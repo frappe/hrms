@@ -1,37 +1,39 @@
-# DocType, Appraisal
+# DocType, Expense Claim
 [
 
 	# These values are common in all dictionaries
 	{
-		'creation': '2012-03-27 14:35:53',
+		'creation': '2012-03-27 14:35:56',
 		'docstatus': 0,
-		'modified': '2012-03-27 14:45:46',
+		'modified': '2012-03-27 14:45:48',
 		'modified_by': u'Administrator',
-		'owner': u'ashwini@webnotestech.com'
+		'owner': u'harshada@webnotestech.com'
 	},
 
 	# These values are common for all DocType
 	{
-		'_last_update': u'1316075905',
-		'autoname': u'APRSL.#####',
+		'_last_update': u'1308808105',
+		'autoname': u'EXP.######',
 		'colour': u'White:FFF',
 		'default_print_format': u'Standard',
 		'doctype': 'DocType',
 		'is_submittable': 1,
 		'module': u'HR',
 		'name': '__common__',
-		'search_fields': u'status, employee, employee_name',
+		'search_fields': u'approval_status,employee,employee_name',
 		'section_style': u'Simple',
 		'server_code_error': u' ',
 		'show_in_menu': 0,
-		'version': 161
+		'subject': u'From %(employee_name)s for %(total_claimed_amount)s (claimed)',
+		'tag_fields': u'approval_status',
+		'version': 135
 	},
 
 	# These values are common for all DocField
 	{
 		'doctype': u'DocField',
 		'name': '__common__',
-		'parent': u'Appraisal',
+		'parent': u'Expense Claim',
 		'parentfield': u'fields',
 		'parenttype': u'DocType'
 	},
@@ -40,16 +42,23 @@
 	{
 		'doctype': u'DocPerm',
 		'name': '__common__',
-		'parent': u'Appraisal',
+		'parent': u'Expense Claim',
 		'parentfield': u'permissions',
 		'parenttype': u'DocType',
 		'read': 1
 	},
 
-	# DocType, Appraisal
+	# DocType, Expense Claim
 	{
 		'doctype': 'DocType',
-		'name': u'Appraisal'
+		'name': u'Expense Claim'
+	},
+
+	# DocPerm
+	{
+		'doctype': u'DocPerm',
+		'permlevel': 1,
+		'role': u'All'
 	},
 
 	# DocPerm
@@ -58,20 +67,8 @@
 		'cancel': 1,
 		'create': 1,
 		'doctype': u'DocPerm',
+		'match': u'owner',
 		'permlevel': 0,
-		'role': u'System Manager',
-		'submit': 1,
-		'write': 1
-	},
-
-	# DocPerm
-	{
-		'amend': 1,
-		'cancel': 1,
-		'create': 1,
-		'doctype': u'DocPerm',
-		'permlevel': 0,
-		'role': u'System Manager',
 		'submit': 1,
 		'write': 1
 	},
@@ -100,27 +97,12 @@
 		'write': 1
 	},
 
-	# DocPerm
-	{
-		'doctype': u'DocPerm',
-		'permlevel': 0,
-		'role': u'All',
-		'write': 1
-	},
-
-	# DocPerm
-	{
-		'doctype': u'DocPerm',
-		'permlevel': 1,
-		'role': u'All'
-	},
-
 	# DocField
 	{
 		'doctype': u'DocField',
-		'fieldname': u'employee_details',
+		'fieldname': u'details',
 		'fieldtype': u'Section Break',
-		'label': u'Employee Details',
+		'label': u'Details',
 		'oldfieldtype': u'Section Break',
 		'permlevel': 0
 	},
@@ -130,16 +112,15 @@
 		'colour': u'White:FFF',
 		'default': u'Draft',
 		'doctype': u'DocField',
-		'fieldname': u'status',
+		'fieldname': u'approval_status',
 		'fieldtype': u'Select',
 		'in_filter': 1,
-		'label': u'Status',
+		'label': u'Approval Status',
 		'no_copy': 1,
-		'oldfieldname': u'status',
+		'oldfieldname': u'approval_status',
 		'oldfieldtype': u'Select',
-		'options': u'\nDraft\nSubmitted\nCompleted\nCancelled',
+		'options': u'\nDraft\nSubmitted\nApproved \nRejected\nCancelled',
 		'permlevel': 1,
-		'reqd': 1,
 		'search_index': 1
 	},
 
@@ -150,7 +131,7 @@
 		'fieldname': u'employee',
 		'fieldtype': u'Link',
 		'in_filter': 1,
-		'label': u'Employee',
+		'label': u'From Employee',
 		'oldfieldname': u'employee',
 		'oldfieldtype': u'Link',
 		'options': u'Employee',
@@ -169,7 +150,9 @@
 		'label': u'Employee Name',
 		'oldfieldname': u'employee_name',
 		'oldfieldtype': u'Data',
-		'permlevel': 1
+		'permlevel': 1,
+		'search_index': 0,
+		'width': u'150px'
 	},
 
 	# DocField
@@ -213,11 +196,11 @@
 	# DocField
 	{
 		'doctype': u'DocField',
-		'fieldname': u'start_date',
+		'fieldname': u'posting_date',
 		'fieldtype': u'Date',
 		'in_filter': 1,
-		'label': u'Start Date',
-		'oldfieldname': u'start_date',
+		'label': u'Posting Date',
+		'oldfieldname': u'posting_date',
 		'oldfieldtype': u'Date',
 		'permlevel': 0,
 		'reqd': 1
@@ -226,36 +209,35 @@
 	# DocField
 	{
 		'doctype': u'DocField',
-		'fieldname': u'end_date',
-		'fieldtype': u'Date',
-		'in_filter': 1,
-		'label': u'End Date',
-		'oldfieldname': u'end_date',
-		'oldfieldtype': u'Date',
+		'fieldname': u'exp_approver',
+		'fieldtype': u'Select',
+		'label': u'Approver',
+		'oldfieldname': u'exp_approver',
+		'oldfieldtype': u'Select',
 		'permlevel': 0,
-		'reqd': 1
+		'width': u'160px'
+	},
+
+	# DocField
+	{
+		'allow_on_submit': 1,
+		'colour': u'White:FFF',
+		'doctype': u'DocField',
+		'fieldname': u'remark',
+		'fieldtype': u'Small Text',
+		'label': u'Remark',
+		'no_copy': 1,
+		'oldfieldname': u'remark',
+		'oldfieldtype': u'Small Text',
+		'permlevel': 0
 	},
 
 	# DocField
 	{
 		'colour': u'White:FFF',
 		'doctype': u'DocField',
-		'fieldname': u'kra_approver',
-		'fieldtype': u'Select',
-		'in_filter': 0,
-		'label': u'Approver',
-		'oldfieldname': u'kra_approver',
-		'oldfieldtype': u'Select',
-		'permlevel': 0,
-		'trigger': u'Client'
-	},
-
-	# DocField
-	{
-		'doctype': u'DocField',
 		'fieldname': u'amended_from',
 		'fieldtype': u'Data',
-		'hidden': 1,
 		'label': u'Amended From',
 		'no_copy': 1,
 		'oldfieldname': u'amended_from',
@@ -263,15 +245,15 @@
 		'permlevel': 1,
 		'print_hide': 1,
 		'report_hide': 1,
-		'width': u'150px'
+		'width': u'160px'
 	},
 
 	# DocField
 	{
+		'colour': u'White:FFF',
 		'doctype': u'DocField',
 		'fieldname': u'amendment_date',
 		'fieldtype': u'Date',
-		'hidden': 1,
 		'label': u'Amendment Date',
 		'no_copy': 1,
 		'oldfieldname': u'amendment_date',
@@ -285,63 +267,39 @@
 	# DocField
 	{
 		'allow_on_submit': 1,
-		'colour': u'White:FFF',
 		'doctype': u'DocField',
-		'fieldname': u'declare_completed',
-		'fieldtype': u'Button',
-		'label': u'Declare Completed',
-		'oldfieldtype': u'Button',
-		'permlevel': 0,
-		'trigger': u'Client'
-	},
-
-	# DocField
-	{
-		'doctype': u'DocField',
-		'fieldname': u'section_break0',
-		'fieldtype': u'Section Break',
-		'oldfieldtype': u'Section Break',
-		'options': u'Simple',
-		'permlevel': 0
-	},
-
-	# DocField
-	{
-		'colour': u'White:FFF',
-		'description': u'Select template from which you want to fetch KRA',
-		'doctype': u'DocField',
-		'fieldname': u'kra_template',
-		'fieldtype': u'Link',
-		'label': u'Appraisal Template',
-		'oldfieldname': u'kra_template',
-		'oldfieldtype': u'Link',
-		'options': u'Appraisal Template',
-		'permlevel': 0
-	},
-
-	# DocField
-	{
-		'doctype': u'DocField',
-		'fieldname': u'fetch_template',
-		'fieldtype': u'Button',
-		'label': u'Fetch Template',
-		'oldfieldtype': u'Button',
-		'options': u'fetch_kra',
-		'permlevel': 0
-	},
-
-	# DocField
-	{
-		'allow_on_submit': 1,
-		'colour': u'White:FFF',
-		'doctype': u'DocField',
-		'fieldname': u'update',
+		'fieldname': u'approve',
 		'fieldtype': u'Button',
 		'hidden': 1,
-		'label': u'Update',
+		'label': u'Approve',
 		'oldfieldtype': u'Button',
 		'permlevel': 0,
+		'print_hide': 1,
 		'trigger': u'Client'
+	},
+
+	# DocField
+	{
+		'allow_on_submit': 1,
+		'doctype': u'DocField',
+		'fieldname': u'reject',
+		'fieldtype': u'Button',
+		'hidden': 1,
+		'label': u'Reject',
+		'oldfieldtype': u'Button',
+		'permlevel': 0,
+		'print_hide': 1,
+		'trigger': u'Client'
+	},
+
+	# DocField
+	{
+		'doctype': u'DocField',
+		'fieldname': u'expense_details',
+		'fieldtype': u'Section Break',
+		'label': u'Expense Details',
+		'oldfieldtype': u'Section Break',
+		'permlevel': 0
 	},
 
 	# DocField
@@ -349,36 +307,84 @@
 		'allow_on_submit': 1,
 		'colour': u'White:FFF',
 		'doctype': u'DocField',
-		'fieldname': u'appraisal_details',
-		'fieldtype': u'Table',
-		'label': u'Appraisal Goals',
-		'oldfieldname': u'appraisal_details',
-		'oldfieldtype': u'Table',
-		'options': u'Appraisal Goal',
-		'permlevel': 0
+		'fieldname': u'calculate_total_amount',
+		'fieldtype': u'Button',
+		'label': u'Calculate Total Amount',
+		'oldfieldtype': u'Button',
+		'permlevel': 0,
+		'print_hide': 1,
+		'report_hide': 1,
+		'trigger': u'Client'
+	},
+
+	# DocField
+	{
+		'colour': u'White:FFF',
+		'doctype': u'DocField',
+		'fieldname': u'total_claimed_amount',
+		'fieldtype': u'Currency',
+		'in_filter': 0,
+		'label': u'Total Claimed Amount',
+		'no_copy': 1,
+		'oldfieldname': u'total_claimed_amount',
+		'oldfieldtype': u'Currency',
+		'permlevel': 1,
+		'reqd': 0,
+		'width': u'160px'
+	},
+
+	# DocField
+	{
+		'colour': u'White:FFF',
+		'doctype': u'DocField',
+		'fieldname': u'total_sanctioned_amount',
+		'fieldtype': u'Currency',
+		'in_filter': 0,
+		'label': u'Total Sanctioned Amount',
+		'no_copy': 1,
+		'oldfieldname': u'total_sanctioned_amount',
+		'oldfieldtype': u'Currency',
+		'permlevel': 1,
+		'width': u'160px'
 	},
 
 	# DocField
 	{
 		'allow_on_submit': 1,
 		'doctype': u'DocField',
-		'fieldname': u'calculate_total_score',
+		'fieldname': u'update_voucher',
 		'fieldtype': u'Button',
-		'label': u'Calculate Total Score',
+		'hidden': 1,
+		'label': u'Update Voucher',
 		'oldfieldtype': u'Button',
-		'options': u'calculate_total',
+		'permlevel': 0,
+		'print_hide': 1,
+		'trigger': u'Client'
+	},
+
+	# DocField
+	{
+		'allow_on_submit': 1,
+		'doctype': u'DocField',
+		'fieldname': u'expense_voucher_details',
+		'fieldtype': u'Table',
+		'label': u'Expense Claim Details',
+		'oldfieldname': u'expense_voucher_details',
+		'oldfieldtype': u'Table',
+		'options': u'Expense Claim Detail',
 		'permlevel': 0
 	},
 
 	# DocField
 	{
 		'doctype': u'DocField',
-		'fieldname': u'total_score',
-		'fieldtype': u'Currency',
-		'label': u'Total Score (Out of 5)',
-		'no_copy': 1,
-		'oldfieldname': u'total_score',
-		'oldfieldtype': u'Currency',
-		'permlevel': 1
+		'fieldname': u'email_id',
+		'fieldtype': u'Data',
+		'hidden': 1,
+		'label': u'Employees Email Id',
+		'oldfieldname': u'email_id',
+		'oldfieldtype': u'Data',
+		'permlevel': 0,
+		'print_hide': 1
 	}
 ]
