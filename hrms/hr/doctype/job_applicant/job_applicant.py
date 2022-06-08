@@ -10,7 +10,7 @@ from frappe.model.document import Document
 from frappe.model.naming import append_number_if_name_exists
 from frappe.utils import validate_email_address
 
-from erpnext.hr.doctype.interview.interview import get_interviewers
+from hrms.hr.doctype.interview.interview import get_interviewers
 
 
 class DuplicationError(frappe.ValidationError):

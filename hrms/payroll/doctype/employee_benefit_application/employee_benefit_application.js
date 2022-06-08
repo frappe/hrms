@@ -11,7 +11,7 @@ frappe.ui.form.on('Employee Benefit Application', {
 		}
 		var method, args;
 		if(frm.doc.employee && frm.doc.date && frm.doc.payroll_period){
-			method = "erpnext.payroll.doctype.employee_benefit_application.employee_benefit_application.get_max_benefits_remaining";
+			method = "hrms.payroll.doctype.employee_benefit_application.employee_benefit_application.get_max_benefits_remaining";
 			args = {
 				employee: frm.doc.employee,
 				on_date: frm.doc.date,
@@ -20,7 +20,7 @@ frappe.ui.form.on('Employee Benefit Application', {
 			get_max_benefits(frm, method, args);
 		}
 		else if(frm.doc.employee && frm.doc.date){
-			method = "erpnext.payroll.doctype.employee_benefit_application.employee_benefit_application.get_max_benefits";
+			method = "hrms.payroll.doctype.employee_benefit_application.employee_benefit_application.get_max_benefits";
 			args = {
 				employee: frm.doc.employee,
 				on_date: frm.doc.date
@@ -37,7 +37,7 @@ frappe.ui.form.on('Employee Benefit Application', {
 		if(!frm.doc.employee && !frm.doc.date) return;
 		frm.set_query("earning_component", "employee_benefits", function() {
 			return {
-				query : "erpnext.payroll.doctype.employee_benefit_application.employee_benefit_application.get_earning_components",
+				query : "hrms.payroll.doctype.employee_benefit_application.employee_benefit_application.get_earning_components",
 				filters: {date: frm.doc.date, employee: frm.doc.employee}
 			};
 		});
@@ -46,7 +46,7 @@ frappe.ui.form.on('Employee Benefit Application', {
 	get_employee_currency: function(frm) {
 		if (frm.doc.employee) {
 			frappe.call({
-				method: "erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
+				method: "hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
 				args: {
 					employee: frm.doc.employee,
 				},
@@ -63,7 +63,7 @@ frappe.ui.form.on('Employee Benefit Application', {
 	payroll_period: function(frm) {
 		var method, args;
 		if (frm.doc.employee && frm.doc.date && frm.doc.payroll_period) {
-			method = "erpnext.payroll.doctype.employee_benefit_application.employee_benefit_application.get_max_benefits_remaining";
+			method = "hrms.payroll.doctype.employee_benefit_application.employee_benefit_application.get_max_benefits_remaining";
 			args = {
 				employee: frm.doc.employee,
 				on_date: frm.doc.date,

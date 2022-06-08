@@ -9,5 +9,5 @@ frappe.views.calendar["Shift Assignment"] = {
 		"docstatus": 1,
 		"allDay": "allDay",
 	},
-	get_events_method: "erpnext.hr.doctype.shift_assignment.shift_assignment.get_events"
+	get_events_method: "hrms.hr.doctype.shift_assignment.shift_assignment.get_events"
 }

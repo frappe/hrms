@@ -6,7 +6,7 @@ import unittest
 import frappe
 from frappe.utils import add_days, getdate
 
-from erpnext.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 
 class TestEmployeeTransfer(unittest.TestCase):

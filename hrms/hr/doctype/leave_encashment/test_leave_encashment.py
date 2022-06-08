@@ -7,18 +7,18 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
-from erpnext.hr.doctype.leave_period.test_leave_period import create_leave_period
-from erpnext.hr.doctype.leave_policy.test_leave_policy import create_leave_policy
-from erpnext.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
+from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
+from hrms.hr.doctype.leave_policy.test_leave_policy import create_leave_policy
+from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
 	create_assignment_for_multiple_employees,
 )
-from erpnext.payroll.doctype.salary_slip.test_salary_slip import (
+from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
 )
-from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 test_records = frappe.get_test_records("Leave Type")
 

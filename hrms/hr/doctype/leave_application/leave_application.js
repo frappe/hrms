@@ -8,7 +8,7 @@ frappe.ui.form.on("Leave Application", {
 	setup: function(frm) {
 		frm.set_query("leave_approver", function() {
 			return {
-				query: "erpnext.hr.doctype.department_approver.department_approver.get_approvers",
+				query: "hrms.hr.doctype.department_approver.department_approver.get_approvers",
 				filters: {
 					employee: frm.doc.employee,
 					doctype: frm.doc.doctype
@@ -27,7 +27,7 @@ frappe.ui.form.on("Leave Application", {
 		}
 		if (frm.doc.docstatus == 0) {
 			return frappe.call({
-				method: "erpnext.hr.doctype.leave_application.leave_application.get_mandatory_approval",
+				method: "hrms.hr.doctype.leave_application.leave_application.get_mandatory_approval",
 				args: {
 					doctype: frm.doc.doctype,
 				},
@@ -54,7 +54,7 @@ frappe.ui.form.on("Leave Application", {
 		let lwps;
 		if (frm.doc.employee && frm.doc.from_date) {
 			frappe.call({
-				method: "erpnext.hr.doctype.leave_application.leave_application.get_leave_details",
+				method: "hrms.hr.doctype.leave_application.leave_application.get_leave_details",
 				async: false,
 				args: {
 					employee: frm.doc.employee,
@@ -167,7 +167,7 @@ frappe.ui.form.on("Leave Application", {
 	get_leave_balance: function(frm) {
 		if (frm.doc.docstatus === 0 && frm.doc.employee && frm.doc.leave_type && frm.doc.from_date && frm.doc.to_date) {
 			return frappe.call({
-				method: "erpnext.hr.doctype.leave_application.leave_application.get_leave_balance_on",
+				method: "hrms.hr.doctype.leave_application.leave_application.get_leave_balance_on",
 				args: {
 					employee: frm.doc.employee,
 					date: frm.doc.from_date,
@@ -199,7 +199,7 @@ frappe.ui.form.on("Leave Application", {
 			}
 			// server call is done to include holidays in leave days calculations
 			return frappe.call({
-				method: 'erpnext.hr.doctype.leave_application.leave_application.get_number_of_leave_days',
+				method: 'hrms.hr.doctype.leave_application.leave_application.get_number_of_leave_days',
 				args: {
 					"employee": frm.doc.employee,
 					"leave_type": frm.doc.leave_type,
@@ -222,7 +222,7 @@ frappe.ui.form.on("Leave Application", {
 		if (frm.doc.employee) {
 			// server call is done to include holidays in leave days calculations
 			return frappe.call({
-				method: 'erpnext.hr.doctype.leave_application.leave_application.get_leave_approver',
+				method: 'hrms.hr.doctype.leave_application.leave_application.get_leave_approver',
 				args: {
 					"employee": frm.doc.employee,
 				},

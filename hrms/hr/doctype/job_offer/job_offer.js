@@ -45,7 +45,7 @@ frappe.ui.form.on("Job Offer", {
 
 erpnext.job_offer.make_employee = function (frm) {
 	frappe.model.open_mapped_doc({
-		method: "erpnext.hr.doctype.job_offer.job_offer.make_employee",
+		method: "hrms.hr.doctype.job_offer.job_offer.make_employee",
 		frm: frm
 	});
 };

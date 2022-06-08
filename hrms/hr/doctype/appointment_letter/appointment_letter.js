@@ -5,7 +5,7 @@ frappe.ui.form.on('Appointment Letter', {
 	appointment_letter_template: function(frm){
 		if (frm.doc.appointment_letter_template){
 			frappe.call({
-				method: 'erpnext.hr.doctype.appointment_letter.appointment_letter.get_appointment_letter_details',
+				method: 'hrms.hr.doctype.appointment_letter.appointment_letter.get_appointment_letter_details',
 				args : {
 					template : frm.doc.appointment_letter_template
 				},

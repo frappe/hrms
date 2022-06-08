@@ -10,8 +10,8 @@ from frappe.model.document import Document
 from frappe.utils import add_days, cstr, date_diff, getdate
 from frappe.utils.csvutils import UnicodeWriter
 
-from erpnext.hr.doctype.employee.employee import get_holiday_list_for_employee
-from erpnext.hr.utils import get_holiday_dates_for_employee
+from hrms.hr.doctype.employee.employee import get_holiday_list_for_employee
+from hrms.hr.utils import get_holiday_dates_for_employee
 
 
 class UploadAttendance(Document):

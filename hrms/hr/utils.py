@@ -17,7 +17,7 @@ from frappe.utils import (
 )
 
 import erpnext
-from erpnext.hr.doctype.employee.employee import (
+from hrms.hr.doctype.employee.employee import (
 	InactiveEmployeeStatusError,
 	get_holiday_list_for_employee,
 )
@@ -247,7 +247,7 @@ def get_leave_period(from_date, to_date, company):
 
 def generate_leave_encashment():
 	"""Generates a draft leave encashment on allocation expiry"""
-	from erpnext.hr.doctype.leave_encashment.leave_encashment import create_leave_encashment
+	from hrms.hr.doctype.leave_encashment.leave_encashment import create_leave_encashment
 
 	if frappe.db.get_single_value("HR Settings", "auto_leave_encashment"):
 		leave_type = frappe.get_all("Leave Type", filters={"allow_encashment": 1}, fields=["name"])
@@ -354,7 +354,7 @@ def get_monthly_earned_leave(annual_leaves, frequency, rounding):
 
 
 def is_earned_leave_already_allocated(allocation, annual_allocation):
-	from erpnext.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
+	from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
 		get_leave_type_details,
 	)
 

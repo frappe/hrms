@@ -5,8 +5,8 @@
 import frappe
 from frappe import _
 
-from erpnext.hr.doctype.leave_application.leave_application import get_leave_details
-from erpnext.hr.report.employee_leave_balance.employee_leave_balance import (
+from hrms.hr.doctype.leave_application.leave_application import get_leave_details
+from hrms.hr.report.employee_leave_balance.employee_leave_balance import (
 	get_department_leave_approver_map,
 )
 

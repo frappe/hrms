@@ -3,12 +3,12 @@ import unittest
 import frappe
 from frappe.utils import add_days, getdate
 
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.exit_interview.test_exit_interview import create_exit_interview
-from erpnext.hr.doctype.full_and_final_statement.test_full_and_final_statement import (
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.exit_interview.test_exit_interview import create_exit_interview
+from hrms.hr.doctype.full_and_final_statement.test_full_and_final_statement import (
 	create_full_and_final_statement,
 )
-from erpnext.hr.report.employee_exits.employee_exits import execute
+from hrms.hr.report.employee_exits.employee_exits import execute
 
 
 class TestEmployeeExits(unittest.TestCase):

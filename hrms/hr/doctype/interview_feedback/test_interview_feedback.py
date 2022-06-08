@@ -6,11 +6,11 @@ import unittest
 import frappe
 from frappe.utils import add_days, flt, getdate
 
-from erpnext.hr.doctype.interview.test_interview import (
+from hrms.hr.doctype.interview.test_interview import (
 	create_interview_and_dependencies,
 	create_skill_set,
 )
-from erpnext.hr.doctype.job_applicant.test_job_applicant import create_job_applicant
+from hrms.hr.doctype.job_applicant.test_job_applicant import create_job_applicant
 
 
 class TestInterviewFeedback(unittest.TestCase):

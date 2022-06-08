@@ -16,10 +16,10 @@ from frappe.utils import (
 	nowdate,
 )
 
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
-from erpnext.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
-from erpnext.hr.doctype.leave_application.leave_application import (
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
+from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
+from hrms.hr.doctype.leave_application.leave_application import (
 	InsufficientLeaveBalanceError,
 	LeaveAcrossAllocationsError,
 	LeaveDayBlockedError,
@@ -29,11 +29,11 @@ from erpnext.hr.doctype.leave_application.leave_application import (
 	get_leave_balance_on,
 	get_leave_details,
 )
-from erpnext.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
+from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
 	create_assignment_for_multiple_employees,
 )
-from erpnext.hr.doctype.leave_type.test_leave_type import create_leave_type
-from erpnext.payroll.doctype.salary_slip.test_salary_slip import (
+from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
+from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
 )
@@ -709,7 +709,7 @@ class TestLeaveApplication(unittest.TestCase):
 		self.assertEqual(details.leave_balance, 30)
 
 	def test_earned_leaves_creation(self):
-		from erpnext.hr.utils import allocate_earned_leaves
+		from hrms.hr.utils import allocate_earned_leaves
 
 		leave_period = get_leave_period()
 		employee = get_employee()
@@ -944,7 +944,7 @@ class TestLeaveApplication(unittest.TestCase):
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_get_earned_leave_details_for_dashboard(self):
-		from erpnext.hr.utils import allocate_earned_leaves
+		from hrms.hr.utils import allocate_earned_leaves
 
 		leave_period = get_leave_period()
 		employee = get_employee()

@@ -153,7 +153,7 @@ class LeavePolicyAssignment(Document):
 	def get_leaves_for_passed_months(
 		self, leave_type, new_leaves_allocated, leave_type_details, date_of_joining
 	):
-		from erpnext.hr.utils import get_monthly_earned_leave
+		from hrms.hr.utils import get_monthly_earned_leave
 
 		current_date = frappe.flags.current_date or getdate()
 		if current_date > getdate(self.effective_to):

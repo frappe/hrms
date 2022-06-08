@@ -31,7 +31,7 @@ frappe.team_updates = {
 	run: function() {
 		var me = frappe.team_updates;
 		frappe.call({
-			method: 'erpnext.hr.page.team_updates.team_updates.get_data',
+			method: 'hrms.hr.page.team_updates.team_updates.get_data',
 			args: {
 				start: me.start
 			},

@@ -91,7 +91,7 @@ frappe.listview_settings['Leave Policy Assignment'] = {
 				primary_action_label: "Assign",
 				action(employees, data) {
 					frappe.call({
-						method: 'erpnext.hr.doctype.leave_policy_assignment.leave_policy_assignment.create_assignment_for_multiple_employees',
+						method: 'hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment.create_assignment_for_multiple_employees',
 						async: false,
 						args: {
 							employees: employees,

@@ -3,12 +3,12 @@ from dateutil.relativedelta import relativedelta
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import get_year_ending, get_year_start, getdate, now_datetime
 
-from erpnext.hr.doctype.attendance.attendance import mark_attendance
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
-from erpnext.hr.doctype.leave_application.test_leave_application import make_allocation_record
-from erpnext.hr.report.monthly_attendance_sheet.monthly_attendance_sheet import execute
-from erpnext.payroll.doctype.salary_slip.test_salary_slip import (
+from hrms.hr.doctype.attendance.attendance import mark_attendance
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
+from hrms.hr.doctype.leave_application.test_leave_application import make_allocation_record
+from hrms.hr.report.monthly_attendance_sheet.monthly_attendance_sheet import execute
+from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
 )

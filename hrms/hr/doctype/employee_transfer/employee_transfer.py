@@ -7,7 +7,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import getdate
 
-from erpnext.hr.utils import update_employee_work_history
+from hrms.hr.utils import update_employee_work_history
 
 
 class EmployeeTransfer(Document):

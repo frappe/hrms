@@ -46,14 +46,14 @@ frappe.ui.form.on("Employee Referral", {
 	},
 	create_job_applicant: function(frm) {
 		frappe.model.open_mapped_doc({
-			method: "erpnext.hr.doctype.employee_referral.employee_referral.create_job_applicant",
+			method: "hrms.hr.doctype.employee_referral.employee_referral.create_job_applicant",
 			frm: frm
 		});
 	},
 
 	create_additional_salary: function(frm) {
 		frappe.call({
-			method: "erpnext.hr.doctype.employee_referral.employee_referral.create_additional_salary",
+			method: "hrms.hr.doctype.employee_referral.employee_referral.create_additional_salary",
 			args: {
 				doc: frm.doc
 			},

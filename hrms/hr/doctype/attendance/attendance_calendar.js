@@ -8,5 +8,5 @@ frappe.views.calendar["Attendance"] = {
 			right: 'month'
 		}
 	},
-	get_events_method: "erpnext.hr.doctype.attendance.attendance.get_events"
+	get_events_method: "hrms.hr.doctype.attendance.attendance.get_events"
 };

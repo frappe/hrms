@@ -7,7 +7,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import add_days, cint, date_diff, format_date, getdate
 
-from erpnext.hr.utils import (
+from hrms.hr.utils import (
 	create_additional_leave_ledger_entry,
 	get_holiday_dates_for_employee,
 	get_leave_period,

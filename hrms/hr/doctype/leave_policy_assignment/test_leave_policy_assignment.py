@@ -7,12 +7,12 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, add_months, get_first_day, get_last_day, getdate
 
-from erpnext.hr.doctype.leave_application.test_leave_application import (
+from hrms.hr.doctype.leave_application.test_leave_application import (
 	get_employee,
 	get_leave_period,
 )
-from erpnext.hr.doctype.leave_policy.test_leave_policy import create_leave_policy
-from erpnext.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
+from hrms.hr.doctype.leave_policy.test_leave_policy import create_leave_policy
+from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
 	create_assignment_for_multiple_employees,
 )
 
@@ -193,7 +193,7 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 		self.assertEqual(leaves_allocated, 3)
 
 	def test_earned_leave_alloc_for_passed_months_with_cf_leaves_based_on_leave_period(self):
-		from erpnext.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
+		from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
 
 		leave_period, leave_policy = setup_leave_period_and_policy(
 			get_first_day(add_months(getdate(), -2))

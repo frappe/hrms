@@ -13,7 +13,7 @@ frappe.ui.form.on("Vehicle Log", {
 
 	expense_claim: function(frm){
 		frappe.call({
-			method: "erpnext.hr.doctype.vehicle_log.vehicle_log.make_expense_claim",
+			method: "hrms.hr.doctype.vehicle_log.vehicle_log.make_expense_claim",
 			args:{
 				docname: frm.doc.name
 			},

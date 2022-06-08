@@ -145,7 +145,7 @@ frappe.ui.form.on('Payroll Entry', {
 
 	add_bank_entry_button: function (frm) {
 		frappe.call({
-			method: 'erpnext.payroll.doctype.payroll_entry.payroll_entry.payroll_entry_has_bank_entries',
+			method: 'hrms.payroll.doctype.payroll_entry.payroll_entry.payroll_entry_has_bank_entries',
 			args: {
 				'name': frm.doc.name
 			},
@@ -195,7 +195,7 @@ frappe.ui.form.on('Payroll Entry', {
 			}
 
 			return {
-				query: "erpnext.payroll.doctype.payroll_entry.payroll_entry.employee_query",
+				query: "hrms.payroll.doctype.payroll_entry.payroll_entry.employee_query",
 				filters: frm.events.get_employee_filters(frm)
 			};
 		});
@@ -307,7 +307,7 @@ frappe.ui.form.on('Payroll Entry', {
 	set_start_end_dates: function (frm) {
 		if (!frm.doc.salary_slip_based_on_timesheet) {
 			frappe.call({
-				method: 'erpnext.payroll.doctype.payroll_entry.payroll_entry.get_start_end_dates',
+				method: 'hrms.payroll.doctype.payroll_entry.payroll_entry.get_start_end_dates',
 				args: {
 					payroll_frequency: frm.doc.payroll_frequency,
 					start_date: frm.doc.posting_date
@@ -325,7 +325,7 @@ frappe.ui.form.on('Payroll Entry', {
 
 	set_end_date: function (frm) {
 		frappe.call({
-			method: 'erpnext.payroll.doctype.payroll_entry.payroll_entry.get_end_date',
+			method: 'hrms.payroll.doctype.payroll_entry.payroll_entry.get_end_date',
 			args: {
 				frequency: frm.doc.payroll_frequency,
 				start_date: frm.doc.start_date

@@ -11,7 +11,7 @@ frappe.ui.form.on("Interview Round", {
 	},
 	create_interview: function(frm) {
 		frappe.call({
-			method: "erpnext.hr.doctype.interview_round.interview_round.create_interview",
+			method: "hrms.hr.doctype.interview_round.interview_round.create_interview",
 			args: {
 				doc: frm.doc
 			},

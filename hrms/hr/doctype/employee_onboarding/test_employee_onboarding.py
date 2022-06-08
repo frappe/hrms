@@ -6,12 +6,12 @@ import unittest
 import frappe
 from frappe.utils import add_days, getdate
 
-from erpnext.hr.doctype.employee_onboarding.employee_onboarding import (
+from hrms.hr.doctype.employee_onboarding.employee_onboarding import (
 	IncompleteTaskError,
 	make_employee,
 )
-from erpnext.hr.doctype.job_offer.test_job_offer import create_job_offer
-from erpnext.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
+from hrms.hr.doctype.job_offer.test_job_offer import create_job_offer
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 
 
 class TestEmployeeOnboarding(unittest.TestCase):

@@ -15,7 +15,7 @@ frappe.listview_settings['Exit Interview'] = {
 			listview.page.add_action_item(__('Send Exit Questionnaires'), function() {
 				const interviews = listview.get_checked_items();
 				frappe.call({
-					method: 'erpnext.hr.doctype.exit_interview.exit_interview.send_exit_questionnaire',
+					method: 'hrms.hr.doctype.exit_interview.exit_interview.send_exit_questionnaire',
 					freeze: true,
 					args: {
 						'interviews': interviews

@@ -16,16 +16,16 @@ from frappe.utils import (
 	nowdate,
 )
 
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.employee_checkin.employee_checkin import (
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee_checkin.employee_checkin import (
 	add_log_based_on_employee_field,
 	calculate_working_hours,
 	mark_attendance_and_link_log,
 )
-from erpnext.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
-from erpnext.hr.doctype.leave_application.test_leave_application import get_first_sunday
-from erpnext.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
-from erpnext.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
+from hrms.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
+from hrms.hr.doctype.leave_application.test_leave_application import get_first_sunday
+from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 
 
 class TestEmployeeCheckin(FrappeTestCase):

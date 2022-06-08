@@ -31,7 +31,7 @@ erpnext.employee_attendance_tool = {
 	load_employees: function(frm) {
 		if(frm.doc.date) {
 			frappe.call({
-				method: "erpnext.hr.doctype.employee_attendance_tool.employee_attendance_tool.get_employees",
+				method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.get_employees",
 				args: {
 					date: frm.doc.date,
 					department: frm.doc.department,
@@ -159,7 +159,7 @@ erpnext.EmployeeSelector = class EmployeeSelector {
 					}
 				});
 				frappe.call({
-					method: "erpnext.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
+					method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
 					args:{
 						"employee_list":employee_present,
 						"status":"Present",
@@ -184,7 +184,7 @@ erpnext.EmployeeSelector = class EmployeeSelector {
 					}
 				});
 				frappe.call({
-					method: "erpnext.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
+					method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
 					args:{
 						"employee_list":employee_absent,
 						"status":"Absent",
@@ -210,7 +210,7 @@ erpnext.EmployeeSelector = class EmployeeSelector {
 					}
 				});
 				frappe.call({
-					method: "erpnext.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
+					method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
 					args:{
 						"employee_list":employee_half_day,
 						"status":"Half Day",
@@ -236,7 +236,7 @@ erpnext.EmployeeSelector = class EmployeeSelector {
 					}
 				});
 				frappe.call({
-					method: "erpnext.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
+					method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
 					args:{
 						"employee_list":employee_work_from_home,
 						"status":"Work From Home",

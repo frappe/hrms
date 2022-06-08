@@ -3,17 +3,17 @@ import unittest
 import frappe
 from frappe.utils import getdate
 
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
 	create_payroll_period,
 )
-from erpnext.payroll.doctype.salary_slip.test_salary_slip import (
+from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	create_exemption_declaration,
 	create_salary_slips_for_payroll_period,
 	create_tax_slab,
 )
-from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
-from erpnext.payroll.report.income_tax_computation.income_tax_computation import execute
+from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.payroll.report.income_tax_computation.income_tax_computation import execute
 
 
 class TestIncomeTaxComputation(unittest.TestCase):

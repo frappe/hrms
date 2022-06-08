@@ -7,10 +7,10 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import getdate, nowdate
 
-from erpnext.hr.doctype.leave_application.leave_application import get_leaves_for_period
-from erpnext.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
-from erpnext.hr.utils import set_employee_name, validate_active_employee
-from erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
+from hrms.hr.doctype.leave_application.leave_application import get_leaves_for_period
+from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
+from hrms.hr.utils import set_employee_name, validate_active_employee
+from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
 	get_assigned_salary_structure,
 )
 

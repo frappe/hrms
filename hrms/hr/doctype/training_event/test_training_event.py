@@ -6,7 +6,7 @@ import unittest
 import frappe
 from frappe.utils import add_days, today
 
-from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_employee
+from hrms.payroll.doctype.salary_structure.test_salary_structure import make_employee
 
 
 class TestTrainingEvent(unittest.TestCase):

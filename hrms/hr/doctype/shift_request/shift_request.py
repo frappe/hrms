@@ -8,8 +8,8 @@ from frappe.model.document import Document
 from frappe.query_builder import Criterion
 from frappe.utils import get_link_to_form, getdate
 
-from erpnext.hr.doctype.shift_assignment.shift_assignment import has_overlapping_timings
-from erpnext.hr.utils import share_doc_with_approver, validate_active_employee
+from hrms.hr.doctype.shift_assignment.shift_assignment import has_overlapping_timings
+from hrms.hr.utils import share_doc_with_approver, validate_active_employee
 
 
 class OverlappingShiftRequestError(frappe.ValidationError):

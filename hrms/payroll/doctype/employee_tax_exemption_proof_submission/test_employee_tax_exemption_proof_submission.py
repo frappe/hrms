@@ -6,8 +6,8 @@ import unittest
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
 	create_exemption_category,
 	create_payroll_period,
 	setup_hra_exemption_prerequisites,

@@ -3,9 +3,9 @@
 
 
 
-frappe.provide("erpnext.hr");
+frappe.provide("hrms.hr");
 
-erpnext.hr.AttendanceControlPanel = class AttendanceControlPanel extends frappe.ui.form.Controller {
+hrms.hr.AttendanceControlPanel = class AttendanceControlPanel extends frappe.ui.form.Controller {
 	onload() {
 		this.frm.set_value("att_fr_date", frappe.datetime.get_today());
 		this.frm.set_value("att_to_date", frappe.datetime.get_today());
@@ -24,7 +24,7 @@ erpnext.hr.AttendanceControlPanel = class AttendanceControlPanel extends frappe.
 		}
 		window.location.href = repl(frappe.request.url +
 			'?cmd=%(cmd)s&from_date=%(from_date)s&to_date=%(to_date)s', {
-			cmd: "erpnext.hr.doctype.upload_attendance.upload_attendance.get_template",
+			cmd: "hrms.hr.doctype.upload_attendance.upload_attendance.get_template",
 			from_date: this.frm.doc.att_fr_date,
 			to_date: this.frm.doc.att_to_date,
 		});
@@ -34,7 +34,7 @@ erpnext.hr.AttendanceControlPanel = class AttendanceControlPanel extends frappe.
 		var $wrapper = $(cur_frm.fields_dict.upload_html.wrapper).empty();
 		new frappe.ui.FileUploader({
 			wrapper: $wrapper,
-			method: 'erpnext.hr.doctype.upload_attendance.upload_attendance.upload'
+			method: 'hrms.hr.doctype.upload_attendance.upload_attendance.upload'
 		});
 	}
 
@@ -66,4 +66,4 @@ erpnext.hr.AttendanceControlPanel = class AttendanceControlPanel extends frappe.
 	}
 }
 
-cur_frm.cscript = new erpnext.hr.AttendanceControlPanel({frm: cur_frm});
+cur_frm.cscript = new hrms.hr.AttendanceControlPanel({frm: cur_frm});

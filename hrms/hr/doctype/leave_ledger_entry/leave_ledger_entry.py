@@ -202,7 +202,7 @@ def expire_allocation(allocation, expiry_date=None):
 
 def expire_carried_forward_allocation(allocation):
 	"""Expires remaining leaves in the on carried forward allocation"""
-	from erpnext.hr.doctype.leave_application.leave_application import get_leaves_for_period
+	from hrms.hr.doctype.leave_application.leave_application import get_leaves_for_period
 
 	leaves_taken = get_leaves_for_period(
 		allocation.employee,

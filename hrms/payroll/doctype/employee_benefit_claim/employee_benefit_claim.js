@@ -5,7 +5,7 @@ frappe.ui.form.on('Employee Benefit Claim', {
 	setup: function(frm) {
 		frm.set_query("earning_component", function() {
 			return {
-				query : "erpnext.payroll.doctype.employee_benefit_application.employee_benefit_application.get_earning_components",
+				query : "hrms.payroll.doctype.employee_benefit_application.employee_benefit_application.get_earning_components",
 				filters: {date: frm.doc.claim_date, employee: frm.doc.employee}
 			};
 		});
@@ -14,7 +14,7 @@ frappe.ui.form.on('Employee Benefit Claim', {
 		frm.set_value("earning_component", null);
 		if (frm.doc.employee) {
 			frappe.call({
-				method: "erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
+				method: "hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
 				args: {
 					employee: frm.doc.employee,
 				},

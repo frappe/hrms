@@ -1,7 +1,7 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
 
-frappe.provide("erpnext.hr");
+frappe.provide("hrms.hr");
 frappe.provide("erpnext.accounts.dimensions");
 
 frappe.ui.form.on('Expense Claim', {
@@ -17,7 +17,7 @@ frappe.ui.form.on('Expense Claim', {
 				continue;
 			}
 			frappe.call({
-				method: "erpnext.hr.doctype.expense_claim.expense_claim.get_expense_claim_account_and_cost_center",
+				method: "hrms.hr.doctype.expense_claim.expense_claim.get_expense_claim_account_and_cost_center",
 				args: {
 					"expense_claim_type": expense.expense_type,
 					"company": frm.doc.company
@@ -47,7 +47,7 @@ frappe.ui.form.on('Expense Claim Detail', {
 			return;
 		}
 		return frappe.call({
-			method: "erpnext.hr.doctype.expense_claim.expense_claim.get_expense_claim_account_and_cost_center",
+			method: "hrms.hr.doctype.expense_claim.expense_claim.get_expense_claim_account_and_cost_center",
 			args: {
 				"expense_claim_type": d.expense_type,
 				"company": frm.doc.company
@@ -178,7 +178,7 @@ frappe.ui.form.on("Expense Claim", {
 
 		frm.set_query("expense_approver", function() {
 			return {
-				query: "erpnext.hr.doctype.department_approver.department_approver.get_approvers",
+				query: "hrms.hr.doctype.department_approver.department_approver.get_approvers",
 				filters: {
 					employee: frm.doc.employee,
 					doctype: frm.doc.doctype
@@ -224,7 +224,7 @@ frappe.ui.form.on("Expense Claim", {
 	onload: function(frm) {
 		if (frm.doc.docstatus == 0) {
 			return frappe.call({
-				method: "erpnext.hr.doctype.leave_application.leave_application.get_mandatory_approval",
+				method: "hrms.hr.doctype.leave_application.leave_application.get_mandatory_approval",
 				args: {
 					doctype: frm.doc.doctype,
 				},
@@ -289,7 +289,7 @@ frappe.ui.form.on("Expense Claim", {
 	make_payment_entry: function(frm) {
 		var method = "erpnext.accounts.doctype.payment_entry.payment_entry.get_payment_entry";
 		if(frm.doc.__onload && frm.doc.__onload.make_payment_via_journal_entry) {
-			method = "erpnext.hr.doctype.expense_claim.expense_claim.make_bank_entry";
+			method = "hrms.hr.doctype.expense_claim.expense_claim.make_bank_entry";
 		}
 		return frappe.call({
 			method: method,
@@ -356,7 +356,7 @@ frappe.ui.form.on("Expense Claim", {
 		frappe.model.clear_table(frm.doc, "advances");
 		if (frm.doc.employee) {
 			return frappe.call({
-				method: "erpnext.hr.doctype.expense_claim.expense_claim.get_advances",
+				method: "hrms.hr.doctype.expense_claim.expense_claim.get_advances",
 				args: {
 					employee: frm.doc.employee
 				},
@@ -407,7 +407,7 @@ frappe.ui.form.on("Expense Claim Advance", {
 		}
 		else {
 			return frappe.call({
-				method: "erpnext.hr.doctype.expense_claim.expense_claim.get_advances",
+				method: "hrms.hr.doctype.expense_claim.expense_claim.get_advances",
 				args: {
 					employee: frm.doc.employee,
 					advance_id: child.employee_advance

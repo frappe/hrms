@@ -7,7 +7,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import getdate
 
-from erpnext.hr.utils import validate_overlap
+from hrms.hr.utils import validate_overlap
 
 
 class LeavePeriod(Document):

@@ -55,7 +55,7 @@ frappe.query_reports["Employee Leave Balance"] = {
 	onload: () => {
 		frappe.call({
 			type: "GET",
-			method: "erpnext.hr.utils.get_leave_period",
+			method: "hrms.hr.utils.get_leave_period",
 			args: {
 				"from_date": frappe.defaults.get_default("year_start_date"),
 				"to_date": frappe.defaults.get_default("year_end_date"),

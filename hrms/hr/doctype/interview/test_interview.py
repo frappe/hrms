@@ -10,10 +10,10 @@ from frappe import _
 from frappe.core.doctype.user_permission.test_user_permission import create_user
 from frappe.utils import add_days, getdate, nowtime
 
-from erpnext.hr.doctype.designation.test_designation import create_designation
-from erpnext.hr.doctype.interview.interview import DuplicateInterviewRoundError
-from erpnext.hr.doctype.job_applicant.job_applicant import get_interview_details
-from erpnext.hr.doctype.job_applicant.test_job_applicant import create_job_applicant
+from hrms.hr.doctype.designation.test_designation import create_designation
+from hrms.hr.doctype.interview.interview import DuplicateInterviewRoundError
+from hrms.hr.doctype.job_applicant.job_applicant import get_interview_details
+from hrms.hr.doctype.job_applicant.test_job_applicant import create_job_applicant
 
 
 class TestInterview(unittest.TestCase):
@@ -46,7 +46,7 @@ class TestInterview(unittest.TestCase):
 		self.assertIsNotNone(notification)
 
 	def test_notification_for_scheduling(self):
-		from erpnext.hr.doctype.interview.interview import send_interview_reminder
+		from hrms.hr.doctype.interview.interview import send_interview_reminder
 
 		setup_reminder_settings()
 
@@ -64,7 +64,7 @@ class TestInterview(unittest.TestCase):
 		self.assertTrue("Subject: Interview Reminder" in email_queue[0].message)
 
 	def test_notification_for_feedback_submission(self):
-		from erpnext.hr.doctype.interview.interview import send_daily_feedback_reminder
+		from hrms.hr.doctype.interview.interview import send_daily_feedback_reminder
 
 		setup_reminder_settings()
 

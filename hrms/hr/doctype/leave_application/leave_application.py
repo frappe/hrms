@@ -20,10 +20,10 @@ from frappe.utils import (
 )
 
 from erpnext.buying.doctype.supplier_scorecard.supplier_scorecard import daterange
-from erpnext.hr.doctype.employee.employee import get_holiday_list_for_employee
-from erpnext.hr.doctype.leave_block_list.leave_block_list import get_applicable_block_dates
-from erpnext.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
-from erpnext.hr.utils import (
+from hrms.hr.doctype.employee.employee import get_holiday_list_for_employee
+from hrms.hr.doctype.leave_block_list.leave_block_list import get_applicable_block_dates
+from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
+from hrms.hr.utils import (
 	get_holiday_dates_for_employee,
 	get_leave_period,
 	set_employee_name,
@@ -1130,7 +1130,7 @@ def add_leaves(events, start, end, filter_conditions=None):
 
 def add_block_dates(events, start, end, employee, company):
 	# block days
-	from erpnext.hr.doctype.leave_block_list.leave_block_list import get_applicable_block_dates
+	from hrms.hr.doctype.leave_block_list.leave_block_list import get_applicable_block_dates
 
 	cnt = 0
 	block_dates = get_applicable_block_dates(start, end, employee, company, all_lists=True)

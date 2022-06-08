@@ -7,14 +7,14 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cint, get_datetime, get_link_to_form
 
-from erpnext.hr.doctype.attendance.attendance import (
+from hrms.hr.doctype.attendance.attendance import (
 	get_duplicate_attendance_record,
 	get_overlapping_shift_attendance,
 )
-from erpnext.hr.doctype.shift_assignment.shift_assignment import (
+from hrms.hr.doctype.shift_assignment.shift_assignment import (
 	get_actual_start_end_datetime_of_shift,
 )
-from erpnext.hr.utils import validate_active_employee
+from hrms.hr.utils import validate_active_employee
 
 
 class EmployeeCheckin(Document):

@@ -54,7 +54,7 @@ frappe.ui.form.on('Employee Incentive', {
 
 	get_employee_currency: function(frm) {
 		frappe.call({
-			method: "erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
+			method: "hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
 			args: {
 				employee: frm.doc.employee,
 			},

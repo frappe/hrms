@@ -7,9 +7,9 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, nowdate
 
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.shift_request.shift_request import OverlappingShiftRequestError
-from erpnext.hr.doctype.shift_type.test_shift_type import setup_shift_type
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.shift_request.shift_request import OverlappingShiftRequestError
+from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 
 test_dependencies = ["Shift Type"]
 

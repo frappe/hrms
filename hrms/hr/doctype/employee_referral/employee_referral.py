@@ -7,7 +7,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import get_link_to_form
 
-from erpnext.hr.utils import validate_active_employee
+from hrms.hr.utils import validate_active_employee
 
 
 class EmployeeReferral(Document):

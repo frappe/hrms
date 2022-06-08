@@ -7,22 +7,22 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, date_diff, get_year_ending, get_year_start, getdate
 
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
-from erpnext.hr.doctype.leave_application.test_leave_application import get_first_sunday
-from erpnext.hr.utils import get_holiday_dates_for_employee
-from erpnext.payroll.doctype.employee_benefit_application.employee_benefit_application import (
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
+from hrms.hr.doctype.leave_application.test_leave_application import get_first_sunday
+from hrms.hr.utils import get_holiday_dates_for_employee
+from hrms.payroll.doctype.employee_benefit_application.employee_benefit_application import (
 	calculate_lwp,
 )
-from erpnext.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
+from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
 	create_payroll_period,
 )
-from erpnext.payroll.doctype.salary_slip.test_salary_slip import (
+from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
 )
-from erpnext.payroll.doctype.salary_structure.salary_structure import make_salary_slip
-from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 
 class TestEmployeeBenefitApplication(FrappeTestCase):

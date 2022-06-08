@@ -19,7 +19,7 @@ frappe.ui.form.on('Appraisal', {
 	kra_template: function(frm) {
 		frm.doc.goals = [];
 		erpnext.utils.map_current_doc({
-			method: "erpnext.hr.doctype.appraisal.appraisal.fetch_appraisal_template",
+			method: "hrms.hr.doctype.appraisal.appraisal.fetch_appraisal_template",
 			source_name: frm.doc.kra_template,
 			frm: frm
 		});

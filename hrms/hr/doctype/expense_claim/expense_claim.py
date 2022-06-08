@@ -10,7 +10,7 @@ import erpnext
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from erpnext.accounts.general_ledger import make_gl_entries
 from erpnext.controllers.accounts_controller import AccountsController
-from erpnext.hr.utils import set_employee_name, share_doc_with_approver, validate_active_employee
+from hrms.hr.utils import set_employee_name, share_doc_with_approver, validate_active_employee
 
 
 class InvalidExpenseApproverError(frappe.ValidationError):

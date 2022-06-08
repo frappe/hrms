@@ -14,7 +14,7 @@ frappe.ui.form.on('Job Opening', {
 	designation: function(frm) {
 		if(frm.doc.designation && frm.doc.company){
 			frappe.call({
-				"method": "erpnext.hr.doctype.staffing_plan.staffing_plan.get_active_staffing_plan_details",
+				"method": "hrms.hr.doctype.staffing_plan.staffing_plan.get_active_staffing_plan_details",
 				args: {
 					company: frm.doc.company,
 					designation: frm.doc.designation,

@@ -9,7 +9,7 @@ from frappe import _
 from frappe.utils import get_link_to_form
 from frappe.website.website_generator import WebsiteGenerator
 
-from erpnext.hr.doctype.staffing_plan.staffing_plan import (
+from hrms.hr.doctype.staffing_plan.staffing_plan import (
 	get_active_staffing_plan_details,
 	get_designation_counts,
 )

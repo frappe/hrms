@@ -70,7 +70,7 @@ class TestDailyWorkSummary(unittest.TestCase):
 		)
 		self.setup_groups(hour)
 
-		from erpnext.hr.doctype.daily_work_summary_group.daily_work_summary_group import trigger_emails
+		from hrms.hr.doctype.daily_work_summary_group.daily_work_summary_group import trigger_emails
 
 		trigger_emails()
 

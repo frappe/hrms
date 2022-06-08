@@ -50,7 +50,7 @@ frappe.ui.form.on("Job Applicant", {
 
 	make_dashboard: function(frm) {
 		frappe.call({
-			method: "erpnext.hr.doctype.job_applicant.job_applicant.get_interview_details",
+			method: "hrms.hr.doctype.job_applicant.job_applicant.get_interview_details",
 			args: {
 				job_applicant: frm.doc.name
 			},
@@ -91,7 +91,7 @@ frappe.ui.form.on("Job Applicant", {
 
 	create_interview: function (frm, values) {
 		frappe.call({
-			method: "erpnext.hr.doctype.job_applicant.job_applicant.create_interview",
+			method: "hrms.hr.doctype.job_applicant.job_applicant.create_interview",
 			args: {
 				doc: frm.doc,
 				interview_round: values.interview_round

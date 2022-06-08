@@ -57,7 +57,7 @@ var set_number_of_positions = function(frm, cdt, cdn) {
 	let child = locals[cdt][cdn];
 	if (!child.designation) frappe.throw(__("Please enter the designation"));
 	frappe.call({
-		"method": "erpnext.hr.doctype.staffing_plan.staffing_plan.get_designation_counts",
+		"method": "hrms.hr.doctype.staffing_plan.staffing_plan.get_designation_counts",
 		args: {
 			designation: child.designation,
 			company: frm.doc.company

@@ -6,9 +6,9 @@ import unittest
 import frappe
 from frappe.utils import add_days, add_months, today
 
-from erpnext.hr.doctype.attendance_request.test_attendance_request import get_employee
-from erpnext.hr.doctype.leave_application.leave_application import get_leave_balance_on
-from erpnext.hr.doctype.leave_period.test_leave_period import create_leave_period
+from hrms.hr.doctype.attendance_request.test_attendance_request import get_employee
+from hrms.hr.doctype.leave_application.leave_application import get_leave_balance_on
+from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
 
 test_dependencies = ["Employee"]
 

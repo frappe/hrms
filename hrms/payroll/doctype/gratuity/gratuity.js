@@ -58,7 +58,7 @@ frappe.ui.form.on('Gratuity', {
 
 		if (frm.doc.employee && frm.doc.gratuity_rule) {
 			frappe.call({
-				method: "erpnext.payroll.doctype.gratuity.gratuity.calculate_work_experience_and_amount",
+				method: "hrms.payroll.doctype.gratuity.gratuity.calculate_work_experience_and_amount",
 				args: {
 					employee: frm.doc.employee,
 					gratuity_rule: frm.doc.gratuity_rule

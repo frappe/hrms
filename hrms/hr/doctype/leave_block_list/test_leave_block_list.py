@@ -6,7 +6,7 @@ import unittest
 import frappe
 from frappe.utils import getdate
 
-from erpnext.hr.doctype.leave_block_list.leave_block_list import get_applicable_block_dates
+from hrms.hr.doctype.leave_block_list.leave_block_list import get_applicable_block_dates
 
 
 class TestLeaveBlockList(unittest.TestCase):

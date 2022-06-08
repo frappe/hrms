@@ -7,17 +7,17 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import add_days, cstr, date_diff, flt, getdate, rounded
 
-from erpnext.hr.utils import (
+from hrms.hr.utils import (
 	get_holiday_dates_for_employee,
 	get_previous_claimed_amount,
 	get_sal_slip_total_benefit_given,
 	validate_active_employee,
 )
-from erpnext.payroll.doctype.payroll_period.payroll_period import (
+from hrms.payroll.doctype.payroll_period.payroll_period import (
 	get_payroll_period_days,
 	get_period_factor,
 )
-from erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
+from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
 	get_assigned_salary_structure,
 )
 

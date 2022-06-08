@@ -5,13 +5,13 @@ from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, add_months, getdate, nowdate
 
 import erpnext
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.leave_allocation.leave_allocation import (
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.leave_allocation.leave_allocation import (
 	BackDatedAllocationError,
 	OverAllocationError,
 )
-from erpnext.hr.doctype.leave_ledger_entry.leave_ledger_entry import process_expired_allocation
-from erpnext.hr.doctype.leave_type.test_leave_type import create_leave_type
+from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import process_expired_allocation
+from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 
 
 class TestLeaveAllocation(FrappeTestCase):
@@ -374,7 +374,7 @@ class TestLeaveAllocation(FrappeTestCase):
 		self.assertTrue(leave_allocation.total_leaves_allocated, 10)
 
 	def test_validation_against_leave_application_after_submit(self):
-		from erpnext.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
+		from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 
 		make_holiday_list()
 		frappe.db.set_value(

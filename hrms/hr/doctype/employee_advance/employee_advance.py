@@ -10,7 +10,7 @@ from frappe.utils import flt, nowdate
 
 import erpnext
 from erpnext.accounts.doctype.journal_entry.journal_entry import get_default_bank_cash_account
-from erpnext.hr.utils import validate_active_employee
+from hrms.hr.utils import validate_active_employee
 
 
 class EmployeeAdvanceOverPayment(frappe.ValidationError):

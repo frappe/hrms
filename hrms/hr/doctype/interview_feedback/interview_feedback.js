@@ -16,7 +16,7 @@ frappe.ui.form.on('Interview Feedback', {
 
 	interview_round: function(frm) {
 		frappe.call({
-			method: 'erpnext.hr.doctype.interview.interview.get_expected_skill_set',
+			method: 'hrms.hr.doctype.interview.interview.get_expected_skill_set',
 			args: {
 				interview_round: frm.doc.interview_round
 			},
@@ -28,7 +28,7 @@ frappe.ui.form.on('Interview Feedback', {
 
 	interview: function(frm) {
 		frappe.call({
-			method: 'erpnext.hr.doctype.interview_feedback.interview_feedback.get_applicable_interviewers',
+			method: 'hrms.hr.doctype.interview_feedback.interview_feedback.get_applicable_interviewers',
 			args: {
 				interview: frm.doc.interview || ''
 			},

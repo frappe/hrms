@@ -7,8 +7,8 @@ import frappe
 from frappe.utils import getdate
 
 import erpnext
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.upload_attendance.upload_attendance import get_data
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.upload_attendance.upload_attendance import get_data
 
 test_dependencies = ["Holiday List"]
 

@@ -83,7 +83,7 @@ frappe.ui.form.on("Full and Final Outstanding Statement", {
 		var child = locals[cdt][cdn];
 		if (child.reference_document_type && child.reference_document) {
 			frappe.call({
-				method: "erpnext.hr.doctype.full_and_final_statement.full_and_final_statement.get_account_and_amount",
+				method: "hrms.hr.doctype.full_and_final_statement.full_and_final_statement.get_account_and_amount",
 				args: {
 					ref_doctype: child.reference_document_type,
 					ref_document: child.reference_document

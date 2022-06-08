@@ -24,7 +24,7 @@ from frappe.utils.background_jobs import enqueue
 
 import erpnext
 from erpnext.accounts.utils import get_fiscal_year
-from erpnext.hr.utils import get_holiday_dates_for_employee, validate_active_employee
+from hrms.hr.utils import get_holiday_dates_for_employee, validate_active_employee
 from erpnext.loan_management.doctype.loan_repayment.loan_repayment import (
 	calculate_amounts,
 	create_repayment_entry,
@@ -32,16 +32,16 @@ from erpnext.loan_management.doctype.loan_repayment.loan_repayment import (
 from erpnext.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
 	process_loan_interest_accrual_for_term_loans,
 )
-from erpnext.payroll.doctype.additional_salary.additional_salary import get_additional_salaries
-from erpnext.payroll.doctype.employee_benefit_application.employee_benefit_application import (
+from hrms.payroll.doctype.additional_salary.additional_salary import get_additional_salaries
+from hrms.payroll.doctype.employee_benefit_application.employee_benefit_application import (
 	get_benefit_component_amount,
 )
-from erpnext.payroll.doctype.employee_benefit_claim.employee_benefit_claim import (
+from hrms.payroll.doctype.employee_benefit_claim.employee_benefit_claim import (
 	get_benefit_claim_amount,
 	get_last_payroll_period_benefits,
 )
-from erpnext.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
-from erpnext.payroll.doctype.payroll_period.payroll_period import (
+from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
+from hrms.payroll.doctype.payroll_period.payroll_period import (
 	get_payroll_period,
 	get_period_factor,
 )
@@ -291,7 +291,7 @@ class SalarySlip(TransactionBase):
 			)
 
 	def pull_sal_struct(self):
-		from erpnext.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+		from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 
 		if self.salary_slip_based_on_timesheet:
 			self.salary_structure = self._salary_structure_doc.name
@@ -413,7 +413,7 @@ class SalarySlip(TransactionBase):
 		Exclude days before DOJ or after
 		Relieving Date from unmarked days
 		"""
-		from erpnext.hr.doctype.employee.employee import is_holiday
+		from hrms.hr.doctype.employee.employee import is_holiday
 
 		if include_holidays_in_total_working_days:
 			unmarked_days -= date_diff(end_date, start_date) + 1
@@ -1599,7 +1599,7 @@ class SalarySlip(TransactionBase):
 		self.set("leave_details", [])
 
 		if frappe.db.get_single_value("Payroll Settings", "show_leave_balances_in_salary_slip"):
-			from erpnext.hr.doctype.leave_application.leave_application import get_leave_details
+			from hrms.hr.doctype.leave_application.leave_application import get_leave_details
 
 			leave_details = get_leave_details(self.employee, self.end_date)
 

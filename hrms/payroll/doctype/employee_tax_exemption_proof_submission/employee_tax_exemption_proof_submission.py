@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 from frappe.utils import flt
 
-from erpnext.hr.utils import (
+from hrms.hr.utils import (
 	calculate_hra_exemption_for_period,
 	get_total_exemption_amount,
 	validate_active_employee,

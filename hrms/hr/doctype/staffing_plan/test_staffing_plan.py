@@ -6,7 +6,7 @@ import unittest
 import frappe
 from frappe.utils import add_days, nowdate
 
-from erpnext.hr.doctype.staffing_plan.staffing_plan import (
+from hrms.hr.doctype.staffing_plan.staffing_plan import (
 	ParentCompanyError,
 	SubsidiaryCompanyError,
 )

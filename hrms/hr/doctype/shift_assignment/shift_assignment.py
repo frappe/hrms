@@ -11,9 +11,9 @@ from frappe.model.document import Document
 from frappe.query_builder import Criterion
 from frappe.utils import cstr, get_datetime, get_link_to_form, get_time, getdate, now_datetime
 
-from erpnext.hr.doctype.employee.employee import get_holiday_list_for_employee
-from erpnext.hr.doctype.holiday_list.holiday_list import is_holiday
-from erpnext.hr.utils import validate_active_employee
+from hrms.hr.doctype.employee.employee import get_holiday_list_for_employee
+from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
+from hrms.hr.utils import validate_active_employee
 
 
 class OverlappingShiftError(frappe.ValidationError):

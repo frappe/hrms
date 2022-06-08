@@ -8,8 +8,8 @@ from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_months, getdate
 
 import erpnext
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.utils import DuplicateDeclarationError
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.utils import DuplicateDeclarationError
 
 
 class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
@@ -311,8 +311,8 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 		frappe.flags.country = current_country
 
 	def test_india_hra_exemption_with_multiple_salary_structure_assignments(self):
-		from erpnext.payroll.doctype.salary_slip.test_salary_slip import create_tax_slab
-		from erpnext.payroll.doctype.salary_structure.test_salary_structure import (
+		from hrms.payroll.doctype.salary_slip.test_salary_slip import create_tax_slab
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 			create_salary_structure_assignment,
 			make_salary_structure,
 		)
@@ -461,8 +461,8 @@ def create_exemption_category():
 
 
 def setup_hra_exemption_prerequisites(frequency, employee=None):
-	from erpnext.payroll.doctype.salary_slip.test_salary_slip import create_tax_slab
-	from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+	from hrms.payroll.doctype.salary_slip.test_salary_slip import create_tax_slab
+	from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 	payroll_period = create_payroll_period(name="_Test Payroll Period", company="_Test Company")
 	if not employee:

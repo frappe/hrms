@@ -7,7 +7,7 @@ frappe.ui.form.on('Interview', {
 
 		frm.set_query('interviewer', 'interview_details', function () {
 			return {
-				query: 'erpnext.hr.doctype.interview.interview.get_interviewer_list'
+				query: 'hrms.hr.doctype.interview.interview.get_interviewer_list'
 			};
 		});
 	},
@@ -31,7 +31,7 @@ frappe.ui.form.on('Interview', {
 					if (Object.keys(r).length === 0) {
 						frm.add_custom_button(__('Submit Feedback'), function () {
 							frappe.call({
-								method: 'erpnext.hr.doctype.interview.interview.get_expected_skill_set',
+								method: 'hrms.hr.doctype.interview.interview.get_expected_skill_set',
 								args: {
 									interview_round: frm.doc.interview_round
 								},
@@ -121,7 +121,7 @@ frappe.ui.form.on('Interview', {
 			minimizable: true,
 			primary_action: function(values) {
 				frappe.call({
-					method: 'erpnext.hr.doctype.interview.interview.create_interview_feedback',
+					method: 'hrms.hr.doctype.interview.interview.create_interview_feedback',
 					args: {
 						data: values,
 						interview_name: frm.doc.name,
@@ -184,7 +184,7 @@ frappe.ui.form.on('Interview', {
 
 	set_interview_details: function (frm) {
 		frappe.call({
-			method: 'erpnext.hr.doctype.interview.interview.get_interviewers',
+			method: 'hrms.hr.doctype.interview.interview.get_interviewers',
 			args: {
 				interview_round: frm.doc.interview_round
 			},

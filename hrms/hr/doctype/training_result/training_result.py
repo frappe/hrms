@@ -6,7 +6,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 
-from erpnext.hr.doctype.employee.employee import get_employee_emails
+from hrms.hr.doctype.employee.employee import get_employee_emails
 
 
 class TrainingResult(Document):

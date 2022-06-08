@@ -8,10 +8,10 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, get_time, get_year_ending, get_year_start, getdate, now_datetime
 
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
-from erpnext.hr.doctype.leave_application.test_leave_application import get_first_sunday
-from erpnext.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
+from hrms.hr.doctype.leave_application.test_leave_application import get_first_sunday
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 
 
 class TestShiftType(FrappeTestCase):
@@ -26,7 +26,7 @@ class TestShiftType(FrappeTestCase):
 		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
 
 	def test_mark_attendance(self):
-		from erpnext.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 
@@ -50,7 +50,7 @@ class TestShiftType(FrappeTestCase):
 		self.assertEqual(attendance.status, "Present")
 
 	def test_entry_and_exit_grace(self):
-		from erpnext.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 
@@ -86,7 +86,7 @@ class TestShiftType(FrappeTestCase):
 		self.assertEqual(attendance.early_exit, 1)
 
 	def test_working_hours_threshold_for_half_day(self):
-		from erpnext.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 		shift_type = setup_shift_type(shift_type="Half Day Test", working_hours_threshold_for_half_day=2)
@@ -110,7 +110,7 @@ class TestShiftType(FrappeTestCase):
 		self.assertEqual(attendance.working_hours, 1.5)
 
 	def test_working_hours_threshold_for_absent(self):
-		from erpnext.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 		shift_type = setup_shift_type(shift_type="Absent Test", working_hours_threshold_for_absent=2)
@@ -135,7 +135,7 @@ class TestShiftType(FrappeTestCase):
 
 	def test_working_hours_threshold_for_absent_and_half_day_1(self):
 		# considers half day over absent
-		from erpnext.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 		shift_type = setup_shift_type(
@@ -164,7 +164,7 @@ class TestShiftType(FrappeTestCase):
 
 	def test_working_hours_threshold_for_absent_and_half_day_2(self):
 		# considers absent over half day
-		from erpnext.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 		shift_type = setup_shift_type(
@@ -264,8 +264,8 @@ class TestShiftType(FrappeTestCase):
 
 	def test_skip_auto_attendance_for_duplicate_record(self):
 		# Skip auto attendance in case of duplicate attendance record
-		from erpnext.hr.doctype.attendance.attendance import mark_attendance
-		from erpnext.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+		from hrms.hr.doctype.attendance.attendance import mark_attendance
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 
@@ -296,8 +296,8 @@ class TestShiftType(FrappeTestCase):
 		# Skip auto attendance in case of overlapping shift attendance record
 		# this case won't occur in case of shift assignment, since it will not allow overlapping shifts to be assigned
 		# can happen if manual attendance records are created
-		from erpnext.hr.doctype.attendance.attendance import mark_attendance
-		from erpnext.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+		from hrms.hr.doctype.attendance.attendance import mark_attendance
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 		shift_1 = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="10:00:00")

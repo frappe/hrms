@@ -7,15 +7,15 @@ import unittest
 import frappe
 from frappe.utils import add_days, flt, get_year_ending, get_year_start, getdate
 
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
-from erpnext.hr.doctype.leave_application.test_leave_application import (
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
+from hrms.hr.doctype.leave_application.test_leave_application import (
 	get_first_sunday,
 	make_allocation_record,
 )
-from erpnext.hr.doctype.leave_ledger_entry.leave_ledger_entry import process_expired_allocation
-from erpnext.hr.report.employee_leave_balance_summary.employee_leave_balance_summary import execute
-from erpnext.payroll.doctype.salary_slip.test_salary_slip import (
+from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import process_expired_allocation
+from hrms.hr.report.employee_leave_balance_summary.employee_leave_balance_summary import execute
+from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
 )

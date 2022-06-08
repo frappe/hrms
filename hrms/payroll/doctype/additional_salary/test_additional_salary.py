@@ -8,13 +8,13 @@ from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, add_months, nowdate
 
 import erpnext
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.payroll.doctype.salary_component.test_salary_component import create_salary_component
-from erpnext.payroll.doctype.salary_slip.test_salary_slip import (
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
+from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_employee_salary_slip,
 	setup_test,
 )
-from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 
 class TestAdditionalSalary(FrappeTestCase):

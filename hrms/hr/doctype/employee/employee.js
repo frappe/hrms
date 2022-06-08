@@ -1,8 +1,8 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
 
-frappe.provide("erpnext.hr");
-erpnext.hr.EmployeeController = class EmployeeController extends frappe.ui.form.Controller {
+frappe.provide("hrms.hr");
+hrms.hr.EmployeeController = class EmployeeController extends frappe.ui.form.Controller {
 	setup() {
 		this.frm.fields_dict.user_id.get_query = function(doc, cdt, cdn) {
 			return {
@@ -103,7 +103,7 @@ frappe.ui.form.on('Employee', {
 			frappe.throw(__("Please enter Preferred Contact Email"));
 		}
 		frappe.call({
-			method: "erpnext.hr.doctype.employee.employee.create_user",
+			method: "hrms.hr.doctype.employee.employee.create_user",
 			args: {
 				employee: frm.doc.name,
 				email: frm.doc.prefered_email
@@ -115,7 +115,7 @@ frappe.ui.form.on('Employee', {
 	}
 });
 
-cur_frm.cscript = new erpnext.hr.EmployeeController({
+cur_frm.cscript = new hrms.hr.EmployeeController({
 	frm: cur_frm
 });
 

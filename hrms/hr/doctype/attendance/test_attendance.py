@@ -13,22 +13,22 @@ from frappe.utils import (
 	nowdate,
 )
 
-from erpnext.hr.doctype.attendance.attendance import (
+from hrms.hr.doctype.attendance.attendance import (
 	DuplicateAttendanceError,
 	OverlappingShiftAttendanceError,
 	get_month_map,
 	get_unmarked_days,
 	mark_attendance,
 )
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.leave_application.test_leave_application import get_first_sunday
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.leave_application.test_leave_application import get_first_sunday
 
 test_records = frappe.get_test_records("Attendance")
 
 
 class TestAttendance(FrappeTestCase):
 	def setUp(self):
-		from erpnext.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
+		from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 
 		from_date = get_year_start(getdate())
 		to_date = get_year_ending(getdate())
@@ -53,7 +53,7 @@ class TestAttendance(FrappeTestCase):
 		self.assertRaises(DuplicateAttendanceError, attendance.insert)
 
 	def test_duplicate_attendance_with_shift(self):
-		from erpnext.hr.doctype.shift_type.test_shift_type import setup_shift_type
+		from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 
 		employee = make_employee("test_duplicate_attendance@example.com", company="_Test Company")
 		date = nowdate()
@@ -89,7 +89,7 @@ class TestAttendance(FrappeTestCase):
 		self.assertRaises(DuplicateAttendanceError, attendance.insert)
 
 	def test_overlapping_shift_attendance_validation(self):
-		from erpnext.hr.doctype.shift_type.test_shift_type import setup_shift_type
+		from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 
 		employee = make_employee("test_overlap_attendance@example.com", company="_Test Company")
 		date = nowdate()
@@ -115,7 +115,7 @@ class TestAttendance(FrappeTestCase):
 
 	def test_allow_attendance_with_different_shifts(self):
 		# allows attendance with 2 different non-overlapping shifts
-		from erpnext.hr.doctype.shift_type.test_shift_type import setup_shift_type
+		from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 
 		employee = make_employee("test_duplicate_attendance@example.com", company="_Test Company")
 		date = nowdate()

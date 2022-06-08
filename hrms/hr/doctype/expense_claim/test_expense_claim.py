@@ -7,8 +7,8 @@ import frappe
 from frappe.utils import flt, nowdate, random_string
 
 from erpnext.accounts.doctype.account.test_account import create_account
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.expense_claim.expense_claim import make_bank_entry
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.expense_claim.expense_claim import make_bank_entry
 
 test_dependencies = ["Employee"]
 company_name = "_Test Company 3"
@@ -84,7 +84,7 @@ class TestExpenseClaim(unittest.TestCase):
 		self.assertEqual(len(gl_entry), 0)
 
 	def test_expense_claim_against_fully_paid_advances(self):
-		from erpnext.hr.doctype.employee_advance.test_employee_advance import (
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
 			get_advances_for_claim,
 			make_employee_advance,
 			make_payment_entry,
@@ -110,11 +110,11 @@ class TestExpenseClaim(unittest.TestCase):
 		self.assertEqual(claim.status, "Paid")
 
 	def test_expense_claim_partially_paid_via_advance(self):
-		from erpnext.hr.doctype.employee_advance.test_employee_advance import (
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
 			get_advances_for_claim,
 			make_employee_advance,
 		)
-		from erpnext.hr.doctype.employee_advance.test_employee_advance import (
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
 			make_payment_entry as make_advance_payment,
 		)
 

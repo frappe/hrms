@@ -183,7 +183,7 @@ frappe.ui.form.on('Salary Structure', {
 
 	preview_salary_slip: function(frm) {
 		frappe.call({
-			method: "erpnext.payroll.doctype.salary_structure.salary_structure.get_employees",
+			method: "hrms.payroll.doctype.salary_structure.salary_structure.get_employees",
 			args: {
 				salary_structure: frm.doc.name
 			},
@@ -224,7 +224,7 @@ frappe.ui.form.on('Salary Structure', {
 	open_salary_slip: function(frm, employee){
 		var print_format = frm.doc.salary_slip_based_on_timesheet ? "Salary Slip based on Timesheet" : "Salary Slip Standard";
 		frappe.call({
-			method: "erpnext.payroll.doctype.salary_structure.salary_structure.make_salary_slip",
+			method: "hrms.payroll.doctype.salary_structure.salary_structure.make_salary_slip",
 			args: {
 				source_name: frm.doc.name,
 				employee: employee,

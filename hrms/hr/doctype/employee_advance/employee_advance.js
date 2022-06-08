@@ -83,7 +83,7 @@ frappe.ui.form.on('Employee Advance', {
 
 	make_deduction_via_additional_salary: function(frm) {
 		frappe.call({
-			method: "erpnext.hr.doctype.employee_advance.employee_advance.create_return_through_additional_salary",
+			method: "hrms.hr.doctype.employee_advance.employee_advance.create_return_through_additional_salary",
 			args: {
 				doc: frm.doc
 			},
@@ -97,7 +97,7 @@ frappe.ui.form.on('Employee Advance', {
 	make_payment_entry: function(frm) {
 		var method = "erpnext.accounts.doctype.payment_entry.payment_entry.get_payment_entry";
 		if (frm.doc.__onload && frm.doc.__onload.make_payment_via_journal_entry) {
-			method = "erpnext.hr.doctype.employee_advance.employee_advance.make_bank_entry";
+			method = "hrms.hr.doctype.employee_advance.employee_advance.make_bank_entry";
 		}
 		return frappe.call({
 			method: method,
@@ -114,7 +114,7 @@ frappe.ui.form.on('Employee Advance', {
 
 	make_expense_claim: function(frm) {
 		return frappe.call({
-			method: "erpnext.hr.doctype.expense_claim.expense_claim.get_expense_claim",
+			method: "hrms.hr.doctype.expense_claim.expense_claim.get_expense_claim",
 			args: {
 				"employee_name": frm.doc.employee,
 				"company": frm.doc.company,
@@ -132,7 +132,7 @@ frappe.ui.form.on('Employee Advance', {
 
 	make_return_entry: function(frm) {
 		frappe.call({
-			method: 'erpnext.hr.doctype.employee_advance.employee_advance.make_return_entry',
+			method: 'hrms.hr.doctype.employee_advance.employee_advance.make_return_entry',
 			args: {
 				'employee': frm.doc.employee,
 				'company': frm.doc.company,
@@ -161,7 +161,7 @@ frappe.ui.form.on('Employee Advance', {
 
 	get_pending_amount: function(frm) {
 		frappe.call({
-			method: "erpnext.hr.doctype.employee_advance.employee_advance.get_pending_amount",
+			method: "hrms.hr.doctype.employee_advance.employee_advance.get_pending_amount",
 			args: {
 				"employee": frm.doc.employee,
 				"posting_date": frm.doc.posting_date
@@ -174,7 +174,7 @@ frappe.ui.form.on('Employee Advance', {
 
 	get_employee_currency: function(frm) {
 		frappe.call({
-			method: "erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
+			method: "hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
 			args: {
 				employee: frm.doc.employee,
 			},

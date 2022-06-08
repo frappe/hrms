@@ -38,7 +38,7 @@ frappe.ui.form.on('Employee Onboarding', {
 		if ((!frm.doc.employee) && (frm.doc.docstatus === 1)) {
 			frm.add_custom_button(__('Employee'), function () {
 				frappe.model.open_mapped_doc({
-					method: "erpnext.hr.doctype.employee_onboarding.employee_onboarding.make_employee",
+					method: "hrms.hr.doctype.employee_onboarding.employee_onboarding.make_employee",
 					frm: frm
 				});
 			}, __('Create'));

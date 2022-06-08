@@ -7,17 +7,17 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, add_months, floor, flt, get_datetime, get_first_day, getdate
 
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.expense_claim.test_expense_claim import get_payable_account
-from erpnext.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
-from erpnext.payroll.doctype.gratuity.gratuity import get_last_salary_slip
-from erpnext.payroll.doctype.salary_slip.test_salary_slip import (
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.expense_claim.test_expense_claim import get_payable_account
+from hrms.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
+from hrms.payroll.doctype.gratuity.gratuity import get_last_salary_slip
+from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_deduction_salary_component,
 	make_earning_salary_component,
 	make_employee_salary_slip,
 	make_holiday_list,
 )
-from erpnext.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 from erpnext.regional.united_arab_emirates.setup import create_gratuity_rule
 
 test_dependencies = ["Salary Component", "Salary Slip", "Account"]

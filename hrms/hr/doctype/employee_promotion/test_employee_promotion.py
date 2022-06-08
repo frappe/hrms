@@ -7,7 +7,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, getdate
 
-from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_employee
+from hrms.payroll.doctype.salary_structure.test_salary_structure import make_employee
 
 
 class TestEmployeePromotion(FrappeTestCase):

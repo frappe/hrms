@@ -6,8 +6,8 @@ from frappe import _, scrub
 from frappe.query_builder.functions import Sum
 from frappe.utils import add_days, flt, getdate, rounded
 
-from erpnext.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
-from erpnext.payroll.doctype.salary_slip.salary_slip import calculate_tax_by_tax_slab
+from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
+from hrms.payroll.doctype.salary_slip.salary_slip import calculate_tax_by_tax_slab
 
 
 def execute(filters=None):

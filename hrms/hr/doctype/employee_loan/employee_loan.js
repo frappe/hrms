@@ -63,7 +63,7 @@ frappe.ui.form.on('Employee Loan', {
 				"loan_amount": frm.doc.loan_amount,
 				"payment_account": frm.doc.payment_account
 			},
-			method: "erpnext.hr.doctype.employee_loan.employee_loan.make_jv_entry",
+			method: "hrms.hr.doctype.employee_loan.employee_loan.make_jv_entry",
 			callback: function (r) {
 				if (r.message)
 					var doc = frappe.model.sync(r.message)[0];
@@ -92,7 +92,7 @@ frappe.ui.form.on('Employee Loan', {
 	employee_loan_application: function (frm) {
 	    if(frm.doc.employee_loan_application){
             return frappe.call({
-                method: "erpnext.hr.doctype.employee_loan.employee_loan.get_employee_loan_application",
+                method: "hrms.hr.doctype.employee_loan.employee_loan.get_employee_loan_application",
                 args: {
                     "employee_loan_application": frm.doc.employee_loan_application
                 },

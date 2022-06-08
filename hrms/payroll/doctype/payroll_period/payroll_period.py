@@ -7,7 +7,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import add_months, cint, date_diff, flt, formatdate, getdate, month_diff
 
-from erpnext.hr.utils import get_holiday_dates_for_employee
+from hrms.hr.utils import get_holiday_dates_for_employee
 
 
 class PayrollPeriod(Document):

@@ -10,5 +10,5 @@ frappe.views.calendar['Interview'] = {
 	},
 	order_by: 'scheduled_on',
 	gantt: true,
-	get_events_method: 'erpnext.hr.doctype.interview.interview.get_events'
+	get_events_method: 'hrms.hr.doctype.interview.interview.get_events'
 };

@@ -7,20 +7,20 @@ import frappe
 from frappe.utils import flt, nowdate
 
 import erpnext
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.employee_advance.employee_advance import (
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee_advance.employee_advance import (
 	EmployeeAdvanceOverPayment,
 	create_return_through_additional_salary,
 	make_bank_entry,
 	make_return_entry,
 )
-from erpnext.hr.doctype.expense_claim.expense_claim import get_advances
-from erpnext.hr.doctype.expense_claim.test_expense_claim import (
+from hrms.hr.doctype.expense_claim.expense_claim import get_advances
+from hrms.hr.doctype.expense_claim.test_expense_claim import (
 	get_payable_account,
 	make_expense_claim,
 )
-from erpnext.payroll.doctype.salary_component.test_salary_component import create_salary_component
-from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
+from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 
 class TestEmployeeAdvance(unittest.TestCase):

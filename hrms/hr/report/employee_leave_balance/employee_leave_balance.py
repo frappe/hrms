@@ -9,8 +9,8 @@ import frappe
 from frappe import _
 from frappe.utils import add_days, getdate
 
-from erpnext.hr.doctype.leave_allocation.leave_allocation import get_previous_allocation
-from erpnext.hr.doctype.leave_application.leave_application import (
+from hrms.hr.doctype.leave_allocation.leave_allocation import get_previous_allocation
+from hrms.hr.doctype.leave_application.leave_application import (
 	get_leave_balance_on,
 	get_leaves_for_period,
 )

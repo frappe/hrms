@@ -8,8 +8,8 @@ from frappe.model.document import Document
 from frappe.query_builder import Criterion
 from frappe.utils import cint, cstr, formatdate, get_datetime, get_link_to_form, getdate, nowdate
 
-from erpnext.hr.doctype.shift_assignment.shift_assignment import has_overlapping_timings
-from erpnext.hr.utils import get_holiday_dates_for_employee, validate_active_employee
+from hrms.hr.doctype.shift_assignment.shift_assignment import has_overlapping_timings
+from hrms.hr.utils import get_holiday_dates_for_employee, validate_active_employee
 
 
 class DuplicateAttendanceError(frappe.ValidationError):

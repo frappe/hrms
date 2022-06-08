@@ -43,7 +43,7 @@ frappe.ui.form.on('Employee Tax Exemption Proof Submission', {
 
 			frm.add_custom_button(__('Get Details From Declaration'), function() {
 				erpnext.utils.map_current_doc({
-					method: "erpnext.payroll.doctype.employee_tax_exemption_declaration.employee_tax_exemption_declaration.make_proof_submission",
+					method: "hrms.payroll.doctype.employee_tax_exemption_declaration.employee_tax_exemption_declaration.make_proof_submission",
 					source_doctype: "Employee Tax Exemption Declaration",
 					target: frm,
 					date_field: "creation",
@@ -68,7 +68,7 @@ frappe.ui.form.on('Employee Tax Exemption Proof Submission', {
 
 	get_employee_currency: function(frm) {
 		frappe.call({
-			method: "erpnext.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
+			method: "hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
 			args: {
 				employee: frm.doc.employee,
 			},

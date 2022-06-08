@@ -23,16 +23,16 @@ from frappe.utils.make_random import get_random
 
 import erpnext
 from erpnext.accounts.utils import get_fiscal_year
-from erpnext.hr.doctype.attendance.attendance import mark_attendance
-from erpnext.hr.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
-from erpnext.hr.doctype.leave_type.test_leave_type import create_leave_type
-from erpnext.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
+from hrms.hr.doctype.attendance.attendance import mark_attendance
+from hrms.hr.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
+from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
+from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
 	create_exemption_category,
 	create_payroll_period,
 )
-from erpnext.payroll.doctype.payroll_entry.payroll_entry import get_month_details
-from erpnext.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+from hrms.payroll.doctype.payroll_entry.payroll_entry import get_month_details
+from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 
 
 class TestSalarySlip(unittest.TestCase):
@@ -194,7 +194,7 @@ class TestSalarySlip(unittest.TestCase):
 	)
 	def test_payment_days_for_mid_joinee_including_holidays_and_unmarked_days(self):
 		# tests mid month joining and relieving along with unmarked days
-		from erpnext.hr.doctype.holiday_list.holiday_list import is_holiday
+		from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
 
 		no_of_days = get_no_of_days()
 		month_start_date, month_end_date = get_first_day(nowdate()), get_last_day(nowdate())
@@ -234,7 +234,7 @@ class TestSalarySlip(unittest.TestCase):
 		},
 	)
 	def test_payment_days_for_mid_joinee_excluding_holidays(self):
-		from erpnext.hr.doctype.holiday_list.holiday_list import is_holiday
+		from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
 
 		no_of_days = get_no_of_days()
 		month_start_date, month_end_date = get_first_day(nowdate()), get_last_day(nowdate())
@@ -322,7 +322,7 @@ class TestSalarySlip(unittest.TestCase):
 
 	@change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
 	def test_payment_days_in_salary_slip_based_on_timesheet(self):
-		from erpnext.hr.doctype.attendance.attendance import mark_attendance
+		from hrms.hr.doctype.attendance.attendance import mark_attendance
 		from erpnext.projects.doctype.timesheet.test_timesheet import (
 			make_salary_structure_for_timesheet,
 			make_timesheet,
@@ -382,8 +382,8 @@ class TestSalarySlip(unittest.TestCase):
 
 	@change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
 	def test_component_amount_dependent_on_another_payment_days_based_component(self):
-		from erpnext.hr.doctype.attendance.attendance import mark_attendance
-		from erpnext.payroll.doctype.salary_structure.test_salary_structure import (
+		from hrms.hr.doctype.attendance.attendance import mark_attendance
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 			create_salary_structure_assignment,
 		)
 
@@ -506,7 +506,7 @@ class TestSalarySlip(unittest.TestCase):
 
 	@change_settings("Payroll Settings", {"include_holidays_in_total_working_days": 1})
 	def test_payment_days(self):
-		from erpnext.payroll.doctype.salary_structure.test_salary_structure import (
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 			create_salary_structure_assignment,
 		)
 
@@ -609,7 +609,7 @@ class TestSalarySlip(unittest.TestCase):
 		from erpnext.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
 			process_loan_interest_accrual_for_term_loans,
 		)
-		from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 		applicant = make_employee("test_loan_repayment_salary_slip@salary.com", company="_Test Company")
 
@@ -695,7 +695,7 @@ class TestSalarySlip(unittest.TestCase):
 				self.assertEqual(ss.end_date, nowdate())
 
 	def test_multi_currency_salary_slip(self):
-		from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 		applicant = make_employee("test_multi_currency_salary_slip@salary.com", company="_Test Company")
 		frappe.db.sql(
@@ -716,7 +716,7 @@ class TestSalarySlip(unittest.TestCase):
 		self.assertEqual(salary_slip.base_gross_pay, 78000 * 70)
 
 	def test_year_to_date_computation(self):
-		from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 		applicant = make_employee("test_ytd@salary.com", company="_Test Company")
 
@@ -759,7 +759,7 @@ class TestSalarySlip(unittest.TestCase):
 			self.assertEqual(slip.year_to_date, year_to_date)
 
 	def test_component_wise_year_to_date_computation(self):
-		from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 		employee_name = "test_component_wise_ytd@salary.com"
 		applicant = make_employee(employee_name, company="_Test Company")
@@ -831,7 +831,7 @@ class TestSalarySlip(unittest.TestCase):
 		for doc in delete_docs:
 			frappe.db.sql("delete from `tab%s` where employee='%s'" % (doc, employee))
 
-		from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 		salary_structure = make_salary_structure(
 			"Stucture to test tax",
@@ -935,7 +935,7 @@ class TestSalarySlip(unittest.TestCase):
 		for doc in delete_docs:
 			frappe.db.sql("delete from `tab%s` where employee='%s'" % (doc, employee))
 
-		from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 		salary_structure = make_salary_structure(
 			"Stucture to test tax",
@@ -999,7 +999,7 @@ def get_no_of_days():
 
 
 def make_employee_salary_slip(user, payroll_frequency, salary_structure=None, posting_date=None):
-	from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+	from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 	if not salary_structure:
 		salary_structure = payroll_frequency + " Salary Structure Test for Salary Slip"

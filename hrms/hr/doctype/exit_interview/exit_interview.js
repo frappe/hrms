@@ -24,7 +24,7 @@ frappe.ui.form.on('Exit Interview', {
 
 	send_exit_questionnaire: function(frm) {
 		frappe.call({
-			method: 'erpnext.hr.doctype.exit_interview.exit_interview.send_exit_questionnaire',
+			method: 'hrms.hr.doctype.exit_interview.exit_interview.send_exit_questionnaire',
 			args: {
 				'interviews': [frm.doc]
 			},

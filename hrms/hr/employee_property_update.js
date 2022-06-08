@@ -95,7 +95,7 @@ var show_dialog = function(frm, table, field_labels) {
 		d.data.fieldname = property;
 		if(!property){return;}
 		frappe.call({
-			method: 'erpnext.hr.utils.get_employee_field_property',
+			method: 'hrms.hr.utils.get_employee_field_property',
 			args: {employee: frm.doc.employee, fieldname: property},
 			callback: function(r) {
 				if (r.message) {
