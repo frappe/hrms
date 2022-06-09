@@ -90,6 +90,8 @@ app_license = "GNU General Public License"
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
 
+has_upload_permission = {"Employee": "hrms.hr.doctype.employee.employee.has_upload_permission"}
+
 # DocType Class
 # ---------------
 # Override standard doctype classes
@@ -102,34 +104,43 @@ app_license = "GNU General Public License"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-#	}
-# }
+doc_events = {
+	"User": {
+		"validate": "hrms.hr.doctype.employee.employee.validate_employee_role",
+		"on_update": "hrms.hr.doctype.employee.employee.update_user_permissions",
+	}
+}
 
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"hrms.tasks.all"
-# 	],
-# 	"daily": [
-# 		"hrms.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"hrms.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"hrms.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"hrms.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	"all": [
+		"hrms.hr.doctype.interview.interview.send_interview_reminder",
+	],
+	"hourly": [
+		"hrms.hr.doctype.daily_work_summary_group.daily_work_summary_group.trigger_emails",
+		"hrms.hr.doctype.shift_type.shift_type.process_auto_attendance_for_all_shifts",
+	],
+	"daily": [
+		"hrms.hr.doctype.employee.employee_reminders.send_work_anniversary_reminders",
+		"hrms.hr.doctype.employee.employee_reminders.send_birthday_reminders",
+		"hrms.hr.doctype.daily_work_summary_group.daily_work_summary_group.send_summary",
+		"hrms.hr.doctype.interview.interview.send_daily_feedback_reminder",
+	],
+	"daily_long": [
+		"hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry.process_expired_allocation",
+		"hrms.hr.utils.generate_leave_encashment",
+		"hrms.hr.utils.allocate_earned_leaves",
+	],
+	"weekly": ["hrms.hr.doctype.employee.employee_reminders.send_reminders_in_advance_weekly"],
+	"monthly": ["hrms.hr.doctype.employee.employee_reminders.send_reminders_in_advance_monthly"],
+}
+
+accounting_dimension_doctypes = [
+	"Payroll Entry",
+]
+
 
 # Testing
 # -------
@@ -138,7 +149,14 @@ app_license = "GNU General Public License"
 
 # Overriding Methods
 # ------------------------------
-#
+
+regional_overrides = {
+	"India": {
+		"hrms.hr.utils.calculate_annual_eligible_hra_exemption": "erpnext.regional.india.utils.calculate_annual_eligible_hra_exemption",
+		"hrms.hr.utils.calculate_hra_exemption_for_period": "erpnext.regional.india.utils.calculate_hra_exemption_for_period",
+	},
+}
+
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "hrms.event.get_events"
 # }
