@@ -7,8 +7,8 @@ import unittest
 import frappe
 from frappe.utils import add_days, flt, get_year_ending, get_year_start, getdate
 
-from hrms.hr.doctype.employee.test_employee import make_employee
-from hrms.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
+from erpnext.setup.doctype.employee.test_employee import make_employee
+from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 from hrms.hr.doctype.leave_application.test_leave_application import (
 	get_first_sunday,
 	make_allocation_record,

@@ -10,7 +10,7 @@ from frappe.utils import add_months
 
 import erpnext
 from erpnext.accounts.utils import get_fiscal_year, getdate, nowdate
-from hrms.hr.doctype.employee.test_employee import make_employee
+from erpnext.setup.doctype.employee.test_employee import make_employee
 from erpnext.loan_management.doctype.loan.test_loan import (
 	create_loan,
 	create_loan_accounts,

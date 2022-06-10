@@ -16,8 +16,8 @@ from frappe.utils import (
 	nowdate,
 )
 
-from hrms.hr.doctype.employee.test_employee import make_employee
-from hrms.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
+from erpnext.setup.doctype.employee.test_employee import make_employee
+from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
 from hrms.hr.doctype.leave_application.leave_application import (
 	InsufficientLeaveBalanceError,

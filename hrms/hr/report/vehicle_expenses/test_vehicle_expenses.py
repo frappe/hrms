@@ -8,7 +8,7 @@ import frappe
 from frappe.utils import getdate
 
 from erpnext.accounts.utils import get_fiscal_year
-from hrms.hr.doctype.employee.test_employee import make_employee
+from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.vehicle_log.test_vehicle_log import get_vehicle, make_vehicle_log
 from hrms.hr.doctype.vehicle_log.vehicle_log import make_expense_claim
 from hrms.hr.report.vehicle_expenses.vehicle_expenses import execute

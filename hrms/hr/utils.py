@@ -17,7 +17,7 @@ from frappe.utils import (
 )
 
 import erpnext
-from hrms.hr.doctype.employee.employee import (
+from erpnext.setup.doctype.employee.employee import (
 	InactiveEmployeeStatusError,
 	get_holiday_list_for_employee,
 )

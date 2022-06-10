@@ -6,7 +6,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import get_link_to_form
 
-from hrms.hr.doctype.employee.employee import get_employee_email
+from erpnext.setup.doctype.employee.employee import get_employee_email
 
 
 class ExitInterview(Document):

@@ -5,7 +5,7 @@ from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, add_months, getdate, nowdate
 
 import erpnext
-from hrms.hr.doctype.employee.test_employee import make_employee
+from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.leave_allocation.leave_allocation import (
 	BackDatedAllocationError,
 	OverAllocationError,

@@ -9,7 +9,7 @@ from frappe.utils import add_years, date_diff, get_first_day, nowdate
 from frappe.utils.make_random import get_random
 
 import erpnext
-from hrms.hr.doctype.employee.test_employee import make_employee
+from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
 	create_payroll_period,
 )

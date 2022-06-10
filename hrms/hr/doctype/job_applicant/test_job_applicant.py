@@ -5,7 +5,7 @@ import unittest
 
 import frappe
 
-from hrms.hr.doctype.designation.test_designation import create_designation
+from erpnext.setup.doctype.designation.test_designation import create_designation
 
 
 class TestJobApplicant(unittest.TestCase):

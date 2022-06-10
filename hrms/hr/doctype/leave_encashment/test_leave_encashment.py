@@ -7,8 +7,8 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 
-from hrms.hr.doctype.employee.test_employee import make_employee
-from hrms.hr.doctype.holiday_list.test_holiday_list import set_holiday_list
+from erpnext.setup.doctype.employee.test_employee import make_employee
+from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
 from hrms.hr.doctype.leave_policy.test_leave_policy import create_leave_policy
 from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (

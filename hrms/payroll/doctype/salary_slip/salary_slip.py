@@ -413,7 +413,7 @@ class SalarySlip(TransactionBase):
 		Exclude days before DOJ or after
 		Relieving Date from unmarked days
 		"""
-		from hrms.hr.doctype.employee.employee import is_holiday
+		from erpnext.setup.doctype.employee.employee import is_holiday
 
 		if include_holidays_in_total_working_days:
 			unmarked_days -= date_diff(end_date, start_date) + 1

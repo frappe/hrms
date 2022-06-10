@@ -6,7 +6,7 @@ import unittest
 import frappe
 from frappe.utils import cstr, flt, nowdate, random_string
 
-from hrms.hr.doctype.employee.test_employee import make_employee
+from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.vehicle_log.vehicle_log import make_expense_claim
 
 

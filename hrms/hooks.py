@@ -2,10 +2,11 @@ from . import __version__ as app_version
 
 app_name = "hrms"
 app_title = "HRMS"
-app_publisher = "Frappe"
+app_publisher = "Frappe Technologies Pvt. Ltd."
 app_description = "Modern HR and Payroll Software"
 app_email = "contact@frappe.io"
-app_license = "GNU General Public License"
+app_license = "GNU General Public License (v3)"
+
 
 # Includes in <head>
 # ------------------
@@ -49,8 +50,11 @@ app_license = "GNU General Public License"
 # ----------
 
 # automatically create page for each record of this doctype
-# website_generators = ["Web Page"]
+website_generators = ["Job Opening"]
 
+website_route_rules = [
+	{"from_route": "/jobs", "to_route": "Job Opening"},
+]
 # Jinja
 # ----------
 
@@ -64,7 +68,7 @@ app_license = "GNU General Public License"
 # ------------
 
 # before_install = "hrms.install.before_install"
-# after_install = "hrms.install.after_install"
+after_install = "hrms.setup.after_install"
 
 # Uninstallation
 # ------------
@@ -90,7 +94,7 @@ app_license = "GNU General Public License"
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
 
-has_upload_permission = {"Employee": "hrms.hr.doctype.employee.employee.has_upload_permission"}
+has_upload_permission = {"Employee": "erpnext.setup.doctype.employee.employee.has_upload_permission"}
 
 # DocType Class
 # ---------------
@@ -106,8 +110,8 @@ has_upload_permission = {"Employee": "hrms.hr.doctype.employee.employee.has_uplo
 
 doc_events = {
 	"User": {
-		"validate": "hrms.hr.doctype.employee.employee.validate_employee_role",
-		"on_update": "hrms.hr.doctype.employee.employee.update_user_permissions",
+		"validate": "erpnext.setup.doctype.employee.employee.validate_employee_role",
+		"on_update": "erpnext.setup.doctype.employee.employee.update_user_permissions",
 	}
 }
 
@@ -123,8 +127,8 @@ scheduler_events = {
 		"hrms.hr.doctype.shift_type.shift_type.process_auto_attendance_for_all_shifts",
 	],
 	"daily": [
-		"hrms.hr.doctype.employee.employee_reminders.send_work_anniversary_reminders",
-		"hrms.hr.doctype.employee.employee_reminders.send_birthday_reminders",
+		"erpnext.setup.doctype.employee.employee_reminders.send_work_anniversary_reminders",
+		"erpnext.setup.doctype.employee.employee_reminders.send_birthday_reminders",
 		"hrms.hr.doctype.daily_work_summary_group.daily_work_summary_group.send_summary",
 		"hrms.hr.doctype.interview.interview.send_daily_feedback_reminder",
 	],
@@ -133,8 +137,8 @@ scheduler_events = {
 		"hrms.hr.utils.generate_leave_encashment",
 		"hrms.hr.utils.allocate_earned_leaves",
 	],
-	"weekly": ["hrms.hr.doctype.employee.employee_reminders.send_reminders_in_advance_weekly"],
-	"monthly": ["hrms.hr.doctype.employee.employee_reminders.send_reminders_in_advance_monthly"],
+	"weekly": ["erpnext.setup.doctype.employee.employee_reminders.send_reminders_in_advance_weekly"],
+	"monthly": ["erpnext.setup.doctype.employee.employee_reminders.send_reminders_in_advance_monthly"],
 }
 
 accounting_dimension_doctypes = [
@@ -155,6 +159,21 @@ regional_overrides = {
 		"hrms.hr.utils.calculate_annual_eligible_hra_exemption": "erpnext.regional.india.utils.calculate_annual_eligible_hra_exemption",
 		"hrms.hr.utils.calculate_hra_exemption_for_period": "erpnext.regional.india.utils.calculate_hra_exemption_for_period",
 	},
+}
+
+# ERPNext doctypes for Global Search
+global_search_doctypes = {
+	"Default": [
+		{"doctype": "Salary Slip", "index": 19},
+		{"doctype": "Leave Application", "index": 20},
+		{"doctype": "Expense Claim", "index": 21},
+		{"doctype": "Employee Grade", "index": 37},
+		{"doctype": "Job Opening", "index": 39},
+		{"doctype": "Job Applicant", "index": 40},
+		{"doctype": "Job Offer", "index": 41},
+		{"doctype": "Salary Structure Assignment", "index": 42},
+		{"doctype": "Appraisal", "index": 43},
+	],
 }
 
 # override_whitelisted_methods = {
