@@ -127,8 +127,7 @@ scheduler_events = {
 		"hrms.hr.doctype.shift_type.shift_type.process_auto_attendance_for_all_shifts",
 	],
 	"daily": [
-		"erpnext.setup.doctype.employee.employee_reminders.send_work_anniversary_reminders",
-		"erpnext.setup.doctype.employee.employee_reminders.send_birthday_reminders",
+		"hrms.controllers.employee_reminders.send_birthday_reminders",
 		"hrms.hr.doctype.daily_work_summary_group.daily_work_summary_group.send_summary",
 		"hrms.hr.doctype.interview.interview.send_daily_feedback_reminder",
 	],
@@ -137,8 +136,8 @@ scheduler_events = {
 		"hrms.hr.utils.generate_leave_encashment",
 		"hrms.hr.utils.allocate_earned_leaves",
 	],
-	"weekly": ["erpnext.setup.doctype.employee.employee_reminders.send_reminders_in_advance_weekly"],
-	"monthly": ["erpnext.setup.doctype.employee.employee_reminders.send_reminders_in_advance_monthly"],
+	"weekly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_weekly"],
+	"monthly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_monthly"],
 }
 
 accounting_dimension_doctypes = [
