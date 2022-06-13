@@ -112,6 +112,9 @@ doc_events = {
 	"User": {
 		"validate": "erpnext.setup.doctype.employee.employee.validate_employee_role",
 		"on_update": "erpnext.setup.doctype.employee.employee.update_user_permissions",
+	},
+	"Timesheet": {
+		"validate": "erpnext.hr.utils.validate_active_employee"
 	}
 }
 

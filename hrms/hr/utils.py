@@ -15,6 +15,7 @@ from frappe.utils import (
 	nowdate,
 	today,
 )
+from frappe.model.document import Document
 
 import erpnext
 from erpnext.setup.doctype.employee.employee import (
@@ -588,8 +589,11 @@ def share_doc_with_approver(doc, user):
 			frappe.share.remove(doc.doctype, doc.name, doc_before_save.get(approver))
 
 
-def validate_active_employee(employee):
-	if frappe.db.get_value("Employee", employee, "status") == "Inactive":
+def validate_active_employee(employee, method=None):
+	if isinstance(employee, (dict, Document)):
+		employee = employee.get("employee")
+
+	if employee and frappe.db.get_value("Employee", employee, "status") == "Inactive":
 		frappe.throw(
 			_("Transactions cannot be created for an Inactive Employee {0}.").format(
 				get_link_to_form("Employee", employee)
