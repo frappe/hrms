@@ -5,7 +5,11 @@ import calendar
 import random
 import unittest
 
+import erpnext
 import frappe
+from erpnext.accounts.utils import get_fiscal_year
+from erpnext.setup.doctype.employee.employee import InactiveEmployeeStatusError
+from erpnext.setup.doctype.employee.test_employee import make_employee
 from frappe.model.document import Document
 from frappe.tests.utils import change_settings
 from frappe.utils import (
@@ -21,10 +25,7 @@ from frappe.utils import (
 )
 from frappe.utils.make_random import get_random
 
-import erpnext
-from erpnext.accounts.utils import get_fiscal_year
 from hrms.hr.doctype.attendance.attendance import mark_attendance
-from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
@@ -44,6 +45,33 @@ class TestSalarySlip(unittest.TestCase):
 		frappe.db.rollback()
 		frappe.db.set_value("Payroll Settings", None, "include_holidays_in_total_working_days", 0)
 		frappe.set_user("Administrator")
+
+	def test_employee_status_inactive(self):
+		from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		employee = make_employee("test_employee_status@company.com")
+		employee_doc = frappe.get_doc("Employee", employee)
+		employee_doc.status = "Inactive"
+		employee_doc.save()
+		employee_doc.reload()
+
+		make_holiday_list()
+		frappe.db.set_value(
+			"Company", employee_doc.company, "default_holiday_list", "Salary Slip Test Holiday List"
+		)
+
+		frappe.db.sql(
+			"""delete from `tabSalary Structure` where name='Test Inactive Employee Salary Slip'"""
+		)
+		salary_structure = make_salary_structure(
+			"Test Inactive Employee Salary Slip",
+			"Monthly",
+			employee=employee_doc.name,
+			company=employee_doc.company,
+		)
+		salary_slip = make_salary_slip(salary_structure.name, employee=employee_doc.name)
+
+		self.assertRaises(InactiveEmployeeStatusError, salary_slip.save)
 
 	@change_settings(
 		"Payroll Settings", {"payroll_based_on": "Attendance", "daily_wages_fraction_for_half_day": 0.75}
@@ -322,7 +350,6 @@ class TestSalarySlip(unittest.TestCase):
 
 	@change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
 	def test_payment_days_in_salary_slip_based_on_timesheet(self):
-		from hrms.hr.doctype.attendance.attendance import mark_attendance
 		from erpnext.projects.doctype.timesheet.test_timesheet import (
 			make_salary_structure_for_timesheet,
 			make_timesheet,
@@ -330,6 +357,8 @@ class TestSalarySlip(unittest.TestCase):
 		from erpnext.projects.doctype.timesheet.timesheet import (
 			make_salary_slip as make_salary_slip_for_timesheet,
 		)
+
+		from hrms.hr.doctype.attendance.attendance import mark_attendance
 
 		emp = make_employee(
 			"test_employee_timesheet@salary.com",
@@ -609,6 +638,7 @@ class TestSalarySlip(unittest.TestCase):
 		from erpnext.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
 			process_loan_interest_accrual_for_term_loans,
 		)
+
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 		applicant = make_employee("test_loan_repayment_salary_slip@salary.com", company="_Test Company")
