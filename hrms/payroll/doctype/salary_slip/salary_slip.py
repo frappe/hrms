@@ -1617,11 +1617,12 @@ class SalarySlip(TransactionBase):
 				)
 
 
-def unlink_ref_doc_from_salary_slip(ref_no):
+def unlink_ref_doc_from_salary_slip(doc, method=None):
+	"""Unlinks accrual Journal Entry from Salary Slips on cancellation"""
 	linked_ss = frappe.db.sql_list(
 		"""select name from `tabSalary Slip`
 	where journal_entry=%s and docstatus < 2""",
-		(ref_no),
+		(doc.name),
 	)
 	if linked_ss:
 		for ss in linked_ss:

@@ -114,7 +114,19 @@ doc_events = {
 		"on_update": "erpnext.setup.doctype.employee.employee.update_user_permissions",
 	},
 	"Timesheet": {
-		"validate": "erpnext.hr.utils.validate_active_employee"
+		"validate": "hrms.hr.utils.validate_active_employee"
+	},
+	"Payment Entry": {
+		"on_submit": "hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
+		"on_cancel": "hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
+	},
+	"Journal Entry": {
+		"validate": "hrms.hr.doctype.expense_claim.expense_claim.validate_expense_claim_in_jv",
+		"on_submit": "hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
+		"on_cancel": [
+			"hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
+			"hrms.payroll.doctype.salary_slip.salary_slip.unlink_ref_doc_from_salary_slip",
+		]
 	}
 }
 

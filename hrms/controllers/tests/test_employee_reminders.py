@@ -9,8 +9,8 @@ from frappe.utils import add_months, getdate
 
 from employee.setup.doctype.employee.employee_reminders import send_holidays_reminder_in_advance
 from employee.setup.doctype.employee.test_employee import make_employee
-from erpnext.hr.doctype.hr_settings.hr_settings import set_proceed_with_frequency_change
-from erpnext.hr.utils import get_holidays_for_employee
+from hrms.hr.doctype.hr_settings.hr_settings import set_proceed_with_frequency_change
+from hrms.hr.utils import get_holidays_for_employee
 
 
 class TestEmployeeReminders(unittest.TestCase):

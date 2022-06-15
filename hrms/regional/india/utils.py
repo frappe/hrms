@@ -10,8 +10,8 @@ from frappe.utils import (
 	month_diff,
 )
 
-from erpnext.hr.utils import get_salary_assignments
-from erpnext.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+from hrms.hr.utils import get_salary_assignments
+from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 
 
 def calculate_annual_eligible_hra_exemption(doc):

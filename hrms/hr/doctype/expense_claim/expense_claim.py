@@ -329,7 +329,6 @@ class ExpenseClaim(AccountsController):
 
 
 def update_reimbursed_amount(doc, amount):
-
 	doc.total_amount_reimbursed += amount
 	frappe.db.set_value(
 		"Expense Claim", doc.name, "total_amount_reimbursed", doc.total_amount_reimbursed
@@ -462,3 +461,39 @@ def get_expense_claim(
 	)
 
 	return expense_claim
+
+
+def update_payment_for_expense_claim(doc, method=None):
+	"""
+	Updates payment/reimbursed amount in Expense Claim
+	on Payment Entry/Journal Entry cancellation/submission
+	"""
+	if doc.doctype == "Payment Entry" and not (doc.payment_type == "Pay" and doc.party):
+		return
+
+	payment_table = "accounts" if doc.doctype == "Journal Entry" else "references"
+	amount_field = "debit" if doc.doctype == "Journal Entry" else "allocated_amount"
+
+	for d in doc.get(payment_table):
+		if d.reference_doctype == "Expense Claim" and d.reference_name:
+			doc = frappe.get_doc("Expense Claim", d.reference_name)
+			if doc.docstatus == 2:
+				update_reimbursed_amount(doc, -1 * d.get(amount_field))
+			else:
+				update_reimbursed_amount(doc, d.get(amount_field))
+
+
+def validate_expense_claim_in_jv(doc, method=None):
+	"""Validates Expense Claim amount in Journal Entry"""
+	for d in doc.accounts:
+		if d.reference_type == "Expense Claim":
+			sanctioned_amount, reimbursed_amount = frappe.db.get_value(
+				"Expense Claim", d.reference_name, ("total_sanctioned_amount", "total_amount_reimbursed")
+			)
+			pending_amount = flt(sanctioned_amount) - flt(reimbursed_amount)
+			if d.debit > pending_amount:
+				frappe.throw(
+					_(
+						"Row No {0}: Amount cannot be greater than Pending Amount against Expense Claim {1}. Pending Amount is {2}"
+					).format(d.idx, d.reference_name, pending_amount)
+				)
