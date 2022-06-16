@@ -1,5 +1,3 @@
-from . import __version__ as app_version
-
 app_name = "hrms"
 app_title = "HRMS"
 app_publisher = "Frappe Technologies Pvt. Ltd."
@@ -30,7 +28,7 @@ app_license = "GNU General Public License (v3)"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {"Timesheet": "public/js/timesheet.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -43,7 +41,7 @@ app_license = "GNU General Public License (v3)"
 
 # website user home page (by Role)
 # role_home_page = {
-#	"Role": "home_page"
+# 	"Role": "home_page"
 # }
 
 # Generators
@@ -94,15 +92,15 @@ after_install = "hrms.setup.after_install"
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
 
-has_upload_permission = {"Employee": "erpnext.setup.doctype.employee.employee.has_upload_permission"}
+has_upload_permission = {
+	"Employee": "erpnext.setup.doctype.employee.employee.has_upload_permission"
+}
 
 # DocType Class
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {"Timesheet": "hrms.overrides.payroll_timesheet.PayrollTimesheet"}
 
 # Document Events
 # ---------------
@@ -113,9 +111,7 @@ doc_events = {
 		"validate": "erpnext.setup.doctype.employee.employee.validate_employee_role",
 		"on_update": "erpnext.setup.doctype.employee.employee.update_user_permissions",
 	},
-	"Timesheet": {
-		"validate": "hrms.hr.utils.validate_active_employee"
-	},
+	"Timesheet": {"validate": "hrms.hr.utils.validate_active_employee"},
 	"Payment Entry": {
 		"on_submit": "hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
 		"on_cancel": "hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
@@ -126,8 +122,8 @@ doc_events = {
 		"on_cancel": [
 			"hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
 			"hrms.payroll.doctype.salary_slip.salary_slip.unlink_ref_doc_from_salary_slip",
-		]
-	}
+		],
+	},
 }
 
 # Scheduled Tasks

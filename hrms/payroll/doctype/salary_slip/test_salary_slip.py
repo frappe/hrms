@@ -33,6 +33,7 @@ from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_e
 	create_payroll_period,
 )
 from hrms.payroll.doctype.payroll_entry.payroll_entry import get_month_details
+from hrms.payroll.doctype.salary_slip.salary_slip import make_salary_slip_from_timesheet
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 
 
@@ -350,13 +351,7 @@ class TestSalarySlip(unittest.TestCase):
 
 	@change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
 	def test_payment_days_in_salary_slip_based_on_timesheet(self):
-		from erpnext.projects.doctype.timesheet.test_timesheet import (
-			make_salary_structure_for_timesheet,
-			make_timesheet,
-		)
-		from erpnext.projects.doctype.timesheet.timesheet import (
-			make_salary_slip as make_salary_slip_for_timesheet,
-		)
+		from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
 
 		from hrms.hr.doctype.attendance.attendance import mark_attendance
 
@@ -388,7 +383,7 @@ class TestSalarySlip(unittest.TestCase):
 		# salary structure based on timesheet
 		make_salary_structure_for_timesheet(emp)
 		timesheet = make_timesheet(emp, simulate=True, is_billable=1)
-		salary_slip = make_salary_slip_for_timesheet(timesheet.name)
+		salary_slip = make_salary_slip_from_timesheet(timesheet.name)
 		salary_slip.start_date = month_start_date
 		salary_slip.end_date = month_end_date
 		salary_slip.save()
@@ -1007,6 +1002,27 @@ class TestSalarySlip(unittest.TestCase):
 
 		frappe.db.rollback()
 
+	def test_salary_slip_from_timesheet(self):
+		emp = make_employee("test_employee_6@salary.com", company="_Test Company")
+		salary_structure = make_salary_structure_for_timesheet(emp)
+		timesheet = make_timesheet(emp, simulate=True, is_billable=1)
+		salary_slip = make_salary_slip_from_timesheet(timesheet.name)
+		salary_slip.submit()
+
+		self.assertEqual(salary_slip.total_working_hours, 2)
+		self.assertEqual(salary_slip.hour_rate, 50)
+		self.assertEqual(salary_slip.earnings[0].salary_component, "Timesheet Component")
+		self.assertEqual(salary_slip.earnings[0].amount, 100)
+		self.assertEqual(salary_slip.timesheets[0].time_sheet, timesheet.name)
+		self.assertEqual(salary_slip.timesheets[0].working_hours, 2)
+
+		timesheet = frappe.get_doc("Timesheet", timesheet.name)
+		self.assertEqual(timesheet.status, "Payslip")
+		salary_slip.cancel()
+
+		timesheet = frappe.get_doc("Timesheet", timesheet.name)
+		self.assertEqual(timesheet.status, "Submitted")
+
 	def make_activity_for_employee(self):
 		activity_type = frappe.get_doc("Activity Type", "_Test Activity Type")
 		activity_type.billing_rate = 50
@@ -1584,3 +1600,28 @@ def create_recurring_additional_salary(
 			"currency": erpnext.get_default_currency(),
 		}
 	).submit()
+
+
+def make_salary_structure_for_timesheet(employee, company=None):
+	salary_structure_name = "Timesheet Salary Structure Test"
+	frequency = "Monthly"
+
+	if not frappe.db.exists("Salary Component", "Timesheet Component"):
+		frappe.get_doc(
+			{"doctype": "Salary Component", "salary_component": "Timesheet Component"}
+		).insert()
+
+	salary_structure = make_salary_structure(
+		salary_structure_name, frequency, company=company, dont_submit=True
+	)
+	salary_structure.salary_component = "Timesheet Component"
+	salary_structure.salary_slip_based_on_timesheet = 1
+	salary_structure.hour_rate = 50.0
+	salary_structure.save()
+	salary_structure.submit()
+
+	if not frappe.db.get_value("Salary Structure Assignment", {"employee": employee, "docstatus": 1}):
+		frappe.db.set_value("Employee", employee, "date_of_joining", add_months(nowdate(), -5))
+		create_salary_structure_assignment(employee, salary_structure.name)
+
+	return salary_structure

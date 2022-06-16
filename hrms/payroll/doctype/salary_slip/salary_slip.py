@@ -24,7 +24,6 @@ from frappe.utils.background_jobs import enqueue
 
 import erpnext
 from erpnext.accounts.utils import get_fiscal_year
-from hrms.hr.utils import get_holiday_dates_for_employee, validate_active_employee
 from erpnext.loan_management.doctype.loan_repayment.loan_repayment import (
 	calculate_amounts,
 	create_repayment_entry,
@@ -32,6 +31,9 @@ from erpnext.loan_management.doctype.loan_repayment.loan_repayment import (
 from erpnext.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
 	process_loan_interest_accrual_for_term_loans,
 )
+from erpnext.utilities.transaction_base import TransactionBase
+
+from hrms.hr.utils import get_holiday_dates_for_employee, validate_active_employee
 from hrms.payroll.doctype.additional_salary.additional_salary import get_additional_salaries
 from hrms.payroll.doctype.employee_benefit_application.employee_benefit_application import (
 	get_benefit_component_amount,
@@ -45,8 +47,6 @@ from hrms.payroll.doctype.payroll_period.payroll_period import (
 	get_payroll_period,
 	get_period_factor,
 )
-from erpnext.utilities.transaction_base import TransactionBase
-
 
 class SalarySlip(TransactionBase):
 	def __init__(self, *args, **kwargs):
@@ -1763,3 +1763,24 @@ def get_lwp_or_ppl_for_date(date, employee, holidays):
 		query = query.where((LeaveType.include_holiday == "1"))
 
 	return query.run(as_dict=True)
+
+
+@frappe.whitelist()
+def make_salary_slip_from_timesheet(source_name, target_doc=None):
+	target = frappe.new_doc("Salary Slip")
+	set_missing_values(source_name, target)
+	target.run_method("get_emp_and_working_day_details")
+
+	return target
+
+
+def set_missing_values(time_sheet, target):
+	doc = frappe.get_doc("Timesheet", time_sheet)
+	target.employee = doc.employee
+	target.employee_name = doc.employee_name
+	target.salary_slip_based_on_timesheet = 1
+	target.start_date = doc.start_date
+	target.end_date = doc.end_date
+	target.posting_date = doc.modified
+	target.total_working_hours = doc.total_hours
+	target.append("timesheets", {"time_sheet": doc.name, "working_hours": doc.total_hours})

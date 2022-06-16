@@ -180,6 +180,7 @@
    "read_only": 1
   },
   {
+   "fetch_from": "employee.company",
    "fieldname": "company",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -277,6 +278,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "timesheet.total_hours",
    "fieldname": "total_working_hours",
    "fieldtype": "Float",
    "label": "Total Working Hours",
@@ -637,7 +639,7 @@
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-19 12:45:54.999345",
+ "modified": "2022-06-15 18:36:54.999345",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

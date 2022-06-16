@@ -1,9 +1,6 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
 
-cur_frm.add_fetch('employee', 'company', 'company');
-cur_frm.add_fetch('time_sheet', 'total_hours', 'working_hours');
-
 frappe.ui.form.on("Salary Slip", {
 	setup: function(frm) {
 		$.each(["earnings", "deductions"], function(i, table_fieldname) {

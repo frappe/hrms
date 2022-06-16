@@ -29,7 +29,7 @@ def get_custom_fields():
 				"options": "Job Applicant",
 				"insert_after": "employment_details",
 			},
-			 {
+			{
 				"fieldname": "grade",
 				"fieldtype": "Link",
 				"label": "Grade",
@@ -120,5 +120,17 @@ def get_custom_fields():
 				"options": "Department Approver",
 				"insert_after": "leave_approvers",
 			},
-		]
+		],
+		"Timesheet": [
+			{
+				"fieldname": "salary_slip",
+				"fieldtype": "Link",
+				"label": "Salary Slip",
+				"no_copy": 1,
+				"options": "Salary Slip",
+				"print_hide": 1,
+				"read_only": 1,
+				"insert_after": "column_break_3",
+			},
+		],
 	}
