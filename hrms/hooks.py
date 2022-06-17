@@ -67,6 +67,7 @@ website_route_rules = [
 
 # before_install = "hrms.install.before_install"
 after_install = "hrms.setup.after_install"
+after_migrate = ["hrms.setup.update_select_perm_after_install"]
 
 # Uninstallation
 # ------------
