@@ -101,7 +101,9 @@ has_upload_permission = {
 # ---------------
 # Override standard doctype classes
 
-override_doctype_class = {"Timesheet": "hrms.overrides.payroll_timesheet.PayrollTimesheet"}
+override_doctype_class = {
+	"Timesheet": "hrms.overrides.employee_timesheet.EmployeeTimesheet",
+}
 
 # Document Events
 # ---------------
@@ -125,6 +127,7 @@ doc_events = {
 			"hrms.payroll.doctype.salary_slip.salary_slip.unlink_ref_doc_from_salary_slip",
 		],
 	},
+	"Loan": {"validate": "hrms.hr.utils.validate_loan_repay_from_salary"},
 }
 
 # Scheduled Tasks

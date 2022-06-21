@@ -4,7 +4,7 @@
 from erpnext.projects.doctype.timesheet.timesheet import Timesheet
 
 
-class PayrollTimesheet(Timesheet):
+class EmployeeTimesheet(Timesheet):
 	def set_status(self):
 		self.status = {"0": "Draft", "1": "Submitted", "2": "Cancelled"}[str(self.docstatus or 0)]
 

@@ -48,7 +48,7 @@ class TestSalarySlip(unittest.TestCase):
 		frappe.set_user("Administrator")
 
 	def test_employee_status_inactive(self):
-		from erpnext.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 		employee = make_employee("test_employee_status@company.com")
 		employee_doc = frappe.get_doc("Employee", employee)
@@ -1003,6 +1003,8 @@ class TestSalarySlip(unittest.TestCase):
 		frappe.db.rollback()
 
 	def test_salary_slip_from_timesheet(self):
+		from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
+
 		emp = make_employee("test_employee_6@salary.com", company="_Test Company")
 		salary_structure = make_salary_structure_for_timesheet(emp)
 		timesheet = make_timesheet(emp, simulate=True, is_billable=1)
@@ -1603,6 +1605,11 @@ def create_recurring_additional_salary(
 
 
 def make_salary_structure_for_timesheet(employee, company=None):
+	from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+		create_salary_structure_assignment,
+		make_salary_structure,
+	)
+
 	salary_structure_name = "Timesheet Salary Structure Test"
 	frequency = "Monthly"
 

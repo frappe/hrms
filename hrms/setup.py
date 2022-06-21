@@ -151,6 +151,35 @@ def get_custom_fields():
 				"insert_after": "buying",
 			},
 		],
+		"Loan": [
+			{
+				"default": "0",
+				"depends_on": 'eval:doc.applicant_type=="Employee"',
+				"fieldname": "repay_from_salary",
+				"fieldtype": "Check",
+				"label": "Repay From Salary",
+				"insert_after": "status",
+			},
+		],
+		"Loan Repayment": [
+			{
+				"default": "0",
+				"fetch_from": "against_loan.repay_from_salary",
+				"fieldname": "repay_from_salary",
+				"fieldtype": "Check",
+				"label": "Repay From Salary",
+				"insert_after": "is_term_loan",
+			},
+			{
+				"depends_on": "eval:doc.repay_from_salary",
+				"fieldname": "payroll_payable_account",
+				"fieldtype": "Link",
+				"label": "Payroll Payable Account",
+				"mandatory_depends_on": "eval:doc.repay_from_salary",
+				"options": "Account",
+				"insert_after": "rate_of_interest",
+			},
+		],
 	}
 
 
@@ -452,10 +481,7 @@ def update_select_perm_after_install():
 
 
 def set_single_defaults():
-	for dt in (
-		"HR Settings",
-		"Payroll Settings"
-	):
+	for dt in ("HR Settings", "Payroll Settings"):
 		default_values = frappe.db.sql(
 			"""
 			select fieldname, `default` from `tabDocField`

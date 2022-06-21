@@ -1,8 +1,14 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
+import erpnext
 import frappe
+from erpnext.setup.doctype.employee.employee import (
+	InactiveEmployeeStatusError,
+	get_holiday_list_for_employee,
+)
 from frappe import _
+from frappe.model.document import Document
 from frappe.utils import (
 	add_days,
 	cstr,
@@ -14,13 +20,6 @@ from frappe.utils import (
 	getdate,
 	nowdate,
 	today,
-)
-from frappe.model.document import Document
-
-import erpnext
-from erpnext.setup.doctype.employee.employee import (
-	InactiveEmployeeStatusError,
-	get_holiday_list_for_employee,
 )
 
 
@@ -355,9 +354,7 @@ def get_monthly_earned_leave(annual_leaves, frequency, rounding):
 
 
 def is_earned_leave_already_allocated(allocation, annual_allocation):
-	from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
-		get_leave_type_details,
-	)
+	from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import get_leave_type_details
 
 	leave_type_details = get_leave_type_details()
 	date_of_joining = frappe.db.get_value("Employee", allocation.employee, "date_of_joining")
@@ -600,3 +597,28 @@ def validate_active_employee(employee, method=None):
 			),
 			InactiveEmployeeStatusError,
 		)
+
+
+def validate_loan_repay_from_salary(doc, method=None):
+	if doc.applicant_type == "Employee" and doc.repay_from_salary:
+		from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
+			get_employee_currency,
+		)
+
+		if not doc.applicant:
+			frappe.throw(_("Please select an Applicant"))
+
+		if not doc.company:
+			frappe.throw(_("Please select a Company"))
+
+		employee_currency = get_employee_currency(doc.applicant)
+		company_currency = erpnext.get_company_currency(doc.company)
+		if employee_currency != company_currency:
+			frappe.throw(
+				_(
+					"Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
+				).format(applicant, employee_currency)
+			)
+
+	if not doc.is_term_loan and doc.repay_from_salary:
+		frappe.throw(_("Repay From Salary can be selected only for term loans"))
