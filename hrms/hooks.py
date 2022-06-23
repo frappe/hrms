@@ -28,7 +28,11 @@ app_license = "GNU General Public License (v3)"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {"Timesheet": "public/js/timesheet.js"}
+doctype_js = {
+	"Timesheet": "public/js/timesheet.js",
+	"Payment Entry": "public/js/payment_entry.js",
+	"Journal Entry": "public/js/journal_entry.js",
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -103,6 +107,7 @@ has_upload_permission = {
 
 override_doctype_class = {
 	"Timesheet": "hrms.overrides.employee_timesheet.EmployeeTimesheet",
+	"Payment Entry": "hrms.overrides.employee_payment_entry.EmployeePaymentEntry",
 }
 
 # Document Events
@@ -121,10 +126,14 @@ doc_events = {
 	},
 	"Journal Entry": {
 		"validate": "hrms.hr.doctype.expense_claim.expense_claim.validate_expense_claim_in_jv",
-		"on_submit": "hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
+		"on_submit": [
+			"hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
+			"hrms.hr.doctype.full_and_final_statement.full_and_final_statement.update_full_and_final_statement_status",
+		],
 		"on_cancel": [
 			"hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
 			"hrms.payroll.doctype.salary_slip.salary_slip.unlink_ref_doc_from_salary_slip",
+			"hrms.hr.doctype.full_and_final_statement.full_and_final_statement.update_full_and_final_statement_status",
 		],
 	},
 	"Loan": {"validate": "hrms.hr.utils.validate_loan_repay_from_salary"},
@@ -155,7 +164,16 @@ scheduler_events = {
 	"monthly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_monthly"],
 }
 
+advance_payment_doctypes = ["Gratuity", "Employee Advance"]
+
+invoice_doctypes = ["Expense Claim"]
+
+period_closing_doctypes = ["Payroll Entry"]
+
 accounting_dimension_doctypes = [
+	"Expense Claim",
+	"Expense Claim Detail",
+	"Expense Taxes and Charges",
 	"Payroll Entry",
 ]
 
@@ -166,7 +184,8 @@ accounting_dimension_doctypes = [
 # before_tests = "hrms.install.before_tests"
 
 # Overriding Methods
-# ------------------------------
+# -----------------------------
+
 
 regional_overrides = {
 	"India": {

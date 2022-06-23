@@ -2,14 +2,14 @@
 # License: GNU General Public License v3. See license.txt
 
 
-import frappe
-from frappe import _
-from frappe.utils import cstr, flt, get_link_to_form
-
 import erpnext
+import frappe
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from erpnext.accounts.general_ledger import make_gl_entries
 from erpnext.controllers.accounts_controller import AccountsController
+from frappe import _
+from frappe.utils import cstr, flt, get_link_to_form
+
 from hrms.hr.utils import set_employee_name, share_doc_with_approver, validate_active_employee
 
 
@@ -473,9 +473,10 @@ def update_payment_for_expense_claim(doc, method=None):
 
 	payment_table = "accounts" if doc.doctype == "Journal Entry" else "references"
 	amount_field = "debit" if doc.doctype == "Journal Entry" else "allocated_amount"
+	doctype_field = "reference_type" if doc.doctype == "Journal Entry" else "reference_doctype"
 
 	for d in doc.get(payment_table):
-		if d.reference_doctype == "Expense Claim" and d.reference_name:
+		if d.get(doctype_field) == "Expense Claim" and d.reference_name:
 			doc = frappe.get_doc("Expense Claim", d.reference_name)
 			if doc.docstatus == 2:
 				update_reimbursed_amount(doc, -1 * d.get(amount_field))

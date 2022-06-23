@@ -4,10 +4,10 @@
 import unittest
 
 import frappe
-from frappe.utils import flt, nowdate, random_string
-
 from erpnext.accounts.doctype.account.test_account import create_account
 from erpnext.setup.doctype.employee.test_employee import make_employee
+from frappe.utils import flt, nowdate, random_string
+
 from hrms.hr.doctype.expense_claim.expense_claim import make_bank_entry
 
 test_dependencies = ["Employee"]
@@ -358,9 +358,9 @@ def get_outstanding_and_total_reimbursed_amounts(expense_claim):
 
 
 def make_payment_entry(expense_claim, payable_account, amt):
-	from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
+	from hrms.overrides.employee_payment_entry import get_payment_entry_for_employee
 
-	pe = get_payment_entry(
+	pe = get_payment_entry_for_employee(
 		"Expense Claim", expense_claim.name, bank_account="_Test Bank USD - _TC", bank_amount=amt
 	)
 	pe.reference_no = "1"

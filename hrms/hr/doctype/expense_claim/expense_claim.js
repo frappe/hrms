@@ -287,7 +287,7 @@ frappe.ui.form.on("Expense Claim", {
 	},
 
 	make_payment_entry: function(frm) {
-		var method = "erpnext.accounts.doctype.payment_entry.payment_entry.get_payment_entry";
+		let method = "hrms.overrides.employee_payment_entry.get_payment_entry_for_employee";
 		if(frm.doc.__onload && frm.doc.__onload.make_payment_via_journal_entry) {
 			method = "hrms.hr.doctype.expense_claim.expense_claim.make_bank_entry";
 		}

@@ -4,12 +4,13 @@
 import unittest
 
 import frappe
+from erpnext.regional.united_arab_emirates.setup import create_gratuity_rule
+from erpnext.setup.doctype.employee.test_employee import make_employee
+from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, add_months, floor, flt, get_datetime, get_first_day, getdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.expense_claim.test_expense_claim import get_payable_account
-from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 from hrms.payroll.doctype.gratuity.gratuity import get_last_salary_slip
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_deduction_salary_component,
@@ -18,7 +19,6 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 )
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
-from erpnext.regional.united_arab_emirates.setup import create_gratuity_rule
 
 test_dependencies = ["Salary Component", "Salary Slip", "Account"]
 
@@ -101,7 +101,7 @@ class TestGratuity(FrappeTestCase):
 		1-5		|	0.7
 		5-0		|	1
 		"""
-		from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
+		from hrms.overrides.employee_payment_entry import get_payment_entry_for_employee
 
 		doj = add_days(getdate(), -(6 * 365))
 		relieving_date = getdate()
@@ -143,7 +143,7 @@ class TestGratuity(FrappeTestCase):
 		self.assertEqual(flt(gratuity_amount, 2), flt(gratuity.amount, 2))
 		self.assertEqual(gratuity.status, "Unpaid")
 
-		pe = get_payment_entry("Gratuity", gratuity.name)
+		pe = get_payment_entry_for_employee("Gratuity", gratuity.name)
 		pe.reference_no = "123467"
 		pe.reference_date = getdate()
 		pe.submit()

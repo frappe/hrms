@@ -200,3 +200,12 @@ def get_account_and_amount(ref_doctype, ref_document):
 		payment_account = details.advance_account
 		amount = details.paid_amount - (details.claimed_amount + details.return_amount)
 		return [payment_account, amount]
+
+
+def update_full_and_final_statement_status(doc, method=None):
+	"""Updates FnF status on Journal Entry Submission/Cancellation"""
+	status = "Paid" if doc.docstatus == 1 else "Unpaid"
+
+	for entry in doc.accounts:
+		if entry.reference_type == "Full and Final Statement":
+			frappe.db.set_value("Full and Final Statement", entry.reference_name, "status", status)
