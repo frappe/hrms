@@ -130,6 +130,25 @@ def get_custom_fields():
 				"insert_after": "leave_approvers",
 			},
 		],
+		"Project": [
+			{
+				"fieldname": "total_expense_claim",
+				"fieldtype": "Currency",
+				"label": "Total Expense Claim (via Expense Claims)",
+				"read_only": 1,
+				"insert_after": "total_costing_amount",
+			},
+		],
+		"Task": [
+			{
+				"fieldname": "total_expense_claim",
+				"fieldtype": "Currency",
+				"label": "Total Expense Claim (via Expense Claim)",
+				"options": "Company:company:default_currency",
+				"read_only": 1,
+				"insert_after": "total_costing_amount",
+			},
+		],
 		"Timesheet": [
 			{
 				"fieldname": "salary_slip",

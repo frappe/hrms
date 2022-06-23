@@ -8,6 +8,8 @@ from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_a
 from erpnext.accounts.general_ledger import make_gl_entries
 from erpnext.controllers.accounts_controller import AccountsController
 from frappe import _
+from frappe.model.mapper import get_mapped_doc
+from frappe.query_builder.functions import Sum
 from frappe.utils import cstr, flt, get_link_to_form
 
 from hrms.hr.utils import set_employee_name, share_doc_with_approver, validate_active_employee
@@ -120,7 +122,20 @@ class ExpenseClaim(AccountsController):
 
 	def update_task_and_project(self):
 		if self.task:
-			self.update_task()
+			task = frappe.get_doc("Task", self.task)
+
+			ExpenseClaim = frappe.qb.DocType("Expense Claim")
+			task.total_expense_claim = (
+				frappe.qb.from_(ExpenseClaim)
+				.select(Sum(ExpenseClaim.total_sanctioned_amount))
+				.where(
+					(ExpenseClaim.docstatus == 1)
+					& (ExpenseClaim.project == self.project)
+					& (ExpenseClaim.task == self.task)
+				)
+			).run()[0][0]
+
+			task.save()
 		elif self.project:
 			frappe.get_doc("Project", self.project).update_project()
 
@@ -274,11 +289,6 @@ class ExpenseClaim(AccountsController):
 			+ flt(self.total_taxes_and_charges)
 			- flt(self.total_advance_amount)
 		)
-
-	def update_task(self):
-		task = frappe.get_doc("Task", self.task)
-		task.update_total_expense_claim()
-		task.save()
 
 	def validate_advances(self):
 		self.total_advance_amount = 0
@@ -498,3 +508,15 @@ def validate_expense_claim_in_jv(doc, method=None):
 						"Row No {0}: Amount cannot be greater than Pending Amount against Expense Claim {1}. Pending Amount is {2}"
 					).format(d.idx, d.reference_name, pending_amount)
 				)
+
+
+@frappe.whitelist()
+def make_expense_claim_for_delivery_trip(source_name, target_doc=None):
+	doc = get_mapped_doc(
+		"Delivery Trip",
+		source_name,
+		{"Delivery Trip": {"doctype": "Expense Claim", "field_map": {"name": "delivery_trip"}}},
+		target_doc,
+	)
+
+	return doc

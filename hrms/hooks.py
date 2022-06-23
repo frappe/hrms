@@ -32,6 +32,7 @@ doctype_js = {
 	"Timesheet": "public/js/timesheet.js",
 	"Payment Entry": "public/js/payment_entry.js",
 	"Journal Entry": "public/js/journal_entry.js",
+	"Delivery Trip": "public/js/deliver_trip.js",
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -108,6 +109,7 @@ has_upload_permission = {
 override_doctype_class = {
 	"Timesheet": "hrms.overrides.employee_timesheet.EmployeeTimesheet",
 	"Payment Entry": "hrms.overrides.employee_payment_entry.EmployeePaymentEntry",
+	"Project": "hrms.overrides.employee_project.EmployeeProject",
 }
 
 # Document Events
