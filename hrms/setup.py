@@ -73,6 +73,47 @@ def get_custom_fields():
 				"label": "Health Insurance No",
 				"insert_after": "health_insurance_provider",
 			},
+			{
+				"fieldname": "approvers_section",
+				"fieldtype": "Section Break",
+				"label": "Approvers",
+				"insert_after": "branch",
+			},
+			{
+				"fieldname": "expense_approver",
+				"fieldtype": "Link",
+				"label": "Expense Approver",
+				"options": "User",
+				"insert_after": "approvers_section",
+			},
+			{
+				"fieldname": "leave_approver",
+				"fieldtype": "Link",
+				"label": "Leave Approver",
+				"options": "User",
+				"insert_after": "expense_approver",
+			},
+			{
+				"fieldname": "column_break_45",
+				"fieldtype": "Column Break",
+				"insert_after": "leave_approver",
+			},
+			{
+				"fieldname": "shift_request_approver",
+				"fieldtype": "Link",
+				"label": "Shift Request Approver",
+				"options": "User",
+				"insert_after": "column_break_45",
+			},
+			{
+				"fetch_from": "department.payroll_cost_center",
+				"fetch_if_empty": 1,
+				"fieldname": "payroll_cost_center",
+				"fieldtype": "Link",
+				"label": "Payroll Cost Center",
+				"options": "Cost Center",
+				"insert_after": "salary_mode",
+			},
 		],
 		"Department": [
 			{

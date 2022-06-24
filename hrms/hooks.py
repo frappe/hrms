@@ -29,6 +29,8 @@ app_license = "GNU General Public License (v3)"
 
 # include js in doctype views
 doctype_js = {
+	"Employee": "public/js/employee.js",
+	"Department": "public/js/department.js",
 	"Timesheet": "public/js/timesheet.js",
 	"Payment Entry": "public/js/payment_entry.js",
 	"Journal Entry": "public/js/journal_entry.js",
@@ -139,6 +141,7 @@ doc_events = {
 		],
 	},
 	"Loan": {"validate": "hrms.hr.utils.validate_loan_repay_from_salary"},
+	"Employee": {"on_update": "hrms.hr.utils.update_approver_role"},
 }
 
 # Scheduled Tasks
