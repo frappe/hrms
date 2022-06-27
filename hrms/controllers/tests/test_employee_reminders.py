@@ -5,10 +5,10 @@ import unittest
 from datetime import timedelta
 
 import frappe
+from erpnext.setup.doctype.employee.test_employee import make_employee
 from frappe.utils import add_months, getdate
 
-from employee.setup.doctype.employee.employee_reminders import send_holidays_reminder_in_advance
-from employee.setup.doctype.employee.test_employee import make_employee
+from hrms.controllers.employee_reminders import send_holidays_reminder_in_advance
 from hrms.hr.doctype.hr_settings.hr_settings import set_proceed_with_frequency_change
 from hrms.hr.utils import get_holidays_for_employee
 
@@ -16,7 +16,7 @@ from hrms.hr.utils import get_holidays_for_employee
 class TestEmployeeReminders(unittest.TestCase):
 	@classmethod
 	def setUpClass(cls):
-		from employee.setup.doctype.holiday_list.test_holiday_list import make_holiday_list
+		from erpnext.setup.doctype.holiday_list.test_holiday_list import make_holiday_list
 
 		# Create a test holiday list
 		test_holiday_dates = cls.get_test_holiday_dates()
@@ -83,7 +83,7 @@ class TestEmployeeReminders(unittest.TestCase):
 		frappe.db.sql("delete from `tabEmail Queue Recipient`")
 
 	def test_is_holiday(self):
-		from employee.setup.doctype.employee.employee import is_holiday
+		from erpnext.setup.doctype.employee.employee import is_holiday
 
 		self.assertTrue(is_holiday(self.test_employee.name))
 		self.assertTrue(is_holiday(self.test_employee.name, date=self.test_holiday_dates[1]))
@@ -109,7 +109,7 @@ class TestEmployeeReminders(unittest.TestCase):
 		employee.company = "_Test Company"
 		employee.save()
 
-		from employee.setup.doctype.employee.employee_reminders import (
+		from hrms.controllers.employee_reminders import (
 			get_employees_who_are_born_today,
 			send_birthday_reminders,
 		)
@@ -127,15 +127,15 @@ class TestEmployeeReminders(unittest.TestCase):
 		self.assertTrue("Subject: Birthday Reminder" in email_queue[0].message)
 
 	def test_work_anniversary_reminders(self):
-		make_employee(
-			"test_work_anniversary@gmail.com",
-			date_of_joining="1998" + frappe.utils.nowdate()[4:],
-			company="_Test Company",
-		)
-
-		from employee.setup.doctype.employee.employee_reminders import (
+		from hrms.controllers.employee_reminders import (
 			get_employees_having_an_event_today,
 			send_work_anniversary_reminders,
+		)
+
+		emp = make_employee(
+			"test_emp_work_anniversary@gmail.com",
+			company="_Test Company",
+			date_of_joining=frappe.utils.add_years(getdate(), -2),
 		)
 
 		employees_having_work_anniversary = get_employees_having_an_event_today("work_anniversary")
@@ -144,7 +144,7 @@ class TestEmployeeReminders(unittest.TestCase):
 		for entry in employees:
 			user_ids.append(entry.user_id)
 
-		self.assertTrue("test_work_anniversary@gmail.com" in user_ids)
+		self.assertTrue("test_emp_work_anniversary@gmail.com" in user_ids)
 
 		hr_settings = frappe.get_doc("HR Settings", "HR Settings")
 		hr_settings.send_work_anniversary_reminders = 1
@@ -162,7 +162,7 @@ class TestEmployeeReminders(unittest.TestCase):
 			company="_Test Company",
 		)
 
-		from employee.setup.doctype.employee.employee_reminders import get_employees_having_an_event_today
+		from hrms.controllers.employee_reminders import get_employees_having_an_event_today
 
 		employees_having_work_anniversary = get_employees_having_an_event_today("work_anniversary")
 		employees = employees_having_work_anniversary.get("_Test Company") or []
@@ -190,7 +190,7 @@ class TestEmployeeReminders(unittest.TestCase):
 		self.assertTrue("Holidays this Week." in email_queue[0].message)
 
 	def test_advance_holiday_reminders_monthly(self):
-		from employee.setup.doctype.employee.employee_reminders import send_reminders_in_advance_monthly
+		from hrms.controllers.employee_reminders import send_reminders_in_advance_monthly
 
 		setup_hr_settings("Monthly")
 
@@ -217,7 +217,7 @@ class TestEmployeeReminders(unittest.TestCase):
 		)
 
 	def test_advance_holiday_reminders_weekly(self):
-		from employee.setup.doctype.employee.employee_reminders import send_reminders_in_advance_weekly
+		from hrms.controllers.employee_reminders import send_reminders_in_advance_weekly
 
 		setup_hr_settings("Weekly")
 
