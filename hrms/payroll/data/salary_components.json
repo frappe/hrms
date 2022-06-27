@@ -1,0 +1,27 @@
+[
+    {
+        "doctype": "Salary Component",
+        "salary_component": "Income Tax",
+        "description": "Income Tax",
+        "type": "Deduction",
+        "is_income_tax_component": 1
+    },
+    {
+        "doctype": "Salary Component",
+        "salary_component": "Basic",
+        "description": "Basic",
+        "type": "Earning"
+    },
+    {
+        "doctype": "Salary Component",
+        "salary_component": "Arrear",
+        "description": "Arrear",
+        "type": "Earning"
+    },
+    {
+        "doctype": "Salary Component",
+        "salary_component": "Leave Encashment",
+        "description": "Leave Encashment",
+        "type": "Earning"
+    }
+]

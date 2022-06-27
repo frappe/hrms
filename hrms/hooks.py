@@ -4,6 +4,7 @@ app_publisher = "Frappe Technologies Pvt. Ltd."
 app_description = "Modern HR and Payroll Software"
 app_email = "contact@frappe.io"
 app_license = "GNU General Public License (v3)"
+required_apps = ["erpnext"]
 
 
 # Includes in <head>
@@ -122,6 +123,9 @@ doc_events = {
 	"User": {
 		"validate": "erpnext.setup.doctype.employee.employee.validate_employee_role",
 		"on_update": "erpnext.setup.doctype.employee.employee.update_user_permissions",
+	},
+	"Company": {
+		"on_update": "hrms.overrides.company.make_company_fixtures",
 	},
 	"Timesheet": {"validate": "hrms.hr.utils.validate_active_employee"},
 	"Payment Entry": {

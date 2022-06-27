@@ -9,7 +9,7 @@ from frappe.installer import update_site_config
 
 def after_install():
 	create_custom_fields(get_custom_fields())
-	make_default_records()
+	make_fixtures()
 	setup_notifications()
 	update_hr_defaults()
 	add_non_standard_user_types()
@@ -243,34 +243,8 @@ def get_custom_fields():
 	}
 
 
-def make_default_records():
+def make_fixtures():
 	records = [
-		# salary component
-		{
-			"doctype": "Salary Component",
-			"salary_component": _("Income Tax"),
-			"description": _("Income Tax"),
-			"type": "Deduction",
-			"is_income_tax_component": 1,
-		},
-		{
-			"doctype": "Salary Component",
-			"salary_component": _("Basic"),
-			"description": _("Basic"),
-			"type": "Earning",
-		},
-		{
-			"doctype": "Salary Component",
-			"salary_component": _("Arrear"),
-			"description": _("Arrear"),
-			"type": "Earning",
-		},
-		{
-			"doctype": "Salary Component",
-			"salary_component": _("Leave Encashment"),
-			"description": _("Leave Encashment"),
-			"type": "Earning",
-		},
 		# expense claim type
 		{"doctype": "Expense Claim Type", "name": _("Calls"), "expense_type": _("Calls")},
 		{"doctype": "Expense Claim Type", "name": _("Food"), "expense_type": _("Food")},

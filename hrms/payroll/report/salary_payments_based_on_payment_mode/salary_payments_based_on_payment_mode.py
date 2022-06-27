@@ -2,13 +2,11 @@
 # For license information, please see license.txt
 
 
+import erpnext
 import frappe
 from frappe import _
 
-import erpnext
-from erpnext.regional.report.provident_fund_deductions.provident_fund_deductions import (
-	get_conditions,
-)
+from hrms.payroll.report.provident_fund_deductions.provident_fund_deductions import get_conditions
 
 
 def execute(filters=None):

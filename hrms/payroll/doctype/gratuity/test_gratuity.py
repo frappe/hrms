@@ -4,7 +4,6 @@
 import unittest
 
 import frappe
-from erpnext.regional.united_arab_emirates.setup import create_gratuity_rule
 from erpnext.setup.doctype.employee.test_employee import make_employee
 from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 from frappe.tests.utils import FrappeTestCase
@@ -19,6 +18,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 )
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+from hrms.regional.united_arab_emirates.setup import setup
 
 test_dependencies = ["Salary Component", "Salary Slip", "Account"]
 
@@ -156,7 +156,7 @@ class TestGratuity(FrappeTestCase):
 def get_gratuity_rule(name):
 	rule = frappe.db.exists("Gratuity Rule", name)
 	if not rule:
-		create_gratuity_rule()
+		setup()
 	rule = frappe.get_doc("Gratuity Rule", name)
 	rule.applicable_earnings_component = []
 	rule.append("applicable_earnings_component", {"salary_component": "Basic Salary"})
