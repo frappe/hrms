@@ -322,6 +322,8 @@ def make_fixtures():
 		{"doctype": "Offer Term", "offer_term": _("Leaves per Year")},
 		{"doctype": "Offer Term", "offer_term": _("Notice Period")},
 		{"doctype": "Offer Term", "offer_term": _("Incentives")},
+		# Email Account
+		{"doctype": "Email Account", "email_id": "jobs@example.com", "append_to": "Job Applicant"},
 	]
 
 	make_records(records)
