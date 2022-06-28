@@ -110,6 +110,7 @@ has_upload_permission = {
 # Override standard doctype classes
 
 override_doctype_class = {
+	"Employee": "hrms.overrides.employee_master.EmployeeMaster",
 	"Timesheet": "hrms.overrides.employee_timesheet.EmployeeTimesheet",
 	"Payment Entry": "hrms.overrides.employee_payment_entry.EmployeePaymentEntry",
 	"Project": "hrms.overrides.employee_project.EmployeeProject",
@@ -145,7 +146,11 @@ doc_events = {
 		],
 	},
 	"Loan": {"validate": "hrms.hr.utils.validate_loan_repay_from_salary"},
-	"Employee": {"on_update": "hrms.hr.utils.update_approver_role"},
+	"Employee": {
+		"validate": "hrms.overrides.employee_master.validate_onboarding_process",
+		"on_update": "hrms.overrides.employee_master.update_approver_role",
+		"on_trash": "hrms.overrides.employee_master.update_employee_transfer",
+	},
 }
 
 # Scheduled Tasks

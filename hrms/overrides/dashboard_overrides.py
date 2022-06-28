@@ -10,6 +10,7 @@ def get_dashboard_for_employee(data):
 		"heatmap_message": _("This is based on the attendance of this Employee"),
 		"fieldname": "employee",
 		"non_standard_fieldnames": {"Bank Account": "party", "Employee Grievance": "raised_by"},
+		"method": "hrms.overrides.employee_master.get_timeline_data",
 		"transactions": [
 			{"label": _("Attendance"), "items": ["Attendance", "Attendance Request", "Employee Checkin"]},
 			{

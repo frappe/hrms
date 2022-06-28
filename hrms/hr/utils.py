@@ -622,15 +622,3 @@ def validate_loan_repay_from_salary(doc, method=None):
 
 	if not doc.is_term_loan and doc.repay_from_salary:
 		frappe.throw(_("Repay From Salary can be selected only for term loans"))
-
-
-def update_approver_role(doc, method=None):
-	if doc.leave_approver:
-		user = frappe.get_doc("User", doc.leave_approver)
-		user.flags.ignore_permissions = True
-		user.add_roles("Leave Approver")
-
-	if doc.expense_approver:
-		user = frappe.get_doc("User", doc.expense_approver)
-		user.flags.ignore_permissions = True
-		user.add_roles("Expense Approver")
