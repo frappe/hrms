@@ -171,6 +171,21 @@ def get_custom_fields():
 				"insert_after": "leave_approvers",
 			},
 		],
+		"Designation": [
+			{
+				"fieldname": "required_skills_section",
+				"fieldtype": "Section Break",
+				"label": "Required Skills",
+				"insert_after": "description",
+			},
+			{
+				"fieldname": "skills",
+				"fieldtype": "Table",
+				"label": "Skills",
+				"options": "Designation Skill",
+				"insert_after": "required_skills_section",
+			}
+		],
 		"Project": [
 			{
 				"fieldname": "total_expense_claim",
