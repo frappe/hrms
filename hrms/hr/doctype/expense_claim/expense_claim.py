@@ -487,11 +487,11 @@ def update_payment_for_expense_claim(doc, method=None):
 
 	for d in doc.get(payment_table):
 		if d.get(doctype_field) == "Expense Claim" and d.reference_name:
-			doc = frappe.get_doc("Expense Claim", d.reference_name)
+			expense_claim = frappe.get_doc("Expense Claim", d.reference_name)
 			if doc.docstatus == 2:
-				update_reimbursed_amount(doc, -1 * d.get(amount_field))
+				update_reimbursed_amount(expense_claim, -1 * d.get(amount_field))
 			else:
-				update_reimbursed_amount(doc, d.get(amount_field))
+				update_reimbursed_amount(expense_claim, d.get(amount_field))
 
 
 def validate_expense_claim_in_jv(doc, method=None):
