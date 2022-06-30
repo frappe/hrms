@@ -115,6 +115,47 @@ def get_custom_fields():
 				"insert_after": "salary_mode",
 			},
 		],
+		"Company": [
+			{
+				"fieldname": "hr_settings_section",
+				"fieldtype": "Section Break",
+				"label": "HR & Payroll Settings",
+				"insert_after": "credit_limit",
+			},
+			{
+				"depends_on": "eval:!doc.__islocal",
+				"fieldname": "default_expense_claim_payable_account",
+				"fieldtype": "Link",
+				"ignore_user_permissions": 1,
+				"label": "Default Expense Claim Payable Account",
+				"no_copy": 1,
+				"options": "Account",
+				"insert_after": "hr_settings_section",
+			},
+			{
+				"fieldname": "default_employee_advance_account",
+				"fieldtype": "Link",
+				"label": "Default Employee Advance Account",
+				"no_copy": 1,
+				"options": "Account",
+				"insert_after": "default_expense_claim_payable_account",
+			},
+			{
+				"fieldname": "column_break_10",
+				"fieldtype": "Column Break",
+				"insert_after": "default_employee_advance_account",
+			},
+			{
+				"depends_on": "eval:!doc.__islocal",
+				"fieldname": "default_payroll_payable_account",
+				"fieldtype": "Link",
+				"ignore_user_permissions": 1,
+				"label": "Default Payroll Payable Account",
+				"no_copy": 1,
+				"options": "Account",
+				"insert_after": "column_break_10",
+			},
+		],
 		"Department": [
 			{
 				"fieldname": "section_break_4",
@@ -184,7 +225,7 @@ def get_custom_fields():
 				"label": "Skills",
 				"options": "Designation Skill",
 				"insert_after": "required_skills_section",
-			}
+			},
 		],
 		"Project": [
 			{

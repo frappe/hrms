@@ -101,26 +101,6 @@ def get_custom_fields():
 				"options": "Salary Component",
 				"insert_after": "hra_column_break",
 			},
-			{
-				"fieldname": "non_profit_section",
-				"label": "Non Profit Settings",
-				"fieldtype": "Section Break",
-				"insert_after": "arrear_component",
-				"collapsible": 1,
-			},
-			{
-				"fieldname": "company_80g_number",
-				"label": "80G Number",
-				"fieldtype": "Data",
-				"insert_after": "non_profit_section",
-				"translatable": 0,
-			},
-			{
-				"fieldname": "with_effect_from",
-				"label": "80G With Effect From",
-				"fieldtype": "Date",
-				"insert_after": "company_80g_number",
-			},
 		],
 		"Employee Tax Exemption Declaration": [
 			{

@@ -31,6 +31,7 @@ required_apps = ["erpnext"]
 # include js in doctype views
 doctype_js = {
 	"Employee": "public/js/employee.js",
+	"Company": "public/js/company.js",
 	"Department": "public/js/department.js",
 	"Timesheet": "public/js/timesheet.js",
 	"Payment Entry": "public/js/payment_entry.js",
@@ -126,7 +127,11 @@ doc_events = {
 		"on_update": "erpnext.setup.doctype.employee.employee.update_user_permissions",
 	},
 	"Company": {
-		"on_update": "hrms.overrides.company.make_company_fixtures",
+		"validate": "hrms.overrides.company.validate_default_accounts",
+		"on_update": [
+			"hrms.overrides.company.make_company_fixtures",
+			"hrms.overrides.company.set_default_hr_accounts",
+		],
 	},
 	"Timesheet": {"validate": "hrms.hr.utils.validate_active_employee"},
 	"Payment Entry": {

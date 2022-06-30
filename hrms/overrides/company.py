@@ -4,6 +4,7 @@
 import json
 
 import frappe
+from erpnext.accounts.doctype.account.account import get_account_currency
 from frappe import _
 
 
@@ -59,3 +60,40 @@ def read_data_file(file_path):
 			return f.read()
 	except IOError:
 		return "{}"
+
+
+def set_default_hr_accounts(doc, method=None):
+	if frappe.local.flags.ignore_chart_of_accounts:
+		return
+
+	if not doc.default_payroll_payable_account:
+		payroll_payable_account = frappe.db.get_value(
+			"Account", {"account_name": _("Payroll Payable"), "company": doc.name, "is_group": 0}
+		)
+
+		doc.db_set("default_payroll_payable_account", payroll_payable_account)
+
+	if not doc.default_employee_advance_account:
+		employe_advance_account = frappe.db.get_value(
+			"Account", {"account_name": _("Employee Advances"), "company": doc.name, "is_group": 0}
+		)
+
+		doc.db_set("default_employee_advance_account", employe_advance_account)
+
+
+def validate_default_accounts(doc, method=None):
+	if doc.default_payroll_payable_account:
+		for_company = frappe.db.get_value("Account", doc.default_payroll_payable_account, "company")
+		if for_company != doc.name:
+			frappe.throw(
+				_("Account {0} does not belong to company: {1}").format(
+					doc.default_payroll_payable_account, doc.name
+				)
+			)
+
+		if get_account_currency(doc.default_payroll_payable_account) != doc.default_currency:
+			frappe.throw(
+				_(
+					"{0} currency must be same as company's default currency. Please select another account."
+				).format(frappe.bold("Default Payroll Payable Account"))
+			)
