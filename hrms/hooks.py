@@ -37,6 +37,7 @@ doctype_js = {
 	"Payment Entry": "public/js/payment_entry.js",
 	"Journal Entry": "public/js/journal_entry.js",
 	"Delivery Trip": "public/js/deliver_trip.js",
+	"Bank Transaction": "public/js/bank_transaction.js",
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -196,6 +197,7 @@ accounting_dimension_doctypes = [
 	"Payroll Entry",
 ]
 
+bank_reconciliation_doctypes = ["Expense Claim"]
 
 # Testing
 # -------
@@ -205,6 +207,8 @@ accounting_dimension_doctypes = [
 # Overriding Methods
 # -----------------------------
 
+# get matching queries for Bank Reconciliation
+get_matching_queries = "hrms.hr.utils.get_matching_queries"
 
 regional_overrides = {
 	"India": {

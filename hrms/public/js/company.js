@@ -31,5 +31,11 @@ frappe.ui.form.on("Company", {
 				}
 			};
 		});
+
+		frm.set_query("hra_component", function() {
+			return {
+				filters: {"type": "Earning"}
+			}
+		});
 	}
 })

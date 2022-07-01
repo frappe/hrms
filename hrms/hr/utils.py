@@ -3,6 +3,7 @@
 
 import erpnext
 import frappe
+from erpnext import get_company_currency
 from erpnext.setup.doctype.employee.employee import (
 	InactiveEmployeeStatusError,
 	get_holiday_list_for_employee,
@@ -622,3 +623,50 @@ def validate_loan_repay_from_salary(doc, method=None):
 
 	if not doc.is_term_loan and doc.repay_from_salary:
 		frappe.throw(_("Repay From Salary can be selected only for term loans"))
+
+
+def get_matching_queries(
+	bank_account, company, transaction, document_types, amount_condition, account_from_to
+):
+	"""Returns matching queries for Bank Reconciliation"""
+	queries = []
+	if transaction.withdrawal > 0:
+		if "expense_claim" in document_types:
+			ec_amount_matching = get_ec_matching_query(bank_account, company, amount_condition)
+			queries.extend([ec_amount_matching])
+
+	return queries
+
+
+def get_ec_matching_query(bank_account, company, amount_condition):
+	# get matching Expense Claim query
+	mode_of_payments = [
+		x["parent"]
+		for x in frappe.db.get_all(
+			"Mode of Payment Account", filters={"default_account": bank_account}, fields=["parent"]
+		)
+	]
+	mode_of_payments = "('" + "', '".join(mode_of_payments) + "' )"
+	company_currency = get_company_currency(company)
+	return f"""
+		SELECT
+			( CASE WHEN employee = %(party)s THEN 1 ELSE 0 END
+			+ 1 ) AS rank,
+			'Expense Claim' as doctype,
+			name,
+			total_sanctioned_amount as paid_amount,
+			'' as reference_no,
+			'' as reference_date,
+			employee as party,
+			'Employee' as party_type,
+			posting_date,
+			'{company_currency}' as currency
+		FROM
+			`tabExpense Claim`
+		WHERE
+			total_sanctioned_amount {amount_condition} %(amount)s
+			AND docstatus = 1
+			AND is_paid = 1
+			AND ifnull(clearance_date, '') = ""
+			AND mode_of_payment in {mode_of_payments}
+	"""
