@@ -26,3 +26,7 @@ force_grid_wrap = 0
 use_parentheses = true
 ensure_newline_before_comments = true
 indent = "\t"
+known_frappe = ["frappe"]
+known_erpnext = ["erpnext"]
+known_hrms = ["hrms"]
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FRAPPE", "ERPNEXT", "HRMS", "FIRSTPARTY", "LOCALFOLDER"]
