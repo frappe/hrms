@@ -10,6 +10,7 @@ from frappe.utils import flt, nowdate
 
 import erpnext
 from erpnext.accounts.doctype.journal_entry.journal_entry import get_default_bank_cash_account
+
 from hrms.hr.utils import validate_active_employee
 
 

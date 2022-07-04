@@ -2,9 +2,10 @@
 # License: GNU General Public License v3. See license.txt
 
 import frappe
-from erpnext.setup.doctype.employee.employee import get_all_employee_emails, get_employee_email
 from frappe import _
 from frappe.utils import add_days, add_months, comma_sep, getdate, today
+
+from erpnext.setup.doctype.employee.employee import get_all_employee_emails, get_employee_email
 
 from hrms.hr.utils import get_holidays_for_employee
 

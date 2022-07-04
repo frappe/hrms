@@ -1,14 +1,14 @@
 import frappe
-from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
-from erpnext.projects.doctype.timesheet.timesheet import make_sales_invoice
-from erpnext.setup.doctype.employee.test_employee import make_employee
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, getdate
 
-from hrms.payroll.doctype.salary_slip.salary_slip import make_salary_slip_from_timesheet
-from hrms.payroll.doctype.salary_slip.test_salary_slip import make_salary_structure_for_timesheet
+from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
+from erpnext.projects.doctype.timesheet.timesheet import make_sales_invoice
+from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.report.project_profitability.project_profitability import execute
+from hrms.payroll.doctype.salary_slip.salary_slip import make_salary_slip_from_timesheet
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_salary_structure_for_timesheet
 
 
 class TestProjectProfitability(FrappeTestCase):

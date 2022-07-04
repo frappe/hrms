@@ -2,10 +2,11 @@
 # License: GNU General Public License v3. See license.txt
 
 import frappe
-from erpnext.setup.doctype.employee.employee import Employee
 from frappe import _
 from frappe.model.naming import set_name_by_naming_series
 from frappe.utils import add_years, cint, getdate
+
+from erpnext.setup.doctype.employee.employee import Employee
 
 
 class EmployeeMaster(Employee):

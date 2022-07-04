@@ -4,8 +4,9 @@
 import json
 
 import frappe
-from erpnext.accounts.doctype.account.account import get_account_currency
 from frappe import _
+
+from erpnext.accounts.doctype.account.account import get_account_currency
 
 
 def make_company_fixtures(doc, method=None):

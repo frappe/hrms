@@ -3,8 +3,9 @@
 
 import json
 
-import frappe
 from dateutil.relativedelta import relativedelta
+
+import frappe
 from frappe import _
 from frappe.desk.reportview import get_filters_cond, get_match_cond
 from frappe.model.document import Document
