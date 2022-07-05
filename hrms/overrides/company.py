@@ -4,15 +4,16 @@
 import json
 
 import frappe
-from erpnext.accounts.doctype.account.account import get_account_currency
 from frappe import _
+
+from erpnext.accounts.doctype.account.account import get_account_currency
 
 
 def make_company_fixtures(doc, method=None):
 	if not frappe.flags.country_change:
 		return
 
-	run_regional_setup(doc.company, doc.country)
+	run_regional_setup(doc.name, doc.country)
 	make_salary_components(doc.country)
 
 
@@ -21,7 +22,7 @@ def run_regional_setup(company, country):
 
 	try:
 		module_name = f"hrms.regional.{frappe.scrub(country)}.setup.setup"
-		frappe.get_attr(module_name)(company, False)
+		frappe.get_attr(module_name)()
 	except ImportError:
 		pass
 	except Exception:

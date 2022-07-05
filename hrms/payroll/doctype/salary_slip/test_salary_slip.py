@@ -5,11 +5,7 @@ import calendar
 import random
 import unittest
 
-import erpnext
 import frappe
-from erpnext.accounts.utils import get_fiscal_year
-from erpnext.setup.doctype.employee.employee import InactiveEmployeeStatusError
-from erpnext.setup.doctype.employee.test_employee import make_employee
 from frappe.model.document import Document
 from frappe.tests.utils import change_settings
 from frappe.utils import (
@@ -24,6 +20,11 @@ from frappe.utils import (
 	nowdate,
 )
 from frappe.utils.make_random import get_random
+
+import erpnext
+from erpnext.accounts.utils import get_fiscal_year
+from erpnext.setup.doctype.employee.employee import InactiveEmployeeStatusError
+from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation

@@ -2,13 +2,7 @@ import math
 
 import frappe
 from frappe import _
-from frappe.utils import (
-	add_days,
-	date_diff,
-	flt,
-	get_link_to_form,
-	month_diff,
-)
+from frappe.utils import add_days, date_diff, flt, get_link_to_form, month_diff
 
 from hrms.hr.utils import get_salary_assignments
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip

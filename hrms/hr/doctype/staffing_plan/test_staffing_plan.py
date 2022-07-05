@@ -6,10 +6,7 @@ import unittest
 import frappe
 from frappe.utils import add_days, nowdate
 
-from hrms.hr.doctype.staffing_plan.staffing_plan import (
-	ParentCompanyError,
-	SubsidiaryCompanyError,
-)
+from hrms.hr.doctype.staffing_plan.staffing_plan import ParentCompanyError, SubsidiaryCompanyError
 
 test_dependencies = ["Designation"]
 

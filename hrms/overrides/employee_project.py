@@ -2,9 +2,10 @@
 # License: GNU General Public License v3. See license.txt
 
 import frappe
-from erpnext.projects.doctype.project.project import Project
 from frappe.query_builder.functions import Max, Min, Sum
 from frappe.utils import flt
+
+from erpnext.projects.doctype.project.project import Project
 
 
 class EmployeeProject(Project):

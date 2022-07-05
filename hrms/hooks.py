@@ -202,7 +202,7 @@ bank_reconciliation_doctypes = ["Expense Claim"]
 # Testing
 # -------
 
-# before_tests = "hrms.install.before_tests"
+before_tests = "hrms.utils.before_test.before_tests"
 
 # Overriding Methods
 # -----------------------------

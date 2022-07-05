@@ -1,13 +1,7 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
-import erpnext
 import frappe
-from erpnext import get_company_currency
-from erpnext.setup.doctype.employee.employee import (
-	InactiveEmployeeStatusError,
-	get_holiday_list_for_employee,
-)
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import (
@@ -21,6 +15,13 @@ from frappe.utils import (
 	getdate,
 	nowdate,
 	today,
+)
+
+import erpnext
+from erpnext import get_company_currency
+from erpnext.setup.doctype.employee.employee import (
+	InactiveEmployeeStatusError,
+	get_holiday_list_for_employee,
 )
 
 

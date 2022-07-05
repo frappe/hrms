@@ -1,11 +1,12 @@
 # Copyright (c) 2013, Frappe Technologies Pvt. Ltd. and contributors
 # License: MIT. See LICENSE
 
+from pypika import functions as fn
+
 import frappe
 from frappe import _
 from frappe.query_builder import Order
 from frappe.utils import getdate
-from pypika import functions as fn
 
 
 def execute(filters=None):

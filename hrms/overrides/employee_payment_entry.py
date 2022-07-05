@@ -1,8 +1,10 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
-import erpnext
 import frappe
+from frappe.utils import flt, nowdate
+
+import erpnext
 from erpnext.accounts.doctype.payment_entry.payment_entry import (
 	PaymentEntry,
 	get_bank_cash_account,
@@ -10,7 +12,6 @@ from erpnext.accounts.doctype.payment_entry.payment_entry import (
 )
 from erpnext.accounts.utils import get_account_currency
 from erpnext.setup.utils import get_exchange_rate
-from frappe.utils import flt, nowdate
 
 
 class EmployeePaymentEntry(PaymentEntry):

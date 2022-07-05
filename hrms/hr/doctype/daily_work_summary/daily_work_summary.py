@@ -2,8 +2,9 @@
 # For license information, please see license.txt
 
 
-import frappe
 from email_reply_parser import EmailReplyParser
+
+import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import global_date_format

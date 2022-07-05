@@ -48,6 +48,7 @@ from hrms.payroll.doctype.payroll_period.payroll_period import (
 	get_period_factor,
 )
 
+
 class SalarySlip(TransactionBase):
 	def __init__(self, *args, **kwargs):
 		super(SalarySlip, self).__init__(*args, **kwargs)

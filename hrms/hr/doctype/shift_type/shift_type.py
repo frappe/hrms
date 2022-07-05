@@ -10,17 +10,15 @@ from frappe.model.document import Document
 from frappe.utils import cint, get_datetime, get_time, getdate
 
 from erpnext.buying.doctype.supplier_scorecard.supplier_scorecard import daterange
-from hrms.hr.doctype.attendance.attendance import mark_attendance
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
+from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
+
+from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.employee_checkin.employee_checkin import (
 	calculate_working_hours,
 	mark_attendance_and_link_log,
 )
-from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
-from hrms.hr.doctype.shift_assignment.shift_assignment import (
-	get_employee_shift,
-	get_shift_details,
-)
+from hrms.hr.doctype.shift_assignment.shift_assignment import get_employee_shift, get_shift_details
 
 
 class ShiftType(Document):

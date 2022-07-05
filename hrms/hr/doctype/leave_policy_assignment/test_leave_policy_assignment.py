@@ -7,10 +7,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, add_months, get_first_day, get_last_day, getdate
 
-from hrms.hr.doctype.leave_application.test_leave_application import (
-	get_employee,
-	get_leave_period,
-)
+from hrms.hr.doctype.leave_application.test_leave_application import get_employee, get_leave_period
 from hrms.hr.doctype.leave_policy.test_leave_policy import create_leave_policy
 from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
 	create_assignment_for_multiple_employees,

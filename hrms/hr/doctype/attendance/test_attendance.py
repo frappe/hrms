@@ -13,6 +13,8 @@ from frappe.utils import (
 	nowdate,
 )
 
+from erpnext.setup.doctype.employee.test_employee import make_employee
+
 from hrms.hr.doctype.attendance.attendance import (
 	DuplicateAttendanceError,
 	OverlappingShiftAttendanceError,
@@ -20,7 +22,6 @@ from hrms.hr.doctype.attendance.attendance import (
 	get_unmarked_days,
 	mark_attendance,
 )
-from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.leave_application.test_leave_application import get_first_sunday
 
 test_records = frappe.get_test_records("Attendance")
