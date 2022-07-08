@@ -4,21 +4,22 @@
 import unittest
 
 import frappe
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import flt, nowdate, random_string
 
 from erpnext.accounts.doctype.account.test_account import create_account
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
-from hrms.hr.doctype.expense_claim.expense_claim import make_bank_entry
+from hrms.hr.doctype.expense_claim.expense_claim import (
+	make_bank_entry,
+	make_expense_claim_for_delivery_trip,
+)
 
 test_dependencies = ["Employee"]
 company_name = "_Test Company 3"
 
 
-class TestExpenseClaim(unittest.TestCase):
-	def tearDown(self):
-		frappe.db.rollback()
-
+class TestExpenseClaim(FrappeTestCase):
 	def test_total_expense_claim_for_project(self):
 		frappe.db.sql("""delete from `tabTask`""")
 		frappe.db.sql("""delete from `tabProject`""")
@@ -272,6 +273,24 @@ class TestExpenseClaim(unittest.TestCase):
 		)
 		self.assertEqual(outstanding_amount, 0)
 		self.assertEqual(total_amount_reimbursed, 5500)
+
+	def test_expense_claim_against_delivery_trip(self):
+		from erpnext.stock.doctype.delivery_trip.test_delivery_trip import (
+			create_address,
+			create_delivery_trip,
+			create_driver,
+			create_vehicle,
+		)
+		from erpnext.tests.utils import create_test_contact_and_address
+
+		driver = create_driver()
+		create_vehicle()
+		create_test_contact_and_address()
+		address = create_address(driver)
+
+		delivery_trip = create_delivery_trip(driver, address)
+		expense_claim = make_expense_claim_for_delivery_trip(delivery_trip.name)
+		self.assertEqual(delivery_trip.name, expense_claim.delivery_trip)
 
 
 def get_payable_account(company):
