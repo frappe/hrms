@@ -72,7 +72,7 @@ def generate_encashment_leave_ledger_entries():
 
 def generate_expiry_allocation_ledger_entries():
 	"""fix ledger entries for missing leave allocation transaction"""
-	from erpnext.hr.doctype.leave_ledger_entry.leave_ledger_entry import expire_allocation
+	from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import expire_allocation
 
 	allocation_list = get_allocation_records()
 

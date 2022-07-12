@@ -89,6 +89,11 @@ def execute():
 	if not frappe.db.table_exists("Employee Tax Exemption Proof Submission"):
 		return
 
+	if not frappe.db.has_column(
+		"Employee Tax Exemption Proof Submission", "income_from_other_sources"
+	):
+		return
+
 	migrated = []
 	proofs = frappe.get_all(
 		"Employee Tax Exemption Proof Submission",
@@ -110,6 +115,9 @@ def execute():
 				pass
 
 	if not frappe.db.table_exists("Employee Tax Exemption Declaration"):
+		return
+
+	if not frappe.db.has_column("Employee Tax Exemption Declaration", "income_from_other_sources"):
 		return
 
 	declerations = frappe.get_all(

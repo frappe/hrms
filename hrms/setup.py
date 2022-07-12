@@ -1,5 +1,6 @@
 import frappe
 import os
+import click
 from frappe import _
 
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
@@ -601,7 +602,6 @@ def get_post_install_patches():
 		"erpnext.patches.v10_0.migrate_daily_work_summary_settings_to_daily_work_summary_group",
 		"erpnext.patches.v11_0.move_leave_approvers_from_employee",
 		"erpnext.patches.v11_0.rename_field_max_days_allowed",
-		"erpnext.patches.v11_0.set_department_for_doctypes",
 		"erpnext.patches.v11_0.set_department_for_doctypes",
 		"erpnext.patches.v11_0.add_expense_claim_default_account",
 		"erpnext.patches.v11_0.drop_column_max_days_allowed",
