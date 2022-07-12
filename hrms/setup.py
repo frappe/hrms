@@ -15,6 +15,8 @@ def after_install():
 	add_non_standard_user_types()
 	set_single_defaults()
 	frappe.db.commit()
+	run_post_install_patches()
+	click.secho("Thank you for installing Frappe HR!", fg="green")
 
 
 def get_custom_fields():
@@ -591,3 +593,51 @@ def set_single_defaults():
 				pass
 
 	frappe.db.set_default("date_format", "dd-mm-yyyy")
+
+
+def get_post_install_patches():
+	return (
+		"erpnext.patches.v10_0.rename_offer_letter_to_job_offer",
+		"erpnext.patches.v10_0.migrate_daily_work_summary_settings_to_daily_work_summary_group",
+		"erpnext.patches.v11_0.move_leave_approvers_from_employee",
+		"erpnext.patches.v11_0.rename_field_max_days_allowed",
+		"erpnext.patches.v11_0.set_department_for_doctypes",
+		"erpnext.patches.v11_0.set_department_for_doctypes",
+		"erpnext.patches.v11_0.add_expense_claim_default_account",
+		"erpnext.patches.v11_0.drop_column_max_days_allowed",
+		"erpnext.patches.v11_0.rename_additional_salary_component_additional_salary",
+		"erpnext.patches.v11_1.set_salary_details_submittable",
+		"erpnext.patches.v11_1.rename_depends_on_lwp",
+		"erpnext.patches.v12_0.generate_leave_ledger_entries",
+		"erpnext.patches.v12_0.remove_denied_leaves_from_leave_ledger",
+		"erpnext.patches.v12_0.set_employee_preferred_emails",
+		"erpnext.patches.v12_0.set_job_offer_applicant_email",
+		"erpnext.patches.v13_0.move_tax_slabs_from_payroll_period_to_income_tax_slab",
+		"erpnext.patches.v12_0.remove_duplicate_leave_ledger_entries",
+		"erpnext.patches.v12_0.move_due_advance_amount_to_pending_amount",
+		"erpnext.patches.v13_0.move_doctype_reports_and_notification_from_hr_to_payroll",
+		"erpnext.patches.v13_0.move_payroll_setting_separately_from_hr_settings",
+		"erpnext.patches.v13_0.update_start_end_date_for_old_shift_assignment",
+		"erpnext.patches.v13_0.updates_for_multi_currency_payroll",
+		"erpnext.patches.v13_0.update_reason_for_resignation_in_employee",
+		"erpnext.patches.v13_0.set_company_in_leave_ledger_entry",
+		"erpnext.patches.v13_0.rename_stop_to_send_birthday_reminders",
+		"erpnext.patches.v13_0.set_training_event_attendance",
+		"erpnext.patches.v14_0.set_payroll_cost_centers",
+		"erpnext.patches.v13_0.update_employee_advance_status",
+		"erpnext.patches.v13_0.update_expense_claim_status_for_paid_advances",
+		"erpnext.patches.v14_0.delete_employee_transfer_property_doctype",
+		"erpnext.patches.v13_0.set_payroll_entry_status",
+	)
+
+
+def run_post_install_patches():
+	print("\nPatching Existing Data...")
+
+	POST_INSTALL_PATCHES = get_post_install_patches()
+
+	for patch in POST_INSTALL_PATCHES:
+		# patch has not run on the site before
+		if not frappe.db.exists("Patch Log", {"patch": patch}):
+			patch_name = patch.split(".")[-1]
+			frappe.get_attr(f"hrms.patches.post_install.{patch_name}.execute")()
