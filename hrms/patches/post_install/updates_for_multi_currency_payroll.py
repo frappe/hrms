@@ -8,7 +8,7 @@ from frappe.model.utils.rename_field import rename_field
 
 def execute():
 
-	frappe.reload_doc("Accounts", "doctype", "Salary Component Account")
+	frappe.reload_doc("payroll", "doctype", "Salary Component Account")
 	if frappe.db.has_column("Salary Component Account", "default_account"):
 		rename_field("Salary Component Account", "default_account", "account")
 
@@ -43,13 +43,14 @@ def execute():
 			"""
 			update `tab{doctype}`
 			set company = (select company from tabEmployee where name=`tab{doctype}`.employee)
+			where company IS NULL
 		""".format(
 				doctype=dt
 			)
 		)
 
 	# update exchange rate for employee advance
-	frappe.db.sql("update `tabEmployee Advance` set exchange_rate=1")
+	frappe.db.sql("update `tabEmployee Advance` set exchange_rate=1 where exchange_rate is NULL")
 
 	# get all companies and it's currency
 	all_companies = frappe.db.get_all(
@@ -88,7 +89,9 @@ def execute():
 
 		for dt in doctypes_for_currency:
 			frappe.db.sql(
-				"""update `tab{doctype}` set currency = %s where company=%s""".format(doctype=dt),
+				"""update `tab{doctype}` set currency = %s where company=%s and currency IS NULL""".format(
+					doctype=dt
+				),
 				(company_currency, company),
 			)
 
@@ -100,6 +103,7 @@ def execute():
 				exchange_rate = 1,
 				payroll_payable_account=%s
 			where company=%s
+			and currency IS NULL
 		""",
 			(company_currency, default_payroll_payable_account, company),
 		)
@@ -111,6 +115,7 @@ def execute():
 			set currency = %s,
 				payroll_payable_account=%s
 			where company=%s
+			and currency IS NULL
 		""",
 			(company_currency, default_payroll_payable_account, company),
 		)
@@ -128,6 +133,7 @@ def execute():
 				base_rounded_total = rounded_total,
 				base_total_in_words = total_in_words
 			where company=%s
+			and currency IS NULL
 		""",
 			(company_currency, company),
 		)

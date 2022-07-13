@@ -13,6 +13,12 @@ def execute():
 	frappe.reload_doc("HR", "doctype", "Leave Encashment")
 	frappe.reload_doc("HR", "doctype", "Leave Type")
 
+	# no need to create leave ledger entries if they already exist
+	# they were introduced in v12 and this patch was added to create entries for existing data
+	# ref: https://github.com/frappe/erpnext/pull/17624
+	if frappe.db.a_row_exists("Leave Ledger Entry"):
+		return
+
 	if not frappe.get_meta("Leave Allocation").has_field("unused_leaves"):
 		frappe.reload_doc("HR", "doctype", "Leave Allocation")
 		update_leave_allocation_fieldname()
@@ -25,12 +31,13 @@ def execute():
 
 def update_leave_allocation_fieldname():
 	"""maps data from old field to the new field"""
-	frappe.db.sql(
+	if frappe.db.has_column("Leave Allocation", "carry_forwarded_leaves"):
+		frappe.db.sql(
+			"""
+			UPDATE `tabLeave Allocation`
+			SET `unused_leaves` = `carry_forwarded_leaves`
 		"""
-		UPDATE `tabLeave Allocation`
-		SET `unused_leaves` = `carry_forwarded_leaves`
-	"""
-	)
+		)
 
 
 def generate_allocation_ledger_entries():
