@@ -26,7 +26,7 @@ frappe.ui.form.on("Journal Entry", {
 
 			if (jvd.reference_type === "Payroll Entry") {
 				return {
-					query: "erpnext.payroll.doctype.payroll_entry.payroll_entry.get_payroll_entries_for_jv",
+					query: "hrms.payroll.doctype.payroll_entry.payroll_entry.get_payroll_entries_for_jv",
 				};
 			}
 		})
