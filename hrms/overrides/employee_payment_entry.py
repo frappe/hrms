@@ -64,27 +64,23 @@ def get_payment_entry_for_employee(dt, dn, party_amount=None, bank_account=None,
 		doc, party_account_currency, bank, outstanding_amount, payment_type, bank_amount
 	)
 
-	pe = frappe.get_doc(
-		{
-			"doctype": "Payment Entry",
-			"payment_type": payment_type,
-			"company": doc.company,
-			"cost_center": doc.get("cost_center"),
-			"posting_date": nowdate(),
-			"mode_of_payment": doc.get("mode_of_payment"),
-			"party_type": "Employee",
-			"party": doc.get("employee"),
-			"contact_person": doc.get("contact_person"),
-			"contact_email": doc.get("contact_email"),
-			"letter_head": doc.get("letter_head"),
-			"paid_from": bank.account,
-			"paid_to": party_account,
-			"paid_from_account_currency": bank.account_currency,
-			"paid_to_account_currency": party_account_currency,
-			"paid_amount": paid_amount,
-			"received_amount": received_amount,
-		}
-	)
+	pe = frappe.new_doc("Payment Entry")
+	pe.payment_type = payment_type
+	pe.company = doc.company
+	pe.cost_center = doc.get("cost_center")
+	pe.posting_date = nowdate()
+	pe.mode_of_payment = doc.get("mode_of_payment")
+	pe.party_type = "Employee"
+	pe.party = doc.get("employee")
+	pe.contact_person = doc.get("contact_person")
+	pe.contact_email = doc.get("contact_email")
+	pe.letter_head = doc.get("letter_head")
+	pe.paid_from = bank.account
+	pe.paid_to = party_account
+	pe.paid_from_account_currency = bank.account_currency
+	pe.paid_to_account_currency = party_account_currency
+	pe.paid_amount = paid_amount
+	pe.received_amount = received_amount
 
 	pe.append(
 		"references",

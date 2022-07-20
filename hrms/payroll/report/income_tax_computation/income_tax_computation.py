@@ -198,6 +198,9 @@ class IncomeTaxComputationReport(object):
 	def get_tax_exempted_earnings_and_deductions(self):
 		tax_exempted_components = self.get_tax_exempted_components()
 
+		if not tax_exempted_components:
+			return
+
 		# Get component totals from existing salary slips
 		ss = frappe.qb.DocType("Salary Slip")
 		ss_comps = frappe.qb.DocType("Salary Detail")

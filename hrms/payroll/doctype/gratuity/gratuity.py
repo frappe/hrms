@@ -6,6 +6,7 @@ from math import floor
 
 import frappe
 from frappe import _, bold
+from frappe.query_builder.functions import Sum
 from frappe.utils import flt, get_datetime, get_link_to_form
 
 from erpnext.accounts.general_ledger import make_gl_entries
@@ -17,8 +18,28 @@ class Gratuity(AccountsController):
 		data = calculate_work_experience_and_amount(self.employee, self.gratuity_rule)
 		self.current_work_experience = data["current_work_experience"]
 		self.amount = data["amount"]
-		if self.docstatus == 1:
-			self.status = "Unpaid"
+		self.set_status()
+
+	def set_status(self, update=False):
+		precision = self.precision("paid_amount")
+		status = None
+
+		if self.docstatus == 0:
+			status = "Draft"
+		elif self.docstatus == 1:
+			if flt(self.paid_amount) > 0 and flt(self.amount, precision) == flt(
+				self.paid_amount, precision
+			):
+				status = "Paid"
+			else:
+				status = "Unpaid"
+		elif self.docstatus == 2:
+			status = "Cancelled"
+
+		if update:
+			self.db_set("status", status)
+		else:
+			self.status = status
 
 	def on_submit(self):
 		if self.pay_via_salary_slip:
@@ -29,6 +50,7 @@ class Gratuity(AccountsController):
 	def on_cancel(self):
 		self.ignore_linked_doctypes = ["GL Entry"]
 		self.create_gl_entries(cancel=True)
+		self.set_status(update=True)
 
 	def create_gl_entries(self, cancel=False):
 		gl_entries = self.get_gl_entries()
@@ -87,25 +109,25 @@ class Gratuity(AccountsController):
 			additional_salary.submit()
 
 	def set_total_advance_paid(self):
-		paid_amount = frappe.db.sql(
-			"""
-			select ifnull(sum(debit_in_account_currency), 0) as paid_amount
-			from `tabGL Entry`
-			where against_voucher_type = 'Gratuity'
-				and against_voucher = %s
-				and party_type = 'Employee'
-				and party = %s
-		""",
-			(self.name, self.employee),
-			as_dict=1,
-		)[0].paid_amount
+		gle = frappe.qb.DocType("GL Entry")
+		paid_amount = (
+			frappe.qb.from_(gle)
+			.select(Sum(gle.debit_in_account_currency).as_("paid_amount"))
+			.where(
+				(gle.against_voucher_type == "Gratuity")
+				& (gle.against_voucher == self.name)
+				& (gle.party_type == "Employee")
+				& (gle.party == self.employee)
+				& (gle.docstatus == 1)
+				& (gle.is_cancelled == 0)
+			)
+		).run(as_dict=True)[0].paid_amount or 0
 
 		if flt(paid_amount) > self.amount:
 			frappe.throw(_("Row {0}# Paid Amount cannot be greater than Total amount"))
 
 		self.db_set("paid_amount", paid_amount)
-		if self.amount == self.paid_amount:
-			self.db_set("status", "Paid")
+		self.set_status(update=True)
 
 
 @frappe.whitelist()
