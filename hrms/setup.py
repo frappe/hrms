@@ -550,6 +550,7 @@ def create_user_type(user_type, data):
 		)
 
 	create_role_permissions_for_doctype(doc, data)
+	doc.flags.ignore_links = True
 	doc.save(ignore_permissions=True)
 
 
