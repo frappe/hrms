@@ -2,9 +2,9 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.require("assets/erpnext/js/salary_slip_deductions_report_filters.js", function() {
+frappe.require("assets/hrms/js/salary_slip_deductions_report_filters.js", function() {
 
-	let ecs_checklist_filter = erpnext.salary_slip_deductions_report_filters
+	let ecs_checklist_filter = hrms.salary_slip_deductions_report_filters
 	ecs_checklist_filter['filters'].push({
 		fieldname: "type",
 		label: __("Type"),

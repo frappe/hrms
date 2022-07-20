@@ -2,6 +2,6 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.require("assets/erpnext/js/salary_slip_deductions_report_filters.js", function() {
-	frappe.query_reports["Income Tax Deductions"] = erpnext.salary_slip_deductions_report_filters;
+frappe.require("assets/hrms/js/salary_slip_deductions_report_filters.js", function() {
+	frappe.query_reports["Income Tax Deductions"] = hrms.salary_slip_deductions_report_filters;
 });
