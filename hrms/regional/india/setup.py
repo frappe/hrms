@@ -26,7 +26,7 @@ def get_custom_fields():
 				"fieldtype": "Select",
 				"insert_after": "description",
 				"options": (
-					"\nProvident Fund\nAdditional Provident Fund\nProvident Fund" " Loan\nProfessional Tax"
+					"\nProvident Fund\nAdditional Provident Fund\nProvident Fund Loan\nProfessional Tax"
 				),
 				"depends_on": 'eval:doc.type == "Deduction"',
 				"translatable": 0,
