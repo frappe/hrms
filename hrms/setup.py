@@ -571,6 +571,7 @@ def update_select_perm_after_install():
 	for row in frappe.get_all("User Type", filters={"is_standard": 0}):
 		print("Updating user type :- ", row.name)
 		doc = frappe.get_doc("User Type", row.name)
+		doc.flags.ignore_links = True
 		doc.save()
 
 	frappe.flags.update_select_perm_after_migrate = False
