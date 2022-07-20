@@ -153,6 +153,11 @@ class TestGratuity(FrappeTestCase):
 		self.assertEqual(gratuity.status, "Paid")
 		self.assertEqual(flt(gratuity.paid_amount, 2), flt(gratuity.amount, 2))
 
+		pe.cancel()
+		gratuity.reload()
+		self.assertEqual(gratuity.status, "Unpaid")
+		self.assertEqual(gratuity.paid_amount, 0)
+
 
 def get_gratuity_rule(name):
 	rule = frappe.db.exists("Gratuity Rule", name)
