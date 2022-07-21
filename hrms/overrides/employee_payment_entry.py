@@ -13,6 +13,8 @@ from erpnext.accounts.doctype.payment_entry.payment_entry import (
 from erpnext.accounts.utils import get_account_currency
 from erpnext.setup.utils import get_exchange_rate
 
+from hrms.hr.doctype.expense_claim.expense_claim import get_outstanding_amount_for_claim
+
 
 class EmployeePaymentEntry(PaymentEntry):
 	def get_valid_reference_doctypes(self):
@@ -208,12 +210,7 @@ def get_reference_details_for_employee(reference_doctype, reference_name, party_
 	)
 
 	if reference_doctype == "Expense Claim":
-		outstanding_amount = (
-			flt(ref_doc.get("total_sanctioned_amount"))
-			+ flt(ref_doc.get("total_taxes_and_charges"))
-			- flt(ref_doc.get("total_amount_reimbursed"))
-			- flt(ref_doc.get("total_advance_amount"))
-		)
+		outstanding_amount = get_outstanding_amount_for_claim(ref_doc)
 	elif reference_doctype == "Employee Advance":
 		outstanding_amount = flt(ref_doc.advance_amount) - flt(ref_doc.paid_amount)
 		if party_account_currency != ref_doc.currency:
