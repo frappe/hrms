@@ -15,7 +15,6 @@ def after_install():
 	update_hr_defaults()
 	add_non_standard_user_types()
 	set_single_defaults()
-	frappe.db.commit()
 	run_post_install_patches()
 	click.secho("Thank you for installing Frappe HR!", fg="green")
 
@@ -630,6 +629,8 @@ def get_post_install_patches():
 		"erpnext.patches.v13_0.update_expense_claim_status_for_paid_advances",
 		"erpnext.patches.v14_0.delete_employee_transfer_property_doctype",
 		"erpnext.patches.v13_0.set_payroll_entry_status",
+		# HRMS
+		"create_country_fixtures",
 	)
 
 
