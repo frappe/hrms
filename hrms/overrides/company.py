@@ -13,13 +13,11 @@ def make_company_fixtures(doc, method=None):
 	if not frappe.flags.country_change:
 		return
 
-	run_regional_setup(doc.name, doc.country)
+	run_regional_setup(doc.country)
 	make_salary_components(doc.country)
 
 
-def run_regional_setup(company, country):
-	company = company or frappe.db.get_value("Global Defaults", None, "default_company")
-
+def run_regional_setup(country):
 	try:
 		module_name = f"hrms.regional.{frappe.scrub(country)}.setup.setup"
 		frappe.get_attr(module_name)()
@@ -38,8 +36,11 @@ def make_salary_components(country):
 	docs = []
 
 	file_name = "salary_components.json"
-	file_path = frappe.get_app_path("hrms", "payroll", "data", file_name)
-	docs.extend(json.loads(read_data_file(file_path)))
+
+	# default components already added
+	if not frappe.db.exists("Salary Component", "Basic"):
+		file_path = frappe.get_app_path("hrms", "payroll", "data", file_name)
+		docs.extend(json.loads(read_data_file(file_path)))
 
 	file_path = frappe.get_app_path("hrms", "regional", frappe.scrub(country), "data", file_name)
 	docs.extend(json.loads(read_data_file(file_path)))
