@@ -1,4 +1,4 @@
-# Frappe HRMS
+# Frappe HR
 
 Open Source, modern, and easy-to-use HR and Payroll Software for all organizations.
 
@@ -7,7 +7,7 @@ Open Source, modern, and easy-to-use HR and Payroll Software for all organizatio
 
 ## Introduction
 
-Frappe HRMS has everything you need to drive excellence within the company. It's a complete HRMS solution with over 13 different modules right from Employee Management, Onboarding, Leaves, to Payroll, Taxation, and more!
+Frappe HR has everything you need to drive excellence within the company. It's a complete HRMS solution with over 13 different modules right from Employee Management, Onboarding, Leaves, to Payroll, Taxation, and more!
 
 ![HRMS](hrms.png)
 
@@ -43,7 +43,7 @@ Frappe HRMS has everything you need to drive excellence within the company. It's
 
 ## Documentation
 
-Complete documentation for Frappe HRMS is available at https://docs.erpnext.com/docs/user/manual/en/human-resources
+Complete documentation for Frappe HR is available at https://docs.erpnext.com/docs/user/manual/en/human-resources
 
 ## License
 
