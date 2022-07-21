@@ -49,4 +49,4 @@ Complete documentation for Frappe HR is available at https://docs.erpnext.com/do
 
 GNU GPL V3. (See [license.txt](license.txt) for more information).
 
-The HRMS code is licensed as GNU General Public License (v3) and the copyright is owned by Frappe Technologies Pvt Ltd (Frappe) and Contributors.
+The HR code is licensed as GNU General Public License (v3) and the copyright is owned by Frappe Technologies Pvt Ltd (Frappe) and Contributors.
