@@ -22,7 +22,11 @@ from erpnext.loan_management.doctype.process_loan_interest_accrual.process_loan_
 )
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
-from hrms.payroll.doctype.payroll_entry.payroll_entry import get_end_date, get_start_end_dates
+from hrms.payroll.doctype.payroll_entry.payroll_entry import (
+	PayrollEntry,
+	get_end_date,
+	get_start_end_dates,
+)
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	create_account,
 	make_deduction_salary_component,
@@ -398,7 +402,7 @@ class TestPayrollEntry(FrappeTestCase):
 def get_payroll_entry(**args):
 	args = frappe._dict(args)
 
-	payroll_entry = frappe.new_doc("Payroll Entry")
+	payroll_entry: PayrollEntry = frappe.new_doc("Payroll Entry")
 	payroll_entry.company = args.company or erpnext.get_default_company()
 	payroll_entry.start_date = args.start_date or "2016-11-01"
 	payroll_entry.end_date = args.end_date or "2016-11-30"

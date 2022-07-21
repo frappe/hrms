@@ -642,7 +642,9 @@ class PayrollEntry(Document):
 		return marked_days
 
 
-def get_sal_struct(company, currency, salary_slip_based_on_timesheet, condition):
+def get_sal_struct(
+	company: str, currency: str, salary_slip_based_on_timesheet: int, condition: str
+):
 	return frappe.db.sql_list(
 		"""
 		select
@@ -978,24 +980,27 @@ def get_payroll_entries_for_jv(doctype, txt, searchfield, start, page_len, filte
 	)
 
 
-def get_employee_list(filters):
-	cond = get_filter_condition(filters)
-	cond += get_joining_relieving_condition(filters.start_date, filters.end_date)
-	condition = """and payroll_frequency = '%(payroll_frequency)s'""" % {
-		"payroll_frequency": filters.payroll_frequency
-	}
+def get_employee_list(filters: frappe._dict) -> list[str]:
+	condition = f"and payroll_frequency = '{filters.payroll_frequency}'"
+
 	sal_struct = get_sal_struct(
 		filters.company, filters.currency, filters.salary_slip_based_on_timesheet, condition
 	)
-	if sal_struct:
-		cond += "and t2.salary_structure IN %(sal_struct)s "
-		cond += "and t2.payroll_payable_account = %(payroll_payable_account)s "
-		cond += "and %(from_date)s >= t2.from_date"
-		emp_list = get_emp_list(sal_struct, cond, filters.end_date, filters.payroll_payable_account)
-		emp_list = remove_payrolled_employees(emp_list, filters.start_date, filters.end_date)
-		return emp_list
 
-	return []
+	if not sal_struct:
+		return []
+
+	cond = (
+		get_filter_condition(filters)
+		+ get_joining_relieving_condition(filters.start_date, filters.end_date)
+		+ (
+			"and t2.salary_structure IN %(sal_struct)s "
+			"and t2.payroll_payable_account = %(payroll_payable_account)s "
+			"and %(from_date)s >= t2.from_date"
+		)
+	)
+	emp_list = get_emp_list(sal_struct, cond, filters.end_date, filters.payroll_payable_account)
+	return remove_payrolled_employees(emp_list, filters.start_date, filters.end_date)
 
 
 @frappe.whitelist()
