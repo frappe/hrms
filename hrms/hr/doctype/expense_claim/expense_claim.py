@@ -349,6 +349,30 @@ def update_reimbursed_amount(doc, amount):
 	frappe.db.set_value("Expense Claim", doc.name, "status", doc.status)
 
 
+def get_outstanding_amount_for_claim(claim):
+	if isinstance(claim, str):
+		claim = frappe.db.get_value(
+			"Expense Claim",
+			claim,
+			(
+				"total_sanctioned_amount",
+				"total_taxes_and_charges",
+				"total_amount_reimbursed",
+				"total_advance_amount",
+			),
+			as_dict=True,
+		)
+
+	outstanding_amt = (
+		flt(claim.total_sanctioned_amount)
+		+ flt(claim.total_taxes_and_charges)
+		- flt(claim.total_amount_reimbursed)
+		- flt(claim.total_advance_amount)
+	)
+
+	return outstanding_amt
+
+
 @frappe.whitelist()
 def make_bank_entry(dt, dn):
 	from erpnext.accounts.doctype.journal_entry.journal_entry import get_default_bank_cash_account
@@ -358,11 +382,7 @@ def make_bank_entry(dt, dn):
 	if not default_bank_cash_account:
 		default_bank_cash_account = get_default_bank_cash_account(expense_claim.company, "Cash")
 
-	payable_amount = (
-		flt(expense_claim.total_sanctioned_amount)
-		- flt(expense_claim.total_amount_reimbursed)
-		- flt(expense_claim.total_advance_amount)
-	)
+	payable_amount = get_outstanding_amount_for_claim(expense_claim)
 
 	je = frappe.new_doc("Journal Entry")
 	je.voucher_type = "Bank Entry"
@@ -499,15 +519,12 @@ def validate_expense_claim_in_jv(doc, method=None):
 	"""Validates Expense Claim amount in Journal Entry"""
 	for d in doc.accounts:
 		if d.reference_type == "Expense Claim":
-			sanctioned_amount, reimbursed_amount = frappe.db.get_value(
-				"Expense Claim", d.reference_name, ("total_sanctioned_amount", "total_amount_reimbursed")
-			)
-			pending_amount = flt(sanctioned_amount) - flt(reimbursed_amount)
-			if d.debit > pending_amount:
+			outstanding_amt = get_outstanding_amount_for_claim(d.reference_name)
+			if d.debit > outstanding_amt:
 				frappe.throw(
 					_(
-						"Row No {0}: Amount cannot be greater than Pending Amount against Expense Claim {1}. Pending Amount is {2}"
-					).format(d.idx, d.reference_name, pending_amount)
+						"Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
+					).format(d.idx, d.reference_name, outstanding_amt)
 				)
 
 
