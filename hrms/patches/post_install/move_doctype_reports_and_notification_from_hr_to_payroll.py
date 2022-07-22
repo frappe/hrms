@@ -6,6 +6,9 @@ import frappe
 
 
 def execute():
+	if frappe.db.exists("DocType", {"module": "Payroll", "name": "Employee Incentive"}):
+		return
+
 	frappe.db.sql(
 		"""UPDATE `tabPrint Format`
         SET module = 'Payroll'

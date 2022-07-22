@@ -11,6 +11,9 @@ def execute():
 	):
 		return
 
+	if frappe.db.a_row_exists("Income Tax Slab"):
+		return
+
 	for doctype in (
 		"income_tax_slab",
 		"salary_structure_assignment",
