@@ -517,7 +517,9 @@ def get_holidays_for_employee(
 	if only_non_weekly:
 		filters["weekly_off"] = False
 
-	holidays = frappe.get_all("Holiday", fields=["description", "holiday_date"], filters=filters)
+	holidays = frappe.get_all(
+		"Holiday", fields=["description", "holiday_date"], filters=filters, order_by="holiday_date"
+	)
 
 	return holidays
 
