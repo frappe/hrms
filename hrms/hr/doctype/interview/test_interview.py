@@ -90,7 +90,7 @@ class TestInterview(unittest.TestCase):
 			{
 				"name": interview.name,
 				"interview_round": interview.interview_round,
-				"expected_average_rating": interview.expected_average_rating * 5,
+				"scheduled_on": interview.scheduled_on,
 				"average_rating": interview.average_rating * 5,
 				"status": "Pending",
 			},
