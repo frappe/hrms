@@ -84,16 +84,13 @@ def get_interview_details(job_applicant):
 	interview_details = frappe.db.get_all(
 		"Interview",
 		filters={"job_applicant": job_applicant, "docstatus": ["!=", 2]},
-		fields=["name", "interview_round", "expected_average_rating", "average_rating", "status"],
+		fields=["name", "interview_round", "scheduled_on", "average_rating", "status"],
 	)
 	interview_detail_map = {}
 	meta = frappe.get_meta("Interview")
-	number_of_stars = meta.get_options("expected_average_rating") or 5
+	number_of_stars = meta.get_options("average_rating") or 5
 
 	for detail in interview_details:
-		detail.expected_average_rating = (
-			detail.expected_average_rating * number_of_stars if detail.expected_average_rating else 0
-		)
 		detail.average_rating = detail.average_rating * number_of_stars if detail.average_rating else 0
 
 		interview_detail_map[detail.name] = detail
