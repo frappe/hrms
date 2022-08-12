@@ -153,6 +153,7 @@ doc_events = {
 	},
 	"Loan": {"validate": "hrms.hr.utils.validate_loan_repay_from_salary"},
 	"Employee": {
+		"before_insert": "hrms.limits.validate_employee_limit",
 		"validate": [
 			"hrms.overrides.employee_master.validate_onboarding_process",
 			"hrms.overrides.employee_master.update_to_date_in_work_history",
