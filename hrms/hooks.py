@@ -1,5 +1,5 @@
 app_name = "hrms"
-app_title = "HRMS"
+app_title = "Frappe HR"
 app_publisher = "Frappe Technologies Pvt. Ltd."
 app_description = "Modern HR and Payroll Software"
 app_email = "contact@frappe.io"
