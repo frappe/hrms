@@ -1,11 +1,6 @@
 {
- "charts": [
-  {
-   "chart_name": "Outgoing Salary",
-   "label": "Outgoing Salary"
-  }
- ],
- "content": "[{\"type\":\"onboarding\",\"data\":{\"onboarding_name\":\"Payroll\",\"col\":12}},{\"type\":\"chart\",\"data\":{\"chart_name\":\"Outgoing Salary\",\"col\":12}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Salary Structure\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Payroll Entry\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Salary Slip\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Income Tax Slab\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Salary Register\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dashboard\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports & Masters</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Payroll\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Taxation\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Compensations\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "charts": [],
+ "content": "[{\"type\":\"onboarding\",\"data\":{\"onboarding_name\":\"Payroll\",\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dashboard\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Salary Register\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Quick Links\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}}]",
  "creation": "2020-05-27 19:54:23.405607",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -15,14 +10,6 @@
  "idx": 0,
  "label": "Payroll",
  "links": [
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Payroll",
-   "link_count": 0,
-   "onboard": 0,
-   "type": "Card Break"
-  },
   {
    "dependencies": "",
    "hidden": 0,
@@ -77,14 +64,6 @@
    "link_type": "DocType",
    "onboard": 1,
    "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Taxation",
-   "link_count": 0,
-   "onboard": 0,
-   "type": "Card Break"
   },
   {
    "dependencies": "",
@@ -164,14 +143,6 @@
    "type": "Link"
   },
   {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Compensations",
-   "link_count": 0,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -227,14 +198,6 @@
    "type": "Link"
   },
   {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Reports",
-   "link_count": 0,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
    "dependencies": "Salary Slip",
    "hidden": 0,
    "is_query_report": 1,
@@ -246,16 +209,16 @@
    "type": "Link"
   },
   {
-    "dependencies": "Salary Structure",
-    "hidden": 0,
-    "is_query_report": 1,
-    "label": "Income Tax Computation",
-    "link_count": 0,
-    "link_to": "Income Tax Computation",
-    "link_type": "Report",
-    "onboard": 0,
-    "type": "Link"
-   },
+   "dependencies": "Salary Structure",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Income Tax Computation",
+   "link_count": 0,
+   "link_to": "Income Tax Computation",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
   {
    "dependencies": "Salary Slip",
    "hidden": 0,
@@ -321,51 +284,77 @@
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Settings",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payroll Settings",
+   "link_count": 0,
+   "link_to": "Payroll Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Quick Links",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payroll Entry",
+   "link_count": 0,
+   "link_to": "Payroll Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Salary Slip",
+   "link_count": 0,
+   "link_to": "Salary Slip",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2022-02-23 17:41:19.098813",
+ "modified": "2022-08-20 19:42:54.909095",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll",
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,
+ "quick_lists": [],
  "restrict_to_domain": "",
  "roles": [],
- "sequence_id": 19.0,
+ "sequence_id": 15.0,
  "shortcuts": [
-  {
-   "label": "Salary Structure",
-   "link_to": "Salary Structure",
-   "type": "DocType"
-  },
-  {
-   "label": "Payroll Entry",
-   "link_to": "Payroll Entry",
-   "type": "DocType"
-  },
-  {
-   "color": "",
-   "format": "{} Pending",
-   "label": "Salary Slip",
-   "link_to": "Salary Slip",
-   "stats_filter": "{\"status\": \"Draft\"}",
-   "type": "DocType"
-  },
-  {
-   "label": "Income Tax Slab",
-   "link_to": "Income Tax Slab",
-   "type": "DocType"
-  },
-  {
-   "label": "Salary Register",
-   "link_to": "Salary Register",
-   "type": "Report"
-  },
   {
    "label": "Dashboard",
    "link_to": "Payroll",
    "type": "Dashboard"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Salary Register",
+   "link_to": "Salary Register",
+   "type": "Report"
   }
  ],
  "title": "Payroll"
