@@ -1,6 +1,11 @@
 {
- "charts": [],
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Checkin\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Attendance\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Shift Request\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 18px;\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Shifts\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Attendance\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Time\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "charts": [
+  {
+   "chart_name": "Attendance Count",
+   "label": "Attendance Count"
+  }
+ ],
+ "content": "[{\"type\":\"chart\",\"data\":{\"chart_name\":\"Attendance Count\",\"col\":12}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Checkin\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Attendance\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Shift Request\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 18px;\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Shifts\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Attendance\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Time\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2022-08-20 15:50:06.598086",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -183,7 +188,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-08-20 20:03:39.162843",
+ "modified": "2022-08-21 14:09:53.000149",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift & Attendance",

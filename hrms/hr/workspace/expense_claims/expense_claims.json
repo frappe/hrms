@@ -1,6 +1,11 @@
 {
- "charts": [],
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Expense Claim\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Advance\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Claims\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Advances\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Travel\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "charts": [
+  {
+   "chart_name": "Expense Claims",
+   "label": "Expense Claims"
+  }
+ ],
+ "content": "[{\"type\":\"chart\",\"data\":{\"chart_name\":\"Expense Claims\",\"col\":12}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Expense Claim\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Advance\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Claims\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Advances\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Travel\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2022-08-20 16:28:40.701015",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -143,7 +148,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-08-20 20:04:38.962349",
+ "modified": "2022-08-21 14:08:08.174450",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claims",
