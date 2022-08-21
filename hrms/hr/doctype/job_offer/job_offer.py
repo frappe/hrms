@@ -6,8 +6,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
-from frappe.utils import cint
-from frappe.utils.data import get_link_to_form
+from frappe.utils import cint, flt, get_link_to_form
 
 
 class JobOffer(Document):
@@ -105,3 +104,22 @@ def make_employee(source_name, target_doc=None):
 		set_missing_values,
 	)
 	return doc
+
+
+@frappe.whitelist()
+def get_offer_acceptance_rate(company=None, department=None):
+	filters = {"docstatus": 1}
+	if company:
+		filters["company"] = company
+	if department:
+		filters["department"] = department
+
+	total_offers = frappe.db.count("Job Offer", filters=filters)
+
+	filters["status"] = "Accepted"
+	total_accepted = frappe.db.count("Job Offer", filters=filters)
+
+	return {
+		"value": flt(total_accepted) / flt(total_offers) * 100 if total_offers else 0,
+		"fieldtype": "Percent",
+	}
