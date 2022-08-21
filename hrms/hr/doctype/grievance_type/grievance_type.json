@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_rename": 1,
  "autoname": "Prompt",
  "creation": "2021-05-11 12:41:50.256071",
  "doctype": "DocType",
@@ -22,10 +23,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-06-21 12:54:37.764712",
+ "modified": "2022-08-21 13:05:39.326191",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Grievance Type",
+ "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [
   {
@@ -65,6 +67,8 @@
    "write": 1
   }
  ],
+ "quick_entry": 1,
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "states": []
 }
