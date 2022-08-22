@@ -45,22 +45,14 @@ def get_data(
 
 
 def get_ranges() -> list[tuple[int, int]]:
-	return [
-		(15, 19),
-		(20, 24),
-		(25, 29),
-		(30, 34),
-		(35, 39),
-		(40, 44),
-		(45, 49),
-		(50, 54),
-		(55, 59),
-		(60, 64),
-		(65, 69),
-		(70, 74),
-		(75, 79),
-		80,
-	]
+	ranges = []
+
+	for i in range(15, 80, 5):
+		ranges.append((i, i + 4))
+
+	ranges.append(80)
+
+	return ranges
 
 
 def get_age_list(employees) -> list[int]:
