@@ -4,13 +4,16 @@
    "card": "Job Openings"
   },
   {
+   "card": "Total Applicants (This month)"
+  },
+  {
    "card": "Accepted Job Applicants"
   },
   {
    "card": "Rejected Job Applicants"
   },
   {
-   "card": "Job Offers"
+   "card": "Job Offers (This Month)"
   },
   {
    "card": "Applicant-to-Hire Percentage"
@@ -26,6 +29,14 @@
   },
   {
    "chart": "Job Applicant Source",
+   "width": "Half"
+  },
+  {
+   "chart": "Job Applicants by Country",
+   "width": "Half"
+  },
+  {
+   "chart": "Job Application Status",
    "width": "Half"
   },
   {
@@ -56,7 +67,7 @@
  "idx": 0,
  "is_default": 0,
  "is_standard": 1,
- "modified": "2022-08-21 21:24:02.995887",
+ "modified": "2022-08-22 12:18:44.691596",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Recruitment",

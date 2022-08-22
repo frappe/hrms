@@ -13,7 +13,8 @@
  "idx": 0,
  "is_public": 1,
  "is_standard": 1,
- "modified": "2022-08-20 23:10:33.131622",
+ "last_synced_on": "2022-08-22 12:12:19.640093",
+ "modified": "2022-08-22 12:14:33.674218",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview Status",
@@ -25,7 +26,7 @@
  "time_interval": "Yearly",
  "timeseries": 0,
  "timespan": "Last Year",
- "type": "Donut",
+ "type": "Pie",
  "use_report_chart": 0,
  "value_based_on": "",
  "y_axis": []
