@@ -188,7 +188,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-08-22 14:19:53.599053",
+ "modified": "2022-08-22 20:51:32.142934",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift & Attendance",
@@ -197,7 +197,7 @@
  "public": 1,
  "quick_lists": [],
  "roles": [],
- "sequence_id": 11.0,
+ "sequence_id": 7.0,
  "shortcuts": [
   {
    "color": "Grey",
