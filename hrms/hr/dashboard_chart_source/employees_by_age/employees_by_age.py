@@ -44,7 +44,7 @@ def get_data(
 	}
 
 
-def get_ranges() -> list[tuple(int, int)]:
+def get_ranges() -> list[tuple[int, int]]:
 	return [
 		(15, 19),
 		(20, 24),
@@ -74,7 +74,7 @@ def get_age_list(employees) -> list[int]:
 	return age_list
 
 
-def get_employees_by_age(age_list, ranges) -> tuple(list[str], list[int]):
+def get_employees_by_age(age_list, ranges) -> tuple[list[str], list[int]]:
 	age_range = []
 	values = []
 	for bracket in ranges:
