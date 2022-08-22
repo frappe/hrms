@@ -1,0 +1,13 @@
+{
+ "creation": "2022-08-22 12:49:07.303139",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart Source",
+ "idx": 0,
+ "modified": "2022-08-22 12:49:07.303139",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Employees by Age",
+ "owner": "Administrator",
+ "source_name": "Employees by Age",
+ "timeseries": 0
+}

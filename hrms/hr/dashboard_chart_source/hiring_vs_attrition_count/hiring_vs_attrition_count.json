@@ -1,0 +1,13 @@
+{
+ "creation": "2022-08-21 21:38:22.271985",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart Source",
+ "idx": 0,
+ "modified": "2022-08-21 21:38:22.271985",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Hiring vs Attrition Count",
+ "owner": "Administrator",
+ "source_name": "Hiring vs Attrition Count",
+ "timeseries": 1
+}

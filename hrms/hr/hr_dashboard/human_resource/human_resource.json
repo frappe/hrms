@@ -4,18 +4,25 @@
    "card": "Total Employees"
   },
   {
-   "card": "New Joinees (Last year)"
+   "card": "New Hires (This Year)"
   },
   {
-   "card": "Employees Left (Last year)"
+   "card": "Employee Exits (This Year)"
   },
   {
-   "card": "Total Applicants (Last month)"
+   "card": "Employees Joining (Next Quarter)"
+  },
+  {
+   "card": "Employees Relieving (Next Quarter)"
   }
  ],
  "charts": [
   {
-   "chart": "Attendance Count",
+   "chart": "Hiring vs Attrition Count",
+   "width": "Full"
+  },
+  {
+   "chart": "Employees by Age",
    "width": "Full"
   },
   {
@@ -23,7 +30,15 @@
    "width": "Half"
   },
   {
-   "chart": "Job Application Status",
+   "chart": "Employees by Type",
+   "width": "Half"
+  },
+  {
+   "chart": "Employees by Grade",
+   "width": "Half"
+  },
+  {
+   "chart": "Employees by Branch",
    "width": "Half"
   },
   {
@@ -32,14 +47,6 @@
   },
   {
    "chart": "Department Wise Employee Count",
-   "width": "Half"
-  },
-  {
-   "chart": "Designation Wise Openings",
-   "width": "Half"
-  },
-  {
-   "chart": "Department Wise Openings",
    "width": "Half"
   }
  ],
@@ -50,7 +57,7 @@
  "idx": 0,
  "is_default": 0,
  "is_standard": 1,
- "modified": "2020-07-22 14:42:12.789249",
+ "modified": "2022-08-22 19:10:33.594097",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Human Resource",

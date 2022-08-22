@@ -8,7 +8,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.model.naming import append_number_if_name_exists
-from frappe.utils import validate_email_address
+from frappe.utils import flt, validate_email_address
 
 from hrms.hr.doctype.interview.interview import get_interviewers
 
@@ -96,3 +96,14 @@ def get_interview_details(job_applicant):
 		interview_detail_map[detail.name] = detail
 
 	return {"interviews": interview_detail_map, "stars": number_of_stars}
+
+
+@frappe.whitelist()
+def get_applicant_to_hire_percentage():
+	total_applicants = frappe.db.count("Job Applicant")
+	total_hired = frappe.db.count("Job Applicant", filters={"status": "Accepted"})
+
+	return {
+		"value": flt(total_hired) / flt(total_applicants) * 100 if total_applicants else 0,
+		"fieldtype": "Percent",
+	}
