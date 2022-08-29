@@ -9,6 +9,7 @@
  "field_order": [
   "naming_series",
   "designation",
+  "department",
   "no_of_positions",
   "expected_compensation",
   "column_break_4",
@@ -50,7 +51,7 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Expected Compensation",
-   "options": "company:company_currency",
+   "options": "Company:company:default_currency",
    "reqd": 1
   },
   {
@@ -62,7 +63,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "Open\nApproved\nRejected\nFilled\nOn Hold\nCancelled",
+   "options": "Draft\nOpen & Approved\nRejected\nFilled\nOn Hold\nCancelled",
    "reqd": 1
   },
   {
@@ -164,11 +165,22 @@
    "fieldname": "reason_for_requesting",
    "fieldtype": "Text",
    "label": "Reason for Requesting"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2022-08-29 19:48:57.869568",
+ "links": [
+  {
+   "link_doctype": "Job Opening",
+   "link_fieldname": "hiring_request"
+  }
+ ],
+ "modified": "2022-08-29 22:28:03.209218",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Hiring Request",

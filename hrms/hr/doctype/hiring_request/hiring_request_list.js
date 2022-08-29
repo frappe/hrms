@@ -1,8 +1,8 @@
 frappe.listview_settings["Hiring Request"] = {
 	get_indicator: function(doc) {
 		let status_color = {
-			"Open": "yellow",
-			"Approved": "blue",
+			"Draft": "yellow",
+			"Open & Approved": "blue",
 			"Rejected": "red",
 			"Filled": "green",
 			"Cancelled": "gray",
