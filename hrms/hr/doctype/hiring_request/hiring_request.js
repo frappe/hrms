@@ -3,6 +3,29 @@
 
 frappe.ui.form.on("Hiring Request", {
 	refresh: function(frm) {
+		if (!frm.doc.__islocal && !["Filled", "On Hold", "Cancelled"].includes(frm.doc.status)) {
+			frappe.db.get_list("Employee Referral", {
+				filters: {for_designation: frm.doc.designation, status: "Pending"}
+			}).then((data) => {
+				if (data && data.length) {
+					let link = data.length > 1
+						? `<a id="referral_links" style="text-decoration: underline;">${__("Employee Referrals")}</a>`
+						: `<a id="referral_links" style="text-decoration: underline;">${__("Employee Referral")}</a>`;
+
+					const headline = __("{} {} open for this position.", [data.length, link]);
+					frm.dashboard.set_headline(headline, "yellow");
+
+					$("#referral_links").on("click", (e) => {
+						e.preventDefault();
+						frappe.set_route("List", "Employee Referral", {
+							for_designation: frm.doc.designation,
+							status: "Pending"
+						});
+					});
+				}
+			})
+		}
+
 		if (frm.doc.status === "Open & Approved") {
 			frm.add_custom_button(__("Create Job Opening"), () => {
 				frappe.model.open_mapped_doc({
