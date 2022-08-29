@@ -15,6 +15,7 @@
   "column_break_4",
   "company",
   "status",
+  "time_to_fill",
   "section_break_7",
   "requested_by",
   "requested_by_name",
@@ -171,6 +172,13 @@
    "fieldtype": "Link",
    "label": "Department",
    "options": "Department"
+  },
+  {
+   "fieldname": "time_to_fill",
+   "fieldtype": "Duration",
+   "hide_seconds": 1,
+   "label": "Time to Fill",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -180,7 +188,7 @@
    "link_fieldname": "hiring_request"
   }
  ],
- "modified": "2022-08-29 22:28:03.209218",
+ "modified": "2022-08-29 23:01:38.649992",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Hiring Request",
