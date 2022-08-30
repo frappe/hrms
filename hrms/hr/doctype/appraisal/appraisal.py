@@ -37,7 +37,7 @@ class Appraisal(Document):
 	def calculate_total_score(self):
 		total = 0
 		for entry in self.appraisal_kra:
-			total += entry.goal_score
+			total += flt(entry.goal_score)
 
 		self.total_score = total
 
