@@ -1,0 +1,70 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2022-08-26 13:06:59.241017",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "feedback",
+  "given_by",
+  "user",
+  "given_by_name",
+  "added_on",
+  "for_employee"
+ ],
+ "fields": [
+  {
+   "columns": 5,
+   "fieldname": "feedback",
+   "fieldtype": "Text Editor",
+   "in_list_view": 1,
+   "label": "Feedback"
+  },
+  {
+   "fieldname": "given_by",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Given By",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "given_by.employee_name",
+   "fieldname": "given_by_name",
+   "fieldtype": "Data",
+   "label": "Given By (Name)"
+  },
+  {
+   "fieldname": "added_on",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Added On"
+  },
+  {
+   "fetch_from": "given_by.user_id",
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
+  },
+  {
+   "fieldname": "for_employee",
+   "fieldtype": "Link",
+   "label": "For Employee",
+   "options": "Employee"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-08-26 13:15:35.788827",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Appraisal Feedback",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
