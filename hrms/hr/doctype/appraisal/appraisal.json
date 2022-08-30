@@ -26,6 +26,13 @@
   "feedbacks_tab",
   "feedback_html",
   "feedbacks_table",
+  "self_appraisal_tab",
+  "rating",
+  "column_break_23",
+  "upload_reflections",
+  "reflections_section",
+  "positives",
+  "negatives",
   "amended_from"
  ],
  "fields": [
@@ -206,13 +213,47 @@
    "label": "Feedbacks",
    "no_copy": 1,
    "options": "Appraisal Feedback"
+  },
+  {
+   "fieldname": "self_appraisal_tab",
+   "fieldtype": "Tab Break",
+   "label": "Self Appraisal"
+  },
+  {
+   "fieldname": "positives",
+   "fieldtype": "Text Editor",
+   "label": "What went well?"
+  },
+  {
+   "fieldname": "negatives",
+   "fieldtype": "Text Editor",
+   "label": "What could have been better?"
+  },
+  {
+   "fieldname": "rating",
+   "fieldtype": "Rating",
+   "label": "Rating"
+  },
+  {
+   "fieldname": "column_break_23",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "upload_reflections",
+   "fieldtype": "Attach",
+   "label": "Upload Reflections"
+  },
+  {
+   "fieldname": "reflections_section",
+   "fieldtype": "Section Break",
+   "label": "Reflections"
   }
  ],
  "icon": "fa fa-thumbs-up",
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-29 18:29:22.645382",
+ "modified": "2022-08-30 11:18:57.962378",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",
