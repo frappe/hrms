@@ -1,7 +1,7 @@
 {
  "actions": [],
  "autoname": "naming_series:",
- "creation": "2022-08-26 05:55:37.571091",
+ "creation": "2013-01-10 16:34:12",
  "doctype": "DocType",
  "document_type": "Setup",
  "engine": "InnoDB",
@@ -11,21 +11,19 @@
   "kra_template",
   "employee",
   "employee_name",
-  "department",
-  "designation",
   "column_break0",
-  "company",
   "status",
-  "appraisal_cycle",
+  "start_date",
+  "end_date",
+  "department",
   "section_break0",
-  "appraisal_kra",
-  "total_section",
-  "feedbacks",
-  "column_break_15",
+  "goals",
   "total_score",
-  "feedbacks_tab",
-  "feedback_html",
-  "feedbacks_table",
+  "section_break1",
+  "remarks",
+  "other_details",
+  "company",
+  "column_break_17",
   "amended_from"
  ],
  "fields": [
@@ -60,7 +58,7 @@
    "fieldtype": "Link",
    "in_global_search": 1,
    "in_standard_filter": 1,
-   "label": "Employee",
+   "label": "For Employee",
    "oldfieldname": "employee",
    "oldfieldtype": "Link",
    "options": "Employee",
@@ -68,11 +66,11 @@
    "search_index": 1
   },
   {
-   "fetch_from": "employee.employee_name",
+   "depends_on": "kra_template",
    "fieldname": "employee_name",
    "fieldtype": "Data",
    "in_global_search": 1,
-   "label": "Employee Name",
+   "label": "For Employee Name",
    "oldfieldname": "employee_name",
    "oldfieldtype": "Data",
    "read_only": 1
@@ -100,6 +98,25 @@
    "search_index": 1
   },
   {
+   "depends_on": "kra_template",
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Start Date",
+   "oldfieldname": "start_date",
+   "oldfieldtype": "Date",
+   "reqd": 1
+  },
+  {
+   "depends_on": "kra_template",
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date",
+   "oldfieldname": "end_date",
+   "oldfieldtype": "Date",
+   "reqd": 1
+  },
+  {
    "fetch_from": "employee.department",
    "fieldname": "department",
    "fieldtype": "Link",
@@ -110,10 +127,44 @@
   {
    "depends_on": "kra_template",
    "fieldname": "section_break0",
-   "fieldtype": "Tab Break",
-   "label": "KRAs",
+   "fieldtype": "Section Break",
+   "label": "Goals",
    "oldfieldtype": "Section Break",
-   "show_dashboard": 1
+   "options": "Simple"
+  },
+  {
+   "fieldname": "goals",
+   "fieldtype": "Table",
+   "label": "Goals",
+   "oldfieldname": "appraisal_details",
+   "oldfieldtype": "Table",
+   "options": "Appraisal Goal"
+  },
+  {
+   "fieldname": "total_score",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Total Score (Out of 5)",
+   "no_copy": 1,
+   "oldfieldname": "total_score",
+   "oldfieldtype": "Currency",
+   "read_only": 1
+  },
+  {
+   "depends_on": "kra_template",
+   "fieldname": "section_break1",
+   "fieldtype": "Section Break"
+  },
+  {
+   "description": "Any other remarks, noteworthy effort that should go in the records.",
+   "fieldname": "remarks",
+   "fieldtype": "Text",
+   "label": "Remarks"
+  },
+  {
+   "depends_on": "kra_template",
+   "fieldname": "other_details",
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "company",
@@ -126,97 +177,34 @@
    "reqd": 1
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Appraisal",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
-   "fetch_from": "employee.designation",
-   "fieldname": "designation",
-   "fieldtype": "Link",
-   "label": "Designation",
-   "options": "Designation",
-   "read_only": 1
-  },
-  {
-   "fieldname": "appraisal_cycle",
-   "fieldtype": "Link",
-   "label": "Appraisal Cycle",
-   "options": "Appraisal Cycle"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Appraisal",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "appraisal_kra",
-   "fieldtype": "Table",
-   "oldfieldname": "appraisal_details",
-   "oldfieldtype": "Table",
-   "options": "Appraisal KRA"
-  },
-  {
-   "fieldname": "column_break_15",
+   "fieldname": "column_break_17",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "total_section",
-   "fieldtype": "Section Break",
-   "label": "Total"
-  },
-  {
-   "fieldname": "feedbacks",
-   "fieldtype": "Int",
-   "label": "Feedbacks",
-   "read_only": 1
-  },
-  {
-   "fieldname": "total_score",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Total Score",
-   "no_copy": 1,
-   "oldfieldname": "total_score",
-   "oldfieldtype": "Currency",
-   "read_only": 1
-  },
-  {
-   "fieldname": "feedbacks_tab",
-   "fieldtype": "Tab Break",
-   "label": "Feedbacks"
-  },
-  {
-   "fieldname": "feedback_html",
-   "fieldtype": "HTML",
-   "label": "Feedback HTML"
-  },
-  {
-   "fieldname": "feedbacks_table",
-   "fieldtype": "Table",
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
    "hidden": 1,
-   "label": "Feedbacks",
+   "ignore_user_permissions": 1,
+   "label": "Amended From",
    "no_copy": 1,
-   "options": "Appraisal Feedback"
+   "oldfieldname": "amended_from",
+   "oldfieldtype": "Data",
+   "options": "Appraisal Old",
+   "print_hide": 1,
+   "read_only": 1,
+   "report_hide": 1,
+   "width": "150px"
   }
  ],
  "icon": "fa fa-thumbs-up",
+ "idx": 1,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-29 18:29:22.645382",
+ "modified": "2022-08-26 05:48:35.743427",
  "modified_by": "Administrator",
  "module": "HR",
- "name": "Appraisal",
- "naming_rule": "By \"Naming Series\" field",
+ "name": "Appraisal Old",
  "owner": "Administrator",
  "permissions": [
   {
@@ -258,11 +246,10 @@
    "write": 1
   }
  ],
- "search_fields": "status, employee, employee_name, appraisal_cycle",
+ "search_fields": "status, employee, employee_name",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
  "timeline_field": "employee",
- "title_field": "employee_name",
- "track_changes": 1
+ "title_field": "employee_name"
 }
