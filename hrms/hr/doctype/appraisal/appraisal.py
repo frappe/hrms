@@ -1,7 +1,6 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
-
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -18,6 +17,8 @@ class Appraisal(Document):
 		validate_active_employee(self.employee)
 		self.validate_existing_appraisal()
 		self.calculate_total_score()
+		self.calculate_self_appraisal_score()
+		self.calculate_avg_feedback_score()
 		self.feedbacks = len(self.feedbacks_table)
 
 	def validate_existing_appraisal(self):
@@ -41,19 +42,63 @@ class Appraisal(Document):
 
 		self.total_score = total
 
+	def calculate_self_appraisal_score(self):
+		total = 0
+		for entry in self.kra_rating:
+			score = flt(entry.rating) * 5 * flt(entry.per_weightage / 100)
+			total += flt(score)
+
+		self.self_score = total
+
+	def calculate_avg_feedback_score(self):
+		self.avg_feedback_score = (
+			frappe.db.sql(
+				"""
+			select avg(total_score) from `tabPerformance Feedback`
+			where for_employee=%s
+			""",
+				(self.employee,),
+				as_list=1,
+			)[0][0]
+			or 0
+		)
+
 	@frappe.whitelist()
-	def add_feedback(self, feedback):
-		self.append(
-			"feedbacks_table",
+	def add_feedback(self, feedback, kra_rating):
+		perf = frappe.new_doc("Performance Feedback")
+		perf.update(
 			{
+				"for_employee": self.employee,
+				"added_on": now(),
 				"feedback": feedback,
 				"given_by": frappe.db.get_value("Employee", {"user_id": frappe.session.user}),
 				"user": frappe.session.user,
-				"added_on": now(),
-				"for_employee": self.employee,
-			},
+			}
 		)
+		for kra in kra_rating:
+			perf.append(
+				"kra_rating",
+				{
+					"kra": kra["kra"],
+					"rating": kra["rating"],
+					"per_weightage": kra["per_weightage"],
+				},
+			)
+
+		perf.save()
+		self.calculate_avg_feedback_score()
 		self.save()
+		# self.append(
+		# 	"feedbacks_table",
+		# 	{
+		# 		"feedback": feedback,
+		# 		"given_by": frappe.db.get_value("Employee", {"user_id": frappe.session.user}),
+		# 		"user": frappe.session.user,
+		# 		"added_on": now(),
+		# 		"for_employee": self.employee,
+		# 	},
+		# )
+		# self.save()
 
 	@frappe.whitelist()
 	def edit_feedback(self, feedback, row_id):
@@ -61,14 +106,19 @@ class Appraisal(Document):
 			if cstr(d.name) == row_id:
 				d.feedback = feedback
 				d.db_update()
+		self.calculate_avg_feedback_score()
+		self.save()
 
 	@frappe.whitelist()
 	def delete_feedback(self, row_id):
-		for d in self.feedbacks_table:
-			if cstr(d.name) == row_id:
-				self.remove(d)
-				break
+		frappe.delete_doc("Performance Feedback", row_id)
+		self.calculate_avg_feedback_score()
 		self.save()
+		# for d in self.feedbacks_table:
+		# 	if cstr(d.name) == row_id:
+		# 		self.remove(d)
+		# 		break
+		# self.save()
 
 
 def update_progress_in_appraisal(goal):
@@ -97,3 +147,22 @@ def update_progress_in_appraisal(goal):
 		kra.goal_score = flt(kra.goal_completion * kra.per_weightage / 100, kra.precision("goal_score"))
 
 	doc.save()
+
+
+@frappe.whitelist()
+def get_feedbacks(employee):
+	return frappe.db.get_all(
+		"Performance Feedback",
+		filters={"for_employee": employee},
+		fields=[
+			"feedback",
+			"given_by",
+			"user",
+			"owner",
+			"given_by_name",
+			"added_on",
+			"for_employee",
+			"total_score",
+			"name",
+		],
+	)

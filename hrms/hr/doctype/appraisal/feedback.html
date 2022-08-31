@@ -10,19 +10,26 @@
 	<div class="all-notes">
 		{% if (feedbacks.length) { %}
 			{% for(var i=0, l=feedbacks.length; i<l; i++) { %}
-				<div class="comment-content p-3 row" name="{{ feedbacks[i].employee_name }}">
+				<div class="comment-content p-3 row" name="{{ feedbacks[i].name }}">
 					<div class="mb-2 head col-xs-3">
 						<div class="row">
 							<div class="col-xs-2">
 								{{ frappe.avatar(feedbacks[i].user) }}
 							</div>
-							<div class="col-xs-10">
+							<div class="col-xs-7">
 								<div class="mr-2 title font-weight-bold">
-									{{ strip_html(feedbacks[i].employee_name) }}
+									{{ strip_html(feedbacks[i].given_by_name) }}
 								</div>
 								<div class="time small text-muted">
 									{{ frappe.datetime.global_date_format(feedbacks[i].added_on) }}
 								</div>
+							</div>
+							<div class="col-xs-2">
+								{% if (feedbacks[i].total_score < 3) { %}
+									<span class="indicator-pill whitespace-nowrap red">{{ feedbacks[i].total_score }}</span>
+								{% } else { %}
+									<span class="indicator-pill whitespace-nowrap green">{{ feedbacks[i].total_score }}</span>
+								{% } %}
 							</div>
 						</div>
 					</div>
