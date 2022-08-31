@@ -21,15 +21,17 @@
   "appraisal_kra",
   "total_section",
   "feedbacks",
-  "column_break_15",
   "total_score",
   "feedbacks_tab",
   "feedback_html",
   "feedbacks_table",
+  "section_break_20",
+  "avg_feedback_score",
   "self_appraisal_tab",
-  "rating",
-  "column_break_23",
   "upload_reflections",
+  "column_break_23",
+  "kra_rating",
+  "self_score",
   "reflections_section",
   "positives",
   "negatives",
@@ -172,10 +174,6 @@
    "options": "Appraisal KRA"
   },
   {
-   "fieldname": "column_break_15",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "total_section",
    "fieldtype": "Section Break",
    "label": "Total"
@@ -183,6 +181,7 @@
   {
    "fieldname": "feedbacks",
    "fieldtype": "Int",
+   "hidden": 1,
    "label": "Feedbacks",
    "read_only": 1
   },
@@ -230,13 +229,9 @@
    "label": "What could have been better?"
   },
   {
-   "fieldname": "rating",
-   "fieldtype": "Rating",
-   "label": "Rating"
-  },
-  {
    "fieldname": "column_break_23",
-   "fieldtype": "Column Break"
+   "fieldtype": "Section Break",
+   "label": "KRA Rating"
   },
   {
    "fieldname": "upload_reflections",
@@ -247,13 +242,34 @@
    "fieldname": "reflections_section",
    "fieldtype": "Section Break",
    "label": "Reflections"
+  },
+  {
+   "fieldname": "kra_rating",
+   "fieldtype": "Table",
+   "options": "KRA Rating"
+  },
+  {
+   "fieldname": "self_score",
+   "fieldtype": "Float",
+   "label": "Self Score",
+   "read_only": 1
+  },
+  {
+   "fieldname": "avg_feedback_score",
+   "fieldtype": "Float",
+   "label": "Average Feedback Score",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_20",
+   "fieldtype": "Section Break"
   }
  ],
  "icon": "fa fa-thumbs-up",
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-30 11:18:57.962378",
+ "modified": "2022-09-01 07:55:40.536993",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",
