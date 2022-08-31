@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Timesheet", {
 	refresh(frm) {
-		if (frm.doc.docstatus == 1) {
+		if (frm.doc.docstatus === 1 && frappe.model.can_create("Salary Slip")) {
 			if (!frm.doc.salary_slip && frm.doc.employee) {
 				frm.add_custom_button(__("Create Salary Slip"), function() {
 					frm.trigger("make_salary_slip");
