@@ -1,0 +1,122 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2022-09-01 01:05:44.869523",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "for_employee",
+  "employee_name",
+  "added_on",
+  "column_break_3",
+  "given_by",
+  "given_by_name",
+  "user",
+  "section_break_3",
+  "kra_rating",
+  "total_score",
+  "feedback_tab",
+  "feedback"
+ ],
+ "fields": [
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "kra_rating",
+   "fieldtype": "Table",
+   "label": "KRA Rating",
+   "options": "KRA Rating"
+  },
+  {
+   "fieldname": "total_score",
+   "fieldtype": "Float",
+   "label": "Total Score",
+   "read_only": 1
+  },
+  {
+   "fieldname": "feedback_tab",
+   "fieldtype": "Tab Break",
+   "label": "Feedback",
+   "options": "Feedback"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "given_by",
+   "fieldtype": "Link",
+   "label": "Given By",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "given_by.employee_name",
+   "fieldname": "given_by_name",
+   "fieldtype": "Data",
+   "label": "Given By (Name)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "feedback",
+   "fieldtype": "Text Editor"
+  },
+  {
+   "fieldname": "for_employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "added_on",
+   "fieldtype": "Datetime",
+   "label": "Added On"
+  },
+  {
+   "fetch_from": "given_by.user_id",
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-09-01 01:42:27.710846",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Performance Feedback",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "employee_name"
+}
