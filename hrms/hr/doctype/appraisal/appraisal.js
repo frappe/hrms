@@ -52,9 +52,9 @@ frappe.ui.form.on("Appraisal", {
 	},
 
 	setup_chart: function(frm) {
-		let labels = [];
-		let maximum_scores = [];
-		let scores = [];
+		const labels = [];
+		const maximum_scores = [];
+		const scores = [];
 
 		$.each(frm.doc.appraisal_kra, function(_i, e) {
 			labels.push(e.kra);
@@ -106,28 +106,28 @@ hrms.Feedback = class Feedback {
 			},
 			callback: function(r) {
 				if (!r.exc) {
-					let feedbacks = r.message || [];
+					const feedbacks = r.message || [];
 					feedbacks.sort(
 						function(a, b) {
 							return new Date(b.added_on) - new Date(a.added_on);
 						}
 					);
 
-					let feedback_html = frappe.render_template("feedback", {
+					const feedback_html = frappe.render_template("feedback", {
 						feedbacks: feedbacks
 					});
 					$(feedback_html).appendTo(me.feedback_wrapper);
 
 					$(".notes-section").find(".new-note-btn").on("click", function() {
-						me.add_feedback(this);
+						me.add_feedback();
 					});
 
 					$(".notes-section").find(".edit-note-btn").on("click", function() {
-						me.edit_feedback(this);
+						me.edit_feedback();
 					});
 
 					$(".notes-section").find(".delete-note-btn").on("click", function() {
-						me.delete_feedback(this);
+						me.delete_feedback();
 					});
 				}
 			}
@@ -135,9 +135,9 @@ hrms.Feedback = class Feedback {
 	}
 
 
-	add_feedback () {
-		let me = this;
-		let _add_feedback = () => {
+	add_feedback() {
+		const me = this;
+		const _add_feedback = () => {
 			this.data = [];
 			const dialog = new frappe.ui.Dialog({
 				title: __("Add Feedback"),
@@ -210,7 +210,7 @@ hrms.Feedback = class Feedback {
 					employee: me.frm.doc.employee
 				},
 				callback: function(data) {
-					data.message.goals.forEach(item => {
+					data.message.goals.forEach((item) => {
 						dialog.fields_dict.kra_rating.df.data.push({
 							"kra": item.kra,
 							"per_weightage": item.per_weightage
@@ -225,13 +225,13 @@ hrms.Feedback = class Feedback {
 		$(".new-note-btn").click(_add_feedback);
 	}
 
-	edit_feedback (edit_btn) {
-		var me = this;
-		let row = $(edit_btn).closest(".comment-content");
-		let row_id = row.attr("name");
-		let row_content = $(row).find(".content").html();
+	edit_feedback(edit_btn) {
+		const me = this;
+		const row = $(edit_btn).closest(".comment-content");
+		const row_id = row.attr("name");
+		const row_content = $(row).find(".content").html();
 		if (row_content) {
-			var d = new frappe.ui.Dialog({
+			const d = new frappe.ui.Dialog({
 				title: __("Edit Feedback"),
 				fields: [
 					{
@@ -267,9 +267,9 @@ hrms.Feedback = class Feedback {
 		}
 	}
 
-	delete_feedback (delete_btn) {
-		var me = this;
-		let row_id = $(delete_btn).closest(".comment-content").attr("name");
+	delete_feedback(delete_btn) {
+		const me = this;
+		const row_id = $(delete_btn).closest(".comment-content").attr("name");
 		frappe.call({
 			method: "delete_feedback",
 			doc: me.frm.doc,

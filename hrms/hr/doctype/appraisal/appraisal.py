@@ -22,11 +22,13 @@ class Appraisal(Document):
 		self.feedbacks = len(self.feedbacks_table)
 
 	def validate_existing_appraisal(self):
-		duplicate = frappe.db.sql(
-			"""select name from `tabAppraisal` where employee=%s
-			and (status='Submitted' or status='Completed')
-			and (appraisal_cycle=%s)""",
-			(self.employee, self.appraisal_cycle),
+		duplicate = frappe.db.exists(
+			"Appraisal",
+			filters={
+				"employee": self.employee,
+				"status": ["in", ["Submitted", "Completed"]],
+				"appraisal_cycle": self.appraisal_cycle,
+			},
 		)
 		if duplicate:
 			frappe.throw(
@@ -52,14 +54,11 @@ class Appraisal(Document):
 
 	def calculate_avg_feedback_score(self):
 		self.avg_feedback_score = (
-			frappe.db.sql(
-				"""
-			select avg(total_score) from `tabPerformance Feedback`
-			where for_employee=%s
-			""",
-				(self.employee,),
-				as_list=1,
-			)[0][0]
+			frappe.db.get_all(
+				"Performance Feedback",
+				filters={"for_employee": self.employee},
+				fields=["avg(total_score) as avg_feedback_score"],
+			)[0].avg_feedback_score
 			or 0
 		)
 

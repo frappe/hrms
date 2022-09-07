@@ -1,7 +1,7 @@
 frappe.listview_settings['Goal'] = {
 	add_fields: ["due_date", "status"],
 	get_indicator: function(doc) {
-		let status_color = {
+		const status_color = {
 			'Pending': 'yellow',
 			'In Progress': 'orange',
 			'Completed': 'green',
@@ -12,10 +12,10 @@ frappe.listview_settings['Goal'] = {
 	formatters: {
 		due_date(value, df, doc) {
 			if (!value) return ''
-			if (doc.status == 'Completed' || doc.status == 'Archived') return '';
+			if (doc.status === 'Completed' || doc.status === 'Archived') return '';
 
-			let d = moment(value);
-			let now = moment();
+			const d = moment(value);
+			const now = moment();
 			let color = 'green';
 			if (d < now) {
 				color = 'red'
