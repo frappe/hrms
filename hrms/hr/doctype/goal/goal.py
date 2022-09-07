@@ -51,7 +51,6 @@ def get_children(doctype, parent, is_root=False, **filters):
 			"progress",
 		],
 		filters=conditions,
-		debug=True,
 		order_by="employee",
 	)
 

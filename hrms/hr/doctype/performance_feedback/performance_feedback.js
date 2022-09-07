@@ -15,7 +15,7 @@ frappe.ui.form.on('Performance Feedback', {
 				callback: function(data) {
 					frm.doc.kra_rating = [];
 					$.each(data.message.goals, function(_i, e) {
-						let entry = frm.add_child("kra_rating");
+						const entry = frm.add_child("kra_rating");
 						entry.kra = e.kra;
 						entry.per_weightage = e.per_weightage;
 					});

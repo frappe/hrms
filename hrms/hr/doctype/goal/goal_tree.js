@@ -22,7 +22,7 @@ frappe.treeview_settings["Goal"] = {
 			options: "Goal",
 			label: __("Goal"),
 			get_query: function() {
-				let me = frappe.treeview_settings["Goal"];
+				const me = frappe.treeview_settings["Goal"];
 				var appraisal_cycle = me.page.fields_dict.appraisal_cycle.get_value();
 				var args = [["Goal", "is_group", "=", 1]];
 				if (project) {
@@ -101,7 +101,7 @@ frappe.treeview_settings["Goal"] = {
 			`).insertBefore(node.$ul);
 		}
 		else if (node.data && node.data.status !== undefined) {
-			let status_color = {
+			const status_color = {
 				'Pending': 'yellow',
 				'In Progress': 'orange',
 				'Completed': 'green',
@@ -136,7 +136,7 @@ frappe.treeview_settings["Goal"] = {
 		$.extend(frappe.treeview_settings['Goal'].treeview, treeview);
 	},
 	get_label: function(node) {
-		if (node.title && node.title != node.label) {
+		if (node.title && node.title !== node.label) {
 			return __(node.title) + ` <span class='text-muted'>(${node.data.employee_name})</span>`;
 		} else {
 			return __(node.title || node.label);
