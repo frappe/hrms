@@ -34,10 +34,15 @@ def get_custom_fields():
 		],
 		"Employee": [
 			{
+				"fieldname": "bank_cb",
+				"fieldtype": "Column Break",
+				"insert_after": "bank_ac_no",
+			},
+			{
 				"fieldname": "ifsc_code",
 				"label": "IFSC Code",
 				"fieldtype": "Data",
-				"insert_after": "bank_ac_no",
+				"insert_after": "bank_cb",
 				"print_hide": 1,
 				"depends_on": 'eval:doc.salary_mode == "Bank"',
 				"translatable": 0,

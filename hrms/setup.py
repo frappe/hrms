@@ -32,7 +32,7 @@ def get_custom_fields():
 				"oldfieldname": "employment_type",
 				"oldfieldtype": "Link",
 				"options": "Employment Type",
-				"insert_after": "employee_name",
+				"insert_after": "department",
 			},
 			{
 				"fieldname": "job_applicant",
@@ -46,7 +46,7 @@ def get_custom_fields():
 				"fieldtype": "Link",
 				"label": "Grade",
 				"options": "Employee Grade",
-				"insert_after": "column_break_31",
+				"insert_after": "branch",
 			},
 			{
 				"fieldname": "default_shift",
@@ -60,7 +60,7 @@ def get_custom_fields():
 				"fieldname": "health_insurance_section",
 				"fieldtype": "Section Break",
 				"label": "Health Insurance",
-				"insert_after": "bank_ac_no",
+				"insert_after": "health_details",
 			},
 			{
 				"fieldname": "health_insurance_provider",
@@ -80,7 +80,7 @@ def get_custom_fields():
 				"fieldname": "approvers_section",
 				"fieldtype": "Section Break",
 				"label": "Approvers",
-				"insert_after": "branch",
+				"insert_after": "default_shift",
 			},
 			{
 				"fieldname": "expense_approver",
@@ -109,13 +109,18 @@ def get_custom_fields():
 				"insert_after": "column_break_45",
 			},
 			{
+				"fieldname": "salary_cb",
+				"fieldtype": "Column Break",
+				"insert_after": "salary_mode",
+			},
+			{
 				"fetch_from": "department.payroll_cost_center",
 				"fetch_if_empty": 1,
 				"fieldname": "payroll_cost_center",
 				"fieldtype": "Link",
 				"label": "Payroll Cost Center",
 				"options": "Cost Center",
-				"insert_after": "salary_mode",
+				"insert_after": "salary_cb",
 			},
 		],
 		"Company": [
