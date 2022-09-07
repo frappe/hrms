@@ -471,7 +471,9 @@ def get_advances(employee, advance_id=None):
 def get_expense_claim(
 	employee_name, company, employee_advance_name, posting_date, paid_amount, claimed_amount
 ):
-	default_payable_account = frappe.get_cached_value("Company", company, "default_payable_account")
+	default_payable_account = frappe.get_cached_value(
+		"Company", company, "default_expense_claim_payable_account"
+	)
 	default_cost_center = frappe.get_cached_value("Company", company, "cost_center")
 
 	expense_claim = frappe.new_doc("Expense Claim")
