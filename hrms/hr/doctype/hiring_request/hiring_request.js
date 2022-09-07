@@ -8,7 +8,7 @@ frappe.ui.form.on("Hiring Request", {
 				filters: {for_designation: frm.doc.designation, status: "Pending"}
 			}).then((data) => {
 				if (data && data.length) {
-					let link = data.length > 1
+					const link = data.length > 1
 						? `<a id="referral_links" style="text-decoration: underline;">${__("Employee Referrals")}</a>`
 						: `<a id="referral_links" style="text-decoration: underline;">${__("Employee Referral")}</a>`;
 
