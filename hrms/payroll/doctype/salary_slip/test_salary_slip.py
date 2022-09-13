@@ -36,6 +36,7 @@ from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_e
 from hrms.payroll.doctype.payroll_entry.payroll_entry import get_month_details
 from hrms.payroll.doctype.salary_slip.salary_slip import make_salary_slip_from_timesheet
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+from hrms.tests.test_utils import get_first_sunday
 
 
 class TestSalarySlip(FrappeTestCase):
@@ -85,18 +86,7 @@ class TestSalarySlip(FrappeTestCase):
 
 		frappe.db.set_value("Leave Type", "Leave Without Pay", "include_holiday", 0)
 
-		month_start_date = get_first_day(nowdate())
-		month_end_date = get_last_day(nowdate())
-
-		first_sunday = frappe.db.sql(
-			"""
-			select holiday_date from `tabHoliday`
-			where parent = 'Salary Slip Test Holiday List'
-				and holiday_date between %s and %s
-			order by holiday_date
-		""",
-			(month_start_date, month_end_date),
-		)[0][0]
+		first_sunday = get_first_sunday()
 
 		mark_attendance(emp_id, first_sunday, "Absent", ignore_validate=True)  # invalid lwp
 		mark_attendance(
@@ -303,18 +293,7 @@ class TestSalarySlip(FrappeTestCase):
 
 		frappe.db.set_value("Leave Type", "Leave Without Pay", "include_holiday", 0)
 
-		month_start_date = get_first_day(nowdate())
-		month_end_date = get_last_day(nowdate())
-
-		first_sunday = frappe.db.sql(
-			"""
-			select holiday_date from `tabHoliday`
-			where parent = 'Salary Slip Test Holiday List'
-				and holiday_date between %s and %s
-			order by holiday_date
-		""",
-			(month_start_date, month_end_date),
-		)[0][0]
+		first_sunday = get_first_sunday()
 
 		make_leave_application(emp_id, first_sunday, add_days(first_sunday, 3), "Leave Without Pay")
 
@@ -363,18 +342,7 @@ class TestSalarySlip(FrappeTestCase):
 		frappe.db.set_value("Employee", emp, {"relieving_date": None, "status": "Active"})
 
 		# mark attendance
-		month_start_date = get_first_day(nowdate())
-		month_end_date = get_last_day(nowdate())
-
-		first_sunday = frappe.db.sql(
-			"""
-			select holiday_date from `tabHoliday`
-			where parent = 'Salary Slip Test Holiday List'
-				and holiday_date between %s and %s
-			order by holiday_date
-		""",
-			(month_start_date, month_end_date),
-		)[0][0]
+		first_sunday = get_first_sunday()
 
 		mark_attendance(
 			emp, add_days(first_sunday, 1), "Absent", ignore_validate=True
@@ -384,8 +352,8 @@ class TestSalarySlip(FrappeTestCase):
 		make_salary_structure_for_timesheet(emp)
 		timesheet = make_timesheet(emp, simulate=True, is_billable=1)
 		salary_slip = make_salary_slip_from_timesheet(timesheet.name)
-		salary_slip.start_date = month_start_date
-		salary_slip.end_date = month_end_date
+		salary_slip.start_date = get_first_day(nowdate())
+		salary_slip.end_date = get_last_day(nowdate())
 		salary_slip.save()
 		salary_slip.submit()
 		salary_slip.reload()
@@ -426,18 +394,7 @@ class TestSalarySlip(FrappeTestCase):
 		)
 
 		# mark employee absent for a day since this case works fine if payment days are equal to working days
-		month_start_date = get_first_day(nowdate())
-		month_end_date = get_last_day(nowdate())
-
-		first_sunday = frappe.db.sql(
-			"""
-			select holiday_date from `tabHoliday`
-			where parent = 'Salary Slip Test Holiday List'
-				and holiday_date between %s and %s
-			order by holiday_date
-		""",
-			(month_start_date, month_end_date),
-		)[0][0]
+		first_sunday = get_first_sunday()
 
 		mark_attendance(
 			employee, add_days(first_sunday, 1), "Absent", ignore_validate=True
@@ -1085,8 +1042,7 @@ class TestSalarySlip(FrappeTestCase):
 		Tests whether component using statistical component in the formula
 		gets the updated value based on payment days
 		"""
-		from erpnext.hr.doctype.leave_application.test_leave_application import get_first_sunday
-		from erpnext.payroll.doctype.salary_structure.test_salary_structure import (
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 			create_salary_structure_assignment,
 		)
 

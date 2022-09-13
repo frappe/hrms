@@ -38,6 +38,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
 )
+from hrms.tests.test_utils import get_first_sunday
 
 test_dependencies = ["Leave Type", "Leave Allocation", "Leave Block List", "Employee"]
 
@@ -1104,23 +1105,6 @@ def allocate_leaves(employee, leave_period, leave_type, new_leaves_allocated, el
 	).insert()
 
 	allocate_leave.submit()
-
-
-def get_first_sunday(holiday_list="Salary Slip Test Holiday List", for_date=None):
-	date = for_date or getdate()
-	month_start_date = get_first_day(date)
-	month_end_date = get_last_day(date)
-	first_sunday = frappe.db.sql(
-		"""
-		select holiday_date from `tabHoliday`
-		where parent = %s
-			and holiday_date between %s and %s
-		order by holiday_date
-	""",
-		(holiday_list, month_start_date, month_end_date),
-	)[0][0]
-
-	return first_sunday
 
 
 def make_policy_assignment(employee, leave_type, leave_period):
