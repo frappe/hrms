@@ -10,7 +10,7 @@ frappe.ui.form.on(cur_frm.doctype, {
 	},
 
 	onload: function(frm) {
-		if (frm.doc.__islocal)
+		if (frm.doc.__islocal && !frm.doc.amended_from)
 			frm.trigger("clear_property_table");
 	},
 
