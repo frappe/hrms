@@ -107,102 +107,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Payroll Reports",
-   "link_count": 5,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Salary Register",
-   "link_count": 0,
-   "link_to": "Salary Register",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Bank Remittance",
-   "link_count": 0,
-   "link_to": "Bank Remittance",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Salary Payments Based On Payment Mode",
-   "link_count": 0,
-   "link_to": "Salary Payments Based On Payment Mode",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Salary Payments via ECS",
-   "link_count": 0,
-   "link_to": "Salary Payments via ECS",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Income Tax Computation",
-   "link_count": 0,
-   "link_to": "Income Tax Computation",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Deduction Reports",
-   "link_count": 3,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Provident Fund Deductions",
-   "link_count": 0,
-   "link_to": "Provident Fund Deductions",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Professional Tax Deductions",
-   "link_count": 0,
-   "link_to": "Professional Tax Deductions",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Income Tax Deductions",
-   "link_count": 0,
-   "link_to": "Income Tax Deductions",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Incentives",
    "link_count": 3,
    "onboard": 0,
@@ -275,9 +179,105 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payroll Reports",
+   "link_count": 5,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Salary Register",
+   "link_count": 0,
+   "link_to": "Salary Register",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Bank Remittance",
+   "link_count": 0,
+   "link_to": "Bank Remittance",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Salary Payments Based On Payment Mode",
+   "link_count": 0,
+   "link_to": "Salary Payments Based On Payment Mode",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Salary Payments via ECS",
+   "link_count": 0,
+   "link_to": "Salary Payments via ECS",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Income Tax Computation",
+   "link_count": 0,
+   "link_to": "Income Tax Computation",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Deduction Reports",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Provident Fund Deductions",
+   "link_count": 0,
+   "link_to": "Provident Fund Deductions",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Professional Tax Deductions",
+   "link_count": 0,
+   "link_to": "Professional Tax Deductions",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Income Tax Deductions",
+   "link_count": 0,
+   "link_to": "Income Tax Deductions",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2022-08-22 20:50:18.659471",
+ "modified": "2022-09-16 11:48:38.760656",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Payout",
