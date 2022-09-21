@@ -26,7 +26,7 @@ STANDARD_ROLES = [
 
 
 @frappe.whitelist(allow_guest=True)
-def get_add_on_details(site_details: dict) -> dict[str, int]:
+def get_add_on_details(plan: str) -> dict[str, int]:
 	"""
 	Returns the number of employees to be billed under add-ons for SAAS subscription
 	site_details = {
@@ -42,7 +42,7 @@ def get_add_on_details(site_details: dict) -> dict[str, int]:
 	EMPLOYEE_LIMITS = {"Basic": 25, "Essential": 50, "Professional": 100}
 	add_on_details = {}
 
-	employees_included_in_plan = EMPLOYEE_LIMITS.get(site_details.get("plan"))
+	employees_included_in_plan = EMPLOYEE_LIMITS.get(plan)
 	if employees_included_in_plan:
 		active_employees = get_active_employees()
 		add_on_employees = active_employees - employees_included_in_plan
@@ -58,8 +58,8 @@ def get_active_employees() -> int:
 
 
 @frappe.whitelist(allow_guest=True)
-def subscription_updated(app: str, plan_details: dict):
-	if app == "erpnext" and plan_details.get("plan"):
+def subscription_updated(app: str, plan: str):
+	if app == "erpnext" and plan:
 		update_erpnext_access()
 
 
