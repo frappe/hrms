@@ -78,6 +78,7 @@ def update_erpnext_workspaces(disable: bool = True):
 	erpnext_workspaces = [
 		"Home",
 		"Assets",
+		"Accounting",
 		"Buying",
 		"CRM",
 		"ERPNext Integrations",
