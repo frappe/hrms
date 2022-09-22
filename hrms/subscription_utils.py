@@ -1,3 +1,5 @@
+import requests
+
 import frappe
 
 STANDARD_ROLES = [
@@ -153,13 +155,23 @@ def roles_by_doctype(doctypes: list) -> set:
 
 
 def hide_erpnext() -> bool:
-	if not frappe.conf.sk_hrms:
-		# no subscription for HRMS
+	hr_subscription = has_subscription(frappe.conf.sk_hrms)
+	erpnext_subscription = has_subscription(frappe.conf.sk_erpnext_smb or frappe.conf.sk_erpnext)
+
+	if not hr_subscription:
 		return False
 
-	if frappe.conf.sk_hrms and frappe.conf.sk_erpnext:
+	if hr_subscription and erpnext_subscription:
 		# subscribed for ERPNext
 		return False
 
 	# no subscription for ERPNext
 	return True
+
+
+def has_subscription(secret_key) -> bool:
+	url = f"https://frappecloud.com/api/method/press.api.developer.saas.get_subscription_status?secret_key={secret_key}"
+	response = requests.request(method="POST", url=url, timeout=5)
+
+	status = response.json().get("message")
+	return True if status == "Active" else False
