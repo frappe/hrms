@@ -45,7 +45,11 @@ def get_add_on_details(plan: str) -> dict[str, int]:
 	employees_included_in_plan = EMPLOYEE_LIMITS.get(plan)
 	if employees_included_in_plan:
 		active_employees = get_active_employees()
-		add_on_employees = active_employees - employees_included_in_plan
+		add_on_employees = (
+			active_employees - employees_included_in_plan
+			if active_employees > employees_included_in_plan
+			else 0
+		)
 	else:
 		add_on_employees = 0
 
