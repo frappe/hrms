@@ -59,9 +59,9 @@ frappe.ui.form.on(cur_frm.doctype, {
 				frappe.get_meta("Employee").fields.forEach(d => {
 					field_label_map[d.fieldname] = __(d.label) + ` (${d.fieldname})`;
 					if (
-						!in_list(exclude_field_types, d.fieldtype) 
-						&& !in_list(exclude_fields, d.fieldname) 
-						&& !d.hidden 
+						!in_list(exclude_field_types, d.fieldtype)
+						&& !in_list(exclude_fields, d.fieldname)
+						&& !d.hidden
 						&& !d.read_only
 					) {
 						allowed_fields.push({
