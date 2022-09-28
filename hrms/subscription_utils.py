@@ -75,6 +75,9 @@ def update_erpnext_access():
 	enables erpnext workspaces and roles if user has subscribed to hrms and erpnext
 	disables erpnext workspaces and roles if user has subscribed to hrms but not erpnext
 	"""
+	if not frappe.utils.get_url().endswith(".frappehr.com"):
+		return
+
 	disable = hide_erpnext()
 	update_erpnext_workspaces(disable)
 	update_erpnext_roles(disable)
@@ -170,7 +173,7 @@ def hide_erpnext() -> bool:
 
 
 def has_subscription(secret_key) -> bool:
-	url = f"https://frappecloud.com/api/method/press.api.developer.saas.get_subscription_status?secret_key={secret_key}"
+	url = f"https://frappecloud.com/api/method/press.api.developer.marketplace.get_subscription_status?secret_key={secret_key}"
 	response = requests.request(method="POST", url=url, timeout=5)
 
 	status = response.json().get("message")
