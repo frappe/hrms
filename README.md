@@ -43,7 +43,7 @@ Frappe HR has everything you need to drive excellence within the company. It's a
 
 ## Documentation
 
-Complete documentation for Frappe HR is available at https://docs.erpnext.com/docs/user/manual/en/human-resources
+Complete documentation for Frappe HR is available at https://frappehr.com/docs
 
 ## License
 
