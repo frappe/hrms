@@ -78,9 +78,8 @@ def update_erpnext_access():
 	if not frappe.utils.get_url().endswith(".frappehr.com"):
 		return
 
-	disable = hide_erpnext()
-	update_erpnext_workspaces(disable)
-	update_erpnext_roles(disable)
+	update_erpnext_workspaces(True)
+	update_erpnext_roles(True)
 
 
 def update_erpnext_workspaces(disable: bool = True):
@@ -118,7 +117,7 @@ def update_erpnext_roles(disable: bool = True):
 		try:
 			role_doc = frappe.get_doc("Role", role)
 			role_doc.disabled = disable
-			role_doc.ignore_links = True
+			role_doc.flags.ignore_links = True
 			role_doc.save()
 		except Exception:
 			pass
