@@ -125,7 +125,7 @@
   },
   {
    "fieldname": "standard_working_hours",
-   "fieldtype": "Int",
+   "fieldtype": "Float",
    "label": "Standard Working Hours"
   },
   {
