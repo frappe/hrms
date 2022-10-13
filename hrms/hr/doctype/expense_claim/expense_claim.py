@@ -342,7 +342,7 @@ class ExpenseClaim(AccountsController):
 def update_reimbursed_amount(doc, amount):
 	doc.total_amount_reimbursed += amount
 	
-	if doc.total_amount_reimbursed > doc.total_sanctioned_amount:
+	if flt(doc.total_amount_reimbursed) > flt(doc.total_sanctioned_amount):
 		frappe.throw(_("Total Reimbursed Amount cannot be greater than Total Sanctioned Amount"))
 
 	frappe.db.set_value(
