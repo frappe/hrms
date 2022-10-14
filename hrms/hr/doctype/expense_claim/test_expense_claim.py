@@ -8,6 +8,7 @@ from frappe.tests.utils import FrappeTestCase
 from frappe.utils import flt, nowdate, random_string
 
 from erpnext.accounts.doctype.account.test_account import create_account
+from erpnext.accounts.doctype.payment_entry.test_payment_entry import get_payment_entry
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.expense_claim.expense_claim import (
@@ -66,7 +67,8 @@ class TestExpenseClaim(FrappeTestCase):
 		self.assertEqual(frappe.db.get_value("Task", task_name, "total_expense_claim"), 200)
 		self.assertEqual(frappe.db.get_value("Project", project.name, "total_expense_claim"), 200)
 
-	def test_expense_claim_status(self):
+	def test_expense_claim_status_as_payment_from_journal_entry(self):
+		# Via Journal Entry
 		payable_account = get_payable_account(company_name)
 		expense_claim = make_expense_claim(
 			payable_account, 300, 200, company_name, "Travel Expenses - _TC3"
@@ -74,11 +76,11 @@ class TestExpenseClaim(FrappeTestCase):
 
 		je = make_journal_entry(expense_claim)
 
-		expense_claim = frappe.get_doc("Expense Claim", expense_claim.name)
+		expense_claim.load_from_db()
 		self.assertEqual(expense_claim.status, "Paid")
 
 		je.cancel()
-		expense_claim = frappe.get_doc("Expense Claim", expense_claim.name)
+		expense_claim.load_from_db()
 		self.assertEqual(expense_claim.status, "Unpaid")
 
 		# expense claim without any sanctioned amount should not have status as Paid
@@ -91,6 +93,80 @@ class TestExpenseClaim(FrappeTestCase):
 			"GL Entry", {"voucher_type": "Expense Claim", "voucher_no": claim.name}
 		)
 		self.assertEqual(len(gl_entry), 0)
+
+	def test_expense_claim_status_as_payment_from_payment_entry(self):
+		# Via Payment Entry
+		payable_account = get_payable_account(company_name)
+
+		expense_claim = make_expense_claim(
+			payable_account, 300, 200, company_name, "Travel Expenses - _TC3"
+		)
+
+		pe = _make_payment_entry(expense_claim)
+
+		expense_claim.load_from_db()
+		self.assertEqual(expense_claim.status, "Paid")
+
+		pe.cancel()
+		expense_claim.load_from_db()
+		self.assertEqual(expense_claim.status, "Unpaid")
+
+	def test_expense_claim_status_as_payment_allocation_using_pr(self):
+		# Allocation via Payment Reconciliation Tool for mutiple employees using journal entry
+		payable_account = get_payable_account(company_name)
+		# Make employee
+		employee = frappe.db.get_value(
+			"Employee",
+			{"status": "Active", "company": company_name, "first_name": "test_employee1@expenseclaim.com"},
+			"name",
+		)
+		if not employee:
+			employee = make_employee("test_employee1@expenseclaim.com", company=company_name)
+
+		expense_claim1 = make_expense_claim(
+			payable_account, 300, 200, company_name, "Travel Expenses - _TC3"
+		)
+
+		expense_claim2 = make_expense_claim(
+			payable_account, 300, 200, company_name, "Travel Expenses - _TC3", employee=employee
+		)
+
+		je = make_journal_entry(expense_claim1, do_not_submit=True)
+		# Remove expense claim reference from journal entry
+		for entry in je.get("accounts"):
+			entry.reference_type = ""
+			entry.reference_name = ""
+
+			cost_center = entry.cost_center
+			if entry.party:
+				employee1 = entry.party
+
+			if not entry.party_type:
+				entry.credit += 200
+				entry.credit_in_account_currency += 200
+
+		je.append(
+			"accounts",
+			{
+				"account": payable_account,
+				"debit_in_account_currency": 200,
+				"reference_type": "Expense Claim",
+				"party_type": "Employee",
+				"party": employee,
+				"cost_center": cost_center,
+			},
+		)
+
+		je.save()
+		je.submit()
+
+		allocate_using_payment_reconciliation(expense_claim1, employee1, je, payable_account)
+		expense_claim1.load_from_db()
+		self.assertEqual(expense_claim1.status, "Paid")
+
+		allocate_using_payment_reconciliation(expense_claim2, employee, je, payable_account)
+		expense_claim2.load_from_db()
+		self.assertEqual(expense_claim2.status, "Paid")
 
 	def test_expense_claim_against_fully_paid_advances(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
@@ -384,10 +460,13 @@ def make_expense_claim(
 	task_name=None,
 	do_not_submit=False,
 	taxes=None,
+	employee=None,
 ):
-	employee = frappe.db.get_value("Employee", {"status": "Active"})
+
 	if not employee:
-		employee = make_employee("test_employee@expense_claim.com", company=company)
+		employee = frappe.db.get_value("Employee", {"status": "Active", "company": company})
+		if not employee:
+			employee = make_employee("test_employee@expenseclaim.com", company=company)
 
 	currency, cost_center = frappe.db.get_value(
 		"Company", company, ["default_currency", "cost_center"]
@@ -452,12 +531,51 @@ def make_payment_entry(expense_claim, payable_account, amt):
 	pe.submit()
 
 
-def make_journal_entry(expense_claim):
+def make_journal_entry(expense_claim, do_not_submit=False):
 	je_dict = make_bank_entry("Expense Claim", expense_claim.name)
 	je = frappe.get_doc(je_dict)
 	je.posting_date = nowdate()
 	je.cheque_no = random_string(5)
 	je.cheque_date = nowdate()
-	je.submit()
+
+	if not do_not_submit:
+		je.submit()
 
 	return je
+
+
+def _make_payment_entry(expense_claim):
+	outstanding_amount, total_amount_reimbursed = get_outstanding_and_total_reimbursed_amounts(
+		expense_claim
+	)
+	pe = get_payment_entry(
+		"Expense Claim", expense_claim.name, party_type="Employee", party_amount=outstanding_amount
+	)
+	pe.reference_no = "Conrad Oct 2022"
+	pe.reference_date = nowdate()
+	pe.paid_amount = expense_claim.total_sanctioned_amount
+	pe.received_amount = expense_claim.total_sanctioned_amount
+	pe.insert()
+	pe.submit()
+
+	return pe
+
+
+def create_payment_reconciliation(company, employee, payable_account):
+	pr = frappe.new_doc("Payment Reconciliation")
+	pr.company = company
+	pr.party_type = "Employee"
+	pr.party = employee
+	pr.receivable_payable_account = payable_account
+	pr.from_invoice_date = pr.to_invoice_date = pr.from_payment_date = pr.to_payment_date = nowdate()
+	return pr
+
+
+def allocate_using_payment_reconciliation(expense_claim, employee, journal_entry, payable_account):
+	pr = create_payment_reconciliation(company_name, employee, payable_account)
+	pr.get_unreconciled_entries()
+	invoices = [x.as_dict() for x in pr.get("invoices") if x.invoice_number == expense_claim.name]
+	payments = [x.as_dict() for x in pr.get("payments") if x.reference_name == journal_entry.name]
+
+	pr.allocate_entries(frappe._dict({"invoices": invoices, "payments": payments}))
+	pr.reconcile()
