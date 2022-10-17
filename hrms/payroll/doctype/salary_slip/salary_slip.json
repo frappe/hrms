@@ -6,27 +6,30 @@
  "document_type": "Setup",
  "engine": "InnoDB",
  "field_order": [
+  "details_tab",
   "posting_date",
+  "salary_structure",
+  "payroll_entry",
+  "mode_of_payment",
+  "salary_slip_based_on_timesheet",
+  "deduct_tax_for_unclaimed_employee_benefits",
+  "deduct_tax_for_unsubmitted_tax_exemption_proof",
+  "column_break1",
+  "payroll_frequency",
+  "start_date",
+  "end_date",
+  "status",
+  "section_break_6",
   "employee",
   "employee_name",
   "department",
   "designation",
   "branch",
-  "column_break1",
-  "status",
-  "journal_entry",
-  "payroll_entry",
+  "column_break_18",
   "company",
   "currency",
   "exchange_rate",
   "letter_head",
-  "section_break_10",
-  "start_date",
-  "end_date",
-  "salary_structure",
-  "column_break_18",
-  "salary_slip_based_on_timesheet",
-  "payroll_frequency",
   "section_break_20",
   "total_working_days",
   "unmarked_days",
@@ -40,13 +43,6 @@
   "total_working_hours",
   "hour_rate",
   "base_hour_rate",
-  "section_break_26",
-  "bank_name",
-  "bank_account_no",
-  "mode_of_payment",
-  "section_break_32",
-  "deduct_tax_for_unclaimed_employee_benefits",
-  "deduct_tax_for_unsubmitted_tax_exemption_proof",
   "earning_deduction",
   "earning",
   "earnings",
@@ -84,7 +80,10 @@
   "leave_details_section",
   "leave_details",
   "section_break_75",
-  "amended_from"
+  "amended_from",
+  "journal_entry",
+  "bank_name",
+  "bank_account_no"
  ],
  "fields": [
   {
@@ -169,8 +168,7 @@
    "fieldname": "journal_entry",
    "fieldtype": "Link",
    "label": "Journal Entry",
-   "options": "Journal Entry",
-   "read_only": 1
+   "options": "Journal Entry"
   },
   {
    "fieldname": "payroll_entry",
@@ -198,10 +196,6 @@
    "label": "Letter Head",
    "options": "Letter Head",
    "print_hide": 1
-  },
-  {
-   "fieldname": "section_break_10",
-   "fieldtype": "Section Break"
   },
   {
    "default": "0",
@@ -292,28 +286,14 @@
    "print_hide_if_no_value": 1
   },
   {
-   "fieldname": "section_break_26",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "bank_name",
    "fieldtype": "Data",
-   "label": "Bank Name",
-   "oldfieldname": "bank_name",
-   "oldfieldtype": "Data",
-   "read_only": 1
+   "label": "Bank Name"
   },
   {
    "fieldname": "bank_account_no",
    "fieldtype": "Data",
-   "label": "Bank Account No.",
-   "oldfieldname": "bank_account_no",
-   "oldfieldtype": "Data",
-   "read_only": 1
-  },
-  {
-   "fieldname": "section_break_32",
-   "fieldtype": "Section Break"
+   "label": "Bank Account No"
   },
   {
    "default": "0",
@@ -329,7 +309,7 @@
   },
   {
    "fieldname": "earning_deduction",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Earnings & Deductions",
    "oldfieldtype": "Section Break"
   },
@@ -380,7 +360,7 @@
   {
    "depends_on": "total_loan_repayment",
    "fieldname": "loan_repayment",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Loan Repayment"
   },
   {
@@ -425,7 +405,7 @@
   },
   {
    "fieldname": "net_pay_info",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Net Pay Info"
   },
   {
@@ -520,7 +500,8 @@
   },
   {
    "fieldname": "section_break_75",
-   "fieldtype": "Section Break"
+   "fieldtype": "Tab Break",
+   "label": "References"
   },
   {
    "fieldname": "base_hour_rate",
@@ -610,7 +591,7 @@
   },
   {
    "fieldname": "leave_details_section",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Leave Details"
   },
   {
@@ -633,13 +614,23 @@
    "label": "Gross Year To Date(Company Currency)",
    "options": "Company:company:default_currency",
    "read_only": 1
+  },
+  {
+   "fieldname": "details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break",
+   "label": "Employee Details"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-06-15 18:36:54.999345",
+ "modified": "2022-10-19 12:12:03.070134",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

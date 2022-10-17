@@ -40,15 +40,6 @@ frappe.ui.form.on('Payroll Entry', {
 	},
 
 	refresh: function (frm) {
-		if (frm.doc.docstatus === 0 && !frm.is_new()) {
-			frm.page.clear_primary_action();
-			frm.add_custom_button(__("Get Employees"),
-				function () {
-					frm.events.get_employee_details(frm);
-				}
-			).toggleClass("btn-primary", !(frm.doc.employees || []).length);
-		}
-
 		if (
 			(frm.doc.employees || []).length
 			&& !frappe.model.has_workflow(frm.doctype)
@@ -105,6 +96,10 @@ frappe.ui.form.on('Payroll Entry', {
 		});
 	},
 
+	get_employees: function (frm) {
+		frm.events.get_employee_details(frm);
+	},
+
 	get_employee_details: function (frm) {
 		return frappe.call({
 			doc: frm.doc,
@@ -112,8 +107,8 @@ frappe.ui.form.on('Payroll Entry', {
 		}).then(r => {
 			if (r.docs && r.docs[0].employees) {
 				frm.employees = r.docs[0].employees;
-				frm.dirty();
-				frm.save();
+				// frm.dirty();
+				// frm.save();
 				frm.refresh();
 				if (r.docs[0].validate_attendance) {
 					render_employee_attendance(frm, r.message);

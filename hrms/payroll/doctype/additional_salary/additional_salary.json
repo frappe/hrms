@@ -180,7 +180,7 @@
   },
   {
    "fieldname": "employee_details_section",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Employee Details"
   },
   {
@@ -193,18 +193,18 @@
   },
   {
    "fieldname": "salary_details_section",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Salary Details"
   },
   {
    "fieldname": "properties_and_references_section",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Properties and References"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-19 12:56:51.765353",
+ "modified": "2022-10-13 12:48:39.806057",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Additional Salary",

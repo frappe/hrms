@@ -6,28 +6,31 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "details_tab",
   "employee",
   "employee_name",
   "department",
   "designation",
+  "current_work_experience",
   "column_break_3",
   "posting_date",
+  "gratuity_rule",
   "status",
   "company",
-  "gratuity_rule",
+  "amended_from",
   "section_break_5",
+  "mode_of_payment",
   "pay_via_salary_slip",
+  "amount",
+  "column_break_13",
   "payroll_date",
   "salary_component",
-  "payable_account",
-  "expense_account",
-  "mode_of_payment",
-  "cost_center",
-  "column_break_15",
-  "current_work_experience",
-  "amount",
   "paid_amount",
-  "amended_from"
+  "accounts_tab",
+  "cost_center",
+  "column_break_24",
+  "expense_account",
+  "payable_account"
  ],
  "fields": [
   {
@@ -104,7 +107,7 @@
   },
   {
    "fieldname": "section_break_5",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Payment Configuration"
   },
   {
@@ -141,10 +144,6 @@
    "options": "Gratuity",
    "print_hide": 1,
    "read_only": 1
-  },
-  {
-   "fieldname": "column_break_15",
-   "fieldtype": "Column Break"
   },
   {
    "default": "0",
@@ -189,12 +188,30 @@
    "label": "Salary Component",
    "mandatory_depends_on": "pay_via_salary_slip",
    "options": "Salary Component"
+  },
+  {
+   "fieldname": "column_break_13",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "accounts_tab",
+   "fieldtype": "Tab Break",
+   "label": "Accounting"
+  },
+  {
+   "fieldname": "column_break_24",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-07-20 11:35:36.553045",
+ "modified": "2022-10-19 16:00:59.797956",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Gratuity",

@@ -8,11 +8,10 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "employee_details_tab",
   "employee",
   "employee_name",
   "currency",
-  "max_benefits",
-  "remaining_benefit",
   "column_break_2",
   "date",
   "payroll_period",
@@ -20,6 +19,10 @@
   "company",
   "amended_from",
   "section_break_4",
+  "max_benefits",
+  "column_break_13",
+  "remaining_benefit",
+  "section_break_15",
   "employee_benefits",
   "totals",
   "total_amount",
@@ -94,8 +97,8 @@
   },
   {
    "fieldname": "section_break_4",
-   "fieldtype": "Section Break",
-   "label": "Benefits Applied"
+   "fieldtype": "Tab Break",
+   "label": "Benefits"
   },
   {
    "fieldname": "employee_benefits",
@@ -143,11 +146,24 @@
   {
    "fieldname": "column_break",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Employee Details"
+  },
+  {
+   "fieldname": "column_break_13",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_15",
+   "fieldtype": "Section Break"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-19 12:58:31.664468",
+ "modified": "2022-10-13 13:08:51.380935",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Benefit Application",

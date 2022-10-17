@@ -6,13 +6,14 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "disabled",
+  "section_break_2",
   "effective_from",
   "company",
   "column_break_3",
   "currency",
   "standard_tax_exemption_amount",
   "allow_tax_exemption",
-  "disabled",
   "amended_from",
   "taxable_salary_slabs_section",
   "slabs",
@@ -40,7 +41,7 @@
   },
   {
    "fieldname": "taxable_salary_slabs_section",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Taxable Salary Slabs"
   },
   {
@@ -83,7 +84,7 @@
    "collapsible": 1,
    "collapsible_depends_on": "other_taxes_and_charges",
    "fieldname": "taxes_and_charges_on_income_tax_section",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Taxes and Charges on Income Tax"
   },
   {
@@ -100,14 +101,19 @@
    "options": "Currency",
    "print_hide": 1,
    "reqd": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2021-03-31 22:42:08.139520",
+ "modified": "2022-10-13 12:45:23.020054",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Income Tax Slab",
+ "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [
   {
@@ -158,5 +164,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }

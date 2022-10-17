@@ -15,8 +15,8 @@
   "daily_wages_fraction_for_half_day",
   "email_salary_slip_to_employee",
   "encrypt_salary_slips_in_emails",
-  "show_leave_balances_in_salary_slip",
-  "password_policy"
+  "password_policy",
+  "show_leave_balances_in_salary_slip"
  ],
  "fields": [
   {
@@ -97,7 +97,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-03-03 17:49:59.579723",
+ "modified": "2022-10-19 16:04:31.345157",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",
@@ -115,5 +115,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "ASC",
+ "states": [],
  "track_changes": 1
 }

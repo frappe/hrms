@@ -7,6 +7,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "employee_details_tab",
   "employee",
   "employee_name",
   "department",
@@ -62,7 +63,7 @@
   },
   {
    "fieldname": "benefit_type_and_amount",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Benefit Type and Amount"
   },
   {
@@ -140,11 +141,16 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "employee_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Employee Details"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-19 12:59:15.699118",
+ "modified": "2022-10-13 15:48:48.695587",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Benefit Claim",

@@ -31,15 +31,15 @@
   "pay_against_benefit_claim",
   "only_tax_impact",
   "create_separate_payment_entry_against_benefit_claim",
-  "section_break_5",
-  "accounts",
   "condition_and_formula",
   "condition",
   "amount",
   "amount_based_on_formula",
   "formula",
   "column_break_28",
-  "help"
+  "help",
+  "section_break_5",
+  "accounts"
  ],
  "fields": [
   {
@@ -120,7 +120,7 @@
   {
    "depends_on": "eval:doc.type==\"Earning\" && doc.statistical_component!=1",
    "fieldname": "flexible_benefits",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Flexible Benefits"
   },
   {
@@ -170,7 +170,7 @@
   {
    "depends_on": "eval:doc.statistical_component != 1",
    "fieldname": "section_break_5",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Accounts"
   },
   {
@@ -244,10 +244,11 @@
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2020-10-07 20:38:33.795853",
+ "modified": "2022-10-12 16:57:31.680886",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -268,5 +269,6 @@
   }
  ],
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "states": []
 }
