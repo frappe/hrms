@@ -319,7 +319,7 @@ class LeaveApplication(Document):
 
 	def show_block_day_warning(self):
 		block_dates = get_applicable_block_dates(
-			self.from_date, self.to_date, self.employee, self.company, all_lists=True
+			self.from_date, self.to_date, self.employee, self.company, all_lists=True, leave_type=self.leave_type
 		)
 
 		if block_dates:
@@ -329,7 +329,7 @@ class LeaveApplication(Document):
 
 	def validate_block_days(self):
 		block_dates = get_applicable_block_dates(
-			self.from_date, self.to_date, self.employee, self.company
+			self.from_date, self.to_date, self.employee, self.company, leave_type=self.leave_type
 		)
 
 		if block_dates and self.status == "Approved":
@@ -1131,8 +1131,6 @@ def add_leaves(events, start, end, filter_conditions=None):
 
 def add_block_dates(events, start, end, employee, company):
 	# block days
-	from hrms.hr.doctype.leave_block_list.leave_block_list import get_applicable_block_dates
-
 	cnt = 0
 	block_dates = get_applicable_block_dates(start, end, employee, company, all_lists=True)
 
