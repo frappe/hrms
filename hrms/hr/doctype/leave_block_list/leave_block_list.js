@@ -92,6 +92,7 @@ frappe.ui.form.on('Leave Block List', {
 							if (d.get_value(frappe.scrub(item))) return item
 						})
 					});
+					frm.dirty();
 					d.hide();
 				}
 			});
