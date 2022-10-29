@@ -23,21 +23,16 @@ class LeaveBlockList(Document):
 	def get_weekly_off_dates(self, start_date, end_date, days, reason):
 		date_list = self.get_block_dates_from_date(start_date, end_date, days)
 		for date in date_list:
-			ch = self.append("leave_block_list_dates", {
-				'block_date': date,
-				'reason': reason
-			})
+			self.append("leave_block_list_dates", {"block_date": date, "reason": reason})
 
 	def get_block_dates_from_date(self, start_date, end_date, days):
 		start_date, end_date = getdate(start_date), getdate(end_date)
-		
+
 		import calendar
 		from datetime import timedelta
 
 		date_list = []
-		existing_date_list = [
-			getdate(d.block_date) for d in self.get("leave_block_list_dates")
-		]
+		existing_date_list = [getdate(d.block_date) for d in self.get("leave_block_list_dates")]
 
 		while start_date <= end_date:
 			if start_date not in existing_date_list and calendar.day_name[start_date.weekday()] in days:
@@ -48,11 +43,17 @@ class LeaveBlockList(Document):
 
 
 @frappe.whitelist()
-def get_applicable_block_dates(from_date, to_date, employee=None, company=None, all_lists=False, leave_type=None):
-	return frappe.db.get_all("Leave Block List Date", filters={
-		"parent": ["IN", get_applicable_block_lists(employee, company, all_lists, leave_type)],
-		"block_date": ["BETWEEN", [from_date, to_date]]
-	}, fields=['block_date', 'reason'])
+def get_applicable_block_dates(
+	from_date, to_date, employee=None, company=None, all_lists=False, leave_type=None
+):
+	return frappe.db.get_all(
+		"Leave Block List Date",
+		filters={
+			"parent": ["IN", get_applicable_block_lists(employee, company, all_lists, leave_type)],
+			"block_date": ["BETWEEN", [from_date, to_date]],
+		},
+		fields=["block_date", "reason"],
+	)
 
 
 def get_applicable_block_lists(employee=None, company=None, all_lists=False, leave_type=None):
@@ -80,19 +81,17 @@ def get_applicable_block_lists(employee=None, company=None, all_lists=False, lea
 			add_block_list([block_list])
 
 	# global
-	conditions = {
-		'applies_to_all_departments': 1,
-		'company': company
-	}
+	conditions = {"applies_to_all_departments": 1, "company": company}
 	if leave_type:
-		conditions['leave_type'] = leave_type
+		conditions["leave_type"] = leave_type
 
 	add_block_list(frappe.db.get_all("Leave Block List", filters=conditions, pluck="name"))
 	return list(set(block_lists))
 
 
 def is_user_in_allow_list(block_list):
-	return frappe.db.get_value("Leave Block List Allow", {
-		"parent": ["IN", block_list],
-		"allow_user": frappe.session.user
-	}, "allow_user")
+	return frappe.db.get_value(
+		"Leave Block List Allow",
+		{"parent": ["IN", block_list], "allow_user": frappe.session.user},
+		"allow_user",
+	)

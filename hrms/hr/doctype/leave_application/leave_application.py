@@ -319,7 +319,12 @@ class LeaveApplication(Document):
 
 	def show_block_day_warning(self):
 		block_dates = get_applicable_block_dates(
-			self.from_date, self.to_date, self.employee, self.company, all_lists=True, leave_type=self.leave_type
+			self.from_date,
+			self.to_date,
+			self.employee,
+			self.company,
+			all_lists=True,
+			leave_type=self.leave_type,
 		)
 
 		if block_dates:
