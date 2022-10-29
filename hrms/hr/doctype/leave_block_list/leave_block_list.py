@@ -7,6 +7,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.utils import getdate
 
 
 class LeaveBlockList(Document):
@@ -17,6 +18,33 @@ class LeaveBlockList(Document):
 			if d.block_date in dates:
 				frappe.msgprint(_("Date is repeated") + ":" + d.block_date, raise_exception=1)
 			dates.append(d.block_date)
+
+	@frappe.whitelist()
+	def get_weekly_off_dates(self, start_date, end_date, days, reason):
+		date_list = self.get_block_dates_from_date(start_date, end_date, days)
+		for date in date_list:
+			ch = self.append("leave_block_list_dates", {
+				'block_date': date,
+				'reason': reason
+			})
+
+	def get_block_dates_from_date(self, start_date, end_date, days):
+		start_date, end_date = getdate(start_date), getdate(end_date)
+		
+		import calendar
+		from datetime import timedelta
+
+		date_list = []
+		existing_date_list = [
+			getdate(d.block_date) for d in self.get("leave_block_list_dates")
+		]
+
+		while start_date <= end_date:
+			if start_date not in existing_date_list and calendar.day_name[start_date.weekday()] in days:
+				date_list.append(start_date)
+			start_date += timedelta(days=1)
+
+		return date_list
 
 
 @frappe.whitelist()
