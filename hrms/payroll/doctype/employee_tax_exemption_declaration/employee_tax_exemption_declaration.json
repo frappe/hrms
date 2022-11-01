@@ -121,12 +121,12 @@
   {
    "fieldname": "employee_details_tab",
    "fieldtype": "Tab Break",
-   "label": "Employee Details"
+   "label": "Employee"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-10-13 13:34:52.474501",
+ "modified": "2022-11-01 13:15:42.342774",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Tax Exemption Declaration",

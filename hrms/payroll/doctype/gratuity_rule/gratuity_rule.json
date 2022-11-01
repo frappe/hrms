@@ -48,8 +48,8 @@
   },
   {
    "fieldname": "gratuity_rules_section",
-   "fieldtype": "Tab Break",
-   "label": "Gratuity Rules"
+   "fieldtype": "Section Break",
+   "label": "Rules"
   },
   {
    "description": "Leave <b>From</b> and <b>To</b> 0 for no upper and lower limit.",
@@ -87,13 +87,13 @@
   },
   {
    "fieldname": "gratuity_details_tab",
-   "fieldtype": "Tab Break",
-   "label": "Gratuity Details"
+   "fieldtype": "Section Break",
+   "label": "Gratuity"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-10-19 16:06:20.118940",
+ "modified": "2022-11-01 12:32:12.973686",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Gratuity Rule",

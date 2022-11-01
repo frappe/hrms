@@ -139,17 +139,17 @@
   {
    "fieldname": "employee_details_tab",
    "fieldtype": "Tab Break",
-   "label": "Employee Details"
+   "label": "Employee"
   },
   {
    "fieldname": "exemption_proofs_details_tab",
    "fieldtype": "Tab Break",
-   "label": "Exemption Proofs Details"
+   "label": "Exemption Proofs"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-10-13 12:59:16.637533",
+ "modified": "2022-11-01 13:13:06.714501",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Tax Exemption Proof Submission",

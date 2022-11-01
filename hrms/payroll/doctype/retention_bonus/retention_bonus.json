@@ -107,13 +107,13 @@
   },
   {
    "fieldname": "employee_details_tab",
-   "fieldtype": "Tab Break",
-   "label": "Employee Details"
+   "fieldtype": "Section Break",
+   "label": "Employee"
   },
   {
    "fieldname": "bonus_details_tab",
-   "fieldtype": "Tab Break",
-   "label": "Bonus Details"
+   "fieldtype": "Section Break",
+   "label": "Bonus"
   },
   {
    "fieldname": "column_break_12",
@@ -122,7 +122,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-10-13 12:56:52.355122",
+ "modified": "2022-11-01 13:11:32.287586",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Retention Bonus",

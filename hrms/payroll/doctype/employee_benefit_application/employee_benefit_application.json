@@ -150,7 +150,7 @@
   {
    "fieldname": "employee_details_tab",
    "fieldtype": "Tab Break",
-   "label": "Employee Details"
+   "label": "Employee"
   },
   {
    "fieldname": "column_break_13",
@@ -163,7 +163,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-10-13 13:08:51.380935",
+ "modified": "2022-11-01 12:20:34.958813",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Benefit Application",

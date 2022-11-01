@@ -24,12 +24,12 @@
   "payroll_date",
   "from_date",
   "to_date",
-  "properties_and_references_section",
   "deduct_full_tax_on_selected_payroll_date",
+  "overwrite_salary_structure_amount",
+  "properties_and_references_section",
   "ref_doctype",
   "ref_docname",
   "column_break_22",
-  "overwrite_salary_structure_amount",
   "amended_from"
  ],
  "fields": [
@@ -181,7 +181,7 @@
   {
    "fieldname": "employee_details_section",
    "fieldtype": "Tab Break",
-   "label": "Employee Details"
+   "label": "Employee"
   },
   {
    "fieldname": "column_break_13",
@@ -194,17 +194,17 @@
   {
    "fieldname": "salary_details_section",
    "fieldtype": "Tab Break",
-   "label": "Salary Details"
+   "label": "Salary"
   },
   {
    "fieldname": "properties_and_references_section",
    "fieldtype": "Tab Break",
-   "label": "Properties and References"
+   "label": "References"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-10-13 12:48:39.806057",
+ "modified": "2022-11-01 12:14:10.319237",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Additional Salary",

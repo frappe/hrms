@@ -84,7 +84,7 @@
   {
    "fieldname": "income_source_details_section",
    "fieldtype": "Section Break",
-   "label": "Income Source Details"
+   "label": "Income Source"
   },
   {
    "fieldname": "column_break_10",
@@ -93,7 +93,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-10-13 13:22:18.835379",
+ "modified": "2022-11-01 13:15:09.332029",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Other Income",

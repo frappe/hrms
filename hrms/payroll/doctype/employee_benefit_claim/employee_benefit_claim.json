@@ -64,7 +64,7 @@
   {
    "fieldname": "benefit_type_and_amount",
    "fieldtype": "Tab Break",
-   "label": "Benefit Type and Amount"
+   "label": "Benefits"
   },
   {
    "fieldname": "earning_component",
@@ -145,12 +145,12 @@
   {
    "fieldname": "employee_details_tab",
    "fieldtype": "Tab Break",
-   "label": "Employee Details"
+   "label": "Employee"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-10-13 15:48:48.695587",
+ "modified": "2022-11-01 12:19:41.896101",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Benefit Claim",

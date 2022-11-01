@@ -55,7 +55,7 @@
   {
    "fieldname": "section_break0",
    "fieldtype": "Tab Break",
-   "label": "Select Employees"
+   "label": "Employees"
   },
   {
    "default": "Today",
@@ -135,7 +135,7 @@
   {
    "fieldname": "select_payroll_period",
    "fieldtype": "Tab Break",
-   "label": "Payroll Details"
+   "label": "Payroll"
   },
   {
    "fieldname": "start_date",
@@ -286,8 +286,7 @@
   },
   {
    "fieldname": "employees_section",
-   "fieldtype": "Section Break",
-   "label": "Employees"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "column_break_5",
@@ -322,7 +321,7 @@
  "icon": "fa fa-cog",
  "is_submittable": 1,
  "links": [],
- "modified": "2022-10-18 17:27:13.340690",
+ "modified": "2022-11-01 12:47:50.193232",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",
