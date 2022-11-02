@@ -614,6 +614,7 @@ class TestSalarySlip(FrappeTestCase):
 			loan_account="Loan Account - _TC",
 			interest_income_account="Interest Income Account - _TC",
 			penalty_income_account="Penalty Income Account - _TC",
+			repayment_schedule_type="Monthly as per repayment start date",
 		)
 
 		payroll_period = create_payroll_period(name="_Test Payroll Period 1", company="_Test Company")
