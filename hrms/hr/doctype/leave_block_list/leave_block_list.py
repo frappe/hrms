@@ -20,7 +20,7 @@ class LeaveBlockList(Document):
 			dates.append(d.block_date)
 
 	@frappe.whitelist()
-	def get_weekly_off_dates(self, start_date, end_date, days, reason):
+	def set_weekly_off_dates(self, start_date, end_date, days, reason):
 		date_list = self.get_block_dates_from_date(start_date, end_date, days)
 		for date in date_list:
 			self.append("leave_block_list_dates", {"block_date": date, "reason": reason})
@@ -68,9 +68,9 @@ def get_applicable_block_lists(employee=None, company=None, all_lists=False, lea
 		company = frappe.db.get_value("Employee", employee, "company")
 
 	def add_block_list(block_list):
-		if block_list:
-			if all_lists or not is_user_in_allow_list(block_list):
-				block_lists.extend(block_list)
+		for d in block_list:
+			if all_lists or not is_user_in_allow_list(d):
+				block_lists.append(d)
 
 	# per department
 	department = frappe.db.get_value("Employee", employee, "department")
@@ -92,6 +92,6 @@ def get_applicable_block_lists(employee=None, company=None, all_lists=False, lea
 def is_user_in_allow_list(block_list):
 	return frappe.db.get_value(
 		"Leave Block List Allow",
-		{"parent": ["IN", block_list], "allow_user": frappe.session.user},
+		{"parent": block_list, "allow_user": frappe.session.user},
 		"allow_user",
 	)

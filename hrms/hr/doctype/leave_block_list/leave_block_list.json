@@ -14,6 +14,7 @@
   "column_break_4",
   "leave_type",
   "block_days",
+  "add_day_wise_dates",
   "leave_block_list_dates",
   "allow_list",
   "leave_block_list_allowed"
@@ -54,7 +55,8 @@
    "fieldname": "leave_block_list_dates",
    "fieldtype": "Table",
    "label": "Leave Block List Dates",
-   "options": "Leave Block List Date"
+   "options": "Leave Block List Date",
+   "reqd": 1
   },
   {
    "description": "Allow the following users to approve Leave Applications for block days.",
@@ -77,12 +79,17 @@
    "fieldtype": "Link",
    "label": "Leave Type",
    "options": "Leave Type"
+  },
+  {
+   "fieldname": "add_day_wise_dates",
+   "fieldtype": "Button",
+   "label": "Add Day-wise Dates"
   }
  ],
  "icon": "fa fa-calendar",
  "idx": 1,
  "links": [],
- "modified": "2022-10-29 17:41:02.905699",
+ "modified": "2022-11-04 14:18:25.192917",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Block List",

@@ -2,102 +2,98 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Leave Block List', {
-	refresh: function(frm) {
-		frm.add_custom_button(__("Bulk Add Dates"), function () {
-			let d = new frappe.ui.Dialog({
-				title: 'Add Leave Block Dates',
-				fields: [
-					{
-						label: 'Start Date',
-						fieldname: 'start_date',
-						fieldtype: 'Date',
-						reqd: 1
-					},
-					{
-						fieldname: 'col_break_0',
-						fieldtype: 'Column Break'
-					},
-					{
-						label: 'End Date',
-						fieldname: 'end_date',
-						fieldtype: 'Date',
-						reqd: 1
-					},
-					{
-						fieldname: 'sec_break_0',
-						fieldtype: 'Section Break'
-					},
-					{
-						label: 'Monday',
-						fieldname: 'monday',
-						fieldtype: 'Check'
-					},
-					{
-						label: 'Thursday',
-						fieldname: 'thursday',
-						fieldtype: 'Check'
-					},
-					{
-						label: 'Sunday',
-						fieldname: 'sunday',
-						fieldtype: 'Check'
-					},
-					{
-						fieldname: 'col_break_0',
-						fieldtype: 'Column Break'
-					},
-					{
-						label: 'Tuesday',
-						fieldname: 'tuesday',
-						fieldtype: 'Check'
-					},
-					{
-						label: 'Friday',
-						fieldname: 'friday',
-						fieldtype: 'Check'
-					},
-					{
-						fieldname: 'col_break_0',
-						fieldtype: 'Column Break'
-					},
-					{
-						label: 'Wednesday',
-						fieldname: 'wednesday',
-						fieldtype: 'Check'
-					},
-					{
-						label: 'Saturday',
-						fieldname: 'saturday',
-						fieldtype: 'Check'
-					},
-					{
-						fieldname: 'sec_break_0',
-						fieldtype: 'Section Break'
-					},
-					{
-						label: 'Reason',
-						fieldname: 'reason',
-						fieldtype: 'Small Text',
-						reqd: 1
-					},
-				],
-				primary_action_label: 'Add',
-				primary_action(values) {
-					let days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-					frm.call('get_weekly_off_dates', {
-						'start_date': d.get_value('start_date'),
-						'end_date': d.get_value('end_date'),
-						'reason': d.get_value('reason'),
-						'days': days.map(function(item) {
-							if (d.get_value(frappe.scrub(item))) return item
-						})
-					});
-					frm.dirty();
-					d.hide();
-				}
-			});
-
-			d.show();
+	add_day_wise_dates: function(frm) {
+		let d = new frappe.ui.Dialog({
+			title: 'Add Leave Block Dates',
+			fields: [
+				{
+					label: 'Start Date',
+					fieldname: 'start_date',
+					fieldtype: 'Date',
+					reqd: 1
+				},
+				{
+					fieldname: 'col_break_0',
+					fieldtype: 'Column Break'
+				},
+				{
+					label: 'End Date',
+					fieldname: 'end_date',
+					fieldtype: 'Date',
+					reqd: 1
+				},
+				{
+					fieldname: 'sec_break_0',
+					fieldtype: 'Section Break'
+				},
+				{
+					fieldname: "days",
+					fieldtype: "MultiCheck",
+					select_all: true,
+					columns: 3,
+					reqd: 1,
+					options: [
+						{
+							label: __("Monday"),
+							value: "Monday",
+							checked: 0,
+						},
+						{
+							label: __("Tuesday"),
+							value: "Tuesday",
+							checked: 0,
+						},
+						{
+							label: __("Wednesday"),
+							value: "Wednesday",
+							checked: 0,
+						},
+						{
+							label: __("Thursday"),
+							value: "Thursday",
+							checked: 0,
+						},
+						{
+							label: __("Friday"),
+							value: "Friday",
+							checked: 0,
+						},
+						{
+							label: __("Saturday"),
+							value: "Saturday",
+							checked: 0,
+						},
+						{
+							label: __("Sunday"),
+							value: "Sunday",
+							checked: 0,
+						},
+					],
+				},
+				{
+					fieldname: 'sec_break_0',
+					fieldtype: 'Section Break'
+				},
+				{
+					label: 'Reason',
+					fieldname: 'reason',
+					fieldtype: 'Small Text',
+					reqd: 1
+				},
+			],
+			primary_action_label: 'Add',
+			primary_action(values) {
+				frm.call('set_weekly_off_dates', {
+					'start_date': d.get_value('start_date'),
+					'end_date': d.get_value('end_date'),
+					'reason': d.get_value('reason'),
+					'days': d.get_value('days')
+				});
+				frm.dirty();
+				d.hide();
+			}
 		});
+
+		d.show();
 	}
 });
