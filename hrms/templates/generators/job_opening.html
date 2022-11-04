@@ -21,11 +21,11 @@
 <p style='margin-top: 30px'>
 	{%- if job_application_route -%}
 	<a class='btn btn-primary'
-	href='/{{job_application_route}}?new=1&job_title={{ doc.name }}'>
+	href='/{{job_application_route}}/new?job_title={{ doc.name }}'>
 	{{ _("Apply Now") }}</a>
 	{% else %}
 	<a class='btn btn-primary'
-	href='/job_application?new=1&job_title={{ doc.name }}'>
+	href='/job_application/new?job_title={{ doc.name }}'>
 	{{ _("Apply Now") }}</a>
 	{% endif %}
 </p>

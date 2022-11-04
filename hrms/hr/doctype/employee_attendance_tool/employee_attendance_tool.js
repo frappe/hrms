@@ -98,7 +98,7 @@ erpnext.MarkedEmployee = class MarkedEmployee {
 				<label class="marked-employee-label"><span class="%(icon)s"></span>\
 				%(employee)s</label>\
 				</div>', {
-					employee: m.employee_name,
+					employee: m.employee +' : '+ m.employee_name,
 					icon: attendance_icon,
 					color_class: color_class
 				})).appendTo(row);
@@ -261,7 +261,7 @@ erpnext.EmployeeSelector = class EmployeeSelector {
 				<div class="checkbox">\
 				<label><input type="checkbox" class="employee-check" employee="%(employee)s"/>\
 				%(employee)s</label>\
-				</div></div>', {employee: m.employee_name})).appendTo(row);
+				</div></div>', {employee: m.employee +' : '+ m.employee_name})).appendTo(row);
 		});
 
 		mark_employee_toolbar.appendTo($(this.wrapper));

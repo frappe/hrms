@@ -571,7 +571,9 @@ def get_previous_claimed_amount(employee, payroll_period, non_pro_rata=False, co
 def share_doc_with_approver(doc, user):
 	# if approver does not have permissions, share
 	if not frappe.has_permission(doc=doc, ptype="submit", user=user):
-		frappe.share.add(doc.doctype, doc.name, user, submit=1, flags={"ignore_share_permission": True})
+		frappe.share.add_docshare(
+			doc.doctype, doc.name, user, submit=1, flags={"ignore_share_permission": True}
+		)
 
 		frappe.msgprint(
 			_("Shared with the user {0} with {1} access").format(user, frappe.bold("submit"), alert=True)

@@ -404,7 +404,7 @@ def get_attendance_status_for_summarized_view(
 	return {
 		"total_present": summary.total_present + summary.total_half_days,
 		"total_leaves": summary.total_leaves + summary.total_half_days,
-		"total_absent": summary.total_absent + summary.total_half_days,
+		"total_absent": summary.total_absent,
 		"total_holidays": total_holidays,
 		"unmarked_days": total_unmarked_days,
 	}

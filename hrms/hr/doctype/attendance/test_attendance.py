@@ -22,7 +22,7 @@ from hrms.hr.doctype.attendance.attendance import (
 	get_unmarked_days,
 	mark_attendance,
 )
-from hrms.hr.doctype.leave_application.test_leave_application import get_first_sunday
+from hrms.tests.test_utils import get_first_sunday
 
 test_records = frappe.get_test_records("Attendance")
 

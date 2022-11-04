@@ -6,7 +6,7 @@ import frappe
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
 
-from erpnext.controllers.employee_boarding_controller import EmployeeBoardingController
+from hrms.controllers.employee_boarding_controller import EmployeeBoardingController
 
 
 class IncompleteTaskError(frappe.ValidationError):

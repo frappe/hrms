@@ -139,8 +139,8 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 
 		# 4 present + half day absent 0.5
 		self.assertEqual(row["total_present"], 4.5)
-		# 1 present + half day absent 0.5
-		self.assertEqual(row["total_absent"], 1.5)
+		# 1 present
+		self.assertEqual(row["total_absent"], 1)
 		# leave days + half day leave 0.5
 		self.assertEqual(row["total_leaves"], leave_application.total_leave_days + 0.5)
 
