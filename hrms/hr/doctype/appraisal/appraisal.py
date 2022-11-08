@@ -24,7 +24,7 @@ class Appraisal(Document):
 	def validate_existing_appraisal(self):
 		duplicate = frappe.db.exists(
 			"Appraisal",
-			filters={
+			{
 				"employee": self.employee,
 				"status": ["in", ["Submitted", "Completed"]],
 				"appraisal_cycle": self.appraisal_cycle,
