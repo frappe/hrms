@@ -83,7 +83,7 @@ def get_applicable_block_lists(employee=None, company=None, all_lists=False, lea
 	# global
 	conditions = {"applies_to_all_departments": 1, "company": company}
 	if leave_type:
-		conditions["leave_type"] = leave_type
+		conditions["leave_type"] = ["IN", (leave_type, "", None)]
 
 	add_block_list(frappe.db.get_all("Leave Block List", filters=conditions, pluck="name"))
 	return list(set(block_lists))
