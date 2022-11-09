@@ -171,6 +171,17 @@ class LeaveApplication(Document):
 		):
 
 			frappe.throw(_("Half Day Date should be between From Date and To Date"))
+		
+		if (
+			self.quarter_day_leave
+			and self.quarter_leave_date
+			and (
+				getdate(self.quarter_leave_date) < getdate(self.from_date)
+				or getdate(self.quarter_leave_date) > getdate(self.to_date)
+			)
+		):
+
+			frappe.throw(_("Quarter Leave Date should be between From Date and To Date"))
 
 		if not is_lwp(self.leave_type):
 			self.validate_dates_across_allocation()
