@@ -75,7 +75,7 @@ class LeaveApplication(Document):
 		self.validate_block_days()
 		self.validate_salary_processed_days()
 		self.validate_attendance()
-		self.set_half_day_date()
+		self.set_half_quarter_day_date()
 		if frappe.db.get_value("Leave Type", self.leave_type, "is_optional_leave"):
 			self.validate_optional_leave()
 		self.validate_applicable_after()
@@ -338,7 +338,7 @@ class LeaveApplication(Document):
 	def validate_balance_leaves(self):
 		if self.from_date and self.to_date:
 			self.total_leave_days = get_number_of_leave_days(
-				self.employee, self.leave_type, self.from_date, self.to_date, self.half_day, self.half_day_date
+				self.employee, self.leave_type, self.from_date, self.to_date, self.half_day, self.quarter_day_leave
 			)
 
 			if self.total_leave_days <= 0:
@@ -487,12 +487,20 @@ class LeaveApplication(Document):
 				)
 			day = add_days(day, 1)
 
-	def set_half_day_date(self):
-		if self.from_date == self.to_date and self.half_day == 1:
-			self.half_day_date = self.from_date
+	def set_half_quarter_day_date(self):
+		if self.from_date == self.to_date:
+			if self.half_day:
+				self.half_day_date = self.from_date
+			if self.quarter_day_leave:
+				self.quarter_leave_date = self.from_date
 
-		if self.half_day == 0:
+		if not self.half_day:
 			self.half_day_date = None
+		if not self.quarter_day_leave:
+			self.quarter_leave_date = None
+		
+		if self.quarter_leave_date and self.quarter_leave_date == self.half_day_date:
+			frappe.throw(_("You cannot apply for half and quarter leave on the same date."))
 
 	def notify_employee(self):
 		employee = frappe.get_doc("Employee", self.employee)
@@ -644,7 +652,7 @@ class LeaveApplication(Document):
 			self.from_date,
 			first_alloc_end,
 			self.half_day,
-			self.half_day_date,
+			self.quarter_day_leave,
 		)
 		leaves_in_second_alloc = get_number_of_leave_days(
 			self.employee,
@@ -652,7 +660,7 @@ class LeaveApplication(Document):
 			second_alloc_start,
 			self.to_date,
 			self.half_day,
-			self.half_day_date,
+			self.quarter_day_leave,
 		)
 
 		args = dict(
@@ -678,7 +686,7 @@ class LeaveApplication(Document):
 		raise_exception = False if frappe.flags.in_patch else True
 
 		leaves = get_number_of_leave_days(
-			self.employee, self.leave_type, self.from_date, expiry_date, self.half_day, self.half_day_date
+			self.employee, self.leave_type, self.from_date, expiry_date, self.half_day, self.quarter_day_leave
 		)
 
 		if leaves:
@@ -695,7 +703,7 @@ class LeaveApplication(Document):
 		if getdate(expiry_date) != getdate(self.to_date):
 			start_date = add_days(expiry_date, 1)
 			leaves = get_number_of_leave_days(
-				self.employee, self.leave_type, start_date, self.to_date, self.half_day, self.half_day_date
+				self.employee, self.leave_type, start_date, self.to_date, self.half_day, self.quarter_day_leave
 			)
 
 			if leaves:
@@ -729,21 +737,18 @@ def get_number_of_leave_days(
 	from_date: str,
 	to_date: str,
 	half_day: Optional[int] = None,
-	half_day_date: Optional[str] = None,
+	quarter_leave: Optional[int] = None,
 	holiday_list: Optional[str] = None,
 ) -> float:
 	"""Returns number of leave days between 2 dates after considering half day and holidays
 	(Based on the include_holiday setting in Leave Type)"""
-	number_of_days = 0
+	number_of_days = date_diff(to_date, from_date)
 	if cint(half_day) == 1:
-		if getdate(from_date) == getdate(to_date):
-			number_of_days = 0.5
-		elif half_day_date and getdate(from_date) <= getdate(half_day_date) <= getdate(to_date):
-			number_of_days = date_diff(to_date, from_date) + 0.5
-		else:
-			number_of_days = date_diff(to_date, from_date) + 1
-	else:
-		number_of_days = date_diff(to_date, from_date) + 1
+		number_of_days += 0.5
+	if cint(quarter_leave) == 1:
+		number_of_days += 0.25
+	if not cint(half_day) and not cint(quarter_leave):
+		number_of_days += 1
 
 	if not frappe.db.get_value("Leave Type", leave_type, "include_holiday"):
 		number_of_days = flt(number_of_days) - flt(
@@ -967,9 +972,8 @@ def get_leaves_for_period(
 			half_day_date = None
 			# fetch half day date for leaves with half days
 			if leave_entry.leaves % 1:
-				half_day = 1
-				half_day_date = frappe.db.get_value(
-					"Leave Application", {"name": leave_entry.transaction_name}, ["half_day_date"]
+				half_day, quarter_day_leave = frappe.db.get_value(
+					"Leave Application", {"name": leave_entry.transaction_name}, ["half_day", "quarter_day_leave"]
 				)
 
 			leave_days += (
@@ -979,7 +983,7 @@ def get_leaves_for_period(
 					leave_entry.from_date,
 					leave_entry.to_date,
 					half_day,
-					half_day_date,
+					quarter_day_leave,
 					holiday_list=leave_entry.holiday_list,
 				)
 				* -1

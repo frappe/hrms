@@ -97,7 +97,7 @@ frappe.ui.form.on("Leave Application", {
 		if (frm.is_new()) {
 			frm.trigger("calculate_total_days");
 		}
-		cur_frm.set_intro("");
+		frm.set_intro("");
 		if (frm.doc.__islocal && !in_list(frappe.user_roles, "Employee")) {
 			frm.set_intro(__("Fill the form and save it"));
 		}
@@ -108,6 +108,8 @@ frappe.ui.form.on("Leave Application", {
 				frm.set_value('employee', perm['Employee'].map(perm_doc => perm_doc.doc)[0]);
 			}
 		}
+		frm.trigger("half_day_datepicker");
+		frm.trigger("quarter_day_leave_datepicker");
 	},
 
 	employee: function(frm) {
@@ -142,26 +144,72 @@ frappe.ui.form.on("Leave Application", {
 	from_date: function(frm) {
 		frm.trigger("make_dashboard");
 		frm.trigger("half_day_datepicker");
+		frm.trigger("quarter_day_leave_datepicker");
 		frm.trigger("calculate_total_days");
 	},
 
 	to_date: function(frm) {
 		frm.trigger("make_dashboard");
 		frm.trigger("half_day_datepicker");
+		frm.trigger("quarter_day_leave_datepicker");
 		frm.trigger("calculate_total_days");
 	},
 
 	half_day_date(frm) {
+		frm.trigger("quarter_day_leave_datepicker");
 		frm.trigger("calculate_total_days");
 	},
 
+	quarter_leave_date(frm) {
+		frm.trigger("half_day_datepicker");
+		frm.trigger("calculate_total_days");
+	},
+	
+	quarter_day_leave(frm) {
+		frm.trigger("quarter_day_leave_datepicker");
+		frm.trigger("calculate_total_days");
+	},
+
+	quarter_day_leave_datepicker: function(frm) {
+		if (!frm.doc.quarter_day_leave) return
+		let quarter_day_leave_datepicker = frm.fields_dict.quarter_leave_date.datepicker;
+		quarter_day_leave_datepicker.update({
+			minDate: frappe.datetime.str_to_obj(frm.doc.from_date),
+			maxDate: frappe.datetime.str_to_obj(frm.doc.to_date)
+		});
+
+		if (frm.doc.half_day_date) {
+			quarter_day_leave_datepicker.update({
+				onRenderCell: function (date, cellType) {
+					if (cellType == 'day') {
+						return {
+							disabled: (frappe.datetime.get_diff(date, frappe.datetime.str_to_obj(frm.doc.half_day_date)) === 0)
+						}
+					}
+				}
+			})
+		}
+	},
+
 	half_day_datepicker: function(frm) {
-		frm.set_value('half_day_date', '');
+		if (!frm.doc.half_day) return
 		var half_day_datepicker = frm.fields_dict.half_day_date.datepicker;
 		half_day_datepicker.update({
 			minDate: frappe.datetime.str_to_obj(frm.doc.from_date),
 			maxDate: frappe.datetime.str_to_obj(frm.doc.to_date)
 		});
+
+		if (frm.doc.quarter_leave_date) {
+			half_day_datepicker.update({
+				onRenderCell: function (date, cellType) {
+					if (cellType == 'day') {
+						return {
+							disabled: (frappe.datetime.get_diff(date, frappe.datetime.str_to_obj(frm.doc.quarter_leave_date)) === 0)
+						}
+					}
+				}
+			})
+		}
 	},
 
 	get_leave_balance: function(frm) {
@@ -206,10 +254,11 @@ frappe.ui.form.on("Leave Application", {
 					"from_date": frm.doc.from_date,
 					"to_date": frm.doc.to_date,
 					"half_day": frm.doc.half_day,
-					"half_day_date": frm.doc.half_day_date,
+					"quarter_leave": frm.doc.quarter_day_leave,
 				},
 				callback: function(r) {
 					if (r && r.message) {
+						console.log(r.message)
 						frm.set_value('total_leave_days', r.message);
 						frm.trigger("get_leave_balance");
 					}
