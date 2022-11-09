@@ -15,35 +15,35 @@
   "posting_date",
   "status",
   "payroll_payable_account",
-  "section_break_8",
-  "salary_slip_based_on_timesheet",
-  "deduct_tax_for_unclaimed_employee_benefits",
-  "deduct_tax_for_unsubmitted_tax_exemption_proof",
   "column_break_13",
+  "salary_slip_based_on_timesheet",
   "payroll_frequency",
   "start_date",
   "end_date",
-  "section_break0",
-  "employees_section",
+  "deduct_tax_for_unclaimed_employee_benefits",
+  "deduct_tax_for_unsubmitted_tax_exemption_proof",
+  "employees_tab",
+  "section_break_17",
   "branch",
-  "department",
   "get_employees",
+  "number_of_employees",
   "column_break_21",
   "designation",
-  "number_of_employees",
+  "department",
   "section_break_24",
   "employees",
   "section_break_26",
   "validate_attendance",
   "attendance_detail_html",
+  "accounting_dimensions_tab",
   "accounting_dimensions_section",
-  "project",
-  "dimension_col_break",
   "cost_center",
+  "dimension_col_break",
+  "project",
   "account",
   "payment_account",
-  "column_break_35",
   "bank_account",
+  "column_break_35",
   "salary_slips_created",
   "salary_slips_submitted",
   "failure_details_section",
@@ -52,11 +52,6 @@
   "amended_from"
  ],
  "fields": [
-  {
-   "fieldname": "section_break0",
-   "fieldtype": "Tab Break",
-   "label": "Employees"
-  },
   {
    "default": "Today",
    "fieldname": "posting_date",
@@ -80,10 +75,6 @@
    "options": "Company",
    "remember_last_selected_value": 1,
    "reqd": 1
-  },
-  {
-   "fieldname": "section_break_8",
-   "fieldtype": "Section Break"
   },
   {
    "fieldname": "branch",
@@ -177,7 +168,7 @@
   },
   {
    "fieldname": "account",
-   "fieldtype": "Tab Break",
+   "fieldtype": "Section Break",
    "label": "Payment Entry"
   },
   {
@@ -218,7 +209,7 @@
   },
   {
    "fieldname": "accounting_dimensions_section",
-   "fieldtype": "Tab Break",
+   "fieldtype": "Section Break",
    "label": "Accounting Dimensions"
   },
   {
@@ -285,10 +276,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "employees_section",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "column_break_5",
    "fieldtype": "Column Break"
   },
@@ -313,15 +300,30 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.docstatus==0",
    "fieldname": "get_employees",
    "fieldtype": "Button",
    "label": "Get Employees"
+  },
+  {
+   "fieldname": "accounting_dimensions_tab",
+   "fieldtype": "Tab Break",
+   "label": "Accounting and Payment"
+  },
+  {
+   "fieldname": "section_break_17",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "employees_tab",
+   "fieldtype": "Tab Break",
+   "label": "Employees"
   }
  ],
  "icon": "fa fa-cog",
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-01 12:47:50.193232",
+ "modified": "2022-11-09 16:32:16.521580",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",

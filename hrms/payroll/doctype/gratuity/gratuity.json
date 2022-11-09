@@ -19,16 +19,14 @@
   "company",
   "amended_from",
   "section_break_5",
-  "mode_of_payment",
   "pay_via_salary_slip",
   "amount",
+  "paid_amount",
   "column_break_13",
   "payroll_date",
   "salary_component",
-  "paid_amount",
-  "accounts_tab",
   "cost_center",
-  "column_break_24",
+  "mode_of_payment",
   "expense_account",
   "payable_account"
  ],
@@ -108,7 +106,7 @@
   {
    "fieldname": "section_break_5",
    "fieldtype": "Tab Break",
-   "label": "Payment Configuration"
+   "label": "Payment and Accounting"
   },
   {
    "fetch_from": "employee.employee_name",
@@ -194,15 +192,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "accounts_tab",
-   "fieldtype": "Tab Break",
-   "label": "Accounting"
-  },
-  {
-   "fieldname": "column_break_24",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "details_tab",
    "fieldtype": "Tab Break",
    "label": "Gratuity"
@@ -211,7 +200,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-01 12:33:17.396682",
+ "modified": "2022-11-09 15:47:13.353555",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Gratuity",

@@ -41,7 +41,7 @@
   },
   {
    "fieldname": "taxable_salary_slabs_section",
-   "fieldtype": "Tab Break",
+   "fieldtype": "Section Break",
    "label": "Taxable Salary Slabs"
   },
   {
@@ -84,7 +84,7 @@
    "collapsible": 1,
    "collapsible_depends_on": "other_taxes_and_charges",
    "fieldname": "taxes_and_charges_on_income_tax_section",
-   "fieldtype": "Tab Break",
+   "fieldtype": "Section Break",
    "label": "Taxes and Charges on Income Tax"
   },
   {
@@ -109,7 +109,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-10-13 12:45:23.020054",
+ "modified": "2022-11-09 16:08:47.654119",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Income Tax Slab",

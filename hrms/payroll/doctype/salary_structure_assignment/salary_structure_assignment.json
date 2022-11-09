@@ -11,20 +11,21 @@
   "employee",
   "employee_name",
   "department",
-  "grade",
-  "company",
-  "payroll_payable_account",
-  "column_break_6",
   "designation",
+  "grade",
+  "column_break_6",
   "salary_structure",
   "from_date",
   "income_tax_slab",
+  "column_break_11",
+  "company",
+  "payroll_payable_account",
   "currency",
+  "amended_from",
   "section_break_7",
   "base",
   "column_break_9",
   "variable",
-  "amended_from",
   "section_break_17",
   "payroll_cost_centers"
  ],
@@ -96,7 +97,7 @@
   },
   {
    "fieldname": "section_break_7",
-   "fieldtype": "Tab Break",
+   "fieldtype": "Section Break",
    "label": "Base & Variable"
   },
   {
@@ -155,7 +156,7 @@
    "collapsible": 1,
    "depends_on": "employee",
    "fieldname": "section_break_17",
-   "fieldtype": "Tab Break",
+   "fieldtype": "Section Break",
    "label": "Payroll Cost Centers"
   },
   {
@@ -177,11 +178,15 @@
    "fieldname": "employee_details_tab",
    "fieldtype": "Tab Break",
    "label": "Employee"
+  },
+  {
+   "fieldname": "column_break_11",
+   "fieldtype": "Column Break"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-01 13:14:25.508594",
+ "modified": "2022-11-09 16:58:15.761878",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",

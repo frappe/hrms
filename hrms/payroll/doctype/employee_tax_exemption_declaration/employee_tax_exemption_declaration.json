@@ -8,7 +8,6 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "employee_details_tab",
   "employee",
   "employee_name",
   "department",
@@ -117,16 +116,11 @@
    "options": "Currency",
    "print_hide": 1,
    "reqd": 1
-  },
-  {
-   "fieldname": "employee_details_tab",
-   "fieldtype": "Tab Break",
-   "label": "Employee"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-01 13:15:42.342774",
+ "modified": "2022-11-08 17:03:56.224987",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Tax Exemption Declaration",

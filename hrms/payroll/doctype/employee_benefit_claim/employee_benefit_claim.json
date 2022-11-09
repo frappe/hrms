@@ -7,7 +7,6 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "employee_details_tab",
   "employee",
   "employee_name",
   "department",
@@ -15,13 +14,14 @@
   "claim_date",
   "currency",
   "company",
+  "amended_from",
   "benefit_type_and_amount",
   "earning_component",
   "max_amount_eligible",
+  "column_break_12",
   "pay_against_benefit_claim",
   "claimed_amount",
   "salary_slip",
-  "amended_from",
   "section_break_9",
   "attachments"
  ],
@@ -63,7 +63,7 @@
   },
   {
    "fieldname": "benefit_type_and_amount",
-   "fieldtype": "Tab Break",
+   "fieldtype": "Section Break",
    "label": "Benefits"
   },
   {
@@ -143,14 +143,13 @@
    "reqd": 1
   },
   {
-   "fieldname": "employee_details_tab",
-   "fieldtype": "Tab Break",
-   "label": "Employee"
+   "fieldname": "column_break_12",
+   "fieldtype": "Column Break"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-01 12:19:41.896101",
+ "modified": "2022-11-08 16:41:02.260427",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Benefit Claim",

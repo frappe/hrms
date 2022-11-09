@@ -11,14 +11,15 @@
   "salary_structure",
   "payroll_entry",
   "mode_of_payment",
-  "salary_slip_based_on_timesheet",
-  "deduct_tax_for_unclaimed_employee_benefits",
-  "deduct_tax_for_unsubmitted_tax_exemption_proof",
-  "column_break1",
+  "status",
+  "column_break_6",
   "payroll_frequency",
   "start_date",
   "end_date",
-  "status",
+  "column_break1",
+  "salary_slip_based_on_timesheet",
+  "deduct_tax_for_unclaimed_employee_benefits",
+  "deduct_tax_for_unsubmitted_tax_exemption_proof",
   "section_break_6",
   "employee",
   "employee_name",
@@ -30,11 +31,10 @@
   "currency",
   "exchange_rate",
   "letter_head",
-  "section_break_20",
+  "column_break_24",
   "total_working_days",
   "unmarked_days",
   "leave_without_pay",
-  "column_break_24",
   "absent_days",
   "payment_days",
   "hourly_wages",
@@ -462,10 +462,6 @@
    "label": "Unmarked days"
   },
   {
-   "fieldname": "section_break_20",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "column_break_24",
    "fieldtype": "Column Break"
   },
@@ -624,13 +620,17 @@
    "fieldname": "section_break_6",
    "fieldtype": "Section Break",
    "label": "Employee Details"
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-10-19 12:12:03.070134",
+ "modified": "2022-11-09 16:51:38.831947",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
