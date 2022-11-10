@@ -72,7 +72,7 @@ class HRSettings(Document):
 			title="Confirm change in Frequency",
 			primary_action={
 				"label": frappe._("Yes, Proceed"),
-				"client_action": "erpnext.proceed_save_with_reminders_frequency_change",
+				"client_action": "hrms.proceed_save_with_reminders_frequency_change",
 			},
 			raise_exception=frappe.ValidationError,
 		)
