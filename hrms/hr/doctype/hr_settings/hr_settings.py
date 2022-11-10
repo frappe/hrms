@@ -65,6 +65,11 @@ class HRSettings(Document):
 	def show_freq_change_warning(self, from_date, to_date):
 		from_date = frappe.bold(format_date(from_date))
 		to_date = frappe.bold(format_date(to_date))
+
+		raise_exception=frappe.ValidationError
+		if frappe.flags.in_test or frappe.flags.in_patch or frappe.flags.in_install:
+			raise_exception = False
+
 		frappe.msgprint(
 			msg=frappe._(
 				"Employees will miss holiday reminders from {} until {}. <br> Do you want to proceed with this change?"
@@ -74,7 +79,7 @@ class HRSettings(Document):
 				"label": frappe._("Yes, Proceed"),
 				"client_action": "hrms.proceed_save_with_reminders_frequency_change",
 			},
-			raise_exception=frappe.ValidationError,
+			raise_exception=raise_exception,
 		)
 
 
