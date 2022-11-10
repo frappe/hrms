@@ -66,7 +66,7 @@ class HRSettings(Document):
 		from_date = frappe.bold(format_date(from_date))
 		to_date = frappe.bold(format_date(to_date))
 
-		raise_exception=frappe.ValidationError
+		raise_exception = frappe.ValidationError
 		if frappe.flags.in_test or frappe.flags.in_patch or frappe.flags.in_install:
 			raise_exception = False
 
