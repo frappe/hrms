@@ -58,12 +58,14 @@ frappe.ui.form.on('Salary Structure', {
 		if(!frm.doc.company) return;
 		frm.set_query("salary_component", "earnings", function() {
 			return {
-				filters: {type: "earning", company: frm.doc.company}
+				filters: {component_type: "earning", company: frm.doc.company},
+				query: "hrms.payroll.doctype.salary_structure.salary_structure.get_salary_component"
 			};
 		});
 		frm.set_query("salary_component", "deductions", function() {
 			return {
-				filters: {type: "deduction", company: frm.doc.company}
+				filters: {component_type: "deduction", company: frm.doc.company},
+				query: "hrms.payroll.doctype.salary_structure.salary_structure.get_salary_component"
 			};
 		});
 	},
