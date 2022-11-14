@@ -368,22 +368,23 @@ def get_employees(salary_structure):
 
 @frappe.whitelist()
 def get_salary_component(doctype, txt, searchfield, start, page_len, filters):
-	salary_components = frappe.db.sql(
-		"""select sc.name, sca.account, sca.company
-		from `tabSalary Component` sc
-		left join  `tabSalary Component Account` sca
-		on sca.parent=sc.name
-		where sc.type=%s and sc.disabled=0""",
-		filters["component_type"],
-		as_dict=1,
-	)
+	sc = frappe.qb.DocType("Salary Component")
+	sca = frappe.qb.DocType("Salary Component Account")
+
+	salary_components = (
+		frappe.qb.from_(sc)
+		.left_join(sca)
+		.on(sca.parent == sc.name)
+		.select(sc.name, sca.account, sca.company)
+		.where((sc.type == filters.get("component_type")) & (sc.disabled == 0))
+	).run(as_dict=True)
 
 	accounts = []
-	for sc in salary_components:
-		if not sc.company:
-			accounts.append((sc.name, sc.account, sc.company))
+	for component in salary_components:
+		if not component.company:
+			accounts.append((component.name, component.account, component.company))
 		else:
-			if sc.company == filters["company"]:
-				accounts.append((sc.name, sc.account, sc.company))
+			if component.company == filters["company"]:
+				accounts.append((component.name, component.account, component.company))
 
 	return accounts
