@@ -364,3 +364,22 @@ def get_employees(salary_structure):
 		)
 
 	return list(set([d.employee for d in employees]))
+
+
+@frappe.whitelist()
+def get_salary_component(doctype, txt, searchfield, start, page_len, filters):
+	salary_components = frappe.db.sql('''select sc.name, sca.account, sca.company
+		from `tabSalary Component` sc
+		left join  `tabSalary Component Account` sca
+		on sca.parent=sc.name
+		where sc.type=%s and sc.disabled=0''', filters['component_type'], as_dict=1)
+
+	accounts = []
+	for sc in salary_components:
+		if not sc.company:
+			accounts.append((sc.name, sc.account, sc.company))
+		else:
+			if sc.company == filters['company']:
+				accounts.append((sc.name, sc.account, sc.company))
+
+	return accounts
