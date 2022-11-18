@@ -814,22 +814,29 @@ def get_month_details(year, month):
 		frappe.throw(_("Fiscal Year {0} not found").format(year))
 
 
-def get_payroll_entry_bank_entries(payroll_entry_name, payroll_payable_account):
-	journal_entries = frappe.db.sql(
-		"select name from `tabJournal Entry Account` "
-		'where reference_type="Payroll Entry" '
-		"and reference_name=%s and account != %s and docstatus=1",
-		(payroll_entry_name, payroll_payable_account),
-		as_dict=1,
-	)
+def get_payroll_entry_bank_entries(payroll_entry_name):
+	je = frappe.qb.DocType("Journal Entry")
+	jea = frappe.qb.DocType("Journal Entry Account")
+
+	journal_entries = (
+		frappe.qb.from_(je)
+		.from_(jea)
+		.select(je.name)
+		.where(
+			(je.name == jea.parent)
+			& (je.voucher_type == "Bank Entry")
+			& (jea.reference_name == payroll_entry_name)
+			& (jea.reference_type == "Payroll Entry")
+		)
+	).run(as_dict=True)
 
 	return journal_entries
 
 
 @frappe.whitelist()
-def payroll_entry_has_bank_entries(name: str, payroll_payable_account: str):
+def payroll_entry_has_bank_entries(name: str):
 	response = {}
-	bank_entries = get_payroll_entry_bank_entries(name, payroll_payable_account)
+	bank_entries = get_payroll_entry_bank_entries(name)
 	response["submitted"] = 1 if bank_entries else 0
 
 	return response
