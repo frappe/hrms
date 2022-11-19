@@ -307,70 +307,70 @@ class SalarySlip(TransactionBase):
 
 		make_salary_slip(self._salary_structure_doc.name, self)
 
-def get_working_days_details(
-       self, joining_date=None, relieving_date=None, lwp=None, for_preview=0
-   ):
-       payroll_based_on = frappe.db.get_value("Payroll Settings", None, "payroll_based_on")
-       include_holidays_in_total_working_days = frappe.db.get_single_value(
-           "Payroll Settings", "include_holidays_in_total_working_days"
-       )
- 
-       working_days = date_diff(self.end_date, self.start_date) + 1
-       if for_preview:
-           self.total_working_days = working_days
-           self.payment_days = working_days
-           return
- 
-       holidays = self.get_holidays_for_employee(self.start_date, self.end_date)
- 
-       if not cint(include_holidays_in_total_working_days):
-          
-           all_date_list = date_range(getdate(self.start_date), getdate(self.end_date))
-           working_days_list = [i for i in all_date_list if i not in holidays]
- 
-           working_days -= len(holidays)
-           if working_days < 0:
-               frappe.throw(_("There are more holidays than working days this month."))
- 
-       if not payroll_based_on:
-           frappe.throw(_("Please set Payroll based on in Payroll settings"))
- 
-       if payroll_based_on == "Attendance":
-           actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(holidays)
-           self.absent_days = absent
-       else:
-           actual_lwp = self.calculate_lwp_or_ppl_based_on_leave_application(holidays, working_days_list)
- 
-       if not lwp:
-           lwp = actual_lwp
-       elif lwp != actual_lwp:
-           frappe.msgprint(
-               _("Leave Without Pay does not match with approved {} records").format(payroll_based_on)
-           )
- 
-       self.leave_without_pay = lwp
-       self.total_working_days = working_days
- 
-       payment_days = self.get_payment_days(
-           joining_date, relieving_date, include_holidays_in_total_working_days
-       )
- 
-       if flt(payment_days) > flt(lwp):
-           self.payment_days = flt(payment_days) - flt(lwp)
- 
-           if payroll_based_on == "Attendance":
-               self.payment_days -= flt(absent)
- 
-           consider_unmarked_attendance_as = (
-               frappe.db.get_value("Payroll Settings", None, "consider_unmarked_attendance_as") or "Present"
-           )
- 
-           if payroll_based_on == "Attendance" and consider_unmarked_attendance_as == "Absent":
-               unmarked_days = self.get_unmarked_days(include_holidays_in_total_working_days)
-               self.absent_days += unmarked_days  # will be treated as absent
-               self.payment_days -= unmarked_days
-       else:
-           self.payment_days = 0
+	def get_working_days_details(
+		self, joining_date=None, relieving_date=None, lwp=None, for_preview=0
+	):
+		payroll_based_on = frappe.db.get_value("Payroll Settings", None, "payroll_based_on")
+		include_holidays_in_total_working_days = frappe.db.get_single_value(
+			"Payroll Settings", "include_holidays_in_total_working_days"
+		)
+	
+		working_days = date_diff(self.end_date, self.start_date) + 1
+		if for_preview:
+			self.total_working_days = working_days
+			self.payment_days = working_days
+			return
+	
+		holidays = self.get_holidays_for_employee(self.start_date, self.end_date)
+	
+		if not cint(include_holidays_in_total_working_days):
+			
+			all_date_list = date_range(getdate(self.start_date), getdate(self.end_date))
+			working_days_list = [i for i in all_date_list if i not in holidays]
+	
+			working_days -= len(holidays)
+			if working_days < 0:
+				frappe.throw(_("There are more holidays than working days this month."))
+	
+		if not payroll_based_on:
+			frappe.throw(_("Please set Payroll based on in Payroll settings"))
+	
+		if payroll_based_on == "Attendance":
+			actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(holidays)
+			self.absent_days = absent
+		else:
+			actual_lwp = self.calculate_lwp_or_ppl_based_on_leave_application(holidays, working_days_list)
+	
+		if not lwp:
+			lwp = actual_lwp
+		elif lwp != actual_lwp:
+			frappe.msgprint(
+				_("Leave Without Pay does not match with approved {} records").format(payroll_based_on)
+			)
+	
+		self.leave_without_pay = lwp
+		self.total_working_days = working_days
+	
+		payment_days = self.get_payment_days(
+			joining_date, relieving_date, include_holidays_in_total_working_days
+		)
+	
+		if flt(payment_days) > flt(lwp):
+			self.payment_days = flt(payment_days) - flt(lwp)
+	
+			if payroll_based_on == "Attendance":
+				self.payment_days -= flt(absent)
+	
+			consider_unmarked_attendance_as = (
+				frappe.db.get_value("Payroll Settings", None, "consider_unmarked_attendance_as") or "Present"
+			)
+	
+			if payroll_based_on == "Attendance" and consider_unmarked_attendance_as == "Absent":
+				unmarked_days = self.get_unmarked_days(include_holidays_in_total_working_days)
+				self.absent_days += unmarked_days  # will be treated as absent
+				self.payment_days -= unmarked_days
+		else:
+			self.payment_days = 0
 
 	def get_unmarked_days(self, include_holidays_in_total_working_days):
 		unmarked_days = self.total_working_days
