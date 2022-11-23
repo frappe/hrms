@@ -1069,7 +1069,7 @@ class SalarySlip(TransactionBase):
 			)
 			exempted_amount = flt(exempted_amount[0][0]) if exempted_amount else 0
 
-		opening_taxable_earning = self.get_opening_taxable_earnings(
+		opening_taxable_earning = self.get_opening_taxable_earnings_or_paid_tax(
 			"salary_paid_till_date", start_date, end_date
 		)
 
@@ -1082,6 +1082,7 @@ class SalarySlip(TransactionBase):
 				"employee": self.employee,
 				"salary_structure": self.salary_structure,
 				"from_date": ["between", start_date, end_date],
+				"docstatus": 1,
 			},
 			field_to_select,
 		)
