@@ -4,7 +4,7 @@
 
 import datetime
 import math
-
+from datetime import datetime, timedelta
 import frappe
 from frappe import _, msgprint
 from frappe.model.naming import make_autoname
@@ -322,12 +322,11 @@ class SalarySlip(TransactionBase):
 			return
 
 		holidays = self.get_holidays_for_employee(self.start_date, self.end_date)
+		working_days_list = date_range(getdate(self.start_date), getdate(self.end_date))
 
 		if not cint(include_holidays_in_total_working_days):
-			
-			all_date_list = date_range(getdate(self.start_date), getdate(self.end_date))
-			working_days_list = [i for i in all_date_list if i not in holidays]
-	
+			working_days_list = [i for i in working_days_list if i not in holidays]
+
 			working_days -= len(holidays)
 			if working_days < 0:
 				frappe.throw(_("There are more holidays than working days this month."))
@@ -1829,3 +1828,12 @@ def set_missing_values(time_sheet, target):
 	target.posting_date = doc.modified
 	target.total_working_hours = doc.total_hours
 	target.append("timesheets", {"time_sheet": doc.name, "working_hours": doc.total_hours})
+
+
+def date_range(start=None, end=None):
+	if start and end:
+		delta = end - start  # as timedelta
+		days = [str(start + timedelta(days=i))  for i in range(delta.days + 1)]
+		return days
+	else:
+		return 0
