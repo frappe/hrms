@@ -1081,7 +1081,7 @@ class SalarySlip(TransactionBase):
 			{
 				"employee": self.employee,
 				"salary_structure": self.salary_structure,
-				"from_date": ["between", start_date, end_date],
+				"from_date": ["between", [start_date, end_date]],
 				"docstatus": 1,
 			},
 			field_to_select,
