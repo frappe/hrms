@@ -24,6 +24,10 @@
   "column_break_9",
   "variable",
   "amended_from",
+  "earnings_and_taxation_section",
+  "salary_paid_till_date",
+  "column_break_20",
+  "tax_deducted_till_date",
   "section_break_17",
   "payroll_cost_centers"
  ],
@@ -171,11 +175,36 @@
    "label": "Grade",
    "options": "Employee Grade",
    "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "salary_paid_till_date",
+   "fieldtype": "Currency",
+   "label": "Salary Paid Till Date",
+   "options": "currency"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "tax_deducted_till_date",
+   "fieldtype": "Currency",
+   "label": "Tax Deducted Till Date",
+   "options": "currency"
+  },
+  {
+   "fieldname": "column_break_20",
+   "fieldtype": "Column Break"
+  },
+  {
+   "collapsible_depends_on": "eval:doc.salary_paid_till_date && doc.tax_deducted_till_date",
+   "fieldname": "earnings_and_taxation_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "label": "Earnings and Taxation "
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-05-06 12:18:36.972336",
+ "modified": "2022-11-23 12:33:45.955520",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",

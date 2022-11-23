@@ -13,6 +13,13 @@ class DuplicateAssignment(frappe.ValidationError):
 
 
 class SalaryStructureAssignment(Document):
+	def onload(self):
+		if self.employee:
+			res = self.set_earnings_and_taxation_section()
+			self.set_onload(
+				"unhide_earnings_and_taxation_section", res.get("unhide_earnings_and_taxation_section")
+			)
+
 	def validate(self):
 		self.validate_dates()
 		self.validate_income_tax_slab()
@@ -101,6 +108,49 @@ class SalaryStructureAssignment(Document):
 			total_percentage = sum([flt(d.percentage) for d in self.get("payroll_cost_centers", [])])
 			if total_percentage != 100:
 				frappe.throw(_("Total percentage against cost centers should be 100"))
+
+	@frappe.whitelist()
+	def set_employee_dependent_properties(self):
+		self.set_payroll_cost_centers()
+		return self.set_earnings_and_taxation_section()
+
+	@frappe.whitelist()
+	def set_earnings_and_taxation_section(self):
+		if self.has_joined_in_same_month() or self.has_salary_slip():
+			return {
+				"unhide_earnings_and_taxation_section": 0,
+			}
+
+		return {
+			"unhide_earnings_and_taxation_section": 1,
+		}
+
+	def has_salary_slip(self):
+		"""returns True if salary structure assignment has salary slips else False"""
+
+		salary_slip = frappe.db.get_value(
+			"Salary Slip", filters={"employee": self.employee, "docstatus": 1}
+		)
+
+		if salary_slip:
+			return True
+
+		return False
+
+	def has_joined_in_same_month(self):
+		"""returns True if employee joined in same month as salary structure assignment from date else False"""
+
+		date_of_joining = frappe.db.get_value("Employee", self.employee, "date_of_joining")
+		from_date = getdate(self.from_date)
+
+		if not self.from_date or not date_of_joining:
+			return False
+
+		elif date_of_joining.month == from_date.month:
+			return True
+
+		else:
+			return False
 
 
 def get_assigned_salary_structure(employee, on_date):
