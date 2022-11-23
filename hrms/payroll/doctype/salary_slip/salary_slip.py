@@ -1836,4 +1836,4 @@ def date_range(start=None, end=None):
 		days = [str(start + timedelta(days=i))  for i in range(delta.days + 1)]
 		return days
 	else:
-		return 0
+		return []
