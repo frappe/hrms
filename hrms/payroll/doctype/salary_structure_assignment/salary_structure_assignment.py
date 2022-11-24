@@ -24,6 +24,14 @@ class SalaryStructureAssignment(Document):
 		self.validate_dates()
 		self.validate_income_tax_slab()
 		self.set_payroll_payable_account()
+
+		if self.set_earnings_and_taxation_section().get("unhide_earnings_and_taxation_section"):
+			frappe.msgprint(
+				_(
+					"Please mension opening entries for taxable earnings till date and total tax deducted till date"
+				)
+			)
+
 		if not self.get("payroll_cost_centers"):
 			self.set_payroll_cost_centers()
 
