@@ -1070,21 +1070,24 @@ class SalarySlip(TransactionBase):
 			exempted_amount = flt(exempted_amount[0][0]) if exempted_amount else 0
 
 		opening_taxable_earning = self.get_opening_taxable_earnings_or_paid_tax(
-			"salary_paid_till_date", start_date, end_date
+			"taxable_earnings_till_date", start_date, end_date
 		)
 
 		return (taxable_earnings + opening_taxable_earning) - exempted_amount
 
 	def get_opening_taxable_earnings_or_paid_tax(self, field_to_select, start_date, end_date):
-		return frappe.db.get_value(
-			"Salary Structure Assignment",
-			{
-				"employee": self.employee,
-				"salary_structure": self.salary_structure,
-				"from_date": ["between", [start_date, end_date]],
-				"docstatus": 1,
-			},
-			field_to_select,
+		return (
+			frappe.db.get_value(
+				"Salary Structure Assignment",
+				{
+					"employee": self.employee,
+					"salary_structure": self.salary_structure,
+					"from_date": ["between", [start_date, end_date]],
+					"docstatus": 1,
+				},
+				field_to_select,
+			)
+			or 0
 		)
 
 	def get_tax_paid_in_period(self, start_date, end_date, tax_component):
@@ -1739,6 +1742,7 @@ def calculate_tax_by_tax_slab(
 		if not slab.to_amount and annual_taxable_earning >= slab.from_amount:
 			tax_amount += (annual_taxable_earning - slab.from_amount + 1) * slab.percent_deduction * 0.01
 			continue
+
 		if annual_taxable_earning >= slab.from_amount and annual_taxable_earning < slab.to_amount:
 			tax_amount += (annual_taxable_earning - slab.from_amount + 1) * slab.percent_deduction * 0.01
 		elif annual_taxable_earning >= slab.from_amount and annual_taxable_earning >= slab.to_amount:
