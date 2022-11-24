@@ -572,7 +572,7 @@ def get_attendance_years() -> str:
 	if year_list:
 		year_list.sort(key=lambda d: d.year, reverse=True)
 	else:
-		year_list = [getdate().year]
+		year_list = [frappe._dict({"year": getdate().year})]
 
 	return "\n".join(cstr(entry.year) for entry in year_list)
 
