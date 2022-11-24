@@ -472,10 +472,12 @@ class SalarySlip(TransactionBase):
 			if leave:
 				equivalent_lwp_count = 0
 				is_half_day_leave = cint(leave[0].is_half_day)
+				is_quarter_day_leave = cint(leave[0].is_quarter_leave)
 				is_partially_paid_leave = cint(leave[0].is_ppl)
 				fraction_of_daily_salary_per_leave = flt(leave[0].fraction_of_daily_salary_per_leave)
 
 				equivalent_lwp_count = (1 - daily_wages_fraction_for_half_day) if is_half_day_leave else 1
+				equivalent_lwp_count = (equivalent_lwp_count - 0.75) if is_quarter_day_leave else equivalent_lwp_count
 
 				if is_partially_paid_leave:
 					equivalent_lwp_count *= (
@@ -504,23 +506,28 @@ class SalarySlip(TransactionBase):
 		for leave_type in leave_types:
 			leave_type_map[leave_type.name] = leave_type
 
-		attendances = frappe.db.sql(
-			"""
-			SELECT attendance_date, status, leave_type
-			FROM `tabAttendance`
-			WHERE
-				status in ('Absent', 'Half Day', 'On leave')
-				AND employee = %s
-				AND docstatus = 1
-				AND attendance_date between %s and %s
-		""",
-			values=(self.employee, self.start_date, self.end_date),
-			as_dict=1,
-		)
+		db_attendance = frappe.qb.DocType("Attendance")
+		attendances = (
+			frappe.qb.from_(db_attendance)
+			.select(
+				db_attendance.attendance_date,
+				db_attendance.status,
+				db_attendance.quarter_day_off,
+				db_attendance.leave_type
+			)
+			.where(
+				(db_attendance.status.isin(['Absent', 'Half Day', 'On Leave'])) | (db_attendance.quarter_day_off == 1)
+			)
+			.where(db_attendance.employee == self.employee)
+			.where(db_attendance.docstatus == 1)
+			.where(
+				(db_attendance.attendance_date >= self.start_date) & (db_attendance.attendance_date <= self.end_date)
+			)
+		).run(as_dict=1)
 
 		for d in attendances:
 			if (
-				d.status in ("Half Day", "On Leave")
+				d.status in ("Half Day", "On Leave", "Present")
 				and d.leave_type
 				and d.leave_type not in leave_type_map.keys()
 			):
@@ -549,6 +556,13 @@ class SalarySlip(TransactionBase):
 				lwp += equivalent_lwp
 			elif d.status == "On Leave" and d.leave_type and d.leave_type in leave_type_map.keys():
 				equivalent_lwp = 1
+				if leave_type_map[d.leave_type]["is_ppl"]:
+					equivalent_lwp *= (
+						fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
+					)
+				lwp += equivalent_lwp
+			elif d.quarter_day_off and d.leave_type and d.leave_type in leave_type_map.keys():
+				equivalent_lwp = 0.25
 				if leave_type_map[d.leave_type]["is_ppl"]:
 					equivalent_lwp *= (
 						fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
@@ -1778,6 +1792,18 @@ def get_lwp_or_ppl_for_date(date, employee, holidays):
 		)
 		.else_(0)
 	).as_("is_half_day")
+	
+	is_quarter_leave = (
+		frappe.qb.terms.Case()
+		.when(
+			(
+				(LeaveApplication.quarter_leave_date == date)
+				| (LeaveApplication.from_date == LeaveApplication.to_date)
+			),
+			LeaveApplication.quarter_day_leave,
+		)
+		.else_(0)
+	).as_("is_quarter_leave")
 
 	query = (
 		frappe.qb.from_(LeaveApplication)
@@ -1788,6 +1814,7 @@ def get_lwp_or_ppl_for_date(date, employee, holidays):
 			LeaveType.is_ppl,
 			LeaveType.fraction_of_daily_salary_per_leave,
 			(is_half_day),
+			(is_quarter_leave),
 		)
 		.where(
 			(((LeaveType.is_lwp == 1) | (LeaveType.is_ppl == 1)))
