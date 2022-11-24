@@ -272,14 +272,25 @@ class LeaveApplication(Document):
 		status = (
 			"Half Day"
 			if self.half_day_date and getdate(date) == getdate(self.half_day_date)
-			else "On Leave"
+			else (
+				"Present"
+				if self.quarter_leave_date and getdate(date) == getdate(self.quarter_leave_date)
+				else "On Leave"
+			)
 		)
+
+		quarter_day_off = 1 if status == "Present" else 0
 
 		if attendance_name:
 			# update existing attendance, change absent to on leave
 			doc = frappe.get_doc("Attendance", attendance_name)
 			if doc.status != status:
-				doc.db_set({"status": status, "leave_type": self.leave_type, "leave_application": self.name})
+				doc.db_set({
+					"status": status,
+					"leave_type": self.leave_type,
+					"leave_application": self.name,
+					"quarter_day_off": quarter_day_off
+				})
 		else:
 			# make new attendance and submit it
 			doc = frappe.new_doc("Attendance")
@@ -290,6 +301,7 @@ class LeaveApplication(Document):
 			doc.leave_type = self.leave_type
 			doc.leave_application = self.name
 			doc.status = status
+			doc.quarter_day_off = quarter_day_off
 			doc.flags.ignore_validate = True
 			doc.insert(ignore_permissions=True)
 			doc.submit()
@@ -510,6 +522,10 @@ class LeaveApplication(Document):
 		if not self.quarter_day_leave:
 			self.quarter_leave_date = None
 		
+		if self.half_day and not self.half_day_date:
+			frappe.throw(_("Please specify the half day date."))
+		if self.quarter_day_leave and not self.quarter_leave_date:
+			frappe.throw(_("Please specify the quarter leave date."))
 		if self.quarter_leave_date and self.quarter_leave_date == self.half_day_date:
 			frappe.throw(_("You cannot apply for half and quarter leave on the same date."))
 
@@ -753,13 +769,11 @@ def get_number_of_leave_days(
 ) -> float:
 	"""Returns number of leave days between 2 dates after considering half day and holidays
 	(Based on the include_holiday setting in Leave Type)"""
-	number_of_days = date_diff(to_date, from_date)
+	number_of_days = date_diff(to_date, from_date) + 1
 	if cint(half_day) == 1:
-		number_of_days += 0.5
+		number_of_days-= 0.5
 	if cint(quarter_leave) == 1:
-		number_of_days += 0.25
-	if not cint(half_day) and not cint(quarter_leave):
-		number_of_days += 1
+		number_of_days -= 0.75
 
 	if not frappe.db.get_value("Leave Type", leave_type, "include_holiday"):
 		number_of_days = flt(number_of_days) - flt(

@@ -15,6 +15,7 @@
   "status",
   "leave_type",
   "leave_application",
+  "quarter_day_off",
   "column_break0",
   "attendance_date",
   "company",
@@ -199,16 +200,25 @@
   {
    "fieldname": "column_break_18",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "depends_on": "quarter_day_off",
+   "fieldname": "quarter_day_off",
+   "fieldtype": "Check",
+   "label": "Quarter Day Off",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-ok",
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2020-09-18 17:26:09.703215",
+ "modified": "2022-11-24 13:21:40.012791",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
@@ -256,5 +266,6 @@
  "search_fields": "employee,employee_name,attendance_date,status",
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "employee_name"
 }
