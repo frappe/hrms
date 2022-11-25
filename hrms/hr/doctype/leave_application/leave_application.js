@@ -164,7 +164,7 @@ frappe.ui.form.on("Leave Application", {
 		frm.trigger("half_day_datepicker");
 		frm.trigger("calculate_total_days");
 	},
-	
+
 	quarter_day_leave(frm) {
 		frm.trigger("quarter_day_leave_datepicker");
 		frm.trigger("calculate_total_days");

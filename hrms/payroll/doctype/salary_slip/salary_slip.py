@@ -477,8 +477,8 @@ class SalarySlip(TransactionBase):
 				fraction_of_daily_salary_per_leave = flt(leave[0].fraction_of_daily_salary_per_leave)
 
 				equivalent_lwp_count = (1 - daily_wages_fraction_for_half_day) if is_half_day_leave else 1
-				equivalent_lwp_count = (equivalent_lwp_count - 0.75) if is_quarter_day_leave else equivalent_lwp_count
-				equivalent_lwp_count += (0.5 if is_quarter_day_leave and is_half_day_leave else 0)
+				equivalent_lwp_count -= 0.75 if is_quarter_day_leave else 0
+				equivalent_lwp_count += 0.5 if is_quarter_day_leave and is_half_day_leave else 0
 
 				if is_partially_paid_leave:
 					equivalent_lwp_count *= (
@@ -514,15 +514,17 @@ class SalarySlip(TransactionBase):
 				db_attendance.attendance_date,
 				db_attendance.status,
 				db_attendance.quarter_day_off,
-				db_attendance.leave_type
+				db_attendance.leave_type,
 			)
 			.where(
-				(db_attendance.status.isin(['Absent', 'Half Day', 'On Leave'])) | (db_attendance.quarter_day_off == 1)
+				(db_attendance.status.isin(["Absent", "Half Day", "On Leave"]))
+				| (db_attendance.quarter_day_off == 1)
 			)
 			.where(db_attendance.employee == self.employee)
 			.where(db_attendance.docstatus == 1)
 			.where(
-				(db_attendance.attendance_date >= self.start_date) & (db_attendance.attendance_date <= self.end_date)
+				(db_attendance.attendance_date >= self.start_date)
+				& (db_attendance.attendance_date <= self.end_date)
 			)
 		).run(as_dict=1)
 
@@ -1794,7 +1796,7 @@ def get_lwp_or_ppl_for_date(date, employee, holidays):
 		)
 		.else_(0)
 	).as_("is_half_day")
-	
+
 	is_quarter_leave = (
 		frappe.qb.terms.Case()
 		.when(
