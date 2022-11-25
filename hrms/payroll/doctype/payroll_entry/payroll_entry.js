@@ -147,7 +147,8 @@ frappe.ui.form.on('Payroll Entry', {
 		frappe.call({
 			method: 'hrms.payroll.doctype.payroll_entry.payroll_entry.payroll_entry_has_bank_entries',
 			args: {
-				'name': frm.doc.name
+				'name': frm.doc.name,
+				'payroll_payable_account': frm.doc.payroll_payable_account
 			},
 			callback: function (r) {
 				if (r.message && !r.message.submitted) {

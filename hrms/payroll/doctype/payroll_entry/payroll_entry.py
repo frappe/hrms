@@ -438,6 +438,8 @@ class PayrollEntry(Document):
 						"credit_in_account_currency": flt(payable_amt, precision),
 						"exchange_rate": flt(exchange_rate),
 						"cost_center": self.cost_center,
+						"reference_type": self.doctype,
+						"reference_name": self.name,
 					},
 					accounting_dimensions,
 				)
@@ -813,19 +815,26 @@ def get_month_details(year, month):
 
 
 def get_payroll_entry_bank_entries(payroll_entry_name):
-	journal_entries = frappe.db.sql(
-		"select name from `tabJournal Entry Account` "
-		'where reference_type="Payroll Entry" '
-		"and reference_name=%s and docstatus=1",
-		payroll_entry_name,
-		as_dict=1,
-	)
+	je = frappe.qb.DocType("Journal Entry")
+	jea = frappe.qb.DocType("Journal Entry Account")
+
+	journal_entries = (
+		frappe.qb.from_(je)
+		.from_(jea)
+		.select(je.name)
+		.where(
+			(je.name == jea.parent)
+			& (je.voucher_type == "Bank Entry")
+			& (jea.reference_name == payroll_entry_name)
+			& (jea.reference_type == "Payroll Entry")
+		)
+	).run(as_dict=True)
 
 	return journal_entries
 
 
 @frappe.whitelist()
-def payroll_entry_has_bank_entries(name):
+def payroll_entry_has_bank_entries(name: str):
 	response = {}
 	bank_entries = get_payroll_entry_bank_entries(name)
 	response["submitted"] = 1 if bank_entries else 0

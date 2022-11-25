@@ -364,3 +364,27 @@ def get_employees(salary_structure):
 		)
 
 	return list(set([d.employee for d in employees]))
+
+
+@frappe.whitelist()
+def get_salary_component(doctype, txt, searchfield, start, page_len, filters):
+	sc = frappe.qb.DocType("Salary Component")
+	sca = frappe.qb.DocType("Salary Component Account")
+
+	salary_components = (
+		frappe.qb.from_(sc)
+		.left_join(sca)
+		.on(sca.parent == sc.name)
+		.select(sc.name, sca.account, sca.company)
+		.where((sc.type == filters.get("component_type")) & (sc.disabled == 0))
+	).run(as_dict=True)
+
+	accounts = []
+	for component in salary_components:
+		if not component.company:
+			accounts.append((component.name, component.account, component.company))
+		else:
+			if component.company == filters["company"]:
+				accounts.append((component.name, component.account, component.company))
+
+	return accounts

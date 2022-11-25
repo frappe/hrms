@@ -123,11 +123,15 @@ class TestPayrollEntry(FrappeTestCase):
 
 		payment_entry = frappe.db.sql(
 			"""
-			Select ifnull(sum(je.total_debit),0) as total_debit, ifnull(sum(je.total_credit),0) as total_credit from `tabJournal Entry` je, `tabJournal Entry Account` jea
-			Where je.name = jea.parent
-			And jea.reference_name = %s
+			select
+				ifnull(sum(je.total_debit),0) as total_debit,
+				ifnull(sum(je.total_credit),0) as total_credit
+			from `tabJournal Entry` je, `tabJournal Entry Account` jea
+			where je.name = jea.parent
+				and je.voucher_type = 'Bank Entry'
+				and jea.reference_name = %s
 			""",
-			(payroll_entry.name),
+			payroll_entry.name,
 			as_dict=1,
 		)
 		self.assertEqual(salary_slip.base_net_pay, payment_entry[0].total_debit)
