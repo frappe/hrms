@@ -166,7 +166,15 @@ frappe.ui.form.on("Leave Application", {
 	},
 
 	quarter_day_leave(frm) {
-		frm.trigger("quarter_day_leave_datepicker");
+		if (frm.doc.quarter_day_leave) {
+			if (frm.doc.from_date == frm.doc.to_date) {
+				frm.set_value("quarter_leave_date", frm.doc.from_date);
+			} else {
+				frm.trigger("quarter_day_leave_datepicker");
+			}
+		} else {
+			frm.set_value("quarter_leave_date", "");
+		}
 		frm.trigger("calculate_total_days");
 	},
 
