@@ -67,6 +67,7 @@ class LeaveApplication(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
 		set_employee_name(self)
+		self.set_half_quarter_day_date()
 		self.validate_dates()
 		self.validate_balance_leaves()
 		self.validate_leave_overlap()
@@ -75,7 +76,6 @@ class LeaveApplication(Document):
 		self.validate_block_days()
 		self.validate_salary_processed_days()
 		self.validate_attendance()
-		self.set_half_quarter_day_date()
 		if frappe.db.get_value("Leave Type", self.leave_type, "is_optional_leave"):
 			self.validate_optional_leave()
 		self.validate_applicable_after()
@@ -269,17 +269,17 @@ class LeaveApplication(Document):
 			self.create_or_update_attendance(attendance_name, date)
 
 	def create_or_update_attendance(self, attendance_name, date):
-		status = (
-			"Half Day"
-			if self.half_day_date and getdate(date) == getdate(self.half_day_date)
-			else (
-				"Present"
-				if self.quarter_leave_date and getdate(date) == getdate(self.quarter_leave_date)
-				else "On Leave"
-			)
-		)
-
-		quarter_day_off = 1 if status == "Present" else 0
+		status = "On Leave"
+		quarter_day_off = 0
+		if (
+			self.half_day_date and getdate(date) == getdate(self.half_day_date)
+			or self.quarter_leave_date and getdate(date) == getdate(self.quarter_leave_date)
+		):
+			half_leave_count = self.get_total_leaves_on_half_day(date)
+			quarter_leave_count = self.get_total_leaves_on_quarter_leave_day(date)
+			if (half_leave_count+quarter_leave_count) < 1:
+				status = "Half Day" if (half_leave_count+quarter_leave_count) >= 0.5 else "Present"
+				quarter_day_off = 1 if quarter_leave_count else 0
 
 		if attendance_name:
 			# update existing attendance, change absent to on leave
@@ -361,7 +361,14 @@ class LeaveApplication(Document):
 	def validate_balance_leaves(self):
 		if self.from_date and self.to_date:
 			self.total_leave_days = get_number_of_leave_days(
-				self.employee, self.leave_type, self.from_date, self.to_date, self.half_day, self.quarter_day_leave
+				self.employee,
+				self.leave_type,
+				self.from_date,
+				self.to_date,
+				self.half_day,
+				self.half_day_date,
+				self.quarter_day_leave,
+				self.quarter_leave_date,
 			)
 
 			if self.total_leave_days <= 0:
@@ -418,21 +425,27 @@ class LeaveApplication(Document):
 			# hack! if name is null, it could cause problems with !=
 			self.name = "New Leave Application"
 
-		for d in frappe.db.sql(
-			"""
-			select
-				name, leave_type, posting_date, from_date, to_date, total_leave_days, half_day_date
-			from `tabLeave Application`
-			where employee = %(employee)s and docstatus < 2 and status in ('Open', 'Approved')
-			and to_date >= %(from_date)s and from_date <= %(to_date)s
-			and name != %(name)s""",
-			{
-				"employee": self.employee,
-				"from_date": self.from_date,
-				"to_date": self.to_date,
-				"name": self.name,
-			},
-			as_dict=1,
+		db_leave_app = frappe.qb.DocType("Leave Application")
+		for d in (
+			frappe.qb.from_(db_leave_app)
+			.select(
+				db_leave_app.name,
+				db_leave_app.leave_type,
+				db_leave_app.posting_date,
+				db_leave_app.from_date,
+				db_leave_app.to_date,
+				db_leave_app.total_leave_days,
+				db_leave_app.half_day_date,
+				db_leave_app.quarter_leave_date,
+			)
+			.where(db_leave_app.name != self.name)
+			.where(db_leave_app.employee == self.employee)
+			.where(db_leave_app.docstatus < 2)
+			.where(db_leave_app.status.isin(['Open', 'Approved']))
+			.where(
+				(db_leave_app.to_date >= self.from_date) & (db_leave_app.from_date <= self.to_date)
+			)
+			.run(as_dict=1)
 		):
 
 			if (
@@ -444,12 +457,24 @@ class LeaveApplication(Document):
 					or getdate(self.to_date) == getdate(d.from_date)
 				)
 			):
-
-				total_leaves_on_half_day = self.get_total_leaves_on_half_day()
-				if total_leaves_on_half_day >= 1:
+				if self.get_total_leaves_on_half_day() >= 1:
 					self.throw_overlap_error(d)
-			else:
-				self.throw_overlap_error(d)
+				continue
+			
+			if (
+				cint(self.quarter_day_leave) == 1
+				and getdate(self.quarter_leave_date) == getdate(d.quarter_leave_date)
+				and (
+					flt(self.total_leave_days) == 0.25
+					or getdate(self.from_date) == getdate(d.to_date)
+					or getdate(self.to_date) == getdate(d.from_date)
+				)
+			):
+				if self.get_total_leaves_on_quarter_leave_day() >= 1:
+					self.throw_overlap_error(d)
+				continue
+			
+			self.throw_overlap_error(d)
 
 	def throw_overlap_error(self, d):
 		form_link = get_link_to_form("Leave Application", d.name)
@@ -458,19 +483,29 @@ class LeaveApplication(Document):
 		)
 		frappe.throw(msg, OverlapError)
 
-	def get_total_leaves_on_half_day(self):
-		leave_count_on_half_day_date = frappe.db.sql(
-			"""select count(name) from `tabLeave Application`
-			where employee = %(employee)s
-			and docstatus < 2
-			and status in ('Open', 'Approved')
-			and half_day = 1
-			and half_day_date = %(half_day_date)s
-			and name != %(name)s""",
-			{"employee": self.employee, "half_day_date": self.half_day_date, "name": self.name},
-		)[0][0]
-
-		return leave_count_on_half_day_date * 0.5
+	def get_total_leaves_on_half_day(self, date=None):
+		filters= {
+			"employee": self.employee,
+			"docstatus": ["<", 2],
+			"status": ["in", ['Open', 'Approved']],
+			"half_day": 1,
+			"half_day_date": (date or self.half_day_date),
+		}
+		if not date:
+			filters["name"] = ["!=", self.name]
+		return frappe.db.count("Leave Application", filters) * 0.5
+	
+	def get_total_leaves_on_quarter_leave_day(self, date=None):
+		filters = {
+			"employee": self.employee,
+			"docstatus": ["<", 2],
+			"status": ["in", ['Open', 'Approved']],
+			"quarter_day_leave": 1,
+			"quarter_leave_date": (date or self.quarter_leave_date),
+		}
+		if not date:
+			filters["name"] = ["!=", self.name]
+		return frappe.db.count("Leave Application", filters) * 0.25
 
 	def validate_max_days(self):
 		max_days = frappe.db.get_value("Leave Type", self.leave_type, "max_continuous_days_allowed")
@@ -526,8 +561,6 @@ class LeaveApplication(Document):
 			frappe.throw(_("Please specify the half day date."))
 		if self.quarter_day_leave and not self.quarter_leave_date:
 			frappe.throw(_("Please specify the quarter leave date."))
-		if self.quarter_leave_date and self.quarter_leave_date == self.half_day_date:
-			frappe.throw(_("You cannot apply for half and quarter leave on the same date."))
 
 	def notify_employee(self):
 		employee = frappe.get_doc("Employee", self.employee)
@@ -679,7 +712,9 @@ class LeaveApplication(Document):
 			self.from_date,
 			first_alloc_end,
 			self.half_day,
+			self.half_day_date,
 			self.quarter_day_leave,
+			self.quarter_leave_date,
 		)
 		leaves_in_second_alloc = get_number_of_leave_days(
 			self.employee,
@@ -687,7 +722,9 @@ class LeaveApplication(Document):
 			second_alloc_start,
 			self.to_date,
 			self.half_day,
+			self.half_day_date,
 			self.quarter_day_leave,
+			self.quarter_leave_date,
 		)
 
 		args = dict(
@@ -713,7 +750,14 @@ class LeaveApplication(Document):
 		raise_exception = False if frappe.flags.in_patch else True
 
 		leaves = get_number_of_leave_days(
-			self.employee, self.leave_type, self.from_date, expiry_date, self.half_day, self.quarter_day_leave
+			self.employee,
+			self.leave_type,
+			self.from_date,
+			expiry_date,
+			self.half_day,
+			self.half_day_date,
+			self.quarter_day_leave,
+			self.quarter_leave_date,
 		)
 
 		if leaves:
@@ -730,7 +774,14 @@ class LeaveApplication(Document):
 		if getdate(expiry_date) != getdate(self.to_date):
 			start_date = add_days(expiry_date, 1)
 			leaves = get_number_of_leave_days(
-				self.employee, self.leave_type, start_date, self.to_date, self.half_day, self.quarter_day_leave
+				self.employee,
+				self.leave_type,
+				start_date,
+				self.to_date,
+				self.half_day,
+				self.half_day_date,
+				self.quarter_day_leave,
+				self.quarter_leave_date
 			)
 
 			if leaves:
@@ -764,16 +815,25 @@ def get_number_of_leave_days(
 	from_date: str,
 	to_date: str,
 	half_day: Optional[int] = None,
+	half_day_date: Optional[str] = None,
 	quarter_leave: Optional[int] = None,
+	quarter_leave_date: Optional[str] = None,
 	holiday_list: Optional[str] = None,
 ) -> float:
 	"""Returns number of leave days between 2 dates after considering half day and holidays
 	(Based on the include_holiday setting in Leave Type)"""
 	number_of_days = date_diff(to_date, from_date) + 1
 	if cint(half_day) == 1:
-		number_of_days-= 0.5
+		number_of_days -= 0.5
 	if cint(quarter_leave) == 1:
 		number_of_days -= 0.75
+	
+	if cint(half_day) and cint(quarter_leave):
+		if (
+			getdate(from_date) == getdate(to_date)
+			or getdate(half_day_date) == getdate(quarter_leave_date)
+		):
+			number_of_days += 0.50
 
 	if not frappe.db.get_value("Leave Type", leave_type, "include_holiday"):
 		number_of_days = flt(number_of_days) - flt(
@@ -993,12 +1053,14 @@ def get_leaves_for_period(
 			if leave_entry.to_date > getdate(to_date):
 				leave_entry.to_date = to_date
 
-			half_day = 0
-			half_day_date = None
+			leave_details = {}
 			# fetch half day date for leaves with half days
 			if leave_entry.leaves % 1:
-				half_day, quarter_day_leave = frappe.db.get_value(
-					"Leave Application", {"name": leave_entry.transaction_name}, ["half_day", "quarter_day_leave"]
+				leave_details = frappe.db.get_value(
+					"Leave Application",
+					{"name": leave_entry.transaction_name},
+					["half_day", "half_day", "quarter_day_leave", "quarter_leave_date"],
+					as_dict=1
 				)
 
 			leave_days += (
@@ -1007,8 +1069,10 @@ def get_leaves_for_period(
 					leave_type,
 					leave_entry.from_date,
 					leave_entry.to_date,
-					half_day,
-					quarter_day_leave,
+					leave_details.get("half_day"),
+					leave_details.get("half_day_date"),
+					leave_details.get("quarter_day_leave"),
+					leave_details.get("quarter_leave_date"),
 					holiday_list=leave_entry.holiday_list,
 				)
 				* -1

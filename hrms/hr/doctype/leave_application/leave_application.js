@@ -177,18 +177,6 @@ frappe.ui.form.on("Leave Application", {
 			minDate: frappe.datetime.str_to_obj(frm.doc.from_date),
 			maxDate: frappe.datetime.str_to_obj(frm.doc.to_date)
 		});
-
-		if (frm.doc.half_day_date) {
-			quarter_day_leave_datepicker.update({
-				onRenderCell: function (date, cellType) {
-					if (cellType == 'day') {
-						return {
-							disabled: (frappe.datetime.get_diff(date, frappe.datetime.str_to_obj(frm.doc.half_day_date)) === 0)
-						}
-					}
-				}
-			})
-		}
 	},
 
 	half_day_datepicker: function(frm) {
@@ -198,18 +186,6 @@ frappe.ui.form.on("Leave Application", {
 			minDate: frappe.datetime.str_to_obj(frm.doc.from_date),
 			maxDate: frappe.datetime.str_to_obj(frm.doc.to_date)
 		});
-
-		if (frm.doc.quarter_leave_date) {
-			half_day_datepicker.update({
-				onRenderCell: function (date, cellType) {
-					if (cellType == 'day') {
-						return {
-							disabled: (frappe.datetime.get_diff(date, frappe.datetime.str_to_obj(frm.doc.quarter_leave_date)) === 0)
-						}
-					}
-				}
-			})
-		}
 	},
 
 	get_leave_balance: function(frm) {
@@ -254,7 +230,9 @@ frappe.ui.form.on("Leave Application", {
 					"from_date": frm.doc.from_date,
 					"to_date": frm.doc.to_date,
 					"half_day": frm.doc.half_day,
+					"half_day_date": frm.doc.half_day_date,
 					"quarter_leave": frm.doc.quarter_day_leave,
+					"quarter_leave_date": frm.doc.quarter_leave_date,
 				},
 				callback: function(r) {
 					if (r && r.message) {
