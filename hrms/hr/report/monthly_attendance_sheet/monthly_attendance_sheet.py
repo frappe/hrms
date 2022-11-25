@@ -492,13 +492,14 @@ def get_attendance_status_for_detailed_view(
 
 def get_holiday_status(day: int, holidays: List) -> str:
 	status = None
-	for holiday in holidays:
-		if day == holiday.get("day_of_month"):
-			if holiday.get("weekly_off"):
-				status = "Weekly Off"
-			else:
-				status = "Holiday"
-			break
+	if holidays:
+		for holiday in holidays:
+			if day == holiday.get("day_of_month"):
+				if holiday.get("weekly_off"):
+					status = "Weekly Off"
+				else:
+					status = "Holiday"
+				break
 	return status
 
 
