@@ -296,7 +296,7 @@ class PayrollEntry(Document):
 
 			return salary_components
 
-	def get_salary_component_total(self, component_type=None):
+	def get_salary_component_total(self, component_type=None, employee_wise_accrual_entry=False):
 		salary_components = self.get_salary_components(component_type)
 		if salary_components:
 			component_dict = {}
@@ -305,7 +305,6 @@ class PayrollEntry(Document):
 				employee_cost_centers = self.get_payroll_cost_centers_for_employee(
 					item.employee, item.salary_structure
 				)
-
 				add_component_to_accrual_jv_entry = True
 				if component_type == "earnings":
 					is_flexible_benefit, only_tax_impact = frappe.get_cached_value(
@@ -317,11 +316,15 @@ class PayrollEntry(Document):
 				if add_component_to_accrual_jv_entry:
 					for cost_center, percentage in employee_cost_centers.items():
 						amount_against_cost_center = flt(item.amount) * percentage / 100
-						component_dict[(item.salary_component, cost_center)] = (
-							component_dict.get((item.salary_component, cost_center), 0) + amount_against_cost_center
-						)
+						if employee_wise_accrual_entry:
+							key = (item.salary_component, cost_center, item.employee)
+						else:
+							key = (item.salary_component, cost_center)
 
-			account_details = self.get_account(component_dict=component_dict)
+						component_dict[key] = component_dict.get(key, 0) + amount_against_cost_center
+			account_details = self.get_account(
+				component_dict=component_dict, employee_wise_accrual_entry=employee_wise_accrual_entry
+			)
 			return account_details
 
 	def get_payroll_cost_centers_for_employee(self, employee, salary_structure):
@@ -358,17 +361,37 @@ class PayrollEntry(Document):
 
 		return self.employee_cost_centers.get(employee, {})
 
-	def get_account(self, component_dict=None):
+	def get_account(self, component_dict=None, employee_wise_accrual_entry=False):
 		account_dict = {}
 		for key, amount in component_dict.items():
 			account = self.get_salary_component_account(key[0])
-			account_dict[(account, key[1])] = account_dict.get((account, key[1]), 0) + amount
+
+			if employee_wise_accrual_entry:
+				accouting_key = (account, key[1], key[2])
+			else:
+				accouting_key = (account, key[1])
+
+			account_dict[accouting_key] = account_dict.get(accouting_key, 0) + amount
+
 		return account_dict
 
 	def make_accrual_jv_entry(self):
 		self.check_permission("write")
-		earnings = self.get_salary_component_total(component_type="earnings") or {}
-		deductions = self.get_salary_component_total(component_type="deductions") or {}
+		employee_wise_accrual_entry = frappe.db.get_single_value(
+			"Payroll Settings", "link_employee_in_accrual_payment_entry"
+		)
+		earnings = (
+			self.get_salary_component_total(
+				component_type="earnings", employee_wise_accrual_entry=employee_wise_accrual_entry
+			)
+			or {}
+		)
+		deductions = (
+			self.get_salary_component_total(
+				component_type="deductions", employee_wise_accrual_entry=employee_wise_accrual_entry
+			)
+			or {}
+		)
 		payroll_payable_account = self.payroll_payable_account
 		jv_name = ""
 		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
@@ -391,41 +414,37 @@ class PayrollEntry(Document):
 
 			# Earnings
 			for acc_cc, amount in earnings.items():
-				exchange_rate, amt = self.get_amount_and_exchange_rate_for_journal_entry(
-					acc_cc[0], amount, company_currency, currencies
+				accounting_entries, payable_amount = self.get_accounting_entries_and_payable_amount(
+					accounts,
+					acc_cc,
+					amount,
+					company_currency,
+					currencies,
+					payable_amount,
+					accounting_dimensions,
+					precision,
+					employee_wise_accrual_entry,
+					entry_type="debit",
 				)
-				payable_amount += flt(amount, precision)
-				accounts.append(
-					self.update_accounting_dimensions(
-						{
-							"account": acc_cc[0],
-							"debit_in_account_currency": flt(amt, precision),
-							"exchange_rate": flt(exchange_rate),
-							"cost_center": acc_cc[1] or self.cost_center,
-							"project": self.project,
-						},
-						accounting_dimensions,
-					)
-				)
+
+				accounts.append(accounting_entries)
 
 			# Deductions
 			for acc_cc, amount in deductions.items():
-				exchange_rate, amt = self.get_amount_and_exchange_rate_for_journal_entry(
-					acc_cc[0], amount, company_currency, currencies
+				accounting_entries, payable_amount = self.get_accounting_entries_and_payable_amount(
+					accounts,
+					acc_cc,
+					amount,
+					currencies,
+					company_currency,
+					payable_amount,
+					accounting_dimensions,
+					precision,
+					employee_wise_accrual_entry,
+					entry_type="credit",
 				)
-				payable_amount -= flt(amount, precision)
-				accounts.append(
-					self.update_accounting_dimensions(
-						{
-							"account": acc_cc[0],
-							"credit_in_account_currency": flt(amt, precision),
-							"exchange_rate": flt(exchange_rate),
-							"cost_center": acc_cc[1] or self.cost_center,
-							"project": self.project,
-						},
-						accounting_dimensions,
-					)
-				)
+
+				accounts.append(accounting_entries)
 
 			# Payable amount
 			exchange_rate, payable_amt = self.get_amount_and_exchange_rate_for_journal_entry(
@@ -462,6 +481,56 @@ class PayrollEntry(Document):
 				raise
 
 		return jv_name
+
+	def get_accounting_entries_and_payable_amount(
+		self,
+		accounts,
+		acc_cc,
+		amount,
+		currencies,
+		company_currency,
+		payable_amount,
+		accounting_dimensions,
+		precision,
+		employee_wise_accrual_entry=False,
+		entry_type="credit",
+	):
+		exchange_rate, amt = self.get_amount_and_exchange_rate_for_journal_entry(
+			acc_cc[0], amount, company_currency, currencies
+		)
+
+		row = {
+			"account": acc_cc[0],
+			"exchange_rate": flt(exchange_rate),
+			"cost_center": acc_cc[1] or self.cost_center,
+			"project": self.project,
+		}
+
+		if entry_type == "debit":
+			payable_amount += flt(amount, precision)
+			row.update(
+				{
+					"debit_in_account_currency": flt(amt, precision),
+				}
+			)
+		else:
+			payable_amount -= flt(amount, precision)
+			row.update(
+				{
+					"credit_in_account_currency": flt(amt, precision),
+				}
+			)
+
+		self.update_accounting_dimensions(
+			row,
+			accounting_dimensions,
+		)
+
+		# update employee ref in journal entry
+		if employee_wise_accrual_entry:
+			row.update({"party_type": "Employee", "party": acc_cc[2]})
+
+		return row, payable_amount
 
 	def update_accounting_dimensions(self, row, accounting_dimensions):
 		for dimension in accounting_dimensions:
