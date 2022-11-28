@@ -26,11 +26,18 @@ class SalaryStructureAssignment(Document):
 		self.set_payroll_payable_account()
 
 		if self.set_earnings_and_taxation_section().get("unhide_earnings_and_taxation_section"):
-			frappe.msgprint(
-				_(
-					"Please mension opening entries for taxable earnings till date and total tax deducted till date"
+			if not self.taxable_earnings_till_date and not self.tax_deducted_till_date:
+				frappe.msgprint(
+					_(
+						"""
+						Not found any salary slip record(s) for the employee {0}. <br><br>
+						Please specify opening balances for <b>Taxable Earnings Till Date</b> and total <b>Tax Deducted Till Date</b>,
+						under <b>Earnings and Taxation</b> sections, for the correct tax calculation in future salary slips.
+						"""
+					).format(self.employee),
+					indicator="orange",
+					title=_("Warning"),
 				)
-			)
 
 		if not self.get("payroll_cost_centers"):
 			self.set_payroll_cost_centers()

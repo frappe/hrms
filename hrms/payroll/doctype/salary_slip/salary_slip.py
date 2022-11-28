@@ -1069,13 +1069,13 @@ class SalarySlip(TransactionBase):
 			)
 			exempted_amount = flt(exempted_amount[0][0]) if exempted_amount else 0
 
-		opening_taxable_earning = self.get_opening_taxable_earnings_or_paid_tax(
+		opening_taxable_earning = self.get_opening_for(
 			"taxable_earnings_till_date", start_date, end_date
 		)
 
 		return (taxable_earnings + opening_taxable_earning) - exempted_amount
 
-	def get_opening_taxable_earnings_or_paid_tax(self, field_to_select, start_date, end_date):
+	def get_opening_for(self, field_to_select, start_date, end_date):
 		return (
 			frappe.db.get_value(
 				"Salary Structure Assignment",
@@ -1117,9 +1117,7 @@ class SalarySlip(TransactionBase):
 			)[0][0]
 		)
 
-		tax_deducted_till_date = self.get_opening_taxable_earnings_or_paid_tax(
-			"tax_deducted_till_date", start_date, end_date
-		)
+		tax_deducted_till_date = self.get_opening_for("tax_deducted_till_date", start_date, end_date)
 
 		return total_tax_paid + tax_deducted_till_date
 
