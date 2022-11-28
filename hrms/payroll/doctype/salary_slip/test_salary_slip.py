@@ -1087,12 +1087,25 @@ class TestSalarySlip(FrappeTestCase):
 			IncomeTaxComputationReport,
 		)
 
-		payroll_period = create_payroll_period(
-			name="_Test Payroll Period for Tax",
-			company="_Test Company",
-			start_date="2022-04-01",
-			end_date="2023-03-31",
+		payroll_period = frappe.db.get_value(
+			"Payroll Period",
+			{
+				"company": "_Test Company",
+				"start_date": ["<=", "2023-03-31"],
+				"end_date": [">=", "2022-04-01"],
+			},
+			"name",
 		)
+
+		if not payroll_period:
+			payroll_period = create_payroll_period(
+				name="_Test Payroll Period for Tax",
+				company="_Test Company",
+				start_date="2022-04-01",
+				end_date="2023-03-31",
+			)
+		else:
+			payroll_period = frappe.get_cached_doc("Payroll Period", payroll_period)
 
 		emp = make_employee(
 			"test_employee_ss_with_opening_balance@salary.com",
