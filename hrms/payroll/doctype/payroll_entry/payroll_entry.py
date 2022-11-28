@@ -415,8 +415,8 @@ class PayrollEntry(Document):
 			# Earnings
 			for acc_cc, amount in earnings.items():
 				accounting_entries, payable_amount = self.get_accounting_entries_and_payable_amount(
-					accounts,
-					acc_cc,
+					acc_cc[0],
+					acc_cc[1] or self.cost_center,
 					amount,
 					company_currency,
 					currencies,
@@ -425,6 +425,7 @@ class PayrollEntry(Document):
 					precision,
 					employee_wise_accrual_entry,
 					entry_type="debit",
+					party=acc_cc[2] if employee_wise_accrual_entry else None,
 				)
 
 				accounts.append(accounting_entries)
@@ -432,8 +433,8 @@ class PayrollEntry(Document):
 			# Deductions
 			for acc_cc, amount in deductions.items():
 				accounting_entries, payable_amount = self.get_accounting_entries_and_payable_amount(
-					accounts,
-					acc_cc,
+					acc_cc[0],
+					acc_cc[1] or self.cost_center,
 					amount,
 					currencies,
 					company_currency,
@@ -442,27 +443,25 @@ class PayrollEntry(Document):
 					precision,
 					employee_wise_accrual_entry,
 					entry_type="credit",
+					party=acc_cc[2] if employee_wise_accrual_entry else None,
 				)
 
 				accounts.append(accounting_entries)
 
 			# Payable amount
-			exchange_rate, payable_amt = self.get_amount_and_exchange_rate_for_journal_entry(
-				payroll_payable_account, payable_amount, company_currency, currencies
+			accounting_entry, payable_amount = self.get_accounting_entries_and_payable_amount(
+				payroll_payable_account,
+				self.cost_center,
+				payable_amount,
+				company_currency,
+				currencies,
+				0,
+				accounting_dimensions,
+				precision,
+				employee_wise_accrual_entry=False,
+				entry_type="payable",
 			)
-			accounts.append(
-				self.update_accounting_dimensions(
-					{
-						"account": payroll_payable_account,
-						"credit_in_account_currency": flt(payable_amt, precision),
-						"exchange_rate": flt(exchange_rate),
-						"cost_center": self.cost_center,
-						"reference_type": self.doctype,
-						"reference_name": self.name,
-					},
-					accounting_dimensions,
-				)
-			)
+			accounts.append(accounting_entry)
 
 			journal_entry.set("accounts", accounts)
 			if len(currencies) > 1:
@@ -484,8 +483,8 @@ class PayrollEntry(Document):
 
 	def get_accounting_entries_and_payable_amount(
 		self,
-		accounts,
-		acc_cc,
+		account,
+		cost_center,
 		amount,
 		currencies,
 		company_currency,
@@ -494,15 +493,16 @@ class PayrollEntry(Document):
 		precision,
 		employee_wise_accrual_entry=False,
 		entry_type="credit",
+		party=None,
 	):
 		exchange_rate, amt = self.get_amount_and_exchange_rate_for_journal_entry(
-			acc_cc[0], amount, company_currency, currencies
+			account, amount, company_currency, currencies
 		)
 
 		row = {
-			"account": acc_cc[0],
+			"account": account,
 			"exchange_rate": flt(exchange_rate),
-			"cost_center": acc_cc[1] or self.cost_center,
+			"cost_center": cost_center,
 			"project": self.project,
 		}
 
@@ -513,11 +513,19 @@ class PayrollEntry(Document):
 					"debit_in_account_currency": flt(amt, precision),
 				}
 			)
-		else:
+		elif entry_type == "credit":
 			payable_amount -= flt(amount, precision)
 			row.update(
 				{
 					"credit_in_account_currency": flt(amt, precision),
+				}
+			)
+		else:
+			row.update(
+				{
+					"credit_in_account_currency": flt(amt, precision),
+					"reference_type": self.doctype,
+					"reference_name": self.name,
 				}
 			)
 
@@ -528,7 +536,7 @@ class PayrollEntry(Document):
 
 		# update employee ref in journal entry
 		if employee_wise_accrual_entry:
-			row.update({"party_type": "Employee", "party": acc_cc[2]})
+			row.update({"party_type": "Employee", "party": party})
 
 		return row, payable_amount
 
