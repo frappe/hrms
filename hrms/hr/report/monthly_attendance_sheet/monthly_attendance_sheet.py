@@ -492,13 +492,14 @@ def get_attendance_status_for_detailed_view(
 
 def get_holiday_status(day: int, holidays: List) -> str:
 	status = None
-	for holiday in holidays:
-		if day == holiday.get("day_of_month"):
-			if holiday.get("weekly_off"):
-				status = "Weekly Off"
-			else:
-				status = "Holiday"
-			break
+	if holidays:
+		for holiday in holidays:
+			if day == holiday.get("day_of_month"):
+				if holiday.get("weekly_off"):
+					status = "Weekly Off"
+				else:
+					status = "Holiday"
+				break
 	return status
 
 
@@ -572,7 +573,7 @@ def get_attendance_years() -> str:
 	if year_list:
 		year_list.sort(key=lambda d: d.year, reverse=True)
 	else:
-		year_list = [getdate().year]
+		year_list = [frappe._dict({"year": getdate().year})]
 
 	return "\n".join(cstr(entry.year) for entry in year_list)
 
