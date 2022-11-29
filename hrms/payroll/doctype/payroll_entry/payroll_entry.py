@@ -418,8 +418,8 @@ class PayrollEntry(Document):
 					acc_cc[0],
 					acc_cc[1] or self.cost_center,
 					amount,
-					company_currency,
 					currencies,
+					company_currency,
 					payable_amount,
 					accounting_dimensions,
 					precision,
@@ -427,7 +427,6 @@ class PayrollEntry(Document):
 					entry_type="debit",
 					party=acc_cc[2] if employee_wise_accrual_entry else None,
 				)
-
 				accounts.append(accounting_entries)
 
 			# Deductions
@@ -445,7 +444,6 @@ class PayrollEntry(Document):
 					entry_type="credit",
 					party=acc_cc[2] if employee_wise_accrual_entry else None,
 				)
-
 				accounts.append(accounting_entries)
 
 			# Payable amount
@@ -453,8 +451,8 @@ class PayrollEntry(Document):
 				payroll_payable_account,
 				self.cost_center,
 				payable_amount,
-				company_currency,
 				currencies,
+				company_currency,
 				0,
 				accounting_dimensions,
 				precision,
@@ -558,6 +556,7 @@ class PayrollEntry(Document):
 			conversion_rate = self.exchange_rate
 			exchange_rate = 1
 		amount = flt(amount) * flt(conversion_rate)
+
 		return exchange_rate, amount
 
 	@frappe.whitelist()
