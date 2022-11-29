@@ -376,7 +376,13 @@ def get_salary_component(doctype, txt, searchfield, start, page_len, filters):
 		.left_join(sca)
 		.on(sca.parent == sc.name)
 		.select(sc.name, sca.account, sca.company)
-		.where((sc.type == filters.get("component_type")) & (sc.disabled == 0))
+		.where(
+			(sc.type == filters.get("component_type"))
+			& (sc.disabled == 0)
+			& (sc[searchfield].like("%{0}%".format(txt)) | sc.name.like("%{0}%".format(txt)))
+		)
+		.limit(page_len)
+		.offset(start)
 	).run(as_dict=True)
 
 	accounts = []
