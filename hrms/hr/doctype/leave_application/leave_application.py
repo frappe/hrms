@@ -464,7 +464,10 @@ class LeaveApplication(Document):
 					or getdate(self.to_date) == getdate(d.from_date)
 				)
 			):
-				if self.get_total_leaves_on_half_day() >= 1:
+				if (
+					self.get_total_leaves_on_half_day(exclude_self=True)
+					+ self.get_total_leaves_on_quarter_leave_day(self.half_day_date, exclude_self=True)
+				) > 1:
 					self.throw_overlap_error(d)
 				continue
 
@@ -477,7 +480,10 @@ class LeaveApplication(Document):
 					or getdate(self.to_date) == getdate(d.from_date)
 				)
 			):
-				if self.get_total_leaves_on_quarter_leave_day() >= 1:
+				if (
+					self.get_total_leaves_on_quarter_leave_day(exclude_self=True)
+					+ self.get_total_leaves_on_half_day(self.quarter_leave_date, exclude_self=True)
+				) > 1:
 					self.throw_overlap_error(d)
 				continue
 
@@ -490,7 +496,7 @@ class LeaveApplication(Document):
 		)
 		frappe.throw(msg, OverlapError)
 
-	def get_total_leaves_on_half_day(self, date=None):
+	def get_total_leaves_on_half_day(self, date=None, exclude_self=False):
 		filters = {
 			"employee": self.employee,
 			"docstatus": ["<", 2],
@@ -498,11 +504,15 @@ class LeaveApplication(Document):
 			"half_day": 1,
 			"half_day_date": (date or self.half_day_date),
 		}
-		if not date:
+		if exclude_self:
 			filters["name"] = ["!=", self.name]
+			return (frappe.db.count("Leave Application", filters) * 0.5) + (
+				0.5 if self.half_day and self.half_day_date == filters["half_day_date"] else 0
+			)
+
 		return frappe.db.count("Leave Application", filters) * 0.5
 
-	def get_total_leaves_on_quarter_leave_day(self, date=None):
+	def get_total_leaves_on_quarter_leave_day(self, date=None, exclude_self=False):
 		filters = {
 			"employee": self.employee,
 			"docstatus": ["<", 2],
@@ -510,8 +520,14 @@ class LeaveApplication(Document):
 			"quarter_day_leave": 1,
 			"quarter_leave_date": (date or self.quarter_leave_date),
 		}
-		if not date:
+		if exclude_self:
 			filters["name"] = ["!=", self.name]
+			return (frappe.db.count("Leave Application", filters) * 0.25) + (
+				0.25
+				if self.quarter_day_leave and self.quarter_leave_date == filters["quarter_leave_date"]
+				else 0
+			)
+
 		return frappe.db.count("Leave Application", filters) * 0.25
 
 	def validate_max_days(self):
