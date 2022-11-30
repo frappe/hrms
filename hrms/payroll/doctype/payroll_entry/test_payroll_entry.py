@@ -403,7 +403,7 @@ class TestPayrollEntry(FrappeTestCase):
 		payroll_entry.cancel()
 		self.assertEqual(payroll_entry.status, "Cancelled")
 
-	@change_settings("Payroll Settings", {"link_employee_in_accrual_payment_entry": 1})
+	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1})
 	def test_payroll_accrual_journal_entry_with_employee_tagging(self):
 		company_doc = frappe.get_doc("Company", "_Test Company")
 		employee = make_employee(
@@ -434,7 +434,7 @@ class TestPayrollEntry(FrappeTestCase):
 					self.assertEqual(account.party_type, "Employee")
 					self.assertEqual(account.party, employee)
 
-	@change_settings("Payroll Settings", {"link_employee_in_accrual_payment_entry": 0})
+	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0})
 	def test_payroll_accrual_journal_entry_without_employee_tagging(self):
 		company_doc = frappe.get_doc("Company", "_Test Company")
 		employee = make_employee(

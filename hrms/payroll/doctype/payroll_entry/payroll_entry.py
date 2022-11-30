@@ -296,7 +296,7 @@ class PayrollEntry(Document):
 
 			return salary_components
 
-	def get_salary_component_total(self, component_type=None, employee_wise_accrual_entry=False):
+	def get_salary_component_total(self, component_type=None, employee_based_accounting=False):
 		salary_components = self.get_salary_components(component_type)
 		if salary_components:
 			component_dict = {}
@@ -316,14 +316,14 @@ class PayrollEntry(Document):
 				if add_component_to_accrual_jv_entry:
 					for cost_center, percentage in employee_cost_centers.items():
 						amount_against_cost_center = flt(item.amount) * percentage / 100
-						if employee_wise_accrual_entry:
+						if employee_based_accounting:
 							key = (item.salary_component, cost_center, item.employee)
 						else:
 							key = (item.salary_component, cost_center)
 
 						component_dict[key] = component_dict.get(key, 0) + amount_against_cost_center
 			account_details = self.get_account(
-				component_dict=component_dict, employee_wise_accrual_entry=employee_wise_accrual_entry
+				component_dict=component_dict, employee_based_accounting=employee_based_accounting
 			)
 			return account_details
 
@@ -361,12 +361,12 @@ class PayrollEntry(Document):
 
 		return self.employee_cost_centers.get(employee, {})
 
-	def get_account(self, component_dict=None, employee_wise_accrual_entry=False):
+	def get_account(self, component_dict=None, employee_based_accounting=False):
 		account_dict = {}
 		for key, amount in component_dict.items():
 			account = self.get_salary_component_account(key[0])
 
-			if employee_wise_accrual_entry:
+			if employee_based_accounting:
 				accouting_key = (account, key[1], key[2])
 			else:
 				accouting_key = (account, key[1])
@@ -377,18 +377,18 @@ class PayrollEntry(Document):
 
 	def make_accrual_jv_entry(self):
 		self.check_permission("write")
-		employee_wise_accrual_entry = frappe.db.get_single_value(
-			"Payroll Settings", "link_employee_in_accrual_payment_entry"
+		employee_based_accounting = frappe.db.get_single_value(
+			"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
 		)
 		earnings = (
 			self.get_salary_component_total(
-				component_type="earnings", employee_wise_accrual_entry=employee_wise_accrual_entry
+				component_type="earnings", employee_based_accounting=employee_based_accounting
 			)
 			or {}
 		)
 		deductions = (
 			self.get_salary_component_total(
-				component_type="deductions", employee_wise_accrual_entry=employee_wise_accrual_entry
+				component_type="deductions", employee_based_accounting=employee_based_accounting
 			)
 			or {}
 		)
@@ -423,9 +423,9 @@ class PayrollEntry(Document):
 					payable_amount,
 					accounting_dimensions,
 					precision,
-					employee_wise_accrual_entry,
+					employee_based_accounting,
 					entry_type="debit",
-					party=acc_cc[2] if employee_wise_accrual_entry else None,
+					party=acc_cc[2] if employee_based_accounting else None,
 				)
 				accounts.append(accounting_entries)
 
@@ -440,9 +440,9 @@ class PayrollEntry(Document):
 					payable_amount,
 					accounting_dimensions,
 					precision,
-					employee_wise_accrual_entry,
+					employee_based_accounting,
 					entry_type="credit",
-					party=acc_cc[2] if employee_wise_accrual_entry else None,
+					party=acc_cc[2] if employee_based_accounting else None,
 				)
 				accounts.append(accounting_entries)
 
@@ -456,7 +456,7 @@ class PayrollEntry(Document):
 				0,
 				accounting_dimensions,
 				precision,
-				employee_wise_accrual_entry=False,
+				employee_based_accounting=False,
 				entry_type="payable",
 			)
 			accounts.append(accounting_entry)
@@ -489,7 +489,7 @@ class PayrollEntry(Document):
 		payable_amount,
 		accounting_dimensions,
 		precision,
-		employee_wise_accrual_entry=False,
+		employee_based_accounting=False,
 		entry_type="credit",
 		party=None,
 	):
@@ -533,7 +533,7 @@ class PayrollEntry(Document):
 		)
 
 		# update employee ref in journal entry
-		if employee_wise_accrual_entry:
+		if employee_based_accounting:
 			row.update({"party_type": "Employee", "party": party})
 
 		return row, payable_amount

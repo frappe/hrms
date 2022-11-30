@@ -11,7 +11,7 @@
   "max_working_hours_against_timesheet",
   "include_holidays_in_total_working_days",
   "disable_rounded_total",
-  "link_employee_in_accrual_payment_entry",
+  "process_payroll_accounting_entry_based_on_employee",
   "column_break_11",
   "daily_wages_fraction_for_half_day",
   "email_salary_slip_to_employee",
@@ -95,17 +95,17 @@
   },
   {
    "default": "0",
-   "description": "If checked, employees from Payroll Entry will get linked in the accrual payroll Journal Entry",
-   "fieldname": "link_employee_in_accrual_payment_entry",
+   "description": "If checked, Payroll Payable will be booked against each employee",
+   "fieldname": "process_payroll_accounting_entry_based_on_employee",
    "fieldtype": "Check",
-   "label": "Link Employee In Accrual Payment Entry"
+   "label": "Process Payroll Accounting Entry based on Employee"
   }
  ],
  "icon": "fa fa-cog",
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-11-28 15:07:27.397455",
+ "modified": "2022-11-30 16:33:05.112551",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",
