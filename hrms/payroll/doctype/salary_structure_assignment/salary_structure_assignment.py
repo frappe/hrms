@@ -13,10 +13,35 @@ class DuplicateAssignment(frappe.ValidationError):
 
 
 class SalaryStructureAssignment(Document):
+	def onload(self):
+		if self.employee:
+			self.set_onload(
+				"earning_and_deduction_entries_exists", self.earning_and_deduction_entries_exists()
+			)
+
 	def validate(self):
 		self.validate_dates()
 		self.validate_income_tax_slab()
 		self.set_payroll_payable_account()
+
+		if not self.earning_and_deduction_entries_exists():
+			if not self.taxable_earnings_till_date and not self.tax_deducted_till_date:
+				frappe.msgprint(
+					_(
+						"""
+						Not found any salary slip record(s) for the employee {0}. <br><br>
+						Please specify {1} and {2} (if any),
+						for the correct tax calculation in future salary slips.
+						"""
+					).format(
+						self.employee,
+						"<b>" + _("Taxable Earnings Till Date") + "</b>",
+						"<b>" + _("Tax Deducted Till Date") + "</b>",
+					),
+					indicator="orange",
+					title=_("Warning"),
+				)
+
 		if not self.get("payroll_cost_centers"):
 			self.set_payroll_cost_centers()
 
@@ -101,6 +126,40 @@ class SalaryStructureAssignment(Document):
 			total_percentage = sum([flt(d.percentage) for d in self.get("payroll_cost_centers", [])])
 			if total_percentage != 100:
 				frappe.throw(_("Total percentage against cost centers should be 100"))
+
+	@frappe.whitelist()
+	def earning_and_deduction_entries_exists(self):
+		if not self.joined_in_the_same_month() and not self.have_salary_slips():
+			return False
+		else:
+			return True
+
+	def have_salary_slips(self):
+		"""returns True if salary structure assignment has salary slips else False"""
+
+		salary_slip = frappe.db.get_value(
+			"Salary Slip", filters={"employee": self.employee, "docstatus": 1}
+		)
+
+		if salary_slip:
+			return True
+
+		return False
+
+	def joined_in_the_same_month(self):
+		"""returns True if employee joined in same month as salary structure assignment from date else False"""
+
+		date_of_joining = frappe.db.get_value("Employee", self.employee, "date_of_joining")
+		from_date = getdate(self.from_date)
+
+		if not self.from_date or not date_of_joining:
+			return False
+
+		elif date_of_joining.month == from_date.month:
+			return True
+
+		else:
+			return False
 
 
 def get_assigned_salary_structure(employee, on_date):
