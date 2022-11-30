@@ -192,11 +192,23 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		previous_month_first = now.replace(day=1).replace(month=previous_month).date()
 
 		company = frappe.db.get_value("Employee", self.employee, "company")
+		employee2 = make_employee("test_employee2@example.com", company="_Test Company")
+		employee3 = make_employee("test_employee3@example.com", company="_Test Company")
 
-		# mark different attendance status on first 3 days of previous month
+		# mark different attendance status on first 3 days of previous month for employee1
 		mark_attendance(self.employee, previous_month_first, "Absent")
 		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present")
 		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "On Leave")
+
+		# mark different attendance status on first 3 days of previous month for employee2
+		mark_attendance(employee2, previous_month_first, "Absent")
+		mark_attendance(employee2, previous_month_first + relativedelta(days=1), "Present")
+		mark_attendance(employee2, previous_month_first + relativedelta(days=2), "On Leave")
+
+		# mark different attendance status on first 3 days of previous month for employee3
+		mark_attendance(employee3, previous_month_first, "Absent")
+		mark_attendance(employee3, previous_month_first + relativedelta(days=1), "Present")
+		mark_attendance(employee3, previous_month_first + relativedelta(days=2), "On Leave")
 
 		filters = frappe._dict(
 			{"month": previous_month, "year": now.year, "company": company, "employee": self.employee}
@@ -208,6 +220,59 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		absent = datasets[0]["values"]
 		present = datasets[1]["values"]
 		leaves = datasets[2]["values"]
+
+		# ensure that only show the attendance for the specified employee
+		self.assertEqual(len(report[1]), 1)
+
+		# ensure correct attendance is reflected on the report
+		self.assertEqual(self.employee, record.get("employee"))
+		self.assertEqual(absent[0], 1)
+		self.assertEqual(present[1], 1)
+		self.assertEqual(leaves[2], 1)
+
+	def test_attendance_with_employee_filter_and_summarized_view(self):
+		now = now_datetime()
+		previous_month = now.month - 1
+		previous_month_first = now.replace(day=1).replace(month=previous_month).date()
+
+		company = frappe.db.get_value("Employee", self.employee, "company")
+		employee2 = make_employee("test_employee2@example.com", company="_Test Company")
+		employee3 = make_employee("test_employee3@example.com", company="_Test Company")
+
+		# mark different attendance status on first 3 days of previous month for employee1
+		mark_attendance(self.employee, previous_month_first, "Absent")
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present")
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "On Leave")
+
+		# mark different attendance status on first 3 days of previous month for employee2
+		mark_attendance(employee2, previous_month_first, "Absent")
+		mark_attendance(employee2, previous_month_first + relativedelta(days=1), "Present")
+		mark_attendance(employee2, previous_month_first + relativedelta(days=2), "On Leave")
+
+		# mark different attendance status on first 3 days of previous month for employee3
+		mark_attendance(employee3, previous_month_first, "Absent")
+		mark_attendance(employee3, previous_month_first + relativedelta(days=1), "Present")
+		mark_attendance(employee3, previous_month_first + relativedelta(days=2), "On Leave")
+
+		filters = frappe._dict(
+			{
+				"month": previous_month,
+				"year": now.year,
+				"company": company,
+				"employee": self.employee,
+				"summarized_view": 1,
+			}
+		)
+		report = execute(filters=filters)
+
+		record = report[1][0]
+		datasets = report[3]["data"]["datasets"]
+		absent = datasets[0]["values"]
+		present = datasets[1]["values"]
+		leaves = datasets[2]["values"]
+
+		# ensure that only show the attendance for the specified employee
+		self.assertEqual(len(report[1]), 1)
 
 		# ensure correct attendance is reflected on the report
 		self.assertEqual(self.employee, record.get("employee"))
