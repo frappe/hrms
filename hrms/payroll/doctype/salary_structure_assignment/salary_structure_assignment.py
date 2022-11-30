@@ -31,7 +31,7 @@ class SalaryStructureAssignment(Document):
 					_(
 						"""
 						Not found any salary slip record(s) for the employee {0}. <br><br>
-						Please specify opening balances for <b>Taxable Earnings Till Date</b> and total <b>Tax Deducted Till Date</b>,
+						Please specify opening balances for <b>Taxable Earnings Till Date</b> and <b>Tax Deducted Till Date</b> (if any),
 						under <b>Earnings and Taxation</b> sections, for the correct tax calculation in future salary slips.
 						"""
 					).format(self.employee),
@@ -131,7 +131,7 @@ class SalaryStructureAssignment(Document):
 
 	@frappe.whitelist()
 	def set_earnings_and_taxation_section(self):
-		if self.has_joined_in_same_month() or self.has_salary_slip():
+		if not self.has_joined_in_same_month() or self.has_salary_slip():
 			return {
 				"unhide_earnings_and_taxation_section": 0,
 			}
