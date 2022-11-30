@@ -52,15 +52,16 @@ frappe.ui.form.on('Salary Structure Assignment', {
 	},
 
 	refresh: function(frm) {
-		if(frm.doc.__onload && frm.doc.__onload.unhide_earnings_and_taxation_section){
-			frm.unhide_earnings_and_taxation_section = frm.doc.__onload.unhide_earnings_and_taxation_section;
+		if(frm.doc.__onload){
+			frm.unhide_earnings_and_taxation_section = !frm.doc.__onload.earning_and_deduction_entries_exists;
 			frm.trigger("set_earnings_and_taxation_section_visibility");
 		}
 	},
 
 	employee: function(frm) {
 		if (frm.doc.employee) {
-			frm.trigger("set_employee_dependent_properties");
+			frm.trigger("set_payroll_cost_centers");
+			frm.trigger("valiadte_joining_date_and_salary_slips");
 		}
 		else {
 			frm.set_value("payroll_cost_centers", []);
@@ -75,14 +76,26 @@ frappe.ui.form.on('Salary Structure Assignment', {
 		}
 	},
 
-	set_employee_dependent_properties: function(frm) {
+	set_payroll_cost_centers: function(frm) {
+		if (frm.doc.payroll_cost_centers.length < 1) {
+			frappe.call({
+				method: "set_payroll_cost_centers",
+				doc: frm.doc,
+				callback: function(data) {
+					refresh_field("payroll_cost_centers");
+				}
+			})
+		}
+	},
+
+	valiadte_joining_date_and_salary_slips: function(frm) {
 		frappe.call({
-			method: "set_employee_dependent_properties",
+			method: "earning_and_deduction_entries_exists",
 			doc: frm.doc,
 			callback: function(data) {
-				frm.unhide_earnings_and_taxation_section = data.message.unhide_earnings_and_taxation_section;
+				let earning_and_deduction_entries_exists = data.message;
+				frm.unhide_earnings_and_taxation_section = ! earning_and_deduction_entries_exists;
 				frm.trigger("set_earnings_and_taxation_section_visibility");
-				refresh_field("payroll_cost_centers");
 			}
 		});
 	},
@@ -98,7 +111,7 @@ frappe.ui.form.on('Salary Structure Assignment', {
 
 	from_date: function(frm) {
 		if (frm.doc.from_date) {
-			frm.trigger("set_employee_dependent_properties" );
+			frm.trigger("valiadte_joining_date_and_salary_slips" );
 		}
 	},
 });
