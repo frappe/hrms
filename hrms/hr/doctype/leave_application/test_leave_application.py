@@ -511,6 +511,46 @@ class TestLeaveApplication(unittest.TestCase):
 		application.half_day_date = "2013-01-05"
 		application.insert()
 
+	def test_quarter_leave_application(self):
+		self._clear_roles()
+		self._clear_applications()
+
+		from frappe.utils.user import add_role
+
+		add_role("test@example.com", "Employee")
+		frappe.set_user("test@example.com")
+
+		make_allocation_record()
+
+		# leave from 1-5, quarter day leave on 5th
+		application = self.get_application(_test_records[0])
+		application.quarter_day_leave = 1
+		application.quarter_leave_date = "2013-01-05"
+		application.insert()
+
+		self.assertEqual(application.total_leave_days, 4.25)
+
+		# # Apply for quarter and half day leave on 5th
+		application = self.get_application(_test_records[0])
+		application.from_date = "2013-01-05"
+		application.to_date = "2013-01-05"
+		application.half_day = 1
+		application.half_day_date = "2013-01-05"
+		application.quarter_day_leave = 1
+		application.quarter_leave_date = "2013-01-05"
+		application.insert()
+
+		self.assertEqual(application.total_leave_days, 0.75)
+
+		# Apply again for a half day leave on 3rd
+		application = self.get_application(_test_records[0])
+		application.from_date = "2013-01-03"
+		application.to_date = "2013-01-03"
+		application.quarter_day_leave = 1
+		application.quarter_leave_date = "2013-01-03"
+
+		self.assertRaises(OverlapError, application.insert)
+
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_optional_leave(self):
 		leave_period = get_leave_period()
