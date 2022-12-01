@@ -50,14 +50,14 @@ Frappe HR has everything you need to drive excellence within the company. It's a
 
 ## Learning and Community
 
-1. [Official documentation](https://frappehr.com/docs) - Extensive documentation for Frappe HR.
-2. [Discussion Forum](https://discuss.erpnext.com/) - Engage with community of ERPNext users and service providers.
+1. [Documentation](https://frappehr.com/docs) - Extensive documentation for Frappe HR.
+2. [User Forum](https://discuss.erpnext.com/) - Engage with community of ERPNext users and service providers.
 3. [Telegram Group](https://t.me/frappehr) - Get instant help from community of users.
 
-## Contributions 
+## Contribute
 
 1. [Issue Guidelines](https://github.com/frappe/erpnext/wiki/Issue-Guidelines) - [Create a issue](https://github.com/frappe/hrms/issues/new)
-1. [Pull Request Requirements](https://github.com/frappe/erpnext/wiki/Contribution-Guidelines)
+1. [Contribution Guidelines](https://github.com/frappe/erpnext/wiki/Contribution-Guidelines)
 
 ## License
 
