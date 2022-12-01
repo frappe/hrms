@@ -1,5 +1,5 @@
 <div align="center" markdown="1">
-<img src=".github/frappe-hr-logo.png" alt="Frappe Books logo" width="384"/>
+<img src=".github/frappe-hr-logo.png" alt="Frappe HR logo" width="384"/>
 
 Open Source, modern, and easy-to-use HR and Payroll Software for all organizations.
 
