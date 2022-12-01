@@ -1,9 +1,15 @@
-# Frappe HR
+<div align="center" markdown="1">
+<img src=".github/frappe-hr-logo.png" alt="Frappe HR logo" width="384"/>
 
 Open Source, modern, and easy-to-use HR and Payroll Software for all organizations.
 
 [![CI](https://github.com/frappe/hrms/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/frappe/hrms/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/frappe/hrms/branch/develop/graph/badge.svg?token=0TwvyUg3I5)](https://codecov.io/gh/frappe/hrms)
+
+
+[https://frappehr.com](https://frappehr.com)
+
+</div>
 
 ## Introduction
 
@@ -41,9 +47,17 @@ Frappe HR has everything you need to drive excellence within the company. It's a
     $ bench --site sitename install-app hrms
     ```
 
-## Documentation
 
-Complete documentation for Frappe HR is available at https://frappehr.com/docs
+## Learning and Community
+
+1. [Documentation](https://frappehr.com/docs) - Extensive documentation for Frappe HR.
+2. [User Forum](https://discuss.erpnext.com/) - Engage with community of ERPNext users and service providers.
+3. [Telegram Group](https://t.me/frappehr) - Get instant help from community of users.
+
+## Contribute
+
+1. [Issue Guidelines](https://github.com/frappe/erpnext/wiki/Issue-Guidelines) - [Create a issue](https://github.com/frappe/hrms/issues/new)
+1. [Contribution Guidelines](https://github.com/frappe/erpnext/wiki/Contribution-Guidelines)
 
 ## License
 
