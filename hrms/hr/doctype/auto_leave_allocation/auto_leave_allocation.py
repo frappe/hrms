@@ -21,8 +21,7 @@ class AutoLeaveAllocation(Document):
 			self.filters_json = "[]"
 
 	def on_submit(self):
-		# self.run_allocation()
-		return
+		self.run_allocation()
 
 	def validate_dates(self):
 		if self.start_date >= self.end_date:
@@ -83,7 +82,7 @@ class AutoLeaveAllocation(Document):
 		self.start_date = getdate(self.start_date)
 		self.end_date = getdate(self.end_date)
 		if self.start_date > getdate():
-			return
+			return False
 
 		to_date = min(getdate(), self.end_date)
 		from_date = self.start_date

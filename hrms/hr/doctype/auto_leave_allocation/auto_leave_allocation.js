@@ -7,9 +7,16 @@ frappe.ui.form.on('Auto Leave Allocation', {
 	},
 	refresh: function(frm) {
 		frm.trigger("render_filters_table");
-		if (frm.doc.docstatus === 1) {
+		if (frm.doc.docstatus === 1 && frm.doc.start_date <= frappe.datetime.get_today()) {
 			frm.add_custom_button(__("Allocate"), function () {
-				frm.call('run_allocation')
+				frm.call('run_allocation').then(r => {
+					if (r.message) {
+						frappe.show_alert({
+							message: __('Executed allocation. Check error log for any issue(s).'),
+							indicator: 'green'
+						}, 5);
+					}
+				});
 			});
 		}
 	},
