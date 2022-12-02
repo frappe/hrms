@@ -13,10 +13,10 @@ frappe.listview_settings["Attendance"] = {
 
 	onload: function (list_view) {
 		let me = this;
-		
+
 		list_view.page.add_inner_button(__("Mark Attendance"), function () {
 			let first_day_of_month = moment().startOf('month');
-		
+
 			if (moment().toDate().getDate() === 1) {
 				first_day_of_month = first_day_of_month.subtract(1, "month");
 			}
