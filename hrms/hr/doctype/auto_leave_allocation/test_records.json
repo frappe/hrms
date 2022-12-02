@@ -1,0 +1,24 @@
+[
+    {
+        "docstatus": 0,
+        "naming_series": "HR-ALA-.YYYY.-",
+        "start_date": "2022-12-01",
+        "end_date": "2022-12-31",
+        "frequency": "Monthly",
+        "leave_type": "Casual Leave",
+        "new_allocation": 1,
+        "carry_forward": 0,
+        "doctype": "Auto Leave Allocation"
+    },
+    {
+        "docstatus": 0,
+        "naming_series": "HR-ALA-.YYYY.-",
+        "start_date": "2022-09-01",
+        "end_date": "2022-11-30",
+        "frequency": "Weekly",
+        "leave_type": "Casual Leave",
+        "new_allocation": 1,
+        "carry_forward": 0,
+        "doctype": "Auto Leave Allocation"
+    }
+]
