@@ -71,6 +71,7 @@ class AutoLeaveAllocation(Document):
 						"to_date": to_date,
 						"new_leaves_allocated": self.new_allocation,
 						"carry_forward": self.carry_forward,
+						"auto_leave_allocation": self.name,
 					}
 				).submit()
 			except Exception as e:

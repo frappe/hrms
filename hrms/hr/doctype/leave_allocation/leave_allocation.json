@@ -27,6 +27,7 @@
   "leave_period",
   "leave_policy",
   "leave_policy_assignment",
+  "auto_leave_allocation",
   "carry_forwarded_leaves_count",
   "expired",
   "amended_from",
@@ -230,6 +231,14 @@
    "options": "Company",
    "read_only": 1,
    "reqd": 1
+  },
+  {
+   "fieldname": "auto_leave_allocation",
+   "fieldtype": "Link",
+   "label": "Auto Leave Allocation",
+   "no_copy": 1,
+   "options": "Auto Leave Allocation",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-ok",
@@ -237,7 +246,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-04-07 09:50:33.145825",
+ "modified": "2022-12-02 19:24:08.180094",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Allocation",
