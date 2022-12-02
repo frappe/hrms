@@ -191,8 +191,14 @@ scheduler_events = {
 		"hrms.hr.utils.generate_leave_encashment",
 		"hrms.hr.utils.allocate_earned_leaves",
 	],
-	"weekly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_weekly"],
-	"monthly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_monthly"],
+	"weekly": [
+		"hrms.controllers.employee_reminders.send_reminders_in_advance_weekly",
+		"hrms.hr.doctype.auto_leave_allocation.auto_leave_allocation.process_weekly_auto_leave_allocation",
+	],
+	"monthly": [
+		"hrms.controllers.employee_reminders.send_reminders_in_advance_monthly",
+		"hrms.hr.doctype.auto_leave_allocation.auto_leave_allocation.process_monthly_auto_leave_allocation",
+	],
 }
 
 advance_payment_doctypes = ["Gratuity", "Employee Advance"]
