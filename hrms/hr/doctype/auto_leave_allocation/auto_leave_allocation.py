@@ -79,13 +79,12 @@ class AutoLeaveAllocation(Document):
 
 	@frappe.whitelist()
 	def run_allocation(self):
-		self.start_date = getdate(self.start_date)
-		self.end_date = getdate(self.end_date)
-		if self.start_date > getdate():
+		from_date = getdate(self.start_date)
+		to_date = getdate(self.end_date)
+		if from_date > getdate():
 			return False
 
-		to_date = min(getdate(), self.end_date)
-		from_date = self.start_date
+		to_date = min(getdate(), to_date)
 		last_day = get_last_day if self.frequency == "Monthly" else get_last_day_of_week
 
 		while from_date <= to_date:
