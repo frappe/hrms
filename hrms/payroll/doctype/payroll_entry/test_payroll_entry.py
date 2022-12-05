@@ -430,7 +430,7 @@ class TestPayrollEntry(FrappeTestCase):
 		if payroll_je:
 			payroll_je_doc = frappe.get_doc("Journal Entry", payroll_je)
 			for account in payroll_je_doc.accounts:
-				if account.account != company_doc.default_payroll_payable_account:
+				if account.account == company_doc.default_payroll_payable_account:
 					self.assertEqual(account.party_type, "Employee")
 					self.assertEqual(account.party, employee)
 
@@ -462,7 +462,7 @@ class TestPayrollEntry(FrappeTestCase):
 		if payroll_je:
 			payroll_je_doc = frappe.get_doc("Journal Entry", payroll_je)
 			for account in payroll_je_doc.accounts:
-				if account.account != company_doc.default_payroll_payable_account:
+				if account.account == company_doc.default_payroll_payable_account:
 					self.assertEqual(account.party_type, None)
 					self.assertEqual(account.party, None)
 
