@@ -296,7 +296,11 @@ class PayrollEntry(Document):
 
 			return salary_components
 
-	def get_salary_component_total(self, component_type=None, employee_based_accounting=False):
+	def get_salary_component_total(
+		self,
+		component_type=None,
+		process_payroll_accounting_entry_based_on_employee=False,
+	):
 		salary_components = self.get_salary_components(component_type)
 		if salary_components:
 			component_dict = {}
@@ -316,16 +320,22 @@ class PayrollEntry(Document):
 				if add_component_to_accrual_jv_entry:
 					for cost_center, percentage in employee_cost_centers.items():
 						amount_against_cost_center = flt(item.amount) * percentage / 100
-						if employee_based_accounting:
-							key = (item.salary_component, cost_center, item.employee)
-						else:
-							key = (item.salary_component, cost_center)
-
+						key = (item.salary_component, cost_center)
 						component_dict[key] = component_dict.get(key, 0) + amount_against_cost_center
-			account_details = self.get_account(
-				component_dict=component_dict, employee_based_accounting=employee_based_accounting
-			)
+
+						if process_payroll_accounting_entry_based_on_employee:
+							self.set_employee_based_payroll_payable_entries(
+								component_type, item, amount_against_cost_center
+							)
+
+			account_details = self.get_account(component_dict=component_dict)
+
 			return account_details
+
+	def set_employee_based_payroll_payable_entries(self, component_type, item, amount):
+		self.employee_based_payroll_payable_entries.setdefault(item.employee, {})
+		self.employee_based_payroll_payable_entries[item.employee].setdefault(component_type, 0)
+		self.employee_based_payroll_payable_entries[item.employee][component_type] += amount
 
 	def get_payroll_cost_centers_for_employee(self, employee, salary_structure):
 		if not self.employee_cost_centers.get(employee):
@@ -361,15 +371,11 @@ class PayrollEntry(Document):
 
 		return self.employee_cost_centers.get(employee, {})
 
-	def get_account(self, component_dict=None, employee_based_accounting=False):
+	def get_account(self, component_dict=None):
 		account_dict = {}
 		for key, amount in component_dict.items():
 			account = self.get_salary_component_account(key[0])
-
-			if employee_based_accounting:
-				accouting_key = (account, key[1], key[2])
-			else:
-				accouting_key = (account, key[1])
+			accouting_key = (account, key[1])
 
 			account_dict[accouting_key] = account_dict.get(accouting_key, 0) + amount
 
@@ -377,21 +383,27 @@ class PayrollEntry(Document):
 
 	def make_accrual_jv_entry(self):
 		self.check_permission("write")
-		employee_based_accounting = frappe.db.get_single_value(
+		process_payroll_accounting_entry_based_on_employee = frappe.db.get_single_value(
 			"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
 		)
+		self.employee_based_payroll_payable_entries = {}
+
 		earnings = (
 			self.get_salary_component_total(
-				component_type="earnings", employee_based_accounting=employee_based_accounting
+				component_type="earnings",
+				process_payroll_accounting_entry_based_on_employee=process_payroll_accounting_entry_based_on_employee,
 			)
 			or {}
 		)
+
 		deductions = (
 			self.get_salary_component_total(
-				component_type="deductions", employee_based_accounting=employee_based_accounting
+				component_type="deductions",
+				process_payroll_accounting_entry_based_on_employee=process_payroll_accounting_entry_based_on_employee,
 			)
 			or {}
 		)
+
 		payroll_payable_account = self.payroll_payable_account
 		jv_name = ""
 		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
@@ -414,7 +426,7 @@ class PayrollEntry(Document):
 
 			# Earnings
 			for acc_cc, amount in earnings.items():
-				accounting_entries, payable_amount = self.get_accounting_entries_and_payable_amount(
+				accounting_entry, payable_amount = self.get_accounting_entries_and_payable_amount(
 					acc_cc[0],
 					acc_cc[1] or self.cost_center,
 					amount,
@@ -423,15 +435,13 @@ class PayrollEntry(Document):
 					payable_amount,
 					accounting_dimensions,
 					precision,
-					employee_based_accounting,
 					entry_type="debit",
-					party=acc_cc[2] if employee_based_accounting else None,
 				)
-				accounts.append(accounting_entries)
+				accounts.append(accounting_entry)
 
 			# Deductions
 			for acc_cc, amount in deductions.items():
-				accounting_entries, payable_amount = self.get_accounting_entries_and_payable_amount(
+				accounting_entry, payable_amount = self.get_accounting_entries_and_payable_amount(
 					acc_cc[0],
 					acc_cc[1] or self.cost_center,
 					amount,
@@ -440,26 +450,53 @@ class PayrollEntry(Document):
 					payable_amount,
 					accounting_dimensions,
 					precision,
-					employee_based_accounting,
 					entry_type="credit",
-					party=acc_cc[2] if employee_based_accounting else None,
 				)
-				accounts.append(accounting_entries)
+				accounts.append(accounting_entry)
 
 			# Payable amount
-			accounting_entry, payable_amount = self.get_accounting_entries_and_payable_amount(
-				payroll_payable_account,
-				self.cost_center,
-				payable_amount,
-				currencies,
-				company_currency,
-				0,
-				accounting_dimensions,
-				precision,
-				employee_based_accounting=False,
-				entry_type="payable",
-			)
-			accounts.append(accounting_entry)
+			if process_payroll_accounting_entry_based_on_employee:
+				"""
+				employee_based_payroll_payable_entries = {
+				        'HR-EMP-00004': {
+				                        'earnings': 83332.0,
+				                        'deductions': 2000.0
+				                },
+				        'HR-EMP-00005': {
+				                'earnings': 50000.0,
+				                'deductions': 2000.0
+				        }
+				}
+				"""
+				for employee, employee_details in self.employee_based_payroll_payable_entries.items():
+					payable_amount = employee_details.get("earnings") - employee_details.get("deductions")
+
+					accounting_entry, payable_amount = self.get_accounting_entries_and_payable_amount(
+						payroll_payable_account,
+						self.cost_center,
+						payable_amount,
+						currencies,
+						company_currency,
+						0,
+						accounting_dimensions,
+						precision,
+						entry_type="payable",
+						party=employee,
+					)
+					accounts.append(accounting_entry)
+			else:
+				accounting_entry, payable_amount = self.get_accounting_entries_and_payable_amount(
+					payroll_payable_account,
+					self.cost_center,
+					payable_amount,
+					currencies,
+					company_currency,
+					0,
+					accounting_dimensions,
+					precision,
+					entry_type="payable",
+				)
+				accounts.append(accounting_entry)
 
 			journal_entry.set("accounts", accounts)
 			if len(currencies) > 1:
@@ -489,7 +526,6 @@ class PayrollEntry(Document):
 		payable_amount,
 		accounting_dimensions,
 		precision,
-		employee_based_accounting=False,
 		entry_type="credit",
 		party=None,
 	):
@@ -527,14 +563,18 @@ class PayrollEntry(Document):
 				}
 			)
 
+		if party:
+			row.update(
+				{
+					"party_type": "Employee",
+					"party": party,
+				}
+			)
+
 		self.update_accounting_dimensions(
 			row,
 			accounting_dimensions,
 		)
-
-		# update employee ref in journal entry
-		if employee_based_accounting:
-			row.update({"party_type": "Employee", "party": party})
 
 		return row, payable_amount
 
