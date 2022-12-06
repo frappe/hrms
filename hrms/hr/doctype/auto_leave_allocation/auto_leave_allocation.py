@@ -62,6 +62,7 @@ class AutoLeaveAllocation(Document):
 		to_date = min(to_date, getdate(self.end_date))
 		conditions = json.loads(self.filters_json) or []
 		conditions.append(["Employee", "status", "=", "Active"])
+		conditions.append(["Employee", "date_of_joining", "<=", from_date])
 		employees = frappe.db.get_all("Employee", filters=conditions, pluck="name")
 		for emp in employees:
 			try:
