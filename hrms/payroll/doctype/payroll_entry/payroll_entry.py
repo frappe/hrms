@@ -296,7 +296,11 @@ class PayrollEntry(Document):
 
 			return salary_components
 
-	def get_salary_component_total(self, component_type=None):
+	def get_salary_component_total(
+		self,
+		component_type=None,
+		process_payroll_accounting_entry_based_on_employee=False,
+	):
 		salary_components = self.get_salary_components(component_type)
 		if salary_components:
 			component_dict = {}
@@ -305,7 +309,6 @@ class PayrollEntry(Document):
 				employee_cost_centers = self.get_payroll_cost_centers_for_employee(
 					item.employee, item.salary_structure
 				)
-
 				add_component_to_accrual_jv_entry = True
 				if component_type == "earnings":
 					is_flexible_benefit, only_tax_impact = frappe.get_cached_value(
@@ -317,12 +320,22 @@ class PayrollEntry(Document):
 				if add_component_to_accrual_jv_entry:
 					for cost_center, percentage in employee_cost_centers.items():
 						amount_against_cost_center = flt(item.amount) * percentage / 100
-						component_dict[(item.salary_component, cost_center)] = (
-							component_dict.get((item.salary_component, cost_center), 0) + amount_against_cost_center
-						)
+						key = (item.salary_component, cost_center)
+						component_dict[key] = component_dict.get(key, 0) + amount_against_cost_center
+
+						if process_payroll_accounting_entry_based_on_employee:
+							self.set_employee_based_payroll_payable_entries(
+								component_type, item.employee, amount_against_cost_center
+							)
 
 			account_details = self.get_account(component_dict=component_dict)
+
 			return account_details
+
+	def set_employee_based_payroll_payable_entries(self, component_type, employee, amount):
+		self.employee_based_payroll_payable_entries.setdefault(employee, {})
+		self.employee_based_payroll_payable_entries[employee].setdefault(component_type, 0)
+		self.employee_based_payroll_payable_entries[employee][component_type] += amount
 
 	def get_payroll_cost_centers_for_employee(self, employee, salary_structure):
 		if not self.employee_cost_centers.get(employee):
@@ -362,13 +375,35 @@ class PayrollEntry(Document):
 		account_dict = {}
 		for key, amount in component_dict.items():
 			account = self.get_salary_component_account(key[0])
-			account_dict[(account, key[1])] = account_dict.get((account, key[1]), 0) + amount
+			accouting_key = (account, key[1])
+
+			account_dict[accouting_key] = account_dict.get(accouting_key, 0) + amount
+
 		return account_dict
 
 	def make_accrual_jv_entry(self):
 		self.check_permission("write")
-		earnings = self.get_salary_component_total(component_type="earnings") or {}
-		deductions = self.get_salary_component_total(component_type="deductions") or {}
+		process_payroll_accounting_entry_based_on_employee = frappe.db.get_single_value(
+			"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
+		)
+		self.employee_based_payroll_payable_entries = {}
+
+		earnings = (
+			self.get_salary_component_total(
+				component_type="earnings",
+				process_payroll_accounting_entry_based_on_employee=process_payroll_accounting_entry_based_on_employee,
+			)
+			or {}
+		)
+
+		deductions = (
+			self.get_salary_component_total(
+				component_type="deductions",
+				process_payroll_accounting_entry_based_on_employee=process_payroll_accounting_entry_based_on_employee,
+			)
+			or {}
+		)
+
 		payroll_payable_account = self.payroll_payable_account
 		jv_name = ""
 		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
@@ -391,59 +426,77 @@ class PayrollEntry(Document):
 
 			# Earnings
 			for acc_cc, amount in earnings.items():
-				exchange_rate, amt = self.get_amount_and_exchange_rate_for_journal_entry(
-					acc_cc[0], amount, company_currency, currencies
+				accounting_entry, payable_amount = self.get_accounting_entries_and_payable_amount(
+					acc_cc[0],
+					acc_cc[1] or self.cost_center,
+					amount,
+					currencies,
+					company_currency,
+					payable_amount,
+					accounting_dimensions,
+					precision,
+					entry_type="debit",
 				)
-				payable_amount += flt(amount, precision)
-				accounts.append(
-					self.update_accounting_dimensions(
-						{
-							"account": acc_cc[0],
-							"debit_in_account_currency": flt(amt, precision),
-							"exchange_rate": flt(exchange_rate),
-							"cost_center": acc_cc[1] or self.cost_center,
-							"project": self.project,
-						},
-						accounting_dimensions,
-					)
-				)
+				accounts.append(accounting_entry)
 
 			# Deductions
 			for acc_cc, amount in deductions.items():
-				exchange_rate, amt = self.get_amount_and_exchange_rate_for_journal_entry(
-					acc_cc[0], amount, company_currency, currencies
+				accounting_entry, payable_amount = self.get_accounting_entries_and_payable_amount(
+					acc_cc[0],
+					acc_cc[1] or self.cost_center,
+					amount,
+					currencies,
+					company_currency,
+					payable_amount,
+					accounting_dimensions,
+					precision,
+					entry_type="credit",
 				)
-				payable_amount -= flt(amount, precision)
-				accounts.append(
-					self.update_accounting_dimensions(
-						{
-							"account": acc_cc[0],
-							"credit_in_account_currency": flt(amt, precision),
-							"exchange_rate": flt(exchange_rate),
-							"cost_center": acc_cc[1] or self.cost_center,
-							"project": self.project,
-						},
-						accounting_dimensions,
-					)
-				)
+				accounts.append(accounting_entry)
 
 			# Payable amount
-			exchange_rate, payable_amt = self.get_amount_and_exchange_rate_for_journal_entry(
-				payroll_payable_account, payable_amount, company_currency, currencies
-			)
-			accounts.append(
-				self.update_accounting_dimensions(
-					{
-						"account": payroll_payable_account,
-						"credit_in_account_currency": flt(payable_amt, precision),
-						"exchange_rate": flt(exchange_rate),
-						"cost_center": self.cost_center,
-						"reference_type": self.doctype,
-						"reference_name": self.name,
-					},
+			if process_payroll_accounting_entry_based_on_employee:
+				"""
+				employee_based_payroll_payable_entries = {
+				        'HR-EMP-00004': {
+				                        'earnings': 83332.0,
+				                        'deductions': 2000.0
+				                },
+				        'HR-EMP-00005': {
+				                'earnings': 50000.0,
+				                'deductions': 2000.0
+				        }
+				}
+				"""
+				for employee, employee_details in self.employee_based_payroll_payable_entries.items():
+					payable_amount = employee_details.get("earnings") - employee_details.get("deductions")
+
+					accounting_entry, payable_amount = self.get_accounting_entries_and_payable_amount(
+						payroll_payable_account,
+						self.cost_center,
+						payable_amount,
+						currencies,
+						company_currency,
+						0,
+						accounting_dimensions,
+						precision,
+						entry_type="payable",
+						party=employee,
+					)
+					accounts.append(accounting_entry)
+			else:
+				accounting_entry, payable_amount = self.get_accounting_entries_and_payable_amount(
+					payroll_payable_account,
+					self.cost_center,
+					payable_amount,
+					currencies,
+					company_currency,
+					0,
 					accounting_dimensions,
+					precision,
+					entry_type="payable",
 				)
-			)
+				accounts.append(accounting_entry)
 
 			journal_entry.set("accounts", accounts)
 			if len(currencies) > 1:
@@ -463,6 +516,68 @@ class PayrollEntry(Document):
 
 		return jv_name
 
+	def get_accounting_entries_and_payable_amount(
+		self,
+		account,
+		cost_center,
+		amount,
+		currencies,
+		company_currency,
+		payable_amount,
+		accounting_dimensions,
+		precision,
+		entry_type="credit",
+		party=None,
+	):
+		exchange_rate, amt = self.get_amount_and_exchange_rate_for_journal_entry(
+			account, amount, company_currency, currencies
+		)
+
+		row = {
+			"account": account,
+			"exchange_rate": flt(exchange_rate),
+			"cost_center": cost_center,
+			"project": self.project,
+		}
+
+		if entry_type == "debit":
+			payable_amount += flt(amount, precision)
+			row.update(
+				{
+					"debit_in_account_currency": flt(amt, precision),
+				}
+			)
+		elif entry_type == "credit":
+			payable_amount -= flt(amount, precision)
+			row.update(
+				{
+					"credit_in_account_currency": flt(amt, precision),
+				}
+			)
+		else:
+			row.update(
+				{
+					"credit_in_account_currency": flt(amt, precision),
+					"reference_type": self.doctype,
+					"reference_name": self.name,
+				}
+			)
+
+		if party:
+			row.update(
+				{
+					"party_type": "Employee",
+					"party": party,
+				}
+			)
+
+		self.update_accounting_dimensions(
+			row,
+			accounting_dimensions,
+		)
+
+		return row, payable_amount
+
 	def update_accounting_dimensions(self, row, accounting_dimensions):
 		for dimension in accounting_dimensions:
 			row.update({dimension: self.get(dimension)})
@@ -481,11 +596,16 @@ class PayrollEntry(Document):
 			conversion_rate = self.exchange_rate
 			exchange_rate = 1
 		amount = flt(amount) * flt(conversion_rate)
+
 		return exchange_rate, amount
 
 	@frappe.whitelist()
 	def make_payment_entry(self):
 		self.check_permission("write")
+		self.employee_based_payroll_payable_entries = {}
+		process_payroll_accounting_entry_based_on_employee = frappe.db.get_single_value(
+			"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
+		)
 
 		salary_slip_name_list = frappe.db.sql(
 			""" select t1.name from `tabSalary Slip` t1
@@ -499,6 +619,7 @@ class PayrollEntry(Document):
 			salary_slip_total = 0
 			for salary_slip_name in salary_slip_name_list:
 				salary_slip = frappe.get_doc("Salary Slip", salary_slip_name[0])
+
 				for sal_detail in salary_slip.earnings:
 					(
 						is_flexible_benefit,
@@ -519,13 +640,24 @@ class PayrollEntry(Document):
 						if is_flexible_benefit == 1 and creat_separate_je == 1:
 							self.create_journal_entry(sal_detail.amount, sal_detail.salary_component)
 						else:
+							if process_payroll_accounting_entry_based_on_employee:
+								self.set_employee_based_payroll_payable_entries(
+									"earnings", salary_slip.employee, sal_detail.amount
+								)
 							salary_slip_total += sal_detail.amount
+
 				for sal_detail in salary_slip.deductions:
 					statistical_component = frappe.db.get_value(
 						"Salary Component", sal_detail.salary_component, "statistical_component"
 					)
 					if statistical_component != 1:
+						if process_payroll_accounting_entry_based_on_employee:
+							self.set_employee_based_payroll_payable_entries(
+								"deduction", salary_slip.employee, sal_detail.amount
+							)
+
 						salary_slip_total -= sal_detail.amount
+
 			if salary_slip_total > 0:
 				self.create_journal_entry(salary_slip_total, "salary")
 
@@ -554,21 +686,43 @@ class PayrollEntry(Document):
 			)
 		)
 
-		exchange_rate, amount = self.get_amount_and_exchange_rate_for_journal_entry(
-			payroll_payable_account, je_payment_amount, company_currency, currencies
-		)
-		accounts.append(
-			self.update_accounting_dimensions(
-				{
-					"account": payroll_payable_account,
-					"debit_in_account_currency": flt(amount, precision),
-					"exchange_rate": flt(exchange_rate),
-					"reference_type": self.doctype,
-					"reference_name": self.name,
-				},
-				accounting_dimensions,
+		if self.employee_based_payroll_payable_entries:
+			for employee, employee_details in self.employee_based_payroll_payable_entries.items():
+				je_payment_amount = employee_details["earnings"] - employee_details["deduction"]
+				exchange_rate, amount = self.get_amount_and_exchange_rate_for_journal_entry(
+					self.payment_account, je_payment_amount, company_currency, currencies
+				)
+
+				accounts.append(
+					self.update_accounting_dimensions(
+						{
+							"account": payroll_payable_account,
+							"debit_in_account_currency": flt(amount, precision),
+							"exchange_rate": flt(exchange_rate),
+							"reference_type": self.doctype,
+							"reference_name": self.name,
+							"party_type": "Employee",
+							"party": employee,
+						},
+						accounting_dimensions,
+					)
+				)
+		else:
+			exchange_rate, amount = self.get_amount_and_exchange_rate_for_journal_entry(
+				payroll_payable_account, je_payment_amount, company_currency, currencies
 			)
-		)
+			accounts.append(
+				self.update_accounting_dimensions(
+					{
+						"account": payroll_payable_account,
+						"debit_in_account_currency": flt(amount, precision),
+						"exchange_rate": flt(exchange_rate),
+						"reference_type": self.doctype,
+						"reference_name": self.name,
+					},
+					accounting_dimensions,
+				)
+			)
 
 		if len(currencies) > 1:
 			multi_currency = 1
