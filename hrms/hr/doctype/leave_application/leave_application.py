@@ -1,6 +1,7 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
+import datetime
 from typing import Dict, Optional, Tuple
 
 import frappe
@@ -709,7 +710,7 @@ class LeaveApplication(Document):
 
 
 def get_allocation_expiry_for_cf_leaves(
-	employee: str, leave_type: str, to_date: str, from_date: str
+	employee: str, leave_type: str, to_date: datetime.date, from_date: datetime.date
 ) -> str:
 	"""Returns expiry of carry forward allocation in leave ledger entry"""
 	expiry = frappe.get_all(
@@ -731,10 +732,10 @@ def get_allocation_expiry_for_cf_leaves(
 def get_number_of_leave_days(
 	employee: str,
 	leave_type: str,
-	from_date: str,
-	to_date: str,
+	from_date: datetime.date,
+	to_date: datetime.date,
 	half_day: Optional[int] = None,
-	half_day_date: Optional[str] = None,
+	half_day_date: Optional[datetime.date] = None,
 	holiday_list: Optional[str] = None,
 ) -> float:
 	"""Returns number of leave days between 2 dates after considering half day and holidays
@@ -796,8 +797,8 @@ def get_leave_details(employee, date):
 def get_leave_balance_on(
 	employee: str,
 	leave_type: str,
-	date: str,
-	to_date: str = None,
+	date: datetime.date,
+	to_date: Optional[datetime.date] = None,
 	consider_all_leaves_in_the_allocation_period: bool = False,
 	for_consumption: bool = False,
 ):
@@ -893,7 +894,7 @@ def get_leave_allocation_records(employee, date, leave_type=None):
 
 
 def get_leaves_pending_approval_for_period(
-	employee: str, leave_type: str, from_date: str, to_date: str
+	employee: str, leave_type: str, from_date: datetime.date, to_date: datetime.date
 ) -> float:
 	"""Returns leaves that are pending for approval"""
 	leaves = frappe.get_all(
@@ -941,7 +942,11 @@ def get_remaining_leaves(
 
 
 def get_leaves_for_period(
-	employee: str, leave_type: str, from_date: str, to_date: str, skip_expired_leaves: bool = True
+	employee: str,
+	leave_type: str,
+	from_date: datetime.date,
+	to_date: datetime.date,
+	skip_expired_leaves: bool = True,
 ) -> float:
 	leave_entries = get_leave_entries(employee, leave_type, from_date, to_date)
 	leave_days = 0
