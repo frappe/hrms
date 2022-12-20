@@ -734,8 +734,8 @@ def get_number_of_leave_days(
 	leave_type: str,
 	from_date: datetime.date,
 	to_date: datetime.date,
-	half_day: Optional[int] = None,
-	half_day_date: Optional[datetime.date] = None,
+	half_day: Optional[int] | Optional[str] = None,
+	half_day_date: Optional[int] | Optional[str] = None,
 	holiday_list: Optional[str] = None,
 ) -> float:
 	"""Returns number of leave days between 2 dates after considering half day and holidays
