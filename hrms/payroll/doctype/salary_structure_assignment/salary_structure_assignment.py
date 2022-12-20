@@ -129,10 +129,16 @@ class SalaryStructureAssignment(Document):
 
 	@frappe.whitelist()
 	def earning_and_deduction_entries_exists(self):
-		if not self.joined_in_the_same_month() and not self.have_salary_slips():
+		if not frappe.db.get_single_value("Payroll Settings", "define_earning_and_deductions_till_date"):
+			return True
+
+		if self.docstatus in [1, 2] and (self.taxable_earnings_till_date or self.tax_deducted_till_date):
 			return False
 		else:
-			return True
+			if not self.joined_in_the_same_month() and not self.have_salary_slips():
+				return False
+			else:
+				return True
 
 	def have_salary_slips(self):
 		"""returns True if salary structure assignment has salary slips else False"""
