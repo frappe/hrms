@@ -337,6 +337,9 @@ class SalarySlip(TransactionBase):
 		if payroll_based_on == "Attendance":
 			actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(holidays)
 			self.absent_days = absent
+		elif payroll_based_on == "Actual Working Hours":
+			actual_lwp = None
+			self.calculate_working_days_based_on_employee_checkin(holidays, working_days)
 		else:
 			actual_lwp = self.calculate_lwp_or_ppl_based_on_leave_application(holidays, working_days_list)
 
@@ -460,6 +463,13 @@ class SalarySlip(TransactionBase):
 
 	def get_holidays_for_employee(self, start_date, end_date):
 		return get_holiday_dates_for_employee(self.employee, start_date, end_date)
+
+	def calculate_working_days_based_on_employee_checkin(self, holidays, working_days):
+		"""
+		Calculate working days based on employee checkin
+		"""
+		print(holidays, self.start_date, self.end_date)
+		print(getdate(self.end_date) - getdate(self.start_date))
 
 	def calculate_lwp_or_ppl_based_on_leave_application(self, holidays, working_days_list):
 		lwp = 0
