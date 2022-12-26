@@ -4,7 +4,7 @@
 
 import datetime
 import math
-
+from datetime import datetime, timedelta
 import frappe
 from frappe import _, msgprint
 from frappe.model.naming import make_autoname
@@ -322,8 +322,11 @@ class SalarySlip(TransactionBase):
 			return
 
 		holidays = self.get_holidays_for_employee(self.start_date, self.end_date)
+		working_days_list = date_range(getdate(self.start_date), getdate(self.end_date))
 
 		if not cint(include_holidays_in_total_working_days):
+			working_days_list = [i for i in working_days_list if i not in holidays]
+
 			working_days -= len(holidays)
 			if working_days < 0:
 				frappe.throw(_("There are more holidays than working days this month."))
@@ -335,7 +338,7 @@ class SalarySlip(TransactionBase):
 			actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(holidays)
 			self.absent_days = absent
 		else:
-			actual_lwp = self.calculate_lwp_or_ppl_based_on_leave_application(holidays, working_days)
+			actual_lwp = self.calculate_lwp_or_ppl_based_on_leave_application(holidays, working_days_list)
 
 		if not lwp:
 			lwp = actual_lwp
@@ -458,16 +461,16 @@ class SalarySlip(TransactionBase):
 	def get_holidays_for_employee(self, start_date, end_date):
 		return get_holiday_dates_for_employee(self.employee, start_date, end_date)
 
-	def calculate_lwp_or_ppl_based_on_leave_application(self, holidays, working_days):
+	def calculate_lwp_or_ppl_based_on_leave_application(self, holidays, working_days_list):
 		lwp = 0
 		holidays = "','".join(holidays)
 		daily_wages_fraction_for_half_day = (
 			flt(frappe.db.get_value("Payroll Settings", None, "daily_wages_fraction_for_half_day")) or 0.5
 		)
 
-		for d in range(working_days):
-			date = add_days(cstr(getdate(self.start_date)), d)
-			leave = get_lwp_or_ppl_for_date(date, self.employee, holidays)
+		for d in working_days_list:
+			# date = add_days(cstr(getdate(self.start_date)), d)
+			leave = get_lwp_or_ppl_for_date(d, self.employee, holidays)
 
 			if leave:
 				equivalent_lwp_count = 0
@@ -1848,3 +1851,12 @@ def set_missing_values(time_sheet, target):
 	target.posting_date = doc.modified
 	target.total_working_hours = doc.total_hours
 	target.append("timesheets", {"time_sheet": doc.name, "working_hours": doc.total_hours})
+
+
+def date_range(start=None, end=None):
+	if start and end:
+		delta = end - start  # as timedelta
+		days = [str(start + timedelta(days=i))  for i in range(delta.days + 1)]
+		return days
+	else:
+		return []
