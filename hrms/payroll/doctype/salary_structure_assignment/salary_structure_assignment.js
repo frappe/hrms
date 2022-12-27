@@ -53,7 +53,7 @@ frappe.ui.form.on('Salary Structure Assignment', {
 
 	refresh: function(frm) {
 		if(frm.doc.__onload){
-			frm.unhide_earnings_and_taxation_section = !frm.doc.__onload.earning_and_deduction_entries_exists;
+			frm.unhide_earnings_and_taxation_section = frm.doc.__onload.earning_and_deduction_entries_does_not_exists;
 			frm.trigger("set_earnings_and_taxation_section_visibility");
 		}
 	},
@@ -77,7 +77,7 @@ frappe.ui.form.on('Salary Structure Assignment', {
 	},
 
 	set_payroll_cost_centers: function(frm) {
-		if (frm.doc.payroll_cost_centers.length < 1) {
+		if (frm.doc.payroll_cost_centers && frm.doc.payroll_cost_centers.length < 1) {
 			frappe.call({
 				method: "set_payroll_cost_centers",
 				doc: frm.doc,
@@ -90,11 +90,11 @@ frappe.ui.form.on('Salary Structure Assignment', {
 
 	valiadte_joining_date_and_salary_slips: function(frm) {
 		frappe.call({
-			method: "earning_and_deduction_entries_exists",
+			method: "earning_and_deduction_entries_does_not_exists",
 			doc: frm.doc,
 			callback: function(data) {
-				let earning_and_deduction_entries_exists = data.message;
-				frm.unhide_earnings_and_taxation_section = ! earning_and_deduction_entries_exists;
+				let earning_and_deduction_entries_does_not_exists = data.message;
+				frm.unhide_earnings_and_taxation_section = earning_and_deduction_entries_does_not_exists;
 				frm.trigger("set_earnings_and_taxation_section_visibility");
 			}
 		});
