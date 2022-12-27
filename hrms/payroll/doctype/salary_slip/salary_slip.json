@@ -26,6 +26,7 @@
   "salary_structure",
   "column_break_18",
   "salary_slip_based_on_timesheet",
+  "salary_slip_based_on_actual_working_hours",
   "payroll_frequency",
   "section_break_20",
   "total_working_days",
@@ -633,13 +634,20 @@
    "label": "Gross Year To Date(Company Currency)",
    "options": "Company:company:default_currency",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "salary_slip_based_on_actual_working_hours",
+   "fieldtype": "Check",
+   "label": "Salary Slip Based on Actual Working Hours",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-06-15 18:36:54.999345",
+ "modified": "2022-12-27 15:39:28.538753",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

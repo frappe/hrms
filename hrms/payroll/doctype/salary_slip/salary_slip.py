@@ -1,10 +1,10 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
-
-import datetime
+import itertools
 import math
 from datetime import datetime, timedelta
+
 import frappe
 from frappe import _, msgprint
 from frappe.model.naming import make_autoname
@@ -337,9 +337,6 @@ class SalarySlip(TransactionBase):
 		if payroll_based_on == "Attendance":
 			actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(holidays)
 			self.absent_days = absent
-		elif payroll_based_on == "Actual Working Hours":
-			actual_lwp = None
-			self.calculate_working_days_based_on_employee_checkin(holidays, working_days)
 		else:
 			actual_lwp = self.calculate_lwp_or_ppl_based_on_leave_application(holidays, working_days_list)
 
@@ -464,12 +461,61 @@ class SalarySlip(TransactionBase):
 	def get_holidays_for_employee(self, start_date, end_date):
 		return get_holiday_dates_for_employee(self.employee, start_date, end_date)
 
-	def calculate_working_days_based_on_employee_checkin(self, holidays, working_days):
+	def set_working_hrs_and_payment_days_based_on_employee_checkin(self):
 		"""
 		Calculate working days based on employee checkin
 		"""
-		print(holidays, self.start_date, self.end_date)
-		print(getdate(self.end_date) - getdate(self.start_date))
+		from hrms.hr.doctype.employee_checkin.employee_checkin import calculate_working_hours
+
+		shift_doc = None
+		payment_days = 0
+		total_working_hours = 0
+		shift_hrs = {}
+		shift_wise_working_hours = {}
+
+		filters = {
+			"time": ("between", (self.start_date, self.end_date)),
+			"employee": self.employee,
+		}
+
+		logs = frappe.db.get_list(
+			"Employee Checkin", fields="*", filters=filters, order_by="employee,time"
+		)
+
+		for key, group in itertools.groupby(
+			logs, key=lambda x: (x["employee"], x["shift_actual_start"])
+		):
+			logs = list(group)
+
+			if not shift_doc or shift_doc.name != logs[0].shift:
+				shift_doc = self.get_shift_doc(logs)
+
+				if not shift_wise_working_hours.get(shift_doc.name):
+					shift_wise_working_hours[shift_doc.name] = 0.0
+
+				shift_hrs[shift_doc.name] = (
+					logs[0].shift_actual_end - logs[0].shift_actual_start
+				).seconds / 3600
+
+			working_hours, in_time, out_time = calculate_working_hours(
+				logs, shift_doc.determine_check_in_and_check_out, shift_doc.working_hours_calculation_based_on
+			)
+
+			if in_time:
+				shift_wise_working_hours[shift_doc.name] += working_hours
+
+		for shift in shift_wise_working_hours:
+			total_working_hours += shift_wise_working_hours[shift]
+			payment_days += shift_wise_working_hours[shift] / shift_hrs[shift]
+
+		self.payment_days = payment_days
+		self.total_working_hours = total_working_hours
+
+	def get_shift_doc(self, logs):
+		"""
+		Get shift doc from logs
+		"""
+		return frappe.get_cached_doc("Shift Type", logs[0].shift)
 
 	def calculate_lwp_or_ppl_based_on_leave_application(self, holidays, working_days_list):
 		lwp = 0
@@ -623,9 +669,12 @@ class SalarySlip(TransactionBase):
 
 	def calculate_component_amounts(self, component_type):
 		if not getattr(self, "_salary_structure_doc", None):
-			self._salary_structure_doc = frappe.get_doc("Salary Structure", self.salary_structure)
+			self._salary_structure_doc = frappe.get_cached_doc("Salary Structure", self.salary_structure)
 
 		payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
+
+		if self._salary_structure_doc.salary_slip_based_on_actual_working_hours:
+			self.set_working_hrs_and_payment_days_based_on_employee_checkin()
 
 		self.add_structure_components(component_type)
 		self.add_additional_salary_components(component_type)
@@ -1866,7 +1915,7 @@ def set_missing_values(time_sheet, target):
 def date_range(start=None, end=None):
 	if start and end:
 		delta = end - start  # as timedelta
-		days = [str(start + timedelta(days=i))  for i in range(delta.days + 1)]
+		days = [str(start + timedelta(days=i)) for i in range(delta.days + 1)]
 		return days
 	else:
 		return []

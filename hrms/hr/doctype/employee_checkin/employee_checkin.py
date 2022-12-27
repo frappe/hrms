@@ -37,6 +37,7 @@ class EmployeeCheckin(Document):
 		shift_actual_timings = get_actual_start_end_datetime_of_shift(
 			self.employee, get_datetime(self.time), True
 		)
+
 		if shift_actual_timings:
 			if (
 				shift_actual_timings.shift_type.determine_check_in_and_check_out
