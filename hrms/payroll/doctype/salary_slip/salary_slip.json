@@ -81,6 +81,17 @@
   "total_in_words",
   "column_break_69",
   "base_total_in_words",
+  "income_tax_calculation_breakup_section",
+  "ctc",
+  "income_from_other_sources",
+  "total_earnings",
+  "non_taxable_earnings",
+  "column_break_0rsw",
+  "deductions_before_tax_calculation",
+  "tax_exemption_declaration",
+  "standard_tax_exemption_amount",
+  "annual_taxable_amount",
+  "income_tax_deducted_till_date",
   "section_break_75",
   "journal_entry",
   "amended_from",
@@ -645,7 +656,71 @@
   },
   {
    "fieldname": "column_break_ghjr",
+   "fieldtype": "Column Break",
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "income_tax_calculation_breakup_section",
+   "fieldtype": "Section Break",
+   "label": "Income Tax Breakup"
+  },
+  {
+   "fieldname": "ctc",
+   "fieldtype": "Currency",
+   "label": "CTC",
+   "read_only": 1
+  },
+  {
+   "fieldname": "income_from_other_sources",
+   "fieldtype": "Currency",
+   "label": "Income from Other Sources",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_earnings",
+   "fieldtype": "Currency",
+   "label": "Total Earnings",
+   "read_only": 1
+  },
+  {
+   "fieldname": "non_taxable_earnings",
+   "fieldtype": "Currency",
+   "label": "Non Taxable Earnings",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_0rsw",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "deductions_before_tax_calculation",
+   "fieldtype": "Currency",
+   "label": "Deductions before tax calculation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "tax_exemption_declaration",
+   "fieldtype": "Currency",
+   "label": "Tax Exemption Declaration",
+   "read_only": 1
+  },
+  {
+   "fieldname": "standard_tax_exemption_amount",
+   "fieldtype": "Currency",
+   "label": "Standard Tax Exemption Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "annual_taxable_amount",
+   "fieldtype": "Currency",
+   "label": "Annual Taxable Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "income_tax_deducted_till_date",
+   "fieldtype": "Currency",
+   "label": "Income Tax Deducted Till Date",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-file-text",

@@ -1,9 +1,9 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
-import math
-from datetime import date, timedelta
 
+import math
+from datetime import datetime, timedelta
 import frappe
 from frappe import _, msgprint
 from frappe.model.naming import make_autoname
@@ -609,6 +609,18 @@ class SalarySlip(TransactionBase):
 				flt(self.hour_rate) * flt(self.exchange_rate), self.precision("base_hour_rate")
 			)
 		self.set_net_total_in_words()
+		self.set_income_tax_breakup()
+
+	def set_income_tax_breakup(self):
+		self.ctc = self.base_gross_pay * 12
+		self.income_from_other_sources = self.income_from_other_sources
+		self.total_earnings = self.ctc + self.income_from_other_sources
+		self.non_taxable_earnings = 0
+		self.deductions_before_tax_calculation = 0
+		self.tax_exemption_declaration = 0
+		self.standard_tax_exemption_amount = 0
+		self.annual_taxable_amount = 0
+		self.income_tax_deducted_till_date = 0
 
 	def calculate_component_amounts(self, component_type):
 		if not getattr(self, "_salary_structure_doc", None):
