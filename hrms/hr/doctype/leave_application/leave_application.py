@@ -742,9 +742,19 @@ def get_number_of_leave_days(
 	(Based on the include_holiday setting in Leave Type)"""
 	number_of_days = 0
 	if cint(half_day) == 1:
+		holiday_list_dates= get_holidays_list(employee, from_date, to_date, holiday_list=holiday_list)
+		half_day_check = 0 # to check whether the half day is in holiday
+		if not frappe.db.get_value("Leave Type", leave_type, "include_holiday"):
+			if getdate(half_day_date) not in holiday_list_dates:
+				half_day_check = 1 
+		else:
+			half_day_check = 1
+
 		if getdate(from_date) == getdate(to_date):
 			number_of_days = 0.5
-		elif half_day_date and getdate(from_date) <= getdate(half_day_date) <= getdate(to_date):
+
+		elif half_day_date and half_day_check and getdate(from_date) <= getdate(half_day_date) <= getdate(to_date):
+
 			number_of_days = date_diff(to_date, from_date) + 0.5
 		else:
 			number_of_days = date_diff(to_date, from_date) + 1
@@ -1034,6 +1044,23 @@ def get_holidays(employee, from_date, to_date, holiday_list=None):
 
 	return holidays
 
+@frappe.whitelist()
+def get_holidays_list(employee, from_date, to_date, holiday_list=None):
+	"""get holidays between two dates for the given employee"""
+	if not holiday_list:
+		holiday_list = get_holiday_list_for_employee(employee)
+
+	holidays = frappe.db.sql(
+		"""select holiday_date from `tabHoliday` h1, `tabHoliday List` h2
+		where h1.parent = h2.name and h1.holiday_date between %s and %s
+		and h2.name = %s""",
+		(from_date, to_date, holiday_list),as_list=1
+	)
+	if holidays:
+		holidays = holidays[0]
+	else:
+		holidays = []
+	return holidays
 
 def is_lwp(leave_type):
 	lwp = frappe.db.sql("select is_lwp from `tabLeave Type` where name = %s", leave_type)
