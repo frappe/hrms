@@ -1,10 +1,9 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
-
-import datetime
 import math
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
+
 import frappe
 from frappe import _, msgprint
 from frappe.model.naming import make_autoname
@@ -58,7 +57,7 @@ class SalarySlip(TransactionBase):
 			"float": float,
 			"long": int,
 			"round": round,
-			"date": datetime.date,
+			"date": date,
 			"getdate": getdate,
 		}
 
@@ -1856,7 +1855,6 @@ def set_missing_values(time_sheet, target):
 def date_range(start=None, end=None):
 	if start and end:
 		delta = end - start  # as timedelta
-		days = [str(start + timedelta(days=i))  for i in range(delta.days + 1)]
+		days = [str(start + timedelta(days=i)) for i in range(delta.days + 1)]
 		return days
-	else:
-		return []
+	return []
