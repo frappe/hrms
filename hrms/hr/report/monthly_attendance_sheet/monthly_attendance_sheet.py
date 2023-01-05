@@ -176,9 +176,7 @@ def get_total_days_in_month(filters: Filters) -> int:
 
 
 def get_data(filters: Filters, attendance_map: Dict) -> List[Dict]:
-	employee_details, group_by_param_values = get_employee_related_details(
-		filters.group_by, filters.company
-	)
+	employee_details, group_by_param_values = get_employee_related_details(filters)
 	holiday_map = get_holiday_map(filters)
 	data = []
 
@@ -243,7 +241,7 @@ def get_attendance_map(filters: Filters) -> Dict:
 	return attendance_map
 
 
-def get_employee_related_details(group_by: str, company: str) -> Tuple[Dict, List]:
+def get_employee_related_details(filters: Filters) -> Tuple[Dict, List]:
 	"""Returns
 	1. nested dict for employee details
 	2. list of values for the group by filter
@@ -261,9 +259,13 @@ def get_employee_related_details(group_by: str, company: str) -> Tuple[Dict, Lis
 			Employee.company,
 			Employee.holiday_list,
 		)
-		.where(Employee.company == company)
+		.where(Employee.company == filters.company)
 	)
 
+	if filters.employee:
+		query = query.where(Employee.name == filters.employee)
+
+	group_by = filters.group_by
 	if group_by:
 		group_by = group_by.lower()
 		query = query.orderby(group_by)
@@ -492,13 +494,14 @@ def get_attendance_status_for_detailed_view(
 
 def get_holiday_status(day: int, holidays: List) -> str:
 	status = None
-	for holiday in holidays:
-		if day == holiday.get("day_of_month"):
-			if holiday.get("weekly_off"):
-				status = "Weekly Off"
-			else:
-				status = "Holiday"
-			break
+	if holidays:
+		for holiday in holidays:
+			if day == holiday.get("day_of_month"):
+				if holiday.get("weekly_off"):
+					status = "Weekly Off"
+				else:
+					status = "Holiday"
+				break
 	return status
 
 
@@ -572,7 +575,7 @@ def get_attendance_years() -> str:
 	if year_list:
 		year_list.sort(key=lambda d: d.year, reverse=True)
 	else:
-		year_list = [getdate().year]
+		year_list = [frappe._dict({"year": getdate().year})]
 
 	return "\n".join(cstr(entry.year) for entry in year_list)
 
