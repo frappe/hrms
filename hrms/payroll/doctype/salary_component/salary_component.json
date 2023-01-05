@@ -9,6 +9,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "overview_tab",
   "salary_component",
   "salary_component_abbr",
   "type",
@@ -27,19 +28,20 @@
   "section_break_5",
   "accounts",
   "configure_component_tab",
-  "is_flexible_benefit",
-  "max_benefit_amount",
-  "column_break_9",
-  "pay_against_benefit_claim",
-  "only_tax_impact",
-  "create_separate_payment_entry_against_benefit_claim",
   "condition_and_formula",
   "condition",
   "amount",
   "amount_based_on_formula",
   "formula",
   "column_break_28",
-  "help"
+  "help",
+  "flexible_benefits_tab",
+  "is_flexible_benefit",
+  "max_benefit_amount",
+  "column_break_9",
+  "pay_against_benefit_claim",
+  "only_tax_impact",
+  "create_separate_payment_entry_against_benefit_claim"
  ],
  "fields": [
   {
@@ -174,12 +176,9 @@
    "options": "Salary Component Account"
   },
   {
-   "collapsible": 1,
-   "collapsible_depends_on": "eval:doc.condition || doc.formula",
    "depends_on": "eval:doc.is_flexible_benefit != 1 && doc.variable_based_on_taxable_salary != 1",
    "fieldname": "condition_and_formula",
-   "fieldtype": "Section Break",
-   "label": "Condition and Formula"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "condition",
@@ -236,16 +235,26 @@
    "label": "Is Income Tax Component"
   },
   {
-   "depends_on": "eval:doc.type==\"Earning\" && doc.statistical_component!=1",
    "fieldname": "configure_component_tab",
    "fieldtype": "Tab Break",
-   "label": "Configure Component"
+   "label": "Condition & Formula"
+  },
+  {
+   "fieldname": "overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "depends_on": "eval:doc.type==\"Earning\" && doc.statistical_component!=1",
+   "fieldname": "flexible_benefits_tab",
+   "fieldtype": "Tab Break",
+   "label": "Flexible Benefits"
   }
  ],
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-11-09 16:45:10.873844",
+ "modified": "2023-01-05 13:08:30.234871",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",

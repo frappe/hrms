@@ -7,46 +7,49 @@
  "engine": "InnoDB",
  "field_order": [
   "details_tab",
-  "posting_date",
-  "salary_structure",
-  "payroll_entry",
-  "mode_of_payment",
-  "status",
-  "column_break_6",
-  "payroll_frequency",
-  "start_date",
-  "end_date",
-  "column_break1",
-  "salary_slip_based_on_timesheet",
-  "deduct_tax_for_unclaimed_employee_benefits",
-  "deduct_tax_for_unsubmitted_tax_exemption_proof",
   "section_break_6",
   "employee",
   "employee_name",
   "department",
   "designation",
   "branch",
+  "column_break_obdl",
+  "posting_date",
+  "letter_head",
   "column_break_18",
+  "status",
   "company",
   "currency",
   "exchange_rate",
-  "letter_head",
-  "column_break_24",
+  "section_break_gsts",
+  "payroll_frequency",
+  "start_date",
+  "end_date",
+  "column_break_ptcc",
+  "salary_structure",
+  "payroll_entry",
+  "mode_of_payment",
+  "column_break1",
+  "salary_slip_based_on_timesheet",
+  "section_break_wrwj",
+  "deduct_tax_for_unclaimed_employee_benefits",
+  "deduct_tax_for_unsubmitted_tax_exemption_proof",
+  "payment_days_tab",
   "total_working_days",
   "unmarked_days",
   "leave_without_pay",
+  "column_break_geio",
   "absent_days",
   "payment_days",
-  "hourly_wages",
+  "earning_deduction",
   "timesheets",
-  "column_break_20",
+  "column_break_ghjr",
   "total_working_hours",
   "hour_rate",
   "base_hour_rate",
-  "earning_deduction",
-  "earning",
+  "section_break_gerh",
   "earnings",
-  "deduction",
+  "column_break_ywkr",
   "deductions",
   "totals",
   "gross_pay",
@@ -66,24 +69,26 @@
   "net_pay_info",
   "net_pay",
   "base_net_pay",
+  "column_break_dqnd",
   "year_to_date",
   "base_year_to_date",
+  "month_to_date",
+  "base_month_to_date",
   "column_break_53",
   "rounded_total",
   "base_rounded_total",
-  "month_to_date",
-  "base_month_to_date",
   "section_break_55",
   "total_in_words",
   "column_break_69",
   "base_total_in_words",
-  "leave_details_section",
-  "leave_details",
   "section_break_75",
-  "amended_from",
   "journal_entry",
+  "amended_from",
+  "column_break_ieob",
   "bank_name",
-  "bank_account_no"
+  "bank_account_no",
+  "leave_details_section",
+  "leave_details"
  ],
  "fields": [
   {
@@ -258,18 +263,10 @@
    "reqd": 1
   },
   {
-   "fieldname": "hourly_wages",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "timesheets",
    "fieldtype": "Table",
    "label": "Salary Slip Timesheet",
    "options": "Salary Slip Timesheet"
-  },
-  {
-   "fieldname": "column_break_20",
-   "fieldtype": "Column Break"
   },
   {
    "fetch_from": "timesheet.total_hours",
@@ -314,24 +311,12 @@
    "oldfieldtype": "Section Break"
   },
   {
-   "fieldname": "earning",
-   "fieldtype": "Column Break",
-   "oldfieldtype": "Column Break",
-   "width": "50%"
-  },
-  {
    "fieldname": "earnings",
    "fieldtype": "Table",
    "label": "Earnings",
    "oldfieldname": "earning_details",
    "oldfieldtype": "Table",
    "options": "Salary Detail"
-  },
-  {
-   "fieldname": "deduction",
-   "fieldtype": "Column Break",
-   "oldfieldtype": "Column Break",
-   "width": "50%"
   },
   {
    "fieldname": "deductions",
@@ -462,10 +447,6 @@
    "label": "Unmarked days"
   },
   {
-   "fieldname": "column_break_24",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "column_break_18",
    "fieldtype": "Column Break"
   },
@@ -497,7 +478,7 @@
   {
    "fieldname": "section_break_75",
    "fieldtype": "Tab Break",
-   "label": "References"
+   "label": "Bank Details"
   },
   {
    "fieldname": "base_hour_rate",
@@ -588,7 +569,7 @@
   {
    "fieldname": "leave_details_section",
    "fieldtype": "Tab Break",
-   "label": "Leave Details"
+   "label": "Leaves"
   },
   {
    "fieldname": "leave_details",
@@ -622,7 +603,48 @@
    "label": "Employee Details"
   },
   {
-   "fieldname": "column_break_6",
+   "fieldname": "section_break_gsts",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_obdl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ptcc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_gerh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ywkr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "payment_days_tab",
+   "fieldtype": "Tab Break",
+   "label": "Payment Days"
+  },
+  {
+   "fieldname": "column_break_geio",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_dqnd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ieob",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_wrwj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ghjr",
    "fieldtype": "Column Break"
   }
  ],
@@ -630,7 +652,7 @@
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-09 16:51:38.831947",
+ "modified": "2023-01-05 15:10:58.042266",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
