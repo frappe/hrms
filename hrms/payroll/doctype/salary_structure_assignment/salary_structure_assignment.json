@@ -7,7 +7,6 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "employee_details_tab",
   "employee",
   "employee_name",
   "department",
@@ -180,14 +179,10 @@
    "read_only": 1
   },
   {
-   "fieldname": "employee_details_tab",
-   "fieldtype": "Tab Break",
-   "label": "Employee"
-  },
-  {
    "fieldname": "column_break_11",
    "fieldtype": "Column Break"
   },
+  {
    "allow_on_submit": 1,
    "fieldname": "tax_deducted_till_date",
    "fieldtype": "Currency",
@@ -215,7 +210,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-05 11:43:57.942233",
+ "modified": "2023-01-05 12:00:57.942233",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",
