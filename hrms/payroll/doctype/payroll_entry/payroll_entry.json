@@ -8,28 +8,28 @@
  "engine": "InnoDB",
  "field_order": [
   "select_payroll_period",
+  "posting_date",
+  "payroll_frequency",
   "company",
+  "column_break_5",
   "currency",
   "exchange_rate",
-  "column_break_5",
-  "posting_date",
-  "status",
   "payroll_payable_account",
-  "column_break_13",
-  "salary_slip_based_on_timesheet",
-  "payroll_frequency",
+  "status",
+  "section_break_cypo",
   "start_date",
   "end_date",
+  "column_break_13",
+  "salary_slip_based_on_timesheet",
   "deduct_tax_for_unclaimed_employee_benefits",
   "deduct_tax_for_unsubmitted_tax_exemption_proof",
   "employees_tab",
   "section_break_17",
   "branch",
-  "get_employees",
-  "number_of_employees",
+  "department",
   "column_break_21",
   "designation",
-  "department",
+  "number_of_employees",
   "section_break_24",
   "employees",
   "section_break_26",
@@ -42,14 +42,15 @@
   "project",
   "account",
   "payment_account",
-  "bank_account",
   "column_break_35",
+  "bank_account",
   "salary_slips_created",
   "salary_slips_submitted",
   "failure_details_section",
   "error_message",
   "section_break_41",
-  "amended_from"
+  "amended_from",
+  "connections_tab"
  ],
  "fields": [
   {
@@ -104,7 +105,6 @@
   {
    "fieldname": "employees",
    "fieldtype": "Table",
-   "label": "Employee Details",
    "options": "Payroll Employee Detail"
   },
   {
@@ -126,7 +126,7 @@
   {
    "fieldname": "select_payroll_period",
    "fieldtype": "Tab Break",
-   "label": "Payroll"
+   "label": "Overview"
   },
   {
    "fieldname": "start_date",
@@ -285,7 +285,8 @@
   },
   {
    "fieldname": "section_break_24",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Employee Details"
   },
   {
    "fieldname": "section_break_26",
@@ -300,30 +301,35 @@
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval:doc.docstatus==0",
-   "fieldname": "get_employees",
-   "fieldtype": "Button",
-   "label": "Get Employees"
-  },
-  {
    "fieldname": "accounting_dimensions_tab",
    "fieldtype": "Tab Break",
-   "label": "Accounting and Payment"
+   "label": "Accounting & Payment"
   },
   {
    "fieldname": "section_break_17",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Filter Employees"
   },
   {
    "fieldname": "employees_tab",
    "fieldtype": "Tab Break",
    "label": "Employees"
+  },
+  {
+   "fieldname": "section_break_cypo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
   }
  ],
  "icon": "fa fa-cog",
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-09 16:32:16.521580",
+ "modified": "2023-01-05 17:07:00.372983",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",
