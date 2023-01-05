@@ -52,7 +52,7 @@
    "label": "Rules"
   },
   {
-   "description": "Leave <b>From</b> and <b>To</b> 0 for no upper and lower limit.",
+   "description": "Set \"From(Year)\" and \"To(Year)\" to 0 for no upper and lower limit.",
    "fieldname": "gratuity_rule_slabs",
    "fieldtype": "Table",
    "label": "Current Work Experience",
@@ -93,7 +93,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-11-01 12:32:12.973686",
+ "modified": "2023-01-05 12:36:32.412409",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Gratuity Rule",

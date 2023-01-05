@@ -8,20 +8,20 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "employee_details_tab",
+  "employee_section",
   "employee",
-  "company",
-  "amended_from",
-  "column_break_6",
   "employee_name",
-  "date_of_joining",
   "department",
-  "bonus_details_tab",
+  "column_break_6",
+  "company",
+  "date_of_joining",
+  "bonus_section",
   "salary_component",
   "bonus_amount",
   "column_break_12",
   "bonus_payment_date",
-  "currency"
+  "currency",
+  "amended_from"
  ],
  "fields": [
   {
@@ -106,23 +106,23 @@
    "reqd": 1
   },
   {
-   "fieldname": "employee_details_tab",
+   "fieldname": "column_break_12",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee_section",
    "fieldtype": "Section Break",
    "label": "Employee"
   },
   {
-   "fieldname": "bonus_details_tab",
+   "fieldname": "bonus_section",
    "fieldtype": "Section Break",
    "label": "Bonus"
-  },
-  {
-   "fieldname": "column_break_12",
-   "fieldtype": "Column Break"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-01 13:11:32.287586",
+ "modified": "2023-01-05 12:48:25.678478",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Retention Bonus",
