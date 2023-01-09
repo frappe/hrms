@@ -6,14 +6,17 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "employee_details_section",
   "employee",
   "employee_name",
-  "payroll_period",
+  "amended_from",
   "column_break_3",
   "company",
+  "payroll_period",
+  "income_source_details_section",
   "source",
-  "amount",
-  "amended_from"
+  "column_break_10",
+  "amount"
  ],
  "fields": [
   {
@@ -72,11 +75,25 @@
    "options": "Employee Other Income",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "employee_section",
+   "fieldtype": "Section Break",
+   "label": "Employee"
+  },
+  {
+   "fieldname": "income_source_details_section",
+   "fieldtype": "Section Break",
+   "label": "Income Source"
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-19 12:58:43.255900",
+ "modified": "2023-01-05 12:00:57.942233",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Other Income",

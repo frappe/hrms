@@ -759,17 +759,21 @@ class PayrollEntry(Document):
 				"Employee", employee_detail.employee, "date_of_joining"
 			)
 			start_date = self.start_date
+
 			if employee_joining_date > getdate(self.start_date):
 				start_date = employee_joining_date
+
 			days_holiday = self.get_count_holidays_of_employee(employee_detail.employee, start_date)
 			days_attendance_marked = self.get_count_employee_attendance(
 				employee_detail.employee, start_date
 			)
 			days_in_payroll = date_diff(self.end_date, start_date) + 1
+
 			if days_in_payroll > days_holiday + days_attendance_marked:
 				employees_to_mark_attendance.append(
 					{"employee": employee_detail.employee, "employee_name": employee_detail.employee_name}
 				)
+
 		return employees_to_mark_attendance
 
 	def get_count_holidays_of_employee(self, employee, start_date):

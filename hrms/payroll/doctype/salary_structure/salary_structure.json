@@ -12,16 +12,17 @@
   "letter_head",
   "column_break1",
   "is_active",
+  "is_default",
   "payroll_frequency",
   "currency",
-  "is_default",
+  "amended_from",
   "time_sheet_earning_detail",
-  "salary_slip_based_on_timesheet",
-  "column_break_17",
-  "salary_component",
-  "hour_rate",
   "leave_encashment_amount_per_day",
   "max_benefits",
+  "column_break_17",
+  "salary_slip_based_on_timesheet",
+  "salary_component",
+  "hour_rate",
   "earning_deduction",
   "earnings",
   "deductions",
@@ -34,8 +35,7 @@
   "account",
   "mode_of_payment",
   "column_break_28",
-  "payment_account",
-  "amended_from"
+  "payment_account"
  ],
  "fields": [
   {
@@ -131,7 +131,8 @@
   {
    "description": "Salary breakup based on Earning and Deduction.",
    "fieldname": "earning_deduction",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
+   "label": "Earnings & Deductions",
    "oldfieldname": "earning_deduction",
    "oldfieldtype": "Section Break",
    "precision": "2"
@@ -188,7 +189,7 @@
   },
   {
    "fieldname": "account",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Account"
   },
   {
@@ -233,7 +234,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-02-03 23:50:10.205676",
+ "modified": "2023-01-05 13:39:47.519380",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure",

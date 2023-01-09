@@ -14,13 +14,14 @@
   "claim_date",
   "currency",
   "company",
+  "amended_from",
   "benefit_type_and_amount",
   "earning_component",
   "max_amount_eligible",
+  "column_break_12",
   "pay_against_benefit_claim",
   "claimed_amount",
   "salary_slip",
-  "amended_from",
   "section_break_9",
   "attachments"
  ],
@@ -63,7 +64,7 @@
   {
    "fieldname": "benefit_type_and_amount",
    "fieldtype": "Section Break",
-   "label": "Benefit Type and Amount"
+   "label": "Benefits"
   },
   {
    "fieldname": "earning_component",
@@ -140,11 +141,15 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "column_break_12",
+   "fieldtype": "Column Break"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-19 12:59:15.699118",
+ "modified": "2022-11-08 16:41:02.260427",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Benefit Claim",
