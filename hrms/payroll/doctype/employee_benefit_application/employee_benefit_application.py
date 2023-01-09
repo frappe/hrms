@@ -334,7 +334,6 @@ def get_earning_components(doctype, txt, searchfield, start, page_len, filters):
 		return {}
 
 	salary_structure = get_assigned_salary_structure(filters["employee"], filters["date"])
-
 	if salary_structure:
 		return frappe.db.sql(
 			"""

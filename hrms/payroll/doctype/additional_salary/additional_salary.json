@@ -7,30 +7,30 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "employee_details_section",
   "naming_series",
   "employee",
   "employee_name",
-  "column_break_5",
-  "company",
   "department",
-  "salary_details_section",
-  "salary_component",
-  "type",
-  "currency",
-  "amount",
-  "column_break_13",
+  "column_break_5",
   "is_recurring",
   "payroll_date",
   "from_date",
   "to_date",
-  "properties_and_references_section",
+  "column_break_10",
+  "company",
+  "amended_from",
+  "salary_details_section",
+  "salary_component",
+  "type",
+  "column_break_13",
+  "currency",
+  "amount",
+  "column_break_8",
   "deduct_full_tax_on_selected_payroll_date",
-  "ref_doctype",
-  "ref_docname",
-  "column_break_22",
   "overwrite_salary_structure_amount",
-  "amended_from"
+  "properties_and_references_section",
+  "ref_doctype",
+  "ref_docname"
  ],
  "fields": [
   {
@@ -179,32 +179,31 @@
    "reqd": 1
   },
   {
-   "fieldname": "employee_details_section",
-   "fieldtype": "Section Break",
-   "label": "Employee Details"
-  },
-  {
    "fieldname": "column_break_13",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_22",
    "fieldtype": "Column Break"
   },
   {
    "fieldname": "salary_details_section",
    "fieldtype": "Section Break",
-   "label": "Salary Details"
+   "label": "Salary"
   },
   {
    "fieldname": "properties_and_references_section",
    "fieldtype": "Section Break",
-   "label": "Properties and References"
+   "label": "References"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-19 12:56:51.765353",
+ "modified": "2022-11-08 15:01:45.702987",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Additional Salary",

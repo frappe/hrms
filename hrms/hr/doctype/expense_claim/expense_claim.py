@@ -100,10 +100,8 @@ class ExpenseClaim(AccountsController):
 		self.update_task_and_project()
 		self.make_gl_entries()
 
-		if self.is_paid:
-			update_reimbursed_amount(self, self.grand_total)
+		update_reimbursed_amount(self)
 
-		self.set_status(update=True)
 		self.update_claimed_amount_in_employee_advance()
 
 	def on_cancel(self):
@@ -112,8 +110,7 @@ class ExpenseClaim(AccountsController):
 		if self.payable_account:
 			self.make_gl_entries(cancel=True)
 
-		if self.is_paid:
-			update_reimbursed_amount(self, -1 * self.grand_total)
+		update_reimbursed_amount(self)
 
 		self.update_claimed_amount_in_employee_advance()
 
@@ -339,14 +336,31 @@ class ExpenseClaim(AccountsController):
 				]
 
 
-def update_reimbursed_amount(doc, amount):
-	doc.total_amount_reimbursed += amount
-	frappe.db.set_value(
-		"Expense Claim", doc.name, "total_amount_reimbursed", doc.total_amount_reimbursed
-	)
+def update_reimbursed_amount(doc):
+	total_amount_reimbursed = get_total_reimbursed_amount(doc)
 
-	doc.set_status()
-	frappe.db.set_value("Expense Claim", doc.name, "status", doc.status)
+	doc.total_amount_reimbursed = total_amount_reimbursed
+	frappe.db.set_value("Expense Claim", doc.name, "total_amount_reimbursed", total_amount_reimbursed)
+
+	doc.set_status(update=True)
+
+
+def get_total_reimbursed_amount(doc):
+	if doc.is_paid:
+		# No need to check for cancelled state here as it will anyways update status as cancelled
+		return doc.grand_total
+	else:
+		amount_via_jv = frappe.db.get_value(
+			"Journal Entry Account",
+			{"reference_name": doc.name, "docstatus": 1},
+			"sum(debit_in_account_currency - credit_in_account_currency)",
+		)
+
+		amount_via_payment_entry = frappe.db.get_value(
+			"Payment Entry Reference", {"reference_name": doc.name, "docstatus": 1}, "sum(allocated_amount)"
+		)
+
+		return flt(amount_via_jv) + flt(amount_via_payment_entry)
 
 
 def get_outstanding_amount_for_claim(claim):
@@ -407,8 +421,6 @@ def make_bank_entry(dt, dn):
 		{
 			"account": default_bank_cash_account.account,
 			"credit_in_account_currency": payable_amount,
-			"reference_type": "Expense Claim",
-			"reference_name": expense_claim.name,
 			"balance": default_bank_cash_account.balance,
 			"account_currency": default_bank_cash_account.account_currency,
 			"cost_center": erpnext.get_default_cost_center(expense_claim.company),
@@ -505,16 +517,15 @@ def update_payment_for_expense_claim(doc, method=None):
 		return
 
 	payment_table = "accounts" if doc.doctype == "Journal Entry" else "references"
-	amount_field = "debit" if doc.doctype == "Journal Entry" else "allocated_amount"
 	doctype_field = "reference_type" if doc.doctype == "Journal Entry" else "reference_doctype"
 
 	for d in doc.get(payment_table):
 		if d.get(doctype_field) == "Expense Claim" and d.reference_name:
 			expense_claim = frappe.get_doc("Expense Claim", d.reference_name)
 			if doc.docstatus == 2:
-				update_reimbursed_amount(expense_claim, -1 * d.get(amount_field))
+				update_reimbursed_amount(expense_claim)
 			else:
-				update_reimbursed_amount(expense_claim, d.get(amount_field))
+				update_reimbursed_amount(expense_claim)
 
 
 def validate_expense_claim_in_jv(doc, method=None):

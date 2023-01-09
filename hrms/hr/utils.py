@@ -342,7 +342,7 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 
 def get_monthly_earned_leave(annual_leaves, frequency, rounding):
 	earned_leaves = 0.0
-	divide_by_frequency = {"Yearly": 1, "Half-Yearly": 6, "Quarterly": 4, "Monthly": 12}
+	divide_by_frequency = {"Yearly": 1, "Half-Yearly": 2, "Quarterly": 4, "Monthly": 12}
 	if annual_leaves:
 		earned_leaves = flt(annual_leaves) / divide_by_frequency[frequency]
 		if rounding:
@@ -571,7 +571,9 @@ def get_previous_claimed_amount(employee, payroll_period, non_pro_rata=False, co
 def share_doc_with_approver(doc, user):
 	# if approver does not have permissions, share
 	if not frappe.has_permission(doc=doc, ptype="submit", user=user):
-		frappe.share.add(doc.doctype, doc.name, user, submit=1, flags={"ignore_share_permission": True})
+		frappe.share.add_docshare(
+			doc.doctype, doc.name, user, submit=1, flags={"ignore_share_permission": True}
+		)
 
 		frappe.msgprint(
 			_("Shared with the user {0} with {1} access").format(user, frappe.bold("submit"), alert=True)

@@ -6,7 +6,7 @@ import unittest
 from dateutil.relativedelta import relativedelta
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests.utils import FrappeTestCase, change_settings
 from frappe.utils import add_months
 
 import erpnext
@@ -123,11 +123,15 @@ class TestPayrollEntry(FrappeTestCase):
 
 		payment_entry = frappe.db.sql(
 			"""
-			Select ifnull(sum(je.total_debit),0) as total_debit, ifnull(sum(je.total_credit),0) as total_credit from `tabJournal Entry` je, `tabJournal Entry Account` jea
-			Where je.name = jea.parent
-			And jea.reference_name = %s
+			select
+				ifnull(sum(je.total_debit),0) as total_debit,
+				ifnull(sum(je.total_credit),0) as total_credit
+			from `tabJournal Entry` je, `tabJournal Entry Account` jea
+			where je.name = jea.parent
+				and je.voucher_type = 'Bank Entry'
+				and jea.reference_name = %s
 			""",
-			(payroll_entry.name),
+			payroll_entry.name,
 			as_dict=1,
 		)
 		self.assertEqual(salary_slip.base_net_pay, payment_entry[0].total_debit)
@@ -253,6 +257,7 @@ class TestPayrollEntry(FrappeTestCase):
 				loan_account="Loan Account - _TC",
 				interest_income_account="Interest Income Account - _TC",
 				penalty_income_account="Penalty Income Account - _TC",
+				repayment_schedule_type="Monthly as per repayment start date",
 			)
 
 		loan = create_loan(
@@ -397,6 +402,69 @@ class TestPayrollEntry(FrappeTestCase):
 
 		payroll_entry.cancel()
 		self.assertEqual(payroll_entry.status, "Cancelled")
+
+	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1})
+	def test_payroll_accrual_journal_entry_with_employee_tagging(self):
+		company_doc = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee(
+			"test_payroll_accrual_journal_entry_with_employee_tagging@payroll.com", company=company_doc.name
+		)
+
+		setup_salary_structure(employee, company_doc)
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = make_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company_doc.default_payroll_payable_account,
+			currency=company_doc.default_currency,
+			company=company_doc.name,
+			cost_center="Main - _TC",
+		)
+
+		salary_slip = frappe.db.get_value("Salary Slip", {"payroll_entry": payroll_entry.name}, "name")
+		salary_slip = frappe.get_doc("Salary Slip", salary_slip)
+		payroll_entry.reload()
+		payroll_je = salary_slip.journal_entry
+
+		if payroll_je:
+			payroll_je_doc = frappe.get_doc("Journal Entry", payroll_je)
+			for account in payroll_je_doc.accounts:
+				if account.account == company_doc.default_payroll_payable_account:
+					self.assertEqual(account.party_type, "Employee")
+					self.assertEqual(account.party, employee)
+
+	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0})
+	def test_payroll_accrual_journal_entry_without_employee_tagging(self):
+		company_doc = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee(
+			"test_payroll_accrual_journal_entry_without_employee_tagging@payroll.com",
+			company=company_doc.name,
+		)
+
+		setup_salary_structure(employee, company_doc)
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = make_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company_doc.default_payroll_payable_account,
+			currency=company_doc.default_currency,
+			company=company_doc.name,
+			cost_center="Main - _TC",
+		)
+
+		salary_slip = frappe.db.get_value("Salary Slip", {"payroll_entry": payroll_entry.name}, "name")
+		salary_slip = frappe.get_doc("Salary Slip", salary_slip)
+		payroll_entry.reload()
+		payroll_je = salary_slip.journal_entry
+
+		if payroll_je:
+			payroll_je_doc = frappe.get_doc("Journal Entry", payroll_je)
+			for account in payroll_je_doc.accounts:
+				if account.account == company_doc.default_payroll_payable_account:
+					self.assertEqual(account.party_type, None)
+					self.assertEqual(account.party, None)
 
 
 def get_payroll_entry(**args):

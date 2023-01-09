@@ -174,7 +174,7 @@ def get_onboarding_details(parent, parenttype):
 	)
 
 
-def update_employee_boarding_status(project):
+def update_employee_boarding_status(project, event=None):
 	employee_onboarding = frappe.db.exists("Employee Onboarding", {"project": project.name})
 	employee_separation = frappe.db.exists("Employee Separation", {"project": project.name})
 
@@ -191,3 +191,8 @@ def update_employee_boarding_status(project):
 		frappe.db.set_value("Employee Onboarding", employee_onboarding, "boarding_status", status)
 	elif employee_separation:
 		frappe.db.set_value("Employee Separation", employee_separation, "boarding_status", status)
+
+
+def update_task(task, event=None):
+	if task.project and not task.flags.from_project:
+		update_employee_boarding_status(frappe.get_cached_doc("Project", task.project))

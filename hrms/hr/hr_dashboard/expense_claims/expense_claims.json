@@ -1,0 +1,43 @@
+{
+ "cards": [
+  {
+   "card": "Expense Claims (This Month)"
+  },
+  {
+   "card": "Approved Claims (This Month)"
+  },
+  {
+   "card": "Rejected Claims (This Month)"
+  }
+ ],
+ "charts": [
+  {
+   "chart": "Expense Claims",
+   "width": "Full"
+  },
+  {
+   "chart": "Claims by Type",
+   "width": "Half"
+  },
+  {
+   "chart": "Employee Advance Status",
+   "width": "Half"
+  },
+  {
+   "chart": "Department wise Expense Claims",
+   "width": "Full"
+  }
+ ],
+ "creation": "2022-08-31 23:00:07.341160",
+ "dashboard_name": "Expense Claims",
+ "docstatus": 0,
+ "doctype": "Dashboard",
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "modified": "2022-09-16 11:36:44.704033",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Expense Claims",
+ "owner": "Administrator"
+}

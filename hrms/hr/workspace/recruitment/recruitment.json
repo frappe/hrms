@@ -104,7 +104,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Recruitment Analytics",
    "link_count": 0,
    "link_to": "Recruitment Analytics",
@@ -182,7 +182,7 @@
   }
  ],
  "modified": "2022-08-30 14:27:22.207771",
- "modified_by": "ruchamahabal2@gmail.com",
+ "modified_by": "Administrator",
  "module": "HR",
  "name": "Recruitment",
  "owner": "Administrator",

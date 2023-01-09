@@ -9,6 +9,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "overview_tab",
   "salary_component",
   "salary_component_abbr",
   "type",
@@ -24,22 +25,23 @@
   "statistical_component",
   "do_not_include_in_total",
   "disabled",
-  "flexible_benefits",
-  "is_flexible_benefit",
-  "max_benefit_amount",
-  "column_break_9",
-  "pay_against_benefit_claim",
-  "only_tax_impact",
-  "create_separate_payment_entry_against_benefit_claim",
   "section_break_5",
   "accounts",
+  "configure_component_tab",
   "condition_and_formula",
   "condition",
   "amount",
   "amount_based_on_formula",
   "formula",
   "column_break_28",
-  "help"
+  "help",
+  "flexible_benefits_tab",
+  "is_flexible_benefit",
+  "max_benefit_amount",
+  "column_break_9",
+  "pay_against_benefit_claim",
+  "only_tax_impact",
+  "create_separate_payment_entry_against_benefit_claim"
  ],
  "fields": [
   {
@@ -118,12 +120,6 @@
    "label": "Statistical Component"
   },
   {
-   "depends_on": "eval:doc.type==\"Earning\" && doc.statistical_component!=1",
-   "fieldname": "flexible_benefits",
-   "fieldtype": "Section Break",
-   "label": "Flexible Benefits"
-  },
-  {
    "default": "0",
    "fieldname": "is_flexible_benefit",
    "fieldtype": "Check",
@@ -180,11 +176,9 @@
    "options": "Salary Component Account"
   },
   {
-   "collapsible": 1,
    "depends_on": "eval:doc.is_flexible_benefit != 1 && doc.variable_based_on_taxable_salary != 1",
    "fieldname": "condition_and_formula",
-   "fieldtype": "Section Break",
-   "label": "Condition and Formula"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "condition",
@@ -239,15 +233,32 @@
    "fieldname": "is_income_tax_component",
    "fieldtype": "Check",
    "label": "Is Income Tax Component"
+  },
+  {
+   "fieldname": "configure_component_tab",
+   "fieldtype": "Tab Break",
+   "label": "Condition & Formula"
+  },
+  {
+   "fieldname": "overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "depends_on": "eval:doc.type==\"Earning\" && doc.statistical_component!=1",
+   "fieldname": "flexible_benefits_tab",
+   "fieldtype": "Tab Break",
+   "label": "Flexible Benefits"
   }
  ],
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2020-10-07 20:38:33.795853",
+ "modified": "2023-01-05 13:08:30.234871",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -268,5 +279,6 @@
   }
  ],
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "states": []
 }

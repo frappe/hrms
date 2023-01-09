@@ -1,9 +1,8 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
-
-import datetime
 import math
+from datetime import date, datetime, timedelta
 
 import frappe
 from frappe import _, msgprint
@@ -58,7 +57,7 @@ class SalarySlip(TransactionBase):
 			"float": float,
 			"long": int,
 			"round": round,
-			"date": datetime.date,
+			"date": date,
 			"getdate": getdate,
 		}
 
@@ -322,8 +321,11 @@ class SalarySlip(TransactionBase):
 			return
 
 		holidays = self.get_holidays_for_employee(self.start_date, self.end_date)
+		working_days_list = date_range(getdate(self.start_date), getdate(self.end_date))
 
 		if not cint(include_holidays_in_total_working_days):
+			working_days_list = [i for i in working_days_list if i not in holidays]
+
 			working_days -= len(holidays)
 			if working_days < 0:
 				frappe.throw(_("There are more holidays than working days this month."))
@@ -335,7 +337,7 @@ class SalarySlip(TransactionBase):
 			actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(holidays)
 			self.absent_days = absent
 		else:
-			actual_lwp = self.calculate_lwp_or_ppl_based_on_leave_application(holidays, working_days)
+			actual_lwp = self.calculate_lwp_or_ppl_based_on_leave_application(holidays, working_days_list)
 
 		if not lwp:
 			lwp = actual_lwp
@@ -458,16 +460,16 @@ class SalarySlip(TransactionBase):
 	def get_holidays_for_employee(self, start_date, end_date):
 		return get_holiday_dates_for_employee(self.employee, start_date, end_date)
 
-	def calculate_lwp_or_ppl_based_on_leave_application(self, holidays, working_days):
+	def calculate_lwp_or_ppl_based_on_leave_application(self, holidays, working_days_list):
 		lwp = 0
 		holidays = "','".join(holidays)
 		daily_wages_fraction_for_half_day = (
 			flt(frappe.db.get_value("Payroll Settings", None, "daily_wages_fraction_for_half_day")) or 0.5
 		)
 
-		for d in range(working_days):
-			date = add_days(cstr(getdate(self.start_date)), d)
-			leave = get_lwp_or_ppl_for_date(date, self.employee, holidays)
+		for d in working_days_list:
+			# date = add_days(cstr(getdate(self.start_date)), d)
+			leave = get_lwp_or_ppl_for_date(d, self.employee, holidays)
 
 			if leave:
 				equivalent_lwp_count = 0
@@ -632,9 +634,19 @@ class SalarySlip(TransactionBase):
 				continue
 
 			amount = self.eval_condition_and_formula(struct_row, data)
-			if (
-				amount or (struct_row.amount_based_on_formula and amount is not None)
-			) and struct_row.statistical_component == 0:
+
+			if struct_row.statistical_component:
+				# update statitical component amount in reference data based on payment days
+				# since row for statistical component is not added to salary slip
+				if struct_row.depends_on_payment_days:
+					joining_date, relieving_date = self.get_joining_and_relieving_dates()
+					default_data[struct_row.abbr] = amount
+					data[struct_row.abbr] = flt(
+						(flt(amount) * flt(self.payment_days) / cint(self.total_working_days)),
+						struct_row.precision("amount"),
+					)
+
+			elif amount or struct_row.amount_based_on_formula and amount is not None:
 				default_amount = self.eval_condition_and_formula(struct_row, default_data)
 				self.update_component_row(
 					struct_row, amount, component_type, data=data, default_amount=default_amount
@@ -687,8 +699,8 @@ class SalarySlip(TransactionBase):
 
 		for key in ("earnings", "deductions"):
 			for d in self.get(key):
-				default_data[d.abbr] = d.default_amount
-				data[d.abbr] = d.amount
+				default_data[d.abbr] = d.default_amount or 0
+				data[d.abbr] = d.amount or 0
 
 		return data, default_data
 
@@ -914,7 +926,8 @@ class SalarySlip(TransactionBase):
 		remaining_sub_periods = get_period_factor(
 			self.employee, self.start_date, self.end_date, self.payroll_frequency, payroll_period
 		)[1]
-		# get taxable_earnings, paid_taxes for previous period
+
+		# get taxable_earnings, opening_taxable_earning, paid_taxes for previous period
 		previous_taxable_earnings = self.get_taxable_earnings_for_prev_period(
 			payroll_period.start_date, self.start_date, tax_slab.allow_tax_exemption
 		)
@@ -1058,7 +1071,26 @@ class SalarySlip(TransactionBase):
 			)
 			exempted_amount = flt(exempted_amount[0][0]) if exempted_amount else 0
 
-		return taxable_earnings - exempted_amount
+		opening_taxable_earning = self.get_opening_for(
+			"taxable_earnings_till_date", start_date, end_date
+		)
+
+		return (taxable_earnings + opening_taxable_earning) - exempted_amount
+
+	def get_opening_for(self, field_to_select, start_date, end_date):
+		return (
+			frappe.db.get_value(
+				"Salary Structure Assignment",
+				{
+					"employee": self.employee,
+					"salary_structure": self.salary_structure,
+					"from_date": ["between", [start_date, end_date]],
+					"docstatus": 1,
+				},
+				field_to_select,
+			)
+			or 0
+		)
 
 	def get_tax_paid_in_period(self, start_date, end_date, tax_component):
 		# find total_tax_paid, tax paid for benefit, additional_salary
@@ -1087,7 +1119,9 @@ class SalarySlip(TransactionBase):
 			)[0][0]
 		)
 
-		return total_tax_paid
+		tax_deducted_till_date = self.get_opening_for("tax_deducted_till_date", start_date, end_date)
+
+		return total_tax_paid + tax_deducted_till_date
 
 	def get_taxable_earnings(
 		self, allow_tax_exemption=False, based_on_payment_days=0, payroll_period=None
@@ -1708,6 +1742,7 @@ def calculate_tax_by_tax_slab(
 		if not slab.to_amount and annual_taxable_earning >= slab.from_amount:
 			tax_amount += (annual_taxable_earning - slab.from_amount + 1) * slab.percent_deduction * 0.01
 			continue
+
 		if annual_taxable_earning >= slab.from_amount and annual_taxable_earning < slab.to_amount:
 			tax_amount += (annual_taxable_earning - slab.from_amount + 1) * slab.percent_deduction * 0.01
 		elif annual_taxable_earning >= slab.from_amount and annual_taxable_earning >= slab.to_amount:
@@ -1815,3 +1850,11 @@ def set_missing_values(time_sheet, target):
 	target.posting_date = doc.modified
 	target.total_working_hours = doc.total_hours
 	target.append("timesheets", {"time_sheet": doc.name, "working_hours": doc.total_hours})
+
+
+def date_range(start=None, end=None):
+	if start and end:
+		delta = end - start  # as timedelta
+		days = [str(start + timedelta(days=i)) for i in range(delta.days + 1)]
+		return days
+	return []
