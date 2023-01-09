@@ -10,6 +10,32 @@ from frappe.utils import format_duration, get_link_to_form, time_diff_in_seconds
 
 class JobRequisition(Document):
 	def validate(self):
+		self.validate_duplicates()
+		self.set_time_to_fill()
+
+	def validate_duplicates(self):
+		duplicate = frappe.db.exists(
+			"Job Requisition",
+			{
+				"designation": self.designation,
+				"department": self.department,
+				"requested_by": self.requested_by,
+				"status": ("not in", ["Cancelled", "Filled"]),
+				"name": ("!=", self.name),
+			},
+		)
+
+		if duplicate:
+			frappe.throw(
+				_("A Job Requisition for {0} requested by {1} already exists: {2}").format(
+					frappe.bold(self.designation),
+					frappe.bold(self.requested_by),
+					get_link_to_form("Job Requisition", duplicate),
+				),
+				title=_("Duplicate Job Requisition"),
+			)
+
+	def set_time_to_fill(self):
 		if self.status == "Filled" and self.completed_on:
 			self.time_to_fill = time_diff_in_seconds(self.completed_on, self.posting_date)
 

@@ -95,7 +95,7 @@
   {
    "fieldname": "section_break_7",
    "fieldtype": "Section Break",
-   "label": "Requester By"
+   "label": "Requested By"
   },
   {
    "fetch_from": "requested_by.department",
@@ -202,7 +202,7 @@
    "link_fieldname": "job_requisition"
   }
  ],
- "modified": "2023-01-10 12:40:43.594021",
+ "modified": "2023-01-09 13:47:21.910622",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Requisition",
