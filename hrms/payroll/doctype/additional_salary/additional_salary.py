@@ -75,8 +75,7 @@ class AdditionalSalary(Document):
 			"Employee", self.employee, ["date_of_joining", "relieving_date"]
 		)
 
-		if getdate(self.from_date) > getdate(self.to_date):
-			frappe.throw(_("From Date can not be greater than To Date."))
+		self.validate_from_to_dates("from_date", "to_date")
 
 		if date_of_joining:
 			if self.payroll_date and getdate(self.payroll_date) < getdate(date_of_joining):
