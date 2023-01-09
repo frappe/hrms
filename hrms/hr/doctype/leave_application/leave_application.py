@@ -2,7 +2,7 @@
 # License: GNU General Public License v3. See license.txt
 
 import datetime
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Union
 
 import frappe
 from frappe import _
@@ -734,8 +734,8 @@ def get_number_of_leave_days(
 	leave_type: str,
 	from_date: datetime.date,
 	to_date: datetime.date,
-	half_day: Optional[int] | Optional[str] = None,
-	half_day_date: Optional[datetime.date] | Optional[str] = None,
+	half_day: Union[int, str, None] = None,
+	half_day_date: Union[datetime.date, str, None] = None,
 	holiday_list: Optional[str] = None,
 ) -> float:
 	"""Returns number of leave days between 2 dates after considering half day and holidays
@@ -798,7 +798,7 @@ def get_leave_balance_on(
 	employee: str,
 	leave_type: str,
 	date: datetime.date,
-	to_date: Optional[datetime.date] = None,
+	to_date: Union[datetime.date, None] = None,
 	consider_all_leaves_in_the_allocation_period: bool = False,
 	for_consumption: bool = False,
 ):
