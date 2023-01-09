@@ -1,7 +1,7 @@
 // Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on("Hiring Request", {
+frappe.ui.form.on("Job Requisition", {
 	refresh: function(frm) {
 		if (!frm.doc.__islocal && !["Filled", "On Hold", "Cancelled"].includes(frm.doc.status)) {
 			frappe.db.get_list("Employee Referral", {
@@ -29,7 +29,7 @@ frappe.ui.form.on("Hiring Request", {
 		if (frm.doc.status === "Open & Approved") {
 			frm.add_custom_button(__("Create Job Opening"), () => {
 				frappe.model.open_mapped_doc({
-					method: "hrms.hr.doctype.hiring_request.hiring_request.make_job_opening",
+					method: "hrms.hr.doctype.job_requisition.job_requisition.make_job_opening",
 					frm: frm
 				});
 			}, __("Actions"));

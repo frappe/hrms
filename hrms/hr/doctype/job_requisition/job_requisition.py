@@ -8,7 +8,7 @@ from frappe.model.mapper import get_mapped_doc
 from frappe.utils import format_duration, get_link_to_form, time_diff_in_seconds
 
 
-class HiringRequest(Document):
+class JobRequisition(Document):
 	def validate(self):
 		if self.status == "Filled" and self.completed_on:
 			self.time_to_fill = time_diff_in_seconds(self.completed_on, self.posting_date)
@@ -16,10 +16,10 @@ class HiringRequest(Document):
 	@frappe.whitelist()
 	def associate_job_opening(self, job_opening):
 		frappe.db.set_value(
-			"Job Opening", job_opening, {"hiring_request": self.name, "vacancies": self.no_of_positions}
+			"Job Opening", job_opening, {"job_requisition": self.name, "vacancies": self.no_of_positions}
 		)
 		frappe.msgprint(
-			_("Hiring Request {0} is associated with Job Opening {1}").format(
+			_("Job Requisition {0} is associated with Job Opening {1}").format(
 				self.name, get_link_to_form("Job Opening", job_opening)
 			)
 		)
@@ -34,15 +34,15 @@ def make_job_opening(source_name, target_doc=None):
 		target.lower_range = source.expected_compensation
 
 	return get_mapped_doc(
-		"Hiring Request",
+		"Job Requisition",
 		source_name,
 		{
-			"Hiring Request": {
+			"Job Requisition": {
 				"doctype": "Job Opening",
 			},
 			"field_map": {
 				"designation": "designation",
-				"name": "hiring_request",
+				"name": "job_requisition",
 				"department": "department",
 				"no_of_positions": "vacancies",
 			},
@@ -63,7 +63,7 @@ def get_avg_time_to_fill(company=None, department=None, designation=None):
 		filters["designation"] = designation
 
 	avg_time_to_fill = frappe.db.get_all(
-		"Hiring Request",
+		"Job Requisition",
 		filters=filters,
 		fields=["avg(time_to_fill) as average_time"],
 	)[0].average_time

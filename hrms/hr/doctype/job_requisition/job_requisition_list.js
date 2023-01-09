@@ -1,7 +1,7 @@
-frappe.listview_settings["Hiring Request"] = {
+frappe.listview_settings["Job Requisition"] = {
 	get_indicator: function(doc) {
 		const status_color = {
-			"Draft": "yellow",
+			"Pending": "yellow",
 			"Open & Approved": "blue",
 			"Rejected": "red",
 			"Filled": "green",
@@ -10,6 +10,7 @@ frappe.listview_settings["Hiring Request"] = {
 		};
 		return [__(doc.status), status_color[doc.status], "status,=,"+doc.status];
 	},
+
 	formatters: {
 		expected_by(value, df, doc) {
 			if (!value) return ""

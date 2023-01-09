@@ -10,12 +10,12 @@
   "naming_series",
   "designation",
   "department",
+  "column_break_qkna",
   "no_of_positions",
   "expected_compensation",
   "column_break_4",
   "company",
   "status",
-  "time_to_fill",
   "section_break_7",
   "requested_by",
   "requested_by_name",
@@ -24,12 +24,14 @@
   "requested_by_designation",
   "timelines_tab",
   "posting_date",
+  "completed_on",
   "column_break_15",
   "expected_by",
-  "completed_on",
+  "time_to_fill",
   "job_description_tab",
   "description",
-  "reason_for_requesting"
+  "reason_for_requesting",
+  "connections_tab"
  ],
  "fields": [
   {
@@ -64,7 +66,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "Draft\nOpen & Approved\nRejected\nFilled\nOn Hold\nCancelled",
+   "options": "Pending\nOpen & Approved\nRejected\nFilled\nOn Hold\nCancelled",
    "reqd": 1
   },
   {
@@ -93,7 +95,7 @@
   {
    "fieldname": "section_break_7",
    "fieldtype": "Section Break",
-   "label": "Requester Details"
+   "label": "Requester By"
   },
   {
    "fetch_from": "requested_by.department",
@@ -135,8 +137,7 @@
    "fieldname": "expected_by",
    "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "Expected By",
-   "reqd": 1
+   "label": "Expected By"
   },
   {
    "depends_on": "eval:doc.status==\"Filled\"",
@@ -151,6 +152,8 @@
    "label": "Job Description"
   },
   {
+   "fetch_from": "designation.description",
+   "fetch_if_empty": 1,
    "fieldname": "description",
    "fieldtype": "Text Editor",
    "label": "Job Description",
@@ -174,24 +177,35 @@
    "options": "Department"
   },
   {
+   "description": "Time taken to fill the open positions",
    "fieldname": "time_to_fill",
    "fieldtype": "Duration",
    "hide_seconds": 1,
    "label": "Time to Fill",
    "read_only": 1
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
+  },
+  {
+   "fieldname": "column_break_qkna",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [
   {
    "link_doctype": "Job Opening",
-   "link_fieldname": "hiring_request"
+   "link_fieldname": "job_requisition"
   }
  ],
- "modified": "2022-08-29 23:01:38.649992",
+ "modified": "2023-01-10 12:40:43.594021",
  "modified_by": "Administrator",
  "module": "HR",
- "name": "Hiring Request",
+ "name": "Job Requisition",
  "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [

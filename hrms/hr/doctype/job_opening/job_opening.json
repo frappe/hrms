@@ -16,7 +16,7 @@
   "references_section",
   "staffing_plan",
   "planned_vacancies",
-  "hiring_request",
+  "job_requisition",
   "vacancies",
   "section_break_6",
   "publish",
@@ -167,15 +167,15 @@
    "label": "References"
   },
   {
-   "fieldname": "hiring_request",
+   "fieldname": "job_requisition",
    "fieldtype": "Link",
-   "label": "Hiring Request",
-   "options": "Hiring Request",
+   "label": "Job Requisition",
+   "options": "Job Requisition",
    "read_only": 1
   },
   {
-   "depends_on": "hiring_request",
-   "fetch_from": "hiring_request.no_of_positions",
+   "depends_on": "job_requisition",
+   "fetch_from": "job_requisition.no_of_positions",
    "fieldname": "vacancies",
    "fieldtype": "Int",
    "label": "Vacancies",
@@ -185,7 +185,7 @@
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2022-08-29 20:37:52.356508",
+ "modified": "2023-01-09 13:34:47.274465",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",

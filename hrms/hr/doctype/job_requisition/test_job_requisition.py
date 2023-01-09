@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestHiringRequest(FrappeTestCase):
+class TestJobRequisition(FrappeTestCase):
 	pass

@@ -26,7 +26,7 @@ class JobOpening(WebsiteGenerator):
 		if not self.route:
 			self.route = frappe.scrub(self.job_title).replace("_", "-")
 		self.validate_current_vacancies()
-		self.update_hiring_request_status()
+		self.update_job_requisition_status()
 
 	def validate_current_vacancies(self):
 		if not self.staffing_plan:
@@ -63,14 +63,14 @@ class JobOpening(WebsiteGenerator):
 					title=_("Vacancies fulfilled"),
 				)
 
-	def update_hiring_request_status(self):
-		if self.status == "Closed" and self.hiring_request:
-			hiring_request = frappe.get_doc("Hiring Request", self.hiring_request)
-			hiring_request.status = "Filled"
-			hiring_request.completed_on = getdate()
-			hiring_request.flags.ignore_permissions = True
-			hiring_request.flags.ignore_mandatory = True
-			hiring_request.save()
+	def update_job_requisition_status(self):
+		if self.status == "Closed" and self.job_requisition:
+			job_requisition = frappe.get_doc("Job Requisition", self.job_requisition)
+			job_requisition.status = "Filled"
+			job_requisition.completed_on = getdate()
+			job_requisition.flags.ignore_permissions = True
+			job_requisition.flags.ignore_mandatory = True
+			job_requisition.save()
 
 	def get_context(self, context):
 		context.parents = [{"route": "jobs", "title": _("All Jobs")}]
