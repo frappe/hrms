@@ -42,13 +42,16 @@ frappe.ui.form.on("Job Requisition", {
 					options: "Job Opening",
 					reqd: 1,
 					get_query: () => {
-						return {
-							filters: {
-								"company": frm.doc.company,
-								"status": "Open",
-								"staffing_plan": ("is", "Not Set")
-							}
-						};
+						const filters = {
+							company: frm.doc.company,
+							status: "Open",
+							designation: frm.doc.designation,
+						}
+
+						if (frm.doc.department)
+							filters.department = frm.doc.department;
+
+						return {filters: filters};
 					}
 				}, (values) => {
 					frm.call("associate_job_opening", {job_opening: values.job_opening});
