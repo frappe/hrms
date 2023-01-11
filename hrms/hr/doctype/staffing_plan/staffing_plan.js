@@ -51,12 +51,15 @@ frappe.ui.form.on('Staffing Plan', {
 				};
 			},
 			action(selections) {
+				const plan_name = frm.doc.__newname;
 				frappe.call({
 					method: "set_job_requisitions",
 					doc: frm.doc,
 					args: selections,
 				}).then(() => {
-					frm.refresh_field("staffing_details");
+					// hack to retain prompt name that gets lost on frappe.call
+					frm.doc.__newname = plan_name;
+					refresh_field("staffing_details");
 				});
 
 				cur_dialog.hide();
