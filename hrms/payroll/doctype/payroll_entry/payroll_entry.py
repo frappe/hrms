@@ -90,6 +90,8 @@ class PayrollEntry(Document):
 			)
 
 	def on_cancel(self):
+		self.ignore_linked_doctypes = "GL Entry"
+
 		frappe.delete_doc(
 			"Salary Slip",
 			frappe.db.sql_list(
