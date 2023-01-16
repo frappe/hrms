@@ -1,0 +1,229 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2022-08-29 19:00:53.358248",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "designation",
+  "department",
+  "column_break_qkna",
+  "no_of_positions",
+  "expected_compensation",
+  "column_break_4",
+  "company",
+  "status",
+  "section_break_7",
+  "requested_by",
+  "requested_by_name",
+  "column_break_10",
+  "requested_by_dept",
+  "requested_by_designation",
+  "timelines_tab",
+  "posting_date",
+  "completed_on",
+  "column_break_15",
+  "expected_by",
+  "time_to_fill",
+  "job_description_tab",
+  "description",
+  "reason_for_requesting",
+  "connections_tab"
+ ],
+ "fields": [
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Designation",
+   "options": "Designation",
+   "reqd": 1
+  },
+  {
+   "fieldname": "no_of_positions",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "No of. Positions",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expected_compensation",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Expected Compensation",
+   "options": "Company:company:default_currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Pending\nOpen & Approved\nRejected\nFilled\nOn Hold\nCancelled",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "requested_by",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Requested By",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "requested_by.employee_name",
+   "fieldname": "requested_by_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Requested By (Name)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_7",
+   "fieldtype": "Section Break",
+   "label": "Requested By"
+  },
+  {
+   "fetch_from": "requested_by.department",
+   "fieldname": "requested_by_dept",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "requested_by.designation",
+   "fieldname": "requested_by_designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "timelines_tab",
+   "fieldtype": "Section Break",
+   "label": "Timelines"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_15",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "expected_by",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Expected By"
+  },
+  {
+   "depends_on": "eval:doc.status==\"Filled\"",
+   "fieldname": "completed_on",
+   "fieldtype": "Date",
+   "label": "Completed On",
+   "mandatory_depends_on": "eval:doc.status==\"Filled\""
+  },
+  {
+   "fieldname": "job_description_tab",
+   "fieldtype": "Tab Break",
+   "label": "Job Description"
+  },
+  {
+   "fetch_from": "designation.description",
+   "fetch_if_empty": 1,
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Job Description",
+   "reqd": 1
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "HR-HIREQ-"
+  },
+  {
+   "fieldname": "reason_for_requesting",
+   "fieldtype": "Text",
+   "label": "Reason for Requesting"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "description": "Time taken to fill the open positions",
+   "fieldname": "time_to_fill",
+   "fieldtype": "Duration",
+   "hide_seconds": 1,
+   "label": "Time to Fill",
+   "read_only": 1
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
+  },
+  {
+   "fieldname": "column_break_qkna",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Job Opening",
+   "link_fieldname": "job_requisition"
+  }
+ ],
+ "modified": "2023-01-09 13:47:21.910622",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Job Requisition",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "designation"
+}
