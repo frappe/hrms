@@ -59,6 +59,7 @@ def make_job_opening(source_name, target_doc=None):
 		target.status = "Open"
 		target.currency = frappe.db.get_value("Company", source.company, "default_currency")
 		target.lower_range = source.expected_compensation
+		target.description = source.description
 
 	return get_mapped_doc(
 		"Job Requisition",
