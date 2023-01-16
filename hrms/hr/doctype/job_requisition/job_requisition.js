@@ -5,7 +5,7 @@ frappe.ui.form.on("Job Requisition", {
 	refresh: function(frm) {
 		if (!frm.doc.__islocal && !["Filled", "On Hold", "Cancelled"].includes(frm.doc.status)) {
 			frappe.db.get_list("Employee Referral", {
-				filters: {for_designation: frm.doc.designation, status: "Pending"}
+				filters: { for_designation: frm.doc.designation, status: "Pending" }
 			}).then((data) => {
 				if (data && data.length) {
 					const link = data.length > 1
@@ -51,10 +51,10 @@ frappe.ui.form.on("Job Requisition", {
 						if (frm.doc.department)
 							filters.department = frm.doc.department;
 
-						return {filters: filters};
+						return { filters: filters };
 					}
 				}, (values) => {
-					frm.call("associate_job_opening", {job_opening: values.job_opening});
+					frm.call("associate_job_opening", { job_opening: values.job_opening });
 				}, __("Associate Job Opening"), __("Submit"));
 			}, __("Actions"));
 

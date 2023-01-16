@@ -45,9 +45,10 @@ class JobRequisition(Document):
 			"Job Opening", job_opening, {"job_requisition": self.name, "vacancies": self.no_of_positions}
 		)
 		frappe.msgprint(
-			_("Job Requisition {0} is associated with Job Opening {1}").format(
-				self.name, get_link_to_form("Job Opening", job_opening)
-			)
+			_("Job Requisition {0} has been associated with Job Opening {1}").format(
+				frappe.bold(self.name), get_link_to_form("Job Opening", job_opening)
+			),
+			title=_("Job Opening Associated"),
 		)
 
 

@@ -50,7 +50,7 @@ def make_job_requisition(**args):
 	frappe.db.delete("Job Requisition")
 	args = frappe._dict(args)
 
-	job_req = frappe.get_doc(
+	return frappe.get_doc(
 		{
 			"doctype": "Job Requisition",
 			"designation": args.designation or create_designation().name,
@@ -67,5 +67,3 @@ def make_job_requisition(**args):
 			"reason_for_requesting": "Test",
 		}
 	).insert()
-
-	return job_req
