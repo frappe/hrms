@@ -6,7 +6,7 @@
  "document_type": "Setup",
  "engine": "InnoDB",
  "field_order": [
-  "details_tab",
+  "employee_and_payroll_tab",
   "section_break_6",
   "employee",
   "employee_name",
@@ -29,12 +29,7 @@
   "salary_structure",
   "payroll_entry",
   "mode_of_payment",
-  "column_break1",
-  "salary_slip_based_on_timesheet",
-  "section_break_wrwj",
-  "deduct_tax_for_unclaimed_employee_benefits",
-  "deduct_tax_for_unsubmitted_tax_exemption_proof",
-  "payment_days_tab",
+  "salary_details_tab",
   "total_working_days",
   "unmarked_days",
   "leave_without_pay",
@@ -42,14 +37,16 @@
   "absent_days",
   "payment_days",
   "earning_deduction",
+  "salary_slip_based_on_timesheet",
   "timesheets",
   "column_break_ghjr",
   "total_working_hours",
   "hour_rate",
   "base_hour_rate",
   "section_break_gerh",
+  "deduct_tax_for_unclaimed_employee_benefits",
+  "deduct_tax_for_unsubmitted_tax_exemption_proof",
   "earnings",
-  "column_break_ywkr",
   "deductions",
   "totals",
   "gross_pay",
@@ -69,14 +66,13 @@
   "net_pay_info",
   "net_pay",
   "base_net_pay",
+  "rounded_total",
+  "base_rounded_total",
   "column_break_dqnd",
   "year_to_date",
   "base_year_to_date",
   "month_to_date",
   "base_month_to_date",
-  "column_break_53",
-  "rounded_total",
-  "base_rounded_total",
   "section_break_55",
   "total_in_words",
   "column_break_69",
@@ -166,12 +162,6 @@
    "oldfieldtype": "Link",
    "options": "Branch",
    "read_only": 1
-  },
-  {
-   "fieldname": "column_break1",
-   "fieldtype": "Column Break",
-   "oldfieldtype": "Column Break",
-   "width": "50%"
   },
   {
    "fieldname": "status",
@@ -317,7 +307,7 @@
   },
   {
    "fieldname": "earning_deduction",
-   "fieldtype": "Tab Break",
+   "fieldtype": "Section Break",
    "label": "Earnings & Deductions",
    "oldfieldtype": "Section Break"
   },
@@ -356,7 +346,7 @@
   {
    "depends_on": "total_loan_repayment",
    "fieldname": "loan_repayment",
-   "fieldtype": "Tab Break",
+   "fieldtype": "Section Break",
    "label": "Loan Repayment"
   },
   {
@@ -401,7 +391,7 @@
   },
   {
    "fieldname": "net_pay_info",
-   "fieldtype": "Tab Break",
+   "fieldtype": "Section Break",
    "label": "Net Pay Info"
   },
   {
@@ -410,10 +400,6 @@
    "label": "Net Pay",
    "options": "currency",
    "read_only": 1
-  },
-  {
-   "fieldname": "column_break_53",
-   "fieldtype": "Column Break"
   },
   {
    "bold": 1,
@@ -604,11 +590,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "details_tab",
-   "fieldtype": "Tab Break",
-   "label": "Details"
-  },
-  {
    "fieldname": "section_break_6",
    "fieldtype": "Section Break",
    "label": "Employee Details"
@@ -630,15 +611,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "column_break_ywkr",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "payment_days_tab",
-   "fieldtype": "Tab Break",
-   "label": "Payment Days"
-  },
-  {
    "fieldname": "column_break_geio",
    "fieldtype": "Column Break"
   },
@@ -651,17 +623,13 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "section_break_wrwj",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "column_break_ghjr",
-   "fieldtype": "Column Break",
+   "fieldtype": "Column Break"
   },
   {
    "collapsible": 1,
    "fieldname": "income_tax_calculation_breakup_section",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Income Tax Breakup"
   },
   {
@@ -721,13 +689,23 @@
    "fieldtype": "Currency",
    "label": "Income Tax Deducted Till Date",
    "read_only": 1
+  },
+  {
+   "fieldname": "employee_and_payroll_tab",
+   "fieldtype": "Tab Break",
+   "label": "Employee and Payroll"
+  },
+  {
+   "fieldname": "salary_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Salary Details"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-05 15:10:58.042266",
+ "modified": "2023-01-17 13:11:34.478357",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

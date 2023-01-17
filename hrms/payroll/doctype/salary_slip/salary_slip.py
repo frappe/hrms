@@ -3,7 +3,8 @@
 
 
 import math
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
+
 import frappe
 from frappe import _, msgprint
 from frappe.model.naming import make_autoname
