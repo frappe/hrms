@@ -68,6 +68,8 @@ def update_employee_work_history(employee, details, date=None, cancel=False):
 	if cancel:
 		delete_employee_work_history(details, employee, date)
 
+	update_to_date_in_work_history(employee, cancel)
+
 	return employee
 
 
@@ -89,6 +91,22 @@ def delete_employee_work_history(details, employee, date):
 	if filters:
 		frappe.db.delete("Employee Internal Work History", filters)
 		employee.save()
+
+
+def update_to_date_in_work_history(employee, cancel):
+	if not employee.internal_work_history:
+		return
+
+	for idx, row in enumerate(employee.internal_work_history):
+		if not row.from_date or idx == 0:
+			continue
+
+		prev_row = employee.internal_work_history[idx - 1]
+		if not prev_row.to_date:
+			prev_row.to_date = add_days(row.from_date, -1)
+
+	if cancel:
+		employee.internal_work_history[-1].to_date = None
 
 
 @frappe.whitelist()

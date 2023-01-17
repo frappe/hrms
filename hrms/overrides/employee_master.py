@@ -4,7 +4,7 @@
 import frappe
 from frappe import _
 from frappe.model.naming import set_name_by_naming_series
-from frappe.utils import add_days, add_years, cint, getdate
+from frappe.utils import add_years, cint, getdate
 
 from erpnext.setup.doctype.employee.employee import Employee
 
@@ -43,19 +43,6 @@ def validate_onboarding_process(doc, method=None):
 		onboarding = frappe.get_doc("Employee Onboarding", employee_onboarding[0].name)
 		onboarding.validate_employee_creation()
 		onboarding.db_set("employee", doc.name)
-
-
-def update_to_date_in_work_history(doc, method=None):
-	if not doc.internal_work_history:
-		return
-
-	for idx, row in enumerate(doc.internal_work_history):
-		if not row.from_date or idx == 0:
-			continue
-
-		prev_row = doc.internal_work_history[idx - 1]
-		if not prev_row.to_date:
-			prev_row.to_date = add_days(row.from_date, -1)
 
 
 def update_approver_role(doc, method=None):
