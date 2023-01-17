@@ -80,15 +80,17 @@ def get_payroll_period_days(start_date, end_date, employee, company=None):
 
 
 def get_payroll_period(from_date, to_date, company):
-	payroll_period = frappe.db.sql(
-		"""
-		select name, start_date, end_date
-		from `tabPayroll Period`
-		where start_date<=%s and end_date>= %s and company=%s
-	""",
-		(from_date, to_date, company),
-		as_dict=1,
-	)
+	Payroll_Period = frappe.qb.DocType("Payroll Period")
+
+	payroll_period = (
+		frappe.qb.from_(Payroll_Period)
+		.select(Payroll_Period.name, Payroll_Period.start_date, Payroll_Period.end_date)
+		.where(
+			(Payroll_Period.start_date <= from_date)
+			& (Payroll_Period.end_date >= to_date)
+			& (Payroll_Period.company == company)
+		)
+	).run(as_dict=1)
 
 	return payroll_period[0] if payroll_period else None
 
