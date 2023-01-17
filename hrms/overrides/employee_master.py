@@ -53,9 +53,9 @@ def update_to_date_in_work_history(doc, method=None):
 		if not row.from_date or idx == 0:
 			continue
 
-		doc.internal_work_history[idx - 1].to_date = add_days(row.from_date, -1)
-
-	doc.internal_work_history[-1].to_date = None
+		prev_row = doc.internal_work_history[idx - 1]
+		if not prev_row.to_date:
+			prev_row.to_date = add_days(row.from_date, -1)
 
 
 def update_approver_role(doc, method=None):
