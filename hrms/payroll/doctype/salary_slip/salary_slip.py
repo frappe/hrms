@@ -659,6 +659,11 @@ class SalarySlip(TransactionBase):
 			unclaimed_taxable_benefits = self.calculate_unclaimed_taxable_benefits()
 			unclaimed_taxable_benefits += self.current_taxable_earnings_for_payment_days.flexi_benefits
 
+		# Deduct taxes forcefully for unsubmitted tax exemption proof and unclaimed benefits in the last period
+		if self.payroll_period.end_date <= getdate(self.end_date):
+			self.deduct_tax_for_unsubmitted_tax_exemption_proof = 1
+			self.deduct_tax_for_unclaimed_employee_benefits = 1
+
 		# Total exemption amount based on tax exemption declaration
 		self.total_exemption_amount = self.get_total_exemption_amount()
 
@@ -682,21 +687,23 @@ class SalarySlip(TransactionBase):
 		)
 
 	def compute_income_tax_breakup(self):
+		self.non_taxable_earnings = self.get_non_taxable_earnings()
+
 		self.ctc = self.get_ctc()
+		print(self.component_based_veriable_tax)
 
 		self.income_from_other_sources = self.get_income_form_other_sources()
 
 		self.total_earnings = self.ctc + self.income_from_other_sources
 
-		self.non_taxable_earnings = self.get_non_taxable_earnings()
 		self.deductions_before_tax_calculation = self.get_anual_deductions_before_tax_calculation()
-
-		self.tax_exemption_declaration = (
-			self.get_total_exemption_amount() - self.tax_slab.standard_tax_exemption_amount
-		)
 
 		self.standard_tax_exemption_amount = (
 			self.tax_slab.standard_tax_exemption_amount if self.tax_slab.allow_tax_exemption else 0.0
+		)
+
+		self.tax_exemption_declaration = (
+			self.get_total_exemption_amount() - self.standard_tax_exemption_amount
 		)
 
 		self.annual_taxable_amount = self.total_earnings - (
@@ -706,9 +713,7 @@ class SalarySlip(TransactionBase):
 			+ self.standard_tax_exemption_amount
 		)
 
-		self.income_tax_deducted_till_date = (
-			self.previous_total_paid_taxes + self.current_structured_tax_amount
-		)
+		self.income_tax_deducted_till_date = self.get_income_tax_deducted_till_date()
 
 		self.future_income_tax_deductions = (
 			self.total_structured_tax_amount - self.income_tax_deducted_till_date
@@ -722,11 +727,13 @@ class SalarySlip(TransactionBase):
 			+ self.current_additional_earnings
 			+ self.other_incomes
 			+ self.unclaimed_taxable_benefits
+			+ self.additional_non_taxable_earnings
 		) or 0.0
 
 	def get_non_taxable_earnings(self):
 		sal_struc_non_taxable_earnings = 0
-		non_taxable_earnings = 0
+		self.additional_non_taxable_earnings = 0
+
 		non_taxable_income_components = [
 			d.salary_component
 			for d in self._salary_structure_doc.get("earnings", [])
@@ -738,9 +745,9 @@ class SalarySlip(TransactionBase):
 				sal_struc_non_taxable_earnings += d.amount
 			else:
 				if not d.is_tax_applicable:
-					non_taxable_earnings += d.amount
+					self.additional_non_taxable_earnings += d.amount
 
-		return (sal_struc_non_taxable_earnings * 12 + non_taxable_earnings) * self.exchange_rate or 0.0
+		return (sal_struc_non_taxable_earnings * 12 + self.additional_non_taxable_earnings) or 0.0
 
 	def get_anual_deductions_before_tax_calculation(self):
 		deductions_before_tax_calculation = 0
@@ -749,6 +756,15 @@ class SalarySlip(TransactionBase):
 				deductions_before_tax_calculation += d.amount
 
 		return deductions_before_tax_calculation * 12
+
+	def get_income_tax_deducted_till_date(self):
+		tax_deducted = 0.0
+		for tax_component in self.component_based_veriable_tax:
+			tax_deducted += (
+				self.component_based_veriable_tax[tax_component]["previous_total_paid_taxes"]
+				+ self.component_based_veriable_tax[tax_component]["current_tax_amount"]
+			)
+		return tax_deducted
 
 	def calculate_component_amounts(self, component_type):
 		if not getattr(self, "_salary_structure_doc", None):
@@ -952,7 +968,9 @@ class SalarySlip(TransactionBase):
 				if d.name not in self.other_deduction_components
 			]
 
+		self.component_based_veriable_tax = {}
 		for d in tax_components:
+			self.component_based_veriable_tax.setdefault(d, {})
 			tax_amount = self.calculate_variable_based_on_taxable_salary(d)
 			tax_row = get_salary_component_data(d)
 			self.update_component_row(tax_row, tax_amount, "deductions")
@@ -1061,11 +1079,6 @@ class SalarySlip(TransactionBase):
 			)
 			return
 
-		# Deduct taxes forcefully for unsubmitted tax exemption proof and unclaimed benefits in the last period
-		if self.payroll_period.end_date <= getdate(self.end_date):
-			self.deduct_tax_for_unsubmitted_tax_exemption_proof = 1
-			self.deduct_tax_for_unclaimed_employee_benefits = 1
-
 		return self.calculate_variable_tax(tax_component)
 
 	def calculate_variable_tax(self, tax_component):
@@ -1097,6 +1110,16 @@ class SalarySlip(TransactionBase):
 		current_tax_amount = self.current_structured_tax_amount + self.full_tax_on_additional_earnings
 		if flt(current_tax_amount) < 0:
 			current_tax_amount = 0
+
+		self.component_based_veriable_tax[tax_component].update(
+			{
+				"previous_total_paid_taxes": self.previous_total_paid_taxes,
+				"total_structured_tax_amount": self.total_structured_tax_amount,
+				"current_structured_tax_amount": self.current_structured_tax_amount,
+				"full_tax_on_additional_earnings": self.full_tax_on_additional_earnings,
+				"current_tax_amount": current_tax_amount,
+			}
+		)
 
 		return current_tax_amount
 
