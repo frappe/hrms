@@ -29,7 +29,7 @@
   "salary_structure",
   "payroll_entry",
   "mode_of_payment",
-  "salary_details_tab",
+  "earnings_and_deductions_tab",
   "total_working_days",
   "unmarked_days",
   "leave_without_pay",
@@ -695,12 +695,7 @@
   {
    "fieldname": "employee_and_payroll_tab",
    "fieldtype": "Tab Break",
-   "label": "Employee and Payroll"
-  },
-  {
-   "fieldname": "salary_details_tab",
-   "fieldtype": "Tab Break",
-   "label": "Salary Details"
+   "label": "Details"
   },
   {
    "fieldname": "column_break_35wb",
@@ -710,13 +705,18 @@
    "fieldname": "future_income_tax_deductions",
    "fieldtype": "Currency",
    "label": "Future Income Tax Deductions"
+  },
+  {
+   "fieldname": "earnings_and_deductions_tab",
+   "fieldtype": "Tab Break",
+   "label": "Earnings & Deductions"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-18 15:12:16.936820",
+ "modified": "2023-01-18 15:54:08.459244",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
