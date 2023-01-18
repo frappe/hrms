@@ -684,7 +684,7 @@ def get_ec_matching_query(bank_account, company, amount_condition):
 			employee as party,
 			'Employee' as party_type,
 			posting_date,
-			'{company_currency}' as currency
+			{company_currency!r} as currency
 		FROM
 			`tabExpense Claim`
 		WHERE
