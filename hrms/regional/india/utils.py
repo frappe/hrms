@@ -51,15 +51,28 @@ def calculate_annual_eligible_hra_exemption(doc):
 
 		if hra_amount:
 			if doc.monthly_house_rent:
+				start_of_financial_year, end_of_financial_year = frappe.db.get_value(
+					"Payroll Period", doc.payroll_period, ["start_date", "end_date"]
+				)
+				joining_date, relieving_date = frappe.db.get_value(
+					"Employee", doc.employee, ["relieving_date", "joining_date"]
+				)
+				if relieving_date is not None:
+					months = month_diff(
+						min(end_of_financial_year, relieving_date) - max(joining_date, start_of_financial_year)
+					)
+				else:
+					months = month_diff(end_of_financial_year - max(joining_date, start_of_financial_year))
 				annual_exemption = calculate_hra_exemption(
 					assignment.salary_structure,
 					basic_amount,
 					hra_amount,
 					doc.monthly_house_rent,
 					doc.rented_in_metro_city,
+					months,
 				)
 				if annual_exemption > 0:
-					monthly_exemption = annual_exemption / 12
+					monthly_exemption = annual_exemption / (months)
 				else:
 					annual_exemption = 0
 
@@ -122,7 +135,7 @@ def get_component_amt_from_salary_slip(
 
 
 def calculate_hra_exemption(
-	salary_structure, annual_basic, annual_hra, monthly_house_rent, rented_in_metro_city
+	salary_structure, annual_basic, annual_hra, monthly_house_rent, rented_in_metro_city, months
 ):
 	# TODO make this configurable
 	exemptions = []
@@ -130,7 +143,7 @@ def calculate_hra_exemption(
 	exemptions.append(annual_hra)
 
 	# case 2: Actual rent paid less 10% of the basic salary.
-	actual_annual_rent = monthly_house_rent * 12
+	actual_annual_rent = monthly_house_rent * months
 	exemptions.append(flt(actual_annual_rent) - flt(annual_basic * 0.1))
 
 	# case 3: 50% of the basic salary, if the employee is staying in a metro city (40% for a non-metro city).
