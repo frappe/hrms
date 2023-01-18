@@ -136,9 +136,9 @@ class EmployeeHoursReport:
 		for field in filter_fields:
 			if self.filters.get(field):
 				if field == "project":
-					additional_filters += f"AND ttd.{field} = '{self.filters.get(field)}'"
+					additional_filters += f" AND ttd.{field} = {self.filters.get(field)!r}"
 				else:
-					additional_filters += f"AND tt.{field} = '{self.filters.get(field)}'"
+					additional_filters += f" AND tt.{field} = {self.filters.get(field)!r}"
 
 		self.filtered_time_logs = frappe.db.sql(
 			"""
