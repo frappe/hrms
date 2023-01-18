@@ -89,6 +89,7 @@
   "deductions_before_tax_calculation",
   "annual_taxable_amount",
   "income_tax_deducted_till_date",
+  "future_income_tax_deductions",
   "section_break_75",
   "journal_entry",
   "amended_from",
@@ -704,13 +705,18 @@
   {
    "fieldname": "column_break_35wb",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "future_income_tax_deductions",
+   "fieldtype": "Currency",
+   "label": "Future Income Tax Deductions"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-17 13:32:29.592558",
+ "modified": "2023-01-18 15:12:16.936820",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

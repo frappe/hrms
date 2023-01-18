@@ -691,7 +691,9 @@ class SalarySlip(TransactionBase):
 		self.non_taxable_earnings = self.get_non_taxable_earnings()
 		self.deductions_before_tax_calculation = self.get_anual_deductions_before_tax_calculation()
 
-		self.tax_exemption_declaration = self.get_total_exemption_amount()
+		self.tax_exemption_declaration = (
+			self.get_total_exemption_amount() - self.tax_slab.standard_tax_exemption_amount
+		)
 
 		self.standard_tax_exemption_amount = (
 			self.tax_slab.standard_tax_exemption_amount if self.tax_slab.allow_tax_exemption else 0.0
@@ -706,6 +708,10 @@ class SalarySlip(TransactionBase):
 
 		self.income_tax_deducted_till_date = (
 			self.previous_total_paid_taxes + self.current_structured_tax_amount
+		)
+
+		self.future_income_tax_deductions = (
+			self.total_structured_tax_amount - self.income_tax_deducted_till_date
 		)
 
 	def get_ctc(self):
@@ -1407,16 +1413,19 @@ class SalarySlip(TransactionBase):
 		return total_exemption_amount
 
 	def get_income_form_other_sources(self):
-		return frappe.get_all(
-			"Employee Other Income",
-			filters={
-				"employee": self.employee,
-				"payroll_period": self.payroll_period.name,
-				"company": self.company,
-				"docstatus": 1,
-			},
-			fields="SUM(amount) as total_amount",
-		)[0].total_amount
+		return (
+			frappe.get_all(
+				"Employee Other Income",
+				filters={
+					"employee": self.employee,
+					"payroll_period": self.payroll_period.name,
+					"company": self.company,
+					"docstatus": 1,
+				},
+				fields="SUM(amount) as total_amount",
+			)[0].total_amount
+			or 0.0
+		)
 
 	def get_component_totals(self, component_type, depends_on_payment_days=0):
 		joining_date, relieving_date = frappe.get_cached_value(
@@ -1593,6 +1602,10 @@ class SalarySlip(TransactionBase):
 			self.get_date_details()
 		self.pull_emp_details()
 		self.get_working_days_details(for_preview=for_preview)
+
+		if not hasattr(self, "payroll_period"):
+			self.set_payroll_period()
+
 		self.calculate_net_pay()
 
 	def pull_emp_details(self):
