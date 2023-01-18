@@ -21,7 +21,7 @@ from frappe.utils import (
 )
 
 from erpnext.buying.doctype.supplier_scorecard.supplier_scorecard import daterange
-from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
+from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee, is_holiday
 
 from hrms.hr.doctype.leave_block_list.leave_block_list import get_applicable_block_dates
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
@@ -744,7 +744,11 @@ def get_number_of_leave_days(
 	if cint(half_day) == 1:
 		if getdate(from_date) == getdate(to_date):
 			number_of_days = 0.5
-		elif half_day_date and getdate(from_date) <= getdate(half_day_date) <= getdate(to_date):
+		elif (
+			half_day_date
+			and (getdate(from_date) <= getdate(half_day_date) <= getdate(to_date))
+			and not is_holiday(employee, half_day_date)
+		):
 			number_of_days = date_diff(to_date, from_date) + 0.5
 		else:
 			number_of_days = date_diff(to_date, from_date) + 1
