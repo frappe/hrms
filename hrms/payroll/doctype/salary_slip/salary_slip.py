@@ -590,7 +590,9 @@ class SalarySlip(TransactionBase):
 	def calculate_net_pay(self):
 		if self.salary_structure:
 			self.tax_slab = self.get_income_tax_slabs()
+			self.compute_taxable_earnings_for_year()
 			self.calculate_component_amounts("earnings")
+
 		self.gross_pay = self.get_component_totals("earnings", depends_on_payment_days=1)
 		self.base_gross_pay = flt(
 			flt(self.gross_pay) * flt(self.exchange_rate), self.precision("base_gross_pay")
@@ -620,8 +622,67 @@ class SalarySlip(TransactionBase):
 			)
 		self.set_net_total_in_words()
 
+	def compute_taxable_earnings_for_year(self):
+		# get remaining numbers of sub-period (period for which one salary is processed)
+		self.remaining_sub_periods = get_period_factor(
+			self.employee, self.start_date, self.end_date, self.payroll_frequency, self.payroll_period
+		)[1]
+
+		# get taxable_earnings, opening_taxable_earning, paid_taxes for previous period
+		self.previous_taxable_earnings = self.get_taxable_earnings_for_prev_period(
+			self.payroll_period.start_date, self.start_date, self.tax_slab.allow_tax_exemption
+		)
+
+		# get taxable_earnings for current period (all days)
+		self.current_taxable_earnings = self.get_taxable_earnings(self.tax_slab.allow_tax_exemption)
+		self.future_structured_taxable_earnings = self.current_taxable_earnings.taxable_earnings * (
+			math.ceil(self.remaining_sub_periods) - 1
+		)
+
+		# get taxable_earnings, addition_earnings for current actual payment days
+		self.current_taxable_earnings_for_payment_days = self.get_taxable_earnings(
+			self.tax_slab.allow_tax_exemption, based_on_payment_days=1
+		)
+		self.current_structured_taxable_earnings = (
+			self.current_taxable_earnings_for_payment_days.taxable_earnings
+		)
+		self.current_additional_earnings = (
+			self.current_taxable_earnings_for_payment_days.additional_income
+		)
+		self.current_additional_earnings_with_full_tax = (
+			self.current_taxable_earnings_for_payment_days.additional_income_with_full_tax
+		)
+
+		# Get taxable unclaimed benefits
+		self.unclaimed_taxable_benefits = 0
+		if self.deduct_tax_for_unclaimed_employee_benefits:
+			unclaimed_taxable_benefits = self.calculate_unclaimed_taxable_benefits()
+			unclaimed_taxable_benefits += self.current_taxable_earnings_for_payment_days.flexi_benefits
+
+		# Total exemption amount based on tax exemption declaration
+		self.total_exemption_amount = self.get_total_exemption_amount()
+
+		# Employee Other Incomes
+		self.other_incomes = self.get_income_form_other_sources() or 0.0
+
+		# Total taxable earnings including additional and other incomes
+		self.total_taxable_earnings = (
+			self.previous_taxable_earnings
+			+ self.current_structured_taxable_earnings
+			+ self.future_structured_taxable_earnings
+			+ self.current_additional_earnings
+			+ self.other_incomes
+			+ self.unclaimed_taxable_benefits
+			- self.total_exemption_amount
+		)
+
+		# Total taxable earnings without additional earnings with full tax
+		self.total_taxable_earnings_without_full_tax_addl_components = (
+			self.total_taxable_earnings - self.current_additional_earnings_with_full_tax
+		)
+
 	def compute_income_tax_breakup(self):
-		self.ctc = self.base_gross_pay * 12
+		self.ctc = self.get_ctc()
 
 		self.income_from_other_sources = self.get_income_form_other_sources()
 
@@ -643,7 +704,19 @@ class SalarySlip(TransactionBase):
 			+ self.standard_tax_exemption_amount
 		)
 
-		self.income_tax_deducted_till_date = 0
+		self.income_tax_deducted_till_date = (
+			self.previous_total_paid_taxes + self.current_structured_tax_amount
+		)
+
+	def get_ctc(self):
+		return (
+			self.previous_taxable_earnings
+			+ self.current_structured_taxable_earnings
+			+ self.future_structured_taxable_earnings
+			+ self.current_additional_earnings
+			+ self.other_incomes
+			+ self.unclaimed_taxable_benefits
+		) or 0.0
 
 	def get_non_taxable_earnings(self):
 		sal_struc_non_taxable_earnings = 0
@@ -990,87 +1063,32 @@ class SalarySlip(TransactionBase):
 		return self.calculate_variable_tax(tax_component)
 
 	def calculate_variable_tax(self, tax_component):
-		# get Tax slab from salary structure assignment for the employee and payroll period
-		# tax_slab = self.get_income_tax_slabs(self.payroll_period)
-
-		# get remaining numbers of sub-period (period for which one salary is processed)
-		remaining_sub_periods = get_period_factor(
-			self.employee, self.start_date, self.end_date, self.payroll_frequency, self.payroll_period
-		)[1]
-
-		# get taxable_earnings, opening_taxable_earning, paid_taxes for previous period
-		previous_taxable_earnings = self.get_taxable_earnings_for_prev_period(
-			self.payroll_period.start_date, self.start_date, self.tax_slab.allow_tax_exemption
-		)
-		previous_total_paid_taxes = self.get_tax_paid_in_period(
+		self.previous_total_paid_taxes = self.get_tax_paid_in_period(
 			self.payroll_period.start_date, self.start_date, tax_component
-		)
-
-		# get taxable_earnings for current period (all days)
-		current_taxable_earnings = self.get_taxable_earnings(self.tax_slab.allow_tax_exemption)
-		future_structured_taxable_earnings = current_taxable_earnings.taxable_earnings * (
-			math.ceil(remaining_sub_periods) - 1
-		)
-
-		# get taxable_earnings, addition_earnings for current actual payment days
-		current_taxable_earnings_for_payment_days = self.get_taxable_earnings(
-			self.tax_slab.allow_tax_exemption, based_on_payment_days=1
-		)
-		current_structured_taxable_earnings = current_taxable_earnings_for_payment_days.taxable_earnings
-		current_additional_earnings = current_taxable_earnings_for_payment_days.additional_income
-		current_additional_earnings_with_full_tax = (
-			current_taxable_earnings_for_payment_days.additional_income_with_full_tax
-		)
-
-		# Get taxable unclaimed benefits
-		unclaimed_taxable_benefits = 0
-		if self.deduct_tax_for_unclaimed_employee_benefits:
-			unclaimed_taxable_benefits = self.calculate_unclaimed_taxable_benefits()
-			unclaimed_taxable_benefits += current_taxable_earnings_for_payment_days.flexi_benefits
-
-		# Total exemption amount based on tax exemption declaration
-		total_exemption_amount = self.get_total_exemption_amount()
-
-		# Employee Other Incomes
-		other_incomes = self.get_income_form_other_sources() or 0.0
-
-		# Total taxable earnings including additional and other incomes
-		total_taxable_earnings = (
-			previous_taxable_earnings
-			+ current_structured_taxable_earnings
-			+ future_structured_taxable_earnings
-			+ current_additional_earnings
-			+ other_incomes
-			+ unclaimed_taxable_benefits
-			- total_exemption_amount
-		)
-
-		# Total taxable earnings without additional earnings with full tax
-		total_taxable_earnings_without_full_tax_addl_components = (
-			total_taxable_earnings - current_additional_earnings_with_full_tax
 		)
 
 		# Structured tax amount
 		eval_locals, default_data = self.get_data_for_eval()
-		total_structured_tax_amount = calculate_tax_by_tax_slab(
-			total_taxable_earnings_without_full_tax_addl_components,
+		self.total_structured_tax_amount = calculate_tax_by_tax_slab(
+			self.total_taxable_earnings_without_full_tax_addl_components,
 			self.tax_slab,
 			self.whitelisted_globals,
 			eval_locals,
 		)
-		current_structured_tax_amount = (
-			total_structured_tax_amount - previous_total_paid_taxes
-		) / remaining_sub_periods
+
+		self.current_structured_tax_amount = (
+			self.total_structured_tax_amount - self.previous_total_paid_taxes
+		) / self.remaining_sub_periods
 
 		# Total taxable earnings with additional earnings with full tax
-		full_tax_on_additional_earnings = 0.0
-		if current_additional_earnings_with_full_tax:
-			total_tax_amount = calculate_tax_by_tax_slab(
-				total_taxable_earnings, self.tax_slab, self.whitelisted_globals, eval_locals
+		self.full_tax_on_additional_earnings = 0.0
+		if self.current_additional_earnings_with_full_tax:
+			self.total_tax_amount = calculate_tax_by_tax_slab(
+				self.total_taxable_earnings, self.tax_slab, self.whitelisted_globals, eval_locals
 			)
-			full_tax_on_additional_earnings = total_tax_amount - total_structured_tax_amount
+			self.full_tax_on_additional_earnings = self.total_tax_amount - self.total_structured_tax_amount
 
-		current_tax_amount = current_structured_tax_amount + full_tax_on_additional_earnings
+		current_tax_amount = self.current_structured_tax_amount + self.full_tax_on_additional_earnings
 		if flt(current_tax_amount) < 0:
 			current_tax_amount = 0
 
