@@ -1114,6 +1114,7 @@ def make_policy_assignment(employee, leave_type, leave_period):
 			leave_type_name=leave_type,
 			doctype="Leave Type",
 			is_earned_leave=1,
+			allocate_on="Last Day",
 			earned_leave_frequency="Monthly",
 			rounding=0.5,
 			max_leaves_allowed=6,

@@ -246,6 +246,7 @@ def get_leave_type_details():
 			"is_earned_leave",
 			"is_compensatory",
 			"based_on_date_of_joining",
+			"allocate_on",
 			"is_carry_forward",
 			"expire_carry_forwarded_leaves_after_days",
 			"earned_leave_frequency",
