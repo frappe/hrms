@@ -8,6 +8,7 @@ from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.installer import update_site_config
 
 from hrms.subscription_utils import update_erpnext_access
+from hrms.overrides.company import delete_company_fixtures
 
 
 def after_install():
@@ -20,7 +21,11 @@ def after_install():
 	update_erpnext_access()
 	frappe.db.commit()
 	run_post_install_patches()
-	click.secho("Thank you for installing Frappe HR!", fg="green")
+
+
+def before_uninstall():
+	delete_custom_fields(get_custom_fields())
+	delete_company_fixtures()
 
 
 def get_custom_fields():
@@ -657,3 +662,16 @@ def run_post_install_patches():
 				frappe.get_attr(f"hrms.patches.post_install.{patch_name}.execute")()
 	finally:
 		frappe.flags.in_patch = False
+
+
+def delete_custom_fields(custom_fields):
+	for doctype, fields in custom_fields.items():
+		frappe.db.delete(
+			"Custom Field",
+			{
+				"fieldname": ("in", [field["fieldname"] for field in fields]),
+				"dt": doctype,
+			},
+		)
+
+		frappe.clear_cache(doctype=doctype)
