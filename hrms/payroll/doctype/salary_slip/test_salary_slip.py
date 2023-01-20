@@ -16,6 +16,8 @@ from frappe.utils import (
 	flt,
 	get_first_day,
 	get_last_day,
+	get_year_ending,
+	get_year_start,
 	getdate,
 	nowdate,
 	rounded,
@@ -1642,6 +1644,7 @@ def setup_test():
 	frappe.db.set_value(
 		"Company", erpnext.get_default_company(), "default_holiday_list", "Salary Slip Test Holiday List"
 	)
+
 	frappe.db.set_value("Payroll Settings", None, "email_salary_slip_to_employee", 0)
 	frappe.db.set_value("HR Settings", None, "leave_status_notification_template", None)
 	frappe.db.set_value("HR Settings", None, "leave_approval_notification_template", None)
