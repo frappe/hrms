@@ -23,6 +23,10 @@ def after_install():
 	click.secho("Thank you for installing Frappe HR!", fg="green")
 
 
+def before_uninstall():
+	delete_custom_fields(get_custom_fields())
+
+
 def get_custom_fields():
 	"""HR specific custom fields that need to be added to the masters in ERPNext"""
 	return {
@@ -657,3 +661,16 @@ def run_post_install_patches():
 				frappe.get_attr(f"hrms.patches.post_install.{patch_name}.execute")()
 	finally:
 		frappe.flags.in_patch = False
+
+
+def delete_custom_fields(custom_fields):
+	for doctype, fields in custom_fields.items():
+		frappe.db.delete(
+			"Custom Field",
+			{
+				"fieldname": ("in", [field["fieldname"] for field in fields]),
+				"dt": doctype,
+			},
+		)
+
+		frappe.clear_cache(doctype=doctype)
