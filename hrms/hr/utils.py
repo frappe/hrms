@@ -650,7 +650,17 @@ def validate_loan_repay_from_salary(doc, method=None):
 
 
 def get_matching_queries(
-	bank_account, company, transaction, document_types, amount_condition, account_from_to
+	bank_account,
+	company,
+	transaction,
+	document_types,
+	amount_condition,
+	account_from_to,
+	from_date=None,
+	to_date=None,
+	filter_by_reference_date=None,
+	from_reference_date=None,
+	to_reference_date=None,
 ):
 	"""Returns matching queries for Bank Reconciliation"""
 	queries = []
