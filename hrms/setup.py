@@ -8,6 +8,7 @@ from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.installer import update_site_config
 
 from hrms.subscription_utils import update_erpnext_access
+from hrms.overrides.company import delete_company_fixtures
 
 
 def after_install():
@@ -25,6 +26,7 @@ def after_install():
 
 def before_uninstall():
 	delete_custom_fields(get_custom_fields())
+	delete_company_fixtures()
 
 
 def get_custom_fields():

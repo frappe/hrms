@@ -5,11 +5,18 @@
 import frappe
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
+from hrms.setup import delete_custom_fields
+
 
 def setup():
 	make_custom_fields()
 	add_custom_roles_for_reports()
 	create_gratuity_rule_for_india()
+
+
+def uninstall():
+	custom_fields = get_custom_fields()
+	delete_custom_fields(custom_fields)
 
 
 def make_custom_fields(update=True):
