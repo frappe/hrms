@@ -690,7 +690,6 @@ class SalarySlip(TransactionBase):
 		self.non_taxable_earnings = self.get_non_taxable_earnings()
 
 		self.ctc = self.get_ctc()
-		print(self.component_based_veriable_tax)
 
 		self.income_from_other_sources = self.get_income_form_other_sources()
 
@@ -715,9 +714,10 @@ class SalarySlip(TransactionBase):
 
 		self.income_tax_deducted_till_date = self.get_income_tax_deducted_till_date()
 
-		self.future_income_tax_deductions = (
-			self.total_structured_tax_amount - self.income_tax_deducted_till_date
-		)
+		if hasattr(self, "total_structured_tax_amount"):
+			self.future_income_tax_deductions = (
+				self.total_structured_tax_amount - self.income_tax_deducted_till_date
+			)
 
 	def get_ctc(self):
 		return (
