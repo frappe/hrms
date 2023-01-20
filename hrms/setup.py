@@ -21,7 +21,6 @@ def after_install():
 	update_erpnext_access()
 	frappe.db.commit()
 	run_post_install_patches()
-	click.secho("Thank you for installing Frappe HR!", fg="green")
 
 
 def before_uninstall():
