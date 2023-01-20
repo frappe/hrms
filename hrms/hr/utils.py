@@ -350,7 +350,7 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 
 		if e_leave_type.allocate_on:
 			text = _("allocated {0} leave(s) via scheduler on {1} based on the {2}").format(
-				frappe.bold(earned_leaves), frappe.bold(formatdate(today_date), e_leave_type.allocate_on)
+				frappe.bold(earned_leaves), frappe.bold(formatdate(today_date)), e_leave_type.allocate_on
 			)
 
 		allocation.add_comment(comment_type="Info", text=text)
@@ -413,7 +413,6 @@ def get_earned_leaves():
 			"max_leaves_allowed",
 			"earned_leave_frequency",
 			"rounding",
-			"based_on_date_of_joining",
 			"allocate_on",
 		],
 		filters={"is_earned_leave": 1},

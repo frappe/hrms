@@ -265,7 +265,7 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 	def test_grant_leaves_on_doj_for_earned_leaves_based_on_leave_period(self):
 		# tests leave alloc based on leave period for earned leaves with "based on doj" configuration in leave type
 		leave_period, leave_policy = setup_leave_period_and_policy(
-			get_first_day(add_months(getdate(), -2)), based_on_doj=True
+			get_first_day(add_months(getdate(), -2)), allocate_on="Date of Joining"
 		)
 
 		# joining date set to 2 months back
@@ -293,7 +293,7 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 
 	def test_grant_leaves_on_doj_for_earned_leaves_based_on_joining_date(self):
 		# tests leave alloc based on joining date for earned leaves with "based on doj" configuration in leave type
-		leave_type = create_earned_leave_type("Test Earned Leave", based_on_doj=True)
+		leave_type = create_earned_leave_type("Test Earned Leave", allocate_on="Date of Joining")
 		leave_policy = frappe.get_doc(
 			{
 				"doctype": "Leave Policy",
@@ -329,7 +329,7 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 		frappe.flags.current_date = None
 
 
-def create_earned_leave_type(leave_type, based_on_doj=False):
+def create_earned_leave_type(leave_type, allocate_on="Last Day"):
 	frappe.delete_doc_if_exists("Leave Type", leave_type, force=1)
 
 	return frappe.get_doc(
@@ -340,7 +340,7 @@ def create_earned_leave_type(leave_type, based_on_doj=False):
 			earned_leave_frequency="Monthly",
 			rounding=0.5,
 			is_carry_forward=1,
-			based_on_date_of_joining=based_on_doj,
+			allocate_on=allocate_on,
 		)
 	).insert()
 
@@ -362,8 +362,8 @@ def create_leave_period(name, start_date=None):
 	).insert()
 
 
-def setup_leave_period_and_policy(start_date, based_on_doj=False):
-	leave_type = create_earned_leave_type("Test Earned Leave", based_on_doj)
+def setup_leave_period_and_policy(start_date, allocate_on="Last Day"):
+	leave_type = create_earned_leave_type("Test Earned Leave", allocate_on)
 	leave_period = create_leave_period("Test Earned Leave Period", start_date=start_date)
 	leave_policy = frappe.get_doc(
 		{
