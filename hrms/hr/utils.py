@@ -655,7 +655,7 @@ def get_matching_queries(
 	transaction,
 	document_types,
 	amount_condition,
-	account_from_to,
+	account_from_to=None,
 	from_date=None,
 	to_date=None,
 	filter_by_reference_date=None,
@@ -666,13 +666,15 @@ def get_matching_queries(
 	queries = []
 	if transaction.withdrawal > 0:
 		if "expense_claim" in document_types:
-			ec_amount_matching = get_ec_matching_query(bank_account, company, amount_condition)
+			ec_amount_matching = get_ec_matching_query(
+				bank_account, company, amount_condition, from_date, to_date
+			)
 			queries.extend([ec_amount_matching])
 
 	return queries
 
 
-def get_ec_matching_query(bank_account, company, amount_condition):
+def get_ec_matching_query(bank_account, company, amount_condition, from_date=None, to_date=None):
 	# get matching Expense Claim query
 	mode_of_payments = [
 		x["parent"]
@@ -680,8 +682,15 @@ def get_ec_matching_query(bank_account, company, amount_condition):
 			"Mode of Payment Account", filters={"default_account": bank_account}, fields=["parent"]
 		)
 	]
+
 	mode_of_payments = "('" + "', '".join(mode_of_payments) + "' )"
 	company_currency = get_company_currency(company)
+
+	filter_by_date = ""
+	if from_date and to_date:
+		filter_by_date = f"AND posting_date BETWEEN '{from_date}' AND '{to_date}'"
+		order_by = "posting_date"
+
 	return f"""
 		SELECT
 			( CASE WHEN employee = %(party)s THEN 1 ELSE 0 END
@@ -703,4 +712,5 @@ def get_ec_matching_query(bank_account, company, amount_condition):
 			AND is_paid = 1
 			AND ifnull(clearance_date, '') = ""
 			AND mode_of_payment in {mode_of_payments}
+			{filter_by_date}
 	"""
