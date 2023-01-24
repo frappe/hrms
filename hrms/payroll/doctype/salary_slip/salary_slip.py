@@ -588,9 +588,11 @@ class SalarySlip(TransactionBase):
 
 	def calculate_net_pay(self):
 		if self.salary_structure:
+			self.calculate_component_amounts("earnings")
+
+		if self.payroll_period and self.salary_structure:
 			self.tax_slab = self.get_income_tax_slabs()
 			self.compute_taxable_earnings_for_year()
-			self.calculate_component_amounts("earnings")
 
 		self.gross_pay = self.get_component_totals("earnings", depends_on_payment_days=1)
 		self.base_gross_pay = flt(
@@ -652,16 +654,16 @@ class SalarySlip(TransactionBase):
 			self.current_taxable_earnings_for_payment_days.additional_income_with_full_tax
 		)
 
-		# Get taxable unclaimed benefits
-		self.unclaimed_taxable_benefits = 0
-		if self.deduct_tax_for_unclaimed_employee_benefits:
-			unclaimed_taxable_benefits = self.calculate_unclaimed_taxable_benefits()
-			unclaimed_taxable_benefits += self.current_taxable_earnings_for_payment_days.flexi_benefits
-
 		# Deduct taxes forcefully for unsubmitted tax exemption proof and unclaimed benefits in the last period
 		if self.payroll_period.end_date <= getdate(self.end_date):
 			self.deduct_tax_for_unsubmitted_tax_exemption_proof = 1
 			self.deduct_tax_for_unclaimed_employee_benefits = 1
+
+		# Get taxable unclaimed benefits
+		self.unclaimed_taxable_benefits = 0
+		if self.deduct_tax_for_unclaimed_employee_benefits:
+			self.unclaimed_taxable_benefits = self.calculate_unclaimed_taxable_benefits()
+			self.unclaimed_taxable_benefits += self.current_taxable_earnings_for_payment_days.flexi_benefits
 
 		# Total exemption amount based on tax exemption declaration
 		self.total_exemption_amount = self.get_total_exemption_amount()
@@ -686,9 +688,12 @@ class SalarySlip(TransactionBase):
 		)
 
 	def compute_income_tax_breakup(self):
+		if not self.payroll_period:
+			return
+
 		self.non_taxable_earnings = self.get_non_taxable_earnings()
 
-		self.ctc = self.get_ctc()
+		self.ctc = self.compute_ctc()
 
 		self.income_from_other_sources = self.get_income_form_other_sources()
 
@@ -718,16 +723,19 @@ class SalarySlip(TransactionBase):
 				self.total_structured_tax_amount - self.income_tax_deducted_till_date
 			)
 
-	def get_ctc(self):
-		return (
-			self.previous_taxable_earnings
-			+ self.current_structured_taxable_earnings
-			+ self.future_structured_taxable_earnings
-			+ self.current_additional_earnings
-			+ self.other_incomes
-			+ self.unclaimed_taxable_benefits
-			+ self.additional_non_taxable_earnings
-		) or 0.0
+	def compute_ctc(self):
+		if hasattr(self, "self.previous_taxable_earnings"):
+			return (
+				self.previous_taxable_earnings
+				+ self.current_structured_taxable_earnings
+				+ self.future_structured_taxable_earnings
+				+ self.current_additional_earnings
+				+ self.other_incomes
+				+ self.unclaimed_taxable_benefits
+				+ self.additional_non_taxable_earnings
+			)
+		else:
+			return 0.0
 
 	def get_non_taxable_earnings(self):
 		sal_struc_non_taxable_earnings = 0
