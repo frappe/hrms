@@ -42,5 +42,11 @@ frappe.ui.form.on('Job Opening', {
 	},
 	company: function(frm) {
 		frm.set_value('designation', "");
+	},
+	status:function(frm){
+		if(frm.doc.status=="Closed")
+		{
+			frm.set_value("publish",0)
+		}
 	}
 });
