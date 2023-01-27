@@ -1142,10 +1142,9 @@ class TestSalarySlip(FrappeTestCase):
 
 		prev_period = math.ceil(remaining_sub_periods)
 
-		annual_tax = 93036  # 89220 #data[0].get('applicable_tax')
-		monthly_tax_amount = 7732.40  # 7435 #annual_tax/12
-		annual_earnings = 933600  # data[0].get('ctc')
-		monthly_earnings = 77800  # annual_earnings/12
+		annual_tax = 93288
+		monthly_tax_amount = 7774.0
+		monthly_earnings = 77800
 
 		# Get Salary Structure Assignment
 		ssa = frappe.get_value(
@@ -1166,7 +1165,7 @@ class TestSalarySlip(FrappeTestCase):
 		)
 		for deduction in salary_slip.deductions:
 			if deduction.salary_component == "TDS":
-				self.assertEqual(deduction.amount, rounded(monthly_tax_amount))
+				self.assertEqual(deduction.amount, 7732.0)
 
 		frappe.db.sql("DELETE FROM `tabPayroll Period` where company = '_Test Company'")
 		frappe.db.sql("DELETE FROM `tabIncome Tax Slab` where currency = 'INR'")

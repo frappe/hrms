@@ -8,6 +8,8 @@ from datetime import date, datetime, timedelta
 import frappe
 from frappe import _, msgprint
 from frappe.model.naming import make_autoname
+from frappe.query_builder import Order
+from frappe.query_builder.functions import Sum
 from frappe.utils import (
 	add_days,
 	cint,
@@ -183,17 +185,24 @@ class SalarySlip(TransactionBase):
 
 	def check_existing(self):
 		if not self.salary_slip_based_on_timesheet:
-			cond = ""
-			if self.payroll_entry:
-				cond += "and payroll_entry = '{0}'".format(self.payroll_entry)
-			ret_exist = frappe.db.sql(
-				"""select name from `tabSalary Slip`
-						where start_date = %s and end_date = %s and docstatus != 2
-						and employee = %s and name != %s {0}""".format(
-					cond
-				),
-				(self.start_date, self.end_date, self.employee, self.name),
+			ss = frappe.qb.DocType("Salary Slip")
+			query = (
+				frappe.qb.from_(ss)
+				.select(ss.name)
+				.where(
+					(ss.start_date == self.start_date)
+					& (ss.end_date == self.end_date)
+					& (ss.docstatus != 2)
+					& (ss.employee == self.employee)
+					& (ss.name != self.name)
+				)
 			)
+
+			if self.payroll_entry:
+				query = query.where(ss.payroll_entry == self.payroll_entry)
+
+			ret_exist = query.run()
+
 			if ret_exist:
 				frappe.throw(
 					_("Salary Slip of employee {0} already created for this period").format(self.employee)
@@ -249,41 +258,49 @@ class SalarySlip(TransactionBase):
 	def set_time_sheet(self):
 		if self.salary_slip_based_on_timesheet:
 			self.set("timesheets", [])
-			timesheets = frappe.db.sql(
-				""" select * from `tabTimesheet` where employee = %(employee)s and start_date BETWEEN %(start_date)s AND %(end_date)s and (status = 'Submitted' or
-				status = 'Billed')""",
-				{"employee": self.employee, "start_date": self.start_date, "end_date": self.end_date},
-				as_dict=1,
-			)
+
+			timesheet = frappe.qb.DocType("Timesheet")
+			timesheets = (
+				frappe.qb.from_(timesheet)
+				.select(timesheet.star)
+				.where(
+					(timesheet.employee == self.employee)
+					& (timesheet.start_date.between(self.start_date, self.end_date))
+					& ((timesheet.status == "Submitted") | (timesheet.status == "Billed"))
+				)
+			).run(as_dict=1)
 
 			for data in timesheets:
 				self.append("timesheets", {"time_sheet": data.name, "working_hours": data.total_hours})
 
 	def check_sal_struct(self, joining_date, relieving_date):
-		cond = """and sa.employee=%(employee)s and (sa.from_date <= %(start_date)s or
-				sa.from_date <= %(end_date)s or sa.from_date <= %(joining_date)s)"""
-		if self.payroll_frequency:
-			cond += """and ss.payroll_frequency = '%(payroll_frequency)s'""" % {
-				"payroll_frequency": self.payroll_frequency
-			}
+		ss = frappe.qb.DocType("Salary Structure")
+		ssa = frappe.qb.DocType("Salary Structure Assignment")
 
-		st_name = frappe.db.sql(
-			"""
-			select sa.salary_structure
-			from `tabSalary Structure Assignment` sa join `tabSalary Structure` ss
-			where sa.salary_structure=ss.name
-				and sa.docstatus = 1 and ss.docstatus = 1 and ss.is_active ='Yes' %s
-			order by sa.from_date desc
-			limit 1
-		"""
-			% cond,
-			{
-				"employee": self.employee,
-				"start_date": self.start_date,
-				"end_date": self.end_date,
-				"joining_date": joining_date,
-			},
+		query = (
+			frappe.qb.from_(ssa)
+			.join(ss)
+			.on(ssa.salary_structure == ss.name)
+			.select(ssa.salary_structure)
+			.where(
+				(ssa.docstatus == 1)
+				& (ss.docstatus == 1)
+				& (ss.is_active == "Yes")
+				& (ssa.employee == self.employee)
+				& (
+					(ssa.from_date <= self.start_date)
+					| (ssa.from_date <= self.end_date)
+					| (ssa.from_date <= joining_date)
+				)
+			)
+			.orderby(ssa.from_date, order=Order.desc)
+			.limit(1)
 		)
+
+		if self.payroll_frequency:
+			query = query.where(ss.payroll_frequency == self.payroll_frequency)
+
+		st_name = query.run()
 
 		if st_name:
 			self.salary_structure = st_name[0][0]
@@ -514,19 +531,18 @@ class SalarySlip(TransactionBase):
 		for leave_type in leave_types:
 			leave_type_map[leave_type.name] = leave_type
 
-		attendances = frappe.db.sql(
-			"""
-			SELECT attendance_date, status, leave_type
-			FROM `tabAttendance`
-			WHERE
-				status in ('Absent', 'Half Day', 'On leave')
-				AND employee = %s
-				AND docstatus = 1
-				AND attendance_date between %s and %s
-		""",
-			values=(self.employee, self.start_date, self.end_date),
-			as_dict=1,
-		)
+		attendance = frappe.qb.DocType("Attendance")
+
+		attendances = (
+			frappe.qb.from_(attendance)
+			.select(attendance.attendance_date, attendance.status, attendance.leave_type)
+			.where(
+				(attendance.status.isin(["Absent", "Half Day", "On Leave"]))
+				& (attendance.employee == self.employee)
+				& (attendance.docstatus == 1)
+				& (attendance.attendance_date.between(self.start_date, self.end_date))
+			)
+		).run(as_dict=1)
 
 		for d in attendances:
 			if (
@@ -1156,42 +1172,16 @@ class SalarySlip(TransactionBase):
 		return income_tax_slab_doc
 
 	def get_taxable_earnings_for_prev_period(self, start_date, end_date, allow_tax_exemption=False):
-		taxable_earnings = frappe.db.sql(
-			"""
-			select sum(sd.amount)
-			from
-				`tabSalary Detail` sd join `tabSalary Slip` ss on sd.parent=ss.name
-			where
-				sd.parentfield='earnings'
-				and sd.is_tax_applicable=1
-				and is_flexible_benefit=0
-				and ss.docstatus=1
-				and ss.employee=%(employee)s
-				and ss.start_date between %(from_date)s and %(to_date)s
-				and ss.end_date between %(from_date)s and %(to_date)s
-			""",
-			{"employee": self.employee, "from_date": start_date, "to_date": end_date},
-		)
+		exempted_amount = 0
+		taxable_earnings = self.get_query_for_salary_slip_and_salary_details(
+			start_date, end_date, parentfield="earnings", is_tax_applicable=1
+		).run()
 		taxable_earnings = flt(taxable_earnings[0][0]) if taxable_earnings else 0
 
-		exempted_amount = 0
 		if allow_tax_exemption:
-			exempted_amount = frappe.db.sql(
-				"""
-				select sum(sd.amount)
-				from
-					`tabSalary Detail` sd join `tabSalary Slip` ss on sd.parent=ss.name
-				where
-					sd.parentfield='deductions'
-					and sd.exempted_from_income_tax=1
-					and is_flexible_benefit=0
-					and ss.docstatus=1
-					and ss.employee=%(employee)s
-					and ss.start_date between %(from_date)s and %(to_date)s
-					and ss.end_date between %(from_date)s and %(to_date)s
-				""",
-				{"employee": self.employee, "from_date": start_date, "to_date": end_date},
-			)
+			exempted_amount = self.get_query_for_salary_slip_and_salary_details(
+				start_date, end_date, parentfield="deductions", exempted_from_income_tax=1
+			).run()
 			exempted_amount = flt(exempted_amount[0][0]) if exempted_amount else 0
 
 		opening_taxable_earning = self.get_opening_for(
@@ -1215,32 +1205,58 @@ class SalarySlip(TransactionBase):
 			or 0
 		)
 
+	def get_query_for_salary_slip_and_salary_details(
+		self,
+		start_date,
+		end_date,
+		parentfield,
+		salary_component=None,
+		is_tax_applicable=0,
+		is_flexible_benefit=0,
+		exempted_from_income_tax=0,
+		variable_based_on_taxable_salary=0,
+	):
+		ss = frappe.qb.DocType("Salary Slip")
+		sd = frappe.qb.DocType("Salary Detail")
+
+		query = (
+			frappe.qb.from_(ss)
+			.join(sd)
+			.on(sd.parent == ss.name)
+			.select(Sum(sd.amount))
+			.where(sd.parentfield == parentfield)
+			.where(sd.is_flexible_benefit == is_flexible_benefit)
+			.where(ss.docstatus == 1)
+			.where(ss.employee == self.employee)
+			.where(ss.start_date.between(start_date, end_date))
+			.where(ss.end_date.between(start_date, end_date))
+		)
+
+		if is_tax_applicable:
+			query = query.where(sd.is_tax_applicable == is_tax_applicable)
+
+		if exempted_from_income_tax:
+			query = query.where(sd.exempted_from_income_tax == exempted_from_income_tax)
+
+		if variable_based_on_taxable_salary:
+			query = query.where(sd.variable_based_on_taxable_salary == variable_based_on_taxable_salary)
+
+		if salary_component:
+			query = query.where(sd.salary_component == salary_component)
+
+		return query
+
 	def get_tax_paid_in_period(self, start_date, end_date, tax_component):
 		# find total_tax_paid, tax paid for benefit, additional_salary
-		total_tax_paid = flt(
-			frappe.db.sql(
-				"""
-			select
-				sum(sd.amount)
-			from
-				`tabSalary Detail` sd join `tabSalary Slip` ss on sd.parent=ss.name
-			where
-				sd.parentfield='deductions'
-				and sd.salary_component=%(salary_component)s
-				and sd.variable_based_on_taxable_salary=1
-				and ss.docstatus=1
-				and ss.employee=%(employee)s
-				and ss.start_date between %(from_date)s and %(to_date)s
-				and ss.end_date between %(from_date)s and %(to_date)s
-		""",
-				{
-					"salary_component": tax_component,
-					"employee": self.employee,
-					"from_date": start_date,
-					"to_date": end_date,
-				},
-			)[0][0]
-		)
+		total_tax_paid = self.get_query_for_salary_slip_and_salary_details(
+			start_date,
+			end_date,
+			parentfield="deductions",
+			salary_component=tax_component,
+			variable_based_on_taxable_salary=1,
+		).run()
+
+		total_tax_paid = flt(total_tax_paid[0][0]) if total_tax_paid else 0
 
 		tax_deducted_till_date = self.get_opening_for("tax_deducted_till_date", start_date, end_date)
 
@@ -1379,42 +1395,27 @@ class SalarySlip(TransactionBase):
 
 	def calculate_unclaimed_taxable_benefits(self):
 		# get total sum of benefits paid
-		total_benefits_paid = flt(
-			frappe.db.sql(
-				"""
-			select sum(sd.amount)
-			from `tabSalary Detail` sd join `tabSalary Slip` ss on sd.parent=ss.name
-			where
-				sd.parentfield='earnings'
-				and sd.is_tax_applicable=1
-				and is_flexible_benefit=1
-				and ss.docstatus=1
-				and ss.employee=%(employee)s
-				and ss.start_date between %(start_date)s and %(end_date)s
-				and ss.end_date between %(start_date)s and %(end_date)s
-		""",
-				{
-					"employee": self.employee,
-					"start_date": self.payroll_period.start_date,
-					"end_date": self.start_date,
-				},
-			)[0][0]
-		)
+		total_benefits_paid = self.get_query_for_salary_slip_and_salary_details(
+			self.payroll_period.start_date,
+			self.start_date,
+			parentfield="earnings",
+			is_tax_applicable=1,
+			is_flexible_benefit=1,
+		).run()
+		total_benefits_paid = flt(total_benefits_paid[0][0]) if total_benefits_paid else 0
 
 		# get total benefits claimed
-		total_benefits_claimed = flt(
-			frappe.db.sql(
-				"""
-			select sum(claimed_amount)
-			from `tabEmployee Benefit Claim`
-			where
-				docstatus=1
-				and employee=%s
-				and claim_date between %s and %s
-		""",
-				(self.employee, self.payroll_period.start_date, self.end_date),
-			)[0][0]
-		)
+		ebc = frappe.qb.DocType("Employee Benefit Claim")
+		total_benefits_claimed = (
+			frappe.qb.from_(ebc)
+			.select(Sum(ebc.claimed_amount))
+			.where(
+				(ebc.docstatus == 1)
+				& (ebc.employee == self.employee)
+				& (ebc.claim_date.between(self.payroll_period.start_date, self.end_date))
+			)
+		).run()
+		total_benefits_claimed = flt(total_benefits_claimed[0][0]) if total_benefits_claimed else 0
 
 		return total_benefits_paid - total_benefits_claimed
 
@@ -1743,41 +1744,37 @@ class SalarySlip(TransactionBase):
 	def compute_component_wise_year_to_date(self):
 		period_start_date, period_end_date = self.get_year_to_date_period()
 
+		ss = frappe.qb.DocType("Salary Slip")
+		sd = frappe.qb.DocType("Salary Detail")
+
 		for key in ("earnings", "deductions"):
 			for component in self.get(key):
 				year_to_date = 0
-				component_sum = frappe.db.sql(
-					"""
-					SELECT sum(detail.amount) as sum
-					FROM `tabSalary Detail` as detail
-					INNER JOIN `tabSalary Slip` as salary_slip
-					ON detail.parent = salary_slip.name
-					WHERE
-						salary_slip.employee = %(employee)s
-						AND detail.salary_component = %(component)s
-						AND salary_slip.start_date >= %(period_start_date)s
-						AND salary_slip.end_date < %(period_end_date)s
-						AND salary_slip.name != %(docname)s
-						AND salary_slip.docstatus = 1""",
-					{
-						"employee": self.employee,
-						"component": component.salary_component,
-						"period_start_date": period_start_date,
-						"period_end_date": period_end_date,
-						"docname": self.name,
-					},
-				)
+				component_sum = (
+					frappe.qb.from_(sd)
+					.inner_join(ss)
+					.on(sd.parent == ss.name)
+					.select(Sum(sd.amount).as_("sum"))
+					.where(
+						(ss.employee == self.employee)
+						& (sd.salary_component == component.salary_component)
+						& (ss.start_date >= period_start_date)
+						& (ss.end_date < period_end_date)
+						& (ss.name != self.name)
+						& (ss.docstatus == 1)
+					)
+				).run()
 
 				year_to_date = flt(component_sum[0][0]) if component_sum else 0.0
 				year_to_date += component.amount
 				component.year_to_date = year_to_date
 
 	def get_year_to_date_period(self):
-		payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
+		self.payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
 
-		if payroll_period:
-			period_start_date = payroll_period.start_date
-			period_end_date = payroll_period.end_date
+		if self.payroll_period:
+			period_start_date = self.payroll_period.start_date
+			period_end_date = self.payroll_period.end_date
 		else:
 			# get dates based on fiscal year if no payroll period exists
 			fiscal_year = get_fiscal_year(date=self.start_date, company=self.company, as_dict=1)
@@ -1810,11 +1807,10 @@ class SalarySlip(TransactionBase):
 
 def unlink_ref_doc_from_salary_slip(doc, method=None):
 	"""Unlinks accrual Journal Entry from Salary Slips on cancellation"""
-	linked_ss = frappe.db.sql_list(
-		"""select name from `tabSalary Slip`
-	where journal_entry=%s and docstatus < 2""",
-		(doc.name),
+	linked_ss = frappe.get_all(
+		"Salary Slip", filters={"journal_entry": doc.name, "docstatus": ["<", 2]}, pluck="name"
 	)
+
 	if linked_ss:
 		for ss in linked_ss:
 			ss_doc = frappe.get_doc("Salary Slip", ss)
