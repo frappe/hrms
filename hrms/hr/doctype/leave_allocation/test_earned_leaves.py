@@ -1,6 +1,14 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from frappe.utils import add_days, add_months, get_first_day, get_last_day, getdate
+from frappe.utils import (
+	add_days,
+	add_months,
+	get_first_day,
+	get_last_day,
+	get_year_ending,
+	get_year_start,
+	getdate,
+)
 
 from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 
@@ -14,6 +22,7 @@ from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
 	create_assignment_for_multiple_employees,
 )
 from hrms.hr.utils import allocate_earned_leaves
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.tests.test_utils import get_first_sunday
 
 
@@ -30,8 +39,16 @@ class TestLeaveAllocation(FrappeTestCase):
 
 		employee = frappe.get_doc("Employee", "_T-Employee-00001")
 		self.original_doj = employee.date_of_joining
+
+		employee.date_of_joining = add_months(getdate(), -24)
+		employee.save()
+
 		self.employee = employee
 		self.leave_type = "Test Earned Leave"
+
+		from_date = get_year_start(getdate())
+		to_date = get_year_ending(getdate())
+		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
 
 	def test_earned_leave_allocation(self):
 		"""Tests if Earned Leave allocation is 0 initially as it happens via scheduler"""
@@ -155,21 +172,28 @@ class TestLeaveAllocation(FrappeTestCase):
 		self.assertEqual(leaves_allocated, 3)
 
 	def test_earned_leaves_creation(self):
-		make_policy_assignment(self.employee, annual_allocation=6)
-		frappe.db.set_value("Leave Type", self.leave_type, "max_leaves_allowed", 6)
+		test = get_year_start(getdate())
+		frappe.flags.current_date = get_year_start(getdate())
+		make_policy_assignment(
+			self.employee,
+			annual_allocation=6,
+			allocate_on="First Day",
+			start_date=frappe.flags.current_date,
+		)
 
-		for i in range(0, 14):
-			allocate_earned_leaves()
-
-		self.assertEqual(get_leave_balance_on(self.employee.name, self.leave_type, getdate()), 6)
+		# leaves for 6 months = 3, but max leaves restricts allocation to 2
+		frappe.db.set_value("Leave Type", self.leave_type, "max_leaves_allowed", 2)
+		allocate_earned_leaves_for_months(6)
+		self.assertEqual(
+			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 2
+		)
 
 		# validate earned leaves creation without maximum leaves
 		frappe.db.set_value("Leave Type", self.leave_type, "max_leaves_allowed", 0)
-
-		for i in range(0, 6):
-			allocate_earned_leaves()
-
-		self.assertEqual(get_leave_balance_on(self.employee.name, self.leave_type, getdate()), 9)
+		allocate_earned_leaves_for_months(6)
+		self.assertEqual(
+			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 5
+		)
 
 	def test_allocate_on_first_day(self):
 		"""Tests assignment with 'Allocate On=First Day'"""
@@ -249,7 +273,13 @@ class TestLeaveAllocation(FrappeTestCase):
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_get_earned_leave_details_for_dashboard(self):
-		leave_policy_assignments = make_policy_assignment(self.employee, annual_allocation=6)
+		frappe.flags.current_date = get_year_start(getdate())
+		leave_policy_assignments = make_policy_assignment(
+			self.employee,
+			annual_allocation=6,
+			allocate_on="First Day",
+			start_date=frappe.flags.current_date,
+		)
 		allocation = frappe.db.get_value(
 			"Leave Allocation",
 			{"leave_policy_assignment": leave_policy_assignments[0]},
@@ -259,10 +289,9 @@ class TestLeaveAllocation(FrappeTestCase):
 		allocation.new_leaves_allocated = 2
 		allocation.save()
 
-		for i in range(0, 6):
-			allocate_earned_leaves()
+		allocate_earned_leaves_for_months(6)
 
-		first_sunday = get_first_sunday()
+		first_sunday = get_first_sunday(self.holiday_list)
 		make_leave_application(
 			self.employee.name, add_days(first_sunday, 1), add_days(first_sunday, 1), self.leave_type
 		)
@@ -279,8 +308,8 @@ class TestLeaveAllocation(FrappeTestCase):
 		}
 		self.assertEqual(leave_allocation, expected)
 
-		# total leaves allocated = 6 on the current date
-		details = get_leave_details(self.employee.name, getdate())
+		# total leaves allocated = 5 on the current date
+		details = get_leave_details(self.employee.name, frappe.flags.current_date)
 		leave_allocation = details["leave_allocation"][self.leave_type]
 		expected = {
 			"total_leaves": 5.0,
@@ -374,3 +403,9 @@ def get_allocated_leaves(assignment):
 		{"leave_policy_assignment": assignment},
 		"total_leaves_allocated",
 	)
+
+
+def allocate_earned_leaves_for_months(months):
+	for i in range(0, months):
+		frappe.flags.current_date = add_months(frappe.flags.current_date, 1)
+		allocate_earned_leaves()
