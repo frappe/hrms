@@ -80,6 +80,8 @@ class LeaveApplication(Document):
 		if frappe.db.get_value("Leave Type", self.leave_type, "is_optional_leave"):
 			self.validate_optional_leave()
 		self.validate_applicable_after()
+		if self.leave_approver:
+			self.validate_self_approval_status()
 
 	def on_update(self):
 		if self.status == "Open" and self.docstatus < 1:
@@ -147,6 +149,17 @@ class LeaveApplication(Document):
 		
 		if self.leave_approver != frappe.session.user:
 			frappe.throw(_("Only Leave Approver Can Submit Leave Application"))
+
+	def validate_self_approval_status(self):
+		user_roles = frappe.get_roles()
+		roles_to_check = ["HR Manager", "HR User", "System Manager"]
+
+		if any(role in user_roles for role in roles_to_check):
+			return
+		
+		if self.leave_approver != frappe.session.user:
+			if self.status in ["Approved", "Rejected"]:
+				frappe.throw(_("Only Leave Approver can change the status 'Approved' or 'Rejected'"))
 
 	def validate_dates(self):
 		if frappe.db.get_single_value("HR Settings", "restrict_backdated_leave_application"):
