@@ -198,12 +198,13 @@ class LeavePolicyAssignment(Document):
 def add_current_month_if_applicable(months_passed, date_of_joining, allocate_on):
 	date = getdate(frappe.flags.current_date) or getdate()
 
-	# If the date of assignment creation matches the leave type's "Allocate On" date,
-	# then the month should be considered
+	# If the date of assignment creation is >= the leave type's "Allocate On" date,
+	# then the current month should be considered
+	# because the employee is already entitled for the leave of that month
 	if (
-		(allocate_on == "Date of Joining" and date.day == date_of_joining.day)
-		or (allocate_on == "First Day" and get_first_day(date) == date)
-		or (allocate_on == "Last Day" and get_last_day(date) == date)
+		(allocate_on == "Date of Joining" and date.day >= date_of_joining.day)
+		or (allocate_on == "First Day" and date >= get_first_day(date))
+		or (allocate_on == "Last Day" and date == get_last_day(date))
 	):
 		months_passed += 1
 
