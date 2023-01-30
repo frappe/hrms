@@ -97,6 +97,8 @@ class LeaveApplication(Document):
 
 		self.validate_back_dated_application()
 		self.update_attendance()
+		if self.leave_approver:
+			self.validate_self_approval()
 
 		# notify leave applier about approval
 		if frappe.db.get_single_value("HR Settings", "send_leave_notification"):
@@ -135,6 +137,16 @@ class LeaveApplication(Document):
 								self.leave_type, leave_type.applicable_after
 							)
 						)
+
+	def validate_self_approval(self):
+		user_roles = frappe.get_roles()
+		roles_to_check = ["HR Manager", "HR User", "System Manager"]
+
+		if any(role in user_roles for role in roles_to_check):
+			return
+		
+		if self.leave_approver != frappe.session.user:
+			frappe.throw(_("Only Leave Approver Can Submit Leave Application"))
 
 	def validate_dates(self):
 		if frappe.db.get_single_value("HR Settings", "restrict_backdated_leave_application"):
