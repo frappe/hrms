@@ -322,7 +322,7 @@ def allocate_earned_leaves():
 
 			from_date = allocation.from_date
 
-			if e_leave_type.allocate_on == "Joining Date":
+			if e_leave_type.allocate_on == "Date of Joining":
 				from_date = frappe.db.get_value("Employee", allocation.employee, "date_of_joining")
 
 			if check_effective_date(
@@ -431,13 +431,13 @@ def check_effective_date(from_date, today, frequency, allocate_on):
 	from dateutil import relativedelta
 
 	from_date = get_datetime(from_date)
-	today = get_datetime(today)
+	today = frappe.flags.current_date or get_datetime(today)
 	rd = relativedelta.relativedelta(today, from_date)
 
 	expected_date = {
 		"First Day": get_first_day(from_date),
 		"Last Day": get_last_day(today),
-		"Joining Date": from_date,
+		"Date of Joining": from_date,
 	}[allocate_on]
 
 	if expected_date.day == today.day:
@@ -449,9 +449,6 @@ def check_effective_date(from_date, today, frequency, allocate_on):
 			return True
 		elif frequency == "Yearly" and rd.months % 12:
 			return True
-
-	if frappe.flags.in_test:
-		return True
 
 	return False
 
