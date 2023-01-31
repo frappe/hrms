@@ -34,7 +34,7 @@
   "is_earned_leave",
   "earned_leave_frequency",
   "column_break_22",
-  "based_on_date_of_joining",
+  "allocate_on_day",
   "rounding"
  ],
  "fields": [
@@ -192,14 +192,6 @@
   },
   {
    "default": "0",
-   "depends_on": "eval:doc.is_earned_leave",
-   "description": "If checked, leave will be granted on the day of joining every month.",
-   "fieldname": "based_on_date_of_joining",
-   "fieldtype": "Check",
-   "label": "Based On Date Of Joining"
-  },
-  {
-   "default": "0",
    "depends_on": "eval:doc.is_lwp == 0",
    "fieldname": "is_ppl",
    "fieldtype": "Check",
@@ -219,12 +211,21 @@
    "fieldname": "allow_over_allocation",
    "fieldtype": "Check",
    "label": "Allow Over Allocation"
+  },
+  {
+   "default": "Last Day",
+   "depends_on": "eval:doc.is_earned_leave",
+   "description": "The day of the month when leaves should be allocated",
+   "fieldname": "allocate_on_day",
+   "fieldtype": "Select",
+   "label": "Allocate on Day",
+   "options": "First Day\nLast Day\nDate of Joining"
   }
  ],
  "icon": "fa fa-flag",
  "idx": 1,
  "links": [],
- "modified": "2022-05-09 05:01:38.957545",
+ "modified": "2023-01-31 10:19:49.181649",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Type",

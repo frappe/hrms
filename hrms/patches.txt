@@ -3,3 +3,4 @@
 
 [post_model_sync]
 hrms.patches.v1_0.rearrange_employee_fields
+hrms.patches.v1_0.update_allocate_on_in_leave_type
