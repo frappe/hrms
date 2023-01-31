@@ -34,7 +34,7 @@
   "is_earned_leave",
   "earned_leave_frequency",
   "column_break_22",
-  "allocate_on",
+  "allocate_on_day",
   "rounding"
  ],
  "fields": [
@@ -215,17 +215,17 @@
   {
    "default": "Last Day",
    "depends_on": "eval:doc.is_earned_leave",
-   "description": "The day of the month leaves should get allocated on",
-   "fieldname": "allocate_on",
+   "description": "The day of the month when leaves should be allocated",
+   "fieldname": "allocate_on_day",
    "fieldtype": "Select",
-   "label": "Allocate On",
+   "label": "Allocate on Day",
    "options": "First Day\nLast Day\nDate of Joining"
   }
  ],
  "icon": "fa fa-flag",
  "idx": 1,
  "links": [],
- "modified": "2023-01-18 16:18:52.914394",
+ "modified": "2023-01-31 10:19:49.181649",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Type",

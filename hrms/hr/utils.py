@@ -322,11 +322,11 @@ def allocate_earned_leaves():
 
 			from_date = allocation.from_date
 
-			if e_leave_type.allocate_on == "Date of Joining":
+			if e_leave_type.allocate_on_day == "Date of Joining":
 				from_date = frappe.db.get_value("Employee", allocation.employee, "date_of_joining")
 
 			if check_effective_date(
-				from_date, today, e_leave_type.earned_leave_frequency, e_leave_type.allocate_on
+				from_date, today, e_leave_type.earned_leave_frequency, e_leave_type.allocate_on_day
 			):
 				update_previous_leave_allocation(allocation, annual_allocation, e_leave_type)
 
@@ -348,9 +348,9 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 		allocation.db_set("total_leaves_allocated", new_allocation, update_modified=False)
 		create_additional_leave_ledger_entry(allocation, earned_leaves, today_date)
 
-		if e_leave_type.allocate_on:
+		if e_leave_type.allocate_on_day:
 			text = _("allocated {0} leave(s) via scheduler on {1} based on the {2}").format(
-				frappe.bold(earned_leaves), frappe.bold(formatdate(today_date)), e_leave_type.allocate_on
+				frappe.bold(earned_leaves), frappe.bold(formatdate(today_date)), e_leave_type.allocate_on_day
 			)
 
 		allocation.add_comment(comment_type="Info", text=text)
@@ -413,7 +413,7 @@ def get_earned_leaves():
 			"max_leaves_allowed",
 			"earned_leave_frequency",
 			"rounding",
-			"allocate_on",
+			"allocate_on_day",
 		],
 		filters={"is_earned_leave": 1},
 	)
@@ -427,7 +427,7 @@ def create_additional_leave_ledger_entry(allocation, leaves, date):
 	allocation.create_leave_ledger_entry()
 
 
-def check_effective_date(from_date, today, frequency, allocate_on):
+def check_effective_date(from_date, today, frequency, allocate_on_day):
 	from dateutil import relativedelta
 
 	from_date = get_datetime(from_date)
@@ -438,7 +438,7 @@ def check_effective_date(from_date, today, frequency, allocate_on):
 		"First Day": get_first_day(from_date),
 		"Last Day": get_last_day(today),
 		"Date of Joining": from_date,
-	}[allocate_on]
+	}[allocate_on_day]
 
 	if expected_date.day == today.day:
 		if frequency == "Monthly":

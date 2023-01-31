@@ -172,15 +172,15 @@ class LeavePolicyAssignment(Document):
 			from_date = getdate(date_of_joining)
 
 		months_passed = 0
-		allocate_on = leave_type_details.get(leave_type).allocate_on
+		allocate_on_day = leave_type_details.get(leave_type).allocate_on_day
 
 		if current_date.year == from_date.year and current_date.month >= from_date.month:
 			months_passed = current_date.month - from_date.month
-			months_passed = add_current_month_if_applicable(months_passed, date_of_joining, allocate_on)
+			months_passed = add_current_month_if_applicable(months_passed, date_of_joining, allocate_on_day)
 
 		elif current_date.year > from_date.year:
 			months_passed = (12 - from_date.month) + current_date.month
-			months_passed = add_current_month_if_applicable(months_passed, date_of_joining, allocate_on)
+			months_passed = add_current_month_if_applicable(months_passed, date_of_joining, allocate_on_day)
 
 		if months_passed > 0:
 			monthly_earned_leave = get_monthly_earned_leave(
@@ -195,16 +195,16 @@ class LeavePolicyAssignment(Document):
 		return new_leaves_allocated
 
 
-def add_current_month_if_applicable(months_passed, date_of_joining, allocate_on):
+def add_current_month_if_applicable(months_passed, date_of_joining, allocate_on_day):
 	date = getdate(frappe.flags.current_date) or getdate()
 
 	# If the date of assignment creation is >= the leave type's "Allocate On" date,
 	# then the current month should be considered
 	# because the employee is already entitled for the leave of that month
 	if (
-		(allocate_on == "Date of Joining" and date.day >= date_of_joining.day)
-		or (allocate_on == "First Day" and date >= get_first_day(date))
-		or (allocate_on == "Last Day" and date == get_last_day(date))
+		(allocate_on_day == "Date of Joining" and date.day >= date_of_joining.day)
+		or (allocate_on_day == "First Day" and date >= get_first_day(date))
+		or (allocate_on_day == "Last Day" and date == get_last_day(date))
 	):
 		months_passed += 1
 
@@ -252,7 +252,7 @@ def get_leave_type_details():
 			"is_lwp",
 			"is_earned_leave",
 			"is_compensatory",
-			"allocate_on",
+			"allocate_on_day",
 			"is_carry_forward",
 			"expire_carry_forwarded_leaves_after_days",
 			"earned_leave_frequency",

@@ -146,7 +146,7 @@ class TestLeaveAllocation(FrappeTestCase):
 		frappe.flags.current_date = get_first_day(getdate())
 
 		leave_policy_assignments = make_policy_assignment(
-			self.employee, start_date=start_date, allocate_on="Date of Joining"
+			self.employee, start_date=start_date, allocate_on_day="Date of Joining"
 		)
 		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
 		self.assertEqual(leaves_allocated, 3)
@@ -162,7 +162,7 @@ class TestLeaveAllocation(FrappeTestCase):
 		frappe.flags.current_date = get_first_day(getdate())
 
 		leave_policy_assignments = make_policy_assignment(
-			self.employee, allocate_on="Date of Joining", assignment_based_on="Joining Date"
+			self.employee, allocate_on_day="Date of Joining", assignment_based_on="Joining Date"
 		)
 		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
 		effective_from = frappe.db.get_value(
@@ -177,7 +177,7 @@ class TestLeaveAllocation(FrappeTestCase):
 		make_policy_assignment(
 			self.employee,
 			annual_allocation=6,
-			allocate_on="First Day",
+			allocate_on_day="First Day",
 			start_date=frappe.flags.current_date,
 		)
 
@@ -204,7 +204,7 @@ class TestLeaveAllocation(FrappeTestCase):
 		# Case 1: Allocates 1 leave for the previous month if created on the previous month's last day
 		frappe.flags.current_date = prev_month_last_day
 		leave_policy_assignments = make_policy_assignment(
-			self.employee, allocate_on="First Day", start_date=start_date
+			self.employee, allocate_on_day="First Day", start_date=start_date
 		)
 		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
 		self.assertEqual(leaves_allocated, 1)
@@ -223,7 +223,7 @@ class TestLeaveAllocation(FrappeTestCase):
 		# Case 1: Allocates 1 leave for the previous month if created on the previous month's last day
 		frappe.flags.current_date = prev_month_last_day
 		leave_policy_assignments = make_policy_assignment(
-			self.employee, allocate_on="Last Day", start_date=prev_month_last_day
+			self.employee, allocate_on_day="Last Day", start_date=prev_month_last_day
 		)
 		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
 		self.assertEqual(leaves_allocated, 1)
@@ -253,7 +253,7 @@ class TestLeaveAllocation(FrappeTestCase):
 		# Case 1: Allocates 1 leave for the previous month if created on the previous month's day of joining
 		frappe.flags.current_date = doj
 		leave_policy_assignments = make_policy_assignment(
-			self.employee, allocate_on="Date of Joining", start_date=start_date
+			self.employee, allocate_on_day="Date of Joining", start_date=start_date
 		)
 		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
 		self.assertEqual(leaves_allocated, 1)
@@ -277,7 +277,7 @@ class TestLeaveAllocation(FrappeTestCase):
 		leave_policy_assignments = make_policy_assignment(
 			self.employee,
 			annual_allocation=6,
-			allocate_on="First Day",
+			allocate_on_day="First Day",
 			start_date=frappe.flags.current_date,
 		)
 		allocation = frappe.db.get_value(
@@ -326,7 +326,7 @@ class TestLeaveAllocation(FrappeTestCase):
 		frappe.flags.current_date = None
 
 
-def create_earned_leave_type(leave_type, allocate_on="Last Day"):
+def create_earned_leave_type(leave_type, allocate_on_day="Last Day"):
 	frappe.delete_doc_if_exists("Leave Type", leave_type, force=1)
 	frappe.delete_doc_if_exists("Leave Type", "Test Earned Leave Type", force=1)
 	frappe.delete_doc_if_exists("Leave Type", "Test Earned Leave Type 2", force=1)
@@ -339,7 +339,7 @@ def create_earned_leave_type(leave_type, allocate_on="Last Day"):
 			earned_leave_frequency="Monthly",
 			rounding=0.5,
 			is_carry_forward=1,
-			allocate_on=allocate_on,
+			allocate_on_day=allocate_on_day,
 			max_leaves_allowed=0,
 		)
 	).insert()
@@ -365,14 +365,14 @@ def create_leave_period(name, start_date=None):
 
 def make_policy_assignment(
 	employee,
-	allocate_on="Last Day",
+	allocate_on_day="Last Day",
 	earned_leave_frequency="Monthly",
 	start_date=None,
 	annual_allocation=12,
 	carry_forward=0,
 	assignment_based_on="Leave Period",
 ):
-	leave_type = create_earned_leave_type("Test Earned Leave", allocate_on)
+	leave_type = create_earned_leave_type("Test Earned Leave", allocate_on_day)
 	leave_period = create_leave_period("Test Earned Leave Period", start_date=start_date)
 	leave_policy = frappe.get_doc(
 		{
