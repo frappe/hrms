@@ -349,7 +349,7 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 		create_additional_leave_ledger_entry(allocation, earned_leaves, today_date)
 
 		if e_leave_type.allocate_on_day:
-			text = _("allocated {0} leave(s) via scheduler on {1} based on the {2}").format(
+			text = _("allocated {0} leave(s) via scheduler on {1} based on the 'Allocate on Day' option set to {2}").format(
 				frappe.bold(earned_leaves), frappe.bold(formatdate(today_date)), e_leave_type.allocate_on_day
 			)
 
@@ -435,7 +435,7 @@ def check_effective_date(from_date, today, frequency, allocate_on_day):
 	rd = relativedelta.relativedelta(today, from_date)
 
 	expected_date = {
-		"First Day": get_first_day(from_date),
+		"First Day": get_first_day(today),
 		"Last Day": get_last_day(today),
 		"Date of Joining": from_date,
 	}[allocate_on_day]
