@@ -349,7 +349,9 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 		create_additional_leave_ledger_entry(allocation, earned_leaves, today_date)
 
 		if e_leave_type.allocate_on_day:
-			text = _("allocated {0} leave(s) via scheduler on {1} based on the 'Allocate on Day' option set to {2}").format(
+			text = _(
+				"Allocated {0} leave(s) via scheduler on {1} based on the 'Allocate on Day' option set to {2}"
+			).format(
 				frappe.bold(earned_leaves), frappe.bold(formatdate(today_date)), e_leave_type.allocate_on_day
 			)
 
