@@ -9,7 +9,7 @@ def execute():
 
 	WIKI_URL = "https://github.com/frappe/hrms/wiki/Changes-to-branching-and-versioning"
 
-	if "14" in frappe_v and "15" in hrms_v:
+	if frappe_v.startswith("14") and hrms_v.startswith("15"):
 		message = f"""
 			The `develop` branch of Frappe HR is no longer compatible with Frappe & ERPNext's `version-14`.
 			Since you are using ERPNext/Frappe `version-14` please switch Frappe HR's branch to `version-14` and then proceed with the update.\n\t
