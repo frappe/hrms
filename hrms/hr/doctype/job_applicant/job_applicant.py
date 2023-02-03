@@ -40,6 +40,11 @@ class JobApplicant(Document):
 		if not self.applicant_name and self.email_id:
 			guess = self.email_id.split("@")[0]
 			self.applicant_name = " ".join([p.capitalize() for p in guess.split(".")])
+		if self.job_title:
+			job_openings=frappe.get_doc("Job Openings",self.job_title)
+			if (job_openings.status=="Closed"):
+				frappe.throw("Cannot create job applicant against closed status job openings")
+		
 
 	def set_status_for_employee_referral(self):
 		emp_ref = frappe.get_doc("Employee Referral", self.employee_referral)
