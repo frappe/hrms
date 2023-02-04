@@ -8,7 +8,15 @@ from math import ceil
 import frappe
 from frappe import _, bold
 from frappe.model.document import Document
-from frappe.utils import date_diff, flt, formatdate, get_last_day, get_link_to_form, getdate
+from frappe.utils import (
+	date_diff,
+	flt,
+	formatdate,
+	get_first_day,
+	get_last_day,
+	get_link_to_form,
+	getdate,
+)
 
 
 class LeavePolicyAssignment(Document):
@@ -164,15 +172,15 @@ class LeavePolicyAssignment(Document):
 			from_date = getdate(date_of_joining)
 
 		months_passed = 0
-		based_on_doj = leave_type_details.get(leave_type).based_on_date_of_joining
+		allocate_on_day = leave_type_details.get(leave_type).allocate_on_day
 
 		if current_date.year == from_date.year and current_date.month >= from_date.month:
 			months_passed = current_date.month - from_date.month
-			months_passed = add_current_month_if_applicable(months_passed, date_of_joining, based_on_doj)
+			months_passed = add_current_month_if_applicable(months_passed, date_of_joining, allocate_on_day)
 
 		elif current_date.year > from_date.year:
 			months_passed = (12 - from_date.month) + current_date.month
-			months_passed = add_current_month_if_applicable(months_passed, date_of_joining, based_on_doj)
+			months_passed = add_current_month_if_applicable(months_passed, date_of_joining, allocate_on_day)
 
 		if months_passed > 0:
 			monthly_earned_leave = get_monthly_earned_leave(
@@ -187,19 +195,18 @@ class LeavePolicyAssignment(Document):
 		return new_leaves_allocated
 
 
-def add_current_month_if_applicable(months_passed, date_of_joining, based_on_doj):
+def add_current_month_if_applicable(months_passed, date_of_joining, allocate_on_day):
 	date = getdate(frappe.flags.current_date) or getdate()
 
-	if based_on_doj:
-		# if leave type allocation is based on DOJ, and the date of assignment creation is same as DOJ,
-		# then the month should be considered
-		if date.day == date_of_joining.day:
-			months_passed += 1
-	else:
-		last_day_of_month = get_last_day(date)
-		# if its the last day of the month, then that month should be considered
-		if last_day_of_month == date:
-			months_passed += 1
+	# If the date of assignment creation is >= the leave type's "Allocate On" date,
+	# then the current month should be considered
+	# because the employee is already entitled for the leave of that month
+	if (
+		(allocate_on_day == "Date of Joining" and date.day >= date_of_joining.day)
+		or (allocate_on_day == "First Day" and date >= get_first_day(date))
+		or (allocate_on_day == "Last Day" and date == get_last_day(date))
+	):
+		months_passed += 1
 
 	return months_passed
 
@@ -245,7 +252,7 @@ def get_leave_type_details():
 			"is_lwp",
 			"is_earned_leave",
 			"is_compensatory",
-			"based_on_date_of_joining",
+			"allocate_on_day",
 			"is_carry_forward",
 			"expire_carry_forwarded_leaves_after_days",
 			"earned_leave_frequency",

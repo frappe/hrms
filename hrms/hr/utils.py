@@ -11,6 +11,8 @@ from frappe.utils import (
 	format_datetime,
 	formatdate,
 	get_datetime,
+	get_first_day,
+	get_last_day,
 	get_link_to_form,
 	getdate,
 	nowdate,
@@ -320,11 +322,11 @@ def allocate_earned_leaves():
 
 			from_date = allocation.from_date
 
-			if e_leave_type.based_on_date_of_joining:
+			if e_leave_type.allocate_on_day == "Date of Joining":
 				from_date = frappe.db.get_value("Employee", allocation.employee, "date_of_joining")
 
 			if check_effective_date(
-				from_date, today, e_leave_type.earned_leave_frequency, e_leave_type.based_on_date_of_joining
+				from_date, today, e_leave_type.earned_leave_frequency, e_leave_type.allocate_on_day
 			):
 				update_previous_leave_allocation(allocation, annual_allocation, e_leave_type)
 
@@ -346,13 +348,11 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 		allocation.db_set("total_leaves_allocated", new_allocation, update_modified=False)
 		create_additional_leave_ledger_entry(allocation, earned_leaves, today_date)
 
-		if e_leave_type.based_on_date_of_joining:
-			text = _("allocated {0} leave(s) via scheduler on {1} based on the date of joining").format(
-				frappe.bold(earned_leaves), frappe.bold(formatdate(today_date))
-			)
-		else:
-			text = _("allocated {0} leave(s) via scheduler on {1}").format(
-				frappe.bold(earned_leaves), frappe.bold(formatdate(today_date))
+		if e_leave_type.allocate_on_day:
+			text = _(
+				"Allocated {0} leave(s) via scheduler on {1} based on the 'Allocate on Day' option set to {2}"
+			).format(
+				frappe.bold(earned_leaves), frappe.bold(formatdate(today_date)), e_leave_type.allocate_on_day
 			)
 
 		allocation.add_comment(comment_type="Info", text=text)
@@ -415,7 +415,7 @@ def get_earned_leaves():
 			"max_leaves_allowed",
 			"earned_leave_frequency",
 			"rounding",
-			"based_on_date_of_joining",
+			"allocate_on_day",
 		],
 		filters={"is_earned_leave": 1},
 	)
@@ -429,20 +429,20 @@ def create_additional_leave_ledger_entry(allocation, leaves, date):
 	allocation.create_leave_ledger_entry()
 
 
-def check_effective_date(from_date, to_date, frequency, based_on_date_of_joining):
-	import calendar
-
+def check_effective_date(from_date, today, frequency, allocate_on_day):
 	from dateutil import relativedelta
 
 	from_date = get_datetime(from_date)
-	to_date = get_datetime(to_date)
-	rd = relativedelta.relativedelta(to_date, from_date)
-	# last day of month
-	last_day = calendar.monthrange(to_date.year, to_date.month)[1]
+	today = frappe.flags.current_date or get_datetime(today)
+	rd = relativedelta.relativedelta(today, from_date)
 
-	if (from_date.day == to_date.day and based_on_date_of_joining) or (
-		not based_on_date_of_joining and to_date.day == last_day
-	):
+	expected_date = {
+		"First Day": get_first_day(today),
+		"Last Day": get_last_day(today),
+		"Date of Joining": from_date,
+	}[allocate_on_day]
+
+	if expected_date.day == today.day:
 		if frequency == "Monthly":
 			return True
 		elif frequency == "Quarterly" and rd.months % 3:
@@ -451,9 +451,6 @@ def check_effective_date(from_date, to_date, frequency, based_on_date_of_joining
 			return True
 		elif frequency == "Yearly" and rd.months % 12:
 			return True
-
-	if frappe.flags.in_test:
-		return True
 
 	return False
 
@@ -650,19 +647,31 @@ def validate_loan_repay_from_salary(doc, method=None):
 
 
 def get_matching_queries(
-	bank_account, company, transaction, document_types, amount_condition, account_from_to
+	bank_account,
+	company,
+	transaction,
+	document_types,
+	amount_condition,
+	account_from_to=None,
+	from_date=None,
+	to_date=None,
+	filter_by_reference_date=None,
+	from_reference_date=None,
+	to_reference_date=None,
 ):
 	"""Returns matching queries for Bank Reconciliation"""
 	queries = []
 	if transaction.withdrawal > 0:
 		if "expense_claim" in document_types:
-			ec_amount_matching = get_ec_matching_query(bank_account, company, amount_condition)
+			ec_amount_matching = get_ec_matching_query(
+				bank_account, company, amount_condition, from_date, to_date
+			)
 			queries.extend([ec_amount_matching])
 
 	return queries
 
 
-def get_ec_matching_query(bank_account, company, amount_condition):
+def get_ec_matching_query(bank_account, company, amount_condition, from_date=None, to_date=None):
 	# get matching Expense Claim query
 	mode_of_payments = [
 		x["parent"]
@@ -670,8 +679,15 @@ def get_ec_matching_query(bank_account, company, amount_condition):
 			"Mode of Payment Account", filters={"default_account": bank_account}, fields=["parent"]
 		)
 	]
+
 	mode_of_payments = "('" + "', '".join(mode_of_payments) + "' )"
 	company_currency = get_company_currency(company)
+
+	filter_by_date = ""
+	if from_date and to_date:
+		filter_by_date = f"AND posting_date BETWEEN '{from_date}' AND '{to_date}'"
+		order_by = "posting_date"
+
 	return f"""
 		SELECT
 			( CASE WHEN employee = %(party)s THEN 1 ELSE 0 END
@@ -693,4 +709,5 @@ def get_ec_matching_query(bank_account, company, amount_condition):
 			AND is_paid = 1
 			AND ifnull(clearance_date, '') = ""
 			AND mode_of_payment in {mode_of_payments}
+			{filter_by_date}
 	"""

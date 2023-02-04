@@ -17,6 +17,28 @@ def make_company_fixtures(doc, method=None):
 	make_salary_components(doc.country)
 
 
+def delete_company_fixtures():
+	countries = frappe.get_all(
+		"Company",
+		distinct="True",
+		pluck="country",
+	)
+
+	for country in countries:
+		try:
+			module_name = f"hrms.regional.{frappe.scrub(country)}.setup.uninstall"
+			frappe.get_attr(module_name)()
+		except ImportError:
+			pass
+		except Exception:
+			frappe.log_error("Unable to delete country fixtures for HRMS")
+			frappe.throw(
+				_("Failed to delete defaults for country {0}. Please contact support.").format(
+					frappe.bold(country)
+				)
+			)
+
+
 def run_regional_setup(country):
 	try:
 		module_name = f"hrms.regional.{frappe.scrub(country)}.setup.setup"
