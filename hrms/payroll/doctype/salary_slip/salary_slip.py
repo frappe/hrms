@@ -814,8 +814,8 @@ class SalarySlip(TransactionBase):
 		prev_period_exempted_amount = 0
 		current_period_exempted_amount = 0
 		future_period_exempted_amount = 0
-		tax_exempted_components = {}
 
+		# Previous period exempted amount
 		prev_period_exempted_amount = self.get_query_for_salary_slip_and_salary_details(
 			self.payroll_period.start_date,
 			self.start_date,
@@ -826,23 +826,53 @@ class SalarySlip(TransactionBase):
 			flt(prev_period_exempted_amount[0][0]) if prev_period_exempted_amount else 0
 		)
 
+		# Current period exempted amount
 		for d in self.get("deductions"):
 			if d.exempted_from_income_tax:
 				current_period_exempted_amount += d.amount
 
+		# Future period exempted amount
 		for deduction in self._salary_structure_doc.get("deductions"):
 			if deduction.exempted_from_income_tax:
-				tax_exempted_components[deduction.salary_component] = {}
 				if deduction.amount_based_on_formula:
-					tax_exempted_components[deduction.salary_component]["formula"] = deduction.formula
+					for sub_period in range(1, math.ceil(self.remaining_sub_periods)):
+						future_period_exempted_amount += self.get_amount_from_formula(deduction, sub_period)
+					pass
 				else:
-					tax_exempted_components[deduction.salary_component]["amount"] = deduction.amount
+					future_period_exempted_amount += deduction.amount * (
+						math.ceil(self.remaining_sub_periods) - 1
+					)
 
-		print(tax_exempted_components, self.remaining_sub_periods)
+		return (
+			prev_period_exempted_amount + current_period_exempted_amount + future_period_exempted_amount
+		) or 0
 
-		# math.ceil(self.remaining_sub_periods) - 1
+	def get_amount_from_formula(self, struct_row, sub_period=1):
+		if self.payroll_frequency == "Monthly":
+			start_date = frappe.utils.add_months(self.start_date, sub_period)
+			end_date = frappe.utils.add_months(self.end_date, sub_period)
+			posting_date = frappe.utils.add_months(self.posting_date, sub_period)
 
-		return 0
+		else:
+			if self.payroll_frequency == "Weekly":
+				days_to_add = sub_period * 6
+
+			if self.payroll_frequency == "Fortnightly":
+				days_to_add = sub_period * 13
+
+			if self.payroll_frequency == "Daily":
+				days_to_add = start_date
+
+			start_date = frappe.utils.add_days(self.start_date, days_to_add)
+			end_date = frappe.utils.add_days(self.end_date, days_to_add)
+			posting_date = start_date
+
+		local_data = self.data.copy()
+		local_data.update({"start_date": start_date, "end_date": end_date, "posting_date": posting_date})
+
+		amount = self.eval_condition_and_formula(struct_row, local_data)
+
+		return amount
 
 	def get_income_tax_deducted_till_date(self):
 		tax_deducted = 0.0
@@ -866,7 +896,7 @@ class SalarySlip(TransactionBase):
 
 	def add_structure_components(self, component_type):
 		self.data, self.default_data = self.get_data_for_eval()
-		print(self.data, self.default_data, "self.data, self.default_data")
+
 		timesheet_component = frappe.db.get_value(
 			"Salary Structure", self.salary_structure, "salary_component"
 		)
