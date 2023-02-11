@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Tuple
 
 import frappe
 from frappe import _
-from frappe.utils import add_days, getdate
+from frappe.utils import add_days, cint, flt, getdate
 
 from hrms.hr.doctype.leave_allocation.leave_allocation import get_previous_allocation
 from hrms.hr.doctype.leave_application.leave_application import (
@@ -97,6 +97,7 @@ def get_data(filters: Filters) -> List:
 		fields=["name", "employee_name", "department", "user_id", "leave_approver"],
 	)
 
+	precision = cint(frappe.db.get_single_value("System Settings", "float_precision", cache=True))
 	data = []
 
 	for leave_type in leave_types:
@@ -126,13 +127,13 @@ def get_data(filters: Filters) -> List:
 			)
 			opening = get_opening_balance(employee.name, leave_type, filters, carry_forwarded_leaves)
 
-			row.leaves_allocated = new_allocation
-			row.leaves_expired = expired_leaves
-			row.opening_balance = opening
-			row.leaves_taken = leaves_taken
+			row.leaves_allocated = flt(new_allocation, precision)
+			row.leaves_expired = flt(expired_leaves, precision)
+			row.opening_balance = flt(opening, precision)
+			row.leaves_taken = flt(leaves_taken, precision)
 
-			# not be shown on the basis of days left it create in user mind for carry_forward leave
-			row.closing_balance = new_allocation + opening - (row.leaves_expired + leaves_taken)
+			closing = new_allocation + opening - (row.leaves_expired + leaves_taken)
+			row.closing_balance = flt(closing, precision)
 			row.indent = 1
 			data.append(row)
 
