@@ -762,6 +762,8 @@ def get_number_of_leave_days(
 def get_leave_details(employee, date):
 	allocation_records = get_leave_allocation_records(employee, date)
 	leave_allocation = {}
+	precision = cint(frappe.db.get_single_value("System Settings", "float_precision", cache=True))
+
 	for d in allocation_records:
 		allocation = allocation_records.get(d, frappe._dict())
 		remaining_leaves = get_leave_balance_on(
@@ -776,11 +778,11 @@ def get_leave_details(employee, date):
 		expired_leaves = allocation.total_leaves_allocated - (remaining_leaves + leaves_taken)
 
 		leave_allocation[d] = {
-			"total_leaves": allocation.total_leaves_allocated,
-			"expired_leaves": expired_leaves if expired_leaves > 0 else 0,
-			"leaves_taken": leaves_taken,
-			"leaves_pending_approval": leaves_pending,
-			"remaining_leaves": remaining_leaves,
+			"total_leaves": flt(allocation.total_leaves_allocated, precision),
+			"expired_leaves": flt(expired_leaves, precision) if expired_leaves > 0 else 0,
+			"leaves_taken": flt(leaves_taken, precision),
+			"leaves_pending_approval": flt(leaves_pending, precision),
+			"remaining_leaves": flt(remaining_leaves, precision),
 		}
 
 	# is used in set query
