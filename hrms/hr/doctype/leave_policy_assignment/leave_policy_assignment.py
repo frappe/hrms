@@ -149,12 +149,10 @@ class LeavePolicyAssignment(Document):
 					leave_type, new_leaves_allocated, leave_type_details, date_of_joining
 				)
 
-		# Calculate leaves at pro-rata basis for employees joining after the beginning of the given leave period
-		elif getdate(date_of_joining) > getdate(self.effective_from):
-			remaining_period = (date_diff(self.effective_to, date_of_joining) + 1) / (
-				date_diff(self.effective_to, self.effective_from) + 1
-			)
-			new_leaves_allocated = ceil(new_leaves_allocated * remaining_period)
+		leave_details = leave_type_details.get(leave_type)
+		new_leaves_allocated = self.get_pro_rated_leaves(
+			date_of_joining, leave_details, new_leaves_allocated
+		)
 
 		return flt(new_leaves_allocated, precision)
 
@@ -191,6 +189,32 @@ class LeavePolicyAssignment(Document):
 			new_leaves_allocated = monthly_earned_leave * months_passed
 		else:
 			new_leaves_allocated = 0
+
+		return new_leaves_allocated
+
+	def get_pro_rated_leaves(self, date_of_joining, leave_details, new_leaves_allocated):
+		"""
+		Calculates pro-rated leaves for the months passed
+		for employees joining after the beginning of the given leave period
+		"""
+		# no need to prorate if employee joined before the leave period
+		if getdate(date_of_joining) <= getdate(self.effective_from):
+			return new_leaves_allocated
+
+		# for earned leave, pro-rata period ends on the last day of the month
+		period_end_date = (
+			get_last_day(date_of_joining) if leave_details.is_earned_leave else self.effective_to
+		)
+
+		actual_period = date_diff(period_end_date, date_of_joining) + 1
+		complete_period = date_diff(period_end_date, self.effective_from) + 1
+
+		remaining_period = actual_period / complete_period
+
+		if leave_details.is_earned_leave:
+			new_leaves_allocated = new_leaves_allocated * remaining_period
+		else:
+			new_leaves_allocated = ceil(new_leaves_allocated * remaining_period)
 
 		return new_leaves_allocated
 
