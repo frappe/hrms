@@ -85,37 +85,34 @@ class LeavePolicyAssignment(Document):
 			date_of_joining = frappe.db.get_value("Employee", self.employee, "date_of_joining")
 
 			for leave_policy_detail in leave_policy.leave_policy_details:
-				if not leave_type_details.get(leave_policy_detail.leave_type).is_lwp:
+				leave_details = leave_type_details.get(leave_policy_detail.leave_type)
+
+				if not leave_details.is_lwp:
 					leave_allocation, new_leaves_allocated = self.create_leave_allocation(
-						leave_policy_detail.leave_type,
 						leave_policy_detail.annual_allocation,
-						leave_type_details,
+						leave_details,
 						date_of_joining,
 					)
-					leave_allocations[leave_policy_detail.leave_type] = {
+					leave_allocations[leave_details.name] = {
 						"name": leave_allocation,
 						"leaves": new_leaves_allocated,
 					}
 			self.db_set("leaves_allocated", 1)
 			return leave_allocations
 
-	def create_leave_allocation(
-		self, leave_type, new_leaves_allocated, leave_type_details, date_of_joining
-	):
+	def create_leave_allocation(self, new_leaves_allocated, leave_details, date_of_joining):
 		# Creates leave allocation for the given employee in the provided leave period
 		carry_forward = self.carry_forward
-		if self.carry_forward and not leave_type_details.get(leave_type).is_carry_forward:
+		if self.carry_forward and not leave_details.is_carry_forward:
 			carry_forward = 0
 
-		new_leaves_allocated = self.get_new_leaves(
-			leave_type, new_leaves_allocated, leave_type_details, date_of_joining
-		)
+		new_leaves_allocated = self.get_new_leaves(new_leaves_allocated, leave_details, date_of_joining)
 
 		allocation = frappe.get_doc(
 			dict(
 				doctype="Leave Allocation",
 				employee=self.employee,
-				leave_type=leave_type,
+				leave_type=leave_details.name,
 				from_date=self.effective_from,
 				to_date=self.effective_to,
 				new_leaves_allocated=new_leaves_allocated,
@@ -129,7 +126,7 @@ class LeavePolicyAssignment(Document):
 		allocation.submit()
 		return allocation.name, new_leaves_allocated
 
-	def get_new_leaves(self, leave_type, new_leaves_allocated, leave_type_details, date_of_joining):
+	def get_new_leaves(self, new_leaves_allocated, leave_details, date_of_joining):
 		from frappe.model.meta import get_field_precision
 
 		precision = get_field_precision(
@@ -137,28 +134,25 @@ class LeavePolicyAssignment(Document):
 		)
 
 		# Earned Leaves and Compensatory Leaves are allocated by scheduler, initially allocate 0
-		if leave_type_details.get(leave_type).is_compensatory == 1:
+		if leave_details.is_compensatory == 1:
 			new_leaves_allocated = 0
 
-		elif leave_type_details.get(leave_type).is_earned_leave == 1:
+		elif leave_details.is_earned_leave == 1:
 			if not self.assignment_based_on:
 				new_leaves_allocated = 0
 			else:
 				# get leaves for past months if assignment is based on Leave Period / Joining Date
 				new_leaves_allocated = self.get_leaves_for_passed_months(
-					leave_type, new_leaves_allocated, leave_type_details, date_of_joining
+					new_leaves_allocated, leave_details, date_of_joining
 				)
 
-		leave_details = leave_type_details.get(leave_type)
 		new_leaves_allocated = self.get_pro_rated_leaves(
 			date_of_joining, leave_details, new_leaves_allocated
 		)
 
 		return flt(new_leaves_allocated, precision)
 
-	def get_leaves_for_passed_months(
-		self, leave_type, new_leaves_allocated, leave_type_details, date_of_joining
-	):
+	def get_leaves_for_passed_months(self, new_leaves_allocated, leave_details, date_of_joining):
 		from hrms.hr.utils import get_monthly_earned_leave
 
 		current_date = frappe.flags.current_date or getdate()
@@ -170,7 +164,7 @@ class LeavePolicyAssignment(Document):
 			from_date = getdate(date_of_joining)
 
 		months_passed = 0
-		allocate_on_day = leave_type_details.get(leave_type).allocate_on_day
+		allocate_on_day = leave_details.allocate_on_day
 
 		if current_date.year == from_date.year and current_date.month >= from_date.month:
 			months_passed = current_date.month - from_date.month
@@ -183,8 +177,8 @@ class LeavePolicyAssignment(Document):
 		if months_passed > 0:
 			monthly_earned_leave = get_monthly_earned_leave(
 				new_leaves_allocated,
-				leave_type_details.get(leave_type).earned_leave_frequency,
-				leave_type_details.get(leave_type).rounding,
+				leave_details.earned_leave_frequency,
+				leave_details.rounding,
 			)
 			new_leaves_allocated = monthly_earned_leave * months_passed
 		else:
