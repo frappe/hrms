@@ -3,6 +3,8 @@ from frappe.tests.utils import FrappeTestCase
 from frappe.utils import (
 	add_days,
 	add_months,
+	date_diff,
+	flt,
 	get_first_day,
 	get_last_day,
 	get_year_ending,
@@ -244,32 +246,37 @@ class TestLeaveAllocation(FrappeTestCase):
 	def test_allocate_on_date_of_joining(self):
 		"""Tests if assignment with 'Allocate On=Last Day'"""
 		start_date = get_first_day(add_months(getdate(), -1))
+		end_date = get_last_day(start_date)
 		doj = add_days(start_date, 5)
 		current_month_doj = add_days(get_first_day(getdate()), 5)
 
 		self.employee.date_of_joining = doj
 		self.employee.save()
 
-		# Case 1: Allocates 1 leave for the previous month if created on the previous month's day of joining
+		# Case 1: Allocates pro-rated leave for the previous month if created on the previous month's day of joining
 		frappe.flags.current_date = doj
 		leave_policy_assignments = make_policy_assignment(
 			self.employee, allocate_on_day="Date of Joining", start_date=start_date
 		)
 		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
-		self.assertEqual(leaves_allocated, 1)
 
-		# Case 2: Allocates 1 leave on the current month's day of joining (via scheduler)
-		frappe.flags.current_date = current_month_doj
-		allocate_earned_leaves()
-		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
-		self.assertEqual(leaves_allocated, 2)
+		pro_rated_leave = flt(
+			((date_diff(end_date, doj) + 1) / (date_diff(end_date, start_date) + 1)), 3
+		)
+		self.assertEqual(leaves_allocated, pro_rated_leave)
 
-		# Case 3: Doesn't allocate before the current month's doj (via scheduler)
+		# Case 2: Doesn't allocate before the current month's doj (via scheduler)
 		frappe.flags.current_date = add_days(current_month_doj, -1)
 		allocate_earned_leaves()
 		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
-		# balance is still 2
-		self.assertEqual(leaves_allocated, 2)
+		# balance is still the same
+		self.assertEqual(leaves_allocated, pro_rated_leave)
+
+		# Case 3: Allocates 1 leave on the current month's day of joining (via scheduler)
+		frappe.flags.current_date = current_month_doj
+		allocate_earned_leaves()
+		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
+		self.assertEqual(leaves_allocated, pro_rated_leave + 1)
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_get_earned_leave_details_for_dashboard(self):
