@@ -653,7 +653,7 @@ class SalarySlip(TransactionBase):
 		# get taxable_earnings for current period (all days)
 		self.current_taxable_earnings = self.get_taxable_earnings(self.tax_slab.allow_tax_exemption)
 		self.future_structured_taxable_earnings = self.current_taxable_earnings.taxable_earnings * (
-			math.ceil(self.remaining_sub_periods) - 1
+			math.floor(self.remaining_sub_periods) - 1
 		)
 
 		# get taxable_earnings, addition_earnings for current actual payment days
@@ -750,6 +750,7 @@ class SalarySlip(TransactionBase):
 				+ self.unclaimed_taxable_benefits
 				+ self.non_taxable_earnings
 			)
+
 		else:
 			return 0.0
 
@@ -762,22 +763,16 @@ class SalarySlip(TransactionBase):
 		future_period_non_taxable_earnings = 0.0
 
 		# Previous period non taxable earnings
-		prev_period_non_taxable_earnings = self.get_query_for_salary_slip_and_salary_details(
+		prev_period_non_taxable_earnings = self.get_salary_slip_details(
 			self.payroll_period.start_date, self.start_date, parentfield="earnings", is_tax_applicable=0
-		).run()
-		prev_period_non_taxable_earnings = (
-			flt(prev_period_non_taxable_earnings[0][0]) if prev_period_non_taxable_earnings else 0
 		)
 
-		non_taxable_additiona_salary = self.get_query_for_salary_slip_and_salary_details(
+		non_taxable_additiona_salary = self.get_salary_slip_details(
 			self.payroll_period.start_date,
 			self.start_date,
 			parentfield="earnings",
 			is_tax_applicable=0,
 			field_to_select="additional_amount",
-		).run()
-		non_taxable_additiona_salary = (
-			flt(non_taxable_additiona_salary[0][0]) if non_taxable_additiona_salary else 0
 		)
 
 		# Current period non taxable earnings
@@ -797,7 +792,7 @@ class SalarySlip(TransactionBase):
 
 		# Future period non taxable earnings
 		future_period_non_taxable_earnings += current_period_non_taxable_earnings * (
-			math.ceil(self.remaining_sub_periods) - 1
+			math.floor(self.remaining_sub_periods) - 1
 		)
 
 		non_taxable_earnings = (
@@ -815,14 +810,11 @@ class SalarySlip(TransactionBase):
 		future_period_exempted_amount = 0
 
 		# Previous period exempted amount
-		prev_period_exempted_amount = self.get_query_for_salary_slip_and_salary_details(
+		prev_period_exempted_amount = self.get_salary_slip_details(
 			self.payroll_period.start_date,
 			self.start_date,
 			parentfield="deductions",
 			exempted_from_income_tax=1,
-		).run()
-		prev_period_exempted_amount = (
-			flt(prev_period_exempted_amount[0][0]) if prev_period_exempted_amount else 0
 		)
 
 		# Current period exempted amount
@@ -834,12 +826,12 @@ class SalarySlip(TransactionBase):
 		for deduction in self._salary_structure_doc.get("deductions"):
 			if deduction.exempted_from_income_tax:
 				if deduction.amount_based_on_formula:
-					for sub_period in range(1, math.ceil(self.remaining_sub_periods)):
+					for sub_period in range(1, math.floor(self.remaining_sub_periods)):
 						future_period_exempted_amount += self.get_amount_from_formula(deduction, sub_period)
 					pass
 				else:
 					future_period_exempted_amount += deduction.amount * (
-						math.ceil(self.remaining_sub_periods) - 1
+						math.floor(self.remaining_sub_periods) - 1
 					)
 
 		return (
@@ -1267,16 +1259,14 @@ class SalarySlip(TransactionBase):
 
 	def get_taxable_earnings_for_prev_period(self, start_date, end_date, allow_tax_exemption=False):
 		exempted_amount = 0
-		taxable_earnings = self.get_query_for_salary_slip_and_salary_details(
+		taxable_earnings = self.get_salary_slip_details(
 			start_date, end_date, parentfield="earnings", is_tax_applicable=1
-		).run()
-		taxable_earnings = flt(taxable_earnings[0][0]) if taxable_earnings else 0
+		)
 
 		if allow_tax_exemption:
-			exempted_amount = self.get_query_for_salary_slip_and_salary_details(
+			exempted_amount = self.get_salary_slip_details(
 				start_date, end_date, parentfield="deductions", exempted_from_income_tax=1
-			).run()
-			exempted_amount = flt(exempted_amount[0][0]) if exempted_amount else 0
+			)
 
 		opening_taxable_earning = self.get_opening_for(
 			"taxable_earnings_till_date", start_date, end_date
@@ -1299,7 +1289,7 @@ class SalarySlip(TransactionBase):
 			or 0
 		)
 
-	def get_query_for_salary_slip_and_salary_details(
+	def get_salary_slip_details(
 		self,
 		start_date,
 		end_date,
@@ -1344,19 +1334,19 @@ class SalarySlip(TransactionBase):
 		if salary_component:
 			query = query.where(sd.salary_component == salary_component)
 
-		return query
+		result = query.run()
+
+		return flt(result[0][0]) if result else 0.0
 
 	def get_tax_paid_in_period(self, start_date, end_date, tax_component):
 		# find total_tax_paid, tax paid for benefit, additional_salary
-		total_tax_paid = self.get_query_for_salary_slip_and_salary_details(
+		total_tax_paid = self.get_salary_slip_details(
 			start_date,
 			end_date,
 			parentfield="deductions",
 			salary_component=tax_component,
 			variable_based_on_taxable_salary=1,
-		).run()
-
-		total_tax_paid = flt(total_tax_paid[0][0]) if total_tax_paid else 0
+		)
 
 		tax_deducted_till_date = self.get_opening_for("tax_deducted_till_date", start_date, end_date)
 
@@ -1501,14 +1491,13 @@ class SalarySlip(TransactionBase):
 
 	def calculate_unclaimed_taxable_benefits(self):
 		# get total sum of benefits paid
-		total_benefits_paid = self.get_query_for_salary_slip_and_salary_details(
+		total_benefits_paid = self.get_salary_slip_details(
 			self.payroll_period.start_date,
 			self.start_date,
 			parentfield="earnings",
 			is_tax_applicable=1,
 			is_flexible_benefit=1,
-		).run()
-		total_benefits_paid = flt(total_benefits_paid[0][0]) if total_benefits_paid else 0
+		)
 
 		# get total benefits claimed
 		ebc = frappe.qb.DocType("Employee Benefit Claim")
@@ -1520,7 +1509,7 @@ class SalarySlip(TransactionBase):
 				& (ebc.employee == self.employee)
 				& (ebc.claim_date.between(self.payroll_period.start_date, self.end_date))
 			)
-		).run()
+		)
 		total_benefits_claimed = flt(total_benefits_claimed[0][0]) if total_benefits_claimed else 0
 
 		return total_benefits_paid - total_benefits_claimed
