@@ -2,14 +2,26 @@ name: CI
 
 on:
   push:
-    branches:
-      - develop
+    branches: [develop, version-14-hotfix, version-14]
+    paths-ignore:
+      - "**.css"
+      - "**.js"
+      - "**.md"
+      - "**.html"
+      - "**.csv"
+
   pull_request:
-    branches:
-      - develop
+    paths-ignore:
+      - "**.css"
+      - "**.js"
+      - "**.md"
+      - "**.html"
+      - "**.csv"
   schedule:
     # Run everday at midnight UTC / 5:30 IST
     - cron: "0 0 * * *"
+env:
+    HR_BRANCH: ${{ github.base_ref || github.ref_name }}
 
 concurrency:
   group: develop-${{ github.event.number }}
@@ -87,6 +99,8 @@ jobs:
       - name: Install
         run: |
           bash ${GITHUB_WORKSPACE}/.github/helper/install.sh
+        env:
+          BRANCH_TO_CLONE: ${{ env.HR_BRANCH }}
 
 
       - name: Run Tests
