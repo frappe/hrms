@@ -43,9 +43,9 @@ class JobApplicant(Document):
 			
 	def before_insert(self):
 		if self.job_title:
-			job_openings=frappe.get_doc("Job Openings",self.job_title)
-			if (job_openings.status=="Closed"):
-				frappe.throw("Cannot create job applicant against closed status job openings")
+			job_opening_status = frappe.db.get_value("Job Opening", self.job_title, "status")
+			if job_opening_status == "Closed":
+				frappe.throw(_("Cannot create a Job Applicant against a closed Job Opening"), title=_("Not Allowed"))
 
 	def set_status_for_employee_referral(self):
 		emp_ref = frappe.get_doc("Employee Referral", self.employee_referral)
