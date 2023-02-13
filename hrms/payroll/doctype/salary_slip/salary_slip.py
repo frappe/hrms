@@ -3,7 +3,7 @@
 
 
 import math
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 
 import frappe
 from frappe import _, msgprint
@@ -654,7 +654,7 @@ class SalarySlip(TransactionBase):
 		# get taxable_earnings for current period (all days)
 		self.current_taxable_earnings = self.get_taxable_earnings(self.tax_slab.allow_tax_exemption)
 		self.future_structured_taxable_earnings = self.current_taxable_earnings.taxable_earnings * (
-			math.floor(self.remaining_sub_periods) - 1
+			math.ceil(self.remaining_sub_periods) - 1
 		)
 
 		# get taxable_earnings, addition_earnings for current actual payment days
@@ -716,7 +716,7 @@ class SalarySlip(TransactionBase):
 
 		self.total_earnings = self.ctc + self.income_from_other_sources
 
-		self.deductions_before_tax_calculation = self.compute_anual_deductions_before_tax_calculation()
+		self.deductions_before_tax_calculation = self.compute_annual_deductions_before_tax_calculation()
 
 		self.standard_tax_exemption_amount = (
 			self.tax_slab.standard_tax_exemption_amount if self.tax_slab.allow_tax_exemption else 0.0
@@ -757,7 +757,7 @@ class SalarySlip(TransactionBase):
 
 	def compute_non_taxable_earnings(self):
 		non_taxable_earnings = 0.0
-		non_taxable_additiona_salary = 0.0
+		non_taxable_additional_salary = 0.0
 
 		prev_period_non_taxable_earnings = 0.0
 		current_period_non_taxable_earnings = 0.0
@@ -768,7 +768,7 @@ class SalarySlip(TransactionBase):
 			self.payroll_period.start_date, self.start_date, parentfield="earnings", is_tax_applicable=0
 		)
 
-		non_taxable_additiona_salary = self.get_salary_slip_details(
+		non_taxable_additional_salary = self.get_salary_slip_details(
 			self.payroll_period.start_date,
 			self.start_date,
 			parentfield="earnings",
@@ -783,29 +783,29 @@ class SalarySlip(TransactionBase):
 					current_period_non_taxable_earnings += earning.amount
 
 				if earning.additional_amount:
-					non_taxable_additiona_salary += earning.additional_amount
+					non_taxable_additional_salary += earning.additional_amount
 
 					# Future recurring additional salary
 					if earning.additional_salary and earning.is_recurring_additional_salary:
-						non_taxable_additiona_salary += self.get_future_recurring_additional_amount(
+						non_taxable_additional_salary += self.get_future_recurring_additional_amount(
 							earning.additional_salary, earning.additional_amount
 						)
 
 		# Future period non taxable earnings
 		future_period_non_taxable_earnings += current_period_non_taxable_earnings * (
-			math.floor(self.remaining_sub_periods) - 1
+			math.ceil(self.remaining_sub_periods) - 1
 		)
 
 		non_taxable_earnings = (
 			prev_period_non_taxable_earnings
 			+ current_period_non_taxable_earnings
 			+ future_period_non_taxable_earnings
-			+ non_taxable_additiona_salary
+			+ non_taxable_additional_salary
 		)
 
 		return non_taxable_earnings
 
-	def compute_anual_deductions_before_tax_calculation(self):
+	def compute_annual_deductions_before_tax_calculation(self):
 		prev_period_exempted_amount = 0
 		current_period_exempted_amount = 0
 		future_period_exempted_amount = 0
@@ -827,12 +827,12 @@ class SalarySlip(TransactionBase):
 		for deduction in self._salary_structure_doc.get("deductions"):
 			if deduction.exempted_from_income_tax:
 				if deduction.amount_based_on_formula:
-					for sub_period in range(1, math.floor(self.remaining_sub_periods)):
+					for sub_period in range(1, math.ceil(self.remaining_sub_periods)):
 						future_period_exempted_amount += self.get_amount_from_formula(deduction, sub_period)
 					pass
 				else:
 					future_period_exempted_amount += deduction.amount * (
-						math.floor(self.remaining_sub_periods) - 1
+						math.ceil(self.remaining_sub_periods) - 1
 					)
 
 		return (
@@ -1510,7 +1510,7 @@ class SalarySlip(TransactionBase):
 				& (ebc.employee == self.employee)
 				& (ebc.claim_date.between(self.payroll_period.start_date, self.end_date))
 			)
-		)
+		).run()
 		total_benefits_claimed = flt(total_benefits_claimed[0][0]) if total_benefits_claimed else 0
 
 		return total_benefits_paid - total_benefits_claimed

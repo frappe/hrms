@@ -704,7 +704,8 @@
   {
    "fieldname": "future_income_tax_deductions",
    "fieldtype": "Currency",
-   "label": "Future Income Tax Deductions"
+   "label": "Future Income Tax Deductions",
+   "read_only": 1
   },
   {
    "fieldname": "earnings_and_deductions_tab",
@@ -716,7 +717,7 @@
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-18 15:54:08.459244",
+ "modified": "2023-02-13 14:28:48.451878",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
