@@ -723,18 +723,21 @@ class SalarySlip(TransactionBase):
 
 		except NameError as err:
 			throw_error_message(
-				d, err, title="Name error", description="This error can be due to missing or deleted field."
+				d,
+				err,
+				title=_("Name error"),
+				description=_("This error can be due to missing or deleted field."),
 			)
 		except SyntaxError as err:
 			throw_error_message(
-				d, err, title="Syntax error", description="This error can be due to invalid syntax."
+				d, err, title=_("Syntax error"), description=_("This error can be due to invalid syntax.")
 			)
 		except Exception as err:
 			throw_error_message(
 				d,
 				err,
-				title="Error in formula or condition",
-				description="This error can be due to invalid formula or condition.",
+				title=_("Error in formula or condition"),
+				description=_("This error can be due to invalid formula or condition."),
 			)
 			raise
 
@@ -1884,4 +1887,4 @@ def throw_error_message(row, error, title, description=None):
 		"Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
 	).format(**data)
 
-	frappe.throw(message, title=_(title))
+	frappe.throw(message, title=title)
