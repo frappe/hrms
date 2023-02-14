@@ -722,11 +722,20 @@ class SalarySlip(TransactionBase):
 			return amount
 
 		except NameError as err:
-			throw_error_message(d, err, title="Name error")
+			throw_error_message(
+				d, err, title="Name error", description="This error can be due to missing or deleted field."
+			)
 		except SyntaxError as err:
-			throw_error_message(d, err, title="Syntax error")
+			throw_error_message(
+				d, err, title="Syntax error", description="This error can be due to invalid syntax."
+			)
 		except Exception as err:
-			throw_error_message(d, err, title="Error in formula or condition")
+			throw_error_message(
+				d,
+				err,
+				title="Error in formula or condition",
+				description="This error can be due to invalid formula or condition.",
+			)
 			raise
 
 	def add_employee_benefits(self, payroll_period):
@@ -1858,10 +1867,21 @@ def date_range(start=None, end=None):
 	return []
 
 
-def throw_error_message(row, error, title):
-	doclink = get_link_to_form(row.parenttype, row.parent)
-	message = f""" {title} in <b>{row.parenttype}</b>: {doclink} </a> at row {row.idx} """
-	if error:
-		message += f""" <br><br> Error: {error} """
+def throw_error_message(row, error, title, description=None):
+	data = frappe._dict(
+		{
+			"doctype": row.parenttype,
+			"name": row.parent,
+			"doclink": get_link_to_form(row.parenttype, row.parent),
+			"row_id": row.idx,
+			"error": error,
+			"title": title,
+			"description": description or "",
+		}
+	)
 
-	frappe.throw(_(message), title=_(title))
+	message = _(
+		"Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
+	).format(**data)
+
+	frappe.throw(message, title=_(title))
