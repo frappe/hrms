@@ -10,6 +10,7 @@ from frappe import _, bold
 from frappe.model.document import Document
 from frappe.utils import (
 	add_months,
+	cint,
 	date_diff,
 	flt,
 	formatdate,
@@ -18,8 +19,6 @@ from frappe.utils import (
 	get_link_to_form,
 	getdate,
 )
-
-from hrms.hr.utils import get_monthly_earned_leave
 
 
 class LeavePolicyAssignment(Document):
@@ -156,6 +155,8 @@ class LeavePolicyAssignment(Document):
 		return flt(new_leaves_allocated, precision)
 
 	def get_leaves_for_passed_months(self, new_leaves_allocated, leave_details, date_of_joining):
+		from hrms.hr.utils import get_monthly_earned_leave
+
 		current_date = frappe.flags.current_date or getdate()
 		if current_date > getdate(self.effective_to):
 			current_date = getdate(self.effective_to)
@@ -208,17 +209,25 @@ class LeavePolicyAssignment(Document):
 		else:
 			period_end_date = self.effective_to
 
-		actual_period = date_diff(period_end_date, date_of_joining) + 1
-		complete_period = date_diff(period_end_date, self.effective_from) + 1
+		new_leaves_allocated = calculate_pro_rated_leaves(
+			new_leaves_allocated, date_of_joining, self.effective_from, period_end_date
+		)
 
-		remaining_period = actual_period / complete_period
-
-		if leave_details.is_earned_leave:
-			new_leaves_allocated = new_leaves_allocated * remaining_period
-		else:
-			new_leaves_allocated = ceil(new_leaves_allocated * remaining_period)
+		# don't round earned leaves
+		if not leave_details.is_earned_leave:
+			new_leaves_allocated = ceil(new_leaves_allocated)
 
 		return new_leaves_allocated
+
+
+def calculate_pro_rated_leaves(leaves, date_of_joining, period_start_date, period_end_date):
+	precision = cint(frappe.db.get_single_value("System Settings", "float_precision", cache=True))
+	actual_period = date_diff(period_end_date, date_of_joining) + 1
+	complete_period = date_diff(period_end_date, period_start_date) + 1
+
+	leaves *= actual_period / complete_period
+
+	return flt(leaves, precision)
 
 
 def is_earned_leave_applicable_for_current_month(date_of_joining, allocate_on_day):
