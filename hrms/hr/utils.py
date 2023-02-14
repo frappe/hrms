@@ -16,7 +16,6 @@ from frappe.utils import (
 	get_link_to_form,
 	getdate,
 	nowdate,
-	today,
 )
 
 import erpnext
@@ -24,6 +23,10 @@ from erpnext import get_company_currency
 from erpnext.setup.doctype.employee.employee import (
 	InactiveEmployeeStatusError,
 	get_holiday_list_for_employee,
+)
+
+from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
+	calculate_pro_rated_leaves,
 )
 
 
@@ -278,7 +281,7 @@ def generate_leave_encashment():
 
 		leave_allocation = frappe.get_all(
 			"Leave Allocation",
-			filters={"to_date": add_days(today(), -1), "leave_type": ("in", leave_type)},
+			filters={"to_date": add_days(getdate(), -1), "leave_type": ("in", leave_type)},
 			fields=[
 				"employee",
 				"leave_period",
@@ -295,14 +298,12 @@ def generate_leave_encashment():
 def allocate_earned_leaves():
 	"""Allocate earned leaves to Employees"""
 	e_leave_types = get_earned_leaves()
-	today = getdate()
+	today = frappe.flags.current_date or getdate()
 
 	for e_leave_type in e_leave_types:
-
 		leave_allocations = get_leave_allocations(today, e_leave_type.name)
 
 		for allocation in leave_allocations:
-
 			if not allocation.leave_policy_assignment and not allocation.leave_policy:
 				continue
 
@@ -319,22 +320,35 @@ def allocate_earned_leaves():
 				filters={"parent": leave_policy, "leave_type": e_leave_type.name},
 				fieldname=["annual_allocation"],
 			)
+			date_of_joining = frappe.db.get_value("Employee", allocation.employee, "date_of_joining")
 
 			from_date = allocation.from_date
 
 			if e_leave_type.allocate_on_day == "Date of Joining":
-				from_date = frappe.db.get_value("Employee", allocation.employee, "date_of_joining")
+				from_date = date_of_joining
 
 			if check_effective_date(
 				from_date, today, e_leave_type.earned_leave_frequency, e_leave_type.allocate_on_day
 			):
-				update_previous_leave_allocation(allocation, annual_allocation, e_leave_type)
+				update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, date_of_joining)
 
 
-def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type):
+def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, date_of_joining):
+	def _calculate_pro_rated_leaves(earned_leaves):
+		today_date = frappe.flags.current_date or getdate()
+		period_end_date = get_last_day(today_date)
+		period_start_date = get_first_day(today_date)
+
+		if period_start_date <= date_of_joining <= period_end_date:
+			return calculate_pro_rated_leaves(
+				earned_leaves, date_of_joining, period_start_date, period_end_date
+			)
+		return earned_leaves
+
 	earned_leaves = get_monthly_earned_leave(
 		annual_allocation, e_leave_type.earned_leave_frequency, e_leave_type.rounding
 	)
+	earned_leaves = _calculate_pro_rated_leaves(earned_leaves)
 
 	allocation = frappe.get_doc("Leave Allocation", allocation.name)
 	new_allocation = flt(allocation.total_leaves_allocated) + flt(earned_leaves)
@@ -343,7 +357,7 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 		new_allocation = e_leave_type.max_leaves_allowed
 
 	if new_allocation != allocation.total_leaves_allocated:
-		today_date = today()
+		today_date = frappe.flags.current_date or getdate()
 
 		allocation.db_set("total_leaves_allocated", new_allocation, update_modified=False)
 		create_additional_leave_ledger_entry(allocation, earned_leaves, today_date)
