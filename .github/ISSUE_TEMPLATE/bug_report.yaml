@@ -45,7 +45,7 @@ body:
       description: Share exact version number of Frappe, ERPNext and Frappe HR you are using.
       placeholder: |
         Frappe version -
-        ERPNext verion -
+        ERPNext version -
         Frappe HR version -
     validations:
       required: true
