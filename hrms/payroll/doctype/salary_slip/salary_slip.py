@@ -15,6 +15,7 @@ from frappe.utils import (
 	flt,
 	formatdate,
 	get_first_day,
+	get_link_to_form,
 	getdate,
 	money_in_words,
 	rounded,
@@ -721,14 +722,23 @@ class SalarySlip(TransactionBase):
 			return amount
 
 		except NameError as err:
-			frappe.throw(
-				_("{0} <br> This error can be due to missing or deleted field.").format(err),
+			throw_error_message(
+				d,
+				err,
 				title=_("Name error"),
+				description=_("This error can be due to missing or deleted field."),
 			)
 		except SyntaxError as err:
-			frappe.throw(_("Syntax error in formula or condition: {0}").format(err))
-		except Exception as e:
-			frappe.throw(_("Error in formula or condition: {0}").format(e))
+			throw_error_message(
+				d, err, title=_("Syntax error"), description=_("This error can be due to invalid syntax.")
+			)
+		except Exception as err:
+			throw_error_message(
+				d,
+				err,
+				title=_("Error in formula or condition"),
+				description=_("This error can be due to invalid formula or condition."),
+			)
 			raise
 
 	def add_employee_benefits(self, payroll_period):
@@ -1858,3 +1868,23 @@ def date_range(start=None, end=None):
 		days = [str(start + timedelta(days=i)) for i in range(delta.days + 1)]
 		return days
 	return []
+
+
+def throw_error_message(row, error, title, description=None):
+	data = frappe._dict(
+		{
+			"doctype": row.parenttype,
+			"name": row.parent,
+			"doclink": get_link_to_form(row.parenttype, row.parent),
+			"row_id": row.idx,
+			"error": error,
+			"title": title,
+			"description": description or "",
+		}
+	)
+
+	message = _(
+		"Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
+	).format(**data)
+
+	frappe.throw(message, title=title)
