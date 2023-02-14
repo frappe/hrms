@@ -2,7 +2,7 @@
 # License: GNU General Public License v3. See license.txt
 
 import math
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 
 import frappe
 from frappe import _, msgprint
@@ -1781,7 +1781,7 @@ def eval_tax_slab_condition(condition, eval_globals=None, eval_locals=None):
 			"float": float,
 			"long": int,
 			"round": round,
-			"date": datetime.date,
+			"date": date,
 			"getdate": getdate,
 		}
 
