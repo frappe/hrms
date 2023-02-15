@@ -340,8 +340,9 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 		period_start_date = get_first_day(today_date)
 
 		if period_start_date <= date_of_joining <= period_end_date:
-			return calculate_pro_rated_leaves(
-				earned_leaves, date_of_joining, period_start_date, period_end_date
+			return round_earned_leaves(
+				calculate_pro_rated_leaves(earned_leaves, date_of_joining, period_start_date, period_end_date),
+				e_leave_type.rounding,
 			)
 		return earned_leaves
 
