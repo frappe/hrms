@@ -194,6 +194,9 @@ class LeavePolicyAssignment(Document):
 		Calculates pro-rated leaves for the months passed
 		for employees joining after the beginning of the given leave period
 		"""
+
+		from hrms.hr.utils import round_earned_leaves
+
 		# no need to prorate if employee joined before the leave period
 		if not new_leaves_allocated or getdate(date_of_joining) <= getdate(self.effective_from):
 			return new_leaves_allocated
@@ -213,9 +216,10 @@ class LeavePolicyAssignment(Document):
 			new_leaves_allocated, date_of_joining, self.effective_from, period_end_date
 		)
 
-		# don't round earned leaves
 		if not leave_details.is_earned_leave:
 			new_leaves_allocated = ceil(new_leaves_allocated)
+		else:
+			new_leaves_allocated = round_earned_leaves(new_leaves_allocated, leave_details.rounding)
 
 		return new_leaves_allocated
 
