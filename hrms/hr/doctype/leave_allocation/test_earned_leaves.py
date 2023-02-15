@@ -24,7 +24,7 @@ from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
 	calculate_pro_rated_leaves,
 	create_assignment_for_multiple_employees,
 )
-from hrms.hr.utils import allocate_earned_leaves
+from hrms.hr.utils import allocate_earned_leaves, round_earned_leaves
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.tests.test_utils import get_first_sunday
 
@@ -260,7 +260,9 @@ class TestLeaveAllocation(FrappeTestCase):
 			self.employee, allocate_on_day="Date of Joining", start_date=start_date
 		)
 		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
-		pro_rated_leave = calculate_pro_rated_leaves(1, doj, start_date, end_date)
+		pro_rated_leave = round_earned_leaves(
+			calculate_pro_rated_leaves(1, doj, start_date, end_date), "0.5"
+		)
 		self.assertEqual(leaves_allocated, pro_rated_leave)
 
 		# Case 2: Doesn't allocate before the current month's doj (via scheduler)
@@ -308,7 +310,9 @@ class TestLeaveAllocation(FrappeTestCase):
 		frappe.flags.current_date = add_days(doj, -1)
 		allocate_earned_leaves()
 		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
-		pro_rated_leave = calculate_pro_rated_leaves(1, doj, start_date, get_last_day(start_date))
+		pro_rated_leave = round_earned_leaves(
+			calculate_pro_rated_leaves(1, doj, start_date, get_last_day(start_date)), "0.5"
+		)
 		self.assertEqual(leaves_allocated, pro_rated_leave)
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
