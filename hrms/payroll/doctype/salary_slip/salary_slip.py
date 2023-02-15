@@ -158,8 +158,7 @@ class SalarySlip(TransactionBase):
 		return status
 
 	def validate_dates(self, joining_date=None, relieving_date=None):
-		if date_diff(self.end_date, self.start_date) < 0:
-			frappe.throw(_("To date cannot be before From date"))
+		self.validate_from_to_dates("start_date", "end_date")
 
 		if not joining_date:
 			joining_date, relieving_date = frappe.get_cached_value(

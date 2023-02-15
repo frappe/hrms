@@ -6,7 +6,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.query_builder import Criterion
-from frappe.utils import get_link_to_form, getdate
+from frappe.utils import get_link_to_form
 
 from hrms.hr.doctype.shift_assignment.shift_assignment import has_overlapping_timings
 from hrms.hr.utils import share_doc_with_approver, validate_active_employee
@@ -19,7 +19,7 @@ class OverlappingShiftRequestError(frappe.ValidationError):
 class ShiftRequest(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
-		self.validate_dates()
+		self.validate_from_to_dates("from_date", "to_date")
 		self.validate_overlapping_shift_requests()
 		self.validate_approver()
 		self.validate_default_shift()
@@ -76,10 +76,6 @@ class ShiftRequest(Document):
 		approvers.append(shift_approver)
 		if self.approver not in approvers:
 			frappe.throw(_("Only Approvers can Approve this Request."))
-
-	def validate_dates(self):
-		if self.from_date and self.to_date and (getdate(self.to_date) < getdate(self.from_date)):
-			frappe.throw(_("To date cannot be before from date"))
 
 	def validate_overlapping_shift_requests(self):
 		overlapping_dates = self.get_overlapping_dates()

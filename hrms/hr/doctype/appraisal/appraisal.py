@@ -6,7 +6,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
-from frappe.utils import flt, getdate
+from frappe.utils import flt
 
 from hrms.hr.utils import set_employee_name, validate_active_employee
 
@@ -21,17 +21,13 @@ class Appraisal(Document):
 
 		validate_active_employee(self.employee)
 		set_employee_name(self)
-		self.validate_dates()
+		self.validate_from_to_dates("start_date", "end_date")
 		self.validate_existing_appraisal()
 		self.calculate_total()
 
 	def get_employee_name(self):
 		self.employee_name = frappe.db.get_value("Employee", self.employee, "employee_name")
 		return self.employee_name
-
-	def validate_dates(self):
-		if getdate(self.start_date) > getdate(self.end_date):
-			frappe.throw(_("End Date can not be less than Start Date"))
 
 	def validate_existing_appraisal(self):
 		chk = frappe.db.sql(

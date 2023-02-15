@@ -12,12 +12,8 @@ from hrms.hr.utils import get_holiday_dates_for_employee
 
 class PayrollPeriod(Document):
 	def validate(self):
-		self.validate_dates()
+		self.validate_from_to_dates("start_date", "end_date")
 		self.validate_overlap()
-
-	def validate_dates(self):
-		if getdate(self.start_date) > getdate(self.end_date):
-			frappe.throw(_("End date can not be less than start date"))
 
 	def validate_overlap(self):
 		query = """
