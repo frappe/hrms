@@ -340,16 +340,18 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 		period_start_date = get_first_day(today_date)
 
 		if period_start_date <= date_of_joining <= period_end_date:
-			return round_earned_leaves(
-				calculate_pro_rated_leaves(earned_leaves, date_of_joining, period_start_date, period_end_date),
-				e_leave_type.rounding,
+			return calculate_pro_rated_leaves(
+				earned_leaves, date_of_joining, period_start_date, period_end_date
 			)
+
 		return earned_leaves
 
 	earned_leaves = get_monthly_earned_leave(
-		annual_allocation, e_leave_type.earned_leave_frequency, e_leave_type.rounding
+		annual_allocation, e_leave_type.earned_leave_frequency, None
 	)
-	earned_leaves = _calculate_pro_rated_leaves(earned_leaves)
+	earned_leaves = round_earned_leaves(
+		_calculate_pro_rated_leaves(earned_leaves), e_leave_type.rounding
+	)
 
 	allocation = frappe.get_doc("Leave Allocation", allocation.name)
 	new_allocation = flt(allocation.total_leaves_allocated) + flt(earned_leaves)

@@ -199,6 +199,8 @@ class LeavePolicyAssignment(Document):
 
 		# no need to prorate if employee joined before the leave period
 		if not new_leaves_allocated or getdate(date_of_joining) <= getdate(self.effective_from):
+			if not leave_details.is_earned_leave:
+				return new_leaves_allocated
 			return round_earned_leaves(new_leaves_allocated, leave_details.rounding)
 
 		# for earned leave, pro-rata period ends on the last day of the month
