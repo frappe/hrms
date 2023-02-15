@@ -380,13 +380,15 @@ def get_monthly_earned_leave(annual_leaves, frequency, rounding):
 	divide_by_frequency = {"Yearly": 1, "Half-Yearly": 2, "Quarterly": 4, "Monthly": 12}
 	if annual_leaves:
 		earned_leaves = flt(annual_leaves) / divide_by_frequency[frequency]
-		if rounding:
-			earned_leaves = round_earned_leaves(earned_leaves, rounding)
+		earned_leaves = round_earned_leaves(earned_leaves, rounding)
 
 	return earned_leaves
 
 
 def round_earned_leaves(earned_leaves, rounding):
+	if not rounding:
+		return earned_leaves
+
 	if rounding == "0.25":
 		earned_leaves = round(earned_leaves * 4) / 4
 	elif rounding == "0.5":
