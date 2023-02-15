@@ -181,7 +181,7 @@ class LeavePolicyAssignment(Document):
 			monthly_earned_leave = get_monthly_earned_leave(
 				new_leaves_allocated,
 				leave_details.earned_leave_frequency,
-				leave_details.rounding,
+				None,  # no rounding as we we will round the figure after calculating pro-rata basis
 			)
 			new_leaves_allocated = monthly_earned_leave * months_passed
 		else:
@@ -199,7 +199,7 @@ class LeavePolicyAssignment(Document):
 
 		# no need to prorate if employee joined before the leave period
 		if not new_leaves_allocated or getdate(date_of_joining) <= getdate(self.effective_from):
-			return new_leaves_allocated
+			return round_earned_leaves(new_leaves_allocated, leave_details.rounding)
 
 		# for earned leave, pro-rata period ends on the last day of the month
 		date = getdate(frappe.flags.current_date) or getdate()
