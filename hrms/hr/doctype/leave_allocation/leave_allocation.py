@@ -99,7 +99,7 @@ class LeaveAllocation(Document):
 			# run required validations again since total leaves are being updated
 			self.validate_leave_days_and_dates()
 
-			leaves_to_be_added = self.new_leaves_allocated - self.get_existing_leave_count()
+			leaves_to_be_added = self.total_leaves_allocated - self.get_existing_leave_count()
 			args = {
 				"leaves": leaves_to_be_added,
 				"from_date": self.from_date,
