@@ -85,11 +85,13 @@
   "non_taxable_earnings",
   "standard_tax_exemption_amount",
   "tax_exemption_declaration",
-  "column_break_35wb",
   "deductions_before_tax_calculation",
   "annual_taxable_amount",
+  "column_break_35wb",
   "income_tax_deducted_till_date",
+  "current_month_income_tax",
   "future_income_tax_deductions",
+  "total_income_tax",
   "section_break_75",
   "journal_entry",
   "amended_from",
@@ -704,20 +706,32 @@
   {
    "fieldname": "future_income_tax_deductions",
    "fieldtype": "Currency",
-   "label": "Future Income Tax Deductions",
+   "label": "Future Income Tax",
    "read_only": 1
   },
   {
    "fieldname": "earnings_and_deductions_tab",
    "fieldtype": "Tab Break",
    "label": "Earnings & Deductions"
+  },
+  {
+   "fieldname": "current_month_income_tax",
+   "fieldtype": "Currency",
+   "label": "Current Month Income Tax",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_income_tax",
+   "fieldtype": "Currency",
+   "label": "Total Income Tax",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-02-13 14:28:48.451878",
+ "modified": "2023-02-16 15:40:43.835145",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
