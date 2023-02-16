@@ -84,15 +84,15 @@ def get_payroll_period_days(start_date, end_date, employee, company=None):
 
 
 def get_payroll_period(from_date, to_date, company):
-	Payroll_Period = frappe.qb.DocType("Payroll Period")
+	PayrollPeriod = frappe.qb.DocType("Payroll Period")
 
 	payroll_period = (
-		frappe.qb.from_(Payroll_Period)
-		.select(Payroll_Period.name, Payroll_Period.start_date, Payroll_Period.end_date)
+		frappe.qb.from_(PayrollPeriod)
+		.select(PayrollPeriod.name, PayrollPeriod.start_date, PayrollPeriod.end_date)
 		.where(
-			(Payroll_Period.start_date <= from_date)
-			& (Payroll_Period.end_date >= to_date)
-			& (Payroll_Period.company == company)
+			(PayrollPeriod.start_date <= from_date)
+			& (PayrollPeriod.end_date >= to_date)
+			& (PayrollPeriod.company == company)
 		)
 	).run(as_dict=1)
 
