@@ -645,30 +645,7 @@ class SalarySlip(TransactionBase):
 			self.payroll_period.start_date, self.start_date, self.tax_slab.allow_tax_exemption
 		)
 
-		# get remaining numbers of sub-period (period for which one salary is processed)
-		self.remaining_sub_periods = get_period_factor(
-			self.employee, self.start_date, self.end_date, self.payroll_frequency, self.payroll_period
-		)[1]
-
-		# get taxable_earnings for current period (all days)
-		self.current_taxable_earnings = self.get_taxable_earnings(self.tax_slab.allow_tax_exemption)
-		self.future_structured_taxable_earnings = self.current_taxable_earnings.taxable_earnings * (
-			math.ceil(self.remaining_sub_periods) - 1
-		)
-
-		# get taxable_earnings, addition_earnings for current actual payment days
-		self.current_taxable_earnings_for_payment_days = self.get_taxable_earnings(
-			self.tax_slab.allow_tax_exemption, based_on_payment_days=1
-		)
-		self.current_structured_taxable_earnings = (
-			self.current_taxable_earnings_for_payment_days.taxable_earnings
-		)
-		self.current_additional_earnings = (
-			self.current_taxable_earnings_for_payment_days.additional_income
-		)
-		self.current_additional_earnings_with_full_tax = (
-			self.current_taxable_earnings_for_payment_days.additional_income_with_full_tax
-		)
+		self.compute_current_and_future_taxable_earnings()
 
 		# Deduct taxes forcefully for unsubmitted tax exemption proof and unclaimed benefits in the last period
 		if self.payroll_period.end_date <= getdate(self.end_date):
@@ -700,6 +677,35 @@ class SalarySlip(TransactionBase):
 		# Total taxable earnings without additional earnings with full tax
 		self.total_taxable_earnings_without_full_tax_addl_components = (
 			self.total_taxable_earnings - self.current_additional_earnings_with_full_tax
+		)
+
+	def compute_current_and_future_taxable_earnings(self):
+		# get remaining numbers of sub-period (period for which one salary is processed)
+		self.remaining_sub_periods = get_period_factor(
+			self.employee, self.start_date, self.end_date, self.payroll_frequency, self.payroll_period
+		)[1]
+
+		# get taxable_earnings for current period (all days)
+		self.current_taxable_earnings = self.get_taxable_earnings(self.tax_slab.allow_tax_exemption)
+		self.future_structured_taxable_earnings = self.current_taxable_earnings.taxable_earnings * (
+			math.ceil(self.remaining_sub_periods) - 1
+		)
+
+		# get taxable_earnings, addition_earnings for current actual payment days
+		self.current_taxable_earnings_for_payment_days = self.get_taxable_earnings(
+			self.tax_slab.allow_tax_exemption, based_on_payment_days=1
+		)
+
+		self.current_structured_taxable_earnings = (
+			self.current_taxable_earnings_for_payment_days.taxable_earnings
+		)
+
+		self.current_additional_earnings = (
+			self.current_taxable_earnings_for_payment_days.additional_income
+		)
+
+		self.current_additional_earnings_with_full_tax = (
+			self.current_taxable_earnings_for_payment_days.additional_income_with_full_tax
 		)
 
 	def compute_income_tax_breakup(self):

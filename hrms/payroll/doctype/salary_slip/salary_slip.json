@@ -667,7 +667,7 @@
   {
    "fieldname": "deductions_before_tax_calculation",
    "fieldtype": "Currency",
-   "label": "Deductions before tax calculation",
+   "label": "Deductions before Tax Calculation",
    "read_only": 1
   },
   {
