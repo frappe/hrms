@@ -136,10 +136,10 @@ class LeavePolicyAssignment(Document):
 		)
 
 		# Earned Leaves and Compensatory Leaves are allocated by scheduler, initially allocate 0
-		if leave_details.is_compensatory == 1:
+		if leave_details.is_compensatory:
 			new_leaves_allocated = 0
 
-		elif leave_details.is_earned_leave == 1:
+		elif leave_details.is_earned_leave:
 			if not self.assignment_based_on:
 				new_leaves_allocated = 0
 			else:
@@ -148,40 +148,71 @@ class LeavePolicyAssignment(Document):
 					new_leaves_allocated, leave_details, date_of_joining
 				)
 
-		new_leaves_allocated = self.get_pro_rated_leaves(
-			date_of_joining, leave_details, new_leaves_allocated
-		)
+		else:
+			# calculate pro-rated leaves for other leave types
+			new_leaves_allocated = calculate_pro_rated_leaves(
+				new_leaves_allocated,
+				date_of_joining,
+				self.effective_from,
+				self.effective_to,
+				is_earned_leave=False,
+			)
 
 		return flt(new_leaves_allocated, precision)
 
 	def get_leaves_for_passed_months(self, new_leaves_allocated, leave_details, date_of_joining):
 		from hrms.hr.utils import get_monthly_earned_leave
 
-		current_date = frappe.flags.current_date or getdate()
-		if current_date > getdate(self.effective_to):
-			current_date = getdate(self.effective_to)
+		def _get_current_and_from_date():
+			current_date = frappe.flags.current_date or getdate()
+			if current_date > getdate(self.effective_to):
+				current_date = getdate(self.effective_to)
 
-		from_date = getdate(self.effective_from)
-		if getdate(date_of_joining) > from_date:
-			from_date = getdate(date_of_joining)
+			from_date = getdate(self.effective_from)
+			if getdate(date_of_joining) > from_date:
+				from_date = getdate(date_of_joining)
 
-		months_passed = 0
+			return current_date, from_date
 
-		if current_date.year == from_date.year and current_date.month >= from_date.month:
-			months_passed = current_date.month - from_date.month
-			if is_earned_leave_applicable_for_current_month(date_of_joining, leave_details.allocate_on_day):
-				months_passed += 1
+		def _get_months_passed(current_date, from_date, consider_current_month):
+			months_passed = 0
+			if current_date.year == from_date.year and current_date.month >= from_date.month:
+				months_passed = current_date.month - from_date.month
+				if consider_current_month:
+					months_passed += 1
 
-		elif current_date.year > from_date.year:
-			months_passed = (12 - from_date.month) + current_date.month
-			if is_earned_leave_applicable_for_current_month(date_of_joining, leave_details.allocate_on_day):
-				months_passed += 1
+			elif current_date.year > from_date.year:
+				months_passed = (12 - from_date.month) + current_date.month
+				if consider_current_month:
+					months_passed += 1
+
+			return months_passed
+
+		def _get_pro_rata_period_end_date(consider_current_month):
+			# for earned leave, pro-rata period ends on the last day of the month
+			date = getdate(frappe.flags.current_date) or getdate()
+			if consider_current_month:
+				period_end_date = get_last_day(date)
+			else:
+				period_end_date = get_last_day(add_months(date, -1))
+
+			return period_end_date
+
+		consider_current_month = is_earned_leave_applicable_for_current_month(
+			date_of_joining, leave_details.allocate_on_day
+		)
+		current_date, from_date = _get_current_and_from_date()
+		months_passed = _get_months_passed(current_date, from_date, consider_current_month)
 
 		if months_passed > 0:
+			period_end_date = _get_pro_rata_period_end_date(consider_current_month)
 			monthly_earned_leave = get_monthly_earned_leave(
+				date_of_joining,
 				new_leaves_allocated,
 				leave_details.earned_leave_frequency,
 				leave_details.rounding,
+				self.effective_from,
+				period_end_date,
 			)
 			new_leaves_allocated = monthly_earned_leave * months_passed
 		else:
@@ -189,45 +220,22 @@ class LeavePolicyAssignment(Document):
 
 		return new_leaves_allocated
 
-	def get_pro_rated_leaves(self, date_of_joining, leave_details, new_leaves_allocated):
-		"""
-		Calculates pro-rated leaves for the months passed
-		for employees joining after the beginning of the given leave period
-		"""
-		# no need to prorate if employee joined before the leave period
-		if not new_leaves_allocated or getdate(date_of_joining) <= getdate(self.effective_from):
-			return new_leaves_allocated
 
-		# for earned leave, pro-rata period ends on the last day of the month
-		date = getdate(frappe.flags.current_date) or getdate()
+def calculate_pro_rated_leaves(
+	leaves, date_of_joining, period_start_date, period_end_date, is_earned_leave=False
+):
+	if not leaves or getdate(date_of_joining) <= getdate(period_start_date):
+		return leaves
 
-		if leave_details.is_earned_leave:
-			if is_earned_leave_applicable_for_current_month(date_of_joining, leave_details.allocate_on_day):
-				period_end_date = get_last_day(date)
-			else:
-				period_end_date = get_last_day(add_months(date, -1))
-		else:
-			period_end_date = self.effective_to
-
-		new_leaves_allocated = calculate_pro_rated_leaves(
-			new_leaves_allocated, date_of_joining, self.effective_from, period_end_date
-		)
-
-		# don't round earned leaves
-		if not leave_details.is_earned_leave:
-			new_leaves_allocated = ceil(new_leaves_allocated)
-
-		return new_leaves_allocated
-
-
-def calculate_pro_rated_leaves(leaves, date_of_joining, period_start_date, period_end_date):
 	precision = cint(frappe.db.get_single_value("System Settings", "float_precision", cache=True))
 	actual_period = date_diff(period_end_date, date_of_joining) + 1
 	complete_period = date_diff(period_end_date, period_start_date) + 1
 
 	leaves *= actual_period / complete_period
 
-	return flt(leaves, precision)
+	if is_earned_leave:
+		return flt(leaves, precision)
+	return ceil(leaves)
 
 
 def is_earned_leave_applicable_for_current_month(date_of_joining, allocate_on_day):
