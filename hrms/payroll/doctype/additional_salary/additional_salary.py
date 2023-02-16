@@ -170,6 +170,7 @@ def get_additional_salaries(employee, start_date, end_date, component_type):
 			(additional_sal.employee == employee)
 			& (additional_sal.docstatus == 1)
 			& (additional_sal.type == comp_type)
+			& (additional_sal.disabled == 0)
 		)
 		.where(
 			Criterion.any(
