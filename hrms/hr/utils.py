@@ -334,21 +334,9 @@ def allocate_earned_leaves():
 
 
 def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, date_of_joining):
-	def _calculate_pro_rated_leaves(earned_leaves):
-		today_date = frappe.flags.current_date or getdate()
-		period_end_date = get_last_day(today_date)
-		period_start_date = get_first_day(today_date)
-
-		if period_start_date <= date_of_joining <= period_end_date:
-			return calculate_pro_rated_leaves(
-				earned_leaves, date_of_joining, period_start_date, period_end_date
-			)
-		return earned_leaves
-
 	earned_leaves = get_monthly_earned_leave(
-		annual_allocation, e_leave_type.earned_leave_frequency, e_leave_type.rounding
+		date_of_joining, annual_allocation, e_leave_type.earned_leave_frequency, e_leave_type.rounding
 	)
-	earned_leaves = _calculate_pro_rated_leaves(earned_leaves)
 
 	allocation = frappe.get_doc("Leave Allocation", allocation.name)
 	new_allocation = flt(allocation.total_leaves_allocated) + flt(earned_leaves)
@@ -372,18 +360,42 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 		allocation.add_comment(comment_type="Info", text=text)
 
 
-def get_monthly_earned_leave(annual_leaves, frequency, rounding):
+def get_monthly_earned_leave(
+	date_of_joining,
+	annual_leaves,
+	frequency,
+	rounding,
+	period_start_date=None,
+	period_end_date=None,
+):
 	earned_leaves = 0.0
 	divide_by_frequency = {"Yearly": 1, "Half-Yearly": 2, "Quarterly": 4, "Monthly": 12}
 	if annual_leaves:
 		earned_leaves = flt(annual_leaves) / divide_by_frequency[frequency]
-		if rounding:
-			if rounding == "0.25":
-				earned_leaves = round(earned_leaves * 4) / 4
-			elif rounding == "0.5":
-				earned_leaves = round(earned_leaves * 2) / 2
-			else:
-				earned_leaves = round(earned_leaves)
+
+		if not (period_start_date or period_end_date):
+			today_date = frappe.flags.current_date or getdate()
+			period_end_date = get_last_day(today_date)
+			period_start_date = get_first_day(today_date)
+
+		earned_leaves = calculate_pro_rated_leaves(
+			earned_leaves, date_of_joining, period_start_date, period_end_date, is_earned_leave=True
+		)
+		earned_leaves = round_earned_leaves(earned_leaves, rounding)
+
+	return earned_leaves
+
+
+def round_earned_leaves(earned_leaves, rounding):
+	if not rounding:
+		return earned_leaves
+
+	if rounding == "0.25":
+		earned_leaves = round(earned_leaves * 4) / 4
+	elif rounding == "0.5":
+		earned_leaves = round(earned_leaves * 2) / 2
+	else:
+		earned_leaves = round(earned_leaves)
 
 	return earned_leaves
 
