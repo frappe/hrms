@@ -769,13 +769,32 @@ class SalarySlip(TransactionBase):
 		return 0.0
 
 	def compute_non_taxable_earnings(self):
-		current_period_non_taxable_earnings = 0.0
-		future_period_non_taxable_earnings = 0.0
-
 		# Previous period non taxable earnings
 		prev_period_non_taxable_earnings = self.get_salary_slip_details(
 			self.payroll_period.start_date, self.start_date, parentfield="earnings", is_tax_applicable=0
 		)
+
+		(
+			current_period_non_taxable_earnings,
+			non_taxable_additional_salary,
+		) = self.get_non_taxable_earnings_for_current_period()
+
+		# Future period non taxable earnings
+		future_period_non_taxable_earnings = current_period_non_taxable_earnings * (
+			math.ceil(self.remaining_sub_periods) - 1
+		)
+
+		non_taxable_earnings = (
+			prev_period_non_taxable_earnings
+			+ current_period_non_taxable_earnings
+			+ future_period_non_taxable_earnings
+			+ non_taxable_additional_salary
+		)
+
+		return non_taxable_earnings
+
+	def get_non_taxable_earnings_for_current_period(self):
+		current_period_non_taxable_earnings = 0.0
 
 		non_taxable_additional_salary = self.get_salary_slip_details(
 			self.payroll_period.start_date,
@@ -801,19 +820,7 @@ class SalarySlip(TransactionBase):
 			else:
 				current_period_non_taxable_earnings += earning.amount
 
-		# Future period non taxable earnings
-		future_period_non_taxable_earnings += current_period_non_taxable_earnings * (
-			math.ceil(self.remaining_sub_periods) - 1
-		)
-
-		non_taxable_earnings = (
-			prev_period_non_taxable_earnings
-			+ current_period_non_taxable_earnings
-			+ future_period_non_taxable_earnings
-			+ non_taxable_additional_salary
-		)
-
-		return non_taxable_earnings
+		return current_period_non_taxable_earnings, non_taxable_additional_salary
 
 	def compute_annual_deductions_before_tax_calculation(self):
 		prev_period_exempted_amount = 0
