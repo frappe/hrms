@@ -621,6 +621,7 @@ class SalarySlip(TransactionBase):
 		self.set_loan_repayment()
 		self.set_precision_for_component_amounts()
 		self.set_net_pay()
+		self.compute_income_tax_breakup()
 
 	def set_net_pay(self):
 		self.total_deduction = self.get_component_totals("deductions")
@@ -748,11 +749,7 @@ class SalarySlip(TransactionBase):
 
 			self.current_month_income_tax = self.current_structured_tax_amount
 
-			self.total_income_tax = (
-				self.income_tax_deducted_till_date
-				+ self.current_month_income_tax
-				+ self.future_income_tax_deductions
-			)
+			self.total_income_tax = self.income_tax_deducted_till_date + self.future_income_tax_deductions
 
 	def compute_ctc(self):
 		if hasattr(self, "previous_taxable_earnings"):

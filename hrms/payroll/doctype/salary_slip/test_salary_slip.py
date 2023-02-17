@@ -1170,6 +1170,63 @@ class TestSalarySlip(FrappeTestCase):
 		frappe.db.sql("DELETE FROM `tabPayroll Period` where company = '_Test Company'")
 		frappe.db.sql("DELETE FROM `tabIncome Tax Slab` where currency = 'INR'")
 
+	def test_income_tax_breakup_fields(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		frappe.db.sql("DELETE FROM `tabIncome Tax Slab` where currency = 'INR'")
+
+		emp = make_employee(
+			"test_employee_ss_income_tax_breakup@salary.com",
+			company="_Test Company",
+			**{"date_of_joining": "2021-12-01"},
+		)
+		employee_doc = frappe.get_cached_doc("Employee", emp)
+
+		payroll_period = frappe.get_all("Payroll Period", filters={"company": "_Test Company"}, limit=1)
+		payroll_period = frappe.get_cached_doc("Payroll Period", payroll_period[0].name)
+		create_tax_slab(
+			payroll_period, effective_date=payroll_period.start_date, allow_tax_exemption=True
+		)
+
+		salary_structure_name = "Test Salary Structure to test Income Tax Breakup"
+		if not frappe.db.exists("Salary Structure", salary_structure_name):
+			salary_structure_doc = make_salary_structure(
+				salary_structure_name,
+				"Monthly",
+				company="_Test Company",
+				employee=emp,
+				from_date=payroll_period.start_date,
+				payroll_period=payroll_period,
+				test_tax=True,
+				base=65000,
+			)
+
+		create_exemption_declaration(emp, payroll_period.name)
+
+		create_additional_salary_for_non_taxable_component(emp, payroll_period, company="_Test Company")
+
+		create_employee_other_income(emp, payroll_period.name, company="_Test Company")
+
+		# Create Salary Slip
+		salary_slip = make_salary_slip(
+			salary_structure_doc.name, employee=employee_doc.name, posting_date=payroll_period.start_date
+		)
+
+		monthly_tax_amount = 11466.0
+
+		self.assertEqual(salary_slip.ctc, 1226000.0)
+		self.assertEqual(salary_slip.income_from_other_sources, 10000.0)
+		self.assertEqual(salary_slip.non_taxable_earnings, 10000.0)
+		self.assertEqual(salary_slip.total_earnings, 1236000.0)
+		self.assertEqual(salary_slip.standard_tax_exemption_amount, 50000.0)
+		self.assertEqual(salary_slip.tax_exemption_declaration, 100000.0)
+		self.assertEqual(salary_slip.deductions_before_tax_calculation, 2400.0)
+		self.assertEqual(salary_slip.annual_taxable_amount, 1073600.0)
+		self.assertEqual(flt(salary_slip.income_tax_deducted_till_date, 1), monthly_tax_amount)
+		self.assertEqual(flt(salary_slip.current_month_income_tax, 1), monthly_tax_amount)
+		self.assertEqual(flt(salary_slip.future_income_tax_deductions, 1), 126126.0)
+		self.assertEqual(flt(salary_slip.total_income_tax, 0), 137592)
+
 
 def get_no_of_days():
 	no_of_days_in_month = calendar.monthrange(getdate(nowdate()).year, getdate(nowdate()).month)
@@ -1617,6 +1674,7 @@ def setup_test():
 		"Employee Tax Exemption Proof Submission",
 		"Employee Benefit Claim",
 		"Salary Structure Assignment",
+		"Payroll Period",
 	]:
 		frappe.db.sql("delete from `tab%s`" % dt)
 
@@ -1830,3 +1888,58 @@ def make_salary_structure_for_timesheet(employee, company=None):
 		create_salary_structure_assignment(employee, salary_structure.name)
 
 	return salary_structure
+
+
+def create_employee_other_income(employee, payroll_period, company):
+	other_income = frappe.db.get_value(
+		"Employee Other Income",
+		{
+			"employee": employee,
+			"payroll_period": payroll_period,
+			"company": company,
+			"docstatus": 1,
+		},
+		"name",
+	)
+
+	if not other_income:
+		other_income = frappe.get_doc(
+			{
+				"doctype": "Employee Other Income",
+				"employee": employee,
+				"payroll_period": payroll_period,
+				"company": company,
+				"source": "Other Income",
+				"amount": 10000,
+			}
+		).insert()
+
+		other_income.submit()
+
+	return other_income
+
+
+def create_additional_salary_for_non_taxable_component(employee, payroll_period, company):
+	data = [
+		{
+			"salary_component": "Non Taxable Additional Salary",
+			"abbr": "AS",
+			"type": "Earning",
+			"is_tax_applicable": 0,
+		},
+	]
+	make_salary_component(data, False, company_list=[company])
+
+	add_sal = frappe.get_doc(
+		{
+			"doctype": "Additional Salary",
+			"employee": employee,
+			"company": company,
+			"salary_component": "Non Taxable Additional Salary",
+			"amount": 10000,
+			"currency": "INR",
+			"payroll_date": payroll_period.start_date,
+		}
+	).insert()
+
+	add_sal.submit()
