@@ -632,6 +632,7 @@
   },
   {
    "collapsible": 1,
+   "depends_on": "eval:doc.ctc",
    "fieldname": "income_tax_calculation_breakup_section",
    "fieldtype": "Tab Break",
    "label": "Income Tax Breakup"
@@ -667,7 +668,7 @@
   {
    "fieldname": "deductions_before_tax_calculation",
    "fieldtype": "Currency",
-   "label": "Deductions before Tax Calculation",
+   "label": "Deductions before tax calculation",
    "read_only": 1
   },
   {
@@ -731,7 +732,7 @@
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-02-16 15:40:43.835145",
+ "modified": "2023-02-20 11:27:58.517546",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
