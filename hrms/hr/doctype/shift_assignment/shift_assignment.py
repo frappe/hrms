@@ -176,6 +176,7 @@ def add_assignments(start, end, conditions=None):
 				"title": cstr(d.employee_name) + ": " + cstr(d.shift_type),
 				"docstatus": d.docstatus,
 				"allDay": 0,
+				"convertToUserTz": 0,
 			}
 			if e not in events:
 				events.append(e)
