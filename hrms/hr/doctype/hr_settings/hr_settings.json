@@ -125,7 +125,7 @@
   },
   {
    "fieldname": "standard_working_hours",
-   "fieldtype": "Int",
+   "fieldtype": "Float",
    "label": "Standard Working Hours"
   },
   {
@@ -257,7 +257,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-12-05 14:48:10.884253",
+ "modified": "2022-10-04 17:29:45.926918",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",

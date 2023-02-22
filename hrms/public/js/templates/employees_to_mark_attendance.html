@@ -1,5 +1,5 @@
-{% if data %}
-<div class="col-md-12 col-xs-12" align="center">
+{% if data.length %}
+<div class="col-md-12 col-xs-12">
 	<div class="col-md-12 col-xs-12" style="padding-bottom:15px;">
 		<b>Employees to mark attendance</b>
 	</div>
@@ -10,5 +10,9 @@
 	{% } %}
 </div>
 {% } else { %}
-<div></div>
+<div class="col-md-12 col-xs-12">
+	<div class="col-md-12 col-xs-12" style="padding-bottom:15px;">
+		<b> Attendance records not found </b>
+	</div>
+</div>
 {% } %}

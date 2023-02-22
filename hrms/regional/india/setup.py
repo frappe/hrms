@@ -5,11 +5,18 @@
 import frappe
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
+from hrms.setup import delete_custom_fields
+
 
 def setup():
 	make_custom_fields()
 	add_custom_roles_for_reports()
 	create_gratuity_rule_for_india()
+
+
+def uninstall():
+	custom_fields = get_custom_fields()
+	delete_custom_fields(custom_fields)
 
 
 def make_custom_fields(update=True):
@@ -34,10 +41,15 @@ def get_custom_fields():
 		],
 		"Employee": [
 			{
+				"fieldname": "bank_cb",
+				"fieldtype": "Column Break",
+				"insert_after": "bank_ac_no",
+			},
+			{
 				"fieldname": "ifsc_code",
 				"label": "IFSC Code",
 				"fieldtype": "Data",
-				"insert_after": "bank_ac_no",
+				"insert_after": "bank_cb",
 				"print_hide": 1,
 				"depends_on": 'eval:doc.salary_mode == "Bank"',
 				"translatable": 0,

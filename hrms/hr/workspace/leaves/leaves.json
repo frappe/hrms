@@ -144,7 +144,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Employee Leave Balance",
    "link_count": 0,
    "link_to": "Employee Leave Balance",
@@ -154,7 +154,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Employee Leave Balance Summary",
    "link_count": 0,
    "link_to": "Employee Leave Balance Summary",
@@ -164,7 +164,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Employees working on a holiday",
    "link_count": 0,
    "link_to": "Employees working on a holiday",
@@ -173,7 +173,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-08-20 20:03:53.227404",
+ "modified": "2022-09-16 11:36:11.119565",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leaves",

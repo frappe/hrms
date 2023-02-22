@@ -6,7 +6,7 @@
 
 import frappe
 from frappe import _
-from frappe.utils import get_link_to_form
+from frappe.utils import get_link_to_form, getdate
 from frappe.website.website_generator import WebsiteGenerator
 
 from hrms.hr.doctype.staffing_plan.staffing_plan import (
@@ -26,6 +26,7 @@ class JobOpening(WebsiteGenerator):
 		if not self.route:
 			self.route = frappe.scrub(self.job_title).replace("_", "-")
 		self.validate_current_vacancies()
+		self.update_job_requisition_status()
 
 	def validate_current_vacancies(self):
 		if not self.staffing_plan:
@@ -61,6 +62,15 @@ class JobOpening(WebsiteGenerator):
 					),
 					title=_("Vacancies fulfilled"),
 				)
+
+	def update_job_requisition_status(self):
+		if self.status == "Closed" and self.job_requisition:
+			job_requisition = frappe.get_doc("Job Requisition", self.job_requisition)
+			job_requisition.status = "Filled"
+			job_requisition.completed_on = getdate()
+			job_requisition.flags.ignore_permissions = True
+			job_requisition.flags.ignore_mandatory = True
+			job_requisition.save()
 
 	def get_context(self, context):
 		context.parents = [{"route": "jobs", "title": _("All Jobs")}]

@@ -1,7 +1,8 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
-from typing import Dict, Optional, Tuple
+import datetime
+from typing import Dict, Optional, Tuple, Union
 
 import frappe
 from frappe import _
@@ -319,7 +320,12 @@ class LeaveApplication(Document):
 
 	def show_block_day_warning(self):
 		block_dates = get_applicable_block_dates(
-			self.from_date, self.to_date, self.employee, self.company, all_lists=True
+			self.from_date,
+			self.to_date,
+			self.employee,
+			self.company,
+			all_lists=True,
+			leave_type=self.leave_type,
 		)
 
 		if block_dates:
@@ -329,7 +335,7 @@ class LeaveApplication(Document):
 
 	def validate_block_days(self):
 		block_dates = get_applicable_block_dates(
-			self.from_date, self.to_date, self.employee, self.company
+			self.from_date, self.to_date, self.employee, self.company, leave_type=self.leave_type
 		)
 
 		if block_dates and self.status == "Approved":
@@ -704,7 +710,7 @@ class LeaveApplication(Document):
 
 
 def get_allocation_expiry_for_cf_leaves(
-	employee: str, leave_type: str, to_date: str, from_date: str
+	employee: str, leave_type: str, to_date: datetime.date, from_date: datetime.date
 ) -> str:
 	"""Returns expiry of carry forward allocation in leave ledger entry"""
 	expiry = frappe.get_all(
@@ -726,10 +732,10 @@ def get_allocation_expiry_for_cf_leaves(
 def get_number_of_leave_days(
 	employee: str,
 	leave_type: str,
-	from_date: str,
-	to_date: str,
-	half_day: Optional[int] = None,
-	half_day_date: Optional[str] = None,
+	from_date: datetime.date,
+	to_date: datetime.date,
+	half_day: Union[int, str, None] = None,
+	half_day_date: Union[datetime.date, str, None] = None,
 	holiday_list: Optional[str] = None,
 ) -> float:
 	"""Returns number of leave days between 2 dates after considering half day and holidays
@@ -756,6 +762,8 @@ def get_number_of_leave_days(
 def get_leave_details(employee, date):
 	allocation_records = get_leave_allocation_records(employee, date)
 	leave_allocation = {}
+	precision = cint(frappe.db.get_single_value("System Settings", "float_precision", cache=True))
+
 	for d in allocation_records:
 		allocation = allocation_records.get(d, frappe._dict())
 		remaining_leaves = get_leave_balance_on(
@@ -770,11 +778,11 @@ def get_leave_details(employee, date):
 		expired_leaves = allocation.total_leaves_allocated - (remaining_leaves + leaves_taken)
 
 		leave_allocation[d] = {
-			"total_leaves": allocation.total_leaves_allocated,
-			"expired_leaves": expired_leaves if expired_leaves > 0 else 0,
-			"leaves_taken": leaves_taken,
-			"leaves_pending_approval": leaves_pending,
-			"remaining_leaves": remaining_leaves,
+			"total_leaves": flt(allocation.total_leaves_allocated, precision),
+			"expired_leaves": flt(expired_leaves, precision) if expired_leaves > 0 else 0,
+			"leaves_taken": flt(leaves_taken, precision),
+			"leaves_pending_approval": flt(leaves_pending, precision),
+			"remaining_leaves": flt(remaining_leaves, precision),
 		}
 
 	# is used in set query
@@ -791,8 +799,8 @@ def get_leave_details(employee, date):
 def get_leave_balance_on(
 	employee: str,
 	leave_type: str,
-	date: str,
-	to_date: str = None,
+	date: datetime.date,
+	to_date: Union[datetime.date, None] = None,
 	consider_all_leaves_in_the_allocation_period: bool = False,
 	for_consumption: bool = False,
 ):
@@ -817,7 +825,9 @@ def get_leave_balance_on(
 	allocation = allocation_records.get(leave_type, frappe._dict())
 
 	end_date = allocation.to_date if cint(consider_all_leaves_in_the_allocation_period) else date
-	cf_expiry = get_allocation_expiry_for_cf_leaves(employee, leave_type, to_date, date)
+	cf_expiry = get_allocation_expiry_for_cf_leaves(
+		employee, leave_type, to_date, allocation.from_date
+	)
 
 	leaves_taken = get_leaves_for_period(employee, leave_type, allocation.from_date, end_date)
 
@@ -832,6 +842,7 @@ def get_leave_balance_on(
 def get_leave_allocation_records(employee, date, leave_type=None):
 	"""Returns the total allocated leaves and carry forwarded leaves based on ledger entries"""
 	Ledger = frappe.qb.DocType("Leave Ledger Entry")
+	LeaveAllocation = frappe.qb.DocType("Leave Allocation")
 
 	cf_leave_case = (
 		frappe.qb.terms.Case().when(Ledger.is_carry_forward == "1", Ledger.leaves).else_(0)
@@ -845,6 +856,8 @@ def get_leave_allocation_records(employee, date, leave_type=None):
 
 	query = (
 		frappe.qb.from_(Ledger)
+		.inner_join(LeaveAllocation)
+		.on(Ledger.transaction_name == LeaveAllocation.name)
 		.select(
 			sum_cf_leaves,
 			sum_new_leaves,
@@ -854,12 +867,21 @@ def get_leave_allocation_records(employee, date, leave_type=None):
 		)
 		.where(
 			(Ledger.from_date <= date)
-			& (Ledger.to_date >= date)
 			& (Ledger.docstatus == 1)
 			& (Ledger.transaction_type == "Leave Allocation")
 			& (Ledger.employee == employee)
 			& (Ledger.is_expired == 0)
 			& (Ledger.is_lwp == 0)
+			& (
+				# newly allocated leave's end date is same as the leave allocation's to date
+				((Ledger.is_carry_forward == 0) & (Ledger.to_date >= date))
+				# carry forwarded leave's end date won't be same as the leave allocation's to date
+				# it's between the leave allocation's from and to date
+				| (
+					(Ledger.is_carry_forward == 1)
+					& (Ledger.to_date.between(LeaveAllocation.from_date, LeaveAllocation.to_date))
+				)
+			)
 		)
 	)
 
@@ -888,7 +910,7 @@ def get_leave_allocation_records(employee, date, leave_type=None):
 
 
 def get_leaves_pending_approval_for_period(
-	employee: str, leave_type: str, from_date: str, to_date: str
+	employee: str, leave_type: str, from_date: datetime.date, to_date: datetime.date
 ) -> float:
 	"""Returns leaves that are pending for approval"""
 	leaves = frappe.get_all(
@@ -925,8 +947,12 @@ def get_remaining_leaves(
 
 	# balance for carry forwarded leaves
 	if cf_expiry and allocation.unused_leaves:
-		cf_leaves = flt(allocation.unused_leaves) + flt(leaves_taken)
-		remaining_cf_leaves = _get_remaining_leaves(cf_leaves, cf_expiry)
+		if getdate(date) > getdate(cf_expiry):
+			# carry forwarded leave expiry date passed
+			cf_leaves = remaining_cf_leaves = 0
+		else:
+			cf_leaves = flt(allocation.unused_leaves) + flt(leaves_taken)
+			remaining_cf_leaves = _get_remaining_leaves(cf_leaves, cf_expiry)
 
 		leave_balance = flt(allocation.new_leaves_allocated) + flt(cf_leaves)
 		leave_balance_for_consumption = flt(allocation.new_leaves_allocated) + flt(remaining_cf_leaves)
@@ -936,7 +962,11 @@ def get_remaining_leaves(
 
 
 def get_leaves_for_period(
-	employee: str, leave_type: str, from_date: str, to_date: str, skip_expired_leaves: bool = True
+	employee: str,
+	leave_type: str,
+	from_date: datetime.date,
+	to_date: datetime.date,
+	skip_expired_leaves: bool = True,
 ) -> float:
 	leave_entries = get_leave_entries(employee, leave_type, from_date, to_date)
 	leave_days = 0
@@ -1131,8 +1161,6 @@ def add_leaves(events, start, end, filter_conditions=None):
 
 def add_block_dates(events, start, end, employee, company):
 	# block days
-	from hrms.hr.doctype.leave_block_list.leave_block_list import get_applicable_block_dates
-
 	cnt = 0
 	block_dates = get_applicable_block_dates(start, end, employee, company, all_lists=True)
 

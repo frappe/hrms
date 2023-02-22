@@ -1,0 +1,81 @@
+---
+name: Bug Report
+description: Report a bug encountered while using Frappe HR
+labels: ["bug"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Welcome to Frappe HR issue tracker! Before creating an issue, please consider the following:
+
+        1. This tracker should only be used to report bugs and request features / enhancements to Frappe HR
+            - For questions and general support, checkout the [documentation](https://frappehr.com/docs) or use the [forum](https://discuss.frappe.io) to get inputs from the open source community.
+            - For documentation issues, propose edit on the [documentation site](https://frappehr.com/docs) directly.
+        2. When making a bug report, make sure you provide all required information. The easier it is for
+           maintainers to reproduce, the faster it'll be fixed.
+        3. If you think you know what the reason for the bug is, share it with us. Maybe put in a PR 😉
+
+  - type: textarea
+    id: bug-info
+    attributes:
+      label: Information about bug
+      description: Also tell us, what did you expect to happen? If applicable, add screenshots to help explain your problem.
+      placeholder: Please provide as much information as possible.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module
+      description: Select the affected module of Frappe HR.
+      multiple: true
+      options:
+        - HR
+        - Payroll
+        - other
+    validations:
+      required: true
+
+  - type: textarea
+    id: exact-version
+    attributes:
+      label: Version
+      description: Share exact version number of Frappe, ERPNext and Frappe HR you are using.
+      placeholder: |
+        Frappe version -
+        ERPNext version -
+        Frappe HR version -
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install-method
+    attributes:
+      label: Installation method
+      options:
+        - docker
+        - easy-install
+        - manual install
+        - FrappeCloud
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output / Stack trace / Full Error Message.
+      description: Please copy and paste any relevant log output. This will be automatically formatted.
+      render: shell
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: |
+        By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/frappe/hrms/blob/develop/CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
+...

@@ -10,20 +10,25 @@
   "employee",
   "employee_name",
   "department",
-  "grade",
-  "company",
-  "payroll_payable_account",
-  "column_break_6",
   "designation",
+  "grade",
+  "column_break_6",
   "salary_structure",
   "from_date",
   "income_tax_slab",
+  "column_break_11",
+  "company",
+  "payroll_payable_account",
   "currency",
   "section_break_7",
   "base",
   "column_break_9",
   "variable",
   "amended_from",
+  "earnings_and_taxation_section",
+  "taxable_earnings_till_date",
+  "column_break_20",
+  "tax_deducted_till_date",
   "section_break_17",
   "payroll_cost_centers"
  ],
@@ -171,11 +176,40 @@
    "label": "Grade",
    "options": "Employee Grade",
    "read_only": 1
+  },
+  {
+   "fieldname": "column_break_11",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "tax_deducted_till_date",
+   "fieldtype": "Currency",
+   "label": "Tax Deducted Till Date",
+   "options": "currency"
+  },
+  {
+   "fieldname": "column_break_20",
+   "fieldtype": "Column Break"
+  },
+  {
+   "collapsible_depends_on": "eval:doc.taxable_earnings_till_date && doc.tax_deducted_till_date",
+   "fieldname": "earnings_and_taxation_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "label": "Earnings and Taxation "
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "taxable_earnings_till_date",
+   "fieldtype": "Currency",
+   "label": "Taxable Earnings Till Date",
+   "options": "currency"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-05-06 12:18:36.972336",
+ "modified": "2023-01-10 12:00:57.942233",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",

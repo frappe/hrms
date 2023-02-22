@@ -6,13 +6,16 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "applicable_earnings_component",
-  "work_experience_calculation_function",
+  "gratuity_details_tab",
+  "disable",
+  "section_break_2",
+  "calculate_gratuity_amount_based_on",
   "total_working_days_per_year",
   "column_break_3",
-  "disable",
-  "calculate_gratuity_amount_based_on",
+  "work_experience_calculation_function",
   "minimum_year_for_gratuity",
+  "column_break_8",
+  "applicable_earnings_component",
   "gratuity_rules_section",
   "gratuity_rule_slabs"
  ],
@@ -46,10 +49,10 @@
   {
    "fieldname": "gratuity_rules_section",
    "fieldtype": "Section Break",
-   "label": "Gratuity Rules"
+   "label": "Rules"
   },
   {
-   "description": "Leave <b>From</b> and <b>To</b> 0 for no upper and lower limit.",
+   "description": "Set \"From(Year)\" and \"To(Year)\" to 0 for no upper and lower limit.",
    "fieldname": "gratuity_rule_slabs",
    "fieldtype": "Table",
    "label": "Current Work Experience",
@@ -73,14 +76,28 @@
    "fieldname": "minimum_year_for_gratuity",
    "fieldtype": "Int",
    "label": "Minimum Year for Gratuity"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "gratuity_details_tab",
+   "fieldtype": "Section Break",
+   "label": "Gratuity"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2020-12-03 17:08:27.891535",
+ "modified": "2023-01-05 12:36:32.412409",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Gratuity Rule",
+ "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [
   {
@@ -110,5 +127,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }

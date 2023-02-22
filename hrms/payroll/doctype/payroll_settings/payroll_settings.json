@@ -8,14 +8,16 @@
  "field_order": [
   "payroll_based_on",
   "consider_unmarked_attendance_as",
-  "max_working_hours_against_timesheet",
-  "include_holidays_in_total_working_days",
   "disable_rounded_total",
-  "column_break_11",
+  "include_holidays_in_total_working_days",
+  "show_leave_balances_in_salary_slip",
+  "define_opening_balance_for_earning_and_deductions",
+  "process_payroll_accounting_entry_based_on_employee",
+  "column_break_6",
+  "max_working_hours_against_timesheet",
   "daily_wages_fraction_for_half_day",
   "email_salary_slip_to_employee",
   "encrypt_salary_slips_in_emails",
-  "show_leave_balances_in_salary_slip",
   "password_policy"
  ],
  "fields": [
@@ -44,10 +46,6 @@
    "fieldname": "disable_rounded_total",
    "fieldtype": "Check",
    "label": "Disable Rounded Total"
-  },
-  {
-   "fieldname": "column_break_11",
-   "fieldtype": "Column Break"
   },
   {
    "default": "0.5",
@@ -91,13 +89,31 @@
    "fieldname": "show_leave_balances_in_salary_slip",
    "fieldtype": "Check",
    "label": "Show Leave Balances in Salary Slip"
+  },
+  {
+   "default": "0",
+   "description": "If checked, Payroll Payable will be booked against each employee",
+   "fieldname": "process_payroll_accounting_entry_based_on_employee",
+   "fieldtype": "Check",
+   "label": "Process Payroll Accounting Entry based on Employee"
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "description": "If checked, then the system will enable the provision to set the opening balance for earnings and deductions till date while creating a Salary Structure Assignment (if any)",
+   "fieldname": "define_opening_balance_for_earning_and_deductions",
+   "fieldtype": "Check",
+   "label": "Define Opening Balance for Earning and Deductions"
   }
  ],
  "icon": "fa fa-cog",
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-03-03 17:49:59.579723",
+ "modified": "2023-01-05 10:22:22.425409",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",
@@ -115,5 +131,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "ASC",
+ "states": [],
  "track_changes": 1
 }

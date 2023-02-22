@@ -8,7 +8,7 @@ sudo apt-get -y install redis-server libcups2-dev -qq
 
 pip install frappe-bench
 
-git clone https://github.com/frappe/frappe --branch develop --depth 1
+git clone https://github.com/frappe/frappe --branch "$BRANCH_TO_CLONE" --depth 1
 bench init --skip-assets --frappe-path ~/frappe --python "$(which python)" frappe-bench
 
 mkdir ~/frappe-bench/sites/test_site
@@ -40,7 +40,7 @@ sed -i 's/socketio:/# socketio:/g' Procfile
 sed -i 's/redis_socketio:/# redis_socketio:/g' Procfile
 
 bench get-app payments
-bench get-app https://github.com/frappe/erpnext --branch develop
+bench get-app https://github.com/frappe/erpnext --branch "$BRANCH_TO_CLONE" --resolve-deps
 bench setup requirements --dev
 
 bench start &> bench_run_logs.txt &

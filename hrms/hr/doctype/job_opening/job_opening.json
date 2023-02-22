@@ -13,8 +13,11 @@
   "column_break_5",
   "designation",
   "department",
+  "references_section",
   "staffing_plan",
   "planned_vacancies",
+  "job_requisition",
+  "vacancies",
   "section_break_6",
   "publish",
   "route",
@@ -156,15 +159,37 @@
    "fieldname": "publish_salary_range",
    "fieldtype": "Check",
    "label": "Publish Salary Range"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "references_section",
+   "fieldtype": "Section Break",
+   "label": "References"
+  },
+  {
+   "fieldname": "job_requisition",
+   "fieldtype": "Link",
+   "label": "Job Requisition",
+   "options": "Job Requisition",
+   "read_only": 1
+  },
+  {
+   "depends_on": "job_requisition",
+   "fetch_from": "job_requisition.no_of_positions",
+   "fieldname": "vacancies",
+   "fieldtype": "Int",
+   "label": "Vacancies",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2020-09-18 11:23:29.488923",
+ "modified": "2023-01-09 13:34:47.274465",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -184,5 +209,6 @@
   }
  ],
  "sort_field": "modified",
- "sort_order": "ASC"
+ "sort_order": "ASC",
+ "states": []
 }

@@ -6,51 +6,47 @@
  "document_type": "Setup",
  "engine": "InnoDB",
  "field_order": [
-  "posting_date",
+  "employee_and_payroll_tab",
+  "section_break_6",
   "employee",
   "employee_name",
   "department",
   "designation",
   "branch",
-  "column_break1",
+  "column_break_obdl",
+  "posting_date",
+  "letter_head",
+  "column_break_18",
   "status",
-  "journal_entry",
-  "payroll_entry",
   "company",
   "currency",
   "exchange_rate",
-  "letter_head",
-  "section_break_10",
+  "section_break_gsts",
+  "payroll_frequency",
   "start_date",
   "end_date",
+  "column_break_ptcc",
   "salary_structure",
-  "column_break_18",
-  "salary_slip_based_on_timesheet",
-  "payroll_frequency",
-  "section_break_20",
+  "payroll_entry",
+  "mode_of_payment",
+  "earnings_and_deductions_tab",
   "total_working_days",
   "unmarked_days",
   "leave_without_pay",
-  "column_break_24",
+  "column_break_geio",
   "absent_days",
   "payment_days",
-  "hourly_wages",
+  "earning_deduction",
+  "salary_slip_based_on_timesheet",
   "timesheets",
-  "column_break_20",
+  "column_break_ghjr",
   "total_working_hours",
   "hour_rate",
   "base_hour_rate",
-  "section_break_26",
-  "bank_name",
-  "bank_account_no",
-  "mode_of_payment",
-  "section_break_32",
+  "section_break_gerh",
   "deduct_tax_for_unclaimed_employee_benefits",
   "deduct_tax_for_unsubmitted_tax_exemption_proof",
-  "earning_deduction",
-  "earning",
   "earnings",
-  "deduction",
   "deductions",
   "totals",
   "gross_pay",
@@ -70,21 +66,40 @@
   "net_pay_info",
   "net_pay",
   "base_net_pay",
-  "year_to_date",
-  "base_year_to_date",
-  "column_break_53",
   "rounded_total",
   "base_rounded_total",
+  "column_break_dqnd",
+  "year_to_date",
+  "base_year_to_date",
   "month_to_date",
   "base_month_to_date",
   "section_break_55",
   "total_in_words",
   "column_break_69",
   "base_total_in_words",
-  "leave_details_section",
-  "leave_details",
+  "income_tax_calculation_breakup_section",
+  "ctc",
+  "income_from_other_sources",
+  "total_earnings",
+  "column_break_0rsw",
+  "non_taxable_earnings",
+  "standard_tax_exemption_amount",
+  "tax_exemption_declaration",
+  "deductions_before_tax_calculation",
+  "annual_taxable_amount",
+  "column_break_35wb",
+  "income_tax_deducted_till_date",
+  "current_month_income_tax",
+  "future_income_tax_deductions",
+  "total_income_tax",
   "section_break_75",
-  "amended_from"
+  "journal_entry",
+  "amended_from",
+  "column_break_ieob",
+  "bank_name",
+  "bank_account_no",
+  "leave_details_section",
+  "leave_details"
  ],
  "fields": [
   {
@@ -153,12 +168,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "column_break1",
-   "fieldtype": "Column Break",
-   "oldfieldtype": "Column Break",
-   "width": "50%"
-  },
-  {
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
@@ -169,8 +178,7 @@
    "fieldname": "journal_entry",
    "fieldtype": "Link",
    "label": "Journal Entry",
-   "options": "Journal Entry",
-   "read_only": 1
+   "options": "Journal Entry"
   },
   {
    "fieldname": "payroll_entry",
@@ -198,10 +206,6 @@
    "label": "Letter Head",
    "options": "Letter Head",
    "print_hide": 1
-  },
-  {
-   "fieldname": "section_break_10",
-   "fieldtype": "Section Break"
   },
   {
    "default": "0",
@@ -264,18 +268,10 @@
    "reqd": 1
   },
   {
-   "fieldname": "hourly_wages",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "timesheets",
    "fieldtype": "Table",
    "label": "Salary Slip Timesheet",
    "options": "Salary Slip Timesheet"
-  },
-  {
-   "fieldname": "column_break_20",
-   "fieldtype": "Column Break"
   },
   {
    "fetch_from": "timesheet.total_hours",
@@ -292,28 +288,14 @@
    "print_hide_if_no_value": 1
   },
   {
-   "fieldname": "section_break_26",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "bank_name",
    "fieldtype": "Data",
-   "label": "Bank Name",
-   "oldfieldname": "bank_name",
-   "oldfieldtype": "Data",
-   "read_only": 1
+   "label": "Bank Name"
   },
   {
    "fieldname": "bank_account_no",
    "fieldtype": "Data",
-   "label": "Bank Account No.",
-   "oldfieldname": "bank_account_no",
-   "oldfieldtype": "Data",
-   "read_only": 1
-  },
-  {
-   "fieldname": "section_break_32",
-   "fieldtype": "Section Break"
+   "label": "Bank Account No"
   },
   {
    "default": "0",
@@ -334,24 +316,12 @@
    "oldfieldtype": "Section Break"
   },
   {
-   "fieldname": "earning",
-   "fieldtype": "Column Break",
-   "oldfieldtype": "Column Break",
-   "width": "50%"
-  },
-  {
    "fieldname": "earnings",
    "fieldtype": "Table",
    "label": "Earnings",
    "oldfieldname": "earning_details",
    "oldfieldtype": "Table",
    "options": "Salary Detail"
-  },
-  {
-   "fieldname": "deduction",
-   "fieldtype": "Column Break",
-   "oldfieldtype": "Column Break",
-   "width": "50%"
   },
   {
    "fieldname": "deductions",
@@ -436,10 +406,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "column_break_53",
-   "fieldtype": "Column Break"
-  },
-  {
    "bold": 1,
    "fieldname": "rounded_total",
    "fieldtype": "Currency",
@@ -482,14 +448,6 @@
    "label": "Unmarked days"
   },
   {
-   "fieldname": "section_break_20",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "column_break_24",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "column_break_18",
    "fieldtype": "Column Break"
   },
@@ -520,7 +478,8 @@
   },
   {
    "fieldname": "section_break_75",
-   "fieldtype": "Section Break"
+   "fieldtype": "Tab Break",
+   "label": "Bank Details"
   },
   {
    "fieldname": "base_hour_rate",
@@ -610,8 +569,8 @@
   },
   {
    "fieldname": "leave_details_section",
-   "fieldtype": "Section Break",
-   "label": "Leave Details"
+   "fieldtype": "Tab Break",
+   "label": "Leaves"
   },
   {
    "fieldname": "leave_details",
@@ -633,13 +592,147 @@
    "label": "Gross Year To Date(Company Currency)",
    "options": "Company:company:default_currency",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break",
+   "label": "Employee Details"
+  },
+  {
+   "fieldname": "section_break_gsts",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_obdl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ptcc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_gerh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_geio",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_dqnd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ieob",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ghjr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "eval:doc.ctc",
+   "fieldname": "income_tax_calculation_breakup_section",
+   "fieldtype": "Tab Break",
+   "label": "Income Tax Breakup"
+  },
+  {
+   "fieldname": "ctc",
+   "fieldtype": "Currency",
+   "label": "CTC",
+   "read_only": 1
+  },
+  {
+   "fieldname": "income_from_other_sources",
+   "fieldtype": "Currency",
+   "label": "Income from Other Sources",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_earnings",
+   "fieldtype": "Currency",
+   "label": "Total Earnings",
+   "read_only": 1
+  },
+  {
+   "fieldname": "non_taxable_earnings",
+   "fieldtype": "Currency",
+   "label": "Non Taxable Earnings",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_0rsw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "deductions_before_tax_calculation",
+   "fieldtype": "Currency",
+   "label": "Deductions before tax calculation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "tax_exemption_declaration",
+   "fieldtype": "Currency",
+   "label": "Tax Exemption Declaration",
+   "read_only": 1
+  },
+  {
+   "fieldname": "standard_tax_exemption_amount",
+   "fieldtype": "Currency",
+   "label": "Standard Tax Exemption Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "annual_taxable_amount",
+   "fieldtype": "Currency",
+   "label": "Annual Taxable Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "income_tax_deducted_till_date",
+   "fieldtype": "Currency",
+   "label": "Income Tax Deducted Till Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "employee_and_payroll_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "column_break_35wb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "future_income_tax_deductions",
+   "fieldtype": "Currency",
+   "label": "Future Income Tax",
+   "read_only": 1
+  },
+  {
+   "fieldname": "earnings_and_deductions_tab",
+   "fieldtype": "Tab Break",
+   "label": "Earnings & Deductions"
+  },
+  {
+   "fieldname": "current_month_income_tax",
+   "fieldtype": "Currency",
+   "label": "Current Month Income Tax",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_income_tax",
+   "fieldtype": "Currency",
+   "label": "Total Income Tax",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-06-15 18:36:54.999345",
+ "modified": "2023-02-20 11:27:58.517546",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

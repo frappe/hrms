@@ -7,55 +7,52 @@
  "document_type": "Other",
  "engine": "InnoDB",
  "field_order": [
-  "section_break0",
+  "select_payroll_period",
   "posting_date",
   "payroll_frequency",
   "company",
-  "column_break1",
-  "status",
+  "column_break_5",
   "currency",
   "exchange_rate",
   "payroll_payable_account",
-  "section_break_8",
-  "branch",
-  "department",
-  "column_break_10",
-  "designation",
-  "number_of_employees",
-  "sec_break20",
-  "employees",
-  "section_break_13",
-  "validate_attendance",
-  "attendance_detail_html",
-  "section_break_12",
-  "salary_slip_based_on_timesheet",
-  "select_payroll_period",
+  "status",
+  "section_break_cypo",
   "start_date",
   "end_date",
-  "column_break_11",
+  "column_break_13",
+  "salary_slip_based_on_timesheet",
   "deduct_tax_for_unclaimed_employee_benefits",
   "deduct_tax_for_unsubmitted_tax_exemption_proof",
+  "employees_tab",
+  "section_break_17",
+  "branch",
+  "department",
+  "column_break_21",
+  "designation",
+  "number_of_employees",
+  "section_break_24",
+  "employees",
+  "section_break_26",
+  "validate_attendance",
+  "attendance_detail_html",
+  "accounting_dimensions_tab",
   "accounting_dimensions_section",
-  "project",
-  "dimension_col_break",
   "cost_center",
+  "dimension_col_break",
+  "project",
   "account",
   "payment_account",
-  "column_break_33",
+  "column_break_35",
   "bank_account",
   "salary_slips_created",
   "salary_slips_submitted",
   "failure_details_section",
   "error_message",
   "section_break_41",
-  "amended_from"
+  "amended_from",
+  "connections_tab"
  ],
  "fields": [
-  {
-   "fieldname": "section_break0",
-   "fieldtype": "Section Break",
-   "label": "Select Employees"
-  },
   {
    "default": "Today",
    "fieldname": "posting_date",
@@ -72,11 +69,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "column_break1",
-   "fieldtype": "Column Break",
-   "width": "50%"
-  },
-  {
    "fieldname": "company",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -84,11 +76,6 @@
    "options": "Company",
    "remember_last_selected_value": 1,
    "reqd": 1
-  },
-  {
-   "fieldname": "section_break_8",
-   "fieldtype": "Section Break",
-   "label": "Employees"
   },
   {
    "fieldname": "branch",
@@ -104,10 +91,6 @@
    "options": "Department"
   },
   {
-   "fieldname": "column_break_10",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "designation",
    "fieldtype": "Link",
    "label": "Designation",
@@ -120,18 +103,9 @@
    "read_only": 1
   },
   {
-   "fieldname": "sec_break20",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "employees",
    "fieldtype": "Table",
-   "label": "Employee Details",
    "options": "Payroll Employee Detail"
-  },
-  {
-   "fieldname": "section_break_13",
-   "fieldtype": "Section Break"
   },
   {
    "default": "0",
@@ -144,10 +118,6 @@
    "fieldtype": "HTML"
   },
   {
-   "fieldname": "section_break_12",
-   "fieldtype": "Section Break"
-  },
-  {
    "default": "0",
    "fieldname": "salary_slip_based_on_timesheet",
    "fieldtype": "Check",
@@ -155,8 +125,8 @@
   },
   {
    "fieldname": "select_payroll_period",
-   "fieldtype": "Section Break",
-   "label": "Select Payroll Period"
+   "fieldtype": "Tab Break",
+   "label": "Overview"
   },
   {
    "fieldname": "start_date",
@@ -169,10 +139,6 @@
    "fieldtype": "Date",
    "label": "End Date",
    "reqd": 1
-  },
-  {
-   "fieldname": "column_break_11",
-   "fieldtype": "Column Break"
   },
   {
    "default": "0",
@@ -257,10 +223,6 @@
    "options": "Bank Account"
   },
   {
-   "fieldname": "column_break_33",
-   "fieldtype": "Column Break"
-  },
-  {
    "depends_on": "company",
    "fieldname": "currency",
    "fieldtype": "Link",
@@ -290,7 +252,7 @@
    "collapsible_depends_on": "error_message",
    "depends_on": "eval:doc.status=='Failed';",
    "fieldname": "failure_details_section",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Failure Details"
   },
   {
@@ -312,12 +274,62 @@
    "options": "Draft\nSubmitted\nCancelled\nQueued\nFailed",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_21",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_24",
+   "fieldtype": "Section Break",
+   "label": "Employee Details"
+  },
+  {
+   "fieldname": "section_break_26",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_35",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_13",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "accounting_dimensions_tab",
+   "fieldtype": "Tab Break",
+   "label": "Accounting & Payment"
+  },
+  {
+   "fieldname": "section_break_17",
+   "fieldtype": "Section Break",
+   "label": "Filter Employees"
+  },
+  {
+   "fieldname": "employees_tab",
+   "fieldtype": "Tab Break",
+   "label": "Employees"
+  },
+  {
+   "fieldname": "section_break_cypo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
   }
  ],
  "icon": "fa fa-cog",
  "is_submittable": 1,
  "links": [],
- "modified": "2022-03-16 12:45:21.662765",
+ "modified": "2023-01-05 17:07:00.372983",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",

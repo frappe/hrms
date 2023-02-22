@@ -12,8 +12,8 @@
   "employee_name",
   "department",
   "column_break_2",
-  "payroll_period",
   "company",
+  "payroll_period",
   "currency",
   "amended_from",
   "section_break_8",
@@ -77,7 +77,8 @@
   },
   {
    "fieldname": "section_break_8",
-   "fieldtype": "Section Break"
+   "fieldtype": "Tab Break",
+   "label": "Tax Exemption Declaration"
   },
   {
    "fieldname": "declarations",
@@ -119,7 +120,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-19 12:58:54.707871",
+ "modified": "2022-11-08 17:03:56.224987",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Tax Exemption Declaration",
