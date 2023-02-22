@@ -1,0 +1,85 @@
+<div class="rating-summary-section mt-4">
+	<div class="rating-summary-numbers col-3">
+		<h2 style="font-size: 2rem;">
+			{{ average_rating }}
+		</h2>
+		<div class="mb-2" style="margin-top: -.5rem;">
+			{{ cstr(total_feedbacks)}} {{ total_feedbacks > 1 ? __("feedbacks") : "feedback" }}
+		</div>
+
+		<!-- Ratings Summary -->
+		{%= frappe.render_template("rating",
+				{number_of_stars: number_of_stars, average_rating: average_rating, for_summary: true}
+			)
+		%}
+
+		<div class="mt-2">{{ cstr(average_rating) + " " + __("out of") + " " }} {{number_of_stars}}</div>
+	</div>
+
+	<!-- Rating Progress Bars -->
+	<div class="rating-progress-bar-section col-4 ml-4">
+		{% for(let i=0, l=reviews_per_rating.length; i<l; i++) { %}
+			<div class="col-sm-4 small rating-bar-title">
+				{{ i+1 }} star
+			</div>
+			<div class="row">
+				<div class="col-md-7">
+					<div class="progress rating-progress-bar" title="{{ reviews_per_rating[i] }} % of reviews are {{ i+1 }} star">
+						<div class="progress-bar progress-bar-cosmetic" role="progressbar"
+							aria-valuenow="{{ reviews_per_rating[i] }}"
+							aria-valuemin="0" aria-valuemax="100"
+							style="width: {{ reviews_per_rating[i] }}%;">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-1 small">
+					{{ reviews_per_rating[i] }}%
+				</div>
+			</div>
+		{% } %}
+	</div>
+</div>
+
+<style>
+	.rating-summary-section {
+		display: flex;
+	}
+
+	.rating-summary-numbers {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		border-right: 1px solid var(--gray-100);
+	}
+
+	.rating-summary-numbers h2 {
+		font-size: 2rem;
+	}
+
+	.rating-summary-numbers .mb-2 {
+		margin-top: -.5rem;
+	}
+
+	.rating-summary-numbers .mt-2 {
+		margin-top: 1rem;
+	}
+
+	.rating-progress-bar-section {
+		padding-bottom: 2rem;
+	}
+
+	.rating-progress-bar-section .rating-bar-title {
+		margin-left: -15px;
+	}
+
+	.rating-progress-bar-section .rating-progress-bar {
+		margin-bottom: 4px;
+		height: 7px;
+		margin-top: 6px;
+	}
+
+	.rating-progress-bar-section .progress-bar-cosmetic {
+		background-color: var(--gray-600);
+		border-radius: var(--border-radius);
+	}
+</style>
