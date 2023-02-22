@@ -11,8 +11,10 @@
   "disable_rounded_total",
   "include_holidays_in_total_working_days",
   "show_leave_balances_in_salary_slip",
+  "column_break_rnoq",
   "define_opening_balance_for_earning_and_deductions",
   "process_payroll_accounting_entry_based_on_employee",
+  "include_zero_value_salary_component_in_salary_slip",
   "column_break_6",
   "max_working_hours_against_timesheet",
   "daily_wages_fraction_for_half_day",
@@ -107,13 +109,23 @@
    "fieldname": "define_opening_balance_for_earning_and_deductions",
    "fieldtype": "Check",
    "label": "Define Opening Balance for Earning and Deductions"
+  },
+  {
+   "default": "0",
+   "fieldname": "include_zero_value_salary_component_in_salary_slip",
+   "fieldtype": "Check",
+   "label": "Include Zero Value Salary Component in Salary Slip"
+  },
+  {
+   "fieldname": "column_break_rnoq",
+   "fieldtype": "Column Break"
   }
  ],
  "icon": "fa fa-cog",
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-01-05 10:22:22.425409",
+ "modified": "2023-02-22 12:21:31.266958",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",
