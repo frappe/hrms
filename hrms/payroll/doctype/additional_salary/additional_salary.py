@@ -54,9 +54,7 @@ class AdditionalSalary(Document):
 					& (AdditionalSalary.from_date <= self.to_date)
 					& (AdditionalSalary.disabled == 0)
 				)
-			).run(as_dict=1)
-
-			additional_salaries = [salary.name for salary in additional_salaries]
+			).run(pluck=True)
 
 			if additional_salaries and len(additional_salaries):
 				frappe.throw(
