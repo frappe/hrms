@@ -1,0 +1,107 @@
+<div class="feedback-section col-xs-12">
+	{% if (feedbacks.length) { %}
+		<div class="feedback-summary">
+			{%= frappe.render_template("feedback_summary",
+					{
+						number_of_stars: 5,
+						average_rating: average_feedback_score,
+						total_feedbacks: feedbacks.length,
+						reviews_per_rating: reviews_per_rating
+					}
+				)
+			%}
+		</div>
+	{% } %}
+
+	<div class="new-btn py-3">
+		<button class="new-feedback-btn btn btn-sm small inline-flex items-center justify-center p-2">
+			<svg class="icon icon-sm">
+				<use href="#icon-add"></use>
+			</svg>
+			{{ __("New Feedback") }}
+		</button>
+	</div>
+
+	<div class="all-feedbacks frappe-card mb-3">
+		{% if (feedbacks.length) { %}
+			{% for(var i=0, l=feedbacks.length; i<l; i++) { %}
+				<div class="comment-content p-3 d-flex flex-row" name="{{ feedbacks[i].name }}">
+					<div class="mb-2 head col-xs-3">
+						<div class="row">
+							<div class="col-xs-2">
+								{{ frappe.avatar(feedbacks[i].user, "avatar-medium") }}
+							</div>
+							<div class="col-xs-10">
+								<div class="ml-2">
+									<div class="title font-weight-bold">
+										{{ strip_html(feedbacks[i].reviewer_name) }}
+									</div>
+									<div class="small text-muted">
+										{{ strip_html(feedbacks[i].reviewer_designation) }}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="content col-xs-6">
+						<div class="rating">
+							{%= frappe.render_template("rating",
+									{number_of_stars: 5, average_rating: feedbacks[i].total_score, for_summary: false}
+								)
+							%}
+						</div>
+						<div class="my-3">
+							{{ feedbacks[i].feedback }}
+						</div>
+					</div>
+
+					<div class="content col-xs-3 d-flex flex-row justify-content-end">
+						<div class="time small text-muted">
+							{{ frappe.datetime.global_date_format(feedbacks[i].added_on) }}
+						</div>
+						{% if (frappe.session.user === feedbacks[i].user || frappe.session.user === "Administrator") { %}
+						<div class="ml-2 text-right">
+							<div class="column-options dropdown pull-right">
+								<a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<svg class="icon icon-sm">
+										<use href="#icon-dot-horizontal"></use>
+									</svg>
+								</a>
+								<ul class="dropdown-menu overflow-hidden dropdown-menu-right">
+									<li><a class="dropdown-item edit-feedback-btn">{{ __("Edit") }}</a></li>
+									<li><a class="dropdown-item delete-feedback-btn">{{ __("Delete") }}</a></li>
+								</ul>
+							</div>
+						</div>
+					{% } %}
+					</div>
+				</div>
+			{% } %}
+		{% } else { %}
+			<div class="no-feedbacks d-flex flex-col justify-content-center align-items-center text-muted">
+				<span>{{ __("This employee has not received any feedbacks yet") }}</span>
+			</div>
+		{% } %}
+	</div>
+</div>
+
+<style>
+
+.comment-content {
+	border: 1px solid var(--border-color);
+	border-bottom: none;
+}
+
+.comment-content:last-child {
+	border-bottom: 1px solid var(--border-color);
+}
+
+.new-btn {
+	text-align: right;
+}
+
+.feedback-section .no-feedbacks {
+	min-height: 100px;
+}
+
+</style>
