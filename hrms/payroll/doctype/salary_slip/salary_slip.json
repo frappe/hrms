@@ -29,24 +29,28 @@
   "salary_structure",
   "payroll_entry",
   "mode_of_payment",
-  "earnings_and_deductions_tab",
+  "column_break_wyhp",
+  "salary_slip_based_on_timesheet",
+  "section_break_gerh",
+  "deduct_tax_for_unclaimed_employee_benefits",
+  "deduct_tax_for_unsubmitted_tax_exemption_proof",
+  "payment_days_tab",
   "total_working_days",
   "unmarked_days",
   "leave_without_pay",
   "column_break_geio",
   "absent_days",
   "payment_days",
-  "earning_deduction",
-  "salary_slip_based_on_timesheet",
+  "earnings_and_deductions_tab",
+  "timesheets_section",
   "timesheets",
   "column_break_ghjr",
   "total_working_hours",
   "hour_rate",
   "base_hour_rate",
-  "section_break_gerh",
-  "deduct_tax_for_unclaimed_employee_benefits",
-  "deduct_tax_for_unsubmitted_tax_exemption_proof",
+  "earning_deduction",
   "earnings",
+  "column_break_k1jz",
   "deductions",
   "totals",
   "gross_pay",
@@ -312,7 +316,6 @@
   {
    "fieldname": "earning_deduction",
    "fieldtype": "Section Break",
-   "label": "Earnings & Deductions",
    "oldfieldtype": "Section Break"
   },
   {
@@ -334,6 +337,7 @@
   {
    "fieldname": "totals",
    "fieldtype": "Section Break",
+   "label": "Totals",
    "oldfieldtype": "Section Break"
   },
   {
@@ -395,7 +399,7 @@
   },
   {
    "fieldname": "net_pay_info",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Net Pay Info"
   },
   {
@@ -595,8 +599,7 @@
   },
   {
    "fieldname": "section_break_6",
-   "fieldtype": "Section Break",
-   "label": "Employee Details"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "section_break_gsts",
@@ -726,13 +729,31 @@
    "fieldtype": "Currency",
    "label": "Total Income Tax",
    "read_only": 1
+  },
+  {
+   "fieldname": "payment_days_tab",
+   "fieldtype": "Tab Break",
+   "label": "Payment Days"
+  },
+  {
+   "fieldname": "column_break_k1jz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_wyhp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.salary_slip_based_on_timesheet",
+   "fieldname": "timesheets_section",
+   "fieldtype": "Section Break"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-02-20 11:27:58.517546",
+ "modified": "2023-02-22 18:23:49.783449",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
