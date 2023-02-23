@@ -11,7 +11,7 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 		this.feedback_wrapper.find(".feedback-section").remove();
 
 		frappe.call({
-			method: "hrms.hr.doctype.appraisal.appraisal.get_feedbacks",
+			method: "hrms.hr.doctype.appraisal.appraisal.get_feedback_history",
 			args: {
 				employee: me.frm.doc.employee,
 				appraisal: me.frm.doc.name
@@ -19,16 +19,16 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 			callback: function(r) {
 				if (!r.exc) {
 					const data = r.message || [];
-					const feedbacks = data.feedbacks;
+					const feedback_history = data.feedback_history;
 
-					feedbacks.sort(
+					feedback_history.sort(
 						function(a, b) {
 							return new Date(b.added_on) - new Date(a.added_on);
 						}
 					);
 
-					const feedback_html = frappe.render_template("employee_feedbacks", {
-						feedbacks: feedbacks,
+					const feedback_html = frappe.render_template("performance_feedback_history", {
+						feedback_history: feedback_history,
 						average_feedback_score: me.frm.doc.avg_feedback_score,
 						reviews_per_rating: data.reviews_per_rating
 					});
@@ -110,7 +110,7 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 						freeze: true,
 						callback: function(r) {
 							if (!r.exc) {
-								me.frm.refresh_field("feedbacks_table");
+								me.frm.refresh_field("feedback_table");
 								me.refresh();
 							}
 							dialog.hide();
@@ -170,7 +170,7 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 						freeze: true,
 						callback: function(r) {
 							if (!r.exc) {
-								me.frm.refresh_field("feedbacks_table");
+								me.frm.refresh_field("feedback_table");
 								me.refresh();
 							}
 							d.hide();
@@ -195,7 +195,7 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 			freeze: true,
 			callback: function(r) {
 				if (!r.exc) {
-					me.frm.refresh_field("feedbacks_table");
+					me.frm.refresh_field("feedback_table");
 					me.refresh();
 				}
 			}

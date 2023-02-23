@@ -12,7 +12,7 @@ frappe.ui.form.on("Appraisal", {
 				frappe.set_route("Tree", "Goal");
 			});
 
-			frm.trigger("show_feedbacks");
+			frm.trigger("show_feedback_history");
 			frm.trigger("setup_chart");
 		}
 
@@ -44,13 +44,13 @@ frappe.ui.form.on("Appraisal", {
 		}
 	},
 
-	show_feedbacks: function(frm) {
+	show_feedback_history: function(frm) {
 		frappe.require("performance.bundle.js", () => {
-			const feedbacks = new hrms.PerformanceFeedback({
+			const feedback_history = new hrms.PerformanceFeedback({
 				frm: frm,
 				feedback_wrapper: $(frm.fields_dict.feedback_html.wrapper),
 			});
-			feedbacks.refresh();
+			feedback_history.refresh();
 		});
 	},
 

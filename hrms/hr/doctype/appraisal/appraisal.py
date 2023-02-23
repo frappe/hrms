@@ -19,7 +19,7 @@ class Appraisal(Document):
 		self.calculate_total_score()
 		self.calculate_self_appraisal_score()
 		self.calculate_avg_feedback_score()
-		self.feedbacks = len(self.feedbacks_table)
+		self.feedback_count = len(self.feedback_table)
 
 	def validate_existing_appraisal(self):
 		duplicate = frappe.db.exists(
@@ -90,7 +90,7 @@ class Appraisal(Document):
 
 	@frappe.whitelist()
 	def edit_feedback(self, feedback, row_id):
-		for d in self.feedbacks_table:
+		for d in self.feedback_table:
 			if cstr(d.name) == row_id:
 				d.feedback = feedback
 				d.db_update()
@@ -133,9 +133,9 @@ def update_progress_in_appraisal(goal):
 
 
 @frappe.whitelist()
-def get_feedbacks(employee, appraisal):
+def get_feedback_history(employee, appraisal):
 	data = frappe._dict()
-	data.feedbacks = frappe.db.get_list(
+	data.feedback_history = frappe.db.get_list(
 		"Performance Feedback",
 		filters={"employee": employee},
 		fields=[
@@ -165,7 +165,7 @@ def get_feedbacks(employee, appraisal):
 			},
 		)
 
-		percent = flt((count / len(data.feedbacks) or 1) * 100, 0) if count else 0
+		percent = flt((count / len(data.feedback_history) or 1) * 100, 0) if count else 0
 		reviews_per_rating.append(percent)
 
 	data.reviews_per_rating = reviews_per_rating
