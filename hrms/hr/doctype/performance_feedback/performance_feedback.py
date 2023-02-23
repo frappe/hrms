@@ -19,7 +19,7 @@ class PerformanceFeedback(Document):
 
 		appraisal = frappe.get_doc("Appraisal", self.appraisal)
 		appraisal.calculate_avg_feedback_score()
-		appraisal.db_update_all()
+		appraisal.db_update()
 
 	def set_total_score(self):
 		total = 0
@@ -29,10 +29,22 @@ class PerformanceFeedback(Document):
 
 		self.total_score = total
 
+	@frappe.whitelist()
+	def set_kras(self):
+		if not self.appraisal:
+			return
 
-@frappe.whitelist()
-def get_kra(employee):
-	appraisal_template = frappe.db.get_value(
-		"Appraisal", {"employee": employee}, "appraisal_template"
-	)
-	return frappe.get_doc("Appraisal Template", appraisal_template)
+		template = frappe.db.get_value("Appraisal", self.appraisal, "appraisal_template")
+		template = frappe.get_doc("Appraisal Template", template)
+
+		self.set("kra_rating", [])
+		for kra in template.goals:
+			self.append(
+				"kra_rating",
+				{
+					"kra": kra.kra,
+					"per_weightage": kra.per_weightage,
+				},
+			)
+
+		return self

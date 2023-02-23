@@ -10,12 +10,14 @@ from hrms.hr.utils import validate_active_employee
 
 
 class Appraisal(Document):
+	def before_insert(self):
+		self.validate_duplicate()
+
 	def validate(self):
 		if not self.status:
 			self.status = "Draft"
 
 		validate_active_employee(self.employee)
-		self.validate_duplicate()
 
 		self.calculate_total_score()
 		self.calculate_self_appraisal_score()
