@@ -21,19 +21,19 @@
   "section_break0",
   "appraisal_kra",
   "total_section",
-  "feedbacks",
+  "feedback_count",
   "total_score",
-  "feedbacks_tab",
+  "feedback_tab",
   "feedback_html",
-  "feedbacks_table",
+  "feedback_table",
   "section_break_20",
   "avg_feedback_score",
   "self_appraisal_tab",
-  "upload_reflections",
   "column_break_23",
   "kra_rating",
   "self_score",
   "reflections_section",
+  "upload_reflections",
   "positives",
   "negatives",
   "amended_from"
@@ -180,13 +180,6 @@
    "label": "Total"
   },
   {
-   "fieldname": "feedbacks",
-   "fieldtype": "Int",
-   "hidden": 1,
-   "label": "Feedbacks",
-   "read_only": 1
-  },
-  {
    "fieldname": "total_score",
    "fieldtype": "Float",
    "in_list_view": 1,
@@ -197,22 +190,9 @@
    "read_only": 1
   },
   {
-   "fieldname": "feedbacks_tab",
-   "fieldtype": "Tab Break",
-   "label": "Feedbacks"
-  },
-  {
    "fieldname": "feedback_html",
    "fieldtype": "HTML",
    "label": "Feedback HTML"
-  },
-  {
-   "fieldname": "feedbacks_table",
-   "fieldtype": "Table",
-   "hidden": 1,
-   "label": "Feedbacks",
-   "no_copy": 1,
-   "options": "Appraisal Feedback"
   },
   {
    "fieldname": "self_appraisal_tab",
@@ -271,6 +251,26 @@
    "fieldtype": "Attach Image",
    "hidden": 1,
    "label": "Employee Image"
+  },
+  {
+   "fieldname": "feedback_count",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Feedback Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "feedback_tab",
+   "fieldtype": "Tab Break",
+   "label": "Feedback"
+  },
+  {
+   "fieldname": "feedback_table",
+   "fieldtype": "Table",
+   "hidden": 1,
+   "label": "Feedback",
+   "no_copy": 1,
+   "options": "Appraisal Feedback"
   }
  ],
  "icon": "fa fa-thumbs-up",
@@ -278,7 +278,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-09 19:29:59.210052",
+ "modified": "2023-02-23 12:49:40.912870",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",
