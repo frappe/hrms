@@ -21,7 +21,6 @@
   "appraisal_template",
   "appraisal_kra",
   "total_section",
-  "feedback_count",
   "total_score",
   "feedback_tab",
   "feedback_html",
@@ -43,7 +42,7 @@
    "fieldtype": "Select",
    "label": "Series",
    "no_copy": 1,
-   "options": "HR-APR-.YY.-.MM.",
+   "options": "HR-APR-.YYYY.-",
    "print_hide": 1,
    "reqd": 1,
    "set_only_once": 1
@@ -215,13 +214,6 @@
    "label": "Employee Image"
   },
   {
-   "fieldname": "feedback_count",
-   "fieldtype": "Int",
-   "hidden": 1,
-   "label": "Feedback Count",
-   "read_only": 1
-  },
-  {
    "fieldname": "feedback_tab",
    "fieldtype": "Tab Break",
    "label": "Feedback"
@@ -257,7 +249,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-02-23 21:49:53.846256",
+ "modified": "2023-02-23 23:24:25.295787",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",

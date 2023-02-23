@@ -1,12 +1,13 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "hash",
+ "autoname": "naming_series:",
  "creation": "2022-09-01 01:05:44.869523",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "naming_series",
   "employee_details_tab",
   "employee",
   "employee_name",
@@ -35,6 +36,7 @@
    "read_only": 1
   },
   {
+   "depends_on": "employee",
    "fieldname": "section_break_3",
    "fieldtype": "Section Break"
   },
@@ -68,7 +70,8 @@
    "default": "Now",
    "fieldname": "added_on",
    "fieldtype": "Datetime",
-   "label": "Added On"
+   "label": "Added On",
+   "reqd": 1
   },
   {
    "fieldname": "employee",
@@ -82,7 +85,8 @@
    "fieldname": "appraisal",
    "fieldtype": "Link",
    "label": "Appraisal",
-   "options": "Appraisal"
+   "options": "Appraisal",
+   "reqd": 1
   },
   {
    "fetch_from": "reviewer.designation",
@@ -96,7 +100,8 @@
    "fieldname": "reviewer",
    "fieldtype": "Link",
    "label": "Reviewer",
-   "options": "Employee"
+   "options": "Employee",
+   "reqd": 1
   },
   {
    "fetch_from": "reviewer.employee_name",
@@ -137,15 +142,21 @@
    "label": "Appraisal Cycle",
    "options": "Appraisal Cycle",
    "read_only": 1
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "HR-PF-.YYYY.-"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-02-23 20:29:19.320118",
+ "modified": "2023-02-23 23:26:15.659365",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Performance Feedback",
- "naming_rule": "Random",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
