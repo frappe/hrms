@@ -65,5 +65,6 @@ class RetentionBonus(Document):
 				"docstatus": 1,
 				"ref_doctype": self.doctype,
 				"ref_docname": self.name,
+				"disabled": 0,
 			},
 		)
