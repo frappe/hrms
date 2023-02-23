@@ -15,9 +15,8 @@
   "daily_wages_fraction_for_half_day",
   "column_break_rnoq",
   "disable_rounded_total",
-  "show_leave_balances_in_salary_slip",
   "column_break_gzpl",
-  "show_zero_value_components",
+  "show_leave_balances_in_salary_slip",
   "email_section",
   "email_salary_slip_to_employee",
   "column_break_iewr",
@@ -122,12 +121,6 @@
    "label": "Salary Slip"
   },
   {
-   "default": "0",
-   "fieldname": "show_zero_value_components",
-   "fieldtype": "Check",
-   "label": "Show Zero Value Components in Salary Slip"
-  },
-  {
    "fieldname": "email_section",
    "fieldtype": "Section Break",
    "label": "Email"
@@ -159,7 +152,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-02-22 16:30:07.239895",
+ "modified": "2023-02-23 14:56:15.335250",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",
