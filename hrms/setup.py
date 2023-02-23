@@ -57,6 +57,13 @@ def get_custom_fields():
 				"insert_after": "branch",
 			},
 			{
+				"fieldname": "default_appraisal_template",
+				"fieldtype": "Link",
+				"label": "Default Appraisal Template",
+				"options": "Appraisal Template",
+				"insert_after": "grade",
+			},
+			{
 				"fieldname": "default_shift",
 				"fieldtype": "Link",
 				"label": "Default Shift",
