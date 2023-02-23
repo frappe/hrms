@@ -24,7 +24,7 @@ class Appraisal(Document):
 	def validate_existing_appraisal(self):
 		duplicate = frappe.db.exists(
 			"Appraisal",
-			filters={
+			{
 				"employee": self.employee,
 				"status": ["in", ["Submitted", "Completed"]],
 				"appraisal_cycle": self.appraisal_cycle,
@@ -56,7 +56,7 @@ class Appraisal(Document):
 		self.avg_feedback_score = (
 			frappe.db.get_all(
 				"Performance Feedback",
-				filters={"for_employee": self.employee},
+				filters={"employee": self.employee, "appraisal": self.name},
 				fields=["avg(total_score) as avg_feedback_score"],
 			)[0].avg_feedback_score
 			or 0
@@ -67,10 +67,10 @@ class Appraisal(Document):
 		perf = frappe.new_doc("Performance Feedback")
 		perf.update(
 			{
-				"for_employee": self.employee,
+				"employee": self.employee,
 				"added_on": now(),
 				"feedback": feedback,
-				"given_by": frappe.db.get_value("Employee", {"user_id": frappe.session.user}),
+				"reviewer": frappe.db.get_value("Employee", {"user_id": frappe.session.user}),
 				"user": frappe.session.user,
 			}
 		)
@@ -87,17 +87,6 @@ class Appraisal(Document):
 		perf.save()
 		self.calculate_avg_feedback_score()
 		self.save()
-		# self.append(
-		# 	"feedbacks_table",
-		# 	{
-		# 		"feedback": feedback,
-		# 		"given_by": frappe.db.get_value("Employee", {"user_id": frappe.session.user}),
-		# 		"user": frappe.session.user,
-		# 		"added_on": now(),
-		# 		"for_employee": self.employee,
-		# 	},
-		# )
-		# self.save()
 
 	@frappe.whitelist()
 	def edit_feedback(self, feedback, row_id):
@@ -113,11 +102,6 @@ class Appraisal(Document):
 		frappe.delete_doc("Performance Feedback", row_id)
 		self.calculate_avg_feedback_score()
 		self.save()
-		# for d in self.feedbacks_table:
-		# 	if cstr(d.name) == row_id:
-		# 		self.remove(d)
-		# 		break
-		# self.save()
 
 
 def update_progress_in_appraisal(goal):
@@ -149,18 +133,20 @@ def update_progress_in_appraisal(goal):
 
 
 @frappe.whitelist()
-def get_feedbacks(employee):
-	return frappe.db.get_all(
+def get_feedbacks(employee, appraisal):
+	data = frappe._dict()
+	data.feedbacks = frappe.db.get_list(
 		"Performance Feedback",
-		filters={"for_employee": employee},
+		filters={"employee": employee},
 		fields=[
 			"feedback",
-			"given_by",
+			"reviewer",
 			"user",
 			"owner",
-			"given_by_name",
+			"reviewer_name",
+			"reviewer_designation",
 			"added_on",
-			"for_employee",
+			"employee",
 			"total_score",
 			"name",
 		],
