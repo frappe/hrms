@@ -151,3 +151,23 @@ def get_feedbacks(employee, appraisal):
 			"name",
 		],
 	)
+
+	# get percentage of reviews per rating
+	reviews_per_rating = []
+
+	for i in range(1, 6):
+		count = frappe.db.count(
+			"Performance Feedback",
+			filters={
+				"appraisal": appraisal,
+				"employee": employee,
+				"total_score": ("between", [i, i + 0.99]),
+			},
+		)
+
+		percent = flt((count / len(data.feedbacks) or 1) * 100, 0) if count else 0
+		reviews_per_rating.append(percent)
+
+	data.reviews_per_rating = reviews_per_rating
+
+	return data
