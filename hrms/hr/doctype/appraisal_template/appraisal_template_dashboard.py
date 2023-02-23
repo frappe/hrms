@@ -1,6 +1,6 @@
 def get_data():
 	return {
-		"fieldname": "kra_template",
+		"fieldname": "appraisal_template",
 		"transactions": [
 			{"items": ["Appraisal"]},
 		],

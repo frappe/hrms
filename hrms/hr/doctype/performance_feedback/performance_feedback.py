@@ -32,5 +32,7 @@ class PerformanceFeedback(Document):
 
 @frappe.whitelist()
 def get_kra(employee):
-	kra_template = frappe.db.get_value("Appraisal", {"employee": employee}, "kra_template")
-	return frappe.get_doc("Appraisal Template", kra_template)
+	appraisal_template = frappe.db.get_value(
+		"Appraisal", {"employee": employee}, "appraisal_template"
+	)
+	return frappe.get_doc("Appraisal Template", appraisal_template)

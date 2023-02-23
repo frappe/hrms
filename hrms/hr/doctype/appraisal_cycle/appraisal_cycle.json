@@ -9,8 +9,8 @@
  "field_order": [
   "appraisal_name",
   "company",
-  "start_date",
   "column_break_3",
+  "start_date",
   "end_date",
   "section_break_4",
   "description",
@@ -20,9 +20,9 @@
   "department",
   "column_break_11",
   "designation",
-  "appraisee_list_section",
+  "employees_section",
   "get_employees",
-  "appraisee_list"
+  "appraisees"
  ],
  "fields": [
   {
@@ -51,14 +51,15 @@
    "reqd": 1
   },
   {
+   "collapsible": 1,
    "fieldname": "section_break_4",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Description"
   },
   {
    "allow_in_quick_entry": 1,
    "fieldname": "description",
-   "fieldtype": "Text Editor",
-   "label": "Description"
+   "fieldtype": "Text Editor"
   },
   {
    "fieldname": "column_break_3",
@@ -70,6 +71,8 @@
    "label": "Applicable For"
   },
   {
+   "collapsible": 1,
+   "collapsible_depends_on": "eval: doc.__islocal",
    "description": "Set optional filters to fetch employees in the appraisee list",
    "fieldname": "filters_section",
    "fieldtype": "Section Break",
@@ -98,16 +101,6 @@
    "options": "Designation"
   },
   {
-   "fieldname": "appraisee_list_section",
-   "fieldtype": "Section Break",
-   "label": "Appraisee List"
-  },
-  {
-   "fieldname": "appraisee_list",
-   "fieldtype": "Table",
-   "options": "Appraisee"
-  },
-  {
    "fieldname": "get_employees",
    "fieldtype": "Button",
    "label": "Get Employees"
@@ -118,11 +111,22 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "employees_section",
+   "fieldtype": "Section Break",
+   "label": "Employees"
+  },
+  {
+   "fieldname": "appraisees",
+   "fieldtype": "Table",
+   "options": "Appraisee",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-08-25 12:42:02.677756",
+ "modified": "2023-02-23 16:39:22.487447",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal Cycle",
