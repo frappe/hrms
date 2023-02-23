@@ -11,6 +11,8 @@ from hrms.hr.doctype.appraisal.appraisal import update_progress_in_appraisal
 class Goal(NestedSet):
 	def validate(self):
 		self.set_status()
+
+	def on_update(self):
 		update_progress_in_appraisal(self)
 
 	def set_status(self, status=None):

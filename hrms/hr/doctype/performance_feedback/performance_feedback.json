@@ -7,14 +7,16 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "for_employee",
+  "employee",
   "employee_name",
   "added_on",
   "column_break_3",
-  "given_by",
-  "given_by_name",
+  "reviewer",
+  "reviewer_name",
+  "reviewer_designation",
   "user",
   "section_break_3",
+  "appraisal",
   "kra_rating",
   "total_score",
   "feedback_tab",
@@ -55,29 +57,8 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "given_by",
-   "fieldtype": "Link",
-   "label": "Given By",
-   "options": "Employee"
-  },
-  {
-   "fetch_from": "given_by.employee_name",
-   "fieldname": "given_by_name",
-   "fieldtype": "Data",
-   "label": "Given By (Name)",
-   "read_only": 1
-  },
-  {
    "fieldname": "feedback",
    "fieldtype": "Text Editor"
-  },
-  {
-   "fieldname": "for_employee",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Employee",
-   "options": "Employee",
-   "reqd": 1
   },
   {
    "fieldname": "added_on",
@@ -85,17 +66,52 @@
    "label": "Added On"
   },
   {
-   "fetch_from": "given_by.user_id",
+   "fetch_from": "reviewer.user_id",
    "fieldname": "user",
    "fieldtype": "Link",
    "label": "User",
    "options": "User",
    "reqd": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "For Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "appraisal",
+   "fieldtype": "Link",
+   "label": "Appraisal",
+   "options": "Appraisal"
+  },
+  {
+   "fetch_from": "reviewer.designation",
+   "fieldname": "reviewer_designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reviewer",
+   "fieldtype": "Link",
+   "label": "Reviewer",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "reviewer.employee_name",
+   "fieldname": "reviewer_name",
+   "fieldtype": "Data",
+   "label": "Reviewer Name",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-01 01:42:27.710846",
+ "modified": "2022-09-10 23:32:09.374542",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Performance Feedback",

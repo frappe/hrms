@@ -46,7 +46,7 @@ frappe.ui.form.on("Appraisal", {
 
 	show_feedbacks: function(frm) {
 		frappe.require("performance.bundle.js", () => {
-			const feedbacks = new hrms.EmployeeFeedback({
+			const feedbacks = new hrms.PerformanceFeedback({
 				frm: frm,
 				feedback_wrapper: $(frm.fields_dict.feedback_html.wrapper),
 			});
