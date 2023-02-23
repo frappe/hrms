@@ -961,29 +961,25 @@ class SalarySlip(TransactionBase):
 					self.data[struct_row.abbr] = flt(payment_days_amount, struct_row.precision("amount"))
 
 			else:
+				default_amount = 0
+				show_zero_value_component = 0
+
 				if amount or (struct_row.amount_based_on_formula and amount is not None):
 					default_amount = self.eval_condition_and_formula(struct_row, self.default_data)
-					self.update_component_row(
-						struct_row,
-						amount,
-						component_type,
-						data=self.data,
-						default_amount=default_amount,
-					)
 
 				else:
 					show_zero_value_component = frappe.db.get_value(
 						"Salary Component", struct_row.salary_component, "show_zero_value_component"
 					)
 
-					if show_zero_value_component:
-						self.update_component_row(
-							struct_row,
-							amount,
-							component_type,
-							data=self.data,
-							show_zero_value_component=show_zero_value_component,
-						)
+				self.update_component_row(
+					struct_row,
+					amount,
+					component_type,
+					data=self.data,
+					default_amount=default_amount,
+					show_zero_value_component=show_zero_value_component,
+				)
 
 	def get_data_for_eval(self):
 		"""Returns data for evaluating formula"""
@@ -1239,8 +1235,6 @@ class SalarySlip(TransactionBase):
 		component_row.amount = self.get_amount_based_on_payment_days(
 			component_row, joining_date, relieving_date
 		)[0]
-
-		print(component_row.amount, component_row.salary_component)
 
 		# remove 0 valued components that have been updated later
 		if component_row.amount == 0 and not show_zero_value_component:
