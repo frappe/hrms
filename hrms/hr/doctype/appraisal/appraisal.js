@@ -19,28 +19,12 @@ frappe.ui.form.on("Appraisal", {
 		frm.sidebar.image_wrapper.find(".sidebar-image-actions").addClass("hide");
 	},
 
-	kra_template: function(frm) {
-		if (frm.doc.kra_template) {
-			frappe.call({
-				"method": "frappe.client.get",
-				args: {
-					doctype: "Appraisal Template",
-					name: frm.doc.kra_template
-				},
-				callback: function(data) {
-					frm.doc.appraisal_kra = [];
-					$.each(data.message.goals, function(_i, e) {
-						let entry = frm.add_child("appraisal_kra");
-						entry.kra = e.kra;
-						entry.per_weightage = e.per_weightage;
-
-						entry = frm.add_child("kra_rating");
-						entry.kra = e.kra;
-						entry.per_weightage = e.per_weightage;
-					});
-					refresh_field("appraisal_kra");
-				}
-			});
+	appraisal_template: function(frm) {
+		if (frm.doc.appraisal_template) {
+			frm.call("set_kras", () => {
+				frm.refresh_field("appraisal_kra");
+				frm.refresh_field("kra_rating");
+			})
 		}
 	},
 

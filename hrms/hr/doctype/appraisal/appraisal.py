@@ -15,27 +15,50 @@ class Appraisal(Document):
 			self.status = "Draft"
 
 		validate_active_employee(self.employee)
-		self.validate_existing_appraisal()
+		self.validate_duplicate()
+
 		self.calculate_total_score()
 		self.calculate_self_appraisal_score()
 		self.calculate_avg_feedback_score()
 		self.feedback_count = len(self.feedback_table)
 
-	def validate_existing_appraisal(self):
+	def validate_duplicate(self):
 		duplicate = frappe.db.exists(
 			"Appraisal",
 			{
 				"employee": self.employee,
-				"status": ["in", ["Submitted", "Completed"]],
+				"docstatus": ["!=", 2],
 				"appraisal_cycle": self.appraisal_cycle,
 			},
 		)
+
 		if duplicate:
 			frappe.throw(
 				_("Appraisal {0} already created for Employee {1} for this Appraisal Cycle").format(
-					duplicate[0][0], self.employee_name
-				)
+					duplicate, self.employee_name
+				),
+				frappe.DuplicateEntryError,
 			)
+
+	@frappe.whitelist()
+	def set_kras(self):
+		if not self.appraisal_template:
+			return
+
+		self.set("appraisal_kra", [])
+		self.set("kra_rating", [])
+
+		template = frappe.get_doc("Appraisal Template", self.appraisal_template)
+		for kra in template.goals:
+			row = {
+				"kra": kra.kra,
+				"per_weightage": kra.per_weightage,
+			}
+
+			self.append("appraisal_kra", row)
+			self.append("kra_rating", row)
+
+		return self
 
 	def calculate_total_score(self):
 		total = 0

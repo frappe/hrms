@@ -6,9 +6,8 @@
  "document_type": "Setup",
  "engine": "InnoDB",
  "field_order": [
-  "employee_details",
+  "employee_details_tab",
   "naming_series",
-  "kra_template",
   "employee",
   "employee_name",
   "department",
@@ -19,6 +18,7 @@
   "status",
   "appraisal_cycle",
   "section_break0",
+  "appraisal_template",
   "appraisal_kra",
   "total_section",
   "feedback_count",
@@ -40,11 +40,6 @@
  ],
  "fields": [
   {
-   "fieldname": "employee_details",
-   "fieldtype": "Section Break",
-   "oldfieldtype": "Section Break"
-  },
-  {
    "fieldname": "naming_series",
    "fieldtype": "Select",
    "label": "Series",
@@ -55,17 +50,6 @@
    "set_only_once": 1
   },
   {
-   "fieldname": "kra_template",
-   "fieldtype": "Link",
-   "in_standard_filter": 1,
-   "label": "Appraisal Template",
-   "oldfieldname": "kra_template",
-   "oldfieldtype": "Link",
-   "options": "Appraisal Template",
-   "reqd": 1
-  },
-  {
-   "depends_on": "kra_template",
    "fieldname": "employee",
    "fieldtype": "Link",
    "in_global_search": 1,
@@ -88,7 +72,6 @@
    "read_only": 1
   },
   {
-   "depends_on": "kra_template",
    "fieldname": "column_break0",
    "fieldtype": "Column Break",
    "oldfieldtype": "Column Break",
@@ -96,7 +79,6 @@
   },
   {
    "default": "Draft",
-   "depends_on": "kra_template",
    "fieldname": "status",
    "fieldtype": "Select",
    "in_standard_filter": 1,
@@ -118,7 +100,6 @@
    "read_only": 1
   },
   {
-   "depends_on": "kra_template",
    "fieldname": "section_break0",
    "fieldtype": "Tab Break",
    "label": "KRAs",
@@ -136,15 +117,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Appraisal",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
    "fetch_from": "employee.designation",
    "fieldname": "designation",
    "fieldtype": "Link",
@@ -157,15 +129,6 @@
    "fieldtype": "Link",
    "label": "Appraisal Cycle",
    "options": "Appraisal Cycle"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Appraisal",
-   "print_hide": 1,
-   "read_only": 1
   },
   {
    "fieldname": "appraisal_kra",
@@ -271,6 +234,31 @@
    "label": "Feedback",
    "no_copy": 1,
    "options": "Appraisal Feedback"
+  },
+  {
+   "fieldname": "appraisal_template",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Appraisal Template",
+   "oldfieldname": "kra_template",
+   "oldfieldtype": "Link",
+   "options": "Appraisal Template",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Appraisal",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "employee_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview",
+   "oldfieldtype": "Section Break"
   }
  ],
  "icon": "fa fa-thumbs-up",
@@ -278,7 +266,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-02-23 12:49:40.912870",
+ "modified": "2023-02-23 16:57:50.537745",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",
