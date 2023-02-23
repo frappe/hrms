@@ -25,7 +25,6 @@
   "total_score",
   "feedback_tab",
   "feedback_html",
-  "feedback_table",
   "section_break_20",
   "avg_feedback_score",
   "self_appraisal_tab",
@@ -228,14 +227,6 @@
    "label": "Feedback"
   },
   {
-   "fieldname": "feedback_table",
-   "fieldtype": "Table",
-   "hidden": 1,
-   "label": "Feedback",
-   "no_copy": 1,
-   "options": "Appraisal Feedback"
-  },
-  {
    "fieldname": "appraisal_template",
    "fieldtype": "Link",
    "in_standard_filter": 1,
@@ -266,7 +257,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-02-23 16:57:50.537745",
+ "modified": "2023-02-23 21:49:53.846256",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",

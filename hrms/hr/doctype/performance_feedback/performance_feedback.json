@@ -7,14 +7,18 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "employee_details_tab",
   "employee",
   "employee_name",
-  "added_on",
+  "department",
+  "designation",
   "column_break_3",
   "reviewer",
   "reviewer_name",
   "reviewer_designation",
-  "user",
+  "column_break_f0bz",
+  "added_on",
+  "appraisal_cycle",
   "section_break_3",
   "appraisal",
   "kra_rating",
@@ -61,17 +65,10 @@
    "fieldtype": "Text Editor"
   },
   {
+   "default": "Now",
    "fieldname": "added_on",
    "fieldtype": "Datetime",
    "label": "Added On"
-  },
-  {
-   "fetch_from": "reviewer.user_id",
-   "fieldname": "user",
-   "fieldtype": "Link",
-   "label": "User",
-   "options": "User",
-   "reqd": 1
   },
   {
    "fieldname": "employee",
@@ -107,11 +104,44 @@
    "fieldtype": "Data",
    "label": "Reviewer Name",
    "read_only": 1
+  },
+  {
+   "fieldname": "employee_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Employee Details"
+  },
+  {
+   "fetch_from": "employee.department",
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.designation",
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_f0bz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "appraisal.appraisal_cycle",
+   "fieldname": "appraisal_cycle",
+   "fieldtype": "Link",
+   "label": "Appraisal Cycle",
+   "options": "Appraisal Cycle",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-10 23:32:09.374542",
+ "modified": "2023-02-23 20:29:19.320118",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Performance Feedback",
