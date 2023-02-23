@@ -4,7 +4,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cstr, flt, now
+from frappe.utils import flt, now
 
 from hrms.hr.utils import validate_active_employee
 
@@ -20,7 +20,7 @@ class Appraisal(Document):
 		self.calculate_total_score()
 		self.calculate_self_appraisal_score()
 		self.calculate_avg_feedback_score()
-		self.feedback_count = len(self.feedback_table)
+		# self.feedback_count = len(self.feedback_table)
 
 	def validate_duplicate(self):
 		duplicate = frappe.db.exists(
@@ -113,10 +113,10 @@ class Appraisal(Document):
 
 	@frappe.whitelist()
 	def edit_feedback(self, feedback, row_id):
-		for d in self.feedback_table:
-			if cstr(d.name) == row_id:
-				d.feedback = feedback
-				d.db_update()
+		doc = frappe.get_doc("Performance Feedback", row_id)
+		doc.update({"feedback": feedback})
+		doc.save()
+
 		self.calculate_avg_feedback_score()
 		self.save()
 
@@ -158,7 +158,7 @@ def update_progress_in_appraisal(goal):
 @frappe.whitelist()
 def get_feedback_history(employee, appraisal):
 	data = frappe._dict()
-	data.feedback_history = frappe.db.get_list(
+	data.feedback_history = frappe.get_list(
 		"Performance Feedback",
 		filters={"employee": employee},
 		fields=[
