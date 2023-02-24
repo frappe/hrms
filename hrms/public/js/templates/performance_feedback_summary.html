@@ -4,7 +4,7 @@
 			{{ average_rating }}
 		</h2>
 		<div class="mb-2" style="margin-top: -.5rem;">
-			{{ cstr(feedback_count)}} {{ __("reviews") }}
+			{{ cstr(feedback_count)}} {{ feedback_count > 1 ? __("reviews") : __("review") }}
 		</div>
 
 		<!-- Ratings Summary -->
