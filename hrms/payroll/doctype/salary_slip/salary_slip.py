@@ -970,22 +970,22 @@ class SalarySlip(TransactionBase):
 				default_amount = 0
 				show_zero_value_component = 0
 
-				if amount or (struct_row.amount_based_on_formula and amount is not None):
-					default_amount = self.eval_condition_and_formula(struct_row, self.default_data)
+				if amount is not None:
+					if amount or struct_row.amount_based_on_formula:
+						default_amount = self.eval_condition_and_formula(struct_row, self.default_data)
 
-				else:
 					show_zero_value_component = frappe.db.get_value(
 						"Salary Component", struct_row.salary_component, "show_zero_value_component"
 					)
 
-				self.update_component_row(
-					struct_row,
-					amount,
-					component_type,
-					data=self.data,
-					default_amount=default_amount,
-					show_zero_value_component=show_zero_value_component,
-				)
+					self.update_component_row(
+						struct_row,
+						amount,
+						component_type,
+						data=self.data,
+						default_amount=default_amount,
+						show_zero_value_component=show_zero_value_component,
+					)
 
 	def get_data_for_eval(self):
 		"""Returns data for evaluating formula"""
