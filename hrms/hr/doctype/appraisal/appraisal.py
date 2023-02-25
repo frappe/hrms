@@ -89,18 +89,19 @@ class Appraisal(Document):
 
 	@frappe.whitelist()
 	def add_feedback(self, feedback, kra_rating):
-		perf = frappe.new_doc("Performance Feedback")
-		perf.update(
+		feedback = frappe.get_doc(
 			{
+				"doctype": "Performance Feedback",
+				"appraisal": self.name,
 				"employee": self.employee,
 				"added_on": now(),
 				"feedback": feedback,
 				"reviewer": frappe.db.get_value("Employee", {"user_id": frappe.session.user}),
-				"user": frappe.session.user,
 			}
 		)
+
 		for kra in kra_rating:
-			perf.append(
+			feedback.append(
 				"kra_rating",
 				{
 					"kra": kra["kra"],
@@ -109,24 +110,22 @@ class Appraisal(Document):
 				},
 			)
 
-		perf.save()
-		self.calculate_avg_feedback_score()
-		self.save()
+		feedback.insert()
+
+		return feedback.name
 
 	@frappe.whitelist()
-	def edit_feedback(self, feedback, row_id):
-		doc = frappe.get_doc("Performance Feedback", row_id)
+	def edit_feedback(self, feedback, name):
+		doc = frappe.get_doc("Performance Feedback", name)
 		doc.update({"feedback": feedback})
 		doc.save()
 
-		self.calculate_avg_feedback_score()
-		self.save()
+		return doc.name
 
 	@frappe.whitelist()
-	def delete_feedback(self, row_id):
-		frappe.delete_doc("Performance Feedback", row_id)
-		self.calculate_avg_feedback_score()
-		self.save()
+	def delete_feedback(self, name):
+		frappe.delete_doc("Performance Feedback", name)
+		return name
 
 
 def update_progress_in_appraisal(goal):
@@ -175,6 +174,7 @@ def get_feedback_history(employee, appraisal):
 			"total_score",
 			"name",
 		],
+		order_by="added_on desc",
 	)
 
 	# get percentage of reviews per rating
