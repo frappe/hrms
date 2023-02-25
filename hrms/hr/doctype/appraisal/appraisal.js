@@ -32,7 +32,7 @@ frappe.ui.form.on("Appraisal", {
 		frappe.require("performance.bundle.js", () => {
 			const feedback_history = new hrms.PerformanceFeedback({
 				frm: frm,
-				feedback_wrapper: $(frm.fields_dict.feedback_html.wrapper),
+				wrapper: $(frm.fields_dict.feedback_html.wrapper),
 			});
 			feedback_history.refresh();
 		});

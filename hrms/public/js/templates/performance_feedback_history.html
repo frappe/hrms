@@ -13,19 +13,21 @@
 		</div>
 	{% } %}
 
-	<div class="new-btn py-3">
-		<button class="new-feedback-btn btn btn-sm small inline-flex items-center justify-center p-2">
-			<svg class="icon icon-sm">
-				<use href="#icon-add"></use>
-			</svg>
-			{{ __("New Feedback") }}
-		</button>
-	</div>
+	{% if (can_add_feedback) { %}
+		<div class="new-btn py-3">
+			<button class="new-feedback-btn btn btn-sm small inline-flex items-center justify-center p-2">
+				<svg class="icon icon-sm">
+					<use href="#icon-add"></use>
+				</svg>
+				{{ __("New Feedback") }}
+			</button>
+		</div>
+	{% } %}
 
 	<div class="feedback-history frappe-card mb-3">
 		{% if (feedback_history.length) { %}
 			{% for(var i=0, l=feedback_history.length; i<l; i++) { %}
-				<div class="comment-content p-3 d-flex flex-row" name="{{ feedback_history[i].name }}">
+				<div class="feedback-content p-3 d-flex flex-row" data-name="{{ feedback_history[i].name }}">
 					<div class="mb-2 head col-xs-3">
 						<div class="row">
 							<div class="col-xs-2">
@@ -50,7 +52,7 @@
 								)
 							%}
 						</div>
-						<div class="my-3">
+						<div class="feedback my-3">
 							{{ feedback_history[i].feedback }}
 						</div>
 					</div>
@@ -87,12 +89,12 @@
 
 <style>
 
-.comment-content {
+.feedback-content {
 	border: 1px solid var(--border-color);
 	border-bottom: none;
 }
 
-.comment-content:last-child {
+.feedback-content:last-child {
 	border-bottom: 1px solid var(--border-color);
 }
 

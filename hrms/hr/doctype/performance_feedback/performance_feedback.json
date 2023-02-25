@@ -64,7 +64,8 @@
   },
   {
    "fieldname": "feedback",
-   "fieldtype": "Text Editor"
+   "fieldtype": "Text Editor",
+   "reqd": 1
   },
   {
    "default": "Now",
@@ -152,7 +153,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-02-23 23:26:15.659365",
+ "modified": "2023-02-25 22:44:47.549387",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Performance Feedback",
@@ -168,6 +169,19 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "select": 1,
    "share": 1,
    "write": 1
   }

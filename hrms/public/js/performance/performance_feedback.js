@@ -2,203 +2,249 @@
 frappe.provide("hrms");
 
 hrms.PerformanceFeedback = class PerformanceFeedback {
-	constructor(opts) {
-		$.extend(this, opts);
+	constructor({ frm, wrapper }) {
+		this.frm = frm;
+		this.wrapper = wrapper;
 	}
 
 	refresh() {
-		var me = this;
-		this.feedback_wrapper.find(".feedback-section").remove();
+		this.prepare_dom();
+		this.setup_feedback_view();
+	}
 
-		frappe.call({
-			method: "hrms.hr.doctype.appraisal.appraisal.get_feedback_history",
-			args: {
-				employee: me.frm.doc.employee,
-				appraisal: me.frm.doc.name
-			},
-			callback: function(r) {
-				if (!r.exc) {
-					const data = r.message || [];
-					const feedback_history = data.feedback_history;
+	prepare_dom() {
+		this.wrapper.find(".feedback-section").remove();
+	}
 
-					feedback_history.sort(
-						function(a, b) {
-							return new Date(b.added_on) - new Date(a.added_on);
-						}
-					);
+	setup_feedback_view() {
+		frappe.run_serially([
+			() => this.get_feedback_history(),
+			(data) => this.render_feedback_history(data),
+			() => this.setup_actions(),
+		])
+	}
 
-					const feedback_html = frappe.render_template("performance_feedback_history", {
-						feedback_history: feedback_history,
-						average_feedback_score: me.frm.doc.avg_feedback_score,
-						reviews_per_rating: data.reviews_per_rating
-					});
-					$(feedback_html).appendTo(me.feedback_wrapper);
+	get_feedback_history() {
+		let me = this;
 
-					$(".feedback-section").find(".new-feedback-btn").on("click", function() {
-						me.add_feedback(this);
-					});
-
-					$(".feedback-section").find(".edit-feedback-btn").on("click", function() {
-						me.edit_feedback(this);
-					});
-
-					$(".feedback-section").find(".delete-feedback-btn").on("click", function() {
-						me.delete_feedback(this);
-					});
+		return new Promise(resolve => {
+			frappe.call({
+				method: "hrms.hr.doctype.appraisal.appraisal.get_feedback_history",
+				args: {
+					employee: me.frm.doc.employee,
+					appraisal: me.frm.doc.name
 				}
-			}
+			}).then(r => resolve(r.message));
 		});
 	}
 
+	async render_feedback_history(data) {
+		const { feedback_history, reviews_per_rating } = data || {};
+		const can_add_feedback = await this.can_add_feedback();
+
+		const feedback_html = frappe.render_template("performance_feedback_history", {
+			feedback_history: feedback_history,
+			average_feedback_score: this.frm.doc.avg_feedback_score,
+			reviews_per_rating: reviews_per_rating,
+			can_add_feedback: can_add_feedback
+		});
+
+		$(feedback_html).appendTo(this.wrapper);
+	}
+
+	setup_actions() {
+		let me = this;
+
+		$(".new-feedback-btn").click(() => {
+			me.add_feedback();
+		});
+
+		$(".feedback-section").find(".edit-feedback-btn").on("click", function() {
+			me.edit_feedback(this);
+		});
+
+		$(".feedback-section").find(".delete-feedback-btn").on("click", function() {
+			me.delete_feedback(this);
+		});
+	}
 
 	add_feedback() {
-		const me = this;
-		const _add_feedback = () => {
-			this.data = [];
-			const dialog = new frappe.ui.Dialog({
-				title: __("Add Feedback"),
+		frappe.run_serially([
+			() => this.get_kra_data(),
+			(kra_data) => this.show_add_feedback_dialog(kra_data),
+		]);
+	}
+
+	get_kra_data() {
+		let me = this;
+
+		return new Promise(resolve => {
+			frappe.db.get_doc("Appraisal Template", me.frm.doc.appraisal_template)
+				.then(({ goals }) => {
+					const kras = [];
+					goals.forEach((goal) => {
+						kras.push({
+							"kra": goal.kra,
+							"per_weightage": goal.per_weightage,
+						})
+					});
+					resolve(kras);
+				});
+		});
+	}
+
+	show_add_feedback_dialog(kra_data) {
+		let me = this;
+
+		const dialog = new frappe.ui.Dialog({
+			title: __("Add Feedback"),
+			fields: me.get_feedback_dialog_fields(kra_data),
+			primary_action: function() {
+				const data = dialog.get_values();
+
+				frappe.call({
+					method: "add_feedback",
+					doc: me.frm.doc,
+					args: {
+						feedback: data.feedback,
+						kra_rating: data.kra_rating
+					},
+					freeze: true,
+					callback: function(r) {
+						if (!r.exc) {
+							me.refresh();
+							frappe.show_alert({
+								message: __("Feedback {0} added successfully", [r.message.bold()]),
+								indicator: "green",
+							});
+						}
+						dialog.hide();
+					}
+				});
+			},
+			primary_action_label: __("Add")
+		});
+
+		dialog.show();
+	};
+
+	get_feedback_dialog_fields(kra_data) {
+		return [
+			{
+				label: "Feedback",
+				fieldname: "feedback",
+				fieldtype: "Text Editor",
+				reqd: 1,
+				enable_mentions: true,
+			},
+			{
+				label: "KRA Rating",
+				fieldtype: "Table",
+				fieldname: "kra_rating",
+				cannot_add_rows: true,
+				data: kra_data,
+				get_data: () => {
+					return kra_data;
+				},
 				fields: [
 					{
-						"label": "Feedback",
-						"fieldname": "feedback",
-						"fieldtype": "Text Editor",
-						"reqd": 1,
-						"enable_mentions": true,
+						fieldname: "kra",
+						fieldtype: "Link",
+						in_list_view: 1,
+						label: "KRA",
+						options: "KRA",
+						reqd: 1
 					},
 					{
-						"label": "KRA Rating",
-						"fieldtype": "Table",
-						"fieldname": "kra_rating",
-						"cannot_add_rows": true,
-						"data": this.data,
-						get_data: () => {
-							return this.data;
-						},
-						"fields": [
-							{
-								"fieldname": "kra",
-								"fieldtype": "Link",
-								"in_list_view": 1,
-								"label": "KRA",
-								"options": "KRA",
-								"reqd": 1
-							},
-							{
-								"fieldname": "per_weightage",
-								"fieldtype": "Percent",
-								"in_list_view": 1,
-								"label": "Weightage"
-							},
-							{
-								"fieldname": "rating",
-								"fieldtype": "Rating",
-								"in_list_view": 1,
-								"label": "Rating"
-							}
-						]
+						fieldname: "per_weightage",
+						fieldtype: "Percent",
+						in_list_view: 1,
+						label: "Weightage"
+					},
+					{
+						fieldname: "rating",
+						fieldtype: "Rating",
+						in_list_view: 1,
+						label: "Rating"
 					}
-				],
-				primary_action: function() {
-					var data = dialog.get_values();
-					frappe.call({
-						method: "add_feedback",
-						doc: me.frm.doc,
-						args: {
-							feedback: data.feedback,
-							kra_rating: data.kra_rating
-						},
-						freeze: true,
-						callback: function(r) {
-							if (!r.exc) {
-								me.frm.refresh_field("feedback_table");
-								me.refresh();
-							}
-							dialog.hide();
-						}
-					});
-				},
-				primary_action_label: __("Add")
-			});
-
-			frappe.call({
-				"method": "hrms.hr.doctype.performance_feedback.performance_feedback.get_kra",
-				args: {
-					employee: me.frm.doc.employee
-				},
-				callback: function(data) {
-					data.message.goals.forEach((item) => {
-						dialog.fields_dict.kra_rating.df.data.push({
-							"kra": item.kra,
-							"per_weightage": item.per_weightage
-						});
-						this.data = dialog.fields_dict.kra_rating.df.data;
-						dialog.fields_dict.kra_rating.grid.refresh();
-					})
-				}
-			});
-			dialog.show();
-		};
-		$(".new-note-btn").click(_add_feedback);
+				]
+			}
+		];
 	}
 
 	edit_feedback(edit_btn) {
-		const me = this;
-		const row = $(edit_btn).closest(".comment-content");
-		const row_id = row.attr("name");
-		const row_content = $(row).find(".content").html();
-		if (row_content) {
-			const d = new frappe.ui.Dialog({
-				title: __("Edit Feedback"),
-				fields: [
-					{
-						"label": "Feedback",
-						"fieldname": "feedback",
-						"fieldtype": "Text Editor",
-						"reqd": 1,
-						"enable_mentions": true,
-					}
-				],
-				primary_action: function() {
-					var data = d.get_values();
-					frappe.call({
-						method: "edit_feedback",
-						doc: me.frm.doc,
-						args: {
-							feedback: data.feedback,
-							row_id: row_id
-						},
-						freeze: true,
-						callback: function(r) {
-							if (!r.exc) {
-								me.frm.refresh_field("feedback_table");
-								me.refresh();
-							}
-							d.hide();
+		let me = this;
+
+		const row = $(edit_btn).closest(".feedback-content");
+		const row_id = row.attr("data-name");
+		const row_content = $(row).find(".feedback").html();
+
+		const dialog = new frappe.ui.Dialog({
+			title: __("Edit Feedback"),
+			fields: [
+				{
+					"label": "Feedback",
+					"fieldname": "feedback",
+					"fieldtype": "Text Editor",
+					"reqd": 1,
+					"enable_mentions": true,
+					"default": row_content
+				}
+			],
+			primary_action: function() {
+				const data = dialog.get_values();
+
+				frappe.call({
+					method: "edit_feedback",
+					doc: me.frm.doc,
+					args: {
+						feedback: data.feedback,
+						name: row_id
+					},
+					freeze: true,
+					callback: function(r) {
+						if (!r.exc) {
+							me.refresh();
+							frappe.show_alert({
+								message: __("Feedback {0} updated successfully", [r.message.bold()]),
+								indicator: "green",
+							});
 						}
-					});
-				},
-				primary_action_label: __("Done")
-			});
-			d.show();
-		}
+						dialog.hide();
+					}
+				});
+			},
+			primary_action_label: __("Update")
+		});
+
+		dialog.show();
 	}
 
 	delete_feedback(delete_btn) {
-		const me = this;
-		const row_id = $(delete_btn).closest(".comment-content").attr("name");
+		let me = this;
+		const row_id = $(delete_btn).closest(".feedback-content").attr("data-name");
+
 		frappe.call({
 			method: "delete_feedback",
 			doc: me.frm.doc,
 			args: {
-				row_id: row_id
+				name: row_id
 			},
 			freeze: true,
 			callback: function(r) {
 				if (!r.exc) {
-					me.frm.refresh_field("feedback_table");
 					me.refresh();
+					frappe.show_alert({
+						message: __("Feedback {0} deleted successfully", [r.message.bold()]),
+						indicator: "green",
+					});
 				}
 			}
 		});
+	}
+
+	async can_add_feedback() {
+		const is_employee = (await frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name"))?.message?.name;
+		return is_employee && frappe.model.can_create("Performance Feedback");
 	}
 };
