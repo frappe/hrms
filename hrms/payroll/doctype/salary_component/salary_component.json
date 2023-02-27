@@ -254,7 +254,7 @@
   {
    "default": "0",
    "depends_on": "eval:!doc.statistical_component",
-   "description": "If checked, the component will get added in salary slip though  the amount is zero",
+   "description": "If checked, the component will be displayed in the salary slip even if the amount is zero",
    "fieldname": "show_zero_value_component",
    "fieldtype": "Check",
    "label": "Show Zero Value Component"
