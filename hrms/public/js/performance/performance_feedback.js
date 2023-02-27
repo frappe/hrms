@@ -40,13 +40,13 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 
 	async render_feedback_history(data) {
 		const { feedback_history, reviews_per_rating } = data || {};
-		const can_add_feedback = await this.can_add_feedback();
+		const perms = await this.get_permissions();
 
 		const feedback_html = frappe.render_template("performance_feedback_history", {
 			feedback_history: feedback_history,
 			average_feedback_score: this.frm.doc.avg_feedback_score,
 			reviews_per_rating: reviews_per_rating,
-			can_add_feedback: can_add_feedback
+			permissions: perms
 		});
 
 		$(feedback_html).appendTo(this.wrapper);
@@ -243,8 +243,15 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 		});
 	}
 
-	async can_add_feedback() {
-		const is_employee = (await frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name"))?.message?.name;
-		return is_employee && frappe.model.can_create("Performance Feedback");
+	async get_permissions() {
+		const is_employee = (
+			await frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
+		)?.message?.name || false;
+
+		return {
+			can_create: (is_employee && frappe.model.can_create("Performance Feedback")),
+			can_write: frappe.model.can_write("Performance Feedback"),
+			can_delete: frappe.model.can_delete("Performance Feedback"),
+		}
 	}
 };
