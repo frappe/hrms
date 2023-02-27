@@ -7,8 +7,8 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "naming_series",
   "employee_details_tab",
+  "naming_series",
   "employee",
   "employee_name",
   "department",
@@ -162,7 +162,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-02-26 00:19:25.167761",
+ "modified": "2023-02-27 12:13:08.071301",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Performance Feedback",

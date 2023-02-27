@@ -1,9 +1,7 @@
-<div class="rating-summary-section mt-4">
+<div class="feedback-summary-section my-4 d-flex">
 	<div class="rating-summary-numbers col-3">
-		<h2 style="font-size: 2rem;">
-			{{ average_rating }}
-		</h2>
-		<div class="mb-2" style="margin-top: -.5rem;">
+		<h2 class="average-rating">{{ average_rating }}</h2>
+		<div class="feedback-count mb-2">
 			{{ cstr(feedback_count)}} {{ feedback_count > 1 ? __("reviews") : __("review") }}
 		</div>
 
@@ -39,47 +37,3 @@
 		{% } %}
 	</div>
 </div>
-
-<style>
-	.rating-summary-section {
-		display: flex;
-	}
-
-	.rating-summary-numbers {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		border-right: 1px solid var(--gray-100);
-	}
-
-	.rating-summary-numbers h2 {
-		font-size: 2rem;
-	}
-
-	.rating-summary-numbers .mb-2 {
-		margin-top: -.5rem;
-	}
-
-	.rating-summary-numbers .mt-2 {
-		margin-top: 1rem;
-	}
-
-	.rating-progress-bar-section {
-		padding-bottom: 2rem;
-	}
-
-	.rating-progress-bar-section .rating-bar-title {
-		margin-left: -15px;
-	}
-
-	.rating-progress-bar-section .rating-progress-bar {
-		margin-bottom: 4px;
-		height: 7px;
-		margin-top: 6px;
-	}
-
-	.rating-progress-bar-section .progress-bar-cosmetic {
-		background-color: var(--gray-600);
-		border-radius: var(--border-radius);
-	}
-</style>
