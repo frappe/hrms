@@ -78,14 +78,13 @@ class Appraisal(Document):
 		self.self_score = total
 
 	def calculate_avg_feedback_score(self):
-		self.avg_feedback_score = (
-			frappe.db.get_all(
-				"Performance Feedback",
-				filters={"employee": self.employee, "appraisal": self.name},
-				fields=["avg(total_score) as avg_feedback_score"],
-			)[0].avg_feedback_score
-			or 0
-		)
+		avg_feedback_score = frappe.db.get_all(
+			"Performance Feedback",
+			filters={"employee": self.employee, "appraisal": self.name},
+			fields=["avg(total_score) as avg_feedback_score"],
+		)[0].avg_feedback_score
+
+		self.avg_feedback_score = flt(avg_feedback_score, self.precision("avg_feedback_score"))
 
 	@frappe.whitelist()
 	def add_feedback(self, feedback, kra_rating):
