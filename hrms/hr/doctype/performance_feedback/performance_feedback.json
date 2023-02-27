@@ -16,6 +16,7 @@
   "column_break_3",
   "reviewer",
   "reviewer_name",
+  "user",
   "reviewer_designation",
   "column_break_f0bz",
   "added_on",
@@ -149,11 +150,19 @@
    "fieldtype": "Select",
    "label": "Naming Series",
    "options": "HR-PF-.YYYY.-"
+  },
+  {
+   "fetch_from": "reviewer.user_id",
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-02-25 22:44:47.549387",
+ "modified": "2023-02-26 00:19:25.167761",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Performance Feedback",

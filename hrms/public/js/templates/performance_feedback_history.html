@@ -13,7 +13,7 @@
 		</div>
 	{% } %}
 
-	{% if (can_add_feedback) { %}
+	{% if (permissions.can_create) { %}
 		<div class="new-btn py-3">
 			<button class="new-feedback-btn btn btn-sm small inline-flex items-center justify-center p-2">
 				<svg class="icon icon-sm">
@@ -57,25 +57,38 @@
 						</div>
 					</div>
 
-					<div class="content col-xs-3 d-flex flex-row justify-content-end">
-						<div class="time small text-muted">
+					<div class="content col-xs-3 d-flex flex-row">
+						<div class="time small text-muted mr-2">
 							{{ frappe.datetime.global_date_format(feedback_history[i].added_on) }}
 						</div>
-						{% if (frappe.session.user === feedback_history[i].user || frappe.session.user === "Administrator") { %}
-						<div class="ml-2 text-right">
-							<div class="column-options dropdown pull-right">
-								<a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<svg class="icon icon-sm">
-										<use href="#icon-dot-horizontal"></use>
-									</svg>
-								</a>
-								<ul class="dropdown-menu overflow-hidden dropdown-menu-right">
-									<li><a class="dropdown-item edit-feedback-btn">{{ __("Edit") }}</a></li>
-									<li><a class="dropdown-item delete-feedback-btn">{{ __("Delete") }}</a></li>
-								</ul>
+						{%
+							if (
+								(frappe.session.user === "Administrator")
+								|| (
+									(frappe.session.user === feedback_history[i].user)
+									&& (permissions.can_write || permissions.can_delete)
+								)
+							) {
+						%}
+							<div class="text-right">
+								<div class="column-options dropdown pull-right">
+									<a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<svg class="icon icon-sm">
+											<use href="#icon-dot-horizontal"></use>
+										</svg>
+									</a>
+									<ul class="dropdown-menu overflow-hidden dropdown-menu-right">
+										{% if (permissions.can_write) { %}
+											<li><a class="dropdown-item edit-feedback-btn">{{ __("Edit") }}</a></li>
+										{% } %}
+
+										{% if (permissions.can_delete) { %}
+											<li><a class="dropdown-item delete-feedback-btn">{{ __("Delete") }}</a></li>
+										{% } %}
+									</ul>
+								</div>
 							</div>
-						</div>
-					{% } %}
+						{% } %}
 					</div>
 				</div>
 			{% } %}
