@@ -51,10 +51,10 @@ frappe.ui.form.on("Employee Attendance Tool", {
 			}
 
 			if (r.message["marked"].length > 0) {
-				unhide_field("marked_attendance_section");
+				unhide_field("marked_attendance_html");
 				frm.events.show_marked_employees(frm, r.message["marked"]);
 			} else {
-				hide_field("marked_attendance_section");
+				hide_field("marked_attendance_html");
 			}
 		});
 	},
@@ -89,38 +89,54 @@ frappe.ui.form.on("Employee Attendance Tool", {
 	},
 
 	show_marked_employees(frm, marked_employees) {
-		let $wrapper = frm.get_field("marked_attendance_html").$wrapper;
+		const $wrapper = frm.get_field("marked_attendance_html").$wrapper;
+		const summary_wrapper = $(`<div class="summary_wrapper">`).appendTo($wrapper);
 
-		if (!frm.marked_employee_area) {
-			frm.marked_employee_area = $(`<div>`).appendTo($wrapper);
+		frm.events.render_datatable(frm, marked_employees, summary_wrapper);
+	},
+
+	render_datatable(frm, data, summary_wrapper) {
+		const columns = frm.events.get_columns_for_marked_attendance_table(frm);
+
+		if (!frm.marked_emp_datatable) {
+			const datatable_options = {
+				columns: columns,
+				data: data,
+				dynamicRowHeight: true,
+				inlineFilters: true,
+				layout: "fluid",
+				cellHeight: 35,
+				noDataMessage: __("No Data"),
+				disableReorderColumn: true,
+			};
+			frm.marked_emp_datatable = new frappe.DataTable(
+				summary_wrapper.get(0),
+				datatable_options,
+			);
+		} else {
+			frm.marked_emp_datatable.refresh(data, columns);
 		}
+	},
 
-		$wrapper.empty();
+	get_columns_for_marked_attendance_table(frm) {
+		const status_map = [
+			{"status": "Present", "indicator": "green"},
+			{"status": "Absent", "indicator": "red"},
+			{"status": "Half Day", "indicator": "orange"},
+			{"status": "Work From Home", "indicator": "green"},
+		];
 
-		let row;
-		$.each(marked_employees, function(i, m) {
-			let attendance_icon = "fa fa-check";
-			let color_class = "";
-			if(m.status == "Absent") {
-				attendance_icon = "fa fa-check-empty"
-				color_class = "text-muted";
+		return status_map.map((entry) => {
+			return {
+				name: entry.status,
+				id: entry.status,
+				content: `<span class="indicator ${entry.indicator}">${__(entry.status)}</span>`,
+				editable: false,
+				sortable: false,
+				focusable: false,
+				dropdown: false,
+				align: "left",
 			}
-			else if(m.status == "Half Day") {
-				attendance_icon = "fa fa-check-minus"
-			}
-
-			if (i===0 || i % 4===0) {
-				row = $('<div class="row"></div>').appendTo($wrapper);
-			}
-
-			$(repl('<div class="col-sm-3 %(color_class)s">\
-				<label class="marked-employee-label"><span class="%(icon)s"></span>\
-				%(employee)s</label>\
-				</div>', {
-					employee: m.employee +' : '+ m.employee_name,
-					icon: attendance_icon,
-					color_class: color_class
-				})).appendTo(row);
 		});
 	},
 

@@ -50,10 +50,10 @@
   },
   {
    "depends_on": "date",
-   "description": "Select Employees",
+   "description": "Unmarked Attendance",
    "fieldname": "unmarked_attendance_section",
    "fieldtype": "Section Break",
-   "label": "Unmarked Attendance"
+   "label": "Select Employees"
   },
   {
    "fieldname": "employees_html",
@@ -103,7 +103,7 @@
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-02-28 10:23:02.623199",
+ "modified": "2023-03-01 13:19:58.028726",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Attendance Tool",

@@ -3,6 +3,7 @@
 
 
 import json
+from itertools import zip_longest
 
 import frappe
 from frappe.model.document import Document
@@ -15,8 +16,6 @@ class EmployeeAttendanceTool(Document):
 
 @frappe.whitelist()
 def get_employees(date, department=None, branch=None, company=None):
-	attendance_not_marked = []
-	attendance_marked = []
 	filters = {"status": "Active", "date_of_joining": ["<=", date]}
 
 	for field, value in {"department": department, "branch": branch, "company": company}.items():
@@ -26,19 +25,47 @@ def get_employees(date, department=None, branch=None, company=None):
 	employee_list = frappe.get_list(
 		"Employee", fields=["employee", "employee_name"], filters=filters, order_by="employee_name"
 	)
-	marked_employee = {}
-	for emp in frappe.get_list(
-		"Attendance", fields=["employee", "status"], filters={"attendance_date": date}
-	):
-		marked_employee[emp["employee"]] = emp["status"]
+	attendance_list = frappe.get_list(
+		"Attendance",
+		fields=["employee", "employee_name", "status"],
+		filters={
+			"attendance_date": date,
+			"docstatus": 1,
+		},
+	)
 
-	for employee in employee_list:
-		employee["status"] = marked_employee.get(employee["employee"])
-		if employee["employee"] not in marked_employee:
-			attendance_not_marked.append(employee)
+	marked_employees = {}
+
+	for attendance in attendance_list:
+		marked_employees[attendance.employee] = attendance.status
+
+	attendance_unmarked = []
+	attendance_marked = []
+
+	for entry in employee_list:
+		entry["status"] = marked_employees.get(entry.employee)
+
+		if entry.employee in marked_employees:
+			attendance_marked.append(entry)
 		else:
-			attendance_marked.append(employee)
-	return {"marked": attendance_marked, "unmarked": attendance_not_marked}
+			attendance_unmarked.append(entry)
+
+	marked = {
+		"Present": [],
+		"Absent": [],
+		"Half Day": [],
+		"Work From Home": [],
+	}
+
+	for entry in attendance_list:
+		marked.get(entry.status).append(f"{entry.employee} : {entry.employee_name}")
+
+	transposed_marked_attendance = []
+	if any(marked.values()):
+		# transpose data to fill table with columns as per attendance status
+		transposed_marked_attendance = zip_longest(*marked.values(), fillvalue="")
+
+	return {"marked": transposed_marked_attendance, "unmarked": attendance_unmarked}
 
 
 @frappe.whitelist()
