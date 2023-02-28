@@ -765,11 +765,10 @@ class SalarySlip(TransactionBase):
 
 			self.current_month_income_tax = self.current_structured_tax_amount
 
-			self.total_income_tax = (
-				self.income_tax_deducted_till_date
-				+ self.current_month_income_tax
-				+ self.future_income_tax_deductions
-			)
+			# non included current_month_income_tax separately as its already considered
+			# while calculating income_tax_deducted_till_date
+
+			self.total_income_tax = self.income_tax_deducted_till_date + self.future_income_tax_deductions
 
 	def compute_ctc(self):
 		if hasattr(self, "previous_taxable_earnings"):
