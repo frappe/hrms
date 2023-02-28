@@ -156,7 +156,9 @@ frappe.ui.form.on("Employee Attendance Tool", {
 				employee_list: marked_employees,
 				status: frm.doc.status,
 				date: frm.doc.date,
-				company: frm.doc.company
+				late_entry: frm.doc.late_entry,
+				early_exit: frm.doc.early_exit,
+				shift: frm.doc.shift,
 			},
 			freeze: true,
 			callback: function(r) {
