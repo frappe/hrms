@@ -642,8 +642,12 @@ class SalarySlip(TransactionBase):
 
 	def compute_taxable_earnings_for_year(self):
 		# get taxable_earnings, opening_taxable_earning, paid_taxes for previous period
-		self.previous_taxable_earnings = self.get_taxable_earnings_for_prev_period(
+		self.previous_taxable_earnings, exempted_amount = self.get_taxable_earnings_for_prev_period(
 			self.payroll_period.start_date, self.start_date, self.tax_slab.allow_tax_exemption
+		)
+
+		self.previous_taxable_earnings_before_exemption = (
+			self.previous_taxable_earnings + exempted_amount
 		)
 
 		self.compute_current_and_future_taxable_earnings()
@@ -692,6 +696,14 @@ class SalarySlip(TransactionBase):
 			math.ceil(self.remaining_sub_periods) - 1
 		)
 
+		current_taxable_earnings_before_exemption = (
+			self.current_taxable_earnings.taxable_earnings
+			+ self.current_taxable_earnings.amount_exempted_from_income_tax
+		)
+		self.future_structured_taxable_earnings_before_exemption = (
+			current_taxable_earnings_before_exemption * (math.ceil(self.remaining_sub_periods) - 1)
+		)
+
 		# get taxable_earnings, addition_earnings for current actual payment days
 		self.current_taxable_earnings_for_payment_days = self.get_taxable_earnings(
 			self.tax_slab.allow_tax_exemption, based_on_payment_days=1
@@ -699,6 +711,10 @@ class SalarySlip(TransactionBase):
 
 		self.current_structured_taxable_earnings = (
 			self.current_taxable_earnings_for_payment_days.taxable_earnings
+		)
+		self.current_structured_taxable_earnings_before_exemption = (
+			self.current_structured_taxable_earnings
+			+ self.current_taxable_earnings_for_payment_days.amount_exempted_from_income_tax
 		)
 
 		self.current_additional_earnings = (
@@ -749,14 +765,18 @@ class SalarySlip(TransactionBase):
 
 			self.current_month_income_tax = self.current_structured_tax_amount
 
+			# non included current_month_income_tax separately as its already considered
+			# while calculating income_tax_deducted_till_date
+
 			self.total_income_tax = self.income_tax_deducted_till_date + self.future_income_tax_deductions
 
 	def compute_ctc(self):
 		if hasattr(self, "previous_taxable_earnings"):
+
 			return (
-				self.previous_taxable_earnings
-				+ self.current_structured_taxable_earnings
-				+ self.future_structured_taxable_earnings
+				self.previous_taxable_earnings_before_exemption
+				+ self.current_structured_taxable_earnings_before_exemption
+				+ self.future_structured_taxable_earnings_before_exemption
 				+ self.current_additional_earnings
 				+ self.other_incomes
 				+ self.unclaimed_taxable_benefits
@@ -1286,7 +1306,7 @@ class SalarySlip(TransactionBase):
 			"taxable_earnings_till_date", start_date, end_date
 		)
 
-		return (taxable_earnings + opening_taxable_earning) - exempted_amount
+		return (taxable_earnings + opening_taxable_earning) - exempted_amount, exempted_amount
 
 	def get_opening_for(self, field_to_select, start_date, end_date):
 		return (
@@ -1373,6 +1393,7 @@ class SalarySlip(TransactionBase):
 		additional_income = 0
 		additional_income_with_full_tax = 0
 		flexi_benefits = 0
+		amount_exempted_from_income_tax = 0
 
 		for earning in self.earnings:
 			if based_on_payment_days:
@@ -1412,6 +1433,7 @@ class SalarySlip(TransactionBase):
 
 					taxable_earnings -= flt(amount - additional_amount)
 					additional_income -= additional_amount
+					amount_exempted_from_income_tax = flt(amount - additional_amount)
 
 					if additional_amount and ded.is_recurring_additional_salary:
 						additional_income -= self.get_future_recurring_additional_amount(
@@ -1422,6 +1444,7 @@ class SalarySlip(TransactionBase):
 			{
 				"taxable_earnings": taxable_earnings,
 				"additional_income": additional_income,
+				"amount_exempted_from_income_tax": amount_exempted_from_income_tax,
 				"additional_income_with_full_tax": additional_income_with_full_tax,
 				"flexi_benefits": flexi_benefits,
 			}
