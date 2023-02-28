@@ -69,13 +69,20 @@ def get_employees(date, department=None, branch=None, company=None):
 
 
 @frappe.whitelist()
-def mark_employee_attendance(employee_list, status, date, leave_type=None):
+def mark_employee_attendance(
+	employee_list,
+	status,
+	date,
+	leave_type=None,
+	late_entry=None,
+	early_exit=None,
+	shift=None,
+):
 	employee_list = json.loads(employee_list)
 	for employee in employee_list:
+		leave_type = None
 		if status == "On Leave" and leave_type:
 			leave_type = leave_type
-		else:
-			leave_type = None
 
 		attendance = frappe.get_doc(
 			dict(
@@ -84,6 +91,9 @@ def mark_employee_attendance(employee_list, status, date, leave_type=None):
 				attendance_date=getdate(date),
 				status=status,
 				leave_type=leave_type,
+				late_entry=late_entry,
+				early_exit=early_exit,
+				shift=shift,
 			)
 		)
 		attendance.insert()

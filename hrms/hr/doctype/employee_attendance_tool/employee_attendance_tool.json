@@ -16,6 +16,10 @@
   "employees_html",
   "attendance_details_section",
   "status",
+  "late_entry",
+  "early_exit",
+  "column_break_kecn",
+  "shift",
   "marked_attendance_section",
   "marked_attendance_html"
  ],
@@ -98,12 +102,34 @@
   {
    "fieldname": "column_break_bhny",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "late_entry",
+   "fieldtype": "Check",
+   "label": "Late Entry"
+  },
+  {
+   "default": "0",
+   "fieldname": "early_exit",
+   "fieldtype": "Check",
+   "label": "Early Exit"
+  },
+  {
+   "fieldname": "column_break_kecn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "shift",
+   "fieldtype": "Link",
+   "label": "Shift",
+   "options": "Shift Type"
   }
  ],
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-03-01 13:19:58.028726",
+ "modified": "2023-02-28 14:13:59.849205",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Attendance Tool",
