@@ -1,0 +1,21 @@
+{
+ "cards": [],
+ "charts": [
+  {
+   "chart": "Designation_Wise_Applicant",
+   "width": "Half"
+  }
+ ],
+ "creation": "2023-02-28 14:33:50.470639",
+ "dashboard_name": "Department_Wise_Applicant",
+ "docstatus": 0,
+ "doctype": "Dashboard",
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "modified": "2023-02-28 14:34:39.651759",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Department_Wise_Applicant",
+ "owner": "Administrator"
+}
