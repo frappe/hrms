@@ -54,59 +54,38 @@ frappe.ui.form.on("Employee Attendance Tool", {
 				unhide_field("marked_attendance_section");
 				frm.events.show_marked_employees(frm, r.message["marked"]);
 			} else {
-				hide_field('marked_attendance_section')
+				hide_field("marked_attendance_section");
 			}
 		});
 	},
 
 	show_unmarked_employees(frm, unmarked_employees) {
-		let $wrapper = frm.get_field("employees_html").$wrapper;
+		const $wrapper = frm.get_field("employees_html").$wrapper;
+		const employee_wrapper = $(`<div class="employee_wrapper">`).appendTo($wrapper);
 
-		if (!frm.employee_area) {
-			frm.employee_area = $(`<div>`).appendTo($wrapper);
+		if (!frm.employees_multicheck) {
+			frm.employees_multicheck = frappe.ui.form.make_control({
+				parent: employee_wrapper,
+				df: {
+					fieldname: "employees_multicheck",
+					fieldtype: "MultiCheck",
+					select_all: true,
+					columns: 4,
+					get_data: () => {
+						return unmarked_employees.map((employee) => {
+							return {
+								label: `${employee.employee} : ${employee.employee_name}`,
+								value: employee.employee,
+								checked: 0,
+							};
+						});
+					},
+				},
+				render_input: true,
+			});
+
+			frm.employees_multicheck.refresh_input();
 		}
-
-		$($wrapper).empty();
-		let employee_toolbar = $(
-			`<div class="col-sm-12 top-toolbar">
-				<button class="btn btn-xs btn-default btn-add">${__("Check all")}</button>
-				<button class="btn btn-xs btn-default btn-remove">${__("Uncheck all")}</button>
-			</div>`
-		).appendTo($wrapper);
-
-		employee_toolbar.find(".btn-add")
-			.html(__('Check all'))
-			.on("click", function() {
-				$wrapper.find('input[type="checkbox"]').each(function(i, check) {
-					if(!$(check).is(":checked")) {
-						check.checked = true;
-					}
-				});
-			});
-
-		employee_toolbar.find(".btn-remove")
-			.html(__('Uncheck all'))
-			.on("click", function() {
-				$wrapper.find('input[type="checkbox"]').each(function(i, check) {
-					if($(check).is(":checked")) {
-						check.checked = false;
-					}
-				});
-			});
-
-		let row;
-		$.each(unmarked_employees, function(i, m) {
-			if (i===0 || (i % 4) === 0) {
-				row = $('<div class="row"></div>').appendTo($wrapper);
-			}
-
-			$(repl('<div class="col-sm-3 unmarked-employee-checkbox">\
-				<div class="checkbox">\
-				<label><input type="checkbox" class="employee-check" employee="%(employee)s"/>\
-				%(employee)s</label>\
-				</div></div>', {employee: m.employee +' : '+ m.employee_name})).appendTo(row);
-		});
-
 	},
 
 	show_marked_employees(frm, marked_employees) {
@@ -120,8 +99,8 @@ frappe.ui.form.on("Employee Attendance Tool", {
 
 		let row;
 		$.each(marked_employees, function(i, m) {
-			var attendance_icon = "fa fa-check";
-			var color_class = "";
+			let attendance_icon = "fa fa-check";
+			let color_class = "";
 			if(m.status == "Absent") {
 				attendance_icon = "fa fa-check-empty"
 				color_class = "text-muted";
@@ -153,23 +132,15 @@ frappe.ui.form.on("Employee Attendance Tool", {
 	},
 
 	mark_attendance(frm) {
-		const marked_employees = [];
-
-		frm.get_field("employees_html").$wrapper
-			.find('input[type="checkbox"]')
-			.each(function(i, check) {
-				if($(check).is(":checked")) {
-					marked_employees.push(frm.employees[i]);
-				}
-		});
+		const marked_employees = frm.employees_multicheck.get_checked_options();
 
 		frappe.call({
 			method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
 			args: {
-				"employee_list": marked_employees,
-				"status": frm.doc.status,
-				"date": frm.doc.date,
-				"company": frm.doc.company
+				employee_list: marked_employees,
+				status: frm.doc.status,
+				date: frm.doc.date,
+				company: frm.doc.company
 			},
 			freeze: true,
 			callback: function(r) {
