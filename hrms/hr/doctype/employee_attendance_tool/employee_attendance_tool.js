@@ -1,85 +1,125 @@
 frappe.ui.form.on("Employee Attendance Tool", {
-	refresh: function(frm) {
+	refresh(frm) {
 		frm.disable_save();
 	},
 
-	onload: function(frm) {
+	onload(frm) {
 		frm.set_value("date", frappe.datetime.get_today());
-		erpnext.employee_attendance_tool.load_employees(frm);
+		frm.trigger("load_employees");
+		frm.trigger("set_primary_action");
 	},
 
-	date: function(frm) {
-		erpnext.employee_attendance_tool.load_employees(frm);
+	date(frm) {
+		frm.trigger("load_employees");
 	},
 
-	department: function(frm) {
-		erpnext.employee_attendance_tool.load_employees(frm);
+	department(frm) {
+		frm.trigger("load_employees");
 	},
 
-	branch: function(frm) {
-		erpnext.employee_attendance_tool.load_employees(frm);
+	branch(frm) {
+		frm.trigger("load_employees");
 	},
 
-	company: function(frm) {
-		erpnext.employee_attendance_tool.load_employees(frm);
-	}
+	company(frm) {
+		frm.trigger("load_employees");
+	},
 
-});
+	status(frm) {
+		frm.trigger("set_primary_action");
+	},
 
+	load_employees(frm) {
+		if (!frm.doc.date)
+			return;
 
-erpnext.employee_attendance_tool = {
-	load_employees: function(frm) {
-		if(frm.doc.date) {
-			frappe.call({
-				method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.get_employees",
-				args: {
-					date: frm.doc.date,
-					department: frm.doc.department,
-					branch: frm.doc.branch,
-					company: frm.doc.company
-				},
-				callback: function(r) {
-					if(r.message['unmarked'].length > 0) {
-						unhide_field('unmarked_attendance_section')
-						if(!frm.employee_area) {
-							frm.employee_area = $('<div>')
-							.appendTo(frm.fields_dict.employees_html.wrapper);
-						}
-						frm.EmployeeSelector = new erpnext.EmployeeSelector(frm, frm.employee_area, r.message['unmarked'])
-					}
-					else{
-						hide_field('unmarked_attendance_section')
-					}
+		frappe.call({
+			method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.get_employees",
+			args: {
+				date: frm.doc.date,
+				department: frm.doc.department,
+				branch: frm.doc.branch,
+				company: frm.doc.company
+			}
+		}).then((r) => {
+			if (r.message["unmarked"].length > 0) {
+				unhide_field("unmarked_attendance_section");
+				frm.employees = r.message["unmarked"];
+				frm.events.show_unmarked_employees(frm, r.message["unmarked"]);
+			} else {
+				hide_field("unmarked_attendance_section");
+			}
 
-					if(r.message['marked'].length > 0) {
-						unhide_field('marked_attendance_section')
-						if(!frm.marked_employee_area) {
-							frm.marked_employee_area = $('<div>')
-								.appendTo(frm.fields_dict.marked_attendance_html.wrapper);
-						}
-						frm.marked_employee = new erpnext.MarkedEmployee(frm, frm.marked_employee_area, r.message['marked'])
-					}
-					else{
-						hide_field('marked_attendance_section')
-					}
-				}
-			});
+			if (r.message["marked"].length > 0) {
+				unhide_field("marked_attendance_section");
+				frm.events.show_marked_employees(frm, r.message["marked"]);
+			} else {
+				hide_field('marked_attendance_section')
+			}
+		});
+	},
+
+	show_unmarked_employees(frm, unmarked_employees) {
+		let $wrapper = frm.get_field("employees_html").$wrapper;
+
+		if (!frm.employee_area) {
+			frm.employee_area = $(`<div>`).appendTo($wrapper);
 		}
-	}
-}
 
-erpnext.MarkedEmployee = class MarkedEmployee {
-	constructor(frm, wrapper, employee) {
-		this.wrapper = wrapper;
-		this.frm = frm;
-		this.make(frm, employee);
-	}
-	make(frm, employee) {
-		var me = this;
-		$(this.wrapper).empty();
+		$($wrapper).empty();
+		let employee_toolbar = $(
+			`<div class="col-sm-12 top-toolbar">
+				<button class="btn btn-xs btn-default btn-add">${__("Check all")}</button>
+				<button class="btn btn-xs btn-default btn-remove">${__("Uncheck all")}</button>
+			</div>`
+		).appendTo($wrapper);
 
-		var row;
-		$.each(employee, function(i, m) {
+		employee_toolbar.find(".btn-add")
+			.html(__('Check all'))
+			.on("click", function() {
+				$wrapper.find('input[type="checkbox"]').each(function(i, check) {
+					if(!$(check).is(":checked")) {
+						check.checked = true;
+					}
+				});
+			});
+
+		employee_toolbar.find(".btn-remove")
+			.html(__('Uncheck all'))
+			.on("click", function() {
+				$wrapper.find('input[type="checkbox"]').each(function(i, check) {
+					if($(check).is(":checked")) {
+						check.checked = false;
+					}
+				});
+			});
+
+		let row;
+		$.each(unmarked_employees, function(i, m) {
+			if (i===0 || (i % 4) === 0) {
+				row = $('<div class="row"></div>').appendTo($wrapper);
+			}
+
+			$(repl('<div class="col-sm-3 unmarked-employee-checkbox">\
+				<div class="checkbox">\
+				<label><input type="checkbox" class="employee-check" employee="%(employee)s"/>\
+				%(employee)s</label>\
+				</div></div>', {employee: m.employee +' : '+ m.employee_name})).appendTo(row);
+		});
+
+	},
+
+	show_marked_employees(frm, marked_employees) {
+		let $wrapper = frm.get_field("marked_attendance_html").$wrapper;
+
+		if (!frm.marked_employee_area) {
+			frm.marked_employee_area = $(`<div>`).appendTo($wrapper);
+		}
+
+		$wrapper.empty();
+
+		let row;
+		$.each(marked_employees, function(i, m) {
 			var attendance_icon = "fa fa-check";
 			var color_class = "";
 			if(m.status == "Absent") {
@@ -91,7 +131,7 @@ erpnext.MarkedEmployee = class MarkedEmployee {
 			}
 
 			if (i===0 || i % 4===0) {
-				row = $('<div class="row"></div>').appendTo(me.wrapper);
+				row = $('<div class="row"></div>').appendTo($wrapper);
 			}
 
 			$(repl('<div class="col-sm-3 %(color_class)s">\
@@ -103,167 +143,41 @@ erpnext.MarkedEmployee = class MarkedEmployee {
 					color_class: color_class
 				})).appendTo(row);
 		});
-	}
-};
+	},
 
+	set_primary_action(frm) {
+		frm.disable_save();
 
-erpnext.EmployeeSelector = class EmployeeSelector {
-	constructor(frm, wrapper, employee) {
-		this.wrapper = wrapper;
-		this.frm = frm;
-		this.make(frm, employee);
-	}
-	make(frm, employee) {
-		var me = this;
+		if (frm.doc.status)
+			frm.page.set_primary_action(__("Mark Attendance"), () => frm.trigger("mark_attendance"));
+	},
 
-		$(this.wrapper).empty();
-		var employee_toolbar = $('<div class="col-sm-12 top-toolbar">\
-			<button class="btn btn-default btn-add btn-xs"></button>\
-			<button class="btn btn-xs btn-default btn-remove"></button>\
-			</div>').appendTo($(this.wrapper));
+	mark_attendance(frm) {
+		const marked_employees = [];
 
-		var mark_employee_toolbar = $('<div class="col-sm-12 bottom-toolbar">\
-			<button class="btn btn-primary btn-mark-present btn-xs"></button>\
-			<button class="btn btn-primary btn-mark-work-from-home btn-xs"></button>\
-			<button class="btn btn-warning btn-mark-half-day btn-xs"></button>\
-			<button class="btn btn-danger btn-mark-absent btn-xs"></button>\
-			</div>');
-
-		employee_toolbar.find(".btn-add")
-			.html(__('Check all'))
-			.on("click", function() {
-				$(me.wrapper).find('input[type="checkbox"]').each(function(i, check) {
-					if(!$(check).is(":checked")) {
-						check.checked = true;
-					}
-				});
-			});
-
-		employee_toolbar.find(".btn-remove")
-			.html(__('Uncheck all'))
-			.on("click", function() {
-				$(me.wrapper).find('input[type="checkbox"]').each(function(i, check) {
-					if($(check).is(":checked")) {
-						check.checked = false;
-					}
-				});
-			});
-
-		mark_employee_toolbar.find(".btn-mark-present")
-			.html(__('Mark Present'))
-			.on("click", function() {
-				var employee_present = [];
-				$(me.wrapper).find('input[type="checkbox"]').each(function(i, check) {
-					if($(check).is(":checked")) {
-						employee_present.push(employee[i]);
-					}
-				});
-				frappe.call({
-					method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
-					args:{
-						"employee_list":employee_present,
-						"status":"Present",
-						"date":frm.doc.date,
-						"company":frm.doc.company
-					},
-
-					callback: function(r) {
-						erpnext.employee_attendance_tool.load_employees(frm);
-
-					}
-				});
-			});
-
-		mark_employee_toolbar.find(".btn-mark-absent")
-			.html(__('Mark Absent'))
-			.on("click", function() {
-				var employee_absent = [];
-				$(me.wrapper).find('input[type="checkbox"]').each(function(i, check) {
-					if($(check).is(":checked")) {
-						employee_absent.push(employee[i]);
-					}
-				});
-				frappe.call({
-					method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
-					args:{
-						"employee_list":employee_absent,
-						"status":"Absent",
-						"date":frm.doc.date,
-						"company":frm.doc.company
-					},
-
-					callback: function(r) {
-						erpnext.employee_attendance_tool.load_employees(frm);
-
-					}
-				});
-			});
-
-
-		mark_employee_toolbar.find(".btn-mark-half-day")
-			.html(__('Mark Half Day'))
-			.on("click", function() {
-				var employee_half_day = [];
-				$(me.wrapper).find('input[type="checkbox"]').each(function(i, check) {
-					if($(check).is(":checked")) {
-						employee_half_day.push(employee[i]);
-					}
-				});
-				frappe.call({
-					method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
-					args:{
-						"employee_list":employee_half_day,
-						"status":"Half Day",
-						"date":frm.doc.date,
-						"company":frm.doc.company
-					},
-
-					callback: function(r) {
-						erpnext.employee_attendance_tool.load_employees(frm);
-
-					}
-				});
-			});
-
-
-		mark_employee_toolbar.find(".btn-mark-work-from-home")
-			.html(__('Mark Work From Home'))
-			.on("click", function() {
-				var employee_work_from_home = [];
-				$(me.wrapper).find('input[type="checkbox"]').each(function(i, check) {
-					if($(check).is(":checked")) {
-						employee_work_from_home.push(employee[i]);
-					}
-				});
-				frappe.call({
-					method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
-					args:{
-						"employee_list":employee_work_from_home,
-						"status":"Work From Home",
-						"date":frm.doc.date,
-						"company":frm.doc.company
-					},
-
-					callback: function(r) {
-						erpnext.employee_attendance_tool.load_employees(frm);
-
-					}
-				});
-			});
-
-		var row;
-		$.each(employee, function(i, m) {
-			if (i===0 || (i % 4) === 0) {
-				row = $('<div class="row"></div>').appendTo(me.wrapper);
-			}
-
-			$(repl('<div class="col-sm-3 unmarked-employee-checkbox">\
-				<div class="checkbox">\
-				<label><input type="checkbox" class="employee-check" employee="%(employee)s"/>\
-				%(employee)s</label>\
-				</div></div>', {employee: m.employee +' : '+ m.employee_name})).appendTo(row);
+		frm.get_field("employees_html").$wrapper
+			.find('input[type="checkbox"]')
+			.each(function(i, check) {
+				if($(check).is(":checked")) {
+					marked_employees.push(frm.employees[i]);
+				}
 		});
 
-		mark_employee_toolbar.appendTo($(this.wrapper));
+		frappe.call({
+			method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
+			args: {
+				"employee_list": marked_employees,
+				"status": frm.doc.status,
+				"date": frm.doc.date,
+				"company": frm.doc.company
+			},
+			freeze: true,
+			callback: function(r) {
+				if (!r.exc) {
+					frappe.show_alert({message: __("Attendance marked successfully"), indicator: "green"});
+					frm.trigger("load_employees");
+				}
+			}
+		});
 	}
-};
+});
