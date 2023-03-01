@@ -60,14 +60,18 @@ def get_marked_attendance(attendance_list):
 	}
 
 	for entry in attendance_list:
-		marked.get(entry.status).append(f"{entry.employee} : {entry.employee_name}")
+		marked.get(entry.status).append(
+			{"employee": entry.employee, "employee_name": entry.employee_name}
+		)
 
-	transposed_data = []
+	marked_attendance = []
 	if any(marked.values()):
 		# transpose data to fill table with columns as per attendance status
 		transposed_data = zip_longest(*marked.values(), fillvalue="")
+		# zip will give list of tuples, convert to list of lists
+		marked_attendance = [list(entry) for entry in transposed_data]
 
-	return transposed_data
+	return marked_attendance
 
 
 @frappe.whitelist()

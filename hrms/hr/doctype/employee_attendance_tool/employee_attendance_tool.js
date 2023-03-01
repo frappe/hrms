@@ -98,7 +98,14 @@ frappe.ui.form.on("Employee Attendance Tool", {
 		const $wrapper = frm.get_field("marked_attendance_html").$wrapper;
 		const summary_wrapper = $(`<div class="summary_wrapper">`).appendTo($wrapper);
 
-		frm.events.render_datatable(frm, marked_employees, summary_wrapper);
+		// format data as [[ "employee1: employee_name1", "employee2: employee_name2", ...]]
+		const data = marked_employees.map((entry) => {
+			return entry.map((employee) => {
+				return employee ? `${employee.employee} : ${employee.employee_name}` : "";
+			});
+		});
+
+		frm.events.render_datatable(frm, data, summary_wrapper);
 	},
 
 	render_datatable(frm, data, summary_wrapper) {
