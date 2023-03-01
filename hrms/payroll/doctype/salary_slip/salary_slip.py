@@ -1416,7 +1416,7 @@ class SalarySlip(TransactionBase):
 					# Get additional amount based on future recurring additional salary
 					if additional_amount and earning.is_recurring_additional_salary:
 						additional_income += self.get_future_recurring_additional_amount(
-							earning.additional_salary, earning.additional_amount
+							earning.additional_salary, earning.additional_amount, relieving_date=relieving_date
 						)  # Used earning.additional_amount to consider the amount for the full month
 
 					if earning.deduct_full_tax_on_selected_payroll_date:
@@ -1437,7 +1437,7 @@ class SalarySlip(TransactionBase):
 
 					if additional_amount and ded.is_recurring_additional_salary:
 						additional_income -= self.get_future_recurring_additional_amount(
-							ded.additional_salary, ded.additional_amount
+							ded.additional_salary, ded.additional_amount, relieving_date=relieving_date
 						)  # Used ded.additional_amount to consider the amount for the full month
 
 		return frappe._dict(
@@ -1450,8 +1450,11 @@ class SalarySlip(TransactionBase):
 			}
 		)
 
-	def get_future_recurring_period(self, additional_salary):
+	def get_future_recurring_period(self, additional_salary, relieving_date=None):
 		to_date = frappe.db.get_value("Additional Salary", additional_salary, "to_date")
+
+		if relieving_date:
+			to_date = relieving_date
 
 		# future month count excluding current
 		from_date, to_date = getdate(self.start_date), getdate(to_date)
@@ -1467,10 +1470,14 @@ class SalarySlip(TransactionBase):
 
 		return future_recurring_period
 
-	def get_future_recurring_additional_amount(self, additional_salary, monthly_additional_amount):
+	def get_future_recurring_additional_amount(
+		self, additional_salary, monthly_additional_amount, relieving_date=None
+	):
 		future_recurring_additional_amount = 0
 
-		future_recurring_period = self.get_future_recurring_period(additional_salary)
+		future_recurring_period = self.get_future_recurring_period(
+			additional_salary, relieving_date=relieving_date
+		)
 
 		if future_recurring_period > 0:
 			future_recurring_additional_amount = (
