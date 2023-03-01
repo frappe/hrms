@@ -1440,7 +1440,7 @@ def make_earning_salary_component(
 			"type": "Earning",
 			"depends_on_payment_days": 0,
 			"amount": 0,
-			"show_zero_value_component": 1,
+			"remove_if_zero_valued": 0,
 		},
 		{
 			"salary_component": "Overtime",
@@ -1448,7 +1448,7 @@ def make_earning_salary_component(
 			"type": "Earning",
 			"depends_on_payment_days": 0,
 			"amount": 0,
-			"show_zero_value_component": 0,
+			"remove_if_zero_valued": 1,
 		},
 	]
 	if include_flexi_benefits:
