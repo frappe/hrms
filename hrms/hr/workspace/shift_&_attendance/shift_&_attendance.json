@@ -5,7 +5,7 @@
    "label": "Attendance Count"
   }
  ],
- "content": "[{\"type\":\"chart\",\"data\":{\"chart_name\":\"Attendance Count\",\"col\":12}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Checkin\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Attendance\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Shift Request\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dashboard\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 18px;\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Shifts\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Attendance\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Time\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"P47-fVW30h\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Attendance Count\",\"col\":12}},{\"id\":\"BRycH8dWeB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"fKN5UywKs-\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"eZcc4V_Bzl\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Checkin\",\"col\":3}},{\"id\":\"vAKl_-A_J1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Attendance\",\"col\":3}},{\"id\":\"p4y-IcgTX9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Shift Request\",\"col\":3}},{\"id\":\"KExKSERnyX\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dashboard\",\"col\":3}},{\"id\":\"8HcTyocHxj\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"3cD06m-RTN\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 18px;\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"id\":\"csu8SxnCo1\",\"type\":\"card\",\"data\":{\"card_name\":\"Shifts\",\"col\":4}},{\"id\":\"oiSVzsT9wc\",\"type\":\"card\",\"data\":{\"card_name\":\"Attendance\",\"col\":4}},{\"id\":\"z8CNL5qL-l\",\"type\":\"card\",\"data\":{\"card_name\":\"Time\",\"col\":4}},{\"id\":\"LOqcZ2oTjn\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2022-08-20 15:50:06.598086",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -13,46 +13,9 @@
  "hide_custom": 1,
  "icon": "milestone",
  "idx": 0,
+ "is_hidden": 0,
  "label": "Shift & Attendance",
  "links": [
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Shifts",
-   "link_count": 3,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Shift Type",
-   "link_count": 0,
-   "link_to": "Shift Type",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Shift Assignment",
-   "link_count": 0,
-   "link_to": "Shift Assignment",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Shift Request",
-   "link_count": 0,
-   "link_to": "Shift Request",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
   {
    "hidden": 0,
    "is_query_report": 0,
@@ -186,9 +149,57 @@
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Shifts",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Shift Type",
+   "link_count": 0,
+   "link_to": "Shift Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Shift Assignment",
+   "link_count": 0,
+   "link_to": "Shift Assignment",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Shift Request",
+   "link_count": 0,
+   "link_to": "Shift Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Shit Time",
+   "link_count": 0,
+   "link_to": "Shift time",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2022-09-16 11:35:56.729759",
+ "modified": "2023-03-01 16:14:05.685918",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift & Attendance",
