@@ -968,14 +968,14 @@ class SalarySlip(TransactionBase):
 
 			else:
 				default_amount = 0
-				show_zero_value_component = 0
+				remove_if_zero_valued = 0
 
 				if amount is not None:
 					if amount or struct_row.amount_based_on_formula:
 						default_amount = self.eval_condition_and_formula(struct_row, self.default_data)
 
-					show_zero_value_component = frappe.db.get_value(
-						"Salary Component", struct_row.salary_component, "show_zero_value_component"
+					remove_if_zero_valued = frappe.get_cached_value(
+						"Salary Component", struct_row.salary_component, "remove_if_zero_valued"
 					)
 
 					self.update_component_row(
@@ -984,7 +984,7 @@ class SalarySlip(TransactionBase):
 						component_type,
 						data=self.data,
 						default_amount=default_amount,
-						show_zero_value_component=show_zero_value_component,
+						remove_if_zero_valued=remove_if_zero_valued,
 					)
 
 	def get_data_for_eval(self):
@@ -1166,7 +1166,7 @@ class SalarySlip(TransactionBase):
 		is_recurring=0,
 		data=None,
 		default_amount=None,
-		show_zero_value_component=None,
+		remove_if_zero_valued=None,
 	):
 		component_row = None
 		for d in self.get(component_type):
@@ -1193,7 +1193,7 @@ class SalarySlip(TransactionBase):
 			)
 
 		if not component_row:
-			if not amount and not show_zero_value_component:
+			if not amount and remove_if_zero_valued:
 				return
 
 			component_row = self.append(component_type)
@@ -1233,13 +1233,13 @@ class SalarySlip(TransactionBase):
 
 		component_row.amount = amount
 
-		self.update_component_amount_based_on_payment_days(component_row, show_zero_value_component)
+		self.update_component_amount_based_on_payment_days(component_row, remove_if_zero_valued)
 
 		if data:
 			data[component_row.abbr] = component_row.amount
 
 	def update_component_amount_based_on_payment_days(
-		self, component_row, show_zero_value_component=None
+		self, component_row, remove_if_zero_valued=None
 	):
 		joining_date, relieving_date = self.get_joining_and_relieving_dates()
 		component_row.amount = self.get_amount_based_on_payment_days(
@@ -1247,7 +1247,7 @@ class SalarySlip(TransactionBase):
 		)[0]
 
 		# remove 0 valued components that have been updated later
-		if component_row.amount == 0 and not show_zero_value_component:
+		if component_row.amount == 0 and remove_if_zero_valued:
 			self.remove(component_row)
 
 	def set_precision_for_component_amounts(self):
