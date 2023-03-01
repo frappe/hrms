@@ -126,10 +126,10 @@ frappe.ui.form.on("Employee Attendance Tool", {
 
 	get_columns_for_marked_attendance_table(frm) {
 		const status_map = [
-			{"status": "Present", "indicator": "green"},
-			{"status": "Absent", "indicator": "red"},
-			{"status": "Half Day", "indicator": "orange"},
-			{"status": "Work From Home", "indicator": "green"},
+			{ "status": "Present", "indicator": "green" },
+			{ "status": "Absent", "indicator": "red" },
+			{ "status": "Half Day", "indicator": "orange" },
+			{ "status": "Work From Home", "indicator": "green" },
 		];
 
 		return status_map.map((entry) => {
@@ -151,19 +151,19 @@ frappe.ui.form.on("Employee Attendance Tool", {
 		frm.page.set_primary_action(__("Mark Attendance"), () => {
 			if (frm.employees_multicheck.get_checked_options().length === 0) {
 				frappe.throw({
-					message:__("Please select the employees you want to mark attendance for."),
+					message: __("Please select the employees you want to mark attendance for."),
 					title: __("Mandatory")
 				});
 			}
 
 			if (!frm.doc.status) {
 				frappe.throw({
-					message:__("Please select the attendance status."),
+					message: __("Please select the attendance status."),
 					title: __("Mandatory")
 				});
 			}
 
-			frm.trigger("mark_attendance")
+			frm.trigger("mark_attendance");
 		});
 	},
 
@@ -181,12 +181,11 @@ frappe.ui.form.on("Employee Attendance Tool", {
 				shift: frm.doc.shift,
 			},
 			freeze: true,
-			freeze_message: __("Marking Attendance"),
-			callback: function(r) {
-				if (!r.exc) {
-					frappe.show_alert({message: __("Attendance marked successfully"), indicator: "green"});
-					frm.refresh();
-				}
+			freeze_message: __("Marking Attendance")
+		}).then((r) => {
+			if (!r.exc) {
+				frappe.show_alert({ message: __("Attendance marked successfully"), indicator: "green" });
+				frm.refresh();
 			}
 		});
 	},
