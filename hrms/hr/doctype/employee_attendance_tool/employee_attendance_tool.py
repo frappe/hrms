@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 
+import datetime
 import json
 from itertools import zip_longest
 
@@ -15,7 +16,9 @@ class EmployeeAttendanceTool(Document):
 
 
 @frappe.whitelist()
-def get_employees(date, department=None, branch=None, company=None):
+def get_employees(
+	date: str | datetime.date, department: str = None, branch: str = None, company: str = None
+) -> dict[str, list]:
 	filters = {"status": "Active", "date_of_joining": ["<=", date]}
 
 	for field, value in {"department": department, "branch": branch, "company": company}.items():
@@ -35,13 +38,13 @@ def get_employees(date, department=None, branch=None, company=None):
 		order_by="employee_name",
 	)
 
-	unmarked_attendance = get_unmarked_attendance(employee_list, attendance_list)
-	marked_attendance = get_marked_attendance(attendance_list)
+	unmarked_attendance = _get_unmarked_attendance(employee_list, attendance_list)
+	marked_attendance = _get_marked_attendance(attendance_list)
 
 	return {"marked": marked_attendance, "unmarked": unmarked_attendance}
 
 
-def get_unmarked_attendance(employee_list, attendance_list):
+def _get_unmarked_attendance(employee_list: list[dict], attendance_list: list[dict]) -> list[dict]:
 	marked_employees = [entry.employee for entry in attendance_list]
 	unmarked_attendance = []
 
@@ -52,7 +55,7 @@ def get_unmarked_attendance(employee_list, attendance_list):
 	return unmarked_attendance
 
 
-def get_marked_attendance(attendance_list):
+def _get_marked_attendance(attendance_list: list[dict]) -> list:
 	marked = {
 		"Present": [],
 		"Absent": [],
@@ -77,14 +80,15 @@ def get_marked_attendance(attendance_list):
 
 @frappe.whitelist()
 def mark_employee_attendance(
-	employee_list,
-	status,
-	date,
-	leave_type=None,
-	late_entry=None,
-	early_exit=None,
-	shift=None,
-):
+	employee_list: list | str,
+	status: str,
+	date: str | datetime.date,
+	leave_type: str = None,
+	company: str = None,
+	late_entry: str = None,
+	early_exit: str = None,
+	shift: str = None,
+) -> None:
 	if isinstance(employee_list, str):
 		employee_list = json.loads(employee_list)
 
