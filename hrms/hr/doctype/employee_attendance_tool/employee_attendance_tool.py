@@ -32,6 +32,7 @@ def get_employees(date, department=None, branch=None, company=None):
 			"attendance_date": date,
 			"docstatus": 1,
 		},
+		order_by="employee_name",
 	)
 
 	unmarked_attendance = get_unmarked_attendance(employee_list, attendance_list)
