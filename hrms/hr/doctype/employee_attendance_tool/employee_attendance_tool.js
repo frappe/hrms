@@ -1,12 +1,12 @@
 frappe.ui.form.on("Employee Attendance Tool", {
 	refresh(frm) {
-		frm.disable_save();
+		frm.trigger("reset_attendance_fields")
+		frm.trigger("load_employees");
+		frm.trigger("set_primary_action");
 	},
 
 	onload(frm) {
 		frm.set_value("date", frappe.datetime.get_today());
-		frm.trigger("load_employees");
-		frm.trigger("set_primary_action");
 	},
 
 	date(frm) {
@@ -27,6 +27,13 @@ frappe.ui.form.on("Employee Attendance Tool", {
 
 	status(frm) {
 		frm.trigger("set_primary_action");
+	},
+
+	reset_attendance_fields(frm) {
+		frm.set_value("status", "");
+		frm.set_value("shift", "");
+		frm.set_value("late_entry", 0);
+		frm.set_value("early_exit", 0);
 	},
 
 	load_employees(frm) {
@@ -61,31 +68,30 @@ frappe.ui.form.on("Employee Attendance Tool", {
 
 	show_unmarked_employees(frm, unmarked_employees) {
 		const $wrapper = frm.get_field("employees_html").$wrapper;
+		$wrapper.empty();
 		const employee_wrapper = $(`<div class="employee_wrapper">`).appendTo($wrapper);
 
-		if (!frm.employees_multicheck) {
-			frm.employees_multicheck = frappe.ui.form.make_control({
-				parent: employee_wrapper,
-				df: {
-					fieldname: "employees_multicheck",
-					fieldtype: "MultiCheck",
-					select_all: true,
-					columns: 4,
-					get_data: () => {
-						return unmarked_employees.map((employee) => {
-							return {
-								label: `${employee.employee} : ${employee.employee_name}`,
-								value: employee.employee,
-								checked: 0,
-							};
-						});
-					},
+		frm.employees_multicheck = frappe.ui.form.make_control({
+			parent: employee_wrapper,
+			df: {
+				fieldname: "employees_multicheck",
+				fieldtype: "MultiCheck",
+				select_all: true,
+				columns: 4,
+				get_data: () => {
+					return unmarked_employees.map((employee) => {
+						return {
+							label: `${employee.employee} : ${employee.employee_name}`,
+							value: employee.employee,
+							checked: 0,
+						};
+					});
 				},
-				render_input: true,
-			});
+			},
+			render_input: true,
+		});
 
-			frm.employees_multicheck.refresh_input();
-		}
+		frm.employees_multicheck.refresh_input();
 	},
 
 	show_marked_employees(frm, marked_employees) {
@@ -164,9 +170,9 @@ frappe.ui.form.on("Employee Attendance Tool", {
 			callback: function(r) {
 				if (!r.exc) {
 					frappe.show_alert({message: __("Attendance marked successfully"), indicator: "green"});
-					frm.trigger("load_employees");
+					frm.refresh();
 				}
 			}
 		});
-	}
+	},
 });
