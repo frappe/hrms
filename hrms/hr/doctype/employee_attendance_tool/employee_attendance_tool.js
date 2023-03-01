@@ -148,9 +148,23 @@ frappe.ui.form.on("Employee Attendance Tool", {
 
 	set_primary_action(frm) {
 		frm.disable_save();
+		frm.page.set_primary_action(__("Mark Attendance"), () => {
+			if (frm.employees_multicheck.get_checked_options().length === 0) {
+				frappe.throw({
+					message:__("Please select the employees you want to mark attendance for."),
+					title: __("Mandatory")
+				});
+			}
 
-		if (frm.doc.status)
-			frm.page.set_primary_action(__("Mark Attendance"), () => frm.trigger("mark_attendance"));
+			if (!frm.doc.status) {
+				frappe.throw({
+					message:__("Please select the attendance status."),
+					title: __("Mandatory")
+				});
+			}
+
+			frm.trigger("mark_attendance")
+		});
 	},
 
 	mark_attendance(frm) {
@@ -167,6 +181,7 @@ frappe.ui.form.on("Employee Attendance Tool", {
 				shift: frm.doc.shift,
 			},
 			freeze: true,
+			freeze_message: __("Marking Attendance"),
 			callback: function(r) {
 				if (!r.exc) {
 					frappe.show_alert({message: __("Attendance marked successfully"), indicator: "green"});
