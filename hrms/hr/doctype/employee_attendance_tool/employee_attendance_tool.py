@@ -34,22 +34,24 @@ def get_employees(date, department=None, branch=None, company=None):
 		},
 	)
 
-	marked_employees = {}
+	unmarked_attendance = get_unmarked_attendance(employee_list, attendance_list)
+	marked_attendance = get_marked_attendance(attendance_list)
 
-	for attendance in attendance_list:
-		marked_employees[attendance.employee] = attendance.status
+	return {"marked": marked_attendance, "unmarked": unmarked_attendance}
 
-	attendance_unmarked = []
-	attendance_marked = []
+
+def get_unmarked_attendance(employee_list, attendance_list):
+	marked_employees = [entry.employee for entry in attendance_list]
+	unmarked_attendance = []
 
 	for entry in employee_list:
-		entry["status"] = marked_employees.get(entry.employee)
+		if entry.employee not in marked_employees:
+			unmarked_attendance.append(entry)
 
-		if entry.employee in marked_employees:
-			attendance_marked.append(entry)
-		else:
-			attendance_unmarked.append(entry)
+	return unmarked_attendance
 
+
+def get_marked_attendance(attendance_list):
 	marked = {
 		"Present": [],
 		"Absent": [],
@@ -60,12 +62,12 @@ def get_employees(date, department=None, branch=None, company=None):
 	for entry in attendance_list:
 		marked.get(entry.status).append(f"{entry.employee} : {entry.employee_name}")
 
-	transposed_marked_attendance = []
+	transposed_data = []
 	if any(marked.values()):
 		# transpose data to fill table with columns as per attendance status
-		transposed_marked_attendance = zip_longest(*marked.values(), fillvalue="")
+		transposed_data = zip_longest(*marked.values(), fillvalue="")
 
-	return {"marked": transposed_marked_attendance, "unmarked": attendance_unmarked}
+	return transposed_data
 
 
 @frappe.whitelist()
