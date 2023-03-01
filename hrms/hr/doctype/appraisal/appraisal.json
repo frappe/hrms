@@ -24,7 +24,10 @@
   "other_details",
   "company",
   "column_break_17",
-  "amended_from"
+  "amended_from",
+  "assigned_to",
+  "closed_at",
+  "open_at"
  ],
  "fields": [
   {
@@ -194,6 +197,25 @@
    "read_only": 1,
    "report_hide": 1,
    "width": "150px"
+  },
+  {
+   "fieldname": "assigned_to",
+   "fieldtype": "Link",
+   "label": "Assigned_to",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "closed_at",
+   "fieldtype": "Date",
+   "label": "Closed_at",
+   "reqd": 1
+  },
+  {
+   "fieldname": "open_at",
+   "fieldtype": "Date",
+   "label": "Open_at",
+   "reqd": 1
   }
  ],
  "icon": "fa fa-thumbs-up",
@@ -201,10 +223,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2020-10-03 21:48:33.297065",
+ "modified": "2023-03-01 12:31:13.587122",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
@@ -249,6 +272,7 @@
  "search_fields": "status, employee, employee_name",
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "timeline_field": "employee",
  "title_field": "employee_name"
 }
