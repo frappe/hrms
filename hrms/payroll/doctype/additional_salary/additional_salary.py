@@ -39,24 +39,22 @@ class AdditionalSalary(Document):
 
 	def validate_recurring_additional_salary_overlap(self):
 		if self.is_recurring:
-			additional_salaries = frappe.db.sql(
-				"""
-				SELECT
-					name
-				FROM `tabAdditional Salary`
-				WHERE
-					employee=%s
-					AND name <> %s
-					AND docstatus=1
-					AND is_recurring=1
-					AND salary_component = %s
-					AND to_date >= %s
-					AND from_date <= %s""",
-				(self.employee, self.name, self.salary_component, self.from_date, self.to_date),
-				as_dict=1,
-			)
+			AdditionalSalary = frappe.qb.DocType("Additional Salary")
 
-			additional_salaries = [salary.name for salary in additional_salaries]
+			additional_salaries = (
+				frappe.qb.from_(AdditionalSalary)
+				.select(AdditionalSalary.name)
+				.where(
+					(AdditionalSalary.employee == self.employee)
+					& (AdditionalSalary.name != self.name)
+					& (AdditionalSalary.docstatus == 1)
+					& (AdditionalSalary.is_recurring == 1)
+					& (AdditionalSalary.salary_component == self.salary_component)
+					& (AdditionalSalary.to_date >= self.from_date)
+					& (AdditionalSalary.from_date <= self.to_date)
+					& (AdditionalSalary.disabled == 0)
+				)
+			).run(pluck=True)
 
 			if additional_salaries and len(additional_salaries):
 				frappe.throw(
@@ -144,6 +142,10 @@ class AdditionalSalary(Document):
 		no_of_days = date_diff(getdate(end_date), getdate(start_date)) + 1
 		return amount_per_day * no_of_days
 
+	def validate_update_after_submit(self):
+		if not self.disabled:
+			self.validate_recurring_additional_salary_overlap()
+
 
 @frappe.whitelist()
 def get_additional_salaries(employee, start_date, end_date, component_type):
@@ -170,6 +172,7 @@ def get_additional_salaries(employee, start_date, end_date, component_type):
 			(additional_sal.employee == employee)
 			& (additional_sal.docstatus == 1)
 			& (additional_sal.type == comp_type)
+			& (additional_sal.disabled == 0)
 		)
 		.where(
 			Criterion.any(

@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 
+import datetime
 import json
 
 import frappe
@@ -14,9 +15,9 @@ class EmployeeAttendanceTool(Document):
 
 
 @frappe.whitelist()
-def get_employees(date, department=None, branch=None, company=None):
-	attendance_not_marked = []
-	attendance_marked = []
+def get_employees(
+	date: str | datetime.date, department: str = None, branch: str = None, company: str = None
+) -> dict[str, list]:
 	filters = {"status": "Active", "date_of_joining": ["<=", date]}
 
 	for field, value in {"department": department, "branch": branch, "company": company}.items():
@@ -26,43 +27,61 @@ def get_employees(date, department=None, branch=None, company=None):
 	employee_list = frappe.get_list(
 		"Employee", fields=["employee", "employee_name"], filters=filters, order_by="employee_name"
 	)
-	marked_employee = {}
-	for emp in frappe.get_list(
-		"Attendance", fields=["employee", "status"], filters={"attendance_date": date}
-	):
-		marked_employee[emp["employee"]] = emp["status"]
+	attendance_list = frappe.get_list(
+		"Attendance",
+		fields=["employee", "employee_name", "status"],
+		filters={
+			"attendance_date": date,
+			"docstatus": 1,
+		},
+		order_by="employee_name",
+	)
 
-	for employee in employee_list:
-		employee["status"] = marked_employee.get(employee["employee"])
-		if employee["employee"] not in marked_employee:
-			attendance_not_marked.append(employee)
-		else:
-			attendance_marked.append(employee)
-	return {"marked": attendance_marked, "unmarked": attendance_not_marked}
+	unmarked_attendance = _get_unmarked_attendance(employee_list, attendance_list)
+
+	return {"marked": attendance_list, "unmarked": unmarked_attendance}
+
+
+def _get_unmarked_attendance(employee_list: list[dict], attendance_list: list[dict]) -> list[dict]:
+	marked_employees = [entry.employee for entry in attendance_list]
+	unmarked_attendance = []
+
+	for entry in employee_list:
+		if entry.employee not in marked_employees:
+			unmarked_attendance.append(entry)
+
+	return unmarked_attendance
 
 
 @frappe.whitelist()
-def mark_employee_attendance(employee_list, status, date, leave_type=None, company=None):
+def mark_employee_attendance(
+	employee_list: list | str,
+	status: str,
+	date: str | datetime.date,
+	leave_type: str = None,
+	company: str = None,
+	late_entry: str = None,
+	early_exit: str = None,
+	shift: str = None,
+) -> None:
+	if isinstance(employee_list, str):
+		employee_list = json.loads(employee_list)
 
-	employee_list = json.loads(employee_list)
 	for employee in employee_list:
-
+		leave_type = None
 		if status == "On Leave" and leave_type:
 			leave_type = leave_type
-		else:
-			leave_type = None
-
-		company = frappe.db.get_value("Employee", employee["employee"], "Company", cache=True)
 
 		attendance = frappe.get_doc(
 			dict(
 				doctype="Attendance",
-				employee=employee.get("employee"),
-				employee_name=employee.get("employee_name"),
+				employee=employee,
 				attendance_date=getdate(date),
 				status=status,
 				leave_type=leave_type,
-				company=company,
+				late_entry=late_entry,
+				early_exit=early_exit,
+				shift=shift,
 			)
 		)
 		attendance.insert()

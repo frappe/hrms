@@ -6,7 +6,7 @@
  "document_type": "Setup",
  "engine": "InnoDB",
  "field_order": [
-  "details_tab",
+  "employee_and_payroll_tab",
   "section_break_6",
   "employee",
   "employee_name",
@@ -29,9 +29,9 @@
   "salary_structure",
   "payroll_entry",
   "mode_of_payment",
-  "column_break1",
+  "column_break_wyhp",
   "salary_slip_based_on_timesheet",
-  "section_break_wrwj",
+  "section_break_gerh",
   "deduct_tax_for_unclaimed_employee_benefits",
   "deduct_tax_for_unsubmitted_tax_exemption_proof",
   "payment_days_tab",
@@ -41,15 +41,16 @@
   "column_break_geio",
   "absent_days",
   "payment_days",
-  "earning_deduction",
+  "earnings_and_deductions_tab",
+  "timesheets_section",
   "timesheets",
   "column_break_ghjr",
   "total_working_hours",
   "hour_rate",
   "base_hour_rate",
-  "section_break_gerh",
+  "earning_deduction",
   "earnings",
-  "column_break_ywkr",
+  "column_break_k1jz",
   "deductions",
   "totals",
   "gross_pay",
@@ -69,18 +70,32 @@
   "net_pay_info",
   "net_pay",
   "base_net_pay",
+  "rounded_total",
+  "base_rounded_total",
   "column_break_dqnd",
   "year_to_date",
   "base_year_to_date",
   "month_to_date",
   "base_month_to_date",
-  "column_break_53",
-  "rounded_total",
-  "base_rounded_total",
   "section_break_55",
   "total_in_words",
   "column_break_69",
   "base_total_in_words",
+  "income_tax_calculation_breakup_section",
+  "ctc",
+  "income_from_other_sources",
+  "total_earnings",
+  "column_break_0rsw",
+  "non_taxable_earnings",
+  "standard_tax_exemption_amount",
+  "tax_exemption_declaration",
+  "deductions_before_tax_calculation",
+  "annual_taxable_amount",
+  "column_break_35wb",
+  "income_tax_deducted_till_date",
+  "current_month_income_tax",
+  "future_income_tax_deductions",
+  "total_income_tax",
   "section_break_75",
   "journal_entry",
   "amended_from",
@@ -155,12 +170,6 @@
    "oldfieldtype": "Link",
    "options": "Branch",
    "read_only": 1
-  },
-  {
-   "fieldname": "column_break1",
-   "fieldtype": "Column Break",
-   "oldfieldtype": "Column Break",
-   "width": "50%"
   },
   {
    "fieldname": "status",
@@ -306,8 +315,7 @@
   },
   {
    "fieldname": "earning_deduction",
-   "fieldtype": "Tab Break",
-   "label": "Earnings & Deductions",
+   "fieldtype": "Section Break",
    "oldfieldtype": "Section Break"
   },
   {
@@ -329,6 +337,7 @@
   {
    "fieldname": "totals",
    "fieldtype": "Section Break",
+   "label": "Totals",
    "oldfieldtype": "Section Break"
   },
   {
@@ -345,7 +354,7 @@
   {
    "depends_on": "total_loan_repayment",
    "fieldname": "loan_repayment",
-   "fieldtype": "Tab Break",
+   "fieldtype": "Section Break",
    "label": "Loan Repayment"
   },
   {
@@ -399,10 +408,6 @@
    "label": "Net Pay",
    "options": "currency",
    "read_only": 1
-  },
-  {
-   "fieldname": "column_break_53",
-   "fieldtype": "Column Break"
   },
   {
    "bold": 1,
@@ -593,14 +598,8 @@
    "read_only": 1
   },
   {
-   "fieldname": "details_tab",
-   "fieldtype": "Tab Break",
-   "label": "Details"
-  },
-  {
    "fieldname": "section_break_6",
-   "fieldtype": "Section Break",
-   "label": "Employee Details"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "section_break_gsts",
@@ -619,15 +618,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "column_break_ywkr",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "payment_days_tab",
-   "fieldtype": "Tab Break",
-   "label": "Payment Days"
-  },
-  {
    "fieldname": "column_break_geio",
    "fieldtype": "Column Break"
   },
@@ -640,19 +630,130 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "section_break_wrwj",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "column_break_ghjr",
    "fieldtype": "Column Break"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "eval:doc.ctc",
+   "fieldname": "income_tax_calculation_breakup_section",
+   "fieldtype": "Tab Break",
+   "label": "Income Tax Breakup"
+  },
+  {
+   "fieldname": "ctc",
+   "fieldtype": "Currency",
+   "label": "CTC",
+   "read_only": 1
+  },
+  {
+   "fieldname": "income_from_other_sources",
+   "fieldtype": "Currency",
+   "label": "Income from Other Sources",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_earnings",
+   "fieldtype": "Currency",
+   "label": "Total Earnings",
+   "read_only": 1
+  },
+  {
+   "fieldname": "non_taxable_earnings",
+   "fieldtype": "Currency",
+   "label": "Non Taxable Earnings",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_0rsw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "deductions_before_tax_calculation",
+   "fieldtype": "Currency",
+   "label": "Deductions before tax calculation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "tax_exemption_declaration",
+   "fieldtype": "Currency",
+   "label": "Tax Exemption Declaration",
+   "read_only": 1
+  },
+  {
+   "fieldname": "standard_tax_exemption_amount",
+   "fieldtype": "Currency",
+   "label": "Standard Tax Exemption Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "annual_taxable_amount",
+   "fieldtype": "Currency",
+   "label": "Annual Taxable Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "income_tax_deducted_till_date",
+   "fieldtype": "Currency",
+   "label": "Income Tax Deducted Till Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "employee_and_payroll_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "column_break_35wb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "future_income_tax_deductions",
+   "fieldtype": "Currency",
+   "label": "Future Income Tax",
+   "read_only": 1
+  },
+  {
+   "fieldname": "earnings_and_deductions_tab",
+   "fieldtype": "Tab Break",
+   "label": "Earnings & Deductions"
+  },
+  {
+   "fieldname": "current_month_income_tax",
+   "fieldtype": "Currency",
+   "label": "Current Month Income Tax",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_income_tax",
+   "fieldtype": "Currency",
+   "label": "Total Income Tax",
+   "read_only": 1
+  },
+  {
+   "fieldname": "payment_days_tab",
+   "fieldtype": "Tab Break",
+   "label": "Payment Days"
+  },
+  {
+   "fieldname": "column_break_k1jz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_wyhp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.salary_slip_based_on_timesheet",
+   "fieldname": "timesheets_section",
+   "fieldtype": "Section Break"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-05 15:10:58.042266",
+ "modified": "2023-02-22 18:23:49.783449",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
