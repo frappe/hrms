@@ -98,11 +98,8 @@ frappe.ui.form.on("Employee Attendance Tool", {
 		const $wrapper = frm.get_field("marked_attendance_html").$wrapper;
 		const summary_wrapper = $(`<div class="summary_wrapper">`).appendTo($wrapper);
 
-		// format data as [[ "employee1: employee_name1", "employee2: employee_name2", ...]]
 		const data = marked_employees.map((entry) => {
-			return entry.map((employee) => {
-				return employee ? `${employee.employee} : ${employee.employee_name}` : "";
-			});
+			return [`${entry.employee} : ${entry.employee_name}`, entry.status];
 		});
 
 		frm.events.render_datatable(frm, data, summary_wrapper);
@@ -117,7 +114,7 @@ frappe.ui.form.on("Employee Attendance Tool", {
 				data: data,
 				dynamicRowHeight: true,
 				inlineFilters: true,
-				layout: "fluid",
+				layout: "fixed",
 				cellHeight: 35,
 				noDataMessage: __("No Data"),
 				disableReorderColumn: true,
@@ -132,25 +129,40 @@ frappe.ui.form.on("Employee Attendance Tool", {
 	},
 
 	get_columns_for_marked_attendance_table(frm) {
-		const status_map = [
-			{ "status": "Present", "indicator": "green" },
-			{ "status": "Absent", "indicator": "red" },
-			{ "status": "Half Day", "indicator": "orange" },
-			{ "status": "Work From Home", "indicator": "green" },
-		];
-
-		return status_map.map((entry) => {
-			return {
-				name: entry.status,
-				id: entry.status,
-				content: `<span class="indicator ${entry.indicator}">${__(entry.status)}</span>`,
+		return [
+			{
+				name: "employee",
+				id: "employee",
+				content: `${__("Employee")}`,
 				editable: false,
 				sortable: false,
 				focusable: false,
 				dropdown: false,
 				align: "left",
-			}
-		});
+				width: 350,
+			},
+			{
+				name: "status",
+				id: "status",
+				content: `${__("Status")}`,
+				editable: false,
+				sortable: false,
+				focusable: false,
+				dropdown: false,
+				align: "left",
+				width: 150,
+				format: (value) => {
+					if (value == "Present" || value == "Work From Home")
+						return `<span style="color:green">${__(value)}</span>`;
+					else if (value == "Absent")
+						return `<span style="color:red">${__(value)}</span>`;
+					else if (value == "Half Day")
+						return `<span style="color:orange">${__(value)}</span>`;
+					else if (value == "Leave")
+						return `<span style="color:#318AD8">${__(value)}</span>`;
+				}
+			},
+		]
 	},
 
 	set_primary_action(frm) {
