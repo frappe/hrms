@@ -4,7 +4,6 @@
 
 import datetime
 import json
-from itertools import zip_longest
 
 import frappe
 from frappe.model.document import Document
@@ -39,9 +38,8 @@ def get_employees(
 	)
 
 	unmarked_attendance = _get_unmarked_attendance(employee_list, attendance_list)
-	marked_attendance = _get_marked_attendance(attendance_list)
 
-	return {"marked": marked_attendance, "unmarked": unmarked_attendance}
+	return {"marked": attendance_list, "unmarked": unmarked_attendance}
 
 
 def _get_unmarked_attendance(employee_list: list[dict], attendance_list: list[dict]) -> list[dict]:
@@ -53,29 +51,6 @@ def _get_unmarked_attendance(employee_list: list[dict], attendance_list: list[di
 			unmarked_attendance.append(entry)
 
 	return unmarked_attendance
-
-
-def _get_marked_attendance(attendance_list: list[dict]) -> list:
-	marked = {
-		"Present": [],
-		"Absent": [],
-		"Half Day": [],
-		"Work From Home": [],
-	}
-
-	for entry in attendance_list:
-		marked.get(entry.status).append(
-			{"employee": entry.employee, "employee_name": entry.employee_name}
-		)
-
-	marked_attendance = []
-	if any(marked.values()):
-		# transpose data to fill table with columns as per attendance status
-		transposed_data = zip_longest(*marked.values(), fillvalue="")
-		# zip will give list of tuples, convert to list of lists
-		marked_attendance = [list(entry) for entry in transposed_data]
-
-	return marked_attendance
 
 
 @frappe.whitelist()

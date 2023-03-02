@@ -32,13 +32,13 @@ class TestEmployeeAttendanceTool(FrappeTestCase):
 
 		employees = get_employees(date, company="_Test Company")
 
-		marked_employees = employees["marked"][0]
+		marked_employees = employees["marked"]
 		unmarked_employees = [entry.employee for entry in employees["unmarked"]]
 
-		# present
-		self.assertEqual(marked_employees[0].get("employee"), self.employee1)
 		# absent
-		self.assertEqual(marked_employees[1].get("employee"), self.employee2)
+		self.assertEqual(marked_employees[0].get("employee"), self.employee2)
+		# present
+		self.assertEqual(marked_employees[1].get("employee"), self.employee1)
 		# unmarked
 		self.assertIn(self.employee3, unmarked_employees)
 		# employee from a different company
