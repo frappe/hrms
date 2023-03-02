@@ -456,9 +456,7 @@ class SalarySlip(TransactionBase):
 
 	def get_payment_days(self, joining_date, relieving_date, include_holidays_in_total_working_days):
 		if not joining_date:
-			joining_date, relieving_date = frappe.get_cached_value(
-				"Employee", self.employee, ["date_of_joining", "relieving_date"]
-			)
+			joining_date, relieving_date = self.get_joining_and_relieving_dates()
 
 		start_date = getdate(self.start_date)
 		if joining_date:
@@ -936,7 +934,6 @@ class SalarySlip(TransactionBase):
 				# update statitical component amount in reference data based on payment days
 				# since row for statistical component is not added to salary slip
 				if struct_row.depends_on_payment_days:
-					joining_date, relieving_date = self.get_joining_and_relieving_dates()
 					payment_days_amount = (
 						flt(amount) * flt(self.payment_days) / cint(self.total_working_days)
 						if self.total_working_days
@@ -1475,6 +1472,9 @@ class SalarySlip(TransactionBase):
 	):
 		future_recurring_additional_amount = 0
 
+		if not relieving_date:
+			joining_date, relieving_date = self.get_joining_and_relieving_dates()
+
 		future_recurring_period = self.get_future_recurring_period(
 			additional_salary, relieving_date=relieving_date
 		)
@@ -1615,15 +1615,12 @@ class SalarySlip(TransactionBase):
 				total += amount
 		return total
 
-	def get_joining_and_relieving_dates(self):
+	def get_joining_and_relieving_dates(self, raise_exception=True):
 		joining_date, relieving_date = frappe.get_cached_value(
 			"Employee", self.employee, ["date_of_joining", "relieving_date"]
 		)
 
-		if not relieving_date:
-			relieving_date = getdate(self.end_date)
-
-		if not joining_date:
+		if not joining_date and raise_exception:
 			frappe.throw(
 				_("Please set the Date Of Joining for employee {0}").format(frappe.bold(self.employee_name))
 			)

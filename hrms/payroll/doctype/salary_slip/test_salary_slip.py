@@ -999,7 +999,7 @@ class TestSalarySlip(FrappeTestCase):
 
 		tax_paid = get_tax_paid_in_period(employee)
 
-		annual_tax = 31391.0
+		annual_tax = 32315.0
 		self.assertEqual(tax_paid, annual_tax)
 
 		frappe.db.rollback()
