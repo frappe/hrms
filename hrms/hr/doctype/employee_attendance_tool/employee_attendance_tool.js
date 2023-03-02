@@ -49,12 +49,15 @@ frappe.ui.form.on("Employee Attendance Tool", {
 				company: frm.doc.company
 			}
 		}).then((r) => {
+			frm.employees = r.message["unmarked"];
+
 			if (r.message["unmarked"].length > 0) {
 				unhide_field("unmarked_attendance_section");
-				frm.employees = r.message["unmarked"];
+				unhide_field("attendance_details_section");
 				frm.events.show_unmarked_employees(frm, r.message["unmarked"]);
 			} else {
 				hide_field("unmarked_attendance_section");
+				hide_field("attendance_details_section");
 			}
 
 			if (r.message["marked"].length > 0) {
@@ -168,6 +171,15 @@ frappe.ui.form.on("Employee Attendance Tool", {
 	set_primary_action(frm) {
 		frm.disable_save();
 		frm.page.set_primary_action(__("Mark Attendance"), () => {
+			if (frm.employees.length === 0) {
+				frappe.msgprint({
+					message: __("Attendance for all the employees under this criteria has been marked already."),
+					title: __("Attendance Marked"),
+					indicator: "green"
+				});
+				return;
+			}
+
 			if (frm.employees_multicheck.get_checked_options().length === 0) {
 				frappe.throw({
 					message: __("Please select the employees you want to mark attendance for."),
