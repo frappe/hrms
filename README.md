@@ -9,6 +9,12 @@ Open Source, modern, and easy-to-use HR and Payroll Software for all organizatio
 
 [https://frappehr.com](https://frappehr.com)
 
+<div align="center" style="max-height: 40px;">
+	<a href="https://frappecloud.com/hrms/signup">
+		<img src=".github/try-on-f-cloud-button.svg" height="40">
+	</a>
+</div>
+
 </div>
 
 ## Introduction
@@ -35,8 +41,10 @@ Frappe HR has everything you need to drive excellence within the company. It's a
 
 ## Installation
 
+### Manual Installation
+
 1. [Install bench](https://github.com/frappe/bench).
-2. [Install ERPNext](https://github.com/frappe/bench#installation).
+2. [Install ERPNext](https://github.com/frappe/erpnext#installation).
 3. Once ERPNext is installed, add the hrms app to your bench by running
 
 	```sh
