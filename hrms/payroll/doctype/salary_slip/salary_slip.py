@@ -515,6 +515,12 @@ class SalarySlip(TransactionBase):
 		lwp = 0
 		absent = 0
 
+		joining_date, relieving_date = self.get_joining_and_relieving_dates()
+
+		end_date = self.end_date
+		if relieving_date:
+			end_date = relieving_date
+
 		daily_wages_fraction_for_half_day = (
 			flt(frappe.db.get_value("Payroll Settings", None, "daily_wages_fraction_for_half_day")) or 0.5
 		)
@@ -538,7 +544,7 @@ class SalarySlip(TransactionBase):
 				(attendance.status.isin(["Absent", "Half Day", "On Leave"]))
 				& (attendance.employee == self.employee)
 				& (attendance.docstatus == 1)
-				& (attendance.attendance_date.between(self.start_date, self.end_date))
+				& (attendance.attendance_date.between(self.start_date, end_date))
 			)
 		).run(as_dict=1)
 
