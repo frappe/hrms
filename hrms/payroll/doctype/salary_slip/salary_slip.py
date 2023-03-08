@@ -68,6 +68,20 @@ class SalarySlip(TransactionBase):
 	def autoname(self):
 		self.name = make_autoname(self.series)
 
+	@property
+	def joining_date(self):
+		if not hasattr(self, "__joining_date"):
+			self.__joining_date = frappe.get_cached_value("Employee", self.employee, "date_of_joining")
+
+		return self.__joining_date
+
+	@property
+	def relieving_date(self):
+		if not hasattr(self, "__relieving_date"):
+			self.__relieving_date = frappe.get_cached_value("Employee", self.employee, "relieving_date")
+
+		return self.__relieving_date
+
 	def validate(self):
 		self.status = self.get_status()
 		validate_active_employee(self.employee)
@@ -166,18 +180,15 @@ class SalarySlip(TransactionBase):
 			status = "Cancelled"
 		return status
 
-	def validate_dates(self, joining_date=None, relieving_date=None):
+	def validate_dates(
+		self,
+	):
 		self.validate_from_to_dates("start_date", "end_date")
 
-		if not joining_date:
-			joining_date, relieving_date = frappe.get_cached_value(
-				"Employee", self.employee, ("date_of_joining", "relieving_date")
-			)
-
-		if date_diff(self.end_date, joining_date) < 0:
+		if date_diff(self.end_date, self.joining_date) < 0:
 			frappe.throw(_("Cannot create Salary Slip for Employee joining after Payroll Period"))
 
-		if relieving_date and date_diff(relieving_date, self.start_date) < 0:
+		if self.relieving_date and date_diff(self.relieving_date, self.start_date) < 0:
 			frappe.throw(_("Cannot create Salary Slip for Employee who has left before Payroll Period"))
 
 	def is_rounding_total_disabled(self):
@@ -233,15 +244,12 @@ class SalarySlip(TransactionBase):
 				self.get_date_details()
 
 			self.set_payroll_period()
-			joining_date, relieving_date = frappe.get_cached_value(
-				"Employee", self.employee, ("date_of_joining", "relieving_date")
-			)
 
-			self.validate_dates(joining_date, relieving_date)
+			self.validate_dates()
 
 			# getin leave details
-			self.get_working_days_details(joining_date, relieving_date)
-			struct = self.check_sal_struct(joining_date, relieving_date)
+			self.get_working_days_details()
+			struct = self.check_sal_struct()
 
 			if struct:
 				self._salary_structure_doc = frappe.get_doc("Salary Structure", struct)
@@ -273,7 +281,7 @@ class SalarySlip(TransactionBase):
 			for data in timesheets:
 				self.append("timesheets", {"time_sheet": data.name, "working_hours": data.total_hours})
 
-	def check_sal_struct(self, joining_date, relieving_date):
+	def check_sal_struct(self):
 		ss = frappe.qb.DocType("Salary Structure")
 		ssa = frappe.qb.DocType("Salary Structure Assignment")
 
@@ -290,7 +298,7 @@ class SalarySlip(TransactionBase):
 				& (
 					(ssa.from_date <= self.start_date)
 					| (ssa.from_date <= self.end_date)
-					| (ssa.from_date <= joining_date)
+					| (ssa.from_date <= self.joining_date)
 				)
 			)
 			.orderby(ssa.from_date, order=Order.desc)
@@ -331,9 +339,7 @@ class SalarySlip(TransactionBase):
 
 		make_salary_slip(self._salary_structure_doc.name, self)
 
-	def get_working_days_details(
-		self, joining_date=None, relieving_date=None, lwp=None, for_preview=0
-	):
+	def get_working_days_details(self, lwp=None, for_preview=0):
 		payroll_based_on = frappe.db.get_value("Payroll Settings", None, "payroll_based_on")
 		include_holidays_in_total_working_days = frappe.db.get_single_value(
 			"Payroll Settings", "include_holidays_in_total_working_days"
@@ -383,9 +389,7 @@ class SalarySlip(TransactionBase):
 		self.leave_without_pay = lwp
 		self.total_working_days = working_days
 
-		payment_days = self.get_payment_days(
-			joining_date, relieving_date, include_holidays_in_total_working_days
-		)
+		payment_days = self.get_payment_days(include_holidays_in_total_working_days)
 
 		if flt(payment_days) > flt(lwp):
 			self.payment_days = flt(payment_days) - flt(lwp)
@@ -406,27 +410,29 @@ class SalarySlip(TransactionBase):
 
 	def get_unmarked_days(self, include_holidays_in_total_working_days):
 		unmarked_days = self.total_working_days
-		joining_date, relieving_date = frappe.get_cached_value(
-			"Employee", self.employee, ["date_of_joining", "relieving_date"]
-		)
+
 		start_date = self.start_date
 		end_date = self.end_date
 
-		if joining_date and (getdate(self.start_date) < joining_date <= getdate(self.end_date)):
-			start_date = joining_date
+		if self.joining_date and (
+			getdate(self.start_date) < self.joining_date <= getdate(self.end_date)
+		):
+			start_date = self.joining_date
 			unmarked_days = self.get_unmarked_days_based_on_doj_or_relieving(
 				unmarked_days,
 				include_holidays_in_total_working_days,
 				self.start_date,
-				add_days(joining_date, -1),
+				add_days(self.joining_date, -1),
 			)
 
-		if relieving_date and (getdate(self.start_date) <= relieving_date < getdate(self.end_date)):
-			end_date = relieving_date
+		if self.relieving_date and (
+			getdate(self.start_date) <= self.relieving_date < getdate(self.end_date)
+		):
+			end_date = self.relieving_date
 			unmarked_days = self.get_unmarked_days_based_on_doj_or_relieving(
 				unmarked_days,
 				include_holidays_in_total_working_days,
-				add_days(relieving_date, 1),
+				add_days(self.relieving_date, 1),
 				self.end_date,
 			)
 
@@ -463,24 +469,20 @@ class SalarySlip(TransactionBase):
 
 		return unmarked_days
 
-	def get_payment_days(self, joining_date, relieving_date, include_holidays_in_total_working_days):
-		if not joining_date:
-			joining_date, relieving_date = self.get_joining_and_relieving_dates()
-
+	def get_payment_days(self, include_holidays_in_total_working_days):
 		start_date = getdate(self.start_date)
-		if joining_date:
-			if getdate(self.start_date) <= joining_date <= getdate(self.end_date):
-				start_date = joining_date
-			elif joining_date > getdate(self.end_date):
+		if self.joining_date:
+			if getdate(self.start_date) <= self.joining_date <= getdate(self.end_date):
+				start_date = self.joining_date
+			elif self.joining_date > getdate(self.end_date):
 				return
 
 		end_date = getdate(self.end_date)
-		if relieving_date:
-			employee_status = frappe.get_cached_value("Employee", self.employee, "status")
-			if getdate(self.start_date) <= relieving_date <= getdate(self.end_date):
-				end_date = relieving_date
-			elif relieving_date < getdate(self.start_date) and employee_status != "Left":
-				frappe.throw(_("Employee relieved on {0} must be set as 'Left'").format(relieving_date))
+		if self.relieving_date:
+			if getdate(self.start_date) <= self.relieving_date <= getdate(self.end_date):
+				end_date = self.relieving_date
+			elif self.relieving_date < getdate(self.start_date):
+				frappe.throw(_("Employee relieved on {0} must be set as 'Left'").format(self.relieving_date))
 
 		payment_days = date_diff(end_date, start_date) + 1
 
@@ -1213,10 +1215,7 @@ class SalarySlip(TransactionBase):
 			data[component_row.abbr] = component_row.amount
 
 	def update_component_amount_based_on_payment_days(self, component_row):
-		joining_date, relieving_date = self.get_joining_and_relieving_dates()
-		component_row.amount = self.get_amount_based_on_payment_days(
-			component_row, joining_date, relieving_date
-		)[0]
+		component_row.amount = self.get_amount_based_on_payment_days(component_row)[0]
 
 		# remove 0 valued components that have been updated later
 		if component_row.amount == 0:
@@ -1401,7 +1400,6 @@ class SalarySlip(TransactionBase):
 		return total_tax_paid + tax_deducted_till_date
 
 	def get_taxable_earnings(self, allow_tax_exemption=False, based_on_payment_days=0):
-		joining_date, relieving_date = self.get_joining_and_relieving_dates()
 
 		taxable_earnings = 0
 		additional_income = 0
@@ -1411,9 +1409,7 @@ class SalarySlip(TransactionBase):
 
 		for earning in self.earnings:
 			if based_on_payment_days:
-				amount, additional_amount = self.get_amount_based_on_payment_days(
-					earning, joining_date, relieving_date
-				)
+				amount, additional_amount = self.get_amount_based_on_payment_days(earning)
 			else:
 				if earning.additional_amount:
 					amount, additional_amount = earning.amount, earning.additional_amount
@@ -1430,7 +1426,7 @@ class SalarySlip(TransactionBase):
 					# Get additional amount based on future recurring additional salary
 					if additional_amount and earning.is_recurring_additional_salary:
 						additional_income += self.get_future_recurring_additional_amount(
-							earning.additional_salary, earning.additional_amount, relieving_date=relieving_date
+							earning.additional_salary, earning.additional_amount
 						)  # Used earning.additional_amount to consider the amount for the full month
 
 					if earning.deduct_full_tax_on_selected_payroll_date:
@@ -1441,9 +1437,7 @@ class SalarySlip(TransactionBase):
 				if ded.exempted_from_income_tax:
 					amount, additional_amount = ded.amount, ded.additional_amount
 					if based_on_payment_days:
-						amount, additional_amount = self.get_amount_based_on_payment_days(
-							ded, joining_date, relieving_date
-						)
+						amount, additional_amount = self.get_amount_based_on_payment_days(ded)
 
 					taxable_earnings -= flt(amount - additional_amount)
 					additional_income -= additional_amount
@@ -1451,7 +1445,7 @@ class SalarySlip(TransactionBase):
 
 					if additional_amount and ded.is_recurring_additional_salary:
 						additional_income -= self.get_future_recurring_additional_amount(
-							ded.additional_salary, ded.additional_amount, relieving_date=relieving_date
+							ded.additional_salary, ded.additional_amount
 						)  # Used ded.additional_amount to consider the amount for the full month
 
 		return frappe._dict(
@@ -1464,11 +1458,11 @@ class SalarySlip(TransactionBase):
 			}
 		)
 
-	def get_future_recurring_period(self, additional_salary, relieving_date=None):
+	def get_future_recurring_period(self, additional_salary):
 		to_date = frappe.db.get_value("Additional Salary", additional_salary, "to_date")
 
-		if relieving_date:
-			to_date = relieving_date
+		if self.relieving_date:
+			to_date = self.relieving_date
 
 		# future month count excluding current
 		from_date, to_date = getdate(self.start_date), getdate(to_date)
@@ -1484,17 +1478,10 @@ class SalarySlip(TransactionBase):
 
 		return future_recurring_period
 
-	def get_future_recurring_additional_amount(
-		self, additional_salary, monthly_additional_amount, relieving_date=None
-	):
+	def get_future_recurring_additional_amount(self, additional_salary, monthly_additional_amount):
 		future_recurring_additional_amount = 0
 
-		if not relieving_date:
-			joining_date, relieving_date = self.get_joining_and_relieving_dates()
-
-		future_recurring_period = self.get_future_recurring_period(
-			additional_salary, relieving_date=relieving_date
-		)
+		future_recurring_period = self.get_future_recurring_period(additional_salary)
 
 		if future_recurring_period > 0:
 			future_recurring_additional_amount = (
@@ -1502,7 +1489,7 @@ class SalarySlip(TransactionBase):
 			)  # Used earning.additional_amount to consider the amount for the full month
 		return future_recurring_additional_amount
 
-	def get_amount_based_on_payment_days(self, row, joining_date, relieving_date):
+	def get_amount_based_on_payment_days(self, row):
 		amount, additional_amount = row.amount, row.additional_amount
 		timesheet_component = frappe.db.get_value(
 			"Salary Structure", self.salary_structure, "salary_component"
@@ -1517,8 +1504,8 @@ class SalarySlip(TransactionBase):
 			)  # to identify overwritten additional salary
 			and (
 				row.salary_component != timesheet_component
-				or getdate(self.start_date) < joining_date
-				or (relieving_date and getdate(self.end_date) > relieving_date)
+				or getdate(self.start_date) < self.joining_date
+				or (self.relieving_date and getdate(self.end_date) > self.relieving_date)
 			)
 		):
 			additional_amount = flt(
@@ -1618,15 +1605,11 @@ class SalarySlip(TransactionBase):
 		)
 
 	def get_component_totals(self, component_type, depends_on_payment_days=0):
-		joining_date, relieving_date = frappe.get_cached_value(
-			"Employee", self.employee, ["date_of_joining", "relieving_date"]
-		)
-
 		total = 0.0
 		for d in self.get(component_type):
 			if not d.do_not_include_in_total:
 				if depends_on_payment_days:
-					amount = self.get_amount_based_on_payment_days(d, joining_date, relieving_date)[0]
+					amount = self.get_amount_based_on_payment_days(d)[0]
 				else:
 					amount = flt(d.amount, d.precision("amount"))
 				total += amount
