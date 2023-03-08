@@ -141,37 +141,8 @@ class TestShiftType(FrappeTestCase):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 		shift_type = setup_shift_type(
 			shift_type="Half Day + Absent Test",
-			working_hours_threshold_for_half_day=1,
-			working_hours_threshold_for_absent=2,
-		)
-		date = getdate()
-		make_shift_assignment(shift_type.name, employee, date)
-
-		timestamp = datetime.combine(date, get_time("08:00:00"))
-		log_in = make_checkin(employee, timestamp)
-		self.assertEqual(log_in.shift, shift_type.name)
-
-		timestamp = datetime.combine(date, get_time("08:45:00"))
-		log_out = make_checkin(employee, timestamp)
-		self.assertEqual(log_out.shift, shift_type.name)
-
-		shift_type.process_auto_attendance()
-
-		attendance = frappe.db.get_value(
-			"Attendance", {"shift": shift_type.name}, ["status", "working_hours"], as_dict=True
-		)
-		self.assertEqual(attendance.status, "Half Day")
-		self.assertEqual(attendance.working_hours, 0.75)
-
-	def test_working_hours_threshold_for_absent_and_half_day_2(self):
-		# considers absent over half day
-		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
-
-		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
-		shift_type = setup_shift_type(
-			shift_type="Half Day + Absent Test",
-			working_hours_threshold_for_half_day=1,
-			working_hours_threshold_for_absent=2,
+			working_hours_threshold_for_half_day=2,
+			working_hours_threshold_for_absent=1,
 		)
 		date = getdate()
 		make_shift_assignment(shift_type.name, employee, date)
@@ -181,6 +152,35 @@ class TestShiftType(FrappeTestCase):
 		self.assertEqual(log_in.shift, shift_type.name)
 
 		timestamp = datetime.combine(date, get_time("09:30:00"))
+		log_out = make_checkin(employee, timestamp)
+		self.assertEqual(log_out.shift, shift_type.name)
+
+		shift_type.process_auto_attendance()
+
+		attendance = frappe.db.get_value(
+			"Attendance", {"shift": shift_type.name}, ["status", "working_hours"], as_dict=True
+		)
+		self.assertEqual(attendance.status, "Half Day")
+		self.assertEqual(attendance.working_hours, 1.5)
+
+	def test_working_hours_threshold_for_absent_and_half_day_2(self):
+		# considers absent over half day
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+
+		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
+		shift_type = setup_shift_type(
+			shift_type="Half Day + Absent Test",
+			working_hours_threshold_for_half_day=2,
+			working_hours_threshold_for_absent=1,
+		)
+		date = getdate()
+		make_shift_assignment(shift_type.name, employee, date)
+
+		timestamp = datetime.combine(date, get_time("08:00:00"))
+		log_in = make_checkin(employee, timestamp)
+		self.assertEqual(log_in.shift, shift_type.name)
+
+		timestamp = datetime.combine(date, get_time("08:45:00"))
 		log_out = make_checkin(employee, timestamp)
 		self.assertEqual(log_out.shift, shift_type.name)
 
