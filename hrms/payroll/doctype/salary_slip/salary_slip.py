@@ -349,7 +349,9 @@ class SalarySlip(TransactionBase):
 			return
 
 		holidays = self.get_holidays_for_employee(self.start_date, self.end_date)
-		working_days_list = [add_days(self.start_date, day) for day in range(0, working_days)]
+		working_days_list = [
+			add_days(getdate(self.start_date), days=day) for day in range(0, working_days)
+		]
 
 		if not cint(include_holidays_in_total_working_days):
 			working_days_list = [i for i in working_days_list if i not in holidays]
@@ -504,7 +506,7 @@ class SalarySlip(TransactionBase):
 			if relieving_date and d > relieving_date:
 				continue
 
-			leave = get_lwp_or_ppl_for_date(str(d), self.employee, holidays)
+			leave = get_lwp_or_ppl_for_date(formatdate(d), self.employee, holidays)
 
 			if leave:
 				equivalent_lwp_count = 0
