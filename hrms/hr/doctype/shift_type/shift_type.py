@@ -96,15 +96,17 @@ class ShiftType(Document):
 			early_exit = True
 
 		if (
-			self.working_hours_threshold_for_half_day
-			and total_working_hours < self.working_hours_threshold_for_half_day
-		):
-			return "Half Day", total_working_hours, late_entry, early_exit, in_time, out_time
-		if (
 			self.working_hours_threshold_for_absent
 			and total_working_hours < self.working_hours_threshold_for_absent
 		):
 			return "Absent", total_working_hours, late_entry, early_exit, in_time, out_time
+
+		if (
+			self.working_hours_threshold_for_half_day
+			and total_working_hours < self.working_hours_threshold_for_half_day
+		):
+			return "Half Day", total_working_hours, late_entry, early_exit, in_time, out_time
+
 		return "Present", total_working_hours, late_entry, early_exit, in_time, out_time
 
 	def mark_absent_for_dates_with_no_attendance(self, employee):
