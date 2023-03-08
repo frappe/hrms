@@ -502,12 +502,10 @@ class SalarySlip(TransactionBase):
 		)
 
 		for d in working_days_list:
-			# date = add_days(cstr(getdate(self.start_date)), d)
 			if relieving_date and d > relieving_date:
 				continue
 
-			leave = get_lwp_or_ppl_for_date(formatdate(d), self.employee, holidays)
-
+			leave = get_lwp_or_ppl_for_date(str(d), self.employee, holidays)
 			if leave:
 				equivalent_lwp_count = 0
 				is_half_day_leave = cint(leave[0].is_half_day)
