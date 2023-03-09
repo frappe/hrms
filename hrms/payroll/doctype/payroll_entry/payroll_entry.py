@@ -690,7 +690,6 @@ class PayrollEntry(Document):
 
 		if self.employee_based_payroll_payable_entries:
 			for employee, employee_details in self.employee_based_payroll_payable_entries.items():
-				je_payment_amount = employee_details["earnings"] - employee_details["deduction"]
 				je_payment_amount = employee_details.get("earnings") - (
 					employee_details.get("deductions") or 0
 				)
