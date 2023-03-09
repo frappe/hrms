@@ -3,7 +3,7 @@
 
 
 import math
-from datetime import date, timedelta
+from datetime import date
 
 import frappe
 from frappe import _, msgprint
@@ -2127,14 +2127,6 @@ def set_missing_values(time_sheet, target):
 	target.posting_date = doc.modified
 	target.total_working_hours = doc.total_hours
 	target.append("timesheets", {"time_sheet": doc.name, "working_hours": doc.total_hours})
-
-
-def date_range(start=None, end=None):
-	if start and end:
-		delta = end - start  # as timedelta
-		days = [str(start + timedelta(days=i)) for i in range(delta.days + 1)]
-		return days
-	return []
 
 
 def throw_error_message(row, error, title, description=None):
