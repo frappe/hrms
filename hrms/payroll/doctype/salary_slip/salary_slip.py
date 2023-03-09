@@ -466,7 +466,7 @@ class SalarySlip(TransactionBase):
 				return
 
 		end_date = getdate(self.end_date)
-		employee_status = froggy.get_cached_value("Employee", self.employee, "status")
+		employee_status = frappe.get_cached_value("Employee", self.employee, "status")
 		if relieving_date:
 			if getdate(self.start_date) <= relieving_date <= getdate(self.end_date):
 				end_date = relieving_date
