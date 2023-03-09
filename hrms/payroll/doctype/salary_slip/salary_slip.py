@@ -466,8 +466,8 @@ class SalarySlip(TransactionBase):
 				return
 
 		end_date = getdate(self.end_date)
-		employee_status = frappe.get_cached_value("Employee", self.employee, "status")
 		if relieving_date:
+			employee_status = frappe.get_cached_value("Employee", self.employee, "status")
 			if getdate(self.start_date) <= relieving_date <= getdate(self.end_date):
 				end_date = relieving_date
 			elif relieving_date < getdate(self.start_date) and employee_status != "Left":
