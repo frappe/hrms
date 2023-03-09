@@ -470,7 +470,7 @@ class SalarySlip(TransactionBase):
 		if relieving_date:
 			if getdate(self.start_date) <= relieving_date <= getdate(self.end_date):
 				end_date = relieving_date
-			elif relieving_date < getdate(self.start_date) and employee_status != 'Left':
+			elif relieving_date < getdate(self.start_date) and employee_status != "Left":
 				frappe.throw(_("Employee relieved on {0} must be set as 'Left'").format(relieving_date))
 
 		payment_days = date_diff(end_date, start_date) + 1
