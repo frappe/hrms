@@ -97,6 +97,9 @@ class TestLeaveApplication(unittest.TestCase):
 		from_date = get_year_start(getdate())
 		to_date = get_year_ending(getdate())
 		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
+		list_without_weekly_offs = make_holiday_list(
+			"Holiday List w/o Weekly Offs", from_date=from_date, to_date=to_date, add_weekly_offs=False
+		)
 
 		if not frappe.db.exists("Leave Type", "_Test Leave Type"):
 			frappe.get_doc(
@@ -922,8 +925,12 @@ class TestLeaveApplication(unittest.TestCase):
 		self.assertEqual(leave_allocation["leaves_pending_approval"], 1)
 		self.assertEqual(leave_allocation["remaining_leaves"], 26)
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@set_holiday_list("Holiday List w/o Weekly Offs", "_Test Company")
 	def test_leave_details_with_expired_cf_leaves(self):
+		"""Tests leave details:
+		Case 1: All leaves available before cf leave expiry
+		Case 2: Remaining Leaves after cf leave expiry
+		"""
 		employee = get_employee()
 		leave_type = create_leave_type(
 			leave_type_name="_Test_CF_leave_expiry",
@@ -936,11 +943,11 @@ class TestLeaveApplication(unittest.TestCase):
 			"Leave Ledger Entry", {"transaction_name": leave_alloc.name, "is_carry_forward": 1}, "to_date"
 		)
 
-		# all leaves available before cf leave expiry
+		# case 1: all leaves available before cf leave expiry
 		leave_details = get_leave_details(employee.name, add_days(cf_expiry, -1))
 		self.assertEqual(leave_details["leave_allocation"][leave_type.name]["remaining_leaves"], 30.0)
 
-		# cf leaves expired
+		# case 2: cf leaves expired
 		leave_details = get_leave_details(employee.name, add_days(cf_expiry, 1))
 		expected_data = {
 			"total_leaves": 30.0,
@@ -949,6 +956,79 @@ class TestLeaveApplication(unittest.TestCase):
 			"leaves_pending_approval": 0.0,
 			"remaining_leaves": 15.0,
 		}
+
+		self.assertEqual(leave_details["leave_allocation"][leave_type.name], expected_data)
+
+	@set_holiday_list("Holiday List w/o Weekly Offs", "_Test Company")
+	def test_leave_details_with_application_across_cf_expiry(self):
+		"""Tests leave details with leave application across cf expiry, such that:
+		cf leaves are partially expired and partially consumed
+		"""
+		employee = get_employee()
+		leave_type = create_leave_type(
+			leave_type_name="_Test_CF_leave_expiry",
+			is_carry_forward=1,
+			expire_carry_forwarded_leaves_after_days=90,
+		).insert()
+
+		leave_alloc = create_carry_forwarded_allocation(employee, leave_type)
+		cf_expiry = frappe.db.get_value(
+			"Leave Ledger Entry", {"transaction_name": leave_alloc.name, "is_carry_forward": 1}, "to_date"
+		)
+
+		# leave application across cf expiry
+		application = make_leave_application(
+			employee.name,
+			cf_expiry,
+			add_days(cf_expiry, 3),
+			leave_type.name,
+		)
+
+		leave_details = get_leave_details(employee.name, add_days(cf_expiry, 4))
+		expected_data = {
+			"total_leaves": 30.0,
+			"expired_leaves": 14.0,
+			"leaves_taken": 4.0,
+			"leaves_pending_approval": 0.0,
+			"remaining_leaves": 12.0,
+		}
+
+		self.assertEqual(leave_details["leave_allocation"][leave_type.name], expected_data)
+
+	@set_holiday_list("Holiday List w/o Weekly Offs", "_Test Company")
+	def test_leave_details_with_application_after_cf_expiry(self):
+		"""Tests leave details with leave application after cf expiry, such that:
+		cf leaves are completely expired and only newly allocated leaves are consumed
+		"""
+		employee = get_employee()
+		leave_type = create_leave_type(
+			leave_type_name="_Test_CF_leave_expiry",
+			is_carry_forward=1,
+			expire_carry_forwarded_leaves_after_days=90,
+		).insert()
+
+		leave_alloc = create_carry_forwarded_allocation(employee, leave_type)
+		cf_expiry = frappe.db.get_value(
+			"Leave Ledger Entry", {"transaction_name": leave_alloc.name, "is_carry_forward": 1}, "to_date"
+		)
+
+		# leave application after cf expiry
+		application = make_leave_application(
+			employee.name,
+			add_days(cf_expiry, 1),
+			add_days(cf_expiry, 4),
+			leave_type.name,
+		)
+
+		leave_details = get_leave_details(employee.name, add_days(cf_expiry, 4))
+		expected_data = {
+			"total_leaves": 30.0,
+			"expired_leaves": 15.0,
+			"leaves_taken": 4.0,
+			"leaves_pending_approval": 0.0,
+			"remaining_leaves": 11.0,
+		}
+
 		self.assertEqual(leave_details["leave_allocation"][leave_type.name], expected_data)
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
