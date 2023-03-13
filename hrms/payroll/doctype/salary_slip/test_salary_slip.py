@@ -1254,6 +1254,7 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertEqual(ss.leave_without_pay, 0)
 
 		self.assertEqual(ss.payment_days, (days_between_start_and_relieving - len(holidays)))
+
 	def test_zero_value_component(self):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
