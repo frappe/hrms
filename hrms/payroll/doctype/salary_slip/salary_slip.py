@@ -345,9 +345,6 @@ class SalarySlip(TransactionBase):
 			"Payroll Settings", "include_holidays_in_total_working_days"
 		)
 
-		if not (joining_date and relieving_date):
-			joining_date, relieving_date = self.get_joining_and_relieving_dates()
-
 		working_days = date_diff(self.end_date, self.start_date) + 1
 		if for_preview:
 			self.total_working_days = working_days
@@ -370,14 +367,10 @@ class SalarySlip(TransactionBase):
 			frappe.throw(_("Please set Payroll based on in Payroll settings"))
 
 		if payroll_based_on == "Attendance":
-			actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(
-				holidays, relieving_date
-			)
+			actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(holidays)
 			self.absent_days = absent
 		else:
-			actual_lwp = self.calculate_lwp_or_ppl_based_on_leave_application(
-				holidays, working_days_list, relieving_date
-			)
+			actual_lwp = self.calculate_lwp_or_ppl_based_on_leave_application(holidays, working_days_list)
 
 		if not lwp:
 			lwp = actual_lwp
@@ -495,9 +488,7 @@ class SalarySlip(TransactionBase):
 	def get_holidays_for_employee(self, start_date, end_date):
 		return get_holiday_dates_for_employee(self.employee, start_date, end_date)
 
-	def calculate_lwp_or_ppl_based_on_leave_application(
-		self, holidays, working_days_list, relieving_date
-	):
+	def calculate_lwp_or_ppl_based_on_leave_application(self, holidays, working_days_list):
 		lwp = 0
 		holidays = "','".join(holidays)
 		daily_wages_fraction_for_half_day = (
@@ -505,7 +496,7 @@ class SalarySlip(TransactionBase):
 		)
 
 		for d in working_days_list:
-			if relieving_date and d > relieving_date:
+			if self.relieving_date and d > self.relieving_date:
 				continue
 
 			leave = get_lwp_or_ppl_for_date(str(d), self.employee, holidays)
@@ -526,13 +517,13 @@ class SalarySlip(TransactionBase):
 
 		return lwp
 
-	def calculate_lwp_ppl_and_absent_days_based_on_attendance(self, holidays, relieving_date):
+	def calculate_lwp_ppl_and_absent_days_based_on_attendance(self, holidays):
 		lwp = 0
 		absent = 0
 
 		end_date = self.end_date
-		if relieving_date:
-			end_date = relieving_date
+		if self.relieving_date:
+			end_date = self.relieving_date
 
 		daily_wages_fraction_for_half_day = (
 			flt(frappe.db.get_value("Payroll Settings", None, "daily_wages_fraction_for_half_day")) or 0.5
