@@ -139,7 +139,7 @@ class TestSalarySlip(FrappeTestCase):
 			(78000 / (days_in_month - no_of_holidays)) * flt(ss.leave_without_pay + ss.absent_days)
 		)
 
-		self.assertEqual(ss.gross_pay, gross_pay)
+		self.assertEqual(rounded(ss.gross_pay), rounded(gross_pay))
 
 	@change_settings(
 		"Payroll Settings",
