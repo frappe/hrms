@@ -1,3 +1,4 @@
+import logging
 import random
 
 import frappe
@@ -5,7 +6,12 @@ import frappe
 
 class Batch:
 	def __init__(
-		self, no_of_records: int = 0, batch_size: int = 10000, method: str = None, on_success: str = None
+		self,
+		no_of_records: int = 0,
+		batch_size: int = 100,
+		method: str = None,
+		on_success: str = None,
+		on_failure: str = None,
 	):
 		self.batch_size = batch_size
 		self.no_of_records = no_of_records
@@ -13,6 +19,7 @@ class Batch:
 		self.batch_start = 0
 		self.batch_end = 0
 		self.on_success = on_success
+		self.on_failure = on_failure
 
 	def set_batch(self):
 		while self.no_of_records > 0:
@@ -22,17 +29,16 @@ class Batch:
 			else:
 				self.batch_end = self.batch_start + self.batch_size
 
-			job = frappe.enqueue(
-				self.method_to_enqueue,
-				start=self.batch_start,
-				end=self.batch_end,
-				queue="long",
-				timeout=6000,
-				job_name=self.get_batch_id(),
-				on_success=self.on_success,
-			)
+			try:
 
-			print(job.get_status())
+				batch_id = self.get_batch_id()
+				frappe.call(self.method_to_enqueue, *[self.batch_start, self.batch_end])
+				frappe.call(self.on_success, *[batch_id])
+
+			except Exception as e:
+				Log(e)
+				frappe.call(self.on_failure, *[batch_id])
+
 			self.batch_start = self.batch_end
 			self.no_of_records -= self.batch_size
 
@@ -51,3 +57,13 @@ class Date:
 	@staticmethod
 	def add_years(date, years):
 		return frappe.utils.add_to_date(date, years=years)
+
+
+# logging
+format = "%(asctime)s: %(message)s"
+logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
+
+
+class Log:
+	def __init__(self, message) -> None:
+		logging.info(message)

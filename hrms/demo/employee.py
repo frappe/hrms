@@ -4,7 +4,7 @@ import frappe
 from frappe.model.document import bulk_insert
 from frappe.utils.nestedset import rebuild_tree
 
-from hrms.demo.utils import Batch, Date
+from hrms.demo.utils import Batch, Date, Log
 
 # from tqdm import tqdm
 
@@ -61,7 +61,7 @@ class EmployeeBatch(Batch):
 	@staticmethod
 	def create(start, end):
 		employees = []
-
+		Log(f"Creating employee records for {start} .. {end}")
 		for emp_id in range(start, end):
 			employee = DemoEmployee(emp_id)
 			employee_doc = frappe.new_doc("Employee")
@@ -71,8 +71,8 @@ class EmployeeBatch(Batch):
 		rebuild_tree("Employee", "reports_to")
 
 	@staticmethod
-	def on_success():
-		print("Employee Batch Created")
+	def on_success(batch_id):
+		Log(f"Completed with batch {batch_id}")
 
 
 create_employee_records = EmployeeBatch.create
