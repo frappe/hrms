@@ -622,9 +622,10 @@ class SalarySlip(TransactionBase):
 			self.calculate_component_amounts("earnings")
 
 		# get remaining numbers of sub-period (period for which one salary is processed)
-		self.remaining_sub_periods = get_period_factor(
-			self.employee, self.start_date, self.end_date, self.payroll_frequency, self.payroll_period
-		)[1]
+		if self.payroll_period:
+			self.remaining_sub_periods = get_period_factor(
+				self.employee, self.start_date, self.end_date, self.payroll_frequency, self.payroll_period
+			)[1]
 
 		self.gross_pay = self.get_component_totals("earnings", depends_on_payment_days=1)
 		self.base_gross_pay = flt(
