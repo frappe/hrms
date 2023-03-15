@@ -126,7 +126,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-02-23 16:39:22.487447",
+ "modified": "2023-03-14 00:01:00.691481",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal Cycle",
@@ -147,6 +147,7 @@
   }
  ],
  "quick_entry": 1,
+ "search_fields": "start_date, end_date",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

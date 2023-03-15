@@ -9,18 +9,19 @@
  "field_order": [
   "naming_series",
   "goal_name",
-  "employee",
-  "user",
-  "employee_name",
   "is_group",
   "parent_goal",
+  "column_break_tyox",
+  "kra",
+  "section_break_nf0j",
+  "employee",
+  "employee_name",
+  "user",
   "column_break_4",
   "appraisal_cycle",
   "start_date",
-  "due_date",
-  "kra",
+  "end_date",
   "section_break_7",
-  "priority",
   "progress",
   "column_break_10",
   "status",
@@ -28,11 +29,7 @@
   "description",
   "lft",
   "rgt",
-  "old_parent",
-  "references_tab",
-  "ref_doctype",
-  "column_break_25",
-  "ref_docname"
+  "old_parent"
  ],
  "fields": [
   {
@@ -45,12 +42,13 @@
    "fieldname": "goal_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Goal Name",
+   "label": "Goal",
    "reqd": 1
   },
   {
    "fieldname": "employee",
    "fieldtype": "Link",
+   "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Employee",
    "options": "Employee",
@@ -61,6 +59,9 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "employee",
+   "fetch_from": "appraisal_cycle.start_date",
+   "fetch_if_empty": 1,
    "fieldname": "start_date",
    "fieldtype": "Date",
    "in_standard_filter": 1,
@@ -68,25 +69,9 @@
    "reqd": 1
   },
   {
-   "fieldname": "due_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Due Date"
-  },
-  {
    "depends_on": "eval:!doc.is_group",
    "fieldname": "section_break_7",
    "fieldtype": "Section Break"
-  },
-  {
-   "depends_on": "eval:!doc.is_group",
-   "fieldname": "priority",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Priority",
-   "options": "\nLow\nMedium\nHigh\nHighest"
   },
   {
    "allow_in_quick_entry": 1,
@@ -102,6 +87,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "Pending",
    "depends_on": "eval:!doc.is_group",
    "fieldname": "status",
    "fieldtype": "Select",
@@ -112,12 +98,14 @@
    "read_only": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "collapsible": 1,
    "fieldname": "section_break_12",
-   "fieldtype": "Tab Break",
+   "fieldtype": "Section Break",
    "label": "Description"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "description",
    "fieldtype": "Text Editor",
    "label": "Description"
@@ -139,10 +127,12 @@
    "read_only": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "default": "0",
    "fieldname": "is_group",
    "fieldtype": "Check",
-   "label": "Is Group"
+   "label": "Is Group",
+   "set_only_once": 1
   },
   {
    "fieldname": "old_parent",
@@ -152,30 +142,41 @@
    "options": "Goal"
   },
   {
+   "allow_in_quick_entry": 1,
+   "depends_on": "employee",
    "fieldname": "parent_goal",
    "fieldtype": "Link",
    "label": "Parent Goal",
    "options": "Goal"
   },
   {
+   "allow_in_quick_entry": 1,
+   "depends_on": "employee",
    "description": "Tag KRA to your goal",
+   "fetch_from": "parent_goal.kra",
+   "fetch_if_empty": 1,
    "fieldname": "kra",
    "fieldtype": "Link",
    "label": "KRA",
-   "options": "KRA"
+   "options": "KRA",
+   "read_only_depends_on": "eval: doc.parent_goal"
   },
   {
+   "allow_in_quick_entry": 1,
+   "depends_on": "employee",
    "fieldname": "appraisal_cycle",
    "fieldtype": "Link",
    "in_standard_filter": 1,
    "label": "Appraisal Cycle",
-   "options": "Appraisal Cycle"
+   "options": "Appraisal Cycle",
+   "reqd": 1
   },
   {
    "fetch_from": "employee.employee_name",
    "fieldname": "employee_name",
    "fieldtype": "Data",
    "in_list_view": 1,
+   "in_preview": 1,
    "label": "Employee Name",
    "read_only": 1
   },
@@ -187,31 +188,29 @@
    "read_only": 1
   },
   {
-   "fieldname": "references_tab",
-   "fieldtype": "Tab Break",
-   "label": "References"
+   "allow_in_quick_entry": 1,
+   "depends_on": "employee",
+   "fetch_from": "appraisal_cycle.end_date",
+   "fetch_if_empty": 1,
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "End Date"
   },
   {
-   "fieldname": "ref_doctype",
-   "fieldtype": "Link",
-   "label": "Reference Document Type",
-   "options": "DocType"
-  },
-  {
-   "fieldname": "ref_docname",
-   "fieldtype": "Dynamic Link",
-   "label": "Reference Document Name",
-   "options": "ref_doctype"
-  },
-  {
-   "fieldname": "column_break_25",
+   "fieldname": "column_break_tyox",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_nf0j",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2022-08-29 17:57:03.121482",
+ "modified": "2023-03-15 15:34:11.273575",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Goal",
@@ -268,8 +267,9 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
  "search_fields": "employee, goal_name",
+ "show_preview_popup": 1,
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
