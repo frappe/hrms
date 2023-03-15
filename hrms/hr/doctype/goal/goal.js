@@ -26,7 +26,7 @@ frappe.ui.form.on("Goal", {
 					"appraisal_cycle": frm.doc.appraisal_cycle,
 				}
 			};
-		})
+		});
 	},
 
 	add_custom_buttons(frm) {

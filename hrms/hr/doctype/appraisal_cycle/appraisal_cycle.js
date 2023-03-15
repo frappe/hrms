@@ -18,6 +18,7 @@ frappe.ui.form.on("Appraisal Cycle", {
 			freeze_message: __("Fetching Employees"),
 			callback: function() {
 				refresh_field("appraisees");
+				frm.dirty();
 			}
 		});
 	}

@@ -225,8 +225,7 @@
    "label": "Appraisal Template",
    "oldfieldname": "kra_template",
    "oldfieldtype": "Link",
-   "options": "Appraisal Template",
-   "reqd": 1
+   "options": "Appraisal Template"
   },
   {
    "fieldname": "amended_from",
@@ -249,7 +248,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-02-23 23:24:25.295787",
+ "modified": "2023-03-15 18:20:26.292204",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",
