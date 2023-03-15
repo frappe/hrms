@@ -195,3 +195,23 @@ def get_feedback_history(employee, appraisal):
 	data.reviews_per_rating = reviews_per_rating
 
 	return data
+
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_kras_for_employee(doctype, txt, searchfield, start, page_len, filters):
+	appraisal = frappe.db.get_value(
+		"Appraisal",
+		{
+			"appraisal_cycle": filters.get("appraisal_cycle"),
+			"employee": filters.get("employee"),
+		},
+		"name",
+	)
+
+	return frappe.get_all(
+		"Appraisal KRA",
+		filters={"parent": appraisal, "kra": ("like", "{0}%".format(txt))},
+		fields=["kra"],
+		as_list=1,
+	)
