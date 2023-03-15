@@ -3,12 +3,13 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 
 def execute():
 	create_custom_field(
-		"Employee",
+		"Designation",
 		{
-			"fieldname": "default_appraisal_template",
+			"fieldname": "appraisal_template",
 			"fieldtype": "Link",
-			"label": "Default Appraisal Template",
+			"label": "Appraisal Template",
 			"options": "Appraisal Template",
-			"insert_after": "grade",
+			"insert_after": "description",
+			"allow_in_quick_entry": 1,
 		},
 	)

@@ -1,4 +1,4 @@
-frappe.listview_settings['Goal'] = {
+frappe.listview_settings["Goal"] = {
 	add_fields: ["end_date", "status"],
 	get_indicator: function(doc) {
 		const status_color = {

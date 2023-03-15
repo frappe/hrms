@@ -57,13 +57,6 @@ def get_custom_fields():
 				"insert_after": "branch",
 			},
 			{
-				"fieldname": "default_appraisal_template",
-				"fieldtype": "Link",
-				"label": "Default Appraisal Template",
-				"options": "Appraisal Template",
-				"insert_after": "grade",
-			},
-			{
 				"fieldname": "default_shift",
 				"fieldtype": "Link",
 				"label": "Default Shift",
@@ -237,10 +230,17 @@ def get_custom_fields():
 		],
 		"Designation": [
 			{
+				"fieldname": "appraisal_template",
+				"fieldtype": "Link",
+				"label": "Appraisal Template",
+				"options": "Appraisal Template",
+				"insert_after": "description",
+			},
+			{
 				"fieldname": "required_skills_section",
 				"fieldtype": "Section Break",
 				"label": "Required Skills",
-				"insert_after": "description",
+				"insert_after": "appraisal_template",
 			},
 			{
 				"fieldname": "skills",

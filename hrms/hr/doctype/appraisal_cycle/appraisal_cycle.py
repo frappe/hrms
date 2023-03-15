@@ -11,11 +11,16 @@ class AppraisalCycle(Document):
 	def set_employees(self):
 		"""Pull employees in appraisee list based on selected filters"""
 		employees = self.get_employees_for_appraisal()
+		appraisal_templates = self.get_appraisal_template_map()
 
 		if employees:
 			self.set("appraisees", [])
+			template_missing = False
 
 			for data in employees:
+				if not appraisal_templates.get(data.designation):
+					template_missing = True
+
 				self.append(
 					"appraisees",
 					{
@@ -24,8 +29,13 @@ class AppraisalCycle(Document):
 						"branch": data.branch,
 						"designation": data.designation,
 						"department": data.department,
-						"appraisal_template": data.default_appraisal_template,
+						"appraisal_template": appraisal_templates.get(data.designation),
 					},
+				)
+
+			if template_missing:
+				frappe.msgprint(
+					_("Appraisal Template missing for some designations."), alert=True, indicator="yellow"
 				)
 		else:
 			self.set("appraisees", [])
@@ -59,6 +69,15 @@ class AppraisalCycle(Document):
 		)
 
 		return employees
+
+	def get_appraisal_template_map(self):
+		designations = frappe.get_all("Designation", fields=["name", "appraisal_template"])
+		appraisal_templates = frappe._dict()
+
+		for entry in designations:
+			appraisal_templates[entry.name] = entry.appraisal_template
+
+		return appraisal_templates
 
 	@frappe.whitelist()
 	def create_appraisals(self):
