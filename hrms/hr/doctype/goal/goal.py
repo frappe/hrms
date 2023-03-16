@@ -1,6 +1,8 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+from pypika import CustomFunction
+
 import frappe
 from frappe import _
 from frappe.utils import flt
@@ -43,45 +45,60 @@ class Goal(NestedSet):
 
 
 @frappe.whitelist()
-def get_children(doctype, parent, is_root=False, **filters):
-	conditions = [["status", "!=", "Archived"]]
+def get_children(doctype: str, parent: str, is_root: bool = False, **filters) -> list[dict]:
+	Goal = frappe.qb.DocType(doctype)
 
-	if filters.get("goal"):
-		conditions.append(["parent_goal", "=", filters.get("goal")])
-	elif parent and not is_root:
-		# via expand child
-		conditions.append(["parent_goal", "=", parent])
-	else:
-		conditions.append(['ifnull(`parent_goal`, "")', "=", ""])
-
-	if filters.get("appraisal_cycle"):
-		conditions.append(["appraisal_cycle", "=", filters.get("appraisal_cycle")])
-
-	if filters.get("employee"):
-		conditions.append(["employee", "=", filters.get("employee")])
-
-	goals = frappe.get_list(
-		doctype,
-		fields=[
-			"name as value",
-			"goal_name as title",
-			"is_group as expandable",
-			"status",
-			"employee",
-			"employee_name",
-			"appraisal_cycle",
-			"progress",
-			"kra",
-		],
-		filters=conditions,
-		order_by="employee",
+	query = (
+		frappe.qb.from_(Goal)
+		.select(
+			Goal.name.as_("value"),
+			Goal.goal_name.as_("title"),
+			Goal.is_group.as_("expandable"),
+			Goal.status,
+			Goal.employee,
+			Goal.employee_name,
+			Goal.appraisal_cycle,
+			Goal.progress,
+			Goal.kra,
+		)
+		.where(Goal.status != "Archived")
 	)
 
+	if filters.get("employee"):
+		query = query.where(Goal.employee == filters.get("employee"))
+
+	if filters.get("appraisal_cycle"):
+		query = query.where(Goal.appraisal_cycle == filters.get("appraisal_cycle"))
+
+	if filters.get("goal"):
+		query = query.where(Goal.parent_goal == filters.get("goal"))
+	elif parent and not is_root:
+		# via expand child
+		query = query.where(Goal.parent_goal == parent)
+	else:
+		ifnull = CustomFunction("IFNULL", ["value", "default"])
+		query = query.where(ifnull(Goal.parent_goal, "") == "")
+
+	if filters.get("date_range"):
+		date_range = frappe.parse_json(filters.get("date_range"))
+
+		query = query.where(
+			(Goal.start_date.between(date_range[0], date_range[1]))
+			& ((Goal.end_date.isnull()) | (Goal.end_date.between(date_range[0], date_range[1])))
+		)
+
+	goals = query.orderby(Goal.employee).run(as_dict=True)
+	_update_goal_completion_status(goals)
+
+	return goals
+
+
+def _update_goal_completion_status(goals: list[dict]) -> list[dict]:
 	for goal in goals:
 		if goal.expandable:  # group node
 			total_goals = frappe.db.count("Goal", dict(parent_goal=goal.value))
 
-			if total_goals > 0:
+			if total_goals:
 				completed = frappe.db.count("Goal", {"parent_goal": goal.value, "status": "Completed"}) or 0
 				# set completion status of group node
 				goal["completion_count"] = _("{0} of {1} Completed").format(completed, total_goals)
@@ -90,9 +107,7 @@ def get_children(doctype, parent, is_root=False, **filters):
 
 
 @frappe.whitelist()
-def update_progress(progress, goal):
+def update_progress(progress: float, goal: str) -> None:
 	goal = frappe.get_doc("Goal", goal)
 	goal.progress = progress
 	goal.save()
-
-	return progress

@@ -8,6 +8,7 @@ frappe.ui.form.on("Appraisal", {
 				frappe.route_options = {
 					company: frm.doc.company,
 					employee: frm.doc.employee,
+					appraisal_cycle: frm.doc.appraisal_cycle,
 				};
 				frappe.set_route("Tree", "Goal");
 			});
