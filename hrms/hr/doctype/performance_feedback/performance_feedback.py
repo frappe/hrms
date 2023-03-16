@@ -23,27 +23,27 @@ class PerformanceFeedback(Document):
 
 	def set_total_score(self):
 		total = 0
-		for entry in self.kra_rating:
+		for entry in self.feedback_ratings:
 			score = flt(entry.rating) * 5 * flt(entry.per_weightage / 100)
 			total += flt(score)
 
 		self.total_score = total
 
 	@frappe.whitelist()
-	def set_kras(self):
+	def set_feedback_criteria(self):
 		if not self.appraisal:
 			return
 
 		template = frappe.db.get_value("Appraisal", self.appraisal, "appraisal_template")
 		template = frappe.get_doc("Appraisal Template", template)
 
-		self.set("kra_rating", [])
-		for kra in template.goals:
+		self.set("feedback_ratings", [])
+		for entry in template.rating_criteria:
 			self.append(
-				"kra_rating",
+				"feedback_ratings",
 				{
-					"kra": kra.kra,
-					"per_weightage": kra.per_weightage,
+					"criteria": entry.criteria,
+					"per_weightage": entry.per_weightage,
 				},
 			)
 

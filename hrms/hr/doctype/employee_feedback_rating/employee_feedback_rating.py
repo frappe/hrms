@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class KRARating(Document):
+class EmployeeFeedbackRating(Document):
 	pass

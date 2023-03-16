@@ -23,7 +23,7 @@ frappe.ui.form.on("Appraisal", {
 		if (frm.doc.appraisal_template) {
 			frm.call("set_kras", () => {
 				frm.refresh_field("appraisal_kra");
-				frm.refresh_field("kra_rating");
+				frm.refresh_field("feedback_ratings");
 			});
 		}
 	},

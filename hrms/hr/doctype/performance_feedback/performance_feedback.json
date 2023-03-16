@@ -23,7 +23,7 @@
   "appraisal_cycle",
   "section_break_3",
   "appraisal",
-  "kra_rating",
+  "feedback_ratings",
   "total_score",
   "feedback_tab",
   "feedback"
@@ -40,12 +40,6 @@
    "depends_on": "employee",
    "fieldname": "section_break_3",
    "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "kra_rating",
-   "fieldtype": "Table",
-   "label": "KRA Rating",
-   "options": "KRA Rating"
   },
   {
    "fieldname": "total_score",
@@ -158,11 +152,17 @@
    "label": "User",
    "options": "User",
    "read_only": 1
+  },
+  {
+   "fieldname": "feedback_ratings",
+   "fieldtype": "Table",
+   "label": "Feedback Ratings",
+   "options": "Employee Feedback Rating"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-02-27 12:13:08.071301",
+ "modified": "2023-03-16 15:34:55.736554",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Performance Feedback",
