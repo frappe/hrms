@@ -31,6 +31,11 @@ frappe.treeview_settings["Goal"] = {
 			options: "Employee",
 			label: __("Employee")
 		},
+		{
+			fieldname: "date_range",
+			fieldtype: "DateRange",
+			label: __("Date Range")
+		},
 	],
 	fields: [
 		{
@@ -151,6 +156,18 @@ frappe.treeview_settings["Goal"] = {
 		});
 	},
 	onrender(node) {
+		// show KRA against the goal
+		if (node.data.kra) {
+			$(node.$tree_link).find(".tree-label").append(`
+				<span
+					class="pill small"
+					style="background-color: var(--bg-light-gray); color: var(--text-on-gray);">
+					${node.data.kra}
+				</span>
+			`);
+		}
+
+		// show goal completion status
 		if (node.data.completion_count !== undefined) {
 			$(`
 				<span class="balance-area pull-right text-muted small">
