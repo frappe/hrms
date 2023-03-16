@@ -22,7 +22,6 @@ class Appraisal(Document):
 		self.calculate_total_score()
 		self.calculate_self_appraisal_score()
 		self.calculate_avg_feedback_score()
-		# self.feedback_count = len(self.feedback_table)
 
 	def validate_duplicate(self):
 		duplicate = frappe.db.exists(
@@ -39,7 +38,8 @@ class Appraisal(Document):
 				_("Appraisal {0} already created for Employee {1} for this Appraisal Cycle").format(
 					duplicate, self.employee_name
 				),
-				frappe.DuplicateEntryError,
+				exc=frappe.DuplicateEntryError,
+				title=_("Duplicate Entry"),
 			)
 
 	@frappe.whitelist()

@@ -34,9 +34,15 @@ class AppraisalCycle(Document):
 				)
 
 			if template_missing:
-				frappe.msgprint(
-					_("Appraisal Template missing for some designations."), alert=True, indicator="yellow"
+				msg = _("Appraisal Template not found for some designations.")
+				msg += "<br><br>"
+				msg += _(
+					"Please set the Appraisal Template for all the {0} or select the template in the Employees table below."
+				).format(
+					f"""<a href='{frappe.utils.get_url_to_list("Designation")}'>Designations</a>"""
 				)
+
+				frappe.msgprint(msg, title=_("Appraisal Template Missing"), indicator="yellow")
 		else:
 			self.set("appraisees", [])
 			frappe.msgprint(_("No employees found for the selected criteria"))
