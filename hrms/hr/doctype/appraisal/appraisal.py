@@ -48,17 +48,27 @@ class Appraisal(Document):
 			return
 
 		self.set("appraisal_kra", [])
-		self.set("kra_rating", [])
+		self.set("ratings", [])
 
 		template = frappe.get_doc("Appraisal Template", self.appraisal_template)
-		for kra in template.goals:
-			row = {
-				"kra": kra.kra,
-				"per_weightage": kra.per_weightage,
-			}
 
-			self.append("appraisal_kra", row)
-			self.append("kra_rating", row)
+		for entry in template.goals:
+			self.append(
+				"appraisal_kra",
+				{
+					"kra": entry.kra,
+					"per_weightage": entry.per_weightage,
+				},
+			)
+
+		for entry in template.rating_criteria:
+			self.append(
+				"ratings",
+				{
+					"criteria": entry.criteria,
+					"per_weightage": entry.per_weightage,
+				},
+			)
 
 		return self
 
@@ -71,7 +81,7 @@ class Appraisal(Document):
 
 	def calculate_self_appraisal_score(self):
 		total = 0
-		for entry in self.kra_rating:
+		for entry in self.ratings:
 			score = flt(entry.rating) * 5 * flt(entry.per_weightage / 100)
 			total += flt(score)
 
@@ -87,7 +97,7 @@ class Appraisal(Document):
 		self.avg_feedback_score = flt(avg_feedback_score, self.precision("avg_feedback_score"))
 
 	@frappe.whitelist()
-	def add_feedback(self, feedback, kra_rating):
+	def add_feedback(self, feedback, feedback_ratings):
 		feedback = frappe.get_doc(
 			{
 				"doctype": "Performance Feedback",
@@ -99,9 +109,9 @@ class Appraisal(Document):
 			}
 		)
 
-		for kra in kra_rating:
+		for kra in feedback_ratings:
 			feedback.append(
-				"kra_rating",
+				"feedback_ratings",
 				{
 					"kra": kra["kra"],
 					"rating": kra["rating"],

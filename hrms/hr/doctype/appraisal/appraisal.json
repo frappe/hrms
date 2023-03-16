@@ -27,8 +27,8 @@
   "section_break_20",
   "avg_feedback_score",
   "self_appraisal_tab",
-  "column_break_23",
-  "kra_rating",
+  "section_break_23",
+  "ratings",
   "self_score",
   "reflections_section",
   "upload_reflections",
@@ -171,11 +171,6 @@
    "label": "What could have been better?"
   },
   {
-   "fieldname": "column_break_23",
-   "fieldtype": "Section Break",
-   "label": "KRA Rating"
-  },
-  {
    "fieldname": "upload_reflections",
    "fieldtype": "Attach",
    "label": "Upload Reflections"
@@ -184,11 +179,6 @@
    "fieldname": "reflections_section",
    "fieldtype": "Section Break",
    "label": "Reflections"
-  },
-  {
-   "fieldname": "kra_rating",
-   "fieldtype": "Table",
-   "options": "KRA Rating"
   },
   {
    "fieldname": "self_score",
@@ -242,6 +232,16 @@
    "fieldtype": "Tab Break",
    "label": "Overview",
    "oldfieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_23",
+   "fieldtype": "Section Break",
+   "label": "Ratings"
+  },
+  {
+   "fieldname": "ratings",
+   "fieldtype": "Table",
+   "options": "Employee Feedback Rating"
   }
  ],
  "icon": "fa fa-thumbs-up",
@@ -249,7 +249,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-16 11:54:53.084545",
+ "modified": "2023-03-16 15:33:27.336179",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",

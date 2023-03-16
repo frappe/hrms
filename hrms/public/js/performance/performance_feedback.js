@@ -107,7 +107,7 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 					doc: me.frm.doc,
 					args: {
 						feedback: data.feedback,
-						kra_rating: data.kra_rating
+						feedback_ratings: data.feedback_ratings
 					},
 					freeze: true,
 					callback: function(r) {
@@ -138,9 +138,9 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 				enable_mentions: true,
 			},
 			{
-				label: "KRA Rating",
+				label: "Feedback Rating",
 				fieldtype: "Table",
-				fieldname: "kra_rating",
+				fieldname: "feedback_ratings",
 				cannot_add_rows: true,
 				data: kra_data,
 				get_data: () => {

@@ -14,8 +14,8 @@ frappe.ui.form.on("Performance Feedback", {
 
 	appraisal: function(frm) {
 		if (frm.doc.employee) {
-			frm.call("set_kras", () => {
-				frm.refresh_field("kra_rating");
+			frm.call("set_feedback_criteria", () => {
+				frm.refresh_field("feedback_ratings");
 			});
 		}
 	},

@@ -11,8 +11,9 @@
   "kra_title",
   "section_break_5",
   "description",
-  "tab_break_7",
-  "goals"
+  "section_break_7",
+  "goals",
+  "rating_criteria"
  ],
  "fields": [
   {
@@ -29,7 +30,6 @@
    "fieldname": "description",
    "fieldtype": "Small Text",
    "in_list_view": 1,
-   "label": "Description",
    "oldfieldname": "description",
    "oldfieldtype": "Small Text",
    "print_width": "300px",
@@ -38,25 +38,43 @@
   {
    "fieldname": "goals",
    "fieldtype": "Table",
+   "label": "KRAs",
    "oldfieldname": "kra_sheet",
    "oldfieldtype": "Table",
    "options": "Appraisal Template Goal",
    "reqd": 1
   },
   {
+   "collapsible": 1,
    "fieldname": "section_break_5",
+   "fieldtype": "Section Break",
+   "label": "Description"
+  },
+  {
+   "fieldname": "section_break_7",
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "tab_break_7",
-   "fieldtype": "Tab Break",
-   "label": "KRAs"
+   "description": "Criteria based on which employee should be rated in Performance Feedback and Self Appraisal",
+   "fieldname": "rating_criteria",
+   "fieldtype": "Table",
+   "label": "Rating Criteria",
+   "options": "Employee Feedback Rating"
   }
  ],
  "icon": "icon-file-text",
  "idx": 1,
- "links": [],
- "modified": "2022-08-24 21:01:29.941117",
+ "links": [
+  {
+   "link_doctype": "Appraisal",
+   "link_fieldname": "appraisal_template"
+  },
+  {
+   "link_doctype": "Designation",
+   "link_fieldname": "appraisal_template"
+  }
+ ],
+ "modified": "2023-03-16 14:51:05.709843",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal Template",
