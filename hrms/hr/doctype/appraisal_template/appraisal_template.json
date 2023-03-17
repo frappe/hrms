@@ -2,13 +2,13 @@
  "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "field:kra_title",
+ "autoname": "field:template_title",
  "creation": "2012-07-03 13:30:39",
  "doctype": "DocType",
  "document_type": "Setup",
  "engine": "InnoDB",
  "field_order": [
-  "kra_title",
+  "template_title",
   "section_break_5",
   "description",
   "section_break_7",
@@ -16,16 +16,6 @@
   "rating_criteria"
  ],
  "fields": [
-  {
-   "fieldname": "kra_title",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Appraisal Template Title",
-   "oldfieldname": "kra_title",
-   "oldfieldtype": "Data",
-   "reqd": 1,
-   "unique": 1
-  },
   {
    "fieldname": "description",
    "fieldtype": "Small Text",
@@ -60,6 +50,16 @@
    "fieldtype": "Table",
    "label": "Rating Criteria",
    "options": "Employee Feedback Rating"
+  },
+  {
+   "fieldname": "template_title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Appraisal Template Title",
+   "oldfieldname": "kra_title",
+   "oldfieldtype": "Data",
+   "reqd": 1,
+   "unique": 1
   }
  ],
  "icon": "icon-file-text",
@@ -74,7 +74,7 @@
    "link_fieldname": "appraisal_template"
   }
  ],
- "modified": "2023-03-17 12:37:58.703691",
+ "modified": "2023-03-17 18:58:23.471479",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal Template",
