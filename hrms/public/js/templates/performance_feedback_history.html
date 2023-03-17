@@ -80,6 +80,8 @@
 									</svg>
 								</a>
 								<ul class="dropdown-menu overflow-hidden dropdown-menu-right">
+									<li><a class="dropdown-item view-feedback-btn">{{ __("View") }}</a></li>
+
 									{% if (permissions.can_write) { %}
 										<li><a class="dropdown-item edit-feedback-btn">{{ __("Edit") }}</a></li>
 									{% } %}

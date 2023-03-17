@@ -59,6 +59,10 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 			me.add_feedback();
 		});
 
+		$(".feedback-section").find(".view-feedback-btn").on("click", function() {
+			me.view_feedback(this);
+		});
+
 		$(".feedback-section").find(".edit-feedback-btn").on("click", function() {
 			me.edit_feedback(this);
 		});
@@ -167,6 +171,11 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 				]
 			}
 		];
+	}
+
+	view_feedback(view_btn) {
+		const row_id = $(view_btn).closest(".feedback-content").attr("data-name");
+		frappe.set_route("Form", "Employee Performance Feedback", row_id);
 	}
 
 	edit_feedback(edit_btn) {
