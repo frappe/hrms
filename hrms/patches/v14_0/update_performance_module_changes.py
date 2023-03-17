@@ -1,8 +1,19 @@
 import frappe
+from frappe.model.utils.rename_field import rename_field
 
 
 def execute():
+	_rename_fields()
 	_create_kras()
+
+
+def _rename_fields():
+	try:
+		rename_field("Appraisal Template", "kra_title", "template_title")
+
+	except Exception as e:
+		if e.args[0] != 1054:
+			raise
 
 
 def _create_kras():
