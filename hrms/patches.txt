@@ -1,5 +1,10 @@
 [pre_model_sync]
+<<<<<<< HEAD
 
+=======
+hrms.patches.v15_0.check_version_compatibility_with_frappe
+hrms.patches.v14_0.update_performance_module_changes
+>>>>>>> 468453b5 (patch: create KRAs from Appraisal Template)
 
 [post_model_sync]
 hrms.patches.v1_0.rearrange_employee_fields
