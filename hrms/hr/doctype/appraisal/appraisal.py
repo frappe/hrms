@@ -89,7 +89,7 @@ class Appraisal(Document):
 
 	def calculate_avg_feedback_score(self):
 		avg_feedback_score = frappe.db.get_all(
-			"Performance Feedback",
+			"Employee Performance Feedback",
 			filters={"employee": self.employee, "appraisal": self.name},
 			fields=["avg(total_score) as avg_feedback_score"],
 		)[0].avg_feedback_score
@@ -100,7 +100,7 @@ class Appraisal(Document):
 	def add_feedback(self, feedback, feedback_ratings):
 		feedback = frappe.get_doc(
 			{
-				"doctype": "Performance Feedback",
+				"doctype": "Employee Performance Feedback",
 				"appraisal": self.name,
 				"employee": self.employee,
 				"added_on": now(),
@@ -109,13 +109,13 @@ class Appraisal(Document):
 			}
 		)
 
-		for kra in feedback_ratings:
+		for entry in feedback_ratings:
 			feedback.append(
 				"feedback_ratings",
 				{
-					"kra": kra["kra"],
-					"rating": kra["rating"],
-					"per_weightage": kra["per_weightage"],
+					"criteria": entry["criteria"],
+					"rating": entry["rating"],
+					"per_weightage": entry["per_weightage"],
 				},
 			)
 
@@ -125,7 +125,7 @@ class Appraisal(Document):
 
 	@frappe.whitelist()
 	def edit_feedback(self, feedback, name):
-		doc = frappe.get_doc("Performance Feedback", name)
+		doc = frappe.get_doc("Employee Performance Feedback", name)
 		doc.update({"feedback": feedback})
 		doc.save()
 
@@ -133,7 +133,7 @@ class Appraisal(Document):
 
 	@frappe.whitelist()
 	def delete_feedback(self, name):
-		frappe.delete_doc("Performance Feedback", name)
+		frappe.delete_doc("Employee Performance Feedback", name)
 		return name
 
 
@@ -169,7 +169,7 @@ def update_progress_in_appraisal(goal):
 def get_feedback_history(employee, appraisal):
 	data = frappe._dict()
 	data.feedback_history = frappe.get_list(
-		"Performance Feedback",
+		"Employee Performance Feedback",
 		filters={"employee": employee},
 		fields=[
 			"feedback",
@@ -191,7 +191,7 @@ def get_feedback_history(employee, appraisal):
 
 	for i in range(1, 6):
 		count = frappe.db.count(
-			"Performance Feedback",
+			"Employee Performance Feedback",
 			filters={
 				"appraisal": appraisal,
 				"employee": employee,
