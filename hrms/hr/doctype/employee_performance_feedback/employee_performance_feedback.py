@@ -6,7 +6,7 @@ from frappe.model.document import Document
 from frappe.utils import flt
 
 
-class PerformanceFeedback(Document):
+class EmployeePerformanceFeedback(Document):
 	def validate(self):
 		self.set_total_score()
 

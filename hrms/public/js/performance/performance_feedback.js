@@ -70,35 +70,35 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 
 	add_feedback() {
 		frappe.run_serially([
-			() => this.get_kra_data(),
-			(kra_data) => this.show_add_feedback_dialog(kra_data),
+			() => this.get_feedback_criteria_data(),
+			(criteria_data) => this.show_add_feedback_dialog(criteria_data),
 		]);
 	}
 
-	get_kra_data() {
+	get_feedback_criteria_data() {
 		let me = this;
 
 		return new Promise(resolve => {
 			frappe.db.get_doc("Appraisal Template", me.frm.doc.appraisal_template)
-				.then(({ goals }) => {
-					const kras = [];
-					goals.forEach((goal) => {
-						kras.push({
-							"kra": goal.kra,
-							"per_weightage": goal.per_weightage,
+				.then(({ rating_criteria }) => {
+					const criteria_list = [];
+					rating_criteria.forEach((entry) => {
+						criteria_list.push({
+							"criteria": entry.criteria,
+							"per_weightage": entry.per_weightage,
 						})
 					});
-					resolve(kras);
+					resolve(criteria_list);
 				});
 		});
 	}
 
-	show_add_feedback_dialog(kra_data) {
+	show_add_feedback_dialog(criteria_data) {
 		let me = this;
 
 		const dialog = new frappe.ui.Dialog({
 			title: __("Add Feedback"),
-			fields: me.get_feedback_dialog_fields(kra_data),
+			fields: me.get_feedback_dialog_fields(criteria_data),
 			primary_action: function() {
 				const data = dialog.get_values();
 
@@ -128,7 +128,7 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 		dialog.show();
 	};
 
-	get_feedback_dialog_fields(kra_data) {
+	get_feedback_dialog_fields(criteria_data) {
 		return [
 			{
 				label: "Feedback",
@@ -142,17 +142,14 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 				fieldtype: "Table",
 				fieldname: "feedback_ratings",
 				cannot_add_rows: true,
-				data: kra_data,
-				get_data: () => {
-					return kra_data;
-				},
+				data: criteria_data,
 				fields: [
 					{
-						fieldname: "kra",
+						fieldname: "criteria",
 						fieldtype: "Link",
 						in_list_view: 1,
-						label: "KRA",
-						options: "KRA",
+						label: "Criteria",
+						options: "Employee Feedback Criteria",
 						reqd: 1
 					},
 					{
@@ -249,9 +246,9 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 		)?.message?.name || false;
 
 		return {
-			can_create: (is_employee && frappe.model.can_create("Performance Feedback")),
-			can_write: frappe.model.can_write("Performance Feedback"),
-			can_delete: frappe.model.can_delete("Performance Feedback"),
+			can_create: (is_employee && frappe.model.can_create("Employee Performance Feedback")),
+			can_write: frappe.model.can_write("Employee Performance Feedback"),
+			can_delete: frappe.model.can_delete("Employee Performance Feedback"),
 		}
 	}
 };
