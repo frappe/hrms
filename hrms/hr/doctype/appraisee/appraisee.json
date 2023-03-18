@@ -68,13 +68,12 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Appraisal Template",
-   "options": "Appraisal Template",
-   "reqd": 1
+   "options": "Appraisal Template"
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2023-03-16 11:38:57.265839",
+ "modified": "2023-03-18 12:59:48.643272",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisee",

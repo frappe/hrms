@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Appraisal", {
 	refresh: function(frm) {
-		if (!frm.doc._islocal) {
+		if (!frm.doc.__islocal) {
 			frm.add_custom_button(__("View Goals"), function() {
 				frappe.route_options = {
 					company: frm.doc.company,

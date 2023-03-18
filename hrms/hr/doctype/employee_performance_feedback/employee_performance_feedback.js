@@ -7,6 +7,7 @@ frappe.ui.form.on("Employee Performance Feedback", {
 			return {
 				filters: {
 					employee: frm.doc.employee,
+					appraisal_cycle: frm.doc.appraisal_cycle,
 				}
 			}
 		});

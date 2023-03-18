@@ -3,11 +3,28 @@
 
 frappe.ui.form.on("Appraisal Cycle", {
 	refresh: function(frm) {
-		frm.add_custom_button(__("Create Appraisals"), () => {
-			frm.call("create_appraisals", {}, () => {
-				frm.reload_doc();
+		if (!frm.doc.__islocal) {
+			frm.add_custom_button(__("View Goals"), () => {
+				frappe.route_options = {
+					company: frm.doc.company,
+					appraisal_cycle: frm.doc.name,
+				};
+				frappe.set_route("Tree", "Goal");
 			});
-		}).addClass("btn-primary");
+
+			frm.add_custom_button(__("Create Appraisals"), () => {
+				frm.call({
+					method: "create_appraisals",
+					doc: frm.doc,
+					freeze: true,
+				}).then((r) => {
+					if (!r.exc) {
+						frm.reload_doc();
+					}
+				});
+
+			}).addClass("btn-primary");
+		}
 	},
 
 	get_employees: function(frm) {
