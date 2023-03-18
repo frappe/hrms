@@ -34,15 +34,7 @@ class AppraisalCycle(Document):
 				)
 
 			if template_missing:
-				msg = _("Appraisal Template not found for some designations.")
-				msg += "<br><br>"
-				msg += _(
-					"Please set the Appraisal Template for all the {0} or select the template in the Employees table below."
-				).format(
-					f"""<a href='{frappe.utils.get_url_to_list("Designation")}'>Designations</a>"""
-				)
-
-				frappe.msgprint(msg, title=_("Appraisal Template Missing"), indicator="yellow")
+				self.show_missing_template_message()
 		else:
 			self.set("appraisees", [])
 			frappe.msgprint(_("No employees found for the selected criteria"))
@@ -88,6 +80,8 @@ class AppraisalCycle(Document):
 	@frappe.whitelist()
 	def create_appraisals(self):
 		self.check_permission("write")
+		if not all(appraisee.appraisal_template for appraisee in self.appraisees):
+			self.show_missing_template_message(raise_exception=True)
 
 		if len(self.appraisees) > 30:
 			frappe.enqueue(
@@ -106,6 +100,17 @@ class AppraisalCycle(Document):
 			create_appraisals_for_cycle(self.name, self.appraisees, publish_progress=True)
 			# since this method is called via frm.call this doc needs to be updated manually
 			self.reload()
+
+	def show_missing_template_message(self, raise_exception=False):
+		msg = _("Appraisal Template not found for some designations.")
+		msg += "<br><br>"
+		msg += _(
+			"Please set the Appraisal Template for all the {0} or select the template in the Employees table below."
+		).format(f"""<a href='{frappe.utils.get_url_to_list("Designation")}'>Designations</a>""")
+
+		frappe.msgprint(
+			msg, title=_("Appraisal Template Missing"), indicator="yellow", raise_exception=raise_exception
+		)
 
 
 def create_appraisals_for_cycle(appraisal_cycle, employees, publish_progress=False):
