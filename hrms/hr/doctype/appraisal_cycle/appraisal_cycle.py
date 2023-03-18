@@ -62,7 +62,6 @@ class AppraisalCycle(Document):
 				"branch",
 				"designation",
 				"department",
-				"default_appraisal_template",
 			],
 		)
 
