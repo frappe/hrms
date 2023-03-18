@@ -126,7 +126,8 @@
    "fieldname": "appraisal_cycle",
    "fieldtype": "Link",
    "label": "Appraisal Cycle",
-   "options": "Appraisal Cycle"
+   "options": "Appraisal Cycle",
+   "reqd": 1
   },
   {
    "fieldname": "appraisal_kra",
@@ -249,7 +250,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-16 15:33:27.336179",
+ "modified": "2023-03-18 19:57:27.089288",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",

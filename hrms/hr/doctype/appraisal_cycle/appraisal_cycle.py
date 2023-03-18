@@ -131,7 +131,7 @@ def create_appraisals_for_cycle(appraisal_cycle, employees, publish_progress=Fal
 				}
 			)
 
-			appraisal.set_kras()
+			appraisal.set_kras_and_rating_criteria()
 			appraisal.insert()
 
 			if publish_progress:

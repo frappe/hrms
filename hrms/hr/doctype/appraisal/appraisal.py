@@ -43,7 +43,7 @@ class Appraisal(Document):
 			)
 
 	@frappe.whitelist()
-	def set_kras(self):
+	def set_kras_and_rating_criteria(self):
 		if not self.appraisal_template:
 			return
 
