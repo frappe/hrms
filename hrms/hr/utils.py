@@ -410,27 +410,6 @@ def round_earned_leaves(earned_leaves, rounding):
 	return earned_leaves
 
 
-def is_earned_leave_already_allocated(allocation, annual_allocation):
-	from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import get_leave_type_details
-
-	leave_type_details = get_leave_type_details()
-	date_of_joining = frappe.db.get_value("Employee", allocation.employee, "date_of_joining")
-
-	assignment = frappe.get_doc("Leave Policy Assignment", allocation.leave_policy_assignment)
-	leaves_for_passed_months = assignment.get_leaves_for_passed_months(
-		allocation.leave_type, annual_allocation, leave_type_details, date_of_joining
-	)
-
-	# exclude carry-forwarded leaves while checking for leave allocation for passed months
-	num_allocations = allocation.total_leaves_allocated
-	if allocation.unused_leaves:
-		num_allocations -= allocation.unused_leaves
-
-	if num_allocations >= leaves_for_passed_months:
-		return True
-	return False
-
-
 def get_leave_allocations(date, leave_type):
 	return frappe.db.sql(
 		"""select name, employee, from_date, to_date, leave_policy_assignment, leave_policy
