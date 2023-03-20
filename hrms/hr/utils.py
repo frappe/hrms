@@ -334,17 +334,27 @@ def allocate_earned_leaves():
 
 
 def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, date_of_joining):
+	allocation = frappe.get_doc("Leave Allocation", allocation.name)
+	annual_allocation = flt(annual_allocation, allocation.precision("total_leaves_allocated"))
+
 	earned_leaves = get_monthly_earned_leave(
 		date_of_joining, annual_allocation, e_leave_type.earned_leave_frequency, e_leave_type.rounding
 	)
 
-	allocation = frappe.get_doc("Leave Allocation", allocation.name)
 	new_allocation = flt(allocation.total_leaves_allocated) + flt(earned_leaves)
+	new_allocation_without_cf = flt(
+		flt(allocation.get_existing_leave_count()) + flt(earned_leaves),
+		allocation.precision("total_leaves_allocated"),
+	)
 
 	if new_allocation > e_leave_type.max_leaves_allowed and e_leave_type.max_leaves_allowed > 0:
 		new_allocation = e_leave_type.max_leaves_allowed
 
-	if new_allocation != allocation.total_leaves_allocated:
+	if (
+		new_allocation != allocation.total_leaves_allocated
+		# annual allocation as per policy should not be exceeded
+		and new_allocation_without_cf <= annual_allocation
+	):
 		today_date = frappe.flags.current_date or getdate()
 
 		allocation.db_set("total_leaves_allocated", new_allocation, update_modified=False)
@@ -398,27 +408,6 @@ def round_earned_leaves(earned_leaves, rounding):
 		earned_leaves = round(earned_leaves)
 
 	return earned_leaves
-
-
-def is_earned_leave_already_allocated(allocation, annual_allocation):
-	from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import get_leave_type_details
-
-	leave_type_details = get_leave_type_details()
-	date_of_joining = frappe.db.get_value("Employee", allocation.employee, "date_of_joining")
-
-	assignment = frappe.get_doc("Leave Policy Assignment", allocation.leave_policy_assignment)
-	leaves_for_passed_months = assignment.get_leaves_for_passed_months(
-		allocation.leave_type, annual_allocation, leave_type_details, date_of_joining
-	)
-
-	# exclude carry-forwarded leaves while checking for leave allocation for passed months
-	num_allocations = allocation.total_leaves_allocated
-	if allocation.unused_leaves:
-		num_allocations -= allocation.unused_leaves
-
-	if num_allocations >= leaves_for_passed_months:
-		return True
-	return False
 
 
 def get_leave_allocations(date, leave_type):
