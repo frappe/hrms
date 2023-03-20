@@ -621,9 +621,11 @@ class SalarySlip(TransactionBase):
 		if self.salary_structure:
 			self.calculate_component_amounts("earnings")
 
-		if self.payroll_period and self.salary_structure:
-			self.tax_slab = self.get_income_tax_slabs()
-			self.compute_taxable_earnings_for_year()
+		# get remaining numbers of sub-period (period for which one salary is processed)
+		if self.payroll_period:
+			self.remaining_sub_periods = get_period_factor(
+				self.employee, self.start_date, self.end_date, self.payroll_frequency, self.payroll_period
+			)[1]
 
 		self.gross_pay = self.get_component_totals("earnings", depends_on_payment_days=1)
 		self.base_gross_pay = flt(
@@ -700,11 +702,6 @@ class SalarySlip(TransactionBase):
 		)
 
 	def compute_current_and_future_taxable_earnings(self):
-		# get remaining numbers of sub-period (period for which one salary is processed)
-		self.remaining_sub_periods = get_period_factor(
-			self.employee, self.start_date, self.end_date, self.payroll_frequency, self.payroll_period
-		)[1]
-
 		# get taxable_earnings for current period (all days)
 		self.current_taxable_earnings = self.get_taxable_earnings(self.tax_slab.allow_tax_exemption)
 		self.future_structured_taxable_earnings = self.current_taxable_earnings.taxable_earnings * (
@@ -744,6 +741,9 @@ class SalarySlip(TransactionBase):
 		if not self.payroll_period:
 			return
 
+		self.standard_tax_exemption_amount = 0
+		self.tax_exemption_declaration = 0
+
 		self.non_taxable_earnings = self.compute_non_taxable_earnings()
 
 		self.ctc = self.compute_ctc()
@@ -754,13 +754,14 @@ class SalarySlip(TransactionBase):
 
 		self.deductions_before_tax_calculation = self.compute_annual_deductions_before_tax_calculation()
 
-		self.standard_tax_exemption_amount = (
-			self.tax_slab.standard_tax_exemption_amount if self.tax_slab.allow_tax_exemption else 0.0
-		)
+		if hasattr(self, "tax_slab"):
+			self.standard_tax_exemption_amount = (
+				self.tax_slab.standard_tax_exemption_amount if self.tax_slab.allow_tax_exemption else 0.0
+			)
 
-		self.tax_exemption_declaration = (
-			self.get_total_exemption_amount() - self.standard_tax_exemption_amount
-		)
+			self.tax_exemption_declaration = (
+				self.get_total_exemption_amount() - self.standard_tax_exemption_amount
+			)
 
 		self.annual_taxable_amount = self.total_earnings - (
 			self.non_taxable_earnings
@@ -1124,6 +1125,10 @@ class SalarySlip(TransactionBase):
 				for d in frappe.get_all("Salary Component", filters={"variable_based_on_taxable_salary": 1})
 				if d.name not in self.other_deduction_components
 			]
+
+		if tax_components and self.payroll_period and self.salary_structure:
+			self.tax_slab = self.get_income_tax_slabs()
+			self.compute_taxable_earnings_for_year()
 
 		self.component_based_veriable_tax = {}
 		for d in tax_components:

@@ -1164,7 +1164,7 @@ class TestSalarySlip(FrappeTestCase):
 		)
 		for deduction in salary_slip.deductions:
 			if deduction.salary_component == "TDS":
-				self.assertEqual(deduction.amount, 7732.0)
+				self.assertEqual(deduction.amount, 7691.0)
 
 		frappe.db.sql("DELETE FROM `tabPayroll Period` where company = '_Test Company'")
 		frappe.db.sql("DELETE FROM `tabIncome Tax Slab` where currency = 'INR'")
@@ -1211,7 +1211,7 @@ class TestSalarySlip(FrappeTestCase):
 			salary_structure_doc.name, employee=employee_doc.name, posting_date=payroll_period.start_date
 		)
 
-		monthly_tax_amount = 11466.0
+		monthly_tax_amount = 11403.6
 
 		self.assertEqual(salary_slip.ctc, 1226000.0)
 		self.assertEqual(salary_slip.income_from_other_sources, 10000.0)
@@ -1221,10 +1221,10 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertEqual(salary_slip.tax_exemption_declaration, 100000.0)
 		self.assertEqual(salary_slip.deductions_before_tax_calculation, 2400.0)
 		self.assertEqual(salary_slip.annual_taxable_amount, 1073600.0)
-		self.assertEqual(flt(salary_slip.income_tax_deducted_till_date, 1), monthly_tax_amount)
-		self.assertEqual(flt(salary_slip.current_month_income_tax, 1), monthly_tax_amount)
-		self.assertEqual(flt(salary_slip.future_income_tax_deductions, 1), 126126.0)
-		self.assertEqual(flt(salary_slip.total_income_tax, 0), 137592)
+		self.assertEqual(flt(salary_slip.income_tax_deducted_till_date, 2), monthly_tax_amount)
+		self.assertEqual(flt(salary_slip.current_month_income_tax, 2), monthly_tax_amount)
+		self.assertEqual(flt(salary_slip.future_income_tax_deductions, 2), 125439.65)
+		self.assertEqual(flt(salary_slip.total_income_tax, 2), 136843.25)
 
 	@change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
 	def test_lwp_calculation_based_on_relieving_date(self):
