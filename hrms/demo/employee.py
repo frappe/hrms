@@ -1,10 +1,13 @@
 import random
 
 import frappe
-from frappe.model.document import bulk_insert
-from frappe.utils.nestedset import rebuild_tree
 
-from hrms.demo.utils import Batch, Date, Log
+from hrms.demo.utils import Batch, Date, Log, initialize
+
+# from frappe.model.document import bulk_insert
+# from frappe.utils.caching import site_cache
+# from frappe.utils.nestedset import rebuild_tree
+
 
 # from tqdm import tqdm
 
@@ -51,7 +54,7 @@ class EmployeeBatch(Batch):
 	def __init__(self, no_of_records: int = 0):
 		super().__init__(
 			no_of_records=no_of_records,
-			method="hrms.demo.employee.create_employee_records",
+			method=create_employee_records,
 			on_success=on_success,
 		)
 
@@ -59,21 +62,31 @@ class EmployeeBatch(Batch):
 		self.set_batch()
 
 	@staticmethod
+	@initialize
 	def create(start, end):
 		employees = []
 		Log(f"Creating employee records for {start} .. {end}")
+
 		for emp_id in range(start, end):
 			employee = DemoEmployee(emp_id)
+
 			employee_doc = frappe.new_doc("Employee")
 			employees.append(employee_doc.update(employee.__dict__))
 
-		bulk_insert("Employee", employees, ignore_duplicates=True)
-		rebuild_tree("Employee", "reports_to")
+		return employees
 
 	@staticmethod
-	def on_success(batch_id):
-		Log(f"Completed with batch {batch_id}")
+	def on_success(*args, **kwargs):
+		# rebuild_tree("Employee", "reports_to")
+		# bulk_insert("Employee", employees, ignore_duplicates=True)
+
+		Log(f"Completed with batch {kwargs['batch_id']}")
+
+	@staticmethod
+	def on_failure(*args, **kwargs):
+		Log(f"Batch {kwargs['batch_id']} creation failed")
 
 
 create_employee_records = EmployeeBatch.create
 on_success = EmployeeBatch.on_success
+on_failure = EmployeeBatch.on_failure
