@@ -198,7 +198,7 @@ class TestLeaveAllocation(FrappeTestCase):
 		)
 
 	def test_overallocation(self):
-		"""Tests if earned leave allocation does not exceed annual allocation"""
+		"""Tests earned leave allocation does not exceed annual allocation"""
 		frappe.flags.current_date = get_year_start(getdate())
 		make_policy_assignment(
 			self.employee,
@@ -219,6 +219,46 @@ class TestLeaveAllocation(FrappeTestCase):
 		allocate_earned_leaves_for_months(1)
 		self.assertEqual(
 			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 22
+		)
+
+	def test_overallocation_with_carry_forwarding(self):
+		"""Tests earned leave allocation with cf leaves does not exceed annual allocation"""
+		year_start = get_year_start(getdate())
+
+		# initial leave allocation = 5
+		leave_allocation = create_leave_allocation(
+			employee=self.employee.name,
+			employee_name=self.employee.employee_name,
+			leave_type=self.leave_type,
+			from_date=get_first_day(add_months(year_start, -1)),
+			to_date=get_last_day(add_months(year_start, -1)),
+			new_leaves_allocated=5,
+			carry_forward=0,
+		)
+		leave_allocation.submit()
+
+		frappe.flags.current_date = year_start
+		# carry forwarded leaves = 5
+		make_policy_assignment(
+			self.employee,
+			annual_allocation=22,
+			allocate_on_day="First Day",
+			start_date=year_start,
+			carry_forward=True,
+		)
+
+		frappe.db.set_value("Leave Type", self.leave_type, "rounding", 1.0)
+		allocate_earned_leaves_for_months(11)
+
+		# 5 carry forwarded leaves + 22 EL allocated = 27 leaves
+		self.assertEqual(
+			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 27
+		)
+
+		# should not allocate more leaves than annual allocation (22 excluding 5 cf leaves)
+		allocate_earned_leaves_for_months(1)
+		self.assertEqual(
+			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 27
 		)
 
 	def test_allocate_on_first_day(self):
