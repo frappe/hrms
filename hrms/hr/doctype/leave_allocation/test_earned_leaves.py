@@ -221,6 +221,26 @@ class TestLeaveAllocation(FrappeTestCase):
 			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 22
 		)
 
+	def test_over_allocation_during_assignment_creation(self):
+		"""Tests backdated earned leave allocation does not exceed annual allocation"""
+		start_date = get_first_day(add_months(getdate(), -12))
+
+		# joining date set to 1Y ago
+		self.employee.date_of_joining = start_date
+		self.employee.save()
+
+		# create backdated assignment for last year
+		frappe.flags.current_date = get_first_day(getdate())
+
+		leave_policy_assignments = make_policy_assignment(
+			self.employee, start_date=start_date, allocate_on_day="Date of Joining"
+		)
+
+		# 13 months have passed but annual allocation = 12
+		# check annual allocation is not exceeded
+		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
+		self.assertEqual(leaves_allocated, 12)
+
 	def test_overallocation_with_carry_forwarding(self):
 		"""Tests earned leave allocation with cf leaves does not exceed annual allocation"""
 		year_start = get_year_start(getdate())

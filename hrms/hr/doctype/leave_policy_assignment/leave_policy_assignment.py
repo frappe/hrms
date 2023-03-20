@@ -102,13 +102,13 @@ class LeavePolicyAssignment(Document):
 			self.db_set("leaves_allocated", 1)
 			return leave_allocations
 
-	def create_leave_allocation(self, new_leaves_allocated, leave_details, date_of_joining):
+	def create_leave_allocation(self, annual_allocation, leave_details, date_of_joining):
 		# Creates leave allocation for the given employee in the provided leave period
 		carry_forward = self.carry_forward
 		if self.carry_forward and not leave_details.is_carry_forward:
 			carry_forward = 0
 
-		new_leaves_allocated = self.get_new_leaves(new_leaves_allocated, leave_details, date_of_joining)
+		new_leaves_allocated = self.get_new_leaves(annual_allocation, leave_details, date_of_joining)
 
 		allocation = frappe.get_doc(
 			dict(
@@ -128,7 +128,7 @@ class LeavePolicyAssignment(Document):
 		allocation.submit()
 		return allocation.name, new_leaves_allocated
 
-	def get_new_leaves(self, new_leaves_allocated, leave_details, date_of_joining):
+	def get_new_leaves(self, annual_allocation, leave_details, date_of_joining):
 		from frappe.model.meta import get_field_precision
 
 		precision = get_field_precision(
@@ -145,22 +145,26 @@ class LeavePolicyAssignment(Document):
 			else:
 				# get leaves for past months if assignment is based on Leave Period / Joining Date
 				new_leaves_allocated = self.get_leaves_for_passed_months(
-					new_leaves_allocated, leave_details, date_of_joining
+					annual_allocation, leave_details, date_of_joining
 				)
 
 		else:
 			# calculate pro-rated leaves for other leave types
 			new_leaves_allocated = calculate_pro_rated_leaves(
-				new_leaves_allocated,
+				annual_allocation,
 				date_of_joining,
 				self.effective_from,
 				self.effective_to,
 				is_earned_leave=False,
 			)
 
+		# leave allocation should not exceed annual allocation as per policy assignment
+		if new_leaves_allocated > annual_allocation:
+			new_leaves_allocated = annual_allocation
+
 		return flt(new_leaves_allocated, precision)
 
-	def get_leaves_for_passed_months(self, new_leaves_allocated, leave_details, date_of_joining):
+	def get_leaves_for_passed_months(self, annual_allocation, leave_details, date_of_joining):
 		from hrms.hr.utils import get_monthly_earned_leave
 
 		def _get_current_and_from_date():
@@ -208,7 +212,7 @@ class LeavePolicyAssignment(Document):
 			period_end_date = _get_pro_rata_period_end_date(consider_current_month)
 			monthly_earned_leave = get_monthly_earned_leave(
 				date_of_joining,
-				new_leaves_allocated,
+				annual_allocation,
 				leave_details.earned_leave_frequency,
 				leave_details.rounding,
 				self.effective_from,
