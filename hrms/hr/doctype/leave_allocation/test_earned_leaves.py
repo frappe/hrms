@@ -175,7 +175,6 @@ class TestLeaveAllocation(FrappeTestCase):
 		self.assertEqual(leaves_allocated, 3)
 
 	def test_earned_leaves_creation(self):
-		test = get_year_start(getdate())
 		frappe.flags.current_date = get_year_start(getdate())
 		make_policy_assignment(
 			self.employee,
@@ -196,6 +195,30 @@ class TestLeaveAllocation(FrappeTestCase):
 		allocate_earned_leaves_for_months(6)
 		self.assertEqual(
 			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 5
+		)
+
+	def test_overallocation(self):
+		"""Tests if earned leave allocation does not exceed annual allocation"""
+		frappe.flags.current_date = get_year_start(getdate())
+		make_policy_assignment(
+			self.employee,
+			annual_allocation=22,
+			allocate_on_day="First Day",
+			start_date=frappe.flags.current_date,
+		)
+
+		# leaves for 12 months = 22
+		# With rounding, 22 leaves would be allocated in 11 months only
+		frappe.db.set_value("Leave Type", self.leave_type, "rounding", 1.0)
+		allocate_earned_leaves_for_months(11)
+		self.assertEqual(
+			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 22
+		)
+
+		# should not allocate more leaves than annual allocation
+		allocate_earned_leaves_for_months(1)
+		self.assertEqual(
+			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 22
 		)
 
 	def test_allocate_on_first_day(self):
