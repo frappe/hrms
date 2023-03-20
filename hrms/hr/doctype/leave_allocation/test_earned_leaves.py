@@ -63,6 +63,19 @@ class TestLeaveAllocation(FrappeTestCase):
 		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
 		self.assertEqual(leaves_allocated, 0)
 
+	def test_earned_leave_update_after_submission(self):
+		"""Tests if validation error is raised when updating Earned Leave allocation after submission"""
+		leave_policy_assignments = make_policy_assignment(self.employee)
+
+		allocation = frappe.db.get_value(
+			"Leave Allocation",
+			{"leave_policy_assignment": leave_policy_assignments[0]},
+			"name",
+		)
+		allocation = frappe.get_doc("Leave Allocation", allocation)
+		allocation.new_leaves_allocated = 2
+		self.assertRaises(frappe.ValidationError, allocation.save)
+
 	def test_alloc_based_on_leave_period(self):
 		"""Case 1: Tests if assignment created one month after the leave period
 		allocates 1 leave for past month"""
@@ -405,16 +418,15 @@ class TestLeaveAllocation(FrappeTestCase):
 			self.employee,
 			annual_allocation=6,
 			allocate_on_day="First Day",
-			start_date=frappe.flags.current_date,
+			start_date=add_months(frappe.flags.current_date, -3),
 		)
 		allocation = frappe.db.get_value(
 			"Leave Allocation",
 			{"leave_policy_assignment": leave_policy_assignments[0]},
 			"name",
 		)
+		# 2 leaves allocated for past months
 		allocation = frappe.get_doc("Leave Allocation", allocation)
-		allocation.new_leaves_allocated = 2
-		allocation.save()
 
 		allocate_earned_leaves_for_months(6)
 
