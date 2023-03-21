@@ -88,11 +88,11 @@ class Appraisal(Document):
 		self.self_score = total
 
 	def calculate_avg_feedback_score(self):
-		avg_feedback_score = frappe.db.get_all(
+		avg_feedback_score = frappe.qb.avg(
 			"Employee Performance Feedback",
-			filters={"employee": self.employee, "appraisal": self.name},
-			fields=["avg(total_score) as avg_feedback_score"],
-		)[0].avg_feedback_score
+			"total_score",
+			{"employee": self.employee, "appraisal": self.name},
+		)
 
 		self.avg_feedback_score = flt(avg_feedback_score, self.precision("avg_feedback_score"))
 
@@ -170,7 +170,7 @@ def get_feedback_history(employee, appraisal):
 	data = frappe._dict()
 	data.feedback_history = frappe.get_list(
 		"Employee Performance Feedback",
-		filters={"employee": employee},
+		filters={"employee": employee, "appraisal": appraisal},
 		fields=[
 			"feedback",
 			"reviewer",
