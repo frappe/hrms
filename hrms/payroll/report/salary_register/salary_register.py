@@ -122,6 +122,7 @@ def get_columns(salary_slips):
 	):
 		salary_components[_(component.type)].append(component.salary_component)
 
+<<<<<<< HEAD
 	columns = (
 		columns
 		+ [(e + ":Currency:120") for e in salary_components[_("Earning")]]
@@ -131,6 +132,185 @@ def get_columns(salary_slips):
 			_("Loan Repayment") + ":Currency:120",
 			_("Total Deduction") + ":Currency:120",
 			_("Net Pay") + ":Currency:120",
+=======
+	return salary_components[_("Earning")], salary_components[_("Deduction")]
+
+
+def update_column_width(ss, columns):
+	if ss.branch is not None:
+		columns[3].update({"width": 120})
+	if ss.department is not None:
+		columns[4].update({"width": 120})
+	if ss.designation is not None:
+		columns[5].update({"width": 120})
+	if ss.leave_without_pay is not None:
+		columns[9].update({"width": 120})
+
+
+def get_columns(earning_types, ded_types):
+	"""
+	columns = [
+	        {
+	                "label": _("Salary Slip ID"),
+	                "fieldname": "salary_slip_id",
+	                "fieldtype": "Link",
+	                "options": "Salary Slip",
+	                "width": 150,
+	        },
+	        {
+	                "label": _("Employee"),
+	                "fieldname": "employee",
+	                "fieldtype": "Link",
+	                "options": "Employee",
+	                "width": 120,
+	        },
+	]
+	"""
+
+	columns = [
+		{
+			"label": _("Salary Slip ID"),
+			"fieldname": "salary_slip_id",
+			"fieldtype": "Link",
+			"options": "Salary Slip",
+			"width": 150,
+		},
+		{
+			"label": _("Employee"),
+			"fieldname": "employee",
+			"fieldtype": "Link",
+			"options": "Employee",
+			"width": 120,
+		},
+		{
+			"label": _("Employee Name"),
+			"fieldname": "employee_name",
+			"fieldtype": "Data",
+			"width": 140,
+		},
+		{
+			"label": _("Date of Joining"),
+			"fieldname": "data_of_joining",
+			"fieldtype": "Date",
+			"width": 80,
+		},
+		{
+			"label": _("Branch"),
+			"fieldname": "branch",
+			"fieldtype": "Link",
+			"options": "Branch",
+			"width": -1,
+		},
+		{
+			"label": _("Department"),
+			"fieldname": "department",
+			"fieldtype": "Link",
+			"options": "Department",
+			"width": -1,
+		},
+		{
+			"label": _("Designation"),
+			"fieldname": "designation",
+			"fieldtype": "Link",
+			"options": "Designation",
+			"width": 120,
+		},
+		{
+			"label": _("Company"),
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"options": "Company",
+			"width": 120,
+		},
+		{
+			"label": _("Start Date"),
+			"fieldname": "start_date",
+			"fieldtype": "Data",
+			"width": 80,
+		},
+		{
+			"label": _("End Date"),
+			"fieldname": "end_date",
+			"fieldtype": "Data",
+			"width": 80,
+		},
+		{
+			"label": _("Leave Without Pay"),
+			"fieldname": "leave_without_pay",
+			"fieldtype": "Float",
+			"width": 50,
+		},
+		{
+			"label": _("Payment Days"),
+			"fieldname": "payment_days",
+			"fieldtype": "Float",
+			"width": 120,
+		},
+		{
+			"label": _("Currency"),
+			"fieldname": "currency",
+			"fieldtype": "Link",
+			"options": "Currency",
+			"hidden": 1,
+		},
+	]
+
+	for earning in earning_types:
+		columns.append(
+			{
+				"label": earning,
+				"fieldname": frappe.scrub(earning),
+				"fieldtype": "Currency",
+				"options": "currency",
+				"width": 120,
+			}
+		)
+
+	columns.append(
+		{
+			"label": _("Gross Pay"),
+			"fieldname": "gross_pay",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 120,
+		}
+	)
+
+	for deduction in ded_types:
+		columns.append(
+			{
+				"label": deduction,
+				"fieldname": frappe.scrub(deduction),
+				"fieldtype": "Currency",
+				"options": "currency",
+				"width": 120,
+			}
+		)
+
+	columns.extend(
+		[
+			{
+				"label": _("Loan Repayment"),
+				"fieldname": "total_loan_repayment",
+				"fieldtype": "Currency",
+				"options": "currency",
+				"width": 120,
+			},
+			{
+				"label": _("Total Deduction"),
+				"fieldname": "total_deduction",
+				"fieldtype": "Currency",
+				"options": "currency",
+				"width": 120,
+			},
+			{
+				"label": _("Net Pay"),
+				"fieldname": "net_pay",
+				"fieldtype": "Currency",
+				"options": "currency",
+				"width": 120,
+			},
+>>>>>>> 68a7a34b (chore: fix fieldname in report)
 		]
 	)
 
