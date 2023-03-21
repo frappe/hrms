@@ -4,6 +4,8 @@ import threading
 
 import frappe
 
+### Batching
+
 
 class Batch:
 	def __init__(
@@ -16,15 +18,16 @@ class Batch:
 	):
 		self.batch_size = batch_size
 		self.no_of_records = no_of_records
-		self.method_to_enqueue = method
+		self.method_to_exec = method
 		self.batch_start = 0
 		self.batch_end = 0
 		self.on_success = on_success
 		self.on_failure = on_failure
+		self._batch_id = None
+		self.args = []
+		self.kwargs = {}
 
 	def set_batch(self):
-		threads = []
-
 		while self.no_of_records > 0:
 
 			if self.no_of_records < self.batch_size:
@@ -33,34 +36,107 @@ class Batch:
 				self.batch_end = self.batch_start + self.batch_size
 
 			try:
-				batch_id = self.get_batch_id()
-				thread = Thread(
-					*[self.batch_start, self.batch_end],
-					**{
-						"method": self.method_to_enqueue,
-						"batch_id": batch_id,
-						"site": frappe.local.site,
-						"on_success": self.on_success,
-						"on_failure": self.on_failure,
-					},
-				)
-				thread.start()
-				threads.append(thread)
+				self.kwargs = {
+					"batch_id": self.batch_id,
+					"start": self.batch_start,
+					"end": self.batch_end,
+				}
 
+				self.method_to_exec(*self.args, **self.kwargs)
+
+				self.success()
 			except Exception as e:
-				Log(e)
+				self.failure(e)
 
 			self.batch_start = self.batch_end
 			self.no_of_records -= self.batch_size
 
-		for thread in threads:
-			thread.join()
+	def success(self):
+		frappe.db.commit()
+		if self.on_success:
+			self.on_success(*self.args, **self.kwargs)
 
-	def get_batch_id(self):
-		return f"{self.method_to_enqueue}-{self.batch_start}-{self.batch_end}"
+	def failure(self, execption):
+		Log(execption)
+		frappe.db.rollback()
+
+		if self.on_failure:
+			self.on_failure(*self.args, **self.kwargs)
+
+	@property
+	def batch_id(self):
+		if not self._batch_id:
+			self._batch_id = f"{self.method_to_exec.__name__}--{self.batch_start}--{self.batch_end}"
+
+		return self._batch_id
 
 
+### Date Util
+class Date:
+	@staticmethod
+	def get_random_date():
+		start_date = "1980-01-01"
+		random_no = random.randint(0, 15)
+
+		return frappe.utils.add_to_date(start_date, years=random_no, months=random_no, days=random_no)
+
+	@staticmethod
+	def add_years(date, years):
+		return frappe.utils.add_to_date(date, years=years)
+
+
+### logging
+format = "%(asctime)s: %(message)s"
+logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
+
+
+class Log:
+	def __init__(self, message) -> None:
+		logging.info(message)
+
+
+### decorator
+def initialize(func):
+	"""
+	decorator to initiate env in thread
+	"""
+
+	def _func(*args, **kwargs):
+		frappe.init(site=kwargs["site"])
+		frappe.connect()
+
+		return func(*args)
+
+	return _func
+
+
+### threading
 class Thread(threading.Thread):
+	"""
+	threads = []
+
+	try:
+	        batch_id = self.get_batch_id()
+	        thread = Thread(
+	                *[self.batch_start, self.batch_end],
+	                **{
+	                        "method": self.method_to_enqueue,
+	                        "batch_id": batch_id,
+	                        "site": frappe.local.site,
+	                        "on_success": self.on_success,
+	                        "on_failure": self.on_failure,
+	                },
+	        )
+	        thread.start()
+	        threads.append(thread)
+
+	except Exception as e:
+	        Log(e)
+
+	for thread in threads:
+	        thread.join()
+	"""
+
 	def __init__(self, *args, **kwargs):
 		super().__init__(
 			target=kwargs["method"], args=args, kwargs=kwargs, daemon=True, name=kwargs["batch_id"]
@@ -86,41 +162,3 @@ class Thread(threading.Thread):
 		if self.on_sucess:
 			self._kwargs["result"] = self.ret
 			self.on_sucess(*self._args, **self._kwargs)
-
-
-class Date:
-	@staticmethod
-	def get_random_date():
-		start_date = "1980-01-01"
-		random_no = random.randint(0, 15)
-
-		return frappe.utils.add_to_date(start_date, years=random_no, months=random_no, days=random_no)
-
-	@staticmethod
-	def add_years(date, years):
-		return frappe.utils.add_to_date(date, years=years)
-
-
-# logging
-format = "%(asctime)s: %(message)s"
-logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
-
-
-class Log:
-	def __init__(self, message) -> None:
-		logging.info(message)
-
-
-# decorator
-def initialize(func):
-	"""
-	decorator to initiate env in thread
-	"""
-
-	def _func(*args, **kwargs):
-		frappe.init(site=kwargs["site"])
-		frappe.connect()
-
-		return func(*args)
-
-	return _func
