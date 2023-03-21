@@ -228,7 +228,7 @@ def get_columns(earning_types, ded_types):
 		[
 			{
 				"label": _("Loan Repayment"),
-				"fieldname": "loan_repayment",
+				"fieldname": "total_loan_repayment",
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 120,
