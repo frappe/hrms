@@ -1,6 +1,8 @@
 import frappe
 from frappe.utils import now_datetime, cint, get_year_ending, get_year_start, getdate
 
+from hrms.demo.payroll import DemoPayrollPeriod, DemoIncomeTaxSlab, DemoSalaryStructure
+
 
 class DemoSetup:
 	def __init__(self):
@@ -16,6 +18,7 @@ class DemoSetup:
 		cls.create_holiday_list(year)
 		cls.create_payroll_period()
 		cls.create_tax_slab()
+		cls.create_salary_structure()
 
 		frappe.db.commit()  # nosemgrep
 
@@ -67,6 +70,13 @@ class DemoSetup:
 		ts = DemoIncomeTaxSlab()
 		cls.income_tax_slab = ts.create_income_tax_slab()
 		print(f"Income Tax Slab {cls.income_tax_slab.name} Created")
+
+	@classmethod
+	def create_salary_structure(cls):
+		salary_structure = DemoSalaryStructure()
+
+		for i in range(1, 5):
+			salary_structure.create_salary_structure(i)
 
 
 class DemoHolidayList:
@@ -125,60 +135,3 @@ class DemoHolidayList:
 		company = frappe.db.get_single_value("Global Defaults", "default_company")
 		frappe.db.set_value("Company", company, "default_holiday_list", holiday_list_name)
 		frappe.db.commit()  # nosemgrep
-
-
-class DemoPayrollPeriod:
-	def __init__(self, start_date: str = None, end_date: str = None):
-		self.start_date = start_date or get_year_start(getdate())
-		self.end_date = end_date or get_year_ending(getdate())
-
-	def create_payroll_period(self):
-		try:
-			payroll_period = frappe.get_doc(
-				{
-					"doctype": "Payroll Period",
-					"__newname": f"{self.start_date} - {self.end_date}",
-					"start_date": self.start_date,
-					"end_date": self.end_date,
-					"company": frappe.db.get_single_value("Global Defaults", "default_company"),
-				}
-			).insert()
-		except frappe.DuplicateEntryError:
-			payroll_period = frappe.get_doc("Payroll Period", f"{self.start_date} - {self.end_date}")
-
-		return payroll_period
-
-
-class DemoIncomeTaxSlab:
-	def __init__(self, tax_slab_name: str = None, tax_slabs: list = None):
-		self.tax_slab_name = tax_slab_name or "Demo Income Tax Slab"
-		self.tax_slabs = tax_slabs or [
-			{
-				"from_amount": 250000,
-				"to_amount": 500000,
-				"percent_deduction": 5,
-				"condition": "annual_taxable_earning > 500000",
-			},
-			{"from_amount": 500001, "to_amount": 1000000, "percent_deduction": 20},
-			{"from_amount": 1000001, "percent_deduction": 30},
-		]
-
-	def create_income_tax_slab(self):
-		try:
-			tax_slab = frappe.get_doc(
-				{
-					"doctype": "Income Tax Slab",
-					"__newname": self.tax_slab_name,
-					"slabs": self.tax_slabs,
-					"company": frappe.db.get_single_value("Global Defaults", "default_company"),
-					"currency": "INR",
-					"effective_from": get_year_start(getdate()),
-					"standard_tax_exemption_amount": 50000,
-				}
-			).insert()
-			tax_slab.submit()
-
-		except frappe.DuplicateEntryError:
-			tax_slab = frappe.get_doc("Income Tax Slab", self.tax_slab_name)
-
-		return tax_slab
