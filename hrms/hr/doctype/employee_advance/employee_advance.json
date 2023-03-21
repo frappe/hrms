@@ -200,7 +200,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-17 19:33:52.345823",
+ "modified": "2023-03-21 18:24:06.416439",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Advance",
@@ -240,22 +240,18 @@
  "states": [
   {
    "color": "Red",
-   "custom": 1,
    "title": "Draft"
   },
   {
    "color": "Green",
-   "custom": 1,
    "title": "Paid"
   },
   {
    "color": "Orange",
-   "custom": 1,
    "title": "Unpaid"
   },
   {
    "color": "Blue",
-   "custom": 1,
    "title": "Claimed"
   },
   {
@@ -268,7 +264,6 @@
   },
   {
    "color": "Red",
-   "custom": 1,
    "title": "Cancelled"
   }
  ],
