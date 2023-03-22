@@ -5,10 +5,9 @@ from pypika import CustomFunction
 
 import frappe
 from frappe import _
+from frappe.query_builder.functions import Avg
 from frappe.utils import flt
 from frappe.utils.nestedset import NestedSet
-
-from hrms.hr.doctype.appraisal.appraisal import update_progress_in_appraisal
 
 
 class Goal(NestedSet):
@@ -18,7 +17,8 @@ class Goal(NestedSet):
 		self.validate_from_to_dates(self.start_date, self.end_date)
 
 	def on_update(self):
-		update_progress_in_appraisal(self)
+		self.update_parent_progress()
+		self.update_goal_progress_in_appraisal()
 
 	def validate_parent_fields(self):
 		if not self.parent_goal:
@@ -42,6 +42,38 @@ class Goal(NestedSet):
 				self.status = "Completed"
 			elif flt(self.progress) < 100:
 				self.status = "In Progress"
+
+	def update_parent_progress(self):
+		if not self.parent_goal:
+			return
+
+		Goal = frappe.qb.DocType("Goal")
+		avg_goal_completion = (
+			frappe.qb.from_(Goal)
+			.select(Avg(Goal.progress).as_("avg_goal_completion"))
+			.where(
+				(Goal.parent_goal == self.parent_goal)
+				& (Goal.employee == self.employee)
+				# archived goals should not contribute to progress
+				& (Goal.status != "Archived")
+			)
+		).run()[0][0]
+
+		parent_goal = frappe.get_doc("Goal", self.parent_goal)
+		parent_goal.progress = flt(avg_goal_completion, parent_goal.precision("progress"))
+		parent_goal.ignore_permissions = True
+		parent_goal.ignore_mandatory = True
+		parent_goal.save()
+
+	def update_goal_progress_in_appraisal(self):
+		if not self.kra:
+			return
+
+		appraisal = frappe.db.get_value(
+			"Appraisal", {"employee": self.employee, "appraisal_cycle": self.appraisal_cycle}
+		)
+		appraisal = frappe.get_doc("Appraisal", appraisal)
+		appraisal.update_goal_progress(self)
 
 
 @frappe.whitelist()
@@ -87,7 +119,7 @@ def get_children(doctype: str, parent: str, is_root: bool = False, **filters) ->
 			& ((Goal.end_date.isnull()) | (Goal.end_date.between(date_range[0], date_range[1])))
 		)
 
-	goals = query.orderby(Goal.employee).run(as_dict=True)
+	goals = query.orderby(Goal.employee, Goal.kra).run(as_dict=True)
 	_update_goal_completion_status(goals)
 
 	return goals
@@ -110,4 +142,5 @@ def _update_goal_completion_status(goals: list[dict]) -> list[dict]:
 def update_progress(progress: float, goal: str) -> None:
 	goal = frappe.get_doc("Goal", goal)
 	goal.progress = progress
+	goal.flags.ignore_mandatory = True
 	goal.save()
