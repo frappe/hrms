@@ -102,25 +102,6 @@ def update_column_width(ss, columns):
 
 
 def get_columns(earning_types, ded_types):
-	"""
-	columns = [
-	        {
-	                "label": _("Salary Slip ID"),
-	                "fieldname": "salary_slip_id",
-	                "fieldtype": "Link",
-	                "options": "Salary Slip",
-	                "width": 150,
-	        },
-	        {
-	                "label": _("Employee"),
-	                "fieldname": "employee",
-	                "fieldtype": "Link",
-	                "options": "Employee",
-	                "width": 120,
-	        },
-	]
-	"""
-
 	columns = [
 		{
 			"label": _("Salary Slip ID"),
