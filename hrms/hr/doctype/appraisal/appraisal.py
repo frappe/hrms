@@ -4,6 +4,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.query_builder.functions import Avg
 from frappe.utils import flt, now
 
 from hrms.hr.utils import validate_active_employee
@@ -87,7 +88,7 @@ class Appraisal(Document):
 
 		self.self_score = total
 
-	def calculate_avg_feedback_score(self):
+	def calculate_avg_feedback_score(self, update=False):
 		avg_feedback_score = frappe.qb.avg(
 			"Employee Performance Feedback",
 			"total_score",
@@ -95,6 +96,9 @@ class Appraisal(Document):
 		)
 
 		self.avg_feedback_score = flt(avg_feedback_score, self.precision("avg_feedback_score"))
+
+		if update:
+			self.db_update()
 
 	@frappe.whitelist()
 	def add_feedback(self, feedback, feedback_ratings):
@@ -136,33 +140,30 @@ class Appraisal(Document):
 		frappe.delete_doc("Employee Performance Feedback", name)
 		return name
 
+	def update_goal_progress(self, goal):
+		for kra in self.appraisal_kra:
+			if kra.kra != goal.kra:
+				continue
 
-def update_progress_in_appraisal(goal):
-	appraisal = frappe.db.exists(
-		"Appraisal", {"employee": goal.employee, "appraisal_cycle": goal.appraisal_cycle}
-	)
-	if not appraisal:
-		return
+			Goal = frappe.qb.DocType("Goal")
+			avg_goal_completion = (
+				frappe.qb.from_(Goal)
+				.select(Avg(Goal.progress).as_("avg_goal_completion"))
+				.where(
+					(Goal.kra == kra.kra)
+					& (Goal.employee == self.employee)
+					# archived goals should not contribute to progress
+					& (Goal.status != "Archived")
+					& ((Goal.parent_goal == "") | (Goal.parent_goal.isnull()))
+				)
+			).run()[0][0]
 
-	doc = frappe.get_doc("Appraisal", appraisal)
-	for kra in doc.appraisal_kra:
-		total_goals = frappe.db.count(
-			"Goal", {"kra": kra.kra, "employee": doc.employee, "status": ("!=", "Archived")}
-		)
-		completed_goals = frappe.db.count(
-			"Goal",
-			{
-				"kra": kra.kra,
-				"status": "Completed",
-				"employee": doc.employee,
-			},
-		)
-		kra.goal_completion = (
-			flt(completed_goals / total_goals * 100, kra.precision("goal_completion")) if total_goals else 0
-		)
-		kra.goal_score = flt(kra.goal_completion * kra.per_weightage / 100, kra.precision("goal_score"))
+			kra.goal_completion = flt(avg_goal_completion, kra.precision("goal_completion"))
+			kra.goal_score = flt(kra.goal_completion * kra.per_weightage / 100, kra.precision("goal_score"))
 
-	doc.save()
+			kra.db_update()
+
+			return kra.goal_score
 
 
 @frappe.whitelist()

@@ -48,8 +48,7 @@ class EmployeePerformanceFeedback(Document):
 			return
 
 		appraisal = frappe.get_doc("Appraisal", self.appraisal)
-		appraisal.calculate_avg_feedback_score()
-		appraisal.db_update()
+		appraisal.calculate_avg_feedback_score(update=True)
 
 	@frappe.whitelist()
 	def set_feedback_criteria(self):
