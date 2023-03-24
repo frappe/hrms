@@ -12,17 +12,16 @@
   "employee_name",
   "department",
   "column_break_5",
+  "company",
   "is_recurring",
-  "payroll_date",
+  "disabled",
   "from_date",
   "to_date",
-  "column_break_10",
-  "company",
+  "payroll_date",
   "amended_from",
   "salary_details_section",
   "salary_component",
   "type",
-  "column_break_13",
   "currency",
   "amount",
   "column_break_8",
@@ -61,6 +60,8 @@
    "search_index": 1
   },
   {
+   "fetch_from": "salary_component.amount",
+   "fetch_if_empty": 1,
    "fieldname": "amount",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -179,10 +180,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "column_break_13",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "salary_details_section",
    "fieldtype": "Section Break",
    "label": "Salary"
@@ -197,13 +194,18 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "column_break_10",
-   "fieldtype": "Column Break"
+   "allow_on_submit": 1,
+   "default": "0",
+   "depends_on": "eval:doc.is_recurring",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled",
+   "no_copy": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-08 15:01:45.702987",
+ "modified": "2023-03-14 10:31:03.071277",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Additional Salary",

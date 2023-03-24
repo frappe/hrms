@@ -3,7 +3,7 @@
 
 
 import math
-from datetime import date, timedelta
+from datetime import date
 
 import frappe
 from frappe import _, msgprint
@@ -339,6 +339,9 @@ class SalarySlip(TransactionBase):
 			"Payroll Settings", "include_holidays_in_total_working_days"
 		)
 
+		if not (joining_date and relieving_date):
+			joining_date, relieving_date = self.get_joining_and_relieving_dates()
+
 		working_days = date_diff(self.end_date, self.start_date) + 1
 		if for_preview:
 			self.total_working_days = working_days
@@ -346,7 +349,9 @@ class SalarySlip(TransactionBase):
 			return
 
 		holidays = self.get_holidays_for_employee(self.start_date, self.end_date)
-		working_days_list = date_range(getdate(self.start_date), getdate(self.end_date))
+		working_days_list = [
+			add_days(getdate(self.start_date), days=day) for day in range(0, working_days)
+		]
 
 		if not cint(include_holidays_in_total_working_days):
 			working_days_list = [i for i in working_days_list if i not in holidays]
@@ -359,10 +364,14 @@ class SalarySlip(TransactionBase):
 			frappe.throw(_("Please set Payroll based on in Payroll settings"))
 
 		if payroll_based_on == "Attendance":
-			actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(holidays)
+			actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(
+				holidays, relieving_date
+			)
 			self.absent_days = absent
 		else:
-			actual_lwp = self.calculate_lwp_or_ppl_based_on_leave_application(holidays, working_days_list)
+			actual_lwp = self.calculate_lwp_or_ppl_based_on_leave_application(
+				holidays, working_days_list, relieving_date
+			)
 
 		if not lwp:
 			lwp = actual_lwp
@@ -456,9 +465,7 @@ class SalarySlip(TransactionBase):
 
 	def get_payment_days(self, joining_date, relieving_date, include_holidays_in_total_working_days):
 		if not joining_date:
-			joining_date, relieving_date = frappe.get_cached_value(
-				"Employee", self.employee, ["date_of_joining", "relieving_date"]
-			)
+			joining_date, relieving_date = self.get_joining_and_relieving_dates()
 
 		start_date = getdate(self.start_date)
 		if joining_date:
@@ -469,9 +476,10 @@ class SalarySlip(TransactionBase):
 
 		end_date = getdate(self.end_date)
 		if relieving_date:
+			employee_status = frappe.get_cached_value("Employee", self.employee, "status")
 			if getdate(self.start_date) <= relieving_date <= getdate(self.end_date):
 				end_date = relieving_date
-			elif relieving_date < getdate(self.start_date):
+			elif relieving_date < getdate(self.start_date) and employee_status != "Left":
 				frappe.throw(_("Employee relieved on {0} must be set as 'Left'").format(relieving_date))
 
 		payment_days = date_diff(end_date, start_date) + 1
@@ -485,7 +493,9 @@ class SalarySlip(TransactionBase):
 	def get_holidays_for_employee(self, start_date, end_date):
 		return get_holiday_dates_for_employee(self.employee, start_date, end_date)
 
-	def calculate_lwp_or_ppl_based_on_leave_application(self, holidays, working_days_list):
+	def calculate_lwp_or_ppl_based_on_leave_application(
+		self, holidays, working_days_list, relieving_date
+	):
 		lwp = 0
 		holidays = "','".join(holidays)
 		daily_wages_fraction_for_half_day = (
@@ -493,9 +503,10 @@ class SalarySlip(TransactionBase):
 		)
 
 		for d in working_days_list:
-			# date = add_days(cstr(getdate(self.start_date)), d)
-			leave = get_lwp_or_ppl_for_date(d, self.employee, holidays)
+			if relieving_date and d > relieving_date:
+				continue
 
+			leave = get_lwp_or_ppl_for_date(str(d), self.employee, holidays)
 			if leave:
 				equivalent_lwp_count = 0
 				is_half_day_leave = cint(leave[0].is_half_day)
@@ -513,9 +524,13 @@ class SalarySlip(TransactionBase):
 
 		return lwp
 
-	def calculate_lwp_ppl_and_absent_days_based_on_attendance(self, holidays):
+	def calculate_lwp_ppl_and_absent_days_based_on_attendance(self, holidays, relieving_date):
 		lwp = 0
 		absent = 0
+
+		end_date = self.end_date
+		if relieving_date:
+			end_date = relieving_date
 
 		daily_wages_fraction_for_half_day = (
 			flt(frappe.db.get_value("Payroll Settings", None, "daily_wages_fraction_for_half_day")) or 0.5
@@ -540,7 +555,7 @@ class SalarySlip(TransactionBase):
 				(attendance.status.isin(["Absent", "Half Day", "On Leave"]))
 				& (attendance.employee == self.employee)
 				& (attendance.docstatus == 1)
-				& (attendance.attendance_date.between(self.start_date, self.end_date))
+				& (attendance.attendance_date.between(self.start_date, end_date))
 			)
 		).run(as_dict=1)
 
@@ -606,9 +621,11 @@ class SalarySlip(TransactionBase):
 		if self.salary_structure:
 			self.calculate_component_amounts("earnings")
 
-		if self.payroll_period and self.salary_structure:
-			self.tax_slab = self.get_income_tax_slabs()
-			self.compute_taxable_earnings_for_year()
+		# get remaining numbers of sub-period (period for which one salary is processed)
+		if self.payroll_period:
+			self.remaining_sub_periods = get_period_factor(
+				self.employee, self.start_date, self.end_date, self.payroll_frequency, self.payroll_period
+			)[1]
 
 		self.gross_pay = self.get_component_totals("earnings", depends_on_payment_days=1)
 		self.base_gross_pay = flt(
@@ -642,8 +659,12 @@ class SalarySlip(TransactionBase):
 
 	def compute_taxable_earnings_for_year(self):
 		# get taxable_earnings, opening_taxable_earning, paid_taxes for previous period
-		self.previous_taxable_earnings = self.get_taxable_earnings_for_prev_period(
+		self.previous_taxable_earnings, exempted_amount = self.get_taxable_earnings_for_prev_period(
 			self.payroll_period.start_date, self.start_date, self.tax_slab.allow_tax_exemption
+		)
+
+		self.previous_taxable_earnings_before_exemption = (
+			self.previous_taxable_earnings + exempted_amount
 		)
 
 		self.compute_current_and_future_taxable_earnings()
@@ -681,15 +702,18 @@ class SalarySlip(TransactionBase):
 		)
 
 	def compute_current_and_future_taxable_earnings(self):
-		# get remaining numbers of sub-period (period for which one salary is processed)
-		self.remaining_sub_periods = get_period_factor(
-			self.employee, self.start_date, self.end_date, self.payroll_frequency, self.payroll_period
-		)[1]
-
 		# get taxable_earnings for current period (all days)
 		self.current_taxable_earnings = self.get_taxable_earnings(self.tax_slab.allow_tax_exemption)
 		self.future_structured_taxable_earnings = self.current_taxable_earnings.taxable_earnings * (
 			math.ceil(self.remaining_sub_periods) - 1
+		)
+
+		current_taxable_earnings_before_exemption = (
+			self.current_taxable_earnings.taxable_earnings
+			+ self.current_taxable_earnings.amount_exempted_from_income_tax
+		)
+		self.future_structured_taxable_earnings_before_exemption = (
+			current_taxable_earnings_before_exemption * (math.ceil(self.remaining_sub_periods) - 1)
 		)
 
 		# get taxable_earnings, addition_earnings for current actual payment days
@@ -699,6 +723,10 @@ class SalarySlip(TransactionBase):
 
 		self.current_structured_taxable_earnings = (
 			self.current_taxable_earnings_for_payment_days.taxable_earnings
+		)
+		self.current_structured_taxable_earnings_before_exemption = (
+			self.current_structured_taxable_earnings
+			+ self.current_taxable_earnings_for_payment_days.amount_exempted_from_income_tax
 		)
 
 		self.current_additional_earnings = (
@@ -713,6 +741,9 @@ class SalarySlip(TransactionBase):
 		if not self.payroll_period:
 			return
 
+		self.standard_tax_exemption_amount = 0
+		self.tax_exemption_declaration = 0
+
 		self.non_taxable_earnings = self.compute_non_taxable_earnings()
 
 		self.ctc = self.compute_ctc()
@@ -723,13 +754,14 @@ class SalarySlip(TransactionBase):
 
 		self.deductions_before_tax_calculation = self.compute_annual_deductions_before_tax_calculation()
 
-		self.standard_tax_exemption_amount = (
-			self.tax_slab.standard_tax_exemption_amount if self.tax_slab.allow_tax_exemption else 0.0
-		)
+		if hasattr(self, "tax_slab"):
+			self.standard_tax_exemption_amount = (
+				self.tax_slab.standard_tax_exemption_amount if self.tax_slab.allow_tax_exemption else 0.0
+			)
 
-		self.tax_exemption_declaration = (
-			self.get_total_exemption_amount() - self.standard_tax_exemption_amount
-		)
+			self.tax_exemption_declaration = (
+				self.get_total_exemption_amount() - self.standard_tax_exemption_amount
+			)
 
 		self.annual_taxable_amount = self.total_earnings - (
 			self.non_taxable_earnings
@@ -749,14 +781,18 @@ class SalarySlip(TransactionBase):
 
 			self.current_month_income_tax = self.current_structured_tax_amount
 
+			# non included current_month_income_tax separately as its already considered
+			# while calculating income_tax_deducted_till_date
+
 			self.total_income_tax = self.income_tax_deducted_till_date + self.future_income_tax_deductions
 
 	def compute_ctc(self):
 		if hasattr(self, "previous_taxable_earnings"):
+
 			return (
-				self.previous_taxable_earnings
-				+ self.current_structured_taxable_earnings
-				+ self.future_structured_taxable_earnings
+				self.previous_taxable_earnings_before_exemption
+				+ self.current_structured_taxable_earnings_before_exemption
+				+ self.future_structured_taxable_earnings_before_exemption
 				+ self.current_additional_earnings
 				+ self.other_incomes
 				+ self.unclaimed_taxable_benefits
@@ -916,7 +952,6 @@ class SalarySlip(TransactionBase):
 				# update statitical component amount in reference data based on payment days
 				# since row for statistical component is not added to salary slip
 				if struct_row.depends_on_payment_days:
-					joining_date, relieving_date = self.get_joining_and_relieving_dates()
 					payment_days_amount = (
 						flt(amount) * flt(self.payment_days) / cint(self.total_working_days)
 						if self.total_working_days
@@ -1090,6 +1125,10 @@ class SalarySlip(TransactionBase):
 				for d in frappe.get_all("Salary Component", filters={"variable_based_on_taxable_salary": 1})
 				if d.name not in self.other_deduction_components
 			]
+
+		if tax_components and self.payroll_period and self.salary_structure:
+			self.tax_slab = self.get_income_tax_slabs()
+			self.compute_taxable_earnings_for_year()
 
 		self.component_based_veriable_tax = {}
 		for d in tax_components:
@@ -1286,7 +1325,7 @@ class SalarySlip(TransactionBase):
 			"taxable_earnings_till_date", start_date, end_date
 		)
 
-		return (taxable_earnings + opening_taxable_earning) - exempted_amount
+		return (taxable_earnings + opening_taxable_earning) - exempted_amount, exempted_amount
 
 	def get_opening_for(self, field_to_select, start_date, end_date):
 		return (
@@ -1373,6 +1412,7 @@ class SalarySlip(TransactionBase):
 		additional_income = 0
 		additional_income_with_full_tax = 0
 		flexi_benefits = 0
+		amount_exempted_from_income_tax = 0
 
 		for earning in self.earnings:
 			if based_on_payment_days:
@@ -1395,7 +1435,7 @@ class SalarySlip(TransactionBase):
 					# Get additional amount based on future recurring additional salary
 					if additional_amount and earning.is_recurring_additional_salary:
 						additional_income += self.get_future_recurring_additional_amount(
-							earning.additional_salary, earning.additional_amount
+							earning.additional_salary, earning.additional_amount, relieving_date=relieving_date
 						)  # Used earning.additional_amount to consider the amount for the full month
 
 					if earning.deduct_full_tax_on_selected_payroll_date:
@@ -1412,23 +1452,28 @@ class SalarySlip(TransactionBase):
 
 					taxable_earnings -= flt(amount - additional_amount)
 					additional_income -= additional_amount
+					amount_exempted_from_income_tax = flt(amount - additional_amount)
 
 					if additional_amount and ded.is_recurring_additional_salary:
 						additional_income -= self.get_future_recurring_additional_amount(
-							ded.additional_salary, ded.additional_amount
+							ded.additional_salary, ded.additional_amount, relieving_date=relieving_date
 						)  # Used ded.additional_amount to consider the amount for the full month
 
 		return frappe._dict(
 			{
 				"taxable_earnings": taxable_earnings,
 				"additional_income": additional_income,
+				"amount_exempted_from_income_tax": amount_exempted_from_income_tax,
 				"additional_income_with_full_tax": additional_income_with_full_tax,
 				"flexi_benefits": flexi_benefits,
 			}
 		)
 
-	def get_future_recurring_period(self, additional_salary):
+	def get_future_recurring_period(self, additional_salary, relieving_date=None):
 		to_date = frappe.db.get_value("Additional Salary", additional_salary, "to_date")
+
+		if relieving_date:
+			to_date = relieving_date
 
 		# future month count excluding current
 		from_date, to_date = getdate(self.start_date), getdate(to_date)
@@ -1444,10 +1489,17 @@ class SalarySlip(TransactionBase):
 
 		return future_recurring_period
 
-	def get_future_recurring_additional_amount(self, additional_salary, monthly_additional_amount):
+	def get_future_recurring_additional_amount(
+		self, additional_salary, monthly_additional_amount, relieving_date=None
+	):
 		future_recurring_additional_amount = 0
 
-		future_recurring_period = self.get_future_recurring_period(additional_salary)
+		if not relieving_date:
+			joining_date, relieving_date = self.get_joining_and_relieving_dates()
+
+		future_recurring_period = self.get_future_recurring_period(
+			additional_salary, relieving_date=relieving_date
+		)
 
 		if future_recurring_period > 0:
 			future_recurring_additional_amount = (
@@ -1585,15 +1637,12 @@ class SalarySlip(TransactionBase):
 				total += amount
 		return total
 
-	def get_joining_and_relieving_dates(self):
+	def get_joining_and_relieving_dates(self, raise_exception=True):
 		joining_date, relieving_date = frappe.get_cached_value(
 			"Employee", self.employee, ["date_of_joining", "relieving_date"]
 		)
 
-		if not relieving_date:
-			relieving_date = getdate(self.end_date)
-
-		if not joining_date:
+		if not joining_date and raise_exception:
 			frappe.throw(
 				_("Please set the Date Of Joining for employee {0}").format(frappe.bold(self.employee_name))
 			)
@@ -2084,14 +2133,6 @@ def set_missing_values(time_sheet, target):
 	target.posting_date = doc.modified
 	target.total_working_hours = doc.total_hours
 	target.append("timesheets", {"time_sheet": doc.name, "working_hours": doc.total_hours})
-
-
-def date_range(start=None, end=None):
-	if start and end:
-		delta = end - start  # as timedelta
-		days = [str(start + timedelta(days=i)) for i in range(delta.days + 1)]
-		return days
-	return []
 
 
 def throw_error_message(row, error, title, description=None):
