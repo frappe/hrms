@@ -31,9 +31,7 @@
   "ratings",
   "self_score",
   "reflections_section",
-  "upload_reflections",
-  "positives",
-  "negatives",
+  "reflections",
   "amended_from"
  ],
  "fields": [
@@ -125,6 +123,8 @@
   {
    "fieldname": "appraisal_cycle",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Appraisal Cycle",
    "options": "Appraisal Cycle",
    "reqd": 1
@@ -162,21 +162,6 @@
    "label": "Self Appraisal"
   },
   {
-   "fieldname": "positives",
-   "fieldtype": "Text Editor",
-   "label": "What went well?"
-  },
-  {
-   "fieldname": "negatives",
-   "fieldtype": "Text Editor",
-   "label": "What could have been better?"
-  },
-  {
-   "fieldname": "upload_reflections",
-   "fieldtype": "Attach",
-   "label": "Upload Reflections"
-  },
-  {
    "fieldname": "reflections_section",
    "fieldtype": "Section Break",
    "label": "Reflections"
@@ -184,7 +169,7 @@
   {
    "fieldname": "self_score",
    "fieldtype": "Float",
-   "label": "Self Score",
+   "label": "Total Score",
    "read_only": 1
   },
   {
@@ -244,6 +229,10 @@
    "fieldname": "ratings",
    "fieldtype": "Table",
    "options": "Employee Feedback Rating"
+  },
+  {
+   "fieldname": "reflections",
+   "fieldtype": "Text Editor"
   }
  ],
  "icon": "fa fa-thumbs-up",
@@ -251,7 +240,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-23 21:49:06.725532",
+ "modified": "2023-03-24 18:30:07.479774",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",
@@ -292,6 +281,19 @@
    "read": 1,
    "report": 1,
    "role": "HR User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
    "share": 1,
    "submit": 1,
    "write": 1

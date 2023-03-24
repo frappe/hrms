@@ -123,6 +123,7 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 							});
 						}
 						dialog.hide();
+						this.frm.refresh();
 					}
 				});
 			},
@@ -217,6 +218,7 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 							});
 						}
 						dialog.hide();
+						this.frm.refresh();
 					}
 				});
 			},

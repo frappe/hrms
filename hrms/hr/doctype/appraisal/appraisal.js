@@ -68,8 +68,11 @@ frappe.ui.form.on("Appraisal", {
 					]
 				},
 				title: __("Scores"),
-				height: 300,
+				height: 250,
 				type: "bar",
+				barOptions: {
+					spaceRatio: 0.7
+				},
 				colors: ["blue", "green"]
 			});
 		}

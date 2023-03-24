@@ -169,7 +169,7 @@ class Appraisal(Document):
 @frappe.whitelist()
 def get_feedback_history(employee, appraisal):
 	data = frappe._dict()
-	data.feedback_history = frappe.get_list(
+	data.feedback_history = frappe.get_all(
 		"Employee Performance Feedback",
 		filters={"employee": employee, "appraisal": appraisal},
 		fields=[
