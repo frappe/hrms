@@ -24,10 +24,10 @@
 		</div>
 	{% } %}
 
-	<div class="feedback-history frappe-card mb-3">
+	<div class="feedback-history mb-3">
 		{% if (feedback_history.length) { %}
 			{% for (let i=0, l=feedback_history.length; i<l; i++) { %}
-				<div class="feedback-content p-3 d-flex flex-row" data-name="{{ feedback_history[i].name }}">
+				<div class="feedback-content p-3 d-flex flex-row mt-3" data-name="{{ feedback_history[i].name }}">
 					<div class="reviewer-info mb-2 col-xs-3">
 						<div class="row">
 							<div class="col-xs-2">
@@ -60,9 +60,9 @@
 						</div>
 					</div>
 
-					<div class="feedback-info col-xs-3 d-flex flex-row">
+					<div class="feedback-info col-xs-3 d-flex flex-row justify-content-end">
 						<div class="time small text-muted mr-2">
-							{{ frappe.datetime.global_date_format(feedback_history[i].added_on) }}
+							{{ frappe.datetime.comment_when(feedback_history[i].added_on) }}
 						</div>
 						{%
 							if (
