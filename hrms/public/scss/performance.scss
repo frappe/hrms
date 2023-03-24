@@ -52,8 +52,8 @@
 
 .feedback-history {
 	.feedback-content {
+		border-radius: var(--border-radius);
 		border: 1px solid var(--border-color);
-		border-bottom: none;
 	}
 
 	.feedback-content:last-child {

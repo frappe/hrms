@@ -16,6 +16,7 @@
   "reviewer",
   "reviewer_name",
   "reviewer_designation",
+  "user",
   "column_break_f0bz",
   "added_on",
   "appraisal_cycle",
@@ -148,11 +149,19 @@
    "fieldtype": "Table",
    "label": "Feedback Ratings",
    "options": "Employee Feedback Rating"
+  },
+  {
+   "fetch_from": "reviewer.user_id",
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-03-20 21:40:34.610858",
+ "modified": "2023-03-23 22:28:07.950350",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Performance Feedback",
