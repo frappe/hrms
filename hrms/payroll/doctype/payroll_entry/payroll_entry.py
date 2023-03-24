@@ -29,6 +29,8 @@ from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
 from erpnext.accounts.utils import get_fiscal_year
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 
+SalaryStructure = frappe.qb.DocType("Salary Structure")
+
 
 class PayrollEntry(Document):
 	def onload(self):
@@ -204,7 +206,7 @@ class PayrollEntry(Document):
 				self.db_set("status", "Queued")
 				frappe.enqueue(
 					create_salary_slips_for_employees,
-					timeout=600,
+					timeout=3000,
 					employees=employees,
 					args=args,
 					publish_progress=False,
@@ -248,7 +250,7 @@ class PayrollEntry(Document):
 			self.db_set("status", "Queued")
 			frappe.enqueue(
 				submit_salary_slips_for_employees,
-				timeout=600,
+				timeout=3000,
 				payroll_entry=self,
 				salary_slips=salary_slips,
 				publish_progress=False,
@@ -812,27 +814,20 @@ class PayrollEntry(Document):
 
 
 def get_sal_struct(
-	company: str, currency: str, salary_slip_based_on_timesheet: int, condition: str
+	company: str, currency: str, salary_slip_based_on_timesheet: int, payroll_frequency: str
 ):
-	return frappe.db.sql_list(
-		"""
-		select
-			name from `tabSalary Structure`
-		where
-			docstatus = 1 and
-			is_active = 'Yes'
-			and company = %(company)s
-			and currency = %(currency)s and
-			ifnull(salary_slip_based_on_timesheet,0) = %(salary_slip_based_on_timesheet)s
-			{condition}""".format(
-			condition=condition
-		),
-		{
-			"company": company,
-			"currency": currency,
-			"salary_slip_based_on_timesheet": salary_slip_based_on_timesheet,
-		},
-	)
+	return (
+		frappe.qb.from_(SalaryStructure)
+		.select(SalaryStructure.name)
+		.where(
+			(SalaryStructure.docstatus == 1)
+			& (SalaryStructure.is_active == "Yes")
+			& (SalaryStructure.company == company)
+			& (SalaryStructure.currency == currency)
+			& (SalaryStructure.salary_slip_based_on_timesheet == salary_slip_based_on_timesheet)
+			& (SalaryStructure.payroll_frequency == payroll_frequency)
+		)
+	).run(pluck=True)
 
 
 def get_filter_condition(filters):
@@ -855,27 +850,34 @@ def get_joining_relieving_condition(start_date, end_date):
 	return cond
 
 
-def get_emp_list(sal_struct, cond, end_date, payroll_payable_account):
-	return frappe.db.sql(
-		"""
-			select
-				distinct t1.name as employee, t1.employee_name, t1.department, t1.designation
-			from
-				`tabEmployee` t1, `tabSalary Structure Assignment` t2
-			where
-				t1.name = t2.employee
-				and t2.docstatus = 1
-				and t1.status != 'Inactive'
-		%s order by t2.from_date desc
-		"""
-		% cond,
-		{
-			"sal_struct": tuple(sal_struct),
-			"from_date": end_date,
-			"payroll_payable_account": payroll_payable_account,
-		},
-		as_dict=True,
+def get_emp_list(sal_struct, filters):
+	SalaryStructureAssignment = frappe.qb.DocType("Salary Structure Assignment")
+	Employee = frappe.qb.DocType("Employee")
+
+	query = (
+		frappe.qb.from_(Employee)
+		.join(SalaryStructureAssignment)
+		.on(Employee.name == SalaryStructureAssignment.employee)
+		.where(
+			(SalaryStructureAssignment.docstatus == 1)
+			& (Employee.status != "Inactive")
+			& (Employee.company == filters.company)
+			& (Employee.date_of_joining <= filters.end_date)
+			& (Employee.relieving_date >= filters.start_date)
+			& (SalaryStructureAssignment.salary_structure.isin(sal_struct))
+			& (SalaryStructureAssignment.payroll_payable_account == filters.payroll_payable_account)
+			& (filters.start_date >= SalaryStructureAssignment.from_date)
+		)
+		.select(
+			Employee.name.as_("employee"), Employee.employee_name, Employee.department, Employee.designation
+		)
 	)
+
+	for fltr_key in ["branch", "department", "designation"]:
+		if filters.get(fltr_key):
+			query = query.where(Employee[fltr_key] == filters[fltr_key])
+
+	return query.run(as_dict=True)
 
 
 def remove_payrolled_employees(emp_list, start_date, end_date):
@@ -1157,25 +1159,17 @@ def get_payroll_entries_for_jv(doctype, txt, searchfield, start, page_len, filte
 
 
 def get_employee_list(filters: frappe._dict) -> list[str]:
-	condition = f"and payroll_frequency = '{filters.payroll_frequency}'"
-
 	sal_struct = get_sal_struct(
-		filters.company, filters.currency, filters.salary_slip_based_on_timesheet, condition
+		filters.company,
+		filters.currency,
+		filters.salary_slip_based_on_timesheet,
+		filters.payroll_frequency,
 	)
 
 	if not sal_struct:
 		return []
 
-	cond = (
-		get_filter_condition(filters)
-		+ get_joining_relieving_condition(filters.start_date, filters.end_date)
-		+ (
-			"and t2.salary_structure IN %(sal_struct)s "
-			"and t2.payroll_payable_account = %(payroll_payable_account)s "
-			"and %(from_date)s >= t2.from_date"
-		)
-	)
-	emp_list = get_emp_list(sal_struct, cond, filters.end_date, filters.payroll_payable_account)
+	emp_list = get_emp_list(sal_struct, filters)
 	return remove_payrolled_employees(emp_list, filters.start_date, filters.end_date)
 
 
