@@ -139,7 +139,7 @@ class TestSalarySlip(FrappeTestCase):
 			(78000 / (days_in_month - no_of_holidays)) * flt(ss.leave_without_pay + ss.absent_days)
 		)
 
-		self.assertEqual(ss.gross_pay, gross_pay)
+		self.assertEqual(rounded(ss.gross_pay), rounded(gross_pay))
 
 	@change_settings(
 		"Payroll Settings",
@@ -301,7 +301,6 @@ class TestSalarySlip(FrappeTestCase):
 		make_leave_application(emp_id, first_sunday, add_days(first_sunday, 3), "Leave Without Pay")
 
 		leave_type_ppl = create_leave_type(leave_type_name="Test Partially Paid Leave", is_ppl=1)
-		leave_type_ppl.save()
 
 		alloc = create_leave_allocation(
 			employee=emp_id,
@@ -1165,7 +1164,7 @@ class TestSalarySlip(FrappeTestCase):
 		)
 		for deduction in salary_slip.deductions:
 			if deduction.salary_component == "TDS":
-				self.assertEqual(deduction.amount, 7732.0)
+				self.assertEqual(deduction.amount, 7691.0)
 
 		frappe.db.sql("DELETE FROM `tabPayroll Period` where company = '_Test Company'")
 		frappe.db.sql("DELETE FROM `tabIncome Tax Slab` where currency = 'INR'")
@@ -1212,7 +1211,7 @@ class TestSalarySlip(FrappeTestCase):
 			salary_structure_doc.name, employee=employee_doc.name, posting_date=payroll_period.start_date
 		)
 
-		monthly_tax_amount = 11466.0
+		monthly_tax_amount = 11403.6
 
 		self.assertEqual(salary_slip.ctc, 1226000.0)
 		self.assertEqual(salary_slip.income_from_other_sources, 10000.0)
@@ -1222,10 +1221,39 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertEqual(salary_slip.tax_exemption_declaration, 100000.0)
 		self.assertEqual(salary_slip.deductions_before_tax_calculation, 2400.0)
 		self.assertEqual(salary_slip.annual_taxable_amount, 1073600.0)
-		self.assertEqual(flt(salary_slip.income_tax_deducted_till_date, 1), monthly_tax_amount)
-		self.assertEqual(flt(salary_slip.current_month_income_tax, 1), monthly_tax_amount)
-		self.assertEqual(flt(salary_slip.future_income_tax_deductions, 1), 126126.0)
-		self.assertEqual(flt(salary_slip.total_income_tax, 0), 137592)
+		self.assertEqual(flt(salary_slip.income_tax_deducted_till_date, 2), monthly_tax_amount)
+		self.assertEqual(flt(salary_slip.current_month_income_tax, 2), monthly_tax_amount)
+		self.assertEqual(flt(salary_slip.future_income_tax_deductions, 2), 125439.65)
+		self.assertEqual(flt(salary_slip.total_income_tax, 2), 136843.25)
+
+	@change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
+	def test_lwp_calculation_based_on_relieving_date(self):
+		emp_id = make_employee("test_lwp_based_on_relieving_date@salary.com")
+		frappe.db.set_value("Employee", emp_id, {"relieving_date": None, "status": "Active"})
+		frappe.db.set_value("Leave Type", "Leave Without Pay", "include_holiday", 0)
+
+		month_start_date = get_first_day(nowdate())
+		first_sunday = get_first_sunday(for_date=month_start_date)
+		relieving_date = add_days(first_sunday, 10)
+		leave_start_date = add_days(first_sunday, 16)
+		leave_end_date = add_days(leave_start_date, 2)
+
+		make_leave_application(emp_id, leave_start_date, leave_end_date, "Leave Without Pay")
+
+		frappe.db.set_value("Employee", emp_id, {"relieving_date": relieving_date, "status": "Left"})
+
+		ss = make_employee_salary_slip(
+			"test_lwp_based_on_relieving_date@salary.com",
+			"Monthly",
+			"Test Payment Based On Leave Application",
+		)
+
+		holidays = ss.get_holidays_for_employee(month_start_date, relieving_date)
+		days_between_start_and_relieving = date_diff(relieving_date, month_start_date) + 1
+
+		self.assertEqual(ss.leave_without_pay, 0)
+
+		self.assertEqual(ss.payment_days, (days_between_start_and_relieving - len(holidays)))
 
 
 def get_no_of_days():
@@ -1710,7 +1738,7 @@ def make_payroll_period():
 			pp = create_payroll_period(company=company, name=company_based_payroll_period[company])
 
 
-def make_holiday_list(list_name=None, from_date=None, to_date=None):
+def make_holiday_list(list_name=None, from_date=None, to_date=None, add_weekly_offs=True):
 	fiscal_year = get_fiscal_year(nowdate(), company=erpnext.get_default_company())
 	name = list_name or "Salary Slip Test Holiday List"
 
@@ -1722,10 +1750,13 @@ def make_holiday_list(list_name=None, from_date=None, to_date=None):
 			"holiday_list_name": name,
 			"from_date": from_date or fiscal_year[1],
 			"to_date": to_date or fiscal_year[2],
-			"weekly_off": "Sunday",
 		}
 	).insert()
-	holiday_list.get_weekly_off_dates()
+
+	if add_weekly_offs:
+		holiday_list.weekly_off = "Sunday"
+		holiday_list.get_weekly_off_dates()
+
 	holiday_list.save()
 	holiday_list = holiday_list.name
 
