@@ -14,10 +14,14 @@
   "designation",
   "employee_image",
   "column_break0",
+  "period_based_on",
+  "appraisal_cycle",
+  "start_date",
+  "end_date",
+  "column_break_hgqn",
   "company",
   "status",
-  "appraisal_cycle",
-  "section_break0",
+  "kra_tab",
   "appraisal_template",
   "rate_goals_manually",
   "section_break_kras",
@@ -101,7 +105,7 @@
    "read_only": 1
   },
   {
-   "fieldname": "section_break0",
+   "fieldname": "kra_tab",
    "fieldtype": "Tab Break",
    "label": "KRAs",
    "oldfieldtype": "Section Break",
@@ -126,13 +130,14 @@
    "read_only": 1
   },
   {
+   "depends_on": "eval:doc.period_based_on===\"Appraisal Cycle\";",
    "fieldname": "appraisal_cycle",
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Appraisal Cycle",
-   "options": "Appraisal Cycle",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.period_based_on===\"Appraisal Cycle\";",
+   "options": "Appraisal Cycle"
   },
   {
    "depends_on": "eval: !doc.rate_goals_manually",
@@ -269,6 +274,32 @@
    "fieldtype": "Check",
    "label": "Rate Goals Manually",
    "read_only": 1
+  },
+  {
+   "fieldname": "column_break_hgqn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.period_based_on==\"Custom Date Range\";",
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date",
+   "mandatory_depends_on": "eval:doc.period_based_on===\"Custom Date Range\";"
+  },
+  {
+   "depends_on": "eval:doc.period_based_on==\"Custom Date Range\";",
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date",
+   "mandatory_depends_on": "eval:doc.period_based_on===\"Custom Date Range\";"
+  },
+  {
+   "default": "Appraisal Cycle",
+   "fieldname": "period_based_on",
+   "fieldtype": "Select",
+   "label": "Period Based on",
+   "options": "Appraisal Cycle\nCustom Date Range",
+   "reqd": 1
   }
  ],
  "icon": "fa fa-thumbs-up",
@@ -276,7 +307,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-25 20:44:30.156036",
+ "modified": "2023-03-26 01:50:34.941927",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",

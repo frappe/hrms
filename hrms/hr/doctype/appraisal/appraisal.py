@@ -5,7 +5,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.query_builder.functions import Avg
-from frappe.utils import flt, now
+from frappe.utils import flt, get_link_to_form, now
 
 from hrms.hr.utils import validate_active_employee
 
@@ -18,27 +18,45 @@ class Appraisal(Document):
 		self.set_kra_evaluation_method()
 
 		validate_active_employee(self.employee)
+		self.validate_period()
 		self.validate_duplicate()
 
 		self.calculate_total_score()
 		self.calculate_self_appraisal_score()
 		self.calculate_avg_feedback_score()
 
+	def validate_period(self):
+		if self.period_based_on == "Custom Date Range":
+			self.validate_from_to_dates("start_date", "end_date")
+
 	def validate_duplicate(self):
-		duplicate = frappe.db.exists(
-			"Appraisal",
-			{
-				"employee": self.employee,
-				"status": ["in", ["Submitted", "Completed"]],
-				"name": ["!=", self.name],
-				"appraisal_cycle": self.appraisal_cycle,
-			},
-		)
+		Appraisal = frappe.qb.DocType("Appraisal")
+		duplicate = (
+			frappe.qb.from_(Appraisal)
+			.select(Appraisal.name)
+			.where(
+				(Appraisal.employee == self.employee)
+				& (Appraisal.docstatus != 2)
+				& (Appraisal.name != self.name)
+				& (
+					(Appraisal.appraisal_cycle == self.appraisal_cycle)
+					| (
+						(Appraisal.start_date.between(self.start_date, self.end_date))
+						| (Appraisal.end_date.between(self.start_date, self.end_date))
+						| ((self.start_date >= Appraisal.start_date) & (self.start_date <= Appraisal.end_date))
+						| ((self.end_date >= Appraisal.start_date) & (self.end_date <= Appraisal.end_date))
+					)
+				)
+			)
+		).run()
+		duplicate = duplicate[0][0] if duplicate else 0
 
 		if duplicate:
 			frappe.throw(
-				_("Appraisal {0} already created for Employee {1} for this Appraisal Cycle").format(
-					duplicate, self.employee_name
+				_(
+					"Appraisal {0} already exists for Employee {1} for this Appraisal Cycle or overlapping period"
+				).format(
+					get_link_to_form("Appraisal", duplicate), frappe.bold(self.employee_name)
 				),
 				exc=frappe.DuplicateEntryError,
 				title=_("Duplicate Entry"),
