@@ -19,7 +19,12 @@
   "appraisal_cycle",
   "section_break0",
   "appraisal_template",
+  "rate_goals_manually",
+  "section_break_kras",
   "appraisal_kra",
+  "section_break_goals",
+  "goals",
+  "remarks",
   "total_section",
   "total_score",
   "feedback_tab",
@@ -130,8 +135,10 @@
    "reqd": 1
   },
   {
+   "depends_on": "eval: !doc.rate_goals_manually",
    "fieldname": "appraisal_kra",
    "fieldtype": "Table",
+   "label": "KRA vs Goals",
    "oldfieldname": "appraisal_details",
    "oldfieldtype": "Table",
    "options": "Appraisal KRA"
@@ -233,6 +240,35 @@
   {
    "fieldname": "reflections",
    "fieldtype": "Text Editor"
+  },
+  {
+   "depends_on": "rate_goals_manually",
+   "fieldname": "goals",
+   "fieldtype": "Table",
+   "label": "Goals",
+   "options": "Appraisal Goal"
+  },
+  {
+   "depends_on": "rate_goals_manually",
+   "description": "Any other remarks, noteworthy effort that should go in the records",
+   "fieldname": "remarks",
+   "fieldtype": "Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "section_break_kras",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_goals",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "rate_goals_manually",
+   "fieldtype": "Check",
+   "label": "Rate Goals Manually",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-thumbs-up",
@@ -240,7 +276,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-24 18:30:07.479774",
+ "modified": "2023-03-25 20:44:30.156036",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",

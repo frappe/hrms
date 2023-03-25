@@ -7,6 +7,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "overview_tab",
   "cycle_name",
   "company",
   "column_break_3",
@@ -14,6 +15,8 @@
   "end_date",
   "section_break_4",
   "description",
+  "settings_section",
+  "kra_evaluation_method",
   "applicable_for_tab",
   "filters_section",
   "branch",
@@ -124,6 +127,23 @@
    "label": "Cycle Name",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "settings_section",
+   "fieldtype": "Section Break",
+   "label": "Settings"
+  },
+  {
+   "default": "Automated Based on Goal Progress",
+   "fieldname": "kra_evaluation_method",
+   "fieldtype": "Select",
+   "label": "KRA Evaluation Method",
+   "options": "Automated Based on Goal Progress\nManual Rating"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -141,7 +161,7 @@
    "link_fieldname": "appraisal_cycle"
   }
  ],
- "modified": "2023-03-18 12:46:22.990441",
+ "modified": "2023-03-25 13:53:35.538948",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal Cycle",
