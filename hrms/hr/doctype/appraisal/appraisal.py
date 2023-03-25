@@ -11,14 +11,14 @@ from hrms.hr.utils import validate_active_employee
 
 
 class Appraisal(Document):
-	def before_insert(self):
-		self.validate_duplicate()
-
 	def validate(self):
 		if not self.status:
 			self.status = "Draft"
 
+		self.set_kra_evaluation_method()
+
 		validate_active_employee(self.employee)
+		self.validate_duplicate()
 
 		self.calculate_total_score()
 		self.calculate_self_appraisal_score()
@@ -29,7 +29,8 @@ class Appraisal(Document):
 			"Appraisal",
 			{
 				"employee": self.employee,
-				"docstatus": ["!=", 2],
+				"status": ["in", ["Submitted", "Completed"]],
+				"name": ["!=", self.name],
 				"appraisal_cycle": self.appraisal_cycle,
 			},
 		)
@@ -42,6 +43,18 @@ class Appraisal(Document):
 				exc=frappe.DuplicateEntryError,
 				title=_("Duplicate Entry"),
 			)
+
+	@frappe.whitelist()
+	def set_kra_evaluation_method(self):
+		if (
+			self.is_new()
+			and self.appraisal_cycle
+			and frappe.db.get_value(
+				"Appraisal Cycle", self.appraisal_cycle, "kra_evaluation_method", cache=True
+			)
+			== "Manual Rating"
+		):
+			self.rate_goals_manually = 1
 
 	@frappe.whitelist()
 	def set_kras_and_rating_criteria(self):
@@ -74,11 +87,30 @@ class Appraisal(Document):
 		return self
 
 	def calculate_total_score(self):
-		total = 0
-		for entry in self.appraisal_kra:
-			total += flt(entry.goal_score)
+		total_weightage, total = 0, 0
+		table = ""
 
-		self.total_score = total
+		if self.rate_goals_manually:
+			table = _("Goals")
+			for entry in self.goals:
+				entry.score_earned = flt(entry.score) * flt(entry.per_weightage) / 100
+				total += flt(entry.score_earned)
+				total_weightage += flt(entry.per_weightage)
+		else:
+			table = _("KRAs")
+			for entry in self.appraisal_kra:
+				total += flt(entry.goal_score)
+				total_weightage += flt(entry.per_weightage)
+
+		if flt(total_weightage, 2) != 100.0:
+			frappe.throw(
+				_("Total weightage for all {0} must add up to 100. Currently, it is {1}%").format(
+					table, total_weightage
+				),
+				title=_("Incorrect Weightage Allocation"),
+			)
+
+		self.total_score = flt(total, self.precision("total_score"))
 
 	def calculate_self_appraisal_score(self):
 		total = 0
@@ -125,15 +157,16 @@ class Appraisal(Document):
 
 		feedback.insert()
 
-		return feedback.name
+		return feedback
 
 	@frappe.whitelist()
 	def edit_feedback(self, feedback, name):
 		doc = frappe.get_doc("Employee Performance Feedback", name)
 		doc.update({"feedback": feedback})
+		doc.flags.ignore_mandatory = True
 		doc.save()
 
-		return doc.name
+		return doc
 
 	@frappe.whitelist()
 	def delete_feedback(self, name):
@@ -163,7 +196,10 @@ class Appraisal(Document):
 
 			kra.db_update()
 
-			return kra.goal_score
+		self.calculate_total_score()
+		self.db_update()
+
+		return kra.goal_score
 
 
 @frappe.whitelist()

@@ -2,25 +2,18 @@
 // License: GNU General Public License v3. See license.txt
 
 frappe.ui.form.on("Appraisal", {
-	refresh: function(frm) {
+	refresh(frm) {
 		if (!frm.doc.__islocal) {
-			frm.add_custom_button(__("View Goals"), function() {
-				frappe.route_options = {
-					company: frm.doc.company,
-					employee: frm.doc.employee,
-					appraisal_cycle: frm.doc.appraisal_cycle,
-				};
-				frappe.set_route("Tree", "Goal");
-			});
-
+			frm.trigger("add_custom_buttons");
 			frm.trigger("show_feedback_history");
 			frm.trigger("setup_chart");
 		}
 
+		// don't allow removing image (fetched from employee)
 		frm.sidebar.image_wrapper.find(".sidebar-image-actions").addClass("hide");
 	},
 
-	appraisal_template: function(frm) {
+	appraisal_template(frm) {
 		if (frm.doc.appraisal_template) {
 			frm.call("set_kras_and_rating_criteria", () => {
 				frm.refresh_field("appraisal_kra");
@@ -29,7 +22,27 @@ frappe.ui.form.on("Appraisal", {
 		}
 	},
 
-	show_feedback_history: function(frm) {
+	appraisal_cycle(frm) {
+		if (frm.doc.appraisal_cycle) {
+			frm.call({
+				method: "set_kra_evaluation_method",
+				doc: frm.doc,
+			});
+		}
+	},
+
+	add_custom_buttons(frm) {
+		frm.add_custom_button(__("View Goals"), function() {
+			frappe.route_options = {
+				company: frm.doc.company,
+				employee: frm.doc.employee,
+				appraisal_cycle: frm.doc.appraisal_cycle,
+			};
+			frappe.set_route("Tree", "Goal");
+		});
+	},
+
+	show_feedback_history(frm) {
 		frappe.require("performance.bundle.js", () => {
 			const feedback_history = new hrms.PerformanceFeedback({
 				frm: frm,
@@ -39,7 +52,7 @@ frappe.ui.form.on("Appraisal", {
 		});
 	},
 
-	setup_chart: function(frm) {
+	setup_chart(frm) {
 		const labels = [];
 		const maximum_scores = [];
 		const scores = [];

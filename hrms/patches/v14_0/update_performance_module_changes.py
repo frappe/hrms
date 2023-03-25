@@ -5,11 +5,13 @@ from frappe.model.utils.rename_field import rename_field
 def execute():
 	_rename_fields()
 	_create_kras()
+	update_kra_evaluation_method()
 
 
 def _rename_fields():
 	try:
 		rename_field("Appraisal Template", "kra_title", "template_title")
+		rename_field("Appraisal", "kra_template", "appraisal_template")
 
 	except Exception as e:
 		if e.args[0] != 1054:
@@ -43,3 +45,13 @@ def _create_kras():
 			entry.kra = kra_title
 
 		template_doc.save(ignore_permissions=True)
+
+
+def update_kra_evaluation_method():
+	"""
+	- Set rate_goals_manually = True in existing Appraisals
+	- Only new appraisals created after this patch can use the new method.
+	"""
+
+	Appraisal = frappe.qb.DocType("Appraisal")
+	frappe.qb.update(Appraisal).set(Appraisal.rate_goals_manually, 1).run()
