@@ -377,7 +377,7 @@ def get_employee_shift_timings(
 	curr_shift = get_employee_shift(employee, for_timestamp, consider_default_shift, "forward")
 	if curr_shift:
 		next_shift = get_employee_shift(
-			employee, curr_shift.start_datetime + timedelta(days=1), consider_default_shift, "forward"
+			employee, for_timestamp + timedelta(days=1), consider_default_shift, "forward"
 		)
 	prev_shift = get_employee_shift(
 		employee, for_timestamp + timedelta(days=-1), consider_default_shift, "reverse"
