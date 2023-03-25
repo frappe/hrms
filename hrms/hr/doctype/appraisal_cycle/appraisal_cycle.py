@@ -7,6 +7,9 @@ from frappe.model.document import Document
 
 
 class AppraisalCycle(Document):
+	def validate(self):
+		self.validate_from_to_dates("start_date", "end_date")
+
 	@frappe.whitelist()
 	def set_employees(self):
 		"""Pull employees in appraisee list based on selected filters"""
