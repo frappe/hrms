@@ -114,34 +114,21 @@ class PayrollEntry(Document):
 		"""
 		self.check_mandatory()
 		filters = self.make_filters()
-		cond = get_filter_condition(filters)
-		cond += get_joining_relieving_condition(self.start_date, self.end_date)
-
-		condition = ""
-		if self.payroll_frequency:
-			condition = """and payroll_frequency = '%(payroll_frequency)s'""" % {
-				"payroll_frequency": self.payroll_frequency
-			}
-
-		sal_struct = get_sal_struct(
-			self.company, self.currency, self.salary_slip_based_on_timesheet, condition
-		)
-		if sal_struct:
-			cond += "and t2.salary_structure IN %(sal_struct)s "
-			cond += "and t2.payroll_payable_account = %(payroll_payable_account)s "
-			cond += "and %(from_date)s >= t2.from_date"
-			emp_list = get_emp_list(sal_struct, cond, self.end_date, self.payroll_payable_account)
-			emp_list = remove_payrolled_employees(emp_list, self.start_date, self.end_date)
-			return emp_list
+		return get_employee_list(filters=filters)
 
 	def make_filters(self):
-		filters = frappe._dict()
-		filters["company"] = self.company
-		filters["branch"] = self.branch
-		filters["department"] = self.department
-		filters["designation"] = self.designation
-
-		return filters
+		return frappe._dict(
+			company=self.company,
+			branch=self.branch,
+			department=self.department,
+			designation=self.designation,
+			currency=self.currency,
+			payroll_frequency=self.payroll_frequency,
+			start_date=self.start_date,
+			end_date=self.end_date,
+			payroll_payable_account=self.payroll_payable_account,
+			salary_slip_based_on_timesheet=self.salary_slip_based_on_timesheet,
+		)
 
 	@frappe.whitelist()
 	def fill_employee_details(self):
@@ -862,8 +849,8 @@ def get_emp_list(sal_struct, filters):
 			(SalaryStructureAssignment.docstatus == 1)
 			& (Employee.status != "Inactive")
 			& (Employee.company == filters.company)
-			& (Employee.date_of_joining <= filters.end_date)
-			& (Employee.relieving_date >= filters.start_date)
+			& ((Employee.date_of_joining <= filters.end_date) | (Employee.date_of_joining.isnull()))
+			& ((Employee.relieving_date >= filters.start_date) | (Employee.relieving_date.isnull()))
 			& (SalaryStructureAssignment.salary_structure.isin(sal_struct))
 			& (SalaryStructureAssignment.payroll_payable_account == filters.payroll_payable_account)
 			& (filters.start_date >= SalaryStructureAssignment.from_date)
