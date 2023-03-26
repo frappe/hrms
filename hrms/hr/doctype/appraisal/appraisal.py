@@ -21,6 +21,7 @@ class Appraisal(Document):
 		self.validate_period()
 		self.validate_duplicate()
 
+		self.set_goal_progress()
 		self.calculate_total_score()
 		self.calculate_self_appraisal_score()
 		self.calculate_avg_feedback_score()
@@ -191,11 +192,9 @@ class Appraisal(Document):
 		frappe.delete_doc("Employee Performance Feedback", name)
 		return name
 
-	def update_goal_progress(self, goal):
+	def set_goal_progress(self, update=False):
 		for kra in self.appraisal_kra:
-			if kra.kra != goal.kra:
-				continue
-
+			# update progress for all goals as KRA linked could be removed or changed
 			Goal = frappe.qb.DocType("Goal")
 			avg_goal_completion = (
 				frappe.qb.from_(Goal)
@@ -212,12 +211,14 @@ class Appraisal(Document):
 			kra.goal_completion = flt(avg_goal_completion, kra.precision("goal_completion"))
 			kra.goal_score = flt(kra.goal_completion * kra.per_weightage / 100, kra.precision("goal_score"))
 
-			kra.db_update()
+			if update:
+				kra.db_update()
 
-		self.calculate_total_score()
-		self.db_update()
+		if update:
+			self.calculate_total_score()
+			self.db_update()
 
-		return kra.goal_score
+		return self
 
 
 @frappe.whitelist()

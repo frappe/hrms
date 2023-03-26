@@ -12,11 +12,25 @@ from frappe.utils.nestedset import NestedSet
 
 class Goal(NestedSet):
 	def validate(self):
-		self.set_status()
 		self.validate_parent_fields()
 		self.validate_from_to_dates(self.start_date, self.end_date)
+		self.validate_progress()
+		self.set_status()
 
 	def on_update(self):
+		doc_before_save = self.get_doc_before_save()
+
+		if doc_before_save:
+			self.update_kra_in_child_goals(doc_before_save)
+
+			if doc_before_save.parent_goal != self.parent_goal:
+				# parent goal changed, update progress of old parent
+				self.update_parent_progress(doc_before_save.parent_goal)
+
+		self.update_parent_progress()
+		self.update_goal_progress_in_appraisal()
+
+	def after_delete(self):
 		self.update_parent_progress()
 		self.update_goal_progress_in_appraisal()
 
@@ -34,6 +48,10 @@ class Goal(NestedSet):
 				_("Goal should be aligned with the same KRA as its parent goal."), title=_("Not Allowed")
 			)
 
+	def validate_progress(self):
+		if flt(self.progress) > 100:
+			frappe.throw(_("Goal progress percentage cannot be more than 100."))
+
 	def set_status(self, status=None):
 		if self.status != "Archived":
 			if flt(self.progress) == 0:
@@ -43,8 +61,18 @@ class Goal(NestedSet):
 			elif flt(self.progress) < 100:
 				self.status = "In Progress"
 
-	def update_parent_progress(self):
-		if not self.parent_goal:
+	def update_kra_in_child_goals(self, doc_before_save):
+		"""Aligns children's KRA to parent goal's KRA if parent goal's KRA is changed"""
+		if doc_before_save.kra != self.kra and self.is_group:
+			Goal = frappe.qb.DocType("Goal")
+			(frappe.qb.update(Goal).set(Goal.kra, self.kra).where((Goal.parent_goal == self.name))).run()
+
+			frappe.msgprint(_("KRA updated for all child goals."), alert=True, indicator="green")
+
+	def update_parent_progress(self, old_parent=None):
+		parent_goal = old_parent or self.parent_goal
+
+		if not parent_goal:
 			return
 
 		Goal = frappe.qb.DocType("Goal")
@@ -52,28 +80,26 @@ class Goal(NestedSet):
 			frappe.qb.from_(Goal)
 			.select(Avg(Goal.progress).as_("avg_goal_completion"))
 			.where(
-				(Goal.parent_goal == self.parent_goal)
+				(Goal.parent_goal == parent_goal)
 				& (Goal.employee == self.employee)
 				# archived goals should not contribute to progress
 				& (Goal.status != "Archived")
 			)
 		).run()[0][0]
 
-		parent_goal = frappe.get_doc("Goal", self.parent_goal)
-		parent_goal.progress = flt(avg_goal_completion, parent_goal.precision("progress"))
-		parent_goal.ignore_permissions = True
-		parent_goal.ignore_mandatory = True
-		parent_goal.save()
+		parent_goal_doc = frappe.get_doc("Goal", parent_goal)
+		parent_goal_doc.progress = flt(avg_goal_completion, parent_goal_doc.precision("progress"))
+		parent_goal_doc.ignore_permissions = True
+		parent_goal_doc.ignore_mandatory = True
+		parent_goal_doc.save()
 
 	def update_goal_progress_in_appraisal(self):
-		if not self.kra:
-			return
-
 		appraisal = frappe.db.get_value(
 			"Appraisal", {"employee": self.employee, "appraisal_cycle": self.appraisal_cycle}
 		)
-		appraisal = frappe.get_doc("Appraisal", appraisal)
-		appraisal.update_goal_progress(self)
+		if appraisal:
+			appraisal = frappe.get_doc("Appraisal", appraisal)
+			appraisal.set_goal_progress(update=True)
 
 
 @frappe.whitelist()

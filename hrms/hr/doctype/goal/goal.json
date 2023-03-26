@@ -30,20 +30,14 @@
  ],
  "fields": [
   {
-   "fieldname": "goal_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Goal",
-   "reqd": 1
-  },
-  {
    "fieldname": "employee",
    "fieldtype": "Link",
    "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Employee",
    "options": "Employee",
-   "reqd": 1
+   "reqd": 1,
+   "set_only_once": 1
   },
   {
    "fieldname": "column_break_4",
@@ -65,7 +59,7 @@
    "fieldtype": "Percent",
    "in_list_view": 1,
    "label": "Progress",
-   "read_only_depends_on": "eval:!doc.is_group"
+   "read_only_depends_on": "eval:doc.is_group"
   },
   {
    "default": "Pending",
@@ -111,7 +105,8 @@
    "default": "0",
    "fieldname": "is_group",
    "fieldtype": "Check",
-   "label": "Is Group"
+   "label": "Is Group",
+   "set_only_once": 1
   },
   {
    "fieldname": "old_parent",
@@ -148,7 +143,7 @@
    "in_standard_filter": 1,
    "label": "Appraisal Cycle",
    "options": "Appraisal Cycle",
-   "reqd": 1
+   "set_only_once": 1
   },
   {
    "fetch_from": "employee.employee_name",
@@ -184,12 +179,19 @@
   {
    "fieldname": "section_break_nf0j",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "goal_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Goal",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2023-03-23 01:16:32.788958",
+ "modified": "2023-03-26 22:29:02.080965",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Goal",

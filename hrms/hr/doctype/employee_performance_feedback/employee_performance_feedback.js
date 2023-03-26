@@ -23,7 +23,6 @@ frappe.ui.form.on("Employee Performance Feedback", {
 			return {
 				filters: {
 					employee: frm.doc.employee,
-					appraisal_cycle: frm.doc.appraisal_cycle,
 				}
 			}
 		});
@@ -32,14 +31,6 @@ frappe.ui.form.on("Employee Performance Feedback", {
 			return {
 				filters: {
 					employee: ["!=", frm.doc.employee],
-				}
-			}
-		});
-
-		frm.set_query("employee", () => {
-			return {
-				filters: {
-					employee: ["!=", frm.doc.reviewer],
 				}
 			}
 		});

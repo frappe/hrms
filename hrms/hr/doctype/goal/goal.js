@@ -44,4 +44,20 @@ frappe.ui.form.on("Goal", {
 			}
 		}
 	},
+
+	kra(frm) {
+		if (frm.doc.__islocal || !frm.doc.is_group) return;
+
+		let msg = __("Changing KRA in this parent goal will align all the child goals to the same KRA.")
+		msg += "<br>";
+		msg += __("Do you still want to proceed?");
+
+		frappe.confirm(
+			msg,
+			() => {},
+			() => {
+				frappe.db.get_value("Goal", frm.doc.name, "kra", (r) => frm.set_value("kra", r.kra));
+			}
+		);
+	}
 });
