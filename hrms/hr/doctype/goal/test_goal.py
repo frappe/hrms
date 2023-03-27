@@ -174,7 +174,14 @@ class TestGoal(FrappeTestCase):
 		self.assertEqual(child_goal2.kra, "Quality")
 
 
-def create_goal(employee, kra=None, is_group=0, parent_goal=None):
+def create_goal(
+	employee,
+	kra=None,
+	is_group=0,
+	parent_goal=None,
+	appraisal_cycle=None,
+	progress=0,
+):
 	return frappe.get_doc(
 		{
 			"doctype": "Goal",
@@ -184,5 +191,7 @@ def create_goal(employee, kra=None, is_group=0, parent_goal=None):
 			"is_group": is_group,
 			"parent_goal": parent_goal,
 			"start_date": "2023-01-01",
+			"appraisal_cycle": appraisal_cycle,
+			"progress": progress,
 		}
 	).insert()
