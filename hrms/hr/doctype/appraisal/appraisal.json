@@ -36,7 +36,7 @@
   "avg_feedback_score",
   "self_appraisal_tab",
   "section_break_23",
-  "ratings",
+  "self_ratings",
   "self_score",
   "reflections_section",
   "reflections",
@@ -228,11 +228,6 @@
    "label": "Ratings"
   },
   {
-   "fieldname": "ratings",
-   "fieldtype": "Table",
-   "options": "Employee Feedback Rating"
-  },
-  {
    "fieldname": "reflections",
    "fieldtype": "Text Editor"
   },
@@ -290,6 +285,11 @@
    "fieldtype": "Float",
    "label": "Goal Score (%)",
    "read_only": 1
+  },
+  {
+   "fieldname": "self_ratings",
+   "fieldtype": "Table",
+   "options": "Employee Feedback Rating"
   }
  ],
  "icon": "fa fa-thumbs-up",
@@ -297,7 +297,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-27 13:25:03.583340",
+ "modified": "2023-03-27 18:06:37.924817",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",

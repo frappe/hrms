@@ -94,7 +94,7 @@ class Appraisal(Document):
 			return
 
 		self.set("appraisal_kra", [])
-		self.set("ratings", [])
+		self.set("self_ratings", [])
 		self.set("goals", [])
 
 		template = frappe.get_doc("Appraisal Template", self.appraisal_template)
@@ -112,7 +112,7 @@ class Appraisal(Document):
 
 		for entry in template.rating_criteria:
 			self.append(
-				"ratings",
+				"self_ratings",
 				{
 					"criteria": entry.criteria,
 					"per_weightage": entry.per_weightage,
@@ -127,7 +127,7 @@ class Appraisal(Document):
 		if self.rate_goals_manually:
 			table = _("Goals")
 			for entry in self.goals:
-				if entry.score > 5:
+				if flt(entry.score) > 5:
 					frappe.throw(_("Row {0}: Goal Score cannot be greater than 5").format(entry.idx))
 
 				entry.score_earned = flt(entry.score) * flt(entry.per_weightage) / 100
@@ -156,11 +156,11 @@ class Appraisal(Document):
 
 	def calculate_self_appraisal_score(self):
 		total = 0
-		for entry in self.ratings:
+		for entry in self.self_ratings:
 			score = flt(entry.rating) * 5 * flt(entry.per_weightage / 100)
 			total += flt(score)
 
-		self.self_score = total
+		self.self_score = flt(total, self.precision("self_score"))
 
 	def calculate_avg_feedback_score(self, update=False):
 		avg_feedback_score = frappe.qb.avg(
