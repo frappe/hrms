@@ -24,6 +24,7 @@
   "rate_goals_manually",
   "section_break_kras",
   "appraisal_kra",
+  "goal_score_percentage",
   "section_break_goals",
   "goals",
   "remarks",
@@ -140,14 +141,13 @@
   },
   {
    "fieldname": "total_section",
-   "fieldtype": "Section Break",
-   "label": "Total"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "total_score",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Total Score",
+   "label": "Total Score (Out of 5)",
    "no_copy": 1,
    "oldfieldname": "total_score",
    "oldfieldtype": "Currency",
@@ -283,6 +283,13 @@
    "label": "KRAs",
    "oldfieldtype": "Section Break",
    "show_dashboard": 1
+  },
+  {
+   "depends_on": "eval: !doc.rate_goals_manually",
+   "fieldname": "goal_score_percentage",
+   "fieldtype": "Float",
+   "label": "Goal Score (%)",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-thumbs-up",
@@ -290,7 +297,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-27 09:54:30.126492",
+ "modified": "2023-03-27 12:32:01.982250",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",

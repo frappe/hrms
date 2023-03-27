@@ -122,7 +122,7 @@ class Appraisal(Document):
 		return self
 
 	def calculate_total_score(self):
-		total_weightage, total = 0, 0
+		total_weightage, total, goal_score_percentage = 0, 0, 0
 		table = ""
 
 		if self.rate_goals_manually:
@@ -134,8 +134,12 @@ class Appraisal(Document):
 		else:
 			table = _("KRAs")
 			for entry in self.appraisal_kra:
-				total += flt(entry.goal_score)
+				goal_score_percentage += flt(entry.goal_score)
 				total_weightage += flt(entry.per_weightage)
+
+			self.goal_score_percentage = flt(goal_score_percentage, self.precision("goal_score_percentage"))
+			# convert goal score percentage to total score out of 5
+			total = flt(goal_score_percentage) / 20
 
 		if total_weightage and flt(total_weightage, 2) != 100.0:
 			frappe.throw(
