@@ -63,12 +63,31 @@ class Appraisal(Document):
 		if (
 			self.is_new()
 			and self.appraisal_cycle
-			and frappe.db.get_value(
-				"Appraisal Cycle", self.appraisal_cycle, "kra_evaluation_method", cache=True
+			and (
+				frappe.db.get_value("Appraisal Cycle", self.appraisal_cycle, "kra_evaluation_method")
+				== "Manual Rating"
 			)
-			== "Manual Rating"
 		):
 			self.rate_goals_manually = 1
+
+	@frappe.whitelist()
+	def set_appraisal_template(self):
+		"""Sets appraisal template from Appraisee table in Cycle"""
+		if not self.appraisal_cycle:
+			return
+
+		appraisal_template = frappe.db.get_value(
+			"Appraisee",
+			{
+				"employee": self.employee,
+				"parent": self.appraisal_cycle,
+			},
+			"appraisal_template",
+		)
+
+		if appraisal_template:
+			self.appraisal_template = appraisal_template
+			self.set_kras_and_rating_criteria()
 
 	@frappe.whitelist()
 	def set_kras_and_rating_criteria(self):
@@ -81,8 +100,10 @@ class Appraisal(Document):
 		template = frappe.get_doc("Appraisal Template", self.appraisal_template)
 
 		for entry in template.goals:
+			table_name = "goals" if self.rate_goals_manually else "appraisal_kra"
+
 			self.append(
-				"appraisal_kra",
+				table_name,
 				{
 					"kra": entry.kra,
 					"per_weightage": entry.per_weightage,
@@ -116,7 +137,7 @@ class Appraisal(Document):
 				total += flt(entry.goal_score)
 				total_weightage += flt(entry.per_weightage)
 
-		if flt(total_weightage, 2) != 100.0:
+		if total_weightage and flt(total_weightage, 2) != 100.0:
 			frappe.throw(
 				_("Total weightage for all {0} must add up to 100. Currently, it is {1}%").format(
 					table, total_weightage

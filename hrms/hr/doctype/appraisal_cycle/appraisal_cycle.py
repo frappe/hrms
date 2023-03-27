@@ -9,6 +9,23 @@ from frappe.model.document import Document
 class AppraisalCycle(Document):
 	def validate(self):
 		self.validate_from_to_dates("start_date", "end_date")
+		self.validate_evaluation_method_change()
+
+	def validate_evaluation_method_change(self):
+		if self.is_new():
+			return
+
+		if self.has_value_changed("kra_evaluation_method") and self.check_if_appraisals_exist():
+			frappe.throw(
+				_("Evaluation Method cannot be changed as there are existing appraisals for this cycle"),
+				title=_("Not Allowed"),
+			)
+
+	def check_if_appraisals_exist(self):
+		return frappe.db.exists(
+			"Appraisal",
+			{"appraisal_cycle": self.name, "docstatus": ["!=", 2]},
+		)
 
 	@frappe.whitelist()
 	def set_employees(self):
@@ -95,8 +112,7 @@ class AppraisalCycle(Document):
 				create_appraisals_for_cycle,
 				queue="long",
 				timeout=600,
-				appraisal_cycle=self.name,
-				employees=self.appraisees,
+				appraisal_cycle=self,
 			)
 			frappe.msgprint(
 				_("Appraisal creation is queued. It may take a few minutes."),
@@ -104,7 +120,7 @@ class AppraisalCycle(Document):
 				indicator="blue",
 			)
 		else:
-			create_appraisals_for_cycle(self.name, self.appraisees, publish_progress=True)
+			create_appraisals_for_cycle(self, publish_progress=True)
 			# since this method is called via frm.call this doc needs to be updated manually
 			self.reload()
 
@@ -120,30 +136,35 @@ class AppraisalCycle(Document):
 		)
 
 
-def create_appraisals_for_cycle(appraisal_cycle, employees, publish_progress=False):
+def create_appraisals_for_cycle(appraisal_cycle: AppraisalCycle, publish_progress: bool = False):
 	"""
 	Creates appraisals for employees in the appraisee list of appraisal cycle,
 	if not already created
 	"""
 	count = 0
 
-	for employee in employees:
+	for employee in appraisal_cycle.appraisees:
 		try:
 			appraisal = frappe.get_doc(
 				{
 					"doctype": "Appraisal",
 					"appraisal_template": employee.appraisal_template,
 					"employee": employee.employee,
-					"appraisal_cycle": appraisal_cycle,
+					"appraisal_cycle": appraisal_cycle.name,
 				}
 			)
 
+			appraisal.rate_goals_manually = (
+				1 if appraisal_cycle.kra_evaluation_method == "Manual Rating" else 0
+			)
 			appraisal.set_kras_and_rating_criteria()
 			appraisal.insert()
 
 			if publish_progress:
 				count += 1
-				frappe.publish_progress(count * 100 / len(employees), title=_("Creating Appraisals") + "...")
+				frappe.publish_progress(
+					count * 100 / len(appraisal_cycle.appraisees), title=_("Creating Appraisals") + "..."
+				)
 		except frappe.DuplicateEntryError:
 			# already exists
 			pass
