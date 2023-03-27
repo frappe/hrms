@@ -14,6 +14,9 @@ from hrms.tests.test_utils import create_company
 
 class TestEmployeePerformanceFeedback(FrappeTestCase):
 	def setUp(self):
+		frappe.db.delete("Employee Performance Feedback")
+		frappe.db.delete("Appraisal")
+
 		company = create_company("_Test Appraisal").name
 		self.template = create_appraisal_template()
 
@@ -84,7 +87,7 @@ class TestEmployeePerformanceFeedback(FrappeTestCase):
 		# 30% weightage
 		ratings[1].rating = 0.7
 
-		feedback1.save()
+		feedback1.submit()
 
 		feedback2 = create_performance_feedback(
 			self.employee,
@@ -98,20 +101,35 @@ class TestEmployeePerformanceFeedback(FrappeTestCase):
 		# 30% weightage
 		ratings[1].rating = 0.8
 
-		feedback2.save()
+		feedback2.submit()
 
 		avg_feedback_score = frappe.db.get_value("Appraisal", self.appraisal, "avg_feedback_score")
 		self.assertEqual(avg_feedback_score, 3.575)
 
+	def test_update_avg_feedback_score_on_cancel(self):
+		feedback = create_performance_feedback(
+			self.employee,
+			self.reviewer1,
+			self.appraisal,
+		)
+
+		ratings = feedback.feedback_ratings
+		# 70% weightage
+		ratings[0].rating = 0.8
+		# 30% weightage
+		ratings[1].rating = 0.7
+		feedback.submit()
+
+		avg_feedback_score = frappe.db.get_value("Appraisal", self.appraisal, "avg_feedback_score")
+		self.assertEqual(avg_feedback_score, 3.85)
+
+		feedback.cancel()
+
+		avg_feedback_score = frappe.db.get_value("Appraisal", self.appraisal, "avg_feedback_score")
+		self.assertEqual(avg_feedback_score, 0.0)
+
 
 def create_performance_feedback(employee, reviewer, appraisal):
-	feedback = frappe.db.exists(
-		"Employee Performance Feedback",
-		{"employee": employee, "reviewer": reviewer, "appraisal": appraisal},
-	)
-	if feedback:
-		frappe.delete_doc("Employee Performance Feedback", feedback, force=True)
-
 	feedback = frappe.get_doc(
 		{
 			"doctype": "Employee Performance Feedback",
