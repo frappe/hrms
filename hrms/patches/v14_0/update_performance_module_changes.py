@@ -3,12 +3,58 @@ from frappe.model.utils.rename_field import rename_field
 
 
 def execute():
-	_rename_fields()
-	_create_kras()
+	create_kras()
+
+	for doctype in (
+		"Appraisal Template",
+		"Appraisal Cycle",
+		"Appraisal KRA",
+		"Appraisal Goal",
+		"Employee Feedback Rating",
+		"Appraisal",
+	):
+		frappe.reload_doc("hr", "doctype", doctype)
+
+	rename_fields()
 	update_kra_evaluation_method()
 
 
-def _rename_fields():
+def create_kras():
+	# Appraisal Template Goal's KRA field was changed from Small Text to Link
+	# This patch will create KRA's for all existing Appraisal Template Goal entries
+	# keeping 140 characters as the KRA title and the whole KRA as the description
+	frappe.reload_doc("hr", "doctype", "kra")
+
+	template_goals = frappe.get_all("Appraisal Template Goal", fields=["name", "kra"], as_list=True)
+
+	if len(template_goals) > 10000:
+		frappe.db.auto_commit_on_many_writes = 1
+
+	for name, kra in template_goals:
+		if not kra:
+			kra = "Key Result Area"
+
+		kra_title = kra.strip()[:140]
+
+		if not frappe.db.exists("KRA", kra_title):
+			frappe.get_doc(
+				{
+					"doctype": "KRA",
+					"title": kra_title,
+					"description": kra,
+					"name": kra_title,
+					"owner": "Administrator",
+					"modified_by": "Administrator",
+				}
+			).db_insert()
+
+		frappe.db.set_value("Appraisal Template Goal", name, "kra", kra_title, update_modified=False)
+
+	if frappe.db.auto_commit_on_many_writes:
+		frappe.db.auto_commit_on_many_writes = 0
+
+
+def rename_fields():
 	try:
 		rename_field("Appraisal Template", "kra_title", "template_title")
 		rename_field("Appraisal", "kra_template", "appraisal_template")
@@ -16,35 +62,6 @@ def _rename_fields():
 	except Exception as e:
 		if e.args[0] != 1054:
 			raise
-
-
-def _create_kras():
-	# Appraisal Template Goal's KRA field was changed from Small Text to Link
-	# This patch will create KRA's for all existing Appraisal Template Goal entries
-	# keeping 140 characters as the KRA title and the whole KRA as the description
-	frappe.reload_doc("hr", "doctype", "kra")
-
-	templates = frappe.get_all("Appraisal Template", pluck="name")
-
-	for template in templates:
-		template_doc = frappe.get_doc("Appraisal Template", template)
-		for entry in template_doc.goals:
-			kra_title = entry.kra[:140].strip()
-
-			if not frappe.db.exists("KRA", kra_title):
-				kra = frappe.get_doc(
-					{
-						"doctype": "KRA",
-						"title": kra_title,
-						"description": entry.kra,
-					}
-				).insert(ignore_permissions=True)
-
-				kra_title = kra.name
-
-			entry.kra = kra_title
-
-		template_doc.save(ignore_permissions=True)
 
 
 def update_kra_evaluation_method():
