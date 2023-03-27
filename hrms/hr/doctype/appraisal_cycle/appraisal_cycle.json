@@ -117,8 +117,7 @@
   {
    "fieldname": "appraisees",
    "fieldtype": "Table",
-   "options": "Appraisee",
-   "reqd": 1
+   "options": "Appraisee"
   },
   {
    "fieldname": "cycle_name",
@@ -161,7 +160,7 @@
    "link_fieldname": "appraisal_cycle"
   }
  ],
- "modified": "2023-03-26 01:10:23.387814",
+ "modified": "2023-03-27 09:54:55.729884",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal Cycle",

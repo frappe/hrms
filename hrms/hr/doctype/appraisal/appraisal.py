@@ -18,17 +18,12 @@ class Appraisal(Document):
 		self.set_kra_evaluation_method()
 
 		validate_active_employee(self.employee)
-		self.validate_period()
 		self.validate_duplicate()
 
 		self.set_goal_score()
 		self.calculate_total_score()
 		self.calculate_self_appraisal_score()
 		self.calculate_avg_feedback_score()
-
-	def validate_period(self):
-		if self.period_based_on == "Custom Date Range":
-			self.validate_from_to_dates("start_date", "end_date")
 
 	def validate_duplicate(self):
 		Appraisal = frappe.qb.DocType("Appraisal")
