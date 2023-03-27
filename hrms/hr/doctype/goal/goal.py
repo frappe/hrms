@@ -113,7 +113,7 @@ class Goal(NestedSet):
 		)
 		if appraisal:
 			appraisal = frappe.get_doc("Appraisal", appraisal)
-			appraisal.set_goal_progress(update=True)
+			appraisal.set_goal_score(update=True)
 
 
 @frappe.whitelist()
