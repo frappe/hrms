@@ -166,7 +166,7 @@ class Appraisal(Document):
 		avg_feedback_score = frappe.qb.avg(
 			"Employee Performance Feedback",
 			"total_score",
-			{"employee": self.employee, "appraisal": self.name},
+			{"employee": self.employee, "appraisal": self.name, "docstatus": 1},
 		)
 
 		self.avg_feedback_score = flt(avg_feedback_score, self.precision("avg_feedback_score"))
@@ -197,23 +197,9 @@ class Appraisal(Document):
 				},
 			)
 
-		feedback.insert()
+		feedback.submit()
 
 		return feedback
-
-	@frappe.whitelist()
-	def edit_feedback(self, feedback, name):
-		doc = frappe.get_doc("Employee Performance Feedback", name)
-		doc.update({"feedback": feedback})
-		doc.flags.ignore_mandatory = True
-		doc.save()
-
-		return doc
-
-	@frappe.whitelist()
-	def delete_feedback(self, name):
-		frappe.delete_doc("Employee Performance Feedback", name)
-		return name
 
 	def set_goal_score(self, update=False):
 		for kra in self.appraisal_kra:
@@ -248,9 +234,9 @@ class Appraisal(Document):
 @frappe.whitelist()
 def get_feedback_history(employee, appraisal):
 	data = frappe._dict()
-	data.feedback_history = frappe.get_all(
+	data.feedback_history = frappe.get_list(
 		"Employee Performance Feedback",
-		filters={"employee": employee, "appraisal": appraisal},
+		filters={"employee": employee, "appraisal": appraisal, "docstatus": 1},
 		fields=[
 			"feedback",
 			"reviewer",
@@ -276,6 +262,7 @@ def get_feedback_history(employee, appraisal):
 				"appraisal": appraisal,
 				"employee": employee,
 				"total_score": ("between", [i, i + 0.99]),
+				"docstatus": 1,
 			},
 		)
 

@@ -10,6 +10,10 @@ frappe.ui.form.on("Employee Performance Feedback", {
 		frm.trigger("set_filters");
 	},
 
+	employee(frm) {
+		frm.set_value("appraisal", "");
+	},
+
 	appraisal(frm) {
 		if (frm.doc.employee) {
 			frm.call("set_feedback_criteria", () => {
