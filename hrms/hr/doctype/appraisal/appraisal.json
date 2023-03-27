@@ -14,13 +14,11 @@
   "designation",
   "employee_image",
   "column_break0",
-  "period_based_on",
+  "company",
+  "status",
   "appraisal_cycle",
   "start_date",
   "end_date",
-  "column_break_hgqn",
-  "company",
-  "status",
   "kra_tab",
   "appraisal_template",
   "rate_goals_manually",
@@ -105,13 +103,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "kra_tab",
-   "fieldtype": "Tab Break",
-   "label": "KRAs",
-   "oldfieldtype": "Section Break",
-   "show_dashboard": 1
-  },
-  {
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
@@ -130,14 +121,13 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval:doc.period_based_on===\"Appraisal Cycle\";",
    "fieldname": "appraisal_cycle",
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Appraisal Cycle",
-   "mandatory_depends_on": "eval:doc.period_based_on===\"Appraisal Cycle\";",
-   "options": "Appraisal Cycle"
+   "options": "Appraisal Cycle",
+   "reqd": 1
   },
   {
    "depends_on": "eval: !doc.rate_goals_manually",
@@ -276,30 +266,23 @@
    "read_only": 1
   },
   {
-   "fieldname": "column_break_hgqn",
-   "fieldtype": "Column Break"
-  },
-  {
-   "depends_on": "eval:doc.period_based_on==\"Custom Date Range\";",
    "fieldname": "start_date",
    "fieldtype": "Date",
    "label": "Start Date",
-   "mandatory_depends_on": "eval:doc.period_based_on===\"Custom Date Range\";"
+   "read_only": 1
   },
   {
-   "depends_on": "eval:doc.period_based_on==\"Custom Date Range\";",
    "fieldname": "end_date",
    "fieldtype": "Date",
    "label": "End Date",
-   "mandatory_depends_on": "eval:doc.period_based_on===\"Custom Date Range\";"
+   "read_only": 1
   },
   {
-   "default": "Appraisal Cycle",
-   "fieldname": "period_based_on",
-   "fieldtype": "Select",
-   "label": "Period Based on",
-   "options": "Appraisal Cycle\nCustom Date Range",
-   "reqd": 1
+   "fieldname": "kra_tab",
+   "fieldtype": "Tab Break",
+   "label": "KRAs",
+   "oldfieldtype": "Section Break",
+   "show_dashboard": 1
   }
  ],
  "icon": "fa fa-thumbs-up",
@@ -307,7 +290,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-26 01:50:34.941927",
+ "modified": "2023-03-27 09:54:30.126492",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",

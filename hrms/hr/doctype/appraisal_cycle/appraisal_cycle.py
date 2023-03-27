@@ -82,6 +82,11 @@ class AppraisalCycle(Document):
 	@frappe.whitelist()
 	def create_appraisals(self):
 		self.check_permission("write")
+		if not self.appraisees:
+			frappe.throw(
+				_("Please select employees to create appraisals for"), title=_("No Employees Selected")
+			)
+
 		if not all(appraisee.appraisal_template for appraisee in self.appraisees):
 			self.show_missing_template_message(raise_exception=True)
 
