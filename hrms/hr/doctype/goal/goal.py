@@ -11,6 +11,10 @@ from frappe.utils.nestedset import NestedSet
 
 
 class Goal(NestedSet):
+	def before_insert(self):
+		if self.is_group:
+			self.progress = 0
+
 	def validate(self):
 		self.validate_parent_fields()
 		self.validate_from_to_dates(self.start_date, self.end_date)
@@ -38,7 +42,9 @@ class Goal(NestedSet):
 		if not self.parent_goal:
 			return
 
-		parent_details = frappe.db.get_value("Goal", self.parent_goal, ["employee", "kra"], as_dict=True)
+		parent_details = frappe.db.get_value(
+			"Goal", self.parent_goal, ["employee", "kra", "appraisal_cycle"], as_dict=True
+		)
 		if self.employee != parent_details.employee:
 			frappe.throw(
 				_("Goal should be owned by the same employee as its parent goal."), title=_("Not Allowed")
@@ -46,6 +52,11 @@ class Goal(NestedSet):
 		if self.kra != parent_details.kra:
 			frappe.throw(
 				_("Goal should be aligned with the same KRA as its parent goal."), title=_("Not Allowed")
+			)
+		if self.appraisal_cycle != parent_details.appraisal_cycle:
+			frappe.throw(
+				_("Goal should belong to the same Appraisal Cycle as its parent goal."),
+				title=_("Not Allowed"),
 			)
 
 	def validate_progress(self):
@@ -94,6 +105,9 @@ class Goal(NestedSet):
 		parent_goal_doc.save()
 
 	def update_goal_progress_in_appraisal(self):
+		if not self.appraisal_cycle:
+			return
+
 		appraisal = frappe.db.get_value(
 			"Appraisal", {"employee": self.employee, "appraisal_cycle": self.appraisal_cycle}
 		)

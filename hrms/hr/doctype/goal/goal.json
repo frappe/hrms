@@ -10,7 +10,6 @@
   "goal_name",
   "is_group",
   "parent_goal",
-  "kra",
   "column_break_tyox",
   "progress",
   "status",
@@ -18,10 +17,13 @@
   "employee",
   "employee_name",
   "user",
-  "column_break_4",
-  "appraisal_cycle",
+  "column_break_ahxr",
   "start_date",
   "end_date",
+  "section_break_cycle",
+  "appraisal_cycle",
+  "column_break_4",
+  "kra",
   "section_break_12",
   "description",
   "lft",
@@ -126,9 +128,7 @@
   {
    "allow_in_quick_entry": 1,
    "depends_on": "employee",
-   "description": "Tag KRA to your goal",
    "fetch_from": "parent_goal.kra",
-   "fetch_if_empty": 1,
    "fieldname": "kra",
    "fieldtype": "Link",
    "label": "KRA",
@@ -138,11 +138,13 @@
   {
    "allow_in_quick_entry": 1,
    "depends_on": "employee",
+   "fetch_from": "parent_goal.appraisal_cycle",
    "fieldname": "appraisal_cycle",
    "fieldtype": "Link",
    "in_standard_filter": 1,
    "label": "Appraisal Cycle",
    "options": "Appraisal Cycle",
+   "read_only_depends_on": "eval: doc.parent_goal",
    "set_only_once": 1
   },
   {
@@ -186,12 +188,22 @@
    "in_list_view": 1,
    "label": "Goal",
    "reqd": 1
+  },
+  {
+   "description": "Link the cycle and tag KRA to your goal to update the appraisal's goal score based on the goal progress",
+   "fieldname": "section_break_cycle",
+   "fieldtype": "Section Break",
+   "label": "Appraisal Linking"
+  },
+  {
+   "fieldname": "column_break_ahxr",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2023-03-26 22:29:02.080965",
+ "modified": "2023-03-27 08:40:17.719438",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Goal",

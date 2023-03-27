@@ -70,20 +70,9 @@ frappe.treeview_settings["Goal"] = {
 			},
 		},
 		{
-			fieldtype: "Link",
-			fieldname: "appraisal_cycle",
-			label: __("Appraisal Cycle"),
-			options: "Appraisal Cycle",
-			reqd: 1,
-			default() {
-				const treeview = frappe.treeview_settings["Goal"].treeview;
-				let appraisal_cycle = (
-					treeview.page.fields_dict.appraisal_cycle.get_value() ||
-					treeview.tree.get_selected_node().data.appraisal_cycle || ""
-				);
-
-				return appraisal_cycle;
-			},
+			fieldtype: "Percent",
+			fieldname: "progress",
+			label: __("Progress"),
 		},
 		{
 			fieldtype: "Column Break",
@@ -103,14 +92,33 @@ frappe.treeview_settings["Goal"] = {
 		},
 		{
 			fieldtype: "Section Break",
-			depends_on: "eval:doc.employee && doc.appraisal_cycle"
+			label: __("Appraisal Linking"),
+			description: __("Link the cycle and tag KRA to your goal to update the appraisal's goal score based on the goal progress"),
+			depends_on: "eval:doc.employee",
+		},
+		{
+			fieldtype: "Link",
+			fieldname: "appraisal_cycle",
+			label: __("Appraisal Cycle"),
+			options: "Appraisal Cycle",
+			default() {
+				const treeview = frappe.treeview_settings["Goal"].treeview;
+				let appraisal_cycle = (
+					treeview.page.fields_dict.appraisal_cycle.get_value() ||
+					treeview.tree.get_selected_node().data.appraisal_cycle || ""
+				);
+
+				return appraisal_cycle;
+			},
+		},
+		{
+			fieldtype: "Column Break",
 		},
 		{
 			fieldtype: "Link",
 			fieldname: "kra",
 			label: __("KRA"),
 			options: "KRA",
-			description: __("Tag KRA to this goal"),
 			get_query() {
 				return {
 					query: "hrms.hr.doctype.appraisal.appraisal.get_kras_for_employee",
@@ -126,19 +134,11 @@ frappe.treeview_settings["Goal"] = {
 			}
 		},
 		{
-			fieldtype: "Column Break",
-		},
-		{
-			fieldtype: "Percent",
-			fieldname: "progress",
-			label: __("Progress"),
-		},
-		{
 			fieldtype: "Section Break",
 			fieldname: "description_section",
 			label: __("Description"),
 			collapsible: 1,
-			depends_on: "eval:doc.employee && doc.appraisal_cycle",
+			depends_on: "eval:doc.employee",
 		},
 		{
 			fieldtype: "Text Editor",

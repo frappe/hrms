@@ -34,12 +34,6 @@ class TestGoal(FrappeTestCase):
 		# parent goal and child goal should have same employee
 		self.assertRaises(frappe.ValidationError, child_goal.insert)
 
-		child_goal.employee = self.employee1
-		child_goal.kra = "Quality"
-
-		# parent goal and child goal should have same kra
-		self.assertRaises(frappe.ValidationError, child_goal.insert)
-
 	def test_set_status(self):
 		goal = create_goal(self.employee1, "Development")
 		self.assertEqual(goal.status, "Pending")
