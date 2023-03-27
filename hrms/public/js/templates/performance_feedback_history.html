@@ -13,7 +13,7 @@
 		</div>
 	{% } %}
 
-	{% if (permissions.can_create) { %}
+	{% if (can_create) { %}
 		<div class="new-btn pb-3 text-right">
 			<button class="new-feedback-btn btn btn-sm d-inline-flex align-items-center justify-content-center px-3 py-2">
 				<svg class="icon icon-sm">
@@ -60,38 +60,17 @@
 						</div>
 					</div>
 
-					<div class="feedback-info col-xs-3 d-flex flex-row justify-content-end">
+					<div class="feedback-info col-xs-3 d-flex flex-row justify-content-end align-items-baseline">
 						<div class="time small text-muted mr-2">
 							{{ frappe.datetime.comment_when(feedback_history[i].added_on) }}
 						</div>
-						{%
-							if (
-								(frappe.session.user === "Administrator")
-								|| (
-									(frappe.session.user === feedback_history[i].user)
-									&& (permissions.can_write || permissions.can_delete)
-								)
-							) {
-						%}
-							<div class="text-right column-options dropdown pull-right">
-								<a class="d-flex" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<svg class="icon icon-sm">
-										<use href="#icon-dot-horizontal"></use>
-									</svg>
-								</a>
-								<ul class="dropdown-menu overflow-hidden dropdown-menu-right">
-									<li><a class="dropdown-item view-feedback-btn">{{ __("View") }}</a></li>
-
-									{% if (permissions.can_write) { %}
-										<li><a class="dropdown-item edit-feedback-btn">{{ __("Edit") }}</a></li>
-									{% } %}
-
-									{% if (permissions.can_delete) { %}
-										<li><a class="dropdown-item delete-feedback-btn">{{ __("Delete") }}</a></li>
-									{% } %}
-								</ul>
-							</div>
-						{% } %}
+						<a
+							href="{{ frappe.utils.get_form_link("Employee Performance Feedback", feedback_history[i].name) }}"
+							title="{{ __("Open Feedback") }}">
+							<svg class="icon icon-sm">
+								<use href="#icon-link-url" class="like-icon"></use>
+							</svg>
+						</a>
 					</div>
 				</div>
 			{% } %}

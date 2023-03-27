@@ -9,28 +9,31 @@ from frappe.utils import flt, get_link_to_form
 
 class EmployeePerformanceFeedback(Document):
 	def validate(self):
-		self.validate_employees()
+		self.validate_employee()
+		self.validate_appraisal()
 		self.validate_total_weightage()
 		self.set_total_score()
 
-	def on_update(self):
-		doc_before_save = self.get_doc_before_save()
-
-		if doc_before_save and doc_before_save.appraisal != self.appraisal:
-			# appraisal changed, update score in old appraisal
-			self.update_avg_feedback_score_in_appraisal(doc_before_save.appraisal)
-
+	def on_submit(self):
 		self.update_avg_feedback_score_in_appraisal()
 
-	def after_delete(self):
+	def on_cancel(self):
 		self.update_avg_feedback_score_in_appraisal()
 
-	def validate_employees(self):
+	def validate_employee(self):
 		if self.employee == self.reviewer:
 			frappe.throw(
 				_("Employees cannot give feedback to themselves. Use {0} instead: {1}").format(
 					frappe.bold(_("Self Appraisal")), get_link_to_form("Appraisal", self.appraisal)
 				)
+			)
+
+	def validate_appraisal(self):
+		employee = frappe.db.get_value("Appraisal", self.appraisal, "employee")
+
+		if employee != self.employee:
+			frappe.throw(
+				_("Appraisal {0} does not belong to Employee {1}").format(self.appraisal, self.employee)
 			)
 
 	def validate_total_weightage(self):
