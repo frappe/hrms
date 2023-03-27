@@ -9,6 +9,19 @@ from frappe.model.document import Document
 class AppraisalCycle(Document):
 	def validate(self):
 		self.validate_from_to_dates("start_date", "end_date")
+		self.validate_evaluation_method_change()
+
+	def validate_evaluation_method_change(self):
+		if self.is_new():
+			return
+
+		if self.has_value_changed("kra_evaluation_method") and self.check_if_appraisals_exist():
+			frappe.throw(
+				_(
+					"Evaluation Method cannot be changed as there are existing appraisals created for this cycle"
+				),
+				title=_("Not Allowed"),
+			)
 
 	def check_if_appraisals_exist(self):
 		return frappe.db.exists(

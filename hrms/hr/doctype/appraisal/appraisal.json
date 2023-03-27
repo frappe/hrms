@@ -19,6 +19,8 @@
   "appraisal_cycle",
   "start_date",
   "end_date",
+  "section_break_aeb0",
+  "final_score",
   "kra_tab",
   "appraisal_template",
   "rate_goals_manually",
@@ -290,6 +292,18 @@
    "fieldname": "self_ratings",
    "fieldtype": "Table",
    "options": "Employee Feedback Rating"
+  },
+  {
+   "fieldname": "section_break_aeb0",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "appraisal_cycle",
+   "description": "Average of Goal Score, Feedback Score, and Self Appraisal Score",
+   "fieldname": "final_score",
+   "fieldtype": "Float",
+   "label": "Final Score (Out of 5)",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-thumbs-up",
@@ -297,7 +311,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-27 18:06:37.924817",
+ "modified": "2023-03-27 23:33:42.998800",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",
