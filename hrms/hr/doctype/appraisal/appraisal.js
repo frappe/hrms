@@ -24,10 +24,20 @@ frappe.ui.form.on("Appraisal", {
 
 	appraisal_cycle(frm) {
 		if (frm.doc.appraisal_cycle) {
-			frm.call({
-				method: "set_kra_evaluation_method",
-				doc: frm.doc,
-			});
+			frappe.run_serially([
+				() => {
+					frm.call({
+						method: "set_kra_evaluation_method",
+						doc: frm.doc,
+					});
+				},
+				() => {
+					frm.call({
+						method: "set_appraisal_template",
+						doc: frm.doc,
+					});
+				}
+			]);
 		}
 	},
 
