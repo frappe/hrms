@@ -14,6 +14,15 @@ class EmployeePerformanceFeedback(Document):
 		self.set_total_score()
 
 	def on_update(self):
+		doc_before_save = self.get_doc_before_save()
+
+		if doc_before_save and doc_before_save.appraisal != self.appraisal:
+			# appraisal changed, update score in old appraisal
+			self.update_avg_feedback_score_in_appraisal(doc_before_save.appraisal)
+
+		self.update_avg_feedback_score_in_appraisal()
+
+	def after_delete(self):
 		self.update_avg_feedback_score_in_appraisal()
 
 	def validate_employees(self):
