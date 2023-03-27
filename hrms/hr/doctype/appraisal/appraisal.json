@@ -147,7 +147,7 @@
    "fieldname": "total_score",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Total Score (Out of 5)",
+   "label": "Total Goal Score (Out of 5)",
    "no_copy": 1,
    "oldfieldname": "total_score",
    "oldfieldtype": "Currency",
@@ -171,7 +171,7 @@
   {
    "fieldname": "self_score",
    "fieldtype": "Float",
-   "label": "Total Score",
+   "label": "Total Self Score",
    "read_only": 1
   },
   {
@@ -297,7 +297,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-27 12:32:01.982250",
+ "modified": "2023-03-27 13:25:03.583340",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",

@@ -67,10 +67,10 @@ frappe.ui.form.on("Appraisal", {
 		const maximum_scores = [];
 		const scores = [];
 
-		$.each(frm.doc.appraisal_kra, function(_i, e) {
-			labels.push(e.kra);
-			maximum_scores.push(e.per_weightage || 0);
-			scores.push(e.goal_score || 0);
+		frm.doc.appraisal_kra.forEach((d) => {
+			labels.push(d.kra);
+			maximum_scores.push(d.per_weightage || 0);
+			scores.push(d.goal_score || 0);
 		});
 
 		if (labels.length && maximum_scores.length && scores.length) {
@@ -99,5 +99,47 @@ frappe.ui.form.on("Appraisal", {
 				colors: ["blue", "green"]
 			});
 		}
+	},
+
+	calculate_total(frm) {
+		let total = 0;
+
+		frm.doc.goals.forEach((d) => {
+			total += flt(d.score_earned);
+		});
+
+		frm.set_value("total_score", total);
+	}
+});
+
+
+frappe.ui.form.on("Appraisal Goal", {
+	score(frm, cdt, cdn) {
+		let d = frappe.get_doc(cdt, cdn);
+
+		if (flt(d.score) > 5) {
+			frappe.msgprint(__("Score must be less than or equal to 5"));
+			d.score = 0;
+			refresh_field("score", d.name, "goals");
+		} else {
+			frm.trigger("set_score_earned", cdt, cdn);
+		}
+	},
+
+	per_weightage(frm, cdt, cdn) {
+		frm.trigger("set_score_earned", cdt, cdn);
+	},
+
+	goals_remove(frm, cdt, cdn) {
+		frm.trigger("set_score_earned", cdt, cdn);
+	},
+
+	set_score_earned(frm, cdt, cdn) {
+		let d = frappe.get_doc(cdt, cdn);
+
+		score_earned = flt(d.score) * flt(d.per_weightage) / 100;
+		frappe.model.set_value(cdt, cdn, "score_earned", score_earned);
+
+		frm.trigger("calculate_total");
 	}
 });

@@ -21,7 +21,6 @@ class Appraisal(Document):
 		self.validate_duplicate()
 
 		self.set_goal_score()
-		self.calculate_total_score()
 		self.calculate_self_appraisal_score()
 		self.calculate_avg_feedback_score()
 
@@ -96,6 +95,7 @@ class Appraisal(Document):
 
 		self.set("appraisal_kra", [])
 		self.set("ratings", [])
+		self.set("goals", [])
 
 		template = frappe.get_doc("Appraisal Template", self.appraisal_template)
 
@@ -123,14 +123,17 @@ class Appraisal(Document):
 
 	def calculate_total_score(self):
 		total_weightage, total, goal_score_percentage = 0, 0, 0
-		table = ""
 
 		if self.rate_goals_manually:
 			table = _("Goals")
 			for entry in self.goals:
+				if entry.score > 5:
+					frappe.throw(_("Row {0}: Goal Score cannot be greater than 5").format(entry.idx))
+
 				entry.score_earned = flt(entry.score) * flt(entry.per_weightage) / 100
 				total += flt(entry.score_earned)
 				total_weightage += flt(entry.per_weightage)
+
 		else:
 			table = _("KRAs")
 			for entry in self.appraisal_kra:
@@ -234,8 +237,9 @@ class Appraisal(Document):
 			if update:
 				kra.db_update()
 
+		self.calculate_total_score()
+
 		if update:
-			self.calculate_total_score()
 			self.db_update()
 
 		return self
