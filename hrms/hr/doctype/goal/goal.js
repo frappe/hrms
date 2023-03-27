@@ -5,6 +5,14 @@ frappe.ui.form.on("Goal", {
 	refresh(frm) {
 		frm.trigger("set_filters");
 		frm.trigger("add_custom_buttons");
+
+		if (frm.doc.is_group) {
+			frm.set_df_property(
+				"progress",
+				"description",
+				__("Group goal's progress is auto-calculated based on the child goals.")
+			);
+		}
 	},
 
 	set_filters(frm) {
@@ -46,9 +54,20 @@ frappe.ui.form.on("Goal", {
 	},
 
 	kra(frm) {
+		if (!frm.doc.appraisal_cycle) {
+			frm.set_value("kra", "");
+
+			frappe.msgprint({
+				message: __("Please select the Appraisal Cycle first."),
+				title: __("Mandatory")
+			});
+
+			return;
+		}
+
 		if (frm.doc.__islocal || !frm.doc.is_group) return;
 
-		let msg = __("Changing KRA in this parent goal will align all the child goals to the same KRA.")
+		let msg = __("Changing KRA in this parent goal will align all the child goals to the same KRA, if any.");
 		msg += "<br>";
 		msg += __("Do you still want to proceed?");
 
@@ -59,5 +78,11 @@ frappe.ui.form.on("Goal", {
 				frappe.db.get_value("Goal", frm.doc.name, "kra", (r) => frm.set_value("kra", r.kra));
 			}
 		);
+	},
+
+	is_group(frm) {
+		if (frm.doc.__islocal && frm.doc.is_group) {
+			frm.set_value("progress", 0);
+		}
 	}
 });
