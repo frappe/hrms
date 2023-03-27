@@ -11,6 +11,9 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.appraisal_cycle.test_appraisal_cycle import create_appraisal_cycle
 from hrms.hr.doctype.appraisal_template.test_appraisal_template import create_appraisal_template
+from hrms.hr.doctype.employee_performance_feedback.test_employee_performance_feedback import (
+	create_performance_feedback,
+)
 from hrms.hr.doctype.goal.test_goal import create_goal
 from hrms.tests.test_utils import create_company
 
@@ -61,6 +64,40 @@ class TestAppraisal(FrappeTestCase):
 		self.assertEqual(appraisal.goals[1].score_earned, 2.1)
 
 		self.assertEqual(appraisal.total_score, 3.6)
+		self.assertEqual(appraisal.final_score, 1.2)
+
+	def test_final_score(self):
+		cycle = create_appraisal_cycle(designation="Engineer", kra_evaluation_method="Manual Rating")
+		cycle.create_appraisals()
+
+		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name})
+		appraisal = frappe.get_doc("Appraisal", appraisal)
+
+		# GOAL SCORE
+		appraisal.goals[0].score = 5  # 30% weightage
+		appraisal.goals[1].score = 3  # 70% weightage
+
+		# SELF APPRAISAL SCORE
+		ratings = appraisal.self_ratings
+		ratings[0].rating = 0.8  # 70% weightage
+		ratings[1].rating = 0.7  # 30% weightage
+
+		appraisal.save()
+
+		# FEEDBACK SCORE
+		reviewer = make_employee("reviewer1@example.com", designation="Engineer")
+		feedback = create_performance_feedback(
+			self.employee1,
+			reviewer,
+			appraisal.name,
+		)
+		ratings = feedback.feedback_ratings
+		ratings[0].rating = 0.8  # 70% weightage
+		ratings[1].rating = 0.7  # 30% weightage
+		feedback.submit()
+
+		appraisal.reload()
+		self.assertEqual(appraisal.final_score, 3.767)
 
 	def test_goal_score(self):
 		"""
@@ -98,6 +135,7 @@ class TestAppraisal(FrappeTestCase):
 
 		self.assertEqual(appraisal.goal_score_percentage, 38.75)
 		self.assertEqual(appraisal.total_score, 1.938)
+		self.assertEqual(appraisal.final_score, 0.646)
 
 	def test_goal_score_after_parent_goal_change(self):
 		"""

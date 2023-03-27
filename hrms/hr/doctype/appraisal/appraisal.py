@@ -23,6 +23,7 @@ class Appraisal(Document):
 		self.set_goal_score()
 		self.calculate_self_appraisal_score()
 		self.calculate_avg_feedback_score()
+		self.calculate_final_score()
 
 	def validate_duplicate(self):
 		Appraisal = frappe.qb.DocType("Appraisal")
@@ -172,7 +173,13 @@ class Appraisal(Document):
 		self.avg_feedback_score = flt(avg_feedback_score, self.precision("avg_feedback_score"))
 
 		if update:
+			self.calculate_final_score()
 			self.db_update()
+
+	def calculate_final_score(self):
+		final_score = (flt(self.total_score) + flt(self.avg_feedback_score) + flt(self.self_score)) / 3
+
+		self.final_score = flt(final_score, self.precision("final_score"))
 
 	@frappe.whitelist()
 	def add_feedback(self, feedback, feedback_ratings):
@@ -226,6 +233,7 @@ class Appraisal(Document):
 		self.calculate_total_score()
 
 		if update:
+			self.calculate_final_score()
 			self.db_update()
 
 		return self
