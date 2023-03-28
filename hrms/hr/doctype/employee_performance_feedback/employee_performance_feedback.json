@@ -98,6 +98,7 @@
   {
    "fieldname": "reviewer",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "in_standard_filter": 1,
    "label": "Reviewer",
    "options": "Employee",
@@ -182,7 +183,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-28 06:45:27.732572",
+ "modified": "2023-03-28 07:21:50.868103",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Performance Feedback",

@@ -39,16 +39,17 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 	}
 
 	async render_feedback_history(data) {
-		const { feedback_history, reviews_per_rating } = data || {};
+		const { feedback_history, reviews_per_rating, avg_feedback_score } = data || {};
 		const can_create = await this.can_create();
 
 		const feedback_html = frappe.render_template("performance_feedback_history", {
 			feedback_history: feedback_history,
-			average_feedback_score: this.frm.doc.avg_feedback_score,
+			average_feedback_score: avg_feedback_score,
 			reviews_per_rating: reviews_per_rating,
 			can_create: can_create
 		});
 
+		$(this.wrapper).empty();
 		$(feedback_html).appendTo(this.wrapper);
 	}
 
@@ -104,14 +105,17 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 					freeze: true,
 					callback: function(r) {
 						if (!r.exc) {
-							me.refresh();
+							frappe.run_serially([
+								() => me.frm.refresh_fields(),
+								() => me.refresh()
+							]);
+
 							frappe.show_alert({
 								message: __("Feedback {0} added successfully", [r.message?.name?.bold()]),
 								indicator: "green",
 							});
 						}
 						dialog.hide();
-						this.frm.refresh();
 					}
 				});
 			},
@@ -143,19 +147,19 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 						in_list_view: 1,
 						label: "Criteria",
 						options: "Employee Feedback Criteria",
-						reqd: 1
+						reqd: 1,
 					},
 					{
 						fieldname: "per_weightage",
 						fieldtype: "Percent",
 						in_list_view: 1,
-						label: "Weightage"
+						label: "Weightage",
 					},
 					{
 						fieldname: "rating",
 						fieldtype: "Rating",
 						in_list_view: 1,
-						label: "Rating"
+						label: "Rating",
 					}
 				]
 			}

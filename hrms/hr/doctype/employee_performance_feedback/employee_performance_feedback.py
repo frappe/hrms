@@ -6,6 +6,8 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt, get_link_to_form
 
+from hrms.hr.utils import validate_active_employee
+
 
 class EmployeePerformanceFeedback(Document):
 	def validate(self):
@@ -27,6 +29,9 @@ class EmployeePerformanceFeedback(Document):
 					frappe.bold(_("Self Appraisal")), get_link_to_form("Appraisal", self.appraisal)
 				)
 			)
+
+		validate_active_employee(self.employee)
+		validate_active_employee(self.reviewer)
 
 	def validate_appraisal(self):
 		employee = frappe.db.get_value("Appraisal", self.appraisal, "employee")

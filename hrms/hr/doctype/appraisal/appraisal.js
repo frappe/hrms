@@ -26,10 +26,13 @@ frappe.ui.form.on("Appraisal", {
 		if (frm.doc.appraisal_cycle) {
 			frappe.run_serially([
 				() => {
-					frm.call({
-						method: "set_kra_evaluation_method",
-						doc: frm.doc,
-					});
+					if (frm.doc.__islocal && frm.doc.appraisal_cycle) {
+						frappe.db.get_value("Appraisal Cycle", frm.doc.appraisal_cycle, "kra_evaluation_method", (r) => {
+							if (r.kra_evaluation_method) {
+								frm.set_value("rate_goals_manually", cint(r.kra_evaluation_method === "Manual Rating"));
+							}
+						});
+					}
 				},
 				() => {
 					frm.call({
