@@ -16,6 +16,7 @@
   "section_break_nf0j",
   "employee",
   "employee_name",
+  "company",
   "user",
   "column_break_ahxr",
   "start_date",
@@ -198,12 +199,20 @@
   {
    "fieldname": "column_break_ahxr",
    "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2023-03-27 08:40:17.719438",
+ "modified": "2023-03-28 06:48:10.561241",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Goal",

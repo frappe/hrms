@@ -12,6 +12,7 @@
   "employee_name",
   "department",
   "designation",
+  "company",
   "column_break_3",
   "reviewer",
   "reviewer_name",
@@ -167,12 +168,21 @@
    "options": "Employee Performance Feedback",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1,
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-27 19:20:09.773916",
+ "modified": "2023-03-28 06:45:27.732572",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Performance Feedback",
