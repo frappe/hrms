@@ -58,7 +58,6 @@ class Appraisal(Document):
 				title=_("Duplicate Entry"),
 			)
 
-	@frappe.whitelist()
 	def set_kra_evaluation_method(self):
 		if (
 			self.is_new()
@@ -198,9 +197,9 @@ class Appraisal(Document):
 			feedback.append(
 				"feedback_ratings",
 				{
-					"criteria": entry["criteria"],
-					"rating": entry["rating"],
-					"per_weightage": entry["per_weightage"],
+					"criteria": entry.get("criteria"),
+					"rating": entry.get("rating"),
+					"per_weightage": entry.get("per_weightage"),
 				},
 			)
 
@@ -221,6 +220,7 @@ class Appraisal(Document):
 					# archived goals should not contribute to progress
 					& (Goal.status != "Archived")
 					& ((Goal.parent_goal == "") | (Goal.parent_goal.isnull()))
+					& (Goal.appraisal_cycle == self.appraisal_cycle)
 				)
 			).run()[0][0]
 
@@ -263,6 +263,15 @@ def get_feedback_history(employee, appraisal):
 	# get percentage of reviews per rating
 	reviews_per_rating = []
 
+	feedback_count = frappe.db.count(
+		"Employee Performance Feedback",
+		filters={
+			"appraisal": appraisal,
+			"employee": employee,
+			"docstatus": 1,
+		},
+	)
+
 	for i in range(1, 6):
 		count = frappe.db.count(
 			"Employee Performance Feedback",
@@ -274,10 +283,11 @@ def get_feedback_history(employee, appraisal):
 			},
 		)
 
-		percent = flt((count / len(data.feedback_history) or 1) * 100, 0) if count else 0
+		percent = flt((count / feedback_count) * 100, 0) if feedback_count else 0
 		reviews_per_rating.append(percent)
 
 	data.reviews_per_rating = reviews_per_rating
+	data.avg_feedback_score = frappe.db.get_value("Appraisal", appraisal, "avg_feedback_score")
 
 	return data
 

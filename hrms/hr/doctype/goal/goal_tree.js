@@ -192,6 +192,7 @@ frappe.treeview_settings["Goal"] = {
 	},
 	breadcrumb: "Performance",
 	get_tree_root: false,
+	add_tree_node: "hrms.hr.doctype.goal.goal.add_tree_node",
 	root_label: __("All Goals"),
 	ignore_fields: ["parent_goal"],
 	post_render(treeview) {

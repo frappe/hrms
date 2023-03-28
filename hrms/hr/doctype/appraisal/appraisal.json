@@ -146,10 +146,11 @@
    "fieldtype": "Section Break"
   },
   {
+   "description": "Out of 5",
    "fieldname": "total_score",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Total Goal Score (Out of 5)",
+   "label": "Total Goal Score",
    "no_copy": 1,
    "oldfieldname": "total_score",
    "oldfieldtype": "Currency",
@@ -299,10 +300,11 @@
   },
   {
    "depends_on": "appraisal_cycle",
-   "description": "Average of Goal Score, Feedback Score, and Self Appraisal Score",
+   "description": "Average of Goal Score, Feedback Score, and Self Appraisal Score (out of 5)",
    "fieldname": "final_score",
    "fieldtype": "Float",
-   "label": "Final Score (Out of 5)",
+   "in_list_view": 1,
+   "label": "Final Score",
    "read_only": 1
   }
  ],
@@ -311,7 +313,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-27 23:33:42.998800",
+ "modified": "2023-03-28 08:37:36.312872",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",

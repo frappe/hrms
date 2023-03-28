@@ -12,6 +12,8 @@ frappe.ui.form.on("Appraisal Cycle", {
 				frappe.set_route("Tree", "Goal");
 			});
 
+			if (frm.doc.status == "Completed") return;
+
 			frm.add_custom_button(__("Create Appraisals"), () => {
 				frm.call({
 					method: "create_appraisals",

@@ -6,16 +6,19 @@ from pypika import CustomFunction
 import frappe
 from frappe import _
 from frappe.query_builder.functions import Avg
-from frappe.utils import flt
+from frappe.utils import cint, flt
 from frappe.utils.nestedset import NestedSet
+
+from hrms.hr.utils import validate_active_employee
 
 
 class Goal(NestedSet):
 	def before_insert(self):
-		if self.is_group:
+		if cint(self.is_group):
 			self.progress = 0
 
 	def validate(self):
+		validate_active_employee(self.employee)
 		self.validate_parent_fields()
 		self.validate_from_to_dates(self.start_date, self.end_date)
 		self.validate_progress()
@@ -45,6 +48,9 @@ class Goal(NestedSet):
 		parent_details = frappe.db.get_value(
 			"Goal", self.parent_goal, ["employee", "kra", "appraisal_cycle"], as_dict=True
 		)
+		if not parent_details:
+			return
+
 		if self.employee != parent_details.employee:
 			frappe.throw(
 				_("Goal should be owned by the same employee as its parent goal."), title=_("Not Allowed")
@@ -184,3 +190,16 @@ def update_progress(progress: float, goal: str) -> None:
 	goal.progress = progress
 	goal.flags.ignore_mandatory = True
 	goal.save()
+
+
+@frappe.whitelist()
+def add_tree_node():
+	from frappe.desk.treeview import make_tree_args
+
+	args = frappe.form_dict
+	args = make_tree_args(**args)
+
+	if args.parent_goal == "All Goals" or not frappe.db.exists("Goal", args.parent_goal):
+		args.parent_goal = None
+
+	frappe.get_doc(args).insert()
