@@ -205,10 +205,10 @@
    "fieldtype": "Link",
    "in_standard_filter": 1,
    "label": "Appraisal Template",
+   "mandatory_depends_on": "eval:!doc.__islocal",
    "oldfieldname": "kra_template",
    "oldfieldtype": "Link",
-   "options": "Appraisal Template",
-   "reqd": 1
+   "options": "Appraisal Template"
   },
   {
    "fieldname": "amended_from",
@@ -313,7 +313,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-28 08:37:36.312872",
+ "modified": "2023-03-30 21:02:16.425253",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",
