@@ -7,6 +7,9 @@ from frappe.model.document import Document
 
 
 class AppraisalCycle(Document):
+	def onload(self):
+		self.set_onload("appraisals_created", self.check_if_appraisals_exist())
+
 	def validate(self):
 		self.validate_from_to_dates("start_date", "end_date")
 		self.validate_evaluation_method_change()
@@ -137,6 +140,24 @@ class AppraisalCycle(Document):
 			msg, title=_("Appraisal Template Missing"), indicator="yellow", raise_exception=raise_exception
 		)
 
+	@frappe.whitelist()
+	def complete_cycle(self):
+		self.check_permission("write")
+
+		draft_appraisals = frappe.db.count("Appraisal", {"appraisal_cycle": self.name, "docstatus": 0})
+
+		if draft_appraisals:
+			link = frappe.utils.get_url_to_list("Appraisal") + f"?status=Draft&appraisal_cycle={self.name}"
+			link = f"""<a href="{link}">documents</a>"""
+
+			msg = _("{0} Appraisal(s) are not submitted yet").format(frappe.bold(draft_appraisals))
+			msg += "<br><br>"
+			msg += _("Please submit the {0} before marking the cycle as Completed").format(link)
+			frappe.throw(msg, title=_("Unsubmitted Appraisals"))
+
+		self.status = "Completed"
+		self.save()
+
 
 def create_appraisals_for_cycle(appraisal_cycle: AppraisalCycle, publish_progress: bool = False):
 	"""
@@ -170,3 +191,14 @@ def create_appraisals_for_cycle(appraisal_cycle: AppraisalCycle, publish_progres
 		except frappe.DuplicateEntryError:
 			# already exists
 			pass
+
+
+def validate_active_appraisal_cycle(appraisal_cycle: str) -> None:
+	if frappe.db.get_value("Appraisal Cycle", appraisal_cycle, "status") == "Completed":
+		msg = _("Cannot create or change transactions against a {0} Appraisal Cycle.").format(
+			frappe.bold("Completed")
+		)
+		msg += "<br><br>"
+		msg += _("Mark the cycle as {0} if required.").format(frappe.bold("In Progress"))
+
+		frappe.throw(msg, title=_("Not Allowed"))

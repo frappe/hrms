@@ -153,7 +153,7 @@
    "in_standard_filter": 1,
    "label": "Status",
    "options": "Not Started\nIn Progress\nCompleted",
-   "reqd": 1
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -171,7 +171,7 @@
    "link_fieldname": "appraisal_cycle"
   }
  ],
- "modified": "2023-03-28 06:57:48.146484",
+ "modified": "2023-03-29 12:28:36.247120",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal Cycle",
