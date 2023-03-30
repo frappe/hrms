@@ -9,6 +9,7 @@ from frappe.tests.utils import FrappeTestCase
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
+from hrms.hr.doctype.appraisal_cycle.appraisal_cycle import get_appraisal_cycle_summary
 from hrms.hr.doctype.appraisal_cycle.test_appraisal_cycle import create_appraisal_cycle
 from hrms.hr.doctype.appraisal_template.test_appraisal_template import create_appraisal_template
 from hrms.hr.doctype.employee_performance_feedback.test_employee_performance_feedback import (
@@ -23,14 +24,16 @@ class TestAppraisal(FrappeTestCase):
 		frappe.db.delete("Goal")
 		frappe.db.delete("Appraisal")
 
-		company = create_company("_Test Appraisal").name
+		self.company = create_company("_Test Appraisal").name
 		self.template = create_appraisal_template()
 
 		engineer = create_designation(designation_name="Engineer")
 		engineer.appraisal_template = self.template.name
 		engineer.save()
 
-		self.employee1 = make_employee("employee1@example.com", company=company, designation="Engineer")
+		self.employee1 = make_employee(
+			"employee1@example.com", company=self.company, designation="Engineer"
+		)
 
 	def test_validate_duplicate(self):
 		cycle = create_appraisal_cycle(designation="Engineer")
@@ -270,3 +273,34 @@ class TestAppraisal(FrappeTestCase):
 
 		# transaction against a Completed cycle
 		self.assertRaises(frappe.ValidationError, appraisal.insert)
+
+	def test_cycle_summary(self):
+		employee2 = make_employee("employee2@example.com", company=self.company, designation="Engineer")
+
+		cycle = create_appraisal_cycle(designation="Engineer")
+		cycle.create_appraisals()
+
+		appraisal = frappe.db.exists(
+			"Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1}
+		)
+
+		goal = create_goal(self.employee1, "Quality", appraisal_cycle=cycle.name)
+		feedback = create_performance_feedback(
+			self.employee1,
+			employee2,
+			appraisal,
+		)
+		ratings = feedback.feedback_ratings
+		ratings[0].rating = 0.8  # 70% weightage
+		ratings[1].rating = 0.7  # 30% weightage
+		feedback.submit()
+
+		summary = get_appraisal_cycle_summary(cycle.name)
+
+		expected_data = {
+			"appraisees": 2,
+			"self_appraisal_pending": 2,
+			"goals_missing": 1,
+			"feedback_missing": 1,
+		}
+		self.assertEqual(summary, expected_data)
