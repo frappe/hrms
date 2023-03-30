@@ -4,6 +4,8 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.query_builder.functions import Count
+from frappe.query_builder.terms import SubQuery
 
 
 class AppraisalCycle(Document):
@@ -202,3 +204,64 @@ def validate_active_appraisal_cycle(appraisal_cycle: str) -> None:
 		msg += _("Mark the cycle as {0} if required.").format(frappe.bold("In Progress"))
 
 		frappe.throw(msg, title=_("Not Allowed"))
+
+
+@frappe.whitelist()
+def get_appraisal_cycle_summary(cycle_name: str) -> dict:
+	summary = frappe._dict()
+
+	summary["appraisees"] = frappe.db.count(
+		"Appraisal", {"appraisal_cycle": cycle_name, "docstatus": ("!=", 2)}
+	)
+	summary["self_appraisal_pending"] = frappe.db.count(
+		"Appraisal", {"appraisal_cycle": cycle_name, "docstatus": 0, "self_score": 0}
+	)
+	summary["goals_missing"] = get_employees_without_goals(cycle_name)
+	summary["feedback_missing"] = get_employees_without_feedback(cycle_name)
+
+	return summary
+
+
+def get_employees_without_goals(cycle_name: str) -> int:
+	Goal = frappe.qb.DocType("Goal")
+	Appraisal = frappe.qb.DocType("Appraisal")
+	count = Count("*").as_("count")
+	filtered_records = frappe.qb.get_query(
+		"Goal", filters={"appraisal_cycle": cycle_name}, fields=["employee"], distinct=True
+	)
+
+	goals_missing = (
+		frappe.qb.from_(Appraisal)
+		.select(count)
+		.where(
+			(Appraisal.appraisal_cycle == cycle_name)
+			& (Appraisal.docstatus != 2)
+			& (Appraisal.employee.notin(SubQuery(filtered_records)))
+		)
+	).run(as_dict=True)
+
+	return goals_missing[0].count
+
+
+def get_employees_without_feedback(cycle_name: str) -> int:
+	Feedback = frappe.qb.DocType("Employee Performance Feedback")
+	Appraisal = frappe.qb.DocType("Appraisal")
+	count = Count("*").as_("count")
+	filtered_records = frappe.qb.get_query(
+		Feedback,
+		filters={"appraisal_cycle": cycle_name, "docstatus": 1},
+		fields=["employee"],
+		distinct=True,
+	)
+
+	feedback_missing = (
+		frappe.qb.from_(Appraisal)
+		.select(count)
+		.where(
+			(Appraisal.appraisal_cycle == cycle_name)
+			& (Appraisal.docstatus != 2)
+			& (Appraisal.employee.notin(SubQuery(filtered_records)))
+		)
+	).run(as_dict=True)
+
+	return feedback_missing[0].count
