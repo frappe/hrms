@@ -6,11 +6,14 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt, get_link_to_form
 
+from hrms.hr.doctype.appraisal_cycle.appraisal_cycle import validate_active_appraisal_cycle
 from hrms.hr.utils import validate_active_employee
 
 
 class EmployeePerformanceFeedback(Document):
 	def validate(self):
+		validate_active_appraisal_cycle(self.appraisal_cycle)
+
 		self.validate_employee()
 		self.validate_appraisal()
 		self.validate_total_weightage()

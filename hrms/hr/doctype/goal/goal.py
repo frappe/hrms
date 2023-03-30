@@ -9,6 +9,7 @@ from frappe.query_builder.functions import Avg
 from frappe.utils import cint, flt
 from frappe.utils.nestedset import NestedSet
 
+from hrms.hr.doctype.appraisal_cycle.appraisal_cycle import validate_active_appraisal_cycle
 from hrms.hr.utils import validate_active_employee
 
 
@@ -18,6 +19,9 @@ class Goal(NestedSet):
 			self.progress = 0
 
 	def validate(self):
+		if self.appraisal_cycle:
+			validate_active_appraisal_cycle(self.appraisal_cycle)
+
 		validate_active_employee(self.employee)
 		self.validate_parent_fields()
 		self.validate_from_to_dates(self.start_date, self.end_date)

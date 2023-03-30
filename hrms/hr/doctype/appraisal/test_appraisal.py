@@ -246,3 +246,27 @@ class TestAppraisal(FrappeTestCase):
 
 		appraisal.save()
 		self.assertEqual(appraisal.self_score, 3.85)
+
+	def test_cycle_completion(self):
+		cycle = create_appraisal_cycle(designation="Engineer")
+		cycle.create_appraisals()
+
+		# unsubmitted appraisals
+		self.assertRaises(frappe.ValidationError, cycle.complete_cycle)
+
+		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name})
+		appraisal = frappe.get_doc("Appraisal", appraisal)
+		appraisal.submit()
+
+		cycle.complete_cycle()
+		appraisal = frappe.get_doc(
+			{
+				"doctype": "Appraisal",
+				"employee": self.employee1,
+				"appraisal_cycle": cycle.name,
+				"appraisal_template": self.template.name,
+			}
+		)
+
+		# transaction against a Completed cycle
+		self.assertRaises(frappe.ValidationError, appraisal.insert)
