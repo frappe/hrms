@@ -1,0 +1,39 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2023-03-24 11:04:25.623467",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "modified": "2023-03-30 18:50:42.394262",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Appraisal Overview",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Appraisal",
+ "reference_report": "",
+ "report_name": "Appraisal Overview",
+ "report_script": "",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Employee"
+  },
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HR User"
+  },
+  {
+   "role": "Employee Self Service"
+  },
+  {
+   "role": "HR Manager"
+  }
+ ]
+}
