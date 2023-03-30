@@ -6,6 +6,7 @@ from frappe import _
 
 
 def execute(filters: dict = None) -> tuple:
+	filters = frappe._dict(filters or {})
 	columns = get_columns()
 	data = get_data(filters)
 	chart = get_chart_data(data)
