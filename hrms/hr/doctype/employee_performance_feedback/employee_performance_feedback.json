@@ -1,0 +1,249 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:HR-PF-{YYYY}-{#####}",
+ "creation": "2022-09-01 01:05:44.869523",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee_details_tab",
+  "employee",
+  "employee_name",
+  "department",
+  "designation",
+  "company",
+  "column_break_3",
+  "reviewer",
+  "reviewer_name",
+  "reviewer_designation",
+  "user",
+  "column_break_f0bz",
+  "added_on",
+  "appraisal_cycle",
+  "section_break_3",
+  "appraisal",
+  "feedback_ratings",
+  "total_score",
+  "feedback_tab",
+  "feedback",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "depends_on": "employee",
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_score",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Total Score",
+   "read_only": 1
+  },
+  {
+   "fieldname": "feedback_tab",
+   "fieldtype": "Tab Break",
+   "label": "Feedback",
+   "options": "Feedback"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "feedback",
+   "fieldtype": "Text Editor",
+   "reqd": 1
+  },
+  {
+   "default": "Now",
+   "fieldname": "added_on",
+   "fieldtype": "Datetime",
+   "label": "Added On",
+   "reqd": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "For Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "appraisal",
+   "fieldtype": "Link",
+   "label": "Appraisal",
+   "options": "Appraisal",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "reviewer.designation",
+   "fieldname": "reviewer_designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reviewer",
+   "fieldtype": "Link",
+   "ignore_user_permissions": 1,
+   "in_standard_filter": 1,
+   "label": "Reviewer",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "reviewer.employee_name",
+   "fieldname": "reviewer_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Reviewer Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "employee_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Employee Details"
+  },
+  {
+   "fetch_from": "employee.department",
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.designation",
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_f0bz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "appraisal.appraisal_cycle",
+   "fieldname": "appraisal_cycle",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Appraisal Cycle",
+   "options": "Appraisal Cycle",
+   "read_only": 1
+  },
+  {
+   "fieldname": "feedback_ratings",
+   "fieldtype": "Table",
+   "label": "Feedback Ratings",
+   "options": "Employee Feedback Rating"
+  },
+  {
+   "fetch_from": "reviewer.user_id",
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Employee Performance Feedback",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1,
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2023-03-28 07:21:50.868103",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Employee Performance Feedback",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "share": 1
+  }
+ ],
+ "search_fields": "employee_name, reviewer_name, appraisal_cycle",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "employee_name"
+}

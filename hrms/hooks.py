@@ -12,7 +12,13 @@ required_apps = ["erpnext"]
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/hrms/css/hrms.css"
-app_include_js = "hrms.bundle.js"
+app_include_js = [
+	"hrms.bundle.js",
+	"performance.bundle.js",
+]
+app_include_css = "hrms.bundle.css"
+
+# website
 
 # include js, css files in header of web template
 # web_include_css = "/assets/hrms/css/hrms.css"
@@ -30,14 +36,14 @@ app_include_js = "hrms.bundle.js"
 
 # include js in doctype views
 doctype_js = {
-	"Employee": "public/js/employee.js",
-	"Company": "public/js/company.js",
-	"Department": "public/js/department.js",
-	"Timesheet": "public/js/timesheet.js",
-	"Payment Entry": "public/js/payment_entry.js",
-	"Journal Entry": "public/js/journal_entry.js",
-	"Delivery Trip": "public/js/deliver_trip.js",
-	"Bank Transaction": "public/js/bank_transaction.js",
+	"Employee": "public/js/erpnext/employee.js",
+	"Company": "public/js/erpnext/company.js",
+	"Department": "public/js/erpnext/department.js",
+	"Timesheet": "public/js/erpnext/timesheet.js",
+	"Payment Entry": "public/js/erpnext/payment_entry.js",
+	"Journal Entry": "public/js/erpnext/journal_entry.js",
+	"Delivery Trip": "public/js/erpnext/deliver_trip.js",
+	"Bank Transaction": "public/js/erpnext/bank_transaction.js",
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
