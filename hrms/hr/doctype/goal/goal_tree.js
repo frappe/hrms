@@ -101,6 +101,16 @@ frappe.treeview_settings["Goal"] = {
 			fieldname: "appraisal_cycle",
 			label: __("Appraisal Cycle"),
 			options: "Appraisal Cycle",
+			get_query() {
+				const company = frappe.treeview_settings["Goal"].page.fields_dict.company.get_value();
+
+				return {
+					filters: {
+						company: company,
+						status: ["!=", "Completed"]
+					}
+				}
+			},
 			default() {
 				const treeview = frappe.treeview_settings["Goal"].treeview;
 				let appraisal_cycle = (

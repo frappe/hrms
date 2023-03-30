@@ -30,8 +30,17 @@ frappe.ui.form.on("Goal", {
 			return {
 				query: "hrms.hr.doctype.appraisal.appraisal.get_kras_for_employee",
 				filters: {
-					"employee": frm.doc.employee,
-					"appraisal_cycle": frm.doc.appraisal_cycle,
+					employee: frm.doc.employee,
+					appraisal_cycle: frm.doc.appraisal_cycle,
+				}
+			};
+		});
+
+		frm.set_query("appraisal_cycle", () => {
+			return {
+				filters: {
+					status: ["!=", "Completed"],
+					company: frm.doc.company,
 				}
 			};
 		});
