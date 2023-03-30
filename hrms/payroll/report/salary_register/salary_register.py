@@ -81,13 +81,15 @@ def execute(filters=None):
 
 
 def get_earning_and_deduction_types(salary_slips):
-	salary_components = {_("Earning"): [], _("Deduction"): []}
-	salary_components_and_type = get_salary_components_and_type(salary_slips)
+	salary_component_and_type = {_("Earning"): [], _("Deduction"): []}
 
-	for component in salary_components_and_type:
-		salary_components[_(component.type)].append(component.salary_component)
+	for salary_compoent in get_salary_components(salary_slips):
+		component_type = get_salary_component_type(salary_compoent)
+		salary_component_and_type[_(component_type)].append(salary_compoent)
 
-	return salary_components[_("Earning")], salary_components[_("Deduction")]
+	return sorted(salary_component_and_type[_("Earning")]), sorted(
+		salary_component_and_type[_("Deduction")]
+	)
 
 
 def update_column_width(ss, columns):
@@ -251,14 +253,17 @@ def get_columns(earning_types, ded_types):
 	return columns
 
 
-def get_salary_components_and_type(salary_slips):
+def get_salary_components(salary_slips):
 	return (
 		frappe.qb.from_(salary_detail)
-		.join(salary_component)
-		.on(salary_detail.salary_component == salary_component.name)
 		.where((salary_detail.amount != 0) & (salary_detail.parent.isin([d.name for d in salary_slips])))
-		.select(salary_detail.salary_component, salary_component.type)
-	).run(as_dict=1)
+		.select(salary_detail.salary_component)
+		.distinct()
+	).run(pluck=True)
+
+
+def get_salary_component_type(salary_component):
+	return frappe.db.get_value("Salary Component", salary_component, "type", cache=True)
 
 
 def get_salary_slips(filters, company_currency):
