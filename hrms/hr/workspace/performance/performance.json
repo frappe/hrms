@@ -163,7 +163,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Appraisal Overview",
    "link_count": 0,
    "link_to": "Appraisal Overview",
@@ -172,7 +172,7 @@
    "type": "Link"
   }
  ],
- "modified": "2023-03-30 22:50:21.593682",
+ "modified": "2023-03-30 22:51:21.593682",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Performance",
