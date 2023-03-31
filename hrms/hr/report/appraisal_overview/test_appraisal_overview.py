@@ -23,11 +23,11 @@ class TestAppraisalOverview(FrappeTestCase):
 		self.company = create_company("_Test Appraisal").name
 
 		engineer = create_designation(designation_name="Engineer")
-		engineer.appraisal_template = create_appraisal_template()
+		engineer.appraisal_template = create_appraisal_template().name
 		engineer.save()
 
 		consultant = create_designation(designation_name="Consultant")
-		consultant.appraisal_template = create_appraisal_template("Consultant")
+		consultant.appraisal_template = create_appraisal_template("Consultant").name
 		consultant.save()
 
 		self.employee1 = make_employee(
