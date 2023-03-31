@@ -109,7 +109,7 @@ class EmployeeAdvance(Document):
 				EmployeeAdvanceOverPayment,
 			)
 
-		if flt(return_amount) > self.paid_amount - self.claimed_amount:
+		if flt(return_amount) > round(self.paid_amount - self.claimed_amount, 2):
 			frappe.throw(_("Return amount cannot be greater unclaimed amount"))
 
 		self.db_set("paid_amount", paid_amount)
