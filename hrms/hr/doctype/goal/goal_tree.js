@@ -129,6 +129,7 @@ frappe.treeview_settings["Goal"] = {
 			fieldname: "kra",
 			label: __("KRA"),
 			options: "KRA",
+			mandatory_depends_on: "eval:doc.appraisal_cycle && !doc.parent_goal",
 			get_query() {
 				return {
 					query: "hrms.hr.doctype.appraisal.appraisal.get_kras_for_employee",

@@ -14,6 +14,8 @@ from hrms.hr.utils import validate_active_employee
 
 
 class Goal(NestedSet):
+	nsm_parent_field = "parent_goal"
+
 	def before_insert(self):
 		if cint(self.is_group):
 			self.progress = 0
@@ -29,6 +31,8 @@ class Goal(NestedSet):
 		self.set_status()
 
 	def on_update(self):
+		NestedSet.on_update(self)
+
 		doc_before_save = self.get_doc_before_save()
 
 		if doc_before_save:
@@ -40,6 +44,9 @@ class Goal(NestedSet):
 
 		self.update_parent_progress()
 		self.update_goal_progress_in_appraisal()
+
+	def on_trash(self):
+		NestedSet.on_trash(self, allow_root_deletion=True)
 
 	def after_delete(self):
 		self.update_parent_progress()

@@ -133,6 +133,7 @@
    "fieldname": "kra",
    "fieldtype": "Link",
    "label": "KRA",
+   "mandatory_depends_on": "eval: !doc.parent_goal && doc.appraisal_cycle",
    "options": "KRA",
    "read_only_depends_on": "eval: doc.parent_goal"
   },
@@ -212,7 +213,7 @@
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2023-03-28 06:48:10.561241",
+ "modified": "2023-03-31 09:56:03.450215",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Goal",
