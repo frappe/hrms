@@ -230,10 +230,17 @@ def get_custom_fields():
 		],
 		"Designation": [
 			{
+				"fieldname": "appraisal_template",
+				"fieldtype": "Link",
+				"label": "Appraisal Template",
+				"options": "Appraisal Template",
+				"insert_after": "description",
+			},
+			{
 				"fieldname": "required_skills_section",
 				"fieldtype": "Section Break",
 				"label": "Required Skills",
-				"insert_after": "description",
+				"insert_after": "appraisal_template",
 			},
 			{
 				"fieldname": "skills",

@@ -23,3 +23,19 @@ def get_first_day_for_prev_month():
 	prev_month = add_months(getdate(), -1)
 	prev_month_first = prev_month.replace(day=1)
 	return prev_month_first
+
+
+def create_company(name=None):
+	company_name = name or "Test Company"
+
+	if frappe.db.exists("Company", company_name):
+		return frappe.get_doc("Company", company_name)
+
+	return frappe.get_doc(
+		{
+			"doctype": "Company",
+			"company_name": company_name,
+			"default_currency": "INR",
+			"country": "India",
+		}
+	).insert()
