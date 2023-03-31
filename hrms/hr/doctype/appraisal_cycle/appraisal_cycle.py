@@ -226,8 +226,12 @@ def get_employees_without_goals(cycle_name: str) -> int:
 	Goal = frappe.qb.DocType("Goal")
 	Appraisal = frappe.qb.DocType("Appraisal")
 	count = Count("*").as_("count")
-	filtered_records = frappe.qb.get_query(
-		"Goal", filters={"appraisal_cycle": cycle_name}, fields=["employee"], distinct=True
+
+	filtered_records = SubQuery(
+		frappe.qb.from_(Goal)
+		.select(Goal.employee)
+		.distinct()
+		.where((Goal.appraisal_cycle == cycle_name) & (Goal.status != "Archived"))
 	)
 
 	goals_missing = (
@@ -236,7 +240,7 @@ def get_employees_without_goals(cycle_name: str) -> int:
 		.where(
 			(Appraisal.appraisal_cycle == cycle_name)
 			& (Appraisal.docstatus != 2)
-			& (Appraisal.employee.notin(SubQuery(filtered_records)))
+			& (Appraisal.employee.notin(filtered_records))
 		)
 	).run(as_dict=True)
 
@@ -247,11 +251,12 @@ def get_employees_without_feedback(cycle_name: str) -> int:
 	Feedback = frappe.qb.DocType("Employee Performance Feedback")
 	Appraisal = frappe.qb.DocType("Appraisal")
 	count = Count("*").as_("count")
-	filtered_records = frappe.qb.get_query(
-		Feedback,
-		filters={"appraisal_cycle": cycle_name, "docstatus": 1},
-		fields=["employee"],
-		distinct=True,
+
+	filtered_records = SubQuery(
+		frappe.qb.from_(Feedback)
+		.select(Feedback.employee)
+		.distinct()
+		.where((Feedback.appraisal_cycle == cycle_name) & (Feedback.docstatus == 1))
 	)
 
 	feedback_missing = (
@@ -260,7 +265,7 @@ def get_employees_without_feedback(cycle_name: str) -> int:
 		.where(
 			(Appraisal.appraisal_cycle == cycle_name)
 			& (Appraisal.docstatus != 2)
-			& (Appraisal.employee.notin(SubQuery(filtered_records)))
+			& (Appraisal.employee.notin(filtered_records))
 		)
 	).run(as_dict=True)
 
