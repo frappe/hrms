@@ -195,6 +195,8 @@ def update_progress(progress: float, goal: str) -> None:
 	goal.flags.ignore_mandatory = True
 	goal.save()
 
+	return goal
+
 
 @frappe.whitelist()
 def add_tree_node():
