@@ -10,6 +10,7 @@ from hrms.hr.doctype.full_and_final_statement.test_full_and_final_statement impo
 	create_full_and_final_statement,
 )
 from hrms.hr.report.employee_exits.employee_exits import execute
+from hrms.tests.test_utils import create_company
 
 
 class TestEmployeeExits(unittest.TestCase):
@@ -232,15 +233,3 @@ class TestEmployeeExits(unittest.TestCase):
 		]
 
 		self.assertEqual(expected_data, report[1])  # rows
-
-
-def create_company():
-	if not frappe.db.exists("Company", "Test Company"):
-		frappe.get_doc(
-			{
-				"doctype": "Company",
-				"company_name": "Test Company",
-				"default_currency": "INR",
-				"country": "India",
-			}
-		).insert()

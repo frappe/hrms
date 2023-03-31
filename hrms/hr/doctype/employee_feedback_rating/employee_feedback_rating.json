@@ -1,0 +1,50 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2022-09-01 01:04:20.661490",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "criteria",
+  "per_weightage",
+  "rating"
+ ],
+ "fields": [
+  {
+   "depends_on": "eval: doc.parenttype != \"Appraisal Template\"",
+   "fieldname": "rating",
+   "fieldtype": "Rating",
+   "in_list_view": 1,
+   "label": "Rating"
+  },
+  {
+   "fieldname": "criteria",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Criteria",
+   "options": "Employee Feedback Criteria",
+   "reqd": 1
+  },
+  {
+   "fieldname": "per_weightage",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Weightage (%)",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-03-16 15:09:46.695238",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Employee Feedback Rating",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
