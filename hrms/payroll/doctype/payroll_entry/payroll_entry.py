@@ -820,8 +820,8 @@ def get_emp_list(
 	search_string,
 	fields,
 	as_dict=False,
-	limit=20,
-	offset=0,
+	limit=None,
+	offset=None,
 	ignore_match_conditions=False,
 ):
 	SalaryStructureAssignment = frappe.qb.DocType("Salary Structure Assignment")
@@ -850,7 +850,7 @@ def get_emp_list(
 	if not ignore_match_conditions:
 		query = set_match_conditions(query=query, qb_object=Employee)
 
-	if limit and offset:
+	if limit and offset is not None:
 		query = query.limit(limit).offset(offset)
 
 	return query.run(as_dict=as_dict)
@@ -1189,8 +1189,8 @@ def get_employee_list(
 	search_string=None,
 	fields: List[str] = None,
 	as_dict=True,
-	limit=20,
-	offset=0,
+	limit=None,
+	offset=None,
 	ignore_match_conditions=False,
 ):
 	sal_struct = get_sal_struct(
