@@ -2,12 +2,13 @@
 # For license information, please see license.txt
 
 import json
+from typing import List
 
 from dateutil.relativedelta import relativedelta
 
 import frappe
 from frappe import _
-from frappe.desk.reportview import get_filters_cond, get_match_cond
+from frappe.desk.reportview import get_match_cond
 from frappe.model.document import Document
 from frappe.query_builder.functions import Coalesce
 from frappe.utils import (
@@ -28,8 +29,6 @@ from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
 )
 from erpnext.accounts.utils import get_fiscal_year
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
-
-SalaryStructure = frappe.qb.DocType("Salary Structure")
 
 
 class PayrollEntry(Document):
@@ -114,7 +113,7 @@ class PayrollEntry(Document):
 		"""
 		self.check_mandatory()
 		filters = self.make_filters()
-		return get_employee_list(filters=filters)
+		return get_employee_list(filters=filters, as_dict=True, ignore_match_conditions=True)
 
 	def make_filters(self):
 		return frappe._dict(
@@ -134,6 +133,7 @@ class PayrollEntry(Document):
 	def fill_employee_details(self):
 		self.set("employees", [])
 		employees = self.get_emp_list()
+
 		if not employees:
 			error_msg = _(
 				"No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
@@ -154,8 +154,7 @@ class PayrollEntry(Document):
 				error_msg += "<br>" + _("End date: {0}").format(frappe.bold(self.end_date))
 			frappe.throw(error_msg, title=_("No employees found"))
 
-		for d in employees:
-			self.append("employees", d)
+		self.set("employees", employees)
 
 		self.number_of_employees = len(self.employees)
 		if self.validate_attendance:
@@ -280,9 +279,7 @@ class PayrollEntry(Document):
 				.join(ssd)
 				.on(ss.name == ssd.parent)
 				.select(ssd.salary_component, ssd.amount, ssd.parentfield, ss.salary_structure, ss.employee)
-				.where(
-					(ssd.parentfield == component_type) & (ss.name.isin(tuple([d.name for d in salary_slips])))
-				)
+				.where((ssd.parentfield == component_type) & (ss.name.isin([d.name for d in salary_slips])))
 			).run(as_dict=True)
 
 			return salary_components
@@ -330,35 +327,33 @@ class PayrollEntry(Document):
 
 	def get_payroll_cost_centers_for_employee(self, employee, salary_structure):
 		if not self.employee_cost_centers.get(employee):
-			ss_assignment_name = frappe.db.get_value(
-				"Salary Structure Assignment",
-				{"employee": employee, "salary_structure": salary_structure, "docstatus": 1},
-				"name",
+			SalaryStructureAssignment = frappe.qb.DocType("Salary Structure Assignment")
+			EmployeeCostCenter = frappe.qb.DocType("Employee Cost Center")
+
+			cost_centers = dict(
+				(
+					frappe.qb.from_(SalaryStructureAssignment)
+					.join(EmployeeCostCenter)
+					.on(SalaryStructureAssignment.name == EmployeeCostCenter.parent)
+					.select(EmployeeCostCenter.cost_center, EmployeeCostCenter.percentage)
+					.where(
+						(SalaryStructureAssignment.employee == employee) & (SalaryStructureAssignment.docstatus == 1)
+					)
+				).run(as_list=True)
 			)
 
-			if ss_assignment_name:
-				cost_centers = dict(
-					frappe.get_all(
-						"Employee Cost Center",
-						{"parent": ss_assignment_name},
-						["cost_center", "percentage"],
-						as_list=1,
-					)
+			if not cost_centers:
+				default_cost_center, department = frappe.get_cached_value(
+					"Employee", employee, ["payroll_cost_center", "department"]
 				)
-				if not cost_centers:
-					default_cost_center, department = frappe.get_cached_value(
-						"Employee", employee, ["payroll_cost_center", "department"]
-					)
-					if not default_cost_center and department:
-						default_cost_center = frappe.get_cached_value(
-							"Department", department, "payroll_cost_center"
-						)
-					if not default_cost_center:
-						default_cost_center = self.cost_center
+				if not default_cost_center and department:
+					default_cost_center = frappe.get_cached_value("Department", department, "payroll_cost_center")
+				if not default_cost_center:
+					default_cost_center = self.cost_center
 
-					cost_centers = {default_cost_center: 100}
+				cost_centers = {default_cost_center: 100}
 
-				self.employee_cost_centers.setdefault(employee, cost_centers)
+			self.employee_cost_centers.setdefault(employee, cost_centers)
 
 		return self.employee_cost_centers.get(employee, {})
 
@@ -449,11 +444,11 @@ class PayrollEntry(Document):
 			if process_payroll_accounting_entry_based_on_employee:
 				"""
 				employee_based_payroll_payable_entries = {
-				        'HR-EMP-00004': {
-				                        'earnings': 83332.0,
-				                        'deductions': 2000.0
-				                },
-				        'HR-EMP-00005': {
+				        'HREMP00004': {
+				                'earnings': 83332.0,
+				                'deductions': 2000.0
+				        },
+				        'HREMP00005': {
 				                'earnings': 50000.0,
 				                'deductions': 2000.0
 				        }
@@ -803,6 +798,7 @@ class PayrollEntry(Document):
 def get_sal_struct(
 	company: str, currency: str, salary_slip_based_on_timesheet: int, payroll_frequency: str
 ):
+	SalaryStructure = frappe.qb.DocType("Salary Structure")
 	return (
 		frappe.qb.from_(SalaryStructure)
 		.select(SalaryStructure.name)
@@ -817,27 +813,17 @@ def get_sal_struct(
 	).run(pluck=True)
 
 
-def get_filter_condition(filters):
-	cond = ""
-	for f in ["company", "branch", "department", "designation"]:
-		if filters.get(f):
-			cond += " and t1." + f + " = " + frappe.db.escape(filters.get(f))
-
-	return cond
-
-
-def get_joining_relieving_condition(start_date, end_date):
-	cond = """
-		and ifnull(t1.date_of_joining, '1900-01-01') <= '%(end_date)s'
-		and ifnull(t1.relieving_date, '2199-12-31') >= '%(start_date)s'
-	""" % {
-		"start_date": start_date,
-		"end_date": end_date,
-	}
-	return cond
-
-
-def get_emp_list(sal_struct, filters):
+def get_emp_list(
+	sal_struct,
+	filters,
+	searchfield,
+	search_string,
+	fields,
+	as_dict=False,
+	limit=20,
+	offset=0,
+	ignore_match_conditions=False,
+):
 	SalaryStructureAssignment = frappe.qb.DocType("Salary Structure Assignment")
 	Employee = frappe.qb.DocType("Employee")
 
@@ -855,33 +841,81 @@ def get_emp_list(sal_struct, filters):
 			& (SalaryStructureAssignment.payroll_payable_account == filters.payroll_payable_account)
 			& (filters.start_date >= SalaryStructureAssignment.from_date)
 		)
-		.select(
-			Employee.name.as_("employee"), Employee.employee_name, Employee.department, Employee.designation
-		)
 	)
+
+	query = set_fields_to_select(query, fields)
+	query = set_searchfield(query, searchfield, search_string, qb_object=Employee)
+	query = set_filter_conditions(query, filters, qb_object=Employee)
+
+	if not ignore_match_conditions:
+		query = set_match_conditions(query=query, qb_object=Employee)
+
+	if limit and offset:
+		query = query.limit(limit).offset(offset)
+
+	return query.run(as_dict=as_dict)
+
+
+def set_fields_to_select(query, fields: List[str] = None):
+	default_fields = ["employee", "employee_name", "department", "designation"]
+
+	if fields:
+		query = query.select(*fields)
+	else:
+		query = query.select(*default_fields)
+
+	return query
+
+
+def set_searchfield(query, searchfield, search_string, qb_object):
+	if searchfield:
+		query = query.where(
+			(qb_object[searchfield].like("%" + search_string + "%"))
+			| (qb_object.employee_name.like("%" + search_string + "%"))
+		)
+
+	return query
+
+
+def set_filter_conditions(query, filters, qb_object):
+	if filters.get("emplyees"):
+		query = query.where(qb_object.name.not_in(filters.get("emplyees")))
 
 	for fltr_key in ["branch", "department", "designation"]:
 		if filters.get(fltr_key):
-			query = query.where(Employee[fltr_key] == filters[fltr_key])
+			query = query.where(qb_object[fltr_key] == filters[fltr_key])
 
-	return query.run(as_dict=True)
+	return query
+
+
+def set_match_conditions(query, qb_object):
+	match_conditions = get_match_cond("Employee", as_condition=False)
+
+	for cond in match_conditions:
+		if isinstance(cond, dict):
+			for key, value in cond.items():
+				if isinstance(value, list):
+					query = query.where(qb_object[key].isin(value))
+				else:
+					query = query.where(qb_object[key] == value)
+
+	return query
 
 
 def remove_payrolled_employees(emp_list, start_date, end_date):
-	new_emp_list = []
-	for employee_details in emp_list:
-		if not frappe.db.exists(
-			"Salary Slip",
-			{
-				"employee": employee_details.employee,
-				"start_date": start_date,
-				"end_date": end_date,
-				"docstatus": 1,
-			},
-		):
-			new_emp_list.append(employee_details)
+	SalarySlip = frappe.qb.DocType("Salary Slip")
 
-	return new_emp_list
+	employees_with_payroll = (
+		frappe.qb.from_(SalarySlip)
+		.select(SalarySlip.employee)
+		.where(
+			(SalarySlip.docstatus == 1)
+			& (SalarySlip.start_date == start_date)
+			& (SalarySlip.end_date == end_date)
+		)
+	).run(pluck=True)
+
+	return [emp_list[emp] for emp in emp_list if emp not in employees_with_payroll]
 
 
 @frappe.whitelist()
@@ -1018,21 +1052,21 @@ def log_payroll_failure(process, payroll_entry, error):
 
 def create_salary_slips_for_employees(employees, args, publish_progress=True):
 	try:
-		payroll_entry = frappe.get_doc("Payroll Entry", args.payroll_entry)
+		payroll_entry = frappe.get_cached_doc("Payroll Entry", args.payroll_entry)
 		salary_slips_exist_for = get_existing_salary_slips(employees, args)
 		count = 0
 
+		employees = list(set(employees) - set(salary_slips_exist_for))
 		for emp in employees:
-			if emp not in salary_slips_exist_for:
-				args.update({"doctype": "Salary Slip", "employee": emp})
-				frappe.get_doc(args).insert()
+			args.update({"doctype": "Salary Slip", "employee": emp})
+			frappe.get_doc(args).insert()
 
-				count += 1
-				if publish_progress:
-					frappe.publish_progress(
-						count * 100 / len(set(employees) - set(salary_slips_exist_for)),
-						title=_("Creating Salary Slips..."),
-					)
+			count += 1
+			if publish_progress:
+				frappe.publish_progress(
+					count * 100 / len(set(employees) - set(salary_slips_exist_for)),
+					title=_("Creating Salary Slips..."),
+				)
 
 		payroll_entry.db_set({"status": "Submitted", "salary_slips_created": 1, "error_message": ""})
 
@@ -1076,16 +1110,20 @@ def show_payroll_submission_status(submitted, unsubmitted, payroll_entry):
 
 
 def get_existing_salary_slips(employees, args):
-	return frappe.db.sql_list(
-		"""
-		select distinct employee from `tabSalary Slip`
-		where docstatus!= 2 and company = %s and payroll_entry = %s
-			and start_date >= %s and end_date <= %s
-			and employee in (%s)
-	"""
-		% ("%s", "%s", "%s", "%s", ", ".join(["%s"] * len(employees))),
-		[args.company, args.payroll_entry, args.start_date, args.end_date] + employees,
-	)
+	SalarySlip = frappe.qb.DocType("Salary Slip")
+
+	return (
+		frappe.qb.from_(SalarySlip)
+		.select(SalarySlip.employee)
+		.where(
+			(SalarySlip.docstatus != 2)
+			& (SalarySlip.company == args.company)
+			& (SalarySlip.payroll_entry == args.payroll_entry)
+			& (SalarySlip.start_date >= args.start_date)
+			& (SalarySlip.end_date <= args.end_date)
+			& (SalarySlip.employee.isin(employees))
+		)
+	).run(pluck="employee")
 
 
 def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progress=True):
@@ -1145,7 +1183,16 @@ def get_payroll_entries_for_jv(doctype, txt, searchfield, start, page_len, filte
 	)
 
 
-def get_employee_list(filters: frappe._dict) -> list[str]:
+def get_employee_list(
+	filters: frappe._dict,
+	searchfield=None,
+	search_string=None,
+	fields: List[str] = None,
+	as_dict=True,
+	limit=20,
+	offset=0,
+	ignore_match_conditions=False,
+):
 	sal_struct = get_sal_struct(
 		filters.company,
 		filters.currency,
@@ -1156,66 +1203,43 @@ def get_employee_list(filters: frappe._dict) -> list[str]:
 	if not sal_struct:
 		return []
 
-	emp_list = get_emp_list(sal_struct, filters)
-	return remove_payrolled_employees(emp_list, filters.start_date, filters.end_date)
+	emp_list = get_emp_list(
+		sal_struct,
+		filters,
+		searchfield,
+		search_string,
+		fields,
+		as_dict=as_dict,
+		limit=limit,
+		offset=offset,
+		ignore_match_conditions=ignore_match_conditions,
+	)
+
+	if as_dict:
+		employees_to_check = {emp.employee: emp for emp in emp_list}
+	else:
+		employees_to_check = {emp[0]: emp for emp in emp_list}
+
+	return remove_payrolled_employees(employees_to_check, filters.start_date, filters.end_date)
 
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def employee_query(doctype, txt, searchfield, start, page_len, filters):
-	filters = frappe._dict(filters)
-	conditions = []
-	include_employees = []
-	emp_cond = ""
 	doctype = "Employee"
+	filters = frappe._dict(filters)
 
 	if not filters.payroll_frequency:
 		frappe.throw(_("Select Payroll Frequency."))
 
-	if filters.start_date and filters.end_date:
-		employee_list = get_employee_list(filters)
-		emp = filters.get("employees") or []
-		include_employees = [
-			employee.employee for employee in employee_list if employee.employee not in emp
-		]
-		filters.pop("start_date")
-		filters.pop("end_date")
-		filters.pop("salary_slip_based_on_timesheet")
-		filters.pop("payroll_frequency")
-		filters.pop("payroll_payable_account")
-		filters.pop("currency")
-		if filters.employees is not None:
-			filters.pop("employees")
-
-		if include_employees:
-			emp_cond += "and employee in %(include_employees)s"
-
-	return frappe.db.sql(
-		"""select name, employee_name from `tabEmployee`
-		where status = 'Active'
-			and docstatus < 2
-			and ({key} like %(txt)s
-				or employee_name like %(txt)s)
-			{emp_cond}
-			{fcond} {mcond}
-		order by
-			if(locate(%(_txt)s, name), locate(%(_txt)s, name), 99999),
-			if(locate(%(_txt)s, employee_name), locate(%(_txt)s, employee_name), 99999),
-			idx desc,
-			name, employee_name
-		limit %(start)s, %(page_len)s""".format(
-			**{
-				"key": searchfield,
-				"fcond": get_filters_cond(doctype, filters, conditions),
-				"mcond": get_match_cond(doctype),
-				"emp_cond": emp_cond,
-			}
-		),
-		{
-			"txt": "%%%s%%" % txt,
-			"_txt": txt.replace("%", ""),
-			"start": start,
-			"page_len": page_len,
-			"include_employees": include_employees,
-		},
+	employee_list = get_employee_list(
+		filters,
+		searchfield=searchfield,
+		search_string=txt,
+		fields=["name", "employee_name"],
+		as_dict=False,
+		limit=page_len,
+		offset=start,
 	)
+
+	return employee_list

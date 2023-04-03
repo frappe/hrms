@@ -104,7 +104,8 @@ class SalarySlip(TransactionBase):
 				)
 
 	def set_payroll_period(self):
-		self.payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
+		if not hasattr(self, "payroll_period"):
+			self.payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
 
 	def set_net_total_in_words(self):
 		doc_currency = self.currency

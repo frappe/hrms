@@ -105,6 +105,8 @@ frappe.ui.form.on('Payroll Entry', {
 		return frappe.call({
 			doc: frm.doc,
 			method: 'fill_employee_details',
+			freeze: true,
+			freeze_message: __('Pulling Employees')
 		}).then(r => {
 			if (r.docs && r.docs[0].employees) {
 				frm.employees = r.docs[0].employees;
