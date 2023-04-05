@@ -88,11 +88,7 @@ frappe.ui.form.on('Payroll Entry', {
 
 			$("#jump_to_error").on("click", (e) => {
 				e.preventDefault();
-				frappe.utils.scroll_to(
-					frm.get_field("error_message").$wrapper,
-					true,
-					30
-				);
+				frm.scroll_to_field("error_message");
 			});
 		}
 
