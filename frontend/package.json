@@ -1,12 +1,13 @@
 {
-  "name": "frappe-ui-frontend",
+  "name": "FrappeHR",
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
+		"dev": "vite",
+		"serve": "vite preview",
+		"build": "vite build --base=/assets/hrms/frontend/ && yarn copy-html-entry",
+		"copy-html-entry": "cp ../hrms/public/frontend/index.html ../hrms/www/hrms.html"
+	},
   "dependencies": {
     "feather-icons": "^4.28.0",
     "frappe-ui": "^0.0.105",
