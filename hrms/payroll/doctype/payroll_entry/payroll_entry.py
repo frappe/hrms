@@ -67,17 +67,18 @@ class PayrollEntry(Document):
 
 	def validate_employee_details(self):
 		emp_with_sal_slip = []
-		for employee_details in self.employees:
-			if frappe.db.exists(
-				"Salary Slip",
-				{
-					"employee": employee_details.employee,
-					"start_date": self.start_date,
-					"end_date": self.end_date,
-					"docstatus": 1,
-				},
-			):
-				emp_with_sal_slip.append(employee_details.employee)
+		SalarySlip = frappe.qb.DocType("Salary Slip")
+
+		emp_with_sal_slip = (
+			frappe.qb.from_(SalarySlip)
+			.select(SalarySlip.employee)
+			.where(
+				(SalarySlip.employee.isin([employee.employee for employee in self.employees]))
+				& (SalarySlip.start_date == self.start_date)
+				& (SalarySlip.end_date == self.end_date)
+				& (SalarySlip.docstatus == 1)
+			)
+		).run(pluck=True)
 
 		if len(emp_with_sal_slip):
 			frappe.throw(_("Salary Slip already exists for {0}").format(comma_and(emp_with_sal_slip)))
