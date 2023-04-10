@@ -1,0 +1,62 @@
+.feedback-section {
+	.no-feedback {
+		min-height: 100px;
+	}
+
+	.new-feedback-btn {
+		gap: 5px;
+	}
+}
+
+.feedback-summary-section {
+	.rating-summary-numbers {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		border-right: 1px solid var(--gray-100);
+
+		.average-rating {
+			font-size: 2rem;
+		}
+
+		.feedback-count {
+			margin-top: -0.5rem;
+		}
+	}
+
+	.rating-progress-bar-section {
+		padding-bottom: 2rem;
+
+		.rating-bar-title {
+			margin-left: -15px;
+		}
+
+		.rating-progress-bar {
+			margin-bottom: 4px;
+			height: 7px;
+			margin-top: 6px;
+		}
+
+		.progress-bar-cosmetic {
+			background-color: var(--gray-600);
+			border-radius: var(--border-radius);
+		}
+	}
+
+	.ratings-pill {
+		background-color: var(--gray-100);
+		padding: .5rem 1rem;
+		border-radius: 66px;
+	}
+}
+
+.feedback-history {
+	.feedback-content {
+		border-radius: var(--border-radius);
+		border: 1px solid var(--border-color);
+	}
+
+	.feedback-content:last-child {
+		border-bottom: 1px solid var(--border-color);
+	}
+}

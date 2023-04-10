@@ -1,6 +1,9 @@
 [pre_model_sync]
 hrms.patches.v15_0.check_version_compatibility_with_frappe
+hrms.patches.v14_0.update_performance_module_changes
 
 [post_model_sync]
+hrms.patches.post_install.set_payroll_entry_status
 hrms.patches.v1_0.rearrange_employee_fields
 hrms.patches.v1_0.update_allocate_on_in_leave_type
+hrms.patches.v14_0.create_custom_field_for_appraisal_template

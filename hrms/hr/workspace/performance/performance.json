@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Appraisal\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Transactions</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Appraisal\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Energy Points\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Promotion\",\"col\":4}}]",
+ "content": "[{\"id\":\"nZ9MUieUjy\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"ETYoHfg2k0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Appraisal\",\"col\":3}},{\"id\":\"VRnsImMEoD\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Performance Feedback\",\"col\":5}},{\"id\":\"vXBMJGJ98C\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Goal\",\"col\":3}},{\"id\":\"Vtre-LDhRc\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"NmUDJB28UL\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Transactions</b></span>\",\"col\":12}},{\"id\":\"vNnUr6yHsH\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"v8mC6C_9V-\",\"type\":\"card\",\"data\":{\"card_name\":\"Appraisal\",\"col\":4}},{\"id\":\"8X_kx16fax\",\"type\":\"card\",\"data\":{\"card_name\":\"Energy Points\",\"col\":4}},{\"id\":\"x_fx5yusAz\",\"type\":\"card\",\"data\":{\"card_name\":\"Promotion\",\"col\":4}},{\"id\":\"ofPrShxelC\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2022-08-20 16:17:20.159886",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -8,6 +8,7 @@
  "hide_custom": 0,
  "icon": "star",
  "idx": 0,
+ "is_hidden": 0,
  "label": "Performance",
  "links": [
   {
@@ -69,8 +70,46 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Masters",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Appraisal Template",
+   "link_count": 0,
+   "link_to": "Appraisal Template",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "KRA",
+   "link_count": 0,
+   "link_to": "KRA",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Employee Feedback Criteria",
+   "link_count": 0,
+   "link_to": "Employee Feedback Criteria",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Appraisal",
-   "link_count": 2,
+   "link_count": 4,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -87,24 +126,63 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Appraisal Template",
+   "label": "Appraisal Cycle",
    "link_count": 0,
-   "link_to": "Appraisal Template",
+   "link_to": "Appraisal Cycle",
    "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Employee Performance Feedback",
+   "link_count": 0,
+   "link_to": "Employee Performance Feedback",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Goal",
+   "link_count": 0,
+   "link_to": "Goal",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Appraisal Overview",
+   "link_count": 0,
+   "link_to": "Appraisal Overview",
+   "link_type": "Report",
    "onboard": 0,
    "type": "Link"
   }
  ],
- "modified": "2022-09-16 11:49:27.869740",
+ "modified": "2023-03-30 22:51:21.593682",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Performance",
+ "number_cards": [],
  "owner": "Administrator",
  "parent_page": "HR",
  "public": 1,
  "quick_lists": [],
  "roles": [],
- "sequence_id": 13.0,
+ "sequence_id": 7.0,
  "shortcuts": [
   {
    "color": "Orange",
@@ -113,6 +191,20 @@
    "label": "Appraisal",
    "link_to": "Appraisal",
    "stats_filter": "{\"status\":[\"=\",\"Draft\"]}",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Employee Performance Feedback",
+   "link_to": "Employee Performance Feedback",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Goal",
+   "link_to": "Goal",
    "type": "DocType"
   }
  ],
