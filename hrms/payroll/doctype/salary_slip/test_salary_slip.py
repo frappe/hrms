@@ -1255,6 +1255,41 @@ class TestSalarySlip(FrappeTestCase):
 
 		self.assertEqual(ss.payment_days, (days_between_start_and_relieving - len(holidays)))
 
+	def test_zero_value_component(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		emp = make_employee(
+			"test_zero_value_component@salary.com",
+			company="_Test Company",
+			**{"date_of_joining": "2021-12-01"},
+		)
+
+		payroll_period = frappe.get_all("Payroll Period", filters={"company": "_Test Company"}, limit=1)
+		payroll_period = frappe.get_cached_doc("Payroll Period", payroll_period[0].name)
+
+		salary_structure_name = "Test zero value component"
+		if not frappe.db.exists("Salary Structure", salary_structure_name):
+			salary_structure_doc = make_salary_structure(
+				salary_structure_name,
+				"Monthly",
+				company="_Test Company",
+				employee=emp,
+				from_date=payroll_period.start_date,
+				payroll_period=payroll_period,
+				base=65000,
+			)
+
+		# Create Salary Slip
+		salary_slip = make_salary_slip(
+			salary_structure_doc.name, employee=emp, posting_date=payroll_period.start_date
+		)
+		earnings = {d.salary_component: d.amount for d in salary_slip.earnings}
+
+		# Check if zero value component is included in salary slip based on component settings
+		self.assertIn("Arrear", earnings)
+		self.assertEqual(earnings["Arrear"], 0.0)
+		self.assertNotIn("Overtime", earnings)
+
 
 def get_no_of_days():
 	no_of_days_in_month = calendar.monthrange(getdate(nowdate()).year, getdate(nowdate()).month)
@@ -1399,6 +1434,22 @@ def make_earning_salary_component(
 			"type": "Earning",
 			"statistical_component": 1,
 			"amount": 500,
+		},
+		{
+			"salary_component": "Arrear",
+			"abbr": "A",
+			"type": "Earning",
+			"depends_on_payment_days": 0,
+			"amount": 0,
+			"remove_if_zero_valued": 0,
+		},
+		{
+			"salary_component": "Overtime",
+			"abbr": "OT",
+			"type": "Earning",
+			"depends_on_payment_days": 0,
+			"amount": 0,
+			"remove_if_zero_valued": 1,
 		},
 	]
 	if include_flexi_benefits:
