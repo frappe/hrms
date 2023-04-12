@@ -158,10 +158,12 @@ class PayrollEntry(Document):
 			frappe.throw(error_msg, title=_("No employees found"))
 
 		self.set("employees", employees)
-
 		self.number_of_employees = len(self.employees)
+
 		if self.validate_attendance:
 			return self.validate_employee_attendance()
+
+		self.save()
 
 	def check_mandatory(self):
 		for fieldname in ["company", "start_date", "end_date"]:
