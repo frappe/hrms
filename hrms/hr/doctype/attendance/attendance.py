@@ -10,7 +10,7 @@ from frappe.utils import (
 	add_days,
 	cint,
 	cstr,
-	formatdate,
+	format_date,
 	get_datetime,
 	get_link_to_form,
 	getdate,
@@ -53,9 +53,19 @@ class Attendance(Document):
 			and not self.leave_application
 			and getdate(self.attendance_date) > getdate(nowdate())
 		):
-			frappe.throw(_("Attendance can not be marked for future dates"))
+			frappe.throw(
+				_("Attendance can not be marked for future dates: {0}").format(
+					frappe.bold(format_date(self.attendance_date)),
+				)
+			)
 		elif date_of_joining and getdate(self.attendance_date) < getdate(date_of_joining):
-			frappe.throw(_("Attendance date can not be less than employee's joining date"))
+			frappe.throw(
+				_("Attendance date {0} can not be less than employee {1}'s joining date: {2}").format(
+					frappe.bold(format_date(self.attendance_date)),
+					frappe.bold(self.employee),
+					frappe.bold(format_date(date_of_joining)),
+				)
+			)
 
 	def validate_duplicate_record(self):
 		duplicate = get_duplicate_attendance_record(
@@ -66,7 +76,7 @@ class Attendance(Document):
 			frappe.throw(
 				_("Attendance for employee {0} is already marked for the date {1}: {2}").format(
 					frappe.bold(self.employee),
-					frappe.bold(self.attendance_date),
+					frappe.bold(format_date(self.attendance_date)),
 					get_link_to_form("Attendance", duplicate[0].name),
 				),
 				title=_("Duplicate Attendance"),
@@ -112,19 +122,19 @@ class Attendance(Document):
 				if d.half_day_date == getdate(self.attendance_date):
 					self.status = "Half Day"
 					frappe.msgprint(
-						_("Employee {0} on Half day on {1}").format(self.employee, formatdate(self.attendance_date))
+						_("Employee {0} on Half day on {1}").format(self.employee, format_date(self.attendance_date))
 					)
 				else:
 					self.status = "On Leave"
 					frappe.msgprint(
-						_("Employee {0} is on Leave on {1}").format(self.employee, formatdate(self.attendance_date))
+						_("Employee {0} is on Leave on {1}").format(self.employee, format_date(self.attendance_date))
 					)
 
 		if self.status in ("On Leave", "Half Day"):
 			if not leave_record:
 				frappe.msgprint(
 					_("No leave record found for employee {0} on {1}").format(
-						self.employee, formatdate(self.attendance_date)
+						self.employee, format_date(self.attendance_date)
 					),
 					alert=1,
 				)
