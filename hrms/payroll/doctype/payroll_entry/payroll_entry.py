@@ -259,7 +259,10 @@ class PayrollEntry(Document):
 
 	def get_salary_component_account(self, salary_component):
 		account = frappe.db.get_value(
-			"Salary Component Account", {"parent": salary_component, "company": self.company}, "account"
+			"Salary Component Account",
+			{"parent": salary_component, "company": self.company},
+			"account",
+			cache=True,
 		)
 
 		if not account:
@@ -601,22 +604,59 @@ class PayrollEntry(Document):
 			"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
 		)
 
-		salary_slip_name_list = frappe.get_all(
-			"Salary Slip",
-			filters={
-				"docstatus": 1,
-				"start_date": [">=", self.start_date],
-				"end_date": ["<=", self.end_date],
-				"payroll_entry": self.name,
-			},
-			fields=["name"],
-			pluck="name",
-		)
+		salary_slips = self.get_salary_slip_details()
 
+		salary_slip_total = 0
+		for salary_detail in salary_slips:
+			if salary_detail.parentfield == "earnings":
+				(
+					is_flexible_benefit,
+					only_tax_impact,
+					creat_separate_je,
+					statistical_component,
+				) = frappe.db.get_value(
+					"Salary Component",
+					salary_detail.salary_component,
+					(
+						"is_flexible_benefit",
+						"only_tax_impact",
+						"create_separate_payment_entry_against_benefit_claim",
+						"statistical_component",
+					),
+					cache=True,
+				)
+
+				if only_tax_impact != 1 and statistical_component != 1:
+					if is_flexible_benefit == 1 and creat_separate_je == 1:
+						self.create_journal_entry(salary_detail.amount, salary_detail.salary_component)
+					else:
+						if process_payroll_accounting_entry_based_on_employee:
+							self.set_employee_based_payroll_payable_entries(
+								"earnings", salary_detail.employee, salary_detail.amount
+							)
+						salary_slip_total += salary_detail.amount
+
+			if salary_detail.parentfield == "deductions":
+				statistical_component = frappe.db.get_value(
+					"Salary Component", salary_detail.salary_component, "statistical_component", cache=True
+				)
+
+				if not statistical_component:
+					if process_payroll_accounting_entry_based_on_employee:
+						self.set_employee_based_payroll_payable_entries(
+							"deductions", salary_detail.employee, salary_detail.amount
+						)
+
+					salary_slip_total -= salary_detail.amount
+
+		if salary_slip_total > 0:
+			self.create_journal_entry(salary_slip_total, "salary")
+
+	def get_salary_slip_details(self):
 		SalarySlip = frappe.qb.DocType("Salary Slip")
 		SalaryDetail = frappe.qb.DocType("Salary Detail")
 
-		salary_slips = (
+		return (
 			frappe.qb.from_(SalarySlip)
 			.join(SalaryDetail)
 			.on(SalarySlip.name == SalaryDetail.parent)
@@ -634,56 +674,6 @@ class PayrollEntry(Document):
 				& (SalarySlip.payroll_entry == self.name)
 			)
 		).run(as_dict=True)
-
-		for salary_slip in salary_slips:
-			pass
-
-		if salary_slip_name_list and len(salary_slip_name_list) > 0:
-			salary_slip_total = 0
-			for salary_slip_name in salary_slip_name_list:
-				salary_slip = frappe.get_doc("Salary Slip", salary_slip_name)
-
-				for sal_detail in salary_slip.earnings:
-					(
-						is_flexible_benefit,
-						only_tax_impact,
-						creat_separate_je,
-						statistical_component,
-					) = frappe.db.get_value(
-						"Salary Component",
-						sal_detail.salary_component,
-						[
-							"is_flexible_benefit",
-							"only_tax_impact",
-							"create_separate_payment_entry_against_benefit_claim",
-							"statistical_component",
-						],
-						cache=True,
-					)
-					if only_tax_impact != 1 and statistical_component != 1:
-						if is_flexible_benefit == 1 and creat_separate_je == 1:
-							self.create_journal_entry(sal_detail.amount, sal_detail.salary_component)
-						else:
-							if process_payroll_accounting_entry_based_on_employee:
-								self.set_employee_based_payroll_payable_entries(
-									"earnings", salary_slip.employee, sal_detail.amount
-								)
-							salary_slip_total += sal_detail.amount
-
-				for sal_detail in salary_slip.deductions:
-					statistical_component = frappe.db.get_value(
-						"Salary Component", sal_detail.salary_component, "statistical_component", cache=True
-					)
-					if statistical_component != 1:
-						if process_payroll_accounting_entry_based_on_employee:
-							self.set_employee_based_payroll_payable_entries(
-								"deductions", salary_slip.employee, sal_detail.amount
-							)
-
-						salary_slip_total -= sal_detail.amount
-
-			if salary_slip_total > 0:
-				self.create_journal_entry(salary_slip_total, "salary")
 
 	def create_journal_entry(self, je_payment_amount, user_remark):
 		payroll_payable_account = self.payroll_payable_account
