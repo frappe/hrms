@@ -6,6 +6,8 @@
 		"dev": "vite",
 		"serve": "vite preview",
 		"build": "vite build --base=/assets/hrms/frontend/ && yarn copy-html-entry",
+		"ionic:build": "npm run build",
+		"ionic:serve": "vite dev --host",
 		"copy-html-entry": "cp ../hrms/public/frontend/index.html ../hrms/www/hrms.html"
 	},
 	"dependencies": {
