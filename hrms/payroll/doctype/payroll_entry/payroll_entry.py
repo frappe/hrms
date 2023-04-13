@@ -380,7 +380,7 @@ class PayrollEntry(Document):
 
 		return account_dict
 
-	def make_accrual_jv_entry(self):
+	def make_accrual_jv_entry(self, submitted_salary_slips):
 		self.check_permission("write")
 		process_payroll_accounting_entry_based_on_employee = frappe.db.get_single_value(
 			"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
@@ -403,88 +403,160 @@ class PayrollEntry(Document):
 			or {}
 		)
 
-		payroll_payable_account = self.payroll_payable_account
-		jv_name = ""
 		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
 
 		if earnings or deductions:
-			journal_entry = frappe.new_doc("Journal Entry")
-			journal_entry.voucher_type = "Journal Entry"
-			journal_entry.user_remark = _("Accrual Journal Entry for salaries from {0} to {1}").format(
-				self.start_date, self.end_date
-			)
-			journal_entry.company = self.company
-			journal_entry.posting_date = self.posting_date
-			accounting_dimensions = get_accounting_dimensions() or []
-
 			accounts = []
 			currencies = []
 			payable_amount = 0
-			multi_currency = 0
+			accounting_dimensions = get_accounting_dimensions() or []
 			company_currency = erpnext.get_company_currency(self.company)
 
-			# Earnings
-			for acc_cc, amount in earnings.items():
-				payable_amount = self.get_accounting_entries_and_payable_amount(
-					acc_cc[0],
-					acc_cc[1] or self.cost_center,
-					amount,
-					currencies,
-					company_currency,
-					payable_amount,
-					accounting_dimensions,
-					precision,
-					entry_type="debit",
-					accounts=accounts,
-				)
+			payable_amount = self.get_payable_amount_for_earnings_and_deductions(
+				accounts,
+				earnings,
+				deductions,
+				currencies,
+				company_currency,
+				accounting_dimensions,
+				precision,
+				payable_amount,
+			)
 
-			# Deductions
-			for acc_cc, amount in deductions.items():
-				payable_amount = self.get_accounting_entries_and_payable_amount(
-					acc_cc[0],
-					acc_cc[1] or self.cost_center,
-					amount,
-					currencies,
-					company_currency,
-					payable_amount,
-					accounting_dimensions,
-					precision,
-					entry_type="credit",
-					accounts=accounts,
-				)
+			self.set_payable_amuont_against_payroll_payable_account(
+				accounts,
+				currencies,
+				company_currency,
+				accounting_dimensions,
+				precision,
+				payable_amount,
+				self.payroll_payable_account,
+				process_payroll_accounting_entry_based_on_employee,
+			)
 
-			# Payable amount
-			if process_payroll_accounting_entry_based_on_employee:
-				"""
-				employee_based_payroll_payable_entries = {
-				        'HREMP00004': {
-				                'earnings': 83332.0,
-				                'deductions': 2000.0
-				        },
-				        'HREMP00005': {
-				                'earnings': 50000.0,
-				                'deductions': 2000.0
-				        }
-				}
-				"""
-				for employee, employee_details in self.employee_based_payroll_payable_entries.items():
-					payable_amount = employee_details.get("earnings") - (employee_details.get("deductions") or 0)
+			self.make_journal_entry(
+				accounts,
+				currencies,
+				self.payroll_payable_account,
+				voucher_type="Journal Entry",
+				user_remark=_("Accrual Journal Entry for salaries from {0} to {1}").format(
+					self.start_date, self.end_date
+				),
+				submit_journal_entry=True,
+				submitted_salary_slips=submitted_salary_slips,
+			)
 
-					payable_amount = self.get_accounting_entries_and_payable_amount(
-						payroll_payable_account,
-						self.cost_center,
-						payable_amount,
-						currencies,
-						company_currency,
-						0,
-						accounting_dimensions,
-						precision,
-						entry_type="payable",
-						party=employee,
-						accounts=accounts,
-					)
+	def make_journal_entry(
+		self,
+		accounts,
+		currencies,
+		payroll_payable_account=None,
+		voucher_type="Journal Entry",
+		user_remark="",
+		submitted_salary_slips: List = None,
+		submit_journal_entry=False,
+	):
+		multi_currency = 0
+		if len(currencies) > 1:
+			multi_currency = 1
 
-			else:
+		journal_entry = frappe.new_doc("Journal Entry")
+		journal_entry.voucher_type = voucher_type
+		journal_entry.user_remark = user_remark
+		journal_entry.company = self.company
+		journal_entry.posting_date = self.posting_date
+
+		journal_entry.set("accounts", accounts)
+		journal_entry.multi_currency = multi_currency
+
+		if voucher_type == "Journal Entry":
+			journal_entry.title = payroll_payable_account
+
+		journal_entry.save(ignore_permissions=True)
+
+		try:
+			if submit_journal_entry:
+				journal_entry.submit()
+
+			if submitted_salary_slips:
+				self.update_salary_slip_status(submitted_salary_slips, jv_name=journal_entry.name)
+
+		except Exception as e:
+			frappe.log_error(
+				frappe.get_traceback(), reference_doctype="Payroll Entry", reference_name=self.name
+			)
+
+	def get_payable_amount_for_earnings_and_deductions(
+		self,
+		accounts,
+		earnings,
+		deductions,
+		currencies,
+		company_currency,
+		accounting_dimensions,
+		precision,
+		payable_amount,
+	):
+		# Earnings
+		for acc_cc, amount in earnings.items():
+			payable_amount = self.get_accounting_entries_and_payable_amount(
+				acc_cc[0],
+				acc_cc[1] or self.cost_center,
+				amount,
+				currencies,
+				company_currency,
+				payable_amount,
+				accounting_dimensions,
+				precision,
+				entry_type="debit",
+				accounts=accounts
+			)
+
+		# Deductions
+		for acc_cc, amount in deductions.items():
+			payable_amount = self.get_accounting_entries_and_payable_amount(
+				acc_cc[0],
+				acc_cc[1] or self.cost_center,
+				amount,
+				currencies,
+				company_currency,
+				payable_amount,
+				accounting_dimensions,
+				precision,
+				entry_type="credit",
+				accounts=accounts
+			)
+
+		return payable_amount
+
+	def set_payable_amuont_against_payroll_payable_account(
+		self,
+		accounts,
+		currencies,
+		company_currency,
+		accounting_dimensions,
+		precision,
+		payable_amount,
+		payroll_payable_account,
+		process_payroll_accounting_entry_based_on_employee,
+	):
+		# Payable amount
+		if process_payroll_accounting_entry_based_on_employee:
+			"""
+			employee_based_payroll_payable_entries = {
+			                'HREMP00004': {
+			                                'earnings': 83332.0,
+			                                'deductions': 2000.0
+			                },
+			                'HREMP00005': {
+			                                'earnings': 50000.0,
+			                                'deductions': 2000.0
+			                }
+			}
+			"""
+			for employee, employee_details in self.employee_based_payroll_payable_entries.items():
+				payable_amount = employee_details.get("earnings") - (employee_details.get("deductions") or 0)
+
 				payable_amount = self.get_accounting_entries_and_payable_amount(
 					payroll_payable_account,
 					self.cost_center,
@@ -495,26 +567,22 @@ class PayrollEntry(Document):
 					accounting_dimensions,
 					precision,
 					entry_type="payable",
-					accounts=accounts,
+					party=employee,
+					accounts=accounts
 				)
-
-			journal_entry.set("accounts", accounts)
-			if len(currencies) > 1:
-				multi_currency = 1
-			journal_entry.multi_currency = multi_currency
-			journal_entry.title = payroll_payable_account
-			journal_entry.save()
-
-			try:
-				journal_entry.submit()
-				jv_name = journal_entry.name
-				self.update_salary_slip_status(jv_name=jv_name)
-			except Exception as e:
-				if type(e) in (str, list, tuple):
-					frappe.msgprint(e)
-				raise
-
-		return jv_name
+		else:
+			payable_amount = self.get_accounting_entries_and_payable_amount(
+				payroll_payable_account,
+				self.cost_center,
+				payable_amount,
+				currencies,
+				company_currency,
+				0,
+				accounting_dimensions,
+				precision,
+				entry_type="payable",
+				accounts=accounts
+			)
 
 	def get_accounting_entries_and_payable_amount(
 		self,
@@ -594,26 +662,29 @@ class PayrollEntry(Document):
 		conversion_rate = 1
 		exchange_rate = self.exchange_rate
 		account_currency = frappe.db.get_value("Account", account, "account_currency")
+
 		if account_currency not in currencies:
 			currencies.append(account_currency)
+
 		if account_currency == company_currency:
 			conversion_rate = self.exchange_rate
 			exchange_rate = 1
+
 		amount = flt(amount) * flt(conversion_rate)
 
 		return exchange_rate, amount
 
 	@frappe.whitelist()
-	def make_payment_entry(self):
+	def make_bank_entry(self):
 		self.check_permission("write")
 		self.employee_based_payroll_payable_entries = {}
 		process_payroll_accounting_entry_based_on_employee = frappe.db.get_single_value(
 			"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
 		)
 
+		salary_slip_total = 0
 		salary_slips = self.get_salary_slip_details()
 
-		salary_slip_total = 0
 		for salary_detail in salary_slips:
 			if salary_detail.parentfield == "earnings":
 				(
@@ -635,7 +706,9 @@ class PayrollEntry(Document):
 
 				if only_tax_impact != 1 and statistical_component != 1:
 					if is_flexible_benefit == 1 and creat_separate_je == 1:
-						self.create_journal_entry(salary_detail.amount, salary_detail.salary_component)
+						self.set_accounting_entries_for_bank_entry(
+							salary_detail.amount, salary_detail.salary_component
+						)
 					else:
 						if process_payroll_accounting_entry_based_on_employee:
 							self.set_employee_based_payroll_payable_entries(
@@ -657,7 +730,7 @@ class PayrollEntry(Document):
 					salary_slip_total -= salary_detail.amount
 
 		if salary_slip_total > 0:
-			self.create_journal_entry(salary_slip_total, "salary")
+			self.set_accounting_entries_for_bank_entry(salary_slip_total, "salary")
 
 	def get_salary_slip_details(self):
 		SalarySlip = frappe.qb.DocType("Salary Slip")
@@ -682,13 +755,12 @@ class PayrollEntry(Document):
 			)
 		).run(as_dict=True)
 
-	def create_journal_entry(self, je_payment_amount, user_remark):
+	def set_accounting_entries_for_bank_entry(self, je_payment_amount, user_remark):
 		payroll_payable_account = self.payroll_payable_account
 		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
 
 		accounts = []
 		currencies = []
-		multi_currency = 0
 		company_currency = erpnext.get_company_currency(self.company)
 		accounting_dimensions = get_accounting_dimensions() or []
 
@@ -747,26 +819,22 @@ class PayrollEntry(Document):
 				)
 			)
 
-		if len(currencies) > 1:
-			multi_currency = 1
-
-		journal_entry = frappe.new_doc("Journal Entry")
-		journal_entry.voucher_type = "Bank Entry"
-		journal_entry.user_remark = _("Payment of {0} from {1} to {2}").format(
-			user_remark, self.start_date, self.end_date
+		self.make_journal_entry(
+			accounts,
+			currencies,
+			voucher_type="Bank Entry",
+			user_remark=_("Payment of {0} from {1} to {2}").format(
+				user_remark, self.start_date, self.end_date
+			),
 		)
-		journal_entry.company = self.company
-		journal_entry.posting_date = self.posting_date
-		journal_entry.multi_currency = multi_currency
 
-		journal_entry.set("accounts", accounts)
-		journal_entry.save(ignore_permissions=True)
-
-	def update_salary_slip_status(self, jv_name=None):
-		ss_list = self.get_sal_slip_list(ss_status=1)
-		for ss in ss_list:
-			ss_obj = frappe.get_doc("Salary Slip", ss[0])
-			frappe.db.set_value("Salary Slip", ss_obj.name, "journal_entry", jv_name)
+	def update_salary_slip_status(self, submitted_salary_slips, jv_name=None):
+		SalarySlip = frappe.qb.DocType("Salary Slip")
+		(
+			frappe.qb.update(SalarySlip)
+			.set(SalarySlip.journal_entry, jv_name)
+			.where(SalarySlip.name.isin([salary_slip.name for salary_slip in submitted_salary_slips]))
+		).run()
 
 	def set_start_end_dates(self):
 		self.update(
@@ -1230,7 +1298,7 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 				frappe.publish_progress(count * 100 / len(salary_slips), title=_("Submitting Salary Slips..."))
 
 		if submitted:
-			payroll_entry.make_accrual_jv_entry()
+			payroll_entry.make_accrual_jv_entry(submitted)
 			payroll_entry.email_salary_slip(submitted)
 			payroll_entry.db_set({"salary_slips_submitted": 1, "status": "Submitted", "error_message": ""})
 

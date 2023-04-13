@@ -109,7 +109,7 @@ class TestPayrollEntry(FrappeTestCase):
 			company=company.name,
 			cost_center="Main - _TC",
 		)
-		payroll_entry.make_payment_entry()
+		payroll_entry.make_bank_entry()
 
 		salary_slip = frappe.db.get_value("Salary Slip", {"payroll_entry": payroll_entry.name}, "name")
 		salary_slip = frappe.get_doc("Salary Slip", salary_slip)
@@ -419,7 +419,7 @@ class TestPayrollEntry(FrappeTestCase):
 			payment_account="Cash - _TC",
 		)
 		payroll_entry.reload()
-		payroll_entry.make_payment_entry()
+		payroll_entry.make_bank_entry()
 
 		# submit the bank entry journal voucher
 		jv = frappe.db.get_value(
@@ -561,7 +561,7 @@ def make_payroll_entry(**args):
 	payroll_entry.submit()
 	payroll_entry.submit_salary_slips()
 	if payroll_entry.get_sal_slip_list(ss_status=1):
-		payroll_entry.make_payment_entry()
+		payroll_entry.make_bank_entry()
 
 	return payroll_entry
 
