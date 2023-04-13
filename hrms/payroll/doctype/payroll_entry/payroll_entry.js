@@ -389,7 +389,7 @@ let make_bank_entry = function (frm) {
 		return frappe.call({
 			method: "run_doc_method",
 			args: {
-				method: "make_payment_entry",
+				method: "make_bank_entry",
 				dt: "Payroll Entry",
 				dn: frm.doc.name
 			},

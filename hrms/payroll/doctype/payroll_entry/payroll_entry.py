@@ -775,7 +775,7 @@ class PayrollEntry(Document):
 		return exchange_rate, amount
 
 	@frappe.whitelist()
-	def make_payment_entry(self):
+	def make_bank_entry(self):
 		self.check_permission("write")
 		self.employee_based_payroll_payable_entries = {}
 		employee_wise_accounting_enabled = frappe.db.get_single_value(
