@@ -44,17 +44,6 @@ class PayrollEntry(Document):
 		self.number_of_employees = len(self.employees)
 		self.set_status()
 
-	def on_submit(self):
-		self.set_status(update=True, status="Submitted")
-		self.create_salary_slips()
-
-	def before_submit(self):
-		self.validate_employee_details()
-		self.validate_payroll_payable_account()
-		if self.validate_attendance:
-			if self.validate_employee_attendance():
-				frappe.throw(_("Cannot Submit, Employees left to mark attendance"))
-
 	def set_status(self, status=None, update=False):
 		if not status:
 			status = {0: "Draft", 1: "Submitted", 2: "Cancelled"}[self.docstatus or 0]
@@ -63,6 +52,17 @@ class PayrollEntry(Document):
 			self.db_set("status", status)
 		else:
 			self.status = status
+
+	def before_submit(self):
+		self.validate_employee_details()
+		self.validate_payroll_payable_account()
+		if self.validate_attendance:
+			if self.validate_employee_attendance():
+				frappe.throw(_("Cannot Submit, Employees left to mark attendance"))
+
+	def on_submit(self):
+		self.set_status(update=True, status="Submitted")
+		self.create_salary_slips()
 
 	def validate_employee_details(self):
 		emp_with_sal_slip = []
@@ -118,6 +118,11 @@ class PayrollEntry(Document):
 		filters = self.make_filters()
 		return get_employee_list(filters=filters, as_dict=True, ignore_match_conditions=True)
 
+	def check_mandatory(self):
+		for fieldname in ["company", "start_date", "end_date"]:
+			if not self.get(fieldname):
+				frappe.throw(_("Please set {0}").format(self.meta.get_label(fieldname)))
+
 	def make_filters(self):
 		return frappe._dict(
 			company=self.company,
@@ -164,11 +169,6 @@ class PayrollEntry(Document):
 			return self.validate_employee_attendance()
 
 		self.save()
-
-	def check_mandatory(self):
-		for fieldname in ["company", "start_date", "end_date"]:
-			if not self.get(fieldname):
-				frappe.throw(_("Please set {0}").format(self.meta.get_label(fieldname)))
 
 	@frappe.whitelist()
 	def create_salary_slips(self):
@@ -237,6 +237,7 @@ class PayrollEntry(Document):
 	def submit_salary_slips(self):
 		self.check_permission("write")
 		salary_slips = self.get_sal_slip_list(ss_status=0)
+
 		if len(salary_slips) > 30 or frappe.flags.enqueue_payroll_entry:
 			self.db_set("status", "Queued")
 			frappe.enqueue(
@@ -301,11 +302,13 @@ class PayrollEntry(Document):
 		if salary_components:
 			component_dict = {}
 			self.employee_cost_centers = {}
+
 			for item in salary_components:
+				add_component_to_accrual_jv_entry = True
 				employee_cost_centers = self.get_payroll_cost_centers_for_employee(
 					item.employee, item.salary_structure
 				)
-				add_component_to_accrual_jv_entry = True
+
 				if component_type == "earnings":
 					is_flexible_benefit, only_tax_impact = frappe.get_cached_value(
 						"Salary Component", item["salary_component"], ["is_flexible_benefit", "only_tax_impact"]
@@ -354,8 +357,10 @@ class PayrollEntry(Document):
 				default_cost_center, department = frappe.get_cached_value(
 					"Employee", employee, ["payroll_cost_center", "department"]
 				)
+
 				if not default_cost_center and department:
 					default_cost_center = frappe.get_cached_value("Department", department, "payroll_cost_center")
+
 				if not default_cost_center:
 					default_cost_center = self.cost_center
 

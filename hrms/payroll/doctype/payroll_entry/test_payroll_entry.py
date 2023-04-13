@@ -547,8 +547,8 @@ def get_payroll_entry(**args):
 	if args.payment_account:
 		payroll_entry.payment_account = args.payment_account
 
-	payroll_entry.fill_employee_details()
 	payroll_entry.insert()
+	payroll_entry.fill_employee_details()
 
 	# Commit so that the first salary slip creation failure does not rollback the Payroll Entry insert.
 	frappe.db.commit()  # nosemgrep
