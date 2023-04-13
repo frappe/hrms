@@ -18,6 +18,7 @@
 	},
 	"devDependencies": {
 		"@vitejs/plugin-vue": "^2.0.0",
+		"@vue/cli-service": "5.0.8",
 		"autoprefixer": "^10.4.2",
 		"eslint": "^8.39.0",
 		"eslint-plugin-vue": "^9.11.0",

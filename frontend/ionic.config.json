@@ -1,5 +1,8 @@
 {
   "name": "FrappeHR",
   "integrations": {},
-  "type": "vue"
+  "type": "vue",
+  "server": {
+    "url": "http://localhost:8100/"
+  }
 }

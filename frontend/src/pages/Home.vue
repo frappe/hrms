@@ -1,20 +1,28 @@
 <template>
-	<div class="max-w-3xl py-12 mx-auto">
-		<Button icon-left="code" @click="$resources.ping.fetch" :loading="$resources.ping.loading">
+	<ion-page>
+		<div class="max-w-3xl py-12 mx-auto">
+			<Button
+			icon-left="code"
+			@click="$resources.ping.fetch"
+			:loading="$resources.ping.loading"
+			>
 			Click to send 'ping' request
-		</Button>
-		<div>
+			</Button>
+			<div>
 			{{ $resources.ping.data }}
-		</div>
-		<pre>{{ $resources.ping }}</pre>
+			</div>
+			<pre>{{ $resources.ping }}</pre>
 
-		<Button @click="showDialog = true">Open Dialog</Button>
-		<Dialog title="Title" v-model="showDialog"> Dialog content </Dialog>
-	</div>
+			<Button @click="showDialog = true">Open Dialog</Button>
+			<Dialog title="Title" v-model="showDialog"> Dialog content </Dialog>
+	  </div>
+	</ion-page>
 </template>
+
 
 <script>
 import { Dialog } from "frappe-ui"
+import { IonPage, IonRouterOutlet } from "@ionic/vue"
 
 export default {
 	name: "Home",
@@ -30,6 +38,8 @@ export default {
 	},
 	components: {
 		Dialog,
+		IonPage,
+		IonRouterOutlet,
 	},
 }
 </script>
