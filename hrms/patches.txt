@@ -1,5 +1,10 @@
 [pre_model_sync]
+<<<<<<< HEAD
 hrms.patches.v14_0.update_performance_module_changes
+=======
+hrms.patches.v15_0.check_version_compatibility_with_frappe
+hrms.patches.v14_0.update_performance_module_changes #2023-04-17
+>>>>>>> ad0767e9 (fix: KRA patching)
 
 [post_model_sync]
 hrms.patches.post_install.set_payroll_entry_status
