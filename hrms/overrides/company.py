@@ -71,6 +71,7 @@ def make_salary_components(country):
 		try:
 			doc = frappe.get_doc(d)
 			doc.flags.ignore_permissions = True
+			doc.flags.ignore_mandatory = True
 			doc.insert(ignore_if_duplicate=True)
 		except frappe.NameError:
 			frappe.clear_messages()
