@@ -235,6 +235,7 @@ def get_custom_fields():
 				"label": "Appraisal Template",
 				"options": "Appraisal Template",
 				"insert_after": "description",
+				"allow_in_quick_entry": 1,
 			},
 			{
 				"fieldname": "required_skills_section",
@@ -652,6 +653,8 @@ def get_post_install_patches():
 		"erpnext.patches.v13_0.set_payroll_entry_status",
 		# HRMS
 		"create_country_fixtures",
+		"update_allocate_on_in_leave_type",
+		"update_performance_module_changes",
 	)
 
 
