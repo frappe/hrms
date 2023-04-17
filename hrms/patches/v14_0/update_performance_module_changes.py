@@ -4,17 +4,6 @@ from frappe.model.utils.rename_field import rename_field
 
 def execute():
 	create_kras()
-
-	for doctype in (
-		"Appraisal Template",
-		"Appraisal Cycle",
-		"Appraisal KRA",
-		"Appraisal Goal",
-		"Employee Feedback Rating",
-		"Appraisal",
-	):
-		frappe.reload_doc("hr", "doctype", doctype)
-
 	rename_fields()
 	update_kra_evaluation_method()
 
@@ -25,8 +14,6 @@ def create_kras():
 	# This patch will create KRA's for all existing Appraisal Template Goal entries
 	# keeping 140 characters as the KRA title and the whole KRA as the description
 	# and then set the new title (140 characters) in the `key_result_area` field
-	frappe.reload_doc("hr", "doctype", "kra")
-
 	if not frappe.db.has_column("Appraisal Template Goal", "kra"):
 		return
 
