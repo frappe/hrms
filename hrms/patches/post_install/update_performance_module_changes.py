@@ -4,28 +4,25 @@ from frappe.model.utils.rename_field import rename_field
 
 def execute():
 	create_kras()
-
-	for doctype in (
-		"Appraisal Template",
-		"Appraisal Cycle",
-		"Appraisal KRA",
-		"Appraisal Goal",
-		"Employee Feedback Rating",
-		"Appraisal",
-	):
-		frappe.reload_doc("hr", "doctype", doctype)
-
 	rename_fields()
 	update_kra_evaluation_method()
 
 
 def create_kras():
-	# Appraisal Template Goal's KRA field was changed from Small Text to Link
+	# A new Link field `key_result_area` was added in the Appraisal Template Goal table
+	# Old field's (`kra` (Small Text)) data now needs to be copied to the new field
 	# This patch will create KRA's for all existing Appraisal Template Goal entries
 	# keeping 140 characters as the KRA title and the whole KRA as the description
-	frappe.reload_doc("hr", "doctype", "kra")
+	# and then set the new title (140 characters) in the `key_result_area` field
+	if not frappe.db.has_column("Appraisal Template Goal", "kra"):
+		return
 
-	template_goals = frappe.get_all("Appraisal Template Goal", fields=["name", "kra"], as_list=True)
+	template_goals = frappe.get_all(
+		"Appraisal Template Goal",
+		filters={"parenttype": "Appraisal Template"},
+		fields=["name", "kra"],
+		as_list=True,
+	)
 
 	if len(template_goals) > 10000:
 		frappe.db.auto_commit_on_many_writes = 1
@@ -48,7 +45,10 @@ def create_kras():
 				}
 			).db_insert()
 
-		frappe.db.set_value("Appraisal Template Goal", name, "kra", kra_title, update_modified=False)
+		# set 140 char kra in the `key_result_area` field
+		frappe.db.set_value(
+			"Appraisal Template Goal", name, "key_result_area", kra_title, update_modified=False
+		)
 
 	if frappe.db.auto_commit_on_many_writes:
 		frappe.db.auto_commit_on_many_writes = 0

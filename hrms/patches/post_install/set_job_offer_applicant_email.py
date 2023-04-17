@@ -2,13 +2,13 @@ import frappe
 
 
 def execute():
-	frappe.reload_doc("hr", "doctype", "job_offer")
+	Offer = frappe.qb.DocType("Job Offer")
+	Applicant = frappe.qb.DocType("Job Applicant")
 
-	frappe.db.sql(
-		"""
-		UPDATE
-			`tabJob Offer` AS offer
-		SET
-			applicant_email = (SELECT email_id FROM `tabJob Applicant` WHERE name = offer.job_applicant)
-	"""
-	)
+	(
+		frappe.qb.update(Offer)
+		.inner_join(Applicant)
+		.on(Applicant.name == Offer.job_applicant)
+		.set(Offer.applicant_email, Applicant.email_id)
+		.where(Offer.applicant_email.isnull())
+	).run()

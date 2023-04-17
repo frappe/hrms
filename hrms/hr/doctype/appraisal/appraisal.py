@@ -107,7 +107,7 @@ class Appraisal(Document):
 			self.append(
 				table_name,
 				{
-					"kra": entry.kra,
+					"kra": entry.key_result_area,
 					"per_weightage": entry.per_weightage,
 				},
 			)

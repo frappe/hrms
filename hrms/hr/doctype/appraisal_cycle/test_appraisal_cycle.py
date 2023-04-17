@@ -44,7 +44,7 @@ class TestAppraisalCycle(FrappeTestCase):
 
 		for i in range(2):
 			# check if KRAs are set
-			self.assertEqual(appraisal.appraisal_kra[i].kra, self.template.goals[i].kra)
+			self.assertEqual(appraisal.appraisal_kra[i].kra, self.template.goals[i].key_result_area)
 			self.assertEqual(appraisal.appraisal_kra[i].per_weightage, self.template.goals[i].per_weightage)
 
 			# check if rating criteria is set
