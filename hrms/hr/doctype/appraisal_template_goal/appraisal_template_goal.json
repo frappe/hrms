@@ -22,10 +22,11 @@
    "width": "100px"
   },
   {
+   "description": "Key Result Area",
    "fieldname": "key_result_area",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Key Result Area",
+   "label": "KRA",
    "options": "KRA",
    "reqd": 1
   }
@@ -33,7 +34,7 @@
  "idx": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-04-17 10:37:35.033632",
+ "modified": "2023-04-17 17:01:46.294286",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal Template Goal",

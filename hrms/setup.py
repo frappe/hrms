@@ -19,7 +19,6 @@ def after_install():
 	add_non_standard_user_types()
 	set_single_defaults()
 	update_erpnext_access()
-	frappe.db.commit()
 	run_post_install_patches()
 
 
@@ -666,10 +665,11 @@ def run_post_install_patches():
 
 	try:
 		for patch in POST_INSTALL_PATCHES:
-			# patch has not run on the site before
-			if not frappe.db.exists("Patch Log", {"patch": ("like", f"%{patch}%")}):
-				patch_name = patch.split(".")[-1]
-				frappe.get_attr(f"hrms.patches.post_install.{patch_name}.execute")()
+			patch_name = patch.split(".")[-1]
+			if not patch_name:
+				continue
+
+			frappe.get_attr(f"hrms.patches.post_install.{patch_name}.execute")()
 	finally:
 		frappe.flags.in_patch = False
 
