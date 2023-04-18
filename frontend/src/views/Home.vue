@@ -1,24 +1,19 @@
 <template>
 	<ion-page>
 		<div class="max-w-3xl py-12 mx-auto">
-			<Button
-			icon-left="code"
-			@click="$resources.ping.fetch"
-			:loading="$resources.ping.loading"
-			>
-			Click to send 'ping' request
+			<Button icon-left="code" @click="$resources.ping.fetch" :loading="$resources.ping.loading">
+				Click to send 'ping' request
 			</Button>
 			<div>
-			{{ $resources.ping.data }}
+				{{ $resources.ping.data }}
 			</div>
 			<pre>{{ $resources.ping }}</pre>
 
 			<Button @click="showDialog = true">Open Dialog</Button>
 			<Dialog title="Title" v-model="showDialog"> Dialog content </Dialog>
-	  </div>
+		</div>
 	</ion-page>
 </template>
-
 
 <script>
 import { Dialog } from "frappe-ui"
