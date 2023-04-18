@@ -50,11 +50,11 @@ def create_appraisal_template(title=None, kras=None, rating_criteria=None):
 	if not kras:
 		kras = [
 			{
-				"kra": "Quality",
+				"key_result_area": "Quality",
 				"per_weightage": 30,
 			},
 			{
-				"kra": "Development",
+				"key_result_area": "Development",
 				"per_weightage": 70,
 			},
 		]
@@ -71,7 +71,7 @@ def create_appraisal_template(title=None, kras=None, rating_criteria=None):
 			},
 		]
 
-	create_kras([entry["kra"] for entry in kras])
+	create_kras([entry["key_result_area"] for entry in kras])
 	create_criteria([entry["criteria"] for entry in rating_criteria])
 
 	appraisal_template = frappe.new_doc("Appraisal Template")
