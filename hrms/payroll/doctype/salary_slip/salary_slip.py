@@ -362,6 +362,13 @@ class SalarySlip(TransactionBase):
 			add_days(getdate(self.start_date), days=day) for day in range(0, working_days)
 		]
 
+		daily_wages_fraction_for_half_day = (
+			flt(
+				frappe.db.get_single_value("Payroll Settings", "daily_wages_fraction_for_half_day", cache=True)
+			)
+			or 0.5
+		)
+
 		if not cint(include_holidays_in_total_working_days):
 			working_days_list = [i for i in working_days_list if i not in holidays]
 
@@ -374,12 +381,12 @@ class SalarySlip(TransactionBase):
 
 		if payroll_based_on == "Attendance":
 			actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(
-				holidays, relieving_date
+				holidays, relieving_date, daily_wages_fraction_for_half_day
 			)
 			self.absent_days = absent
 		else:
 			actual_lwp = self.calculate_lwp_or_ppl_based_on_leave_application(
-				holidays, working_days_list, relieving_date
+				holidays, working_days_list, relieving_date, daily_wages_fraction_for_half_day
 			)
 
 		if not lwp:
@@ -532,13 +539,10 @@ class SalarySlip(TransactionBase):
 		return holiday_dates
 
 	def calculate_lwp_or_ppl_based_on_leave_application(
-		self, holidays, working_days_list, relieving_date
+		self, holidays, working_days_list, relieving_date, daily_wages_fraction_for_half_day
 	):
 		lwp = 0
 		holidays = "','".join(holidays)
-		daily_wages_fraction_for_half_day = (
-			flt(frappe.db.get_value("Payroll Settings", None, "daily_wages_fraction_for_half_day")) or 0.5
-		)
 
 		for d in working_days_list:
 			if relieving_date and d > relieving_date:
@@ -562,7 +566,41 @@ class SalarySlip(TransactionBase):
 
 		return lwp
 
-	def calculate_lwp_ppl_and_absent_days_based_on_attendance(self, holidays, relieving_date):
+	def get_leave_type_map(self):
+		leave_type_map = frappe.cache().hget("leave_type_map", "leave_type")
+
+		if not leave_type_map:
+			leave_types = frappe.get_all(
+				"Leave Type",
+				or_filters=[["is_ppl", "=", 1], ["is_lwp", "=", 1]],
+				fields=["name", "is_lwp", "is_ppl", "fraction_of_daily_salary_per_leave", "include_holiday"],
+			)
+
+			leave_type_map = {}
+			for leave_type in leave_types:
+				leave_type_map[leave_type.name] = leave_type
+
+			frappe.cache().hset("leave_type_map", "leave_type", leave_type_map)
+
+		return leave_type_map
+
+	def get_employee_attendance(self, start_date, end_date):
+		attendance = frappe.qb.DocType("Attendance")
+
+		return (
+			frappe.qb.from_(attendance)
+			.select(attendance.attendance_date, attendance.status, attendance.leave_type)
+			.where(
+				(attendance.status.isin(["Absent", "Half Day", "On Leave"]))
+				& (attendance.employee == self.employee)
+				& (attendance.docstatus == 1)
+				& (attendance.attendance_date.between(start_date, end_date))
+			)
+		).run(as_dict=1)
+
+	def calculate_lwp_ppl_and_absent_days_based_on_attendance(
+		self, holidays, relieving_date, daily_wages_fraction_for_half_day
+	):
 		lwp = 0
 		absent = 0
 
@@ -570,32 +608,9 @@ class SalarySlip(TransactionBase):
 		if relieving_date:
 			end_date = relieving_date
 
-		daily_wages_fraction_for_half_day = (
-			flt(frappe.db.get_value("Payroll Settings", None, "daily_wages_fraction_for_half_day")) or 0.5
-		)
+		leave_type_map = self.get_leave_type_map()
 
-		leave_types = frappe.get_all(
-			"Leave Type",
-			or_filters=[["is_ppl", "=", 1], ["is_lwp", "=", 1]],
-			fields=["name", "is_lwp", "is_ppl", "fraction_of_daily_salary_per_leave", "include_holiday"],
-		)
-
-		leave_type_map = {}
-		for leave_type in leave_types:
-			leave_type_map[leave_type.name] = leave_type
-
-		attendance = frappe.qb.DocType("Attendance")
-
-		attendances = (
-			frappe.qb.from_(attendance)
-			.select(attendance.attendance_date, attendance.status, attendance.leave_type)
-			.where(
-				(attendance.status.isin(["Absent", "Half Day", "On Leave"]))
-				& (attendance.employee == self.employee)
-				& (attendance.docstatus == 1)
-				& (attendance.attendance_date.between(self.start_date, end_date))
-			)
-		).run(as_dict=1)
+		attendances = self.get_employee_attendace(start_date=self.start_date, end_date=end_date)
 
 		for d in attendances:
 			if (
