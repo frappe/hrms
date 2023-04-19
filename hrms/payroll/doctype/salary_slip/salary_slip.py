@@ -30,7 +30,7 @@ import erpnext
 from erpnext.accounts.utils import get_fiscal_year
 from erpnext.utilities.transaction_base import TransactionBase
 
-from hrms.hr.utils import get_holiday_dates_for_employee, validate_active_employee
+from hrms.hr.utils import validate_active_employee
 from hrms.payroll.doctype.additional_salary.additional_salary import get_additional_salaries
 from hrms.payroll.doctype.employee_benefit_application.employee_benefit_application import (
 	get_benefit_component_amount,
@@ -343,9 +343,9 @@ class SalarySlip(TransactionBase):
 	def get_working_days_details(
 		self, joining_date=None, relieving_date=None, lwp=None, for_preview=0
 	):
-		payroll_based_on = frappe.db.get_value("Payroll Settings", None, "payroll_based_on")
+		payroll_based_on = frappe.db.get_value("Payroll Settings", None, "payroll_based_on", cache=True)
 		include_holidays_in_total_working_days = frappe.db.get_single_value(
-			"Payroll Settings", "include_holidays_in_total_working_days"
+			"Payroll Settings", "include_holidays_in_total_working_days", cache=True
 		)
 
 		if not (joining_date and relieving_date):
@@ -500,7 +500,36 @@ class SalarySlip(TransactionBase):
 		return payment_days
 
 	def get_holidays_for_employee(self, start_date, end_date):
-		return get_holiday_dates_for_employee(self.employee, start_date, end_date)
+		default_holiday_list = frappe.db.get_value(
+			"Company", self.company, "default_holiday_list", cache=True
+		)
+		holiday_list = (
+			frappe.db.get_value("Employee", self.employee, "holiday_list", cache=True)
+			or default_holiday_list
+		)
+
+		if not holiday_list:
+			return []
+
+		key = f"{holiday_list}:{start_date}:{end_date}"
+		holiday_dates = frappe.cache().hget("holidays", key)
+
+		if not holiday_dates:
+			holidays = frappe.db.get_all(
+				"Holiday",
+				fields=["description", "holiday_date"],
+				filters={
+					"parent": holiday_list,
+					"holiday_date": ["between", [start_date, end_date]],
+					"weekly_off": 0,
+				},
+				order_by="holiday_date",
+			)
+
+			holiday_dates = [cstr(h.holiday_date) for h in holidays]
+			frappe.cache().hset("holidays", key, holiday_dates)
+
+		return holiday_dates
 
 	def calculate_lwp_or_ppl_based_on_leave_application(
 		self, holidays, working_days_list, relieving_date
