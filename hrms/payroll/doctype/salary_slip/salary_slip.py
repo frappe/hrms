@@ -96,8 +96,9 @@ class SalarySlip(TransactionBase):
 		self.compute_year_to_date()
 		self.compute_month_to_date()
 		self.compute_component_wise_year_to_date()
-		self.add_leave_balances()
 		self.compute_income_tax_breakup()
+
+		self.add_leave_balances()
 
 		if frappe.db.get_single_value("Payroll Settings", "max_working_hours_against_timesheet"):
 			max_working_hours = frappe.db.get_single_value(
@@ -253,7 +254,7 @@ class SalarySlip(TransactionBase):
 			struct = self.check_sal_struct(joining_date, relieving_date)
 
 			if struct:
-				self._salary_structure_doc = frappe.get_doc("Salary Structure", struct)
+				self._salary_structure_doc = frappe.get_cached_doc("Salary Structure", struct)
 				self.salary_slip_based_on_timesheet = (
 					self._salary_structure_doc.salary_slip_based_on_timesheet or 0
 				)
@@ -342,7 +343,7 @@ class SalarySlip(TransactionBase):
 				self, self._salary_structure_doc.salary_component, wages_amount
 			)
 
-		make_salary_slip(self._salary_structure_doc.name, self)
+		make_salary_slip(self._salary_structure_doc.name, self, from_salary_slip=True)
 
 	def get_working_days_details(
 		self, joining_date=None, relieving_date=None, lwp=None, for_preview=0
@@ -539,18 +540,29 @@ class SalarySlip(TransactionBase):
 		self, holidays, working_days_list, relieving_date, daily_wages_fraction_for_half_day
 	):
 		lwp = 0
-		holidays = "','".join(holidays)
+		leaves = get_lwp_or_ppl_for_date_range(
+			self.employee,
+			self.start_date,
+			self.end_date,
+		)
 
 		for d in working_days_list:
 			if relieving_date and d > relieving_date:
 				continue
 
-			leave = get_lwp_or_ppl_for_date(str(d), self.employee, holidays)
+			is_half_day_leave = 0
+
+			leave = leaves.get(d)
 			if leave:
+				if str(d) in holidays and not leave.include_holiday:
+					continue
+
 				equivalent_lwp_count = 0
-				is_half_day_leave = cint(leave[0].is_half_day)
-				is_partially_paid_leave = cint(leave[0].is_ppl)
-				fraction_of_daily_salary_per_leave = flt(leave[0].fraction_of_daily_salary_per_leave)
+				is_partially_paid_leave = cint(leave.is_ppl)
+				fraction_of_daily_salary_per_leave = flt(leave.fraction_of_daily_salary_per_leave)
+
+				if leave.half_day_date == d:
+					is_half_day_leave = 1
 
 				equivalent_lwp_count = (1 - daily_wages_fraction_for_half_day) if is_half_day_leave else 1
 
@@ -560,6 +572,19 @@ class SalarySlip(TransactionBase):
 					)
 
 				lwp += equivalent_lwp_count
+
+		# is_half_day_leave = cint(leave[0].is_half_day)
+		# is_partially_paid_leave = cint(leave[0].is_ppl)
+		# fraction_of_daily_salary_per_leave = flt(leave[0].fraction_of_daily_salary_per_leave)
+
+		# equivalent_lwp_count = (1 - daily_wages_fraction_for_half_day) if is_half_day_leave else 1
+
+		# if is_partially_paid_leave:
+		# 	equivalent_lwp_count *= (
+		# 		fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
+		# 	)
+
+		# lwp += equivalent_lwp_count
 
 		return lwp
 
@@ -1040,7 +1065,7 @@ class SalarySlip(TransactionBase):
 	def get_data_for_eval(self):
 		"""Returns data for evaluating formula"""
 		data = frappe._dict()
-		employee = frappe.get_doc("Employee", self.employee).as_dict()
+		employee = frappe.get_cached_doc("Employee", self.employee).as_dict()
 
 		start_date = getdate(self.start_date)
 		date_to_validate = (
@@ -2112,6 +2137,46 @@ def eval_tax_slab_condition(condition, eval_globals=None, eval_locals=None):
 		raise
 
 
+def get_lwp_or_ppl_for_date_range(employee, start_date, end_date):
+	LeaveApplication = frappe.qb.DocType("Leave Application")
+	LeaveType = frappe.qb.DocType("Leave Type")
+
+	leaves = (
+		frappe.qb.from_(LeaveApplication)
+		.inner_join(LeaveType)
+		.on((LeaveType.name == LeaveApplication.leave_type))
+		.select(
+			LeaveApplication.name,
+			LeaveType.is_ppl,
+			LeaveType.fraction_of_daily_salary_per_leave,
+			LeaveType.include_holiday,
+			LeaveApplication.from_date,
+			LeaveApplication.to_date,
+			LeaveApplication.half_day_date,
+		)
+		.where(
+			(((LeaveType.is_lwp == 1) | (LeaveType.is_ppl == 1)))
+			& (LeaveApplication.docstatus == 1)
+			& (LeaveApplication.status == "Approved")
+			& (LeaveApplication.employee == employee)
+			& ((LeaveApplication.salary_slip.isnull()) | (LeaveApplication.salary_slip == ""))
+			& ((LeaveApplication.from_date >= start_date) & (LeaveApplication.to_date <= end_date))
+		)
+	).run(as_dict=True)
+
+	leave_date_mapper = frappe._dict()
+	for leave in leaves:
+		if leave.from_date == leave.to_date:
+			leave_date_mapper[leave.from_date] = leave
+		else:
+			date_diff = (getdate(leave.to_date) - getdate(leave.from_date)).days
+			for i in range(date_diff + 1):
+				date = add_days(leave.from_date, i)
+				leave_date_mapper[date] = leave
+
+	return leave_date_mapper
+
+
 def get_lwp_or_ppl_for_date(date, employee, holidays):
 	LeaveApplication = frappe.qb.DocType("Leave Application")
 	LeaveType = frappe.qb.DocType("Leave Type")
@@ -2151,6 +2216,8 @@ def get_lwp_or_ppl_for_date(date, employee, holidays):
 	# if it's a holiday only include if leave type has "include holiday" enabled
 	if date in holidays:
 		query = query.where((LeaveType.include_holiday == "1"))
+
+	print(query)
 
 	return query.run(as_dict=True)
 
@@ -2194,3 +2261,7 @@ def throw_error_message(row, error, title, description=None):
 	).format(**data)
 
 	frappe.throw(message, title=title)
+
+
+def on_doctype_update():
+	frappe.db.add_index("Salary Slip", ["employee", "start_date", "end_date"])
