@@ -305,8 +305,12 @@ def make_salary_slip(
 	print_format=None,
 	for_preview=0,
 	ignore_permissions=False,
+	from_salary_slip=False,
 ):
 	def postprocess(source, target):
+		if from_salary_slip:
+			return
+
 		if employee:
 			employee_details = frappe.db.get_value(
 				"Employee", employee, ["employee_name", "branch", "designation", "department"], as_dict=1
