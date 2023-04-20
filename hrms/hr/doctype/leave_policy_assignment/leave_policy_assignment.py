@@ -11,6 +11,7 @@ from frappe.model.document import Document
 from frappe.utils import (
 	add_months,
 	cint,
+	comma_and,
 	date_diff,
 	flt,
 	formatdate,
@@ -290,7 +291,31 @@ def create_assignment_for_multiple_employees(employees, data):
 
 		docs_name.append(assignment.name)
 
+	if failed:
+		show_assignment_submission_status(failed)
+
 	return docs_name
+
+
+def show_assignment_submission_status(failed):
+	frappe.clear_messages()
+	assignment_list = [get_link_to_form("Leave Policy Assignment", entry) for entry in failed]
+
+	msg = _("Failed to submit some leave policy assignments:")
+	msg += " " + comma_and(assignment_list, False)
+	msg += "<br><hr><br>"
+	msg += (
+		_("Check {0} for more details")
+		.format("<a href='/app/List/Error Log?reference_doctype=Leave Policy Assignment'>{0}</a>")
+		.format(_("Error Log"))
+	)
+
+	frappe.msgprint(
+		msg,
+		indicator="red",
+		title=_("Submission Failed"),
+		is_minimizable=True,
+	)
 
 
 def get_leave_type_details():
