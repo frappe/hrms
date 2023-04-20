@@ -182,7 +182,8 @@
    "fieldtype": "Link",
    "label": "Payroll Entry",
    "options": "Payroll Entry",
-   "read_only": 1
+   "read_only": 1,
+   "search_index": 1
   },
   {
    "fetch_from": "employee.company",
@@ -214,12 +215,14 @@
   {
    "fieldname": "start_date",
    "fieldtype": "Date",
-   "label": "Start Date"
+   "label": "Start Date",
+   "search_index": 1
   },
   {
    "fieldname": "end_date",
    "fieldtype": "Date",
-   "label": "End Date"
+   "label": "End Date",
+   "search_index": 1
   },
   {
    "fieldname": "salary_structure",
