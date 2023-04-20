@@ -259,7 +259,6 @@ def is_earned_leave_applicable_for_current_month(date_of_joining, allocate_on_da
 
 @frappe.whitelist()
 def create_assignment_for_multiple_employees(employees, data):
-
 	if isinstance(employees, str):
 		employees = json.loads(employees)
 
@@ -267,6 +266,8 @@ def create_assignment_for_multiple_employees(employees, data):
 		data = frappe._dict(json.loads(data))
 
 	docs_name = []
+	failed = []
+
 	for employee in employees:
 		assignment = frappe.new_doc("Leave Policy Assignment")
 		assignment.employee = employee
@@ -277,12 +278,15 @@ def create_assignment_for_multiple_employees(employees, data):
 		assignment.leave_period = data.leave_period or None
 		assignment.carry_forward = data.carry_forward
 		assignment.save()
-		try:
-			assignment.submit()
-		except frappe.exceptions.ValidationError:
-			continue
 
-		frappe.db.commit()
+		savepoint = "before_assignment_submission"
+		try:
+			frappe.db.savepoint(savepoint)
+			assignment.submit()
+		except Exception as e:
+			frappe.db.rollback(save_point=savepoint)
+			assignment.log_error("Leave Policy Assignment submission failed")
+			failed.append(assignment.name)
 
 		docs_name.append(assignment.name)
 
