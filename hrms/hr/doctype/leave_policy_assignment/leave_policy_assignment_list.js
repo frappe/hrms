@@ -51,7 +51,7 @@ frappe.listview_settings['Leave Policy Assignment'] = {
 					},
 					get_query() {
 						let filters = {"is_active": 1};
-						if (cur_dialog.fields_dict.company.value)
+						if (cur_dialog?.fields_dict?.company?.value)
 							filters["company"] = cur_dialog.fields_dict.company.value;
 
 						return {
