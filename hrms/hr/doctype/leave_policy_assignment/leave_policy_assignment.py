@@ -302,8 +302,7 @@ def show_assignment_submission_status(failed):
 	assignment_list = [get_link_to_form("Leave Policy Assignment", entry) for entry in failed]
 
 	msg = _("Failed to submit some leave policy assignments:")
-	msg += " " + comma_and(assignment_list, False)
-	msg += "<br><hr><br>"
+	msg += " " + comma_and(assignment_list, False) + "<hr>"
 	msg += (
 		_("Check {0} for more details")
 		.format("<a href='/app/List/Error Log?reference_doctype=Leave Policy Assignment'>{0}</a>")
