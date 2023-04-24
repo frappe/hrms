@@ -1,5 +1,6 @@
 import frappe
 from frappe.model.utils.rename_field import rename_field
+from frappe.utils import cstr
 
 
 def execute():
@@ -19,7 +20,7 @@ def create_kras():
 
 	template_goals = frappe.get_all(
 		"Appraisal Template Goal",
-		filters={"parenttype": "Appraisal Template"},
+		filters={"parenttype": "Appraisal Template", "key_result_area": ("is", "not set")},
 		fields=["name", "kra"],
 		as_list=True,
 	)
@@ -31,7 +32,7 @@ def create_kras():
 		if not kra:
 			kra = "Key Result Area"
 
-		kra_title = kra.strip()[:140]
+		kra_title = cstr(kra).replace("\n", " ").strip()[:140]
 
 		if not frappe.db.exists("KRA", kra_title):
 			frappe.get_doc(
