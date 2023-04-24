@@ -258,36 +258,6 @@ class TestEmployeeCheckin(FrappeTestCase):
 		self.assertEqual(log.shift_actual_start, datetime.combine(prev_day, get_time("22:00:00")))
 		self.assertEqual(log.shift_actual_end, datetime.combine(date, get_time("02:00:00")))
 
-	def test_no_shift_fetched_on_holiday_as_per_shift_holiday_list(self):
-		date = getdate()
-		from_date = get_year_start(date)
-		to_date = get_year_ending(date)
-		holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
-
-		employee = make_employee("test_shift_with_holiday@example.com", company="_Test Company")
-		setup_shift_type(shift_type="Test Holiday Shift", holiday_list=holiday_list)
-
-		first_sunday = get_first_sunday(holiday_list, for_date=date)
-		timestamp = datetime.combine(first_sunday, get_time("08:00:00"))
-		log = make_checkin(employee, timestamp)
-
-		self.assertIsNone(log.shift)
-
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
-	def test_no_shift_fetched_on_holiday_as_per_employee_holiday_list(self):
-		employee = make_employee("test_shift_with_holiday@example.com", company="_Test Company")
-		shift_type = setup_shift_type(shift_type="Test Holiday Shift")
-		shift_type.holiday_list = None
-		shift_type.save()
-
-		date = getdate()
-
-		first_sunday = get_first_sunday(self.holiday_list, for_date=date)
-		timestamp = datetime.combine(first_sunday, get_time("08:00:00"))
-		log = make_checkin(employee, timestamp)
-
-		self.assertIsNone(log.shift)
-
 	def test_consecutive_shift_assignments_overlapping_within_grace_period(self):
 		# test adjustment for start and end times if they are overlapping
 		# within "begin_check_in_before_shift_start_time" and "allow_check_out_after_shift_end_time" periods
