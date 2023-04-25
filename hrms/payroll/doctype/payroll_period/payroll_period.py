@@ -96,13 +96,22 @@ def get_payroll_period(from_date, to_date, company):
 
 
 def get_period_factor(
-	employee, start_date, end_date, payroll_frequency, payroll_period, depends_on_payment_days=0
+	employee,
+	start_date,
+	end_date,
+	payroll_frequency,
+	payroll_period,
+	depends_on_payment_days=0,
+	joining_date=None,
+	relieving_date=None,
 ):
 	# TODO if both deduct checked update the factor to make tax consistent
 	period_start, period_end = payroll_period.start_date, payroll_period.end_date
-	joining_date, relieving_date = frappe.db.get_value(
-		"Employee", employee, ["date_of_joining", "relieving_date"]
-	)
+
+	if not joining_date and not relieving_date:
+		joining_date, relieving_date = frappe.db.get_value(
+			"Employee", employee, ["date_of_joining", "relieving_date"]
+		)
 
 	if getdate(joining_date) > getdate(period_start):
 		period_start = joining_date
