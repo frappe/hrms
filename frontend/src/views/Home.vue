@@ -19,12 +19,12 @@
 					<div class="flex flex-col bg-white shadow-sm p-4">
 						<div class="flex flex-row justify-between items-center">
 							<ion-menu-toggle>
-								<Button appearance="minimal" class="px-0 py-0">
+								<Button appearance="minimal" class="!px-0 !py-0">
 									<FeatherIcon name="menu" class="h-6 w-6" />
 								</Button>
 							</ion-menu-toggle>
 							<div class="flex flex-row items-center gap-3">
-								<Button appearance="minimal" class="px-0 py-0">
+								<Button appearance="minimal" class="!px-0 !py-0">
 									<FeatherIcon name="bell" class="h-6 w-6" />
 								</Button>
 								<Avatar imageURL="https://placekitten.com/100" label="Whiskers" />
