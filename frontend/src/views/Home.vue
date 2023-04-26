@@ -32,8 +32,8 @@
 						</div>
 
 						<div class="my-5">
-							<h2 class="text-3xl font-bold leading-none text-gray-900">
-								Hey, Rucha!
+							<h2 class="text-2xl font-bold text-gray-900">
+								Hey, {{ user?.data?.first_name }}!
 							</h2>
 						</div>
 					</div>
@@ -55,5 +55,9 @@ import { IonContent, IonHeader, IonMenu, IonMenuToggle, IonPage, IonTitle, IonTo
 import { FeatherIcon, Avatar, Card } from "frappe-ui"
 
 import QuickLinks from "@/components/dashboard/QuickLinks.vue"
+
+import { inject } from "vue"
+
+const user = inject("$user")
 
 </script>

@@ -5,6 +5,7 @@ http://ionicframework.com/docs/theming/ */
 
 :root {
 	--ion-background-color: #f4f5f6;
+	--ion-font-family: 'Inter', sans-serif;
 
 	/** primary **/
 	--ion-color-primary: #3880ff;
