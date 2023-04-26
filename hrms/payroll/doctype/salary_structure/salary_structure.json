@@ -73,7 +73,6 @@
   },
   {
    "default": "Monthly",
-   "depends_on": "eval:(!doc.salary_slip_based_on_timesheet)",
    "fieldname": "payroll_frequency",
    "fieldtype": "Select",
    "label": "Payroll Frequency",
@@ -237,7 +236,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-24 18:16:49.424812",
+ "modified": "2023-04-26 17:28:22.345683",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure",
