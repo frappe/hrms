@@ -109,15 +109,6 @@ class PayrollEntry(Document):
 		else:
 			delete_salary_slips_for_employees(self, salary_slips)
 
-	def get_emp_list(self):
-		"""
-		Returns list of active employees based on selected criteria
-		and for which salary structure exists
-		"""
-		self.check_mandatory()
-		filters = self.make_filters()
-		return get_employee_list(filters=filters, as_dict=True, ignore_match_conditions=True)
-
 	def check_mandatory(self):
 		for fieldname in ["company", "start_date", "end_date"]:
 			if not self.get(fieldname):
@@ -139,8 +130,10 @@ class PayrollEntry(Document):
 
 	@frappe.whitelist()
 	def fill_employee_details(self):
+		self.check_mandatory()
+		filters = self.make_filters()
+		employees = get_employee_list(filters=filters, as_dict=True, ignore_match_conditions=True)
 		self.set("employees", [])
-		employees = self.get_emp_list()
 
 		if not employees:
 			error_msg = _(
@@ -423,7 +416,7 @@ class PayrollEntry(Document):
 				payable_amount,
 			)
 
-			self.set_payable_amuont_against_payroll_payable_account(
+			self.set_payable_amount_against_payroll_payable_account(
 				accounts,
 				currencies,
 				company_currency,
@@ -529,7 +522,7 @@ class PayrollEntry(Document):
 
 		return payable_amount
 
-	def set_payable_amuont_against_payroll_payable_account(
+	def set_payable_amount_against_payroll_payable_account(
 		self,
 		accounts,
 		currencies,
@@ -675,7 +668,7 @@ class PayrollEntry(Document):
 		return exchange_rate, amount
 
 	@frappe.whitelist()
-	def make_bank_entry(self):
+	def make_payment_entry(self):
 		self.check_permission("write")
 		self.employee_based_payroll_payable_entries = {}
 		process_payroll_accounting_entry_based_on_employee = frappe.db.get_single_value(
@@ -962,7 +955,7 @@ def get_sal_struct(
 	).run(pluck=True)
 
 
-def get_emp_list(
+def build_query(
 	sal_struct,
 	filters,
 	searchfield,
@@ -1213,7 +1206,7 @@ def create_salary_slips_for_employees(employees, args, publish_progress=True):
 			count += 1
 			if publish_progress:
 				frappe.publish_progress(
-					count * 100 / len(set(employees) - set(salary_slips_exist_for)),
+					count * 100 / len(employees),
 					title=_("Creating Salary Slips..."),
 				)
 
@@ -1264,6 +1257,7 @@ def get_existing_salary_slips(employees, args):
 	return (
 		frappe.qb.from_(SalarySlip)
 		.select(SalarySlip.employee)
+		.distinct()
 		.where(
 			(SalarySlip.docstatus != 2)
 			& (SalarySlip.company == args.company)
@@ -1364,7 +1358,7 @@ def get_employee_list(
 	if not sal_struct:
 		return []
 
-	emp_list = get_emp_list(
+	emp_list = build_query(
 		sal_struct,
 		filters,
 		searchfield,

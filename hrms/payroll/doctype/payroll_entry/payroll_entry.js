@@ -106,10 +106,10 @@ frappe.ui.form.on('Payroll Entry', {
 			doc: frm.doc,
 			method: 'fill_employee_details',
 			freeze: true,
-			freeze_message: __('Pulling Employees')
+			freeze_message: __('Fetching Employees')
 		}).then(r => {
 			frm.refresh();
-			if (r.docs[0].validate_attendance) {
+			if (r.docs?.[0]?.validate_attendance) {
 				render_employee_attendance(frm, r.message);
 			}
 			frm.scroll_to_field("employees");
@@ -393,7 +393,7 @@ let make_bank_entry = function (frm) {
 		return frappe.call({
 			method: "run_doc_method",
 			args: {
-				method: "make_bank_entry",
+				method: "make_payment_entry",
 				dt: "Payroll Entry",
 				dn: frm.doc.name
 			},
