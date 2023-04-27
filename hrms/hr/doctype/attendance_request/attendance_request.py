@@ -21,37 +21,58 @@ class AttendanceRequest(Document):
 				frappe.throw(_("Half day date should be in between from date and to date"))
 
 	def on_submit(self):
-		self.create_attendance()
+		self.create_attendance_records()
 
 	def on_cancel(self):
 		attendance_list = frappe.get_list(
-			"Attendance", {"employee": self.employee, "attendance_request": self.name}
+			"Attendance", {"employee": self.employee, "attendance_request": self.name, "docstatus": 1}
 		)
 		if attendance_list:
 			for attendance in attendance_list:
 				attendance_obj = frappe.get_doc("Attendance", attendance["name"])
 				attendance_obj.cancel()
 
-	def create_attendance(self):
+	def create_attendance_records(self):
 		request_days = date_diff(self.to_date, self.from_date) + 1
 		for number in range(request_days):
 			attendance_date = add_days(self.from_date, number)
-			skip_attendance = self.validate_if_attendance_not_applicable(attendance_date)
-			if not skip_attendance:
-				attendance = frappe.new_doc("Attendance")
-				attendance.employee = self.employee
-				attendance.employee_name = self.employee_name
-				if self.half_day and date_diff(getdate(self.half_day_date), getdate(attendance_date)) == 0:
-					attendance.status = "Half Day"
-				elif self.reason == "Work From Home":
-					attendance.status = "Work From Home"
-				else:
-					attendance.status = "Present"
-				attendance.attendance_date = attendance_date
-				attendance.company = self.company
-				attendance.attendance_request = self.name
-				attendance.save(ignore_permissions=True)
-				attendance.submit()
+			if self.validate_if_attendance_not_applicable(attendance_date):
+				continue
+
+			self.create_or_update_attendance(attendance_date)
+
+	def create_or_update_attendance(self, date):
+		attendance_name = frappe.db.exists(
+			"Attendance", dict(employee=self.employee, attendance_date=date, docstatus=("!=", 2))
+		)
+
+		if self.half_day and date_diff(getdate(self.half_day_date), getdate(date)) == 0:
+			status = "Half Day"
+		elif self.reason == "Work From Home":
+			status = "Work From Home"
+		else:
+			status = "Present"
+
+		if attendance_name:
+			# update existing attendance, change the status
+			doc = frappe.get_doc("Attendance", attendance_name)
+			if doc.status != status:
+				text = _("updated status from {0} to {1} via Attendance Request").format(
+					frappe.bold(doc.status), frappe.bold(status)
+				)
+
+				doc.db_set({"status": status, "attendance_request": self.name})
+				doc.add_comment(comment_type="Info", text=text)
+		else:
+			# submit a new attendance record
+			doc = frappe.new_doc("Attendance")
+			doc.employee = self.employee
+			doc.attendance_date = date
+			doc.company = self.company
+			doc.attendance_request = self.name
+			doc.status = status
+			doc.insert(ignore_permissions=True)
+			doc.submit()
 
 	def validate_if_attendance_not_applicable(self, attendance_date):
 		# Check if attendance_date is a Holiday
