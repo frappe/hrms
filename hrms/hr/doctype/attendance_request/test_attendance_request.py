@@ -7,6 +7,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, add_months, get_year_ending, get_year_start, getdate
 
+from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.tests.test_utils import get_first_sunday
 
@@ -59,6 +60,18 @@ class TestAttendanceRequest(FrappeTestCase):
 		attendance_request.cancel()
 		records = self.get_attendance_records(attendance_request.name)
 		self.assertEqual(records[0].docstatus, 2)
+
+	def test_overwrite_attendance(self):
+		attendance_name = mark_attendance(self.employee.name, getdate(), "Absent")
+
+		attendance_request = create_attendance_request(
+			employee=self.employee.name, reason="Work From Home", company="_Test Company"
+		)
+		prev_attendance = frappe.get_doc("Attendance", attendance_name)
+
+		# attendance request should overwrite attendance status from Absent to Work From Home
+		self.assertEqual(prev_attendance.status, "Work From Home")
+		self.assertEqual(prev_attendance.attendance_request, attendance_request.name)
 
 	def get_attendance_records(self, attendance_request: str) -> list[dict]:
 		return frappe.db.get_all(
