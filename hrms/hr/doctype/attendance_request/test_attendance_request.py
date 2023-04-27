@@ -2,99 +2,94 @@
 # See license.txt
 
 import unittest
-from datetime import date
 
 import frappe
-from frappe.utils import nowdate
+from frappe.tests.utils import FrappeTestCase
+from frappe.utils import add_days, add_months, get_year_ending, get_year_start, getdate
+
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
+from hrms.tests.test_utils import get_first_sunday
 
 test_dependencies = ["Employee"]
 
 
-class TestAttendanceRequest(unittest.TestCase):
+class TestAttendanceRequest(FrappeTestCase):
 	def setUp(self):
 		for doctype in ["Attendance Request", "Attendance"]:
-			frappe.db.sql("delete from `tab{doctype}`".format(doctype=doctype))
+			frappe.db.delete(doctype)
 
-	def tearDown(self):
-		frappe.db.rollback()
+		from_date = get_year_start(add_months(getdate(), -1))
+		to_date = get_year_ending(getdate())
+		self.holiday_list = make_holiday_list(
+			from_date=from_date, to_date=to_date, add_weekly_offs=False
+		)
+
+		self.employee = get_employee()
+		frappe.db.set_value("Employee", self.employee.name, "holiday_list", self.holiday_list)
 
 	def test_on_duty_attendance_request(self):
-		"Test creation/updation of Attendace from Attendance Request, on duty."
-		today = nowdate()
-		employee = get_employee()
-		attendance_request = frappe.new_doc("Attendance Request")
-		attendance_request.employee = employee.name
-		attendance_request.from_date = date(date.today().year, 1, 1)
-		attendance_request.to_date = date(date.today().year, 1, 2)
-		attendance_request.reason = "On Duty"
-		attendance_request.company = "_Test Company"
-		attendance_request.insert()
-		attendance_request.submit()
-
-		attendance = frappe.db.get_value(
-			"Attendance",
-			filters={
-				"attendance_request": attendance_request.name,
-				"attendance_date": date(date.today().year, 1, 1),
-			},
-			fieldname=["status", "docstatus"],
-			as_dict=True,
+		"Test creation of Attendance from Attendance Request, on duty."
+		attendance_request = create_attendance_request(
+			employee=self.employee.name, reason="On Duty", company="_Test Company"
 		)
-		self.assertEqual(attendance.status, "Present")
-		self.assertEqual(attendance.docstatus, 1)
+		records = self.get_attendance_records(attendance_request.name)
+
+		self.assertEqual(len(records), 2)
+		self.assertEqual(records[0].status, "Present")
+		self.assertEqual(records[0].docstatus, 1)
 
 		# cancelling attendance request cancels linked attendances
 		attendance_request.cancel()
 
 		# cancellation alters docname
 		# fetch attendance value again to avoid stale docname
-		attendance_docstatus = frappe.db.get_value(
-			"Attendance",
-			filters={
-				"attendance_request": attendance_request.name,
-				"attendance_date": date(date.today().year, 1, 1),
-			},
-			fieldname="docstatus",
-		)
-		self.assertEqual(attendance_docstatus, 2)
+		records = self.get_attendance_records(attendance_request.name)
+		self.assertEqual(records[0].docstatus, 2)
 
 	def test_work_from_home_attendance_request(self):
-		"Test creation/updation of Attendace from Attendance Request, work from home."
-		today = nowdate()
-		employee = get_employee()
-		attendance_request = frappe.new_doc("Attendance Request")
-		attendance_request.employee = employee.name
-		attendance_request.from_date = date(date.today().year, 1, 1)
-		attendance_request.to_date = date(date.today().year, 1, 2)
-		attendance_request.reason = "Work From Home"
-		attendance_request.company = "_Test Company"
-		attendance_request.insert()
-		attendance_request.submit()
-
-		attendance_status = frappe.db.get_value(
-			"Attendance",
-			filters={
-				"attendance_request": attendance_request.name,
-				"attendance_date": date(date.today().year, 1, 1),
-			},
-			fieldname="status",
+		"Test creation of Attendance from Attendance Request, work from home."
+		attendance_request = create_attendance_request(
+			employee=self.employee.name, reason="Work From Home", company="_Test Company"
 		)
-		self.assertEqual(attendance_status, "Work From Home")
+		records = self.get_attendance_records(attendance_request.name)
 
+		self.assertEqual(records[0].status, "Work From Home")
+
+		# cancelling attendance request cancels linked attendances
 		attendance_request.cancel()
+		records = self.get_attendance_records(attendance_request.name)
+		self.assertEqual(records[0].docstatus, 2)
 
-		# cancellation alters docname
-		# fetch attendance value again to avoid stale docname
-		attendance_docstatus = frappe.db.get_value(
+	def get_attendance_records(self, attendance_request: str) -> list[dict]:
+		return frappe.db.get_all(
 			"Attendance",
-			filters={
-				"attendance_request": attendance_request.name,
-				"attendance_date": date(date.today().year, 1, 1),
+			{
+				"attendance_request": attendance_request,
 			},
-			fieldname="docstatus",
+			["status", "docstatus"],
 		)
-		self.assertEqual(attendance_docstatus, 2)
 
 
 def get_employee():
 	return frappe.get_doc("Employee", "_T-Employee-00001")
+
+
+def create_attendance_request(**args: dict) -> dict:
+	args = frappe._dict(args)
+	today = getdate()
+
+	attendance_request = frappe.get_doc(
+		{
+			"doctype": "Attendance Request",
+			"employee": args.employee or get_employee().name,
+			"from_date": add_days(today, -1),
+			"to_date": today,
+			"reason": "On Duty",
+			"company": "_Test Company",
+		}
+	)
+
+	if args:
+		attendance_request.update(args)
+
+	return attendance_request.submit()
