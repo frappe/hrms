@@ -561,7 +561,7 @@ def make_payroll_entry(**args):
 	payroll_entry.submit()
 	payroll_entry.submit_salary_slips()
 	if payroll_entry.get_sal_slip_list(ss_status=1):
-		payroll_entry.make_bank_entry()
+		payroll_entry.make_payment_entry()
 
 	return payroll_entry
 
