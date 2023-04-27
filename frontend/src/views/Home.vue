@@ -1,14 +1,12 @@
 <template>
 	<ion-menu content-id="main-content">
-		<ion-header>
-			<ion-toolbar>
-				<ion-title>FrappeHR</ion-title>
-			</ion-toolbar>
-		</ion-header>
 		<ion-content class="ion-padding">
-			<ion-menu-toggle>
-				<Button>Click to close the menu</Button>
-			</ion-menu-toggle>
+			<div class="bg-white h-full">
+				<div class="flex w-full items-center justify-between py-8 px-4 border-b">
+					<FrappeHRLogo />
+				</div>
+				<MenuLinks />
+			</div>
 		</ion-content>
 	</ion-menu>
 
@@ -55,6 +53,8 @@ import { IonContent, IonHeader, IonMenu, IonMenuToggle, IonPage, IonTitle, IonTo
 import { FeatherIcon, Avatar, Card } from "frappe-ui"
 
 import QuickLinks from "@/components/dashboard/QuickLinks.vue"
+import MenuLinks from "@/components/dashboard/MenuLinks.vue"
+import FrappeHRLogo from "@/components/icons/FrappeHRLogo.vue"
 
 import { inject } from "vue"
 
