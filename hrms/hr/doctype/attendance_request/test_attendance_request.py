@@ -73,6 +73,28 @@ class TestAttendanceRequest(FrappeTestCase):
 		self.assertEqual(prev_attendance.status, "Work From Home")
 		self.assertEqual(prev_attendance.attendance_request, attendance_request.name)
 
+	def test_skip_attendance_on_holiday(self):
+		today = getdate()
+		holiday_list = frappe.get_doc("Holiday List", self.holiday_list)
+		holiday_list.append(
+			"holidays",
+			{
+				"holiday_date": today,
+				"description": "Test Holiday",
+			},
+		)
+		holiday_list.save()
+
+		attendance_request = create_attendance_request(
+			employee=self.employee.name, reason="On Duty", company="_Test Company"
+		)
+
+		records = self.get_attendance_records(attendance_request.name)
+		# only 1 attendance marked for yesterday
+		# attendance skipped for today since its a holiday
+		self.assertEqual(len(records), 1)
+		self.assertEqual(records[0].status, "Present")
+
 	def get_attendance_records(self, attendance_request: str) -> list[dict]:
 		return frappe.db.get_all(
 			"Attendance",
