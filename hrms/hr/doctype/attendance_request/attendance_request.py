@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import add_days, date_diff, getdate
+from frappe.utils import add_days, date_diff, format_date, getdate
 
 from erpnext.setup.doctype.employee.employee import is_holiday
 
@@ -36,10 +36,8 @@ class AttendanceRequest(Document):
 		request_days = date_diff(self.to_date, self.from_date) + 1
 		for number in range(request_days):
 			attendance_date = add_days(self.from_date, number)
-			if self.validate_if_attendance_not_applicable(attendance_date):
-				continue
-
-			self.create_or_update_attendance(attendance_date)
+			if self.should_mark_attendance(attendance_date):
+				self.create_or_update_attendance(attendance_date)
 
 	def create_or_update_attendance(self, date):
 		attendance_name = frappe.db.exists(
@@ -74,27 +72,33 @@ class AttendanceRequest(Document):
 			doc.insert(ignore_permissions=True)
 			doc.submit()
 
-	def validate_if_attendance_not_applicable(self, attendance_date):
-		# Check if attendance_date is a Holiday
+	def should_mark_attendance(self, attendance_date: str) -> bool:
+		# Check if attendance_date is a holiday
 		if is_holiday(self.employee, attendance_date):
 			frappe.msgprint(
-				_("Attendance not submitted for {0} as it is a Holiday.").format(attendance_date), alert=1
+				_("Attendance not submitted for {0} as it is a Holiday.").format(
+					frappe.bold(format_date(attendance_date))
+				)
 			)
-			return True
+			return False
 
-		# Check if employee on Leave
-		leave_record = frappe.db.sql(
-			"""select half_day from `tabLeave Application`
-			where employee = %s and %s between from_date and to_date
-			and docstatus = 1""",
-			(self.employee, attendance_date),
-			as_dict=True,
+		# Check if employee is on leave
+		leave_record = frappe.db.exists(
+			"Leave Application",
+			{
+				"employee": self.employee,
+				"docstatus": 1,
+				"from_date": ("<=", attendance_date),
+				"to_date": (">=", attendance_date),
+			},
 		)
+
 		if leave_record:
 			frappe.msgprint(
-				_("Attendance not submitted for {0} as {1} on leave.").format(attendance_date, self.employee),
-				alert=1,
+				_("Attendance not submitted for {0} as {1} is on leave.").format(
+					frappe.bold(format_date(attendance_date)), frappe.bold(self.employee)
+				)
 			)
-			return True
+			return False
 
-		return False
+		return True
