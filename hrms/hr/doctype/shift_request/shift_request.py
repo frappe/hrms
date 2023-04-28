@@ -50,8 +50,8 @@ class ShiftRequest(Document):
 			)
 
 	def on_cancel(self):
-		shift_assignment_list = frappe.get_list(
-			"Shift Assignment", {"employee": self.employee, "shift_request": self.name}
+		shift_assignment_list = frappe.db.get_all(
+			"Shift Assignment", {"employee": self.employee, "shift_request": self.name, "docstatus": 1}
 		)
 		if shift_assignment_list:
 			for shift in shift_assignment_list:
