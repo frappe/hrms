@@ -50,6 +50,33 @@ class TestShiftType(FrappeTestCase):
 		)
 		self.assertEqual(attendance.status, "Present")
 
+	def test_mark_attendance_with_different_shift_start_time(self):
+		"""Tests whether attendance is marked correctly if shift configuration is changed midway"""
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+
+		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
+
+		shift_type = setup_shift_type(shift_type="Test Shift Start")
+		date = getdate()
+		make_shift_assignment(shift_type.name, employee, date)
+
+		timestamp = datetime.combine(date, get_time("08:00:00"))
+		log_in = make_checkin(employee, timestamp)
+
+		# change config before adding OUT log
+		shift_type.begin_check_in_before_shift_start_time = 120
+		shift_type.save()
+
+		timestamp = datetime.combine(date, get_time("12:00:00"))
+		log_out = make_checkin(employee, timestamp)
+
+		shift_type.process_auto_attendance()
+
+		attendance = frappe.db.get_value(
+			"Attendance", {"shift": shift_type.name}, ["status", "name"], as_dict=True
+		)
+		self.assertEqual(attendance.status, "Present")
+
 	def test_entry_and_exit_grace(self):
 		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 
