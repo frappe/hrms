@@ -42,9 +42,7 @@ class ShiftType(Document):
 			"Employee Checkin", fields="*", filters=filters, order_by="employee,time"
 		)
 
-		for key, group in itertools.groupby(
-			logs, key=lambda x: (x["employee"], x["shift_actual_start"])
-		):
+		for key, group in itertools.groupby(logs, key=lambda x: (x["employee"], x["shift_start"])):
 			single_shift_logs = list(group)
 			(
 				attendance_status,
@@ -58,7 +56,7 @@ class ShiftType(Document):
 			mark_attendance_and_link_log(
 				single_shift_logs,
 				attendance_status,
-				key[1].date(),
+				single_shift_logs[0].shift_actual_start.date(),
 				working_hours,
 				late_entry,
 				early_exit,
