@@ -11,9 +11,23 @@ from frappe.utils import cint, comma_and, cstr, flt
 class LeaveControlPanel(Document):
 	def get_employees(self):
 		conditions, values = [], []
-		for field in ["company", "employment_type", "branch", "designation", "department"]:
+		for field in [
+			"company",
+			"employment_type",
+			"branch",
+			"designation",
+			"department",
+			"employee",
+			"employee_grade",
+		]:
 			if self.get(field):
-				conditions.append("{0}=%s".format(field))
+				if field == "employee":
+					conditions.append("name=%s")
+				elif field == "employee_grade":
+					conditions.append("grade=%s")
+				else:
+					conditions.append("{0}=%s".format(field))
+
 				values.append(self.get(field))
 
 		condition_str = " and " + " and ".join(conditions) if len(conditions) else ""
