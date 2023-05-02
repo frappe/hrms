@@ -6,19 +6,26 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "working_days_section",
   "payroll_based_on",
   "consider_unmarked_attendance_as",
-  "disable_rounded_total",
   "include_holidays_in_total_working_days",
-  "show_leave_balances_in_salary_slip",
-  "define_opening_balance_for_earning_and_deductions",
-  "process_payroll_accounting_entry_based_on_employee",
   "column_break_6",
   "max_working_hours_against_timesheet",
   "daily_wages_fraction_for_half_day",
+  "column_break_rnoq",
+  "disable_rounded_total",
+  "column_break_gzpl",
+  "show_leave_balances_in_salary_slip",
+  "email_section",
   "email_salary_slip_to_employee",
+  "column_break_iewr",
   "encrypt_salary_slips_in_emails",
-  "password_policy"
+  "password_policy",
+  "other_settings_section",
+  "define_opening_balance_for_earning_and_deductions",
+  "column_break_zi9y",
+  "process_payroll_accounting_entry_based_on_employee"
  ],
  "fields": [
   {
@@ -107,13 +114,45 @@
    "fieldname": "define_opening_balance_for_earning_and_deductions",
    "fieldtype": "Check",
    "label": "Define Opening Balance for Earning and Deductions"
+  },
+  {
+   "fieldname": "column_break_rnoq",
+   "fieldtype": "Section Break",
+   "label": "Salary Slip"
+  },
+  {
+   "fieldname": "email_section",
+   "fieldtype": "Section Break",
+   "label": "Email"
+  },
+  {
+   "fieldname": "working_days_section",
+   "fieldtype": "Section Break",
+   "label": "Working Days and Hours"
+  },
+  {
+   "fieldname": "column_break_gzpl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "other_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Other Settings"
+  },
+  {
+   "fieldname": "column_break_zi9y",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_iewr",
+   "fieldtype": "Column Break"
   }
  ],
  "icon": "fa fa-cog",
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-01-05 10:22:22.425409",
+ "modified": "2023-02-23 14:56:15.335250",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",

@@ -24,6 +24,7 @@
   "round_to_the_nearest_integer",
   "statistical_component",
   "do_not_include_in_total",
+  "remove_if_zero_valued",
   "disabled",
   "section_break_5",
   "accounts",
@@ -249,12 +250,20 @@
    "fieldname": "flexible_benefits_tab",
    "fieldtype": "Tab Break",
    "label": "Flexible Benefits"
+  },
+  {
+   "default": "1",
+   "depends_on": "eval:!doc.statistical_component",
+   "description": "If checked, the component will not be displayed in the salary slip if the amount is zero",
+   "fieldname": "remove_if_zero_valued",
+   "fieldtype": "Check",
+   "label": "Remove if Zero Valued"
   }
  ],
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-01-05 13:08:30.234871",
+ "modified": "2023-03-01 16:57:46.413627",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",
