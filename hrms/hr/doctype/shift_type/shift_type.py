@@ -44,6 +44,11 @@ class ShiftType(Document):
 
 		for key, group in itertools.groupby(logs, key=lambda x: (x["employee"], x["shift_start"])):
 			single_shift_logs = list(group)
+			attendance_date = single_shift_logs[0].shift_actual_start.date()
+
+			if not self.should_mark_attendance(key[0], attendance_date):
+				continue
+
 			(
 				attendance_status,
 				working_hours,
@@ -56,7 +61,7 @@ class ShiftType(Document):
 			mark_attendance_and_link_log(
 				single_shift_logs,
 				attendance_status,
-				single_shift_logs[0].shift_actual_start.date(),
+				attendance_date,
 				working_hours,
 				late_entry,
 				early_exit,
@@ -117,10 +122,7 @@ class ShiftType(Document):
 		if start_date is None:
 			return
 
-		holiday_list_name = self.holiday_list
-		if not holiday_list_name:
-			holiday_list_name = get_holiday_list_for_employee(employee, False)
-
+		holiday_list_name = self.get_holiday_list(employee)
 		start_time = get_time(self.start_time)
 
 		for date in daterange(getdate(start_date), getdate(end_date)):
@@ -214,6 +216,22 @@ class ShiftType(Document):
 		)
 
 		return list(set(default_shift_employees) - set(active_shift_assignments))
+
+	def get_holiday_list(self, employee: str) -> str:
+		holiday_list_name = self.holiday_list or get_holiday_list_for_employee(employee, False)
+		return holiday_list_name
+
+	def should_mark_attendance(self, employee: str, attendance_date: str) -> bool:
+		"""Determines whether attendance should be marked on holidays or not"""
+		if self.mark_auto_attendance_on_holidays:
+			# no need to check if date is a holiday or not
+			# since attendance should be marked on all days
+			return True
+
+		holiday_list = self.get_holiday_list(employee)
+		if is_holiday(holiday_list, attendance_date):
+			return False
+		return True
 
 
 def process_auto_attendance_for_all_shifts():
