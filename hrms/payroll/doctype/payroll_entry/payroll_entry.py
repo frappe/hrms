@@ -54,17 +54,17 @@ class PayrollEntry(Document):
 			self.status = status
 
 	def before_submit(self):
-		self.validate_employee_details()
+		self.validate_existing_salary_slips()
 		self.validate_payroll_payable_account()
 		if self.validate_attendance:
 			if self.validate_employee_attendance():
-				frappe.throw(_("Cannot Submit, Employees left to mark attendance"))
+				frappe.throw(_("Cannot Submit, Attendance is not marked for some employees."))
 
 	def on_submit(self):
 		self.set_status(update=True, status="Submitted")
 		self.create_salary_slips()
 
-	def validate_employee_details(self):
+	def validate_existing_salary_slips(self):
 		emp_with_sal_slip = []
 		SalarySlip = frappe.qb.DocType("Salary Slip")
 
@@ -109,11 +109,6 @@ class PayrollEntry(Document):
 		else:
 			delete_salary_slips_for_employees(self, salary_slips)
 
-	def check_mandatory(self):
-		for fieldname in ["company", "start_date", "end_date"]:
-			if not self.get(fieldname):
-				frappe.throw(_("Please set {0}").format(self.meta.get_label(fieldname)))
-
 	def make_filters(self):
 		return frappe._dict(
 			company=self.company,
@@ -130,7 +125,6 @@ class PayrollEntry(Document):
 
 	@frappe.whitelist()
 	def fill_employee_details(self):
-		self.check_mandatory()
 		filters = self.make_filters()
 		employees = get_employee_list(filters=filters, as_dict=True, ignore_match_conditions=True)
 		self.set("employees", [])
@@ -475,8 +469,8 @@ class PayrollEntry(Document):
 				self.update_salary_slip_status(submitted_salary_slips, jv_name=journal_entry.name)
 
 		except Exception as e:
-			frappe.log_error(
-				frappe.get_traceback(), reference_doctype="Payroll Entry", reference_name=self.name
+			self.log_error(
+				title="Journal Entry creation against Salary Slip failed", message=frappe.get_traceback()
 			)
 
 	def get_payable_amount_for_earnings_and_deductions(
@@ -502,7 +496,7 @@ class PayrollEntry(Document):
 				accounting_dimensions,
 				precision,
 				entry_type="debit",
-				accounts=accounts
+				accounts=accounts,
 			)
 
 		# Deductions
@@ -517,7 +511,7 @@ class PayrollEntry(Document):
 				accounting_dimensions,
 				precision,
 				entry_type="credit",
-				accounts=accounts
+				accounts=accounts,
 			)
 
 		return payable_amount
@@ -561,7 +555,7 @@ class PayrollEntry(Document):
 					precision,
 					entry_type="payable",
 					party=employee,
-					accounts=accounts
+					accounts=accounts,
 				)
 		else:
 			payable_amount = self.get_accounting_entries_and_payable_amount(
@@ -574,7 +568,7 @@ class PayrollEntry(Document):
 				accounting_dimensions,
 				precision,
 				entry_type="payable",
-				accounts=accounts
+				accounts=accounts,
 			)
 
 	def get_accounting_entries_and_payable_amount(
@@ -836,13 +830,17 @@ class PayrollEntry(Document):
 
 	@frappe.whitelist()
 	def validate_employee_attendance(self):
-		"""{
+		"""
+		returns a dict of employee attendance details
+
+		{
 		        "EMP/0001": {
 		                "date_of_joining": "2019-01-01",
 		                "holiday_list": "Holiday List Company",
 		                "attendance_marked": 22
 		        }
-		}"""
+		}
+		"""
 		holidays_count = {}
 		employees_to_mark_attendance = []
 		days_in_payroll, days_holiday, days_attendance_marked = 0, 0, 0
