@@ -24,7 +24,7 @@ class AttendanceRequest(Document):
 		self.create_attendance_records()
 
 	def on_cancel(self):
-		attendance_list = frappe.get_list(
+		attendance_list = frappe.get_all(
 			"Attendance", {"employee": self.employee, "attendance_request": self.name, "docstatus": 1}
 		)
 		if attendance_list:
@@ -34,15 +34,13 @@ class AttendanceRequest(Document):
 
 	def create_attendance_records(self):
 		request_days = date_diff(self.to_date, self.from_date) + 1
-		for number in range(request_days):
-			attendance_date = add_days(self.from_date, number)
+		for day in range(request_days):
+			attendance_date = add_days(self.from_date, day)
 			if self.should_mark_attendance(attendance_date):
 				self.create_or_update_attendance(attendance_date)
 
-	def create_or_update_attendance(self, date):
-		attendance_name = frappe.db.exists(
-			"Attendance", dict(employee=self.employee, attendance_date=date, docstatus=("!=", 2))
-		)
+	def create_or_update_attendance(self, date: str):
+		attendance_name = self.get_attendance_record(date)
 
 		if self.half_day and date_diff(getdate(self.half_day_date), getdate(date)) == 0:
 			status = "Half Day"
@@ -55,12 +53,12 @@ class AttendanceRequest(Document):
 			# update existing attendance, change the status
 			doc = frappe.get_doc("Attendance", attendance_name)
 			if doc.status != status:
-				text = _("updated status from {0} to {1} via Attendance Request").format(
+				text = _("Status updated from {0} to {1} via Attendance Request").format(
 					frappe.bold(doc.status), frappe.bold(status)
 				)
 
 				doc.db_set({"status": status, "attendance_request": self.name})
-				doc.add_comment(comment_type="Info", text=text)
+				doc.add_comment(text=text)
 		else:
 			# submit a new attendance record
 			doc = frappe.new_doc("Attendance")
@@ -83,7 +81,18 @@ class AttendanceRequest(Document):
 			return False
 
 		# Check if employee is on leave
-		leave_record = frappe.db.exists(
+		if self.has_leave_record(attendance_date):
+			frappe.msgprint(
+				_("Attendance not submitted for {0} as {1} is on leave.").format(
+					frappe.bold(format_date(attendance_date)), frappe.bold(self.employee)
+				)
+			)
+			return False
+
+		return True
+
+	def has_leave_record(self, attendance_date: str) -> str | None:
+		return frappe.db.exists(
 			"Leave Application",
 			{
 				"employee": self.employee,
@@ -93,12 +102,38 @@ class AttendanceRequest(Document):
 			},
 		)
 
-		if leave_record:
-			frappe.msgprint(
-				_("Attendance not submitted for {0} as {1} is on leave.").format(
-					frappe.bold(format_date(attendance_date)), frappe.bold(self.employee)
-				)
-			)
-			return False
+	def get_attendance_record(self, attendance_date: str) -> str | None:
+		return frappe.db.exists(
+			"Attendance",
+			{
+				"employee": self.employee,
+				"attendance_date": attendance_date,
+				"docstatus": 1,
+			},
+		)
 
-		return True
+	@frappe.whitelist()
+	def get_attendance_warnings(self) -> list:
+		attendance_warnings = []
+		request_days = date_diff(self.to_date, self.from_date) + 1
+
+		for day in range(request_days):
+			attendance_date = add_days(self.from_date, day)
+
+			if is_holiday(self.employee, attendance_date):
+				attendance_warnings.append({"date": attendance_date, "reason": "Holiday", "action": "Skip"})
+			elif self.has_leave_record(attendance_date):
+				attendance_warnings.append({"date": attendance_date, "reason": "On Leave", "action": "Skip"})
+			else:
+				attendance = self.get_attendance_record(attendance_date)
+				if attendance:
+					attendance_warnings.append(
+						{
+							"date": attendance_date,
+							"reason": "Attendance already marked",
+							"record": attendance,
+							"action": "Overwrite",
+						}
+					)
+
+		return attendance_warnings
