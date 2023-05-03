@@ -4,10 +4,30 @@ on:
   pull_request: { }
 
 jobs:
-
-  linters:
-    name: linters
+  commit-lint:
+    name: 'Semantic Commits'
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 200
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          check-latest: true
+
+      - name: Check commit titles
+        run: |
+          npm install @commitlint/cli @commitlint/config-conventional
+          npx commitlint --verbose --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }}
+
+  linter:
+    name: 'Frappe Linter'
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
     steps:
       - uses: actions/checkout@v2
 
