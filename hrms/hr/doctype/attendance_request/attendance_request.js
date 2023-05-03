@@ -10,14 +10,16 @@ frappe.ui.form.on("Attendance Request", {
 			frm.dashboard.clear_headline();
 
 			frm.call("get_attendance_warnings").then((r) => {
-				frm.dashboard.reset();
-				frm.dashboard.add_section(
-					frappe.render_template("attendance_warnings", {
-						warnings: r.message || [],
-					}),
-					__("Attendance Warnings")
-				);
-				frm.dashboard.show();
+				if (r.message?.length) {
+					frm.dashboard.reset();
+					frm.dashboard.add_section(
+						frappe.render_template("attendance_warnings", {
+							warnings: r.message || [],
+						}),
+						__("Attendance Warnings")
+					);
+					frm.dashboard.show();
+				}
 			})
 		}
 	}

@@ -5,20 +5,60 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import add_days, date_diff, format_date, getdate
+from frappe.utils import add_days, date_diff, format_date, get_link_to_form, getdate
 
 from erpnext.setup.doctype.employee.employee import is_holiday
 
 from hrms.hr.utils import validate_active_employee, validate_dates
 
 
+class OverlappingAttendanceRequestError(frappe.ValidationError):
+	pass
+
+
 class AttendanceRequest(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
 		validate_dates(self, self.from_date, self.to_date)
+		self.validate_half_day()
+		self.validate_request_overlap()
+
+	def validate_half_day(self):
 		if self.half_day:
 			if not getdate(self.from_date) <= getdate(self.half_day_date) <= getdate(self.to_date):
 				frappe.throw(_("Half day date should be in between from date and to date"))
+
+	def validate_request_overlap(self):
+		if not self.name:
+			self.name = "New Attendance Request"
+
+		Request = frappe.qb.DocType("Attendance Request")
+		overlapping_request = (
+			frappe.qb.from_(Request)
+			.select(Request.name)
+			.where(
+				(Request.employee == self.employee)
+				& (Request.docstatus < 2)
+				& (Request.name != self.name)
+				& (self.to_date >= Request.from_date)
+				& (self.from_date <= Request.to_date)
+			)
+		).run(as_dict=True)
+
+		if overlapping_request:
+			self.throw_overlap_error(overlapping_request[0].name)
+
+	def throw_overlap_error(self, overlapping_request: str):
+		msg = _(
+			"Employee {0} already has an Attendance Request {1} that overlaps with this period"
+		).format(
+			frappe.bold(self.employee),
+			get_link_to_form("Attendance Request", overlapping_request),
+		)
+
+		frappe.throw(
+			msg, title=_("Overlapping Attendance Request"), exc=OverlappingAttendanceRequestError
+		)
 
 	def on_submit(self):
 		self.create_attendance_records()
@@ -41,24 +81,18 @@ class AttendanceRequest(Document):
 
 	def create_or_update_attendance(self, date: str):
 		attendance_name = self.get_attendance_record(date)
-
-		if self.half_day and date_diff(getdate(self.half_day_date), getdate(date)) == 0:
-			status = "Half Day"
-		elif self.reason == "Work From Home":
-			status = "Work From Home"
-		else:
-			status = "Present"
+		status = self.get_attendance_status(date)
 
 		if attendance_name:
 			# update existing attendance, change the status
 			doc = frappe.get_doc("Attendance", attendance_name)
 			if doc.status != status:
-				text = _("Status updated from {0} to {1} via Attendance Request").format(
+				text = _("changed the status from {0} to {1} via Attendance Request").format(
 					frappe.bold(doc.status), frappe.bold(status)
 				)
 
 				doc.db_set({"status": status, "attendance_request": self.name})
-				doc.add_comment(text=text)
+				doc.add_comment(comment_type="Info", text=text)
 		else:
 			# submit a new attendance record
 			doc = frappe.new_doc("Attendance")
@@ -111,6 +145,14 @@ class AttendanceRequest(Document):
 				"docstatus": 1,
 			},
 		)
+
+	def get_attendance_status(self, attendance_date: str) -> str:
+		if self.half_day and date_diff(getdate(self.half_day_date), getdate(attendance_date)) == 0:
+			return "Half Day"
+		elif self.reason == "Work From Home":
+			return "Work From Home"
+		else:
+			return "Present"
 
 	@frappe.whitelist()
 	def get_attendance_warnings(self) -> list:
