@@ -428,7 +428,7 @@ class PayrollEntry(Document):
 
 			# Earnings
 			for acc_cc, amount in earnings.items():
-				accounting_entry, payable_amount = self.get_accounting_entries_and_payable_amount(
+				payable_amount = self.get_accounting_entries_and_payable_amount(
 					acc_cc[0],
 					acc_cc[1] or self.cost_center,
 					amount,
@@ -438,12 +438,12 @@ class PayrollEntry(Document):
 					accounting_dimensions,
 					precision,
 					entry_type="debit",
+					accounts=accounts,
 				)
-				accounts.append(accounting_entry)
 
 			# Deductions
 			for acc_cc, amount in deductions.items():
-				accounting_entry, payable_amount = self.get_accounting_entries_and_payable_amount(
+				payable_amount = self.get_accounting_entries_and_payable_amount(
 					acc_cc[0],
 					acc_cc[1] or self.cost_center,
 					amount,
@@ -453,8 +453,8 @@ class PayrollEntry(Document):
 					accounting_dimensions,
 					precision,
 					entry_type="credit",
+					accounts=accounts,
 				)
-				accounts.append(accounting_entry)
 
 			# Payable amount
 			if process_payroll_accounting_entry_based_on_employee:
@@ -473,7 +473,7 @@ class PayrollEntry(Document):
 				for employee, employee_details in self.employee_based_payroll_payable_entries.items():
 					payable_amount = employee_details.get("earnings") - (employee_details.get("deductions") or 0)
 
-					accounting_entry, payable_amount = self.get_accounting_entries_and_payable_amount(
+					payable_amount = self.get_accounting_entries_and_payable_amount(
 						payroll_payable_account,
 						self.cost_center,
 						payable_amount,
@@ -484,10 +484,11 @@ class PayrollEntry(Document):
 						precision,
 						entry_type="payable",
 						party=employee,
+						accounts=accounts,
 					)
-					accounts.append(accounting_entry)
+
 			else:
-				accounting_entry, payable_amount = self.get_accounting_entries_and_payable_amount(
+				payable_amount = self.get_accounting_entries_and_payable_amount(
 					payroll_payable_account,
 					self.cost_center,
 					payable_amount,
@@ -497,8 +498,8 @@ class PayrollEntry(Document):
 					accounting_dimensions,
 					precision,
 					entry_type="payable",
+					accounts=accounts,
 				)
-				accounts.append(accounting_entry)
 
 			journal_entry.set("accounts", accounts)
 			if len(currencies) > 1:
@@ -530,6 +531,7 @@ class PayrollEntry(Document):
 		precision,
 		entry_type="credit",
 		party=None,
+		accounts=None,
 	):
 		exchange_rate, amt = self.get_amount_and_exchange_rate_for_journal_entry(
 			account, amount, company_currency, currencies
@@ -578,7 +580,10 @@ class PayrollEntry(Document):
 			accounting_dimensions,
 		)
 
-		return row, payable_amount
+		if amt:
+			accounts.append(row)
+
+		return payable_amount
 
 	def update_accounting_dimensions(self, row, accounting_dimensions):
 		for dimension in accounting_dimensions:
