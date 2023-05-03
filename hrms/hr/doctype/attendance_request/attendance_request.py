@@ -86,13 +86,24 @@ class AttendanceRequest(Document):
 		if attendance_name:
 			# update existing attendance, change the status
 			doc = frappe.get_doc("Attendance", attendance_name)
-			if doc.status != status:
-				text = _("changed the status from {0} to {1} via Attendance Request").format(
-					frappe.bold(doc.status), frappe.bold(status)
-				)
+			old_status = doc.status
 
+			if old_status != status:
 				doc.db_set({"status": status, "attendance_request": self.name})
+				text = _("changed the status from {0} to {1} via Attendance Request").format(
+					frappe.bold(old_status), frappe.bold(status)
+				)
 				doc.add_comment(comment_type="Info", text=text)
+
+				frappe.msgprint(
+					_("Updated status from {0} to {1} for date {2} in the attendance record {3}").format(
+						frappe.bold(old_status),
+						frappe.bold(status),
+						frappe.bold(format_date(date)),
+						get_link_to_form("Attendance", doc.name),
+					),
+					title=_("Attendance Updated"),
+				)
 		else:
 			# submit a new attendance record
 			doc = frappe.new_doc("Attendance")
@@ -142,7 +153,7 @@ class AttendanceRequest(Document):
 			{
 				"employee": self.employee,
 				"attendance_date": attendance_date,
-				"docstatus": 1,
+				"docstatus": ("!=", 2),
 			},
 		)
 
