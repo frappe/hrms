@@ -15,7 +15,7 @@
 
 import { IonContent, IonMenu } from '@ionic/vue';
 
-import MenuLinks from "@/components/header/MenuLinks.vue"
+import MenuLinks from "@/components/MenuLinks.vue"
 import FrappeHRLogo from "@/components/icons/FrappeHRLogo.vue"
 
 </script>

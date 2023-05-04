@@ -1,11 +1,13 @@
 <template>
-	<ion-page>
-		<ion-content>Leaves</ion-content>
-	</ion-page>
+	<BaseLayout pageTitle="Leaves">
+		<template #content>
+			Leaves
+		</template>
+	</BaseLayout>
 </template>
 
 <script setup>
 
-import { IonPage, IonContent } from "@ionic/vue"
+import BaseLayout from "@/components/BaseLayout.vue"
 
 </script>
