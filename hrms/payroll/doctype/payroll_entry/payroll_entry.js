@@ -108,7 +108,13 @@ frappe.ui.form.on('Payroll Entry', {
 			freeze: true,
 			freeze_message: __('Fetching Employees')
 		}).then(r => {
+			if (r.docs?.[0]?.employees) {
+				frm.dirty();
+				frm.save();
+			}
+
 			frm.refresh();
+
 			if (r.docs?.[0]?.validate_attendance) {
 				render_employee_attendance(frm, r.message);
 			}
@@ -339,9 +345,9 @@ frappe.ui.form.on('Payroll Entry', {
 	},
 
 	validate_attendance: function (frm) {
-		if (frm.doc.validate_attendance && frm.doc.employees) {
+		if (frm.doc.validate_attendance && (frm.doc.employees?.length > 0)) {
 			frappe.call({
-				method: 'validate_employee_attendance',
+				method: 'get_employees_to_mark_attendance',
 				args: {},
 				callback: function (r) {
 					render_employee_attendance(frm, r.message);

@@ -153,9 +153,7 @@ class PayrollEntry(Document):
 		self.number_of_employees = len(self.employees)
 
 		if self.validate_attendance:
-			return self.validate_employee_attendance()
-
-		self.save()
+			return self.get_employees_to_mark_attendance()
 
 	@frappe.whitelist()
 	def create_salary_slips(self):
