@@ -65,6 +65,9 @@ class PayrollEntry(Document):
 		self.create_salary_slips()
 
 	def validate_existing_salary_slips(self):
+		if not self.employees:
+			return
+
 		emp_with_sal_slip = []
 		SalarySlip = frappe.qb.DocType("Salary Slip")
 
@@ -162,6 +165,7 @@ class PayrollEntry(Document):
 		"""
 		self.check_permission("write")
 		employees = [emp.employee for emp in self.employees]
+
 		if employees:
 			args = frappe._dict(
 				{
