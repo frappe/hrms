@@ -1,10 +1,8 @@
 <template>
 	<BaseLayout :pageTitle="`Hey, ${ user?.data?.first_name }!`">
 		<template #body>
-			<!-- quick links -->
-			<div class="flex flex-col gap-5 mt-4 p-4">
-				<div class="font-medium text-gray-900">Quick Links</div>
-				<QuickLinks />
+			<div class="flex flex-col items-center mt-5 p-4">
+				<QuickLinks :items="quickLinks" />
 			</div>
 		</template>
 	</BaseLayout>
@@ -18,5 +16,24 @@ import BaseLayout from "@/components/BaseLayout.vue"
 import { inject } from "vue"
 
 const user = inject("$user")
+
+const quickLinks = [
+	{
+		icon: "calendar",
+		title: "Request Leave",
+	},
+	{
+		icon: "dollar-sign",
+		title: "Claim an Expense",
+	},
+	{
+		icon: "file",
+		title: "Payslip",
+	},
+	{
+		icon: "hard-drive",
+		title: "Documents",
+	}
+]
 
 </script>
