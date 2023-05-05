@@ -8,6 +8,7 @@ import { IonicVue } from "@ionic/vue"
 
 import { session } from "./data/session"
 import { userResource } from "./data/user"
+import { employee } from "./data/employee"
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/vue/css/core.css"
@@ -27,6 +28,7 @@ app.component("Button", Button)
 
 app.provide("$session", session)
 app.provide("$user", userResource)
+app.provide("$employee", employee)
 
 router.isReady().then(() => {
 	app.mount("#app")

@@ -14,18 +14,20 @@
 								<Button appearance="minimal" class="!px-0 !py-0">
 									<FeatherIcon name="bell" class="h-6 w-6" />
 								</Button>
-								<Avatar imageURL="https://placekitten.com/100" label="Whiskers" />
+								<router-link :to="{ name: 'Profile' }">
+									<Avatar :imageURL="user.data.user_image" :label="user.data.first_name" />
+								</router-link>
 							</div>
 						</div>
 
 						<div class="my-5">
 							<h2 class="text-2xl font-bold text-gray-900">
-								{{ props.pageTitle}}
+								{{ props.pageTitle }}
 							</h2>
 						</div>
 					</div>
 
-					<slot name="content"></slot>
+					<slot name="body"></slot>
 				</div>
 			</div>
 		</ion-content>
@@ -37,10 +39,14 @@
 import { IonContent, IonMenuToggle, IonPage } from '@ionic/vue';
 import { FeatherIcon, Avatar } from "frappe-ui"
 
+import { inject } from "vue"
+
+const user = inject("$user")
+
 const props = defineProps({
 	pageTitle: {
 		type: String,
-		required: true,
+		required: false,
 		default: "Home"
 	}
 })

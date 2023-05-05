@@ -1,6 +1,6 @@
 <template>
 	<BaseLayout pageTitle="Leaves">
-		<template #content>
+		<template #body>
 			Leaves
 		</template>
 	</BaseLayout>
