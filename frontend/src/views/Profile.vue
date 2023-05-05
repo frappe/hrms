@@ -1,8 +1,16 @@
 <template>
 	<BaseLayout pageTitle="Profile">
 		<template #body>
-			<div class="flex flex-col items-center mt-5 p-4 gap-5">
-				<Avatar :imageURL="user.data.user_image" :label="user.data.first_name" size="lg" />
+			<div class="flex flex-col items-center mt-5 p-4">
+				<img
+					class="h-24 w-24 rounded-full object-cover"
+					:src="user.data.user_image"
+					:alt="user.data.first_name"
+				/>
+				<div class="flex flex-col gap-1 items-center mt-2 mb-5">
+					<span v-if="employee" class="text-xl font-bold text-gray-900">{{ employee?.data?.employee_name }}</span>
+					<span v-if="employee" class="font-normal text-sm text-gray-500">{{ employee?.data?.designation }}</span>
+				</div>
 				<Button @click="logout" appearance="white" class="text-red-500 w-full shadow py-2" icon-left="log-out"> Log Out </Button>
 			</div>
 		</template>
@@ -11,8 +19,6 @@
 
 <script setup>
 
-import { Avatar } from "frappe-ui"
-
 import QuickLinks from "@/components/QuickLinks.vue"
 import BaseLayout from "@/components/BaseLayout.vue"
 
@@ -20,9 +26,9 @@ import { inject } from "vue"
 
 import { showErrorAlert } from "@/utils.js"
 
-const employee = inject("$employee")
-const user = inject("$user")
 const session = inject("$session")
+const user = inject("$user")
+const employee = inject("$employee")
 
 const logout = async () => {
 	try {
