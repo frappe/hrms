@@ -281,7 +281,7 @@ class PayrollEntry(Document):
 	def get_salary_component_total(
 		self,
 		component_type=None,
-		process_payroll_accounting_entry_based_on_employee=False,
+		employee_wise_accounting_enabled=False,
 	):
 		salary_components = self.get_salary_components(component_type)
 		if salary_components:
@@ -307,7 +307,7 @@ class PayrollEntry(Document):
 						key = (item.salary_component, cost_center)
 						component_dict[key] = component_dict.get(key, 0) + amount_against_cost_center
 
-						if process_payroll_accounting_entry_based_on_employee:
+						if employee_wise_accounting_enabled:
 							self.set_employee_based_payroll_payable_entries(
 								component_type, item.employee, amount_against_cost_center
 							)
@@ -333,7 +333,9 @@ class PayrollEntry(Document):
 					.on(SalaryStructureAssignment.name == EmployeeCostCenter.parent)
 					.select(EmployeeCostCenter.cost_center, EmployeeCostCenter.percentage)
 					.where(
-						(SalaryStructureAssignment.employee == employee) & (SalaryStructureAssignment.docstatus == 1)
+						(SalaryStructureAssignment.employee == employee)
+						& (SalaryStructureAssignment.docstatus == 1)
+						& (SalaryStructureAssignment.salary_structure == salary_structure)
 					)
 				).run(as_list=True)
 			)
@@ -367,7 +369,7 @@ class PayrollEntry(Document):
 
 	def make_accrual_jv_entry(self, submitted_salary_slips):
 		self.check_permission("write")
-		process_payroll_accounting_entry_based_on_employee = frappe.db.get_single_value(
+		employee_wise_accounting_enabled = frappe.db.get_single_value(
 			"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
 		)
 		self.employee_based_payroll_payable_entries = {}
@@ -375,7 +377,7 @@ class PayrollEntry(Document):
 		earnings = (
 			self.get_salary_component_total(
 				component_type="earnings",
-				process_payroll_accounting_entry_based_on_employee=process_payroll_accounting_entry_based_on_employee,
+				employee_wise_accounting_enabled=employee_wise_accounting_enabled,
 			)
 			or {}
 		)
@@ -383,7 +385,7 @@ class PayrollEntry(Document):
 		deductions = (
 			self.get_salary_component_total(
 				component_type="deductions",
-				process_payroll_accounting_entry_based_on_employee=process_payroll_accounting_entry_based_on_employee,
+				employee_wise_accounting_enabled=employee_wise_accounting_enabled,
 			)
 			or {}
 		)
@@ -416,7 +418,7 @@ class PayrollEntry(Document):
 				precision,
 				payable_amount,
 				self.payroll_payable_account,
-				process_payroll_accounting_entry_based_on_employee,
+				employee_wise_accounting_enabled,
 			)
 
 			self.make_journal_entry(
@@ -467,7 +469,11 @@ class PayrollEntry(Document):
 				self.update_salary_slip_status(submitted_salary_slips, jv_name=journal_entry.name)
 
 		except Exception as e:
+			if type(e) in (str, list, tuple):
+				frappe.msgprint(e)
+
 			self.log_error("Journal Entry creation against Salary Slip failed")
+			raise
 
 	def get_payable_amount_for_earnings_and_deductions(
 		self,
@@ -521,10 +527,10 @@ class PayrollEntry(Document):
 		precision,
 		payable_amount,
 		payroll_payable_account,
-		process_payroll_accounting_entry_based_on_employee,
+		employee_wise_accounting_enabled,
 	):
 		# Payable amount
-		if process_payroll_accounting_entry_based_on_employee:
+		if employee_wise_accounting_enabled:
 			"""
 			employee_based_payroll_payable_entries = {
 			                'HREMP00004': {
@@ -661,7 +667,7 @@ class PayrollEntry(Document):
 	def make_payment_entry(self):
 		self.check_permission("write")
 		self.employee_based_payroll_payable_entries = {}
-		process_payroll_accounting_entry_based_on_employee = frappe.db.get_single_value(
+		employee_wise_accounting_enabled = frappe.db.get_single_value(
 			"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
 		)
 
@@ -693,7 +699,7 @@ class PayrollEntry(Document):
 							salary_detail.amount, salary_detail.salary_component
 						)
 					else:
-						if process_payroll_accounting_entry_based_on_employee:
+						if employee_wise_accounting_enabled:
 							self.set_employee_based_payroll_payable_entries(
 								"earnings", salary_detail.employee, salary_detail.amount
 							)
@@ -705,7 +711,7 @@ class PayrollEntry(Document):
 				)
 
 				if not statistical_component:
-					if process_payroll_accounting_entry_based_on_employee:
+					if employee_wise_accounting_enabled:
 						self.set_employee_based_payroll_payable_entries(
 							"deductions", salary_detail.employee, salary_detail.amount
 						)
@@ -825,18 +831,7 @@ class PayrollEntry(Document):
 		)
 
 	@frappe.whitelist()
-	def get_employees_to_mark_attendance(self):
-		"""
-		returns a dict of employee attendance details
-
-		{
-		        "EMP/0001": {
-		                "date_of_joining": "2019-01-01",
-		                "holiday_list": "Holiday List Company",
-		                "attendance_marked": 22
-		        }
-		}
-		"""
+	def get_employees_to_mark_attendance(self) -> list[dict]:
 		holiday_list_based_count = {}
 		employees_to_mark_attendance = []
 		employee_details = self.get_employee_and_attendance_details()
@@ -852,16 +847,13 @@ class PayrollEntry(Document):
 			if details.get("date_of_joining") > self.start_date:
 				start_date = details.get("date_of_joining")
 
-			holidays = (
-				self.get_holiday_list_based_count(
-					details["holiday_list"], start_date, holiday_list_based_count
-				)
-				or 0
+			holidays = self.get_holiday_list_based_count(
+				details["holiday_list"], start_date, holiday_list_based_count
 			)
 
 			attendance_marked = details["attendance_count"] or 0
 
-			payroll_days = date_diff(self.end_date, start_date) + 1 or 0
+			payroll_days = date_diff(self.end_date, start_date) + 1
 
 			if payroll_days > (holidays + attendance_marked):
 				employees_to_mark_attendance.append(
@@ -870,7 +862,17 @@ class PayrollEntry(Document):
 
 		return employees_to_mark_attendance
 
-	def get_employee_and_attendance_details(self):
+	def get_employee_and_attendance_details(self) -> list[dict]:
+		"""Returns a list of employee and attendance details like
+		[
+		        {
+		                "name": "HREMP00001",
+		                "date_of_joining": "2019-01-01",
+		                "holiday_list": "Holiday List Company",
+		                "attendance_count": 22
+		        }
+		]
+		"""
 		employees = [emp.employee for emp in self.employees]
 		default_holiday_list = frappe.db.get_value("Company", self.company, "default_holiday_list")
 
@@ -894,7 +896,9 @@ class PayrollEntry(Document):
 			.groupby(Employee.name)
 		).run(as_dict=True)
 
-	def get_holiday_list_based_count(self, holiday_list, start_date, holiday_list_based_count):
+	def get_holiday_list_based_count(
+		self, holiday_list: str, start_date: str, holiday_list_based_count: dict
+	) -> float:
 		key = f"{start_date}-{self.end_date}-{holiday_list}"
 
 		if key in holiday_list_based_count:
@@ -981,9 +985,9 @@ def set_fields_to_select(query, fields: list[str] = None):
 	default_fields = ["employee", "employee_name", "department", "designation"]
 
 	if fields:
-		query = query.select(*fields)
+		query = query.select(*fields).distinct()
 	else:
-		query = query.select(*default_fields)
+		query = query.select(*default_fields).distinct()
 
 	return query
 
@@ -1246,7 +1250,7 @@ def get_existing_salary_slips(employees, args):
 			& (SalarySlip.end_date <= args.end_date)
 			& (SalarySlip.employee.isin(employees))
 		)
-	).run(pluck="employee")
+	).run(pluck=True)
 
 
 def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progress=True):
