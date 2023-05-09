@@ -116,19 +116,19 @@ class SalarySlip(TransactionBase):
 		self.base_total_in_words = money_in_words(base_total, company_currency)
 
 	def on_submit(self):
-		email_salary_slip_to_employee = frappe.db.get_single_value(
-			"Payroll Settings", "email_salary_slip_to_employee"
-		)
 		if self.net_pay < 0:
 			frappe.throw(_("Net Pay cannot be less than 0"))
 		else:
 			self.set_status()
 			self.update_status(self.name)
 			self.make_loan_repayment_entry()
-			if (email_salary_slip_to_employee) and (
-				not frappe.flags.via_payroll_entry and not frappe.flags.in_patch
-			):
-				self.email_salary_slip()
+
+			if not frappe.flags.via_payroll_entry and not frappe.flags.in_patch:
+				email_salary_slip = cint(
+					frappe.db.get_single_value("Payroll Settings", "email_salary_slip_to_employee")
+				)
+				if email_salary_slip:
+					self.email_salary_slip()
 
 		self.update_payment_status_for_gratuity()
 

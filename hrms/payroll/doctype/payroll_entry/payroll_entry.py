@@ -58,7 +58,7 @@ class PayrollEntry(Document):
 		self.validate_payroll_payable_account()
 		if self.validate_attendance:
 			if self.get_employees_to_mark_attendance():
-				frappe.throw(_("Cannot Submit, Attendance is not marked for some employees."))
+				frappe.throw(_("Cannot submit. Attendance is not marked for some employees."))
 
 	def on_submit(self):
 		self.set_status(update=True, status="Submitted")
@@ -75,7 +75,7 @@ class PayrollEntry(Document):
 			frappe.qb.from_(SalarySlip)
 			.select(SalarySlip.employee)
 			.where(
-				(SalarySlip.employee.isin([employee.employee for employee in self.employees]))
+				(SalarySlip.employee.isin([emp.employee for emp in self.employees]))
 				& (SalarySlip.start_date == self.start_date)
 				& (SalarySlip.end_date == self.end_date)
 				& (SalarySlip.docstatus == 1)
@@ -471,9 +471,7 @@ class PayrollEntry(Document):
 				self.update_salary_slip_status(submitted_salary_slips, jv_name=journal_entry.name)
 
 		except Exception as e:
-			self.log_error(
-				title="Journal Entry creation against Salary Slip failed", message=frappe.get_traceback()
-			)
+			self.log_error("Journal Entry creation against Salary Slip failed")
 
 	def get_payable_amount_for_earnings_and_deductions(
 		self,
