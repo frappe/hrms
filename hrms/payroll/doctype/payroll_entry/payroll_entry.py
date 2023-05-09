@@ -94,23 +94,20 @@ class PayrollEntry(Document):
 			)
 
 	def on_cancel(self):
-		salary_slips = frappe.get_all("Salary Slip", filters={"payroll_entry": self.name}, pluck="name")
+		self.ignore_linked_doctypes = "GL Entry"
 
-		if len(salary_slips) > 30 or frappe.flags.enqueue_payroll_entry:
-			frappe.enqueue(
-				delete_salary_slips_for_employees,
-				timeout=3000,
-				payroll_entry=self,
-				salary_slips=salary_slips,
-				publish_progress=False,
-			)
-			frappe.msgprint(
-				_("Payroll Entry cancellation is queued. It may take a few minutes"),
-				alert=True,
-				indicator="blue",
-			)
-		else:
-			delete_salary_slips_for_employees(self, salary_slips)
+		frappe.delete_doc(
+			"Salary Slip",
+			frappe.db.sql_list(
+				"""select name from `tabSalary Slip`
+			where payroll_entry=%s """,
+				(self.name),
+			),
+		)
+		self.db_set("salary_slips_created", 0)
+		self.db_set("salary_slips_submitted", 0)
+		self.set_status(update=True, status="Cancelled")
+		self.db_set("error_message", "")
 
 	def make_filters(self):
 		return frappe._dict(
@@ -1287,18 +1284,6 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 		frappe.publish_realtime("completed_salary_slip_submission")
 
 	frappe.flags.via_payroll_entry = False
-
-
-def delete_salary_slips_for_employees(payroll_entry, salary_slips):
-	payroll_entry.ignore_linked_doctypes = "GL Entry"
-
-	frappe.delete_doc("Salary Slip", salary_slips)
-
-	payroll_entry.db_set(
-		{"salary_slips_created": 0, "salary_slips_submitted": 0, "error_message": ""}
-	)
-
-	payroll_entry.set_status(update=True, status="Cancelled")
 
 
 @frappe.whitelist()
