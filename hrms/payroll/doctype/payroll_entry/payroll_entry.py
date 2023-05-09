@@ -2,7 +2,6 @@
 # For license information, please see license.txt
 
 import json
-from typing import List
 
 from dateutil.relativedelta import relativedelta
 
@@ -439,7 +438,7 @@ class PayrollEntry(Document):
 		payroll_payable_account=None,
 		voucher_type="Journal Entry",
 		user_remark="",
-		submitted_salary_slips: List = None,
+		submitted_salary_slips: list = None,
 		submit_journal_entry=False,
 	):
 		multi_currency = 0
@@ -916,7 +915,7 @@ class PayrollEntry(Document):
 
 def get_sal_struct(
 	company: str, currency: str, salary_slip_based_on_timesheet: int, payroll_frequency: str
-):
+) -> list[str]:
 	SalaryStructure = frappe.qb.DocType("Salary Structure")
 	return (
 		frappe.qb.from_(SalaryStructure)
@@ -932,17 +931,17 @@ def get_sal_struct(
 	).run(pluck=True)
 
 
-def build_query(
+def get_filtered_employees(
 	sal_struct,
 	filters,
-	searchfield,
-	search_string,
-	fields,
+	searchfield=None,
+	search_string=None,
+	fields=None,
 	as_dict=False,
 	limit=None,
 	offset=None,
 	ignore_match_conditions=False,
-):
+) -> list:
 	SalaryStructureAssignment = frappe.qb.DocType("Salary Structure Assignment")
 	Employee = frappe.qb.DocType("Employee")
 
@@ -958,7 +957,7 @@ def build_query(
 			& ((Employee.relieving_date >= filters.start_date) | (Employee.relieving_date.isnull()))
 			& (SalaryStructureAssignment.salary_structure.isin(sal_struct))
 			& (SalaryStructureAssignment.payroll_payable_account == filters.payroll_payable_account)
-			& (filters.start_date >= SalaryStructureAssignment.from_date)
+			& (filters.end_date >= SalaryStructureAssignment.from_date)
 		)
 	)
 
@@ -969,13 +968,16 @@ def build_query(
 	if not ignore_match_conditions:
 		query = set_match_conditions(query=query, qb_object=Employee)
 
-	if limit and offset is not None:
-		query = query.limit(limit).offset(offset)
+	if limit:
+		query = query.limit(limit)
+
+	if offset:
+		query = query.offset(offset)
 
 	return query.run(as_dict=as_dict)
 
 
-def set_fields_to_select(query, fields: List[str] = None):
+def set_fields_to_select(query, fields: list[str] = None):
 	default_fields = ["employee", "employee_name", "department", "designation"]
 
 	if fields:
@@ -997,8 +999,9 @@ def set_searchfield(query, searchfield, search_string, qb_object):
 
 
 def set_filter_conditions(query, filters, qb_object):
-	if filters.get("emplyees"):
-		query = query.where(qb_object.name.not_in(filters.get("emplyees")))
+	"""Append optional filters to employee query"""
+	if filters.get("employees"):
+		query = query.where(qb_object.name.notin(filters.get("employees")))
 
 	for fltr_key in ["branch", "department", "designation"]:
 		if filters.get(fltr_key):
@@ -1307,12 +1310,12 @@ def get_employee_list(
 	filters: frappe._dict,
 	searchfield=None,
 	search_string=None,
-	fields: List[str] = None,
+	fields: list[str] = None,
 	as_dict=True,
 	limit=None,
 	offset=None,
 	ignore_match_conditions=False,
-):
+) -> list:
 	sal_struct = get_sal_struct(
 		filters.company,
 		filters.currency,
@@ -1323,7 +1326,7 @@ def get_employee_list(
 	if not sal_struct:
 		return []
 
-	emp_list = build_query(
+	emp_list = get_filtered_employees(
 		sal_struct,
 		filters,
 		searchfield,
