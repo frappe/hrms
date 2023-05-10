@@ -1,5 +1,5 @@
 <template>
-	<BaseLayout :pageTitle="`Hey, ${ user?.data?.first_name }!`">
+	<BaseLayout :pageTitle="`Hey, ${ user?.data?.first_name }!`" :showCheckInPanel="true">
 		<template #body>
 			<div class="flex flex-col items-center mt-5 p-4">
 				<QuickLinks :items="quickLinks" />

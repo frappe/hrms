@@ -20,10 +20,12 @@
 							</div>
 						</div>
 
-						<div class="my-5">
+						<div class="mt-5">
 							<h2 class="text-2xl font-bold text-gray-900">
 								{{ props.pageTitle }}
 							</h2>
+
+							<CheckInPanel v-if="props.showCheckInPanel" />
 						</div>
 					</div>
 
@@ -39,6 +41,8 @@
 import { IonContent, IonMenuToggle, IonPage } from '@ionic/vue';
 import { FeatherIcon, Avatar } from "frappe-ui"
 
+import CheckInPanel from "@/components/CheckInPanel.vue"
+
 import { inject } from "vue"
 
 const user = inject("$user")
@@ -48,6 +52,11 @@ const props = defineProps({
 		type: String,
 		required: false,
 		default: "Home"
+	},
+	showCheckInPanel: {
+		type: Boolean,
+		required: false,
+		default: false
 	}
 })
 
