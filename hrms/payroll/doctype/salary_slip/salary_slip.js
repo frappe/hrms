@@ -94,11 +94,15 @@ frappe.ui.form.on("Salary Slip", {
 
 	set_exchange_rate: function(frm, company_currency) {
 		if (frm.doc.docstatus === 0) {
+
+			if(frm.doc.payroll_entry && frm.doc.exchange_rate) {
+				frm.set_df_property('exchange_rate', 'read_only', 1)
+				return
+			}
+
 			if (frm.doc.currency) {
 				var from_currency = frm.doc.currency;
 				if (from_currency != company_currency) {
-					if (frm.doc.exchange_rate && frm.doc.exchange_rate !==1){ return; }
-
 					frm.events.hide_loan_section(frm);
 					frappe.call({
 						method: "erpnext.setup.utils.get_exchange_rate",
