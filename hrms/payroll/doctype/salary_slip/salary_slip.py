@@ -104,7 +104,8 @@ class SalarySlip(TransactionBase):
 				)
 
 	def set_payroll_period(self):
-		self.payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
+		if not hasattr(self, "payroll_period"):
+			self.payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
 
 	def set_net_total_in_words(self):
 		doc_currency = self.currency
@@ -121,10 +122,13 @@ class SalarySlip(TransactionBase):
 			self.set_status()
 			self.update_status(self.name)
 			self.make_loan_repayment_entry()
-			if (
-				frappe.db.get_single_value("Payroll Settings", "email_salary_slip_to_employee")
-			) and not frappe.flags.via_payroll_entry:
-				self.email_salary_slip()
+
+			if not frappe.flags.via_payroll_entry and not frappe.flags.in_patch:
+				email_salary_slip = cint(
+					frappe.db.get_single_value("Payroll Settings", "email_salary_slip_to_employee")
+				)
+				if email_salary_slip:
+					self.email_salary_slip()
 
 		self.update_payment_status_for_gratuity()
 
