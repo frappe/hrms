@@ -2148,6 +2148,11 @@ dash-get@^1.0.2:
   resolved "https://registry.yarnpkg.com/dash-get/-/dash-get-1.0.2.tgz#4c9e9ad5ef04c4bf9d3c9a451f6f7997298dcc7c"
   integrity sha512-4FbVrHDwfOASx7uQVxeiCTo7ggSdYZbqs8lH+WU6ViypPlDbe9y6IP5VVUDQBv9DcnyaiPT5XT0UWHgJ64zLeQ==
 
+dayjs@^1.11.7:
+  version "1.11.7"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.7.tgz#4b296922642f70999544d1144a2c25730fce63e2"
+  integrity sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==
+
 debug@2.6.9:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"

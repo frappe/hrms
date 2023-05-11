@@ -29,7 +29,7 @@ import BaseLayout from "@/components/BaseLayout.vue"
 
 import { inject } from "vue"
 
-import { showErrorAlert } from "@/utils.js"
+import { showErrorAlert } from "@/utils/dialogs"
 
 const session = inject("$session")
 const user = inject("$user")
