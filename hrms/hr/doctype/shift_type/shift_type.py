@@ -151,7 +151,7 @@ class ShiftType(Document):
 		return: start date = max of `process_attendance_after` and DOJ
 		return: end date = min of shift before `last_sync_of_checkin` and Relieving Date
 		"""
-		date_of_joining, relieving_date, employee_creation = frappe.db.get_value(
+		date_of_joining, relieving_date, employee_creation = frappe.get_cached_value(
 			"Employee", employee, ["date_of_joining", "relieving_date", "creation"]
 		)
 
@@ -235,7 +235,7 @@ class ShiftType(Document):
 
 
 def process_auto_attendance_for_all_shifts():
-	shift_list = frappe.get_all("Shift Type", "name", {"enable_auto_attendance": "1"}, as_list=True)
+	shift_list = frappe.get_all("Shift Type", filters={"enable_auto_attendance": "1"}, pluck="name")
 	for shift in shift_list:
-		doc = frappe.get_doc("Shift Type", shift[0])
+		doc = frappe.get_cached_doc("Shift Type", shift)
 		doc.process_auto_attendance()
