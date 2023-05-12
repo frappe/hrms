@@ -1945,8 +1945,6 @@ class SalarySlip(TransactionBase):
 				component.year_to_date = year_to_date
 
 	def get_year_to_date_period(self):
-		self.payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
-
 		if self.payroll_period:
 			period_start_date = self.payroll_period.start_date
 			period_end_date = self.payroll_period.end_date
