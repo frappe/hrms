@@ -68,12 +68,18 @@ class SalarySlip(TransactionBase):
 	def autoname(self):
 		self.name = make_autoname(self.series)
 
+	@property
+	def payroll_period(self):
+		if not hasattr(self, "_payroll_period"):
+			self._payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
+
+		return self._payroll_period
+
 	def validate(self):
 		self.status = self.get_status()
 		validate_active_employee(self.employee)
 		self.validate_dates()
 		self.check_existing()
-		self.set_payroll_period()
 
 		if not self.salary_slip_based_on_timesheet:
 			self.get_date_details()
@@ -103,9 +109,12 @@ class SalarySlip(TransactionBase):
 					alert=True,
 				)
 
+<<<<<<< HEAD
 	def set_payroll_period(self):
 		self.payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
 
+=======
+>>>>>>> 5315512a (chore: set payroll period if not exists)
 	def set_net_total_in_words(self):
 		doc_currency = self.currency
 		company_currency = erpnext.get_company_currency(self.company)
@@ -233,7 +242,6 @@ class SalarySlip(TransactionBase):
 			if not self.salary_slip_based_on_timesheet:
 				self.get_date_details()
 
-			self.set_payroll_period()
 			joining_date, relieving_date = frappe.get_cached_value(
 				"Employee", self.employee, ("date_of_joining", "relieving_date")
 			)
@@ -1809,9 +1817,6 @@ class SalarySlip(TransactionBase):
 			self.get_date_details()
 		self.pull_emp_details()
 		self.get_working_days_details(for_preview=for_preview)
-
-		if not hasattr(self, "payroll_period"):
-			self.set_payroll_period()
 
 		self.calculate_net_pay()
 
