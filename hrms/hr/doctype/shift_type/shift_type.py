@@ -31,16 +31,7 @@ class ShiftType(Document):
 		):
 			return
 
-		filters = {
-			"skip_auto_attendance": 0,
-			"attendance": ("is", "not set"),
-			"time": (">=", self.process_attendance_after),
-			"shift_actual_end": ("<", self.last_sync_of_checkin),
-			"shift": self.name,
-		}
-		logs = frappe.db.get_list(
-			"Employee Checkin", fields="*", filters=filters, order_by="employee,time"
-		)
+		logs = self.get_employee_checkins()
 
 		for key, group in itertools.groupby(logs, key=lambda x: (x["employee"], x["shift_start"])):
 			single_shift_logs = list(group)
@@ -72,6 +63,31 @@ class ShiftType(Document):
 
 		for employee in self.get_assigned_employee(self.process_attendance_after, True):
 			self.mark_absent_for_dates_with_no_attendance(employee)
+
+	def get_employee_checkins(self) -> list[dict]:
+		return frappe.get_all(
+			"Employee Checkin",
+			fields=[
+				"name",
+				"employee",
+				"log_type",
+				"time",
+				"shift",
+				"shift_start",
+				"shift_end",
+				"shift_actual_start",
+				"shift_actual_end",
+				"device_id",
+			],
+			filters={
+				"skip_auto_attendance": 0,
+				"attendance": ("is", "not set"),
+				"time": (">=", self.process_attendance_after),
+				"shift_actual_end": ("<", self.last_sync_of_checkin),
+				"shift": self.name,
+			},
+			order_by="employee,time",
+		)
 
 	def get_attendance(self, logs):
 		"""Return attendance_status, working_hours, late_entry, early_exit, in_time, out_time
