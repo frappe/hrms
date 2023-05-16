@@ -502,7 +502,7 @@ class PayrollEntry(Document):
 				)
 
 			journal_entry.set("accounts", accounts)
-			company_currency = frappe.db.get_value("Company",self.company,"default_currency")
+			company_currency = frappe.db.get_value("Company",self.company, "default_currency")
 			currencies.append(self.currency)
 			if company_currency != self.currency:
 				currencies.append(company_currency)
@@ -737,7 +737,7 @@ class PayrollEntry(Document):
 				)
 			)
 
-		company_currency = frappe.db.get_value("Company",self.company,"default_currency")
+		company_currency = frappe.db.get_value("Company", self.company, "default_currency")
 		currencies.append(self.currency)
 		if company_currency != self.currency:
 			currencies.append(company_currency)
