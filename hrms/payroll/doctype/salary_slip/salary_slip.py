@@ -953,13 +953,11 @@ class SalarySlip(TransactionBase):
 				continue
 
 			amount = self.eval_condition_and_formula(struct_row, self.data)
-
 			if struct_row.statistical_component:
 				# update statitical component amount in reference data based on payment days
 				# since row for statistical component is not added to salary slip
 
 				self.default_data[struct_row.abbr] = amount
-
 				if struct_row.depends_on_payment_days:
 					joining_date, relieving_date = self.get_joining_and_relieving_dates()
 					payment_days_amount = (
