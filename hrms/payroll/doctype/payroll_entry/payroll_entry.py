@@ -502,6 +502,10 @@ class PayrollEntry(Document):
 				)
 
 			journal_entry.set("accounts", accounts)
+			company_currency = frappe.db.get_value("Company",self.company,"default_currency")
+			currencies.append(self.currency)
+			if company_currency != self.currency:
+				currencies.append(company_currency)
 			if len(currencies) > 1:
 				multi_currency = 1
 			journal_entry.multi_currency = multi_currency
@@ -726,13 +730,16 @@ class PayrollEntry(Document):
 						"account": payroll_payable_account,
 						"debit_in_account_currency": flt(amount, precision),
 						"exchange_rate": flt(exchange_rate),
-						"reference_type": self.doctype,
+						"reference_type": self.doctype,f
 						"reference_name": self.name,
 					},
 					accounting_dimensions,
 				)
 			)
-
+		company_currency = frappe.db.get_value("Company",self.company,"default_currency")
+		currencies.append(self.currency)
+		if company_currency != self.currency:
+			currencies.append(company_currency)
 		if len(currencies) > 1:
 			multi_currency = 1
 
