@@ -341,7 +341,7 @@ class TestShiftType(FrappeTestCase):
 
 		default_shift = setup_shift_type()
 		employee = make_employee(
-			"test_employee_checkin@example.com", company="_Test Company", shift_type=default_shift.name
+			"test_employee_checkin@example.com", company="_Test Company", default_shift=default_shift.name
 		)
 
 		assigned_shift = setup_shift_type(shift_type="Test Absent with no Attendance")
@@ -355,11 +355,15 @@ class TestShiftType(FrappeTestCase):
 		log_out = make_checkin(employee, timestamp)
 
 		default_shift.process_auto_attendance()
-		attendance = frappe.db.get_value("Attendance", {"employee": employee}, "status")
+		attendance = frappe.db.get_value(
+			"Attendance", {"employee": employee, "shift": default_shift.name}, "status"
+		)
 		self.assertIsNone(attendance)
 
 		assigned_shift.process_auto_attendance()
-		attendance = frappe.db.get_value("Attendance", {"employee": employee}, "status")
+		attendance = frappe.db.get_value(
+			"Attendance", {"employee": employee, "shift": assigned_shift.name}, "status"
+		)
 		self.assertEqual(attendance, "Present")
 
 	def test_get_start_and_end_dates(self):
