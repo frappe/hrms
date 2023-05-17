@@ -286,7 +286,7 @@ def get_employee_shift(
 	shift_details = get_shift_for_timestamp(employee, for_timestamp)
 
 	# if shift assignment is not found, consider default shift
-	default_shift = frappe.db.get_value("Employee", employee, "default_shift")
+	default_shift = frappe.db.get_value("Employee", employee, "default_shift", cache=True)
 	if not shift_details and consider_default_shift:
 		shift_details = get_shift_details(default_shift, for_timestamp)
 
@@ -462,7 +462,18 @@ def get_shift_details(shift_type_name: str, for_timestamp: datetime = None) -> D
 	if for_timestamp is None:
 		for_timestamp = now_datetime()
 
-	shift_type = frappe.get_doc("Shift Type", shift_type_name)
+	shift_type = frappe.get_cached_value(
+		"Shift Type",
+		shift_type_name,
+		[
+			"name",
+			"start_time",
+			"end_time",
+			"begin_check_in_before_shift_start_time",
+			"allow_check_out_after_shift_end_time",
+		],
+		as_dict=1,
+	)
 	shift_actual_start = shift_type.start_time - timedelta(
 		minutes=shift_type.begin_check_in_before_shift_start_time
 	)
