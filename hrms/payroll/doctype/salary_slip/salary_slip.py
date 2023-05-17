@@ -2,7 +2,6 @@
 # License: GNU General Public License v3. See license.txt
 
 
-import math
 from datetime import date
 
 import frappe
@@ -12,9 +11,11 @@ from frappe.query_builder import Order
 from frappe.query_builder.functions import Sum
 from frappe.utils import (
 	add_days,
+	ceil,
 	cint,
 	cstr,
 	date_diff,
+	floor,
 	flt,
 	formatdate,
 	get_first_day,
@@ -63,6 +64,8 @@ class SalarySlip(TransactionBase):
 			"round": round,
 			"date": date,
 			"getdate": getdate,
+			"ceil": ceil,
+			"floor": floor,
 		}
 
 	def autoname(self):
@@ -710,7 +713,7 @@ class SalarySlip(TransactionBase):
 		# get taxable_earnings for current period (all days)
 		self.current_taxable_earnings = self.get_taxable_earnings(self.tax_slab.allow_tax_exemption)
 		self.future_structured_taxable_earnings = self.current_taxable_earnings.taxable_earnings * (
-			math.ceil(self.remaining_sub_periods) - 1
+			ceil(self.remaining_sub_periods) - 1
 		)
 
 		current_taxable_earnings_before_exemption = (
@@ -718,7 +721,7 @@ class SalarySlip(TransactionBase):
 			+ self.current_taxable_earnings.amount_exempted_from_income_tax
 		)
 		self.future_structured_taxable_earnings_before_exemption = (
-			current_taxable_earnings_before_exemption * (math.ceil(self.remaining_sub_periods) - 1)
+			current_taxable_earnings_before_exemption * (ceil(self.remaining_sub_periods) - 1)
 		)
 
 		# get taxable_earnings, addition_earnings for current actual payment days
@@ -820,7 +823,7 @@ class SalarySlip(TransactionBase):
 
 		# Future period non taxable earnings
 		future_period_non_taxable_earnings = current_period_non_taxable_earnings * (
-			math.ceil(self.remaining_sub_periods) - 1
+			ceil(self.remaining_sub_periods) - 1
 		)
 
 		non_taxable_earnings = (
@@ -883,12 +886,10 @@ class SalarySlip(TransactionBase):
 		for deduction in self._salary_structure_doc.get("deductions"):
 			if deduction.exempted_from_income_tax:
 				if deduction.amount_based_on_formula:
-					for sub_period in range(1, math.ceil(self.remaining_sub_periods)):
+					for sub_period in range(1, ceil(self.remaining_sub_periods)):
 						future_period_exempted_amount += self.get_amount_from_formula(deduction, sub_period)
 				else:
-					future_period_exempted_amount += deduction.amount * (
-						math.ceil(self.remaining_sub_periods) - 1
-					)
+					future_period_exempted_amount += deduction.amount * (ceil(self.remaining_sub_periods) - 1)
 
 		return (
 			prev_period_exempted_amount + current_period_exempted_amount + future_period_exempted_amount
