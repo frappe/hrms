@@ -2,21 +2,15 @@
 	<ion-app>
 		<Menu/>
 		<ion-router-outlet id="main-content" />
+		<Toasts />
 	</ion-app>
 </template>
 
-<script>
+<script setup>
 import { IonApp, IonRouterOutlet } from "@ionic/vue"
 import { defineComponent } from "vue"
 
-import Menu from "@/components/Menu.vue"
+import { Toasts } from "frappe-ui"
 
-export default defineComponent({
-	name: "App",
-	components: {
-		IonApp,
-		IonRouterOutlet,
-		Menu,
-	},
-})
+import Menu from "@/components/Menu.vue"
 </script>

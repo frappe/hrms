@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-	import { createListResource } from "frappe-ui"
+	import { createListResource, toast } from "frappe-ui"
 	import { computed, inject, ref } from "vue"
 	import { IonModal, modalController } from "@ionic/vue"
 
@@ -86,6 +86,8 @@
 	})
 
 	const submitLog = (logType) => {
+		const action = logType === "IN" ? "Check-in" : "Check-out"
+
 		checkins.insert.submit(
 			{
 				employee: employee.data.name,
@@ -95,7 +97,23 @@
 			{
 				onSuccess() {
 					modalController.dismiss()
+					toast({
+						title: "Success",
+						text: `${action} successful!`,
+						icon: "check-circle",
+						position: "bottom-center",
+						iconClasses: "text-green-500",
+					})
 				},
+				onError() {
+					toast({
+						title: "Error",
+						text: `${action} failed!`,
+						icon: "alert-circle",
+						position: "bottom-center",
+						iconClasses: "text-red-500",
+					})
+				}
 			}
 		)
 	}
