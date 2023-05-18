@@ -203,6 +203,36 @@ class LeavePolicyAssignment(Document):
 
 			return period_end_date
 
+		def _calculate_leaves_for_passed_months(consider_current_month):
+			monthly_earned_leave = get_monthly_earned_leave(
+				date_of_joining,
+				annual_allocation,
+				leave_details.earned_leave_frequency,
+				leave_details.rounding,
+				pro_rated=False,
+			)
+
+			period_end_date = _get_pro_rata_period_end_date(consider_current_month)
+
+			if self.effective_from < date_of_joining <= period_end_date:
+				# if the employee joined within the allocation period in some previous month,
+				# calculate pro-rated leave for that month
+				# and normal monthly earned leave for remaining passed months
+				leaves = get_monthly_earned_leave(
+					date_of_joining,
+					annual_allocation,
+					leave_details.earned_leave_frequency,
+					leave_details.rounding,
+					get_first_day(date_of_joining),
+					get_last_day(date_of_joining),
+				)
+
+				leaves += monthly_earned_leave * (months_passed - 1)
+			else:
+				leaves = monthly_earned_leave * months_passed
+
+			return leaves
+
 		consider_current_month = is_earned_leave_applicable_for_current_month(
 			date_of_joining, leave_details.allocate_on_day
 		)
@@ -210,16 +240,7 @@ class LeavePolicyAssignment(Document):
 		months_passed = _get_months_passed(current_date, from_date, consider_current_month)
 
 		if months_passed > 0:
-			period_end_date = _get_pro_rata_period_end_date(consider_current_month)
-			monthly_earned_leave = get_monthly_earned_leave(
-				date_of_joining,
-				annual_allocation,
-				leave_details.earned_leave_frequency,
-				leave_details.rounding,
-				self.effective_from,
-				period_end_date,
-			)
-			new_leaves_allocated = monthly_earned_leave * months_passed
+			new_leaves_allocated = _calculate_leaves_for_passed_months(consider_current_month)
 		else:
 			new_leaves_allocated = 0
 
