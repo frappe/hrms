@@ -968,15 +968,20 @@ class SalarySlip(TransactionBase):
 					self.data[struct_row.abbr] = flt(payment_days_amount, struct_row.precision("amount"))
 
 			else:
-				default_amount = 0
+				# default behavior, the system does not add if component amount is zero
+				# if remove_if_zero_valued is unchecked, then ask system to add component row
 				remove_if_zero_valued = frappe.get_cached_value(
 					"Salary Component", struct_row.salary_component, "remove_if_zero_valued"
 				)
 
-				if amount or struct_row.amount_based_on_formula:
-					default_amount = self.eval_condition_and_formula(struct_row, self.default_data)
+				default_amount = 0
 
-				if amount is not None:
+				if (
+					amount
+					or (struct_row.amount_based_on_formula and amount is not None)
+					or (not remove_if_zero_valued and amount is not None and not self.data[struct_row.abbr])
+				):
+					default_amount = self.eval_condition_and_formula(struct_row, self.default_data)
 					self.update_component_row(
 						struct_row,
 						amount,
