@@ -8,8 +8,9 @@ from typing import Dict, List
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.query_builder import Criterion
-from frappe.utils import cstr, get_datetime, get_link_to_form, get_time, getdate, now_datetime
+from frappe.query_builder import Criterion, Interval
+from frappe.query_builder.functions import Date
+from frappe.utils import cstr, get_link_to_form, get_time, getdate, now_datetime
 
 from hrms.hr.utils import validate_active_employee
 
@@ -197,43 +198,58 @@ def get_shift_for_time(shifts: List[Dict], for_timestamp: datetime) -> Dict:
 	"""Returns shift with details for given timestamp"""
 	valid_shifts = []
 
-	for entry in shifts:
-		shift_details = get_shift_details(entry.shift_type, for_timestamp=for_timestamp)
+	for assignment in shifts:
+		shift_details = get_shift_details(assignment.shift_type, for_timestamp=for_timestamp)
 
-		if (
-			get_datetime(shift_details.actual_start)
-			<= get_datetime(for_timestamp)
-			<= get_datetime(shift_details.actual_end)
-		):
+		if _is_invalid_midnight_shift(shift_details, assignment):
+			continue
+
+		if _is_timestamp_within_shift(shift_details, for_timestamp):
 			valid_shifts.append(shift_details)
 
 	valid_shifts.sort(key=lambda x: x["actual_start"])
 
 	if len(valid_shifts) > 1:
-		for i in range(len(valid_shifts) - 1):
-			# comparing 2 consecutive shifts and adjusting start and end times
-			# if they are overlapping within grace period
-			curr_shift = valid_shifts[i]
-			next_shift = valid_shifts[i + 1]
+		_adjust_overlapping_shifts(valid_shifts)
 
-			if curr_shift and next_shift:
-				next_shift.actual_start = (
-					curr_shift.end_datetime
-					if next_shift.actual_start < curr_shift.end_datetime
-					else next_shift.actual_start
-				)
-				curr_shift.actual_end = (
-					next_shift.actual_start
-					if curr_shift.actual_end > next_shift.actual_start
-					else curr_shift.actual_end
-				)
+	return get_exact_shift(valid_shifts, for_timestamp)
 
-			valid_shifts[i] = curr_shift
-			valid_shifts[i + 1] = next_shift
 
-		return get_exact_shift(valid_shifts, for_timestamp) or {}
+def _is_invalid_midnight_shift(shift_details: dict, assignment: dict) -> bool:
+	"""
+	If log's date is greater than shift assignment's end date,
+	checks whether its a midnight shift or not
+	"""
+	return assignment.end_date and (
+		shift_details.actual_start.date() > assignment.end_date
+		or (
+			shift_details.actual_end.date() > assignment.end_date
+			# start time <= end time, means its not a midnight shift
+			and shift_details.actual_start.time() <= shift_details.actual_end.time()
+		)
+	)
 
-	return (valid_shifts and valid_shifts[0]) or {}
+
+def _is_timestamp_within_shift(shift_details: dict, for_timestamp: datetime) -> bool:
+	"""Checks whether the timestamp is within shift's actual start and end datetime"""
+	return shift_details.actual_start <= for_timestamp <= shift_details.actual_end
+
+
+def _adjust_overlapping_shifts(shifts: dict):
+	"""
+	Compares 2 consecutive shifts and adjusts start and end times
+	if they are overlapping within grace period
+	"""
+	for i in range(len(shifts) - 1):
+		curr_shift = shifts[i]
+		next_shift = shifts[i + 1]
+
+		if curr_shift and next_shift:
+			next_shift.actual_start = max(curr_shift.end_datetime, next_shift.actual_start)
+			curr_shift.actual_end = min(next_shift.actual_start, curr_shift.actual_end)
+
+		shifts[i] = curr_shift
+		shifts[i + 1] = next_shift
 
 
 def get_shifts_for_date(employee: str, for_timestamp: datetime) -> List[Dict[str, str]]:
@@ -242,7 +258,7 @@ def get_shifts_for_date(employee: str, for_timestamp: datetime) -> List[Dict[str
 
 	return (
 		frappe.qb.from_(assignment)
-		.select(assignment.name, assignment.shift_type)
+		.select(assignment.name, assignment.shift_type, assignment.end_date)
 		.where(
 			(assignment.employee == employee)
 			& (assignment.docstatus == 1)
@@ -252,7 +268,11 @@ def get_shifts_for_date(employee: str, for_timestamp: datetime) -> List[Dict[str
 				Criterion.any(
 					[
 						assignment.end_date.isnull(),
-						(assignment.end_date.isnotnull() & (getdate(for_timestamp.date()) <= assignment.end_date)),
+						(
+							assignment.end_date.isnotnull()
+							# for midnight shifts, valid assignments are upto 1 day prior
+							& (Date(for_timestamp) - Interval(days=1) <= assignment.end_date)
+						),
 					]
 				)
 			)
