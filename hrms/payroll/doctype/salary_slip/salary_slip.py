@@ -68,12 +68,18 @@ class SalarySlip(TransactionBase):
 	def autoname(self):
 		self.name = make_autoname(self.series)
 
+	@property
+	def payroll_period(self):
+		if not hasattr(self, "_payroll_period"):
+			self._payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
+
+		return self._payroll_period
+
 	def validate(self):
 		self.status = self.get_status()
 		validate_active_employee(self.employee)
 		self.validate_dates()
 		self.check_existing()
-		self.set_payroll_period()
 
 		if not self.salary_slip_based_on_timesheet:
 			self.get_date_details()
@@ -102,9 +108,6 @@ class SalarySlip(TransactionBase):
 					),
 					alert=True,
 				)
-
-	def set_payroll_period(self):
-		self.payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
 
 	def set_net_total_in_words(self):
 		doc_currency = self.currency
@@ -233,7 +236,6 @@ class SalarySlip(TransactionBase):
 			if not self.salary_slip_based_on_timesheet:
 				self.get_date_details()
 
-			self.set_payroll_period()
 			joining_date, relieving_date = frappe.get_cached_value(
 				"Employee", self.employee, ("date_of_joining", "relieving_date")
 			)
@@ -951,10 +953,11 @@ class SalarySlip(TransactionBase):
 				continue
 
 			amount = self.eval_condition_and_formula(struct_row, self.data)
-
 			if struct_row.statistical_component:
 				# update statitical component amount in reference data based on payment days
 				# since row for statistical component is not added to salary slip
+
+				self.default_data[struct_row.abbr] = amount
 				if struct_row.depends_on_payment_days:
 					joining_date, relieving_date = self.get_joining_and_relieving_dates()
 					payment_days_amount = (
@@ -962,20 +965,23 @@ class SalarySlip(TransactionBase):
 						if self.total_working_days
 						else 0
 					)
-
-					self.default_data[struct_row.abbr] = amount
 					self.data[struct_row.abbr] = flt(payment_days_amount, struct_row.precision("amount"))
 
 			else:
-				default_amount = 0
+				# default behavior, the system does not add if component amount is zero
+				# if remove_if_zero_valued is unchecked, then ask system to add component row
 				remove_if_zero_valued = frappe.get_cached_value(
 					"Salary Component", struct_row.salary_component, "remove_if_zero_valued"
 				)
 
-				if amount or struct_row.amount_based_on_formula:
-					default_amount = self.eval_condition_and_formula(struct_row, self.default_data)
+				default_amount = 0
 
-				if amount is not None:
+				if (
+					amount
+					or (struct_row.amount_based_on_formula and amount is not None)
+					or (not remove_if_zero_valued and amount is not None and not self.data[struct_row.abbr])
+				):
+					default_amount = self.eval_condition_and_formula(struct_row, self.default_data)
 					self.update_component_row(
 						struct_row,
 						amount,
@@ -1810,9 +1816,6 @@ class SalarySlip(TransactionBase):
 		self.pull_emp_details()
 		self.get_working_days_details(for_preview=for_preview)
 
-		if not hasattr(self, "payroll_period"):
-			self.set_payroll_period()
-
 		self.calculate_net_pay()
 
 	def pull_emp_details(self):
@@ -1946,8 +1949,6 @@ class SalarySlip(TransactionBase):
 				component.year_to_date = year_to_date
 
 	def get_year_to_date_period(self):
-		self.payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
-
 		if self.payroll_period:
 			period_start_date = self.payroll_period.start_date
 			period_end_date = self.payroll_period.end_date
