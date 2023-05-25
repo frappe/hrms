@@ -211,6 +211,28 @@ def get_attendance_map(filters: Filters) -> Dict:
 	        }
 	}
 	"""
+	attendance_list = get_attendance_records(filters)
+	attendance_map = {}
+	leave_map = {}
+
+	for d in attendance_list:
+		if d.status == "On Leave":
+			leave_map.setdefault(d.employee, []).append(d.day_of_month)
+			continue
+
+		attendance_map.setdefault(d.employee, frappe._dict()).setdefault(d.shift, frappe._dict())
+		attendance_map[d.employee][d.shift][d.day_of_month] = d.status
+
+	# leave is applicable for the entire day so all shifts should show the leave entry
+	for employee, leave_days in leave_map.items():
+		for day in leave_days:
+			for shift in attendance_map[employee].keys():
+				attendance_map[employee][shift][day] = "On Leave"
+
+	return attendance_map
+
+
+def get_attendance_records(filters: Filters) -> List[Dict]:
 	Attendance = frappe.qb.DocType("Attendance")
 	query = (
 		frappe.qb.from_(Attendance)
@@ -227,18 +249,12 @@ def get_attendance_map(filters: Filters) -> Dict:
 			& (Extract("year", Attendance.attendance_date) == filters.year)
 		)
 	)
+
 	if filters.employee:
 		query = query.where(Attendance.employee == filters.employee)
 	query = query.orderby(Attendance.employee, Attendance.attendance_date)
 
-	attendance_list = query.run(as_dict=1)
-	attendance_map = {}
-
-	for d in attendance_list:
-		attendance_map.setdefault(d.employee, frappe._dict()).setdefault(d.shift, frappe._dict())
-		attendance_map[d.employee][d.shift][d.day_of_month] = d.status
-
-	return attendance_map
+	return query.run(as_dict=1)
 
 
 def get_employee_related_details(filters: Filters) -> Tuple[Dict, List]:
@@ -595,15 +611,17 @@ def get_chart_data(attendance_map: Dict, filters: Filters) -> Dict:
 			for shift, attendance in attendance_dict.items():
 				attendance_on_day = attendance.get(day["fieldname"])
 
-				if attendance_on_day == "Absent":
+				if attendance_on_day == "On Leave":
+					# leave should be counted only once for the entire day
+					total_leaves_on_day += 1
+					break
+				elif attendance_on_day == "Absent":
 					total_absent_on_day += 1
 				elif attendance_on_day in ["Present", "Work From Home"]:
 					total_present_on_day += 1
 				elif attendance_on_day == "Half Day":
 					total_present_on_day += 0.5
 					total_leaves_on_day += 0.5
-				elif attendance_on_day == "On Leave":
-					total_leaves_on_day += 1
 
 		absent.append(total_absent_on_day)
 		present.append(total_present_on_day)
