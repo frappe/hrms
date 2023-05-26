@@ -10,7 +10,44 @@ import { webserver_port } from "../../../sites/common_site_config.json"
 export default defineConfig({
 	plugins: [
 		vue(),
-		VitePWA(),
+		VitePWA({
+			registerType: "autoUpdate",
+			devOptions: {
+				enabled: true,
+			},
+			manifest: {
+				display: "standalone",
+				name: "Frappe HR",
+				short_name: "Frappe HR",
+				description: "Everyday HR & Payroll operations at your fingertips",
+				icons: [
+					{
+						"src": "/assets/hrms/manifest/manifest-icon-192.maskable.png",
+						"sizes": "192x192",
+						"type": "image/png",
+						"purpose": "any"
+					},
+					{
+						"src": "/assets/hrms/manifest/manifest-icon-192.maskable.png",
+						"sizes": "192x192",
+						"type": "image/png",
+						"purpose": "maskable"
+					},
+					{
+						"src": "/assets/hrms/manifest/manifest-icon-512.maskable.png",
+						"sizes": "512x512",
+						"type": "image/png",
+						"purpose": "any"
+					},
+					{
+						"src": "/assets/hrms/manifest/manifest-icon-512.maskable.png",
+						"sizes": "512x512",
+						"type": "image/png",
+						"purpose": "maskable"
+					}
+				]
+			}
+		}),
 	],
 	server: {
 		port: 8080,
