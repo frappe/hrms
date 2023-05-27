@@ -13,33 +13,29 @@
 
 import { inject, ref } from "vue"
 import TabButtons from "@/components/TabButtons.vue"
-import { createListResource, toast } from "frappe-ui"
+import { createResource, createListResource, toast } from "frappe-ui"
 import RequestsList from "@/components/RequestsList.vue"
 
 const employee = inject("$employee")
 const activeTab = ref("My Requests")
 
-const myRequests = createListResource({
-	doctype: "Leave Application",
-	fields: ["name", "employee", "employee_name", "leave_type", "status", "from_date", "to_date"],
-	filters: {
+const myRequests = createResource({
+	url: "hrms.api.get_employee_leave_applications",
+	params: {
 		employee: employee.data.name,
-		status: ["!=", "Cancelled"],
 	},
-	orderBy: "from_date desc",
+	cache: "MyLeaveRequests",
+	auto: true
 })
-myRequests.reload()
 
-const teamRequests = createListResource({
-	doctype: "Leave Application",
-	fields: ["name", "employee", "employee_name", "leave_type", "status", "from_date", "to_date"],
-	filters: {
-		leave_approver: employee.data.user_id,
-		status: ["!=", "Cancelled"],
-		employee: ["!=", employee.data.name],
+const teamRequests = createResource({
+	url: "hrms.api.get_team_leave_applications",
+	params: {
+		employee: employee.data.name,
+		user_id: employee.data.user_id,
 	},
-	orderBy: "from_date desc"
+	cache: "TeamLeaveRequests",
+	auto: true
 })
-teamRequests.reload()
 
 </script>
