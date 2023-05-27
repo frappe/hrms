@@ -1,6 +1,6 @@
 <template>
 	<Avatar
-		v-if="empID"
+		v-if="employeeID"
 		:label="employee?.employee_name"
 		:imageURL="employee?.image"
 		:size="props.size"
@@ -11,10 +11,10 @@
 
 import { computed } from "vue"
 import { Avatar } from "frappe-ui"
-import { employeeInfo } from "@/data/employees"
+import { getEmployeeInfo } from "@/data/employees"
 
 const props = defineProps({
-	empID: {
+	employeeID: {
 		type: String,
 	},
 	size: {
@@ -23,6 +23,6 @@ const props = defineProps({
 	},
 })
 
-const employee = computed(() => employeeInfo(props.empID))
+const employee = computed(() => getEmployeeInfo(props.employeeID))
 
 </script>

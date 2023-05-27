@@ -23,10 +23,9 @@ export const employees = createResource({
 	},
 })
 
-export function employeeInfo(empID) {
-	if (!empID)
-		empID = employeeResource.data.name
+export function getEmployeeInfo(employeeID) {
+	if (!employeeID)
+		employeeID = employeeResource.data.name
 
-	return employeesByID[empID]
+	return employeesByID[employeeID]
 }
-

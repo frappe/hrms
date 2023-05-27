@@ -9,7 +9,7 @@
 					<div class="flex flex-row items-start gap-3 grow">
 						<FeatherIcon name="calendar" class="h-5 w-5 text-gray-500" />
 						<div class="flex flex-col items-start">
-							<div class="text-base font-normal text-gray-800">{{ link.leave_type }}</div>
+							<div class="text-lg font-normal text-gray-800">{{ link.leave_type }}</div>
 							<div class="text-sm font-normal text-gray-500">
 								<span>{{ get_leave_dates(link) }}</span>
 								<span class="whitespace-pre"> &middot; </span>
@@ -23,7 +23,7 @@
 					</div>
 				</div>
 				<div v-if="props.teamRequests" class="flex flex-row items-center gap-2 pl-8">
-					<EmployeeAvatar :empID="link.employee"/>
+					<EmployeeAvatar :employeeID="link.employee"/>
 					<div class="text-sm text-gray-600 grow">{{ link.employee_name }}</div>
 				</div>
 			</div>
