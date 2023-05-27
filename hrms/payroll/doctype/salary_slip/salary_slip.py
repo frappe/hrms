@@ -950,7 +950,8 @@ class SalarySlip(TransactionBase):
 			if self.salary_slip_based_on_timesheet and struct_row.salary_component == timesheet_component:
 				continue
 
-			amount = self.eval_condition_and_formula(struct_row, self.data)
+			amount = self.eval_condition_and_formula(struct_row, self.data) or 0
+			
 			if struct_row.statistical_component:
 				# update statitical component amount in reference data based on payment days
 				# since row for statistical component is not added to salary slip
