@@ -1290,6 +1290,42 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertEqual(earnings["Arrear"], 0.0)
 		self.assertNotIn("Overtime", earnings)
 
+	def test_component_default_amount_against_statistical_component(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+			create_salary_structure_assignment,
+		)
+
+		emp = make_employee(
+			"test_default_value_for_statistical_component@salary.com",
+			company="_Test Company",
+			**{"date_of_joining": "2021-12-01"},
+		)
+
+		salary_structure_doc = make_salary_structure_for_statistical_component("_Test Company")
+
+		create_salary_structure_assignment(
+			employee=emp,
+			salary_structure=salary_structure_doc.name,
+			company="_Test Company",
+			currency="INR",
+			base=40000,
+		)
+
+		# Create Salary Slip
+		salary_slip = make_salary_slip(salary_structure_doc.name, employee=emp, posting_date=nowdate())
+
+		for earning in salary_slip.earnings:
+			if earning.salary_component == "Leave Travel Allowance":
+				# formula for statistical component is, SC = base - BS - H
+				# formula for Leave Travel Allowance is , LTA = base - SC
+				# base = 40000
+				# BS = base * 0.4 = 16000
+				# H = 3000
+				# SC = 40000 - 16000 - 3000 = 21000
+				# LTA = 40000 - 21000 = 19000
+
+				self.assertEqual(earning.default_amount, 19000)
+
 
 def get_no_of_days():
 	no_of_days_in_month = calendar.monthrange(getdate(nowdate()).year, getdate(nowdate()).month)
@@ -2025,3 +2061,73 @@ def create_additional_salary_for_non_taxable_component(employee, payroll_period,
 	).insert()
 
 	add_sal.submit()
+
+
+def make_salary_structure_for_statistical_component(company):
+	earnings = [
+		{
+			"salary_component": "Basic Component",
+			"abbr": "BSC",
+			"formula": "base * 0.4",
+			"type": "Earning",
+			"amount_based_on_formula": 1,
+		},
+		{"salary_component": "HRA Component", "abbr": "HRAC", "amount": 3000, "type": "Earning"},
+		{
+			"salary_component": "Statistical Component",
+			"abbr": "SC",
+			"type": "Earning",
+			"formula": "base - BSC - HRAC",
+			"statistical_component": 1,
+			"amount_based_on_formula": 1,
+			"depends_on_payment_days": 0,
+		},
+		{
+			"salary_component": "Leave Travel Allowance",
+			"abbr": "LTA",
+			"formula": "base - SC",
+			"type": "Earning",
+			"amount_based_on_formula": 1,
+			"depends_on_payment_days": 0,
+		},
+	]
+
+	make_salary_component(earnings, False, company_list=[company])
+
+	deductions = [
+		{
+			"salary_component": "P - Professional Tax",
+			"abbr": "P_PT",
+			"type": "Deduction",
+			"depends_on_payment_days": 1,
+			"amount": 200.00,
+		},
+	]
+
+	make_salary_component(deductions, False, company_list=["_Test Company"])
+
+	salary_structure = "Salary Structure with Statistical Component"
+	if frappe.db.exists("Salary Structure", salary_structure):
+		frappe.db.delete("Salary Structure", salary_structure)
+
+	details = {
+		"doctype": "Salary Structure",
+		"name": salary_structure,
+		"company": "_Test Company",
+		"payroll_frequency": "Monthly",
+		"payment_account": get_random("Account", filters={"account_currency": "INR"}),
+		"currency": "INR",
+	}
+
+	salary_structure_doc = frappe.get_doc(details)
+
+	for entry in earnings:
+		salary_structure_doc.append("earnings", entry)
+
+	for entry in deductions:
+		salary_structure_doc.append("deductions", entry)
+
+	salary_structure_doc.insert()
+	salary_structure_doc.submit()
+
+	return salary_structure_doc
