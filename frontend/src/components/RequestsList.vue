@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col bg-white rounded-lg mt-5 overflow-auto" v-if="items">
 		<div
-			class="flex flex-row p-3.5 items-center justify-between border-b"
+			class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
 			v-for="link in props.items" :key="link.name"
 		>
 			<div class="flex flex-col w-full justify-center gap-2.5">
@@ -11,9 +11,9 @@
 						<div class="flex flex-col items-start">
 							<div class="text-lg font-normal text-gray-800">{{ link.leave_type }}</div>
 							<div class="text-sm font-normal text-gray-500">
-								<span>{{ get_leave_dates(link) }}</span>
+								<span>{{ link.leave_dates }}</span>
 								<span class="whitespace-pre"> &middot; </span>
-								<span class="whitespace-nowrap">{{ get_leave_duration(link) }}</span>
+								<span class="whitespace-nowrap">{{ link.total_leave_days }}</span>
 							</div>
 						</div>
 					</div>
@@ -36,7 +36,6 @@
 
 import { FeatherIcon, Badge, Avatar } from "frappe-ui"
 import dayjs from "@/utils/dayjs"
-import { computed } from "vue"
 
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 
@@ -54,18 +53,6 @@ const colorMap = {
 	Approved: "green",
 	Rejected: "red",
 	Open: "yellow"
-}
-
-const get_leave_dates = (leave) => {
-	if (leave.from_date == leave.to_date)
-		return dayjs(leave.from_date).format("D MMM")
-	else
-		return `${dayjs(leave.from_date).format("D MMM")} - ${dayjs(leave.to_date).format("D MMM")}`
-}
-
-const get_leave_duration = (leave) => {
-	const diff = dayjs(leave.to_date).diff(dayjs(leave.from_date), "day") + 1
-	return `${diff}d`
 }
 
 </script>
