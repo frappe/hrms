@@ -8,7 +8,7 @@
 					<div class="text-sm font-normal text-gray-500">
 						<span>{{ props.leave.leave_dates }}</span>
 						<span class="whitespace-pre"> &middot; </span>
-						<span class="whitespace-nowrap">{{ props.leave.total_leave_days }}</span>
+						<span class="whitespace-nowrap">{{ `${props.leave.total_leave_days}d` }}</span>
 					</div>
 				</div>
 			</div>

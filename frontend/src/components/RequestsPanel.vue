@@ -12,10 +12,11 @@
 <script setup>
 
 import { inject, ref } from "vue"
-import TabButtons from "@/components/TabButtons.vue"
 import { createResource, createListResource, toast } from "frappe-ui"
-import RequestsList from "@/components/RequestsList.vue"
 import dayjs from "@/utils/dayjs"
+
+import TabButtons from "@/components/TabButtons.vue"
+import RequestsList from "@/components/RequestsList.vue"
 
 const employee = inject("$employee")
 const activeTab = ref("My Requests")
@@ -48,7 +49,6 @@ const teamRequests = createResource({
 const transformLeaveData = (data) => {
 	return data.map((leave) => {
 		leave.leave_dates = get_leave_dates(leave)
-		leave.total_leave_days = `${leave.total_leave_days}d`
 		leave.doctype = "Leave Application"
 		return leave
 	})
