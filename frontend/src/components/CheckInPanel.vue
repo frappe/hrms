@@ -119,9 +119,3 @@
 	}
 
 </script>
-
-<style scoped>
-	ion-modal {
-		--height: auto;
-	}
-</style>

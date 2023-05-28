@@ -49,6 +49,7 @@ const transformLeaveData = (data) => {
 	return data.map((leave) => {
 		leave.leave_dates = get_leave_dates(leave)
 		leave.total_leave_days = `${leave.total_leave_days}d`
+		leave.doctype = "Leave Application"
 		return leave
 	})
 }
