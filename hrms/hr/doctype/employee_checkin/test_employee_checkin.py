@@ -249,14 +249,13 @@ class TestEmployeeCheckin(FrappeTestCase):
 		log.delete()
 
 		# log falls in the second day
-		prev_day = add_days(date, -1)
-		timestamp = datetime.combine(date, get_time("01:30:00"))
+		timestamp = datetime.combine(next_day, get_time("01:30:00"))
 		log = make_checkin(employee, timestamp)
 		self.assertEqual(log.shift, shift_type.name)
-		self.assertEqual(log.shift_start, datetime.combine(prev_day, get_time("23:00:00")))
-		self.assertEqual(log.shift_end, datetime.combine(date, get_time("01:00:00")))
-		self.assertEqual(log.shift_actual_start, datetime.combine(prev_day, get_time("22:00:00")))
-		self.assertEqual(log.shift_actual_end, datetime.combine(date, get_time("02:00:00")))
+		self.assertEqual(log.shift_start, datetime.combine(date, get_time("23:00:00")))
+		self.assertEqual(log.shift_end, datetime.combine(next_day, get_time("01:00:00")))
+		self.assertEqual(log.shift_actual_start, datetime.combine(date, get_time("22:00:00")))
+		self.assertEqual(log.shift_actual_end, datetime.combine(next_day, get_time("02:00:00")))
 
 	def test_consecutive_shift_assignments_overlapping_within_grace_period(self):
 		# test adjustment for start and end times if they are overlapping
