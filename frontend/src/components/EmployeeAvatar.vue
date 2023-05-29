@@ -1,6 +1,16 @@
 <template>
+	<div v-if="showLabel" class="flex flex-row items-center gap-2">
+		<Avatar
+			v-if="employeeID"
+			:label="employee?.employee_name"
+			:imageURL="employee?.image"
+			:size="props.size"
+		/>
+		<div class="text-base text-gray-800 grow">{{ employee?.employee_name }}</div>
+	</div>
+
 	<Avatar
-		v-if="employeeID"
+		v-else
 		:label="employee?.employee_name"
 		:imageURL="employee?.image"
 		:size="props.size"
@@ -21,6 +31,10 @@ const props = defineProps({
 		type: String,
 		default: "sm",
 	},
+	showLabel: {
+		type: Boolean,
+		default: false,
+	}
 })
 
 const employee = computed(() => getEmployeeInfo(props.employeeID))

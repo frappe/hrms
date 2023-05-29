@@ -3,11 +3,6 @@
 
 export const LEAVE_FIELDS = [
 	{
-		"fieldname": "employee",
-		"label": "Employee",
-		"fieldtype": "Link",
-	},
-	{
 		"fieldname": "leave_type",
 		"label": "Leave Type",
 		"fieldtype": "Link",
@@ -31,6 +26,11 @@ export const LEAVE_FIELDS = [
 		"fieldname": "total_leave_days",
 		"label": "Total Leave Days",
 		"fieldtype": "Float",
+	},
+	{
+		"fieldname": "employee",
+		"label": "Employee",
+		"fieldtype": "Link",
 	},
 	{
 		"fieldname": "leave_balance",
