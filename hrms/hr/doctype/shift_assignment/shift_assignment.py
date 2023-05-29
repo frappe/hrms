@@ -95,24 +95,30 @@ def has_overlapping_timings(shift_1: str, shift_2: str) -> bool:
 	"""
 	Accepts two shift types and checks whether their timings are overlapping
 	"""
-	curr_shift = frappe.db.get_value("Shift Type", shift_1, ["start_time", "end_time"], as_dict=True)
-	overlapping_shift = frappe.db.get_value(
-		"Shift Type", shift_2, ["start_time", "end_time"], as_dict=True
-	)
+	if shift_1 == shift_2:
+		return True
+
+	s1 = frappe.db.get_value("Shift Type", shift_1, ["start_time", "end_time"], as_dict=True)
+	s2 = frappe.db.get_value("Shift Type", shift_2, ["start_time", "end_time"], as_dict=True)
 
 	if (
-		(
-			curr_shift.start_time > overlapping_shift.start_time
-			and curr_shift.start_time < overlapping_shift.end_time
-		)
-		or (
-			curr_shift.end_time > overlapping_shift.start_time
-			and curr_shift.end_time < overlapping_shift.end_time
-		)
-		or (
-			curr_shift.start_time <= overlapping_shift.start_time
-			and curr_shift.end_time >= overlapping_shift.end_time
-		)
+		# shift 1 spans across 2 days
+		s1.start_time > s1.end_time
+		and s1.start_time < s2.end_time
+		or s1.start_time > s1.end_time
+		and s2.start_time < s1.end_time
+		or s1.start_time > s1.end_time
+		and s2.start_time > s2.end_time
+		or
+		# both shifts fall on the same day
+		s1.start_time < s2.end_time
+		and s2.start_time < s1.end_time
+		or
+		# shift 2 spans across 2 days
+		s1.start_time < s2.end_time
+		and s2.start_time > s2.end_time
+		or s2.start_time < s1.end_time
+		and s2.start_time > s2.end_time
 	):
 		return True
 	return False
