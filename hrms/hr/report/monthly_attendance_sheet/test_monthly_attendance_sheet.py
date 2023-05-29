@@ -62,7 +62,7 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		self.assertEqual(leaves[2], 1)
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
-	def test_monthly_attendance_sheet_with_detailed_view(self):
+	def test_detailed_view(self):
 		previous_month_first = get_first_day_for_prev_month()
 		company = frappe.db.get_value("Employee", self.employee, "company")
 
@@ -93,11 +93,45 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		self.assertEqual(day_shift_row[2], "P")  # present on the 2nd day
 
 		self.assertEqual(row_without_shift["shift"], None)
-		self.assertEqual(row_without_shift[3], "L")  # on leave on the 3rd day
 		self.assertEqual(row_without_shift[4], "P")  # present on the 4th day
 
+		# leave should be shown against every shift
+		self.assertTrue(day_shift_row[3] == row_without_shift[3] == "L")
+
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
-	def test_monthly_attendance_sheet_with_summarized_view(self):
+	def test_single_shift_with_leaves_in_detailed_view(self):
+		previous_month_first = get_first_day_for_prev_month()
+		company = frappe.db.get_value("Employee", self.employee, "company")
+
+		# attendance with shift
+		mark_attendance(self.employee, previous_month_first, "Absent", "Day Shift")
+		mark_attendance(
+			self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift"
+		)
+
+		# attendance without shift
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "On Leave")
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": company,
+			}
+		)
+		report = execute(filters=filters)
+		# do not split for leave record
+		self.assertEqual(len(report[1]), 1)
+
+		day_shift_row = report[1][0]
+
+		self.assertEqual(day_shift_row["shift"], "Day Shift")
+		self.assertEqual(day_shift_row[1], "A")  # absent on the 1st day of the month
+		self.assertEqual(day_shift_row[2], "P")  # present on the 2nd day
+		self.assertEqual(day_shift_row[3], "L")  # leave on the 3rd day
+
+	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	def test_summarized_view(self):
 		previous_month_first = get_first_day_for_prev_month()
 		company = frappe.db.get_value("Employee", self.employee, "company")
 

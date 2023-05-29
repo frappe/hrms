@@ -5,11 +5,15 @@ import unittest
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from frappe.utils import add_days, getdate, nowdate
+from frappe.utils import add_days, get_datetime, getdate, nowdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
-from hrms.hr.doctype.shift_assignment.shift_assignment import OverlappingShiftError, get_events
+from hrms.hr.doctype.shift_assignment.shift_assignment import (
+	OverlappingShiftError,
+	get_employee_shift_timings,
+	get_events,
+)
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
 
 test_dependencies = ["Shift Type"]
@@ -170,3 +174,35 @@ class TestShiftAssignment(FrappeTestCase):
 		)
 		self.assertEqual(len(events), 1)
 		self.assertEqual(events[0]["name"], shift1.name)
+
+	def test_same_prev_shift_for_curr_shift(self):
+		# defaults
+		employee = make_employee("test_shift_assignment@example.com", company="_Test Company")
+		today = getdate()
+		yesterday = add_days(today, -1)
+
+		# default shift
+		shift_type = setup_shift_type(
+			shift_type="Test Security", start_time="07:00:00", end_time="19:00:00"
+		)
+		frappe.db.set_value("Employee", employee, "default_shift", shift_type.name)
+
+		# night shift
+		shift_type = setup_shift_type(
+			shift_type="Test Security - Night", start_time="19:00:00", end_time="07:00:00"
+		)
+		make_shift_assignment(shift_type.name, employee, yesterday, yesterday)
+
+		# get shifts based on IN timestamp of default shift
+		prev_shift_in, curr_shift_in, _ = get_employee_shift_timings(
+			employee, get_datetime(f"{today} 07:01:00"), True
+		)
+
+		# get shifts based on OUT timestamp of default shift
+		prev_shift_out, curr_shift_out, _ = get_employee_shift_timings(
+			employee, get_datetime(f"{today} 19:00:00"), True
+		)
+
+		# ensure that previous and current shift matches
+		self.assertEqual(prev_shift_in, prev_shift_out)
+		self.assertEqual(curr_shift_in, curr_shift_out)

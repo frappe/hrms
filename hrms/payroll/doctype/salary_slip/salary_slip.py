@@ -918,9 +918,7 @@ class SalarySlip(TransactionBase):
 		local_data = self.data.copy()
 		local_data.update({"start_date": start_date, "end_date": end_date, "posting_date": posting_date})
 
-		amount = self.eval_condition_and_formula(struct_row, local_data)
-
-		return amount
+		return flt(self.eval_condition_and_formula(struct_row, local_data))
 
 	def get_income_tax_deducted_till_date(self):
 		tax_deducted = 0.0
