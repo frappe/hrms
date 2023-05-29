@@ -103,22 +103,14 @@ def has_overlapping_timings(shift_1: str, shift_2: str) -> bool:
 
 	if (
 		# shift 1 spans across 2 days
-		s1.start_time > s1.end_time
-		and s1.start_time < s2.end_time
-		or s1.start_time > s1.end_time
-		and s2.start_time < s1.end_time
-		or s1.start_time > s1.end_time
-		and s2.start_time > s2.end_time
-		or
+		(s1.start_time > s1.end_time and s1.start_time < s2.end_time)
+		or (s1.start_time > s1.end_time and s2.start_time < s1.end_time)
+		or (s1.start_time > s1.end_time and s2.start_time > s2.end_time)
 		# both shifts fall on the same day
-		s1.start_time < s2.end_time
-		and s2.start_time < s1.end_time
-		or
+		or (s1.start_time < s2.end_time and s2.start_time < s1.end_time)
 		# shift 2 spans across 2 days
-		s1.start_time < s2.end_time
-		and s2.start_time > s2.end_time
-		or s2.start_time < s1.end_time
-		and s2.start_time > s2.end_time
+		or (s1.start_time < s2.end_time and s2.start_time > s2.end_time)
+		or (s2.start_time < s1.end_time and s2.start_time > s2.end_time)
 	):
 		return True
 	return False
@@ -207,7 +199,7 @@ def get_shift_for_time(shifts: List[Dict], for_timestamp: datetime) -> Dict:
 	for assignment in shifts:
 		shift_details = get_shift_details(assignment.shift_type, for_timestamp=for_timestamp)
 
-		if _is_invalid_midnight_shift(shift_details, assignment):
+		if _is_shift_outside_assignment_period(shift_details, assignment):
 			continue
 
 		if _is_timestamp_within_shift(shift_details, for_timestamp):
@@ -221,19 +213,27 @@ def get_shift_for_time(shifts: List[Dict], for_timestamp: datetime) -> Dict:
 	return get_exact_shift(valid_shifts, for_timestamp)
 
 
-def _is_invalid_midnight_shift(shift_details: dict, assignment: dict) -> bool:
+def _is_shift_outside_assignment_period(shift_details: dict, assignment: dict) -> bool:
 	"""
 	If log's date is greater than shift assignment's end date,
 	checks whether its a midnight shift or not
 	"""
-	return assignment.end_date and (
-		shift_details.actual_start.date() > assignment.end_date
-		or (
+	if shift_details.actual_start.date() < assignment.start_date:
+		return True
+
+	if assignment.end_date:
+		if shift_details.actual_start.date() > assignment.end_date:
+			return True
+
+		# log's end date can only exceed assignment's end date if its a midnight shift
+		if (
 			shift_details.actual_end.date() > assignment.end_date
 			# start time <= end time, means its not a midnight shift
 			and shift_details.actual_start.time() <= shift_details.actual_end.time()
-		)
-	)
+		):
+			return True
+
+	return False
 
 
 def _is_timestamp_within_shift(shift_details: dict, for_timestamp: datetime) -> bool:
@@ -264,7 +264,7 @@ def get_shifts_for_date(employee: str, for_timestamp: datetime) -> List[Dict[str
 
 	return (
 		frappe.qb.from_(assignment)
-		.select(assignment.name, assignment.shift_type, assignment.end_date)
+		.select(assignment.name, assignment.shift_type, assignment.start_date, assignment.end_date)
 		.where(
 			(assignment.employee == employee)
 			& (assignment.docstatus == 1)
