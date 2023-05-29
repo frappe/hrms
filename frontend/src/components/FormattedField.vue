@@ -9,9 +9,17 @@
 		{{ dayjs(props.value).format("D MMM") }}
 	</div>
 
+	<Input
+		v-else-if="props.fieldtype === 'Check'"
+		type="checkbox"
+		label=""
+		v-model="props.value"
+		:disabled="true"
+	/>
+
 	<EmployeeAvatar
 		v-else-if="props.fieldtype === 'Link' && props.fieldname === 'employee'"
-		:employeeID="props.value" showLabel="true"
+		:employeeID="props.value" :showLabel="true"
 	/>
 
 	<div v-else class="text-gray-900 text-base">{{ props.value }}</div>
@@ -19,9 +27,9 @@
 
 <script setup>
 
-import { Badge } from "frappe-ui"
-import dayjs from "@/utils/dayjs"
+import { Badge, Input } from "frappe-ui"
 
+import dayjs from "@/utils/dayjs"
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 
 const props = defineProps({
