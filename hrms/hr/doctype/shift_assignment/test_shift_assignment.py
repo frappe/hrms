@@ -11,7 +11,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.shift_assignment.shift_assignment import (
 	OverlappingShiftError,
-	get_employee_shift_timings,
+	get_actual_start_end_datetime_of_shift,
 	get_events,
 )
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
@@ -210,7 +210,7 @@ class TestShiftAssignment(FrappeTestCase):
 		self.assertEqual(len(events), 1)
 		self.assertEqual(events[0]["name"], shift1.name)
 
-	def test_same_prev_shift_for_curr_shift(self):
+	def test_consecutive_day_and_night_shifts(self):
 		# defaults
 		employee = make_employee("test_shift_assignment@example.com", company="_Test Company")
 		today = getdate()
@@ -228,16 +228,22 @@ class TestShiftAssignment(FrappeTestCase):
 		)
 		make_shift_assignment(shift_type.name, employee, yesterday, yesterday)
 
-		# get shifts based on IN timestamp of default shift
-		prev_shift_in, curr_shift_in, _ = get_employee_shift_timings(
+		# prev shift log
+		prev_shift = get_actual_start_end_datetime_of_shift(
+			employee, get_datetime(f"{today} 07:00:00"), True
+		)
+		self.assertEqual(prev_shift.shift_type.name, "Test Security - Night")
+		self.assertEqual(prev_shift.actual_start.date(), yesterday)
+		self.assertEqual(prev_shift.actual_end.date(), today)
+
+		# current shift IN
+		checkin = get_actual_start_end_datetime_of_shift(
 			employee, get_datetime(f"{today} 07:01:00"), True
 		)
-
-		# get shifts based on OUT timestamp of default shift
-		prev_shift_out, curr_shift_out, _ = get_employee_shift_timings(
+		# current shift OUT
+		checkout = get_actual_start_end_datetime_of_shift(
 			employee, get_datetime(f"{today} 19:00:00"), True
 		)
-
-		# ensure that previous and current shift matches
-		self.assertEqual(prev_shift_in, prev_shift_out)
-		self.assertEqual(curr_shift_in, curr_shift_out)
+		self.assertEqual(checkin.shift_type, checkout.shift_type)
+		self.assertEqual(checkin.actual_start.date(), today)
+		self.assertEqual(checkout.actual_end.date(), today)
