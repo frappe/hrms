@@ -760,6 +760,7 @@ class PayrollEntry(Document):
 			self.update_accounting_dimensions(
 				{
 					"account": self.payment_account,
+					"cost_center": self.cost_center,
 					"bank_account": self.bank_account,
 					"credit_in_account_currency": flt(amount, precision),
 					"exchange_rate": flt(exchange_rate),
@@ -781,6 +782,7 @@ class PayrollEntry(Document):
 					self.update_accounting_dimensions(
 						{
 							"account": payroll_payable_account,
+							"cost_center": self.cost_center,
 							"debit_in_account_currency": flt(amount, precision),
 							"exchange_rate": flt(exchange_rate),
 							"reference_type": self.doctype,
@@ -799,6 +801,7 @@ class PayrollEntry(Document):
 				self.update_accounting_dimensions(
 					{
 						"account": payroll_payable_account,
+						"cost_center": self.cost_center,
 						"debit_in_account_currency": flt(amount, precision),
 						"exchange_rate": flt(exchange_rate),
 						"reference_type": self.doctype,
