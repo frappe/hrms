@@ -17,6 +17,13 @@
 		:disabled="true"
 	/>
 
+	<div
+		v-else-if="['Small Text', 'Text', 'Long Text'].includes(props.fieldtype)"
+		class="text-gray-900 text-base bg-gray-200 rounded-lg py-2.5 pl-3 mt-1"
+	>
+		{{ props.value }}
+	</div>
+
 	<EmployeeAvatar
 		v-else-if="props.fieldtype === 'Link' && props.fieldname === 'employee'"
 		:employeeID="props.value" :showLabel="true"
