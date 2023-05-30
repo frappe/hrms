@@ -206,17 +206,15 @@ def get_shift_for_time(shifts: List[Dict], for_timestamp: datetime) -> Dict:
 			valid_shifts.append(shift_details)
 
 	valid_shifts.sort(key=lambda x: x["actual_start"])
-
-	if len(valid_shifts) > 1:
-		_adjust_overlapping_shifts(valid_shifts)
+	_adjust_overlapping_shifts(valid_shifts)
 
 	return get_exact_shift(valid_shifts, for_timestamp)
 
 
 def _is_shift_outside_assignment_period(shift_details: dict, assignment: dict) -> bool:
 	"""
-	If log's date is greater than shift assignment's end date,
-	checks whether its a midnight shift or not
+	Compares shift's actual start and end dates with assignment dates
+	and returns True is shift is outside assignment period
 	"""
 	if shift_details.actual_start.date() < assignment.start_date:
 		return True
