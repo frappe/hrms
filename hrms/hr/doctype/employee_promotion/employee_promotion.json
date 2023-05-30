@@ -71,8 +71,7 @@
   {
    "fieldname": "promotion_details",
    "fieldtype": "Table",
-   "options": "Employee Property History",
-   "reqd": 1
+   "options": "Employee Property History"
   },
   {
    "fieldname": "amended_from",
@@ -119,7 +118,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-04-22 18:47:10.168744",
+ "modified": "2023-05-30 15:15:11.806546",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Promotion",
