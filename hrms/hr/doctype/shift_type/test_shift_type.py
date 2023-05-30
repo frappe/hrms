@@ -508,7 +508,7 @@ def setup_shift_type(**args):
 	return shift_type
 
 
-def make_shift_assignment(shift_type, employee, start_date, end_date=None):
+def make_shift_assignment(shift_type, employee, start_date, end_date=None, do_not_submit=False):
 	shift_assignment = frappe.get_doc(
 		{
 			"doctype": "Shift Assignment",
@@ -518,7 +518,8 @@ def make_shift_assignment(shift_type, employee, start_date, end_date=None):
 			"start_date": start_date,
 			"end_date": end_date,
 		}
-	).insert()
-	shift_assignment.submit()
+	)
+	if not do_not_submit:
+		shift_assignment.submit()
 
 	return shift_assignment
