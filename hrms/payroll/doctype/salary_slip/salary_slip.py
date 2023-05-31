@@ -590,20 +590,26 @@ class SalarySlip(TransactionBase):
 		return lwp
 
 	def get_leave_type_map(self):
-		leave_type_map = frappe.cache().hget("leave_type_map", "leave_type")
-
-		if not leave_type_map:
-			leave_types = frappe.get_all(
+		def _get_leave_type():
+			return frappe.get_all(
 				"Leave Type",
 				or_filters=[["is_ppl", "=", 1], ["is_lwp", "=", 1]],
 				fields=["name", "is_lwp", "is_ppl", "fraction_of_daily_salary_per_leave", "include_holiday"],
 			)
 
-			leave_type_map = {}
-			for leave_type in leave_types:
-				leave_type_map[leave_type.name] = leave_type
+		if frappe.flags.in_test:
+			leave_types = _get_leave_type()
 
-			frappe.cache().hset("leave_type_map", "leave_type", leave_type_map)
+		else:
+			leave_types = frappe.cache().hget("leave_types", "leave_types")
+
+			if not leave_types:
+				leave_types = self._get_leave_type()
+				frappe.cache().hset("leave_types", "leave_types", leave_types)
+
+		leave_type_map = {}
+		for leave_type in leave_types:
+			leave_type_map[leave_type.name] = leave_type
 
 		return leave_type_map
 
