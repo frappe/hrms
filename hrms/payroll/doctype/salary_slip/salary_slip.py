@@ -30,7 +30,7 @@ import erpnext
 from erpnext.accounts.utils import get_fiscal_year
 from erpnext.utilities.transaction_base import TransactionBase
 
-from hrms.hr.utils import validate_active_employee
+from hrms.hr.utils import get_holiday_dates_for_employee, validate_active_employee
 from hrms.payroll.doctype.additional_salary.additional_salary import get_additional_salaries
 from hrms.payroll.doctype.employee_benefit_application.employee_benefit_application import (
 	get_benefit_component_amount,
@@ -453,9 +453,6 @@ class SalarySlip(TransactionBase):
 	def get_unmarked_days(self, include_holidays_in_total_working_days):
 		unmarked_days = self.total_working_days
 
-		start_date = self.start_date
-		end_date = self.end_date
-
 		if self.joining_date and (
 			getdate(self.start_date) < self.joining_date <= getdate(self.end_date)
 		):
@@ -463,7 +460,7 @@ class SalarySlip(TransactionBase):
 			unmarked_days = self.get_unmarked_days_based_on_doj_or_relieving(
 				unmarked_days,
 				include_holidays_in_total_working_days,
-				self.start_date,
+				start_date,
 				add_days(self.joining_date, -1),
 			)
 
@@ -475,7 +472,7 @@ class SalarySlip(TransactionBase):
 				unmarked_days,
 				include_holidays_in_total_working_days,
 				add_days(self.relieving_date, 1),
-				self.end_date,
+				end_date,
 			)
 
 		# exclude days for which attendance has been marked
@@ -528,33 +525,14 @@ class SalarySlip(TransactionBase):
 		return payment_days
 
 	def get_holidays_for_employee(self, start_date, end_date):
-		default_holiday_list = frappe.db.get_value(
-			"Company", self.company, "default_holiday_list", cache=True
-		)
-		holiday_list = (
-			frappe.db.get_value("Employee", self.employee, "holiday_list", cache=True)
-			or default_holiday_list
-		)
-
-		if not holiday_list:
-			return []
-
+		holiday_list = get_holiday_list_for_employee(self.employee)
 		key = f"{holiday_list}:{start_date}:{end_date}"
 		holiday_dates = frappe.cache().hget("holidays", key)
 
 		if not holiday_dates:
-			holidays = frappe.db.get_all(
-				"Holiday",
-				fields=["description", "holiday_date"],
-				filters={
-					"parent": holiday_list,
-					"holiday_date": ["between", [start_date, end_date]],
-					"weekly_off": 0,
-				},
-				order_by="holiday_date",
+			holiday_dates = get_holiday_dates_for_employee(
+				self.employee, start_date, end_date, holiday_list
 			)
-
-			holiday_dates = [cstr(h.holiday_date) for h in holidays]
 			frappe.cache().hset("holidays", key, holiday_dates)
 
 		return holiday_dates
@@ -655,9 +633,7 @@ class SalarySlip(TransactionBase):
 			end_date = self.relieving_date
 
 		leave_type_map = self.get_leave_type_map()
-
 		attendance_details = self.get_employee_attendance(start_date=self.start_date, end_date=end_date)
-
 		for d in attendance_details:
 			if (
 				d.status in ("Half Day", "On Leave")
@@ -687,6 +663,7 @@ class SalarySlip(TransactionBase):
 						fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
 					)
 				lwp += equivalent_lwp
+
 			elif d.status == "On Leave" and d.leave_type and d.leave_type in leave_type_map.keys():
 				equivalent_lwp = 1
 				if leave_type_map[d.leave_type]["is_ppl"]:
@@ -694,8 +671,10 @@ class SalarySlip(TransactionBase):
 						fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
 					)
 				lwp += equivalent_lwp
+
 			elif d.status == "Absent":
 				absent += 1
+
 		return lwp, absent
 
 	def add_earning_for_hourly_wages(self, doc, salary_component, amount):
