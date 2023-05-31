@@ -1,4 +1,5 @@
 import frappe
+from frappe.utils import getdate
 
 
 @frappe.whitelist()
@@ -45,11 +46,26 @@ def get_employees(employee: str = None) -> list[dict]:
 
 
 @frappe.whitelist()
-def get_leave_applications(filters: dict = {}) -> list[dict]:
+def get_leave_applications(filters: dict) -> list[dict]:
 	doctype = "Leave Application"
 	leave_applications = frappe.get_list(
 		"Leave Application",
-		fields=["name", "employee", "employee_name", "leave_type", "status", "from_date", "to_date", "half_day", "half_day_date", "description", "total_leave_days", "leave_balance", "leave_approver", "posting_date"],
+		fields=[
+			"name",
+			"employee",
+			"employee_name",
+			"leave_type",
+			"status",
+			"from_date",
+			"to_date",
+			"half_day",
+			"half_day_date",
+			"description",
+			"total_leave_days",
+			"leave_balance",
+			"leave_approver",
+			"posting_date",
+		],
 		filters=filters,
 		order_by="from_date desc",
 	)
@@ -63,10 +79,7 @@ def get_leave_applications(filters: dict = {}) -> list[dict]:
 
 @frappe.whitelist()
 def get_employee_leave_applications(employee: str) -> list[dict]:
-	filters = {
-		"employee": employee,
-		"status": ["!=", "Cancelled"]
-	}
+	filters = {"employee": employee, "status": ["!=", "Cancelled"]}
 
 	return get_leave_applications(filters)
 
@@ -81,3 +94,29 @@ def get_team_leave_applications(employee: str, user_id: str) -> list[dict]:
 	}
 
 	return get_leave_applications(filters)
+
+
+@frappe.whitelist()
+def get_leave_balance_map(employee: str) -> dict[str, dict[str, float]]:
+	"""
+	Returns a map of leave type and balance details like:
+	{
+	        'Casual Leave': {'allocated_leaves': 10.0, 'balance_leaves': 5.0},
+	        'Earned Leave': {'allocated_leaves': 3.0, 'balance_leaves': 3.0},
+	}
+	"""
+	from hrms.hr.doctype.leave_application.leave_application import get_leave_details
+
+	date = getdate()
+	leave_map = {}
+
+	leave_details = get_leave_details(employee, date)
+	allocation = leave_details["leave_allocation"]
+
+	for leave_type, details in allocation.items():
+		leave_map[leave_type] = {
+			"allocated_leaves": details.get("total_leaves"),
+			"balance_leaves": details.get("remaining_leaves"),
+		}
+
+	return leave_map

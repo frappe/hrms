@@ -21,7 +21,7 @@
 						</div>
 
 						<div class="mt-5">
-							<h2 class="text-2xl font-bold text-gray-900">
+							<h2 class="text-4xl font-bold text-gray-900">
 								{{ props.pageTitle }}
 							</h2>
 
