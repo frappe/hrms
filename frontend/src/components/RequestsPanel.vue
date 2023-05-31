@@ -26,7 +26,6 @@ const myRequests = createResource({
 	params: {
 		employee: employee.data.name,
 	},
-	cache: "MyLeaveRequests",
 	auto: true,
 	transform(data) {
 		return transformLeaveData(data)
@@ -39,7 +38,6 @@ const teamRequests = createResource({
 		employee: employee.data.name,
 		user_id: employee.data.user_id,
 	},
-	cache: "TeamLeaveRequests",
 	auto: true,
 	transform(data) {
 		return transformLeaveData(data)

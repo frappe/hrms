@@ -76,7 +76,8 @@ def get_team_leave_applications(employee: str, user_id: str) -> list[dict]:
 	filters = {
 		"employee": ["!=", employee],
 		"leave_approver": user_id,
-		"status": ["!=", "Cancelled"],
+		"status": "Open",
+		"docstatus": 0,
 	}
 
 	return get_leave_applications(filters)

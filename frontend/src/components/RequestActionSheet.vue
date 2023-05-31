@@ -4,6 +4,7 @@
 			<span class="text-gray-900 font-bold text-xl">{{ data.doctype }}</span>
 		</div>
 		<div class="w-full flex flex-col items-center justify-center gap-5 p-4">
+			<!-- Request Summary -->
 			<div
 				v-for="field in fieldsWithValues"
 				:key="field.fieldname"
@@ -21,12 +22,37 @@
 					:fieldname="field.fieldname"
 				/>
 			</div>
+
+			<!-- Actions -->
+			<div
+				v-if="['Open', 'Draft'].includes(document?.doc?.status)"
+				class="flex w-full flex-row items-center justify-between gap-3"
+			>
+				<Button
+					@click="updateDocumentStatus('Rejected')"
+					class="w-full py-3 px-12 bg-red-100 text-red-600"
+					icon-left="x"
+				>
+					Reject
+				</Button>
+				<Button
+					@click="updateDocumentStatus('Approved')"
+					class="w-full bg-green-600 text-white py-3 px-12"
+					icon-left="check"
+				>
+					Approve
+				</Button>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
+
 import { computed } from "vue"
+import { modalController } from "@ionic/vue"
+import { toast, createDocumentResource } from "frappe-ui"
+
 import FormattedField from "@/components/FormattedField.vue"
 
 const props = defineProps({
@@ -45,5 +71,39 @@ const fieldsWithValues = computed(() => {
 		return props.data[field.fieldname]
 	})
 })
+
+const document = createDocumentResource({
+	doctype: props.data.doctype,
+	name: props.data.name,
+})
+
+document.reload()
+
+const updateDocumentStatus = (status) => {
+	document.setValue.submit(
+		{ "status": status, "docstatus": 1 },
+		{
+			onSuccess() {
+				modalController.dismiss()
+				toast({
+					title: "Success",
+					text: `${status} successful!`,
+					icon: "check-circle",
+					position: "bottom-center",
+					iconClasses: "text-green-500",
+				})
+			},
+			onError() {
+				toast({
+					title: "Error",
+					text: `${status} failed!`,
+					icon: "alert-circle",
+					position: "bottom-center",
+					iconClasses: "text-red-500",
+				})
+			}
+		}
+	)
+}
 
 </script>
