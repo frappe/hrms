@@ -452,6 +452,8 @@ class SalarySlip(TransactionBase):
 
 	def get_unmarked_days(self, include_holidays_in_total_working_days):
 		unmarked_days = self.total_working_days
+		start_date = self.start_date
+		end_date = self.end_date
 
 		if self.joining_date and (
 			getdate(self.start_date) < self.joining_date <= getdate(self.end_date)
@@ -460,7 +462,7 @@ class SalarySlip(TransactionBase):
 			unmarked_days = self.get_unmarked_days_based_on_doj_or_relieving(
 				unmarked_days,
 				include_holidays_in_total_working_days,
-				start_date,
+				self.start_date,
 				add_days(self.joining_date, -1),
 			)
 
@@ -472,11 +474,12 @@ class SalarySlip(TransactionBase):
 				unmarked_days,
 				include_holidays_in_total_working_days,
 				add_days(self.relieving_date, 1),
-				end_date,
+				self.end_date,
 			)
 
 		# exclude days for which attendance has been marked
-		unmarked_days -= len(self.attendance_details)
+		attendance_details = self.get_employee_attendance(start_date, end_date)
+		unmarked_days -= len(attendance_details)
 
 		return unmarked_days
 
@@ -616,7 +619,7 @@ class SalarySlip(TransactionBase):
 	def get_employee_attendance(self, start_date, end_date):
 		attendance = frappe.qb.DocType("Attendance")
 
-		self.attendance_details = (
+		attendance_details = (
 			frappe.qb.from_(attendance)
 			.select(attendance.attendance_date, attendance.status, attendance.leave_type)
 			.where(
@@ -626,7 +629,7 @@ class SalarySlip(TransactionBase):
 			)
 		).run(as_dict=1)
 
-		return self.attendance_details
+		return attendance_details
 
 	def calculate_lwp_ppl_and_absent_days_based_on_attendance(
 		self, holidays, daily_wages_fraction_for_half_day
