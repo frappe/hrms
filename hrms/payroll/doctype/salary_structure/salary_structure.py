@@ -343,6 +343,7 @@ def make_salary_slip(
 		postprocess,
 		ignore_child_tables=True,
 		ignore_permissions=ignore_permissions,
+		cached=True,
 	)
 
 	if cint(as_print):
