@@ -175,12 +175,12 @@ class TestShiftAssignment(FrappeTestCase):
 
 		# no overlap
 		shift_type = setup_shift_type(shift_type="Shift 2", start_time="15:00:00", end_time="20:00:00")
-		assignment = make_shift_assignment(shift_type, employee, date)
+		assignment = make_shift_assignment(shift_type.name, employee, date)
 
 		# no overlap
 		shift_type.update({"start_time": "02:00:00", "end_time": "3:00:00"})
 		shift_type.save()
-		assignment = make_shift_assignment(shift_type, employee, date)
+		assignment = make_shift_assignment(shift_type.name, employee, date)
 
 	def test_multiple_shift_assignments_for_same_day(self):
 		employee = make_employee("test_shift_assignment@example.com", company="_Test Company")
