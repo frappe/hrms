@@ -41,6 +41,9 @@ def set_employee_name(doc):
 
 
 def update_employee_work_history(employee, details, date=None, cancel=False):
+	if not details:
+		return employee
+
 	if not employee.internal_work_history and not cancel:
 		employee.append(
 			"internal_work_history",
