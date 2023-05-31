@@ -4,8 +4,8 @@
 			:buttons="[{ label: 'My Requests'}, { label: 'Team Requests' }]"
 			v-model="activeTab"
 		/>
-		<RequestsList :items="myRequests.data" v-if="activeTab == 'My Requests'" />
-		<RequestsList :items="teamRequests.data" :teamRequests="true" v-if="activeTab == 'Team Requests'" />
+		<RequestList :items="myRequests.data" v-if="activeTab == 'My Requests'" />
+		<RequestList :items="teamRequests.data" :teamRequests="true" v-if="activeTab == 'Team Requests'" />
 	</div>
 </template>
 
@@ -16,7 +16,7 @@ import { createResource, createListResource, toast } from "frappe-ui"
 import dayjs from "@/utils/dayjs"
 
 import TabButtons from "@/components/TabButtons.vue"
-import RequestsList from "@/components/RequestsList.vue"
+import RequestList from "@/components/RequestList.vue"
 
 const employee = inject("$employee")
 const activeTab = ref("My Requests")
