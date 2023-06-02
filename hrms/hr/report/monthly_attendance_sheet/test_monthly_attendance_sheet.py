@@ -131,6 +131,30 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		self.assertEqual(day_shift_row[3], "L")  # leave on the 3rd day
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	def test_single_leave_record(self):
+		previous_month_first = get_first_day_for_prev_month()
+		company = frappe.db.get_value("Employee", self.employee, "company")
+
+		# attendance without shift
+		mark_attendance(self.employee, previous_month_first, "On Leave")
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": company,
+			}
+		)
+		report = execute(filters=filters)
+
+		# single row with leave record
+		self.assertEqual(len(report[1]), 1)
+		row = report[1][0]
+
+		self.assertIsNone(row["shift"])
+		self.assertEqual(row[1], "L")
+
+	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_summarized_view(self):
 		previous_month_first = get_first_day_for_prev_month()
 		company = frappe.db.get_value("Employee", self.employee, "company")
