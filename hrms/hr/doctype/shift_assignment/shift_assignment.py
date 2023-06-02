@@ -440,36 +440,15 @@ def get_actual_start_end_datetime_of_shift(
 
 def get_exact_shift(shifts: List, for_timestamp: datetime) -> Dict:
 	"""Returns the shift details (dict) for the exact shift in which the 'for_timestamp' value falls among multiple shifts"""
-	shift_details = dict()
-	timestamp_list = []
 
-	for shift in shifts:
-		if shift:
-			timestamp_list.extend([shift.actual_start, shift.actual_end])
-		else:
-			timestamp_list.extend([None, None])
-
-	timestamp_index = None
-	for index, timestamp in enumerate(timestamp_list):
-		if not timestamp:
-			continue
-
-		if for_timestamp < timestamp:
-			timestamp_index = index
-		elif for_timestamp == timestamp:
-			# on timestamp boundary
-			if index % 2 == 1:
-				timestamp_index = index
-			else:
-				timestamp_index = index + 1
-
-		if timestamp_index:
-			break
-
-	if timestamp_index and timestamp_index % 2 == 1:
-		shift_details = shifts[int((timestamp_index - 1) / 2)]
-
-	return shift_details
+	return next(
+		(
+			shift
+			for shift in shifts
+			if shift and for_timestamp >= shift.actual_start and for_timestamp <= shift.actual_end
+		),
+		{},
+	)
 
 
 def get_shift_details(shift_type_name: str, for_timestamp: datetime = None) -> Dict:
