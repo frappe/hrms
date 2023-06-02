@@ -159,7 +159,12 @@ def get_employee_field_property(employee, fieldname):
 	elif field.fieldtype == "Datetime":
 		value = format_datetime(value)
 
-	return {"value": value, "datatype": field.fieldtype, "label": field.label, "options": field.options}
+	return {
+		"value": value,
+		"datatype": field.fieldtype,
+		"label": field.label,
+		"options": field.options,
+	}
 
 
 def validate_dates(doc, from_date, to_date):
