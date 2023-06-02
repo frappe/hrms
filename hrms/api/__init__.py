@@ -1,4 +1,5 @@
 import frappe
+from frappe.query_builder import Order
 from frappe.utils import getdate
 
 
@@ -120,3 +121,20 @@ def get_leave_balance_map(employee: str) -> dict[str, dict[str, float]]:
 		}
 
 	return leave_map
+
+
+@frappe.whitelist()
+def get_holidays_for_employee(employee: str) -> list[dict]:
+	from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
+
+	holiday_list = get_holiday_list_for_employee(employee)
+	if not holiday_list:
+		return []
+
+	Holiday = frappe.qb.DocType("Holiday")
+	return (
+		frappe.qb.from_(Holiday)
+		.select(Holiday.name, Holiday.holiday_date, Holiday.description)
+		.where((Holiday.parent == holiday_list) & (Holiday.weekly_off == 0))
+		.orderby(Holiday.holiday_date, order=Order.asc)
+	).run(as_dict=True)
