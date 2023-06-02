@@ -2,7 +2,6 @@
 # License: GNU General Public License v3. See license.txt
 
 
-import math
 from datetime import date
 
 import frappe
@@ -12,9 +11,11 @@ from frappe.query_builder import Order
 from frappe.query_builder.functions import Sum
 from frappe.utils import (
 	add_days,
+	ceil,
 	cint,
 	cstr,
 	date_diff,
+	floor,
 	flt,
 	formatdate,
 	get_first_day,
@@ -63,17 +64,25 @@ class SalarySlip(TransactionBase):
 			"round": round,
 			"date": date,
 			"getdate": getdate,
+			"ceil": ceil,
+			"floor": floor,
 		}
 
 	def autoname(self):
 		self.name = make_autoname(self.series)
+
+	@property
+	def payroll_period(self):
+		if not hasattr(self, "_payroll_period"):
+			self._payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
+
+		return self._payroll_period
 
 	def validate(self):
 		self.status = self.get_status()
 		validate_active_employee(self.employee)
 		self.validate_dates()
 		self.check_existing()
-		self.set_payroll_period()
 
 		if not self.salary_slip_based_on_timesheet:
 			self.get_date_details()
@@ -103,9 +112,6 @@ class SalarySlip(TransactionBase):
 					alert=True,
 				)
 
-	def set_payroll_period(self):
-		self.payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
-
 	def set_net_total_in_words(self):
 		doc_currency = self.currency
 		company_currency = erpnext.get_company_currency(self.company)
@@ -121,10 +127,13 @@ class SalarySlip(TransactionBase):
 			self.set_status()
 			self.update_status(self.name)
 			self.make_loan_repayment_entry()
-			if (
-				frappe.db.get_single_value("Payroll Settings", "email_salary_slip_to_employee")
-			) and not frappe.flags.via_payroll_entry:
-				self.email_salary_slip()
+
+			if not frappe.flags.via_payroll_entry and not frappe.flags.in_patch:
+				email_salary_slip = cint(
+					frappe.db.get_single_value("Payroll Settings", "email_salary_slip_to_employee")
+				)
+				if email_salary_slip:
+					self.email_salary_slip()
 
 		self.update_payment_status_for_gratuity()
 
@@ -232,7 +241,6 @@ class SalarySlip(TransactionBase):
 			if not self.salary_slip_based_on_timesheet:
 				self.get_date_details()
 
-			self.set_payroll_period()
 			joining_date, relieving_date = frappe.get_cached_value(
 				"Employee", self.employee, ("date_of_joining", "relieving_date")
 			)
@@ -705,7 +713,7 @@ class SalarySlip(TransactionBase):
 		# get taxable_earnings for current period (all days)
 		self.current_taxable_earnings = self.get_taxable_earnings(self.tax_slab.allow_tax_exemption)
 		self.future_structured_taxable_earnings = self.current_taxable_earnings.taxable_earnings * (
-			math.ceil(self.remaining_sub_periods) - 1
+			ceil(self.remaining_sub_periods) - 1
 		)
 
 		current_taxable_earnings_before_exemption = (
@@ -713,7 +721,7 @@ class SalarySlip(TransactionBase):
 			+ self.current_taxable_earnings.amount_exempted_from_income_tax
 		)
 		self.future_structured_taxable_earnings_before_exemption = (
-			current_taxable_earnings_before_exemption * (math.ceil(self.remaining_sub_periods) - 1)
+			current_taxable_earnings_before_exemption * (ceil(self.remaining_sub_periods) - 1)
 		)
 
 		# get taxable_earnings, addition_earnings for current actual payment days
@@ -815,7 +823,7 @@ class SalarySlip(TransactionBase):
 
 		# Future period non taxable earnings
 		future_period_non_taxable_earnings = current_period_non_taxable_earnings * (
-			math.ceil(self.remaining_sub_periods) - 1
+			ceil(self.remaining_sub_periods) - 1
 		)
 
 		non_taxable_earnings = (
@@ -878,12 +886,10 @@ class SalarySlip(TransactionBase):
 		for deduction in self._salary_structure_doc.get("deductions"):
 			if deduction.exempted_from_income_tax:
 				if deduction.amount_based_on_formula:
-					for sub_period in range(1, math.ceil(self.remaining_sub_periods)):
+					for sub_period in range(1, ceil(self.remaining_sub_periods)):
 						future_period_exempted_amount += self.get_amount_from_formula(deduction, sub_period)
 				else:
-					future_period_exempted_amount += deduction.amount * (
-						math.ceil(self.remaining_sub_periods) - 1
-					)
+					future_period_exempted_amount += deduction.amount * (ceil(self.remaining_sub_periods) - 1)
 
 		return (
 			prev_period_exempted_amount + current_period_exempted_amount + future_period_exempted_amount
@@ -912,9 +918,7 @@ class SalarySlip(TransactionBase):
 		local_data = self.data.copy()
 		local_data.update({"start_date": start_date, "end_date": end_date, "posting_date": posting_date})
 
-		amount = self.eval_condition_and_formula(struct_row, local_data)
-
-		return amount
+		return flt(self.eval_condition_and_formula(struct_row, local_data))
 
 	def get_income_tax_deducted_till_date(self):
 		tax_deducted = 0.0
@@ -948,30 +952,34 @@ class SalarySlip(TransactionBase):
 				continue
 
 			amount = self.eval_condition_and_formula(struct_row, self.data)
-
 			if struct_row.statistical_component:
 				# update statitical component amount in reference data based on payment days
 				# since row for statistical component is not added to salary slip
+
+				self.default_data[struct_row.abbr] = flt(amount)
 				if struct_row.depends_on_payment_days:
 					payment_days_amount = (
 						flt(amount) * flt(self.payment_days) / cint(self.total_working_days)
 						if self.total_working_days
 						else 0
 					)
-
-					self.default_data[struct_row.abbr] = amount
 					self.data[struct_row.abbr] = flt(payment_days_amount, struct_row.precision("amount"))
 
 			else:
-				default_amount = 0
+				# default behavior, the system does not add if component amount is zero
+				# if remove_if_zero_valued is unchecked, then ask system to add component row
 				remove_if_zero_valued = frappe.get_cached_value(
 					"Salary Component", struct_row.salary_component, "remove_if_zero_valued"
 				)
 
-				if amount or struct_row.amount_based_on_formula:
-					default_amount = self.eval_condition_and_formula(struct_row, self.default_data)
+				default_amount = 0
 
-				if amount is not None:
+				if (
+					amount
+					or (struct_row.amount_based_on_formula and amount is not None)
+					or (not remove_if_zero_valued and amount is not None and not self.data[struct_row.abbr])
+				):
+					default_amount = self.eval_condition_and_formula(struct_row, self.default_data)
 					self.update_component_row(
 						struct_row,
 						amount,
@@ -1813,9 +1821,6 @@ class SalarySlip(TransactionBase):
 		self.pull_emp_details()
 		self.get_working_days_details(for_preview=for_preview)
 
-		if not hasattr(self, "payroll_period"):
-			self.set_payroll_period()
-
 		self.calculate_net_pay()
 
 	def pull_emp_details(self):
@@ -1949,8 +1954,6 @@ class SalarySlip(TransactionBase):
 				component.year_to_date = year_to_date
 
 	def get_year_to_date_period(self):
-		self.payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
-
 		if self.payroll_period:
 			period_start_date = self.payroll_period.start_date
 			period_end_date = self.payroll_period.end_date

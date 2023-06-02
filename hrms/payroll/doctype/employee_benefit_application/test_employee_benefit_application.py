@@ -55,6 +55,7 @@ class TestEmployeeBenefitApplication(FrappeTestCase):
 			include_flexi_benefits=True,
 			employee=employee,
 			payroll_period=payroll_period,
+			company="_Test Company",
 		)
 		salary_slip = make_salary_slip(salary_structure.name, employee=employee, posting_date=getdate())
 		salary_slip.insert()
