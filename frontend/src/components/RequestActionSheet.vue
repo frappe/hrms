@@ -43,6 +43,18 @@
 					Approve
 				</Button>
 			</div>
+			<div
+				v-else-if="document?.doc?.docstatus === 1"
+				class="flex w-full flex-row items-center justify-between gap-3"
+			>
+				<Button
+					@click="updateDocumentStatus('Cancelled', 2)"
+					class="w-full py-3 px-12 bg-red-100 text-red-600"
+					icon-left="x"
+				>
+					Cancel
+				</Button>
+			</div>
 		</div>
 	</div>
 </template>
@@ -79,9 +91,9 @@ const document = createDocumentResource({
 
 document.reload()
 
-const updateDocumentStatus = (status) => {
+const updateDocumentStatus = (status, docstatus=1) => {
 	document.setValue.submit(
-		{ "status": status, "docstatus": 1 },
+		{ "status": status, "docstatus": docstatus },
 		{
 			onSuccess() {
 				modalController.dismiss()

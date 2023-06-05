@@ -42,7 +42,7 @@ const menuItems = ref([
 	},
 	{
 		icon: "calendar",
-		title: "Leaves",
+		title: "Leaves & Holidays",
 		route: {
 			name: "Leaves",
 		},
