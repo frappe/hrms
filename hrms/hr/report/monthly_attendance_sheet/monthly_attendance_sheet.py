@@ -201,14 +201,17 @@ def get_data(filters: Filters, attendance_map: Dict) -> List[Dict]:
 def get_attendance_map(filters: Filters) -> Dict:
 	"""Returns a dictionary of employee wise attendance map as per shifts for all the days of the month like
 	{
-	        'employee1': {
-	                'Morning Shift': {1: 'Present', 2: 'Absent', ...}
-	                'Evening Shift': {1: 'Absent', 2: 'Present', ...}
-	        },
-	        'employee2': {
-	                'Afternoon Shift': {1: 'Present', 2: 'Absent', ...}
-	                'Night Shift': {1: 'Absent', 2: 'Absent', ...}
-	        }
+	    'employee1': {
+	            'Morning Shift': {1: 'Present', 2: 'Absent', ...}
+	            'Evening Shift': {1: 'Absent', 2: 'Present', ...}
+	    },
+	    'employee2': {
+	            'Afternoon Shift': {1: 'Present', 2: 'Absent', ...}
+	            'Night Shift': {1: 'Absent', 2: 'Absent', ...}
+	    },
+	    'employee3': {
+	            None: {1: 'On Leave'}
+	    }
 	}
 	"""
 	attendance_list = get_attendance_records(filters)
@@ -220,11 +223,15 @@ def get_attendance_map(filters: Filters) -> Dict:
 			leave_map.setdefault(d.employee, []).append(d.day_of_month)
 			continue
 
-		attendance_map.setdefault(d.employee, frappe._dict()).setdefault(d.shift, frappe._dict())
+		attendance_map.setdefault(d.employee, {}).setdefault(d.shift, {})
 		attendance_map[d.employee][d.shift][d.day_of_month] = d.status
 
 	# leave is applicable for the entire day so all shifts should show the leave entry
 	for employee, leave_days in leave_map.items():
+		# no attendance records exist except leaves
+		if employee not in attendance_map:
+			attendance_map.setdefault(employee, {}).setdefault(None, {})
+
 		for day in leave_days:
 			for shift in attendance_map[employee].keys():
 				attendance_map[employee][shift][day] = "On Leave"
