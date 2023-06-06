@@ -28,7 +28,8 @@ def delete_company_fixtures():
 		try:
 			module_name = f"hrms.regional.{frappe.scrub(country)}.setup.uninstall"
 			frappe.get_attr(module_name)()
-		except ImportError:
+		except (ImportError, AttributeError):
+			# regional file or method does not exist
 			pass
 		except Exception:
 			frappe.log_error("Unable to delete country fixtures for HRMS")
