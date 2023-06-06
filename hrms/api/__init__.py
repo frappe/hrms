@@ -24,29 +24,6 @@ def get_current_employee_info() -> dict:
 
 
 @frappe.whitelist()
-def get_employees(employee: str = None) -> list[dict]:
-	filters = []
-	if employee:
-		filters["name"] = employee
-
-	return frappe.db.get_all(
-		"Employee",
-		filters=filters,
-		fields=[
-			"name",
-			"employee_name",
-			"designation",
-			"department",
-			"company",
-			"reports_to",
-			"user_id",
-			"image",
-			"status",
-		],
-	)
-
-
-@frappe.whitelist()
 def get_leave_applications(filters: dict) -> list[dict]:
 	doctype = "Leave Application"
 	leave_applications = frappe.get_list(
