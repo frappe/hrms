@@ -1,6 +1,7 @@
 import { createApp } from "vue"
 import App from "./App.vue"
 import router from "./router"
+import socket from "./socket"
 
 import { Button, setConfig, frappeRequest, resourcesPlugin } from "frappe-ui"
 
@@ -29,6 +30,7 @@ app.component("Button", Button)
 app.provide("$session", session)
 app.provide("$user", userResource)
 app.provide("$employee", employeeResource)
+app.provide("$socket", socket)
 
 router.isReady().then(() => {
 	app.mount("#app")

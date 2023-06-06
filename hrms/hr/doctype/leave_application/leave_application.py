@@ -88,6 +88,7 @@ class LeaveApplication(Document):
 				self.notify_leave_approver()
 
 		share_doc_with_approver(self, self.leave_approver)
+		self.publish_update()
 
 	def on_submit(self):
 		if self.status in ["Open", "Cancelled"]:
@@ -114,6 +115,22 @@ class LeaveApplication(Document):
 		if frappe.db.get_single_value("HR Settings", "send_leave_notification"):
 			self.notify_employee()
 		self.cancel_attendance()
+
+		self.publish_update()
+
+	def after_delete(self):
+		self.publish_update()
+
+	def publish_update(self):
+		frappe.publish_realtime(
+			event="hrms:update_leaves",
+			message={
+				"approver": self.leave_approver,
+				"employee": self.employee,
+			},
+			user=frappe.session.user,
+			after_commit=True,
+		)
 
 	def validate_applicable_after(self):
 		if self.leave_type:

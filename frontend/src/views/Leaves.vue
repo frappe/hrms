@@ -19,11 +19,26 @@
 
 <script setup>
 
+import { inject, onUnmounted } from "vue"
+
 import BaseLayout from "@/components/BaseLayout.vue"
 import LeaveBalance from "@/components/LeaveBalance.vue"
 import RequestList from "@/components/RequestList.vue"
 import Holidays from "@/components/Holidays.vue"
 
-import { leavesThisMonth } from "@/data/leaves"
+import { leavesThisMonth, myRequests } from "@/data/leaves"
+
+const socket = inject("$socket")
+const employee = inject("$employee")
+
+socket.on("hrms:update_leaves", (data) => {
+	if (data.employee === employee.data.name) {
+		myRequests.reload()
+	}
+})
+
+onUnmounted(() => {
+	socket.off("hrms:update_leaves");
+});
 
 </script>
