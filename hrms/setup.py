@@ -20,6 +20,7 @@ def after_install():
 	set_single_defaults()
 	update_erpnext_access()
 	run_post_install_patches()
+	create_default_role_profiles()
 
 
 def before_uninstall():
@@ -683,3 +684,22 @@ def delete_custom_fields(custom_fields):
 		)
 
 		frappe.clear_cache(doctype=doctype)
+
+
+def create_default_role_profiles():
+	for role_profile_name, roles in DEFAULT_ROLE_PROFILES.items():
+		role_profile = frappe.new_doc("Role Profile")
+		role_profile.role_profile = role_profile_name
+		for role in roles:
+			role_profile.append("roles", {"role": role})
+
+		role_profile.insert(ignore_permissions=True)
+
+
+DEFAULT_ROLE_PROFILES = {
+	"HR": [
+		"HR User",
+		"HR Manager",
+		"Leave Approver",
+	],
+}
