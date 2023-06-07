@@ -95,11 +95,13 @@ class SalarySlip(TransactionBase):
 	@property
 	def payroll_period(self):
 		if not hasattr(self, "__payroll_period"):
-			self.__payroll_period = frappe.cache().hget("payroll_period", "payroll_period")
-
-			if not self.__payroll_period:
+			if frappe.flags.in_test:
 				self.__payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
-				frappe.cache().hset("payroll_period", "payroll_period", self.__payroll_period)
+			else:
+				self.__payroll_period = frappe.cache().hget("payroll_period", "payroll_period")
+				if not self.__payroll_period:
+					self.__payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
+					frappe.cache().hset("payroll_period", "payroll_period", self.__payroll_period)
 
 		return self.__payroll_period
 
@@ -283,12 +285,11 @@ class SalarySlip(TransactionBase):
 				)
 				self.set_time_sheet()
 				self.pull_sal_struct()
-				ps = frappe.db.get_value(
+				ps = frappe.get_cached_value(
 					"Payroll Settings",
 					None,
 					("payroll_based_on", "consider_unmarked_attendance_as"),
 					as_dict=1,
-					cache=True,
 				)
 				return [ps.payroll_based_on, ps.consider_unmarked_attendance_as]
 

@@ -1088,8 +1088,8 @@ class TestSalarySlip(FrappeTestCase):
 		payroll_period = create_payroll_period(
 			name="_Test Payroll Period for Tax",
 			company="_Test Company",
-			start_date="2022-04-01",
-			end_date="2023-03-31",
+			start_date="2023-04-01",
+			end_date="2024-03-31",
 		)
 
 		emp = make_employee(
@@ -1113,7 +1113,7 @@ class TestSalarySlip(FrappeTestCase):
 				"Monthly",
 				company="_Test Company",
 				employee=emp,
-				from_date="2022-04-01",
+				from_date="2023-04-01",
 				payroll_period=payroll_period,
 				test_tax=True,
 				currency="INR",
@@ -1127,7 +1127,7 @@ class TestSalarySlip(FrappeTestCase):
 					"employee": emp,
 					"salary_structure": salary_structure_doc.name,
 					"docstatus": 1,
-					"start_date": [">=", "2022-04-01"],
+					"start_date": [">=", "2023-04-01"],
 				},
 			)
 			== 0
@@ -1135,8 +1135,8 @@ class TestSalarySlip(FrappeTestCase):
 
 		remaining_sub_periods = get_period_factor(
 			emp,
-			get_first_day("2022-10-01"),
-			get_last_day("2022-10-01"),
+			get_first_day("2023-10-01"),
+			get_last_day("2023-10-01"),
 			"Monthly",
 			payroll_period,
 			depends_on_payment_days=0,
@@ -1144,9 +1144,10 @@ class TestSalarySlip(FrappeTestCase):
 
 		prev_period = math.ceil(remaining_sub_periods)
 
-		annual_tax = 93288
-		monthly_tax_amount = 7774.0
-		monthly_earnings = 77800
+		# annual_tax = 347580
+		anual_tax = 2, 52, 540
+		monthly_tax_amount = 30124
+		monthly_earnings = 152800
 
 		# Get Salary Structure Assignment
 		ssa = frappe.get_value(
@@ -1163,11 +1164,11 @@ class TestSalarySlip(FrappeTestCase):
 
 		# Create Salary Slip
 		salary_slip = make_salary_slip(
-			salary_structure_doc.name, employee=employee_doc.name, posting_date=getdate("2022-10-01")
+			salary_structure_doc.name, employee=employee_doc.name, posting_date=getdate("2023-10-01")
 		)
 		for deduction in salary_slip.deductions:
 			if deduction.salary_component == "TDS":
-				self.assertEqual(deduction.amount, 7691.0)
+				self.assertEqual(deduction.amount, 30123.0)
 
 		frappe.db.sql("DELETE FROM `tabPayroll Period` where company = '_Test Company'")
 		frappe.db.sql("DELETE FROM `tabIncome Tax Slab` where currency = 'INR'")
