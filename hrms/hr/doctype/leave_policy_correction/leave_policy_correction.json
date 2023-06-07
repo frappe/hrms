@@ -1,0 +1,130 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2023-06-07 15:35:51.160455",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "employee",
+  "leave_policy_assignment",
+  "existing_leave_policy",
+  "column_break_yhwa",
+  "new_leave_policy",
+  "effective_from",
+  "amended_from",
+  "section_break_hsfw",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "leave_policy_assignment",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Leave Policy Assignment",
+   "options": "Leave Policy Assignment",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Leave Policy Correction",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_yhwa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_hsfw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "new_leave_policy",
+   "fieldtype": "Link",
+   "label": "New Leave Policy",
+   "options": "Leave Policy",
+   "reqd": 1
+  },
+  {
+   "fieldname": "effective_from",
+   "fieldtype": "Date",
+   "label": "Effective From",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "leave_policy_assignment.leave_policy",
+   "fieldname": "existing_leave_policy",
+   "fieldtype": "Link",
+   "label": "Existing Leave Policy",
+   "options": "Leave Policy",
+   "read_only": 1
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "HR-LPC-.###"
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2023-06-07 15:48:05.170874",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Leave Policy Correction",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
