@@ -147,7 +147,6 @@ class AdditionalSalary(Document):
 			self.validate_recurring_additional_salary_overlap()
 
 
-@frappe.whitelist()
 def get_additional_salaries(employee, start_date, end_date, component_type):
 	from frappe.query_builder import Criterion
 
