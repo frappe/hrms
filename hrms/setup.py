@@ -19,8 +19,8 @@ def after_install():
 	add_non_standard_user_types()
 	set_single_defaults()
 	update_erpnext_access()
-	run_post_install_patches()
 	create_default_role_profiles()
+	run_post_install_patches()
 
 
 def before_uninstall():
@@ -701,5 +701,6 @@ DEFAULT_ROLE_PROFILES = {
 		"HR User",
 		"HR Manager",
 		"Leave Approver",
+		"Expense Approver",
 	],
 }
