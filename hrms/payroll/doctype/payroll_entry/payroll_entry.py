@@ -837,7 +837,9 @@ class PayrollEntry(Document):
 		employee_details = self.get_employee_and_attendance_details()
 
 		for emp in self.employees:
-			details = next((details for details in employee_details if details["name"] == emp.employee), None)
+			details = next(
+				(details for details in employee_details if details["name"] == emp.employee), None
+			)
 
 			if not details:
 				continue
