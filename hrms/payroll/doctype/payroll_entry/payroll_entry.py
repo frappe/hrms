@@ -762,6 +762,7 @@ class PayrollEntry(Document):
 	@frappe.whitelist()
 	def validate_employee_attendance(self):
 		employees_to_mark_attendance = []
+<<<<<<< HEAD
 		days_in_payroll, days_holiday, days_attendance_marked = 0, 0, 0
 		for employee_detail in self.employees:
 			employee_joining_date = frappe.db.get_value(
@@ -771,6 +772,22 @@ class PayrollEntry(Document):
 
 			if employee_joining_date > getdate(self.start_date):
 				start_date = employee_joining_date
+=======
+		employee_details = self.get_employee_and_attendance_details()
+
+		for emp in self.employees:
+			details = next(
+				(details for details in employee_details if details["name"] == emp.employee), None
+			)
+
+			if not details:
+				continue
+
+			start_date = self.start_date
+
+			if details.get("date_of_joining") > getdate(self.start_date):
+				start_date = details.get("date_of_joining")
+>>>>>>> 17388ba4 (fix: `validate_attendance` in payroll entry (#585))
 
 			days_holiday = self.get_count_holidays_of_employee(employee_detail.employee, start_date)
 			days_attendance_marked = self.get_count_employee_attendance(
