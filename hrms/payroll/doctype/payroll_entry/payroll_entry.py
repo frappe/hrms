@@ -837,14 +837,16 @@ class PayrollEntry(Document):
 		employee_details = self.get_employee_and_attendance_details()
 
 		for emp in self.employees:
-			details = next((details for details in employee_details if details["name"] == emp.name), None)
+			details = next(
+				(details for details in employee_details if details["name"] == emp.employee), None
+			)
 
 			if not details:
 				continue
 
 			start_date = self.start_date
 
-			if details.get("date_of_joining") > self.start_date:
+			if details.get("date_of_joining") > getdate(self.start_date):
 				start_date = details.get("date_of_joining")
 
 			holidays = self.get_holiday_list_based_count(
