@@ -168,7 +168,12 @@ class ShiftType(Document):
 		# skip marking absent on holidays
 		holiday_list = self.get_holiday_list(employee)
 		holiday_dates = get_holiday_dates_between(holiday_list, start_date, end_date)
-		return set(date_range) - set(holiday_dates)
+		# skip dates with attendance
+		marked_attendance_dates = self.get_marked_attendance_dates_between(
+			employee, start_date, end_date
+		)
+
+		return set(date_range) - set(holiday_dates) - set(marked_attendance_dates)
 
 	def get_start_and_end_dates(self, employee):
 		"""Returns start and end dates for checking attendance and marking absent
@@ -203,6 +208,21 @@ class ShiftType(Document):
 			# no shift found
 			return None, None
 		return start_date, end_date
+
+	def get_marked_attendance_dates_between(
+		self, employee: str, start_date: str, end_date: str
+	) -> list[str]:
+		Attendance = frappe.qb.DocType("Attendance")
+		return (
+			frappe.qb.from_(Attendance)
+			.select(Attendance.attendance_date)
+			.where(
+				(Attendance.employee == employee)
+				& (Attendance.docstatus < 2)
+				& (Attendance.attendance_date.between(start_date, end_date))
+				& ((Attendance.shift.isnull()) | (Attendance.shift == self.name))
+			)
+		).run(pluck=True)
 
 	def get_assigned_employee(self, from_date=None, consider_default_shift=False):
 		filters = {"shift_type": self.name, "docstatus": "1", "status": "Active"}
