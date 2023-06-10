@@ -29,7 +29,6 @@ from erpnext.accounts.utils import get_fiscal_year
 from erpnext.setup.doctype.employee.employee import InactiveEmployeeStatusError
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
-from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
@@ -334,8 +333,6 @@ class TestSalarySlip(FrappeTestCase):
 	def test_payment_days_in_salary_slip_based_on_timesheet(self):
 		from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
 
-		from hrms.hr.doctype.attendance.attendance import mark_attendance
-
 		emp = make_employee(
 			"test_employee_timesheet@salary.com",
 			company="_Test Company",
@@ -382,7 +379,6 @@ class TestSalarySlip(FrappeTestCase):
 
 	@change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
 	def test_component_amount_dependent_on_another_payment_days_based_component(self):
-		from hrms.hr.doctype.attendance.attendance import mark_attendance
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 			create_salary_structure_assignment,
 		)
@@ -2131,3 +2127,33 @@ def make_salary_structure_for_statistical_component(company):
 	salary_structure_doc.submit()
 
 	return salary_structure_doc
+
+
+def mark_attendance(
+	employee,
+	attendance_date,
+	status,
+	shift=None,
+	ignore_validate=False,
+	leave_type=None,
+	late_entry=False,
+	early_exit=False,
+):
+	company = frappe.db.get_value("Employee", employee, "company")
+	attendance = frappe.new_doc("Attendance")
+	attendance.update(
+		{
+			"doctype": "Attendance",
+			"employee": employee,
+			"attendance_date": attendance_date,
+			"status": status,
+			"company": company,
+			"shift": shift,
+			"leave_type": leave_type,
+			"late_entry": late_entry,
+			"early_exit": early_exit,
+		}
+	)
+	attendance.flags.ignore_validate = ignore_validate
+	attendance.insert()
+	attendance.submit()

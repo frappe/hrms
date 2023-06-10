@@ -270,7 +270,7 @@ def add_comment_in_checkins(log_names: list, reason: str, error_message: str):
 		).insert(ignore_permissions=True)
 
 
-def skip_attendance_in_checkins(log_names: str):
+def skip_attendance_in_checkins(log_names: list):
 	EmployeeCheckin = frappe.qb.DocType("Employee Checkin")
 	(
 		frappe.qb.update(EmployeeCheckin)
