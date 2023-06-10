@@ -287,29 +287,31 @@ def mark_attendance(
 	late_entry=False,
 	early_exit=False,
 ):
-	if get_duplicate_attendance_record(employee, attendance_date, shift):
-		return
-
-	if get_overlapping_shift_attendance(employee, attendance_date, shift):
-		return
-
 	company = frappe.db.get_value("Employee", employee, "company")
-	attendance = frappe.get_doc(
-		{
-			"doctype": "Attendance",
-			"employee": employee,
-			"attendance_date": attendance_date,
-			"status": status,
-			"company": company,
-			"shift": shift,
-			"leave_type": leave_type,
-			"late_entry": late_entry,
-			"early_exit": early_exit,
-		}
-	)
-	attendance.flags.ignore_validate = ignore_validate
-	attendance.insert()
-	attendance.submit()
+	savepoint = "attendance_creation"
+
+	try:
+		frappe.db.savepoint(savepoint)
+		attendance = frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": employee,
+				"attendance_date": attendance_date,
+				"status": status,
+				"company": company,
+				"shift": shift,
+				"leave_type": leave_type,
+				"late_entry": late_entry,
+				"early_exit": early_exit,
+			}
+		)
+		attendance.flags.ignore_validate = ignore_validate
+		attendance.insert()
+		attendance.submit()
+	except (DuplicateAttendanceError, OverlappingShiftAttendanceError):
+		frappe.db.rollback(save_point=savepoint)
+		return
+
 	return attendance.name
 
 
