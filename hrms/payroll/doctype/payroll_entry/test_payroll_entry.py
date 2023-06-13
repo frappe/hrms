@@ -60,7 +60,7 @@ class TestPayrollEntry(FrappeTestCase):
 		make_deduction_salary_component(setup=True, test_tax=False, company_list=["_Test Company"])
 
 		frappe.db.set_value("Company", "_Test Company", "default_holiday_list", "_Test Holiday List")
-		frappe.db.set_value("Payroll Settings", None, "email_salary_slip_to_employee", 0)
+		frappe.db.set_single_value("Payroll Settings", "email_salary_slip_to_employee", 0)
 
 		# set default payable account
 		default_account = frappe.db.get_value(
