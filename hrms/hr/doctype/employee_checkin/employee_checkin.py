@@ -5,11 +5,11 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cint, get_datetime, get_link_to_form
+from frappe.utils import cint, cstr, get_datetime, get_link_to_form
 
 from hrms.hr.doctype.attendance.attendance import (
-	get_duplicate_attendance_record,
-	get_overlapping_shift_attendance,
+	DuplicateAttendanceError,
+	OverlappingShiftAttendanceError,
 )
 from hrms.hr.doctype.shift_assignment.shift_assignment import (
 	get_actual_start_end_datetime_of_shift,
@@ -137,42 +137,39 @@ def mark_attendance_and_link_log(
 
 	elif attendance_status in ("Present", "Absent", "Half Day"):
 		company = frappe.db.get_value("Employee", employee, "company", cache=True)
-		duplicate = get_duplicate_attendance_record(employee, attendance_date, shift)
-		overlapping = get_overlapping_shift_attendance(employee, attendance_date, shift)
 
-		if not duplicate and not overlapping:
-			doc_dict = {
-				"doctype": "Attendance",
-				"employee": employee,
-				"attendance_date": attendance_date,
-				"status": attendance_status,
-				"working_hours": working_hours,
-				"company": company,
-				"shift": shift,
-				"late_entry": late_entry,
-				"early_exit": early_exit,
-				"in_time": in_time,
-				"out_time": out_time,
-			}
-			attendance = frappe.get_doc(doc_dict).insert()
-			attendance.submit()
+		try:
+			frappe.db.savepoint("attendance_creation")
+			attendance = frappe.new_doc("Attendance")
+			attendance.update(
+				{
+					"doctype": "Attendance",
+					"employee": employee,
+					"attendance_date": attendance_date,
+					"status": attendance_status,
+					"working_hours": working_hours,
+					"company": company,
+					"shift": shift,
+					"late_entry": late_entry,
+					"early_exit": early_exit,
+					"in_time": in_time,
+					"out_time": out_time,
+				}
+			).submit()
 
 			if attendance_status == "Absent":
 				attendance.add_comment(
 					text=_("Employee was marked Absent for not meeting the working hours threshold.")
 				)
 
-			frappe.db.sql(
-				"""update `tabEmployee Checkin`
-				set attendance = %s
-				where name in %s""",
-				(attendance.name, log_names),
-			)
+			update_attendance_in_checkins(log_names, attendance.name)
 			return attendance
-		else:
-			skip_attendance_in_checkins(log_names)
-			add_comment_in_checkins(log_names, duplicate, overlapping)
-			return None
+
+		except DuplicateAttendanceError as e:
+			handle_attendance_exception(log_names, "duplicate", e)
+
+		except OverlappingShiftAttendanceError as e:
+			handle_attendance_exception(log_names, "overlapping", e)
 
 	else:
 		frappe.throw(_("{} is an invalid Attendance Status.").format(attendance_status))
@@ -247,15 +244,19 @@ def find_index_in_dict(dict_list, key, value):
 	return next((index for (index, d) in enumerate(dict_list) if d[key] == value), None)
 
 
-def add_comment_in_checkins(log_names, duplicate, overlapping):
-	if duplicate:
-		text = _("Auto Attendance skipped due to duplicate attendance record: {}").format(
-			get_link_to_form("Attendance", duplicate[0].name)
-		)
-	else:
-		text = _("Auto Attendance skipped due to overlapping attendance record: {}").format(
-			get_link_to_form("Attendance", overlapping.name)
-		)
+def handle_attendance_exception(log_names: list, reason: str, error_message: str):
+	frappe.db.rollback(save_point="attendance_creation")
+	frappe.clear_messages()
+	skip_attendance_in_checkins(log_names)
+	add_comment_in_checkins(log_names, reason, error_message)
+
+
+def add_comment_in_checkins(log_names: list, reason: str, error_message: str):
+	conflicting_docname = cstr(error_message).split(":")[-1].strip()
+
+	text = _("Auto Attendance skipped due to {} attendance record: {}").format(
+		_(reason), get_link_to_form("Attendance", conflicting_docname)
+	)
 
 	for name in log_names:
 		frappe.get_doc(
@@ -269,10 +270,19 @@ def add_comment_in_checkins(log_names, duplicate, overlapping):
 		).insert(ignore_permissions=True)
 
 
-def skip_attendance_in_checkins(log_names):
+def skip_attendance_in_checkins(log_names: list):
 	EmployeeCheckin = frappe.qb.DocType("Employee Checkin")
 	(
 		frappe.qb.update(EmployeeCheckin)
 		.set("skip_auto_attendance", 1)
+		.where(EmployeeCheckin.name.isin(log_names))
+	).run()
+
+
+def update_attendance_in_checkins(log_names: list, attendance_id: str):
+	EmployeeCheckin = frappe.qb.DocType("Employee Checkin")
+	(
+		frappe.qb.update(EmployeeCheckin)
+		.set("attendance", attendance_id)
 		.where(EmployeeCheckin.name.isin(log_names))
 	).run()
