@@ -109,18 +109,22 @@ class PayrollEntry(Document):
 		self.db_set("error_message", "")
 
 	def make_filters(self):
-		return frappe._dict(
+		filters = frappe._dict(
 			company=self.company,
 			branch=self.branch,
 			department=self.department,
 			designation=self.designation,
 			currency=self.currency,
-			payroll_frequency=self.payroll_frequency,
 			start_date=self.start_date,
 			end_date=self.end_date,
 			payroll_payable_account=self.payroll_payable_account,
 			salary_slip_based_on_timesheet=self.salary_slip_based_on_timesheet,
 		)
+
+		if self.salary_slip_based_on_timesheet:
+			filters.update(dict(payroll_frequency=self.payroll_frequency))
+
+		return filters
 
 	@frappe.whitelist()
 	def fill_employee_details(self):
@@ -947,7 +951,8 @@ def get_sal_struct(
 	company: str, currency: str, salary_slip_based_on_timesheet: int, payroll_frequency: str
 ) -> list[str]:
 	SalaryStructure = frappe.qb.DocType("Salary Structure")
-	return (
+
+	query = (
 		frappe.qb.from_(SalaryStructure)
 		.select(SalaryStructure.name)
 		.where(
@@ -956,9 +961,13 @@ def get_sal_struct(
 			& (SalaryStructure.company == company)
 			& (SalaryStructure.currency == currency)
 			& (SalaryStructure.salary_slip_based_on_timesheet == salary_slip_based_on_timesheet)
-			& (SalaryStructure.payroll_frequency == payroll_frequency)
 		)
-	).run(pluck=True)
+	)
+
+	if not salary_slip_based_on_timesheet:
+		query += query.where(SalaryStructure.payroll_frequency == payroll_frequency)
+
+	return query.run(pluck=True)
 
 
 def get_filtered_employees(
