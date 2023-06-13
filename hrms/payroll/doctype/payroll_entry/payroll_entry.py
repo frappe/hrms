@@ -105,6 +105,7 @@ class PayrollEntry(Document):
 		self.set_status(update=True, status="Cancelled")
 		self.db_set("error_message", "")
 
+<<<<<<< HEAD
 	def get_emp_list(self):
 		"""
 		Returns list of active employees based on selected criteria
@@ -123,6 +124,19 @@ class PayrollEntry(Document):
 
 		sal_struct = get_sal_struct(
 			self.company, self.currency, self.salary_slip_based_on_timesheet, condition
+=======
+	def make_filters(self):
+		filters = frappe._dict(
+			company=self.company,
+			branch=self.branch,
+			department=self.department,
+			designation=self.designation,
+			currency=self.currency,
+			start_date=self.start_date,
+			end_date=self.end_date,
+			payroll_payable_account=self.payroll_payable_account,
+			salary_slip_based_on_timesheet=self.salary_slip_based_on_timesheet,
+>>>>>>> a8ed22cd (fix: do not add condition to validate payroll frequency if payroll is based on timesheet)
 		)
 		if sal_struct:
 			cond += "and t2.salary_structure IN %(sal_struct)s "
@@ -138,6 +152,11 @@ class PayrollEntry(Document):
 		filters["branch"] = self.branch
 		filters["department"] = self.department
 		filters["designation"] = self.designation
+
+		return filters
+
+		if self.salary_slip_based_on_timesheet:
+			filters.update(dict(payroll_frequency=self.payroll_frequency))
 
 		return filters
 
@@ -836,6 +855,7 @@ class PayrollEntry(Document):
 
 
 def get_sal_struct(
+<<<<<<< HEAD
 	company: str, currency: str, salary_slip_based_on_timesheet: int, condition: str
 ):
 	return frappe.db.sql_list(
@@ -856,6 +876,58 @@ def get_sal_struct(
 			"currency": currency,
 			"salary_slip_based_on_timesheet": salary_slip_based_on_timesheet,
 		},
+=======
+	company: str, currency: str, salary_slip_based_on_timesheet: int, payroll_frequency: str
+) -> list[str]:
+	SalaryStructure = frappe.qb.DocType("Salary Structure")
+
+	query = (
+		frappe.qb.from_(SalaryStructure)
+		.select(SalaryStructure.name)
+		.where(
+			(SalaryStructure.docstatus == 1)
+			& (SalaryStructure.is_active == "Yes")
+			& (SalaryStructure.company == company)
+			& (SalaryStructure.currency == currency)
+			& (SalaryStructure.salary_slip_based_on_timesheet == salary_slip_based_on_timesheet)
+		)
+	)
+
+	if not salary_slip_based_on_timesheet:
+		query += query.where(SalaryStructure.payroll_frequency == payroll_frequency)
+
+	return query.run(pluck=True)
+
+
+def get_filtered_employees(
+	sal_struct,
+	filters,
+	searchfield=None,
+	search_string=None,
+	fields=None,
+	as_dict=False,
+	limit=None,
+	offset=None,
+	ignore_match_conditions=False,
+) -> list:
+	SalaryStructureAssignment = frappe.qb.DocType("Salary Structure Assignment")
+	Employee = frappe.qb.DocType("Employee")
+
+	query = (
+		frappe.qb.from_(Employee)
+		.join(SalaryStructureAssignment)
+		.on(Employee.name == SalaryStructureAssignment.employee)
+		.where(
+			(SalaryStructureAssignment.docstatus == 1)
+			& (Employee.status != "Inactive")
+			& (Employee.company == filters.company)
+			& ((Employee.date_of_joining <= filters.end_date) | (Employee.date_of_joining.isnull()))
+			& ((Employee.relieving_date >= filters.start_date) | (Employee.relieving_date.isnull()))
+			& (SalaryStructureAssignment.salary_structure.isin(sal_struct))
+			& (SalaryStructureAssignment.payroll_payable_account == filters.payroll_payable_account)
+			& (filters.end_date >= SalaryStructureAssignment.from_date)
+		)
+>>>>>>> a8ed22cd (fix: do not add condition to validate payroll frequency if payroll is based on timesheet)
 	)
 
 
