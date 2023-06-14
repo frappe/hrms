@@ -30,15 +30,15 @@ class TestProjectProfitability(FrappeTestCase):
 
 		holidays = self.salary_slip.get_holidays_for_employee(date, date)
 		if holidays:
-			frappe.db.set_value("Payroll Settings", None, "include_holidays_in_total_working_days", 1)
+			frappe.db.set_single_value("Payroll Settings", "include_holidays_in_total_working_days", 1)
 
 		self.salary_slip.submit()
 		self.sales_invoice = make_sales_invoice(self.timesheet.name, "_Test Item", "_Test Customer")
 		self.sales_invoice.due_date = date
 		self.sales_invoice.submit()
 
-		frappe.db.set_value("HR Settings", None, "standard_working_hours", 8)
-		frappe.db.set_value("Payroll Settings", None, "include_holidays_in_total_working_days", 0)
+		frappe.db.set_single_value("HR Settings", "standard_working_hours", 8)
+		frappe.db.set_single_value("Payroll Settings", "include_holidays_in_total_working_days", 0)
 
 	def test_project_profitability(self):
 		filters = {
