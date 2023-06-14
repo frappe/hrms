@@ -121,7 +121,7 @@ class PayrollEntry(Document):
 			salary_slip_based_on_timesheet=self.salary_slip_based_on_timesheet,
 		)
 
-		if self.salary_slip_based_on_timesheet:
+		if not self.salary_slip_based_on_timesheet:
 			filters.update(dict(payroll_frequency=self.payroll_frequency))
 
 		return filters
@@ -947,7 +947,7 @@ class PayrollEntry(Document):
 		return holiday_list_based_count[key] or 0
 
 
-def get_sal_struct(
+def get_salary_structure(
 	company: str, currency: str, salary_slip_based_on_timesheet: int, payroll_frequency: str
 ) -> list[str]:
 	SalaryStructure = frappe.qb.DocType("Salary Structure")
@@ -965,7 +965,7 @@ def get_sal_struct(
 	)
 
 	if not salary_slip_based_on_timesheet:
-		query += query.where(SalaryStructure.payroll_frequency == payroll_frequency)
+		query = query.where(SalaryStructure.payroll_frequency == payroll_frequency)
 
 	return query.run(pluck=True)
 
@@ -1355,7 +1355,7 @@ def get_employee_list(
 	offset=None,
 	ignore_match_conditions=False,
 ) -> list:
-	sal_struct = get_sal_struct(
+	sal_struct = get_salary_structure(
 		filters.company,
 		filters.currency,
 		filters.salary_slip_based_on_timesheet,
