@@ -34,10 +34,12 @@
 
 <script setup>
 
+import { inject } from "vue"
 import { Badge, Input } from "frappe-ui"
 
-import dayjs from "@/utils/dayjs"
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
+
+const dayjs = inject("$dayjs")
 
 const props = defineProps({
 	value: [String, Number, Boolean, Array, Object],

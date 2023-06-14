@@ -46,9 +46,9 @@
 import { inject, computed } from "vue"
 import { IonModal } from "@ionic/vue"
 import { FeatherIcon, createResource } from "frappe-ui"
-import dayjs from "@/utils/dayjs"
 
 const employee = inject("$employee")
+const dayjs = inject("$dayjs")
 
 const holidays = createResource({
 	url: "hrms.api.get_holidays_for_employee",

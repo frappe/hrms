@@ -37,9 +37,8 @@
 	import { computed, inject, ref } from "vue"
 	import { IonModal, modalController } from "@ionic/vue"
 
-	import dayjs from "@/utils/dayjs"
-
 	const employee = inject("$employee")
+	const dayjs = inject("$dayjs")
 	const checkinTimestamp = ref(null)
 
 	const checkins = createListResource({
