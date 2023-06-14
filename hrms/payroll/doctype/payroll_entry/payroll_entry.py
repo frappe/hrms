@@ -155,7 +155,7 @@ class PayrollEntry(Document):
 
 		return filters
 
-		if self.salary_slip_based_on_timesheet:
+		if not self.salary_slip_based_on_timesheet:
 			filters.update(dict(payroll_frequency=self.payroll_frequency))
 
 		return filters
@@ -854,6 +854,7 @@ class PayrollEntry(Document):
 		return marked_days
 
 
+<<<<<<< HEAD
 def get_sal_struct(
 <<<<<<< HEAD
 	company: str, currency: str, salary_slip_based_on_timesheet: int, condition: str
@@ -877,6 +878,9 @@ def get_sal_struct(
 			"salary_slip_based_on_timesheet": salary_slip_based_on_timesheet,
 		},
 =======
+=======
+def get_salary_structure(
+>>>>>>> cee27a6d (fix: query to pull salary structure name)
 	company: str, currency: str, salary_slip_based_on_timesheet: int, payroll_frequency: str
 ) -> list[str]:
 	SalaryStructure = frappe.qb.DocType("Salary Structure")
@@ -894,7 +898,7 @@ def get_sal_struct(
 	)
 
 	if not salary_slip_based_on_timesheet:
-		query += query.where(SalaryStructure.payroll_frequency == payroll_frequency)
+		query = query.where(SalaryStructure.payroll_frequency == payroll_frequency)
 
 	return query.run(pluck=True)
 
@@ -1252,11 +1256,29 @@ def get_payroll_entries_for_jv(doctype, txt, searchfield, start, page_len, filte
 	)
 
 
+<<<<<<< HEAD
 def get_employee_list(filters: frappe._dict) -> list[str]:
 	condition = f"and payroll_frequency = '{filters.payroll_frequency}'"
 
 	sal_struct = get_sal_struct(
 		filters.company, filters.currency, filters.salary_slip_based_on_timesheet, condition
+=======
+def get_employee_list(
+	filters: frappe._dict,
+	searchfield=None,
+	search_string=None,
+	fields: list[str] = None,
+	as_dict=True,
+	limit=None,
+	offset=None,
+	ignore_match_conditions=False,
+) -> list:
+	sal_struct = get_salary_structure(
+		filters.company,
+		filters.currency,
+		filters.salary_slip_based_on_timesheet,
+		filters.payroll_frequency,
+>>>>>>> cee27a6d (fix: query to pull salary structure name)
 	)
 
 	if not sal_struct:
