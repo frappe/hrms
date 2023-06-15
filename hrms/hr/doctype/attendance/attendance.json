@@ -125,12 +125,14 @@
    "reqd": 1
   },
   {
+   "fetch_from": "employee.company",
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
    "oldfieldname": "company",
    "oldfieldtype": "Link",
    "options": "Company",
+   "read_only": 1,
    "remember_last_selected_value": 1,
    "reqd": 1
   },
@@ -205,7 +207,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-05-02 16:38:11.017001",
+ "modified": "2023-06-15 20:09:21.730465",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance",
