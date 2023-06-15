@@ -1,0 +1,17 @@
+{
+  "name": "hrms",
+  "description": "Open Source HR & Payroll System powered by the Frappe Framework",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frappe/hrms.git"
+  },
+  "homepage": "https://frappehr.com",
+  "author": "Frappe Technologies Pvt. Ltd.",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/frappe/hrms/issues"
+  },
+  "dependencies": {
+    "html2canvas": "^1.4.1"
+  }
+}
