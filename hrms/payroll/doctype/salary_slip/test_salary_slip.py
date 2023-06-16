@@ -2139,7 +2139,6 @@ def mark_attendance(
 	late_entry=False,
 	early_exit=False,
 ):
-	company = frappe.db.get_value("Employee", employee, "company")
 	attendance = frappe.new_doc("Attendance")
 	attendance.update(
 		{
@@ -2147,7 +2146,6 @@ def mark_attendance(
 			"employee": employee,
 			"attendance_date": attendance_date,
 			"status": status,
-			"company": company,
 			"shift": shift,
 			"leave_type": leave_type,
 			"late_entry": late_entry,
