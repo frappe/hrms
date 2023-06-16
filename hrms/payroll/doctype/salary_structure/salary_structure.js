@@ -180,9 +180,7 @@ frappe.ui.form.on('Salary Structure', {
 	},
 
 	salary_slip_based_on_timesheet: function(frm) {
-		frm.trigger("toggle_fields");
-		hrms.set_payroll_frequency_to_null(frm);
-
+		frm.trigger("toggle_fields")
 	},
 
 	preview_salary_slip: function(frm) {

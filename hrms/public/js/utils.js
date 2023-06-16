@@ -10,11 +10,5 @@ $.extend(hrms, {
 				cur_frm.save();
 			}
 		});
-	},
-
-	set_payroll_frequency_to_null: (frm) => {
-		if (frm.doc.salary_slip_based_on_timesheet ==1){
-			frm.set_value("payroll_frequency", "");
-		}
 	}
 })
