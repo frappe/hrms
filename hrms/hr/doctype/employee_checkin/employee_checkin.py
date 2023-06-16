@@ -136,8 +136,6 @@ def mark_attendance_and_link_log(
 		return None
 
 	elif attendance_status in ("Present", "Absent", "Half Day"):
-		company = frappe.db.get_value("Employee", employee, "company", cache=True)
-
 		try:
 			frappe.db.savepoint("attendance_creation")
 			attendance = frappe.new_doc("Attendance")
@@ -148,7 +146,6 @@ def mark_attendance_and_link_log(
 					"attendance_date": attendance_date,
 					"status": attendance_status,
 					"working_hours": working_hours,
-					"company": company,
 					"shift": shift,
 					"late_entry": late_entry,
 					"early_exit": early_exit,
