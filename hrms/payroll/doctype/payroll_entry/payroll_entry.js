@@ -209,9 +209,10 @@ frappe.ui.form.on('Payroll Entry', {
 
 	get_employee_filters: function (frm) {
 		let filters = {};
+		filters['salary_slip_based_on_timesheet'] = frm.doc.salary_slip_based_on_timesheet;
 
 		let fields = ['company', 'start_date', 'end_date', 'payroll_frequency', 'payroll_payable_account',
-			'currency', 'department', 'branch', 'designation', 'salary_slip_based_on_timesheet'];
+			'currency', 'department', 'branch', 'designation'];
 
 		fields.forEach(field => {
 			if (frm.doc[field]) {
@@ -307,7 +308,6 @@ frappe.ui.form.on('Payroll Entry', {
 
 	salary_slip_based_on_timesheet: function (frm) {
 		frm.toggle_reqd(['payroll_frequency'], !frm.doc.salary_slip_based_on_timesheet);
-		hrms.set_payroll_frequency_to_null(frm);
 	},
 
 	set_start_end_dates: function (frm) {
