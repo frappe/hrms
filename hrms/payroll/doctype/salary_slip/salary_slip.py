@@ -1145,11 +1145,7 @@ class SalarySlip(TransactionBase):
 				self.other_deduction_components.append(d.salary_component)
 
 		if not tax_components:
-			tax_components = [
-				d.name
-				for d in frappe.get_all("Salary Component", filters={"variable_based_on_taxable_salary": 1})
-				if d.name not in self.other_deduction_components
-			]
+			tax_components = self.get_tax_components()
 
 		if tax_components and self.payroll_period and self.salary_structure:
 			self.tax_slab = self.get_income_tax_slabs()
@@ -1157,10 +1153,34 @@ class SalarySlip(TransactionBase):
 
 		self.component_based_veriable_tax = {}
 		for d in tax_components:
+			if d.get("company") and self.company != d.get("company"):
+				continue
+
 			self.component_based_veriable_tax.setdefault(d, {})
 			tax_amount = self.calculate_variable_based_on_taxable_salary(d)
 			tax_row = get_salary_component_data(d)
 			self.update_component_row(tax_row, tax_amount, "deductions")
+
+	def get_tax_components(self):
+		def _get_tax_components():
+			sc = frappe.qb.DocType("Salary Component")
+			sca = frappe.qb.DocType("Salary Component Account")
+
+			return (
+				frappe.qb.from_(sc)
+				.left_join(sca)
+				.on(sca.parent == sc.name)
+				.select(
+					sc.name,
+					sca.company,
+				)
+				.where(sc.variable_based_on_taxable_salary == 1)
+			).run(as_dict=True)
+
+		if frappe.flags.in_test:
+			return _get_tax_components()
+		else:
+			return frappe.cache().get_value("tax_components", _get_tax_components, expires=3600)
 
 	def update_component_row(
 		self,
