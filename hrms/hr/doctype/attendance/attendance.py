@@ -264,7 +264,6 @@ def mark_attendance(
 	late_entry=False,
 	early_exit=False,
 ):
-	company = frappe.db.get_value("Employee", employee, "company")
 	savepoint = "attendance_creation"
 
 	try:
@@ -276,7 +275,6 @@ def mark_attendance(
 				"employee": employee,
 				"attendance_date": attendance_date,
 				"status": status,
-				"company": company,
 				"shift": shift,
 				"leave_type": leave_type,
 				"late_entry": late_entry,
@@ -299,7 +297,6 @@ def mark_bulk_attendance(data):
 	if isinstance(data, str):
 		data = json.loads(data)
 	data = frappe._dict(data)
-	company = frappe.get_value("Employee", data.employee, "company")
 	if not data.unmarked_days:
 		frappe.throw(_("Please select a date."))
 		return
@@ -310,7 +307,6 @@ def mark_bulk_attendance(data):
 			"employee": data.employee,
 			"attendance_date": get_datetime(date),
 			"status": data.status,
-			"company": company,
 		}
 		attendance = frappe.get_doc(doc_dict).insert()
 		attendance.submit()

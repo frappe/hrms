@@ -306,7 +306,7 @@ class PayrollEntry(Document):
 		salary_components = self.get_salary_components(component_type)
 		if salary_components:
 			component_dict = {}
-			self.employee_cost_centers = {}
+
 			for item in salary_components:
 				employee_cost_centers = self.get_payroll_cost_centers_for_employee(
 					item.employee, item.salary_structure
@@ -334,12 +334,21 @@ class PayrollEntry(Document):
 
 			return account_details
 
-	def set_employee_based_payroll_payable_entries(self, component_type, employee, amount):
-		self.employee_based_payroll_payable_entries.setdefault(employee, {})
-		self.employee_based_payroll_payable_entries[employee].setdefault(component_type, 0)
-		self.employee_based_payroll_payable_entries[employee][component_type] += amount
+	def set_employee_based_payroll_payable_entries(
+		self, component_type, employee, amount, salary_structure=None
+	):
+		employee_details = self.employee_based_payroll_payable_entries.setdefault(employee, {})
+
+		employee_details.setdefault(component_type, 0)
+		employee_details[component_type] += amount
+
+		if salary_structure and "salary_structure" not in employee_details:
+			employee_details["salary_structure"] = salary_structure
 
 	def get_payroll_cost_centers_for_employee(self, employee, salary_structure):
+		if not hasattr(self, "employee_cost_centers"):
+			self.employee_cost_centers = {}
+
 		if not self.employee_cost_centers.get(employee):
 			ss_assignment_name = frappe.db.get_value(
 				"Salary Structure Assignment",
@@ -649,7 +658,10 @@ class PayrollEntry(Document):
 						else:
 							if process_payroll_accounting_entry_based_on_employee:
 								self.set_employee_based_payroll_payable_entries(
-									"earnings", salary_slip.employee, sal_detail.amount
+									"earnings",
+									salary_slip.employee,
+									sal_detail.amount,
+									salary_slip.salary_structure,
 								)
 							salary_slip_total += sal_detail.amount
 
@@ -660,7 +672,10 @@ class PayrollEntry(Document):
 					if statistical_component != 1:
 						if process_payroll_accounting_entry_based_on_employee:
 							self.set_employee_based_payroll_payable_entries(
-								"deductions", salary_slip.employee, sal_detail.amount
+								"deductions",
+								salary_slip.employee,
+								sal_detail.amount,
+								salary_slip.salary_structure,
 							)
 
 						salary_slip_total -= sal_detail.amount
@@ -688,6 +703,7 @@ class PayrollEntry(Document):
 					"bank_account": self.bank_account,
 					"credit_in_account_currency": flt(amount, precision),
 					"exchange_rate": flt(exchange_rate),
+					"cost_center": self.cost_center,
 				},
 				accounting_dimensions,
 			)
@@ -702,20 +718,27 @@ class PayrollEntry(Document):
 					self.payment_account, je_payment_amount, company_currency, currencies
 				)
 
-				accounts.append(
-					self.update_accounting_dimensions(
-						{
-							"account": payroll_payable_account,
-							"debit_in_account_currency": flt(amount, precision),
-							"exchange_rate": flt(exchange_rate),
-							"reference_type": self.doctype,
-							"reference_name": self.name,
-							"party_type": "Employee",
-							"party": employee,
-						},
-						accounting_dimensions,
-					)
+				cost_centers = self.get_payroll_cost_centers_for_employee(
+					employee, employee_details.get("salary_structure")
 				)
+
+				for cost_center, percentage in cost_centers.items():
+					amount_against_cost_center = flt(amount) * percentage / 100
+					accounts.append(
+						self.update_accounting_dimensions(
+							{
+								"account": payroll_payable_account,
+								"debit_in_account_currency": flt(amount_against_cost_center, precision),
+								"exchange_rate": flt(exchange_rate),
+								"reference_type": self.doctype,
+								"reference_name": self.name,
+								"party_type": "Employee",
+								"party": employee,
+								"cost_center": cost_center,
+							},
+							accounting_dimensions,
+						)
+					)
 		else:
 			exchange_rate, amount = self.get_amount_and_exchange_rate_for_journal_entry(
 				payroll_payable_account, je_payment_amount, company_currency, currencies
@@ -728,6 +751,7 @@ class PayrollEntry(Document):
 						"exchange_rate": flt(exchange_rate),
 						"reference_type": self.doctype,
 						"reference_name": self.name,
+						"cost_center": self.cost_center,
 					},
 					accounting_dimensions,
 				)
