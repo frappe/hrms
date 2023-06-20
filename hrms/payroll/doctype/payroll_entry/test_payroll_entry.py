@@ -403,7 +403,7 @@ class TestPayrollEntry(FrappeTestCase):
 		payroll_entry.cancel()
 		self.assertEqual(payroll_entry.status, "Cancelled")
 
-	def test_payroll_entry_cancellation_against_cacnelled_gernal_entry(self):
+	def test_payroll_entry_cancellation_against_cancelled_journal_entry(self):
 		company_doc = frappe.get_doc("Company", "_Test Company")
 		employee = make_employee("test_pe_cancellation@payroll.com", company=company_doc.name)
 
@@ -429,10 +429,8 @@ class TestPayrollEntry(FrappeTestCase):
 			as_dict=True,
 		)
 
-		jv_doc = frappe.get_doc("Journal Entry", jv.parent)
-
-		for acc in jv_doc.accounts:
-			acc.update({"cost_center": "Main - _TC"})
+		jv_doc = frappe.get_doc("Journal Entry", jv)
+		self.assertEqual(jv_doc.accounts[0].cost_center, payroll_entry.cost_center)
 
 		jv_doc.cheque_no = "123456"
 		jv_doc.cheque_date = nowdate()
