@@ -65,8 +65,7 @@
    "fieldname": "payroll_frequency",
    "fieldtype": "Select",
    "label": "Payroll Frequency",
-   "options": "\nMonthly\nFortnightly\nBimonthly\nWeekly\nDaily",
-   "reqd": 1
+   "options": "\nMonthly\nFortnightly\nBimonthly\nWeekly\nDaily"
   },
   {
    "fieldname": "company",
@@ -329,7 +328,7 @@
  "icon": "fa fa-cog",
  "is_submittable": 1,
  "links": [],
- "modified": "2023-05-26 17:03:51.264095",
+ "modified": "2023-06-20 16:22:08.674424",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",
