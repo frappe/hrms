@@ -37,6 +37,7 @@ from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 	create_salary_structure_assignment,
 	make_salary_structure,
 )
+from hrms.tests.test_utils import create_department
 
 test_dependencies = ["Holiday List"]
 
@@ -137,58 +138,29 @@ class TestPayrollEntry(FrappeTestCase):
 		self.assertEqual(salary_slip.base_net_pay, payment_entry[0].total_debit)
 		self.assertEqual(salary_slip.base_net_pay, payment_entry[0].total_credit)
 
+	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0})
 	def test_payroll_entry_with_employee_cost_center(self):
-		if not frappe.db.exists("Department", "cc - _TC"):
-			frappe.get_doc(
-				{"doctype": "Department", "department_name": "cc", "company": "_Test Company"}
-			).insert()
+		department = create_department("Cost Center Test")
 
 		employee1 = make_employee(
-			"test_employee1@example.com",
+			"test_emp1@example.com",
 			payroll_cost_center="_Test Cost Center - _TC",
-			department="cc - _TC",
+			department=department,
 			company="_Test Company",
 		)
 		employee2 = make_employee(
-			"test_employee2@example.com", department="cc - _TC", company="_Test Company"
+			"test_emp2@example.com", department=department, company="_Test Company"
 		)
 
-		company = frappe.get_doc("Company", "_Test Company")
-		setup_salary_structure(employee1, company)
-
-		ss = make_salary_structure(
-			"_Test Salary Structure 2",
-			"Monthly",
-			employee2,
-			company="_Test Company",
-			currency=company.default_currency,
-			test_tax=False,
-		)
-
-		# update cost centers in salary structure assignment for employee2
-		ssa = frappe.db.get_value(
-			"Salary Structure Assignment",
-			{"employee": employee2, "salary_structure": ss.name, "docstatus": 1},
-			"name",
-		)
-
-		ssa_doc = frappe.get_doc("Salary Structure Assignment", ssa)
-		ssa_doc.payroll_cost_centers = []
-		ssa_doc.append(
-			"payroll_cost_centers", {"cost_center": "_Test Cost Center - _TC", "percentage": 60}
-		)
-		ssa_doc.append(
-			"payroll_cost_centers", {"cost_center": "_Test Cost Center 2 - _TC", "percentage": 40}
-		)
-		ssa_doc.save()
+		create_assignments_with_cost_centers(employee1, employee2)
 
 		dates = get_start_end_dates("Monthly", nowdate())
 		pe = make_payroll_entry(
 			start_date=dates.start_date,
 			end_date=dates.end_date,
 			payable_account="_Test Payroll Payable - _TC",
-			currency=frappe.db.get_value("Company", "_Test Company", "default_currency"),
-			department="cc - _TC",
+			currency="INR",
+			department=department,
 			company="_Test Company",
 			payment_account="Cash - _TC",
 			cost_center="Main - _TC",
@@ -403,7 +375,7 @@ class TestPayrollEntry(FrappeTestCase):
 		payroll_entry.cancel()
 		self.assertEqual(payroll_entry.status, "Cancelled")
 
-	def test_payroll_entry_cancellation_against_cacnelled_gernal_entry(self):
+	def test_payroll_entry_cancellation_against_cancelled_journal_entry(self):
 		company_doc = frappe.get_doc("Company", "_Test Company")
 		employee = make_employee("test_pe_cancellation@payroll.com", company=company_doc.name)
 
@@ -426,13 +398,10 @@ class TestPayrollEntry(FrappeTestCase):
 			"Journal Entry Account",
 			{"reference_type": "Payroll Entry", "reference_name": payroll_entry.name, "docstatus": 0},
 			"parent",
-			as_dict=True,
 		)
 
-		jv_doc = frappe.get_doc("Journal Entry", jv.parent)
-
-		for acc in jv_doc.accounts:
-			acc.update({"cost_center": "Main - _TC"})
+		jv_doc = frappe.get_doc("Journal Entry", jv)
+		self.assertEqual(jv_doc.accounts[0].cost_center, payroll_entry.cost_center)
 
 		jv_doc.cheque_no = "123456"
 		jv_doc.cheque_date = nowdate()
@@ -524,6 +493,75 @@ class TestPayrollEntry(FrappeTestCase):
 					self.assertEqual(account.party_type, None)
 					self.assertEqual(account.party, None)
 
+	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1})
+	def test_employee_wise_bank_entry_with_cost_centers(self):
+		department = create_department("Cost Center Test")
+		employee1 = make_employee(
+			"test_emp1@example.com",
+			payroll_cost_center="_Test Cost Center - _TC",
+			department=department,
+			company="_Test Company",
+		)
+		employee2 = make_employee(
+			"test_emp2@example.com", department=department, company="_Test Company"
+		)
+
+		create_assignments_with_cost_centers(employee1, employee2)
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = make_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account="_Test Payroll Payable - _TC",
+			currency="INR",
+			department=department,
+			company="_Test Company",
+			payment_account="Cash - _TC",
+			cost_center="Main - _TC",
+		)
+		payroll_entry.reload()
+		payroll_entry.make_payment_entry()
+
+		debit_entries = frappe.db.get_all(
+			"Journal Entry Account",
+			fields=["party", "account", "cost_center", "debit", "credit"],
+			filters={
+				"reference_type": "Payroll Entry",
+				"reference_name": payroll_entry.name,
+				"docstatus": 0,
+			},
+			order_by="party, cost_center",
+		)
+
+		expected_entries = [
+			# 100% in a single cost center
+			{
+				"party": employee1,
+				"account": "_Test Payroll Payable - _TC",
+				"cost_center": "_Test Cost Center - _TC",
+				"debit": 77800.0,
+				"credit": 0.0,
+			},
+			# 60% of 77800.0
+			{
+				"party": employee2,
+				"account": "_Test Payroll Payable - _TC",
+				"cost_center": "_Test Cost Center - _TC",
+				"debit": 46680.0,
+				"credit": 0.0,
+			},
+			# 40% of 77800.0
+			{
+				"party": employee2,
+				"account": "_Test Payroll Payable - _TC",
+				"cost_center": "_Test Cost Center 2 - _TC",
+				"debit": 31120.0,
+				"credit": 0.0,
+			},
+		]
+
+		self.assertEqual(debit_entries, expected_entries)
+
 
 def get_payroll_entry(**args):
 	args = frappe._dict(args)
@@ -607,10 +645,33 @@ def setup_salary_structure(employee, company_doc, currency=None, salary_structur
 		):
 			set_salary_component_account(data)
 
-	make_salary_structure(
+	return make_salary_structure(
 		salary_structure or "_Test Salary Structure",
 		"Monthly",
 		employee,
 		company=company_doc.name,
 		currency=(currency or company_doc.default_currency),
 	)
+
+
+def create_assignments_with_cost_centers(employee1, employee2):
+	company = frappe.get_doc("Company", "_Test Company")
+	setup_salary_structure(employee1, company)
+	ss = setup_salary_structure(employee2, company, salary_structure="_Test Salary Structure 2")
+
+	# update cost centers in salary structure assignment for employee2
+	ssa = frappe.db.get_value(
+		"Salary Structure Assignment",
+		{"employee": employee2, "salary_structure": ss.name, "docstatus": 1},
+		"name",
+	)
+
+	ssa_doc = frappe.get_doc("Salary Structure Assignment", ssa)
+	ssa_doc.payroll_cost_centers = []
+	ssa_doc.append(
+		"payroll_cost_centers", {"cost_center": "_Test Cost Center - _TC", "percentage": 60}
+	)
+	ssa_doc.append(
+		"payroll_cost_centers", {"cost_center": "_Test Cost Center 2 - _TC", "percentage": 40}
+	)
+	ssa_doc.save()
