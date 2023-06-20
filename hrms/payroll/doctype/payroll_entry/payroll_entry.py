@@ -658,6 +658,7 @@ class PayrollEntry(Document):
 						else:
 							if process_payroll_accounting_entry_based_on_employee:
 								self.set_employee_based_payroll_payable_entries(
+									"earnings",
 									salary_slip.employee,
 									sal_detail.amount,
 									salary_slip.salary_structure,

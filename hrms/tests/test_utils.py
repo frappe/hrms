@@ -1,6 +1,7 @@
 import frappe
 from frappe.utils import add_months, get_first_day, get_last_day, getdate, now_datetime
 
+from erpnext.setup.doctype.department.department import get_abbreviated_name
 from erpnext.setup.utils import enable_all_roles_and_domains
 
 
@@ -57,17 +58,27 @@ def get_first_day_for_prev_month():
 	return prev_month_first
 
 
-def create_company(name=None):
-	company_name = name or "Test Company"
-
-	if frappe.db.exists("Company", company_name):
-		return frappe.get_doc("Company", company_name)
+def create_company(name: str = "_Test Company"):
+	if frappe.db.exists("Company", name):
+		return frappe.get_doc("Company", name)
 
 	return frappe.get_doc(
 		{
 			"doctype": "Company",
-			"company_name": company_name,
+			"company_name": name,
 			"default_currency": "INR",
 			"country": "India",
 		}
 	).insert()
+
+
+def create_department(name: str, company: str = "_Test Company") -> str:
+	docname = get_abbreviated_name(name, company)
+
+	if frappe.db.exists("Department", docname):
+		return docname
+
+	department = frappe.new_doc("Department")
+	department.update({"doctype": "Department", "department_name": name, "company": "_Test Company"})
+	department.insert()
+	return department.name
