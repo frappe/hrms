@@ -170,6 +170,7 @@ doc_events = {
 		"validate": "hrms.controllers.employee_boarding_controller.update_employee_boarding_status"
 	},
 	"Task": {"on_update": "hrms.controllers.employee_boarding_controller.update_task"},
+	"Installed Applications": {"on_update": "hrms.setup.update_salary_slip_loans_setup"},
 }
 
 # Scheduled Tasks
