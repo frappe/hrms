@@ -13,6 +13,7 @@ from hrms.overrides.company import delete_company_fixtures
 
 def after_install():
 	create_custom_fields(get_custom_fields())
+	create_salary_slip_loan_fields()
 	make_fixtures()
 	setup_notifications()
 	update_hr_defaults()
@@ -321,6 +322,11 @@ def get_custom_fields():
 			},
 		],
 	}
+
+
+def create_salary_slip_loan_fields():
+	if "lending" in frappe.get_installed_apps():
+		create_custom_fields(SALARY_SLIP_LOAN_FIELDS)
 
 
 def make_fixtures():
@@ -688,6 +694,9 @@ def delete_custom_fields(custom_fields):
 
 def create_default_role_profiles():
 	for role_profile_name, roles in DEFAULT_ROLE_PROFILES.items():
+		if frappe.db.exists("Role Profile", role_profile_name):
+			continue
+
 		role_profile = frappe.new_doc("Role Profile")
 		role_profile.role_profile = role_profile_name
 		for role in roles:
@@ -703,4 +712,62 @@ DEFAULT_ROLE_PROFILES = {
 		"Leave Approver",
 		"Expense Approver",
 	],
+}
+
+SALARY_SLIP_LOAN_FIELDS = {
+	"Salary Slip": [
+		{
+			"fieldname": "loan_repayment_sb_1",
+			"fieldtype": "Section Break",
+			"label": "Loan Repayment",
+			"depends_on": "total_loan_repayment",
+			"insert_after": "base_total_deduction",
+		},
+		{
+			"fieldname": "loans",
+			"fieldtype": "Table",
+			"label": "Employee Loan",
+			"options": "Salary Slip Loan",
+			"print_hide": 1,
+			"insert_after": "loan_repayment_sb_1",
+		},
+		{
+			"fieldname": "loan_details_sb_1",
+			"fieldtype": "Section Break",
+			"depends_on": "eval:doc.docstatus != 0",
+			"insert_after": "loans",
+		},
+		{
+			"fieldname": "total_principal_amount",
+			"fieldtype": "Currency",
+			"label": "Total Principal Amount",
+			"default": "0",
+			"options": "Company:company:default_currency",
+			"read_only": 1,
+			"insert_after": "loan_details_sb_1",
+		},
+		{
+			"fieldname": "total_interest_amount",
+			"fieldtype": "Currency",
+			"label": "Total Interest Amount",
+			"default": "0",
+			"options": "Company:company:default_currency",
+			"read_only": 1,
+			"insert_after": "total_principal_amount",
+		},
+		{
+			"fieldname": "loan_cb_1",
+			"fieldtype": "Column Break",
+			"insert_after": "total_interest_amount",
+		},
+		{
+			"fieldname": "total_loan_repayment",
+			"fieldtype": "Currency",
+			"label": "Total Loan Repayment",
+			"default": "0",
+			"options": "Company:company:default_currency",
+			"read_only": 1,
+			"insert_after": "loan_cb_1",
+		},
+	]
 }
