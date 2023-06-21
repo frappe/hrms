@@ -1153,9 +1153,6 @@ class SalarySlip(TransactionBase):
 
 		self.component_based_veriable_tax = {}
 		for d in tax_components:
-			if d.get("company") and self.company != d.get("company"):
-				continue
-
 			self.component_based_veriable_tax.setdefault(d, {})
 			tax_amount = self.calculate_variable_based_on_taxable_salary(d)
 			tax_row = get_salary_component_data(d)
@@ -1163,10 +1160,11 @@ class SalarySlip(TransactionBase):
 
 	def get_tax_components(self):
 		def _get_tax_components():
+			tax_components = {}
 			sc = frappe.qb.DocType("Salary Component")
 			sca = frappe.qb.DocType("Salary Component Account")
 
-			return (
+			compoents = (
 				frappe.qb.from_(sc)
 				.left_join(sca)
 				.on(sca.parent == sc.name)
@@ -1177,10 +1175,22 @@ class SalarySlip(TransactionBase):
 				.where(sc.variable_based_on_taxable_salary == 1)
 			).run(as_dict=True)
 
+			for d in compoents:
+				key = d.company if d.company else "default"
+				tax_components.setdefault(key, [])
+				tax_components[key].append(d.name)
+
+			return tax_components
+
 		if frappe.flags.in_test:
-			return _get_tax_components()
+			tax_components = _get_tax_components()
 		else:
-			return frappe.cache().get_value("tax_components", _get_tax_components, expires=3600)
+			tax_components = frappe.cache().get_value("tax_components", _get_tax_components)
+
+		if self.company in tax_components:
+			return tax_components[self.company]
+		else:
+			return tax_components["default"]
 
 	def update_component_row(
 		self,
