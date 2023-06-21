@@ -1158,7 +1158,7 @@ class SalarySlip(TransactionBase):
 			tax_row = get_salary_component_data(d)
 			self.update_component_row(tax_row, tax_amount, "deductions")
 
-	def get_tax_components(self):
+	def get_tax_components(self) -> list:
 		def _get_tax_components():
 			tax_components = {}
 			sc = frappe.qb.DocType("Salary Component")
@@ -1190,7 +1190,7 @@ class SalarySlip(TransactionBase):
 		if self.company in tax_components:
 			return tax_components[self.company]
 		else:
-			return tax_components["default"]
+			return tax_components.get("default", [])
 
 	def update_component_row(
 		self,
