@@ -25,7 +25,4 @@ class SalaryComponent(Document):
 		)
 
 	def invalidate_cache(self):
-		keys_to_detete = ["tax_components"]
-
-		for key in keys_to_detete:
-			frappe.cache().delete_key(key)
+		frappe.cache().delete_key("tax_components")
