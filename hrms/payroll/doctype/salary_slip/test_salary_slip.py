@@ -1100,7 +1100,12 @@ class TestSalarySlip(FrappeTestCase):
 		)
 		employee_doc = frappe.get_doc("Employee", emp)
 
-		create_tax_slab(payroll_period, effective_date="2022-04-01", allow_tax_exemption=True)
+		tax_slab = create_tax_slab(payroll_period, effective_date="2022-04-01", allow_tax_exemption=True)
+
+		effective_date = frappe.db.get_value("Income Tax Slab", tax_slab, "effective_from")
+
+		if effective_date != "2022-04-01":
+			frappe.db.set_value("Income Tax Slab", tax_slab, "effective_from", "2022-04-01")
 
 		salary_structure_name = "Test Salary Structure for Opening Balance"
 		if not frappe.db.exists("Salary Structure", salary_structure_name):
@@ -1112,6 +1117,7 @@ class TestSalarySlip(FrappeTestCase):
 				from_date="2022-04-01",
 				payroll_period=payroll_period,
 				test_tax=True,
+				currency="INR",
 			)
 
 		# validate no salary slip exists for the employee
@@ -1325,10 +1331,7 @@ class TestSalarySlip(FrappeTestCase):
 				self.assertEqual(earning.default_amount, 19000)
 
 	def test_variable_tax_component(self):
-		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
-			create_salary_structure_assignment,
-			make_salary_structure,
-		)
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 		emp = make_employee(
 			"testtaxcomponents@salary.com",
@@ -1347,6 +1350,29 @@ class TestSalarySlip(FrappeTestCase):
 			currency="INR",
 			base=40000,
 		)
+
+		def _make_income_tax_compoent():
+			tax_components = [
+				{
+					"salary_component": "_Test TDS",
+					"abbr": "T_TDS",
+					"type": "Deduction",
+					"depends_on_payment_days": 0,
+					"variable_based_on_taxable_salary": 0,
+					"round_to_the_nearest_integer": 1,
+				},
+				{
+					"salary_component": "_Test Income Tax",
+					"abbr": "T_IT",
+					"type": "Deduction",
+					"depends_on_payment_days": 0,
+					"variable_based_on_taxable_salary": 0,
+					"round_to_the_nearest_integer": 1,
+				},
+			]
+			make_salary_component(tax_components, False, company_list=[])
+
+		_make_income_tax_compoent()
 
 		salary_slip = make_salary_slip(salary_structure_doc.name, employee=emp, posting_date=nowdate())
 
@@ -1374,7 +1400,7 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertIn("_Test Company", [com.company for com in test_tds.accounts])
 
 		# define another tax component with variable_based_on_taxable_salary as 1 and company as empty
-		income_tax = frappe.get_doc("Salary Component", "Income Tax")
+		income_tax = frappe.get_doc("Salary Component", "_Test Income Tax")
 		income_tax.variable_based_on_taxable_salary = 1
 		income_tax.save()
 		income_tax.load_from_db()

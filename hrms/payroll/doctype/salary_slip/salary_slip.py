@@ -1175,10 +1175,10 @@ class SalarySlip(TransactionBase):
 				.where(sc.variable_based_on_taxable_salary == 1)
 			).run(as_dict=True)
 
-			for d in compoents:
-				key = d.company if d.company else "default"
+			for component in compoents:
+				key = component.company if component.company else "default"
 				tax_components.setdefault(key, [])
-				tax_components[key].append(d.name)
+				tax_components[key].append(component.name)
 
 			return tax_components
 
