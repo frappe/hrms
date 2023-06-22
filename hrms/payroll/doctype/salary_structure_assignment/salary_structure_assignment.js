@@ -3,14 +3,7 @@
 
 frappe.ui.form.on('Salary Structure Assignment', {
 	setup: function(frm) {
-		frm.set_query("employee", function() {
-			return {
-				query: "erpnext.controllers.queries.employee_query",
-				filters: {
-					company: frm.doc.company,
-				}
-			}
-		});
+		frm.trigger("set_employee_filter");
 		frm.set_query("salary_structure", function() {
 			return {
 				filters: {
@@ -58,6 +51,25 @@ frappe.ui.form.on('Salary Structure Assignment', {
 		if(frm.doc.__onload){
 			frm.unhide_earnings_and_taxation_section = frm.doc.__onload.earning_and_deduction_entries_does_not_exists;
 			frm.trigger("set_earnings_and_taxation_section_visibility");
+		}
+	},
+
+	set_employee_filter: function(frm) {
+		var filters = {}
+
+		if (frm.doc.salary_structure) {
+			filters["company"] = frm.doc.company;
+		}
+
+		frm.set_query("employee", function() {
+			return {
+				query: "erpnext.controllers.queries.employee_query",
+				filters: filters
+			}
+		});
+
+		if (!frm.doc.salary_structure) {
+			frm.add_fetch("employee", "company", "company");
 		}
 	},
 
