@@ -1324,6 +1324,67 @@ class TestSalarySlip(FrappeTestCase):
 
 				self.assertEqual(earning.default_amount, 19000)
 
+	def test_variable_tax_component(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+			create_salary_structure_assignment,
+			make_salary_structure,
+		)
+
+		emp = make_employee(
+			"testtaxcomponents@salary.com",
+			company="_Test Company",
+			**{"date_of_joining": "2021-12-01"},
+		)
+
+		salary_structure_name = "Test Tax Components"
+
+		salary_structure_doc = make_salary_structure(
+			salary_structure=salary_structure_name,
+			payroll_frequency="Monthly",
+			employee=emp,
+			company="_Test Company",
+			from_date=get_first_day(nowdate()),
+			currency="INR",
+			base=40000,
+		)
+
+		salary_slip = make_salary_slip(salary_structure_doc.name, employee=emp, posting_date=nowdate())
+
+		# check tax component not exist in salary slip
+		self.assertNotIn("_Test TDS", [com.salary_component for com in salary_slip.deductions])
+
+		# validate tax component is not configured as variable
+		test_tds = frappe.get_doc("Salary Component", "_Test TDS")
+		self.assertEqual(test_tds.variable_based_on_taxable_salary, 0)
+		self.assertListEqual(test_tds.accounts, [])
+
+		# configure company in tax component and set variable_based_on_taxable_salary as 1
+		test_tds.append(
+			"accounts",
+			{
+				"company": "_Test Company",
+			},
+		)
+		test_tds.variable_based_on_taxable_salary = 1
+		test_tds.save()
+		test_tds.load_from_db()
+
+		# validate tax component is configurations
+		self.assertEqual(test_tds.variable_based_on_taxable_salary, 1)
+		self.assertIn("_Test Company", [com.company for com in test_tds.accounts])
+
+		# define another tax component with variable_based_on_taxable_salary as 1 and company as empty
+		income_tax = frappe.get_doc("Salary Component", "Income Tax")
+		income_tax.variable_based_on_taxable_salary = 1
+		income_tax.save()
+		income_tax.load_from_db()
+		self.assertEqual(income_tax.variable_based_on_taxable_salary, 1)
+
+		# Validate tax component matching company criteria is added in salary slip
+		tax_component = salary_slip.get_tax_components()
+		self.assertEqual(test_tds.accounts[0].company, salary_slip.company)
+		self.assertListEqual(tax_component, ["_Test TDS"])
+
 
 def get_no_of_days():
 	no_of_days_in_month = calendar.monthrange(getdate(nowdate()).year, getdate(nowdate()).month)
