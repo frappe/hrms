@@ -23,7 +23,8 @@ company_name = "_Test Company 3"
 class TestExpenseClaim(FrappeTestCase):
 	def setUp(self):
 		if not frappe.db.get_value("Cost Center", {"company": company_name}):
-			frappe.get_doc(
+			cost_center = frappe.new_doc("Cost Center")
+			cost_center.update(
 				{
 					"doctype": "Cost Center",
 					"cost_center_name": "_Test Cost Center 3",
@@ -33,39 +34,41 @@ class TestExpenseClaim(FrappeTestCase):
 				}
 			).insert()
 
+			frappe.db.set_value("Company", company_name, "default_cost_center", cost_center)
+
 	def test_total_expense_claim_for_project(self):
-		frappe.db.sql("""delete from `tabTask`""")
-		frappe.db.sql("""delete from `tabProject`""")
+		frappe.db.delete("Task")
+		frappe.db.delete("Project")
 		frappe.db.sql("update `tabExpense Claim` set project = '', task = ''")
 
-		project = frappe.get_doc({"project_name": "_Test Project 1", "doctype": "Project"})
-		project.save()
+		project = create_project("_Test Project 1")
 
-		task = frappe.get_doc(
-			dict(doctype="Task", subject="_Test Project Task 1", status="Open", project=project.name)
+		task = frappe.new_doc("Task")
+		task.update(
+			dict(doctype="Task", subject="_Test Project Task 1", status="Open", project=project)
 		).insert()
+		task = task.name
 
-		task_name = task.name
 		payable_account = get_payable_account(company_name)
 
 		make_expense_claim(
-			payable_account, 300, 200, company_name, "Travel Expenses - _TC3", project.name, task_name
+			payable_account, 300, 200, company_name, "Travel Expenses - _TC3", project, task
 		)
 
-		self.assertEqual(frappe.db.get_value("Task", task_name, "total_expense_claim"), 200)
-		self.assertEqual(frappe.db.get_value("Project", project.name, "total_expense_claim"), 200)
+		self.assertEqual(frappe.db.get_value("Task", task, "total_expense_claim"), 200)
+		self.assertEqual(frappe.db.get_value("Project", project, "total_expense_claim"), 200)
 
 		expense_claim2 = make_expense_claim(
-			payable_account, 600, 500, company_name, "Travel Expenses - _TC3", project.name, task_name
+			payable_account, 600, 500, company_name, "Travel Expenses - _TC3", project, task
 		)
 
-		self.assertEqual(frappe.db.get_value("Task", task_name, "total_expense_claim"), 700)
-		self.assertEqual(frappe.db.get_value("Project", project.name, "total_expense_claim"), 700)
+		self.assertEqual(frappe.db.get_value("Task", task, "total_expense_claim"), 700)
+		self.assertEqual(frappe.db.get_value("Project", project, "total_expense_claim"), 700)
 
 		expense_claim2.cancel()
 
-		self.assertEqual(frappe.db.get_value("Task", task_name, "total_expense_claim"), 200)
-		self.assertEqual(frappe.db.get_value("Project", project.name, "total_expense_claim"), 200)
+		self.assertEqual(frappe.db.get_value("Task", task, "total_expense_claim"), 200)
+		self.assertEqual(frappe.db.get_value("Project", project, "total_expense_claim"), 200)
 
 	def test_expense_claim_status_as_payment_from_journal_entry(self):
 		# Via Journal Entry
@@ -427,6 +430,36 @@ class TestExpenseClaim(FrappeTestCase):
 
 		self.assertEqual(je.accounts[0].debit_in_account_currency, expense_claim.grand_total)
 
+	def test_accounting_dimension_mapping(self):
+		project = create_project("_Test Expense Project")
+		payable_account = get_payable_account(company_name)
+
+		expense_claim = make_expense_claim(
+			payable_account,
+			300,
+			200,
+			company_name,
+			"Travel Expenses - _TC3",
+			do_not_submit=True,
+		)
+
+		expense_claim.expenses[0].project = project
+		expense_claim.submit()
+
+		dimensions = frappe.db.get_value(
+			"GL Entry",
+			{
+				"voucher_type": "Expense Claim",
+				"voucher_no": expense_claim.name,
+				"account": "Travel Expenses - _TC3",
+			},
+			["cost_center", "project"],
+			as_dict=1,
+		)
+
+		self.assertEqual(dimensions.project, project)
+		self.assertEqual(dimensions.cost_center, expense_claim.cost_center)
+
 
 def get_payable_account(company):
 	return frappe.get_cached_value("Company", company, "default_payable_account")
@@ -443,9 +476,19 @@ def generate_taxes(company=None):
 		account_type="Tax",
 		parent_account=parent_account,
 	)
+
+	cost_center = frappe.db.get_value("Company", company, "cost_center")
+
 	return {
 		"taxes": [
-			{"account_head": account, "rate": 9, "description": "CGST", "tax_amount": 10, "total": 210}
+			{
+				"account_head": account,
+				"cost_center": cost_center,
+				"rate": 9,
+				"description": "CGST",
+				"tax_amount": 10,
+				"total": 210,
+			}
 		]
 	}
 
@@ -579,3 +622,14 @@ def allocate_using_payment_reconciliation(expense_claim, employee, journal_entry
 
 	pr.allocate_entries(frappe._dict({"invoices": invoices, "payments": payments}))
 	pr.reconcile()
+
+
+def create_project(project_name):
+	project = frappe.db.exists("Project", {"project_name": project_name})
+	if project:
+		return project
+
+	doc = frappe.new_doc("Project")
+	doc.project_name = project_name
+	doc.insert()
+	return doc.name

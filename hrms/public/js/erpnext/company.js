@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Company", {
-	onload: function(frm) {
+	refresh: function(frm) {
 		frm.set_query("default_expense_claim_payable_account", function() {
 			return {
 				filters: {

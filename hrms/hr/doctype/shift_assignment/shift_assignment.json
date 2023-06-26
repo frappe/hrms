@@ -25,7 +25,8 @@
    "fieldtype": "Link",
    "label": "Employee",
    "options": "Employee",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fetch_from": "employee.employee_name",
@@ -48,7 +49,8 @@
    "in_list_view": 1,
    "label": "Shift Type",
    "options": "Shift Type",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fieldname": "column_break_3",
@@ -88,9 +90,7 @@
    "allow_on_submit": 1,
    "fieldname": "end_date",
    "fieldtype": "Date",
-   "label": "End Date",
-   "show_days": 1,
-   "show_seconds": 1
+   "label": "End Date"
   },
   {
    "allow_on_submit": 1,
@@ -98,17 +98,16 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Active\nInactive",
-   "show_days": 1,
-   "show_seconds": 1
+   "options": "Active\nInactive"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-06-15 14:27:54.310773",
+ "modified": "2023-06-23 12:08:23.247882",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -150,6 +149,7 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "employee_name",
  "track_changes": 1
 }

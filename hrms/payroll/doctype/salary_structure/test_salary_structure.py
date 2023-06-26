@@ -78,7 +78,7 @@ class TestSalaryStructure(FrappeTestCase):
 		self.assertEqual(assignment.base * 0.2, ss.deductions[0].amount)
 
 	def test_amount_totals(self):
-		frappe.db.set_value("Payroll Settings", None, "include_holidays_in_total_working_days", 0)
+		frappe.db.set_single_value("Payroll Settings", "include_holidays_in_total_working_days", 0)
 		sal_slip = frappe.get_value("Salary Slip", {"employee_name": "test_employee_2@salary.com"})
 		if not sal_slip:
 			sal_slip = make_employee_salary_slip(

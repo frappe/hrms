@@ -63,8 +63,7 @@ class TestExitInterview(unittest.TestCase):
 		template = create_notification_template()
 
 		webform = frappe.db.get_all("Web Form", limit=1)
-		frappe.db.set_value(
-			"HR Settings",
+		frappe.db.set_single_value(
 			"HR Settings",
 			{
 				"exit_questionnaire_web_form": webform[0].name,

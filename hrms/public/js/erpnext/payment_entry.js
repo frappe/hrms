@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Payment Entry", {
-	setup: function(frm) {
+	refresh: function(frm) {
 		frm.set_query("reference_doctype", "references", function() {
 			let doctypes = [];
 

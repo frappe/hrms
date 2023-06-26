@@ -24,7 +24,7 @@ class TestEmployeeUtilization(unittest.TestCase):
 		# Create test timesheets
 		cls.create_test_timesheets()
 
-		frappe.db.set_value("HR Settings", "HR Settings", "standard_working_hours", 9)
+		frappe.db.set_single_value("HR Settings", "standard_working_hours", 9)
 
 	@classmethod
 	def create_test_timesheets(cls):

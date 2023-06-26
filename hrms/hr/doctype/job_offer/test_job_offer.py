@@ -23,7 +23,7 @@ class TestJobOffer(FrappeTestCase):
 		create_designation(designation_name="Researcher")
 
 	def test_job_offer_creation_against_vacancies(self):
-		frappe.db.set_value("HR Settings", None, "check_vacancies", 1)
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 1)
 		job_applicant = create_job_applicant(email_id="test_job_offer@example.com")
 		job_offer = create_job_offer(job_applicant=job_applicant.name, designation="UX Designer")
 
@@ -36,12 +36,12 @@ class TestJobOffer(FrappeTestCase):
 		self.assertRaises(frappe.ValidationError, job_offer.submit)
 
 		# test creation of job offer when vacancies are not present
-		frappe.db.set_value("HR Settings", None, "check_vacancies", 0)
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
 		job_offer.submit()
 		self.assertTrue(frappe.db.exists("Job Offer", job_offer.name))
 
 	def test_job_applicant_update(self):
-		frappe.db.set_value("HR Settings", None, "check_vacancies", 0)
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
 		create_staffing_plan()
 		job_applicant = create_job_applicant(email_id="test_job_applicants@example.com")
 		job_offer = create_job_offer(job_applicant=job_applicant.name)
@@ -54,7 +54,7 @@ class TestJobOffer(FrappeTestCase):
 		job_offer.submit()
 		job_applicant.reload()
 		self.assertEquals(job_applicant.status, "Rejected")
-		frappe.db.set_value("HR Settings", None, "check_vacancies", 1)
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 1)
 
 	def test_recruitment_metrics(self):
 		job_applicant1 = create_job_applicant(email_id="test_job_applicant1@example.com")

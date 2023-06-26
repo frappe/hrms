@@ -29,7 +29,6 @@ from erpnext.accounts.utils import get_fiscal_year
 from erpnext.setup.doctype.employee.employee import InactiveEmployeeStatusError
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
-from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
@@ -48,7 +47,7 @@ class TestSalarySlip(FrappeTestCase):
 		frappe.flags.pop("via_payroll_entry", None)
 
 	def tearDown(self):
-		frappe.db.set_value("Payroll Settings", None, "include_holidays_in_total_working_days", 0)
+		frappe.db.set_single_value("Payroll Settings", "include_holidays_in_total_working_days", 0)
 		frappe.set_user("Administrator")
 
 	def test_employee_status_inactive(self):
@@ -334,8 +333,6 @@ class TestSalarySlip(FrappeTestCase):
 	def test_payment_days_in_salary_slip_based_on_timesheet(self):
 		from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
 
-		from hrms.hr.doctype.attendance.attendance import mark_attendance
-
 		emp = make_employee(
 			"test_employee_timesheet@salary.com",
 			company="_Test Company",
@@ -382,7 +379,6 @@ class TestSalarySlip(FrappeTestCase):
 
 	@change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
 	def test_component_amount_dependent_on_another_payment_days_based_component(self):
-		from hrms.hr.doctype.attendance.attendance import mark_attendance
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 			create_salary_structure_assignment,
 		)
@@ -1290,6 +1286,42 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertEqual(earnings["Arrear"], 0.0)
 		self.assertNotIn("Overtime", earnings)
 
+	def test_component_default_amount_against_statistical_component(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+			create_salary_structure_assignment,
+		)
+
+		emp = make_employee(
+			"test_default_value_for_statistical_component@salary.com",
+			company="_Test Company",
+			**{"date_of_joining": "2021-12-01"},
+		)
+
+		salary_structure_doc = make_salary_structure_for_statistical_component("_Test Company")
+
+		create_salary_structure_assignment(
+			employee=emp,
+			salary_structure=salary_structure_doc.name,
+			company="_Test Company",
+			currency="INR",
+			base=40000,
+		)
+
+		# Create Salary Slip
+		salary_slip = make_salary_slip(salary_structure_doc.name, employee=emp, posting_date=nowdate())
+
+		for earning in salary_slip.earnings:
+			if earning.salary_component == "Leave Travel Allowance":
+				# formula for statistical component is, SC = base - BS - H
+				# formula for Leave Travel Allowance is , LTA = base - SC
+				# base = 40000
+				# BS = base * 0.4 = 16000
+				# H = 3000
+				# SC = 40000 - 16000 - 3000 = 21000
+				# LTA = 40000 - 21000 = 19000
+
+				self.assertEqual(earning.default_amount, 19000)
+
 
 def get_no_of_days():
 	no_of_days_in_month = calendar.monthrange(getdate(nowdate()).year, getdate(nowdate()).month)
@@ -1764,9 +1796,9 @@ def setup_test():
 		"Company", erpnext.get_default_company(), "default_holiday_list", "Salary Slip Test Holiday List"
 	)
 
-	frappe.db.set_value("Payroll Settings", None, "email_salary_slip_to_employee", 0)
-	frappe.db.set_value("HR Settings", None, "leave_status_notification_template", None)
-	frappe.db.set_value("HR Settings", None, "leave_approval_notification_template", None)
+	frappe.db.set_single_value("Payroll Settings", "email_salary_slip_to_employee", 0)
+	frappe.db.set_single_value("HR Settings", "leave_status_notification_template", None)
+	frappe.db.set_single_value("HR Settings", "leave_approval_notification_template", None)
 
 
 def make_payroll_period():
@@ -2025,3 +2057,101 @@ def create_additional_salary_for_non_taxable_component(employee, payroll_period,
 	).insert()
 
 	add_sal.submit()
+
+
+def make_salary_structure_for_statistical_component(company):
+	earnings = [
+		{
+			"salary_component": "Basic Component",
+			"abbr": "BSC",
+			"formula": "base * 0.4",
+			"type": "Earning",
+			"amount_based_on_formula": 1,
+		},
+		{"salary_component": "HRA Component", "abbr": "HRAC", "amount": 3000, "type": "Earning"},
+		{
+			"salary_component": "Statistical Component",
+			"abbr": "SC",
+			"type": "Earning",
+			"formula": "base - BSC - HRAC",
+			"statistical_component": 1,
+			"amount_based_on_formula": 1,
+			"depends_on_payment_days": 0,
+		},
+		{
+			"salary_component": "Leave Travel Allowance",
+			"abbr": "LTA",
+			"formula": "base - SC",
+			"type": "Earning",
+			"amount_based_on_formula": 1,
+			"depends_on_payment_days": 0,
+		},
+	]
+
+	make_salary_component(earnings, False, company_list=[company])
+
+	deductions = [
+		{
+			"salary_component": "P - Professional Tax",
+			"abbr": "P_PT",
+			"type": "Deduction",
+			"depends_on_payment_days": 1,
+			"amount": 200.00,
+		},
+	]
+
+	make_salary_component(deductions, False, company_list=["_Test Company"])
+
+	salary_structure = "Salary Structure with Statistical Component"
+	if frappe.db.exists("Salary Structure", salary_structure):
+		frappe.db.delete("Salary Structure", salary_structure)
+
+	details = {
+		"doctype": "Salary Structure",
+		"name": salary_structure,
+		"company": "_Test Company",
+		"payroll_frequency": "Monthly",
+		"payment_account": get_random("Account", filters={"account_currency": "INR"}),
+		"currency": "INR",
+	}
+
+	salary_structure_doc = frappe.get_doc(details)
+
+	for entry in earnings:
+		salary_structure_doc.append("earnings", entry)
+
+	for entry in deductions:
+		salary_structure_doc.append("deductions", entry)
+
+	salary_structure_doc.insert()
+	salary_structure_doc.submit()
+
+	return salary_structure_doc
+
+
+def mark_attendance(
+	employee,
+	attendance_date,
+	status,
+	shift=None,
+	ignore_validate=False,
+	leave_type=None,
+	late_entry=False,
+	early_exit=False,
+):
+	attendance = frappe.new_doc("Attendance")
+	attendance.update(
+		{
+			"doctype": "Attendance",
+			"employee": employee,
+			"attendance_date": attendance_date,
+			"status": status,
+			"shift": shift,
+			"leave_type": leave_type,
+			"late_entry": late_entry,
+			"early_exit": early_exit,
+		}
+	)
+	attendance.flags.ignore_validate = ignore_validate
+	attendance.insert()
+	attendance.submit()

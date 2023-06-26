@@ -1,4 +1,5 @@
 {
+ "actions": [],
  "autoname": "prompt",
  "creation": "2018-04-13 16:22:52.954783",
  "doctype": "DocType",
@@ -15,6 +16,7 @@
   "working_hours_calculation_based_on",
   "begin_check_in_before_shift_start_time",
   "allow_check_out_after_shift_end_time",
+  "mark_auto_attendance_on_holidays",
   "column_break_10",
   "working_hours_threshold_for_half_day",
   "working_hours_threshold_for_absent",
@@ -156,12 +158,21 @@
    "fieldname": "last_sync_of_checkin",
    "fieldtype": "Datetime",
    "label": "Last Sync of Checkin"
+  },
+  {
+   "default": "0",
+   "description": "If enabled, auto attendance will be marked on holidays if Employee Checkins exist",
+   "fieldname": "mark_auto_attendance_on_holidays",
+   "fieldtype": "Check",
+   "label": "Mark Auto Attendance on Holidays"
   }
  ],
- "modified": "2019-07-30 01:05:24.660666",
+ "links": [],
+ "modified": "2023-05-02 11:49:20.020685",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Type",
+ "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [
   {
@@ -200,5 +211,6 @@
  "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }

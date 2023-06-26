@@ -44,7 +44,8 @@
    "label": "Company",
    "options": "Company",
    "remember_last_selected_value": 1,
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fieldname": "letter_head",
@@ -76,7 +77,8 @@
    "fieldname": "payroll_frequency",
    "fieldtype": "Select",
    "label": "Payroll Frequency",
-   "options": "\nMonthly\nFortnightly\nBimonthly\nWeekly\nDaily"
+   "options": "\nMonthly\nFortnightly\nBimonthly\nWeekly\nDaily",
+   "search_index": 1
   },
   {
    "default": "No",
@@ -227,14 +229,15 @@
    "fieldtype": "Link",
    "label": "Currency",
    "options": "Currency",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-05 13:39:47.519380",
+ "modified": "2023-03-24 18:16:49.424812",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure",

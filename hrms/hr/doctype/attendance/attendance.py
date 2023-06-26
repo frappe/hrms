@@ -5,7 +5,6 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.query_builder import Criterion
 from frappe.utils import (
 	add_days,
 	cint,
@@ -68,25 +67,46 @@ class Attendance(Document):
 			)
 
 	def validate_duplicate_record(self):
-		duplicate = get_duplicate_attendance_record(
-			self.employee, self.attendance_date, self.shift, self.name
-		)
+		duplicate = self.get_duplicate_attendance_record()
 
 		if duplicate:
 			frappe.throw(
 				_("Attendance for employee {0} is already marked for the date {1}: {2}").format(
 					frappe.bold(self.employee),
 					frappe.bold(format_date(self.attendance_date)),
-					get_link_to_form("Attendance", duplicate[0].name),
+					get_link_to_form("Attendance", duplicate),
 				),
 				title=_("Duplicate Attendance"),
 				exc=DuplicateAttendanceError,
 			)
 
-	def validate_overlapping_shift_attendance(self):
-		attendance = get_overlapping_shift_attendance(
-			self.employee, self.attendance_date, self.shift, self.name
+	def get_duplicate_attendance_record(self) -> str | None:
+		Attendance = frappe.qb.DocType("Attendance")
+		query = (
+			frappe.qb.from_(Attendance)
+			.select(Attendance.name)
+			.where(
+				(Attendance.employee == self.employee)
+				& (Attendance.docstatus < 2)
+				& (Attendance.attendance_date == self.attendance_date)
+				& (Attendance.name != self.name)
+			)
 		)
+
+		if self.shift:
+			query = query.where(
+				((Attendance.shift.isnull()) | (Attendance.shift == ""))
+				| (
+					((Attendance.shift.isnotnull()) | (Attendance.shift != "")) & (Attendance.shift == self.shift)
+				)
+			)
+
+		duplicate = query.run(pluck=True)
+
+		return duplicate[0] if duplicate else None
+
+	def validate_overlapping_shift_attendance(self):
+		attendance = self.get_overlapping_shift_attendance()
 
 		if attendance:
 			frappe.throw(
@@ -98,6 +118,27 @@ class Attendance(Document):
 				title=_("Overlapping Shift Attendance"),
 				exc=OverlappingShiftAttendanceError,
 			)
+
+	def get_overlapping_shift_attendance(self) -> dict:
+		if not self.shift:
+			return {}
+
+		Attendance = frappe.qb.DocType("Attendance")
+		same_date_attendance = (
+			frappe.qb.from_(Attendance)
+			.select(Attendance.name, Attendance.shift)
+			.where(
+				(Attendance.employee == self.employee)
+				& (Attendance.docstatus < 2)
+				& (Attendance.attendance_date == self.attendance_date)
+				& (Attendance.shift != self.shift)
+				& (Attendance.name != self.name)
+			)
+		).run(as_dict=True)
+
+		if same_date_attendance and has_overlapping_timings(self.shift, same_date_attendance[0].shift):
+			return same_date_attendance[0]
+		return {}
 
 	def validate_employee_status(self):
 		if frappe.db.get_value("Employee", self.employee, "status") == "Inactive":
@@ -177,69 +218,6 @@ class Attendance(Document):
 			)
 
 
-def get_duplicate_attendance_record(employee, attendance_date, shift, name=None):
-	attendance = frappe.qb.DocType("Attendance")
-	query = (
-		frappe.qb.from_(attendance)
-		.select(attendance.name)
-		.where((attendance.employee == employee) & (attendance.docstatus < 2))
-	)
-
-	if shift:
-		query = query.where(
-			Criterion.any(
-				[
-					Criterion.all(
-						[
-							((attendance.shift.isnull()) | (attendance.shift == "")),
-							(attendance.attendance_date == attendance_date),
-						]
-					),
-					Criterion.all(
-						[
-							((attendance.shift.isnotnull()) | (attendance.shift != "")),
-							(attendance.attendance_date == attendance_date),
-							(attendance.shift == shift),
-						]
-					),
-				]
-			)
-		)
-	else:
-		query = query.where((attendance.attendance_date == attendance_date))
-
-	if name:
-		query = query.where(attendance.name != name)
-
-	return query.run(as_dict=True)
-
-
-def get_overlapping_shift_attendance(employee, attendance_date, shift, name=None):
-	if not shift:
-		return {}
-
-	attendance = frappe.qb.DocType("Attendance")
-	query = (
-		frappe.qb.from_(attendance)
-		.select(attendance.name, attendance.shift)
-		.where(
-			(attendance.employee == employee)
-			& (attendance.docstatus < 2)
-			& (attendance.attendance_date == attendance_date)
-			& (attendance.shift != shift)
-		)
-	)
-
-	if name:
-		query = query.where(attendance.name != name)
-
-	overlapping_attendance = query.run(as_dict=True)
-
-	if overlapping_attendance and has_overlapping_timings(shift, overlapping_attendance[0].shift):
-		return overlapping_attendance[0]
-	return {}
-
-
 @frappe.whitelist()
 def get_events(start, end, filters=None):
 	events = []
@@ -283,33 +261,32 @@ def mark_attendance(
 	status,
 	shift=None,
 	leave_type=None,
-	ignore_validate=False,
 	late_entry=False,
 	early_exit=False,
 ):
-	if get_duplicate_attendance_record(employee, attendance_date, shift):
+	savepoint = "attendance_creation"
+
+	try:
+		frappe.db.savepoint(savepoint)
+		attendance = frappe.new_doc("Attendance")
+		attendance.update(
+			{
+				"doctype": "Attendance",
+				"employee": employee,
+				"attendance_date": attendance_date,
+				"status": status,
+				"shift": shift,
+				"leave_type": leave_type,
+				"late_entry": late_entry,
+				"early_exit": early_exit,
+			}
+		)
+		attendance.insert()
+		attendance.submit()
+	except (DuplicateAttendanceError, OverlappingShiftAttendanceError):
+		frappe.db.rollback(save_point=savepoint)
 		return
 
-	if get_overlapping_shift_attendance(employee, attendance_date, shift):
-		return
-
-	company = frappe.db.get_value("Employee", employee, "company")
-	attendance = frappe.get_doc(
-		{
-			"doctype": "Attendance",
-			"employee": employee,
-			"attendance_date": attendance_date,
-			"status": status,
-			"company": company,
-			"shift": shift,
-			"leave_type": leave_type,
-			"late_entry": late_entry,
-			"early_exit": early_exit,
-		}
-	)
-	attendance.flags.ignore_validate = ignore_validate
-	attendance.insert()
-	attendance.submit()
 	return attendance.name
 
 
@@ -320,7 +297,6 @@ def mark_bulk_attendance(data):
 	if isinstance(data, str):
 		data = json.loads(data)
 	data = frappe._dict(data)
-	company = frappe.get_value("Employee", data.employee, "company")
 	if not data.unmarked_days:
 		frappe.throw(_("Please select a date."))
 		return
@@ -331,7 +307,6 @@ def mark_bulk_attendance(data):
 			"employee": data.employee,
 			"attendance_date": get_datetime(date),
 			"status": data.status,
-			"company": company,
 		}
 		attendance = frappe.get_doc(doc_dict).insert()
 		attendance.submit()

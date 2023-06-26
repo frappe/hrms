@@ -160,6 +160,7 @@ class ExpenseClaim(AccountsController):
 						"against_voucher_type": self.doctype,
 						"against_voucher": self.name,
 						"cost_center": self.cost_center,
+						"project": self.project,
 					},
 					item=self,
 				)
@@ -175,6 +176,7 @@ class ExpenseClaim(AccountsController):
 						"debit_in_account_currency": data.sanctioned_amount,
 						"against": self.employee,
 						"cost_center": data.cost_center or self.cost_center,
+						"project": data.project or self.project,
 					},
 					item=data,
 				)
@@ -241,7 +243,8 @@ class ExpenseClaim(AccountsController):
 						"debit": tax.tax_amount,
 						"debit_in_account_currency": tax.tax_amount,
 						"against": self.employee,
-						"cost_center": self.cost_center,
+						"cost_center": tax.cost_center or self.cost_center,
+						"project": tax.project or self.project,
 						"against_voucher_type": self.doctype,
 						"against_voucher": self.name,
 					},

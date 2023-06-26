@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Department", {
-	onload: function(frm) {
+	refresh: function(frm) {
 		frm.set_query("payroll_cost_center", function() {
 			return {
 				filters: {

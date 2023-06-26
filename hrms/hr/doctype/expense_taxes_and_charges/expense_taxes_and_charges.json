@@ -17,7 +17,8 @@
   "total",
   "accounting_dimensions_section",
   "cost_center",
-  "dimension_col_break"
+  "dimension_col_break",
+  "project"
  ],
  "fields": [
   {
@@ -96,17 +97,25 @@
   {
    "fieldname": "dimension_col_break",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2021-10-26 20:27:36.027728",
+ "modified": "2023-06-26 13:06:28.555076",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Taxes and Charges",
+ "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",
  "sort_order": "ASC",
+ "states": [],
  "track_changes": 1
 }

@@ -94,7 +94,6 @@ def update_erpnext_workspaces(disable: bool = True):
 		"Loans",
 		"Manufacturing",
 		"Quality",
-		"Retail",
 		"Selling",
 		"Stock",
 		"Support",
