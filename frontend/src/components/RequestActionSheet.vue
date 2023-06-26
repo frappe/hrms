@@ -60,7 +60,6 @@
 </template>
 
 <script setup>
-
 import { computed } from "vue"
 import { modalController } from "@ionic/vue"
 import { toast, createDocumentResource } from "frappe-ui"
@@ -91,9 +90,9 @@ const document = createDocumentResource({
 
 document.reload()
 
-const updateDocumentStatus = (status, docstatus=1) => {
+const updateDocumentStatus = (status, docstatus = 1) => {
 	document.setValue.submit(
-		{ "status": status, "docstatus": docstatus },
+		{ status: status, docstatus: docstatus },
 		{
 			onSuccess() {
 				modalController.dismiss()
@@ -113,9 +112,8 @@ const updateDocumentStatus = (status, docstatus=1) => {
 					position: "bottom-center",
 					iconClasses: "text-red-500",
 				})
-			}
+			},
 		}
 	)
 }
-
 </script>

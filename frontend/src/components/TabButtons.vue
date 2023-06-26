@@ -17,7 +17,6 @@
 </template>
 
 <script setup>
-
 const props = defineProps({
 	buttons: {
 		type: Array,
@@ -29,5 +28,4 @@ const props = defineProps({
 })
 
 defineEmits(["update:modelValue"])
-
 </script>

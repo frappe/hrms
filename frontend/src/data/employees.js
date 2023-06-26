@@ -33,8 +33,7 @@ export const employees = createListResource({
 })
 
 export function getEmployeeInfo(employeeID) {
-	if (!employeeID)
-		employeeID = employeeResource.data.name
+	if (!employeeID) employeeID = employeeResource.data.name
 
 	return employeesByID[employeeID]
 }

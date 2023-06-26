@@ -1,6 +1,6 @@
 <template>
 	<ion-app>
-		<Menu/>
+		<Menu />
 		<ion-router-outlet id="main-content" />
 		<Toasts />
 	</ion-app>

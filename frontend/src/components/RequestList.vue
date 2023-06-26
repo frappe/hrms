@@ -1,8 +1,12 @@
 <template>
-	<div class="flex flex-col bg-white rounded-lg mt-5 overflow-auto" v-if="items">
+	<div
+		class="flex flex-col bg-white rounded-lg mt-5 overflow-auto"
+		v-if="items"
+	>
 		<div
 			class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
-			v-for="link in props.items" :key="link.name"
+			v-for="link in props.items"
+			:key="link.name"
 			@click="openRequestModal(link)"
 		>
 			<LeaveRequestItem
@@ -12,7 +16,9 @@
 			/>
 		</div>
 	</div>
-	<div class="text-sm text-gray-500 mt-5 flex flex-col items-center" v-else>You have no requests</div>
+	<div class="text-sm text-gray-500 mt-5 flex flex-col items-center" v-else>
+		You have no requests
+	</div>
 
 	<ion-modal
 		ref="modal"
@@ -26,7 +32,6 @@
 </template>
 
 <script setup>
-
 import { ref } from "vue"
 import { IonModal } from "@ionic/vue"
 
@@ -42,18 +47,18 @@ const props = defineProps({
 	teamRequests: {
 		type: Boolean,
 		default: false,
-	}
+	},
 })
 
 const isRequestModalOpen = ref(false)
 const selectedRequest = ref(null)
 
-const openRequestModal = async(request) => {
+const openRequestModal = async (request) => {
 	selectedRequest.value = request
 	isRequestModalOpen.value = true
 }
 
-const closeRequestModal = async(request) => {
+const closeRequestModal = async (request) => {
 	isRequestModalOpen.value = false
 	selectedRequest.value = null
 }

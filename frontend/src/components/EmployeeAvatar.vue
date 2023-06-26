@@ -6,7 +6,9 @@
 			:imageURL="employee?.image"
 			:size="props.size"
 		/>
-		<div class="text-base text-gray-800 grow">{{ employee?.employee_name }}</div>
+		<div class="text-base text-gray-800 grow">
+			{{ employee?.employee_name }}
+		</div>
 	</div>
 
 	<Avatar
@@ -18,7 +20,6 @@
 </template>
 
 <script setup>
-
 import { computed } from "vue"
 import { Avatar } from "frappe-ui"
 import { getEmployeeInfo } from "@/data/employees"
@@ -34,9 +35,8 @@ const props = defineProps({
 	showLabel: {
 		type: Boolean,
 		default: false,
-	}
+	},
 })
 
 const employee = computed(() => getEmployeeInfo(props.employeeID))
-
 </script>

@@ -1,7 +1,11 @@
 <template>
 	<ion-page>
 		<div class="max-w-3xl py-12 mx-auto">
-			<Button icon-left="code" @click="$resources.ping.fetch" :loading="$resources.ping.loading">
+			<Button
+				icon-left="code"
+				@click="$resources.ping.fetch"
+				:loading="$resources.ping.loading"
+			>
 				Click to send 'ping' request
 			</Button>
 			<div>

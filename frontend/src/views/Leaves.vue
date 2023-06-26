@@ -5,7 +5,9 @@
 				<LeaveBalance />
 
 				<div class="flex flex-col gap-7 px-4 mt-4 w-full">
-					<Button appearance="primary" class="py-2 w-full">Request a Leave</Button>
+					<Button appearance="primary" class="py-2 w-full">
+						Request a Leave
+					</Button>
 					<div>
 						<div class="text-xl text-gray-800 font-bold">Leaves This Month</div>
 						<RequestList :items="leavesThisMonth" />
@@ -18,7 +20,6 @@
 </template>
 
 <script setup>
-
 import { inject, onUnmounted } from "vue"
 
 import BaseLayout from "@/components/BaseLayout.vue"
@@ -38,7 +39,6 @@ socket.on("hrms:update_leaves", (data) => {
 })
 
 onUnmounted(() => {
-	socket.off("hrms:update_leaves");
-});
-
+	socket.off("hrms:update_leaves")
+})
 </script>

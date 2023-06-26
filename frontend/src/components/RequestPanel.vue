@@ -1,16 +1,19 @@
 <template>
 	<div class="w-full">
 		<TabButtons
-			:buttons="[{ label: 'My Requests'}, { label: 'Team Requests' }]"
+			:buttons="[{ label: 'My Requests' }, { label: 'Team Requests' }]"
 			v-model="activeTab"
 		/>
 		<RequestList :items="myRequests.data" v-if="activeTab == 'My Requests'" />
-		<RequestList :items="teamRequests.data" :teamRequests="true" v-if="activeTab == 'Team Requests'" />
+		<RequestList
+			:items="teamRequests.data"
+			:teamRequests="true"
+			v-if="activeTab == 'Team Requests'"
+		/>
 	</div>
 </template>
 
 <script setup>
-
 import { ref, inject, onUnmounted } from "vue"
 
 import TabButtons from "@/components/TabButtons.vue"
@@ -34,7 +37,6 @@ socket.on("hrms:update_leaves", (data) => {
 })
 
 onUnmounted(() => {
-	socket.off("hrms:update_leaves");
-});
-
+	socket.off("hrms:update_leaves")
+})
 </script>

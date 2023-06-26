@@ -1,5 +1,8 @@
 <template>
-	<BaseLayout :pageTitle="`Hey, ${ user?.data?.first_name }!`" :showCheckInPanel="true">
+	<BaseLayout
+		:pageTitle="`Hey, ${user?.data?.first_name}!`"
+		:showCheckInPanel="true"
+	>
 		<template #body>
 			<div class="flex flex-col items-center mt-5 p-4 gap-7">
 				<QuickLinks :items="quickLinks" title="Quick Links" />
@@ -10,7 +13,6 @@
 </template>
 
 <script setup>
-
 import QuickLinks from "@/components/QuickLinks.vue"
 import BaseLayout from "@/components/BaseLayout.vue"
 import RequestPanel from "@/components/RequestPanel.vue"
@@ -35,7 +37,6 @@ const quickLinks = [
 	{
 		icon: "hard-drive",
 		title: "Documents",
-	}
+	},
 ]
-
 </script>

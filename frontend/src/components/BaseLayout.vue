@@ -15,7 +15,10 @@
 									<FeatherIcon name="bell" class="h-6 w-6" />
 								</Button>
 								<router-link :to="{ name: 'Profile' }">
-									<Avatar :imageURL="user.data.user_image" :label="user.data.first_name" />
+									<Avatar
+										:imageURL="user.data.user_image"
+										:label="user.data.first_name"
+									/>
 								</router-link>
 							</div>
 						</div>
@@ -37,8 +40,7 @@
 </template>
 
 <script setup>
-
-import { IonContent, IonMenuToggle, IonPage } from '@ionic/vue';
+import { IonContent, IonMenuToggle, IonPage } from "@ionic/vue"
 import { FeatherIcon, Avatar } from "frappe-ui"
 
 import CheckInPanel from "@/components/CheckInPanel.vue"
@@ -51,13 +53,12 @@ const props = defineProps({
 	pageTitle: {
 		type: String,
 		required: false,
-		default: "Home"
+		default: "Home",
 	},
 	showCheckInPanel: {
 		type: Boolean,
 		required: false,
-		default: false
-	}
+		default: false,
+	},
 })
-
 </script>

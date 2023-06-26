@@ -21,13 +21,13 @@ const routes = [
 	{
 		path: "/leaves",
 		name: "Leaves",
-		component: () => import("@/views/Leaves.vue")
+		component: () => import("@/views/Leaves.vue"),
 	},
 	{
 		path: "/profile",
 		name: "Profile",
-		component: () => import("@/views/Profile.vue")
-	}
+		component: () => import("@/views/Profile.vue"),
+	},
 ]
 
 const router = createRouter({

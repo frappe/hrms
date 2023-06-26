@@ -16,7 +16,9 @@ const get_leave_dates = (leave) => {
 	if (leave.from_date == leave.to_date)
 		return dayjs(leave.from_date).format("D MMM")
 	else
-		return `${dayjs(leave.from_date).format("D MMM")} - ${dayjs(leave.to_date).format("D MMM")}`
+		return `${dayjs(leave.from_date).format("D MMM")} - ${dayjs(
+			leave.to_date
+		).format("D MMM")}`
 }
 
 export const myRequests = createResource({
@@ -27,7 +29,7 @@ export const myRequests = createResource({
 	auto: true,
 	transform(data) {
 		return transformLeaveData(data)
-	}
+	},
 })
 
 export const teamRequests = createResource({
@@ -39,7 +41,7 @@ export const teamRequests = createResource({
 	auto: true,
 	transform(data) {
 		return transformLeaveData(data)
-	}
+	},
 })
 
 export const leavesThisMonth = computed(() => {

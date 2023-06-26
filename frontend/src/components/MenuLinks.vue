@@ -16,7 +16,7 @@
 						'flex flex-row rounded-lg gap-3 flex-start py-3 px-2 items-center text-base',
 					]"
 				>
-					<FeatherIcon :name=item.icon class="h-5 w-5" />
+					<FeatherIcon :name="item.icon" class="h-5 w-5" />
 					<div>{{ item.title }}</div>
 				</a>
 			</ion-menu-toggle>
@@ -38,7 +38,7 @@ const menuItems = ref([
 		route: {
 			name: "Home",
 		},
-		current: false
+		current: false,
 	},
 	{
 		icon: "calendar",
@@ -46,7 +46,7 @@ const menuItems = ref([
 		route: {
 			name: "Leaves",
 		},
-		current: false
+		current: false,
 	},
 	{
 		icon: "check-circle",
@@ -54,7 +54,7 @@ const menuItems = ref([
 		route: {
 			name: "Login",
 		},
-		current: false
+		current: false,
 	},
 	{
 		icon: "dollar-sign",
@@ -62,7 +62,7 @@ const menuItems = ref([
 		route: {
 			name: "Login",
 		},
-		current: false
+		current: false,
 	},
 	{
 		icon: "info",
@@ -70,8 +70,8 @@ const menuItems = ref([
 		route: {
 			name: "Login",
 		},
-		current: false
-	}
+		current: false,
+	},
 ])
 
 const route = useRoute()
@@ -81,5 +81,4 @@ const currentRoute = computed(() => {
 	})
 	return route.name
 })
-
 </script>

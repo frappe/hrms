@@ -2,7 +2,7 @@ export const showErrorAlert = async (message) => {
 	const alert = await alertController.create({
 		header: "Error",
 		message,
-		buttons: ["OK"]
+		buttons: ["OK"],
 	})
 
 	await alert.present()

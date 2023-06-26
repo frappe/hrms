@@ -3,7 +3,8 @@
 	font-style: normal;
 	font-weight: 100;
 	font-display: swap;
-	src: url("Inter-Thin.woff2?v=3.12") format("woff2"), url("Inter-Thin.woff?v=3.12") format("woff");
+	src: url("Inter-Thin.woff2?v=3.12") format("woff2"),
+		url("Inter-Thin.woff?v=3.12") format("woff");
 }
 @font-face {
 	font-family: "Inter";
@@ -104,7 +105,8 @@
 	font-style: normal;
 	font-weight: 700;
 	font-display: swap;
-	src: url("Inter-Bold.woff2?v=3.12") format("woff2"), url("Inter-Bold.woff?v=3.12") format("woff");
+	src: url("Inter-Bold.woff2?v=3.12") format("woff2"),
+		url("Inter-Bold.woff?v=3.12") format("woff");
 }
 @font-face {
 	font-family: "Inter";

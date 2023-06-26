@@ -28,7 +28,6 @@
 </template>
 
 <script setup>
-
 import { computed } from "vue"
 
 const props = defineProps({
@@ -39,7 +38,7 @@ const props = defineProps({
 	colorClass: {
 		type: String,
 		default: "text-orange-500",
-	}
+	},
 })
 
 const circumference = computed(() => {
@@ -57,5 +56,4 @@ const dashOffset = computed(() => {
 	}
 	return halfCircumference - (percentage / 100) * halfCircumference
 })
-
 </script>

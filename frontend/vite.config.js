@@ -22,31 +22,31 @@ export default defineConfig({
 				description: "Everyday HR & Payroll operations at your fingertips",
 				icons: [
 					{
-						"src": "/assets/hrms/manifest/manifest-icon-192.maskable.png",
-						"sizes": "192x192",
-						"type": "image/png",
-						"purpose": "any"
+						src: "/assets/hrms/manifest/manifest-icon-192.maskable.png",
+						sizes: "192x192",
+						type: "image/png",
+						purpose: "any",
 					},
 					{
-						"src": "/assets/hrms/manifest/manifest-icon-192.maskable.png",
-						"sizes": "192x192",
-						"type": "image/png",
-						"purpose": "maskable"
+						src: "/assets/hrms/manifest/manifest-icon-192.maskable.png",
+						sizes: "192x192",
+						type: "image/png",
+						purpose: "maskable",
 					},
 					{
-						"src": "/assets/hrms/manifest/manifest-icon-512.maskable.png",
-						"sizes": "512x512",
-						"type": "image/png",
-						"purpose": "any"
+						src: "/assets/hrms/manifest/manifest-icon-512.maskable.png",
+						sizes: "512x512",
+						type: "image/png",
+						purpose: "any",
 					},
 					{
-						"src": "/assets/hrms/manifest/manifest-icon-512.maskable.png",
-						"sizes": "512x512",
-						"type": "image/png",
-						"purpose": "maskable"
-					}
-				]
-			}
+						src: "/assets/hrms/manifest/manifest-icon-512.maskable.png",
+						sizes: "512x512",
+						type: "image/png",
+						purpose: "maskable",
+					},
+				],
+			},
 		}),
 	],
 	server: {

@@ -26,14 +26,14 @@
 
 	<EmployeeAvatar
 		v-else-if="props.fieldtype === 'Link' && props.fieldname === 'employee'"
-		:employeeID="props.value" :showLabel="true"
+		:employeeID="props.value"
+		:showLabel="true"
 	/>
 
 	<div v-else class="text-gray-900 text-base">{{ props.value }}</div>
 </template>
 
 <script setup>
-
 import { inject } from "vue"
 import { Badge, Input } from "frappe-ui"
 
@@ -50,7 +50,6 @@ const props = defineProps({
 const colorMap = {
 	Approved: "green",
 	Rejected: "red",
-	Open: "yellow"
+	Open: "yellow",
 }
-
 </script>
