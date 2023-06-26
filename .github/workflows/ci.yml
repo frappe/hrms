@@ -100,7 +100,7 @@ jobs:
         run: |
           bash ${GITHUB_WORKSPACE}/.github/helper/install.sh
         env:
-          BRANCH_TO_CLONE: ${{ env.HR_BRANCH }}
+          BRANCH_TO_CLONE: develop
 
 
       - name: Run Tests
