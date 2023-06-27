@@ -33,7 +33,7 @@ class TestEmployeeAdvance(FrappeTestCase):
 		employee_name = make_employee("_T@employe.advance")
 		advance = make_employee_advance(employee_name)
 
-		journal_entry = make_journal_entry(advance)
+		journal_entry = make_journal_entry_for_advance(advance)
 		journal_entry.submit()
 
 		advance.reload()
@@ -42,14 +42,14 @@ class TestEmployeeAdvance(FrappeTestCase):
 		self.assertEqual(advance.status, "Paid")
 
 		# try making over payment
-		journal_entry1 = make_journal_entry(advance)
+		journal_entry1 = make_journal_entry_for_advance(advance)
 		self.assertRaises(EmployeeAdvanceOverPayment, journal_entry1.submit)
 
 	def test_paid_amount_on_pe_cancellation(self):
 		employee_name = make_employee("_T@employe.advance")
 		advance = make_employee_advance(employee_name)
 
-		journal_entry = make_journal_entry(advance)
+		journal_entry = make_journal_entry_for_advance(advance)
 		journal_entry.submit()
 
 		advance.reload()
@@ -75,7 +75,7 @@ class TestEmployeeAdvance(FrappeTestCase):
 		)
 
 		advance = make_employee_advance(claim.employee)
-		journal_entry = make_journal_entry(advance)
+		journal_entry = make_journal_entry_for_advance(advance)
 		journal_entry.submit()
 
 		claim = get_advances_for_claim(claim, advance.name)
@@ -104,7 +104,7 @@ class TestEmployeeAdvance(FrappeTestCase):
 		)
 
 		advance = make_employee_advance(claim.employee)
-		journal_entry = make_journal_entry(advance)
+		journal_entry = make_journal_entry_for_advance(advance)
 		journal_entry.submit()
 
 		# PARTLY CLAIMED AND RETURNED status check
@@ -114,7 +114,7 @@ class TestEmployeeAdvance(FrappeTestCase):
 		)
 
 		advance = make_employee_advance(claim.employee)
-		journal_entry = make_journal_entry(advance)
+		journal_entry = make_journal_entry_for_advance(advance)
 		journal_entry.submit()
 
 		claim = get_advances_for_claim(claim, advance.name, amount=500)
@@ -163,7 +163,7 @@ class TestEmployeeAdvance(FrappeTestCase):
 	def test_repay_unclaimed_amount_from_salary(self):
 		employee_name = make_employee("_T@employe.advance")
 		advance = make_employee_advance(employee_name, {"repay_unclaimed_amount_from_salary": 1})
-		journal_entry = make_journal_entry(advance)
+		journal_entry = make_journal_entry_for_advance(advance)
 		journal_entry.submit()
 
 		args = {"type": "Deduction"}
@@ -222,7 +222,7 @@ class TestEmployeeAdvance(FrappeTestCase):
 		self.assertEqual(advance.paid_amount, 700)
 
 
-def make_journal_entry(advance):
+def make_journal_entry_for_advance(advance):
 	journal_entry = frappe.get_doc(make_bank_entry("Employee Advance", advance.name))
 	journal_entry.cheque_no = "123123"
 	journal_entry.cheque_date = nowdate()
