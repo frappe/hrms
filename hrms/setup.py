@@ -301,34 +301,22 @@ def create_salary_slip_loan_fields():
 		create_custom_fields(SALARY_SLIP_LOAN_FIELDS)
 
 
-def update_salary_slip_loans_setup(installed_apps, event=None):
-	"""
-	hack: called through hooks, creates/deletes salary slip loan custom fields
-	on lending app install/uninstall
-	TODO: ideally a hook in the framework to take action on any app install/uninstall
-	"""
-	if not frappe.db.exists("DocType", "Salary Slip"):
-		# hrms is uninstalling
+def after_app_install(app_name):
+	"""Set up loan integration with payroll"""
+	if app_name != "lending":
 		return
 
-	prev_installed_apps = installed_apps.get_doc_before_save()
+	print("Updating payroll setup for loans")
+	create_custom_fields(SALARY_SLIP_LOAN_FIELDS)
 
-	prev_installed_app_names = [app.app_name for app in prev_installed_apps.installed_applications]
-	installed_app_names = [app.app_name for app in installed_apps.installed_applications]
 
-	def _is_lending_installed():
-		return "lending" in installed_app_names and "lending" not in prev_installed_app_names
+def before_app_uninstall(app_name):
+	"""Clean up loan integration with payroll"""
+	if app_name != "lending":
+		return
 
-	def _is_lending_uninstalled():
-		return "lending" not in installed_app_names and "lending" in prev_installed_app_names
-
-	if _is_lending_installed():
-		print("Updating payroll setup for loans")
-		create_custom_fields(SALARY_SLIP_LOAN_FIELDS)
-
-	elif _is_lending_uninstalled():
-		print("Updating payroll setup for loans")
-		delete_custom_fields(SALARY_SLIP_LOAN_FIELDS)
+	print("Updating payroll setup for loans")
+	delete_custom_fields(SALARY_SLIP_LOAN_FIELDS)
 
 
 def make_fixtures():
