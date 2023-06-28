@@ -174,7 +174,14 @@ def get_total_benefit_dispensed(employee, sal_struct, sal_slip_start_date, payro
 		{"employee": employee, "payroll_period": payroll_period.name, "docstatus": 1},
 	)
 	if application:
-		application_obj = frappe.get_cached_doc("Employee Benefit Application", application)
+		application_obj = frappe.db.get_value(
+			"Employee Benefit Application",
+			application,
+			("pro_rata_dispensed_amount", "max_benefits", "remaining_benefit"),
+			as_dict=True,
+			cache=True,
+		)
+
 		pro_rata_amount = (
 			application_obj.pro_rata_dispensed_amount
 			+ application_obj.max_benefits

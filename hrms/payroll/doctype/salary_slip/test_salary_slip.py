@@ -1144,8 +1144,7 @@ class TestSalarySlip(FrappeTestCase):
 
 		prev_period = math.ceil(remaining_sub_periods)
 
-		# annual_tax = 347580
-		anual_tax = 2, 52, 540
+		annual_tax = 2, 52, 540
 		monthly_tax_amount = 30124
 		monthly_earnings = 152800
 

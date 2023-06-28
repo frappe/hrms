@@ -110,11 +110,12 @@ def get_period_factor(
 
 	if not joining_date and not relieving_date:
 		joining_date, relieving_date = frappe.db.get_value(
-			"Employee", employee, ["date_of_joining", "relieving_date"]
+			"Employee", employee, ("date_of_joining", "relieving_date"), cache=True
 		)
 
 	if getdate(joining_date) > getdate(period_start):
 		period_start = joining_date
+
 	if relieving_date and getdate(relieving_date) < getdate(period_end):
 		period_end = relieving_date
 		if month_diff(period_end, start_date) > 1:

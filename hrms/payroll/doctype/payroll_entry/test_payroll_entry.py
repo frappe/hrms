@@ -586,7 +586,7 @@ class TestPayrollEntry(FrappeTestCase):
 			cost_center="Main - _TC",
 		)
 		payroll_entry.reload()
-		payroll_entry.make_payment_entry()
+		payroll_entry.make_bank_entry()
 
 		debit_entries = frappe.db.get_all(
 			"Journal Entry Account",
