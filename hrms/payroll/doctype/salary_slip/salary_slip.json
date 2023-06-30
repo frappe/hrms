@@ -60,13 +60,6 @@
   "column_break_25",
   "total_deduction",
   "base_total_deduction",
-  "loan_repayment",
-  "loans",
-  "section_break_43",
-  "total_principal_amount",
-  "total_interest_amount",
-  "column_break_45",
-  "total_loan_repayment",
   "net_pay_info",
   "net_pay",
   "base_net_pay",
@@ -350,52 +343,6 @@
   {
    "fieldname": "column_break_25",
    "fieldtype": "Column Break"
-  },
-  {
-   "depends_on": "total_loan_repayment",
-   "fieldname": "loan_repayment",
-   "fieldtype": "Section Break",
-   "label": "Loan Repayment"
-  },
-  {
-   "fieldname": "loans",
-   "fieldtype": "Table",
-   "label": "Employee Loan",
-   "options": "Salary Slip Loan",
-   "print_hide": 1
-  },
-  {
-   "depends_on": "eval:doc.docstatus != 0",
-   "fieldname": "section_break_43",
-   "fieldtype": "Section Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "total_principal_amount",
-   "fieldtype": "Currency",
-   "label": "Total Principal Amount",
-   "options": "Company:company:default_currency",
-   "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "total_interest_amount",
-   "fieldtype": "Currency",
-   "label": "Total Interest Amount",
-   "options": "Company:company:default_currency",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_45",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "total_loan_repayment",
-   "fieldtype": "Currency",
-   "label": "Total Loan Repayment",
-   "options": "Company:company:default_currency",
-   "read_only": 1
   },
   {
    "fieldname": "net_pay_info",
@@ -753,7 +700,7 @@
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-02-22 18:23:49.783449",
+ "modified": "2023-06-20 20:04:00.131248",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
