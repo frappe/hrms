@@ -39,7 +39,7 @@ sed -i 's/schedule:/# schedule:/g' Procfile
 sed -i 's/socketio:/# socketio:/g' Procfile
 sed -i 's/redis_socketio:/# redis_socketio:/g' Procfile
 
-bench get-app payments
+bench get-app payments --branch ${BRANCH_TO_CLONE%"-hotfix"}
 bench get-app https://github.com/frappe/erpnext --branch "$BRANCH_TO_CLONE" --resolve-deps
 bench setup requirements --dev
 

@@ -1,5 +1,5 @@
 [pre_model_sync]
-hrms.patches.v15_0.check_version_compatibility_with_frappe
+hrms.patches.v15_0.check_version_compatibility_with_frappe #2023-06-27
 
 [post_model_sync]
 hrms.patches.post_install.set_payroll_entry_status

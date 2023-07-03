@@ -23,7 +23,8 @@ company_name = "_Test Company 3"
 class TestExpenseClaim(FrappeTestCase):
 	def setUp(self):
 		if not frappe.db.get_value("Cost Center", {"company": company_name}):
-			frappe.get_doc(
+			cost_center = frappe.new_doc("Cost Center")
+			cost_center.update(
 				{
 					"doctype": "Cost Center",
 					"cost_center_name": "_Test Cost Center 3",
@@ -33,39 +34,41 @@ class TestExpenseClaim(FrappeTestCase):
 				}
 			).insert()
 
+			frappe.db.set_value("Company", company_name, "default_cost_center", cost_center)
+
 	def test_total_expense_claim_for_project(self):
-		frappe.db.sql("""delete from `tabTask`""")
-		frappe.db.sql("""delete from `tabProject`""")
+		frappe.db.delete("Task")
+		frappe.db.delete("Project")
 		frappe.db.sql("update `tabExpense Claim` set project = '', task = ''")
 
-		project = frappe.get_doc({"project_name": "_Test Project 1", "doctype": "Project"})
-		project.save()
+		project = create_project("_Test Project 1")
 
-		task = frappe.get_doc(
-			dict(doctype="Task", subject="_Test Project Task 1", status="Open", project=project.name)
+		task = frappe.new_doc("Task")
+		task.update(
+			dict(doctype="Task", subject="_Test Project Task 1", status="Open", project=project)
 		).insert()
+		task = task.name
 
-		task_name = task.name
 		payable_account = get_payable_account(company_name)
 
 		make_expense_claim(
-			payable_account, 300, 200, company_name, "Travel Expenses - _TC3", project.name, task_name
+			payable_account, 300, 200, company_name, "Travel Expenses - _TC3", project, task
 		)
 
-		self.assertEqual(frappe.db.get_value("Task", task_name, "total_expense_claim"), 200)
-		self.assertEqual(frappe.db.get_value("Project", project.name, "total_expense_claim"), 200)
+		self.assertEqual(frappe.db.get_value("Task", task, "total_expense_claim"), 200)
+		self.assertEqual(frappe.db.get_value("Project", project, "total_expense_claim"), 200)
 
 		expense_claim2 = make_expense_claim(
-			payable_account, 600, 500, company_name, "Travel Expenses - _TC3", project.name, task_name
+			payable_account, 600, 500, company_name, "Travel Expenses - _TC3", project, task
 		)
 
-		self.assertEqual(frappe.db.get_value("Task", task_name, "total_expense_claim"), 700)
-		self.assertEqual(frappe.db.get_value("Project", project.name, "total_expense_claim"), 700)
+		self.assertEqual(frappe.db.get_value("Task", task, "total_expense_claim"), 700)
+		self.assertEqual(frappe.db.get_value("Project", project, "total_expense_claim"), 700)
 
 		expense_claim2.cancel()
 
-		self.assertEqual(frappe.db.get_value("Task", task_name, "total_expense_claim"), 200)
-		self.assertEqual(frappe.db.get_value("Project", project.name, "total_expense_claim"), 200)
+		self.assertEqual(frappe.db.get_value("Task", task, "total_expense_claim"), 200)
+		self.assertEqual(frappe.db.get_value("Project", project, "total_expense_claim"), 200)
 
 	def test_expense_claim_status_as_payment_from_journal_entry(self):
 		# Via Journal Entry
@@ -102,7 +105,7 @@ class TestExpenseClaim(FrappeTestCase):
 			payable_account, 300, 200, company_name, "Travel Expenses - _TC3"
 		)
 
-		pe = _make_payment_entry(expense_claim)
+		pe = make_payment_entry(expense_claim, 200)
 
 		expense_claim.load_from_db()
 		self.assertEqual(expense_claim.status, "Paid")
@@ -172,7 +175,7 @@ class TestExpenseClaim(FrappeTestCase):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
 			get_advances_for_claim,
 			make_employee_advance,
-			make_payment_entry,
+			make_journal_entry_for_advance,
 		)
 
 		frappe.db.delete("Employee Advance")
@@ -183,7 +186,7 @@ class TestExpenseClaim(FrappeTestCase):
 		)
 
 		advance = make_employee_advance(claim.employee)
-		pe = make_payment_entry(advance)
+		pe = make_journal_entry_for_advance(advance)
 		pe.submit()
 
 		# claim for already paid out advances
@@ -198,7 +201,7 @@ class TestExpenseClaim(FrappeTestCase):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
 			get_advances_for_claim,
 			make_employee_advance,
-			make_payment_entry,
+			make_journal_entry_for_advance,
 		)
 
 		frappe.db.delete("Employee Advance")
@@ -217,7 +220,7 @@ class TestExpenseClaim(FrappeTestCase):
 		claim.save()
 
 		advance = make_employee_advance(claim.employee)
-		pe = make_payment_entry(advance)
+		pe = make_journal_entry_for_advance(advance)
 		pe.submit()
 
 		# claim for already paid out advances
@@ -232,9 +235,7 @@ class TestExpenseClaim(FrappeTestCase):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
 			get_advances_for_claim,
 			make_employee_advance,
-		)
-		from hrms.hr.doctype.employee_advance.test_employee_advance import (
-			make_payment_entry as make_advance_payment,
+			make_journal_entry_for_advance,
 		)
 
 		frappe.db.delete("Employee Advance")
@@ -246,7 +247,7 @@ class TestExpenseClaim(FrappeTestCase):
 
 		# link advance for partial amount
 		advance = make_employee_advance(claim.employee, {"advance_amount": 500})
-		pe = make_advance_payment(advance)
+		pe = make_journal_entry_for_advance(advance)
 		pe.submit()
 
 		claim = get_advances_for_claim(claim, advance.name)
@@ -257,7 +258,7 @@ class TestExpenseClaim(FrappeTestCase):
 		self.assertEqual(claim.status, "Unpaid")
 
 		# reimburse remaning amount
-		make_payment_entry(claim, payable_account, 500)
+		make_payment_entry(claim, 500)
 		claim.reload()
 
 		self.assertEqual(claim.total_amount_reimbursed, 500)
@@ -368,7 +369,7 @@ class TestExpenseClaim(FrappeTestCase):
 		expense_claim.submit()
 
 		# Payment entry 1: paying 500
-		make_payment_entry(expense_claim, payable_account, 500)
+		make_payment_entry(expense_claim, 500)
 		outstanding_amount, total_amount_reimbursed = get_outstanding_and_total_reimbursed_amounts(
 			expense_claim
 		)
@@ -376,7 +377,7 @@ class TestExpenseClaim(FrappeTestCase):
 		self.assertEqual(total_amount_reimbursed, 500)
 
 		# Payment entry 1: paying 2000
-		make_payment_entry(expense_claim, payable_account, 2000)
+		make_payment_entry(expense_claim, 2000)
 		outstanding_amount, total_amount_reimbursed = get_outstanding_and_total_reimbursed_amounts(
 			expense_claim
 		)
@@ -384,7 +385,7 @@ class TestExpenseClaim(FrappeTestCase):
 		self.assertEqual(total_amount_reimbursed, 2500)
 
 		# Payment entry 1: paying 3000
-		make_payment_entry(expense_claim, payable_account, 3000)
+		make_payment_entry(expense_claim, 3000)
 		outstanding_amount, total_amount_reimbursed = get_outstanding_and_total_reimbursed_amounts(
 			expense_claim
 		)
@@ -427,6 +428,36 @@ class TestExpenseClaim(FrappeTestCase):
 
 		self.assertEqual(je.accounts[0].debit_in_account_currency, expense_claim.grand_total)
 
+	def test_accounting_dimension_mapping(self):
+		project = create_project("_Test Expense Project")
+		payable_account = get_payable_account(company_name)
+
+		expense_claim = make_expense_claim(
+			payable_account,
+			300,
+			200,
+			company_name,
+			"Travel Expenses - _TC3",
+			do_not_submit=True,
+		)
+
+		expense_claim.expenses[0].project = project
+		expense_claim.submit()
+
+		dimensions = frappe.db.get_value(
+			"GL Entry",
+			{
+				"voucher_type": "Expense Claim",
+				"voucher_no": expense_claim.name,
+				"account": "Travel Expenses - _TC3",
+			},
+			["cost_center", "project"],
+			as_dict=1,
+		)
+
+		self.assertEqual(dimensions.project, project)
+		self.assertEqual(dimensions.cost_center, expense_claim.cost_center)
+
 
 def get_payable_account(company):
 	return frappe.get_cached_value("Company", company, "default_payable_account")
@@ -443,9 +474,19 @@ def generate_taxes(company=None):
 		account_type="Tax",
 		parent_account=parent_account,
 	)
+
+	cost_center = frappe.db.get_value("Company", company, "cost_center")
+
 	return {
 		"taxes": [
-			{"account_head": account, "rate": 9, "description": "CGST", "tax_amount": 10, "total": 210}
+			{
+				"account_head": account,
+				"cost_center": cost_center,
+				"rate": 9,
+				"description": "CGST",
+				"tax_amount": 10,
+				"total": 210,
+			}
 		]
 	}
 
@@ -516,19 +557,18 @@ def get_outstanding_and_total_reimbursed_amounts(expense_claim):
 	return outstanding_amount, total_amount_reimbursed
 
 
-def make_payment_entry(expense_claim, payable_account, amt):
+def make_payment_entry(expense_claim, amount):
 	from hrms.overrides.employee_payment_entry import get_payment_entry_for_employee
 
-	pe = get_payment_entry_for_employee(
-		"Expense Claim", expense_claim.name, bank_account="_Test Bank USD - _TC", bank_amount=amt
-	)
+	pe = get_payment_entry_for_employee("Expense Claim", expense_claim.name)
 	pe.reference_no = "1"
 	pe.reference_date = nowdate()
 	pe.source_exchange_rate = 1
-	pe.paid_to = payable_account
-	pe.references[0].allocated_amount = amt
+	pe.references[0].allocated_amount = amount
 	pe.insert()
 	pe.submit()
+
+	return pe
 
 
 def make_journal_entry(expense_claim, do_not_submit=False):
@@ -542,23 +582,6 @@ def make_journal_entry(expense_claim, do_not_submit=False):
 		je.submit()
 
 	return je
-
-
-def _make_payment_entry(expense_claim):
-	outstanding_amount, total_amount_reimbursed = get_outstanding_and_total_reimbursed_amounts(
-		expense_claim
-	)
-	pe = get_payment_entry(
-		"Expense Claim", expense_claim.name, party_type="Employee", party_amount=outstanding_amount
-	)
-	pe.reference_no = "Conrad Oct 2022"
-	pe.reference_date = nowdate()
-	pe.paid_amount = expense_claim.total_sanctioned_amount
-	pe.received_amount = expense_claim.total_sanctioned_amount
-	pe.insert()
-	pe.submit()
-
-	return pe
 
 
 def create_payment_reconciliation(company, employee, payable_account):
@@ -579,3 +602,14 @@ def allocate_using_payment_reconciliation(expense_claim, employee, journal_entry
 
 	pr.allocate_entries(frappe._dict({"invoices": invoices, "payments": payments}))
 	pr.reconcile()
+
+
+def create_project(project_name):
+	project = frappe.db.exists("Project", {"project_name": project_name})
+	if project:
+		return project
+
+	doc = frappe.new_doc("Project")
+	doc.project_name = project_name
+	doc.insert()
+	return doc.name

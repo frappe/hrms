@@ -28,13 +28,6 @@ from frappe.utils.background_jobs import enqueue
 
 import erpnext
 from erpnext.accounts.utils import get_fiscal_year
-from erpnext.loan_management.doctype.loan_repayment.loan_repayment import (
-	calculate_amounts,
-	create_repayment_entry,
-)
-from erpnext.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
-	process_loan_interest_accrual_for_term_loans,
-)
 from erpnext.utilities.transaction_base import TransactionBase
 
 from hrms.hr.utils import get_holiday_dates_for_employee, validate_active_employee
@@ -50,6 +43,11 @@ from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
 from hrms.payroll.doctype.payroll_period.payroll_period import (
 	get_payroll_period,
 	get_period_factor,
+)
+from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import (
+	cancel_loan_repayment_entry,
+	make_loan_repayment_entry,
+	set_loan_repayment,
 )
 
 
@@ -126,7 +124,8 @@ class SalarySlip(TransactionBase):
 		else:
 			self.set_status()
 			self.update_status(self.name)
-			self.make_loan_repayment_entry()
+
+			make_loan_repayment_entry(self)
 
 			if not frappe.flags.via_payroll_entry and not frappe.flags.in_patch:
 				email_salary_slip = cint(
@@ -159,7 +158,8 @@ class SalarySlip(TransactionBase):
 		self.set_status()
 		self.update_status()
 		self.update_payment_status_for_gratuity()
-		self.cancel_loan_repayment_entry()
+
+		cancel_loan_repayment_entry(self)
 
 	def on_trash(self):
 		from frappe.model.naming import revert_series_if_last
@@ -643,7 +643,8 @@ class SalarySlip(TransactionBase):
 		if self.salary_structure:
 			self.calculate_component_amounts("deductions")
 
-		self.set_loan_repayment()
+		set_loan_repayment(self)
+
 		self.set_precision_for_component_amounts()
 		self.set_net_pay()
 		self.compute_income_tax_breakup()
@@ -653,7 +654,9 @@ class SalarySlip(TransactionBase):
 		self.base_total_deduction = flt(
 			flt(self.total_deduction) * flt(self.exchange_rate), self.precision("base_total_deduction")
 		)
-		self.net_pay = flt(self.gross_pay) - (flt(self.total_deduction) + flt(self.total_loan_repayment))
+		self.net_pay = flt(self.gross_pay) - (
+			flt(self.total_deduction) + flt(self.get("total_loan_repayment"))
+		)
 		self.rounded_total = rounded(self.net_pay)
 		self.base_net_pay = flt(
 			flt(self.net_pay) * flt(self.exchange_rate), self.precision("base_net_pay")
@@ -1675,100 +1678,6 @@ class SalarySlip(TransactionBase):
 
 		return joining_date, relieving_date
 
-	def set_loan_repayment(self):
-		self.total_loan_repayment = 0
-		self.total_interest_amount = 0
-		self.total_principal_amount = 0
-
-		if not self.get("loans"):
-			for loan in self.get_loan_details():
-
-				amounts = calculate_amounts(loan.name, self.posting_date, "Regular Payment")
-
-				if amounts["interest_amount"] or amounts["payable_principal_amount"]:
-					self.append(
-						"loans",
-						{
-							"loan": loan.name,
-							"total_payment": amounts["interest_amount"] + amounts["payable_principal_amount"],
-							"interest_amount": amounts["interest_amount"],
-							"principal_amount": amounts["payable_principal_amount"],
-							"loan_account": loan.loan_account,
-							"interest_income_account": loan.interest_income_account,
-						},
-					)
-
-		for payment in self.get("loans"):
-			amounts = calculate_amounts(payment.loan, self.posting_date, "Regular Payment")
-			total_amount = amounts["interest_amount"] + amounts["payable_principal_amount"]
-			if payment.total_payment > total_amount:
-				frappe.throw(
-					_(
-						"""Row {0}: Paid amount {1} is greater than pending accrued amount {2} against loan {3}"""
-					).format(
-						payment.idx,
-						frappe.bold(payment.total_payment),
-						frappe.bold(total_amount),
-						frappe.bold(payment.loan),
-					)
-				)
-
-			self.total_interest_amount += payment.interest_amount
-			self.total_principal_amount += payment.principal_amount
-
-			self.total_loan_repayment += payment.total_payment
-
-	def get_loan_details(self):
-		loan_details = frappe.get_all(
-			"Loan",
-			fields=["name", "interest_income_account", "loan_account", "loan_type", "is_term_loan"],
-			filters={
-				"applicant": self.employee,
-				"docstatus": 1,
-				"repay_from_salary": 1,
-				"company": self.company,
-			},
-		)
-
-		if loan_details:
-			for loan in loan_details:
-				if loan.is_term_loan:
-					process_loan_interest_accrual_for_term_loans(
-						posting_date=self.posting_date, loan_type=loan.loan_type, loan=loan.name
-					)
-
-		return loan_details
-
-	def make_loan_repayment_entry(self):
-		payroll_payable_account = get_payroll_payable_account(self.company, self.payroll_entry)
-		for loan in self.loans:
-			if loan.total_payment:
-				repayment_entry = create_repayment_entry(
-					loan.loan,
-					self.employee,
-					self.company,
-					self.posting_date,
-					loan.loan_type,
-					"Regular Payment",
-					loan.interest_amount,
-					loan.principal_amount,
-					loan.total_payment,
-					payroll_payable_account=payroll_payable_account,
-				)
-
-				repayment_entry.save()
-				repayment_entry.submit()
-
-				frappe.db.set_value(
-					"Salary Slip Loan", loan.name, "loan_repayment_entry", repayment_entry.name
-				)
-
-	def cancel_loan_repayment_entry(self):
-		for loan in self.loans:
-			if loan.loan_repayment_entry:
-				repayment_entry = frappe.get_doc("Loan Repayment", loan.loan_repayment_entry)
-				repayment_entry.cancel()
-
 	def email_salary_slip(self):
 		receiver = frappe.db.get_value("Employee", self.employee, "prefered_email")
 		payroll_settings = frappe.get_single("Payroll Settings")
@@ -1850,7 +1759,9 @@ class SalarySlip(TransactionBase):
 			if hasattr(self, "deductions"):
 				for deduction in self.deductions:
 					self.total_deduction += flt(deduction.amount, deduction.precision("amount"))
-			self.net_pay = flt(self.gross_pay) - flt(self.total_deduction) - flt(self.total_loan_repayment)
+			self.net_pay = (
+				flt(self.gross_pay) - flt(self.total_deduction) - flt(self.get("total_loan_repayment"))
+			)
 		self.set_base_totals()
 
 	def set_base_totals(self):
@@ -2019,19 +1930,6 @@ def get_salary_component_data(component):
 		],
 		as_dict=1,
 	)
-
-
-def get_payroll_payable_account(company, payroll_entry):
-	if payroll_entry:
-		payroll_payable_account = frappe.db.get_value(
-			"Payroll Entry", payroll_entry, "payroll_payable_account"
-		)
-	else:
-		payroll_payable_account = frappe.db.get_value(
-			"Company", company, "default_payroll_payable_account"
-		)
-
-	return payroll_payable_account
 
 
 def calculate_tax_by_tax_slab(
