@@ -436,6 +436,8 @@ class TestLeaveAllocation(FrappeTestCase):
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_get_earned_leave_details_for_dashboard(self):
 		frappe.flags.current_date = get_year_start(getdate())
+		first_sunday = get_first_sunday(self.holiday_list, for_date=frappe.flags.current_date)
+
 		leave_policy_assignments = make_policy_assignment(
 			self.employee,
 			annual_allocation=6,
@@ -452,10 +454,8 @@ class TestLeaveAllocation(FrappeTestCase):
 
 		allocate_earned_leaves_for_months(6)
 
-		first_sunday = get_first_sunday(self.holiday_list)
-		make_leave_application(
-			self.employee.name, add_days(first_sunday, 1), add_days(first_sunday, 1), self.leave_type
-		)
+		leave_date = add_days(first_sunday, 1)
+		make_leave_application(self.employee.name, leave_date, leave_date, self.leave_type)
 
 		# 2 leaves were allocated when the allocation was created
 		details = get_leave_details(self.employee.name, allocation.from_date)
