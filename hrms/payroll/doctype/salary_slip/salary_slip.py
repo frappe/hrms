@@ -1159,38 +1159,40 @@ class SalarySlip(TransactionBase):
 			self.update_component_row(tax_row, tax_amount, "deductions")
 
 	def get_tax_components(self) -> list:
-		def _get_tax_components():
-			tax_components = {}
-			sc = frappe.qb.DocType("Salary Component")
-			sca = frappe.qb.DocType("Salary Component Account")
-
-			compoents = (
-				frappe.qb.from_(sc)
-				.left_join(sca)
-				.on(sca.parent == sc.name)
-				.select(
-					sc.name,
-					sca.company,
-				)
-				.where(sc.variable_based_on_taxable_salary == 1)
-			).run(as_dict=True)
-
-			for component in compoents:
-				key = component.company if component.company else "default"
-				tax_components.setdefault(key, [])
-				tax_components[key].append(component.name)
-
-			return tax_components
-
 		if frappe.flags.in_test:
-			tax_components = _get_tax_components()
+			tax_components = self._get_company_wise_tax_components()
 		else:
-			tax_components = frappe.cache().get_value("tax_components", _get_tax_components)
+			tax_components = frappe.cache().get_value(
+				"tax_components", self._get_company_wise_tax_components
+			)
 
 		if self.company in tax_components:
 			return tax_components[self.company]
 		else:
 			return tax_components.get("default", [])
+
+	def _get_company_wise_tax_components(self):
+		tax_components = {}
+		sc = frappe.qb.DocType("Salary Component")
+		sca = frappe.qb.DocType("Salary Component Account")
+
+		compoents = (
+			frappe.qb.from_(sc)
+			.left_join(sca)
+			.on(sca.parent == sc.name)
+			.select(
+				sc.name,
+				sca.company,
+			)
+			.where(sc.variable_based_on_taxable_salary == 1)
+		).run(as_dict=True)
+
+		for component in compoents:
+			key = component.company if component.company else "default"
+			tax_components.setdefault(key, [])
+			tax_components[key].append(component.name)
+
+		return tax_components
 
 	def update_component_row(
 		self,
