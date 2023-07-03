@@ -1160,10 +1160,10 @@ class SalarySlip(TransactionBase):
 
 	def get_tax_components(self) -> list:
 		if frappe.flags.in_test:
-			tax_components = self._get_company_wise_tax_components()
+			tax_components = self._fetch_company_wise_tax_components()
 		else:
 			tax_components = frappe.cache().get_value(
-				"tax_components", self._get_company_wise_tax_components
+				"tax_components", self._fetch_company_wise_tax_components
 			)
 
 		if self.company in tax_components:
@@ -1171,7 +1171,7 @@ class SalarySlip(TransactionBase):
 		else:
 			return tax_components.get("default", [])
 
-	def _get_company_wise_tax_components(self):
+	def _fetch_company_wise_tax_components(self):
 		tax_components = {}
 		sc = frappe.qb.DocType("Salary Component")
 		sca = frappe.qb.DocType("Salary Component Account")
