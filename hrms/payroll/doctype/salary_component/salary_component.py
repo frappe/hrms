@@ -9,6 +9,8 @@ from frappe.model.naming import append_number_if_name_exists
 class SalaryComponent(Document):
 	def validate(self):
 		self.validate_abbr()
+
+	def on_update(self):
 		self.invalidate_cache()
 
 	def validate_abbr(self):
