@@ -32,6 +32,7 @@ from hrms.hr.utils import (
 	share_doc_with_approver,
 	validate_active_employee,
 )
+from hrms.utils import get_employee_email
 
 
 class LeaveDayBlockedError(frappe.ValidationError):
@@ -501,8 +502,9 @@ class LeaveApplication(Document):
 			self.half_day_date = None
 
 	def notify_employee(self):
-		employee = frappe.get_doc("Employee", self.employee)
-		if not employee.user_id:
+		employee_email = get_employee_email(self.employee)
+
+		if not employee_email:
 			return
 
 		parent_doc = frappe.get_doc("Leave Application", self.name)
@@ -519,7 +521,7 @@ class LeaveApplication(Document):
 			{
 				# for post in messages
 				"message": message,
-				"message_to": employee.user_id,
+				"message_to": employee_email,
 				# for email
 				"subject": email_template.subject,
 				"notify": "employee",
