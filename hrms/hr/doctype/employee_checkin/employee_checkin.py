@@ -5,12 +5,8 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cint, cstr, get_datetime, get_link_to_form
+from frappe.utils import cint, get_datetime
 
-from hrms.hr.doctype.attendance.attendance import (
-	DuplicateAttendanceError,
-	OverlappingShiftAttendanceError,
-)
 from hrms.hr.doctype.shift_assignment.shift_assignment import (
 	get_actual_start_end_datetime_of_shift,
 )
@@ -162,11 +158,8 @@ def mark_attendance_and_link_log(
 			update_attendance_in_checkins(log_names, attendance.name)
 			return attendance
 
-		except DuplicateAttendanceError as e:
-			handle_attendance_exception(log_names, "duplicate", e)
-
-		except OverlappingShiftAttendanceError as e:
-			handle_attendance_exception(log_names, "overlapping", e)
+		except frappe.ValidationError as e:
+			handle_attendance_exception(log_names, e)
 
 	else:
 		frappe.throw(_("{} is an invalid Attendance Status.").format(attendance_status))
@@ -241,19 +234,15 @@ def find_index_in_dict(dict_list, key, value):
 	return next((index for (index, d) in enumerate(dict_list) if d[key] == value), None)
 
 
-def handle_attendance_exception(log_names: list, reason: str, error_message: str):
+def handle_attendance_exception(log_names: list, error_message: str):
 	frappe.db.rollback(save_point="attendance_creation")
 	frappe.clear_messages()
 	skip_attendance_in_checkins(log_names)
-	add_comment_in_checkins(log_names, reason, error_message)
+	add_comment_in_checkins(log_names, error_message)
 
 
-def add_comment_in_checkins(log_names: list, reason: str, error_message: str):
-	conflicting_docname = cstr(error_message).split(":")[-1].strip()
-
-	text = _("Auto Attendance skipped due to {} attendance record: {}").format(
-		_(reason), get_link_to_form("Attendance", conflicting_docname)
-	)
+def add_comment_in_checkins(log_names: list, error_message: str):
+	text = "{0}<br>{1}".format(frappe.bold(_("Reason for skipping auto attendance:")), error_message)
 
 	for name in log_names:
 		frappe.get_doc(
