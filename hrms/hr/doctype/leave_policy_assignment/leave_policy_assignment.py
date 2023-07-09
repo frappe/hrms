@@ -3,7 +3,6 @@
 
 
 import json
-from math import ceil
 
 import frappe
 from frappe import _, bold
@@ -19,6 +18,7 @@ from frappe.utils import (
 	get_last_day,
 	get_link_to_form,
 	getdate,
+	rounded,
 )
 
 
@@ -260,7 +260,7 @@ def calculate_pro_rated_leaves(
 
 	if is_earned_leave:
 		return flt(leaves, precision)
-	return ceil(leaves)
+	return rounded(leaves)
 
 
 def is_earned_leave_applicable_for_current_month(date_of_joining, allocate_on_day):
