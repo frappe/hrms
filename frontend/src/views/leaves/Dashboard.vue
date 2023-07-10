@@ -5,9 +5,14 @@
 				<LeaveBalance />
 
 				<div class="flex flex-col gap-7 px-4 mt-4 w-full">
-					<Button appearance="primary" class="py-2 w-full">
-						Request a Leave
-					</Button>
+					<router-link
+						:to="{ name: 'LeaveApplicationFormView' }"
+						v-slot="{ navigate }"
+					>
+						<Button @click="navigate" appearance="primary" class="py-2 w-full">
+							Request a Leave
+						</Button>
+					</router-link>
 					<div>
 						<div class="text-xl text-gray-800 font-bold">Leaves This Month</div>
 						<RequestList :items="leavesThisMonth" />
