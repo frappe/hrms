@@ -91,7 +91,6 @@ def update_erpnext_workspaces(disable: bool = True):
 		"CRM",
 		"ERPNext Integrations",
 		"ERPNext Settings",
-		"Loans",
 		"Manufacturing",
 		"Quality",
 		"Selling",

@@ -37,6 +37,7 @@ from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_e
 )
 from hrms.payroll.doctype.payroll_entry.payroll_entry import get_month_details
 from hrms.payroll.doctype.salary_slip.salary_slip import make_salary_slip_from_timesheet
+from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 from hrms.tests.test_utils import get_first_sunday
 
@@ -584,14 +585,15 @@ class TestSalarySlip(FrappeTestCase):
 		email_queue = frappe.db.a_row_exists("Email Queue")
 		self.assertTrue(email_queue)
 
+	@if_lending_app_installed
 	def test_loan_repayment_salary_slip(self):
-		from erpnext.loan_management.doctype.loan.test_loan import (
+		from lending.loan_management.doctype.loan.test_loan import (
 			create_loan,
 			create_loan_accounts,
 			create_loan_type,
 			make_loan_disbursement_entry,
 		)
-		from erpnext.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
+		from lending.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
 			process_loan_interest_accrual_for_term_loans,
 		)
 

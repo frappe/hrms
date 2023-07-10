@@ -140,7 +140,7 @@ frappe.ui.form.on("Appraisal Goal", {
 	set_score_earned(frm, cdt, cdn) {
 		let d = frappe.get_doc(cdt, cdn);
 
-		score_earned = flt(d.score) * flt(d.per_weightage) / 100;
+		let score_earned = flt(d.score) * flt(d.per_weightage) / 100;
 		frappe.model.set_value(cdt, cdn, "score_earned", score_earned);
 
 		frm.trigger("calculate_total");

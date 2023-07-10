@@ -11,15 +11,6 @@ from frappe.utils import add_months
 
 import erpnext
 from erpnext.accounts.utils import get_fiscal_year, getdate, nowdate
-from erpnext.loan_management.doctype.loan.test_loan import (
-	create_loan,
-	create_loan_accounts,
-	create_loan_type,
-	make_loan_disbursement_entry,
-)
-from erpnext.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
-	process_loan_interest_accrual_for_term_loans,
-)
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.payroll_entry.payroll_entry import (
@@ -27,6 +18,7 @@ from hrms.payroll.doctype.payroll_entry.payroll_entry import (
 	get_end_date,
 	get_start_end_dates,
 )
+from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	create_account,
 	make_deduction_salary_component,
@@ -53,7 +45,6 @@ class TestPayrollEntry(FrappeTestCase):
 			"Salary Structure Assignment",
 			"Payroll Employee Detail",
 			"Additional Salary",
-			"Loan",
 		]:
 			frappe.db.delete(dt)
 
@@ -195,17 +186,27 @@ class TestPayrollEntry(FrappeTestCase):
 		self.assertEqual(get_end_date("2017-02-15", "monthly"), {"end_date": "2017-03-14"})
 		self.assertEqual(get_end_date("2017-02-15", "daily"), {"end_date": "2017-02-15"})
 
+	@if_lending_app_installed
 	def test_loan(self):
+		from lending.loan_management.doctype.loan.test_loan import (
+			create_loan,
+			create_loan_accounts,
+			create_loan_type,
+			make_loan_disbursement_entry,
+		)
+		from lending.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
+			process_loan_interest_accrual_for_term_loans,
+		)
+
+		frappe.db.delete("Loan")
+
 		company = "_Test Company"
 		branch = "Test Employee Branch"
 
 		if not frappe.db.exists("Branch", branch):
 			frappe.get_doc({"doctype": "Branch", "branch": branch}).insert()
-		holiday_list = make_holiday("test holiday for loan")
 
-		applicant = make_employee(
-			"test_employee@loan.com", company="_Test Company", branch=branch, holiday_list=holiday_list
-		)
+		applicant = make_employee("test_employee@loan.com", company="_Test Company", branch=branch)
 		company_doc = frappe.get_doc("Company", company)
 
 		make_salary_structure(
@@ -610,32 +611,6 @@ def get_payment_account():
 		{"account_type": "Cash", "company": erpnext.get_default_company(), "is_group": 0},
 		"name",
 	)
-
-
-def make_holiday(holiday_list_name):
-	if not frappe.db.exists("Holiday List", holiday_list_name):
-		current_fiscal_year = get_fiscal_year(nowdate(), as_dict=True)
-		dt = getdate(nowdate())
-
-		new_year = dt + relativedelta(month=1, day=1, year=dt.year)
-		republic_day = dt + relativedelta(month=1, day=26, year=dt.year)
-		test_holiday = dt + relativedelta(month=2, day=2, year=dt.year)
-
-		frappe.get_doc(
-			{
-				"doctype": "Holiday List",
-				"from_date": current_fiscal_year.year_start_date,
-				"to_date": current_fiscal_year.year_end_date,
-				"holiday_list_name": holiday_list_name,
-				"holidays": [
-					{"holiday_date": new_year, "description": "New Year"},
-					{"holiday_date": republic_day, "description": "Republic Day"},
-					{"holiday_date": test_holiday, "description": "Test Holiday"},
-				],
-			}
-		).insert()
-
-	return holiday_list_name
 
 
 def setup_salary_structure(employee, company_doc, currency=None, salary_structure=None):
