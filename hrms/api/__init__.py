@@ -115,3 +115,24 @@ def get_holidays_for_employee(employee: str) -> list[dict]:
 		.where((Holiday.parent == holiday_list) & (Holiday.weekly_off == 0))
 		.orderby(Holiday.holiday_date, order=Order.asc)
 	).run(as_dict=True)
+
+
+@frappe.whitelist()
+def get_doctype_fields(doctype : str) -> list[dict]:
+	return frappe.get_meta(doctype).fields
+
+
+@frappe.whitelist()
+def get_link_field_options(doctype: str) -> list:
+	fields = ["name as value"]
+	title_field = frappe.db.get_value("DocType", doctype, "title_field", cache=1)
+
+	show_title_field_in_link = (
+		frappe.db.get_value("DocType", doctype, "show_title_field_in_link", cache=1) == 1
+	)
+
+	if title_field and show_title_field_in_link:
+		fields.append(f"{title_field} as label")
+
+	link_options = frappe.get_all(doctype, fields=fields)
+	return link_options

@@ -19,7 +19,7 @@ const routes = [
 		path: "/leaves/:id",
 		props: true,
 		component: () => import("@/views/leaves/Details.vue"),
-	}
+	},
 ]
 
 export default routes

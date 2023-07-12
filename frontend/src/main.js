@@ -3,7 +3,13 @@ import App from "./App.vue"
 import router from "./router"
 import socket from "./socket"
 
-import { Button, setConfig, frappeRequest, resourcesPlugin } from "frappe-ui"
+import {
+	Button,
+	Input,
+	setConfig,
+	frappeRequest,
+	resourcesPlugin,
+} from "frappe-ui"
 
 import { IonicVue } from "@ionic/vue"
 
@@ -26,6 +32,7 @@ setConfig("resourceFetcher", frappeRequest)
 app.use(resourcesPlugin)
 
 app.component("Button", Button)
+app.component("Input", Input)
 
 app.use(router)
 app.use(IonicVue)
