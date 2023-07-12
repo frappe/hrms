@@ -51,15 +51,7 @@ from hrms.payroll.doctype.payroll_period.payroll_period import (
 	get_payroll_period,
 	get_period_factor,
 )
-<<<<<<< HEAD
-=======
-from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import (
-	cancel_loan_repayment_entry,
-	make_loan_repayment_entry,
-	set_loan_repayment,
-)
 from hrms.payroll.utils import sanitize_expression
->>>>>>> 46951ad9 (fix(Salary Slip): handle line boundaries characters in formulae (#673))
 
 
 class SalarySlip(TransactionBase):
