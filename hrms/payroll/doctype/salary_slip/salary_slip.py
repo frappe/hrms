@@ -1159,24 +1159,41 @@ class SalarySlip(TransactionBase):
 			self.update_component_row(tax_row, tax_amount, "deductions")
 
 	def get_tax_components(self) -> list:
-		if frappe.flags.in_test:
-			tax_components = self._fetch_company_wise_tax_components()
-		else:
-			tax_components = frappe.cache().get_value(
-				"tax_components", self._fetch_company_wise_tax_components
-			)
+		"""
+		Fetches the tax components for a company.
 
-		if self.company in tax_components:
-			return tax_components[self.company]
-		else:
-			return tax_components.get("default", [])
+		Returns a list of tax components specific to the company. If no tax components are defined for the company, it returns the default tax components.
 
-	def _fetch_company_wise_tax_components(self):
+		Returns:
+		        list: A list of tax components.
+
+
+		"""
+
+		tax_components = frappe.cache().get_value(
+			"tax_components", self._fetch_company_wise_tax_components
+		)
+
+		default_tax_components = tax_components.get("default", [])
+
+		return tax_components.get(self.company, default_tax_components)
+
+	def _fetch_company_wise_tax_components(self) -> dict:
+		"""
+		    Fetches the tax components for each company.
+
+		    Returns:
+		dict: A dictionary containing tax components grouped by company.
+
+		    Raises:
+		        None
+		"""
+
 		tax_components = {}
 		sc = frappe.qb.DocType("Salary Component")
 		sca = frappe.qb.DocType("Salary Component Account")
 
-		compoents = (
+		components = (
 			frappe.qb.from_(sc)
 			.left_join(sca)
 			.on(sca.parent == sc.name)
@@ -1187,8 +1204,8 @@ class SalarySlip(TransactionBase):
 			.where(sc.variable_based_on_taxable_salary == 1)
 		).run(as_dict=True)
 
-		for component in compoents:
-			key = component.company if component.company else "default"
+		for component in components:
+			key = component.company or "default"
 			tax_components.setdefault(key, [])
 			tax_components[key].append(component.name)
 
