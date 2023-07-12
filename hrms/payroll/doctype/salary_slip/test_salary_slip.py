@@ -1349,28 +1349,7 @@ class TestSalarySlip(FrappeTestCase):
 			base=40000,
 		)
 
-		def _make_income_tax_compoent():
-			tax_components = [
-				{
-					"salary_component": "_Test TDS",
-					"abbr": "T_TDS",
-					"type": "Deduction",
-					"depends_on_payment_days": 0,
-					"variable_based_on_taxable_salary": 0,
-					"round_to_the_nearest_integer": 1,
-				},
-				{
-					"salary_component": "_Test Income Tax",
-					"abbr": "T_IT",
-					"type": "Deduction",
-					"depends_on_payment_days": 0,
-					"variable_based_on_taxable_salary": 0,
-					"round_to_the_nearest_integer": 1,
-				},
-			]
-			make_salary_component(tax_components, False, company_list=[])
-
-		_make_income_tax_compoent()
+		make_income_tax_compoents()
 
 		salary_slip = make_salary_slip(salary_structure_doc.name, employee=emp, posting_date=nowdate())
 
@@ -1391,7 +1370,6 @@ class TestSalarySlip(FrappeTestCase):
 		)
 		test_tds.variable_based_on_taxable_salary = 1
 		test_tds.save()
-		test_tds.load_from_db()
 
 		# validate tax component is configurations
 		self.assertEqual(test_tds.variable_based_on_taxable_salary, 1)
@@ -1401,13 +1379,35 @@ class TestSalarySlip(FrappeTestCase):
 		income_tax = frappe.get_doc("Salary Component", "_Test Income Tax")
 		income_tax.variable_based_on_taxable_salary = 1
 		income_tax.save()
-		income_tax.load_from_db()
+
 		self.assertEqual(income_tax.variable_based_on_taxable_salary, 1)
 
 		# Validate tax component matching company criteria is added in salary slip
 		tax_component = salary_slip.get_tax_components()
 		self.assertEqual(test_tds.accounts[0].company, salary_slip.company)
 		self.assertListEqual(tax_component, ["_Test TDS"])
+
+
+def make_income_tax_compoents():
+	tax_components = [
+		{
+			"salary_component": "_Test TDS",
+			"abbr": "T_TDS",
+			"type": "Deduction",
+			"depends_on_payment_days": 0,
+			"variable_based_on_taxable_salary": 0,
+			"round_to_the_nearest_integer": 1,
+		},
+		{
+			"salary_component": "_Test Income Tax",
+			"abbr": "T_IT",
+			"type": "Deduction",
+			"depends_on_payment_days": 0,
+			"variable_based_on_taxable_salary": 0,
+			"round_to_the_nearest_integer": 1,
+		},
+	]
+	make_salary_component(tax_components, False, company_list=[])
 
 
 def get_no_of_days():
