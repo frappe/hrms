@@ -1145,11 +1145,14 @@ class SalarySlip(TransactionBase):
 				self.other_deduction_components.append(d.salary_component)
 
 		if not tax_components:
-			tax_components = [
-				d.name
-				for d in frappe.get_all("Salary Component", filters={"variable_based_on_taxable_salary": 1})
-				if d.name not in self.other_deduction_components
-			]
+			tax_components = self.get_tax_components()
+			frappe.msgprint(
+				_(
+					"Added tax components from the Salary Component master as the salary structure didn't have any tax component."
+				),
+				indicator="blue",
+				alert=True,
+			)
 
 		if tax_components and self.payroll_period and self.salary_structure:
 			self.tax_slab = self.get_income_tax_slabs()
@@ -1161,6 +1164,53 @@ class SalarySlip(TransactionBase):
 			tax_amount = self.calculate_variable_based_on_taxable_salary(d)
 			tax_row = get_salary_component_data(d)
 			self.update_component_row(tax_row, tax_amount, "deductions")
+
+	def get_tax_components(self) -> list:
+		"""
+		Returns:
+		        list: A list of tax components specific to the company.
+		        If no tax components are defined for the company,
+		        it returns the default tax components.
+		"""
+
+		tax_components = frappe.cache().get_value(
+			"tax_components", self._fetch_company_wise_tax_components
+		)
+
+		default_tax_components = tax_components.get("default", [])
+
+		return tax_components.get(self.company, default_tax_components)
+
+	def _fetch_company_wise_tax_components(self) -> dict:
+		"""
+		Returns:
+		    dict: A dictionary containing tax components grouped by company.
+
+		Raises:
+		    None
+		"""
+
+		tax_components = {}
+		sc = frappe.qb.DocType("Salary Component")
+		sca = frappe.qb.DocType("Salary Component Account")
+
+		components = (
+			frappe.qb.from_(sc)
+			.left_join(sca)
+			.on(sca.parent == sc.name)
+			.select(
+				sc.name,
+				sca.company,
+			)
+			.where(sc.variable_based_on_taxable_salary == 1)
+		).run(as_dict=True)
+
+		for component in components:
+			key = component.company or "default"
+			tax_components.setdefault(key, [])
+			tax_components[key].append(component.name)
+
+		return tax_components
 
 	def update_component_row(
 		self,

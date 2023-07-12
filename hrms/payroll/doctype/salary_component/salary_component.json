@@ -162,7 +162,8 @@
    "depends_on": "eval:doc.type == \"Deduction\"",
    "fieldname": "variable_based_on_taxable_salary",
    "fieldtype": "Check",
-   "label": "Variable Based On Taxable Salary"
+   "label": "Variable Based On Taxable Salary",
+   "search_index": 1
   },
   {
    "depends_on": "eval:doc.statistical_component != 1",
@@ -263,7 +264,7 @@
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-03-01 16:57:46.413627",
+ "modified": "2023-06-21 15:11:53.582800",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",
