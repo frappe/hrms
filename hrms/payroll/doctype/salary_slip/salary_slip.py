@@ -1160,14 +1160,10 @@ class SalarySlip(TransactionBase):
 
 	def get_tax_components(self) -> list:
 		"""
-		Fetches the tax components for a company.
-
-		Returns a list of tax components specific to the company. If no tax components are defined for the company, it returns the default tax components.
-
 		Returns:
-		    list: A list of tax components.
-
-
+		        list: A list of tax components specific to the company.
+		        If no tax components are defined for the company,
+		        it returns the default tax components.
 		"""
 
 		tax_components = frappe.cache().get_value(
@@ -1180,8 +1176,6 @@ class SalarySlip(TransactionBase):
 
 	def _fetch_company_wise_tax_components(self) -> dict:
 		"""
-		Fetches the tax components for each company.
-
 		Returns:
 		    dict: A dictionary containing tax components grouped by company.
 
