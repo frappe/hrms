@@ -49,6 +49,7 @@ from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import (
 	make_loan_repayment_entry,
 	set_loan_repayment,
 )
+from hrms.payroll.utils import sanitize_expression
 
 
 class SalarySlip(TransactionBase):
@@ -1044,37 +1045,42 @@ class SalarySlip(TransactionBase):
 
 		return data, default_data
 
-	def eval_condition_and_formula(self, d, data):
+	def eval_condition_and_formula(self, struct_row, data):
 		try:
-			condition = d.condition.strip().replace("\n", " ") if d.condition else None
+			condition = sanitize_expression(struct_row.condition)
 			if condition:
 				if not frappe.safe_eval(condition, self.whitelisted_globals, data):
 					return None
-			amount = d.amount
-			if d.amount_based_on_formula:
-				formula = d.formula.strip().replace("\n", " ") if d.formula else None
+			amount = struct_row.amount
+			if struct_row.amount_based_on_formula:
+				formula = sanitize_expression(struct_row.formula)
 				if formula:
-					amount = flt(frappe.safe_eval(formula, self.whitelisted_globals, data), d.precision("amount"))
+					amount = flt(
+						frappe.safe_eval(formula, self.whitelisted_globals, data), struct_row.precision("amount")
+					)
 			if amount:
-				data[d.abbr] = amount
+				data[struct_row.abbr] = amount
 
 			return amount
 
-		except NameError as err:
+		except NameError as ne:
 			throw_error_message(
-				d,
-				err,
+				struct_row,
+				ne,
 				title=_("Name error"),
 				description=_("This error can be due to missing or deleted field."),
 			)
-		except SyntaxError as err:
+		except SyntaxError as se:
 			throw_error_message(
-				d, err, title=_("Syntax error"), description=_("This error can be due to invalid syntax.")
+				struct_row,
+				se,
+				title=_("Syntax error"),
+				description=_("This error can be due to invalid syntax."),
 			)
-		except Exception as err:
+		except Exception as exc:
 			throw_error_message(
-				d,
-				err,
+				struct_row,
+				exc,
 				title=_("Error in formula or condition"),
 				description=_("This error can be due to invalid formula or condition."),
 			)
