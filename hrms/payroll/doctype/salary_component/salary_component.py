@@ -27,4 +27,4 @@ class SalaryComponent(Document):
 		)
 
 	def invalidate_cache(self):
-		frappe.cache().delete_key("tax_components")
+		frappe.cache().delete_value("tax_components")
