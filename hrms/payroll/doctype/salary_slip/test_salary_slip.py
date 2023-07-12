@@ -1349,7 +1349,7 @@ class TestSalarySlip(FrappeTestCase):
 			base=40000,
 		)
 
-		make_income_tax_compoents()
+		make_income_tax_components()
 
 		salary_slip = make_salary_slip(salary_structure_doc.name, employee=emp, posting_date=nowdate())
 
@@ -1388,7 +1388,7 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertListEqual(tax_component, ["_Test TDS"])
 
 
-def make_income_tax_compoents():
+def make_income_tax_components():
 	tax_components = [
 		{
 			"salary_component": "_Test TDS",
