@@ -42,11 +42,6 @@ class PayrollEntry(Document):
 	def validate(self):
 		self.number_of_employees = len(self.employees)
 		self.set_status()
-		self.validate_payroll_frequency()
-
-	def validate_payroll_frequency(self):
-		if not self.salary_slip_based_on_timesheet and not self.payroll_frequency:
-			frappe.throw(_("Payroll Frequency is mandatory"))
 
 	def set_status(self, status=None, update=False):
 		if not status:
