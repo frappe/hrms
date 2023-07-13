@@ -65,6 +65,7 @@
    "fieldname": "payroll_frequency",
    "fieldtype": "Select",
    "label": "Payroll Frequency",
+   "mandatory_depends_on": "eval:doc.salary_slip_based_on_timesheet == 0",
    "options": "\nMonthly\nFortnightly\nBimonthly\nWeekly\nDaily"
   },
   {
@@ -328,7 +329,7 @@
  "icon": "fa fa-cog",
  "is_submittable": 1,
  "links": [],
- "modified": "2023-06-20 16:22:08.674424",
+ "modified": "2023-07-13 12:27:33.418702",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",
