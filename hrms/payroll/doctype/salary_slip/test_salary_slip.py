@@ -1098,7 +1098,12 @@ class TestSalarySlip(FrappeTestCase):
 		)
 		employee_doc = frappe.get_doc("Employee", emp)
 
-		create_tax_slab(payroll_period, effective_date="2022-04-01", allow_tax_exemption=True)
+		tax_slab = create_tax_slab(payroll_period, effective_date="2022-04-01", allow_tax_exemption=True)
+
+		effective_date = frappe.db.get_value("Income Tax Slab", tax_slab, "effective_from")
+
+		if effective_date != "2022-04-01":
+			frappe.db.set_value("Income Tax Slab", tax_slab, "effective_from", "2022-04-01")
 
 		salary_structure_name = "Test Salary Structure for Opening Balance"
 		if not frappe.db.exists("Salary Structure", salary_structure_name):
@@ -1110,6 +1115,7 @@ class TestSalarySlip(FrappeTestCase):
 				from_date="2022-04-01",
 				payroll_period=payroll_period,
 				test_tax=True,
+				currency="INR",
 			)
 
 		# validate no salary slip exists for the employee
@@ -1321,6 +1327,87 @@ class TestSalarySlip(FrappeTestCase):
 				# LTA = 40000 - 21000 = 19000
 
 				self.assertEqual(earning.default_amount, 19000)
+
+	def test_variable_tax_component(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		emp = make_employee(
+			"testtaxcomponents@salary.com",
+			company="_Test Company",
+			**{"date_of_joining": "2021-12-01"},
+		)
+
+		salary_structure_name = "Test Tax Components"
+
+		salary_structure_doc = make_salary_structure(
+			salary_structure=salary_structure_name,
+			payroll_frequency="Monthly",
+			employee=emp,
+			company="_Test Company",
+			from_date=get_first_day(nowdate()),
+			currency="INR",
+			base=40000,
+		)
+
+		make_income_tax_components()
+
+		salary_slip = make_salary_slip(salary_structure_doc.name, employee=emp, posting_date=nowdate())
+
+		# check tax component not exist in salary slip
+		self.assertNotIn("_Test TDS", [com.salary_component for com in salary_slip.deductions])
+
+		# validate tax component is not configured as variable
+		test_tds = frappe.get_doc("Salary Component", "_Test TDS")
+		self.assertEqual(test_tds.variable_based_on_taxable_salary, 0)
+		self.assertListEqual(test_tds.accounts, [])
+
+		# configure company in tax component and set variable_based_on_taxable_salary as 1
+		test_tds.append(
+			"accounts",
+			{
+				"company": "_Test Company",
+			},
+		)
+		test_tds.variable_based_on_taxable_salary = 1
+		test_tds.save()
+
+		# validate tax component is configurations
+		self.assertEqual(test_tds.variable_based_on_taxable_salary, 1)
+		self.assertIn("_Test Company", [com.company for com in test_tds.accounts])
+
+		# define another tax component with variable_based_on_taxable_salary as 1 and company as empty
+		income_tax = frappe.get_doc("Salary Component", "_Test Income Tax")
+		income_tax.variable_based_on_taxable_salary = 1
+		income_tax.save()
+
+		self.assertEqual(income_tax.variable_based_on_taxable_salary, 1)
+
+		# Validate tax component matching company criteria is added in salary slip
+		tax_component = salary_slip.get_tax_components()
+		self.assertEqual(test_tds.accounts[0].company, salary_slip.company)
+		self.assertListEqual(tax_component, ["_Test TDS"])
+
+
+def make_income_tax_components():
+	tax_components = [
+		{
+			"salary_component": "_Test TDS",
+			"abbr": "T_TDS",
+			"type": "Deduction",
+			"depends_on_payment_days": 0,
+			"variable_based_on_taxable_salary": 0,
+			"round_to_the_nearest_integer": 1,
+		},
+		{
+			"salary_component": "_Test Income Tax",
+			"abbr": "T_IT",
+			"type": "Deduction",
+			"depends_on_payment_days": 0,
+			"variable_based_on_taxable_salary": 0,
+			"round_to_the_nearest_integer": 1,
+		},
+	]
+	make_salary_component(tax_components, False, company_list=[])
 
 
 def get_no_of_days():

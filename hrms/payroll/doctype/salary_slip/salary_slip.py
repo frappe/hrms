@@ -51,6 +51,7 @@ from hrms.payroll.doctype.payroll_period.payroll_period import (
 	get_payroll_period,
 	get_period_factor,
 )
+from hrms.payroll.utils import sanitize_expression
 
 
 class SalarySlip(TransactionBase):
@@ -1042,37 +1043,42 @@ class SalarySlip(TransactionBase):
 
 		return data, default_data
 
-	def eval_condition_and_formula(self, d, data):
+	def eval_condition_and_formula(self, struct_row, data):
 		try:
-			condition = d.condition.strip().replace("\n", " ") if d.condition else None
+			condition = sanitize_expression(struct_row.condition)
 			if condition:
 				if not frappe.safe_eval(condition, self.whitelisted_globals, data):
 					return None
-			amount = d.amount
-			if d.amount_based_on_formula:
-				formula = d.formula.strip().replace("\n", " ") if d.formula else None
+			amount = struct_row.amount
+			if struct_row.amount_based_on_formula:
+				formula = sanitize_expression(struct_row.formula)
 				if formula:
-					amount = flt(frappe.safe_eval(formula, self.whitelisted_globals, data), d.precision("amount"))
+					amount = flt(
+						frappe.safe_eval(formula, self.whitelisted_globals, data), struct_row.precision("amount")
+					)
 			if amount:
-				data[d.abbr] = amount
+				data[struct_row.abbr] = amount
 
 			return amount
 
-		except NameError as err:
+		except NameError as ne:
 			throw_error_message(
-				d,
-				err,
+				struct_row,
+				ne,
 				title=_("Name error"),
 				description=_("This error can be due to missing or deleted field."),
 			)
-		except SyntaxError as err:
+		except SyntaxError as se:
 			throw_error_message(
-				d, err, title=_("Syntax error"), description=_("This error can be due to invalid syntax.")
+				struct_row,
+				se,
+				title=_("Syntax error"),
+				description=_("This error can be due to invalid syntax."),
 			)
-		except Exception as err:
+		except Exception as exc:
 			throw_error_message(
-				d,
-				err,
+				struct_row,
+				exc,
 				title=_("Error in formula or condition"),
 				description=_("This error can be due to invalid formula or condition."),
 			)
@@ -1143,11 +1149,14 @@ class SalarySlip(TransactionBase):
 				self.other_deduction_components.append(d.salary_component)
 
 		if not tax_components:
-			tax_components = [
-				d.name
-				for d in frappe.get_all("Salary Component", filters={"variable_based_on_taxable_salary": 1})
-				if d.name not in self.other_deduction_components
-			]
+			tax_components = self.get_tax_components()
+			frappe.msgprint(
+				_(
+					"Added tax components from the Salary Component master as the salary structure didn't have any tax component."
+				),
+				indicator="blue",
+				alert=True,
+			)
 
 		if tax_components and self.payroll_period and self.salary_structure:
 			self.tax_slab = self.get_income_tax_slabs()
@@ -1159,6 +1168,53 @@ class SalarySlip(TransactionBase):
 			tax_amount = self.calculate_variable_based_on_taxable_salary(d)
 			tax_row = get_salary_component_data(d)
 			self.update_component_row(tax_row, tax_amount, "deductions")
+
+	def get_tax_components(self) -> list:
+		"""
+		Returns:
+		        list: A list of tax components specific to the company.
+		        If no tax components are defined for the company,
+		        it returns the default tax components.
+		"""
+
+		tax_components = frappe.cache().get_value(
+			"tax_components", self._fetch_company_wise_tax_components
+		)
+
+		default_tax_components = tax_components.get("default", [])
+
+		return tax_components.get(self.company, default_tax_components)
+
+	def _fetch_company_wise_tax_components(self) -> dict:
+		"""
+		Returns:
+		    dict: A dictionary containing tax components grouped by company.
+
+		Raises:
+		    None
+		"""
+
+		tax_components = {}
+		sc = frappe.qb.DocType("Salary Component")
+		sca = frappe.qb.DocType("Salary Component Account")
+
+		components = (
+			frappe.qb.from_(sc)
+			.left_join(sca)
+			.on(sca.parent == sc.name)
+			.select(
+				sc.name,
+				sca.company,
+			)
+			.where(sc.variable_based_on_taxable_salary == 1)
+		).run(as_dict=True)
+
+		for component in components:
+			key = component.company or "default"
+			tax_components.setdefault(key, [])
+			tax_components[key].append(component.name)
+
+		return tax_components
 
 	def update_component_row(
 		self,
