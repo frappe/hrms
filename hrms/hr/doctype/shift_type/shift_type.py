@@ -63,7 +63,7 @@ class ShiftType(Document):
 				self.name,
 			)
 
-		for employee in self.get_assigned_employee(self.process_attendance_after, True):
+		for employee in self.get_assigned_employees(self.process_attendance_after, True):
 			self.mark_absent_for_dates_with_no_attendance(employee)
 
 	def get_employee_checkins(self) -> list[dict]:
@@ -225,7 +225,7 @@ class ShiftType(Document):
 			)
 		).run(pluck=True)
 
-	def get_assigned_employee(self, from_date=None, consider_default_shift=False):
+	def get_assigned_employees(self, from_date=None, consider_default_shift=False):
 		filters = {"shift_type": self.name, "docstatus": "1", "status": "Active"}
 		if from_date:
 			filters["start_date"] = (">=", from_date)
@@ -234,9 +234,12 @@ class ShiftType(Document):
 
 		if consider_default_shift:
 			default_shift_employees = self.get_employees_with_default_shift(filters)
+			assigned_employees = set(assigned_employees + default_shift_employees)
 
-			return list(set(assigned_employees + default_shift_employees))
-		return assigned_employees
+		# exclude inactive employees
+		inactive_employees = frappe.db.get_all("Employee", {"status": "Inactive"}, pluck="name")
+
+		return set(assigned_employees) - set(inactive_employees)
 
 	def get_employees_with_default_shift(self, filters: dict) -> list:
 		default_shift_employees = frappe.get_all(
