@@ -331,7 +331,7 @@ class TestShiftType(FrappeTestCase):
 		)
 		self.assertIsNone(attendance)
 
-	def test_skip_marking_absent_for_a_fallback_default_shift(self):
+	def test_skip_absent_marking_for_a_fallback_default_shift(self):
 		"""
 		Tests if an employee is not marked absent for default shift
 		when they have a valid shift assignment of another type.
@@ -365,6 +365,21 @@ class TestShiftType(FrappeTestCase):
 			"Attendance", {"employee": employee, "shift": assigned_shift.name}, "status"
 		)
 		self.assertEqual(attendance, "Present")
+
+	def test_skip_absent_marking_for_inactive_employee(self):
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+
+		shift = setup_shift_type()
+		employee = make_employee("test_inactive_employee@example.com", company="_Test Company")
+		date = getdate()
+		make_shift_assignment(shift.name, employee, date)
+
+		# mark employee as Inactive
+		frappe.db.set_value("Employee", employee, "status", "Inactive")
+
+		shift.process_auto_attendance()
+		attendance = frappe.db.get_value("Attendance", {"employee": employee}, "status")
+		self.assertIsNone(attendance)
 
 	def test_get_start_and_end_dates(self):
 		date = getdate()
