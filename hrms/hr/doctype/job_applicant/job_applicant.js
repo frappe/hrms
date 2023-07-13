@@ -26,7 +26,7 @@ frappe.ui.form.on("Job Applicant", {
 			}, __("Create"));
 		}
 
-		if (!frm.doc.__islocal) {
+		if (!frm.doc.__islocal && frm.doc.status == "Accepted") {
 			if (frm.doc.__onload && frm.doc.__onload.job_offer) {
 				$('[data-doctype="Employee Onboarding"]').find("button").show();
 				$('[data-doctype="Job Offer"]').find("button").hide();
