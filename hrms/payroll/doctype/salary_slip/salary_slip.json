@@ -233,7 +233,6 @@
    "search_index": 1
   },
   {
-   "depends_on": "eval:(!doc.salary_slip_based_on_timesheet)",
    "fieldname": "payroll_frequency",
    "fieldtype": "Select",
    "label": "Payroll Frequency",

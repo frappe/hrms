@@ -306,7 +306,7 @@ class SalarySlip(TransactionBase):
 			.limit(1)
 		)
 
-		if self.payroll_frequency:
+		if not self.salary_slip_based_on_timesheet and self.payroll_frequency:
 			query = query.where(ss.payroll_frequency == self.payroll_frequency)
 
 		st_name = query.run()
@@ -926,10 +926,10 @@ class SalarySlip(TransactionBase):
 
 	def get_income_tax_deducted_till_date(self):
 		tax_deducted = 0.0
-		for tax_component in self.component_based_veriable_tax:
+		for tax_component in self.get("_component_based_variable_tax") or {}:
 			tax_deducted += (
-				self.component_based_veriable_tax[tax_component]["previous_total_paid_taxes"]
-				+ self.component_based_veriable_tax[tax_component]["current_tax_amount"]
+				self._component_based_variable_tax[tax_component]["previous_total_paid_taxes"]
+				+ self._component_based_variable_tax[tax_component]["current_tax_amount"]
 			)
 		return tax_deducted
 
@@ -1164,9 +1164,9 @@ class SalarySlip(TransactionBase):
 			self.tax_slab = self.get_income_tax_slabs()
 			self.compute_taxable_earnings_for_year()
 
-		self.component_based_veriable_tax = {}
+		self._component_based_variable_tax = {}
 		for d in tax_components:
-			self.component_based_veriable_tax.setdefault(d, {})
+			self._component_based_variable_tax.setdefault(d, {})
 			tax_amount = self.calculate_variable_based_on_taxable_salary(d)
 			tax_row = get_salary_component_data(d)
 			self.update_component_row(tax_row, tax_amount, "deductions")
@@ -1357,7 +1357,7 @@ class SalarySlip(TransactionBase):
 		if flt(current_tax_amount) < 0:
 			current_tax_amount = 0
 
-		self.component_based_veriable_tax[tax_component].update(
+		self._component_based_variable_tax[tax_component].update(
 			{
 				"previous_total_paid_taxes": self.previous_total_paid_taxes,
 				"total_structured_tax_amount": self.total_structured_tax_amount,
