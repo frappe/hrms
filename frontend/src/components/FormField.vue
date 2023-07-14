@@ -70,8 +70,8 @@
 		/>
 
 		<!-- Section Break -->
-		<div class="border-t" v-else-if="props.fieldtype === 'Section Break'">
-			<h2 v-if="props.label" class="py-2 text-lg font-semibold text-gray-800">
+		<div v-else-if="props.fieldtype === 'Section Break'">
+			<h2 v-if="props.label" class="pt-4 text-lg font-semibold text-gray-800">
 				{{ props.label }}
 			</h2>
 		</div>
@@ -154,7 +154,7 @@ function setLinkFieldList() {
 			pageLength: 100,
 			transform: (data) => {
 				return data.map((doc) => ({
-					label: doc.label || doc.value,
+					label: doc.label ? `${doc.label}: ${doc.value}` : doc.value,
 					value: doc.value,
 				}))
 			},

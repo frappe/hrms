@@ -118,7 +118,7 @@ def get_holidays_for_employee(employee: str) -> list[dict]:
 
 
 @frappe.whitelist()
-def get_doctype_fields(doctype : str) -> list[dict]:
+def get_doctype_fields(doctype: str) -> list[dict]:
 	return frappe.get_meta(doctype).fields
 
 
@@ -127,11 +127,7 @@ def get_link_field_options(doctype: str) -> list:
 	fields = ["name as value"]
 	title_field = frappe.db.get_value("DocType", doctype, "title_field", cache=1)
 
-	show_title_field_in_link = (
-		frappe.db.get_value("DocType", doctype, "show_title_field_in_link", cache=1) == 1
-	)
-
-	if title_field and show_title_field_in_link:
+	if title_field:
 		fields.append(f"{title_field} as label")
 
 	link_options = frappe.get_all(doctype, fields=fields)
