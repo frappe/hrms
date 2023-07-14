@@ -24,6 +24,7 @@
 			:placeholder="`Select ${props.options}`"
 			:options="selectionList"
 			@change="(v) => emit('update:modelValue', v.value)"
+			v-bind="$attrs"
 			:disabled="props.readOnly"
 		/>
 
@@ -35,6 +36,7 @@
 			:placeholder="`Enter ${props.label}`"
 			@input="(v) => emit('update:modelValue', v.value)"
 			@change="(v) => emit('change', v.value)"
+			v-bind="$attrs"
 			:disabled="props.readOnly"
 		/>
 
@@ -46,6 +48,7 @@
 			:value="modelValue"
 			@input="(v) => emit('update:modelValue', v)"
 			@change="(v) => emit('change', v)"
+			v-bind="$attrs"
 			:disabled="props.readOnly"
 		/>
 
@@ -56,6 +59,7 @@
 			:value="modelValue"
 			@input="(v) => emit('update:modelValue', v)"
 			@change="(v) => emit('change', v)"
+			v-bind="$attrs"
 			:disabled="props.readOnly"
 		/>
 
@@ -66,6 +70,7 @@
 			:value="modelValue"
 			@input="(v) => emit('update:modelValue', v)"
 			@change="(v) => emit('change', v)"
+			v-bind="$attrs"
 			:disabled="props.readOnly"
 		/>
 
@@ -86,6 +91,7 @@
 			:placeholder="`Select ${props.label}`"
 			:formatValue="(val) => dayjs(val).format('DD-MM-YYYY')"
 			@change="(v) => emit('update:modelValue', v.value)"
+			v-bind="$attrs"
 			:disabled="props.readOnly"
 		/>
 
