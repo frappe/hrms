@@ -1,6 +1,6 @@
 <template>
 	<div
-		v-if="SUPPORTED_FIELD_TYPES.includes(props.fieldtype)"
+		v-if="showField"
 		class="flex flex-col gap-1"
 	>
 		<!-- Label -->
@@ -34,8 +34,8 @@
 			type="textarea"
 			:value="modelValue"
 			:placeholder="`Enter ${props.label}`"
-			@input="(v) => emit('update:modelValue', v.value)"
-			@change="(v) => emit('change', v.value)"
+			@input="(v) => emit('update:modelValue', v)"
+			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
 			:disabled="props.readOnly"
 		/>
@@ -82,15 +82,16 @@
 		</div>
 
 		<!-- Date -->
-		<!-- FIXME: Applied flex to fix the width issue -->
-		<DatePicker
+		<!-- FIXME: default datepicker has poor UI -->
+		<Input
 			v-else-if="props.fieldtype === 'Date'"
-			class="flex flex-col"
+			type="date"
 			v-model="date"
 			:value="modelValue"
 			:placeholder="`Select ${props.label}`"
 			:formatValue="(val) => dayjs(val).format('DD-MM-YYYY')"
-			@change="(v) => emit('update:modelValue', v.value)"
+			@input="(v) => emit('update:modelValue', v)"
+			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
 			:disabled="props.readOnly"
 		/>
@@ -101,7 +102,7 @@
 </template>
 
 <script setup>
-import { createResource, Autocomplete, DatePicker } from "frappe-ui"
+import { createResource, Autocomplete } from "frappe-ui"
 import { ref, computed, onMounted, inject } from "vue"
 
 const props = defineProps({
@@ -113,7 +114,12 @@ const props = defineProps({
 	options: [String, Array],
 	readOnly: Boolean,
 	reqd: Boolean,
+	hidden: {
+		type: Boolean,
+		default: true,
+	},
 })
+
 const emit = defineEmits(["change", "update:modelValue"])
 const dayjs = inject("$dayjs")
 const SUPPORTED_FIELD_TYPES = [
@@ -134,6 +140,16 @@ const SUPPORTED_FIELD_TYPES = [
 
 let linkFieldList = ref([])
 let date = ref(null)
+
+const showField = computed(() => {
+	if (props.readOnly && !props.modelValue)
+		return false
+
+	return (
+		SUPPORTED_FIELD_TYPES.includes(props.fieldtype)
+		&& !props.hidden
+	)
+})
 
 const selectionList = computed(() => {
 	if (props.fieldtype == "Link" && props.options) {

@@ -14,16 +14,17 @@
 
 			<div class="flex flex-col space-y-4 bg-white p-4">
 				<FormField
-					v-for="field in formFields.data"
+					v-for="field in fields"
 					:key="field.name"
 					:fieldtype="field.fieldtype"
 					:fieldname="field.fieldname"
-					v-model="field.fieldname"
+					v-model="modelValue[field.fieldname]"
 					:default="field.default"
 					:label="field.label"
 					:options="field.options"
 					:readOnly="Boolean(field.read_only)"
 					:reqd="Boolean(field.reqd)"
+					:hidden="Boolean(field.hidden)"
 				/>
 			</div>
 		</div>
@@ -33,12 +34,20 @@
 <script setup>
 import { computed } from "vue"
 import { useRouter } from "vue-router"
-import { createResource, FeatherIcon } from "frappe-ui"
+import { FeatherIcon } from "frappe-ui"
 import FormField from "@/components/FormField.vue"
 
 const props = defineProps({
 	doctype: {
 		type: String,
+		required: true,
+	},
+	modelValue: {
+		type: Object,
+		required: true,
+	},
+	fields: {
+		type: Array,
 		required: true,
 	},
 	id: {
@@ -47,13 +56,18 @@ const props = defineProps({
 	},
 })
 
-const router = useRouter()
-
-const formFields = createResource({
-	url: "hrms.api.get_doctype_fields",
-	params: {
-		doctype: props.doctype,
+const modelValue = computed({
+	get: () => props.modelValue,
+	set: (value) => {
+		emit('update:modelValue', value)
 	},
 })
-formFields.reload()
+
+props.fields?.forEach((field) => {
+	if (field.default) {
+		modelValue.value[field.fieldname] = field.default
+	}
+})
+
+const router = useRouter()
 </script>
