@@ -38,7 +38,7 @@ const formFields = createResource({
 				field.default = dayjs().format("YYYY-MM-DD")
 
 			if (field.fieldname === "leave_approver")
-				field.reqd = isApproverMandatory.data
+				field.reqd = leaveApprovalDetails?.data?.is_mandatory
 
 			return field
 		})
@@ -46,12 +46,11 @@ const formFields = createResource({
 })
 formFields.reload()
 
-const isApproverMandatory = createResource({
-	url: "hrms.hr.doctype.leave_application.leave_application.get_mandatory_approval",
-	params: { doctype: "Leave Application" },
+const leaveApprovalDetails = createResource({
+	url: "hrms.api.get_leave_approval_details",
+	params: { employee: employee.data.name },
 })
-isApproverMandatory.reload()
-
+leaveApprovalDetails.reload()
 
 // form scripts
 watch(
@@ -174,14 +173,8 @@ function setHalfDayDateRange() {
 }
 
 function setLeaveApprover() {
-	const leaveApprover = createResource({
-		url: "hrms.hr.doctype.leave_application.leave_application.get_leave_approver",
-		params: { employee: employee.data.name },
-		onSuccess(data) {
-			leaveApplication.leave_approver = data
-		}
-	})
-	leaveApprover.reload()
+	leaveApplication.leave_approver = leaveApprovalDetails.data.leave_approver
+	leaveApplication.leave_approver_name = leaveApprovalDetails.data.leave_approver_name
 }
 
 function areValuesSet() {
@@ -192,7 +185,8 @@ function areValuesSet() {
 	)
 }
 
-onMounted(() => {
+onMounted(async () => {
+	await leaveApprovalDetails.promise
 	setLeaveApprover()
 	setTotalLeaveDays()
 })

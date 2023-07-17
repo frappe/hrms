@@ -118,6 +118,21 @@ def get_holidays_for_employee(employee: str) -> list[dict]:
 
 
 @frappe.whitelist()
+def get_leave_approval_details(employee: str) -> dict:
+	from hrms.hr.doctype.leave_application.leave_application import get_leave_approver
+
+	leave_approver = get_leave_approver(employee)
+
+	return dict(
+		leave_approver=leave_approver,
+		leave_approver_name=frappe.db.get_value("User", leave_approver, "full_name", cache=True),
+		is_mandatory=frappe.db.get_single_value(
+			"HR Settings", "leave_approver_mandatory_in_leave_application"
+		),
+	)
+
+
+@frappe.whitelist()
 def get_doctype_fields(doctype: str) -> list[dict]:
 	return frappe.get_meta(doctype).fields
 
