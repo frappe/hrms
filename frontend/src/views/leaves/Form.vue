@@ -25,7 +25,8 @@ const formFields = createResource({
 		doctype: "Leave Application",
 	},
 	transform(data) {
-		return data.map((field) => {
+		let fields = getFilteredFields(data)
+		return fields.map((field) => {
 			if (field.fieldname === "half_day_date") {
 				field.hidden = true
 			}
@@ -34,6 +35,22 @@ const formFields = createResource({
 	}
 })
 formFields.reload()
+
+function getFilteredFields(fields) {
+	// reduce noise from the form view by excluding unnecessary fields
+	// ex: employee and other details can be fetched from the session user
+	const excludeFields = [
+		"naming_series",
+		"employee",
+		"employee_name",
+		"department",
+		"company",
+		"sb_other_details",
+		"salary_slip",
+		"letter_head"
+	]
+	return fields.filter((field) => !excludeFields.includes(field.fieldname))
+}
 
 // form scripts
 watch(
