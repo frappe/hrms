@@ -25,6 +25,7 @@
 					:readOnly="Boolean(field.read_only)"
 					:reqd="Boolean(field.reqd)"
 					:hidden="Boolean(field.hidden)"
+					:errorMessage="field.error_message"
 				/>
 			</div>
 		</div>

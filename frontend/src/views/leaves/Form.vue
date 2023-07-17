@@ -72,13 +72,22 @@ watch(
 		if (!(from_date && to_date))
 			return
 
-		if (from_date > to_date) {
-			leaveApplication.from_date = null
-		}
+		validateDates(from_date, to_date)
 
 		const total_leave_days = dayjs(to_date).diff(dayjs(from_date), "day") + 1
 		leaveApplication.total_leave_days = total_leave_days
 	},
 )
+
+function validateDates(from_date, to_date) {
+	const error_message = (
+		(from_date > to_date)
+		? "From date cannot be greater than To Date"
+		: ""
+	)
+
+	const from_date_field = formFields.data.find((field) => field.fieldname === "from_date")
+	from_date_field.error_message = error_message
+}
 
 </script>

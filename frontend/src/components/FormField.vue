@@ -98,11 +98,13 @@
 
 		<!-- Time -->
 		<!-- Datetime -->
+
+		<ErrorMessage :message="props.errorMessage"/>
 	</div>
 </template>
 
 <script setup>
-import { createResource, Autocomplete } from "frappe-ui"
+import { createResource, Autocomplete, ErrorMessage } from "frappe-ui"
 import { ref, computed, onMounted, inject } from "vue"
 
 const props = defineProps({
@@ -118,6 +120,7 @@ const props = defineProps({
 		type: Boolean,
 		default: true,
 	},
+	errorMessage: String,
 })
 
 const emit = defineEmits(["change", "update:modelValue"])
