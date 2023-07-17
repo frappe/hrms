@@ -94,6 +94,8 @@
 			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
 			:disabled="props.readOnly"
+			:min="props.minDate"
+			:max="props.maxDate"
 		/>
 
 		<!-- Time -->
@@ -121,6 +123,8 @@ const props = defineProps({
 		default: true,
 	},
 	errorMessage: String,
+	minDate: String,
+	maxDate: String,
 })
 
 const emit = defineEmits(["change", "update:modelValue"])

@@ -18,7 +18,7 @@
 					:key="field.name"
 					:fieldtype="field.fieldtype"
 					:fieldname="field.fieldname"
-					v-model="modelValue[field.fieldname]"
+					v-model="formModel[field.fieldname]"
 					:default="field.default"
 					:label="field.label"
 					:options="field.options"
@@ -26,7 +26,19 @@
 					:reqd="Boolean(field.reqd)"
 					:hidden="Boolean(field.hidden)"
 					:errorMessage="field.error_message"
+					:minDate="field.minDate"
+					:maxDate="field.maxDate"
 				/>
+			</div>
+
+			<div class="p-4 bg-white">
+				<Button
+					class="w-full rounded-md py-2.5 px-3.5"
+					appearance="primary"
+					@click="createNewDocument"
+				>
+					Save
+				</Button>
 			</div>
 		</div>
 	</div>
@@ -56,8 +68,10 @@ const props = defineProps({
 		required: false,
 	},
 })
+const router = useRouter()
+const emit = defineEmits(["validateForm"])
 
-const modelValue = computed({
+const formModel = computed({
 	get: () => props.modelValue,
 	set: (value) => {
 		emit('update:modelValue', value)
@@ -66,9 +80,11 @@ const modelValue = computed({
 
 props.fields?.forEach((field) => {
 	if (field.default) {
-		modelValue.value[field.fieldname] = field.default
+		formModel.value[field.fieldname] = field.default
 	}
 })
 
-const router = useRouter()
+function createNewDocument() {
+	emit("validateForm")
+}
 </script>
