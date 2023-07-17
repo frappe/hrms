@@ -60,6 +60,8 @@ doctype_js = {
 # 	"Role": "home_page"
 # }
 
+calendars = ["Leave Application"]
+
 # Generators
 # ----------
 
