@@ -219,13 +219,13 @@ def send_daily_feedback_reminder():
 	)
 
 	interviews = frappe.get_all(
-		"Interview", 
+		"Interview",
 		filters={
-			"status": "Under Review", 
-			"docstatus": ["!=", 2], 
-			"scheduled_on": ["<=", getdate()], 
+			"status": "Under Review",
+			"docstatus": ["!=", 2],
+			"scheduled_on": ["<=", getdate()],
 			"to_time": ["<=", nowtime()],
-		}
+		},
 	)
 
 	for entry in interviews:
