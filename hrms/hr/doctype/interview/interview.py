@@ -7,7 +7,7 @@ import datetime
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cstr, flt, get_datetime, get_link_to_form, getdate, today, get_time, now
+from frappe.utils import cstr, flt, get_datetime, get_link_to_form, getdate, nowtime
 
 
 class DuplicateInterviewRoundError(frappe.ValidationError):
