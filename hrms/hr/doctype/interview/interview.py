@@ -7,7 +7,7 @@ import datetime
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cstr, flt, get_datetime, get_link_to_form
+from frappe.utils import cstr, flt, get_datetime, get_link_to_form, getdate, nowtime
 
 
 class DuplicateInterviewRoundError(frappe.ValidationError):
@@ -217,8 +217,15 @@ def send_daily_feedback_reminder():
 	interview_feedback_template = frappe.get_doc(
 		"Email Template", reminder_settings.feedback_reminder_notification_template
 	)
+
 	interviews = frappe.get_all(
-		"Interview", filters={"status": ["in", ["Under Review", "Pending"]], "docstatus": ["!=", 2]}
+		"Interview",
+		filters={
+			"status": "Under Review",
+			"docstatus": ["!=", 2],
+			"scheduled_on": ["<=", getdate()],
+			"to_time": ["<=", nowtime()],
+		},
 	)
 
 	for entry in interviews:
