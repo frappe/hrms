@@ -76,7 +76,9 @@ class TestInterview(unittest.TestCase):
 
 		job_applicant = create_job_applicant()
 		scheduled_on = add_days(getdate(), -4)
-		create_interview_and_dependencies(job_applicant.name, scheduled_on=scheduled_on)
+		interview = create_interview_and_dependencies(
+			job_applicant.name, scheduled_on=scheduled_on, status="Under Review"
+		)
 
 		frappe.db.sql("DELETE FROM `tabEmail Queue`")
 		send_daily_feedback_reminder()
@@ -106,7 +108,13 @@ class TestInterview(unittest.TestCase):
 
 
 def create_interview_and_dependencies(
-	job_applicant, scheduled_on=None, from_time=None, to_time=None, designation=None, save=1
+	job_applicant,
+	scheduled_on=None,
+	from_time=None,
+	to_time=None,
+	designation=None,
+	status=None,
+	save=True,
 ):
 	if designation:
 		designation = create_designation(designation_name="_Test_Sales_manager").name
@@ -127,6 +135,9 @@ def create_interview_and_dependencies(
 
 	interview.append("interview_details", {"interviewer": interviewer_1.name})
 	interview.append("interview_details", {"interviewer": interviewer_2.name})
+
+	if status:
+		interview.status = status
 
 	if save:
 		interview.save()
