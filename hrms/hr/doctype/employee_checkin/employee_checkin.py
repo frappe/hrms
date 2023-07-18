@@ -30,7 +30,7 @@ class EmployeeCheckin(Document):
 				"employee": self.employee,
 				"time": self.time,
 				"name": ("!=", self.name),
-				"log_type": ("!=", self.log_type),
+				"log_type": self.log_type,
 			},
 		)
 		if doc:
