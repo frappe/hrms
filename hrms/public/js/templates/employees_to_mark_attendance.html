@@ -1,7 +1,7 @@
 {% if data.length %}
 <div class="col-md-12 col-xs-12">
 	<div class="col-md-12 col-xs-12" style="padding-bottom:15px;">
-		<b>Employees to mark attendance</b>
+		<b>{{ __("Attendance pending for employees") + ":" }}</b>
 	</div>
 	{% for item in data %}
 	<div class="col-md-4 col-xs-6" style="padding-bottom:10px;">
@@ -12,7 +12,7 @@
 {% } else { %}
 <div class="col-md-12 col-xs-12">
 	<div class="col-md-12 col-xs-12" style="padding-bottom:15px;">
-		<b> Attendance records not found </b>
+		<b>{{ __("Attendance has been marked for all the employees") }}</b>
 	</div>
 </div>
 {% } %}
