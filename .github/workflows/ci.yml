@@ -1,15 +1,6 @@
 name: CI
 
 on:
-  push:
-    branches: [develop, version-14-hotfix, version-14]
-    paths-ignore:
-      - "**.css"
-      - "**.js"
-      - "**.md"
-      - "**.html"
-      - "**.csv"
-
   pull_request:
     paths-ignore:
       - "**.css"
