@@ -55,9 +55,8 @@ class PayrollEntry(Document):
 	def before_submit(self):
 		self.validate_existing_salary_slips()
 		self.validate_payroll_payable_account()
-		if self.validate_attendance:
-			if self.get_employees_to_mark_attendance():
-				frappe.throw(_("Cannot submit. Attendance is not marked for some employees."))
+		if self.get_employees_to_mark_attendance():
+			frappe.throw(_("Cannot submit. Attendance is not marked for some employees."))
 
 	def on_submit(self):
 		self.set_status(update=True, status="Submitted")
@@ -155,8 +154,7 @@ class PayrollEntry(Document):
 		self.set("employees", employees)
 		self.number_of_employees = len(self.employees)
 
-		if self.validate_attendance:
-			return self.get_employees_to_mark_attendance()
+		return self.get_employees_to_mark_attendance()
 
 	@frappe.whitelist()
 	def create_salary_slips(self):
@@ -859,7 +857,10 @@ class PayrollEntry(Document):
 		)
 
 	@frappe.whitelist()
-	def get_employees_to_mark_attendance(self) -> list[dict]:
+	def get_employees_to_mark_attendance(self) -> list[dict] | None:
+		if not self.validate_attendance:
+			return
+
 		holiday_list_based_count = {}
 		employees_to_mark_attendance = []
 		employee_details = self.get_employee_and_attendance_details()
@@ -904,25 +905,27 @@ class PayrollEntry(Document):
 		]
 		"""
 		employees = [emp.employee for emp in self.employees]
-		default_holiday_list = frappe.db.get_value("Company", self.company, "default_holiday_list")
+		default_holiday_list = frappe.db.get_value(
+			"Company", self.company, "default_holiday_list", cache=True
+		)
 
 		Employee = frappe.qb.DocType("Employee")
 		Attendance = frappe.qb.DocType("Attendance")
 
 		return (
 			frappe.qb.from_(Employee)
-			.join(Attendance)
-			.on(Employee.name == Attendance.employee)
+			.left_join(Attendance)
+			.on(
+				(Employee.name == Attendance.employee)
+				& (Attendance.attendance_date.between(self.start_date, self.end_date))
+			)
 			.select(
 				Employee.name,
 				Employee.date_of_joining,
 				Coalesce(Employee.holiday_list, default_holiday_list).as_("holiday_list"),
 				Count(Attendance.name).as_("attendance_count"),
 			)
-			.where(
-				Attendance.attendance_date.between(self.start_date, self.end_date)
-				& (Employee.name.isin(employees))
-			)
+			.where(Employee.name.isin(employees))
 			.groupby(Employee.name)
 		).run(as_dict=True)
 
