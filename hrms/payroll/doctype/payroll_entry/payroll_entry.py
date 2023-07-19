@@ -867,12 +867,9 @@ class PayrollEntry(Document):
 		for emp in self.employees:
 			details = next(record for record in employee_details if record.name == emp.employee)
 
-			start_date = self.start_date
-			if details.date_of_joining > getdate(self.start_date):
-				start_date = details.date_of_joining
-
-			holidays = self.get_holidays_count(details.holiday_list, start_date)
-			payroll_days = date_diff(self.end_date, start_date) + 1
+			start_date, end_date = self.get_payroll_dates_for_employee(details)
+			holidays = self.get_holidays_count(details.holiday_list, start_date, end_date)
+			payroll_days = date_diff(end_date, start_date) + 1
 
 			if payroll_days > (holidays + details.attendance_count):
 				unmarked_attendance.append({"employee": emp.employee, "employee_name": emp.employee_name})
@@ -908,6 +905,7 @@ class PayrollEntry(Document):
 			.select(
 				Employee.name,
 				Employee.date_of_joining,
+				Employee.relieving_date,
 				Coalesce(Employee.holiday_list, default_holiday_list).as_("holiday_list"),
 				Count(Attendance.name).as_("attendance_count"),
 			)
@@ -915,18 +913,29 @@ class PayrollEntry(Document):
 			.groupby(Employee.name)
 		).run(as_dict=True)
 
-	def get_holidays_count(self, holiday_list: str, start_date: str) -> float:
+	def get_payroll_dates_for_employee(self, employee_details: dict) -> tuple[str, str]:
+		start_date = self.start_date
+		if employee_details.date_of_joining > getdate(self.start_date):
+			start_date = employee_details.date_of_joining
+
+		end_date = self.end_date
+		if employee_details.relieving_date and employee_details.relieving_date < getdate(self.end_date):
+			end_date = employee_details.relieving_date
+
+		return start_date, end_date
+
+	def get_holidays_count(self, holiday_list: str, start_date: str, end_date: str) -> float:
 		"""Returns number of holidays between start and end dates in the holiday list"""
 		if not hasattr(self, "_holidays_between_dates"):
 			self._holidays_between_dates = {}
 
-		key = f"{start_date}-{self.end_date}-{holiday_list}"
+		key = f"{start_date}-{end_date}-{holiday_list}"
 		if key in self._holidays_between_dates:
 			return self._holidays_between_dates[key]
 
 		holidays = frappe.db.get_all(
 			"Holiday",
-			filters={"parent": holiday_list, "holiday_date": ("between", [start_date, self.end_date])},
+			filters={"parent": holiday_list, "holiday_date": ("between", [start_date, end_date])},
 			fields=["COUNT(*) as holidays_count"],
 		)[0]
 
