@@ -70,7 +70,7 @@ class PayrollEntry(Document):
 	def before_submit(self):
 		self.validate_existing_salary_slips()
 		self.validate_payroll_payable_account()
-		if self.get_employees_to_mark_attendance():
+		if self.get_employees_with_unmarked_attendance():
 			frappe.throw(_("Cannot submit. Attendance is not marked for some employees."))
 
 	def on_submit(self):
@@ -186,6 +186,7 @@ class PayrollEntry(Document):
 			self.append("employees", d)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 		self.number_of_employees = len(self.employees)
 		if self.validate_attendance:
 			return self.validate_employee_attendance()
@@ -197,6 +198,9 @@ class PayrollEntry(Document):
 =======
 		return self.get_employees_to_mark_attendance()
 >>>>>>> 6df3cfab (fix: missing attendance query not fetching employees with no attendance records)
+=======
+		return self.get_employees_with_unmarked_attendance()
+>>>>>>> ebbd329e (refactor: get employees with unmarked attendance)
 
 	@frappe.whitelist()
 	def create_salary_slips(self):
@@ -806,6 +810,7 @@ class PayrollEntry(Document):
 
 	@frappe.whitelist()
 <<<<<<< HEAD
+<<<<<<< HEAD
 	def validate_employee_attendance(self):
 =======
 	def get_employees_to_mark_attendance(self) -> list[dict] | None:
@@ -820,8 +825,23 @@ class PayrollEntry(Document):
 			employee_joining_date = frappe.db.get_value(
 				"Employee", employee_detail.employee, "date_of_joining"
 			)
-			start_date = self.start_date
+=======
+	def get_employees_with_unmarked_attendance(self) -> list[dict] | None:
+		if not self.validate_attendance:
+			return
 
+		unmarked_attendance = []
+		employee_details = self.get_employee_and_attendance_details()
+
+		for emp in self.employees:
+			details = next(record for record in employee_details if record.name == emp.employee)
+
+>>>>>>> ebbd329e (refactor: get employees with unmarked attendance)
+			start_date = self.start_date
+			if details.date_of_joining > getdate(self.start_date):
+				start_date = details.date_of_joining
+
+<<<<<<< HEAD
 			if employee_joining_date > getdate(self.start_date):
 				start_date = employee_joining_date
 
@@ -835,8 +855,15 @@ class PayrollEntry(Document):
 				employees_to_mark_attendance.append(
 					{"employee": employee_detail.employee, "employee_name": employee_detail.employee_name}
 				)
+=======
+			holidays = self.get_holidays_count(details.holiday_list, start_date)
+			payroll_days = date_diff(self.end_date, start_date) + 1
 
-		return employees_to_mark_attendance
+			if payroll_days > (holidays + details.attendance_count):
+				unmarked_attendance.append({"employee": emp.employee, "employee_name": emp.employee_name})
+>>>>>>> ebbd329e (refactor: get employees with unmarked attendance)
+
+		return unmarked_attendance
 
 	def get_count_holidays_of_employee(self, employee, start_date):
 		holiday_list = get_holiday_list_for_employee(employee)
@@ -912,25 +939,25 @@ def get_sal_struct(
 			.groupby(Employee.name)
 		).run(as_dict=True)
 
-	def get_holiday_list_based_count(
-		self, holiday_list: str, start_date: str, holiday_list_based_count: dict
-	) -> float:
-		key = f"{start_date}-{self.end_date}-{holiday_list}"
+	def get_holidays_count(self, holiday_list: str, start_date: str) -> float:
+		"""Returns number of holidays between start and end dates in the holiday list"""
+		if not hasattr(self, "_holidays_between_dates"):
+			self._holidays_between_dates = {}
 
-		if key in holiday_list_based_count:
-			return holiday_list_based_count[key]
+		key = f"{start_date}-{self.end_date}-{holiday_list}"
+		if key in self._holidays_between_dates:
+			return self._holidays_between_dates[key]
 
 		holidays = frappe.db.get_all(
 			"Holiday",
 			filters={"parent": holiday_list, "holiday_date": ("between", [start_date, self.end_date])},
-			fields=["count(*) as holiday_count"],
-			as_list=True,
-		)
+			fields=["COUNT(*) as holidays_count"],
+		)[0]
 
-		if len(holidays) > 0:
-			holiday_list_based_count[key] = holidays[0][0]
+		if holidays:
+			self._holidays_between_dates[key] = holidays.holidays_count
 
-		return holiday_list_based_count[key] or 0
+		return self._holidays_between_dates.get(key) or 0
 
 
 def get_salary_structure(
