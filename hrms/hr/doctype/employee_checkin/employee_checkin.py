@@ -21,7 +21,13 @@ class EmployeeCheckin(Document):
 
 	def validate_duplicate_log(self):
 		doc = frappe.db.exists(
-			"Employee Checkin", {"employee": self.employee, "time": self.time, "name": ["!=", self.name]}
+			"Employee Checkin",
+			{
+				"employee": self.employee,
+				"time": self.time,
+				"name": ("!=", self.name),
+				"log_type": self.log_type,
+			},
 		)
 		if doc:
 			doc_link = frappe.get_desk_link("Employee Checkin", doc)
