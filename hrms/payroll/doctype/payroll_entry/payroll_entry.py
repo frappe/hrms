@@ -64,7 +64,24 @@ class PayrollEntry(Document):
 		else:
 			self.status = status
 
+<<<<<<< HEAD
 	def validate_employee_details(self):
+=======
+	def before_submit(self):
+		self.validate_existing_salary_slips()
+		self.validate_payroll_payable_account()
+		if self.get_employees_to_mark_attendance():
+			frappe.throw(_("Cannot submit. Attendance is not marked for some employees."))
+
+	def on_submit(self):
+		self.set_status(update=True, status="Submitted")
+		self.create_salary_slips()
+
+	def validate_existing_salary_slips(self):
+		if not self.employees:
+			return
+
+>>>>>>> 6df3cfab (fix: missing attendance query not fetching employees with no attendance records)
 		emp_with_sal_slip = []
 		for employee_details in self.employees:
 			if frappe.db.exists(
@@ -168,6 +185,7 @@ class PayrollEntry(Document):
 		for d in employees:
 			self.append("employees", d)
 
+<<<<<<< HEAD
 		self.number_of_employees = len(self.employees)
 		if self.validate_attendance:
 			return self.validate_employee_attendance()
@@ -176,6 +194,9 @@ class PayrollEntry(Document):
 		for fieldname in ["company", "start_date", "end_date"]:
 			if not self.get(fieldname):
 				frappe.throw(_("Please set {0}").format(self.meta.get_label(fieldname)))
+=======
+		return self.get_employees_to_mark_attendance()
+>>>>>>> 6df3cfab (fix: missing attendance query not fetching employees with no attendance records)
 
 	@frappe.whitelist()
 	def create_salary_slips(self):
@@ -784,7 +805,15 @@ class PayrollEntry(Document):
 		)
 
 	@frappe.whitelist()
+<<<<<<< HEAD
 	def validate_employee_attendance(self):
+=======
+	def get_employees_to_mark_attendance(self) -> list[dict] | None:
+		if not self.validate_attendance:
+			return
+
+		holiday_list_based_count = {}
+>>>>>>> 6df3cfab (fix: missing attendance query not fetching employees with no attendance records)
 		employees_to_mark_attendance = []
 		days_in_payroll, days_holiday, days_attendance_marked = 0, 0, 0
 		for employee_detail in self.employees:
@@ -840,6 +869,7 @@ def get_sal_struct(
 ):
 	return frappe.db.sql_list(
 		"""
+<<<<<<< HEAD
 		select
 			name from `tabSalary Structure`
 		where
@@ -856,6 +886,69 @@ def get_sal_struct(
 			"currency": currency,
 			"salary_slip_based_on_timesheet": salary_slip_based_on_timesheet,
 		},
+=======
+		employees = [emp.employee for emp in self.employees]
+		default_holiday_list = frappe.db.get_value(
+			"Company", self.company, "default_holiday_list", cache=True
+		)
+
+		Employee = frappe.qb.DocType("Employee")
+		Attendance = frappe.qb.DocType("Attendance")
+
+		return (
+			frappe.qb.from_(Employee)
+			.left_join(Attendance)
+			.on(
+				(Employee.name == Attendance.employee)
+				& (Attendance.attendance_date.between(self.start_date, self.end_date))
+			)
+			.select(
+				Employee.name,
+				Employee.date_of_joining,
+				Coalesce(Employee.holiday_list, default_holiday_list).as_("holiday_list"),
+				Count(Attendance.name).as_("attendance_count"),
+			)
+			.where(Employee.name.isin(employees))
+			.groupby(Employee.name)
+		).run(as_dict=True)
+
+	def get_holiday_list_based_count(
+		self, holiday_list: str, start_date: str, holiday_list_based_count: dict
+	) -> float:
+		key = f"{start_date}-{self.end_date}-{holiday_list}"
+
+		if key in holiday_list_based_count:
+			return holiday_list_based_count[key]
+
+		holidays = frappe.db.get_all(
+			"Holiday",
+			filters={"parent": holiday_list, "holiday_date": ("between", [start_date, self.end_date])},
+			fields=["count(*) as holiday_count"],
+			as_list=True,
+		)
+
+		if len(holidays) > 0:
+			holiday_list_based_count[key] = holidays[0][0]
+
+		return holiday_list_based_count[key] or 0
+
+
+def get_salary_structure(
+	company: str, currency: str, salary_slip_based_on_timesheet: int, payroll_frequency: str
+) -> list[str]:
+	SalaryStructure = frappe.qb.DocType("Salary Structure")
+
+	query = (
+		frappe.qb.from_(SalaryStructure)
+		.select(SalaryStructure.name)
+		.where(
+			(SalaryStructure.docstatus == 1)
+			& (SalaryStructure.is_active == "Yes")
+			& (SalaryStructure.company == company)
+			& (SalaryStructure.currency == currency)
+			& (SalaryStructure.salary_slip_based_on_timesheet == salary_slip_based_on_timesheet)
+		)
+>>>>>>> 6df3cfab (fix: missing attendance query not fetching employees with no attendance records)
 	)
 
 
