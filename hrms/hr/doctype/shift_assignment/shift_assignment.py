@@ -241,7 +241,7 @@ def _is_timestamp_within_shift(shift_details: dict, for_timestamp: datetime) -> 
 def _adjust_overlapping_shifts(shifts: dict):
 	"""
 	Compares 2 consecutive shifts and adjusts start and end times
-	if they are overlapping within grace period
+	if they are overlapping within extension period (begin checkin before.. to allow checkout after..)
 	"""
 	for i in range(len(shifts) - 1):
 		curr_shift = shifts[i]
@@ -401,29 +401,7 @@ def get_employee_shift_timings(
 	)
 
 	if curr_shift:
-		# adjust actual start and end times if they are overlapping with grace period (before start and after end)
-		if prev_shift:
-			curr_shift.actual_start = (
-				prev_shift.end_datetime
-				if curr_shift.actual_start < prev_shift.end_datetime
-				else curr_shift.actual_start
-			)
-			prev_shift.actual_end = (
-				curr_shift.actual_start
-				if prev_shift.actual_end > curr_shift.actual_start
-				else prev_shift.actual_end
-			)
-		if next_shift:
-			next_shift.actual_start = (
-				curr_shift.end_datetime
-				if next_shift.actual_start < curr_shift.end_datetime
-				else next_shift.actual_start
-			)
-			curr_shift.actual_end = (
-				next_shift.actual_start
-				if curr_shift.actual_end > next_shift.actual_start
-				else curr_shift.actual_end
-			)
+		_adjust_overlapping_shifts([prev_shift, curr_shift, next_shift])
 
 	return prev_shift, curr_shift, next_shift
 
