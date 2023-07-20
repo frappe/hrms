@@ -193,7 +193,7 @@ class ShiftType(Document):
 
 		shift_details = get_shift_details(self.name, get_datetime(self.last_sync_of_checkin))
 		last_shift_time = (
-			shift_details.actual_start if shift_details else get_datetime(self.last_sync_of_checkin)
+			shift_details.actual_end if shift_details else get_datetime(self.last_sync_of_checkin)
 		)
 
 		# check if shift is found for 1 day before the last sync of checkin
