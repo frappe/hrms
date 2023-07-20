@@ -379,17 +379,24 @@ def get_employee_shift_timings(
 	if for_timestamp is None:
 		for_timestamp = now_datetime()
 
-	# write and verify a test case for midnight shift.
 	prev_shift = curr_shift = next_shift = None
 	curr_shift = get_employee_shift(employee, for_timestamp, consider_default_shift, "forward")
+
+	# don't consider default shift in overlapping period as curr shift is already fetched
+	# default shift is supposed to be used as a fallback
+	consider_default_shift_in_overlapping_period = False if curr_shift else consider_default_shift
+
 	if curr_shift:
 		next_shift = get_employee_shift(
-			employee, curr_shift.start_datetime + timedelta(days=1), consider_default_shift, "forward"
+			employee,
+			curr_shift.start_datetime + timedelta(days=1),
+			consider_default_shift_in_overlapping_period,
+			"forward",
 		)
 	prev_shift = get_employee_shift(
 		employee,
 		(curr_shift.end_datetime if curr_shift else for_timestamp) + timedelta(days=-1),
-		consider_default_shift,
+		consider_default_shift_in_overlapping_period,
 		"reverse",
 	)
 
