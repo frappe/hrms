@@ -309,6 +309,51 @@ class TestShiftType(FrappeTestCase):
 		)
 		self.assertEqual(attendance, "Absent")
 
+	def test_do_not_mark_absent_before_shift_actual_end_time(self):
+		"""
+		Tests employee is not marked absent for a shift spanning 2 days
+		before its actual end time
+		"""
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+
+		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
+		curr_date = getdate()
+
+		# this shift's valid checkout period (+60 mins) will be till 00:30:00 today, so it goes beyond a day
+		shift_type = setup_shift_type(
+			shift_type="Test Absent", start_time="15:00:00", end_time="23:30:00"
+		)
+		shift_type.last_sync_of_checkin = datetime.combine(curr_date, get_time("00:30:00"))
+		shift_type.save()
+
+		# assign shift for yesterday, actual end time is today at 00:30:00
+		prev_date = add_days(getdate(), -1)
+		make_shift_assignment(shift_type.name, employee, prev_date)
+
+		# make logs
+		timestamp = datetime.combine(prev_date, get_time("15:00:00"))
+		log = make_checkin(employee, timestamp)
+		timestamp = datetime.combine(prev_date, get_time("23:30:00"))
+		log = make_checkin(employee, timestamp)
+
+		# last sync of checkin is 00:30:00 and the checkin logs are not applicable for attendance yet
+		# so it should not mark the employee as absent either
+		shift_type.process_auto_attendance()
+		attendance = frappe.db.get_value(
+			"Attendance", {"attendance_date": prev_date, "employee": employee}, "status"
+		)
+		self.assertIsNone(attendance)
+
+		# update last sync
+		shift_type.last_sync_of_checkin = datetime.combine(curr_date, get_time("01:00:00"))
+		shift_type.save()
+		shift_type.process_auto_attendance()
+		# employee marked present considering checkins
+		attendance = frappe.db.get_value(
+			"Attendance", {"attendance_date": prev_date, "employee": employee}, "status"
+		)
+		self.assertEquals(attendance, "Present")
+
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_skip_marking_absent_on_a_holiday(self):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")

@@ -538,6 +538,7 @@ def get_user_types_data():
 				"Training Program": ["read"],
 				"Training Feedback": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
 				# shifts
+				"Employee Checkin": ["read"],
 				"Shift Request": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
 				# misc
 				"Employee Grievance": ["read", "write", "create", "delete"],
