@@ -193,13 +193,13 @@ class ShiftType(Document):
 
 		shift_details = get_shift_details(self.name, get_datetime(self.last_sync_of_checkin))
 		last_shift_time = (
-			shift_details.actual_start if shift_details else get_datetime(self.last_sync_of_checkin)
+			shift_details.actual_end if shift_details else get_datetime(self.last_sync_of_checkin)
 		)
 
 		# check if shift is found for 1 day before the last sync of checkin
 		# absentees are auto-marked 1 day after the shift to wait for any manual attendance records
 		prev_shift = get_employee_shift(employee, last_shift_time - timedelta(days=1), True, "reverse")
-		if prev_shift:
+		if prev_shift and prev_shift.shift_type.name == self.name:
 			end_date = (
 				min(prev_shift.start_datetime.date(), relieving_date)
 				if relieving_date
