@@ -863,11 +863,20 @@ class PayrollEntry(Document):
 			start_date, end_date = self.get_payroll_dates_for_employee(details)
 			holidays = self.get_holidays_count(details.holiday_list, start_date, end_date)
 			payroll_days = date_diff(end_date, start_date) + 1
+<<<<<<< HEAD
 >>>>>>> a83e2e6c (fix: relieving date not considered while fetching unmarked attendance)
 
 			if payroll_days > (holidays + details.attendance_count):
 				unmarked_attendance.append({"employee": emp.employee, "employee_name": emp.employee_name})
 >>>>>>> ebbd329e (refactor: get employees with unmarked attendance)
+=======
+			unmarked_days = payroll_days - (holidays + details.attendance_count)
+
+			if unmarked_days:
+				unmarked_attendance.append(
+					{"employee": emp.employee, "employee_name": emp.employee_name, "unmarked_days": unmarked_days}
+				)
+>>>>>>> 641d22d7 (feat: show unmarked days in attendance summary, enhance the view)
 
 		return unmarked_attendance
 
