@@ -421,7 +421,7 @@ let make_bank_entry = function (frm) {
 
 let render_employee_attendance = function (frm, data) {
 	frm.fields_dict.attendance_detail_html.html(
-		frappe.render_template('employees_to_mark_attendance', {
+		frappe.render_template('employees_with_unmarked_attendance', {
 			data: data
 		})
 	);

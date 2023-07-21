@@ -870,9 +870,12 @@ class PayrollEntry(Document):
 			start_date, end_date = self.get_payroll_dates_for_employee(details)
 			holidays = self.get_holidays_count(details.holiday_list, start_date, end_date)
 			payroll_days = date_diff(end_date, start_date) + 1
+			unmarked_days = payroll_days - (holidays + details.attendance_count)
 
-			if payroll_days > (holidays + details.attendance_count):
-				unmarked_attendance.append({"employee": emp.employee, "employee_name": emp.employee_name})
+			if unmarked_days:
+				unmarked_attendance.append(
+					{"employee": emp.employee, "employee_name": emp.employee_name, "unmarked_days": unmarked_days}
+				)
 
 		return unmarked_attendance
 
