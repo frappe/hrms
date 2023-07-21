@@ -865,14 +865,16 @@ class PayrollEntry(Document):
 		employee_details = self.get_employee_and_attendance_details()
 
 		for emp in self.employees:
-			details = next(record for record in employee_details if record.name == emp.employee)
+			details = next((record for record in employee_details if record.name == emp.employee), None)
+			if not details:
+				continue
 
 			start_date, end_date = self.get_payroll_dates_for_employee(details)
 			holidays = self.get_holidays_count(details.holiday_list, start_date, end_date)
 			payroll_days = date_diff(end_date, start_date) + 1
 			unmarked_days = payroll_days - (holidays + details.attendance_count)
 
-			if unmarked_days:
+			if unmarked_days > 0:
 				unmarked_attendance.append(
 					{"employee": emp.employee, "employee_name": emp.employee_name, "unmarked_days": unmarked_days}
 				)
@@ -904,6 +906,7 @@ class PayrollEntry(Document):
 			.on(
 				(Employee.name == Attendance.employee)
 				& (Attendance.attendance_date.between(self.start_date, self.end_date))
+				& (Attendance.docstatus == 1)
 			)
 			.select(
 				Employee.name,
