@@ -55,9 +55,8 @@ class PayrollEntry(Document):
 	def before_submit(self):
 		self.validate_existing_salary_slips()
 		self.validate_payroll_payable_account()
-		if self.validate_attendance:
-			if self.get_employees_to_mark_attendance():
-				frappe.throw(_("Cannot submit. Attendance is not marked for some employees."))
+		if self.get_employees_with_unmarked_attendance():
+			frappe.throw(_("Cannot submit. Attendance is not marked for some employees."))
 
 	def on_submit(self):
 		self.set_status(update=True, status="Submitted")
@@ -155,8 +154,7 @@ class PayrollEntry(Document):
 		self.set("employees", employees)
 		self.number_of_employees = len(self.employees)
 
-		if self.validate_attendance:
-			return self.get_employees_to_mark_attendance()
+		return self.get_employees_with_unmarked_attendance()
 
 	@frappe.whitelist()
 	def create_salary_slips(self):
@@ -859,38 +857,29 @@ class PayrollEntry(Document):
 		)
 
 	@frappe.whitelist()
-	def get_employees_to_mark_attendance(self) -> list[dict]:
-		holiday_list_based_count = {}
-		employees_to_mark_attendance = []
+	def get_employees_with_unmarked_attendance(self) -> list[dict] | None:
+		if not self.validate_attendance:
+			return
+
+		unmarked_attendance = []
 		employee_details = self.get_employee_and_attendance_details()
 
 		for emp in self.employees:
-			details = next(
-				(details for details in employee_details if details["name"] == emp.employee), None
-			)
-
+			details = next((record for record in employee_details if record.name == emp.employee), None)
 			if not details:
 				continue
 
-			start_date = self.start_date
+			start_date, end_date = self.get_payroll_dates_for_employee(details)
+			holidays = self.get_holidays_count(details.holiday_list, start_date, end_date)
+			payroll_days = date_diff(end_date, start_date) + 1
+			unmarked_days = payroll_days - (holidays + details.attendance_count)
 
-			if details.get("date_of_joining") > getdate(self.start_date):
-				start_date = details.get("date_of_joining")
-
-			holidays = self.get_holiday_list_based_count(
-				details["holiday_list"], start_date, holiday_list_based_count
-			)
-
-			attendance_marked = details["attendance_count"] or 0
-
-			payroll_days = date_diff(self.end_date, start_date) + 1
-
-			if payroll_days > (holidays + attendance_marked):
-				employees_to_mark_attendance.append(
-					{"employee": emp.employee, "employee_name": emp.employee_name}
+			if unmarked_days > 0:
+				unmarked_attendance.append(
+					{"employee": emp.employee, "employee_name": emp.employee_name, "unmarked_days": unmarked_days}
 				)
 
-		return employees_to_mark_attendance
+		return unmarked_attendance
 
 	def get_employee_and_attendance_details(self) -> list[dict]:
 		"""Returns a list of employee and attendance details like
@@ -904,47 +893,62 @@ class PayrollEntry(Document):
 		]
 		"""
 		employees = [emp.employee for emp in self.employees]
-		default_holiday_list = frappe.db.get_value("Company", self.company, "default_holiday_list")
+		default_holiday_list = frappe.db.get_value(
+			"Company", self.company, "default_holiday_list", cache=True
+		)
 
 		Employee = frappe.qb.DocType("Employee")
 		Attendance = frappe.qb.DocType("Attendance")
 
 		return (
 			frappe.qb.from_(Employee)
-			.join(Attendance)
-			.on(Employee.name == Attendance.employee)
+			.left_join(Attendance)
+			.on(
+				(Employee.name == Attendance.employee)
+				& (Attendance.attendance_date.between(self.start_date, self.end_date))
+				& (Attendance.docstatus == 1)
+			)
 			.select(
 				Employee.name,
 				Employee.date_of_joining,
+				Employee.relieving_date,
 				Coalesce(Employee.holiday_list, default_holiday_list).as_("holiday_list"),
 				Count(Attendance.name).as_("attendance_count"),
 			)
-			.where(
-				Attendance.attendance_date.between(self.start_date, self.end_date)
-				& (Employee.name.isin(employees))
-			)
+			.where(Employee.name.isin(employees))
 			.groupby(Employee.name)
 		).run(as_dict=True)
 
-	def get_holiday_list_based_count(
-		self, holiday_list: str, start_date: str, holiday_list_based_count: dict
-	) -> float:
-		key = f"{start_date}-{self.end_date}-{holiday_list}"
+	def get_payroll_dates_for_employee(self, employee_details: dict) -> tuple[str, str]:
+		start_date = self.start_date
+		if employee_details.date_of_joining > getdate(self.start_date):
+			start_date = employee_details.date_of_joining
 
-		if key in holiday_list_based_count:
-			return holiday_list_based_count[key]
+		end_date = self.end_date
+		if employee_details.relieving_date and employee_details.relieving_date < getdate(self.end_date):
+			end_date = employee_details.relieving_date
+
+		return start_date, end_date
+
+	def get_holidays_count(self, holiday_list: str, start_date: str, end_date: str) -> float:
+		"""Returns number of holidays between start and end dates in the holiday list"""
+		if not hasattr(self, "_holidays_between_dates"):
+			self._holidays_between_dates = {}
+
+		key = f"{start_date}-{end_date}-{holiday_list}"
+		if key in self._holidays_between_dates:
+			return self._holidays_between_dates[key]
 
 		holidays = frappe.db.get_all(
 			"Holiday",
-			filters={"parent": holiday_list, "holiday_date": ("between", [start_date, self.end_date])},
-			fields=["count(*) as holiday_count"],
-			as_list=True,
-		)
+			filters={"parent": holiday_list, "holiday_date": ("between", [start_date, end_date])},
+			fields=["COUNT(*) as holidays_count"],
+		)[0]
 
-		if len(holidays) > 0:
-			holiday_list_based_count[key] = holidays[0][0]
+		if holidays:
+			self._holidays_between_dates[key] = holidays.holidays_count
 
-		return holiday_list_based_count[key] or 0
+		return self._holidays_between_dates.get(key) or 0
 
 
 def get_salary_structure(
