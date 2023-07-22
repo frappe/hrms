@@ -799,7 +799,13 @@ class PayrollEntry(Document):
 			unmarked_days = payroll_days - (holidays + details.attendance_count)
 
 			if unmarked_days > 0:
-				unmarked_attendance.append({"employee": emp.employee, "employee_name": emp.employee_name})
+				unmarked_attendance.append(
+					{
+						"employee": emp.employee,
+						"employee_name": emp.employee_name,
+						"unmarked_days": unmarked_days,
+					}
+				)
 
 		return unmarked_attendance
 

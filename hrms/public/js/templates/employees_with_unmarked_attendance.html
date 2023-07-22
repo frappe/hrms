@@ -1,0 +1,39 @@
+{% if data.length %}
+
+<div class="form-message yellow">
+	<div>
+		{{
+			__(
+				"Attendance is pending for these employees between the selected payroll dates. Mark attendance to proceed. Refer {0} for details.",
+				["<a href='/app/query-report/Monthly%20Attendance%20Sheet'>Monthly Attendance Sheet</a>"]
+			)
+		}}
+	</div>
+</div>
+
+<table class="table table-bordered small">
+	<thead>
+		<tr>
+			<th style="width: 14%" class="text-left">{{ __("Employee") }}</th>
+			<th style="width: 16%" class="text-left">{{ __("Employee Name") }}</th>
+			<th style="width: 12%" class="text-left">{{ __("Unmarked Days") }}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for item in data %}
+			<tr>
+				<td class="text-left"> {{ item.employee }} </td>
+				<td class="text-left"> {{ item.employee_name }} </td>
+				<td class="text-left"> {{ item.unmarked_days }} </td>
+			</tr>
+		{% } %}
+	</tbody>
+</table>
+
+{% } else { %}
+
+<div class="form-message green">
+	<div>{{ __("Attendance has been marked for all the employees between the selected payroll dates.") }}</div>
+</div>
+
+{% } %}
