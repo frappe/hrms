@@ -339,7 +339,7 @@ frappe.ui.form.on('Payroll Entry', {
 	validate_attendance: function (frm) {
 		if (frm.doc.validate_attendance && frm.doc.employees) {
 			frappe.call({
-				method: 'validate_employee_attendance',
+				method: 'get_employees_with_unmarked_attendance',
 				args: {},
 				callback: function (r) {
 					render_employee_attendance(frm, r.message);
