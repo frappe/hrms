@@ -10,12 +10,13 @@ import {
 	frappeRequest,
 	resourcesPlugin,
 } from "frappe-ui"
+import EmptyState from "@/components/EmptyState.vue"
 
 import { IonicVue } from "@ionic/vue"
 
-import { session } from "./data/session"
-import { userResource } from "./data/user"
-import { employeeResource } from "./data/employee"
+import { session } from "@/data/session"
+import { userResource } from "@/data/user"
+import { employeeResource } from "@/data/employee"
 import dayjs from "@/utils/dayjs"
 
 /* Core CSS required for Ionic components to work properly */
@@ -33,6 +34,7 @@ app.use(resourcesPlugin)
 
 app.component("Button", Button)
 app.component("Input", Input)
+app.component("EmptyState", EmptyState)
 
 app.use(router)
 app.use(IonicVue)

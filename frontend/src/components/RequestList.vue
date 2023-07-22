@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="flex flex-col bg-white rounded-lg mt-5 overflow-auto"
-		v-if="items"
+		v-if="props.items?.length"
 	>
 		<div
 			class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
@@ -16,9 +16,7 @@
 			/>
 		</div>
 	</div>
-	<div class="text-sm text-gray-500 mt-5 flex flex-col items-center" v-else>
-		You have no requests
-	</div>
+	<EmptyState message="You have no requests" v-else />
 
 	<ion-modal
 		ref="modal"

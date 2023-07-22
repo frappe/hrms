@@ -3,6 +3,7 @@
 		<div class="flex flex-row justify-between items-center">
 			<div class="text-xl text-gray-800 font-bold">Upcoming Holidays</div>
 			<div
+				v-if="upcomingHolidays?.length"
 				id="open-holiday-list"
 				class="text-lg text-blue-500 font-medium cursor-pointer"
 			>
@@ -10,7 +11,7 @@
 			</div>
 		</div>
 
-		<div class="flex flex-col bg-white rounded-lg">
+		<div class="flex flex-col bg-white rounded-lg" v-if="upcomingHolidays?.length">
 			<div
 				class="flex flex-row flex-start p-4 items-center justify-between border-b"
 				v-for="holiday in upcomingHolidays"
@@ -27,6 +28,8 @@
 				</div>
 			</div>
 		</div>
+
+		<EmptyState message="You have no upcoming holidays" v-else />
 	</div>
 
 	<ion-modal
