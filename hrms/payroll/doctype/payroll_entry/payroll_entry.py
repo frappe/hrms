@@ -51,7 +51,7 @@ class PayrollEntry(Document):
 		self.validate_employee_details()
 		self.validate_payroll_payable_account()
 		if self.get_employees_with_unmarked_attendance():
-			frappe.throw(_("Cannot Submit, Employees left to mark attendance"))
+			frappe.throw(_("Cannot Submit. Attendance is not marked for some employees."))
 
 	def set_status(self, status=None, update=False):
 		if not status:
@@ -815,6 +815,7 @@ class PayrollEntry(Document):
 		        {
 		                "name": "HREMP00001",
 		                "date_of_joining": "2019-01-01",
+		                "relieving_date": "2022-01-01",
 		                "holiday_list": "Holiday List Company",
 		                "attendance_count": 22
 		        }
