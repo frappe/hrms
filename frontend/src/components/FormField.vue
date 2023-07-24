@@ -116,6 +116,7 @@ const props = defineProps({
 	default: [String, Number, Boolean, Array, Object],
 	label: String,
 	options: [String, Array],
+	documentList: Array,
 	readOnly: Boolean,
 	reqd: Boolean,
 	hidden: {
@@ -160,7 +161,7 @@ const showField = computed(() => {
 
 const selectionList = computed(() => {
 	if (props.fieldtype == "Link" && props.options) {
-		return linkFieldList.value.data
+		return props.documentList || linkFieldList.value.data
 	} else if (props.fieldtype == "Select" && props.options) {
 		const options = props.options.split("\n")
 		return options.map((option) => ({

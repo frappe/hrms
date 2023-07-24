@@ -14,7 +14,7 @@
 
 			<div class="flex flex-col space-y-4 bg-white p-4">
 				<FormField
-					v-for="field in fields"
+					v-for="field in props.fields"
 					:key="field.name"
 					:fieldtype="field.fieldtype"
 					:fieldname="field.fieldname"
@@ -22,6 +22,7 @@
 					:default="field.default"
 					:label="field.label"
 					:options="field.options"
+					:documentList="field.documentList"
 					:readOnly="Boolean(field.read_only)"
 					:reqd="Boolean(field.reqd)"
 					:hidden="Boolean(field.hidden)"

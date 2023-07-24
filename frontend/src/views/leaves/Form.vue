@@ -20,6 +20,8 @@ import FormView from "@/components/FormView.vue"
 
 const dayjs = inject("$dayjs")
 const employee = inject("$employee")
+const today = dayjs().format("YYYY-MM-DD")
+
 // reactive object to store form data
 const leaveApplication = reactive({})
 
@@ -35,13 +37,14 @@ const formFields = createResource({
 				field.hidden = true
 
 			if (field.fieldname === "posting_date")
-				field.default = dayjs().format("YYYY-MM-DD")
-
-			if (field.fieldname === "leave_approver")
-				field.reqd = leaveApprovalDetails?.data?.is_mandatory
+				field.default = today
 
 			return field
 		})
+	},
+	onSuccess(_data) {
+		leaveApprovalDetails.fetch()
+		leaveTypes.fetch()
 	}
 })
 formFields.reload()
@@ -49,8 +52,21 @@ formFields.reload()
 const leaveApprovalDetails = createResource({
 	url: "hrms.api.get_leave_approval_details",
 	params: { employee: employee.data.name },
+	onSuccess(data) {
+		setLeaveApprovers(data)
+	}
 })
-leaveApprovalDetails.reload()
+
+const leaveTypes = createResource({
+	url: "hrms.api.get_leave_types",
+	params: {
+		employee: employee.data.name,
+		date: today,
+	},
+	onSuccess(data) {
+		setLeaveTypes(data)
+	}
+})
 
 // form scripts
 watch(
@@ -71,6 +87,12 @@ watch(
 watch(
 	() => [leaveApplication.from_date, leaveApplication.to_date],
 	([from_date, to_date]) => {
+		// fetch leave types for the selected date
+		leaveTypes.fetch({
+			employee: employee.data.name,
+			date: from_date
+		})
+
 		validateDates(from_date, to_date)
 		setHalfDayDateRange()
 		setTotalLeaveDays()
@@ -172,9 +194,24 @@ function setHalfDayDateRange() {
 	half_day_date.maxDate = leaveApplication.to_date
 }
 
-function setLeaveApprover() {
-	leaveApplication.leave_approver = leaveApprovalDetails.data.leave_approver
-	leaveApplication.leave_approver_name = leaveApprovalDetails.data.leave_approver_name
+function setLeaveApprovers(data) {
+	const leave_approver = formFields.data?.find((field) => field.fieldname === "leave_approver")
+	leave_approver.reqd = data?.is_mandatory
+	leave_approver.documentList = data?.department_approvers.map((approver) => ({
+		label: approver.full_name ? `${approver.name} : ${approver.full_name}` : approver.name,
+		value: approver.name
+	}))
+
+	leaveApplication.leave_approver = data?.leave_approver
+	leaveApplication.leave_approver_name = data?.leave_approver_name
+}
+
+function setLeaveTypes(data) {
+	const leave_type = formFields.data.find((field) => field.fieldname === "leave_type")
+	leave_type.documentList = data?.map((leave_type) => ({
+		label: leave_type,
+		value: leave_type,
+	}))
 }
 
 function areValuesSet() {
@@ -184,12 +221,6 @@ function areValuesSet() {
 		&& leaveApplication.leave_type
 	)
 }
-
-onMounted(async () => {
-	await leaveApprovalDetails.promise
-	setLeaveApprover()
-	setTotalLeaveDays()
-})
 
 function validateForm() {
 	setHalfDayDate(leaveApplication.half_day)

@@ -119,17 +119,71 @@ def get_holidays_for_employee(employee: str) -> list[dict]:
 
 @frappe.whitelist()
 def get_leave_approval_details(employee: str) -> dict:
-	from hrms.hr.doctype.leave_application.leave_application import get_leave_approver
+	leave_approver, department = frappe.get_cached_value(
+		"Employee",
+		employee,
+		["leave_approver", "department"],
+	)
 
-	leave_approver = get_leave_approver(employee)
+	if not leave_approver and department:
+		leave_approver = frappe.db.get_value(
+			"Department Approver",
+			{"parent": department, "parentfield": "leave_approvers", "idx": 1},
+			"approver",
+		)
+
+	leave_approver_name = frappe.db.get_value("User", leave_approver, "full_name", cache=True)
+	department_approvers = get_department_approvers(department)
+
+	if leave_approver and leave_approver not in [approver.name for approver in department_approvers]:
+		department_approvers.append({"name": leave_approver, "full_name": leave_approver_name})
 
 	return dict(
 		leave_approver=leave_approver,
-		leave_approver_name=frappe.db.get_value("User", leave_approver, "full_name", cache=True),
+		leave_approver_name=leave_approver_name,
+		department_approvers=department_approvers,
 		is_mandatory=frappe.db.get_single_value(
 			"HR Settings", "leave_approver_mandatory_in_leave_application"
 		),
 	)
+
+
+def get_department_approvers(department: str) -> list[str]:
+	if not department:
+		return []
+
+	department_details = frappe.db.get_value("Department", department, ["lft", "rgt"], as_dict=True)
+	departments = frappe.db.get_all(
+		"Department",
+		filters={
+			"lft": ("<=", department_details.lft),
+			"rgt": (">=", department_details.rgt),
+			"disabled": 0,
+		},
+		pluck="name",
+	)
+
+	Approver = frappe.qb.DocType("Department Approver")
+	User = frappe.qb.DocType("User")
+	department_approvers = (
+		frappe.qb.from_(User)
+		.join(Approver)
+		.on(Approver.approver == User.name)
+		.select(User.name.as_("name"), User.full_name.as_("full_name"))
+		.where((Approver.parent.isin(departments)) & (Approver.parentfield == "leave_approvers"))
+	).run(as_dict=True)
+
+	return department_approvers
+
+
+@frappe.whitelist()
+def get_leave_types(employee: str, date: str) -> list:
+	from hrms.hr.doctype.leave_application.leave_application import get_leave_details
+
+	leave_details = get_leave_details(employee, date)
+	leave_types = list(leave_details["leave_allocation"].keys()) + leave_details["lwps"]
+
+	return leave_types
 
 
 @frappe.whitelist()
