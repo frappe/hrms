@@ -33,10 +33,12 @@
 			</div>
 
 			<div class="p-4 bg-white">
+				<ErrorMessage class="mb-2" :message="docList.insert.error" />
 				<Button
 					class="w-full rounded-md py-2.5 px-3.5"
 					appearance="primary"
-					@click="createNewDocument"
+					@click="submitForm"
+					:loading="docList.insert.loading"
 				>
 					Save
 				</Button>
@@ -48,7 +50,7 @@
 <script setup>
 import { computed } from "vue"
 import { useRouter } from "vue-router"
-import { FeatherIcon } from "frappe-ui"
+import { ErrorMessage, FeatherIcon, createListResource, toast } from "frappe-ui"
 import FormField from "@/components/FormField.vue"
 
 const props = defineProps({
@@ -79,13 +81,33 @@ const formModel = computed({
 	},
 })
 
+const docList = createListResource({
+	doctype: props.doctype,
+	insert: {
+		onSuccess() {
+			toast({
+				title: "Success",
+				text: `${props.doctype} created successfully!`,
+				icon: "check-circle",
+				position: "bottom-center",
+				iconClasses: "text-green-500",
+			})
+			router.back()
+		},
+		onError() {
+			console.log(`Error creating ${props.doctype}`)
+		}
+	}
+})
+
 props.fields?.forEach((field) => {
 	if (field.default) {
 		formModel.value[field.fieldname] = field.default
 	}
 })
 
-function createNewDocument() {
+function submitForm() {
 	emit("validateForm")
+	docList.insert.submit(formModel.value)
 }
 </script>

@@ -14,7 +14,7 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { createResource } from "frappe-ui"
-import { reactive, watch, inject, onMounted } from "vue";
+import { reactive, watch, inject } from "vue";
 
 import FormView from "@/components/FormView.vue"
 
@@ -123,7 +123,7 @@ function validateDates(from_date, to_date) {
 
 	const error_message = (
 		(from_date > to_date)
-		? "From date cannot be greater than To Date"
+		? "To Date cannot be before From Date"
 		: ""
 	)
 
@@ -176,6 +176,7 @@ function setLeaveBalance() {
 function setHalfDayDate(half_day) {
 	const half_day_date = formFields.data.find((field) => field.fieldname === "half_day_date")
 	half_day_date.hidden = !half_day
+	half_day_date.reqd = half_day
 
 	if (!half_day)
 		return
@@ -183,7 +184,6 @@ function setHalfDayDate(half_day) {
 	if (leaveApplication.from_date === leaveApplication.to_date) {
 		leaveApplication.half_day_date = leaveApplication.from_date
 	} else {
-		leaveApplication.half_day_date = ""
 		setHalfDayDateRange()
 	}
 }
@@ -224,6 +224,7 @@ function areValuesSet() {
 
 function validateForm() {
 	setHalfDayDate(leaveApplication.half_day)
+	leaveApplication.employee = employee.data.name
 }
 
 </script>
