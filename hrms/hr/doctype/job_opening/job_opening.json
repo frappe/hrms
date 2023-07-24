@@ -101,7 +101,8 @@
    "fieldname": "route",
    "fieldtype": "Data",
    "label": "Route",
-   "unique": 1
+   "unique": 1,
+   "hidden":1
   },
   {
    "description": "Job profile, qualifications required etc.",
