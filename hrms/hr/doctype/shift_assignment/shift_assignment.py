@@ -247,7 +247,14 @@ def _adjust_overlapping_shifts(shifts: dict):
 		curr_shift = shifts[i]
 		next_shift = shifts[i + 1]
 
-		if curr_shift and next_shift:
+		if (
+			curr_shift
+			and next_shift
+			# only adjust if both are default shifts or neither,
+			# don't adjust if assigned and default shifts are overlapping
+			# default shift is supposed to be used as a fallback
+			and (curr_shift.is_default_shift == next_shift.is_default_shift)
+		):
 			next_shift.actual_start = max(curr_shift.end_datetime, next_shift.actual_start)
 			curr_shift.actual_end = min(next_shift.actual_start, curr_shift.actual_end)
 
@@ -314,6 +321,8 @@ def get_employee_shift(
 	default_shift = frappe.db.get_value("Employee", employee, "default_shift", cache=True)
 	if not shift_details and consider_default_shift:
 		shift_details = get_shift_details(default_shift, for_timestamp)
+		if shift_details:
+			shift_details.is_default_shift = True
 
 	# if no shift is found, find next or prev shift assignment based on direction
 	if not shift_details and next_shift_direction:
@@ -382,21 +391,17 @@ def get_employee_shift_timings(
 	prev_shift = curr_shift = next_shift = None
 	curr_shift = get_employee_shift(employee, for_timestamp, consider_default_shift, "forward")
 
-	# don't consider default shift in overlapping period as curr shift is already fetched
-	# default shift is supposed to be used as a fallback
-	consider_default_shift_in_overlapping_period = False if curr_shift else consider_default_shift
-
 	if curr_shift:
 		next_shift = get_employee_shift(
 			employee,
 			curr_shift.start_datetime + timedelta(days=1),
-			consider_default_shift_in_overlapping_period,
+			consider_default_shift,
 			"forward",
 		)
 	prev_shift = get_employee_shift(
 		employee,
 		(curr_shift.end_datetime if curr_shift else for_timestamp) + timedelta(days=-1),
-		consider_default_shift_in_overlapping_period,
+		consider_default_shift,
 		"reverse",
 	)
 
