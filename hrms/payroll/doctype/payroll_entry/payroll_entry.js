@@ -339,7 +339,7 @@ frappe.ui.form.on('Payroll Entry', {
 	validate_attendance: function (frm) {
 		if (frm.doc.validate_attendance && frm.doc.employees) {
 			frappe.call({
-				method: 'validate_employee_attendance',
+				method: 'get_employees_with_unmarked_attendance',
 				args: {},
 				callback: function (r) {
 					render_employee_attendance(frm, r.message);
@@ -409,7 +409,7 @@ let make_bank_entry = function (frm) {
 
 let render_employee_attendance = function (frm, data) {
 	frm.fields_dict.attendance_detail_html.html(
-		frappe.render_template('employees_to_mark_attendance', {
+		frappe.render_template('employees_with_unmarked_attendance', {
 			data: data
 		})
 	);

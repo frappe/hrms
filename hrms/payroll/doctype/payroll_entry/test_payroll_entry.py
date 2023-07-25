@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 import frappe
 from frappe.tests.utils import FrappeTestCase, change_settings
-from frappe.utils import add_months
+from frappe.utils import add_days, add_months
 
 import erpnext
 from erpnext.accounts.utils import get_fiscal_year, getdate, nowdate
@@ -31,6 +31,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	create_account,
 	make_deduction_salary_component,
 	make_earning_salary_component,
+	mark_attendance,
 	set_salary_component_account,
 )
 from hrms.payroll.doctype.salary_structure.test_salary_structure import (
@@ -38,6 +39,7 @@ from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 	make_salary_structure,
 )
 from hrms.tests.test_utils import create_department
+from hrms.utils import get_date_range
 
 test_dependencies = ["Holiday List"]
 
@@ -561,6 +563,44 @@ class TestPayrollEntry(FrappeTestCase):
 		]
 
 		self.assertEqual(debit_entries, expected_entries)
+
+	def test_validate_attendance(self):
+		company = frappe.get_doc("Company", "_Test Company")
+		employee = frappe.db.get_value("Employee", {"company": "_Test Company"})
+		setup_salary_structure(employee, company)
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = get_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+		)
+
+		# case 1: validate unmarked attendance
+		payroll_entry.validate_attendance = True
+		employees = payroll_entry.get_employees_with_unmarked_attendance()
+		self.assertEqual(employees[0]["employee"], employee)
+
+		# case 2: employee should not be flagged for remaining payroll days for a mid-month relieving date
+		relieving_date = add_days(payroll_entry.start_date, 15)
+		frappe.db.set_value("Employee", employee, "relieving_date", relieving_date)
+
+		for date in get_date_range(payroll_entry.start_date, relieving_date):
+			mark_attendance(employee, date, "Present", ignore_validate=True)
+
+		employees = payroll_entry.get_employees_with_unmarked_attendance()
+		self.assertFalse(employees)
+
+		# case 3: employee should not flagged for remaining payroll days
+		frappe.db.set_value("Employee", employee, "relieving_date", None)
+
+		for date in get_date_range(add_days(relieving_date, 1), payroll_entry.end_date):
+			mark_attendance(employee, date, "Present", ignore_validate=True)
+
+		employees = payroll_entry.get_employees_with_unmarked_attendance()
+		self.assertFalse(employees)
 
 
 def get_payroll_entry(**args):

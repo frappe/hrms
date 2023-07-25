@@ -109,7 +109,8 @@ frappe.ui.form.on('Interview', {
 					fieldname: 'result',
 					fieldtype: 'Select',
 					options: ['', 'Cleared', 'Rejected'],
-					label: __('Result')
+					label: __('Result'),
+					reqd: 1,
 				},
 				{
 					fieldname: 'feedback',
