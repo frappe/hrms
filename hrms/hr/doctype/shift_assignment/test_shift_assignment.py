@@ -228,25 +228,17 @@ class TestShiftAssignment(FrappeTestCase):
 		)
 		make_shift_assignment(shift_type.name, employee, yesterday, yesterday)
 
-		# prev shift logs
-		prev_shift_1 = get_actual_start_end_datetime_of_shift(
+		# prev shift log
+		prev_shift = get_actual_start_end_datetime_of_shift(
 			employee, get_datetime(f"{today} 07:00:00"), True
 		)
-		# Even though default shift is from 7-19,
-		# assigned shift (night shift) has 60 mins of allowed checkout period.
-		# So assigned shift should have precedence over default shift for 7:01 AM
-		prev_shift_2 = get_actual_start_end_datetime_of_shift(
-			employee, get_datetime(f"{today} 07:01:00"), True
-		)
-
-		for checkin in [prev_shift_1, prev_shift_2]:
-			self.assertEqual(checkin.shift_type.name, "Test Security - Night")
-			self.assertEqual(checkin.actual_start.date(), yesterday)
-			self.assertEqual(checkin.actual_end.date(), today)
+		self.assertEqual(prev_shift.shift_type.name, "Test Security - Night")
+		self.assertEqual(prev_shift.actual_start.date(), yesterday)
+		self.assertEqual(prev_shift.actual_end.date(), today)
 
 		# current shift IN
 		checkin = get_actual_start_end_datetime_of_shift(
-			employee, get_datetime(f"{today} 08:01:00"), True
+			employee, get_datetime(f"{today} 07:01:00"), True
 		)
 		# current shift OUT
 		checkout = get_actual_start_end_datetime_of_shift(

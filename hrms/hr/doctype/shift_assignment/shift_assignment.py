@@ -241,7 +241,7 @@ def _is_timestamp_within_shift(shift_details: dict, for_timestamp: datetime) -> 
 def _adjust_overlapping_shifts(shifts: dict):
 	"""
 	Compares 2 consecutive shifts and adjusts start and end times
-	if they are overlapping within extension period (begin checkin before.. to allow checkout after..)
+	if they are overlapping within grace period
 	"""
 	for i in range(len(shifts) - 1):
 		curr_shift = shifts[i]
@@ -379,29 +379,44 @@ def get_employee_shift_timings(
 	if for_timestamp is None:
 		for_timestamp = now_datetime()
 
+	# write and verify a test case for midnight shift.
 	prev_shift = curr_shift = next_shift = None
 	curr_shift = get_employee_shift(employee, for_timestamp, consider_default_shift, "forward")
-
-	# don't consider default shift in overlapping period as curr shift is already fetched
-	# default shift is supposed to be used as a fallback
-	consider_default_shift_in_overlapping_period = False if curr_shift else consider_default_shift
-
 	if curr_shift:
 		next_shift = get_employee_shift(
-			employee,
-			curr_shift.start_datetime + timedelta(days=1),
-			consider_default_shift_in_overlapping_period,
-			"forward",
+			employee, curr_shift.start_datetime + timedelta(days=1), consider_default_shift, "forward"
 		)
 	prev_shift = get_employee_shift(
 		employee,
 		(curr_shift.end_datetime if curr_shift else for_timestamp) + timedelta(days=-1),
-		consider_default_shift_in_overlapping_period,
+		consider_default_shift,
 		"reverse",
 	)
 
 	if curr_shift:
-		_adjust_overlapping_shifts([prev_shift, curr_shift, next_shift])
+		# adjust actual start and end times if they are overlapping with grace period (before start and after end)
+		if prev_shift:
+			curr_shift.actual_start = (
+				prev_shift.end_datetime
+				if curr_shift.actual_start < prev_shift.end_datetime
+				else curr_shift.actual_start
+			)
+			prev_shift.actual_end = (
+				curr_shift.actual_start
+				if prev_shift.actual_end > curr_shift.actual_start
+				else prev_shift.actual_end
+			)
+		if next_shift:
+			next_shift.actual_start = (
+				curr_shift.end_datetime
+				if next_shift.actual_start < curr_shift.end_datetime
+				else next_shift.actual_start
+			)
+			curr_shift.actual_end = (
+				next_shift.actual_start
+				if curr_shift.actual_end > next_shift.actual_start
+				else curr_shift.actual_end
+			)
 
 	return prev_shift, curr_shift, next_shift
 
