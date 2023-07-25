@@ -1,6 +1,5 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
-{% include "erpnext/public/js/controllers/accounts.js" %}
 
 cur_frm.add_fetch('company', 'default_letter_head', 'letter_head');
 
@@ -52,6 +51,12 @@ frappe.ui.form.on('Salary Structure', {
 			};
 		});
 		frm.trigger('set_earning_deduction_component');
+	},
+
+	mode_of_payment: function(frm) {
+		erpnext.accounts.pos.get_payment_mode_account(frm, frm.doc.mode_of_payment, function(account){
+			frm.set_value("payment_account", account);
+		})
 	},
 
 	set_earning_deduction_component: function(frm) {
