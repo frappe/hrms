@@ -17,6 +17,7 @@ from hrms.hr.utils import get_holidays_for_employee
 class TestEmployeeReminders(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls):
+		super().setUpClass()
 		from erpnext.setup.doctype.holiday_list.test_holiday_list import make_holiday_list
 
 		# Create a test holiday list

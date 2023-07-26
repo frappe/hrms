@@ -16,6 +16,7 @@ test_dependencies = ["Holiday List"]
 class TestUploadAttendance(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls):
+		super().setUpClass()
 		frappe.db.set_value(
 			"Company", erpnext.get_default_company(), "default_holiday_list", "_Test Holiday List"
 		)
