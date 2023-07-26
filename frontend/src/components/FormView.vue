@@ -38,6 +38,7 @@
 					class="w-full rounded-md py-2.5 px-3.5"
 					appearance="primary"
 					@click="submitForm"
+					:disabled="saveButtonDisabled"
 					:loading="docList.insert.loading"
 				>
 					Save
@@ -104,6 +105,14 @@ props.fields?.forEach((field) => {
 	if (field.default) {
 		formModel.value[field.fieldname] = field.default
 	}
+})
+
+const saveButtonDisabled = computed(() => {
+	return props.fields?.some((field) => {
+		if (field.reqd && !formModel.value[field.fieldname]) {
+			return true
+		}
+	})
 })
 
 function submitForm() {
