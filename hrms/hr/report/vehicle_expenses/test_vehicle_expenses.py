@@ -2,9 +2,8 @@
 # License: GNU General Public License v3. See license.txt
 
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import getdate
 
 from erpnext.accounts.utils import get_fiscal_year
@@ -15,7 +14,7 @@ from hrms.hr.doctype.vehicle_log.vehicle_log import make_expense_claim
 from hrms.hr.report.vehicle_expenses.vehicle_expenses import execute
 
 
-class TestVehicleExpenses(unittest.TestCase):
+class TestVehicleExpenses(FrappeTestCase):
 	@classmethod
 	def setUpClass(self):
 		frappe.db.sql("delete from `tabVehicle Log`")

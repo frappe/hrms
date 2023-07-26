@@ -1,8 +1,8 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
+from frappe.tests.utils import FrappeTestCase
 
 
-class TestIdentificationDocumentType(unittest.TestCase):
+class TestIdentificationDocumentType(FrappeTestCase):
 	pass

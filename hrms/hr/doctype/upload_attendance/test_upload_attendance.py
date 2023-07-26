@@ -1,9 +1,8 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import getdate
 
 import erpnext
@@ -14,7 +13,7 @@ from hrms.hr.doctype.upload_attendance.upload_attendance import get_data
 test_dependencies = ["Holiday List"]
 
 
-class TestUploadAttendance(unittest.TestCase):
+class TestUploadAttendance(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls):
 		frappe.db.set_value(

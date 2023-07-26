@@ -1,14 +1,13 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
 
 
-class TestJobApplicant(unittest.TestCase):
+class TestJobApplicant(FrappeTestCase):
 	def test_job_applicant_naming(self):
 		applicant = frappe.get_doc(
 			{
