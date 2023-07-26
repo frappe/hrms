@@ -37,6 +37,7 @@
 
 	<ion-modal
 		ref="modal"
+		v-if="upcomingHolidays?.length"
 		trigger="open-holiday-list"
 		:initial-breakpoint="1"
 		:breakpoints="[0, 1]"
