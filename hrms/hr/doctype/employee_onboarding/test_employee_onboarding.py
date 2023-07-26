@@ -1,9 +1,8 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, getdate
 
 from hrms.hr.doctype.employee_onboarding.employee_onboarding import (
@@ -14,7 +13,7 @@ from hrms.hr.doctype.job_offer.test_job_offer import create_job_offer
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 
 
-class TestEmployeeOnboarding(unittest.TestCase):
+class TestEmployeeOnboarding(FrappeTestCase):
 	def setUp(self):
 		if frappe.db.exists("Employee Onboarding", {"employee_name": "Test Researcher"}):
 			frappe.delete_doc("Employee Onboarding", {"employee_name": "Test Researcher"})

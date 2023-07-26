@@ -1,15 +1,14 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import getdate
 
 test_dependencies = ["Employee Onboarding"]
 
 
-class TestEmployeeSeparation(unittest.TestCase):
+class TestEmployeeSeparation(FrappeTestCase):
 	def test_employee_separation(self):
 		separation = create_employee_separation()
 

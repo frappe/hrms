@@ -3,7 +3,6 @@
 
 import calendar
 import random
-import unittest
 
 import frappe
 from frappe.model.document import Document
