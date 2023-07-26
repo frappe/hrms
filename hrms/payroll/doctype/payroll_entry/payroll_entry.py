@@ -887,6 +887,7 @@ class PayrollEntry(Document):
 		        {
 		                "name": "HREMP00001",
 		                "date_of_joining": "2019-01-01",
+		                "relieving_date": "2022-01-01",
 		                "holiday_list": "Holiday List Company",
 		                "attendance_count": 22
 		        }
