@@ -14,7 +14,7 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { createResource } from "frappe-ui"
-import { reactive, watch, inject } from "vue";
+import { reactive, watch, inject } from "vue"
 
 import FormView from "@/components/FormView.vue"
 
@@ -25,7 +25,6 @@ const today = dayjs().format("YYYY-MM-DD")
 // reactive object to store form data
 const leaveApplication = reactive({})
 
-
 // get form fields
 const formFields = createResource({
 	url: "hrms.api.get_doctype_fields",
@@ -33,11 +32,9 @@ const formFields = createResource({
 	transform(data) {
 		let fields = getFilteredFields(data)
 		return fields.map((field) => {
-			if (field.fieldname === "half_day_date")
-				field.hidden = true
+			if (field.fieldname === "half_day_date") field.hidden = true
 
-			if (field.fieldname === "posting_date")
-				field.default = today
+			if (field.fieldname === "posting_date") field.default = today
 
 			return field
 		})
@@ -45,7 +42,7 @@ const formFields = createResource({
 	onSuccess(_data) {
 		leaveApprovalDetails.fetch()
 		leaveTypes.fetch()
-	}
+	},
 })
 formFields.reload()
 
@@ -54,7 +51,7 @@ const leaveApprovalDetails = createResource({
 	params: { employee: employee.data.name },
 	onSuccess(data) {
 		setLeaveApprovers(data)
-	}
+	},
 })
 
 const leaveTypes = createResource({
@@ -65,13 +62,13 @@ const leaveTypes = createResource({
 	},
 	onSuccess(data) {
 		setLeaveTypes(data)
-	}
+	},
 })
 
 // form scripts
 watch(
 	() => leaveApplication.leave_type,
-	(leave_type) => setLeaveBalance(leave_type),
+	(leave_type) => setLeaveBalance(leave_type)
 )
 
 watch(
@@ -80,8 +77,8 @@ watch(
 )
 
 watch(
-	() => (leaveApplication.half_day && leaveApplication.half_day_date),
-	() => setTotalLeaveDays(),
+	() => leaveApplication.half_day && leaveApplication.half_day_date,
+	() => setTotalLeaveDays()
 )
 
 watch(
@@ -90,15 +87,14 @@ watch(
 		// fetch leave types for the selected date
 		leaveTypes.fetch({
 			employee: employee.data.name,
-			date: from_date
+			date: from_date,
 		})
 
 		validateDates(from_date, to_date)
 		setHalfDayDateRange()
 		setTotalLeaveDays()
-	},
+	}
 )
-
 
 // helper functions
 function getFilteredFields(fields) {
@@ -112,28 +108,25 @@ function getFilteredFields(fields) {
 		"company",
 		"sb_other_details",
 		"salary_slip",
-		"letter_head"
+		"letter_head",
 	]
 	return fields.filter((field) => !excludeFields.includes(field.fieldname))
 }
 
 function validateDates(from_date, to_date) {
-	if (!(from_date && to_date))
-		return
+	if (!(from_date && to_date)) return
 
-	const error_message = (
-		(from_date > to_date)
-		? "To Date cannot be before From Date"
-		: ""
+	const error_message =
+		from_date > to_date ? "To Date cannot be before From Date" : ""
+
+	const from_date_field = formFields.data.find(
+		(field) => field.fieldname === "from_date"
 	)
-
-	const from_date_field = formFields.data.find((field) => field.fieldname === "from_date")
 	from_date_field.error_message = error_message
 }
 
 function setTotalLeaveDays() {
-	if (!areValuesSet())
-		return
+	if (!areValuesSet()) return
 
 	const leaveDays = createResource({
 		url: "hrms.hr.doctype.leave_application.leave_application.get_number_of_leave_days",
@@ -147,15 +140,14 @@ function setTotalLeaveDays() {
 		},
 		onSuccess(data) {
 			leaveApplication.total_leave_days = data
-		}
+		},
 	})
 	leaveDays.reload()
 	setLeaveBalance()
 }
 
 function setLeaveBalance() {
-	if (!areValuesSet())
-		return
+	if (!areValuesSet()) return
 
 	const leaveBalance = createResource({
 		url: "hrms.hr.doctype.leave_application.leave_application.get_leave_balance_on",
@@ -164,22 +156,23 @@ function setLeaveBalance() {
 			date: leaveApplication.from_date,
 			to_date: leaveApplication.to_date,
 			leave_type: leaveApplication.leave_type,
-			consider_all_leaves_in_the_allocation_period: 1
+			consider_all_leaves_in_the_allocation_period: 1,
 		},
 		onSuccess(data) {
 			leaveApplication.leave_balance = data
-		}
+		},
 	})
 	leaveBalance.reload()
 }
 
 function setHalfDayDate(half_day) {
-	const half_day_date = formFields.data.find((field) => field.fieldname === "half_day_date")
+	const half_day_date = formFields.data.find(
+		(field) => field.fieldname === "half_day_date"
+	)
 	half_day_date.hidden = !half_day
 	half_day_date.reqd = half_day
 
-	if (!half_day)
-		return
+	if (!half_day) return
 
 	if (leaveApplication.from_date === leaveApplication.to_date) {
 		leaveApplication.half_day_date = leaveApplication.from_date
@@ -189,17 +182,23 @@ function setHalfDayDate(half_day) {
 }
 
 function setHalfDayDateRange() {
-	const half_day_date = formFields.data.find((field) => field.fieldname === "half_day_date")
+	const half_day_date = formFields.data.find(
+		(field) => field.fieldname === "half_day_date"
+	)
 	half_day_date.minDate = leaveApplication.from_date
 	half_day_date.maxDate = leaveApplication.to_date
 }
 
 function setLeaveApprovers(data) {
-	const leave_approver = formFields.data?.find((field) => field.fieldname === "leave_approver")
+	const leave_approver = formFields.data?.find(
+		(field) => field.fieldname === "leave_approver"
+	)
 	leave_approver.reqd = data?.is_mandatory
 	leave_approver.documentList = data?.department_approvers.map((approver) => ({
-		label: approver.full_name ? `${approver.name} : ${approver.full_name}` : approver.name,
-		value: approver.name
+		label: approver.full_name
+			? `${approver.name} : ${approver.full_name}`
+			: approver.name,
+		value: approver.name,
 	}))
 
 	leaveApplication.leave_approver = data?.leave_approver
@@ -207,7 +206,9 @@ function setLeaveApprovers(data) {
 }
 
 function setLeaveTypes(data) {
-	const leave_type = formFields.data.find((field) => field.fieldname === "leave_type")
+	const leave_type = formFields.data.find(
+		(field) => field.fieldname === "leave_type"
+	)
 	leave_type.documentList = data?.map((leave_type) => ({
 		label: leave_type,
 		value: leave_type,
@@ -216,9 +217,9 @@ function setLeaveTypes(data) {
 
 function areValuesSet() {
 	return (
-		leaveApplication.from_date
-		&& leaveApplication.to_date
-		&& leaveApplication.leave_type
+		leaveApplication.from_date &&
+		leaveApplication.to_date &&
+		leaveApplication.leave_type
 	)
 }
 
@@ -226,5 +227,4 @@ function validateForm() {
 	setHalfDayDate(leaveApplication.half_day)
 	leaveApplication.employee = employee.data.name
 }
-
 </script>

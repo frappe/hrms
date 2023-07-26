@@ -78,7 +78,7 @@ const emit = defineEmits(["validateForm"])
 const formModel = computed({
 	get: () => props.modelValue,
 	set: (value) => {
-		emit('update:modelValue', value)
+		emit("update:modelValue", value)
 	},
 })
 
@@ -97,8 +97,8 @@ const docList = createListResource({
 		},
 		onError() {
 			console.log(`Error creating ${props.doctype}`)
-		}
-	}
+		},
+	},
 })
 
 props.fields?.forEach((field) => {

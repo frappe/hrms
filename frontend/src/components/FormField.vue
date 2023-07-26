@@ -1,8 +1,5 @@
 <template>
-	<div
-		v-if="showField"
-		class="flex flex-col gap-1"
-	>
+	<div v-if="showField" class="flex flex-col gap-1">
 		<!-- Label -->
 		<span
 			v-if="
@@ -101,7 +98,7 @@
 		<!-- Time -->
 		<!-- Datetime -->
 
-		<ErrorMessage :message="props.errorMessage"/>
+		<ErrorMessage :message="props.errorMessage" />
 	</div>
 </template>
 
@@ -150,13 +147,9 @@ let linkFieldList = ref([])
 let date = ref(null)
 
 const showField = computed(() => {
-	if (props.readOnly && !props.modelValue)
-		return false
+	if (props.readOnly && !props.modelValue) return false
 
-	return (
-		SUPPORTED_FIELD_TYPES.includes(props.fieldtype)
-		&& !props.hidden
-	)
+	return SUPPORTED_FIELD_TYPES.includes(props.fieldtype) && !props.hidden
 })
 
 const selectionList = computed(() => {
