@@ -17,6 +17,7 @@ from hrms.hr.report.vehicle_expenses.vehicle_expenses import execute
 class TestVehicleExpenses(FrappeTestCase):
 	@classmethod
 	def setUpClass(self):
+		super().setUpClass()
 		frappe.db.sql("delete from `tabVehicle Log`")
 
 		employee_id = frappe.db.sql(

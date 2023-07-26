@@ -15,6 +15,7 @@ from hrms.tests.test_utils import create_company
 class TestEmployeeExits(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls):
+		super().setUpClass()
 		create_company()
 		frappe.db.sql("delete from `tabEmployee` where company='Test Company'")
 		frappe.db.sql("delete from `tabFull and Final Statement` where company='Test Company'")
