@@ -1,16 +1,15 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 
 import erpnext
 
 test_dependencies = ["Employee", "Leave Type", "Leave Policy"]
 
 
-class TestLeavePeriod(unittest.TestCase):
+class TestLeavePeriod(FrappeTestCase):
 	pass
 
 
