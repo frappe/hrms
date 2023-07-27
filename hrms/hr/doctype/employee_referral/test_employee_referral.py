@@ -1,9 +1,8 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import today
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
@@ -15,7 +14,7 @@ from hrms.hr.doctype.employee_referral.employee_referral import (
 )
 
 
-class TestEmployeeReferral(unittest.TestCase):
+class TestEmployeeReferral(FrappeTestCase):
 	def setUp(self):
 		frappe.db.sql("DELETE FROM `tabJob Applicant`")
 		frappe.db.sql("DELETE FROM `tabEmployee Referral`")

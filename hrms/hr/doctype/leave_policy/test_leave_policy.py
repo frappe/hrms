@@ -1,12 +1,11 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 
 
-class TestLeavePolicy(unittest.TestCase):
+class TestLeavePolicy(FrappeTestCase):
 	def test_max_leave_allowed(self):
 		random_leave_type = frappe.get_all("Leave Type", fields=["name", "max_leaves_allowed"])
 		if random_leave_type:
