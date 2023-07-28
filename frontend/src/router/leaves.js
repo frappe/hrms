@@ -18,7 +18,7 @@ const routes = [
 		name: "LeaveApplicationDetailView",
 		path: "/leaves/:id",
 		props: true,
-		component: () => import("@/views/leaves/Details.vue"),
+		component: () => import("@/views/leaves/Form.vue"),
 	},
 ]
 

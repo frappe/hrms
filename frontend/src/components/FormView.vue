@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col h-screen w-screen">
+	<div class="flex flex-col h-screen w-screen" v-if="isFormReady">
 		<div class="w-full sm:w-96">
 			<header
 				class="flex flex-row gap-1 bg-white shadow-sm py-4 px-2 items-center border-b"
@@ -7,7 +7,13 @@
 				<Button appearance="minimal" class="!px-0 !py-0" @click="router.back()">
 					<FeatherIcon name="chevron-left" class="h-5 w-5" />
 				</Button>
-				<h2 class="text-2xl font-semibold text-gray-900">
+				<div v-if="id" class="flex flex-row items-center gap-2">
+					<h2 class="text-2xl font-semibold text-gray-900">
+						{{ doctype }}
+					</h2>
+					<Badge :label="id" color="white" />
+				</div>
+				<h2 v-else class="text-2xl font-semibold text-gray-900">
 					{{ `New ${doctype}` }}
 				</h2>
 			</header>
@@ -33,13 +39,18 @@
 			</div>
 
 			<div class="p-4 bg-white">
-				<ErrorMessage class="mb-2" :message="docList.insert.error" />
+				<ErrorMessage
+					class="mb-2"
+					:message="docList.insert.error || documentResource?.setValue?.error"
+				/>
 				<Button
 					class="w-full rounded-md py-2.5 px-3.5"
 					appearance="primary"
 					@click="submitForm"
 					:disabled="saveButtonDisabled"
-					:loading="docList.insert.loading"
+					:loading="
+						docList.insert.loading || documentResource?.setValue?.loading
+					"
 				>
 					Save
 				</Button>
@@ -49,9 +60,16 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
+import { computed, onMounted } from "vue"
 import { useRouter } from "vue-router"
-import { ErrorMessage, FeatherIcon, createListResource, toast } from "frappe-ui"
+import {
+	ErrorMessage,
+	Badge,
+	FeatherIcon,
+	createListResource,
+	createDocumentResource,
+	toast,
+} from "frappe-ui"
 import FormField from "@/components/FormField.vue"
 
 const props = defineProps({
@@ -73,12 +91,14 @@ const props = defineProps({
 	},
 })
 const router = useRouter()
-const emit = defineEmits(["validateForm"])
+const emit = defineEmits(["validateForm", "update:modelValue"])
 
 const formModel = computed({
-	get: () => props.modelValue,
-	set: (value) => {
-		emit("update:modelValue", value)
+	get() {
+		return props.modelValue
+	},
+	set(newValue) {
+		emit("update:modelValue", newValue)
 	},
 })
 
@@ -101,10 +121,25 @@ const docList = createListResource({
 	},
 })
 
-props.fields?.forEach((field) => {
-	if (field.default) {
-		formModel.value[field.fieldname] = field.default
-	}
+const documentResource = createDocumentResource({
+	doctype: props.doctype,
+	name: props.id,
+	fields: "*",
+	setValue: {
+		onSuccess() {
+			toast({
+				title: "Success",
+				text: `${props.doctype} updated successfully!`,
+				icon: "check-circle",
+				position: "bottom-center",
+				iconClasses: "text-green-500",
+			})
+			router.back()
+		},
+		onError() {
+			console.log(`Error updating ${props.doctype}`)
+		},
+	},
 })
 
 const saveButtonDisabled = computed(() => {
@@ -115,8 +150,38 @@ const saveButtonDisabled = computed(() => {
 	})
 })
 
-function submitForm() {
-	emit("validateForm")
+function handleDocInsert() {
 	docList.insert.submit(formModel.value)
 }
+
+async function handleDocUpdate() {
+	if (documentResource.doc) {
+		await documentResource.setValue.submit(formModel.value)
+		await documentResource.get.promise
+		formModel.value = documentResource.doc
+	}
+}
+
+function submitForm() {
+	emit("validateForm")
+
+	if (props.id) {
+		handleDocUpdate()
+	} else {
+		handleDocInsert()
+	}
+}
+
+const isFormReady = computed(() => {
+	if (!props.id) return true
+
+	return !documentResource.get.loading && documentResource.doc
+})
+
+onMounted(async () => {
+	if (props.id) {
+		await documentResource.get.promise
+		formModel.value = documentResource.doc
+	}
+})
 </script>

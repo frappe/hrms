@@ -189,6 +189,8 @@ function setLinkFieldList() {
 
 function setDefaultValue() {
 	// set default values
+	if (props.modelValue) return
+
 	if (props.default) {
 		props.fieldtype === "Check"
 			? emit("update:modelValue", props.default === "1" ? true : false)

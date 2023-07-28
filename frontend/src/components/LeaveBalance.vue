@@ -4,7 +4,7 @@
 			<div class="text-xl text-gray-800 font-bold">Leave Balance</div>
 			<div
 				class="text-lg text-blue-500 font-medium cursor-pointer"
-				v-if="leaveBalance.data?.length"
+				v-if="leaveBalance.data"
 			>
 				View Leave History
 			</div>
@@ -13,7 +13,7 @@
 		<!-- Leave Balance Dashboard -->
 		<div
 			class="flex flex-row gap-4 overflow-x-auto py-2 mt-3"
-			v-if="leaveBalance.data?.length"
+			v-if="leaveBalance.data"
 		>
 			<div
 				v-for="(allocation, leave_type, index) in leaveBalance.data"
