@@ -2,7 +2,7 @@
 	<div class="flex flex-col h-screen w-screen" v-if="isFormReady">
 		<div class="w-full sm:w-96">
 			<header
-				class="flex flex-row gap-1 bg-white shadow-sm py-4 px-2 items-center border-b"
+				class="flex flex-row gap-1 bg-white shadow-sm py-4 px-2 items-center border-b sticky top-0 z-10"
 			>
 				<Button appearance="minimal" class="!px-0 !py-0" @click="router.back()">
 					<FeatherIcon name="chevron-left" class="h-5 w-5" />
