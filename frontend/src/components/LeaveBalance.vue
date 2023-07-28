@@ -6,7 +6,18 @@
 				class="text-lg text-blue-500 font-medium cursor-pointer"
 				v-if="leaveBalance.data"
 			>
-				View Leave History
+				<router-link
+					:to="{ name: 'LeaveApplicationListView' }"
+					v-slot="{ navigate }"
+					v-if="leaveBalance.data"
+				>
+					<div
+						@click="navigate"
+						class="text-lg text-blue-500 font-medium cursor-pointer"
+					>
+						View Leave History
+					</div>
+				</router-link>
 			</div>
 		</div>
 

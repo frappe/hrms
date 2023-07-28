@@ -11,7 +11,7 @@
 		>
 			<LeaveRequestItem
 				v-if="link.doctype === 'Leave Application'"
-				:leave="link"
+				:doc="link"
 				:isTeamRequest="props.teamRequests"
 			/>
 		</div>
