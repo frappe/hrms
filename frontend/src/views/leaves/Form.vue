@@ -101,14 +101,20 @@ watch(
 )
 
 watch(
-	() => [leaveApplication.value.from_date, leaveApplication.value.to_date],
-	([from_date, to_date]) => {
+	() => leaveApplication.value.from_date,
+	(from_date) => {
+		leaveApplication.value.to_date = from_date
 		// fetch leave types for the selected date
 		leaveTypes.fetch({
 			employee: employee.data.name,
 			date: from_date,
 		})
+	}
+)
 
+watch(
+	() => [leaveApplication.value.from_date, leaveApplication.value.to_date],
+	([from_date, to_date]) => {
 		validateDates(from_date, to_date)
 		setHalfDayDateRange()
 		setTotalLeaveDays()
@@ -126,17 +132,10 @@ function getFilteredFields(fields) {
 		"letter_head",
 	]
 
-	const employeeFields = [
-		"employee",
-		"employee_name",
-		"department",
-		"company",
-	]
+	const employeeFields = ["employee", "employee_name", "department", "company"]
 
-	if (!props.id)
-		excludeFields.push(...employeeFields)
+	if (!props.id) excludeFields.push(...employeeFields)
 
-	console.log(excludeFields)
 	return fields.filter((field) => !excludeFields.includes(field.fieldname))
 }
 

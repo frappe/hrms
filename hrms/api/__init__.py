@@ -180,6 +180,8 @@ def get_department_approvers(department: str) -> list[str]:
 def get_leave_types(employee: str, date: str) -> list:
 	from hrms.hr.doctype.leave_application.leave_application import get_leave_details
 
+	date = date or getdate()
+
 	leave_details = get_leave_details(employee, date)
 	leave_types = list(leave_details["leave_allocation"].keys()) + leave_details["lwps"]
 
