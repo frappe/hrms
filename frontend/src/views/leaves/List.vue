@@ -5,7 +5,8 @@
 				doctype="Leave Application"
 				:fields="LEAVE_FIELDS"
 				pageTitle="Leave History"
-				:tabButtons="tabButtons"
+				:tabButtons="TAB_BUTTONS"
+				:statusFilterOptions="STATUS_FILTER_OPTIONS"
 			/>
 		</ion-content>
 	</ion-page>
@@ -15,7 +16,7 @@
 import { IonPage, IonContent } from "@ionic/vue"
 import ListView from "@/components/ListView.vue"
 
-const tabButtons = ["My Leaves", "Team Leaves"]
+const TAB_BUTTONS = ["My Leaves", "Team Leaves"]
 const LEAVE_FIELDS = [
 	"name",
 	"employee",
@@ -26,4 +27,5 @@ const LEAVE_FIELDS = [
 	"total_leave_days",
 	"status",
 ]
+const STATUS_FILTER_OPTIONS = ["Open", "Approved", "Rejected", "Cancelled"]
 </script>
