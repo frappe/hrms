@@ -218,7 +218,7 @@ def send_work_anniversary_reminders():
 
 	if len(anniversary_persons) > 1:
 		# email for people sharing work anniversaries
-		person_emails=[]
+		person_emails = []
 		for person in anniversary_persons:
 			person_emails.append(person["user_id"] or person["personal_email"] or person["company_email"])
 		reminder_text, message = get_work_anniversary_reminder_text_and_message(anniversary_persons)
@@ -234,14 +234,14 @@ def get_work_anniversary_reminder_text_and_message(anniversary_persons):
 		anniversary_person += f" completed {get_pluralized_years(completed_years)}"
 	else:
 		person_names_with_years = []
-		group_name_acc_years={}
-		names_with_years={}
+		group_name_acc_years = {}
+		names_with_years = {}
 
 		for person in anniversary_persons:
 			person_text = person["name"]
 			# Number of years completed at the company
 			completed_years = getdate().year - person["date_of_joining"].year
-			names_with_years[person_text]=completed_years
+			names_with_years[person_text] = completed_years
 		
 		for key, value in names_with_years.items():
 			if value in group_name_acc_years:
