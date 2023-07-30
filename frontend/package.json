@@ -11,8 +11,8 @@
 		"copy-html-entry": "cp ../hrms/public/frontend/index.html ../hrms/www/hrms.html"
 	},
 	"dependencies": {
-		"@ionic/vue": "^7.0.4",
-		"@ionic/vue-router": "^7.0.4",
+		"@ionic/vue": "^7.2.1",
+		"@ionic/vue-router": "^7.2.1",
 		"dayjs": "^1.11.7",
 		"feather-icons": "^4.28.0",
 		"frappe-ui": "^0.0.112",

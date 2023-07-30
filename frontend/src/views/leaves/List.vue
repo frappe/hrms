@@ -3,10 +3,10 @@
 		<ion-content :fullscreen="true">
 			<ListView
 				doctype="Leave Application"
-				:fields="LEAVE_FIELDS"
 				pageTitle="Leave History"
 				:tabButtons="TAB_BUTTONS"
-				:statusFilterOptions="STATUS_FILTER_OPTIONS"
+				:fields="LEAVE_FIELDS"
+				:filterConfig="FILTER_CONFIG"
 			/>
 		</ion-content>
 	</ion-page>
@@ -27,5 +27,33 @@ const LEAVE_FIELDS = [
 	"total_leave_days",
 	"status",
 ]
-const STATUS_FILTER_OPTIONS = ["Open", "Approved", "Rejected", "Cancelled"]
+const STATUS_FILTER_OPTIONS = ["Open", "Approved", "Rejected"]
+const FILTER_CONFIG = [
+	{
+		fieldname: "status",
+		fieldtype: "Select",
+		label: "Status",
+		options: STATUS_FILTER_OPTIONS,
+	},
+	{
+		fieldname: "leave_type",
+		fieldtype: "Link",
+		label: "Leave Type",
+		options: "Leave Type",
+	},
+	{
+		fieldname: "employee",
+		fieldtype: "Link",
+		label: "Employee",
+		options: "Employee",
+	},
+	{
+		fieldname: "department",
+		fieldtype: "Link",
+		label: "Department",
+		options: "Department",
+	},
+	{ fieldname: "from_date", fieldtype: "Date", label: "From Date" },
+	{ fieldname: "to_date", fieldtype: "Date", label: "To Date" },
+]
 </script>

@@ -118,7 +118,7 @@ const props = defineProps({
 	reqd: Boolean,
 	hidden: {
 		type: Boolean,
-		default: true,
+		default: false,
 	},
 	errorMessage: String,
 	minDate: String,

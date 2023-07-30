@@ -17,12 +17,12 @@
 
 				<div class="flex flex-row gap-2">
 					<Button
-						id="open-filter-view"
+						id="show-filter-modal"
 						icon="filter"
 						appearance="secondary"
 						:class="[
 							areFiltersApplied
-								? '!border border-blue-500 bg-white !text-blue-500'
+								? '!border !border-blue-500 !bg-white !text-blue-500'
 								: '',
 						]"
 					/>
@@ -80,62 +80,19 @@
 				<LoadingIndicator class="w-8 h-8 text-blue-500" />
 			</div>
 
-			<!-- Filter Action Sheet -->
 			<ion-modal
 				ref="modal"
-				trigger="open-filter-view"
+				trigger="show-filter-modal"
 				:initial-breakpoint="1"
 				:breakpoints="[0, 1]"
 			>
-				<div
-					class="bg-white w-full flex flex-col items-center justify-center pb-5"
-				>
-					<div class="w-full pt-8 pb-5 border-b text-center">
-						<span class="text-gray-900 font-bold text-xl">Filters</span>
-					</div>
-					<div
-						class="w-full flex flex-col items-center justify-center gap-5 p-4"
-					>
-						<!-- Status filter -->
-						<div class="flex flex-col w-full">
-							<div class="text-gray-800 font-bold text-lg">Status</div>
-							<div class="flex flex-row gap-2 mt-2">
-								<Button
-									v-for="option in statusFilterOptions"
-									@click="filterByStatus = option"
-									appearance="white"
-									:class="[
-										option === filterByStatus
-											? 'border border-blue-500 !text-blue-500'
-											: '',
-									]"
-								>
-									{{ option }}
-								</Button>
-							</div>
-						</div>
-
-						<!-- Filter Buttons -->
-						<div
-							class="flex w-full flex-row items-center justify-between gap-3"
-						>
-							<Button
-								@click="clearFilters"
-								appearance="secondary"
-								class="w-full py-3 px-12"
-							>
-								Clear All
-							</Button>
-							<Button
-								@click="applyFilters"
-								appearance="primary"
-								class="w-full py-3 px-12"
-							>
-								Apply Filters
-							</Button>
-						</div>
-					</div>
-				</div>
+				<!-- Filter Action Sheet -->
+				<ListFiltersActionSheet
+					:filterConfig="filterConfig"
+					@applyFilters="applyFilters"
+					@clearFilters="clearFilters"
+					v-model:filters="filterMap"
+				/>
 			</ion-modal>
 		</div>
 	</div>
@@ -143,13 +100,14 @@
 
 <script setup>
 import { useRouter } from "vue-router"
-import { inject, ref, markRaw, watch, computed } from "vue"
+import { inject, ref, markRaw, watch, computed, reactive } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
 
 import { FeatherIcon, createResource, LoadingIndicator } from "frappe-ui"
 
 import TabButtons from "@/components/TabButtons.vue"
 import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
+import ListFiltersActionSheet from "@/components/ListFiltersActionSheet.vue"
 
 const props = defineProps({
 	doctype: {
@@ -160,17 +118,17 @@ const props = defineProps({
 		type: Array,
 		required: true,
 	},
+	filterConfig: {
+		type: Array,
+		required: true,
+	},
 	tabButtons: {
 		type: Array,
 		required: true,
 	},
 	pageTitle: {
 		type: String,
-		required: false,
-	},
-	statusFilterOptions: {
-		type: Array,
-		required: false,
+		required: true,
 	},
 })
 
@@ -180,10 +138,12 @@ const listItemComponent = {
 
 const router = useRouter()
 const employee = inject("$employee")
+const filterMap = reactive({})
 const activeTab = ref(props.tabButtons[0])
-const filterByStatus = ref(null)
 const areFiltersApplied = ref(false)
+const appliedFilters = ref([])
 
+// computed properties
 const isTeamRequest = computed(() => {
 	return activeTab.value === props.tabButtons[1]
 })
@@ -196,7 +156,7 @@ const detailViewRoute = computed(() => {
 	return `${props.doctype.replace(/\s+/g, "")}DetailView`
 })
 
-const appliedFilters = computed(() => {
+const defaultFilters = computed(() => {
 	const filters = []
 
 	if (isTeamRequest.value) {
@@ -205,21 +165,44 @@ const appliedFilters = computed(() => {
 		filters.push([props.doctype, "employee", "=", employee.data.name])
 	}
 
-	if (filterByStatus.value) {
-		filters.push([props.doctype, "status", "=", filterByStatus.value])
-	}
-
 	return filters
 })
 
+// helper functions
+function initializeFilters() {
+	props.filterConfig.forEach((filter) => {
+		filterMap[filter.fieldname] = {
+			condition: "=",
+			value: null,
+		}
+	})
+
+	appliedFilters.value = []
+}
+initializeFilters()
+
+function prepareFilters() {
+	let condition,
+		value = ""
+	appliedFilters.value = []
+
+	for (const fieldname in filterMap) {
+		condition = filterMap[fieldname].condition
+		value = filterMap[fieldname].value
+		if (condition && value)
+			appliedFilters.value.push([props.doctype, fieldname, condition, value])
+	}
+}
+
 function applyFilters() {
+	prepareFilters()
 	fetchDocumentList()
 	modalController.dismiss()
 	areFiltersApplied.value = true
 }
 
 function clearFilters() {
-	filterByStatus.value = []
+	initializeFilters()
 	fetchDocumentList()
 	modalController.dismiss()
 	areFiltersApplied.value = false
@@ -227,7 +210,9 @@ function clearFilters() {
 
 function fetchDocumentList() {
 	const filters = [[props.doctype, "docstatus", "!=", "2"]]
-	filters.push(...appliedFilters.value)
+	filters.push(...defaultFilters.value)
+
+	if (appliedFilters.value) filters.push(...appliedFilters.value)
 
 	documents.submit({
 		doctype: props.doctype,
