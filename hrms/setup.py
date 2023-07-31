@@ -613,8 +613,6 @@ def set_single_defaults():
 			except frappe.ValidationError:
 				pass
 
-	frappe.db.set_default("date_format", "dd-mm-yyyy")
-
 
 def get_post_install_patches():
 	return (
