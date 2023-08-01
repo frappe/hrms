@@ -60,6 +60,7 @@
    "search_index": 1
   },
   {
+   "fetch_from": "employee.employee_name",
    "fieldname": "employee_name",
    "fieldtype": "Data",
    "in_global_search": 1,
@@ -254,7 +255,7 @@
  "is_submittable": 1,
  "links": [],
  "max_attachments": 3,
- "modified": "2023-08-01 22:43:53.067995",
+ "modified": "2023-08-01 22:45:57.851854",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Application",
