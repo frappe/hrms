@@ -115,7 +115,7 @@
   },
   {
    "default": "0",
-   "description": "If selected, the value specified or calculated in this component will not contribute to the earnings or deductions. However, it's value can be referenced by other components that can be added or deducted. ",
+   "description": "If enabled, the value specified or calculated in this component will not contribute to the earnings or deductions. However, it's value can be referenced by other components that can be added or deducted. ",
    "fieldname": "statistical_component",
    "fieldtype": "Check",
    "label": "Statistical Component"
@@ -160,6 +160,7 @@
   {
    "default": "0",
    "depends_on": "eval:doc.type == \"Deduction\"",
+   "description": "If enabled, the component will be considered as a tax component and the amount will be auto-calculated as per the configured income tax slabs",
    "fieldname": "variable_based_on_taxable_salary",
    "fieldtype": "Check",
    "label": "Variable Based On Taxable Salary",
@@ -232,6 +233,7 @@
   {
    "default": "0",
    "depends_on": "eval:doc.type == \"Deduction\"",
+   "description": "If enabled, the component will be considered in the Income Tax Deductions report",
    "fieldname": "is_income_tax_component",
    "fieldtype": "Check",
    "label": "Is Income Tax Component"
@@ -255,7 +257,7 @@
   {
    "default": "1",
    "depends_on": "eval:!doc.statistical_component",
-   "description": "If checked, the component will not be displayed in the salary slip if the amount is zero",
+   "description": "If enabled, the component will not be displayed in the salary slip if the amount is zero",
    "fieldname": "remove_if_zero_valued",
    "fieldtype": "Check",
    "label": "Remove if Zero Valued"
@@ -264,7 +266,7 @@
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-06-21 15:11:53.582800",
+ "modified": "2023-07-31 13:35:37.413696",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",
