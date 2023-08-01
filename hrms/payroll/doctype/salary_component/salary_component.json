@@ -233,7 +233,7 @@
   {
    "default": "0",
    "depends_on": "eval:doc.type == \"Deduction\"",
-   "description": "If enabled, the component is considered in the Income Tax Deductions report",
+   "description": "If enabled, the component will be considered in the Income Tax Deductions report",
    "fieldname": "is_income_tax_component",
    "fieldtype": "Check",
    "label": "Is Income Tax Component"
