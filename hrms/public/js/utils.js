@@ -10,15 +10,6 @@ $.extend(hrms, {
 				cur_frm.save();
 			}
 		});
-<<<<<<< HEAD
-	}
-=======
-	},
-
-	set_payroll_frequency_to_null: (frm) => {
-		if (cint(frm.doc.salary_slip_based_on_timesheet)) {
-			frm.set_value("payroll_frequency", "");
-		}
 	},
 
 	get_current_employee: async (frm) => {
@@ -28,5 +19,4 @@ $.extend(hrms, {
 
 		return employee;
 	},
->>>>>>> c27d6671 (feat: set current user's employee in leave application if applicable)
 })
