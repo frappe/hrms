@@ -10,5 +10,13 @@ $.extend(hrms, {
 				cur_frm.save();
 			}
 		});
-	}
+	},
+
+	get_current_employee: async (frm) => {
+		const employee = (
+			await frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
+		)?.message?.name;
+
+		return employee;
+	},
 })

@@ -1,9 +1,6 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
 
-cur_frm.add_fetch('employee', 'employee_name', 'employee_name');
-cur_frm.add_fetch('employee', 'company', 'company');
-
 frappe.ui.form.on("Leave Application", {
 	setup: function(frm) {
 		frm.set_query("leave_approver", function() {
@@ -18,6 +15,7 @@ frappe.ui.form.on("Leave Application", {
 
 		frm.set_query("employee", erpnext.queries.employee);
 	},
+
 	onload: function(frm) {
 		// Ignore cancellation of doctype on cancel all.
 		frm.ignore_doctypes_on_cancel_all = ["Leave Ledger Entry"];
@@ -41,17 +39,18 @@ frappe.ui.form.on("Leave Application", {
 	},
 
 	validate: function(frm) {
-		if (frm.doc.from_date == frm.doc.to_date && frm.doc.half_day == 1) {
+		if (frm.doc.from_date === frm.doc.to_date && cint(frm.doc.half_day)) {
 			frm.doc.half_day_date = frm.doc.from_date;
-		} else if (frm.doc.half_day == 0) {
+		} else if (frm.doc.half_day === 0) {
 			frm.doc.half_day_date = "";
 		}
-		frm.toggle_reqd("half_day_date", frm.doc.half_day == 1);
+		frm.toggle_reqd("half_day_date", cint(frm.doc.half_day));
 	},
 
 	make_dashboard: function(frm) {
-		var leave_details;
+		let leave_details;
 		let lwps;
+
 		if (frm.doc.employee) {
 			frappe.call({
 				method: "hrms.hr.doctype.leave_application.leave_application.get_leave_details",
@@ -61,32 +60,34 @@ frappe.ui.form.on("Leave Application", {
 					date: frm.doc.from_date || frm.doc.posting_date
 				},
 				callback: function(r) {
-					if (!r.exc && r.message['leave_allocation']) {
-						leave_details = r.message['leave_allocation'];
+					if (!r.exc && r.message["leave_allocation"]) {
+						leave_details = r.message["leave_allocation"];
 					}
-					if (!r.exc && r.message['leave_approver']) {
-						frm.set_value('leave_approver', r.message['leave_approver']);
+					if (!r.exc && r.message["leave_approver"]) {
+						frm.set_value("leave_approver", r.message["leave_approver"]);
 					}
 					lwps = r.message["lwps"];
 				}
 			});
+
 			$("div").remove(".form-dashboard-section.custom");
+
 			frm.dashboard.add_section(
-				frappe.render_template('leave_application_dashboard', {
+				frappe.render_template("leave_application_dashboard", {
 					data: leave_details
 				}),
 				__("Allocated Leaves")
 			);
 			frm.dashboard.show();
-			let allowed_leave_types = Object.keys(leave_details);
 
-			// lwps should be allowed, lwps don't have any allocation
+			let allowed_leave_types = Object.keys(leave_details);
+			// lwps should be allowed for selection as they don't have any allocation
 			allowed_leave_types = allowed_leave_types.concat(lwps);
 
-			frm.set_query('leave_type', function() {
+			frm.set_query("leave_type", function() {
 				return {
 					filters: [
-						['leave_type_name', 'in', allowed_leave_types]
+						["leave_type_name", "in", allowed_leave_types]
 					]
 				};
 			});
@@ -97,16 +98,21 @@ frappe.ui.form.on("Leave Application", {
 		if (frm.is_new()) {
 			frm.trigger("calculate_total_days");
 		}
-		cur_frm.set_intro("");
+
+		frm.set_intro("");
 		if (frm.doc.__islocal && !in_list(frappe.user_roles, "Employee")) {
 			frm.set_intro(__("Fill the form and save it"));
 		}
 
-		if (!frm.doc.employee && frappe.defaults.get_user_permissions()) {
-			const perm = frappe.defaults.get_user_permissions();
-			if (perm && perm['Employee']) {
-				frm.set_value('employee', perm['Employee'].map(perm_doc => perm_doc.doc)[0]);
-			}
+		frm.trigger("set_employee");
+	},
+
+	async set_employee(frm) {
+		if (frm.doc.employee) return;
+
+		const employee = await hrms.get_current_employee(frm);
+		if (employee) {
+			frm.set_value("employee", employee);
 		}
 	},
 
@@ -156,8 +162,8 @@ frappe.ui.form.on("Leave Application", {
 	},
 
 	half_day_datepicker: function(frm) {
-		frm.set_value('half_day_date', '');
-		var half_day_datepicker = frm.fields_dict.half_day_date.datepicker;
+		frm.set_value("half_day_date", "");
+		let half_day_datepicker = frm.fields_dict.half_day_date.datepicker;
 		half_day_datepicker.update({
 			minDate: frappe.datetime.str_to_obj(frm.doc.from_date),
 			maxDate: frappe.datetime.str_to_obj(frm.doc.to_date)
@@ -177,9 +183,9 @@ frappe.ui.form.on("Leave Application", {
 				},
 				callback: function (r) {
 					if (!r.exc && r.message) {
-						frm.set_value('leave_balance', r.message);
+						frm.set_value("leave_balance", r.message);
 					} else {
-						frm.set_value('leave_balance', "0");
+						frm.set_value("leave_balance", "0");
 					}
 				}
 			});
@@ -188,18 +194,17 @@ frappe.ui.form.on("Leave Application", {
 
 	calculate_total_days: function(frm) {
 		if (frm.doc.from_date && frm.doc.to_date && frm.doc.employee && frm.doc.leave_type) {
-
-			var from_date = Date.parse(frm.doc.from_date);
-			var to_date = Date.parse(frm.doc.to_date);
+			let from_date = Date.parse(frm.doc.from_date);
+			let to_date = Date.parse(frm.doc.to_date);
 
 			if (to_date < from_date) {
 				frappe.msgprint(__("To Date cannot be less than From Date"));
-				frm.set_value('to_date', '');
+				frm.set_value("to_date", "");
 				return;
 			}
 			// server call is done to include holidays in leave days calculations
 			return frappe.call({
-				method: 'hrms.hr.doctype.leave_application.leave_application.get_number_of_leave_days',
+				method: "hrms.hr.doctype.leave_application.leave_application.get_number_of_leave_days",
 				args: {
 					"employee": frm.doc.employee,
 					"leave_type": frm.doc.leave_type,
@@ -210,7 +215,7 @@ frappe.ui.form.on("Leave Application", {
 				},
 				callback: function(r) {
 					if (r && r.message) {
-						frm.set_value('total_leave_days', r.message);
+						frm.set_value("total_leave_days", r.message);
 						frm.trigger("get_leave_balance");
 					}
 				}
@@ -220,15 +225,14 @@ frappe.ui.form.on("Leave Application", {
 
 	set_leave_approver: function(frm) {
 		if (frm.doc.employee) {
-			// server call is done to include holidays in leave days calculations
 			return frappe.call({
-				method: 'hrms.hr.doctype.leave_application.leave_application.get_leave_approver',
+				method: "hrms.hr.doctype.leave_application.leave_application.get_leave_approver",
 				args: {
 					"employee": frm.doc.employee,
 				},
 				callback: function(r) {
 					if (r && r.message) {
-						frm.set_value('leave_approver', r.message);
+						frm.set_value("leave_approver", r.message);
 					}
 				}
 			});
