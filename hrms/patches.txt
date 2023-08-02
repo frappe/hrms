@@ -8,4 +8,4 @@ hrms.patches.v14_0.create_custom_field_for_appraisal_template
 hrms.patches.post_install.update_performance_module_changes #2023-04-17
 hrms.patches.v14_0.update_ess_user_access
 execute:frappe.db.set_default("date_format", frappe.db.get_single_value("System Settings", "date_format"))
-hrms.patches.create_vehicle_service_item
+hrms.patches.v14_0.create_vehicle_service_item
