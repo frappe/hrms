@@ -50,7 +50,7 @@
 
 <script setup>
 import { inject } from "vue"
-import { createResource, Card } from "frappe-ui"
+import { createResource } from "frappe-ui"
 
 import SemicircleChart from "@/components/SemicircleChart.vue"
 

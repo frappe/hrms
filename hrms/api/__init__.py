@@ -23,6 +23,7 @@ def get_current_employee_info() -> dict:
 	return employee
 
 
+# Leaves and Holidays
 @frappe.whitelist()
 def get_leave_applications(filters: dict) -> list[dict]:
 	doctype = "Leave Application"
@@ -188,6 +189,53 @@ def get_leave_types(employee: str, date: str) -> list:
 	return leave_types
 
 
+# Expense Claims
+@frappe.whitelist()
+def get_expense_claim_summary(employee: str) -> dict:
+	from frappe.query_builder.functions import Sum
+
+	Claim = frappe.qb.DocType("Expense Claim")
+
+	pending_claims_case = (
+		frappe.qb.terms.Case()
+		.when(Claim.approval_status == "Draft", Claim.total_claimed_amount)
+		.else_(0)
+	)
+	sum_pending_claims = Sum(pending_claims_case).as_("total_pending_amount")
+
+	approved_claims_case = (
+		frappe.qb.terms.Case()
+		.when(Claim.approval_status == "Approved", Claim.total_sanctioned_amount)
+		.else_(0)
+	)
+	sum_approved_claims = Sum(approved_claims_case).as_("total_approved_amount")
+
+	rejected_claims_case = (
+		frappe.qb.terms.Case()
+		.when(Claim.approval_status == "Rejected", Claim.total_sanctioned_amount)
+		.else_(0)
+	)
+	sum_rejected_claims = Sum(rejected_claims_case).as_("total_rejected_amount")
+
+	summary = (
+		frappe.qb.from_(Claim)
+		.select(
+			sum_pending_claims,
+			sum_approved_claims,
+			sum_rejected_claims,
+			Claim.company,
+		)
+		.where((Claim.docstatus != 2) & (Claim.employee == employee))
+	).run(as_dict=True)[0]
+
+	currency = frappe.db.get_value("Company", summary.company, "default_currency")
+	symbol = frappe.db.get_value("Currency", currency, "symbol")
+	summary["currency"] = symbol or currency
+
+	return summary
+
+
+# Form View APIs
 @frappe.whitelist()
 def get_doctype_fields(doctype: str) -> list[dict]:
 	return frappe.get_meta(doctype).fields
