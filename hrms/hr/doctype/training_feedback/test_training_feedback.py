@@ -1,9 +1,8 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 
 from hrms.hr.doctype.training_event.test_training_event import (
 	create_training_event,
@@ -12,7 +11,7 @@ from hrms.hr.doctype.training_event.test_training_event import (
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_employee
 
 
-class TestTrainingFeedback(unittest.TestCase):
+class TestTrainingFeedback(FrappeTestCase):
 	def setUp(self):
 		create_training_program("Basic Training")
 		self.employee = make_employee("robert_loan@trainig.com")

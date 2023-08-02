@@ -1,9 +1,8 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, add_months, today
 
 from hrms.hr.doctype.attendance_request.test_attendance_request import get_employee
@@ -13,7 +12,7 @@ from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
 test_dependencies = ["Employee"]
 
 
-class TestCompensatoryLeaveRequest(unittest.TestCase):
+class TestCompensatoryLeaveRequest(FrappeTestCase):
 	def setUp(self):
 		frappe.db.sql(""" delete from `tabCompensatory Leave Request`""")
 		frappe.db.sql(""" delete from `tabLeave Ledger Entry`""")
