@@ -13,8 +13,8 @@
   "employee_name",
   "column_break_4",
   "leave_type",
+  "company",
   "department",
-  "leave_balance",
   "section_break_5",
   "from_date",
   "to_date",
@@ -23,18 +23,18 @@
   "total_leave_days",
   "column_break1",
   "description",
+  "leave_balance",
   "section_break_7",
   "leave_approver",
   "leave_approver_name",
-  "column_break_18",
-  "status",
-  "salary_slip",
-  "sb10",
-  "posting_date",
   "follow_via_email",
+  "column_break_18",
+  "posting_date",
+  "status",
+  "sb_other_details",
+  "salary_slip",
   "color",
   "column_break_17",
-  "company",
   "letter_head",
   "amended_from"
  ],
@@ -60,6 +60,7 @@
    "search_index": 1
   },
   {
+   "fetch_from": "employee.employee_name",
    "fieldname": "employee_name",
    "fieldtype": "Data",
    "in_global_search": 1,
@@ -97,7 +98,8 @@
   },
   {
    "fieldname": "section_break_5",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Dates & Reason"
   },
   {
    "fieldname": "from_date",
@@ -148,7 +150,8 @@
   },
   {
    "fieldname": "section_break_7",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Approval"
   },
   {
    "fieldname": "leave_approver",
@@ -176,10 +179,6 @@
    "options": "Open\nApproved\nRejected\nCancelled",
    "permlevel": 1,
    "reqd": 1
-  },
-  {
-   "fieldname": "sb10",
-   "fieldtype": "Section Break"
   },
   {
    "default": "Today",
@@ -243,6 +242,12 @@
    "options": "Leave Application",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "sb_other_details",
+   "fieldtype": "Section Break",
+   "label": "Other Details"
   }
  ],
  "icon": "fa fa-calendar",
@@ -250,10 +255,11 @@
  "is_submittable": 1,
  "links": [],
  "max_attachments": 3,
- "modified": "2020-05-18 13:00:41.577327",
+ "modified": "2023-08-01 22:45:57.851854",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Application",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
@@ -333,6 +339,7 @@
  "search_fields": "employee,employee_name,leave_type,from_date,to_date,total_leave_days",
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "timeline_field": "employee",
  "title_field": "employee_name"
 }
