@@ -3,6 +3,7 @@ import { session } from "@/data/session"
 import { userResource } from "@/data/user"
 
 import leaveRoutes from "./leaves"
+import claimRoutes from "./claims"
 
 const routes = [
 	{
@@ -26,6 +27,7 @@ const routes = [
 		component: () => import("@/views/Profile.vue"),
 	},
 	...leaveRoutes,
+	...claimRoutes,
 ]
 
 const router = createRouter({

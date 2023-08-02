@@ -1,24 +1,24 @@
 const routes = [
 	{
 		name: "Leaves",
-		path: "/leaves",
-		component: () => import("@/views/leaves/Dashboard.vue"),
+		path: "/leave/dashboard",
+		component: () => import("@/views/leave/Dashboard.vue"),
 	},
 	{
 		name: "LeaveApplicationListView",
-		path: "/leaves/list",
-		component: () => import("@/views/leaves/List.vue"),
+		path: "/leave/list",
+		component: () => import("@/views/leave/List.vue"),
 	},
 	{
 		name: "LeaveApplicationFormView",
-		path: "/leaves/new",
-		component: () => import("@/views/leaves/Form.vue"),
+		path: "/leave/new",
+		component: () => import("@/views/leave/Form.vue"),
 	},
 	{
 		name: "LeaveApplicationDetailView",
-		path: "/leaves/:id",
+		path: "/leave/:id",
 		props: true,
-		component: () => import("@/views/leaves/Form.vue"),
+		component: () => import("@/views/leave/Form.vue"),
 	},
 ]
 

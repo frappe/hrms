@@ -49,16 +49,16 @@ const menuItems = ref([
 		current: false,
 	},
 	{
-		icon: "check-circle",
-		title: "Attendance",
+		icon: "dollar-sign",
+		title: "Expense Claims",
 		route: {
-			name: "Login",
+			name: "ExpenseClaims",
 		},
 		current: false,
 	},
 	{
-		icon: "dollar-sign",
-		title: "Expense Claims",
+		icon: "check-circle",
+		title: "Attendance",
 		route: {
 			name: "Login",
 		},
