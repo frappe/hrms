@@ -327,6 +327,13 @@ def make_fixtures():
 		{"doctype": "Expense Claim Type", "name": _("Medical"), "expense_type": _("Medical")},
 		{"doctype": "Expense Claim Type", "name": _("Others"), "expense_type": _("Others")},
 		{"doctype": "Expense Claim Type", "name": _("Travel"), "expense_type": _("Travel")},
+		# vehicle service item
+		{"doctype": "Vehicle Service Item", "service_item": "Brake Oil"},
+		{"doctype": "Vehicle Service Item", "service_item": "Brake Pad"},
+		{"doctype": "Vehicle Service Item", "service_item": "Clutch Plate"},
+		{"doctype": "Vehicle Service Item", "service_item": "Engine Oil"},
+		{"doctype": "Vehicle Service Item", "service_item": "Oil Change"},
+		{"doctype": "Vehicle Service Item", "service_item": "Wheels"},
 		# leave type
 		{
 			"doctype": "Leave Type",
