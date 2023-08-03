@@ -1,6 +1,6 @@
 import frappe
 from frappe.query_builder import Order
-from frappe.query_builder.functions import Count, Max, Min
+from frappe.query_builder.functions import Count
 from frappe.utils import getdate
 
 
@@ -216,8 +216,6 @@ def get_expense_claims(
 			Claim.company,
 			ClaimDetail.expense_type,
 			Count(ClaimDetail.expense_type).as_("total_expenses"),
-			Min(ClaimDetail.expense_date).as_("from_date"),
-			Max(ClaimDetail.expense_date).as_("to_date"),
 		)
 		.orderby(Claim.posting_date, order=Order.desc)
 	)

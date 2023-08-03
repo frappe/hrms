@@ -11,14 +11,14 @@
 				class="flex flex-col w-full gap-1"
 			>
 				<!-- Status filter -->
-				<div class="flex flex-col" v-if="filter.fieldname === 'status'">
+				<div
+					class="flex flex-col"
+					v-if="['status', 'approval_status'].includes(filter.fieldname)"
+				>
 					<div class="text-gray-800 font-semibold text-lg">
 						{{ filter.label }}
 					</div>
-					<div
-						v-if="filter.fieldname === 'status'"
-						class="flex flex-row gap-2 mt-2"
-					>
+					<div class="flex flex-row gap-2 mt-2">
 						<Button
 							v-for="option in filter.options"
 							appearance="white"

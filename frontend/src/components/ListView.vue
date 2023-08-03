@@ -107,6 +107,7 @@ import { FeatherIcon, createResource, LoadingIndicator } from "frappe-ui"
 
 import TabButtons from "@/components/TabButtons.vue"
 import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
+import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 import ListFiltersActionSheet from "@/components/ListFiltersActionSheet.vue"
 
 const props = defineProps({
@@ -117,6 +118,10 @@ const props = defineProps({
 	fields: {
 		type: Array,
 		required: true,
+	},
+	groupBy: {
+		type: String,
+		required: false,
 	},
 	filterConfig: {
 		type: Array,
@@ -134,6 +139,7 @@ const props = defineProps({
 
 const listItemComponent = {
 	"Leave Application": markRaw(LeaveRequestItem),
+	"Expense Claim": markRaw(ExpenseClaimItem),
 }
 
 const router = useRouter()
@@ -218,6 +224,7 @@ function fetchDocumentList() {
 		doctype: props.doctype,
 		fields: props.fields,
 		filters: filters,
+		group_by: props.groupBy,
 	})
 }
 
