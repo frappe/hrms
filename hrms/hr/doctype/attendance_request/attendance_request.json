@@ -16,6 +16,7 @@
   "from_date",
   "to_date",
   "half_day",
+  "shift",
   "half_day_date",
   "reason_section",
   "reason",
@@ -117,11 +118,17 @@
    "options": "Attendance Request",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "shift",
+   "fieldtype": "Link",
+   "label": "Shift",
+   "options": "Shift Type"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-05-03 09:31:53.325203",
+ "modified": "2023-08-03 13:37:32.830560",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance Request",
