@@ -137,6 +137,7 @@ def add_assignments(start, end, filters):
 
 	filters = json.loads(filters)
 	filters.extend([["start_date", ">", start], ["end_date", "<", end], ["docstatus", "=", 1]])
+	filters = json.dumps(filters)
 
 	records = frappe.db.get_list(
 		"Shift Assignment",
