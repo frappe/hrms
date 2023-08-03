@@ -14,7 +14,25 @@
 				:doc="link"
 				:isTeamRequest="props.teamRequests"
 			/>
+			<ExpenseClaimItem
+				v-else-if="link.doctype === 'Expense Claim'"
+				:doc="link"
+				:isTeamRequest="props.teamRequests"
+			/>
 		</div>
+
+		<router-link
+			v-if="props.addListButton"
+			:to="{ name: props.listButtonRoute }"
+			v-slot="{ navigate }"
+		>
+			<Button
+				@click="navigate"
+				class="w-full !text-gray-600 py-4 mt-0 border-none bg-white hover:bg-white"
+			>
+				View List
+			</Button>
+		</router-link>
 	</div>
 	<EmptyState message="You have no requests" v-else />
 
@@ -34,6 +52,7 @@ import { ref } from "vue"
 import { IonModal } from "@ionic/vue"
 
 import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
+import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 import RequestActionSheet from "@/components/RequestActionSheet.vue"
 
 import { LEAVE_FIELDS } from "@/data/config/requestSummaryFields"
@@ -45,6 +64,14 @@ const props = defineProps({
 	teamRequests: {
 		type: Boolean,
 		default: false,
+	},
+	addListButton: {
+		type: Boolean,
+		default: false,
+	},
+	listButtonRoute: {
+		type: String,
+		default: "",
 	},
 })
 

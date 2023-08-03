@@ -1,5 +1,6 @@
 import frappe
 from frappe.query_builder import Order
+from frappe.query_builder.functions import Count, Max, Min
 from frappe.utils import getdate
 
 
@@ -24,7 +25,6 @@ def get_current_employee_info() -> dict:
 
 
 # Leaves and Holidays
-@frappe.whitelist()
 def get_leave_applications(filters: dict) -> list[dict]:
 	doctype = "Leave Application"
 	leave_applications = frappe.get_list(
@@ -191,6 +191,56 @@ def get_leave_types(employee: str, date: str) -> list:
 
 # Expense Claims
 @frappe.whitelist()
+def get_expense_claims(
+	employee: str,
+	approver_id: str = None,
+	for_approval: bool = False,
+	limit: int | None = None,
+) -> list[dict]:
+	Claim = frappe.qb.DocType("Expense Claim")
+	ClaimDetail = frappe.qb.DocType("Expense Claim Detail")
+	Company = frappe.qb.DocType("Company")
+
+	query = (
+		frappe.qb.from_(Claim)
+		.join(ClaimDetail)
+		.on(Claim.name == ClaimDetail.parent)
+		.select(
+			Claim.name,
+			Claim.employee,
+			Claim.employee_name,
+			Claim.approval_status,
+			Claim.expense_approver,
+			Claim.total_claimed_amount,
+			Claim.posting_date,
+			Claim.company,
+			ClaimDetail.expense_type,
+			Count(ClaimDetail.expense_type).as_("total_expenses"),
+			Min(ClaimDetail.expense_date).as_("from_date"),
+			Max(ClaimDetail.expense_date).as_("to_date"),
+		)
+		.orderby(Claim.posting_date, order=Order.desc)
+	)
+
+	if for_approval:
+		query = query.where(
+			(Claim.docstatus == 0)
+			& (Claim.status == "Draft")
+			& (Claim.expense_approver == approver_id)
+			& (Claim.employee != employee)
+		)
+	else:
+		query = query.where((Claim.docstatus != 2) & (Claim.employee == employee))
+
+	if limit:
+		query = query.limit(limit)
+
+	query = query.groupby(Claim.name)
+	claims = query.run(as_dict=True)
+	return claims
+
+
+@frappe.whitelist()
 def get_expense_claim_summary(employee: str) -> dict:
 	from frappe.query_builder.functions import Sum
 
@@ -233,6 +283,26 @@ def get_expense_claim_summary(employee: str) -> dict:
 	summary["currency"] = symbol or currency
 
 	return summary
+
+
+@frappe.whitelist()
+def get_company_currencies() -> dict:
+	Company = frappe.qb.DocType("Company")
+	Currency = frappe.qb.DocType("Currency")
+
+	query = (
+		frappe.qb.from_(Company)
+		.join(Currency)
+		.on(Company.default_currency == Currency.name)
+		.select(
+			Company.name,
+			Company.default_currency,
+			Currency.symbol,
+		)
+	)
+
+	companies = query.run(as_dict=True)
+	return {company.name: company.symbol or company.default_currency for company in companies}
 
 
 # Form View APIs

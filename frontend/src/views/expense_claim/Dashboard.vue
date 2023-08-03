@@ -1,7 +1,7 @@
 <template>
 	<BaseLayout pageTitle="Expense Claims">
 		<template #body>
-			<div class="flex flex-col items-center mt-5 mb-7 p-4 gap-7">
+			<div class="flex flex-col mt-5 mb-7 p-4 gap-7">
 				<ExpenseClaimSummary />
 
 				<div class="w-full">
@@ -14,6 +14,15 @@
 						</Button>
 					</router-link>
 				</div>
+
+				<div>
+					<div class="text-xl text-gray-800 font-bold">Recent Expenses</div>
+					<RequestList
+						:items="myRequests.data"
+						:addListButton="true"
+						listButtonRoute="ExpenseClaimListView"
+					/>
+				</div>
 			</div>
 		</template>
 	</BaseLayout>
@@ -22,4 +31,7 @@
 <script setup>
 import BaseLayout from "@/components/BaseLayout.vue"
 import ExpenseClaimSummary from "@/components/ExpenseClaimSummary.vue"
+import RequestList from "@/components/RequestList.vue"
+
+import { myRequests } from "@/data/claims"
 </script>

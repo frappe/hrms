@@ -7,7 +7,7 @@
 					>Total Expense Amount</span
 				>
 				<span class="text-gray-800 text-2xl font-bold leading-6">
-					{{ `${summary.data?.currency} ${total_claimed_amount}` }}
+					{{ `${company_currency} ${total_claimed_amount}` }}
 				</span>
 			</div>
 
@@ -20,9 +20,7 @@
 						<FeatherIcon name="alert-circle" class="text-yellow-500 h-3 w-3" />
 					</div>
 					<span class="text-gray-800 text-xl font-semibold leading-6">
-						{{
-							`${summary.data?.currency} ${summary.data?.total_pending_amount}`
-						}}
+						{{ `${company_currency} ${summary.data?.total_pending_amount}` }}
 					</span>
 				</div>
 				<div class="flex flex-col gap-1">
@@ -33,17 +31,15 @@
 						<FeatherIcon name="check-circle" class="text-green-500 h-3 w-3" />
 					</div>
 					<span class="text-gray-800 text-xl font-semibold leading-6">
-						{{
-							`${summary.data?.currency} ${summary.data?.total_approved_amount}`
-						}}
+						{{ `${company_currency} ${summary.data?.total_approved_amount}` }}
 					</span>
 				</div>
 
 				<div class="flex flex-col gap-1">
 					<div class="flex flex-row gap-1 items-center">
-						<span class="text-gray-600 text-sm font-medium leading-5"
-							>Rejected</span
-						>
+						<span class="text-gray-600 text-sm font-medium leading-5">
+							Rejected
+						</span>
 						<FeatherIcon name="x-circle" class="text-red-500 h-3 w-3" />
 					</div>
 					<span class="text-gray-800 text-xl font-semibold leading-6">
@@ -60,6 +56,8 @@
 <script setup>
 import { FeatherIcon, createResource } from "frappe-ui"
 import { computed, inject } from "vue"
+
+import { getCompanyCurrency } from "@/data/company"
 
 const employee = inject("$employee")
 
@@ -78,4 +76,8 @@ const total_claimed_amount = computed(() => {
 		summary.data?.total_rejected_amount
 	)
 })
+
+const company_currency = computed(() =>
+	getCompanyCurrency(employee.data.company)
+)
 </script>
