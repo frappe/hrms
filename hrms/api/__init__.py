@@ -199,7 +199,6 @@ def get_expense_claims(
 ) -> list[dict]:
 	Claim = frappe.qb.DocType("Expense Claim")
 	ClaimDetail = frappe.qb.DocType("Expense Claim Detail")
-	Company = frappe.qb.DocType("Company")
 
 	query = (
 		frappe.qb.from_(Claim)
@@ -285,6 +284,36 @@ def get_expense_claim_summary(employee: str) -> dict:
 	return summary
 
 
+# Employee Advance
+@frappe.whitelist()
+def get_employee_advance_balance(employee: str) -> list[dict]:
+	Advance = frappe.qb.DocType("Employee Advance")
+
+	advances = (
+		frappe.qb.from_(Advance)
+		.select(
+			Advance.name,
+			Advance.employee,
+			Advance.status,
+			Advance.purpose,
+			Advance.paid_amount,
+			(Advance.paid_amount - (Advance.claimed_amount + Advance.return_amount)).as_("balance_amount"),
+			Advance.posting_date,
+			Advance.currency,
+		)
+		.where(
+			(Advance.docstatus == 1)
+			& (Advance.paid_amount)
+			& (Advance.employee == employee)
+			# don't need claimed & returned advances, only partly or completely paid ones
+			& (Advance.status.isin(["Paid", "Unpaid"]))
+		)
+		.orderby(Advance.posting_date, order=Order.desc)
+	).run(as_dict=True)
+
+	return advances
+
+
 @frappe.whitelist()
 def get_company_currencies() -> dict:
 	Company = frappe.qb.DocType("Company")
@@ -303,6 +332,15 @@ def get_company_currencies() -> dict:
 
 	companies = query.run(as_dict=True)
 	return {company.name: company.symbol or company.default_currency for company in companies}
+
+
+@frappe.whitelist()
+def get_currency_symbols() -> dict:
+	Currency = frappe.qb.DocType("Currency")
+
+	currencies = (frappe.qb.from_(Currency).select(Currency.name, Currency.symbol)).run(as_dict=True)
+
+	return {currency.name: currency.symbol or currency.name for currency in currencies}
 
 
 # Form View APIs

@@ -23,6 +23,13 @@
 						listButtonRoute="ExpenseClaimListView"
 					/>
 				</div>
+
+				<div>
+					<div class="text-xl text-gray-800 font-bold">
+						Employee Advance Balance
+					</div>
+					<EmployeeAdvanceBalance :items="advanceBalance.data" />
+				</div>
 			</div>
 		</template>
 	</BaseLayout>
@@ -32,6 +39,8 @@
 import BaseLayout from "@/components/BaseLayout.vue"
 import ExpenseClaimSummary from "@/components/ExpenseClaimSummary.vue"
 import RequestList from "@/components/RequestList.vue"
+import EmployeeAdvanceBalance from "@/components/EmployeeAdvanceBalance.vue"
 
 import { myRequests } from "@/data/claims"
+import { advanceBalance } from "@/data/advances"
 </script>

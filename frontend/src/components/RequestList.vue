@@ -19,6 +19,10 @@
 				:doc="link"
 				:isTeamRequest="props.teamRequests"
 			/>
+			<EmployeeAdvanceItem
+				v-else-if="link.doctype === 'Employee Advance'"
+				:doc="link"
+			/>
 		</div>
 
 		<router-link
@@ -54,6 +58,7 @@ import { IonModal } from "@ionic/vue"
 import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
 import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 import RequestActionSheet from "@/components/RequestActionSheet.vue"
+import EmployeeAdvanceItem from "@/components/EmployeeAdvanceItem.vue"
 
 import { LEAVE_FIELDS } from "@/data/config/requestSummaryFields"
 

@@ -14,9 +14,9 @@
 			<div class="flex flex-row justify-between">
 				<div class="flex flex-col gap-1">
 					<div class="flex flex-row gap-1 items-center">
-						<span class="text-gray-600 text-sm font-medium leading-5"
-							>Pending</span
-						>
+						<span class="text-gray-600 text-sm font-medium leading-5">
+							Pending
+						</span>
 						<FeatherIcon name="alert-circle" class="text-yellow-500 h-3 w-3" />
 					</div>
 					<span class="text-gray-800 text-xl font-semibold leading-6">
@@ -25,9 +25,9 @@
 				</div>
 				<div class="flex flex-col gap-1">
 					<div class="flex flex-row gap-1 items-center">
-						<span class="text-gray-600 text-sm font-medium leading-5"
-							>Approved</span
-						>
+						<span class="text-gray-600 text-sm font-medium leading-5">
+							Approved
+						</span>
 						<FeatherIcon name="check-circle" class="text-green-500 h-3 w-3" />
 					</div>
 					<span class="text-gray-800 text-xl font-semibold leading-6">
@@ -57,7 +57,7 @@
 import { FeatherIcon, createResource } from "frappe-ui"
 import { computed, inject } from "vue"
 
-import { getCompanyCurrency } from "@/data/company"
+import { getCompanyCurrency } from "@/data/currencies"
 
 const employee = inject("$employee")
 

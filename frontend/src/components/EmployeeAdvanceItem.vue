@@ -4,22 +4,25 @@
 			<div class="flex flex-row items-start gap-3 grow">
 				<FeatherIcon name="file" class="h-4 w-4 text-gray-500" />
 				<div class="flex flex-col items-start">
-					<div class="text-lg font-normal text-gray-800">
-						{{ claimTitle }}
+					<div class="text-xl font-bold text-gray-800 leading-6">
+						{{ `${currency} ${props.doc.balance_amount} /` }}
+						<span class="text-gray-600">
+							{{ `${currency} ${props.doc.paid_amount}` }}
+						</span>
 					</div>
 					<div class="text-sm font-normal text-gray-500">
 						<span>
-							{{ `${currency} ${props.doc.total_claimed_amount}` }}
+							{{ props.doc.purpose }}
 						</span>
 						<span class="whitespace-pre"> &middot; </span>
 						<span class="whitespace-nowrap">
-							{{ claimDates }}
+							{{ postingDate }}
 						</span>
 					</div>
 				</div>
 			</div>
 			<div class="flex flex-row justify-end items-center gap-2">
-				<Badge :colorMap="colorMap" :label="props.doc.approval_status" />
+				<Badge :colorMap="colorMap" :label="props.doc.status" />
 				<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
 			</div>
 		</div>
@@ -39,7 +42,7 @@
 import { FeatherIcon, Badge } from "frappe-ui"
 import { computed, inject } from "vue"
 
-import { getCompanyCurrency } from "@/data/currencies"
+import { getCurrencySymbol } from "@/data/currencies"
 
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 
@@ -55,32 +58,16 @@ const props = defineProps({
 })
 
 const colorMap = {
-	Approved: "green",
-	Rejected: "red",
-	Draft: "yellow",
+	Paid: "green",
+	Unpaid: "yellow",
+	Claimed: "blue",
+	Returned: "gray",
+	"Partly Claimed and Returned": "yellow",
 }
 
-const claimTitle = computed(() => {
-	let title = props.doc.expense_type
-	if (props.doc.total_expenses > 1) {
-		title += ` & ${props.doc.total_expenses - 1} more`
-	}
+const currency = computed(() => getCurrencySymbol(props.doc.currency))
 
-	return title
+const postingDate = computed(() => {
+	return dayjs(props.doc.posting_date).format("D MMM")
 })
-
-const claimDates = computed(() => {
-	if (!props.doc.from_date && !props.doc.to_date)
-		return dayjs(props.doc.posting_date).format("D MMM")
-
-	if (props.doc.from_date === props.doc.to_date) {
-		return dayjs(props.doc.from_date).format("D MMM")
-	} else {
-		return `${dayjs(props.doc.from_date).format("D MMM")} - ${dayjs(
-			props.doc.to_date
-		).format("D MMM")}`
-	}
-})
-
-const currency = computed(() => getCompanyCurrency(props.doc.company))
 </script>
