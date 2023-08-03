@@ -209,6 +209,7 @@ def get_expense_claims(
 			Claim.employee,
 			Claim.employee_name,
 			Claim.approval_status,
+			Claim.status,
 			Claim.expense_approver,
 			Claim.total_claimed_amount,
 			Claim.posting_date,

@@ -19,7 +19,12 @@
 				</div>
 			</div>
 			<div class="flex flex-row justify-end items-center gap-2">
-				<Badge :colorMap="colorMap" :label="props.doc.approval_status" />
+				<span
+					class="text-gray-600 bg-gray-100 font-medium rounded-lg text-xs px-2"
+				>
+					{{ props.doc.status }}
+				</span>
+				<Badge :colorMap="colorMap" :label="approvalStatus" />
 				<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
 			</div>
 		</div>
@@ -57,7 +62,7 @@ const props = defineProps({
 const colorMap = {
 	Approved: "green",
 	Rejected: "red",
-	Draft: "yellow",
+	Pending: "yellow",
 }
 
 const claimTitle = computed(() => {
@@ -83,4 +88,10 @@ const claimDates = computed(() => {
 })
 
 const currency = computed(() => getCompanyCurrency(props.doc.company))
+
+const approvalStatus = computed(() => {
+	return props.doc.approval_status === "Draft"
+		? "Pending"
+		: props.doc.approval_status
+})
 </script>
