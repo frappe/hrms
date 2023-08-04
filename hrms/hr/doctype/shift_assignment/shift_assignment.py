@@ -117,8 +117,6 @@ def has_overlapping_timings(shift_1: str, shift_2: str) -> bool:
 
 @frappe.whitelist()
 def get_events(start, end, filters=None):
-	from frappe.desk.calendar import get_event_conditions
-
 	employee = frappe.db.get_value(
 		"Employee", {"user_id": frappe.session.user}, ["name", "company"], as_dict=True
 	)
@@ -128,27 +126,32 @@ def get_events(start, end, filters=None):
 		employee = ""
 		company = frappe.db.get_value("Global Defaults", None, "default_company")
 
-	conditions = get_event_conditions("Shift Assignment", filters)
-	events = add_assignments(start, end, conditions=conditions)
+	events = add_assignments(start, end, filters)
 	return events
 
 
-def add_assignments(start, end, conditions=None):
+def add_assignments(start, end, filters):
+	import json
+
 	events = []
+	if isinstance(filters, str):
+		filters = json.loads(filters)
+	filters.extend([["start_date", ">=", start], ["end_date", "<=", end], ["docstatus", "=", 1]])
 
-	query = """select name, start_date, end_date, employee_name,
-		employee, docstatus, shift_type
-		from `tabShift Assignment` where
-		(
-			start_date >= %(start_date)s
-			or end_date <=  %(end_date)s
-			or (%(start_date)s between start_date and end_date and %(end_date)s between start_date and end_date)
-		)
-		and docstatus = 1"""
-	if conditions:
-		query += conditions
+	records = frappe.get_list(
+		"Shift Assignment",
+		filters=filters,
+		fields=[
+			"name",
+			"start_date",
+			"end_date",
+			"employee_name",
+			"employee",
+			"docstatus",
+			"shift_type",
+		],
+	)
 
-	records = frappe.db.sql(query, {"start_date": start, "end_date": end}, as_dict=True)
 	shift_timing_map = get_shift_type_timing([d.shift_type for d in records])
 
 	for d in records:
@@ -182,7 +185,9 @@ def add_assignments(start, end, conditions=None):
 def get_shift_type_timing(shift_types):
 	shift_timing_map = {}
 	data = frappe.get_all(
-		"Shift Type", filters={"name": ("IN", shift_types)}, fields=["name", "start_time", "end_time"]
+		"Shift Type",
+		filters={"name": ("IN", shift_types)},
+		fields=["name", "start_time", "end_time"],
 	)
 
 	for d in data:
@@ -364,7 +369,10 @@ def get_prev_or_next_shift(
 				if date[1] and date[1] < for_timestamp.date():
 					continue
 				shift_details = get_employee_shift(
-					employee, datetime.combine(date[0], for_timestamp.time()), consider_default_shift, None
+					employee,
+					datetime.combine(date[0], for_timestamp.time()),
+					consider_default_shift,
+					None,
 				)
 				if shift_details:
 					break
@@ -384,7 +392,10 @@ def get_employee_shift_timings(
 	curr_shift = get_employee_shift(employee, for_timestamp, consider_default_shift, "forward")
 	if curr_shift:
 		next_shift = get_employee_shift(
-			employee, curr_shift.start_datetime + timedelta(days=1), consider_default_shift, "forward"
+			employee,
+			curr_shift.start_datetime + timedelta(days=1),
+			consider_default_shift,
+			"forward",
 		)
 	prev_shift = get_employee_shift(
 		employee,
