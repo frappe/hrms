@@ -3,11 +3,11 @@
 
 import datetime
 import os
-import unittest
 
 import frappe
 from frappe import _
 from frappe.core.doctype.user_permission.test_user_permission import create_user
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, get_time, getdate, nowtime
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
@@ -17,7 +17,7 @@ from hrms.hr.doctype.job_applicant.job_applicant import get_interview_details
 from hrms.hr.doctype.job_applicant.test_job_applicant import create_job_applicant
 
 
-class TestInterview(unittest.TestCase):
+class TestInterview(FrappeTestCase):
 	def test_validations_for_designation(self):
 		job_applicant = create_job_applicant()
 		interview = create_interview_and_dependencies(

@@ -1,9 +1,8 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, nowdate
 
 from hrms.hr.doctype.staffing_plan.staffing_plan import ParentCompanyError, SubsidiaryCompanyError
@@ -11,7 +10,7 @@ from hrms.hr.doctype.staffing_plan.staffing_plan import ParentCompanyError, Subs
 test_dependencies = ["Designation"]
 
 
-class TestStaffingPlan(unittest.TestCase):
+class TestStaffingPlan(FrappeTestCase):
 	def test_staffing_plan(self):
 		_set_up()
 		frappe.db.set_value("Company", "_Test Company 3", "is_group", 1)

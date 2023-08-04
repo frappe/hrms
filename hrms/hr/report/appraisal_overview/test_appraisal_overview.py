@@ -1,5 +1,3 @@
-import unittest
-
 import frappe
 from frappe.tests.utils import FrappeTestCase
 

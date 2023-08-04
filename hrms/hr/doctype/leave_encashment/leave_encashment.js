@@ -14,6 +14,13 @@ frappe.ui.form.on('Leave Encashment', {
 				}
 			}
 		})
+		frm.set_query("leave_period", function() {
+			return {
+				filters: {
+					is_active: 1
+				}
+			}
+		})
 	},
 	refresh: function(frm) {
 		cur_frm.set_intro("");

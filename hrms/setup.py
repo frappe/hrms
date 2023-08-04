@@ -327,6 +327,13 @@ def make_fixtures():
 		{"doctype": "Expense Claim Type", "name": _("Medical"), "expense_type": _("Medical")},
 		{"doctype": "Expense Claim Type", "name": _("Others"), "expense_type": _("Others")},
 		{"doctype": "Expense Claim Type", "name": _("Travel"), "expense_type": _("Travel")},
+		# vehicle service item
+		{"doctype": "Vehicle Service Item", "service_item": "Brake Oil"},
+		{"doctype": "Vehicle Service Item", "service_item": "Brake Pad"},
+		{"doctype": "Vehicle Service Item", "service_item": "Clutch Plate"},
+		{"doctype": "Vehicle Service Item", "service_item": "Engine Oil"},
+		{"doctype": "Vehicle Service Item", "service_item": "Oil Change"},
+		{"doctype": "Vehicle Service Item", "service_item": "Wheels"},
 		# leave type
 		{
 			"doctype": "Leave Type",
@@ -534,6 +541,7 @@ def get_user_types_data():
 				"Training Program": ["read"],
 				"Training Feedback": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
 				# shifts
+				"Employee Checkin": ["read"],
 				"Shift Request": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
 				# misc
 				"Employee Grievance": ["read", "write", "create", "delete"],
@@ -611,8 +619,6 @@ def set_single_defaults():
 				doc.save()
 			except frappe.ValidationError:
 				pass
-
-	frappe.db.set_default("date_format", "dd-mm-yyyy")
 
 
 def get_post_install_patches():

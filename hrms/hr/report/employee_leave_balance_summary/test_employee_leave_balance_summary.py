@@ -2,9 +2,8 @@
 # License: GNU General Public License v3. See license.txt
 
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, flt, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -22,7 +21,7 @@ from hrms.tests.test_utils import get_first_sunday
 test_records = frappe.get_test_records("Leave Type")
 
 
-class TestEmployeeLeaveBalance(unittest.TestCase):
+class TestEmployeeLeaveBalance(FrappeTestCase):
 	def setUp(self):
 		for dt in [
 			"Leave Application",
