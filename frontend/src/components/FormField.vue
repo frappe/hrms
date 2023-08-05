@@ -73,7 +73,11 @@
 
 		<!-- Section Break -->
 		<div v-else-if="props.fieldtype === 'Section Break'">
-			<h2 v-if="props.label" class="pt-4 text-lg font-semibold text-gray-800">
+			<h2
+				v-if="props.label"
+				class="text-lg font-semibold text-gray-800"
+				:class="props.addSectionPadding ? 'pt-4' : ''"
+			>
 				{{ props.label }}
 			</h2>
 		</div>
@@ -123,6 +127,10 @@ const props = defineProps({
 	errorMessage: String,
 	minDate: String,
 	maxDate: String,
+	addSectionPadding: {
+		type: Boolean,
+		default: true,
+	},
 })
 
 const emit = defineEmits(["change", "update:modelValue"])

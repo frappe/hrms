@@ -18,49 +18,98 @@
 				</h2>
 			</header>
 
-			<div class="flex flex-col space-y-4 bg-white p-4">
-				<FormField
-					v-for="field in props.fields"
-					:key="field.name"
-					:fieldtype="field.fieldtype"
-					:fieldname="field.fieldname"
-					v-model="formModel[field.fieldname]"
-					:default="field.default"
-					:label="field.label"
-					:options="field.options"
-					:documentList="field.documentList"
-					:readOnly="Boolean(field.read_only)"
-					:reqd="Boolean(field.reqd)"
-					:hidden="Boolean(field.hidden)"
-					:errorMessage="field.error_message"
-					:minDate="field.minDate"
-					:maxDate="field.maxDate"
-				/>
-			</div>
-
-			<div class="p-4 bg-white">
-				<ErrorMessage
-					class="mb-2"
-					:message="docList.insert.error || documentResource?.setValue?.error"
-				/>
-				<Button
-					class="w-full rounded-md py-2.5 px-3.5"
-					appearance="primary"
-					@click="submitForm"
-					:disabled="saveButtonDisabled"
-					:loading="
-						docList.insert.loading || documentResource?.setValue?.loading
-					"
+			<div v-if="isFormReady">
+				<!-- Tabs -->
+				<div
+					class="px-4 bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
 				>
-					Save
-				</Button>
+					<ul class="flex flex-wrap -mb-px">
+						<li class="mr-2" v-for="tab in tabs">
+							<button
+								@click="activeTab = tab.name"
+								class="inline-block p-4 border-b-2 border-transparent rounded-t-lg"
+								:class="[
+									activeTab === tab.name
+										? 'text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500'
+										: 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300',
+								]"
+							>
+								{{ tab.name }}
+							</button>
+						</li>
+					</ul>
+				</div>
+
+				<template v-if="tabbedView" v-for="(fieldList, tabName) in tabFields">
+					<div
+						v-show="tabName === activeTab"
+						class="flex flex-col space-y-4 bg-white p-4"
+					>
+						<FormField
+							v-for="field in fieldList"
+							:key="field.name"
+							:fieldtype="field.fieldtype"
+							:fieldname="field.fieldname"
+							v-model="formModel[field.fieldname]"
+							:default="field.default"
+							:label="field.label"
+							:options="field.options"
+							:documentList="field.documentList"
+							:readOnly="Boolean(field.read_only)"
+							:reqd="Boolean(field.reqd)"
+							:hidden="Boolean(field.hidden)"
+							:errorMessage="field.error_message"
+							:minDate="field.minDate"
+							:maxDate="field.maxDate"
+							:addSectionPadding="fieldList[0].name !== field.name"
+						/>
+					</div>
+				</template>
+
+				<div class="flex flex-col space-y-4 bg-white p-4" v-else>
+					<FormField
+						v-for="field in props.fields"
+						:key="field.name"
+						:fieldtype="field.fieldtype"
+						:fieldname="field.fieldname"
+						v-model="formModel[field.fieldname]"
+						:default="field.default"
+						:label="field.label"
+						:options="field.options"
+						:documentList="field.documentList"
+						:readOnly="Boolean(field.read_only)"
+						:reqd="Boolean(field.reqd)"
+						:hidden="Boolean(field.hidden)"
+						:errorMessage="field.error_message"
+						:minDate="field.minDate"
+						:maxDate="field.maxDate"
+					/>
+				</div>
+
+				<div class="p-4 bg-white">
+					<ErrorMessage
+						class="mb-2"
+						:message="docList.insert.error || documentResource?.setValue?.error"
+					/>
+					<Button
+						class="w-full rounded-md py-2.5 px-3.5"
+						appearance="primary"
+						@click="submitForm"
+						:disabled="saveButtonDisabled"
+						:loading="
+							docList.insert.loading || documentResource?.setValue?.loading
+						"
+					>
+						Save
+					</Button>
+				</div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
-import { computed, onMounted } from "vue"
+import { computed, onMounted, ref } from "vue"
 import { useRouter } from "vue-router"
 import {
 	ErrorMessage,
@@ -89,9 +138,19 @@ const props = defineProps({
 		type: String,
 		required: false,
 	},
+	tabbedView: {
+		type: Boolean,
+		required: false,
+		default: false,
+	},
+	tabs: {
+		type: Array,
+		required: false,
+	},
 })
-const router = useRouter()
 const emit = defineEmits(["validateForm", "update:modelValue"])
+const router = useRouter()
+const activeTab = ref(props.tabs?.[0].name)
 
 const formModel = computed({
 	get() {
@@ -102,6 +161,25 @@ const formModel = computed({
 	},
 })
 
+const tabFields = computed(() => {
+	let fieldsByTab = {}
+	let fieldList = []
+	let firstFieldIndex = 0
+	let lastFieldIndex = 0
+
+	props.tabs?.forEach((tab) => {
+		lastFieldIndex = props.fields.findIndex(
+			(field) => field.fieldname === tab.lastField
+		)
+		fieldList = props.fields.slice(firstFieldIndex, lastFieldIndex)
+		fieldsByTab[tab.name] = fieldList
+		firstFieldIndex = lastFieldIndex + 1
+	})
+
+	return fieldsByTab
+})
+
+// create/update doc
 const docList = createListResource({
 	doctype: props.doctype,
 	insert: {
