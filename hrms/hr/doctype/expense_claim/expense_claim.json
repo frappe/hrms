@@ -7,19 +7,21 @@
  "document_type": "Setup",
  "engine": "InnoDB",
  "field_order": [
+  "expenses_and_advances_tab",
   "naming_series",
   "employee",
   "employee_name",
   "department",
+  "company",
   "column_break_5",
   "expense_approver",
   "approval_status",
-  "delivery_trip",
-  "is_paid",
   "expense_details",
   "expenses",
   "sb1",
   "taxes",
+  "advance_payments",
+  "advances",
   "transactions_section",
   "total_sanctioned_amount",
   "total_taxes_and_charges",
@@ -28,29 +30,29 @@
   "grand_total",
   "total_claimed_amount",
   "total_amount_reimbursed",
-  "section_break_16",
-  "posting_date",
-  "vehicle_log",
-  "task",
-  "cb1",
-  "remark",
-  "title",
-  "email_id",
+  "accounting_details_tab",
   "accounting_details",
-  "company",
+  "posting_date",
+  "is_paid",
   "mode_of_payment",
-  "clearance_date",
-  "column_break_24",
   "payable_account",
+  "column_break_24",
+  "clearance_date",
+  "remark",
+  "accounting_dimensions_tab",
   "accounting_dimensions_section",
   "project",
   "dimension_col_break",
   "cost_center",
+  "more_info_tab",
   "more_details",
   "status",
+  "task",
   "amended_from",
-  "advance_payments",
-  "advances"
+  "column_break_xdzn",
+  "delivery_trip",
+  "vehicle_log",
+  "dashboard_tab"
  ],
  "fields": [
   {
@@ -158,8 +160,10 @@
    "reqd": 1
   },
   {
+   "collapsible": 1,
    "fieldname": "sb1",
    "fieldtype": "Section Break",
+   "label": "Taxes & Charges",
    "options": "Simple"
   },
   {
@@ -193,10 +197,6 @@
    "remember_last_selected_value": 1
   },
   {
-   "fieldname": "cb1",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "total_amount_reimbursed",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -214,27 +214,8 @@
    "oldfieldtype": "Small Text"
   },
   {
-   "allow_on_submit": 1,
-   "default": "{employee_name}",
-   "fieldname": "title",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Title",
-   "no_copy": 1
-  },
-  {
-   "fieldname": "email_id",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Employees Email Id",
-   "oldfieldname": "email_id",
-   "oldfieldtype": "Data",
-   "print_hide": 1
-  },
-  {
    "fieldname": "accounting_details",
-   "fieldtype": "Section Break",
-   "label": "Accounting Details"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "company",
@@ -277,10 +258,8 @@
    "options": "Cost Center"
   },
   {
-   "collapsible": 1,
    "fieldname": "more_details",
-   "fieldtype": "Section Break",
-   "label": "More Details"
+   "fieldtype": "Section Break"
   },
   {
    "default": "Draft",
@@ -308,6 +287,7 @@
    "width": "160px"
   },
   {
+   "collapsible": 1,
    "fieldname": "advance_payments",
    "fieldtype": "Section Break",
    "label": "Advance Payments"
@@ -327,8 +307,7 @@
   },
   {
    "fieldname": "accounting_dimensions_section",
-   "fieldtype": "Section Break",
-   "label": "Accounting Dimensions"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "dimension_col_break",
@@ -339,10 +318,6 @@
    "fieldtype": "Table",
    "label": "Expense Taxes and Charges",
    "options": "Expense Taxes and Charges"
-  },
-  {
-   "fieldname": "section_break_16",
-   "fieldtype": "Section Break"
   },
   {
    "fieldname": "transactions_section",
@@ -373,13 +348,43 @@
    "fieldtype": "Link",
    "label": "Delivery Trip",
    "options": "Delivery Trip"
+  },
+  {
+   "fieldname": "column_break_xdzn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "accounting_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Accounting Details"
+  },
+  {
+   "fieldname": "accounting_dimensions_tab",
+   "fieldtype": "Tab Break",
+   "label": "Accounting Dimensions"
+  },
+  {
+   "fieldname": "more_info_tab",
+   "fieldtype": "Tab Break",
+   "label": "More Info"
+  },
+  {
+   "fieldname": "dashboard_tab",
+   "fieldtype": "Tab Break",
+   "label": "Dashboard",
+   "show_dashboard": 1
+  },
+  {
+   "fieldname": "expenses_and_advances_tab",
+   "fieldtype": "Tab Break",
+   "label": "Expenses & Advances"
   }
  ],
  "icon": "fa fa-money",
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-11-22 16:26:57.787838",
+ "modified": "2023-08-05 18:33:30.144486",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim",
@@ -445,6 +450,7 @@
  "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "timeline_field": "employee",
- "title_field": "title"
+ "title_field": "employee_name"
 }
