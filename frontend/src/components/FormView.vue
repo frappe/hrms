@@ -1,6 +1,8 @@
 <template>
 	<div class="flex flex-col h-screen w-screen" v-if="isFormReady">
-		<div class="w-full sm:w-96">
+		<div
+			class="w-full h-full bg-white sm:w-96 flex flex-col relative overflow-y-auto"
+		>
 			<header
 				class="flex flex-row gap-1 bg-white shadow-sm py-4 px-2 items-center border-b sticky top-0 z-10"
 			>
@@ -18,10 +20,11 @@
 				</h2>
 			</header>
 
-			<div v-if="isFormReady">
+			<!-- Form -->
+			<div class="bg-white grow">
 				<!-- Tabs -->
 				<div
-					class="px-4 bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
+					class="px-4 text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
 				>
 					<ul class="flex flex-wrap -mb-px">
 						<li class="mr-2" v-for="tab in tabs">
@@ -43,7 +46,7 @@
 				<template v-if="tabbedView" v-for="(fieldList, tabName) in tabFields">
 					<div
 						v-show="tabName === activeTab"
-						class="flex flex-col space-y-4 bg-white p-4"
+						class="flex flex-col space-y-4 p-4"
 					>
 						<FormField
 							v-for="field in fieldList"
@@ -66,7 +69,7 @@
 					</div>
 				</template>
 
-				<div class="flex flex-col space-y-4 bg-white p-4" v-else>
+				<div class="flex flex-col space-y-4 p-4" v-else>
 					<FormField
 						v-for="field in props.fields"
 						:key="field.name"
@@ -85,24 +88,27 @@
 						:maxDate="field.maxDate"
 					/>
 				</div>
+			</div>
 
-				<div class="p-4 bg-white">
-					<ErrorMessage
-						class="mb-2"
-						:message="docList.insert.error || documentResource?.setValue?.error"
-					/>
-					<Button
-						class="w-full rounded-md py-2.5 px-3.5"
-						appearance="primary"
-						@click="submitForm"
-						:disabled="saveButtonDisabled"
-						:loading="
-							docList.insert.loading || documentResource?.setValue?.loading
-						"
-					>
-						Save
-					</Button>
-				</div>
+			<!-- Bottom Save Button -->
+			<div
+				class="p-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-xl"
+			>
+				<ErrorMessage
+					class="mb-2"
+					:message="docList.insert.error || documentResource?.setValue?.error"
+				/>
+				<Button
+					class="w-full rounded-md py-2.5 px-3.5"
+					appearance="primary"
+					@click="submitForm"
+					:disabled="saveButtonDisabled"
+					:loading="
+						docList.insert.loading || documentResource?.setValue?.loading
+					"
+				>
+					Save
+				</Button>
 			</div>
 		</div>
 	</div>
