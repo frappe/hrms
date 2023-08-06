@@ -27,7 +27,11 @@
 
 		<!-- Text -->
 		<Input
-			v-else-if="['Small Text', 'Text', 'Long Text'].includes(props.fieldtype)"
+			v-else-if="
+				['Text Editor', 'Small Text', 'Text', 'Long Text'].includes(
+					props.fieldtype
+				)
+			"
 			type="textarea"
 			:value="modelValue"
 			:placeholder="`Enter ${props.label}`"
@@ -62,7 +66,7 @@
 
 		<!-- Float/Int field -->
 		<Input
-			v-else-if="['Float', 'Int'].includes(props.fieldtype)"
+			v-else-if="['Float', 'Int', 'Currency'].includes(props.fieldtype)"
 			type="number"
 			:value="modelValue"
 			@input="(v) => emit('update:modelValue', v)"
@@ -118,10 +122,10 @@ const props = defineProps({
 	label: String,
 	options: [String, Array],
 	documentList: Array,
-	readOnly: Boolean,
-	reqd: Boolean,
+	readOnly: [Boolean, Number],
+	reqd: [Boolean, Number],
 	hidden: {
-		type: Boolean,
+		type: [Boolean, Number],
 		default: false,
 	},
 	errorMessage: String,
@@ -141,6 +145,7 @@ const SUPPORTED_FIELD_TYPES = [
 	"Small Text",
 	"Text",
 	"Long Text",
+	"Text Editor",
 	"Check",
 	"Data",
 	"Float",
@@ -149,6 +154,7 @@ const SUPPORTED_FIELD_TYPES = [
 	"Date",
 	"Time",
 	"Datetime",
+	"Currency",
 ]
 
 let linkFieldList = ref([])
@@ -200,9 +206,11 @@ function setDefaultValue() {
 	if (props.modelValue) return
 
 	if (props.default) {
-		props.fieldtype === "Check"
-			? emit("update:modelValue", props.default === "1" ? true : false)
-			: emit("update:modelValue", props.default)
+		if (props.fieldtype === "Check")
+			emit("update:modelValue", props.default === "1" ? true : false)
+		else if (props.fieldtype === "Date" && props.default === "Today")
+			emit("update:modelValue", dayjs().format("YYYY-MM-DD"))
+		else emit("update:modelValue", props.default)
 	} else {
 		props.fieldtype === "Check"
 			? emit("update:modelValue", false)

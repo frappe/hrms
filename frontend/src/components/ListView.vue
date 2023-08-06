@@ -188,7 +188,8 @@ function initializeFilters() {
 initializeFilters()
 
 function prepareFilters() {
-	let condition, value = ""
+	let condition = ""
+	let value = ""
 	appliedFilters.value = []
 
 	for (const fieldname in filterMap) {

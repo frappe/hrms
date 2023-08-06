@@ -48,24 +48,30 @@
 						v-show="tabName === activeTab"
 						class="flex flex-col space-y-4 p-4"
 					>
-						<FormField
-							v-for="field in fieldList"
-							:key="field.name"
-							:fieldtype="field.fieldtype"
-							:fieldname="field.fieldname"
-							v-model="formModel[field.fieldname]"
-							:default="field.default"
-							:label="field.label"
-							:options="field.options"
-							:documentList="field.documentList"
-							:readOnly="Boolean(field.read_only)"
-							:reqd="Boolean(field.reqd)"
-							:hidden="Boolean(field.hidden)"
-							:errorMessage="field.error_message"
-							:minDate="field.minDate"
-							:maxDate="field.maxDate"
-							:addSectionPadding="fieldList[0].name !== field.name"
-						/>
+						<template v-for="field in fieldList" :key="field.fieldname">
+							<slot
+								v-if="field.fieldtype == 'Table'"
+								:name="field.fieldname"
+							></slot>
+
+							<FormField
+								v-else
+								:fieldtype="field.fieldtype"
+								:fieldname="field.fieldname"
+								v-model="formModel[field.fieldname]"
+								:default="field.default"
+								:label="field.label"
+								:options="field.options"
+								:documentList="field.documentList"
+								:readOnly="Boolean(field.read_only)"
+								:reqd="Boolean(field.reqd)"
+								:hidden="Boolean(field.hidden)"
+								:errorMessage="field.error_message"
+								:minDate="field.minDate"
+								:maxDate="field.maxDate"
+								:addSectionPadding="fieldList[0].name !== field.name"
+							/>
+						</template>
 					</div>
 				</template>
 
