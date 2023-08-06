@@ -188,8 +188,7 @@ function initializeFilters() {
 initializeFilters()
 
 function prepareFilters() {
-	let condition,
-		value = ""
+	let condition, value = ""
 	appliedFilters.value = []
 
 	for (const fieldname in filterMap) {
@@ -204,7 +203,7 @@ function applyFilters() {
 	prepareFilters()
 	fetchDocumentList()
 	modalController.dismiss()
-	areFiltersApplied.value = true
+	areFiltersApplied.value = appliedFilters.value.length ? true : false
 }
 
 function clearFilters() {

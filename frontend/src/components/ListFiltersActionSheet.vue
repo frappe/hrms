@@ -22,7 +22,7 @@
 						<Button
 							v-for="option in filter.options"
 							appearance="white"
-							@click="filters[filter.fieldname].value = option"
+							@click="setStatusFilter(filter.fieldname, option)"
 							:class="[
 								option === filters[filter.fieldname].value
 									? '!border !border-blue-500 !text-blue-500'
@@ -126,4 +126,12 @@ const filters = computed({
 		emit("update:filters", value)
 	},
 })
+
+function setStatusFilter(fieldname, value) {
+	if (filters.value[fieldname].value === value) {
+		filters.value[fieldname].value = ""
+	} else {
+		filters.value[fieldname].value = value
+	}
+}
 </script>
