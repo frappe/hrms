@@ -22,7 +22,7 @@
 			:options="selectionList"
 			@change="(v) => emit('update:modelValue', v.value)"
 			v-bind="$attrs"
-			:disabled="props.readOnly"
+			:disabled="isReadOnly"
 		/>
 
 		<!-- Text -->
@@ -38,7 +38,7 @@
 			@input="(v) => emit('update:modelValue', v)"
 			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
-			:disabled="props.readOnly"
+			:disabled="isReadOnly"
 		/>
 
 		<!-- Check -->
@@ -50,7 +50,7 @@
 			@input="(v) => emit('update:modelValue', v)"
 			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
-			:disabled="props.readOnly"
+			:disabled="isReadOnly"
 		/>
 
 		<!-- Data field -->
@@ -61,18 +61,18 @@
 			@input="(v) => emit('update:modelValue', v)"
 			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
-			:disabled="props.readOnly"
+			:disabled="isReadOnly"
 		/>
 
 		<!-- Float/Int field -->
 		<Input
-			v-else-if="['Float', 'Int', 'Currency'].includes(props.fieldtype)"
+			v-else-if="isNumberType"
 			type="number"
 			:value="modelValue"
 			@input="(v) => emit('update:modelValue', v)"
 			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
-			:disabled="props.readOnly"
+			:disabled="isReadOnly"
 		/>
 
 		<!-- Section Break -->
@@ -98,7 +98,7 @@
 			@input="(v) => emit('update:modelValue', v)"
 			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
-			:disabled="props.readOnly"
+			:disabled="isReadOnly"
 			:min="props.minDate"
 			:max="props.maxDate"
 		/>
@@ -166,6 +166,14 @@ const showField = computed(() => {
 	return SUPPORTED_FIELD_TYPES.includes(props.fieldtype) && !props.hidden
 })
 
+const isNumberType = computed(() => {
+	return ["Int", "Float", "Currency"].includes(props.fieldtype)
+})
+
+const isReadOnly = computed(() => {
+	return Boolean(props.readOnly)
+})
+
 const selectionList = computed(() => {
 	if (props.fieldtype == "Link" && props.options) {
 		return props.documentList || linkFieldList.value.data
@@ -206,11 +214,15 @@ function setDefaultValue() {
 	if (props.modelValue) return
 
 	if (props.default) {
-		if (props.fieldtype === "Check")
+		if (props.fieldtype === "Check") {
 			emit("update:modelValue", props.default === "1" ? true : false)
-		else if (props.fieldtype === "Date" && props.default === "Today")
+		} else if (props.fieldtype === "Date" && props.default === "Today") {
 			emit("update:modelValue", dayjs().format("YYYY-MM-DD"))
-		else emit("update:modelValue", props.default)
+		} else if (isNumberType.value) {
+			emit("update:modelValue", parseFloat(props.default || 0))
+		} else {
+			emit("update:modelValue", props.default)
+		}
 	} else {
 		props.fieldtype === "Check"
 			? emit("update:modelValue", false)
