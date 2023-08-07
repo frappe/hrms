@@ -9,6 +9,7 @@
 				:id="props.id"
 				:tabbedView="true"
 				:tabs="tabs"
+				@validateForm="validateForm"
 			>
 				<!-- Expenses child table -->
 				<template #expenses>
@@ -168,6 +169,62 @@
 						</ion-modal>
 					</template>
 				</template>
+
+				<template #advances>
+					<div class="flex flex-row justify-between items-center">
+						<h2 class="text-lg font-semibold text-gray-800">
+							Settle against Advances
+						</h2>
+					</div>
+
+					<div class="flex flex-col gap-2.5">
+						<!-- Advance Card -->
+						<div
+							v-for="advance in expenseClaim.advances"
+							:key="advance.name"
+							class="flex flex-col bg-white border shadow-sm rounded-lg p-3.5 cursor-pointer"
+							:class="advance.selected ? 'border-blue-500' : ''"
+							@click="advance.selected = !advance.selected"
+						>
+							<div class="flex flex-row justify-between items-center">
+								<div class="flex flex-row items-start gap-3">
+									<Input
+										type="checkbox"
+										class="mt-0.5"
+										v-model="advance.selected"
+									/>
+
+									<div class="flex flex-col items-start gap-1">
+										<div class="text-lg font-semibold text-gray-800">
+											{{ advance.purpose || advance.employee_advance }}
+										</div>
+										<div
+											class="flex flex-row items-center gap-3 justify-between"
+										>
+											<div class="text-sm font-normal text-gray-500">
+												{{
+													`Unclaimed Amount: ${currency} ${advance.unclaimed_amount}`
+												}}
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="flex flex-row items-center gap-2">
+									<span class="text-normal">
+										{{ currency }}
+									</span>
+									<Input
+										type="number"
+										class="w-20"
+										v-model="advance.allocated_amount"
+										@input="(v) => (advance.selected = v)"
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
+				</template>
 			</FormView>
 		</ion-content>
 	</ion-page>
@@ -175,7 +232,7 @@
 
 <script setup>
 import { IonPage, IonContent, IonModal, modalController } from "@ionic/vue"
-import { createResource, FeatherIcon } from "frappe-ui"
+import { createResource, FeatherIcon, Input } from "frappe-ui"
 import { computed, ref, watch, inject } from "vue"
 
 import FormView from "@/components/FormView.vue"
@@ -196,11 +253,19 @@ const props = defineProps({
 	},
 })
 
+const tabs = [
+	{ name: "Expenses", lastField: "taxes" },
+	{ name: "Advances", lastField: "advances" },
+	{ name: "Totals", lastField: "cost_center" },
+]
+
 // reactive object to store form data
 const expenseClaim = ref({
 	employee: employee.data.name,
 	company: employee.data.company,
 })
+
+const currency = computed(() => getCompanyCurrency(expenseClaim.value.company))
 
 // get form fields
 const formFields = createResource({
@@ -255,30 +320,46 @@ const taxesTableFields = createResource({
 })
 taxesTableFields.reload()
 
-const tabs = [
-	{
-		name: "Expenses",
-		lastField: "taxes",
+// resources
+const advances = createResource({
+	url: "hrms.hr.doctype.expense_claim.expense_claim.get_advances",
+	params: { employee: employee.data.name },
+	onSuccess(data) {
+		// set advances
+		expenseClaim.value.advances = []
+		data.forEach((advance) => {
+			expenseClaim.value.advances.push({
+				employee_advance: advance.name,
+				purpose: advance.purpose,
+				posting_date: advance.posting_date,
+				advance_account: advance.advance_account,
+				advance_paid: advance.paid_amount,
+				unclaimed_amount: advance.paid_amount - advance.claimed_amount,
+				allocated_amount: 0,
+			})
+		})
 	},
-	{
-		name: "Advances",
-		lastField: "advances",
-	},
-	{
-		name: "Totals",
-		lastField: "cost_center",
-	},
-]
-
-const currency = computed(() => getCompanyCurrency(expenseClaim.value.company))
+})
 
 // form scripts
+watch(
+	() => expenseClaim.value.employee && !props.id,
+	(_value) => {
+		advances.reload()
+	},
+	{ immediate: true }
+)
 
 // helper functions
 function getFilteredFields(fields) {
 	// reduce noise from the form view by excluding unnecessary fields
 	// ex: employee and other details can be fetched from the session user
-	const excludeFields = ["naming_series", "task", "taxes_and_charges_sb"]
+	const excludeFields = [
+		"naming_series",
+		"task",
+		"taxes_and_charges_sb",
+		"advance_payments_sb",
+	]
 	const extraFields = [
 		"employee",
 		"employee_name",
@@ -346,5 +427,30 @@ function calculateGrandTotal() {
 		parseFloat(expenseClaim.value.total_sanctioned_amount || 0) +
 		parseFloat(expenseClaim.value.total_taxes_and_charges || 0) -
 		parseFloat(expenseClaim.value.total_advance_amount || 0)
+
+	setAdvanceAmount()
+}
+
+function setAdvanceAmount() {
+	let amount_to_be_allocated = parseFloat(expenseClaim.value.grand_total)
+
+	expenseClaim?.value?.advances?.forEach((advance) => {
+		if (amount_to_be_allocated >= parseFloat(advance.unclaimed_amount)) {
+			advance.allocated_amount = parseFloat(advance.unclaimed_amount)
+			amount_to_be_allocated -= parseFloat(advance.allocated_amount)
+		} else {
+			advance.allocated_amount = amount_to_be_allocated
+			amount_to_be_allocated = 0
+		}
+
+		advance.selected = advance.allocated_amount > 0 ? true : false
+	})
+}
+
+function validateForm() {
+	// set selected advances
+	expenseClaim.value.advances = expenseClaim.value.advances.filter(
+		(advance) => advance.selected
+	)
 }
 </script>
