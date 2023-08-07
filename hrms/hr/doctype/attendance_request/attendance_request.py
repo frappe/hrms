@@ -109,6 +109,7 @@ class AttendanceRequest(Document):
 			doc = frappe.new_doc("Attendance")
 			doc.employee = self.employee
 			doc.attendance_date = date
+			doc.shift = self.shift
 			doc.company = self.company
 			doc.attendance_request = self.name
 			doc.status = status
