@@ -20,7 +20,7 @@
   "expenses",
   "taxes_and_charges_sb",
   "taxes",
-  "advance_payments",
+  "advance_payments_sb",
   "advances",
   "transactions_section",
   "total_sanctioned_amount",
@@ -282,7 +282,7 @@
   },
   {
    "collapsible": 1,
-   "fieldname": "advance_payments",
+   "fieldname": "advance_payments_sb",
    "fieldtype": "Section Break",
    "label": "Advance Payments"
   },
