@@ -39,6 +39,8 @@
 import { computed, ref, watch } from "vue"
 import FormField from "@/components/FormField.vue"
 
+import { claimTypesByID } from "@/data/claims"
+
 const props = defineProps({
 	fields: {
 		type: Array,
@@ -56,6 +58,14 @@ const addButtonDisabled = computed(() => {
 		}
 	})
 })
+
+// child table form scripts
+watch(
+	() => expenseItem.value.expense_type,
+	(value) => {
+		expenseItem.value.description = claimTypesByID[value]?.description
+	}
+)
 
 watch(
 	() => expenseItem.value.amount,

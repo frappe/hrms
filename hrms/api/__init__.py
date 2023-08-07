@@ -283,6 +283,20 @@ def get_expense_claim_summary(employee: str) -> dict:
 	return summary
 
 
+@frappe.whitelist()
+def get_expense_type_description(expense_type: str) -> str:
+	return frappe.db.get_value("Expense Claim Type", expense_type, "description")
+
+
+@frappe.whitelist()
+def get_expense_claim_types() -> list[dict]:
+	ClaimType = frappe.qb.DocType("Expense Claim Type")
+
+	return (frappe.qb.from_(ClaimType).select(ClaimType.name, ClaimType.description)).run(
+		as_dict=True
+	)
+
+
 # Employee Advance
 @frappe.whitelist()
 def get_employee_advance_balance(employee: str) -> list[dict]:

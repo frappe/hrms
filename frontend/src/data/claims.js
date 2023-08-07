@@ -1,5 +1,6 @@
 import { createResource } from "frappe-ui"
 import { employeeResource } from "./employee"
+import { reactive } from "vue"
 
 const transformClaimData = (data) => {
 	return data.map((claim) => {
@@ -31,5 +32,18 @@ export const teamRequests = createResource({
 	auto: true,
 	transform(data) {
 		return transformClaimData(data)
+	},
+})
+
+export let claimTypesByID = reactive({})
+
+export const claimTypesResource = createResource({
+	url: "hrms.api.get_expense_claim_types",
+	auto: true,
+	transform(data) {
+		return data.map((row) => {
+			claimTypesByID[row.name] = row
+			return row
+		})
 	},
 })

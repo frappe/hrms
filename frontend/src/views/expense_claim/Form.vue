@@ -278,7 +278,7 @@ const currency = computed(() => getCompanyCurrency(expenseClaim.value.company))
 function getFilteredFields(fields) {
 	// reduce noise from the form view by excluding unnecessary fields
 	// ex: employee and other details can be fetched from the session user
-	const excludeFields = ["naming_series", "task"]
+	const excludeFields = ["naming_series", "task", "taxes_and_charges_sb"]
 	const extraFields = [
 		"employee",
 		"employee_name",
@@ -288,7 +288,6 @@ function getFilteredFields(fields) {
 		"is_paid",
 		"mode_of_payment",
 		"clearance_date",
-		"taxes_and_charges_sb",
 	]
 
 	if (!props.id) excludeFields.push(...extraFields)
