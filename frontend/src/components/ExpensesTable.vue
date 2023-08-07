@@ -1,0 +1,166 @@
+<template>
+	<!-- Header -->
+	<div class="flex flex-row justify-between items-center">
+		<h2 class="text-lg font-semibold text-gray-800">Expenses</h2>
+		<div class="flex flex-row gap-3 items-center">
+			<span class="text-lg font-semibold text-gray-800">
+				{{ `${currency} ${expenseClaim.total_claimed_amount || 0}` }}
+			</span>
+			<Button
+				id="add-expense-modal"
+				class="text-sm"
+				icon="plus"
+				appearance="secondary"
+			/>
+		</div>
+	</div>
+
+	<!-- Table -->
+	<div
+		v-if="expenseClaim.expenses"
+		class="flex flex-col bg-white mt-5 rounded-lg border overflow-auto"
+	>
+		<div
+			class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
+			v-for="item in expenseClaim.expenses"
+			:key="item.name"
+		>
+			<div class="flex flex-col w-full justify-center gap-2.5">
+				<div class="flex flex-row items-center justify-between">
+					<div class="flex flex-row items-start gap-3 grow">
+						<div class="flex flex-col items-start">
+							<div class="text-lg font-normal text-gray-800">
+								{{ item.expense_type }}
+							</div>
+							<div class="text-sm font-normal text-gray-500">
+								<span>
+									{{ `Sanctioned: ${currency} ${item.sanctioned_amount || 0}` }}
+								</span>
+								<span class="whitespace-pre"> &middot; </span>
+								<span class="whitespace-nowrap">
+									{{ dayjs(item.expense_date).format("D MMM") }}
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="flex flex-row justify-end items-center gap-2">
+						<span class="text-gray-700 font-normal rounded-lg text-lg">
+							{{ `${currency} ${item.amount}` }}
+						</span>
+						<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<EmptyState v-else message="No expense added" />
+
+	<ion-modal
+		ref="modal"
+		trigger="add-expense-modal"
+		:initial-breakpoint="1"
+		:breakpoints="[0, 1]"
+	>
+		<!-- Add Expense Action Sheet -->
+		<div class="bg-white w-full flex flex-col items-center justify-center pb-5">
+			<div class="w-full pt-8 pb-5 border-b text-center">
+				<span class="text-gray-900 font-bold text-xl">New Expense Item</span>
+			</div>
+			<div class="w-full flex flex-col items-center justify-center gap-5 p-4">
+				<div class="flex flex-col w-full space-y-4">
+					<FormField
+						v-for="field in expensesTableFields.data"
+						:key="field.fieldname"
+						class="w-full"
+						:label="field.label"
+						:fieldtype="field.fieldtype"
+						:fieldname="field.fieldname"
+						:options="field.options"
+						:hidden="field.hidden"
+						:reqd="field.reqd"
+						:default="field.default"
+						v-model="expenseItem[field.fieldname]"
+					/>
+				</div>
+
+				<div class="flex w-full flex-row items-center justify-between gap-3">
+					<Button
+						appearance="primary"
+						class="w-full py-3 px-12"
+						@click="emit('add-expense-item', expenseItem)"
+						:disabled="addButtonDisabled"
+					>
+						Add Expense
+					</Button>
+				</div>
+			</div>
+		</div>
+	</ion-modal>
+</template>
+
+<script setup>
+import { IonModal } from "@ionic/vue"
+import { FeatherIcon, createResource } from "frappe-ui"
+import { computed, ref, watch, inject } from "vue"
+
+import FormField from "@/components/FormField.vue"
+import EmptyState from "@/components/EmptyState.vue"
+
+import { claimTypesByID } from "@/data/claims"
+
+const props = defineProps({
+	expenseClaim: {
+		type: Object,
+		required: true,
+	},
+	currency: {
+		type: String,
+		required: true,
+	},
+})
+const emit = defineEmits(["add-expense-item"])
+const dayjs = inject("$dayjs")
+const expenseItem = ref({})
+
+const addButtonDisabled = computed(() => {
+	return props.fields?.some((field) => {
+		if (field.reqd && !expenseItem.value[field.fieldname]) {
+			return true
+		}
+	})
+})
+
+const expensesTableFields = createResource({
+	url: "hrms.api.get_doctype_fields",
+	params: { doctype: "Expense Claim Detail" },
+	transform(data) {
+		const excludeFields = ["description_sb", "amounts_sb"]
+		const dimensionFields = [
+			"cost_center",
+			"project",
+			"branch",
+			"accounting_dimensions_section",
+		]
+
+		if (!props.id) excludeFields.push(...dimensionFields)
+
+		return data.filter((field) => !excludeFields.includes(field.fieldname))
+	},
+})
+expensesTableFields.reload()
+
+// child table form scripts
+watch(
+	() => expenseItem.value.expense_type,
+	(value) => {
+		expenseItem.value.description = claimTypesByID[value]?.description
+	}
+)
+
+watch(
+	() => expenseItem.value.amount,
+	(value) => {
+		expenseItem.value.sanctioned_amount = parseFloat(value)
+	}
+)
+</script>

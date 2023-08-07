@@ -1,0 +1,182 @@
+<template>
+	<template v-if="expenseClaim.expenses">
+		<div class="flex flex-row justify-between items-center">
+			<h2 class="text-lg font-semibold text-gray-800">Taxes & Charges</h2>
+			<div class="flex flex-row gap-3 items-center">
+				<span class="text-lg font-semibold text-gray-800">
+					{{ `${currency} ${expenseClaim.total_taxes_and_charges || 0}` }}
+				</span>
+				<Button
+					id="add-taxes-modal"
+					class="text-sm"
+					icon="plus"
+					appearance="secondary"
+				/>
+			</div>
+		</div>
+
+		<div
+			v-if="expenseClaim.taxes"
+			class="flex flex-col bg-white mt-5 rounded-lg border overflow-auto"
+		>
+			<div
+				class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
+				v-for="item in expenseClaim.taxes"
+				:key="item.name"
+			>
+				<div class="flex flex-col w-full justify-center gap-2.5">
+					<div class="flex flex-row items-center justify-between">
+						<div class="flex flex-row items-start gap-3 grow">
+							<div class="flex flex-col items-start">
+								<div class="text-lg font-normal text-gray-800">
+									{{ item.account_head }}
+								</div>
+								<div class="text-sm font-normal text-gray-500">
+									<span>
+										{{ `Rate: ${currency} ${item.rate || 0}` }}
+									</span>
+									<span class="whitespace-pre"> &middot; </span>
+									<span class="whitespace-nowrap">
+										{{ `Amount: ${currency} ${item.tax_amount || 0}` }}
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="flex flex-row justify-end items-center gap-2">
+							<span class="text-gray-700 font-normal rounded-lg text-lg">
+								{{ `${currency} ${item.total}` }}
+							</span>
+							<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<EmptyState v-else message="No taxes added" />
+
+		<ion-modal
+			ref="modal"
+			trigger="add-taxes-modal"
+			:initial-breakpoint="1"
+			:breakpoints="[0, 1]"
+		>
+			<!-- Add Expense Tax Action Sheet -->
+			<div
+				class="bg-white w-full flex flex-col items-center justify-center pb-5"
+			>
+				<div class="w-full pt-8 pb-5 border-b text-center">
+					<span class="text-gray-900 font-bold text-xl">Add Expense Tax</span>
+				</div>
+				<div class="w-full flex flex-col items-center justify-center gap-5 p-4">
+					<div class="flex flex-col w-full space-y-4">
+						<FormField
+							v-for="field in taxesTableFields.data"
+							:key="field.fieldname"
+							class="w-full"
+							:label="field.label"
+							:fieldtype="field.fieldtype"
+							:fieldname="field.fieldname"
+							:options="field.options"
+							:hidden="field.hidden"
+							:reqd="field.reqd"
+							:readOnly="field.read_only"
+							:default="field.default"
+							v-model="expenseTax[field.fieldname]"
+						/>
+					</div>
+
+					<div class="flex w-full flex-row items-center justify-between gap-3">
+						<Button
+							appearance="primary"
+							class="w-full py-3 px-12"
+							@click="emit('add-expense-tax', expenseTax)"
+							:disabled="addButtonDisabled"
+						>
+							Add Tax
+						</Button>
+					</div>
+				</div>
+			</div>
+		</ion-modal>
+	</template>
+</template>
+
+<script setup>
+import { IonModal } from "@ionic/vue"
+import { FeatherIcon, createResource } from "frappe-ui"
+import { computed, ref, watch, inject } from "vue"
+
+import FormField from "@/components/FormField.vue"
+import EmptyState from "@/components/EmptyState.vue"
+
+const props = defineProps({
+	expenseClaim: {
+		type: Object,
+		required: true,
+	},
+	currency: {
+		type: String,
+		required: true,
+	},
+})
+const emit = defineEmits(["add-expense-tax"])
+const expenseTax = ref({})
+
+const taxesTableFields = createResource({
+	url: "hrms.api.get_doctype_fields",
+	params: { doctype: "Expense Taxes and Charges" },
+	transform(data) {
+		const excludeFields = ["description_sb"]
+		const dimensionFields = [
+			"cost_center",
+			"project",
+			"accounting_dimensions_section",
+		]
+
+		if (!props.id) excludeFields.push(...dimensionFields)
+
+		return data.filter((field) => !excludeFields.includes(field.fieldname))
+	},
+})
+taxesTableFields.reload()
+
+const addButtonDisabled = computed(() => {
+	return props.fields?.some((field) => {
+		if (field.reqd && !expenseTax.value[field.fieldname]) {
+			return true
+		}
+	})
+})
+
+// child table scripts
+watch(
+	() => expenseTax.value.account_head,
+	(value) => {
+		// set description from account head
+		expenseTax.value.description = value.split(" - ").slice(0, -1).join(" - ")
+	}
+)
+
+watch(
+	() => expenseTax.value.rate,
+	(value) => {
+		expenseTax.value.tax_amount =
+			parseFloat(props.expenseClaim.total_sanctioned_amount) *
+			(parseFloat(value) / 100)
+		calculateTotalTax()
+	}
+)
+
+watch(
+	() => expenseTax.value.tax_amount,
+	(_value) => {
+		calculateTotalTax()
+	}
+)
+
+function calculateTotalTax() {
+	expenseTax.value.total =
+		parseFloat(props.expenseClaim.total_sanctioned_amount) +
+		parseFloat(expenseTax.value.tax_amount)
+}
+</script>
