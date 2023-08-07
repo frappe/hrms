@@ -58,6 +58,7 @@
    "read_only": 1
   },
   {
+   "fetch_from": "expense_type.description",
    "fieldname": "description",
    "fieldtype": "Text Editor",
    "in_list_view": 1,
@@ -127,7 +128,7 @@
  "idx": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-08-07 01:51:48.854616",
+ "modified": "2023-08-07 14:07:19.298844",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim Detail",
