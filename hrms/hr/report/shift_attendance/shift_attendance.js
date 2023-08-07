@@ -38,4 +38,14 @@ frappe.query_reports["Shift Attendance"] = {
       options: "Company",
     },
   ],
+  formatter: (value, row, column, data, default_formatter) => {
+    value = default_formatter(value, row, column, data);
+    if (
+      (column.fieldname === "in_time" && data.late_entry) ||
+      (column.fieldname === "out_time" && data.early_exit)
+    ) {
+      value = `<span style='color:red!important'>${value}</span>`;
+    }
+    return value;
+  },
 };

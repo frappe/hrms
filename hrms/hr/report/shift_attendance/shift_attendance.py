@@ -3,6 +3,7 @@
 
 import frappe
 from frappe import _
+from frappe.utils import flt
 
 
 def execute(filters=None):
@@ -24,7 +25,7 @@ def get_columns():
 			"label": _("Employee Name"),
 			"fieldname": "employee_name",
 			"fieldtype": "Data",
-			"width": 120,
+			"width": 150,
 		},
 		{
 			"label": _("Shift"),
@@ -54,34 +55,34 @@ def get_columns():
 		{
 			"label": _("Total Working Hours"),
 			"fieldname": "working_hours",
-			"fieldtype": "Float",
+			"fieldtype": "Data",
 			"width": 120,
 		},
 		{
 			"label": _("Late Entry"),
 			"fieldname": "late_entry",
 			"fieldtype": "Check",
-			"width": 120,
+			"width": 100,
 		},
 		{
 			"label": _("Early Exit"),
 			"fieldname": "early_exit",
 			"fieldtype": "Check",
-			"width": 120,
+			"width": 100,
 		},
 		{
 			"label": _("Department"),
 			"fieldname": "department",
 			"fieldtype": "Link",
 			"options": "Department",
-			"width": 120,
+			"width": 150,
 		},
 		{
 			"label": _("Company"),
 			"fieldname": "company",
 			"fieldtype": "Link",
 			"options": "Company",
-			"width": 120,
+			"width": 150,
 		},
 		{
 			"label": _("Shift Start Time"),
@@ -157,6 +158,7 @@ def format_data(data):
 	for d in data:
 		d.in_time = d.in_time.time()
 		d.out_time = d.out_time.time()
+		d.working_hours = flt(d.working_hours, 1)
 		d.shift_start = d.shift_start.time()
 		d.shift_end = d.shift_end.time()
 		d.shift_actual_start = d.shift_actual_start.time()
