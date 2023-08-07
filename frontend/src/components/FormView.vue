@@ -183,7 +183,7 @@ const tabFields = computed(() => {
 		lastFieldIndex = props.fields.findIndex(
 			(field) => field.fieldname === tab.lastField
 		)
-		fieldList = props.fields.slice(firstFieldIndex, lastFieldIndex)
+		fieldList = props.fields.slice(firstFieldIndex, lastFieldIndex + 1)
 		fieldsByTab[tab.name] = fieldList
 		firstFieldIndex = lastFieldIndex + 1
 	})
