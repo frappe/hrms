@@ -7,11 +7,15 @@ frappe.query_reports["Shift Attendance"] = {
 			fieldname: "from_date",
 			label: __("From Date"),
 			fieldtype: "Date",
+			reqd: 1,
+			default: frappe.datetime.month_start(),
 		},
 		{
 			fieldname: "to_date",
 			label: __("To Date"),
 			fieldtype: "Date",
+			reqd: 1,
+			default: frappe.datetime.month_end(),
 		},
 		{
 			fieldname: "employee",
@@ -36,6 +40,18 @@ frappe.query_reports["Shift Attendance"] = {
 			label: __("Company"),
 			fieldtype: "Link",
 			options: "Company",
+			reqd: 1,
+			default: frappe.defaults.get_user_default("Company"),
+		},
+		{
+			fieldname: "late_entry",
+			label: __("Late Entry"),
+			fieldtype: "Check",
+		},
+		{
+			fieldname: "early_exit",
+			label: __("Early Exit"),
+			fieldtype: "Check",
 		},
 	],
 	formatter: (value, row, column, data, default_formatter) => {
