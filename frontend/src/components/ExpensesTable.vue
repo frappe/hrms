@@ -11,6 +11,7 @@
 				class="text-sm"
 				icon="plus"
 				appearance="secondary"
+				@click="openModal()"
 			/>
 		</div>
 	</div>
@@ -22,8 +23,9 @@
 	>
 		<div
 			class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
-			v-for="item in expenseClaim.expenses"
-			:key="item.name"
+			v-for="(item, idx) in expenseClaim.expenses"
+			:key="idx"
+			@click="openModal(item, idx)"
 		>
 			<div class="flex flex-col w-full justify-center gap-2.5">
 				<div class="flex flex-row items-center justify-between">
@@ -57,14 +59,17 @@
 
 	<ion-modal
 		ref="modal"
-		trigger="add-expense-modal"
+		:is-open="isModalOpen"
+		@didDismiss="resetSelectedItem()"
 		:initial-breakpoint="1"
 		:breakpoints="[0, 1]"
 	>
 		<!-- Add Expense Action Sheet -->
 		<div class="bg-white w-full flex flex-col items-center justify-center pb-5">
 			<div class="w-full pt-8 pb-5 border-b text-center">
-				<span class="text-gray-900 font-bold text-xl">New Expense Item</span>
+				<span class="text-gray-900 font-bold text-xl">
+					{{ editingIdx === null ? "New Expense Item" : "Edit Expense Item" }}
+				</span>
 			</div>
 			<div class="w-full flex flex-col items-center justify-center gap-5 p-4">
 				<div class="flex flex-col w-full space-y-4">
@@ -87,10 +92,10 @@
 					<Button
 						appearance="primary"
 						class="w-full py-3 px-12"
-						@click="emit('add-expense-item', expenseItem)"
+						@click="closeModal()"
 						:disabled="addButtonDisabled"
 					>
-						Add Expense
+						{{ editingIdx === null ? "Add Expense" : "Update Expense" }}
 					</Button>
 				</div>
 			</div>
@@ -118,9 +123,35 @@ const props = defineProps({
 		required: true,
 	},
 })
-const emit = defineEmits(["add-expense-item"])
+const emit = defineEmits(["add-expense-item", "update-expense-item"])
 const dayjs = inject("$dayjs")
 const expenseItem = ref({})
+const editingIdx = ref(null)
+
+const isModalOpen = ref(false)
+
+const openModal = async (item, idx) => {
+	if (item) {
+		expenseItem.value = item
+		editingIdx.value = idx
+	}
+	isModalOpen.value = true
+}
+
+const closeModal = async () => {
+	if (editingIdx.value === null) {
+		emit("add-expense-item", expenseItem.value)
+	} else {
+		emit("update-expense-item", expenseItem.value, editingIdx.value)
+	}
+	resetSelectedItem()
+}
+
+function resetSelectedItem() {
+	isModalOpen.value = false
+	expenseItem.value = {}
+	editingIdx.value = null
+}
 
 const addButtonDisabled = computed(() => {
 	return props.fields?.some((field) => {

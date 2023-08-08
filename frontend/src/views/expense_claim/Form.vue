@@ -17,6 +17,7 @@
 						v-model:expenseClaim="expenseClaim"
 						:currency="currency"
 						@addExpenseItem="addExpenseItem"
+						@updateExpenseItem="updateExpenseItem"
 					/>
 				</template>
 
@@ -25,6 +26,7 @@
 						v-model:expenseClaim="expenseClaim"
 						:currency="currency"
 						@addExpenseTax="addExpenseTax"
+						@updateExpenseTax="updateExpenseTax"
 					/>
 				</template>
 
@@ -155,9 +157,21 @@ function addExpenseItem(item) {
 	modalController.dismiss()
 }
 
+function updateExpenseItem(item, idx) {
+	expenseClaim.value.expenses[idx] = item
+	calculateTotals()
+	modalController.dismiss()
+}
+
 function addExpenseTax(item) {
 	if (!expenseClaim.value.taxes) expenseClaim.value.taxes = []
 	expenseClaim.value.taxes.push(item)
+	calculateTaxes()
+	modalController.dismiss()
+}
+
+function updateExpenseTax(item, idx) {
+	expenseClaim.value.taxes[idx] = item
 	calculateTaxes()
 	modalController.dismiss()
 }
@@ -180,10 +194,11 @@ function calculateTaxes() {
 	let total_taxes_and_charges = 0
 
 	expenseClaim.value?.taxes?.forEach((item) => {
-		if (item.rate)
+		if (item.rate && !item.tax_amount) {
 			item.tax_amount =
 				parseFloat(expenseClaim.value.total_sanctioned_amount) *
 				parseFloat(item.rate / 100)
+		}
 
 		item.total =
 			parseFloat(item.tax_amount) +

@@ -11,6 +11,7 @@
 					class="text-sm"
 					icon="plus"
 					appearance="secondary"
+					@click="openModal()"
 				/>
 			</div>
 		</div>
@@ -21,8 +22,9 @@
 		>
 			<div
 				class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
-				v-for="item in expenseClaim.taxes"
+				v-for="(item, idx) in expenseClaim.taxes"
 				:key="item.name"
+				@click="openModal(item, idx)"
 			>
 				<div class="flex flex-col w-full justify-center gap-2.5">
 					<div class="flex flex-row items-center justify-between">
@@ -56,7 +58,8 @@
 
 		<ion-modal
 			ref="modal"
-			trigger="add-taxes-modal"
+			:is-open="isModalOpen"
+			@didDismiss="resetSelectedItem()"
 			:initial-breakpoint="1"
 			:breakpoints="[0, 1]"
 		>
@@ -65,7 +68,9 @@
 				class="bg-white w-full flex flex-col items-center justify-center pb-5"
 			>
 				<div class="w-full pt-8 pb-5 border-b text-center">
-					<span class="text-gray-900 font-bold text-xl">Add Expense Tax</span>
+					<span class="text-gray-900 font-bold text-xl">
+						{{ editingIdx === null ? "New Tax Entry" : "Edit Tax Entry" }}
+					</span>
 				</div>
 				<div class="w-full flex flex-col items-center justify-center gap-5 p-4">
 					<div class="flex flex-col w-full space-y-4">
@@ -89,10 +94,10 @@
 						<Button
 							appearance="primary"
 							class="w-full py-3 px-12"
-							@click="emit('add-expense-tax', expenseTax)"
+							@click="closeModal()"
 							:disabled="addButtonDisabled"
 						>
-							Add Tax
+							{{ editingIdx === null ? "Add Tax" : "Update Tax" }}
 						</Button>
 					</div>
 				</div>
@@ -119,8 +124,33 @@ const props = defineProps({
 		required: true,
 	},
 })
-const emit = defineEmits(["add-expense-tax"])
+const emit = defineEmits(["add-expense-tax", "update-expense-tax"])
 const expenseTax = ref({})
+const editingIdx = ref(null)
+
+const isModalOpen = ref(false)
+const openModal = async (item, idx) => {
+	if (item) {
+		expenseTax.value = item
+		editingIdx.value = idx
+	}
+	isModalOpen.value = true
+}
+
+const closeModal = async () => {
+	if (editingIdx.value === null) {
+		emit("add-expense-tax", expenseTax.value)
+	} else {
+		emit("update-expense-tax", expenseTax.value, editingIdx.value)
+	}
+	resetSelectedItem()
+}
+
+function resetSelectedItem() {
+	isModalOpen.value = false
+	expenseTax.value = {}
+	editingIdx.value = null
+}
 
 const taxesTableFields = createResource({
 	url: "hrms.api.get_doctype_fields",
@@ -153,16 +183,18 @@ watch(
 	() => expenseTax.value.account_head,
 	(value) => {
 		// set description from account head
-		expenseTax.value.description = value.split(" - ").slice(0, -1).join(" - ")
+		expenseTax.value.description = value?.split(" - ").slice(0, -1).join(" - ")
 	}
 )
 
 watch(
 	() => expenseTax.value.rate,
-	(value) => {
+	(newVal, oldVal) => {
+		if (editingIdx.value && newVal && !oldVal) return
+
 		expenseTax.value.tax_amount =
 			parseFloat(props.expenseClaim.total_sanctioned_amount) *
-			(parseFloat(value) / 100)
+			(parseFloat(newVal) / 100)
 		calculateTotalTax()
 	}
 )
