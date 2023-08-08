@@ -43,7 +43,11 @@
 					</ul>
 				</div>
 
-				<template v-if="tabbedView" v-for="(fieldList, tabName) in tabFields">
+				<template
+					v-if="tabbedView"
+					v-for="(fieldList, tabName, index) in tabFields"
+					:key="tabName"
+				>
 					<div
 						v-show="tabName === activeTab"
 						class="flex flex-col space-y-4 p-4"
@@ -72,6 +76,12 @@
 								:addSectionPadding="fieldList[0].name !== field.name"
 							/>
 						</template>
+
+						<FileUploaderView
+							v-if="showAttachmentView"
+							v-model="fileAttachments"
+							@handleFileSelect="handleFileSelect"
+						/>
 					</div>
 				</template>
 
@@ -92,6 +102,12 @@
 						:errorMessage="field.error_message"
 						:minDate="field.minDate"
 						:maxDate="field.maxDate"
+					/>
+
+					<FileUploaderView
+						v-if="showAttachmentView"
+						v-model="fileAttachments"
+						@handleFileSelect="handleFileSelect"
 					/>
 				</div>
 			</div>
@@ -132,6 +148,9 @@ import {
 	toast,
 } from "frappe-ui"
 import FormField from "@/components/FormField.vue"
+import FileUploaderView from "@/components/FileUploaderView.vue"
+
+import { FileAttachmentUploader } from "@/composables/index"
 
 const props = defineProps({
 	doctype: {
@@ -159,10 +178,16 @@ const props = defineProps({
 		type: Array,
 		required: false,
 	},
+	showAttachmentView: {
+		type: Boolean,
+		required: false,
+		default: false,
+	},
 })
 const emit = defineEmits(["validateForm", "update:modelValue"])
 const router = useRouter()
 const activeTab = ref(props.tabs?.[0].name)
+let fileAttachments = ref([])
 
 const formModel = computed({
 	get() {
@@ -191,11 +216,29 @@ const tabFields = computed(() => {
 	return fieldsByTab
 })
 
+const handleFileSelect = (e) => {
+	fileAttachments.value.push(...e.target.files)
+}
+
+const uploadAttachment = async (doctype, name, file) => {
+	const fileAttachmentUploader = new FileAttachmentUploader(file)
+	return fileAttachmentUploader.upload(doctype, name).promise
+}
+
+async function uploadAllAttachments(documentType, documentName) {
+	for (const attachment of fileAttachments.value) {
+		if (!attachment.uploaded) {
+			await uploadAttachment(documentType, documentName, attachment)
+			attachment.uploaded = true
+		}
+	}
+}
+
 // create/update doc
 const docList = createListResource({
 	doctype: props.doctype,
 	insert: {
-		onSuccess() {
+		async onSuccess(data) {
 			toast({
 				title: "Success",
 				text: `${props.doctype} created successfully!`,
@@ -203,6 +246,8 @@ const docList = createListResource({
 				position: "bottom-center",
 				iconClasses: "text-green-500",
 			})
+
+			await uploadAllAttachments(data.doctype, data.name)
 			router.back()
 		},
 		onError() {

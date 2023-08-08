@@ -9,6 +9,7 @@
 				:id="props.id"
 				:tabbedView="true"
 				:tabs="tabs"
+				:showAttachmentView="true"
 				@validateForm="validateForm"
 			>
 				<!-- Child Tables -->

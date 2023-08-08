@@ -405,3 +405,29 @@ def get_link_field_options(doctype: str) -> list:
 
 	link_options = frappe.get_all(doctype, fields=fields)
 	return link_options
+
+
+@frappe.whitelist()
+def upload_base64_file(content, filename, dt=None, dn=None, fieldname=None):
+	import base64
+	from mimetypes import guess_type
+
+	from frappe.handler import ALLOWED_MIMETYPES
+
+	decoded_content = base64.b64decode(content)
+	content_type = guess_type(filename)[0]
+	if content_type not in ALLOWED_MIMETYPES:
+		frappe.throw("You can only upload JPG, PNG, PDF, TXT or Microsoft documents.")
+
+	return frappe.get_doc(
+		{
+			"doctype": "File",
+			"attached_to_doctype": dt,
+			"attached_to_name": dn,
+			"attached_to_field": fieldname,
+			"folder": "Home",
+			"file_name": filename,
+			"content": decoded_content,
+			"is_private": 1,
+		}
+	).insert()

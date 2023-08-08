@@ -55,7 +55,7 @@
 			</div>
 		</div>
 	</div>
-	<EmptyState v-else message="No expense added" />
+	<EmptyState v-else message="No expenses added" />
 
 	<ion-modal
 		ref="modal"
