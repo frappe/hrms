@@ -91,6 +91,9 @@ const formFields = createResource({
 			return field
 		})
 	},
+	onSuccess(_data) {
+		expenseApproverDetails.reload()
+	},
 })
 formFields.reload()
 
@@ -112,6 +115,14 @@ const advances = createResource({
 				allocated_amount: 0,
 			})
 		})
+	},
+})
+
+const expenseApproverDetails = createResource({
+	url: "hrms.api.get_expense_approval_details",
+	params: { employee: employee.data.name },
+	onSuccess(data) {
+		setExpenseApprover(data)
 	},
 })
 
@@ -148,6 +159,24 @@ function getFilteredFields(fields) {
 	if (!props.id) excludeFields.push(...extraFields)
 
 	return fields.filter((field) => !excludeFields.includes(field.fieldname))
+}
+
+function setExpenseApprover(data) {
+	const expense_approver = formFields.data?.find(
+		(field) => field.fieldname === "expense_approver"
+	)
+	expense_approver.reqd = data?.is_mandatory
+	expense_approver.documentList = data?.department_approvers.map(
+		(approver) => ({
+			label: approver.full_name
+				? `${approver.name} : ${approver.full_name}`
+				: approver.name,
+			value: approver.name,
+		})
+	)
+
+	expenseClaim.value.expense_approver = data?.expense_approver
+	expenseClaim.value.expense_approver_name = data?.expense_approver_name
 }
 
 function addExpenseItem(item) {
