@@ -3,7 +3,7 @@
 
 import frappe
 from frappe import _
-from frappe.utils import flt, cint
+from frappe.utils import cint, flt
 
 
 def execute(filters=None):
@@ -37,13 +37,13 @@ def get_columns():
 		{
 			"label": _("In Time"),
 			"fieldname": "in_time",
-			"fieldtype": "Time",
+			"fieldtype": "Data",
 			"width": 120,
 		},
 		{
 			"label": _("Out Time"),
 			"fieldname": "out_time",
-			"fieldtype": "Time",
+			"fieldtype": "Data",
 			"width": 120,
 		},
 		{
@@ -81,25 +81,25 @@ def get_columns():
 		{
 			"label": _("Shift Start Time"),
 			"fieldname": "shift_start",
-			"fieldtype": "Time",
+			"fieldtype": "Data",
 			"width": 125,
 		},
 		{
 			"label": _("Shift End Time"),
 			"fieldname": "shift_end",
-			"fieldtype": "Time",
+			"fieldtype": "Data",
 			"width": 125,
 		},
 		{
 			"label": _("Shift Actual Start Time"),
 			"fieldname": "shift_actual_start",
-			"fieldtype": "Time",
+			"fieldtype": "Data",
 			"width": 165,
 		},
 		{
 			"label": _("Shift Actual End Time"),
 			"fieldname": "shift_actual_end",
-			"fieldtype": "Time",
+			"fieldtype": "Data",
 			"width": 165,
 		},
 	]
@@ -150,12 +150,15 @@ def get_query(filters):
 
 def format_data(data):
 	for d in data:
-		d.in_time = d.in_time.time()
-		d.out_time = d.out_time.time()
 		precision = cint(frappe.db.get_default("float_precision")) or 2
 		d.working_hours = flt(d.working_hours, precision)
-		d.shift_start = d.shift_start.time()
-		d.shift_end = d.shift_end.time()
-		d.shift_actual_start = d.shift_actual_start.time()
-		d.shift_actual_end = d.shift_actual_end.time()
+		if d.in_time.date() == d.out_time.date():
+			d.in_time = d.in_time.time()
+			d.out_time = d.out_time.time()
+		if d.shift_start.date() == d.shift_end.date():
+			d.shift_start = d.shift_start.time()
+			d.shift_end = d.shift_end.time()
+		if d.shift_actual_start.date() == d.shift_actual_end.date():
+			d.shift_actual_start = d.shift_actual_start.time()
+			d.shift_actual_end = d.shift_actual_end.time()
 	return data
