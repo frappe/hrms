@@ -9,7 +9,9 @@ from frappe.utils import cint, flt
 def execute(filters=None):
 	columns = get_columns()
 	data = get_data(filters)
-	return columns, data
+	chart = get_chart_data(data)
+	report_summary = get_report_summary(data)
+	return columns, data, None, chart, report_summary
 
 
 def get_columns():
@@ -118,6 +120,74 @@ def get_data(filters):
 	return data
 
 
+def get_report_summary(data):
+	if not data:
+		return None
+	present_records = half_day_records = absent_records = late_entries = early_exits = 0
+	for entry in data:
+		if entry.status == "Present":
+			present_records += 1
+		elif entry.status == "Half Day":
+			half_day_records += 1
+		else:
+			absent_records += 1
+		if entry.late_entry:
+			late_entries += 1
+		if entry.early_exit:
+			early_exits += 1
+	return [
+		{
+			"value": present_records,
+			"indicator": "Green",
+			"label": _("Present Records"),
+			"datatype": "Int",
+		},
+		{
+			"value": half_day_records,
+			"indicator": "Blue",
+			"label": _("Half Day Records"),
+			"datatype": "Int",
+		},
+		{
+			"value": absent_records,
+			"indicator": "Red",
+			"label": _("Absent Records"),
+			"datatype": "Int",
+		},
+		{
+			"value": late_entries,
+			"indicator": "Red",
+			"label": _("Late Entries"),
+			"datatype": "Int",
+		},
+		{
+			"value": early_exits,
+			"indicator": "Red",
+			"label": _("Early Exits"),
+			"datatype": "Int",
+		},
+	]
+
+
+def get_chart_data(data):
+	if not data:
+		return None
+	total_shift_records = {}
+	for entry in data:
+		if entry.shift not in total_shift_records:
+			total_shift_records[entry.shift] = 0
+		total_shift_records[entry.shift] += 1
+	labels = [_(d) for d in list(total_shift_records)]
+	chart = {
+		"data": {
+			"labels": labels,
+			"datasets": [{"name": _("Shift"), "values": total_shift_records.values()}],
+		},
+		"type": "donut",
+	}
+	return chart
+
+
 def get_query(filters):
 	attendance = frappe.qb.DocType("Attendance")
 	checkin = frappe.qb.DocType("Employee Checkin")
@@ -164,32 +234,32 @@ def format_data(data):
 	return data
 
 
-def format_working_ours_precision(record):
+def format_working_ours_precision(entry):
 	precision = cint(frappe.db.get_default("float_precision")) or 2
-	record.working_hours = flt(record.working_hours, precision)
-	return record
+	entry.working_hours = flt(entry.working_hours, precision)
+	return entry
 
 
-def format_in_out_time(record):
-	if record.in_time and not record.out_time and record.in_time.date() == record.attendance_date:
-		record.in_time = record.in_time.time()
-	elif record.out_time and not record.in_time and record.out_time.date() == record.attendance_date:
-		record.out_time = record.out_time.time()
-	elif record.in_time and record.out_time and record.in_time.date() == record.out_time.date():
-		record.in_time = record.in_time.time()
-		record.out_time = record.out_time.time()
-	return record
+def format_in_out_time(entry):
+	if entry.in_time and not entry.out_time and entry.in_time.date() == entry.attendance_date:
+		entry.in_time = entry.in_time.time()
+	elif entry.out_time and not entry.in_time and entry.out_time.date() == entry.attendance_date:
+		entry.out_time = entry.out_time.time()
+	elif entry.in_time and entry.out_time and entry.in_time.date() == entry.out_time.date():
+		entry.in_time = entry.in_time.time()
+		entry.out_time = entry.out_time.time()
+	return entry
 
 
-def format_shift_start_end(record):
-	if record.shift_start.date() == record.shift_end.date():
-		record.shift_start = record.shift_start.time()
-		record.shift_end = record.shift_end.time()
-	return record
+def format_shift_start_end(entry):
+	if entry.shift_start.date() == entry.shift_end.date():
+		entry.shift_start = entry.shift_start.time()
+		entry.shift_end = entry.shift_end.time()
+	return entry
 
 
-def format_shift_actual_start_end(record):
-	if record.shift_actual_start.date() == record.shift_actual_end.date():
-		record.shift_actual_start = record.shift_actual_start.time()
-		record.shift_actual_end = record.shift_actual_end.time()
-	return record
+def format_shift_actual_start_end(entry):
+	if entry.shift_actual_start.date() == entry.shift_actual_end.date():
+		entry.shift_actual_start = entry.shift_actual_start.time()
+		entry.shift_actual_end = entry.shift_actual_end.time()
+	return entry
