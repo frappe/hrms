@@ -35,6 +35,12 @@ def get_columns():
 			"width": 120,
 		},
 		{
+			"label": _("Attendance Status"),
+			"fieldname": "status",
+			"fieldtype": "Data",
+			"width": 120,
+		},
+		{
 			"label": _("In Time"),
 			"fieldname": "in_time",
 			"fieldtype": "Data",
@@ -123,6 +129,7 @@ def get_query(filters):
 			attendance.employee,
 			attendance.shift,
 			attendance.attendance_date,
+			attendance.status,
 			attendance.in_time,
 			attendance.out_time,
 			attendance.working_hours,
