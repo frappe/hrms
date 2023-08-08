@@ -33,8 +33,8 @@
 								class="inline-block p-4 border-b-2 border-transparent rounded-t-lg"
 								:class="[
 									activeTab === tab.name
-										? 'text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500'
-										: 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300',
+										? '!text-blue-600 !border-blue-600'
+										: 'hover:text-gray-600 hover:border-gray-300',
 								]"
 							>
 								{{ tab.name }}
@@ -46,7 +46,6 @@
 				<template
 					v-if="tabbedView"
 					v-for="(fieldList, tabName, index) in tabFields"
-					:key="tabName"
 				>
 					<div
 						v-show="tabName === activeTab"
@@ -78,7 +77,7 @@
 						</template>
 
 						<FileUploaderView
-							v-if="showAttachmentView"
+							v-if="showAttachmentView && index === 0"
 							v-model="fileAttachments"
 							@handleFileSelect="handleFileSelect"
 						/>
