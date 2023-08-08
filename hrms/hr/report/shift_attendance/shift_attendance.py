@@ -158,7 +158,8 @@ def format_data(data):
 	for d in data:
 		d.in_time = d.in_time.time()
 		d.out_time = d.out_time.time()
-		d.working_hours = flt(d.working_hours, 1)
+		precision = cint(frappe.db.get_default("float_precision")) or 2
+		d.working_hours = flt(d.working_hours, precision)
 		d.shift_start = d.shift_start.time()
 		d.shift_end = d.shift_end.time()
 		d.shift_actual_start = d.shift_actual_start.time()
