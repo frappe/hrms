@@ -157,15 +157,39 @@ def get_query(filters):
 
 def format_data(data):
 	for d in data:
-		precision = cint(frappe.db.get_default("float_precision")) or 2
-		d.working_hours = flt(d.working_hours, precision)
-		if d.in_time.date() == d.out_time.date():
-			d.in_time = d.in_time.time()
-			d.out_time = d.out_time.time()
-		if d.shift_start.date() == d.shift_end.date():
-			d.shift_start = d.shift_start.time()
-			d.shift_end = d.shift_end.time()
-		if d.shift_actual_start.date() == d.shift_actual_end.date():
-			d.shift_actual_start = d.shift_actual_start.time()
-			d.shift_actual_end = d.shift_actual_end.time()
+		d = format_working_ours_precision(d)
+		d = format_in_out_time(d)
+		d = format_shift_start_end(d)
+		d = format_shift_actual_start_end(d)
 	return data
+
+
+def format_working_ours_precision(record):
+	precision = cint(frappe.db.get_default("float_precision")) or 2
+	record.working_hours = flt(record.working_hours, precision)
+	return record
+
+
+def format_in_out_time(record):
+	if record.in_time and not record.out_time and record.in_time.date() == record.attendance_date:
+		record.in_time = record.in_time.time()
+	elif record.out_time and not record.in_time and record.out_time.date() == record.attendance_date:
+		record.out_time = record.out_time.time()
+	elif record.in_time and record.out_time and record.in_time.date() == record.out_time.date():
+		record.in_time = record.in_time.time()
+		record.out_time = record.out_time.time()
+	return record
+
+
+def format_shift_start_end(record):
+	if record.shift_start.date() == record.shift_end.date():
+		record.shift_start = record.shift_start.time()
+		record.shift_end = record.shift_end.time()
+	return record
+
+
+def format_shift_actual_start_end(record):
+	if record.shift_actual_start.date() == record.shift_actual_end.date():
+		record.shift_actual_start = record.shift_actual_start.time()
+		record.shift_actual_end = record.shift_actual_end.time()
+	return record
