@@ -24,7 +24,7 @@
 			<div class="bg-white grow">
 				<!-- Tabs -->
 				<div
-					class="px-4 text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
+					class="px-4 sticky top-14 z-6 bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
 				>
 					<ul class="flex flex-wrap -mb-px">
 						<li class="mr-2" v-for="tab in tabs">
