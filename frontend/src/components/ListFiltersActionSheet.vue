@@ -81,7 +81,7 @@
 <script setup>
 import { computed } from "vue"
 import FormField from "@/components/FormField.vue"
-import { Autocomplete } from "frappe-ui";
+import { Autocomplete } from "frappe-ui"
 
 const props = defineProps({
 	filterConfig: {
@@ -103,7 +103,7 @@ const filterConditionMap = {
 		{ label: "<", value: "<" },
 		{ label: ">=", value: ">=" },
 		{ label: "<=", value: "<=" },
-	]
+	],
 }
 
 const filters = computed({

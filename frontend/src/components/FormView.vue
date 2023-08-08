@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col h-screen w-screen" v-if="isFormReady">
+	<div class="flex flex-col h-full w-full" v-if="isFormReady">
 		<div
 			class="w-full h-full bg-white sm:w-96 flex flex-col relative overflow-y-auto"
 		>
@@ -113,7 +113,7 @@
 
 			<!-- Bottom Save Button -->
 			<div
-				class="p-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-xl"
+				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-xl pb-10"
 			>
 				<ErrorMessage
 					class="mb-2"
