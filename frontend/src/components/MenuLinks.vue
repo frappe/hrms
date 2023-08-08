@@ -49,7 +49,7 @@ const menuItems = ref([
 		current: false,
 	},
 	{
-		icon: "dollar-sign",
+		icon: "file",
 		title: "Expense Claims",
 		route: {
 			name: "ExpenseClaims",

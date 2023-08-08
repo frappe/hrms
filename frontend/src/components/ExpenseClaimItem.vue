@@ -2,7 +2,7 @@
 	<div class="flex flex-col w-full justify-center gap-2.5">
 		<div class="flex flex-row items-center justify-between">
 			<div class="flex flex-row items-start gap-3 grow">
-				<FeatherIcon name="file" class="h-4 w-4 text-gray-500" />
+				<ExpenseIcon class="h-5 w-5 mt-0.5 text-gray-500" />
 				<div class="flex flex-col items-start">
 					<div class="text-lg font-normal text-gray-800">
 						{{ claimTitle }}
@@ -47,6 +47,7 @@ import { computed, inject } from "vue"
 import { getCompanyCurrency } from "@/data/currencies"
 
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
+import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
 
 const dayjs = inject("$dayjs")
 const props = defineProps({
