@@ -22,17 +22,11 @@ def get_columns():
 			"width": 120,
 		},
 		{
-			"label": _("Employee Name"),
-			"fieldname": "employee_name",
-			"fieldtype": "Data",
-			"width": 150,
-		},
-		{
 			"label": _("Shift"),
 			"fieldname": "shift",
 			"fieldtype": "Link",
 			"options": "Shift Type",
-			"width": 120,
+			"width": 100,
 		},
 		{
 			"label": _("Attendance Date"),
@@ -56,19 +50,19 @@ def get_columns():
 			"label": _("Total Working Hours"),
 			"fieldname": "working_hours",
 			"fieldtype": "Data",
-			"width": 120,
+			"width": 100,
 		},
 		{
 			"label": _("Late Entry"),
 			"fieldname": "late_entry",
 			"fieldtype": "Check",
-			"width": 100,
+			"width": 80,
 		},
 		{
 			"label": _("Early Exit"),
 			"fieldname": "early_exit",
 			"fieldtype": "Check",
-			"width": 100,
+			"width": 80,
 		},
 		{
 			"label": _("Department"),
@@ -88,25 +82,25 @@ def get_columns():
 			"label": _("Shift Start Time"),
 			"fieldname": "shift_start",
 			"fieldtype": "Time",
-			"width": 120,
+			"width": 125,
 		},
 		{
 			"label": _("Shift End Time"),
 			"fieldname": "shift_end",
 			"fieldtype": "Time",
-			"width": 120,
+			"width": 125,
 		},
 		{
 			"label": _("Shift Actual Start Time"),
 			"fieldname": "shift_actual_start",
 			"fieldtype": "Time",
-			"width": 120,
+			"width": 165,
 		},
 		{
 			"label": _("Shift Actual End Time"),
 			"fieldname": "shift_actual_end",
 			"fieldtype": "Time",
-			"width": 120,
+			"width": 165,
 		},
 	]
 
@@ -127,7 +121,6 @@ def get_query(filters):
 		.on(checkin.attendance == attendance.name)
 		.select(
 			attendance.employee,
-			attendance.employee_name,
 			attendance.shift,
 			attendance.attendance_date,
 			attendance.in_time,
