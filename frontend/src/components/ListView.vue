@@ -194,6 +194,11 @@ function prepareFilters() {
 
 	for (const fieldname in filterMap) {
 		condition = filterMap[fieldname].condition
+		// accessing .value because autocomplete returns an object instead of value
+		if (typeof condition === "object" && condition !== null) {
+			condition = condition.value
+		}
+
 		value = filterMap[fieldname].value
 		if (condition && value)
 			appliedFilters.value.push([props.doctype, fieldname, condition, value])

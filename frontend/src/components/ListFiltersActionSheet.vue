@@ -39,31 +39,13 @@
 					<div class="text-gray-800 font-semibold text-lg">
 						{{ filter.label }}
 					</div>
-					<div class="flex flex-row items-center gap-2 w-full">
-						<ion-list
-							class="h-[26px] w-full rounded-md p-0 mt-1"
+					<div class="flex flex-row items-center gap-3">
+						<Autocomplete
 							v-if="filterConditionMap[filter.fieldtype]"
-						>
-							<ion-item class="rounded-md text-center justify-center">
-								<ion-select
-									class="-top-3.5 m-0 appearance-none rounded-md text-base"
-									interface="action-sheet"
-									aria-label="fruit"
-									toggle-icon=""
-									placeholder="Select Operator"
-									v-model="filters[filter.fieldname].condition"
-								>
-									<ion-select-option
-										v-for="condition in filterConditionMap[filter.fieldtype]"
-										:value="condition"
-										:key="condition"
-										:selected="condition === '='"
-									>
-										{{ condition }}
-									</ion-select-option>
-								</ion-select>
-							</ion-item>
-						</ion-list>
+							class="mt-1 w-[75px]"
+							:options="filterConditionMap[filter.fieldtype]"
+							v-model="filters[filter.fieldname].condition"
+						/>
 						<FormField
 							class="w-full"
 							:fieldtype="filter.fieldtype"
@@ -98,8 +80,8 @@
 
 <script setup>
 import { computed } from "vue"
-import { IonList, IonItem, IonSelect, IonSelectOption } from "@ionic/vue"
 import FormField from "@/components/FormField.vue"
+import { Autocomplete } from "frappe-ui";
 
 const props = defineProps({
 	filterConfig: {
@@ -115,7 +97,13 @@ const props = defineProps({
 const emit = defineEmits(["apply-filters", "clear-filters", "update:filters"])
 
 const filterConditionMap = {
-	Date: ["=", ">", "<", ">=", "<="],
+	Date: [
+		{ label: "=", value: "=" },
+		{ label: ">", value: ">" },
+		{ label: "<", value: "<" },
+		{ label: ">=", value: ">=" },
+		{ label: "<=", value: "<=" },
+	]
 }
 
 const filters = computed({
