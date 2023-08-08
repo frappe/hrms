@@ -227,14 +227,14 @@ def get_query(filters):
 
 def format_data(data):
 	for d in data:
-		d = format_working_ours_precision(d)
+		d = format_working_hours_precision(d)
 		d = format_in_out_time(d)
 		d = format_shift_start_end(d)
 		d = format_shift_actual_start_end(d)
 	return data
 
 
-def format_working_ours_precision(entry):
+def format_working_hours_precision(entry):
 	precision = cint(frappe.db.get_default("float_precision")) or 2
 	entry.working_hours = flt(entry.working_hours, precision)
 	return entry
