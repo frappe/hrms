@@ -143,6 +143,7 @@ def get_query(filters):
 			checkin.shift_actual_end,
 		)
 		.groupby(attendance.name)
+		.where(attendance.docstatus == 1)
 	)
 	for filter in filters:
 		if filter == "from_date":
