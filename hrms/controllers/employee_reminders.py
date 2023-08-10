@@ -208,12 +208,16 @@ def send_work_anniversary_reminders():
 
 	employees_joined_today = get_employees_having_an_event_today("work_anniversary")
 
+	message = _("A friendly reminder of an important date for our team.")
+	message += "<br>"
+	message += _("Everyone, let’s congratulate them on their work anniversary!")
+
 	for company, anniversary_persons in employees_joined_today.items():
 		employee_emails = get_all_employee_emails(company)
 		anniversary_person_emails = [get_employee_email(doc) for doc in anniversary_persons]
 		recipients = list(set(employee_emails) - set(anniversary_person_emails))
 
-		reminder_text, message = get_work_anniversary_reminder_text_and_message(anniversary_persons)
+		reminder_text = get_work_anniversary_reminder_text(anniversary_persons)
 		send_work_anniversary_reminder(recipients, reminder_text, anniversary_persons, message)
 
 		if len(anniversary_persons) > 1:
@@ -221,11 +225,11 @@ def send_work_anniversary_reminders():
 			for person in anniversary_persons:
 				person_email = person["user_id"] or person["personal_email"] or person["company_email"]
 				others = [d for d in anniversary_persons if d != person]
-				reminder_text, message = get_work_anniversary_reminder_text_and_message(others)
+				reminder_text = get_work_anniversary_reminder_text(others)
 				send_work_anniversary_reminder(person_email, reminder_text, others, message)
 
 
-def get_work_anniversary_reminder_text_and_message(anniversary_persons):
+def get_work_anniversary_reminder_text(anniversary_persons: list) -> str:
 	if len(anniversary_persons) == 1:
 		anniversary_person = anniversary_persons[0]["name"]
 		# Number of years completed at the company
@@ -246,12 +250,9 @@ def get_work_anniversary_reminder_text_and_message(anniversary_persons):
 
 		# converts ["Jim", "Rim", "Dim"] to Jim, Rim & Dim
 		anniversary_person = comma_sep(person_names_with_years, frappe._("{0} & {1}"), False)
-	reminder_text = _("Today {0} at our Company! 🎉").format(anniversary_person)
-	message = _("A friendly reminder of an important date for our team.")
-	message += "<br>"
-	message += _("Everyone, let’s congratulate them on their work anniversary!")
+	reminder_text = _("Today {0} at our Company! 🎉").format(_(anniversary_person))
 
-	return reminder_text, message
+	return reminder_text
 
 
 def get_pluralized_years(years):
