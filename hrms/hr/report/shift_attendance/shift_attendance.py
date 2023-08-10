@@ -183,7 +183,7 @@ def get_chart_data(data):
 			"labels": labels,
 			"datasets": [{"name": _("Shift"), "values": list(total_shift_records.values())}],
 		},
-		"type": "donut",
+		"type": "percentage",
 	}
 	return chart
 
