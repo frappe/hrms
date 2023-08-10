@@ -61,11 +61,6 @@ frappe.query_reports["Shift Attendance"] = {
 			(column.fieldname === "out_time" && data.early_exit)
 		) {
 			value = `<span style='color:red!important'>${value}</span>`;
-		} else if (
-			column.fieldname === "in_time" ||
-			column.fieldname === "out_time"
-		) {
-			value = `<span style='color:green!important'>${value}</span>`;
 		}
 		return value;
 	},
