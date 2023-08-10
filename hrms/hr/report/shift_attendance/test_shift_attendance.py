@@ -1,8 +1,7 @@
-from datetime import datetime
+from datetime import date, datetime, time
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from frappe.utils import add_days, get_time, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -34,6 +33,8 @@ class TestShiftAttendance(FrappeTestCase):
 			working_hours_threshold_for_absent=1,
 			enable_entry_grace_period=1,
 			enable_exit_grace_period=1,
+			process_attendance_after="2023-01-01",
+			last_sync_of_checkin="2023-01-04 04:00:00",
 		)
 		cls.shift2 = setup_shift_type(
 			shift_type="Shift 2",
@@ -43,107 +44,97 @@ class TestShiftAttendance(FrappeTestCase):
 			working_hours_threshold_for_absent=1,
 			enable_entry_grace_period=1,
 			enable_exit_grace_period=1,
+			process_attendance_after="2023-01-01",
+			last_sync_of_checkin="2023-01-04 04:00:00",
 		)
 
 		cls.emp1 = make_employee(
 			"employee1@example.com",
 			company="_Test Company",
-			date_of_joining=getdate("01-10-2021"),
 			default_shift="Shift 1",
 		)
 		cls.emp2 = make_employee(
 			"employee2@example.com",
 			company="_Test Company",
-			date_of_joining=getdate("01-12-2021"),
 			default_shift="Shift 2",
 		)
 
 		# Present | Early Entry | Late Exit
-		make_checkin(cls.emp1, get_timestamp("07:30:00", 2), "IN")
-		make_checkin(cls.emp1, get_timestamp("12:30:00", 2), "OUT")
+		make_checkin(cls.emp1, datetime(2023, 1, 1, 7, 30), "IN")
+		make_checkin(cls.emp1, datetime(2023, 1, 1, 12, 30), "OUT")
 		# Present | Late Entry | Late Exit
-		make_checkin(cls.emp1, get_timestamp("08:30:00", 1), "IN")
-		make_checkin(cls.emp1, get_timestamp("12:30:00", 1), "OUT")
+		make_checkin(cls.emp1, datetime(2023, 1, 2, 8, 30), "IN")
+		make_checkin(cls.emp1, datetime(2023, 1, 2, 12, 30), "OUT")
 		# Present | Early Entry | Early Exit
-		make_checkin(cls.emp1, get_timestamp("07:30:00", 0), "IN")
-		make_checkin(cls.emp1, get_timestamp("11:30:00", 0), "OUT")
+		make_checkin(cls.emp1, datetime(2023, 1, 3, 7, 30), "IN")
+		make_checkin(cls.emp1, datetime(2023, 1, 3, 11, 30), "OUT")
 		# Present | Late Entry | Early Exit
-		make_checkin(cls.emp2, get_timestamp("22:30:00", 2), "IN")
-		make_checkin(cls.emp2, get_timestamp("01:30:00", 1), "OUT")
+		make_checkin(cls.emp2, datetime(2023, 1, 1, 22, 30), "IN")
+		make_checkin(cls.emp2, datetime(2023, 1, 2, 1, 30), "OUT")
 		# Half Day | Early Entry | Early Exit
-		make_checkin(cls.emp2, get_timestamp("21:30:00", 1), "IN")
-		make_checkin(cls.emp2, get_timestamp("23:15:00", 1), "OUT")
+		make_checkin(cls.emp2, datetime(2023, 1, 2, 21, 30), "IN")
+		make_checkin(cls.emp2, datetime(2023, 1, 2, 23, 15), "OUT")
 		# Absent | Early Entry | Early Exit
-		make_checkin(cls.emp2, get_timestamp("21:30:00", 0), "IN")
-		make_checkin(cls.emp2, get_timestamp("22:15:00", 0), "OUT")
+		make_checkin(cls.emp2, datetime(2023, 1, 3, 21, 30), "IN")
+		make_checkin(cls.emp2, datetime(2023, 1, 3, 22, 15), "OUT")
 
 		cls.shift1.process_auto_attendance()
 		cls.shift2.process_auto_attendance()
 
 	def test_data(self):
-		import datetime
-
 		filters = frappe._dict(
 			{
 				"company": "_Test Company",
-				"from_date": add_days(getdate(), -2),
-				"to_date": getdate(),
+				"from_date": date(2023, 1, 1),
+				"to_date": date(2023, 1, 3),
 			}
 		)
 		report = execute(filters)
 		data = report[1]
 		for i, d in enumerate(data):
-			data[i] = {
-				k: d[k] for k in ("employee", "shift", "attendance_date", "status", "in_time", "out_time")
-			}
+			data[i] = {k: d[k] for k in ("shift", "attendance_date", "status", "in_time", "out_time")}
 		expected_data = [
 			{
-				"employee": "EMP-00001",
 				"shift": "Shift 1",
-				"attendance_date": add_days(getdate(), -2),
+				"attendance_date": date(2023, 1, 1),
 				"status": "Present",
-				"in_time": datetime.time(7, 30),
-				"out_time": datetime.time(12, 30),
+				"in_time": time(7, 30),
+				"out_time": time(12, 30),
 			},
 			{
-				"employee": "EMP-00001",
 				"shift": "Shift 1",
-				"attendance_date": add_days(getdate(), -1),
+				"attendance_date": date(2023, 1, 2),
 				"status": "Present",
-				"in_time": datetime.time(8, 30),
-				"out_time": datetime.time(12, 30),
+				"in_time": time(8, 30),
+				"out_time": time(12, 30),
 			},
 			{
-				"employee": "EMP-00001",
 				"shift": "Shift 1",
-				"attendance_date": getdate(),
+				"attendance_date": date(2023, 1, 3),
 				"status": "Present",
-				"in_time": datetime.time(7, 30),
-				"out_time": datetime.time(11, 30),
+				"in_time": time(7, 30),
+				"out_time": time(11, 30),
 			},
 			{
-				"employee": "EMP-00002",
 				"shift": "Shift 2",
-				"attendance_date": add_days(getdate(), -2),
+				"attendance_date": date(2023, 1, 1),
 				"status": "Present",
-				"in_time": get_timestamp("22:30:00", 2),
-				"out_time": get_timestamp("01:30:00", 1),
+				"in_time": datetime(2023, 1, 1, 22, 30),
+				"out_time": datetime(2023, 1, 2, 1, 30),
 			},
 			{
-				"employee": "EMP-00002",
 				"shift": "Shift 2",
-				"attendance_date": add_days(getdate(), -1),
+				"attendance_date": date(2023, 1, 2),
 				"status": "Half Day",
-				"in_time": datetime.time(21, 30),
-				"out_time": datetime.time(23, 15),
+				"in_time": time(21, 30),
+				"out_time": time(23, 15),
 			},
 			{
-				"employee": "EMP-00002",
 				"shift": "Shift 2",
-				"attendance_date": getdate(),
+				"attendance_date": date(2023, 1, 3),
 				"status": "Absent",
-				"in_time": datetime.time(21, 30),
-				"out_time": datetime.time(22, 15),
+				"in_time": time(21, 30),
+				"out_time": time(22, 15),
 			},
 		]
 		self.assertEqual(expected_data, data)
@@ -152,8 +143,8 @@ class TestShiftAttendance(FrappeTestCase):
 		filters = frappe._dict(
 			{
 				"company": "_Test Company",
-				"from_date": add_days(getdate(), -2),
-				"to_date": getdate(),
+				"from_date": date(2023, 1, 1),
+				"to_date": date(2023, 1, 3),
 			}
 		)
 		report = execute(filters)
@@ -167,8 +158,8 @@ class TestShiftAttendance(FrappeTestCase):
 		filters = frappe._dict(
 			{
 				"company": "_Test Company",
-				"from_date": add_days(getdate(), -2),
-				"to_date": getdate(),
+				"from_date": date(2023, 1, 1),
+				"to_date": date(2023, 1, 3),
 			}
 		)
 		report = execute(filters)
@@ -193,10 +184,3 @@ def make_checkin(employee, time, log_type):
 			"log_type": log_type,
 		}
 	).insert()
-
-
-# Returns timespamp after attaching 'time' to 'days_before' days before today
-def get_timestamp(time, days_before):
-	today = getdate()
-	timestamp = datetime.combine(today, get_time(time))
-	return add_days(timestamp, -days_before)
