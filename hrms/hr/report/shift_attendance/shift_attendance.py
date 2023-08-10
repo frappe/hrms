@@ -181,7 +181,7 @@ def get_chart_data(data):
 	chart = {
 		"data": {
 			"labels": labels,
-			"datasets": [{"name": _("Shift"), "values": total_shift_records.values()}],
+			"datasets": [{"name": _("Shift"), "values": list(total_shift_records.values())}],
 		},
 		"type": "donut",
 	}
