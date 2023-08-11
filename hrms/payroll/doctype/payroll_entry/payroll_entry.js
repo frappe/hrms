@@ -74,15 +74,8 @@ frappe.ui.form.on('Payroll Entry', {
 					});
 				});
 			} else if (frm.doc.docstatus == 1 && frm.doc.status == "Failed") {
-<<<<<<< HEAD
-				frm.add_custom_button(__("Create Salary Slip"), function () {
-					frm.call("create_salary_slips", {}, () => {
-						frm.reload_doc();
-					});
-=======
 				frm.add_custom_button(__("Create Salary Slips"), function () {
 					frm.call("create_salary_slips");
->>>>>>> 343f366a (fix(Payroll Entry): remove unnecessary refresh calls)
 				}).addClass("btn-primary");
 			}
 		}
@@ -128,18 +121,7 @@ frappe.ui.form.on('Payroll Entry', {
 	create_salary_slips: function (frm) {
 		frm.call({
 			doc: frm.doc,
-<<<<<<< HEAD
 			method: "create_salary_slips",
-			callback: function () {
-				frm.toolbar.refresh();
-=======
-			method: "run_doc_method",
-			args: {
-				method: "create_salary_slips",
-				dt: "Payroll Entry",
-				dn: frm.doc.name
->>>>>>> d8a101fe (fix: don't refresh toolbar after salary slip creation since `reload_doc` is already called)
-			}
 		});
 	},
 
