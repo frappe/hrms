@@ -499,7 +499,7 @@ def check_effective_date(from_date, today, frequency, allocate_on_day):
 		"First Day": get_first_day(today),
 		"Last Day": get_last_day(today),
 		"Date of Joining": from_date,
-		"First Day(Next Month)": add_days(get_last_day(add_days(today, -1)), 1)
+		"First Day(Next Month)": add_days(get_last_day(add_days(today, -1)), 1),
 	}[allocate_on_day]
 
 	if allocate_on_day == "First Day(Next Month)":
