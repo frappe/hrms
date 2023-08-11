@@ -87,7 +87,7 @@ frappe.ui.form.on('Payroll Entry', {
 			}
 		}
 
-		if (frm.doc.docstatus == 1 && frm.doc.status == "Submitted") {
+		if (frm.doc.docstatus == 1) {
 			if (frm.custom_buttons) frm.clear_custom_buttons();
 			frm.events.add_context_buttons(frm);
 		}
