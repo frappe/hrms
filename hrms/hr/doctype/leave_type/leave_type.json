@@ -218,13 +218,13 @@
    "fieldname": "allocate_on_day",
    "fieldtype": "Select",
    "label": "Allocate on Day",
-   "options": "First Day\nLast Day\nDate of Joining"
+   "options": "First Day\nLast Day\nDate of Joining\nFirst Day(Next Month)"
   }
  ],
  "icon": "fa fa-flag",
  "idx": 1,
  "links": [],
- "modified": "2023-05-26 14:15:29.695487",
+ "modified": "2023-08-11 09:31:06.255340",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Type",
