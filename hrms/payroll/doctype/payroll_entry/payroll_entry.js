@@ -15,6 +15,16 @@ frappe.ui.form.on('Payroll Entry', {
 		erpnext.accounts.dimensions.setup_dimension_filters(frm, frm.doctype);
 		frm.events.department_filters(frm);
 		frm.events.payroll_payable_account_filters(frm);
+
+		frappe.realtime.off("completed_salary_slip_creation");
+		frappe.realtime.on("completed_salary_slip_creation", function() {
+			frm.reload_doc();
+		});
+
+		frappe.realtime.off("completed_salary_slip_submission");
+		frappe.realtime.on("completed_salary_slip_submission", function() {
+			frm.reload_doc();
+		});
 	},
 
 	department_filters: function (frm) {
@@ -61,19 +71,16 @@ frappe.ui.form.on('Payroll Entry', {
 					frm.save("Submit").then(() => {
 						frm.page.clear_primary_action();
 						frm.refresh();
-						frm.events.refresh(frm);
 					});
 				});
 			} else if (frm.doc.docstatus == 1 && frm.doc.status == "Failed") {
 				frm.add_custom_button(__("Create Salary Slips"), function () {
-					frm.call("create_salary_slips", {}, () => {
-						frm.reload_doc();
-					});
+					frm.call("create_salary_slips");
 				}).addClass("btn-primary");
 			}
 		}
 
-		if (frm.doc.docstatus == 1 && frm.doc.status == "Submitted") {
+		if (frm.doc.docstatus == 1) {
 			if (frm.custom_buttons) frm.clear_custom_buttons();
 			frm.events.add_context_buttons(frm);
 		}
@@ -91,14 +98,6 @@ frappe.ui.form.on('Payroll Entry', {
 				frm.scroll_to_field("error_message");
 			});
 		}
-
-		frappe.realtime.on("completed_salary_slip_creation", function() {
-			frm.reload_doc();
-		});
-
-		frappe.realtime.on("completed_salary_slip_submission", function() {
-			frm.reload_doc();
-		});
 	},
 
 	get_employee_details: function (frm) {
@@ -130,10 +129,6 @@ frappe.ui.form.on('Payroll Entry', {
 				method: "create_salary_slips",
 				dt: "Payroll Entry",
 				dn: frm.doc.name
-			},
-			callback: function () {
-				frm.reload_doc();
-				frm.toolbar.refresh();
 			}
 		});
 	},
@@ -375,10 +370,6 @@ const submit_salary_slip = function (frm) {
 			frappe.call({
 				method: 'submit_salary_slips',
 				args: {},
-				callback: function () {
-					frm.reload_doc();
-					frm.events.refresh(frm);
-				},
 				doc: frm.doc,
 				freeze: true,
 				freeze_message: __('Submitting Salary Slips and creating Journal Entry...')
@@ -387,7 +378,6 @@ const submit_salary_slip = function (frm) {
 		function () {
 			if (frappe.dom.freeze_count) {
 				frappe.dom.unfreeze();
-				frm.events.refresh(frm);
 			}
 		}
 	);
