@@ -15,6 +15,16 @@ frappe.ui.form.on('Payroll Entry', {
 		erpnext.accounts.dimensions.setup_dimension_filters(frm, frm.doctype);
 		frm.events.department_filters(frm);
 		frm.events.payroll_payable_account_filters(frm);
+
+		frappe.realtime.off("completed_salary_slip_creation");
+		frappe.realtime.on("completed_salary_slip_creation", function() {
+			frm.reload_doc();
+		});
+
+		frappe.realtime.off("completed_salary_slip_submission");
+		frappe.realtime.on("completed_salary_slip_submission", function() {
+			frm.reload_doc();
+		});
 	},
 
 	department_filters: function (frm) {
@@ -88,14 +98,6 @@ frappe.ui.form.on('Payroll Entry', {
 				frm.scroll_to_field("error_message");
 			});
 		}
-
-		frappe.realtime.on("completed_salary_slip_creation", function() {
-			frm.reload_doc();
-		});
-
-		frappe.realtime.on("completed_salary_slip_submission", function() {
-			frm.reload_doc();
-		});
 	},
 
 	get_employee_details: function (frm) {
