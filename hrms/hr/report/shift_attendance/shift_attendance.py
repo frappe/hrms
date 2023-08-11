@@ -231,6 +231,10 @@ def get_query(filters):
 			query = query.where(attendance.attendance_date <= filters.to_date)
 		elif filter == "consider_grace_period":
 			continue
+		elif filter == "late_entry" and not filters.consider_grace_period:
+			query = query.where(attendance.in_time > checkin.shift_start)
+		elif filter == "early_exit" and not filters.consider_grace_period:
+			query = query.where(attendance.out_time < checkin.shift_end)
 		else:
 			query = query.where(attendance[filter] == filters[filter])
 	return query
