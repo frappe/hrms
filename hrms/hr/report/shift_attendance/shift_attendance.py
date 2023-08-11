@@ -118,7 +118,7 @@ def get_columns():
 def get_data(filters):
 	query = get_query(filters)
 	data = query.run(as_dict=True)
-	data = update_data(data)
+	data = update_data(data, filters)
 	return data
 
 
@@ -236,11 +236,11 @@ def get_query(filters):
 	return query
 
 
-def update_data(data):
+def update_data(data, filters):
 	for d in data:
 		d.working_hours = format_float_precision(d.working_hours)
-		d.late_entry_hrs = calculate_late_entry_hrs(d)
-		d.early_exit_hrs = calculate_early_exit_hrs(d)
+		d.late_entry_hrs = calculate_late_entry_hrs(d, filters.consider_grace_period)
+		d.early_exit_hrs = calculate_early_exit_hrs(d, filters.consider_grace_period)
 		d.in_time, d.out_time = format_in_out_time(d.in_time, d.out_time, d.attendance_date)
 		d.shift_start, d.shift_end = convert_datetime_to_time_for_same_date(d.shift_start, d.shift_end)
 		d.shift_actual_start, d.shift_actual_end = convert_datetime_to_time_for_same_date(
@@ -271,17 +271,33 @@ def convert_datetime_to_time_for_same_date(start, end):
 	return start, end
 
 
-def calculate_late_entry_hrs(entry):
-	if not entry.late_entry:
-		return
-	entry_grace_period = entry.late_entry_grace_period if entry.enable_entry_grace_period else 0
-	start_time_with_grace_period = entry.shift_start + timedelta(minutes=entry_grace_period)
-	return entry.in_time - start_time_with_grace_period
+def calculate_late_entry_hrs(entry, consider_grace_period):
+	is_late_entry = (
+		entry.late_entry
+		if consider_grace_period
+		else (entry.in_time and entry.in_time > entry.shift_start)
+	)
+	if is_late_entry:
+		entry_grace_period = (
+			entry.late_entry_grace_period
+			if (consider_grace_period and entry.enable_entry_grace_period)
+			else 0
+		)
+		start_time = entry.shift_start + timedelta(minutes=entry_grace_period)
+		return entry.in_time - start_time
 
 
-def calculate_early_exit_hrs(entry):
-	if not entry.early_exit:
-		return
-	exit_grace_period = entry.early_exit_grace_period if entry.enable_exit_grace_period else 0
-	end_time_with_grace_period = entry.shift_end - timedelta(minutes=exit_grace_period)
-	return end_time_with_grace_period - entry.out_time
+def calculate_early_exit_hrs(entry, consider_grace_period):
+	is_early_exit = (
+		entry.early_exit
+		if consider_grace_period
+		else (entry.out_time and entry.out_time < entry.shift_end)
+	)
+	if is_early_exit:
+		exit_grace_period = (
+			entry.early_exit_grace_period
+			if (consider_grace_period and entry.enable_exit_grace_period)
+			else 0
+		)
+		end_time = entry.shift_end - timedelta(minutes=exit_grace_period)
+		return end_time - entry.out_time
