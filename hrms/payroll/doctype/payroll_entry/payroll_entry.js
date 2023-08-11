@@ -129,9 +129,6 @@ frappe.ui.form.on('Payroll Entry', {
 				method: "create_salary_slips",
 				dt: "Payroll Entry",
 				dn: frm.doc.name
-			},
-			callback: function () {
-				frm.toolbar.refresh();
 			}
 		});
 	},
