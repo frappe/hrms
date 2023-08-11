@@ -128,9 +128,17 @@ frappe.ui.form.on('Payroll Entry', {
 	create_salary_slips: function (frm) {
 		frm.call({
 			doc: frm.doc,
+<<<<<<< HEAD
 			method: "create_salary_slips",
 			callback: function () {
 				frm.toolbar.refresh();
+=======
+			method: "run_doc_method",
+			args: {
+				method: "create_salary_slips",
+				dt: "Payroll Entry",
+				dn: frm.doc.name
+>>>>>>> d8a101fe (fix: don't refresh toolbar after salary slip creation since `reload_doc` is already called)
 			}
 		});
 	},
