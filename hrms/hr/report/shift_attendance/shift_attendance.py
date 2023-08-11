@@ -1,6 +1,8 @@
 # Copyright (c) 2023, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+from datetime import timedelta
+
 import frappe
 from frappe import _
 from frappe.utils import cint, flt
@@ -61,16 +63,16 @@ def get_columns():
 			"width": 100,
 		},
 		{
-			"label": _("Late Entry"),
-			"fieldname": "late_entry",
-			"fieldtype": "Check",
-			"width": 80,
+			"label": _("Late Entry By (Hrs)"),
+			"fieldname": "late_entry_hrs",
+			"fieldtype": "Time",
+			"width": 120,
 		},
 		{
-			"label": _("Early Exit"),
-			"fieldname": "early_exit",
-			"fieldtype": "Check",
-			"width": 80,
+			"label": _("Early Exit By (Hrs)"),
+			"fieldname": "early_exit_hrs",
+			"fieldtype": "Time",
+			"width": 120,
 		},
 		{
 			"label": _("Department"),
@@ -116,7 +118,7 @@ def get_columns():
 def get_data(filters):
 	query = get_query(filters)
 	data = query.run(as_dict=True)
-	data = format_data(data)
+	data = update_data(data)
 	return data
 
 
@@ -191,10 +193,13 @@ def get_chart_data(data):
 def get_query(filters):
 	attendance = frappe.qb.DocType("Attendance")
 	checkin = frappe.qb.DocType("Employee Checkin")
+	shift_type = frappe.qb.DocType("Shift Type")
 	query = (
 		frappe.qb.from_(attendance)
 		.inner_join(checkin)
 		.on(checkin.attendance == attendance.name)
+		.inner_join(shift_type)
+		.on(attendance.shift == shift_type.name)
 		.select(
 			attendance.employee,
 			attendance.shift,
@@ -211,6 +216,10 @@ def get_query(filters):
 			checkin.shift_end,
 			checkin.shift_actual_start,
 			checkin.shift_actual_end,
+			shift_type.enable_entry_grace_period,
+			shift_type.late_entry_grace_period,
+			shift_type.enable_exit_grace_period,
+			shift_type.early_exit_grace_period,
 		)
 		.groupby(attendance.name)
 		.where(attendance.docstatus == 1)
@@ -220,46 +229,59 @@ def get_query(filters):
 			query = query.where(attendance.attendance_date >= filters.from_date)
 		elif filter == "to_date":
 			query = query.where(attendance.attendance_date <= filters.to_date)
+		elif filter == "consider_grace_period":
+			continue
 		else:
 			query = query.where(attendance[filter] == filters[filter])
 	return query
 
 
-def format_data(data):
+def update_data(data):
 	for d in data:
-		d = format_working_hours_precision(d)
-		d = format_in_out_time(d)
-		d = format_shift_start_end(d)
-		d = format_shift_actual_start_end(d)
+		d.working_hours = format_float_precision(d.working_hours)
+		d.late_entry_hrs = calculate_late_entry_hrs(d)
+		d.early_exit_hrs = calculate_early_exit_hrs(d)
+		d.in_time, d.out_time = format_in_out_time(d.in_time, d.out_time, d.attendance_date)
+		d.shift_start, d.shift_end = convert_datetime_to_time_for_same_date(d.shift_start, d.shift_end)
+		d.shift_actual_start, d.shift_actual_end = convert_datetime_to_time_for_same_date(
+			d.shift_actual_start, d.shift_actual_end
+		)
 	return data
 
 
-def format_working_hours_precision(entry):
+def format_float_precision(value):
 	precision = cint(frappe.db.get_default("float_precision")) or 2
-	entry.working_hours = flt(entry.working_hours, precision)
-	return entry
+	return flt(value, precision)
 
 
-def format_in_out_time(entry):
-	if entry.in_time and not entry.out_time and entry.in_time.date() == entry.attendance_date:
-		entry.in_time = entry.in_time.time()
-	elif entry.out_time and not entry.in_time and entry.out_time.date() == entry.attendance_date:
-		entry.out_time = entry.out_time.time()
-	elif entry.in_time and entry.out_time and entry.in_time.date() == entry.out_time.date():
-		entry.in_time = entry.in_time.time()
-		entry.out_time = entry.out_time.time()
-	return entry
+def format_in_out_time(in_time, out_time, attendance_date):
+	if in_time and not out_time and in_time.date() == attendance_date:
+		in_time = in_time.time()
+	elif out_time and not in_time and out_time.date() == attendance_date:
+		out_time = out_time.time()
+	elif in_time and out_time:
+		in_time, out_time = convert_datetime_to_time_for_same_date(in_time, out_time)
+	return in_time, out_time
 
 
-def format_shift_start_end(entry):
-	if entry.shift_start.date() == entry.shift_end.date():
-		entry.shift_start = entry.shift_start.time()
-		entry.shift_end = entry.shift_end.time()
-	return entry
+def convert_datetime_to_time_for_same_date(start, end):
+	if start.date() == end.date():
+		start = start.time()
+		end = end.time()
+	return start, end
 
 
-def format_shift_actual_start_end(entry):
-	if entry.shift_actual_start.date() == entry.shift_actual_end.date():
-		entry.shift_actual_start = entry.shift_actual_start.time()
-		entry.shift_actual_end = entry.shift_actual_end.time()
-	return entry
+def calculate_late_entry_hrs(entry):
+	if not entry.late_entry:
+		return
+	entry_grace_period = entry.late_entry_grace_period if entry.enable_entry_grace_period else 0
+	start_time_with_grace_period = entry.shift_start + timedelta(minutes=entry_grace_period)
+	return entry.in_time - start_time_with_grace_period
+
+
+def calculate_early_exit_hrs(entry):
+	if not entry.early_exit:
+		return
+	exit_grace_period = entry.early_exit_grace_period if entry.enable_exit_grace_period else 0
+	end_time_with_grace_period = entry.shift_end - timedelta(minutes=exit_grace_period)
+	return end_time_with_grace_period - entry.out_time
