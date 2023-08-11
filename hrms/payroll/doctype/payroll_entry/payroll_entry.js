@@ -61,14 +61,11 @@ frappe.ui.form.on('Payroll Entry', {
 					frm.save("Submit").then(() => {
 						frm.page.clear_primary_action();
 						frm.refresh();
-						frm.events.refresh(frm);
 					});
 				});
 			} else if (frm.doc.docstatus == 1 && frm.doc.status == "Failed") {
 				frm.add_custom_button(__("Create Salary Slips"), function () {
-					frm.call("create_salary_slips", {}, () => {
-						frm.reload_doc();
-					});
+					frm.call("create_salary_slips");
 				}).addClass("btn-primary");
 			}
 		}
@@ -132,7 +129,6 @@ frappe.ui.form.on('Payroll Entry', {
 				dn: frm.doc.name
 			},
 			callback: function () {
-				frm.reload_doc();
 				frm.toolbar.refresh();
 			}
 		});
@@ -375,10 +371,6 @@ const submit_salary_slip = function (frm) {
 			frappe.call({
 				method: 'submit_salary_slips',
 				args: {},
-				callback: function () {
-					frm.reload_doc();
-					frm.events.refresh(frm);
-				},
 				doc: frm.doc,
 				freeze: true,
 				freeze_message: __('Submitting Salary Slips and creating Journal Entry...')
@@ -387,7 +379,6 @@ const submit_salary_slip = function (frm) {
 		function () {
 			if (frappe.dom.freeze_count) {
 				frappe.dom.unfreeze();
-				frm.events.refresh(frm);
 			}
 		}
 	);
