@@ -340,6 +340,38 @@ class TestLeaveAllocation(FrappeTestCase):
 		# balance is still 2
 		self.assertEqual(leaves_allocated, 2)
 
+	def test_allocate_on_first_day_next_month(self):
+		"""Tests assignment with 'Allocate On=First Day(Next Month)'"""
+		prev_month_last_day = get_last_day(add_months(getdate(), -1))
+		last_day = get_last_day(getdate())
+
+		# Case 1: Allocates no leave for the previous month if created on the previous month's last day
+		frappe.flags.current_date = prev_month_last_day
+		leave_policy_assignments = make_policy_assignment(
+			self.employee, allocate_on_day="First Day(Next Month)", start_date=prev_month_last_day
+		)
+		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
+		self.assertEqual(leaves_allocated, 0)
+
+		# Case 2: Allocate 1 leave on the current month's first day (via scheduler)
+		frappe.flags.current_date = add_days(prev_month_last_day, 1)
+		allocate_earned_leaves()
+		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
+		self.assertEqual(leaves_allocated, 1)
+
+		# Case 3: Doesn't allocate before the next month's first day (via scheduler)
+		frappe.flags.current_date = last_day
+		allocate_earned_leaves()
+		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
+		# balance is still 1
+		self.assertEqual(leaves_allocated, 1)
+
+		# Case 4: Allocate 1 leave on next month's first day (via scheduler)
+		frappe.flags.current_date = add_days(last_day, 1)
+		allocate_earned_leaves()
+		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
+		self.assertEqual(leaves_allocated, 2)
+
 	def test_allocate_on_date_of_joining(self):
 		"""Tests assignment with 'Allocate On=Date of Joining'"""
 		start_date = get_first_day(add_months(getdate(), -1))
