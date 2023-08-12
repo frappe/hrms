@@ -184,12 +184,14 @@ function addExpenseItem(item) {
 	if (!expenseClaim.value.expenses) expenseClaim.value.expenses = []
 	expenseClaim.value.expenses.push(item)
 	calculateTotals()
+	calculateTaxes()
 	modalController.dismiss()
 }
 
 function updateExpenseItem(item, idx) {
 	expenseClaim.value.expenses[idx] = item
 	calculateTotals()
+	calculateTaxes()
 	modalController.dismiss()
 }
 
@@ -224,7 +226,7 @@ function calculateTaxes() {
 	let total_taxes_and_charges = 0
 
 	expenseClaim.value?.taxes?.forEach((item) => {
-		if (item.rate && !item.tax_amount) {
+		if (item.rate) {
 			item.tax_amount =
 				parseFloat(expenseClaim.value.total_sanctioned_amount) *
 				parseFloat(item.rate / 100)
