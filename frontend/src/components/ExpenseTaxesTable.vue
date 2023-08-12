@@ -131,7 +131,7 @@ const editingIdx = ref(null)
 const isModalOpen = ref(false)
 const openModal = async (item, idx) => {
 	if (item) {
-		expenseTax.value = item
+		expenseTax.value = { ...item }
 		editingIdx.value = idx
 	}
 	isModalOpen.value = true

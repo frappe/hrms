@@ -139,7 +139,7 @@ watch(
 // helper functions
 function getFilteredFields(fields) {
 	// reduce noise from the form view by excluding unnecessary fields
-	// ex: employee and other details can be fetched from the session user
+	// eg: employee and other details can be fetched from the session user
 	const excludeFields = [
 		"naming_series",
 		"task",
