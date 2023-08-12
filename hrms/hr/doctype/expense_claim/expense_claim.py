@@ -280,7 +280,7 @@ class ExpenseClaim(AccountsController):
 		self.total_taxes_and_charges = 0
 		for tax in self.taxes:
 			if tax.rate:
-				tax.tax_amount = flt(self.total_sanctioned_amount) * flt(tax.rate / 100)
+				tax.tax_amount = flt(self.total_sanctioned_amount) * flt(flt(tax.rate) / 100)
 
 			tax.total = flt(tax.tax_amount) + flt(self.total_sanctioned_amount)
 			self.total_taxes_and_charges += flt(tax.tax_amount)
