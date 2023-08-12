@@ -39,6 +39,7 @@
 						class="w-20"
 						v-model="advance.allocated_amount"
 						@input="(v) => (advance.selected = v)"
+						@click.stop
 					/>
 				</div>
 			</div>
