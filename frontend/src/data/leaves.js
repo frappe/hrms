@@ -15,6 +15,7 @@ export const myRequests = createResource({
 	url: "hrms.api.get_employee_leave_applications",
 	params: {
 		employee: employeeResource.data.name,
+		limit: 5,
 	},
 	auto: true,
 	transform(data) {
@@ -27,19 +28,10 @@ export const teamRequests = createResource({
 	params: {
 		employee: employeeResource.data.name,
 		user_id: employeeResource.data.user_id,
+		limit: 5,
 	},
 	auto: true,
 	transform(data) {
 		return transformLeaveData(data)
 	},
-})
-
-export const leavesThisMonth = computed(() => {
-	const today = dayjs()
-	const start = today.startOf("month").format("YYYY-MM-DD")
-	const end = today.endOf("month").format("YYYY-MM-DD")
-
-	return myRequests.data?.filter((leave) => {
-		return dayjs(leave.from_date).isBetween(start, end, null, "[]")
-	})
 })

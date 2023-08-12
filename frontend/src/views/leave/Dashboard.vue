@@ -14,8 +14,12 @@
 						</Button>
 					</router-link>
 					<div>
-						<div class="text-xl text-gray-800 font-bold">Leaves This Month</div>
-						<RequestList :items="leavesThisMonth" />
+						<div class="text-xl text-gray-800 font-bold">Recent Leaves</div>
+						<RequestList
+							:items="myRequests.data"
+							:addListButton="true"
+							listButtonRoute="LeaveApplicationListView"
+						/>
 					</div>
 					<Holidays />
 				</div>
@@ -32,7 +36,7 @@ import LeaveBalance from "@/components/LeaveBalance.vue"
 import RequestList from "@/components/RequestList.vue"
 import Holidays from "@/components/Holidays.vue"
 
-import { leavesThisMonth, myRequests } from "@/data/leaves"
+import { myRequests } from "@/data/leaves"
 
 const socket = inject("$socket")
 const employee = inject("$employee")
