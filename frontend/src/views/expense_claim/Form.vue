@@ -136,6 +136,14 @@ watch(
 	{ immediate: true }
 )
 
+watch(
+	() => expenseClaim.value.advances,
+	(_value) => {
+		calculateTotalAdvance()
+	},
+	{ deep: true }
+)
+
 // helper functions
 function getFilteredFields(fields) {
 	// reduce noise from the form view by excluding unnecessary fields
@@ -185,6 +193,7 @@ function addExpenseItem(item) {
 	expenseClaim.value.expenses.push(item)
 	calculateTotals()
 	calculateTaxes()
+	allocateAdvanceAmount()
 	modalController.dismiss()
 }
 
@@ -192,6 +201,7 @@ function updateExpenseItem(item, idx) {
 	expenseClaim.value.expenses[idx] = item
 	calculateTotals()
 	calculateTaxes()
+	allocateAdvanceAmount()
 	modalController.dismiss()
 }
 
@@ -199,12 +209,14 @@ function addExpenseTax(item) {
 	if (!expenseClaim.value.taxes) expenseClaim.value.taxes = []
 	expenseClaim.value.taxes.push(item)
 	calculateTaxes()
+	allocateAdvanceAmount()
 	modalController.dismiss()
 }
 
 function updateExpenseTax(item, idx) {
 	expenseClaim.value.taxes[idx] = item
 	calculateTaxes()
+	allocateAdvanceAmount()
 	modalController.dismiss()
 }
 
@@ -246,12 +258,14 @@ function calculateGrandTotal() {
 		parseFloat(expenseClaim.value.total_sanctioned_amount || 0) +
 		parseFloat(expenseClaim.value.total_taxes_and_charges || 0) -
 		parseFloat(expenseClaim.value.total_advance_amount || 0)
-
-	setAdvanceAmount()
 }
 
-function setAdvanceAmount() {
-	let amount_to_be_allocated = parseFloat(expenseClaim.value.grand_total)
+function allocateAdvanceAmount() {
+	// allocate reqd advance amount
+	let amount_to_be_allocated =
+		parseFloat(expenseClaim.value.total_sanctioned_amount) +
+		parseFloat(expenseClaim.value.total_taxes_and_charges)
+	let total_advance_amount = 0
 
 	expenseClaim?.value?.advances?.forEach((advance) => {
 		if (amount_to_be_allocated >= parseFloat(advance.unclaimed_amount)) {
@@ -263,7 +277,23 @@ function setAdvanceAmount() {
 		}
 
 		advance.selected = advance.allocated_amount > 0 ? true : false
+		total_advance_amount += parseFloat(advance.allocated_amount)
 	})
+	expenseClaim.value.total_advance_amount = total_advance_amount
+	calculateGrandTotal()
+}
+
+function calculateTotalAdvance() {
+	// update total advance amount as per user selection & edited values
+	let total_advance_amount = 0
+
+	expenseClaim?.value?.advances?.forEach((advance) => {
+		if (advance.selected) {
+			total_advance_amount += parseFloat(advance.allocated_amount)
+		}
+	})
+	expenseClaim.value.total_advance_amount = total_advance_amount
+	calculateGrandTotal()
 }
 
 function validateForm() {
