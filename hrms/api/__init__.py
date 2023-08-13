@@ -396,14 +396,14 @@ def get_doctype_fields(doctype: str) -> list[dict]:
 
 
 @frappe.whitelist()
-def get_link_field_options(doctype: str) -> list:
+def get_link_field_options(doctype: str, filters: dict | None = None) -> list:
 	fields = ["name as value"]
 	title_field = frappe.db.get_value("DocType", doctype, "title_field", cache=1)
 
 	if title_field:
 		fields.append(f"{title_field} as label")
 
-	link_options = frappe.get_all(doctype, fields=fields)
+	link_options = frappe.get_all(doctype, fields=fields, filters=filters)
 	return link_options
 
 

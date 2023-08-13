@@ -82,6 +82,7 @@
 							:fieldtype="field.fieldtype"
 							:fieldname="field.fieldname"
 							:options="field.options"
+							:linkFilters="field.linkFilters"
 							:hidden="field.hidden"
 							:reqd="field.reqd"
 							:readOnly="field.read_only"
@@ -165,7 +166,25 @@ const taxesTableFields = createResource({
 
 		if (!props.id) excludeFields.push(...dimensionFields)
 
-		return data.filter((field) => !excludeFields.includes(field.fieldname))
+		return data
+			.map((field) => {
+				if (field.fieldname === "account_head") {
+					field.linkFilters = {
+						company: props.expenseClaim.company,
+						account_type: [
+							"in",
+							[
+								"Tax",
+								"Chargeable",
+								"Income Account",
+								"Expenses Included In Valuation",
+							],
+						],
+					}
+				}
+				return field
+			})
+			.filter((field) => !excludeFields.includes(field.fieldname))
 	},
 })
 taxesTableFields.reload()

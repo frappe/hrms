@@ -88,8 +88,7 @@ const formFields = createResource({
 
 		return fields.map((field) => {
 			if (field.fieldname === "posting_date") field.default = today
-
-			return field
+			return applyFilters(field)
 		})
 	},
 	onSuccess(_data) {
@@ -168,6 +167,28 @@ function getFilteredFields(fields) {
 	if (!props.id) excludeFields.push(...extraFields)
 
 	return fields.filter((field) => !excludeFields.includes(field.fieldname))
+}
+
+function applyFilters(field) {
+	if (field.fieldname === "payable_account") {
+		field.linkFilters = {
+			report_type: "Balance Sheet",
+			account_type: "Payable",
+			company: expenseClaim.value.company,
+			is_group: 0,
+		}
+	} else if (field.fieldname === "cost_center") {
+		field.linkFilters = {
+			company: expenseClaim.value.company,
+			is_group: 0,
+		}
+	} else if (field.fieldname === "project") {
+		field.linkFilters = {
+			company: expenseClaim.value.company,
+		}
+	}
+
+	return field
 }
 
 function setExpenseApprover(data) {

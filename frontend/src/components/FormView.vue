@@ -65,6 +65,7 @@
 								:default="field.default"
 								:label="field.label"
 								:options="field.options"
+								:linkFilters="field.linkFilters"
 								:documentList="field.documentList"
 								:readOnly="Boolean(field.read_only)"
 								:reqd="Boolean(field.reqd)"

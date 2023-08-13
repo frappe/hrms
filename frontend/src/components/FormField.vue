@@ -121,6 +121,7 @@ const props = defineProps({
 	default: [String, Number, Boolean, Array, Object],
 	label: String,
 	options: [String, Array],
+	linkFilters: Object,
 	documentList: Array,
 	readOnly: [Boolean, Number],
 	reqd: [Boolean, Number],
@@ -195,6 +196,7 @@ function setLinkFieldList() {
 			url: "hrms.api.get_link_field_options",
 			params: {
 				doctype: props.options,
+				filters: props.linkFilters,
 			},
 			pageLength: 100,
 			transform: (data) => {
