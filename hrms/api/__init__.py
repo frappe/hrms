@@ -360,6 +360,7 @@ def get_employee_advance_balance(employee: str) -> list[dict]:
 	return advances
 
 
+# Company
 @frappe.whitelist()
 def get_company_currencies() -> dict:
 	Company = frappe.qb.DocType("Company")
@@ -387,6 +388,11 @@ def get_currency_symbols() -> dict:
 	currencies = (frappe.qb.from_(Currency).select(Currency.name, Currency.symbol)).run(as_dict=True)
 
 	return {currency.name: currency.symbol or currency.name for currency in currencies}
+
+
+@frappe.whitelist()
+def get_company_cost_center(company: str) -> str:
+	return frappe.db.get_value("Company", company, "cost_center")
 
 
 # Form View APIs

@@ -185,6 +185,7 @@ watch(
 	() => expenseItem.value.expense_type,
 	(value) => {
 		expenseItem.value.description = claimTypesByID[value]?.description
+		expenseItem.value.cost_center = props.expenseClaim.cost_center
 	}
 )
 

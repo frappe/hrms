@@ -93,6 +93,7 @@ const formFields = createResource({
 	},
 	onSuccess(_data) {
 		expenseApproverDetails.reload()
+		costCenter.reload()
 	},
 })
 formFields.reload()
@@ -126,6 +127,14 @@ const expenseApproverDetails = createResource({
 	},
 })
 
+const costCenter = createResource({
+	url: "hrms.api.get_company_cost_center",
+	params: { company: expenseClaim.value.company },
+	onSuccess(data) {
+		expenseClaim.value.cost_center = data
+	},
+})
+
 // form scripts
 watch(
 	() => expenseClaim.value.employee && !props.id,
@@ -141,6 +150,15 @@ watch(
 		calculateTotalAdvance()
 	},
 	{ deep: true }
+)
+
+watch(
+	() => expenseClaim.value.cost_center,
+	() => {
+		expenseClaim?.value?.expenses?.forEach((expense) => {
+			expense.cost_center = expenseClaim.value.cost_center
+		})
+	}
 )
 
 // helper functions
