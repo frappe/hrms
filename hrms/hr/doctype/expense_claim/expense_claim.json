@@ -39,7 +39,6 @@
   "column_break_24",
   "clearance_date",
   "remark",
-  "accounting_dimensions_tab",
   "accounting_dimensions_section",
   "project",
   "dimension_col_break",
@@ -208,7 +207,8 @@
   },
   {
    "fieldname": "accounting_details",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Accounting Details"
   },
   {
    "fetch_from": "employee.company",
@@ -301,7 +301,8 @@
   },
   {
    "fieldname": "accounting_dimensions_section",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Accounting Dimensions"
   },
   {
    "fieldname": "dimension_col_break",
@@ -314,9 +315,9 @@
    "options": "Expense Taxes and Charges"
   },
   {
-   "label": "Totals",
    "fieldname": "transactions_section",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Totals"
   },
   {
    "fieldname": "grand_total",
@@ -351,12 +352,7 @@
   {
    "fieldname": "accounting_details_tab",
    "fieldtype": "Tab Break",
-   "label": "Accounting Details"
-  },
-  {
-   "fieldname": "accounting_dimensions_tab",
-   "fieldtype": "Tab Break",
-   "label": "Accounting Dimensions"
+   "label": "Accounting"
   },
   {
    "fieldname": "more_info_tab",
@@ -386,7 +382,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-08-07 15:06:12.118680",
+ "modified": "2023-08-14 15:31:49.277947",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim",
