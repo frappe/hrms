@@ -3,7 +3,7 @@
 		<h2 class="text-lg font-semibold text-gray-800">Settle against Advances</h2>
 	</div>
 
-	<div class="flex flex-col gap-2.5">
+	<div class="flex flex-col gap-2.5" v-if="expenseClaim.advances.length">
 		<!-- Advance Card -->
 		<div
 			v-for="advance in expenseClaim.advances"
@@ -45,6 +45,8 @@
 			</div>
 		</div>
 	</div>
+
+	<EmptyState message="You have no advances" v-else />
 </template>
 
 <script setup>
