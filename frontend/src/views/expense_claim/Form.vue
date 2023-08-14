@@ -75,7 +75,7 @@ const tabs = [
 	{ name: "Totals", lastField: "cost_center" },
 ]
 
-// reactive object to store form data
+// object to store form data
 const expenseClaim = ref({
 	employee: employee.data.name,
 	company: employee.data.company,
@@ -108,9 +108,22 @@ const advances = createResource({
 	params: { employee: employee.data.name },
 	onSuccess(data) {
 		// set advances
-		expenseClaim.value.advances = []
-		data.forEach((advance) => {
-			expenseClaim.value.advances.push({
+		if (props.id) {
+			expenseClaim.value.advances?.map((advance) => (advance.selected = true))
+		} else {
+			expenseClaim.value.advances = []
+		}
+
+		return data.forEach((advance) => {
+			if (
+				props.id &&
+				expenseClaim.value.advances?.some(
+					(entry) => entry.employee_advance === advance.name
+				)
+			)
+				return
+
+			expenseClaim.value.advances?.push({
 				employee_advance: advance.name,
 				purpose: advance.purpose,
 				posting_date: advance.posting_date,
@@ -151,11 +164,10 @@ watch(
 )
 
 watch(
-	() => expenseClaim.value.employee && !props.id,
-	(_value) => {
+	() => props.id && expenseClaim.value.expenses,
+	(_) => {
 		advances.reload()
-	},
-	{ immediate: true }
+	}
 )
 
 watch(
