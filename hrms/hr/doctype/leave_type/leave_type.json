@@ -50,7 +50,7 @@
   },
   {
    "fieldname": "max_leaves_allowed",
-   "fieldtype": "Int",
+   "fieldtype": "Float",
    "label": "Maximum Leave Allocation Allowed"
   },
   {
