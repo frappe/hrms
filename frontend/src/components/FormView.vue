@@ -4,7 +4,7 @@
 			class="w-full h-full bg-white sm:w-96 flex flex-col relative overflow-y-auto"
 		>
 			<header
-				class="flex flex-row gap-1 bg-white shadow-sm py-4 px-2 items-center border-b sticky top-0 z-10"
+				class="flex flex-row gap-1 bg-white shadow-sm py-4 px-2 items-center border-b sticky top-0 z-[1000]"
 			>
 				<Button appearance="minimal" class="!px-0 !py-0" @click="router.back()">
 					<FeatherIcon name="chevron-left" class="h-5 w-5" />
@@ -24,7 +24,7 @@
 			<div class="bg-white grow">
 				<!-- Tabs -->
 				<div
-					class="px-4 sticky top-14 z-6 bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
+					class="px-4 sticky top-14 z-[100] bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
 				>
 					<ul class="flex flex-wrap -mb-px">
 						<li class="mr-2" v-for="tab in tabs">
