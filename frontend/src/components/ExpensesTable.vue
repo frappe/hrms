@@ -12,6 +12,7 @@
 				icon="plus"
 				appearance="secondary"
 				@click="openModal()"
+				:disabled="isReadOnly"
 			/>
 		</div>
 	</div>
@@ -22,7 +23,8 @@
 		class="flex flex-col bg-white mt-5 rounded-lg border overflow-auto"
 	>
 		<div
-			class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
+			class="flex flex-row p-3.5 items-center justify-between border-b"
+			:class="isReadOnly ? '' : 'cursor-pointer'"
 			v-for="(item, idx) in expenseClaim.expenses"
 			:key="idx"
 			@click="openModal(item, idx)"
@@ -122,6 +124,10 @@ const props = defineProps({
 		type: String,
 		required: true,
 	},
+	isReadOnly: {
+		type: Boolean,
+		default: false,
+	},
 })
 const emit = defineEmits(["add-expense-item", "update-expense-item"])
 const dayjs = inject("$dayjs")
@@ -131,6 +137,8 @@ const editingIdx = ref(null)
 const isModalOpen = ref(false)
 
 const openModal = async (item, idx) => {
+	if (props.isReadOnly) return
+
 	if (item) {
 		expenseItem.value = { ...item }
 		editingIdx.value = idx

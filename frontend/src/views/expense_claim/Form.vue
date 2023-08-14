@@ -17,6 +17,7 @@
 					<ExpensesTable
 						v-model:expenseClaim="expenseClaim"
 						:currency="currency"
+						:isReadOnly="isReadOnly"
 						@addExpenseItem="addExpenseItem"
 						@updateExpenseItem="updateExpenseItem"
 					/>
@@ -26,6 +27,7 @@
 					<ExpenseTaxesTable
 						v-model:expenseClaim="expenseClaim"
 						:currency="currency"
+						:isReadOnly="isReadOnly"
 						@addExpenseTax="addExpenseTax"
 						@updateExpenseTax="updateExpenseTax"
 					/>
@@ -35,6 +37,7 @@
 					<ExpenseAdvancesTable
 						v-model:expenseClaim="expenseClaim"
 						:currency="currency"
+						:isReadOnly="isReadOnly"
 					/>
 				</template>
 			</FormView>
@@ -57,6 +60,7 @@ import { getCompanyCurrency } from "@/data/currencies"
 const dayjs = inject("$dayjs")
 const employee = inject("$employee")
 const today = dayjs().format("YYYY-MM-DD")
+const isReadOnly = ref(false)
 
 const props = defineProps({
 	id: {
@@ -136,6 +140,16 @@ const costCenter = createResource({
 })
 
 // form scripts
+watch(
+	() => expenseClaim.value.employee,
+	(employee_id) => {
+		if (props.id && employee_id !== employee.data.name) {
+			// if employee is not the current user, set form as read only
+			setFormReadOnly()
+		}
+	}
+)
+
 watch(
 	() => expenseClaim.value.employee && !props.id,
 	(_value) => {
@@ -333,6 +347,12 @@ function calculateTotalAdvance() {
 	})
 	expenseClaim.value.total_advance_amount = total_advance_amount
 	calculateGrandTotal()
+}
+
+function setFormReadOnly() {
+	if (expenseClaim.value.expense_approver === employee.data.user_id) return
+	formFields.data.map((field) => (field.read_only = true))
+	isReadOnly.value = true
 }
 
 function validateForm() {

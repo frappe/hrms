@@ -12,16 +12,18 @@
 					icon="plus"
 					appearance="secondary"
 					@click="openModal()"
+					:disabled="isReadOnly"
 				/>
 			</div>
 		</div>
 
 		<div
-			v-if="expenseClaim.taxes"
+			v-if="expenseClaim.taxes.length"
 			class="flex flex-col bg-white mt-5 rounded-lg border overflow-auto"
 		>
 			<div
-				class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
+				class="flex flex-row p-3.5 items-center justify-between border-b"
+				:class="isReadOnly ? '' : 'cursor-pointer'"
 				v-for="(item, idx) in expenseClaim.taxes"
 				:key="item.name"
 				@click="openModal(item, idx)"
@@ -124,6 +126,10 @@ const props = defineProps({
 		type: String,
 		required: true,
 	},
+	isReadOnly: {
+		type: Boolean,
+		default: false,
+	},
 })
 const emit = defineEmits(["add-expense-tax", "update-expense-tax"])
 const expenseTax = ref({})
@@ -131,6 +137,7 @@ const editingIdx = ref(null)
 
 const isModalOpen = ref(false)
 const openModal = async (item, idx) => {
+	if (props.isReadOnly) return
 	if (item) {
 		expenseTax.value = { ...item }
 		editingIdx.value = idx

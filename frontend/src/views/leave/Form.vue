@@ -140,15 +140,8 @@ function getFilteredFields(fields) {
 }
 
 function setFormReadOnly() {
-	formFields?.data?.forEach((field) => {
-		if (
-			field.fieldname === "leave_approver" &&
-			leaveApplication.leave_approver === employee.data.user_id
-		)
-			return
-
-		field.read_only = true
-	})
+	if (leaveApplication.value.leave_approver === employee.data.user_id) return
+	formFields.data.map((field) => (field.read_only = true))
 }
 
 function validateDates(from_date, to_date) {
