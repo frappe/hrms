@@ -6,7 +6,7 @@ function getFileReader() {
 	return zoneOriginalInstance || fileReader
 }
 
-export class FileAttachmentUploader {
+export class FileAttachment {
 	constructor(fileObj) {
 		this.fileObj = fileObj
 		this.fileName = fileObj.name
@@ -34,5 +34,16 @@ export class FileAttachmentUploader {
 		reader.readAsDataURL(this.fileObj)
 
 		return uploader
+	}
+
+	delete() {
+		return createResource({
+			url: "hrms.api.delete_attachment",
+			onSuccess: () => {
+				console.log("Deleted successfully ✅")
+			},
+		}).submit({
+			filename: this.fileName,
+		})
 	}
 }

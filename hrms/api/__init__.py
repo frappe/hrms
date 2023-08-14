@@ -413,6 +413,14 @@ def get_link_field_options(doctype: str, filters: dict | None = None) -> list:
 	return link_options
 
 
+# File
+@frappe.whitelist()
+def get_attachments(dt: str, dn: str):
+	from frappe.desk.form.load import get_attachments
+
+	return get_attachments(dt, dn)
+
+
 @frappe.whitelist()
 def upload_base64_file(content, filename, dt=None, dn=None, fieldname=None):
 	import base64
@@ -437,3 +445,8 @@ def upload_base64_file(content, filename, dt=None, dn=None, fieldname=None):
 			"is_private": 1,
 		}
 	).insert()
+
+
+@frappe.whitelist()
+def delete_attachment(filename: str):
+	frappe.delete_doc("File", filename)

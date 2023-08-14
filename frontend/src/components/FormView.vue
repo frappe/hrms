@@ -81,6 +81,7 @@
 							v-if="showAttachmentView && index === 0"
 							v-model="fileAttachments"
 							@handleFileSelect="handleFileSelect"
+							@handleFileDelete="handleFileDelete"
 						/>
 					</div>
 				</template>
@@ -108,6 +109,7 @@
 						v-if="showAttachmentView"
 						v-model="fileAttachments"
 						@handleFileSelect="handleFileSelect"
+						@handleFileDelete="handleFileDelete"
 					/>
 				</div>
 			</div>
@@ -146,11 +148,12 @@ import {
 	createListResource,
 	createDocumentResource,
 	toast,
+	createResource,
 } from "frappe-ui"
 import FormField from "@/components/FormField.vue"
 import FileUploaderView from "@/components/FileUploaderView.vue"
 
-import { FileAttachmentUploader } from "@/composables/index"
+import { FileAttachment } from "@/composables/index"
 
 const props = defineProps({
 	doctype: {
@@ -186,7 +189,7 @@ const props = defineProps({
 })
 const emit = defineEmits(["validateForm", "update:modelValue"])
 const router = useRouter()
-const activeTab = ref(props.tabs?.[0].name)
+let activeTab = ref(props.tabs?.[0].name)
 let fileAttachments = ref([])
 
 const formModel = computed({
@@ -216,13 +219,43 @@ const tabFields = computed(() => {
 	return fieldsByTab
 })
 
+const attachedFiles = createResource({
+	url: "hrms.api.get_attachments",
+	params: {
+		dt: props.doctype,
+		dn: props.id,
+	},
+	transform(data) {
+		return data.map((file) => (file.uploaded = true))
+	},
+	onSuccess(data) {
+		fileAttachments.value = data
+	},
+})
+
 const handleFileSelect = (e) => {
 	fileAttachments.value.push(...e.target.files)
+
+	if (props.id) {
+		uploadAllAttachments(props.doctype, props.id)
+	}
+}
+
+const handleFileDelete = async (fileObj) => {
+	if (fileObj.uploaded) {
+		const fileAttachment = new FileAttachment(fileObj)
+		await fileAttachment.delete()
+		await attachedFiles.reload()
+	} else {
+		fileAttachments.value = fileAttachments.value.filter(
+			(file) => file.name !== fileName
+		)
+	}
 }
 
 const uploadAttachment = async (doctype, name, file) => {
-	const fileAttachmentUploader = new FileAttachmentUploader(file)
-	return fileAttachmentUploader.upload(doctype, name).promise
+	const fileAttachment = new FileAttachment(file)
+	return fileAttachment.upload(doctype, name).promise
 }
 
 async function uploadAllAttachments(documentType, documentName) {
@@ -317,6 +350,7 @@ onMounted(async () => {
 	if (props.id) {
 		await documentResource.get.promise
 		formModel.value = documentResource.doc
+		await attachedFiles.reload()
 	}
 })
 </script>

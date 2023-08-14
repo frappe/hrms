@@ -31,17 +31,46 @@
 					<div
 						class="flex flex-row items-center justify-between text-gray-700 text-sm"
 					>
-						<span class="grow">{{ file.name }}</span>
-						<FeatherIcon name="x" class="h-3 w-3 text-gray-700" />
+						<span class="grow">{{ file.file_name || file.name }}</span>
+						<FeatherIcon
+							name="x"
+							class="h-3 w-3 cursor-pointer text-gray-700"
+							@click="() => confirmDeleteAttachment(file)"
+						/>
 					</div>
 				</li>
 			</ul>
+
+			<Dialog
+				:options="{
+					title: 'Delete Attachment',
+					message: `Are you sure you want to delete the attachment ${deleteAttachment}?`,
+					icon: {
+						name: 'trash',
+						appearance: 'danger',
+					},
+					size: 'xs',
+					actions: [
+						{
+							label: 'Delete',
+							appearance: 'danger',
+							handler: ({ close }) => {
+								emit('handle-file-delete', deleteAttachment)
+								close() // closes dialog
+							},
+						},
+						{ label: 'Cancel' },
+					],
+				}"
+				v-model="showDialog"
+			/>
 		</div>
 	</div>
 </template>
 
 <script setup>
-import { FeatherIcon } from "frappe-ui"
+import { FeatherIcon, Dialog } from "frappe-ui"
+import { ref } from "vue"
 
 const props = defineProps({
 	modelValue: {
@@ -49,6 +78,13 @@ const props = defineProps({
 		required: true,
 	},
 })
+let showDialog = ref(false)
+let deleteAttachment = ref({})
 
-const emit = defineEmits(["handle-file-select"])
+const emit = defineEmits(["handle-file-select", "handle-file-delete"])
+
+function confirmDeleteAttachment(fileObj) {
+	deleteAttachment.value = fileObj
+	showDialog.value = true
+}
 </script>
