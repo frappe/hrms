@@ -35,40 +35,40 @@
    "fieldname": "employment_type",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Employment Type (optional)",
+   "label": "Employment Type",
    "options": "Employment Type"
   },
   {
    "fieldname": "branch",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Branch (optional)",
+   "label": "Branch",
    "options": "Branch"
   },
   {
    "fieldname": "department",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Department (optional)",
+   "label": "Department",
    "options": "Department"
   },
   {
    "fieldname": "designation",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Designation (optional)",
+   "label": "Designation",
    "options": "Designation"
   },
   {
    "fieldname": "employee_grade",
    "fieldtype": "Link",
-   "label": "Employee Grade (optional)",
+   "label": "Employee Grade",
    "options": "Employee Grade"
   },
   {
    "fieldname": "employee",
    "fieldtype": "Link",
-   "label": "Employee (optional)",
+   "label": "Employee",
    "options": "Employee"
   },
   {
@@ -139,7 +139,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2019-12-12 18:51:41.573349",
+ "modified": "2023-08-15 12:48:38.215388",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Control Panel",
@@ -154,5 +154,6 @@
  ],
  "read_only": 1,
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "states": []
 }
