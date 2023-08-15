@@ -5,7 +5,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "select_employees_section",
+  "filters_section",
   "company",
   "employment_type",
   "branch",
@@ -13,7 +13,8 @@
   "column_break1",
   "designation",
   "employee_grade",
-  "employee",
+  "select_employees_section",
+  "employees_html",
   "allocate_leaves_section",
   "from_date",
   "to_date",
@@ -64,12 +65,6 @@
    "fieldtype": "Link",
    "label": "Employee Grade",
    "options": "Employee Grade"
-  },
-  {
-   "fieldname": "employee",
-   "fieldtype": "Link",
-   "label": "Employee",
-   "options": "Employee"
   },
   {
    "fieldname": "column_break1",
@@ -127,11 +122,24 @@
   {
    "fieldname": "allocate_leaves_section",
    "fieldtype": "Section Break",
-   "label": "Allocate Leaves"
+   "label": "Set Leave Details"
   },
   {
    "fieldname": "column_break_16",
    "fieldtype": "Column Break"
+  },
+  {
+   "collapsible": 1,
+   "description": "Set filters to fetch employees",
+   "fieldname": "filters_section",
+   "fieldtype": "Section Break",
+   "label": "Filters"
+  },
+  {
+   "fieldname": "employees_html",
+   "fieldtype": "HTML",
+   "label": "Employees HTML",
+   "read_only": 1
   }
  ],
  "hide_toolbar": 1,
@@ -139,7 +147,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-08-15 12:48:38.215388",
+ "modified": "2023-08-15 14:30:29.579496",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Control Panel",

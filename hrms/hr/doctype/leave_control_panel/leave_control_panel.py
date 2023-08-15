@@ -5,41 +5,30 @@
 import frappe
 from frappe import _, msgprint
 from frappe.model.document import Document
-from frappe.utils import cint, comma_and, cstr, flt
+from frappe.utils import cint, comma_and, flt
 
 
 class LeaveControlPanel(Document):
-	def get_employees(self):
-		conditions, values = [], []
-		for field in [
-			"company",
-			"employment_type",
-			"branch",
-			"designation",
-			"department",
-			"employee",
-			"employee_grade",
-		]:
-			if self.get(field):
-				if field == "employee":
-					conditions.append("name=%s")
-				elif field == "employee_grade":
-					conditions.append("grade=%s")
-				else:
-					conditions.append("{0}=%s".format(field))
+	# @frappe.whitelist()
+	# def get_employees(self):
+	# 	filters = {"status": "Active"}
+	# 	for field in [
+	# 		"company",
+	# 		"employment_type",
+	# 		"branch",
+	# 		"designation",
+	# 		"department",
+	# 		"employee_grade",
+	# 	]:
+	# 		if self.get(field):
+	# 			filters["grade" if field == "employee_grade" else field] = self.get(field)
 
-				values.append(self.get(field))
-
-		condition_str = " and " + " and ".join(conditions) if len(conditions) else ""
-
-		e = frappe.db.sql(
-			"select name from tabEmployee where status='Active' {condition}".format(
-				condition=condition_str
-			),
-			tuple(values),
-		)
-
-		return e
+	# 	employees = frappe.get_list(
+	# 		"Employee",
+	# 		filters=filters,
+	# 		fields=["employee", "employee_name"],
+	# 	)
+	# 	return employees
 
 	def validate_values(self):
 		for f in ["from_date", "to_date", "leave_type", "no_of_days"]:
@@ -48,19 +37,17 @@ class LeaveControlPanel(Document):
 		self.validate_from_to_dates("from_date", "to_date")
 
 	@frappe.whitelist()
-	def allocate_leave(self):
+	def allocate_leave(self, employees):
 		self.validate_values()
-		leave_allocated_for = []
-		employees = self.get_employees()
 		if not employees:
-			frappe.throw(_("No employee found"))
-
-		for d in self.get_employees():
+			frappe.throw(_("No employee selected"))
+		leave_allocated_for = []
+		for d in employees:
 			try:
 				la = frappe.new_doc("Leave Allocation")
 				la.set("__islocal", 1)
-				la.employee = cstr(d[0])
-				la.employee_name = frappe.db.get_value("Employee", cstr(d[0]), "employee_name")
+				la.employee = d
+				la.employee_name = frappe.db.get_value("Employee", d, "employee_name")
 				la.leave_type = self.leave_type
 				la.from_date = self.from_date
 				la.to_date = self.to_date
@@ -68,8 +55,30 @@ class LeaveControlPanel(Document):
 				la.new_leaves_allocated = flt(self.no_of_days)
 				la.docstatus = 1
 				la.save()
-				leave_allocated_for.append(d[0])
+				leave_allocated_for.append(d)
 			except Exception:
 				pass
 		if leave_allocated_for:
 			msgprint(_("Leaves Allocated Successfully for {0}").format(comma_and(leave_allocated_for)))
+
+
+@frappe.whitelist()
+def get_employees(
+	company: str = None,
+	employment_type: str = None,
+	branch: str = None,
+	department: str = None,
+	designation: str = None,
+	grade: str = None,
+) -> list:
+	args = locals().copy()
+	filters = {"status": "Active"}
+	for d in args:
+		if args[d]:
+			filters[d] = args[d]
+	employees = frappe.get_list(
+		"Employee",
+		filters=filters,
+		fields=["employee", "employee_name"],
+	)
+	return employees
