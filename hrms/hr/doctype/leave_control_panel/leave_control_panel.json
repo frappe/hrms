@@ -20,7 +20,6 @@
   "to_date",
   "carry_forward",
   "no_of_days",
-  "allocate",
   "column_break_16",
   "leave_policy",
   "leave_type"
@@ -109,12 +108,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "allocate",
-   "fieldtype": "Button",
-   "label": "Allocate",
-   "options": "allocate_leave"
-  },
-  {
    "fieldname": "select_employees_section",
    "fieldtype": "Section Break",
    "label": "Select Employees"
@@ -147,7 +140,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-08-15 14:30:29.579496",
+ "modified": "2023-08-15 18:42:40.969726",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Control Panel",
