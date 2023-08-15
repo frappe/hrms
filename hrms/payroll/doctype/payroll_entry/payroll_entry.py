@@ -287,10 +287,22 @@ class PayrollEntry(Document):
 				frappe.qb.from_(ss)
 				.join(ssd)
 				.on(ss.name == ssd.parent)
+<<<<<<< HEAD
 				.select(ssd.salary_component, ssd.amount, ssd.parentfield, ss.salary_structure, ss.employee)
 				.where(
 					(ssd.parentfield == component_type) & (ss.name.isin(tuple([d.name for d in salary_slips])))
 				)
+=======
+				.select(
+					ssd.salary_component,
+					ssd.amount,
+					ssd.parentfield,
+					ssd.additional_salary,
+					ss.salary_structure,
+					ss.employee,
+				)
+				.where((ssd.parentfield == component_type) & (ss.name.isin([d.name for d in salary_slips])))
+>>>>>>> ed9f75ac (fix(Payroll JE): link employee in advance return entries)
 			).run(as_dict=True)
 
 			return salary_components
@@ -317,9 +329,12 @@ class PayrollEntry(Document):
 						add_component_to_accrual_jv_entry = False
 
 				if add_component_to_accrual_jv_entry:
+					is_advance_deduction = self.is_advance_deduction(component_type, item)
+
 					for cost_center, percentage in employee_cost_centers.items():
 						amount_against_cost_center = flt(item.amount) * percentage / 100
-						key = (item.salary_component, cost_center)
+						party = item.employee if is_advance_deduction else None
+						key = (item.salary_component, cost_center, party)
 						component_dict[key] = component_dict.get(key, 0) + amount_against_cost_center
 
 						if process_payroll_accounting_entry_based_on_employee:
@@ -330,6 +345,13 @@ class PayrollEntry(Document):
 			account_details = self.get_account(component_dict=component_dict)
 
 			return account_details
+
+	def is_advance_deduction(self, component_type: str, item: dict) -> bool:
+		if component_type == "deductions" and item.additional_salary:
+			ref_doctype = frappe.db.get_value("Additional Salary", item.additional_salary, "ref_doctype")
+
+			return ref_doctype == "Employee Advance"
+		return False
 
 	def set_employee_based_payroll_payable_entries(
 		self, component_type, employee, amount, salary_structure=None
@@ -383,7 +405,7 @@ class PayrollEntry(Document):
 		account_dict = {}
 		for key, amount in component_dict.items():
 			account = self.get_salary_component_account(key[0])
-			accouting_key = (account, key[1])
+			accouting_key = (account, key[1], key[2])
 
 			account_dict[accouting_key] = account_dict.get(accouting_key, 0) + amount
 
@@ -479,6 +501,7 @@ class PayrollEntry(Document):
 				for employee, employee_details in self.employee_based_payroll_payable_entries.items():
 					payable_amount = employee_details.get("earnings") - (employee_details.get("deductions") or 0)
 
+<<<<<<< HEAD
 					payable_amount = self.get_accounting_entries_and_payable_amount(
 						payroll_payable_account,
 						self.cost_center,
@@ -492,6 +515,121 @@ class PayrollEntry(Document):
 						party=employee,
 						accounts=accounts,
 					)
+=======
+	def make_journal_entry(
+		self,
+		accounts,
+		currencies,
+		payroll_payable_account=None,
+		voucher_type="Journal Entry",
+		user_remark="",
+		submitted_salary_slips: list = None,
+		submit_journal_entry=False,
+	):
+		multi_currency = 0
+		if len(currencies) > 1:
+			multi_currency = 1
+
+		journal_entry = frappe.new_doc("Journal Entry")
+		journal_entry.voucher_type = voucher_type
+		journal_entry.user_remark = user_remark
+		journal_entry.company = self.company
+		journal_entry.posting_date = self.posting_date
+
+		journal_entry.set("accounts", accounts)
+		journal_entry.multi_currency = multi_currency
+
+		if voucher_type == "Journal Entry":
+			journal_entry.title = payroll_payable_account
+
+		journal_entry.save(ignore_permissions=True)
+
+		try:
+			if submit_journal_entry:
+				journal_entry.submit()
+
+			if submitted_salary_slips:
+				self.update_salary_slip_status(submitted_salary_slips, jv_name=journal_entry.name)
+
+		except Exception as e:
+			if type(e) in (str, list, tuple):
+				frappe.msgprint(e)
+
+			self.log_error("Journal Entry creation against Salary Slip failed")
+			raise
+
+	def get_payable_amount_for_earnings_and_deductions(
+		self,
+		accounts,
+		earnings,
+		deductions,
+		currencies,
+		company_currency,
+		accounting_dimensions,
+		precision,
+		payable_amount,
+	):
+		# Earnings
+		for acc_cc, amount in earnings.items():
+			payable_amount = self.get_accounting_entries_and_payable_amount(
+				acc_cc[0],
+				acc_cc[1] or self.cost_center,
+				amount,
+				currencies,
+				company_currency,
+				payable_amount,
+				accounting_dimensions,
+				precision,
+				entry_type="debit",
+				accounts=accounts,
+			)
+
+		# Deductions
+		for acc_cc, amount in deductions.items():
+			payable_amount = self.get_accounting_entries_and_payable_amount(
+				acc_cc[0],
+				acc_cc[1] or self.cost_center,
+				amount,
+				currencies,
+				company_currency,
+				payable_amount,
+				accounting_dimensions,
+				precision,
+				entry_type="credit",
+				accounts=accounts,
+				party=acc_cc[2],
+			)
+
+		return payable_amount
+
+	def set_payable_amount_against_payroll_payable_account(
+		self,
+		accounts,
+		currencies,
+		company_currency,
+		accounting_dimensions,
+		precision,
+		payable_amount,
+		payroll_payable_account,
+		employee_wise_accounting_enabled,
+	):
+		# Payable amount
+		if employee_wise_accounting_enabled:
+			"""
+			employee_based_payroll_payable_entries = {
+			                'HREMP00004': {
+			                                'earnings': 83332.0,
+			                                'deductions': 2000.0
+			                },
+			                'HREMP00005': {
+			                                'earnings': 50000.0,
+			                                'deductions': 2000.0
+			                }
+			}
+			"""
+			for employee, employee_details in self.employee_based_payroll_payable_entries.items():
+				payable_amount = employee_details.get("earnings") - (employee_details.get("deductions") or 0)
+>>>>>>> ed9f75ac (fix(Payroll JE): link employee in advance return entries)
 
 			else:
 				payable_amount = self.get_accounting_entries_and_payable_amount(
