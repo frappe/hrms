@@ -19,6 +19,7 @@
 					<Badge
 						v-if="formModel.status"
 						:label="formModel.status"
+						:colorMap="colorMap?.data"
 						class="whitespace-nowrap"
 					/>
 				</div>
@@ -224,6 +225,12 @@ const tabFields = computed(() => {
 	})
 
 	return fieldsByTab
+})
+
+const colorMap = createResource({
+	url: "hrms.api.get_doctype_states",
+	params: { doctype: props.doctype },
+	auto: true,
 })
 
 const attachedFiles = createResource({

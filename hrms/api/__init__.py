@@ -402,6 +402,12 @@ def get_doctype_fields(doctype: str) -> list[dict]:
 
 
 @frappe.whitelist()
+def get_doctype_states(doctype: str) -> dict:
+	states = frappe.get_meta(doctype).states
+	return {state.title: state.color.lower() for state in states}
+
+
+@frappe.whitelist()
 def get_link_field_options(doctype: str, filters: dict | None = None) -> list:
 	fields = ["name as value"]
 	title_field = frappe.db.get_value("DocType", doctype, "title_field", cache=1)
