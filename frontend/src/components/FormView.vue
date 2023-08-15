@@ -9,11 +9,18 @@
 				<Button appearance="minimal" class="!px-0 !py-0" @click="router.back()">
 					<FeatherIcon name="chevron-left" class="h-5 w-5" />
 				</Button>
-				<div v-if="id" class="flex flex-row items-center gap-2">
-					<h2 class="text-2xl font-semibold text-gray-900">
+				<div v-if="id" class="flex flex-row items-center gap-2 overflow-hidden">
+					<h2
+						class="text-2xl font-semibold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis"
+					>
 						{{ doctype }}
 					</h2>
-					<Badge :label="id" color="white" />
+					<Badge :label="id" color="white" class="whitespace-nowrap" />
+					<Badge
+						v-if="formModel.status"
+						:label="formModel.status"
+						class="whitespace-nowrap"
+					/>
 				</div>
 				<h2 v-else class="text-2xl font-semibold text-gray-900">
 					{{ `New ${doctype}` }}
