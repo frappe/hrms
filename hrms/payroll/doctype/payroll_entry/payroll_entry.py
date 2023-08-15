@@ -274,7 +274,14 @@ class PayrollEntry(Document):
 				frappe.qb.from_(ss)
 				.join(ssd)
 				.on(ss.name == ssd.parent)
-				.select(ssd.salary_component, ssd.amount, ssd.parentfield, ss.salary_structure, ss.employee)
+				.select(
+					ssd.salary_component,
+					ssd.amount,
+					ssd.parentfield,
+					ssd.additional_salary,
+					ss.salary_structure,
+					ss.employee,
+				)
 				.where((ssd.parentfield == component_type) & (ss.name.isin([d.name for d in salary_slips])))
 			).run(as_dict=True)
 
@@ -303,9 +310,12 @@ class PayrollEntry(Document):
 						add_component_to_accrual_jv_entry = False
 
 				if add_component_to_accrual_jv_entry:
+					is_advance_deduction = self.is_advance_deduction(component_type, item)
+
 					for cost_center, percentage in employee_cost_centers.items():
 						amount_against_cost_center = flt(item.amount) * percentage / 100
-						key = (item.salary_component, cost_center)
+						party = item.employee if is_advance_deduction else None
+						key = (item.salary_component, cost_center, party)
 						component_dict[key] = component_dict.get(key, 0) + amount_against_cost_center
 
 						if employee_wise_accounting_enabled:
@@ -316,6 +326,13 @@ class PayrollEntry(Document):
 			account_details = self.get_account(component_dict=component_dict)
 
 			return account_details
+
+	def is_advance_deduction(self, component_type: str, item: dict) -> bool:
+		if component_type == "deductions" and item.additional_salary:
+			ref_doctype = frappe.db.get_value("Additional Salary", item.additional_salary, "ref_doctype")
+
+			return ref_doctype == "Employee Advance"
+		return False
 
 	def set_employee_based_payroll_payable_entries(
 		self, component_type, employee, amount, salary_structure=None
@@ -371,7 +388,7 @@ class PayrollEntry(Document):
 		account_dict = {}
 		for key, amount in component_dict.items():
 			account = self.get_salary_component_account(key[0])
-			accouting_key = (account, key[1])
+			accouting_key = (account, key[1], key[2])
 
 			account_dict[accouting_key] = account_dict.get(accouting_key, 0) + amount
 
@@ -524,6 +541,7 @@ class PayrollEntry(Document):
 				precision,
 				entry_type="credit",
 				accounts=accounts,
+				party=acc_cc[2],
 			)
 
 		return payable_amount
