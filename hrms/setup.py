@@ -503,7 +503,7 @@ def add_non_standard_user_types():
 
 	user_type_limit = {}
 	for user_type, data in user_types.items():
-		user_type_limit.setdefault(frappe.scrub(user_type), 20)
+		user_type_limit.setdefault(frappe.scrub(user_type), 30)
 
 	update_site_config("user_type_doctype_limit", user_type_limit)
 
@@ -522,11 +522,13 @@ def get_user_types_data():
 				# masters
 				"Holiday List": ["read"],
 				"Employee": ["read", "write"],
+				"Company": ["read"],
 				# payroll
 				"Salary Slip": ["read"],
 				"Employee Benefit Application": ["read", "write", "create", "delete"],
 				# expenses
 				"Expense Claim": ["read", "write", "create", "delete"],
+				"Expense Claim Type": ["read"],
 				"Employee Advance": ["read", "write", "create", "delete"],
 				# leave and attendance
 				"Leave Application": ["read", "write", "create", "delete"],
