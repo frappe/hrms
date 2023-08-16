@@ -208,12 +208,16 @@ def send_work_anniversary_reminders():
 
 	employees_joined_today = get_employees_having_an_event_today("work_anniversary")
 
+	message = _("A friendly reminder of an important date for our team.")
+	message += "<br>"
+	message += _("Everyone, let’s congratulate them on their work anniversary!")
+
 	for company, anniversary_persons in employees_joined_today.items():
 		employee_emails = get_all_employee_emails(company)
 		anniversary_person_emails = [get_employee_email(doc) for doc in anniversary_persons]
 		recipients = list(set(employee_emails) - set(anniversary_person_emails))
 
-		reminder_text, message = get_work_anniversary_reminder_text_and_message(anniversary_persons)
+		reminder_text = get_work_anniversary_reminder_text(anniversary_persons)
 		send_work_anniversary_reminder(recipients, reminder_text, anniversary_persons, message)
 
 		if len(anniversary_persons) > 1:
@@ -221,38 +225,34 @@ def send_work_anniversary_reminders():
 			for person in anniversary_persons:
 				person_email = person["user_id"] or person["personal_email"] or person["company_email"]
 				others = [d for d in anniversary_persons if d != person]
-				reminder_text, message = get_work_anniversary_reminder_text_and_message(others)
+				reminder_text = get_work_anniversary_reminder_text(others)
 				send_work_anniversary_reminder(person_email, reminder_text, others, message)
 
 
-def get_work_anniversary_reminder_text_and_message(anniversary_persons):
+def get_work_anniversary_reminder_text(anniversary_persons: list) -> str:
 	if len(anniversary_persons) == 1:
 		anniversary_person = anniversary_persons[0]["name"]
-		persons_name = anniversary_person
 		# Number of years completed at the company
 		completed_years = getdate().year - anniversary_persons[0]["date_of_joining"].year
 		anniversary_person += f" completed {get_pluralized_years(completed_years)}"
 	else:
 		person_names_with_years = []
-		names = []
+		names_grouped_by_years = {}
+
 		for person in anniversary_persons:
-			person_text = person["name"]
-			names.append(person_text)
 			# Number of years completed at the company
 			completed_years = getdate().year - person["date_of_joining"].year
-			person_text += f" completed {get_pluralized_years(completed_years)}"
-			person_names_with_years.append(person_text)
+			names_grouped_by_years.setdefault(completed_years, []).append(person["name"])
+
+		for key, value in names_grouped_by_years.items():
+			person_names = comma_sep(value, frappe._("{0} & {1}"), False)
+			person_names_with_years.append(f"{person_names} completed {get_pluralized_years(key)}")
 
 		# converts ["Jim", "Rim", "Dim"] to Jim, Rim & Dim
 		anniversary_person = comma_sep(person_names_with_years, frappe._("{0} & {1}"), False)
-		persons_name = comma_sep(names, frappe._("{0} & {1}"), False)
+	reminder_text = _("Today {0} at our Company! 🎉").format(_(anniversary_person))
 
-	reminder_text = _("Today {0} at our Company! 🎉").format(anniversary_person)
-	message = _("A friendly reminder of an important date for our team.")
-	message += "<br>"
-	message += _("Everyone, let’s congratulate {0} on their work anniversary!").format(persons_name)
-
-	return reminder_text, message
+	return reminder_text
 
 
 def get_pluralized_years(years):

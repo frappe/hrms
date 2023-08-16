@@ -713,7 +713,7 @@ def get_matching_queries(
 	company,
 	transaction,
 	document_types,
-	amount_condition,
+	exact_match,
 	account_from_to=None,
 	from_date=None,
 	to_date=None,
@@ -726,14 +726,14 @@ def get_matching_queries(
 	if transaction.withdrawal > 0:
 		if "expense_claim" in document_types:
 			ec_amount_matching = get_ec_matching_query(
-				bank_account, company, amount_condition, from_date, to_date
+				bank_account, company, exact_match, from_date, to_date
 			)
 			queries.extend([ec_amount_matching])
 
 	return queries
 
 
-def get_ec_matching_query(bank_account, company, amount_condition, from_date=None, to_date=None):
+def get_ec_matching_query(bank_account, company, exact_match, from_date=None, to_date=None):
 	# get matching Expense Claim query
 	mode_of_payments = [
 		x["parent"]
@@ -766,7 +766,7 @@ def get_ec_matching_query(bank_account, company, amount_condition, from_date=Non
 		FROM
 			`tabExpense Claim`
 		WHERE
-			total_sanctioned_amount {amount_condition} %(amount)s
+			total_sanctioned_amount {'= %(amount)s' if exact_match else '> 0.0'}
 			AND docstatus = 1
 			AND is_paid = 1
 			AND ifnull(clearance_date, '') = ""
