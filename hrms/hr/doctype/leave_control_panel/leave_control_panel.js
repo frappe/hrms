@@ -58,41 +58,72 @@ frappe.ui.form.on("Leave Control Panel", {
 				},
 			})
 			.then((r) => {
-				if (r.message.length > 0) {
-					unhide_field("select_employees_section");
-					frm.events.show_employees(frm, r.message);
-				} else {
-					hide_field("select_employees_section");
-				}
+				frm.employees = r.message;
+				frm.events.show_employees(frm, frm.employees);
 			});
 	},
 
 	show_employees(frm, employees) {
 		const $wrapper = frm.get_field("employees_html").$wrapper;
-		$wrapper.empty();
-		const employee_wrapper = $(`<div class="employee_wrapper">`).appendTo(
+		frm.employee_wrapper = $(`<div class="employee_wrapper">`).appendTo(
 			$wrapper
 		);
-		frm.employees_multicheck = frappe.ui.form.make_control({
-			parent: employee_wrapper,
-			df: {
-				fieldname: "employees_multicheck",
-				fieldtype: "MultiCheck",
-				select_all: true,
-				columns: 4,
-				get_data: () => {
-					return employees.map((employee) => {
-						return {
-							label: `${employee.employee} : ${employee.employee_name}`,
-							value: employee.employee,
-							checked: 0,
-						};
-					});
-				},
+		frm.events.render_datatable(frm, employees, frm.employee_wrapper);
+	},
+
+	render_datatable(frm, data, wrapper) {
+		const columns = frm.events.get_columns_for_employees_table();
+		if (!frm.employees_datatable) {
+			const datatable_options = {
+				columns: columns,
+				data: data,
+				checkboxColumn: true,
+				serialNoColumn: false,
+				dynamicRowHeight: true,
+				inlineFilters: true,
+				layout: "fluid",
+				cellHeight: 35,
+				noDataMessage: __("No Data"),
+				disableReorderColumn: true,
+			};
+			frm.employees_datatable = new frappe.DataTable(
+				wrapper.get(0),
+				datatable_options
+			);
+		} else {
+			frm.employees_datatable.refresh(data, columns);
+		}
+	},
+
+	get_columns_for_employees_table() {
+		return [
+			{
+				name: "employee",
+				id: "employee",
+				content: `${__("Employee")}`,
 			},
-			render_input: true,
-		});
-		frm.employees_multicheck.refresh_input();
+			{
+				name: "employee_name",
+				id: "employee_name",
+				content: `${__("Name")}`,
+			},
+			{
+				name: "company",
+				id: "company",
+				content: `${__("Company")}`,
+			},
+			{
+				name: "department",
+				id: "department",
+				content: `${__("Department")}`,
+			},
+		].map((x) => ({
+			...x,
+			editable: false,
+			focusable: false,
+			dropdown: false,
+			align: "left",
+		}));
 	},
 
 	set_primary_action(frm) {
@@ -103,13 +134,18 @@ frappe.ui.form.on("Leave Control Panel", {
 	},
 
 	allocate_leave(frm) {
-		const selected_employees = frm.employees_multicheck.get_checked_options();
+		const selected_rows = [];
+		frm.employee_wrapper.find(":input[type=checkbox]").each((idx, row) => {
+			if (row.checked && idx > 0) {
+				selected_rows.push(frm.employees[idx - 1].employee);
+			}
+		});
 		frm
 			.call({
 				method: "allocate_leave",
 				doc: frm.doc,
 				args: {
-					employees: selected_employees,
+					employees: selected_rows,
 				},
 				freeze: true,
 				freeze_message: __("Allocating Leave"),

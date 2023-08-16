@@ -58,6 +58,6 @@ def get_employees(
 	employees = frappe.get_list(
 		"Employee",
 		filters=filters,
-		fields=["employee", "employee_name"],
+		fields=["employee", "employee_name", "company", "department"],
 	)
 	return employees
