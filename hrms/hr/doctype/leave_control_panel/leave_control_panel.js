@@ -78,6 +78,7 @@ frappe.ui.form.on("Leave Control Panel", {
 				columns: columns,
 				data: data,
 				checkboxColumn: true,
+				checkedRowStatus: false,
 				serialNoColumn: false,
 				dynamicRowHeight: true,
 				inlineFilters: true,

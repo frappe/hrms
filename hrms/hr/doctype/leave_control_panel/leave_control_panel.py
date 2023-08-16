@@ -9,27 +9,37 @@ from frappe.utils import cint, comma_and, flt
 
 
 class LeaveControlPanel(Document):
-	def validate_values(self):
-		for f in ["from_date", "to_date", "leave_type", "no_of_days"]:
+	def validate_fields(self):
+		fields = []
+		if self.dates_based_on == "Leave Period":
+			fields.append("leave_period")
+		else:
+			fields.extend(["from_date", "to_date"])
+			self.validate_from_to_dates("from_date", "to_date")
+		if self.allocation_based_on == "Leave Policy Assignment":
+			fields.append("leave_policy")
+		else:
+			fields.extend(["leave_type", "no_of_days"])
+		for f in fields:
 			if not self.get(f):
 				frappe.throw(_("{0} is required").format(self.meta.get_label(f)))
-		self.validate_from_to_dates("from_date", "to_date")
 
 	@frappe.whitelist()
 	def allocate_leave(self, employees):
-		self.validate_values()
+		self.validate_fields()
 		if not employees:
 			frappe.throw(_("No employee selected"))
 		leave_allocated_for = []
+		from_date, to_date = self.get_from_to_date()
 		for d in employees:
 			try:
 				la = frappe.new_doc("Leave Allocation")
 				la.set("__islocal", 1)
 				la.employee = d
-				la.employee_name = frappe.db.get_value("Employee", d, "employee_name")
+				la.employee_name = frappe.get_value("Employee", d, "employee_name")
 				la.leave_type = self.leave_type
-				la.from_date = self.from_date
-				la.to_date = self.to_date
+				la.from_date = from_date
+				la.to_date = to_date
 				la.carry_forward = cint(self.carry_forward)
 				la.new_leaves_allocated = flt(self.no_of_days)
 				la.docstatus = 1
@@ -40,6 +50,11 @@ class LeaveControlPanel(Document):
 		if leave_allocated_for:
 			msgprint(_("Leaves Allocated Successfully for {0}").format(comma_and(leave_allocated_for)))
 
+	def get_from_to_date(self):
+		if self.dates_based_on == "Leave Period":
+			return frappe.get_value("Leave Period", self.leave_period, ['from_date', 'to_date'])
+		else:
+			return self.from_date, self.to_date
 
 @frappe.whitelist()
 def get_employees(
