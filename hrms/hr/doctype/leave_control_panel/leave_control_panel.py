@@ -9,27 +9,6 @@ from frappe.utils import cint, comma_and, flt
 
 
 class LeaveControlPanel(Document):
-	# @frappe.whitelist()
-	# def get_employees(self):
-	# 	filters = {"status": "Active"}
-	# 	for field in [
-	# 		"company",
-	# 		"employment_type",
-	# 		"branch",
-	# 		"designation",
-	# 		"department",
-	# 		"employee_grade",
-	# 	]:
-	# 		if self.get(field):
-	# 			filters["grade" if field == "employee_grade" else field] = self.get(field)
-
-	# 	employees = frappe.get_list(
-	# 		"Employee",
-	# 		filters=filters,
-	# 		fields=["employee", "employee_name"],
-	# 	)
-	# 	return employees
-
 	def validate_values(self):
 		for f in ["from_date", "to_date", "leave_type", "no_of_days"]:
 			if not self.get(f):
