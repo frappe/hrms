@@ -63,6 +63,7 @@ class LeaveControlPanel(Document):
 			show_assignment_submission_status,
 		)
 
+		failed = []
 		from_date, to_date = self.get_from_to_date()
 		for d in employees:
 			assignment = frappe.new_doc("Leave Policy Assignment")
@@ -77,7 +78,6 @@ class LeaveControlPanel(Document):
 			assignment.carry_forward = self.carry_forward
 			assignment.save()
 
-			failed = []
 			savepoint = "before_assignment_submission"
 			try:
 				frappe.db.savepoint(savepoint)
