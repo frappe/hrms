@@ -23,26 +23,33 @@ def get_columns():
 			"fieldname": "employee",
 			"fieldtype": "Link",
 			"options": "Employee",
-			"width": 120,
+			"width": 220,
+		},
+		{
+			"fieldname": "employee_name",
+			"fieldtype": "Data",
+			"label": _("Employee Name"),
+			"width": 0,
+			"hidden": 1,
 		},
 		{
 			"label": _("Shift"),
 			"fieldname": "shift",
 			"fieldtype": "Link",
 			"options": "Shift Type",
-			"width": 100,
+			"width": 120,
 		},
 		{
 			"label": _("Attendance Date"),
 			"fieldname": "attendance_date",
 			"fieldtype": "Date",
-			"width": 120,
+			"width": 130,
 		},
 		{
-			"label": _("Attendance Status"),
+			"label": _("Status"),
 			"fieldname": "status",
 			"fieldtype": "Data",
-			"width": 120,
+			"width": 100,
 		},
 		{
 			"label": _("In Time"),
@@ -66,13 +73,13 @@ def get_columns():
 			"label": _("Late Entry By (Hrs)"),
 			"fieldname": "late_entry_hrs",
 			"fieldtype": "Time",
-			"width": 120,
+			"width": 145,
 		},
 		{
 			"label": _("Early Exit By (Hrs)"),
 			"fieldname": "early_exit_hrs",
 			"fieldtype": "Time",
-			"width": 120,
+			"width": 145,
 		},
 		{
 			"label": _("Department"),
@@ -202,6 +209,7 @@ def get_query(filters):
 		.on(attendance.shift == shift_type.name)
 		.select(
 			attendance.employee,
+			attendance.employee_name,
 			attendance.shift,
 			attendance.attendance_date,
 			attendance.status,
