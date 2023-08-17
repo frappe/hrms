@@ -5,14 +5,16 @@
    "label": "Attendance Count"
   }
  ],
- "content": "[{\"type\":\"chart\",\"data\":{\"chart_name\":\"Attendance Count\",\"col\":12}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Checkin\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Attendance\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Shift Request\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dashboard\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 18px;\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Shifts\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Attendance\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Time\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"rQtUgcUzix\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Attendance Count\",\"col\":12}},{\"id\":\"UwQ_xifLsF\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"9SaJAQOCAW\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"nX7FmW_6Ui\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Checkin\",\"col\":3}},{\"id\":\"hRoTARs-yw\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Attendance\",\"col\":3}},{\"id\":\"RIpBNZ8K-4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Shift Request\",\"col\":3}},{\"id\":\"QSgM2O0tYh\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dashboard\",\"col\":3}},{\"id\":\"6U12ml1ZF3\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"7YjYKeq-Y9\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 18px;\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"id\":\"z_bESTqtB8\",\"type\":\"card\",\"data\":{\"card_name\":\"Shifts\",\"col\":4}},{\"id\":\"gz9Lq4wHbl\",\"type\":\"card\",\"data\":{\"card_name\":\"Attendance\",\"col\":4}},{\"id\":\"j-gCF6e-Mv\",\"type\":\"card\",\"data\":{\"card_name\":\"Time\",\"col\":4}},{\"id\":\"55mpJ1Rqrd\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2022-08-20 15:50:06.598086",
+ "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
  "hide_custom": 1,
  "icon": "milestone",
  "idx": 0,
+ "is_hidden": 0,
  "label": "Shift & Attendance",
  "links": [
   {
@@ -143,7 +145,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Reports",
-   "link_count": 4,
+   "link_count": 5,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -153,6 +155,16 @@
    "label": "Monthly Attendance Sheet",
    "link_count": 0,
    "link_to": "Monthly Attendance Sheet",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Shift Attendance",
+   "link_count": 0,
+   "link_to": "Shift Attendance",
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
@@ -188,16 +200,17 @@
    "type": "Link"
   }
  ],
- "modified": "2022-09-16 11:35:56.729759",
+ "modified": "2023-08-17 20:03:47.627057",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift & Attendance",
+ "number_cards": [],
  "owner": "Administrator",
  "parent_page": "HR",
  "public": 1,
  "quick_lists": [],
  "roles": [],
- "sequence_id": 7.0,
+ "sequence_id": 5.0,
  "shortcuts": [
   {
    "color": "Grey",
