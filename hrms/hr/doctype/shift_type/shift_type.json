@@ -95,7 +95,7 @@
    "default": "0",
    "fieldname": "enable_entry_grace_period",
    "fieldtype": "Check",
-   "label": "Enable Entry Grace Period"
+   "label": "Enable Late Entry Marking"
   },
   {
    "depends_on": "enable_entry_grace_period",
@@ -112,7 +112,7 @@
    "default": "0",
    "fieldname": "enable_exit_grace_period",
    "fieldtype": "Check",
-   "label": "Enable Exit Grace Period"
+   "label": "Enable Early Exit Marking"
   },
   {
    "depends_on": "eval:doc.enable_exit_grace_period",
@@ -138,7 +138,7 @@
    "depends_on": "enable_auto_attendance",
    "fieldname": "grace_period_settings_auto_attendance_section",
    "fieldtype": "Section Break",
-   "label": "Grace Period Settings For Auto Attendance"
+   "label": "Late Entry & Early Exit Settings for Auto Attendance"
   },
   {
    "default": "0",
@@ -168,7 +168,7 @@
   }
  ],
  "links": [],
- "modified": "2023-05-02 11:49:20.020685",
+ "modified": "2023-08-11 20:30:13.358549",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Type",
