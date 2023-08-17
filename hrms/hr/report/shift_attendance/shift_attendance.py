@@ -132,7 +132,9 @@ def get_data(filters):
 def get_report_summary(data):
 	if not data:
 		return None
+
 	present_records = half_day_records = absent_records = late_entries = early_exits = 0
+
 	for entry in data:
 		if entry.status == "Present":
 			present_records += 1
@@ -140,10 +142,12 @@ def get_report_summary(data):
 			half_day_records += 1
 		else:
 			absent_records += 1
+
 		if entry.late_entry:
 			late_entries += 1
 		if entry.early_exit:
 			early_exits += 1
+
 	return [
 		{
 			"value": present_records,
@@ -181,11 +185,12 @@ def get_report_summary(data):
 def get_chart_data(data):
 	if not data:
 		return None
+
 	total_shift_records = {}
 	for entry in data:
-		if entry.shift not in total_shift_records:
-			total_shift_records[entry.shift] = 0
+		total_shift_records.setdefault(entry.shift, 0)
 		total_shift_records[entry.shift] += 1
+
 	labels = [_(d) for d in list(total_shift_records)]
 	chart = {
 		"data": {
@@ -201,6 +206,7 @@ def get_query(filters):
 	attendance = frappe.qb.DocType("Attendance")
 	checkin = frappe.qb.DocType("Employee Checkin")
 	shift_type = frappe.qb.DocType("Shift Type")
+
 	query = (
 		frappe.qb.from_(attendance)
 		.inner_join(checkin)
@@ -232,6 +238,7 @@ def get_query(filters):
 		.groupby(attendance.name)
 		.where(attendance.docstatus == 1)
 	)
+
 	for filter in filters:
 		if filter == "from_date":
 			query = query.where(attendance.attendance_date >= filters.from_date)
@@ -245,6 +252,7 @@ def get_query(filters):
 			query = query.where(attendance.out_time < checkin.shift_end)
 		else:
 			query = query.where(attendance[filter] == filters[filter])
+
 	return query
 
 
@@ -252,6 +260,7 @@ def update_data(data, filters):
 	for d in data:
 		update_late_entry(d, filters.consider_grace_period)
 		update_early_exit(d, filters.consider_grace_period)
+
 		d.working_hours = format_float_precision(d.working_hours)
 		d.in_time, d.out_time = format_in_out_time(d.in_time, d.out_time, d.attendance_date)
 		d.shift_start, d.shift_end = convert_datetime_to_time_for_same_date(d.shift_start, d.shift_end)
