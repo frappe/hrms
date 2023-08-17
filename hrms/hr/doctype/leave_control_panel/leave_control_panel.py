@@ -9,7 +9,7 @@ from frappe.utils import cint, comma_and, flt
 
 
 class LeaveControlPanel(Document):
-	def validate_fields(self):
+	def validate_fields(self, employees):
 		fields = []
 		if self.dates_based_on == "Leave Period":
 			fields.append("leave_period")
@@ -23,12 +23,18 @@ class LeaveControlPanel(Document):
 		for f in fields:
 			if not self.get(f):
 				frappe.throw(_("{0} is required").format(self.meta.get_label(f)))
+		if not employees:
+			frappe.throw(_("No employee(s) selected"))
 
 	@frappe.whitelist()
 	def allocate_leave(self, employees):
-		self.validate_fields()
-		if not employees:
-			frappe.throw(_("No employee selected"))
+		self.validate_fields(employees)
+		if self.allocation_based_on == "Leave Policy Assignment":
+			self.create_leave_policy_assignments(employees)
+		else:
+			self.create_leave_allocations(employees)
+
+	def create_leave_allocations(self, employees):
 		leave_allocated_for = []
 		from_date, to_date = self.get_from_to_date()
 		for d in employees:
@@ -50,11 +56,41 @@ class LeaveControlPanel(Document):
 		if leave_allocated_for:
 			msgprint(_("Leaves Allocated Successfully for {0}").format(comma_and(leave_allocated_for)))
 
+	def create_leave_policy_assignments(self, employees):
+		from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
+			show_assignment_submission_status,
+		)
+
+		from_date, to_date = self.get_from_to_date()
+		for d in employees:
+			assignment = frappe.new_doc("Leave Policy Assignment")
+			assignment.employee = d
+			assignment.assignment_based_on = self.dates_based_on
+			assignment.leave_policy = self.leave_policy
+			assignment.effective_from = from_date
+			assignment.effective_to = to_date
+			assignment.leave_period = self.leave_period or None
+			assignment.carry_forward = self.carry_forward
+			assignment.save()
+
+			failed = []
+			savepoint = "before_assignment_submission"
+			try:
+				frappe.db.savepoint(savepoint)
+				assignment.submit()
+			except Exception:
+				frappe.db.rollback(save_point=savepoint)
+				assignment.log_error("Leave Policy Assignment submission failed")
+				failed.append(assignment.name)
+		if failed:
+			show_assignment_submission_status(failed)
+
 	def get_from_to_date(self):
 		if self.dates_based_on == "Leave Period":
-			return frappe.get_value("Leave Period", self.leave_period, ['from_date', 'to_date'])
+			return frappe.get_value("Leave Period", self.leave_period, ["from_date", "to_date"])
 		else:
 			return self.from_date, self.to_date
+
 
 @frappe.whitelist()
 def get_employees(
