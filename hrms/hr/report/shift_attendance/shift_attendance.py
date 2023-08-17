@@ -49,7 +49,19 @@ def get_columns():
 			"label": _("Status"),
 			"fieldname": "status",
 			"fieldtype": "Data",
-			"width": 100,
+			"width": 80,
+		},
+		{
+			"label": _("Shift Start Time"),
+			"fieldname": "shift_start",
+			"fieldtype": "Data",
+			"width": 125,
+		},
+		{
+			"label": _("Shift End Time"),
+			"fieldname": "shift_end",
+			"fieldtype": "Data",
+			"width": 125,
 		},
 		{
 			"label": _("In Time"),
@@ -94,18 +106,6 @@ def get_columns():
 			"fieldtype": "Link",
 			"options": "Company",
 			"width": 150,
-		},
-		{
-			"label": _("Shift Start Time"),
-			"fieldname": "shift_start",
-			"fieldtype": "Data",
-			"width": 125,
-		},
-		{
-			"label": _("Shift End Time"),
-			"fieldname": "shift_end",
-			"fieldtype": "Data",
-			"width": 125,
 		},
 		{
 			"label": _("Shift Actual Start Time"),
