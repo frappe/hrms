@@ -119,6 +119,13 @@ def get_columns():
 			"fieldtype": "Data",
 			"width": 165,
 		},
+		{
+			"label": _("Attendance ID"),
+			"fieldname": "name",
+			"fieldtype": "Link",
+			"options": "Attendance",
+			"width": 150,
+		},
 	]
 
 
@@ -214,6 +221,7 @@ def get_query(filters):
 		.inner_join(shift_type)
 		.on(attendance.shift == shift_type.name)
 		.select(
+			attendance.name,
 			attendance.employee,
 			attendance.employee_name,
 			attendance.shift,
