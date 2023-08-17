@@ -5,7 +5,7 @@ from datetime import timedelta
 
 import frappe
 from frappe import _
-from frappe.utils import cint, flt
+from frappe.utils import cint, flt, format_datetime
 
 
 def execute(filters=None):
@@ -289,6 +289,9 @@ def convert_datetime_to_time_for_same_date(start, end):
 	if start.date() == end.date():
 		start = start.time()
 		end = end.time()
+	else:
+		start = format_datetime(start)
+		end = format_datetime(end)
 	return start, end
 
 
