@@ -2,6 +2,7 @@ from datetime import date, datetime, time
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
+from frappe.utils import format_datetime
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -119,8 +120,8 @@ class TestShiftAttendance(FrappeTestCase):
 				"shift": "Shift 2",
 				"attendance_date": date(2023, 1, 1),
 				"status": "Present",
-				"in_time": datetime(2023, 1, 1, 22, 30),
-				"out_time": datetime(2023, 1, 2, 1, 30),
+				"in_time": format_datetime(datetime(2023, 1, 1, 22, 30)),
+				"out_time": format_datetime(datetime(2023, 1, 2, 1, 30)),
 			},
 			{
 				"shift": "Shift 2",
