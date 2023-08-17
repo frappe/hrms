@@ -74,18 +74,18 @@
    "width": "50%"
   },
   {
-   "depends_on": "eval:doc.dates_based_on == 'Input'",
+   "depends_on": "eval:!doc.dates_based_on",
    "fieldname": "from_date",
    "fieldtype": "Date",
    "label": "From Date",
-   "mandatory_depends_on": "eval:doc.dates_based_on == 'Input'"
+   "mandatory_depends_on": "eval:!doc.dates_based_on"
   },
   {
-   "depends_on": "eval:doc.dates_based_on == 'Input' || doc.dates_based_on == 'Joining Date'",
+   "depends_on": "eval:doc.dates_based_on != 'Leave Period'",
    "fieldname": "to_date",
    "fieldtype": "Date",
    "label": "To Date",
-   "mandatory_depends_on": "eval:doc.dates_based_on == 'Input' || doc.dates_based_on == 'Joining Date'"
+   "mandatory_depends_on": "eval:doc.dates_based_on != 'Leave Period'"
   },
   {
    "depends_on": "eval:doc.allocation_based_on == 'Leave Policy Assignment'",
@@ -96,11 +96,11 @@
    "options": "Leave Policy"
   },
   {
-   "depends_on": "eval:doc.allocation_based_on == 'Leave Type'",
+   "depends_on": "eval:!doc.allocation_based_on",
    "fieldname": "leave_type",
    "fieldtype": "Link",
    "label": "Leave Type",
-   "mandatory_depends_on": "eval:doc.allocation_based_on == 'Leave Type'",
+   "mandatory_depends_on": "eval:!doc.allocation_based_on",
    "options": "Leave Type"
   },
   {
@@ -111,11 +111,11 @@
    "label": "Carry Forward"
   },
   {
-   "depends_on": "eval:doc.allocation_based_on == 'Leave Type'",
+   "depends_on": "eval:!doc.allocation_based_on",
    "fieldname": "no_of_days",
    "fieldtype": "Float",
    "label": "New Leaves Allocated (In Days)",
-   "mandatory_depends_on": "eval:doc.allocation_based_on == 'Leave Type'"
+   "mandatory_depends_on": "eval:!doc.allocation_based_on"
   },
   {
    "fieldname": "select_employees_section",
@@ -149,7 +149,7 @@
    "fieldname": "dates_based_on",
    "fieldtype": "Select",
    "label": "Dates Based On",
-   "options": "Leave Period\nInput\nJoining Date"
+   "options": "\nLeave Period\nJoining Date"
   },
   {
    "depends_on": "eval:doc.dates_based_on == 'Leave Period'",
@@ -164,7 +164,7 @@
    "fieldname": "allocation_based_on",
    "fieldtype": "Select",
    "label": "Allocation Based On",
-   "options": "Leave Policy Assignment\nLeave Type"
+   "options": "\nLeave Policy Assignment"
   }
  ],
  "hide_toolbar": 1,
@@ -172,7 +172,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-08-17 13:17:26.844418",
+ "modified": "2023-08-17 13:48:46.304073",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Control Panel",

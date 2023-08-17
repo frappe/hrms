@@ -13,9 +13,11 @@ class LeaveControlPanel(Document):
 		fields = []
 		if self.dates_based_on == "Leave Period":
 			fields.append("leave_period")
+		elif self.dates_based_on == "Joining Date":
+			fields.append("to_date")
 		else:
-			fields.extend(["from_date", "to_date"])
 			self.validate_from_to_dates("from_date", "to_date")
+			fields.extend(["from_date", "to_date"])
 		if self.allocation_based_on == "Leave Policy Assignment":
 			fields.append("leave_policy")
 		else:
