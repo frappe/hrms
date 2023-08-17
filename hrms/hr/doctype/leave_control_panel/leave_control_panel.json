@@ -81,11 +81,11 @@
    "mandatory_depends_on": "eval:doc.dates_based_on == 'Input'"
   },
   {
-   "depends_on": "eval:doc.dates_based_on == 'Input'",
+   "depends_on": "eval:doc.dates_based_on == 'Input' || doc.dates_based_on == 'Joining Date'",
    "fieldname": "to_date",
    "fieldtype": "Date",
    "label": "To Date",
-   "mandatory_depends_on": "eval:doc.dates_based_on == 'Input'"
+   "mandatory_depends_on": "eval:doc.dates_based_on == 'Input' || doc.dates_based_on == 'Joining Date'"
   },
   {
    "depends_on": "eval:doc.allocation_based_on == 'Leave Policy Assignment'",
@@ -149,7 +149,7 @@
    "fieldname": "dates_based_on",
    "fieldtype": "Select",
    "label": "Dates Based On",
-   "options": "Leave Period\nInput"
+   "options": "Leave Period\nInput\nJoining Date"
   },
   {
    "depends_on": "eval:doc.dates_based_on == 'Leave Period'",
@@ -172,7 +172,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-08-16 13:31:23.082681",
+ "modified": "2023-08-17 13:17:26.844418",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Control Panel",

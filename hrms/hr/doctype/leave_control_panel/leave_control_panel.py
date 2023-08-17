@@ -44,7 +44,7 @@ class LeaveControlPanel(Document):
 				la.employee = d
 				la.employee_name = frappe.get_value("Employee", d, "employee_name")
 				la.leave_type = self.leave_type
-				la.from_date = from_date
+				la.from_date = from_date if from_date else frappe.get_value("Employee", d, "date_of_joining")
 				la.to_date = to_date
 				la.carry_forward = cint(self.carry_forward)
 				la.new_leaves_allocated = flt(self.no_of_days)
@@ -67,7 +67,9 @@ class LeaveControlPanel(Document):
 			assignment.employee = d
 			assignment.assignment_based_on = self.dates_based_on
 			assignment.leave_policy = self.leave_policy
-			assignment.effective_from = from_date
+			assignment.effective_from = (
+				from_date if from_date else frappe.get_value("Employee", d, "date_of_joining")
+			)
 			assignment.effective_to = to_date
 			assignment.leave_period = self.leave_period or None
 			assignment.carry_forward = self.carry_forward
@@ -88,8 +90,10 @@ class LeaveControlPanel(Document):
 	def get_from_to_date(self):
 		if self.dates_based_on == "Leave Period":
 			return frappe.get_value("Leave Period", self.leave_period, ["from_date", "to_date"])
-		else:
+		elif self.dates_based_on == "Input":
 			return self.from_date, self.to_date
+		else:
+			return None, self.to_date
 
 
 @frappe.whitelist()
