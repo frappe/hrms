@@ -297,42 +297,103 @@ class PayrollEntry(Document):
 			component_dict = {}
 
 			for item in salary_components:
-				add_component_to_accrual_jv_entry = True
+				if not self.should_add_component_to_accrual_jv(component_type, item):
+					continue
+
 				employee_cost_centers = self.get_payroll_cost_centers_for_employee(
 					item.employee, item.salary_structure
 				)
+				employee_advance = self.get_advance_deduction(component_type, item)
 
-				if component_type == "earnings":
-					is_flexible_benefit, only_tax_impact = frappe.get_cached_value(
-						"Salary Component", item["salary_component"], ["is_flexible_benefit", "only_tax_impact"]
-					)
-					if is_flexible_benefit == 1 and only_tax_impact == 1:
-						add_component_to_accrual_jv_entry = False
+				for cost_center, percentage in employee_cost_centers.items():
+					amount_against_cost_center = flt(item.amount) * percentage / 100
 
-				if add_component_to_accrual_jv_entry:
-					is_advance_deduction = self.is_advance_deduction(component_type, item)
-
-					for cost_center, percentage in employee_cost_centers.items():
-						amount_against_cost_center = flt(item.amount) * percentage / 100
-						party = item.employee if is_advance_deduction else None
-						key = (item.salary_component, cost_center, party)
+					if employee_advance:
+						self.add_advance_deduction_entry(
+							item, amount_against_cost_center, cost_center, employee_advance
+						)
+					else:
+						key = (item.salary_component, cost_center)
 						component_dict[key] = component_dict.get(key, 0) + amount_against_cost_center
 
-						if employee_wise_accounting_enabled:
-							self.set_employee_based_payroll_payable_entries(
-								component_type, item.employee, amount_against_cost_center
-							)
+					if employee_wise_accounting_enabled:
+						self.set_employee_based_payroll_payable_entries(
+							component_type, item.employee, amount_against_cost_center
+						)
 
 			account_details = self.get_account(component_dict=component_dict)
 
 			return account_details
 
-	def is_advance_deduction(self, component_type: str, item: dict) -> bool:
-		if component_type == "deductions" and item.additional_salary:
-			ref_doctype = frappe.db.get_value("Additional Salary", item.additional_salary, "ref_doctype")
+	def should_add_component_to_accrual_jv(self, component_type: str, item: dict) -> bool:
+		add_component_to_accrual_jv = True
+		if component_type == "earnings":
+			is_flexible_benefit, only_tax_impact = frappe.get_cached_value(
+				"Salary Component", item["salary_component"], ["is_flexible_benefit", "only_tax_impact"]
+			)
+			if cint(is_flexible_benefit) and cint(only_tax_impact):
+				add_component_to_accrual_jv = False
 
-			return ref_doctype == "Employee Advance"
-		return False
+		return add_component_to_accrual_jv
+
+	def get_advance_deduction(self, component_type: str, item: dict) -> str | None:
+		if component_type == "deductions" and item.additional_salary:
+			ref_doctype, ref_docname = frappe.db.get_value(
+				"Additional Salary",
+				item.additional_salary,
+				["ref_doctype", "ref_docname"],
+			)
+
+			if ref_doctype == "Employee Advance":
+				return ref_docname
+		return
+
+	def add_advance_deduction_entry(
+		self,
+		item: dict,
+		amount: float,
+		cost_center: str,
+		employee_advance: str,
+	) -> None:
+		self._advance_deduction_entries.append(
+			{
+				"employee": item.employee,
+				"account": self.get_salary_component_account(item.salary_component),
+				"amount": amount,
+				"cost_center": cost_center,
+				"reference_type": "Employee Advance",
+				"reference_name": employee_advance,
+			}
+		)
+
+	def set_accounting_entries_for_advance_deductions(
+		self,
+		accounts: list,
+		currencies: list,
+		company_currency: str,
+		accounting_dimensions: list,
+		precision: int,
+		payable_amount: float,
+	):
+		for entry in self._advance_deduction_entries:
+			payable_amount = self.get_accounting_entries_and_payable_amount(
+				entry.get("account"),
+				entry.get("cost_center"),
+				entry.get("amount"),
+				currencies,
+				company_currency,
+				payable_amount,
+				accounting_dimensions,
+				precision,
+				entry_type="credit",
+				accounts=accounts,
+				party=entry.get("employee"),
+				reference_type="Employee Advance",
+				reference_name=entry.get("reference_name"),
+				is_advance="Yes",
+			)
+
+		return payable_amount
 
 	def set_employee_based_payroll_payable_entries(
 		self, component_type, employee, amount, salary_structure=None
@@ -387,10 +448,11 @@ class PayrollEntry(Document):
 	def get_account(self, component_dict=None):
 		account_dict = {}
 		for key, amount in component_dict.items():
-			account = self.get_salary_component_account(key[0])
-			accouting_key = (account, key[1], key[2])
+			component, cost_center = key
+			account = self.get_salary_component_account(component)
+			accounting_key = (account, cost_center)
 
-			account_dict[accouting_key] = account_dict.get(accouting_key, 0) + amount
+			account_dict[accounting_key] = account_dict.get(accounting_key, 0) + amount
 
 		return account_dict
 
@@ -400,6 +462,7 @@ class PayrollEntry(Document):
 			"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
 		)
 		self.employee_based_payroll_payable_entries = {}
+		self._advance_deduction_entries = []
 
 		earnings = (
 			self.get_salary_component_total(
@@ -430,6 +493,15 @@ class PayrollEntry(Document):
 				accounts,
 				earnings,
 				deductions,
+				currencies,
+				company_currency,
+				accounting_dimensions,
+				precision,
+				payable_amount,
+			)
+
+			payable_amount = self.set_accounting_entries_for_advance_deductions(
+				accounts,
 				currencies,
 				company_currency,
 				accounting_dimensions,
@@ -541,7 +613,6 @@ class PayrollEntry(Document):
 				precision,
 				entry_type="credit",
 				accounts=accounts,
-				party=acc_cc[2],
 			)
 
 		return payable_amount
@@ -614,6 +685,9 @@ class PayrollEntry(Document):
 		entry_type="credit",
 		party=None,
 		accounts=None,
+		reference_type=None,
+		reference_name=None,
+		is_advance=None,
 	):
 		exchange_rate, amt = self.get_amount_and_exchange_rate_for_journal_entry(
 			account, amount, company_currency, currencies
@@ -654,6 +728,15 @@ class PayrollEntry(Document):
 				{
 					"party_type": "Employee",
 					"party": party,
+				}
+			)
+
+		if reference_type:
+			row.update(
+				{
+					"reference_type": reference_type,
+					"reference_name": reference_name,
+					"is_advance": is_advance,
 				}
 			)
 
