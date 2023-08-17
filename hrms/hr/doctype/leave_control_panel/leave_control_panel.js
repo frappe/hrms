@@ -2,13 +2,9 @@
 // License: GNU General Public License v3. See license.txt
 
 frappe.ui.form.on("Leave Control Panel", {
-	onload: function (frm) {
-		if (!frm.doc.from_date) {
-			frm.set_value("from_date", frappe.datetime.get_today());
-		}
-	},
 	refresh: function (frm) {
 		frm.disable_save();
+		frm.trigger("reset_leave_details");
 		frm.trigger("load_employees");
 		frm.trigger("set_primary_action");
 	},
@@ -42,6 +38,18 @@ frappe.ui.form.on("Leave Control Panel", {
 
 	employee_grade(frm) {
 		frm.trigger("load_employees");
+	},
+
+	reset_leave_details(frm) {
+		frm.set_value("dates_based_on", "");
+		frm.set_value("leave_period", "");
+		frm.set_value("from_date", frappe.datetime.get_today());
+		frm.set_value("to_date", "");
+		frm.set_value("carry_forward", 0);
+		frm.set_value("allocation_based_on", "");
+		frm.set_value("leave_type", "");
+		frm.set_value("no_of_days", 0);
+		frm.set_value("leave_policy", "");
 	},
 
 	load_employees(frm) {
@@ -92,6 +100,7 @@ frappe.ui.form.on("Leave Control Panel", {
 				datatable_options
 			);
 		} else {
+			frm.employees_datatable.rowmanager.checkMap = [];
 			frm.employees_datatable.refresh(data, columns);
 		}
 	},
@@ -128,25 +137,26 @@ frappe.ui.form.on("Leave Control Panel", {
 	},
 
 	set_primary_action(frm) {
-		frm.disable_save();
 		frm.page.set_primary_action(__("Allocate Leave"), () => {
 			frm.trigger("allocate_leave");
 		});
 	},
 
 	allocate_leave(frm) {
-		const selected_rows = [];
-		frm.employee_wrapper.find(":input[type=checkbox]").each((idx, row) => {
-			if (row.checked && idx > 0) {
-				selected_rows.push(frm.employees[idx - 1].employee);
-			}
+		const check_map = frm.employees_datatable.rowmanager.checkMap;
+		const selected_employees = [];
+		check_map.forEach((is_checked, idx) => {
+			if (is_checked)
+				selected_employees.push(
+					frm.employees_datatable.datamanager.data[idx].employee
+				);
 		});
 		frm
 			.call({
 				method: "allocate_leave",
 				doc: frm.doc,
 				args: {
-					employees: selected_rows,
+					employees: selected_employees,
 				},
 				freeze: true,
 				freeze_message: __("Allocating Leave"),
