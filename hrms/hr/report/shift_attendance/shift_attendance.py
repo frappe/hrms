@@ -243,8 +243,8 @@ def get_query(filters):
 			shift_type.enable_exit_grace_period,
 			shift_type.early_exit_grace_period,
 		)
-		.groupby(attendance.name)
 		.where(attendance.docstatus == 1)
+		.groupby(attendance.name)
 	)
 
 	for filter in filters:
