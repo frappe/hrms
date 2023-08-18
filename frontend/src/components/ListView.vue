@@ -230,6 +230,7 @@ function fetchDocumentList() {
 		fields: props.fields,
 		filters: filters,
 		group_by: props.groupBy,
+		order_by: `\`tab${props.doctype}\`.modified desc`,
 	})
 }
 
