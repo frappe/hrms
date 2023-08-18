@@ -18,10 +18,12 @@ class LeaveControlPanel(Document):
 		else:
 			self.validate_from_to_dates("from_date", "to_date")
 			fields.extend(["from_date", "to_date"])
+
 		if self.allocation_based_on == "Leave Policy Assignment":
 			fields.append("leave_policy")
 		else:
 			fields.extend(["leave_type", "no_of_days"])
+
 		for f in fields:
 			if not self.get(f):
 				frappe.throw(_("{0} is required").format(self.meta.get_label(f)))
@@ -92,10 +94,10 @@ class LeaveControlPanel(Document):
 	def get_from_to_date(self):
 		if self.dates_based_on == "Leave Period":
 			return frappe.get_value("Leave Period", self.leave_period, ["from_date", "to_date"])
-		elif self.dates_based_on == "Input":
-			return self.from_date, self.to_date
-		else:
+		elif self.dates_based_on == "Joining Date":
 			return None, self.to_date
+		else:
+			return self.from_date, self.to_date
 
 
 @frappe.whitelist()
