@@ -47,3 +47,50 @@ export class FileAttachment {
 		})
 	}
 }
+
+export async function guessStatusColor(doctype, status) {
+	const statesResource = createResource({
+		url: "hrms.api.get_doctype_states",
+		params: { doctype: doctype },
+	})
+
+	const stateMap = await statesResource.reload()
+
+	if (stateMap?.length) {
+		return stateMap?.[status]
+	}
+
+	let color = "gray"
+
+	if (
+		["Open", "Pending", "Unpaid", "Review", "Medium", "Not Approved"].includes(
+			status
+		)
+	) {
+		color = "yellow"
+	} else if (
+		["Urgent", "High", "Failed", "Rejected", "Error"].includes(status)
+	) {
+		color = "red"
+	} else if (
+		[
+			"Closed",
+			"Finished",
+			"Converted",
+			"Completed",
+			"Complete",
+			"Confirmed",
+			"Approved",
+			"Yes",
+			"Active",
+			"Available",
+			"Success",
+		].includes(status)
+	) {
+		color = "green"
+	} else if (status === "Submitted") {
+		color = "blue"
+	}
+
+	return color
+}

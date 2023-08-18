@@ -19,7 +19,7 @@
 					<Badge
 						v-if="formModel.status"
 						:label="formModel.status"
-						:colorMap="colorMap?.data"
+						:color="statusColor"
 						class="whitespace-nowrap"
 					/>
 				</div>
@@ -161,7 +161,7 @@ import {
 import FormField from "@/components/FormField.vue"
 import FileUploaderView from "@/components/FileUploaderView.vue"
 
-import { FileAttachment } from "@/composables/index"
+import { FileAttachment, guessStatusColor } from "@/composables/index"
 
 const props = defineProps({
 	doctype: {
@@ -199,6 +199,7 @@ const emit = defineEmits(["validateForm", "update:modelValue"])
 const router = useRouter()
 let activeTab = ref(props.tabs?.[0].name)
 let fileAttachments = ref([])
+let statusColor = ref("")
 
 const formModel = computed({
 	get() {
@@ -225,12 +226,6 @@ const tabFields = computed(() => {
 	})
 
 	return fieldsByTab
-})
-
-const colorMap = createResource({
-	url: "hrms.api.get_doctype_states",
-	params: { doctype: props.doctype },
-	auto: true,
 })
 
 const attachedFiles = createResource({
@@ -354,6 +349,13 @@ function submitForm() {
 	}
 }
 
+async function setStatusColor() {
+	const status = formModel.value.status || formModel.value.approval_status
+	if (status) {
+		statusColor.value = await guessStatusColor(props.doctype, status)
+	}
+}
+
 const isFormReady = computed(() => {
 	if (!props.id) return true
 
@@ -365,6 +367,7 @@ onMounted(async () => {
 		await documentResource.get.promise
 		formModel.value = documentResource.doc
 		await attachedFiles.reload()
+		await setStatusColor()
 	}
 })
 </script>
