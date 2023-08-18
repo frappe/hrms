@@ -288,9 +288,12 @@ const docList = createListResource({
 				position: "bottom-center",
 				iconClasses: "text-green-500",
 			})
-
 			await uploadAllAttachments(data.doctype, data.name)
-			router.back()
+
+			router.replace({
+				name: `${props.doctype.replace(/\s+/g, "")}DetailView`,
+				params: { id: data.name },
+			})
 		},
 		onError() {
 			console.log(`Error creating ${props.doctype}`)
@@ -311,7 +314,6 @@ const documentResource = createDocumentResource({
 				position: "bottom-center",
 				iconClasses: "text-green-500",
 			})
-			router.back()
 		},
 		onError() {
 			console.log(`Error updating ${props.doctype}`)
