@@ -5,7 +5,7 @@ from datetime import timedelta
 
 import frappe
 from frappe import _
-from frappe.utils import cint, flt, format_datetime
+from frappe.utils import cint, flt, format_datetime, format_duration
 
 
 def execute(filters=None):
@@ -82,16 +82,16 @@ def get_columns():
 			"width": 100,
 		},
 		{
-			"label": _("Late Entry By (Hrs)"),
+			"label": _("Late Entry By"),
 			"fieldname": "late_entry_hrs",
-			"fieldtype": "Time",
-			"width": 145,
+			"fieldtype": "Data",
+			"width": 120,
 		},
 		{
-			"label": _("Early Exit By (Hrs)"),
+			"label": _("Early Exit By"),
 			"fieldname": "early_exit_hrs",
-			"fieldtype": "Time",
-			"width": 145,
+			"fieldtype": "Data",
+			"width": 120,
 		},
 		{
 			"label": _("Department"),
@@ -312,6 +312,8 @@ def update_late_entry(entry, consider_grace_period):
 	elif entry.in_time and entry.in_time > entry.shift_start:
 		entry.late_entry = 1
 		entry.late_entry_hrs = entry.in_time - entry.shift_start
+	if entry.late_entry_hrs:
+		entry.late_entry_hrs = format_duration(entry.late_entry_hrs.total_seconds())
 
 
 def update_early_exit(entry, consider_grace_period):
@@ -323,3 +325,5 @@ def update_early_exit(entry, consider_grace_period):
 	elif entry.out_time and entry.out_time < entry.shift_end:
 		entry.early_exit = 1
 		entry.early_exit_hrs = entry.shift_end - entry.out_time
+	if entry.early_exit_hrs:
+		entry.early_exit_hrs = format_duration(entry.early_exit_hrs.total_seconds())
