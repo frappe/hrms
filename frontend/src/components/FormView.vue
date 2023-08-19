@@ -105,6 +105,7 @@
 						:default="field.default"
 						:label="field.label"
 						:options="field.options"
+						:linkFilters="field.linkFilters"
 						:documentList="field.documentList"
 						:readOnly="Boolean(field.read_only) || isFormReadOnly"
 						:reqd="Boolean(field.reqd)"
@@ -346,13 +347,17 @@ const documentResource = createDocumentResource({
 	},
 })
 
+const docPermissions = createResource({
+	url: "frappe.client.get_doc_permissions",
+})
+
 const saveButtonDisabled = computed(() => {
 	if (props.id && formButton.value === "Save" && !isFormDirty.value) {
 		return true
 	}
 
 	return props.fields?.some((field) => {
-		if (field.reqd && !formModel.value[field.fieldname]) {
+		if (field.reqd && !field.hidden && !formModel.value[field.fieldname]) {
 			return true
 		}
 	})
@@ -360,15 +365,19 @@ const saveButtonDisabled = computed(() => {
 
 const formButton = computed(() => {
 	if (props.id && props.isSubmittable && !isFormDirty.value) {
-		if (formModel.value.docstatus === 0) {
+		if (formModel.value.docstatus === 0 && hasPermission("submit")) {
 			return "Submit"
-		} else if (formModel.value.docstatus === 1) {
+		} else if (formModel.value.docstatus === 1 && hasPermission("cancel")) {
 			return "Cancel"
 		}
 	} else if (formModel.value.docstatus !== 2) {
 		return "Save"
 	}
 })
+
+function hasPermission(action) {
+	return docPermissions.data?.permissions[action]
+}
 
 function handleDocInsert() {
 	docList.insert.submit(formModel.value)
@@ -438,6 +447,7 @@ onMounted(async () => {
 	if (props.id) {
 		await documentResource.get.promise
 		formModel.value = { ...documentResource.doc }
+		await docPermissions.fetch({ doctype: props.doctype, docname: props.id })
 		await attachedFiles.reload()
 		await setStatusColor()
 		isFormDirty.value = false
