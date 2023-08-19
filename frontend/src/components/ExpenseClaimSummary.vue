@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col w-full">
+	<div class="flex flex-col w-full" v-if="summary.data">
 		<div class="text-xl text-gray-800 font-bold">Expense Claim Summary</div>
 		<div class="flex flex-col gap-4 bg-white py-3 px-3.5 mt-3 rounded-xl">
 			<div class="flex flex-col gap-1.5">
@@ -57,7 +57,7 @@
 import { FeatherIcon, createResource } from "frappe-ui"
 import { computed, inject } from "vue"
 
-import { getCompanyCurrency } from "@/data/currencies"
+import { getCompanyCurrencySymbol } from "@/data/currencies"
 
 const employee = inject("$employee")
 
@@ -78,6 +78,6 @@ const total_claimed_amount = computed(() => {
 })
 
 const company_currency = computed(() =>
-	getCompanyCurrency(employee.data.company)
+	getCompanyCurrencySymbol(employee.data.company)
 )
 </script>

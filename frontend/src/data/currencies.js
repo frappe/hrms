@@ -11,7 +11,11 @@ const currencySymbols = createResource({
 })
 
 export function getCompanyCurrency(company) {
-	return companyCurrency?.data?.[company]
+	return companyCurrency?.data?.[company][0]
+}
+
+export function getCompanyCurrencySymbol(company) {
+	return companyCurrency?.data?.[company][1]
 }
 
 export function getCurrencySymbol(currency) {

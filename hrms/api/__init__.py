@@ -360,6 +360,11 @@ def get_employee_advance_balance(employee: str) -> list[dict]:
 	return advances
 
 
+@frappe.whitelist()
+def get_advance_account(company: str) -> str | None:
+	return frappe.db.get_value("Company", company, "default_employee_advance_account", cache=True)
+
+
 # Company
 @frappe.whitelist()
 def get_company_currencies() -> dict:
@@ -373,12 +378,13 @@ def get_company_currencies() -> dict:
 		.select(
 			Company.name,
 			Company.default_currency,
-			Currency.symbol,
+			Currency.name.as_("currency"),
+			Currency.symbol.as_("symbol"),
 		)
 	)
 
 	companies = query.run(as_dict=True)
-	return {company.name: company.symbol or company.default_currency for company in companies}
+	return {company.name: (company.default_currency, company.symbol) for company in companies}
 
 
 @frappe.whitelist()

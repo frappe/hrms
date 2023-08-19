@@ -44,7 +44,7 @@
 import { FeatherIcon, Badge } from "frappe-ui"
 import { computed, inject } from "vue"
 
-import { getCompanyCurrency } from "@/data/currencies"
+import { getCompanyCurrencySymbol } from "@/data/currencies"
 
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
@@ -88,7 +88,7 @@ const claimDates = computed(() => {
 	}
 })
 
-const currency = computed(() => getCompanyCurrency(props.doc.company))
+const currency = computed(() => getCompanyCurrencySymbol(props.doc.company))
 
 const approvalStatus = computed(() => {
 	return props.doc.approval_status === "Draft"
