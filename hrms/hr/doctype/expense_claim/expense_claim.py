@@ -53,7 +53,7 @@ class ExpenseClaim(AccountsController):
 			# set as paid
 			self.is_paid
 			or (
-				flt(self.total_sanctioned_amount > 0)
+				flt(self.total_sanctioned_amount) > 0
 				and (
 					# grand total is reimbursed
 					(

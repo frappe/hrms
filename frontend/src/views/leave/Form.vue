@@ -5,6 +5,7 @@
 				v-if="formFields.data"
 				doctype="Leave Application"
 				v-model="leaveApplication"
+				:isSubmittable="true"
 				:fields="formFields.data"
 				:id="props.id"
 				@validateForm="validateForm"

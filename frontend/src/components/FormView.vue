@@ -124,22 +124,25 @@
 
 			<!-- Bottom Save Button -->
 			<div
+				v-if="formButton"
 				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-xl pb-10"
 			>
 				<ErrorMessage
 					class="mb-2"
 					:message="docList.insert.error || documentResource?.setValue?.error"
 				/>
+
 				<Button
-					class="w-full rounded-md py-2.5 px-3.5"
-					appearance="primary"
-					@click="submitForm"
+					class="w-full rounded-md py-2.5 px-3.5 mt-2"
+					:class="formButton === 'Cancel' ? 'shadow' : ''"
+					@click="formButton === 'Save' ? saveForm() : submitOrCancelForm()"
+					:appearance="formButton === 'Cancel' ? 'secondary' : 'primary'"
 					:disabled="saveButtonDisabled"
 					:loading="
 						docList.insert.loading || documentResource?.setValue?.loading
 					"
 				>
-					Save
+					{{ formButton }}
 				</Button>
 			</div>
 		</div>
@@ -147,7 +150,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue"
+import { computed, nextTick, onMounted, ref, watch } from "vue"
 import { useRouter } from "vue-router"
 import {
 	ErrorMessage,
@@ -171,6 +174,11 @@ const props = defineProps({
 	modelValue: {
 		type: Object,
 		required: true,
+	},
+	isSubmittable: {
+		type: Boolean,
+		required: false,
+		default: false,
 	},
 	fields: {
 		type: Array,
@@ -200,6 +208,8 @@ const router = useRouter()
 let activeTab = ref(props.tabs?.[0].name)
 let fileAttachments = ref([])
 let statusColor = ref("")
+let isFormDirty = ref(false)
+let isFormUpdated = ref(false)
 
 const formModel = computed({
 	get() {
@@ -209,6 +219,20 @@ const formModel = computed({
 		emit("update:modelValue", newValue)
 	},
 })
+
+watch(
+	() => formModel.value,
+	() => {
+		if (!props.id) return
+
+		if (isFormReady.value && !isFormUpdated.value) {
+			isFormDirty.value = true
+		} else if (isFormUpdated.value) {
+			isFormUpdated.value = false
+		}
+	},
+	{ deep: true }
+)
 
 const tabFields = computed(() => {
 	let fieldsByTab = {}
@@ -322,6 +346,10 @@ const documentResource = createDocumentResource({
 })
 
 const saveButtonDisabled = computed(() => {
+	if (props.id && formButton.value === "Save" && !isFormDirty.value) {
+		return true
+	}
+
 	return props.fields?.some((field) => {
 		if (field.reqd && !formModel.value[field.fieldname]) {
 			return true
@@ -329,25 +357,62 @@ const saveButtonDisabled = computed(() => {
 	})
 })
 
+const formButton = computed(() => {
+	if (props.id && props.isSubmittable && !isFormDirty.value) {
+		if (formModel.value.docstatus === 0) {
+			return "Submit"
+		} else if (formModel.value.docstatus === 1) {
+			return "Cancel"
+		}
+	} else if (formModel.value.docstatus !== 2) {
+		return "Save"
+	}
+})
+
 function handleDocInsert() {
 	docList.insert.submit(formModel.value)
 }
 
-async function handleDocUpdate() {
+async function handleDocUpdate(action) {
 	if (documentResource.doc) {
-		await documentResource.setValue.submit(formModel.value)
+		let params = { ...formModel.value }
+		if (action == "submit") {
+			params.docstatus = 1
+		} else if (action == "cancel") {
+			params.docstatus = 2
+		}
+
+		await documentResource.setValue.submit(params)
 		await documentResource.get.promise
-		formModel.value = documentResource.doc
+
+		formModel.value = { ...documentResource.doc }
+
+		nextTick(() => {
+			setStatusColor()
+			isFormDirty.value = false
+			isFormUpdated.value = true
+		})
 	}
 }
 
-function submitForm() {
+function saveForm() {
 	emit("validateForm")
 
 	if (props.id) {
 		handleDocUpdate()
 	} else {
 		handleDocInsert()
+	}
+}
+
+function submitOrCancelForm() {
+	if (isFormDirty.value) return
+
+	if (formModel.value.docstatus === 0) {
+		emit("validateForm")
+		handleDocUpdate("submit")
+	} else if (formModel.value.docstatus === 1) {
+		handleDocUpdate("cancel")
 	}
 }
 
@@ -367,9 +432,10 @@ const isFormReady = computed(() => {
 onMounted(async () => {
 	if (props.id) {
 		await documentResource.get.promise
-		formModel.value = documentResource.doc
+		formModel.value = { ...documentResource.doc }
 		await attachedFiles.reload()
 		await setStatusColor()
+		isFormDirty.value = false
 	}
 })
 </script>

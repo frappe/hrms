@@ -5,6 +5,7 @@
 				v-if="formFields.data"
 				doctype="Expense Claim"
 				v-model="expenseClaim"
+				:isSubmittable="true"
 				:fields="formFields.data"
 				:id="props.id"
 				:tabbedView="true"
@@ -369,8 +370,13 @@ function setFormReadOnly() {
 
 function validateForm() {
 	// set selected advances
-	expenseClaim.value.advances = expenseClaim.value.advances.filter(
+	if (!expenseClaim?.value?.advances) return
+
+	expenseClaim.value.advances = expenseClaim?.value?.advances?.filter(
 		(advance) => advance.selected
 	)
+	expenseClaim?.value?.expenses?.forEach((expense) => {
+		expense.cost_center = expenseClaim.value.cost_center
+	})
 }
 </script>

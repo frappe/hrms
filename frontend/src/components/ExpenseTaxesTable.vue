@@ -18,7 +18,7 @@
 		</div>
 
 		<div
-			v-if="expenseClaim.taxes.length"
+			v-if="expenseClaim.taxes?.length"
 			class="flex flex-col bg-white mt-5 rounded-lg border overflow-auto"
 		>
 			<div
