@@ -14,31 +14,31 @@
 				@validateForm="validateForm"
 			>
 				<!-- Child Tables -->
-				<template #expenses>
+				<template #expenses="{ isFormReadOnly }">
 					<ExpensesTable
 						v-model:expenseClaim="expenseClaim"
 						:currency="currency"
-						:isReadOnly="isReadOnly"
+						:isReadOnly="isReadOnly || isFormReadOnly"
 						@addExpenseItem="addExpenseItem"
 						@updateExpenseItem="updateExpenseItem"
 					/>
 				</template>
 
-				<template #taxes>
+				<template #taxes="{ isFormReadOnly }">
 					<ExpenseTaxesTable
 						v-model:expenseClaim="expenseClaim"
 						:currency="currency"
-						:isReadOnly="isReadOnly"
+						:isReadOnly="isReadOnly || isFormReadOnly"
 						@addExpenseTax="addExpenseTax"
 						@updateExpenseTax="updateExpenseTax"
 					/>
 				</template>
 
-				<template #advances>
+				<template #advances="{ isFormReadOnly }">
 					<ExpenseAdvancesTable
 						v-model:expenseClaim="expenseClaim"
 						:currency="currency"
-						:isReadOnly="isReadOnly"
+						:isReadOnly="isReadOnly || isFormReadOnly"
 					/>
 				</template>
 			</FormView>
@@ -167,7 +167,9 @@ watch(
 watch(
 	() => props.id && expenseClaim.value.expenses,
 	(_) => {
-		advances.reload()
+		if (expenseClaim.value.docstatus === 0) {
+			advances.reload()
+		}
 	}
 )
 

@@ -22,8 +22,7 @@
 			class="flex flex-col bg-white mt-5 rounded-lg border overflow-auto"
 		>
 			<div
-				class="flex flex-row p-3.5 items-center justify-between border-b"
-				:class="isReadOnly ? '' : 'cursor-pointer'"
+				class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
 				v-for="(item, idx) in expenseClaim.taxes"
 				:key="item.name"
 				@click="openModal(item, idx)"
@@ -71,7 +70,7 @@
 			>
 				<div class="w-full pt-8 pb-5 border-b text-center">
 					<span class="text-gray-900 font-bold text-xl">
-						{{ editingIdx === null ? "New Tax Entry" : "Edit Tax Entry" }}
+						{{ modalTitle }}
 					</span>
 				</div>
 				<div class="w-full flex flex-col items-center justify-center gap-5 p-4">
@@ -87,13 +86,16 @@
 							:linkFilters="field.linkFilters"
 							:hidden="field.hidden"
 							:reqd="field.reqd"
-							:readOnly="field.read_only"
+							:readOnly="field.read_only || isReadOnly"
 							:default="field.default"
 							v-model="expenseTax[field.fieldname]"
 						/>
 					</div>
 
-					<div class="flex w-full flex-row items-center justify-between gap-3">
+					<div
+						v-if="!isReadOnly"
+						class="flex w-full flex-row items-center justify-between gap-3"
+					>
 						<Button
 							appearance="primary"
 							class="w-full py-3 px-12"
@@ -137,7 +139,6 @@ const editingIdx = ref(null)
 
 const isModalOpen = ref(false)
 const openModal = async (item, idx) => {
-	if (props.isReadOnly) return
 	if (item) {
 		expenseTax.value = { ...item }
 		editingIdx.value = idx
@@ -195,6 +196,12 @@ const taxesTableFields = createResource({
 	},
 })
 taxesTableFields.reload()
+
+const modalTitle = computed(() => {
+	if (props.isReadOnly) return "Expense Tax"
+
+	return editingIdx.value === null ? "New Expense Tax" : "Edit Expense Tax"
+})
 
 const addButtonDisabled = computed(() => {
 	return props.fields?.some((field) => {

@@ -57,7 +57,7 @@
 		</div>
 	</div>
 
-	<EmptyState message="You have no advances" v-else />
+	<EmptyState message="No advances found" v-else />
 </template>
 
 <script setup>

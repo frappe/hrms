@@ -63,6 +63,7 @@
 							<slot
 								v-if="field.fieldtype == 'Table'"
 								:name="field.fieldname"
+								:isFormReadOnly="isFormReadOnly"
 							></slot>
 
 							<FormField
@@ -75,7 +76,7 @@
 								:options="field.options"
 								:linkFilters="field.linkFilters"
 								:documentList="field.documentList"
-								:readOnly="Boolean(field.read_only)"
+								:readOnly="Boolean(field.read_only) || isFormReadOnly"
 								:reqd="Boolean(field.reqd)"
 								:hidden="Boolean(field.hidden)"
 								:errorMessage="field.error_message"
@@ -105,7 +106,7 @@
 						:label="field.label"
 						:options="field.options"
 						:documentList="field.documentList"
-						:readOnly="Boolean(field.read_only)"
+						:readOnly="Boolean(field.read_only) || isFormReadOnly"
 						:reqd="Boolean(field.reqd)"
 						:hidden="Boolean(field.hidden)"
 						:errorMessage="field.error_message"
@@ -422,6 +423,10 @@ async function setStatusColor() {
 		statusColor.value = await guessStatusColor(props.doctype, status)
 	}
 }
+
+const isFormReadOnly = computed(
+	() => props.id && formModel.value.docstatus !== 0
+)
 
 const isFormReady = computed(() => {
 	if (!props.id) return true

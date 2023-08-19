@@ -23,8 +23,7 @@
 		class="flex flex-col bg-white mt-5 rounded-lg border overflow-auto"
 	>
 		<div
-			class="flex flex-row p-3.5 items-center justify-between border-b"
-			:class="isReadOnly ? '' : 'cursor-pointer'"
+			class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
 			v-for="(item, idx) in expenseClaim.expenses"
 			:key="idx"
 			@click="openModal(item, idx)"
@@ -70,7 +69,7 @@
 		<div class="bg-white w-full flex flex-col items-center justify-center pb-5">
 			<div class="w-full pt-8 pb-5 border-b text-center">
 				<span class="text-gray-900 font-bold text-xl">
-					{{ editingIdx === null ? "New Expense Item" : "Edit Expense Item" }}
+					{{ modalTitle }}
 				</span>
 			</div>
 			<div class="w-full flex flex-col items-center justify-center gap-5 p-4">
@@ -86,11 +85,15 @@
 						:hidden="field.hidden"
 						:reqd="field.reqd"
 						:default="field.default"
+						:readOnly="field.read_only || isReadOnly"
 						v-model="expenseItem[field.fieldname]"
 					/>
 				</div>
 
-				<div class="flex w-full flex-row items-center justify-between gap-3">
+				<div
+					v-if="!isReadOnly"
+					class="flex w-full flex-row items-center justify-between gap-3"
+				>
 					<Button
 						appearance="primary"
 						class="w-full py-3 px-12"
@@ -137,8 +140,6 @@ const editingIdx = ref(null)
 const isModalOpen = ref(false)
 
 const openModal = async (item, idx) => {
-	if (props.isReadOnly) return
-
 	if (item) {
 		expenseItem.value = { ...item }
 		editingIdx.value = idx
@@ -160,6 +161,12 @@ function resetSelectedItem() {
 	expenseItem.value = {}
 	editingIdx.value = null
 }
+
+const modalTitle = computed(() => {
+	if (props.isReadOnly) return "Expense Item"
+
+	return editingIdx.value === null ? "New Expense Item" : "Edit Expense Item"
+})
 
 const addButtonDisabled = computed(() => {
 	return props.fields?.some((field) => {
