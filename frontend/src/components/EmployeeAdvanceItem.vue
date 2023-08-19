@@ -4,11 +4,17 @@
 			<div class="flex flex-row items-start gap-3 grow">
 				<WalletIcon class="h-4 w-4 mt-0.5 text-gray-500" />
 				<div class="flex flex-col items-start">
-					<div class="text-xl font-bold text-gray-800 leading-6">
+					<div
+						v-if="props.doc.balance_amount"
+						class="text-xl font-bold text-gray-800 leading-6"
+					>
 						{{ `${currency} ${props.doc.balance_amount} /` }}
 						<span class="text-gray-600">
 							{{ `${currency} ${props.doc.paid_amount}` }}
 						</span>
+					</div>
+					<div v-else class="text-xl font-bold text-gray-800 leading-6">
+						{{ `${currency} ${props.doc.advance_amount}` }}
 					</div>
 					<div class="text-sm font-normal text-gray-500">
 						<span>

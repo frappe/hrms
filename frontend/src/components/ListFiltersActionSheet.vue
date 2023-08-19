@@ -18,7 +18,7 @@
 					<div class="text-gray-800 font-semibold text-lg">
 						{{ filter.label }}
 					</div>
-					<div class="flex flex-row gap-2 mt-2">
+					<div class="flex flex-row gap-2 mt-2 flex-wrap">
 						<Button
 							v-for="option in filter.options"
 							appearance="white"
@@ -95,15 +95,17 @@ const props = defineProps({
 })
 
 const emit = defineEmits(["apply-filters", "clear-filters", "update:filters"])
+const numberOperators = [
+	{ label: "=", value: "=" },
+	{ label: ">", value: ">" },
+	{ label: "<", value: "<" },
+	{ label: ">=", value: ">=" },
+	{ label: "<=", value: "<=" },
+]
 
 const filterConditionMap = {
-	Date: [
-		{ label: "=", value: "=" },
-		{ label: ">", value: ">" },
-		{ label: "<", value: "<" },
-		{ label: ">=", value: ">=" },
-		{ label: "<=", value: "<=" },
-	],
+	Date: numberOperators,
+	Currency: numberOperators,
 }
 
 const filters = computed({
