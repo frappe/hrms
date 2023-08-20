@@ -44,7 +44,7 @@
 					? LEAVE_FIELDS
 					: EXPENSE_CLAIM_FIELDS
 			"
-			:data="selectedRequest"
+			v-model="selectedRequest"
 		/>
 	</ion-modal>
 </template>

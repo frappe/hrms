@@ -3,7 +3,9 @@
 		v-if="document?.doc"
 		class="bg-white w-full flex flex-col items-center justify-center pb-5"
 	>
-		<div class="w-full flex flex-row gap-2 pt-8 pb-5 border-b justify-center items-center">
+		<div
+			class="w-full flex flex-row gap-2 pt-8 pb-5 border-b justify-center items-center"
+		>
 			<span class="text-gray-900 font-bold text-xl text-center">
 				{{ document?.doctype }}
 			</span>
@@ -64,30 +66,47 @@
 
 			<!-- Actions -->
 			<div
-				v-if="['Open', 'Draft'].includes(document?.doc?.status)"
+				v-if="['Open', 'Draft'].includes(document?.doc?.[approvalField])"
 				class="flex w-full flex-row items-center justify-between gap-3"
 			>
 				<Button
-					@click="updateDocumentStatus('Rejected')"
+					@click="updateDocumentStatus({ status: 'Rejected' })"
 					class="w-full py-3 px-12 bg-red-100 text-red-600"
 					icon-left="x"
 				>
 					Reject
 				</Button>
 				<Button
-					@click="updateDocumentStatus('Approved')"
+					@click="updateDocumentStatus({ status: 'Approved' })"
 					class="w-full bg-green-600 text-white py-3 px-12"
 					icon-left="check"
 				>
 					Approve
 				</Button>
 			</div>
+
+			<div
+				v-if="
+					document?.doc?.docstatus === 0 &&
+					['Approved', 'Rejected'].includes(document?.doc?.[approvalField])
+				"
+				class="flex w-full flex-row items-center justify-between gap-3"
+			>
+				<Button
+					@click="updateDocumentStatus({ docstatus: 1 })"
+					class="w-full py-3 px-12"
+					appearance="primary"
+				>
+					Submit
+				</Button>
+			</div>
+
 			<div
 				v-else-if="document?.doc?.docstatus === 1"
 				class="flex w-full flex-row items-center justify-between gap-3"
 			>
 				<Button
-					@click="updateDocumentStatus('Cancelled', 2)"
+					@click="updateDocumentStatus({ docstatus: 2 })"
 					class="w-full py-3 px-12 bg-red-100 text-red-600"
 					icon-left="x"
 				>
@@ -117,7 +136,7 @@ const props = defineProps({
 		type: Array,
 		required: true,
 	},
-	data: {
+	modelValue: {
 		type: Object,
 		required: true,
 	},
@@ -125,16 +144,16 @@ const props = defineProps({
 const router = useRouter()
 
 const document = createDocumentResource({
-	doctype: props.data.doctype,
-	name: props.data.name,
+	doctype: props.modelValue.doctype,
+	name: props.modelValue.name,
 	auto: true,
 })
 
 const attachedFiles = createResource({
 	url: "hrms.api.get_attachments",
 	params: {
-		dt: props.data.doctype,
-		dn: props.data.name,
+		dt: props.modelValue.doctype,
+		dn: props.modelValue.name,
 	},
 	auto: true,
 })
@@ -158,22 +177,49 @@ const fieldsWithValues = computed(() => {
 				)
 			}
 			field.value =
-				props.data[field.fieldname] || document?.doc?.[field.fieldname]
+				document?.doc?.[field.fieldname] || props.modelValue[field.fieldname]
 		}
 
 		return field.value
 	})
 })
 
-const updateDocumentStatus = (status, docstatus = 1) => {
+const approvalField = computed(() => {
+	return props.modelValue.doctype === "Expense Claim"
+		? "approval_status"
+		: "status"
+})
+
+const getSuccessMessage = ({ status = "", docstatus = 0 }) => {
+	if (status) return `${status} successfully!`
+	else if (docstatus)
+		return `Document ${
+			docstatus === 1 ? "submitted" : "cancelled"
+		} successfully!`
+}
+
+const getFailureMessage = ({ status = "", docstatus = 0 }) => {
+	if (status)
+		return `${status === "Approved" ? "Approval" : "Rejection"} failed!`
+	else if (docstatus)
+		return `Document ${docstatus === 1 ? "submission" : "cancellation"} failed!`
+}
+
+const updateDocumentStatus = ({ status = "", docstatus = 0 }) => {
+	let updateValues = {}
+
+	if (status) updateValues[approvalField.value] = status
+	if (docstatus) updateValues.docstatus = docstatus
+
 	document.setValue.submit(
-		{ status: status, docstatus: docstatus },
+		{ ...updateValues },
 		{
 			onSuccess() {
-				modalController.dismiss()
+				if (docstatus !== 0) modalController.dismiss()
+
 				toast({
 					title: "Success",
-					text: `${status} successful!`,
+					text: getSuccessMessage({ status, docstatus }),
 					icon: "check-circle",
 					position: "bottom-center",
 					iconClasses: "text-green-500",
@@ -182,7 +228,7 @@ const updateDocumentStatus = (status, docstatus = 1) => {
 			onError() {
 				toast({
 					title: "Error",
-					text: `${status} failed!`,
+					text: getFailureMessage({ status, docstatus }),
 					icon: "alert-circle",
 					position: "bottom-center",
 					iconClasses: "text-red-500",
@@ -195,8 +241,8 @@ const updateDocumentStatus = (status, docstatus = 1) => {
 const openFormView = () => {
 	modalController.dismiss()
 	router.push({
-		name: `${props.data.doctype.replace(/\s+/g, "")}DetailView`,
-		params: { id: props.data.name },
+		name: `${props.modelValue.doctype.replace(/\s+/g, "")}DetailView`,
+		params: { id: props.modelValue.name },
 	})
 }
 </script>
