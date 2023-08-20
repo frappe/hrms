@@ -25,18 +25,22 @@ const quickLinks = [
 	{
 		icon: "calendar",
 		title: "Request Leave",
+		route: "LeaveApplicationFormView",
 	},
 	{
 		icon: "dollar-sign",
 		title: "Claim an Expense",
+		route: "ExpenseClaimFormView",
 	},
 	{
 		icon: "file",
 		title: "Payslip",
+		route: "Home",
 	},
 	{
 		icon: "hard-drive",
 		title: "Documents",
+		route: "Home",
 	},
 ]
 </script>
