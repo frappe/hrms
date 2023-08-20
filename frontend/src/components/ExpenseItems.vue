@@ -27,11 +27,9 @@
 							</div>
 						</div>
 					</div>
-					<div class="flex flex-row justify-end items-center gap-2">
-						<span class="text-gray-700 font-normal rounded-lg text-lg">
-							{{ `${currency} ${item.amount}` }}
-						</span>
-					</div>
+					<span class="text-gray-700 font-normal rounded-lg text-lg">
+						{{ `${currency} ${item.amount}` }}
+					</span>
 				</div>
 			</div>
 		</div>
@@ -39,9 +37,9 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue'
+import { computed, inject } from "vue"
 
-import { getCompanyCurrencySymbol } from '@/data/currencies'
+import { getCompanyCurrencySymbol } from "@/data/currencies"
 
 const props = defineProps({
 	doc: {

@@ -3,10 +3,15 @@
 		v-if="document?.doc"
 		class="bg-white w-full flex flex-col items-center justify-center pb-5"
 	>
-		<div class="w-full pt-8 pb-5 border-b text-center">
-			<span class="text-gray-900 font-bold text-xl">
+		<div class="w-full flex flex-row gap-2 pt-8 pb-5 border-b justify-center items-center">
+			<span class="text-gray-900 font-bold text-xl text-center">
 				{{ document?.doctype }}
 			</span>
+			<FeatherIcon
+				name="external-link"
+				class="h-4 w-4 text-gray-500 cursor-pointer"
+				@click="openFormView"
+			/>
 		</div>
 		<div class="w-full flex flex-col items-center justify-center gap-5 p-4">
 			<!-- Request Summary -->
@@ -35,7 +40,10 @@
 			</div>
 
 			<!-- Attachments -->
-			<div class="flex flex-col gap-2 w-full">
+			<div
+				class="flex flex-col gap-2 w-full"
+				v-if="attachedFiles?.data?.length"
+			>
 				<div class="text-gray-600 text-base">Attachments</div>
 				<ul class="w-full flex flex-col items-center gap-2">
 					<li
@@ -93,10 +101,16 @@
 <script setup>
 import { computed, defineAsyncComponent } from "vue"
 import { modalController } from "@ionic/vue"
-import { toast, createDocumentResource, createResource } from "frappe-ui"
+import {
+	toast,
+	createDocumentResource,
+	createResource,
+	FeatherIcon,
+} from "frappe-ui"
 
 import FormattedField from "@/components/FormattedField.vue"
 import { getCurrencySymbol, getCompanyCurrencySymbol } from "@/data/currencies"
+import { useRouter } from "vue-router"
 
 const props = defineProps({
 	fields: {
@@ -108,6 +122,7 @@ const props = defineProps({
 		required: true,
 	},
 })
+const router = useRouter()
 
 const document = createDocumentResource({
 	doctype: props.data.doctype,
@@ -175,5 +190,13 @@ const updateDocumentStatus = (status, docstatus = 1) => {
 			},
 		}
 	)
+}
+
+const openFormView = () => {
+	modalController.dismiss()
+	router.push({
+		name: `${props.data.doctype.replace(/\s+/g, "")}DetailView`,
+		params: { id: props.data.name },
+	})
 }
 </script>
