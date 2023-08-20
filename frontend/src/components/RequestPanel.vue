@@ -4,22 +4,26 @@
 			:buttons="[{ label: 'My Requests' }, { label: 'Team Requests' }]"
 			v-model="activeTab"
 		/>
-		<RequestList :items="myRequests.data" v-if="activeTab == 'My Requests'" />
+		<RequestList v-if="activeTab == 'My Requests'" :items="myRequests" />
 		<RequestList
-			:items="teamRequests.data"
+			v-else-if="activeTab == 'Team Requests'"
+			:items="teamRequests"
 			:teamRequests="true"
-			v-if="activeTab == 'Team Requests'"
 		/>
 	</div>
 </template>
 
 <script setup>
-import { ref, inject, onUnmounted } from "vue"
+import { ref, inject, onUnmounted, computed, markRaw } from "vue"
 
 import TabButtons from "@/components/TabButtons.vue"
 import RequestList from "@/components/RequestList.vue"
 
-import { myRequests, teamRequests } from "@/data/leaves"
+import { myLeaves, teamLeaves } from "@/data/leaves"
+import { myClaims, teamClaims } from "@/data/claims"
+
+import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
+import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 
 const activeTab = ref("My Requests")
 
@@ -27,12 +31,38 @@ const socket = inject("$socket")
 const employee = inject("$employee")
 const user = inject("$user")
 
+const myRequests = computed(() => {
+	const requests = [...(myLeaves.data || []), ...(myClaims.data || [])]
+
+	return requests.map((item) => {
+		if (item.doctype === "Leave Application")
+			item.component = markRaw(LeaveRequestItem)
+		else if (item.doctype === "Expense Claim")
+			item.component = markRaw(ExpenseClaimItem)
+
+		return item
+	})
+})
+
+const teamRequests = computed(() => {
+	const requests = [...(teamLeaves.data || []), ...(teamClaims.data || [])]
+
+	return requests.map((item) => {
+		if (item.doctype === "Leave Application")
+			item.component = markRaw(LeaveRequestItem)
+		else if (item.doctype === "Expense Claim")
+			item.component = markRaw(ExpenseClaimItem)
+
+		return item
+	})
+})
+
 socket.on("hrms:update_leaves", (data) => {
 	if (data.employee === employee.data.name) {
-		myRequests.reload()
+		myLeaves.reload()
 	}
 	if (data.approver === user.data.name) {
-		teamRequests.reload()
+		teamLeaves.reload()
 	}
 })
 

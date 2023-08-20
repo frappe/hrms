@@ -16,7 +16,8 @@
 					<div>
 						<div class="text-xl text-gray-800 font-bold">Recent Leaves</div>
 						<RequestList
-							:items="myRequests.data"
+							:component="markRaw(LeaveRequestItem)"
+							:items="myLeaves.data"
 							:addListButton="true"
 							listButtonRoute="LeaveApplicationListView"
 						/>
@@ -29,21 +30,22 @@
 </template>
 
 <script setup>
-import { inject, onUnmounted } from "vue"
+import { inject, onUnmounted, markRaw } from "vue"
 
 import BaseLayout from "@/components/BaseLayout.vue"
 import LeaveBalance from "@/components/LeaveBalance.vue"
 import RequestList from "@/components/RequestList.vue"
+import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
 import Holidays from "@/components/Holidays.vue"
 
-import { myRequests } from "@/data/leaves"
+import { myLeaves } from "@/data/leaves"
 
 const socket = inject("$socket")
 const employee = inject("$employee")
 
 socket.on("hrms:update_leaves", (data) => {
 	if (data.employee === employee.data.name) {
-		myRequests.reload()
+		myLeaves.reload()
 	}
 })
 

@@ -9,7 +9,7 @@ const transformClaimData = (data) => {
 	})
 }
 
-export const myRequests = createResource({
+export const myClaims = createResource({
 	url: "hrms.api.get_expense_claims",
 	params: {
 		employee: employeeResource.data.name,
@@ -21,7 +21,7 @@ export const myRequests = createResource({
 	},
 })
 
-export const teamRequests = createResource({
+export const teamClaims = createResource({
 	url: "hrms.api.get_expense_claims",
 	params: {
 		employee: employeeResource.data.name,

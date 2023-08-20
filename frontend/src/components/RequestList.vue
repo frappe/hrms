@@ -9,19 +9,10 @@
 			:key="link.name"
 			@click="openRequestModal(link)"
 		>
-			<LeaveRequestItem
-				v-if="link.doctype === 'Leave Application'"
+			<component
+				:is="props.component || link.component"
 				:doc="link"
 				:isTeamRequest="props.teamRequests"
-			/>
-			<ExpenseClaimItem
-				v-else-if="link.doctype === 'Expense Claim'"
-				:doc="link"
-				:isTeamRequest="props.teamRequests"
-			/>
-			<EmployeeAdvanceItem
-				v-else-if="link.doctype === 'Employee Advance'"
-				:doc="link"
 			/>
 		</div>
 
@@ -54,15 +45,14 @@
 <script setup>
 import { ref } from "vue"
 import { IonModal } from "@ionic/vue"
-
-import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
-import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 import RequestActionSheet from "@/components/RequestActionSheet.vue"
-import EmployeeAdvanceItem from "@/components/EmployeeAdvanceItem.vue"
 
 import { LEAVE_FIELDS } from "@/data/config/requestSummaryFields"
 
 const props = defineProps({
+	component: {
+		type: Object,
+	},
 	items: {
 		type: Array,
 	},
@@ -88,7 +78,7 @@ const openRequestModal = async (request) => {
 	isRequestModalOpen.value = true
 }
 
-const closeRequestModal = async (request) => {
+const closeRequestModal = async (_request) => {
 	isRequestModalOpen.value = false
 	selectedRequest.value = null
 }

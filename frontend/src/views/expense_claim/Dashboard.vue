@@ -18,7 +18,8 @@
 				<div>
 					<div class="text-xl text-gray-800 font-bold">Recent Expenses</div>
 					<RequestList
-						:items="myRequests.data"
+						:component="markRaw(ExpenseClaimItem)"
+						:items="myClaims.data"
 						:addListButton="true"
 						listButtonRoute="ExpenseClaimListView"
 					/>
@@ -36,11 +37,14 @@
 </template>
 
 <script setup>
+import { markRaw } from "vue"
+
 import BaseLayout from "@/components/BaseLayout.vue"
 import ExpenseClaimSummary from "@/components/ExpenseClaimSummary.vue"
 import RequestList from "@/components/RequestList.vue"
+import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 import EmployeeAdvanceBalance from "@/components/EmployeeAdvanceBalance.vue"
 
-import { myRequests } from "@/data/claims"
+import { myClaims } from "@/data/claims"
 import { advanceBalance } from "@/data/advances"
 </script>
