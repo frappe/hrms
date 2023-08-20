@@ -31,7 +31,9 @@
 					<div
 						class="flex flex-row items-center justify-between text-gray-700 text-sm"
 					>
-						<span class="grow">{{ file.file_name || file.name }}</span>
+						<a target="_blank" :href="file.file_url">
+							<span class="grow">{{ file.file_name || file.name }}</span>
+						</a>
 						<FeatherIcon
 							name="x"
 							class="h-3 w-3 cursor-pointer text-gray-700"
@@ -44,7 +46,7 @@
 			<Dialog
 				:options="{
 					title: 'Delete Attachment',
-					message: `Are you sure you want to delete the attachment ${deleteAttachment}?`,
+					message: `Are you sure you want to delete the attachment ${deleteAttachment.file_name}?`,
 					icon: {
 						name: 'trash',
 						appearance: 'danger',
