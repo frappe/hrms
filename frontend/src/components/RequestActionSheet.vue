@@ -1,7 +1,12 @@
 <template>
-	<div class="bg-white w-full flex flex-col items-center justify-center pb-5">
+	<div
+		v-if="document?.doc"
+		class="bg-white w-full flex flex-col items-center justify-center pb-5"
+	>
 		<div class="w-full pt-8 pb-5 border-b text-center">
-			<span class="text-gray-900 font-bold text-xl">{{ data.doctype }}</span>
+			<span class="text-gray-900 font-bold text-xl">
+				{{ document?.doctype }}
+			</span>
 		</div>
 		<div class="w-full flex flex-col items-center justify-center gap-5 p-4">
 			<!-- Request Summary -->
@@ -17,7 +22,7 @@
 			>
 				<div class="text-gray-600 text-base">{{ field.label }}</div>
 				<FormattedField
-					:value="data[field.fieldname]"
+					:value="field.value"
 					:fieldtype="field.fieldtype"
 					:fieldname="field.fieldname"
 				/>
@@ -65,6 +70,7 @@ import { modalController } from "@ionic/vue"
 import { toast, createDocumentResource } from "frappe-ui"
 
 import FormattedField from "@/components/FormattedField.vue"
+import { getCurrencySymbol, getCompanyCurrencySymbol } from "../data/currencies"
 
 const props = defineProps({
 	fields: {
@@ -77,18 +83,30 @@ const props = defineProps({
 	},
 })
 
-const fieldsWithValues = computed(() => {
-	return props.fields.filter((field) => {
-		return props.data[field.fieldname]
-	})
-})
-
 const document = createDocumentResource({
 	doctype: props.data.doctype,
 	name: props.data.name,
 })
-
 document.reload()
+
+const currency = computed(() => {
+	if (document?.doc?.currency) return getCurrencySymbol(document?.doc?.currency)
+	else if (document?.doc?.company)
+		return getCompanyCurrencySymbol(document?.doc?.company)
+})
+
+const fieldsWithValues = computed(() => {
+	return props.fields.filter((field) => {
+		if (field.fieldtype === "Currency") {
+			field.value = `${currency.value} ${document.doc?.[field.fieldname]}`
+		} else {
+			field.value =
+				props.data[field.fieldname] || document?.doc?.[field.fieldname]
+		}
+
+		return field.value
+	})
+})
 
 const updateDocumentStatus = (status, docstatus = 1) => {
 	document.setValue.submit(

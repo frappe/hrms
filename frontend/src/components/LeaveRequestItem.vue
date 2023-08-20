@@ -8,7 +8,7 @@
 						{{ props.doc.leave_type }}
 					</div>
 					<div class="text-sm font-normal text-gray-500">
-						<span>{{ leaveDates }}</span>
+						<span>{{ props.doc.leave_dates }}</span>
 						<span class="whitespace-pre"> &middot; </span>
 						<span class="whitespace-nowrap">{{
 							`${props.doc.total_leave_days}d`
@@ -35,11 +35,9 @@
 
 <script setup>
 import { FeatherIcon, Badge } from "frappe-ui"
-import { computed, inject } from "vue"
 
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 
-const dayjs = inject("$dayjs")
 const props = defineProps({
 	doc: {
 		type: Object,
@@ -55,13 +53,4 @@ const colorMap = {
 	Rejected: "red",
 	Open: "yellow",
 }
-
-const leaveDates = computed(() => {
-	if (props.doc.from_date === props.doc.to_date)
-		return dayjs(props.doc.from_date).format("D MMM")
-	else
-		return `${dayjs(props.doc.from_date).format("D MMM")} - ${dayjs(
-			props.doc.to_date
-		).format("D MMM")}`
-})
 </script>

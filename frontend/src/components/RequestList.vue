@@ -38,7 +38,14 @@
 		:initial-breakpoint="1"
 		:breakpoints="[0, 1]"
 	>
-		<RequestActionSheet :fields="LEAVE_FIELDS" :data="selectedRequest" />
+		<RequestActionSheet
+			:fields="
+				selectedRequest.doctype === 'Leave Application'
+					? LEAVE_FIELDS
+					: EXPENSE_CLAIM_FIELDS
+			"
+			:data="selectedRequest"
+		/>
 	</ion-modal>
 </template>
 
@@ -47,7 +54,10 @@ import { ref } from "vue"
 import { IonModal } from "@ionic/vue"
 import RequestActionSheet from "@/components/RequestActionSheet.vue"
 
-import { LEAVE_FIELDS } from "@/data/config/requestSummaryFields"
+import {
+	LEAVE_FIELDS,
+	EXPENSE_CLAIM_FIELDS,
+} from "@/data/config/requestSummaryFields"
 
 const props = defineProps({
 	component: {
