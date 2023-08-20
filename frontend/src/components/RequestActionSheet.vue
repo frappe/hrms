@@ -14,18 +14,44 @@
 				v-for="field in fieldsWithValues"
 				:key="field.fieldname"
 				:class="[
-					['Small Text', 'Text', 'Long Text'].includes(field.fieldtype)
+					['Small Text', 'Text', 'Long Text', 'Table'].includes(field.fieldtype)
 						? 'flex-col'
 						: 'flex-row items-center justify-between',
 					'flex w-full',
 				]"
 			>
 				<div class="text-gray-600 text-base">{{ field.label }}</div>
+				<component
+					v-if="field.fieldtype === 'Table'"
+					:is="field.component"
+					:doc="document?.doc"
+				/>
 				<FormattedField
+					v-else
 					:value="field.value"
 					:fieldtype="field.fieldtype"
 					:fieldname="field.fieldname"
 				/>
+			</div>
+
+			<!-- Attachments -->
+			<div class="flex flex-col gap-2 w-full">
+				<div class="text-gray-600 text-base">Attachments</div>
+				<ul class="w-full flex flex-col items-center gap-2">
+					<li
+						class="bg-gray-100 rounded-lg p-2 w-full"
+						v-for="(file, index) in attachedFiles.data"
+						:key="index"
+					>
+						<div
+							class="flex flex-row items-center justify-between text-gray-700 text-sm"
+						>
+							<a target="_blank" :href="file.file_url">
+								<span class="grow">{{ file.file_name || file.name }}</span>
+							</a>
+						</div>
+					</li>
+				</ul>
 			</div>
 
 			<!-- Actions -->
@@ -65,12 +91,12 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
+import { computed, defineAsyncComponent } from "vue"
 import { modalController } from "@ionic/vue"
-import { toast, createDocumentResource } from "frappe-ui"
+import { toast, createDocumentResource, createResource } from "frappe-ui"
 
 import FormattedField from "@/components/FormattedField.vue"
-import { getCurrencySymbol, getCompanyCurrencySymbol } from "../data/currencies"
+import { getCurrencySymbol, getCompanyCurrencySymbol } from "@/data/currencies"
 
 const props = defineProps({
 	fields: {
@@ -86,8 +112,17 @@ const props = defineProps({
 const document = createDocumentResource({
 	doctype: props.data.doctype,
 	name: props.data.name,
+	auto: true,
 })
-document.reload()
+
+const attachedFiles = createResource({
+	url: "hrms.api.get_attachments",
+	params: {
+		dt: props.data.doctype,
+		dn: props.data.name,
+	},
+	auto: true,
+})
 
 const currency = computed(() => {
 	if (document?.doc?.currency) return getCurrencySymbol(document?.doc?.currency)
@@ -100,6 +135,13 @@ const fieldsWithValues = computed(() => {
 		if (field.fieldtype === "Currency") {
 			field.value = `${currency.value} ${document.doc?.[field.fieldname]}`
 		} else {
+			if (field.fieldtype === "Table") {
+				// dynamically loading child table component as per config
+				// does not work with @ alias due to vite's import analysis
+				field.component = defineAsyncComponent(() =>
+					import(`../components/${field.componentName}.vue`)
+				)
+			}
 			field.value =
 				props.data[field.fieldname] || document?.doc?.[field.fieldname]
 		}

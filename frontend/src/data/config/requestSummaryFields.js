@@ -3,6 +3,11 @@
 
 export const LEAVE_FIELDS = [
 	{
+		fieldname: "name",
+		label: "ID",
+		fieldtype: "Data",
+	},
+	{
 		fieldname: "leave_type",
 		label: "Leave Type",
 		fieldtype: "Link",
@@ -51,6 +56,11 @@ export const LEAVE_FIELDS = [
 
 export const EXPENSE_CLAIM_FIELDS = [
 	{
+		fieldname: "name",
+		label: "ID",
+		fieldtype: "Data",
+	},
+	{
 		fieldname: "posting_date",
 		label: "Posting Date",
 		fieldtype: "Date",
@@ -64,6 +74,7 @@ export const EXPENSE_CLAIM_FIELDS = [
 		fieldname: "expenses",
 		label: "Expenses",
 		fieldtype: "Table",
+		componentName: "ExpenseItems",
 	},
 	{
 		fieldname: "total_claimed_amount",
