@@ -26,9 +26,19 @@
 				</div>
 
 				<div>
-					<div class="text-xl text-gray-800 font-bold">
-						Employee Advance Balance
+					<div class="flex flex-row justify-between items-center">
+						<div class="text-xl text-gray-800 font-bold">
+							Employee Advance Balance
+						</div>
+						<router-link
+							v-if="advanceBalance?.data?.length"
+							:to="{ name: 'EmployeeAdvanceListView' }"
+							class="text-lg text-blue-500 font-medium cursor-pointer"
+						>
+							View List
+						</router-link>
 					</div>
+
 					<EmployeeAdvanceBalance :items="advanceBalance.data" />
 				</div>
 			</div>

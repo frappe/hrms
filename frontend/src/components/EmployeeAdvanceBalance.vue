@@ -3,14 +3,14 @@
 		class="flex flex-col bg-white rounded-lg mt-5 overflow-auto"
 		v-if="props.items?.length"
 	>
-		<div
-			class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
+		<router-link
 			v-for="link in props.items"
 			:key="link.name"
-			@click="openRequestModal(link)"
+			:to="{ name: 'EmployeeAdvanceDetailView', params: { id: link.name } }"
+			class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
 		>
 			<EmployeeAdvanceItem :doc="link" />
-		</div>
+		</router-link>
 
 		<router-link
 			:to="{ name: 'EmployeeAdvanceFormView' }"
