@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { ref, inject, onUnmounted, computed, markRaw } from "vue"
+import { ref, inject, onMounted, onUnmounted, computed, markRaw } from "vue"
 
 import TabButtons from "@/components/TabButtons.vue"
 import RequestList from "@/components/RequestList.vue"
@@ -57,16 +57,28 @@ const teamRequests = computed(() => {
 	})
 })
 
-socket.on("hrms:update_leaves", (data) => {
-	if (data.employee === employee.data.name) {
-		myLeaves.reload()
-	}
-	if (data.approver === user.data.name) {
-		teamLeaves.reload()
-	}
+onMounted(() => {
+	socket.on("hrms:update_leaves", (data) => {
+		if (data.employee === employee.data.name) {
+			myLeaves.reload()
+		}
+		if (data.approver === user.data.name) {
+			teamLeaves.reload()
+		}
+	})
+
+	socket.on("hrms:update_expense_claims", (data) => {
+		if (data.employee === employee.data.name) {
+			myClaims.reload()
+		}
+		if (data.approver === user.data.name) {
+			teamClaims.reload()
+		}
+	})
 })
 
 onUnmounted(() => {
 	socket.off("hrms:update_leaves")
+	socket.off("hrms:update_expense_claims")
 })
 </script>

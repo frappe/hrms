@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { inject, onUnmounted, markRaw } from "vue"
+import { inject, onMounted, onUnmounted, markRaw } from "vue"
 
 import BaseLayout from "@/components/BaseLayout.vue"
 import LeaveBalance from "@/components/LeaveBalance.vue"
@@ -43,10 +43,12 @@ import { myLeaves } from "@/data/leaves"
 const socket = inject("$socket")
 const employee = inject("$employee")
 
-socket.on("hrms:update_leaves", (data) => {
-	if (data.employee === employee.data.name) {
-		myLeaves.reload()
-	}
+onMounted(() => {
+	socket.on("hrms:update_leaves", (data) => {
+		if (data.employee === employee.data.name) {
+			myLeaves.reload()
+		}
+	})
 })
 
 onUnmounted(() => {

@@ -82,6 +82,22 @@ class ExpenseClaim(AccountsController):
 
 	def on_update(self):
 		share_doc_with_approver(self, self.expense_approver)
+		self.publish_update()
+
+	def after_delete(self):
+		self.publish_update()
+
+	def publish_update(self):
+		if frappe.session.user in [self.expense_approver, self.employee]:
+			frappe.publish_realtime(
+				event="hrms:update_expense_claims",
+				message={
+					"approver": self.expense_approver,
+					"employee": self.employee,
+				},
+				user=frappe.session.user,
+				after_commit=True,
+			)
 
 	def set_payable_account(self):
 		if not self.payable_account and not self.is_paid:
@@ -113,6 +129,7 @@ class ExpenseClaim(AccountsController):
 		update_reimbursed_amount(self)
 
 		self.update_claimed_amount_in_employee_advance()
+		self.publish_update()
 
 	def update_claimed_amount_in_employee_advance(self):
 		for d in self.get("advances"):

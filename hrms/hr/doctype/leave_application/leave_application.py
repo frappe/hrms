@@ -123,15 +123,16 @@ class LeaveApplication(Document):
 		self.publish_update()
 
 	def publish_update(self):
-		frappe.publish_realtime(
-			event="hrms:update_leaves",
-			message={
-				"approver": self.leave_approver,
-				"employee": self.employee,
-			},
-			user=frappe.session.user,
-			after_commit=True,
-		)
+		if frappe.session.user in [self.employee, self.leave_approver]:
+			frappe.publish_realtime(
+				event="hrms:update_leaves",
+				message={
+					"approver": self.leave_approver,
+					"employee": self.employee,
+				},
+				user=frappe.session.user,
+				after_commit=True,
+			)
 
 	def validate_applicable_after(self):
 		if self.leave_type:

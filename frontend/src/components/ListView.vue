@@ -100,7 +100,16 @@
 
 <script setup>
 import { useRouter } from "vue-router"
-import { inject, ref, markRaw, watch, computed, reactive } from "vue"
+import {
+	inject,
+	ref,
+	markRaw,
+	watch,
+	computed,
+	reactive,
+	onUnmounted,
+	onMounted,
+} from "vue"
 import { IonModal, modalController } from "@ionic/vue"
 
 import { FeatherIcon, createResource, LoadingIndicator } from "frappe-ui"
@@ -145,6 +154,7 @@ const listItemComponent = {
 }
 
 const router = useRouter()
+const socket = inject("$socket")
 const employee = inject("$employee")
 const filterMap = reactive({})
 const activeTab = ref(props.tabButtons[0])
@@ -264,4 +274,14 @@ watch(
 	},
 	{ immediate: true }
 )
+
+onMounted(() => {
+	socket.emit("doctype_subscribe", props.doctype)
+	socket.on("list_update", (_data) => documents.reload())
+})
+
+onUnmounted(() => {
+	socket.emit("doctype_unsubscribe", props.doctype)
+	socket.off("list_update")
+})
 </script>

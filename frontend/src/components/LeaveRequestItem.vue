@@ -8,7 +8,7 @@
 						{{ props.doc.leave_type }}
 					</div>
 					<div class="text-sm font-normal text-gray-500">
-						<span>{{ props.doc.leave_dates }}</span>
+						<span>{{ props.doc.leave_dates || getLeaveDates(props.doc) }}</span>
 						<span class="whitespace-pre"> &middot; </span>
 						<span class="whitespace-nowrap">{{
 							`${props.doc.total_leave_days}d`
@@ -37,6 +37,7 @@
 import { FeatherIcon, Badge } from "frappe-ui"
 
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
+import { getLeaveDates } from "@/data/leaves"
 
 const props = defineProps({
 	doc: {

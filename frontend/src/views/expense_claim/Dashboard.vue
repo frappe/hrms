@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { markRaw } from "vue"
+import { markRaw, inject, onUnmounted, onMounted } from "vue"
 
 import BaseLayout from "@/components/BaseLayout.vue"
 import ExpenseClaimSummary from "@/components/ExpenseClaimSummary.vue"
@@ -57,4 +57,19 @@ import EmployeeAdvanceBalance from "@/components/EmployeeAdvanceBalance.vue"
 
 import { myClaims } from "@/data/claims"
 import { advanceBalance } from "@/data/advances"
+
+const socket = inject("$socket")
+const employee = inject("$employee")
+
+onMounted(() => {
+	socket.on("hrms:update_expense_claims", (data) => {
+		if (data.employee === employee.data.name) {
+			myClaims.reload()
+		}
+	})
+})
+
+onUnmounted(() => {
+	socket.off("hrms:update_expense_claims")
+})
 </script>
