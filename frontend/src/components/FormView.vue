@@ -36,7 +36,7 @@
 							{
 								label: 'Delete',
 								condition: showDeleteButton,
-								handler: () => handleDocDelete(),
+								handler: () => showDeleteDialog = true,
 							},
 							{ label: 'Reload', handler: () => handleDocReload() },
 						]"
@@ -173,6 +173,68 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Confirmation Dialogs -->
+	<Dialog
+		:options="{
+			title: `Delete ${props.doctype}`,
+			message: `Are you sure you want to delete the ${props.doctype} ${formModel.name}?`,
+			icon: { name: 'trash', appearance: 'danger'},
+			size: 'xs',
+			actions: [
+				{
+					label: 'Delete',
+					appearance: 'danger',
+					handler: ({ close }) => {
+						handleDocDelete()
+						close() // closes dialog
+					},
+				},
+				{ label: 'Cancel' },
+			],
+		}"
+		v-model="showDeleteDialog"
+	/>
+
+	<Dialog
+		:options="{
+			title: 'Confirm',
+			message: `Permanently submit ${props.doctype} ${formModel.name}?`,
+			size: 'xs',
+			actions: [
+				{
+					label: 'Yes',
+					appearance: 'primary',
+					handler: ({ close }) => {
+						handleDocUpdate('submit')
+						close() // closes dialog
+					},
+				},
+				{ label: 'No' },
+			],
+		}"
+		v-model="showSubmitDialog"
+	/>
+
+	<Dialog
+		:options="{
+			title: 'Confirm',
+			message: `Permanently cancel ${props.doctype} ${formModel.name}?`,
+			size: 'xs',
+			actions: [
+				{
+					label: 'Yes',
+					appearance: 'primary',
+					handler: ({ close }) => {
+						handleDocUpdate('cancel')
+						close() // closes dialog
+					},
+				},
+				{ label: 'No' },
+			],
+		}"
+		v-model="showCancelDialog"
+	/>
 </template>
 
 <script setup>
@@ -187,6 +249,7 @@ import {
 	toast,
 	createResource,
 	Dropdown,
+	Dialog,
 } from "frappe-ui"
 import FormField from "@/components/FormField.vue"
 import FileUploaderView from "@/components/FileUploaderView.vue"
@@ -237,6 +300,9 @@ let fileAttachments = ref([])
 let statusColor = ref("")
 let isFormDirty = ref(false)
 let isFormUpdated = ref(false)
+let showDeleteDialog = ref(false)
+let showSubmitDialog = ref(false)
+let showCancelDialog = ref(false)
 
 const formModel = computed({
 	get() {
@@ -347,6 +413,13 @@ const docList = createListResource({
 			})
 		},
 		onError() {
+			toast({
+				title: "Error",
+				text: `Error creating ${props.doctype}`,
+				icon: "alert-circle",
+				position: "bottom-center",
+				iconClasses: "text-red-500",
+			})
 			console.log(`Error creating ${props.doctype}`)
 		},
 	},
@@ -367,6 +440,13 @@ const documentResource = createDocumentResource({
 			})
 		},
 		onError() {
+			toast({
+				title: "Error",
+				text: `Error updating ${props.doctype}`,
+				icon: "alert-circle",
+				position: "bottom-center",
+				iconClasses: "text-red-500",
+			})
 			console.log(`Error updating ${props.doctype}`)
 		},
 	},
@@ -382,6 +462,13 @@ const documentResource = createDocumentResource({
 			})
 		},
 		onError() {
+			toast({
+				title: "Error",
+				text: `Error deleting ${props.doctype}`,
+				icon: "alert-circle",
+				position: "bottom-center",
+				iconClasses: "text-red-500",
+			})
 			console.log(`Error deleting ${props.doctype}`)
 		},
 	},
@@ -464,9 +551,9 @@ function submitOrCancelForm() {
 
 	if (formModel.value.docstatus === 0) {
 		emit("validateForm")
-		handleDocUpdate("submit")
+		showSubmitDialog.value = true
 	} else if (formModel.value.docstatus === 1) {
-		handleDocUpdate("cancel")
+		showCancelDialog.value = true
 	}
 }
 
