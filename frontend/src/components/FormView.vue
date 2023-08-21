@@ -9,18 +9,42 @@
 				<Button appearance="minimal" class="!px-0 !py-0" @click="router.back()">
 					<FeatherIcon name="chevron-left" class="h-5 w-5" />
 				</Button>
-				<div v-if="id" class="flex flex-row items-center gap-2 overflow-hidden">
+				<div
+					v-if="id"
+					class="flex flex-row items-center gap-2 overflow-hidden grow"
+				>
 					<h2
 						class="text-2xl font-semibold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis"
 					>
 						{{ doctype }}
 					</h2>
-					<Badge :label="id" color="white" class="whitespace-nowrap" />
+					<Badge
+						:label="id"
+						color="white"
+						class="whitespace-nowrap text-[8px]"
+					/>
 					<Badge
 						v-if="formModel.status"
 						:label="formModel.status"
 						:color="statusColor"
-						class="whitespace-nowrap"
+						class="whitespace-nowrap text-[8px]"
+					/>
+
+					<Dropdown
+						class="ml-auto"
+						:options="[
+							{
+								label: 'Delete',
+								condition: showDeleteButton,
+								handler: () => handleDocDelete(),
+							},
+							{ label: 'Reload', handler: () => handleDocReload() },
+						]"
+						:button="{
+							label: 'Menu',
+							icon: 'more-horizontal',
+							appearance: 'minimal',
+						}"
 					/>
 				</div>
 				<h2 v-else class="text-2xl font-semibold text-gray-900">
@@ -162,6 +186,7 @@ import {
 	createDocumentResource,
 	toast,
 	createResource,
+	Dropdown,
 } from "frappe-ui"
 import FormField from "@/components/FormField.vue"
 import FileUploaderView from "@/components/FileUploaderView.vue"
@@ -302,7 +327,7 @@ async function uploadAllAttachments(documentType, documentName) {
 	}
 }
 
-// create/update doc
+// CRUD for doc
 const docList = createListResource({
 	doctype: props.doctype,
 	insert: {
@@ -345,6 +370,21 @@ const documentResource = createDocumentResource({
 			console.log(`Error updating ${props.doctype}`)
 		},
 	},
+	delete: {
+		onSuccess() {
+			router.back()
+			toast({
+				title: "Success",
+				text: `${props.doctype} deleted successfully!`,
+				icon: "check-circle",
+				position: "bottom-center",
+				iconClasses: "text-green-500",
+			})
+		},
+		onError() {
+			console.log(`Error deleting ${props.doctype}`)
+		},
+	},
 })
 
 const docPermissions = createResource({
@@ -374,6 +414,10 @@ const formButton = computed(() => {
 		return "Save"
 	}
 })
+
+function showDeleteButton() {
+	return props.id && formModel.value.docstatus !== 1 && hasPermission("delete")
+}
 
 function hasPermission(action) {
 	return docPermissions.data?.permissions[action]
@@ -424,6 +468,14 @@ function submitOrCancelForm() {
 	} else if (formModel.value.docstatus === 1) {
 		handleDocUpdate("cancel")
 	}
+}
+
+function handleDocDelete() {
+	documentResource.delete.submit()
+}
+
+function handleDocReload() {
+	documentResource.reload()
 }
 
 async function setStatusColor() {
