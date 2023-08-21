@@ -40,7 +40,7 @@
 									{{ `Sanctioned: ${currency} ${item.sanctioned_amount || 0}` }}
 								</span>
 								<span class="whitespace-pre"> &middot; </span>
-								<span class="whitespace-nowrap">
+								<span class="whitespace-nowrap" v-if="item.expense_date">
 									{{ dayjs(item.expense_date).format("D MMM") }}
 								</span>
 							</div>
@@ -95,9 +95,19 @@
 					class="flex w-full flex-row items-center justify-between gap-3"
 				>
 					<Button
+						v-if="editingIdx !== null"
+						class="py-3 px-12 border-red-600 text-red-600"
+						icon-left="trash"
+						appearance="white"
+						@click="deleteExpenseItem()"
+					>
+						Delete
+					</Button>
+					<Button
 						appearance="primary"
 						class="w-full py-3 px-12"
-						@click="closeModal()"
+						:icon-left="editingIdx === null ? 'plus' : 'check'"
+						@click="updateExpenseItem()"
 						:disabled="addButtonDisabled"
 					>
 						{{ editingIdx === null ? "Add Expense" : "Update Expense" }}
@@ -132,7 +142,11 @@ const props = defineProps({
 		default: false,
 	},
 })
-const emit = defineEmits(["add-expense-item", "update-expense-item"])
+const emit = defineEmits([
+	"add-expense-item",
+	"update-expense-item",
+	"delete-expense-item",
+])
 const dayjs = inject("$dayjs")
 const expenseItem = ref({})
 const editingIdx = ref(null)
@@ -147,7 +161,12 @@ const openModal = async (item, idx) => {
 	isModalOpen.value = true
 }
 
-const closeModal = async () => {
+const deleteExpenseItem = () => {
+	emit("delete-expense-item", editingIdx.value)
+	resetSelectedItem()
+}
+
+const updateExpenseItem = () => {
 	if (editingIdx.value === null) {
 		emit("add-expense-item", expenseItem.value)
 	} else {
@@ -161,20 +180,6 @@ function resetSelectedItem() {
 	expenseItem.value = {}
 	editingIdx.value = null
 }
-
-const modalTitle = computed(() => {
-	if (props.isReadOnly) return "Expense Item"
-
-	return editingIdx.value === null ? "New Expense Item" : "Edit Expense Item"
-})
-
-const addButtonDisabled = computed(() => {
-	return props.fields?.some((field) => {
-		if (field.reqd && !expenseItem.value[field.fieldname]) {
-			return true
-		}
-	})
-})
 
 const expensesTableFields = createResource({
 	url: "hrms.api.get_doctype_fields",
@@ -194,6 +199,20 @@ const expensesTableFields = createResource({
 	},
 })
 expensesTableFields.reload()
+
+const modalTitle = computed(() => {
+	if (props.isReadOnly) return "Expense Item"
+
+	return editingIdx.value === null ? "New Expense Item" : "Edit Expense Item"
+})
+
+const addButtonDisabled = computed(() => {
+	return expensesTableFields.data?.some((field) => {
+		if (field.reqd && !expenseItem.value[field.fieldname]) {
+			return true
+		}
+	})
+})
 
 // child table form scripts
 watch(

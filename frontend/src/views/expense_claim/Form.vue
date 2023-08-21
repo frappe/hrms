@@ -21,6 +21,7 @@
 						:isReadOnly="isReadOnly || isFormReadOnly"
 						@addExpenseItem="addExpenseItem"
 						@updateExpenseItem="updateExpenseItem"
+						@deleteExpenseItem="deleteExpenseItem"
 					/>
 				</template>
 
@@ -31,6 +32,7 @@
 						:isReadOnly="isReadOnly || isFormReadOnly"
 						@addExpenseTax="addExpenseTax"
 						@updateExpenseTax="updateExpenseTax"
+						@deleteExpenseTax="deleteExpenseTax"
 					/>
 				</template>
 
@@ -47,7 +49,7 @@
 </template>
 
 <script setup>
-import { IonPage, IonContent, modalController } from "@ionic/vue"
+import { IonPage, IonContent } from "@ionic/vue"
 import { createResource } from "frappe-ui"
 import { computed, ref, watch, inject } from "vue"
 
@@ -264,7 +266,6 @@ function addExpenseItem(item) {
 	calculateTotals()
 	calculateTaxes()
 	allocateAdvanceAmount()
-	modalController.dismiss()
 }
 
 function updateExpenseItem(item, idx) {
@@ -272,7 +273,13 @@ function updateExpenseItem(item, idx) {
 	calculateTotals()
 	calculateTaxes()
 	allocateAdvanceAmount()
-	modalController.dismiss()
+}
+
+function deleteExpenseItem(idx) {
+	expenseClaim.value.expenses.splice(idx, 1)
+	calculateTotals()
+	calculateTaxes()
+	allocateAdvanceAmount()
 }
 
 function addExpenseTax(item) {
@@ -280,14 +287,18 @@ function addExpenseTax(item) {
 	expenseClaim.value.taxes.push(item)
 	calculateTaxes()
 	allocateAdvanceAmount()
-	modalController.dismiss()
 }
 
 function updateExpenseTax(item, idx) {
 	expenseClaim.value.taxes[idx] = item
 	calculateTaxes()
 	allocateAdvanceAmount()
-	modalController.dismiss()
+}
+
+function deleteExpenseTax(idx) {
+	expenseClaim.value.taxes.splice(idx, 1)
+	calculateTaxes()
+	allocateAdvanceAmount()
 }
 
 function calculateTotals() {

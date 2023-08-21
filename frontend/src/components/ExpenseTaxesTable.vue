@@ -97,9 +97,19 @@
 						class="flex w-full flex-row items-center justify-between gap-3"
 					>
 						<Button
+							v-if="editingIdx !== null"
+							class="py-3 px-12 border-red-600 text-red-600"
+							icon-left="trash"
+							appearance="white"
+							@click="deleteExpenseTax()"
+						>
+							Delete
+						</Button>
+						<Button
 							appearance="primary"
 							class="w-full py-3 px-12"
-							@click="closeModal()"
+							:icon-left="editingIdx === null ? 'plus' : 'check'"
+							@click="updateExpenseTax()"
 							:disabled="addButtonDisabled"
 						>
 							{{ editingIdx === null ? "Add Tax" : "Update Tax" }}
@@ -114,7 +124,7 @@
 <script setup>
 import { IonModal } from "@ionic/vue"
 import { FeatherIcon, createResource } from "frappe-ui"
-import { computed, ref, watch, inject } from "vue"
+import { computed, ref, watch } from "vue"
 
 import FormField from "@/components/FormField.vue"
 import EmptyState from "@/components/EmptyState.vue"
@@ -133,7 +143,11 @@ const props = defineProps({
 		default: false,
 	},
 })
-const emit = defineEmits(["add-expense-tax", "update-expense-tax"])
+const emit = defineEmits([
+	"add-expense-tax",
+	"update-expense-tax",
+	"delete-expense-tax",
+])
 const expenseTax = ref({})
 const editingIdx = ref(null)
 
@@ -146,7 +160,12 @@ const openModal = async (item, idx) => {
 	isModalOpen.value = true
 }
 
-const closeModal = async () => {
+const deleteExpenseTax = () => {
+	emit("delete-expense-tax", editingIdx.value)
+	resetSelectedItem()
+}
+
+const updateExpenseTax = () => {
 	if (editingIdx.value === null) {
 		emit("add-expense-tax", expenseTax.value)
 	} else {
@@ -204,7 +223,7 @@ const modalTitle = computed(() => {
 })
 
 const addButtonDisabled = computed(() => {
-	return props.fields?.some((field) => {
+	return taxesTableFields.data?.some((field) => {
 		if (field.reqd && !expenseTax.value[field.fieldname]) {
 			return true
 		}

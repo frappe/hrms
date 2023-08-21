@@ -36,7 +36,7 @@
 							{
 								label: 'Delete',
 								condition: showDeleteButton,
-								handler: () => showDeleteDialog = true,
+								handler: () => (showDeleteDialog = true),
 							},
 							{ label: 'Reload', handler: () => handleDocReload() },
 						]"
@@ -179,7 +179,7 @@
 		:options="{
 			title: `Delete ${props.doctype}`,
 			message: `Are you sure you want to delete the ${props.doctype} ${formModel.name}?`,
-			icon: { name: 'trash', appearance: 'danger'},
+			icon: { name: 'trash', appearance: 'danger' },
 			size: 'xs',
 			actions: [
 				{

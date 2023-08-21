@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 from frappe.query_builder import Order
 from frappe.query_builder.functions import Count
 from frappe.utils import getdate
@@ -443,7 +444,7 @@ def upload_base64_file(content, filename, dt=None, dn=None, fieldname=None):
 	decoded_content = base64.b64decode(content)
 	content_type = guess_type(filename)[0]
 	if content_type not in ALLOWED_MIMETYPES:
-		frappe.throw("You can only upload JPG, PNG, PDF, TXT or Microsoft documents.")
+		frappe.throw(_("You can only upload JPG, PNG, PDF, TXT or Microsoft documents."))
 
 	return frappe.get_doc(
 		{
