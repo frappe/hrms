@@ -29,13 +29,16 @@ class JobOpening(WebsiteGenerator):
 	def validate(self):
 		if not self.route:
 			self.route = frappe.scrub(self.job_title).replace("_", "-")
-		self.validate_closes_on()
+		self.validate_dates()
 		self.validate_current_vacancies()
 		self.update_job_requisition_status()
 
-	def validate_closes_on(self):
+	def validate_dates(self):
 		self.validate_from_to_dates("posted_on", "closes_on")
 		today = getdate()
+		posted_on = getdate(self.posted_on)
+		if posted_on > today:
+			frappe.throw(_(f"{frappe.bold('Posted On')} cannot be a future date"))
 		closes_on = getdate(self.closes_on)
 		if closes_on < today:
 			frappe.throw(_(f"{frappe.bold('Closes On')} cannot be a past date"))
