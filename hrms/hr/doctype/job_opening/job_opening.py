@@ -6,8 +6,8 @@
 
 import frappe
 from frappe import _
-from frappe.utils import get_link_to_form, getdate
 from frappe.model.naming import set_name_from_naming_options
+from frappe.utils import get_link_to_form, getdate
 from frappe.website.website_generator import WebsiteGenerator
 
 from hrms.hr.doctype.staffing_plan.staffing_plan import (
@@ -29,8 +29,16 @@ class JobOpening(WebsiteGenerator):
 	def validate(self):
 		if not self.route:
 			self.route = frappe.scrub(self.job_title).replace("_", "-")
+		self.validate_closes_on()
 		self.validate_current_vacancies()
 		self.update_job_requisition_status()
+
+	def validate_closes_on(self):
+		self.validate_from_to_dates("posted_on", "closes_on")
+		today = getdate()
+		closes_on = getdate(self.closes_on)
+		if closes_on < today:
+			frappe.throw(_(f"{frappe.bold('Closes On')} cannot be a past date"))
 
 	def validate_current_vacancies(self):
 		if not self.staffing_plan:
