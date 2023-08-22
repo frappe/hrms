@@ -7,6 +7,7 @@
 import frappe
 from frappe import _
 from frappe.utils import get_link_to_form, getdate
+from frappe.model.naming import set_name_from_naming_options
 from frappe.website.website_generator import WebsiteGenerator
 
 from hrms.hr.doctype.staffing_plan.staffing_plan import (
@@ -21,6 +22,9 @@ class JobOpening(WebsiteGenerator):
 		condition_field="publish",
 		page_title_field="job_title",
 	)
+
+	def autoname(self):
+		self.name = set_name_from_naming_options(frappe.get_meta(self.doctype).autoname, self)
 
 	def validate(self):
 		if not self.route:

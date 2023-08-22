@@ -1,6 +1,6 @@
 {
  "actions": [],
- "autoname": "field:route",
+ "autoname": "HR-OPN-.YYYY.-.#### ",
  "creation": "2013-01-15 16:13:36",
  "description": "Description of a Job Opening",
  "doctype": "DocType",
@@ -230,11 +230,11 @@
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2023-08-22 15:39:10.430060",
+ "modified": "2023-08-22 16:53:41.910984",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
- "naming_rule": "By fieldname",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -255,5 +255,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "ASC",
- "states": []
+ "states": [],
+ "title_field": "job_title"
 }
