@@ -83,8 +83,8 @@ class TestShiftType(FrappeTestCase):
 		# doesn't mark late entry until 60 mins after shift start i.e. till 9
 		# doesn't mark late entry until 60 mins before shift end i.e. 11
 		shift_type = setup_shift_type(
-			enable_entry_grace_period=1,
-			enable_exit_grace_period=1,
+			enable_late_entry_marking=1,
+			enable_early_exit_marking=1,
 			late_entry_grace_period=60,
 			early_exit_grace_period=60,
 		)
