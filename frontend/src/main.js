@@ -3,13 +3,20 @@ import App from "./App.vue"
 import router from "./router"
 import socket from "./socket"
 
-import { Button, setConfig, frappeRequest, resourcesPlugin } from "frappe-ui"
+import {
+	Button,
+	Input,
+	setConfig,
+	frappeRequest,
+	resourcesPlugin,
+} from "frappe-ui"
+import EmptyState from "@/components/EmptyState.vue"
 
 import { IonicVue } from "@ionic/vue"
 
-import { session } from "./data/session"
-import { userResource } from "./data/user"
-import { employeeResource } from "./data/employee"
+import { session } from "@/data/session"
+import { userResource } from "@/data/user"
+import { employeeResource } from "@/data/employee"
 import dayjs from "@/utils/dayjs"
 
 /* Core CSS required for Ionic components to work properly */
@@ -26,6 +33,8 @@ setConfig("resourceFetcher", frappeRequest)
 app.use(resourcesPlugin)
 
 app.component("Button", Button)
+app.component("Input", Input)
+app.component("EmptyState", EmptyState)
 
 app.use(router)
 app.use(IonicVue)

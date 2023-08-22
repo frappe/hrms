@@ -1,0 +1,595 @@
+<template>
+	<div class="flex flex-col h-full w-full" v-if="isFormReady">
+		<div
+			class="w-full h-full bg-white sm:w-96 flex flex-col relative overflow-y-auto"
+		>
+			<header
+				class="flex flex-row gap-1 bg-white shadow-sm py-4 px-2 items-center border-b sticky top-0 z-[1000]"
+			>
+				<Button appearance="minimal" class="!px-0 !py-0" @click="router.back()">
+					<FeatherIcon name="chevron-left" class="h-5 w-5" />
+				</Button>
+				<div
+					v-if="id"
+					class="flex flex-row items-center gap-2 overflow-hidden grow"
+				>
+					<h2
+						class="text-2xl font-semibold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis"
+					>
+						{{ doctype }}
+					</h2>
+					<Badge
+						:label="id"
+						color="white"
+						class="whitespace-nowrap text-[8px]"
+					/>
+					<Badge
+						v-if="formModel.status"
+						:label="formModel.status"
+						:color="statusColor"
+						class="whitespace-nowrap text-[8px]"
+					/>
+
+					<Dropdown
+						class="ml-auto"
+						:options="[
+							{
+								label: 'Delete',
+								condition: showDeleteButton,
+								handler: () => (showDeleteDialog = true),
+							},
+							{ label: 'Reload', handler: () => handleDocReload() },
+						]"
+						:button="{
+							label: 'Menu',
+							icon: 'more-horizontal',
+							appearance: 'minimal',
+						}"
+					/>
+				</div>
+				<h2 v-else class="text-2xl font-semibold text-gray-900">
+					{{ `New ${doctype}` }}
+				</h2>
+			</header>
+
+			<!-- Form -->
+			<div class="bg-white grow">
+				<!-- Tabs -->
+				<div
+					class="px-4 sticky top-14 z-[100] bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
+				>
+					<ul class="flex flex-wrap -mb-px">
+						<li class="mr-2" v-for="tab in tabs">
+							<button
+								@click="activeTab = tab.name"
+								class="inline-block p-4 border-b-2 border-transparent rounded-t-lg"
+								:class="[
+									activeTab === tab.name
+										? '!text-blue-600 !border-blue-600'
+										: 'hover:text-gray-600 hover:border-gray-300',
+								]"
+							>
+								{{ tab.name }}
+							</button>
+						</li>
+					</ul>
+				</div>
+
+				<template
+					v-if="tabbedView"
+					v-for="(fieldList, tabName, index) in tabFields"
+				>
+					<div
+						v-show="tabName === activeTab"
+						class="flex flex-col space-y-4 p-4"
+					>
+						<template v-for="field in fieldList" :key="field.fieldname">
+							<slot
+								v-if="field.fieldtype == 'Table'"
+								:name="field.fieldname"
+								:isFormReadOnly="isFormReadOnly"
+							></slot>
+
+							<FormField
+								v-else
+								:fieldtype="field.fieldtype"
+								:fieldname="field.fieldname"
+								v-model="formModel[field.fieldname]"
+								:default="field.default"
+								:label="field.label"
+								:options="field.options"
+								:linkFilters="field.linkFilters"
+								:documentList="field.documentList"
+								:readOnly="Boolean(field.read_only) || isFormReadOnly"
+								:reqd="Boolean(field.reqd)"
+								:hidden="Boolean(field.hidden)"
+								:errorMessage="field.error_message"
+								:minDate="field.minDate"
+								:maxDate="field.maxDate"
+								:addSectionPadding="fieldList[0].name !== field.name"
+							/>
+						</template>
+
+						<FileUploaderView
+							v-if="showAttachmentView && index === 0"
+							v-model="fileAttachments"
+							@handleFileSelect="handleFileSelect"
+							@handleFileDelete="handleFileDelete"
+						/>
+					</div>
+				</template>
+
+				<div class="flex flex-col space-y-4 p-4" v-else>
+					<FormField
+						v-for="field in props.fields"
+						:key="field.name"
+						:fieldtype="field.fieldtype"
+						:fieldname="field.fieldname"
+						v-model="formModel[field.fieldname]"
+						:default="field.default"
+						:label="field.label"
+						:options="field.options"
+						:linkFilters="field.linkFilters"
+						:documentList="field.documentList"
+						:readOnly="Boolean(field.read_only) || isFormReadOnly"
+						:reqd="Boolean(field.reqd)"
+						:hidden="Boolean(field.hidden)"
+						:errorMessage="field.error_message"
+						:minDate="field.minDate"
+						:maxDate="field.maxDate"
+					/>
+
+					<FileUploaderView
+						v-if="showAttachmentView"
+						v-model="fileAttachments"
+						@handleFileSelect="handleFileSelect"
+						@handleFileDelete="handleFileDelete"
+					/>
+				</div>
+			</div>
+
+			<!-- Bottom Save Button -->
+			<div
+				v-if="formButton"
+				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-xl pb-10"
+			>
+				<ErrorMessage
+					class="mb-2"
+					:message="docList.insert.error || documentResource?.setValue?.error"
+				/>
+
+				<Button
+					class="w-full rounded-md py-2.5 px-3.5 mt-2"
+					:class="formButton === 'Cancel' ? 'shadow' : ''"
+					@click="formButton === 'Save' ? saveForm() : submitOrCancelForm()"
+					:appearance="formButton === 'Cancel' ? 'secondary' : 'primary'"
+					:disabled="saveButtonDisabled"
+					:loading="
+						docList.insert.loading || documentResource?.setValue?.loading
+					"
+				>
+					{{ formButton }}
+				</Button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Confirmation Dialogs -->
+	<Dialog
+		:options="{
+			title: `Delete ${props.doctype}`,
+			message: `Are you sure you want to delete the ${props.doctype} ${formModel.name}?`,
+			icon: { name: 'trash', appearance: 'danger' },
+			size: 'xs',
+			actions: [
+				{
+					label: 'Delete',
+					appearance: 'danger',
+					handler: ({ close }) => {
+						handleDocDelete()
+						close() // closes dialog
+					},
+				},
+				{ label: 'Cancel' },
+			],
+		}"
+		v-model="showDeleteDialog"
+	/>
+
+	<Dialog
+		:options="{
+			title: 'Confirm',
+			message: `Permanently submit ${props.doctype} ${formModel.name}?`,
+			size: 'xs',
+			actions: [
+				{
+					label: 'Yes',
+					appearance: 'primary',
+					handler: ({ close }) => {
+						handleDocUpdate('submit')
+						close() // closes dialog
+					},
+				},
+				{ label: 'No' },
+			],
+		}"
+		v-model="showSubmitDialog"
+	/>
+
+	<Dialog
+		:options="{
+			title: 'Confirm',
+			message: `Permanently cancel ${props.doctype} ${formModel.name}?`,
+			size: 'xs',
+			actions: [
+				{
+					label: 'Yes',
+					appearance: 'primary',
+					handler: ({ close }) => {
+						handleDocUpdate('cancel')
+						close() // closes dialog
+					},
+				},
+				{ label: 'No' },
+			],
+		}"
+		v-model="showCancelDialog"
+	/>
+</template>
+
+<script setup>
+import { computed, nextTick, onMounted, ref, watch } from "vue"
+import { useRouter } from "vue-router"
+import {
+	ErrorMessage,
+	Badge,
+	FeatherIcon,
+	createListResource,
+	createDocumentResource,
+	toast,
+	createResource,
+	Dropdown,
+	Dialog,
+} from "frappe-ui"
+import FormField from "@/components/FormField.vue"
+import FileUploaderView from "@/components/FileUploaderView.vue"
+
+import { FileAttachment, guessStatusColor } from "@/composables/index"
+
+const props = defineProps({
+	doctype: {
+		type: String,
+		required: true,
+	},
+	modelValue: {
+		type: Object,
+		required: true,
+	},
+	isSubmittable: {
+		type: Boolean,
+		required: false,
+		default: false,
+	},
+	fields: {
+		type: Array,
+		required: true,
+	},
+	id: {
+		type: String,
+		required: false,
+	},
+	tabbedView: {
+		type: Boolean,
+		required: false,
+		default: false,
+	},
+	tabs: {
+		type: Array,
+		required: false,
+	},
+	showAttachmentView: {
+		type: Boolean,
+		required: false,
+		default: false,
+	},
+})
+const emit = defineEmits(["validateForm", "update:modelValue"])
+const router = useRouter()
+let activeTab = ref(props.tabs?.[0].name)
+let fileAttachments = ref([])
+let statusColor = ref("")
+let isFormDirty = ref(false)
+let isFormUpdated = ref(false)
+let showDeleteDialog = ref(false)
+let showSubmitDialog = ref(false)
+let showCancelDialog = ref(false)
+
+const formModel = computed({
+	get() {
+		return props.modelValue
+	},
+	set(newValue) {
+		emit("update:modelValue", newValue)
+	},
+})
+
+watch(
+	() => formModel.value,
+	() => {
+		if (!props.id) return
+
+		if (isFormReady.value && !isFormUpdated.value) {
+			isFormDirty.value = true
+		} else if (isFormUpdated.value) {
+			isFormUpdated.value = false
+		}
+	},
+	{ deep: true }
+)
+
+const tabFields = computed(() => {
+	let fieldsByTab = {}
+	let fieldList = []
+	let firstFieldIndex = 0
+	let lastFieldIndex = 0
+
+	props.tabs?.forEach((tab) => {
+		lastFieldIndex = props.fields.findIndex(
+			(field) => field.fieldname === tab.lastField
+		)
+		fieldList = props.fields.slice(firstFieldIndex, lastFieldIndex + 1)
+		fieldsByTab[tab.name] = fieldList
+		firstFieldIndex = lastFieldIndex + 1
+	})
+
+	return fieldsByTab
+})
+
+const attachedFiles = createResource({
+	url: "hrms.api.get_attachments",
+	params: {
+		dt: props.doctype,
+		dn: props.id,
+	},
+	transform(data) {
+		return data.map((file) => (file.uploaded = true))
+	},
+	onSuccess(data) {
+		fileAttachments.value = data
+	},
+})
+
+const handleFileSelect = (e) => {
+	fileAttachments.value.push(...e.target.files)
+
+	if (props.id) {
+		uploadAllAttachments(props.doctype, props.id)
+	}
+}
+
+const handleFileDelete = async (fileObj) => {
+	if (fileObj.uploaded) {
+		const fileAttachment = new FileAttachment(fileObj)
+		await fileAttachment.delete()
+		await attachedFiles.reload()
+	} else {
+		fileAttachments.value = fileAttachments.value.filter(
+			(file) => file.name !== fileName
+		)
+	}
+}
+
+const uploadAttachment = async (doctype, name, file) => {
+	const fileAttachment = new FileAttachment(file)
+	return fileAttachment.upload(doctype, name).promise
+}
+
+async function uploadAllAttachments(documentType, documentName) {
+	for (const attachment of fileAttachments.value) {
+		if (!attachment.uploaded) {
+			await uploadAttachment(documentType, documentName, attachment)
+			attachment.uploaded = true
+		}
+	}
+}
+
+// CRUD for doc
+const docList = createListResource({
+	doctype: props.doctype,
+	insert: {
+		async onSuccess(data) {
+			toast({
+				title: "Success",
+				text: `${props.doctype} created successfully!`,
+				icon: "check-circle",
+				position: "bottom-center",
+				iconClasses: "text-green-500",
+			})
+			await uploadAllAttachments(data.doctype, data.name)
+
+			router.replace({
+				name: `${props.doctype.replace(/\s+/g, "")}DetailView`,
+				params: { id: data.name },
+			})
+		},
+		onError() {
+			toast({
+				title: "Error",
+				text: `Error creating ${props.doctype}`,
+				icon: "alert-circle",
+				position: "bottom-center",
+				iconClasses: "text-red-500",
+			})
+			console.log(`Error creating ${props.doctype}`)
+		},
+	},
+})
+
+const documentResource = createDocumentResource({
+	doctype: props.doctype,
+	name: props.id,
+	fields: "*",
+	setValue: {
+		onSuccess() {
+			toast({
+				title: "Success",
+				text: `${props.doctype} updated successfully!`,
+				icon: "check-circle",
+				position: "bottom-center",
+				iconClasses: "text-green-500",
+			})
+		},
+		onError() {
+			toast({
+				title: "Error",
+				text: `Error updating ${props.doctype}`,
+				icon: "alert-circle",
+				position: "bottom-center",
+				iconClasses: "text-red-500",
+			})
+			console.log(`Error updating ${props.doctype}`)
+		},
+	},
+	delete: {
+		onSuccess() {
+			router.back()
+			toast({
+				title: "Success",
+				text: `${props.doctype} deleted successfully!`,
+				icon: "check-circle",
+				position: "bottom-center",
+				iconClasses: "text-green-500",
+			})
+		},
+		onError() {
+			toast({
+				title: "Error",
+				text: `Error deleting ${props.doctype}`,
+				icon: "alert-circle",
+				position: "bottom-center",
+				iconClasses: "text-red-500",
+			})
+			console.log(`Error deleting ${props.doctype}`)
+		},
+	},
+})
+
+const docPermissions = createResource({
+	url: "frappe.client.get_doc_permissions",
+})
+
+const saveButtonDisabled = computed(() => {
+	if (props.id && formButton.value === "Save" && !isFormDirty.value) {
+		return true
+	}
+
+	return props.fields?.some((field) => {
+		if (field.reqd && !field.hidden && !formModel.value[field.fieldname]) {
+			return true
+		}
+	})
+})
+
+const formButton = computed(() => {
+	if (props.id && props.isSubmittable && !isFormDirty.value) {
+		if (formModel.value.docstatus === 0 && hasPermission("submit")) {
+			return "Submit"
+		} else if (formModel.value.docstatus === 1 && hasPermission("cancel")) {
+			return "Cancel"
+		}
+	} else if (formModel.value.docstatus !== 2) {
+		return "Save"
+	}
+})
+
+function showDeleteButton() {
+	return props.id && formModel.value.docstatus !== 1 && hasPermission("delete")
+}
+
+function hasPermission(action) {
+	return docPermissions.data?.permissions[action]
+}
+
+function handleDocInsert() {
+	docList.insert.submit(formModel.value)
+}
+
+async function handleDocUpdate(action) {
+	if (documentResource.doc) {
+		let params = { ...formModel.value }
+		if (action == "submit") {
+			params.docstatus = 1
+		} else if (action == "cancel") {
+			params.docstatus = 2
+		}
+
+		await documentResource.setValue.submit(params)
+		await documentResource.get.promise
+
+		formModel.value = { ...documentResource.doc }
+
+		nextTick(() => {
+			setStatusColor()
+			isFormDirty.value = false
+			isFormUpdated.value = true
+		})
+	}
+}
+
+function saveForm() {
+	emit("validateForm")
+
+	if (props.id) {
+		handleDocUpdate()
+	} else {
+		handleDocInsert()
+	}
+}
+
+function submitOrCancelForm() {
+	if (isFormDirty.value) return
+
+	if (formModel.value.docstatus === 0) {
+		emit("validateForm")
+		showSubmitDialog.value = true
+	} else if (formModel.value.docstatus === 1) {
+		showCancelDialog.value = true
+	}
+}
+
+function handleDocDelete() {
+	documentResource.delete.submit()
+}
+
+function handleDocReload() {
+	documentResource.reload()
+}
+
+async function setStatusColor() {
+	const status = formModel.value.status || formModel.value.approval_status
+	if (status) {
+		statusColor.value = await guessStatusColor(props.doctype, status)
+	}
+}
+
+const isFormReadOnly = computed(
+	() => props.id && formModel.value.docstatus !== 0
+)
+
+const isFormReady = computed(() => {
+	if (!props.id) return true
+
+	return !documentResource.get.loading && documentResource.doc
+})
+
+onMounted(async () => {
+	if (props.id) {
+		await documentResource.get.promise
+		formModel.value = { ...documentResource.doc }
+		await docPermissions.fetch({ doctype: props.doctype, docname: props.id })
+		await attachedFiles.reload()
+		await setStatusColor()
+		isFormDirty.value = false
+	}
+})
+</script>

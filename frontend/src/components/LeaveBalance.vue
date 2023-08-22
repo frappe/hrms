@@ -2,13 +2,30 @@
 	<div class="flex flex-col w-full mt-7">
 		<div class="flex flex-row justify-between items-center px-4">
 			<div class="text-xl text-gray-800 font-bold">Leave Balance</div>
-			<div class="text-lg text-blue-500 font-medium cursor-pointer">
-				View Leave History
+			<div
+				class="text-lg text-blue-500 font-medium cursor-pointer"
+				v-if="leaveBalance.data"
+			>
+				<router-link
+					:to="{ name: 'LeaveApplicationListView' }"
+					v-slot="{ navigate }"
+					v-if="leaveBalance.data"
+				>
+					<div
+						@click="navigate"
+						class="text-lg text-blue-500 font-medium cursor-pointer"
+					>
+						View Leave History
+					</div>
+				</router-link>
 			</div>
 		</div>
 
 		<!-- Leave Balance Dashboard -->
-		<div class="flex flex-row gap-4 overflow-x-auto py-2 mt-3">
+		<div
+			class="flex flex-row gap-4 overflow-x-auto py-2 mt-3"
+			v-if="leaveBalance.data"
+		>
 			<div
 				v-for="(allocation, leave_type, index) in leaveBalance.data"
 				:key="leave_type"
@@ -26,12 +43,14 @@
 				</div>
 			</div>
 		</div>
+
+		<EmptyState message="You have no leaves allocated" v-else />
 	</div>
 </template>
 
 <script setup>
 import { inject } from "vue"
-import { createResource, Card } from "frappe-ui"
+import { createResource } from "frappe-ui"
 
 import SemicircleChart from "@/components/SemicircleChart.vue"
 

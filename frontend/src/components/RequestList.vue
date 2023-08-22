@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="flex flex-col bg-white rounded-lg mt-5 overflow-auto"
-		v-if="items"
+		v-if="props.items?.length"
 	>
 		<div
 			class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
@@ -9,16 +9,27 @@
 			:key="link.name"
 			@click="openRequestModal(link)"
 		>
-			<LeaveRequestItem
-				v-if="link.doctype === 'Leave Application'"
-				:leave="link"
+			<component
+				:is="props.component || link.component"
+				:doc="link"
 				:isTeamRequest="props.teamRequests"
 			/>
 		</div>
+
+		<router-link
+			v-if="props.addListButton"
+			:to="{ name: props.listButtonRoute }"
+			v-slot="{ navigate }"
+		>
+			<Button
+				@click="navigate"
+				class="w-full !text-gray-600 py-4 mt-0 border-none bg-white hover:bg-white"
+			>
+				View List
+			</Button>
+		</router-link>
 	</div>
-	<div class="text-sm text-gray-500 mt-5 flex flex-col items-center" v-else>
-		You have no requests
-	</div>
+	<EmptyState message="You have no requests" v-else />
 
 	<ion-modal
 		ref="modal"
@@ -27,26 +38,45 @@
 		:initial-breakpoint="1"
 		:breakpoints="[0, 1]"
 	>
-		<RequestActionSheet :fields="LEAVE_FIELDS" :data="selectedRequest" />
+		<RequestActionSheet
+			:fields="
+				selectedRequest.doctype === 'Leave Application'
+					? LEAVE_FIELDS
+					: EXPENSE_CLAIM_FIELDS
+			"
+			v-model="selectedRequest"
+		/>
 	</ion-modal>
 </template>
 
 <script setup>
 import { ref } from "vue"
 import { IonModal } from "@ionic/vue"
-
-import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
 import RequestActionSheet from "@/components/RequestActionSheet.vue"
 
-import { LEAVE_FIELDS } from "@/data/config/requestSummaryFields"
+import {
+	LEAVE_FIELDS,
+	EXPENSE_CLAIM_FIELDS,
+} from "@/data/config/requestSummaryFields"
 
 const props = defineProps({
+	component: {
+		type: Object,
+	},
 	items: {
 		type: Array,
 	},
 	teamRequests: {
 		type: Boolean,
 		default: false,
+	},
+	addListButton: {
+		type: Boolean,
+		default: false,
+	},
+	listButtonRoute: {
+		type: String,
+		default: "",
 	},
 })
 
@@ -58,7 +88,7 @@ const openRequestModal = async (request) => {
 	isRequestModalOpen.value = true
 }
 
-const closeRequestModal = async (request) => {
+const closeRequestModal = async (_request) => {
 	isRequestModalOpen.value = false
 	selectedRequest.value = null
 }

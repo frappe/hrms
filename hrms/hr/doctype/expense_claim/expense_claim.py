@@ -53,7 +53,7 @@ class ExpenseClaim(AccountsController):
 			# set as paid
 			self.is_paid
 			or (
-				flt(self.total_sanctioned_amount > 0)
+				flt(self.total_sanctioned_amount) > 0
 				and (
 					# grand total is reimbursed
 					(
@@ -82,6 +82,22 @@ class ExpenseClaim(AccountsController):
 
 	def on_update(self):
 		share_doc_with_approver(self, self.expense_approver)
+		self.publish_update()
+
+	def after_delete(self):
+		self.publish_update()
+
+	def publish_update(self):
+		if frappe.session.user in [self.expense_approver, self.employee]:
+			frappe.publish_realtime(
+				event="hrms:update_expense_claims",
+				message={
+					"approver": self.expense_approver,
+					"employee": self.employee,
+				},
+				user=frappe.session.user,
+				after_commit=True,
+			)
 
 	def set_payable_account(self):
 		if not self.payable_account and not self.is_paid:
@@ -113,6 +129,7 @@ class ExpenseClaim(AccountsController):
 		update_reimbursed_amount(self)
 
 		self.update_claimed_amount_in_employee_advance()
+		self.publish_update()
 
 	def update_claimed_amount_in_employee_advance(self):
 		for d in self.get("advances"):
@@ -280,7 +297,7 @@ class ExpenseClaim(AccountsController):
 		self.total_taxes_and_charges = 0
 		for tax in self.taxes:
 			if tax.rate:
-				tax.tax_amount = flt(self.total_sanctioned_amount) * flt(tax.rate / 100)
+				tax.tax_amount = flt(self.total_sanctioned_amount) * flt(flt(tax.rate) / 100)
 
 			tax.total = flt(tax.tax_amount) + flt(self.total_sanctioned_amount)
 			self.total_taxes_and_charges += flt(tax.tax_amount)
@@ -463,6 +480,7 @@ def get_advances(employee, advance_id=None):
 
 	query = frappe.qb.from_(advance).select(
 		advance.name,
+		advance.purpose,
 		advance.posting_date,
 		advance.paid_amount,
 		advance.claimed_amount,

@@ -2,6 +2,10 @@ import { createRouter, createWebHistory } from "@ionic/vue-router"
 import { session } from "@/data/session"
 import { userResource } from "@/data/user"
 
+import leaveRoutes from "./leaves"
+import claimRoutes from "./claims"
+import employeeAdvanceRoutes from "./advances"
+
 const routes = [
 	{
 		path: "/",
@@ -19,15 +23,13 @@ const routes = [
 		component: () => import("@/views/CheckStatus.vue"),
 	},
 	{
-		path: "/leaves",
-		name: "Leaves",
-		component: () => import("@/views/Leaves.vue"),
-	},
-	{
 		path: "/profile",
 		name: "Profile",
 		component: () => import("@/views/Profile.vue"),
 	},
+	...leaveRoutes,
+	...claimRoutes,
+	...employeeAdvanceRoutes,
 ]
 
 const router = createRouter({

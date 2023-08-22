@@ -4,3 +4,8 @@
 ion-modal {
 	--height: auto;
 }
+
+input:disabled {
+	--webkit-text-fill-color: var(--text-color);
+	opacity: 1; /* required on iOS */
+}
