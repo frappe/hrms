@@ -16,7 +16,7 @@ class TestShiftAttendance(FrappeTestCase):
 	def setUpClass(cls):
 		create_company()
 		super().setUpClass()
-		frappe.db.sql("delete from `tabEmployee` where company='_Test Company'")
+		frappe.db.delete("Employee", {"company": "_Test Company"})
 
 		cls.create_records()
 
