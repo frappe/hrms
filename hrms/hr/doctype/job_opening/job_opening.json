@@ -1,7 +1,11 @@
 {
  "actions": [],
+<<<<<<< HEAD
  "allow_import": 1,
  "autoname": "field:route",
+=======
+ "autoname": "HR-OPN-.YYYY.-.#### ",
+>>>>>>> 8555205f2 (refactor: set Naming Rule as Expression)
  "creation": "2013-01-15 16:13:36",
  "description": "Description of a Job Opening",
  "doctype": "DocType",
@@ -232,14 +236,18 @@
  "idx": 1,
  "links": [],
 <<<<<<< HEAD
+<<<<<<< HEAD
  "modified": "2023-09-14 16:50:39.316079",
 =======
  "modified": "2023-08-22 15:39:10.430060",
 >>>>>>> fbd5cd4aa (feat: add Posted On, Closes On, Employment Type, and Location fields)
+=======
+ "modified": "2023-08-22 16:53:41.910984",
+>>>>>>> 8555205f2 (refactor: set Naming Rule as Expression)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
- "naming_rule": "By fieldname",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -260,5 +268,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "ASC",
- "states": []
+ "states": [],
+ "title_field": "job_title"
 }
