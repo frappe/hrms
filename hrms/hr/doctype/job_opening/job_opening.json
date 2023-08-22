@@ -8,12 +8,19 @@
  "document_type": "Document",
  "engine": "InnoDB",
  "field_order": [
+  "job_details_section",
   "job_title",
-  "company",
-  "status",
-  "column_break_5",
   "designation",
+  "column_break_5",
+  "status",
+  "posted_on",
+  "closes_on",
+  "section_break_nngy",
+  "company",
   "department",
+  "column_break_dxpv",
+  "employment_type",
+  "location",
   "references_section",
   "staffing_plan",
   "planned_vacancies",
@@ -181,12 +188,54 @@
    "fieldtype": "Int",
    "label": "Vacancies",
    "read_only": 1
+  },
+  {
+   "default": "Today",
+   "depends_on": "eval:doc.status == 'Open'",
+   "fieldname": "posted_on",
+   "fieldtype": "Date",
+   "label": "Posted On"
+  },
+  {
+   "depends_on": "eval:doc.status == 'Open'",
+   "fieldname": "closes_on",
+   "fieldtype": "Date",
+   "label": "Closes On"
+  },
+  {
+   "fieldname": "employment_type",
+   "fieldtype": "Link",
+   "label": "Employment Type",
+   "options": "Employment Type"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Branch"
+  },
+  {
+   "fieldname": "section_break_nngy",
+   "fieldtype": "Section Break",
+   "label": "Company Details"
+  },
+  {
+   "fieldname": "column_break_dxpv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "job_details_section",
+   "fieldtype": "Section Break"
   }
  ],
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-09-14 16:50:39.316079",
+=======
+ "modified": "2023-08-22 15:39:10.430060",
+>>>>>>> fbd5cd4aa (feat: add Posted On, Closes On, Employment Type, and Location fields)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
