@@ -123,3 +123,13 @@ def get_job_openings(
 	return frappe.get_all(
 		doctype, filters, fields, start=limit_start, page_length=limit_page_length, order_by=order_by
 	)
+
+
+def close_expired_job_openings():
+	today = getdate()
+	for d in frappe.get_all(
+		"Job Opening",
+		filters={"Status": "Open", "closes_on": ["<=", today]},
+		fields=["name", "closes_on"],
+	):
+		frappe.set_value("Job Opening", d.name, "status", "Closed")
