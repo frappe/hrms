@@ -1,10 +1,11 @@
 <template>
 	<div
 		v-if="document?.doc"
-		class="bg-white w-full flex flex-col items-center justify-center pb-5"
+		class="bg-white w-full flex flex-col items-center justify-center pb-5 max-h-[calc(100vh-5rem)]"
 	>
+		<!-- Header -->
 		<div
-			class="w-full flex flex-row gap-2 pt-8 pb-5 border-b justify-center items-center"
+			class="w-full flex flex-row gap-2 pt-8 pb-5 border-b justify-center items-center sticky top-0 z-[100]"
 		>
 			<span class="text-gray-900 font-bold text-xl text-center">
 				{{ document?.doctype }}
@@ -15,104 +16,109 @@
 				@click="openFormView"
 			/>
 		</div>
-		<div class="w-full flex flex-col items-center justify-center gap-5 p-4">
-			<!-- Request Summary -->
-			<div
-				v-for="field in fieldsWithValues"
-				:key="field.fieldname"
-				:class="[
-					['Small Text', 'Text', 'Long Text', 'Table'].includes(field.fieldtype)
-						? 'flex-col'
-						: 'flex-row items-center justify-between',
-					'flex w-full',
-				]"
-			>
-				<div class="text-gray-600 text-base">{{ field.label }}</div>
-				<component
-					v-if="field.fieldtype === 'Table'"
-					:is="field.component"
-					:doc="document?.doc"
-				/>
-				<FormattedField
-					v-else
-					:value="field.value"
-					:fieldtype="field.fieldtype"
-					:fieldname="field.fieldname"
-				/>
-			</div>
 
-			<!-- Attachments -->
-			<div
-				class="flex flex-col gap-2 w-full"
-				v-if="attachedFiles?.data?.length"
-			>
-				<div class="text-gray-600 text-base">Attachments</div>
-				<ul class="w-full flex flex-col items-center gap-2">
-					<li
-						class="bg-gray-100 rounded-lg p-2 w-full"
-						v-for="(file, index) in attachedFiles.data"
-						:key="index"
-					>
-						<div
-							class="flex flex-row items-center justify-between text-gray-700 text-sm"
+		<!-- Request Summary -->
+		<div class="w-full p-4 overflow-auto">
+			<div class="flex flex-col items-center justify-center gap-5">
+				<div
+					v-for="field in fieldsWithValues"
+					:key="field.fieldname"
+					:class="[
+						['Small Text', 'Text', 'Long Text', 'Table'].includes(
+							field.fieldtype
+						)
+							? 'flex-col'
+							: 'flex-row items-center justify-between',
+						'flex w-full',
+					]"
+				>
+					<div class="text-gray-600 text-base">{{ field.label }}</div>
+					<component
+						v-if="field.fieldtype === 'Table'"
+						:is="field.component"
+						:doc="document?.doc"
+					/>
+					<FormattedField
+						v-else
+						:value="field.value"
+						:fieldtype="field.fieldtype"
+						:fieldname="field.fieldname"
+					/>
+				</div>
+
+				<!-- Attachments -->
+				<div
+					class="flex flex-col gap-2 w-full"
+					v-if="attachedFiles?.data?.length"
+				>
+					<div class="text-gray-600 text-base">Attachments</div>
+					<ul class="w-full flex flex-col items-center gap-2">
+						<li
+							class="bg-gray-100 rounded-lg p-2 w-full"
+							v-for="(file, index) in attachedFiles.data"
+							:key="index"
 						>
-							<a target="_blank" :href="file.file_url">
-								<span class="grow">{{ file.file_name || file.name }}</span>
-							</a>
-						</div>
-					</li>
-				</ul>
+							<div
+								class="flex flex-row items-center justify-between text-gray-700 text-sm"
+							>
+								<a target="_blank" :href="file.file_url">
+									<span class="grow">{{ file.file_name || file.name }}</span>
+								</a>
+							</div>
+						</li>
+					</ul>
+				</div>
 			</div>
+		</div>
 
-			<!-- Actions -->
-			<div
-				v-if="['Open', 'Draft'].includes(document?.doc?.[approvalField])"
-				class="flex w-full flex-row items-center justify-between gap-3"
+		<!-- Actions -->
+		<div
+			v-if="['Open', 'Draft'].includes(document?.doc?.[approvalField])"
+			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
+		>
+			<Button
+				@click="updateDocumentStatus({ status: 'Rejected' })"
+				class="w-full py-3 px-12 bg-red-100 text-red-600"
+				icon-left="x"
 			>
-				<Button
-					@click="updateDocumentStatus({ status: 'Rejected' })"
-					class="w-full py-3 px-12 bg-red-100 text-red-600"
-					icon-left="x"
-				>
-					Reject
-				</Button>
-				<Button
-					@click="updateDocumentStatus({ status: 'Approved' })"
-					class="w-full bg-green-600 text-white py-3 px-12"
-					icon-left="check"
-				>
-					Approve
-				</Button>
-			</div>
+				Reject
+			</Button>
+			<Button
+				@click="updateDocumentStatus({ status: 'Approved' })"
+				class="w-full bg-green-600 text-white py-3 px-12"
+				icon-left="check"
+			>
+				Approve
+			</Button>
+		</div>
 
-			<div
-				v-if="
-					document?.doc?.docstatus === 0 &&
-					['Approved', 'Rejected'].includes(document?.doc?.[approvalField])
-				"
-				class="flex w-full flex-row items-center justify-between gap-3"
+		<div
+			v-else-if="
+				document?.doc?.docstatus === 0 &&
+				['Approved', 'Rejected'].includes(document?.doc?.[approvalField])
+			"
+			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
+		>
+			<Button
+				@click="updateDocumentStatus({ docstatus: 1 })"
+				class="w-full py-3 px-12"
+				appearance="primary"
 			>
-				<Button
-					@click="updateDocumentStatus({ docstatus: 1 })"
-					class="w-full py-3 px-12"
-					appearance="primary"
-				>
-					Submit
-				</Button>
-			</div>
+				Submit
+			</Button>
+		</div>
 
-			<div
-				v-else-if="document?.doc?.docstatus === 1"
-				class="flex w-full flex-row items-center justify-between gap-3"
+		<div
+			v-else-if="document?.doc?.docstatus === 1"
+			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
+		>
+			<Button
+				@click="updateDocumentStatus({ docstatus: 2 })"
+				class="w-full py-3 px-12 bg-red-100 text-red-600"
+				icon-left="x"
 			>
-				<Button
-					@click="updateDocumentStatus({ docstatus: 2 })"
-					class="w-full py-3 px-12 bg-red-100 text-red-600"
-					icon-left="x"
-				>
-					Cancel
-				</Button>
-			</div>
+				Cancel
+			</Button>
 		</div>
 	</div>
 </template>
