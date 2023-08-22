@@ -238,9 +238,9 @@ def get_query(filters):
 			checkin.shift_end,
 			checkin.shift_actual_start,
 			checkin.shift_actual_end,
-			shift_type.enable_entry_grace_period,
+			shift_type.enable_late_entry_marking,
 			shift_type.late_entry_grace_period,
-			shift_type.enable_exit_grace_period,
+			shift_type.enable_early_exit_marking,
 			shift_type.early_exit_grace_period,
 		)
 		.where(attendance.docstatus == 1)
@@ -306,7 +306,7 @@ def convert_datetime_to_time_for_same_date(start, end):
 def update_late_entry(entry, consider_grace_period):
 	if consider_grace_period:
 		if entry.late_entry:
-			entry_grace_period = entry.late_entry_grace_period if entry.enable_entry_grace_period else 0
+			entry_grace_period = entry.late_entry_grace_period if entry.enable_late_entry_marking else 0
 			start_time = entry.shift_start + timedelta(minutes=entry_grace_period)
 			entry.late_entry_hrs = entry.in_time - start_time
 	elif entry.in_time and entry.in_time > entry.shift_start:
@@ -319,7 +319,7 @@ def update_late_entry(entry, consider_grace_period):
 def update_early_exit(entry, consider_grace_period):
 	if consider_grace_period:
 		if entry.early_exit:
-			exit_grace_period = entry.early_exit_grace_period if entry.enable_exit_grace_period else 0
+			exit_grace_period = entry.early_exit_grace_period if entry.enable_early_exit_marking else 0
 			end_time = entry.shift_end - timedelta(minutes=exit_grace_period)
 			entry.early_exit_hrs = end_time - entry.out_time
 	elif entry.out_time and entry.out_time < entry.shift_end:
