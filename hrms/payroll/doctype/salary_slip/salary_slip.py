@@ -1834,13 +1834,13 @@ class SalarySlip(TransactionBase):
 		self.calculate_net_pay()
 
 	def pull_emp_details(self):
-		emp = frappe.db.get_value(
-			"Employee", self.employee, ["bank_name", "bank_ac_no", "salary_mode"], as_dict=1, cache=True
+		account_details = frappe.get_cached_value(
+			"Employee", self.employee, ["bank_name", "bank_ac_no", "salary_mode"], as_dict=1
 		)
-		if emp:
-			self.mode_of_payment = emp.salary_mode
-			self.bank_name = emp.bank_name
-			self.bank_account_no = emp.bank_ac_no
+		if account_details:
+			self.mode_of_payment = account_details.salary_mode
+			self.bank_name = account_details.bank_name
+			self.bank_account_no = account_details.bank_ac_no
 
 	@frappe.whitelist()
 	def process_salary_based_on_working_days(self):
