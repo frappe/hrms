@@ -122,6 +122,9 @@ class LeaveEncashment(Document):
 		self.leave_allocation = allocation.name
 
 	def set_encashment_amount(self):
+		if not hasattr(self, "_salary_structure"):
+			self.set_salary_structure()
+
 		per_day_encashment = frappe.db.get_value(
 			"Salary Structure", self._salary_structure, "leave_encashment_amount_per_day"
 		)
