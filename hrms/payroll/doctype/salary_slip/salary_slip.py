@@ -131,7 +131,7 @@ class SalarySlip(TransactionBase):
 		self.add_leave_balances()
 
 		max_working_hours = frappe.db.get_single_value(
-			"Payroll Settings", "max_working_hours_against_timesheet", cache=True
+			"Payroll Settings", "max_working_hours_against_timesheet"
 		)
 		if max_working_hours:
 			if self.salary_slip_based_on_timesheet and (self.total_working_hours > int(max_working_hours)):
@@ -161,7 +161,7 @@ class SalarySlip(TransactionBase):
 
 			if not frappe.flags.via_payroll_entry and not frappe.flags.in_patch:
 				email_salary_slip = cint(
-					frappe.db.get_single_value("Payroll Settings", "email_salary_slip_to_employee", cache=True)
+					frappe.db.get_single_value("Payroll Settings", "email_salary_slip_to_employee")
 				)
 				if email_salary_slip:
 					self.email_salary_slip()
@@ -222,7 +222,7 @@ class SalarySlip(TransactionBase):
 			frappe.throw(_("Cannot create Salary Slip for Employee who has left before Payroll Period"))
 
 	def is_rounding_total_disabled(self):
-		return cint(frappe.db.get_single_value("Payroll Settings", "disable_rounded_total", cache=True))
+		return cint(frappe.db.get_single_value("Payroll Settings", "disable_rounded_total"))
 
 	def check_existing(self):
 		if not self.salary_slip_based_on_timesheet:
@@ -1978,9 +1978,7 @@ class SalarySlip(TransactionBase):
 	def add_leave_balances(self):
 		self.set("leave_details", [])
 
-		if frappe.db.get_single_value(
-			"Payroll Settings", "show_leave_balances_in_salary_slip", cache=True
-		):
+		if frappe.db.get_single_value("Payroll Settings", "show_leave_balances_in_salary_slip"):
 			from hrms.hr.doctype.leave_application.leave_application import get_leave_details
 
 			leave_details = get_leave_details(self.employee, self.end_date)
