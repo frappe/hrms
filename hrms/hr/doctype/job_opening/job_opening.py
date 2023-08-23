@@ -33,15 +33,40 @@ class JobOpening(WebsiteGenerator):
 		self.validate_current_vacancies()
 		self.update_job_requisition_status()
 
+	def on_update(self):
+		old_doc = self.get_doc_before_save()
+		if not old_doc:
+			return
+
+		if old_doc.status == "Open" and self.status == "Closed":
+			today = getdate()
+			self.closes_on = None
+			if not self.closed_on:
+				self.closed_on = today
+			self.save()
+
+		elif old_doc.status == "Closed" and self.status == "Open":
+			self.closed_on = None
+			self.save()
+
 	def validate_dates(self):
-		self.validate_from_to_dates("posted_on", "closes_on")
+		self.validate_past_future("posted_on", True)
+		if self.status == "Open":
+			self.validate_past_future("closes_on", False)
+		if self.status == "Closed":
+			self.validate_from_to_dates("posted_on", "closed_on")
+			self.validate_past_future("closed_on", True)
+
+	def validate_past_future(self, field, is_past):
+		date = self.get(field)
+		label = self.meta.get_label(field)
 		today = getdate()
-		posted_on = getdate(self.posted_on)
-		if posted_on > today:
-			frappe.throw(_(f"{frappe.bold('Posted On')} cannot be a future date"))
-		closes_on = getdate(self.closes_on)
-		if closes_on < today:
-			frappe.throw(_(f"{frappe.bold('Closes On')} cannot be a past date"))
+		if is_past:
+			if getdate(date) > today:
+				frappe.throw(_(f"{frappe.bold(label)} cannot be a future date"))
+		else:
+			if getdate(date) < today:
+				frappe.throw(_(f"{frappe.bold(label)} cannot be a past date"))
 
 	def validate_current_vacancies(self):
 		if not self.staffing_plan:

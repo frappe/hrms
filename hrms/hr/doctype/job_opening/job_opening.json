@@ -14,6 +14,7 @@
   "status",
   "posted_on",
   "closes_on",
+  "closed_on",
   "section_break_nngy",
   "company",
   "department",
@@ -190,7 +191,6 @@
   },
   {
    "default": "Today",
-   "depends_on": "eval:doc.status == 'Open'",
    "fieldname": "posted_on",
    "fieldtype": "Date",
    "label": "Posted On"
@@ -225,12 +225,18 @@
   {
    "fieldname": "job_details_section",
    "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.status == 'Closed'",
+   "fieldname": "closed_on",
+   "fieldtype": "Date",
+   "label": "Closed On"
   }
  ],
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2023-08-22 16:53:41.910984",
+ "modified": "2023-08-23 11:48:22.678542",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
