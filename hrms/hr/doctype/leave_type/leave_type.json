@@ -27,6 +27,7 @@
   "expire_carry_forwarded_leaves_after_days",
   "encashment",
   "allow_encashment",
+  "max_encashable_leaves",
   "encashment_threshold_days",
   "column_break_17",
   "earning_component",
@@ -219,12 +220,18 @@
    "fieldtype": "Select",
    "label": "Allocate on Day",
    "options": "First Day\nLast Day\nDate of Joining"
+  },
+  {
+   "depends_on": "allow_encashment",
+   "fieldname": "max_encashable_leaves",
+   "fieldtype": "Float",
+   "label": "Maximum Encashable Leaves"
   }
  ],
  "icon": "fa fa-flag",
  "idx": 1,
  "links": [],
- "modified": "2023-05-26 14:15:29.695487",
+ "modified": "2023-08-23 12:18:55.806197",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Type",
