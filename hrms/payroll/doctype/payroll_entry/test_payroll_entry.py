@@ -11,11 +11,19 @@ import erpnext
 from erpnext.accounts.utils import get_fiscal_year, getdate, nowdate
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
+from hrms.hr.doctype.employee_advance.employee_advance import (
+	create_return_through_additional_salary,
+)
+from hrms.hr.doctype.employee_advance.test_employee_advance import (
+	make_employee_advance,
+	make_journal_entry_for_advance,
+)
 from hrms.payroll.doctype.payroll_entry.payroll_entry import (
 	PayrollEntry,
 	get_end_date,
 	get_start_end_dates,
 )
+from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
 from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	create_account,
@@ -493,6 +501,63 @@ class TestPayrollEntry(FrappeTestCase):
 				if account.account == company_doc.default_payroll_payable_account:
 					self.assertEqual(account.party_type, None)
 					self.assertEqual(account.party, None)
+
+	def test_advance_deduction_in_accrual_journal_entry(self):
+		company_doc = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("test_employee@payroll.com", company=company_doc.name)
+
+		setup_salary_structure(employee, company_doc)
+
+		# create employee advance
+		advance = make_employee_advance(employee, {"repay_unclaimed_amount_from_salary": 1})
+		journal_entry = make_journal_entry_for_advance(advance)
+		journal_entry.submit()
+		advance.reload()
+
+		# return advance through additional salary (deduction)
+		component = create_salary_component("Advance Salary - Deduction", **{"type": "Deduction"})
+		component.append(
+			"accounts",
+			{"company": company_doc.name, "account": "Employee Advances - _TC"},
+		)
+		component.save()
+
+		additional_salary = create_return_through_additional_salary(advance)
+		additional_salary.salary_component = component.name
+		additional_salary.payroll_date = nowdate()
+		additional_salary.amount = advance.paid_amount
+		additional_salary.submit()
+
+		# payroll entry
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = make_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company_doc.default_payroll_payable_account,
+			currency=company_doc.default_currency,
+			company=company_doc.name,
+			cost_center="Main - _TC",
+		)
+
+		# check advance deduction entry correctly mapped in accrual entry
+		deduction_entry = frappe.get_all(
+			"Journal Entry Account",
+			fields=["account", "party", "debit", "credit"],
+			filters={
+				"reference_type": "Employee Advance",
+				"reference_name": advance.name,
+				"is_advance": "Yes",
+			},
+		)[0]
+
+		expected_entry = {
+			"account": "Employee Advances - _TC",
+			"party": employee,
+			"debit": 0.0,
+			"credit": advance.paid_amount,
+		}
+
+		self.assertEqual(deduction_entry, expected_entry)
 
 	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1})
 	def test_employee_wise_bank_entry_with_cost_centers(self):
