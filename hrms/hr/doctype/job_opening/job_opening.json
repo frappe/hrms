@@ -19,6 +19,7 @@
   "status",
   "posted_on",
   "closes_on",
+  "closed_on",
   "section_break_nngy",
   "company",
   "department",
@@ -195,7 +196,6 @@
   },
   {
    "default": "Today",
-   "depends_on": "eval:doc.status == 'Open'",
    "fieldname": "posted_on",
    "fieldtype": "Date",
    "label": "Posted On"
@@ -230,11 +230,18 @@
   {
    "fieldname": "job_details_section",
    "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.status == 'Closed'",
+   "fieldname": "closed_on",
+   "fieldtype": "Date",
+   "label": "Closed On"
   }
  ],
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
  "modified": "2023-09-14 16:50:39.316079",
@@ -244,6 +251,9 @@
 =======
  "modified": "2023-08-22 16:53:41.910984",
 >>>>>>> 8555205f2 (refactor: set Naming Rule as Expression)
+=======
+ "modified": "2023-08-23 11:48:22.678542",
+>>>>>>> ffa97ee3b (feat: add Closed On field)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
