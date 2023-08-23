@@ -1,18 +1,21 @@
 <div class="py-12 px-4" style="font-size: 18px">
-	<div class="d-flex">
-		<h2 class="mt-0 mr-2">{{ doc.job_title }}</h2>
-		{%- if doc.location -%}
-		<h2 class="mt-0 text-secondary bottom-align">({{ doc.location }})</h2>
+	<h2 class="mt-0">
+		{{ doc.job_title }} {%- if doc.location -%}
+		<small class="text-secondary ml-2">({{ doc.location }})</small>
 		{% endif %}
-	</div>
+	</h2>
 	<p>{{ doc.description or _("No description") }}</p>
 	{%- if doc.publish_salary_range -%}
 	<p>
-		<b>{{_("Salary Range ")}} ({{_(doc.salary_type.lower())}}): </b>{{
-		frappe.format_value(frappe.utils.flt(doc.lower_range),
-		currency=doc.currency) }} - {{
-		frappe.format_value(frappe.utils.flt(doc.upper_range),
-		currency=doc.currency) }}
+		<i>
+			{{_("Salary range " + doc.salary_type.lower())}}:
+			<b
+				>{{ frappe.format_value(frappe.utils.flt(doc.lower_range),
+				currency=doc.currency) }} - {{
+				frappe.format_value(frappe.utils.flt(doc.upper_range),
+				currency=doc.currency) }}
+			</b>
+		</i>
 	</p>
 	{% endif %}
 	<a href="{{ doc.route }}"> {{ _("Learn More →") }}</a>
