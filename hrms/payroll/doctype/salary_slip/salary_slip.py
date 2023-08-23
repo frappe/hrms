@@ -1150,7 +1150,13 @@ class SalarySlip(TransactionBase):
 			else:
 				self.other_deduction_components.append(d.salary_component)
 
+		# consider manually added tax component
 		if not tax_components:
+			tax_components = [
+				d.salary_component for d in self.get("deductions") if d.variable_based_on_taxable_salary
+			]
+
+		if self.is_new() and not tax_components:
 			tax_components = self.get_tax_components()
 			frappe.msgprint(
 				_(
