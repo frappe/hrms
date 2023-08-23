@@ -377,6 +377,7 @@ class SalarySlip(TransactionBase):
 				"payroll_based_on",
 				"include_holidays_in_total_working_days",
 				"daily_wages_fraction_for_half_day",
+				"consider_unmarked_attendance_as",
 			),
 			as_dict=1,
 		)
@@ -436,10 +437,7 @@ class SalarySlip(TransactionBase):
 			if payroll_settings.payroll_based_on == "Attendance":
 				self.payment_days -= flt(absent)
 
-			consider_unmarked_attendance_as = (
-				frappe.db.get_single_value("Payroll Settings", "consider_unmarked_attendance_as", cache=True)
-				or "Present"
-			)
+			consider_unmarked_attendance_as = payroll_settings.consider_unmarked_attendance_as or "Present"
 
 			if (
 				payroll_settings.payroll_based_on == "Attendance"
@@ -695,7 +693,7 @@ class SalarySlip(TransactionBase):
 	def set_salary_structure_assignement(self):
 		start_date = getdate(self.start_date)
 		date_to_validate = self.joining_date if self.joining_date > start_date else start_date
-		self._salary_structure_assignment = frappe.get_value(
+		self._salary_structure_assignment = frappe.db.get_value(
 			"Salary Structure Assignment",
 			{
 				"employee": self.employee,
@@ -1093,7 +1091,7 @@ class SalarySlip(TransactionBase):
 		data = frappe._dict()
 		employee = frappe.get_cached_doc("Employee", self.employee).as_dict()
 
-		if not hasattr(self, "salary_structure_assignment"):
+		if not hasattr(self, "_salary_structure_assignment"):
 			self.set_salary_structure_assignement()
 
 		data.update(self._salary_structure_assignment)
