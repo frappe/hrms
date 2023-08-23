@@ -81,8 +81,8 @@ class LeaveEncashment(Document):
 
 	@frappe.whitelist()
 	def get_leave_details_for_encashment(self):
-		self.set_encashable_days()
 		self.set_leave_balance()
+		self.set_encashable_days()
 		self.set_encashment_amount()
 
 	def get_encashment_settings(self):
@@ -98,9 +98,21 @@ class LeaveEncashment(Document):
 		if not encashment_settings.allow_encashment:
 			frappe.throw(_("Leave Type {0} is not encashable").format(self.leave_type))
 
-		encashable_days = self.leave_balance - encashment_settings.encashment_threshold_days
-		self.encashable_days = encashable_days if encashable_days > 0 else 0
-		self.encashable_days = min(self.encashable_days, encashment_settings.max_encashable_leaves)
+		# allow overwriting encashable days
+		if not self.encashable_days:
+			self.encashable_days = self.leave_balance
+
+		# make sure user input doesn't exceed leave balance
+		self.encashable_days = min(self.encashable_days, self.leave_balance)
+
+		# TODO: Remove this weird setting if possible. Retained for backward compatibility
+		if encashment_settings.encashment_threshold_days:
+			encashable_days = self.leave_balance - encashment_settings.encashment_threshold_days
+			encashable_days = min(self.encashable_days, encashable_days)
+			self.encashable_days = encashable_days if encashable_days > 0 else 0
+
+		if encashment_settings.max_encashable_leaves:
+			self.encashable_days = min(self.encashable_days, encashment_settings.max_encashable_leaves)
 
 	def set_leave_balance(self):
 		allocation = self.get_leave_allocation()
