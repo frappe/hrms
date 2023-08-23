@@ -366,7 +366,7 @@ class SalarySlip(TransactionBase):
 				self, self._salary_structure_doc.salary_component, wages_amount
 			)
 
-		make_salary_slip(self._salary_structure_doc.name, self, from_salary_slip=True)
+		make_salary_slip(self._salary_structure_doc.name, self)
 
 	def get_working_days_details(self, lwp=None, for_preview=0):
 		payroll_settings = frappe.get_cached_value(
@@ -1782,7 +1782,7 @@ class SalarySlip(TransactionBase):
 		return total
 
 	def email_salary_slip(self):
-		receiver = frappe.db.get_value("Employee", self.employee, "prefered_email")
+		receiver = frappe.db.get_value("Employee", self.employee, "prefered_email", cache=True)
 		payroll_settings = frappe.get_single("Payroll Settings")
 		message = "Please see attachment"
 		password = None
@@ -1836,7 +1836,7 @@ class SalarySlip(TransactionBase):
 
 	def pull_emp_details(self):
 		emp = frappe.db.get_value(
-			"Employee", self.employee, ["bank_name", "bank_ac_no", "salary_mode"], as_dict=1
+			"Employee", self.employee, ["bank_name", "bank_ac_no", "salary_mode"], as_dict=1, cache=True
 		)
 		if emp:
 			self.mode_of_payment = emp.salary_mode
