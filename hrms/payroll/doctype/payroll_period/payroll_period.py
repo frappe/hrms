@@ -109,8 +109,8 @@ def get_period_factor(
 	period_start, period_end = payroll_period.start_date, payroll_period.end_date
 
 	if not joining_date and not relieving_date:
-		joining_date, relieving_date = frappe.db.get_value(
-			"Employee", employee, ("date_of_joining", "relieving_date"), cache=True
+		joining_date, relieving_date = frappe.get_cached_value(
+			"Employee", employee, ["date_of_joining", "relieving_date"]
 		)
 
 	if getdate(joining_date) > getdate(period_start):

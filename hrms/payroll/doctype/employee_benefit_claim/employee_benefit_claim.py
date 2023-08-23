@@ -106,11 +106,10 @@ def get_benefit_pro_rata_ratio_amount(employee, on_date, sal_struct):
 	benefit_amount_total = 0
 	for sal_struct_row in sal_struct.get("earnings"):
 		try:
-			pay_against_benefit_claim, max_benefit_amount = frappe.db.get_value(
+			pay_against_benefit_claim, max_benefit_amount = frappe.get_cached_value(
 				"Salary Component",
 				sal_struct_row.salary_component,
-				("pay_against_benefit_claim", "max_benefit_amount"),
-				cache=True,
+				["pay_against_benefit_claim", "max_benefit_amount"],
 			)
 		except TypeError:
 			# show the error in tests?
@@ -174,12 +173,11 @@ def get_total_benefit_dispensed(employee, sal_struct, sal_slip_start_date, payro
 		{"employee": employee, "payroll_period": payroll_period.name, "docstatus": 1},
 	)
 	if application:
-		application_obj = frappe.db.get_value(
+		application_obj = frappe.get_cached_value(
 			"Employee Benefit Application",
 			application,
-			("pro_rata_dispensed_amount", "max_benefits", "remaining_benefit"),
+			["pro_rata_dispensed_amount", "max_benefits", "remaining_benefit"],
 			as_dict=True,
-			cache=True,
 		)
 
 		pro_rata_amount = (
