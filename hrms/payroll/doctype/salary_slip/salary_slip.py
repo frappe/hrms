@@ -31,7 +31,7 @@ from erpnext.accounts.utils import get_fiscal_year
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 from erpnext.utilities.transaction_base import TransactionBase
 
-from hrms.hr.utils import get_holiday_dates_for_employee, validate_active_employee
+from hrms.hr.utils import validate_active_employee
 from hrms.payroll.doctype.additional_salary.additional_salary import get_additional_salaries
 from hrms.payroll.doctype.employee_benefit_application.employee_benefit_application import (
 	get_benefit_component_amount,
@@ -51,6 +51,7 @@ from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import (
 	set_loan_repayment,
 )
 from hrms.payroll.utils import sanitize_expression
+from hrms.utils.holiday_list import get_holiday_dates_between
 
 
 class SalarySlip(TransactionBase):
@@ -533,9 +534,7 @@ class SalarySlip(TransactionBase):
 		holiday_dates = frappe.cache().hget("holidays", key)
 
 		if not holiday_dates:
-			holiday_dates = get_holiday_dates_for_employee(
-				self.employee, start_date, end_date, holiday_list
-			)
+			holiday_dates = get_holiday_dates_between(holiday_list, start_date, end_date)
 			frappe.cache().hset("holidays", key, holiday_dates)
 
 		return holiday_dates
