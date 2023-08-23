@@ -477,8 +477,15 @@ class SalarySlip(TransactionBase):
 			)
 
 		# exclude days for which attendance has been marked
-		attendance_details = self.get_employee_attendance(start_date, end_date)
-		unmarked_days -= len(attendance_details)
+		marked_days = frappe.db.count(
+			"Attendance",
+			filters={
+				"attendance_date": ["between", [start_date, end_date]],
+				"employee": self.employee,
+				"docstatus": 1,
+			},
+		)
+		unmarked_days -= marked_days
 
 		return unmarked_days
 
@@ -516,7 +523,7 @@ class SalarySlip(TransactionBase):
 			if getdate(self.start_date) <= self.relieving_date <= getdate(self.end_date):
 				end_date = self.relieving_date
 			elif self.relieving_date < getdate(self.start_date) and employee_status != "Left":
-				frappe.throw(_("Employee relieved on {0} must be set as 'Left'").format(self.elieving_date))
+				frappe.throw(_("Employee relieved on {0} must be set as 'Left'").format(self.relieving_date))
 
 		payment_days = date_diff(end_date, start_date) + 1
 
@@ -607,7 +614,8 @@ class SalarySlip(TransactionBase):
 			frappe.qb.from_(attendance)
 			.select(attendance.attendance_date, attendance.status, attendance.leave_type)
 			.where(
-				(attendance.employee == self.employee)
+				(attendance.status.isin(["Absent", "Half Day", "On Leave"]))
+				& (attendance.employee == self.employee)
 				& (attendance.docstatus == 1)
 				& (attendance.attendance_date.between(start_date, end_date))
 			)
@@ -627,6 +635,7 @@ class SalarySlip(TransactionBase):
 
 		leave_type_map = self.get_leave_type_map()
 		attendance_details = self.get_employee_attendance(start_date=self.start_date, end_date=end_date)
+
 		for d in attendance_details:
 			if (
 				d.status in ("Half Day", "On Leave")
@@ -635,7 +644,7 @@ class SalarySlip(TransactionBase):
 			):
 				continue
 
-			if formatdate(d.attendance_date, "yyyy-mm-dd") in holidays:
+			if getdate(d.attendance_date) in holidays:
 				if d.status == "Absent" or (
 					d.leave_type
 					and d.leave_type in leave_type_map.keys()
