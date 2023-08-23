@@ -307,8 +307,10 @@ def make_salary_slip(
 	ignore_permissions=False,
 ):
 	def postprocess(source, target):
-		if employee and posting_date:
-			target.posting_date = posting_date
+		if employee:
+			target.employee = employee
+			if posting_date:
+				target.posting_date = posting_date
 
 		target.run_method("process_salary_structure", for_preview=for_preview)
 
