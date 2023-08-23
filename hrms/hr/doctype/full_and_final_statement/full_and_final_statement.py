@@ -42,12 +42,11 @@ class FullandFinalStatement(Document):
 			frappe.throw(
 				_("Set Relieving Date for Employee: {0}").format(get_link_to_form("Employee", self.employee))
 			)
-			
+
 	def get_assets_statements(self):
 		if not len(self.get("assets_allocated", [])):
 			for data in self.get_assets_movement():
 				self.append("assets_allocated", data)
-
 
 	def create_component_row(self, components, component_type):
 		for component in components:
