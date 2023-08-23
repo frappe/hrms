@@ -136,6 +136,7 @@ def get_job_openings(
 		"currency",
 		"job_application_route",
 		"salary_type",
+		"route",
 	]
 
 	filters = filters or {}
