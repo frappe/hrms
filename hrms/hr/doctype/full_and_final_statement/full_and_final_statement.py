@@ -10,6 +10,7 @@ from frappe.utils import flt, get_link_to_form, today
 class FullandFinalStatement(Document):
 	def before_insert(self):
 		self.get_outstanding_statements()
+
 	def validate(self):
 		self.get_assets_statements()
 		if self.docstatus == 1:
