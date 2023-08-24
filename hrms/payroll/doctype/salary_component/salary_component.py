@@ -16,8 +16,13 @@ class SalaryComponent(Document):
 			self.variable_based_on_taxable_salary = 1
 
 	def clear_cache(self):
-		frappe.cache.delete_value("salary_component_values")
-		frappe.cache.delete_value("tax_components_by_company")
+		from hrms.payroll.doctype.salary_slip.salary_slip import (
+			SALARY_COMPONENT_VALUES,
+			TAX_COMPONENTS_BY_COMPANY,
+		)
+
+		frappe.cache.delete_value(SALARY_COMPONENT_VALUES)
+		frappe.cache.delete_value(TAX_COMPONENTS_BY_COMPANY)
 		return super().clear_cache()
 
 	def validate_abbr(self):

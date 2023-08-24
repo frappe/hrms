@@ -12,4 +12,6 @@ def get_holiday_dates_between(holiday_list: str, start_date: str, end_date: str)
 
 
 def invalidate_cache(doc, method=None):
-	frappe.cache.delete_value("holidays_between_dates")
+	from hrms.payroll.doctype.salary_slip.salary_slip import HOLIDAYS_BETWEEN_DATES
+
+	frappe.cache.delete_value(HOLIDAYS_BETWEEN_DATES)
