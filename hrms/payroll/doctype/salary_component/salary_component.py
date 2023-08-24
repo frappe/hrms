@@ -15,8 +15,10 @@ class SalaryComponent(Document):
 		if self.is_income_tax_component:
 			self.variable_based_on_taxable_salary = 1
 
-	def on_update(self):
-		self.invalidate_cache()
+	def clear_cache(self):
+		frappe.cache.delete_value("salary_component_values")
+		frappe.cache.delete_value("tax_components_by_company")
+		return super().clear_cache()
 
 	def validate_abbr(self):
 		if not self.salary_component_abbr:
@@ -30,6 +32,3 @@ class SalaryComponent(Document):
 			separator="_",
 			filters={"name": ["!=", self.name]},
 		)
-
-	def invalidate_cache(self):
-		frappe.cache().delete_value("tax_components")
