@@ -97,13 +97,7 @@ class SalarySlip(TransactionBase):
 	@property
 	def payroll_period(self):
 		if not hasattr(self, "__payroll_period"):
-			if frappe.flags.in_test:
-				self.__payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
-			else:
-				self.__payroll_period = frappe.cache().hget("payroll_period", "payroll_period")
-				if not self.__payroll_period:
-					self.__payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
-					frappe.cache().hset("payroll_period", "payroll_period", self.__payroll_period)
+			self.__payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
 
 		return self.__payroll_period
 

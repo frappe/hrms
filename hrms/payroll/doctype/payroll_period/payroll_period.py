@@ -6,6 +6,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import add_months, cint, date_diff, flt, formatdate, getdate, month_diff
+from frappe.utils.caching import redis_cache
 
 from hrms.hr.utils import get_holiday_dates_for_employee
 
@@ -14,6 +15,10 @@ class PayrollPeriod(Document):
 	def validate(self):
 		self.validate_from_to_dates("start_date", "end_date")
 		self.validate_overlap()
+
+	def clear_cache(self):
+		get_payroll_period.clear_cache()
+		return super().clear_cache()
 
 	def validate_overlap(self):
 		query = """
@@ -79,6 +84,7 @@ def get_payroll_period_days(start_date, end_date, employee, company=None):
 	return False, False, False
 
 
+@redis_cache()
 def get_payroll_period(from_date, to_date, company):
 	PayrollPeriod = frappe.qb.DocType("Payroll Period")
 
