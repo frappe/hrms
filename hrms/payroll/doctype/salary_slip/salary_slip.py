@@ -536,11 +536,11 @@ class SalarySlip(TransactionBase):
 	def get_holidays_for_employee(self, start_date, end_date):
 		holiday_list = get_holiday_list_for_employee(self.employee)
 		key = f"{holiday_list}:{start_date}:{end_date}"
-		holiday_dates = frappe.cache().hget("holidays", key)
+		holiday_dates = frappe.cache.hget("holidays_between_dates", key)
 
 		if not holiday_dates:
 			holiday_dates = get_holiday_dates_between(holiday_list, start_date, end_date)
-			frappe.cache().hset("holidays", key, holiday_dates)
+			frappe.cache.hset("holidays_between_dates", key, holiday_dates)
 
 		return holiday_dates
 
@@ -584,29 +584,18 @@ class SalarySlip(TransactionBase):
 
 		return lwp
 
-	def get_leave_type_map(self):
-		def _get_leave_types():
-			return frappe.get_all(
+	def get_leave_type_map(self) -> dict:
+		"""Returns (partially paid leaves/leave without pay) leave types by name"""
+
+		def _get_leave_type_map():
+			leave_types = frappe.get_all(
 				"Leave Type",
-				or_filters=[["is_ppl", "=", 1], ["is_lwp", "=", 1]],
+				or_filters={"is_ppl": 1, "is_lwp": 1},
 				fields=["name", "is_lwp", "is_ppl", "fraction_of_daily_salary_per_leave", "include_holiday"],
 			)
+			return {leave_type.name: leave_type for leave_type in leave_types}
 
-		if frappe.flags.in_test:
-			leave_types = _get_leave_types()
-
-		else:
-			leave_types = frappe.cache().hget("leave_types", "leave_types")
-
-			if not leave_types:
-				leave_types = _get_leave_types()
-				frappe.cache().hset("leave_types", "leave_types", leave_types)
-
-		leave_type_map = {}
-		for leave_type in leave_types:
-			leave_type_map[leave_type.name] = leave_type
-
-		return leave_type_map
+		return frappe.cache.get_value("leave_type_map", _get_leave_type_map)
 
 	def get_employee_attendance(self, start_date, end_date):
 		attendance = frappe.qb.DocType("Attendance")
@@ -1108,7 +1097,7 @@ class SalarySlip(TransactionBase):
 		data.update(employee)
 		data.update(self.as_dict())
 
-		data.update(self.set_values_for_components())
+		data.update(self.get_component_abbr_map())
 
 		# shallow copy of data to store default amounts (without payment days) for tax calculation
 		default_data = data.copy()
@@ -1120,18 +1109,14 @@ class SalarySlip(TransactionBase):
 
 		return data, default_data
 
-	def set_values_for_components(self):
-		component_data = frappe.cache().hget("salary_component_values", "component_data")
-
-		if not component_data:
-			component_data = {
+	def get_component_abbr_map(self):
+		def _fetch_component_values():
+			return {
 				component_abbr: 0
 				for component_abbr in frappe.get_all("Salary Component", pluck="salary_component_abbr")
 			}
 
-		frappe.cache().hset("salary_component_values", "component_data", component_data)
-
-		return component_data
+		return frappe.cache.get_value("salary_component_values", generator=_fetch_component_values)
 
 	def eval_condition_and_formula(self, struct_row, data):
 		try:
@@ -1272,16 +1257,14 @@ class SalarySlip(TransactionBase):
 		        If no tax components are defined for the company,
 		        it returns the default tax components.
 		"""
-
-		tax_components = frappe.cache().get_value(
-			"tax_components", self._fetch_company_wise_tax_components
+		tax_components = frappe.cache.get_value(
+			"tax_components_by_company", self._fetch_tax_components_by_company
 		)
 
 		default_tax_components = tax_components.get("default", [])
-
 		return tax_components.get(self.company, default_tax_components)
 
-	def _fetch_company_wise_tax_components(self) -> dict:
+	def _fetch_tax_components_by_company(self) -> dict:
 		"""
 		Returns:
 		    dict: A dictionary containing tax components grouped by company.
