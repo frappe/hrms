@@ -1741,7 +1741,7 @@ class SalarySlip(TransactionBase):
 				exemption_proof = frappe.db.get_value(
 					"Employee Tax Exemption Proof Submission",
 					{"employee": self.employee, "payroll_period": self.payroll_period.name, "docstatus": 1},
-					["exemption_amount"],
+					"exemption_amount",
 					cache=True,
 				)
 				if exemption_proof:
@@ -1750,7 +1750,7 @@ class SalarySlip(TransactionBase):
 				declaration = frappe.db.get_value(
 					"Employee Tax Exemption Declaration",
 					{"employee": self.employee, "payroll_period": self.payroll_period.name, "docstatus": 1},
-					["total_exemption_amount"],
+					"total_exemption_amount",
 					cache=True,
 				)
 				if declaration:
@@ -2024,6 +2024,7 @@ def generate_password_for_pdf(policy_template, employee):
 
 
 def get_salary_component_data(component):
+	# get_cached_value doesn't work here due to alias "name as salary_component"
 	return frappe.db.get_value(
 		"Salary Component",
 		component,

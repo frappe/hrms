@@ -120,11 +120,10 @@ def get_benefit_pro_rata_ratio_amount(employee, on_date, sal_struct):
 
 	if total_pro_rata_max > 0:
 		for sal_struct_row in sal_struct.get("earnings"):
-			pay_against_benefit_claim, max_benefit_amount = frappe.db.get_value(
+			pay_against_benefit_claim, max_benefit_amount = frappe.get_cached_value(
 				"Salary Component",
 				sal_struct_row.salary_component,
-				("pay_against_benefit_claim", "max_benefit_amount"),
-				cache=True,
+				["pay_against_benefit_claim", "max_benefit_amount"],
 			)
 
 			if sal_struct_row.is_flexible_benefit == 1 and pay_against_benefit_claim != 1:
