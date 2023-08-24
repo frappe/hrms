@@ -1,33 +1,74 @@
-{% extends "templates/web.html" %}
-
-{% block breadcrumbs %}
-	{% include "templates/includes/breadcrumbs.html" %}
-{% endblock %}
-
-{% block header %}
-<h1>{{ job_title }}</h1>
-{% endblock %}
-
-{% block page_content %}
-
-{%- if description -%}
-<div>{{ description }}</div>
-{% endif %}
-
-{%- if publish_salary_range -%}
-<div><b>{{_("Salary range per month")}}: </b>{{ frappe.format_value(frappe.utils.flt(lower_range), currency=currency) }} - {{ frappe.format_value(frappe.utils.flt(upper_range), currency=currency) }}</div>
-{% endif %}
-
-<p style='margin-top: 30px'>
-	{%- if job_application_route -%}
-	<a class='btn btn-primary'
-	href='/{{job_application_route}}/new?job_title={{ doc.name }}'>
-	{{ _("Apply Now") }}</a>
-	{% else %}
-	<a class='btn btn-primary'
-	href='/job_application/new?job_title={{ doc.name }}'>
-	{{ _("Apply Now") }}</a>
+{% extends "templates/web.html" %} {% block breadcrumbs %} {% include
+"templates/includes/breadcrumbs.html" %} {% endblock %} {% block page_content %}
+<div class="flex">
+	<h1 class="my-0 mr-32">{{ job_title }}</h1>
+	<div class="ml-auto mt-1">
+		{%- if job_application_route -%}
+		<a
+			class="btn btn-primary btn-lg"
+			href="/{{job_application_route}}/new?job_title={{ doc.name }}"
+		>
+			{{ _("Apply Now") }}</a
+		>
+		{% else %}
+		<a
+			class="btn btn-primary btn-lg"
+			href="/job_application/new?job_title={{ doc.name }}"
+		>
+			{{ _("Apply Now") }}</a
+		>
+		{% endif %}
+	</div>
+</div>
+<div class="flex mt-3" style="--icon-stroke: var(--primary)">
+	{%- if department -%}
+	<svg class="icon icon-lg ml-0 mr-1">
+		<use href="#icon-organization"></use>
+	</svg>
+	<p class="mr-3">{{ doc.department }}</p>
+	{% endif %} {%- if location -%}
+	<svg
+		class="icon icon-lg ml-0 mr-1"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 16 16"
+	>
+		<g stroke="var(--primary)" stroke-miterlimit="10">
+			<path
+				d="M11.467 3.458c1.958 1.957 1.958 5.088.027 7.02L7.97 14l-3.523-3.523a4.945 4.945 0 010-6.993l.026-.026a4.922 4.922 0 016.993 0zm0 0c-.026-.026-.026-.026 0 0z"
+			></path>
+			<path
+				d="M7.971 8.259a1.305 1.305 0 100-2.61 1.305 1.305 0 000 2.61z"
+			></path>
+		</g>
+	</svg>
+	<p class="mr-3">{{ doc.location }}</p>
+	{% endif %} {%- if employment_type -%}
+	<svg class="icon icon-lg ml-0 mr-1">
+		<use href="#icon-hr"></use>
+	</svg>
+	<p class="mr-3">{{ doc.employment_type }}</p>
 	{% endif %}
+</div>
+{%- if doc.publish_salary_range -%}
+<p>
+	{{_("Salary range " + doc.salary_type.lower())}}:
+	<b
+		>{{ frappe.format_value(frappe.utils.flt(doc.lower_range),
+		currency=doc.currency) }} - {{
+		frappe.format_value(frappe.utils.flt(doc.upper_range),
+		currency=doc.currency) }}
+	</b>
 </p>
-
+{% endif %}
+<p>{{ description or _("No description") }}</p>
+<div class="flex">
+	<p>
+		<b>20 applications received!</b>
+	</p>
+	{%- if doc.closes_on -%}
+	<p class="ml-auto">
+		<i> {{_("Closes on ")}} {{ doc.closes_on }} </i>
+	</p>
+	{% endif %}
+</div>
 {% endblock %}
