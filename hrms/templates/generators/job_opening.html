@@ -62,10 +62,14 @@
 {% endif %}
 <p>{{ description or _("No description") }}</p>
 <div class="flex">
+	{%- if no_of_applications -%}
 	<p>
-		<b>20 applications received!</b>
+		<b
+			>{{ no_of_applications }} {{"application" if no_of_applications == 1 else
+			"applications"}} received!</b
+		>
 	</p>
-	{%- if doc.closes_on -%}
+	{% endif %} {%- if doc.closes_on -%}
 	<p class="ml-auto">
 		<i> {{_("Closes on ")}} {{ doc.closes_on }} </i>
 	</p>
