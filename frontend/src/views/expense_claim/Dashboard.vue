@@ -67,9 +67,16 @@ onMounted(() => {
 			myClaims.reload()
 		}
 	})
+
+	socket.on("hrms:update_employee_advances", (data) => {
+		if (data.employee === employee.data.name) {
+			advanceBalance.reload()
+		}
+	})
 })
 
 onUnmounted(() => {
 	socket.off("hrms:update_expense_claims")
+	socket.off("hrms:update_employee_advances")
 })
 </script>
