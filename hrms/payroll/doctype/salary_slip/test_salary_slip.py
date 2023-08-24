@@ -45,10 +45,12 @@ class TestSalarySlip(FrappeTestCase):
 	def setUp(self):
 		setup_test()
 		frappe.flags.pop("via_payroll_entry", None)
+		clear_cache()
 
 	def tearDown(self):
 		frappe.db.set_single_value("Payroll Settings", "include_holidays_in_total_working_days", 0)
 		frappe.set_user("Administrator")
+		clear_cache()
 
 	def test_employee_status_inactive(self):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
@@ -2249,3 +2251,10 @@ def mark_attendance(
 	attendance.flags.ignore_validate = ignore_validate
 	attendance.insert()
 	attendance.submit()
+
+
+def clear_cache():
+	frappe.cache.delete_value("holidays_between_dates")
+	frappe.cache.delete_value("leave_type_map")
+	frappe.cache.delete_value("salary_component_values")
+	frappe.cache.delete_value("tax_components_by_company")
