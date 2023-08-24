@@ -1,10 +1,9 @@
-<div class="py-12 px-4" style="font-size: 18px">
-	<h2 class="mt-0">
+<div class="py-8 px-3">
+	<h3 class="mt-0">
 		{{ doc.job_title }} {%- if doc.location -%}
 		<small class="text-secondary ml-2">({{ doc.location }})</small>
 		{% endif %}
 	</h2>
-	<p>{{ doc.description or _("No description") }}</p>
 	{%- if doc.publish_salary_range -%}
 	<p>
 		<i>
