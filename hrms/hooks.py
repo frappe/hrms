@@ -159,6 +159,10 @@ doc_events = {
 			"hrms.overrides.company.set_default_hr_accounts",
 		],
 	},
+	"Holiday List": {
+		"on_update": "hrms.utils.holiday_list.invalidate_cache",
+		"on_trash": "hrms.utils.holiday_list.invalidate_cache",
+	},
 	"Timesheet": {"validate": "hrms.hr.utils.validate_active_employee"},
 	"Payment Entry": {
 		"on_submit": "hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",

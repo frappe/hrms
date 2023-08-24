@@ -6,7 +6,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "employee_details_section",
+  "employee_section",
   "employee",
   "employee_name",
   "amended_from",
@@ -25,7 +25,8 @@
    "in_list_view": 1,
    "label": "Employee",
    "options": "Employee",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fieldname": "payroll_period",
@@ -33,7 +34,8 @@
    "in_list_view": 1,
    "label": "Payroll Period",
    "options": "Payroll Period",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fieldname": "column_break_3",
@@ -45,7 +47,8 @@
    "in_list_view": 1,
    "label": "Company",
    "options": "Company",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fieldname": "source",
@@ -79,7 +82,7 @@
   {
    "fieldname": "employee_section",
    "fieldtype": "Section Break",
-   "label": "Employee"
+   "label": "Employee Details"
   },
   {
    "fieldname": "income_source_details_section",
@@ -93,7 +96,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-05 12:00:57.942233",
+ "modified": "2023-04-24 15:32:19.086167",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Other Income",
