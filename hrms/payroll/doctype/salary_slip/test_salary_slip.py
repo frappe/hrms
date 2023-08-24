@@ -297,6 +297,7 @@ class TestSalarySlip(FrappeTestCase):
 
 		first_sunday = get_first_sunday()
 
+		# 3 days LWP
 		make_leave_application(emp_id, first_sunday, add_days(first_sunday, 3), "Leave Without Pay")
 
 		leave_type_ppl = create_leave_type(leave_type_name="Test Partially Paid Leave", is_ppl=1)
@@ -311,9 +312,14 @@ class TestSalarySlip(FrappeTestCase):
 		alloc.save()
 		alloc.submit()
 
-		# two day leave ppl with fraction_of_daily_salary_per_leave = 0.5 equivalent to single day lwp
+		# 1.5 day leave ppl with fraction_of_daily_salary_per_leave = 0.5 equivalent to single day lwp = 0.75
 		make_leave_application(
-			emp_id, add_days(first_sunday, 4), add_days(first_sunday, 5), "Test Partially Paid Leave"
+			emp_id,
+			add_days(first_sunday, 4),
+			add_days(first_sunday, 5),
+			"Test Partially Paid Leave",
+			half_day=True,
+			half_day_date=add_days(first_sunday, 4),
 		)
 
 		ss = make_employee_salary_slip(
@@ -322,12 +328,12 @@ class TestSalarySlip(FrappeTestCase):
 			"Test Payment Based On Leave Application",
 		)
 
-		self.assertEqual(ss.leave_without_pay, 4)
+		self.assertEqual(ss.leave_without_pay, 3.75)
 
 		days_in_month = no_of_days[0]
 		no_of_holidays = no_of_days[1]
 
-		self.assertEqual(ss.payment_days, days_in_month - no_of_holidays - 4)
+		self.assertEqual(ss.payment_days, days_in_month - no_of_holidays - 3.75)
 
 	@change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
 	def test_payment_days_in_salary_slip_based_on_timesheet(self):
