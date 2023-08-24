@@ -562,7 +562,7 @@ class SalarySlip(TransactionBase):
 
 			leave = leaves.get(d)
 			if leave:
-				if str(d) in holidays and not leave.include_holiday:
+				if getdate(d) in holidays and not leave.include_holiday:
 					continue
 
 				equivalent_lwp_count = 0
