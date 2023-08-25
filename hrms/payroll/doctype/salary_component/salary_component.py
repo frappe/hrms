@@ -9,7 +9,6 @@ from frappe.model.naming import append_number_if_name_exists
 class SalaryComponent(Document):
 	def validate(self):
 		self.validate_abbr()
-		self.set_tax_component()
 
 	def clear_cache(self):
 		from hrms.payroll.doctype.salary_slip.salary_slip import (
