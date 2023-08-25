@@ -1,49 +1,58 @@
 {% extends "templates/web.html" %}
-{% block header %}
-    Current Job Openings
-{% endblock header %}
 {% block page_content %}
-    <div class="pt-12">
+    <div class="mx-32 ">
         {% for jo in job_openings %}
-            <div class="mb-12 card border p-6">
-                <div>
-                    <h4 class="mt-0 mb-3">{{ jo.job_title }}</h4>
-                    <div class="flex mb-3 align-items-center primary-stroke">
-                        {%- if jo.department -%}
-                            <svg class="icon icon-md ml-0 mr-1">
-                                <use href="#icon-branch"></use>
+            <div class="mb-8 card border p-6">
+                <div class="flex">
+                    <div class="mr-12">
+                        <h3 class="mt-0 mb-3">{{ jo.job_title }}</h3>
+                        <div class="flex mb-8 align-items-center primary-stroke">
+                            <svg class="icon icon-lg ml-0 mr-1">
+                                <use href="#icon-organization"></use>
                             </svg>
-                            <p class="mr-3 mb-0">{{ jo.department }}</p>
-                        {% endif %}
-                        {%- if jo.location -%}
-                            <svg class="icon icon-md ml-0 mr-1"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 viewBox="0 0 16 16">
-                                <g stroke="var(--primary)" stroke-miterlimit="10">
-                                <path d="M11.467 3.458c1.958 1.957 1.958 5.088.027 7.02L7.97 14l-3.523-3.523a4.945 4.945 0 010-6.993l.026-.026a4.922 4.922 0 016.993 0zm0 0c-.026-.026-.026-.026 0 0z">
-                                </path>
-                                <path d="M7.971 8.259a1.305 1.305 0 100-2.61 1.305 1.305 0 000 2.61z"></path>
-                                </g>
-                            </svg>
-                            <p class="mr-3 mb-0">{{ jo.location }}</p>
-                        {% endif %}
-                        {%- if jo.employment_type -%}
-                            <svg class="icon icon-md ml-0 mr-1">
-                                <use href="#icon-hr"></use>
-                            </svg>
-                            <p class="mr-3 mb-0">{{ jo.employment_type }}</p>
-                        {% endif %}
+                            <p class="mr-3 ">{{ jo.company }}</p>
+                            {%- if jo.department -%}
+                                <svg class="icon icon-md ml-0 mr-1">
+                                    <use href="#icon-branch"></use>
+                                </svg>
+                                <p class="mr-3 ">{{ jo.department }}</p>
+                            {% endif %}
+                            {%- if jo.location -%}
+                                <svg class="icon icon-md ml-0 mr-1"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 16 16">
+                                    <g stroke="var(--primary)" stroke-miterlimit="10">
+                                    <path d="M11.467 3.458c1.958 1.957 1.958 5.088.027 7.02L7.97 14l-3.523-3.523a4.945 4.945 0 010-6.993l.026-.026a4.922 4.922 0 016.993 0zm0 0c-.026-.026-.026-.026 0 0z">
+                                    </path>
+                                    <path d="M7.971 8.259a1.305 1.305 0 100-2.61 1.305 1.305 0 000 2.61z"></path>
+                                    </g>
+                                </svg>
+                                <p class="mr-3 ">{{ jo.location }}</p>
+                            {% endif %}
+                            {%- if jo.employment_type -%}
+                                <svg class="icon icon-md ml-0 mr-1">
+                                    <use href="#icon-hr"></use>
+                                </svg>
+                                <p class="mr-3 ">{{ jo.employment_type }}</p>
+                            {% endif %}
+                        </div>
+                        <a href="{{ jo.route }}">{{ _("Learn More →") }}</a>
                     </div>
-                    {%- if jo.publish_salary_range -%}
-                        <p>
-                            {{ _("Salary range " + jo.salary_type.lower() ) }}:
-                            <b>{{ frappe.format_value(frappe.utils.flt(jo.lower_range) ,
+                    <div class="ml-auto flex flex-column">
+                        {%- if jo.publish_salary_range -%}
+                            <p class="font-weight-bold salary text-right">
+                                {{ frappe.format_value(frappe.utils.flt(jo.lower_range) ,
                                 currency=jo.currency) }} - {{ frappe.format_value(frappe.utils.flt(jo.upper_range) ,
                                 currency=jo.currency) }}
-                            </b>
+                            </p>
+                            <p class="text-secondary text-right">{{ jo.salary_type.lower() }}</p>
+                        {% endif %}
+                        <p class="font-italic text-right">
+                            {%- if jo.closes_on -%} {{ _("Closes on " +
+                                 frappe.format_date(jo.closes_on, "d MMM, YYYY") ) }}
+                            {% endif %}
                         </p>
-                    {% endif %}
-                    <a href="{{ jo.route }}">{{ _("Learn More →") }}</a>
+                    </div>
                 </div>
             </div>
         {% endfor %}
