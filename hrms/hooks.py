@@ -68,9 +68,9 @@ calendars = ["Leave Application"]
 # automatically create page for each record of this doctype
 website_generators = ["Job Opening"]
 
-website_route_rules = [
-	{"from_route": "/jobs", "to_route": "Job Opening"},
-]
+# website_route_rules = [
+# 	{"from_route": "/jobs", "to_route": "Job Opening"},
+# ]
 # Jinja
 # ----------
 
