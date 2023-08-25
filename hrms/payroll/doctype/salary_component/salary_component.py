@@ -11,10 +11,6 @@ class SalaryComponent(Document):
 		self.validate_abbr()
 		self.set_tax_component()
 
-	def set_tax_component(self):
-		if self.is_income_tax_component:
-			self.variable_based_on_taxable_salary = 1
-
 	def clear_cache(self):
 		from hrms.payroll.doctype.salary_slip.salary_slip import (
 			SALARY_COMPONENT_VALUES,
