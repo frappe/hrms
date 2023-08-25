@@ -16,6 +16,10 @@
         <div class="mb-16" style="font-size: 18px">
             <div class="flex mt-3 align-items-center mb-4"
                  style="--icon-stroke: var(--primary)">
+                <svg class="icon icon-lg ml-0 mr-1">
+                    <use href="#icon-organization"></use>
+                </svg>
+                <p class="mr-3 mb-0">{{ doc.company }}</p>
                 {%- if department -%}
                     <svg class="icon icon-lg ml-0 mr-1">
                         <use href="#icon-branch"></use>
@@ -59,7 +63,7 @@
                 {% endif %}
                 {%- if
                     no_of_applications -%} {{ no_of_applications }} {{ _("application
-                     received!" if no_of_applications == 1 else "applications received!") }}
+                     received" if no_of_applications == 1 else "applications received") }}
                 {% endif %}
             </i>
         </p>
