@@ -2,27 +2,26 @@
 "templates/includes/breadcrumbs.html" %} {% endblock %} {% block page_content %}
 
 <div class="py-20">
-	<div class="flex">
+	<div class="flex mb-16">
 		<h1 class="my-0 mr-32" style="font-size: 3rem">{{ job_title }}</h1>
 		<div class="ml-auto">
 			{%- if job_application_route -%}
 			<a
 				class="btn btn-primary btn-lg"
-				href="/{{job_application_route}}/new?job_title={{ doc.name }}"
-			>
-				{{ _("Apply Now") }}</a
+				href="/{{ job_application_route }}/new?job_title={{ doc.name }}"
+				>{{ _("Apply Now") }}</a
 			>
 			{% else %}
 			<a
 				class="btn btn-primary btn-lg"
 				href="/job_application/new?job_title={{ doc.name }}"
-			>
-				{{ _("Apply Now") }}</a
+				>{{ _("Apply Now") }}</a
 			>
 			{% endif %}
 		</div>
 	</div>
-	<div class="my-16" style="font-size: 18px">
+
+	<div class="mb-16" style="font-size: 18px">
 		<div
 			class="flex mt-3 align-items-center mb-4"
 			style="--icon-stroke: var(--primary)"
@@ -55,31 +54,32 @@
 			<p class="mr-3 mb-0">{{ doc.employment_type }}</p>
 			{% endif %}
 		</div>
+
 		{%- if doc.publish_salary_range -%}
 		<p>
-			{{_("Salary range " + doc.salary_type.lower())}}:
+			{{ _("Salary range " + doc.salary_type.lower() ) }}:
 			<b
-				>{{ frappe.format_value(frappe.utils.flt(doc.lower_range),
+				>{{ frappe.format_value(frappe.utils.flt(doc.lower_range) ,
 				currency=doc.currency) }} - {{
-				frappe.format_value(frappe.utils.flt(doc.upper_range),
+				frappe.format_value(frappe.utils.flt(doc.upper_range) ,
 				currency=doc.currency) }}
 			</b>
 		</p>
-		{% endif %} {%- if no_of_applications -%}
-		<p>
-			{{ no_of_applications }} {{"application" if no_of_applications == 1 else
-			"applications"}} received!
-		</p>
-		{% endif %} {%- if doc.closes_on -%}
-		<p>
-			<i>{{_("Closes on ")}} {{ frappe.format_date(doc.closes_on) }} </i>
-		</p>
 		{% endif %}
+
+		<p>
+			<i>
+				{%- if doc.closes_on -%} {{ _("Closes on " +
+				frappe.format_date(doc.closes_on) ) }} {%- if no_of_applications -%} {{
+				" - " }}{% endif %} {% endif %} {%- if no_of_applications -%} {{
+				no_of_applications }} {{ _("application received!" if no_of_applications
+				== 1 else "applications received!") }} {% endif %}
+			</i>
+		</p>
 	</div>
 
 	{%- if doc.description -%}
 	<p>{{ description }}</p>
 	{% endif %}
 </div>
-
 {% endblock %}
