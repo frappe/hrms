@@ -28,7 +28,7 @@ class JobOpening(WebsiteGenerator):
 
 	def validate(self):
 		if not self.route:
-			self.route = frappe.scrub(self.job_title).replace("_", "-")
+			self.route = f"jobs/{frappe.scrub(self.job_title).replace('_', '-')}"
 		self.validate_dates()
 		self.validate_current_vacancies()
 		self.update_job_requisition_status()
