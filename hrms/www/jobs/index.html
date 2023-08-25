@@ -1,5 +1,25 @@
 {% extends "templates/web.html" %}
 {% block header %}
+    Current Job Openings
 {% endblock header %}
 {% block page_content %}
+    <div class="pt-12">
+        {% for jo in job_openings %}
+            <div class="pb-12">
+                <h4 class="mt-0">
+                    {{ jo.job_title }} {%- if jo.location -%}<small class="text-secondary ml-2">({{ jo.location }})</small>{% endif %}
+            </h4>
+            {%- if jo.publish_salary_range -%}
+                <p>
+                    {{ _("Salary range " + jo.salary_type.lower() ) }}:
+                    <b>{{ frappe.format_value(frappe.utils.flt(jo.lower_range) ,
+                        currency=jo.currency) }} - {{ frappe.format_value(frappe.utils.flt(jo.upper_range) ,
+                        currency=jo.currency) }}
+                    </b>
+                </p>
+            {% endif %}
+            <a href="{{ jo.route }}">{{ _("Learn More →") }}</a>
+        </div>
+    {% endfor %}
+</div>
 {% endblock page_content %}
