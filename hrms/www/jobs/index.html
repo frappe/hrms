@@ -58,15 +58,7 @@
                                 </p>
                             {% endif %}
                         </div>
-                        <div>
-                            {%- if job_application_route -%}
-                                <a class="btn btn-primary"
-                                   href="/{{ jo.job_application_route }}/new?job_title={{ jo.name }}">{{ _("Apply Now →") }}</a>
-                            {% else %}
-                                <a class="btn btn-primary"
-                                   href="/job_application/new?job_title={{ jo.name }}">{{ _("Apply Now →") }}</a>
-                            {% endif %}
-                        </div>
+                        <a class="btn btn-primary" href="{{ jo.route }}">{{ _("View Job →") }}</a>
                     </div>
                     <div class="col-3 flex flex-column">
                         {%- if jo.employment_type -%}
