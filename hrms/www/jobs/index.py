@@ -21,6 +21,8 @@ def get_job_openings(txt=None, filters=None, limit_start=0, limit_page_length=20
 		"salary_type",
 		"route",
 		"location",
+		"department",
+		"employment_type",
 	]
 
 	filters = filters or {}
