@@ -57,12 +57,11 @@
             <p class="font-italic">
                 {%- if doc.closes_on -%} {{ _("Closes on " +
                      frappe.format_date(doc.closes_on, "d MMM, YYYY") ) }} {%- if
-                    no_of_applications -%} {{ " - " }}
+                    no_of_applications -%} {{ " · " }}
                 {% endif %}
             {% endif %}
             {%- if
-                no_of_applications -%} {{ no_of_applications }} {{ _("application
-                 received" if no_of_applications == 1 else "applications received") }}
+                no_of_applications -%} {{ no_of_applications }} {{ _("applicant" if no_of_applications == 1 else "applicants") }}
             {% endif %}
         </p>
     </div>
