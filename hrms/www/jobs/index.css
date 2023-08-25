@@ -1,3 +1,15 @@
 .primary-stroke {
 	--icon-stroke: var(--primary);
 }
+
+.salary {
+	font-size: 18px
+}
+
+h3 {
+	font-size: 1.7rem
+}
+
+p {
+	margin-bottom: 0
+}
