@@ -1,6 +1,6 @@
 {% extends "templates/web.html" %}
 {% block page_content %}
-    <div class="mx-32 my-20">
+    <div class="mx-40 my-20">
         <div class="mb-12">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -18,11 +18,11 @@
             </div>
         </div>
         {% for jo in job_openings %}
-            <div class="mb-8 card border p-6 card">
+            <div class="mb-8 card border p-6">
                 <div class="row">
-                    <div class="col-8 pr-12">
+                    <div class="col-9">
                         <h3 class="mt-0 mb-3">{{ jo.job_title }}</h3>
-                        <div class="flex mb-8 align-items-center secondary-stroke text-secondary">
+                        <div class="flex mb-3 align-items-center secondary-stroke text-secondary">
                             <svg class="icon icon-md ml-0 mr-1">
                                 <use href="#icon-organization"></use>
                             </svg>
@@ -46,18 +46,39 @@
                                 <p class="mr-3 ">{{ jo.location }}</p>
                             {% endif %}
                         </div>
-                        <a href="{{ jo.route }}">{{ _("Learn More →") }}</a>
-                    </div>
-                    <div class="col-4 flex flex-column">
                         {%- if jo.publish_salary_range -%}
-                            <p class="font-weight-bold salary text-right">
-                                {{ frappe.format_value(frappe.utils.flt(jo.lower_range) ,
-                                currency=jo.currency) }} - {{ frappe.format_value(frappe.utils.flt(jo.upper_range) ,
-                                currency=jo.currency) }}
-                            </p>
-                            <p class="text-secondary text-right mt-n1">{{ jo.salary_type.lower() }}</p>
+                            <div class="mb-8">
+                                <p>
+                                    <span class="font-weight-bold salary">
+                                        {{ frappe.format_value(frappe.utils.flt(jo.lower_range) ,
+                                        currency=jo.currency) }} - {{ frappe.format_value(frappe.utils.flt(jo.upper_range) ,
+                                        currency=jo.currency) }}
+                                    </span>
+                                    <span class="text-secondary">{{ jo.salary_type.lower() }}</span>
+                                </p>
+                            </div>
                         {% endif %}
-                        <p class="font-italic text-right text-secondary mt-auto closes-on">
+                        <div>
+                            {%- if job_application_route -%}
+                                <a class="btn btn-primary"
+                                   href="/{{ jo.job_application_route }}/new?job_title={{ jo.name }}">{{ _("Apply Now →") }}</a>
+                            {% else %}
+                                <a class="btn btn-primary"
+                                   href="/job_application/new?job_title={{ jo.name }}">{{ _("Apply Now →") }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-3 flex flex-column">
+                        {%- if jo.employment_type -%}
+                            {%- if jo.employment_type == "Full-time" -%}
+                                <span class="ml-auto smol-text py-1 px-3 font-weight-bold full-time-badge">{{ jo.employment_type }}</span>
+                            {%- elif jo.employment_type == "Part-time" -%}
+                                <span class="ml-auto smol-text py-1 px-3 font-weight-bold part-time-badge">{{ jo.employment_type }}</span>
+                            {%- else -%}
+                                <span class="ml-auto smol-text py-1 px-3 font-weight-bold other-badge">{{ jo.employment_type }}</span>
+                            {% endif %}
+                        {% endif %}
+                        <p class="font-italic text-right text-secondary mt-auto smol-text">
                             {%- if jo.closes_on -%} {{ _("Closes on " +
                                  frappe.format_date(jo.closes_on, "d MMM, YYYY") ) }}
                             {% endif %}

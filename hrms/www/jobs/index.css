@@ -14,13 +14,24 @@ p {
 	font-size: 18px;
 }
 
-/* .card {
-	-webkit-transition: transform 0.1s ease-in-out;
-}
-.card:hover {
-	transform: scale(1.01);
-} */
-
-.closes-on {
+.smol-text {
 	font-size: 13px;
+}
+
+.full-time-badge {
+	background: var(--bg-green);
+	color: var(--text-on-green);
+	border-radius: var(--border-radius)
+}
+
+.part-time-badge {
+	background: var(--bg-orange);
+	color: var(--text-on-orange);
+	border-radius: var(--border-radius)
+}
+
+.other-badge {
+	background: var(--bg-blue);
+	color: var(--text-on-blue);
+	border-radius: var(--border-radius)
 }
