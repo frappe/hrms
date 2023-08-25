@@ -1,13 +1,29 @@
 {% extends "templates/web.html" %}
 {% block page_content %}
     <div class="mx-32 my-20">
+        <div class="mb-12">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">
+                        <svg class="icon icon-md ml-0 mr-1">
+                            <use href="#icon-search"></use>
+                        </svg>
+                    </span>
+                </div>
+                <input type="text"
+                       class="form-control"
+                       placeholder="Search for Jobs"
+                       aria-label="Username"
+                       aria-describedby="basic-addon1">
+            </div>
+        </div>
         {% for jo in job_openings %}
-            <div class="mb-8 card border p-6">
+            <div class="mb-8 card border p-6 card">
                 <div class="row">
                     <div class="col-8 pr-12">
                         <h3 class="mt-0 mb-3">{{ jo.job_title }}</h3>
-                        <div class="flex mb-8 align-items-center primary-stroke">
-                            <svg class="icon icon-lg ml-0 mr-1">
+                        <div class="flex mb-8 align-items-center secondary-stroke text-secondary">
+                            <svg class="icon icon-md ml-0 mr-1">
                                 <use href="#icon-organization"></use>
                             </svg>
                             <p class="mr-3 ">{{ jo.company }}</p>
@@ -21,7 +37,7 @@
                                 <svg class="icon icon-md ml-0 mr-1"
                                      xmlns="http://www.w3.org/2000/svg"
                                      viewBox="0 0 16 16">
-                                    <g stroke="var(--primary)" stroke-miterlimit="10">
+                                    <g stroke="var(--secondary)" stroke-miterlimit="10">
                                     <path d="M11.467 3.458c1.958 1.957 1.958 5.088.027 7.02L7.97 14l-3.523-3.523a4.945 4.945 0 010-6.993l.026-.026a4.922 4.922 0 016.993 0zm0 0c-.026-.026-.026-.026 0 0z">
                                     </path>
                                     <path d="M7.971 8.259a1.305 1.305 0 100-2.61 1.305 1.305 0 000 2.61z"></path>
@@ -39,9 +55,9 @@
                                 currency=jo.currency) }} - {{ frappe.format_value(frappe.utils.flt(jo.upper_range) ,
                                 currency=jo.currency) }}
                             </p>
-                            <p class="text-secondary text-right">{{ jo.salary_type.lower() }}</p>
+                            <p class="text-secondary text-right mt-n1">{{ jo.salary_type.lower() }}</p>
                         {% endif %}
-                        <p class="font-italic text-right mt-auto">
+                        <p class="font-italic text-right text-secondary mt-auto closes-on">
                             {%- if jo.closes_on -%} {{ _("Closes on " +
                                  frappe.format_date(jo.closes_on, "d MMM, YYYY") ) }}
                             {% endif %}

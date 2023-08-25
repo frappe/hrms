@@ -1,15 +1,26 @@
-.primary-stroke {
-	--icon-stroke: var(--primary);
-}
-
-.salary {
-	font-size: 18px
-}
-
 h3 {
-	font-size: 1.7rem
+	font-size: 1.7rem;
 }
 
 p {
-	margin-bottom: 0
+	margin-bottom: 0;
+}
+
+.secondary-stroke {
+	--icon-stroke: var(--secondary);
+}
+
+.salary {
+	font-size: 18px;
+}
+
+/* .card {
+	-webkit-transition: transform 0.1s ease-in-out;
+}
+.card:hover {
+	transform: scale(1.01);
+} */
+
+.closes-on {
+	font-size: 13px;
 }
