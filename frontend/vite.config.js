@@ -6,7 +6,7 @@ import path from "path"
 import { getProxyOptions } from "frappe-ui/src/utils/vite-dev-server"
 import { webserver_port } from "../../../sites/common_site_config.json"
 
-// https://vitejs.dev/config/
+
 export default defineConfig({
 	plugins: [
 		vue(),
@@ -59,11 +59,19 @@ export default defineConfig({
 		},
 	},
 	build: {
-		outDir: `../${path.basename(path.resolve(".."))}/public/frontend`,
+		outDir: "../hrms/public/frontend",
 		emptyOutDir: true,
 		target: "es2015",
+		commonjsOptions: {
+			include: [/tailwind.config.js/, /node_modules/],
+		},
 	},
 	optimizeDeps: {
-		include: ["frappe-ui > feather-icons", "showdown", "engine.io-client"],
+		include: [
+			"feather-icons",
+			"showdown",
+			"tailwind.config.js",
+			"engine.io-client",
+		],
 	},
 })
