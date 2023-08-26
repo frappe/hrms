@@ -9,7 +9,24 @@
 				:id="props.id"
 				:tabbedView="true"
 				:tabs="tabs"
-			/>
+			>
+				<!-- Child Tables -->
+				<template #earnings="{ isFormReadOnly }">
+					<SalaryDetailTable
+						type="Earnings"
+						:salarySlip="salarySlip"
+						:isReadOnly="isFormReadOnly"
+					/>
+				</template>
+
+				<template #deductions="{ isFormReadOnly }">
+					<SalaryDetailTable
+						type="Deductions"
+						:salarySlip="salarySlip"
+						:isReadOnly="isFormReadOnly"
+					/>
+				</template>
+			</FormView>
 		</ion-content>
 	</ion-page>
 </template>
@@ -17,7 +34,9 @@
 <script setup>
 import { ref } from "vue"
 import { IonPage, IonContent } from "@ionic/vue"
+
 import FormView from "@/components/FormView.vue"
+import SalaryDetailTable from "@/components/SalaryDetailTable.vue"
 
 import { createResource } from "frappe-ui"
 
