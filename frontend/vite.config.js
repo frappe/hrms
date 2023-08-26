@@ -19,6 +19,7 @@ export default defineConfig({
 				display: "standalone",
 				name: "Frappe HR",
 				short_name: "Frappe HR",
+				start_url: "/hrms",
 				description: "Everyday HR & Payroll operations at your fingertips",
 				icons: [
 					{
