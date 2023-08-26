@@ -9,3 +9,14 @@ input:disabled {
 	--webkit-text-fill-color: var(--text-color);
 	opacity: 1; /* required on iOS */
 }
+
+/* For Webkit-based browsers (Chrome, Safari and Opera) */
+.hide-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+
+/* For IE, Edge and Firefox */
+.hide-scrollbar {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}

@@ -24,8 +24,8 @@
 						class="whitespace-nowrap text-[8px]"
 					/>
 					<Badge
-						v-if="formModel.status"
-						:label="formModel.status"
+						v-if="formModel?.status"
+						:label="formModel?.status"
 						:color="statusColor"
 						class="whitespace-nowrap text-[8px]"
 					/>
@@ -58,8 +58,8 @@
 				<div
 					class="px-4 sticky top-14 z-[100] bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
 				>
-					<ul class="flex flex-wrap -mb-px">
-						<li class="mr-2" v-for="tab in tabs">
+					<ul class="flex -mb-px overflow-auto hide-scrollbar">
+						<li class="mr-2 whitespace-nowrap" v-for="tab in tabs">
 							<button
 								@click="activeTab = tab.name"
 								class="inline-block p-4 border-b-2 border-transparent rounded-t-lg"
