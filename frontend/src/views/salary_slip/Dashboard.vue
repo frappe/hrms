@@ -1,0 +1,137 @@
+<template>
+	<BaseLayout pageTitle="Salary Slips">
+		<template #body>
+			<div class="flex flex-col items-center my-7 p-4">
+				<div class="flex flex-col w-full bg-white rounded-lg py-5 px-3.5 gap-5">
+					<div v-if="lastSalarySlip" class="flex flex-col w-full gap-1.5">
+						<span class="text-gray-600 text-base font-medium leading-5">
+							Year To Date
+						</span>
+						<span class="text-gray-800 text-2xl font-bold leading-6">
+							{{
+								formatCurrency(
+									lastSalarySlip.year_to_date,
+									lastSalarySlip.currency
+								)
+							}}
+						</span>
+					</div>
+
+					<Autocomplete
+						label="Payroll Period"
+						class="w-full"
+						placeholder="Select Payroll Period"
+						v-model="selectedPeriod"
+						:options="payrollPeriods.data"
+					/>
+				</div>
+
+				<div class="flex flex-col items-center mt-5 mb-7 w-full">
+					<div
+						v-if="slipsForPeriod?.length"
+						class="flex flex-col bg-white rounded-lg mt-5 overflow-auto w-full"
+					>
+						<div
+							class="p-3.5 items-center justify-between border-b cursor-pointer"
+							v-for="link in slipsForPeriod"
+							:key="link.name"
+						>
+							<router-link
+								:to="{
+									name: 'SalarySlipDetailView',
+									params: { id: link.name },
+								}"
+								v-slot="{ navigate }"
+							>
+								<SalarySlipItem :doc="link" @click="navigate" />
+							</router-link>
+						</div>
+					</div>
+					<EmptyState message="No salary slips found" v-else />
+				</div>
+			</div>
+		</template>
+	</BaseLayout>
+</template>
+
+<script setup>
+import { inject, ref, computed } from "vue"
+import { Autocomplete, createListResource } from "frappe-ui"
+
+import BaseLayout from "@/components/BaseLayout.vue"
+import EmptyState from "@/components/EmptyState.vue"
+import SalarySlipItem from "@/components/SalarySlipItem.vue"
+
+import { formatCurrency } from "@/utils/formatters"
+
+let selectedPeriod = ref({})
+let periodsByName = ref({})
+
+const employee = inject("$employee")
+const dayjs = inject("$dayjs")
+
+const payrollPeriods = createListResource({
+	doctype: "Payroll Period",
+	fields: ["name", "start_date", "end_date"],
+	filters: {
+		company: employee.data?.company,
+	},
+	orderBy: "start_date desc",
+	auto: true,
+	transform(data) {
+		return data.map((period) => {
+			periodsByName.value[period.name] = period
+			return {
+				label: getPeriodLabel(period),
+				value: period.name,
+			}
+		})
+	},
+	onSuccess: (data) => {
+		selectedPeriod.value = data[0]
+	},
+})
+
+const documents = createListResource({
+	doctype: "Salary Slip",
+	fields: [
+		"name",
+		"start_date",
+		"end_date",
+		"currency",
+		"gross_pay",
+		"net_pay",
+		"year_to_date",
+	],
+	auto: true,
+	filters: {
+		employee: employee.data?.name,
+		docstatus: 1,
+	},
+	orderBy: "end_date desc",
+})
+
+const slipsForPeriod = computed(() => {
+	let period = periodsByName.value[selectedPeriod.value.value]
+	if (!period) return []
+
+	return documents.data?.filter((slip) => {
+		return dayjs(slip.start_date).isBetween(
+			period?.start_date,
+			period?.end_date,
+			null,
+			"[]"
+		)
+	})
+})
+
+const lastSalarySlip = computed(() => {
+	return slipsForPeriod.value?.[0]
+})
+
+const getPeriodLabel = (period) => {
+	return `${dayjs(period?.start_date).format("MMM YYYY")} - ${dayjs(
+		period?.end_date
+	).format("MMM YYYY")}`
+}
+</script>
