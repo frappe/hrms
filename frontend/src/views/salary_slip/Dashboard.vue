@@ -28,12 +28,12 @@
 
 				<div class="flex flex-col items-center mt-5 mb-7 w-full">
 					<div
-						v-if="slipsForPeriod?.length"
+						v-if="documents.data?.length"
 						class="flex flex-col bg-white rounded-lg mt-5 overflow-auto w-full"
 					>
 						<div
 							class="p-3.5 items-center justify-between border-b cursor-pointer"
-							v-for="link in slipsForPeriod"
+							v-for="link in documents.data"
 							:key="link.name"
 						>
 							<router-link
@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { inject, ref, computed } from "vue"
+import { inject, ref, computed, watch } from "vue"
 import { Autocomplete, createListResource } from "frappe-ui"
 
 import BaseLayout from "@/components/BaseLayout.vue"
@@ -103,7 +103,6 @@ const documents = createListResource({
 		"net_pay",
 		"year_to_date",
 	],
-	auto: true,
 	filters: {
 		employee: employee.data?.name,
 		docstatus: 1,
@@ -111,27 +110,23 @@ const documents = createListResource({
 	orderBy: "end_date desc",
 })
 
-const slipsForPeriod = computed(() => {
-	let period = periodsByName.value[selectedPeriod.value.value]
-	if (!period) return []
+const lastSalarySlip = computed(() => documents.data?.[0])
 
-	return documents.data?.filter((slip) => {
-		return dayjs(slip.start_date).isBetween(
-			period?.start_date,
-			period?.end_date,
-			null,
-			"[]"
-		)
-	})
-})
-
-const lastSalarySlip = computed(() => {
-	return slipsForPeriod.value?.[0]
-})
-
-const getPeriodLabel = (period) => {
+function getPeriodLabel(period) {
 	return `${dayjs(period?.start_date).format("MMM YYYY")} - ${dayjs(
 		period?.end_date
 	).format("MMM YYYY")}`
 }
+
+watch(
+	() => selectedPeriod.value,
+	(value) => {
+		let period = periodsByName.value[value.value]
+		documents.filters.start_date = [
+			"between",
+			[period?.start_date, period?.end_date],
+		]
+		documents.reload()
+	}
+)
 </script>
