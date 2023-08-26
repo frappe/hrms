@@ -16,6 +16,7 @@
 					ref="input"
 					type="file"
 					multiple
+					accept="*"
 					@change="(e) => emit('handle-file-select', e)"
 				/>
 			</div>

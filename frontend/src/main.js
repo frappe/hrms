@@ -39,6 +39,8 @@ app.component("EmptyState", EmptyState)
 app.use(router)
 app.use(IonicVue)
 
+employeeResource.reload()
+
 app.provide("$session", session)
 app.provide("$user", userResource)
 app.provide("$employee", employeeResource)
