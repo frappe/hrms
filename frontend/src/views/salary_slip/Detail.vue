@@ -32,10 +32,11 @@
 			<div
 				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-xl pb-10"
 			>
+				<ErrorMessage :message="downloadError" class="mt-2" />
 				<Button
 					class="w-full rounded-md py-2.5 px-3.5 mt-2"
 					@click="downloadPDF"
-					appearance="secondary"
+					appearance="primary"
 				>
 					Download PDF
 				</Button>
@@ -60,6 +61,7 @@ const props = defineProps({
 	},
 })
 
+const downloadError = ref("")
 // reactive object to store form data
 const salarySlip = ref({})
 
@@ -79,27 +81,33 @@ const tabs = [
 ]
 
 function downloadPDF() {
-	let xhr = new XMLHttpRequest()
+	const salarySlipName = salarySlip.value.name
 
-	xhr.open("POST", "/api/method/hrms.api.download_salary_slip")
-	xhr.responseType = "arraybuffer"
-
-	xhr.onload = function (e) {
-		if (this.status == 200) {
-			const blob = new Blob([this.response], { type: "application/pdf" })
+	fetch("/api/method/hrms.api.download_salary_slip", {
+		method: "POST",
+		body: new URLSearchParams({ name: salarySlipName }),
+		responseType: "blob",
+	})
+		.then((response) => {
+			if (response.ok) {
+				return response.blob()
+			} else {
+				downloadError.value = `Failed to download PDF: ${response.statusText}`
+			}
+		})
+		.then((blob) => {
+			const blobUrl = window.URL.createObjectURL(blob)
 			const link = document.createElement("a")
-			link.href = window.URL.createObjectURL(blob)
-			link.download = `${salarySlip.value.name}.pdf`
+			link.href = blobUrl
+			link.download = `${salarySlipName}.pdf`
 			link.click()
 
 			setTimeout(() => {
-				URL.revokeObjectURL(blob)
+				window.URL.revokeObjectURL(blobUrl)
 			}, 3000)
-		}
-	}
-
-	const data = new FormData()
-	data.append("name", salarySlip.value.name)
-	xhr.send(data)
+		})
+		.catch((error) => {
+			downloadError.value = `Failed to download PDF: ${error.message}`
+		})
 }
 </script>

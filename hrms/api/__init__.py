@@ -474,9 +474,6 @@ def download_salary_slip(name: str):
 	download_pdf("Salary Slip", name, format="Salary Slip with Year to Date")
 
 	base64content = base64.b64encode(frappe.local.response.filecontent)
-	filename = frappe.local.response.filename
 	content_type = frappe.local.response.type
-	name = filename
 
-	data = f"data:{content_type};base64," + base64content.decode("utf-8")
-	return data
+	return f"data:{content_type};base64," + base64content.decode("utf-8")
