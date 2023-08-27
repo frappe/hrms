@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue"
+import { ref } from "vue"
 import { IonPage, IonContent } from "@ionic/vue"
 
 import { createResource, ErrorMessage } from "frappe-ui"

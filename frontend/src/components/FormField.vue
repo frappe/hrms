@@ -162,13 +162,17 @@ let linkFieldList = ref([])
 let date = ref(null)
 
 const showField = computed(() => {
-	if (props.readOnly && !props.modelValue) return false
+	if (props.readOnly && !isLayoutField.value && !props.modelValue) return false
 
 	return SUPPORTED_FIELD_TYPES.includes(props.fieldtype) && !props.hidden
 })
 
 const isNumberType = computed(() => {
 	return ["Int", "Float", "Currency"].includes(props.fieldtype)
+})
+
+const isLayoutField = computed(() => {
+	return ["Section Break", "Column Break"].includes(props.fieldtype)
 })
 
 const isReadOnly = computed(() => {
