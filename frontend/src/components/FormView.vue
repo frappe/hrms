@@ -262,6 +262,8 @@ import FormField from "@/components/FormField.vue"
 import FileUploaderView from "@/components/FileUploaderView.vue"
 
 import { FileAttachment, guessStatusColor } from "@/composables/index"
+import { getCompanyCurrency } from "@/data/currencies"
+import { formatCurrency } from "@/utils/formatters"
 
 const props = defineProps({
 	doctype: {
@@ -586,6 +588,27 @@ async function setStatusColor() {
 	}
 }
 
+async function setFormattedCurrency() {
+	const companyCurrency = await getCompanyCurrency(formModel.value.company)
+
+	props.fields.forEach((field) => {
+		if (field.fieldtype !== "Currency") return
+		if (!(field.readOnly || isFormReadOnly.value)) return
+
+		if (field.options === "currency") {
+			formModel.value[field.fieldname] = formatCurrency(
+				formModel.value[field.fieldname],
+				formModel.value.currency
+			)
+		} else {
+			formModel.value[field.fieldname] = formatCurrency(
+				formModel.value[field.fieldname],
+				companyCurrency
+			)
+		}
+	})
+}
+
 const isFormReadOnly = computed(
 	() => props.id && formModel.value.docstatus !== 0
 )
@@ -602,6 +625,7 @@ onMounted(async () => {
 		formModel.value = { ...documentResource.doc }
 		await docPermissions.fetch({ doctype: props.doctype, docname: props.id })
 		await attachedFiles.reload()
+		await setFormattedCurrency()
 		await setStatusColor()
 		isFormDirty.value = false
 	}

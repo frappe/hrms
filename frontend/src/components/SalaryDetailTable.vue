@@ -3,7 +3,7 @@
 	<div class="flex flex-row justify-between items-center">
 		<h2 class="text-lg font-semibold text-gray-800">{{ type }}</h2>
 		<span class="text-lg font-semibold text-gray-800">
-			{{ formatCurrency(total, salarySlip.currency) }}
+			{{ total }}
 		</span>
 	</div>
 

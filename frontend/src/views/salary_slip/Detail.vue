@@ -72,6 +72,9 @@ const salarySlip = ref({})
 const formFields = createResource({
 	url: "hrms.api.get_doctype_fields",
 	params: { doctype: "Salary Slip" },
+	transform(data) {
+		return getFilteredFields(data)
+	},
 })
 formFields.reload()
 
@@ -89,13 +92,9 @@ watch(
 		if (!company) return
 
 		const companyCurrency = await getCompanyCurrency(company)
+
 		formFields.data?.map((field) => {
-			// hide timesheets section if no timesheets
-			if (field.fieldname === "timesheets_section") {
-				if (!salarySlip.value?.timesheets?.length) {
-					field.hidden = true
-				}
-			} else if (field.label?.includes("Company Currency")) {
+			if (field.label?.includes("Company Currency")) {
 				if (salarySlip.value.currency === companyCurrency) {
 					// hide base currency fields
 					field.hidden = true
@@ -108,6 +107,20 @@ watch(
 	},
 	{ immediate: true }
 )
+
+function getFilteredFields(fields) {
+	const hasTimesheets = salarySlip.value?.timesheets?.length
+	if (hasTimesheets) return fields
+
+	const excludeFields = [
+		"timesheets_section",
+		"timesheets",
+		"total_working_hours",
+		"hour_rate",
+		"base_hour_rate",
+	]
+	return fields.filter((field) => !excludeFields.includes(field.fieldname))
+}
 
 function downloadPDF() {
 	const salarySlipName = salarySlip.value.name

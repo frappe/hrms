@@ -64,6 +64,17 @@
 			:disabled="isReadOnly"
 		/>
 
+		<!-- Read only currency field -->
+		<Input
+			v-else-if="props.fieldtype === 'Currency' && isReadOnly"
+			type="text"
+			:value="modelValue"
+			@input="(v) => emit('update:modelValue', v)"
+			@change="(v) => emit('change', v)"
+			v-bind="$attrs"
+			:disabled="isReadOnly"
+		/>
+
 		<!-- Float/Int field -->
 		<Input
 			v-else-if="isNumberType"
