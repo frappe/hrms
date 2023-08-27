@@ -49,10 +49,18 @@ const menuItems = ref([
 		current: false,
 	},
 	{
-		icon: "file",
+		icon: "dollar-sign",
 		title: "Expense Claims",
 		route: {
 			name: "ExpenseClaims",
+		},
+		current: false,
+	},
+	{
+		icon: "check-circle",
+		title: "Attendance",
+		route: {
+			name: "Login",
 		},
 		current: false,
 	},
@@ -62,14 +70,6 @@ const menuItems = ref([
 		route: {
 			name: "SalarySlips",
 		},
-	},
-	{
-		icon: "check-circle",
-		title: "Attendance",
-		route: {
-			name: "Login",
-		},
-		current: false,
 	},
 	{
 		icon: "info",
