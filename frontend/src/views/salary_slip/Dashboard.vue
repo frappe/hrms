@@ -121,7 +121,7 @@ function getPeriodLabel(period) {
 watch(
 	() => selectedPeriod.value,
 	(value) => {
-		let period = periodsByName.value[value.value]
+		let period = periodsByName.value[value?.value]
 		documents.filters.start_date = [
 			"between",
 			[period?.start_date, period?.end_date],

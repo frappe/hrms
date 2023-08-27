@@ -106,7 +106,7 @@
 								:errorMessage="field.error_message"
 								:minDate="field.minDate"
 								:maxDate="field.maxDate"
-								:addSectionPadding="fieldList[1].name !== field.name"
+								:addSectionPadding="fieldList[0].name !== field.name"
 							/>
 						</template>
 

@@ -4,6 +4,25 @@ from frappe.query_builder import Order
 from frappe.query_builder.functions import Count
 from frappe.utils import getdate
 
+SUPPORTED_FIELD_TYPES = [
+	"Link",
+	"Select",
+	"Small Text",
+	"Text",
+	"Long Text",
+	"Text Editor",
+	"Table",
+	"Check",
+	"Data",
+	"Float",
+	"Int",
+	"Section Break",
+	"Date",
+	"Time",
+	"Datetime",
+	"Currency",
+]
+
 
 @frappe.whitelist()
 def get_current_user_info() -> dict:
@@ -405,7 +424,12 @@ def get_company_cost_center(company: str) -> str:
 # Form View APIs
 @frappe.whitelist()
 def get_doctype_fields(doctype: str) -> list[dict]:
-	return frappe.get_meta(doctype).fields
+	fields = frappe.get_meta(doctype).fields
+	return [
+		field
+		for field in fields
+		if field.fieldtype in SUPPORTED_FIELD_TYPES and field.fieldname != "amended_from"
+	]
 
 
 @frappe.whitelist()

@@ -151,23 +151,6 @@ const props = defineProps({
 
 const emit = defineEmits(["change", "update:modelValue"])
 const dayjs = inject("$dayjs")
-const SUPPORTED_FIELD_TYPES = [
-	"Link",
-	"Select",
-	"Small Text",
-	"Text",
-	"Long Text",
-	"Text Editor",
-	"Check",
-	"Data",
-	"Float",
-	"Int",
-	"Section Break",
-	"Date",
-	"Time",
-	"Datetime",
-	"Currency",
-]
 
 let linkFieldList = ref([])
 let date = ref(null)
@@ -175,7 +158,7 @@ let date = ref(null)
 const showField = computed(() => {
 	if (props.readOnly && !isLayoutField.value && !props.modelValue) return false
 
-	return SUPPORTED_FIELD_TYPES.includes(props.fieldtype) && !props.hidden
+	return props.fieldtype !== "Table" && !props.hidden
 })
 
 const isNumberType = computed(() => {
