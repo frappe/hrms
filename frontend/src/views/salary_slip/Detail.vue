@@ -45,13 +45,15 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import { IonPage, IonContent } from "@ionic/vue"
 
 import { createResource, ErrorMessage } from "frappe-ui"
 
 import FormView from "@/components/FormView.vue"
 import SalaryDetailTable from "@/components/SalaryDetailTable.vue"
+
+import { getCompanyCurrency } from "@/data/currencies"
 
 const props = defineProps({
 	id: {
@@ -80,6 +82,32 @@ const tabs = [
 	{ name: "Income Tax Breakup", lastField: "total_income_tax" },
 	{ name: "Bank Details", lastField: "bank_account_no" },
 ]
+
+watch(
+	() => salarySlip.value.company,
+	async (company) => {
+		if (!company) return
+
+		const companyCurrency = await getCompanyCurrency(company)
+		formFields.data?.map((field) => {
+			// hide timesheets section if no timesheets
+			if (field.fieldname === "timesheets_section") {
+				if (!salarySlip.value?.timesheets?.length) {
+					field.hidden = true
+				}
+			} else if (field.label?.includes("Company Currency")) {
+				if (salarySlip.value.currency === companyCurrency) {
+					// hide base currency fields
+					field.hidden = true
+				} else {
+					// set currency in label
+					field.label = field.label.replace("Company Currency", companyCurrency)
+				}
+			}
+		})
+	},
+	{ immediate: true }
+)
 
 function downloadPDF() {
 	const salarySlipName = salarySlip.value.name
