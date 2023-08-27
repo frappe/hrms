@@ -34,8 +34,8 @@ const quickLinks = [
 	},
 	{
 		icon: "file",
-		title: "Payslip",
-		route: "Home",
+		title: "Salary Slips",
+		route: "SalarySlips",
 	},
 	{
 		icon: "hard-drive",

@@ -64,6 +64,17 @@
 			:disabled="isReadOnly"
 		/>
 
+		<!-- Read only currency field -->
+		<Input
+			v-else-if="props.fieldtype === 'Currency' && isReadOnly"
+			type="text"
+			:value="modelValue"
+			@input="(v) => emit('update:modelValue', v)"
+			@change="(v) => emit('change', v)"
+			v-bind="$attrs"
+			:disabled="isReadOnly"
+		/>
+
 		<!-- Float/Int field -->
 		<Input
 			v-else-if="isNumberType"
@@ -140,35 +151,22 @@ const props = defineProps({
 
 const emit = defineEmits(["change", "update:modelValue"])
 const dayjs = inject("$dayjs")
-const SUPPORTED_FIELD_TYPES = [
-	"Link",
-	"Select",
-	"Small Text",
-	"Text",
-	"Long Text",
-	"Text Editor",
-	"Check",
-	"Data",
-	"Float",
-	"Int",
-	"Section Break",
-	"Date",
-	"Time",
-	"Datetime",
-	"Currency",
-]
 
 let linkFieldList = ref([])
 let date = ref(null)
 
 const showField = computed(() => {
-	if (props.readOnly && !props.modelValue) return false
+	if (props.readOnly && !isLayoutField.value && !props.modelValue) return false
 
-	return SUPPORTED_FIELD_TYPES.includes(props.fieldtype) && !props.hidden
+	return props.fieldtype !== "Table" && !props.hidden
 })
 
 const isNumberType = computed(() => {
 	return ["Int", "Float", "Currency"].includes(props.fieldtype)
+})
+
+const isLayoutField = computed(() => {
+	return ["Section Break", "Column Break"].includes(props.fieldtype)
 })
 
 const isReadOnly = computed(() => {

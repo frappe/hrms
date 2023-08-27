@@ -24,8 +24,8 @@
 						class="whitespace-nowrap text-[8px]"
 					/>
 					<Badge
-						v-if="formModel.status"
-						:label="formModel.status"
+						v-if="formModel?.status"
+						:label="formModel?.status"
 						:color="statusColor"
 						class="whitespace-nowrap text-[8px]"
 					/>
@@ -58,8 +58,8 @@
 				<div
 					class="px-4 sticky top-14 z-[100] bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
 				>
-					<ul class="flex flex-wrap -mb-px">
-						<li class="mr-2" v-for="tab in tabs">
+					<ul class="flex -mb-px overflow-auto hide-scrollbar">
+						<li class="mr-2 whitespace-nowrap" v-for="tab in tabs">
 							<button
 								@click="activeTab = tab.name"
 								class="inline-block p-4 border-b-2 border-transparent rounded-t-lg"
@@ -171,6 +171,13 @@
 					{{ formButton }}
 				</Button>
 			</div>
+
+			<div
+				v-else
+				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-xl pb-10"
+			>
+				<slot name="formButton"></slot>
+			</div>
 		</div>
 	</div>
 
@@ -255,6 +262,8 @@ import FormField from "@/components/FormField.vue"
 import FileUploaderView from "@/components/FileUploaderView.vue"
 
 import { FileAttachment, guessStatusColor } from "@/composables/index"
+import { getCompanyCurrency } from "@/data/currencies"
+import { formatCurrency } from "@/utils/formatters"
 
 const props = defineProps({
 	doctype: {
@@ -291,6 +300,11 @@ const props = defineProps({
 		type: Boolean,
 		required: false,
 		default: false,
+	},
+	showFormButton: {
+		type: Boolean,
+		required: false,
+		default: true,
 	},
 })
 const emit = defineEmits(["validateForm", "update:modelValue"])
@@ -491,6 +505,8 @@ const saveButtonDisabled = computed(() => {
 })
 
 const formButton = computed(() => {
+	if (!props.showFormButton) return
+
 	if (props.id && props.isSubmittable && !isFormDirty.value) {
 		if (formModel.value.docstatus === 0 && hasPermission("submit")) {
 			return "Submit"
@@ -572,6 +588,27 @@ async function setStatusColor() {
 	}
 }
 
+async function setFormattedCurrency() {
+	const companyCurrency = await getCompanyCurrency(formModel.value.company)
+
+	props.fields.forEach((field) => {
+		if (field.fieldtype !== "Currency") return
+		if (!(field.readOnly || isFormReadOnly.value)) return
+
+		if (field.options === "currency") {
+			formModel.value[field.fieldname] = formatCurrency(
+				formModel.value[field.fieldname],
+				formModel.value.currency
+			)
+		} else {
+			formModel.value[field.fieldname] = formatCurrency(
+				formModel.value[field.fieldname],
+				companyCurrency
+			)
+		}
+	})
+}
+
 const isFormReadOnly = computed(
 	() => props.id && formModel.value.docstatus !== 0
 )
@@ -588,6 +625,7 @@ onMounted(async () => {
 		formModel.value = { ...documentResource.doc }
 		await docPermissions.fetch({ doctype: props.doctype, docname: props.id })
 		await attachedFiles.reload()
+		await setFormattedCurrency()
 		await setStatusColor()
 		isFormDirty.value = false
 	}

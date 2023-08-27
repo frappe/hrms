@@ -5,6 +5,7 @@ import { userResource } from "@/data/user"
 import leaveRoutes from "./leaves"
 import claimRoutes from "./claims"
 import employeeAdvanceRoutes from "./advances"
+import salarySlipRoutes from "./salary_slips"
 
 const routes = [
 	{
@@ -30,6 +31,7 @@ const routes = [
 	...leaveRoutes,
 	...claimRoutes,
 	...employeeAdvanceRoutes,
+	...salarySlipRoutes,
 ]
 
 const router = createRouter({

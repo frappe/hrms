@@ -49,7 +49,7 @@ const menuItems = ref([
 		current: false,
 	},
 	{
-		icon: "file",
+		icon: "dollar-sign",
 		title: "Expense Claims",
 		route: {
 			name: "ExpenseClaims",
@@ -63,6 +63,13 @@ const menuItems = ref([
 			name: "Login",
 		},
 		current: false,
+	},
+	{
+		icon: "file",
+		title: "Salary Slips",
+		route: {
+			name: "SalarySlips",
+		},
 	},
 	{
 		icon: "info",

@@ -546,11 +546,13 @@
   },
   {
    "fieldname": "section_break_6",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Employee Info"
   },
   {
    "fieldname": "section_break_gsts",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Payroll Info"
   },
   {
    "fieldname": "column_break_obdl",
@@ -693,14 +695,15 @@
   {
    "depends_on": "eval:doc.salary_slip_based_on_timesheet",
    "fieldname": "timesheets_section",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Timesheet Details"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-06-20 20:04:00.131248",
+ "modified": "2023-08-27 15:31:03.171812",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
@@ -732,6 +735,7 @@
    "write": 1
   },
   {
+   "print": 1,
    "read": 1,
    "role": "Employee"
   }

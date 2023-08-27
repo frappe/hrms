@@ -4,7 +4,7 @@
 		<h2 class="text-lg font-semibold text-gray-800">Expenses</h2>
 		<div class="flex flex-row gap-3 items-center">
 			<span class="text-lg font-semibold text-gray-800">
-				{{ `${currency} ${expenseClaim.total_claimed_amount || 0}` }}
+				{{ expenseClaim.total_claimed_amount || 0 }}
 			</span>
 			<Button
 				id="add-expense-modal"
