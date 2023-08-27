@@ -37,6 +37,7 @@
 					class="w-full rounded-md py-2.5 px-3.5 mt-2"
 					@click="downloadPDF"
 					appearance="primary"
+					:loading="loading"
 				>
 					Download PDF
 				</Button>
@@ -62,6 +63,8 @@ const props = defineProps({
 })
 
 const downloadError = ref("")
+const loading = ref(false)
+
 // reactive object to store form data
 const salarySlip = ref({})
 
@@ -82,6 +85,7 @@ const tabs = [
 
 function downloadPDF() {
 	const salarySlipName = salarySlip.value.name
+	loading.value = true
 
 	fetch("/api/method/hrms.api.download_salary_slip", {
 		method: "POST",
@@ -108,6 +112,9 @@ function downloadPDF() {
 		})
 		.catch((error) => {
 			downloadError.value = `Failed to download PDF: ${error.message}`
+		})
+		.finally(() => {
+			loading.value = false
 		})
 }
 </script>
