@@ -107,8 +107,8 @@ import {
 	watch,
 	computed,
 	reactive,
-	onUnmounted,
 	onMounted,
+	onBeforeUnmount,
 } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
 
@@ -277,10 +277,14 @@ watch(
 
 onMounted(() => {
 	socket.emit("doctype_subscribe", props.doctype)
-	socket.on("list_update", (_data) => documents.reload())
+	socket.off("list_update")
+	socket.on("list_update", (data) => {
+		if (data?.doctype !== props.doctype) return
+		fetchDocumentList()
+	})
 })
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
 	socket.emit("doctype_unsubscribe", props.doctype)
 	socket.off("list_update")
 })

@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { inject, ref, computed, watch } from "vue"
+import { inject, ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
 import { Autocomplete, createListResource } from "frappe-ui"
 
 import BaseLayout from "@/components/BaseLayout.vue"
@@ -69,6 +69,7 @@ let periodsByName = ref({})
 
 const employee = inject("$employee")
 const dayjs = inject("$dayjs")
+const socket = inject("$socket")
 
 const payrollPeriods = createListResource({
 	doctype: "Payroll Period",
@@ -129,4 +130,17 @@ watch(
 		documents.reload()
 	}
 )
+
+onMounted(() => {
+	socket.off("hrms:update_salary_slips")
+	socket.on("hrms:update_salary_slips", (data) => {
+		if (data.employee === employee.data.name) {
+			documents.reload()
+		}
+	})
+})
+
+onBeforeUnmount(() => {
+	socket.off("hrms:update_salary_slips")
+})
 </script>

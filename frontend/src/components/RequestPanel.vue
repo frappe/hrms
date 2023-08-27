@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { ref, inject, onMounted, onUnmounted, computed, markRaw } from "vue"
+import { ref, inject, onMounted, computed, markRaw, onBeforeUnmount } from "vue"
 
 import TabButtons from "@/components/TabButtons.vue"
 import RequestList from "@/components/RequestList.vue"
@@ -29,7 +29,6 @@ const activeTab = ref("My Requests")
 
 const socket = inject("$socket")
 const employee = inject("$employee")
-const user = inject("$user")
 
 const myRequests = computed(() => {
 	const requests = [...(myLeaves.data || []), ...(myClaims.data || [])]
@@ -58,26 +57,28 @@ const teamRequests = computed(() => {
 })
 
 onMounted(() => {
+	socket.off("hrms:update_leaves")
 	socket.on("hrms:update_leaves", (data) => {
 		if (data.employee === employee.data.name) {
 			myLeaves.reload()
 		}
-		if (data.approver === user.data.name) {
+		if (data.approver === employee.data.user_id) {
 			teamLeaves.reload()
 		}
 	})
 
+	socket.off("hrms:update_expense_claims")
 	socket.on("hrms:update_expense_claims", (data) => {
 		if (data.employee === employee.data.name) {
 			myClaims.reload()
 		}
-		if (data.approver === user.data.name) {
+		if (data.approver === employee.data.user_id) {
 			teamClaims.reload()
 		}
 	})
 })
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
 	socket.off("hrms:update_leaves")
 	socket.off("hrms:update_expense_claims")
 })

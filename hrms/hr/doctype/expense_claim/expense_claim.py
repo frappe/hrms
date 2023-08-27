@@ -88,7 +88,8 @@ class ExpenseClaim(AccountsController):
 		self.publish_update()
 
 	def publish_update(self):
-		if frappe.session.user in [self.expense_approver, self.employee]:
+		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
+		if frappe.session.user in [employee_user, self.expense_approver]:
 			frappe.publish_realtime(
 				event="hrms:update_expense_claims",
 				message={

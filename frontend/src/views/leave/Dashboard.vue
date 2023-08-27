@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { inject, onMounted, onUnmounted, markRaw } from "vue"
+import { inject, onMounted, onBeforeUnmount, markRaw } from "vue"
 
 import BaseLayout from "@/components/BaseLayout.vue"
 import LeaveBalance from "@/components/LeaveBalance.vue"
@@ -44,6 +44,7 @@ const socket = inject("$socket")
 const employee = inject("$employee")
 
 onMounted(() => {
+	socket.off("hrms:update_leaves")
 	socket.on("hrms:update_leaves", (data) => {
 		if (data.employee === employee.data.name) {
 			myLeaves.reload()
@@ -51,7 +52,7 @@ onMounted(() => {
 	})
 })
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
 	socket.off("hrms:update_leaves")
 })
 </script>
