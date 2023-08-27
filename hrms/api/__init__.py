@@ -471,7 +471,8 @@ def download_salary_slip(name: str):
 
 	from frappe.utils.print_format import download_pdf
 
-	download_pdf("Salary Slip", name, format="Salary Slip with Year to Date")
+	default_print_format = frappe.get_meta("Salary Slip").default_print_format or "Standard"
+	download_pdf("Salary Slip", name, format=default_print_format)
 
 	base64content = base64.b64encode(frappe.local.response.filecontent)
 	content_type = frappe.local.response.type
