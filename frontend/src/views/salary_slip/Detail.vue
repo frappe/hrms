@@ -9,6 +9,7 @@
 				:id="props.id"
 				:tabbedView="true"
 				:tabs="tabs"
+				:showFormButton="false"
 			>
 				<!-- Child Tables -->
 				<template #earnings="{ isFormReadOnly }">
@@ -27,18 +28,30 @@
 					/>
 				</template>
 			</FormView>
+
+			<div
+				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-xl pb-10"
+			>
+				<Button
+					class="w-full rounded-md py-2.5 px-3.5 mt-2"
+					@click="downloadPDF"
+					appearance="secondary"
+				>
+					Download PDF
+				</Button>
+			</div>
 		</ion-content>
 	</ion-page>
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import { IonPage, IonContent } from "@ionic/vue"
+
+import { createResource, ErrorMessage } from "frappe-ui"
 
 import FormView from "@/components/FormView.vue"
 import SalaryDetailTable from "@/components/SalaryDetailTable.vue"
-
-import { createResource } from "frappe-ui"
 
 const props = defineProps({
 	id: {
@@ -64,4 +77,29 @@ const tabs = [
 	{ name: "Income Tax Breakup", lastField: "total_income_tax" },
 	{ name: "Bank Details", lastField: "bank_account_no" },
 ]
+
+function downloadPDF() {
+	let xhr = new XMLHttpRequest()
+
+	xhr.open("POST", "/api/method/hrms.api.download_salary_slip")
+	xhr.responseType = "arraybuffer"
+
+	xhr.onload = function (e) {
+		if (this.status == 200) {
+			const blob = new Blob([this.response], { type: "application/pdf" })
+			const link = document.createElement("a")
+			link.href = window.URL.createObjectURL(blob)
+			link.download = `${salarySlip.value.name}.pdf`
+			link.click()
+
+			setTimeout(() => {
+				URL.revokeObjectURL(blob)
+			}, 3000)
+		}
+	}
+
+	const data = new FormData()
+	data.append("name", salarySlip.value.name)
+	xhr.send(data)
+}
 </script>

@@ -57,6 +57,13 @@ const menuItems = ref([
 		current: false,
 	},
 	{
+		icon: "file",
+		title: "Salary Slips",
+		route: {
+			name: "SalarySlips",
+		},
+	},
+	{
 		icon: "check-circle",
 		title: "Attendance",
 		route: {

@@ -700,7 +700,7 @@
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-06-20 20:04:00.131248",
+ "modified": "2023-06-21 20:04:00.131248",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
@@ -733,6 +733,7 @@
   },
   {
    "read": 1,
+   "print": 1,
    "role": "Employee"
   }
  ],

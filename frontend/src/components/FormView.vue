@@ -292,6 +292,11 @@ const props = defineProps({
 		required: false,
 		default: false,
 	},
+	showFormButton: {
+		type: Boolean,
+		required: false,
+		default: true,
+	},
 })
 const emit = defineEmits(["validateForm", "update:modelValue"])
 const router = useRouter()
@@ -491,6 +496,8 @@ const saveButtonDisabled = computed(() => {
 })
 
 const formButton = computed(() => {
+	if (!props.showFormButton) return
+
 	if (props.id && props.isSubmittable && !isFormDirty.value) {
 		if (formModel.value.docstatus === 0 && hasPermission("submit")) {
 			return "Submit"

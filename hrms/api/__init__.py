@@ -463,3 +463,20 @@ def upload_base64_file(content, filename, dt=None, dn=None, fieldname=None):
 @frappe.whitelist()
 def delete_attachment(filename: str):
 	frappe.delete_doc("File", filename)
+
+
+@frappe.whitelist()
+def download_salary_slip(name: str):
+	import base64
+
+	from frappe.utils.print_format import download_pdf
+
+	download_pdf("Salary Slip", name, format="Salary Slip with Year to Date")
+
+	base64content = base64.b64encode(frappe.local.response.filecontent)
+	filename = frappe.local.response.filename
+	content_type = frappe.local.response.type
+	name = filename
+
+	data = f"data:{content_type};base64," + base64content.decode("utf-8")
+	return data
