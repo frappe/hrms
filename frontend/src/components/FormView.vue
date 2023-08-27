@@ -171,6 +171,13 @@
 					{{ formButton }}
 				</Button>
 			</div>
+
+			<div
+				v-else
+				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-xl pb-10"
+			>
+				<slot name="formButton"></slot>
+			</div>
 		</div>
 	</div>
 

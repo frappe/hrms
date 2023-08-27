@@ -27,21 +27,19 @@
 						:isReadOnly="isFormReadOnly"
 					/>
 				</template>
-			</FormView>
 
-			<div
-				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-xl pb-10"
-			>
-				<ErrorMessage :message="downloadError" class="mt-2" />
-				<Button
-					class="w-full rounded-md py-2.5 px-3.5 mt-2"
-					@click="downloadPDF"
-					appearance="primary"
-					:loading="loading"
-				>
-					Download PDF
-				</Button>
-			</div>
+				<template #formButton>
+					<ErrorMessage :message="downloadError" class="mt-2" />
+					<Button
+						class="w-full rounded-md py-2.5 px-3.5 mt-2"
+						@click="downloadPDF"
+						appearance="primary"
+						:loading="loading"
+					>
+						Download PDF
+					</Button>
+				</template>
+			</FormView>
 		</ion-content>
 	</ion-page>
 </template>
