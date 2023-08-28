@@ -4,7 +4,7 @@
 		:options="{
 			title: 'Install Frappe HR',
 			message:
-				'Get the Frappe HR app on your home screen. It won\'t take up any space on your phone!',
+				'Get the app on your device for easy access & a better experience!',
 			size: 'xs',
 			actions: [
 				{
