@@ -6,9 +6,7 @@ from frappe.query_builder.functions import Count
 def get_context(context):
 	context.parents = [{"name": _("My Account"), "route": "/"}]
 	context.job_openings = get_job_openings()
-	context.companies, context.departments, context.locations, context.employment_types = get_filters(
-		context.job_openings
-	)
+	context.filters = get_filters(context.job_openings)
 
 
 def get_job_openings(txt=None, filters=None, limit_start=0, limit_page_length=20, order_by=None):
@@ -88,4 +86,9 @@ def get_filters(job_openings):
 	departments.sort()
 	locations.sort()
 	employment_types.sort()
-	return companies, departments, locations, employment_types
+	return {
+		"Company": companies,
+		"Department": departments,
+		"Location": locations,
+		"Employment Type": employment_types,
+	}
