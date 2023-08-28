@@ -10,12 +10,15 @@ p {
 	--icon-stroke: var(--primary);
 }
 
-.big-text {
+.lg-text {
 	font-size: 18px;
 }
 
-.smol-text {
-	font-size: 13px;
+.md-text {
+	font-size: 15px;
+}
+.sm-text {
+	font-size: 12px;
 }
 
 .full-time-badge {
