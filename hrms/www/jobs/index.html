@@ -1,9 +1,15 @@
 {% extends "templates/web.html" %}
+{% block header %}
+    <h3 class="mt-0 mb-10">{{ _("Job Openings") }}</h3>
+{% endblock header %}
 {% block page_content %}
-    <div class="my-20 row">
-        <div class="col-3">
-            <p class="big-text font-weight-bold mb-12">Filters</p>
-            <div class="mb-12">
+    <div class="row">
+        <div class="col-3 md-text">
+            <div class="mb-10 flex align-items-center">
+                <p class="lg-text font-weight-bold">Filters</p>
+                <a class="ml-auto sm-text" href="/jobs">{{ _("Clear All") }}</a>
+            </div>
+            <div class="mb-10">
                 <p class="font-weight-bold mb-4">Companies</p>
                 {% for company in companies %}
                     <div class="form-group form-check">
@@ -12,7 +18,7 @@
                     </div>
                 {% endfor %}
             </div>
-            <div class="mb-12">
+            <div class="mb-10">
                 <p class="font-weight-bold mb-4">Departments</p>
                 {% for department in departments %}
                     <div class="form-group form-check">
@@ -21,7 +27,7 @@
                     </div>
                 {% endfor %}
             </div>
-            <div class="mb-12">
+            <div class="mb-10">
                 <p class="font-weight-bold mb-4">Location</p>
                 {% for location in locations %}
                     <div class="form-group form-check">
@@ -30,7 +36,7 @@
                     </div>
                 {% endfor %}
             </div>
-            <div class="mb-12">
+            <div class="mb-10">
                 <p class="font-weight-bold mb-4">Employment Type</p>
                 {% for type in employment_types %}
                     <div class="form-group form-check">
@@ -65,11 +71,11 @@
                         <div class="ml-auto font-weight-bold text-nowrap">
                             {%- if jo.employment_type -%}
                                 {%- if jo.employment_type == "Full-time" -%}
-                                    <span class="smol-text py-2 px-3 full-time-badge">• {{ jo.employment_type }}</span>
+                                    <span class="sm-text py-2 px-3 full-time-badge">• {{ jo.employment_type }}</span>
                                 {%- elif jo.employment_type == "Part-time" -%}
-                                    <span class="smol-text py-2 px-4 part-time-badge">• {{ jo.employment_type }}</span>
+                                    <span class="sm-text py-2 px-4 part-time-badge">• {{ jo.employment_type }}</span>
                                 {%- else -%}
-                                    <span class="smol-text py-2 px-4 other-badge">• {{ jo.employment_type }}</span>
+                                    <span class="sm-text py-2 px-4 other-badge">• {{ jo.employment_type }}</span>
                                 {% endif %}
                             {% endif %}
                         </div>
@@ -101,7 +107,7 @@
                         </div>
                         {%- if jo.publish_salary_range -%}
                             <p class="mb-2">
-                                <span class="font-weight-bold big-text">
+                                <span class="font-weight-bold lg-text">
                                     {{ frappe.format_value(frappe.utils.flt(jo.lower_range) ,
                                     currency=jo.currency) }} - {{ frappe.format_value(frappe.utils.flt(jo.upper_range) ,
                                     currency=jo.currency) }}
@@ -119,7 +125,7 @@
                     <div class="flex">
                         <a class="btn btn-primary" href="{{ jo.route }}">{{ _("View Job →") }}</a>
                         {%- if jo.closes_on -%}
-                            <p class="ml-auto font-italic text-secondary mt-auto smol-text">
+                            <p class="ml-auto font-italic text-secondary mt-auto sm-text">
                                 {{ _("Closes on " + frappe.format_date(jo.closes_on, "d MMM, YYYY") ) }}
                             </p>
                         {% endif %}

@@ -1,6 +1,5 @@
 import frappe
 from frappe import _
-from frappe.query_builder import DocType
 from frappe.query_builder.functions import Count
 
 
@@ -85,4 +84,8 @@ def get_filters(job_openings):
 			locations.append(d.location)
 		if d.employment_type and d.employment_type not in employment_types:
 			employment_types.append(d.employment_type)
+	companies.sort()
+	departments.sort()
+	locations.sort()
+	employment_types.sort()
 	return companies, departments, locations, employment_types
