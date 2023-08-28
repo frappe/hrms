@@ -6,11 +6,11 @@ p {
 	margin-bottom: 0;
 }
 
-.secondary-stroke {
-	--icon-stroke: var(--secondary);
+.primary-stroke {
+	--icon-stroke: var(--primary);
 }
 
-.salary {
+.big-text {
 	font-size: 18px;
 }
 
