@@ -39,8 +39,6 @@ app.component("EmptyState", EmptyState)
 app.use(router)
 app.use(IonicVue)
 
-employeeResource.reload()
-
 app.provide("$session", session)
 app.provide("$user", userResource)
 app.provide("$employee", employeeResource)
@@ -49,4 +47,25 @@ app.provide("$dayjs", dayjs)
 
 router.isReady().then(() => {
 	app.mount("#app")
+})
+
+router.beforeEach(async (to, from, next) => {
+	let isLoggedIn = session.isLoggedIn
+	try {
+		await userResource.promise
+	} catch (error) {
+		isLoggedIn = false
+	}
+
+	if (isLoggedIn) {
+		await employeeResource.promise
+	}
+
+	if (to.name === "Login" && isLoggedIn) {
+		next({ name: "Home" })
+	} else if (to.name !== "Login" && !isLoggedIn) {
+		next({ name: "Login" })
+	} else {
+		next()
+	}
 })
