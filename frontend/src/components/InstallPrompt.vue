@@ -25,13 +25,34 @@
 	<Popover :show="iosInstallMessage" placement="bottom">
 		<template #body>
 			<div
-				class="mt-[90vh] mx-2 text-center rounded-xl bg-blue-100 px-3 py-5 text-xs text-blue-700 shadow-xl"
+				class="mt-[calc(100vh-10rem)] flex flex-col gap-2 mx-2 rounded-xl py-5 bg-blue-50 shadow-xl"
 			>
-				<span class="inline-flex items-center whitespace-nowrap">
-					<span>Install Frappe HR on your iPhone: tap&nbsp;</span>
-					<FeatherIcon name="share" class="h-4 w-4 text-gray-700" />
-					<span>&nbsp;and then Add to Home Screen</span>
-				</span>
+				<div
+					class="flex flex-row text-center items-center justify-between mb-1 px-3"
+				>
+					<span class="text-lg text-gray-900 font-bold">
+						Install Frappe HR
+					</span>
+					<span class="inline-flex items-baseline">
+						<FeatherIcon
+							name="x"
+							class="ml-auto h-4 w-4 text-gray-700"
+							@click="iosInstallMessage = false"
+						/>
+					</span>
+				</div>
+				<div class="text-sm text-gray-800 px-3">
+					<span class="flex flex-col gap-1">
+						<span>
+							Get the app on your iPhone for easy access & a better experience
+						</span>
+						<span class="inline-flex items-start whitespace-nowrap">
+							<span>Tap&nbsp;</span>
+							<FeatherIcon name="share" class="h-4 w-4 text-blue-600" />
+							<span>&nbsp;and then "Add to Home Screen"</span>
+						</span>
+					</span>
+				</div>
 			</div>
 		</template>
 	</Popover>
