@@ -9,42 +9,17 @@
                 <p class="lg-text font-weight-bold">Filters</p>
                 <a class="ml-auto sm-text" href="/jobs">{{ _("Clear All") }}</a>
             </div>
-            <div class="mb-10">
-                <p class="font-weight-bold mb-4">Companies</p>
-                {% for company in companies %}
-                    <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="{{ company }}">
-                        <label class="form-check-label" for="{{ company }}">{{ company }}</label>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="mb-10">
-                <p class="font-weight-bold mb-4">Departments</p>
-                {% for department in departments %}
-                    <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="{{ department }}">
-                        <label class="form-check-label" for="{{ department }}">{{ department }}</label>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="mb-10">
-                <p class="font-weight-bold mb-4">Location</p>
-                {% for location in locations %}
-                    <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="{{ location }}">
-                        <label class="form-check-label" for="{{ location }}">{{ location }}</label>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="mb-10">
-                <p class="font-weight-bold mb-4">Employment Type</p>
-                {% for type in employment_types %}
-                    <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="{{ type }}">
-                        <label class="form-check-label" for="{{ type }}">{{ type }}</label>
-                    </div>
-                {% endfor %}
-            </div>
+            {% for name, values in filters.items() %}
+                <div class="mb-10">
+                    <p class="font-weight-bold mb-4">{{ name }}</p>
+                    {% for value in values %}
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="{{ value }}">
+                            <label class="form-check-label" for="{{ value }}">{{ value }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
         </div>
         <div class="col-9">
             <div class="mb-12">
