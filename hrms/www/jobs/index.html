@@ -1,83 +1,131 @@
 {% extends "templates/web.html" %}
 {% block page_content %}
-    <div class="mx-40 my-20">
-        <div class="mb-12">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">
-                        <svg class="icon icon-md ml-0 mr-1">
-                            <use href="#icon-search"></use>
-                        </svg>
-                    </span>
-                </div>
-                <input type="text"
-                       class="form-control"
-                       placeholder="Search for Jobs"
-                       aria-label="Username"
-                       aria-describedby="basic-addon1">
+    <div class="my-20 row">
+        <div class="col-3">
+            <p class="big-text font-weight-bold mb-12">Filters</p>
+            <div class="mb-12">
+                <p class="font-weight-bold mb-4">Companies</p>
+                {% for company in companies %}
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="{{ company }}">
+                        <label class="form-check-label" for="{{ company }}">{{ company }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="mb-12">
+                <p class="font-weight-bold mb-4">Departments</p>
+                {% for department in departments %}
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="{{ department }}">
+                        <label class="form-check-label" for="{{ department }}">{{ department }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="mb-12">
+                <p class="font-weight-bold mb-4">Location</p>
+                {% for location in locations %}
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="{{ location }}">
+                        <label class="form-check-label" for="{{ location }}">{{ location }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="mb-12">
+                <p class="font-weight-bold mb-4">Employment Type</p>
+                {% for type in employment_types %}
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="{{ type }}">
+                        <label class="form-check-label" for="{{ type }}">{{ type }}</label>
+                    </div>
+                {% endfor %}
             </div>
         </div>
-        {% for jo in job_openings %}
-            <div class="mb-8 card border p-6">
-                <div class="flex">
-                    <h3 class="mt-0 mb-3 mr-20">{{ jo.job_title }}</h3>
-                    <div class="ml-auto font-weight-bold text-nowrap">
-                        {%- if jo.employment_type -%}
-                            {%- if jo.employment_type == "Full-time" -%}
-                                <span class="smol-text py-2 px-3 full-time-badge">• {{ jo.employment_type }}</span>
-                            {%- elif jo.employment_type == "Part-time" -%}
-                                <span class="smol-text py-2 px-4 part-time-badge">• {{ jo.employment_type }}</span>
-                            {%- else -%}
-                                <span class="smol-text py-2 px-4 other-badge">• {{ jo.employment_type }}</span>
-                            {% endif %}
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="mb-8">
-                    <div class="flex mb-3 align-items-center secondary-stroke text-secondary">
-                        <svg class="icon icon-md ml-0 mr-1">
-                            <use href="#icon-organization"></use>
-                        </svg>
-                        <p class="mr-3 ">{{ jo.company }}</p>
-                        {%- if jo.department -%}
+        <div class="col-9">
+            <div class="mb-12">
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">
                             <svg class="icon icon-md ml-0 mr-1">
-                                <use href="#icon-branch"></use>
+                                <use href="#icon-search"></use>
                             </svg>
-                            <p class="mr-3 ">{{ jo.department }}</p>
-                        {% endif %}
-                        {%- if jo.location -%}
-                            <svg class="icon icon-md ml-0 mr-1"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 viewBox="0 0 16 16">
-                                <g stroke="var(--secondary)" stroke-miterlimit="10">
-                                <path d="M11.467 3.458c1.958 1.957 1.958 5.088.027 7.02L7.97 14l-3.523-3.523a4.945 4.945 0 010-6.993l.026-.026a4.922 4.922 0 016.993 0zm0 0c-.026-.026-.026-.026 0 0z">
-                                </path>
-                                <path d="M7.971 8.259a1.305 1.305 0 100-2.61 1.305 1.305 0 000 2.61z"></path>
-                                </g>
-                            </svg>
-                            <p class="mr-3 ">{{ jo.location }}</p>
-                        {% endif %}
+                        </span>
                     </div>
-                    {%- if jo.publish_salary_range -%}
-                        <p>
-                            <span class="font-weight-bold salary">
-                                {{ frappe.format_value(frappe.utils.flt(jo.lower_range) ,
-                                currency=jo.currency) }} - {{ frappe.format_value(frappe.utils.flt(jo.upper_range) ,
-                                currency=jo.currency) }}
-                            </span>
-                            <span class="text-secondary">{{ jo.salary_type.lower() }}</span>
-                        </p>
-                    {% endif %}
-                </div>
-                <div class="flex">
-                    <a class="btn btn-primary" href="{{ jo.route }}">{{ _("View Job →") }}</a>
-                    {%- if jo.closes_on -%}
-                        <p class="ml-auto font-italic text-secondary mt-auto smol-text">
-                            {{ _("Closes on " + frappe.format_date(jo.closes_on, "d MMM, YYYY") ) }}
-                        </p>
-                    {% endif %}
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Search for Jobs"
+                           aria-label="Username"
+                           aria-describedby="basic-addon1">
                 </div>
             </div>
-        {% endfor %}
+            <p class="text-secondary font-weight-bold mb-4">Showing {{ job_openings|length }} results</p>
+            {% for jo in job_openings %}
+                <div class="mb-8 card border p-6">
+                    <div class="flex">
+                        <h3 class="mt-0 mb-3 mr-20">{{ jo.job_title }}</h3>
+                        <div class="ml-auto font-weight-bold text-nowrap">
+                            {%- if jo.employment_type -%}
+                                {%- if jo.employment_type == "Full-time" -%}
+                                    <span class="smol-text py-2 px-3 full-time-badge">• {{ jo.employment_type }}</span>
+                                {%- elif jo.employment_type == "Part-time" -%}
+                                    <span class="smol-text py-2 px-4 part-time-badge">• {{ jo.employment_type }}</span>
+                                {%- else -%}
+                                    <span class="smol-text py-2 px-4 other-badge">• {{ jo.employment_type }}</span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="mb-10">
+                        <div class="flex mb-2 align-items-center primary-stroke text-secondary">
+                            <svg class="icon icon-md ml-0 mr-1">
+                                <use href="#icon-organization"></use>
+                            </svg>
+                            <p class="mr-3 ">{{ jo.company }}</p>
+                            {%- if jo.department -%}
+                                <svg class="icon icon-md ml-0 mr-1">
+                                    <use href="#icon-branch"></use>
+                                </svg>
+                                <p class="mr-3 ">{{ jo.department }}</p>
+                            {% endif %}
+                            {%- if jo.location -%}
+                                <svg class="icon icon-md ml-0 mr-1"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 16 16">
+                                    <g stroke="var(--primary)" stroke-miterlimit="10">
+                                    <path d="M11.467 3.458c1.958 1.957 1.958 5.088.027 7.02L7.97 14l-3.523-3.523a4.945 4.945 0 010-6.993l.026-.026a4.922 4.922 0 016.993 0zm0 0c-.026-.026-.026-.026 0 0z">
+                                    </path>
+                                    <path d="M7.971 8.259a1.305 1.305 0 100-2.61 1.305 1.305 0 000 2.61z"></path>
+                                    </g>
+                                </svg>
+                                <p class="mr-3 ">{{ jo.location }}</p>
+                            {% endif %}
+                        </div>
+                        {%- if jo.publish_salary_range -%}
+                            <p class="mb-2">
+                                <span class="font-weight-bold big-text">
+                                    {{ frappe.format_value(frappe.utils.flt(jo.lower_range) ,
+                                    currency=jo.currency) }} - {{ frappe.format_value(frappe.utils.flt(jo.upper_range) ,
+                                    currency=jo.currency) }}
+                                </span>
+                                <span class="text-secondary">{{ jo.salary_type.lower() }}</span>
+                            </p>
+                        {% endif %}
+                        {%- if jo.no_of_applications -%}
+                            <p class="text-secondary">
+                                {{ jo.no_of_applications }}
+                                {{ _(" applicant" if jo.no_of_applications == 1 else " applicants") }}
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div class="flex">
+                        <a class="btn btn-primary" href="{{ jo.route }}">{{ _("View Job →") }}</a>
+                        {%- if jo.closes_on -%}
+                            <p class="ml-auto font-italic text-secondary mt-auto smol-text">
+                                {{ _("Closes on " + frappe.format_date(jo.closes_on, "d MMM, YYYY") ) }}
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock page_content %}
