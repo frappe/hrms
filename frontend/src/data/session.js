@@ -1,6 +1,7 @@
 import { computed, reactive } from "vue"
 import { createResource } from "frappe-ui"
 import { userResource } from "./user"
+import { employeeResource } from "./employee"
 import router from "@/router"
 
 export function sessionUser() {
@@ -23,6 +24,8 @@ export const session = reactive({
 		},
 		onSuccess(data) {
 			userResource.reload()
+			employeeResource.reload()
+
 			session.user = sessionUser()
 			session.login.reset()
 			router.replace(data.default_route || "/")
@@ -32,6 +35,8 @@ export const session = reactive({
 		url: "logout",
 		onSuccess() {
 			userResource.reset()
+			employeeResource.reset()
+
 			session.user = sessionUser()
 			router.replace({ name: "Login" })
 			window.location.reload()

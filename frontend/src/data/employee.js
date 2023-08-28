@@ -10,7 +10,3 @@ export const employeeResource = createResource({
 		}
 	},
 })
-
-export function getEmployee() {
-	return employeeResource.data
-}

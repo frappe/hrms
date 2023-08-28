@@ -1,9 +1,7 @@
 import { createResource } from "frappe-ui"
-import { getEmployee } from "./employee"
+import { employeeResource } from "./employee"
 
 import dayjs from "@/utils/dayjs"
-
-const employee = getEmployee()
 
 const transformLeaveData = (data) => {
 	return data.map((leave) => {
@@ -25,7 +23,7 @@ export const getLeaveDates = (leave) => {
 export const myLeaves = createResource({
 	url: "hrms.api.get_employee_leave_applications",
 	params: {
-		employee: employee.name,
+		employee: employeeResource.data.name,
 		limit: 5,
 	},
 	auto: true,
@@ -37,8 +35,8 @@ export const myLeaves = createResource({
 export const teamLeaves = createResource({
 	url: "hrms.api.get_team_leave_applications",
 	params: {
-		employee: employee.name,
-		user_id: employee.user_id,
+		employee: employeeResource.data.name,
+		user_id: employeeResource.data.user_id,
 		limit: 5,
 	},
 	auto: true,

@@ -46,7 +46,7 @@ const employee = inject("$employee")
 onMounted(() => {
 	socket.off("hrms:update_leaves")
 	socket.on("hrms:update_leaves", (data) => {
-		if (data.employee === employee().name) {
+		if (data.employee === employee.data.name) {
 			myLeaves.reload()
 		}
 	})

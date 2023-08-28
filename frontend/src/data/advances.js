@@ -1,5 +1,5 @@
 import { createResource } from "frappe-ui"
-import { getEmployee } from "./employee"
+import { employeeResource } from "./employee"
 
 const transformAdvanceData = (data) => {
 	return data.map((claim) => {
@@ -11,7 +11,7 @@ const transformAdvanceData = (data) => {
 export const advanceBalance = createResource({
 	url: "hrms.api.get_employee_advance_balance",
 	params: {
-		employee: getEmployee().name,
+		employee: employeeResource.data.name,
 	},
 	auto: true,
 	transform(data) {
