@@ -59,20 +59,20 @@ const teamRequests = computed(() => {
 onMounted(() => {
 	socket.off("hrms:update_leaves")
 	socket.on("hrms:update_leaves", (data) => {
-		if (data.employee === employee.data.name) {
+		if (data.employee === employee().name) {
 			myLeaves.reload()
 		}
-		if (data.approver === employee.data.user_id) {
+		if (data.approver === employee().user_id) {
 			teamLeaves.reload()
 		}
 	})
 
 	socket.off("hrms:update_expense_claims")
 	socket.on("hrms:update_expense_claims", (data) => {
-		if (data.employee === employee.data.name) {
+		if (data.employee === employee().name) {
 			myClaims.reload()
 		}
-		if (data.approver === employee.data.user_id) {
+		if (data.approver === employee().user_id) {
 			teamClaims.reload()
 		}
 	})

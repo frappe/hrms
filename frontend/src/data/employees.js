@@ -1,6 +1,6 @@
 import { createListResource } from "frappe-ui"
 import { reactive } from "vue"
-import { employeeResource } from "./employee"
+import { getEmployee } from "./employee"
 
 let employeesByID = reactive({})
 
@@ -33,7 +33,6 @@ export const employees = createListResource({
 })
 
 export function getEmployeeInfo(employeeID) {
-	if (!employeeID) employeeID = employeeResource.data.name
-
+	if (!employeeID) return getEmployee()
 	return employeesByID[employeeID]
 }

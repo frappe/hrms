@@ -61,7 +61,7 @@ const checkins = createListResource({
 		"device_id",
 	],
 	filters: {
-		employee: employee.data.name,
+		employee: employee().name,
 	},
 	orderBy: "time desc",
 })
@@ -99,7 +99,7 @@ const submitLog = (logType) => {
 
 	checkins.insert.submit(
 		{
-			employee: employee.data.name,
+			employee: employee().name,
 			log_type: logType,
 			time: checkinTimestamp.value,
 		},

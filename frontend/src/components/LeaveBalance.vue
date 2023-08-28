@@ -59,7 +59,7 @@ const employee = inject("$employee")
 const leaveBalance = createResource({
 	url: "hrms.api.get_leave_balance_map",
 	params: {
-		employee: employee.data.name,
+		employee: employee().name,
 	},
 	auto: true,
 	transform: (data) => {

@@ -78,7 +78,7 @@ const dayjs = inject("$dayjs")
 const holidays = createResource({
 	url: "hrms.api.get_holidays_for_employee",
 	params: {
-		employee: employee.data.name,
+		employee: employee().name,
 	},
 	auto: true,
 	transform: (data) => {

@@ -80,8 +80,8 @@ const tabs = [
 
 // object to store form data
 const expenseClaim = ref({
-	employee: employee.data.name,
-	company: employee.data.company,
+	employee: employee().name,
+	company: employee().company,
 })
 
 const currency = computed(() =>
@@ -110,7 +110,7 @@ formFields.reload()
 // resources
 const advances = createResource({
 	url: "hrms.hr.doctype.expense_claim.expense_claim.get_advances",
-	params: { employee: employee.data.name },
+	params: { employee: employee().name },
 	onSuccess(data) {
 		// set advances
 		if (props.id) {
@@ -143,7 +143,7 @@ const advances = createResource({
 
 const expenseApproverDetails = createResource({
 	url: "hrms.api.get_expense_approval_details",
-	params: { employee: employee.data.name },
+	params: { employee: employee().name },
 	onSuccess(data) {
 		setExpenseApprover(data)
 	},
@@ -161,7 +161,7 @@ const costCenter = createResource({
 watch(
 	() => expenseClaim.value.employee,
 	(employee_id) => {
-		if (props.id && employee_id !== employee.data.name) {
+		if (props.id && employee_id !== employee().name) {
 			// if employee is not the current user, set form as read only
 			setFormReadOnly()
 		}
@@ -378,7 +378,7 @@ function calculateTotalAdvance() {
 }
 
 function setFormReadOnly() {
-	if (expenseClaim.value.expense_approver === employee.data.user_id) return
+	if (expenseClaim.value.expense_approver === employee().user_id) return
 	formFields.data.map((field) => (field.read_only = true))
 	isReadOnly.value = true
 }

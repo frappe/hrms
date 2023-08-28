@@ -64,7 +64,7 @@ const employee = inject("$employee")
 const summary = createResource({
 	url: "hrms.api.get_expense_claim_summary",
 	params: {
-		employee: employee.data.name,
+		employee: employee().name,
 	},
 	auto: true,
 })
@@ -78,6 +78,6 @@ const total_claimed_amount = computed(() => {
 })
 
 const company_currency = computed(() =>
-	getCompanyCurrencySymbol(employee.data.company)
+	getCompanyCurrencySymbol(employee().company)
 )
 </script>

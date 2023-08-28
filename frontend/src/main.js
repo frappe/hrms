@@ -16,7 +16,7 @@ import { IonicVue } from "@ionic/vue"
 
 import { session } from "@/data/session"
 import { userResource } from "@/data/user"
-import { employeeResource } from "@/data/employee"
+import { getEmployee } from "@/data/employee"
 import dayjs from "@/utils/dayjs"
 
 /* Core CSS required for Ionic components to work properly */
@@ -39,11 +39,9 @@ app.component("EmptyState", EmptyState)
 app.use(router)
 app.use(IonicVue)
 
-employeeResource.reload()
-
 app.provide("$session", session)
 app.provide("$user", userResource)
-app.provide("$employee", employeeResource)
+app.provide("$employee", getEmployee)
 app.provide("$socket", socket)
 app.provide("$dayjs", dayjs)
 

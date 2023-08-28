@@ -75,7 +75,7 @@ const payrollPeriods = createListResource({
 	doctype: "Payroll Period",
 	fields: ["name", "start_date", "end_date"],
 	filters: {
-		company: employee.data?.company,
+		company: employee()?.company,
 	},
 	orderBy: "start_date desc",
 	auto: true,
@@ -105,7 +105,7 @@ const documents = createListResource({
 		"year_to_date",
 	],
 	filters: {
-		employee: employee.data?.name,
+		employee: employee()?.name,
 		docstatus: 1,
 	},
 	orderBy: "end_date desc",
@@ -134,7 +134,7 @@ watch(
 onMounted(() => {
 	socket.off("hrms:update_salary_slips")
 	socket.on("hrms:update_salary_slips", (data) => {
-		if (data.employee === employee.data.name) {
+		if (data.employee === employee().name) {
 			documents.reload()
 		}
 	})
