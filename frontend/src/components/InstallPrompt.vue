@@ -4,16 +4,13 @@
 		:options="{
 			title: 'Install Frappe HR',
 			message:
-				'Get the Frappe HR app on your home screen. It won\'t take up space on your phone!',
-			icon: {
-				name: 'download',
-				appearance: 'primary',
-			},
+				'Get the Frappe HR app on your home screen. It won\'t take up any space on your phone!',
 			size: 'xs',
 			actions: [
 				{
 					label: 'Install',
 					appearance: 'primary',
+					'icon-left': 'download',
 					handler: ({ close }) => {
 						install()
 						close() // closes dialog
@@ -25,10 +22,10 @@
 	/>
 
 	<!-- iOS installation info message -->
-	<Popover :show="iosInstallMessage" placement="bottom-center">
+	<Popover :show="iosInstallMessage" placement="bottom">
 		<template #body>
 			<div
-				class="mt-1 text-center rounded-xl bg-blue-100 px-3 py-5 text-xs text-gray-900 shadow-xl"
+				class="mt-[90vh] mx-2 text-center rounded-xl bg-blue-100 px-3 py-5 text-xs text-gray-900 shadow-xl"
 			>
 				<span class="inline-flex items-center whitespace-nowrap">
 					<span>Install Frappe HR on your iPhone: tap&nbsp;</span>
