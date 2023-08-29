@@ -17,14 +17,14 @@ const routes = [
 		component: () => import("@/views/Login.vue"),
 	},
 	{
-		path: "/status",
-		name: "Status",
-		component: () => import("@/views/CheckStatus.vue"),
-	},
-	{
 		path: "/profile",
 		name: "Profile",
 		component: () => import("@/views/Profile.vue"),
+	},
+	{
+		path: "/notifications",
+		name: "Notifications",
+		component: () => import("@/views/Notifications.vue"),
 	},
 	...leaveRoutes,
 	...claimRoutes,

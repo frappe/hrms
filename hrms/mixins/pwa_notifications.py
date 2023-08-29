@@ -14,7 +14,10 @@ class PWANotificationsMixin:
 
 		if self.has_value_changed(status_field) and status in ["Approved", "Rejected"]:
 			notification = frappe.new_doc("PWA Notification")
-			notification.message = f"Your {self.doctype} {bold(self.name)} has been {bold(status)}"
+			from_user = self._get_doc_approver()
+			notification.message = (
+				f"{bold(from_user)} {bold(status)} your {self.doctype}: {bold(self.name)}"
+			)
 			notification.from_user = self._get_doc_approver()
 			notification.to_employee = self.employee
 
@@ -26,7 +29,7 @@ class PWANotificationsMixin:
 		"""Send new Leave Application & Expense Claim request notification - to approvers"""
 		notification = frappe.new_doc("PWA Notification")
 		notification.message = (
-			f"New {self.doctype} {bold(self.name)} request from {bold(self.employee_name)}"
+			f"{bold(self.employee_name)} raised a new {bold(self.doctype)} for approval: {self.name}"
 		)
 		notification.from_employee = self.employee
 		notification.to_user = self._get_doc_approver()

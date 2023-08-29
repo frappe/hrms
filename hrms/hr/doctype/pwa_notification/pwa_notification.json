@@ -8,11 +8,13 @@
  "engine": "InnoDB",
  "field_order": [
   "to_user",
+  "to_employee",
   "column_break_otsw",
   "from_user",
   "from_employee",
   "section_break_wsgn",
   "message",
+  "read",
   "section_break_xdby",
   "reference_document_type",
   "column_break_prpj",
@@ -29,7 +31,7 @@
    "options": "User"
   },
   {
-   "fetch_from": ".",
+   "fetch_from": "to_employee.user_id",
    "fieldname": "to_user",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -46,6 +48,12 @@
    "fieldname": "message",
    "fieldtype": "Text Editor",
    "label": "Message"
+  },
+  {
+   "default": "0",
+   "fieldname": "read",
+   "fieldtype": "Check",
+   "label": "Read"
   },
   {
    "fieldname": "section_break_xdby",
@@ -81,11 +89,19 @@
   {
    "fieldname": "column_break_otsw",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "to_employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "To Employee",
+   "options": "Employee"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-08-29 18:56:07.188725",
+ "modified": "2023-08-29 20:38:39.901280",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "PWA Notification",

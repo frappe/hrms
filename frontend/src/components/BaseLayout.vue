@@ -11,9 +11,18 @@
 								</Button>
 							</ion-menu-toggle>
 							<div class="flex flex-row items-center gap-3">
-								<Button appearance="minimal" class="!px-0 !py-0">
-									<FeatherIcon name="bell" class="h-6 w-6" />
-								</Button>
+								<router-link
+									:to="{ name: 'Notifications' }"
+									v-slot="{ navigate }"
+								>
+									<Button
+										appearance="minimal"
+										class="!px-0 !py-0"
+										@click="navigate"
+									>
+										<FeatherIcon name="bell" class="h-6 w-6" />
+									</Button>
+								</router-link>
 								<router-link :to="{ name: 'Profile' }">
 									<Avatar
 										:imageURL="user.data.user_image"
