@@ -1320,8 +1320,13 @@ def log_payroll_failure(process, payroll_entry, error):
 
 
 def create_salary_slips_for_employees(employees, args, publish_progress=True):
+	payroll_entry = frappe.get_doc("Payroll Entry", args.payroll_entry)
+
 	try:
+<<<<<<< HEAD
 		payroll_entry = frappe.get_cached_doc("Payroll Entry", args.payroll_entry)
+=======
+>>>>>>> 32895577 (fix: Create Salary Slips button not visible on failure (#826))
 		salary_slips_exist_for = get_existing_salary_slips(employees, args)
 		count = 0
 
