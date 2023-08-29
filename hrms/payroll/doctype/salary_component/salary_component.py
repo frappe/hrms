@@ -9,11 +9,6 @@ from frappe.model.naming import append_number_if_name_exists
 class SalaryComponent(Document):
 	def validate(self):
 		self.validate_abbr()
-		self.set_tax_component()
-
-	def set_tax_component(self):
-		if self.is_income_tax_component:
-			self.variable_based_on_taxable_salary = 1
 
 	def on_update(self):
 		self.invalidate_cache()
