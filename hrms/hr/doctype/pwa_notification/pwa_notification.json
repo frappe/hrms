@@ -7,9 +7,10 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "from_user",
-  "column_break_hbva",
   "to_user",
+  "column_break_otsw",
+  "from_user",
+  "from_employee",
   "section_break_wsgn",
   "message",
   "section_break_xdby",
@@ -19,6 +20,7 @@
  ],
  "fields": [
   {
+   "fetch_from": "from_employee.user_id",
    "fieldname": "from_user",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -27,10 +29,7 @@
    "options": "User"
   },
   {
-   "fieldname": "column_break_hbva",
-   "fieldtype": "Column Break"
-  },
-  {
+   "fetch_from": ".",
    "fieldname": "to_user",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -70,11 +69,23 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Reference Document Name"
+  },
+  {
+   "fieldname": "from_employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "From Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "column_break_otsw",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-08-29 17:44:01.290243",
+ "modified": "2023-08-29 18:56:07.188725",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "PWA Notification",
