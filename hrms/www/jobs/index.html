@@ -1,4 +1,7 @@
 {% extends "templates/web.html" %}
+{% block title %}
+    {{ _("Job Openings") }}
+{% endblock title %}
 {% block header %}
     <h3 class="mt-0 mb-10">{{ _("Job Openings") }}</h3>
 {% endblock header %}
@@ -6,8 +9,8 @@
     <div class="row">
         <div class="col-3 md-text">
             <div class="mb-10 flex align-items-center">
-                <p class="lg-text font-weight-bold">Filters</p>
-                <a class="ml-auto sm-text" href="/jobs">{{ _("Clear All") }}</a>
+                <p class="lg-text font-weight-bold">{{ _("Filters") }}</p>
+                <a id="clear-filters" class="ml-auto sm-text" role="button">{{ _("Clear All") }}</a>
             </div>
             {% for name, values in filters.items() %}
                 <div class="mb-10">
@@ -27,23 +30,31 @@
             {% endfor %}
         </div>
         <div class="col-9">
-            <div class="mb-12">
-                <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">
-                            <svg class="icon icon-md ml-0 mr-1">
-                                <use href="#icon-search"></use>
-                            </svg>
-                        </span>
-                    </div>
-                    <input type="text"
-                           class="form-control"
-                           placeholder="Search for Jobs"
-                           aria-label="Username"
-                           aria-describedby="basic-addon1">
+            <div class="mb-12 col-8 pl-0">
+                <input type="search"
+                       name="query"
+                       id="search-box"
+                       class="form-control border font-md"
+                       placeholder="Search for Jobs"
+                       aria-label="Jobs Search"
+                       style="height: 36px">
+                <div class="search-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="16"
+                         height="16"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         class="feather feather-search">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
                 </div>
             </div>
-            <p class="text-secondary font-weight-bold mb-4">Showing {{ job_openings|length }} results</p>
+            <p class="text-secondary mb-4 md-text">Showing {{ job_openings|length }} results</p>
             {% for jo in job_openings %}
                 <div class="mb-8 card border p-6">
                     <div class="flex">

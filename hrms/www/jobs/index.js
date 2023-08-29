@@ -4,6 +4,9 @@ $(() => {
 		const filters = $("input:checked").serialize();
 		scroll_up_and_update_filters(filters);
 	});
+	$("#clear-filters").on("click", function () {
+		scroll_up_and_update_filters();
+	});
 });
 
 function select_applied_filters() {
@@ -18,7 +21,7 @@ function select_applied_filters() {
 	}
 }
 
-function scroll_up_and_update_filters(filters) {
+function scroll_up_and_update_filters(filters="") {
 	if (window.scrollY === 0) {
 		window.location.href = "/jobs?" + filters;
 	} else {
