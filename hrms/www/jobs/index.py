@@ -5,11 +5,15 @@ from frappe.query_builder.functions import Count
 
 def get_context(context):
 	context.parents = [{"name": _("My Account"), "route": "/"}]
-	context.job_openings = get_job_openings()
-	context.filters = get_filters(context.job_openings)
+	applied_filters = frappe.request.args.to_dict(flat=False)
+	context.job_openings = get_job_openings(applied_filters)
+	context.filters = get_all_filters(applied_filters)
 
 
-def get_job_openings(txt=None, filters=None, limit_start=0, limit_page_length=20, order_by=None):
+def get_job_openings(
+	applied_filters=None, txt=None, limit_start=0, limit_page_length=20, order_by=None
+):
+
 	jo = frappe.qb.DocType("Job Opening")
 	ja = frappe.qb.DocType("Job Applicant")
 
@@ -40,55 +44,35 @@ def get_job_openings(txt=None, filters=None, limit_start=0, limit_page_length=20
 		.groupby(jo.name)
 	)
 
-	return query.run(as_dict=True)
+	for d in applied_filters:
+		query = query.where(frappe.qb.Field(d).isin(applied_filters[d]))
 
-	# for filter in filters:
-	# 	if filter == "from_date":
-	# 		query = query.where(attendance.attendance_date >= filters.from_date)
-	# 	elif filter == "to_date":
-	# 		query = query.where(attendance.attendance_date <= filters.to_date)
-	# 	elif filter == "consider_grace_period":
-	# 		continue
-	# 	elif filter == "late_entry" and not filters.consider_grace_period:
-	# 		query = query.where(attendance.in_time > checkin.shift_start)
-	# 	elif filter == "early_exit" and not filters.consider_grace_period:
-	# 		query = query.where(attendance.out_time < checkin.shift_end)
-	# 	else:
-	# 		query = query.where(attendance[filter] == filters[filter])
+	return query.run(as_dict=True)
 
 	# if txt:
 	# 	filters.update(
 	# 		{"job_title": ["like", "%{0}%".format(txt)], "description": ["like", "%{0}%".format(txt)]}
 	# 	)
 
-	# return frappe.get_all(
-	# 	"Job Opening",
-	# 	filters,
-	# 	fields,
-	# 	start=limit_start,
-	# 	page_length=limit_page_length,
-	# 	order_by=order_by,
-	# )
 
+def get_all_filters(applied_filters=None):
+	job_openings = frappe.get_all(
+		"Job Opening",
+		fields=["company", "department", "location", "employment_type"],
+	)
 
-def get_filters(job_openings):
-	companies, departments, locations, employment_types = ([] for _ in range(4))
+	companies = applied_filters["company"] if "company" in applied_filters else None
+
+	filters = {}
 	for d in job_openings:
-		if d.company not in companies:
-			companies.append(d.company)
-		if d.department and d.department not in departments:
-			departments.append(d.department)
-		if d.location and d.location not in locations:
-			locations.append(d.location)
-		if d.employment_type and d.employment_type not in employment_types:
-			employment_types.append(d.employment_type)
-	companies.sort()
-	departments.sort()
-	locations.sort()
-	employment_types.sort()
-	return {
-		"Company": companies,
-		"Department": departments,
-		"Location": locations,
-		"Employment Type": employment_types,
-	}
+		for key, value in d.items():
+			if key == "company" or not companies or (companies and d["company"] in companies):
+				if key not in filters:
+					filters[key] = [value]
+				elif value and value not in filters[key]:
+					filters[key].append(value)
+
+	for d in filters:
+		filters[d].sort()
+
+	return filters
