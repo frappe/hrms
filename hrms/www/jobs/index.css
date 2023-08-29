@@ -1,3 +1,7 @@
+body {
+	background-color: var(--gray-50);
+}
+
 h3 {
 	font-size: 1.7rem;
 }
@@ -24,17 +28,17 @@ p {
 .full-time-badge {
 	background: var(--bg-green);
 	color: var(--text-on-green);
-	border-radius: var(--border-radius)
+	border-radius: var(--border-radius);
 }
 
 .part-time-badge {
 	background: var(--bg-orange);
 	color: var(--text-on-orange);
-	border-radius: var(--border-radius)
+	border-radius: var(--border-radius);
 }
 
 .other-badge {
 	background: var(--bg-blue);
 	color: var(--text-on-blue);
-	border-radius: var(--border-radius)
+	border-radius: var(--border-radius);
 }
