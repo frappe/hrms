@@ -25,7 +25,7 @@
 	<Popover :show="iosInstallMessage" placement="bottom">
 		<template #body>
 			<div
-				class="mt-[calc(100vh-10rem)] flex flex-col gap-2 mx-2 rounded-xl py-5 bg-blue-50 shadow-xl"
+				class="mt-[calc(100vh-15rem)] flex flex-col gap-2 mx-2 rounded-xl py-5 bg-blue-50 shadow-xl"
 			>
 				<div
 					class="flex flex-row text-center items-center justify-between mb-1 px-3"
