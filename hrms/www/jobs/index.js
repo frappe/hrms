@@ -1,4 +1,12 @@
 $(() => {
+	select_applied_filters();
+	$("input:checkbox").change(function () {
+		const filters = $("input:checked").serialize();
+		scroll_up_and_update_filters(filters);
+	});
+});
+
+function select_applied_filters() {
 	const query_params = frappe.utils.get_query_params();
 	for (const filter in query_params) {
 		if (typeof query_params[filter] === "string") {
@@ -8,8 +16,20 @@ $(() => {
 				$("#" + $.escapeSelector(d)).prop("checked", true);
 		}
 	}
-	$("input:checkbox").change(function () {
-		const filters = $("input:checked").serialize();
+}
+
+function scroll_up_and_update_filters(filters) {
+	if (window.scrollY === 0) {
 		window.location.href = "/jobs?" + filters;
-	});
-});
+	} else {
+		window.scroll({
+			top: 0,
+			behavior: "smooth",
+		});
+		window.addEventListener("scroll", function () {
+			if (window.scrollY === 0) {
+				window.location.href = "/jobs?" + filters;
+			}
+		});
+	}
+}
