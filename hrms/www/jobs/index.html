@@ -11,10 +11,14 @@
             </div>
             {% for name, values in filters.items() %}
                 <div class="mb-10">
-                    <p class="font-weight-bold mb-4">{{ name }}</p>
+                    <p class="font-weight-bold mb-4">{{ name.title() | replace('_', ' ') }}</p>
                     {% for value in values %}
                         <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="{{ value }}">
+                            <input type="checkbox"
+                                   name="{{ name }}"
+                                   class="form-check-input"
+                                   id="{{ value }}"
+                                   value="{{ value }}">
                             <label class="form-check-label" for="{{ value }}">{{ value }}</label>
                         </div>
                     {% endfor %}
