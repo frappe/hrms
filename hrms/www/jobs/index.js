@@ -27,14 +27,13 @@ $(() => {
 	});
 
 	function show_applied_filters() {
+		const allowed_filters = Object.keys(
+			JSON.parse($("#data").data("filters").replace(/'/g, '"'))
+		);
 		for (const filter in query_params) {
 			if (filter === "query") {
 				$("#search-box").val(query_params["query"]);
-			} else if (
-				["company", "department", "location", "employment_type"].includes(
-					filter
-				)
-			) {
+			} else if (allowed_filters.includes(filter)) {
 				if (typeof query_params[filter] === "string") {
 					$("#" + $.escapeSelector(query_params[filter])).prop("checked", true);
 				} else {
