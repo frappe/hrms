@@ -536,11 +536,11 @@ class SalarySlip(TransactionBase):
 	def get_holidays_for_employee(self, start_date, end_date):
 		holiday_list = get_holiday_list_for_employee(self.employee)
 		key = f"{holiday_list}:{start_date}:{end_date}"
-		holiday_dates = frappe.cache.hget(HOLIDAYS_BETWEEN_DATES, key)
+		holiday_dates = frappe.cache().hget(HOLIDAYS_BETWEEN_DATES, key)
 
 		if not holiday_dates:
 			holiday_dates = get_holiday_dates_between(holiday_list, start_date, end_date)
-			frappe.cache.hset(HOLIDAYS_BETWEEN_DATES, key, holiday_dates)
+			frappe.cache().hset(HOLIDAYS_BETWEEN_DATES, key, holiday_dates)
 
 		return holiday_dates
 
@@ -595,7 +595,7 @@ class SalarySlip(TransactionBase):
 			)
 			return {leave_type.name: leave_type for leave_type in leave_types}
 
-		return frappe.cache.get_value(LEAVE_TYPE_MAP, _get_leave_type_map)
+		return frappe.cache().get_value(LEAVE_TYPE_MAP, _get_leave_type_map)
 
 	def get_employee_attendance(self, start_date, end_date):
 		attendance = frappe.qb.DocType("Attendance")
@@ -1116,7 +1116,7 @@ class SalarySlip(TransactionBase):
 				for component_abbr in frappe.get_all("Salary Component", pluck="salary_component_abbr")
 			}
 
-		return frappe.cache.get_value(SALARY_COMPONENT_VALUES, generator=_fetch_component_values)
+		return frappe.cache().get_value(SALARY_COMPONENT_VALUES, generator=_fetch_component_values)
 
 	def eval_condition_and_formula(self, struct_row, data):
 		try:
@@ -1257,7 +1257,7 @@ class SalarySlip(TransactionBase):
 		        If no tax components are defined for the company,
 		        it returns the default tax components.
 		"""
-		tax_components = frappe.cache.get_value(
+		tax_components = frappe.cache().get_value(
 			TAX_COMPONENTS_BY_COMPANY, self._fetch_tax_components_by_company
 		)
 
