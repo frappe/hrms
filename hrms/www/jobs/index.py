@@ -5,10 +5,10 @@ from frappe.query_builder.functions import Count
 
 def get_context(context):
 	context.parents = [{"name": _("My Account"), "route": "/"}]
-	args = frappe.request.args.to_dict(flat=False)
-	filters, txt, context.order_by = get_filters_txt_and_order_by(args)
-	context.job_openings = get_job_openings(filters, txt, context.order_by)
+	filters, txt, order_by = get_filters_txt_and_order_by()
+	context.job_openings = get_job_openings(filters, txt, order_by)
 	context.all_filters = get_all_filters(filters)
+	context.order_by = order_by
 
 
 def get_job_openings(filters=None, txt=None, order_by=None, limit_start=0, limit_page_length=20):
@@ -78,11 +78,13 @@ def get_all_filters(filters=None):
 	return all_filters
 
 
-def get_filters_txt_and_order_by(args):
+def get_filters_txt_and_order_by():
+	args = frappe.request.args.to_dict(flat=False)
 	filters = {}
 	txt = ""
 	order_by = "Newest Post"
 	allowed_filters = ["company", "department", "location", "employment_type"]
+
 	for d in args:
 		if d in allowed_filters:
 			filters[d] = args[d]
