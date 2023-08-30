@@ -8,10 +8,8 @@
  "engine": "InnoDB",
  "field_order": [
   "to_user",
-  "to_employee",
   "column_break_otsw",
   "from_user",
-  "from_employee",
   "section_break_wsgn",
   "message",
   "read",
@@ -79,29 +77,13 @@
    "label": "Reference Document Name"
   },
   {
-   "fieldname": "from_employee",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "From Employee",
-   "options": "Employee"
-  },
-  {
    "fieldname": "column_break_otsw",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "to_employee",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "To Employee",
-   "options": "Employee"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-08-29 20:38:39.901280",
+ "modified": "2023-08-30 13:53:34.444277",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "PWA Notification",

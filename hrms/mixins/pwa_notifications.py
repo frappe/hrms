@@ -13,13 +13,18 @@ class PWANotificationsMixin:
 		status = self.get(status_field)
 
 		if self.has_value_changed(status_field) and status in ["Approved", "Rejected"]:
-			notification = frappe.new_doc("PWA Notification")
 			from_user = self._get_doc_approver()
-			notification.message = (
-				f"{bold(from_user)} {bold(status)} your {self.doctype}: {bold(self.name)}"
-			)
-			notification.from_user = self._get_doc_approver()
-			notification.to_employee = self.employee
+			from_user_name = self._get_user_name(from_user)
+			to_user = self._get_employee_user()
+
+			if from_user == to_user:
+				return
+
+			notification = frappe.new_doc("PWA Notification")
+			notification.from_user = from_user
+			notification.to_user = to_user
+
+			notification.message = f"{bold('Your')} {bold(self.doctype)} {self.name} has been {bold(status)} by {bold(from_user_name)}"
 
 			notification.reference_document_type = self.doctype
 			notification.reference_document_name = self.name
@@ -27,12 +32,18 @@ class PWANotificationsMixin:
 
 	def notify_approver(self):
 		"""Send new Leave Application & Expense Claim request notification - to approvers"""
+		from_user = self._get_employee_user()
+		to_user = self._get_doc_approver()
+
+		if from_user == to_user:
+			return
+
 		notification = frappe.new_doc("PWA Notification")
 		notification.message = (
 			f"{bold(self.employee_name)} raised a new {bold(self.doctype)} for approval: {self.name}"
 		)
-		notification.from_employee = self.employee
-		notification.to_user = self._get_doc_approver()
+		notification.from_user = from_user
+		notification.to_user = to_user
 
 		notification.reference_document_type = self.doctype
 		notification.reference_document_name = self.name
@@ -52,3 +63,9 @@ class PWANotificationsMixin:
 		}
 		approver_field = APPROVER_FIELD[self.doctype]
 		return self.get(approver_field)
+
+	def _get_employee_user(self) -> str:
+		return frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
+
+	def _get_user_name(self, user) -> str:
+		return frappe.db.get_value("User", user, "full_name", cache=True)

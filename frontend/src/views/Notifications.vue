@@ -7,17 +7,13 @@
 						:class="[
 							'flex flex-row items-start p-4 justify-between border-b before:mt-4',
 							`before:content-[''] before:mr-2 before:shrink-0 before:w-1.5 before:h-1.5 before:rounded-full`,
-							item.read ? 'before:bg-blue-500' : 'bg-white-500',
+							item.read ? 'bg-white-500' : 'before:bg-blue-500',
 						]"
 						v-for="item in notifications.data"
 						:key="item.name"
 						to="Home"
 					>
-						<EmployeeAvatar
-							:employeeID="item.from_employee"
-							size="md"
-							class="mt-0.5"
-						/>
+						<EmployeeAvatar :userID="item.from_user" size="md" class="mt-0.5" />
 						<div class="flex flex-col gap-0.5 grow ml-3">
 							<div
 								class="text-base font-normal text-gray-800"
@@ -47,7 +43,7 @@ const dayjs = inject("$dayjs")
 const notifications = createListResource({
 	doctype: "PWA Notification",
 	filters: { to_user: user.data.name },
-	fields: ["name", "from_user", "from_employee", "message", "read", "creation"],
+	fields: ["name", "from_user", "message", "read", "creation"],
 	auto: true,
 	orderBy: "creation desc",
 })
