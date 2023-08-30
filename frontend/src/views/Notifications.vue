@@ -11,7 +11,8 @@
 						]"
 						v-for="item in notifications.data"
 						:key="item.name"
-						to="Home"
+						:to="getItemRoute(item)"
+						@click="markAsRead(item.name)"
 					>
 						<EmployeeAvatar :userID="item.from_user" size="md" class="mt-0.5" />
 						<div class="flex flex-col gap-0.5 grow ml-3">
@@ -32,7 +33,7 @@
 
 <script setup>
 import BaseLayout from "@/components/BaseLayout.vue"
-import { createListResource } from "frappe-ui"
+import { createListResource, FeatherIcon } from "frappe-ui"
 
 import { inject, onMounted } from "vue"
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
@@ -43,10 +44,29 @@ const dayjs = inject("$dayjs")
 const notifications = createListResource({
 	doctype: "PWA Notification",
 	filters: { to_user: user.data.name },
-	fields: ["name", "from_user", "message", "read", "creation"],
+	fields: [
+		"name",
+		"from_user",
+		"message",
+		"read",
+		"creation",
+		"reference_document_type",
+		"reference_document_name",
+	],
 	auto: true,
 	orderBy: "creation desc",
 })
+
+function markAsRead(name) {
+	notifications.setValue.submit({ name, read: 1 })
+}
+
+function getItemRoute(item) {
+	return {
+		name: `${item.reference_document_type.replace(/\s+/g, "")}DetailView`,
+		params: { id: item.reference_document_name },
+	}
+}
 
 onMounted(async () => {
 	await user.promise

@@ -4,7 +4,7 @@
 		<ion-router-outlet id="main-content" />
 		<Toasts />
 
-		<InstallPrompt />
+		<!-- <InstallPrompt /> -->
 	</ion-app>
 </template>
 
