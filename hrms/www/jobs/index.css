@@ -1,5 +1,5 @@
 body {
-	background-color: var(--gray-50);
+	background: var(--gray-50);
 }
 
 h3 {
