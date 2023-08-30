@@ -12,7 +12,7 @@
                 <p class="lg-text font-weight-bold">{{ _("Filters") }}</p>
                 <a id="clear-filters" class="ml-auto sm-text" role="button">{{ _("Clear All") }}</a>
             </div>
-            {% for name, values in filters.items() %}
+            {% for name, values in all_filters.items() %}
                 <div class="mb-10">
                     <p class="font-weight-bold mb-4">{{ name.title() | replace('_', ' ') }}</p>
                     {% for value in values %}
@@ -30,28 +30,59 @@
             {% endfor %}
         </div>
         <div class="col-9">
-            <div class="mb-12 col-8 pl-0">
-                <input type="search"
-                       name="query"
-                       id="search-box"
-                       class="form-control border font-md"
-                       placeholder="Search for Jobs"
-                       aria-label="Jobs Search"
-                       style="height: 36px">
-                <div class="search-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="16"
-                         height="16"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         class="feather feather-search">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
+            <div class="row px-4 mb-12 ">
+                <div class="col-8 pl-0">
+                    <input type="search"
+                           name="query"
+                           id="search-box"
+                           class="form-control border font-md"
+                           placeholder="Search for Jobs"
+                           aria-label="Jobs Search"
+                           style="height: 40px">
+                    <div class="search-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="16"
+                             height="16"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             class="feather feather-search">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </div>
+                </div>
+                <div class="col-4 flex pr-0">
+                    <div class="ml-auto flex align-items-center">
+                        <div class="md-text text-secondary flex"
+                             type="button"
+                             data-toggle="dropdown"
+                             aria-haspopup="true"
+                             aria-expanded="false">
+                            Sort by:
+                            <div class="font-weight-bold ml-3">
+                                {{ order_by }}
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     width="10"
+                                     height="10"
+                                     fill="currentColor"
+                                     stroke="currentColor"
+                                     stroke-width="3"
+                                     class="bi bi-chevron-down"
+                                     viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="dropdown-menu border" aria-labelledby="dropdownMenuButton">
+                            {% for sort in ["Newest Post", "Oldest Post", "Earliest Closing", "Latest Closing"] %}
+                                <a name="sort" class="dropdown-item text-secondary">{{ sort }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             </div>
             <p class="text-secondary mb-4 md-text">Showing {{ job_openings|length }} results</p>
