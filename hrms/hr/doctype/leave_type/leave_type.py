@@ -52,5 +52,5 @@ class LeaveType(Document):
 	def clear_cache(self):
 		from hrms.payroll.doctype.salary_slip.salary_slip import LEAVE_TYPE_MAP
 
-		frappe.cache.delete_value(LEAVE_TYPE_MAP)
+		frappe.cache().delete_value(LEAVE_TYPE_MAP)
 		return super().clear_cache()

@@ -16,8 +16,8 @@ class SalaryComponent(Document):
 			TAX_COMPONENTS_BY_COMPANY,
 		)
 
-		frappe.cache.delete_value(SALARY_COMPONENT_VALUES)
-		frappe.cache.delete_value(TAX_COMPONENTS_BY_COMPANY)
+		frappe.cache().delete_value(SALARY_COMPONENT_VALUES)
+		frappe.cache().delete_value(TAX_COMPONENTS_BY_COMPANY)
 		return super().clear_cache()
 
 	def validate_abbr(self):
