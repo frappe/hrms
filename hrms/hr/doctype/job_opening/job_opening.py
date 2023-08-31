@@ -63,10 +63,10 @@ class JobOpening(WebsiteGenerator):
 		today = getdate()
 		if is_past:
 			if getdate(date) > today:
-				frappe.throw(_(f"{frappe.bold(label)} cannot be a future date"))
+				frappe.throw(_("{} cannot be a future date").format(frappe.bold(label)))
 		else:
 			if getdate(date) < today:
-				frappe.throw(_(f"{frappe.bold(label)} cannot be a past date"))
+				frappe.throw(_("{} cannot be a past date").format(frappe.bold(label)))
 
 	def validate_current_vacancies(self):
 		if not self.staffing_plan:
