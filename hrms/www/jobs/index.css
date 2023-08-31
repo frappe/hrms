@@ -10,10 +10,6 @@ p {
 	margin-bottom: 0;
 }
 
-.primary-stroke {
-	--icon-stroke: var(--primary);
-}
-
 .text-18 {
 	font-size: 18px;
 }
@@ -62,4 +58,8 @@ p {
 
 .zoom:hover {
 	transform: scale(1.01);
+}
+
+.light-stroke {
+	--icon-stroke: var(--gray-500);
 }
