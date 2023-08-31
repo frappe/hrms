@@ -28,19 +28,19 @@ const quickLinks = [
 		route: "LeaveApplicationFormView",
 	},
 	{
-		icon: "dollar-sign",
+		icon: "file-text",
 		title: "Claim an Expense",
 		route: "ExpenseClaimFormView",
+	},
+	{
+		icon: "dollar-sign",
+		title: "Request an Advance",
+		route: "EmployeeAdvanceFormView",
 	},
 	{
 		icon: "file",
 		title: "Salary Slips",
 		route: "SalarySlips",
-	},
-	{
-		icon: "hard-drive",
-		title: "Documents",
-		route: "Home",
 	},
 ]
 </script>
