@@ -5,15 +5,26 @@
 				<div class="w-full sm:w-96">
 					<div class="flex flex-col bg-white shadow-sm p-4">
 						<div class="flex flex-row justify-between items-center">
-							<ion-menu-toggle>
+							<ion-menu-toggle class="flex flex-col items-center">
 								<Button appearance="minimal" class="!px-0 !py-0">
 									<FeatherIcon name="menu" class="h-6 w-6" />
 								</Button>
 							</ion-menu-toggle>
 							<div class="flex flex-row items-center gap-3">
-								<Button appearance="minimal" class="!px-0 !py-0">
-									<FeatherIcon name="bell" class="h-6 w-6" />
-								</Button>
+								<router-link
+									:to="{ name: 'Notifications' }"
+									v-slot="{ navigate }"
+									class="flex flex-col items-center"
+								>
+									<span class="relative inline-block" @click="navigate">
+										<FeatherIcon name="bell" class="h-6 w-6" />
+										<span
+											v-if="unreadNotificationsCount.data"
+											class="absolute top-0 right-0.5 inline-block w-2 h-2 bg-red-600 rounded-full border border-white"
+										>
+										</span>
+									</span>
+								</router-link>
 								<router-link :to="{ name: 'Profile' }">
 									<Avatar
 										:imageURL="user.data.user_image"
@@ -45,6 +56,8 @@ import { FeatherIcon, Avatar } from "frappe-ui"
 
 import CheckInPanel from "@/components/CheckInPanel.vue"
 
+import { unreadNotificationsCount } from "@/data/notifications"
+
 import { inject } from "vue"
 
 const user = inject("$user")
@@ -53,7 +66,6 @@ const props = defineProps({
 	pageTitle: {
 		type: String,
 		required: false,
-		default: "Home",
 	},
 	showCheckInPanel: {
 		type: Boolean,

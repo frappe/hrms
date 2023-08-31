@@ -3,6 +3,7 @@ import { reactive } from "vue"
 import { employeeResource } from "./employee"
 
 let employeesByID = reactive({})
+let employeesByUserID = reactive({})
 
 export const employees = createListResource({
 	doctype: "Employee",
@@ -22,6 +23,8 @@ export const employees = createListResource({
 		return data.map((employee) => {
 			employee.isActive = employee.status === "Active"
 			employeesByID[employee.name] = employee
+			employeesByUserID[employee.user_id] = employee
+
 			return employee
 		})
 	},
@@ -36,4 +39,8 @@ export function getEmployeeInfo(employeeID) {
 	if (!employeeID) employeeID = employeeResource.data.name
 
 	return employeesByID[employeeID]
+}
+
+export function getEmployeeInfoByUserID(userID) {
+	return employeesByUserID[userID]
 }

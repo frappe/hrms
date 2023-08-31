@@ -32,6 +32,7 @@ from hrms.hr.utils import (
 	share_doc_with_approver,
 	validate_active_employee,
 )
+from hrms.mixins.pwa_notifications import PWANotificationsMixin
 from hrms.utils import get_employee_email
 
 
@@ -62,9 +63,12 @@ class LeaveAcrossAllocationsError(frappe.ValidationError):
 from frappe.model.document import Document
 
 
-class LeaveApplication(Document):
+class LeaveApplication(Document, PWANotificationsMixin):
 	def get_feed(self):
 		return _("{0}: From {0} of type {1}").format(self.employee_name, self.leave_type)
+
+	def after_insert(self):
+		self.notify_approver()
 
 	def validate(self):
 		validate_active_employee(self.employee)
@@ -90,6 +94,7 @@ class LeaveApplication(Document):
 
 		share_doc_with_approver(self, self.leave_approver)
 		self.publish_update()
+		self.notify_approval_status()
 
 	def on_submit(self):
 		if self.status in ["Open", "Cancelled"]:

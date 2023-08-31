@@ -1,7 +1,7 @@
 <template>
 	<div v-if="showLabel" class="flex flex-row items-center gap-2">
 		<Avatar
-			v-if="employeeID"
+			v-if="employee"
 			:label="employee?.employee_name"
 			:imageURL="employee?.image"
 			:size="props.size"
@@ -22,11 +22,16 @@
 <script setup>
 import { computed } from "vue"
 import { Avatar } from "frappe-ui"
-import { getEmployeeInfo } from "@/data/employees"
+import { getEmployeeInfo, getEmployeeInfoByUserID } from "@/data/employees"
 
 const props = defineProps({
 	employeeID: {
 		type: String,
+		required: false,
+	},
+	userID: {
+		type: String,
+		required: false,
 	},
 	size: {
 		type: String,
@@ -38,5 +43,11 @@ const props = defineProps({
 	},
 })
 
-const employee = computed(() => getEmployeeInfo(props.employeeID))
+const employee = computed(() => {
+	if (props.employeeID) {
+		return getEmployeeInfo(props.employeeID)
+	} else if (props.userID) {
+		return getEmployeeInfoByUserID(props.userID)
+	}
+})
 </script>

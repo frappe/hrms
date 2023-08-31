@@ -14,6 +14,7 @@ from erpnext.accounts.general_ledger import make_gl_entries
 from erpnext.controllers.accounts_controller import AccountsController
 
 from hrms.hr.utils import set_employee_name, share_doc_with_approver, validate_active_employee
+from hrms.mixins.pwa_notifications import PWANotificationsMixin
 
 
 class InvalidExpenseApproverError(frappe.ValidationError):
@@ -24,11 +25,14 @@ class ExpenseApproverIdentityError(frappe.ValidationError):
 	pass
 
 
-class ExpenseClaim(AccountsController):
+class ExpenseClaim(AccountsController, PWANotificationsMixin):
 	def onload(self):
 		self.get("__onload").make_payment_via_journal_entry = frappe.db.get_single_value(
 			"Accounts Settings", "make_payment_via_journal_entry"
 		)
+
+	def after_insert(self):
+		self.notify_approver()
 
 	def validate(self):
 		validate_active_employee(self.employee)
@@ -83,6 +87,7 @@ class ExpenseClaim(AccountsController):
 	def on_update(self):
 		share_doc_with_approver(self, self.expense_approver)
 		self.publish_update()
+		self.notify_approval_status()
 
 	def after_delete(self):
 		self.publish_update()
