@@ -14,14 +14,23 @@ p {
 	--icon-stroke: var(--primary);
 }
 
-.lg-text {
+.text-18 {
 	font-size: 18px;
 }
 
-.md-text {
+.text-15 {
 	font-size: 15px;
 }
-.sm-text {
+
+.text-14 {
+	font-size: 14px;
+}
+
+.text-13 {
+	font-size: 13px;
+}
+
+.text-12 {
 	font-size: 12px;
 }
 

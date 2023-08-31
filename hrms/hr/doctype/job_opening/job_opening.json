@@ -196,9 +196,9 @@
    "read_only": 1
   },
   {
-   "default": "Today",
+   "default": "Now",
    "fieldname": "posted_on",
-   "fieldtype": "Date",
+   "fieldtype": "Datetime",
    "label": "Posted On"
   },
   {
@@ -253,6 +253,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
  "modified": "2023-09-14 16:50:39.316079",
 =======
  "modified": "2023-08-22 15:39:10.430060",
@@ -266,6 +267,9 @@
 =======
  "modified": "2023-08-23 15:55:02.233809",
 >>>>>>> a65b7d5f3 (feat: add Salary Type field)
+=======
+ "modified": "2023-08-31 14:23:14.826907",
+>>>>>>> 17130198c (feat: better ui(?))
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
