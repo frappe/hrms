@@ -62,7 +62,6 @@ const props = defineProps({
 	pageTitle: {
 		type: String,
 		required: false,
-		default: "Home",
 	},
 	showCheckInPanel: {
 		type: Boolean,

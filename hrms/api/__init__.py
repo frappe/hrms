@@ -44,6 +44,25 @@ def get_current_employee_info() -> dict:
 	return employee
 
 
+@frappe.whitelist()
+def get_unread_notifications_count() -> int:
+	return frappe.db.count(
+		"PWA Notification",
+		{"to_user": frappe.session.user, "read": 0},
+	)
+
+
+@frappe.whitelist()
+def mark_all_notifications_as_read() -> None:
+	frappe.db.set_value(
+		"PWA Notification",
+		{"to_user": frappe.session.user, "read": 0},
+		"read",
+		1,
+		update_modified=False,
+	)
+
+
 # Leaves and Holidays
 def get_leave_applications(filters: dict) -> list[dict]:
 	doctype = "Leave Application"

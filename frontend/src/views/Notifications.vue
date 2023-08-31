@@ -1,7 +1,25 @@
 <template>
 	<BaseLayout pageTitle="Notifications">
 		<template #body>
-			<div class="flex flex-col items-center mt-5 p-4">
+			<div class="flex flex-col gap-4 mt-5 p-4">
+				<div
+					v-if="unreadNotificationsCount.data"
+					class="flex flex-row justify-between items-center"
+				>
+					<div class="text-lg text-gray-800 font-semibold">
+						{{ unreadNotificationsCount.data }} Unread
+					</div>
+					<Button
+						appearance="white"
+						icon-left="check-circle"
+						class="ml-auto"
+						@click="markAllAsRead.submit"
+						:loading="markAllAsRead.loading"
+					>
+						Mark all as read
+					</Button>
+				</div>
+
 				<div class="flex flex-col bg-white rounded-lg">
 					<router-link
 						:class="[
@@ -33,13 +51,16 @@
 
 <script setup>
 import BaseLayout from "@/components/BaseLayout.vue"
-import { createListResource, FeatherIcon } from "frappe-ui"
+import { createListResource, createResource } from "frappe-ui"
 
 import { inject, onMounted } from "vue"
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 
+import { unreadNotificationsCount } from "@/data/notifications"
+
 const user = inject("$user")
 const dayjs = inject("$dayjs")
+const socket = inject("$socket")
 
 const notifications = createListResource({
 	doctype: "PWA Notification",
@@ -57,8 +78,23 @@ const notifications = createListResource({
 	orderBy: "creation desc",
 })
 
+const markAllAsRead = createResource({
+	url: "hrms.api.mark_all_notifications_as_read",
+	onSuccess() {
+		notifications.reload()
+		unreadNotificationsCount.reload()
+	},
+})
+
 function markAsRead(name) {
-	notifications.setValue.submit({ name, read: 1 })
+	notifications.setValue.submit(
+		{ name, read: 1 },
+		{
+			onSuccess: () => {
+				unreadNotificationsCount.reload()
+			},
+		}
+	)
 }
 
 function getItemRoute(item) {
@@ -67,6 +103,10 @@ function getItemRoute(item) {
 		params: { id: item.reference_document_name },
 	}
 }
+
+socket.on("hrms:update_notifications", () => {
+	notifications.reload()
+})
 
 onMounted(async () => {
 	await user.promise
