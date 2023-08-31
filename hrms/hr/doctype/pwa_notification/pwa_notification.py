@@ -5,7 +5,7 @@ from frappe.model.document import Document
 
 
 class PWANotification(Document):
-	def after_insert(self):
+	def on_update(self):
 		self.publish_update()
 
 	def publish_update(self):

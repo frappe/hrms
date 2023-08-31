@@ -20,7 +20,11 @@
 										class="!px-0 !py-0"
 										@click="navigate"
 									>
-										<FeatherIcon name="bell" class="h-6 w-6" />
+										<NotificationWithIndicator
+											v-if="unreadNotificationsCount.data"
+											class="h-6 w-6"
+										/>
+										<Notification v-else class="h-6 w-6" />
 									</Button>
 								</router-link>
 								<router-link :to="{ name: 'Profile' }">
@@ -53,6 +57,10 @@ import { IonContent, IonMenuToggle, IonPage } from "@ionic/vue"
 import { FeatherIcon, Avatar } from "frappe-ui"
 
 import CheckInPanel from "@/components/CheckInPanel.vue"
+import NotificationWithIndicator from "@/components/icons/NotificationWithIndicator.vue"
+import Notification from "@/components/icons/Notification.vue"
+
+import { unreadNotificationsCount } from "@/data/notifications"
 
 import { inject } from "vue"
 
