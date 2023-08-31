@@ -191,9 +191,9 @@
    "read_only": 1
   },
   {
-   "default": "Today",
+   "default": "Now",
    "fieldname": "posted_on",
-   "fieldtype": "Date",
+   "fieldtype": "Datetime",
    "label": "Posted On"
   },
   {
@@ -244,7 +244,7 @@
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2023-08-23 15:55:02.233809",
+ "modified": "2023-08-31 14:23:14.826907",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
