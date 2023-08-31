@@ -20,7 +20,10 @@
 					</Button>
 				</div>
 
-				<div class="flex flex-col bg-white rounded-lg">
+				<div
+					class="flex flex-col bg-white rounded-lg"
+					v-if="notifications.data?.length"
+				>
 					<router-link
 						:class="[
 							'flex flex-row items-start p-4 justify-between border-b before:mt-4',
@@ -44,6 +47,8 @@
 						</div>
 					</router-link>
 				</div>
+
+				<EmptyState v-else message="You have no notifications" />
 			</div>
 		</template>
 	</BaseLayout>
@@ -57,6 +62,7 @@ import { inject, onMounted } from "vue"
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 
 import { unreadNotificationsCount } from "@/data/notifications"
+import EmptyState from "@/components/EmptyState.vue"
 
 const user = inject("$user")
 const dayjs = inject("$dayjs")
