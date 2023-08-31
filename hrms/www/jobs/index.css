@@ -42,3 +42,7 @@ p {
 	color: var(--text-on-blue);
 	border-radius: var(--border-radius);
 }
+
+.order-item:active {
+	background-color: var(--gray-200);
+}
