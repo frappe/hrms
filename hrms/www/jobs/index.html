@@ -87,7 +87,9 @@
                     </div>
                 </div>
             </div>
-            <p class="text-secondary mb-4 md-text">Showing {{ job_openings|length }} results</p>
+            <p class="text-secondary mb-4 md-text">
+                Showing {{ job_openings|length }} {{ "result" if job_openings|length == 1 else "results" }}
+            </p>
             {% for jo in job_openings %}
                 <div class="mb-8 card border p-6">
                     <div class="flex">
