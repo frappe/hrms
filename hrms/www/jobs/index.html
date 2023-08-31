@@ -79,7 +79,10 @@
                             </div>
                         </div>
                         <div class="dropdown-menu border" aria-labelledby="dropdownMenuButton">
-                            {% for order in orders %}<a name="sort" class="dropdown-item text-secondary">{{ order }}</a>{% endfor %}
+                            {% for order in orders %}
+                                <a name="sort"
+                                   class="{{ 'dropdown-item order-item text-secondary font-weight-bold' if order == order_by else 'dropdown-item order-item text-secondary' }}">{{ order }}</a>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
