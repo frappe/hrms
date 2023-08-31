@@ -16,17 +16,14 @@
 									v-slot="{ navigate }"
 									class="flex flex-col items-center"
 								>
-									<Button
-										appearance="minimal"
-										class="!px-0 !py-0"
-										@click="navigate"
-									>
-										<NotificationWithIndicator
+									<span class="relative inline-block" @click="navigate">
+										<FeatherIcon name="bell" class="h-6 w-6" />
+										<span
 											v-if="unreadNotificationsCount.data"
-											class="h-6 w-6"
-										/>
-										<Notification v-else class="h-6 w-6" />
-									</Button>
+											class="absolute top-0 right-0.5 inline-block w-2 h-2 bg-red-600 rounded-full border border-white"
+										>
+										</span>
+									</span>
 								</router-link>
 								<router-link :to="{ name: 'Profile' }">
 									<Avatar
@@ -58,8 +55,6 @@ import { IonContent, IonMenuToggle, IonPage } from "@ionic/vue"
 import { FeatherIcon, Avatar } from "frappe-ui"
 
 import CheckInPanel from "@/components/CheckInPanel.vue"
-import NotificationWithIndicator from "@/components/icons/NotificationWithIndicator.vue"
-import Notification from "@/components/icons/Notification.vue"
 
 import { unreadNotificationsCount } from "@/data/notifications"
 
