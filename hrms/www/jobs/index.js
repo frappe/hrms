@@ -26,6 +26,10 @@ $(() => {
 		scroll_up_and_update_params(filters + "&" + sort);
 	});
 
+	$("[name=card]").on("click", function () {
+		window.location.href = this.id;
+	});
+
 	function show_applied_filters() {
 		const allowed_filters = Object.keys(
 			JSON.parse($("#data").data("filters").replace(/'/g, '"'))

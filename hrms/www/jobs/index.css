@@ -55,3 +55,11 @@ p {
 .order-item:active {
 	background-color: var(--gray-200);
 }
+
+.zoom {
+	transition: transform 0.1s;
+}
+
+.zoom:hover {
+	transform: scale(1.01);
+}

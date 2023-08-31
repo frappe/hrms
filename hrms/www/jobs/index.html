@@ -9,12 +9,12 @@
     <meta id="data" data-filters="{{ all_filters }}">
     <div class="row">
         <div class="col-3 text-15">
-            <div class="mb-10 flex align-items-center">
+            <div class="mb-8 flex align-items-center">
                 <p class="text-18 font-weight-bold">{{ _("Filters") }}</p>
                 <a id="clear-filters" class="ml-auto text-12" role="button">{{ _("Clear All") }}</a>
             </div>
             {% for name, values in all_filters.items() %}
-                <div class="mb-10">
+                <div class="mb-8">
                     <p class="font-weight-bold mb-4">{{ name.title() | replace('_', ' ') }}</p>
                     {% for value in values %}
                         <div class="form-group form-check">
@@ -91,29 +91,24 @@
                 Showing {{ job_openings|length }} {{ "result" if job_openings|length == 1 else "results" }}
             </p>
             {% for jo in job_openings %}
-                <div class="mb-8 card border p-6">
+                <div name="card" id="{{ jo.route }}" class="mb-8 card border p-6 zoom" role="button">
                     <div class="flex">
-                        <div class="mr-20">
-                            <p class="text-primary text-13 font-weight-bold">{{ jo.company }}</p>
-                            <h3 class="mt-0">{{ jo.job_title }}</h3>
-                        </div>
-                        <div class="ml-auto text-nowrap text-secondary text-13">
+                        <h3 class="mt-0 mr-20">{{ jo.job_title }}</h3>
+                        <div class="ml-auto text-nowrap text-secondary text-14">
                             <p>{{ jo.posted_on }}</p>
                         </div>
                     </div>
                     <div class="mb-10">
                         <div class="flex mb-2 align-items-center primary-stroke text-secondary">
+                            <svg class="icon icon-md ml-0 mr-1">
+                                <use href="#icon-organization"></use>
+                            </svg>
+                            <p class="mr-3 ">{{ jo.company }}</p>
                             {%- if jo.department -%}
                                 <svg class="icon icon-md ml-0 mr-1">
                                     <use href="#icon-branch"></use>
                                 </svg>
                                 <p class="mr-3 ">{{ jo.department }}</p>
-                            {% endif %}
-                            {%- if jo.employment_type -%}
-                                <svg class="icon icon-md ml-0 mr-1">
-                                    <use href="#icon-hr"></use>
-                                </svg>
-                                <p class="mr-3 ">{{ jo.employment_type }}</p>
                             {% endif %}
                             {%- if jo.location -%}
                                 <svg class="icon icon-md ml-0 mr-1"
@@ -125,7 +120,7 @@
                                     <path d="M7.971 8.259a1.305 1.305 0 100-2.61 1.305 1.305 0 000 2.61z"></path>
                                     </g>
                                 </svg>
-                                <p>{{ jo.location }}</p>
+                                <p class="mr-3">{{ jo.location }}</p>
                             {% endif %}
                         </div>
                         <p class="text-secondary font-italic">
@@ -148,7 +143,17 @@
                                 <span class="text-secondary">{{ jo.salary_type.lower() }}</span>
                             </p>
                         {% endif %}
-                        <a class="ml-auto btn btn-primary" href="{{ jo.route }}">{{ _("View Job →") }}</a>
+                        <div class="ml-auto font-weight-bold">
+                            {%- if jo.employment_type -%}
+                                {%- if jo.employment_type == "Full-time" -%}
+                                    <span class="text-14 py-2 px-3 full-time-badge">• {{ jo.employment_type }}</span>
+                                {%- elif jo.employment_type == "Part-time" -%}
+                                    <span class="text-14 py-2 px-4 part-time-badge">• {{ jo.employment_type }}</span>
+                                {%- else -%}
+                                    <span class="text-14 py-2 px-4 other-badge">• {{ jo.employment_type }}</span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             {% endfor %}
