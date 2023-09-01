@@ -64,7 +64,7 @@
                              data-toggle="dropdown"
                              aria-haspopup="true"
                              aria-expanded="false">
-                            Sort by:
+                            {{ _("Sort by: ") }}
                             <div class="font-weight-bold ml-3">
                                 {{ order_by }}
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -89,76 +89,69 @@
                 </div>
             </div>
             <p class="text-secondary mb-4 text-15">
-                Showing {{ job_openings|length }} {{ "result" if job_openings|length == 1 else "results" }}
+                {{ _("Showing") }} {{ job_openings|length }} {{ _("result" if job_openings|length == 1 else "results") }}
             </p>
             {% for jo in job_openings %}
                 <div name="card"
                      id="{{ jo.route }}"
-                     class="mb-8 card border p-6 zoom"
+                     class="mb-8 card border zoom"
                      role="button">
-                    <div class="flex mb-3">
-                        <h3 class="mt-0 mr-20">{{ jo.job_title }}</h3>
-                        <div class="ml-auto font-weight-bold text-nowrap text-12">
-                            {%- if jo.employment_type -%}
-                                {%- if jo.employment_type == "Full-time" -%}
-                                    <div class="py-2 px-3 full-time-badge">• {{ jo.employment_type }}</div>
-                                {%- elif jo.employment_type == "Part-time" -%}
-                                    <div class="py-2 px-3 part-time-badge">• {{ jo.employment_type }}</div>
-                                {%- else -%}
-                                    <div class="py-2 px-3 other-badge">• {{ jo.employment_type }}</div>
+                    <div class="p-6">
+                        <div class="flex mb-3">
+                            <div>
+                                <h4 class="mt-0 mb-1 mr-20">{{ jo.job_title }}</h4>
+                                <div class="text-secondary">{{ jo.company }}</div>
+                            </div>
+                            <div class="ml-auto font-weight-bold text-nowrap text-12">
+                                {%- if jo.employment_type -%}
+                                    {%- if jo.employment_type == "Full-time" -%}
+                                        <div class="py-1 px-2 full-time-badge">• {{ jo.employment_type }}</div>
+                                    {%- elif jo.employment_type == "Part-time" -%}
+                                        <div class="py-1 px-2 part-time-badge">• {{ jo.employment_type }}</div>
+                                    {%- else -%}
+                                        <div class="py-1 px-2 other-badge">• {{ jo.employment_type }}</div>
+                                    {% endif %}
                                 {% endif %}
-                            {% endif %}
+                            </div>
                         </div>
-                    </div>
-                    <div class="mb-8">
-                        <div class="flex mb-2 align-items-center light-stroke text-secondary">
-                            <svg class="icon icon-md ml-0 mr-1">
-                                <use href="#icon-organization"></use>
-                            </svg>
-                            <p class="mr-3 ">{{ jo.company }}</p>
-                            {%- if jo.department -%}
-                                <svg class="icon icon-md ml-0 mr-1">
-                                    <use href="#icon-branch"></use>
-                                </svg>
-                                <p class="mr-3 ">{{ jo.department }}</p>
-                            {% endif %}
+                        <div class="row">
                             {%- if jo.location -%}
-                                <svg class="icon icon-md ml-0 mr-1"
-                                     xmlns="http://www.w3.org/2000/svg"
-                                     viewBox="0 0 16 16">
-                                    <g stroke="var(--gray-400)" stroke-miterlimit="10">
-                                    <path d="M11.467 3.458c1.958 1.957 1.958 5.088.027 7.02L7.97 14l-3.523-3.523a4.945 4.945 0 010-6.993l.026-.026a4.922 4.922 0 016.993 0zm0 0c-.026-.026-.026-.026 0 0z">
-                                    </path>
-                                    <path d="M7.971 8.259a1.305 1.305 0 100-2.61 1.305 1.305 0 000 2.61z"></path>
-                                    </g>
-                                </svg>
-                                <p>{{ jo.location }}</p>
+                                <div class="col-4">
+                                    <div class="text-secondary text-13">Location</div>
+                                    <div class="font-weight-bold">{{ jo.location }}</div>
+                                </div>
+                            {% endif %}
+                            {%- if jo.department -%}
+                                <div class="col-4">
+                                    <div class="text-secondary text-13">Department</div>
+                                    <div class="font-weight-bold">{{ jo.department }}</div>
+                                </div>
+                            {% endif %}
+                            {%- if jo.publish_salary_range -%}
+                                <div class="col-4">
+                                    <div class="text-secondary text-13">Salary Range</div>
+                                    <div class="font-weight-bold">
+                                        {{ frappe.format_value(frappe.utils.flt(jo.lower_range) ,
+                                        currency=jo.currency) }} - {{ frappe.format_value(frappe.utils.flt(jo.upper_range) ,
+                                        currency=jo.currency) }} / {{ jo.salary_per.lower() }}
+                                    </div>
+                                </div>
                             {% endif %}
                         </div>
-                        {%- if jo.publish_salary_range -%}
-                            <p>
-                                <span class="font-weight-bold text-18">
-                                    {{ frappe.format_value(frappe.utils.flt(jo.lower_range) ,
-                                    currency=jo.currency) }} - {{ frappe.format_value(frappe.utils.flt(jo.upper_range) ,
-                                    currency=jo.currency) }}
-                                </span>
-                                <span class="text-secondary">{{ jo.salary_per.lower() }}</span>
-                            </p>
-                        {% endif %}
                     </div>
-                    <div class="row text-14 text-secondary">
-                        <p class="col-4">
-                        {{ _("Posted ") }}<b>{{ jo.posted_on }}</b>
-                    </p>
-                    <p class="col-4 text-center">
-                        {%- if jo.no_of_applications -%}
+                    <div class="px-6 py-2 footer">
+                        <div class="row text-12 text-secondary">
+                            <p class="col-4 text-center">
+                                {{ _("Posted on: ") }}<b>{{ frappe.format_date(jo.posted_on, "d MMM, YYYY") }}</b>
+                            </p>
+                            <p class="col-4 text-center border-right border-left">
+                                {%- if jo.closes_on -%}{{ _("Closes on: ") }}<b>{{ frappe.format_date(jo.closes_on, "d MMM, YYYY") }}</b>{% endif %}
+                        </p>
+                        <p class="col-4 text-center">
                             {{ _("Applications received: ") }}
                             <b>{{ jo.no_of_applications }}</b>
-                        {% endif %}
-                    </p>
-                    <p class="col-4 text-right">
-                            {%- if jo.closes_on -%}{{ _("Closes on ") }}<b>{{ frappe.format_date(jo.closes_on, "d MMM, YYYY") }}</b>{% endif %}
-                    </p>
+                        </p>
+                    </div>
                 </div>
             </div>
         {% endfor %}

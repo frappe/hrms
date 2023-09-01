@@ -8,7 +8,7 @@
                     <div>
                         {{ "Posted" }}
                         {{ posted_on }}
-                        {{ " · " }}{{ no_of_applications }}{{ " applicants" }}
+                        {{ " · " }}{{ no_of_applications }}{{ " applicant" if no_of_applications == 1 else " applicants" }}
                     </div>
                 </div>
             </div>
@@ -22,25 +22,25 @@
                 {% endif %}
             </div>
         </div>
-        <div class="mb-8">
+        <div class="mb-4">
             <div class="m-4">
-                <div class="row" style="--icon-stroke: var(--gray-700); font-size: 17px">
+                <div class="row" style="--icon-stroke: var(--gray-700);">
                     <div class="col-4 mb-8">
-                        <div class="card flex flex-row align-items-center">
+                        <div class="flex flex-row align-items-center">
                             <div class="rounded-circle p-4" style="background: var(--purple-50)">
                                 <svg class="icon" style="height: 28px; width: 28px;">
-                                    <use href="#icon-organization" style="height: 28px; width: 28px"></use>
+                                    <use href="#icon-organization"></use>
                                 </svg>
                             </div>
                             <div class="ml-5">
-                                <div class="text-secondary" style="font-size: 13px">Company</div>
+                                <div class="text-secondary" style="font-size: 14px">{{ _("Company") }}</div>
                                 <div class="font-weight-bold">{{ company }}</div>
                             </div>
                         </div>
                     </div>
                     {%- if location -%}
                         <div class="col-4 mb-8">
-                            <div class="card flex flex-row align-items-center">
+                            <div class="flex flex-row align-items-center">
                                 <div class="rounded-circle p-4" style="background: var(--blue-50)">
                                     <svg class="icon"
                                          style="height: 28px;
@@ -55,7 +55,7 @@
                                     </svg>
                                 </div>
                                 <div class="ml-5">
-                                    <div class="text-secondary" style="font-size: 13px">Location</div>
+                                    <div class="text-secondary" style="font-size: 14px">{{ _("Location") }}</div>
                                     <div class="font-weight-bold">{{ location }}</div>
                                 </div>
                             </div>
@@ -63,14 +63,14 @@
                     {% endif %}
                     {%- if publish_salary_range -%}
                         <div class="col-4 mb-8">
-                            <div class="card flex flex-row align-items-center">
+                            <div class="flex flex-row align-items-center">
                                 <div class="rounded-circle p-4" style="background: var(--green-50)">
                                     <svg class="icon" style="height: 28px; width: 28px;">
-                                        <use href="#icon-income" style="height: 28px; width: 28px"></use>
+                                        <use href="#icon-income"></use>
                                     </svg>
                                 </div>
                                 <div class="ml-5">
-                                    <div class="text-secondary" style="font-size: 14px">Salary Range</div>
+                                    <div class="text-secondary" style="font-size: 14px">{{ _("Salary Range") }}</div>
                                     <div class="font-weight-bold">
                                         {{ frappe.format_value(frappe.utils.flt(lower_range) ,
                                         currency=currency) }} - {{ frappe.format_value(frappe.utils.flt(upper_range) ,
@@ -82,14 +82,14 @@
                     {% endif %}
                     {%- if department -%}
                         <div class="col-4 mb-8">
-                            <div class="card flex flex-row align-items-center">
+                            <div class="flex flex-row align-items-center">
                                 <div class="rounded-circle p-4" style="background: var(--yellow-50)">
                                     <svg class="icon" style="height: 28px; width: 28px;">
-                                        <use href="#icon-branch" style="height: 28px; width: 28px"></use>
+                                        <use href="#icon-branch"></use>
                                     </svg>
                                 </div>
                                 <div class="ml-5">
-                                    <div class="text-secondary" style="font-size: 13px">Department</div>
+                                    <div class="text-secondary" style="font-size: 14px">{{ _("Department") }}</div>
                                     <div class="font-weight-bold">{{ department }}</div>
                                 </div>
                             </div>
@@ -97,14 +97,14 @@
                     {% endif %}
                     {%- if employment_type -%}
                         <div class="col-4 mb-8">
-                            <div class="card flex flex-row align-items-center">
+                            <div class="flex flex-row align-items-center">
                                 <div class="rounded-circle p-4" style="background: var(--orange-50)">
                                     <svg class="icon" style="height: 28px; width: 28px;">
-                                        <use href="#icon-hr" style="height: 28px; width: 28px"></use>
+                                        <use href="#icon-hr"></use>
                                     </svg>
                                 </div>
                                 <div class="ml-5">
-                                    <div class="text-secondary" style="font-size: 13px">Employment Type</div>
+                                    <div class="text-secondary" style="font-size: 14px">{{ _("Employment Type") }}</div>
                                     <div class="font-weight-bold">{{ employment_type }}</div>
                                 </div>
                             </div>
@@ -112,14 +112,14 @@
                     {% endif %}
                     {%- if closes_on -%}
                         <div class="col-4 mb-8">
-                            <div class="card flex flex-row align-items-center">
+                            <div class="flex flex-row align-items-center">
                                 <div class="rounded-circle p-4" style="background: var(--red-50)">
                                     <svg class="icon" style="height: 28px; width: 28px;">
-                                        <use href="#icon-calendar" style="height: 28px; width: 28px"></use>
+                                        <use href="#icon-calendar"></use>
                                     </svg>
                                 </div>
                                 <div class="ml-5">
-                                    <div class="text-secondary" style="font-size: 13px">Closes On</div>
+                                    <div class="text-secondary" style="font-size: 14px">{{ _("Closes On") }}</div>
                                     <div class="font-weight-bold">{{ frappe.format_date(closes_on, "d MMM, YYYY") }}</div>
                                 </div>
                             </div>
