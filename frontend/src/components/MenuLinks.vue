@@ -71,14 +71,6 @@ const menuItems = ref([
 			name: "SalarySlips",
 		},
 	},
-	{
-		icon: "info",
-		title: "Payment Information",
-		route: {
-			name: "Login",
-		},
-		current: false,
-	},
 ])
 
 const route = useRoute()
