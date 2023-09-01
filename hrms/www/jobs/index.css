@@ -61,5 +61,5 @@ p {
 }
 
 .light-stroke {
-	--icon-stroke: var(--gray-500);
+	--icon-stroke: var(--gray-400);
 }

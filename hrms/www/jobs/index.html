@@ -96,7 +96,7 @@
                      id="{{ jo.route }}"
                      class="mb-8 card border p-6 zoom"
                      role="button">
-                    <div class="flex">
+                    <div class="flex mb-3">
                         <h3 class="mt-0 mr-20">{{ jo.job_title }}</h3>
                         <div class="ml-auto font-weight-bold text-nowrap text-12">
                             {%- if jo.employment_type -%}
@@ -110,8 +110,8 @@
                             {% endif %}
                         </div>
                     </div>
-                    <div class="mb-10">
-                        <div class="flex mb-2 align-items-center light-stroke">
+                    <div class="mb-8">
+                        <div class="flex mb-2 align-items-center light-stroke text-secondary">
                             <svg class="icon icon-md ml-0 mr-1">
                                 <use href="#icon-organization"></use>
                             </svg>
@@ -126,7 +126,7 @@
                                 <svg class="icon icon-md ml-0 mr-1"
                                      xmlns="http://www.w3.org/2000/svg"
                                      viewBox="0 0 16 16">
-                                    <g stroke="var(--gray-500)" stroke-miterlimit="10">
+                                    <g stroke="var(--gray-400)" stroke-miterlimit="10">
                                     <path d="M11.467 3.458c1.958 1.957 1.958 5.088.027 7.02L7.97 14l-3.523-3.523a4.945 4.945 0 010-6.993l.026-.026a4.922 4.922 0 016.993 0zm0 0c-.026-.026-.026-.026 0 0z">
                                     </path>
                                     <path d="M7.971 8.259a1.305 1.305 0 100-2.61 1.305 1.305 0 000 2.61z"></path>
@@ -146,19 +146,22 @@
                             </p>
                         {% endif %}
                     </div>
-                    <div class="flex align-items-center text-14 text-secondary">
-                        <p>
-                            {%- if jo.closes_on -%}{{ _("Closes on " + frappe.format_date(jo.closes_on, "d MMM, YYYY") ) }}{% endif %}
-                            {%- if jo.no_of_applications and jo.closes_on -%}{{ " · " }}{% endif %}
-                            {%- if jo.no_of_applications -%}
-                                {{ jo.no_of_applications }}
-                                {{ _(" applicant" if jo.no_of_applications == 1 else " applicants") }}
-                            {% endif %}
-                        </p>
-                        <p class="ml-auto">{{ _("Posted ") + jo.posted_on }}</p>
-                    </div>
+                    <div class="row text-14 text-secondary">
+                        <p class="col-4">
+                        {{ _("Posted ") }}<b>{{ jo.posted_on }}</b>
+                    </p>
+                    <p class="col-4 text-center">
+                        {%- if jo.no_of_applications -%}
+                            {{ _("Applications received: ") }}
+                            <b>{{ jo.no_of_applications }}</b>
+                        {% endif %}
+                    </p>
+                    <p class="col-4 text-right">
+                            {%- if jo.closes_on -%}{{ _("Closes on ") }}<b>{{ frappe.format_date(jo.closes_on, "d MMM, YYYY") }}</b>{% endif %}
+                    </p>
                 </div>
-            {% endfor %}
-        </div>
+            </div>
+        {% endfor %}
     </div>
+</div>
 {% endblock page_content %}
