@@ -63,3 +63,8 @@ p {
 .light-stroke {
 	--icon-stroke: var(--gray-400);
 }
+
+.footer {
+	background: var(--gray-50);
+	border-radius: 0 0 0.75rem 0.75rem
+}
