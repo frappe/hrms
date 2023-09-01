@@ -2,7 +2,6 @@ import frappe
 from frappe import _
 from frappe.query_builder import Order
 from frappe.query_builder.functions import Count
-from frappe.utils import pretty_date
 
 
 def get_context(context):
@@ -63,9 +62,6 @@ def get_job_openings(filters=None, txt=None, order_by=None, limit_start=0, limit
 		query = query.orderby(order_by[0], order=order_by[1])
 
 	results = query.run(as_dict=True)
-
-	for d in results:
-		d.posted_on = pretty_date(d.posted_on)
 
 	return results
 
