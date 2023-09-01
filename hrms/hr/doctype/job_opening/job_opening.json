@@ -43,7 +43,7 @@
   "lower_range",
   "upper_range",
   "column_break_20",
-  "salary_type",
+  "salary_per",
   "publish_salary_range"
  ],
  "fields": [
@@ -239,16 +239,17 @@
    "label": "Closed On"
   },
   {
-   "default": "Per Month",
-   "fieldname": "salary_type",
+   "default": "Month",
+   "fieldname": "salary_per",
    "fieldtype": "Select",
-   "label": "Salary Type",
-   "options": "Per Hour\nPer Day\nPer Week\nPer Month\nPer Year\nPer Sale"
+   "label": "Salary Paid Per",
+   "options": "Hour\nDay\nWeek\nMonth\nYear\nSale"
   }
  ],
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -270,6 +271,9 @@
 =======
  "modified": "2023-08-31 14:23:14.826907",
 >>>>>>> 17130198c (feat: better ui(?))
+=======
+ "modified": "2023-09-01 15:37:33.862986",
+>>>>>>> f6f20a8d9 (refactor: change salary_type to salary_per)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
