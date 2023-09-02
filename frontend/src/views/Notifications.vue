@@ -8,7 +8,7 @@
 					>
 						<div class="flex flex-row gap-1">
 							<Button
-								appearance="minimal"
+								variant="ghost"
 								class="!px-0 !py-0"
 								@click="router.back()"
 							>
@@ -29,7 +29,7 @@
 								{{ unreadNotificationsCount.data }} Unread
 							</div>
 							<Button
-								appearance="white"
+								variant="outline"
 								icon-left="check-circle"
 								class="ml-auto"
 								@click="markAllAsRead.submit"

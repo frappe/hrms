@@ -17,7 +17,7 @@
 			v-slot="{ navigate }"
 		>
 			<div class="flex flex-col bg-white w-full py-5 px-3.5 mt-0 border-none">
-				<Button @click="navigate" appearance="secondary" class="py-2">
+				<Button @click="navigate" variant="subtle" class="py-2">
 					Request an Advance
 				</Button>
 			</div>

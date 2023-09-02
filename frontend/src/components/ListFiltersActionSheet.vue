@@ -25,7 +25,7 @@
 						<div class="flex flex-row gap-2 mt-2 flex-wrap">
 							<Button
 								v-for="option in filter.options"
-								appearance="white"
+								variant="outline"
 								@click="setStatusFilter(filter.fieldname, option)"
 								:class="[
 									option === filters[filter.fieldname].value
@@ -69,14 +69,14 @@
 		>
 			<Button
 				@click="emit('clear-filters')"
-				appearance="secondary"
+				variant="subtle"
 				class="w-full py-3 px-12"
 			>
 				Clear All
 			</Button>
 			<Button
 				@click="emit('apply-filters')"
-				appearance="primary"
+				variant="solid"
 				class="w-full py-3 px-12"
 			>
 				Apply Filters

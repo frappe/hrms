@@ -31,7 +31,7 @@
 				</div>
 			</div>
 			<Button
-				appearance="primary"
+				variant="solid"
 				class="py-2 w-full"
 				@click="submitLog(nextAction.action)"
 			>

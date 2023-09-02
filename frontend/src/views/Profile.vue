@@ -22,7 +22,7 @@
 
 				<Button
 					@click="logout"
-					appearance="white"
+					variant="outline"
 					class="text-red-500 w-full shadow py-2 mt-5"
 					icon-left="log-out"
 				>

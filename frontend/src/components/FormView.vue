@@ -6,7 +6,7 @@
 			<header
 				class="flex flex-row gap-1 bg-white shadow-sm py-4 px-2 items-center border-b sticky top-0 z-[1000]"
 			>
-				<Button appearance="minimal" class="!px-0 !py-0" @click="router.back()">
+				<Button variant="ghost" class="!px-0 !py-0" @click="router.back()">
 					<FeatherIcon name="chevron-left" class="h-5 w-5" />
 				</Button>
 				<div
@@ -162,7 +162,7 @@
 					class="w-full rounded-md py-2.5 px-3.5 mt-2"
 					:class="formButton === 'Cancel' ? 'shadow' : ''"
 					@click="formButton === 'Save' ? saveForm() : submitOrCancelForm()"
-					:appearance="formButton === 'Cancel' ? 'secondary' : 'primary'"
+					:variant="formButton === 'Cancel' ? 'subtle' : 'solid'"
 					:disabled="saveButtonDisabled"
 					:loading="
 						docList.insert.loading || documentResource?.setValue?.loading

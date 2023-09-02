@@ -10,7 +10,7 @@
 				id="add-expense-modal"
 				class="text-sm"
 				icon="plus"
-				appearance="secondary"
+				variant="subtle"
 				@click="openModal()"
 				:disabled="isReadOnly"
 			/>
@@ -98,13 +98,13 @@
 						v-if="editingIdx !== null"
 						class="py-3 px-12 border-red-600 text-red-600"
 						icon-left="trash"
-						appearance="white"
+						variant="outline"
 						@click="deleteExpenseItem()"
 					>
 						Delete
 					</Button>
 					<Button
-						appearance="primary"
+						variant="solid"
 						class="w-full py-3 px-12"
 						:icon-left="editingIdx === null ? 'plus' : 'check'"
 						@click="updateExpenseItem()"

@@ -5,11 +5,7 @@
 				class="flex flex-row bg-white shadow-sm py-4 px-2 items-center justify-between border-b sticky top-0 z-10"
 			>
 				<div class="flex flex-row gap-1">
-					<Button
-						appearance="minimal"
-						class="!px-0 !py-0"
-						@click="router.back()"
-					>
+					<Button variant="ghost" class="!px-0 !py-0" @click="router.back()">
 						<FeatherIcon name="chevron-left" class="h-5 w-5" />
 					</Button>
 					<h2 class="text-2xl font-semibold text-gray-900">{{ pageTitle }}</h2>
@@ -19,7 +15,7 @@
 					<Button
 						id="show-filter-modal"
 						icon="filter"
-						appearance="secondary"
+						variant="subtle"
 						:class="[
 							areFiltersApplied
 								? '!border !border-blue-500 !bg-white !text-blue-500'
@@ -29,7 +25,7 @@
 					<router-link :to="{ name: formViewRoute }" v-slot="{ navigate }">
 						<Button
 							icon-left="plus"
-							appearance="primary"
+							variant="solid"
 							class="mr-2"
 							@click="navigate"
 						>

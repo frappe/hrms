@@ -102,7 +102,7 @@
 			<Button
 				@click="updateDocumentStatus({ docstatus: 1 })"
 				class="w-full py-3 px-12"
-				appearance="primary"
+				variant="solid"
 			>
 				Submit
 			</Button>

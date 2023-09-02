@@ -33,7 +33,7 @@
 					<Button
 						class="w-full rounded-md py-2.5 px-3.5 mt-2"
 						@click="downloadPDF"
-						appearance="primary"
+						variant="solid"
 						:loading="loading"
 					>
 						Download PDF
