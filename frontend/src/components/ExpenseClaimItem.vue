@@ -2,12 +2,12 @@
 	<div class="flex flex-col w-full justify-center gap-2.5">
 		<div class="flex flex-row items-center justify-between">
 			<div class="flex flex-row items-start gap-3 grow">
-				<ExpenseIcon class="h-5 w-5 mt-0.5 text-gray-500" />
-				<div class="flex flex-col items-start">
-					<div class="text-lg font-normal text-gray-800">
+				<ExpenseIcon class="h-5 w-5 text-gray-500" />
+				<div class="flex flex-col items-start gap-1.5">
+					<div class="text-base font-normal text-gray-800">
 						{{ claimTitle }}
 					</div>
-					<div class="text-sm font-normal text-gray-500">
+					<div class="text-xs font-normal text-gray-500">
 						<span>
 							{{ `${currency} ${props.doc.total_claimed_amount}` }}
 						</span>

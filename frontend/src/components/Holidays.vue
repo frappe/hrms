@@ -22,11 +22,11 @@
 			>
 				<div class="flex flex-row items-center gap-3 grow">
 					<FeatherIcon name="calendar" class="h-5 w-5 text-gray-500" />
-					<div class="text-lg font-normal text-gray-800">
+					<div class="text-base font-normal text-gray-800">
 						{{ holiday.description }}
 					</div>
 				</div>
-				<div class="text-lg font-bold text-gray-800">
+				<div class="text-base font-bold text-gray-800">
 					{{ holiday.formatted_holiday_date }}
 				</div>
 			</div>
@@ -54,11 +54,11 @@
 				>
 					<div class="flex flex-row items-center gap-3 grow">
 						<FeatherIcon name="calendar" class="h-5 w-5 text-gray-500" />
-						<div class="text-lg font-normal text-gray-800">
+						<div class="text-base font-normal text-gray-800">
 							{{ holiday.description }}
 						</div>
 					</div>
-					<div class="text-lg font-bold text-gray-800">
+					<div class="text-base font-bold text-gray-800">
 						{{ holiday.formatted_holiday_date }}
 					</div>
 				</div>

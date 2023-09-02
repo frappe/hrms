@@ -3,10 +3,10 @@
 		<div class="text-xl text-gray-800 font-bold">Expense Claim Summary</div>
 		<div class="flex flex-col gap-4 bg-white py-3 px-3.5 mt-3 rounded-xl">
 			<div class="flex flex-col gap-1.5">
-				<span class="text-gray-600 text-base font-medium leading-5"
-					>Total Expense Amount</span
-				>
-				<span class="text-gray-800 text-2xl font-bold leading-6">
+				<span class="text-gray-600 text-base font-medium leading-5">
+					Total Expense Amount
+				</span>
+				<span class="text-gray-800 text-xl font-bold leading-6">
 					{{ `${company_currency} ${total_claimed_amount}` }}
 				</span>
 			</div>
@@ -19,7 +19,7 @@
 						</span>
 						<FeatherIcon name="alert-circle" class="text-yellow-500 h-3 w-3" />
 					</div>
-					<span class="text-gray-800 text-xl font-semibold leading-6">
+					<span class="text-gray-800 text-lg font-semibold leading-6">
 						{{ `${company_currency} ${summary.data?.total_pending_amount}` }}
 					</span>
 				</div>
@@ -30,7 +30,7 @@
 						</span>
 						<FeatherIcon name="check-circle" class="text-green-500 h-3 w-3" />
 					</div>
-					<span class="text-gray-800 text-xl font-semibold leading-6">
+					<span class="text-gray-800 text-lg font-semibold leading-6">
 						{{ `${company_currency} ${summary.data?.total_approved_amount}` }}
 					</span>
 				</div>
@@ -42,7 +42,7 @@
 						</span>
 						<FeatherIcon name="x-circle" class="text-red-500 h-3 w-3" />
 					</div>
-					<span class="text-gray-800 text-xl font-semibold leading-6">
+					<span class="text-gray-800 text-lg font-semibold leading-6">
 						{{
 							`${summary.data?.currency} ${summary.data?.total_rejected_amount}`
 						}}

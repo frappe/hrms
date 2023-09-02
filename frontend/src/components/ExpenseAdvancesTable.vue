@@ -19,17 +19,17 @@
 				<div class="flex flex-row items-start gap-3">
 					<Input
 						type="checkbox"
-						class="mt-0.5"
+						class="mt-[0.5px]"
 						v-model="advance.selected"
 						:disabled="isReadOnly"
 					/>
 
-					<div class="flex flex-col items-start gap-1">
-						<div class="text-lg font-semibold text-gray-800">
+					<div class="flex flex-col items-start gap-1.5">
+						<div class="text-base font-semibold text-gray-800">
 							{{ advance.purpose || advance.employee_advance }}
 						</div>
 						<div class="flex flex-row items-center gap-3 justify-between">
-							<div class="text-sm font-normal text-gray-500">
+							<div class="text-xs font-normal text-gray-500">
 								{{
 									`Unclaimed Amount: ${currency} ${advance.unclaimed_amount}`
 								}}

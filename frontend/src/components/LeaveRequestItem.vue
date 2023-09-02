@@ -3,11 +3,11 @@
 		<div class="flex flex-row items-center justify-between">
 			<div class="flex flex-row items-start gap-3 grow">
 				<FeatherIcon name="calendar" class="h-5 w-5 text-gray-500" />
-				<div class="flex flex-col items-start">
-					<div class="text-lg font-normal text-gray-800">
+				<div class="flex flex-col items-start gap-1.5">
+					<div class="text-base font-normal text-gray-800">
 						{{ props.doc.leave_type }}
 					</div>
-					<div class="text-sm font-normal text-gray-500">
+					<div class="text-xs font-normal text-gray-500">
 						<span>{{ props.doc.leave_dates || getLeaveDates(props.doc) }}</span>
 						<span class="whitespace-pre"> &middot; </span>
 						<span class="whitespace-nowrap">{{

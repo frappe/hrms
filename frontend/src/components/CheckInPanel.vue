@@ -1,6 +1,6 @@
 <template>
 	<div class="flex flex-col">
-		<div class="font-medium text-sm text-gray-500" v-if="lastLog">
+		<div class="font-medium text-xs text-gray-500 mt-1.5" v-if="lastLog">
 			{{ `Last ${lastLogType} was at ${lastLogTime}` }}
 		</div>
 		<Button

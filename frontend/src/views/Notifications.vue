@@ -54,11 +54,7 @@
 								:to="getItemRoute(item)"
 								@click="markAsRead(item.name)"
 							>
-								<EmployeeAvatar
-									:userID="item.from_user"
-									size="md"
-									class="mt-0.5"
-								/>
+								<EmployeeAvatar :userID="item.from_user" size="md" />
 								<div class="flex flex-col gap-0.5 grow ml-3">
 									<div
 										class="text-base font-normal text-gray-800"

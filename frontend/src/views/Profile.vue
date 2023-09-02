@@ -8,7 +8,7 @@
 					:alt="user.data.first_name"
 				/>
 
-				<div class="flex flex-col gap-1 items-center mt-2 mb-5">
+				<div class="flex flex-col gap-1.5 items-center mt-2 mb-5">
 					<span v-if="employee" class="text-xl font-bold text-gray-900">{{
 						employee?.data?.employee_name
 					}}</span>
@@ -23,7 +23,8 @@
 				<Button
 					@click="logout"
 					variant="outline"
-					class="text-red-500 w-full shadow py-2 mt-5"
+					theme="red"
+					class="w-full shadow py-4 mt-5"
 					icon-left="log-out"
 				>
 					Log Out
@@ -40,6 +41,7 @@ import BaseLayout from "@/components/BaseLayout.vue"
 import { inject } from "vue"
 
 import { showErrorAlert } from "@/utils/dialogs"
+import { Avatar } from "frappe-ui"
 
 const session = inject("$session")
 const user = inject("$user")

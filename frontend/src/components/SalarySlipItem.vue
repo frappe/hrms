@@ -2,12 +2,12 @@
 	<div class="flex flex-col w-full justify-center gap-2.5">
 		<div class="flex flex-row items-center justify-between">
 			<div class="flex flex-row items-start gap-3 grow">
-				<SalaryIcon class="h-4 w-4 mt-0.5 text-gray-500" />
-				<div class="flex flex-col items-start">
-					<div class="text-lg font-normal text-gray-800">
+				<SalaryIcon class="h-4 w-4 text-gray-500" />
+				<div class="flex flex-col items-start gap-1.5">
+					<div class="text-base font-normal text-gray-800">
 						{{ title }}
 					</div>
-					<div class="text-sm font-normal text-gray-500">
+					<div class="text-xs font-normal text-gray-500">
 						<span>
 							{{ `Gross Pay: ${formatCurrency(doc.gross_pay, doc.currency)}` }}
 						</span>
