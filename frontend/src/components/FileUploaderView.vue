@@ -44,29 +44,37 @@
 				</li>
 			</ul>
 
-			<Dialog
-				:options="{
-					title: 'Delete Attachment',
-					message: `Are you sure you want to delete the attachment ${deleteAttachment.file_name}?`,
-					icon: {
-						name: 'trash',
-						appearance: 'danger',
-					},
-					size: 'xs',
-					actions: [
-						{
-							label: 'Delete',
-							appearance: 'danger',
-							handler: ({ close }) => {
-								emit('handle-file-delete', deleteAttachment)
-								close() // closes dialog
-							},
-						},
-						{ label: 'Cancel' },
-					],
-				}"
-				v-model="showDialog"
-			/>
+			<Dialog v-model="showDialog">
+				<template #body-title>
+					<h2 class="text-xl font-bold">Delete Attachment</h2>
+				</template>
+				<template #body-content>
+					<p>
+						Are you sure you want to delete the attachment
+						<span class="font-bold">{{ deleteAttachment.file_name }}</span>
+						?
+					</p>
+				</template>
+				<template #actions>
+					<div class="flex flex-row gap-4">
+						<Button
+							variant="outline"
+							class="py-5 w-full"
+							@click="showDialog = false"
+						>
+							Cancel
+						</Button>
+						<Button
+							variant="solid"
+							theme="red"
+							@click="handleFileDelete"
+							class="py-5 w-full"
+						>
+							Delete
+						</Button>
+					</div>
+				</template>
+			</Dialog>
 		</div>
 	</div>
 </template>
@@ -89,5 +97,10 @@ const emit = defineEmits(["handle-file-select", "handle-file-delete"])
 function confirmDeleteAttachment(fileObj) {
 	deleteAttachment.value = fileObj
 	showDialog.value = true
+}
+
+function handleFileDelete() {
+	emit("handle-file-delete", deleteAttachment.value)
+	showDialog.value = false
 }
 </script>

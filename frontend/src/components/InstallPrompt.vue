@@ -1,25 +1,23 @@
 <template>
 	<!-- Install PWA dialog -->
-	<Dialog
-		:options="{
-			title: 'Install Frappe HR',
-			message:
-				'Get the app on your device for easy access & a better experience!',
-			size: 'xs',
-			actions: [
-				{
-					label: 'Install',
-					appearance: 'primary',
-					'icon-left': 'download',
-					handler: ({ close }) => {
-						install()
-						close() // closes dialog
-					},
-				},
-			],
-		}"
-		v-model="showDialog"
-	/>
+	<Dialog v-model="showDialog">
+		<template #body-title>
+			<h2 class="text-xl font-bold">Install Frappe HR</h2>
+		</template>
+		<template #body-content>
+			<p>Get the app on your device for easy access & a better experience!</p>
+		</template>
+		<template #actions>
+			<Button
+				variant="solid"
+				@click="handleDocUpdate('submit')"
+				class="py-5 w-full"
+			>
+				<template #prefix><FeatherIcon name="download" class="w-4" /></template>
+				Install
+			</Button>
+		</template>
+	</Dialog>
 
 	<!-- iOS installation info message -->
 	<Popover :show="iosInstallMessage" placement="bottom">

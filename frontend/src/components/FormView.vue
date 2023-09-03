@@ -36,9 +36,9 @@
 							{
 								label: 'Delete',
 								condition: showDeleteButton,
-								handler: () => (showDeleteDialog = true),
+								onClick: () => (showDeleteDialog = true),
 							},
-							{ label: 'Reload', handler: () => handleDocReload() },
+							{ label: 'Reload', onClick: () => handleDocReload() },
 						]"
 						:button="{
 							label: 'Menu',
@@ -182,66 +182,99 @@
 	</div>
 
 	<!-- Confirmation Dialogs -->
-	<Dialog
-		:options="{
-			title: `Delete ${props.doctype}`,
-			message: `Are you sure you want to delete the ${props.doctype} ${formModel.name}?`,
-			icon: { name: 'trash', appearance: 'danger' },
-			size: 'xs',
-			actions: [
-				{
-					label: 'Delete',
-					appearance: 'danger',
-					handler: ({ close }) => {
-						handleDocDelete()
-						close() // closes dialog
-					},
-				},
-				{ label: 'Cancel' },
-			],
-		}"
-		v-model="showDeleteDialog"
-	/>
+	<Dialog v-model="showDeleteDialog">
+		<template #body-title>
+			<h2 class="text-xl font-bold">Delete {{ props.doctype }}</h2>
+		</template>
+		<template #body-content>
+			<p>
+				Are you sure you want to delete the {{ props.doctype }}
+				<span class="font-bold">{{ formModel.name }}</span>
+				?
+			</p>
+		</template>
+		<template #actions>
+			<div class="flex flex-row gap-4">
+				<Button
+					variant="outline"
+					class="py-5 w-full"
+					@click="showDeleteDialog = false"
+				>
+					Cancel
+				</Button>
+				<Button
+					variant="solid"
+					theme="red"
+					@click="handleDocDelete"
+					class="py-5 w-full"
+				>
+					Delete
+				</Button>
+			</div>
+		</template>
+	</Dialog>
 
-	<Dialog
-		:options="{
-			title: 'Confirm',
-			message: `Permanently submit ${props.doctype} ${formModel.name}?`,
-			size: 'xs',
-			actions: [
-				{
-					label: 'Yes',
-					appearance: 'primary',
-					handler: ({ close }) => {
-						handleDocUpdate('submit')
-						close() // closes dialog
-					},
-				},
-				{ label: 'No' },
-			],
-		}"
-		v-model="showSubmitDialog"
-	/>
+	<Dialog v-model="showSubmitDialog">
+		<template #body-title>
+			<h2 class="text-xl font-bold">Confirm</h2>
+		</template>
+		<template #body-content>
+			<p>
+				Permanently submit {{ props.doctype }}
+				<span class="font-bold">{{ formModel.name }}</span>
+				?
+			</p>
+		</template>
+		<template #actions>
+			<div class="flex flex-row gap-4">
+				<Button
+					variant="outline"
+					class="py-5 w-full"
+					@click="showSubmitDialog = false"
+				>
+					No
+				</Button>
+				<Button
+					variant="solid"
+					@click="handleDocUpdate('submit')"
+					class="py-5 w-full"
+				>
+					Yes
+				</Button>
+			</div>
+		</template>
+	</Dialog>
 
-	<Dialog
-		:options="{
-			title: 'Confirm',
-			message: `Permanently cancel ${props.doctype} ${formModel.name}?`,
-			size: 'xs',
-			actions: [
-				{
-					label: 'Yes',
-					appearance: 'primary',
-					handler: ({ close }) => {
-						handleDocUpdate('cancel')
-						close() // closes dialog
-					},
-				},
-				{ label: 'No' },
-			],
-		}"
-		v-model="showCancelDialog"
-	/>
+	<Dialog v-model="showCancelDialog">
+		<template #body-title>
+			<h2 class="text-xl font-bold">Confirm</h2>
+		</template>
+		<template #body-content>
+			<p>
+				Permanently cancel {{ props.doctype }}
+				<span class="font-bold">{{ formModel.name }}</span
+				>?
+			</p>
+		</template>
+		<template #actions>
+			<div class="flex flex-row gap-4">
+				<Button
+					variant="outline"
+					class="py-5 w-full"
+					@click="showCancelDialog = false"
+				>
+					No
+				</Button>
+				<Button
+					variant="solid"
+					@click="handleDocUpdate('cancel')"
+					class="py-5 w-full"
+				>
+					Yes
+				</Button>
+			</div>
+		</template>
+	</Dialog>
 </template>
 
 <script setup>
@@ -550,6 +583,9 @@ async function handleDocUpdate(action) {
 			isFormUpdated.value = true
 		})
 	}
+
+	if (action === "submit") showSubmitDialog.value = false
+	else if (action === "cancel") showCancelDialog.value = false
 }
 
 function saveForm() {
@@ -575,6 +611,7 @@ function submitOrCancelForm() {
 
 function handleDocDelete() {
 	documentResource.delete.submit()
+	showDeleteDialog.value = false
 }
 
 function handleDocReload() {
