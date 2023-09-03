@@ -45,7 +45,7 @@
 						>
 							<router-link
 								:class="[
-									'flex flex-row items-start p-4 justify-between border-b before:mt-4',
+									'flex flex-row items-start p-4 justify-between border-b before:mt-3',
 									`before:content-[''] before:mr-2 before:shrink-0 before:w-1.5 before:h-1.5 before:rounded-full`,
 									item.read ? 'bg-white-500' : 'before:bg-blue-500',
 								]"
@@ -54,13 +54,13 @@
 								:to="getItemRoute(item)"
 								@click="markAsRead(item.name)"
 							>
-								<EmployeeAvatar :userID="item.from_user" size="md" />
+								<EmployeeAvatar :userID="item.from_user" size="lg" />
 								<div class="flex flex-col gap-0.5 grow ml-3">
 									<div
-										class="text-base font-normal text-gray-800"
+										class="text-sm leading-5 font-normal text-gray-800"
 										v-html="item.message"
 									></div>
-									<div class="text-sm font-normal text-gray-500">
+									<div class="text-xs font-normal text-gray-500">
 										{{ dayjs(item.creation).fromNow() }}
 									</div>
 								</div>

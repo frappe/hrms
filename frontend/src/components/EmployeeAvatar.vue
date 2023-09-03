@@ -3,7 +3,7 @@
 		<Avatar
 			v-if="employee"
 			:label="employee?.employee_name"
-			:imageURL="employee?.image"
+			:image="employee?.image"
 			:size="props.size"
 		/>
 		<div class="text-base text-gray-800 grow">
@@ -14,7 +14,7 @@
 	<Avatar
 		v-else
 		:label="employee?.employee_name"
-		:imageURL="employee?.image"
+		:image="employee?.image"
 		:size="props.size"
 	/>
 </template>
