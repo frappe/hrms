@@ -25,13 +25,14 @@
 						<div class="flex flex-row gap-2 mt-2 flex-wrap">
 							<Button
 								v-for="option in filter.options"
-								:variant="
-									option === filters[filter.fieldname].value
-										? 'solid'
-										: 'outline'
-								"
+								variant="outline"
 								@click="setStatusFilter(filter.fieldname, option)"
-								class="text-sm"
+								class="text-sm text-gray-800"
+								:class="[
+									option === filters[filter.fieldname].value
+										? '!border !border-gray-800 !text-gray-900 !bg-gray-50 !font-medium'
+										: '!font-normal',
+								]"
 							>
 								{{ option }}
 							</Button>

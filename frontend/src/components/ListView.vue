@@ -18,7 +18,7 @@
 						variant="subtle"
 						:class="[
 							areFiltersApplied
-								? '!border !border-gray-800 !bg-white !text-gray-800'
+								? '!border !border-gray-800 !bg-white !text-gray-900 !font-semibold'
 								: '',
 						]"
 					/>
