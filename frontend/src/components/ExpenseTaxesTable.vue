@@ -98,8 +98,9 @@
 					>
 						<Button
 							v-if="editingIdx !== null"
-							class="py-3 px-12 border-red-600 text-red-600"
+							class="border-red-600 text-red-600 py-5 text-sm"
 							variant="outline"
+							theme="red"
 							@click="deleteExpenseTax()"
 						>
 							<template #prefix>
@@ -109,7 +110,7 @@
 						</Button>
 						<Button
 							variant="solid"
-							class="w-full py-3 px-12"
+							class="w-full py-5 text-sm"
 							@click="updateExpenseTax()"
 							:disabled="addButtonDisabled"
 						>
