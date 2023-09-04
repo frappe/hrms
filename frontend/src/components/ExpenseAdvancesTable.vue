@@ -17,7 +17,7 @@
 		>
 			<div class="flex flex-row justify-between items-center">
 				<div class="flex flex-row items-start gap-3">
-					<Input
+					<FormControl
 						type="checkbox"
 						class="mt-[0.5px]"
 						v-model="advance.selected"
@@ -42,7 +42,7 @@
 					<span class="text-normal">
 						{{ currency }}
 					</span>
-					<Input
+					<FormControl
 						type="number"
 						class="w-20"
 						v-model="advance.allocated_amount"

@@ -7,13 +7,13 @@
 				</div>
 				<div class="mx-auto mt-6 w-full px-8 sm:w-96">
 					<form class="flex flex-col space-y-4" @submit.prevent="submit">
-						<Input
+						<FormControl
 							label="Email"
 							placeholder="johndoe@mail.com"
 							v-model="email"
 							:type="email !== 'Administrator' ? 'email' : 'text'"
 						/>
-						<Input
+						<FormControl
 							label="Password"
 							type="password"
 							placeholder="••••••"
@@ -32,7 +32,7 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { inject, ref } from "vue"
-import { Input, Button } from "frappe-ui"
+import { Button, FormControl } from "frappe-ui"
 
 const email = ref(null)
 const password = ref(null)
