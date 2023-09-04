@@ -65,7 +65,7 @@
 								class="inline-block p-4 border-b-2 border-transparent rounded-t-lg"
 								:class="[
 									activeTab === tab.name
-										? '!text-blue-600 !border-blue-600'
+										? '!text-gray-800 !border-gray-800'
 										: 'hover:text-gray-600 hover:border-gray-300',
 								]"
 							>

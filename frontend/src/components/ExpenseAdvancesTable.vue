@@ -10,7 +10,7 @@
 			:key="advance.name"
 			class="flex flex-col bg-white border shadow-sm rounded-lg p-3.5"
 			:class="[
-				advance.selected ? 'border-blue-500' : '',
+				advance.selected ? 'border-gray-500' : '',
 				isReadOnly ? '' : 'cursor-pointer',
 			]"
 			@click="toggleAdvanceSelection(advance)"

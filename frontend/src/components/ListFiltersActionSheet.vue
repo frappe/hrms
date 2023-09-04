@@ -16,22 +16,22 @@
 				>
 					<!-- Status filter -->
 					<div
-						class="flex flex-col"
+						class="flex flex-col gap-1.5"
 						v-if="['status', 'approval_status'].includes(filter.fieldname)"
 					>
-						<div class="text-gray-800 font-semibold text-lg">
+						<div class="text-gray-800 font-semibold text-base">
 							{{ filter.label }}
 						</div>
 						<div class="flex flex-row gap-2 mt-2 flex-wrap">
 							<Button
 								v-for="option in filter.options"
-								variant="outline"
-								@click="setStatusFilter(filter.fieldname, option)"
-								:class="[
+								:variant="
 									option === filters[filter.fieldname].value
-										? '!border !border-blue-500 !text-blue-500'
-										: '',
-								]"
+										? 'solid'
+										: 'outline'
+								"
+								@click="setStatusFilter(filter.fieldname, option)"
+								class="text-sm"
 							>
 								{{ option }}
 							</Button>
@@ -40,7 +40,7 @@
 
 					<!-- Field filters -->
 					<div v-else class="flex flex-col gap-2">
-						<div class="text-gray-800 font-semibold text-lg">
+						<div class="text-gray-800 font-semibold text-base">
 							{{ filter.label }}
 						</div>
 						<div class="flex flex-row items-center gap-3">
