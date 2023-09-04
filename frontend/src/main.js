@@ -9,6 +9,7 @@ import {
 	setConfig,
 	frappeRequest,
 	resourcesPlugin,
+	FormControl,
 } from "frappe-ui"
 import EmptyState from "@/components/EmptyState.vue"
 
@@ -34,6 +35,7 @@ app.use(resourcesPlugin)
 
 app.component("Button", Button)
 app.component("Input", Input)
+app.component("FormControl", FormControl)
 app.component("EmptyState", EmptyState)
 
 app.use(router)

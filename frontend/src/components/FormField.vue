@@ -39,6 +39,7 @@
 			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
+			class="h-15"
 		/>
 
 		<!-- Check -->
