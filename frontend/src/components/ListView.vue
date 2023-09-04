@@ -4,7 +4,7 @@
 			<header
 				class="flex flex-row bg-white shadow-sm py-4 px-2 items-center justify-between border-b sticky top-0 z-10"
 			>
-				<div class="flex flex-row gap-1">
+				<div class="flex flex-row gap-1 items-center">
 					<Button variant="ghost" class="!px-0 !py-0" @click="router.back()">
 						<FeatherIcon name="chevron-left" class="h-5 w-5" />
 					</Button>
