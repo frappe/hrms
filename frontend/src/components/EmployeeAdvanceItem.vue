@@ -28,7 +28,12 @@
 				</div>
 			</div>
 			<div class="flex flex-row justify-end items-center gap-2">
-				<Badge :colorMap="colorMap" :label="props.doc.status" />
+				<Badge
+					variant="subtle"
+					:theme="colorMap[props.doc.status]"
+					:label="props.doc.status"
+					size="sm"
+				/>
 				<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
 			</div>
 		</div>
@@ -66,10 +71,10 @@ const props = defineProps({
 
 const colorMap = {
 	Paid: "green",
-	Unpaid: "yellow",
+	Unpaid: "orange",
 	Claimed: "blue",
 	Returned: "gray",
-	"Partly Claimed and Returned": "yellow",
+	"Partly Claimed and Returned": "orange",
 }
 
 const currency = computed(() => getCurrencySymbol(props.doc.currency))

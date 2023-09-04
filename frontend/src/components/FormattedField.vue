@@ -1,7 +1,7 @@
 <template>
 	<Badge
 		v-if="props.fieldtype === 'Select'"
-		:colorMap="colorMap"
+		:theme="colorMap[props.value]"
 		:label="props.value"
 	/>
 
@@ -50,6 +50,6 @@ const props = defineProps({
 const colorMap = {
 	Approved: "green",
 	Rejected: "red",
-	Open: "yellow",
+	Open: "orange",
 }
 </script>

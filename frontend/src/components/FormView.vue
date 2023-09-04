@@ -20,13 +20,13 @@
 					</h2>
 					<Badge
 						:label="id"
-						color="white"
 						class="whitespace-nowrap text-[8px]"
+						variant="outline"
 					/>
 					<Badge
 						v-if="formModel?.status"
 						:label="formModel?.status"
-						:color="statusColor"
+						:theme="statusColor"
 						class="whitespace-nowrap text-[8px]"
 					/>
 
@@ -294,7 +294,7 @@ import {
 import FormField from "@/components/FormField.vue"
 import FileUploaderView from "@/components/FileUploaderView.vue"
 
-import { FileAttachment, guessStatusColor } from "@/composables/index"
+import { FileAttachment, guessStatusColor } from "@/composables"
 import { getCompanyCurrency } from "@/data/currencies"
 import { formatCurrency } from "@/utils/formatters"
 

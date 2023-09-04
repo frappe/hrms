@@ -19,12 +19,17 @@
 				</div>
 			</div>
 			<div class="flex flex-row justify-end items-center gap-2">
-				<span
-					class="text-gray-600 bg-gray-100 font-medium rounded-lg text-xs px-2"
-				>
-					{{ props.doc.status }}
-				</span>
-				<Badge :colorMap="colorMap" :label="approvalStatus" />
+				<Badge
+					variant="outline"
+					:theme="statusMap[props.doc.status]"
+					:label="props.doc.status"
+					size="sm"
+				/>
+				<Badge
+					:theme="approvalStatusMap[props.doc.approval_status]"
+					:label="approvalStatus"
+					size="sm"
+				/>
 				<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
 			</div>
 		</div>
@@ -44,10 +49,10 @@
 import { FeatherIcon, Badge } from "frappe-ui"
 import { computed, inject } from "vue"
 
-import { getCompanyCurrencySymbol } from "@/data/currencies"
-
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
+
+import { getCompanyCurrencySymbol } from "@/data/currencies"
 
 const dayjs = inject("$dayjs")
 const props = defineProps({
@@ -60,10 +65,19 @@ const props = defineProps({
 	},
 })
 
-const colorMap = {
+const statusMap = {
+	Draft: "gray",
+	Submitted: "blue",
+	Cancelled: "red",
+	Paid: "green",
+	Unpaid: "orange",
+	Rejected: "red",
+}
+
+const approvalStatusMap = {
 	Approved: "green",
 	Rejected: "red",
-	Pending: "yellow",
+	Draft: "orange",
 }
 
 const claimTitle = computed(() => {
