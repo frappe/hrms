@@ -29,17 +29,17 @@
 			<div
 				v-for="(allocation, leave_type, index) in leaveBalance.data"
 				:key="leave_type"
-				class="flex flex-col bg-white rounded-xl shadow-md gap-2 p-4 items-start first:ml-4"
+				class="flex flex-col bg-white border-none rounded-xl drop-shadow-md gap-2 p-4 items-start first:ml-4"
 			>
 				<SemicircleChart
 					:percentage="allocation.balance_percentage"
 					:colorClass="getChartColor(index)"
 				/>
-				<div class="text-gray-800 font-bold text-lg">
+				<div class="text-gray-800 font-bold text-base">
 					{{ `${allocation.balance_leaves}/${allocation.allocated_leaves}` }}
 				</div>
-				<div class="text-gray-600 font-normal text-base w-24">
-					{{ `${leave_type} balance` }}
+				<div class="text-gray-600 font-normal text-sm w-24">
+					{{ leave_type }}
 				</div>
 			</div>
 		</div>
@@ -75,7 +75,7 @@ const leaveBalance = createResource({
 })
 
 const getChartColor = (index) => {
-	const chartColors = ["text-pink-500", "text-orange-400", "text-purple-500"]
+	const chartColors = ["text-pink-500", "text-orange-500", "text-purple-500"]
 	return chartColors[index % chartColors.length]
 }
 </script>
