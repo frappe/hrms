@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col gap-3 py-4">
 		<label class="file-select">
-			<h2 class="text-lg font-semibold text-gray-800 pb-4">Attachments</h2>
+			<h2 class="text-base font-semibold text-gray-800 pb-4">Attachments</h2>
 			<div class="select-button cursor-pointer">
 				<div
 					class="flex flex-col w-full border shadow-sm items-center rounded-lg p-3 gap-2"

@@ -1,9 +1,9 @@
 <template>
 	<!-- Header -->
-	<div class="flex flex-row justify-between items-center">
-		<h2 class="text-lg font-semibold text-gray-800">Expenses</h2>
+	<div class="flex flex-row justify-between items-center mt-2">
+		<h2 class="text-base font-semibold text-gray-800">Expenses</h2>
 		<div class="flex flex-row gap-3 items-center">
-			<span class="text-lg font-semibold text-gray-800">
+			<span class="text-base font-semibold text-gray-800">
 				{{ expenseClaim.total_claimed_amount || 0 }}
 			</span>
 			<Button

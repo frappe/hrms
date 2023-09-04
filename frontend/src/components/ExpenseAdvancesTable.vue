@@ -1,6 +1,8 @@
 <template>
 	<div class="flex flex-row justify-between items-center">
-		<h2 class="text-lg font-semibold text-gray-800">Settle against Advances</h2>
+		<h2 class="text-base font-semibold text-gray-800">
+			Settle against Advances
+		</h2>
 	</div>
 
 	<div class="flex flex-col gap-2.5" v-if="expenseClaim.advances?.length">

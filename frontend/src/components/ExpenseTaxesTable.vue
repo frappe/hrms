@@ -1,9 +1,9 @@
 <template>
 	<template v-if="expenseClaim.expenses">
 		<div class="flex flex-row justify-between items-center pt-4">
-			<h2 class="text-lg font-semibold text-gray-800">Taxes & Charges</h2>
+			<h2 class="text-base font-semibold text-gray-800">Taxes & Charges</h2>
 			<div class="flex flex-row gap-3 items-center">
-				<span class="text-lg font-semibold text-gray-800">
+				<span class="text-base font-semibold text-gray-800">
 					{{ expenseClaim.total_taxes_and_charges || 0 }}
 				</span>
 				<Button
