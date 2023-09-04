@@ -4,10 +4,10 @@
 			<div class="flex flex-col items-center my-7 p-4">
 				<div class="flex flex-col w-full bg-white rounded-lg py-5 px-3.5 gap-5">
 					<div v-if="lastSalarySlip" class="flex flex-col w-full gap-1.5">
-						<span class="text-gray-600 text-base font-medium leading-5">
+						<span class="text-gray-600 text-sm font-medium leading-5">
 							Year To Date
 						</span>
-						<span class="text-gray-800 text-2xl font-bold leading-6">
+						<span class="text-gray-800 text-xl font-bold leading-6">
 							{{
 								formatCurrency(
 									lastSalarySlip.year_to_date,

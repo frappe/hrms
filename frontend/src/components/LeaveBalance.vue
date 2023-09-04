@@ -1,24 +1,19 @@
 <template>
 	<div class="flex flex-col w-full mt-7">
 		<div class="flex flex-row justify-between items-center px-4">
-			<div class="text-xl text-gray-800 font-bold">Leave Balance</div>
-			<div
-				class="text-lg text-blue-500 font-medium cursor-pointer"
+			<div class="text-lg text-gray-800 font-bold">Leave Balance</div>
+			<router-link
+				:to="{ name: 'LeaveApplicationListView' }"
+				v-slot="{ navigate }"
 				v-if="leaveBalance.data"
 			>
-				<router-link
-					:to="{ name: 'LeaveApplicationListView' }"
-					v-slot="{ navigate }"
-					v-if="leaveBalance.data"
+				<div
+					@click="navigate"
+					class="text-base text-blue-500 font-medium cursor-pointer"
 				>
-					<div
-						@click="navigate"
-						class="text-lg text-blue-500 font-medium cursor-pointer"
-					>
-						View Leave History
-					</div>
-				</router-link>
-			</div>
+					View Leave History
+				</div>
+			</router-link>
 		</div>
 
 		<!-- Leave Balance Dashboard -->

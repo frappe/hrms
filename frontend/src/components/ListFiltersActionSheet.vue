@@ -4,7 +4,7 @@
 		class="bg-white w-full flex flex-col items-center justify-center pb-5 max-h-[calc(100vh-5rem)]"
 	>
 		<div class="w-full pt-8 pb-5 border-b text-center sticky top-0 z-[100]">
-			<span class="text-gray-900 font-bold text-xl">Filters</span>
+			<span class="text-gray-900 font-bold text-lg">Filters</span>
 		</div>
 
 		<div class="w-full p-4 overflow-auto">

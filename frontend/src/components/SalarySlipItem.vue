@@ -16,7 +16,7 @@
 				</div>
 			</div>
 			<div class="flex flex-row justify-end items-center gap-2">
-				<span class="text-gray-700 font-normal rounded-lg text-lg">
+				<span class="text-gray-700 font-normal rounded-lg text-base">
 					{{ formatCurrency(doc.net_pay, doc.currency) }}
 				</span>
 				<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />

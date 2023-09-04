@@ -2,7 +2,7 @@
 	<!-- Install PWA dialog -->
 	<Dialog v-model="showDialog">
 		<template #body-title>
-			<h2 class="text-xl font-bold">Install Frappe HR</h2>
+			<h2 class="text-lg font-bold">Install Frappe HR</h2>
 		</template>
 		<template #body-content>
 			<p>Get the app on your device for easy access & a better experience!</p>

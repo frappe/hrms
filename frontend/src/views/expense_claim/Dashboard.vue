@@ -16,7 +16,7 @@
 				</div>
 
 				<div>
-					<div class="text-xl text-gray-800 font-bold">Recent Expenses</div>
+					<div class="text-lg text-gray-800 font-bold">Recent Expenses</div>
 					<RequestList
 						:component="markRaw(ExpenseClaimItem)"
 						:items="myClaims.data"
@@ -27,7 +27,7 @@
 
 				<div>
 					<div class="flex flex-row justify-between items-center">
-						<div class="text-xl text-gray-800 font-bold">
+						<div class="text-lg text-gray-800 font-bold">
 							Employee Advance Balance
 						</div>
 						<router-link

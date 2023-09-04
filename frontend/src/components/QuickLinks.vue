@@ -1,6 +1,6 @@
 <template>
 	<div class="flex flex-col gap-5 my-4 w-full">
-		<div class="font-medium text-gray-900">{{ title }}</div>
+		<div class="text-lg font-medium text-gray-900">{{ title }}</div>
 		<div class="flex flex-col bg-white rounded-lg">
 			<router-link
 				class="flex flex-row flex-start p-4 items-center justify-between border-b"

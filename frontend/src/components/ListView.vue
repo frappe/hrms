@@ -8,7 +8,7 @@
 					<Button variant="ghost" class="!px-0 !py-0" @click="router.back()">
 						<FeatherIcon name="chevron-left" class="h-5 w-5" />
 					</Button>
-					<h2 class="text-2xl font-semibold text-gray-900">{{ pageTitle }}</h2>
+					<h2 class="text-xl font-semibold text-gray-900">{{ pageTitle }}</h2>
 				</div>
 
 				<div class="flex flex-row gap-2">

@@ -13,7 +13,7 @@
 						item.current
 							? 'bg-gray-200 font-bold text-gray-800'
 							: 'text-gray-700 font-normal hover:bg-gray-100 hover:text-gray-900',
-						'flex flex-row rounded-lg gap-3 flex-start py-3 px-2 items-center text-base',
+						'flex flex-row rounded-lg gap-3 flex-start py-3 px-2 items-center text-sm',
 					]"
 				>
 					<FeatherIcon :name="item.icon" class="h-5 w-5" />

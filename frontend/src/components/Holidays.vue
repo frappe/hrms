@@ -1,11 +1,11 @@
 <template>
 	<div class="flex flex-col gap-5 w-full">
 		<div class="flex flex-row justify-between items-center">
-			<div class="text-xl text-gray-800 font-bold">Upcoming Holidays</div>
+			<div class="text-lg text-gray-800 font-bold">Upcoming Holidays</div>
 			<div
 				v-if="upcomingHolidays?.length"
 				id="open-holiday-list"
-				class="text-lg text-blue-500 font-medium cursor-pointer"
+				class="text-base text-blue-500 font-medium cursor-pointer"
 			>
 				View All
 			</div>
@@ -44,7 +44,7 @@
 	>
 		<div class="bg-white w-full flex flex-col items-center justify-center pb-5">
 			<div class="w-full pt-8 pb-5 border-b text-center">
-				<span class="text-gray-900 font-bold text-xl">Holiday List</span>
+				<span class="text-gray-900 font-bold text-lg">Holiday List</span>
 			</div>
 			<div class="w-full flex flex-col items-center justify-center gap-5 p-4">
 				<div

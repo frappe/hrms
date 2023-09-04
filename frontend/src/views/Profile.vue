@@ -9,7 +9,7 @@
 				/>
 
 				<div class="flex flex-col gap-1.5 items-center mt-2 mb-5">
-					<span v-if="employee" class="text-xl font-bold text-gray-900">{{
+					<span v-if="employee" class="text-lg font-bold text-gray-900">{{
 						employee?.data?.employee_name
 					}}</span>
 					<span v-if="employee" class="font-normal text-sm text-gray-500">{{

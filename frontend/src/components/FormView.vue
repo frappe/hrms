@@ -14,7 +14,7 @@
 					class="flex flex-row items-center gap-2 overflow-hidden grow"
 				>
 					<h2
-						class="text-2xl font-semibold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis"
+						class="text-xl font-semibold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis"
 					>
 						{{ doctype }}
 					</h2>
@@ -43,7 +43,7 @@
 						:button="{
 							label: 'Menu',
 							icon: 'more-horizontal',
-							appearance: 'minimal',
+							variant: 'ghost',
 						}"
 					/>
 				</div>

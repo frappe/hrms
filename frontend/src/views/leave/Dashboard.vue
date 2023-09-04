@@ -14,7 +14,7 @@
 						</Button>
 					</router-link>
 					<div>
-						<div class="text-xl text-gray-800 font-bold">Recent Leaves</div>
+						<div class="text-lg text-gray-800 font-bold">Recent Leaves</div>
 						<RequestList
 							:component="markRaw(LeaveRequestItem)"
 							:items="myLeaves.data"

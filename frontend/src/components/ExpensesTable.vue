@@ -68,7 +68,7 @@
 		<!-- Add Expense Action Sheet -->
 		<div class="bg-white w-full flex flex-col items-center justify-center pb-5">
 			<div class="w-full pt-8 pb-5 border-b text-center">
-				<span class="text-gray-900 font-bold text-xl">
+				<span class="text-gray-900 font-bold text-lg">
 					{{ modalTitle }}
 				</span>
 			</div>
