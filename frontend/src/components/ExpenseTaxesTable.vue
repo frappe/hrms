@@ -99,19 +99,26 @@
 						<Button
 							v-if="editingIdx !== null"
 							class="py-3 px-12 border-red-600 text-red-600"
-							icon-left="trash"
 							variant="outline"
 							@click="deleteExpenseTax()"
 						>
+							<template #prefix>
+								<FeatherIcon name="trash" class="w-4" />
+							</template>
 							Delete
 						</Button>
 						<Button
 							variant="solid"
 							class="w-full py-3 px-12"
-							:icon-left="editingIdx === null ? 'plus' : 'check'"
 							@click="updateExpenseTax()"
 							:disabled="addButtonDisabled"
 						>
+							<template #prefix>
+								<FeatherIcon
+									:name="editingIdx === null ? 'plus' : 'check'"
+									class="w-4"
+								/>
+							</template>
 							{{ editingIdx === null ? "Add Tax" : "Update Tax" }}
 						</Button>
 					</div>

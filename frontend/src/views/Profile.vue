@@ -25,8 +25,10 @@
 					variant="outline"
 					theme="red"
 					class="w-full shadow py-4 mt-5"
-					icon-left="log-out"
 				>
+					<template #prefix>
+						<FeatherIcon name="log-out" class="w-4" />
+					</template>
 					Log Out
 				</Button>
 			</div>
@@ -41,7 +43,7 @@ import BaseLayout from "@/components/BaseLayout.vue"
 import { inject } from "vue"
 
 import { showErrorAlert } from "@/utils/dialogs"
-import { Avatar } from "frappe-ui"
+import { FeatherIcon } from "frappe-ui"
 
 const session = inject("$session")
 const user = inject("$user")

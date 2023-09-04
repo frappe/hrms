@@ -28,11 +28,13 @@
 							</div>
 							<Button
 								variant="outline"
-								icon-left="check-circle"
 								class="ml-auto"
 								@click="markAllAsRead.submit"
 								:loading="markAllAsRead.loading"
 							>
+								<template #prefix>
+									<FeatherIcon name="check-circle" class="w-4" />
+								</template>
 								Mark all as read
 							</Button>
 						</div>

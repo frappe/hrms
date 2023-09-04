@@ -23,12 +23,10 @@
 						]"
 					/>
 					<router-link :to="{ name: formViewRoute }" v-slot="{ navigate }">
-						<Button
-							icon-left="plus"
-							variant="solid"
-							class="mr-2"
-							@click="navigate"
-						>
+						<Button variant="solid" class="mr-2" @click="navigate">
+							<template #prefix>
+								<FeatherIcon name="plus" class="w-4" />
+							</template>
 							New
 						</Button>
 					</router-link>
