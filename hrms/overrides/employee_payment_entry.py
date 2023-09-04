@@ -106,6 +106,7 @@ def get_payment_entry_for_employee(dt, dn, party_amount=None, bank_account=None,
 
 	pe.setup_party_account_field()
 	pe.set_missing_values()
+	pe.set_missing_ref_details()
 
 	if party_account and bank:
 		reference_doc = None
