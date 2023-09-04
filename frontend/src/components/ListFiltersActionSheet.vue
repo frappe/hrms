@@ -69,15 +69,15 @@
 		>
 			<Button
 				@click="emit('clear-filters')"
-				variant="subtle"
-				class="w-full py-3 px-12"
+				variant="outline"
+				class="w-full py-5 text-sm"
 			>
 				Clear All
 			</Button>
 			<Button
 				@click="emit('apply-filters')"
 				variant="solid"
-				class="w-full py-3 px-12"
+				class="w-full py-5 text-sm"
 			>
 				Apply Filters
 			</Button>

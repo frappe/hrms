@@ -78,14 +78,14 @@
 		>
 			<Button
 				@click="updateDocumentStatus({ status: 'Rejected' })"
-				class="w-full py-3 px-12 bg-red-100 text-red-600"
+				class="w-full bg-red-100 text-red-600 py-5 text-sm"
 				icon-left="x"
 			>
 				Reject
 			</Button>
 			<Button
 				@click="updateDocumentStatus({ status: 'Approved' })"
-				class="w-full bg-green-600 text-white py-3 px-12"
+				class="w-full bg-green-600 text-white py-5 text-sm"
 				icon-left="check"
 			>
 				Approve
@@ -101,7 +101,7 @@
 		>
 			<Button
 				@click="updateDocumentStatus({ docstatus: 1 })"
-				class="w-full py-3 px-12"
+				class="w-full py-5 text-sm"
 				variant="solid"
 			>
 				Submit
@@ -114,7 +114,7 @@
 		>
 			<Button
 				@click="updateDocumentStatus({ docstatus: 2 })"
-				class="w-full py-3 px-12 bg-red-100 text-red-600"
+				class="w-full py-5 text-sm bg-red-100 text-red-600"
 				icon-left="x"
 			>
 				Cancel

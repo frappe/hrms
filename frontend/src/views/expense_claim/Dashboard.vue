@@ -9,7 +9,11 @@
 						:to="{ name: 'ExpenseClaimFormView' }"
 						v-slot="{ navigate }"
 					>
-						<Button @click="navigate" variant="solid" class="py-2 w-full">
+						<Button
+							@click="navigate"
+							variant="solid"
+							class="w-full py-5 text-sm"
+						>
 							Claim an Expense
 						</Button>
 					</router-link>

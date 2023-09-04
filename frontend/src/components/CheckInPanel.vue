@@ -4,8 +4,7 @@
 			{{ `Last ${lastLogType} was at ${lastLogTime}` }}
 		</div>
 		<Button
-			class="mt-2 mb-1 py-2 shadow-sm"
-			expand="block"
+			class="mt-2 mb-1 drop-shadow-sm py-5 text-sm"
 			id="open-checkin-modal"
 			@click="checkinTimestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')"
 		>
@@ -32,7 +31,7 @@
 			</div>
 			<Button
 				variant="solid"
-				class="py-2 w-full"
+				class="w-full py-5 text-sm"
 				@click="submitLog(nextAction.action)"
 			>
 				Confirm {{ nextAction.label }}
