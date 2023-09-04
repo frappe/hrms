@@ -54,7 +54,7 @@
 					<div class="text-gray-600 text-base">Attachments</div>
 					<ul class="w-full flex flex-col items-center gap-2">
 						<li
-							class="bg-gray-100 rounded-lg p-2 w-full"
+							class="bg-gray-100 rounded p-2 w-full"
 							v-for="(file, index) in attachedFiles.data"
 							:key="index"
 						>

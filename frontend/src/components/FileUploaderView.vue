@@ -4,7 +4,7 @@
 			<h2 class="text-base font-semibold text-gray-800 pb-4">Attachments</h2>
 			<div class="select-button cursor-pointer">
 				<div
-					class="flex flex-col w-full border shadow-sm items-center rounded-lg p-3 gap-2"
+					class="flex flex-col w-full border shadow-sm items-center rounded p-3 gap-2"
 				>
 					<FeatherIcon name="upload" class="h-6 w-6 text-gray-700" />
 					<span class="block text-sm font-normal leading-5 text-gray-700">
@@ -25,7 +25,7 @@
 		<div v-if="modelValue.length" class="w-full">
 			<ul class="w-full flex flex-col items-center gap-2">
 				<li
-					class="bg-gray-100 rounded-lg p-2 w-full"
+					class="bg-gray-100 rounded p-2 w-full"
 					v-for="(file, index) in modelValue"
 					:key="index"
 				>

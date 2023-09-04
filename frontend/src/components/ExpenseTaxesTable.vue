@@ -19,7 +19,7 @@
 
 		<div
 			v-if="expenseClaim.taxes?.length"
-			class="flex flex-col bg-white mt-5 rounded-lg border overflow-auto"
+			class="flex flex-col bg-white mt-5 rounded border overflow-auto"
 		>
 			<div
 				class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
@@ -46,7 +46,7 @@
 							</div>
 						</div>
 						<div class="flex flex-row justify-end items-center gap-2">
-							<span class="text-gray-700 font-normal rounded-lg text-base">
+							<span class="text-gray-700 font-normal rounded text-base">
 								{{ `${currency} ${item.total}` }}
 							</span>
 							<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />

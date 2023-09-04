@@ -40,7 +40,7 @@
 						</div>
 
 						<div
-							class="flex flex-col bg-white rounded-lg"
+							class="flex flex-col bg-white rounded"
 							v-if="notifications.data?.length"
 						>
 							<router-link

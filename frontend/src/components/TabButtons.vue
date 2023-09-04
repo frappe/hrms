@@ -1,12 +1,12 @@
 <template>
-	<div class="flex p-1 bg-gray-200 rounded-lg">
+	<div class="flex p-1 bg-gray-200 rounded">
 		<button
 			v-for="button in buttons"
 			:key="button.label"
-			class="px-8 py-2.5 transition-all rounded-md flex-auto font-medium text-base"
+			class="px-8 py-2.5 transition-all rounded-[7px] flex-auto font-medium text-sm"
 			:class="
 				modelValue === button.label
-					? 'bg-white shadow text-gray-900'
+					? 'bg-white drop-shadow text-gray-900'
 					: 'text-gray-600'
 			"
 			@click="$emit('update:modelValue', button.label)"

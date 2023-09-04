@@ -10,7 +10,7 @@
 		<div
 			v-for="advance in expenseClaim.advances"
 			:key="advance.name"
-			class="flex flex-col bg-white border shadow-sm rounded-lg p-3.5"
+			class="flex flex-col bg-white border shadow-sm rounded p-3.5"
 			:class="[
 				advance.selected ? 'border-gray-500' : '',
 				isReadOnly ? '' : 'cursor-pointer',

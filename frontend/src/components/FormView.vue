@@ -151,7 +151,7 @@
 			<!-- Bottom Save Button -->
 			<div
 				v-if="formButton"
-				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-xl pb-10"
+				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
 			>
 				<ErrorMessage
 					class="mb-2"
@@ -159,7 +159,7 @@
 				/>
 
 				<Button
-					class="w-full rounded-md mt-2 py-5 text-sm"
+					class="w-full rounded mt-2 py-5 text-sm"
 					:class="formButton === 'Cancel' ? 'shadow' : ''"
 					@click="formButton === 'Save' ? saveForm() : submitOrCancelForm()"
 					:variant="formButton === 'Cancel' ? 'subtle' : 'solid'"
@@ -174,7 +174,7 @@
 
 			<div
 				v-else
-				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-xl pb-10"
+				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
 			>
 				<slot name="formButton"></slot>
 			</div>

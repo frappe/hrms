@@ -2,7 +2,7 @@
 	<BaseLayout pageTitle="Salary Slips">
 		<template #body>
 			<div class="flex flex-col items-center my-7 p-4">
-				<div class="flex flex-col w-full bg-white rounded-lg py-5 px-3.5 gap-5">
+				<div class="flex flex-col w-full bg-white rounded py-5 px-3.5 gap-5">
 					<div v-if="lastSalarySlip" class="flex flex-col w-full gap-1.5">
 						<span class="text-gray-600 text-sm font-medium leading-5">
 							Year To Date
@@ -29,7 +29,7 @@
 				<div class="flex flex-col items-center mt-5 mb-7 w-full">
 					<div
 						v-if="documents.data?.length"
-						class="flex flex-col bg-white rounded-lg mt-5 overflow-auto w-full"
+						class="flex flex-col bg-white rounded mt-5 overflow-auto w-full"
 					>
 						<div
 							class="p-3.5 items-center justify-between border-b cursor-pointer"

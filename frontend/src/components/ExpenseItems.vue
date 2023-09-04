@@ -2,7 +2,7 @@
 	<!-- Table -->
 	<div
 		v-if="doc?.expenses"
-		class="flex flex-col bg-white mt-5 rounded-lg border overflow-auto"
+		class="flex flex-col bg-white mt-5 rounded border overflow-auto"
 	>
 		<div
 			class="flex flex-row p-3.5 items-center justify-between cursor-pointer"
@@ -27,7 +27,7 @@
 							</div>
 						</div>
 					</div>
-					<span class="text-gray-700 font-normal rounded-lg text-base">
+					<span class="text-gray-700 font-normal rounded text-base">
 						{{ `${currency} ${item.amount}` }}
 					</span>
 				</div>

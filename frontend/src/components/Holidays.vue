@@ -11,10 +11,7 @@
 			</div>
 		</div>
 
-		<div
-			class="flex flex-col bg-white rounded-lg"
-			v-if="upcomingHolidays?.length"
-		>
+		<div class="flex flex-col bg-white rounded" v-if="upcomingHolidays?.length">
 			<div
 				class="flex flex-row flex-start p-4 items-center justify-between border-b"
 				v-for="holiday in upcomingHolidays"

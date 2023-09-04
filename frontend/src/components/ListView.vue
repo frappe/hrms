@@ -41,7 +41,7 @@
 					/>
 
 					<div
-						class="flex flex-col bg-white rounded-lg mt-5 overflow-auto"
+						class="flex flex-col bg-white rounded mt-5 overflow-auto"
 						v-if="documents.data?.length"
 					>
 						<div

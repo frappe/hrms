@@ -24,7 +24,7 @@
 			<div
 				v-for="(allocation, leave_type, index) in leaveBalance.data"
 				:key="leave_type"
-				class="flex flex-col bg-white border-none rounded-xl drop-shadow-md gap-2 p-4 items-start first:ml-4"
+				class="flex flex-col bg-white border-none rounded-lg drop-shadow-md gap-2 p-4 items-start first:ml-4"
 			>
 				<SemicircleChart
 					:percentage="allocation.balance_percentage"

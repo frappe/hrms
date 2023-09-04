@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col gap-5 my-4 w-full">
 		<div class="text-lg font-medium text-gray-900">{{ title }}</div>
-		<div class="flex flex-col bg-white rounded-lg">
+		<div class="flex flex-col bg-white rounded">
 			<router-link
 				class="flex flex-row flex-start p-4 items-center justify-between border-b"
 				v-for="link in props.items"
