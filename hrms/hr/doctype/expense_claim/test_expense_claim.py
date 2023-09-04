@@ -300,6 +300,41 @@ class TestExpenseClaim(FrappeTestCase):
 			self.assertEqual(expected_values[gle.account][1], gle.debit)
 			self.assertEqual(expected_values[gle.account][2], gle.credit)
 
+	def test_invalid_gain_loss_for_expense_claim(self):
+		payable_account = get_payable_account(company_name)
+		taxes = generate_taxes()
+		expense_claim = make_expense_claim(
+			payable_account,
+			300,
+			200,
+			company_name,
+			"Travel Expenses - _TC3",
+			do_not_submit=True,
+			taxes=taxes,
+		)
+		expense_claim.submit()
+
+		from hrms.overrides.employee_payment_entry import get_payment_entry_for_employee
+
+		pe = get_payment_entry_for_employee(expense_claim.doctype, expense_claim.name)
+		pe.save()
+		pe.submit()
+		self.assertEqual(len(pe.references), 1)
+		self.assertEqual(pe.references[0].exchange_gain_loss, 0.0)
+		self.assertEqual(pe.references[0].exchange_rate, 1.0)
+		# Invalid gain/loss JE shouldn't be created for base currency Expense Claims
+		self.assertEqual(
+			frappe.db.get_all(
+				"Journal Entry Account",
+				filters={
+					"reference_type": expense_claim.doctype,
+					"reference_name": expense_claim.name,
+					"docstatus": 1,
+				},
+			),
+			[],
+		)
+
 	def test_rejected_expense_claim(self):
 		payable_account = get_payable_account(company_name)
 		expense_claim = frappe.get_doc(
