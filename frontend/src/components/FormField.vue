@@ -87,7 +87,10 @@
 		/>
 
 		<!-- Section Break -->
-		<div v-else-if="props.fieldtype === 'Section Break'" class="mt-2">
+		<div
+			v-else-if="props.fieldtype === 'Section Break'"
+			:class="props.addSectionPadding ? 'mt-2': ''"
+		>
 			<h2
 				v-if="props.label"
 				class="text-base font-semibold text-gray-800"

@@ -1,8 +1,8 @@
 <template>
 	<!-- Header -->
 	<div class="flex flex-row justify-between items-center">
-		<h2 class="text-lg font-semibold text-gray-800">{{ type }}</h2>
-		<span class="text-lg font-semibold text-gray-800">
+		<h2 class="text-base font-semibold text-gray-800">{{ type }}</h2>
+		<span class="text-base font-semibold text-gray-800">
 			{{ total }}
 		</span>
 	</div>
@@ -18,11 +18,11 @@
 			:key="idx"
 		>
 			<div
-				class="text-lg font-normal whitespace-nowrap overflow-hidden text-ellipsis text-gray-800"
+				class="text-base font-normal whitespace-nowrap overflow-hidden text-ellipsis text-gray-800"
 			>
 				{{ item.salary_component }}
 			</div>
-			<span class="text-gray-700 font-normal rounded-lg text-lg">
+			<span class="text-gray-700 font-normal rounded-lg text-base">
 				{{ formatCurrency(item.amount, salarySlip.currency) }}
 			</span>
 		</div>
