@@ -9,7 +9,7 @@
 			>
 				<div
 					@click="navigate"
-					class="text-base text-blue-500 font-medium cursor-pointer"
+					class="text-sm text-gray-800 font-semibold cursor-pointer underline underline-offset-2"
 				>
 					View Leave History
 				</div>

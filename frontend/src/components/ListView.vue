@@ -71,7 +71,7 @@
 				v-if="documents.loading"
 				class="flex h-64 items-center justify-center"
 			>
-				<LoadingIndicator class="w-8 h-8 text-blue-500" />
+				<LoadingIndicator class="w-8 h-8 text-gray-800" />
 			</div>
 
 			<ion-modal

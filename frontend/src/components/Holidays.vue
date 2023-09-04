@@ -5,7 +5,7 @@
 			<div
 				v-if="upcomingHolidays?.length"
 				id="open-holiday-list"
-				class="text-base text-blue-500 font-medium cursor-pointer"
+				class="text-sm text-gray-800 font-semibold cursor-pointer underline underline-offset-2"
 			>
 				View All
 			</div>

@@ -37,7 +37,7 @@
 						<router-link
 							v-if="advanceBalance?.data?.length"
 							:to="{ name: 'EmployeeAdvanceListView' }"
-							class="text-lg text-blue-500 font-medium cursor-pointer"
+							class="text-sm text-gray-800 font-semibold cursor-pointer underline underline-offset-2"
 						>
 							View List
 						</router-link>
