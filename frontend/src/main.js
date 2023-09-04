@@ -6,7 +6,6 @@ import socket from "./socket"
 import {
 	Button,
 	Input,
-	FormControl,
 	setConfig,
 	frappeRequest,
 	resourcesPlugin,
@@ -35,7 +34,6 @@ app.use(resourcesPlugin)
 
 app.component("Button", Button)
 app.component("Input", Input)
-app.component("FormControl", FormControl)
 app.component("EmptyState", EmptyState)
 
 app.use(router)

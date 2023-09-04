@@ -26,7 +26,7 @@
 		/>
 
 		<!-- Text -->
-		<FormControl
+		<Input
 			v-else-if="
 				['Text Editor', 'Small Text', 'Text', 'Long Text'].includes(
 					props.fieldtype
@@ -42,7 +42,7 @@
 		/>
 
 		<!-- Check -->
-		<FormControl
+		<Input
 			v-else-if="props.fieldtype === 'Check'"
 			type="checkbox"
 			:label="props.label"
@@ -54,7 +54,7 @@
 		/>
 
 		<!-- Data field -->
-		<FormControl
+		<Input
 			v-else-if="props.fieldtype === 'Data'"
 			type="text"
 			:value="modelValue"
@@ -65,7 +65,7 @@
 		/>
 
 		<!-- Read only currency field -->
-		<FormControl
+		<Input
 			v-else-if="props.fieldtype === 'Currency' && isReadOnly"
 			type="text"
 			:value="modelValue"
@@ -76,7 +76,7 @@
 		/>
 
 		<!-- Float/Int field -->
-		<FormControl
+		<Input
 			v-else-if="isNumberType"
 			type="number"
 			:value="modelValue"
@@ -102,7 +102,7 @@
 
 		<!-- Date -->
 		<!-- FIXME: default datepicker has poor UI -->
-		<FormControl
+		<Input
 			v-else-if="props.fieldtype === 'Date'"
 			type="date"
 			v-model="date"

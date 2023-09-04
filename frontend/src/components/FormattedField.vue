@@ -9,7 +9,7 @@
 		{{ dayjs(props.value).format("D MMM") }}
 	</div>
 
-	<FormControl
+	<Input
 		v-else-if="props.fieldtype === 'Check'"
 		type="checkbox"
 		label=""
@@ -35,7 +35,7 @@
 
 <script setup>
 import { inject } from "vue"
-import { Badge, FormControl, Input } from "frappe-ui"
+import { Badge, Input } from "frappe-ui"
 
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 
