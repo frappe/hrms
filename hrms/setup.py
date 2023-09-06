@@ -712,3 +712,94 @@ DEFAULT_ROLE_PROFILES = {
 		"Expense Approver",
 	],
 }
+<<<<<<< HEAD
+=======
+
+SALARY_SLIP_LOAN_FIELDS = {
+	"Salary Slip": [
+		{
+			"fieldname": "loan_repayment_sb_1",
+			"fieldtype": "Section Break",
+			"label": "Loan Repayment",
+			"depends_on": "total_loan_repayment",
+			"insert_after": "base_total_deduction",
+		},
+		{
+			"fieldname": "loans",
+			"fieldtype": "Table",
+			"label": "Employee Loan",
+			"options": "Salary Slip Loan",
+			"print_hide": 1,
+			"insert_after": "loan_repayment_sb_1",
+		},
+		{
+			"fieldname": "loan_details_sb_1",
+			"fieldtype": "Section Break",
+			"depends_on": "eval:doc.docstatus != 0",
+			"insert_after": "loans",
+		},
+		{
+			"fieldname": "total_principal_amount",
+			"fieldtype": "Currency",
+			"label": "Total Principal Amount",
+			"default": "0",
+			"options": "Company:company:default_currency",
+			"read_only": 1,
+			"insert_after": "loan_details_sb_1",
+		},
+		{
+			"fieldname": "total_interest_amount",
+			"fieldtype": "Currency",
+			"label": "Total Interest Amount",
+			"default": "0",
+			"options": "Company:company:default_currency",
+			"read_only": 1,
+			"insert_after": "total_principal_amount",
+		},
+		{
+			"fieldname": "loan_cb_1",
+			"fieldtype": "Column Break",
+			"insert_after": "total_interest_amount",
+		},
+		{
+			"fieldname": "total_loan_repayment",
+			"fieldtype": "Currency",
+			"label": "Total Loan Repayment",
+			"default": "0",
+			"options": "Company:company:default_currency",
+			"read_only": 1,
+			"insert_after": "loan_cb_1",
+		},
+	],
+	"Loan": [
+		{
+			"default": "0",
+			"depends_on": 'eval:doc.applicant_type=="Employee"',
+			"fieldname": "repay_from_salary",
+			"fieldtype": "Check",
+			"label": "Repay From Salary",
+			"insert_after": "status",
+		},
+	],
+	"Loan Repayment": [
+		{
+			"default": "0",
+			"fetch_from": "against_loan.repay_from_salary",
+			"fetch_if_empty": 1,
+			"fieldname": "repay_from_salary",
+			"fieldtype": "Check",
+			"label": "Repay From Salary",
+			"insert_after": "is_term_loan",
+		},
+		{
+			"depends_on": "eval:doc.repay_from_salary",
+			"fieldname": "payroll_payable_account",
+			"fieldtype": "Link",
+			"label": "Payroll Payable Account",
+			"mandatory_depends_on": "eval:doc.repay_from_salary",
+			"options": "Account",
+			"insert_after": "payment_account",
+		},
+	],
+}
+>>>>>>> d6c812e3 (fix: update repay_from_salary and payroll_payable_account fields (#851))
