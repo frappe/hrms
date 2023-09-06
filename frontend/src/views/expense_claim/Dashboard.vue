@@ -1,7 +1,7 @@
 <template>
 	<BaseLayout pageTitle="Expense Claims">
 		<template #body>
-			<div class="flex flex-col mt-5 mb-7 p-4 gap-7">
+			<div class="flex flex-col mt-7 mb-7 p-4 gap-7">
 				<ExpenseClaimSummary />
 
 				<div class="w-full">

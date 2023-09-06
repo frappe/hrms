@@ -1,10 +1,10 @@
 <template>
 	<BaseLayout pageTitle="Leaves &amp; Holidays">
 		<template #body>
-			<div class="flex flex-col items-center mt-5 mb-7">
+			<div class="flex flex-col items-center mt-7 mb-7 py-4">
 				<LeaveBalance />
 
-				<div class="flex flex-col gap-7 px-4 mt-4 w-full">
+				<div class="flex flex-col gap-7 mt-5 px-4 w-full">
 					<router-link
 						:to="{ name: 'LeaveApplicationFormView' }"
 						v-slot="{ navigate }"
