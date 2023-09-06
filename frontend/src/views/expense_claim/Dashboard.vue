@@ -12,7 +12,7 @@
 						<Button
 							@click="navigate"
 							variant="solid"
-							class="w-full py-5 text-sm"
+							class="w-full py-5 text-base"
 						>
 							Claim an Expense
 						</Button>

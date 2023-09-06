@@ -1,10 +1,10 @@
 <template>
 	<div class="flex flex-col">
-		<div class="font-medium text-xs text-gray-500 mt-1.5" v-if="lastLog">
+		<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
 			{{ `Last ${lastLogType} was at ${lastLogTime}` }}
 		</div>
 		<Button
-			class="mt-2 mb-1 drop-shadow-sm py-5 text-sm"
+			class="mt-2 mb-1 drop-shadow-sm py-5 text-base"
 			id="open-checkin-modal"
 			@click="checkinTimestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')"
 		>
