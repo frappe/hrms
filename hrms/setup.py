@@ -800,5 +800,14 @@ SALARY_SLIP_LOAN_FIELDS = {
 			"options": "Account",
 			"insert_after": "payment_account",
 		},
+		{
+			"default": "0",
+			"depends_on": 'eval:doc.applicant_type=="Employee"',
+			"fieldname": "process_payroll_accounting_entry_based_on_employee",
+			"hidden": 1,
+			"fieldtype": "Check",
+			"label": "Process Payroll Accounting Entry based on Employee",
+			"insert_after": "repay_from_salary",
+		},
 	],
 }
