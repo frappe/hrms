@@ -70,7 +70,8 @@ const leaveBalance = createResource({
 })
 
 const getChartColor = (index) => {
-	const chartColors = ["text-pink-500", "text-orange-500", "text-purple-500"]
+	// note: tw colors - rose-400, pink-400 & purple-500 of the old frappeui palette #918ef5
+	const chartColors = ["text-[#fb7185]", "text-[#f472b6]", "text-[#918ef5]"]
 	return chartColors[index % chartColors.length]
 }
 </script>
