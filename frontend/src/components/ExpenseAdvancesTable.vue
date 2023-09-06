@@ -59,7 +59,7 @@
 		</div>
 	</div>
 
-	<EmptyState message="No advances found" v-else />
+	<EmptyState v-else message="No advances found" :isTableField="true" />
 </template>
 
 <script setup>

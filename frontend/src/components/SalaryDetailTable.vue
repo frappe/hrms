@@ -27,7 +27,7 @@
 			</span>
 		</div>
 	</div>
-	<EmptyState v-else message="No expenses added" />
+	<EmptyState v-else message="No expenses added" :isTableField="true" />
 </template>
 
 <script setup>

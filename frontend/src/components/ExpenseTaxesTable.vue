@@ -55,7 +55,7 @@
 				</div>
 			</div>
 		</div>
-		<EmptyState v-else message="No taxes added" />
+		<EmptyState v-else message="No taxes added" :isTableField="true" />
 
 		<ion-modal
 			ref="modal"
