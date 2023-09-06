@@ -110,7 +110,7 @@
 						</Button>
 						<Button
 							variant="solid"
-							class="w-full py-5 text-sm"
+							class="w-full py-5 text-sm disabled:bg-gray-700 disabled:text-white"
 							@click="updateExpenseTax()"
 							:disabled="addButtonDisabled"
 						>

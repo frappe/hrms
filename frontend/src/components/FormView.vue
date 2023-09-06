@@ -159,7 +159,7 @@
 				/>
 
 				<Button
-					class="w-full rounded mt-2 py-5 text-base"
+					class="w-full rounded mt-2 py-5 text-base disabled:bg-gray-700 disabled:text-white"
 					:class="formButton === 'Cancel' ? 'shadow' : ''"
 					@click="formButton === 'Save' ? saveForm() : submitOrCancelForm()"
 					:variant="formButton === 'Cancel' ? 'subtle' : 'solid'"
