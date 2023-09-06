@@ -29,7 +29,7 @@
 			</div>
 			<div class="flex flex-row justify-end items-center gap-2">
 				<Badge
-					variant="subtle"
+					variant="outline"
 					:theme="colorMap[props.doc.status]"
 					:label="props.doc.status"
 					size="md"

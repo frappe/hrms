@@ -1,6 +1,7 @@
 <template>
 	<Badge
 		v-if="props.fieldtype === 'Select'"
+		variant="outline"
 		:theme="colorMap[props.value]"
 		:label="props.value"
 		size="md"

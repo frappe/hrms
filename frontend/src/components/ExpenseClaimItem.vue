@@ -20,7 +20,7 @@
 			</div>
 			<div class="flex flex-row justify-end items-center gap-2">
 				<Badge
-					variant="subtle"
+					variant="outline"
 					:theme="statusMap[claimStatus]"
 					:label="claimStatus"
 					size="md"
