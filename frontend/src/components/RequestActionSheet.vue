@@ -78,16 +78,21 @@
 		>
 			<Button
 				@click="updateDocumentStatus({ status: 'Rejected' })"
-				class="w-full bg-red-100 text-red-600 py-5 text-sm"
+				class="w-full py-5"
+				variant="subtle"
+				theme="red"
 			>
 				<template #prefix>
 					<FeatherIcon name="x" class="w-4" />
 				</template>
 				Reject
 			</Button>
+
 			<Button
 				@click="updateDocumentStatus({ status: 'Approved' })"
-				class="w-full bg-green-600 text-white py-5 text-sm"
+				class="w-full py-5"
+				variant="solid"
+				theme="green"
 			>
 				<template #prefix>
 					<FeatherIcon name="check" class="w-4" />
@@ -105,7 +110,7 @@
 		>
 			<Button
 				@click="updateDocumentStatus({ docstatus: 1 })"
-				class="w-full py-5 text-sm"
+				class="w-full py-5"
 				variant="solid"
 			>
 				Submit
@@ -118,7 +123,9 @@
 		>
 			<Button
 				@click="updateDocumentStatus({ docstatus: 2 })"
-				class="w-full py-5 text-sm bg-red-100 text-red-600"
+				class="w-full py-5"
+				variant="subtle"
+				theme="red"
 			>
 				<template #prefix>
 					<FeatherIcon name="x" class="w-4" />

@@ -7,7 +7,7 @@
 			"
 			:class="[
 				// mark field as mandatory
-				props.reqd ? `after:content-['_*'] after:text-red-400` : ``,
+				props.reqd ? `after:content-['_*'] after:text-red-600` : ``,
 				`block text-sm leading-5 text-gray-700`,
 			]"
 		>

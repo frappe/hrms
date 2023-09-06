@@ -20,7 +20,7 @@
 
 	<div
 		v-else-if="['Small Text', 'Text', 'Long Text'].includes(props.fieldtype)"
-		class="text-gray-900 text-base bg-gray-200 rounded py-2.5 pl-3 mt-1"
+		class="text-gray-900 text-base bg-gray-100 rounded py-3 pl-3 mt-2"
 	>
 		{{ props.value }}
 	</div>
@@ -36,7 +36,7 @@
 
 <script setup>
 import { inject } from "vue"
-import { Badge, Input } from "frappe-ui"
+import { Badge, FormControl, Input } from "frappe-ui"
 
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 
