@@ -13,3 +13,4 @@ execute:frappe.db.set_default("date_format", frappe.db.get_single_value("System 
 hrms.patches.v14_0.create_vehicle_service_item
 hrms.patches.v15_0.notify_about_loan_app_separation
 hrms.patches.v15_0.rename_enable_late_entry_early_exit_grace_period
+hrms.patches.v14_0.update_repay_from_salary_and_payroll_payable_account_fields
