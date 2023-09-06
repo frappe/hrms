@@ -7,12 +7,12 @@
 				{{ expenseClaim.total_claimed_amount || 0 }}
 			</span>
 			<Button
+				v-if="!isReadOnly"
 				id="add-expense-modal"
 				class="text-sm"
 				icon="plus"
 				variant="subtle"
 				@click="openModal()"
-				:disabled="isReadOnly"
 			/>
 		</div>
 	</div>
