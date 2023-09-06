@@ -6,8 +6,9 @@ ion-modal {
 }
 
 input:disabled {
-	--webkit-text-fill-color: var(--text-color);
-	opacity: 1; /* required on iOS */
+	--webkit-text-fill-color: var(--tw-text-color);
+	opacity: 0.9; /* required on iOS */
+	color: var(--tw-text-color);
 }
 
 /* For Webkit-based browsers (Chrome, Safari and Opera) */
