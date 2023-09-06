@@ -3,6 +3,7 @@
 		v-if="props.fieldtype === 'Select'"
 		:theme="colorMap[props.value]"
 		:label="props.value"
+		size="md"
 	/>
 
 	<div v-else-if="props.fieldtype === 'Date'" class="text-gray-900 text-base">

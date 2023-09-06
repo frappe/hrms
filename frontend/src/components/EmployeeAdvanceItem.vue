@@ -32,7 +32,7 @@
 					variant="subtle"
 					:theme="colorMap[props.doc.status]"
 					:label="props.doc.status"
-					size="sm"
+					size="md"
 				/>
 				<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
 			</div>

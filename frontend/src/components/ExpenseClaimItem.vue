@@ -20,15 +20,10 @@
 			</div>
 			<div class="flex flex-row justify-end items-center gap-2">
 				<Badge
-					variant="outline"
-					:theme="statusMap[props.doc.status]"
-					:label="props.doc.status"
-					size="sm"
-				/>
-				<Badge
-					:theme="approvalStatusMap[props.doc.approval_status]"
-					:label="approvalStatus"
-					size="sm"
+					variant="subtle"
+					:theme="statusMap[claimStatus]"
+					:label="claimStatus"
+					size="md"
 				/>
 				<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
 			</div>
@@ -71,14 +66,23 @@ const statusMap = {
 	Cancelled: "red",
 	Paid: "green",
 	Unpaid: "orange",
+	"Approved & Draft": "gray",
+	"Approved & Unpaid": "orange",
+	"Approved & Submitted": "blue",
 	Rejected: "red",
 }
 
-const approvalStatusMap = {
-	Approved: "green",
-	Rejected: "red",
-	Draft: "orange",
-}
+const claimStatus = computed(() => {
+	if (
+		props.doc.approval_status === "Approved" &&
+		["Draft", "Unpaid", "Submitted"].includes(props.doc.status)
+	) {
+		return `${props.doc.approval_status} & ${props.doc.status}`
+	} else if (props.doc.approval_status === "Rejected") {
+		return "Rejected"
+	}
+	return props.doc.status
+})
 
 const claimTitle = computed(() => {
 	let title = props.doc.expense_type
