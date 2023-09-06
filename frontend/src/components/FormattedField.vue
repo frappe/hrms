@@ -16,6 +16,7 @@
 		label=""
 		v-model="props.value"
 		:disabled="true"
+		class="rounded-sm text-gray-800"
 	/>
 
 	<div

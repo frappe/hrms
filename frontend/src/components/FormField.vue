@@ -52,6 +52,7 @@
 			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
+			class="rounded-sm text-gray-800"
 		/>
 
 		<!-- Data field -->
