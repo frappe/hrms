@@ -305,6 +305,7 @@ def get_custom_fields():
 			{
 				"default": "0",
 				"fetch_from": "against_loan.repay_from_salary",
+				"fetch_if_empty": 1,
 				"fieldname": "repay_from_salary",
 				"fieldtype": "Check",
 				"label": "Repay From Salary",
@@ -317,7 +318,7 @@ def get_custom_fields():
 				"label": "Payroll Payable Account",
 				"mandatory_depends_on": "eval:doc.repay_from_salary",
 				"options": "Account",
-				"insert_after": "rate_of_interest",
+				"insert_after": "payment_account",
 			},
 		],
 	}
