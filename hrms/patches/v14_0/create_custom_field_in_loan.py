@@ -1,6 +1,9 @@
 from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 
+from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
 
+
+@if_lending_app_installed
 def execute():
 	create_custom_field(
 		"Loan Repayment",
