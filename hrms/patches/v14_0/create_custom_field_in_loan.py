@@ -1,5 +1,6 @@
 from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 
+
 def execute():
 	create_custom_field(
 		"Loan Repayment",
