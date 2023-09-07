@@ -1,5 +1,5 @@
 <template>
-	<div v-if="showField" class="flex flex-col gap-1">
+	<div v-if="showField" class="flex flex-col gap-1.5">
 		<!-- Label -->
 		<span
 			v-if="
@@ -7,8 +7,8 @@
 			"
 			:class="[
 				// mark field as mandatory
-				props.reqd ? `after:content-['_*'] after:text-red-400` : ``,
-				`block text-base leading-5 text-gray-700`,
+				props.reqd ? `after:content-['_*'] after:text-red-600` : ``,
+				`block text-sm leading-5 text-gray-700`,
 			]"
 		>
 			{{ props.label }}
@@ -39,6 +39,7 @@
 			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
+			class="h-15"
 		/>
 
 		<!-- Check -->
@@ -51,6 +52,7 @@
 			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
+			class="rounded-sm text-gray-800"
 		/>
 
 		<!-- Data field -->
@@ -87,10 +89,13 @@
 		/>
 
 		<!-- Section Break -->
-		<div v-else-if="props.fieldtype === 'Section Break'">
+		<div
+			v-else-if="props.fieldtype === 'Section Break'"
+			:class="props.addSectionPadding ? 'mt-2' : ''"
+		>
 			<h2
 				v-if="props.label"
-				class="text-lg font-semibold text-gray-800"
+				class="text-base font-semibold text-gray-800"
 				:class="props.addSectionPadding ? 'pt-4' : ''"
 			>
 				{{ props.label }}

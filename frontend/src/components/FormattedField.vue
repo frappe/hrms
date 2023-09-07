@@ -1,8 +1,10 @@
 <template>
 	<Badge
 		v-if="props.fieldtype === 'Select'"
-		:colorMap="colorMap"
+		variant="outline"
+		:theme="colorMap[props.value]"
 		:label="props.value"
+		size="md"
 	/>
 
 	<div v-else-if="props.fieldtype === 'Date'" class="text-gray-900 text-base">
@@ -15,11 +17,12 @@
 		label=""
 		v-model="props.value"
 		:disabled="true"
+		class="rounded-sm text-gray-800"
 	/>
 
 	<div
 		v-else-if="['Small Text', 'Text', 'Long Text'].includes(props.fieldtype)"
-		class="text-gray-900 text-base bg-gray-200 rounded-lg py-2.5 pl-3 mt-1"
+		class="text-gray-900 text-base bg-gray-100 rounded py-3 pl-3 mt-2"
 	>
 		{{ props.value }}
 	</div>
@@ -35,7 +38,7 @@
 
 <script setup>
 import { inject } from "vue"
-import { Badge, Input } from "frappe-ui"
+import { Badge, FormControl, Input } from "frappe-ui"
 
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 
@@ -50,6 +53,6 @@ const props = defineProps({
 const colorMap = {
 	Approved: "green",
 	Rejected: "red",
-	Open: "yellow",
+	Open: "orange",
 }
 </script>

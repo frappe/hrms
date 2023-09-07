@@ -4,7 +4,7 @@
 		class="bg-white w-full flex flex-col items-center justify-center pb-5 max-h-[calc(100vh-5rem)]"
 	>
 		<div class="w-full pt-8 pb-5 border-b text-center sticky top-0 z-[100]">
-			<span class="text-gray-900 font-bold text-xl">Filters</span>
+			<span class="text-gray-900 font-bold text-lg">Filters</span>
 		</div>
 
 		<div class="w-full p-4 overflow-auto">
@@ -16,21 +16,22 @@
 				>
 					<!-- Status filter -->
 					<div
-						class="flex flex-col"
+						class="flex flex-col gap-1.5"
 						v-if="['status', 'approval_status'].includes(filter.fieldname)"
 					>
-						<div class="text-gray-800 font-semibold text-lg">
+						<div class="text-gray-800 font-semibold text-base">
 							{{ filter.label }}
 						</div>
 						<div class="flex flex-row gap-2 mt-2 flex-wrap">
 							<Button
 								v-for="option in filter.options"
-								appearance="white"
+								variant="outline"
 								@click="setStatusFilter(filter.fieldname, option)"
+								class="text-sm text-gray-800"
 								:class="[
 									option === filters[filter.fieldname].value
-										? '!border !border-blue-500 !text-blue-500'
-										: '',
+										? '!border !border-gray-800 !text-gray-900 !bg-gray-50 !font-medium'
+										: '!font-normal',
 								]"
 							>
 								{{ option }}
@@ -40,7 +41,7 @@
 
 					<!-- Field filters -->
 					<div v-else class="flex flex-col gap-2">
-						<div class="text-gray-800 font-semibold text-lg">
+						<div class="text-gray-800 font-semibold text-base">
 							{{ filter.label }}
 						</div>
 						<div class="flex flex-row items-center gap-3">
@@ -69,15 +70,15 @@
 		>
 			<Button
 				@click="emit('clear-filters')"
-				appearance="secondary"
-				class="w-full py-3 px-12"
+				variant="outline"
+				class="w-full py-5 text-sm"
 			>
 				Clear All
 			</Button>
 			<Button
 				@click="emit('apply-filters')"
-				appearance="primary"
-				class="w-full py-3 px-12"
+				variant="solid"
+				class="w-full py-5 text-sm"
 			>
 				Apply Filters
 			</Button>

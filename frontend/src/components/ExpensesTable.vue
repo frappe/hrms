@@ -1,18 +1,18 @@
 <template>
 	<!-- Header -->
-	<div class="flex flex-row justify-between items-center">
-		<h2 class="text-lg font-semibold text-gray-800">Expenses</h2>
+	<div class="flex flex-row justify-between items-center mt-2">
+		<h2 class="text-base font-semibold text-gray-800">Expenses</h2>
 		<div class="flex flex-row gap-3 items-center">
-			<span class="text-lg font-semibold text-gray-800">
+			<span class="text-base font-semibold text-gray-800">
 				{{ expenseClaim.total_claimed_amount || 0 }}
 			</span>
 			<Button
+				v-if="!isReadOnly"
 				id="add-expense-modal"
 				class="text-sm"
 				icon="plus"
-				appearance="secondary"
+				variant="subtle"
 				@click="openModal()"
-				:disabled="isReadOnly"
 			/>
 		</div>
 	</div>
@@ -20,7 +20,7 @@
 	<!-- Table -->
 	<div
 		v-if="expenseClaim.expenses"
-		class="flex flex-col bg-white mt-5 rounded-lg border overflow-auto"
+		class="flex flex-col bg-white mt-5 rounded border overflow-auto"
 	>
 		<div
 			class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
@@ -31,11 +31,11 @@
 			<div class="flex flex-col w-full justify-center gap-2.5">
 				<div class="flex flex-row items-center justify-between">
 					<div class="flex flex-row items-start gap-3 grow">
-						<div class="flex flex-col items-start">
-							<div class="text-lg font-normal text-gray-800">
+						<div class="flex flex-col items-start gap-1.5">
+							<div class="text-base font-normal text-gray-800">
 								{{ item.expense_type }}
 							</div>
-							<div class="text-sm font-normal text-gray-500">
+							<div class="text-xs font-normal text-gray-500">
 								<span>
 									{{ `Sanctioned: ${currency} ${item.sanctioned_amount || 0}` }}
 								</span>
@@ -47,7 +47,7 @@
 						</div>
 					</div>
 					<div class="flex flex-row justify-end items-center gap-2">
-						<span class="text-gray-700 font-normal rounded-lg text-lg">
+						<span class="text-gray-700 font-normal rounded text-base">
 							{{ `${currency} ${item.amount}` }}
 						</span>
 						<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
@@ -56,7 +56,7 @@
 			</div>
 		</div>
 	</div>
-	<EmptyState v-else message="No expenses added" />
+	<EmptyState v-else message="No expenses added" :isTableField="true" />
 
 	<ion-modal
 		ref="modal"
@@ -68,7 +68,7 @@
 		<!-- Add Expense Action Sheet -->
 		<div class="bg-white w-full flex flex-col items-center justify-center pb-5">
 			<div class="w-full pt-8 pb-5 border-b text-center">
-				<span class="text-gray-900 font-bold text-xl">
+				<span class="text-gray-900 font-bold text-lg">
 					{{ modalTitle }}
 				</span>
 			</div>
@@ -96,20 +96,28 @@
 				>
 					<Button
 						v-if="editingIdx !== null"
-						class="py-3 px-12 border-red-600 text-red-600"
-						icon-left="trash"
-						appearance="white"
+						class="border-red-600 text-red-600 py-5 text-sm"
+						variant="outline"
+						theme="red"
 						@click="deleteExpenseItem()"
 					>
+						<template #prefix>
+							<FeatherIcon name="trash" class="w-4" />
+						</template>
 						Delete
 					</Button>
 					<Button
-						appearance="primary"
-						class="w-full py-3 px-12"
-						:icon-left="editingIdx === null ? 'plus' : 'check'"
+						variant="solid"
+						class="w-full py-5 text-sm disabled:bg-gray-700 disabled:text-white"
 						@click="updateExpenseItem()"
 						:disabled="addButtonDisabled"
 					>
+						<template #prefix>
+							<FeatherIcon
+								:name="editingIdx === null ? 'plus' : 'check'"
+								class="w-4"
+							/>
+						</template>
 						{{ editingIdx === null ? "Add Expense" : "Update Expense" }}
 					</Button>
 				</div>

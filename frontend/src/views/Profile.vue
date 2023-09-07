@@ -8,8 +8,8 @@
 					:alt="user.data.first_name"
 				/>
 
-				<div class="flex flex-col gap-1 items-center mt-2 mb-5">
-					<span v-if="employee" class="text-xl font-bold text-gray-900">{{
+				<div class="flex flex-col gap-1.5 items-center mt-2 mb-5">
+					<span v-if="employee" class="text-lg font-bold text-gray-900">{{
 						employee?.data?.employee_name
 					}}</span>
 					<span v-if="employee" class="font-normal text-sm text-gray-500">{{
@@ -22,10 +22,13 @@
 
 				<Button
 					@click="logout"
-					appearance="white"
-					class="text-red-500 w-full shadow py-2 mt-5"
-					icon-left="log-out"
+					variant="outline"
+					theme="red"
+					class="w-full shadow py-4 mt-5"
 				>
+					<template #prefix>
+						<FeatherIcon name="log-out" class="w-4" />
+					</template>
 					Log Out
 				</Button>
 			</div>
@@ -40,6 +43,7 @@ import BaseLayout from "@/components/BaseLayout.vue"
 import { inject } from "vue"
 
 import { showErrorAlert } from "@/utils/dialogs"
+import { FeatherIcon } from "frappe-ui"
 
 const session = inject("$session")
 const user = inject("$user")

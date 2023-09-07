@@ -6,17 +6,15 @@
 					<header
 						class="flex flex-row bg-white shadow-sm py-4 px-2 items-center justify-between border-b sticky top-0 z-10"
 					>
-						<div class="flex flex-row gap-1">
+						<div class="flex flex-row gap-1 items-center">
 							<Button
-								appearance="minimal"
+								variant="ghost"
 								class="!px-0 !py-0"
 								@click="router.back()"
 							>
 								<FeatherIcon name="chevron-left" class="h-5 w-5" />
 							</Button>
-							<h2 class="text-2xl font-semibold text-gray-900">
-								Notifications
-							</h2>
+							<h2 class="text-xl font-semibold text-gray-900">Notifications</h2>
 						</div>
 					</header>
 
@@ -29,23 +27,25 @@
 								{{ unreadNotificationsCount.data }} Unread
 							</div>
 							<Button
-								appearance="white"
-								icon-left="check-circle"
+								variant="outline"
 								class="ml-auto"
 								@click="markAllAsRead.submit"
 								:loading="markAllAsRead.loading"
 							>
+								<template #prefix>
+									<FeatherIcon name="check-circle" class="w-4" />
+								</template>
 								Mark all as read
 							</Button>
 						</div>
 
 						<div
-							class="flex flex-col bg-white rounded-lg"
+							class="flex flex-col bg-white rounded"
 							v-if="notifications.data?.length"
 						>
 							<router-link
 								:class="[
-									'flex flex-row items-start p-4 justify-between border-b before:mt-4',
+									'flex flex-row items-start p-4 justify-between border-b before:mt-3',
 									`before:content-[''] before:mr-2 before:shrink-0 before:w-1.5 before:h-1.5 before:rounded-full`,
 									item.read ? 'bg-white-500' : 'before:bg-blue-500',
 								]"
@@ -54,17 +54,13 @@
 								:to="getItemRoute(item)"
 								@click="markAsRead(item.name)"
 							>
-								<EmployeeAvatar
-									:userID="item.from_user"
-									size="md"
-									class="mt-0.5"
-								/>
+								<EmployeeAvatar :userID="item.from_user" size="lg" />
 								<div class="flex flex-col gap-0.5 grow ml-3">
 									<div
-										class="text-base font-normal text-gray-800"
+										class="text-sm leading-5 font-normal text-gray-800"
 										v-html="item.message"
 									></div>
-									<div class="text-sm font-normal text-gray-500">
+									<div class="text-xs font-normal text-gray-500">
 										{{ dayjs(item.creation).fromNow() }}
 									</div>
 								</div>

@@ -6,7 +6,7 @@
 					<div class="flex flex-col bg-white shadow-sm p-4">
 						<div class="flex flex-row justify-between items-center">
 							<ion-menu-toggle class="flex flex-col items-center">
-								<Button appearance="minimal" class="!px-0 !py-0">
+								<Button variant="ghost" class="!px-0 !py-0">
 									<FeatherIcon name="menu" class="h-6 w-6" />
 								</Button>
 							</ion-menu-toggle>
@@ -25,17 +25,21 @@
 										</span>
 									</span>
 								</router-link>
-								<router-link :to="{ name: 'Profile' }">
+								<router-link
+									:to="{ name: 'Profile' }"
+									class="flex flex-col items-center"
+								>
 									<Avatar
-										:imageURL="user.data.user_image"
+										:image="user.data.user_image"
 										:label="user.data.first_name"
+										size="xl"
 									/>
 								</router-link>
 							</div>
 						</div>
 
 						<div class="mt-5">
-							<h2 class="text-2xl font-bold text-gray-900">
+							<h2 class="text-xl font-bold text-gray-900">
 								{{ props.pageTitle }}
 							</h2>
 

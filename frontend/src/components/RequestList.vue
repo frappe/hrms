@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="flex flex-col bg-white rounded-lg mt-5 overflow-auto"
+		class="flex flex-col bg-white rounded mt-5 overflow-auto"
 		v-if="props.items?.length"
 	>
 		<div
@@ -22,8 +22,9 @@
 			v-slot="{ navigate }"
 		>
 			<Button
+				variant="ghost"
 				@click="navigate"
-				class="w-full !text-gray-600 py-4 mt-0 border-none bg-white hover:bg-white"
+				class="w-full !text-gray-600 py-6 text-sm border-none bg-white hover:bg-white"
 			>
 				View List
 			</Button>

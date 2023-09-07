@@ -1,11 +1,10 @@
 <template>
 	<div class="flex flex-col">
-		<div class="font-medium text-sm text-gray-500" v-if="lastLog">
+		<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
 			{{ `Last ${lastLogType} was at ${lastLogTime}` }}
 		</div>
 		<Button
-			class="mt-2 mb-1 py-2 shadow-sm"
-			expand="block"
+			class="mt-2 mb-1 drop-shadow-sm py-5 text-base"
 			id="open-checkin-modal"
 			@click="checkinTimestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')"
 		>
@@ -22,8 +21,8 @@
 		<div
 			class="h-40 w-full flex flex-col items-center justify-center gap-5 p-4 mb-5"
 		>
-			<div class="flex flex-col gap-1 items-center justify-center">
-				<div class="font-bold text-2xl">
+			<div class="flex flex-col gap-1.5 items-center justify-center">
+				<div class="font-bold text-xl">
 					{{ dayjs(checkinTimestamp).format("hh:mm:ss a") }}
 				</div>
 				<div class="font-medium text-gray-500 text-sm">
@@ -31,8 +30,8 @@
 				</div>
 			</div>
 			<Button
-				appearance="primary"
-				class="py-2 w-full"
+				variant="solid"
+				class="w-full py-5 text-sm"
 				@click="submitLog(nextAction.action)"
 			>
 				Confirm {{ nextAction.label }}

@@ -57,6 +57,7 @@ export async function guessStatusColor(doctype, status) {
 	const stateMap = await statesResource.reload()
 
 	if (stateMap?.length) {
+		if (stateMap?.[status] === "yellow") return "orange"
 		return stateMap?.[status]
 	}
 
@@ -67,7 +68,7 @@ export async function guessStatusColor(doctype, status) {
 			status
 		)
 	) {
-		color = "yellow"
+		color = "orange"
 	} else if (
 		["Urgent", "High", "Failed", "Rejected", "Error"].includes(status)
 	) {

@@ -3,11 +3,11 @@ import vue from "@vitejs/plugin-vue"
 import { VitePWA } from "vite-plugin-pwa"
 
 import path from "path"
-import { getProxyOptions } from "frappe-ui/src/utils/vite-dev-server"
-import { webserver_port } from "../../../sites/common_site_config.json"
+import frappeui from "frappe-ui/vite"
 
 export default defineConfig({
 	plugins: [
+		frappeui(),
 		vue(),
 		VitePWA({
 			registerType: "autoUpdate",
@@ -49,10 +49,6 @@ export default defineConfig({
 			},
 		}),
 	],
-	server: {
-		port: 8080,
-		proxy: getProxyOptions({ port: webserver_port }),
-	},
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "src"),

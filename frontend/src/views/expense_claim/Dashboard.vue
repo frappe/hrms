@@ -1,7 +1,7 @@
 <template>
 	<BaseLayout pageTitle="Expense Claims">
 		<template #body>
-			<div class="flex flex-col mt-5 mb-7 p-4 gap-7">
+			<div class="flex flex-col mt-7 mb-7 p-4 gap-7">
 				<ExpenseClaimSummary />
 
 				<div class="w-full">
@@ -9,14 +9,18 @@
 						:to="{ name: 'ExpenseClaimFormView' }"
 						v-slot="{ navigate }"
 					>
-						<Button @click="navigate" appearance="primary" class="py-2 w-full">
+						<Button
+							@click="navigate"
+							variant="solid"
+							class="w-full py-5 text-base"
+						>
 							Claim an Expense
 						</Button>
 					</router-link>
 				</div>
 
 				<div>
-					<div class="text-xl text-gray-800 font-bold">Recent Expenses</div>
+					<div class="text-lg text-gray-800 font-bold">Recent Expenses</div>
 					<RequestList
 						:component="markRaw(ExpenseClaimItem)"
 						:items="myClaims.data"
@@ -27,13 +31,13 @@
 
 				<div>
 					<div class="flex flex-row justify-between items-center">
-						<div class="text-xl text-gray-800 font-bold">
+						<div class="text-lg text-gray-800 font-bold">
 							Employee Advance Balance
 						</div>
 						<router-link
 							v-if="advanceBalance?.data?.length"
 							:to="{ name: 'EmployeeAdvanceListView' }"
-							class="text-lg text-blue-500 font-medium cursor-pointer"
+							class="text-sm text-gray-800 font-semibold cursor-pointer underline underline-offset-2"
 						>
 							View List
 						</router-link>

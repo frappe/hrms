@@ -6,7 +6,7 @@
 			<header
 				class="flex flex-row gap-1 bg-white shadow-sm py-4 px-2 items-center border-b sticky top-0 z-[1000]"
 			>
-				<Button appearance="minimal" class="!px-0 !py-0" @click="router.back()">
+				<Button variant="ghost" class="!px-0 !py-0" @click="router.back()">
 					<FeatherIcon name="chevron-left" class="h-5 w-5" />
 				</Button>
 				<div
@@ -14,19 +14,19 @@
 					class="flex flex-row items-center gap-2 overflow-hidden grow"
 				>
 					<h2
-						class="text-2xl font-semibold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis"
+						class="text-xl font-semibold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis"
 					>
 						{{ doctype }}
 					</h2>
 					<Badge
 						:label="id"
-						color="white"
 						class="whitespace-nowrap text-[8px]"
+						variant="outline"
 					/>
 					<Badge
 						v-if="formModel?.status"
 						:label="formModel?.status"
-						:color="statusColor"
+						:theme="statusColor"
 						class="whitespace-nowrap text-[8px]"
 					/>
 
@@ -36,14 +36,14 @@
 							{
 								label: 'Delete',
 								condition: showDeleteButton,
-								handler: () => (showDeleteDialog = true),
+								onClick: () => (showDeleteDialog = true),
 							},
-							{ label: 'Reload', handler: () => handleDocReload() },
+							{ label: 'Reload', onClick: () => handleDocReload() },
 						]"
 						:button="{
 							label: 'Menu',
 							icon: 'more-horizontal',
-							appearance: 'minimal',
+							variant: 'ghost',
 						}"
 					/>
 				</div>
@@ -65,7 +65,7 @@
 								class="inline-block p-4 border-b-2 border-transparent rounded-t-lg"
 								:class="[
 									activeTab === tab.name
-										? '!text-blue-600 !border-blue-600'
+										? '!text-gray-800 !border-gray-800'
 										: 'hover:text-gray-600 hover:border-gray-300',
 								]"
 							>
@@ -151,7 +151,7 @@
 			<!-- Bottom Save Button -->
 			<div
 				v-if="formButton"
-				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-xl pb-10"
+				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
 			>
 				<ErrorMessage
 					class="mb-2"
@@ -159,10 +159,10 @@
 				/>
 
 				<Button
-					class="w-full rounded-md py-2.5 px-3.5 mt-2"
+					class="w-full rounded mt-2 py-5 text-base disabled:bg-gray-700 disabled:text-white"
 					:class="formButton === 'Cancel' ? 'shadow' : ''"
 					@click="formButton === 'Save' ? saveForm() : submitOrCancelForm()"
-					:appearance="formButton === 'Cancel' ? 'secondary' : 'primary'"
+					:variant="formButton === 'Cancel' ? 'subtle' : 'solid'"
 					:disabled="saveButtonDisabled"
 					:loading="
 						docList.insert.loading || documentResource?.setValue?.loading
@@ -174,7 +174,7 @@
 
 			<div
 				v-else
-				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-xl pb-10"
+				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
 			>
 				<slot name="formButton"></slot>
 			</div>
@@ -182,66 +182,99 @@
 	</div>
 
 	<!-- Confirmation Dialogs -->
-	<Dialog
-		:options="{
-			title: `Delete ${props.doctype}`,
-			message: `Are you sure you want to delete the ${props.doctype} ${formModel.name}?`,
-			icon: { name: 'trash', appearance: 'danger' },
-			size: 'xs',
-			actions: [
-				{
-					label: 'Delete',
-					appearance: 'danger',
-					handler: ({ close }) => {
-						handleDocDelete()
-						close() // closes dialog
-					},
-				},
-				{ label: 'Cancel' },
-			],
-		}"
-		v-model="showDeleteDialog"
-	/>
+	<Dialog v-model="showDeleteDialog">
+		<template #body-title>
+			<h2 class="text-xl font-bold">Delete {{ props.doctype }}</h2>
+		</template>
+		<template #body-content>
+			<p>
+				Are you sure you want to delete the {{ props.doctype }}
+				<span class="font-bold">{{ formModel.name }}</span>
+				?
+			</p>
+		</template>
+		<template #actions>
+			<div class="flex flex-row gap-4">
+				<Button
+					variant="outline"
+					class="py-5 w-full"
+					@click="showDeleteDialog = false"
+				>
+					Cancel
+				</Button>
+				<Button
+					variant="solid"
+					theme="red"
+					@click="handleDocDelete"
+					class="py-5 w-full"
+				>
+					Delete
+				</Button>
+			</div>
+		</template>
+	</Dialog>
 
-	<Dialog
-		:options="{
-			title: 'Confirm',
-			message: `Permanently submit ${props.doctype} ${formModel.name}?`,
-			size: 'xs',
-			actions: [
-				{
-					label: 'Yes',
-					appearance: 'primary',
-					handler: ({ close }) => {
-						handleDocUpdate('submit')
-						close() // closes dialog
-					},
-				},
-				{ label: 'No' },
-			],
-		}"
-		v-model="showSubmitDialog"
-	/>
+	<Dialog v-model="showSubmitDialog">
+		<template #body-title>
+			<h2 class="text-xl font-bold">Confirm</h2>
+		</template>
+		<template #body-content>
+			<p>
+				Permanently submit {{ props.doctype }}
+				<span class="font-bold">{{ formModel.name }}</span>
+				?
+			</p>
+		</template>
+		<template #actions>
+			<div class="flex flex-row gap-4">
+				<Button
+					variant="outline"
+					class="py-5 w-full"
+					@click="showSubmitDialog = false"
+				>
+					No
+				</Button>
+				<Button
+					variant="solid"
+					@click="handleDocUpdate('submit')"
+					class="py-5 w-full"
+				>
+					Yes
+				</Button>
+			</div>
+		</template>
+	</Dialog>
 
-	<Dialog
-		:options="{
-			title: 'Confirm',
-			message: `Permanently cancel ${props.doctype} ${formModel.name}?`,
-			size: 'xs',
-			actions: [
-				{
-					label: 'Yes',
-					appearance: 'primary',
-					handler: ({ close }) => {
-						handleDocUpdate('cancel')
-						close() // closes dialog
-					},
-				},
-				{ label: 'No' },
-			],
-		}"
-		v-model="showCancelDialog"
-	/>
+	<Dialog v-model="showCancelDialog">
+		<template #body-title>
+			<h2 class="text-xl font-bold">Confirm</h2>
+		</template>
+		<template #body-content>
+			<p>
+				Permanently cancel {{ props.doctype }}
+				<span class="font-bold">{{ formModel.name }}</span
+				>?
+			</p>
+		</template>
+		<template #actions>
+			<div class="flex flex-row gap-4">
+				<Button
+					variant="outline"
+					class="py-5 w-full"
+					@click="showCancelDialog = false"
+				>
+					No
+				</Button>
+				<Button
+					variant="solid"
+					@click="handleDocUpdate('cancel')"
+					class="py-5 w-full"
+				>
+					Yes
+				</Button>
+			</div>
+		</template>
+	</Dialog>
 </template>
 
 <script setup>
@@ -261,7 +294,7 @@ import {
 import FormField from "@/components/FormField.vue"
 import FileUploaderView from "@/components/FileUploaderView.vue"
 
-import { FileAttachment, guessStatusColor } from "@/composables/index"
+import { FileAttachment, guessStatusColor } from "@/composables"
 import { getCompanyCurrency } from "@/data/currencies"
 import { formatCurrency } from "@/utils/formatters"
 
@@ -550,6 +583,9 @@ async function handleDocUpdate(action) {
 			isFormUpdated.value = true
 		})
 	}
+
+	if (action === "submit") showSubmitDialog.value = false
+	else if (action === "cancel") showCancelDialog.value = false
 }
 
 function saveForm() {
@@ -575,6 +611,7 @@ function submitOrCancelForm() {
 
 function handleDocDelete() {
 	documentResource.delete.submit()
+	showDeleteDialog.value = false
 }
 
 function handleDocReload() {

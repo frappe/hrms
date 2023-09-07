@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="flex flex-col bg-white rounded-lg mt-5 overflow-auto"
+		class="flex flex-col bg-white rounded mt-5 overflow-auto"
 		v-if="props.items?.length"
 	>
 		<router-link
@@ -17,7 +17,7 @@
 			v-slot="{ navigate }"
 		>
 			<div class="flex flex-col bg-white w-full py-5 px-3.5 mt-0 border-none">
-				<Button @click="navigate" appearance="secondary" class="py-2">
+				<Button @click="navigate" variant="subtle" class="py-5 text-base">
 					Request an Advance
 				</Button>
 			</div>

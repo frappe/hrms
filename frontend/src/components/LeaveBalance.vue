@@ -1,24 +1,19 @@
 <template>
-	<div class="flex flex-col w-full mt-7">
+	<div class="flex flex-col w-full">
 		<div class="flex flex-row justify-between items-center px-4">
-			<div class="text-xl text-gray-800 font-bold">Leave Balance</div>
-			<div
-				class="text-lg text-blue-500 font-medium cursor-pointer"
+			<div class="text-lg text-gray-800 font-bold">Leave Balance</div>
+			<router-link
+				:to="{ name: 'LeaveApplicationListView' }"
+				v-slot="{ navigate }"
 				v-if="leaveBalance.data"
 			>
-				<router-link
-					:to="{ name: 'LeaveApplicationListView' }"
-					v-slot="{ navigate }"
-					v-if="leaveBalance.data"
+				<div
+					@click="navigate"
+					class="text-sm text-gray-800 font-semibold cursor-pointer underline underline-offset-2"
 				>
-					<div
-						@click="navigate"
-						class="text-lg text-blue-500 font-medium cursor-pointer"
-					>
-						View Leave History
-					</div>
-				</router-link>
-			</div>
+					View Leave History
+				</div>
+			</router-link>
 		</div>
 
 		<!-- Leave Balance Dashboard -->
@@ -29,16 +24,16 @@
 			<div
 				v-for="(allocation, leave_type, index) in leaveBalance.data"
 				:key="leave_type"
-				class="flex flex-col bg-white rounded-xl shadow-md gap-2 p-4 items-start first:ml-4"
+				class="flex flex-col bg-white border-none rounded-lg drop-shadow-md gap-2 p-4 items-start first:ml-4"
 			>
 				<SemicircleChart
 					:percentage="allocation.balance_percentage"
 					:colorClass="getChartColor(index)"
 				/>
-				<div class="text-gray-800 font-bold text-lg">
+				<div class="text-gray-800 font-bold text-base">
 					{{ `${allocation.balance_leaves}/${allocation.allocated_leaves}` }}
 				</div>
-				<div class="text-gray-600 font-normal text-base w-24">
+				<div class="text-gray-600 font-normal text-sm w-24 leading-4">
 					{{ `${leave_type} balance` }}
 				</div>
 			</div>
@@ -75,7 +70,8 @@ const leaveBalance = createResource({
 })
 
 const getChartColor = (index) => {
-	const chartColors = ["text-pink-500", "text-orange-400", "text-purple-500"]
+	// note: tw colors - rose-400, pink-400 & purple-500 of the old frappeui palette #918ef5
+	const chartColors = ["text-[#fb7185]", "text-[#f472b6]", "text-[#918ef5]"]
 	return chartColors[index % chartColors.length]
 }
 </script>

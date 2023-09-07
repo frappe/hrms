@@ -7,7 +7,7 @@
 		<div
 			class="w-full flex flex-row gap-2 pt-8 pb-5 border-b justify-center items-center sticky top-0 z-[100]"
 		>
-			<span class="text-gray-900 font-bold text-xl text-center">
+			<span class="text-gray-900 font-bold text-lg text-center">
 				{{ document?.doctype }}
 			</span>
 			<FeatherIcon
@@ -54,7 +54,7 @@
 					<div class="text-gray-600 text-base">Attachments</div>
 					<ul class="w-full flex flex-col items-center gap-2">
 						<li
-							class="bg-gray-100 rounded-lg p-2 w-full"
+							class="bg-gray-100 rounded p-2 w-full"
 							v-for="(file, index) in attachedFiles.data"
 							:key="index"
 						>
@@ -78,16 +78,25 @@
 		>
 			<Button
 				@click="updateDocumentStatus({ status: 'Rejected' })"
-				class="w-full py-3 px-12 bg-red-100 text-red-600"
-				icon-left="x"
+				class="w-full py-5"
+				variant="subtle"
+				theme="red"
 			>
+				<template #prefix>
+					<FeatherIcon name="x" class="w-4" />
+				</template>
 				Reject
 			</Button>
+
 			<Button
 				@click="updateDocumentStatus({ status: 'Approved' })"
-				class="w-full bg-green-600 text-white py-3 px-12"
-				icon-left="check"
+				class="w-full py-5"
+				variant="solid"
+				theme="green"
 			>
+				<template #prefix>
+					<FeatherIcon name="check" class="w-4" />
+				</template>
 				Approve
 			</Button>
 		</div>
@@ -101,8 +110,8 @@
 		>
 			<Button
 				@click="updateDocumentStatus({ docstatus: 1 })"
-				class="w-full py-3 px-12"
-				appearance="primary"
+				class="w-full py-5"
+				variant="solid"
 			>
 				Submit
 			</Button>
@@ -114,9 +123,13 @@
 		>
 			<Button
 				@click="updateDocumentStatus({ docstatus: 2 })"
-				class="w-full py-3 px-12 bg-red-100 text-red-600"
-				icon-left="x"
+				class="w-full py-5"
+				variant="subtle"
+				theme="red"
 			>
+				<template #prefix>
+					<FeatherIcon name="x" class="w-4" />
+				</template>
 				Cancel
 			</Button>
 		</div>

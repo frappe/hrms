@@ -4,7 +4,7 @@
 		:showCheckInPanel="true"
 	>
 		<template #body>
-			<div class="flex flex-col items-center mt-5 p-4 gap-7">
+			<div class="flex flex-col items-center mt-3 p-4 gap-7">
 				<QuickLinks :items="quickLinks" title="Quick Links" />
 				<RequestPanel />
 			</div>

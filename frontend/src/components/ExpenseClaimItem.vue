@@ -2,12 +2,12 @@
 	<div class="flex flex-col w-full justify-center gap-2.5">
 		<div class="flex flex-row items-center justify-between">
 			<div class="flex flex-row items-start gap-3 grow">
-				<ExpenseIcon class="h-5 w-5 mt-0.5 text-gray-500" />
-				<div class="flex flex-col items-start">
-					<div class="text-lg font-normal text-gray-800">
+				<ExpenseIcon class="h-5 w-5 text-gray-500" />
+				<div class="flex flex-col items-start gap-1.5">
+					<div class="text-base font-normal text-gray-800">
 						{{ claimTitle }}
 					</div>
-					<div class="text-sm font-normal text-gray-500">
+					<div class="text-xs font-normal text-gray-500">
 						<span>
 							{{ `${currency} ${props.doc.total_claimed_amount}` }}
 						</span>
@@ -19,12 +19,12 @@
 				</div>
 			</div>
 			<div class="flex flex-row justify-end items-center gap-2">
-				<span
-					class="text-gray-600 bg-gray-100 font-medium rounded-lg text-xs px-2"
-				>
-					{{ props.doc.status }}
-				</span>
-				<Badge :colorMap="colorMap" :label="approvalStatus" />
+				<Badge
+					variant="outline"
+					:theme="statusMap[claimStatus]"
+					:label="claimStatus"
+					size="md"
+				/>
 				<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
 			</div>
 		</div>
@@ -44,10 +44,10 @@
 import { FeatherIcon, Badge } from "frappe-ui"
 import { computed, inject } from "vue"
 
-import { getCompanyCurrencySymbol } from "@/data/currencies"
-
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
+
+import { getCompanyCurrencySymbol } from "@/data/currencies"
 
 const dayjs = inject("$dayjs")
 const props = defineProps({
@@ -60,11 +60,29 @@ const props = defineProps({
 	},
 })
 
-const colorMap = {
-	Approved: "green",
+const statusMap = {
+	Draft: "gray",
+	Submitted: "blue",
+	Cancelled: "red",
+	Paid: "green",
+	Unpaid: "orange",
+	"Approved & Draft": "gray",
+	"Approved & Unpaid": "orange",
+	"Approved & Submitted": "blue",
 	Rejected: "red",
-	Pending: "yellow",
 }
+
+const claimStatus = computed(() => {
+	if (
+		props.doc.approval_status === "Approved" &&
+		["Draft", "Unpaid", "Submitted"].includes(props.doc.status)
+	) {
+		return `${props.doc.approval_status} & ${props.doc.status}`
+	} else if (props.doc.approval_status === "Rejected") {
+		return "Rejected"
+	}
+	return props.doc.status
+})
 
 const claimTitle = computed(() => {
 	let title = props.doc.expense_type
