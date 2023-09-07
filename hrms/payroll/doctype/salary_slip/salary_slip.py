@@ -1797,6 +1797,10 @@ class SalarySlip(TransactionBase):
 
 	def make_loan_repayment_entry(self):
 		payroll_payable_account = get_payroll_payable_account(self.company, self.payroll_entry)
+		process_payroll_accounting_entry_based_on_employee = frappe.db.get_single_value(
+			"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
+		)
+
 		for loan in self.loans:
 			if loan.total_payment:
 				repayment_entry = create_repayment_entry(
@@ -1810,6 +1814,7 @@ class SalarySlip(TransactionBase):
 					loan.principal_amount,
 					loan.total_payment,
 					payroll_payable_account=payroll_payable_account,
+					process_payroll_accounting_entry_based_on_employee=process_payroll_accounting_entry_based_on_employee,
 				)
 
 				repayment_entry.save()
