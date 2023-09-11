@@ -94,13 +94,16 @@
             {% for jo in job_openings %}
                 <div name="card"
                      id="{{ jo.route }}"
-                     class="mb-8 card border zoom"
+                     class="mb-8 card border"
                      role="button">
                     <div class="p-6">
-                        <div class="flex mb-3">
+                        <div class="flex mb-5">
                             <div>
                                 <h4 class="mt-0 mb-1 mr-20">{{ jo.job_title }}</h4>
-                                <div class="text-secondary">{{ jo.company }}</div>
+                                <div class="text-14">
+                                    <span class="font-weight-bold">{{ jo.company }}</span>
+                                    <span class="text-secondary">{{ " · " }} {{ jo.posted_on }}</span>
+                                </div>
                             </div>
                             <div class="ml-auto font-weight-bold text-nowrap text-12">
                                 {%- if jo.employment_type -%}
@@ -114,42 +117,47 @@
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="text-14">
                             {%- if jo.location -%}
-                                <div class="col-4">
-                                    <div class="text-secondary text-13">Location</div>
-                                    <div class="font-weight-bold">{{ jo.location }}</div>
+                                <div class="mt-3">
+                                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                        <g stroke="var(--gray-600)" stroke-miterlimit="10">
+                                        <path d="M11.467 3.458c1.958 1.957 1.958 5.088.027 7.02L7.97 14l-3.523-3.523a4.945 4.945 0 010-6.993l.026-.026a4.922 4.922 0 016.993 0zm0 0c-.026-.026-.026-.026 0 0z">
+                                        </path>
+                                        <path d="M7.971 8.259a1.305 1.305 0 100-2.61 1.305 1.305 0 000 2.61z"></path>
+                                        </g>
+                                    </svg>
+                                    {{ jo.location }}
                                 </div>
                             {% endif %}
                             {%- if jo.department -%}
-                                <div class="col-4">
-                                    <div class="text-secondary text-13">Department</div>
-                                    <div class="font-weight-bold">{{ jo.department }}</div>
+                                <div class="mt-3">
+                                    <svg class="icon" style="--icon-stroke: var(--gray-600)">
+                                        <use href="#icon-branch"></use>
+                                    </svg>
+                                    {{ jo.department }}
                                 </div>
                             {% endif %}
                             {%- if jo.publish_salary_range -%}
-                                <div class="col-4">
-                                    <div class="text-secondary text-13">Salary Range</div>
-                                    <div class="font-weight-bold">
-                                        {{ frappe.format_value(frappe.utils.flt(jo.lower_range) ,
-                                        currency=jo.currency) }} - {{ frappe.format_value(frappe.utils.flt(jo.upper_range) ,
-                                        currency=jo.currency) }} / {{ jo.salary_per.lower() }}
-                                    </div>
+                                <div class="mt-3">
+                                    <svg class="icon" style="--icon-stroke: var(--gray-600)">
+                                        <use href="#icon-income"></use>
+                                    </svg>
+                                    {{ frappe.format_value(frappe.utils.flt(jo.lower_range) ,
+                                    currency=jo.currency) }} - {{ frappe.format_value(frappe.utils.flt(jo.upper_range) ,
+                                    currency=jo.currency) }} / {{ jo.salary_per.lower() }}
                                 </div>
                             {% endif %}
                         </div>
                     </div>
                     <div class="px-4 py-2 footer">
                         <div class="row text-12 text-secondary">
-                            <p class="col-4 text-center">
-                                {{ _("Posted on: ") }}<b>{{ frappe.format_date(jo.posted_on, "d MMM, YYYY") }}</b>
-                            </p>
-                            <p class="col-4 text-center border-right border-left">
-                                {%- if jo.closes_on -%}{{ _("Closes on: ") }}<b>{{ frappe.format_date(jo.closes_on, "d MMM, YYYY") }}</b>{% endif %}
-                        </p>
-                        <p class="col-4 text-center">
+                        <p class="col-6 text-center border-right">
                             {{ _("Applications received: ") }}
                             <b>{{ jo.no_of_applications }}</b>
+                        </p>
+                            <p class="col-6 text-center">
+                                {%- if jo.closes_on -%}{{ _("Closes on: ") }}<b>{{ frappe.format_date(jo.closes_on, "d MMM, YYYY") }}</b>{% endif %}
                         </p>
                     </div>
                 </div>
