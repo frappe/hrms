@@ -113,8 +113,8 @@ class JobOpening(WebsiteGenerator):
 			job_requisition.save()
 
 	def get_context(self, context):
-		job_applicants = frappe.get_all("Job Applicant", filters={"job_title": self.name})
-		context.no_of_applications = len(job_applicants)
+		job_applicants = frappe.db.count("Job Applicant", {"job_title": self.name})
+		context.no_of_applications = job_applicants
 		context.parents = [{"route": "jobs", "title": _("All Jobs")}]
 		context.posted_on = pretty_date(self.posted_on)
 
