@@ -6,9 +6,9 @@
                 <h1 class="mt-0 mb-3" style="font-size: 3rem">{{ job_title }}</h1>
                 <div class="flex align-items-center">
                     <div>
-                        {{ "Posted" }}
+                        <span class="font-weight-bold">{{ company }}</span>
+                        {{ " · " }}
                         {{ posted_on }}
-                        {{ " · " }}{{ no_of_applications }}{{ " applicant" if no_of_applications == 1 else " applicants" }}
                     </div>
                 </div>
             </div>
@@ -25,32 +25,16 @@
         <div class="mb-4">
             <div class="m-4">
                 <div class="row">
-                    <div class="col-4 mb-8">
-                        <div class="flex flex-row align-items-center">
-                            <div class="rounded-circle p-4" style="background: var(--purple-50)">
-                                <svg class="icon"
-                                     style="height: 28px;
-                                            width: 28px;
-                                            --icon-stroke: var(--purple-700)">
-                                    <use href="#icon-organization"></use>
-                                </svg>
-                            </div>
-                            <div class="ml-5">
-                                <div class="text-secondary" style="font-size: 14px">{{ _("Company") }}</div>
-                                <div class="font-weight-bold">{{ company }}</div>
-                            </div>
-                        </div>
-                    </div>
                     {%- if location -%}
                         <div class="col-4 mb-8">
                             <div class="flex flex-row align-items-center">
-                                <div class="rounded-circle p-4" style="background: var(--blue-50)">
+                                <div class="rounded-circle p-4" style="background: var(--purple-50)">
                                     <svg class="icon"
                                          style="height: 28px;
                                                 width: 28px"
                                          xmlns="http://www.w3.org/2000/svg"
                                          viewBox="0 0 16 16">
-                                        <g stroke="var(--blue-700)" stroke-miterlimit="10">
+                                        <g stroke="var(--purple-700)" stroke-miterlimit="10">
                                         <path d="M11.467 3.458c1.958 1.957 1.958 5.088.027 7.02L7.97 14l-3.523-3.523a4.945 4.945 0 010-6.993l.026-.026a4.922 4.922 0 016.993 0zm0 0c-.026-.026-.026-.026 0 0z">
                                         </path>
                                         <path d="M7.971 8.259a1.305 1.305 0 100-2.61 1.305 1.305 0 000 2.61z"></path>
@@ -60,6 +44,24 @@
                                 <div class="ml-5">
                                     <div class="text-secondary" style="font-size: 14px">{{ _("Location") }}</div>
                                     <div class="font-weight-bold">{{ location }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {%- if department -%}
+                        <div class="col-4 mb-8">
+                            <div class="flex flex-row align-items-center">
+                                <div class="rounded-circle p-4" style="background: var(--blue-50)">
+                                    <svg class="icon"
+                                         style="height: 28px;
+                                                width: 28px;
+                                                --icon-stroke: var(--blue-700)">
+                                        <use href="#icon-branch"></use>
+                                    </svg>
+                                </div>
+                                <div class="ml-5">
+                                    <div class="text-secondary" style="font-size: 14px">{{ _("Department") }}</div>
+                                    <div class="font-weight-bold">{{ department }}</div>
                                 </div>
                             </div>
                         </div>
@@ -86,7 +88,7 @@
                             </div>
                         </div>
                     {% endif %}
-                    {%- if department -%}
+                    {%- if employment_type -%}
                         <div class="col-4 mb-8">
                             <div class="flex flex-row align-items-center">
                                 <div class="rounded-circle p-4" style="background: var(--yellow-50)">
@@ -94,24 +96,6 @@
                                          style="height: 28px;
                                                 width: 28px;
                                                 --icon-stroke: var(--yellow-700)">
-                                        <use href="#icon-branch"></use>
-                                    </svg>
-                                </div>
-                                <div class="ml-5">
-                                    <div class="text-secondary" style="font-size: 14px">{{ _("Department") }}</div>
-                                    <div class="font-weight-bold">{{ department }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
-                    {%- if employment_type -%}
-                        <div class="col-4 mb-8">
-                            <div class="flex flex-row align-items-center">
-                                <div class="rounded-circle p-4" style="background: var(--orange-50)">
-                                    <svg class="icon"
-                                         style="height: 28px;
-                                                width: 28px;
-                                                --icon-stroke: var(--orange-700)">
                                         <use href="#icon-hr"></use>
                                     </svg>
                                 </div>
@@ -122,6 +106,22 @@
                             </div>
                         </div>
                     {% endif %}
+                    <div class="col-4 mb-8">
+                        <div class="flex flex-row align-items-center">
+                            <div class="rounded-circle p-4" style="background: var(--orange-50)">
+                                <svg class="icon"
+                                     style="height: 28px;
+                                            width: 28px;
+                                            --icon-stroke: var(--orange-700)">
+                                    <use href="#icon-users"></use>
+                                </svg>
+                            </div>
+                            <div class="ml-5">
+                                <div class="text-secondary" style="font-size: 14px">{{ _("Applications Received") }}</div>
+                                <div class="font-weight-bold">{{ no_of_applications }}</div>
+                            </div>
+                        </div>
+                    </div>
                     {%- if closes_on -%}
                         <div class="col-4 mb-8">
                             <div class="flex flex-row align-items-center">
