@@ -32,7 +32,14 @@ def before_tests():
 		)
 
 	enable_all_roles_and_domains()
+	set_defaults()
 	frappe.db.commit()  # nosemgrep
+
+
+def set_defaults():
+	frappe.db.set_value(
+		"Company", "_Test Company", "default_holiday_list", "Salary Slip Test Holiday List"
+	)
 
 
 def get_first_sunday(holiday_list="Salary Slip Test Holiday List", for_date=None):
