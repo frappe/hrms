@@ -13,8 +13,6 @@
   "employment_type",
   "designation",
   "employee_grade",
-  "select_employees_section",
-  "employees_html",
   "allocate_leaves_section",
   "dates_based_on",
   "leave_period",
@@ -25,7 +23,9 @@
   "allocation_based_on",
   "leave_policy",
   "leave_type",
-  "no_of_days"
+  "no_of_days",
+  "select_employees_section",
+  "employees_html"
  ],
  "fields": [
   {
@@ -172,7 +172,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-08-21 12:48:51.288503",
+ "modified": "2023-09-12 15:32:12.665601",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Control Panel",

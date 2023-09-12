@@ -40,6 +40,34 @@ frappe.ui.form.on("Leave Control Panel", {
 		frm.trigger("load_employees");
 	},
 
+	dates_based_on(frm) {
+		frm.trigger("load_employees");
+	},
+
+	from_date(frm) {
+		frm.trigger("load_employees");
+	},
+
+	to_date(frm) {
+		frm.trigger("load_employees");
+	},
+
+	leave_period(frm) {
+		frm.trigger("load_employees");
+	},
+
+	allocation_based_on(frm) {
+		frm.trigger("load_employees");
+	},
+
+	leave_type(frm) {
+		frm.trigger("load_employees");
+	},
+
+	leave_policy(frm) {
+		frm.trigger("load_employees");
+	},
+
 	reset_leave_details(frm) {
 		frm.set_value({
 			dates_based_on: undefined,
@@ -58,14 +86,7 @@ frappe.ui.form.on("Leave Control Panel", {
 		frm
 			.call({
 				method: "get_employees",
-				args: {
-					company: frm.doc.company,
-					employment_type: frm.doc.employment_type,
-					branch: frm.doc.branch,
-					department: frm.doc.department,
-					designation: frm.doc.designation,
-					grade: frm.doc.employee_grade,
-				},
+				doc: frm.doc,
 			})
 			.then((r) => {
 				frm.employees = r.message;

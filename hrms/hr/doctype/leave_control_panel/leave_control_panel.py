@@ -99,24 +99,26 @@ class LeaveControlPanel(Document):
 		else:
 			return self.from_date, self.to_date
 
-
-@frappe.whitelist()
-def get_employees(
-	company: str = None,
-	employment_type: str = None,
-	branch: str = None,
-	department: str = None,
-	designation: str = None,
-	grade: str = None,
-) -> list:
-	args = locals().copy()
-	filters = {"status": "Active"}
-	for d in args:
-		if args[d]:
-			filters[d] = args[d]
-	employees = frappe.get_list(
-		"Employee",
-		filters=filters,
-		fields=["employee", "employee_name", "company", "department"],
-	)
-	return employees
+	@frappe.whitelist()
+	def get_employees(self):
+		filter_fields = [
+			"company",
+			"employment_type",
+			"branch",
+			"department",
+			"designation",
+			"employee_grade",
+		]
+		filters = {"status": "Active"}
+		for d in filter_fields:
+			if self.get(d):
+				if d == "employee_grade":
+					filters["grade"] = self.get(d)
+				else:
+					filters[d] = self.get(d)
+		employees = frappe.get_list(
+			"Employee",
+			filters=filters,
+			fields=["employee", "employee_name", "company", "department"],
+		)
+		return employees
