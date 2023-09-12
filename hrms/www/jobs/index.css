@@ -52,10 +52,6 @@ p {
 	background-color: var(--gray-200);
 }
 
-.light-stroke {
-	--icon-stroke: var(--gray-400);
-}
-
 .footer {
 	background: var(--gray-50);
 	border-radius: 0 0 0.75rem 0.75rem

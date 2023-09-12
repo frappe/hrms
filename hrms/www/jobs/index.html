@@ -89,7 +89,7 @@
                 </div>
             </div>
             <p class="text-secondary mb-4 text-15">
-                {{ _("Showing") }} {{ job_openings|length }} {{ _("result" if job_openings|length == 1 else "results") }}
+                {{ _("Showing " + job_openings|length|string + (" result" if job_openings|length == 1 else " results") ) }}
             </p>
             {% for jo in job_openings %}
                 <div name="card"
@@ -152,10 +152,10 @@
                     </div>
                     <div class="px-4 py-2 footer">
                         <div class="row text-12 text-secondary">
-                        <p class="col-6 text-center border-right">
-                            {{ _("Applications received: ") }}
-                            <b>{{ jo.no_of_applications }}</b>
-                        </p>
+                            <p class="col-6 text-center border-right">
+                                {{ _("Applications received: ") }}
+                                <b>{{ jo.no_of_applications }}</b>
+                            </p>
                             <p class="col-6 text-center">
                                 {%- if jo.closes_on -%}{{ _("Closes on: ") }}<b>{{ frappe.format_date(jo.closes_on, "d MMM, YYYY") }}</b>{% endif %}
                         </p>
