@@ -248,7 +248,9 @@ def send_daily_feedback_reminder():
 
 @frappe.whitelist()
 def get_expected_skill_set(interview_round):
-	return frappe.get_all("Expected Skill Set", filters={"parent": interview_round}, fields=["skill"])
+	return frappe.get_all(
+		"Expected Skill Set", filters={"parent": interview_round}, fields=["skill"], order_by="idx"
+	)
 
 
 @frappe.whitelist()
