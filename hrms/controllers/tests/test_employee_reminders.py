@@ -12,7 +12,6 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.controllers.employee_reminders import send_holidays_reminder_in_advance
 from hrms.hr.doctype.hr_settings.hr_settings import set_proceed_with_frequency_change
 from hrms.hr.utils import get_holidays_for_employee
-from hrms.tests.test_utils import create_company
 
 
 class TestEmployeeReminders(FrappeTestCase):
@@ -37,7 +36,6 @@ class TestEmployeeReminders(FrappeTestCase):
 			to_date=getdate() + timedelta(weeks=5),
 		)
 
-		create_company("_Test Company")
 		test_employee = frappe.get_doc(
 			"Employee", make_employee("test@gopher.io", company="_Test Company")
 		)
