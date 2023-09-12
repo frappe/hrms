@@ -16,10 +16,10 @@ class TestEmployeeExits(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls):
 		super().setUpClass()
-		create_company()
-		frappe.db.sql("delete from `tabEmployee` where company='Test Company'")
-		frappe.db.sql("delete from `tabFull and Final Statement` where company='Test Company'")
-		frappe.db.sql("delete from `tabExit Interview` where company='Test Company'")
+		create_company("Test Company")
+		frappe.db.delete("Employee", {"company": "Test Company"})
+		frappe.db.delete("Full and Final Statement", {"company": "Test Company"})
+		frappe.db.delete("Exit Interview", {"company": "Test Company"})
 
 		cls.create_records()
 

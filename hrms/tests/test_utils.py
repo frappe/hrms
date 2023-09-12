@@ -16,9 +16,9 @@ def before_tests():
 			{
 				"currency": "INR",
 				"full_name": "Test User",
-				"company_name": "Wind Power LLC",
+				"company_name": "_Test Company",
 				"timezone": "Asia/Kolkata",
-				"company_abbr": "WP",
+				"company_abbr": "_TC",
 				"industry": "Manufacturing",
 				"country": "India",
 				"fy_start_date": f"{year}-01-01",
@@ -32,7 +32,14 @@ def before_tests():
 		)
 
 	enable_all_roles_and_domains()
+	set_defaults()
 	frappe.db.commit()  # nosemgrep
+
+
+def set_defaults():
+	frappe.db.set_value(
+		"Company", "_Test Company", "default_holiday_list", "Salary Slip Test Holiday List"
+	)
 
 
 def get_first_sunday(holiday_list="Salary Slip Test Holiday List", for_date=None):
