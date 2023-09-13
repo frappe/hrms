@@ -102,6 +102,7 @@ class TestPayrollEntry(FrappeTestCase):
 
 	def test_multi_currency_payroll_entry(self):
 		company = frappe.get_doc("Company", "_Test Company")
+		create_department("Accounts")
 		employee = make_employee(
 			"test_muti_currency_employee@payroll.com", company=company.name, department="Accounts - _TC"
 		)
