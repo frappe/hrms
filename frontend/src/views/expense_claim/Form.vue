@@ -111,6 +111,7 @@ formFields.reload()
 const advances = createResource({
 	url: "hrms.hr.doctype.expense_claim.expense_claim.get_advances",
 	params: { employee: employee.data.name },
+	auto: true,
 	onSuccess(data) {
 		// set advances
 		if (props.id) {

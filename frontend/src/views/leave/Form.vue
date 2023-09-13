@@ -133,7 +133,15 @@ function getFilteredFields(fields) {
 		"letter_head",
 	]
 
-	const employeeFields = ["employee", "employee_name", "department", "company"]
+	const employeeFields = [
+		"employee",
+		"employee_name",
+		"department",
+		"company",
+		"follow_via_email",
+		"status",
+		"posting_date",
+	]
 
 	if (!props.id) excludeFields.push(...employeeFields)
 

@@ -57,7 +57,6 @@ const teamRequests = computed(() => {
 })
 
 onMounted(() => {
-	socket.off("hrms:update_leaves")
 	socket.on("hrms:update_leaves", (data) => {
 		if (data.employee === employee.data.name) {
 			myLeaves.reload()
@@ -67,7 +66,6 @@ onMounted(() => {
 		}
 	})
 
-	socket.off("hrms:update_expense_claims")
 	socket.on("hrms:update_expense_claims", (data) => {
 		if (data.employee === employee.data.name) {
 			myClaims.reload()

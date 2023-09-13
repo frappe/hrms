@@ -56,7 +56,7 @@
 			<div class="bg-white grow">
 				<!-- Tabs -->
 				<div
-					class="px-4 sticky top-14 z-[100] bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
+					class="px-4 sticky top-15 z-[100] bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
 				>
 					<ul class="flex -mb-px overflow-auto hide-scrollbar">
 						<li class="mr-2 whitespace-nowrap" v-for="tab in tabs">
