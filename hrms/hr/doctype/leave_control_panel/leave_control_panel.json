@@ -5,14 +5,6 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "filters_section",
-  "company",
-  "branch",
-  "department",
-  "column_break1",
-  "employment_type",
-  "designation",
-  "employee_grade",
   "allocate_leaves_section",
   "dates_based_on",
   "leave_period",
@@ -24,6 +16,14 @@
   "leave_policy",
   "leave_type",
   "no_of_days",
+  "filters_section",
+  "company",
+  "branch",
+  "department",
+  "column_break1",
+  "employment_type",
+  "designation",
+  "employee_grade",
   "select_employees_section",
   "employees_html"
  ],
@@ -133,10 +133,9 @@
   },
   {
    "collapsible": 1,
-   "description": "Set filters to fetch employees",
    "fieldname": "filters_section",
    "fieldtype": "Section Break",
-   "label": "Filters"
+   "label": "Employee Filters"
   },
   {
    "fieldname": "employees_html",
@@ -171,7 +170,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-09-13 14:27:19.508642",
+ "modified": "2023-09-13 16:41:07.259385",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Control Panel",
