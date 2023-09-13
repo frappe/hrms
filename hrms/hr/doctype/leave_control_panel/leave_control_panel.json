@@ -20,7 +20,7 @@
   "to_date",
   "carry_forward",
   "column_break_16",
-  "allocation_based_on",
+  "allocate_based_on_leave_policy",
   "leave_policy",
   "leave_type",
   "no_of_days",
@@ -74,11 +74,11 @@
    "width": "50%"
   },
   {
-   "depends_on": "eval:!doc.dates_based_on",
+   "depends_on": "eval:doc.dates_based_on == 'Custom Range'",
    "fieldname": "from_date",
    "fieldtype": "Date",
    "label": "From Date",
-   "mandatory_depends_on": "eval:!doc.dates_based_on"
+   "mandatory_depends_on": "eval:doc.dates_based_on == 'Custom Range'"
   },
   {
    "depends_on": "eval:doc.dates_based_on != 'Leave Period'",
@@ -88,34 +88,34 @@
    "mandatory_depends_on": "eval:doc.dates_based_on != 'Leave Period'"
   },
   {
-   "depends_on": "eval:doc.allocation_based_on == 'Leave Policy Assignment'",
+   "depends_on": "eval:doc.allocate_based_on_leave_policy ",
    "fieldname": "leave_policy",
    "fieldtype": "Link",
    "label": "Leave Policy",
-   "mandatory_depends_on": "eval:doc.allocation_based_on == 'Leave Policy Assignment'",
+   "mandatory_depends_on": "eval:doc.allocate_based_on_leave_policy ",
    "options": "Leave Policy"
   },
   {
-   "depends_on": "eval:!doc.allocation_based_on",
+   "depends_on": "eval:!doc.allocate_based_on_leave_policy",
    "fieldname": "leave_type",
    "fieldtype": "Link",
    "label": "Leave Type",
-   "mandatory_depends_on": "eval:!doc.allocation_based_on",
+   "mandatory_depends_on": "eval:!doc.allocate_based_on_leave_policy",
    "options": "Leave Type"
   },
   {
-   "default": "0",
+   "default": "1",
    "description": "Please select Carry Forward if you also want to include previous fiscal year's balance leaves to this fiscal year",
    "fieldname": "carry_forward",
    "fieldtype": "Check",
    "label": "Carry Forward"
   },
   {
-   "depends_on": "eval:!doc.allocation_based_on",
+   "depends_on": "eval:!doc.allocate_based_on_leave_policy",
    "fieldname": "no_of_days",
    "fieldtype": "Float",
    "label": "New Leaves Allocated (In Days)",
-   "mandatory_depends_on": "eval:!doc.allocation_based_on"
+   "mandatory_depends_on": "eval:!doc.allocate_based_on_leave_policy"
   },
   {
    "fieldname": "select_employees_section",
@@ -149,7 +149,7 @@
    "fieldname": "dates_based_on",
    "fieldtype": "Select",
    "label": "Dates Based On",
-   "options": "\nLeave Period\nJoining Date"
+   "options": "Leave Period\nJoining Date\nCustom Range"
   },
   {
    "depends_on": "eval:doc.dates_based_on == 'Leave Period'",
@@ -160,11 +160,10 @@
    "options": "Leave Period"
   },
   {
-   "default": "Leave Policy Assignment",
-   "fieldname": "allocation_based_on",
-   "fieldtype": "Select",
-   "label": "Allocation Based On",
-   "options": "\nLeave Policy Assignment"
+   "default": "1",
+   "fieldname": "allocate_based_on_leave_policy",
+   "fieldtype": "Check",
+   "label": "Allocate Based On Leave Policy"
   }
  ],
  "hide_toolbar": 1,
@@ -172,7 +171,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-09-12 15:32:12.665601",
+ "modified": "2023-09-13 14:27:19.508642",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Control Panel",

@@ -49,10 +49,10 @@ class TestLeaveControlPanel(FrappeTestCase):
 	def test_allocation_based_on_leave_type(self):
 		args = {
 			"doctype": "Leave Control Panel",
-			"dates_based_on": None,
+			"dates_based_on": "Custom Range",
 			"from_date": date(2030, 4, 1),
 			"to_date": date(2030, 4, 30),
-			"allocation_based_on": None,
+			"allocate_based_on_leave_policy": 0,
 			"leave_type": "Sick Leave",
 			"no_of_days": 5,
 		}
@@ -75,7 +75,7 @@ class TestLeaveControlPanel(FrappeTestCase):
 			"doctype": "Leave Control Panel",
 			"dates_based_on": "Leave Period",
 			"leave_period": self.leave_period.name,
-			"allocation_based_on": "Leave Policy Assignment",
+			"allocate_based_on_leave_policy": 1,
 			"leave_policy": self.leave_policy,
 		}
 		lcp = LeaveControlPanel(args)

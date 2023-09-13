@@ -19,7 +19,7 @@ class LeaveControlPanel(Document):
 			self.validate_from_to_dates("from_date", "to_date")
 			fields.extend(["from_date", "to_date"])
 
-		if self.allocation_based_on == "Leave Policy Assignment":
+		if self.allocate_based_on_leave_policy:
 			fields.append("leave_policy")
 		else:
 			fields.extend(["leave_type", "no_of_days"])
@@ -33,7 +33,7 @@ class LeaveControlPanel(Document):
 	@frappe.whitelist()
 	def allocate_leave(self, employees):
 		self.validate_fields(employees)
-		if self.allocation_based_on == "Leave Policy Assignment":
+		if self.allocate_based_on_leave_policy:
 			self.create_leave_policy_assignments(employees)
 		else:
 			self.create_leave_allocations(employees)
@@ -67,10 +67,11 @@ class LeaveControlPanel(Document):
 
 		failed = []
 		from_date, to_date = self.get_from_to_date()
+		assignment_based_on = None if self.dates_based_on == "Custom Range" else self.dates_based_on
 		for d in employees:
 			assignment = frappe.new_doc("Leave Policy Assignment")
 			assignment.employee = d
-			assignment.assignment_based_on = self.dates_based_on
+			assignment.assignment_based_on = assignment_based_on
 			assignment.leave_policy = self.leave_policy
 			assignment.effective_from = (
 				from_date if from_date else frappe.get_value("Employee", d, "date_of_joining")
@@ -127,12 +128,12 @@ class LeaveControlPanel(Document):
 
 		from_date, to_date = self.get_from_to_date()
 		if to_date and (from_date or self.dates_based_on == "Joining Date"):
-			if self.allocation_based_on == "Leave Policy Assignment" and self.leave_policy:
+			if self.allocate_based_on_leave_policy and self.leave_policy:
 				leave_types = frappe.get_list(
 					"Leave Policy Detail", {"parent": self.leave_policy}, pluck="leave_type"
 				)
 				return self.filtered_employees(all_employees, from_date, to_date, leave_types)
-			elif not self.allocation_based_on and self.leave_type:
+			elif not self.allocate_based_on_leave_policy and self.leave_type:
 				return self.filtered_employees(all_employees, from_date, to_date)
 
 		return all_employees

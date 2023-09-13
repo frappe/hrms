@@ -56,7 +56,7 @@ frappe.ui.form.on("Leave Control Panel", {
 		frm.trigger("load_employees");
 	},
 
-	allocation_based_on(frm) {
+	allocate_based_on_leave_policy(frm) {
 		frm.trigger("load_employees");
 	},
 
@@ -70,12 +70,12 @@ frappe.ui.form.on("Leave Control Panel", {
 
 	reset_leave_details(frm) {
 		frm.set_value({
-			dates_based_on: undefined,
+			dates_based_on: "Leave Period",
 			from_date: frappe.datetime.get_today(),
 			to_date: undefined,
 			leave_period: undefined,
-			carry_forward: 0,
-			allocation_based_on: undefined,
+			carry_forward: 1,
+			allocate_based_on_leave_policy: 1,
 			leave_type: undefined,
 			no_of_days: 0,
 			leave_policy: undefined,
