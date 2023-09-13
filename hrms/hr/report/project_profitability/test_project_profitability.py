@@ -10,6 +10,8 @@ from hrms.hr.report.project_profitability.project_profitability import execute
 from hrms.payroll.doctype.salary_slip.salary_slip import make_salary_slip_from_timesheet
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_salary_structure_for_timesheet
 
+test_dependencies = ["Customer"]
+
 
 class TestProjectProfitability(FrappeTestCase):
 	def setUp(self):
