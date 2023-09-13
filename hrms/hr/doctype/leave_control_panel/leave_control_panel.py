@@ -92,7 +92,7 @@ class LeaveControlPanel(Document):
 			show_assignment_submission_status(failed)
 
 	def get_from_to_date(self):
-		if self.dates_based_on == "Leave Period":
+		if self.dates_based_on == "Leave Period" and self.leave_period:
 			return frappe.get_value("Leave Period", self.leave_period, ["from_date", "to_date"])
 		elif self.dates_based_on == "Joining Date":
 			return None, self.to_date
@@ -101,6 +101,7 @@ class LeaveControlPanel(Document):
 
 	@frappe.whitelist()
 	def get_employees(self):
+
 		filter_fields = [
 			"company",
 			"employment_type",
@@ -109,6 +110,7 @@ class LeaveControlPanel(Document):
 			"designation",
 			"employee_grade",
 		]
+
 		filters = {"status": "Active"}
 		for d in filter_fields:
 			if self.get(d):
@@ -116,9 +118,56 @@ class LeaveControlPanel(Document):
 					filters["grade"] = self.get(d)
 				else:
 					filters[d] = self.get(d)
-		employees = frappe.get_list(
+
+		all_employees = frappe.get_list(
 			"Employee",
 			filters=filters,
-			fields=["employee", "employee_name", "company", "department"],
+			fields=["employee", "employee_name", "company", "department", "date_of_joining"],
 		)
-		return employees
+
+		from_date, to_date = self.get_from_to_date()
+		if to_date and (from_date or self.dates_based_on == "Joining Date"):
+			if self.allocation_based_on == "Leave Policy Assignment" and self.leave_policy:
+				leave_types = frappe.get_list(
+					"Leave Policy Detail", {"parent": self.leave_policy}, pluck="leave_type"
+				)
+				return self.filtered_employees(all_employees, from_date, to_date, leave_types)
+			elif not self.allocation_based_on and self.leave_type:
+				return self.filtered_employees(all_employees, from_date, to_date)
+
+		return all_employees
+
+	def filtered_employees(self, all_employees, from_date, to_date, leave_types=None):
+		filtered_employees = []
+		la = frappe.qb.DocType("Leave Allocation")
+
+		for d in all_employees:
+			if self.dates_based_on == "Joining Date":
+				from_date = d.date_of_joining
+
+			query = (
+				frappe.qb.from_(la)
+				.select(True)
+				.where(
+					(la.docstatus == 1)
+					& (la.employee == d.employee)
+					& (
+						(la.from_date[from_date:to_date] | la.to_date[from_date:to_date])
+						| (
+							(la.from_date <= from_date)
+							& (la.from_date <= to_date)
+							& (la.to_date >= from_date)
+							& (la.to_date >= to_date)
+						)
+					)
+				)
+			)
+			query = (
+				query.where(la.leave_type.isin(leave_types))
+				if leave_types
+				else query.where(la.leave_type == self.leave_type)
+			)
+
+			if not query.run():
+				filtered_employees.append(d)
+		return filtered_employees
