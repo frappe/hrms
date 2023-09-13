@@ -90,7 +90,12 @@ frappe.ui.form.on("Leave Control Panel", {
 			})
 			.then((r) => {
 				frm.employees = r.message;
-				frm.events.show_employees(frm, frm.employees);
+				if (frm.employees) {
+					frm.set_df_property("select_employees_section", "hidden", 0);
+					frm.events.show_employees(frm, frm.employees);
+				} else {
+					frm.set_df_property("select_employees_section", "hidden", 1);
+				}
 			});
 	},
 

@@ -102,7 +102,36 @@ class LeaveControlPanel(Document):
 
 	@frappe.whitelist()
 	def get_employees(self):
+		from_date, to_date = self.get_from_to_date()
+		if to_date and (from_date or self.dates_based_on == "Joining Date"):
+			la = frappe.qb.DocType("Leave Allocation")
+			all_employees = frappe.get_list(
+				"Employee",
+				filters=self.get_filters(),
+				fields=["employee", "employee_name", "company", "department", "date_of_joining"],
+			)
+			filtered_employees = []
 
+			if self.allocate_based_on_leave_policy and self.leave_policy:
+				leave_types = frappe.get_list(
+					"Leave Policy Detail", {"parent": self.leave_policy}, pluck="leave_type"
+				)
+				for d in all_employees:
+					query = self.get_query(from_date, to_date, d)
+					query = query.where(la.leave_type.isin(leave_types))
+					if not query.run():
+						filtered_employees.append(d)
+				return filtered_employees
+
+			elif not self.allocate_based_on_leave_policy and self.leave_type:
+				for d in all_employees:
+					query = self.get_query(from_date, to_date, d)
+					query = query.where(la.leave_type == self.leave_type)
+					if not query.run():
+						filtered_employees.append(d)
+				return filtered_employees
+
+	def get_filters(self):
 		filter_fields = [
 			"company",
 			"employment_type",
@@ -111,7 +140,6 @@ class LeaveControlPanel(Document):
 			"designation",
 			"employee_grade",
 		]
-
 		filters = {"status": "Active"}
 		for d in filter_fields:
 			if self.get(d):
@@ -119,56 +147,27 @@ class LeaveControlPanel(Document):
 					filters["grade"] = self.get(d)
 				else:
 					filters[d] = self.get(d)
+		return filters
 
-		all_employees = frappe.get_list(
-			"Employee",
-			filters=filters,
-			fields=["employee", "employee_name", "company", "department", "date_of_joining"],
-		)
-
-		from_date, to_date = self.get_from_to_date()
-		if to_date and (from_date or self.dates_based_on == "Joining Date"):
-			if self.allocate_based_on_leave_policy and self.leave_policy:
-				leave_types = frappe.get_list(
-					"Leave Policy Detail", {"parent": self.leave_policy}, pluck="leave_type"
-				)
-				return self.filtered_employees(all_employees, from_date, to_date, leave_types)
-			elif not self.allocate_based_on_leave_policy and self.leave_type:
-				return self.filtered_employees(all_employees, from_date, to_date)
-
-		return all_employees
-
-	def filtered_employees(self, all_employees, from_date, to_date, leave_types=None):
-		filtered_employees = []
+	def get_query(self, from_date, to_date, employee):
 		la = frappe.qb.DocType("Leave Allocation")
+		if self.dates_based_on == "Joining Date":
+			from_date = employee.date_of_joining
 
-		for d in all_employees:
-			if self.dates_based_on == "Joining Date":
-				from_date = d.date_of_joining
-
-			query = (
-				frappe.qb.from_(la)
-				.select(True)
-				.where(
-					(la.docstatus == 1)
-					& (la.employee == d.employee)
-					& (
-						(la.from_date[from_date:to_date] | la.to_date[from_date:to_date])
-						| (
-							(la.from_date <= from_date)
-							& (la.from_date <= to_date)
-							& (la.to_date >= from_date)
-							& (la.to_date >= to_date)
-						)
+		return (
+			frappe.qb.from_(la)
+			.select(True)
+			.where(
+				(la.docstatus == 1)
+				& (la.employee == employee.employee)
+				& (
+					(la.from_date[from_date:to_date] | la.to_date[from_date:to_date])
+					| (
+						(la.from_date <= from_date)
+						& (la.from_date <= to_date)
+						& (la.to_date >= from_date)
+						& (la.to_date >= to_date)
 					)
 				)
 			)
-			query = (
-				query.where(la.leave_type.isin(leave_types))
-				if leave_types
-				else query.where(la.leave_type == self.leave_type)
-			)
-
-			if not query.run():
-				filtered_employees.append(d)
-		return filtered_employees
+		)
