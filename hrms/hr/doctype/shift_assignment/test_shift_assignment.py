@@ -210,7 +210,7 @@ class TestShiftAssignment(FrappeTestCase):
 
 	def test_consecutive_day_and_night_shifts(self):
 		# defaults
-		employee = make_employee("test_shift_assignment@example.com", company="_Test Company")
+		employee = make_employee("test_default_shift_assignment@example.com", company="_Test Company")
 		today = getdate()
 		yesterday = add_days(today, -1)
 
