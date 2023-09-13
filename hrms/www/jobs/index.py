@@ -76,21 +76,15 @@ def get_all_filters(filters=None):
 		fields=["company", "department", "location", "employment_type"],
 	)
 
-	companies = filters["company"] if "company" in filters else None
+	companies = filters.get("company", [])
 
 	all_filters = {}
-	for d in job_openings:
-		for key, value in d.items():
-			if key == "company" or not companies or (companies and d["company"] in companies):
-				if key not in all_filters:
-					all_filters[key] = [value]
-				elif value and value not in all_filters[key]:
-					all_filters[key].append(value)
+	for opening in job_openings:
+		for key, value in opening.items():
+			if value and (key == "company" or not companies or opening.company in companies):
+				all_filters.setdefault(key, set()).add(value)
 
-	for d in all_filters:
-		all_filters[d].sort()
-
-	return all_filters
+	return {key: sorted(value) for key, value in all_filters.items()}
 
 
 def get_filters_txt_and_order_by(orders):
