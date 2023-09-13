@@ -65,7 +65,7 @@ frappe.ui.form.on('Payroll Entry', {
 			&& !cint(frm.doc.salary_slips_created)
 			&& (frm.doc.docstatus != 2)
 		) {
-			if (frm.doc.docstatus == 0) {
+			if (frm.doc.docstatus == 0 && !frm.is_new()) {
 				frm.page.clear_primary_action();
 				frm.page.set_primary_action(__("Create Salary Slips"), () => {
 					frm.save("Submit").then(() => {
