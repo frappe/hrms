@@ -123,7 +123,7 @@ def close_expired_job_openings():
 	today = getdate()
 	for d in frappe.get_all(
 		"Job Opening",
-		filters={"Status": "Open", "closes_on": ["<=", today]},
+		filters={"status": "Open", "closes_on": ["between", ("2023-09-14", today)]},
 		fields=["name", "closes_on"],
 	):
 		frappe.set_value("Job Opening", d.name, "status", "Closed")
