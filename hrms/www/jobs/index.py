@@ -49,7 +49,7 @@ def get_job_openings(filters=None, txt=None, order_by=None, limit_start=0, limit
 			jo.closes_on,
 			Count(ja.job_title).as_("no_of_applications"),
 		)
-		.where(jo.status == "Open")
+		.where((jo.status == "Open") & (jo.publish == 1))
 		.groupby(jo.name)
 	)
 
