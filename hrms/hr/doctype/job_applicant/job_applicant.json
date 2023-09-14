@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "HR-APP-.YYYY.-.#####",
  "creation": "2013-01-29 19:25:37",
@@ -192,7 +193,7 @@
  "idx": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-01-25 17:39:20.694439",
+ "modified": "2023-09-14 16:50:39.316079",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Applicant",

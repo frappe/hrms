@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "field:route",
  "creation": "2013-01-15 16:13:36",
  "description": "Description of a Job Opening",
@@ -185,7 +186,7 @@
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2023-01-09 13:34:47.274465",
+ "modified": "2023-09-14 16:50:39.316079",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
