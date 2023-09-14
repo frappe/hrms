@@ -1,13 +1,9 @@
-body {
+body.jobs-page {
 	background: var(--gray-50);
 }
 
-h3 {
+h3.jobs-page {
 	font-size: 1.7rem;
-}
-
-p {
-	margin-bottom: 0;
 }
 
 .text-18 {
@@ -20,10 +16,6 @@ p {
 
 .text-14 {
 	font-size: 14px;
-}
-
-.text-13 {
-	font-size: 13px;
 }
 
 .text-12 {
@@ -52,7 +44,7 @@ p {
 	background-color: var(--gray-200);
 }
 
-.footer {
+.job-card-footer {
 	background: var(--gray-50);
 	border-radius: 0 0 0.75rem 0.75rem
 }
