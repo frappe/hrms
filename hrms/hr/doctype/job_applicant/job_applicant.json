@@ -72,7 +72,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Job Opening",
-   "options": "Job Opening"
+   "options": "Job Opening",
+   "search_index": 1
   },
   {
    "fieldname": "source",
@@ -193,7 +194,11 @@
  "idx": 1,
  "index_web_pages_for_search": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-09-14 16:50:39.316079",
+=======
+ "modified": "2023-09-14 17:03:48.838409",
+>>>>>>> 3a38ffa61 (perf: index Job Opening in Job Applicant for faster reads)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Applicant",
