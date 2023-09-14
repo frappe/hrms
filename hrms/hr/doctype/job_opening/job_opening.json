@@ -243,12 +243,13 @@
    "fieldname": "salary_per",
    "fieldtype": "Select",
    "label": "Salary Paid Per",
-   "options": "Hour\nDay\nWeek\nMonth\nYear\nSale"
+   "options": "Month\nYear"
   }
  ],
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -274,6 +275,9 @@
 =======
  "modified": "2023-09-01 15:37:33.862986",
 >>>>>>> f6f20a8d9 (refactor: change salary_type to salary_per)
+=======
+ "modified": "2023-09-14 13:04:00.241451",
+>>>>>>> 34b9ae543 (refactor: show only Month and Year for Salary Paid Per)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
