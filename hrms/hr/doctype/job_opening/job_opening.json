@@ -198,6 +198,7 @@
   },
   {
    "depends_on": "eval:doc.status == 'Open'",
+   "description": "If set, the job opening will be closed automatically after this date",
    "fieldname": "closes_on",
    "fieldtype": "Date",
    "label": "Closes On"
@@ -244,7 +245,7 @@
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2023-09-14 13:04:00.241451",
+ "modified": "2023-09-14 15:57:04.756209",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
