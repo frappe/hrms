@@ -203,6 +203,7 @@
   },
   {
    "depends_on": "eval:doc.status == 'Open'",
+   "description": "If set, the job opening will be closed automatically after this date",
    "fieldname": "closes_on",
    "fieldtype": "Date",
    "label": "Closes On"
@@ -256,6 +257,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
  "modified": "2023-09-14 16:50:39.316079",
 =======
  "modified": "2023-08-22 15:39:10.430060",
@@ -278,6 +280,9 @@
 =======
  "modified": "2023-09-14 13:04:00.241451",
 >>>>>>> 34b9ae543 (refactor: show only Month and Year for Salary Paid Per)
+=======
+ "modified": "2023-09-14 15:57:04.756209",
+>>>>>>> 311249ba9 (feat: add description to Closes On field)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
