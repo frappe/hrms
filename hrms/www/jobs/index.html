@@ -3,14 +3,14 @@
 	{{ _("Job Openings") }}
 {% endblock title %}
 {% block header %}
-	<h3 class="mt-0 mb-10">{{ _("Job Openings") }}</h3>
+	<h3 class="mt-0 mb-10 jobs-page">{{ _("Job Openings") }}</h3>
 {% endblock header %}
 {% block page_content %}
 	<meta id="data" data-filters="{{ all_filters }}">
 	<div class="row">
 		<div class="col-3 text-15">
 			<div class="flex align-items-center">
-				<p class="text-18 font-weight-bold">{{ _("Filters") }}</p>
+				<p class="text-18 font-weight-bold mb-0">{{ _("Filters") }}</p>
 				<a id="clear-filters" class="ml-auto" role="button">{{ _("Clear All") }}</a>
 			</div>
 			<hr class="mb-6">
@@ -145,25 +145,25 @@
 										<use href="#icon-income"></use>
 									</svg>
 									{{ " " }}
-									{%- if jo.lower_range -%}{{ frappe.format_value(frappe.utils.flt(jo.lower_range) ,
-										currency=jo.currency) }}
+									{%- if jo.lower_range -%}
+									{{ frappe.format_value(frappe.utils.flt(jo.lower_range), currency=jo.currency) }}
 									{% endif %}
-									{%- if jo.lower_range and jo.upper_range -%}-{% endif %}
-									{%- if jo.upper_range -%}{{ frappe.format_value(frappe.utils.flt(jo.upper_range) ,
-										currency=jo.currency) }}
+									{%- if jo.lower_range and jo.upper_range -%}{{ " - " }}{% endif %}
+									{%- if jo.upper_range -%}
+									{{ frappe.format_value(frappe.utils.flt(jo.upper_range), currency=jo.currency) }}
 									{% endif %}
 									/ {{ jo.salary_per.lower() }}
 								</div>
 							{% endif %}
 						</div>
 					</div>
-					<div class="px-4 py-2 footer">
+					<div class="px-4 py-2 job-card-footer">
 						<div class="row text-12 text-secondary">
-							<p class="col-6 text-center border-right">
+							<p class="col-6 text-center border-right mb-0">
 								{{ _("Applications received: ") }}
 								<b>{{ jo.no_of_applications }}</b>
 							</p>
-							<p class="col-6 text-center">
+							<p class="col-6 text-center mb-0">
 								{%- if jo.closes_on -%}{{ _("Closes on: ") }}<b>{{ frappe.format_date(jo.closes_on, "d MMM,
 								YYYY") }}</b>
 							{% endif %}

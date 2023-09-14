@@ -81,12 +81,12 @@
 								<div class="ml-5">
 									<div class="text-secondary" style="font-size: 14px">{{ _("Salary Range") }}</div>
 									<div class="font-weight-bold">
-										{%- if lower_range -%}{{ frappe.format_value(frappe.utils.flt(lower_range) ,
-											currency=currency) }}
+										{%- if lower_range -%}
+										{{ frappe.format_value(frappe.utils.flt(lower_range), currency=currency) }}
 										{% endif %}
-										{%- if lower_range and upper_range -%}-{% endif %}
-										{%- if upper_range -%}{{ frappe.format_value(frappe.utils.flt(upper_range) ,
-											currency=currency) }}
+										{%- if lower_range and upper_range -%}{{ " - " }}{% endif %}
+										{%- if upper_range -%}
+										{{ frappe.format_value(frappe.utils.flt(upper_range), currency=currency) }}
 										{% endif %}
 										/ {{ salary_per.lower() }}
 									</div>
