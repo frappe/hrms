@@ -238,13 +238,13 @@
    "fieldname": "salary_per",
    "fieldtype": "Select",
    "label": "Salary Paid Per",
-   "options": "Hour\nDay\nWeek\nMonth\nYear\nSale"
+   "options": "Month\nYear"
   }
  ],
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2023-09-01 15:37:33.862986",
+ "modified": "2023-09-14 13:04:00.241451",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
