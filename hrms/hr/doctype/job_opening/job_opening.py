@@ -50,23 +50,10 @@ class JobOpening(WebsiteGenerator):
 			self.save()
 
 	def validate_dates(self):
-		self.validate_past_future("posted_on", True)
 		if self.status == "Open":
-			self.validate_past_future("closes_on", False)
+			self.validate_from_to_dates("posted_on", "closes_on")
 		if self.status == "Closed":
 			self.validate_from_to_dates("posted_on", "closed_on")
-			self.validate_past_future("closed_on", True)
-
-	def validate_past_future(self, field, is_past):
-		date = self.get(field)
-		label = self.meta.get_label(field)
-		today = getdate()
-		if is_past:
-			if getdate(date) > today:
-				frappe.throw(_("{} cannot be a future date").format(frappe.bold(label)))
-		else:
-			if getdate(date) < today:
-				frappe.throw(_("{} cannot be a past date").format(frappe.bold(label)))
 
 	def validate_current_vacancies(self):
 		if not self.staffing_plan:
@@ -123,7 +110,7 @@ def close_expired_job_openings():
 	today = getdate()
 	for d in frappe.get_all(
 		"Job Opening",
-		filters={"status": "Open", "closes_on": ["between", ("2023-09-14", today)]},
+		filters={"status": "Open", "closes_on": ["between", ("2010-01-01", today)]},
 		fields=["name", "closes_on"],
 	):
 		doc = frappe.get_doc("Job Opening", d.name)
