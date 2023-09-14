@@ -7,6 +7,7 @@ from frappe.utils import pretty_date
 
 def get_context(context):
 	context.parents = [{"name": _("My Account"), "route": "/"}]
+	context.body_class = "jobs-page"
 	orders = {
 		"Recent Posts": ["posted_on", Order.desc],
 		"Early Posts": ["posted_on", Order.asc],
