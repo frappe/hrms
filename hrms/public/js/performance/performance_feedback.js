@@ -119,7 +119,9 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 					}
 				});
 			},
-			primary_action_label: __("Submit")
+			primary_action_label: __("Submit"),
+			minimizable: true,
+			size: "large",
 		});
 
 		dialog.show();
