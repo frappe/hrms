@@ -126,4 +126,8 @@ def close_expired_job_openings():
 		filters={"status": "Open", "closes_on": ["between", ("2023-09-14", today)]},
 		fields=["name", "closes_on"],
 	):
-		frappe.set_value("Job Opening", d.name, "status", "Closed")
+		doc = frappe.get_doc("Job Opening", d.name)
+		doc.status = "Closed"
+		doc.flags.ignore_permissions = True
+		doc.flags.ignore_mandatory = True
+		doc.save()
