@@ -258,6 +258,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
  "modified": "2023-09-14 16:50:39.316079",
 =======
  "modified": "2023-08-22 15:39:10.430060",
@@ -283,6 +284,9 @@
 =======
  "modified": "2023-09-14 15:57:04.756209",
 >>>>>>> 311249ba9 (feat: add description to Closes On field)
+=======
+ "modified": "2023-09-15 13:41:54.111743",
+>>>>>>> 836271d4b (feat: handle view for closed openings)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
@@ -307,6 +311,15 @@
  ],
  "sort_field": "modified",
  "sort_order": "ASC",
- "states": [],
+ "states": [
+  {
+   "color": "Green",
+   "title": "Open"
+  },
+  {
+   "color": "Gray",
+   "title": "Closed"
+  }
+ ],
  "title_field": "job_title"
 }
