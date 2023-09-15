@@ -8,20 +8,13 @@ from frappe.utils import pretty_date
 def get_context(context):
 	context.parents = [{"name": _("My Account"), "route": "/"}]
 	context.body_class = "jobs-page"
-	orders = {
-		"Recent Posts": ["posted_on", Order.desc],
-		"Early Posts": ["posted_on", Order.asc],
-		"Urgent Deadlines": ["closes_on", Order.asc],
-		"Extended Deadlines": ["closes_on", Order.desc],
-	}
-	filters, txt, order_by = get_filters_txt_and_order_by(list(orders.keys()))
-	context.orders = orders.keys()
-	context.job_openings = get_job_openings(filters, txt, orders[order_by])
+	filters, txt, sort = get_filters_txt_and_sort()
+	context.job_openings = get_job_openings(filters, txt, sort)
 	context.all_filters = get_all_filters(filters)
-	context.order_by = order_by
+	context.sort = sort
 
 
-def get_job_openings(filters=None, txt=None, order_by=None, limit_start=0, limit_page_length=20):
+def get_job_openings(filters=None, txt=None, sort=None, limit_start=0, limit_page_length=20):
 
 	jo = frappe.qb.DocType("Job Opening")
 	ja = frappe.qb.DocType("Job Applicant")
@@ -60,8 +53,7 @@ def get_job_openings(filters=None, txt=None, order_by=None, limit_start=0, limit
 	if txt:
 		query = query.where((jo.job_title.like(f"%{txt}%")) | (jo.description.like(f"%{txt}%")))
 
-	if order_by:
-		query = query.orderby(order_by[0], order=order_by[1])
+	query = query.orderby("posted_on", order=Order.asc if sort == "asc" else Order.desc)
 
 	results = query.run(as_dict=True)
 
@@ -74,6 +66,7 @@ def get_job_openings(filters=None, txt=None, order_by=None, limit_start=0, limit
 def get_all_filters(filters=None):
 	job_openings = frappe.get_all(
 		"Job Opening",
+		filters={"publish": 1, "status": "Open"},
 		fields=["company", "department", "location", "employment_type"],
 	)
 
@@ -88,11 +81,11 @@ def get_all_filters(filters=None):
 	return {key: sorted(value) for key, value in all_filters.items()}
 
 
-def get_filters_txt_and_order_by(orders):
+def get_filters_txt_and_sort():
 	args = frappe.request.args.to_dict(flat=False)
 	filters = {}
 	txt = ""
-	order_by = orders[0]
+	sort = None
 	allowed_filters = ["company", "department", "location", "employment_type"]
 
 	for d in args:
@@ -101,6 +94,7 @@ def get_filters_txt_and_order_by(orders):
 		elif d == "query":
 			txt = args["query"][0]
 		elif d == "sort":
-			if args["sort"][0] in orders:
-				order_by = args["sort"][0]
-	return filters, txt, order_by
+			if args["sort"][0]:
+				sort = args["sort"][0]
+
+	return filters, txt, sort
