@@ -245,7 +245,7 @@
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2023-09-14 15:57:04.756209",
+ "modified": "2023-09-15 13:41:54.111743",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
@@ -270,6 +270,15 @@
  ],
  "sort_field": "modified",
  "sort_order": "ASC",
- "states": [],
+ "states": [
+  {
+   "color": "Green",
+   "title": "Open"
+  },
+  {
+   "color": "Gray",
+   "title": "Closed"
+  }
+ ],
  "title_field": "job_title"
 }
