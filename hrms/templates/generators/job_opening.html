@@ -13,13 +13,17 @@
 				</div>
 			</div>
 			<div class="ml-auto">
-				{%- if job_application_route -%}
+				{%- if status == "Open" -%}
 					<a class="btn btn-primary btn-lg"
-					   href="/{{ job_application_route }}/new?job_title={{ name }}">{{ _("Apply
-					Now") }}</a>
-				{% else %}
-					<a class="btn btn-primary btn-lg"
-					   href="/job_application/new?job_title={{ name }}">{{ _("Apply Now") }}</a>
+					   href="{{ '/' ~ job_application_route ~ '/new?job_title=' ~ name if job_application_route else '/job_application/new?job_title=' ~ name }}">
+						{{ _("Apply Now") }}
+					</a>
+				{%- else -%}
+					<div class="py-4 px-10 font-weight-bold text-nowrap"
+						 style="background: var(--bg-gray);
+								font-size: 1.1rem;
+								border-radius: var(--border-radius)">{{ _("Opening closed.") }}
+					</div>
 				{% endif %}
 			</div>
 		</div>
@@ -81,13 +85,9 @@
 								<div class="ml-5">
 									<div class="text-secondary" style="font-size: 14px">{{ _("Salary Range") }}</div>
 									<div class="font-weight-bold">
-										{%- if lower_range -%}
-										{{ frappe.format_value(frappe.utils.flt(lower_range), currency=currency) }}
-										{% endif %}
+										{%- if lower_range -%}{{ frappe.format_value(frappe.utils.flt(lower_range) , currency=currency) }}{% endif %}
 										{%- if lower_range and upper_range -%}{{ " - " }}{% endif %}
-										{%- if upper_range -%}
-										{{ frappe.format_value(frappe.utils.flt(upper_range), currency=currency) }}
-										{% endif %}
+										{%- if upper_range -%}{{ frappe.format_value(frappe.utils.flt(upper_range) , currency=currency) }}{% endif %}
 										/ {{ salary_per.lower() }}
 									</div>
 								</div>
@@ -128,7 +128,7 @@
 							</div>
 						</div>
 					</div>
-					{%- if closes_on -%}
+					{%- if (status == 'Open' and closes_on) or (status == 'Closed' and closed_on) -%}
 						<div class="col-4 mb-8">
 							<div class="flex flex-row align-items-center">
 								<div class="rounded-circle p-4" style="background: var(--red-50)">
@@ -140,8 +140,10 @@
 									</svg>
 								</div>
 								<div class="ml-5">
-									<div class="text-secondary" style="font-size: 14px">{{ _("Closes On") }}</div>
-									<div class="font-weight-bold">{{ frappe.format_date(closes_on, "d MMM, YYYY") }}</div>
+									<div class="text-secondary" style="font-size: 14px">{{ _("Closes On" if status == "Open" else "Closed On") }}</div>
+									<div class="font-weight-bold">
+										{{ frappe.format_date(closes_on if status == "Open" else closed_on, "d MMM, YYYY") }}
+									</div>
 								</div>
 							</div>
 						</div>
