@@ -57,16 +57,33 @@
 						</svg>
 					</div>
 				</div>
+				{% set sort = frappe.form_dict.sort %}
 				<div class="col-4 flex pr-0">
 					<div class="ml-auto flex align-items-center">
-						<div id="sort-button" class="text-15 text-secondary flex" type="button">
-							{{ _("Posting Date: ") }}
-							<div class="font-weight-bold ml-2">
-								{{ "Asc" if sort == "asc" else "Desc" }}
-								<svg class="icon" style="--icon-stroke: var(--gray-600)">
-									<use href="{{ '#icon-up-arrow' if sort == 'asc' else '#icon-down-arrow' }}"></use>
+						<div id="sort-button" class="text-secondary text-15 mr-4" type="button">{{ _("Date Posted: ") }}</div>
+						<div class="btn-group btn-group-toggle"
+							 data-toggle="buttons"
+							 style="height: 40px">
+							<label id="desc-label"
+								   class="btn px-5 py-2 border"
+								   style="{{ '--icon-stroke: var(--gray-400) ' if sort == 'asc' else '--icon-stroke: var(--gray-600);
+										  background-color: white;
+										  ' }}">
+								<input type="radio" id="desc-input">
+								<svg class="icon">
+									<use href="#icon-down-arrow"></use>
 								</svg>
-							</div>
+							</label>
+							<label id="asc-label"
+								   class="btn px-5 py-2 border"
+								   style="{{ '--icon-stroke: var(--gray-600) ;
+										  background-color: white;
+										  ' if sort == 'asc' else '--icon-stroke: var(--gray-400) ' }}">
+								<input type="radio" id="asc-input">
+								<svg class="icon">
+									<use href="#icon-up-arrow"></use>
+								</svg>
+							</label>
 						</div>
 					</div>
 				</div>
