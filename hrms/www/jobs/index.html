@@ -59,32 +59,14 @@
 				</div>
 				<div class="col-4 flex pr-0">
 					<div class="ml-auto flex align-items-center">
-						<div class="text-15 text-secondary flex"
-							 type="button"
-							 data-toggle="dropdown"
-							 aria-haspopup="true"
-							 aria-expanded="false">
-							{{ _("Sort by: ") }}
-							<div class="font-weight-bold ml-3">
-								{{ order_by }}
-								<svg xmlns="http://www.w3.org/2000/svg"
-									 width="10"
-									 height="10"
-									 fill="currentColor"
-									 stroke="currentColor"
-									 stroke-width="3"
-									 class="bi bi-chevron-down"
-									 viewBox="0 0 16 16">
-									<path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+						<div id="sort-button" class="text-15 text-secondary flex" type="button">
+							{{ _("Posting Date: ") }}
+							<div class="font-weight-bold ml-2">
+								{{ "Asc" if sort == "asc" else "Desc" }}
+								<svg class="icon" style="--icon-stroke: var(--gray-600)">
+									<use href="{{ '#icon-up-arrow' if sort == 'asc' else '#icon-down-arrow' }}"></use>
 								</svg>
 							</div>
-						</div>
-						<div class="dropdown-menu border" aria-labelledby="dropdownMenuButton">
-							{% for order in orders %}
-								<a name="sort"
-								   class="{{ 'dropdown-item order-item text-secondary font-weight-bold' if order == order_by else 'dropdown-item order-item text-secondary' }}">{{
-								order }}</a>
-							{% endfor %}
 						</div>
 					</div>
 				</div>
@@ -121,7 +103,9 @@
 						<div class="text-14">
 							{%- if jo.location -%}
 								<div class="mt-3 flex align-items-center">
-									<svg class="icon ml-0 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+									<svg class="icon ml-0 mr-1"
+										 xmlns="http://www.w3.org/2000/svg"
+										 viewBox="0 0 16 16">
 										<g stroke="var(--gray-700)" stroke-miterlimit="10">
 										<path d="M11.467 3.458c1.958 1.957 1.958 5.088.027 7.02L7.97 14l-3.523-3.523a4.945 4.945 0 010-6.993l.026-.026a4.922 4.922 0 016.993 0zm0 0c-.026-.026-.026-.026 0 0z">
 										</path>
@@ -145,13 +129,9 @@
 										<use href="#icon-income"></use>
 									</svg>
 									{{ " " }}
-									{%- if jo.lower_range -%}
-									{{ frappe.format_value(frappe.utils.flt(jo.lower_range), currency=jo.currency) }}
-									{% endif %}
+									{%- if jo.lower_range -%}{{ frappe.format_value(frappe.utils.flt(jo.lower_range) , currency=jo.currency) }}{% endif %}
 									{%- if jo.lower_range and jo.upper_range -%}{{ " - " }}{% endif %}
-									{%- if jo.upper_range -%}
-									{{ frappe.format_value(frappe.utils.flt(jo.upper_range), currency=jo.currency) }}
-									{% endif %}
+									{%- if jo.upper_range -%}{{ frappe.format_value(frappe.utils.flt(jo.upper_range) , currency=jo.currency) }}{% endif %}
 									/ {{ jo.salary_per.lower() }}
 								</div>
 							{% endif %}
