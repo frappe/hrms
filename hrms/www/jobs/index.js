@@ -20,10 +20,13 @@ $(() => {
 		}
 	});
 
-	$("[name=sort]").on("click", function () {
+	$("#sort-button").on("click", function () {
 		const filters = $("input").serialize();
-		const sort = $.param({ sort: $(this).text() });
-		scroll_up_and_update_params(filters + "&" + sort);
+		if (query_params.sort != "asc") {
+			scroll_up_and_update_params(filters + "&" + $.param({ sort: "asc" }));
+		} else {
+			scroll_up_and_update_params(filters);
+		}
 	});
 
 	$("[name=card]").on("click", function () {
