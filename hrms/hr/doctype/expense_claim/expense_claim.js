@@ -69,7 +69,7 @@ cur_frm.add_fetch('expense_type','description','description');
 cur_frm.cscript.onload = function(doc) {
 	if (doc.__islocal) {
 		cur_frm.set_value("posting_date", frappe.datetime.get_today());
-		cur_frm.cscript.clear_sanctioned(doc);
+		// cur_frm.cscript.clear_sanctioned(doc);
 	}
 };
 
