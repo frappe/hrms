@@ -81,6 +81,8 @@ class Goal(NestedSet):
 			frappe.throw(_("Goal progress percentage cannot be more than 100."))
 
 	def set_status(self, status=None):
+		if self.status == "Closed":
+			return
 		if self.status != "Archived":
 			if flt(self.progress) == 0:
 				self.status = "Pending"
