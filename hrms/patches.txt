@@ -15,3 +15,4 @@ hrms.patches.v15_0.notify_about_loan_app_separation
 hrms.patches.v15_0.rename_enable_late_entry_early_exit_grace_period
 hrms.patches.v14_0.update_repay_from_salary_and_payroll_payable_account_fields
 hrms.patches.v14_0.create_custom_field_in_loan
+hrms.patches.v14_0.update_loan_repayment_repay_from_salary
