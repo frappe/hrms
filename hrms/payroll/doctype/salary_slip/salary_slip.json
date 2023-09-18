@@ -593,24 +593,28 @@
    "fieldname": "ctc",
    "fieldtype": "Currency",
    "label": "CTC",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "income_from_other_sources",
    "fieldtype": "Currency",
    "label": "Income from Other Sources",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "total_earnings",
    "fieldtype": "Currency",
    "label": "Total Earnings",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "non_taxable_earnings",
    "fieldtype": "Currency",
    "label": "Non Taxable Earnings",
+   "options": "currency",
    "read_only": 1
   },
   {
@@ -621,30 +625,35 @@
    "fieldname": "deductions_before_tax_calculation",
    "fieldtype": "Currency",
    "label": "Deductions before tax calculation",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "tax_exemption_declaration",
    "fieldtype": "Currency",
    "label": "Tax Exemption Declaration",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "standard_tax_exemption_amount",
    "fieldtype": "Currency",
    "label": "Standard Tax Exemption Amount",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "annual_taxable_amount",
    "fieldtype": "Currency",
    "label": "Annual Taxable Amount",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "income_tax_deducted_till_date",
    "fieldtype": "Currency",
    "label": "Income Tax Deducted Till Date",
+   "options": "currency",
    "read_only": 1
   },
   {
@@ -660,6 +669,7 @@
    "fieldname": "future_income_tax_deductions",
    "fieldtype": "Currency",
    "label": "Future Income Tax",
+   "options": "currency",
    "read_only": 1
   },
   {
@@ -671,12 +681,14 @@
    "fieldname": "current_month_income_tax",
    "fieldtype": "Currency",
    "label": "Current Month Income Tax",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "total_income_tax",
    "fieldtype": "Currency",
    "label": "Total Income Tax",
+   "options": "currency",
    "read_only": 1
   },
   {
@@ -702,7 +714,7 @@
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-06-20 20:04:00.131248",
+ "modified": "2023-09-18 12:51:14.969424",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
