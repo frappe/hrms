@@ -26,6 +26,7 @@ class Interview(Document):
 			frappe.throw(
 				_("Only Interviews with Cleared or Rejected status can be submitted."), title=_("Not Allowed")
 			)
+		self.update_job_applicant_status()
 
 	def validate_duplicate_interview(self):
 		duplicate_interview = frappe.db.exists(
@@ -101,6 +102,13 @@ class Interview(Document):
 		self.average_rating = flt(
 			total_rating / len(self.interview_details) if len(self.interview_details) else 0
 		)
+
+	def update_job_applicant_status(self):
+		status_map = {"Cleared": "Accepted", "Rejected": "Rejected"}
+		if self.status in status_map:
+			job_application = frappe.get_doc("Job Applicant", self.job_applicant)
+			job_application.set("status", status_map[self.status])
+			job_application.save()
 
 	@frappe.whitelist()
 	def reschedule_interview(self, scheduled_on, from_time, to_time):
