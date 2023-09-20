@@ -765,11 +765,7 @@
  "idx": 9,
  "is_submittable": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2023-02-22 18:23:49.783449",
-=======
- "modified": "2023-09-18 12:51:14.969424",
->>>>>>> 6f5e5581 (fix(Salary Slip): Income Tax Breakup not using set currency (#887))
+ "modified": "2023-09-20 12:19:14.969424",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
