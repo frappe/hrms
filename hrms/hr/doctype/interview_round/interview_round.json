@@ -45,8 +45,7 @@
   {
    "fieldname": "expected_average_rating",
    "fieldtype": "Rating",
-   "label": "Expected Average Rating",
-   "reqd": 1
+   "label": "Expected Average Rating"
   },
   {
    "fieldname": "column_break_3",
@@ -67,7 +66,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-18 15:48:08.612803",
+ "modified": "2023-09-18 18:05:19.732870",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview Round",

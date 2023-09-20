@@ -15,6 +15,7 @@ required_apps = ["erpnext"]
 app_include_js = [
 	"hrms.bundle.js",
 	"performance.bundle.js",
+	"interview.bundle.js",
 ]
 app_include_css = "hrms.bundle.css"
 
