@@ -135,6 +135,21 @@ class Interview(Document):
 
 		frappe.msgprint(_("Interview Rescheduled successfully"), indicator="green")
 
+	@frappe.whitelist()
+	def get_feedback(self):
+		interview_feedback = frappe.qb.DocType("Interview Feedback")
+		skill_assessment = frappe.qb.DocType("Skill Assessment")
+		query = (
+			frappe.qb.select(
+				interview_feedback.interviewer, skill_assessment.skill, skill_assessment.rating
+			)
+			.from_(skill_assessment)
+			.join(interview_feedback)
+			.on(interview_feedback.name == skill_assessment.parent)
+			.where(interview_feedback.interview == self.name)
+		)
+		return query.run(as_dict=True)
+
 
 def get_recipients(name, for_feedback=0):
 	interview = frappe.get_doc("Interview", name)

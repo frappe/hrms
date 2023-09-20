@@ -14,7 +14,7 @@ frappe.ui.form.on("Interview", {
 
 	refresh: function (frm) {
 		if (!frm.doc.__islocal) {
-			frm.trigger("render_feedback");
+			frm.trigger("load_feedback");
 		}
 		if (frm.doc.docstatus != 2 && !frm.doc.__islocal) {
 			if (frm.doc.status === "Pending") {
@@ -277,10 +277,30 @@ frappe.ui.form.on("Interview", {
 		frm.set_value("resume_link", "");
 	},
 
+	load_feedback(frm) {
+		frm
+			.call({
+				method: "get_feedback",
+				doc: frm.doc,
+			})
+			.then((r) => {
+				frm.feedback = {};
+				for (i of r.message) {
+					if (!(i.interviewer in frm.feedback)) {
+						frm.feedback[i.interviewer] = {};
+					}
+					frm.feedback[i.interviewer][i.skill] = i.rating;
+				}
+				frm.events.render_feedback(frm);
+			});
+	},
+
 	render_feedback(frm) {
 		frappe.require("interview.bundle.js", () => {
 			const wrapper = $(frm.fields_dict.feedback_html.wrapper);
-			const feedback_html = frappe.render_template("interview_feedback");
+			const feedback_html = frappe.render_template("interview_feedback", {
+				feedback: frm.feedback,
+			});
 			$(wrapper).empty();
 			$(feedback_html).appendTo(wrapper);
 		});
