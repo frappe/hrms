@@ -40,7 +40,7 @@ from hrms.payroll.doctype.salary_slip.salary_slip import (
 	LEAVE_TYPE_MAP,
 	SALARY_COMPONENT_VALUES,
 	TAX_COMPONENTS_BY_COMPANY,
-	__safe_eval,
+	_safe_eval,
 	make_salary_slip_from_timesheet,
 )
 from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
@@ -1417,26 +1417,26 @@ class TestSalarySlipSafeEval(FrappeTestCase):
 		}
 
 		for code, result in TEST_CASES.items():
-			self.assertEqual(__safe_eval(code), result)
+			self.assertEqual(_safe_eval(code), result)
 
-		self.assertRaises(AttributeError, __safe_eval, "frappe.utils.os.path", {})
+		self.assertRaises(NameError, _safe_eval, "frappe.utils.os.path", {})
 
 		# Doc/dict objects
 		user = frappe.new_doc("User")
 		user.user_type = "System User"
 		user.enabled = 1
-		self.assertTrue(__safe_eval("user_type == 'System User'", eval_locals=user.as_dict()))
+		self.assertTrue(_safe_eval("user_type == 'System User'", eval_locals=user.as_dict()))
 		self.assertEqual(
-			"System User Test", __safe_eval("user_type + ' Test'", eval_locals=user.as_dict())
+			"System User Test", _safe_eval("user_type + ' Test'", eval_locals=user.as_dict())
 		)
-		self.assertEqual(1, __safe_eval("int(enabled)", eval_locals=user.as_dict()))
+		self.assertEqual(1, _safe_eval("int(enabled)", eval_locals=user.as_dict()))
 
 		# Walrus not allowed
-		self.assertRaises(SyntaxError, __safe_eval, "(x := (40+2))")
+		self.assertRaises(SyntaxError, _safe_eval, "(x := (40+2))")
 
 		# Format check but saner
-		self.assertTrue(__safe_eval("'x' != 'Information Techonology'"))
-		self.assertRaises(SyntaxError, __safe_eval("'blah'.format(1)"))
+		self.assertTrue(_safe_eval("'x' != 'Information Techonology'"))
+		self.assertRaises(SyntaxError, _safe_eval, "'blah'.format(1)")
 
 
 def make_income_tax_components():
