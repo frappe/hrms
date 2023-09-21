@@ -1048,14 +1048,14 @@ class SalarySlip(TransactionBase):
 		try:
 			condition = sanitize_expression(struct_row.condition)
 			if condition:
-				if not __safe_eval(condition, self.whitelisted_globals, data):
+				if not _safe_eval(condition, self.whitelisted_globals, data):
 					return None
 			amount = struct_row.amount
 			if struct_row.amount_based_on_formula:
 				formula = sanitize_expression(struct_row.formula)
 				if formula:
 					amount = flt(
-						__safe_eval(formula, self.whitelisted_globals, data), struct_row.precision("amount")
+						_safe_eval(formula, self.whitelisted_globals, data), struct_row.precision("amount")
 					)
 			if amount:
 				data[struct_row.abbr] = amount
@@ -2244,7 +2244,7 @@ def on_doctype_update():
 	frappe.db.add_index("Salary Slip", ["employee", "start_date", "end_date"])
 
 
-def __safe_eval(code: str, eval_globals: dict | None = None, eval_locals: dict | None = None):
+def _safe_eval(code: str, eval_globals: dict | None = None, eval_locals: dict | None = None):
 	"""Old version of safe_eval from framework.
 
 	Note: current frappe.safe_eval transforms code so if you have nested
@@ -2256,7 +2256,7 @@ def __safe_eval(code: str, eval_globals: dict | None = None, eval_locals: dict |
 	"""
 	code = unicodedata.normalize("NFKC", code)
 
-	__check_attributes(code)
+	_check_attributes(code)
 
 	whitelisted_globals = {"int": int, "float": float, "long": int, "round": round}
 	if not eval_globals:
@@ -2267,7 +2267,7 @@ def __safe_eval(code: str, eval_globals: dict | None = None, eval_locals: dict |
 	return eval(code, eval_globals, eval_locals)  # nosemgrep
 
 
-def __check_attributes(code: str) -> None:
+def _check_attributes(code: str) -> None:
 	import ast
 
 	from frappe.utils.safe_exec import UNSAFE_ATTRIBUTES
