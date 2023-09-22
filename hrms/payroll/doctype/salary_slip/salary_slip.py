@@ -2236,12 +2236,6 @@ def throw_error_message(row, error, title, description=None):
 	).format(**data)
 
 	frappe.throw(message, title=title)
-<<<<<<< HEAD
-=======
-
-
-def on_doctype_update():
-	frappe.db.add_index("Salary Slip", ["employee", "start_date", "end_date"])
 
 
 def _safe_eval(code: str, eval_globals: dict | None = None, eval_locals: dict | None = None):
@@ -2290,4 +2284,3 @@ def _check_attributes(code: str) -> None:
 			and node.attr in UNSAFE_ATTRIBUTES
 		):
 			raise SyntaxError(f'Illegal rule {frappe.bold(code)}. Cannot use "{node.attr}"')
->>>>>>> 7fb3508e (fix: alternate formula eval implementation)

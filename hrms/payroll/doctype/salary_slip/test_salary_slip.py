@@ -35,19 +35,10 @@ from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_e
 	create_payroll_period,
 )
 from hrms.payroll.doctype.payroll_entry.payroll_entry import get_month_details
-<<<<<<< HEAD
-from hrms.payroll.doctype.salary_slip.salary_slip import make_salary_slip_from_timesheet
-=======
 from hrms.payroll.doctype.salary_slip.salary_slip import (
-	HOLIDAYS_BETWEEN_DATES,
-	LEAVE_TYPE_MAP,
-	SALARY_COMPONENT_VALUES,
-	TAX_COMPONENTS_BY_COMPANY,
 	_safe_eval,
 	make_salary_slip_from_timesheet,
 )
-from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
->>>>>>> 7fb3508e (fix: alternate formula eval implementation)
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 from hrms.tests.test_utils import get_first_sunday
 
