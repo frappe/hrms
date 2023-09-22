@@ -139,14 +139,21 @@ class Interview(Document):
 	def get_feedback(self):
 		interview_feedback = frappe.qb.DocType("Interview Feedback")
 		skill_assessment = frappe.qb.DocType("Skill Assessment")
+		employee = frappe.qb.DocType("Employee")
 		query = (
 			frappe.qb.select(
-				interview_feedback.interviewer, skill_assessment.skill, skill_assessment.rating
+				interview_feedback.interviewer,
+				employee.employee_name,
+				employee.designation,
+				skill_assessment.skill,
+				skill_assessment.rating,
 			)
-			.from_(skill_assessment)
-			.join(interview_feedback)
+			.from_(interview_feedback)
+			.where(interview_feedback.interview == self.name and interview_feedback.docstatus == 1)
+			.join(employee)
+			.on(interview_feedback.interviewer == employee.user_id)
+			.join(skill_assessment)
 			.on(interview_feedback.name == skill_assessment.parent)
-			.where(interview_feedback.interview == self.name)
 		)
 		return query.run(as_dict=True)
 

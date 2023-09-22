@@ -1,1 +1,48 @@
-<div>{{ feedback }}</div>
+<div class="feedback-section col-xs-12">
+    {% if feedbacks.length %}
+        <div class="feedback-summary mb-5">
+            {%= frappe.render_template("performance_feedback_summary",
+            {
+            number_of_stars: 5,
+            average_rating: average_rating,
+            feedback_count: feedback_count,
+            reviews_per_rating: reviews_per_rating
+            }
+            )
+            %}
+        </div>
+        {% } %}
+        <div class="feedback-history mb-3">
+            {% if feedbacks.length %}
+                {% for(const d of feedbacks) { %}
+                    <div class="p-3 d-flex flex-row mt-3">
+                        <div class="reviewer-info mb-2 col-xs-3">
+                            <div class="row">
+                                <div class="col-xs-2">{{ frappe.avatar(d.interviewer, "avatar-medium") }}</div>
+                                <div class="col-xs-10">
+                                    <div class="ml-2">
+                                        <div class="title font-weight-bold">{{ d.name }}</div>
+                                        {% if (d.designation) { %}
+                                            <div class="small text-muted">{{ d.designation }}</div>
+                                            {% } %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="rating">
+                                    {%= frappe.render_template("rating",
+                                    {number_of_stars: 5, average_rating: d.skills.Confidence, for_summary: false}
+                                    )
+                                    %}
+                                </div>
+                            </div>
+                        </div>
+                        {% } %}
+                    {% else %}
+                        <div class="no-feedback d-flex flex-col justify-content-center align-items-center text-muted">
+                            <span>{{ __("This applicant has not received any feedback yet") }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>

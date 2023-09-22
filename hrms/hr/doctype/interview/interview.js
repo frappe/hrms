@@ -5,11 +5,11 @@ frappe.ui.form.on("Interview", {
 	onload: function (frm) {
 		frm.events.set_job_applicant_query(frm);
 
-		frm.set_query("interviewer", "interview_details", function () {
-			return {
-				query: "hrms.hr.doctype.interview.interview.get_interviewer_list",
-			};
-		});
+		// frm.set_query("interviewer", "interview_details", function () {
+		// 	return {
+		// 		query: "hrms.hr.doctype.interview.interview.get_interviewer_list",
+		// 	};
+		// });
 	},
 
 	refresh: function (frm) {
@@ -25,9 +25,9 @@ frappe.ui.form.on("Interview", {
 			}
 
 			let allowed_interviewers = [];
-			frm.doc.interview_details.forEach((values) => {
-				allowed_interviewers.push(values.interviewer);
-			});
+			// frm.doc.interview_details.forEach((values) => {
+			// 	allowed_interviewers.push(values.interviewer);
+			// });
 
 			if (allowed_interviewers.includes(frappe.session.user)) {
 				frappe.db.get_value(
@@ -207,11 +207,11 @@ frappe.ui.form.on("Interview", {
 		frm.set_value("designation", round_data.designation);
 		frm.events.set_job_applicant_query(frm);
 
-		if (frm.doc.interview_round) {
-			frm.events.set_interview_details(frm);
-		} else {
-			frm.set_value("interview_details", []);
-		}
+		// if (frm.doc.interview_round) {
+		// 	frm.events.set_interview_details(frm);
+		// } else {
+		// 	frm.set_value("interview_details", []);
+		// }
 	},
 
 	set_interview_details: function (frm) {
@@ -284,13 +284,7 @@ frappe.ui.form.on("Interview", {
 				doc: frm.doc,
 			})
 			.then((r) => {
-				frm.feedback = {};
-				for (i of r.message) {
-					if (!(i.interviewer in frm.feedback)) {
-						frm.feedback[i.interviewer] = {};
-					}
-					frm.feedback[i.interviewer][i.skill] = i.rating;
-				}
+				frm.events.format_feedback(frm, r.message);
 				frm.events.render_feedback(frm);
 			});
 	},
@@ -299,10 +293,44 @@ frappe.ui.form.on("Interview", {
 		frappe.require("interview.bundle.js", () => {
 			const wrapper = $(frm.fields_dict.feedback_html.wrapper);
 			const feedback_html = frappe.render_template("interview_feedback", {
-				feedback: frm.feedback,
+				feedbacks: frm.feedback,
+				feedback_count: frm.feedback.length,
+				average_rating: frm.average_rating,
+				reviews_per_rating: frm.reviews_per_rating,
 			});
 			$(wrapper).empty();
 			$(feedback_html).appendTo(wrapper);
 		});
+	},
+
+	format_feedback(frm, records) {
+		const feedback = {};
+		const reviews_per_rating = [0, 0, 0, 0, 0];
+		let overall_total_rating = 0;
+		let user_total_rating = 0;
+		for (i of records) {
+			if (!(i.interviewer in feedback)) {
+				user_total_rating = 0;
+				feedback[i.interviewer] = {
+					interviewer: i.interviewer,
+					skills: {},
+					average_rating: 0,
+				};
+				feedback[i.interviewer]["name"] = i.employee_name;
+				feedback[i.interviewer]["designation"] = i.designation;
+			}
+			feedback[i.interviewer]["skills"][i.skill] = i.rating * 5;
+			reviews_per_rating[Math.floor(i.rating * 5 - 1)] += 1;
+			user_total_rating += i.rating * 5;
+			overall_total_rating += i.rating * 5;
+			feedback[i.interviewer]["average_rating"] =
+				user_total_rating /
+				Object.keys(feedback[i.interviewer]["skills"]).length;
+		}
+		frm.reviews_per_rating = reviews_per_rating.map(
+			(x) => (x * 100) / records.length
+		);
+		frm.feedback = Object.values(feedback);
+		frm.average_rating = overall_total_rating / records.length;
 	},
 });
