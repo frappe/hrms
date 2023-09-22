@@ -285,6 +285,7 @@ frappe.ui.form.on("Interview", {
 			})
 			.then((r) => {
 				frm.events.format_feedback(frm, r.message);
+				frm.events.calculate_average_rating_and_reviews_per_rating(frm);
 				frm.events.render_feedback(frm);
 			});
 	},
@@ -305,9 +306,8 @@ frappe.ui.form.on("Interview", {
 
 	format_feedback(frm, records) {
 		const feedback = {};
-		const reviews_per_rating = [0, 0, 0, 0, 0];
-		let overall_total_rating = 0;
 		let user_total_rating = 0;
+
 		for (i of records) {
 			if (!(i.interviewer in feedback)) {
 				user_total_rating = 0;
@@ -319,18 +319,26 @@ frappe.ui.form.on("Interview", {
 				feedback[i.interviewer]["name"] = i.employee_name;
 				feedback[i.interviewer]["designation"] = i.designation;
 			}
+
 			feedback[i.interviewer]["skills"][i.skill] = i.rating * 5;
-			reviews_per_rating[Math.floor(i.rating * 5 - 1)] += 1;
 			user_total_rating += i.rating * 5;
-			overall_total_rating += i.rating * 5;
 			feedback[i.interviewer]["average_rating"] =
 				user_total_rating /
 				Object.keys(feedback[i.interviewer]["skills"]).length;
 		}
-		frm.reviews_per_rating = reviews_per_rating.map(
-			(x) => (x * 100) / records.length
-		);
 		frm.feedback = Object.values(feedback);
-		frm.average_rating = overall_total_rating / records.length;
+	},
+	calculate_average_rating_and_reviews_per_rating(frm) {
+		let overall_total_rating = 0;
+		const reviews_per_rating = [0, 0, 0, 0, 0];
+		frm.feedback.forEach((x) => {
+			overall_total_rating += x.average_rating;
+			reviews_per_rating[Math.floor(x.average_rating - 1)] += 1;
+		});
+
+		frm.average_rating = overall_total_rating / frm.feedback.length;
+		frm.reviews_per_rating = reviews_per_rating.map(
+			(x) => (x * 100) / frm.feedback.length
+		);
 	},
 });
