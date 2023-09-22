@@ -2,6 +2,7 @@
 # License: GNU General Public License v3. See license.txt
 
 
+import unicodedata
 from datetime import date
 
 import frappe
@@ -1122,14 +1123,14 @@ class SalarySlip(TransactionBase):
 		try:
 			condition = sanitize_expression(struct_row.condition)
 			if condition:
-				if not frappe.safe_eval(condition, self.whitelisted_globals, data):
+				if not _safe_eval(condition, self.whitelisted_globals, data):
 					return None
 			amount = struct_row.amount
 			if struct_row.amount_based_on_formula:
 				formula = sanitize_expression(struct_row.formula)
 				if formula:
 					amount = flt(
-						frappe.safe_eval(formula, self.whitelisted_globals, data), struct_row.precision("amount")
+						_safe_eval(formula, self.whitelisted_globals, data), struct_row.precision("amount")
 					)
 			if amount:
 				data[struct_row.abbr] = amount
@@ -2181,3 +2182,51 @@ def throw_error_message(row, error, title, description=None):
 
 def on_doctype_update():
 	frappe.db.add_index("Salary Slip", ["employee", "start_date", "end_date"])
+
+
+def _safe_eval(code: str, eval_globals: dict | None = None, eval_locals: dict | None = None):
+	"""Old version of safe_eval from framework.
+
+	Note: current frappe.safe_eval transforms code so if you have nested
+	iterations with too much depth then it can hit recursion limit of python.
+	There's no workaround for this and people need large formulas in some
+	countries so this is alternate implementation for that.
+
+	WARNING: DO NOT use this function anywhere else outside of this file.
+	"""
+	code = unicodedata.normalize("NFKC", code)
+
+	_check_attributes(code)
+
+	whitelisted_globals = {"int": int, "float": float, "long": int, "round": round}
+	if not eval_globals:
+		eval_globals = {}
+
+	eval_globals["__builtins__"] = {}
+	eval_globals.update(whitelisted_globals)
+	return eval(code, eval_globals, eval_locals)  # nosemgrep
+
+
+def _check_attributes(code: str) -> None:
+	import ast
+
+	from frappe.utils.safe_exec import UNSAFE_ATTRIBUTES
+
+	unsafe_attrs = set(UNSAFE_ATTRIBUTES).union(["__"]) - {"format"}
+
+	for attribute in unsafe_attrs:
+		if attribute in code:
+			raise SyntaxError(f'Illegal rule {frappe.bold(code)}. Cannot use "{attribute}"')
+
+	BLOCKED_NODES = (ast.NamedExpr,)
+
+	tree = ast.parse(code, mode="eval")
+	for node in ast.walk(tree):
+		if isinstance(node, BLOCKED_NODES):
+			raise SyntaxError(f"Operation not allowed: line {node.lineno} column {node.col_offset}")
+		if (
+			isinstance(node, ast.Attribute)
+			and isinstance(node.attr, str)
+			and node.attr in UNSAFE_ATTRIBUTES
+		):
+			raise SyntaxError(f'Illegal rule {frappe.bold(code)}. Cannot use "{node.attr}"')
