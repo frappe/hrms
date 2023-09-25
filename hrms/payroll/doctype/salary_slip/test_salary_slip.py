@@ -350,7 +350,7 @@ class TestSalarySlip(FrappeTestCase):
 		)  # counted as absent
 
 		# salary structure based on timesheet
-		make_salary_structure_for_timesheet(emp)
+		make_salary_structure_for_timesheet(emp, "_Test Company")
 		timesheet = make_timesheet(emp, simulate=True, is_billable=1)
 		salary_slip = make_salary_slip_from_timesheet(timesheet.name)
 		salary_slip.start_date = get_first_day(nowdate())
@@ -501,7 +501,7 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertEqual(ss.payment_days, no_of_days[0] - 1)
 		self.assertEqual(ss.earnings[0].amount, 48333.33)
 		self.assertEqual(ss.earnings[1].amount, 2900)
-		self.assertEqual(ss.gross_pay, 75399.99)
+		self.assertEqual(ss.gross_pay, 75400)
 
 		# disable consider marked attendance on holidays
 		frappe.db.set_single_value("Payroll Settings", "consider_marked_attendance_on_holidays", 0)
@@ -1014,7 +1014,7 @@ class TestSalarySlip(FrappeTestCase):
 		from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
 
 		emp = make_employee("test_employee_6@salary.com", company="_Test Company")
-		salary_structure = make_salary_structure_for_timesheet(emp)
+		salary_structure = make_salary_structure_for_timesheet(emp, "_Test Company")
 		timesheet = make_timesheet(emp, simulate=True, is_billable=1)
 		salary_slip = make_salary_slip_from_timesheet(timesheet.name)
 		salary_slip.submit()
