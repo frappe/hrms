@@ -18,8 +18,8 @@ class Interview(Document):
 	def validate(self):
 		self.validate_duplicate_interview()
 		self.validate_designation()
-		self.validate_overlap()
-		self.set_average_rating()
+		# self.validate_overlap()
+		# self.set_average_rating()
 
 	def on_submit(self):
 		if self.status not in ["Cleared", "Rejected"]:
@@ -167,14 +167,21 @@ class Interview(Document):
 		employee = frappe.qb.DocType("Employee")
 		query = (
 			frappe.qb.select(
+				interview_feedback.name,
+				interview_feedback.modified,
 				interview_feedback.interviewer,
+				interview_feedback.feedback,
 				employee.employee_name,
 				employee.designation,
 				skill_assessment.skill,
 				skill_assessment.rating,
 			)
 			.from_(interview_feedback)
-			.where(interview_feedback.interview == self.name and interview_feedback.docstatus == 1)
+			.where(
+				(interview_feedback.interview == self.name)
+				& (interview_feedback.job_applicant == self.job_applicant)
+				& (interview_feedback.docstatus == 1)
+			)
 			.join(employee)
 			.on(interview_feedback.interviewer == employee.user_id)
 			.join(skill_assessment)

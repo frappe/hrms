@@ -10,16 +10,16 @@ from frappe.utils import flt, get_link_to_form, getdate
 
 class InterviewFeedback(Document):
 	def validate(self):
-		self.validate_interviewer()
+		# self.validate_interviewer()
 		self.validate_interview_date()
 		self.validate_duplicate()
 		self.calculate_average_rating()
 
-	def on_submit(self):
-		self.update_interview_details()
+	# def on_submit(self):
+	# 	self.update_interview_details()
 
-	def on_cancel(self):
-		self.update_interview_details()
+	# def on_cancel(self):
+	# 	self.update_interview_details()
 
 	def validate_interviewer(self):
 		applicable_interviewers = get_applicable_interviewers(self.interview)
