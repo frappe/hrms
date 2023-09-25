@@ -287,12 +287,6 @@ class SalarySlip(TransactionBase):
 				)
 				self.set_time_sheet()
 				self.pull_sal_struct()
-				payroll_settings = frappe.get_cached_value(
-					"Payroll Settings",
-					None,
-					("payroll_based_on", "consider_unmarked_attendance_as"),
-				)
-				return payroll_settings
 
 	def set_time_sheet(self):
 		if self.salary_slip_based_on_timesheet:

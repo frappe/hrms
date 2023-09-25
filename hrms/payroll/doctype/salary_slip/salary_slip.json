@@ -41,6 +41,8 @@
   "column_break_geio",
   "absent_days",
   "payment_days",
+  "help_section",
+  "payment_days_calculation_help",
   "earnings_and_deductions_tab",
   "timesheets_section",
   "timesheets",
@@ -708,13 +710,22 @@
    "depends_on": "eval:doc.salary_slip_based_on_timesheet",
    "fieldname": "timesheets_section",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "help_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "payment_days_calculation_help",
+   "fieldtype": "HTML",
+   "label": "Payment Days Calculation Help"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-09-18 12:51:14.969424",
+ "modified": "2023-09-25 19:31:53.460393",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
