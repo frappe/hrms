@@ -776,11 +776,7 @@
  "idx": 9,
  "is_submittable": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2023-09-20 12:19:14.969424",
-=======
- "modified": "2023-09-25 19:31:53.460393",
->>>>>>> 7efd0e33 (feat(UX): show payroll settings in payment days tab for context)
+ "modified": "2023-09-25 19:32:53.460393",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

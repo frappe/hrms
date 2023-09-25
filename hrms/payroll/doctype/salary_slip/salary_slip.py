@@ -258,13 +258,6 @@ class SalarySlip(TransactionBase):
 				)
 				self.set_time_sheet()
 				self.pull_sal_struct()
-<<<<<<< HEAD
-				ps = frappe.db.get_value(
-					"Payroll Settings", None, ["payroll_based_on", "consider_unmarked_attendance_as"], as_dict=1
-				)
-				return [ps.payroll_based_on, ps.consider_unmarked_attendance_as]
-=======
->>>>>>> 7efd0e33 (feat(UX): show payroll settings in payment days tab for context)
 
 	def set_time_sheet(self):
 		if self.salary_slip_based_on_timesheet:
@@ -342,7 +335,6 @@ class SalarySlip(TransactionBase):
 
 		make_salary_slip(self._salary_structure_doc.name, self)
 
-<<<<<<< HEAD
 	def get_working_days_details(
 		self, joining_date=None, relieving_date=None, lwp=None, for_preview=0
 	):
@@ -353,30 +345,6 @@ class SalarySlip(TransactionBase):
 
 		if not (joining_date and relieving_date):
 			joining_date, relieving_date = self.get_joining_and_relieving_dates()
-=======
-	def get_working_days_details(self, lwp=None, for_preview=0):
-		payroll_settings = frappe.get_cached_value(
-			"Payroll Settings",
-			None,
-			(
-				"payroll_based_on",
-				"include_holidays_in_total_working_days",
-				"consider_marked_attendance_on_holidays",
-				"daily_wages_fraction_for_half_day",
-				"consider_unmarked_attendance_as",
-			),
-			as_dict=1,
-		)
-
-		consider_marked_attendance_on_holidays = (
-			payroll_settings.include_holidays_in_total_working_days
-			and payroll_settings.consider_marked_attendance_on_holidays
-		)
-
-		daily_wages_fraction_for_half_day = (
-			flt(payroll_settings.daily_wages_fraction_for_half_day) or 0.5
-		)
->>>>>>> 66b9292c (feat(Payroll Settings): Consider Marked Attendance on Holidays)
 
 		working_days = date_diff(self.end_date, self.start_date) + 1
 		if for_preview:
@@ -401,11 +369,7 @@ class SalarySlip(TransactionBase):
 
 		if payroll_based_on == "Attendance":
 			actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(
-<<<<<<< HEAD
 				holidays, relieving_date
-=======
-				holidays, daily_wages_fraction_for_half_day, consider_marked_attendance_on_holidays
->>>>>>> 66b9292c (feat(Payroll Settings): Consider Marked Attendance on Holidays)
 			)
 			self.absent_days = absent
 		else:
@@ -574,8 +538,24 @@ class SalarySlip(TransactionBase):
 		if relieving_date:
 			end_date = relieving_date
 
+		payroll_settings = frappe.get_cached_value(
+			"Payroll Settings",
+			None,
+			[
+				"daily_wages_fraction_for_half_day",
+				"include_holidays_in_total_working_days",
+				"consider_marked_attendance_on_holidays",
+			],
+			as_dict=True,
+		)
+
+		consider_marked_attendance_on_holidays = (
+			payroll_settings.include_holidays_in_total_working_days
+			and payroll_settings.consider_marked_attendance_on_holidays
+		)
+
 		daily_wages_fraction_for_half_day = (
-			flt(frappe.db.get_value("Payroll Settings", None, "daily_wages_fraction_for_half_day")) or 0.5
+			flt(payroll_settings.daily_wages_fraction_for_half_day) or 0.5
 		)
 
 		leave_types = frappe.get_all(
@@ -601,26 +581,7 @@ class SalarySlip(TransactionBase):
 			)
 		).run(as_dict=1)
 
-<<<<<<< HEAD
 		for d in attendances:
-=======
-		return attendance_details
-
-	def calculate_lwp_ppl_and_absent_days_based_on_attendance(
-		self, holidays, daily_wages_fraction_for_half_day, consider_marked_attendance_on_holidays
-	):
-		lwp = 0
-		absent = 0
-
-		end_date = self.end_date
-		if self.relieving_date:
-			end_date = self.relieving_date
-
-		leave_type_map = self.get_leave_type_map()
-		attendance_details = self.get_employee_attendance(start_date=self.start_date, end_date=end_date)
-
-		for d in attendance_details:
->>>>>>> 66b9292c (feat(Payroll Settings): Consider Marked Attendance on Holidays)
 			if (
 				d.status in ("Half Day", "On Leave")
 				and d.leave_type
@@ -628,12 +589,10 @@ class SalarySlip(TransactionBase):
 			):
 				continue
 
-<<<<<<< HEAD
-			if formatdate(d.attendance_date, "yyyy-mm-dd") in holidays:
-=======
-			# skip counting absent on holidays
-			if not consider_marked_attendance_on_holidays and getdate(d.attendance_date) in holidays:
->>>>>>> 66b9292c (feat(Payroll Settings): Consider Marked Attendance on Holidays)
+			if (
+				not consider_marked_attendance_on_holidays
+				and formatdate(d.attendance_date, "yyyy-mm-dd") in holidays
+			):
 				if d.status == "Absent" or (
 					d.leave_type
 					and d.leave_type in leave_type_map.keys()
