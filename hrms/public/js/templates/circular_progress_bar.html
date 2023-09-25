@@ -1,0 +1,11 @@
+<div class="circular-progress blue">
+    <span class="progress-left" style="--deg: 144deg">
+        <span class="progress-bar"
+              style="border-color: {{ ['red', 'orange', 'yellow', 'yellowgreen', 'green'][ Math.floor(rating-1) ] }}">></span>
+    </span>
+    <span class="progress-right">
+        <span class="progress-bar"
+              style="border-color: {{ ['red', 'orange', 'yellow', 'yellowgreen', 'green'][ Math.floor(rating-1) ] }}">></span>
+    </span>
+    <div class="progress-value">{{ rating }}</div>
+</div>
