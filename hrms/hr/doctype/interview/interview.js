@@ -295,7 +295,6 @@ frappe.ui.form.on("Interview", {
 			const wrapper = $(frm.fields_dict.feedback_html.wrapper);
 			const feedback_html = frappe.render_template("interview_feedback", {
 				feedbacks: frm.feedback,
-				feedback_count: frm.feedback.length,
 				average_rating: frm.average_rating,
 				reviews_per_rating: frm.reviews_per_rating,
 			});
@@ -316,8 +315,11 @@ frappe.ui.form.on("Interview", {
 					skills: {},
 					average_rating: 0,
 				};
-				feedback[i.interviewer]["name"] = i.employee_name;
+				feedback[i.interviewer]["name"] = i.name;
+				feedback[i.interviewer]["modified"] = i.modified;
+				feedback[i.interviewer]["employee_name"] = i.employee_name;
 				feedback[i.interviewer]["designation"] = i.designation;
+				feedback[i.interviewer]["feedback"] = i.feedback;
 			}
 
 			feedback[i.interviewer]["skills"][i.skill] = i.rating * 5;

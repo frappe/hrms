@@ -5,7 +5,7 @@
             {
             number_of_stars: 5,
             average_rating: average_rating,
-            feedback_count: feedback_count,
+            feedback_count: feedbacks.length,
             reviews_per_rating: reviews_per_rating
             }
             )
@@ -21,7 +21,7 @@
                                 <div class="col-xs-2">{{ frappe.avatar(d.interviewer, "avatar-medium") }}</div>
                                 <div class="col-xs-10">
                                     <div class="ml-2">
-                                        <div class="title font-weight-bold">{{ d.name }}</div>
+                                        <div class="title font-weight-bold">{{ d.employee_name }}</div>
                                         {% if (d.designation) { %}
                                             <div class="small text-muted">{{ d.designation }}</div>
                                             {% } %}
@@ -29,13 +29,23 @@
                                     </div>
                                 </div>
                             </div>
-                            <div>
+                            <div class="reviewer-feedback col-xs-6">
                                 <div class="rating">
                                     {%= frappe.render_template("rating",
-                                    {number_of_stars: 5, average_rating: d.skills.Confidence, for_summary: false}
+                                    {number_of_stars: 5, average_rating: d.average_rating, for_summary: false}
                                     )
                                     %}
                                 </div>
+                                <div class="feedback my-3">{{ d.feedback }}</div>
+                            </div>
+                            <div class="feedback-info col-xs-3 d-flex flex-row justify-content-end align-items-baseline">
+                                <div class="time small text-muted mr-2">{{ frappe.datetime.comment_when(d.modified) }}</div>
+                                <a href="{{ frappe.utils.get_form_link("Interview Feedback", d.name) }}"
+                                   title="{{ __("Open Feedback") }}">
+                                    <svg class="icon icon-sm">
+                                        <use href="#icon-link-url" class="like-icon"></use>
+                                    </svg>
+                                </a>
                             </div>
                         </div>
                         {% } %}
