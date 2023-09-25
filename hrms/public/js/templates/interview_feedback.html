@@ -1,6 +1,6 @@
 <div class="feedback-section col-xs-12">
     {% if feedbacks.length %}
-        <div class="feedback-summary-section my-4 d-flex">
+        <div class="feedback-summary-section my-5 d-flex">
             <div class="rating-summary-numbers col-3">
                 <div class="feedback-count mb-2 text-secondary">{{ __("Average Rating") }}</div>
                 <h2 class="average-rating mb-2">{{ average_rating }}</h2>
@@ -40,11 +40,19 @@
                     {% } %}
                 </div>
             </div>
+            <div class="m-5">
+                <h4>{{ __("Feedback Summary") }}</h4>
+                <div>
+                    {%= frappe.render_template("circular_progress_bar",
+                    {rating: 4.4}
+                    )%}
+                </div>
+            </div>
             {% } %}
             <div class="feedback-history mb-3">
                 {% if feedbacks.length %}
                     {% for(const d of feedbacks) { %}
-                        <div class="p-3 d-flex flex-row mt-3">
+                        <div class="px-3 py-5 d-flex flex-row mt-3 border-top">
                             <div class="reviewer-info mb-2 col-xs-3">
                                 <div class="row">
                                     <div class="col-xs-2">{{ frappe.avatar(d.interviewer, "avatar-medium") }}</div>
