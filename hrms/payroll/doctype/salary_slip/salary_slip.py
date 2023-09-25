@@ -258,10 +258,6 @@ class SalarySlip(TransactionBase):
 				)
 				self.set_time_sheet()
 				self.pull_sal_struct()
-				ps = frappe.db.get_value(
-					"Payroll Settings", None, ["payroll_based_on", "consider_unmarked_attendance_as"], as_dict=1
-				)
-				return [ps.payroll_based_on, ps.consider_unmarked_attendance_as]
 
 	def set_time_sheet(self):
 		if self.salary_slip_based_on_timesheet:
@@ -542,8 +538,24 @@ class SalarySlip(TransactionBase):
 		if relieving_date:
 			end_date = relieving_date
 
+		payroll_settings = frappe.get_cached_value(
+			"Payroll Settings",
+			None,
+			[
+				"daily_wages_fraction_for_half_day",
+				"include_holidays_in_total_working_days",
+				"consider_marked_attendance_on_holidays",
+			],
+			as_dict=True,
+		)
+
+		consider_marked_attendance_on_holidays = (
+			payroll_settings.include_holidays_in_total_working_days
+			and payroll_settings.consider_marked_attendance_on_holidays
+		)
+
 		daily_wages_fraction_for_half_day = (
-			flt(frappe.db.get_value("Payroll Settings", None, "daily_wages_fraction_for_half_day")) or 0.5
+			flt(payroll_settings.daily_wages_fraction_for_half_day) or 0.5
 		)
 
 		leave_types = frappe.get_all(
@@ -577,7 +589,10 @@ class SalarySlip(TransactionBase):
 			):
 				continue
 
-			if formatdate(d.attendance_date, "yyyy-mm-dd") in holidays:
+			if (
+				not consider_marked_attendance_on_holidays
+				and formatdate(d.attendance_date, "yyyy-mm-dd") in holidays
+			):
 				if d.status == "Absent" or (
 					d.leave_type
 					and d.leave_type in leave_type_map.keys()

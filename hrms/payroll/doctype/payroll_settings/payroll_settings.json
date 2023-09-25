@@ -10,6 +10,7 @@
   "payroll_based_on",
   "consider_unmarked_attendance_as",
   "include_holidays_in_total_working_days",
+  "consider_marked_attendance_on_holidays",
   "column_break_6",
   "max_working_hours_against_timesheet",
   "daily_wages_fraction_for_half_day",
@@ -42,7 +43,7 @@
   },
   {
    "default": "0",
-   "description": "If checked, Total no. of Working Days will include holidays, and this will reduce the value of Salary Per Day",
+   "description": "If enabled, total no. of working days will include holidays, and this will reduce the value of Salary Per Day",
    "fieldname": "include_holidays_in_total_working_days",
    "fieldtype": "Check",
    "label": "Include holidays in Total no. of Working Days"
@@ -146,13 +147,21 @@
   {
    "fieldname": "column_break_iewr",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "depends_on": "include_holidays_in_total_working_days",
+   "description": "If enabled, deducts payment days for absent attendance on holidays. By default, holidays are considered as paid",
+   "fieldname": "consider_marked_attendance_on_holidays",
+   "fieldtype": "Check",
+   "label": "Consider Marked Attendance on Holidays"
   }
  ],
  "icon": "fa fa-cog",
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-02-23 14:56:15.335250",
+ "modified": "2023-09-25 14:03:59.215240",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",
