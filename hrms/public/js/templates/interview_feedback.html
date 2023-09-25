@@ -1,58 +1,87 @@
 <div class="feedback-section col-xs-12">
     {% if feedbacks.length %}
-        <div class="feedback-summary mb-5">
-            {%= frappe.render_template("performance_feedback_summary",
-            {
-            number_of_stars: 5,
-            average_rating: average_rating,
-            feedback_count: feedbacks.length,
-            reviews_per_rating: reviews_per_rating
-            }
-            )
-            %}
-        </div>
-        {% } %}
-        <div class="feedback-history mb-3">
-            {% if feedbacks.length %}
-                {% for(const d of feedbacks) { %}
-                    <div class="p-3 d-flex flex-row mt-3">
-                        <div class="reviewer-info mb-2 col-xs-3">
-                            <div class="row">
-                                <div class="col-xs-2">{{ frappe.avatar(d.interviewer, "avatar-medium") }}</div>
-                                <div class="col-xs-10">
-                                    <div class="ml-2">
-                                        <div class="title font-weight-bold">{{ d.employee_name }}</div>
-                                        {% if (d.designation) { %}
-                                            <div class="small text-muted">{{ d.designation }}</div>
-                                            {% } %}
+        <div class="feedback-summary-section my-4 d-flex">
+            <div class="rating-summary-numbers col-3">
+                <div class="feedback-count mb-2 text-secondary">{{ __("Average Rating") }}</div>
+                <h2 class="average-rating mb-2">{{ average_rating }}</h2>
+                {%= frappe.render_template("rating",
+                {number_of_stars: 5, average_rating: average_rating, for_summary: true}
+                )
+                %}
+                <div class="feedback-count text-secondary mt-3">
+                    {{ __("based on") }}    {{ cstr(feedbacks.length) }} {{ feedbacks.length > 1 ? __("reviews") : __("review") }}
+                </div>
+            </div>
+            <!-- Rating Progress Bars -->
+            <div class="rating-progress-bar-section pb-0 col-4">
+                {% for(let i=5; i>0; i--) { %}
+                    <div class="row {{ i!=1 && 'mb-3' }}">
+                        <div class="col-sm-3 text-nowrap flex align-items-center">
+                            <svg class="icon icon-sm mr-2">
+                                <use href="#icon-star" class="like-icon"></use>
+                            </svg>
+                            <span>{{ i }}</span>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="progress rating-progress-bar"
+                                 title="{{ reviews_per_rating[i-1] }} % of reviews are {{ i }} star">
+                                <div class="progress-bar progress-bar-cosmetic"
+                                     role="progressbar"
+                                     aria-valuenow="{{ reviews_per_rating[i-1] }}"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100"
+                                     style="width: {{ reviews_per_rating[i-1] }}%;
+                                            background-color: {{ ['red', 'orange', 'yellow', 'yellowgreen', 'green'][i-1] }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-1 small">{{ reviews_per_rating[i-1] }}%</div>
+                    </div>
+                    {% } %}
+                </div>
+            </div>
+            {% } %}
+            <div class="feedback-history mb-3">
+                {% if feedbacks.length %}
+                    {% for(const d of feedbacks) { %}
+                        <div class="p-3 d-flex flex-row mt-3">
+                            <div class="reviewer-info mb-2 col-xs-3">
+                                <div class="row">
+                                    <div class="col-xs-2">{{ frappe.avatar(d.interviewer, "avatar-medium") }}</div>
+                                    <div class="col-xs-10">
+                                        <div class="ml-2">
+                                            <div class="title font-weight-bold">{{ d.employee_name }}</div>
+                                            {% if (d.designation) { %}
+                                                <div class="small text-muted">{{ d.designation }}</div>
+                                                {% } %}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="reviewer-feedback col-xs-6">
-                                <div class="rating">
-                                    {%= frappe.render_template("rating",
-                                    {number_of_stars: 5, average_rating: d.average_rating, for_summary: false}
-                                    )
-                                    %}
+                                <div class="reviewer-feedback col-xs-6">
+                                    <div class="rating">
+                                        {%= frappe.render_template("rating",
+                                        {number_of_stars: 5, average_rating: d.average_rating, for_summary: false}
+                                        )
+                                        %}
+                                    </div>
+                                    <div class="feedback my-3">{{ d.feedback }}</div>
                                 </div>
-                                <div class="feedback my-3">{{ d.feedback }}</div>
+                                <div class="feedback-info col-xs-3 d-flex flex-row justify-content-end align-items-baseline">
+                                    <div class="time small text-muted mr-2">{{ frappe.datetime.comment_when(d.modified) }}</div>
+                                    <a href="{{ frappe.utils.get_form_link("Interview Feedback", d.name) }}"
+                                       title="{{ __("Open Feedback") }}">
+                                        <svg class="icon icon-sm">
+                                            <use href="#icon-link-url" class="like-icon"></use>
+                                        </svg>
+                                    </a>
+                                </div>
                             </div>
-                            <div class="feedback-info col-xs-3 d-flex flex-row justify-content-end align-items-baseline">
-                                <div class="time small text-muted mr-2">{{ frappe.datetime.comment_when(d.modified) }}</div>
-                                <a href="{{ frappe.utils.get_form_link("Interview Feedback", d.name) }}"
-                                   title="{{ __("Open Feedback") }}">
-                                    <svg class="icon icon-sm">
-                                        <use href="#icon-link-url" class="like-icon"></use>
-                                    </svg>
-                                </a>
+                            {% } %}
+                        {% else %}
+                            <div class="no-feedback d-flex flex-col justify-content-center align-items-center text-muted">
+                                <span>{{ __("This applicant has not received any feedback yet") }}</span>
                             </div>
-                        </div>
-                        {% } %}
-                    {% else %}
-                        <div class="no-feedback d-flex flex-col justify-content-center align-items-center text-muted">
-                            <span>{{ __("This applicant has not received any feedback yet") }}</span>
-                        </div>
-                    {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
