@@ -113,14 +113,8 @@ class PayrollEntry(Document):
 		cond = get_filter_condition(filters)
 		cond += get_joining_relieving_condition(self.start_date, self.end_date)
 
-		condition = ""
-		if self.payroll_frequency:
-			condition = """and payroll_frequency = '%(payroll_frequency)s'""" % {
-				"payroll_frequency": self.payroll_frequency
-			}
-
-		sal_struct = get_sal_struct(
-			self.company, self.currency, self.salary_slip_based_on_timesheet, condition
+		sal_struct = get_salary_structure(
+			self.company, self.currency, self.salary_slip_based_on_timesheet, self.payroll_frequency
 		)
 		if sal_struct:
 			cond += "and t2.salary_structure IN %(sal_struct)s "
@@ -984,28 +978,27 @@ class PayrollEntry(Document):
 		return self._holidays_between_dates.get(key) or 0
 
 
-def get_sal_struct(
-	company: str, currency: str, salary_slip_based_on_timesheet: int, condition: str
-):
-	return frappe.db.sql_list(
-		"""
-		select
-			name from `tabSalary Structure`
-		where
-			docstatus = 1 and
-			is_active = 'Yes'
-			and company = %(company)s
-			and currency = %(currency)s and
-			ifnull(salary_slip_based_on_timesheet,0) = %(salary_slip_based_on_timesheet)s
-			{condition}""".format(
-			condition=condition
-		),
-		{
-			"company": company,
-			"currency": currency,
-			"salary_slip_based_on_timesheet": salary_slip_based_on_timesheet,
-		},
+def get_salary_structure(
+	company: str, currency: str, salary_slip_based_on_timesheet: int, payroll_frequency: str
+) -> list[str]:
+	SalaryStructure = frappe.qb.DocType("Salary Structure")
+
+	query = (
+		frappe.qb.from_(SalaryStructure)
+		.select(SalaryStructure.name)
+		.where(
+			(SalaryStructure.docstatus == 1)
+			& (SalaryStructure.is_active == "Yes")
+			& (SalaryStructure.company == company)
+			& (SalaryStructure.currency == currency)
+			& (SalaryStructure.salary_slip_based_on_timesheet == salary_slip_based_on_timesheet)
+		)
 	)
+
+	if not salary_slip_based_on_timesheet:
+		query = query.where(SalaryStructure.payroll_frequency == payroll_frequency)
+
+	return query.run(pluck=True)
 
 
 def get_filter_condition(filters):
@@ -1331,10 +1324,11 @@ def get_payroll_entries_for_jv(doctype, txt, searchfield, start, page_len, filte
 
 
 def get_employee_list(filters: frappe._dict) -> list[str]:
-	condition = f"and payroll_frequency = '{filters.payroll_frequency}'"
-
-	sal_struct = get_sal_struct(
-		filters.company, filters.currency, filters.salary_slip_based_on_timesheet, condition
+	sal_struct = get_salary_structure(
+		filters.company,
+		filters.currency,
+		filters.salary_slip_based_on_timesheet,
+		filters.payroll_frequency,
 	)
 
 	if not sal_struct:

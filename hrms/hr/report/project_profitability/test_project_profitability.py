@@ -36,6 +36,7 @@ class TestProjectProfitability(FrappeTestCase):
 			frappe.db.set_value("Payroll Settings", None, "include_holidays_in_total_working_days", 1)
 
 		self.salary_slip.submit()
+
 		self.sales_invoice = make_sales_invoice(
 			self.timesheet.name, "_Test Item", "_Test Customer", currency="INR"
 		)
@@ -49,7 +50,7 @@ class TestProjectProfitability(FrappeTestCase):
 		filters = {
 			"company": "_Test Company",
 			"start_date": add_days(self.timesheet.start_date, -3),
-			"end_date": self.timesheet.start_date,
+			"end_date": self.timesheet.end_date,
 		}
 
 		report = execute(filters)

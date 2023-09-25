@@ -13,7 +13,6 @@
   "column_break1",
   "is_active",
   "is_default",
-  "payroll_frequency",
   "currency",
   "amended_from",
   "time_sheet_earning_detail",
@@ -21,6 +20,7 @@
   "max_benefits",
   "column_break_17",
   "salary_slip_based_on_timesheet",
+  "payroll_frequency",
   "salary_component",
   "hour_rate",
   "earning_deduction",
@@ -72,7 +72,7 @@
   },
   {
    "default": "Monthly",
-   "depends_on": "eval:(!doc.salary_slip_based_on_timesheet)",
+   "depends_on": "eval:doc.salary_slip_based_on_timesheet == 0",
    "fieldname": "payroll_frequency",
    "fieldtype": "Select",
    "label": "Payroll Frequency",
@@ -97,7 +97,8 @@
    "default": "0",
    "fieldname": "salary_slip_based_on_timesheet",
    "fieldtype": "Check",
-   "label": "Salary Slip Based on Timesheet"
+   "label": "Salary Slip Based on Timesheet",
+   "search_index": 1
   },
   {
    "fieldname": "column_break_17",
@@ -234,7 +235,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-05 13:39:47.519380",
+ "modified": "2023-06-13 18:02:31.779947",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure",
