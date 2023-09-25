@@ -65,7 +65,7 @@ frappe.ui.form.on('Payroll Entry', {
 			&& !cint(frm.doc.salary_slips_created)
 			&& (frm.doc.docstatus != 2)
 		) {
-			if (frm.doc.docstatus == 0) {
+			if (frm.doc.docstatus == 0 && !frm.is_new()) {
 				frm.page.clear_primary_action();
 				frm.page.set_primary_action(__("Create Salary Slips"), () => {
 					frm.save("Submit").then(() => {
@@ -136,9 +136,13 @@ frappe.ui.form.on('Payroll Entry', {
 	add_context_buttons: function (frm) {
 		if (frm.doc.salary_slips_submitted || (frm.doc.__onload && frm.doc.__onload.submitted_ss)) {
 			frm.events.add_bank_entry_button(frm);
-		} else if (frm.doc.salary_slips_created && frm.doc.status != 'Queued') {
-			frm.add_custom_button(__("Submit Salary Slip"), function () {
+		} else if (frm.doc.salary_slips_created && frm.doc.status !== "Queued") {
+			frm.add_custom_button(__("Submit Salary Slip"), function() {
 				submit_salary_slip(frm);
+			}).addClass("btn-primary");
+		} else if (!frm.doc.salary_slips_created && frm.doc.status === "Failed") {
+			frm.add_custom_button(__("Create Salary Slips"), function() {
+				frm.trigger("create_salary_slips");
 			}).addClass("btn-primary");
 		}
 	},
@@ -389,7 +393,7 @@ let make_bank_entry = function (frm) {
 		return frappe.call({
 			method: "run_doc_method",
 			args: {
-				method: "make_payment_entry",
+				method: "make_bank_entry",
 				dt: "Payroll Entry",
 				dn: frm.doc.name
 			},

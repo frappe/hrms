@@ -32,8 +32,8 @@ class TestShiftAttendance(FrappeTestCase):
 			end_time="12:00:00",
 			working_hours_threshold_for_half_day=2,
 			working_hours_threshold_for_absent=1,
-			enable_entry_grace_period=1,
-			enable_exit_grace_period=1,
+			enable_late_entry_marking=1,
+			enable_early_exit_marking=1,
 			process_attendance_after="2023-01-01",
 			last_sync_of_checkin="2023-01-04 04:00:00",
 		)
@@ -43,8 +43,8 @@ class TestShiftAttendance(FrappeTestCase):
 			end_time="02:00:00",
 			working_hours_threshold_for_half_day=2,
 			working_hours_threshold_for_absent=1,
-			enable_entry_grace_period=1,
-			enable_exit_grace_period=1,
+			enable_late_entry_marking=1,
+			enable_early_exit_marking=1,
 			process_attendance_after="2023-01-01",
 			last_sync_of_checkin="2023-01-04 04:00:00",
 		)

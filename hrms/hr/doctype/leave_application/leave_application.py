@@ -1305,3 +1305,7 @@ def get_leave_approver(employee):
 		)
 
 	return leave_approver
+
+
+def on_doctype_update():
+	frappe.db.add_index("Leave Application", ["employee", "from_date", "to_date"])

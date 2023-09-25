@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "HR-APP-.YYYY.-.#####",
  "creation": "2013-01-29 19:25:37",

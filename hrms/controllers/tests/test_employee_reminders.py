@@ -36,7 +36,6 @@ class TestEmployeeReminders(FrappeTestCase):
 			to_date=getdate() + timedelta(weeks=5),
 		)
 
-		# Create a test employee
 		test_employee = frappe.get_doc(
 			"Employee", make_employee("test@gopher.io", company="_Test Company")
 		)
