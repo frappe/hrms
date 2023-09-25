@@ -258,10 +258,13 @@ class SalarySlip(TransactionBase):
 				)
 				self.set_time_sheet()
 				self.pull_sal_struct()
+<<<<<<< HEAD
 				ps = frappe.db.get_value(
 					"Payroll Settings", None, ["payroll_based_on", "consider_unmarked_attendance_as"], as_dict=1
 				)
 				return [ps.payroll_based_on, ps.consider_unmarked_attendance_as]
+=======
+>>>>>>> 7efd0e33 (feat(UX): show payroll settings in payment days tab for context)
 
 	def set_time_sheet(self):
 		if self.salary_slip_based_on_timesheet:
