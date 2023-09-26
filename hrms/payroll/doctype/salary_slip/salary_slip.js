@@ -42,6 +42,12 @@ frappe.ui.form.on("Salary Slip", {
 				}
 			};
 		});
+
+		frm.trigger("set_payment_days_description");
+	},
+
+	validate: function(frm) {
+		frm.trigger("set_payment_days_description");
 	},
 
 	start_date: function(frm) {
@@ -207,9 +213,6 @@ frappe.ui.form.on("Salary Slip", {
 				method: 'get_emp_and_working_day_details',
 				doc: frm.doc,
 				callback: function(r) {
-					if (r.message[1] !== "Leave" && r.message[0]) {
-						frm.fields_dict.absent_days.set_description(__("Unmarked Days is treated as {0}. You can can change this in {1}", [r.message, frappe.utils.get_form_link("Payroll Settings", "Payroll Settings", true)]));
-					}
 					frm.refresh();
 					// triggering events explicitly because structure is set on the server-side
 					// and currency is fetched from the structure
@@ -217,7 +220,40 @@ frappe.ui.form.on("Salary Slip", {
 				}
 			});
 		}
-	}
+	},
+
+	set_payment_days_description: function(frm) {
+		if (frm.doc.docstatus !== 0) return;
+
+		frappe.call("hrms.payroll.utils.get_payroll_settings_for_payment_days").then((r) => {
+			const {
+				payroll_based_on,
+				consider_unmarked_attendance_as,
+				include_holidays_in_total_working_days,
+				consider_marked_attendance_on_holidays
+			} = r.message;
+
+			const message = `
+				<div class="small text-muted pb-3">
+					${__("Note").bold()}: ${__("Payment Days calculations are based on these Payroll Settings")}:
+					<br><br>${__("Payroll Based On")}: ${payroll_based_on.bold()}
+					<br>${__("Consider Unmarked Attendance As")}: ${consider_unmarked_attendance_as.bold()}
+					<br>${__("Consider Marked Attendance on Holidays")}:
+					${
+						cint(include_holidays_in_total_working_days) && cint(consider_marked_attendance_on_holidays)
+						? __("Enabled").bold() : __("Disabled").bold()
+					}
+					<br><br>
+					${
+						__("Click {0} to change the configuration and then resave salary slip",
+						[frappe.utils.get_form_link("Payroll Settings", "Payroll Settings", true, "<u>" + __("here") + "</u>")])
+					}
+				</div>
+			`;
+
+			set_field_options("payment_days_calculation_help", message);
+		});
+	},
 });
 
 frappe.ui.form.on('Salary Slip Timesheet', {

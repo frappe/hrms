@@ -258,10 +258,6 @@ class SalarySlip(TransactionBase):
 				)
 				self.set_time_sheet()
 				self.pull_sal_struct()
-				ps = frappe.db.get_value(
-					"Payroll Settings", None, ["payroll_based_on", "consider_unmarked_attendance_as"], as_dict=1
-				)
-				return [ps.payroll_based_on, ps.consider_unmarked_attendance_as]
 
 	def set_time_sheet(self):
 		if self.salary_slip_based_on_timesheet:
@@ -305,7 +301,7 @@ class SalarySlip(TransactionBase):
 			.limit(1)
 		)
 
-		if self.payroll_frequency:
+		if not self.salary_slip_based_on_timesheet and self.payroll_frequency:
 			query = query.where(ss.payroll_frequency == self.payroll_frequency)
 
 		st_name = query.run()
@@ -542,8 +538,24 @@ class SalarySlip(TransactionBase):
 		if relieving_date:
 			end_date = relieving_date
 
+		payroll_settings = frappe.get_cached_value(
+			"Payroll Settings",
+			None,
+			[
+				"daily_wages_fraction_for_half_day",
+				"include_holidays_in_total_working_days",
+				"consider_marked_attendance_on_holidays",
+			],
+			as_dict=True,
+		)
+
+		consider_marked_attendance_on_holidays = (
+			payroll_settings.include_holidays_in_total_working_days
+			and payroll_settings.consider_marked_attendance_on_holidays
+		)
+
 		daily_wages_fraction_for_half_day = (
-			flt(frappe.db.get_value("Payroll Settings", None, "daily_wages_fraction_for_half_day")) or 0.5
+			flt(payroll_settings.daily_wages_fraction_for_half_day) or 0.5
 		)
 
 		leave_types = frappe.get_all(
@@ -577,7 +589,10 @@ class SalarySlip(TransactionBase):
 			):
 				continue
 
-			if formatdate(d.attendance_date, "yyyy-mm-dd") in holidays:
+			if (
+				not consider_marked_attendance_on_holidays
+				and formatdate(d.attendance_date, "yyyy-mm-dd") in holidays
+			):
 				if d.status == "Absent" or (
 					d.leave_type
 					and d.leave_type in leave_type_map.keys()
@@ -924,10 +939,10 @@ class SalarySlip(TransactionBase):
 
 	def get_income_tax_deducted_till_date(self):
 		tax_deducted = 0.0
-		for tax_component in self.component_based_veriable_tax:
+		for tax_component in self.get("_component_based_variable_tax") or {}:
 			tax_deducted += (
-				self.component_based_veriable_tax[tax_component]["previous_total_paid_taxes"]
-				+ self.component_based_veriable_tax[tax_component]["current_tax_amount"]
+				self._component_based_variable_tax[tax_component]["previous_total_paid_taxes"]
+				+ self._component_based_variable_tax[tax_component]["current_tax_amount"]
 			)
 		return tax_deducted
 
@@ -1169,9 +1184,9 @@ class SalarySlip(TransactionBase):
 			self.tax_slab = self.get_income_tax_slabs()
 			self.compute_taxable_earnings_for_year()
 
-		self.component_based_veriable_tax = {}
+		self._component_based_variable_tax = {}
 		for d in tax_components:
-			self.component_based_veriable_tax.setdefault(d, {})
+			self._component_based_variable_tax.setdefault(d, {})
 			tax_amount = self.calculate_variable_based_on_taxable_salary(d)
 			tax_row = get_salary_component_data(d)
 			self.update_component_row(tax_row, tax_amount, "deductions")
@@ -1362,7 +1377,7 @@ class SalarySlip(TransactionBase):
 		if flt(current_tax_amount) < 0:
 			current_tax_amount = 0
 
-		self.component_based_veriable_tax[tax_component].update(
+		self._component_based_variable_tax[tax_component].update(
 			{
 				"previous_total_paid_taxes": self.previous_total_paid_taxes,
 				"total_structured_tax_amount": self.total_structured_tax_amount,
