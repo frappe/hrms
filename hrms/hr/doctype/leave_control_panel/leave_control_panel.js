@@ -2,12 +2,16 @@
 // License: GNU General Public License v3. See license.txt
 
 frappe.ui.form.on("Leave Control Panel", {
+	setup: function(frm) {
+		frm.trigger("reset_leave_details");
+	},
+
 	refresh: function (frm) {
 		frm.disable_save();
-		frm.trigger("reset_leave_details");
 		frm.trigger("load_employees");
 		frm.trigger("set_primary_action");
 	},
+
 	company: function (frm) {
 		if (frm.doc.company) {
 			frm.set_query("department", function () {
@@ -20,6 +24,7 @@ frappe.ui.form.on("Leave Control Panel", {
 		}
 		frm.trigger("load_employees");
 	},
+
 	employment_type(frm) {
 		frm.trigger("load_employees");
 	},
@@ -72,13 +77,13 @@ frappe.ui.form.on("Leave Control Panel", {
 		frm.set_value({
 			dates_based_on: "Leave Period",
 			from_date: frappe.datetime.get_today(),
-			to_date: undefined,
-			leave_period: undefined,
+			to_date: null,
+			leave_period: null,
 			carry_forward: 1,
 			allocate_based_on_leave_policy: 1,
-			leave_type: undefined,
+			leave_type: null,
 			no_of_days: 0,
-			leave_policy: undefined,
+			leave_policy: null,
 		});
 	},
 
