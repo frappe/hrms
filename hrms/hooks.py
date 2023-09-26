@@ -285,6 +285,10 @@ override_doctype_dashboards = {
 	"Timesheet": "hrms.overrides.dashboard_overrides.get_dashboard_for_timesheet",
 }
 
+default_company_account_fields = [
+	"default_payroll_payable_account",
+	"default_employee_advance_account",
+]
 # exempt linked doctypes from being automatically cancelled
 #
 # auto_cancel_exempted_doctypes = ["Auto Repeat"]
