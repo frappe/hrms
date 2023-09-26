@@ -17,8 +17,6 @@
   "scheduled_on",
   "from_time",
   "to_time",
-  "interview_feedback_section",
-  "interview_details",
   "ratings_section",
   "expected_average_rating",
   "column_break_12",
@@ -151,17 +149,6 @@
    "label": "Reminded"
   },
   {
-   "allow_on_submit": 1,
-   "fieldname": "interview_details",
-   "fieldtype": "Table",
-   "options": "Interview Detail"
-  },
-  {
-   "fieldname": "interview_feedback_section",
-   "fieldtype": "Section Break",
-   "label": "Feedback"
-  },
-  {
    "fieldname": "from_time",
    "fieldtype": "Time",
    "in_list_view": 1,
@@ -196,10 +183,11 @@
    "link_fieldname": "interview"
   }
  ],
- "modified": "2023-09-20 11:54:48.770937",
+ "modified": "2023-09-26 14:10:16.426193",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
