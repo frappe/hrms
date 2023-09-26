@@ -1,5 +1,6 @@
 <div class="feedback-section col-xs-12">
     {% if feedbacks.length %}
+        <h4 class="my-4 mx-5">{{ __("Overall Average Rating") }}</h4>
         <div class="feedback-summary-section my-5 d-flex">
             <div class="rating-summary-numbers col-3">
                 <div class="feedback-count mb-2 text-secondary">{{ __("Average Rating") }}</div>
@@ -31,7 +32,7 @@
                                      aria-valuemin="0"
                                      aria-valuemax="100"
                                      style="width: {{ reviews_per_rating[i-1] }}%;
-                                            background-color: {{ ['red', 'orange', 'gold', 'yellowgreen', 'green'][i-1] }}">
+                                            background-color: {{ ['red', 'orange', 'gold', 'yellowgreen', 'mediumseagreen', 'green'][i] }}">
                                 </div>
                             </div>
                         </div>
@@ -41,7 +42,8 @@
                 </div>
             </div>
             <div class="m-5">
-                <h4 class="mb-5">{{ __("Skill Summary") }}</h4>
+                <h4 class="mb-4">{{ __("Feedback Summary") }}</h4>
+                <h5 class="mb-5 text-secondary">{{ __("Average rating of personal skills") }}</h5>
                 <div class="row">
                     {% for(const d of skills_average_rating) { %}
                         <div class="col-md-4 mb-4">
