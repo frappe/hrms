@@ -3,9 +3,9 @@
 
 
 import frappe
-from frappe import _
+from frappe import _, bold
 from frappe.model.document import Document
-from frappe.utils import format_date, getdate
+from frappe.utils import format_date, get_link_to_form, getdate
 
 from hrms.hr.doctype.leave_application.leave_application import get_leaves_for_period
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
@@ -104,15 +104,29 @@ class LeaveEncashment(Document):
 
 		# make sure user input doesn't exceed leave balance
 		self.encashable_days = min(self.encashable_days, self.leave_balance)
+		leave_form_link = get_link_to_form("Leave Type", self.leave_type)
 
 		# TODO: Remove this weird setting if possible. Retained for backward compatibility
 		if encashment_settings.encashment_threshold_days:
 			encashable_days = self.leave_balance - encashment_settings.encashment_threshold_days
 			encashable_days = min(self.encashable_days, encashable_days)
 			self.encashable_days = encashable_days if encashable_days > 0 else 0
+			frappe.msgprint(
+				_("Encashable Days overwritten based on Encashment Threshold Days: {0} for {1}").format(
+					bold(encashment_settings.max_encashable_leaves),
+					leave_form_link,
+				),
+				title=_("Encashment Threshold Applied"),
+			)
 
 		if encashment_settings.max_encashable_leaves:
 			self.encashable_days = min(self.encashable_days, encashment_settings.max_encashable_leaves)
+			frappe.msgprint(
+				_("Maximum encashable leaves for {0} are {1}").format(
+					leave_form_link, bold(encashment_settings.max_encashable_leaves)
+				),
+				title=_("Encashment Limit Applied"),
+			)
 
 	def set_leave_balance(self):
 		allocation = self.get_leave_allocation()
