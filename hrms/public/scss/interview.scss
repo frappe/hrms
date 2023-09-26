@@ -1,7 +1,7 @@
 .circular-progress{
-    width: 110px;
-    height: 110px;
-    line-height: 110px;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
     position: relative;
 }
 .circular-progress:after{
@@ -57,7 +57,7 @@
 .circular-progress .progress-value{
     width: 100%;
     height: 100%;
-    font-size: 24px;
+    font-size: 22px;
     text-align: center;
     font-weight: bold;
     position: absolute;
