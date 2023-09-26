@@ -4,15 +4,9 @@
 frappe.ui.form.on("Interview", {
 	onload: function (frm) {
 		frm.events.set_job_applicant_query(frm);
-
-		// frm.set_query("interviewer", "interview_details", function () {
-		// 	return {
-		// 		query: "hrms.hr.doctype.interview.interview.get_interviewer_list",
-		// 	};
-		// });
 	},
 
-	refresh: function (frm) {
+	refresh: async function (frm) {
 		if (!frm.doc.__islocal) {
 			frm.trigger("load_feedback");
 		}
@@ -23,42 +17,37 @@ frappe.ui.form.on("Interview", {
 					frm.refresh();
 				});
 			}
-
-			let allowed_interviewers = [];
-			// frm.doc.interview_details.forEach((values) => {
-			// 	allowed_interviewers.push(values.interviewer);
-			// });
-
-			if (allowed_interviewers.includes(frappe.session.user)) {
-				frappe.db.get_value(
-					"Interview Feedback",
-					{
-						interviewer: frappe.session.user,
-						interview: frm.doc.name,
-						docstatus: 1,
-					},
-					"name",
-					(r) => {
-						if (Object.keys(r).length === 0) {
-							frm
-								.add_custom_button(__("Submit Feedback"), function () {
-									frappe.call({
-										method:
-											"hrms.hr.doctype.interview.interview.get_expected_skill_set",
-										args: {
-											interview_round: frm.doc.interview_round,
-										},
-										callback: function (r) {
-											frm.events.show_feedback_dialog(frm, r.message);
-											frm.refresh();
-										},
-									});
-								})
-								.addClass("btn-primary");
-						}
+			frm.disable_button = true;
+			await frm.trigger("enable_feedback_button_for_authorized_users");
+			frappe.db.get_value(
+				"Interview Feedback",
+				{
+					interviewer: frappe.session.user,
+					interview: frm.doc.name,
+					docstatus: 1,
+				},
+				"name",
+				(r) => {
+					if (Object.keys(r).length === 0) {
+						frm
+							.add_custom_button(__("Submit Feedback"), function () {
+								frappe.call({
+									method:
+										"hrms.hr.doctype.interview.interview.get_expected_skill_set",
+									args: {
+										interview_round: frm.doc.interview_round,
+									},
+									callback: function (r) {
+										frm.events.show_feedback_dialog(frm, r.message);
+										frm.refresh();
+									},
+								});
+							})
+							.addClass("btn-primary")
+							.prop("disabled", frm.disable_button);
 					}
-				);
-			}
+				}
+			);
 		}
 	},
 
@@ -206,28 +195,6 @@ frappe.ui.form.on("Interview", {
 		).message;
 		frm.set_value("designation", round_data.designation);
 		frm.events.set_job_applicant_query(frm);
-
-		// if (frm.doc.interview_round) {
-		// 	frm.events.set_interview_details(frm);
-		// } else {
-		// 	frm.set_value("interview_details", []);
-		// }
-	},
-
-	set_interview_details: function (frm) {
-		frappe.call({
-			method: "hrms.hr.doctype.interview.interview.get_interviewers",
-			args: {
-				interview_round: frm.doc.interview_round,
-			},
-			callback: function (data) {
-				let interview_details = data.message;
-				frm.set_value("interview_details", []);
-				if (data.message.length) {
-					frm.set_value("interview_details", interview_details);
-				}
-			},
-		});
 	},
 
 	job_applicant: function (frm) {
@@ -275,6 +242,21 @@ frappe.ui.form.on("Interview", {
 		frm.set_value("designation", "");
 		frm.set_value("job_opening", "");
 		frm.set_value("resume_link", "");
+	},
+
+	enable_feedback_button_for_authorized_users(frm) {
+		frappe.call({
+			method:
+				"hrms.hr.doctype.interview_feedback.interview_feedback.get_applicable_interviewers",
+			args: {
+				interview_round: frm.doc.interview_round || "",
+			},
+			callback: function (r) {
+				if (r.message.includes(frappe.session.user)) {
+					frm.disable_button = false;
+				}
+			},
+		});
 	},
 
 	load_feedback(frm) {
