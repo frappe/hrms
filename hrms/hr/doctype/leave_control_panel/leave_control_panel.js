@@ -143,22 +143,22 @@ frappe.ui.form.on("Leave Control Panel", {
 			{
 				name: "employee",
 				id: "employee",
-				content: `${__("Employee")}`,
+				content: __("Employee"),
 			},
 			{
 				name: "employee_name",
 				id: "employee_name",
-				content: `${__("Name")}`,
+				content: __("Name"),
 			},
 			{
 				name: "company",
 				id: "company",
-				content: `${__("Company")}`,
+				content: __("Company"),
 			},
 			{
 				name: "department",
 				id: "department",
-				content: `${__("Department")}`,
+				content: __("Department"),
 			},
 		].map((x) => ({
 			...x,

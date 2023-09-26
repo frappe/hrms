@@ -105,7 +105,7 @@
   },
   {
    "default": "1",
-   "description": "Please select Carry Forward if you also want to include previous fiscal year's balance leaves to this fiscal year",
+   "description": "Add unused leaves from previous leave period's allocation to this allocation",
    "fieldname": "carry_forward",
    "fieldtype": "Check",
    "label": "Carry Forward"
@@ -170,7 +170,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-09-13 16:41:07.259385",
+ "modified": "2023-09-26 14:40:13.981686",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Control Panel",
