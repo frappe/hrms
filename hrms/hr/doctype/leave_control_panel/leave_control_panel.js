@@ -94,6 +94,9 @@ frappe.ui.form.on("Leave Control Panel", {
 				doc: frm.doc,
 			})
 			.then((r) => {
+				// section automatically collapses on applying a single filter
+				frm.set_df_property("filters_section", "collapsible", 0);
+
 				frm.employees = r.message;
 				if (frm.employees) {
 					frm.set_df_property("select_employees_section", "hidden", 0);
