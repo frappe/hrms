@@ -101,7 +101,7 @@ frappe.ui.form.on("Leave Control Panel", {
 
 	show_employees(frm, employees) {
 		const $wrapper = frm.get_field("employees_html").$wrapper;
-		frm.employee_wrapper = $(`<div class="employee_wrapper">`).appendTo(
+		frm.employee_wrapper = $(`<div class="employee_wrapper pb-5">`).appendTo(
 			$wrapper
 		);
 		frm.events.render_datatable(frm, employees, frm.employee_wrapper);
