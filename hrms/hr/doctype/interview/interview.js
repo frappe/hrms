@@ -297,6 +297,7 @@ frappe.ui.form.on("Interview", {
 				feedbacks: frm.feedback,
 				average_rating: frm.average_rating,
 				reviews_per_rating: frm.reviews_per_rating,
+				skills_average_rating: frm.skills_average_rating,
 			});
 			$(wrapper).empty();
 			$(feedback_html).appendTo(wrapper);
@@ -305,40 +306,60 @@ frappe.ui.form.on("Interview", {
 
 	format_feedback(frm, records) {
 		const feedback = {};
-		let user_total_rating = 0;
+		let user_sum_of_ratings = 0;
+		const skills = {};
 
 		for (i of records) {
 			if (!(i.interviewer in feedback)) {
-				user_total_rating = 0;
+				user_sum_of_ratings = 0;
 				feedback[i.interviewer] = {
+					name: i.name,
+					modified: i.modified,
+					employee_name: i.employee_name,
+					designation: i.designation,
+					feedback: i.feedback,
 					interviewer: i.interviewer,
 					skills: {},
 					average_rating: 0,
 				};
-				feedback[i.interviewer]["name"] = i.name;
-				feedback[i.interviewer]["modified"] = i.modified;
-				feedback[i.interviewer]["employee_name"] = i.employee_name;
-				feedback[i.interviewer]["designation"] = i.designation;
-				feedback[i.interviewer]["feedback"] = i.feedback;
+			}
+			feedback[i.interviewer]["skills"][i.skill] = i.rating * 5;
+			user_sum_of_ratings += i.rating * 5;
+			feedback[i.interviewer]["average_rating"] =
+				Math.round(
+					(user_sum_of_ratings /
+						Object.keys(feedback[i.interviewer]["skills"]).length) *
+						100
+				) / 100;
+
+			if (!(i.skill in skills)) {
+				skills[i.skill] = {
+					no_of_ratings: 0,
+					sum_of_ratings: 0,
+				};
 			}
 
-			feedback[i.interviewer]["skills"][i.skill] = i.rating * 5;
-			user_total_rating += i.rating * 5;
-			feedback[i.interviewer]["average_rating"] =
-				user_total_rating /
-				Object.keys(feedback[i.interviewer]["skills"]).length;
+			skills[i.skill]["no_of_ratings"]++;
+			skills[i.skill]["sum_of_ratings"] += i.rating * 5;
 		}
 		frm.feedback = Object.values(feedback);
+		frm.skills_average_rating = Object.keys(skills).map((x) => {
+			return {
+				skill: x,
+				average_rating: skills[x].sum_of_ratings / skills[x].no_of_ratings,
+			};
+		});
 	},
+
 	calculate_average_rating_and_reviews_per_rating(frm) {
-		let overall_total_rating = 0;
+		let sum_of_all_ratings = 0;
 		const reviews_per_rating = [0, 0, 0, 0, 0];
 		frm.feedback.forEach((x) => {
-			overall_total_rating += x.average_rating;
+			sum_of_all_ratings += x.average_rating;
 			reviews_per_rating[Math.floor(x.average_rating - 1)] += 1;
 		});
 
-		frm.average_rating = overall_total_rating / frm.feedback.length;
+		frm.average_rating = (sum_of_all_ratings / frm.feedback.length).toFixed(2);
 		frm.reviews_per_rating = reviews_per_rating.map(
 			(x) => (x * 100) / frm.feedback.length
 		);
