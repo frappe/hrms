@@ -7,6 +7,7 @@ import datetime
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.query_builder.functions import Avg
 from frappe.utils import cstr, flt, get_datetime, get_link_to_form, getdate, nowtime
 
 from hrms.hr.doctype.interview_feedback.interview_feedback import get_applicable_interviewers
@@ -94,7 +95,6 @@ class Interview(Document):
 	@frappe.whitelist()
 	def get_feedback(self):
 		interview_feedback = frappe.qb.DocType("Interview Feedback")
-		skill_assessment = frappe.qb.DocType("Skill Assessment")
 		employee = frappe.qb.DocType("Employee")
 		query = (
 			frappe.qb.select(
@@ -102,17 +102,31 @@ class Interview(Document):
 				interview_feedback.modified,
 				interview_feedback.interviewer,
 				interview_feedback.feedback,
+				interview_feedback.average_rating,
 				employee.employee_name,
 				employee.designation,
-				skill_assessment.skill,
-				skill_assessment.rating,
 			)
 			.from_(interview_feedback)
 			.where((interview_feedback.interview == self.name) & (interview_feedback.docstatus == 1))
 			.join(employee)
 			.on(interview_feedback.interviewer == employee.user_id)
-			.join(skill_assessment)
-			.on(interview_feedback.name == skill_assessment.parent)
+		)
+		return query.run(as_dict=True)
+
+	@frappe.whitelist()
+	def get_skills_average_rating(self):
+		skill_assessment = frappe.qb.DocType("Skill Assessment")
+		interview_feedback = frappe.qb.DocType("Interview Feedback")
+		query = (
+			frappe.qb.select(
+				skill_assessment.skill,
+				Avg(skill_assessment.rating).as_("rating"),
+			)
+			.from_(skill_assessment)
+			.join(interview_feedback)
+			.on(skill_assessment.parent == interview_feedback.name)
+			.where((interview_feedback.interview == self.name) & (interview_feedback.docstatus == 1))
+			.groupby(skill_assessment.skill)
 		)
 		return query.run(as_dict=True)
 
