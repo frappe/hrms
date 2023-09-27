@@ -6,23 +6,23 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt, get_link_to_form, getdate
-
+from frappe.query_builder.functions import Sum, Count
 
 class InterviewFeedback(Document):
 	def validate(self):
-		# self.validate_interviewer()
+		self.validate_interviewer()
 		self.validate_interview_date()
 		self.validate_duplicate()
 		self.calculate_average_rating()
 
-	# def on_submit(self):
-	# 	self.update_interview_details()
+	def on_submit(self):
+		self.update_interview_average_rating()
 
-	# def on_cancel(self):
-	# 	self.update_interview_details()
+	def on_cancel(self):
+		self.update_interview_average_rating()
 
 	def validate_interviewer(self):
-		applicable_interviewers = get_applicable_interviewers(self.interview)
+		applicable_interviewers = get_applicable_interviewers(self.interview_round)
 		if self.interviewer not in applicable_interviewers:
 			frappe.throw(
 				_("{0} is not allowed to submit Interview Feedback for the Interview: {1}").format(
@@ -65,25 +65,18 @@ class InterviewFeedback(Document):
 			total_rating / len(self.skill_assessment) if len(self.skill_assessment) else 0
 		)
 
-	def update_interview_details(self):
-		doc = frappe.get_doc("Interview", self.interview)
-
-		if self.docstatus == 2:
-			for entry in doc.interview_details:
-				if entry.interview_feedback == self.name:
-					entry.average_rating = entry.interview_feedback = entry.comments = entry.result = None
-					break
-		else:
-			for entry in doc.interview_details:
-				if entry.interviewer == self.interviewer:
-					entry.average_rating = self.average_rating
-					entry.interview_feedback = self.name
-					entry.comments = self.feedback
-					entry.result = self.result
-
-		doc.save()
-		doc.notify_update()
-
+	def update_interview_average_rating(self):
+		interview_feedback = frappe.qb.DocType("Interview Feedback")
+		query = (
+			frappe.qb.from_(interview_feedback)
+			.where((interview_feedback.interview == self.interview) & (interview_feedback.docstatus == 1))
+			.select((Sum(interview_feedback.average_rating) / Count(interview_feedback.average_rating)).as_("average"))
+		)
+		data = query.run(as_dict=True)
+		average = data[0].average
+		if average:
+			frappe.db.set_value('Interview', self.interview, 'average_rating', flt(average, 3))
+			
 
 @frappe.whitelist()
 def get_applicable_interviewers(interview_round):
