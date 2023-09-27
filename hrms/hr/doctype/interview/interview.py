@@ -9,6 +9,8 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cstr, flt, get_datetime, get_link_to_form, getdate, nowtime
 
+from hrms.hr.doctype.interview_feedback.interview_feedback import get_applicable_interviewers
+
 
 class DuplicateInterviewRoundError(frappe.ValidationError):
 	pass
@@ -18,8 +20,6 @@ class Interview(Document):
 	def validate(self):
 		self.validate_duplicate_interview()
 		self.validate_designation()
-		# self.validate_overlap()
-		# self.set_average_rating()
 
 	def on_submit(self):
 		if self.status not in ["Cleared", "Rejected"]:
@@ -58,50 +58,6 @@ class Interview(Document):
 		else:
 			self.designation = applicant_designation
 
-	def validate_overlap(self):
-		interviewers = [entry.interviewer for entry in self.interview_details] or [""]
-
-		overlaps = frappe.db.sql(
-			"""
-			SELECT interview.name
-			FROM `tabInterview` as interview
-			INNER JOIN `tabInterview Detail` as detail
-			WHERE
-				interview.scheduled_on = %s and interview.name != %s and interview.docstatus != 2
-				and (interview.job_applicant = %s or detail.interviewer IN %s) and
-				((from_time < %s and to_time > %s) or
-				(from_time > %s and to_time < %s) or
-				(from_time = %s))
-			""",
-			(
-				self.scheduled_on,
-				self.name,
-				self.job_applicant,
-				interviewers,
-				self.from_time,
-				self.to_time,
-				self.from_time,
-				self.to_time,
-				self.from_time,
-			),
-		)
-
-		if overlaps:
-			overlapping_details = _("Interview overlaps with {0}").format(
-				get_link_to_form("Interview", overlaps[0][0])
-			)
-			frappe.throw(overlapping_details, title=_("Overlap"))
-
-	def set_average_rating(self):
-		total_rating = 0
-		for entry in self.interview_details:
-			if entry.average_rating:
-				total_rating += entry.average_rating
-
-		self.average_rating = flt(
-			total_rating / len(self.interview_details) if len(self.interview_details) else 0
-		)
-
 	@frappe.whitelist()
 	def reschedule_interview(self, scheduled_on, from_time, to_time):
 		original_date = self.scheduled_on
@@ -111,7 +67,7 @@ class Interview(Document):
 		self.db_set({"scheduled_on": scheduled_on, "from_time": from_time, "to_time": to_time})
 		self.notify_update()
 
-		recipients = get_recipients(self.name)
+		recipients = get_recipients(self.name, self.interview_round)
 
 		try:
 			frappe.sendmail(
@@ -152,11 +108,7 @@ class Interview(Document):
 				skill_assessment.rating,
 			)
 			.from_(interview_feedback)
-			.where(
-				(interview_feedback.interview == self.name)
-				& (interview_feedback.job_applicant == self.job_applicant)
-				& (interview_feedback.docstatus == 1)
-			)
+			.where((interview_feedback.interview == self.name) & (interview_feedback.docstatus == 1))
 			.join(employee)
 			.on(interview_feedback.interviewer == employee.user_id)
 			.join(skill_assessment)
@@ -165,23 +117,20 @@ class Interview(Document):
 		return query.run(as_dict=True)
 
 
-def get_recipients(name, for_feedback=0):
+def get_recipients(name, interview_round, for_feedback=0):
 	interview = frappe.get_doc("Interview", name)
+	interviewers = get_applicable_interviewers(interview_round)
 
 	if for_feedback:
-		recipients = [d.interviewer for d in interview.interview_details if not d.interview_feedback]
+		feedback_given_interviewers = frappe.get_all(
+			"Interview Feedback", filters={"interview": name}, pluck="interviewer"
+		)
+		recipients = [d for d in interviewers if d not in feedback_given_interviewers]
 	else:
-		recipients = [d.interviewer for d in interview.interview_details]
+		recipients = interviewers
 		recipients.append(frappe.db.get_value("Job Applicant", interview.job_applicant, "email_id"))
 
 	return recipients
-
-
-@frappe.whitelist()
-def get_interviewers(interview_round):
-	return frappe.get_all(
-		"Interviewer", filters={"parent": interview_round}, fields=["user as interviewer"]
-	)
 
 
 def send_interview_reminder():
@@ -219,7 +168,7 @@ def send_interview_reminder():
 		doc = frappe.get_doc("Interview", d.name)
 		context = doc.as_dict()
 		message = frappe.render_template(interview_template.response, context)
-		recipients = get_recipients(doc.name)
+		recipients = get_recipients(doc.name, doc.interview_round)
 
 		frappe.sendmail(
 			recipients=recipients,
@@ -255,10 +204,11 @@ def send_daily_feedback_reminder():
 			"scheduled_on": ["<=", getdate()],
 			"to_time": ["<=", nowtime()],
 		},
+		fields=["name", "interview_round"],
 	)
 
 	for entry in interviews:
-		recipients = get_recipients(entry.name, for_feedback=1)
+		recipients = get_recipients(entry.name, entry.interview_round, for_feedback=1)
 
 		doc = frappe.get_doc("Interview", entry.name)
 		context = doc.as_dict()
