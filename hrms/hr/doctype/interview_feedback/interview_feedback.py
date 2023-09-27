@@ -5,8 +5,9 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.query_builder.functions import Count, Sum
 from frappe.utils import flt, get_link_to_form, getdate
-from frappe.query_builder.functions import Sum, Count
+
 
 class InterviewFeedback(Document):
 	def validate(self):
@@ -70,13 +71,17 @@ class InterviewFeedback(Document):
 		query = (
 			frappe.qb.from_(interview_feedback)
 			.where((interview_feedback.interview == self.interview) & (interview_feedback.docstatus == 1))
-			.select((Sum(interview_feedback.average_rating) / Count(interview_feedback.average_rating)).as_("average"))
+			.select(
+				(Sum(interview_feedback.average_rating) / Count(interview_feedback.average_rating)).as_(
+					"average"
+				)
+			)
 		)
 		data = query.run(as_dict=True)
 		average = data[0].average
 		if average:
-			frappe.db.set_value('Interview', self.interview, 'average_rating', flt(average, 3))
-			
+			frappe.db.set_value("Interview", self.interview, "average_rating", flt(average, 3))
+
 
 @frappe.whitelist()
 def get_applicable_interviewers(interview_round):
