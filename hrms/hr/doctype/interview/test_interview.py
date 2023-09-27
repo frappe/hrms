@@ -115,15 +115,20 @@ def create_interview_and_dependencies(
 	designation=None,
 	status=None,
 	save=True,
+	average_rating=1,
 ):
 	if designation:
 		designation = create_designation(designation_name="_Test_Sales_manager").name
 
-	interviewer_1 = create_user("test_interviewer1@example.com", "Interviewer")
-	interviewer_2 = create_user("test_interviewer2@example.com", "Interviewer")
+	create_user("test_interviewer1@example.com", "Interviewer")
+	create_user("test_interviewer2@example.com", "Interviewer")
 
 	interview_round = create_interview_round(
-		"Technical Round", ["Python", "JS"], designation=designation, save=True
+		"Technical Round",
+		["Python", "JS"],
+		["test_interviewer1@example.com", "test_interviewer2@example.com"],
+		designation,
+		True,
 	)
 
 	interview = frappe.new_doc("Interview")
@@ -132,9 +137,7 @@ def create_interview_and_dependencies(
 	interview.scheduled_on = scheduled_on or getdate()
 	interview.from_time = from_time or nowtime()
 	interview.to_time = to_time or nowtime()
-
-	interview.append("interview_details", {"interviewer": interviewer_1.name})
-	interview.append("interview_details", {"interviewer": interviewer_2.name})
+	interview.average_rating = average_rating
 
 	if status:
 		interview.status = status
@@ -159,7 +162,7 @@ def create_interview_round(name, skill_set, interviewers=[], designation=None, s
 		interview_round.append("expected_skill_set", {"skill": skill})
 
 	for interviewer in interviewers:
-		interview_round.append("interviewer", {"user": interviewer})
+		interview_round.append("interviewers", {"user": interviewer})
 
 	if save:
 		interview_round.save()
