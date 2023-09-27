@@ -7,7 +7,12 @@ import datetime
 import frappe
 from frappe import _
 from frappe.model.document import Document
+<<<<<<< HEAD
 from frappe.utils import cint, cstr, flt, get_datetime, get_link_to_form, getdate, nowtime
+=======
+from frappe.query_builder.functions import Avg
+from frappe.utils import cstr, flt, get_datetime, get_link_to_form, getdate, nowtime
+>>>>>>> 4b5d6b2906 (refactor: better querying)
 
 from hrms.hr.doctype.interview_feedback.interview_feedback import get_applicable_interviewers
 
@@ -60,76 +65,6 @@ class Interview(Document):
 		else:
 			self.designation = applicant_designation
 
-<<<<<<< HEAD
-	def validate_overlap(self):
-		interviewers = [entry.interviewer for entry in self.interview_details] or [""]
-
-		overlaps = frappe.db.sql(
-			"""
-			SELECT interview.name
-			FROM `tabInterview` as interview
-			INNER JOIN `tabInterview Detail` as detail
-			WHERE
-				interview.scheduled_on = %s and interview.name != %s and interview.docstatus != 2
-				and (interview.job_applicant = %s or detail.interviewer IN %s) and
-				((from_time < %s and to_time > %s) or
-				(from_time > %s and to_time < %s) or
-				(from_time = %s))
-			""",
-			(
-				self.scheduled_on,
-				self.name,
-				self.job_applicant,
-				interviewers,
-				self.from_time,
-				self.to_time,
-				self.from_time,
-				self.to_time,
-				self.from_time,
-			),
-		)
-
-		if overlaps:
-			overlapping_details = _("Interview overlaps with {0}").format(
-				get_link_to_form("Interview", overlaps[0][0])
-			)
-			frappe.throw(overlapping_details, title=_("Overlap"))
-
-	def set_average_rating(self):
-		total_rating = 0
-		for entry in self.interview_details:
-			if entry.average_rating:
-				total_rating += entry.average_rating
-
-		self.average_rating = flt(
-			total_rating / len(self.interview_details) if len(self.interview_details) else 0
-		)
-
-	def show_job_applicant_update_dialog(self):
-		job_applicant_status = self.get_job_applicant_status()
-		if not job_applicant_status:
-			return
-
-		job_application_name = frappe.db.get_value("Job Applicant", self.job_applicant, "applicant_name")
-
-		frappe.msgprint(
-			_("Do you want to update the Job Applicant {0} as {1} based on this interview result?").format(
-				frappe.bold(job_application_name), frappe.bold(job_applicant_status)
-			),
-			title=_("Update Job Applicant"),
-			primary_action={
-				"label": _("Mark as {0}").format(job_applicant_status),
-				"server_action": "hrms.hr.doctype.interview.interview.update_job_applicant_status",
-				"args": {"job_applicant": self.job_applicant, "status": job_applicant_status},
-			},
-		)
-
-	def get_job_applicant_status(self) -> str | None:
-		status_map = {"Cleared": "Accepted", "Rejected": "Rejected"}
-		return status_map.get(self.status, None)
-
-=======
->>>>>>> b793e93b56 (refactor: clean up interview_details)
 	@frappe.whitelist()
 	def reschedule_interview(self, scheduled_on, from_time, to_time):
 		original_date = self.scheduled_on
@@ -166,7 +101,6 @@ class Interview(Document):
 	@frappe.whitelist()
 	def get_feedback(self):
 		interview_feedback = frappe.qb.DocType("Interview Feedback")
-		skill_assessment = frappe.qb.DocType("Skill Assessment")
 		employee = frappe.qb.DocType("Employee")
 		query = (
 			frappe.qb.select(
@@ -174,17 +108,31 @@ class Interview(Document):
 				interview_feedback.modified,
 				interview_feedback.interviewer,
 				interview_feedback.feedback,
+				interview_feedback.average_rating,
 				employee.employee_name,
 				employee.designation,
-				skill_assessment.skill,
-				skill_assessment.rating,
 			)
 			.from_(interview_feedback)
 			.where((interview_feedback.interview == self.name) & (interview_feedback.docstatus == 1))
 			.join(employee)
 			.on(interview_feedback.interviewer == employee.user_id)
-			.join(skill_assessment)
-			.on(interview_feedback.name == skill_assessment.parent)
+		)
+		return query.run(as_dict=True)
+
+	@frappe.whitelist()
+	def get_skills_average_rating(self):
+		skill_assessment = frappe.qb.DocType("Skill Assessment")
+		interview_feedback = frappe.qb.DocType("Interview Feedback")
+		query = (
+			frappe.qb.select(
+				skill_assessment.skill,
+				Avg(skill_assessment.rating).as_("rating"),
+			)
+			.from_(skill_assessment)
+			.join(interview_feedback)
+			.on(skill_assessment.parent == interview_feedback.name)
+			.where((interview_feedback.interview == self.name) & (interview_feedback.docstatus == 1))
+			.groupby(skill_assessment.skill)
 		)
 		return query.run(as_dict=True)
 

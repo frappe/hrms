@@ -8,6 +8,7 @@ frappe.ui.form.on("Interview", {
 
 	refresh: async function (frm) {
 		if (!frm.doc.__islocal) {
+			frm.trigger("load_skills_average_rating");
 			frm.trigger("load_feedback");
 		}
 		if (frm.doc.docstatus != 2 && !frm.doc.__islocal) {
@@ -259,6 +260,17 @@ frappe.ui.form.on("Interview", {
 		});
 	},
 
+	load_skills_average_rating(frm) {
+		frm
+			.call({
+				method: "get_skills_average_rating",
+				doc: frm.doc,
+			})
+			.then((r) => {
+				frm.skills_average_rating = r.message;
+			});
+	},
+
 	load_feedback(frm) {
 		frm
 			.call({
@@ -266,8 +278,8 @@ frappe.ui.form.on("Interview", {
 				doc: frm.doc,
 			})
 			.then((r) => {
-				frm.events.format_feedback(frm, r.message);
-				frm.events.calculate_average_rating_and_reviews_per_rating(frm);
+				frm.feedback = r.message;
+				frm.events.calculate_reviews_per_rating(frm);
 				frm.events.render_feedback(frm);
 			});
 	},
@@ -277,7 +289,7 @@ frappe.ui.form.on("Interview", {
 			const wrapper = $(frm.fields_dict.feedback_html.wrapper);
 			const feedback_html = frappe.render_template("interview_feedback", {
 				feedbacks: frm.feedback,
-				average_rating: frm.average_rating,
+				average_rating: frm.doc.average_rating * 5,
 				reviews_per_rating: frm.reviews_per_rating,
 				skills_average_rating: frm.skills_average_rating,
 			});
@@ -286,64 +298,13 @@ frappe.ui.form.on("Interview", {
 		});
 	},
 
-	format_feedback(frm, records) {
-		const feedback = {};
-		let user_sum_of_ratings = 0;
-		const skills = {};
-
-		for (i of records) {
-			if (!(i.interviewer in feedback)) {
-				user_sum_of_ratings = 0;
-				feedback[i.interviewer] = {
-					name: i.name,
-					modified: i.modified,
-					employee_name: i.employee_name,
-					designation: i.designation,
-					feedback: i.feedback,
-					interviewer: i.interviewer,
-					skills: {},
-					average_rating: 0,
-				};
-			}
-			feedback[i.interviewer]["skills"][i.skill] = i.rating * 5;
-			user_sum_of_ratings += i.rating * 5;
-			feedback[i.interviewer]["average_rating"] =
-				Math.round(
-					(user_sum_of_ratings /
-						Object.keys(feedback[i.interviewer]["skills"]).length) *
-						100
-				) / 100;
-
-			if (!(i.skill in skills)) {
-				skills[i.skill] = {
-					no_of_ratings: 0,
-					sum_of_ratings: 0,
-				};
-			}
-
-			skills[i.skill]["no_of_ratings"]++;
-			skills[i.skill]["sum_of_ratings"] += i.rating * 5;
-		}
-		frm.feedback = Object.values(feedback);
-		frm.skills_average_rating = Object.keys(skills).map((x) => {
-			return {
-				skill: x,
-				average_rating: skills[x].sum_of_ratings / skills[x].no_of_ratings,
-			};
-		});
-	},
-
-	calculate_average_rating_and_reviews_per_rating(frm) {
-		let sum_of_all_ratings = 0;
+	calculate_reviews_per_rating(frm) {
 		const reviews_per_rating = [0, 0, 0, 0, 0];
 		frm.feedback.forEach((x) => {
-			sum_of_all_ratings += x.average_rating;
-			reviews_per_rating[Math.floor(x.average_rating - 1)] += 1;
+			reviews_per_rating[Math.floor(x.average_rating * 5 - 1)] += 1;
 		});
-
-		frm.average_rating = (sum_of_all_ratings / frm.feedback.length).toFixed(2);
 		frm.reviews_per_rating = reviews_per_rating.map(
-			(x) => (x * 100) / frm.feedback.length
+			(x) => Math.round((x * 1000) / frm.feedback.length) / 10
 		);
 	},
 });

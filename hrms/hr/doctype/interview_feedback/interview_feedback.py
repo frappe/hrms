@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.query_builder.functions import Count, Sum
+from frappe.query_builder.functions import Avg
 from frappe.utils import flt, get_link_to_form, getdate
 
 
@@ -71,16 +71,12 @@ class InterviewFeedback(Document):
 		query = (
 			frappe.qb.from_(interview_feedback)
 			.where((interview_feedback.interview == self.interview) & (interview_feedback.docstatus == 1))
-			.select(
-				(Sum(interview_feedback.average_rating) / Count(interview_feedback.average_rating)).as_(
-					"average"
-				)
-			)
+			.select(Avg(interview_feedback.average_rating).as_("average"))
 		)
 		data = query.run(as_dict=True)
-		average = data[0].average
-		if average:
-			frappe.db.set_value("Interview", self.interview, "average_rating", flt(average, 3))
+		average_rating = data[0].average
+		if average_rating:
+			frappe.db.set_value("Interview", self.interview, "average_rating", average_rating)
 
 
 @frappe.whitelist()
