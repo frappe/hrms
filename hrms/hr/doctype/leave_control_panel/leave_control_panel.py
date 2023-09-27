@@ -7,6 +7,8 @@ from frappe import _, msgprint
 from frappe.model.document import Document
 from frappe.utils import cint, comma_and, flt
 
+from erpnext import get_default_company
+
 
 class LeaveControlPanel(Document):
 	def validate_fields(self, employees):
@@ -41,14 +43,19 @@ class LeaveControlPanel(Document):
 	def create_leave_allocations(self, employees):
 		leave_allocated_for = []
 		from_date, to_date = self.get_from_to_date()
+
 		for d in employees:
 			try:
+				employee_name, date_of_joining = frappe.db.get_value(
+					"Employee", d, ["employee_name", "date_of_joining"]
+				)
+
 				la = frappe.new_doc("Leave Allocation")
 				la.set("__islocal", 1)
 				la.employee = d
-				la.employee_name = frappe.get_value("Employee", d, "employee_name")
+				la.employee_name = employee_name
 				la.leave_type = self.leave_type
-				la.from_date = from_date if from_date else frappe.get_value("Employee", d, "date_of_joining")
+				la.from_date = from_date or date_of_joining
 				la.to_date = to_date
 				la.carry_forward = cint(self.carry_forward)
 				la.new_leaves_allocated = flt(self.no_of_days)
@@ -57,6 +64,7 @@ class LeaveControlPanel(Document):
 				leave_allocated_for.append(d)
 			except Exception:
 				pass
+
 		if leave_allocated_for:
 			msgprint(_("Leaves Allocated Successfully for {0}").format(comma_and(leave_allocated_for)))
 
@@ -74,7 +82,7 @@ class LeaveControlPanel(Document):
 			assignment.assignment_based_on = assignment_based_on
 			assignment.leave_policy = self.leave_policy
 			assignment.effective_from = (
-				from_date if from_date else frappe.get_value("Employee", d, "date_of_joining")
+				from_date if from_date else frappe.db.get_value("Employee", d, "date_of_joining")
 			)
 			assignment.effective_to = to_date
 			assignment.leave_period = self.leave_period or None
@@ -94,7 +102,7 @@ class LeaveControlPanel(Document):
 
 	def get_from_to_date(self):
 		if self.dates_based_on == "Leave Period" and self.leave_period:
-			return frappe.get_value("Leave Period", self.leave_period, ["from_date", "to_date"])
+			return frappe.db.get_value("Leave Period", self.leave_period, ["from_date", "to_date"])
 		elif self.dates_based_on == "Joining Date":
 			return None, self.to_date
 		else:
@@ -130,6 +138,18 @@ class LeaveControlPanel(Document):
 					if not query.run():
 						filtered_employees.append(d)
 				return filtered_employees
+
+	@frappe.whitelist()
+	def get_latest_leave_period(self):
+		return frappe.db.get_value(
+			"Leave Period",
+			{
+				"is_active": 1,
+				"company": self.company or get_default_company(),
+			},
+			"name",
+			order_by="from_date desc",
+		)
 
 	def get_filters(self):
 		filter_fields = [

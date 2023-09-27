@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Leave Control Panel", {
 	setup: function(frm) {
-		frm.trigger("reset_leave_details");
+		frm.trigger("set_leave_details");
 	},
 
 	refresh: function (frm) {
@@ -73,17 +73,20 @@ frappe.ui.form.on("Leave Control Panel", {
 		frm.trigger("load_employees");
 	},
 
-	reset_leave_details(frm) {
-		frm.set_value({
-			dates_based_on: "Leave Period",
-			from_date: frappe.datetime.get_today(),
-			to_date: null,
-			leave_period: null,
-			carry_forward: 1,
-			allocate_based_on_leave_policy: 1,
-			leave_type: null,
-			no_of_days: 0,
-			leave_policy: null,
+	set_leave_details(frm) {
+		frm.call("get_latest_leave_period").then((r) => {
+			frm.set_value({
+				dates_based_on: "Leave Period",
+				from_date: frappe.datetime.get_today(),
+				to_date: null,
+				leave_period: r.message,
+				carry_forward: 1,
+				allocate_based_on_leave_policy: 1,
+				leave_type: null,
+				no_of_days: 0,
+				leave_policy: null,
+				company: frappe.defaults.get_default("company"),
+			});
 		});
 	},
 

@@ -32,7 +32,8 @@
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
-   "options": "Company"
+   "options": "Company",
+   "remember_last_selected_value": 1
   },
   {
    "fieldname": "employment_type",
@@ -74,6 +75,7 @@
    "width": "50%"
   },
   {
+   "default": "Today",
    "depends_on": "eval:doc.dates_based_on == 'Custom Range'",
    "fieldname": "from_date",
    "fieldtype": "Date",
@@ -170,7 +172,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-09-26 14:40:13.981686",
+ "modified": "2023-09-27 11:59:58.940418",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Control Panel",
