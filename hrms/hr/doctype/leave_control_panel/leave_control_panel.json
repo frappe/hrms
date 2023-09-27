@@ -76,18 +76,19 @@
   },
   {
    "default": "Today",
-   "depends_on": "eval:doc.dates_based_on == 'Custom Range'",
+   "depends_on": "eval:doc.dates_based_on != 'Joining Date'",
    "fieldname": "from_date",
    "fieldtype": "Date",
    "label": "From Date",
-   "mandatory_depends_on": "eval:doc.dates_based_on == 'Custom Range'"
+   "mandatory_depends_on": "eval:doc.dates_based_on == 'Custom Range'",
+   "read_only_depends_on": "eval:doc.dates_based_on == 'Leave Period'"
   },
   {
-   "depends_on": "eval:doc.dates_based_on != 'Leave Period'",
    "fieldname": "to_date",
    "fieldtype": "Date",
    "label": "To Date",
-   "mandatory_depends_on": "eval:doc.dates_based_on != 'Leave Period'"
+   "mandatory_depends_on": "eval:doc.dates_based_on != 'Leave Period'",
+   "read_only_depends_on": "eval:doc.dates_based_on == 'Leave Period'"
   },
   {
    "depends_on": "eval:doc.allocate_based_on_leave_policy ",
@@ -172,7 +173,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-09-27 11:59:58.940418",
+ "modified": "2023-09-27 13:21:37.070369",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Control Panel",

@@ -46,6 +46,7 @@ frappe.ui.form.on("Leave Control Panel", {
 	},
 
 	dates_based_on(frm) {
+		frm.trigger("reset_leave_details");
 		frm.trigger("load_employees");
 	},
 
@@ -71,6 +72,13 @@ frappe.ui.form.on("Leave Control Panel", {
 
 	leave_policy(frm) {
 		frm.trigger("load_employees");
+	},
+
+	reset_leave_details(frm) {
+		if (frm.doc.dates_based_on === "Leave Period") {
+			frm.add_fetch("leave_period", "from_date", "from_date");
+			frm.add_fetch("leave_period", "to_date", "to_date");
+		}
 	},
 
 	set_leave_details(frm) {

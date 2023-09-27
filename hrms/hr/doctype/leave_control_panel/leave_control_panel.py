@@ -44,24 +44,19 @@ class LeaveControlPanel(Document):
 		leave_allocated_for = []
 		from_date, to_date = self.get_from_to_date()
 
-		for d in employees:
+		for employee in employees:
 			try:
-				employee_name, date_of_joining = frappe.db.get_value(
-					"Employee", d, ["employee_name", "date_of_joining"]
+				allocation = frappe.new_doc("Leave Allocation")
+				allocation.employee = employee
+				allocation.leave_type = self.leave_type
+				allocation.from_date = from_date or frappe.db.get_value(
+					"Employee", employee, "date_of_joining"
 				)
-
-				la = frappe.new_doc("Leave Allocation")
-				la.set("__islocal", 1)
-				la.employee = d
-				la.employee_name = employee_name
-				la.leave_type = self.leave_type
-				la.from_date = from_date or date_of_joining
-				la.to_date = to_date
-				la.carry_forward = cint(self.carry_forward)
-				la.new_leaves_allocated = flt(self.no_of_days)
-				la.docstatus = 1
-				la.save()
-				leave_allocated_for.append(d)
+				allocation.to_date = to_date
+				allocation.carry_forward = cint(self.carry_forward)
+				allocation.new_leaves_allocated = flt(self.no_of_days)
+				allocation.submit()
+				leave_allocated_for.append(employee)
 			except Exception:
 				pass
 
@@ -76,6 +71,7 @@ class LeaveControlPanel(Document):
 		failed = []
 		from_date, to_date = self.get_from_to_date()
 		assignment_based_on = None if self.dates_based_on == "Custom Range" else self.dates_based_on
+
 		for d in employees:
 			assignment = frappe.new_doc("Leave Policy Assignment")
 			assignment.employee = d
@@ -101,9 +97,7 @@ class LeaveControlPanel(Document):
 			show_assignment_submission_status(failed)
 
 	def get_from_to_date(self):
-		if self.dates_based_on == "Leave Period" and self.leave_period:
-			return frappe.db.get_value("Leave Period", self.leave_period, ["from_date", "to_date"])
-		elif self.dates_based_on == "Joining Date":
+		if self.dates_based_on == "Joining Date":
 			return None, self.to_date
 		else:
 			return self.from_date, self.to_date
@@ -161,6 +155,7 @@ class LeaveControlPanel(Document):
 			"employee_grade",
 		]
 		filters = {"status": "Active"}
+
 		for d in filter_fields:
 			if self.get(d):
 				if d == "employee_grade":
@@ -170,23 +165,23 @@ class LeaveControlPanel(Document):
 		return filters
 
 	def get_query(self, from_date, to_date, employee):
-		la = frappe.qb.DocType("Leave Allocation")
 		if self.dates_based_on == "Joining Date":
 			from_date = employee.date_of_joining
 
+		Allocation = frappe.qb.DocType("Leave Allocation")
 		return (
-			frappe.qb.from_(la)
+			frappe.qb.from_(Allocation)
 			.select(True)
 			.where(
-				(la.docstatus == 1)
-				& (la.employee == employee.employee)
+				(Allocation.docstatus == 1)
+				& (Allocation.employee == employee.employee)
 				& (
-					(la.from_date[from_date:to_date] | la.to_date[from_date:to_date])
+					(Allocation.from_date[from_date:to_date] | Allocation.to_date[from_date:to_date])
 					| (
-						(la.from_date <= from_date)
-						& (la.from_date <= to_date)
-						& (la.to_date >= from_date)
-						& (la.to_date >= to_date)
+						(Allocation.from_date <= from_date)
+						& (Allocation.from_date <= to_date)
+						& (Allocation.to_date >= from_date)
+						& (Allocation.to_date >= to_date)
 					)
 				)
 			)
