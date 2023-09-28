@@ -7,10 +7,8 @@ frappe.ui.form.on("Interview", {
 	},
 
 	refresh: async function (frm) {
-		if (!frm.doc.__islocal) {
-			frm.trigger("load_skills_average_rating");
-			frm.trigger("load_feedback");
-		}
+		frm.trigger("load_skills_average_rating");
+		frm.trigger("load_feedback");
 		if (frm.doc.docstatus != 2 && !frm.doc.__islocal) {
 			if (frm.doc.status === "Pending") {
 				frm.add_custom_button(__("Reschedule Interview"), function () {
