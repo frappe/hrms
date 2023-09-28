@@ -40,25 +40,27 @@ class LeavePolicyAssignment(Document):
 			self.effective_from = frappe.db.get_value("Employee", self.employee, "date_of_joining")
 
 	def validate_policy_assignment_overlap(self):
-		leave_policy_assignments = frappe.get_all(
+		leave_policy_assignment = frappe.db.get_value(
 			"Leave Policy Assignment",
-			filters={
+			{
 				"employee": self.employee,
 				"name": ("!=", self.name),
 				"docstatus": 1,
 				"effective_to": (">=", self.effective_from),
 				"effective_from": ("<=", self.effective_to),
 			},
+			"leave_policy",
 		)
 
-		if len(leave_policy_assignments):
+		if leave_policy_assignment:
 			frappe.throw(
 				_("Leave Policy: {0} already assigned for Employee {1} for period {2} to {3}").format(
-					bold(self.leave_policy),
+					bold(leave_policy_assignment),
 					bold(self.employee),
 					bold(formatdate(self.effective_from)),
 					bold(formatdate(self.effective_to)),
-				)
+				),
+				title=_("Leave Policy Assignment Overlap"),
 			)
 
 	def warn_about_carry_forwarding(self):

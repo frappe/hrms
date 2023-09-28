@@ -36,16 +36,18 @@ class LeaveControlPanel(Document):
 	def allocate_leave(self, employees):
 		self.validate_fields(employees)
 		if self.allocate_based_on_leave_policy:
-			self.create_leave_policy_assignments(employees)
-		else:
-			self.create_leave_allocations(employees)
+			return self.create_leave_policy_assignments(employees)
+		return self.create_leave_allocations(employees)
 
-	def create_leave_allocations(self, employees):
-		leave_allocated_for = []
+	def create_leave_allocations(self, employees) -> dict:
 		from_date, to_date = self.get_from_to_date()
+		failure = []
+		success = []
+		savepoint = "before_allocation_submission"
 
 		for employee in employees:
 			try:
+				frappe.db.savepoint(savepoint)
 				allocation = frappe.new_doc("Leave Allocation")
 				allocation.employee = employee
 				allocation.leave_type = self.leave_type
@@ -55,52 +57,91 @@ class LeaveControlPanel(Document):
 				allocation.to_date = to_date
 				allocation.carry_forward = cint(self.carry_forward)
 				allocation.new_leaves_allocated = flt(self.no_of_days)
+				allocation.insert()
 				allocation.submit()
-				leave_allocated_for.append(employee)
-			except Exception:
-				pass
+				success.append(employee)
+			except Exception as e:
+				frappe.db.rollback(save_point=savepoint)
+				allocation.log_error(f"Leave Allocation failed for employee {employee}")
+				failure.append(employee)
 
-		if leave_allocated_for:
-			msgprint(_("Leaves Allocated Successfully for {0}").format(comma_and(leave_allocated_for)))
+		self.notify_status("Leave Allocation", failure, success)
+		return {"failed": failure, "success": success}
 
-	def create_leave_policy_assignments(self, employees):
-		from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
-			show_assignment_submission_status,
-		)
-
-		failed = []
+	def create_leave_policy_assignments(self, employees) -> dict:
 		from_date, to_date = self.get_from_to_date()
 		assignment_based_on = None if self.dates_based_on == "Custom Range" else self.dates_based_on
+		failure = []
+		success = []
+		savepoint = "before_assignment_submission"
 
-		for d in employees:
-			assignment = frappe.new_doc("Leave Policy Assignment")
-			assignment.employee = d
-			assignment.assignment_based_on = assignment_based_on
-			assignment.leave_policy = self.leave_policy
-			assignment.effective_from = (
-				from_date if from_date else frappe.db.get_value("Employee", d, "date_of_joining")
-			)
-			assignment.effective_to = to_date
-			assignment.leave_period = self.leave_period or None
-			assignment.carry_forward = self.carry_forward
-			assignment.save()
-
-			savepoint = "before_assignment_submission"
+		for employee in employees:
 			try:
 				frappe.db.savepoint(savepoint)
+				assignment = frappe.new_doc("Leave Policy Assignment")
+				assignment.employee = employee
+				assignment.assignment_based_on = assignment_based_on
+				assignment.leave_policy = self.leave_policy
+				assignment.effective_from = (
+					from_date if from_date else frappe.db.get_value("Employee", employee, "date_of_joining")
+				)
+				assignment.effective_to = to_date
+				assignment.leave_period = self.leave_period or None
+				assignment.carry_forward = self.carry_forward
+				assignment.save()
 				assignment.submit()
+				success.append(employee)
 			except Exception:
 				frappe.db.rollback(save_point=savepoint)
-				assignment.log_error("Leave Policy Assignment submission failed")
-				failed.append(assignment.name)
-		if failed:
-			show_assignment_submission_status(failed)
+				assignment.log_error(f"Leave Policy Assignment failed for employee {employee}")
+				failure.append(employee)
+
+		self.notify_status("Leave Policy Assignment", failure, success)
+		return {"failed": failure, "success": success}
 
 	def get_from_to_date(self):
 		if self.dates_based_on == "Joining Date":
 			return None, self.to_date
 		else:
 			return self.from_date, self.to_date
+
+	def notify_status(self, doctype: str, failure: list, success: list):
+		frappe.clear_messages()
+
+		msg = ""
+		title = ""
+		if failure:
+			msg += _("Failed to create/submit {0} for employees:").format(doctype)
+			msg += " " + comma_and(failure, False) + "<hr>"
+			msg += (
+				_("Check {0} for more details")
+				.format("<a href='/app/List/Error Log?reference_doctype={0}'>{1}</a>")
+				.format(doctype, _("Error Log"))
+			)
+
+			if success:
+				title = _("Partial Success")
+				msg += "<hr>"
+			else:
+				title = _("{0} Creation Failed").format(doctype)
+		else:
+			title = _("Successfully created {0}").format(doctype)
+
+		if success:
+			msg += _("Successfully created {0} records for:").format(doctype)
+			msg += " " + comma_and(success, False)
+
+		if failure:
+			indicator = "orange" if success else "red"
+		else:
+			indicator = "green"
+
+		msgprint(
+			msg,
+			indicator=indicator,
+			title=title,
+			is_minimizable=True,
+		)
 
 	@frappe.whitelist()
 	def get_employees(self):

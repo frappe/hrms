@@ -209,13 +209,9 @@ frappe.ui.form.on("Leave Control Panel", {
 				freeze_message: __("Allocating Leave"),
 			})
 			.then((r) => {
-				if (!r.exc) {
-					frappe.show_alert({
-						message: __("Leave allocated successfully"),
-						indicator: "green",
-					});
-					frm.refresh();
-				}
+				// don't refresh on complete failure
+				if (r.message.failed && !r.message.success) return
+				frm.refresh();
 			});
 	},
 });
