@@ -287,7 +287,7 @@ frappe.ui.form.on("Interview", {
 			const wrapper = $(frm.fields_dict.feedback_html.wrapper);
 			const feedback_html = frappe.render_template("interview_feedback", {
 				feedbacks: frm.feedback,
-				average_rating: frm.doc.average_rating * 5,
+				average_rating: flt(frm.doc.average_rating * 5, 2),
 				reviews_per_rating: frm.reviews_per_rating,
 				skills_average_rating: frm.skills_average_rating,
 			});
@@ -301,8 +301,8 @@ frappe.ui.form.on("Interview", {
 		frm.feedback.forEach((x) => {
 			reviews_per_rating[Math.floor(x.average_rating * 5 - 1)] += 1;
 		});
-		frm.reviews_per_rating = reviews_per_rating.map(
-			(x) => Math.round((x * 1000) / frm.feedback.length) / 10
+		frm.reviews_per_rating = reviews_per_rating.map((x) =>
+			flt((x * 100) / frm.feedback.length, 1)
 		);
 	},
 });

@@ -10,6 +10,6 @@
         <span class="progress-bar"
               style="border-color: {{ ['red', 'orange', 'gold', 'yellowgreen', 'mediumseagreen', 'green'][ Math.floor(rating) ] }}"></span>
     </span>
-    <div class="progress-value">{{ Math.round(rating*100) /100 }}</div>
+    <div class="progress-value">{{ flt(rating, 2) }}</div>
 </div>
 <h5 class="text-center" style="font-size: 16px">{{ skill }}</h5>
