@@ -16,8 +16,7 @@ frappe.ui.form.on("Interview", {
 					frm.refresh();
 				});
 			}
-			frm.disable_button = true;
-			await frm.trigger("enable_feedback_button_for_authorized_users");
+			await frm.trigger("enable_feedback_button_for_applicable_interviewers");
 			frappe.db.get_value(
 				"Interview Feedback",
 				{
@@ -243,7 +242,7 @@ frappe.ui.form.on("Interview", {
 		frm.set_value("resume_link", "");
 	},
 
-	enable_feedback_button_for_authorized_users(frm) {
+	enable_feedback_button_for_applicable_interviewers(frm) {
 		frappe.call({
 			method:
 				"hrms.hr.doctype.interview_feedback.interview_feedback.get_applicable_interviewers",
@@ -251,9 +250,7 @@ frappe.ui.form.on("Interview", {
 				interview_round: frm.doc.interview_round || "",
 			},
 			callback: function (r) {
-				if (r.message.includes(frappe.session.user)) {
-					frm.disable_button = false;
-				}
+				frm.disable_button = !r.message.includes(frappe.session.user);
 			},
 		});
 	},
