@@ -7,12 +7,8 @@ import datetime
 import frappe
 from frappe import _
 from frappe.model.document import Document
-<<<<<<< HEAD
-from frappe.utils import cint, cstr, flt, get_datetime, get_link_to_form, getdate, nowtime
-=======
 from frappe.query_builder.functions import Avg
-from frappe.utils import cstr, flt, get_datetime, get_link_to_form, getdate, nowtime
->>>>>>> 4b5d6b2906 (refactor: better querying)
+from frappe.utils import cstr, get_datetime, get_link_to_form, getdate, nowtime
 
 from hrms.hr.doctype.interview_feedback.interview_feedback import get_applicable_interviewers
 
