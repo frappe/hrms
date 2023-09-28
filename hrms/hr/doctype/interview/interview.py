@@ -3,6 +3,7 @@
 
 
 import datetime
+import json
 
 import frappe
 from frappe import _
@@ -24,9 +25,10 @@ class Interview(Document):
 	def on_submit(self):
 		if self.status not in ["Cleared", "Rejected"]:
 			frappe.throw(
-				_("Only Interviews with Cleared or Rejected status can be submitted."), title=_("Not Allowed")
+				_("Only Interviews with Cleared or Rejected status can be submitted."),
+				title=_("Not Allowed"),
 			)
-		self.update_job_applicant_status()
+		self.show_job_applicant_update_dialog()
 
 	def validate_duplicate_interview(self):
 		duplicate_interview = frappe.db.exists(
@@ -103,12 +105,21 @@ class Interview(Document):
 			total_rating / len(self.interview_details) if len(self.interview_details) else 0
 		)
 
-	def update_job_applicant_status(self):
-		status_map = {"Cleared": "Accepted", "Rejected": "Rejected"}
-		if self.status in status_map:
-			job_application = frappe.get_doc("Job Applicant", self.job_applicant)
-			job_application.set("status", status_map[self.status])
-			job_application.save()
+	def show_job_applicant_update_dialog(self):
+
+		job_application_name = frappe.get_value("Job Applicant", self.job_applicant, "applicant_name")
+
+		frappe.msgprint(
+			_("Do you want to update the Job Applicant {0} as {1} based on this interview result").format(
+				job_application_name, get_job_applicant_status(self.status)
+			),
+			title=_("Update Job Applicant"),
+			primary_action={
+				"label": _("Mark as {0}").format(get_job_applicant_status(self.status)),
+				"server_action": "hrms.hr.doctype.interview.interview.update_job_applicant_status",
+				"args": {"interview": self.name},
+			},
+		)
 
 	@frappe.whitelist()
 	def reschedule_interview(self, scheduled_on, from_time, to_time):
@@ -154,6 +165,47 @@ def get_recipients(name, for_feedback=0):
 		recipients.append(frappe.db.get_value("Job Applicant", interview.job_applicant, "email_id"))
 
 	return recipients
+
+
+@frappe.whitelist()
+def update_job_applicant_status(args):
+	try:
+		args = json.loads(args)
+		interview = args["interview"]
+
+		if not interview:
+			frappe.throw(_("Interview not provided"))
+
+		interview = frappe.get_doc("Interview", interview)
+		job_applicant_status = get_job_applicant_status(interview.status)
+
+		if not job_applicant_status:
+			frappe.throw(_("Invalid Job Applicant status."))
+
+		job_application = frappe.get_doc("Job Applicant", interview.job_applicant)
+		job_application.set("status", job_applicant_status)
+		job_application.save()
+
+		frappe.msgprint(
+			f"Updated the Job Applicant status to {job_applicant_status}",
+			alert=True,
+			indicator="green",
+		)
+
+	except Exception as e:
+		print(e)
+		frappe.msgprint(
+			"Unable to Update the Job Applicant status",
+			alert=True,
+			indicator="red",
+		)
+
+
+def get_job_applicant_status(status):
+	status_map = {"Cleared": "Accepted", "Rejected": "Rejected"}
+	if status in status_map:
+		return status_map[status]
+	return None
 
 
 @frappe.whitelist()
