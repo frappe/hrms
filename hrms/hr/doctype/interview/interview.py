@@ -172,30 +172,25 @@ def update_job_applicant_status(args):
 	try:
 		args = json.loads(args)
 		interview = args["interview"]
-
 		if not interview:
 			frappe.throw(_("Interview not provided"))
 
 		interview = frappe.get_doc("Interview", interview)
 		job_applicant_status = get_job_applicant_status(interview.status)
-
 		if not job_applicant_status:
 			frappe.throw(_("Invalid Job Applicant status."))
 
 		job_application = frappe.get_doc("Job Applicant", interview.job_applicant)
 		job_application.set("status", job_applicant_status)
 		job_application.save()
-
 		frappe.msgprint(
-			f"Updated the Job Applicant status to {job_applicant_status}",
+			_("Updated the Job Applicant status to {0}").format(job_applicant_status),
 			alert=True,
 			indicator="green",
 		)
-
 	except Exception as e:
-		print(e)
 		frappe.msgprint(
-			"Unable to Update the Job Applicant status",
+			_("Unable to Update the Job Applicant status"),
 			alert=True,
 			indicator="red",
 		)
