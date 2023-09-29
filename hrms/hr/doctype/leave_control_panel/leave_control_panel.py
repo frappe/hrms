@@ -144,13 +144,13 @@ class LeaveControlPanel(Document):
 		)
 
 	@frappe.whitelist()
-	def get_employees(self):
+	def get_employees(self, advanced_filters):
 		from_date, to_date = self.get_from_to_date()
 		if to_date and (from_date or self.dates_based_on == "Joining Date"):
 			la = frappe.qb.DocType("Leave Allocation")
 			all_employees = frappe.get_list(
 				"Employee",
-				filters=self.get_filters(),
+				filters=self.get_filters() + advanced_filters,
 				fields=["employee", "employee_name", "company", "department", "date_of_joining"],
 			)
 			filtered_employees = []
@@ -195,14 +195,14 @@ class LeaveControlPanel(Document):
 			"designation",
 			"employee_grade",
 		]
-		filters = {"status": "Active"}
+		filters = [["status", "=", "Active"]]
 
 		for d in filter_fields:
 			if self.get(d):
 				if d == "employee_grade":
-					filters["grade"] = self.get(d)
+					filters.append(["grade", "=", self.get(d)])
 				else:
-					filters[d] = self.get(d)
+					filters.append([d, "=", self.get(d)])
 		return filters
 
 	def get_query(self, from_date, to_date, employee):
@@ -227,13 +227,3 @@ class LeaveControlPanel(Document):
 				)
 			)
 		)
-
-	@frappe.whitelist()
-	def get_employee_fields(self):
-		employee_meta = frappe.get_meta("Employee")
-		return [
-			d.get("fieldname")
-			for d in employee_meta.fields
-			if d.get("fieldtype")
-			not in ["Section Break", "Attach Image", "Column Break", "Tab Break", "Button"]
-		]

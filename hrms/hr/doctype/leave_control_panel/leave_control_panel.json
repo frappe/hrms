@@ -25,7 +25,7 @@
   "designation",
   "employee_grade",
   "advanced_filters_section",
-  "advanced_filters_json",
+  "filter_list",
   "select_employees_section",
   "employees_html"
  ],
@@ -176,10 +176,9 @@
    "label": "Advanced Filters"
   },
   {
-   "fieldname": "advanced_filters_json",
-   "fieldtype": "Code",
-   "label": "Advanced Filters JSON",
-   "options": "JSON"
+   "fieldname": "filter_list",
+   "fieldtype": "HTML",
+   "label": "Filter List"
   }
  ],
  "hide_toolbar": 1,
@@ -187,7 +186,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-09-29 11:24:34.519009",
+ "modified": "2023-09-29 13:06:06.940985",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Control Panel",

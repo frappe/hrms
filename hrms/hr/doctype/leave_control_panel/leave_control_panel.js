@@ -2,8 +2,9 @@
 // License: GNU General Public License v3. See license.txt
 
 frappe.ui.form.on("Leave Control Panel", {
-	setup: function(frm) {
+	setup: function (frm) {
 		frm.trigger("set_leave_details");
+		frappe.model.with_doctype("Employee", () => set_field_options(frm));
 	},
 
 	refresh: function (frm) {
@@ -102,11 +103,15 @@ frappe.ui.form.on("Leave Control Panel", {
 		frm
 			.call({
 				method: "get_employees",
+				args: {
+					advanced_filters: frm.advanced_filters || [],
+				},
 				doc: frm.doc,
 			})
 			.then((r) => {
 				// section automatically collapses on applying a single filter
 				frm.set_df_property("filters_section", "collapsible", 0);
+				frm.set_df_property("advanced_filters_section", "collapsible", 0);
 
 				frm.employees = r.message;
 				if (frm.employees) {
@@ -210,8 +215,28 @@ frappe.ui.form.on("Leave Control Panel", {
 			})
 			.then((r) => {
 				// don't refresh on complete failure
-				if (r.message.failed && !r.message.success) return
+				if (r.message.failed && !r.message.success) return;
 				frm.refresh();
 			});
 	},
 });
+
+const set_field_options = (frm) => {
+	const filter_wrapper = frm.fields_dict.filter_list.$wrapper;
+	filter_wrapper.empty();
+	frm.filter_list = new frappe.ui.FilterGroup({
+		parent: filter_wrapper,
+		doctype: "Employee",
+		on_change: () => {
+			frm.advanced_filters = frm.filter_list
+				.get_filters()
+				.reduce((filters, item) => {
+					if (item[3]) {
+						filters.push(item.slice(1, 4));
+					}
+					return filters;
+				}, []);
+			frm.trigger("load_employees");
+		},
+	});
+};
