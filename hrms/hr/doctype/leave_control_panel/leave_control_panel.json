@@ -24,6 +24,8 @@
   "employment_type",
   "designation",
   "employee_grade",
+  "advanced_filters_section",
+  "advanced_filters_json",
   "select_employees_section",
   "employees_html"
  ],
@@ -138,7 +140,7 @@
    "collapsible": 1,
    "fieldname": "filters_section",
    "fieldtype": "Section Break",
-   "label": "Employee Filters"
+   "label": "Quick Filters"
   },
   {
    "fieldname": "employees_html",
@@ -166,6 +168,18 @@
    "fieldname": "allocate_based_on_leave_policy",
    "fieldtype": "Check",
    "label": "Allocate Based On Leave Policy"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "advanced_filters_section",
+   "fieldtype": "Section Break",
+   "label": "Advanced Filters"
+  },
+  {
+   "fieldname": "advanced_filters_json",
+   "fieldtype": "Code",
+   "label": "Advanced Filters JSON",
+   "options": "JSON"
   }
  ],
  "hide_toolbar": 1,
@@ -173,7 +187,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-09-27 13:21:37.070369",
+ "modified": "2023-09-29 11:24:34.519009",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Control Panel",

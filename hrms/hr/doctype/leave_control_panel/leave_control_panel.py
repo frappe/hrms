@@ -227,3 +227,13 @@ class LeaveControlPanel(Document):
 				)
 			)
 		)
+
+	@frappe.whitelist()
+	def get_employee_fields(self):
+		employee_meta = frappe.get_meta("Employee")
+		return [
+			d.get("fieldname")
+			for d in employee_meta.fields
+			if d.get("fieldtype")
+			not in ["Section Break", "Attach Image", "Column Break", "Tab Break", "Button"]
+		]
