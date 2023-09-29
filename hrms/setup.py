@@ -784,8 +784,6 @@ SALARY_SLIP_LOAN_FIELDS = {
 	"Loan Repayment": [
 		{
 			"default": "0",
-			"fetch_from": "against_loan.repay_from_salary",
-			"fetch_if_empty": 1,
 			"fieldname": "repay_from_salary",
 			"fieldtype": "Check",
 			"label": "Repay From Salary",
