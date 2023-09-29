@@ -62,7 +62,7 @@
    "fieldtype": "Percent",
    "in_list_view": 1,
    "label": "Progress",
-   "read_only_depends_on": "eval:doc.is_group || doc.status=='Closed';"
+   "read_only_depends_on": "eval:doc.is_group || doc.status=='Closed'"
   },
   {
    "default": "Pending",
@@ -213,7 +213,7 @@
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2023-09-18 12:21:50.530141",
+ "modified": "2023-09-29 12:38:53.405179",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Goal",
