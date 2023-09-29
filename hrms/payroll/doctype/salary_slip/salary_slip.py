@@ -628,12 +628,10 @@ class SalarySlip(TransactionBase):
 		lwp = 0
 		absent = 0
 
-		end_date = self.end_date
-		if self.relieving_date:
-			end_date = self.relieving_date
-
 		leave_type_map = self.get_leave_type_map()
-		attendance_details = self.get_employee_attendance(start_date=self.start_date, end_date=end_date)
+		attendance_details = self.get_employee_attendance(
+			start_date=self.start_date, end_date=self.actual_end_date
+		)
 
 		for d in attendance_details:
 			if (
