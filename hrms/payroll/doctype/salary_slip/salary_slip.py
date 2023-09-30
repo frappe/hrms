@@ -535,7 +535,7 @@ class SalarySlip(TransactionBase):
 		absent = 0
 
 		end_date = self.end_date
-		if relieving_date:
+		if relieving_date and getdate(self.start_date) <= relieving_date < getdate(self.end_date):
 			end_date = relieving_date
 
 		payroll_settings = frappe.get_cached_value(
