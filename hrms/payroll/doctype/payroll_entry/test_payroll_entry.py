@@ -752,7 +752,10 @@ def create_assignments_with_cost_centers(employee1, employee2):
 
 
 def setup_lending():
-	from lending.loan_management.doctype.loan.test_loan import create_loan_accounts, create_loan_product
+	from lending.loan_management.doctype.loan.test_loan import (
+		create_loan_accounts,
+		create_loan_product,
+	)
 
 	company = "_Test Company"
 	branch = "Test Employee Branch"
