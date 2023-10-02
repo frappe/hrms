@@ -98,7 +98,7 @@ frappe.ui.form.on('Employee Loan', {
                 },
                 callback: function (r) {
                     if (!r.exc && r.message) {
-                        frm.set_value("loan_type", r.message.loan_type);
+                        frm.set_value("loan_product", r.message.loan_product);
                         frm.set_value("loan_amount", r.message.loan_amount);
                         frm.set_value("repayment_method", r.message.repayment_method);
                         frm.set_value("monthly_repayment_amount", r.message.repayment_amount);

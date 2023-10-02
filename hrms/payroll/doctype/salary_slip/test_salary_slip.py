@@ -615,7 +615,7 @@ class TestSalarySlip(FrappeTestCase):
 		from lending.loan_management.doctype.loan.test_loan import (
 			create_loan,
 			create_loan_accounts,
-			create_loan_type,
+			create_loan_product,
 			make_loan_disbursement_entry,
 		)
 		from lending.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
@@ -628,7 +628,7 @@ class TestSalarySlip(FrappeTestCase):
 
 		create_loan_accounts()
 
-		create_loan_type(
+		create_loan_product(
 			"Car Loan",
 			500000,
 			8.4,
