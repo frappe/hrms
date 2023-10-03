@@ -499,9 +499,12 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertEqual(ss.total_working_days, no_of_days[0])
 		# deduct 1 day for absent on holiday
 		self.assertEqual(ss.payment_days, no_of_days[0] - 1)
+<<<<<<< HEAD
 		self.assertEqual(ss.earnings[0].amount, 48333.33)
 		self.assertEqual(ss.earnings[1].amount, 2900)
 		self.assertEqual(ss.gross_pay, 75400)
+=======
+>>>>>>> 2a7aa299 (test: remove assertion for amount in consider marked attendance on holidays test (#930))
 
 		# disable consider marked attendance on holidays
 		frappe.db.set_single_value("Payroll Settings", "consider_marked_attendance_on_holidays", 0)
