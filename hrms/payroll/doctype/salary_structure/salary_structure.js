@@ -107,7 +107,7 @@ frappe.ui.form.on('Salary Structure', {
 		if(frm.doc.docstatus === 1) {
 			frm.add_custom_button(__("Preview Salary Slip"), function() {
 				frm.trigger('preview_salary_slip');
-			});
+			},__('Actions'));
 		}
 
 		if(frm.doc.docstatus==1) {
@@ -116,10 +116,10 @@ frappe.ui.form.on('Salary Structure', {
 				doc.salary_structure = frm.doc.name;
 				doc.company = frm.doc.company;
 				frappe.set_route('Form', 'Salary Structure Assignment', doc.name);
-			});
+			},__('Actions'));
 			frm.add_custom_button(__("Assign to Employees"),function () {
 				frm.trigger('assign_to_employees')
-			})
+			},__('Actions'))
 		}
 
 		// set columns read-only
@@ -208,7 +208,7 @@ frappe.ui.form.on('Salary Structure', {
 							{
 								"label":__("Employee"),
 								"fieldname":"employee",
-								"fieldtype":"Select",
+								"fieldtype":"Autocomplete",
 								"reqd": true,
 								options: employees
 							}, {
