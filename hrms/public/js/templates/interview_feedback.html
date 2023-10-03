@@ -1,6 +1,6 @@
 <div class="feedback-section col-xs-12">
 	{% if feedbacks.length %}
-		<h4 class="my-4 mx-5">{{ __("Overall Average Rating") }}</h4>
+		<h4 class="my-4 mx-5" style="font-size: 18px">{{ __("Overall Average Rating") }}</h4>
 		<div class="feedback-summary-section my-5 d-flex">
 			<div class="rating-summary-numbers col-3">
 				<div class="feedback-count mb-2 text-secondary">{{ __("Average Rating") }}</div>
@@ -31,8 +31,7 @@
 									 aria-valuenow="{{ reviews_per_rating[i-1] }}"
 									 aria-valuemin="0"
 									 aria-valuemax="100"
-									 style="width: {{ reviews_per_rating[i-1] }}%;
-											background-color: {{ ['red', 'orange', 'gold', 'yellowgreen', 'mediumseagreen', 'green'][i] }}">
+									 style="width: {{ reviews_per_rating[i-1] }}%;">
 								</div>
 							</div>
 						</div>
@@ -42,7 +41,7 @@
 				</div>
 			</div>
 			<div class="m-5">
-				<h4 class="mb-4">{{ __("Feedback Summary") }}</h4>
+				<h4 class="mb-2" style="font-size: 18px">{{ __("Feedback Summary") }}</h4>
 				<p class="mb-5 text-secondary">{{ __("Average rating of demonstrated skills") }}</p>
 				<div class="row">
 					{% for(const d of skills_average_rating) { %}
@@ -58,7 +57,7 @@
 				<div class="feedback-history mb-3">
 					{% if feedbacks.length %}
 						{% for(const d of feedbacks) { %}
-							<div class="px-3 py-5 d-flex flex-row mt-3 border-top">
+							<div class="px-3 pt-4 d-flex flex-row mt-3 border-top">
 								<div class="reviewer-info mb-2 col-xs-3">
 									<div class="row">
 										<div class="col-xs-2">{{ frappe.avatar(d.interviewer, "avatar-medium") }}</div>
