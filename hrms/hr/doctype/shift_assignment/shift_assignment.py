@@ -12,6 +12,7 @@ from frappe.query_builder import Criterion
 from frappe.utils import add_days, cstr, get_link_to_form, get_time, getdate, now_datetime
 
 from hrms.hr.utils import validate_active_employee
+from hrms.utils import get_date_range
 
 
 class OverlappingShiftError(frappe.ValidationError):
@@ -346,11 +347,11 @@ def get_prev_or_next_shift(
 			date = for_timestamp + timedelta(days=direction * (i + 1))
 			shift_details = get_employee_shift(employee, date, consider_default_shift, None)
 			if shift_details:
-				break
+				return shift_details
 	else:
 		direction = "<" if next_shift_direction == "reverse" else ">"
 		sort_order = "desc" if next_shift_direction == "reverse" else "asc"
-		dates = frappe.db.get_all(
+		shift_dates = frappe.get_all(
 			"Shift Assignment",
 			["start_date", "end_date"],
 			{
@@ -364,18 +365,15 @@ def get_prev_or_next_shift(
 			order_by="start_date " + sort_order,
 		)
 
-		if dates:
-			for date in dates:
-				if date[1] and date[1] < for_timestamp.date():
-					continue
+		for date_range in shift_dates:
+			# midnight shifts will span more than a day
+			end_date = getdate(add_days(date_range[1], 1))
+			for dt in get_date_range(date_range[0], end_date):
 				shift_details = get_employee_shift(
-					employee,
-					datetime.combine(date[0], for_timestamp.time()),
-					consider_default_shift,
-					None,
+					employee, datetime.combine(dt, for_timestamp.time()), consider_default_shift, None
 				)
 				if shift_details:
-					break
+					return shift_details
 
 	return shift_details or {}
 
@@ -538,9 +536,8 @@ def get_shift_timings(shift_type: dict, for_timestamp: datetime) -> tuple:
 			end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + end_time
 			for_timestamp += timedelta(days=-1)
 			start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + start_time
-
 	else:
-		if get_time(shift_actual_start) > shift_actual_end and for_time < shift_actual_start:
+		if shift_actual_start > shift_actual_end and for_time < shift_actual_start:
 			# for_timestamp falls within the margin period in the second day (after midnight)
 			# so shift started and ended on the previous day
 			for_timestamp += timedelta(days=-1)
