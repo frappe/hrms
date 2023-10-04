@@ -480,52 +480,8 @@ def get_shift_details(shift_type_name: str, for_timestamp: datetime = None) -> D
 	if for_timestamp is None:
 		for_timestamp = now_datetime()
 
-	shift_type = frappe.get_cached_value(
-		"Shift Type",
-		shift_type_name,
-		[
-			"name",
-			"start_time",
-			"end_time",
-			"begin_check_in_before_shift_start_time",
-			"allow_check_out_after_shift_end_time",
-		],
-		as_dict=1,
-	)
-	shift_actual_start = shift_type.start_time - timedelta(
-		minutes=shift_type.begin_check_in_before_shift_start_time
-	)
-	shift_actual_end = shift_type.end_time + timedelta(
-		minutes=shift_type.allow_check_out_after_shift_end_time
-	)
-
-	if shift_type.start_time > shift_type.end_time:
-		# shift spans across 2 different days
-		if get_time(for_timestamp.time()) >= get_time(shift_actual_start):
-			# if for_timestamp is greater than start time, it's within the first day
-			start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + shift_type.start_time
-			for_timestamp += timedelta(days=1)
-			end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + shift_type.end_time
-
-		elif get_time(for_timestamp.time()) < get_time(shift_actual_start):
-			# if for_timestamp is less than start time, it's within the second day
-			end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + shift_type.end_time
-			for_timestamp += timedelta(days=-1)
-			start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + shift_type.start_time
-
-	else:
-		if get_time(shift_actual_start) > get_time(shift_actual_end) and get_time(
-			for_timestamp.time()
-		) < get_time(shift_actual_start):
-			# for_timestamp falls within the margin period in the second day (after midnight)
-			# so shift started and ended on the previous day
-			for_timestamp += timedelta(days=-1)
-			end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + shift_type.end_time
-			start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + shift_type.start_time
-		else:
-			# start and end timings fall on the same day
-			start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + shift_type.start_time
-			end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + shift_type.end_time
+	shift_type = get_shift_type(shift_type_name)
+	start_datetime, end_datetime = get_shift_timings(shift_type, for_timestamp)
 
 	actual_start = start_datetime - timedelta(
 		minutes=shift_type.begin_check_in_before_shift_start_time
@@ -541,3 +497,58 @@ def get_shift_details(shift_type_name: str, for_timestamp: datetime = None) -> D
 			"actual_end": actual_end,
 		}
 	)
+
+
+def get_shift_type(shift_type_name: str) -> dict:
+	return frappe.get_cached_value(
+		"Shift Type",
+		shift_type_name,
+		[
+			"name",
+			"start_time",
+			"end_time",
+			"begin_check_in_before_shift_start_time",
+			"allow_check_out_after_shift_end_time",
+		],
+		as_dict=1,
+	)
+
+
+def get_shift_timings(shift_type: dict, for_timestamp: datetime) -> tuple:
+	start_time = shift_type.start_time
+	end_time = shift_type.end_time
+	shift_actual_start = get_time(
+		start_time - timedelta(minutes=shift_type.begin_check_in_before_shift_start_time)
+	)
+	shift_actual_end = get_time(
+		end_time + timedelta(minutes=shift_type.allow_check_out_after_shift_end_time)
+	)
+	for_time = get_time(for_timestamp.time())
+
+	if start_time > end_time:
+		# shift spans across 2 different days
+		if for_time >= shift_actual_start:
+			# if for_timestamp is greater than start time, it's within the first day
+			start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + start_time
+			for_timestamp += timedelta(days=1)
+			end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + end_time
+
+		elif for_time < shift_actual_start:
+			# if for_timestamp is less than start time, it's within the second day
+			end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + end_time
+			for_timestamp += timedelta(days=-1)
+			start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + start_time
+
+	else:
+		if get_time(shift_actual_start) > shift_actual_end and for_time < shift_actual_start:
+			# for_timestamp falls within the margin period in the second day (after midnight)
+			# so shift started and ended on the previous day
+			for_timestamp += timedelta(days=-1)
+			end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + end_time
+			start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + start_time
+		else:
+			# start and end timings fall on the same day
+			start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + start_time
+			end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + end_time
+
+	return start_datetime, end_datetime
