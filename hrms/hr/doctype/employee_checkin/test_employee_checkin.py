@@ -302,6 +302,39 @@ class TestEmployeeCheckin(FrappeTestCase):
 		log = make_checkin(employee, datetime.combine(prev_day, get_time("23:00:00")))
 		self.assertIsNone(log.shift)
 
+	def test_fetch_night_shift_in_shift_margin_period(self):
+		"""
+		Tests if shift is correctly fetched in logs if the actual end time exceeds a day
+		i.e: shift is from 15:00 to 23:00 (starts & ends on the same day)
+		but shift margin = 2 hours, so the actual shift goes to 1:00 of the next day
+		"""
+		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
+		shift_type = setup_shift_type(
+			shift_type="Midnight Shift",
+			start_time="15:00:00",
+			end_time="23:00:00",
+			allow_check_out_after_shift_end_time=120,
+		)
+		shift_type.reload()
+		date = getdate()
+		next_day = add_days(date, 1)
+
+		# shift assigned for a single day
+		make_shift_assignment(shift_type.name, employee, date, date)
+
+		# IN log falls on the first day
+		start_timestamp = datetime.combine(date, get_time("14:00:00"))
+		log_in = make_checkin(employee, start_timestamp)
+
+		# OUT log falls on the second day in the shift margin period
+		end_timestamp = datetime.combine(next_day, get_time("01:00:00"))
+		log_out = make_checkin(employee, end_timestamp)
+
+		for log in [log_in, log_out]:
+			self.assertEqual(log.shift, shift_type.name)
+			self.assertEqual(log.shift_actual_start, start_timestamp)
+			self.assertEqual(log.shift_actual_end, end_timestamp)
+
 	def test_consecutive_shift_assignments_overlapping_within_grace_period(self):
 		# test adjustment for start and end times if they are overlapping
 		# within "begin_check_in_before_shift_start_time" and "allow_check_out_after_shift_end_time" periods
