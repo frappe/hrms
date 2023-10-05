@@ -1503,6 +1503,7 @@ def employee_query(doctype, txt, searchfield, start, page_len, filters):
 	if not filters.payroll_frequency:
 		frappe.throw(_("Select Payroll Frequency."))
 
+<<<<<<< HEAD
 	employee_list = get_employee_list(
 		filters,
 		searchfield=searchfield,
@@ -1511,6 +1512,55 @@ def employee_query(doctype, txt, searchfield, start, page_len, filters):
 		as_dict=False,
 		limit=page_len,
 		offset=start,
+=======
+	if filters.start_date and filters.end_date:
+		employee_list = get_employee_list(filters)
+		emp = filters.get("employees") or []
+		include_employees = [
+			employee.employee for employee in employee_list if employee.employee not in emp
+		]
+		filters.pop("start_date")
+		filters.pop("end_date")
+		if filters.get("salary_slip_based_on_timesheet"):
+			filters.pop("salary_slip_based_on_timesheet")
+		filters.pop("payroll_frequency")
+		filters.pop("payroll_payable_account")
+		filters.pop("currency")
+		if filters.employees is not None:
+			filters.pop("employees")
+
+		if include_employees:
+			emp_cond += "and employee in %(include_employees)s"
+
+	return frappe.db.sql(
+		"""select name, employee_name from `tabEmployee`
+		where status = 'Active'
+			and docstatus < 2
+			and ({key} like %(txt)s
+				or employee_name like %(txt)s)
+			{emp_cond}
+			{fcond} {mcond}
+		order by
+			if(locate(%(_txt)s, name), locate(%(_txt)s, name), 99999),
+			if(locate(%(_txt)s, employee_name), locate(%(_txt)s, employee_name), 99999),
+			idx desc,
+			name, employee_name
+		limit %(start)s, %(page_len)s""".format(
+			**{
+				"key": searchfield,
+				"fcond": get_filters_cond(doctype, filters, conditions),
+				"mcond": get_match_cond(doctype),
+				"emp_cond": emp_cond,
+			}
+		),
+		{
+			"txt": "%%%s%%" % txt,
+			"_txt": txt.replace("%", ""),
+			"start": start,
+			"page_len": page_len,
+			"include_employees": include_employees,
+		},
+>>>>>>> ea77ff24 (fix: error while selecting an employee when `salary_slip_based_on_timesheet` is unchecked (#936))
 	)
 
 	return employee_list
