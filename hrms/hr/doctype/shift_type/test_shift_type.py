@@ -294,18 +294,27 @@ class TestShiftType(FrappeTestCase):
 
 	def test_mark_absent_for_dates_with_no_attendance(self):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
-		shift_type = setup_shift_type(shift_type="Test Absent with no Attendance")
+		today = getdate()
+		shift_type = setup_shift_type(
+			shift_type="Test Absent with no Attendance", process_attendance_after=add_days(today, -6)
+		)
 
 		# absentees are auto-marked one day after to wait for any manual attendance records
-		date = add_days(getdate(), -1)
-		make_shift_assignment(shift_type.name, employee, date)
+		date1 = add_days(today, -5)
+		make_shift_assignment(shift_type.name, employee, date1, date1)
+
+		date2 = add_days(today, -4)
+		make_shift_assignment(shift_type.name, employee, date2)
+
+		date3 = add_days(today, -1)
 
 		shift_type.process_auto_attendance()
 
-		attendance = frappe.db.get_value(
-			"Attendance", {"attendance_date": date, "employee": employee}, "status"
-		)
-		self.assertEqual(attendance, "Absent")
+		for dt in [date1, date2, date3]:
+			attendance = frappe.db.get_value(
+				"Attendance", {"attendance_date": dt, "employee": employee}, "status"
+			)
+			self.assertEqual(attendance, "Absent")
 
 	def test_do_not_mark_absent_before_shift_actual_end_time(self):
 		"""
