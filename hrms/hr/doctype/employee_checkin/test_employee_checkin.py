@@ -309,13 +309,13 @@ class TestEmployeeCheckin(FrappeTestCase):
 		but shift margin = 2 hours, so the actual shift goes to 1:00 of the next day
 		"""
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
+		# shift margin goes to next day (1:00 am)
 		shift_type = setup_shift_type(
 			shift_type="Midnight Shift",
 			start_time="15:00:00",
 			end_time="23:00:00",
 			allow_check_out_after_shift_end_time=120,
 		)
-		shift_type.reload()
 		date = getdate()
 		next_day = add_days(date, 1)
 
