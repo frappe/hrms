@@ -316,6 +316,33 @@ class TestShiftType(FrappeTestCase):
 			)
 			self.assertEqual(attendance, "Absent")
 
+	def test_mark_absent_for_dates_with_no_attendance_for_midnight_shift(self):
+		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
+		today = getdate()
+		shift_type = setup_shift_type(
+			shift_type="Test Absent with no Attendance",
+			start_time="15:00:00",
+			end_time="23:30:00",
+			process_attendance_after=add_days(today, -6),
+			allow_check_out_after_shift_end_time=120,
+		)
+		# absentees are auto-marked one day after to wait for any manual attendance records
+		date1 = add_days(today, -5)
+		make_shift_assignment(shift_type.name, employee, date1, date1)
+
+		date2 = add_days(today, -4)
+		make_shift_assignment(shift_type.name, employee, date2)
+
+		date3 = add_days(today, -1)
+
+		shift_type.process_auto_attendance()
+
+		for dt in [date1, date2, date3]:
+			attendance = frappe.db.get_value(
+				"Attendance", {"attendance_date": dt, "employee": employee}, "status"
+			)
+			self.assertEqual(attendance, "Absent")
+
 	def test_do_not_mark_absent_before_shift_actual_end_time(self):
 		"""
 		Tests employee is not marked absent for a shift spanning 2 days
