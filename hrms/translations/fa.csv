@@ -839,3 +839,10 @@ From date can not be less than employee's joining date.,از تاریخ نمی �
 To date can not be greater than employee's relieving date.,تا به امروز نمی تواند بیشتر از تاریخ تسویه حساب کارمند باشد.,
 Payroll date can not be greater than employee's relieving date.,تاریخ حقوق و دستمزد نمی تواند بیشتر از تاریخ تسویه حساب کارمند باشد.,
 Condition and formula,شرایط و فرمول,
+Available Leaves,برگهای موجود,
+IFSC Code,کد IFSC,
+Others,دیگران,
+Total Allocated Leaves,مجموع برگه های برگزیده,
+Used Leaves,برگهای مورد استفاده,
+PAN Number,شماره PAN,
+Expired Leaves,برگهای منقضی شده,

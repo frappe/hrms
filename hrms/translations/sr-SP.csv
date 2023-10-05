@@ -1,0 +1,51 @@
+Salary Structure,Структура плата
+Net Pay,Neto plaćanje,
+Email Salary Slip to Employee,Pošalji platnu listu Zaposlenom,
+{0} already allocated for Employee {1} for period {2} to {3},{0} već dodijeljeno zaposlenom {1} za period {2} {3}
+Payroll Employee Detail,Detalji o platnom spisku Zaposlenih,
+You can only submit Leave Encashment for a valid encashment amount,Можете поднети Исплату одсуства само са валидном количином за исплату.
+Marked Attendance HTML,Označeno prisustvo HTML,
+Attendance To Date,Prisustvo do danas,
+No employee found,Zaposleni nije pronađen,
+Employees HTML,HTML Zaposlenih,
+Emails salary slip to employee based on preferred email selected in Employee,Pošalji platnu listu Zaposlenom na željenu adresu označenu u tab-u ZAPOSLENI,
+This is based on the attendance of this Employee,Ovo se zasniva na pohađanju ovog zaposlenog,
+Training Event Employee,Obuke Zaposlenih,
+Employees,Zaposleni,
+Please set the Date Of Joining for employee {0},Molimo podesite datum zasnivanja radnog odnosa {0}
+You are not authorized to approve leaves on Block Dates,Немате дозволу да одобравате одсуства на Блок Датумима.
+Salary Slip of employee {0} already created for this period,Isplatna lista Zaposlenog {0} kreirana je već za ovaj period,
+You are not present all day(s) between compensatory leave request days,Нисте присутни свих дана између захтева за компензацијски одмор.
+Attendance,Prisustvo,
+Upload Attendance,Priloži evidenciju,
+Upload HTML,Priloži HTML,
+Fiscal Year {0} not found,Fiskalna godina {0} nije pronađena,
+Payment Date,Datum plaćanja,
+Attendance for employee {0} is already marked for this day,Prisustvo zaposlenog {0} је već označeno za ovaj dan,
+Employee relieved on {0} must be set as 'Left',"Zaposleni smijenjen na {0} mora biti označen kao ""Napustio"""
+Employee Benefits,Primanja Zaposlenih,
+Employee Settings,Podešavanja zaposlenih,
+Attendance Date,Datum prisustva,
+Salary Component,Компонента плате
+Unmarked Attendance,Neobilježeno prisustvo,
+Employee {0} on Half day on {1},Zaposleni {0} na pola radnog vremena {1}
+Employees Email Id,ID email Zaposlenih,
+Employee Attendance Tool,Alat za prisustvo Zaposlenih,
+Payment Days,Dana za plaćanje,
+For Employee,Za Zaposlenog,
+Employee Emails,Elektronska pošta Zaposlenog,
+Training Result Employee,Rezultati obuke Zaposlenih,
+Employees working on a holiday,Zaposleni koji rade za vrijeme praznika,
+Printed On,Datum i vrijeme štampe,
+"{0}: Employee email not found, hence email not sent","{0}: Email zaposlenog nije pronađena, stoga email nije poslat"
+Attendance From Date,Datum početka prisustva,
+Import Attendance,Uvoz prisustva,
+No active or default Salary Structure found for employee {0} for the given dates,Nisu pronađene aktivne ili podrazumjevane strukture plate za Zaposlenog {0} za dati period,
+Mark Attendance,Označi prisustvo,
+Total Payment,Ukupno plaćeno,
+Attendance From Date and Attendance To Date is mandatory,Datum početka prisustva i prisustvo do danas su obavezni,
+Employee {0} is not active or does not exist,Zaposleni {0} nije aktivan ili ne postoji,
+Marked Attendance,Označeno prisustvo,
+Show Salary Slip,Прикажи одсечак плате
+Salary Slip of employee {0} already created for time sheet {1},Isplatna lista Zaposlenog {0} kreirana je već za raspored {1}
+Monthly Attendance Sheet,Mjesečni list prisustva,
