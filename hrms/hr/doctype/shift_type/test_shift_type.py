@@ -296,25 +296,36 @@ class TestShiftType(FrappeTestCase):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 		today = getdate()
 		shift_type = setup_shift_type(
-			shift_type="Test Absent with no Attendance", process_attendance_after=add_days(today, -6)
+			shift_type="Test Absent with no Attendance",
+			process_attendance_after=add_days(today, -6),
+			last_sync_of_checkin=f"{today} 15:00:00",
 		)
-
-		# absentees are auto-marked one day after to wait for any manual attendance records
+		# single day assignment
 		date1 = add_days(today, -5)
 		make_shift_assignment(shift_type.name, employee, date1, date1)
 
+		# assignment without end date
 		date2 = add_days(today, -4)
 		make_shift_assignment(shift_type.name, employee, date2)
 
-		date3 = add_days(today, -1)
-
 		shift_type.process_auto_attendance()
+		yesterday = add_days(today, -1)
 
-		for dt in [date1, date2, date3]:
-			attendance = frappe.db.get_value(
-				"Attendance", {"attendance_date": dt, "employee": employee}, "status"
-			)
-			self.assertEqual(attendance, "Absent")
+		# absentees are auto-marked one day after shift actual end to wait for any manual attendance records
+		# so all days should be marked as absent except today
+		absent_records = frappe.get_all(
+			"Attendance",
+			{
+				"attendance_date": ["between", [date1, yesterday]],
+				"employee": employee,
+				"status": "Absent",
+			},
+		)
+		self.assertEqual(len(absent_records), 5)
+		todays_attendance = frappe.db.get_value(
+			"Attendance", {"attendance_date": today, "employee": employee}
+		)
+		self.assertIsNone(todays_attendance)
 
 	def test_mark_absent_for_dates_with_no_attendance_for_midnight_shift(self):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
@@ -325,23 +336,33 @@ class TestShiftType(FrappeTestCase):
 			end_time="23:30:00",
 			process_attendance_after=add_days(today, -6),
 			allow_check_out_after_shift_end_time=120,
+			last_sync_of_checkin=f"{today} 15:00:00",
 		)
-		# absentees are auto-marked one day after to wait for any manual attendance records
+		# single day assignment
 		date1 = add_days(today, -5)
 		make_shift_assignment(shift_type.name, employee, date1, date1)
 
-		date2 = add_days(today, -4)
-		make_shift_assignment(shift_type.name, employee, date2)
-
-		date3 = add_days(today, -1)
+		# assignment without end date
+		make_shift_assignment(shift_type.name, employee, add_days(today, -4))
 
 		shift_type.process_auto_attendance()
+		yesterday = add_days(today, -1)
 
-		for dt in [date1, date2, date3]:
-			attendance = frappe.db.get_value(
-				"Attendance", {"attendance_date": dt, "employee": employee}, "status"
-			)
-			self.assertEqual(attendance, "Absent")
+		# absentees are auto-marked one day after shift actual end to wait for any manual attendance records
+		# so all days should be marked as absent except today
+		absent_records = frappe.get_all(
+			"Attendance",
+			{
+				"attendance_date": ["between", [date1, yesterday]],
+				"employee": employee,
+				"status": "Absent",
+			},
+		)
+		self.assertEqual(len(absent_records), 5)
+		todays_attendance = frappe.db.get_value(
+			"Attendance", {"attendance_date": today, "employee": employee}
+		)
+		self.assertIsNone(todays_attendance)
 
 	def test_do_not_mark_absent_before_shift_actual_end_time(self):
 		"""
