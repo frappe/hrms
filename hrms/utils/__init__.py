@@ -1,3 +1,5 @@
+from collections.abc import Generator
+
 import requests
 
 import frappe
@@ -32,3 +34,15 @@ def get_date_range(start_date: str, end_date: str) -> list[str]:
 	"""returns list of dates between start and end dates"""
 	no_of_days = date_diff(end_date, start_date) + 1
 	return [add_days(start_date, i) for i in range(no_of_days)]
+
+
+def generate_date_range(
+	start_date: str, end_date: str, reverse: bool = False
+) -> Generator[str, None, None]:
+	no_of_days = date_diff(end_date, start_date) + 1
+
+	date_field = end_date if reverse else start_date
+	direction = -1 if reverse else 1
+
+	for n in range(no_of_days):
+		yield add_days(date_field, direction * n)
