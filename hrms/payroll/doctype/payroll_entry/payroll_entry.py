@@ -1367,7 +1367,8 @@ def employee_query(doctype, txt, searchfield, start, page_len, filters):
 		]
 		filters.pop("start_date")
 		filters.pop("end_date")
-		filters.pop("salary_slip_based_on_timesheet")
+		if filters.get("salary_slip_based_on_timesheet"):
+			filters.pop("salary_slip_based_on_timesheet")
 		filters.pop("payroll_frequency")
 		filters.pop("payroll_payable_account")
 		filters.pop("currency")
