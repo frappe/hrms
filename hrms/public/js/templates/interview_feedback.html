@@ -1,70 +1,26 @@
 <div class="feedback-section col-xs-12">
 	{% if feedbacks.length %}
-		<h4 class="my-4 mx-5" style="font-size: 18px">{{ __("Overall Average Rating") }}</h4>
-			{%= frappe.render_template("performance_feedback_summary",
-					{
-						number_of_stars: 5,
-						average_rating: average_rating,
-						feedback_count: feedbacks.length,
-						reviews_per_rating: reviews_per_rating
-					}
-				)
-			%}
-			<div class="m-5">
-				<h4 class="mb-2" style="font-size: 18px">{{ __("Feedback Summary") }}</h4>
-				<p class="mb-5 text-secondary">{{ __("Average rating of demonstrated skills") }}</p>
-				<div class="row">
-					{% for(const d of skills_average_rating) { %}
-						<div class="col-md-4 mb-4">
-							{%= frappe.render_template("circular_progress_bar",
-							{skill: d.skill, rating: d.rating * 5}
-							)%}
-						</div>
-						{% } %}
-					</div>
-				</div>
-				{% } %}
-				<div class="feedback-history mb-3">
-					{% if feedbacks.length %}
-						{% for(const d of feedbacks) { %}
-							<div class="px-3 pt-4 d-flex flex-row mt-3 border-top">
-								<div class="reviewer-info mb-2 col-xs-3">
-									<div class="row">
-										<div class="col-xs-2">{{ frappe.avatar(d.interviewer, "avatar-medium") }}</div>
-										<div class="col-xs-10">
-											<div class="ml-2">
-												<div class="title font-weight-bold">{{ d.employee_name }}</div>
-												{% if (d.designation) { %}
-													<div class="small text-muted">{{ d.designation }}</div>
-													{% } %}
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="reviewer-feedback col-xs-6">
-										<div class="rating">
-											{%= frappe.render_template("rating",
-											{number_of_stars: 5, average_rating: d.average_rating * 5, for_summary: false}
-											)
-											%}
-										</div>
-										<div class="feedback my-3">{{ d.feedback }}</div>
-									</div>
-									<div class="feedback-info col-xs-3 d-flex flex-row justify-content-end align-items-baseline">
-										<div class="time small text-muted mr-2">{{ frappe.datetime.comment_when(d.modified) }}</div>
-										<a href="{{ frappe.utils.get_form_link("Interview Feedback", d.name) }}"
-										   title="{{ __("Open Feedback") }}">
-											<svg class="icon icon-sm">
-												<use href="#icon-link-url" class="like-icon"></use>
-											</svg>
-										</a>
-									</div>
-								</div>
-								{% } %}
-							{% else %}
-								<div class="no-feedback d-flex flex-col justify-content-center align-items-center text-muted">
-									<span>{{ __("This applicant has not received any feedback for this interview yet") }}</span>
-								</div>
-							{% endif %}
-						</div>
-					</div>
+	<h4 class="my-4 mx-5" style="font-size: 18px">
+		{{ __("Overall Average Rating") }}
+	</h4>
+	{%= frappe.render_template("feedback_summary", { number_of_stars: 5,
+	average_rating: average_rating, feedback_count: feedbacks.length,
+	reviews_per_rating: reviews_per_rating } ) %}
+	<div class="m-5">
+		<h4 class="mb-2" style="font-size: 18px">{{ __("Feedback Summary") }}</h4>
+		<p class="mb-5 text-secondary">
+			{{ __("Average rating of demonstrated skills") }}
+		</p>
+		<div class="row">
+			{% for(const d of skills_average_rating) { %}
+			<div class="col-md-4 mb-4">
+				{%= frappe.render_template("circular_progress_bar", {skill: d.skill,
+				rating: d.rating * 5} )%}
+			</div>
+			{% } %}
+		</div>
+	</div>
+	{% } %} {%= frappe.render_template("feedback_history", { feedback_history:
+	feedbacks, average_feedback_score: average_rating, reviews_per_rating:
+	reviews_per_rating, feedback_doctype: "Interview Feedback" } ) %}
+</div>
