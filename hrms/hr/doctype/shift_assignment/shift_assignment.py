@@ -418,7 +418,13 @@ def get_prev_or_next_shift(
 		)
 
 		for date_range in shift_dates:
-			for dt in get_date_range(date_range[0], date_range[1]):
+			# midnight shifts will span more than a day
+			end_date = add_days(date_range[1], 1)
+			dates = get_date_range(date_range[0], end_date)
+			if next_shift_direction == "reverse":
+				dates.reverse()
+
+			for dt in dates:
 				shift_details = get_employee_shift(
 					employee, datetime.combine(dt, for_timestamp.time()), consider_default_shift, None
 				)
