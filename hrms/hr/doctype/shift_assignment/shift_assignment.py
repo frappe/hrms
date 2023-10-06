@@ -12,7 +12,7 @@ from frappe.query_builder import Criterion
 from frappe.utils import add_days, cstr, get_link_to_form, get_time, getdate, now_datetime
 
 from hrms.hr.utils import validate_active_employee
-from hrms.utils import get_date_range
+from hrms.utils import generate_date_range
 
 
 class OverlappingShiftError(frappe.ValidationError):
@@ -419,12 +419,10 @@ def get_prev_or_next_shift(
 
 		for date_range in shift_dates:
 			# midnight shifts will span more than a day
-			end_date = add_days(date_range[1], 1)
-			dates = get_date_range(date_range[0], end_date)
-			if next_shift_direction == "reverse":
-				dates.reverse()
+			start_date, end_date = date_range[0], add_days(date_range[1], 1)
+			reverse = next_shift_direction == "reverse"
 
-			for dt in dates:
+			for dt in generate_date_range(start_date, end_date, reverse=reverse):
 				shift_details = get_employee_shift(
 					employee, datetime.combine(dt, for_timestamp.time()), consider_default_shift, None
 				)
