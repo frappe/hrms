@@ -36,7 +36,7 @@ class ShiftType(Document):
 
 		for key, group in itertools.groupby(logs, key=lambda x: (x["employee"], x["shift_start"])):
 			single_shift_logs = list(group)
-			attendance_date = single_shift_logs[0].shift_actual_start.date()
+			attendance_date = key[1].date()
 			employee = key[0]
 
 			if not self.should_mark_attendance(employee, attendance_date):

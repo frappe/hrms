@@ -43,10 +43,8 @@ class TestShiftType(FrappeTestCase):
 
 		shift_type.process_auto_attendance()
 
-		attendance = frappe.db.get_value(
-			"Attendance", {"shift": shift_type.name}, ["status", "name"], as_dict=True
-		)
-		self.assertEqual(attendance.status, "Present")
+		attendance = frappe.db.get_value("Attendance", {"shift": shift_type.name}, "status")
+		self.assertEqual(attendance, "Present")
 
 	def test_mark_attendance_with_different_shift_start_time(self):
 		"""Tests whether attendance is marked correctly if shift configuration is changed midway"""
@@ -70,10 +68,38 @@ class TestShiftType(FrappeTestCase):
 
 		shift_type.process_auto_attendance()
 
+		attendance = frappe.db.get_value("Attendance", {"shift": shift_type.name}, "status")
+		self.assertEqual(attendance, "Present")
+
+	def test_attendance_date_for_different_start_and_actual_start_date(self):
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+
+		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
+		shift_type = setup_shift_type(
+			shift_type="Midnight Shift", start_time="00:30:00", end_time="10:00:00"
+		)
+
+		date = getdate()
+		make_shift_assignment(shift_type.name, employee, date, date)
+
+		timestamp = datetime.combine(date, get_time("00:30:00"))
+		log_in = make_checkin(employee, timestamp)
+
+		timestamp = datetime.combine(date, get_time("10:00:00"))
+		log_out = make_checkin(employee, timestamp)
+
+		shift_type.process_auto_attendance()
+
+		# even though actual start time starts on the prev date,
+		# attendance date should be the current date (start date of the shift)
 		attendance = frappe.db.get_value(
-			"Attendance", {"shift": shift_type.name}, ["status", "name"], as_dict=True
+			"Attendance",
+			{"shift": shift_type.name},
+			["attendance_date", "status"],
+			as_dict=True,
 		)
 		self.assertEqual(attendance.status, "Present")
+		self.assertEqual(attendance.attendance_date, date)
 
 	def test_entry_and_exit_grace(self):
 		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
@@ -427,7 +453,8 @@ class TestShiftType(FrappeTestCase):
 		shift_type.process_auto_attendance()
 
 		attendance = frappe.db.get_value(
-			"Attendance", {"attendance_date": first_sunday, "employee": employee}, "status"
+			"Attendance",
+			{"attendance_date": first_sunday, "employee": employee},
 		)
 		self.assertIsNone(attendance)
 
