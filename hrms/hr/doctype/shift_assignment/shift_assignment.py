@@ -243,7 +243,7 @@ def _is_shift_start_before_assignment(
 		if not is_midnight_shift:
 			return True
 
-		# if actual start and start dates are same but its precedes assignment start date
+		# if actual start and start dates are same but it precedes assignment start date
 		# then its actually a shift that starts on the previous day, making it invalid
 		if shift_details.actual_start.date() == shift_details.start_datetime.date():
 			return True
@@ -321,6 +321,9 @@ def get_shifts_for_date(employee: str, for_timestamp: datetime) -> List[Dict[str
 			(assignment.employee == employee)
 			& (assignment.docstatus == 1)
 			& (assignment.status == "Active")
+			# for shifts that exceed a day in duration or margins
+			# eg: shift = 00:30:00 - 10:00:00, including margins (1 hr) = 23:30:00 - 11:00:00
+			# if for_timestamp = 23:30:00 (falls in before shift margin), also fetch next days shift to find the correct shift
 			& (assignment.start_date <= next_day)
 			& (
 				Criterion.any(
@@ -328,8 +331,10 @@ def get_shifts_for_date(employee: str, for_timestamp: datetime) -> List[Dict[str
 						assignment.end_date.isnull(),
 						(
 							assignment.end_date.isnotnull()
-							# for midnight shifts, valid assignments are upto 1 day prior
-							& ((prev_day <= assignment.end_date) | (assignment.end_date == next_day))
+							# for shifts that exceed a day in duration or margins
+							# eg: shift = 15:00 - 23:30, including margins (1 hr) = 14:00 - 00:30
+							# if for_timestamp = 00:30:00 (falls in after shift margin), also fetch prev days shift to find the correct shift
+							& (prev_day <= assignment.end_date)
 						),
 					]
 				)
@@ -413,7 +418,6 @@ def get_prev_or_next_shift(
 		)
 
 		for date_range in shift_dates:
-			# midnight shifts will span more than a day
 			for dt in get_date_range(date_range[0], date_range[1]):
 				shift_details = get_employee_shift(
 					employee, datetime.combine(dt, for_timestamp.time()), consider_default_shift, None
