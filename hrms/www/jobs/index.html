@@ -1,173 +1,187 @@
-{% extends "templates/web.html" %}
-{% block title %}
-	{{ _("Job Openings") }}
-{% endblock title %}
-{% block header %}
-	<h3 class="mt-0 mb-10 jobs-page">{{ _("Job Openings") }}</h3>
-{% endblock header %}
-{% block page_content %}
-	<meta id="data" data-filters="{{ all_filters }}">
-	<div class="row">
-		<div class="col-3 text-15">
-			<div class="flex align-items-center">
-				<p class="text-18 font-weight-bold mb-0">{{ _("Filters") }}</p>
-				<a id="clear-filters" class="ml-auto" role="button">{{ _("Clear All") }}</a>
+{% extends "templates/web.html" %} {% block title %} {{ _("Job Openings") }} {%
+endblock title %} {% block header %}
+<h3 class="mt-0 mb-10 jobs-page">{{ _("Job Openings") }}</h3>
+{% endblock header %} {% block page_content %}
+<meta id="data" data-filters="{{ all_filters }}" />
+<div class="row">
+	<div class="col-3 text-15">
+		<div class="flex align-items-center">
+			<p class="text-18 font-weight-bold mb-0">{{ _("Filters") }}</p>
+			<a id="clear-filters" class="ml-auto" role="button"
+				>{{ _("Clear All") }}</a
+			>
+		</div>
+		<hr class="mb-6" />
+		{% for name, values in all_filters.items() %}
+		<div class="mb-6">
+			<p class="font-weight-bold mb-4">
+				{{ name.title() | replace('_', ' ') }}
+			</p>
+			{% for value in values %}
+			<div class="form-group form-check">
+				<input
+					type="checkbox"
+					name="{{ name }}"
+					class="form-check-input"
+					id="{{ value }}"
+					value="{{ value }}"
+					role="button"
+				/>
+				<label
+					class="form-check-label align-top"
+					for="{{ value }}"
+					role="button"
+					>{{ value }}</label
+				>
 			</div>
-			<hr class="mb-6">
-			{% for name, values in all_filters.items() %}
-				<div class="mb-6">
-					<p class="font-weight-bold mb-4">{{ name.title() | replace('_', ' ') }}</p>
-					{% for value in values %}
-						<div class="form-group form-check">
-							<input type="checkbox"
-								   name="{{ name }}"
-								   class="form-check-input"
-								   id="{{ value }}"
-								   value="{{ value }}"
-								   role="button">
-							<label class="form-check-label align-top" for="{{ value }}" role="button">{{ value }}</label>
-						</div>
-					{% endfor %}
-				</div>
 			{% endfor %}
 		</div>
-		<div class="col-9">
-			<div class="row px-4 mb-12 ">
-				<div class="col-8 pl-0">
-					<input type="search"
-						   name="query"
-						   id="search-box"
-						   class="form-control border font-md"
-						   placeholder="Search for Jobs"
-						   aria-label="Jobs Search"
-						   style="height: 40px">
-					<div class="search-icon">
-						<svg xmlns="http://www.w3.org/2000/svg"
-							 width="16"
-							 height="16"
-							 viewBox="0 0 24 24"
-							 fill="none"
-							 stroke="currentColor"
-							 stroke-width="2"
-							 stroke-linecap="round"
-							 stroke-linejoin="round"
-							 class="feather feather-search">
-							<circle cx="11" cy="11" r="8"></circle>
-							<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-						</svg>
-					</div>
+		{% endfor %}
+	</div>
+	<div class="col-9">
+		<div class="row px-4 mb-12">
+			<div class="col-8 pl-0">
+				<input
+					type="search"
+					name="query"
+					id="search-box"
+					class="form-control border font-md"
+					placeholder="Search for Jobs"
+					aria-label="Jobs Search"
+					style="height: 40px"
+				/>
+				<div class="search-icon">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="feather feather-search"
+					>
+						<circle cx="11" cy="11" r="8"></circle>
+						<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+					</svg>
 				</div>
-				{% set sort = frappe.form_dict.sort %}
-				<div class="col-4 flex pr-0">
-					<div class="ml-auto flex align-items-center">
-						<div id="sort-button" class="text-secondary text-15 mr-4" type="button">{{ _("Date Posted: ") }}</div>
-						<div class="btn-group btn-group-toggle"
-							 data-toggle="buttons"
-							 style="height: 40px">
-							<label id="desc-label"
-								   class="btn px-5 py-2 border"
-								   style="{{ '--icon-stroke: var(--gray-400) ' if sort == 'asc' else '--icon-stroke: var(--gray-600);
-										  background-color: white;
-										  ' }}">
-								<input type="radio" id="desc-input">
-								<svg class="icon">
-									<use href="#icon-down-arrow"></use>
+			</div>
+			{% set sort = frappe.form_dict.sort %}
+			<div class="col-4 flex pr-0">
+				<div class="ml-auto flex align-items-center">
+					<div class="btn-group border" style="border-radius: 8px">
+						<button
+							id="sort"
+							class="btn btn-default btn-order"
+							style="height: 40px; width: 40px; background-color: white"
+						>
+							<span class="sort-order">
+								<svg class="icon icon-sm">
+									<use
+										class
+										href="#icon-sort-{{ 'ascending' if sort == 'asc' else 'descending' }}"
+									></use>
 								</svg>
-							</label>
-							<label id="asc-label"
-								   class="btn px-5 py-2 border"
-								   style="{{ '--icon-stroke: var(--gray-600) ;
-										  background-color: white;
-										  ' if sort == 'asc' else '--icon-stroke: var(--gray-400) ' }}">
-								<input type="radio" id="asc-input">
-								<svg class="icon">
-									<use href="#icon-up-arrow"></use>
-								</svg>
-							</label>
+							</span>
+						</button>
+						<div
+							class="border-left px-3 flex align-items-center"
+							style="background-color: white; border-radius: 0px 8px 8px 0px"
+						>
+							<span class="text-14">Posting Date</span>
 						</div>
 					</div>
 				</div>
 			</div>
-			<p class="text-secondary mb-4 text-15">
-				{{ _("Showing " + job_openings|length|string + (" result" if job_openings|length == 1 else " results") ) }}
-			</p>
-			{% for jo in job_openings %}
-				<div name="card"
-					 id="{{ jo.route }}"
-					 class="mb-8 card border"
-					 role="button">
-					<div class="p-6">
-						<div class="flex mb-5">
-							<div>
-								<h4 class="mt-0 mb-1 mr-20">{{ jo.job_title }}</h4>
-								<div class="text-14">
-									<span class="font-weight-bold">{{ jo.company }}</span>
-									<span class="text-secondary">{{ " · " }} {{ jo.posted_on }}</span>
-								</div>
-							</div>
-							<div class="ml-auto font-weight-bold text-nowrap text-12">
-								{%- if jo.employment_type -%}
-									{%- if jo.employment_type == "Full-time" -%}
-										<div class="py-1 px-2 full-time-badge">• {{ jo.employment_type }}</div>
-									{%- elif jo.employment_type == "Part-time" -%}
-										<div class="py-1 px-2 part-time-badge">• {{ jo.employment_type }}</div>
-									{%- else -%}
-										<div class="py-1 px-2 other-badge">• {{ jo.employment_type }}</div>
-									{% endif %}
-								{% endif %}
-							</div>
-						</div>
+		</div>
+		<p class="text-secondary mb-4 text-15">
+			{{ _("Showing " + job_openings|length|string + (" result" if
+			job_openings|length == 1 else " results") ) }}
+		</p>
+		{% for jo in job_openings %}
+		<div name="card" id="{{ jo.route }}" class="mb-8 card border" role="button">
+			<div class="p-6">
+				<div class="flex mb-5">
+					<div>
+						<h4 class="mt-0 mb-1 mr-20">{{ jo.job_title }}</h4>
 						<div class="text-14">
-							{%- if jo.location -%}
-								<div class="mt-3 flex align-items-center">
-									<svg class="icon ml-0 mr-1"
-										 xmlns="http://www.w3.org/2000/svg"
-										 viewBox="0 0 16 16">
-										<g stroke="var(--gray-700)" stroke-miterlimit="10">
-										<path d="M11.467 3.458c1.958 1.957 1.958 5.088.027 7.02L7.97 14l-3.523-3.523a4.945 4.945 0 010-6.993l.026-.026a4.922 4.922 0 016.993 0zm0 0c-.026-.026-.026-.026 0 0z">
-										</path>
-										<path d="M7.971 8.259a1.305 1.305 0 100-2.61 1.305 1.305 0 000 2.61z"></path>
-										</g>
-									</svg>
-									{{ jo.location }}
-								</div>
-							{% endif %}
-							{%- if jo.department -%}
-								<div class="mt-3 flex align-items-center">
-									<svg class="icon ml-0 mr-1" style="--icon-stroke: var(--gray-700)">
-										<use href="#icon-branch"></use>
-									</svg>
-									{{ jo.department }}
-								</div>
-							{% endif %}
-							{%- if jo.publish_salary_range -%}
-								<div class="mt-3 flex align-items-center">
-									<svg class="icon ml-0 mr-1" style="--icon-stroke: var(--gray-700)">
-										<use href="#icon-income"></use>
-									</svg>
-									{{ " " }}
-									{%- if jo.lower_range -%}{{ frappe.format_value(frappe.utils.flt(jo.lower_range) , currency=jo.currency) }}{% endif %}
-									{%- if jo.lower_range and jo.upper_range -%}{{ " - " }}{% endif %}
-									{%- if jo.upper_range -%}{{ frappe.format_value(frappe.utils.flt(jo.upper_range) , currency=jo.currency) }}{% endif %}
-									/ {{ jo.salary_per.lower() }}
-								</div>
-							{% endif %}
+							<span class="font-weight-bold">{{ jo.company }}</span>
+							<span class="text-secondary">{{ " · " }} {{ jo.posted_on }}</span>
 						</div>
 					</div>
-					<div class="px-4 py-2 job-card-footer">
-						<div class="row text-12 text-secondary">
-							<p class="col-6 text-center border-right mb-0">
-								{{ _("Applications received: ") }}
-								<b>{{ jo.no_of_applications }}</b>
-							</p>
-							<p class="col-6 text-center mb-0">
-								{%- if jo.closes_on -%}{{ _("Closes on: ") }}<b>{{ frappe.format_date(jo.closes_on, "d MMM,
-								YYYY") }}</b>
-							{% endif %}
-						</p>
+					<div class="ml-auto font-weight-bold text-nowrap text-12">
+						{%- if jo.employment_type -%} {%- if jo.employment_type ==
+						"Full-time" -%}
+						<div class="py-1 px-2 full-time-badge">
+							• {{ jo.employment_type }}
+						</div>
+						{%- elif jo.employment_type == "Part-time" -%}
+						<div class="py-1 px-2 part-time-badge">
+							• {{ jo.employment_type }}
+						</div>
+						{%- else -%}
+						<div class="py-1 px-2 other-badge">• {{ jo.employment_type }}</div>
+						{% endif %} {% endif %}
 					</div>
 				</div>
+				<div class="text-14">
+					{%- if jo.location -%}
+					<div class="mt-3 flex align-items-center">
+						<svg
+							class="icon ml-0 mr-1"
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 16 16"
+						>
+							<g stroke="var(--gray-700)" stroke-miterlimit="10">
+								<path
+									d="M11.467 3.458c1.958 1.957 1.958 5.088.027 7.02L7.97 14l-3.523-3.523a4.945 4.945 0 010-6.993l.026-.026a4.922 4.922 0 016.993 0zm0 0c-.026-.026-.026-.026 0 0z"
+								></path>
+								<path
+									d="M7.971 8.259a1.305 1.305 0 100-2.61 1.305 1.305 0 000 2.61z"
+								></path>
+							</g>
+						</svg>
+						{{ jo.location }}
+					</div>
+					{% endif %} {%- if jo.department -%}
+					<div class="mt-3 flex align-items-center">
+						<svg class="icon ml-0 mr-1" style="--icon-stroke: var(--gray-700)">
+							<use href="#icon-branch"></use>
+						</svg>
+						{{ jo.department }}
+					</div>
+					{% endif %} {%- if jo.publish_salary_range -%}
+					<div class="mt-3 flex align-items-center">
+						<svg class="icon ml-0 mr-1" style="--icon-stroke: var(--gray-700)">
+							<use href="#icon-income"></use>
+						</svg>
+						{{ " " }} {%- if jo.lower_range -%}{{
+						frappe.format_value(frappe.utils.flt(jo.lower_range) ,
+						currency=jo.currency) }}{% endif %} {%- if jo.lower_range and
+						jo.upper_range -%}{{ " - " }}{% endif %} {%- if jo.upper_range -%}{{
+						frappe.format_value(frappe.utils.flt(jo.upper_range) ,
+						currency=jo.currency) }}{% endif %} / {{ jo.salary_per.lower() }}
+					</div>
+					{% endif %}
+				</div>
 			</div>
+			<div class="px-4 py-2 job-card-footer">
+				<div class="row text-12 text-secondary">
+					<p class="col-6 text-center border-right mb-0">
+						{{ _("Applications received: ") }}
+						<b>{{ jo.no_of_applications }}</b>
+					</p>
+					<p class="col-6 text-center mb-0">
+						{%- if jo.closes_on -%}{{ _("Closes on: ") }}<b
+							>{{ frappe.format_date(jo.closes_on, "d MMM, YYYY") }}</b
+						>
+						{% endif %}
+					</p>
+				</div>
+			</div>
+		</div>
 		{% endfor %}
 	</div>
 </div>

@@ -20,18 +20,11 @@ $(() => {
 		}
 	});
 
-	$("#desc-input").on("click", function () {
+	$("#sort").on("click", function () {
 		const filters = $("input").serialize();
-		if (query_params.sort === "asc") {
-			scroll_up_and_update_params(filters);
-		}
-	});
-
-	$("#asc-input").on("click", function () {
-		const filters = $("input").serialize();
-		if (query_params.sort != "asc") {
-			scroll_up_and_update_params(filters + "&sort=asc");
-		}
+		query_params.sort === "asc"
+			? scroll_up_and_update_params(filters)
+			: scroll_up_and_update_params(filters + "&sort=asc");
 	});
 
 	$("[name=card]").on("click", function () {
@@ -42,15 +35,9 @@ $(() => {
 		const allowed_filters = Object.keys(
 			JSON.parse($("#data").data("filters").replace(/'/g, '"'))
 		);
-		$("#desc-input").prop("checked", true);
 		for (const filter in query_params) {
 			if (filter === "query") {
 				$("#search-box").val(query_params["query"]);
-			} else if (filter === "sort") {
-				if (query_params["sort"] === "asc") {
-					$("#asc-input").prop("checked", true);
-					$("#desc-input").prop("checked", false);
-				}
 			} else if (allowed_filters.includes(filter)) {
 				if (typeof query_params[filter] === "string") {
 					$("#" + $.escapeSelector(query_params[filter])).prop("checked", true);
