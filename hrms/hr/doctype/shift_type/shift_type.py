@@ -157,12 +157,12 @@ class ShiftType(Document):
 					}
 				).insert(ignore_permissions=True)
 
-	def get_dates_for_attendance(self, employee: str) -> set[str]:
+	def get_dates_for_attendance(self, employee: str) -> list[str]:
 		start_date, end_date = self.get_start_and_end_dates(employee)
 
 		# no shift assignment found, no need to process absent attendance records
 		if start_date is None:
-			return set()
+			return []
 
 		date_range = get_date_range(start_date, end_date)
 
@@ -174,7 +174,7 @@ class ShiftType(Document):
 			employee, start_date, end_date
 		)
 
-		return set(date_range) - set(holiday_dates) - set(marked_attendance_dates)
+		return sorted(set(date_range) - set(holiday_dates) - set(marked_attendance_dates))
 
 	def get_start_and_end_dates(self, employee):
 		"""Returns start and end dates for checking attendance and marking absent
