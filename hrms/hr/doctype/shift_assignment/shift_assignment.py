@@ -224,16 +224,35 @@ def _is_shift_outside_assignment_period(shift_details: dict, assignment: dict) -
 	# start time > end time, means its a midnight shift
 	is_midnight_shift = shift_details.actual_start.time() > shift_details.actual_end.time()
 
-	if shift_details.actual_start.date() < assignment.start_date and not is_midnight_shift:
-		return True
+	if shift_details.actual_start.date() < assignment.start_date:
+		if not is_midnight_shift:
+			return True
+
+		if shift_details.actual_start.date() == shift_details.start_datetime.date():
+			return True
+
+		prev_assignment_day = add_days(assignment.start_date, -1)
+		if is_midnight_shift and shift_details.actual_start.date() != prev_assignment_day:
+			return True
 
 	if assignment.end_date:
 		if shift_details.actual_start.date() > assignment.end_date:
 			return True
 
 		# log's end date can only exceed assignment's end date if its a midnight shift
-		if shift_details.actual_end.date() > assignment.end_date and not is_midnight_shift:
-			return True
+		if shift_details.actual_end.date() > assignment.end_date:
+			if not is_midnight_shift:
+				return True
+
+			if (
+				shift_details.actual_end.date() == shift_details.end_datetime.date()
+				and shift_details.start_datetime.date() == shift_details.end_datetime.date()
+			):
+				return True
+
+			next_assignment_day = add_days(assignment.end_date, 1)
+			if is_midnight_shift and shift_details.actual_end.date() != next_assignment_day:
+				return True
 
 	return False
 
