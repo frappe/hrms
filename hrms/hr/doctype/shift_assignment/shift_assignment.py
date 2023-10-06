@@ -224,35 +224,63 @@ def _is_shift_outside_assignment_period(shift_details: dict, assignment: dict) -
 	# start time > end time, means its a midnight shift
 	is_midnight_shift = shift_details.actual_start.time() > shift_details.actual_end.time()
 
+	if _is_shift_start_before_assignment(shift_details, assignment, is_midnight_shift):
+		return True
+
+	if assignment.end_date and _is_shift_end_after_assignment(
+		shift_details, assignment, is_midnight_shift
+	):
+		return True
+
+	return False
+
+
+def _is_shift_start_before_assignment(
+	shift_details: dict, assignment: dict, is_midnight_shift: bool
+) -> bool:
 	if shift_details.actual_start.date() < assignment.start_date:
+		# log's start date can only precede assignment's start date if its a midnight shift
 		if not is_midnight_shift:
 			return True
 
+		# if actual start and start dates are same but its precedes assignment start date
+		# then its actually a shift that starts on the previous day, making it invalid
 		if shift_details.actual_start.date() == shift_details.start_datetime.date():
 			return True
 
+		# actual start is not the prev assignment day
+		# then its a shift that starts even before the prev day, making it invalid
 		prev_assignment_day = add_days(assignment.start_date, -1)
-		if is_midnight_shift and shift_details.actual_start.date() != prev_assignment_day:
+		if shift_details.actual_start.date() != prev_assignment_day:
 			return True
 
-	if assignment.end_date:
-		if shift_details.actual_start.date() > assignment.end_date:
+	return False
+
+
+def _is_shift_end_after_assignment(
+	shift_details: dict, assignment: dict, is_midnight_shift: bool
+) -> bool:
+	if shift_details.actual_start.date() > assignment.end_date:
+		return True
+
+	# log's end date can only exceed assignment's end date if its a midnight shift
+	if shift_details.actual_end.date() > assignment.end_date:
+		if not is_midnight_shift:
 			return True
 
-		# log's end date can only exceed assignment's end date if its a midnight shift
-		if shift_details.actual_end.date() > assignment.end_date:
-			if not is_midnight_shift:
-				return True
+		# if shift starts & ends on the same day along with shift margin
+		# then actual end cannot exceed assignment's end date, making it invalid
+		if (
+			shift_details.actual_end.date() == shift_details.end_datetime.date()
+			and shift_details.start_datetime.date() == shift_details.end_datetime.date()
+		):
+			return True
 
-			if (
-				shift_details.actual_end.date() == shift_details.end_datetime.date()
-				and shift_details.start_datetime.date() == shift_details.end_datetime.date()
-			):
-				return True
-
-			next_assignment_day = add_days(assignment.end_date, 1)
-			if is_midnight_shift and shift_details.actual_end.date() != next_assignment_day:
-				return True
+		# actual end is not the immediate next assignment day
+		# then its a shift that ends even after the next day, making it invalid
+		next_assignment_day = add_days(assignment.end_date, 1)
+		if shift_details.actual_end.date() != next_assignment_day:
+			return True
 
 	return False
 
