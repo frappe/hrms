@@ -99,12 +99,12 @@ class Interview(Document):
 		query = (
 			frappe.qb.select(
 				interview_feedback.name,
-				interview_feedback.modified,
+				interview_feedback.modified.as_("added_on"),
 				interview_feedback.interviewer,
 				interview_feedback.feedback,
-				interview_feedback.average_rating,
-				employee.employee_name,
-				employee.designation,
+				(interview_feedback.average_rating * 5).as_("total_score"),
+				employee.employee_name.as_("reviewer_name"),
+				employee.designation.as_("reviewer_designation"),
 			)
 			.from_(interview_feedback)
 			.where((interview_feedback.interview == self.name) & (interview_feedback.docstatus == 1))

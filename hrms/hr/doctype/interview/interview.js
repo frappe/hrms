@@ -296,7 +296,7 @@ frappe.ui.form.on("Interview", {
 	calculate_reviews_per_rating(frm) {
 		const reviews_per_rating = [0, 0, 0, 0, 0];
 		frm.feedback.forEach((x) => {
-			reviews_per_rating[Math.floor(x.average_rating * 5 - 1)] += 1;
+			reviews_per_rating[Math.floor(x.total_score - 1)] += 1;
 		});
 		frm.reviews_per_rating = reviews_per_rating.map((x) =>
 			flt((x * 100) / frm.feedback.length, 1)
