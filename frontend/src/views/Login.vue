@@ -19,7 +19,11 @@
 							placeholder="••••••"
 							v-model="password"
 						/>
-						<Button :loading="session.login.loading" variant="solid">
+						<Button
+							:loading="session.login.loading"
+							variant="solid"
+							class="disabled:bg-gray-700 disabled:text-white"
+						>
 							Login
 						</Button>
 					</form>
