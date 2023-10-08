@@ -18,7 +18,9 @@ import { IonicVue } from "@ionic/vue"
 import { session } from "@/data/session"
 import { userResource } from "@/data/user"
 import { employeeResource } from "@/data/employee"
+
 import dayjs from "@/utils/dayjs"
+import getIonicConfig from "@/utils/ionicConfig"
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/vue/css/core.css"
@@ -39,7 +41,7 @@ app.component("FormControl", FormControl)
 app.component("EmptyState", EmptyState)
 
 app.use(router)
-app.use(IonicVue)
+app.use(IonicVue, getIonicConfig())
 
 if (session?.isLoggedIn && !employeeResource?.data) {
 	employeeResource.reload()

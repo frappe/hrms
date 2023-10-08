@@ -1,5 +1,5 @@
 <template>
-	<ion-menu side="start" content-id="main-content">
+	<ion-menu side="start" content-id="main-content" :swipe-gesture="false">
 		<ion-content class="ion-padding">
 			<div class="bg-white h-full">
 				<div
