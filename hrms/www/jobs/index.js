@@ -1,6 +1,6 @@
 $(() => {
 	const query_params = frappe.utils.get_query_params();
-	show_applied_filters();
+	update_ui_with_filters();
 
 	$("input:checkbox").change(function () {
 		scroll_up_and_update_params(get_new_params());
@@ -48,7 +48,7 @@ $(() => {
 		scroll_up_and_update_params(filters + "&page=" + new_page);
 	});
 
-	function show_applied_filters() {
+	function update_ui_with_filters() {
 		const allowed_filters = Object.keys(
 			JSON.parse($("#data").data("filters").replace(/'/g, '"'))
 		);
@@ -56,13 +56,7 @@ $(() => {
 			if (filter === "query") {
 				$("#search-box").val(query_params["query"]);
 			} else if (filter === "page") {
-				const no_of_pages = JSON.parse($("#data").data("no-of-pages"));
-				const page_no = Number(query_params["page"]);
-				if (page_no === no_of_pages) {
-					$("#next").prop("disabled", true);
-				} else if (page_no > no_of_pages || page_no <= 1) {
-					$("#previous").prop("disabled", true);
-				}
+				disable_inapplicable_pagination_buttons();
 			} else if (allowed_filters.includes(filter)) {
 				if (typeof query_params[filter] === "string") {
 					$("#" + $.escapeSelector(query_params[filter])).prop("checked", true);
@@ -73,6 +67,16 @@ $(() => {
 			} else {
 				continue;
 			}
+		}
+	}
+
+	function disable_inapplicable_pagination_buttons() {
+		const no_of_pages = JSON.parse($("#data").data("no-of-pages"));
+		const page_no = Number(query_params["page"]);
+		if (page_no === no_of_pages) {
+			$("#next").prop("disabled", true);
+		} else if (page_no > no_of_pages || page_no <= 1) {
+			$("#previous").prop("disabled", true);
 		}
 	}
 
