@@ -2,10 +2,7 @@
 endblock title %} {% block header %}
 <h3 class="mt-0 mb-10 jobs-page">{{ _("Job Openings") }}</h3>
 {% endblock header %} {% block page_content %}
-<meta
-	id="data"
-	data-filters="{{ all_filters }}"
-/>
+<meta id="data" data-filters="{{ all_filters }}" data-no-of-pages="{{ no_of_pages }}"/>
 <div class="row">
 	<div class="col-3 text-15">
 		<div class="flex align-items-center">

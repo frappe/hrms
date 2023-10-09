@@ -55,6 +55,14 @@ $(() => {
 		for (const filter in query_params) {
 			if (filter === "query") {
 				$("#search-box").val(query_params["query"]);
+			} else if (filter === "page") {
+				const no_of_pages = JSON.parse($("#data").data("no-of-pages"));
+				const page_no = Number(query_params["page"]);
+				if (page_no === no_of_pages) {
+					$("#next").prop("disabled", true);
+				} else if (page_no > no_of_pages || page_no <= 1) {
+					$("#previous").prop("disabled", true);
+				}
 			} else if (allowed_filters.includes(filter)) {
 				if (typeof query_params[filter] === "string") {
 					$("#" + $.escapeSelector(query_params[filter])).prop("checked", true);
