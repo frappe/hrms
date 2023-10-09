@@ -491,12 +491,37 @@ class TestExpenseClaim(FrappeTestCase):
 		self.assertEqual(dimensions.project, project)
 		self.assertEqual(dimensions.cost_center, expense_claim.cost_center)
 
+	def test_rounding(self):
+		payable_account = get_payable_account(company_name)
+		taxes = generate_taxes(rate=7)
+		expense_claim = make_expense_claim(
+			payable_account,
+			130.84,
+			130.84,
+			company_name,
+			"Travel Expenses - _TC3",
+			taxes=taxes,
+		)
+
+		self.assertEqual(expense_claim.total_sanctioned_amount, 130.84)
+		self.assertEqual(expense_claim.total_taxes_and_charges, 9.16)
+		self.assertEqual(expense_claim.grand_total, 140)
+
+		pe = make_payment_entry(expense_claim, 140)
+
+		expense_claim.reload()
+		self.assertEqual(expense_claim.status, "Paid")
+
+		pe.cancel()
+		expense_claim.reload()
+		self.assertEqual(expense_claim.status, "Unpaid")
+
 
 def get_payable_account(company):
 	return frappe.get_cached_value("Company", company, "default_payable_account")
 
 
-def generate_taxes(company=None):
+def generate_taxes(company=None, rate=None) -> dict:
 	company = company or company_name
 	parent_account = frappe.db.get_value(
 		"Account", filters={"account_name": "Duties and Taxes", "company": company}
@@ -515,10 +540,8 @@ def generate_taxes(company=None):
 			{
 				"account_head": account,
 				"cost_center": cost_center,
-				"rate": 9,
+				"rate": rate or 9,
 				"description": "CGST",
-				"tax_amount": 10,
-				"total": 210,
 			}
 		]
 	}
