@@ -318,7 +318,7 @@
  "show_name_in_global_search": 0, 
  "sort_field": "modified", 
  "sort_order": "DESC", 
- "title_field": "designation", 
+ "title_field": "title", 
  "track_changes": 1, 
  "track_seen": 0, 
  "track_views": 0
