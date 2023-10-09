@@ -45,7 +45,7 @@ def get_employees(filters):
 		holiday_names[holiday.holiday_date] = holiday.description
 
 	if holidays_list:
-		cond = " attendance_date in %(holidays_list)s"
+		cond = " attendance_date in %(holidays_list)s and status != 'On Leave' "
 
 		if filters.holiday_list:
 			cond += (
