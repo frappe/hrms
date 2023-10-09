@@ -48,7 +48,6 @@ endblock title %} {% block header %}
 					class="form-control border font-md"
 					placeholder="Search for Jobs"
 					aria-label="Jobs Search"
-					style="height: 40px"
 				/>
 				<div class="search-icon">
 					<svg
@@ -75,7 +74,7 @@ endblock title %} {% block header %}
 						<button
 							id="sort"
 							class="btn btn-default btn-order"
-							style="height: 40px; width: 40px; background-color: white"
+							style="background-color: white"
 						>
 							<span class="sort-order">
 								<svg class="icon icon-sm">
@@ -103,11 +102,14 @@ endblock title %} {% block header %}
 		<div class="row">
 			{% for jo in job_openings %}
 			<div name="card" id="{{ jo.route }}" class="mb-8 col-6" role="button">
-				<div class="card border">
+				<div class="card border h-100 flex flex-col">
 					<div class="p-6">
 						<div class="flex mb-5">
 							<div class="col-9 px-0">
-								<h4 class="mt-0 mb-1 jobs-page text-truncate">
+								<h4
+									class="mt-0 mb-1 jobs-page text-truncate"
+									title="{{ jo.job_title }}"
+								>
 									{{ jo.job_title }}
 								</h4>
 								<div class="text-14">
@@ -184,7 +186,7 @@ endblock title %} {% block header %}
 							{% endif %}
 						</div>
 					</div>
-					<div class="px-4 py-2 job-card-footer">
+					<div class="px-4 py-2 job-card-footer mt-auto">
 						<div class="row text-12 text-secondary">
 							<p class="col-6 text-center border-right mb-0">
 								{{ _("Applications received: ") }}
