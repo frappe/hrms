@@ -2,7 +2,11 @@
 endblock title %} {% block header %}
 <h3 class="mt-0 mb-10 jobs-page">{{ _("Job Openings") }}</h3>
 {% endblock header %} {% block page_content %}
-<meta id="data" data-filters="{{ all_filters }}" data-no-of-pages="{{ no_of_pages }}"/>
+<meta
+	id="data"
+	data-filters="{{ all_filters }}"
+	data-no-of-pages="{{ no_of_pages }}"
+/>
 <div class="row">
 	<div class="col-3 text-15">
 		<div class="flex align-items-center">
@@ -215,7 +219,7 @@ endblock title %} {% block header %}
 				page|int > no_of_pages or page|int < 1) else page %}
 				<button
 					id="previous"
-					class="btn btn-default border-right"
+					class="btn btn-default border-right flex align-items-center"
 					style="background-color: white"
 				>
 					<svg class="icon icon-sm" style="--icon-stroke: var(--gray-600)">
@@ -224,7 +228,7 @@ endblock title %} {% block header %}
 				</button>
 				{% set initial_page = 1 if page|int == 1 else ((page|int / 3 +
 				0.5)|round(method='floor')|int * 3 - 2) %}
-				<div style="background-color: white">
+				<div class="flex" style="background-color: white">
 					{% set no_of_displayed_pages = 5 if no_of_pages - initial_page > 5
 					else no_of_pages - initial_page + 1 %} {% for i in
 					range(no_of_displayed_pages) %} {% set pg = i + initial_page %}
@@ -245,7 +249,7 @@ endblock title %} {% block header %}
 				</div>
 				<button
 					id="next"
-					class="btn btn-default border-left"
+					class="btn btn-default border-left flex align-items-center"
 					style="background-color: white"
 				>
 					<svg class="icon icon-sm" style="--icon-stroke: var(--gray-600)">

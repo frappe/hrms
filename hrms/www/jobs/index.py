@@ -10,10 +10,10 @@ from frappe.utils import pretty_date
 def get_context(context):
 	context.parents = [{"name": _("My Account"), "route": "/"}]
 	context.body_class = "jobs-page"
-	filters, txt, sort = get_filters_txt_and_sort()
-	context.job_openings = get_job_openings(filters, txt, sort)
-	# context.no_of_pages = get_no_of_pages(filters, txt)
-	context.no_of_pages = 10
+	page_len = 20
+	filters, txt, sort, offset = get_filters_txt_sort_offset(page_len)
+	context.job_openings = get_job_openings(filters, txt, sort, page_len, offset)
+	context.no_of_pages = get_no_of_pages(filters, txt, page_len)
 	context.all_filters = get_all_filters(filters)
 	context.sort = sort
 
@@ -60,12 +60,10 @@ def get_job_openings(filters=None, txt=None, sort=None, limit=20, offset=0):
 		query = query.where((jo.job_title.like(f"%{txt}%")) | (jo.description.like(f"%{txt}%")))
 
 	query = query.orderby("posted_on", order=Order.asc if sort == "asc" else Order.desc)
-
 	results = query.run(as_dict=True)
 
 	for d in results:
 		d.posted_on = pretty_date(d.posted_on)
-
 	return results
 
 
@@ -108,11 +106,12 @@ def get_all_filters(filters=None):
 	return {key: sorted(value) for key, value in all_filters.items()}
 
 
-def get_filters_txt_and_sort():
+def get_filters_txt_sort_offset(page_len=20):
 	args = frappe.request.args.to_dict(flat=False)
 	filters = {}
 	txt = ""
 	sort = None
+	offset = 0
 	allowed_filters = ["company", "department", "location", "employment_type"]
 
 	for d in args:
@@ -123,5 +122,7 @@ def get_filters_txt_and_sort():
 		elif d == "sort":
 			if args["sort"][0]:
 				sort = args["sort"][0]
+		elif d == "page":
+			offset = (int(args["page"][0]) - 1) * page_len
 
-	return filters, txt, sort
+	return filters, txt, sort, offset
