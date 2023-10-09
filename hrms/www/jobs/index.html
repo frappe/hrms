@@ -5,7 +5,6 @@ endblock title %} {% block header %}
 <meta
 	id="data"
 	data-filters="{{ all_filters }}"
-	data-no-of-pages="{{ no_of_pages }}"
 />
 <div class="row">
 	<div class="col-3 text-15">
@@ -215,7 +214,8 @@ endblock title %} {% block header %}
 				role="group"
 				aria-label="Pagination"
 			>
-				{% set page = frappe.form_dict.page %}
+				{% set page = frappe.form_dict.page %} {% set page = '1' if (not page or
+				page|int > no_of_pages or page|int < 1) else page %}
 				<button
 					id="previous"
 					class="btn btn-default border-right"
@@ -225,13 +225,15 @@ endblock title %} {% block header %}
 						<use href="#icon-left"></use>
 					</svg>
 				</button>
-				{% set initial_page = (page|int / 3 + 0.5)|round(method='floor')|int * 3
-				- 2 %}
+				{% set initial_page = 1 if page|int == 1 else ((page|int / 3 +
+				0.5)|round(method='floor')|int * 3 - 2) %}
 				<div style="background-color: white">
 					{% set no_of_displayed_pages = 5 if no_of_pages - initial_page > 5
 					else no_of_pages - initial_page + 1 %} {% for i in
 					range(no_of_displayed_pages) %} {% set pg = i + initial_page %}
 					<button
+						id="{{ pg }}"
+						name="pagination"
 						class="btn btn-default text-muted rounded-0"
 						style="background-color: {{ 'var(--gray-100)' if pg|string == page else 'white' }}"
 					>
