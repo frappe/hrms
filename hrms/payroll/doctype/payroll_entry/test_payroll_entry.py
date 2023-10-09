@@ -778,6 +778,7 @@ def setup_lending():
 		create_loan_accounts()
 		create_loan_product(
 			"Car Loan",
+			"Car Loan",
 			500000,
 			8.4,
 			is_term_loan=1,
