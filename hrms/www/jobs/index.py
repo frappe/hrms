@@ -1,3 +1,5 @@
+import math
+
 import frappe
 from frappe import _
 from frappe.query_builder import Order
@@ -10,11 +12,13 @@ def get_context(context):
 	context.body_class = "jobs-page"
 	filters, txt, sort = get_filters_txt_and_sort()
 	context.job_openings = get_job_openings(filters, txt, sort)
+	# context.no_of_pages = get_no_of_pages(filters, txt)
+	context.no_of_pages = 10
 	context.all_filters = get_all_filters(filters)
 	context.sort = sort
 
 
-def get_job_openings(filters=None, txt=None, sort=None, limit_start=0, limit_page_length=20):
+def get_job_openings(filters=None, txt=None, sort=None, limit=20, offset=0):
 
 	jo = frappe.qb.DocType("Job Opening")
 	ja = frappe.qb.DocType("Job Applicant")
@@ -45,6 +49,8 @@ def get_job_openings(filters=None, txt=None, sort=None, limit_start=0, limit_pag
 		)
 		.where((jo.status == "Open") & (jo.publish == 1))
 		.groupby(jo.name)
+		.limit(limit)
+		.offset(offset)
 	)
 
 	for d in filters:
@@ -61,6 +67,27 @@ def get_job_openings(filters=None, txt=None, sort=None, limit_start=0, limit_pag
 		d.posted_on = pretty_date(d.posted_on)
 
 	return results
+
+
+def get_no_of_pages(filters=None, txt=None, page_length=20):
+
+	jo = frappe.qb.DocType("Job Opening")
+	query = (
+		frappe.qb.from_(jo)
+		.select(
+			Count("*").as_("no_of_openings"),
+		)
+		.where((jo.status == "Open") & (jo.publish == 1))
+	)
+
+	for d in filters:
+		query = query.where(frappe.qb.Field(d).isin(filters[d]))
+
+	if txt:
+		query = query.where((jo.job_title.like(f"%{txt}%")) | (jo.description.like(f"%{txt}%")))
+
+	result = query.run(as_dict=True)
+	return math.ceil(result[0].no_of_openings / page_length)
 
 
 def get_all_filters(filters=None):

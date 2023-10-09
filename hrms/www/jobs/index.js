@@ -31,6 +31,14 @@ $(() => {
 		window.location.href = this.id;
 	});
 
+	$("#previous").on("click", function () {
+		console.log("loading more");
+	});
+
+	$("#next").on("click", function () {
+		console.log("loading more");
+	});
+
 	function show_applied_filters() {
 		const allowed_filters = Object.keys(
 			JSON.parse($("#data").data("filters").replace(/'/g, '"'))

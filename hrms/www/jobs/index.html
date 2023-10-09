@@ -2,7 +2,11 @@
 endblock title %} {% block header %}
 <h3 class="mt-0 mb-10 jobs-page">{{ _("Job Openings") }}</h3>
 {% endblock header %} {% block page_content %}
-<meta id="data" data-filters="{{ all_filters }}" />
+<meta
+	id="data"
+	data-filters="{{ all_filters }}"
+	data-no-of-pages="{{ no_of_pages }}"
+/>
 <div class="row">
 	<div class="col-3 text-15">
 		<div class="flex align-items-center">
@@ -204,6 +208,55 @@ endblock title %} {% block header %}
 			</div>
 			{% endfor %}
 		</div>
+		{%- if no_of_pages > 1 -%}
+		<div class="mb-4 flex">
+			<div
+				class="btn-group mx-auto border rounded"
+				role="group"
+				aria-label="Pagination"
+			>
+				{% set page = frappe.form_dict.page %}
+				<button
+					id="previous"
+					class="btn btn-default border-right"
+					style="background-color: white"
+				>
+					<svg class="icon icon-sm" style="--icon-stroke: var(--gray-600)">
+						<use href="#icon-left"></use>
+					</svg>
+				</button>
+				{% set initial_page = (page|int / 3 + 0.5)|round(method='floor')|int * 3
+				- 2 %}
+				<div style="background-color: white">
+					{% set no_of_displayed_pages = 5 if no_of_pages - initial_page > 5
+					else no_of_pages - initial_page + 1 %} {% for i in
+					range(no_of_displayed_pages) %} {% set pg = i + initial_page %}
+					<button
+						class="btn btn-default text-muted rounded-0"
+						style="background-color: {{ 'var(--gray-100)' if pg|string == page else 'white' }}"
+					>
+						{% if (loop.first and pg != 1) or (loop.last and pg != no_of_pages)
+						%}
+						<span>...</span>
+						{% else %}
+						<span>{{ pg }}</span>
+						{% endif %}
+					</button>
+					{% endfor %}
+				</div>
+				<button
+					id="next"
+					class="btn btn-default border-left"
+					style="background-color: white"
+				>
+					<svg class="icon icon-sm" style="--icon-stroke: var(--gray-600)">
+						>
+						<use href="#icon-right"></use>
+					</svg>
+				</button>
+			</div>
+		</div>
+		{% endif %}
 	</div>
 </div>
 {% endblock page_content %}
