@@ -31,12 +31,21 @@ $(() => {
 		window.location.href = this.id;
 	});
 
+	$("[name=pagination]").on("click", function () {
+		const filters = $("input").serialize();
+		scroll_up_and_update_params(filters + "&page=" + this.id);
+	});
+
 	$("#previous").on("click", function () {
-		console.log("loading more");
+		const new_page = (Number(query_params?.page) || 1) - 1;
+		const filters = $("input").serialize();
+		scroll_up_and_update_params(filters + "&page=" + new_page);
 	});
 
 	$("#next").on("click", function () {
-		console.log("loading more");
+		const new_page = (Number(query_params?.page) || 1) + 1;
+		const filters = $("input").serialize();
+		scroll_up_and_update_params(filters + "&page=" + new_page);
 	});
 
 	function show_applied_filters() {
