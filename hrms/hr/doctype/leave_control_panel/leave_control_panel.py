@@ -123,9 +123,9 @@ class LeaveControlPanel(Document):
 				title = _("Partial Success")
 				msg += "<hr>"
 			else:
-				title = _("{0} Creation Failed").format(doctype)
+				title = _("Creation Failed")
 		else:
-			title = _("Successfully created {0}").format(doctype)
+			title = _("Success")
 
 		if success:
 			msg += _("Successfully created {0} records for:").format(doctype)
