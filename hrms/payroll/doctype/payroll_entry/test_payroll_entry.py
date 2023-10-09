@@ -752,7 +752,10 @@ def create_assignments_with_cost_centers(employee1, employee2):
 
 
 def setup_lending():
-	from lending.loan_management.doctype.loan.test_loan import create_loan_accounts, create_loan_type
+	from lending.loan_management.doctype.loan.test_loan import (
+		create_loan_accounts,
+		create_loan_product,
+	)
 
 	company = "_Test Company"
 	branch = "Test Employee Branch"
@@ -771,9 +774,9 @@ def setup_lending():
 		currency=company_doc.default_currency,
 	)
 
-	if not frappe.db.exists("Loan Type", "Car Loan"):
+	if not frappe.db.exists("Loan Product", "Car Loan"):
 		create_loan_accounts()
-		create_loan_type(
+		create_loan_product(
 			"Car Loan",
 			500000,
 			8.4,
