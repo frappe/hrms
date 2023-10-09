@@ -13,7 +13,6 @@ Apply Now,درخواست کن,
 Apprentice,شاگرد,
 Approval Status,وضعیت تایید,
 Approval Status must be 'Approved' or 'Rejected',وضعیت تایید باید &quot;تایید&quot; یا &quot;رد&quot;,
-Approve,تایید,
 As per your assigned Salary Structure you cannot apply for benefits,همانطور که در ساختار حقوق شما تعیین شده است، نمی توانید برای مزایا درخواست دهید,
 Assign,اختصاص دادن,
 Assign Salary Structure,تعیین ساختار حقوق و دستمزد,
@@ -163,7 +162,6 @@ Probation,عفو مشروط,
 Probationary Period,دوره وابسته به التزام,
 Property,خاصیت,
 Property already added,املاک در حال حاضر اضافه شده است,
-Reject,رد کردن,
 Replies,پاسخ ها,
 Responsibilities,مسئولیت,
 Role,نقش,
@@ -839,3 +837,10 @@ From date can not be less than employee's joining date.,از تاریخ نمی �
 To date can not be greater than employee's relieving date.,تا به امروز نمی تواند بیشتر از تاریخ تسویه حساب کارمند باشد.,
 Payroll date can not be greater than employee's relieving date.,تاریخ حقوق و دستمزد نمی تواند بیشتر از تاریخ تسویه حساب کارمند باشد.,
 Condition and formula,شرایط و فرمول,
+Available Leaves,برگهای موجود,
+IFSC Code,کد IFSC,
+Others,دیگران,
+Total Allocated Leaves,مجموع برگه های برگزیده,
+Used Leaves,برگهای مورد استفاده,
+PAN Number,شماره PAN,
+Expired Leaves,برگهای منقضی شده,
