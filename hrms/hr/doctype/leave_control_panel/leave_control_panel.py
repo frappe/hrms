@@ -102,7 +102,7 @@ class LeaveControlPanel(Document):
 	def get_from_to_date(self):
 		if self.dates_based_on == "Joining Date":
 			return None, self.to_date
-		elif self.dates_based_on == "Leave Period":
+		elif self.dates_based_on == "Leave Period" and self.leave_period:
 			return frappe.db.get_value("Leave Period", self.leave_period, ["from_date", "to_date"])
 		else:
 			return self.from_date, self.to_date
