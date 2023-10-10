@@ -65,10 +65,14 @@ def update_employee_transfer(doc, method=None):
 		emp_transfer.db_set("new_employee_id", "")
 
 
-def update_job_applicant_status(doc, method=None):
-	"""Updates Job Applicant status as 'Accepted' if it exists"""
+def update_job_applicant_and_offer(doc, method=None):
+	"""Updates Job Applicant and Job Offer status as 'Accepted' and submits them"""
 	if doc.job_applicant:
 		frappe.db.set_value("Job Applicant", doc.job_applicant, "status", "Accepted")
+		job_offer = frappe.get_last_doc("Job Offer", filters={"job_applicant": doc.job_applicant})
+		job_offer.status = "Accepted"
+		job_offer.save()
+		job_offer.submit()
 
 
 @frappe.whitelist()
