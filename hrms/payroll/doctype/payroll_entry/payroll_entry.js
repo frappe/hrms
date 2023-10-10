@@ -210,7 +210,7 @@ frappe.ui.form.on('Payroll Entry', {
 		let filters = {};
 
 		let fields = ['company', 'start_date', 'end_date', 'payroll_frequency', 'payroll_payable_account',
-			'currency', 'department', 'branch', 'designation', 'salary_slip_based_on_timesheet'];
+			'currency', 'department', 'branch', 'designation', 'salary_slip_based_on_timesheet','grade'];
 
 		fields.forEach(field => {
 			if (frm.doc[field]) {
@@ -281,7 +281,9 @@ frappe.ui.form.on('Payroll Entry', {
 	department: function (frm) {
 		frm.events.clear_employee_table(frm);
 	},
-
+	grade: function (frm) {
+		frm.events.clear_employee_table(frm);
+	},
 	designation: function (frm) {
 		frm.events.clear_employee_table(frm);
 	},
