@@ -64,6 +64,7 @@ class EmployeeOnboarding(EmployeeBoardingController):
 			frappe.db.set_value("Task", activity.task, "status", "Completed")
 		frappe.db.set_value("Project", self.project, "status", "Completed")
 		self.boarding_status = "Completed"
+		self.save()
 
 
 @frappe.whitelist()
