@@ -8,6 +8,7 @@ from frappe.tests.utils import FrappeTestCase
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
+from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
 from hrms.hr.doctype.leave_control_panel.leave_control_panel import LeaveControlPanel
 from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
 from hrms.hr.doctype.leave_policy.test_leave_policy import create_leave_policy
@@ -19,7 +20,7 @@ class TestLeaveControlPanel(FrappeTestCase):
 	def setUpClass(self):
 		create_company()
 		super().setUpClass()
-		frappe.db.sql("delete from `tabEmployee` where company='_Test Company'")
+		frappe.db.delete("Employee", {"company": "_Test Company"})
 
 		self.create_records()
 
@@ -44,6 +45,11 @@ class TestLeaveControlPanel(FrappeTestCase):
 		self.emp3 = make_employee(
 			"employee3@example.com",
 			company="_Test Company",
+		)
+		self.emp4 = make_employee(
+			"employee4@example.com",
+			company="_Test Company",
+			date_of_joining=date(2030, 1, 5),
 		)
 
 	def test_allocation_based_on_leave_type(self):
@@ -91,3 +97,57 @@ class TestLeaveControlPanel(FrappeTestCase):
 		self.assertEqual(lpa.leave_period, self.leave_period.name)
 		self.assertEqual(lpa.effective_from, self.leave_period.from_date)
 		self.assertEqual(lpa.effective_to, self.leave_period.to_date)
+
+	def test_allocation_based_on_joining_date(self):
+		doj = date(2030, 1, 5)
+		to_date = date(2030, 12, 31)
+
+		arg = {
+			"doctype": "Leave Control Panel",
+			"dates_based_on": "Joining Date",
+			"to_date": to_date,
+			"allocate_based_on_leave_policy": 1,
+			"leave_policy": self.leave_policy,
+		}
+
+		lcp = LeaveControlPanel(arg)
+		test = lcp.allocate_leave([self.emp4])
+
+		lpa = frappe.get_value(
+			"Leave Policy Assignment",
+			{"employee": self.emp4},
+			["leave_policy", "leave_period", "effective_from", "effective_to"],
+			as_dict=1,
+		)
+		self.assertEqual(lpa.leave_policy, self.leave_policy.name)
+		self.assertEqual(lpa.effective_from, doj)
+		self.assertEqual(lpa.effective_to, to_date)
+
+	def test_get_employees(self):
+		doj = date(2030, 1, 5)
+		allocation = create_leave_allocation(
+			employee=self.emp1,
+			leave_type="Casual Leave",
+			from_date=self.leave_period.from_date,
+			to_date=self.leave_period.to_date,
+		)
+		allocation.submit()
+
+		args = {
+			"doctype": "Leave Control Panel",
+			"company": "_Test Company",
+			"dates_based_on": "Leave Period",
+			"leave_period": self.leave_period.name,
+			"allocate_based_on_leave_policy": 1,
+			"leave_policy": self.leave_policy,
+		}
+		advanced_filters = [["Employee", "date_of_joining", "<", date(2030, 1, 5)]]
+		lcp = LeaveControlPanel(args)
+		employees = lcp.get_employees(advanced_filters)
+		employee_names = [d.name for d in employees]
+
+		# employee already having an allocation
+		self.assertNotIn(self.emp1, employee_names)
+		# advanced filter applied
+		self.assertNotIn(self.emp4, employee_names)
+		self.assertEqual(len(employees), 2)
