@@ -8,11 +8,7 @@
 			<p>Get the app on your device for easy access & a better experience!</p>
 		</template>
 		<template #actions>
-			<Button
-				variant="solid"
-				@click="handleDocUpdate('submit')"
-				class="py-5 w-full"
-			>
+			<Button variant="solid" @click="() => install()" class="py-5 w-full">
 				<template #prefix><FeatherIcon name="download" class="w-4" /></template>
 				Install
 			</Button>
@@ -102,5 +98,6 @@ window.addEventListener("appinstalled", () => {
 
 async function install() {
 	deferredPrompt.value.prompt()
+	showDialog.value = false
 }
 </script>
