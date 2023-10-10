@@ -11,7 +11,7 @@ from erpnext import get_default_company
 
 
 class LeaveControlPanel(Document):
-	def validate_fields(self, employees):
+	def validate_fields(self, employees: list):
 		fields = []
 		if self.dates_based_on == "Leave Period":
 			fields.append("leave_period")
@@ -33,13 +33,13 @@ class LeaveControlPanel(Document):
 			frappe.throw(_("No employee(s) selected"))
 
 	@frappe.whitelist()
-	def allocate_leave(self, employees):
+	def allocate_leave(self, employees: list):
 		self.validate_fields(employees)
 		if self.allocate_based_on_leave_policy:
 			return self.create_leave_policy_assignments(employees)
 		return self.create_leave_allocations(employees)
 
-	def create_leave_allocations(self, employees) -> dict:
+	def create_leave_allocations(self, employees: list) -> dict:
 		from_date, to_date = self.get_from_to_date()
 		failure = []
 		success = []
@@ -68,7 +68,7 @@ class LeaveControlPanel(Document):
 		self.notify_status("Leave Allocation", failure, success)
 		return {"failed": failure, "success": success}
 
-	def create_leave_policy_assignments(self, employees) -> dict:
+	def create_leave_policy_assignments(self, employees: list) -> dict:
 		from_date, to_date = self.get_from_to_date()
 		assignment_based_on = None if self.dates_based_on == "Custom Range" else self.dates_based_on
 		failure = []
@@ -82,11 +82,11 @@ class LeaveControlPanel(Document):
 				assignment.employee = employee
 				assignment.assignment_based_on = assignment_based_on
 				assignment.leave_policy = self.leave_policy
-				assignment.effective_from = (
-					from_date if from_date else frappe.db.get_value("Employee", employee, "date_of_joining")
+				assignment.effective_from = from_date or frappe.db.get_value(
+					"Employee", employee, "date_of_joining"
 				)
 				assignment.effective_to = to_date
-				assignment.leave_period = self.leave_period or None
+				assignment.leave_period = self.get("leave_period")
 				assignment.carry_forward = self.carry_forward
 				assignment.save()
 				assignment.submit()
@@ -102,10 +102,12 @@ class LeaveControlPanel(Document):
 	def get_from_to_date(self):
 		if self.dates_based_on == "Joining Date":
 			return None, self.to_date
+		elif self.dates_based_on == "Leave Period":
+			return frappe.db.get_value("Leave Period", self.leave_period, ["from_date", "to_date"])
 		else:
 			return self.from_date, self.to_date
 
-	def notify_status(self, doctype: str, failure: list, success: list):
+	def notify_status(self, doctype: str, failure: list, success: list) -> None:
 		frappe.clear_messages()
 
 		msg = ""
@@ -144,35 +146,60 @@ class LeaveControlPanel(Document):
 		)
 
 	@frappe.whitelist()
-	def get_employees(self, advanced_filters):
+	def get_employees(self, advanced_filters: list) -> list:
 		from_date, to_date = self.get_from_to_date()
+
 		if to_date and (from_date or self.dates_based_on == "Joining Date"):
-			la = frappe.qb.DocType("Leave Allocation")
-			all_employees = frappe.get_list(
+			if all_employees := frappe.get_list(
 				"Employee",
 				filters=self.get_filters() + advanced_filters,
-				fields=["employee", "employee_name", "company", "department", "date_of_joining"],
+				fields=["name", "employee", "employee_name", "company", "department", "date_of_joining"],
+			):
+				return self.get_employees_without_allocations(all_employees, from_date, to_date)
+
+		return []
+
+	def get_employees_without_allocations(
+		self, all_employees: list, from_date: str, to_date: str
+	) -> list:
+		Allocation = frappe.qb.DocType("Leave Allocation")
+		Employee = frappe.qb.DocType("Employee")
+
+		query = (
+			frappe.qb.from_(Allocation)
+			.join(Employee)
+			.on(Allocation.employee == Employee.name)
+			.select(Employee.name)
+			.distinct()
+			.where(
+				(Allocation.docstatus == 1) & (Allocation.employee.isin([d.name for d in all_employees]))
 			)
-			filtered_employees = []
+		)
 
-			if self.allocate_based_on_leave_policy and self.leave_policy:
-				leave_types = frappe.get_list(
-					"Leave Policy Detail", {"parent": self.leave_policy}, pluck="leave_type"
-				)
-				for d in all_employees:
-					query = self.get_query(from_date, to_date, d)
-					query = query.where(la.leave_type.isin(leave_types))
-					if not query.run():
-						filtered_employees.append(d)
-				return filtered_employees
+		if self.dates_based_on == "Joining Date":
+			from_date = Employee.date_of_joining
 
-			elif not self.allocate_based_on_leave_policy and self.leave_type:
-				for d in all_employees:
-					query = self.get_query(from_date, to_date, d)
-					query = query.where(la.leave_type == self.leave_type)
-					if not query.run():
-						filtered_employees.append(d)
-				return filtered_employees
+		query = query.where(
+			(Allocation.from_date[from_date:to_date] | Allocation.to_date[from_date:to_date])
+			| (
+				(Allocation.from_date <= from_date)
+				& (Allocation.from_date <= to_date)
+				& (Allocation.to_date >= from_date)
+				& (Allocation.to_date >= to_date)
+			)
+		)
+
+		if self.allocate_based_on_leave_policy and self.leave_policy:
+			leave_types = frappe.get_all(
+				"Leave Policy Detail", {"parent": self.leave_policy}, pluck="leave_type"
+			)
+			query = query.where(Allocation.leave_type.isin(leave_types))
+
+		elif not self.allocate_based_on_leave_policy and self.leave_type:
+			query = query.where(Allocation.leave_type == self.leave_type)
+
+		employees_with_allocations = query.run(pluck=True)
+		return [d for d in all_employees if d.name not in employees_with_allocations]
 
 	@frappe.whitelist()
 	def get_latest_leave_period(self):
@@ -204,26 +231,3 @@ class LeaveControlPanel(Document):
 				else:
 					filters.append([d, "=", self.get(d)])
 		return filters
-
-	def get_query(self, from_date, to_date, employee):
-		if self.dates_based_on == "Joining Date":
-			from_date = employee.date_of_joining
-
-		Allocation = frappe.qb.DocType("Leave Allocation")
-		return (
-			frappe.qb.from_(Allocation)
-			.select(True)
-			.where(
-				(Allocation.docstatus == 1)
-				& (Allocation.employee == employee.employee)
-				& (
-					(Allocation.from_date[from_date:to_date] | Allocation.to_date[from_date:to_date])
-					| (
-						(Allocation.from_date <= from_date)
-						& (Allocation.from_date <= to_date)
-						& (Allocation.to_date >= from_date)
-						& (Allocation.to_date >= to_date)
-					)
-				)
-			)
-		)
