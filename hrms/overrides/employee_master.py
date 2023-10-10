@@ -65,6 +65,12 @@ def update_employee_transfer(doc, method=None):
 		emp_transfer.db_set("new_employee_id", "")
 
 
+def update_job_applicant_status(doc, method=None):
+	"""Updates Job Applicant status as 'Accepted' if it exists"""
+	if doc.job_applicant:
+		frappe.db.set_value("Job Applicant", doc.job_applicant, "status", "Accepted")
+
+
 @frappe.whitelist()
 def get_timeline_data(doctype, name):
 	"""Return timeline for attendance"""
