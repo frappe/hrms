@@ -114,12 +114,8 @@ frappe.ui.form.on("Leave Control Panel", {
 				frm.set_df_property("advanced_filters_section", "collapsible", 0);
 
 				frm.employees = r.message;
-				if (frm.employees) {
-					frm.set_df_property("select_employees_section", "hidden", 0);
-					frm.events.show_employees(frm, frm.employees);
-				} else {
-					frm.set_df_property("select_employees_section", "hidden", 1);
-				}
+				frm.set_df_property("select_employees_section", "hidden", 0);
+				frm.events.show_employees(frm, frm.employees);
 			});
 	},
 
@@ -224,6 +220,7 @@ frappe.ui.form.on("Leave Control Panel", {
 const set_field_options = (frm) => {
 	const filter_wrapper = frm.fields_dict.filter_list.$wrapper;
 	filter_wrapper.empty();
+
 	frm.filter_list = new frappe.ui.FilterGroup({
 		parent: filter_wrapper,
 		doctype: "Employee",
@@ -231,6 +228,7 @@ const set_field_options = (frm) => {
 			frm.advanced_filters = frm.filter_list
 				.get_filters()
 				.reduce((filters, item) => {
+					// item[3] is the value from the array [doctype, fieldname, condition, value]
 					if (item[3]) {
 						filters.push(item.slice(1, 4));
 					}
