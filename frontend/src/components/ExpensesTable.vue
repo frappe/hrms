@@ -58,81 +58,79 @@
 	</div>
 	<EmptyState v-else message="No expenses added" :isTableField="true" />
 
-	<ion-modal
-		ref="modal"
-		:is-open="isModalOpen"
-		@didDismiss="resetSelectedItem()"
-		:initial-breakpoint="1"
-		:breakpoints="[0, 1]"
-	>
-		<!-- Add Expense Action Sheet -->
-		<div class="bg-white w-full flex flex-col items-center justify-center pb-5">
-			<div class="w-full pt-8 pb-5 border-b text-center">
-				<span class="text-gray-900 font-bold text-lg">
-					{{ modalTitle }}
-				</span>
-			</div>
-			<div class="w-full flex flex-col items-center justify-center gap-5 p-4">
-				<div class="flex flex-col w-full space-y-4">
-					<FormField
-						v-for="field in expensesTableFields.data"
-						:key="field.fieldname"
-						class="w-full"
-						:label="field.label"
-						:fieldtype="field.fieldtype"
-						:fieldname="field.fieldname"
-						:options="field.options"
-						:hidden="field.hidden"
-						:reqd="field.reqd"
-						:default="field.default"
-						:readOnly="field.read_only || isReadOnly"
-						v-model="expenseItem[field.fieldname]"
-					/>
+	<CustomIonModal :isOpen="isModalOpen" @didDismiss="resetSelectedItem()">
+		<template #actionSheet>
+			<!-- Add Expense Action Sheet -->
+			<div
+				class="bg-white w-full flex flex-col items-center justify-center pb-5"
+			>
+				<div class="w-full pt-8 pb-5 border-b text-center">
+					<span class="text-gray-900 font-bold text-lg">
+						{{ modalTitle }}
+					</span>
 				</div>
+				<div class="w-full flex flex-col items-center justify-center gap-5 p-4">
+					<div class="flex flex-col w-full space-y-4">
+						<FormField
+							v-for="field in expensesTableFields.data"
+							:key="field.fieldname"
+							class="w-full"
+							:label="field.label"
+							:fieldtype="field.fieldtype"
+							:fieldname="field.fieldname"
+							:options="field.options"
+							:hidden="field.hidden"
+							:reqd="field.reqd"
+							:default="field.default"
+							:readOnly="field.read_only || isReadOnly"
+							v-model="expenseItem[field.fieldname]"
+						/>
+					</div>
 
-				<div
-					v-if="!isReadOnly"
-					class="flex w-full flex-row items-center justify-between gap-3"
-				>
-					<Button
-						v-if="editingIdx !== null"
-						class="border-red-600 text-red-600 py-5 text-sm"
-						variant="outline"
-						theme="red"
-						@click="deleteExpenseItem()"
+					<div
+						v-if="!isReadOnly"
+						class="flex w-full flex-row items-center justify-between gap-3"
 					>
-						<template #prefix>
-							<FeatherIcon name="trash" class="w-4" />
-						</template>
-						Delete
-					</Button>
-					<Button
-						variant="solid"
-						class="w-full py-5 text-sm disabled:bg-gray-700 disabled:text-white"
-						@click="updateExpenseItem()"
-						:disabled="addButtonDisabled"
-					>
-						<template #prefix>
-							<FeatherIcon
-								:name="editingIdx === null ? 'plus' : 'check'"
-								class="w-4"
-							/>
-						</template>
-						{{ editingIdx === null ? "Add Expense" : "Update Expense" }}
-					</Button>
+						<Button
+							v-if="editingIdx !== null"
+							class="border-red-600 text-red-600 py-5 text-sm"
+							variant="outline"
+							theme="red"
+							@click="deleteExpenseItem()"
+						>
+							<template #prefix>
+								<FeatherIcon name="trash" class="w-4" />
+							</template>
+							Delete
+						</Button>
+						<Button
+							variant="solid"
+							class="w-full py-5 text-sm disabled:bg-gray-700 disabled:text-white"
+							@click="updateExpenseItem()"
+							:disabled="addButtonDisabled"
+						>
+							<template #prefix>
+								<FeatherIcon
+									:name="editingIdx === null ? 'plus' : 'check'"
+									class="w-4"
+								/>
+							</template>
+							{{ editingIdx === null ? "Add Expense" : "Update Expense" }}
+						</Button>
+					</div>
 				</div>
 			</div>
-		</div>
-	</ion-modal>
+		</template>
+	</CustomIonModal>
 </template>
 
 <script setup>
-import { IonModal } from "@ionic/vue"
 import { FeatherIcon, createResource } from "frappe-ui"
 import { computed, ref, watch, inject } from "vue"
 
 import FormField from "@/components/FormField.vue"
 import EmptyState from "@/components/EmptyState.vue"
+import CustomIonModal from "@/components/CustomIonModal.vue"
 
 import { claimTypesByID } from "@/data/claims"
 
