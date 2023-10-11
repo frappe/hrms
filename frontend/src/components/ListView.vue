@@ -73,23 +73,20 @@
 			>
 				<LoadingIndicator class="w-8 h-8 text-gray-800" />
 			</div>
-
-			<ion-modal
-				ref="modal"
-				trigger="show-filter-modal"
-				:initial-breakpoint="1"
-				:breakpoints="[0, 1]"
-			>
-				<!-- Filter Action Sheet -->
-				<ListFiltersActionSheet
-					:filterConfig="filterConfig"
-					@applyFilters="applyFilters"
-					@clearFilters="clearFilters"
-					v-model:filters="filterMap"
-				/>
-			</ion-modal>
 		</div>
 	</div>
+
+	<CustomIonModal trigger="show-filter-modal">
+		<!-- Filter Action Sheet -->
+		<template #actionSheet>
+			<ListFiltersActionSheet
+				:filterConfig="filterConfig"
+				@applyFilters="applyFilters"
+				@clearFilters="clearFilters"
+				v-model:filters="filterMap"
+			/>
+		</template>
+	</CustomIonModal>
 </template>
 
 <script setup>
@@ -104,7 +101,7 @@ import {
 	onMounted,
 	onBeforeUnmount,
 } from "vue"
-import { IonModal, modalController } from "@ionic/vue"
+import { modalController } from "@ionic/vue"
 
 import { FeatherIcon, createResource, LoadingIndicator } from "frappe-ui"
 
@@ -113,6 +110,7 @@ import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
 import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 import EmployeeAdvanceItem from "@/components/EmployeeAdvanceItem.vue"
 import ListFiltersActionSheet from "@/components/ListFiltersActionSheet.vue"
+import CustomIonModal from "@/components/CustomIonModal.vue"
 
 const props = defineProps({
 	doctype: {

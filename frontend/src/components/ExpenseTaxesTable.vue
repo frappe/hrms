@@ -57,85 +57,83 @@
 		</div>
 		<EmptyState v-else message="No taxes added" :isTableField="true" />
 
-		<ion-modal
-			ref="modal"
-			:is-open="isModalOpen"
-			@didDismiss="resetSelectedItem()"
-			:initial-breakpoint="1"
-			:breakpoints="[0, 1]"
-		>
-			<!-- Add Expense Tax Action Sheet -->
-			<div
-				class="bg-white w-full flex flex-col items-center justify-center pb-5"
-			>
-				<div class="w-full pt-8 pb-5 border-b text-center">
-					<span class="text-gray-900 font-bold text-xl">
-						{{ modalTitle }}
-					</span>
-				</div>
-				<div class="w-full flex flex-col items-center justify-center gap-5 p-4">
-					<div class="flex flex-col w-full space-y-4">
-						<FormField
-							v-for="field in taxesTableFields.data"
-							:key="field.fieldname"
-							class="w-full"
-							:label="field.label"
-							:fieldtype="field.fieldtype"
-							:fieldname="field.fieldname"
-							:options="field.options"
-							:linkFilters="field.linkFilters"
-							:hidden="field.hidden"
-							:reqd="field.reqd"
-							:readOnly="field.read_only || isReadOnly"
-							:default="field.default"
-							v-model="expenseTax[field.fieldname]"
-						/>
+		<CustomIonModal :isOpen="isModalOpen" @didDismiss="resetSelectedItem()">
+			<template #actionSheet>
+				<!-- Add Expense Tax Action Sheet -->
+				<div
+					class="bg-white w-full flex flex-col items-center justify-center pb-5"
+				>
+					<div class="w-full pt-8 pb-5 border-b text-center">
+						<span class="text-gray-900 font-bold text-xl">
+							{{ modalTitle }}
+						</span>
 					</div>
-
 					<div
-						v-if="!isReadOnly"
-						class="flex w-full flex-row items-center justify-between gap-3"
+						class="w-full flex flex-col items-center justify-center gap-5 p-4"
 					>
-						<Button
-							v-if="editingIdx !== null"
-							class="border-red-600 text-red-600 py-5 text-sm"
-							variant="outline"
-							theme="red"
-							@click="deleteExpenseTax()"
+						<div class="flex flex-col w-full space-y-4">
+							<FormField
+								v-for="field in taxesTableFields.data"
+								:key="field.fieldname"
+								class="w-full"
+								:label="field.label"
+								:fieldtype="field.fieldtype"
+								:fieldname="field.fieldname"
+								:options="field.options"
+								:linkFilters="field.linkFilters"
+								:hidden="field.hidden"
+								:reqd="field.reqd"
+								:readOnly="field.read_only || isReadOnly"
+								:default="field.default"
+								v-model="expenseTax[field.fieldname]"
+							/>
+						</div>
+
+						<div
+							v-if="!isReadOnly"
+							class="flex w-full flex-row items-center justify-between gap-3"
 						>
-							<template #prefix>
-								<FeatherIcon name="trash" class="w-4" />
-							</template>
-							Delete
-						</Button>
-						<Button
-							variant="solid"
-							class="w-full py-5 text-sm disabled:bg-gray-700 disabled:text-white"
-							@click="updateExpenseTax()"
-							:disabled="addButtonDisabled"
-						>
-							<template #prefix>
-								<FeatherIcon
-									:name="editingIdx === null ? 'plus' : 'check'"
-									class="w-4"
-								/>
-							</template>
-							{{ editingIdx === null ? "Add Tax" : "Update Tax" }}
-						</Button>
+							<Button
+								v-if="editingIdx !== null"
+								class="border-red-600 text-red-600 py-5 text-sm"
+								variant="outline"
+								theme="red"
+								@click="deleteExpenseTax()"
+							>
+								<template #prefix>
+									<FeatherIcon name="trash" class="w-4" />
+								</template>
+								Delete
+							</Button>
+							<Button
+								variant="solid"
+								class="w-full py-5 text-sm disabled:bg-gray-700 disabled:text-white"
+								@click="updateExpenseTax()"
+								:disabled="addButtonDisabled"
+							>
+								<template #prefix>
+									<FeatherIcon
+										:name="editingIdx === null ? 'plus' : 'check'"
+										class="w-4"
+									/>
+								</template>
+								{{ editingIdx === null ? "Add Tax" : "Update Tax" }}
+							</Button>
+						</div>
 					</div>
 				</div>
-			</div>
-		</ion-modal>
+			</template>
+		</CustomIonModal>
 	</template>
 </template>
 
 <script setup>
-import { IonModal } from "@ionic/vue"
 import { FeatherIcon, createResource } from "frappe-ui"
 import { computed, ref, watch } from "vue"
 
 import FormField from "@/components/FormField.vue"
 import EmptyState from "@/components/EmptyState.vue"
+import CustomIonModal from "@/components/CustomIonModal.vue"
 
 const props = defineProps({
 	expenseClaim: {
