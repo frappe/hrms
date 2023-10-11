@@ -288,6 +288,7 @@ override_doctype_dashboards = {
 default_company_account_fields = [
 	"default_payroll_payable_account",
 	"default_employee_advance_account",
+	"default_expense_claim_payable_account",
 ]
 # exempt linked doctypes from being automatically cancelled
 #
