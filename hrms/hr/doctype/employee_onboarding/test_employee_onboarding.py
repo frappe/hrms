@@ -79,20 +79,18 @@ class TestEmployeeOnboarding(FrappeTestCase):
 		self.assertEqual(onboarding.boarding_status, "Pending")
 		project = frappe.get_doc("Project", onboarding.project)
 		self.assertEqual(project.status, "Open")
-		for task in frappe.get_all("Task", dict(project=project.name), pluck="name"):
-			task = frappe.get_doc("Task", task)
-			self.assertEqual(task.status, "Open")
+		for task_status in frappe.get_all("Task", dict(project=project.name), pluck="status"):
+			self.assertEqual(task_status, "Open")
 
 		onboarding.reload()
 		onboarding.mark_onboarding_as_completed()
 
 		# after marking as completed
 		self.assertEqual(onboarding.boarding_status, "Completed")
-		project = frappe.get_doc("Project", onboarding.project)
+		project.reload()
 		self.assertEqual(project.status, "Completed")
-		for task in frappe.get_all("Task", dict(project=project.name), pluck="name"):
-			task = frappe.get_doc("Task", task)
-			self.assertEqual(task.status, "Completed")
+		for task_status in frappe.get_all("Task", dict(project=project.name), pluck="status"):
+			self.assertEqual(task_status, "Completed")
 
 	def tearDown(self):
 		frappe.db.rollback()
