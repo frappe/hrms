@@ -153,8 +153,6 @@ const activeTab = ref(props.tabButtons[0])
 const areFiltersApplied = ref(false)
 const appliedFilters = ref([])
 
-const showModalBackdrop = ref(false)
-
 // computed properties
 const isTeamRequest = computed(() => {
 	return activeTab.value === props.tabButtons[1]
