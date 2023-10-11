@@ -19,12 +19,12 @@
 	<Popover :show="iosInstallMessage" placement="bottom">
 		<template #body>
 			<div
-				class="mt-[calc(100vh-15rem)] flex flex-col gap-2 mx-2 rounded-lg py-5 bg-blue-50 shadow-xl"
+				class="mt-[calc(100vh-15rem)] flex flex-col gap-3 mx-2 rounded py-5 bg-blue-100 drop-shadow-xl"
 			>
 				<div
 					class="flex flex-row text-center items-center justify-between mb-1 px-3"
 				>
-					<span class="text-lg text-gray-900 font-bold">
+					<span class="text-base text-gray-900 font-bold">
 						Install Frappe HR
 					</span>
 					<span class="inline-flex items-baseline">
@@ -35,8 +35,8 @@
 						/>
 					</span>
 				</div>
-				<div class="text-sm text-gray-800 px-3">
-					<span class="flex flex-col gap-1">
+				<div class="text-xs text-gray-800 px-3">
+					<span class="flex flex-col gap-2">
 						<span>
 							Get the app on your iPhone for easy access & a better experience
 						</span>
