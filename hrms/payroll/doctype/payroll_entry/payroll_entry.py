@@ -1391,7 +1391,7 @@ def create_salary_slips_for_employees(employees, args, publish_progress=True):
 
 	finally:
 		frappe.db.commit()  # nosemgrep
-		frappe.publish_realtime("completed_salary_slip_creation")
+		frappe.publish_realtime("completed_salary_slip_creation", user=frappe.session.user)
 
 
 def show_payroll_submission_status(submitted, unsubmitted, payroll_entry):
@@ -1468,7 +1468,7 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 
 	finally:
 		frappe.db.commit()  # nosemgrep
-		frappe.publish_realtime("completed_salary_slip_submission")
+		frappe.publish_realtime("completed_salary_slip_submission", user=frappe.session.user)
 
 	frappe.flags.via_payroll_entry = False
 
