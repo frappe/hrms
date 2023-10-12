@@ -7,6 +7,8 @@ frappe.provide("erpnext.accounts.dimensions");
 
 frappe.ui.form.on('Payroll Entry', {
 	onload: function (frm) {
+		frm.ignore_doctypes_on_cancel_all = ["Salary Slip", "Journal Entry"];
+
 		if (!frm.doc.posting_date) {
 			frm.doc.posting_date = frappe.datetime.nowdate();
 		}
