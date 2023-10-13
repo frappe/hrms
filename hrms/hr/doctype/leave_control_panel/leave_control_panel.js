@@ -3,6 +3,7 @@
 
 frappe.ui.form.on("Leave Control Panel", {
 	setup: function (frm) {
+		frm.trigger("set_query");
 		frm.trigger("set_leave_details");
 		frappe.model.with_doctype("Employee", () => set_field_options(frm));
 	},
@@ -182,6 +183,23 @@ frappe.ui.form.on("Leave Control Panel", {
 			dropdown: false,
 			align: "left",
 		}));
+	},
+
+	set_query(frm) {
+		frm.set_query("leave_policy", function () {
+			return {
+				filters: {
+					docstatus: 1,
+				},
+			};
+		});
+		frm.set_query("leave_period", function () {
+			return {
+				filters: {
+					is_active: 1,
+				},
+			};
+		});
 	},
 
 	set_primary_action(frm) {
