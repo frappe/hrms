@@ -26,6 +26,11 @@ const routes = [
 		name: "Notifications",
 		component: () => import("@/views/Notifications.vue"),
 	},
+	{
+		path: "/invalid-employee",
+		name: "InvalidEmployee",
+		component: () => import("@/views/InvalidEmployee.vue"),
+	},
 	...leaveRoutes,
 	...claimRoutes,
 	...employeeAdvanceRoutes,

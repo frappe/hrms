@@ -9,7 +9,7 @@
 				<div
 					class="flex w-full items-center justify-between py-8 px-4 border-b"
 				>
-					<FrappeHRLogo />
+					<FrappeHRLogoType />
 				</div>
 				<MenuLinks />
 			</div>
@@ -21,7 +21,7 @@
 import { IonContent, IonMenu } from "@ionic/vue"
 
 import MenuLinks from "@/components/MenuLinks.vue"
-import FrappeHRLogo from "@/components/icons/FrappeHRLogo.vue"
+import FrappeHRLogoType from "@/components/icons/FrappeHRLogoType.vue"
 import { useRoute } from "vue-router"
 
 const route = useRoute()

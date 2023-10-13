@@ -65,11 +65,16 @@ router.beforeEach(async (to, from, next) => {
 		isLoggedIn = false
 	}
 
-	if (isLoggedIn) {
+	if (isLoggedIn && to.name !== "InvalidEmployee") {
 		await employeeResource.promise
-	}
-
-	if (to.name === "Login" && isLoggedIn) {
+		// user should be an employee to access the app
+		// since all views are employee specific
+		if (!employeeResource?.data) {
+			next({ name: "InvalidEmployee" })
+		} else {
+			next()
+		}
+	} else if (to.name === "Login" && isLoggedIn) {
 		next({ name: "Home" })
 	} else if (to.name !== "Login" && !isLoggedIn) {
 		next({ name: "Login" })

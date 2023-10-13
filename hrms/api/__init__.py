@@ -37,7 +37,7 @@ def get_current_employee_info() -> dict:
 	current_user = frappe.session.user
 	employee = frappe.db.get_value(
 		"Employee",
-		{"user_id": current_user},
+		{"user_id": current_user, "status": "Active"},
 		["name", "employee_name", "designation", "department", "company", "reports_to", "user_id"],
 		as_dict=True,
 	)
