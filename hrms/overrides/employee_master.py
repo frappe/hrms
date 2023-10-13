@@ -68,13 +68,31 @@ def update_employee_transfer(doc, method=None):
 def update_job_applicant_and_offer(doc, method=None):
 	"""Updates Job Applicant and Job Offer status as 'Accepted' and submits them"""
 	if doc.job_applicant:
-		frappe.db.set_value("Job Applicant", doc.job_applicant, "status", "Accepted")
-		job_offer = frappe.get_last_doc("Job Offer", filters={"job_applicant": doc.job_applicant})
-		job_offer.status = "Accepted"
-		job_offer.flags.ignore_mandatory = True
-		job_offer.flags.ignore_permissions = True
-		job_offer.save()
-		job_offer.submit()
+		applicant_status_before_change = frappe.db.get_value(
+			"Job Applicant", doc.job_applicant, "status"
+		)
+		if applicant_status_before_change != "Accepted":
+			frappe.db.set_value("Job Applicant", doc.job_applicant, "status", "Accepted")
+			frappe.msgprint(
+				_("Status field of Job Applicant: {0} has been set to 'Accepted'").format(
+					frappe.bold(doc.job_applicant), alert=True
+				)
+			)
+		offer_status_before_change = frappe.db.get_value(
+			"Job Offer", {"job_applicant": doc.job_applicant, "docstatus": ["!=", 2]}, "status"
+		)
+		if offer_status_before_change and offer_status_before_change != "Accepted":
+			job_offer = frappe.get_last_doc("Job Offer", filters={"job_applicant": doc.job_applicant})
+			job_offer.status = "Accepted"
+			job_offer.flags.ignore_mandatory = True
+			job_offer.flags.ignore_permissions = True
+			job_offer.save()
+			job_offer.submit()
+			frappe.msgprint(
+				_("Status field of Job Offer: {0} has been set to 'Accepted'").format(
+					frappe.bold(job_offer.name), alert=True
+				)
+			)
 
 
 @frappe.whitelist()
