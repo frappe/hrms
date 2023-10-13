@@ -71,6 +71,8 @@ def update_job_applicant_and_offer(doc, method=None):
 		frappe.db.set_value("Job Applicant", doc.job_applicant, "status", "Accepted")
 		job_offer = frappe.get_last_doc("Job Offer", filters={"job_applicant": doc.job_applicant})
 		job_offer.status = "Accepted"
+		job_offer.flags.ignore_mandatory = True
+		job_offer.flags.ignore_permissions = True
 		job_offer.save()
 		job_offer.submit()
 
