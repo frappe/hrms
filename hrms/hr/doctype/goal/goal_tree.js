@@ -262,7 +262,7 @@ frappe.treeview_settings["Goal"] = {
 							.then((r) => {
 								if (!r.exc && r.message) {
 									frappe.treeview_settings["Goal"].treeview.tree.load_children(
-										node.parent_node,
+										frappe.treeview_settings["Goal"].treeview.tree.root_node,
 										true
 									);
 
@@ -298,7 +298,7 @@ frappe.treeview_settings["Goal"] = {
 						.then((r) => {
 							if (!r.exc && r.message) {
 								frappe.treeview_settings["Goal"].treeview.tree.load_children(
-									node.parent_node,
+									frappe.treeview_settings["Goal"].treeview.tree.root_node,
 									true
 								);
 
