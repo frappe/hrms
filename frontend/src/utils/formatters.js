@@ -7,6 +7,8 @@ const settings = createDocumentResource({
 })
 
 export const formatCurrency = (value, currency) => {
+	if (!currency) return value
+
 	const locale =
 		settings.doc?.country == "India" ? "en-IN" : settings.doc?.language
 
