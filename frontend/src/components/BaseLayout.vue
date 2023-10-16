@@ -6,7 +6,7 @@
 					<div class="flex flex-col bg-white shadow-sm p-4">
 						<div class="flex flex-row justify-between items-center">
 							<ion-menu-toggle class="flex flex-col items-center">
-								<Button variant="ghost" class="!px-0 !py-0">
+								<Button variant="ghost" class="!pl-0 hover:bg-white">
 									<FeatherIcon name="menu" class="h-6 w-6" />
 								</Button>
 							</ion-menu-toggle>

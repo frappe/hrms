@@ -19,6 +19,7 @@ export const employees = createListResource({
 		"status",
 	],
 	auto: true,
+	pageLength: 99999,
 	transform(data) {
 		return data.map((employee) => {
 			employee.isActive = employee.status === "Active"

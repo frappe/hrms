@@ -17,8 +17,25 @@
 					}}</span>
 				</div>
 
-				<QuickLinks title="Profile" :items="profileLinks" />
-				<QuickLinks title="Documents" :items="documentLinks" />
+				<div class="flex flex-col gap-5 my-4 w-full">
+					<div class="text-lg font-medium text-gray-900">Profile</div>
+					<div class="flex flex-col bg-white rounded">
+						<div
+							class="flex flex-row cursor-pointer flex-start p-4 items-center justify-between border-b"
+							v-for="link in profileLinks"
+							:key="link.title"
+							@click="openInfoModal(link)"
+						>
+							<div class="flex flex-row items-center gap-3 grow">
+								<FeatherIcon :name="link.icon" class="h-5 w-5 text-gray-500" />
+								<div class="text-base font-normal text-gray-800">
+									{{ link.title }}
+								</div>
+							</div>
+							<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
+						</div>
+					</div>
+				</div>
 
 				<Button
 					@click="logout"
@@ -32,6 +49,29 @@
 					Log Out
 				</Button>
 			</div>
+
+			<ion-modal
+				ref="modal"
+				:is-open="isInfoModalOpen"
+				@didDismiss="closeInfoModal"
+				:initial-breakpoint="1"
+				:breakpoints="[0, 1]"
+			>
+				<ProfileInfoModal
+					:title="selectedItem.title"
+					:data="
+						selectedItem.fields.map((field) => {
+							const [label, fieldtype] = getFieldInfo(field)
+							return {
+								fieldname: field,
+								value: employeeDoc.doc[field],
+								label: label,
+								fieldtype: fieldtype,
+							}
+						})
+					"
+				/>
+			</ion-modal>
 		</template>
 	</BaseLayout>
 </template>
@@ -40,10 +80,14 @@
 import QuickLinks from "@/components/QuickLinks.vue"
 import BaseLayout from "@/components/BaseLayout.vue"
 
-import { inject } from "vue"
+import { inject, ref } from "vue"
+import { IonModal } from "@ionic/vue"
 
 import { showErrorAlert } from "@/utils/dialogs"
-import { FeatherIcon } from "frappe-ui"
+import { FeatherIcon, createDocumentResource, createResource } from "frappe-ui"
+import { formatCurrency } from "@/utils/formatters"
+
+import ProfileInfoModal from "@/components/ProfileInfoModal.vue"
 
 const session = inject("$session")
 const user = inject("$user")
@@ -52,32 +96,93 @@ const employee = inject("$employee")
 const profileLinks = [
 	{
 		icon: "user",
-		title: "Personal Information",
-	},
-	{
-		icon: "bell",
-		title: "Notification Settings",
-	},
-	{
-		icon: "zap",
-		title: "My Journey",
-	},
-]
-
-const documentLinks = [
-	{
-		icon: "dollar-sign",
-		title: "Tax Deductions",
-	},
-	{
-		icon: "hard-drive",
-		title: "Personal Documents",
+		title: "Employee Details",
+		fields: [
+			"employee_name",
+			"employee_number",
+			"gender",
+			"date_of_birth",
+			"date_of_joining",
+			"blood_group",
+		],
 	},
 	{
 		icon: "file",
-		title: "Company Policies",
+		title: "Company Information",
+		fields: [
+			"company",
+			"department",
+			"designation",
+			"branch",
+			"grade",
+			"reports_to",
+			"employment_type",
+		],
+	},
+	{
+		icon: "book",
+		title: "Contact Information",
+		fields: [
+			"cell_number",
+			"personal_email",
+			"company_email",
+			"preferred_email",
+		],
+	},
+	{
+		icon: "dollar-sign",
+		title: "Salary Information",
+		fields: [
+			"ctc",
+			"payroll_cost_center",
+			"pan_number",
+			"provident_fund_account",
+			"salary_mode",
+			"bank_name",
+			"bank_ac_no",
+			"ifsc_code",
+			"micr_code",
+			"iban",
+		],
 	},
 ]
+
+const isInfoModalOpen = ref(false)
+const selectedItem = ref(null)
+
+const openInfoModal = async (request) => {
+	selectedItem.value = request
+	isInfoModalOpen.value = true
+}
+
+const closeInfoModal = async (_request) => {
+	isInfoModalOpen.value = false
+	selectedItem.value = null
+}
+
+const employeeDoc = createDocumentResource({
+	doctype: "Employee",
+	name: employee.data.name,
+	fields: "*",
+	auto: true,
+	transform: (data) => {
+		data.ctc = formatCurrency(data.ctc, data.salary_currency)
+		return data
+	},
+})
+
+const employeeDocType = createResource({
+	url: "hrms.api.get_doctype_fields",
+	params: { doctype: "Employee" },
+	auto: true,
+})
+
+const getFieldInfo = (fieldname) => {
+	const field = employeeDocType.data.find(
+		(field) => field.fieldname === fieldname
+	)
+	return [field?.label, field?.fieldtype]
+}
 
 const logout = async () => {
 	try {

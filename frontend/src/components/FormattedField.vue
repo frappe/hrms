@@ -1,6 +1,8 @@
 <template>
+	<div v-if="!props.value" class="text-gray-600 text-base">-</div>
+
 	<Badge
-		v-if="props.fieldtype === 'Select'"
+		v-else-if="props.fieldtype === 'Select'"
 		variant="outline"
 		:theme="colorMap[props.value]"
 		:label="props.value"
@@ -8,7 +10,7 @@
 	/>
 
 	<div v-else-if="props.fieldtype === 'Date'" class="text-gray-900 text-base">
-		{{ dayjs(props.value).format("D MMM") }}
+		{{ dayjs(props.value).format("D MMM YYYY") }}
 	</div>
 
 	<Input
@@ -28,7 +30,10 @@
 	</div>
 
 	<EmployeeAvatar
-		v-else-if="props.fieldtype === 'Link' && props.fieldname === 'employee'"
+		v-else-if="
+			props.fieldtype === 'Link' &&
+			['employee', 'reports_to'].includes(props.fieldname)
+		"
 		:employeeID="props.value"
 		:showLabel="true"
 	/>
