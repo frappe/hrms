@@ -202,6 +202,9 @@ def update_progress(progress: float, goal: str) -> None:
 	goal.progress = progress
 	goal.flags.ignore_mandatory = True
 	goal.save()
+	if goal.is_group:
+		for child in goal.get_children():
+			update_progress(100, child.name)
 
 	return goal
 
