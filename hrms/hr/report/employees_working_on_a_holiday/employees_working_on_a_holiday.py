@@ -17,11 +17,33 @@ def execute(filters=None):
 
 def get_columns():
 	return [
-		_("Employee") + ":Link/Employee:120",
-		_("Name") + ":Data:200",
-		_("Date") + ":Date:100",
-		_("Status") + ":Data:70",
-		_("Holiday") + ":Data:200",
+		{
+			"label": _("Employee"),
+			"fieldtype": "Link",
+			"fieldname": "employee",
+			"options": "Employee",
+			"width": 120,
+		},
+		{
+			"label": _("Name"),
+			"fieldtype": "Data",
+			"width": 200,
+		},
+		{
+			"label": _("Date"),
+			"fieldtype": "Date",
+			"width": 100,
+		},
+		{
+			"label": _("Status"),
+			"fieldtype": "Data",
+			"width": 70,
+		},
+		{
+			"label": _("Holiday"),
+			"fieldtype": "Data",
+			"width": 200,
+		},
 	]
 
 
@@ -43,22 +65,27 @@ def get_employees(filters):
 		holiday_names[holiday.holiday_date] = holiday.description
 
 	if holidays_list:
-		cond = " attendance_date in %(holidays_list)s and status not in ('On Leave','Absent') "
+		attendance_doctype = frappe.qb.DocType("Attendance")
+		employee_list = (
+			frappe.qb.from_(attendance_doctype)
+			.select(
+				attendance_doctype.employee,
+				attendance_doctype.employee_name,
+				attendance_doctype.attendance_date,
+				attendance_doctype.status,
+			)
+			.where(attendance_doctype.attendance_date.isin(holidays_list))
+			.where(attendance_doctype.status.notin(["Absent", "On Leave"]))
+		)
 
 		if filters.holiday_list:
-			cond += (
-				""" and (employee in (select employee from tabEmployee where holiday_list = %(holidays)s))"""
+			employee = frappe.qb.DocType("Employee")
+			employee_based_on_holiday = (
+				frappe.qb.from_(employee).select(employee.employee).where(employee.holiday_list == holidays)
 			)
+			employee_list.where(attendance_doctype.employee.isin(employee_based_on_holiday))
 
-		employee_list = frappe.db.sql(
-			"""select
-				employee, employee_name, attendance_date, status
-			from tabAttendance
-			where %s"""
-			% cond.format(", ".join(["%s"] * len(holidays_list))),
-			{"holidays_list": holidays_list, "holidays": filters.holiday_list},
-			as_list=True,
-		)
+		employee_list = employee_list.run(as_list=True)
 
 		for employee_data in employee_list:
 			employee_data.append(holiday_names[employee_data[2]])
