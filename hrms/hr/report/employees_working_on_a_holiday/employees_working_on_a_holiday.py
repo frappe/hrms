@@ -81,7 +81,9 @@ def get_employees(filters):
 		if filters.holiday_list:
 			employee = frappe.qb.DocType("Employee")
 			employee_based_on_holiday = (
-				frappe.qb.from_(employee).select(employee.employee).where(employee.holiday_list == holidays)
+				frappe.qb.from_(employee)
+				.select(employee.employee)
+				.where(employee.holiday_list == filters.holiday_list)
 			)
 			employee_list.where(attendance_doctype.employee.isin(employee_based_on_holiday))
 
