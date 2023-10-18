@@ -59,8 +59,6 @@ frappe.listview_settings["Goal"] = {
 
 	trigger_update_status_dialog: function (status, listview) {
 		const checked_items = listview.get_checked_items();
-		this.trigger_error_dialogs(checked_items, status);
-
 		const items_to_be_updated = checked_items
 			.filter(
 				(item) =>
@@ -79,6 +77,7 @@ frappe.listview_settings["Goal"] = {
 					),
 					() => {
 						this.update_status("", items_to_be_updated, listview);
+						this.trigger_error_dialogs(checked_items, status);
 					}
 				);
 			else
@@ -90,9 +89,10 @@ frappe.listview_settings["Goal"] = {
 					),
 					() => {
 						this.update_status(status, items_to_be_updated, listview);
+						this.trigger_error_dialogs(checked_items, status);
 					}
 				);
-		}
+		} else this.trigger_error_dialogs(checked_items, status);
 	},
 
 	trigger_error_dialogs: function (checked_items, status) {
@@ -104,7 +104,7 @@ frappe.listview_settings["Goal"] = {
 		if (checked_items.some((item) => item.is_group))
 			frappe.msgprint({
 				message: __("Cannot update status of Goal groups"),
-				indicator: "orange",
+				indicator: "yellow",
 			});
 
 		const applicable_statuses = applicable_current_statuses(status);
@@ -117,7 +117,7 @@ frappe.listview_settings["Goal"] = {
 						applicable_statuses
 					)} Goals can be ${status}`
 				),
-				indicator: "orange",
+				indicator: "yellow",
 			});
 	},
 
