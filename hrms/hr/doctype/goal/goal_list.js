@@ -68,10 +68,16 @@ frappe.listview_settings["Goal"] = {
 			.map((item) => item.name);
 
 		if (items_to_be_updated.length) {
-			if (status === "Unarchived" || status === "Reopened")
+			if (status === "Unarchived" || status === "Reopened") {
+				const simple_present_tense = {
+					Unarchived: "Unarchive",
+					Reopened: "Reopen",
+				};
 				frappe.confirm(
 					__(
-						`${status} ${items_to_be_updated.length.toString()} ${
+						`${
+							simple_present_tense[status]
+						} ${items_to_be_updated.length.toString()} ${
 							items_to_be_updated.length === 1 ? "item" : "items"
 						}?`
 					),
@@ -80,7 +86,7 @@ frappe.listview_settings["Goal"] = {
 						this.trigger_error_dialogs(checked_items, status);
 					}
 				);
-			else
+			} else
 				frappe.confirm(
 					__(
 						`Mark ${items_to_be_updated.length.toString()} ${
