@@ -71,7 +71,7 @@ frappe.listview_settings["Goal"] = {
 	update_status: function (status, goals, listview) {
 		frappe
 			.call({
-				method: "hrms.hr.doctype.goal.goal.update_status",
+				method: "hrms.hr.doctype.goal.goal.bulk_update_status",
 				args: {
 					status: status,
 					goals: goals,
