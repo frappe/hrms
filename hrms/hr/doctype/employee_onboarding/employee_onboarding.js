@@ -44,8 +44,8 @@ frappe.ui.form.on('Employee Onboarding', {
 			}, __('Create'));
 			frm.page.set_inner_btn_group_as_primary(__('Create'));
 		}
-		if (frm.doc.docstatus === 1 && (frm.doc.boarding_status== "Pending" || frm.doc.boarding_status == "In Process")) {
-			frm.add_custom_button(__('Mark as Completed'), function () {
+		if (frm.doc.docstatus === 1 && (frm.doc.boarding_status === "Pending" || frm.doc.boarding_status === "In Process")) {
+			frm.add_custom_button(__("Mark as Completed"), function() {
 				frm.trigger("mark_as_completed");
 			});
 		}
