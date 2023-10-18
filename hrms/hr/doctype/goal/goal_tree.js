@@ -283,15 +283,15 @@ frappe.treeview_settings["Goal"] = {
 		{
 			label: __("Mark as Completed"),
 			condition: function (node) {
-				return !node.is_root && node.data.status != "Completed";
+				return !node.is_root && !node.expandable && node.data.status != "Completed";
 			},
 			click: function (node) {
 				frappe.confirm(__(`Mark ${node.label.bold()} as Completed?`), () => {
 					frappe
 						.call({
-							method: "hrms.hr.doctype.goal.goal.update_status",
+							method: "hrms.hr.doctype.goal.goal.update_progress",
 							args: {
-								status: "Completed",
+								progress: 100,
 								goal: node.data.value,
 							},
 						})
