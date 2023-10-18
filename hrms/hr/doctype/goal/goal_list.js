@@ -47,10 +47,55 @@ frappe.listview_settings["Goal"] = {
 		listview.page.add_custom_menu_item(status_menu, __("Close"), () =>
 			this.trigger_update_status_dialog("Closed", listview)
 		);
+
+		listview.page.add_custom_menu_item(status_menu, __("Unarchive"), () =>
+			this.trigger_update_status_dialog("Unarchived", listview)
+		);
+
+		listview.page.add_custom_menu_item(status_menu, __("Reopen"), () =>
+			this.trigger_update_status_dialog("Reopened", listview)
+		);
 	},
 
 	trigger_update_status_dialog: function (status, listview) {
 		const checked_items = listview.get_checked_items();
+		this.trigger_error_dialogs(checked_items, status);
+
+		const items_to_be_updated = checked_items
+			.filter(
+				(item) =>
+					!item.is_group &&
+					applicable_current_statuses(status).includes(item.status)
+			)
+			.map((item) => item.name);
+
+		if (items_to_be_updated.length) {
+			if (status === "Unarchived" || status === "Reopened")
+				frappe.confirm(
+					__(
+						`${status} ${items_to_be_updated.length.toString()} ${
+							items_to_be_updated.length === 1 ? "item" : "items"
+						}?`
+					),
+					() => {
+						this.update_status("", items_to_be_updated, listview);
+					}
+				);
+			else
+				frappe.confirm(
+					__(
+						`Mark ${items_to_be_updated.length.toString()} ${
+							items_to_be_updated.length === 1 ? "item" : "items"
+						} as ${status}?`
+					),
+					() => {
+						this.update_status(status, items_to_be_updated, listview);
+					}
+				);
+		}
+	},
+
+	trigger_error_dialogs: function (checked_items, status) {
 		if (!checked_items.length) {
 			frappe.throw(__("No items selected"));
 			return;
@@ -58,34 +103,22 @@ frappe.listview_settings["Goal"] = {
 
 		if (checked_items.some((item) => item.is_group))
 			frappe.msgprint({
-				message: __("Cannot update status of Group Goals"),
+				message: __("Cannot update status of Goal groups"),
 				indicator: "orange",
 			});
 
-		if (checked_items.some((item) => item.status === "Completed"))
+		const applicable_statuses = applicable_current_statuses(status);
+		if (
+			checked_items.some((item) => !applicable_statuses.includes(item.status))
+		)
 			frappe.msgprint({
-				message: __("Cannot update status of Completed Goals"),
+				message: __(
+					`Only ${frappe.utils.comma_and(
+						applicable_statuses
+					)} Goals can be ${status}`
+				),
 				indicator: "orange",
 			});
-
-		const items_to_be_completed = checked_items
-			.filter(
-				(item) =>
-					item.status != "Completed" && item.status != status && !item.is_group
-			)
-			.map((item) => item.name);
-
-		if (items_to_be_completed.length)
-			frappe.confirm(
-				__(
-					`Mark ${items_to_be_completed.length.toString()} ${
-						items_to_be_completed.length === 1 ? "item" : "items"
-					} as ${status}?`
-				),
-				() => {
-					this.update_status(status, items_to_be_completed, listview);
-				}
-			);
 	},
 
 	update_status: function (status, goals, listview) {
@@ -110,4 +143,20 @@ frappe.listview_settings["Goal"] = {
 				listview.refresh();
 			});
 	},
+};
+
+// Returns all possible current statuses that can be changed to the new one
+const applicable_current_statuses = (new_status) => {
+	switch (new_status) {
+		case "Completed":
+			return ["Pending", "In Progress"];
+		case "Archived":
+			return ["Pending", "In Progress", "Closed"];
+		case "Closed":
+			return ["Pending", "In Progress", "Archived"];
+		case "Unarchived":
+			return ["Archived"];
+		case "Reopened":
+			return ["Closed"];
+	}
 };
