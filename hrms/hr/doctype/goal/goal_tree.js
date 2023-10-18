@@ -289,9 +289,9 @@ frappe.treeview_settings["Goal"] = {
 				frappe.confirm(__(`Mark ${node.label.bold()} as Completed?`), () => {
 					frappe
 						.call({
-							method: "hrms.hr.doctype.goal.goal.update_progress",
+							method: "hrms.hr.doctype.goal.goal.update_status",
 							args: {
-								progress: 100,
+								status: "Completed",
 								goal: node.data.value,
 							},
 						})
