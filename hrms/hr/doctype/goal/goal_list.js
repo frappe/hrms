@@ -50,9 +50,29 @@ frappe.listview_settings["Goal"] = {
 	},
 
 	trigger_update_status_dialog: function (status, listview) {
-		const items_to_be_completed = listview
-			.get_checked_items()
-			.filter((item) => item.status != "Completed" && item.status != status)
+		const checked_items = listview.get_checked_items();
+		if (!checked_items.length) {
+			frappe.throw(__("No items selected"));
+			return;
+		}
+
+		if (checked_items.some((item) => item.is_group))
+			frappe.msgprint({
+				message: __("Cannot update status of Group Goals"),
+				indicator: "orange",
+			});
+
+		if (checked_items.some((item) => item.status === "Completed"))
+			frappe.msgprint({
+				message: __("Cannot update status of Completed Goals"),
+				indicator: "orange",
+			});
+
+		const items_to_be_completed = checked_items
+			.filter(
+				(item) =>
+					item.status != "Completed" && item.status != status && !item.is_group
+			)
 			.map((item) => item.name);
 
 		if (items_to_be_completed.length)
@@ -71,7 +91,7 @@ frappe.listview_settings["Goal"] = {
 	update_status: function (status, goals, listview) {
 		frappe
 			.call({
-				method: "hrms.hr.doctype.goal.goal.bulk_update_status",
+				method: "hrms.hr.doctype.goal.goal.update_status",
 				args: {
 					status: status,
 					goals: goals,

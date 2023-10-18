@@ -209,28 +209,17 @@ def update_progress(progress: float, goal: str) -> None:
 
 
 @frappe.whitelist()
-def bulk_update_status(status: str, goals: str) -> None:
+def update_status(status: str, goals: str) -> None:
 	goals = json.loads(goals)
 	for goal in goals:
-		update_status(status, goal)
-
-	return goals
-
-
-@frappe.whitelist()
-def update_status(status: str, goal: str) -> None:
-	goal = frappe.get_doc("Goal", goal)
-	if goal.status != status:
+		goal = frappe.get_doc("Goal", goal)
 		goal.status = status
 		if status == "Completed":
 			goal.progress = 100
 		goal.flags.ignore_mandatory = True
 		goal.save()
 
-	for child in goal.get_children():
-		update_status(status, child.name)
-
-	return goal
+	return goals
 
 
 @frappe.whitelist()
