@@ -8,9 +8,9 @@ from frappe.utils import add_days, nowdate
 from erpnext.setup.doctype.designation.test_designation import create_designation
 
 from hrms.hr.doctype.job_applicant.job_applicant import get_applicant_to_hire_percentage
-from hrms.hr.doctype.job_applicant.test_job_applicant import create_job_applicant
 from hrms.hr.doctype.job_offer.job_offer import get_offer_acceptance_rate
 from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
+from hrms.tests.test_utils import create_job_applicant
 
 
 class TestJobOffer(FrappeTestCase):
