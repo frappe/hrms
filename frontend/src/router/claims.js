@@ -1,10 +1,5 @@
 const routes = [
 	{
-		name: "ExpenseClaims",
-		path: "/expense-claim/dashboard",
-		component: () => import("@/views/expense_claim/Dashboard.vue"),
-	},
-	{
 		name: "ExpenseClaimListView",
 		path: "/expense-claim/list",
 		component: () => import("@/views/expense_claim/List.vue"),
