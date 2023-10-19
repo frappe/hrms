@@ -1344,7 +1344,10 @@ def log_payroll_failure(process, payroll_entry, error):
 	message_log = frappe.message_log.pop() if frappe.message_log else str(error)
 
 	try:
-		error_message = json.loads(message_log).get("message")
+		if isinstance(message_log, str):
+			error_message = json.loads(message_log).get("message")
+		else:
+			error_message = message_log.get("message")
 	except Exception:
 		error_message = message_log
 
