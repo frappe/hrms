@@ -5,12 +5,12 @@
 				<div class="w-full sm:w-96">
 					<div class="flex flex-col bg-white shadow-sm p-4">
 						<div class="flex flex-row justify-between items-center">
-							<ion-menu-toggle class="flex flex-col items-center">
-								<Button variant="ghost" class="!pl-0 hover:bg-white">
-									<FeatherIcon name="menu" class="h-6 w-6" />
-								</Button>
-							</ion-menu-toggle>
-							<div class="flex flex-row items-center gap-3">
+							<div class="flex flex-row items-center gap-2">
+								<h2 class="text-xl font-bold text-gray-900">
+									{{ props.pageTitle }}
+								</h2>
+							</div>
+							<div class="flex flex-row items-center gap-3 ml-auto">
 								<router-link
 									:to="{ name: 'Notifications' }"
 									v-slot="{ navigate }"
@@ -37,14 +37,6 @@
 								</router-link>
 							</div>
 						</div>
-
-						<div class="mt-5">
-							<h2 class="text-xl font-bold text-gray-900">
-								{{ props.pageTitle }}
-							</h2>
-
-							<CheckInPanel v-if="props.showCheckInPanel" />
-						</div>
 					</div>
 
 					<slot name="body"></slot>
@@ -55,10 +47,8 @@
 </template>
 
 <script setup>
-import { IonContent, IonMenuToggle, IonPage } from "@ionic/vue"
+import { IonContent, IonPage } from "@ionic/vue"
 import { FeatherIcon, Avatar } from "frappe-ui"
-
-import CheckInPanel from "@/components/CheckInPanel.vue"
 
 import { unreadNotificationsCount } from "@/data/notifications"
 
@@ -70,11 +60,7 @@ const props = defineProps({
 	pageTitle: {
 		type: String,
 		required: false,
-	},
-	showCheckInPanel: {
-		type: Boolean,
-		required: false,
-		default: false,
+		default: "Frappe HR",
 	},
 })
 </script>
