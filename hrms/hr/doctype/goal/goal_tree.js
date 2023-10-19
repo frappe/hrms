@@ -283,34 +283,39 @@ frappe.treeview_settings["Goal"] = {
 		{
 			label: __("Mark as Completed"),
 			condition: function (node) {
-				return !node.is_root && !node.expandable && node.data.status != "Completed";
+				return (
+					!node.is_root && !node.expandable && node.data.status != "Completed"
+				);
 			},
 			click: function (node) {
-				frappe.confirm(__(`Mark ${node.label.bold()} as Completed?`), () => {
-					frappe
-						.call({
-							method: "hrms.hr.doctype.goal.goal.update_progress",
-							args: {
-								progress: 100,
-								goal: node.data.value,
-							},
-						})
-						.then((r) => {
-							if (!r.exc && r.message) {
-								frappe.treeview_settings["Goal"].treeview.tree.load_children(
-									frappe.treeview_settings["Goal"].treeview.tree.root_node,
-									true
-								);
+				frappe.confirm(
+					__("Mark {0} as Completed?", [node.label.bold()]),
+					() => {
+						frappe
+							.call({
+								method: "hrms.hr.doctype.goal.goal.update_progress",
+								args: {
+									progress: 100,
+									goal: node.data.value,
+								},
+							})
+							.then((r) => {
+								if (!r.exc && r.message) {
+									frappe.treeview_settings["Goal"].treeview.tree.load_children(
+										frappe.treeview_settings["Goal"].treeview.tree.root_node,
+										true
+									);
 
-								frappe.show_alert({
-									message: __("Goal marked as Completed"),
-									indicator: "green",
-								});
-							} else {
-								frappe.msgprint(__("Could not update Goal"));
-							}
-						});
-				});
+									frappe.show_alert({
+										message: __("Goal marked as Completed"),
+										indicator: "green",
+									});
+								} else {
+									frappe.msgprint(__("Could not update Goal"));
+								}
+							});
+					}
+				);
 			},
 		},
 	],
