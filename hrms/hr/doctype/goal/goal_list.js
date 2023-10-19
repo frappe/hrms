@@ -74,13 +74,11 @@ frappe.listview_settings["Goal"] = {
 					Reopened: "Reopen",
 				};
 				frappe.confirm(
-					__(
-						`${
-							simple_present_tense[status]
-						} ${items_to_be_updated.length.toString()} ${
-							items_to_be_updated.length === 1 ? "item" : "items"
-						}?`
-					),
+					__("{0} {1} {2}?", [
+						simple_present_tense[status],
+						items_to_be_updated.length.toString(),
+						items_to_be_updated.length === 1 ? "item" : "items",
+					]),
 					() => {
 						this.update_status("", items_to_be_updated, listview);
 						this.trigger_error_dialogs(checked_items, status);
@@ -88,11 +86,11 @@ frappe.listview_settings["Goal"] = {
 				);
 			} else
 				frappe.confirm(
-					__(
-						`Mark ${items_to_be_updated.length.toString()} ${
-							items_to_be_updated.length === 1 ? "item" : "items"
-						} as ${status}?`
-					),
+					__("Mark {0} {1} as {2}?", [
+						items_to_be_updated.length.toString(),
+						items_to_be_updated.length === 1 ? "item" : "items",
+						status,
+					]),
 					() => {
 						this.update_status(status, items_to_be_updated, listview);
 						this.trigger_error_dialogs(checked_items, status);
@@ -118,11 +116,10 @@ frappe.listview_settings["Goal"] = {
 			checked_items.some((item) => !applicable_statuses.includes(item.status))
 		)
 			frappe.msgprint({
-				message: __(
-					`Only ${frappe.utils.comma_and(
-						applicable_statuses
-					)} Goals can be ${status}`
-				),
+				message: __("Only {0} Goals can be {1}", [
+					frappe.utils.comma_and(applicable_statuses),
+					status,
+				]),
 				indicator: "yellow",
 			});
 	},

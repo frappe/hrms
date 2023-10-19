@@ -1,8 +1,6 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
-import json
-
 from pypika import CustomFunction
 
 import frappe
@@ -210,6 +208,8 @@ def update_progress(progress: float, goal: str) -> None:
 
 @frappe.whitelist()
 def update_status(status: str, goals: str) -> None:
+	import json
+
 	goals = json.loads(goals)
 	for goal in goals:
 		goal = frappe.get_doc("Goal", goal)
