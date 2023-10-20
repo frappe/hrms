@@ -1,53 +1,77 @@
 <template>
-	<BaseLayout pageTitle="Profile">
-		<template #body>
-			<div class="flex flex-col items-center mt-5 p-4">
-				<img
-					class="h-24 w-24 rounded-full object-cover"
-					:src="user.data.user_image"
-					:alt="user.data.first_name"
-				/>
+	<ion-page>
+		<ion-content class="ion-padding">
+			<div class="flex flex-col h-screen w-screen">
+				<div class="w-full sm:w-96">
+					<header
+						class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b sticky top-0 z-10"
+					>
+						<div class="flex flex-row items-center">
+							<Button
+								variant="ghost"
+								class="!pl-0 hover:bg-white"
+								@click="router.back()"
+							>
+								<FeatherIcon name="chevron-left" class="h-5 w-5" />
+							</Button>
+							<h2 class="text-xl font-semibold text-gray-900">Profile</h2>
+						</div>
+					</header>
 
-				<div class="flex flex-col gap-1.5 items-center mt-2 mb-5">
-					<span v-if="employee" class="text-lg font-bold text-gray-900">{{
-						employee?.data?.employee_name
-					}}</span>
-					<span v-if="employee" class="font-normal text-sm text-gray-500">{{
-						employee?.data?.designation
-					}}</span>
-				</div>
+					<div class="flex flex-col items-center mt-5 p-4">
+						<img
+							class="h-24 w-24 rounded-full object-cover"
+							:src="user.data.user_image"
+							:alt="user.data.first_name"
+						/>
 
-				<div class="flex flex-col gap-5 my-4 w-full">
-					<div class="text-lg font-medium text-gray-900">Profile</div>
-					<div class="flex flex-col bg-white rounded">
-						<div
-							class="flex flex-row cursor-pointer flex-start p-4 items-center justify-between border-b"
-							v-for="link in profileLinks"
-							:key="link.title"
-							@click="openInfoModal(link)"
-						>
-							<div class="flex flex-row items-center gap-3 grow">
-								<FeatherIcon :name="link.icon" class="h-5 w-5 text-gray-500" />
-								<div class="text-base font-normal text-gray-800">
-									{{ link.title }}
+						<div class="flex flex-col gap-1.5 items-center mt-2 mb-5">
+							<span v-if="employee" class="text-lg font-bold text-gray-900">{{
+								employee?.data?.employee_name
+							}}</span>
+							<span v-if="employee" class="font-normal text-sm text-gray-500">{{
+								employee?.data?.designation
+							}}</span>
+						</div>
+
+						<div class="flex flex-col gap-5 my-4 w-full">
+							<div class="flex flex-col bg-white rounded">
+								<div
+									class="flex flex-row cursor-pointer flex-start p-4 items-center justify-between border-b"
+									v-for="link in profileLinks"
+									:key="link.title"
+									@click="openInfoModal(link)"
+								>
+									<div class="flex flex-row items-center gap-3 grow">
+										<FeatherIcon
+											:name="link.icon"
+											class="h-5 w-5 text-gray-500"
+										/>
+										<div class="text-base font-normal text-gray-800">
+											{{ link.title }}
+										</div>
+									</div>
+									<FeatherIcon
+										name="chevron-right"
+										class="h-5 w-5 text-gray-500"
+									/>
 								</div>
 							</div>
-							<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
 						</div>
+
+						<Button
+							@click="logout"
+							variant="outline"
+							theme="red"
+							class="w-full shadow py-4 mt-5"
+						>
+							<template #prefix>
+								<FeatherIcon name="log-out" class="w-4" />
+							</template>
+							Log Out
+						</Button>
 					</div>
 				</div>
-
-				<Button
-					@click="logout"
-					variant="outline"
-					theme="red"
-					class="w-full shadow py-4 mt-5"
-				>
-					<template #prefix>
-						<FeatherIcon name="log-out" class="w-4" />
-					</template>
-					Log Out
-				</Button>
 			</div>
 
 			<ion-modal
@@ -72,16 +96,14 @@
 					"
 				/>
 			</ion-modal>
-		</template>
-	</BaseLayout>
+		</ion-content>
+	</ion-page>
 </template>
 
 <script setup>
-import QuickLinks from "@/components/QuickLinks.vue"
-import BaseLayout from "@/components/BaseLayout.vue"
-
 import { inject, ref } from "vue"
-import { IonModal } from "@ionic/vue"
+import { useRouter } from "vue-router"
+import { IonModal, IonPage, IonContent } from "@ionic/vue"
 
 import { showErrorAlert } from "@/utils/dialogs"
 import { FeatherIcon, createDocumentResource, createResource } from "frappe-ui"
@@ -92,6 +114,8 @@ import ProfileInfoModal from "@/components/ProfileInfoModal.vue"
 const session = inject("$session")
 const user = inject("$user")
 const employee = inject("$employee")
+
+const router = useRouter()
 
 const profileLinks = [
 	{

@@ -1,10 +1,5 @@
 const routes = [
 	{
-		name: "Leaves",
-		path: "/leave/dashboard",
-		component: () => import("@/views/leave/Dashboard.vue"),
-	},
-	{
 		name: "LeaveApplicationListView",
 		path: "/leave/list",
 		component: () => import("@/views/leave/List.vue"),

@@ -1,13 +1,26 @@
 <template>
-	<div class="flex flex-col">
+	<div class="flex flex-col bg-white rounded w-full py-6 px-4 border-none">
+		<h2 class="text-lg font-bold text-gray-900">
+			Hey, {{ employee?.data?.first_name }} 👋
+		</h2>
 		<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
-			{{ `Last ${lastLogType} was at ${lastLogTime}` }}
+			Last {{ lastLogType }} was at {{ lastLogTime }}
 		</div>
 		<Button
-			class="mt-2 mb-1 drop-shadow-sm py-5 text-base"
+			class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
 			id="open-checkin-modal"
 			@click="checkinTimestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')"
 		>
+			<template #prefix>
+				<FeatherIcon
+					:name="
+						nextAction.action === 'IN'
+							? 'arrow-right-circle'
+							: 'arrow-left-circle'
+					"
+					class="w-4"
+				/>
+			</template>
 			{{ nextAction.label }}
 		</Button>
 	</div>
@@ -41,7 +54,7 @@
 </template>
 
 <script setup>
-import { createListResource, toast } from "frappe-ui"
+import { createListResource, toast, FeatherIcon } from "frappe-ui"
 import { computed, inject, ref } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
 

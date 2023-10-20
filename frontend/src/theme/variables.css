@@ -6,6 +6,8 @@ http://ionicframework.com/docs/theming/ */
 :root {
 	--ion-background-color: #f4f5f6;
 	--ion-font-family: "InterVar", sans-serif;
+	--ion-tab-bar-color-selected: #525252;
+	--ion-tab-bar-background-focused: #e2e2e2;
 
 	/** primary **/
 	--ion-color-primary: #3880ff;

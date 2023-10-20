@@ -9,7 +9,7 @@
 				:to="{ name: link.route }"
 			>
 				<div class="flex flex-row items-center gap-3 grow">
-					<FeatherIcon :name="link.icon" class="h-5 w-5 text-gray-500" />
+					<component :is="link.icon" class="h-5 w-5 text-gray-500" />
 					<div class="text-base font-normal text-gray-800">
 						{{ link.title }}
 					</div>

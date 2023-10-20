@@ -2,7 +2,7 @@
 	<div class="flex flex-col w-full justify-center gap-2.5">
 		<div class="flex flex-row items-center justify-between">
 			<div class="flex flex-row items-start gap-3 grow">
-				<SalaryIcon class="h-4 w-4 text-gray-500" />
+				<SalaryIcon class="h-5 w-5 text-gray-500" />
 				<div class="flex flex-col items-start gap-1.5">
 					<div class="text-base font-normal text-gray-800">
 						{{ title }}

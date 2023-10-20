@@ -5,7 +5,11 @@
 				class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b sticky top-0 z-10"
 			>
 				<div class="flex flex-row items-center">
-					<Button variant="ghost" class="!pl-0 hover:bg-white" @click="router.back()">
+					<Button
+						variant="ghost"
+						class="!pl-0 hover:bg-white"
+						@click="router.back()"
+					>
 						<FeatherIcon name="chevron-left" class="h-5 w-5" />
 					</Button>
 					<h2 class="text-xl font-semibold text-gray-900">{{ pageTitle }}</h2>
