@@ -11,29 +11,35 @@
 </template>
 
 <script setup>
+import { markRaw } from "vue"
+
 import CheckInPanel from "@/components/CheckInPanel.vue"
 import QuickLinks from "@/components/QuickLinks.vue"
 import BaseLayout from "@/components/BaseLayout.vue"
 import RequestPanel from "@/components/RequestPanel.vue"
+import LeaveIcon from "@/components/icons/LeaveIcon.vue"
+import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
+import EmployeeAdvanceIcon from "@/components/icons/EmployeeAdvanceIcon.vue"
+import SalaryIcon from "@/components/icons/SalaryIcon.vue"
 
 const quickLinks = [
 	{
-		icon: "calendar",
+		icon: markRaw(LeaveIcon),
 		title: "Request Leave",
 		route: "LeaveApplicationFormView",
 	},
 	{
-		icon: "file-text",
+		icon: markRaw(ExpenseIcon),
 		title: "Claim an Expense",
 		route: "ExpenseClaimFormView",
 	},
 	{
-		icon: "dollar-sign",
+		icon: markRaw(EmployeeAdvanceIcon),
 		title: "Request an Advance",
 		route: "EmployeeAdvanceFormView",
 	},
 	{
-		icon: "file",
+		icon: markRaw(SalaryIcon),
 		title: "Salary Slips",
 		route: "SalarySlips",
 	},
