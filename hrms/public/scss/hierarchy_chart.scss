@@ -1,7 +1,5 @@
 .node-card {
 	background: white;
-	stroke: 1px solid var(--gray-200);
-	box-shadow: var(--shadow-base);
 	border-radius: 0.5rem;
 	padding: 0.75rem;
 	margin-left: 3rem;
@@ -31,7 +29,8 @@
 }
 
 .node-name {
-	font-size: 1rem;
+	font-size: var(--text-lg);
+	color: var(--text-color);
 	line-height: 1.72;
 }
 
@@ -59,18 +58,14 @@
 
 	.btn-edit-node {
 		display: flex;
-		background: var(--blue-100);
-		color: var(--blue-500);
-		padding: .25rem .5rem;
 		font-size: .75rem;
-		justify-content: center;
+		align-items: center;
 		box-shadow: var(--shadow-sm);
-		margin-left: auto;
+		gap: 8px;
 	}
 
 	.edit-chart-node {
 		display: block;
-		margin-right: 0.25rem;
 	}
 
 	.node-edit-icon {
@@ -139,8 +134,6 @@
 
 .node-card.collapsed {
 	background: white;
-	stroke: 1px solid var(--gray-200);
-	box-shadow: var(--shadow-sm);
 	border-radius: 0.5rem;
 	padding: 0.75rem;
 	width: 15rem;
@@ -277,7 +270,7 @@
 
 .node-group {
 	background: white;
-	border: 1px solid var(--gray-300);
+	border: 1px solid var(--border-color);
 	box-shadow: var(--shadow-sm);
 	border-radius: 0.5rem;
 	padding: 0.75rem;
