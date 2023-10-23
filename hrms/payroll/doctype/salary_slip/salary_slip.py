@@ -108,6 +108,28 @@ class SalarySlip(TransactionBase):
 
 		return self.__payroll_period
 
+	@property
+	def actual_start_date(self):
+		if not hasattr(self, "__actual_start_date"):
+			self.__actual_start_date = self.start_date
+
+			if self.joining_date and getdate(self.start_date) < self.joining_date <= getdate(self.end_date):
+				self.__actual_start_date = self.joining_date
+
+		return self.__actual_start_date
+
+	@property
+	def actual_end_date(self):
+		if not hasattr(self, "__actual_end_date"):
+			self.__actual_end_date = self.end_date
+
+			if self.relieving_date and getdate(self.start_date) <= self.relieving_date < getdate(
+				self.end_date
+			):
+				self.__actual_end_date = self.relieving_date
+
+		return self.__actual_end_date
+
 	def validate(self):
 		self.status = self.get_status()
 		validate_active_employee(self.employee)
@@ -452,13 +474,8 @@ class SalarySlip(TransactionBase):
 
 	def get_unmarked_days(self, include_holidays_in_total_working_days):
 		unmarked_days = self.total_working_days
-		start_date = self.start_date
-		end_date = self.end_date
 
-		if self.joining_date and (
-			getdate(self.start_date) < self.joining_date <= getdate(self.end_date)
-		):
-			start_date = self.joining_date
+		if self.actual_start_date != self.start_date:
 			unmarked_days = self.get_unmarked_days_based_on_doj_or_relieving(
 				unmarked_days,
 				include_holidays_in_total_working_days,
@@ -466,10 +483,7 @@ class SalarySlip(TransactionBase):
 				add_days(self.joining_date, -1),
 			)
 
-		if self.relieving_date and (
-			getdate(self.start_date) <= self.relieving_date < getdate(self.end_date)
-		):
-			end_date = self.relieving_date
+		if self.actual_end_date != self.end_date:
 			unmarked_days = self.get_unmarked_days_based_on_doj_or_relieving(
 				unmarked_days,
 				include_holidays_in_total_working_days,
@@ -481,7 +495,7 @@ class SalarySlip(TransactionBase):
 		marked_days = frappe.db.count(
 			"Attendance",
 			filters={
-				"attendance_date": ["between", [start_date, end_date]],
+				"attendance_date": ["between", [self.actual_start_date, self.actual_end_date]],
 				"employee": self.employee,
 				"docstatus": 1,
 			},
@@ -511,25 +525,19 @@ class SalarySlip(TransactionBase):
 		return unmarked_days
 
 	def get_payment_days(self, include_holidays_in_total_working_days):
-		start_date = getdate(self.start_date)
-		if self.joining_date:
-			if getdate(self.start_date) <= self.joining_date <= getdate(self.end_date):
-				start_date = self.joining_date
-			elif self.joining_date > getdate(self.end_date):
-				return
+		if self.joining_date and self.joining_date > getdate(self.end_date):
+			# employee joined after payroll date
+			return 0
 
-		end_date = getdate(self.end_date)
 		if self.relieving_date:
-			employee_status = frappe.get_cached_value("Employee", self.employee, "status")
-			if getdate(self.start_date) <= self.relieving_date <= getdate(self.end_date):
-				end_date = self.relieving_date
-			elif self.relieving_date < getdate(self.start_date) and employee_status != "Left":
+			employee_status = frappe.db.get_value("Employee", self.employee, "status")
+			if self.relieving_date < getdate(self.start_date) and employee_status != "Left":
 				frappe.throw(_("Employee relieved on {0} must be set as 'Left'").format(self.relieving_date))
 
-		payment_days = date_diff(end_date, start_date) + 1
+		payment_days = date_diff(self.actual_end_date, self.actual_start_date) + 1
 
 		if not cint(include_holidays_in_total_working_days):
-			holidays = self.get_holidays_for_employee(start_date, end_date)
+			holidays = self.get_holidays_for_employee(self.actual_start_date, self.actual_end_date)
 			payment_days -= len(holidays)
 
 		return payment_days
@@ -620,12 +628,10 @@ class SalarySlip(TransactionBase):
 		lwp = 0
 		absent = 0
 
-		end_date = self.end_date
-		if self.relieving_date:
-			end_date = self.relieving_date
-
 		leave_type_map = self.get_leave_type_map()
-		attendance_details = self.get_employee_attendance(start_date=self.start_date, end_date=end_date)
+		attendance_details = self.get_employee_attendance(
+			start_date=self.start_date, end_date=self.actual_end_date
+		)
 
 		for d in attendance_details:
 			if (
@@ -692,14 +698,12 @@ class SalarySlip(TransactionBase):
 			doc.append("earnings", wages_row)
 
 	def set_salary_structure_assignement(self):
-		start_date = getdate(self.start_date)
-		date_to_validate = self.joining_date if self.joining_date > start_date else start_date
 		self._salary_structure_assignment = frappe.db.get_value(
 			"Salary Structure Assignment",
 			{
 				"employee": self.employee,
 				"salary_structure": self.salary_structure,
-				"from_date": ("<=", date_to_validate),
+				"from_date": ("<=", self.actual_start_date),
 				"docstatus": 1,
 			},
 			"*",
@@ -713,7 +717,7 @@ class SalarySlip(TransactionBase):
 					"Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 				).format(
 					frappe.bold(self.employee_name),
-					frappe.bold(formatdate(date_to_validate)),
+					frappe.bold(formatdate(self.actual_start_date)),
 				)
 			)
 
