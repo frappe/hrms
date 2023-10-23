@@ -102,18 +102,18 @@ hrms.HierarchyChartMobile = class {
 		this.page.main.prepend(`
 			<svg id="arrows" width="100%" height="100%">
 				<defs>
-					<marker id="arrowhead-active" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="6" markerHeight="6" orient="auto" fill="var(--blue-500)">
+					<marker id="arrowhead-active" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="6" markerHeight="6" orient="auto" fill="var(--gray-500)">
 						<path d="M 0 0 L 10 5 L 0 10 z"></path>
 					</marker>
-					<marker id="arrowhead-collapsed" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="6" markerHeight="6" orient="auto" fill="var(--blue-300)">
+					<marker id="arrowhead-collapsed" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="6" markerHeight="6" orient="auto" fill="var(--gray-300)">
 						<path d="M 0 0 L 10 5 L 0 10 z"></path>
 					</marker>
 
-					<marker id="arrowstart-active" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="8" markerHeight="8" orient="auto" fill="var(--blue-500)">
-						<circle cx="4" cy="4" r="3.5" fill="white" stroke="var(--blue-500)"/>
+					<marker id="arrowstart-active" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="8" markerHeight="8" orient="auto" fill="var(--gray-500)">
+						<circle cx="4" cy="4" r="3.5" fill="white" stroke="var(--gray-500)"/>
 					</marker>
-					<marker id="arrowstart-collapsed" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="8" markerHeight="8" orient="auto" fill="var(--blue-300)">
-						<circle cx="4" cy="4" r="3.5" fill="white" stroke="var(--blue-300)"/>
+					<marker id="arrowstart-collapsed" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="8" markerHeight="8" orient="auto" fill="var(--gray-300)">
+						<circle cx="4" cy="4" r="3.5" fill="white" stroke="var(--gray-300)"/>
 					</marker>
 				</defs>
 				<g id="connectors" fill="none">

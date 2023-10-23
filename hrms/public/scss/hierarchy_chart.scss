@@ -49,8 +49,8 @@
 }
 
 .node-card.active {
-	background: var(--blue-50);
-	border: 1px solid var(--blue-500);
+	background: var(--gray-100);
+	border: 1px solid var(--gray-600);
 	box-shadow: var(--shadow-md);
 	border-radius: 0.5rem;
 	padding: 0.75rem;
@@ -73,7 +73,7 @@
 	}
 
 	.node-edit-icon > .icon{
-		stroke: var(--blue-500);
+		stroke: var(--gray-500);
 	}
 
 	.node-name {
@@ -85,8 +85,8 @@
 }
 
 .node-card.active-path {
-	background: var(--blue-100);
-	border: 1px solid var(--blue-300);
+	background: var(--gray-100);
+	border: 1px solid var(--gray-300);
 	box-shadow: var(--shadow-sm);
 	border-radius: 0.5rem;
 	padding: 0.75rem;
@@ -213,11 +213,11 @@
 }
 
 .active-connector {
-	stroke: var(--blue-500);
+	stroke: var(--gray-600);
 }
 
 .collapsed-connector {
-	stroke: var(--blue-300);
+	stroke: var(--gray-400);
 }
 
 // mobile
@@ -285,8 +285,8 @@
 }
 
 .node-group .avatar-extra-count {
-	background-color: var(--blue-100);
-	color: var(--blue-500);
+	background-color: var(--gray-100);
+	color: var(--gray-500);
 }
 
 .node-group .avatar-frame {
