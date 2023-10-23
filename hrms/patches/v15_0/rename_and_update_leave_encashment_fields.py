@@ -13,9 +13,16 @@ def execute():
 	if not frappe.db.has_column("Leave Encashment", "encashable_days"):
 		return
 
+	# set new field values
 	LeaveEncashment = frappe.qb.DocType("Leave Encashment")
 	(
 		frappe.qb.update(LeaveEncashment)
 		.set(LeaveEncashment.encashment_days, LeaveEncashment.encashable_days)
+		.where((LeaveEncashment.encashment_days.isnull()))
+	).run()
+
+	(
+		frappe.qb.update(LeaveEncashment)
 		.set(LeaveEncashment.actual_encashable_days, LeaveEncashment.encashable_days)
+		.where((LeaveEncashment.actual_encashable_days.isnull()))
 	).run()
