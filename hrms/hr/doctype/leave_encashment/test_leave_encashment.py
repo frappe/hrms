@@ -91,10 +91,9 @@ class TestLeaveEncashment(FrappeTestCase):
 		self.assertTrue(leave_encashment.encashment_days, 5)
 		self.assertEqual(leave_encashment.encashment_amount, 250)
 
-		leave_encashment.submit()
-
 		# assert links
 		leave_encashment.submit()
+		self.assertIsNotNone(leave_encashment.leave_allocation)
 		additional_salary_amount = frappe.db.get_value(
 			"Additional Salary", {"ref_docname": leave_encashment.name}, "amount"
 		)

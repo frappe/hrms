@@ -38,7 +38,8 @@ class LeaveEncashment(Document):
 
 	def on_submit(self):
 		if not self.leave_allocation:
-			self.leave_allocation = self.get_leave_allocation().get("name")
+			self.db_set("leave_allocation", self.get_leave_allocation().get("name"))
+
 		additional_salary = frappe.new_doc("Additional Salary")
 		additional_salary.company = frappe.get_value("Employee", self.employee, "company")
 		additional_salary.employee = self.employee
