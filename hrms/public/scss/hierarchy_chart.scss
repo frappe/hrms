@@ -58,10 +58,13 @@
 
 	.btn-edit-node {
 		display: flex;
+		background: var(--gray-300);
+		color: var(--gray-800);
 		font-size: .75rem;
 		align-items: center;
+		justify-content: center;
 		box-shadow: var(--shadow-sm);
-		gap: 8px;
+		gap: 6px;
 	}
 
 	.edit-chart-node {
@@ -72,8 +75,8 @@
 		display: block;
 	}
 
-	.node-edit-icon > .icon{
-		stroke: var(--gray-500);
+	.node-edit-icon > .icon {
+		margin-top: -3px;
 	}
 
 	.node-name {
