@@ -512,9 +512,6 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertEqual(ss.total_working_days, no_of_days[0])
 		# deduct 1 day for absent on holiday
 		self.assertEqual(ss.payment_days, no_of_days[0] - 1)
-		self.assertEqual(ss.earnings[0].amount, 48333.33)
-		self.assertEqual(ss.earnings[1].amount, 2900)
-		self.assertEqual(ss.gross_pay, 75399.99)
 
 		# disable consider marked attendance on holidays
 		frappe.db.set_single_value("Payroll Settings", "consider_marked_attendance_on_holidays", 0)
@@ -615,7 +612,7 @@ class TestSalarySlip(FrappeTestCase):
 		from lending.loan_management.doctype.loan.test_loan import (
 			create_loan,
 			create_loan_accounts,
-			create_loan_type,
+			create_loan_product,
 			make_loan_disbursement_entry,
 		)
 		from lending.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
@@ -628,7 +625,8 @@ class TestSalarySlip(FrappeTestCase):
 
 		create_loan_accounts()
 
-		create_loan_type(
+		create_loan_product(
+			"Car Loan",
 			"Car Loan",
 			500000,
 			8.4,

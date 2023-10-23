@@ -136,7 +136,7 @@ frappe.ui.form.on("Employee Attendance Tool", {
 			{
 				name: "employee",
 				id: "employee",
-				content: `${__("Employee")}`,
+				content: __("Employee"),
 				editable: false,
 				sortable: false,
 				focusable: false,
@@ -147,7 +147,7 @@ frappe.ui.form.on("Employee Attendance Tool", {
 			{
 				name: "status",
 				id: "status",
-				content: `${__("Status")}`,
+				content: __("Status"),
 				editable: false,
 				sortable: false,
 				focusable: false,

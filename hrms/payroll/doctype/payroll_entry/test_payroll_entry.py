@@ -358,13 +358,48 @@ class TestPayrollEntry(FrappeTestCase):
 		self.assertEqual(payroll_entry.status, "Submitted")
 		self.assertEqual(payroll_entry.error_message, "")
 
-	def test_payroll_entry_status(self):
-		company = "_Test Company"
-		company_doc = frappe.get_doc("Company", company)
-		employee = make_employee("test_employee@payroll.com", company=company)
+	def test_payroll_entry_cancellation(self):
+		company_doc = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("test_employee@payroll.com", company=company_doc.name)
 
 		setup_salary_structure(employee, company_doc)
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = make_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company_doc.default_payroll_payable_account,
+			currency=company_doc.default_currency,
+			company=company_doc.name,
+			cost_center="Main - _TC",
+			payment_account="Cash - _TC",
+		)
+		payroll_entry.make_bank_entry()
+		submit_bank_entry(payroll_entry.name)
 
+		salary_slip = frappe.db.get_value("Salary Slip", {"payroll_entry": payroll_entry.name}, "name")
+		self.assertIsNotNone(salary_slip)
+
+		# 2 submitted JVs
+		journal_entries = get_linked_journal_entries(payroll_entry.name, docstatus=1)
+		self.assertEqual(len(journal_entries), 2)
+
+		frappe.flags.enqueue_payroll_entry = True
+		payroll_entry.cancel()
+		frappe.flags.enqueue_payroll_entry = False
+		self.assertEqual(payroll_entry.status, "Cancelled")
+
+		salary_slip = frappe.db.get_value("Salary Slip", {"payroll_entry": payroll_entry.name}, "name")
+		self.assertIsNone(salary_slip)
+
+		# 2 cancelled JVs
+		journal_entries = get_linked_journal_entries(payroll_entry.name, docstatus=2)
+		self.assertEqual(len(journal_entries), 2)
+
+	def test_payroll_entry_status(self):
+		company_doc = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("test_employee@payroll.com", company=company_doc.name)
+
+		setup_salary_structure(employee, company_doc)
 		dates = get_start_end_dates("Monthly", nowdate())
 		payroll_entry = get_payroll_entry(
 			start_date=dates.start_date,
@@ -395,41 +430,21 @@ class TestPayrollEntry(FrappeTestCase):
 			cost_center="Main - _TC",
 			payment_account="Cash - _TC",
 		)
-		payroll_entry.reload()
+
 		payroll_entry.make_bank_entry()
-
-		# submit the bank entry journal voucher
-		jv = frappe.db.get_value(
-			"Journal Entry Account",
-			{"reference_type": "Payroll Entry", "reference_name": payroll_entry.name, "docstatus": 0},
-			"parent",
-		)
-
-		jv_doc = frappe.get_doc("Journal Entry", jv)
-		self.assertEqual(jv_doc.accounts[0].cost_center, payroll_entry.cost_center)
-
-		jv_doc.cheque_no = "123456"
-		jv_doc.cheque_date = nowdate()
-		jv_doc.submit()
+		submit_bank_entry(payroll_entry.name)
 
 		# cancel the salary slip
 		salary_slip = frappe.db.get_value("Salary Slip", {"payroll_entry": payroll_entry.name}, "name")
 		salary_slip = frappe.get_doc("Salary Slip", salary_slip)
 		salary_slip.cancel()
 
-		# cancel the payroll entry
-		jvs = frappe.db.get_values(
-			"Journal Entry Account",
-			{
-				"reference_type": "Payroll Entry",
-				"reference_name": payroll_entry.name,
-			},
-			"parent",
-			as_dict=True,
-		)
+		# cancel the journal entries
+		jvs = get_linked_journal_entries(payroll_entry.name)
 
 		for jv in jvs:
 			jv_doc = frappe.get_doc("Journal Entry", jv.parent)
+			self.assertEqual(jv_doc.accounts[0].cost_center, payroll_entry.cost_center)
 			jv_doc.cancel()
 
 		payroll_entry.cancel()
@@ -752,7 +767,10 @@ def create_assignments_with_cost_centers(employee1, employee2):
 
 
 def setup_lending():
-	from lending.loan_management.doctype.loan.test_loan import create_loan_accounts, create_loan_type
+	from lending.loan_management.doctype.loan.test_loan import (
+		create_loan_accounts,
+		create_loan_product,
+	)
 
 	company = "_Test Company"
 	branch = "Test Employee Branch"
@@ -771,9 +789,10 @@ def setup_lending():
 		currency=company_doc.default_currency,
 	)
 
-	if not frappe.db.exists("Loan Type", "Car Loan"):
+	if not frappe.db.exists("Loan Product", "Car Loan"):
 		create_loan_accounts()
-		create_loan_type(
+		create_loan_product(
+			"Car Loan",
 			"Car Loan",
 			500000,
 			8.4,
@@ -824,3 +843,26 @@ def get_repayment_party_type(loan):
 	)
 
 	return party_type, party
+
+
+def submit_bank_entry(payroll_entry_id):
+	# submit the bank entry journal voucher
+	jv = get_linked_journal_entries(payroll_entry_id, docstatus=0)[0].parent
+
+	jv_doc = frappe.get_doc("Journal Entry", jv)
+	jv_doc.cheque_no = "123456"
+	jv_doc.cheque_date = nowdate()
+	jv_doc.submit()
+
+
+def get_linked_journal_entries(payroll_entry_id, docstatus=None):
+	filters = {"reference_type": "Payroll Entry", "reference_name": payroll_entry_id}
+	if docstatus is not None:
+		filters["docstatus"] = docstatus
+
+	return frappe.get_all(
+		"Journal Entry Account",
+		filters,
+		"parent",
+		distinct=True,
+	)

@@ -104,22 +104,21 @@ frappe.ui.form.on('Salary Structure', {
 		frm.fields_dict['earnings'].grid.set_column_disp("default_amount", false);
 		frm.fields_dict['deductions'].grid.set_column_disp("default_amount", false);
 
-		if(frm.doc.docstatus === 1) {
-			frm.add_custom_button(__("Preview Salary Slip"), function() {
-				frm.trigger('preview_salary_slip');
-			});
-		}
+		if (frm.doc.docstatus === 1) {
+			frm.add_custom_button(__("Assign to Employees"), function() {
+				frm.trigger("assign_to_employees")
+			}, __("Actions"));
 
-		if(frm.doc.docstatus==1) {
 			frm.add_custom_button(__("Assign Salary Structure"), function() {
-				var doc = frappe.model.get_new_doc('Salary Structure Assignment');
+				let doc = frappe.model.get_new_doc("Salary Structure Assignment");
 				doc.salary_structure = frm.doc.name;
 				doc.company = frm.doc.company;
-				frappe.set_route('Form', 'Salary Structure Assignment', doc.name);
-			});
-			frm.add_custom_button(__("Assign to Employees"),function () {
-				frm.trigger('assign_to_employees')
-			})
+				frappe.set_route("Form", "Salary Structure Assignment", doc.name);
+			}, __("Actions"));
+
+			frm.add_custom_button(__("Preview Salary Slip"), function() {
+				frm.trigger("preview_salary_slip");
+			}, __("Actions"));
 		}
 
 		// set columns read-only
@@ -206,9 +205,9 @@ frappe.ui.form.on('Salary Structure', {
 						title: __("Preview Salary Slip"),
 						fields: [
 							{
-								"label":__("Employee"),
-								"fieldname":"employee",
-								"fieldtype":"Select",
+								"label": __("Employee"),
+								"fieldname": "employee",
+								"fieldtype": "Autocomplete",
 								"reqd": true,
 								options: employees
 							}, {

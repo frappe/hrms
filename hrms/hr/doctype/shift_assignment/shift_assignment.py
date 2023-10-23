@@ -12,6 +12,7 @@ from frappe.query_builder import Criterion
 from frappe.utils import add_days, cstr, get_link_to_form, get_time, getdate, now_datetime
 
 from hrms.hr.utils import validate_active_employee
+from hrms.utils import generate_date_range
 
 
 class OverlappingShiftError(frappe.ValidationError):
@@ -220,19 +221,65 @@ def _is_shift_outside_assignment_period(shift_details: dict, assignment: dict) -
 	Compares shift's actual start and end dates with assignment dates
 	and returns True is shift is outside assignment period
 	"""
-	if shift_details.actual_start.date() < assignment.start_date:
+	# start time > end time, means its a midnight shift
+	is_midnight_shift = shift_details.actual_start.time() > shift_details.actual_end.time()
+
+	if _is_shift_start_before_assignment(shift_details, assignment, is_midnight_shift):
 		return True
 
-	if assignment.end_date:
-		if shift_details.actual_start.date() > assignment.end_date:
+	if assignment.end_date and _is_shift_end_after_assignment(
+		shift_details, assignment, is_midnight_shift
+	):
+		return True
+
+	return False
+
+
+def _is_shift_start_before_assignment(
+	shift_details: dict, assignment: dict, is_midnight_shift: bool
+) -> bool:
+	if shift_details.actual_start.date() < assignment.start_date:
+		# log's start date can only precede assignment's start date if its a midnight shift
+		if not is_midnight_shift:
 			return True
 
-		# log's end date can only exceed assignment's end date if its a midnight shift
+		# if actual start and start dates are same but it precedes assignment start date
+		# then its actually a shift that starts on the previous day, making it invalid
+		if shift_details.actual_start.date() == shift_details.start_datetime.date():
+			return True
+
+		# actual start is not the prev assignment day
+		# then its a shift that starts even before the prev day, making it invalid
+		prev_assignment_day = add_days(assignment.start_date, -1)
+		if shift_details.actual_start.date() != prev_assignment_day:
+			return True
+
+	return False
+
+
+def _is_shift_end_after_assignment(
+	shift_details: dict, assignment: dict, is_midnight_shift: bool
+) -> bool:
+	if shift_details.actual_start.date() > assignment.end_date:
+		return True
+
+	# log's end date can only exceed assignment's end date if its a midnight shift
+	if shift_details.actual_end.date() > assignment.end_date:
+		if not is_midnight_shift:
+			return True
+
+		# if shift starts & ends on the same day along with shift margin
+		# then actual end cannot exceed assignment's end date, making it invalid
 		if (
-			shift_details.actual_end.date() > assignment.end_date
-			# start time <= end time, means its not a midnight shift
-			and shift_details.actual_start.time() <= shift_details.actual_end.time()
+			shift_details.actual_end.date() == shift_details.end_datetime.date()
+			and shift_details.start_datetime.date() == shift_details.end_datetime.date()
 		):
+			return True
+
+		# actual end is not the immediate next assignment day
+		# then its a shift that ends even after the next day, making it invalid
+		next_assignment_day = add_days(assignment.end_date, 1)
+		if shift_details.actual_end.date() != next_assignment_day:
 			return True
 
 	return False
@@ -264,6 +311,7 @@ def get_shifts_for_date(employee: str, for_timestamp: datetime) -> List[Dict[str
 	"""Returns list of shifts with details for given date"""
 	for_date = for_timestamp.date()
 	prev_day = add_days(for_date, -1)
+	next_day = add_days(for_date, 1)
 
 	assignment = frappe.qb.DocType("Shift Assignment")
 	return (
@@ -273,14 +321,19 @@ def get_shifts_for_date(employee: str, for_timestamp: datetime) -> List[Dict[str
 			(assignment.employee == employee)
 			& (assignment.docstatus == 1)
 			& (assignment.status == "Active")
-			& (assignment.start_date <= for_date)
+			# for shifts that exceed a day in duration or margins
+			# eg: shift = 00:30:00 - 10:00:00, including margins (1 hr) = 23:30:00 - 11:00:00
+			# if for_timestamp = 23:30:00 (falls in before shift margin), also fetch next days shift to find the correct shift
+			& (assignment.start_date <= next_day)
 			& (
 				Criterion.any(
 					[
 						assignment.end_date.isnull(),
 						(
 							assignment.end_date.isnotnull()
-							# for midnight shifts, valid assignments are upto 1 day prior
+							# for shifts that exceed a day in duration or margins
+							# eg: shift = 15:00 - 23:30, including margins (1 hr) = 14:00 - 00:30
+							# if for_timestamp = 00:30:00 (falls in after shift margin), also fetch prev days shift to find the correct shift
 							& (prev_day <= assignment.end_date)
 						),
 					]
@@ -346,11 +399,11 @@ def get_prev_or_next_shift(
 			date = for_timestamp + timedelta(days=direction * (i + 1))
 			shift_details = get_employee_shift(employee, date, consider_default_shift, None)
 			if shift_details:
-				break
+				return shift_details
 	else:
 		direction = "<" if next_shift_direction == "reverse" else ">"
 		sort_order = "desc" if next_shift_direction == "reverse" else "asc"
-		dates = frappe.db.get_all(
+		shift_dates = frappe.get_all(
 			"Shift Assignment",
 			["start_date", "end_date"],
 			{
@@ -364,18 +417,17 @@ def get_prev_or_next_shift(
 			order_by="start_date " + sort_order,
 		)
 
-		if dates:
-			for date in dates:
-				if date[1] and date[1] < for_timestamp.date():
-					continue
+		for date_range in shift_dates:
+			# midnight shifts will span more than a day
+			start_date, end_date = date_range[0], add_days(date_range[1], 1)
+			reverse = next_shift_direction == "reverse"
+
+			for dt in generate_date_range(start_date, end_date, reverse=reverse):
 				shift_details = get_employee_shift(
-					employee,
-					datetime.combine(date[0], for_timestamp.time()),
-					consider_default_shift,
-					None,
+					employee, datetime.combine(dt, for_timestamp.time()), consider_default_shift, None
 				)
 				if shift_details:
-					break
+					return shift_details
 
 	return shift_details or {}
 
@@ -480,39 +532,8 @@ def get_shift_details(shift_type_name: str, for_timestamp: datetime = None) -> D
 	if for_timestamp is None:
 		for_timestamp = now_datetime()
 
-	shift_type = frappe.get_cached_value(
-		"Shift Type",
-		shift_type_name,
-		[
-			"name",
-			"start_time",
-			"end_time",
-			"begin_check_in_before_shift_start_time",
-			"allow_check_out_after_shift_end_time",
-		],
-		as_dict=1,
-	)
-	shift_actual_start = shift_type.start_time - timedelta(
-		minutes=shift_type.begin_check_in_before_shift_start_time
-	)
-
-	if shift_type.start_time > shift_type.end_time:
-		# shift spans accross 2 different days
-		if get_time(for_timestamp.time()) >= get_time(shift_actual_start):
-			# if for_timestamp is greater than start time, it's within the first day
-			start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + shift_type.start_time
-			for_timestamp += timedelta(days=1)
-			end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + shift_type.end_time
-
-		elif get_time(for_timestamp.time()) < get_time(shift_actual_start):
-			# if for_timestamp is less than start time, it's within the second day
-			end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + shift_type.end_time
-			for_timestamp += timedelta(days=-1)
-			start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + shift_type.start_time
-	else:
-		# start and end timings fall on the same day
-		start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + shift_type.start_time
-		end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + shift_type.end_time
+	shift_type = get_shift_type(shift_type_name)
+	start_datetime, end_datetime = get_shift_timings(shift_type, for_timestamp)
 
 	actual_start = start_datetime - timedelta(
 		minutes=shift_type.begin_check_in_before_shift_start_time
@@ -528,3 +549,76 @@ def get_shift_details(shift_type_name: str, for_timestamp: datetime = None) -> D
 			"actual_end": actual_end,
 		}
 	)
+
+
+def get_shift_type(shift_type_name: str) -> dict:
+	return frappe.get_cached_value(
+		"Shift Type",
+		shift_type_name,
+		[
+			"name",
+			"start_time",
+			"end_time",
+			"begin_check_in_before_shift_start_time",
+			"allow_check_out_after_shift_end_time",
+		],
+		as_dict=1,
+	)
+
+
+def get_shift_timings(shift_type: dict, for_timestamp: datetime) -> tuple:
+	start_time = shift_type.start_time
+	end_time = shift_type.end_time
+
+	shift_actual_start = get_time(
+		datetime.combine(for_timestamp, datetime.min.time())
+		+ start_time
+		- timedelta(minutes=shift_type.begin_check_in_before_shift_start_time)
+	)
+	shift_actual_end = get_time(
+		datetime.combine(for_timestamp, datetime.min.time())
+		+ end_time
+		+ timedelta(minutes=shift_type.allow_check_out_after_shift_end_time)
+	)
+	for_time = get_time(for_timestamp.time())
+	start_datetime = end_datetime = None
+
+	if start_time > end_time:
+		# shift spans across 2 different days
+		if for_time >= shift_actual_start:
+			# if for_timestamp is greater than start time, it's within the first day
+			start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + start_time
+			for_timestamp += timedelta(days=1)
+			end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + end_time
+
+		elif for_time < shift_actual_start:
+			# if for_timestamp is less than start time, it's within the second day
+			end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + end_time
+			for_timestamp += timedelta(days=-1)
+			start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + start_time
+	elif (
+		shift_actual_start > shift_actual_end
+		and for_time < shift_actual_start
+		and get_time(end_time) > shift_actual_end
+	):
+		# for_timestamp falls within the margin period in the second day (after midnight)
+		# so shift started and ended on the previous day
+		for_timestamp += timedelta(days=-1)
+		end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + end_time
+		start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + start_time
+	elif (
+		shift_actual_start > shift_actual_end
+		and for_time > shift_actual_end
+		and get_time(start_time) < shift_actual_start
+	):
+		# for_timestamp falls within the margin period in the first day (before midnight)
+		# so shift started and ended on the next day
+		for_timestamp += timedelta(days=1)
+		start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + start_time
+		end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + end_time
+	else:
+		# start and end timings fall on the same day
+		start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + start_time
+		end_datetime = datetime.combine(for_timestamp, datetime.min.time()) + end_time
+
+	return start_datetime, end_datetime

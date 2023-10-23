@@ -186,6 +186,7 @@ doc_events = {
 	"Employee": {
 		"validate": "hrms.overrides.employee_master.validate_onboarding_process",
 		"on_update": "hrms.overrides.employee_master.update_approver_role",
+		"after_insert": "hrms.overrides.employee_master.update_job_applicant_and_offer",
 		"on_trash": "hrms.overrides.employee_master.update_employee_transfer",
 	},
 	"Project": {
