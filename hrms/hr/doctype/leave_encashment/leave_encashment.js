@@ -43,7 +43,8 @@ frappe.ui.form.on('Leave Encashment', {
 		frm.trigger("get_leave_details_for_encashment");
 	},
 	get_leave_details_for_encashment: function(frm) {
-		frm.set_value("encashable_days", 0);
+		frm.set_value("actual_encashable_days", 0);
+		frm.set_value("encashment_days", 0);
 
 		if (frm.doc.docstatus === 0 && frm.doc.employee && frm.doc.leave_type) {
 			return frappe.call({

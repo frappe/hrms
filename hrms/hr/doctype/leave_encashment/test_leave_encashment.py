@@ -87,7 +87,8 @@ class TestLeaveEncashment(FrappeTestCase):
 		).insert()
 
 		self.assertEqual(leave_encashment.leave_balance, 10)
-		self.assertEqual(leave_encashment.encashable_days, 5)
+		self.assertTrue(leave_encashment.actual_encashable_days, 5)
+		self.assertTrue(leave_encashment.encashment_days, 5)
 		self.assertEqual(leave_encashment.encashment_amount, 250)
 
 		leave_encashment.submit()
@@ -133,7 +134,8 @@ class TestLeaveEncashment(FrappeTestCase):
 		self.assertEqual(leave_encashment.leave_balance, 7)
 		# non-encashable leaves = 5, total leaves are 7, so encashable days = 7-5 = 2
 		# with a charge of 50 per day
-		self.assertEqual(leave_encashment.encashable_days, 2)
+		self.assertTrue(leave_encashment.actual_encashable_days, 2)
+		self.assertTrue(leave_encashment.encashment_days, 2)
 		self.assertEqual(leave_encashment.encashment_amount, 100)
 
 		# assert links
@@ -176,7 +178,8 @@ class TestLeaveEncashment(FrappeTestCase):
 
 		self.assertEqual(leave_encashment.leave_balance, 7)
 		# leave balance = 7, but encashment limit = 3 so encashable days = 3
-		self.assertEqual(leave_encashment.encashable_days, 3)
+		self.assertTrue(leave_encashment.actual_encashable_days, 3)
+		self.assertTrue(leave_encashment.encashment_days, 3)
 		self.assertEqual(leave_encashment.encashment_amount, 150)
 
 		# assert links
@@ -220,7 +223,8 @@ class TestLeaveEncashment(FrappeTestCase):
 		self.assertEqual(leave_encashment.leave_balance, 7)
 		# 1. non-encashable leaves = 5, total leaves are 7, so encashable days = 7-5 = 2
 		# 2. even though this leaves 2 encashable days, max encashable leaves = 1, so encashable days = 1
-		self.assertEqual(leave_encashment.encashable_days, 1)
+		self.assertTrue(leave_encashment.actual_encashable_days, 1)
+		self.assertTrue(leave_encashment.encashment_days, 1)
 		self.assertEqual(leave_encashment.encashment_amount, 50)
 
 		# assert links
@@ -252,7 +256,7 @@ class TestLeaveEncashment(FrappeTestCase):
 		self.assertEqual(len(leave_ledger_entry), 1)
 		self.assertEqual(leave_ledger_entry[0].employee, leave_encashment.employee)
 		self.assertEqual(leave_ledger_entry[0].leave_type, leave_encashment.leave_type)
-		self.assertEqual(leave_ledger_entry[0].leaves, leave_encashment.encashable_days * -1)
+		self.assertEqual(leave_ledger_entry[0].leaves, leave_encashment.encashment_days * -1)
 
 		# check if leave ledger entry is deleted on cancellation
 		frappe.db.delete("Additional Salary", {"ref_docname": leave_encashment.name})
