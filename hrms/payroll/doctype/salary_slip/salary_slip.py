@@ -1799,6 +1799,7 @@ class SalarySlip(TransactionBase):
 				"docstatus": 1,
 				"repay_from_salary": 1,
 				"company": self.company,
+				"status": ("!=", "Closed"),
 			},
 		)
 
