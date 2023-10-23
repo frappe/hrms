@@ -219,20 +219,22 @@
    "depends_on": "allow_encashment",
    "fieldname": "max_encashable_leaves",
    "fieldtype": "Int",
-   "label": "Maximum Encashable Leaves"
+   "label": "Maximum Encashable Leaves",
+   "non_negative": 1
   },
   {
    "depends_on": "allow_encashment",
    "description": "Indicates the number of leaves that cannot be encashed from the leave balance. E.g. with a leave balance of 10 and 4 Non-Encashable Leaves, you can encash 6, while the remaining 4 can be carried forward or expired",
    "fieldname": "non_encashable_leaves",
    "fieldtype": "Int",
-   "label": "Non-Encashable Leaves"
+   "label": "Non-Encashable Leaves",
+   "non_negative": 1
   }
  ],
  "icon": "fa fa-flag",
  "idx": 1,
  "links": [],
- "modified": "2023-10-23 14:10:30.487730",
+ "modified": "2023-10-23 15:34:04.281308",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Type",
