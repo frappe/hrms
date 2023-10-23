@@ -89,7 +89,7 @@ class LeaveEncashment(Document):
 		return frappe.get_cached_value(
 			"Leave Type",
 			self.leave_type,
-			["allow_encashment", "encashment_threshold_days", "max_encashable_leaves"],
+			["allow_encashment", "non_encashable_leaves", "max_encashable_leaves"],
 			as_dict=True,
 		)
 
@@ -107,8 +107,8 @@ class LeaveEncashment(Document):
 		leave_form_link = get_link_to_form("Leave Type", self.leave_type)
 
 		# TODO: Remove this weird setting if possible. Retained for backward compatibility
-		if encashment_settings.encashment_threshold_days:
-			encashable_days = self.leave_balance - encashment_settings.encashment_threshold_days
+		if encashment_settings.non_encashable_leaves:
+			encashable_days = self.leave_balance - encashment_settings.non_encashable_leaves
 			encashable_days = min(self.encashable_days, encashable_days)
 			self.encashable_days = encashable_days if encashable_days > 0 else 0
 			frappe.msgprint(
