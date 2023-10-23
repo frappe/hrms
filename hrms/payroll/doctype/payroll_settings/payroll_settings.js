@@ -16,4 +16,15 @@ frappe.ui.form.on('Payroll Settings', {
 			frm.set_value('password_policy', policy.split(new RegExp(" |-", 'g')).filter((token) => token).join('-'));
 		}
 	},
+	refresh: function (frm) {
+		frm.add_fetch("sender", "email_id", "sender_email");
+		frm.set_query("sender", () => {
+			return {
+				filters: {
+					enable_outgoing: 1,
+				},
+			};
+		});
+
+	}
 });
