@@ -1,6 +1,6 @@
 <div align="center">
     <a href="https://frappehr.com">
-	    <img src="hrms/public/images/frappe-hr-logo.png" alt="Frappe HR logo" width="170" style="max-width: 100%;"/>
+	<img src="hrms/public/images/frappe-hr-logo.png" alt="Frappe HR logo" width="170" style="max-width: 100%;"/>
     </a>
     <h2>Frappe HR</h2>
     <p align="center">
