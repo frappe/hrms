@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - version-14
+      - version-15
 jobs:
   release:
     name: Release
