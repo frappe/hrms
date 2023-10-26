@@ -86,7 +86,7 @@ frappe.listview_settings["Attendance"] = {
 						fieldtype: "MultiCheck",
 						options: [],
 						columns: 2,
-						select_all:true,
+						select_all: true,
 					},
 				],
 				primary_action(data) {
