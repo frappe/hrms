@@ -1,11 +1,14 @@
-<div align="center" markdown="1">
-<img src=".github/frappe-hr-logo.png" alt="Frappe HR logo" width="170" style="max-width: 100%;"/>
-
-Open Source, modern, and easy-to-use HR and Payroll Software for all organizations.
+<div align="center">
+	<a href="https://frappehr.com">
+		<img src="https://raw.githubusercontent.com/frappe/hrms/develop/hrms/public/images/frappe-hr-logo.png" height="128" alt="Frappe HR Logo">
+	</a>
+	<h2>Frappe HR</h2>
+	<p align="center">
+		<p>Open Source, modern, and easy-to-use HR and Payroll Software for all organizations</p>
+	</p>
 
 [![CI](https://github.com/frappe/hrms/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/frappe/hrms/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/frappe/hrms/branch/develop/graph/badge.svg?token=0TwvyUg3I5)](https://codecov.io/gh/frappe/hrms)
-
 
 [https://frappehr.com](https://frappehr.com)
 

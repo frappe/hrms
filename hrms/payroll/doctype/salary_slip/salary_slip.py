@@ -2,6 +2,7 @@
 # License: GNU General Public License v3. See license.txt
 
 
+import unicodedata
 from datetime import date
 
 import frappe
@@ -106,6 +107,28 @@ class SalarySlip(TransactionBase):
 			self.__payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
 
 		return self.__payroll_period
+
+	@property
+	def actual_start_date(self):
+		if not hasattr(self, "__actual_start_date"):
+			self.__actual_start_date = self.start_date
+
+			if self.joining_date and getdate(self.start_date) < self.joining_date <= getdate(self.end_date):
+				self.__actual_start_date = self.joining_date
+
+		return self.__actual_start_date
+
+	@property
+	def actual_end_date(self):
+		if not hasattr(self, "__actual_end_date"):
+			self.__actual_end_date = self.end_date
+
+			if self.relieving_date and getdate(self.start_date) <= self.relieving_date < getdate(
+				self.end_date
+			):
+				self.__actual_end_date = self.relieving_date
+
+		return self.__actual_end_date
 
 	def validate(self):
 		self.status = self.get_status()
@@ -286,12 +309,6 @@ class SalarySlip(TransactionBase):
 				)
 				self.set_time_sheet()
 				self.pull_sal_struct()
-				payroll_settings = frappe.get_cached_value(
-					"Payroll Settings",
-					None,
-					("payroll_based_on", "consider_unmarked_attendance_as"),
-				)
-				return payroll_settings
 
 	def set_time_sheet(self):
 		if self.salary_slip_based_on_timesheet:
@@ -376,10 +393,16 @@ class SalarySlip(TransactionBase):
 			(
 				"payroll_based_on",
 				"include_holidays_in_total_working_days",
+				"consider_marked_attendance_on_holidays",
 				"daily_wages_fraction_for_half_day",
 				"consider_unmarked_attendance_as",
 			),
 			as_dict=1,
+		)
+
+		consider_marked_attendance_on_holidays = (
+			payroll_settings.include_holidays_in_total_working_days
+			and payroll_settings.consider_marked_attendance_on_holidays
 		)
 
 		daily_wages_fraction_for_half_day = (
@@ -409,7 +432,7 @@ class SalarySlip(TransactionBase):
 
 		if payroll_settings.payroll_based_on == "Attendance":
 			actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(
-				holidays, daily_wages_fraction_for_half_day
+				holidays, daily_wages_fraction_for_half_day, consider_marked_attendance_on_holidays
 			)
 			self.absent_days = absent
 		else:
@@ -451,13 +474,8 @@ class SalarySlip(TransactionBase):
 
 	def get_unmarked_days(self, include_holidays_in_total_working_days):
 		unmarked_days = self.total_working_days
-		start_date = self.start_date
-		end_date = self.end_date
 
-		if self.joining_date and (
-			getdate(self.start_date) < self.joining_date <= getdate(self.end_date)
-		):
-			start_date = self.joining_date
+		if self.actual_start_date != self.start_date:
 			unmarked_days = self.get_unmarked_days_based_on_doj_or_relieving(
 				unmarked_days,
 				include_holidays_in_total_working_days,
@@ -465,10 +483,7 @@ class SalarySlip(TransactionBase):
 				add_days(self.joining_date, -1),
 			)
 
-		if self.relieving_date and (
-			getdate(self.start_date) <= self.relieving_date < getdate(self.end_date)
-		):
-			end_date = self.relieving_date
+		if self.actual_end_date != self.end_date:
 			unmarked_days = self.get_unmarked_days_based_on_doj_or_relieving(
 				unmarked_days,
 				include_holidays_in_total_working_days,
@@ -480,7 +495,7 @@ class SalarySlip(TransactionBase):
 		marked_days = frappe.db.count(
 			"Attendance",
 			filters={
-				"attendance_date": ["between", [start_date, end_date]],
+				"attendance_date": ["between", [self.actual_start_date, self.actual_end_date]],
 				"employee": self.employee,
 				"docstatus": 1,
 			},
@@ -510,25 +525,19 @@ class SalarySlip(TransactionBase):
 		return unmarked_days
 
 	def get_payment_days(self, include_holidays_in_total_working_days):
-		start_date = getdate(self.start_date)
-		if self.joining_date:
-			if getdate(self.start_date) <= self.joining_date <= getdate(self.end_date):
-				start_date = self.joining_date
-			elif self.joining_date > getdate(self.end_date):
-				return
+		if self.joining_date and self.joining_date > getdate(self.end_date):
+			# employee joined after payroll date
+			return 0
 
-		end_date = getdate(self.end_date)
 		if self.relieving_date:
-			employee_status = frappe.get_cached_value("Employee", self.employee, "status")
-			if getdate(self.start_date) <= self.relieving_date <= getdate(self.end_date):
-				end_date = self.relieving_date
-			elif self.relieving_date < getdate(self.start_date) and employee_status != "Left":
+			employee_status = frappe.db.get_value("Employee", self.employee, "status")
+			if self.relieving_date < getdate(self.start_date) and employee_status != "Left":
 				frappe.throw(_("Employee relieved on {0} must be set as 'Left'").format(self.relieving_date))
 
-		payment_days = date_diff(end_date, start_date) + 1
+		payment_days = date_diff(self.actual_end_date, self.actual_start_date) + 1
 
 		if not cint(include_holidays_in_total_working_days):
-			holidays = self.get_holidays_for_employee(start_date, end_date)
+			holidays = self.get_holidays_for_employee(self.actual_start_date, self.actual_end_date)
 			payment_days -= len(holidays)
 
 		return payment_days
@@ -614,17 +623,15 @@ class SalarySlip(TransactionBase):
 		return attendance_details
 
 	def calculate_lwp_ppl_and_absent_days_based_on_attendance(
-		self, holidays, daily_wages_fraction_for_half_day
+		self, holidays, daily_wages_fraction_for_half_day, consider_marked_attendance_on_holidays
 	):
 		lwp = 0
 		absent = 0
 
-		end_date = self.end_date
-		if self.relieving_date:
-			end_date = self.relieving_date
-
 		leave_type_map = self.get_leave_type_map()
-		attendance_details = self.get_employee_attendance(start_date=self.start_date, end_date=end_date)
+		attendance_details = self.get_employee_attendance(
+			start_date=self.start_date, end_date=self.actual_end_date
+		)
 
 		for d in attendance_details:
 			if (
@@ -634,7 +641,8 @@ class SalarySlip(TransactionBase):
 			):
 				continue
 
-			if getdate(d.attendance_date) in holidays:
+			# skip counting absent on holidays
+			if not consider_marked_attendance_on_holidays and getdate(d.attendance_date) in holidays:
 				if d.status == "Absent" or (
 					d.leave_type
 					and d.leave_type in leave_type_map.keys()
@@ -690,14 +698,12 @@ class SalarySlip(TransactionBase):
 			doc.append("earnings", wages_row)
 
 	def set_salary_structure_assignement(self):
-		start_date = getdate(self.start_date)
-		date_to_validate = self.joining_date if self.joining_date > start_date else start_date
 		self._salary_structure_assignment = frappe.db.get_value(
 			"Salary Structure Assignment",
 			{
 				"employee": self.employee,
 				"salary_structure": self.salary_structure,
-				"from_date": ("<=", date_to_validate),
+				"from_date": ("<=", self.actual_start_date),
 				"docstatus": 1,
 			},
 			"*",
@@ -711,7 +717,7 @@ class SalarySlip(TransactionBase):
 					"Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 				).format(
 					frappe.bold(self.employee_name),
-					frappe.bold(formatdate(date_to_validate)),
+					frappe.bold(formatdate(self.actual_start_date)),
 				)
 			)
 
@@ -1122,14 +1128,14 @@ class SalarySlip(TransactionBase):
 		try:
 			condition = sanitize_expression(struct_row.condition)
 			if condition:
-				if not frappe.safe_eval(condition, self.whitelisted_globals, data):
+				if not _safe_eval(condition, self.whitelisted_globals, data):
 					return None
 			amount = struct_row.amount
 			if struct_row.amount_based_on_formula:
 				formula = sanitize_expression(struct_row.formula)
 				if formula:
 					amount = flt(
-						frappe.safe_eval(formula, self.whitelisted_globals, data), struct_row.precision("amount")
+						_safe_eval(formula, self.whitelisted_globals, data), struct_row.precision("amount")
 					)
 			if amount:
 				data[struct_row.abbr] = amount
@@ -2181,3 +2187,51 @@ def throw_error_message(row, error, title, description=None):
 
 def on_doctype_update():
 	frappe.db.add_index("Salary Slip", ["employee", "start_date", "end_date"])
+
+
+def _safe_eval(code: str, eval_globals: dict | None = None, eval_locals: dict | None = None):
+	"""Old version of safe_eval from framework.
+
+	Note: current frappe.safe_eval transforms code so if you have nested
+	iterations with too much depth then it can hit recursion limit of python.
+	There's no workaround for this and people need large formulas in some
+	countries so this is alternate implementation for that.
+
+	WARNING: DO NOT use this function anywhere else outside of this file.
+	"""
+	code = unicodedata.normalize("NFKC", code)
+
+	_check_attributes(code)
+
+	whitelisted_globals = {"int": int, "float": float, "long": int, "round": round}
+	if not eval_globals:
+		eval_globals = {}
+
+	eval_globals["__builtins__"] = {}
+	eval_globals.update(whitelisted_globals)
+	return eval(code, eval_globals, eval_locals)  # nosemgrep
+
+
+def _check_attributes(code: str) -> None:
+	import ast
+
+	from frappe.utils.safe_exec import UNSAFE_ATTRIBUTES
+
+	unsafe_attrs = set(UNSAFE_ATTRIBUTES).union(["__"]) - {"format"}
+
+	for attribute in unsafe_attrs:
+		if attribute in code:
+			raise SyntaxError(f'Illegal rule {frappe.bold(code)}. Cannot use "{attribute}"')
+
+	BLOCKED_NODES = (ast.NamedExpr,)
+
+	tree = ast.parse(code, mode="eval")
+	for node in ast.walk(tree):
+		if isinstance(node, BLOCKED_NODES):
+			raise SyntaxError(f"Operation not allowed: line {node.lineno} column {node.col_offset}")
+		if (
+			isinstance(node, ast.Attribute)
+			and isinstance(node.attr, str)
+			and node.attr in UNSAFE_ATTRIBUTES
+		):
+			raise SyntaxError(f'Illegal rule {frappe.bold(code)}. Cannot use "{node.attr}"')
