@@ -1791,6 +1791,7 @@ class SalarySlip(TransactionBase):
 
 		if receiver:
 			email_args = {
+				"sender": payroll_settings.sender_email,
 				"recipients": [receiver],
 				"message": _(message),
 				"subject": "Salary Slip - from {0} to {1}".format(self.start_date, self.end_date),
