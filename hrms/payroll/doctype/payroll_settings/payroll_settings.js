@@ -2,6 +2,16 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Payroll Settings', {
+	refresh: function (frm) {
+		frm.set_query("sender", () => {
+			return {
+				filters: {
+					enable_outgoing: 1,
+				},
+			};
+		});
+	},
+
 	encrypt_salary_slips_in_emails: function(frm) {
 		let encrypt_state = frm.doc.encrypt_salary_slips_in_emails;
 		frm.set_df_property('password_policy', 'reqd', encrypt_state);
