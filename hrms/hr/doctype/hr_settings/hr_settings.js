@@ -3,7 +3,6 @@
 
 frappe.ui.form.on('HR Settings', {
 	refresh: function (frm) {
-		frm.add_fetch("sender", "email_id", "sender_email");
 		frm.set_query("sender", () => {
 			return {
 				filters: {
