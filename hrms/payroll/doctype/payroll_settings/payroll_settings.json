@@ -159,16 +159,17 @@
    "label": "Consider Marked Attendance on Holidays"
   },
   {
-   "depends_on": "eval:doc.email_salary_slip_to_employee;",
+   "depends_on": "eval:doc.email_salary_slip_to_employee",
    "fieldname": "sender",
    "fieldtype": "Link",
    "label": "Sender",
    "options": "Email Account"
   },
   {
-   "depends_on": "eval:doc.sender;",
+   "depends_on": "eval:doc.sender",
+   "fetch_from": "sender.email_id",
    "fieldname": "sender_email",
-   "fieldtype": "Data", 
+   "fieldtype": "Data",
    "label": "Sender Email",
    "read_only": 1
   }
@@ -177,7 +178,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-10-23 14:50:34.451546",
+ "modified": "2023-11-01 13:51:04.225492",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",

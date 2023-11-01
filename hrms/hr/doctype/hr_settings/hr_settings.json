@@ -12,13 +12,14 @@
   "column_break_9",
   "retirement_age",
   "reminders_section",
-  "sender",
-  "sender_email",
   "column_break_11",
   "send_work_anniversary_reminders",
   "send_birthday_reminders",
   "send_holiday_reminders",
   "frequency",
+  "column_break_hyec",
+  "sender",
+  "sender_email",
   "leave_and_expense_claim_settings",
   "send_leave_notification",
   "leave_approval_notification_template",
@@ -256,18 +257,23 @@
    "options": "Email Account"
   },
   {
-   "depends_on": "eval:doc.sender;",
+   "depends_on": "eval:doc.sender",
+   "fetch_from": "sender.email_id",
    "fieldname": "sender_email",
    "fieldtype": "Data",
    "label": "Sender Email",
    "read_only": 1
+  },
+  {
+   "fieldname": "column_break_hyec",
+   "fieldtype": "Column Break"
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-10-23 15:40:06.249322",
+ "modified": "2023-11-01 11:06:31.329718",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
@@ -285,5 +291,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "ASC",
+ "states": [],
  "track_changes": 1
 }
