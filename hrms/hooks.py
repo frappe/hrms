@@ -209,6 +209,7 @@ scheduler_events = {
 	],
 	"hourly_long": [
 		"hrms.hr.doctype.shift_type.shift_type.process_auto_attendance_for_all_shifts",
+		"hrms.hr.doctype.shift_type.shift_type.mark_absent_for_missing_attendance_for_all_shifts",
 	],
 	"daily": [
 		"hrms.controllers.employee_reminders.send_birthday_reminders",

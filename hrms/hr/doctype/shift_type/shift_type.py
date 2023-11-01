@@ -25,6 +25,10 @@ from hrms.utils.holiday_list import get_holiday_dates_between
 class ShiftType(Document):
 	@frappe.whitelist()
 	def process_auto_attendance(self):
+		self.process_attendance_based_on_checkins()
+		self.mark_absent_for_missing_attendance()
+
+	def process_attendance_based_on_checkins(self):
 		if (
 			not cint(self.enable_auto_attendance)
 			or not self.process_attendance_after
@@ -63,6 +67,7 @@ class ShiftType(Document):
 				self.name,
 			)
 
+	def mark_absent_for_missing_attendance(self):
 		for employee in self.get_assigned_employees(self.process_attendance_after, True):
 			self.mark_absent_for_dates_with_no_attendance(employee)
 
@@ -282,4 +287,11 @@ def process_auto_attendance_for_all_shifts():
 	shift_list = frappe.get_all("Shift Type", filters={"enable_auto_attendance": "1"}, pluck="name")
 	for shift in shift_list:
 		doc = frappe.get_cached_doc("Shift Type", shift)
-		doc.process_auto_attendance()
+		doc.process_attendance_based_on_checkins()
+
+
+def mark_absent_for_missing_attendance_for_all_shifts():
+	shift_list = frappe.get_all("Shift Type", filters={"enable_auto_attendance": "1"}, pluck="name")
+	for shift in shift_list:
+		doc = frappe.get_cached_doc("Shift Type", shift)
+		doc.mark_absent_for_missing_attendance()
