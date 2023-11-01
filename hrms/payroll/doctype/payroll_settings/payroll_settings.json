@@ -20,6 +20,8 @@
   "show_leave_balances_in_salary_slip",
   "email_section",
   "email_salary_slip_to_employee",
+  "sender",
+  "sender_email",
   "column_break_iewr",
   "encrypt_salary_slips_in_emails",
   "password_policy",
@@ -155,13 +157,28 @@
    "fieldname": "consider_marked_attendance_on_holidays",
    "fieldtype": "Check",
    "label": "Consider Marked Attendance on Holidays"
+  },
+  {
+   "depends_on": "eval:doc.email_salary_slip_to_employee",
+   "fieldname": "sender",
+   "fieldtype": "Link",
+   "label": "Sender",
+   "options": "Email Account"
+  },
+  {
+   "depends_on": "eval:doc.sender",
+   "fetch_from": "sender.email_id",
+   "fieldname": "sender_email",
+   "fieldtype": "Data",
+   "label": "Sender Email",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-cog",
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-09-25 14:03:59.215240",
+ "modified": "2023-11-01 13:51:04.225492",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",
