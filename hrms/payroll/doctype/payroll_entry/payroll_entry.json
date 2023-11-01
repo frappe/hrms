@@ -29,6 +29,7 @@
   "department",
   "column_break_21",
   "designation",
+  "grade",
   "number_of_employees",
   "section_break_24",
   "employees",
@@ -324,12 +325,18 @@
    "fieldtype": "Tab Break",
    "label": "Connections",
    "show_dashboard": 1
+  },
+  {
+   "fieldname": "grade",
+   "fieldtype": "Link",
+   "label": "Grade",
+   "options": "Employee Grade"
   }
  ],
  "icon": "fa fa-cog",
  "is_submittable": 1,
  "links": [],
- "modified": "2023-07-13 12:27:33.418702",
+ "modified": "2023-10-10 14:21:24.517349",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",

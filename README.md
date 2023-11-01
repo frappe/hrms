@@ -1,19 +1,30 @@
-<div align="center" markdown="1">
-<img src=".github/frappe-hr-logo.png" alt="Frappe HR logo" width="170" style="max-width: 100%;"/>
-
-Open Source, modern, and easy-to-use HR and Payroll Software for all organizations.
+<div align="center">
+	<a href="https://frappehr.com">
+		<img src="https://raw.githubusercontent.com/frappe/hrms/develop/hrms/public/images/frappe-hr-logo.png" height="128" alt="Frappe HR Logo">
+	</a>
+	<h2>Frappe HR</h2>
+	<p align="center">
+		<p>Open Source, modern, and easy-to-use HR and Payroll Software for all organizations</p>
+	</p>
 
 [![CI](https://github.com/frappe/hrms/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/frappe/hrms/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/frappe/hrms/branch/develop/graph/badge.svg?token=0TwvyUg3I5)](https://codecov.io/gh/frappe/hrms)
 
-
 [https://frappehr.com](https://frappehr.com)
+
+<p align="center">
+	<a href="https://www.producthunt.com/posts/frappe-hr?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-frappe&#0045;hr" target="_blank">
+		<img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=421276&theme=dark" alt="Frappe&#0032;HR - The&#0032;missing&#0032;open&#0032;source&#0032;HR&#0032;and&#0032;payroll&#0032;software | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" />
+	</a>
+</p>
 
 <div align="center" style="max-height: 40px;">
 	<a href="https://frappecloud.com/hrms/signup">
-		<img src=".github/try-on-f-cloud-button.svg" height="40">
+		<img src=".github/try-on-f-cloud-button.svg" height="50">
 	</a>
 </div>
+
+
 
 </div>
 

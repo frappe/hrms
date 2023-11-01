@@ -79,6 +79,7 @@ def _get_loan_details(doc: "SalarySlip"):
 			"docstatus": 1,
 			"repay_from_salary": 1,
 			"company": doc.company,
+			"status": ("!=", "Closed"),
 		},
 	)
 
