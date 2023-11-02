@@ -21,7 +21,7 @@ from hrms.hr.doctype.shift_assignment.shift_assignment import get_employee_shift
 from hrms.utils import get_date_range
 from hrms.utils.holiday_list import get_holiday_dates_between
 
-EMPLOYEE_CHUNK_SIZE = 20
+EMPLOYEE_CHUNK_SIZE = 50
 
 
 class ShiftType(Document):
@@ -69,10 +69,10 @@ class ShiftType(Document):
 		frappe.db.commit()  # nosemgrep
 
 		assigned_employees = self.get_assigned_employees(self.process_attendance_after, True)
+
+		# mark absent in batches & commit to avoid losing progress since this tries to process remaining attendance
+		# right from "Process Attendance After" to "Last Sync of Checkin"
 		for batch in create_batch(assigned_employees, EMPLOYEE_CHUNK_SIZE):
-			# mark absent in batches & commit to avoid losing progress
-			# since this tries to process remaining attendance
-			# right from "Process Attendance After" to "Last Sync of Checkin"
 			for employee in batch:
 				self.mark_absent_for_dates_with_no_attendance(employee)
 
