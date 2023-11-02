@@ -461,7 +461,9 @@ class TestShiftType(FrappeTestCase):
 
 		default_shift = setup_shift_type()
 		employee = make_employee(
-			"test_employee_checkin@example.com", company="_Test Company", default_shift=default_shift.name
+			"test_employee_checkin_default@example.com",
+			company="_Test Company",
+			default_shift=default_shift.name,
 		)
 
 		assigned_shift = setup_shift_type(shift_type="Test Absent with no Attendance")
