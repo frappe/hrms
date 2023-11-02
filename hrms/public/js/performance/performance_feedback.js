@@ -94,7 +94,6 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 			fields: me.get_feedback_dialog_fields(criteria_data),
 			size: "large",
 			minimizable: true,
-			static: true,
 			primary_action_label: __("Submit"),
 			primary_action: function() {
 				const data = dialog.get_values();
@@ -126,7 +125,6 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 		});
 
 		dialog.show();
-		dialog.get_close_btn().show();
 	};
 
 	get_feedback_dialog_fields(criteria_data) {
