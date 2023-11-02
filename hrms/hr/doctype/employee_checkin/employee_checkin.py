@@ -1,6 +1,7 @@
 # Copyright (c) 2019, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+import json
 
 import frappe
 from frappe import _
@@ -63,8 +64,8 @@ class EmployeeCheckin(Document):
 
 @frappe.whitelist()
 def add_log_based_on_employee_field(
-	employee_field_value,
-	timestamp,
+	employee_field_value=None,
+	timestamp=None,
 	device_id=None,
 	log_type=None,
 	skip_auto_attendance=0,
@@ -81,6 +82,10 @@ def add_log_based_on_employee_field(
 	"""
 
 	if not employee_field_value or not timestamp:
+		if frappe.request:
+			data = json.loads(frappe.request.data)
+			if data.get("employee_field_value") and data.get("timestamp"):
+				return add_log_based_on_employee_field(**data)
 		frappe.throw(_("'employee_field_value' and 'timestamp' are required."))
 
 	employee = frappe.db.get_values(
