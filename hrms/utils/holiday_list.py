@@ -13,7 +13,7 @@ def get_holiday_dates_between(
 		.select(Holiday.holiday_date)
 		.where((Holiday.parent == holiday_list) & (Holiday.holiday_date.between(start_date, end_date)))
 		.orderby(Holiday.holiday_date)
-	).run(pluck=True)
+	)
 
 	if skip_weekly_offs:
 		query = query.where(Holiday.weekly_off == 0)
