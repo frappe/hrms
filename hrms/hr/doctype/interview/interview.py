@@ -159,7 +159,7 @@ def send_interview_reminder():
 	reminder_settings = frappe.db.get_value(
 		"HR Settings",
 		"HR Settings",
-		["send_interview_reminder", "interview_reminder_template"],
+		["send_interview_reminder", "interview_reminder_template", "sender_email"],
 		as_dict=True,
 	)
 
@@ -193,6 +193,7 @@ def send_interview_reminder():
 		recipients = get_recipients(doc.name)
 
 		frappe.sendmail(
+			sender=reminder_settings.sender_email,
 			recipients=recipients,
 			subject=interview_template.subject,
 			message=message,
@@ -207,7 +208,7 @@ def send_daily_feedback_reminder():
 	reminder_settings = frappe.db.get_value(
 		"HR Settings",
 		"HR Settings",
-		["send_interview_feedback_reminder", "feedback_reminder_notification_template"],
+		["send_interview_feedback_reminder", "feedback_reminder_notification_template", "sender_email"],
 		as_dict=True,
 	)
 
@@ -238,6 +239,7 @@ def send_daily_feedback_reminder():
 
 		if len(recipients):
 			frappe.sendmail(
+				sender=reminder_settings.sender_email,
 				recipients=recipients,
 				subject=interview_feedback_template.subject,
 				message=message,
