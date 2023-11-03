@@ -20,13 +20,15 @@ export const animationBuilder = (baseEl, opts) => {
 }
 
 const getIonicConfig = () => {
-	return isPlatform("iphone")
-		? {
-				// disable ionic's swipe back gesture on ios
-				swipeBackEnabled: false,
-				navAnimation: animationBuilder,
-		  }
-		: {}
+	const config = { mode: "ios" }
+
+	if (isPlatform("iphone")) {
+		// disable ionic's swipe back gesture on ios
+		config.swipeBackEnabled = false
+		config.navAnimation = animationBuilder
+	}
+
+	return config
 }
 
 export default getIonicConfig
