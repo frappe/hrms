@@ -12,6 +12,7 @@
   "employee_name",
   "department",
   "company",
+  "ignore_holiday",
   "column_break_5",
   "from_date",
   "to_date",
@@ -125,11 +126,17 @@
    "fieldtype": "Link",
    "label": "Shift",
    "options": "Shift Type"
+  },
+  {
+   "default": "0",
+   "fieldname": "ignore_holiday",
+   "fieldtype": "Check",
+   "label": "Ignore Holiday"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-08-04 18:15:42.567091",
+ "modified": "2023-11-04 22:34:16.895767",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance Request",

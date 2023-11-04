@@ -119,6 +119,9 @@ class AttendanceRequest(Document):
 	def should_mark_attendance(self, attendance_date: str) -> bool:
 		# Check if attendance_date is a holiday
 		if is_holiday(self.employee, attendance_date):
+			if self.ignore_holiday:
+				return True
+
 			frappe.msgprint(
 				_("Attendance not submitted for {0} as it is a Holiday.").format(
 					frappe.bold(format_date(attendance_date))
