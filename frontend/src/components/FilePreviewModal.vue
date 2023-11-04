@@ -1,7 +1,7 @@
 <template>
 	<ion-header>
 		<ion-toolbar>
-			<ion-title>{{ file.file_name }} - File Preview</ion-title>
+			<ion-title>{{ filename }} - File Preview</ion-title>
 			<ion-buttons slot="end">
 				<ion-button @click="modalController.dismiss()">Close</ion-button>
 			</ion-buttons>
@@ -9,17 +9,14 @@
 	</ion-header>
 	<ion-content>
 		<div class="bg-white h-full w-full overflow-auto touch-pinch-zoom">
-			<img
-				v-if="isImageFile(file.file_name)"
-				:src="file.file_url"
-				class="h-auto"
-			/>
-			<iframe v-else :src="file.file_url" class="w-full h-full"></iframe>
+			<img v-if="isImageFile" :src="src" class="h-auto" />
+			<iframe v-else :src="src" class="w-full h-full"></iframe>
 		</div>
 	</ion-content>
 </template>
 
 <script setup>
+import { computed } from "vue"
 import {
 	IonHeader,
 	IonToolbar,
@@ -37,7 +34,17 @@ const props = defineProps({
 	},
 })
 
-const isImageFile = (filename) => {
-	return /\.(gif|jpg|jpeg|tiff|png|svg)$/i.test(filename)
-}
+const filename = computed(() => {
+	return props.file.file_name || props.file.name
+})
+
+const src = computed(() => {
+	return props.file.file_url
+		? props.file.file_url
+		: URL.createObjectURL(props.file)
+})
+
+const isImageFile = computed(() => {
+	return /\.(gif|jpg|jpeg|tiff|png|svg)$/i.test(filename.value)
+})
 </script>
