@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
+import { computed, onBeforeUnmount } from "vue"
 import {
 	IonHeader,
 	IonToolbar,
@@ -46,5 +46,9 @@ const src = computed(() => {
 
 const isImageFile = computed(() => {
 	return /\.(gif|jpg|jpeg|tiff|png|svg)$/i.test(filename.value)
+})
+
+onBeforeUnmount(() => {
+	URL.revokeObjectURL(src.value)
 })
 </script>
