@@ -181,7 +181,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-08-30 21:11:09.892560",
+ "modified": "2023-11-05 00:05:09.892560",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Full and Final Statement",
@@ -221,6 +221,7 @@
    "report": 1,
    "role": "HR Manager",
    "share": 1,
+   "submit": 1, 
    "write": 1
   }
  ],
