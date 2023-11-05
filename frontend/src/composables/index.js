@@ -1,4 +1,4 @@
-import { createResource } from "frappe-ui"
+import { createResource, toast } from "frappe-ui"
 
 function getFileReader() {
 	const fileReader = new FileReader()
@@ -17,6 +17,17 @@ export class FileAttachment {
 		const uploader = createResource({
 			url: "hrms.api.upload_base64_file",
 			onSuccess: successHandler,
+			onError: (error) => {
+				toast({
+					title: "Error",
+					text: `File upload failed for ${this.fileName}. ${
+						error.messages?.[0] || ""
+					}`,
+					icon: "alert-circle",
+					position: "bottom-center",
+					iconClasses: "text-red-500",
+				})
+			},
 		})
 
 		reader.onload = () => {
@@ -41,6 +52,15 @@ export class FileAttachment {
 			url: "hrms.api.delete_attachment",
 			onSuccess: () => {
 				console.log("Deleted successfully ✅")
+			},
+			onError: (error) => {
+				toast({
+					title: "Error",
+					text: `File deletion failed. ${error.messages?.[0] || ""}`,
+					icon: "alert-circle",
+					position: "bottom-center",
+					iconClasses: "text-red-500",
+				})
 			},
 		}).submit({
 			filename: this.fileName,
