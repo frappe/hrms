@@ -411,10 +411,10 @@ const attachedFiles = createResource({
 })
 
 const handleFileSelect = (e) => {
-	fileAttachments.value.push(...e.target.files)
-
 	if (props.id) {
-		uploadAllAttachments(props.doctype, props.id)
+		uploadAllAttachments(props.doctype, props.id, [...e.target.files])
+	} else {
+		fileAttachments.value.push(...e.target.files)
 	}
 }
 
@@ -425,22 +425,20 @@ const handleFileDelete = async (fileObj) => {
 		await attachedFiles.reload()
 	} else {
 		fileAttachments.value = fileAttachments.value.filter(
-			(file) => file.name !== fileName
+			(file) => file.name !== fileObj.name
 		)
 	}
 }
 
-const uploadAttachment = async (doctype, name, file) => {
-	const fileAttachment = new FileAttachment(file)
-	return fileAttachment.upload(doctype, name).promise
-}
-
-async function uploadAllAttachments(documentType, documentName) {
-	for (const attachment of fileAttachments.value) {
-		if (!attachment.uploaded) {
-			await uploadAttachment(documentType, documentName, attachment)
-			attachment.uploaded = true
-		}
+async function uploadAllAttachments(documentType, documentName, attachments) {
+	for (const attachment of attachments) {
+		const fileAttachment = new FileAttachment(attachment)
+		fileAttachment.upload(documentType, documentName, "", (fileDoc) => {
+			fileDoc.uploaded = true
+			if (props.id) {
+				fileAttachments.value.push(fileDoc)
+			}
+		})
 	}
 }
 
@@ -456,7 +454,7 @@ const docList = createListResource({
 				position: "bottom-center",
 				iconClasses: "text-green-500",
 			})
-			await uploadAllAttachments(data.doctype, data.name)
+			await uploadAllAttachments(data.doctype, data.name, fileAttachments.value)
 
 			router.replace({
 				name: `${props.doctype.replace(/\s+/g, "")}DetailView`,
