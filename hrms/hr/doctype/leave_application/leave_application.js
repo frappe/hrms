@@ -104,11 +104,15 @@ frappe.ui.form.on("Leave Application", {
 			frm.set_intro(__("Fill the form and save it"));
 		}
 
-		if (!frm.doc.employee && frappe.defaults.get_user_permissions()) {
-			const perm = frappe.defaults.get_user_permissions();
-			if (perm && perm["Employee"]) {
-				frm.set_value("employee", perm["Employee"].map(perm_doc => perm_doc.doc)[0]);
-			}
+		frm.trigger("set_employee");
+	},
+
+	async set_employee(frm) {
+		if (frm.doc.employee) return;
+
+		const employee = await hrms.get_current_employee(frm);
+		if (employee) {
+			frm.set_value("employee", employee);
 		}
 	},
 

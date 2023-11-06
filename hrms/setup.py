@@ -327,6 +327,13 @@ def make_fixtures():
 		{"doctype": "Expense Claim Type", "name": _("Medical"), "expense_type": _("Medical")},
 		{"doctype": "Expense Claim Type", "name": _("Others"), "expense_type": _("Others")},
 		{"doctype": "Expense Claim Type", "name": _("Travel"), "expense_type": _("Travel")},
+		# vehicle service item
+		{"doctype": "Vehicle Service Item", "service_item": "Brake Oil"},
+		{"doctype": "Vehicle Service Item", "service_item": "Brake Pad"},
+		{"doctype": "Vehicle Service Item", "service_item": "Clutch Plate"},
+		{"doctype": "Vehicle Service Item", "service_item": "Engine Oil"},
+		{"doctype": "Vehicle Service Item", "service_item": "Oil Change"},
+		{"doctype": "Vehicle Service Item", "service_item": "Wheels"},
 		# leave type
 		{
 			"doctype": "Leave Type",
@@ -496,7 +503,7 @@ def add_non_standard_user_types():
 
 	user_type_limit = {}
 	for user_type, data in user_types.items():
-		user_type_limit.setdefault(frappe.scrub(user_type), 20)
+		user_type_limit.setdefault(frappe.scrub(user_type), 30)
 
 	update_site_config("user_type_doctype_limit", user_type_limit)
 
@@ -515,11 +522,13 @@ def get_user_types_data():
 				# masters
 				"Holiday List": ["read"],
 				"Employee": ["read", "write"],
+				"Company": ["read"],
 				# payroll
 				"Salary Slip": ["read"],
 				"Employee Benefit Application": ["read", "write", "create", "delete"],
 				# expenses
 				"Expense Claim": ["read", "write", "create", "delete"],
+				"Expense Claim Type": ["read"],
 				"Employee Advance": ["read", "write", "create", "delete"],
 				# leave and attendance
 				"Leave Application": ["read", "write", "create", "delete"],
@@ -534,6 +543,7 @@ def get_user_types_data():
 				"Training Program": ["read"],
 				"Training Feedback": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
 				# shifts
+				"Employee Checkin": ["read"],
 				"Shift Request": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
 				# misc
 				"Employee Grievance": ["read", "write", "create", "delete"],
@@ -611,8 +621,6 @@ def set_single_defaults():
 				doc.save()
 			except frappe.ValidationError:
 				pass
-
-	frappe.db.set_default("date_format", "dd-mm-yyyy")
 
 
 def get_post_install_patches():
@@ -776,7 +784,6 @@ SALARY_SLIP_LOAN_FIELDS = {
 	"Loan Repayment": [
 		{
 			"default": "0",
-			"fetch_from": "against_loan.repay_from_salary",
 			"fieldname": "repay_from_salary",
 			"fieldtype": "Check",
 			"label": "Repay From Salary",
@@ -789,7 +796,16 @@ SALARY_SLIP_LOAN_FIELDS = {
 			"label": "Payroll Payable Account",
 			"mandatory_depends_on": "eval:doc.repay_from_salary",
 			"options": "Account",
-			"insert_after": "rate_of_interest",
+			"insert_after": "payment_account",
+		},
+		{
+			"default": "0",
+			"depends_on": 'eval:doc.applicant_type=="Employee"',
+			"fieldname": "process_payroll_accounting_entry_based_on_employee",
+			"hidden": 1,
+			"fieldtype": "Check",
+			"label": "Process Payroll Accounting Entry based on Employee",
+			"insert_after": "repay_from_salary",
 		},
 	],
 }

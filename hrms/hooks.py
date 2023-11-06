@@ -4,7 +4,9 @@ app_publisher = "Frappe Technologies Pvt. Ltd."
 app_description = "Modern HR and Payroll Software"
 app_email = "contact@frappe.io"
 app_license = "GNU General Public License (v3)"
-required_apps = ["erpnext"]
+required_apps = ["frappe/erpnext"]
+source_link = "http://github.com/frappe/hrms"
+app_logo_url = "/assets/hrms/images/frappe-hr-logo.svg"
 
 
 # Includes in <head>
@@ -59,6 +61,8 @@ doctype_js = {
 # role_home_page = {
 # 	"Role": "home_page"
 # }
+
+calendars = ["Leave Application"]
 
 # Generators
 # ----------
@@ -157,6 +161,10 @@ doc_events = {
 			"hrms.overrides.company.set_default_hr_accounts",
 		],
 	},
+	"Holiday List": {
+		"on_update": "hrms.utils.holiday_list.invalidate_cache",
+		"on_trash": "hrms.utils.holiday_list.invalidate_cache",
+	},
 	"Timesheet": {"validate": "hrms.hr.utils.validate_active_employee"},
 	"Payment Entry": {
 		"on_submit": "hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
@@ -180,6 +188,7 @@ doc_events = {
 	"Employee": {
 		"validate": "hrms.overrides.employee_master.validate_onboarding_process",
 		"on_update": "hrms.overrides.employee_master.update_approver_role",
+		"after_insert": "hrms.overrides.employee_master.update_job_applicant_and_offer",
 		"on_trash": "hrms.overrides.employee_master.update_employee_transfer",
 	},
 	"Project": {

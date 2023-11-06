@@ -1,6 +1,5 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
-{% include "erpnext/public/js/controllers/accounts.js" %}
 
 cur_frm.add_fetch('company', 'default_letter_head', 'letter_head');
 
@@ -54,6 +53,12 @@ frappe.ui.form.on('Salary Structure', {
 		frm.trigger('set_earning_deduction_component');
 	},
 
+	mode_of_payment: function(frm) {
+		erpnext.accounts.pos.get_payment_mode_account(frm, frm.doc.mode_of_payment, function(account){
+			frm.set_value("payment_account", account);
+		})
+	},
+
 	set_earning_deduction_component: function(frm) {
 		if(!frm.doc.company) return;
 		frm.set_query("salary_component", "earnings", function() {
@@ -99,22 +104,21 @@ frappe.ui.form.on('Salary Structure', {
 		frm.fields_dict['earnings'].grid.set_column_disp("default_amount", false);
 		frm.fields_dict['deductions'].grid.set_column_disp("default_amount", false);
 
-		if(frm.doc.docstatus === 1) {
-			frm.add_custom_button(__("Preview Salary Slip"), function() {
-				frm.trigger('preview_salary_slip');
-			});
-		}
+		if (frm.doc.docstatus === 1) {
+			frm.add_custom_button(__("Assign to Employees"), function() {
+				frm.trigger("assign_to_employees")
+			}, __("Actions"));
 
-		if(frm.doc.docstatus==1) {
 			frm.add_custom_button(__("Assign Salary Structure"), function() {
-				var doc = frappe.model.get_new_doc('Salary Structure Assignment');
+				let doc = frappe.model.get_new_doc("Salary Structure Assignment");
 				doc.salary_structure = frm.doc.name;
 				doc.company = frm.doc.company;
-				frappe.set_route('Form', 'Salary Structure Assignment', doc.name);
-			});
-			frm.add_custom_button(__("Assign to Employees"),function () {
-				frm.trigger('assign_to_employees')
-			})
+				frappe.set_route("Form", "Salary Structure Assignment", doc.name);
+			}, __("Actions"));
+
+			frm.add_custom_button(__("Preview Salary Slip"), function() {
+				frm.trigger("preview_salary_slip");
+			}, __("Actions"));
 		}
 
 		// set columns read-only
@@ -180,7 +184,9 @@ frappe.ui.form.on('Salary Structure', {
 	},
 
 	salary_slip_based_on_timesheet: function(frm) {
-		frm.trigger("toggle_fields")
+		frm.trigger("toggle_fields");
+		hrms.set_payroll_frequency_to_null(frm);
+
 	},
 
 	preview_salary_slip: function(frm) {
@@ -199,9 +205,9 @@ frappe.ui.form.on('Salary Structure', {
 						title: __("Preview Salary Slip"),
 						fields: [
 							{
-								"label":__("Employee"),
-								"fieldname":"employee",
-								"fieldtype":"Select",
+								"label": __("Employee"),
+								"fieldname": "employee",
+								"fieldtype": "Autocomplete",
 								"reqd": true,
 								options: employees
 							}, {

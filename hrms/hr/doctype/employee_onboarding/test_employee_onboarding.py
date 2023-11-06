@@ -1,9 +1,8 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, getdate
 
 from hrms.hr.doctype.employee_onboarding.employee_onboarding import (
@@ -12,15 +11,17 @@ from hrms.hr.doctype.employee_onboarding.employee_onboarding import (
 )
 from hrms.hr.doctype.job_offer.test_job_offer import create_job_offer
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
+from hrms.tests.test_utils import create_company
 
 
-class TestEmployeeOnboarding(unittest.TestCase):
+class TestEmployeeOnboarding(FrappeTestCase):
 	def setUp(self):
+		create_company()
 		if frappe.db.exists("Employee Onboarding", {"employee_name": "Test Researcher"}):
-			frappe.delete_doc("Employee Onboarding", {"employee_name": "Test Researcher"})
+			frappe.db.sql("delete from `tabEmployee Onboarding` where employee_name=%s", "Test Researcher")
 
 		project = "Employee Onboarding : test@researcher.com"
-		frappe.db.sql("delete from tabProject where name=%s", project)
+		frappe.db.sql("delete from tabProject where project_name=%s", project)
 		frappe.db.sql("delete from tabTask where project=%s", project)
 
 	def test_employee_onboarding_incomplete_task(self):
@@ -70,6 +71,26 @@ class TestEmployeeOnboarding(unittest.TestCase):
 		employee.gender = "Female"
 		employee.insert()
 		self.assertEqual(employee.employee_name, "Test Researcher")
+
+	def test_mark_onboarding_as_completed(self):
+		onboarding = create_employee_onboarding()
+
+		# before marking as completed
+		self.assertEqual(onboarding.boarding_status, "Pending")
+		project = frappe.get_doc("Project", onboarding.project)
+		self.assertEqual(project.status, "Open")
+		for task_status in frappe.get_all("Task", dict(project=project.name), pluck="status"):
+			self.assertEqual(task_status, "Open")
+
+		onboarding.reload()
+		onboarding.mark_onboarding_as_completed()
+
+		# after marking as completed
+		self.assertEqual(onboarding.boarding_status, "Completed")
+		project.reload()
+		self.assertEqual(project.status, "Completed")
+		for task_status in frappe.get_all("Task", dict(project=project.name), pluck="status"):
+			self.assertEqual(task_status, "Completed")
 
 	def tearDown(self):
 		frappe.db.rollback()

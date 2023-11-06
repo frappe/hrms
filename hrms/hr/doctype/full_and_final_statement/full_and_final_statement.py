@@ -8,8 +8,11 @@ from frappe.utils import flt, get_link_to_form, today
 
 
 class FullandFinalStatement(Document):
-	def validate(self):
+	def before_insert(self):
 		self.get_outstanding_statements()
+
+	def validate(self):
+		self.get_assets_statements()
 		if self.docstatus == 1:
 			self.validate_settlement("payables")
 			self.validate_settlement("receivables")
@@ -34,14 +37,16 @@ class FullandFinalStatement(Document):
 			if not len(self.get("receivables", [])):
 				components = self.get_receivable_component()
 				self.create_component_row(components, "receivables")
-
-			if not len(self.get("assets_allocated", [])):
-				for data in self.get_assets_movement():
-					self.append("assets_allocated", data)
+			self.get_assets_statements()
 		else:
 			frappe.throw(
 				_("Set Relieving Date for Employee: {0}").format(get_link_to_form("Employee", self.employee))
 			)
+
+	def get_assets_statements(self):
+		if not len(self.get("assets_allocated", [])):
+			for data in self.get_assets_movement():
+				self.append("assets_allocated", data)
 
 	def create_component_row(self, components, component_type):
 		for component in components:

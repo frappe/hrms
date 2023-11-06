@@ -23,10 +23,10 @@
   "process_attendance_after",
   "last_sync_of_checkin",
   "grace_period_settings_auto_attendance_section",
-  "enable_entry_grace_period",
+  "enable_late_entry_marking",
   "late_entry_grace_period",
   "column_break_18",
-  "enable_exit_grace_period",
+  "enable_early_exit_marking",
   "early_exit_grace_period"
  ],
  "fields": [
@@ -92,13 +92,7 @@
    "label": "Begin check-in before shift start time (in minutes)"
   },
   {
-   "default": "0",
-   "fieldname": "enable_entry_grace_period",
-   "fieldtype": "Check",
-   "label": "Enable Entry Grace Period"
-  },
-  {
-   "depends_on": "enable_entry_grace_period",
+   "depends_on": "enable_late_entry_marking",
    "description": "The time after the shift start time when check-in is considered as late (in minutes).",
    "fieldname": "late_entry_grace_period",
    "fieldtype": "Int",
@@ -109,13 +103,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "0",
-   "fieldname": "enable_exit_grace_period",
-   "fieldtype": "Check",
-   "label": "Enable Exit Grace Period"
-  },
-  {
-   "depends_on": "eval:doc.enable_exit_grace_period",
+   "depends_on": "enable_early_exit_marking",
    "description": "The time before the shift end time when check-out is considered as early (in minutes).",
    "fieldname": "early_exit_grace_period",
    "fieldtype": "Int",
@@ -138,7 +126,7 @@
    "depends_on": "enable_auto_attendance",
    "fieldname": "grace_period_settings_auto_attendance_section",
    "fieldtype": "Section Break",
-   "label": "Grace Period Settings For Auto Attendance"
+   "label": "Late Entry & Early Exit Settings for Auto Attendance"
   },
   {
    "default": "0",
@@ -165,10 +153,22 @@
    "fieldname": "mark_auto_attendance_on_holidays",
    "fieldtype": "Check",
    "label": "Mark Auto Attendance on Holidays"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_late_entry_marking",
+   "fieldtype": "Check",
+   "label": "Enable Late Entry Marking"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_early_exit_marking",
+   "fieldtype": "Check",
+   "label": "Enable Early Exit Marking"
   }
  ],
  "links": [],
- "modified": "2023-05-02 11:49:20.020685",
+ "modified": "2023-08-22 11:31:24.381593",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Type",

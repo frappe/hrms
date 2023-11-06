@@ -1,6 +1,5 @@
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils.make_random import get_random
 
 from erpnext.projects.doctype.project.test_project import make_project
@@ -11,9 +10,10 @@ from hrms.hr.report.employee_hours_utilization_based_on_timesheet.employee_hours
 )
 
 
-class TestEmployeeUtilization(unittest.TestCase):
+class TestEmployeeUtilization(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls):
+		super().setUpClass()
 		# Create test employee
 		cls.test_emp1 = make_employee("test1@employeeutil.com", "_Test Company")
 		cls.test_emp2 = make_employee("test2@employeeutil.com", "_Test Company")

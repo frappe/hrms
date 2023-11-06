@@ -73,12 +73,13 @@ def _get_loan_details(doc: "SalarySlip"):
 
 	loan_details = frappe.get_all(
 		"Loan",
-		fields=["name", "interest_income_account", "loan_account", "loan_type", "is_term_loan"],
+		fields=["name", "interest_income_account", "loan_account", "loan_product", "is_term_loan"],
 		filters={
 			"applicant": doc.employee,
 			"docstatus": 1,
 			"repay_from_salary": 1,
 			"company": doc.company,
+			"status": ("!=", "Closed"),
 		},
 	)
 
@@ -86,7 +87,7 @@ def _get_loan_details(doc: "SalarySlip"):
 		for loan in loan_details:
 			if loan.is_term_loan:
 				process_loan_interest_accrual_for_term_loans(
-					posting_date=doc.posting_date, loan_type=loan.loan_type, loan=loan.name
+					posting_date=doc.posting_date, loan_product=loan.loan_product, loan=loan.name
 				)
 
 	return loan_details
@@ -97,6 +98,10 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 	from lending.loan_management.doctype.loan_repayment.loan_repayment import create_repayment_entry
 
 	payroll_payable_account = get_payroll_payable_account(doc.company, doc.payroll_entry)
+	process_payroll_accounting_entry_based_on_employee = frappe.db.get_single_value(
+		"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
+	)
+
 	for loan in doc.loans:
 		if not loan.total_payment:
 			continue
@@ -106,12 +111,13 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 			doc.employee,
 			doc.company,
 			doc.posting_date,
-			loan.loan_type,
+			loan.loan_product,
 			"Regular Payment",
 			loan.interest_amount,
 			loan.principal_amount,
 			loan.total_payment,
 			payroll_payable_account=payroll_payable_account,
+			process_payroll_accounting_entry_based_on_employee=process_payroll_accounting_entry_based_on_employee,
 		)
 
 		repayment_entry.save()

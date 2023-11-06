@@ -41,6 +41,8 @@
   "column_break_geio",
   "absent_days",
   "payment_days",
+  "help_section",
+  "payment_days_calculation_help",
   "earnings_and_deductions_tab",
   "timesheets_section",
   "timesheets",
@@ -182,7 +184,8 @@
    "fieldtype": "Link",
    "label": "Payroll Entry",
    "options": "Payroll Entry",
-   "read_only": 1
+   "read_only": 1,
+   "search_index": 1
   },
   {
    "fetch_from": "employee.company",
@@ -214,12 +217,14 @@
   {
    "fieldname": "start_date",
    "fieldtype": "Date",
-   "label": "Start Date"
+   "label": "Start Date",
+   "search_index": 1
   },
   {
    "fieldname": "end_date",
    "fieldtype": "Date",
-   "label": "End Date"
+   "label": "End Date",
+   "search_index": 1
   },
   {
    "fieldname": "salary_structure",
@@ -233,7 +238,6 @@
    "search_index": 1
   },
   {
-   "depends_on": "eval:(!doc.salary_slip_based_on_timesheet)",
    "fieldname": "payroll_frequency",
    "fieldtype": "Select",
    "label": "Payroll Frequency",
@@ -593,24 +597,28 @@
    "fieldname": "ctc",
    "fieldtype": "Currency",
    "label": "CTC",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "income_from_other_sources",
    "fieldtype": "Currency",
    "label": "Income from Other Sources",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "total_earnings",
    "fieldtype": "Currency",
    "label": "Total Earnings",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "non_taxable_earnings",
    "fieldtype": "Currency",
    "label": "Non Taxable Earnings",
+   "options": "currency",
    "read_only": 1
   },
   {
@@ -621,30 +629,35 @@
    "fieldname": "deductions_before_tax_calculation",
    "fieldtype": "Currency",
    "label": "Deductions before tax calculation",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "tax_exemption_declaration",
    "fieldtype": "Currency",
    "label": "Tax Exemption Declaration",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "standard_tax_exemption_amount",
    "fieldtype": "Currency",
    "label": "Standard Tax Exemption Amount",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "annual_taxable_amount",
    "fieldtype": "Currency",
    "label": "Annual Taxable Amount",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "income_tax_deducted_till_date",
    "fieldtype": "Currency",
    "label": "Income Tax Deducted Till Date",
+   "options": "currency",
    "read_only": 1
   },
   {
@@ -660,6 +673,7 @@
    "fieldname": "future_income_tax_deductions",
    "fieldtype": "Currency",
    "label": "Future Income Tax",
+   "options": "currency",
    "read_only": 1
   },
   {
@@ -671,12 +685,14 @@
    "fieldname": "current_month_income_tax",
    "fieldtype": "Currency",
    "label": "Current Month Income Tax",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "total_income_tax",
    "fieldtype": "Currency",
    "label": "Total Income Tax",
+   "options": "currency",
    "read_only": 1
   },
   {
@@ -695,15 +711,24 @@
   {
    "depends_on": "eval:doc.salary_slip_based_on_timesheet",
    "fieldname": "timesheets_section",
-   "fieldtype": "Section Break",
    "label": "Timesheet Details"
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "help_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "payment_days_calculation_help",
+   "fieldtype": "HTML",
+   "label": "Payment Days Calculation Help"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-08-27 15:31:03.171812",
+ "modified": "2023-11-06 19:31:53.460393",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

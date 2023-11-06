@@ -106,7 +106,7 @@ def get_benefit_pro_rata_ratio_amount(employee, on_date, sal_struct):
 	benefit_amount_total = 0
 	for sal_struct_row in sal_struct.get("earnings"):
 		try:
-			pay_against_benefit_claim, max_benefit_amount = frappe.db.get_value(
+			pay_against_benefit_claim, max_benefit_amount = frappe.get_cached_value(
 				"Salary Component",
 				sal_struct_row.salary_component,
 				["pay_against_benefit_claim", "max_benefit_amount"],
@@ -114,11 +114,13 @@ def get_benefit_pro_rata_ratio_amount(employee, on_date, sal_struct):
 		except TypeError:
 			# show the error in tests?
 			frappe.throw(_("Unable to find Salary Component {0}").format(sal_struct_row.salary_component))
+
 		if sal_struct_row.is_flexible_benefit == 1 and pay_against_benefit_claim != 1:
 			total_pro_rata_max += max_benefit_amount
+
 	if total_pro_rata_max > 0:
 		for sal_struct_row in sal_struct.get("earnings"):
-			pay_against_benefit_claim, max_benefit_amount = frappe.db.get_value(
+			pay_against_benefit_claim, max_benefit_amount = frappe.get_cached_value(
 				"Salary Component",
 				sal_struct_row.salary_component,
 				["pay_against_benefit_claim", "max_benefit_amount"],
@@ -170,7 +172,13 @@ def get_total_benefit_dispensed(employee, sal_struct, sal_slip_start_date, payro
 		{"employee": employee, "payroll_period": payroll_period.name, "docstatus": 1},
 	)
 	if application:
-		application_obj = frappe.get_doc("Employee Benefit Application", application)
+		application_obj = frappe.get_cached_value(
+			"Employee Benefit Application",
+			application,
+			["pro_rata_dispensed_amount", "max_benefits", "remaining_benefit"],
+			as_dict=True,
+		)
+
 		pro_rata_amount = (
 			application_obj.pro_rata_dispensed_amount
 			+ application_obj.max_benefits
@@ -189,19 +197,22 @@ def get_total_benefit_dispensed(employee, sal_struct, sal_slip_start_date, payro
 def get_last_payroll_period_benefits(
 	employee, sal_slip_start_date, sal_slip_end_date, payroll_period, sal_struct
 ):
-	max_benefits = get_max_benefits(employee, payroll_period.end_date)
-	if not max_benefits:
-		max_benefits = 0
+	if sal_struct:
+		max_benefits = sal_struct.max_benefits
+	else:
+		max_benefits = get_max_benefits(employee, payroll_period.end_date)
+
 	remaining_benefit = max_benefits - get_total_benefit_dispensed(
 		employee, sal_struct, sal_slip_start_date, payroll_period
 	)
+
 	if remaining_benefit > 0:
 		have_remaining = True
 		# Set the remaining benefits to flexi non pro-rata component in the salary structure
 		salary_components_array = []
 		for d in sal_struct.get("earnings"):
 			if d.is_flexible_benefit == 1:
-				salary_component = frappe.get_doc("Salary Component", d.salary_component)
+				salary_component = frappe.get_cached_doc("Salary Component", d.salary_component)
 				if salary_component.pay_against_benefit_claim == 1:
 					claimed_amount = get_benefit_claim_amount(
 						employee, payroll_period.start_date, sal_slip_end_date, d.salary_component

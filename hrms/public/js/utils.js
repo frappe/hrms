@@ -10,5 +10,19 @@ $.extend(hrms, {
 				cur_frm.save();
 			}
 		});
-	}
+	},
+
+	set_payroll_frequency_to_null: (frm) => {
+		if (cint(frm.doc.salary_slip_based_on_timesheet)) {
+			frm.set_value("payroll_frequency", "");
+		}
+	},
+
+	get_current_employee: async (frm) => {
+		const employee = (
+			await frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
+		)?.message?.name;
+
+		return employee;
+	},
 })

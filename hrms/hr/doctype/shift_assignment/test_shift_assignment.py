@@ -1,8 +1,6 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, get_datetime, getdate, nowdate
@@ -212,7 +210,7 @@ class TestShiftAssignment(FrappeTestCase):
 
 	def test_consecutive_day_and_night_shifts(self):
 		# defaults
-		employee = make_employee("test_shift_assignment@example.com", company="_Test Company")
+		employee = make_employee("test_default_shift_assignment@example.com", company="_Test Company")
 		today = getdate()
 		yesterday = add_days(today, -1)
 

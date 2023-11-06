@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import cint, get_datetime, get_time, getdate
+from frappe.utils import cint, create_batch, get_datetime, get_time, getdate
 
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
@@ -20,6 +20,8 @@ from hrms.hr.doctype.employee_checkin.employee_checkin import (
 from hrms.hr.doctype.shift_assignment.shift_assignment import get_employee_shift, get_shift_details
 from hrms.utils import get_date_range
 from hrms.utils.holiday_list import get_holiday_dates_between
+
+EMPLOYEE_CHUNK_SIZE = 50
 
 
 class ShiftType(Document):
@@ -36,7 +38,7 @@ class ShiftType(Document):
 
 		for key, group in itertools.groupby(logs, key=lambda x: (x["employee"], x["shift_start"])):
 			single_shift_logs = list(group)
-			attendance_date = single_shift_logs[0].shift_actual_start.date()
+			attendance_date = key[1].date()
 			employee = key[0]
 
 			if not self.should_mark_attendance(employee, attendance_date):
@@ -63,8 +65,18 @@ class ShiftType(Document):
 				self.name,
 			)
 
-		for employee in self.get_assigned_employee(self.process_attendance_after, True):
-			self.mark_absent_for_dates_with_no_attendance(employee)
+		# commit after processing checkin logs to avoid losing progress
+		frappe.db.commit()  # nosemgrep
+
+		assigned_employees = self.get_assigned_employees(self.process_attendance_after, True)
+
+		# mark absent in batches & commit to avoid losing progress since this tries to process remaining attendance
+		# right from "Process Attendance After" to "Last Sync of Checkin"
+		for batch in create_batch(assigned_employees, EMPLOYEE_CHUNK_SIZE):
+			for employee in batch:
+				self.mark_absent_for_dates_with_no_attendance(employee)
+
+			frappe.db.commit()  # nosemgrep
 
 	def get_employee_checkins(self) -> list[dict]:
 		return frappe.get_all(
@@ -103,14 +115,14 @@ class ShiftType(Document):
 			logs, self.determine_check_in_and_check_out, self.working_hours_calculation_based_on
 		)
 		if (
-			cint(self.enable_entry_grace_period)
+			cint(self.enable_late_entry_marking)
 			and in_time
 			and in_time > logs[0].shift_start + timedelta(minutes=cint(self.late_entry_grace_period))
 		):
 			late_entry = True
 
 		if (
-			cint(self.enable_exit_grace_period)
+			cint(self.enable_early_exit_marking)
 			and out_time
 			and out_time < logs[0].shift_end - timedelta(minutes=cint(self.early_exit_grace_period))
 		):
@@ -157,12 +169,12 @@ class ShiftType(Document):
 					}
 				).insert(ignore_permissions=True)
 
-	def get_dates_for_attendance(self, employee: str) -> set[str]:
+	def get_dates_for_attendance(self, employee: str) -> list[str]:
 		start_date, end_date = self.get_start_and_end_dates(employee)
 
 		# no shift assignment found, no need to process absent attendance records
 		if start_date is None:
-			return set()
+			return []
 
 		date_range = get_date_range(start_date, end_date)
 
@@ -174,7 +186,7 @@ class ShiftType(Document):
 			employee, start_date, end_date
 		)
 
-		return set(date_range) - set(holiday_dates) - set(marked_attendance_dates)
+		return sorted(set(date_range) - set(holiday_dates) - set(marked_attendance_dates))
 
 	def get_start_and_end_dates(self, employee):
 		"""Returns start and end dates for checking attendance and marking absent
@@ -193,13 +205,13 @@ class ShiftType(Document):
 
 		shift_details = get_shift_details(self.name, get_datetime(self.last_sync_of_checkin))
 		last_shift_time = (
-			shift_details.actual_start if shift_details else get_datetime(self.last_sync_of_checkin)
+			shift_details.actual_end if shift_details else get_datetime(self.last_sync_of_checkin)
 		)
 
 		# check if shift is found for 1 day before the last sync of checkin
 		# absentees are auto-marked 1 day after the shift to wait for any manual attendance records
 		prev_shift = get_employee_shift(employee, last_shift_time - timedelta(days=1), True, "reverse")
-		if prev_shift:
+		if prev_shift and prev_shift.shift_type.name == self.name:
 			end_date = (
 				min(prev_shift.start_datetime.date(), relieving_date)
 				if relieving_date
@@ -225,7 +237,7 @@ class ShiftType(Document):
 			)
 		).run(pluck=True)
 
-	def get_assigned_employee(self, from_date=None, consider_default_shift=False):
+	def get_assigned_employees(self, from_date=None, consider_default_shift=False) -> list[str]:
 		filters = {"shift_type": self.name, "docstatus": "1", "status": "Active"}
 		if from_date:
 			filters["start_date"] = (">=", from_date)
@@ -234,9 +246,12 @@ class ShiftType(Document):
 
 		if consider_default_shift:
 			default_shift_employees = self.get_employees_with_default_shift(filters)
+			assigned_employees = set(assigned_employees + default_shift_employees)
 
-			return list(set(assigned_employees + default_shift_employees))
-		return assigned_employees
+		# exclude inactive employees
+		inactive_employees = frappe.db.get_all("Employee", {"status": "Inactive"}, pluck="name")
+
+		return list(set(assigned_employees) - set(inactive_employees))
 
 	def get_employees_with_default_shift(self, filters: dict) -> list:
 		default_shift_employees = frappe.get_all(

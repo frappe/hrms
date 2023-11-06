@@ -6,6 +6,7 @@ frappe.listview_settings["Goal"] = {
 			"In Progress": "orange",
 			"Completed": "green",
 			"Archived": "gray",
+			"Closed": "red",
 		};
 		return [__(doc.status), status_color[doc.status], "status,=," + doc.status];
 	},
