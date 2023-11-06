@@ -489,7 +489,10 @@ def get_attachments(dt: str, dn: str):
 @frappe.whitelist()
 def upload_base64_file(content, filename, dt=None, dn=None, fieldname=None):
 	import base64
+	import io
 	from mimetypes import guess_type
+
+	from PIL import Image, ImageOps
 
 	from frappe.handler import ALLOWED_MIMETYPES
 
@@ -497,6 +500,17 @@ def upload_base64_file(content, filename, dt=None, dn=None, fieldname=None):
 	content_type = guess_type(filename)[0]
 	if content_type not in ALLOWED_MIMETYPES:
 		frappe.throw(_("You can only upload JPG, PNG, PDF, TXT or Microsoft documents."))
+
+	if content_type.startswith("image/jpeg"):
+		# transpose the image according to the orientation tag, and remove the orientation data
+		with Image.open(io.BytesIO(decoded_content)) as image:
+			transpose_img = ImageOps.exif_transpose(image)
+			# convert the image back to bytes
+			file_content = io.BytesIO()
+			transpose_img.save(file_content, format="JPEG")
+			file_content = file_content.getvalue()
+	else:
+		file_content = decoded_content
 
 	return frappe.get_doc(
 		{
@@ -506,7 +520,7 @@ def upload_base64_file(content, filename, dt=None, dn=None, fieldname=None):
 			"attached_to_field": fieldname,
 			"folder": "Home",
 			"file_name": filename,
-			"content": decoded_content,
+			"content": file_content,
 			"is_private": 1,
 		}
 	).insert()

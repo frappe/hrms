@@ -32,12 +32,12 @@
 					<div
 						class="flex flex-row items-center justify-between text-gray-700 text-sm"
 					>
-						<a target="_blank" :href="file.file_url">
-							<span class="grow">{{ file.file_name || file.name }}</span>
-						</a>
+						<span class="grow" @click="showFilePreview(file)">
+							{{ file.file_name || file.name }}
+						</span>
 						<FeatherIcon
 							name="x"
-							class="h-3 w-3 cursor-pointer text-gray-700"
+							class="h-4 w-4 cursor-pointer text-gray-700"
 							@click="() => confirmDeleteAttachment(file)"
 						/>
 					</div>
@@ -51,7 +51,7 @@
 				<template #body-content>
 					<p>
 						Are you sure you want to delete the attachment
-						<span class="font-bold">{{ deleteAttachment.file_name }}</span>
+						<span class="font-bold">{{ selectedFile.file_name }}</span>
 						?
 					</p>
 				</template>
@@ -75,6 +75,15 @@
 					</div>
 				</template>
 			</Dialog>
+
+			<!-- File Preview Modal -->
+			<ion-modal
+				ref="modal"
+				:is-open="showPreviewModal"
+				@didDismiss="showPreviewModal = false"
+			>
+				<FilePreviewModal :file="selectedFile" />
+			</ion-modal>
 		</div>
 	</div>
 </template>
@@ -82,6 +91,9 @@
 <script setup>
 import { FeatherIcon, Dialog } from "frappe-ui"
 import { ref } from "vue"
+import { IonModal } from "@ionic/vue"
+
+import FilePreviewModal from "@/components/FilePreviewModal.vue"
 
 const props = defineProps({
 	modelValue: {
@@ -90,17 +102,29 @@ const props = defineProps({
 	},
 })
 let showDialog = ref(false)
-let deleteAttachment = ref({})
+let showPreviewModal = ref(false)
+let selectedFile = ref({})
 
 const emit = defineEmits(["handle-file-select", "handle-file-delete"])
 
+function showFilePreview(fileObj) {
+	selectedFile.value = fileObj
+	showPreviewModal.value = true
+}
+
 function confirmDeleteAttachment(fileObj) {
-	deleteAttachment.value = fileObj
+	selectedFile.value = fileObj
 	showDialog.value = true
 }
 
 function handleFileDelete() {
-	emit("handle-file-delete", deleteAttachment.value)
+	emit("handle-file-delete", selectedFile.value)
 	showDialog.value = false
 }
 </script>
+
+<style scoped>
+ion-modal {
+	--height: 100%;
+}
+</style>

@@ -114,8 +114,17 @@
 							/>
 						</template>
 
+						<!-- Attachment upload -->
+						<div
+							class="flex flex-row gap-2 items-center justify-center p-5"
+							v-if="isFileUploading"
+						>
+							<LoadingIndicator class="w-3 h-3 text-gray-800" />
+							<span class="text-gray-900 text-sm">Uploading...</span>
+						</div>
+
 						<FileUploaderView
-							v-if="showAttachmentView && index === 0"
+							v-else-if="showAttachmentView && index === 0"
 							v-model="fileAttachments"
 							@handleFileSelect="handleFileSelect"
 							@handleFileDelete="handleFileDelete"
@@ -143,8 +152,17 @@
 						:maxDate="field.maxDate"
 					/>
 
+					<!-- Attachment upload -->
+					<div
+						class="flex flex-row gap-2 items-center justify-center p-5"
+						v-if="isFileUploading"
+					>
+						<LoadingIndicator class="w-3 h-3 text-gray-800" />
+						<span class="text-gray-900 text-sm">Uploading...</span>
+					</div>
+
 					<FileUploaderView
-						v-if="showAttachmentView"
+						v-else-if="showAttachmentView"
 						v-model="fileAttachments"
 						@handleFileSelect="handleFileSelect"
 						@handleFileDelete="handleFileDelete"
@@ -294,6 +312,7 @@ import {
 	createResource,
 	Dropdown,
 	Dialog,
+	LoadingIndicator,
 } from "frappe-ui"
 import FormField from "@/components/FormField.vue"
 import FileUploaderView from "@/components/FileUploaderView.vue"
@@ -354,6 +373,7 @@ let isFormUpdated = ref(false)
 let showDeleteDialog = ref(false)
 let showSubmitDialog = ref(false)
 let showCancelDialog = ref(false)
+let isFileUploading = ref(false)
 
 const formModel = computed({
 	get() {
@@ -411,10 +431,10 @@ const attachedFiles = createResource({
 })
 
 const handleFileSelect = (e) => {
-	fileAttachments.value.push(...e.target.files)
-
 	if (props.id) {
-		uploadAllAttachments(props.doctype, props.id)
+		uploadAllAttachments(props.doctype, props.id, [...e.target.files])
+	} else {
+		fileAttachments.value.push(...e.target.files)
 	}
 }
 
@@ -425,23 +445,28 @@ const handleFileDelete = async (fileObj) => {
 		await attachedFiles.reload()
 	} else {
 		fileAttachments.value = fileAttachments.value.filter(
-			(file) => file.name !== fileName
+			(file) => file.name !== fileObj.name
 		)
 	}
 }
 
-const uploadAttachment = async (doctype, name, file) => {
-	const fileAttachment = new FileAttachment(file)
-	return fileAttachment.upload(doctype, name).promise
-}
+async function uploadAllAttachments(documentType, documentName, attachments) {
+	isFileUploading.value = true
 
-async function uploadAllAttachments(documentType, documentName) {
-	for (const attachment of fileAttachments.value) {
-		if (!attachment.uploaded) {
-			await uploadAttachment(documentType, documentName, attachment)
-			attachment.uploaded = true
-		}
-	}
+	const uploadPromises = attachments.map((attachment) => {
+		const fileAttachment = new FileAttachment(attachment)
+		return fileAttachment
+			.upload(documentType, documentName, "")
+			.then((fileDoc) => {
+				fileDoc.uploaded = true
+				if (props.id) {
+					fileAttachments.value.push(fileDoc)
+				}
+			})
+	})
+
+	await Promise.allSettled(uploadPromises)
+	isFileUploading.value = false
 }
 
 // CRUD for doc
@@ -456,7 +481,7 @@ const docList = createListResource({
 				position: "bottom-center",
 				iconClasses: "text-green-500",
 			})
-			await uploadAllAttachments(data.doctype, data.name)
+			await uploadAllAttachments(data.doctype, data.name, fileAttachments.value)
 
 			router.replace({
 				name: `${props.doctype.replace(/\s+/g, "")}DetailView`,

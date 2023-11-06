@@ -61,9 +61,9 @@
 							<div
 								class="flex flex-row items-center justify-between text-gray-700 text-sm"
 							>
-								<a target="_blank" :href="file.file_url">
-									<span class="grow">{{ file.file_name || file.name }}</span>
-								</a>
+								<span class="grow" @click="showFilePreview(file)">
+									{{ file.file_name || file.name }}
+								</span>
 							</div>
 						</li>
 					</ul>
@@ -133,12 +133,21 @@
 				Cancel
 			</Button>
 		</div>
+
+		<!-- File Preview Modal -->
+		<ion-modal
+			ref="modal"
+			:is-open="showPreviewModal"
+			@didDismiss="showPreviewModal = false"
+		>
+			<FilePreviewModal :file="selectedFile" />
+		</ion-modal>
 	</div>
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent } from "vue"
-import { modalController } from "@ionic/vue"
+import { computed, ref, defineAsyncComponent } from "vue"
+import { IonModal, modalController } from "@ionic/vue"
 import {
 	toast,
 	createDocumentResource,
@@ -147,6 +156,8 @@ import {
 } from "frappe-ui"
 
 import FormattedField from "@/components/FormattedField.vue"
+import FilePreviewModal from "@/components/FilePreviewModal.vue"
+
 import { getCurrencySymbol, getCompanyCurrencySymbol } from "@/data/currencies"
 import { useRouter } from "vue-router"
 
@@ -161,6 +172,14 @@ const props = defineProps({
 	},
 })
 const router = useRouter()
+
+let showPreviewModal = ref(false)
+let selectedFile = ref({})
+
+function showFilePreview(fileObj) {
+	selectedFile.value = fileObj
+	showPreviewModal.value = true
+}
 
 const document = createDocumentResource({
 	doctype: props.modelValue.doctype,
@@ -265,3 +284,9 @@ const openFormView = () => {
 	})
 }
 </script>
+
+<style scoped>
+ion-modal {
+	--height: 100%;
+}
+</style>
