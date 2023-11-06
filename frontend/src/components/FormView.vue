@@ -451,26 +451,22 @@ const handleFileDelete = async (fileObj) => {
 }
 
 async function uploadAllAttachments(documentType, documentName, attachments) {
-	for (const attachment of attachments) {
-		const fileAttachment = new FileAttachment(attachment)
-		isFileUploading.value = true
+	isFileUploading.value = true
 
-		fileAttachment.upload(
-			documentType,
-			documentName,
-			"",
-			// success handler
-			(fileDoc) => {
+	const uploadPromises = attachments.map((attachment) => {
+		const fileAttachment = new FileAttachment(attachment)
+		return fileAttachment
+			.upload(documentType, documentName, "")
+			.then((fileDoc) => {
 				fileDoc.uploaded = true
 				if (props.id) {
 					fileAttachments.value.push(fileDoc)
 				}
-				isFileUploading.value = false
-			},
-			// error handler
-			() => (isFileUploading.value = false)
-		)
-	}
+			})
+	})
+
+	await Promise.allSettled(uploadPromises)
+	isFileUploading.value = false
 }
 
 // CRUD for doc
