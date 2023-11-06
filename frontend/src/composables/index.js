@@ -12,12 +12,19 @@ export class FileAttachment {
 		this.fileName = fileObj.name
 	}
 
-	upload(documentType, documentName, fieldName, successHandler = () => {}) {
+	upload(
+		documentType,
+		documentName,
+		fieldName,
+		successHandler = () => {},
+		errorHandler = () => {}
+	) {
 		const reader = getFileReader()
 		const uploader = createResource({
 			url: "hrms.api.upload_base64_file",
 			onSuccess: successHandler,
 			onError: (error) => {
+				errorHandler(error)
 				toast({
 					title: "Error",
 					text: `File upload failed for ${this.fileName}. ${

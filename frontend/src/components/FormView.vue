@@ -114,8 +114,17 @@
 							/>
 						</template>
 
+						<!-- Attachment upload -->
+						<div
+							class="flex flex-row gap-2 items-center justify-center p-5"
+							v-if="isFileUploading"
+						>
+							<LoadingIndicator class="w-3 h-3 text-gray-800" />
+							<span class="text-gray-900 text-sm">Uploading...</span>
+						</div>
+
 						<FileUploaderView
-							v-if="showAttachmentView && index === 0"
+							v-else-if="showAttachmentView && index === 0"
 							v-model="fileAttachments"
 							@handleFileSelect="handleFileSelect"
 							@handleFileDelete="handleFileDelete"
@@ -143,8 +152,17 @@
 						:maxDate="field.maxDate"
 					/>
 
+					<!-- Attachment upload -->
+					<div
+						class="flex flex-row gap-2 items-center justify-center p-5"
+						v-if="isFileUploading"
+					>
+						<LoadingIndicator class="w-3 h-3 text-gray-800" />
+						<span class="text-gray-900 text-sm">Uploading...</span>
+					</div>
+
 					<FileUploaderView
-						v-if="showAttachmentView"
+						v-else-if="showAttachmentView"
 						v-model="fileAttachments"
 						@handleFileSelect="handleFileSelect"
 						@handleFileDelete="handleFileDelete"
@@ -294,6 +312,7 @@ import {
 	createResource,
 	Dropdown,
 	Dialog,
+	LoadingIndicator,
 } from "frappe-ui"
 import FormField from "@/components/FormField.vue"
 import FileUploaderView from "@/components/FileUploaderView.vue"
@@ -354,6 +373,7 @@ let isFormUpdated = ref(false)
 let showDeleteDialog = ref(false)
 let showSubmitDialog = ref(false)
 let showCancelDialog = ref(false)
+let isFileUploading = ref(false)
 
 const formModel = computed({
 	get() {
@@ -433,12 +453,23 @@ const handleFileDelete = async (fileObj) => {
 async function uploadAllAttachments(documentType, documentName, attachments) {
 	for (const attachment of attachments) {
 		const fileAttachment = new FileAttachment(attachment)
-		fileAttachment.upload(documentType, documentName, "", (fileDoc) => {
-			fileDoc.uploaded = true
-			if (props.id) {
-				fileAttachments.value.push(fileDoc)
-			}
-		})
+		isFileUploading.value = true
+
+		fileAttachment.upload(
+			documentType,
+			documentName,
+			"",
+			// success handler
+			(fileDoc) => {
+				fileDoc.uploaded = true
+				if (props.id) {
+					fileAttachments.value.push(fileDoc)
+				}
+				isFileUploading.value = false
+			},
+			// error handler
+			() => (isFileUploading.value = false)
+		)
 	}
 }
 
