@@ -711,7 +711,7 @@
   {
    "depends_on": "eval:doc.salary_slip_based_on_timesheet",
    "fieldname": "timesheets_section",
-   "label": "Timesheet Details"
+   "label": "Timesheet Details",
    "fieldtype": "Section Break"
   },
   {
