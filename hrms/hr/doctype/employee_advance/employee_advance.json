@@ -10,12 +10,14 @@
   "naming_series",
   "employee",
   "employee_name",
-  "department",
   "column_break_4",
   "posting_date",
+  "company",
+  "department",
+  "currency_section",
   "currency",
+  "column_break_crso",
   "exchange_rate",
-  "repay_unclaimed_amount_from_salary",
   "section_break_8",
   "purpose",
   "column_break_11",
@@ -25,12 +27,15 @@
   "claimed_amount",
   "return_amount",
   "section_break_7",
-  "status",
-  "company",
-  "amended_from",
   "column_break_18",
   "advance_account",
-  "mode_of_payment"
+  "mode_of_payment",
+  "column_break_nhlv",
+  "repay_unclaimed_amount_from_salary",
+  "more_info_section",
+  "status",
+  "column_break_kimx",
+  "amended_from"
  ],
  "fields": [
   {
@@ -75,7 +80,8 @@
   },
   {
    "fieldname": "section_break_8",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Purpose & Amount"
   },
   {
    "fieldname": "purpose",
@@ -114,7 +120,8 @@
   },
   {
    "fieldname": "section_break_7",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Accounting"
   },
   {
    "fieldname": "status",
@@ -125,10 +132,12 @@
    "read_only": 1
   },
   {
+   "fetch_from": "employee.company",
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
    "options": "Company",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -145,6 +154,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "company.default_employee_advance_account",
    "fieldname": "advance_account",
    "fieldtype": "Link",
    "ignore_user_permissions": 1,
@@ -196,11 +206,35 @@
    "precision": "9",
    "print_hide": 1,
    "reqd": 1
+  },
+  {
+   "fieldname": "column_break_nhlv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "more_info_section",
+   "fieldtype": "Section Break",
+   "label": "More Info"
+  },
+  {
+   "fieldname": "column_break_kimx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "currency_section",
+   "fieldtype": "Section Break",
+   "label": "Currency "
+  },
+  {
+   "fieldname": "column_break_crso",
+   "fieldtype": "Column Break"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-21 18:24:06.416439",
+ "modified": "2023-08-19 23:40:06.298367",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Advance",
