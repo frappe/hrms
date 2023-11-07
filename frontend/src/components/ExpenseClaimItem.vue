@@ -9,7 +9,7 @@
 					</div>
 					<div class="text-xs font-normal text-gray-500">
 						<span>
-							{{ `${currency} ${props.doc.total_claimed_amount}` }}
+							{{ formatCurrency(props.doc.total_claimed_amount, currency) }}
 						</span>
 						<span class="whitespace-pre"> &middot; </span>
 						<span class="whitespace-nowrap">
@@ -47,7 +47,8 @@ import { computed, inject } from "vue"
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
 
-import { getCompanyCurrencySymbol } from "@/data/currencies"
+import { getCompanyCurrency } from "@/data/currencies"
+import { formatCurrency } from "@/utils/formatters"
 
 const dayjs = inject("$dayjs")
 const props = defineProps({
@@ -106,7 +107,7 @@ const claimDates = computed(() => {
 	}
 })
 
-const currency = computed(() => getCompanyCurrencySymbol(props.doc.company))
+const currency = computed(() => getCompanyCurrency(props.doc.company))
 
 const approvalStatus = computed(() => {
 	return props.doc.approval_status === "Draft"
