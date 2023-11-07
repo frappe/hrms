@@ -50,7 +50,7 @@
 
 <script setup>
 import { IonHeader, IonContent, IonPage } from "@ionic/vue"
-import { onMounted, onBeforeUnmount } from "vue"
+import { onMounted } from "vue"
 import { FeatherIcon, Avatar } from "frappe-ui"
 
 import { unreadNotificationsCount } from "@/data/notifications"

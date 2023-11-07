@@ -80,7 +80,7 @@ import { IonContent, IonPage } from "@ionic/vue"
 import { useRouter } from "vue-router"
 import { createListResource, createResource, FeatherIcon } from "frappe-ui"
 
-import { inject, onBeforeUnmount, onMounted } from "vue"
+import { inject, onMounted } from "vue"
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 
 import { unreadNotificationsCount } from "@/data/notifications"
