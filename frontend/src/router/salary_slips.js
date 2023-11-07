@@ -1,6 +1,6 @@
 const routes = [
 	{
-		path: "/salary-slip/:id",
+		path: "/salary-slips/:id",
 		name: "SalarySlipDetailView",
 		props: true,
 		component: () => import("@/views/salary_slip/Detail.vue"),
