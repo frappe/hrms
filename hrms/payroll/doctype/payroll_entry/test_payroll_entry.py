@@ -346,6 +346,7 @@ class TestPayrollEntry(FrappeTestCase):
 		frappe.db.set_value("Employee", employee, "status", "Active")
 		payroll_entry.submit()
 		payroll_entry.submit_salary_slips()
+		payroll_entry.make_accrual_jv_entry()
 
 		payroll_entry.reload()
 		self.assertEqual(payroll_entry.status, "Failed")
@@ -357,6 +358,7 @@ class TestPayrollEntry(FrappeTestCase):
 
 		# Payroll Entry successful, status should change to Submitted
 		payroll_entry.submit_salary_slips()
+		payroll_entry.make_accrual_jv_entry()
 		payroll_entry.reload()
 
 		self.assertEqual(payroll_entry.status, "Submitted")
@@ -702,6 +704,7 @@ def make_payroll_entry(**args):
 	payroll_entry = get_payroll_entry(**args)
 	payroll_entry.submit()
 	payroll_entry.submit_salary_slips()
+	payroll_entry.make_accrual_jv_entry()
 	if payroll_entry.get_sal_slip_list(ss_status=1):
 		payroll_entry.make_payment_entry()
 

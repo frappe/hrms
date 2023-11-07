@@ -463,6 +463,7 @@ class PayrollEntry(Document):
 
 		return account_dict
 
+	@frappe.whitelist()
 	def make_accrual_jv_entry(self):
 		self.check_permission("write")
 		process_payroll_accounting_entry_based_on_employee = frappe.db.get_single_value(

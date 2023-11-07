@@ -128,6 +128,9 @@ frappe.ui.form.on('Payroll Entry', {
 	add_context_buttons: function (frm) {
 		if (frm.doc.salary_slips_submitted || (frm.doc.__onload && frm.doc.__onload.submitted_ss)) {
 			frm.events.add_bank_entry_button(frm);
+			frm.add_custom_button(__("Create Journal Entry"), function() {
+				frm.trigger("make_accrual_jv_entry");
+			}).addClass("btn-primary");
 		} else if (frm.doc.salary_slips_created && frm.doc.status !== "Queued") {
 			frm.add_custom_button(__("Submit Salary Slip"), function() {
 				submit_salary_slip(frm);
@@ -137,6 +140,18 @@ frappe.ui.form.on('Payroll Entry', {
 				frm.trigger("create_salary_slips");
 			}).addClass("btn-primary");
 		}
+	},
+
+	make_accrual_jv_entry:function(frm){
+		frm.call({
+			method:"make_accrual_jv_entry",
+			doc: cur_frm.doc,
+			callback: function (r) {
+				if(r.message){
+					frappe.msgprint(`Journal Entry ${r.message} Created Succesfully`)
+				}
+			}
+		})
 	},
 
 	add_bank_entry_button: function (frm) {
