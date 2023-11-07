@@ -134,13 +134,8 @@ function getItemRoute(item) {
 }
 
 onMounted(() => {
-	socket.off("hrms:update_notifications")
 	socket.on("hrms:update_notifications", () => {
 		notifications.reload()
 	})
-})
-
-onBeforeUnmount(() => {
-	socket.off("hrms:update_notifications")
 })
 </script>
