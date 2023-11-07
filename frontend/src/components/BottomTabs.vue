@@ -42,17 +42,17 @@ const tabItems = [
 	{
 		icon: LeaveIcon,
 		title: "Leaves",
-		route: "/leave/dashboard",
+		route: "/dashboard/leaves",
 	},
 	{
 		icon: ExpenseIcon,
 		title: "Expenses",
-		route: "/expense-claim/dashboard",
+		route: "/dashboard/expense-claims",
 	},
 	{
 		icon: SalaryIcon,
 		title: "Salary",
-		route: "/salary-slip/dashboard",
+		route: "/dashboard/salary-slips",
 	},
 ]
 </script>
