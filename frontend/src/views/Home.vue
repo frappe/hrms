@@ -40,8 +40,8 @@ const quickLinks = [
 	},
 	{
 		icon: markRaw(SalaryIcon),
-		title: "Salary Slips",
-		route: "SalarySlips",
+		title: "View Salary Slips",
+		route: "SalarySlipsDashboard",
 	},
 ]
 </script>
