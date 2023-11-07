@@ -81,7 +81,7 @@ const holidays = createResource({
 	transform: (data) => {
 		return data.map((holiday) => {
 			holiday.formatted_holiday_date = dayjs(holiday.holiday_date).format(
-				"D MMM"
+				"D MMM YYYY"
 			)
 			return holiday
 		})
