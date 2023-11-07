@@ -32,9 +32,8 @@
 						</div>
 						<div class="flex flex-row items-center gap-3 justify-between">
 							<div class="text-xs font-normal text-gray-500">
-								{{
-									`Unclaimed Amount: ${currency} ${advance.unclaimed_amount}`
-								}}
+								Unclaimed Amount:
+								{{ formatCurrency(advance.unclaimed_amount, currency) }}
 							</div>
 						</div>
 					</div>
@@ -42,7 +41,7 @@
 
 				<div class="flex flex-row items-center gap-2">
 					<span class="text-normal">
-						{{ currency }}
+						{{ currencySymbol }}
 					</span>
 					<Input
 						type="number"
@@ -63,6 +62,10 @@
 </template>
 
 <script setup>
+import { computed } from "vue"
+import { getCurrencySymbol } from "@/data/currencies"
+import { formatCurrency } from "@/utils/formatters"
+
 const props = defineProps({
 	expenseClaim: {
 		type: Object,
@@ -77,6 +80,8 @@ const props = defineProps({
 		default: false,
 	},
 })
+
+const currencySymbol = computed(() => getCurrencySymbol(props.currency))
 
 function toggleAdvanceSelection(advance) {
 	if (props.isReadOnly) return
