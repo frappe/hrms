@@ -18,6 +18,7 @@ export const formatCurrency = (value, currency) => {
 	const formatter = Intl.NumberFormat(locale, {
 		style: "currency",
 		currency: currency,
+		trailingZeroDisplay: "stripIfInteger",
 	})
 	return (
 		formatter
