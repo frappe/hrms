@@ -21,7 +21,7 @@ export const getLeaveDates = (leave) => {
 }
 
 export const myLeaves = createResource({
-	url: "hrms.api.get_employee_leave_applications",
+	url: "hrms.api.get_leave_applications",
 	params: {
 		employee: employeeResource.data.name,
 		limit: 5,
@@ -33,10 +33,11 @@ export const myLeaves = createResource({
 })
 
 export const teamLeaves = createResource({
-	url: "hrms.api.get_team_leave_applications",
+	url: "hrms.api.get_leave_applications",
 	params: {
 		employee: employeeResource.data.name,
-		user_id: employeeResource.data.user_id,
+		approver_id: employeeResource.data.user_id,
+		for_approval: 1,
 		limit: 5,
 	},
 	auto: true,

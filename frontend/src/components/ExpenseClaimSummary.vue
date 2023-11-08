@@ -9,7 +9,7 @@
 					Total Expense Amount
 				</span>
 				<span class="text-gray-800 text-lg font-bold leading-6">
-					{{ `${company_currency} ${total_claimed_amount}` }}
+					{{ formatCurrency(total_claimed_amount, company_currency) }}
 				</span>
 			</div>
 
@@ -22,7 +22,12 @@
 						<FeatherIcon name="alert-circle" class="text-yellow-500 h-3 w-3" />
 					</div>
 					<span class="text-gray-800 text-base font-semibold leading-6">
-						{{ `${company_currency} ${summary.data?.total_pending_amount}` }}
+						{{
+							formatCurrency(
+								summary.data?.total_pending_amount,
+								company_currency
+							)
+						}}
 					</span>
 				</div>
 				<div class="flex flex-col gap-1">
@@ -33,7 +38,12 @@
 						<FeatherIcon name="check-circle" class="text-green-500 h-3 w-3" />
 					</div>
 					<span class="text-gray-800 text-base font-semibold leading-6">
-						{{ `${company_currency} ${summary.data?.total_approved_amount}` }}
+						{{
+							formatCurrency(
+								summary.data?.total_approved_amount,
+								company_currency
+							)
+						}}
 					</span>
 				</div>
 
@@ -46,7 +56,10 @@
 					</div>
 					<span class="text-gray-800 text-base font-semibold leading-6">
 						{{
-							`${summary.data?.currency} ${summary.data?.total_rejected_amount}`
+							formatCurrency(
+								summary.data?.total_rejected_amount,
+								company_currency
+							)
 						}}
 					</span>
 				</div>
@@ -59,7 +72,7 @@
 import { FeatherIcon, createResource } from "frappe-ui"
 import { computed, inject } from "vue"
 
-import { getCompanyCurrencySymbol } from "@/data/currencies"
+import { formatCurrency } from "@/utils/formatters"
 
 const employee = inject("$employee")
 
@@ -79,7 +92,5 @@ const total_claimed_amount = computed(() => {
 	)
 })
 
-const company_currency = computed(() =>
-	getCompanyCurrencySymbol(employee.data.company)
-)
+const company_currency = computed(() => summary.data?.currency)
 </script>

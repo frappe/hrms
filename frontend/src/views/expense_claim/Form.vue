@@ -58,7 +58,7 @@ import ExpensesTable from "@/components/ExpensesTable.vue"
 import ExpenseTaxesTable from "@/components/ExpenseTaxesTable.vue"
 import ExpenseAdvancesTable from "@/components/ExpenseAdvancesTable.vue"
 
-import { getCompanyCurrencySymbol } from "@/data/currencies"
+import { getCompanyCurrency } from "@/data/currencies"
 
 const dayjs = inject("$dayjs")
 const employee = inject("$employee")
@@ -84,9 +84,7 @@ const expenseClaim = ref({
 	company: employee.data.company,
 })
 
-const currency = computed(() =>
-	getCompanyCurrencySymbol(expenseClaim.value.company)
-)
+const currency = computed(() => getCompanyCurrency(expenseClaim.value.company))
 
 // get form fields
 const formFields = createResource({
