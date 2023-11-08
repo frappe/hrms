@@ -321,8 +321,7 @@ def get_expense_claim_summary(employee: str) -> dict:
 	).run(as_dict=True)[0]
 
 	currency = frappe.db.get_value("Company", summary.company, "default_currency")
-	symbol = frappe.db.get_value("Currency", currency, "symbol")
-	summary["currency"] = symbol or currency
+	summary["currency"] = currency
 
 	return summary
 
