@@ -4,7 +4,7 @@
 		<h2 class="text-base font-semibold text-gray-800">Expenses</h2>
 		<div class="flex flex-row gap-3 items-center">
 			<span class="text-base font-semibold text-gray-800">
-				{{ formatCurrency(expenseClaim.total_sanctioned_amount, currency) }}
+				{{ formatCurrency(expenseClaim.total_claimed_amount, currency) }}
 			</span>
 			<Button
 				v-if="!isReadOnly"
