@@ -203,10 +203,13 @@ const linkFieldList = createResource({
 		filters: props.linkFilters,
 	},
 	transform: (data) => {
-		return data.map((doc) => ({
-			label: doc.description ? `${doc.description}: ${doc.value}` : doc.value,
-			value: doc.value,
-		}))
+		return data.map((doc) => {
+			const title = doc?.description?.split(",")?.[0]
+			return {
+				label: title ? `${title} : ${doc.value}`: doc.value,
+				value: doc.value,
+			}
+		})
 	},
 })
 
