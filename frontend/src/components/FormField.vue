@@ -21,7 +21,8 @@
 			:value="modelValue"
 			:placeholder="`Select ${props.options}`"
 			:options="selectionList"
-			@change="(v) => emit('update:modelValue', v.value)"
+			@change="(v) => emit('update:modelValue', v?.value)"
+			@update:query="(q) => updateLinkFieldOptions(q)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
 		/>
@@ -128,7 +129,7 @@
 </template>
 
 <script setup>
-import { createResource, Autocomplete, ErrorMessage } from "frappe-ui"
+import { createResource, Autocomplete, ErrorMessage, debounce } from "frappe-ui"
 import { ref, computed, onMounted, inject, watchEffect } from "vue"
 
 const props = defineProps({
@@ -158,9 +159,9 @@ const props = defineProps({
 const emit = defineEmits(["change", "update:modelValue"])
 const dayjs = inject("$dayjs")
 
-let linkFieldList = ref([])
 let date = ref(null)
 const autocompleteRef = ref(null)
+const searchText = ref("")
 
 const showField = computed(() => {
 	if (props.readOnly && !isLayoutField.value && !props.modelValue) return false
@@ -182,7 +183,7 @@ const isReadOnly = computed(() => {
 
 const selectionList = computed(() => {
 	if (props.fieldtype == "Link" && props.options) {
-		return props.documentList || linkFieldList.value.data
+		return props.documentList || linkFieldList?.data
 	} else if (props.fieldtype == "Select" && props.options) {
 		const options = props.options.split("\n")
 		return options.map((option) => ({
@@ -194,26 +195,20 @@ const selectionList = computed(() => {
 	return []
 })
 
-function setLinkFieldList() {
-	// get link field document list
-	if (props.fieldtype == "Link" && props.options) {
-		linkFieldList.value = createResource({
-			url: "hrms.api.get_link_field_options",
-			params: {
-				doctype: props.options,
-				filters: props.linkFilters,
-			},
-			transform: (data) => {
-				return data.map((doc) => ({
-					label: doc.label ? `${doc.label}: ${doc.value}` : doc.value,
-					value: doc.value,
-				}))
-			},
-		})
-
-		linkFieldList.value.reload()
-	}
-}
+const linkFieldList = createResource({
+	url: "frappe.desk.search.search_link",
+	params: {
+		doctype: props.options,
+		txt: searchText.value,
+		filters: props.linkFilters,
+	},
+	transform: (data) => {
+		return data.map((doc) => ({
+			label: doc.description ? `${doc.description}: ${doc.value}` : doc.value,
+			value: doc.value,
+		}))
+	},
+})
 
 function setDefaultValue() {
 	// set default values
@@ -236,11 +231,16 @@ function setDefaultValue() {
 	}
 }
 
+const updateLinkFieldOptions = debounce((query) => {
+	searchText.value = query || ""
+	linkFieldList.reload()
+}, 500)
+
 // get link field options from DB only when the field is clicked
 watchEffect(() => {
 	if (autocompleteRef.value && props.fieldtype === "Link") {
 		autocompleteRef.value?.$refs?.search?.$el?.addEventListener("focus", () => {
-			setLinkFieldList()
+			linkFieldList.reload()
 		})
 	}
 })
