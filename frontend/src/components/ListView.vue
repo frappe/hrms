@@ -44,9 +44,17 @@
 						v-model="activeTab"
 					/>
 
+					<!-- Loading Indicator -->
+					<div
+						v-if="documents.loading"
+						class="flex h-64 items-center justify-center"
+					>
+						<LoadingIndicator class="w-8 h-8 text-gray-800" />
+					</div>
+
 					<div
 						class="flex flex-col bg-white rounded mt-5 overflow-auto"
-						v-if="documents.data?.length"
+						v-else-if="documents.data?.length"
 					>
 						<div
 							class="p-3.5 items-center justify-between border-b cursor-pointer"
@@ -68,14 +76,6 @@
 					</div>
 					<EmptyState message="No leaves found" v-else />
 				</div>
-			</div>
-
-			<!-- Loading Indicator -->
-			<div
-				v-if="documents.loading"
-				class="flex h-64 items-center justify-center"
-			>
-				<LoadingIndicator class="w-8 h-8 text-gray-800" />
 			</div>
 		</div>
 	</div>
