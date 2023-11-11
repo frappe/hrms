@@ -120,6 +120,7 @@
    "options": "currency"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "leave_encashment_amount_per_day",
    "fieldtype": "Currency",
    "label": "Leave Encashment Amount Per Day",
@@ -238,7 +239,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-06-13 18:02:31.779947",
+ "modified": "2023-09-26 14:57:07.030623",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure",

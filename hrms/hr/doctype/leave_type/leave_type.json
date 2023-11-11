@@ -27,7 +27,8 @@
   "expire_carry_forwarded_leaves_after_days",
   "encashment",
   "allow_encashment",
-  "encashment_threshold_days",
+  "max_encashable_leaves",
+  "non_encashable_leaves",
   "column_break_17",
   "earning_component",
   "earned_leave",
@@ -138,12 +139,6 @@
   },
   {
    "depends_on": "allow_encashment",
-   "fieldname": "encashment_threshold_days",
-   "fieldtype": "Int",
-   "label": "Encashment Threshold Days"
-  },
-  {
-   "depends_on": "allow_encashment",
    "fieldname": "earning_component",
    "fieldtype": "Link",
    "label": "Earning Component",
@@ -219,12 +214,27 @@
    "fieldtype": "Select",
    "label": "Allocate on Day",
    "options": "First Day\nLast Day\nDate of Joining"
+  },
+  {
+   "depends_on": "allow_encashment",
+   "fieldname": "max_encashable_leaves",
+   "fieldtype": "Int",
+   "label": "Maximum Encashable Leaves",
+   "non_negative": 1
+  },
+  {
+   "depends_on": "allow_encashment",
+   "description": "Indicates the number of leaves that cannot be encashed from the leave balance. E.g. with a leave balance of 10 and 4 Non-Encashable Leaves, you can encash 6, while the remaining 4 can be carried forward or expired",
+   "fieldname": "non_encashable_leaves",
+   "fieldtype": "Int",
+   "label": "Non-Encashable Leaves",
+   "non_negative": 1
   }
  ],
  "icon": "fa fa-flag",
  "idx": 1,
  "links": [],
- "modified": "2023-05-26 14:15:29.695487",
+ "modified": "2023-10-23 15:34:04.281308",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Type",

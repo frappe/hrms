@@ -346,7 +346,7 @@ def get_employees(salary_structure):
 	employees = frappe.get_list(
 		"Salary Structure Assignment",
 		filters={"salary_structure": salary_structure, "docstatus": 1},
-		fields=["employee"],
+		pluck="employee",
 	)
 
 	if not employees:
@@ -356,7 +356,7 @@ def get_employees(salary_structure):
 			).format(salary_structure, salary_structure)
 		)
 
-	return list(set([d.employee for d in employees]))
+	return list(set(employees))
 
 
 @frappe.whitelist()

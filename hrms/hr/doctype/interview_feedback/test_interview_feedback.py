@@ -9,7 +9,7 @@ from hrms.hr.doctype.interview.test_interview import (
 	create_interview_and_dependencies,
 	create_skill_set,
 )
-from hrms.hr.doctype.job_applicant.test_job_applicant import create_job_applicant
+from hrms.tests.test_utils import create_job_applicant
 
 
 class TestInterviewFeedback(FrappeTestCase):
