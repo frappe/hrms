@@ -1,0 +1,49 @@
+Employee Settings,Configuración del Empleado,
+Stop users from making Leave Applications on following days.,Deje que los usuarios realicen Solicitudes de Vacaciones en los siguientes días .
+HR Settings,Configuración de Recursos Humanos,
+Salary breakup based on Earning and Deduction.,Calculo de Salario basado en los Ingresos y la Deducción.
+Leave Balance Before Application,Vacaciones disponibles antes de la solicitud,
+Appraisal Template Title,Titulo de la Plantilla deEvaluación,
+Net pay cannot be negative,Salario neto no puede ser negativo,
+Leave Type,Tipo de Vacaciones,
+New Leaves Allocated (In Days),Nuevas Vacaciones Asignados (en días)
+Leave Block List Allowed,Lista de Bloqueo de Vacaciones Permitida,
+Score must be less than or equal to 5,Puntuación debe ser menor o igual a 5,
+New Leaves Allocated,Nuevas Vacaciones Asignadas,
+Privilege Leave,Permiso con Privilegio,
+Weightage (%),Coeficiente de ponderación (% )
+Allow the following users to approve Leave Applications for block days.,Permitir a los usuarios siguientes aprobar Solicitudes de ausencia en bloques de días.
+Attendance From Date,Asistencia De Fecha,
+Appraisal Template Goal,Objetivo Plantilla de Evaluación,
+Block Holidays on important days.,Bloqueo de vacaciones en días importantes.
+Leave Type Name,Nombre de Tipo de Vacaciones,
+Is Carry Forward,Es llevar adelante,
+Warning: Leave application contains following block dates,Advertencia: Solicitud de Renuncia contiene las siguientes fechas bloquedas,
+Total Leaves Allocated,Total Vacaciones Asignadas,
+Stock Options,Opciones sobre Acciones,
+Leave Control Panel,Salir del Panel de Control,
+Leave Approver Name,Nombre de Supervisor de Vacaciones,
+Apply / Approve Leaves,Aplicar / Aprobar Vacaciones,
+Select Terms and Conditions,Selecciona Términos y Condiciones,
+Approval Status must be 'Approved' or 'Rejected',"Estado de aprobación debe ser "" Aprobado "" o "" Rechazado """
+Total Leave Days,Total Vacaciones,
+Score Earned,Puntuación Obtenida,
+Employee {0} is not active or does not exist,Empleado {0} no está activo o no existe,
+Leave Without Pay,Licencia sin Sueldo,
+Earning,Ganancia,
+Date is repeated,Fecha se repite,
+Include holidays within leaves as leaves,"Incluir las vacaciones con ausencias, únicamente como ausencias"
+Attendance From Date and Attendance To Date is mandatory,Asistencia Desde Fecha y Hasta Fecha de Asistencia es obligatoria,
+Monthly Attendance Sheet,Hoja de Asistencia Mensual,
+Get Template,Verificar Plantilla,
+Submit Salary Slip,Presentar nómina,
+Score (0-5),Puntuación ( 0-5)
+Piecework,Pieza de trabajo,
+Appraisal Goal,Evaluación Meta,
+Carry Forward,Cargar,
+There are more holidays than working days this month.,Hay más vacaciones que días de trabajo este mes.
+Employees Email Id,Empleados Email Id,
+Description of a Job Opening,Descripción de una oferta de trabajo,
+Leave of type {0} cannot be longer than {1},Permiso de tipo {0} no puede tener más de {1}
+Please select Carry Forward if you also want to include previous fiscal year's balance leaves to this fiscal year,"Por favor seleccione trasladar, si usted desea incluir los saldos del año fiscal anterior a este año"
+Leave Application,Solicitud de Vacaciones,
