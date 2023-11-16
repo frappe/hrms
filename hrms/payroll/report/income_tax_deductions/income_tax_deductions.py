@@ -8,15 +8,18 @@ from frappe.query_builder.functions import Extract
 
 import erpnext
 
+Filters = frappe._dict
 
-def execute(filters=None):
-	data = get_data(filters)
-	columns = get_columns()
+
+def execute(filters: Filters = None) -> tuple:
+	is_indian_company = erpnext.get_region(filters.get("company")) == "India"
+	columns = get_columns(is_indian_company)
+	data = get_data(filters, is_indian_company)
 
 	return columns, data
 
 
-def get_columns():
+def get_columns(is_indian_company: bool) -> list[dict]:
 	columns = [
 		{
 			"label": _("Employee"),
@@ -33,7 +36,7 @@ def get_columns():
 		},
 	]
 
-	if erpnext.get_region() == "India":
+	if is_indian_company:
 		columns.append(
 			{"label": _("PAN Number"), "fieldname": "pan_number", "fieldtype": "Data", "width": 140}
 		)
@@ -60,11 +63,11 @@ def get_columns():
 	return columns
 
 
-def get_data(filters):
+def get_data(filters: Filters, is_indian_company: bool) -> list[dict]:
 	data = []
 
 	employee_pan_dict = {}
-	if erpnext.get_region() == "India":
+	if is_indian_company:
 		employee_pan_dict = frappe._dict(
 			frappe.get_all("Employee", fields=["name", "pan_number"], as_list=True)
 		)
@@ -81,7 +84,7 @@ def get_data(filters):
 			"gross_pay": d.gross_pay,
 		}
 
-		if erpnext.get_region() == "India":
+		if is_indian_company:
 			employee["pan_number"] = employee_pan_dict.get(d.employee)
 
 		data.append(employee)
@@ -89,7 +92,7 @@ def get_data(filters):
 	return data
 
 
-def get_income_tax_deductions(filters):
+def get_income_tax_deductions(filters: Filters) -> list[dict]:
 	component_types = frappe.get_all(
 		"Salary Component", filters={"is_income_tax_component": 1}, pluck="name"
 	)
