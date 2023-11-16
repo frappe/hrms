@@ -1790,6 +1790,7 @@ def make_deduction_salary_component(setup=False, test_tax=False, company_list=No
 				"type": "Deduction",
 				"depends_on_payment_days": 0,
 				"variable_based_on_taxable_salary": 1,
+				"is_income_tax_component": 1,
 				"round_to_the_nearest_integer": 1,
 			}
 		)
