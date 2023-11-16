@@ -64,6 +64,7 @@ class TestIncomeTaxDeductions(FrappeTestCase):
 			"posting_date": posting_date,
 			"it_amount": 7732.0,
 			"gross_pay": 78000.0,
+			"pan_number": None,
 		}
 
 		self.assertEqual(result[1][0], expected_data)
