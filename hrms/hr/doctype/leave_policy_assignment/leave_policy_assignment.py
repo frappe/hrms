@@ -262,7 +262,7 @@ def calculate_pro_rated_leaves(
 
 	if is_earned_leave:
 		return flt(leaves, precision)
-	return rounded(leaves)
+	return rounded(leaves, precision)
 
 
 def is_earned_leave_applicable_for_current_month(date_of_joining, allocate_on_day):
