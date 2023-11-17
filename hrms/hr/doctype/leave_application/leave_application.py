@@ -724,6 +724,7 @@ def get_allocation_expiry_for_cf_leaves(
 			"docstatus": 1,
 		},
 		fields=["to_date"],
+		limit=1,
 	)
 	return expiry[0]["to_date"] if expiry else ""
 
@@ -1029,7 +1030,7 @@ def get_leaves_for_period(
 			if leave_entry.leaves % 1:
 				half_day = 1
 				half_day_date = frappe.db.get_value(
-					"Leave Application", {"name": leave_entry.transaction_name}, ["half_day_date"]
+					"Leave Application", {"name": leave_entry.transaction_name}, "half_day_date"
 				)
 
 			leave_days += (
