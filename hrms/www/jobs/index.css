@@ -57,3 +57,16 @@ h4.jobs-page {
 	background: var(--gray-100);
 	border-radius: 0 0 0.75rem 0.75rem
 }
+
+.search-bar .form-control {
+    padding-left: 2.375rem;
+}
+
+.search-bar .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    width: 2.375rem;
+    line-height: 1.875rem;
+    text-align: center;
+    pointer-events: none;
+}
