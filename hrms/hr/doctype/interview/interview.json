@@ -9,6 +9,7 @@
   "interview_details_section",
   "interview_round",
   "job_applicant",
+  "interviewers",
   "job_opening",
   "designation",
   "resume_link",
@@ -173,6 +174,12 @@
    "fieldname": "feedback_html",
    "fieldtype": "HTML",
    "label": "Feedback HTML"
+  },
+  {
+   "fieldname": "interviewers",
+   "fieldtype": "Table MultiSelect",
+   "label": "Interviewers",
+   "options": "Interviewer"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -183,7 +190,7 @@
    "link_fieldname": "interview"
   }
  ],
- "modified": "2023-09-26 14:10:16.426193",
+ "modified": "2023-11-20 18:11:34.879285",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview",

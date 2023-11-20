@@ -16,7 +16,8 @@ frappe.ui.form.on("Interview", {
 					frm.refresh();
 				});
 			}
-			await frm.trigger("enable_feedback_button_for_applicable_interviewers");
+			await frm.trigger("get_applicable_interviewers");
+			const disable_button = !frm.interviewers.includes(frappe.session.user);
 			frappe.db.get_value(
 				"Interview Feedback",
 				{
@@ -42,7 +43,7 @@ frappe.ui.form.on("Interview", {
 								});
 							})
 							.addClass("btn-primary")
-							.prop("disabled", frm.disable_button);
+							.prop("disabled", disable_button);
 					}
 				}
 			);
@@ -184,6 +185,16 @@ frappe.ui.form.on("Interview", {
 		frm.events.reset_values(frm);
 		frm.set_value("job_applicant", "");
 
+		await frm.trigger("get_applicable_interviewers");
+		frm.set_value(
+			"interviewers",
+			frm.interviewers.map((x) => {
+				return {
+					user: x,
+				};
+			})
+		);
+
 		let round_data = (
 			await frappe.db.get_value(
 				"Interview Round",
@@ -242,7 +253,7 @@ frappe.ui.form.on("Interview", {
 		frm.set_value("resume_link", "");
 	},
 
-	enable_feedback_button_for_applicable_interviewers(frm) {
+	get_applicable_interviewers(frm) {
 		frappe.call({
 			method:
 				"hrms.hr.doctype.interview_feedback.interview_feedback.get_applicable_interviewers",
@@ -250,7 +261,7 @@ frappe.ui.form.on("Interview", {
 				interview_round: frm.doc.interview_round || "",
 			},
 			callback: function (r) {
-				frm.disable_button = !r.message.includes(frappe.session.user);
+				frm.interviewers = r.message;
 			},
 		});
 	},
