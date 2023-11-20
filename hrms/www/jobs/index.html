@@ -43,17 +43,9 @@ endblock title %} {% block header %}
 		{% endfor %}
 	</div>
 	<div class="col-9">
-		<div class="row px-4 mb-12">
-			<div class="col-8 pl-0">
-				<input
-					type="search"
-					name="query"
-					id="search-box"
-					class="form-control border font-md"
-					placeholder="Search for Jobs"
-					aria-label="Jobs Search"
-				/>
-				<div class="search-icon">
+		<div class="row px-4 mb-12" style="height: 32px">
+			<div class="col-8 p-0 search-bar">
+				<span class="form-control-feedback">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="16"
@@ -69,17 +61,21 @@ endblock title %} {% block header %}
 						<circle cx="11" cy="11" r="8"></circle>
 						<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
 					</svg>
-				</div>
+				</span>
+				<input
+					type="search"
+					name="query"
+					id="search-box"
+					class="form-control border font-md bg-white h-100"
+					placeholder="Search for Jobs"
+					aria-label="Jobs Search"
+				/>
 			</div>
 			{% set sort = frappe.form_dict.sort %}
 			<div class="col-4 flex pr-0">
 				<div class="ml-auto flex align-items-center">
-					<div class="btn-group border" style="border-radius: 8px">
-						<button
-							id="sort"
-							class="btn btn-default btn-order"
-							style="background-color: white"
-						>
+					<div class="btn-group border h-100" style="border-radius: 8px">
+						<button id="sort" class="btn btn-default btn-order bg-white">
 							<span class="sort-order">
 								<svg class="icon icon-sm">
 									<use
@@ -90,8 +86,8 @@ endblock title %} {% block header %}
 							</span>
 						</button>
 						<div
-							class="border-left px-3 flex align-items-center"
-							style="background-color: white; border-radius: 0px 8px 8px 0px"
+							class="border-left px-3 flex align-items-center bg-white"
+							style="border-radius: 0px 8px 8px 0px"
 						>
 							<span class="text-14">Posting Date</span>
 						</div>
@@ -219,8 +215,7 @@ endblock title %} {% block header %}
 				page|int > no_of_pages or page|int < 1) else page %}
 				<button
 					id="previous"
-					class="btn btn-default border-right flex align-items-center"
-					style="background-color: white"
+					class="btn btn-default border-right flex align-items-center bg-white"
 				>
 					<svg class="icon icon-sm" style="--icon-stroke: var(--gray-600)">
 						<use href="#icon-left"></use>
@@ -228,7 +223,7 @@ endblock title %} {% block header %}
 				</button>
 				{% set initial_page = 1 if page|int == 1 else ((page|int / 3 +
 				0.5)|round(method='floor')|int * 3 - 2) %}
-				<div class="flex" style="background-color: white">
+				<div class="flex bg-white">
 					{% set no_of_displayed_pages = 5 if no_of_pages - initial_page > 5
 					else no_of_pages - initial_page + 1 %} {% for i in
 					range(no_of_displayed_pages) %} {% set pg = i + initial_page %}
@@ -249,8 +244,7 @@ endblock title %} {% block header %}
 				</div>
 				<button
 					id="next"
-					class="btn btn-default border-left flex align-items-center"
-					style="background-color: white"
+					class="btn btn-default border-left flex align-items-center bg-white"
 				>
 					<svg class="icon icon-sm" style="--icon-stroke: var(--gray-600)">
 						>
