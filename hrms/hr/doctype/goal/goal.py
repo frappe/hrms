@@ -81,13 +81,14 @@ class Goal(NestedSet):
 			frappe.throw(_("Goal progress percentage cannot be more than 100."))
 
 	def set_status(self, status=None):
-		if self.status != "Archived":
-			if flt(self.progress) == 0:
-				self.status = "Pending"
-			elif flt(self.progress) == 100:
-				self.status = "Completed"
-			elif flt(self.progress) < 100:
-				self.status = "In Progress"
+		if self.status in ["Archived", "Closed"]:
+			return
+		if flt(self.progress) == 0:
+			self.status = "Pending"
+		elif flt(self.progress) == 100:
+			self.status = "Completed"
+		elif flt(self.progress) < 100:
+			self.status = "In Progress"
 
 	def update_kra_in_child_goals(self, doc_before_save):
 		"""Aligns children's KRA to parent goal's KRA if parent goal's KRA is changed"""

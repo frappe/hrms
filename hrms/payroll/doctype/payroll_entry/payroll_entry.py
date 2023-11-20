@@ -92,20 +92,56 @@ class PayrollEntry(Document):
 			)
 
 	def on_cancel(self):
-		self.ignore_linked_doctypes = "GL Entry"
+		self.ignore_linked_doctypes = ("GL Entry", "Salary Slip", "Journal Entry")
 
-		frappe.delete_doc(
-			"Salary Slip",
-			frappe.db.sql_list(
-				"""select name from `tabSalary Slip`
-			where payroll_entry=%s """,
-				(self.name),
-			),
-		)
+		self.delete_linked_salary_slips()
+		self.cancel_linked_journal_entries()
+
+		# reset flags & update status
 		self.db_set("salary_slips_created", 0)
 		self.db_set("salary_slips_submitted", 0)
 		self.set_status(update=True, status="Cancelled")
 		self.db_set("error_message", "")
+
+	def cancel(self):
+		if len(self.get_linked_salary_slips()) > 50:
+			msg = _("Payroll Entry cancellation is queued. It may take a few minutes")
+			msg += "<br>"
+			msg += _(
+				"In case of any error during this background process, the system will add a comment about the error on this Payroll Entry and revert to the Submitted status"
+			)
+			frappe.msgprint(
+				msg,
+				indicator="blue",
+				title=_("Cancellation Queued"),
+			)
+			self.queue_action("cancel", timeout=3000)
+		else:
+			self._cancel()
+
+	def delete_linked_salary_slips(self):
+		salary_slips = self.get_linked_salary_slips()
+
+		# cancel & delete salary slips
+		for salary_slip in salary_slips:
+			if salary_slip.docstatus == 1:
+				frappe.get_doc("Salary Slip", salary_slip.name).cancel()
+			frappe.delete_doc("Salary Slip", salary_slip.name)
+
+	def cancel_linked_journal_entries(self):
+		journal_entries = frappe.get_all(
+			"Journal Entry Account",
+			{"reference_type": self.doctype, "reference_name": self.name, "docstatus": 1},
+			pluck="parent",
+			distinct=True,
+		)
+
+		# cancel Journal Entries
+		for je in journal_entries:
+			frappe.get_doc("Journal Entry", je).cancel()
+
+	def get_linked_salary_slips(self):
+		return frappe.get_all("Salary Slip", {"payroll_entry": self.name}, ["name", "docstatus"])
 
 	def make_filters(self):
 		filters = frappe._dict(
@@ -113,6 +149,7 @@ class PayrollEntry(Document):
 			branch=self.branch,
 			department=self.department,
 			designation=self.designation,
+			grade=self.grade,
 			currency=self.currency,
 			start_date=self.start_date,
 			end_date=self.end_date,
@@ -1150,7 +1187,7 @@ def set_filter_conditions(query, filters, qb_object):
 	if filters.get("employees"):
 		query = query.where(qb_object.name.notin(filters.get("employees")))
 
-	for fltr_key in ["branch", "department", "designation"]:
+	for fltr_key in ["branch", "department", "designation", "grade"]:
 		if filters.get(fltr_key):
 			query = query.where(qb_object[fltr_key] == filters[fltr_key])
 
@@ -1308,7 +1345,10 @@ def log_payroll_failure(process, payroll_entry, error):
 	message_log = frappe.message_log.pop() if frappe.message_log else str(error)
 
 	try:
-		error_message = json.loads(message_log).get("message")
+		if isinstance(message_log, str):
+			error_message = json.loads(message_log).get("message")
+		else:
+			error_message = message_log.get("message")
 	except Exception:
 		error_message = message_log
 
@@ -1355,7 +1395,7 @@ def create_salary_slips_for_employees(employees, args, publish_progress=True):
 
 	finally:
 		frappe.db.commit()  # nosemgrep
-		frappe.publish_realtime("completed_salary_slip_creation")
+		frappe.publish_realtime("completed_salary_slip_creation", user=frappe.session.user)
 
 
 def show_payroll_submission_status(submitted, unsubmitted, payroll_entry):
@@ -1432,7 +1472,7 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 
 	finally:
 		frappe.db.commit()  # nosemgrep
-		frappe.publish_realtime("completed_salary_slip_submission")
+		frappe.publish_realtime("completed_salary_slip_submission", user=frappe.session.user)
 
 	frappe.flags.via_payroll_entry = False
 

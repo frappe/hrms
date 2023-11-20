@@ -9,3 +9,12 @@ hrms/docs/current
 node_modules/
 dist/
 __pycache__/
+
+# build/
+.vscode
+.vs
+node_modules
+*debug.log
+hrms/docs/current
+hrms/public/frontend
+hrms/www/hrms.html

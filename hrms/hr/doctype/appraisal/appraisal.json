@@ -189,6 +189,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "allow_on_submit": 1,
    "fetch_from": "employee.image",
    "fieldname": "employee_image",
    "fieldtype": "Attach Image",
@@ -313,7 +314,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-30 21:02:16.425253",
+ "modified": "2023-10-21 10:22:26.270161",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",

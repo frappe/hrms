@@ -32,6 +32,22 @@ class EmployeeAdvance(Document):
 		self.ignore_linked_doctypes = "GL Entry"
 		self.set_status(update=True)
 
+	def on_update(self):
+		self.publish_update()
+
+	def after_delete(self):
+		self.publish_update()
+
+	def publish_update(self):
+		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
+		if frappe.session.user == employee_user:
+			frappe.publish_realtime(
+				event="hrms:update_employee_advances",
+				message={"employee": self.employee},
+				user=frappe.session.user,
+				after_commit=True,
+			)
+
 	def set_status(self, update=False):
 		precision = self.precision("paid_amount")
 		total_amount = flt(flt(self.claimed_amount) + flt(self.return_amount), precision)
@@ -65,6 +81,7 @@ class EmployeeAdvance(Document):
 
 		if update:
 			self.db_set("status", status)
+			self.publish_update()
 		else:
 			self.status = status
 

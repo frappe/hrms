@@ -47,18 +47,35 @@ frappe.ui.form.on("Goal", {
 	},
 
 	add_custom_buttons(frm) {
-		if (!frm.doc.__islocal) {
-			if (frm.doc.status !== "Archived") {
-				frm.add_custom_button(__("Archive"), () => {
-					frm.set_value("status", "Archived");
-					frm.save();
-				});
-			} else {
-				frm.add_custom_button(__("Unarchive"), () => {
-					frm.set_value("status", "");
-					frm.save();
-				});
-			}
+		if (frm.doc.__islocal || frm.doc.status === "Completed") return;
+		const doc_status = frm.doc.status;
+
+		if (doc_status === "Archived") {
+			frm.add_custom_button(__("Unarchive"), () => {
+				frm.set_value("status", "");
+				frm.save();
+			}, __("Status"));
+		}
+
+		if (doc_status === "Closed") {
+			frm.add_custom_button(__("Reopen"), () => {
+				frm.set_value("status", "");
+				frm.save();
+			}, __("Status"));
+		}
+
+		if (doc_status !== "Archived") {
+			frm.add_custom_button(__("Archive"), () => {
+				frm.set_value("status", "Archived");
+				frm.save();
+			}, __("Status"));
+		}
+
+		if (doc_status !== "Closed") {
+			frm.add_custom_button(__("Close"), () => {
+				frm.set_value("status", "Closed");
+				frm.save();
+			}, __("Status"));
 		}
 	},
 

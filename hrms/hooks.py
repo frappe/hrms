@@ -5,6 +5,7 @@ app_description = "Modern HR and Payroll Software"
 app_email = "contact@frappe.io"
 app_license = "GNU General Public License (v3)"
 required_apps = ["frappe/erpnext"]
+source_link = "http://github.com/frappe/hrms"
 
 
 # Includes in <head>
@@ -186,6 +187,7 @@ doc_events = {
 	"Employee": {
 		"validate": "hrms.overrides.employee_master.validate_onboarding_process",
 		"on_update": "hrms.overrides.employee_master.update_approver_role",
+		"after_insert": "hrms.overrides.employee_master.update_job_applicant_and_offer",
 		"on_trash": "hrms.overrides.employee_master.update_employee_transfer",
 	},
 	"Project": {
