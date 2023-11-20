@@ -41,6 +41,8 @@
   "column_break_4",
   "send_interview_feedback_reminder",
   "feedback_reminder_notification_template",
+  "hiring_sender",
+  "hiring_sender_email",
   "employee_exit_section",
   "exit_questionnaire_web_form",
   "column_break_34",
@@ -67,7 +69,8 @@
   },
   {
    "fieldname": "column_break_4",
-   "fieldtype": "Column Break"
+   "fieldtype": "Column Break",
+   "read_only": 1
   },
   {
    "default": "1",
@@ -269,6 +272,20 @@
   {
    "fieldname": "column_break_hyec",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hiring_sender",
+   "fieldtype": "Link",
+   "label": "Sender",
+   "options": "Email Account"
+  },
+  {
+   "depends_on": "eval:doc.hiring_sender",
+   "fetch_from": "hiring_sender.email_id",
+   "fieldname": "hiring_sender_email",
+   "fieldtype": "Data",
+   "label": "Sender Email",
+   "read_only": 1
   },
   {
    "default": "0",
