@@ -704,6 +704,95 @@ class TestSalarySlip(FrappeTestCase):
 			elif payroll_frequency == "Daily":
 				self.assertEqual(ss.end_date, nowdate())
 
+	@if_lending_app_installed
+	def test_loan_write_off_salary_slip(self):
+		from lending.loan_management.doctype.loan.loan import make_loan_write_off
+		from lending.loan_management.doctype.loan.test_loan import (
+			create_loan,
+			create_loan_accounts,
+			create_loan_type,
+			create_repayment_entry,
+			make_loan_disbursement_entry,
+		)
+		from lending.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
+			process_loan_interest_accrual_for_term_loans,
+		)
+
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		applicant = make_employee("test_loan_repayment_salary_slip@salary.com", company="_Test Company")
+
+		create_loan_accounts()
+
+		create_loan_type(
+			"Personal Loan",
+			12000,
+			0,
+			is_term_loan=1,
+			mode_of_payment="Cash",
+			disbursement_account="Disbursement Account - _TC",
+			payment_account="Payment Account - _TC",
+			loan_account="Loan Account - _TC",
+			interest_income_account="Interest Income Account - _TC",
+			penalty_income_account="Penalty Income Account - _TC",
+			repayment_schedule_type="Monthly as per repayment start date",
+		)
+
+		payroll_period = create_payroll_period(name="_Test Payroll Period", company="_Test Company")
+
+		make_salary_structure(
+			"Test Loan Repayment Salary Structure",
+			"Monthly",
+			employee=applicant,
+			company="_Test Company",
+			currency="INR",
+			payroll_period=payroll_period,
+		)
+
+		frappe.db.sql(
+			"delete from tabLoan where applicant = 'test_loan_repayment_salary_slip@salary.com'"
+		)
+		loan = create_loan(
+			applicant,
+			"Personal Loan",
+			12000,
+			"Repay Over Number of Periods",
+			12,
+			posting_date=payroll_period.start_date,
+		)
+		loan.repay_from_salary = 1
+		loan.submit()
+
+		make_loan_disbursement_entry(
+			loan.name, loan.loan_amount, disbursement_date=payroll_period.start_date
+		)
+
+		process_loan_interest_accrual_for_term_loans(
+			posting_date=add_months(payroll_period.start_date, 12)
+		)
+
+		repayment_entry = create_repayment_entry(
+			loan.name, applicant, add_months(payroll_period.start_date, 7), 7000
+		)
+		repayment_entry.submit()
+
+		we = make_loan_write_off(
+			loan.name, posting_date=add_months(payroll_period.start_date, 8), amount=5000
+		)
+		we.submit()
+
+		self.assertEqual(frappe.db.get_value("Loan", loan.name, "status"), "Closed")
+
+		ss = make_employee_salary_slip(
+			applicant,
+			"Monthly",
+			"Test Loan Repayment Salary Structure",
+			posting_date=add_months(payroll_period.start_date, 8),
+		)
+		ss.submit()
+
+		self.assertEqual(ss.total_loan_repayment, 0)
+
 	def test_multi_currency_salary_slip(self):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
@@ -1701,6 +1790,7 @@ def make_deduction_salary_component(setup=False, test_tax=False, company_list=No
 				"type": "Deduction",
 				"depends_on_payment_days": 0,
 				"variable_based_on_taxable_salary": 1,
+				"is_income_tax_component": 1,
 				"round_to_the_nearest_integer": 1,
 			}
 		)

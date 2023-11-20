@@ -11,6 +11,15 @@
   "bugs": {
     "url": "https://github.com/frappe/hrms/issues"
   },
+  "aworkspaces": [
+    "frappe-ui",
+    "frontend"
+  ],
+  "scripts": {
+    "postinstall": "cd frontend && yarn install",
+    "dev": "cd frontend && yarn dev",
+    "build": "cd frontend && yarn build"
+  },
   "dependencies": {
     "html2canvas": "^1.4.1"
   }

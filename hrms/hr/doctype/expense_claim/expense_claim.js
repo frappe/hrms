@@ -132,17 +132,6 @@ cur_frm.fields_dict['cost_center'].get_query = function(doc) {
 	}
 };
 
-erpnext.expense_claim = {
-	set_title: function(frm) {
-		if (!frm.doc.task) {
-			frm.set_value("title", frm.doc.employee_name);
-		}
-		else {
-			frm.set_value("title", frm.doc.employee_name + " for "+ frm.doc.task);
-		}
-	}
-};
-
 frappe.ui.form.on("Expense Claim", {
 	setup: function(frm) {
 		frm.add_fetch("company", "cost_center", "cost_center");
@@ -295,14 +284,6 @@ frappe.ui.form.on("Expense Claim", {
 
 	toggle_fields: function(frm) {
 		frm.toggle_reqd("mode_of_payment", frm.doc.is_paid);
-	},
-
-	employee_name: function(frm) {
-		erpnext.expense_claim.set_title(frm);
-	},
-
-	task: function(frm) {
-		erpnext.expense_claim.set_title(frm);
 	},
 
 	employee: function(frm) {

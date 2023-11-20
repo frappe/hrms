@@ -14,7 +14,7 @@ from erpnext.setup.doctype.designation.test_designation import create_designatio
 
 from hrms.hr.doctype.interview.interview import DuplicateInterviewRoundError
 from hrms.hr.doctype.job_applicant.job_applicant import get_interview_details
-from hrms.hr.doctype.job_applicant.test_job_applicant import create_job_applicant
+from hrms.tests.test_utils import create_job_applicant
 
 
 class TestInterview(FrappeTestCase):
