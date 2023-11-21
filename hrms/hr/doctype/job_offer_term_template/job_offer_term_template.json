@@ -1,0 +1,44 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "HR-JO-.TT.-.#####",
+ "creation": "2023-11-21 13:39:20.882706",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "job_offer_term"
+ ],
+ "fields": [
+  {
+   "fieldname": "job_offer_term",
+   "fieldtype": "Table",
+   "label": "Job Offer Term",
+   "options": "Job Offer Term"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-11-21 13:45:32.953317",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Job Offer Term Template",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
