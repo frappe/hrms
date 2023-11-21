@@ -213,7 +213,10 @@ def send_daily_feedback_reminder():
 
 	if not reminder_settings.send_interview_feedback_reminder:
 		return
-
+	
+	if not reminder_settings.feedback_reminder_notification_template:
+		return
+	
 	interview_feedback_template = frappe.get_doc(
 		"Email Template", reminder_settings.feedback_reminder_notification_template
 	)
