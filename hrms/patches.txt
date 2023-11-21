@@ -19,3 +19,4 @@ hrms.patches.v14_0.create_custom_field_in_loan
 hrms.patches.v14_0.update_loan_repayment_repay_from_salary
 hrms.patches.v15_0.migrate_loan_type_to_loan_product
 hrms.patches.v15_0.rename_and_update_leave_encashment_fields
+hrms.patches.v14_0.update_title_in_employee_onboarding_and_separation_templates
