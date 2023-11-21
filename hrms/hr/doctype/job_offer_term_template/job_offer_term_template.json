@@ -1,11 +1,12 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "HR-JO-.TT.-.#####",
+ "autoname": "field:title",
  "creation": "2023-11-21 13:39:20.882706",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "title",
   "job_offer_term"
  ],
  "fields": [
@@ -14,15 +15,21 @@
    "fieldtype": "Table",
    "label": "Job Offer Term",
    "options": "Job Offer Term"
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-21 13:45:32.953317",
+ "modified": "2023-11-21 14:36:28.917809",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer Term Template",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
