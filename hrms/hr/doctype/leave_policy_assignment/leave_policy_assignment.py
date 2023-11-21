@@ -259,9 +259,8 @@ def calculate_pro_rated_leaves(
 	complete_period = date_diff(period_end_date, period_start_date) + 1
 
 	leaves *= actual_period / complete_period
-
-	if is_earned_leave:
-		return flt(leaves, precision)
+	leaves = flt(leaves, precision)
+	
 	return rounded(leaves)
 
 
