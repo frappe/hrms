@@ -1,43 +1,49 @@
 <template>
-	<div class="flex flex-col h-screen w-screen">
-		<div class="w-full sm:w-96">
-			<header
-				class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b sticky top-0 z-10"
-			>
-				<div class="flex flex-row items-center">
-					<Button
-						variant="ghost"
-						class="!pl-0 hover:bg-white"
-						@click="router.back()"
-					>
-						<FeatherIcon name="chevron-left" class="h-5 w-5" />
-					</Button>
-					<h2 class="text-xl font-semibold text-gray-900">{{ pageTitle }}</h2>
-				</div>
-
-				<div class="flex flex-row gap-2">
-					<Button
-						id="show-filter-modal"
-						icon="filter"
-						variant="subtle"
-						:class="[
-							areFiltersApplied
-								? '!border !border-gray-800 !bg-white !text-gray-900 !font-semibold'
-								: '',
-						]"
-					/>
-					<router-link :to="{ name: formViewRoute }" v-slot="{ navigate }">
-						<Button variant="solid" class="mr-2" @click="navigate">
-							<template #prefix>
-								<FeatherIcon name="plus" class="w-4" />
-							</template>
-							New
+	<ion-page>
+		<ion-header class="ion-no-border">
+			<div class="w-full sm:w-96">
+				<div
+					class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b"
+				>
+					<div class="flex flex-row items-center">
+						<Button
+							variant="ghost"
+							class="!pl-0 hover:bg-white"
+							@click="router.back()"
+						>
+							<FeatherIcon name="chevron-left" class="h-5 w-5" />
 						</Button>
-					</router-link>
-				</div>
-			</header>
+						<h2 class="text-xl font-semibold text-gray-900">{{ pageTitle }}</h2>
+					</div>
 
-			<div class="flex flex-col items-center mt-5 mb-7 p-4">
+					<div class="flex flex-row gap-2">
+						<Button
+							id="show-filter-modal"
+							icon="filter"
+							variant="subtle"
+							:class="[
+								areFiltersApplied
+									? '!border !border-gray-800 !bg-white !text-gray-900 !font-semibold'
+									: '',
+							]"
+						/>
+						<router-link :to="{ name: formViewRoute }" v-slot="{ navigate }">
+							<Button variant="solid" class="mr-2" @click="navigate">
+								<template #prefix>
+									<FeatherIcon name="plus" class="w-4" />
+								</template>
+								New
+							</Button>
+						</router-link>
+					</div>
+				</div>
+			</div>
+		</ion-header>
+
+		<ion-content>
+			<div
+				class="flex flex-col items-center mt-5 mb-7 p-4 w-full sm:w-96 overflow-y-auto"
+			>
 				<div class="w-full">
 					<TabButtons
 						:buttons="[{ label: tabButtons[0] }, { label: tabButtons[1] }]"
@@ -53,7 +59,7 @@
 					</div>
 
 					<div
-						class="flex flex-col bg-white rounded mt-5 overflow-auto"
+						class="flex flex-col bg-white rounded mt-5"
 						v-else-if="documents.data?.length"
 					>
 						<div
@@ -77,20 +83,20 @@
 					<EmptyState message="No leaves found" v-else />
 				</div>
 			</div>
-		</div>
-	</div>
 
-	<CustomIonModal trigger="show-filter-modal">
-		<!-- Filter Action Sheet -->
-		<template #actionSheet>
-			<ListFiltersActionSheet
-				:filterConfig="filterConfig"
-				@applyFilters="applyFilters"
-				@clearFilters="clearFilters"
-				v-model:filters="filterMap"
-			/>
-		</template>
-	</CustomIonModal>
+			<CustomIonModal trigger="show-filter-modal">
+				<!-- Filter Action Sheet -->
+				<template #actionSheet>
+					<ListFiltersActionSheet
+						:filterConfig="filterConfig"
+						@applyFilters="applyFilters"
+						@clearFilters="clearFilters"
+						v-model:filters="filterMap"
+					/>
+				</template>
+			</CustomIonModal>
+		</ion-content>
+	</ion-page>
 </template>
 
 <script setup>
@@ -105,7 +111,7 @@ import {
 	onMounted,
 	onBeforeUnmount,
 } from "vue"
-import { modalController } from "@ionic/vue"
+import { modalController, IonPage, IonHeader, IonContent } from "@ionic/vue"
 
 import { FeatherIcon, createResource, LoadingIndicator } from "frappe-ui"
 
