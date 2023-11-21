@@ -13,7 +13,7 @@ frappe.listview_settings["Leave Application"] = {
 			Approved: "green",
 			Rejected: "red",
 			Open: "orange",
-			Draft: "orange",
+			Draft: "red",
 			Cancelled: "red",
 			Submitted: "blue",
 		};
