@@ -2,12 +2,12 @@
 # See license.txt
 
 import os
-import unittest
 
 import frappe
 from frappe import _
 from frappe.core.doctype.user_permission.test_user_permission import create_user
 from frappe.tests.test_webform import create_custom_doctype, create_webform
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -15,7 +15,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.exit_interview.exit_interview import send_exit_questionnaire
 
 
-class TestExitInterview(unittest.TestCase):
+class TestExitInterview(FrappeTestCase):
 	def setUp(self):
 		frappe.db.sql("delete from `tabExit Interview`")
 
@@ -63,8 +63,7 @@ class TestExitInterview(unittest.TestCase):
 		template = create_notification_template()
 
 		webform = frappe.db.get_all("Web Form", limit=1)
-		frappe.db.set_value(
-			"HR Settings",
+		frappe.db.set_single_value(
 			"HR Settings",
 			{
 				"exit_questionnaire_web_form": webform[0].name,

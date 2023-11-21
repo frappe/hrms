@@ -3,12 +3,23 @@
 
 
 import json
-from math import ceil
 
 import frappe
 from frappe import _, bold
 from frappe.model.document import Document
-from frappe.utils import date_diff, flt, formatdate, get_last_day, get_link_to_form, getdate
+from frappe.utils import (
+	add_months,
+	cint,
+	comma_and,
+	date_diff,
+	flt,
+	formatdate,
+	get_first_day,
+	get_last_day,
+	get_link_to_form,
+	getdate,
+	rounded,
+)
 
 
 class LeavePolicyAssignment(Document):
@@ -29,25 +40,27 @@ class LeavePolicyAssignment(Document):
 			self.effective_from = frappe.db.get_value("Employee", self.employee, "date_of_joining")
 
 	def validate_policy_assignment_overlap(self):
-		leave_policy_assignments = frappe.get_all(
+		leave_policy_assignment = frappe.db.get_value(
 			"Leave Policy Assignment",
-			filters={
+			{
 				"employee": self.employee,
 				"name": ("!=", self.name),
 				"docstatus": 1,
 				"effective_to": (">=", self.effective_from),
 				"effective_from": ("<=", self.effective_to),
 			},
+			"leave_policy",
 		)
 
-		if len(leave_policy_assignments):
+		if leave_policy_assignment:
 			frappe.throw(
 				_("Leave Policy: {0} already assigned for Employee {1} for period {2} to {3}").format(
-					bold(self.leave_policy),
+					bold(leave_policy_assignment),
 					bold(self.employee),
 					bold(formatdate(self.effective_from)),
 					bold(formatdate(self.effective_to)),
-				)
+				),
+				title=_("Leave Policy Assignment Overlap"),
 			)
 
 	def warn_about_carry_forwarding(self):
@@ -65,7 +78,6 @@ class LeavePolicyAssignment(Document):
 				).format(frappe.bold(get_link_to_form("Leave Type", leave_type.name)))
 				frappe.msgprint(msg, indicator="orange", alert=True)
 
-	@frappe.whitelist()
 	def grant_leave_alloc_for_employee(self):
 		if self.leaves_allocated:
 			frappe.throw(_("Leave already have been assigned for this Leave Policy Assignment"))
@@ -77,37 +89,34 @@ class LeavePolicyAssignment(Document):
 			date_of_joining = frappe.db.get_value("Employee", self.employee, "date_of_joining")
 
 			for leave_policy_detail in leave_policy.leave_policy_details:
-				if not leave_type_details.get(leave_policy_detail.leave_type).is_lwp:
+				leave_details = leave_type_details.get(leave_policy_detail.leave_type)
+
+				if not leave_details.is_lwp:
 					leave_allocation, new_leaves_allocated = self.create_leave_allocation(
-						leave_policy_detail.leave_type,
 						leave_policy_detail.annual_allocation,
-						leave_type_details,
+						leave_details,
 						date_of_joining,
 					)
-					leave_allocations[leave_policy_detail.leave_type] = {
+					leave_allocations[leave_details.name] = {
 						"name": leave_allocation,
 						"leaves": new_leaves_allocated,
 					}
 			self.db_set("leaves_allocated", 1)
 			return leave_allocations
 
-	def create_leave_allocation(
-		self, leave_type, new_leaves_allocated, leave_type_details, date_of_joining
-	):
+	def create_leave_allocation(self, annual_allocation, leave_details, date_of_joining):
 		# Creates leave allocation for the given employee in the provided leave period
 		carry_forward = self.carry_forward
-		if self.carry_forward and not leave_type_details.get(leave_type).is_carry_forward:
+		if self.carry_forward and not leave_details.is_carry_forward:
 			carry_forward = 0
 
-		new_leaves_allocated = self.get_new_leaves(
-			leave_type, new_leaves_allocated, leave_type_details, date_of_joining
-		)
+		new_leaves_allocated = self.get_new_leaves(annual_allocation, leave_details, date_of_joining)
 
 		allocation = frappe.get_doc(
 			dict(
 				doctype="Leave Allocation",
 				employee=self.employee,
-				leave_type=leave_type,
+				leave_type=leave_details.name,
 				from_date=self.effective_from,
 				to_date=self.effective_to,
 				new_leaves_allocated=new_leaves_allocated,
@@ -121,7 +130,7 @@ class LeavePolicyAssignment(Document):
 		allocation.submit()
 		return allocation.name, new_leaves_allocated
 
-	def get_new_leaves(self, leave_type, new_leaves_allocated, leave_type_details, date_of_joining):
+	def get_new_leaves(self, annual_allocation, leave_details, date_of_joining):
 		from frappe.model.meta import get_field_precision
 
 		precision = get_field_precision(
@@ -129,84 +138,150 @@ class LeavePolicyAssignment(Document):
 		)
 
 		# Earned Leaves and Compensatory Leaves are allocated by scheduler, initially allocate 0
-		if leave_type_details.get(leave_type).is_compensatory == 1:
+		if leave_details.is_compensatory:
 			new_leaves_allocated = 0
 
-		elif leave_type_details.get(leave_type).is_earned_leave == 1:
+		elif leave_details.is_earned_leave:
 			if not self.assignment_based_on:
 				new_leaves_allocated = 0
 			else:
 				# get leaves for past months if assignment is based on Leave Period / Joining Date
 				new_leaves_allocated = self.get_leaves_for_passed_months(
-					leave_type, new_leaves_allocated, leave_type_details, date_of_joining
+					annual_allocation, leave_details, date_of_joining
 				)
 
-		# Calculate leaves at pro-rata basis for employees joining after the beginning of the given leave period
-		elif getdate(date_of_joining) > getdate(self.effective_from):
-			remaining_period = (date_diff(self.effective_to, date_of_joining) + 1) / (
-				date_diff(self.effective_to, self.effective_from) + 1
+		else:
+			# calculate pro-rated leaves for other leave types
+			new_leaves_allocated = calculate_pro_rated_leaves(
+				annual_allocation,
+				date_of_joining,
+				self.effective_from,
+				self.effective_to,
+				is_earned_leave=False,
 			)
-			new_leaves_allocated = ceil(new_leaves_allocated * remaining_period)
+
+		# leave allocation should not exceed annual allocation as per policy assignment
+		if new_leaves_allocated > annual_allocation:
+			new_leaves_allocated = annual_allocation
 
 		return flt(new_leaves_allocated, precision)
 
-	def get_leaves_for_passed_months(
-		self, leave_type, new_leaves_allocated, leave_type_details, date_of_joining
-	):
+	def get_leaves_for_passed_months(self, annual_allocation, leave_details, date_of_joining):
 		from hrms.hr.utils import get_monthly_earned_leave
 
-		current_date = frappe.flags.current_date or getdate()
-		if current_date > getdate(self.effective_to):
-			current_date = getdate(self.effective_to)
+		def _get_current_and_from_date():
+			current_date = frappe.flags.current_date or getdate()
+			if current_date > getdate(self.effective_to):
+				current_date = getdate(self.effective_to)
 
-		from_date = getdate(self.effective_from)
-		if getdate(date_of_joining) > from_date:
-			from_date = getdate(date_of_joining)
+			from_date = getdate(self.effective_from)
+			if getdate(date_of_joining) > from_date:
+				from_date = getdate(date_of_joining)
 
-		months_passed = 0
-		based_on_doj = leave_type_details.get(leave_type).based_on_date_of_joining
+			return current_date, from_date
 
-		if current_date.year == from_date.year and current_date.month >= from_date.month:
-			months_passed = current_date.month - from_date.month
-			months_passed = add_current_month_if_applicable(months_passed, date_of_joining, based_on_doj)
+		def _get_months_passed(current_date, from_date, consider_current_month):
+			months_passed = 0
+			if current_date.year == from_date.year and current_date.month >= from_date.month:
+				months_passed = current_date.month - from_date.month
+				if consider_current_month:
+					months_passed += 1
 
-		elif current_date.year > from_date.year:
-			months_passed = (12 - from_date.month) + current_date.month
-			months_passed = add_current_month_if_applicable(months_passed, date_of_joining, based_on_doj)
+			elif current_date.year > from_date.year:
+				months_passed = (12 - from_date.month) + current_date.month
+				if consider_current_month:
+					months_passed += 1
+
+			return months_passed
+
+		def _get_pro_rata_period_end_date(consider_current_month):
+			# for earned leave, pro-rata period ends on the last day of the month
+			date = getdate(frappe.flags.current_date) or getdate()
+			if consider_current_month:
+				period_end_date = get_last_day(date)
+			else:
+				period_end_date = get_last_day(add_months(date, -1))
+
+			return period_end_date
+
+		def _calculate_leaves_for_passed_months(consider_current_month):
+			monthly_earned_leave = get_monthly_earned_leave(
+				date_of_joining,
+				annual_allocation,
+				leave_details.earned_leave_frequency,
+				leave_details.rounding,
+				pro_rated=False,
+			)
+
+			period_end_date = _get_pro_rata_period_end_date(consider_current_month)
+
+			if self.effective_from < date_of_joining <= period_end_date:
+				# if the employee joined within the allocation period in some previous month,
+				# calculate pro-rated leave for that month
+				# and normal monthly earned leave for remaining passed months
+				leaves = get_monthly_earned_leave(
+					date_of_joining,
+					annual_allocation,
+					leave_details.earned_leave_frequency,
+					leave_details.rounding,
+					get_first_day(date_of_joining),
+					get_last_day(date_of_joining),
+				)
+
+				leaves += monthly_earned_leave * (months_passed - 1)
+			else:
+				leaves = monthly_earned_leave * months_passed
+
+			return leaves
+
+		consider_current_month = is_earned_leave_applicable_for_current_month(
+			date_of_joining, leave_details.allocate_on_day
+		)
+		current_date, from_date = _get_current_and_from_date()
+		months_passed = _get_months_passed(current_date, from_date, consider_current_month)
 
 		if months_passed > 0:
-			monthly_earned_leave = get_monthly_earned_leave(
-				new_leaves_allocated,
-				leave_type_details.get(leave_type).earned_leave_frequency,
-				leave_type_details.get(leave_type).rounding,
-			)
-			new_leaves_allocated = monthly_earned_leave * months_passed
+			new_leaves_allocated = _calculate_leaves_for_passed_months(consider_current_month)
 		else:
 			new_leaves_allocated = 0
 
 		return new_leaves_allocated
 
 
-def add_current_month_if_applicable(months_passed, date_of_joining, based_on_doj):
+def calculate_pro_rated_leaves(
+	leaves, date_of_joining, period_start_date, period_end_date, is_earned_leave=False
+):
+	if not leaves or getdate(date_of_joining) <= getdate(period_start_date):
+		return leaves
+
+	precision = cint(frappe.db.get_single_value("System Settings", "float_precision", cache=True))
+	actual_period = date_diff(period_end_date, date_of_joining) + 1
+	complete_period = date_diff(period_end_date, period_start_date) + 1
+
+	leaves *= actual_period / complete_period
+
+	if is_earned_leave:
+		return flt(leaves, precision)
+	return rounded(leaves)
+
+
+def is_earned_leave_applicable_for_current_month(date_of_joining, allocate_on_day):
 	date = getdate(frappe.flags.current_date) or getdate()
 
-	if based_on_doj:
-		# if leave type allocation is based on DOJ, and the date of assignment creation is same as DOJ,
-		# then the month should be considered
-		if date.day == date_of_joining.day:
-			months_passed += 1
-	else:
-		last_day_of_month = get_last_day(date)
-		# if its the last day of the month, then that month should be considered
-		if last_day_of_month == date:
-			months_passed += 1
-
-	return months_passed
+	# If the date of assignment creation is >= the leave type's "Allocate On" date,
+	# then the current month should be considered
+	# because the employee is already entitled for the leave of that month
+	if (
+		(allocate_on_day == "Date of Joining" and date.day >= date_of_joining.day)
+		or (allocate_on_day == "First Day" and date >= get_first_day(date))
+		or (allocate_on_day == "Last Day" and date == get_last_day(date))
+	):
+		return True
+	return False
 
 
 @frappe.whitelist()
 def create_assignment_for_multiple_employees(employees, data):
-
 	if isinstance(employees, str):
 		employees = json.loads(employees)
 
@@ -214,6 +289,8 @@ def create_assignment_for_multiple_employees(employees, data):
 		data = frappe._dict(json.loads(data))
 
 	docs_name = []
+	failed = []
+
 	for employee in employees:
 		assignment = frappe.new_doc("Leave Policy Assignment")
 		assignment.employee = employee
@@ -224,16 +301,42 @@ def create_assignment_for_multiple_employees(employees, data):
 		assignment.leave_period = data.leave_period or None
 		assignment.carry_forward = data.carry_forward
 		assignment.save()
-		try:
-			assignment.submit()
-		except frappe.exceptions.ValidationError:
-			continue
 
-		frappe.db.commit()
+		savepoint = "before_assignment_submission"
+		try:
+			frappe.db.savepoint(savepoint)
+			assignment.submit()
+		except Exception as e:
+			frappe.db.rollback(save_point=savepoint)
+			assignment.log_error("Leave Policy Assignment submission failed")
+			failed.append(assignment.name)
 
 		docs_name.append(assignment.name)
 
+	if failed:
+		show_assignment_submission_status(failed)
+
 	return docs_name
+
+
+def show_assignment_submission_status(failed):
+	frappe.clear_messages()
+	assignment_list = [get_link_to_form("Leave Policy Assignment", entry) for entry in failed]
+
+	msg = _("Failed to submit some leave policy assignments:")
+	msg += " " + comma_and(assignment_list, False) + "<hr>"
+	msg += (
+		_("Check {0} for more details")
+		.format("<a href='/app/List/Error Log?reference_doctype=Leave Policy Assignment'>{0}</a>")
+		.format(_("Error Log"))
+	)
+
+	frappe.msgprint(
+		msg,
+		indicator="red",
+		title=_("Submission Failed"),
+		is_minimizable=True,
+	)
 
 
 def get_leave_type_details():
@@ -245,7 +348,7 @@ def get_leave_type_details():
 			"is_lwp",
 			"is_earned_leave",
 			"is_compensatory",
-			"based_on_date_of_joining",
+			"allocate_on_day",
 			"is_carry_forward",
 			"expire_carry_forwarded_leaves_after_days",
 			"earned_leave_frequency",

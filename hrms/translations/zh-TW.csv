@@ -1,0 +1,541 @@
+Cannot find active Leave Period,找不到有效的休假期
+Evaluation,評估
+Show Employee,顯示員工
+Bonus Payment Date,獎金支付日期
+HRA as per Salary Structure,HRA根據薪資結構
+Leave Type Name,休假類型名稱
+Employee Tax Exemption Sub Category,員工免稅子類別
+Total Estimated Cost,預計總成本
+Service Expense,服務費用
+Salary Structure Missing,薪酬結構缺失
+Brake Oil,剎車油
+Leave Policy Details,退出政策詳情
+Please set default template for Leave Status Notification in HR Settings.,請在人力資源設置中設置離職狀態通知的默認模板。
+Event Location,活動地點
+Daily Work Summary,每日工作總結
+Tax on flexible benefit,對靈活福利徵稅
+Validate Attendance,驗證出席
+Purpose of Travel,旅行目的
+Payroll Periods,工資期間
+Daily Work Summary Group,日常工作總結小組
+Shift Request,移位請求
+Select Terms and Conditions,選擇條款和條件
+Check-out Date,離開日期
+Allow Negative Balance,允許負平衡
+Add unused leaves from previous allocations,從以前的分配添加未使用的休假
+Net Pay cannot be less than 0,淨工資不能低於0,
+Leaves per Year,每年葉
+Leave Blocked,禁假的
+Bank Entries,銀行條目
+Please confirm once you have completed your training,完成培訓後請確認
+Inspection,檢查
+Emails salary slip to employee based on preferred email selected in Employee,電子郵件工資單員工根據員工選擇首選的電子郵件
+Cover Letter,求職信
+Expense Proof,費用證明
+Application period cannot be across two allocation records,申請期限不能跨越兩個分配記錄
+{0} already allocated for Employee {1} for period {2} to {3},{0}已分配給員工{1}週期為{2}到{3}
+Allow Encashment,允許封裝
+Leave Approver Name,離開批准人姓名
+Job Offer Term,招聘條件
+Medical,醫療
+Work From Date,從日期開始工作
+Non-Vegetarian,非素食主義者
+Show Leaves Of All Department Members In Calendar,在日曆中顯示所有部門成員的葉子
+Oil Change,換油
+Leave Balance,保持平衡
+Description of a Job Opening,一個空缺職位的說明
+Salary Component for timesheet based payroll.,薪酬部分基於時間表工資。
+Workshop,作坊
+Rented From Date,從日期租用
+Planned number of Positions,計劃的職位數量
+Costing Details,成本計算詳情
+Incentive Amount,激勵金額
+Create Salary Slips,創建工資單
+Salary Slip Timesheet,工資單時間表
+Course,課程
+Half day date should be in between from date and to date,半天的日期應該在從日期到日期之間
+Half Day Date is mandatory,半天日期是強制性的
+Resume Attachment,簡歷附
+Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period,注：總分配葉{0}應不低於已核定葉{1}期間
+Please set the Company,請設定公司
+Training Result Employee,訓練結果員工
+Select Payment Account to make Bank Entry,選擇付款科目，使銀行進入
+Claimed Amount,聲明金額
+Departure Datetime,離開日期時間
+Travel Request Costing,旅行請求成本計算
+Employee Onboarding Template,員工入職模板
+Row {0}# Paid Amount cannot be greater than requested advance amount,行{0}＃付費金額不能大於請求的提前金額
+Conference,會議
+Default Salary Structure,默認工資結構
+Vehicle Service,汽車服務
+Employee Promotion Details,員工促銷詳情
+Select Property,選擇屬性
+Work End Date,工作結束日期
+Base,基礎
+Travel To,前往
+Allow User,允許用戶
+Service Details,服務細節
+Service Details,服務細節
+Submitting Salary Slips...,提交工資單......
+Preview Salary Slip,預覽工資單
+There is no leave period in between {0} and {1},{0}和{1}之間沒有休假期限
+Expense Type,費用類型
+Please share your feedback to the training by clicking on 'Training Feedback' and then 'New',請通過點擊“培訓反饋”，然後點擊“新建”
+Max Benefit Amount,最大福利金額
+{0}: From {0} of type {1},{0}：從{0}類型{1}
+Expense Claim Type,費用報銷型
+Max benefits should be greater than zero to dispense benefits,最大的好處應該大於零來分配好處
+Shift Assignment,班次分配
+Sanctioned Amount cannot be greater than Claim Amount in Row {0}.,制裁金額不能大於索賠額行{0}。
+Do not include in total,不包括在內
+No employee found,無發現任何員工
+Event Status,事件狀態
+Score must be less than or equal to 5,得分必須小於或等於5,
+Employee Property History,員工財產歷史
+Select Users,選擇用戶
+Payroll Employee Detail,薪資員工詳細信息
+Import Attendance,進口出席
+Brake Pad,剎車片
+Leave Block List Date,休假區塊清單日期表
+Odometer Reading,里程表讀數
+Encashment Threshold Days,封存閾值天數
+Include holidays in Total no. of Working Days,包括節假日的總數。工作日
+Activity Name,活動名稱
+Number Of Employees,在職員工人數
+Employee {0} is not active or does not exist,員工{0}不活躍或不存在
+Total in words,總計大寫
+Employee Advance Summary,員工提前總結
+Salary Slips Submitted,提交工資單
+Publish on website,發布在網站上
+Default Bank / Cash account will be automatically updated in Salary Journal Entry when this mode is selected.,默認銀行/現金帳戶時，會選擇此模式可以自動在工資日記條目更新。
+Total leaves allocated is mandatory for Leave Type {0},為假期類型{0}分配的總分配數是強制性的
+Total Advance Amount,總預付金額
+Walk In,走在
+Added to details,添加到細節
+Stock Options,庫存期權
+Leave Application,休假申請
+Leave Block List Dates,休假區塊清單日期表
+Total Eligible HRA Exemption,合格的HRA豁免總數
+Train,培養
+Self-Study,自習
+Total Leaves Encashed,總葉子被掩飾
+Interest Amount,利息金額
+Employee Transfer Detail,員工轉移詳情
+Explanation,說明
+Key Performance Area,關鍵績效區
+Maximum amount eligible for the component {0} exceeds {1},符合組件{0}的最高金額超過{1}
+Department Approver,部門批准人
+Claimed,聲稱
+Deductions,扣除
+Leave Without Pay,無薪假
+Earnings,收益
+Employee Details,員工詳細信息
+Is Earned Leave,獲得休假
+Leave Allocations,離開分配
+Leave Type is madatory,離開類型是瘋狂的
+Staffing Plan,人員配備計劃
+Fiscal Year {0} not found,會計年度{0}未找到
+Optional Holiday List not set for leave period {0},可選假期列表未設置為假期{0}
+Gross Pay,工資總額
+International,國際
+Training Event,培訓活動
+As per your assigned Salary Structure you cannot apply for benefits,根據您指定的薪資結構，您無法申請福利
+"{0}: Employee email not found, hence email not sent",{0}：未發現員工的電子郵件，因此，電子郵件未發
+No Salary Structure assigned for Employee {0} on given date {1},給定日期{1}的員工{0}沒有分配薪金結構
+Value missing,價值缺失
+Team Updates,團隊更新
+Reminder,提醒
+Privilege Leave,特權休假
+Appraisal Template Goal,考核目標模板
+Earning,盈利
+Please update your status for this training event,請更新此培訓活動的狀態
+Food,食物
+Exit Interview Summary,退出面試摘要
+Application period cannot be outside leave allocation period,申請期間不能請假外分配週期
+Approval Status must be 'Approved' or 'Rejected',審批狀態必須被“批准”或“拒絕”
+Max Benefits (Amount),最大收益（金額）
+Gluten Free,不含麩質
+Worked On Holiday,在度假工作
+Goals,目標
+Employee Settings,員工設置
+Apprentice,學徒
+Leave Approver Mandatory In Leave Application,在離職申請中允許Approver為強制性
+"Job profile, qualifications required etc.",所需的工作概況，學歷等。
+House rented dates should be atleast 15 days apart,出租房屋的日期應至少相隔15天
+Employee Boarding Activity,員工寄宿活動
+{0} is not in a valid Payroll Period,{0}不在有效的工資核算期間
+Expense Claim {0} already exists for the Vehicle Log,報銷{0}已經存在車輛日誌
+Email Salary Slip to Employee,電子郵件工資單給員工
+Is Leave Without Pay,是無薪休假
+Leave Type {0} is not encashable,離開類型{0}不可放置
+Block Holidays on important days.,重要的日子中封鎖假期。
+Leave Details,留下細節
+Mode of Travel,旅行模式
+Payroll Date,工資日期
+Leaves Allocated Successfully for {0},{0}的排假成功
+Monthly Eligible Amount,每月合格金額
+Estimated Cost Per Position,估計的每位成本
+Employee Referral,員工推薦
+The day(s) on which you are applying for leave are holidays. You need not apply for leave.,這一天（S）對你所申請休假的假期。你不需要申請許可。
+Leave of type {0} cannot be longer than {1},請假類型{0}不能長於{1}
+Half Day Date should be in between Work From Date and Work End Date,半天日期應在工作日期和工作結束日期之間
+Funded Amount,資助金額
+Additional Salary,額外的薪水
+Please select Company and Designation,請選擇公司和指定
+For Employee,對於員工
+Total Amount Reimbursed,報銷金額合計
+This will submit Salary Slips and create accrual Journal Entry. Do you want to proceed?,這將提交工資單，並創建權責發生製日記賬分錄。你想繼續嗎？
+Employee Incentive,員工激勵
+Include holidays within leaves as leaves,休假中包含節日做休假
+From date can not be less than employee's joining date,起始日期不得少於員工的加入日期
+Earned Leave,獲得休假
+Salary Details,薪資明細
+Allocated Leaves,分配的葉子
+Total Leaves Allocated,已安排的休假總計
+Get Template,獲取模板
+Employee {0} already submited an apllication {1} for the payroll period {2},員工{0}已經在工資期間{2}提交了申請{1}
+Compensatory Leave Request,補償請假
+Applicant for a Job,申請人作業
+Employees HTML,員工HTML,
+Payroll Period Date,工資期間日期
+Training Events,培訓活動
+Employee {0} on Half day on {1},員工{0}上半天{1}
+Total working hours should not be greater than max working hours {0},總的工作時間不應超過最高工時更大{0}
+From Amount,從金額
+Encashment,兌現
+Maximum leave allowed in the leave type {0} is {1},假期類型{0}允許的最大休假是{1}
+Apply / Approve Leaves,申請/審批葉
+Earned Leave Frequency,獲得休假頻率
+Claim Benefit For,索賠利益
+Update Response,更新響應
+A {0} exists between {1} and {2} (,{1}和{2}之間存在{0}（
+Fuel Price,燃油價格
+Leave Type {0} cannot be allocated since it is leave without pay,休假類型{0}，因為它是停薪留職無法分配
+Flexible Benefits,靈活的好處
+No salary slip found to submit for the above selected criteria OR salary slip already submitted,沒有發現提交上述選定標准或已提交工資單的工資單
+For Employee Name,對於員工姓名
+"Leave cannot be applied/cancelled before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}",離開不能應用/前{0}取消，因為假平衡已經被搬入轉發在未來休假分配記錄{1}
+Deduct Tax For Unsubmitted Tax Exemption Proof,扣除未提交免稅證明的稅額
+Employee Tax Exemption Proof Submission,員工免稅證明提交
+Please set the Date Of Joining for employee {0},請為員工{0}設置加入日期
+Please set the Date Of Joining for employee {0},請為員工{0}設置加入日期
+Half Day Date should be between From Date and To Date,半天時間應該是從之間的日期和終止日期
+Shift Type,班次類型
+Total allocated leaves {0} cannot be less than already approved leaves {1} for the period,共分配葉{0}不能小於已經批准葉{1}期間
+HR Settings,人力資源設置
+Leave Block List Allow,休假區塊清單准許
+Total Exemption Amount,免稅總額
+From Date {0} cannot be after employee's relieving Date {1},起始日期{0}不能在員工解除日期之後{1}
+Employee Benefit Claim,員工福利索賠
+Remind Before,提醒之前
+{0} applicable after {1} working days,在{1}個工作日後適用{0}
+Total Deduction,扣除總額
+Job Description,職位描述
+Attendance Request,出席請求
+Approver,審批人
+Total Leave Days,總休假天數
+No more updates,沒有更多的更新
+Service Item,服務項目
+Expense Claim Detail,報銷詳情
+Salary Structure Assignment,薪酬結構分配
+Full-time,全日制
+Employees,僱員
+Offer Term,要約期限
+Job Opening,開放職位
+) for {0},）為{0}
+Training Event Employee,培訓活動的員工
+Advance,提前
+Block Date,封鎖日期
+Apply Now,現在申請
+Type of Proof,證明類型
+Appraisal Goal,考核目標
+Submit Salary Slip,提交工資單
+Leave Approval Notification Template,留下批准通知模板
+Number Of Positions,職位數
+Retention Bonus,保留獎金
+Travel,旅遊
+No active or default Salary Structure found for employee {0} for the given dates,發現員工{0}對於給定的日期沒有活動或默認的薪酬結構
+Allow Users,允許用戶
+Show Salary Slip,顯示工資單
+Any other details,任何其他細節
+Name of Organizer,主辦單位名稱
+Salary Slip of employee {0} already created for this period,員工的工資單{0}已為這一時期創建
+You can only submit Leave Encashment for a valid encashment amount,您只能提交離開封存以獲得有效的兌換金額
+Employee Separation Template,員工分離模板
+Attendance To Date,出席會議日期
+Compensatory Off,補假
+Assign Salary Structure,分配薪資結構
+Exemption Sub Category,豁免子類別
+Bonus Payment Date cannot be a past date,獎金支付日期不能是過去的日期
+Copy of Invitation/Announcement,邀請/公告的副本
+Total Absent,共缺席
+Joining Date,入職日期
+Employees working on a holiday,員工在假期工作
+Domestic,國內
+Employee Separation,員工分離
+Salary Component Account,薪金部分科目
+Leave Status Notification,離開狀態通知
+Travel Type,旅行類型
+Employee Benefit Application,員工福利申請
+Amount based on formula,量基於式
+Taxable Salary Slabs,應稅薪金板塊
+Max Benefit Amount (Yearly),最大福利金額（每年）
+Training Result,訓練結果
+Total Earning,總盈利
+Leave Approval Notification,留下批准通知
+Salary Slip Based on Timesheet,基於時間表工資單
+Employee Tax Exemption Declaration,僱員免稅聲明
+Applicable After (Working Days),適用於（工作日）
+Leave Type {0} cannot be carry-forwarded,休假類型{0}不能隨身轉發
+Payroll,工資表
+Key Responsibility Area,關鍵責任區
+Claim Date,索賠日期
+Upload HTML,上傳HTML,
+Property already added,已添加屬性
+Total Leaves,葉總
+Fuel Qty,燃油數量
+Application Status,應用現狀
+Salary Component Type,薪資組件類型
+To date can not greater than employee's relieving date,迄今為止不能超過員工的免除日期
+Only Leave Applications with status 'Approved' and 'Rejected' can be submitted,只留下地位的申請“已批准”和“拒絕”，就可以提交
+Block Days,封鎖天數
+Leave Type,休假類型
+Salary Register,薪酬註冊
+Require Full Funding,需要全額資助
+Condition and Formula Help,條件和公式幫助
+Engine Oil,機油
+Theory,理論
+No replies from,從沒有回复
+Taxable Salary Slab,應納稅薪金平台
+Unmarked Attendance,無標記考勤
+Creating Payment Entries......,創建支付條目......
+Probationary Period,試用期
+Reminded,提醒
+"Details of Sponsor (Name, Location)",贊助商詳情（名稱，地點）
+Future dates not allowed,未來的日期不允許
+Salary breakup based on Earning and Deduction.,工資分手基於盈利和演繹。
+New Leaves Allocated (In Days),新的排假（天）
+Event Details,活動詳情
+Add to Details,添加到詳細信息
+Taxi,出租車
+All Jobs,所有職位
+Employee Attendance Tool,員工考勤工具
+Salary Component,薪金部分
+Leave Allocation,排假
+Trainer Email,教練電子郵件
+"Leave cannot be allocated before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}",假，不是之前分配{0}，因為休假餘額已經結轉轉發在未來的假期分配記錄{1}
+New Employee ID,新員工ID,
+Non Diary,非日記
+Account {0} does not match with Company {1},科目{0}與公司{1}不符
+Please select Employee,請選擇員工
+Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2},行{0}＃分配的金額{1}不能大於無人認領的金額{2}
+No Staffing Plans found for this Designation,本指定沒有發現人員配備計劃
+Annual Allocation,年度分配
+Address of Organizer,主辦單位地址
+Applicable in the case of Employee Onboarding,適用於員工入職的情況
+Marked Attendance HTML,顯著的考勤HTML,
+"Start and end dates not in a valid Payroll Period, cannot calculate {0}.",開始日期和結束日期不在有效的工資核算期間內，無法計算{0}。
+Leave Block List Allowed,准許的休假區塊清單
+Expense Claim for Vehicle Log {0},報銷車輛登錄{0}
+Rented Car,租車
+Appraisal,評價
+Date is repeated,日期重複
+Total advance amount cannot be greater than total sanctioned amount,總預付金額不得超過全部認可金額
+Approval Status,審批狀態
+Invoice Ref,發票編號
+Bonus Amount,獎金金額
+Calls,電話
+Declarations,聲明
+Fully Sponsored,完全贊助
+Health Insurance Name,健康保險名稱
+Weightage (%),權重（％）
+Get Employees,獲得員工
+Please set default template for Leave Approval Notification in HR Settings.,請在人力資源設置中為離職審批通知設置默認模板。
+Select an employee to get the employee advance.,選擇一名員工以推進員工。
+Travel Funding,旅行資助
+Salary Slip ID,工資單編號
+Daily Work Summary Group User,日常工作摘要組用戶
+Creating Salary Slips...,創建工資單......
+Total Sanctioned Amount,總被制裁金額
+"If selected, the value specified or calculated in this component will not contribute to the earnings or deductions. However, it's value can be referenced by other components that can be added or deducted. ",如果選擇此項，則在此組件中指定或計算的值不會對收入或扣除貢獻。但是，它的值可以被添加或扣除的其他組件引用。
+"If selected, the value specified or calculated in this component will not contribute to the earnings or deductions. However, it's value can be referenced by other components that can be added or deducted. ",如果選擇此項，則在此組件中指定或計算的值不會對收入或扣除貢獻。但是，它的值可以被添加或扣除的其他組件引用。
+Fill the form and save it,填寫表格，並將其保存
+Leave Balance Before Application,離開平衡應用前
+Current Job Openings,當前職位空缺
+Leave Status Notification Template,離開狀態通知模板
+Identification Document Type,識別文件類型
+Employee Transfer Details,員工轉移詳情
+Seminar,研討會
+"Partially Sponsored, Require Partial Funding",部分贊助，需要部分資金
+Payroll Period,工資期
+Responsibilities,職責
+Expense Claim Account,報銷科目
+You are not present all day(s) between compensatory leave request days,您在補休請求日之間不是全天
+Job Offer Terms,招聘條款
+Variable,變量
+Required for Employee Creation,員工創建需要
+Intern,實習生
+Salary Structure,薪酬結構
+Employee Tax Exemption Declaration Category,員工免稅申報類別
+There are more holidays than working days this month.,還有比這個月工作日更多的假期。
+Overwrite Salary Structure Amount,覆蓋薪資結構金額
+Encashment Amount,填充量
+Current Openings,當前空缺
+Payroll Frequency,工資頻率
+Follow via Email,透過電子郵件追蹤
+Flight,飛行
+Carry Forward,發揚
+Trainer Name,培訓師姓名
+Total Present,總現
+You are not authorized to approve leaves on Block Dates,在限制的日期，您無權批准休假
+Leave Period,休假期間
+Salary Slip Loan,工資單貸款
+Send Emails At,發送電子郵件在
+Expense Approver Mandatory In Expense Claim,費用審批人必須在費用索賠中
+Please select Carry Forward if you also want to include previous fiscal year's balance leaves to this fiscal year,請選擇結轉，如果你還需要包括上一會計年度的資產負債葉本財年
+Vacancies,職位空缺
+Rounding,四捨五入
+Dispensed Amount (Pro-rated),分配金額（按比例分配）
+New Leaves Allocated,新的排假
+Appraisal Template Title,評估模板標題
+House Rent Payment Amount,房屋租金付款金額
+Tax Exemption Category,免稅類別
+Website Listing,網站列表
+More Details,更多詳情
+Exam,考試
+Travel Itinerary,旅遊行程
+Absent,缺席
+Staffing Plan Detail,人員配置計劃詳情
+Promotion Date,促銷日期
+"Salary already processed for period between {0} and {1}, Leave application period cannot be between this date range.",工資已經處理了與{0}和{1}，留下申請期之間不能在此日期範圍內的時期。
+Submit this to create the Employee record,提交這個來創建員工記錄
+Training,訓練
+Awaiting Response,正在等待回應
+Re-allocate Leaves,重新分配葉子
+Attendance From Date and Attendance To Date is mandatory,考勤起始日期和出席的日期，是強制性的
+Formula,式
+Value / Description,值/說明
+Vegetarian,素
+Probation,緩刑
+Total Estimated Budget,預計總預算
+Staffing Plan {0} already exist for designation {1},已存在人員配置計劃{0}以用於指定{1}
+House rented dates required for exemption calculation,房子租用日期計算免責
+Job Offer,工作機會
+Holiday List for Optional Leave,可選假期的假期列表
+Attendance for employee {0} is already marked for this day,考勤員工{0}已標記為這一天
+Transfer Date,轉移日期
+Travel Advance Required,需要旅行預付款
+Please add the remaining benefits {0} to any of the existing component,請將其餘好處{0}添加到任何現有組件
+Allow the following users to approve Leave Applications for block days.,允許以下用戶批准許可申請的區塊天。
+Lifecycle,生命週期
+Daily Work Summary Replies,日常工作總結回复
+Employee Grade,員工等級
+Piecework,計件工作
+Is Optional Leave,是可選的休假
+To date can not be less than from date,迄今為止不能少於起始日期
+Mode of payment is required to make a payment,付款方式需要進行付款
+Job Applicant Source,求職者來源
+Contact Number,聯繫電話
+Employee Tax Exemption Proof Submission Detail,員工免稅證明提交細節
+Has Certificate,有證書
+Unpaid Expense Claim,未付費用報銷
+Leave Policy Detail,退出政策細節
+Tax Exemption Proofs,免稅證明
+Invited,邀請
+Pay Against Benefit Claim,支付利益索賠
+Internet,互聯網
+Current Count,當前計數
+Expense Claim Advance,費用索賠預付款
+Component,零件
+Accrual Journal Entry for salaries from {0} to {1},從{0}到{1}的薪金的應計日記帳分錄
+Applies to Company,適用於公司
+{0} must be submitted,必須提交{0}
+Payment Days,付款日
+Deduct Tax For Unclaimed Employee Benefits,扣除未領取僱員福利的稅
+Arrival Datetime,到達日期時間
+Net Pay,淨收費
+Vehicle Log,車輛登錄
+Create Separate Payment Entry Against Benefit Claim,針對福利申請創建單獨的付款條目
+Total Claimed Amount,總索賠額
+Expense Date,犧牲日期
+Email Sent To,電子郵件發送給
+"Any other remarks, noteworthy effort that should go in the records.",任何其他言論，值得一提的努力，應該在記錄中。
+Salary Detail,薪酬詳細
+Default Amount,預設數量
+Payroll Settings,薪資設置
+Employee Tax Exemption Category,員工免稅類別
+Employee Transfer,員工轉移
+Earning Component,收入組件
+Training Feedback,培訓反饋
+Is Flexible Benefit,是靈活的好處
+Warning: Leave application contains following block dates,警告：離開包含以下日期區塊的應用程式
+Is Tax Applicable,是否適用稅務？
+Payment of {0} from {1} to {2},從{1}到{2}的{0}付款
+Max working hours against Timesheet,最大工作時間針對時間表
+Employee Health Insurance,員工健康保險
+Employee {0} is on Leave on {1},員工{0}暫停{1}
+Leave Encashment,離開兌現
+To Amount,金額
+Leave Block List Name,休假區塊清單名稱
+Present,現在
+Salary Slip of employee {0} already created for time sheet {1},員工的工資單{0}已為時間表創建{1}
+Salary Structure should have flexible benefit component(s) to dispense benefit amount,薪酬結構應該有靈活的福利組成來分配福利金額
+Only Tax Impact (Cannot Claim But Part of Taxable Income),只有稅收影響（不能索取但應稅收入的一部分）
+Refuelling Details,加油詳情
+Encashable days,可以忍受的日子
+Upload Attendance,上傳考勤
+Employee {0} has no maximum benefit amount,員工{0}沒有最大福利金額
+Leave Encashment Amount Per Day,每天離開沖泡量
+Maximum benefit amount of employee {0} exceeds {1},員工{0}的最高福利金額超過{1}
+Employee Emails,員工電子郵件
+Attendance,出勤
+"If not checked, the list will have to be added to each Department where it has to be applied.",如果未選取，則該列表將被加到每個應被應用到的部門。
+Exemption Category,豁免類別
+Clutch Plate,離合器壓盤
+Score Earned,得分
+Create New Employee Id,創建新的員工ID,
+Travel From,旅行從
+Total Score (Out of 5),總分（滿分5分）
+Please enable default incoming account before creating Daily Work Summary Group,請在創建日常工作摘要組之前啟用默認傳入科目
+Total Score,總得分
+Employee Onboarding,員工入職
+Sponsored Amount,贊助金額
+"If checked, Total no. of Working Days will include holidays, and this will reduce the value of Salary Per Day",如果選中，則總數。工作日將包括節假日，這將縮短每天的工資的價值
+Max Amount Eligible,最高金額合格
+Employee Benefit Application Detail,員工福利申請明細
+This is based on the attendance of this Employee,這是基於該員工的考勤
+Mark Attendance,出席人數
+Stop users from making Leave Applications on following days.,停止用戶在下面日期提出休假申請。
+Employee Benefits,員工福利
+Variable Based On Taxable Salary,基於應納稅工資的變量
+Employee relieved on {0} must be set as 'Left',員工解除對{0}必須設定為“左”
+Tax on additional salary,額外工資稅
+Salary Slips Created,工資單創建
+Identification Document Number,身份證明文件號碼
+Travel Request,旅行要求
+Attendance not submitted for {0} as it is a Holiday.,由於是假期，因此未出席{0}的考勤。
+Employee Promotion,員工晉升
+{0} is not in Optional Holiday List,{0}不在可選節日列表中
+Statistical Component,統計組成部分
+Statistical Component,統計組成部分
+Event Name,事件名稱
+From Date {0} cannot be before employee's joining Date {1},起始日期{0}不能在員工加入日期之前{1}
+Net pay cannot be negative,淨工資不能為負
+Employees Email Id,員工的電子郵件ID,
+Marked Attendance,明顯考勤
+Attendees,與會者
+Percent Deduction,扣除百分比
+Preferred Area for Lodging,住宿的首選地區
+Is Compensatory,是有補償的
+To date can not be equal or less than from date,迄今為止不能等於或少於日期
+Nothing to change,沒什麼可改變的
+Please select a csv file,請選擇一個csv文件
+Maximum benefit amount of component {0} exceeds {1},組件{0}的最大受益金額超過{1}
+Is Carry Forward,是弘揚
+Remaining Benefits (Yearly),剩餘福利（每年）
+Leave Policy,離開政策
+Training Program,培訓計劃
+IFSC Code,IFSC代碼
+Total Allocated Leaves,總分配的葉子
+Used Leaves,使用的葉子
+Available Leaves,可用的葉子

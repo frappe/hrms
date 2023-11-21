@@ -1,9 +1,8 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, add_months, today
 
 from hrms.hr.doctype.attendance_request.test_attendance_request import get_employee
@@ -13,16 +12,14 @@ from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
 test_dependencies = ["Employee"]
 
 
-class TestCompensatoryLeaveRequest(unittest.TestCase):
+class TestCompensatoryLeaveRequest(FrappeTestCase):
 	def setUp(self):
-		frappe.db.sql(""" delete from `tabCompensatory Leave Request`""")
-		frappe.db.sql(""" delete from `tabLeave Ledger Entry`""")
-		frappe.db.sql(""" delete from `tabLeave Allocation`""")
-		frappe.db.sql(
-			""" delete from `tabAttendance` where attendance_date in {0} """.format(
-				(today(), add_days(today(), -1))
-			)
-		)  # nosec
+		frappe.db.delete("Compensatory Leave Request")
+		frappe.db.delete("Leave Ledger Entry")
+		frappe.db.delete("Leave Allocation")
+		frappe.db.delete("Attendance")
+		frappe.db.delete("Leave Period")
+
 		create_leave_period(add_months(today(), -3), add_months(today(), 3), "_Test Company")
 		create_holiday_list()
 
@@ -99,6 +96,37 @@ class TestCompensatoryLeaveRequest(unittest.TestCase):
 		self.assertEqual(leave_ledger_entry[0].employee, compensatory_leave_request.employee)
 		self.assertEqual(leave_ledger_entry[0].leave_type, compensatory_leave_request.leave_type)
 		self.assertEqual(leave_ledger_entry[0].leaves, -1)
+
+	def test_half_day_compensatory_leave(self):
+		employee = get_employee()
+		mark_attendance(employee, status="Half Day")
+		date = today()
+		compensatory_leave_request = frappe.new_doc("Compensatory Leave Request")
+		compensatory_leave_request.update(
+			dict(
+				employee=employee.name,
+				leave_type="Compensatory Off",
+				work_from_date=date,
+				work_end_date=date,
+				reason="test",
+			)
+		)
+
+		# cannot apply for full day compensatory leave for a half day attendance
+		self.assertRaises(frappe.ValidationError, compensatory_leave_request.submit)
+
+		compensatory_leave_request.half_day = 1
+		compensatory_leave_request.half_day_date = date
+		compensatory_leave_request.submit()
+
+		# check creation of leave ledger entry on submission of leave request
+		leave_ledger_entry = frappe.get_all(
+			"Leave Ledger Entry",
+			fields="*",
+			filters={"transaction_name": compensatory_leave_request.leave_allocation},
+		)
+
+		self.assertEqual(leave_ledger_entry[0].leaves, 0.5)
 
 
 def get_compensatory_leave_request(employee, leave_date=today()):

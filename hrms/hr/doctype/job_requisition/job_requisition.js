@@ -13,6 +13,7 @@ frappe.ui.form.on("Job Requisition", {
 						: `<a id="referral_links" style="text-decoration: underline;">${__("Employee Referral")}</a>`;
 
 					const headline = __("{} {} open for this position.", [data.length, link]);
+					frm.dashboard.clear_headline();
 					frm.dashboard.set_headline(headline, "yellow");
 
 					$("#referral_links").on("click", (e) => {

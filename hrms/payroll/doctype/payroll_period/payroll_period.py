@@ -6,18 +6,19 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import add_months, cint, date_diff, flt, formatdate, getdate, month_diff
+from frappe.utils.caching import redis_cache
 
 from hrms.hr.utils import get_holiday_dates_for_employee
 
 
 class PayrollPeriod(Document):
 	def validate(self):
-		self.validate_dates()
+		self.validate_from_to_dates("start_date", "end_date")
 		self.validate_overlap()
 
-	def validate_dates(self):
-		if getdate(self.start_date) > getdate(self.end_date):
-			frappe.throw(_("End date can not be less than start date"))
+	def clear_cache(self):
+		get_payroll_period.clear_cache()
+		return super().clear_cache()
 
 	def validate_overlap(self):
 		query = """
@@ -83,31 +84,44 @@ def get_payroll_period_days(start_date, end_date, employee, company=None):
 	return False, False, False
 
 
+@redis_cache()
 def get_payroll_period(from_date, to_date, company):
-	payroll_period = frappe.db.sql(
-		"""
-		select name, start_date, end_date
-		from `tabPayroll Period`
-		where start_date<=%s and end_date>= %s and company=%s
-	""",
-		(from_date, to_date, company),
-		as_dict=1,
-	)
+	PayrollPeriod = frappe.qb.DocType("Payroll Period")
+
+	payroll_period = (
+		frappe.qb.from_(PayrollPeriod)
+		.select(PayrollPeriod.name, PayrollPeriod.start_date, PayrollPeriod.end_date)
+		.where(
+			(PayrollPeriod.start_date <= from_date)
+			& (PayrollPeriod.end_date >= to_date)
+			& (PayrollPeriod.company == company)
+		)
+	).run(as_dict=1)
 
 	return payroll_period[0] if payroll_period else None
 
 
 def get_period_factor(
-	employee, start_date, end_date, payroll_frequency, payroll_period, depends_on_payment_days=0
+	employee,
+	start_date,
+	end_date,
+	payroll_frequency,
+	payroll_period,
+	depends_on_payment_days=0,
+	joining_date=None,
+	relieving_date=None,
 ):
 	# TODO if both deduct checked update the factor to make tax consistent
 	period_start, period_end = payroll_period.start_date, payroll_period.end_date
-	joining_date, relieving_date = frappe.db.get_value(
-		"Employee", employee, ["date_of_joining", "relieving_date"]
-	)
+
+	if not joining_date and not relieving_date:
+		joining_date, relieving_date = frappe.get_cached_value(
+			"Employee", employee, ["date_of_joining", "relieving_date"]
+		)
 
 	if getdate(joining_date) > getdate(period_start):
 		period_start = joining_date
+
 	if relieving_date and getdate(relieving_date) < getdate(period_end):
 		period_end = relieving_date
 		if month_diff(period_end, start_date) > 1:

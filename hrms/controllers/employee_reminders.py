@@ -61,9 +61,10 @@ def send_holidays_reminder_in_advance(employee, holidays):
 	employee_doc = frappe.get_doc("Employee", employee)
 	employee_email = get_employee_email(employee_doc)
 	frequency = frappe.db.get_single_value("HR Settings", "frequency")
-
+	sender_email = get_sender_email()
 	email_header = _("Holidays this Month.") if frequency == "Monthly" else _("Holidays this Week.")
 	frappe.sendmail(
+		sender=sender_email,
 		recipients=[employee_email],
 		subject=_("Upcoming Holidays Reminder"),
 		template="holiday_reminder",
@@ -85,10 +86,12 @@ def send_holidays_reminder_in_advance(employee, holidays):
 # ------------------
 def send_birthday_reminders():
 	"""Send Employee birthday reminders if no 'Stop Birthday Reminders' is not set."""
+
 	to_send = int(frappe.db.get_single_value("HR Settings", "send_birthday_reminders"))
 	if not to_send:
 		return
 
+	sender = get_sender_email()
 	employees_born_today = get_employees_who_are_born_today()
 
 	for company, birthday_persons in employees_born_today.items():
@@ -97,7 +100,7 @@ def send_birthday_reminders():
 		recipients = list(set(employee_emails) - set(birthday_person_emails))
 
 		reminder_text, message = get_birthday_reminder_text_and_message(birthday_persons)
-		send_birthday_reminder(recipients, reminder_text, birthday_persons, message)
+		send_birthday_reminder(recipients, reminder_text, birthday_persons, message, sender)
 
 		if len(birthday_persons) > 1:
 			# special email for people sharing birthdays
@@ -105,7 +108,7 @@ def send_birthday_reminders():
 				person_email = person["user_id"] or person["personal_email"] or person["company_email"]
 				others = [d for d in birthday_persons if d != person]
 				reminder_text, message = get_birthday_reminder_text_and_message(others)
-				send_birthday_reminder(person_email, reminder_text, others, message)
+				send_birthday_reminder(person_email, reminder_text, others, message, sender)
 
 
 def get_birthday_reminder_text_and_message(birthday_persons):
@@ -124,8 +127,9 @@ def get_birthday_reminder_text_and_message(birthday_persons):
 	return reminder_text, message
 
 
-def send_birthday_reminder(recipients, reminder_text, birthday_persons, message):
+def send_birthday_reminder(recipients, reminder_text, birthday_persons, message, sender=None):
 	frappe.sendmail(
+		sender=sender,
 		recipients=recipients,
 		subject=_("Birthday Reminder"),
 		template="birthday_reminder",
@@ -206,53 +210,54 @@ def send_work_anniversary_reminders():
 	if not to_send:
 		return
 
+	sender = get_sender_email()
 	employees_joined_today = get_employees_having_an_event_today("work_anniversary")
+
+	message = _("A friendly reminder of an important date for our team.")
+	message += "<br>"
+	message += _("Everyone, let’s congratulate them on their work anniversary!")
 
 	for company, anniversary_persons in employees_joined_today.items():
 		employee_emails = get_all_employee_emails(company)
 		anniversary_person_emails = [get_employee_email(doc) for doc in anniversary_persons]
 		recipients = list(set(employee_emails) - set(anniversary_person_emails))
 
-		reminder_text, message = get_work_anniversary_reminder_text_and_message(anniversary_persons)
-		send_work_anniversary_reminder(recipients, reminder_text, anniversary_persons, message)
+		reminder_text = get_work_anniversary_reminder_text(anniversary_persons)
+		send_work_anniversary_reminder(recipients, reminder_text, anniversary_persons, message, sender)
 
 		if len(anniversary_persons) > 1:
 			# email for people sharing work anniversaries
 			for person in anniversary_persons:
 				person_email = person["user_id"] or person["personal_email"] or person["company_email"]
 				others = [d for d in anniversary_persons if d != person]
-				reminder_text, message = get_work_anniversary_reminder_text_and_message(others)
-				send_work_anniversary_reminder(person_email, reminder_text, others, message)
+				reminder_text = get_work_anniversary_reminder_text(others)
+				send_work_anniversary_reminder(person_email, reminder_text, others, message, sender)
 
 
-def get_work_anniversary_reminder_text_and_message(anniversary_persons):
+def get_work_anniversary_reminder_text(anniversary_persons: list) -> str:
 	if len(anniversary_persons) == 1:
 		anniversary_person = anniversary_persons[0]["name"]
-		persons_name = anniversary_person
 		# Number of years completed at the company
 		completed_years = getdate().year - anniversary_persons[0]["date_of_joining"].year
 		anniversary_person += f" completed {get_pluralized_years(completed_years)}"
 	else:
 		person_names_with_years = []
-		names = []
+		names_grouped_by_years = {}
+
 		for person in anniversary_persons:
-			person_text = person["name"]
-			names.append(person_text)
 			# Number of years completed at the company
 			completed_years = getdate().year - person["date_of_joining"].year
-			person_text += f" completed {get_pluralized_years(completed_years)}"
-			person_names_with_years.append(person_text)
+			names_grouped_by_years.setdefault(completed_years, []).append(person["name"])
+
+		for key, value in names_grouped_by_years.items():
+			person_names = comma_sep(value, frappe._("{0} & {1}"), False)
+			person_names_with_years.append(f"{person_names} completed {get_pluralized_years(key)}")
 
 		# converts ["Jim", "Rim", "Dim"] to Jim, Rim & Dim
 		anniversary_person = comma_sep(person_names_with_years, frappe._("{0} & {1}"), False)
-		persons_name = comma_sep(names, frappe._("{0} & {1}"), False)
+	reminder_text = _("Today {0} at our Company! 🎉").format(_(anniversary_person))
 
-	reminder_text = _("Today {0} at our Company! 🎉").format(anniversary_person)
-	message = _("A friendly reminder of an important date for our team.")
-	message += "<br>"
-	message += _("Everyone, let’s congratulate {0} on their work anniversary!").format(persons_name)
-
-	return reminder_text, message
+	return reminder_text
 
 
 def get_pluralized_years(years):
@@ -261,8 +266,15 @@ def get_pluralized_years(years):
 	return f"{years} years"
 
 
-def send_work_anniversary_reminder(recipients, reminder_text, anniversary_persons, message):
+def send_work_anniversary_reminder(
+	recipients,
+	reminder_text,
+	anniversary_persons,
+	message,
+	sender=None,
+):
 	frappe.sendmail(
+		sender=sender,
 		recipients=recipients,
 		subject=_("Work Anniversary Reminder"),
 		template="anniversary_reminder",
@@ -273,3 +285,7 @@ def send_work_anniversary_reminder(recipients, reminder_text, anniversary_person
 		),
 		header=_("Work Anniversary Reminder"),
 	)
+
+
+def get_sender_email() -> str | None:
+	return frappe.db.get_single_value("HR Settings", "sender_email")

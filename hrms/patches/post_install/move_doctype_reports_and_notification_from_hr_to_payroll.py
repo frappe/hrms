@@ -6,16 +6,11 @@ import frappe
 
 
 def execute():
-	if frappe.db.exists("DocType", {"module": "Payroll", "name": "Employee Incentive"}):
-		return
-
 	frappe.db.sql(
 		"""UPDATE `tabPrint Format`
-        SET module = 'Payroll'
-        WHERE name IN ('Salary Slip Based On Timesheet', 'Salary Slip Standard')"""
+		SET module = 'Payroll'
+		WHERE name IN ('Salary Slip Based On Timesheet', 'Salary Slip Standard')"""
 	)
-
-	frappe.db.sql("""UPDATE `tabNotification` SET module='Payroll' WHERE name='Retention Bonus';""")
 
 	doctypes_moved = [
 		"Employee Benefit Application Detail",

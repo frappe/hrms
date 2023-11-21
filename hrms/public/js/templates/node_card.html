@@ -1,0 +1,39 @@
+<div class="node-card card cursor-pointer" id="{%= id %}" data-parent="{%= parent %}">
+	<div class="node-meta d-flex flex-row">
+		<div class="mr-3">
+			<span class="avatar node-image" title="{{ name }}">
+				<span class="avatar-frame" src={{image}} style="background-image: url('{{ image }}')"></span>
+			</span>
+		</div>
+		<div>
+			<div class="node-name d-flex flex-row mb-1">
+				<span class="ellipsis">{{ name }}</span>
+				<div class="btn-sm btn-edit-node">
+					<a class="node-edit-icon">
+						<svg class="es-icon es-line icon-xs icon">
+							<use href="#es-line-edit"></use>
+						</svg>
+					</a>
+					<span class="edit-chart-node text-lg">{{ __("Edit") }}</span>
+				</div>
+			</div>
+			<div class="node-info d-flex flex-row mb-1">
+				{% if title %}
+					<div class="node-title text-muted ellipsis">{{ title }}&nbsp;&middot;&nbsp;</div>
+				{% endif %}
+
+				{% if is_mobile %}
+					<div class="node-connections text-muted ellipsis">
+						&nbsp;{{ connections }} <span class="fa fa-level-down"></span>
+					</div>
+				{% else %}
+					{% if connections == 1 %}
+						<div class="node-connections text-muted ellipsis">{{ connections }} Connection</div>
+					{% else %}
+						<div class="node-connections text-muted ellipsis">{{ connections }} Connections</div>
+					{% endif %}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>

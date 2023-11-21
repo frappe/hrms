@@ -109,7 +109,8 @@ frappe.ui.form.on('Interview', {
 					fieldname: 'result',
 					fieldtype: 'Select',
 					options: ['', 'Cleared', 'Rejected'],
-					label: __('Result')
+					label: __('Result'),
+					reqd: 1,
 				},
 				{
 					fieldname: 'feedback',
@@ -119,6 +120,7 @@ frappe.ui.form.on('Interview', {
 			],
 			size: 'large',
 			minimizable: true,
+			static: true,
 			primary_action: function(values) {
 				frappe.call({
 					method: 'hrms.hr.doctype.interview.interview.create_interview_feedback',
@@ -132,9 +134,10 @@ frappe.ui.form.on('Interview', {
 					frm.refresh();
 				});
 				d.hide();
-			}
+			},
 		});
 		d.show();
+		d.get_close_btn().show();
 	},
 
 	get_fields_for_feedback: function () {

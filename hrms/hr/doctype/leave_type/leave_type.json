@@ -27,14 +27,15 @@
   "expire_carry_forwarded_leaves_after_days",
   "encashment",
   "allow_encashment",
-  "encashment_threshold_days",
+  "max_encashable_leaves",
+  "non_encashable_leaves",
   "column_break_17",
   "earning_component",
   "earned_leave",
   "is_earned_leave",
   "earned_leave_frequency",
   "column_break_22",
-  "based_on_date_of_joining",
+  "allocate_on_day",
   "rounding"
  ],
  "fields": [
@@ -50,7 +51,7 @@
   },
   {
    "fieldname": "max_leaves_allowed",
-   "fieldtype": "Int",
+   "fieldtype": "Float",
    "label": "Maximum Leave Allocation Allowed"
   },
   {
@@ -138,12 +139,6 @@
   },
   {
    "depends_on": "allow_encashment",
-   "fieldname": "encashment_threshold_days",
-   "fieldtype": "Int",
-   "label": "Encashment Threshold Days"
-  },
-  {
-   "depends_on": "allow_encashment",
    "fieldname": "earning_component",
    "fieldtype": "Link",
    "label": "Earning Component",
@@ -169,7 +164,6 @@
    "options": "Monthly\nQuarterly\nHalf-Yearly\nYearly"
   },
   {
-   "default": "0.5",
    "depends_on": "is_earned_leave",
    "fieldname": "rounding",
    "fieldtype": "Select",
@@ -192,14 +186,6 @@
   },
   {
    "default": "0",
-   "depends_on": "eval:doc.is_earned_leave",
-   "description": "If checked, leave will be granted on the day of joining every month.",
-   "fieldname": "based_on_date_of_joining",
-   "fieldtype": "Check",
-   "label": "Based On Date Of Joining"
-  },
-  {
-   "default": "0",
    "depends_on": "eval:doc.is_lwp == 0",
    "fieldname": "is_ppl",
    "fieldtype": "Check",
@@ -219,12 +205,36 @@
    "fieldname": "allow_over_allocation",
    "fieldtype": "Check",
    "label": "Allow Over Allocation"
+  },
+  {
+   "default": "Last Day",
+   "depends_on": "eval:doc.is_earned_leave",
+   "description": "The day of the month when leaves should be allocated",
+   "fieldname": "allocate_on_day",
+   "fieldtype": "Select",
+   "label": "Allocate on Day",
+   "options": "First Day\nLast Day\nDate of Joining"
+  },
+  {
+   "depends_on": "allow_encashment",
+   "fieldname": "max_encashable_leaves",
+   "fieldtype": "Int",
+   "label": "Maximum Encashable Leaves",
+   "non_negative": 1
+  },
+  {
+   "depends_on": "allow_encashment",
+   "description": "Indicates the number of leaves that cannot be encashed from the leave balance. E.g. with a leave balance of 10 and 4 Non-Encashable Leaves, you can encash 6, while the remaining 4 can be carried forward or expired",
+   "fieldname": "non_encashable_leaves",
+   "fieldtype": "Int",
+   "label": "Non-Encashable Leaves",
+   "non_negative": 1
   }
  ],
  "icon": "fa fa-flag",
  "idx": 1,
  "links": [],
- "modified": "2022-05-09 05:01:38.957545",
+ "modified": "2023-10-23 15:34:04.281308",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Type",

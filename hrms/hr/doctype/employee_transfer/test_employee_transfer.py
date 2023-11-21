@@ -1,15 +1,14 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase, change_settings
 from frappe.utils import add_days, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 
-class TestEmployeeTransfer(unittest.TestCase):
+class TestEmployeeTransfer(FrappeTestCase):
 	def setUp(self):
 		create_company()
 
@@ -98,6 +97,16 @@ class TestEmployeeTransfer(unittest.TestCase):
 			self.assertEqual(data.department, department[0])
 			self.assertEqual(data.from_date, dt[0])
 			self.assertEqual(data.to_date, None)
+
+	@change_settings("System Settings", {"number_format": "#.###,##"})
+	def test_data_formatting_in_history(self):
+		from hrms.hr.utils import get_formatted_value
+
+		value = get_formatted_value("12.500,00", "Float")
+		self.assertEqual(value, 12500.0)
+
+		value = get_formatted_value("12.500,00", "Currency")
+		self.assertEqual(value, 12500.0)
 
 
 def create_company():

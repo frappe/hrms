@@ -1,8 +1,6 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, nowdate
@@ -48,6 +46,7 @@ class TestShiftRequest(FrappeTestCase):
 			"Shift Assignment", filters={"shift_request": shift_request.name}, fieldname="docstatus"
 		)
 		self.assertEqual(shift_assignment_docstatus, 2)
+		self.assertEqual(shift_request.docstatus, 2)
 
 	def test_shift_request_approver_perms(self):
 		setup_shift_type(shift_type="Day Shift")

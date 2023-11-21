@@ -158,10 +158,10 @@ class EmployeeBenefitApplication(Document):
 def get_max_benefits(employee, on_date):
 	sal_struct = get_assigned_salary_structure(employee, on_date)
 	if sal_struct:
-		max_benefits = frappe.db.get_value("Salary Structure", sal_struct, "max_benefits")
+		max_benefits = frappe.db.get_value("Salary Structure", sal_struct, "max_benefits", cache=True)
 		if max_benefits > 0:
 			return max_benefits
-	return False
+	return 0
 
 
 @frappe.whitelist()

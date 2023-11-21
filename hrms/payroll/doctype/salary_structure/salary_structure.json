@@ -13,7 +13,6 @@
   "column_break1",
   "is_active",
   "is_default",
-  "payroll_frequency",
   "currency",
   "amended_from",
   "time_sheet_earning_detail",
@@ -21,6 +20,7 @@
   "max_benefits",
   "column_break_17",
   "salary_slip_based_on_timesheet",
+  "payroll_frequency",
   "salary_component",
   "hour_rate",
   "earning_deduction",
@@ -44,7 +44,8 @@
    "label": "Company",
    "options": "Company",
    "remember_last_selected_value": 1,
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fieldname": "letter_head",
@@ -72,11 +73,12 @@
   },
   {
    "default": "Monthly",
-   "depends_on": "eval:(!doc.salary_slip_based_on_timesheet)",
+   "depends_on": "eval:doc.salary_slip_based_on_timesheet == 0",
    "fieldname": "payroll_frequency",
    "fieldtype": "Select",
    "label": "Payroll Frequency",
-   "options": "\nMonthly\nFortnightly\nBimonthly\nWeekly\nDaily"
+   "options": "\nMonthly\nFortnightly\nBimonthly\nWeekly\nDaily",
+   "search_index": 1
   },
   {
    "default": "No",
@@ -97,7 +99,8 @@
    "default": "0",
    "fieldname": "salary_slip_based_on_timesheet",
    "fieldtype": "Check",
-   "label": "Salary Slip Based on Timesheet"
+   "label": "Salary Slip Based on Timesheet",
+   "search_index": 1
   },
   {
    "fieldname": "column_break_17",
@@ -117,6 +120,7 @@
    "options": "currency"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "leave_encashment_amount_per_day",
    "fieldtype": "Currency",
    "label": "Leave Encashment Amount Per Day",
@@ -227,14 +231,15 @@
    "fieldtype": "Link",
    "label": "Currency",
    "options": "Currency",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-05 13:39:47.519380",
+ "modified": "2023-09-26 14:57:07.030623",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure",

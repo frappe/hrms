@@ -80,6 +80,7 @@ def update_erpnext_access():
 
 	update_erpnext_workspaces(True)
 	update_erpnext_roles(True)
+	set_app_logo()
 
 
 def update_erpnext_workspaces(disable: bool = True):
@@ -91,10 +92,8 @@ def update_erpnext_workspaces(disable: bool = True):
 		"CRM",
 		"ERPNext Integrations",
 		"ERPNext Settings",
-		"Loans",
 		"Manufacturing",
 		"Quality",
-		"Retail",
 		"Selling",
 		"Stock",
 		"Support",
@@ -121,6 +120,12 @@ def update_erpnext_roles(disable: bool = True):
 			role_doc.save()
 		except Exception:
 			pass
+
+
+def set_app_logo():
+	frappe.db.set_single_value(
+		"Navbar Settings", "app_logo", "/assets/hrms/images/frappe-hr-logo.svg"
+	)
 
 
 def get_erpnext_roles() -> set:

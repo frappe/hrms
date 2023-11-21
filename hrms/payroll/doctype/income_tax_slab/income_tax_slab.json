@@ -68,7 +68,6 @@
    "label": "Disabled"
   },
   {
-   "depends_on": "allow_tax_exemption",
    "fieldname": "standard_tax_exemption_amount",
    "fieldtype": "Currency",
    "label": "Standard Tax Exemption Amount",
@@ -109,7 +108,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-09 16:08:47.654119",
+ "modified": "2023-04-30 15:01:22.706198",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Income Tax Slab",

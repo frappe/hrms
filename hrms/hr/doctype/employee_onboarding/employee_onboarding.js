@@ -44,6 +44,11 @@ frappe.ui.form.on('Employee Onboarding', {
 			}, __('Create'));
 			frm.page.set_inner_btn_group_as_primary(__('Create'));
 		}
+		if (frm.doc.docstatus === 1 && (frm.doc.boarding_status === "Pending" || frm.doc.boarding_status === "In Process")) {
+			frm.add_custom_button(__("Mark as Completed"), function() {
+				frm.trigger("mark_as_completed");
+			});
+		}
 	},
 
 	employee_onboarding_template: function(frm) {
@@ -79,5 +84,18 @@ frappe.ui.form.on('Employee Onboarding', {
 		} else {
 			frm.set_value('employee', '');
 		}
-	}
+	},
+
+	mark_as_completed(frm) {
+		frm
+			.call({
+				method: "mark_onboarding_as_completed",
+				doc: frm.doc,
+				freeze: true,
+				freeze_message: __("Completing onboarding"),
+			})
+			.then((r) => {
+				frm.refresh();
+			});
+	},
 });

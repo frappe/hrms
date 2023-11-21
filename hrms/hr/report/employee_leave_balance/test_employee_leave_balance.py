@@ -2,9 +2,8 @@
 # License: GNU General Public License v3. See license.txt
 
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, add_months, flt, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -23,7 +22,7 @@ from hrms.tests.test_utils import get_first_sunday
 test_records = frappe.get_test_records("Leave Type")
 
 
-class TestEmployeeLeaveBalance(unittest.TestCase):
+class TestEmployeeLeaveBalance(FrappeTestCase):
 	def setUp(self):
 		for dt in [
 			"Leave Application",
@@ -155,7 +154,6 @@ class TestEmployeeLeaveBalance(unittest.TestCase):
 	@set_holiday_list("_Test Emp Balance Holiday List", "_Test Company")
 	def test_opening_balance_considers_carry_forwarded_leaves(self):
 		leave_type = create_leave_type(leave_type_name="_Test_CF_leave_expiry", is_carry_forward=1)
-		leave_type.insert()
 
 		# 30 leaves allocated for first half of the year
 		allocation1 = make_allocation_record(

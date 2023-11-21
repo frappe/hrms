@@ -34,6 +34,13 @@ frappe.ui.form.on("Leave Allocation", {
 				});
 			}
 		}
+
+		if (!frm.doc.__islocal && frm.doc.leave_policy_assignment) {
+			frappe.db.get_value("Leave Type", frm.doc.leave_type, "is_earned_leave", (r) => {
+				if (cint(r?.is_earned_leave))
+					frm.set_df_property("new_leaves_allocated", "read_only", 1);
+			});
+		}
 	},
 
 	expire_allocation: function(frm) {

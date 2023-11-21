@@ -308,15 +308,7 @@ def make_salary_slip(
 ):
 	def postprocess(source, target):
 		if employee:
-			employee_details = frappe.db.get_value(
-				"Employee", employee, ["employee_name", "branch", "designation", "department"], as_dict=1
-			)
 			target.employee = employee
-			target.employee_name = employee_details.employee_name
-			target.branch = employee_details.branch
-			target.designation = employee_details.designation
-			target.department = employee_details.department
-
 			if posting_date:
 				target.posting_date = posting_date
 
@@ -339,6 +331,7 @@ def make_salary_slip(
 		postprocess,
 		ignore_child_tables=True,
 		ignore_permissions=ignore_permissions,
+		cached=True,
 	)
 
 	if cint(as_print):
@@ -353,7 +346,7 @@ def get_employees(salary_structure):
 	employees = frappe.get_list(
 		"Salary Structure Assignment",
 		filters={"salary_structure": salary_structure, "docstatus": 1},
-		fields=["employee"],
+		pluck="employee",
 	)
 
 	if not employees:
@@ -363,7 +356,7 @@ def get_employees(salary_structure):
 			).format(salary_structure, salary_structure)
 		)
 
-	return list(set([d.employee for d in employees]))
+	return list(set(employees))
 
 
 @frappe.whitelist()

@@ -6,7 +6,7 @@ import frappe
 
 
 def execute():
-	if not frappe.db.table_exists("Daily Work Summary Group"):
+	if frappe.db.table_exists("Daily Work Summary Settings"):
 		frappe.reload_doc("hr", "doctype", "daily_work_summary_group")
 		frappe.reload_doc("hr", "doctype", "daily_work_summary_group_user")
 
@@ -37,6 +37,7 @@ def execute():
 					)
 					new_group.flags.ignore_permissions = True
 					new_group.flags.ignore_validate = True
+					new_group.flags.ignore_mandatory = True
 					new_group.insert(ignore_if_duplicate=True)
 
 	frappe.delete_doc_if_exists("DocType", "Daily Work Summary Settings")

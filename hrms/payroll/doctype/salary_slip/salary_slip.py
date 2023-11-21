@@ -1,20 +1,26 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
-import math
-from datetime import date, datetime, timedelta
+
+import unicodedata
+from datetime import date
 
 import frappe
 from frappe import _, msgprint
 from frappe.model.naming import make_autoname
+from frappe.query_builder import Order
+from frappe.query_builder.functions import Sum
 from frappe.utils import (
 	add_days,
+	ceil,
 	cint,
 	cstr,
 	date_diff,
+	floor,
 	flt,
 	formatdate,
 	get_first_day,
+	get_link_to_form,
 	getdate,
 	money_in_words,
 	rounded,
@@ -23,16 +29,10 @@ from frappe.utils.background_jobs import enqueue
 
 import erpnext
 from erpnext.accounts.utils import get_fiscal_year
-from erpnext.loan_management.doctype.loan_repayment.loan_repayment import (
-	calculate_amounts,
-	create_repayment_entry,
-)
-from erpnext.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
-	process_loan_interest_accrual_for_term_loans,
-)
+from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 from erpnext.utilities.transaction_base import TransactionBase
 
-from hrms.hr.utils import get_holiday_dates_for_employee, validate_active_employee
+from hrms.hr.utils import validate_active_employee
 from hrms.payroll.doctype.additional_salary.additional_salary import get_additional_salaries
 from hrms.payroll.doctype.employee_benefit_application.employee_benefit_application import (
 	get_benefit_component_amount,
@@ -46,6 +46,19 @@ from hrms.payroll.doctype.payroll_period.payroll_period import (
 	get_payroll_period,
 	get_period_factor,
 )
+from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import (
+	cancel_loan_repayment_entry,
+	make_loan_repayment_entry,
+	set_loan_repayment,
+)
+from hrms.payroll.utils import sanitize_expression
+from hrms.utils.holiday_list import get_holiday_dates_between
+
+# cache keys
+HOLIDAYS_BETWEEN_DATES = "holidays_between_dates"
+LEAVE_TYPE_MAP = "leave_type_map"
+SALARY_COMPONENT_VALUES = "salary_component_values"
+TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 
 
 class SalarySlip(TransactionBase):
@@ -59,16 +72,70 @@ class SalarySlip(TransactionBase):
 			"round": round,
 			"date": date,
 			"getdate": getdate,
+			"ceil": ceil,
+			"floor": floor,
 		}
 
 	def autoname(self):
 		self.name = make_autoname(self.series)
+
+	@property
+	def joining_date(self):
+		if not hasattr(self, "__joining_date"):
+			self.__joining_date = frappe.get_cached_value(
+				"Employee",
+				self.employee,
+				"date_of_joining",
+			)
+
+		return self.__joining_date
+
+	@property
+	def relieving_date(self):
+		if not hasattr(self, "__relieving_date"):
+			self.__relieving_date = frappe.get_cached_value(
+				"Employee",
+				self.employee,
+				"relieving_date",
+			)
+
+		return self.__relieving_date
+
+	@property
+	def payroll_period(self):
+		if not hasattr(self, "__payroll_period"):
+			self.__payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
+
+		return self.__payroll_period
+
+	@property
+	def actual_start_date(self):
+		if not hasattr(self, "__actual_start_date"):
+			self.__actual_start_date = self.start_date
+
+			if self.joining_date and getdate(self.start_date) < self.joining_date <= getdate(self.end_date):
+				self.__actual_start_date = self.joining_date
+
+		return self.__actual_start_date
+
+	@property
+	def actual_end_date(self):
+		if not hasattr(self, "__actual_end_date"):
+			self.__actual_end_date = self.end_date
+
+			if self.relieving_date and getdate(self.start_date) <= self.relieving_date < getdate(
+				self.end_date
+			):
+				self.__actual_end_date = self.relieving_date
+
+		return self.__actual_end_date
 
 	def validate(self):
 		self.status = self.get_status()
 		validate_active_employee(self.employee)
 		self.validate_dates()
 		self.check_existing()
+
 		if not self.salary_slip_based_on_timesheet:
 			self.get_date_details()
 
@@ -78,16 +145,18 @@ class SalarySlip(TransactionBase):
 		else:
 			self.get_working_days_details(lwp=self.leave_without_pay)
 
+		self.set_salary_structure_assignement()
 		self.calculate_net_pay()
 		self.compute_year_to_date()
 		self.compute_month_to_date()
 		self.compute_component_wise_year_to_date()
+
 		self.add_leave_balances()
 
-		if frappe.db.get_single_value("Payroll Settings", "max_working_hours_against_timesheet"):
-			max_working_hours = frappe.db.get_single_value(
-				"Payroll Settings", "max_working_hours_against_timesheet"
-			)
+		max_working_hours = frappe.db.get_single_value(
+			"Payroll Settings", "max_working_hours_against_timesheet"
+		)
+		if max_working_hours:
 			if self.salary_slip_based_on_timesheet and (self.total_working_hours > int(max_working_hours)):
 				frappe.msgprint(
 					_("Total working hours should not be greater than max working hours {0}").format(
@@ -104,17 +173,24 @@ class SalarySlip(TransactionBase):
 		self.total_in_words = money_in_words(total, doc_currency)
 		self.base_total_in_words = money_in_words(base_total, company_currency)
 
+	def on_update(self):
+		self.publish_update()
+
 	def on_submit(self):
 		if self.net_pay < 0:
 			frappe.throw(_("Net Pay cannot be less than 0"))
 		else:
 			self.set_status()
 			self.update_status(self.name)
-			self.make_loan_repayment_entry()
-			if (
-				frappe.db.get_single_value("Payroll Settings", "email_salary_slip_to_employee")
-			) and not frappe.flags.via_payroll_entry:
-				self.email_salary_slip()
+
+			make_loan_repayment_entry(self)
+
+			if not frappe.flags.via_payroll_entry and not frappe.flags.in_patch:
+				email_salary_slip = cint(
+					frappe.db.get_single_value("Payroll Settings", "email_salary_slip_to_employee")
+				)
+				if email_salary_slip:
+					self.email_salary_slip()
 
 		self.update_payment_status_for_gratuity()
 
@@ -140,7 +216,19 @@ class SalarySlip(TransactionBase):
 		self.set_status()
 		self.update_status()
 		self.update_payment_status_for_gratuity()
-		self.cancel_loan_repayment_entry()
+
+		cancel_loan_repayment_entry(self)
+		self.publish_update()
+
+	def publish_update(self):
+		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
+		if frappe.session.user == employee_user:
+			frappe.publish_realtime(
+				event="hrms:update_salary_slips",
+				message={"employee": self.employee},
+				user=frappe.session.user,
+				after_commit=True,
+			)
 
 	def on_trash(self):
 		from frappe.model.naming import revert_series_if_last
@@ -156,19 +244,18 @@ class SalarySlip(TransactionBase):
 			status = "Cancelled"
 		return status
 
-	def validate_dates(self, joining_date=None, relieving_date=None):
-		if date_diff(self.end_date, self.start_date) < 0:
-			frappe.throw(_("To date cannot be before From date"))
+	def validate_dates(self):
+		self.validate_from_to_dates("start_date", "end_date")
 
-		if not joining_date:
-			joining_date, relieving_date = frappe.get_cached_value(
-				"Employee", self.employee, ("date_of_joining", "relieving_date")
+		if not self.joining_date:
+			frappe.throw(
+				_("Please set the Date Of Joining for employee {0}").format(frappe.bold(self.employee_name))
 			)
 
-		if date_diff(self.end_date, joining_date) < 0:
+		if date_diff(self.end_date, self.joining_date) < 0:
 			frappe.throw(_("Cannot create Salary Slip for Employee joining after Payroll Period"))
 
-		if relieving_date and date_diff(relieving_date, self.start_date) < 0:
+		if self.relieving_date and date_diff(self.relieving_date, self.start_date) < 0:
 			frappe.throw(_("Cannot create Salary Slip for Employee who has left before Payroll Period"))
 
 	def is_rounding_total_disabled(self):
@@ -176,17 +263,24 @@ class SalarySlip(TransactionBase):
 
 	def check_existing(self):
 		if not self.salary_slip_based_on_timesheet:
-			cond = ""
-			if self.payroll_entry:
-				cond += "and payroll_entry = '{0}'".format(self.payroll_entry)
-			ret_exist = frappe.db.sql(
-				"""select name from `tabSalary Slip`
-						where start_date = %s and end_date = %s and docstatus != 2
-						and employee = %s and name != %s {0}""".format(
-					cond
-				),
-				(self.start_date, self.end_date, self.employee, self.name),
+			ss = frappe.qb.DocType("Salary Slip")
+			query = (
+				frappe.qb.from_(ss)
+				.select(ss.name)
+				.where(
+					(ss.start_date == self.start_date)
+					& (ss.end_date == self.end_date)
+					& (ss.docstatus != 2)
+					& (ss.employee == self.employee)
+					& (ss.name != self.name)
+				)
 			)
+
+			if self.payroll_entry:
+				query = query.where(ss.payroll_entry == self.payroll_entry)
+
+			ret_exist = query.run()
+
 			if ret_exist:
 				frappe.throw(
 					_("Salary Slip of employee {0} already created for this period").format(self.employee)
@@ -216,66 +310,66 @@ class SalarySlip(TransactionBase):
 			if not self.salary_slip_based_on_timesheet:
 				self.get_date_details()
 
-			joining_date, relieving_date = frappe.get_cached_value(
-				"Employee", self.employee, ("date_of_joining", "relieving_date")
-			)
-
-			self.validate_dates(joining_date, relieving_date)
+			self.validate_dates()
 
 			# getin leave details
-			self.get_working_days_details(joining_date, relieving_date)
-			struct = self.check_sal_struct(joining_date, relieving_date)
+			self.get_working_days_details()
+			struct = self.check_sal_struct()
 
 			if struct:
-				self._salary_structure_doc = frappe.get_doc("Salary Structure", struct)
+				self._salary_structure_doc = frappe.get_cached_doc("Salary Structure", struct)
 				self.salary_slip_based_on_timesheet = (
 					self._salary_structure_doc.salary_slip_based_on_timesheet or 0
 				)
 				self.set_time_sheet()
 				self.pull_sal_struct()
-				ps = frappe.db.get_value(
-					"Payroll Settings", None, ["payroll_based_on", "consider_unmarked_attendance_as"], as_dict=1
-				)
-				return [ps.payroll_based_on, ps.consider_unmarked_attendance_as]
 
 	def set_time_sheet(self):
 		if self.salary_slip_based_on_timesheet:
 			self.set("timesheets", [])
-			timesheets = frappe.db.sql(
-				""" select * from `tabTimesheet` where employee = %(employee)s and start_date BETWEEN %(start_date)s AND %(end_date)s and (status = 'Submitted' or
-				status = 'Billed')""",
-				{"employee": self.employee, "start_date": self.start_date, "end_date": self.end_date},
-				as_dict=1,
-			)
+
+			Timesheet = frappe.qb.DocType("Timesheet")
+			timesheets = (
+				frappe.qb.from_(Timesheet)
+				.select(Timesheet.star)
+				.where(
+					(Timesheet.employee == self.employee)
+					& (Timesheet.start_date.between(self.start_date, self.end_date))
+					& ((Timesheet.status == "Submitted") | (Timesheet.status == "Billed"))
+				)
+			).run(as_dict=1)
 
 			for data in timesheets:
 				self.append("timesheets", {"time_sheet": data.name, "working_hours": data.total_hours})
 
-	def check_sal_struct(self, joining_date, relieving_date):
-		cond = """and sa.employee=%(employee)s and (sa.from_date <= %(start_date)s or
-				sa.from_date <= %(end_date)s or sa.from_date <= %(joining_date)s)"""
-		if self.payroll_frequency:
-			cond += """and ss.payroll_frequency = '%(payroll_frequency)s'""" % {
-				"payroll_frequency": self.payroll_frequency
-			}
+	def check_sal_struct(self):
+		ss = frappe.qb.DocType("Salary Structure")
+		ssa = frappe.qb.DocType("Salary Structure Assignment")
 
-		st_name = frappe.db.sql(
-			"""
-			select sa.salary_structure
-			from `tabSalary Structure Assignment` sa join `tabSalary Structure` ss
-			where sa.salary_structure=ss.name
-				and sa.docstatus = 1 and ss.docstatus = 1 and ss.is_active ='Yes' %s
-			order by sa.from_date desc
-			limit 1
-		"""
-			% cond,
-			{
-				"employee": self.employee,
-				"start_date": self.start_date,
-				"end_date": self.end_date,
-				"joining_date": joining_date,
-			},
+		query = (
+			frappe.qb.from_(ssa)
+			.join(ss)
+			.on(ssa.salary_structure == ss.name)
+			.select(ssa.salary_structure)
+			.where(
+				(ssa.docstatus == 1)
+				& (ss.docstatus == 1)
+				& (ss.is_active == "Yes")
+				& (ssa.employee == self.employee)
+				& (
+					(ssa.from_date <= self.start_date)
+					| (ssa.from_date <= self.end_date)
+					| (ssa.from_date <= self.joining_date)
+				)
+			)
+			.orderby(ssa.from_date, order=Order.desc)
+			.limit(1)
 		)
+
+		if not self.salary_slip_based_on_timesheet and self.payroll_frequency:
+			query = query.where(ss.payroll_frequency == self.payroll_frequency)
+
+		st_name = query.run()
 
 		if st_name:
 			self.salary_structure = st_name[0][0]
@@ -306,12 +400,27 @@ class SalarySlip(TransactionBase):
 
 		make_salary_slip(self._salary_structure_doc.name, self)
 
-	def get_working_days_details(
-		self, joining_date=None, relieving_date=None, lwp=None, for_preview=0
-	):
-		payroll_based_on = frappe.db.get_value("Payroll Settings", None, "payroll_based_on")
-		include_holidays_in_total_working_days = frappe.db.get_single_value(
-			"Payroll Settings", "include_holidays_in_total_working_days"
+	def get_working_days_details(self, lwp=None, for_preview=0):
+		payroll_settings = frappe.get_cached_value(
+			"Payroll Settings",
+			None,
+			(
+				"payroll_based_on",
+				"include_holidays_in_total_working_days",
+				"consider_marked_attendance_on_holidays",
+				"daily_wages_fraction_for_half_day",
+				"consider_unmarked_attendance_as",
+			),
+			as_dict=1,
+		)
+
+		consider_marked_attendance_on_holidays = (
+			payroll_settings.include_holidays_in_total_working_days
+			and payroll_settings.consider_marked_attendance_on_holidays
+		)
+
+		daily_wages_fraction_for_half_day = (
+			flt(payroll_settings.daily_wages_fraction_for_half_day) or 0.5
 		)
 
 		working_days = date_diff(self.end_date, self.start_date) + 1
@@ -321,50 +430,57 @@ class SalarySlip(TransactionBase):
 			return
 
 		holidays = self.get_holidays_for_employee(self.start_date, self.end_date)
-		working_days_list = date_range(getdate(self.start_date), getdate(self.end_date))
+		working_days_list = [
+			add_days(getdate(self.start_date), days=day) for day in range(0, working_days)
+		]
 
-		if not cint(include_holidays_in_total_working_days):
+		if not cint(payroll_settings.include_holidays_in_total_working_days):
 			working_days_list = [i for i in working_days_list if i not in holidays]
 
 			working_days -= len(holidays)
 			if working_days < 0:
 				frappe.throw(_("There are more holidays than working days this month."))
 
-		if not payroll_based_on:
+		if not payroll_settings.payroll_based_on:
 			frappe.throw(_("Please set Payroll based on in Payroll settings"))
 
-		if payroll_based_on == "Attendance":
-			actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(holidays)
+		if payroll_settings.payroll_based_on == "Attendance":
+			actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(
+				holidays, daily_wages_fraction_for_half_day, consider_marked_attendance_on_holidays
+			)
 			self.absent_days = absent
 		else:
-			actual_lwp = self.calculate_lwp_or_ppl_based_on_leave_application(holidays, working_days_list)
+			actual_lwp = self.calculate_lwp_or_ppl_based_on_leave_application(
+				holidays, working_days_list, daily_wages_fraction_for_half_day
+			)
 
 		if not lwp:
 			lwp = actual_lwp
 		elif lwp != actual_lwp:
 			frappe.msgprint(
-				_("Leave Without Pay does not match with approved {} records").format(payroll_based_on)
+				_("Leave Without Pay does not match with approved {} records").format(
+					payroll_settings.payroll_based_on
+				)
 			)
 
 		self.leave_without_pay = lwp
 		self.total_working_days = working_days
 
-		payment_days = self.get_payment_days(
-			joining_date, relieving_date, include_holidays_in_total_working_days
-		)
+		payment_days = self.get_payment_days(payroll_settings.include_holidays_in_total_working_days)
 
 		if flt(payment_days) > flt(lwp):
 			self.payment_days = flt(payment_days) - flt(lwp)
 
-			if payroll_based_on == "Attendance":
+			if payroll_settings.payroll_based_on == "Attendance":
 				self.payment_days -= flt(absent)
 
-			consider_unmarked_attendance_as = (
-				frappe.db.get_value("Payroll Settings", None, "consider_unmarked_attendance_as") or "Present"
-			)
+			consider_unmarked_attendance_as = payroll_settings.consider_unmarked_attendance_as or "Present"
 
-			if payroll_based_on == "Attendance" and consider_unmarked_attendance_as == "Absent":
-				unmarked_days = self.get_unmarked_days(include_holidays_in_total_working_days)
+			if (
+				payroll_settings.payroll_based_on == "Attendance"
+				and consider_unmarked_attendance_as == "Absent"
+			):
+				unmarked_days = self.get_unmarked_days(payroll_settings.include_holidays_in_total_working_days)
 				self.absent_days += unmarked_days  # will be treated as absent
 				self.payment_days -= unmarked_days
 		else:
@@ -372,40 +488,33 @@ class SalarySlip(TransactionBase):
 
 	def get_unmarked_days(self, include_holidays_in_total_working_days):
 		unmarked_days = self.total_working_days
-		joining_date, relieving_date = frappe.get_cached_value(
-			"Employee", self.employee, ["date_of_joining", "relieving_date"]
-		)
-		start_date = self.start_date
-		end_date = self.end_date
 
-		if joining_date and (getdate(self.start_date) < joining_date <= getdate(self.end_date)):
-			start_date = joining_date
+		if self.actual_start_date != self.start_date:
 			unmarked_days = self.get_unmarked_days_based_on_doj_or_relieving(
 				unmarked_days,
 				include_holidays_in_total_working_days,
 				self.start_date,
-				add_days(joining_date, -1),
+				add_days(self.joining_date, -1),
 			)
 
-		if relieving_date and (getdate(self.start_date) <= relieving_date < getdate(self.end_date)):
-			end_date = relieving_date
+		if self.actual_end_date != self.end_date:
 			unmarked_days = self.get_unmarked_days_based_on_doj_or_relieving(
 				unmarked_days,
 				include_holidays_in_total_working_days,
-				add_days(relieving_date, 1),
+				add_days(self.relieving_date, 1),
 				self.end_date,
 			)
 
 		# exclude days for which attendance has been marked
-		unmarked_days -= frappe.get_all(
+		marked_days = frappe.db.count(
 			"Attendance",
 			filters={
-				"attendance_date": ["between", [start_date, end_date]],
+				"attendance_date": ["between", [self.actual_start_date, self.actual_end_date]],
 				"employee": self.employee,
 				"docstatus": 1,
 			},
-			fields=["COUNT(*) as marked_days"],
-		)[0].marked_days
+		)
+		unmarked_days -= marked_days
 
 		return unmarked_days
 
@@ -429,98 +538,116 @@ class SalarySlip(TransactionBase):
 
 		return unmarked_days
 
-	def get_payment_days(self, joining_date, relieving_date, include_holidays_in_total_working_days):
-		if not joining_date:
-			joining_date, relieving_date = frappe.get_cached_value(
-				"Employee", self.employee, ["date_of_joining", "relieving_date"]
-			)
+	def get_payment_days(self, include_holidays_in_total_working_days):
+		if self.joining_date and self.joining_date > getdate(self.end_date):
+			# employee joined after payroll date
+			return 0
 
-		start_date = getdate(self.start_date)
-		if joining_date:
-			if getdate(self.start_date) <= joining_date <= getdate(self.end_date):
-				start_date = joining_date
-			elif joining_date > getdate(self.end_date):
-				return
+		if self.relieving_date:
+			employee_status = frappe.db.get_value("Employee", self.employee, "status")
+			if self.relieving_date < getdate(self.start_date) and employee_status != "Left":
+				frappe.throw(_("Employee relieved on {0} must be set as 'Left'").format(self.relieving_date))
 
-		end_date = getdate(self.end_date)
-		if relieving_date:
-			if getdate(self.start_date) <= relieving_date <= getdate(self.end_date):
-				end_date = relieving_date
-			elif relieving_date < getdate(self.start_date):
-				frappe.throw(_("Employee relieved on {0} must be set as 'Left'").format(relieving_date))
-
-		payment_days = date_diff(end_date, start_date) + 1
+		payment_days = date_diff(self.actual_end_date, self.actual_start_date) + 1
 
 		if not cint(include_holidays_in_total_working_days):
-			holidays = self.get_holidays_for_employee(start_date, end_date)
+			holidays = self.get_holidays_for_employee(self.actual_start_date, self.actual_end_date)
 			payment_days -= len(holidays)
 
 		return payment_days
 
 	def get_holidays_for_employee(self, start_date, end_date):
-		return get_holiday_dates_for_employee(self.employee, start_date, end_date)
+		holiday_list = get_holiday_list_for_employee(self.employee)
+		key = f"{holiday_list}:{start_date}:{end_date}"
+		holiday_dates = frappe.cache().hget(HOLIDAYS_BETWEEN_DATES, key)
 
-	def calculate_lwp_or_ppl_based_on_leave_application(self, holidays, working_days_list):
+		if not holiday_dates:
+			holiday_dates = get_holiday_dates_between(holiday_list, start_date, end_date)
+			frappe.cache().hset(HOLIDAYS_BETWEEN_DATES, key, holiday_dates)
+
+		return holiday_dates
+
+	def calculate_lwp_or_ppl_based_on_leave_application(
+		self, holidays, working_days_list, daily_wages_fraction_for_half_day
+	):
 		lwp = 0
-		holidays = "','".join(holidays)
-		daily_wages_fraction_for_half_day = (
-			flt(frappe.db.get_value("Payroll Settings", None, "daily_wages_fraction_for_half_day")) or 0.5
+		leaves = get_lwp_or_ppl_for_date_range(
+			self.employee,
+			self.start_date,
+			self.end_date,
 		)
 
 		for d in working_days_list:
-			# date = add_days(cstr(getdate(self.start_date)), d)
-			leave = get_lwp_or_ppl_for_date(d, self.employee, holidays)
+			if self.relieving_date and d > self.relieving_date:
+				continue
 
-			if leave:
-				equivalent_lwp_count = 0
-				is_half_day_leave = cint(leave[0].is_half_day)
-				is_partially_paid_leave = cint(leave[0].is_ppl)
-				fraction_of_daily_salary_per_leave = flt(leave[0].fraction_of_daily_salary_per_leave)
+			leave = leaves.get(d)
 
-				equivalent_lwp_count = (1 - daily_wages_fraction_for_half_day) if is_half_day_leave else 1
+			if not leave:
+				continue
 
-				if is_partially_paid_leave:
-					equivalent_lwp_count *= (
-						fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
-					)
+			if not leave.include_holidays and getdate(d) in holidays:
+				continue
 
-				lwp += equivalent_lwp_count
+			equivalent_lwp_count = 0
+			fraction_of_daily_salary_per_leave = flt(leave.fraction_of_daily_salary_per_leave)
+
+			is_half_day_leave = False
+			if cint(leave.half_day) and (leave.half_day_date == d or leave.from_date == leave.to_date):
+				is_half_day_leave = True
+
+			equivalent_lwp_count = (1 - daily_wages_fraction_for_half_day) if is_half_day_leave else 1
+
+			if is_partially_paid_leave := cint(leave.is_ppl):
+				equivalent_lwp_count *= (
+					fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
+				)
+
+			lwp += equivalent_lwp_count
 
 		return lwp
 
-	def calculate_lwp_ppl_and_absent_days_based_on_attendance(self, holidays):
+	def get_leave_type_map(self) -> dict:
+		"""Returns (partially paid leaves/leave without pay) leave types by name"""
+
+		def _get_leave_type_map():
+			leave_types = frappe.get_all(
+				"Leave Type",
+				or_filters={"is_ppl": 1, "is_lwp": 1},
+				fields=["name", "is_lwp", "is_ppl", "fraction_of_daily_salary_per_leave", "include_holiday"],
+			)
+			return {leave_type.name: leave_type for leave_type in leave_types}
+
+		return frappe.cache().get_value(LEAVE_TYPE_MAP, _get_leave_type_map)
+
+	def get_employee_attendance(self, start_date, end_date):
+		attendance = frappe.qb.DocType("Attendance")
+
+		attendance_details = (
+			frappe.qb.from_(attendance)
+			.select(attendance.attendance_date, attendance.status, attendance.leave_type)
+			.where(
+				(attendance.status.isin(["Absent", "Half Day", "On Leave"]))
+				& (attendance.employee == self.employee)
+				& (attendance.docstatus == 1)
+				& (attendance.attendance_date.between(start_date, end_date))
+			)
+		).run(as_dict=1)
+
+		return attendance_details
+
+	def calculate_lwp_ppl_and_absent_days_based_on_attendance(
+		self, holidays, daily_wages_fraction_for_half_day, consider_marked_attendance_on_holidays
+	):
 		lwp = 0
 		absent = 0
 
-		daily_wages_fraction_for_half_day = (
-			flt(frappe.db.get_value("Payroll Settings", None, "daily_wages_fraction_for_half_day")) or 0.5
+		leave_type_map = self.get_leave_type_map()
+		attendance_details = self.get_employee_attendance(
+			start_date=self.start_date, end_date=self.actual_end_date
 		)
 
-		leave_types = frappe.get_all(
-			"Leave Type",
-			or_filters=[["is_ppl", "=", 1], ["is_lwp", "=", 1]],
-			fields=["name", "is_lwp", "is_ppl", "fraction_of_daily_salary_per_leave", "include_holiday"],
-		)
-
-		leave_type_map = {}
-		for leave_type in leave_types:
-			leave_type_map[leave_type.name] = leave_type
-
-		attendances = frappe.db.sql(
-			"""
-			SELECT attendance_date, status, leave_type
-			FROM `tabAttendance`
-			WHERE
-				status in ('Absent', 'Half Day', 'On leave')
-				AND employee = %s
-				AND docstatus = 1
-				AND attendance_date between %s and %s
-		""",
-			values=(self.employee, self.start_date, self.end_date),
-			as_dict=1,
-		)
-
-		for d in attendances:
+		for d in attendance_details:
 			if (
 				d.status in ("Half Day", "On Leave")
 				and d.leave_type
@@ -528,7 +655,8 @@ class SalarySlip(TransactionBase):
 			):
 				continue
 
-			if formatdate(d.attendance_date, "yyyy-mm-dd") in holidays:
+			# skip counting absent on holidays
+			if not consider_marked_attendance_on_holidays and getdate(d.attendance_date) in holidays:
 				if d.status == "Absent" or (
 					d.leave_type
 					and d.leave_type in leave_type_map.keys()
@@ -549,6 +677,7 @@ class SalarySlip(TransactionBase):
 						fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
 					)
 				lwp += equivalent_lwp
+
 			elif d.status == "On Leave" and d.leave_type and d.leave_type in leave_type_map.keys():
 				equivalent_lwp = 1
 				if leave_type_map[d.leave_type]["is_ppl"]:
@@ -556,8 +685,10 @@ class SalarySlip(TransactionBase):
 						fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
 					)
 				lwp += equivalent_lwp
+
 			elif d.status == "Absent":
 				absent += 1
+
 		return lwp, absent
 
 	def add_earning_for_hourly_wages(self, doc, salary_component, amount):
@@ -571,16 +702,55 @@ class SalarySlip(TransactionBase):
 		if not row_exists:
 			wages_row = {
 				"salary_component": salary_component,
-				"abbr": frappe.db.get_value("Salary Component", salary_component, "salary_component_abbr"),
+				"abbr": frappe.db.get_value(
+					"Salary Component", salary_component, "salary_component_abbr", cache=True
+				),
 				"amount": self.hour_rate * self.total_working_hours,
 				"default_amount": 0.0,
 				"additional_amount": 0.0,
 			}
 			doc.append("earnings", wages_row)
 
+	def set_salary_structure_assignement(self):
+		self._salary_structure_assignment = frappe.db.get_value(
+			"Salary Structure Assignment",
+			{
+				"employee": self.employee,
+				"salary_structure": self.salary_structure,
+				"from_date": ("<=", self.actual_start_date),
+				"docstatus": 1,
+			},
+			"*",
+			order_by="from_date desc",
+			as_dict=True,
+		)
+
+		if not self._salary_structure_assignment:
+			frappe.throw(
+				_(
+					"Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
+				).format(
+					frappe.bold(self.employee_name),
+					frappe.bold(formatdate(self.actual_start_date)),
+				)
+			)
+
 	def calculate_net_pay(self):
 		if self.salary_structure:
 			self.calculate_component_amounts("earnings")
+
+		# get remaining numbers of sub-period (period for which one salary is processed)
+		if self.payroll_period:
+			self.remaining_sub_periods = get_period_factor(
+				self.employee,
+				self.start_date,
+				self.end_date,
+				self.payroll_frequency,
+				self.payroll_period,
+				joining_date=self.joining_date,
+				relieving_date=self.relieving_date,
+			)[1]
+
 		self.gross_pay = self.get_component_totals("earnings", depends_on_payment_days=1)
 		self.base_gross_pay = flt(
 			flt(self.gross_pay) * flt(self.exchange_rate), self.precision("base_gross_pay")
@@ -589,16 +759,20 @@ class SalarySlip(TransactionBase):
 		if self.salary_structure:
 			self.calculate_component_amounts("deductions")
 
-		self.set_loan_repayment()
+		set_loan_repayment(self)
+
 		self.set_precision_for_component_amounts()
 		self.set_net_pay()
+		self.compute_income_tax_breakup()
 
 	def set_net_pay(self):
 		self.total_deduction = self.get_component_totals("deductions")
 		self.base_total_deduction = flt(
 			flt(self.total_deduction) * flt(self.exchange_rate), self.precision("base_total_deduction")
 		)
-		self.net_pay = flt(self.gross_pay) - (flt(self.total_deduction) + flt(self.total_loan_repayment))
+		self.net_pay = flt(self.gross_pay) - (
+			flt(self.total_deduction) + flt(self.get("total_loan_repayment"))
+		)
 		self.rounded_total = rounded(self.net_pay)
 		self.base_net_pay = flt(
 			flt(self.net_pay) * flt(self.exchange_rate), self.precision("base_net_pay")
@@ -610,89 +784,340 @@ class SalarySlip(TransactionBase):
 			)
 		self.set_net_total_in_words()
 
+	def compute_taxable_earnings_for_year(self):
+		# get taxable_earnings, opening_taxable_earning, paid_taxes for previous period
+		self.previous_taxable_earnings, exempted_amount = self.get_taxable_earnings_for_prev_period(
+			self.payroll_period.start_date, self.start_date, self.tax_slab.allow_tax_exemption
+		)
+
+		self.previous_taxable_earnings_before_exemption = (
+			self.previous_taxable_earnings + exempted_amount
+		)
+
+		self.compute_current_and_future_taxable_earnings()
+
+		# Deduct taxes forcefully for unsubmitted tax exemption proof and unclaimed benefits in the last period
+		if self.payroll_period.end_date <= getdate(self.end_date):
+			self.deduct_tax_for_unsubmitted_tax_exemption_proof = 1
+			self.deduct_tax_for_unclaimed_employee_benefits = 1
+
+		# Get taxable unclaimed benefits
+		self.unclaimed_taxable_benefits = 0
+		if self.deduct_tax_for_unclaimed_employee_benefits:
+			self.unclaimed_taxable_benefits = self.calculate_unclaimed_taxable_benefits()
+
+		# Total exemption amount based on tax exemption declaration
+		self.total_exemption_amount = self.get_total_exemption_amount()
+
+		# Employee Other Incomes
+		self.other_incomes = self.get_income_form_other_sources() or 0.0
+
+		# Total taxable earnings including additional and other incomes
+		self.total_taxable_earnings = (
+			self.previous_taxable_earnings
+			+ self.current_structured_taxable_earnings
+			+ self.future_structured_taxable_earnings
+			+ self.current_additional_earnings
+			+ self.other_incomes
+			+ self.unclaimed_taxable_benefits
+			- self.total_exemption_amount
+		)
+
+		# Total taxable earnings without additional earnings with full tax
+		self.total_taxable_earnings_without_full_tax_addl_components = (
+			self.total_taxable_earnings - self.current_additional_earnings_with_full_tax
+		)
+
+	def compute_current_and_future_taxable_earnings(self):
+		# get taxable_earnings for current period (all days)
+		self.current_taxable_earnings = self.get_taxable_earnings(self.tax_slab.allow_tax_exemption)
+		self.future_structured_taxable_earnings = self.current_taxable_earnings.taxable_earnings * (
+			ceil(self.remaining_sub_periods) - 1
+		)
+
+		current_taxable_earnings_before_exemption = (
+			self.current_taxable_earnings.taxable_earnings
+			+ self.current_taxable_earnings.amount_exempted_from_income_tax
+		)
+		self.future_structured_taxable_earnings_before_exemption = (
+			current_taxable_earnings_before_exemption * (ceil(self.remaining_sub_periods) - 1)
+		)
+
+		# get taxable_earnings, addition_earnings for current actual payment days
+		self.current_taxable_earnings_for_payment_days = self.get_taxable_earnings(
+			self.tax_slab.allow_tax_exemption, based_on_payment_days=1
+		)
+
+		self.current_structured_taxable_earnings = (
+			self.current_taxable_earnings_for_payment_days.taxable_earnings
+		)
+		self.current_structured_taxable_earnings_before_exemption = (
+			self.current_structured_taxable_earnings
+			+ self.current_taxable_earnings_for_payment_days.amount_exempted_from_income_tax
+		)
+
+		self.current_additional_earnings = (
+			self.current_taxable_earnings_for_payment_days.additional_income
+		)
+
+		self.current_additional_earnings_with_full_tax = (
+			self.current_taxable_earnings_for_payment_days.additional_income_with_full_tax
+		)
+
+	def compute_income_tax_breakup(self):
+		if not self.payroll_period:
+			return
+
+		self.standard_tax_exemption_amount = 0
+		self.tax_exemption_declaration = 0
+		self.deductions_before_tax_calculation = 0
+
+		self.non_taxable_earnings = self.compute_non_taxable_earnings()
+
+		self.ctc = self.compute_ctc()
+
+		self.income_from_other_sources = self.get_income_form_other_sources()
+
+		self.total_earnings = self.ctc + self.income_from_other_sources
+
+		if hasattr(self, "tax_slab"):
+			if self.tax_slab.allow_tax_exemption:
+				self.standard_tax_exemption_amount = self.tax_slab.standard_tax_exemption_amount
+				self.deductions_before_tax_calculation = (
+					self.compute_annual_deductions_before_tax_calculation()
+				)
+
+			self.tax_exemption_declaration = (
+				self.get_total_exemption_amount() - self.standard_tax_exemption_amount
+			)
+
+		self.annual_taxable_amount = self.total_earnings - (
+			self.non_taxable_earnings
+			+ self.deductions_before_tax_calculation
+			+ self.tax_exemption_declaration
+			+ self.standard_tax_exemption_amount
+		)
+
+		self.income_tax_deducted_till_date = self.get_income_tax_deducted_till_date()
+
+		if hasattr(self, "total_structured_tax_amount") and hasattr(
+			self, "current_structured_tax_amount"
+		):
+			self.future_income_tax_deductions = (
+				self.total_structured_tax_amount - self.income_tax_deducted_till_date
+			)
+
+			self.current_month_income_tax = self.current_structured_tax_amount
+
+			# non included current_month_income_tax separately as its already considered
+			# while calculating income_tax_deducted_till_date
+
+			self.total_income_tax = self.income_tax_deducted_till_date + self.future_income_tax_deductions
+
+	def compute_ctc(self):
+		if hasattr(self, "previous_taxable_earnings"):
+
+			return (
+				self.previous_taxable_earnings_before_exemption
+				+ self.current_structured_taxable_earnings_before_exemption
+				+ self.future_structured_taxable_earnings_before_exemption
+				+ self.current_additional_earnings
+				+ self.other_incomes
+				+ self.unclaimed_taxable_benefits
+				+ self.non_taxable_earnings
+			)
+
+		return 0.0
+
+	def compute_non_taxable_earnings(self):
+		# Previous period non taxable earnings
+		prev_period_non_taxable_earnings = self.get_salary_slip_details(
+			self.payroll_period.start_date, self.start_date, parentfield="earnings", is_tax_applicable=0
+		)
+
+		(
+			current_period_non_taxable_earnings,
+			non_taxable_additional_salary,
+		) = self.get_non_taxable_earnings_for_current_period()
+
+		# Future period non taxable earnings
+		future_period_non_taxable_earnings = current_period_non_taxable_earnings * (
+			ceil(self.remaining_sub_periods) - 1
+		)
+
+		non_taxable_earnings = (
+			prev_period_non_taxable_earnings
+			+ current_period_non_taxable_earnings
+			+ future_period_non_taxable_earnings
+			+ non_taxable_additional_salary
+		)
+
+		return non_taxable_earnings
+
+	def get_non_taxable_earnings_for_current_period(self):
+		current_period_non_taxable_earnings = 0.0
+
+		non_taxable_additional_salary = self.get_salary_slip_details(
+			self.payroll_period.start_date,
+			self.start_date,
+			parentfield="earnings",
+			is_tax_applicable=0,
+			field_to_select="additional_amount",
+		)
+
+		# Current period non taxable earnings
+		for earning in self.earnings:
+			if earning.is_tax_applicable:
+				continue
+
+			if earning.additional_amount:
+				non_taxable_additional_salary += earning.additional_amount
+
+				# Future recurring additional salary
+				if earning.additional_salary and earning.is_recurring_additional_salary:
+					non_taxable_additional_salary += self.get_future_recurring_additional_amount(
+						earning.additional_salary, earning.additional_amount
+					)
+			else:
+				current_period_non_taxable_earnings += earning.amount
+
+		return current_period_non_taxable_earnings, non_taxable_additional_salary
+
+	def compute_annual_deductions_before_tax_calculation(self):
+		prev_period_exempted_amount = 0
+		current_period_exempted_amount = 0
+		future_period_exempted_amount = 0
+
+		# Previous period exempted amount
+		prev_period_exempted_amount = self.get_salary_slip_details(
+			self.payroll_period.start_date,
+			self.start_date,
+			parentfield="deductions",
+			exempted_from_income_tax=1,
+		)
+
+		# Current period exempted amount
+		for d in self.get("deductions"):
+			if d.exempted_from_income_tax:
+				current_period_exempted_amount += d.amount
+
+		# Future period exempted amount
+		for deduction in self._salary_structure_doc.get("deductions"):
+			if deduction.exempted_from_income_tax:
+				if deduction.amount_based_on_formula:
+					for sub_period in range(1, ceil(self.remaining_sub_periods)):
+						future_period_exempted_amount += self.get_amount_from_formula(deduction, sub_period)
+				else:
+					future_period_exempted_amount += deduction.amount * (ceil(self.remaining_sub_periods) - 1)
+
+		return (
+			prev_period_exempted_amount + current_period_exempted_amount + future_period_exempted_amount
+		) or 0
+
+	def get_amount_from_formula(self, struct_row, sub_period=1):
+		if self.payroll_frequency == "Monthly":
+			start_date = frappe.utils.add_months(self.start_date, sub_period)
+			end_date = frappe.utils.add_months(self.end_date, sub_period)
+			posting_date = frappe.utils.add_months(self.posting_date, sub_period)
+
+		else:
+			if self.payroll_frequency == "Weekly":
+				days_to_add = sub_period * 6
+
+			if self.payroll_frequency == "Fortnightly":
+				days_to_add = sub_period * 13
+
+			if self.payroll_frequency == "Daily":
+				days_to_add = start_date
+
+			start_date = frappe.utils.add_days(self.start_date, days_to_add)
+			end_date = frappe.utils.add_days(self.end_date, days_to_add)
+			posting_date = start_date
+
+		local_data = self.data.copy()
+		local_data.update({"start_date": start_date, "end_date": end_date, "posting_date": posting_date})
+
+		return flt(self.eval_condition_and_formula(struct_row, local_data))
+
+	def get_income_tax_deducted_till_date(self):
+		tax_deducted = 0.0
+		for tax_component in self.get("_component_based_variable_tax") or {}:
+			tax_deducted += (
+				self._component_based_variable_tax[tax_component]["previous_total_paid_taxes"]
+				+ self._component_based_variable_tax[tax_component]["current_tax_amount"]
+			)
+		return tax_deducted
+
 	def calculate_component_amounts(self, component_type):
 		if not getattr(self, "_salary_structure_doc", None):
-			self._salary_structure_doc = frappe.get_doc("Salary Structure", self.salary_structure)
-
-		payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
+			self._salary_structure_doc = frappe.get_cached_doc("Salary Structure", self.salary_structure)
 
 		self.add_structure_components(component_type)
 		self.add_additional_salary_components(component_type)
 		if component_type == "earnings":
-			self.add_employee_benefits(payroll_period)
+			self.add_employee_benefits()
 		else:
-			self.add_tax_components(payroll_period)
+			self.add_tax_components()
 
 	def add_structure_components(self, component_type):
-		data, default_data = self.get_data_for_eval()
-		timesheet_component = frappe.db.get_value(
-			"Salary Structure", self.salary_structure, "salary_component"
-		)
+		self.data, self.default_data = self.get_data_for_eval()
+		timesheet_component = self._salary_structure_doc.salary_component
 
 		for struct_row in self._salary_structure_doc.get(component_type):
 			if self.salary_slip_based_on_timesheet and struct_row.salary_component == timesheet_component:
 				continue
 
-			amount = self.eval_condition_and_formula(struct_row, data)
-
+			amount = self.eval_condition_and_formula(struct_row, self.data)
 			if struct_row.statistical_component:
 				# update statitical component amount in reference data based on payment days
 				# since row for statistical component is not added to salary slip
-				if struct_row.depends_on_payment_days:
-					joining_date, relieving_date = self.get_joining_and_relieving_dates()
-					default_data[struct_row.abbr] = amount
-					data[struct_row.abbr] = flt(
-						(flt(amount) * flt(self.payment_days) / cint(self.total_working_days)),
-						struct_row.precision("amount"),
-					)
 
-			elif amount or struct_row.amount_based_on_formula and amount is not None:
-				default_amount = self.eval_condition_and_formula(struct_row, default_data)
-				self.update_component_row(
-					struct_row, amount, component_type, data=data, default_amount=default_amount
+				self.default_data[struct_row.abbr] = flt(amount)
+				if struct_row.depends_on_payment_days:
+					payment_days_amount = (
+						flt(amount) * flt(self.payment_days) / cint(self.total_working_days)
+						if self.total_working_days
+						else 0
+					)
+					self.data[struct_row.abbr] = flt(payment_days_amount, struct_row.precision("amount"))
+
+			else:
+				# default behavior, the system does not add if component amount is zero
+				# if remove_if_zero_valued is unchecked, then ask system to add component row
+				remove_if_zero_valued = frappe.get_cached_value(
+					"Salary Component", struct_row.salary_component, "remove_if_zero_valued"
 				)
+
+				default_amount = 0
+
+				if (
+					amount
+					or (struct_row.amount_based_on_formula and amount is not None)
+					or (not remove_if_zero_valued and amount is not None and not self.data[struct_row.abbr])
+				):
+					default_amount = self.eval_condition_and_formula(struct_row, self.default_data)
+					self.update_component_row(
+						struct_row,
+						amount,
+						component_type,
+						data=self.data,
+						default_amount=default_amount,
+						remove_if_zero_valued=remove_if_zero_valued,
+					)
 
 	def get_data_for_eval(self):
 		"""Returns data for evaluating formula"""
 		data = frappe._dict()
-		employee = frappe.get_doc("Employee", self.employee).as_dict()
+		employee = frappe.get_cached_doc("Employee", self.employee).as_dict()
 
-		start_date = getdate(self.start_date)
-		date_to_validate = (
-			employee.date_of_joining if employee.date_of_joining > start_date else start_date
-		)
+		if not hasattr(self, "_salary_structure_assignment"):
+			self.set_salary_structure_assignement()
 
-		salary_structure_assignment = frappe.get_value(
-			"Salary Structure Assignment",
-			{
-				"employee": self.employee,
-				"salary_structure": self.salary_structure,
-				"from_date": ("<=", date_to_validate),
-				"docstatus": 1,
-			},
-			"*",
-			order_by="from_date desc",
-			as_dict=True,
-		)
-
-		if not salary_structure_assignment:
-			frappe.throw(
-				_(
-					"Please assign a Salary Structure for Employee {0} " "applicable from or before {1} first"
-				).format(
-					frappe.bold(self.employee_name),
-					frappe.bold(formatdate(date_to_validate)),
-				)
-			)
-
-		data.update(salary_structure_assignment)
+		data.update(self._salary_structure_assignment)
 		data.update(employee)
 		data.update(self.as_dict())
 
-		# set values for components
-		salary_components = frappe.get_all("Salary Component", fields=["salary_component_abbr"])
-		for sc in salary_components:
-			data.setdefault(sc.salary_component_abbr, 0)
+		data.update(self.get_component_abbr_map())
 
 		# shallow copy of data to store default amounts (without payment days) for tax calculation
 		default_data = data.copy()
@@ -704,39 +1129,62 @@ class SalarySlip(TransactionBase):
 
 		return data, default_data
 
-	def eval_condition_and_formula(self, d, data):
+	def get_component_abbr_map(self):
+		def _fetch_component_values():
+			return {
+				component_abbr: 0
+				for component_abbr in frappe.get_all("Salary Component", pluck="salary_component_abbr")
+			}
+
+		return frappe.cache().get_value(SALARY_COMPONENT_VALUES, generator=_fetch_component_values)
+
+	def eval_condition_and_formula(self, struct_row, data):
 		try:
-			condition = d.condition.strip().replace("\n", " ") if d.condition else None
+			condition = sanitize_expression(struct_row.condition)
 			if condition:
-				if not frappe.safe_eval(condition, self.whitelisted_globals, data):
+				if not _safe_eval(condition, self.whitelisted_globals, data):
 					return None
-			amount = d.amount
-			if d.amount_based_on_formula:
-				formula = d.formula.strip().replace("\n", " ") if d.formula else None
+			amount = struct_row.amount
+			if struct_row.amount_based_on_formula:
+				formula = sanitize_expression(struct_row.formula)
 				if formula:
-					amount = flt(frappe.safe_eval(formula, self.whitelisted_globals, data), d.precision("amount"))
+					amount = flt(
+						_safe_eval(formula, self.whitelisted_globals, data), struct_row.precision("amount")
+					)
 			if amount:
-				data[d.abbr] = amount
+				data[struct_row.abbr] = amount
 
 			return amount
 
-		except NameError as err:
-			frappe.throw(
-				_("{0} <br> This error can be due to missing or deleted field.").format(err),
+		except NameError as ne:
+			throw_error_message(
+				struct_row,
+				ne,
 				title=_("Name error"),
+				description=_("This error can be due to missing or deleted field."),
 			)
-		except SyntaxError as err:
-			frappe.throw(_("Syntax error in formula or condition: {0}").format(err))
-		except Exception as e:
-			frappe.throw(_("Error in formula or condition: {0}").format(e))
+		except SyntaxError as se:
+			throw_error_message(
+				struct_row,
+				se,
+				title=_("Syntax error"),
+				description=_("This error can be due to invalid syntax."),
+			)
+		except Exception as exc:
+			throw_error_message(
+				struct_row,
+				exc,
+				title=_("Error in formula or condition"),
+				description=_("This error can be due to invalid formula or condition."),
+			)
 			raise
 
-	def add_employee_benefits(self, payroll_period):
+	def add_employee_benefits(self):
 		for struct_row in self._salary_structure_doc.get("earnings"):
 			if struct_row.is_flexible_benefit == 1:
 				if (
 					frappe.db.get_value(
-						"Salary Component", struct_row.salary_component, "pay_against_benefit_claim"
+						"Salary Component", struct_row.salary_component, "pay_against_benefit_claim", cache=True
 					)
 					!= 1
 				):
@@ -747,7 +1195,7 @@ class SalarySlip(TransactionBase):
 						struct_row.salary_component,
 						self._salary_structure_doc,
 						self.payroll_frequency,
-						payroll_period,
+						self.payroll_period,
 					)
 					if benefit_component_amount:
 						self.update_component_row(struct_row, benefit_component_amount, "earnings")
@@ -758,7 +1206,7 @@ class SalarySlip(TransactionBase):
 					if benefit_claim_amount:
 						self.update_component_row(struct_row, benefit_claim_amount, "earnings")
 
-		self.adjust_benefits_in_last_payroll_period(payroll_period)
+		self.adjust_benefits_in_last_payroll_period(self.payroll_period)
 
 	def adjust_benefits_in_last_payroll_period(self, payroll_period):
 		if payroll_period:
@@ -786,26 +1234,86 @@ class SalarySlip(TransactionBase):
 				is_recurring=additional_salary.is_recurring,
 			)
 
-	def add_tax_components(self, payroll_period):
+	def add_tax_components(self):
 		# Calculate variable_based_on_taxable_salary after all components updated in salary slip
-		tax_components, other_deduction_components = [], []
+		tax_components, self.other_deduction_components = [], []
 		for d in self._salary_structure_doc.get("deductions"):
 			if d.variable_based_on_taxable_salary == 1 and not d.formula and not flt(d.amount):
 				tax_components.append(d.salary_component)
 			else:
-				other_deduction_components.append(d.salary_component)
+				self.other_deduction_components.append(d.salary_component)
 
+		# consider manually added tax component
 		if not tax_components:
 			tax_components = [
-				d.name
-				for d in frappe.get_all("Salary Component", filters={"variable_based_on_taxable_salary": 1})
-				if d.name not in other_deduction_components
+				d.salary_component for d in self.get("deductions") if d.variable_based_on_taxable_salary
 			]
 
+		if self.is_new() and not tax_components:
+			tax_components = self.get_tax_components()
+			frappe.msgprint(
+				_(
+					"Added tax components from the Salary Component master as the salary structure didn't have any tax component."
+				),
+				indicator="blue",
+				alert=True,
+			)
+
+		if tax_components and self.payroll_period and self.salary_structure:
+			self.tax_slab = self.get_income_tax_slabs()
+			self.compute_taxable_earnings_for_year()
+
+		self._component_based_variable_tax = {}
 		for d in tax_components:
-			tax_amount = self.calculate_variable_based_on_taxable_salary(d, payroll_period)
+			self._component_based_variable_tax.setdefault(d, {})
+			tax_amount = self.calculate_variable_based_on_taxable_salary(d)
 			tax_row = get_salary_component_data(d)
 			self.update_component_row(tax_row, tax_amount, "deductions")
+
+	def get_tax_components(self) -> list:
+		"""
+		Returns:
+		        list: A list of tax components specific to the company.
+		        If no tax components are defined for the company,
+		        it returns the default tax components.
+		"""
+		tax_components = frappe.cache().get_value(
+			TAX_COMPONENTS_BY_COMPANY, self._fetch_tax_components_by_company
+		)
+
+		default_tax_components = tax_components.get("default", [])
+		return tax_components.get(self.company, default_tax_components)
+
+	def _fetch_tax_components_by_company(self) -> dict:
+		"""
+		Returns:
+		    dict: A dictionary containing tax components grouped by company.
+
+		Raises:
+		    None
+		"""
+
+		tax_components = {}
+		sc = frappe.qb.DocType("Salary Component")
+		sca = frappe.qb.DocType("Salary Component Account")
+
+		components = (
+			frappe.qb.from_(sc)
+			.left_join(sca)
+			.on(sca.parent == sc.name)
+			.select(
+				sc.name,
+				sca.company,
+			)
+			.where(sc.variable_based_on_taxable_salary == 1)
+		).run(as_dict=True)
+
+		for component in components:
+			key = component.company or "default"
+			tax_components.setdefault(key, [])
+			tax_components[key].append(component.name)
+
+		return tax_components
 
 	def update_component_row(
 		self,
@@ -816,6 +1324,7 @@ class SalarySlip(TransactionBase):
 		is_recurring=0,
 		data=None,
 		default_amount=None,
+		remove_if_zero_valued=None,
 	):
 		component_row = None
 		for d in self.get(component_type):
@@ -842,7 +1351,7 @@ class SalarySlip(TransactionBase):
 			)
 
 		if not component_row:
-			if not amount:
+			if not (amount or default_amount) and remove_if_zero_valued:
 				return
 
 			component_row = self.append(component_type)
@@ -882,19 +1391,18 @@ class SalarySlip(TransactionBase):
 
 		component_row.amount = amount
 
-		self.update_component_amount_based_on_payment_days(component_row)
+		self.update_component_amount_based_on_payment_days(component_row, remove_if_zero_valued)
 
 		if data:
 			data[component_row.abbr] = component_row.amount
 
-	def update_component_amount_based_on_payment_days(self, component_row):
-		joining_date, relieving_date = self.get_joining_and_relieving_dates()
-		component_row.amount = self.get_amount_based_on_payment_days(
-			component_row, joining_date, relieving_date
-		)[0]
+	def update_component_amount_based_on_payment_days(
+		self, component_row, remove_if_zero_valued=None
+	):
+		component_row.amount = self.get_amount_based_on_payment_days(component_row)[0]
 
 		# remove 0 valued components that have been updated later
-		if component_row.amount == 0:
+		if component_row.amount == 0 and remove_if_zero_valued:
 			self.remove(component_row)
 
 	def set_precision_for_component_amounts(self):
@@ -902,8 +1410,8 @@ class SalarySlip(TransactionBase):
 			for component_row in self.get(component_type):
 				component_row.amount = flt(component_row.amount, component_row.precision("amount"))
 
-	def calculate_variable_based_on_taxable_salary(self, tax_component, payroll_period):
-		if not payroll_period:
+	def calculate_variable_based_on_taxable_salary(self, tax_component):
+		if not self.payroll_period:
 			frappe.msgprint(
 				_("Start and end dates not in a valid Payroll Period, cannot calculate {0}.").format(
 					tax_component
@@ -911,233 +1419,166 @@ class SalarySlip(TransactionBase):
 			)
 			return
 
-		# Deduct taxes forcefully for unsubmitted tax exemption proof and unclaimed benefits in the last period
-		if payroll_period.end_date <= getdate(self.end_date):
-			self.deduct_tax_for_unsubmitted_tax_exemption_proof = 1
-			self.deduct_tax_for_unclaimed_employee_benefits = 1
+		return self.calculate_variable_tax(tax_component)
 
-		return self.calculate_variable_tax(payroll_period, tax_component)
-
-	def calculate_variable_tax(self, payroll_period, tax_component):
-		# get Tax slab from salary structure assignment for the employee and payroll period
-		tax_slab = self.get_income_tax_slabs(payroll_period)
-
-		# get remaining numbers of sub-period (period for which one salary is processed)
-		remaining_sub_periods = get_period_factor(
-			self.employee, self.start_date, self.end_date, self.payroll_frequency, payroll_period
-		)[1]
-
-		# get taxable_earnings, opening_taxable_earning, paid_taxes for previous period
-		previous_taxable_earnings = self.get_taxable_earnings_for_prev_period(
-			payroll_period.start_date, self.start_date, tax_slab.allow_tax_exemption
-		)
-		previous_total_paid_taxes = self.get_tax_paid_in_period(
-			payroll_period.start_date, self.start_date, tax_component
-		)
-
-		# get taxable_earnings for current period (all days)
-		current_taxable_earnings = self.get_taxable_earnings(
-			tax_slab.allow_tax_exemption, payroll_period=payroll_period
-		)
-		future_structured_taxable_earnings = current_taxable_earnings.taxable_earnings * (
-			math.ceil(remaining_sub_periods) - 1
-		)
-
-		# get taxable_earnings, addition_earnings for current actual payment days
-		current_taxable_earnings_for_payment_days = self.get_taxable_earnings(
-			tax_slab.allow_tax_exemption, based_on_payment_days=1, payroll_period=payroll_period
-		)
-		current_structured_taxable_earnings = current_taxable_earnings_for_payment_days.taxable_earnings
-		current_additional_earnings = current_taxable_earnings_for_payment_days.additional_income
-		current_additional_earnings_with_full_tax = (
-			current_taxable_earnings_for_payment_days.additional_income_with_full_tax
-		)
-
-		# Get taxable unclaimed benefits
-		unclaimed_taxable_benefits = 0
-		if self.deduct_tax_for_unclaimed_employee_benefits:
-			unclaimed_taxable_benefits = self.calculate_unclaimed_taxable_benefits(payroll_period)
-			unclaimed_taxable_benefits += current_taxable_earnings_for_payment_days.flexi_benefits
-
-		# Total exemption amount based on tax exemption declaration
-		total_exemption_amount = self.get_total_exemption_amount(payroll_period, tax_slab)
-
-		# Employee Other Incomes
-		other_incomes = self.get_income_form_other_sources(payroll_period) or 0.0
-
-		# Total taxable earnings including additional and other incomes
-		total_taxable_earnings = (
-			previous_taxable_earnings
-			+ current_structured_taxable_earnings
-			+ future_structured_taxable_earnings
-			+ current_additional_earnings
-			+ other_incomes
-			+ unclaimed_taxable_benefits
-			- total_exemption_amount
-		)
-
-		# Total taxable earnings without additional earnings with full tax
-		total_taxable_earnings_without_full_tax_addl_components = (
-			total_taxable_earnings - current_additional_earnings_with_full_tax
+	def calculate_variable_tax(self, tax_component):
+		self.previous_total_paid_taxes = self.get_tax_paid_in_period(
+			self.payroll_period.start_date, self.start_date, tax_component
 		)
 
 		# Structured tax amount
 		eval_locals, default_data = self.get_data_for_eval()
-		total_structured_tax_amount = calculate_tax_by_tax_slab(
-			total_taxable_earnings_without_full_tax_addl_components,
-			tax_slab,
+		self.total_structured_tax_amount = calculate_tax_by_tax_slab(
+			self.total_taxable_earnings_without_full_tax_addl_components,
+			self.tax_slab,
 			self.whitelisted_globals,
 			eval_locals,
 		)
-		current_structured_tax_amount = (
-			total_structured_tax_amount - previous_total_paid_taxes
-		) / remaining_sub_periods
+
+		self.current_structured_tax_amount = (
+			self.total_structured_tax_amount - self.previous_total_paid_taxes
+		) / self.remaining_sub_periods
 
 		# Total taxable earnings with additional earnings with full tax
-		full_tax_on_additional_earnings = 0.0
-		if current_additional_earnings_with_full_tax:
-			total_tax_amount = calculate_tax_by_tax_slab(
-				total_taxable_earnings, tax_slab, self.whitelisted_globals, eval_locals
+		self.full_tax_on_additional_earnings = 0.0
+		if self.current_additional_earnings_with_full_tax:
+			self.total_tax_amount = calculate_tax_by_tax_slab(
+				self.total_taxable_earnings, self.tax_slab, self.whitelisted_globals, eval_locals
 			)
-			full_tax_on_additional_earnings = total_tax_amount - total_structured_tax_amount
+			self.full_tax_on_additional_earnings = self.total_tax_amount - self.total_structured_tax_amount
 
-		current_tax_amount = current_structured_tax_amount + full_tax_on_additional_earnings
+		current_tax_amount = self.current_structured_tax_amount + self.full_tax_on_additional_earnings
 		if flt(current_tax_amount) < 0:
 			current_tax_amount = 0
 
+		self._component_based_variable_tax[tax_component].update(
+			{
+				"previous_total_paid_taxes": self.previous_total_paid_taxes,
+				"total_structured_tax_amount": self.total_structured_tax_amount,
+				"current_structured_tax_amount": self.current_structured_tax_amount,
+				"full_tax_on_additional_earnings": self.full_tax_on_additional_earnings,
+				"current_tax_amount": current_tax_amount,
+			}
+		)
+
 		return current_tax_amount
 
-	def get_income_tax_slabs(self, payroll_period):
-		income_tax_slab, ss_assignment_name = frappe.db.get_value(
-			"Salary Structure Assignment",
-			{"employee": self.employee, "salary_structure": self.salary_structure, "docstatus": 1},
-			["income_tax_slab", "name"],
-		)
+	def get_income_tax_slabs(self):
+		income_tax_slab = self._salary_structure_assignment.income_tax_slab
 
 		if not income_tax_slab:
 			frappe.throw(
-				_("Income Tax Slab not set in Salary Structure Assignment: {0}").format(ss_assignment_name)
+				_("Income Tax Slab not set in Salary Structure Assignment: {0}").format(
+					self._salary_structure_assignment
+				)
 			)
 
-		income_tax_slab_doc = frappe.get_doc("Income Tax Slab", income_tax_slab)
+		income_tax_slab_doc = frappe.get_cached_doc("Income Tax Slab", income_tax_slab)
 		if income_tax_slab_doc.disabled:
 			frappe.throw(_("Income Tax Slab: {0} is disabled").format(income_tax_slab))
 
-		if getdate(income_tax_slab_doc.effective_from) > getdate(payroll_period.start_date):
+		if getdate(income_tax_slab_doc.effective_from) > getdate(self.payroll_period.start_date):
 			frappe.throw(
 				_("Income Tax Slab must be effective on or before Payroll Period Start Date: {0}").format(
-					payroll_period.start_date
+					self.payroll_period.start_date
 				)
 			)
 
 		return income_tax_slab_doc
 
 	def get_taxable_earnings_for_prev_period(self, start_date, end_date, allow_tax_exemption=False):
-		taxable_earnings = frappe.db.sql(
-			"""
-			select sum(sd.amount)
-			from
-				`tabSalary Detail` sd join `tabSalary Slip` ss on sd.parent=ss.name
-			where
-				sd.parentfield='earnings'
-				and sd.is_tax_applicable=1
-				and is_flexible_benefit=0
-				and ss.docstatus=1
-				and ss.employee=%(employee)s
-				and ss.start_date between %(from_date)s and %(to_date)s
-				and ss.end_date between %(from_date)s and %(to_date)s
-			""",
-			{"employee": self.employee, "from_date": start_date, "to_date": end_date},
-		)
-		taxable_earnings = flt(taxable_earnings[0][0]) if taxable_earnings else 0
-
 		exempted_amount = 0
+		taxable_earnings = self.get_salary_slip_details(
+			start_date, end_date, parentfield="earnings", is_tax_applicable=1
+		)
+
 		if allow_tax_exemption:
-			exempted_amount = frappe.db.sql(
-				"""
-				select sum(sd.amount)
-				from
-					`tabSalary Detail` sd join `tabSalary Slip` ss on sd.parent=ss.name
-				where
-					sd.parentfield='deductions'
-					and sd.exempted_from_income_tax=1
-					and is_flexible_benefit=0
-					and ss.docstatus=1
-					and ss.employee=%(employee)s
-					and ss.start_date between %(from_date)s and %(to_date)s
-					and ss.end_date between %(from_date)s and %(to_date)s
-				""",
-				{"employee": self.employee, "from_date": start_date, "to_date": end_date},
+			exempted_amount = self.get_salary_slip_details(
+				start_date, end_date, parentfield="deductions", exempted_from_income_tax=1
 			)
-			exempted_amount = flt(exempted_amount[0][0]) if exempted_amount else 0
 
 		opening_taxable_earning = self.get_opening_for(
 			"taxable_earnings_till_date", start_date, end_date
 		)
 
-		return (taxable_earnings + opening_taxable_earning) - exempted_amount
+		return (taxable_earnings + opening_taxable_earning) - exempted_amount, exempted_amount
 
 	def get_opening_for(self, field_to_select, start_date, end_date):
-		return (
-			frappe.db.get_value(
-				"Salary Structure Assignment",
-				{
-					"employee": self.employee,
-					"salary_structure": self.salary_structure,
-					"from_date": ["between", [start_date, end_date]],
-					"docstatus": 1,
-				},
-				field_to_select,
-			)
-			or 0
+		return self._salary_structure_assignment.get(field_to_select) or 0
+
+	def get_salary_slip_details(
+		self,
+		start_date,
+		end_date,
+		parentfield,
+		salary_component=None,
+		is_tax_applicable=None,
+		is_flexible_benefit=0,
+		exempted_from_income_tax=0,
+		variable_based_on_taxable_salary=0,
+		field_to_select="amount",
+	):
+		ss = frappe.qb.DocType("Salary Slip")
+		sd = frappe.qb.DocType("Salary Detail")
+
+		if field_to_select == "amount":
+			field = sd.amount
+		else:
+			field = sd.additional_amount
+
+		query = (
+			frappe.qb.from_(ss)
+			.join(sd)
+			.on(sd.parent == ss.name)
+			.select(Sum(field))
+			.where(sd.parentfield == parentfield)
+			.where(sd.is_flexible_benefit == is_flexible_benefit)
+			.where(ss.docstatus == 1)
+			.where(ss.employee == self.employee)
+			.where(ss.start_date.between(start_date, end_date))
+			.where(ss.end_date.between(start_date, end_date))
 		)
+
+		if is_tax_applicable is not None:
+			query = query.where(sd.is_tax_applicable == is_tax_applicable)
+
+		if exempted_from_income_tax:
+			query = query.where(sd.exempted_from_income_tax == exempted_from_income_tax)
+
+		if variable_based_on_taxable_salary:
+			query = query.where(sd.variable_based_on_taxable_salary == variable_based_on_taxable_salary)
+
+		if salary_component:
+			query = query.where(sd.salary_component == salary_component)
+
+		result = query.run()
+
+		return flt(result[0][0]) if result else 0.0
 
 	def get_tax_paid_in_period(self, start_date, end_date, tax_component):
 		# find total_tax_paid, tax paid for benefit, additional_salary
-		total_tax_paid = flt(
-			frappe.db.sql(
-				"""
-			select
-				sum(sd.amount)
-			from
-				`tabSalary Detail` sd join `tabSalary Slip` ss on sd.parent=ss.name
-			where
-				sd.parentfield='deductions'
-				and sd.salary_component=%(salary_component)s
-				and sd.variable_based_on_taxable_salary=1
-				and ss.docstatus=1
-				and ss.employee=%(employee)s
-				and ss.start_date between %(from_date)s and %(to_date)s
-				and ss.end_date between %(from_date)s and %(to_date)s
-		""",
-				{
-					"salary_component": tax_component,
-					"employee": self.employee,
-					"from_date": start_date,
-					"to_date": end_date,
-				},
-			)[0][0]
+		total_tax_paid = self.get_salary_slip_details(
+			start_date,
+			end_date,
+			parentfield="deductions",
+			salary_component=tax_component,
+			variable_based_on_taxable_salary=1,
 		)
 
 		tax_deducted_till_date = self.get_opening_for("tax_deducted_till_date", start_date, end_date)
 
 		return total_tax_paid + tax_deducted_till_date
 
-	def get_taxable_earnings(
-		self, allow_tax_exemption=False, based_on_payment_days=0, payroll_period=None
-	):
-		joining_date, relieving_date = self.get_joining_and_relieving_dates()
-
+	def get_taxable_earnings(self, allow_tax_exemption=False, based_on_payment_days=0):
 		taxable_earnings = 0
 		additional_income = 0
 		additional_income_with_full_tax = 0
 		flexi_benefits = 0
+		amount_exempted_from_income_tax = 0
 
 		for earning in self.earnings:
 			if based_on_payment_days:
-				amount, additional_amount = self.get_amount_based_on_payment_days(
-					earning, joining_date, relieving_date
-				)
+				amount, additional_amount = self.get_amount_based_on_payment_days(earning)
 			else:
 				if earning.additional_amount:
 					amount, additional_amount = earning.amount, earning.additional_amount
@@ -1154,7 +1595,7 @@ class SalarySlip(TransactionBase):
 					# Get additional amount based on future recurring additional salary
 					if additional_amount and earning.is_recurring_additional_salary:
 						additional_income += self.get_future_recurring_additional_amount(
-							earning.additional_salary, earning.additional_amount, payroll_period
+							earning.additional_salary, earning.additional_amount
 						)  # Used earning.additional_amount to consider the amount for the full month
 
 					if earning.deduct_full_tax_on_selected_payroll_date:
@@ -1165,44 +1606,57 @@ class SalarySlip(TransactionBase):
 				if ded.exempted_from_income_tax:
 					amount, additional_amount = ded.amount, ded.additional_amount
 					if based_on_payment_days:
-						amount, additional_amount = self.get_amount_based_on_payment_days(
-							ded, joining_date, relieving_date
-						)
+						amount, additional_amount = self.get_amount_based_on_payment_days(ded)
 
 					taxable_earnings -= flt(amount - additional_amount)
 					additional_income -= additional_amount
+					amount_exempted_from_income_tax = flt(amount - additional_amount)
 
 					if additional_amount and ded.is_recurring_additional_salary:
 						additional_income -= self.get_future_recurring_additional_amount(
-							ded.additional_salary, ded.additional_amount, payroll_period
+							ded.additional_salary, ded.additional_amount
 						)  # Used ded.additional_amount to consider the amount for the full month
 
 		return frappe._dict(
 			{
 				"taxable_earnings": taxable_earnings,
 				"additional_income": additional_income,
+				"amount_exempted_from_income_tax": amount_exempted_from_income_tax,
 				"additional_income_with_full_tax": additional_income_with_full_tax,
 				"flexi_benefits": flexi_benefits,
 			}
 		)
 
-	def get_future_recurring_additional_amount(
-		self, additional_salary, monthly_additional_amount, payroll_period
+	def get_future_recurring_period(
+		self,
+		additional_salary,
 	):
-		future_recurring_additional_amount = 0
-		to_date = frappe.db.get_value("Additional Salary", additional_salary, "to_date")
+		to_date = None
+
+		if self.relieving_date:
+			to_date = self.relieving_date
+
+		if not to_date:
+			to_date = frappe.db.get_value("Additional Salary", additional_salary, "to_date", cache=True)
 
 		# future month count excluding current
 		from_date, to_date = getdate(self.start_date), getdate(to_date)
 
 		# If recurring period end date is beyond the payroll period,
 		# last day of payroll period should be considered for recurring period calculation
-		if getdate(to_date) > getdate(payroll_period.end_date):
-			to_date = getdate(payroll_period.end_date)
+		if getdate(to_date) > getdate(self.payroll_period.end_date):
+			to_date = getdate(self.payroll_period.end_date)
 
 		future_recurring_period = ((to_date.year - from_date.year) * 12) + (
 			to_date.month - from_date.month
 		)
+
+		return future_recurring_period
+
+	def get_future_recurring_additional_amount(self, additional_salary, monthly_additional_amount):
+		future_recurring_additional_amount = 0
+
+		future_recurring_period = self.get_future_recurring_period(additional_salary)
 
 		if future_recurring_period > 0:
 			future_recurring_additional_amount = (
@@ -1210,11 +1664,9 @@ class SalarySlip(TransactionBase):
 			)  # Used earning.additional_amount to consider the amount for the full month
 		return future_recurring_additional_amount
 
-	def get_amount_based_on_payment_days(self, row, joining_date, relieving_date):
+	def get_amount_based_on_payment_days(self, row):
 		amount, additional_amount = row.amount, row.additional_amount
-		timesheet_component = frappe.db.get_value(
-			"Salary Structure", self.salary_structure, "salary_component"
-		)
+		timesheet_component = self._salary_structure_doc.salary_component
 
 		if (
 			self.salary_structure
@@ -1225,8 +1677,8 @@ class SalarySlip(TransactionBase):
 			)  # to identify overwritten additional salary
 			and (
 				row.salary_component != timesheet_component
-				or getdate(self.start_date) < joining_date
-				or (relieving_date and getdate(self.end_date) > relieving_date)
+				or getdate(self.start_date) < self.joining_date
+				or (self.relieving_date and getdate(self.end_date) > self.relieving_date)
 			)
 		):
 			additional_amount = flt(
@@ -1251,216 +1703,96 @@ class SalarySlip(TransactionBase):
 			amount = flt(row.default_amount) + flt(row.additional_amount)
 
 		# apply rounding
-		if frappe.get_cached_value(
-			"Salary Component", row.salary_component, "round_to_the_nearest_integer"
+		if frappe.db.get_value(
+			"Salary Component", row.salary_component, "round_to_the_nearest_integer", cache=True
 		):
 			amount, additional_amount = rounded(amount or 0), rounded(additional_amount or 0)
 
 		return amount, additional_amount
 
-	def calculate_unclaimed_taxable_benefits(self, payroll_period):
+	def calculate_unclaimed_taxable_benefits(self):
 		# get total sum of benefits paid
-		total_benefits_paid = flt(
-			frappe.db.sql(
-				"""
-			select sum(sd.amount)
-			from `tabSalary Detail` sd join `tabSalary Slip` ss on sd.parent=ss.name
-			where
-				sd.parentfield='earnings'
-				and sd.is_tax_applicable=1
-				and is_flexible_benefit=1
-				and ss.docstatus=1
-				and ss.employee=%(employee)s
-				and ss.start_date between %(start_date)s and %(end_date)s
-				and ss.end_date between %(start_date)s and %(end_date)s
-		""",
-				{
-					"employee": self.employee,
-					"start_date": payroll_period.start_date,
-					"end_date": self.start_date,
-				},
-			)[0][0]
+		total_benefits_paid = self.get_salary_slip_details(
+			self.payroll_period.start_date,
+			self.start_date,
+			parentfield="earnings",
+			is_tax_applicable=1,
+			is_flexible_benefit=1,
 		)
 
 		# get total benefits claimed
-		total_benefits_claimed = flt(
-			frappe.db.sql(
-				"""
-			select sum(claimed_amount)
-			from `tabEmployee Benefit Claim`
-			where
-				docstatus=1
-				and employee=%s
-				and claim_date between %s and %s
-		""",
-				(self.employee, payroll_period.start_date, self.end_date),
-			)[0][0]
-		)
+		BenefitClaim = frappe.qb.DocType("Employee Benefit Claim")
+		total_benefits_claimed = (
+			frappe.qb.from_(BenefitClaim)
+			.select(Sum(BenefitClaim.claimed_amount))
+			.where(
+				(BenefitClaim.docstatus == 1)
+				& (BenefitClaim.employee == self.employee)
+				& (BenefitClaim.claim_date.between(self.payroll_period.start_date, self.end_date))
+			)
+		).run()
+		total_benefits_claimed = flt(total_benefits_claimed[0][0]) if total_benefits_claimed else 0
 
-		return total_benefits_paid - total_benefits_claimed
+		unclaimed_taxable_benefits = (
+			total_benefits_paid - total_benefits_claimed
+		) + self.current_taxable_earnings_for_payment_days.flexi_benefits
+		return unclaimed_taxable_benefits
 
-	def get_total_exemption_amount(self, payroll_period, tax_slab):
+	def get_total_exemption_amount(self):
 		total_exemption_amount = 0
-		if tax_slab.allow_tax_exemption:
+		if self.tax_slab.allow_tax_exemption:
 			if self.deduct_tax_for_unsubmitted_tax_exemption_proof:
 				exemption_proof = frappe.db.get_value(
 					"Employee Tax Exemption Proof Submission",
-					{"employee": self.employee, "payroll_period": payroll_period.name, "docstatus": 1},
-					["exemption_amount"],
+					{"employee": self.employee, "payroll_period": self.payroll_period.name, "docstatus": 1},
+					"exemption_amount",
+					cache=True,
 				)
 				if exemption_proof:
 					total_exemption_amount = exemption_proof
 			else:
 				declaration = frappe.db.get_value(
 					"Employee Tax Exemption Declaration",
-					{"employee": self.employee, "payroll_period": payroll_period.name, "docstatus": 1},
-					["total_exemption_amount"],
+					{"employee": self.employee, "payroll_period": self.payroll_period.name, "docstatus": 1},
+					"total_exemption_amount",
+					cache=True,
 				)
 				if declaration:
 					total_exemption_amount = declaration
 
-			total_exemption_amount += flt(tax_slab.standard_tax_exemption_amount)
+		if self.tax_slab.standard_tax_exemption_amount:
+			total_exemption_amount += flt(self.tax_slab.standard_tax_exemption_amount)
 
 		return total_exemption_amount
 
-	def get_income_form_other_sources(self, payroll_period):
-		return frappe.get_all(
-			"Employee Other Income",
-			filters={
-				"employee": self.employee,
-				"payroll_period": payroll_period.name,
-				"company": self.company,
-				"docstatus": 1,
-			},
-			fields="SUM(amount) as total_amount",
-		)[0].total_amount
-
-	def get_component_totals(self, component_type, depends_on_payment_days=0):
-		joining_date, relieving_date = frappe.get_cached_value(
-			"Employee", self.employee, ["date_of_joining", "relieving_date"]
+	def get_income_form_other_sources(self):
+		return (
+			frappe.get_all(
+				"Employee Other Income",
+				filters={
+					"employee": self.employee,
+					"payroll_period": self.payroll_period.name,
+					"company": self.company,
+					"docstatus": 1,
+				},
+				fields="SUM(amount) as total_amount",
+			)[0].total_amount
+			or 0.0
 		)
 
+	def get_component_totals(self, component_type, depends_on_payment_days=0):
 		total = 0.0
 		for d in self.get(component_type):
 			if not d.do_not_include_in_total:
 				if depends_on_payment_days:
-					amount = self.get_amount_based_on_payment_days(d, joining_date, relieving_date)[0]
+					amount = self.get_amount_based_on_payment_days(d)[0]
 				else:
 					amount = flt(d.amount, d.precision("amount"))
 				total += amount
 		return total
 
-	def get_joining_and_relieving_dates(self):
-		joining_date, relieving_date = frappe.get_cached_value(
-			"Employee", self.employee, ["date_of_joining", "relieving_date"]
-		)
-
-		if not relieving_date:
-			relieving_date = getdate(self.end_date)
-
-		if not joining_date:
-			frappe.throw(
-				_("Please set the Date Of Joining for employee {0}").format(frappe.bold(self.employee_name))
-			)
-
-		return joining_date, relieving_date
-
-	def set_loan_repayment(self):
-		self.total_loan_repayment = 0
-		self.total_interest_amount = 0
-		self.total_principal_amount = 0
-
-		if not self.get("loans"):
-			for loan in self.get_loan_details():
-
-				amounts = calculate_amounts(loan.name, self.posting_date, "Regular Payment")
-
-				if amounts["interest_amount"] or amounts["payable_principal_amount"]:
-					self.append(
-						"loans",
-						{
-							"loan": loan.name,
-							"total_payment": amounts["interest_amount"] + amounts["payable_principal_amount"],
-							"interest_amount": amounts["interest_amount"],
-							"principal_amount": amounts["payable_principal_amount"],
-							"loan_account": loan.loan_account,
-							"interest_income_account": loan.interest_income_account,
-						},
-					)
-
-		for payment in self.get("loans"):
-			amounts = calculate_amounts(payment.loan, self.posting_date, "Regular Payment")
-			total_amount = amounts["interest_amount"] + amounts["payable_principal_amount"]
-			if payment.total_payment > total_amount:
-				frappe.throw(
-					_(
-						"""Row {0}: Paid amount {1} is greater than pending accrued amount {2} against loan {3}"""
-					).format(
-						payment.idx,
-						frappe.bold(payment.total_payment),
-						frappe.bold(total_amount),
-						frappe.bold(payment.loan),
-					)
-				)
-
-			self.total_interest_amount += payment.interest_amount
-			self.total_principal_amount += payment.principal_amount
-
-			self.total_loan_repayment += payment.total_payment
-
-	def get_loan_details(self):
-		loan_details = frappe.get_all(
-			"Loan",
-			fields=["name", "interest_income_account", "loan_account", "loan_type", "is_term_loan"],
-			filters={
-				"applicant": self.employee,
-				"docstatus": 1,
-				"repay_from_salary": 1,
-				"company": self.company,
-			},
-		)
-
-		if loan_details:
-			for loan in loan_details:
-				if loan.is_term_loan:
-					process_loan_interest_accrual_for_term_loans(
-						posting_date=self.posting_date, loan_type=loan.loan_type, loan=loan.name
-					)
-
-		return loan_details
-
-	def make_loan_repayment_entry(self):
-		payroll_payable_account = get_payroll_payable_account(self.company, self.payroll_entry)
-		for loan in self.loans:
-			if loan.total_payment:
-				repayment_entry = create_repayment_entry(
-					loan.loan,
-					self.employee,
-					self.company,
-					self.posting_date,
-					loan.loan_type,
-					"Regular Payment",
-					loan.interest_amount,
-					loan.principal_amount,
-					loan.total_payment,
-					payroll_payable_account=payroll_payable_account,
-				)
-
-				repayment_entry.save()
-				repayment_entry.submit()
-
-				frappe.db.set_value(
-					"Salary Slip Loan", loan.name, "loan_repayment_entry", repayment_entry.name
-				)
-
-	def cancel_loan_repayment_entry(self):
-		for loan in self.loans:
-			if loan.loan_repayment_entry:
-				repayment_entry = frappe.get_doc("Loan Repayment", loan.loan_repayment_entry)
-				repayment_entry.cancel()
-
 	def email_salary_slip(self):
-		receiver = frappe.db.get_value("Employee", self.employee, "prefered_email")
+		receiver = frappe.db.get_value("Employee", self.employee, "prefered_email", cache=True)
 		payroll_settings = frappe.get_single("Payroll Settings")
 		message = "Please see attachment"
 		password = None
@@ -1473,6 +1805,7 @@ class SalarySlip(TransactionBase):
 
 		if receiver:
 			email_args = {
+				"sender": payroll_settings.sender_email,
 				"recipients": [receiver],
 				"message": _(message),
 				"subject": "Salary Slip - from {0} to {1}".format(self.start_date, self.end_date),
@@ -1513,13 +1846,13 @@ class SalarySlip(TransactionBase):
 		self.calculate_net_pay()
 
 	def pull_emp_details(self):
-		emp = frappe.db.get_value(
+		account_details = frappe.get_cached_value(
 			"Employee", self.employee, ["bank_name", "bank_ac_no", "salary_mode"], as_dict=1
 		)
-		if emp:
-			self.mode_of_payment = emp.salary_mode
-			self.bank_name = emp.bank_name
-			self.bank_account_no = emp.bank_ac_no
+		if account_details:
+			self.mode_of_payment = account_details.salary_mode
+			self.bank_name = account_details.bank_name
+			self.bank_account_no = account_details.bank_ac_no
 
 	@frappe.whitelist()
 	def process_salary_based_on_working_days(self):
@@ -1539,7 +1872,9 @@ class SalarySlip(TransactionBase):
 			if hasattr(self, "deductions"):
 				for deduction in self.deductions:
 					self.total_deduction += flt(deduction.amount, deduction.precision("amount"))
-			self.net_pay = flt(self.gross_pay) - flt(self.total_deduction) - flt(self.total_loan_repayment)
+			self.net_pay = (
+				flt(self.gross_pay) - flt(self.total_deduction) - flt(self.get("total_loan_repayment"))
+			)
 		self.set_base_totals()
 
 	def set_base_totals(self):
@@ -1561,7 +1896,7 @@ class SalarySlip(TransactionBase):
 		wages_amount = self.total_working_hours * self.hour_rate
 		self.base_hour_rate = flt(self.hour_rate) * flt(self.exchange_rate)
 		salary_component = frappe.db.get_value(
-			"Salary Structure", {"name": self.salary_structure}, "salary_component"
+			"Salary Structure", {"name": self.salary_structure}, "salary_component", cache=True
 		)
 		if self.earnings:
 			for i, earning in enumerate(self.earnings):
@@ -1617,41 +1952,35 @@ class SalarySlip(TransactionBase):
 	def compute_component_wise_year_to_date(self):
 		period_start_date, period_end_date = self.get_year_to_date_period()
 
+		ss = frappe.qb.DocType("Salary Slip")
+		sd = frappe.qb.DocType("Salary Detail")
+
 		for key in ("earnings", "deductions"):
 			for component in self.get(key):
 				year_to_date = 0
-				component_sum = frappe.db.sql(
-					"""
-					SELECT sum(detail.amount) as sum
-					FROM `tabSalary Detail` as detail
-					INNER JOIN `tabSalary Slip` as salary_slip
-					ON detail.parent = salary_slip.name
-					WHERE
-						salary_slip.employee = %(employee)s
-						AND detail.salary_component = %(component)s
-						AND salary_slip.start_date >= %(period_start_date)s
-						AND salary_slip.end_date < %(period_end_date)s
-						AND salary_slip.name != %(docname)s
-						AND salary_slip.docstatus = 1""",
-					{
-						"employee": self.employee,
-						"component": component.salary_component,
-						"period_start_date": period_start_date,
-						"period_end_date": period_end_date,
-						"docname": self.name,
-					},
-				)
+				component_sum = (
+					frappe.qb.from_(sd)
+					.inner_join(ss)
+					.on(sd.parent == ss.name)
+					.select(Sum(sd.amount).as_("sum"))
+					.where(
+						(ss.employee == self.employee)
+						& (sd.salary_component == component.salary_component)
+						& (ss.start_date >= period_start_date)
+						& (ss.end_date < period_end_date)
+						& (ss.name != self.name)
+						& (ss.docstatus == 1)
+					)
+				).run()
 
 				year_to_date = flt(component_sum[0][0]) if component_sum else 0.0
 				year_to_date += component.amount
 				component.year_to_date = year_to_date
 
 	def get_year_to_date_period(self):
-		payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
-
-		if payroll_period:
-			period_start_date = payroll_period.start_date
-			period_end_date = payroll_period.end_date
+		if self.payroll_period:
+			period_start_date = self.payroll_period.start_date
+			period_end_date = self.payroll_period.end_date
 		else:
 			# get dates based on fiscal year if no payroll period exists
 			fiscal_year = get_fiscal_year(date=self.start_date, company=self.company, as_dict=1)
@@ -1684,11 +2013,10 @@ class SalarySlip(TransactionBase):
 
 def unlink_ref_doc_from_salary_slip(doc, method=None):
 	"""Unlinks accrual Journal Entry from Salary Slips on cancellation"""
-	linked_ss = frappe.db.sql_list(
-		"""select name from `tabSalary Slip`
-	where journal_entry=%s and docstatus < 2""",
-		(doc.name),
+	linked_ss = frappe.get_all(
+		"Salary Slip", filters={"journal_entry": doc.name, "docstatus": ["<", 2]}, pluck="name"
 	)
+
 	if linked_ss:
 		for ss in linked_ss:
 			ss_doc = frappe.get_doc("Salary Slip", ss)
@@ -1696,15 +2024,16 @@ def unlink_ref_doc_from_salary_slip(doc, method=None):
 
 
 def generate_password_for_pdf(policy_template, employee):
-	employee = frappe.get_doc("Employee", employee)
+	employee = frappe.get_cached_doc("Employee", employee)
 	return policy_template.format(**employee.as_dict())
 
 
 def get_salary_component_data(component):
-	return frappe.get_value(
+	# get_cached_value doesn't work here due to alias "name as salary_component"
+	return frappe.db.get_value(
 		"Salary Component",
 		component,
-		[
+		(
 			"name as salary_component",
 			"depends_on_payment_days",
 			"salary_component_abbr as abbr",
@@ -1712,19 +2041,20 @@ def get_salary_component_data(component):
 			"is_tax_applicable",
 			"is_flexible_benefit",
 			"variable_based_on_taxable_salary",
-		],
+		),
 		as_dict=1,
+		cache=True,
 	)
 
 
 def get_payroll_payable_account(company, payroll_entry):
 	if payroll_entry:
 		payroll_payable_account = frappe.db.get_value(
-			"Payroll Entry", payroll_entry, "payroll_payable_account"
+			"Payroll Entry", payroll_entry, "payroll_payable_account", cache=True
 		)
 	else:
 		payroll_payable_account = frappe.db.get_value(
-			"Company", company, "default_payroll_payable_account"
+			"Company", company, "default_payroll_payable_account", cache=True
 		)
 
 	return payroll_payable_account
@@ -1768,7 +2098,7 @@ def eval_tax_slab_condition(condition, eval_globals=None, eval_locals=None):
 			"float": float,
 			"long": int,
 			"round": round,
-			"date": datetime.date,
+			"date": date,
 			"getdate": getdate,
 		}
 
@@ -1788,23 +2118,11 @@ def eval_tax_slab_condition(condition, eval_globals=None, eval_locals=None):
 		raise
 
 
-def get_lwp_or_ppl_for_date(date, employee, holidays):
+def get_lwp_or_ppl_for_date_range(employee, start_date, end_date):
 	LeaveApplication = frappe.qb.DocType("Leave Application")
 	LeaveType = frappe.qb.DocType("Leave Type")
 
-	is_half_day = (
-		frappe.qb.terms.Case()
-		.when(
-			(
-				(LeaveApplication.half_day_date == date)
-				| (LeaveApplication.from_date == LeaveApplication.to_date)
-			),
-			LeaveApplication.half_day,
-		)
-		.else_(0)
-	).as_("is_half_day")
-
-	query = (
+	leaves = (
 		frappe.qb.from_(LeaveApplication)
 		.inner_join(LeaveType)
 		.on((LeaveType.name == LeaveApplication.leave_type))
@@ -1812,7 +2130,11 @@ def get_lwp_or_ppl_for_date(date, employee, holidays):
 			LeaveApplication.name,
 			LeaveType.is_ppl,
 			LeaveType.fraction_of_daily_salary_per_leave,
-			(is_half_day),
+			LeaveType.include_holiday,
+			LeaveApplication.from_date,
+			LeaveApplication.to_date,
+			LeaveApplication.half_day,
+			LeaveApplication.half_day_date,
 		)
 		.where(
 			(((LeaveType.is_lwp == 1) | (LeaveType.is_ppl == 1)))
@@ -1820,15 +2142,21 @@ def get_lwp_or_ppl_for_date(date, employee, holidays):
 			& (LeaveApplication.status == "Approved")
 			& (LeaveApplication.employee == employee)
 			& ((LeaveApplication.salary_slip.isnull()) | (LeaveApplication.salary_slip == ""))
-			& ((LeaveApplication.from_date <= date) & (date <= LeaveApplication.to_date))
+			& ((LeaveApplication.from_date >= start_date) & (LeaveApplication.to_date <= end_date))
 		)
-	)
+	).run(as_dict=True)
 
-	# if it's a holiday only include if leave type has "include holiday" enabled
-	if date in holidays:
-		query = query.where((LeaveType.include_holiday == "1"))
+	leave_date_mapper = frappe._dict()
+	for leave in leaves:
+		if leave.from_date == leave.to_date:
+			leave_date_mapper[leave.from_date] = leave
+		else:
+			date_diff = (getdate(leave.to_date) - getdate(leave.from_date)).days
+			for i in range(date_diff + 1):
+				date = add_days(leave.from_date, i)
+				leave_date_mapper[date] = leave
 
-	return query.run(as_dict=True)
+	return leave_date_mapper
 
 
 @frappe.whitelist()
@@ -1852,9 +2180,95 @@ def set_missing_values(time_sheet, target):
 	target.append("timesheets", {"time_sheet": doc.name, "working_hours": doc.total_hours})
 
 
-def date_range(start=None, end=None):
-	if start and end:
-		delta = end - start  # as timedelta
-		days = [str(start + timedelta(days=i)) for i in range(delta.days + 1)]
-		return days
-	return []
+def throw_error_message(row, error, title, description=None):
+	data = frappe._dict(
+		{
+			"doctype": row.parenttype,
+			"name": row.parent,
+			"doclink": get_link_to_form(row.parenttype, row.parent),
+			"row_id": row.idx,
+			"error": error,
+			"title": title,
+			"description": description or "",
+		}
+	)
+
+	message = _(
+		"Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
+	).format(**data)
+
+	frappe.throw(message, title=title)
+
+
+def on_doctype_update():
+	frappe.db.add_index("Salary Slip", ["employee", "start_date", "end_date"])
+
+
+def _safe_eval(code: str, eval_globals: dict | None = None, eval_locals: dict | None = None):
+	"""Old version of safe_eval from framework.
+
+	Note: current frappe.safe_eval transforms code so if you have nested
+	iterations with too much depth then it can hit recursion limit of python.
+	There's no workaround for this and people need large formulas in some
+	countries so this is alternate implementation for that.
+
+	WARNING: DO NOT use this function anywhere else outside of this file.
+	"""
+	code = unicodedata.normalize("NFKC", code)
+
+	_check_attributes(code)
+
+	whitelisted_globals = {"int": int, "float": float, "long": int, "round": round}
+	if not eval_globals:
+		eval_globals = {}
+
+	eval_globals["__builtins__"] = {}
+	eval_globals.update(whitelisted_globals)
+	return eval(code, eval_globals, eval_locals)  # nosemgrep
+
+
+def _check_attributes(code: str) -> None:
+	import ast
+
+	from frappe.utils.safe_exec import UNSAFE_ATTRIBUTES
+
+	unsafe_attrs = set(UNSAFE_ATTRIBUTES).union(["__"]) - {"format"}
+
+	for attribute in unsafe_attrs:
+		if attribute in code:
+			raise SyntaxError(f'Illegal rule {frappe.bold(code)}. Cannot use "{attribute}"')
+
+	BLOCKED_NODES = (ast.NamedExpr,)
+
+	tree = ast.parse(code, mode="eval")
+	for node in ast.walk(tree):
+		if isinstance(node, BLOCKED_NODES):
+			raise SyntaxError(f"Operation not allowed: line {node.lineno} column {node.col_offset}")
+		if (
+			isinstance(node, ast.Attribute)
+			and isinstance(node.attr, str)
+			and node.attr in UNSAFE_ATTRIBUTES
+		):
+			raise SyntaxError(f'Illegal rule {frappe.bold(code)}. Cannot use "{node.attr}"')
+
+
+@frappe.whitelist()
+def enqueue_email_salary_slips(names) -> None:
+	"""enqueue bulk emailing salary slips"""
+	import json
+
+	if isinstance(names, str):
+		names = json.loads(names)
+
+	frappe.enqueue("hrms.payroll.doctype.salary_slip.salary_slip.email_salary_slips", names=names)
+	frappe.msgprint(
+		_("Salary slip emails have been enqueued for sending. Check {0} for status.").format(
+			f"""<a href='{frappe.utils.get_url_to_list("Email Queue")}' target='blank'>Email Queue</a>"""
+		)
+	)
+
+
+def email_salary_slips(names) -> None:
+	for name in names:
+		salary_slip = frappe.get_doc("Salary Slip", name)
+		salary_slip.email_salary_slip()

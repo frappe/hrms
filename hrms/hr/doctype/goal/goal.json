@@ -1,0 +1,281 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:HR-GOAL-{YYYY}-{####}",
+ "creation": "2022-08-24 16:07:57.669638",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "goal_name",
+  "is_group",
+  "parent_goal",
+  "column_break_tyox",
+  "progress",
+  "status",
+  "section_break_nf0j",
+  "employee",
+  "employee_name",
+  "company",
+  "user",
+  "column_break_ahxr",
+  "start_date",
+  "end_date",
+  "section_break_cycle",
+  "appraisal_cycle",
+  "column_break_4",
+  "kra",
+  "section_break_12",
+  "description",
+  "lft",
+  "rgt",
+  "old_parent"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "employee",
+   "fetch_from": "appraisal_cycle.start_date",
+   "fetch_if_empty": 1,
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "in_standard_filter": 1,
+   "label": "Start Date",
+   "reqd": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "progress",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Progress",
+   "read_only_depends_on": "eval:doc.is_group || doc.status=='Closed'"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "\nPending\nIn Progress\nCompleted\nArchived\nClosed",
+   "read_only": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "collapsible": 1,
+   "fieldname": "section_break_12",
+   "fieldtype": "Section Break",
+   "label": "Description"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Description"
+  },
+  {
+   "fieldname": "lft",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Left",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "rgt",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Right",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "default": "0",
+   "fieldname": "is_group",
+   "fieldtype": "Check",
+   "label": "Is Group",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "old_parent",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Old Parent",
+   "options": "Goal"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "depends_on": "employee",
+   "fieldname": "parent_goal",
+   "fieldtype": "Link",
+   "label": "Parent Goal",
+   "options": "Goal"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "depends_on": "employee",
+   "fetch_from": "parent_goal.kra",
+   "fieldname": "kra",
+   "fieldtype": "Link",
+   "label": "KRA",
+   "mandatory_depends_on": "eval: !doc.parent_goal && doc.appraisal_cycle",
+   "options": "KRA",
+   "read_only_depends_on": "eval: doc.parent_goal"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "depends_on": "employee",
+   "fetch_from": "parent_goal.appraisal_cycle",
+   "fieldname": "appraisal_cycle",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Appraisal Cycle",
+   "options": "Appraisal Cycle",
+   "read_only_depends_on": "eval: doc.parent_goal",
+   "set_only_once": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.user_id",
+   "fieldname": "user",
+   "fieldtype": "Data",
+   "label": "User",
+   "read_only": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "depends_on": "employee",
+   "fetch_from": "appraisal_cycle.end_date",
+   "fetch_if_empty": 1,
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "End Date"
+  },
+  {
+   "fieldname": "column_break_tyox",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_nf0j",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "goal_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Goal",
+   "reqd": 1
+  },
+  {
+   "description": "Link the cycle and tag KRA to your goal to update the appraisal's goal score based on the goal progress",
+   "fieldname": "section_break_cycle",
+   "fieldtype": "Section Break",
+   "label": "Appraisal Linking"
+  },
+  {
+   "fieldname": "column_break_ahxr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_tree": 1,
+ "links": [],
+ "modified": "2023-09-29 12:38:53.405179",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Goal",
+ "naming_rule": "Expression",
+ "nsm_parent_field": "parent_goal",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "employee, goal_name",
+ "show_preview_popup": 1,
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "goal_name",
+ "track_changes": 1
+}

@@ -1,8 +1,6 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
 
-
-
 frappe.provide("hrms.hr");
 
 hrms.hr.AttendanceControlPanel = class AttendanceControlPanel extends frappe.ui.form.Controller {
@@ -31,11 +29,12 @@ hrms.hr.AttendanceControlPanel = class AttendanceControlPanel extends frappe.ui.
 	}
 
 	show_upload() {
-		var $wrapper = $(cur_frm.fields_dict.upload_html.wrapper).empty();
+		let $wrapper = $(this.frm.fields_dict.upload_html.wrapper).empty();
 		new frappe.ui.FileUploader({
 			wrapper: $wrapper,
 			method: 'hrms.hr.doctype.upload_attendance.upload_attendance.upload'
 		});
+		$wrapper.addClass("pb-5");
 	}
 
 	setup_import_progress() {

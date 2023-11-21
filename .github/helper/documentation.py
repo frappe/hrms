@@ -3,14 +3,6 @@ import requests
 from urllib.parse import urlparse
 
 
-docs_repos = [
-	"frappe_docs",
-	"erpnext_documentation",
-	"erpnext_com",
-	"frappe_io",
-]
-
-
 def uri_validator(x):
 	result = urlparse(x)
 	return all([result.scheme, result.netloc, result.path])
@@ -22,15 +14,15 @@ def docs_link_exists(body):
 				parsed_url = urlparse(word)
 				if parsed_url.netloc == "github.com":
 					parts = parsed_url.path.split('/')
-					if len(parts) == 5 and parts[1] == "frappe" and parts[2] in docs_repos:
+					if len(parts) == 5 and parts[1] == "frappe" and parts[2] == "hrms":
 						return True
-				elif parsed_url.netloc == "docs.erpnext.com":
+				elif parsed_url.netloc == "frappehr.com":
 					return True
 
 
 if __name__ == "__main__":
 	pr = sys.argv[1]
-	response = requests.get("https://api.github.com/repos/frappe/erpnext/pulls/{}".format(pr))
+	response = requests.get("https://api.github.com/repos/frappe/hrms/pulls/{}".format(pr))
 
 	if response.ok:
 		payload = response.json()

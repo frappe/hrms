@@ -9,7 +9,6 @@
  "field_order": [
   "select_payroll_period",
   "posting_date",
-  "payroll_frequency",
   "company",
   "column_break_5",
   "currency",
@@ -17,10 +16,11 @@
   "payroll_payable_account",
   "status",
   "section_break_cypo",
+  "salary_slip_based_on_timesheet",
+  "payroll_frequency",
   "start_date",
   "end_date",
   "column_break_13",
-  "salary_slip_based_on_timesheet",
   "deduct_tax_for_unclaimed_employee_benefits",
   "deduct_tax_for_unsubmitted_tax_exemption_proof",
   "employees_tab",
@@ -29,6 +29,7 @@
   "department",
   "column_break_21",
   "designation",
+  "grade",
   "number_of_employees",
   "section_break_24",
   "employees",
@@ -65,8 +66,8 @@
    "fieldname": "payroll_frequency",
    "fieldtype": "Select",
    "label": "Payroll Frequency",
-   "options": "\nMonthly\nFortnightly\nBimonthly\nWeekly\nDaily",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.salary_slip_based_on_timesheet == 0",
+   "options": "\nMonthly\nFortnightly\nBimonthly\nWeekly\nDaily"
   },
   {
    "fieldname": "company",
@@ -324,12 +325,18 @@
    "fieldtype": "Tab Break",
    "label": "Connections",
    "show_dashboard": 1
+  },
+  {
+   "fieldname": "grade",
+   "fieldtype": "Link",
+   "label": "Grade",
+   "options": "Employee Grade"
   }
  ],
  "icon": "fa fa-cog",
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-05 17:07:00.372983",
+ "modified": "2023-10-10 14:21:24.517349",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",

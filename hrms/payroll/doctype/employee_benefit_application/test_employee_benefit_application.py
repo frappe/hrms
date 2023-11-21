@@ -1,8 +1,6 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, date_diff, get_year_ending, get_year_start, getdate
@@ -55,6 +53,7 @@ class TestEmployeeBenefitApplication(FrappeTestCase):
 			include_flexi_benefits=True,
 			employee=employee,
 			payroll_period=payroll_period,
+			company="_Test Company",
 		)
 		salary_slip = make_salary_slip(salary_structure.name, employee=employee, posting_date=getdate())
 		salary_slip.insert()

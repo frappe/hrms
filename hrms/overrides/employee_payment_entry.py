@@ -27,9 +27,16 @@ class EmployeePaymentEntry(PaymentEntry):
 		elif self.party_type == "Employee":
 			return ("Expense Claim", "Journal Entry", "Employee Advance", "Gratuity")
 
-	def set_missing_ref_details(self, force=False):
+	def set_missing_ref_details(
+		self, force: bool = False, update_ref_details_only_for: list | None = None
+	) -> None:
 		for d in self.get("references"):
 			if d.allocated_amount:
+				if update_ref_details_only_for and (
+					not (d.reference_doctype, d.reference_name) in update_ref_details_only_for
+				):
+					continue
+
 				ref_details = get_payment_reference_details(
 					d.reference_doctype, d.reference_name, self.party_account_currency
 				)
@@ -99,6 +106,7 @@ def get_payment_entry_for_employee(dt, dn, party_amount=None, bank_account=None,
 
 	pe.setup_party_account_field()
 	pe.set_missing_values()
+	pe.set_missing_ref_details()
 
 	if party_account and bank:
 		reference_doc = None

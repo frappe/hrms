@@ -3,11 +3,10 @@
 
 
 from itertools import groupby
-from typing import Dict, List, Optional, Tuple
 
 import frappe
 from frappe import _
-from frappe.utils import add_days, getdate
+from frappe.utils import add_days, cint, flt, getdate
 
 from hrms.hr.doctype.leave_allocation.leave_allocation import get_previous_allocation
 from hrms.hr.doctype.leave_application.leave_application import (
@@ -18,17 +17,17 @@ from hrms.hr.doctype.leave_application.leave_application import (
 Filters = frappe._dict
 
 
-def execute(filters: Optional[Filters] = None) -> Tuple:
+def execute(filters: Filters | None = None) -> tuple:
 	if filters.to_date <= filters.from_date:
 		frappe.throw(_('"From Date" can not be greater than or equal to "To Date"'))
 
 	columns = get_columns()
 	data = get_data(filters)
-	charts = get_chart_data(data)
+	charts = get_chart_data(data, filters)
 	return columns, data, None, charts
 
 
-def get_columns() -> List[Dict]:
+def get_columns() -> list[dict]:
 	return [
 		{
 			"label": _("Leave Type"),
@@ -84,35 +83,27 @@ def get_columns() -> List[Dict]:
 	]
 
 
-def get_data(filters: Filters) -> List:
-	leave_types = frappe.db.get_list("Leave Type", pluck="name", order_by="name")
-	conditions = get_conditions(filters)
+def get_data(filters: Filters) -> list:
+	leave_types = get_leave_types()
+	active_employees = get_employees(filters)
 
-	user = frappe.session.user
-	department_approver_map = get_department_leave_approver_map(filters.get("department"))
-
-	active_employees = frappe.get_list(
-		"Employee",
-		filters=conditions,
-		fields=["name", "employee_name", "department", "user_id", "leave_approver"],
-	)
+	precision = cint(frappe.db.get_single_value("System Settings", "float_precision"))
+	consolidate_leave_types = len(active_employees) > 1 and filters.consolidate_leave_types
+	row = None
 
 	data = []
 
 	for leave_type in leave_types:
-		if len(active_employees) > 1:
+		if consolidate_leave_types:
 			data.append({"leave_type": leave_type})
 		else:
 			row = frappe._dict({"leave_type": leave_type})
 
 		for employee in active_employees:
-
-			leave_approvers = department_approver_map.get(employee.department_name, []).append(
-				employee.leave_approver
-			)
-
-			if len(active_employees) > 1:
+			if consolidate_leave_types:
 				row = frappe._dict()
+			else:
+				row = frappe._dict({"leave_type": leave_type})
 
 			row.employee = employee.name
 			row.employee_name = employee.employee_name
@@ -126,17 +117,45 @@ def get_data(filters: Filters) -> List:
 			)
 			opening = get_opening_balance(employee.name, leave_type, filters, carry_forwarded_leaves)
 
-			row.leaves_allocated = new_allocation
-			row.leaves_expired = expired_leaves
-			row.opening_balance = opening
-			row.leaves_taken = leaves_taken
+			row.leaves_allocated = flt(new_allocation, precision)
+			row.leaves_expired = flt(expired_leaves, precision)
+			row.opening_balance = flt(opening, precision)
+			row.leaves_taken = flt(leaves_taken, precision)
 
-			# not be shown on the basis of days left it create in user mind for carry_forward leave
-			row.closing_balance = new_allocation + opening - (row.leaves_expired + leaves_taken)
+			closing = new_allocation + opening - (row.leaves_expired + leaves_taken)
+			row.closing_balance = flt(closing, precision)
 			row.indent = 1
 			data.append(row)
 
 	return data
+
+
+def get_leave_types() -> list[str]:
+	LeaveType = frappe.qb.DocType("Leave Type")
+	return (frappe.qb.from_(LeaveType).select(LeaveType.name).orderby(LeaveType.name)).run(
+		pluck="name"
+	)
+
+
+def get_employees(filters: Filters) -> list[dict]:
+	Employee = frappe.qb.DocType("Employee")
+	query = frappe.qb.from_(Employee).select(
+		Employee.name,
+		Employee.employee_name,
+		Employee.department,
+	)
+
+	for field in ["company", "department"]:
+		if filters.get(field):
+			query = query.where((getattr(Employee, field) == filters.get(field)))
+
+	if filters.get("employee"):
+		query = query.where(Employee.name == filters.get("employee"))
+
+	if filters.get("employee_status"):
+		query = query.where(Employee.status == filters.get("employee_status"))
+
+	return query.run(as_dict=True)
 
 
 def get_opening_balance(
@@ -163,51 +182,9 @@ def get_opening_balance(
 	return opening_balance
 
 
-def get_conditions(filters: Filters) -> Dict:
-	conditions = {}
-
-	if filters.get("employee"):
-		conditions["name"] = filters.get("employee")
-
-	if filters.get("company"):
-		conditions["company"] = filters.get("company")
-
-	if filters.get("department"):
-		conditions["department"] = filters.get("department")
-
-	if filters.get("employee_status"):
-		conditions["status"] = filters.get("employee_status")
-
-	return conditions
-
-
-def get_department_leave_approver_map(department: Optional[str] = None):
-	# get current department and all its child
-	department_list = frappe.get_list(
-		"Department",
-		filters={"disabled": 0},
-		or_filters={"name": department, "parent_department": department},
-		pluck="name",
-	)
-	# retrieve approvers list from current department and from its subsequent child departments
-	approver_list = frappe.get_all(
-		"Department Approver",
-		filters={"parentfield": "leave_approvers", "parent": ("in", department_list)},
-		fields=["parent", "approver"],
-		as_list=True,
-	)
-
-	approvers = {}
-
-	for k, v in approver_list:
-		approvers.setdefault(k, []).append(v)
-
-	return approvers
-
-
 def get_allocated_and_expired_leaves(
 	from_date: str, to_date: str, employee: str, leave_type: str
-) -> Tuple[float, float, float]:
+) -> tuple[float, float, float]:
 	new_allocation = 0
 	expired_leaves = 0
 	carry_forwarded_leaves = 0
@@ -237,9 +214,9 @@ def get_allocated_and_expired_leaves(
 
 def get_leave_ledger_entries(
 	from_date: str, to_date: str, employee: str, leave_type: str
-) -> List[Dict]:
+) -> list[dict]:
 	ledger = frappe.qb.DocType("Leave Ledger Entry")
-	records = (
+	return (
 		frappe.qb.from_(ledger)
 		.select(
 			ledger.employee,
@@ -265,15 +242,16 @@ def get_leave_ledger_entries(
 		)
 	).run(as_dict=True)
 
-	return records
 
-
-def get_chart_data(data: List) -> Dict:
+def get_chart_data(data: list, filters: Filters) -> dict:
 	labels = []
 	datasets = []
 	employee_data = data
 
-	if data and data[0].get("employee_name"):
+	if not data:
+		return None
+
+	if data and filters.employee:
 		get_dataset_for_chart(employee_data, datasets, labels)
 
 	chart = {
@@ -285,7 +263,7 @@ def get_chart_data(data: List) -> Dict:
 	return chart
 
 
-def get_dataset_for_chart(employee_data: List, datasets: List, labels: List) -> List:
+def get_dataset_for_chart(employee_data: list, datasets: list, labels: list) -> list:
 	leaves = []
 	employee_data = sorted(employee_data, key=lambda k: k["employee_name"])
 

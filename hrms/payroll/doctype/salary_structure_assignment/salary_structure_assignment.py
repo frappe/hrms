@@ -22,6 +22,7 @@ class SalaryStructureAssignment(Document):
 
 	def validate(self):
 		self.validate_dates()
+		self.validate_company()
 		self.validate_income_tax_slab()
 		self.set_payroll_payable_account()
 
@@ -74,6 +75,17 @@ class SalaryStructureAssignment(Document):
 						self.from_date, relieving_date
 					)
 				)
+
+	def validate_company(self):
+		salary_structure_company = frappe.db.get_value(
+			"Salary Structure", self.salary_structure, "company", cache=True
+		)
+		if self.company != salary_structure_company:
+			frappe.throw(
+				_("Salary Structure {0} does not belong to company {1}").format(
+					frappe.bold(self.salary_structure), frappe.bold(self.company)
+				)
+			)
 
 	def validate_income_tax_slab(self):
 		if not self.income_tax_slab:

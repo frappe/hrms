@@ -9,7 +9,8 @@ test_records = frappe.get_test_records("Leave Type")
 def create_leave_type(**args):
 	args = frappe._dict(args)
 	if frappe.db.exists("Leave Type", args.leave_type_name):
-		return frappe.get_doc("Leave Type", args.leave_type_name)
+		frappe.delete_doc("Leave Type", args.leave_type_name)
+
 	leave_type = frappe.get_doc(
 		{
 			"doctype": "Leave Type",
@@ -21,12 +22,16 @@ def create_leave_type(**args):
 			"is_ppl": args.is_ppl or 0,
 			"is_carry_forward": args.is_carry_forward or 0,
 			"expire_carry_forwarded_leaves_after_days": args.expire_carry_forwarded_leaves_after_days or 0,
-			"encashment_threshold_days": args.encashment_threshold_days or 5,
+			"non_encashable_leaves": args.non_encashable_leaves or 5,
 			"earning_component": "Leave Encashment",
+			"max_leaves_allowed": args.max_leaves_allowed,
+			"maximum_carry_forwarded_leaves": args.maximum_carry_forwarded_leaves,
 		}
 	)
 
 	if leave_type.is_ppl:
 		leave_type.fraction_of_daily_salary_per_leave = args.fraction_of_daily_salary_per_leave or 0.5
+
+	leave_type.insert()
 
 	return leave_type

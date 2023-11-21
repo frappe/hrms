@@ -1,8 +1,6 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-import unittest
-
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, add_months, nowdate
@@ -12,7 +10,10 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_employee_salary_slip, setup_test
-from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+	make_salary_slip,
+	make_salary_structure,
+)
 
 
 class TestAdditionalSalary(FrappeTestCase):
@@ -29,9 +30,7 @@ class TestAdditionalSalary(FrappeTestCase):
 		)
 		add_sal = get_additional_salary(emp_id)
 
-		ss = make_employee_salary_slip(
-			"test_additional@salary.com", "Monthly", salary_structure=salary_structure.name
-		)
+		ss = make_employee_salary_slip(emp_id, "Monthly", salary_structure=salary_structure.name)
 		for earning in ss.earnings:
 			if earning.salary_component == "Recurring Salary Component":
 				amount = earning.amount
@@ -40,6 +39,26 @@ class TestAdditionalSalary(FrappeTestCase):
 
 		self.assertEqual(amount, add_sal.amount)
 		self.assertEqual(salary_component, add_sal.salary_component)
+
+	def test_disabled_recurring_additional_salary(self):
+		emp_id = make_employee("test_additional@salary.com")
+
+		salary_structure = make_salary_structure(
+			"Test Salary Structure Additional Salary", "Monthly", employee=emp_id
+		)
+		add_sal = get_additional_salary(emp_id)
+		ss = make_employee_salary_slip(emp_id, "Monthly", salary_structure=salary_structure.name)
+		salary_componets = [earning.salary_component for earning in ss.earnings]
+		self.assertIn("Recurring Salary Component", salary_componets)
+
+		# Test disabling recurring additional salary
+		posting_date = add_months(ss.posting_date, 1)
+		frappe.db.set_value("Additional Salary", add_sal.name, "disabled", 1)
+
+		ss = make_salary_slip(salary_structure.name, employee=emp_id, posting_date=posting_date)
+
+		salary_components = [earning.salary_component for earning in ss.earnings]
+		self.assertNotIn("Recurring Salary Component", salary_components)
 
 	def test_non_recurring_additional_salary(self):
 		amount = 0
@@ -53,9 +72,7 @@ class TestAdditionalSalary(FrappeTestCase):
 		)
 		add_sal = get_additional_salary(emp_id, recurring=False, payroll_date=date)
 
-		ss = make_employee_salary_slip(
-			"test_additional@salary.com", "Monthly", salary_structure=salary_structure.name
-		)
+		ss = make_employee_salary_slip(emp_id, "Monthly", salary_structure=salary_structure.name)
 
 		amount, salary_component = None, None
 		for earning in ss.earnings:
