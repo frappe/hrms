@@ -23,7 +23,7 @@ class InterviewFeedback(Document):
 		self.update_interview_average_rating()
 
 	def validate_interviewer(self):
-		applicable_interviewers = get_applicable_interviewers(self.interview_round)
+		applicable_interviewers = get_applicable_interviewers(self.interview)
 		if self.interviewer not in applicable_interviewers:
 			frappe.throw(
 				_("{0} is not allowed to submit Interview Feedback for the Interview: {1}").format(
@@ -80,5 +80,5 @@ class InterviewFeedback(Document):
 
 
 @frappe.whitelist()
-def get_applicable_interviewers(interview_round):
-	return frappe.get_all("Interviewer", filters={"parent": interview_round}, pluck="user")
+def get_applicable_interviewers(parent):
+	return frappe.get_all("Interviewer", filters={"parent": parent}, pluck="user")
