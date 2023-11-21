@@ -10,8 +10,6 @@ from frappe.model.document import Document
 from frappe.query_builder.functions import Avg
 from frappe.utils import cstr, get_datetime, get_link_to_form, getdate, nowtime
 
-from hrms.hr.doctype.interview_feedback.interview_feedback import get_applicable_interviewers
-
 
 class DuplicateInterviewRoundError(frappe.ValidationError):
 	pass
@@ -70,7 +68,7 @@ class Interview(Document):
 		self.db_set({"scheduled_on": scheduled_on, "from_time": from_time, "to_time": to_time})
 		self.notify_update()
 
-		recipients = get_recipients(self.name, self.interview_round)
+		recipients = get_recipients(self.name)
 
 		try:
 			frappe.sendmail(
@@ -133,9 +131,9 @@ class Interview(Document):
 		return query.run(as_dict=True)
 
 
-def get_recipients(name, interview_round, for_feedback=0):
+def get_recipients(name, for_feedback=0):
 	interview = frappe.get_doc("Interview", name)
-	interviewers = get_applicable_interviewers(interview_round)
+	interviewers = list(map(lambda x: x.user, interview.interviewers))
 
 	if for_feedback:
 		feedback_given_interviewers = frappe.get_all(
@@ -220,7 +218,7 @@ def send_interview_reminder():
 		doc = frappe.get_doc("Interview", d.name)
 		context = doc.as_dict()
 		message = frappe.render_template(interview_template.response, context)
-		recipients = get_recipients(doc.name, doc.interview_round)
+		recipients = get_recipients(doc.name)
 
 		frappe.sendmail(
 			sender=reminder_settings.hiring_sender_email,
@@ -265,7 +263,7 @@ def send_daily_feedback_reminder():
 	)
 
 	for entry in interviews:
-		recipients = get_recipients(entry.name, entry.interview_round, for_feedback=1)
+		recipients = get_recipients(entry.name, for_feedback=1)
 
 		doc = frappe.get_doc("Interview", entry.name)
 		context = doc.as_dict()

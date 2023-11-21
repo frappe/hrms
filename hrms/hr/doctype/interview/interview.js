@@ -258,7 +258,7 @@ frappe.ui.form.on("Interview", {
 			method:
 				"hrms.hr.doctype.interview_feedback.interview_feedback.get_applicable_interviewers",
 			args: {
-				interview_round: frm.doc.interview_round || "",
+				parent: frm.doc.interview_round || "",
 			},
 			callback: function (r) {
 				frm.interviewers = r.message;
