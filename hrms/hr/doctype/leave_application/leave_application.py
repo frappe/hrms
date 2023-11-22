@@ -528,7 +528,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			)
 			if len(leave_applications) > 0:
 				leave_applications = ", ".join(
-					list(map(lambda x: get_link_to_form("Leave Application", x), leave_applications))
+					[get_link_to_form("Leave Application", x) for x in leave_applications]
 				)
 				frappe.throw(
 					_("Cannot have more that {0} consecutive leaves of type {1}. Reference: {2}").format(
