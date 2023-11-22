@@ -44,12 +44,13 @@
 </template>
 
 <script setup>
-import { inject } from "vue"
+import { inject, onMounted, onBeforeUnmount } from "vue"
 import { createResource } from "frappe-ui"
 
 import SemicircleChart from "@/components/SemicircleChart.vue"
 
 const employee = inject("$employee")
+const socket = inject("$socket")
 
 const leaveBalance = createResource({
 	url: "hrms.api.get_leave_balance_map",
@@ -74,4 +75,16 @@ const getChartColor = (index) => {
 	const chartColors = ["text-[#fb7185]", "text-[#f472b6]", "text-[#918ef5]"]
 	return chartColors[index % chartColors.length]
 }
+
+onMounted(() => {
+	socket.on("hrms:update_leaves", (data) => {
+		if (data.employee === employee.data.name) {
+			leaveBalance.reload()
+		}
+	})
+})
+
+onBeforeUnmount(() => {
+	socket.off("hrms:update_leaves")
+})
 </script>

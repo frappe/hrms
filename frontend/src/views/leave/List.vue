@@ -1,19 +1,14 @@
 <template>
-	<ion-page>
-		<ion-content :fullscreen="true">
-			<ListView
-				doctype="Leave Application"
-				pageTitle="Leave History"
-				:tabButtons="TAB_BUTTONS"
-				:fields="LEAVE_FIELDS"
-				:filterConfig="FILTER_CONFIG"
-			/>
-		</ion-content>
-	</ion-page>
+	<ListView
+		doctype="Leave Application"
+		pageTitle="Leave History"
+		:tabButtons="TAB_BUTTONS"
+		:fields="LEAVE_FIELDS"
+		:filterConfig="FILTER_CONFIG"
+	/>
 </template>
 
 <script setup>
-import { IonPage, IonContent } from "@ionic/vue"
 import ListView from "@/components/ListView.vue"
 
 const TAB_BUTTONS = ["My Leaves", "Team Leaves"]

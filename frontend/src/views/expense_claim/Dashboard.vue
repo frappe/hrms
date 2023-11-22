@@ -66,14 +66,12 @@ const socket = inject("$socket")
 const employee = inject("$employee")
 
 onMounted(() => {
-	socket.off("hrms:update_expense_claims")
 	socket.on("hrms:update_expense_claims", (data) => {
 		if (data.employee === employee.data.name) {
 			myClaims.reload()
 		}
 	})
 
-	socket.off("hrms:update_employee_advances")
 	socket.on("hrms:update_employee_advances", (data) => {
 		if (data.employee === employee.data.name) {
 			advanceBalance.reload()
