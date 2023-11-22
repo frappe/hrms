@@ -465,8 +465,8 @@ class LeaveApplication(Document):
 		if from_date:
 			return self.get_first_from_date(add_to_date(from_date, days=-1), holiday_list)
 		elif frappe.db.exists("Holiday", {"parent": holiday_list, "holiday_date": to_date}):
-			return self.get_first_from_date(add_to_date(to_date, days=-1), holiday_list)
-		return add_to_date(to_date, days=1)
+			return self.get_first_from_date(add_to_date(to_date, days=-1), holiday_list)  # ignore holiday
+		return add_to_date(to_date, days=1)  # to_date is actually from_date
 
 	# gets to_date of last leave application from following consecutive leave applications
 	def get_last_to_date(self, from_date, holiday_list):
@@ -478,8 +478,8 @@ class LeaveApplication(Document):
 		if to_date:
 			return self.get_last_to_date(add_to_date(to_date, days=1), holiday_list)
 		elif frappe.db.exists("Holiday", {"parent": holiday_list, "holiday_date": from_date}):
-			return self.get_last_to_date(add_to_date(from_date, days=1), holiday_list)
-		return add_to_date(from_date, days=-1)
+			return self.get_last_to_date(add_to_date(from_date, days=1), holiday_list)  # ignore holiday
+		return add_to_date(from_date, days=-1)  # from_date is actually to_date
 
 	def validate_max_days(self):
 		max_days = frappe.db.get_value("Leave Type", self.leave_type, "max_continuous_days_allowed")
@@ -495,9 +495,28 @@ class LeaveApplication(Document):
 			self.employee, self.leave_type, first_from_date, last_to_date
 		)
 		if total_consecutive_leaves > cint(max_days):
+			leave_applications = frappe.get_list(
+				"Leave Application",
+				filters={
+					"employee": self.employee,
+					"leave_type": self.leave_type,
+					"from_date": [">=", first_from_date],
+					"to_date": ["<=", last_to_date],
+				},
+				pluck="name",
+			)
+			if len(leave_applications) > 0:
+				leave_applications = ", ".join(
+					list(map(lambda x: get_link_to_form("Leave Application", x), leave_applications))
+				)
+				frappe.throw(
+					_("Cannot have more that {0} consecutive leaves of type {1}. Reference: {2}").format(
+						max_days, get_link_to_form("Leave Type", self.leave_type), leave_applications
+					)
+				)
 			frappe.throw(
-				_("Cannot have more that {0} consecutive leaves of Leave Type <b>{1}</b>").format(
-					max_days, self.leave_type, max_days
+				_("Cannot have more that {0} consecutive leaves of type {1}").format(
+					max_days, get_link_to_form("Leave Type", self.leave_type)
 				)
 			)
 
