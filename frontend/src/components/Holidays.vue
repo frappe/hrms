@@ -3,7 +3,7 @@
 		<div class="flex flex-row justify-between items-center">
 			<div class="text-lg text-gray-800 font-bold">Upcoming Holidays</div>
 			<div
-				v-if="upcomingHolidays?.length"
+				v-if="holidays?.data?.length"
 				id="open-holiday-list"
 				class="text-sm text-gray-800 font-semibold cursor-pointer underline underline-offset-2"
 			>
@@ -34,7 +34,7 @@
 
 	<ion-modal
 		ref="modal"
-		v-if="upcomingHolidays?.length"
+		v-if="holidays?.data?.length"
 		trigger="open-holiday-list"
 		:initial-breakpoint="1"
 		:breakpoints="[0, 1]"

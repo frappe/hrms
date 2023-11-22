@@ -74,7 +74,10 @@
 							</router-link>
 						</div>
 					</div>
-					<EmptyState message="No leaves found" v-else />
+					<EmptyState
+						:message="`No ${props.doctype?.toLowerCase()}s found`"
+						v-else
+					/>
 
 					<!-- Loading Indicator -->
 					<div
