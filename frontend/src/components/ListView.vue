@@ -321,7 +321,6 @@ watch(
 
 onMounted(() => {
 	socket.emit("doctype_subscribe", props.doctype)
-	socket.off("list_update")
 	socket.on("list_update", (data) => {
 		if (data?.doctype !== props.doctype) return
 		fetchDocumentList()
