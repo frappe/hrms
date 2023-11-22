@@ -20,6 +20,8 @@
   "column_break_hyec",
   "sender",
   "sender_email",
+  "shift_management_settings_section",
+  "allow_multiple_shift_assignments",
   "leave_and_expense_claim_settings",
   "send_leave_notification",
   "leave_approval_notification_template",
@@ -267,13 +269,24 @@
   {
    "fieldname": "column_break_hyec",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_multiple_shift_assignments",
+   "fieldtype": "Check",
+   "label": "Allow Multiple Shift Assignments for Same Date"
+  },
+  {
+   "fieldname": "shift_management_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Shift Management Settings"
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-11-01 11:06:31.329718",
+ "modified": "2023-11-22 18:56:33.884740",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
