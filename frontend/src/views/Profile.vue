@@ -101,7 +101,7 @@
 </template>
 
 <script setup>
-import { inject, ref } from "vue"
+import { inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { useRouter } from "vue-router"
 import { IonModal, IonPage, IonContent } from "@ionic/vue"
 
@@ -111,6 +111,9 @@ import { formatCurrency } from "@/utils/formatters"
 
 import ProfileInfoModal from "@/components/ProfileInfoModal.vue"
 
+const DOCTYPE = "Employee"
+
+const socket = inject("$socket")
 const session = inject("$session")
 const user = inject("$user")
 const employee = inject("$employee")
@@ -185,7 +188,7 @@ const closeInfoModal = async (_request) => {
 }
 
 const employeeDoc = createDocumentResource({
-	doctype: "Employee",
+	doctype: DOCTYPE,
 	name: employee.data.name,
 	fields: "*",
 	auto: true,
@@ -197,7 +200,7 @@ const employeeDoc = createDocumentResource({
 
 const employeeDocType = createResource({
 	url: "hrms.api.get_doctype_fields",
-	params: { doctype: "Employee" },
+	params: { doctype: DOCTYPE },
 	auto: true,
 })
 
@@ -217,4 +220,18 @@ const logout = async () => {
 		showErrorAlert(msg)
 	}
 }
+
+onMounted(() => {
+	socket.emit("doctype_subscribe", DOCTYPE)
+	socket.on("list_update", (data) => {
+		if (data.doctype === DOCTYPE && data.name === employee.data.name) {
+			employeeDoc.reload()
+		}
+	})
+})
+
+onBeforeUnmount(() => {
+	socket.emit("doctype_unsubscribe", DOCTYPE)
+	socket.off("list_update")
+})
 </script>
