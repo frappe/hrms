@@ -42,25 +42,19 @@
 
 		<ion-content>
 			<div
-				class="flex flex-col items-center mt-5 mb-7 p-4 w-full sm:w-96 overflow-y-auto"
+				class="flex flex-col items-center mb-7 p-4 h-full w-full sm:w-96 overflow-y-auto"
+				ref="scrollContainer"
+				@scroll="() => handleScroll()"
 			>
-				<div class="w-full">
+				<div class="w-full mt-5">
 					<TabButtons
 						:buttons="[{ label: tabButtons[0] }, { label: tabButtons[1] }]"
 						v-model="activeTab"
 					/>
 
-					<!-- Loading Indicator -->
-					<div
-						v-if="documents.loading"
-						class="flex h-64 items-center justify-center"
-					>
-						<LoadingIndicator class="w-8 h-8 text-gray-800" />
-					</div>
-
 					<div
 						class="flex flex-col bg-white rounded mt-5"
-						v-else-if="documents.data?.length"
+						v-if="documents.data?.length"
 					>
 						<div
 							class="p-3.5 items-center justify-between border-b cursor-pointer"
@@ -81,6 +75,14 @@
 						</div>
 					</div>
 					<EmptyState message="No leaves found" v-else />
+
+					<!-- Loading Indicator -->
+					<div
+						v-if="documents.loading"
+						class="flex mt-2 items-center justify-center"
+					>
+						<LoadingIndicator class="w-8 h-8 text-gray-800" />
+					</div>
 				</div>
 			</div>
 
@@ -113,7 +115,12 @@ import {
 } from "vue"
 import { modalController, IonPage, IonHeader, IonContent } from "@ionic/vue"
 
-import { FeatherIcon, createResource, LoadingIndicator } from "frappe-ui"
+import {
+	FeatherIcon,
+	createResource,
+	LoadingIndicator,
+	debounce,
+} from "frappe-ui"
 
 import TabButtons from "@/components/TabButtons.vue"
 import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
@@ -162,6 +169,17 @@ const filterMap = reactive({})
 const activeTab = ref(props.tabButtons[0])
 const areFiltersApplied = ref(false)
 const appliedFilters = ref([])
+
+// infinite scroll
+const scrollContainer = ref(null)
+const hasNextPage = ref(true)
+const listOptions = reactive({
+	doctype: props.doctype,
+	fields: props.fields,
+	group_by: props.groupBy,
+	order_by: `\`tab${props.doctype}\`.modified desc`,
+	page_length: 50,
+})
 
 // computed properties
 const isTeamRequest = computed(() => {
@@ -233,23 +251,26 @@ function clearFilters() {
 	areFiltersApplied.value = false
 }
 
-function fetchDocumentList() {
+function fetchDocumentList(start = 0) {
 	const filters = [[props.doctype, "docstatus", "!=", "2"]]
 	filters.push(...defaultFilters.value)
 
 	if (appliedFilters.value) filters.push(...appliedFilters.value)
 
 	documents.submit({
-		doctype: props.doctype,
-		fields: props.fields,
+		...listOptions,
+		start: start || 0,
 		filters: filters,
-		group_by: props.groupBy,
-		order_by: `\`tab${props.doctype}\`.modified desc`,
 	})
 }
 
 const documents = createResource({
 	url: "frappe.desk.reportview.get",
+	onSuccess: (data) => {
+		if (data.values?.length < listOptions.page_length) {
+			hasNextPage.value = false
+		}
+	},
 	transform(data) {
 		if (data.length === 0) {
 			return []
@@ -265,13 +286,34 @@ const documents = createResource({
 			})
 			return doc
 		})
-		return docs
+
+		let pagedData
+		if (!documents.params.start || documents.params.start === 0) {
+			pagedData = docs
+		} else {
+			pagedData = documents.data.concat(docs)
+		}
+
+		return pagedData
 	},
 })
+
+const handleScroll = debounce(() => {
+	if (!hasNextPage.value) return
+
+	const { scrollTop, scrollHeight, clientHeight } = scrollContainer.value
+	const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100
+
+	if (scrollPercentage >= 90) {
+		const start = documents.params.start + listOptions.page_length
+		fetchDocumentList(start)
+	}
+}, 500)
 
 watch(
 	() => activeTab.value,
 	(_value) => {
+		hasNextPage.value = true
 		fetchDocumentList()
 	},
 	{ immediate: true }
