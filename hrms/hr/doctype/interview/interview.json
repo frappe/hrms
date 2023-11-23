@@ -9,7 +9,6 @@
   "interview_details_section",
   "interview_round",
   "job_applicant",
-  "interviewers",
   "job_opening",
   "designation",
   "resume_link",
@@ -18,6 +17,8 @@
   "scheduled_on",
   "from_time",
   "to_time",
+  "section_break_hqvh",
+  "interviewers",
   "ratings_section",
   "expected_average_rating",
   "column_break_12",
@@ -177,9 +178,13 @@
   },
   {
    "fieldname": "interviewers",
-   "fieldtype": "Table MultiSelect",
+   "fieldtype": "Table",
    "label": "Interviewers",
    "options": "Interviewer"
+  },
+  {
+   "fieldname": "section_break_hqvh",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -190,7 +195,7 @@
    "link_fieldname": "interview"
   }
  ],
- "modified": "2023-11-20 18:11:34.879285",
+ "modified": "2023-11-23 18:30:25.476693",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview",
