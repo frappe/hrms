@@ -54,7 +54,7 @@
 
 					<div
 						class="flex flex-col bg-white rounded mt-5"
-						v-if="documents.data?.length"
+						v-if="!documents.loading && documents.data?.length"
 					>
 						<div
 							class="p-3.5 items-center justify-between border-b cursor-pointer"
@@ -76,7 +76,7 @@
 					</div>
 					<EmptyState
 						:message="`No ${props.doctype?.toLowerCase()}s found`"
-						v-else
+						v-else-if="!documents.loading"
 					/>
 
 					<!-- Loading Indicator -->
