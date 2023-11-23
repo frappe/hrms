@@ -56,11 +56,12 @@ class ShiftAssignment(Document):
 				exc=MultipleShiftError,
 			)
 
-		frappe.msgprint(
-			_(
-				"Note: You have already assigned different Shifts to {0} for some/all of these dates. Multiple Shift Assignments for the same date can be disabled under {1}."
-			).format(self.employee, get_link_to_form("HR Settings", "HR Settings"))
-		)
+		if not self.docstatus:
+			frappe.msgprint(
+				_(
+					"Note: You have already assigned different Shifts to {0} for some/all of these dates. Multiple Shift Assignments for the same date can be disabled under {1}."
+				).format(self.employee, get_link_to_form("HR Settings", "HR Settings"))
+			)
 
 	def get_overlapping_dates(self):
 		if not self.name:
