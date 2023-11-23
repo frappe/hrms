@@ -95,9 +95,9 @@ class TestShiftAssignment(FrappeTestCase):
 			}
 		)
 
-		frappe.db.set_value("HR Settings", "HR Settings", "allow_multiple_shift_assignments", 0)
+		frappe.db.set_single_value("HR Settings", "allow_multiple_shift_assignments", 0)
 		self.assertRaises(MultipleShiftError, shift_assignment_2.save)
-		frappe.db.set_value("HR Settings", "HR Settings", "allow_multiple_shift_assignments", 1)
+		frappe.db.set_single_value("HR Settings", "allow_multiple_shift_assignments", 1)
 		shift_assignment_2.save()  # would throw error if multiple shift assignments not allowed
 
 	def test_overlapping_for_fixed_period_shift(self):
