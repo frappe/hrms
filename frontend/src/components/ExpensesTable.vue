@@ -226,7 +226,10 @@ const addButtonDisabled = computed(() => {
 watch(
 	() => expenseItem.value.expense_type,
 	(value) => {
-		expenseItem.value.description = claimTypesByID[value]?.description
+		if (!expenseItem.value.description) {
+			expenseItem.value.description = claimTypesByID[value]?.description
+		}
+
 		expenseItem.value.cost_center = props.expenseClaim.cost_center
 	}
 )
@@ -234,7 +237,9 @@ watch(
 watch(
 	() => expenseItem.value.amount,
 	(value) => {
-		expenseItem.value.sanctioned_amount = parseFloat(value)
+		if (!expenseItem.value.sanctioned_amount) {
+			expenseItem.value.sanctioned_amount = parseFloat(value)
+		}
 	}
 )
 </script>
