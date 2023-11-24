@@ -34,29 +34,38 @@ class ShiftAssignment(Document):
 	def validate_overlapping_shifts(self):
 		overlapping_dates = self.get_overlapping_dates()
 		if len(overlapping_dates):
-			self.validate_same_date_multiple_shifts()
+			self.validate_same_date_multiple_shifts(overlapping_dates)
 			# if dates are overlapping, check if timings are overlapping, else allow
 			overlapping_timings = has_overlapping_timings(self.shift_type, overlapping_dates[0].shift_type)
 			if overlapping_timings:
 				self.throw_overlap_error(overlapping_dates[0])
 
-	def validate_same_date_multiple_shifts(self):
+	def validate_same_date_multiple_shifts(self, overlapping_dates):
 		allow_multiple_shift_assignments = frappe.db.get_single_value(
 			"HR Settings", "allow_multiple_shift_assignments"
 		)
 		if not allow_multiple_shift_assignments:
 			frappe.throw(
+				title=_("Multiple Shift Assignments"),
 				msg=_(
-					"Multiple shift assignments for the same date has been disabled. Please enable this feature under {0}."
-				).format(get_link_to_form("HR Settings", "HR Settings")),
+					"{0} already has an active Shift Assignment {1} for some/all of these dates. To allow this, enable 'Allow Multiple Shift Assignments for Same Date' under {2}."
+				).format(
+					self.employee,
+					get_link_to_form("Shift Assignment", overlapping_dates[0].name),
+					get_link_to_form("HR Settings", "HR Settings"),
+				),
 				exc=MultipleShiftError,
 			)
 
 		if not self.docstatus:
 			frappe.msgprint(
 				_(
-					"Note: You have already assigned different Shifts to {0} for some/all of these dates. Multiple Shift Assignments for the same date can be disabled under {1}."
-				).format(self.employee, get_link_to_form("HR Settings", "HR Settings"))
+					"Warning: {0} already has an active Shift Assignment {1} for some/all of these dates. 'Allow Multiple Shift Assignments for Same Date' can be disabled under {2}."
+				).format(
+					self.employee,
+					get_link_to_form("Shift Assignment", overlapping_dates[0].name),
+					get_link_to_form("HR Settings", "HR Settings"),
+				)
 			)
 
 	def get_overlapping_dates(self):
