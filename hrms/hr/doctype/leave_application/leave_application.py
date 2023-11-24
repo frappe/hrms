@@ -534,7 +534,9 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				leave_applications = ", ".join(
 					[get_link_to_form("Leave Application", x) for x in leave_applications]
 				)
-				msg += _(" Reference: {0}".format(leave_applications))
+				msg = _("Leave of type {0} cannot be longer than {1}. Reference: {2}").format(
+					get_link_to_form("Leave Type", self.leave_type), max_days, leave_applications
+				)
 
 			frappe.throw(msg)
 
