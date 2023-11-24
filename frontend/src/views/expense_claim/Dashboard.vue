@@ -35,7 +35,6 @@
 							Employee Advance Balance
 						</div>
 						<router-link
-							v-if="advanceBalance?.data?.length"
 							:to="{ name: 'EmployeeAdvanceListView' }"
 							class="text-sm text-gray-800 font-semibold cursor-pointer underline underline-offset-2"
 						>
