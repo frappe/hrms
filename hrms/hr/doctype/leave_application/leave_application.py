@@ -521,6 +521,10 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			self.employee, self.leave_type, first_from_date, last_to_date
 		)
 		if total_consecutive_leaves > cint(max_days):
+			msg = _("Leave of type {0} cannot be longer than {1}.").format(
+				get_link_to_form("Leave Type", self.leave_type), max_days
+			)
+
 			leave_applications = frappe.get_all(
 				"Leave Application",
 				filters={
@@ -535,16 +539,9 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				leave_applications = ", ".join(
 					[get_link_to_form("Leave Application", x) for x in leave_applications]
 				)
-				frappe.throw(
-					_("Cannot have more that {0} consecutive leaves of type {1}. Reference: {2}").format(
-						max_days, get_link_to_form("Leave Type", self.leave_type), leave_applications
-					)
-				)
-			frappe.throw(
-				_("Cannot have more that {0} consecutive leaves of type {1}").format(
-					max_days, get_link_to_form("Leave Type", self.leave_type)
-				)
-			)
+				msg += _(" Reference: {0}".format(leave_applications))
+
+			frappe.throw(msg)
 
 	def validate_attendance(self):
 		attendance = frappe.db.sql(
