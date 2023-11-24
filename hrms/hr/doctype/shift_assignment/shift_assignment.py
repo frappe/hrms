@@ -27,7 +27,6 @@ class ShiftAssignment(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
 		self.validate_overlapping_shifts()
-		self.validate_same_date_multiple_shifts()
 
 		if self.end_date:
 			self.validate_from_to_dates("start_date", "end_date")
@@ -35,16 +34,13 @@ class ShiftAssignment(Document):
 	def validate_overlapping_shifts(self):
 		overlapping_dates = self.get_overlapping_dates()
 		if len(overlapping_dates):
+			self.validate_same_date_multiple_shifts()
 			# if dates are overlapping, check if timings are overlapping, else allow
 			overlapping_timings = has_overlapping_timings(self.shift_type, overlapping_dates[0].shift_type)
 			if overlapping_timings:
 				self.throw_overlap_error(overlapping_dates[0])
 
 	def validate_same_date_multiple_shifts(self):
-		overlapping_dates = self.get_overlapping_dates()
-		if not len(overlapping_dates):
-			return
-
 		allow_multiple_shift_assignments = frappe.db.get_single_value(
 			"HR Settings", "allow_multiple_shift_assignments"
 		)
