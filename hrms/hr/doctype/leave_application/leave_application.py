@@ -505,7 +505,7 @@ class LeaveApplication(Document):
 				},
 				pluck="name",
 			)
-			if len(leave_applications) > 0:
+			if leave_applications:
 				leave_applications = ", ".join(
 					[get_link_to_form("Leave Application", x) for x in leave_applications]
 				)
