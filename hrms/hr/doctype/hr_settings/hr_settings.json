@@ -277,9 +277,9 @@
    "label": "Allow Multiple Shift Assignments for Same Date"
   },
   {
-   "fieldname": "shift_management_settings_section",
+   "fieldname": "shift_settings_section",
    "fieldtype": "Section Break",
-   "label": "Shift Management Settings"
+   "label": "Shift Settings"
   }
  ],
  "icon": "fa fa-cog",
