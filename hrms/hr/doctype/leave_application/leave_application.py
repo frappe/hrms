@@ -495,7 +495,7 @@ class LeaveApplication(Document):
 			self.employee, self.leave_type, first_from_date, last_to_date
 		)
 		if total_consecutive_leaves > cint(max_days):
-			leave_applications = frappe.get_list(
+			leave_applications = frappe.get_all(
 				"Leave Application",
 				filters={
 					"employee": self.employee,
