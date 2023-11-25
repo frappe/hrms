@@ -27,9 +27,12 @@ SUPPORTED_FIELD_TYPES = [
 @frappe.whitelist()
 def get_current_user_info() -> dict:
 	current_user = frappe.session.user
-	return frappe.db.get_value(
+	user = frappe.db.get_value(
 		"User", current_user, ["name", "first_name", "full_name", "user_image"], as_dict=True
 	)
+	user["roles"] = frappe.get_roles(current_user)
+
+	return user
 
 
 @frappe.whitelist()
@@ -527,3 +530,12 @@ def download_salary_slip(name: str):
 	content_type = frappe.local.response.type
 
 	return f"data:{content_type};base64," + base64content.decode("utf-8")
+
+
+# Workflow
+@frappe.whitelist()
+def get_workflow(doctype: str) -> dict:
+	workflow = frappe.db.exists("Workflow", {"document_type": doctype, "is_active": 1})
+	if not workflow:
+		return frappe._dict()
+	return frappe.get_doc("Workflow", workflow)
