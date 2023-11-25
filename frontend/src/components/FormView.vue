@@ -318,6 +318,7 @@ import FormField from "@/components/FormField.vue"
 import FileUploaderView from "@/components/FileUploaderView.vue"
 
 import { FileAttachment, guessStatusColor } from "@/composables"
+import useWorkflow from "@/composables/workflow"
 import { getCompanyCurrency } from "@/data/currencies"
 import { formatCurrency } from "@/utils/formatters"
 
@@ -374,6 +375,7 @@ let showDeleteDialog = ref(false)
 let showSubmitDialog = ref(false)
 let showCancelDialog = ref(false)
 let isFileUploading = ref(false)
+let workflow = ref(null)
 
 const formModel = computed({
 	get() {
@@ -675,9 +677,16 @@ async function setFormattedCurrency() {
 	})
 }
 
-const isFormReadOnly = computed(
-	() => props.id && formModel.value.docstatus !== 0
-)
+const isFormReadOnly = computed(() => {
+	if (!isFormReady.value) return true
+	if (!props.id) return false
+
+	// submited & cancelled docs are read only
+	if (formModel.value.docstatus !== 0) return true
+
+	// read only due to workflow based on current user's roles
+	if (workflow.value?.isReadOnly(formModel.value)) return true
+})
 
 const isFormReady = computed(() => {
 	if (!props.id) return true
@@ -693,6 +702,10 @@ onMounted(async () => {
 		await attachedFiles.reload()
 		await setFormattedCurrency()
 		await setStatusColor()
+
+		// workflow
+		workflow.value = useWorkflow(props.doctype)
+
 		isFormDirty.value = false
 	}
 })
