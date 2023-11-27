@@ -160,12 +160,14 @@ const expenseItem = ref({})
 const editingIdx = ref(null)
 
 const isModalOpen = ref(false)
+const isFirstRender = ref(false)
 
 const openModal = async (item, idx) => {
 	if (item) {
 		expenseItem.value = { ...item }
 		editingIdx.value = idx
 	}
+	isFirstRender.value = true
 	isModalOpen.value = true
 }
 
@@ -184,6 +186,7 @@ const updateExpenseItem = () => {
 }
 
 function resetSelectedItem() {
+	isFirstRender.value = false
 	isModalOpen.value = false
 	expenseItem.value = {}
 	editingIdx.value = null
@@ -237,8 +240,10 @@ watch(
 watch(
 	() => expenseItem.value.amount,
 	(value) => {
-		if (!expenseItem.value.sanctioned_amount) {
+		if (!isFirstRender.value) {
 			expenseItem.value.sanctioned_amount = parseFloat(value)
+		} else {
+			isFirstRender.value = false
 		}
 	}
 )
