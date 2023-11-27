@@ -28,8 +28,8 @@
 						variant="outline"
 					/>
 					<Badge
-						v-if="formModel?.status"
-						:label="formModel?.status"
+						v-if="status"
+						:label="status"
 						:theme="statusColor"
 						class="whitespace-nowrap text-[8px]"
 					/>
@@ -173,7 +173,7 @@
 			<!-- Form Primary/Secondary Button -->
 			<!-- workflow actions -->
 			<div
-				v-if="workflowDoc?.data"
+				v-if="workflowDoc"
 				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
 			>
 				<WorkflowActionSheet
@@ -185,7 +185,7 @@
 
 			<!-- save/submit/cancel -->
 			<div
-				v-else-if="!workflowDoc?.data && formButton"
+				v-else-if="!workflowDoc && formButton"
 				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
 			>
 				<ErrorMessage
@@ -400,6 +400,12 @@ const formModel = computed({
 	},
 })
 
+const status = computed(() => {
+	if (!props.id) return ""
+
+	return formModel.value.status || formModel.value.approval_status
+})
+
 watch(
 	() => formModel.value,
 	() => {
@@ -412,6 +418,15 @@ watch(
 		}
 	},
 	{ deep: true }
+)
+
+watch(
+	() => status.value,
+	async (value) => {
+		if (!value) return
+		statusColor.value = await guessStatusColor(props.doctype, status.value)
+	},
+	{ immediate: true }
 )
 
 const tabFields = computed(() => {
@@ -611,7 +626,6 @@ async function handleDocUpdate(action) {
 		formModel.value = { ...documentResource.doc }
 
 		nextTick(() => {
-			setStatusColor()
 			isFormDirty.value = false
 			isFormUpdated.value = true
 		})
@@ -650,13 +664,6 @@ function handleDocDelete() {
 async function reloadDoc() {
 	await documentResource.reload()
 	formModel.value = { ...documentResource.doc }
-}
-
-async function setStatusColor() {
-	const status = formModel.value.status || formModel.value.approval_status
-	if (status) {
-		statusColor.value = await guessStatusColor(props.doctype, status)
-	}
 }
 
 async function setFormattedCurrency() {
@@ -700,7 +707,8 @@ const isFormReady = computed(() => {
 const workflowDoc = computed(() => {
 	if (!props.id) return
 
-	return workflow.value?.workflowDoc?.data
+	const workflowData = workflow.value?.workflowDoc?.data
+	return Object.keys(workflowData || {}).length > 0 ? workflowData : null
 })
 
 onMounted(async () => {
@@ -710,7 +718,6 @@ onMounted(async () => {
 		await docPermissions.fetch({ doctype: props.doctype, docname: props.id })
 		await attachedFiles.reload()
 		await setFormattedCurrency()
-		await setStatusColor()
 
 		// workflow
 		workflow.value = useWorkflow(props.doctype)
