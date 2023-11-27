@@ -1,7 +1,6 @@
 import frappe
 from frappe import _
 from frappe.query_builder import Order
-from frappe.query_builder.functions import Count
 from frappe.utils import getdate
 
 SUPPORTED_FIELD_TYPES = [
@@ -57,6 +56,25 @@ def get_current_employee_info() -> dict:
 
 
 @frappe.whitelist()
+def get_all_employees() -> list[dict]:
+	return frappe.get_all(
+		"Employee",
+		fields=[
+			"name",
+			"employee_name",
+			"designation",
+			"department",
+			"company",
+			"reports_to",
+			"user_id",
+			"image",
+			"status",
+		],
+		limit=999999,
+	)
+
+
+@frappe.whitelist()
 def get_unread_notifications_count() -> int:
 	return frappe.db.count(
 		"PWA Notification",
@@ -83,43 +101,52 @@ def get_leave_applications(
 	for_approval: bool = False,
 	limit: int | None = None,
 ) -> list[dict]:
-	Leave = frappe.qb.DocType("Leave Application")
-
-	query = (
-		frappe.qb.from_(Leave)
-		.select(
-			Leave.name,
-			Leave.employee,
-			Leave.employee_name,
-			Leave.leave_type,
-			Leave.status,
-			Leave.from_date,
-			Leave.to_date,
-			Leave.half_day,
-			Leave.half_day_date,
-			Leave.description,
-			Leave.total_leave_days,
-			Leave.leave_balance,
-			Leave.leave_approver,
-			Leave.posting_date,
-		)
-		.orderby(Leave.posting_date, order=Order.desc)
+	filters = get_leave_application_filters(employee, approver_id, for_approval)
+	return frappe.get_list(
+		"Leave Application",
+		fields=[
+			"name",
+			"employee",
+			"employee_name",
+			"leave_type",
+			"status",
+			"from_date",
+			"to_date",
+			"half_day",
+			"half_day_date",
+			"description",
+			"total_leave_days",
+			"leave_balance",
+			"leave_approver",
+			"posting_date",
+		],
+		filters=filters,
+		order_by="posting_date desc",
+		limit=limit,
 	)
 
+
+def get_leave_application_filters(
+	employee: str,
+	approver_id: str = None,
+	for_approval: bool = False,
+) -> dict:
+	filters = frappe._dict()
 	if for_approval:
-		query = query.where(
-			(Leave.docstatus == 0)
-			& (Leave.status == "Open")
-			& (Leave.leave_approver == approver_id)
-			& (Leave.employee != employee)
-		)
+		filters.docstatus = 0
+		filters.employee = ("!=", employee)
+
+		if workflow := get_workflow("Leave Application"):
+			allowed_states = get_allowed_states_for_workflow(workflow, approver_id)
+			filters[workflow.workflow_state_field] = ("in", allowed_states)
+		else:
+			filters.status = "Open"
+			filters.leave_approver = approver_id
 	else:
-		query = query.where((Leave.docstatus != 2) & (Leave.employee == employee))
+		filters.docstatus = ("!=", 2)
+		filters.employee = employee
 
-	if limit:
-		query = query.limit(limit)
-
-	return query.run(as_dict=True)
+	return filters
 
 
 @frappe.whitelist()
@@ -244,45 +271,51 @@ def get_expense_claims(
 	for_approval: bool = False,
 	limit: int | None = None,
 ) -> list[dict]:
-	Claim = frappe.qb.DocType("Expense Claim")
-	ClaimDetail = frappe.qb.DocType("Expense Claim Detail")
-
-	query = (
-		frappe.qb.from_(Claim)
-		.join(ClaimDetail)
-		.on(Claim.name == ClaimDetail.parent)
-		.select(
-			Claim.name,
-			Claim.employee,
-			Claim.employee_name,
-			Claim.approval_status,
-			Claim.status,
-			Claim.expense_approver,
-			Claim.total_claimed_amount,
-			Claim.posting_date,
-			Claim.company,
-			ClaimDetail.expense_type,
-			Count(ClaimDetail.expense_type).as_("total_expenses"),
-		)
-		.orderby(Claim.posting_date, order=Order.desc)
+	filters = get_expense_claim_filters(employee, approver_id, for_approval)
+	return frappe.get_list(
+		"Expense Claim",
+		fields=[
+			"`tabExpense Claim`.name",
+			"`tabExpense Claim`.employee",
+			"`tabExpense Claim`.employee_name",
+			"`tabExpense Claim`.approval_status",
+			"`tabExpense Claim`.status",
+			"`tabExpense Claim`.expense_approver",
+			"`tabExpense Claim`.total_claimed_amount",
+			"`tabExpense Claim`.posting_date",
+			"`tabExpense Claim`.company",
+			"`tabExpense Claim Detail`.expense_type",
+			"count(`tabExpense Claim Detail`.expense_type) as total_expenses",
+		],
+		filters=filters,
+		order_by="`tabExpense Claim`.posting_date desc",
+		group_by="`tabExpense Claim`.name",
+		limit=limit,
 	)
 
+
+def get_expense_claim_filters(
+	employee: str,
+	approver_id: str = None,
+	for_approval: bool = False,
+) -> dict:
+	filters = frappe._dict()
+
 	if for_approval:
-		query = query.where(
-			(Claim.docstatus == 0)
-			& (Claim.status == "Draft")
-			& (Claim.expense_approver == approver_id)
-			& (Claim.employee != employee)
-		)
+		filters.docstatus = 0
+		filters.employee = ("!=", employee)
+
+		if workflow := get_workflow("Expense Claim"):
+			allowed_states = get_allowed_states_for_workflow(workflow, approver_id)
+			filters[workflow.workflow_state_field] = ("in", allowed_states)
+		else:
+			filters.status = "Draft"
+			filters.expense_approver = approver_id
 	else:
-		query = query.where((Claim.docstatus != 2) & (Claim.employee == employee))
+		filters.docstatus = ("!=", 2)
+		filters.employee = employee
 
-	if limit:
-		query = query.limit(limit)
-
-	query = query.groupby(Claim.name)
-	claims = query.run(as_dict=True)
-	return claims
+	return filters
 
 
 @frappe.whitelist()
@@ -539,3 +572,10 @@ def get_workflow(doctype: str) -> dict:
 	if not workflow:
 		return frappe._dict()
 	return frappe.get_doc("Workflow", workflow)
+
+
+def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
+	user_roles = frappe.get_roles(user_id)
+	return [
+		transition.state for transition in workflow.transitions if transition.allowed in user_roles
+	]
