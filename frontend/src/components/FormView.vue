@@ -42,7 +42,7 @@
 								condition: showDeleteButton,
 								onClick: () => (showDeleteDialog = true),
 							},
-							{ label: 'Reload', onClick: () => handleDocReload() },
+							{ label: 'Reload', onClick: () => reloadDoc() },
 						]"
 						:button="{
 							label: 'Menu',
@@ -170,9 +170,22 @@
 				</div>
 			</div>
 
-			<!-- Bottom Save Button -->
+			<!-- Form Primary/Secondary Button -->
+			<!-- workflow actions -->
 			<div
-				v-if="formButton"
+				v-if="workflowDoc"
+				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
+			>
+				<WorkflowActionSheet
+					:doc="documentResource.doc"
+					:workflowConfig="workflow"
+					@workflowApplied="reloadDoc()"
+				/>
+			</div>
+
+			<!-- save/submit/cancel -->
+			<div
+				v-else-if="formButton"
 				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
 			>
 				<ErrorMessage
@@ -194,6 +207,7 @@
 				</Button>
 			</div>
 
+			<!-- custom form button eg: Download button in salary slips -->
 			<div
 				v-else
 				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
@@ -316,6 +330,7 @@ import {
 } from "frappe-ui"
 import FormField from "@/components/FormField.vue"
 import FileUploaderView from "@/components/FileUploaderView.vue"
+import WorkflowActionSheet from "@/components/WorkflowActionSheet.vue"
 
 import { FileAttachment, guessStatusColor } from "@/composables"
 import useWorkflow from "@/composables/workflow"
@@ -645,8 +660,9 @@ function handleDocDelete() {
 	showDeleteDialog.value = false
 }
 
-function handleDocReload() {
-	documentResource.reload()
+async function reloadDoc() {
+	await documentResource.reload()
+	formModel.value = { ...documentResource.doc }
 }
 
 async function setStatusColor() {
@@ -692,6 +708,12 @@ const isFormReady = computed(() => {
 	if (!props.id) return true
 
 	return !documentResource.get.loading && documentResource.doc
+})
+
+const workflowDoc = computed(() => {
+	if (!props.id) return
+
+	return workflow.value?.workflowDoc?.data
 })
 
 onMounted(async () => {
