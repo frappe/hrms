@@ -135,6 +135,7 @@
    "depends_on": "eval:doc.parenttype=='Salary Structure'",
    "fieldname": "amount_based_on_formula",
    "fieldtype": "Check",
+   "in_list_view": 1,
    "label": "Amount based on formula"
   },
   {
