@@ -44,7 +44,7 @@ export default function useWorkflow(doctype) {
 		const state = doc[state_fieldname] || getDefaultState(doc.docstatus)
 
 		const roles = getDocumentStateRoles(state)
-		return !roles.some((role) => userResource.data.roles.includes(role.role))
+		return !roles.some((role) => userResource.data.roles.includes(role))
 	}
 
 	const applyWorkflow = async (doc, action) => {
