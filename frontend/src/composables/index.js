@@ -83,34 +83,35 @@ export async function guessStatusColor(doctype, status) {
 	}
 
 	let color = "gray"
+	status = status.toLowerCase()
 
 	if (
-		["Open", "Pending", "Unpaid", "Review", "Medium", "Not Approved"].includes(
+		["open", "pending", "unpaid", "review", "medium", "not approved"].includes(
 			status
 		)
 	) {
 		color = "orange"
 	} else if (
-		["Urgent", "High", "Failed", "Rejected", "Error"].includes(status)
+		["urgent", "high", "failed", "rejected", "error"].includes(status)
 	) {
 		color = "red"
 	} else if (
 		[
-			"Closed",
-			"Finished",
-			"Converted",
-			"Completed",
-			"Complete",
-			"Confirmed",
-			"Approved",
-			"Yes",
-			"Active",
-			"Available",
-			"Success",
+			"closed",
+			"finished",
+			"converted",
+			"completed",
+			"complete",
+			"confirmed",
+			"approved",
+			"yes",
+			"active",
+			"available",
+			"success",
 		].includes(status)
 	) {
 		color = "green"
-	} else if (status === "Submitted") {
+	} else if (status === "submitted") {
 		color = "blue"
 	}
 
