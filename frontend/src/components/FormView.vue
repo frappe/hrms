@@ -173,7 +173,7 @@
 			<!-- Form Primary/Secondary Button -->
 			<!-- workflow actions -->
 			<div
-				v-if="workflowDoc"
+				v-if="workflowDoc?.data"
 				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
 			>
 				<WorkflowActionSheet
@@ -185,7 +185,7 @@
 
 			<!-- save/submit/cancel -->
 			<div
-				v-else-if="formButton"
+				v-else-if="!workflowDoc?.data && formButton"
 				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
 			>
 				<ErrorMessage
@@ -198,7 +198,6 @@
 					:class="formButton === 'Cancel' ? 'shadow' : ''"
 					@click="formButton === 'Save' ? saveForm() : submitOrCancelForm()"
 					:variant="formButton === 'Cancel' ? 'subtle' : 'solid'"
-					:disabled="saveButtonDisabled"
 					:loading="
 						docList.insert.loading || documentResource?.setValue?.loading
 					"
@@ -569,18 +568,6 @@ const documentResource = createDocumentResource({
 
 const docPermissions = createResource({
 	url: "frappe.client.get_doc_permissions",
-})
-
-const saveButtonDisabled = computed(() => {
-	if (props.id && formButton.value === "Save" && !isFormDirty.value) {
-		return true
-	}
-
-	return props.fields?.some((field) => {
-		if (field.reqd && !field.hidden && !formModel.value[field.fieldname]) {
-			return true
-		}
-	})
 })
 
 const formButton = computed(() => {
