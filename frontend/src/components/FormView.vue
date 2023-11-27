@@ -171,9 +171,17 @@
 			</div>
 
 			<!-- Form Primary/Secondary Button -->
+			<!-- custom form button eg: Download button in salary slips -->
+			<div
+				v-if="!showFormButton"
+				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
+			>
+				<slot name="formButton"></slot>
+			</div>
+
 			<!-- workflow actions -->
 			<div
-				v-if="!isFormDirty && workflowDoc"
+				v-else-if="!isFormDirty && workflowDoc"
 				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
 			>
 				<WorkflowActionSheet
@@ -204,14 +212,6 @@
 				>
 					{{ formButton }}
 				</Button>
-			</div>
-
-			<!-- custom form button eg: Download button in salary slips -->
-			<div
-				v-else
-				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
-			>
-				<slot name="formButton"></slot>
 			</div>
 		</div>
 	</div>
