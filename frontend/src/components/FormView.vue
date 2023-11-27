@@ -173,7 +173,7 @@
 			<!-- Form Primary/Secondary Button -->
 			<!-- workflow actions -->
 			<div
-				v-if="workflowDoc"
+				v-if="!isFormDirty && workflowDoc"
 				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
 			>
 				<WorkflowActionSheet
@@ -185,7 +185,7 @@
 
 			<!-- save/submit/cancel -->
 			<div
-				v-else-if="!workflowDoc && formButton"
+				v-else-if="isFormDirty || (!workflowDoc && formButton)"
 				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
 			>
 				<ErrorMessage
@@ -622,13 +622,7 @@ async function handleDocUpdate(action) {
 
 		await documentResource.setValue.submit(params)
 		await documentResource.get.promise
-
-		formModel.value = { ...documentResource.doc }
-
-		nextTick(() => {
-			isFormDirty.value = false
-			isFormUpdated.value = true
-		})
+		resetForm()
 	}
 
 	if (action === "submit") showSubmitDialog.value = false
@@ -663,7 +657,15 @@ function handleDocDelete() {
 
 async function reloadDoc() {
 	await documentResource.reload()
+	resetForm()
+}
+
+function resetForm() {
 	formModel.value = { ...documentResource.doc }
+	nextTick(() => {
+		isFormDirty.value = false
+		isFormUpdated.value = true
+	})
 }
 
 async function setFormattedCurrency() {
