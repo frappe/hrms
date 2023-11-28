@@ -131,7 +131,7 @@ class Interview(Document):
 
 def get_recipients(name, for_feedback=0):
 	interview = frappe.get_doc("Interview", name)
-	interviewers = list(map(lambda x: x.user, interview.interviewers))
+	interviewers = [x.user for x in interview.interviewers]
 
 	if for_feedback:
 		feedback_given_interviewers = frappe.get_all(
