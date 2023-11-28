@@ -73,7 +73,18 @@
 
 		<!-- Actions -->
 		<div
-			v-if="['Open', 'Draft'].includes(document?.doc?.[approvalField])"
+			v-if="workflow?.workflowDoc?.data"
+			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
+		>
+			<WorkflowActionSheet
+				:doc="document.doc"
+				:workflowConfig="workflow"
+				@workflowApplied="document.reload()"
+			/>
+		</div>
+
+		<div
+			v-else-if="['Open', 'Draft'].includes(document?.doc?.[approvalField])"
 			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
 		>
 			<Button
@@ -148,6 +159,7 @@
 <script setup>
 import { computed, ref, defineAsyncComponent } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
+import { useRouter } from "vue-router"
 import {
 	toast,
 	createDocumentResource,
@@ -157,10 +169,12 @@ import {
 
 import FormattedField from "@/components/FormattedField.vue"
 import FilePreviewModal from "@/components/FilePreviewModal.vue"
+import WorkflowActionSheet from "@/components/WorkflowActionSheet.vue"
 
 import { getCompanyCurrency } from "@/data/currencies"
 import { formatCurrency } from "@/utils/formatters"
-import { useRouter } from "vue-router"
+
+import useWorkflow from "@/composables/workflow"
 
 const props = defineProps({
 	fields: {
@@ -176,6 +190,7 @@ const router = useRouter()
 
 let showPreviewModal = ref(false)
 let selectedFile = ref({})
+let workflow = useWorkflow(props.modelValue.doctype)
 
 function showFilePreview(fileObj) {
 	selectedFile.value = fileObj
