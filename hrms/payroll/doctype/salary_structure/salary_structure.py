@@ -22,6 +22,23 @@ class SalaryStructure(Document):
 		self.validate_payment_days_based_dependent_component()
 		self.validate_timesheet_component()
 
+	def before_save(self):
+		for detail in self.earnings:
+			if not detail.amount_based_on_formula and detail.formula:
+				frappe.msgprint(
+					_(
+						"Earning Row #{0}: Formula entered for Salary Component {1} even though 'Amount Based on Formula' has been disabled"
+					).format(detail.idx, detail.salary_component)
+				)
+
+		for detail in self.deductions:
+			if not detail.amount_based_on_formula and detail.formula:
+				frappe.msgprint(
+					_(
+						"Deduction Row #{0}: Formula entered for Salary Component {1} even though 'Amount Based on Formula' has been disabled"
+					).format(detail.idx, detail.salary_component)
+				)
+
 	def set_missing_values(self):
 		overwritten_fields = [
 			"depends_on_payment_days",
