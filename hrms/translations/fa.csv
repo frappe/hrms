@@ -784,7 +784,6 @@ Submitting Salary Slips and creating Journal Entry...,ارسال برگه های
 Calculate Payroll Working Days Based On,روزهای حقوق و دستمزد را بر اساس محاسبه کنید,
 Consider Unmarked Attendance As,حضور بدون علامت را در نظر بگیرید,
 Fraction of Daily Salary for Half Day,کسری حقوق روزانه برای نیم روز,
-Component Type,نوع ملفه,
 Provident Fund,صندوق,
 Additional Provident Fund,صندوق تأمین اضافی,
 Provident Fund Loan,وام صندوق تأمین مالی,
@@ -834,6 +833,827 @@ You can not request for your Default Shift: {0},نمی توانید برای ش�
 Only Approvers can Approve this Request.,فقط تصدیق کنندگان می توانند این درخواست را تأیید کنند.,
 Please set Payroll based on in Payroll settings,لطفاً حقوق و دستمزد را براساس تنظیمات حقوق و دستمزد تنظیم کنید,
 Additional Salary: {0} already exist for Salary Component: {1} for period {2} and {3},حقوق اضافی: {0} از قبل برای مonلفه حقوق وجود دارد: {1} برای دوره {2} و {3},
+Payroll date can not be less than employee's joining date.,تاریخ حقوق و دستمزد نمی تواند کمتر از تاریخ عضویت کارمند باشد.,
+From date can not be less than employee's joining date.,از تاریخ نمی تواند کمتر از تاریخ عضویت کارمند باشد.,
+To date can not be greater than employee's relieving date.,تا به امروز نمی تواند بیشتر از تاریخ تسویه حساب کارمند باشد.,
+Payroll date can not be greater than employee's relieving date.,تاریخ حقوق و دستمزد نمی تواند بیشتر از تاریخ تسویه حساب کارمند باشد.,
+Condition and formula,شرایط و فرمول,
+) for {0},) برای {0},
+A {0} exists between {1} and {2} (,A {0} بین {1} و {2} (,
+Absent,غایب,
+Accrual Journal Entry for salaries from {0} to {1},ورود مجله Accruable برای حقوق از {0} به {1},
+Add to Details,اضافه کردن به جزئیات,
+Added to details,به جزئیات اضافه شده است,
+All Jobs,همه مشاغل,
+Allocated Leaves,برگ های اختصاص یافته,
+Annual Salary,حقوق سالانه,
+Application period cannot be across two allocation records,دوره درخواست نمی تواند در دو رکورد تخصیص باشد,
+Application period cannot be outside leave allocation period,دوره نرم افزار می تواند دوره تخصیص مرخصی در خارج نیست,
+Apply Now,درخواست کن,
+Apprentice,شاگرد,
+Approval Status,وضعیت تایید,
+Approval Status must be 'Approved' or 'Rejected',وضعیت تایید باید &quot;تایید&quot; یا &quot;رد&quot;,
+As per your assigned Salary Structure you cannot apply for benefits,همانطور که در ساختار حقوق شما تعیین شده است، نمی توانید برای مزایا درخواست دهید,
+Assign,اختصاص دادن,
+Assign Salary Structure,تعیین ساختار حقوق و دستمزد,
+Assign to Employees,اختصاص به کارمندان,
+Assigning Structures...,اختصاص ساختارها ...,
+Attendance,حضور,
+Attendance From Date and Attendance To Date is mandatory,حضور و غیاب حضور و غیاب از تاریخ و به روز الزامی است,
+Attendance for employee {0} is already marked for this day,حضور و غیاب برای کارکنان {0} در حال حاضر برای این روز را گرامی می,
+Attendance not submitted for {0} as it is a Holiday.,حضور برای {0} ارائه نشده است به عنوان یک تعطیلات.,
+Available Leaves,برگهای موجود,
+Bank Entries,مطالب بانک,
+Base,پایه,
+Beginner,مبتدی,
+Birthday Reminder,یادآوری تولد,
+Bonus Payment Date cannot be a past date,تاریخ پرداخت پاداش نمی تواند تاریخ گذشته باشد,
+Calls,تماس,
+Cannot find active Leave Period,می توانید دوره فعال خروج را پیدا نکنید,
+Casual Leave,مرخصی گاه به گاه,
+Claimed Amount,مقدار ادعا شده,
+Compensatory Off,جبرانی فعال,
+Contact Number,شماره تماس,
+Course,دوره,
+Create Disbursement Entry,ورود ورودی را ایجاد کنید,
+Create Salary Slip,ایجاد لغزش حقوق,
+Create Salary Slips,ایجاد لغزش حقوق,
+Creating Payment Entries......,ایجاد مطالب پرداخت ......,
+Creating Salary Slips...,ایجاد حقوق و دستمزد ...,
+Current,جاری,
+Current Job Openings,فرصت های شغلی فعلی,
+Daily Work Summary,خلاصه کار روزانه,
+Daily Work Summary Group,خلاصه گروه روزانه,
+Date is repeated,تاریخ تکرار شده است,
+Debit A/C Number,Debit A / C شماره,
+Deduction,کسر,
+Document Status,وضعیت سند,
+Earning,سود,
+Employee A/C Number,شماره A / C کارمند,
+Employee Benefits,مزایای کارکنان,
+Employee Grade,درجه کارمند,
+Employee Referral,ارجاع کارمند,
+Employee relieved on {0} must be set as 'Left',کارمند رها در {0} باید تنظیم شود به عنوان چپ,
+Employee {0} already submited an apllication {1} for the payroll period {2},کارمند {0} قبلا یک آپلود {1} را برای مدت زمان پرداخت {2},
+Employee {0} has no maximum benefit amount,کارمند {0} مقدار حداکثر سود ندارد,
+Employee {0} is not active or does not exist,کارمند {0} غیر فعال است و یا وجود ندارد,
+Employee {0} is on Leave on {1},کارمند {0} در حال ترک در {1},
+Employee {0} on Half day on {1},کارمند {0} در روز نیمه در {1},
+End time cannot be before start time,زمان پایان نمی تواند قبل از زمان شروع باشد,
+Evaluation,ارزیابی,
+Event Location,محل رویداد,
+Event Name,نام رخداد,
+Expense Claim for Vehicle Log {0},ادعای هزینه برای ورود خودرو {0},
+Expense Claim {0} already exists for the Vehicle Log,هزینه ادعای {0} در حال حاضر برای ورود خودرو وجود دارد,
+Fill the form and save it,فرم را پر کنید و آن را ذخیره کنید,
+Filter Employees By (Optional),فیلتر کارمندان توسط (اختیاری),
+Fiscal Year {0} not found,سال مالی {0} یافت نشد,
+Food,غذا,
+For Employee,برای کارمند,
+From Date {0} cannot be after employee's relieving Date {1},از تاریخ {0} نمیتواند پس از تخفیف کارمند تاریخ {1},
+From Date {0} cannot be before employee's joining Date {1},از تاریخ {0} نمیتواند قبل از پیوستن کارمند تاریخ {1},
+From date can not be less than employee's joining date,از تاریخ نمیتواند کمتر از تاریخ پیوستن کارکنان باشد,
+Fuel Price,قیمت سوخت,
+Fuel Qty,تعداد سوخت,
+Full-time,تمام وقت,
+Future dates not allowed,تاریخ های آینده مجاز نیست,
+Get Details From Declaration,جزئیات را از اعلامیه دریافت کنید,
+Get Employees,کارمندان را دریافت کنید,
+Gross Pay,پرداخت ناخالص,
+Guest,مهمان,
+Half Day,نیم روز,
+Half Day Date is mandatory,تاریخ نیمه روز اجباری است,
+Half Day Date should be between From Date and To Date,نیم تاریخ روز باید بین از تاریخ و به روز می شود,
+Half Day Date should be in between Work From Date and Work End Date,تاریخ نود روز باید بین کار از تاریخ و تاریخ پایان کار باشد,
+Half day date should be in between from date and to date,تاریخ نود روز باید بین تاریخ و تاریخ باشد,
+Hello,سلام,
+House rent paid days overlapping with {0},اجاره خانه با هم تلفنی با {0},
+House rented dates required for exemption calculation,خانه تاریخ اجاره برای محاسبه معافیت مورد نیاز است,
+House rented dates should be atleast 15 days apart,تاریخ اجاره خانه باید تا 15 روز فاصله باشد,
+IFSC Code,کد IFSC,
+Intern,انترن,
+Job Description,شرح شغل,
+Job Offer,پیشنهاد کار,
+Jobs,شغل ها,
+Leave Approval Notification,اخطار تصویب را ترک کنید,
+Leave Blocked,ترک مسدود,
+Leave Encashment,ترک مجموعه,
+Leave Status Notification,اخطار وضعیت را ترک کنید,
+Leave Type,نوع مرخصی,
+Leave Type is madatory,نوع ترک تحصیل کرده است,
+Leave Type {0} cannot be allocated since it is leave without pay,ترک نوع {0} نمی تواند اختصاص داده شود از آن است که بدون حقوق ترک,
+Leave Type {0} cannot be carry-forwarded,نوع ترک {0} نمی تواند حمل فرستاده,
+Leave Type {0} is not encashable,ترک نوع {0} قابل اتصال نیست,
+Leave Without Pay,ترک کنی بدون اینکه پرداخت,
+"Leave cannot be allocated before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}",می توانید قبل از ترک نمی اختصاص داده شود {0}، به عنوان تعادل مرخصی در حال حاضر شده حمل فرستاده در آینده رکورد تخصیص مرخصی {1},
+"Leave cannot be applied/cancelled before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}",ترک نمی تواند اعمال شود / قبل از {0} لغو، به عنوان تعادل مرخصی در حال حاضر شده حمل فرستاده در آینده رکورد تخصیص مرخصی {1},
+Leave of type {0} cannot be longer than {1},مرخصی از نوع {0} نمی تواند بیش از {1},
+Leaves,برگها,
+Leaves Allocated Successfully for {0},برگ با موفقیت برای اختصاص {0},
+Leaves per Year,برگ در سال,
+Lifecycle,چرخه زندگی,
+Mark Attendance,علامتگذاری حضور,
+Max Exemption Amount cannot be greater than maximum exemption amount {0} of Tax Exemption Category {1},حداکثر مبلغ معافیت نمی تواند بیشتر از مقدار حداکثر معافیت {0} از معافیت مالیاتی دسته {1},
+Max benefits should be greater than zero to dispense benefits,حداکثر مزایا باید بیشتر از صفر باشد تا مزایا را از بین ببرند,
+Maximum amount eligible for the component {0} exceeds {1},حداکثر واجد شرایط برای کامپوننت {0} بیش از {1},
+Maximum benefit amount of component {0} exceeds {1},مقدار حداکثر مزایای کامپوننت {0} بیش از {1},
+Maximum benefit amount of employee {0} exceeds {1},حداکثر مبلغ مزیت کارمند {0} بیش از {1},
+Maximum leave allowed in the leave type {0} is {1},حداکثر مرخصی مجاز در نوع ترک {0} {1},
+Medical,پزشکی,
+Mode of payment is required to make a payment,نحوه پرداخت مورد نیاز است را به پرداخت,
+More than one selection for {0} not allowed,بیش از یک انتخاب برای {0} مجاز نیست,
+Net Pay,پرداخت خالص,
+Net Pay cannot be less than 0,پرداخت خالص نمی تواند کمتر از 0,
+Net Salary Amount,مبلغ دستمزد خالص,
+Net pay cannot be negative,پرداخت خالص نمی تونه منفی,
+No Employee Found,هیچ کارمند یافت نشد,
+No Salary Structure assigned for Employee {0} on given date {1},بدون ساختار حقوق و دستمزد برای کارمندان {0} در تاریخ داده شده {1},
+No Staffing Plans found for this Designation,هیچ برنامه انکشافی برای این تعیین نشد,
+No active or default Salary Structure found for employee {0} for the given dates,فعال یا حقوق و دستمزد به طور پیش فرض ساختار پیدا شده برای کارکنان {0} برای تاریخ داده شده,
+No more updates,هیچ به روز رسانی بیشتر,
+No replies from,بدون پاسخ از,
+No salary slip found to submit for the above selected criteria OR salary slip already submitted,هیچ لغزش حقوق و دستمزد برای ارائه معیارهای انتخاب شده یا معافیت حقوق و دستمزد در حال حاضر ارائه نشده است,
+Nothing to change,چیزی برای تغییر ندارد,
+Notice Period,مقررات دوره,
+Only Leave Applications with status 'Approved' and 'Rejected' can be submitted,تنها برنامه های کاربردی با وضعیت ترک &#39;تایید&#39; و &#39;رد&#39; را می توان ارسال,
+Optional Holiday List not set for leave period {0},فهرست تعطیلات اختیاری برای مدت زمان تعطیل تنظیم نمی شود {0},
+Others,دیگران,
+Part-time,پاره وقت,
+Password policy for Salary Slips is not set,خط مشی رمز عبور برای حقوق و دستمزدها تنظیم نشده است,
+Payment Days,روز پرداخت,
+Payment of {0} from {1} to {2},پرداخت {0} از {1} تا {2},
+Payroll,لیست حقوق,
+Payroll Number,شماره حقوق و دستمزد,
+Piecework,کار از روی مقاطعه,
+Please add the remaining benefits {0} to any of the existing component,لطفا مزایای باقیمانده {0} را به هر یک از اجزای موجود اضافه کنید,
+Please confirm once you have completed your training,لطفا پس از اتمام آموزش خود را تأیید کنید,
+Please enable default incoming account before creating Daily Work Summary Group,قبل از ایجاد خلاصه گروه روزانه، لطفا قبل از ورود به حساب ورودی فعال کنید,
+Please select Company and Designation,لطفا شرکت و تعیین را انتخاب کنید,
+Please select Employee,لطفا کارمند را انتخاب کنید,
+Please select a csv file,لطفا یک فایل CSV را انتخاب کنید,
+Please set default template for Leave Approval Notification in HR Settings.,لطفا قالب پیش فرض برای اعلان تأیید خروج در تنظیمات HR تنظیم کنید.,
+Please set default template for Leave Status Notification in HR Settings.,لطفا قالب پیش فرض برای اعلام وضعیت وضعیت ترک در تنظیمات HR تعیین کنید.,
+Please set the Company,لطفا مجموعه ای از شرکت,
+Please set the Date Of Joining for employee {0},لطفا مجموعه ای از تاریخ پیوستن برای کارمند {0},
+Please share your feedback to the training by clicking on 'Training Feedback' and then 'New',لطفا نظرات خود را به آموزش با کلیک بر روی &#39;آموزش بازخورد&#39; و سپس &#39;جدید&#39;,
+Please update your status for this training event,لطفا وضعیت خود را برای این رویداد آموزشی به روز کنید,
+Present,حاضر,
+Preview Salary Slip,پیش نمایش لغزش حقوق,
+Privilege Leave,امتیاز مرخصی,
+Probation,عفو مشروط,
+Probationary Period,دوره وابسته به التزام,
+Property,خاصیت,
+Property already added,املاک در حال حاضر اضافه شده است,
+Replies,پاسخ ها,
+Responsibilities,مسئولیت,
+Role,نقش,
+Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2},ردیف {0} # مقدار اختصاص داده شده {1} نمیتواند بیشتر از مقدار درخواست نشده باشد {2},
+Row {0}# Paid Amount cannot be greater than requested advance amount,ردیف {0} # مبلغ پرداخت شده نمیتواند بیشتر از مبلغ درخواست پیشنهادی باشد,
+Salary Slip ID,حقوق و دستمزد ID لغزش,
+Salary Slip of employee {0} already created for this period,لغزش حقوق و دستمزد کارکنان {0} در حال حاضر برای این دوره بوجود,
+Salary Slip of employee {0} already created for time sheet {1},لغزش حقوق و دستمزد کارکنان {0} در حال حاضر برای ورق زمان ایجاد {1},
+Salary Structure Assignment for Employee already exists,تخصیص ساختار حقوق برای کارمندان در حال حاضر وجود دارد,
+Salary Structure Missing,گمشده ساختار حقوق و دستمزد,
+Salary Structure not found for employee {0} and date {1},ساختار حقوق و دستمزد برای کارمند یافت نشد {0} و تاریخ {1},
+Salary Structure should have flexible benefit component(s) to dispense benefit amount,ساختار حقوق و دستمزد باید اجزای مزایای قابل انعطاف را در اختیار داشته باشد تا مبلغ سود مورد استفاده قرار گیرد,
+"Salary already processed for period between {0} and {1}, Leave application period cannot be between this date range.",حقوق و دستمزد در حال حاضر برای دوره بین {0} و {1}، ترک دوره نرم افزار نمی تواند بین این محدوده تاریخ پردازش شده است.,
+Sanctioned Amount cannot be greater than Claim Amount in Row {0}.,مقدار تحریم نیست می تواند بیشتر از مقدار ادعای در ردیف {0}.,
+Score must be less than or equal to 5,امتیاز باید کمتر از یا برابر با 5 است,
+Select Property,املاک را انتخاب کنید,
+Select an employee to get the employee advance.,یک کارمند را برای پیشبرد کارمند انتخاب کنید,
+Service Expense,هزینه خدمات,
+Show Employee,نمایش کارمند,
+Show Salary Slip,لغزش نمایش حقوق,
+Sick Leave,مرخصی استعلاجی,
+"Skipping Salary Structure Assignment for the following employees, as Salary Structure Assignment records already exists against them. {0}",تخصیص مجدد ساختار حقوق و دستمزد برای کارکنان زیر، به عنوان پرونده های وظیفه ساختار حقوق و دستمزد در حال حاضر در برابر آنها وجود دارد. {0},
+Staffing Plan {0} already exist for designation {1},برنامه کارکنان {0} برای تعیین نام وجود دارد {1},
+"Start and end dates not in a valid Payroll Period, cannot calculate {0}",تاریخ شروع و پایان را در یک دوره ثبت نام معیوب معتبر، نمیتوان {0} محاسبه کرد,
+"Start and end dates not in a valid Payroll Period, cannot calculate {0}.",تاریخ شروع و پایان را در یک دوره ثبت نام معیوب معتبر، نمیتوان {0} محاسبه کرد.,
+Stock Options,گزینه های سهام,
+Structures have been assigned successfully,ساختارها با موفقیت انجام شده است,
+Submit Proof,اثبات ارسال کنید,
+Submit Salary Slip,ثبت کردن لغزش حقوق,
+Submit this to create the Employee record,این را برای ایجاد رکورد کارمند ارسال کنید,
+Submitting Salary Slips...,ارسال حقوق و دستمزد ...,
+Team Updates,به روز رسانی تیم,
+Thank you,متشکرم,
+The day(s) on which you are applying for leave are holidays. You need not apply for leave.,روز (بازدید کنندگان) که در آن شما برای مرخصی استفاده از تعطیلات. شما نیاز به درخواست برای ترک نمی کند.,
+There are more holidays than working days this month.,می تعطیلات بیشتر از روز کاری در این ماه وجود دارد.,
+There is no leave period in between {0} and {1},فاصله زمانی بین {0} و {1} وجود ندارد,
+This is based on the attendance of this Employee,این است که در حضور این کارمند بر اساس,
+This will submit Salary Slips and create accrual Journal Entry. Do you want to proceed?,این باعث می شود که حقوق و دستمزد را ایجاد کنید و مجله ورودی تعهدی ایجاد کنید. آیا شما می خواهید ادامه دهید؟,
+To date can not be equal or less than from date,تا تاریخ نمی تواند برابر یا کمتر از تاریخ باشد,
+To date can not be less than from date,تا تاریخ نمی تواند کمتر از تاریخ باشد,
+To date can not greater than employee's relieving date,تا تاریخ نمیتواند بیشتر از تاریخ تسکین کارکنان باشد,
+Total Absent,مجموع غایب,
+Total Allocated Leaves,مجموع برگه های برگزیده,
+Total Deduction,کسر مجموع,
+Total Leaves,مجموع برگ,
+Total Present,در حال حاضر مجموع,
+Total advance amount cannot be greater than total sanctioned amount,مبلغ پیشنهادی کل نمیتواند بیشتر از مجموع مبلغ مجاز باشد,
+Total flexible benefit component amount {0} should not be less than max benefits {1},مقدار کامپوننت منعطف انعطاف پذیر {0} نباید کمتر از مزایای حداکثر باشد {1},
+Total leaves allocated is mandatory for Leave Type {0},مجموع برگ ها اختصاص داده شده برای نوع ترک {0} اجباری است,
+Total working hours should not be greater than max working hours {0},کل ساعات کار نباید از ساعات کار حداکثر است بیشتر {0},
+Training,آموزش,
+Training Event,برنامه آموزشی,
+Training Events,رویدادهای آموزشی,
+Training Feedback,آموزش فیدبک,
+Training Result,نتیجه آموزش,
+Travel,سفر,
+Update Response,به روز رسانی پاسخ,
+Used Leaves,برگهای مورد استفاده,
+Value missing,ارزش گمشده,
+Variable,متغیر,
+Walk In,راه رفتن در,
+Warning: Leave application contains following block dates,هشدار: بگذارید برنامه شامل تاریخ های بلوک زیر,
+Website Listing,لیست وبسایت,
+Work Summary for {0},خلاصه کار برای {0},
+You are not authorized to approve leaves on Block Dates,شما مجاز به تایید برگ در تاریخ های مسدود شده نیستید,
+You are not present all day(s) between compensatory leave request days,شما در تمام روز بین روزهای درخواست تعرفه تعلیق حضور ندارید,
+You can only submit Leave Encashment for a valid encashment amount,شما فقط می توانید محتوا را ترک کنید برای یک مبلغ اعتبار معتبر,
+{0} already allocated for Employee {1} for period {2} to {3},{0} در حال حاضر برای کارکنان اختصاص داده {1} برای مدت {2} به {3},
+{0} applicable after {1} working days,{0} پس از {1} روز کاری قابل اجرا است,
+{0} is not in Optional Holiday List,{0} در فهرست تعطیلات اختیاری نیست,
+{0} is not in a valid Payroll Period,{0} در یک دوره ثبت نام معتبر نیست,
+{0} must be submitted,{0} باید ارسال شود,
+"{0}: Employee email not found, hence email not sent",{0}: ایمیل کارمند یافت نشد، از این رو ایمیل ارسال نمی,
+{0}: From {0} of type {1},{0}: از {0} از نوع {1},
+Conditions,شرایط,
+Percent,در صد,
+Error in some rows,خطا در برخی ردیف ها,
+Benefit,سود,
+Shift,تغییر مکان,
+Importing {0} of {1},واردات {0} از 1 {,
+'employee_field_value' and 'timestamp' are required.,&#39;staff_field_value&#39; و &#39;timestamp&#39; الزامی هستند.,
+Allocation Expired!,تخصیص منقضی شده است!,
+Attendance Marked,حضور و علامت گذاری شده,
+Attendance has been marked as per employee check-ins,حضور و غیاب مطابق با اعلامیه های کارمندان مشخص شده است,
+Date Range,محدوده زمانی,
+Event Link,پیوند رویداد,
+Expire Allocation,تخصیص Expire,
+Fuel Expense,هزینه سوخت,
+Intermediate,حد واسط,
+Leave application is linked with leave allocations {0}. Leave application cannot be set as leave without pay,برنامه مرخصی با تخصیص مرخصی 0 {مرتبط است. برنامه مرخصی را نمی توان به عنوان مرخصی بدون پرداخت هزینه تعیین کرد,
+Log Type is required for check-ins falling in the shift: {0}.,ورود به سیستم برای ورود به سیستم در شیفت لازم است: {0.,
+No Employee found for the given employee field value. '{}': {},هیچ کارمندی برای ارزش زمینه کارمند داده شده یافت نشد. &#39;{}&#39;: {},
+No Leaves Allocated to Employee: {0} for Leave Type: {1},بدون برگ اختصاص داده شده به کارمند: {0} برای نوع مرخصی: 1 {,
+Only expired allocation can be cancelled,فقط تخصیص منقضی شده قابل لغو است,
+Only users with the {0} role can create backdated leave applications,فقط کاربران با نقش {0 can می توانند برنامه های مرخصی عقب افتاده ایجاد کنند,
+Password policy cannot contain spaces or simultaneous hyphens. The format will be restructured automatically,خط مشی گذرواژه نمی تواند حاوی فضاها یا منافذ همزمان باشد. این فرمت به طور خودکار بازسازی می شود,
+Please enter the designation,لطفاً عنوان را وارد کنید,
+There are no vacancies under staffing plan {0},طبق برنامه کارمندان هیچ خالی وجود ندارد {0},
+This employee already has a log with the same timestamp.{0},این کارمند قبلاً با همان دفترچه زمانی وارد سیستم شده است. {0},
+Timing,زمان سنجی,
+To date needs to be before from date,تا به امروز باید قبل از تاریخ باشد,
+Total Early Exits,تعداد خروج های اولیه,
+Total Late Entries,کل ورودی های دیررس,
+Training Event:,رویداد آموزشی:,
+Unable to find Salary Component {0},یافتن جزء حقوق و دستمزد {0} یافت نشد,
+Unmarked Attendance for days,حضور در روز بدون علامت,
+Vacancies cannot be lower than the current openings,جای خالی نمی تواند کمتر از دهانه های فعلی باشد,
+{} is an invalid Attendance Status.,{} وضعیت حضور نامعتبر است.,
+Printed On,چاپ شده در,
+To date cannot be before From date,تا به امروز نمی تواند قبل از از تاریخ,
+End date can not be less than start date,تاریخ پایان نمی تواند کمتر از تاریخ شروع,
+No employee found,بدون کارمند یافت,
+Please setup Employee Naming System in Human Resource > HR Settings,لطفاً سیستم نامگذاری کارمندان را در منابع انسانی&gt; تنظیمات HR تنظیم کنید,
+Please setup numbering series for Attendance via Setup > Numbering Series,لطفاً سریال های شماره گذاری را برای حضور از طریق تنظیم&gt; سری شماره گذاری تنظیم کنید,
+Current Odometer Value should be greater than Last Odometer Value {0},مقدار کیلومتر شمار کنونی باید از مقدار آخر کیلومترشمار بیشتر باشد {0},
+No additional expenses has been added,هیچ هزینه اضافی اضافه نشده است,
+{0} already exists for employee {1} and period {2},{0} از قبل برای کارمند وجود دارد {1} و دوره {2},
+Leaves Allocated,برگ های اختصاص یافته,
+Leave Without Pay does not match with approved {} records,ترک بدون پرداخت با سوابق تأیید شده {} مطابقت ندارد,
+Income Tax Slab not set in Salary Structure Assignment: {0},اسلب مالیات بر درآمد در انتساب ساختار حقوق تنظیم نشده است: {0},
+Income Tax Slab: {0} is disabled,اسلب مالیات بر درآمد: {0} غیرفعال است,
+Income Tax Slab must be effective on or before Payroll Period Start Date: {0},اسلب مالیات بر درآمد باید از تاریخ شروع دوره حقوق و دستمزد یا قبل از آن موثر باشد: {0},
+No leave record found for employee {0} on {1},سابقه مرخصی برای کارمند {0} در {1} یافت نشد,
+Row {0}: {1} is required in the expenses table to book an expense claim.,ردیف {0}: برای ثبت ادعای هزینه ، {1} در جدول هزینه ها لازم است.,
+Set the default account for the {0} {1},حساب پیش فرض را برای {0} {1} تنظیم کنید,
+(Half Day),(نیم روز),
+Income Tax Slab,اسلب مالیات بر درآمد,
+Row #{0}: Cannot set amount or formula for Salary Component {1} with Variable Based On Taxable Salary,ردیف شماره {0}: نمی توان مقدار یا فرمولی برای ملفه حقوق {1} با متغیر براساس حقوق مشمول مالیات تعیین کرد,
+Repay From Salary can be selected only for term loans,بازپرداخت از حقوق فقط برای وام های مدت دار قابل انتخاب است,
+Salary Component Account,حساب حقوق و دستمزد و اجزای,
+Default Bank / Cash account will be automatically updated in Salary Journal Entry when this mode is selected.,به طور پیش فرض حساب بانک / نقدی به طور خودکار در حقوق ورودی مجله به روز هنگامی که این حالت انتخاب شده است.,
+Result,نتیجه,
+Total Score,نمره کل,
+Interest,علاقه,
+Joining Date,پیوستن به تاریخ,
+Publish on website,انتشار در وب سایت,
+Application Status,وضعیت برنامه,
+IN,که در,
+Remind Before,قبل از یادآوری,
+Reminded,یادآوری شد,
+Additional Salary,حقوق اضافی,
+HR-ADS-.YY.-.MM.-,HR-ADS- .YY-. MM.-,
+Salary Component,حقوق و دستمزد و اجزای,
+Overwrite Salary Structure Amount,بازپرداخت مقدار حقوق و دستمزد,
+Deduct Full Tax on Selected Payroll Date,كاهش ماليات كامل در تاريخ انتخاب حقوق و دستمزد,
+Payroll Date,تاریخ عضویت,
+Salary Component Type,نوع مشمول حقوق و دستمزد,
+Appointment Letter,نامه انتصاب,
+Appointment Date,تاریخ انتصاب,
+Appointment Letter Template,الگوی نامه انتصاب,
+Closing Notes,یادداشتهای بسته شدن,
+Appointment Letter content,محتوای نامه انتصاب,
+Appraisal,ارزیابی,
+Goals,اهداف,
+Appraisal Goal,ارزیابی هدف,
+Key Responsibility Area,منطقه مسئولیت های کلیدی,
+Weightage (%),بین وزنها (٪),
+Score (0-5),امتیاز (0-5),
+Score Earned,امتیاز کسب,
+Appraisal Template Title,ارزیابی الگو عنوان,
+Appraisal Template Goal,هدف ارزیابی الگو,
+KRA,ناحیه جنوبی,
+Key Performance Area,منطقه کلیدی کارایی,
+HR-ATT-.YYYY.-,HR-ATT- .YYYY.-,
+On Leave,در مرخصی,
+Work From Home,کار از خانه,
+Leave Application,مرخصی استفاده,
+Attendance Date,حضور و غیاب عضویت,
+Attendance Request,درخواست حضور,
+Late Entry,ورود اواخر,
+Early Exit,زود هنگام خروج,
+Half Day Date,تاریخ نیم روز,
+On Duty,در وظیفه,
+Explanation,توضیح,
+Compensatory Leave Request,درخواست بازپرداخت جبران خسارت,
+Leave Allocation,ترک تخصیص,
+Worked On Holiday,کار تعطیلات,
+Work From Date,کار از تاریخ,
+Work End Date,تاریخ پایان کار,
+Email Sent To,ایمیل ارسال شده به,
+Select Users,کاربران را انتخاب کنید,
+Send Emails At,ارسال ایمیل در,
+Reminder,یادآور,
+Daily Work Summary Group User,کاربر خلاصه گروه کار روزانه,
+email,پست الکترونیک,
+Department Approver,تأیید کننده گروه,
+Approver,تصویب,
+Designation Skill,مهارت طراحی,
+Skill,مهارت,
+Leave Policy,ترک سیاست,
+Salary Details,جزئیات حقوق و دستمزد,
+HR-EAD-.YYYY.-,HR-EAD- .YYYY.-,
+Claimed,ادعا شده,
+Advance Account,حساب پیشرو,
+Employee Attendance Tool,کارمند ابزار حضور و غیاب,
+Unmarked Attendance,حضور و غیاب بینام,
+Employees HTML,کارمندان HTML,
+Marked Attendance,حضور و غیاب مشخص شده,
+Marked Attendance HTML,حضور و غیاب مشخص HTML,
+Employee Benefit Application,درخواست کارفرما,
+Max Benefits (Yearly),حداکثر مزایا (سالیانه),
+Remaining Benefits (Yearly),مزایای باقی مانده (سالانه),
+Payroll Period,دوره حقوق و دستمزد,
+Dispensed Amount (Pro-rated),مقدار اعطا شده (امتیاز داده شده),
+Employee Benefit Application Detail,جزئیات برنامه کاربرد مزایای کارکنان,
+Earning Component,کامپوننت درآمد,
+Pay Against Benefit Claim,پرداخت حق بیمه,
+Max Benefit Amount,حداکثر مبلغ مزایا,
+Employee Benefit Claim,ادعای مزایای کارکنان,
+Claim Date,تاریخ ادعا,
+Claim Benefit For,درخواست مزایا برای,
+Max Amount Eligible,حداکثر مبلغ مجاز,
+Expense Proof,اثبات هزینه,
+Employee Boarding Activity,فعاليت شبانه روزی کارکنان,
+Activity Name,نام فعالیت,
+Required for Employee Creation,مورد نیاز برای ایجاد کارمند,
+Applicable in the case of Employee Onboarding,قابل اجرا در مورد کارمند انبار,
+Employee Checkin,بررسی کارمندان,
+Log Type,نوع ورود,
+OUT,بیرون,
+Location / Device ID,شناسه مکان / دستگاه,
+Skip Auto Attendance,شرکت در حضور خودکار,
+Shift Start,Shift Start,
+Shift End,پایان شیفت,
+Shift Actual Start,شروع واقعی Shift,
+Shift Actual End,پایان واقعی Shift,
+Default Salary Structure,ساختار پیش فرض حقوق,
+Employee Health Insurance,بیمه بهداشتی کارکنان,
+Health Insurance Name,نام بیمه بهداشتی,
+Employee Incentive,مشوق کارمند,
+Incentive Amount,مبلغ تسریع کننده,
+Employee Onboarding,کارمند انبار,
+Notify users by email,از طریق ایمیل به کاربران اطلاع دهید,
+Employee Onboarding Template,کارمند برپایه الگو,
+Employee Other Income,درآمد دیگر کارمند,
+Employee Promotion,ارتقاء کارکنان,
+Promotion Date,تاریخ ارتقاء,
+Employee Promotion Details,جزئیات ارتقاء کارکنان,
+Employee Property History,تاریخ اموال کارکنان,
+Employee Separation,جدایی کارکنان,
+Employee Separation Template,قالب جداگانه کارمند,
+Exit Interview Summary,خروج خلاصه مصاحبه,
+Employee Skill,مهارت کارمندان,
+Proficiency,مهارت,
+Evaluation Date,تاریخ ارزیابی,
+Employee Skill Map,نقشه مهارت کارمندان,
+Employee Skills,مهارت های کارمندان,
+Trainings,آموزشها,
+Employee Tax Exemption Category,رده اخراج مالیات کارکنان,
+Max Exemption Amount,حداکثر میزان معافیت,
+Employee Tax Exemption Declaration,بیانیه مالیات بر ارزش افزوده کارمند,
+Declarations,اعلامیه,
+Total Declared Amount,مقدار اعلام شده کل,
+Total Exemption Amount,مجموع مبلغ معافیت,
+Employee Tax Exemption Declaration Category,بخش اعلامیه حقوق بازنشستگی کارکنان,
+Exemption Sub Category,معافیت زیر رده,
+Exemption Category,رده انحصاری,
+Maximum Exempted Amount,حداکثر مقدار مجاز,
+Declared Amount,مقدار اعلام شد,
+Employee Tax Exemption Proof Submission,ارائه بازپرداخت معاف از مالیات کارمند,
+Submission Date,تاریخ ارسال,
+Tax Exemption Proofs,اثبات های تخفیف مالیاتی,
+Total Actual Amount,مقدار کل واقعی,
+Employee Tax Exemption Proof Submission Detail,جزئیات بازپرداخت معاف از مالیات کارمند,
+Maximum Exemption Amount,حداکثر میزان معافیت,
+Type of Proof,نوع اثبات,
+Actual Amount,مقدار واقعی,
+Employee Tax Exemption Sub Category,معافیت مالیاتی کارکنان زیر رده,
+Tax Exemption Category,معافیت مالیاتی رده,
+Employee Training,آموزش کارمندان,
+Training Date,تاریخ آموزش,
+Employee Transfer,انتقال کارفرمایان,
+Transfer Date,تاریخ انتقال,
+Employee Transfer Details,جزئیات انتقال کارکنان,
+Employee Transfer Detail,جزئیات انتقال کارکنان,
+Re-allocate Leaves,تخصیص برگهای مجدد,
+Create New Employee Id,ایجاد شناسه کارمند جدید,
+New Employee ID,شناسه کارمند جدید,
+HR-EXP-.YYYY.-,HR-EXP- .YYYY.-,
+Expense Taxes and Charges,هزینه مالیات و عوارض,
+Total Sanctioned Amount,کل مقدار تحریم,
+Total Advance Amount,مجموع پیشامد,
+Total Claimed Amount,مجموع مقدار ادعا,
+Total Amount Reimbursed,مقدار کل بازپرداخت,
+Vehicle Log,ورود خودرو,
+Employees Email Id,کارکنان پست الکترونیکی شناسه,
+More Details,جزئیات بیشتر,
+Expense Claim Account,حساب ادعای هزینه,
+Expense Claim Advance,پیش پرداخت هزینه,
+Expense Claim Detail,هزینه جزئیات درخواست,
+Expense Date,هزینه عضویت,
+Expense Claim Type,هزینه نوع ادعا,
+HR Settings,تنظیمات HR,
+Employee Settings,تنظیمات کارمند,
+Expense Approver Mandatory In Expense Claim,تأیید کننده هزینه مورد نیاز در هزینه ادعا,
+Payroll Settings,تنظیمات حقوق و دستمزد,
+Leave,ترک کردن,
+Max working hours against Timesheet,حداکثر ساعات کار در برابر برنامه زمانی,
+Include holidays in Total no. of Working Days,شامل تعطیلات در مجموع هیچ. از روز کاری,
+"If checked, hides and disables Rounded Total field in Salary Slips",اگر علامت زده شود ، قسمت Rounded Total را در Slip Slips مخفی کرده و غیرفعال می کند,
+The fraction of daily wages to be paid for half-day attendance,کسری از حقوق روزانه که باید برای حضور در نیم روز پرداخت شود,
+Email Salary Slip to Employee,ایمیل لغزش حقوق و دستمزد به کارکنان,
+Emails salary slip to employee based on preferred email selected in Employee,لغزش ایمیل حقوق و دستمزد به کارکنان را بر اساس ایمیل مورد نظر در انتخاب کارمند,
+Encrypt Salary Slips in Emails,رمزگذاری لیست حقوق در ایمیل,
+"The salary slip emailed to the employee will be password protected, the password will be generated based on the password policy.",مبلغ دستمزدی که به کارمند ارسال می شود از رمز عبور محافظت می شود ، رمز عبور بر اساس خط مشی رمز عبور تولید می شود.,
+Password Policy,خط مشی رمز عبور,
+<b>Example:</b> SAL-{first_name}-{date_of_birth.year} <br>This will generate a password like SAL-Jane-1972,<b>مثال:</b> SAL- {first_name - {date_of_birth.year <br> با این کار رمز عبوری مانند SAL-Jane-1972 ایجاد می شود,
+Leave Approval Notification Template,قالب اخطار تایید را ترک کنید,
+Leave Status Notification Template,حالت اخطار وضعیت را ترک کنید,
+Role Allowed to Create Backdated Leave Application,نقش مجاز به ایجاد برنامه مرخصی با سابقه بازگشت,
+Leave Approver Mandatory In Leave Application,خروج از تأیید کننده در مورد درخواست اجباری,
+Show Leaves Of All Department Members In Calendar,نمایش برگ همه اعضای گروه در تقویم,
+Auto Leave Encashment,خودکار ترک کردن رمزگذاری,
+Hiring Settings,تنظیمات استخدام,
+Check Vacancies On Job Offer Creation,فرصتهای شغلی در ایجاد پیشنهاد شغلی را بررسی کنید,
+Identification Document Type,نوع سند شناسایی,
+Effective from,موثر از,
+Allow Tax Exemption,معافیت مالیاتی مجاز است,
+"If enabled, Tax Exemption Declaration will be considered for income tax calculation.",در صورت فعال بودن ، اعلامیه معافیت مالیاتی برای محاسبه مالیات بر درآمد در نظر گرفته می شود.,
+Standard Tax Exemption Amount,مبلغ معافیت مالیاتی استاندارد,
+Taxable Salary Slabs,اسلب حقوق و دستمزد مشمول مالیات,
+Taxes and Charges on Income Tax,مالیات و هزینه های مالیات بر درآمد,
+Other Taxes and Charges,سایر مالیات ها و هزینه ها,
+Income Tax Slab Other Charges,سایر اسناد مالیات بر درآمد,
+Min Taxable Income,حداقل درآمد مشمول مالیات,
+Max Taxable Income,حداکثر درآمد مشمول مالیات,
+Applicant for a Job,متقاضی برای شغل,
+Job Opening,افتتاح شغلی,
+Cover Letter,جلد نامه,
+Resume Attachment,پیوست رزومه,
+Job Applicant Source,منبع درخواست شغلی,
+Applicant Email Address,آدرس ایمیل متقاضی,
+Awaiting Response,در انتظار پاسخ,
+Job Offer Terms,شرایط پیشنهاد شغلی,
+Select Terms and Conditions,انتخاب شرایط و ضوابط,
+Job Offer Term,پیشنهاد شغلی,
+Offer Term,مدت پیشنهاد,
+Value / Description,ارزش / توضیحات,
+Description of a Job Opening,شرح یک شغل,
+Staffing Plan,طرح کارکنان,
+Planned number of Positions,تعداد پالیسی های برنامه ریزی شده,
+"Job profile, qualifications required etc.",مشخصات شغلی، شرایط مورد نیاز و غیره,
+HR-LAL-.YYYY.-,HR-LAL- .YYYY.-,
+New Leaves Allocated,برگ جدید اختصاص داده شده,
+Add unused leaves from previous allocations,اضافه کردن برگ های استفاده نشده از تخصیص قبلی,
+Unused leaves,برگ استفاده نشده,
+Total Leaves Allocated,مجموع برگ اختصاص داده شده,
+Total Leaves Encashed,مجموع برگ ها جای داده شده است,
+Leave Period,ترک دوره,
+Carry Forwarded Leaves,برگ فرستاده حمل,
+Apply / Approve Leaves,درخواست / برگ تصویب,
+HR-LAP-.YYYY.-,HR-LAP- .YYYY.-,
+Leave Balance Before Application,ترک تعادل قبل از اعمال,
+Total Leave Days,مجموع مرخصی روز,
+Leave Approver Name,ترک نام تصویب,
+Follow via Email,از طریق ایمیل دنبال کنید,
+Block Holidays on important days.,تعطیلات بلوک در روز مهم است.,
+Leave Block List Name,ترک نام فهرست بلوک,
+Applies to Company,امر به شرکت,
+"If not checked, the list will have to be added to each Department where it has to be applied.",اگر بررسی نیست، لیست خواهد باید به هر بخش که در آن به کار گرفته شوند اضافه شده است.,
+Block Days,بلوک روز,
+Stop users from making Leave Applications on following days.,توقف کاربران از ساخت نرم افزار مرخصی در روز بعد.,
+Leave Block List Dates,ترک فهرست بلوک خرما,
+Allow Users,کاربران اجازه می دهد,
+Allow the following users to approve Leave Applications for block days.,اجازه می دهد کاربران زیر به تصویب برنامه های کاربردی را برای روز مسدود کند.,
+Leave Block List Allowed,ترک فهرست بلوک های مجاز,
+Leave Block List Allow,ترک فهرست بلوک اجازه,
+Allow User,اجازه می دهد کاربر,
+Leave Block List Date,ترک فهرست بلوک عضویت,
+Block Date,بلوک عضویت,
+Leave Control Panel,ترک کنترل پنل,
+Employment Type (optional),نوع اشتغال (اختیاری),
+Branch (optional),شعبه (اختیاری),
+Department (optional),بخش (اختیاری),
+Designation (optional),تعیین (اختیاری),
+Employee Grade (optional),درجه کارمند (اختیاری),
+Employee (optional),کارمند (اختیاری),
+Allocate Leaves,تخصیص برگ,
+Carry Forward,حمل به جلو,
+Please select Carry Forward if you also want to include previous fiscal year's balance leaves to this fiscal year,لطفا انتخاب کنید حمل به جلو اگر شما نیز می خواهید که شامل تعادل سال گذشته مالی برگ به سال مالی جاری,
+New Leaves Allocated (In Days),برگ جدید اختصاص داده شده (در روز),
+Leave Balance,برهم زدن تعادل,
+Encashable days,روزهای Encashable,
+Encashment Amount,مبلغ مبلغ,
+Leave Ledger Entry,ورود ورود به سیستم را ترک کنید,
+Transaction Name,نام معاملات,
+Is Carry Forward,آیا حمل به جلو,
+Is Expired,باطل شده,
+Is Leave Without Pay,آیا ترک کنی بدون اینکه پرداخت,
+Holiday List for Optional Leave,لیست تعطیلات برای اقامت اختیاری,
+Leave Allocations,رها کردن,
+Leave Policy Details,ترک جزئیات سیاست,
+Leave Policy Detail,ترک جزئیات سیاست,
+Annual Allocation,توزیع سالانه,
+Leave Type Name,ترک نام نوع,
+Applicable After (Working Days),قابل اجرا بعد از (روزهای کاری),
+Is Optional Leave,ترک اختیاری است,
+Allow Negative Balance,اجازه می دهد تراز منفی,
+Include holidays within leaves as leaves,شامل تعطیلات در برگ برگ,
+Is Compensatory,عیبی دارد,
+Maximum Carry Forwarded Leaves,حداکثر برگهای حمل شده,
+Expire Carry Forwarded Leaves (Days),برگهای حمل شده Expire (روزها),
+Calculated in days,در روز محاسبه می شود,
+Encashment,محاسبه,
+Allow Encashment,مجاز به انسداد,
+Encashment Threshold Days,روز آستانه محاسبه,
+Earned Leave,درآمد کسب شده,
+Is Earned Leave,درآمد کسب کرده است,
+Earned Leave Frequency,فرکانس خروج درآمد,
+Rounding,گرد کردن,
+Payroll Employee Detail,جزئیات کارمند حقوق و دستمزد,
+Payroll Frequency,فرکانس حقوق و دستمزد,
+Fortnightly,دوهفتگی,
+Bimonthly,مجلهای که دوماه یکبار منتشر میشود,
+Employees,کارمندان,
+Number Of Employees,تعداد کارکنان,
+Employee Details,جزئیات کارمند,
+Validate Attendance,تأیید حضور,
+Salary Slip Based on Timesheet,لغزش حقوق و دستمزد بر اساس برنامه زمانی,
+Deduct Tax For Unclaimed Employee Benefits,تخفیف مالیات برای مزایای کارمند بدون اعلان,
+Deduct Tax For Unsubmitted Tax Exemption Proof,تخفیف مالیات برای اثبات تخفیف مالیات غیرقانونی,
+Select Payment Account to make Bank Entry,انتخاب حساب پرداخت به ورود بانک,
+Salary Slips Created,حقوق و دستمزد ایجاد شده است,
+Salary Slips Submitted,حقوق و دستمزد ارسال شده است,
+Payroll Periods,دوره های حقوق و دستمزد,
+Payroll Period Date,تاریخ پرداخت حقوق,
+Purpose of Travel,هدف سفر,
+Retention Bonus,جایزه نگهداری,
+Bonus Payment Date,تاریخ پرداخت پاداش,
+Bonus Amount,مقدار پاداش,
+Depends on Payment Days,بستگی به روزهای پرداخت دارد,
+Is Tax Applicable,مالیات قابل اجرا است,
+Variable Based On Taxable Salary,متغیر بر اساس حقوق و دستمزد قابل پرداخت,
+Exempted from Income Tax,معاف از مالیات بر درآمد,
+Round to the Nearest Integer,دور تا نزدیکترین علاقه,
+Statistical Component,کامپوننت آماری,
+"If selected, the value specified or calculated in this component will not contribute to the earnings or deductions. However, it's value can be referenced by other components that can be added or deducted. ",در صورت انتخاب، از مقدار مشخص شده و یا محاسبه در این بخش نمی خواهد به درآمد یا کسورات کمک می کند. با این حال، ارزش را می توان با دیگر اجزای که می تواند اضافه یا کسر اشاره شده است.,
+Do Not Include in Total,در کل وارد نکنید,
+Flexible Benefits,مزایای انعطاف پذیر,
+Is Flexible Benefit,مزایای قابل انعطاف است,
+Max Benefit Amount (Yearly),مقدار حداکثر مزایا (سالانه),
+Only Tax Impact (Cannot Claim But Part of Taxable Income),فقط تأثیر مالیاتی (نمیتوان ادعا کرد که بخشی از درآمد مشمول مالیات است),
+Create Separate Payment Entry Against Benefit Claim,ایجاد تکالیف جداگانه علیه ادعای مزایا,
+Amount based on formula,مقدار در فرمول بر اساس,
+Formula,فرمول,
+Salary Detail,جزئیات حقوق و دستمزد,
+Do not include in total,در مجموع شامل نمی شود,
+Default Amount,مقدار پیش فرض,
+Additional Amount,مقدار اضافی,
+Tax on flexible benefit,مالیات بر سود انعطاف پذیر,
+Tax on additional salary,مالیات بر حقوق و دستمزد اضافی,
+Salary Structure,ساختار حقوق و دستمزد,
+Working Days,روزهای کاری,
+Salary Slip Timesheet,برنامه زمانی حقوق و دستمزد لغزش,
+Earnings,درامد,
+Deductions,کسر,
+Employee Loan,کارمند وام,
+Total Principal Amount,مجموع کل اصل,
+Total Interest Amount,مقدار کل سود,
+Total Loan Repayment,مجموع بازپرداخت وام,
+Total in words,مجموع در کلمات,
+Salary Component for timesheet based payroll.,کامپوننت حقوق و دستمزد حقوق و دستمزد بر اساس برنامه زمانی برای.,
+Leave Encashment Amount Per Day,مبلغ مبلغ در روز را ترک کنید,
+Max Benefits (Amount),حداکثر مزایا (مقدار),
+Salary breakup based on Earning and Deduction.,فروپاشی حقوق و دستمزد بر اساس سود و کسر.,
+Total Earning,سود مجموع,
+Salary Structure Assignment,تخصیص ساختار حقوق و دستمزد,
+Shift Assignment,تخصیص تغییر,
+Shift Type,نوع تغییر,
+Shift Request,درخواست تغییر,
+Enable Auto Attendance,حضور و غیاب خودکار را فعال کنید,
+Mark attendance based on 'Employee Checkin' for Employees assigned to this shift.,حضور و علامت گذاری بر اساس &quot;Checkin Employee&quot; را برای کارمندان اختصاص داده شده در این شیفت انجام دهید.,
+Auto Attendance Settings,تنظیمات حضور و غیاب خودکار,
+Determine Check-in and Check-out,Check-in و Check-Out را تعیین کنید,
+Alternating entries as IN and OUT during the same shift,ورودی های متناوب مانند IN و OUT در همان شیفت,
+Strictly based on Log Type in Employee Checkin,کاملاً مبتنی بر ورود به سیستم در ورود به سیستم کارمندان,
+Working Hours Calculation Based On,محاسبه ساعت کار بر اساس,
+First Check-in and Last Check-out,اولین ورود به سیستم و آخرین check-out,
+Every Valid Check-in and Check-out,هر ورود به سیستم و ورود به سیستم معتبر است,
+Begin check-in before shift start time (in minutes),قبل از شروع زمان تغییر شیفت (در عرض چند دقیقه) ورود به سیستم را شروع کنید,
+The time before the shift start time during which Employee Check-in is considered for attendance.,زمان قبل از شروع کار شیفت که در آن Check-in کارمندان برای حضور در نظر گرفته می شود.,
+Allow check-out after shift end time (in minutes),بعد از اتمام زمان تغییر شیفت (در عرض چند دقیقه) اجازه ورود به سیستم,
+Time after the end of shift during which check-out is considered for attendance.,زمان بعد از پایان شیفت که در آن چک لیست برای حضور در نظر گرفته شده است.,
+Working Hours Threshold for Half Day,آستانه ساعت کار برای نیم روز,
+Working hours below which Half Day is marked. (Zero to disable),ساعات کاری که زیر آن نیمه روز مشخص شده است. (غیرفعال کردن صفر),
+Working Hours Threshold for Absent,آستانه ساعت کاری برای غیبت,
+Working hours below which Absent is marked. (Zero to disable),ساعات کاری که در زیر آن غایب مشخص شده است. (غیرفعال کردن صفر),
+Process Attendance After,حضور در فرآیند پس از,
+Attendance will be marked automatically only after this date.,حضور فقط بعد از این تاریخ به طور خودکار مشخص می شود.,
+Last Sync of Checkin,آخرین همگام سازی Checkin,
+Last Known Successful Sync of Employee Checkin. Reset this only if you are sure that all Logs are synced from all the locations. Please don't modify this if you are unsure.,آخرین همگام سازی موفقیت آمیز بررسی کارمندان. این تنظیم مجدد فقط درصورتی که مطمئن هستید که همه گزارش ها از همه مکان ها همگام سازی شده اند. اگر مطمئن نیستید ، لطفاً این را اصلاح نکنید.,
+Late Entry Grace Period,دوره تأخیر ورود,
+The time after the shift start time when check-in is considered as late (in minutes).,زمان بعد از شروع زمان تغییر هنگام ورود به سیستم دیر هنگام (در عرض چند دقیقه) در نظر گرفته می شود.,
+Early Exit Grace Period,زودرس دوره گریس,
+The time before the shift end time when check-out is considered as early (in minutes).,زمان قبل از زمان پایان شیفت هنگام استعلام زود هنگام (در عرض چند دقیقه) در نظر گرفته می شود.,
+Skill Name,نام مهارت,
+Staffing Plan Detail,جزئیات برنامه کارکنان,
+Total Estimated Budget,مجموع بودجه تخمینی,
+Vacancies,واجد شرایط,
+Estimated Cost Per Position,هزینه پیش بینی شده در هر موقعیت,
+Total Estimated Cost,کل هزینه تخمینی,
+Current Count,تعداد فعلی,
+Current Openings,بازوهای فعلی,
+Number Of Positions,تعداد موقعیت ها,
+Taxable Salary Slab,حقوق و دستمزد قابل پرداخت,
+From Amount,از مقدار,
+To Amount,به مقدار,
+Percent Deduction,کاهش درصد,
+Training Program,برنامه آموزشی,
+Event Status,وضعیت رویداد,
+Has Certificate,گواهی دارد,
+Seminar,سمینار,
+Theory,تئوری,
+Workshop,کارگاه,
+Conference,کنفرانس,
+Exam,امتحان,
+Internet,اینترنت,
+Self-Study,خودخوان,
+Advance,پیشرفت,
+Trainer Name,نام مربی,
+Trainer Email,ترینر ایمیل,
+Attendees,شرکت کنندگان,
+Employee Emails,ایمیل کارمند,
+Training Event Employee,رویداد آموزش کارکنان,
+Invited,دعوت کرد,
+Feedback Submitted,بازخورد ارائه,
+Training Result Employee,کارمند آموزش نتیجه,
+Travel Itinerary,سفرنامه سفر,
+Travel From,سفر از,
+Travel To,سفر به,
+Mode of Travel,حالت سفر,
+Flight,پرواز,
+Train,قطار - تعلیم دادن,
+Taxi,تاکسی,
+Rented Car,ماشین اجاره ای,
+Meal Preference,اولویت غذا,
+Vegetarian,گیاه خواری,
+Non-Vegetarian,غیر گیاهی,
+Gluten Free,گلوتن رایگان,
+Non Diary,غیر رسمی,
+Travel Advance Required,پیش نیاز سفر,
+Departure Datetime,زمان تاریخ خروج,
+Arrival Datetime,زمان ورود,
+Lodging Required,اسکان ضروری است,
+Preferred Area for Lodging,منطقه مورد نظر برای اسکان,
+Check-in Date,تاریخ ورود,
+Check-out Date,چک کردن تاریخ,
+Travel Request,درخواست سفر,
+Travel Type,نوع سفر,
+Domestic,داخلی,
+International,بین المللی,
+Travel Funding,تامین مالی سفر,
+Require Full Funding,نیاز به بودجه کامل,
+Fully Sponsored,کاملا حمایت شده,
+"Partially Sponsored, Require Partial Funding",بخشی از حمایت مالی، نیاز به سرمایه گذاری بخشی,
+Copy of Invitation/Announcement,کپی دعوت / اعلامیه,
+"Details of Sponsor (Name, Location)",جزئیات حامی (نام، محل),
+Identification Document Number,تشخیص شماره سند,
+Any other details,هر جزئیات دیگر,
+Costing Details,جزئیات هزینه,
+Event Details,جزئیات رویداد,
+Name of Organizer,نام سازنده,
+Address of Organizer,آدرس برگزار کننده,
+Travel Request Costing,هزینه هزینه سفر,
+Expense Type,نوع هزینه,
+Sponsored Amount,مقدار حمایت شده,
+Funded Amount,مبلغ جمع شده,
+Upload Attendance,بارگذاری حضور و غیاب,
+Attendance From Date,حضور و غیاب از تاریخ,
+Attendance To Date,حضور و غیاب به روز,
+Get Template,دریافت قالب,
+Import Attendance,واردات حضور و غیاب,
+Upload HTML,بارگذاری HTML,
+HR-VLOG-.YYYY.-,HR-VLOG- .YYYY.-,
+Odometer Reading,خواندن کیلومترشمار,
+Current Odometer value ,مقدار کیلومتر شمار فعلی,
+Refuelling Details,اطلاعات سوختگیری,
+Invoice Ref,فاکتور کد عکس,
+Service Details,جزئیات خدمات,
+Vehicle Service,خدمات خودرو,
+Service Item,مورد خدمات,
+Inspection,بازرسی,
+Mileage,مسافت پیموده شده,
+Salary Slip Loan,وام وام لغزش,
+Loan Repayment Entry,ورودی بازپرداخت وام,
+Bank Remittance,حواله بانکی,
+Daily Work Summary Replies,روزانه کار خلاصه پاسخ ها,
+Employee Advance Summary,خلاصه پیشرفت کارمند,
+Employees working on a holiday,کارمندان کار در یک روز تعطیل,
+Monthly Attendance Sheet,جدول ماهانه حضور و غیاب,
+Salary Register,حقوق و دستمزد ثبت نام,
+Unpaid Expense Claim,ادعای هزینه های پرداخت نشده,
+Payment Account is mandatory,حساب پرداخت اجباری است,
+"If checked, the full amount will be deducted from taxable income before calculating income tax without any declaration or proof submission.",در صورت بررسی ، قبل از محاسبه مالیات بر درآمد ، بدون هیچ گونه اظهارنامه یا اثبات اثبات ، کل مبلغ از درآمد مشمول مالیات کسر می شود.,
+In Time,به موقع,
+Out Time,زمان خاموش,
+PAN Number,شماره PAN,
+Expired Leaves,برگهای منقضی شده,
+Is Recurring,در حال تکرار است,
+Validating Employee Attendance...,تأیید اعتبار حضور کارمندان ...,
+Submitting Salary Slips and creating Journal Entry...,ارسال برگه های حقوق و ایجاد ورودی مجله ...,
+Calculate Payroll Working Days Based On,روزهای حقوق و دستمزد را بر اساس محاسبه کنید,
+Consider Unmarked Attendance As,حضور بدون علامت را در نظر بگیرید,
+Fraction of Daily Salary for Half Day,کسری حقوق روزانه برای نیم روز,
+Is Income Tax Component,آیا م Taxلفه مالیات بر درآمد است,
+Component properties and references ,خصوصیات و منابع ملفه,
+Additional Salary ,حقوق اضافی,
+Unmarked days,روزهای بدون علامت,
+Absent Days,روزهای غایب,
+Conditions and Formula variable and example,شرایط و متغیر فرمول و مثال,
+Income Tax Deductions,کسر مالیات بر درآمد,
+Income Tax Component,م Taxلفه مالیات بر درآمد,
+Income Tax Amount,مبلغ مالیات بر درآمد,
+Unmarked Days,روزهای بدون علامت,
+Jan,جان,
+Feb,فوریه,
+Mar,مارس,
+Apr,آوریل,
+Aug,اوت,
+Sep,سپتامبر,
+Oct,مهر,
+Nov,نوامبر,
+Dec,دسامبر,
+Summarized View,نمای خلاصه شده,
+Professional Tax Deductions,کسر مالیات حرفه ای,
+Provident Fund Deductions,کسر صندوق تأمین مالی,
+Recruitment Analytics,تجزیه و تحلیل استخدام,
+Applicant name,نام متقاضی,
+Job Offer status,وضعیت پیشنهاد کار,
+On Date,در تاریخ,
+Salary Payments Based On Payment Mode,پرداخت های حقوق براساس حالت پرداخت,
+Salary Payments via ECS,پرداخت حقوق از طریق ECS,
+Account No,شماره حساب,
+IFSC,IFSC,
+MICR,MICR,
+PF Account,حساب PF,
+PF Amount,مقدار PF,
+Additional PF,PF اضافی,
+PF Loan,وام PF,
+Duplicate Entry,ورود تکراری,
+Please select Employee first.,لطفاً ابتدا کارمند را انتخاب کنید.,
+To Date should be greater than From Date,To Date باید بزرگتر از From باشد,
+Job Offer: {0} is already for Job Applicant: {1},پیشنهاد شغلی: {0} در حال حاضر برای متقاضی شغل است: {1},
+Only Shift Request with status 'Approved' and 'Rejected' can be submitted,فقط درخواست شیفت با وضعیت &quot;تأیید شده&quot; و &quot;رد شده&quot; قابل ارسال است,
+Shift Assignment: {0} created for Employee: {1},تکلیف شیفت: {0} برای کارمند ایجاد شده است: {1},
+You can not request for your Default Shift: {0},نمی توانید برای شیفت پیش فرض خود درخواست کنید: {0},
+Only Approvers can Approve this Request.,فقط تصدیق کنندگان می توانند این درخواست را تأیید کنند.,
+Please set Payroll based on in Payroll settings,لطفاً حقوق و دستمزد را براساس تنظیمات حقوق و دستمزد تنظیم کنید,
+Additional Salary: {0} already exist for Salary Component: {1} for period {2} and {3},حقوق اضافی: {0} از قبل برای مonلفه حقوق وجود دارد: {1} برای دوره {2} و {3},
+From Date can not be greater than To Date.,از تاریخ نمی تواند بیشتر از تاریخ باشد.,
 Payroll date can not be less than employee's joining date.,تاریخ حقوق و دستمزد نمی تواند کمتر از تاریخ عضویت کارمند باشد.,
 From date can not be less than employee's joining date.,از تاریخ نمی تواند کمتر از تاریخ عضویت کارمند باشد.,
 To date can not be greater than employee's relieving date.,تا به امروز نمی تواند بیشتر از تاریخ تسویه حساب کارمند باشد.,
