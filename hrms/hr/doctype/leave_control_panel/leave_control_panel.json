@@ -5,71 +5,71 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "select_employees_section",
-  "company",
-  "employment_type",
-  "branch",
-  "department",
-  "column_break1",
-  "designation",
-  "employee_grade",
-  "employee",
   "allocate_leaves_section",
+  "dates_based_on",
+  "leave_period",
   "from_date",
   "to_date",
   "carry_forward",
-  "no_of_days",
-  "allocate",
   "column_break_16",
+  "allocate_based_on_leave_policy",
   "leave_policy",
-  "leave_type"
+  "leave_type",
+  "no_of_days",
+  "filters_section",
+  "company",
+  "branch",
+  "department",
+  "column_break1",
+  "employment_type",
+  "designation",
+  "employee_grade",
+  "advanced_filters_section",
+  "filter_list",
+  "select_employees_section",
+  "employees_html"
  ],
  "fields": [
   {
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
-   "options": "Company"
+   "options": "Company",
+   "remember_last_selected_value": 1
   },
   {
    "fieldname": "employment_type",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Employment Type (optional)",
+   "label": "Employment Type",
    "options": "Employment Type"
   },
   {
    "fieldname": "branch",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Branch (optional)",
+   "label": "Branch",
    "options": "Branch"
   },
   {
    "fieldname": "department",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Department (optional)",
+   "label": "Department",
    "options": "Department"
   },
   {
    "fieldname": "designation",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Designation (optional)",
+   "label": "Designation",
    "options": "Designation"
   },
   {
    "fieldname": "employee_grade",
    "fieldtype": "Link",
-   "label": "Employee Grade (optional)",
+   "label": "Employee Grade",
    "options": "Employee Grade"
-  },
-  {
-   "fieldname": "employee",
-   "fieldtype": "Link",
-   "label": "Employee (optional)",
-   "options": "Employee"
   },
   {
    "fieldname": "column_break1",
@@ -77,47 +77,50 @@
    "width": "50%"
   },
   {
+   "default": "Today",
+   "depends_on": "eval:doc.dates_based_on != 'Joining Date'",
    "fieldname": "from_date",
    "fieldtype": "Date",
    "label": "From Date",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.dates_based_on == 'Custom Range'",
+   "read_only_depends_on": "eval:doc.dates_based_on == 'Leave Period'"
   },
   {
    "fieldname": "to_date",
    "fieldtype": "Date",
    "label": "To Date",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.dates_based_on != 'Leave Period'",
+   "read_only_depends_on": "eval:doc.dates_based_on == 'Leave Period'"
   },
   {
+   "depends_on": "eval:doc.allocate_based_on_leave_policy ",
    "fieldname": "leave_policy",
    "fieldtype": "Link",
    "label": "Leave Policy",
+   "mandatory_depends_on": "eval:doc.allocate_based_on_leave_policy ",
    "options": "Leave Policy"
   },
   {
+   "depends_on": "eval:!doc.allocate_based_on_leave_policy",
    "fieldname": "leave_type",
    "fieldtype": "Link",
    "label": "Leave Type",
+   "mandatory_depends_on": "eval:!doc.allocate_based_on_leave_policy",
    "options": "Leave Type"
   },
   {
-   "default": "0",
-   "description": "Please select Carry Forward if you also want to include previous fiscal year's balance leaves to this fiscal year",
+   "default": "1",
+   "description": "Add unused leaves from previous leave period's allocation to this allocation",
    "fieldname": "carry_forward",
    "fieldtype": "Check",
    "label": "Carry Forward"
   },
   {
+   "depends_on": "eval:!doc.allocate_based_on_leave_policy",
    "fieldname": "no_of_days",
    "fieldtype": "Float",
    "label": "New Leaves Allocated (In Days)",
-   "reqd": 1
-  },
-  {
-   "fieldname": "allocate",
-   "fieldtype": "Button",
-   "label": "Allocate",
-   "options": "allocate_leave"
+   "mandatory_depends_on": "eval:!doc.allocate_based_on_leave_policy"
   },
   {
    "fieldname": "select_employees_section",
@@ -127,11 +130,55 @@
   {
    "fieldname": "allocate_leaves_section",
    "fieldtype": "Section Break",
-   "label": "Allocate Leaves"
+   "label": "Set Leave Details"
   },
   {
    "fieldname": "column_break_16",
    "fieldtype": "Column Break"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "filters_section",
+   "fieldtype": "Section Break",
+   "label": "Quick Filters"
+  },
+  {
+   "fieldname": "employees_html",
+   "fieldtype": "HTML",
+   "label": "Employees HTML",
+   "read_only": 1
+  },
+  {
+   "default": "Leave Period",
+   "fieldname": "dates_based_on",
+   "fieldtype": "Select",
+   "label": "Dates Based On",
+   "options": "Leave Period\nJoining Date\nCustom Range"
+  },
+  {
+   "depends_on": "eval:doc.dates_based_on == 'Leave Period'",
+   "fieldname": "leave_period",
+   "fieldtype": "Link",
+   "label": "Leave Period",
+   "mandatory_depends_on": "eval:doc.dates_based_on == 'Leave Period'",
+   "options": "Leave Period"
+  },
+  {
+   "default": "1",
+   "fieldname": "allocate_based_on_leave_policy",
+   "fieldtype": "Check",
+   "label": "Allocate Based On Leave Policy"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "advanced_filters_section",
+   "fieldtype": "Section Break",
+   "label": "Advanced Filters"
+  },
+  {
+   "fieldname": "filter_list",
+   "fieldtype": "HTML",
+   "label": "Filter List"
   }
  ],
  "hide_toolbar": 1,
@@ -139,7 +186,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2019-12-12 18:51:41.573349",
+ "modified": "2023-09-29 13:06:06.940985",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Control Panel",
@@ -154,5 +201,6 @@
  ],
  "read_only": 1,
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "states": []
 }

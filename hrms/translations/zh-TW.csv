@@ -182,7 +182,6 @@ Half Day Date should be in between Work From Date and Work End Date,半天日期
 Funded Amount,資助金額
 Additional Salary,額外的薪水
 Please select Company and Designation,請選擇公司和指定
-Reject,拒絕
 For Employee,對於員工
 Total Amount Reimbursed,報銷金額合計
 This will submit Salary Slips and create accrual Journal Entry. Do you want to proceed?,這將提交工資單，並創建權責發生製日記賬分錄。你想繼續嗎？
@@ -536,3 +535,7 @@ Is Carry Forward,是弘揚
 Remaining Benefits (Yearly),剩餘福利（每年）
 Leave Policy,離開政策
 Training Program,培訓計劃
+IFSC Code,IFSC代碼
+Total Allocated Leaves,總分配的葉子
+Used Leaves,使用的葉子
+Available Leaves,可用的葉子

@@ -66,23 +66,6 @@ cur_frm.add_fetch('employee', 'company', 'company');
 cur_frm.add_fetch('employee','employee_name','employee_name');
 cur_frm.add_fetch('expense_type','description','description');
 
-cur_frm.cscript.onload = function(doc) {
-	if (doc.__islocal) {
-		cur_frm.set_value("posting_date", frappe.datetime.get_today());
-		cur_frm.cscript.clear_sanctioned(doc);
-	}
-};
-
-cur_frm.cscript.clear_sanctioned = function(doc) {
-	var val = doc.expenses || [];
-	for(var i = 0; i<val.length; i++){
-		val[i].sanctioned_amount ='';
-	}
-
-	doc.total_sanctioned_amount = '';
-	refresh_many(['sanctioned_amount', 'total_sanctioned_amount']);
-};
-
 cur_frm.cscript.refresh = function(doc) {
 	cur_frm.cscript.set_help(doc);
 
@@ -145,17 +128,6 @@ cur_frm.fields_dict['cost_center'].get_query = function(doc) {
 	return {
 		filters: {
 			"company": doc.company
-		}
-	}
-};
-
-erpnext.expense_claim = {
-	set_title: function(frm) {
-		if (!frm.doc.task) {
-			frm.set_value("title", frm.doc.employee_name);
-		}
-		else {
-			frm.set_value("title", frm.doc.employee_name + " for "+ frm.doc.task);
 		}
 	}
 };
@@ -312,14 +284,6 @@ frappe.ui.form.on("Expense Claim", {
 
 	toggle_fields: function(frm) {
 		frm.toggle_reqd("mode_of_payment", frm.doc.is_paid);
-	},
-
-	employee_name: function(frm) {
-		erpnext.expense_claim.set_title(frm);
-	},
-
-	task: function(frm) {
-		erpnext.expense_claim.set_title(frm);
 	},
 
 	employee: function(frm) {

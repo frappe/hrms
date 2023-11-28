@@ -1,0 +1,116 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-08-29 14:27:22.304694",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "to_user",
+  "column_break_otsw",
+  "from_user",
+  "section_break_wsgn",
+  "message",
+  "read",
+  "section_break_xdby",
+  "reference_document_type",
+  "column_break_prpj",
+  "reference_document_name"
+ ],
+ "fields": [
+  {
+   "fetch_from": "from_employee.user_id",
+   "fieldname": "from_user",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "From User",
+   "options": "User"
+  },
+  {
+   "fetch_from": "to_employee.user_id",
+   "fieldname": "to_user",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "To User",
+   "options": "User",
+   "search_index": 1
+  },
+  {
+   "fieldname": "section_break_wsgn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "message",
+   "fieldtype": "Text Editor",
+   "label": "Message"
+  },
+  {
+   "default": "0",
+   "fieldname": "read",
+   "fieldtype": "Check",
+   "label": "Read"
+  },
+  {
+   "fieldname": "section_break_xdby",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reference_document_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Reference Document Type",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "column_break_prpj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reference_document_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Reference Document Name"
+  },
+  {
+   "fieldname": "column_break_otsw",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-11-21 17:26:56.478229",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "PWA Notification",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "message"
+}
