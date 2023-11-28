@@ -112,6 +112,7 @@ def get_additional_salary(emp_id, recurring=True, payroll_date=None):
 	add_sal.from_date = add_days(nowdate(), -50)
 	add_sal.to_date = add_days(nowdate(), 180)
 	add_sal.payroll_date = payroll_date
+	add_sal.overwrite_salary_structure_amount = 0
 
 	add_sal.amount = 5000
 	add_sal.currency = erpnext.get_default_currency()
