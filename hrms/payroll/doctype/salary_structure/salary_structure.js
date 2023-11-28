@@ -13,6 +13,7 @@ cur_frm.cscript.onload = function(doc, dt, dn){
 
 frappe.ui.form.on('Salary Structure', {
 	onload: function(frm) {
+		frm.alerted_rows = []
 
 		let help_button = $(`<a class = 'control-label'>
 			${__("Condition and Formula Help")}
@@ -311,6 +312,13 @@ frappe.ui.form.on('Salary Detail', {
 		calculate_totals(frm.doc);
 	},
 
+	formula: function(frm, cdt, cdn) {
+		if (!locals[cdt][cdn].amount_based_on_formula && !frm.alerted_rows.includes(cdn)) {
+			frappe.msgprint(__("Warning: 'Amount Based on Formula' has been disabled for this row."));
+			frm.alerted_rows.push(cdn)
+		}
+	},
+
 	salary_component: function(frm, cdt, cdn) {
 		var child = locals[cdt][cdn];
 		if(child.salary_component){
@@ -349,6 +357,8 @@ frappe.ui.form.on('Salary Detail', {
 		var child = locals[cdt][cdn];
 		if(child.amount_based_on_formula == 1){
 			frappe.model.set_value(cdt, cdn, 'amount', null);
+			const index = frm.alerted_rows.indexOf(cdn);
+			if (index > -1) frm.alerted_rows.splice(index, 1);
 		}
 		else{
 			frappe.model.set_value(cdt, cdn, 'formula', null);
