@@ -180,20 +180,16 @@
 			</div>
 
 			<!-- workflow actions -->
-			<div
-				v-else-if="!isFormDirty && workflowDoc"
-				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
-			>
-				<WorkflowActionSheet
-					:doc="documentResource.doc"
-					:workflowConfig="workflow"
-					@workflowApplied="reloadDoc()"
-				/>
-			</div>
+			<WorkflowActionSheet
+				v-else-if="!isFormDirty && workflow?.hasWorkflow"
+				:doc="documentResource.doc"
+				:workflow="workflow"
+				@workflowApplied="reloadDoc()"
+			/>
 
 			<!-- save/submit/cancel -->
 			<div
-				v-else-if="isFormDirty || (!workflowDoc && formButton)"
+				v-else-if="isFormDirty || (!workflow?.hasWorkflow && formButton)"
 				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
 			>
 				<ErrorMessage
@@ -704,13 +700,6 @@ const isFormReady = computed(() => {
 	if (!props.id) return true
 
 	return !documentResource.get.loading && documentResource.doc
-})
-
-const workflowDoc = computed(() => {
-	if (!props.id) return
-
-	const workflowData = workflow.value?.workflowDoc?.data
-	return Object.keys(workflowData || {}).length > 0 ? workflowData : null
 })
 
 onMounted(async () => {

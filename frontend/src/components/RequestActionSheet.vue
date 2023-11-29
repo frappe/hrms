@@ -72,16 +72,13 @@
 		</div>
 
 		<!-- Actions -->
-		<div
-			v-if="workflow?.workflowDoc?.data"
-			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
-		>
-			<WorkflowActionSheet
-				:doc="document.doc"
-				:workflowConfig="workflow"
-				@workflowApplied="document.reload()"
-			/>
-		</div>
+		<WorkflowActionSheet
+			v-if="workflow?.hasWorkflow"
+			:doc="document.doc"
+			:workflow="workflow"
+			view="actionSheet"
+			@workflowApplied="document.reload()"
+		/>
 
 		<div
 			v-else-if="['Open', 'Draft'].includes(document?.doc?.[approvalField])"
@@ -157,7 +154,7 @@
 </template>
 
 <script setup>
-import { computed, ref, defineAsyncComponent } from "vue"
+import { computed, ref, defineAsyncComponent, onMounted } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
 import { useRouter } from "vue-router"
 import {
@@ -190,7 +187,7 @@ const router = useRouter()
 
 let showPreviewModal = ref(false)
 let selectedFile = ref({})
-let workflow = useWorkflow(props.modelValue.doctype)
+let workflow = ref(null)
 
 function showFilePreview(fileObj) {
 	selectedFile.value = fileObj
@@ -201,6 +198,9 @@ const document = createDocumentResource({
 	doctype: props.modelValue.doctype,
 	name: props.modelValue.name,
 	auto: true,
+	onSuccess(doc) {
+		attachedFiles.reload()
+	},
 })
 
 const attachedFiles = createResource({
@@ -209,7 +209,6 @@ const attachedFiles = createResource({
 		dt: props.modelValue.doctype,
 		dn: props.modelValue.name,
 	},
-	auto: true,
 })
 
 const currency = computed(() => {
@@ -305,6 +304,10 @@ const openFormView = () => {
 		params: { id: props.modelValue.name },
 	})
 }
+
+onMounted(() => {
+	workflow.value = useWorkflow(props.modelValue.doctype)
+})
 </script>
 
 <style scoped>
