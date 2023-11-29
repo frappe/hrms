@@ -18,6 +18,13 @@ export default function useWorkflow(doctype) {
 		return Boolean(Object.keys(workflowData || {}).length > 0)
 	})
 
+	const getWorkflowStateField = () => {
+		// NOTE: checkbox labelled 'Don't Override Status' is named override_status hence the inverted logic
+		return !workflowDoc.data?.override_status
+			? workflowDoc.data?.workflow_state_field
+			: ""
+	}
+
 	const getDefaultState = (docstatus) => {
 		return workflowDoc.data?.states.find(
 			(state) => state.doc_status == docstatus
@@ -82,6 +89,7 @@ export default function useWorkflow(doctype) {
 	return {
 		hasWorkflow,
 		workflowDoc,
+		getWorkflowStateField,
 		getTransitions,
 		getDocumentStateRoles,
 		isReadOnly,

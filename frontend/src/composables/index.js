@@ -69,6 +69,8 @@ export class FileAttachment {
 	}
 }
 
+const hasWords = (list, status) => list.some((word) => status.includes(word))
+
 export async function guessStatusColor(doctype, status) {
 	const statesResource = createResource({
 		url: "hrms.api.get_doctype_states",
@@ -77,38 +79,42 @@ export async function guessStatusColor(doctype, status) {
 
 	const stateMap = await statesResource.reload()
 
-	if (stateMap?.length) {
+	if (Object.keys(stateMap || {})?.length) {
 		if (stateMap?.[status] === "yellow") return "orange"
-		return stateMap?.[status]
+		if (stateMap?.[status]) return stateMap?.[status]
 	}
 
 	let color = "gray"
 	status = status.toLowerCase()
 
 	if (
-		["open", "pending", "unpaid", "review", "medium", "not approved"].includes(
+		hasWords(
+			["open", "pending", "unpaid", "review", "medium", "not approved"],
 			status
 		)
 	) {
 		color = "orange"
 	} else if (
-		["urgent", "high", "failed", "rejected", "error"].includes(status)
+		hasWords(["urgent", "high", "failed", "rejected", "error"], status)
 	) {
 		color = "red"
 	} else if (
-		[
-			"closed",
-			"finished",
-			"converted",
-			"completed",
-			"complete",
-			"confirmed",
-			"approved",
-			"yes",
-			"active",
-			"available",
-			"success",
-		].includes(status)
+		hasWords(
+			[
+				"closed",
+				"finished",
+				"converted",
+				"completed",
+				"complete",
+				"confirmed",
+				"approved",
+				"yes",
+				"active",
+				"available",
+				"success",
+			],
+			status
+		)
 	) {
 		color = "green"
 	} else if (status === "submitted") {

@@ -69,6 +69,7 @@
 									:is="listItemComponent[doctype]"
 									:doc="link"
 									:isTeamRequest="isTeamRequest"
+									:workflowStateField="workflowStateField"
 									@click="navigate"
 								/>
 							</router-link>
@@ -132,6 +133,8 @@ import EmployeeAdvanceItem from "@/components/EmployeeAdvanceItem.vue"
 import ListFiltersActionSheet from "@/components/ListFiltersActionSheet.vue"
 import CustomIonModal from "@/components/CustomIonModal.vue"
 
+import useWorkflow from "@/composables/workflow"
+
 const props = defineProps({
 	doctype: {
 		type: String,
@@ -172,11 +175,12 @@ const filterMap = reactive({})
 const activeTab = ref(props.tabButtons[0])
 const areFiltersApplied = ref(false)
 const appliedFilters = ref([])
+const workflowStateField = ref(null)
 
 // infinite scroll
 const scrollContainer = ref(null)
 const hasNextPage = ref(true)
-const listOptions = reactive({
+const listOptions = ref({
 	doctype: props.doctype,
 	fields: props.fields,
 	group_by: props.groupBy,
@@ -260,8 +264,12 @@ function fetchDocumentList(start = 0) {
 
 	if (appliedFilters.value) filters.push(...appliedFilters.value)
 
+	if (workflowStateField.value) {
+		listOptions.value.fields.push(workflowStateField.value)
+	}
+
 	documents.submit({
-		...listOptions,
+		...listOptions.value,
 		start: start || 0,
 		filters: filters,
 	})
@@ -270,7 +278,7 @@ function fetchDocumentList(start = 0) {
 const documents = createResource({
 	url: "frappe.desk.reportview.get",
 	onSuccess: (data) => {
-		if (data.values?.length < listOptions.page_length) {
+		if (data.values?.length < listOptions.value.page_length) {
 			hasNextPage.value = false
 		}
 	},
@@ -308,7 +316,7 @@ const handleScroll = debounce(() => {
 	const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100
 
 	if (scrollPercentage >= 90) {
-		const start = documents.params.start + listOptions.page_length
+		const start = documents.params.start + listOptions.value.page_length
 		fetchDocumentList(start)
 	}
 }, 500)
@@ -318,11 +326,17 @@ watch(
 	(_value) => {
 		hasNextPage.value = true
 		fetchDocumentList()
-	},
-	{ immediate: true }
+	}
 )
 
-onMounted(() => {
+onMounted(async () => {
+	const workflow = useWorkflow(props.doctype)
+	await workflow.workflowDoc.promise
+	workflowStateField.value = workflow.getWorkflowStateField()
+
+	hasNextPage.value = true
+	fetchDocumentList()
+
 	socket.emit("doctype_subscribe", props.doctype)
 	socket.on("list_update", (data) => {
 		if (data?.doctype !== props.doctype) return

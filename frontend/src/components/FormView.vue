@@ -399,6 +399,11 @@ const formModel = computed({
 const status = computed(() => {
 	if (!props.id) return ""
 
+	if (workflow.value) {
+		const stateField = workflow.value.getWorkflowStateField()
+		if (stateField) return formModel.value[stateField]
+	}
+
 	return formModel.value.status || formModel.value.approval_status
 })
 
