@@ -8,6 +8,7 @@
 		]"
 	>
 		<Button
+			v-if="props.view === 'form' || actions.length > 2"
 			@click="showTransitions()"
 			class="w-full rounded mt-2 py-5 text-base disabled:bg-gray-700 disabled:text-white"
 			variant="solid"
@@ -17,12 +18,27 @@
 			</template>
 			Actions
 		</Button>
+
+		<template v-else>
+			<Button
+				v-for="action in actions"
+				class="w-full py-5"
+				:variant="action.variant"
+				:theme="action.theme"
+				@click="applyWorkflow({ workflowAction: action.text })"
+			>
+				<template #prefix v-if="action.featherIcon">
+					<FeatherIcon :name="action.featherIcon" class="w-4" />
+				</template>
+				{{ action.text }}
+			</Button>
+		</template>
 	</div>
 
 	<ion-action-sheet
 		:buttons="actions"
 		:is-open="showActionSheet"
-		@didDismiss="applyWorkflow($event)"
+		@didDismiss="applyWorkflow({ event: $event })"
 	>
 	</ion-action-sheet>
 </template>
@@ -57,21 +73,36 @@ const getTransitions = async () => {
 	const transitions = await props.workflow.getTransitions(props.doc)
 	actions.value = transitions.map((transition) => {
 		let role = ""
+		let theme = "gray"
+		let variant = "subtle"
+		let icon = ""
 		let actionLabel = transition.toLowerCase()
 
 		if (actionLabel.includes("reject") || actionLabel.includes("cancel")) {
 			role = "destructive"
+			theme = "red"
+			variant = "subtle"
+			icon = "x"
+		} else if (actionLabel.includes("approve")) {
+			theme = "green"
+			variant = "solid"
+			icon = "check"
 		}
 
 		return {
 			text: transition,
 			role: role,
+			theme: theme,
+			variant: variant,
+			featherIcon: icon,
 			data: {
 				action: transition,
 			},
 		}
 	})
+}
 
+const showTransitions = () => {
 	if (actions.value?.length > 0) {
 		// always add last action for dismissing the modal
 		actions.value.push({
@@ -79,14 +110,12 @@ const getTransitions = async () => {
 			role: "cancel",
 		})
 	}
-}
 
-const showTransitions = () => {
 	showActionSheet.value = true
 }
 
-const applyWorkflow = async (event) => {
-	const action = event.detail.data?.action
+const applyWorkflow = async ({ event = "", workflowAction = "" }) => {
+	const action = workflowAction || event.detail.data?.action
 	if (action) {
 		await props.workflow.applyWorkflow(props.doc, action)
 		modalController.dismiss()
