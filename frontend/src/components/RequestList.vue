@@ -12,6 +12,7 @@
 			<component
 				:is="props.component || link.component"
 				:doc="link"
+				:workflowStateField="link.workflow_state_field"
 				:isTeamRequest="props.teamRequests"
 			/>
 		</div>
