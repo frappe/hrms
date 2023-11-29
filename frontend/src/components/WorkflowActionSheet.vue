@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { IonActionSheet } from "@ionic/vue"
+import { IonActionSheet, modalController } from "@ionic/vue"
 import { computed, ref, onMounted } from "vue"
 import { FeatherIcon } from "frappe-ui"
 
@@ -89,6 +89,7 @@ const applyWorkflow = async (event) => {
 	const action = event.detail.data?.action
 	if (action) {
 		await props.workflow.applyWorkflow(props.doc, action)
+		modalController.dismiss()
 		emit("workflow-applied")
 	}
 

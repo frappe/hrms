@@ -89,7 +89,7 @@ const openRequestModal = async (request) => {
 	isRequestModalOpen.value = true
 }
 
-const closeRequestModal = async (_request) => {
+const closeRequestModal = async () => {
 	isRequestModalOpen.value = false
 	selectedRequest.value = null
 }

@@ -77,7 +77,6 @@
 			:doc="document.doc"
 			:workflow="workflow"
 			view="actionSheet"
-			@workflowApplied="document.reload()"
 		/>
 
 		<div
