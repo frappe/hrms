@@ -1,5 +1,5 @@
 import { createResource, toast } from "frappe-ui"
-import { ref, computed } from "vue"
+import { computed } from "vue"
 import { userResource } from "@/data/user"
 
 export default function useWorkflow(doctype) {
@@ -12,6 +12,11 @@ export default function useWorkflow(doctype) {
 		},
 	})
 	workflowDoc.reload()
+
+	const hasWorkflow = computed(() => {
+		const workflowData = workflowDoc?.data
+		return Boolean(Object.keys(workflowData || {}).length > 0)
+	})
 
 	const getDefaultState = (docstatus) => {
 		return workflowDoc.data?.states.find(
@@ -75,6 +80,7 @@ export default function useWorkflow(doctype) {
 	}
 
 	return {
+		hasWorkflow,
 		workflowDoc,
 		getTransitions,
 		getDocumentStateRoles,
