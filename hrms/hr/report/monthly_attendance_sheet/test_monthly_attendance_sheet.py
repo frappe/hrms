@@ -92,7 +92,7 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		self.assertEqual(day_shift_row[1], "A")  # absent on the 1st day of the month
 		self.assertEqual(day_shift_row[2], "P")  # present on the 2nd day
 
-		self.assertEqual(row_without_shift["shift"], None)
+		self.assertEqual(row_without_shift["shift"], "")
 		self.assertEqual(row_without_shift[4], "P")  # present on the 4th day
 
 		# leave should be shown against every shift
@@ -236,7 +236,7 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		self.assertEqual(day_shift_row[1], "A")  # absent on the 1st day of the month
 		self.assertEqual(day_shift_row[2], "P")  # present on the 2nd day
 
-		self.assertEqual(row_without_shift["shift"], None)
+		self.assertEqual(row_without_shift["shift"], "")
 		self.assertEqual(row_without_shift[3], "L")  # on leave on the 3rd day
 		self.assertEqual(row_without_shift[4], "P")  # present on the 4th day
 
