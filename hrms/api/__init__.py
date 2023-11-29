@@ -1,5 +1,6 @@
 import frappe
 from frappe import _
+from frappe.model.workflow import get_workflow_name
 from frappe.query_builder import Order
 from frappe.utils import getdate
 
@@ -102,28 +103,39 @@ def get_leave_applications(
 	limit: int | None = None,
 ) -> list[dict]:
 	filters = get_leave_application_filters(employee, approver_id, for_approval)
-	return frappe.get_list(
+	fields = [
+		"name",
+		"employee",
+		"employee_name",
+		"leave_type",
+		"status",
+		"from_date",
+		"to_date",
+		"half_day",
+		"half_day_date",
+		"description",
+		"total_leave_days",
+		"leave_balance",
+		"leave_approver",
+		"posting_date",
+	]
+
+	if workflow_state_field := get_workflow_state_field("Leave Application"):
+		fields.append(workflow_state_field)
+
+	applications = frappe.get_list(
 		"Leave Application",
-		fields=[
-			"name",
-			"employee",
-			"employee_name",
-			"leave_type",
-			"status",
-			"from_date",
-			"to_date",
-			"half_day",
-			"half_day_date",
-			"description",
-			"total_leave_days",
-			"leave_balance",
-			"leave_approver",
-			"posting_date",
-		],
+		fields=fields,
 		filters=filters,
 		order_by="posting_date desc",
 		limit=limit,
 	)
+
+	if workflow_state_field:
+		for application in applications:
+			application["workflow_state_field"] = workflow_state_field
+
+	return applications
 
 
 def get_leave_application_filters(
@@ -272,26 +284,37 @@ def get_expense_claims(
 	limit: int | None = None,
 ) -> list[dict]:
 	filters = get_expense_claim_filters(employee, approver_id, for_approval)
-	return frappe.get_list(
+	fields = [
+		"`tabExpense Claim`.name",
+		"`tabExpense Claim`.employee",
+		"`tabExpense Claim`.employee_name",
+		"`tabExpense Claim`.approval_status",
+		"`tabExpense Claim`.status",
+		"`tabExpense Claim`.expense_approver",
+		"`tabExpense Claim`.total_claimed_amount",
+		"`tabExpense Claim`.posting_date",
+		"`tabExpense Claim`.company",
+		"`tabExpense Claim Detail`.expense_type",
+		"count(`tabExpense Claim Detail`.expense_type) as total_expenses",
+	]
+
+	if workflow_state_field := get_workflow_state_field("Expense Claim"):
+		fields.append(workflow_state_field)
+
+	claims = frappe.get_list(
 		"Expense Claim",
-		fields=[
-			"`tabExpense Claim`.name",
-			"`tabExpense Claim`.employee",
-			"`tabExpense Claim`.employee_name",
-			"`tabExpense Claim`.approval_status",
-			"`tabExpense Claim`.status",
-			"`tabExpense Claim`.expense_approver",
-			"`tabExpense Claim`.total_claimed_amount",
-			"`tabExpense Claim`.posting_date",
-			"`tabExpense Claim`.company",
-			"`tabExpense Claim Detail`.expense_type",
-			"count(`tabExpense Claim Detail`.expense_type) as total_expenses",
-		],
+		fields=fields,
 		filters=filters,
 		order_by="`tabExpense Claim`.posting_date desc",
 		group_by="`tabExpense Claim`.name",
 		limit=limit,
 	)
+
+	if workflow_state_field:
+		for claim in claims:
+			claim["workflow_state_field"] = workflow_state_field
+
+	return claims
 
 
 def get_expense_claim_filters(
@@ -568,10 +591,26 @@ def download_salary_slip(name: str):
 # Workflow
 @frappe.whitelist()
 def get_workflow(doctype: str) -> dict:
-	workflow = frappe.db.exists("Workflow", {"document_type": doctype, "is_active": 1})
+	workflow = get_workflow_name(doctype)
 	if not workflow:
 		return frappe._dict()
 	return frappe.get_doc("Workflow", workflow)
+
+
+def get_workflow_state_field(doctype: str) -> str | None:
+	workflow_name = get_workflow_name(doctype)
+	if not workflow_name:
+		return None
+
+	override_status, workflow_state_field = frappe.db.get_value(
+		"Workflow",
+		workflow_name,
+		["override_status", "workflow_state_field"],
+	)
+	# NOTE: checkbox labelled 'Don't Override Status' is named override_status hence the inverted logic
+	if not override_status:
+		return workflow_state_field
+	return None
 
 
 def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
