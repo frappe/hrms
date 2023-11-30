@@ -9,12 +9,16 @@ const settings = createDocumentResource({
 export const formatCurrency = (value, currency) => {
 	if (!currency) return value
 
+	// hack: if value contains a space, it is already formatted
+	if (value?.toString().trim().includes(" ")) return value
+
 	const locale =
 		settings.doc?.country == "India" ? "en-IN" : settings.doc?.language
 
 	const formatter = Intl.NumberFormat(locale, {
 		style: "currency",
 		currency: currency,
+		trailingZeroDisplay: "stripIfInteger",
 	})
 	return (
 		formatter

@@ -118,6 +118,8 @@ function getFilteredFields(fields) {
 		"total_working_hours",
 		"hour_rate",
 		"base_hour_rate",
+		"help_section",
+		"earning_deduction_sb",
 	]
 	return fields.filter((field) => !excludeFields.includes(field.fieldname))
 }

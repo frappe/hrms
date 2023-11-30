@@ -4,7 +4,7 @@
 		<h2 class="text-base font-semibold text-gray-800">Expenses</h2>
 		<div class="flex flex-row gap-3 items-center">
 			<span class="text-base font-semibold text-gray-800">
-				{{ expenseClaim.total_claimed_amount || 0 }}
+				{{ formatCurrency(expenseClaim.total_claimed_amount, currency) }}
 			</span>
 			<Button
 				v-if="!isReadOnly"
@@ -37,7 +37,8 @@
 							</div>
 							<div class="text-xs font-normal text-gray-500">
 								<span>
-									{{ `Sanctioned: ${currency} ${item.sanctioned_amount || 0}` }}
+									Sanctioned:
+									{{ formatCurrency(item.sanctioned_amount, currency) }}
 								</span>
 								<span class="whitespace-pre"> &middot; </span>
 								<span class="whitespace-nowrap" v-if="item.expense_date">
@@ -48,7 +49,7 @@
 					</div>
 					<div class="flex flex-row justify-end items-center gap-2">
 						<span class="text-gray-700 font-normal rounded text-base">
-							{{ `${currency} ${item.amount}` }}
+							{{ formatCurrency(item.amount, currency) }}
 						</span>
 						<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
 					</div>
@@ -133,6 +134,7 @@ import EmptyState from "@/components/EmptyState.vue"
 import CustomIonModal from "@/components/CustomIonModal.vue"
 
 import { claimTypesByID } from "@/data/claims"
+import { formatCurrency } from "@/utils/formatters"
 
 const props = defineProps({
 	expenseClaim: {

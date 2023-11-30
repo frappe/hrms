@@ -158,7 +158,8 @@ import {
 import FormattedField from "@/components/FormattedField.vue"
 import FilePreviewModal from "@/components/FilePreviewModal.vue"
 
-import { getCurrencySymbol, getCompanyCurrencySymbol } from "@/data/currencies"
+import { getCompanyCurrency } from "@/data/currencies"
+import { formatCurrency } from "@/utils/formatters"
 import { useRouter } from "vue-router"
 
 const props = defineProps({
@@ -197,15 +198,21 @@ const attachedFiles = createResource({
 })
 
 const currency = computed(() => {
-	if (document?.doc?.currency) return getCurrencySymbol(document?.doc?.currency)
-	else if (document?.doc?.company)
-		return getCompanyCurrencySymbol(document?.doc?.company)
+	let docCurrency = document?.doc?.currency
+
+	if (!docCurrency && document?.doc?.company) {
+		docCurrency = getCompanyCurrency(document?.doc?.company)
+	}
+	return docCurrency
 })
 
 const fieldsWithValues = computed(() => {
 	return props.fields.filter((field) => {
 		if (field.fieldtype === "Currency") {
-			field.value = `${currency.value} ${document.doc?.[field.fieldname]}`
+			field.value = formatCurrency(
+				document.doc?.[field.fieldname],
+				currency.value
+			)
 		} else {
 			if (field.fieldtype === "Table") {
 				// dynamically loading child table component as per config

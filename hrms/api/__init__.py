@@ -73,54 +73,50 @@ def mark_all_notifications_as_read() -> None:
 
 
 # Leaves and Holidays
-def get_leave_applications(filters: dict) -> list[dict]:
-	doctype = "Leave Application"
-	leave_applications = frappe.get_list(
-		"Leave Application",
-		fields=[
-			"name",
-			"employee",
-			"employee_name",
-			"leave_type",
-			"status",
-			"from_date",
-			"to_date",
-			"half_day",
-			"half_day_date",
-			"description",
-			"total_leave_days",
-			"leave_balance",
-			"leave_approver",
-			"posting_date",
-		],
-		filters=filters,
-		order_by="from_date desc",
+@frappe.whitelist()
+def get_leave_applications(
+	employee: str,
+	approver_id: str = None,
+	for_approval: bool = False,
+	limit: int | None = None,
+) -> list[dict]:
+	Leave = frappe.qb.DocType("Leave Application")
+
+	query = (
+		frappe.qb.from_(Leave)
+		.select(
+			Leave.name,
+			Leave.employee,
+			Leave.employee_name,
+			Leave.leave_type,
+			Leave.status,
+			Leave.from_date,
+			Leave.to_date,
+			Leave.half_day,
+			Leave.half_day_date,
+			Leave.description,
+			Leave.total_leave_days,
+			Leave.leave_balance,
+			Leave.leave_approver,
+			Leave.posting_date,
+		)
+		.orderby(Leave.posting_date, order=Order.desc)
 	)
 
-	for leave in leave_applications:
-		leave.can_cancel = frappe.has_permission(doctype, "cancel", user=frappe.session.user)
-		leave.can_delete = frappe.has_permission(doctype, "delete", user=frappe.session.user)
+	if for_approval:
+		query = query.where(
+			(Leave.docstatus == 0)
+			& (Leave.status == "Open")
+			& (Leave.leave_approver == approver_id)
+			& (Leave.employee != employee)
+		)
+	else:
+		query = query.where((Leave.docstatus != 2) & (Leave.employee == employee))
 
-	return leave_applications
+	if limit:
+		query = query.limit(limit)
 
-
-@frappe.whitelist()
-def get_employee_leave_applications(employee: str) -> list[dict]:
-	filters = {"employee": employee, "status": ["!=", "Cancelled"]}
-
-	return get_leave_applications(filters)
-
-
-@frappe.whitelist()
-def get_team_leave_applications(employee: str, user_id: str) -> list[dict]:
-	filters = {
-		"employee": ["!=", employee],
-		"leave_approver": user_id,
-		"status": "Open",
-		"docstatus": 0,
-	}
-
-	return get_leave_applications(filters)
+	return query.run(as_dict=True)
 
 
 @frappe.whitelist()
@@ -325,8 +321,7 @@ def get_expense_claim_summary(employee: str) -> dict:
 	).run(as_dict=True)[0]
 
 	currency = frappe.db.get_value("Company", summary.company, "default_currency")
-	symbol = frappe.db.get_value("Currency", currency, "symbol")
-	summary["currency"] = symbol or currency
+	summary["currency"] = currency
 
 	return summary
 

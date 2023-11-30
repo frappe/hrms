@@ -17,6 +17,7 @@
 		<!-- Link & Select -->
 		<Autocomplete
 			v-if="['Link', 'Select'].includes(props.fieldtype)"
+			ref="autocompleteRef"
 			:value="modelValue"
 			:placeholder="`Select ${props.options}`"
 			:options="selectionList"
@@ -128,7 +129,7 @@
 
 <script setup>
 import { createResource, Autocomplete, ErrorMessage } from "frappe-ui"
-import { ref, computed, onMounted, inject } from "vue"
+import { ref, computed, onMounted, inject, watchEffect } from "vue"
 
 const props = defineProps({
 	fieldtype: String,
@@ -159,6 +160,7 @@ const dayjs = inject("$dayjs")
 
 let linkFieldList = ref([])
 let date = ref(null)
+const autocompleteRef = ref(null)
 
 const showField = computed(() => {
 	if (props.readOnly && !isLayoutField.value && !props.modelValue) return false
@@ -201,7 +203,6 @@ function setLinkFieldList() {
 				doctype: props.options,
 				filters: props.linkFilters,
 			},
-			pageLength: 100,
 			transform: (data) => {
 				return data.map((doc) => ({
 					label: doc.label ? `${doc.label}: ${doc.value}` : doc.value,
@@ -235,8 +236,16 @@ function setDefaultValue() {
 	}
 }
 
+// get link field options from DB only when the field is clicked
+watchEffect(() => {
+	if (autocompleteRef.value && props.fieldtype === "Link") {
+		autocompleteRef.value?.$refs?.search?.$el?.addEventListener("focus", () => {
+			setLinkFieldList()
+		})
+	}
+})
+
 onMounted(() => {
-	setLinkFieldList()
 	setDefaultValue()
 })
 </script>
