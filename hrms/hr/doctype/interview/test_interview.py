@@ -156,6 +156,8 @@ def create_interview_and_dependencies(
 	interview.from_time = from_time or nowtime()
 	interview.to_time = to_time or nowtime()
 	interview.average_rating = average_rating
+	interview.append("interviewers", {"user": "test_interviewer1@example.com"})
+	interview.append("interviewers", {"user": "test_interviewer2@example.com"})
 
 	if status:
 		interview.status = status
