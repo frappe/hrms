@@ -40,13 +40,12 @@ class EmployeeAdvance(Document):
 
 	def publish_update(self):
 		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
-		if frappe.session.user == employee_user:
-			frappe.publish_realtime(
-				event="hrms:update_employee_advances",
-				message={"employee": self.employee},
-				user=frappe.session.user,
-				after_commit=True,
-			)
+		frappe.publish_realtime(
+			event="hrms:update_employee_advances",
+			message={"employee": self.employee},
+			user=employee_user,
+			after_commit=True,
+		)
 
 	def set_status(self, update=False):
 		precision = self.precision("paid_amount")
@@ -82,6 +81,7 @@ class EmployeeAdvance(Document):
 		if update:
 			self.db_set("status", status)
 			self.publish_update()
+			self.notify_update()
 		else:
 			self.status = status
 

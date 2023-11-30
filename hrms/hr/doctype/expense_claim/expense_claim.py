@@ -81,6 +81,8 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 
 		if update:
 			self.db_set("status", status)
+			self.publish_update()
+			self.notify_update()
 		else:
 			self.status = status
 
@@ -94,16 +96,12 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 
 	def publish_update(self):
 		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
-		if frappe.session.user in [employee_user, self.expense_approver]:
-			frappe.publish_realtime(
-				event="hrms:update_expense_claims",
-				message={
-					"approver": self.expense_approver,
-					"employee": self.employee,
-				},
-				user=frappe.session.user,
-				after_commit=True,
-			)
+		frappe.publish_realtime(
+			event="hrms:update_expense_claims",
+			message={"employee": self.employee},
+			user=employee_user,
+			after_commit=True,
+		)
 
 	def set_payable_account(self):
 		if not self.payable_account and not self.is_paid:
