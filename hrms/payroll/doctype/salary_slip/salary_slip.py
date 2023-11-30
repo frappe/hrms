@@ -173,6 +173,9 @@ class SalarySlip(TransactionBase):
 		self.total_in_words = money_in_words(total, doc_currency)
 		self.base_total_in_words = money_in_words(base_total, company_currency)
 
+	def on_update(self):
+		self.publish_update()
+
 	def on_submit(self):
 		if self.net_pay < 0:
 			frappe.throw(_("Net Pay cannot be less than 0"))
@@ -215,6 +218,17 @@ class SalarySlip(TransactionBase):
 		self.update_payment_status_for_gratuity()
 
 		cancel_loan_repayment_entry(self)
+		self.publish_update()
+
+	def publish_update(self):
+		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
+		if frappe.session.user == employee_user:
+			frappe.publish_realtime(
+				event="hrms:update_salary_slips",
+				message={"employee": self.employee},
+				user=frappe.session.user,
+				after_commit=True,
+			)
 
 	def on_trash(self):
 		from frappe.model.naming import revert_series_if_last
