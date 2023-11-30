@@ -41,6 +41,10 @@
 		</ion-header>
 
 		<ion-content>
+			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+				<ion-refresher-content></ion-refresher-content>
+			</ion-refresher>
+
 			<div
 				class="flex flex-col items-center mb-7 p-4 h-full w-full sm:w-96 overflow-y-auto"
 				ref="scrollContainer"
@@ -117,7 +121,14 @@ import {
 	onMounted,
 	onBeforeUnmount,
 } from "vue"
-import { modalController, IonPage, IonHeader, IonContent } from "@ionic/vue"
+import {
+	modalController,
+	IonPage,
+	IonHeader,
+	IonContent,
+	IonRefresher,
+	IonRefresherContent,
+} from "@ionic/vue"
 
 import {
 	FeatherIcon,
@@ -320,6 +331,13 @@ const handleScroll = debounce(() => {
 		fetchDocumentList(start)
 	}
 }, 500)
+
+const handleRefresh = (event) => {
+	setTimeout(() => {
+		fetchDocumentList()
+		event.target.complete()
+	}, 500)
+}
 
 watch(
 	() => activeTab.value,
