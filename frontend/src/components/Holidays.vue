@@ -3,7 +3,7 @@
 		<div class="flex flex-row justify-between items-center">
 			<div class="text-lg text-gray-800 font-bold">Upcoming Holidays</div>
 			<div
-				v-if="upcomingHolidays?.length"
+				v-if="holidays?.data?.length"
 				id="open-holiday-list"
 				class="text-sm text-gray-800 font-semibold cursor-pointer underline underline-offset-2"
 			>
@@ -34,7 +34,7 @@
 
 	<ion-modal
 		ref="modal"
-		v-if="upcomingHolidays?.length"
+		v-if="holidays?.data?.length"
 		trigger="open-holiday-list"
 		:initial-breakpoint="1"
 		:breakpoints="[0, 1]"
@@ -55,7 +55,12 @@
 							{{ holiday.description }}
 						</div>
 					</div>
-					<div class="text-base font-bold text-gray-800">
+					<div
+						:class="[
+							'text-base font-bold',
+							holiday.is_upcoming ? 'text-gray-800' : 'text-gray-500',
+						]"
+					>
 						{{ holiday.formatted_holiday_date }}
 					</div>
 				</div>
@@ -80,18 +85,18 @@ const holidays = createResource({
 	auto: true,
 	transform: (data) => {
 		return data.map((holiday) => {
-			holiday.formatted_holiday_date = dayjs(holiday.holiday_date).format(
-				"D MMM YYYY"
-			)
+			const holidayDate = dayjs(holiday.holiday_date)
+			holiday.is_upcoming = holidayDate.isAfter(dayjs())
+			holiday.formatted_holiday_date = holidayDate.format("ddd, D MMM YYYY")
 			return holiday
 		})
 	},
 })
 
 const upcomingHolidays = computed(() => {
-	const filteredHolidays = holidays.data?.filter((holiday) => {
-		return dayjs(holiday.holiday_date).isAfter(dayjs())
-	})
+	const filteredHolidays = holidays.data?.filter(
+		(holiday) => holiday.is_upcoming
+	)
 
 	// show only 5 upcoming holidays
 	return filteredHolidays?.slice(0, 5)

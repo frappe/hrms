@@ -1,60 +1,60 @@
 <template>
-	<div class="flex flex-col h-screen w-screen">
-		<div class="w-full sm:w-96">
-			<header
-				class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b sticky top-0 z-10"
-			>
-				<div class="flex flex-row items-center">
-					<Button
-						variant="ghost"
-						class="!pl-0 hover:bg-white"
-						@click="router.back()"
-					>
-						<FeatherIcon name="chevron-left" class="h-5 w-5" />
-					</Button>
-					<h2 class="text-xl font-semibold text-gray-900">{{ pageTitle }}</h2>
-				</div>
-
-				<div class="flex flex-row gap-2">
-					<Button
-						id="show-filter-modal"
-						icon="filter"
-						variant="subtle"
-						:class="[
-							areFiltersApplied
-								? '!border !border-gray-800 !bg-white !text-gray-900 !font-semibold'
-								: '',
-						]"
-					/>
-					<router-link :to="{ name: formViewRoute }" v-slot="{ navigate }">
-						<Button variant="solid" class="mr-2" @click="navigate">
-							<template #prefix>
-								<FeatherIcon name="plus" class="w-4" />
-							</template>
-							New
+	<ion-page>
+		<ion-header class="ion-no-border">
+			<div class="w-full sm:w-96">
+				<div
+					class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b"
+				>
+					<div class="flex flex-row items-center">
+						<Button
+							variant="ghost"
+							class="!pl-0 hover:bg-white"
+							@click="router.back()"
+						>
+							<FeatherIcon name="chevron-left" class="h-5 w-5" />
 						</Button>
-					</router-link>
-				</div>
-			</header>
+						<h2 class="text-xl font-semibold text-gray-900">{{ pageTitle }}</h2>
+					</div>
 
-			<div class="flex flex-col items-center mt-5 mb-7 p-4">
-				<div class="w-full">
+					<div class="flex flex-row gap-2">
+						<Button
+							id="show-filter-modal"
+							icon="filter"
+							variant="subtle"
+							:class="[
+								areFiltersApplied
+									? '!border !border-gray-800 !bg-white !text-gray-900 !font-semibold'
+									: '',
+							]"
+						/>
+						<router-link :to="{ name: formViewRoute }" v-slot="{ navigate }">
+							<Button variant="solid" class="mr-2" @click="navigate">
+								<template #prefix>
+									<FeatherIcon name="plus" class="w-4" />
+								</template>
+								New
+							</Button>
+						</router-link>
+					</div>
+				</div>
+			</div>
+		</ion-header>
+
+		<ion-content>
+			<div
+				class="flex flex-col items-center mb-7 p-4 h-full w-full sm:w-96 overflow-y-auto"
+				ref="scrollContainer"
+				@scroll="() => handleScroll()"
+			>
+				<div class="w-full mt-5">
 					<TabButtons
 						:buttons="[{ label: tabButtons[0] }, { label: tabButtons[1] }]"
 						v-model="activeTab"
 					/>
 
-					<!-- Loading Indicator -->
 					<div
-						v-if="documents.loading"
-						class="flex h-64 items-center justify-center"
-					>
-						<LoadingIndicator class="w-8 h-8 text-gray-800" />
-					</div>
-
-					<div
-						class="flex flex-col bg-white rounded mt-5 overflow-auto"
-						v-else-if="documents.data?.length"
+						class="flex flex-col bg-white rounded mt-5"
+						v-if="documents.data?.length"
 					>
 						<div
 							class="p-3.5 items-center justify-between border-b cursor-pointer"
@@ -74,23 +74,34 @@
 							</router-link>
 						</div>
 					</div>
-					<EmptyState message="No leaves found" v-else />
+					<EmptyState
+						:message="`No ${props.doctype?.toLowerCase()}s found`"
+						v-else
+					/>
+
+					<!-- Loading Indicator -->
+					<div
+						v-if="documents.loading"
+						class="flex mt-2 items-center justify-center"
+					>
+						<LoadingIndicator class="w-8 h-8 text-gray-800" />
+					</div>
 				</div>
 			</div>
-		</div>
-	</div>
 
-	<CustomIonModal trigger="show-filter-modal">
-		<!-- Filter Action Sheet -->
-		<template #actionSheet>
-			<ListFiltersActionSheet
-				:filterConfig="filterConfig"
-				@applyFilters="applyFilters"
-				@clearFilters="clearFilters"
-				v-model:filters="filterMap"
-			/>
-		</template>
-	</CustomIonModal>
+			<CustomIonModal trigger="show-filter-modal">
+				<!-- Filter Action Sheet -->
+				<template #actionSheet>
+					<ListFiltersActionSheet
+						:filterConfig="filterConfig"
+						@applyFilters="applyFilters"
+						@clearFilters="clearFilters"
+						v-model:filters="filterMap"
+					/>
+				</template>
+			</CustomIonModal>
+		</ion-content>
+	</ion-page>
 </template>
 
 <script setup>
@@ -105,9 +116,14 @@ import {
 	onMounted,
 	onBeforeUnmount,
 } from "vue"
-import { modalController } from "@ionic/vue"
+import { modalController, IonPage, IonHeader, IonContent } from "@ionic/vue"
 
-import { FeatherIcon, createResource, LoadingIndicator } from "frappe-ui"
+import {
+	FeatherIcon,
+	createResource,
+	LoadingIndicator,
+	debounce,
+} from "frappe-ui"
 
 import TabButtons from "@/components/TabButtons.vue"
 import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
@@ -156,6 +172,17 @@ const filterMap = reactive({})
 const activeTab = ref(props.tabButtons[0])
 const areFiltersApplied = ref(false)
 const appliedFilters = ref([])
+
+// infinite scroll
+const scrollContainer = ref(null)
+const hasNextPage = ref(true)
+const listOptions = reactive({
+	doctype: props.doctype,
+	fields: props.fields,
+	group_by: props.groupBy,
+	order_by: `\`tab${props.doctype}\`.modified desc`,
+	page_length: 50,
+})
 
 // computed properties
 const isTeamRequest = computed(() => {
@@ -227,23 +254,26 @@ function clearFilters() {
 	areFiltersApplied.value = false
 }
 
-function fetchDocumentList() {
+function fetchDocumentList(start = 0) {
 	const filters = [[props.doctype, "docstatus", "!=", "2"]]
 	filters.push(...defaultFilters.value)
 
 	if (appliedFilters.value) filters.push(...appliedFilters.value)
 
 	documents.submit({
-		doctype: props.doctype,
-		fields: props.fields,
+		...listOptions,
+		start: start || 0,
 		filters: filters,
-		group_by: props.groupBy,
-		order_by: `\`tab${props.doctype}\`.modified desc`,
 	})
 }
 
 const documents = createResource({
 	url: "frappe.desk.reportview.get",
+	onSuccess: (data) => {
+		if (data.values?.length < listOptions.page_length) {
+			hasNextPage.value = false
+		}
+	},
 	transform(data) {
 		if (data.length === 0) {
 			return []
@@ -259,13 +289,34 @@ const documents = createResource({
 			})
 			return doc
 		})
-		return docs
+
+		let pagedData
+		if (!documents.params.start || documents.params.start === 0) {
+			pagedData = docs
+		} else {
+			pagedData = documents.data.concat(docs)
+		}
+
+		return pagedData
 	},
 })
+
+const handleScroll = debounce(() => {
+	if (!hasNextPage.value) return
+
+	const { scrollTop, scrollHeight, clientHeight } = scrollContainer.value
+	const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100
+
+	if (scrollPercentage >= 90) {
+		const start = documents.params.start + listOptions.page_length
+		fetchDocumentList(start)
+	}
+}, 500)
 
 watch(
 	() => activeTab.value,
 	(_value) => {
+		hasNextPage.value = true
 		fetchDocumentList()
 	},
 	{ immediate: true }
@@ -273,7 +324,6 @@ watch(
 
 onMounted(() => {
 	socket.emit("doctype_subscribe", props.doctype)
-	socket.off("list_update")
 	socket.on("list_update", (data) => {
 		if (data?.doctype !== props.doctype) return
 		fetchDocumentList()
