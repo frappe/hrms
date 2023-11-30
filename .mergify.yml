@@ -57,13 +57,3 @@ pull_request_rules:
           - version-14-hotfix
         assignees:
           - "{{ author }}"
-
-  - name: backport to version-15-hotfix
-    conditions:
-      - label="backport version-15-hotfix"
-    actions:
-      backport:
-        branches:
-          - version-15-hotfix
-        assignees:
-          - "{{ author }}"
