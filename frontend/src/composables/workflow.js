@@ -36,7 +36,13 @@ export default function useWorkflow(doctype) {
 			url: "frappe.model.workflow.get_transitions",
 			params: { doc: doc },
 			transform: (data) => {
-				return data.map((transition) => transition.action)
+				const isSelfApproval = userResource?.data?.name == doc.owner
+
+				return data
+					.filter(
+						(transition) => transition.allow_self_approval || !isSelfApproval
+					)
+					.map((transition) => transition.action)
 			},
 		})
 
