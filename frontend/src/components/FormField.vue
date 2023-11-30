@@ -18,6 +18,7 @@
 		<Autocomplete
 			v-if="['Link', 'Select'].includes(props.fieldtype)"
 			ref="autocompleteRef"
+			:class="isReadOnly ? 'pointer-events-none' : ''"
 			:value="modelValue"
 			:placeholder="`Select ${props.options}`"
 			:options="selectionList"
