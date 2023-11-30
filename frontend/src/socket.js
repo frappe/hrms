@@ -6,7 +6,10 @@ function initSocket() {
 	let port = window.location.port ? `:${socketio_port}` : ""
 	let protocol = port ? "http" : "https"
 	let url = `${protocol}://${host}${port}/${host}`
-	let socket = io(url, { withCredentials: true })
+	let socket = io(url, {
+		withCredentials: true,
+		reconnectionAttempts: 5,
+	})
 	return socket
 }
 
