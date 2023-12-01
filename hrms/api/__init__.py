@@ -586,7 +586,7 @@ def download_salary_slip(name: str):
 	try:
 		download_pdf("Salary Slip", name, format=default_print_format)
 	except Exception:
-		frappe.throw("Failed to download Salary Slip PDF")
+		frappe.throw(_("Failed to download Salary Slip PDF"))
 
 	base64content = base64.b64encode(frappe.local.response.filecontent)
 	content_type = frappe.local.response.type
