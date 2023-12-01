@@ -14,6 +14,7 @@ from erpnext.accounts.general_ledger import make_gl_entries
 from erpnext.controllers.accounts_controller import AccountsController
 
 from hrms.hr.utils import set_employee_name, share_doc_with_approver, validate_active_employee
+from hrms.mixins.pwa_notifications import PWANotificationsMixin
 
 
 class InvalidExpenseApproverError(frappe.ValidationError):
@@ -24,11 +25,14 @@ class ExpenseApproverIdentityError(frappe.ValidationError):
 	pass
 
 
-class ExpenseClaim(AccountsController):
+class ExpenseClaim(AccountsController, PWANotificationsMixin):
 	def onload(self):
 		self.get("__onload").make_payment_via_journal_entry = frappe.db.get_single_value(
 			"Accounts Settings", "make_payment_via_journal_entry"
 		)
+
+	def after_insert(self):
+		self.notify_approver()
 
 	def validate(self):
 		validate_active_employee(self.employee)
@@ -53,7 +57,7 @@ class ExpenseClaim(AccountsController):
 			# set as paid
 			self.is_paid
 			or (
-				flt(self.total_sanctioned_amount > 0)
+				flt(self.total_sanctioned_amount) > 0
 				and (
 					# grand total is reimbursed
 					(
@@ -77,11 +81,31 @@ class ExpenseClaim(AccountsController):
 
 		if update:
 			self.db_set("status", status)
+			self.publish_update()
+			self.notify_update()
 		else:
 			self.status = status
 
 	def on_update(self):
 		share_doc_with_approver(self, self.expense_approver)
+		self.publish_update()
+		self.notify_approval_status()
+
+	def after_delete(self):
+		self.publish_update()
+
+	def before_submit(self):
+		if not self.payable_account and not self.is_paid:
+			frappe.throw(_("Payable Account is mandatory to submit an Expense Claim"))
+
+	def publish_update(self):
+		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
+		frappe.publish_realtime(
+			event="hrms:update_expense_claims",
+			message={"employee": self.employee},
+			user=employee_user,
+			after_commit=True,
+		)
 
 	def set_payable_account(self):
 		if not self.payable_account and not self.is_paid:
@@ -113,6 +137,7 @@ class ExpenseClaim(AccountsController):
 		update_reimbursed_amount(self)
 
 		self.update_claimed_amount_in_employee_advance()
+		self.publish_update()
 
 	def update_claimed_amount_in_employee_advance(self):
 		for d in self.get("advances"):
@@ -288,7 +313,7 @@ class ExpenseClaim(AccountsController):
 
 			if tax.rate:
 				tax.tax_amount = flt(
-					flt(self.total_sanctioned_amount) * flt(tax.rate / 100),
+					flt(self.total_sanctioned_amount) * flt(flt(tax.rate) / 100),
 					tax.precision("tax_amount"),
 				)
 
@@ -480,6 +505,7 @@ def get_advances(employee, advance_id=None):
 
 	query = frappe.qb.from_(advance).select(
 		advance.name,
+		advance.purpose,
 		advance.posting_date,
 		advance.paid_amount,
 		advance.claimed_amount,
