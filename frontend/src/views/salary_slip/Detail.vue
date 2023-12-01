@@ -143,10 +143,11 @@ function downloadPDF() {
 			if (response.ok) {
 				return response.blob()
 			} else {
-				downloadError.value = `Failed to download PDF: ${response.statusText}`
+				downloadError.value = "Failed to download PDF"
 			}
 		})
 		.then((blob) => {
+			if (!blob) return
 			const blobUrl = window.URL.createObjectURL(blob)
 			const link = document.createElement("a")
 			link.href = blobUrl
