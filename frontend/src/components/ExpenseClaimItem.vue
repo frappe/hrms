@@ -21,8 +21,8 @@
 			<div class="flex flex-row justify-end items-center gap-2">
 				<Badge
 					variant="outline"
-					:theme="statusMap[claimStatus]"
-					:label="claimStatus"
+					:theme="statusMap[status]"
+					:label="status"
 					size="md"
 				/>
 				<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
@@ -59,6 +59,10 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
+	workflowStateField: {
+		type: String,
+		required: false,
+	},
 })
 
 const statusMap = {
@@ -73,8 +77,10 @@ const statusMap = {
 	Rejected: "red",
 }
 
-const claimStatus = computed(() => {
-	if (
+const status = computed(() => {
+	if (props.workflowStateField) {
+		return props.doc[props.workflowStateField]
+	} else if (
 		props.doc.approval_status === "Approved" &&
 		["Draft", "Unpaid", "Submitted"].includes(props.doc.status)
 	) {
