@@ -363,7 +363,6 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
-	socket.emit("doctype_unsubscribe", props.doctype)
 	socket.off("list_update")
 })
 </script>
