@@ -654,7 +654,6 @@ function submitOrCancelForm() {
 function handleDocDelete() {
 	documentResource.delete.submit()
 	showDeleteDialog.value = false
-	router.back()
 }
 
 async function reloadDoc() {
