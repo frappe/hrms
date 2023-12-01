@@ -255,7 +255,7 @@
  "is_submittable": 1,
  "links": [],
  "max_attachments": 3,
- "modified": "2023-08-01 22:45:57.851854",
+ "modified": "2023-11-27 10:10:04.069667",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Application",
@@ -325,14 +325,25 @@
    "permlevel": 1,
    "read": 1,
    "report": 1,
-   "role": "HR User",
+   "role": "Leave Approver",
    "write": 1
   },
   {
    "permlevel": 1,
    "read": 1,
    "report": 1,
-   "role": "Leave Approver",
+   "role": "HR User",
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
    "write": 1
   }
  ],

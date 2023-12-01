@@ -242,8 +242,7 @@
    "fieldname": "payable_account",
    "fieldtype": "Link",
    "label": "Payable Account",
-   "options": "Account",
-   "reqd": 1
+   "options": "Account"
   },
   {
    "fieldname": "cost_center",
@@ -384,7 +383,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-07 13:57:32.133159",
+ "modified": "2023-12-01 10:08:47.862274",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim",

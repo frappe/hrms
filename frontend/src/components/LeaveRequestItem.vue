@@ -19,8 +19,8 @@
 			<div class="flex flex-row justify-end items-center gap-2">
 				<Badge
 					variant="outline"
-					:theme="colorMap[props.doc.status]"
-					:label="props.doc.status"
+					:theme="colorMap[status]"
+					:label="status"
 					size="md"
 				/>
 				<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
@@ -39,6 +39,7 @@
 </template>
 
 <script setup>
+import { computed } from "vue"
 import { FeatherIcon, Badge } from "frappe-ui"
 
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
@@ -53,6 +54,16 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
+	workflowStateField: {
+		type: String,
+		required: false,
+	},
+})
+
+const status = computed(() => {
+	return props.workflowStateField
+		? props.doc[props.workflowStateField]
+		: props.doc.status
 })
 
 const colorMap = {

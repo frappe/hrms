@@ -12,6 +12,7 @@
 			<component
 				:is="props.component || link.component"
 				:doc="link"
+				:workflowStateField="link.workflow_state_field"
 				:isTeamRequest="props.teamRequests"
 			/>
 		</div>
@@ -89,7 +90,7 @@ const openRequestModal = async (request) => {
 	isRequestModalOpen.value = true
 }
 
-const closeRequestModal = async (_request) => {
+const closeRequestModal = async () => {
 	isRequestModalOpen.value = false
 	selectedRequest.value = null
 }
