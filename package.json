@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "hrms",
   "description": "Open Source HR & Payroll System powered by the Frappe Framework",
   "repository": {
