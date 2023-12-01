@@ -499,8 +499,10 @@ def get_currency_symbols() -> dict:
 
 
 @frappe.whitelist()
-def get_company_cost_center(company: str) -> str:
-	return frappe.db.get_value("Company", company, "cost_center")
+def get_company_cost_center_and_expense_account(company: str) -> dict:
+	return frappe.db.get_value(
+		"Company", company, ["cost_center", "default_expense_claim_payable_account"], as_dict=True
+	)
 
 
 # Form View APIs
