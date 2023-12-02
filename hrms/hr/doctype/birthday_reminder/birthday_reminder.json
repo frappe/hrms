@@ -39,7 +39,7 @@
  "modified": "2023-12-02 18:59:33.438131",
  "modified_by": "Administrator",
  "module": "HR",
- "name": "Birthday Remainder",
+ "name": "Birthday Reminder",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

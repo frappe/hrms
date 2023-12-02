@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class BirthdayRemainder(Document):
+class BirthdayReminder(Document):
 	pass

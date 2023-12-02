@@ -295,9 +295,9 @@ def get_all_employee_emails_birthday(company):
  		and if filling Birthday Sender Employee List in HR Setting then only 
    		take this employee user_id or company_email """
 	sender_employee_list = frappe.get_single("HR Settings")
-	if sender_employee_list.birthday_remainder_sending_employees:
+	if sender_employee_list.birthday_reminder_sending_employees:
 		employee_emails = []
-		for employees in sender_employee_list.birthday_remainder_sending_employees:
+		for employees in sender_employee_list.birthday_reminder_sending_employees:
 			employee_list = frappe.get_all(
 				"Employee", fields=["name", "employee_name"], filters={"status": "Active", "company": company, "name":employees.employee}
 			)

@@ -21,7 +21,7 @@
   "sender",
   "sender_email",
   "section_break_kcct",
-  "birthday_remainder_sending_employees",
+  "birthday_reminder_sending_employees",
   "leave_and_expense_claim_settings",
   "send_leave_notification",
   "leave_approval_notification_template",
@@ -277,17 +277,17 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "birthday_remainder_sending_employees",
+   "fieldname": "birthday_reminder_sending_employees",
    "fieldtype": "Table",
-   "label": "Birthday Remainder Sending Employees",
-   "options": "Birthday Remainder"
+   "label": "Birthday Reminder Sending Employee",
+   "options": "Birthday Reminder"
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-12-02 18:54:12.428783",
+ "modified": "2023-12-02 19:33:22.384926",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
