@@ -95,7 +95,7 @@ def send_birthday_reminders():
 	employees_born_today = get_employees_who_are_born_today()
 
 	for company, birthday_persons in employees_born_today.items():
-		employee_emails = get_all_employee_emails(company)
+		employee_emails = get_all_employee_emails_birthday(company)
 		birthday_person_emails = [get_employee_email(doc) for doc in birthday_persons]
 		recipients = list(set(employee_emails) - set(birthday_person_emails))
 
@@ -218,7 +218,7 @@ def send_work_anniversary_reminders():
 	message += _("Everyone, let’s congratulate them on their work anniversary!")
 
 	for company, anniversary_persons in employees_joined_today.items():
-		employee_emails = get_all_employee_emails(company)
+		employee_emails = get_all_employee_emails_birthday(company)
 		anniversary_person_emails = [get_employee_email(doc) for doc in anniversary_persons]
 		recipients = list(set(employee_emails) - set(anniversary_person_emails))
 
@@ -289,3 +289,40 @@ def send_work_anniversary_reminder(
 
 def get_sender_email() -> str | None:
 	return frappe.db.get_single_value("HR Settings", "sender_email")
+
+def get_all_employee_emails_birthday(company):
+	"""Returns list of employee emails either based on user_id or company_email
+ 		and if filling Birthday Sender Employee List in HR Setting then only 
+   		take this employee user_id or company_email """
+	sender_employee_list = frappe.get_single("HR Settings")
+	if sender_employee_list.birthday_remainder_sending_employees:
+		employee_emails = []
+		for employees in sender_employee_list.birthday_remainder_sending_employees:
+			employee_list = frappe.get_all(
+				"Employee", fields=["name", "employee_name"], filters={"status": "Active", "company": company, "name":employees.employee}
+			)
+			for employee in employee_list:
+				if not employee:
+					continue
+				user, company_email, personal_email = frappe.db.get_value(
+					"Employee", employee, ["user_id", "company_email", "personal_email"]
+				)
+				email = user or company_email or personal_email
+				if email:
+					employee_emails.append(email)
+		return employee_emails
+	else:
+		employee_list = frappe.get_all(
+			"Employee", fields=["name", "employee_name"], filters={"status": "Active", "company": company}
+		)
+		employee_emails = []
+		for employee in employee_list:
+			if not employee:
+				continue
+			user, company_email, personal_email = frappe.db.get_value(
+				"Employee", employee, ["user_id", "company_email", "personal_email"]
+			)
+			email = user or company_email or personal_email
+			if email:
+				employee_emails.append(email)
+		return employee_emails
