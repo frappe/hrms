@@ -1,25 +1,13 @@
-import { createListResource } from "frappe-ui"
+import { createResource } from "frappe-ui"
 import { reactive } from "vue"
 import { employeeResource } from "./employee"
 
 let employeesByID = reactive({})
 let employeesByUserID = reactive({})
 
-export const employees = createListResource({
-	doctype: "Employee",
-	fields: [
-		"name",
-		"employee_name",
-		"designation",
-		"department",
-		"company",
-		"reports_to",
-		"user_id",
-		"image",
-		"status",
-	],
+export const employees = createResource({
+	url: "hrms.api.get_all_employees",
 	auto: true,
-	pageLength: 99999,
 	transform(data) {
 		return data.map((employee) => {
 			employee.isActive = employee.status === "Active"

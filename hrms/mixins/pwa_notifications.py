@@ -13,7 +13,7 @@ class PWANotificationsMixin:
 		status = self.get(status_field)
 
 		if self.has_value_changed(status_field) and status in ["Approved", "Rejected"]:
-			from_user = self._get_doc_approver()
+			from_user = frappe.session.user
 			from_user_name = self._get_user_name(from_user)
 			to_user = self._get_employee_user()
 
@@ -35,7 +35,7 @@ class PWANotificationsMixin:
 		from_user = self._get_employee_user()
 		to_user = self._get_doc_approver()
 
-		if from_user == to_user:
+		if not to_user or from_user == to_user:
 			return
 
 		notification = frappe.new_doc("PWA Notification")

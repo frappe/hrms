@@ -129,16 +129,12 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 	def publish_update(self):
 		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
-		if frappe.session.user in [employee_user, self.leave_approver]:
-			frappe.publish_realtime(
-				event="hrms:update_leaves",
-				message={
-					"approver": self.leave_approver,
-					"employee": self.employee,
-				},
-				user=frappe.session.user,
-				after_commit=True,
-			)
+		frappe.publish_realtime(
+			event="hrms:update_leaves",
+			message={"employee": self.employee},
+			user=employee_user,
+			after_commit=True,
+		)
 
 	def validate_applicable_after(self):
 		if self.leave_type:

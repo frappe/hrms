@@ -30,8 +30,8 @@
 			<div class="flex flex-row justify-end items-center gap-2">
 				<Badge
 					variant="outline"
-					:theme="colorMap[props.doc.status]"
-					:label="props.doc.status"
+					:theme="colorMap[status]"
+					:label="status"
 					size="md"
 				/>
 				<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
@@ -67,6 +67,10 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
+	workflowStateField: {
+		type: String,
+		required: false,
+	},
 })
 
 const colorMap = {
@@ -81,5 +85,11 @@ const currency = computed(() => getCurrencySymbol(props.doc.currency))
 
 const postingDate = computed(() => {
 	return dayjs(props.doc.posting_date).format("D MMM")
+})
+
+const status = computed(() => {
+	return props.workflowStateField
+		? props.doc[props.workflowStateField]
+		: props.doc.status
 })
 </script>
