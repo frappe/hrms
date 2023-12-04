@@ -480,13 +480,16 @@ class SalarySlip(TransactionBase):
 				payroll_settings.payroll_based_on == "Attendance"
 				and consider_unmarked_attendance_as == "Absent"
 			):
-				unmarked_days = self.get_unmarked_days(payroll_settings.include_holidays_in_total_working_days)
-				self.absent_days += unmarked_days  # will be treated as absent
-				self.payment_days -= unmarked_days
+				unmarked_days = self.get_unmarked_days(
+					payroll_settings.include_holidays_in_total_working_days, holidays
+				)
+				if unmarked_days > 0:
+					self.absent_days += unmarked_days  # will be treated as absent
+					self.payment_days -= unmarked_days
 		else:
 			self.payment_days = 0
 
-	def get_unmarked_days(self, include_holidays_in_total_working_days):
+	def get_unmarked_days(self, include_holidays_in_total_working_days, holidays=[]):
 		unmarked_days = self.total_working_days
 
 		if self.actual_start_date != self.start_date:
@@ -506,13 +509,19 @@ class SalarySlip(TransactionBase):
 			)
 
 		# exclude days for which attendance has been marked
+		filters = [
+			["attendance_date", "between", [self.actual_start_date, self.actual_end_date]],
+			["employee", "=", self.employee],
+			["docstatus", "=", 1],
+		]
+		if include_holidays_in_total_working_days and holidays:
+			filters.append(["attendance_date", "not in", holidays])
+			if self.actual_start_date == self.start_date and self.actual_end_date == self.end_date:
+				unmarked_days -= len(holidays)
+
 		marked_days = frappe.db.count(
 			"Attendance",
-			filters={
-				"attendance_date": ["between", [self.actual_start_date, self.actual_end_date]],
-				"employee": self.employee,
-				"docstatus": 1,
-			},
+			filters=filters,
 		)
 		unmarked_days -= marked_days
 
