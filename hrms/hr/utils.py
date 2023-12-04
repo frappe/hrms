@@ -6,6 +6,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import (
 	add_days,
+	comma_and,
 	cstr,
 	flt,
 	format_datetime,
@@ -338,6 +339,7 @@ def allocate_earned_leaves():
 	e_leave_types = get_earned_leaves()
 	today = frappe.flags.current_date or getdate()
 
+	failed_allocations = []
 	for e_leave_type in e_leave_types:
 		leave_allocations = get_leave_allocations(today, e_leave_type.name)
 
@@ -368,7 +370,29 @@ def allocate_earned_leaves():
 			if check_effective_date(
 				from_date, today, e_leave_type.earned_leave_frequency, e_leave_type.allocate_on_day
 			):
-				update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, date_of_joining)
+				try:
+					update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, date_of_joining)
+				except Exception:
+					failed_allocations.append(allocation.name)
+	if failed_allocations:
+		allocations = comma_and([get_link_to_form("Leave Allocation", x) for x in failed_allocations])
+
+		hr_managers = frappe.db.sql_list(
+			"""
+					SELECT DISTINCT(has_role.parent)
+					FROM `tabHas Role` has_role LEFT JOIN `tabUser` user
+					ON has_role.parent = user.name
+					WHERE has_role.parenttype = 'User' AND user.enabled = 1 AND has_role.role = %s
+					""",
+			"HR Manager",
+		)
+		frappe.sendmail(
+			recipients=hr_managers,
+			subject=_("Failure of Automatic Allocation of Earned Leaves"),
+			message=_("Automatic Leave Allocation has failed for the following Earned Leaves: {0}.").format(
+				allocations
+			),
+		)
 
 
 def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, date_of_joining):
