@@ -57,27 +57,22 @@ const teamRequests = computed(() => {
 })
 
 onMounted(() => {
-	socket.on("hrms:update_leaves", (data) => {
-		if (data.employee === employee.data.name) {
+	socket.emit("doctype_subscribe", "Leave Application")
+	socket.emit("doctype_subscribe", "Expense Claim")
+	socket.on("list_update", (data) => {
+		if (data.doctype === "Leave Application") {
 			myLeaves.reload()
-		}
-		if (data.approver === employee.data.user_id) {
 			teamLeaves.reload()
-		}
-	})
-
-	socket.on("hrms:update_expense_claims", (data) => {
-		if (data.employee === employee.data.name) {
+		} else if (data.doctype === "Expense Claim") {
 			myClaims.reload()
-		}
-		if (data.approver === employee.data.user_id) {
 			teamClaims.reload()
 		}
 	})
 })
 
 onBeforeUnmount(() => {
-	socket.off("hrms:update_leaves")
-	socket.off("hrms:update_expense_claims")
+	socket.emit("doctype_unsubscribe", "Leave Application")
+	socket.emit("doctype_unsubscribe", "Expense Claim")
+	socket.off("list_update")
 })
 </script>

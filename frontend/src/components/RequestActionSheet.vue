@@ -72,8 +72,15 @@
 		</div>
 
 		<!-- Actions -->
+		<WorkflowActionSheet
+			v-if="workflow?.hasWorkflow"
+			:doc="document.doc"
+			:workflow="workflow"
+			view="actionSheet"
+		/>
+
 		<div
-			v-if="['Open', 'Draft'].includes(document?.doc?.[approvalField])"
+			v-else-if="['Open', 'Draft'].includes(document?.doc?.[approvalField])"
 			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
 		>
 			<Button
@@ -146,8 +153,9 @@
 </template>
 
 <script setup>
-import { computed, ref, defineAsyncComponent } from "vue"
+import { computed, ref, defineAsyncComponent, onMounted } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
+import { useRouter } from "vue-router"
 import {
 	toast,
 	createDocumentResource,
@@ -157,10 +165,12 @@ import {
 
 import FormattedField from "@/components/FormattedField.vue"
 import FilePreviewModal from "@/components/FilePreviewModal.vue"
+import WorkflowActionSheet from "@/components/WorkflowActionSheet.vue"
 
 import { getCompanyCurrency } from "@/data/currencies"
 import { formatCurrency } from "@/utils/formatters"
-import { useRouter } from "vue-router"
+
+import useWorkflow from "@/composables/workflow"
 
 const props = defineProps({
 	fields: {
@@ -176,6 +186,7 @@ const router = useRouter()
 
 let showPreviewModal = ref(false)
 let selectedFile = ref({})
+let workflow = ref(null)
 
 function showFilePreview(fileObj) {
 	selectedFile.value = fileObj
@@ -186,6 +197,9 @@ const document = createDocumentResource({
 	doctype: props.modelValue.doctype,
 	name: props.modelValue.name,
 	auto: true,
+	onSuccess(doc) {
+		attachedFiles.reload()
+	},
 })
 
 const attachedFiles = createResource({
@@ -194,7 +208,6 @@ const attachedFiles = createResource({
 		dt: props.modelValue.doctype,
 		dn: props.modelValue.name,
 	},
-	auto: true,
 })
 
 const currency = computed(() => {
@@ -290,6 +303,10 @@ const openFormView = () => {
 		params: { id: props.modelValue.name },
 	})
 }
+
+onMounted(() => {
+	workflow.value = useWorkflow(props.modelValue.doctype)
+})
 </script>
 
 <style scoped>
