@@ -116,6 +116,7 @@ class AdditionalSalary(Document):
 	def validate_duplicate_additional_salary(self):
 		if not self.overwrite_salary_structure_amount:
 			return
+
 		existing_additional_salary = frappe.db.exists(
 			"Additional Salary",
 			{
@@ -124,14 +125,16 @@ class AdditionalSalary(Document):
 				"overwrite_salary_structure_amount": 1,
 			},
 		)
+
 		if existing_additional_salary:
-			frappe.throw(
-				_(
-					"Additional Salary of Salary Component {0} with 'Overwrite Salary Structure Amount' enabled already exists for this date. Reference: {1}"
-				).format(
-					self.salary_component, get_link_to_form("Additional Salary", existing_additional_salary)
-				)
+			msg = _(
+				"Additional Salary for this salary component with {0} enabled already exists for this date"
+			).format(frappe.bold("Overwrite Salary Structure Amount"))
+			msg += "<br><br>"
+			msg += _("Reference: {0}").format(
+				get_link_to_form("Additional Salary", existing_additional_salary)
 			)
+			frappe.throw(msg, title=_("Duplicate Overwritten Salary"))
 
 	def update_return_amount_in_employee_advance(self):
 		if self.ref_doctype == "Employee Advance" and self.ref_docname:
