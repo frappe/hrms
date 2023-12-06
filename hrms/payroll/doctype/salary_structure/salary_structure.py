@@ -23,21 +23,14 @@ class SalaryStructure(Document):
 		self.validate_timesheet_component()
 
 	def before_save(self):
-		for detail in self.earnings:
-			if not detail.amount_based_on_formula and detail.formula:
-				frappe.msgprint(
-					_(
-						"Earning Row #{0}: Formula entered for Salary Component {1} even though 'Amount Based on Formula' has been disabled"
-					).format(detail.idx, detail.salary_component)
-				)
-
-		for detail in self.deductions:
-			if not detail.amount_based_on_formula and detail.formula:
-				frappe.msgprint(
-					_(
-						"Deduction Row #{0}: Formula entered for Salary Component {1} even though 'Amount Based on Formula' has been disabled"
-					).format(detail.idx, detail.salary_component)
-				)
+		for table in ["earnings", "deductions"]:
+			for detail in self.get(table):
+				if not detail.amount_based_on_formula and detail.formula:
+					frappe.msgprint(
+						_(
+							"{0} Row #{1}: Formula entered for Salary Component {2} even though 'Amount Based on Formula' has been disabled"
+						).format(table[:-1].capitalize(), detail.idx, detail.salary_component)
+					)
 
 	def set_missing_values(self):
 		overwritten_fields = [
