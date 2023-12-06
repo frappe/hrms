@@ -28,8 +28,13 @@ class SalaryStructure(Document):
 				if not detail.amount_based_on_formula and detail.formula:
 					frappe.msgprint(
 						_(
-							"{0} Row #{1}: Formula entered for Salary Component {2} even though 'Amount Based on Formula' has been disabled"
-						).format(table[:-1].capitalize(), detail.idx, detail.salary_component)
+							"{0} Row #{1}: Formula entered for Salary Component {2} even though {3} has been disabled."
+						).format(
+							table[:-1].capitalize(),
+							detail.idx,
+							detail.salary_component,
+							frappe.bold("Amount Based on Formula"),
+						)
 					)
 
 	def set_missing_values(self):
