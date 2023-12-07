@@ -31,6 +31,8 @@
   "expense_approver_mandatory_in_expense_claim",
   "show_leaves_of_all_department_members_in_calendar",
   "auto_leave_encashment",
+  "shift_settings_section",
+  "allow_multiple_shift_assignments",
   "hiring_settings_section",
   "check_vacancies",
   "send_interview_reminder",
@@ -267,13 +269,24 @@
   {
    "fieldname": "column_break_hyec",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_multiple_shift_assignments",
+   "fieldtype": "Check",
+   "label": "Allow Multiple Shift Assignments for Same Date"
+  },
+  {
+   "fieldname": "shift_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Shift Settings"
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-11-01 11:06:31.329718",
+ "modified": "2023-12-07 14:55:37.309553",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
