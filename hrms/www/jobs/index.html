@@ -1,13 +1,19 @@
-{% extends "templates/web.html" %} {% block title %} {{ _("Job Openings") }} {%
-endblock title %} {% block header %}
+{% extends "templates/web.html" %}
+{% block title %} {{ _("Job Openings") }} {% endblock title %}
+
+{% block header %}
 <h3 class="mt-0 mb-10 jobs-page">{{ _("Job Openings") }}</h3>
-{% endblock header %} {% block page_content %}
+{% endblock header %}
+
+{% block page_content %}
 <meta
 	id="data"
 	data-filters="{{ all_filters }}"
 	data-no-of-pages="{{ no_of_pages }}"
 />
+
 <div class="row">
+	<!-- Filters -->
 	<div class="col-3 text-15">
 		<div class="flex align-items-center">
 			<p class="text-18 font-weight-bold mb-0">{{ _("Filters") }}</p>
@@ -16,6 +22,7 @@ endblock title %} {% block header %}
 			>
 		</div>
 		<hr class="mb-6" />
+
 		{% for name, values in all_filters.items() %}
 		<div class="mb-6">
 			<p class="font-weight-bold mb-4">
@@ -35,15 +42,18 @@ endblock title %} {% block header %}
 					class="form-check-label align-top"
 					for="{{ value }}"
 					role="button"
-					>{{ value }}</label
 				>
+					{{ value }}
+				</label>
 			</div>
 			{% endfor %}
 		</div>
 		{% endfor %}
 	</div>
+
 	<div class="col-9">
 		<div class="row px-4 mb-12" style="height: 32px">
+			<!-- Search -->
 			<div class="col-8 p-0 search-bar">
 				<span class="form-control-feedback">
 					<svg
@@ -71,6 +81,8 @@ endblock title %} {% block header %}
 					aria-label="Jobs Search"
 				/>
 			</div>
+
+			<!-- Sort -->
 			{% set sort = frappe.form_dict.sort %}
 			<div class="col-4 flex pr-0">
 				<div class="ml-auto flex align-items-center">
@@ -95,10 +107,13 @@ endblock title %} {% block header %}
 				</div>
 			</div>
 		</div>
+
+		<!-- Job Opening Cards -->
 		<p class="text-secondary mb-4 text-15">
 			{{ _("Showing " + job_openings|length|string + (" result" if
 			job_openings|length == 1 else " results") ) }}
 		</p>
+
 		<div class="row">
 			{% for jo in job_openings %}
 			<div name="card" id="{{ jo.route }}" class="mb-8 col-6" role="button">
@@ -204,6 +219,8 @@ endblock title %} {% block header %}
 			</div>
 			{% endfor %}
 		</div>
+
+		<!-- Pagination -->
 		{%- if no_of_pages > 1 -%}
 		<div class="mb-4 flex">
 			<div
@@ -247,7 +264,6 @@ endblock title %} {% block header %}
 					class="btn btn-default border-left flex align-items-center bg-white"
 				>
 					<svg class="icon icon-sm" style="--icon-stroke: var(--gray-600)">
-						>
 						<use href="#icon-right"></use>
 					</svg>
 				</button>
