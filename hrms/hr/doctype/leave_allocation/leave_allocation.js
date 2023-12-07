@@ -71,14 +71,15 @@ frappe.ui.form.on("Leave Allocation", {
 					frm.set_df_property("new_leaves_allocated", "read_only", 1);
 					frm.frequency = r?.earned_leave_frequency;
 					frm.rounding = r?.rounding;
+					frm.trigger("get_monthly_earned_leave");
 
 					frm.add_custom_button(__("Allocate Leaves Manually"), function () {
 						const dialog = new frappe.ui.Dialog({
 							title: "Enter details",
 							fields: [
 								{
-									label: "New Leaves Allocated",
-									fieldname: "new_leaves_allocated",
+									label: "New Leaves to be Allocated",
+									fieldname: "new_leaves",
 									fieldtype: "Data",
 								},
 							],
@@ -87,6 +88,7 @@ frappe.ui.form.on("Leave Allocation", {
 								dialog.hide();
 							},
 						});
+						dialog.fields_dict.new_leaves.set_value(frm.monthly_earned_leave);
 						dialog.show();
 					});
 				}
