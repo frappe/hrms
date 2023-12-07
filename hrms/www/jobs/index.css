@@ -58,15 +58,23 @@ h4.jobs-page {
 	border-radius: 0 0 0.75rem 0.75rem
 }
 
-.search-bar .form-control {
-    padding-left: 2.375rem;
+.search-box-container {
+	width: 100%;
 }
 
-.search-bar .form-control-feedback {
-    position: absolute;
-    z-index: 2;
-    width: 2.375rem;
-    line-height: 1.875rem;
-    text-align: center;
-    pointer-events: none;
+#search-box {
+	padding-left: 36px;
+	background-color: var(--bg-color);
+}
+
+.search-bar .search-icon {
+	position: absolute;
+	margin-left: 12px;
+	display: flex;
+	align-items: center;
+	height: 100%;
+}
+
+.filters-section .title-section {
+	border-bottom: 1px solid var(--gray-300);
 }

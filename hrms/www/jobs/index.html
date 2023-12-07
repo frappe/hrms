@@ -17,9 +17,7 @@
 	<div class="col-3 text-15">
 		<div class="flex align-items-center">
 			<p class="text-18 font-weight-bold mb-0">{{ _("Filters") }}</p>
-			<a id="clear-filters" class="ml-auto" role="button"
-				>{{ _("Clear All") }}</a
-			>
+			<a id="clear-filters" class="ml-auto" role="button">{{ _("Clear All") }}</a>
 		</div>
 		<hr class="mb-6" />
 
@@ -28,6 +26,7 @@
 			<p class="font-weight-bold mb-4">
 				{{ name.title() | replace('_', ' ') }}
 			</p>
+
 			{% for value in values %}
 			<div class="form-group form-check">
 				<input
@@ -52,34 +51,24 @@
 	</div>
 
 	<div class="col-9">
-		<div class="row px-4 mb-12" style="height: 32px">
-			<!-- Search -->
-			<div class="col-8 p-0 search-bar">
-				<span class="form-control-feedback">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="16"
-						height="16"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						class="feather feather-search"
-					>
-						<circle cx="11" cy="11" r="8"></circle>
-						<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-					</svg>
-				</span>
-				<input
-					type="search"
-					name="query"
-					id="search-box"
-					class="form-control border font-md bg-white h-100"
-					placeholder="Search for Jobs"
-					aria-label="Jobs Search"
-				/>
+		<div class="row px-4 mb-10 align-items-center">
+			<!-- Search  -->
+			<div class="col-8 pl-0">
+				<div class="input-group search-bar flex text-muted">
+					<div class="search-box-container">
+						<input
+							type="search"
+							name="query"
+							id="search-box"
+							class="form-control border font-md h-100"
+							placeholder="{{ _('Search for Jobs') }}"
+							aria-label="Jobs Search"
+						/>
+					</div>
+					<span class="search-icon">
+						<svg class="icon icon-sm"><use href="#icon-search"></use></svg>
+					</span>
+				</div>
 			</div>
 
 			<!-- Sort -->
