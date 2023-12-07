@@ -81,14 +81,18 @@ frappe.ui.form.on("Leave Allocation", {
 									label: "New Leaves to be Allocated",
 									fieldname: "new_leaves",
 									fieldtype: "Data",
+									onchange: function () {
+										frm.new_leaves = this.value;
+									},
 								},
 							],
 							primary_action_label: "Allocate",
 							primary_action() {
+								frm.trigger("allocate_leaves_manually");
 								dialog.hide();
 							},
 						});
-						dialog.fields_dict.new_leaves.set_value(frm.monthly_earned_leave);
+						dialog.fields_dict.new_leaves.set_value(frm.new_leaves);
 						dialog.show();
 					});
 				}
@@ -209,10 +213,23 @@ frappe.ui.form.on("Leave Allocation", {
 						rounding: frm.rounding,
 					},
 					callback: function (r) {
-						frm.monthly_earned_leave = r.message;
+						frm.new_leaves = r.message;
 					},
 				}),
 		]);
+	},
+
+	allocate_leaves_manually: function (frm) {
+		frappe.call({
+			method: "hrms.hr.utils.allocate_leaves_manually",
+			args: {
+				allocation_name: frm.doc.name,
+				new_leaves: frm.new_leaves,
+			},
+			callback: function () {
+				frm.refresh();
+			},
+		});
 	},
 });
 

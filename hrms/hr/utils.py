@@ -505,6 +505,18 @@ def get_earned_leaves():
 	)
 
 
+@frappe.whitelist()
+def allocate_leaves_manually(allocation_name, new_leaves):
+	allocation = frappe.get_doc("Leave Allocation", allocation_name)
+	today_date = frappe.flags.current_date or getdate()
+
+	create_additional_leave_ledger_entry(allocation, new_leaves, today_date)
+	text = _("{0} leaves were manually allocated by {1} on {2}").format(
+		frappe.bold(new_leaves), frappe.session.user, frappe.bold(formatdate(today_date))
+	)
+	allocation.add_comment(comment_type="Info", text=text)
+
+
 def create_additional_leave_ledger_entry(allocation, leaves, date):
 	"""Create leave ledger entry for leave types"""
 	allocation.new_leaves_allocated = leaves
