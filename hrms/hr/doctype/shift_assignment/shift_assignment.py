@@ -45,23 +45,25 @@ class ShiftAssignment(Document):
 			if not self.docstatus:
 				frappe.msgprint(
 					_(
-						"Warning: {0} already has an active Shift Assignment {1} for some/all of these dates. 'Allow Multiple Shift Assignments for Same Date' can be disabled under {2}."
+						"Warning: {0} already has an active Shift Assignment {1} for some/all of these dates."
 					).format(
-						self.employee,
-						get_link_to_form("Shift Assignment", overlapping_dates[0].name),
-						get_link_to_form("HR Settings", "HR Settings"),
+						frappe.bold(self.employee), get_link_to_form("Shift Assignment", overlapping_dates[0].name)
 					)
 				)
 		else:
+			msg = _("{0} already has an active Shift Assignment {1} for some/all of these dates.").format(
+				frappe.bold(self.employee),
+				get_link_to_form("Shift Assignment", overlapping_dates[0].name),
+			)
+			msg += "<br><br>"
+			msg += _("To allow this, enable {0} under {1}.").format(
+				frappe.bold(_("Allow Multiple Shift Assignments for Same Date")),
+				get_link_to_form("HR Settings", "HR Settings"),
+			)
+
 			frappe.throw(
 				title=_("Multiple Shift Assignments"),
-				msg=_(
-					"{0} already has an active Shift Assignment {1} for some/all of these dates. To allow this, enable 'Allow Multiple Shift Assignments for Same Date' under {2}."
-				).format(
-					self.employee,
-					get_link_to_form("Shift Assignment", overlapping_dates[0].name),
-					get_link_to_form("HR Settings", "HR Settings"),
-				),
+				msg=msg,
 				exc=MultipleShiftError,
 			)
 
