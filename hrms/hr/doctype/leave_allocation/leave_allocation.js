@@ -16,6 +16,7 @@ frappe.ui.form.on("Leave Allocation", {
 				query: "erpnext.controllers.queries.employee_query",
 			};
 		});
+
 		frm.set_query("leave_type", function () {
 			return {
 				filters: {
@@ -23,28 +24,6 @@ frappe.ui.form.on("Leave Allocation", {
 				},
 			};
 		});
-	},
-
-	make_dashboard: async function (frm) {
-		response = await frappe.db.get_value("Leave Type", frm.doc.leave_type, [
-			"is_earned_leave",
-			"earned_leave_frequency",
-		]);
-		leave_type = response.message;
-		if (
-			!leave_type.is_earned_leave ||
-			leave_type.earned_leave_frequency != "Monthly"
-		)
-			return;
-		$("div").remove(".form-dashboard-section.custom");
-
-		frm.dashboard.add_section(
-			frappe.render_template("leave_allocation_dashboard", {
-				data: leave_details,
-			}),
-			__("Allocated Leaves")
-		);
-		frm.dashboard.show();
 	},
 
 	refresh: function (frm) {
@@ -163,6 +142,7 @@ frappe.ui.form.on("Leave Allocation", {
 			);
 		}
 	},
+
 	calculate_total_leaves_allocated: function (frm) {
 		if (
 			cint(frm.doc.carry_forward) == 1 &&
@@ -184,6 +164,7 @@ frappe.ui.form.on("Leave Allocation", {
 			);
 		}
 	},
+
 	get_monthly_earned_leave: async function (frm) {
 		await frappe.run_serially([
 			() =>
@@ -213,7 +194,9 @@ frappe.ui.form.on("Leave Allocation", {
 						rounding: frm.rounding,
 					},
 					callback: function (r) {
+						frm.monthly_leaves = r.message;
 						frm.new_leaves = r.message;
+						frm.trigger("make_dashboard");
 					},
 				}),
 		]);
@@ -230,6 +213,40 @@ frappe.ui.form.on("Leave Allocation", {
 				frm.refresh();
 			},
 		});
+	},
+
+	make_dashboard: async function (frm) {
+		response = await frappe.db.get_value("Leave Type", frm.doc.leave_type, [
+			"is_earned_leave",
+			"earned_leave_frequency",
+		]);
+		leave_type = response.message;
+		if (
+			!leave_type.is_earned_leave ||
+			leave_type.earned_leave_frequency != "Monthly"
+		)
+			return;
+		$("div").remove(".form-dashboard-section.custom");
+
+		const from_date_array = frm.doc.from_date.split("-");
+		const from_month = from_date_array[1] - 1;
+		const to_date_array = frm.doc.to_date.split("-");
+		let to_month = to_date_array[1] - 1;
+		if (to_date_array[0] > from_date_array[0]) to_month += 12;
+
+		const months = [];
+		for (let i = from_month; i <= to_month; i++) {
+			months.push(moment().month(i).format("MMMM"));
+		}
+
+		frm.dashboard.add_section(
+			frappe.render_template("leave_allocation_dashboard", {
+				months: months,
+				monthly_leaves: frm.monthly_leaves,
+			}),
+			__("Allocated Leaves")
+		);
+		frm.dashboard.show();
 	},
 });
 
