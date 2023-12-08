@@ -43,7 +43,7 @@ class RetentionBonus(Document):
 	def on_cancel(self):
 
 		additional_salary = self.get_additional_salary()
-		if self.additional_salary:
+		if additional_salary:
 			bonus_removed = (
 				frappe.db.get_value("Additional Salary", self.additional_salary, "amount") - self.bonus_amount
 			)
