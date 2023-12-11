@@ -271,7 +271,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "1",
+   "default": "0",
    "fieldname": "allow_multiple_shift_assignments",
    "fieldtype": "Check",
    "label": "Allow Multiple Shift Assignments for Same Date"
@@ -286,7 +286,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-12-07 14:55:37.309553",
+ "modified": "2023-12-11 12:51:01.329507",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
