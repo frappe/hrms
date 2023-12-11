@@ -109,12 +109,18 @@ class JobOpening(WebsiteGenerator):
 
 def close_expired_job_openings():
 	today = getdate()
-	for d in frappe.get_all(
-		"Job Opening",
-		filters={"status": "Open", "closes_on": ["between", ("2010-01-01", today)]},
-		fields=["name", "closes_on"],
-	):
-		doc = frappe.get_doc("Job Opening", d.name)
+
+	Opening = frappe.qb.DocType("Job Opening")
+	openings = (
+		frappe.qb.from_(Opening)
+		.select(Opening.name)
+		.where(
+			(Opening.status == "Open") & (Opening.closes_on.isnotnull()) & (Opening.closes_on < today)
+		)
+	).run(pluck=True)
+
+	for d in openings:
+		doc = frappe.get_doc("Job Opening", d)
 		doc.status = "Closed"
 		doc.flags.ignore_permissions = True
 		doc.flags.ignore_mandatory = True
