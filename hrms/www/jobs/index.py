@@ -68,7 +68,6 @@ def get_job_openings(filters=None, txt=None, sort=None, limit=20, offset=0):
 
 
 def get_no_of_pages(filters=None, txt=None, page_length=20):
-
 	jo = frappe.qb.DocType("Job Opening")
 	query = (
 		frappe.qb.from_(jo)
