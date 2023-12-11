@@ -31,25 +31,25 @@ class JobOpening(WebsiteGenerator):
 			self.route = (
 				f"jobs/{frappe.scrub(self.company)}/{frappe.scrub(self.job_title).replace('_', '-')}"
 			)
+		self.update_closing_date()
 		self.validate_dates()
 		self.validate_current_vacancies()
-		self.update_job_requisition_status()
 
 	def on_update(self):
+		self.update_job_requisition_status()
+
+	def update_closing_date(self):
 		old_doc = self.get_doc_before_save()
 		if not old_doc:
 			return
 
 		if old_doc.status == "Open" and self.status == "Closed":
-			today = getdate()
 			self.closes_on = None
 			if not self.closed_on:
-				self.closed_on = today
-			self.save()
+				self.closed_on = getdate()
 
 		elif old_doc.status == "Closed" and self.status == "Open":
 			self.closed_on = None
-			self.save()
 
 	def validate_dates(self):
 		if self.status == "Open":
