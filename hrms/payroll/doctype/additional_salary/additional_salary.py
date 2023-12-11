@@ -119,6 +119,7 @@ class AdditionalSalary(Document):
 		existing_additional_salary = frappe.db.exists(
 			"Additional Salary",
 			{
+				"name": ["!=", self.name],
 				"salary_component": self.salary_component,
 				"payroll_date": self.payroll_date,
 				"overwrite_salary_structure_amount": 1,
