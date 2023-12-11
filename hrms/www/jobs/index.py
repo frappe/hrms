@@ -19,7 +19,6 @@ def get_context(context):
 
 
 def get_job_openings(filters=None, txt=None, sort=None, limit=20, offset=0):
-
 	jo = frappe.qb.DocType("Job Opening")
 	ja = frappe.qb.DocType("Job Applicant")
 
