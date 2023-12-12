@@ -69,22 +69,9 @@ calendars = ["Leave Application"]
 # automatically create page for each record of this doctype
 website_generators = ["Job Opening"]
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-website_route_rules = [
-	{"from_route": "/jobs", "to_route": "Job Opening"},
-	{"from_route": "/hrms/<path:app_path>", "to_route": "hrms"},
-]
-=======
-# website_route_rules = [
-# 	{"from_route": "/jobs", "to_route": "Job Opening"},
-# ]
->>>>>>> 7d5baff78 (feat: add portal page)
-=======
 website_route_rules = [
 	{"from_route": "/hrms/<path:app_path>", "to_route": "hrms"},
 ]
->>>>>>> 7bd4b190f (fix: search bar icon placement)
 # Jinja
 # ----------
 
