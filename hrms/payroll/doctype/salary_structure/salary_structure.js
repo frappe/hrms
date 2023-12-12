@@ -299,10 +299,12 @@ frappe.ui.form.on('Salary Detail', {
 	formula: function(frm, cdt, cdn) {
 		const row = locals[cdt][cdn];
 		if (row.formula && !row?.amount_based_on_formula && !frm.alerted_rows.includes(cdn)) {
-			frappe.msgprint(
-				__("Row #{0}: {1} needs to be enabled for the formula to be considered.",
-				[row.idx, __("Amount based on formula").bold()])
-			);
+			frappe.msgprint({
+				message: __("{0} Row #{1}: {2} needs to be enabled for the formula to be considered.",
+					[toTitle(row.parentfield), row.idx, __("Amount based on formula").bold()]),
+				title: __("Warning"),
+				indicator: "orange",
+			});
 			frm.alerted_rows.push(cdn)
 		}
 	},
