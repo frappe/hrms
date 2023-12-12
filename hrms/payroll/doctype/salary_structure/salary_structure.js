@@ -2,18 +2,9 @@
 // License: GNU General Public License v3. See license.txt
 {% include "erpnext/public/js/controllers/accounts.js" %}
 
-cur_frm.add_fetch('company', 'default_letter_head', 'letter_head');
-
-
-cur_frm.cscript.onload = function(doc, dt, dn){
-	var e_tbl = doc.earnings || [];
-	var d_tbl = doc.deductions || [];
-	if (e_tbl.length == 0 && d_tbl.length == 0)
-		return function(r, rt) { refresh_many(['earnings', 'deductions']);};
-}
-
-frappe.ui.form.on('Salary Structure', {
+frappe.ui.form.on("Salary Structure", {
 	onload: function(frm) {
+		frm.alerted_rows = []
 
 		let help_button = $(`<a class = 'control-label'>
 			${__("Condition and Formula Help")}
@@ -305,6 +296,19 @@ frappe.ui.form.on('Salary Detail', {
 		calculate_totals(frm.doc);
 	},
 
+	formula: function(frm, cdt, cdn) {
+		const row = locals[cdt][cdn];
+		if (row.formula && !row?.amount_based_on_formula && !frm.alerted_rows.includes(cdn)) {
+			frappe.msgprint({
+				message: __("{0} Row #{1}: {2} needs to be enabled for the formula to be considered.",
+					[toTitle(row.parentfield), row.idx, __("Amount based on formula").bold()]),
+				title: __("Warning"),
+				indicator: "orange",
+			});
+			frm.alerted_rows.push(cdn)
+		}
+	},
+
 	salary_component: function(frm, cdt, cdn) {
 		var child = locals[cdt][cdn];
 		if(child.salary_component){
@@ -341,10 +345,11 @@ frappe.ui.form.on('Salary Detail', {
 
 	amount_based_on_formula: function(frm, cdt, cdn) {
 		var child = locals[cdt][cdn];
-		if(child.amount_based_on_formula == 1){
+		if (child.amount_based_on_formula == 1) {
 			frappe.model.set_value(cdt, cdn, 'amount', null);
-		}
-		else{
+			const index = frm.alerted_rows.indexOf(cdn);
+			if (index > -1) frm.alerted_rows.splice(index, 1);
+		} else {
 			frappe.model.set_value(cdt, cdn, 'formula', null);
 		}
 	}
