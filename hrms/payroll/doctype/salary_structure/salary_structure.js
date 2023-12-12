@@ -2,17 +2,7 @@
 // License: GNU General Public License v3. See license.txt
 {% include "erpnext/public/js/controllers/accounts.js" %}
 
-cur_frm.add_fetch('company', 'default_letter_head', 'letter_head');
-
-
-cur_frm.cscript.onload = function(doc, dt, dn){
-	var e_tbl = doc.earnings || [];
-	var d_tbl = doc.deductions || [];
-	if (e_tbl.length == 0 && d_tbl.length == 0)
-		return function(r, rt) { refresh_many(['earnings', 'deductions']);};
-}
-
-frappe.ui.form.on('Salary Structure', {
+frappe.ui.form.on("Salary Structure", {
 	onload: function(frm) {
 		frm.alerted_rows = []
 
