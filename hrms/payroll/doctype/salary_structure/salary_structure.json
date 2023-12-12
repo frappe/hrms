@@ -236,11 +236,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2023-06-13 18:02:31.779947",
-=======
  "modified": "2023-12-12 14:11:22.774017",
->>>>>>> 35fd55ea8 (fix: remove statistical component from list view display)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure",
