@@ -9,7 +9,6 @@ from frappe import _
 from frappe.query_builder.functions import Max, Min, Sum
 from frappe.utils import (
 	add_days,
-	add_to_date,
 	cint,
 	cstr,
 	date_diff,
@@ -23,6 +22,7 @@ from frappe.utils import (
 
 from erpnext.buying.doctype.supplier_scorecard.supplier_scorecard import daterange
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
+from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
 
 from hrms.hr.doctype.leave_block_list.leave_block_list import get_applicable_block_dates
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
@@ -481,69 +481,76 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 		return leave_count_on_half_day_date * 0.5
 
-	# gets from_date of first leave application from previous consecutive leave applications
-	def get_first_from_date(self, to_date, holiday_list):
-		from_date = frappe.db.get_value(
-			"Leave Application",
-			{"employee": self.employee, "leave_type": self.leave_type, "to_date": to_date},
-			"from_date",
-		)
-		if from_date:
-			return self.get_first_from_date(add_to_date(from_date, days=-1), holiday_list)
-		elif frappe.db.exists("Holiday", {"parent": holiday_list, "holiday_date": to_date}):
-			return self.get_first_from_date(add_to_date(to_date, days=-1), holiday_list)  # ignore holiday
-		return add_to_date(to_date, days=1)  # to_date is actually from_date
-
-	# gets to_date of last leave application from following consecutive leave applications
-	def get_last_to_date(self, from_date, holiday_list):
-		to_date = frappe.db.get_value(
-			"Leave Application",
-			{"employee": self.employee, "leave_type": self.leave_type, "from_date": from_date},
-			"to_date",
-		)
-		if to_date:
-			return self.get_last_to_date(add_to_date(to_date, days=1), holiday_list)
-		elif frappe.db.exists("Holiday", {"parent": holiday_list, "holiday_date": from_date}):
-			return self.get_last_to_date(add_to_date(from_date, days=1), holiday_list)  # ignore holiday
-		return add_to_date(from_date, days=-1)  # from_date is actually to_date
-
 	def validate_max_days(self):
 		max_days = frappe.db.get_value("Leave Type", self.leave_type, "max_continuous_days_allowed")
 		if not max_days:
 			return
 
+		details = self.get_consecutive_leave_details()
+
+		if details.total_consecutive_leaves > cint(max_days):
+			msg = _("Leave of type {0} cannot be longer than {1}.").format(
+				get_link_to_form("Leave Type", self.leave_type), max_days
+			)
+			if details.leave_applications:
+				msg += "<br><br>" + _("Reference: {0}").format(
+					", ".join(get_link_to_form("Leave Application", name) for name in details.leave_applications)
+				)
+
+			frappe.throw(msg, title=_("Maximum Consecutive Leaves Exceeded"))
+
+	def get_consecutive_leave_details(self) -> dict:
+		leave_applications = set()
 		raise_exception = False if frappe.flags.in_patch else True
 		holiday_list = get_holiday_list_for_employee(self.employee, raise_exception=raise_exception)
-		first_from_date = self.get_first_from_date(add_to_date(self.from_date, days=-1), holiday_list)
-		last_to_date = self.get_last_to_date(add_to_date(self.to_date, days=1), holiday_list)
+
+		def _get_first_from_date(reference_date):
+			"""gets `from_date` of first leave application from previous consecutive leave applications"""
+			prev_date = add_days(reference_date, -1)
+			application = frappe.db.get_value(
+				"Leave Application",
+				{"employee": self.employee, "leave_type": self.leave_type, "to_date": prev_date},
+				["name", "from_date"],
+				as_dict=True,
+			)
+			if application:
+				leave_applications.add(application.name)
+				return _get_first_from_date(application.from_date)
+			elif is_holiday(holiday_list, prev_date):
+				return _get_first_from_date(prev_date)
+
+			return reference_date
+
+		def _get_last_to_date(reference_date):
+			"""gets `to_date` of last leave application from following consecutive leave applications"""
+			next_date = add_days(reference_date, 1)
+			application = frappe.db.get_value(
+				"Leave Application",
+				{"employee": self.employee, "leave_type": self.leave_type, "from_date": next_date},
+				["name", "to_date"],
+				as_dict=True,
+			)
+			if application:
+				leave_applications.add(application.name)
+				return _get_last_to_date(application.to_date)
+			elif is_holiday(holiday_list, next_date):
+				return _get_last_to_date(next_date)
+
+			return reference_date
+
+		first_from_date = _get_first_from_date(self.from_date)
+		last_to_date = _get_last_to_date(self.to_date)
 
 		total_consecutive_leaves = get_number_of_leave_days(
 			self.employee, self.leave_type, first_from_date, last_to_date
 		)
-		if total_consecutive_leaves > cint(max_days):
-			msg = _("Leave of type {0} cannot be longer than {1}.").format(
-				get_link_to_form("Leave Type", self.leave_type), max_days
-			)
 
-			leave_applications = frappe.get_all(
-				"Leave Application",
-				filters={
-					"employee": self.employee,
-					"leave_type": self.leave_type,
-					"from_date": [">=", first_from_date],
-					"to_date": ["<=", last_to_date],
-				},
-				pluck="name",
-			)
-			if leave_applications:
-				leave_applications = ", ".join(
-					[get_link_to_form("Leave Application", x) for x in leave_applications]
-				)
-				msg = _("Leave of type {0} cannot be longer than {1}. Reference: {2}").format(
-					get_link_to_form("Leave Type", self.leave_type), max_days, leave_applications
-				)
-
-			frappe.throw(msg)
+		return frappe._dict(
+			{
+				"total_consecutive_leaves": total_consecutive_leaves,
+				"leave_applications": leave_applications,
+			}
+		)
 
 	def validate_attendance(self):
 		attendance = frappe.db.sql(
