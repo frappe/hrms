@@ -307,8 +307,12 @@ frappe.ui.form.on('Salary Detail', {
 	},
 
 	formula: function(frm, cdt, cdn) {
-		if (!locals[cdt][cdn].amount_based_on_formula && !frm.alerted_rows.includes(cdn)) {
-			frappe.msgprint(__("Warning: 'Amount Based on Formula' has been disabled for this row."));
+		const row = locals[cdt][cdn];
+		if (row.formula && !row?.amount_based_on_formula && !frm.alerted_rows.includes(cdn)) {
+			frappe.msgprint(
+				__("Row #{0}: {1} needs to be enabled for the formula to be considered.",
+				[row.idx, __("Amount based on formula").bold()])
+			);
 			frm.alerted_rows.push(cdn)
 		}
 	},
@@ -349,12 +353,11 @@ frappe.ui.form.on('Salary Detail', {
 
 	amount_based_on_formula: function(frm, cdt, cdn) {
 		var child = locals[cdt][cdn];
-		if(child.amount_based_on_formula == 1){
+		if (child.amount_based_on_formula == 1) {
 			frappe.model.set_value(cdt, cdn, 'amount', null);
 			const index = frm.alerted_rows.indexOf(cdn);
 			if (index > -1) frm.alerted_rows.splice(index, 1);
-		}
-		else{
+		} else {
 			frappe.model.set_value(cdt, cdn, 'formula', null);
 		}
 	}
