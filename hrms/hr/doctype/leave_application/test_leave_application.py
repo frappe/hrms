@@ -140,7 +140,6 @@ class TestLeaveApplication(FrappeTestCase):
 		)
 
 		# before
-
 		frappe.get_doc(
 			dict(
 				doctype="Leave Application",
@@ -154,7 +153,6 @@ class TestLeaveApplication(FrappeTestCase):
 		).insert()
 
 		# 2013-02-01 is a holiday
-
 		frappe.get_doc(
 			dict(
 				doctype="Leave Application",
@@ -168,37 +166,35 @@ class TestLeaveApplication(FrappeTestCase):
 		).insert()
 
 		# after
-
 		frappe.get_doc(
 			dict(
 				doctype="Leave Application",
 				employee=employee.name,
 				leave_type=leave_type.name,
 				from_date="2013-02-06",
-				to_date="2013-02-08",
+				to_date="2013-02-10",
 				company="_Test Company",
 				status="Approved",
 			)
 		).insert()
 
 		# current
-
+		from_date = getdate("2013-02-04")
+		to_date = getdate("2013-02-05")
 		leave_application = frappe.get_doc(
 			dict(
 				doctype="Leave Application",
 				employee=employee.name,
 				leave_type=leave_type.name,
-				from_date="2013-02-04",
-				to_date="2013-02-05",
+				from_date=from_date,
+				to_date=to_date,
 				company="_Test Company",
 				status="Approved",
 			)
-		).insert()
+		)
 
-		first_from_date = leave_application.get_first_from_date("2013-02-03", "_Test Holiday List")
-		last_to_date = leave_application.get_last_to_date("2013-02-06", "_Test Holiday List")
-		self.assertEqual(first_from_date, getdate("2013-01-30"))
-		self.assertEqual(last_to_date, getdate("2013-02-08"))
+		# 11 consecutive leaves
+		self.assertRaises(frappe.ValidationError, leave_application.insert)
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_validate_application_across_allocations(self):
