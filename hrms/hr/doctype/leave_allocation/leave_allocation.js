@@ -1,9 +1,10 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
 
-frm.add_fetch("employee", "employee_name", "employee_name");
-
 frappe.ui.form.on("Leave Allocation", {
+	setup: function (frm) {
+		frm.add_fetch("employee", "employee_name", "employee_name");
+	},
 	onload: function (frm) {
 		// Ignore cancellation of doctype on cancel all.
 		frm.ignore_doctypes_on_cancel_all = ["Leave Ledger Entry"];
@@ -228,25 +229,25 @@ frappe.ui.form.on("Leave Allocation", {
 			return;
 		$("div").remove(".form-dashboard-section.custom");
 
-		const from_date_array = frm.doc.from_date.split("-");
-		const from_month = from_date_array[1] - 1;
-		const to_date_array = frm.doc.to_date.split("-");
-		let to_month = to_date_array[1] - 1;
-		if (to_date_array[0] > from_date_array[0]) to_month += 12;
-
-		const months = [];
-		for (let i = from_month; i <= to_month; i++) {
-			months.push(moment().month(i).format("MMMM"));
-		}
-
-		frm.dashboard.add_section(
-			frappe.render_template("leave_allocation_dashboard", {
-				months: months,
-				monthly_leaves: frm.monthly_leaves,
-			}),
-			__("Allocated Leaves")
-		);
-		frm.dashboard.show();
+		frappe.call({
+			method: "hrms.hr.utils.get_monthly_allocations",
+			args: {
+				employee: frm.doc.employee,
+				leave_type: frm.doc.leave_type,
+				from_date: frm.doc.from_date,
+				to_date: frm.doc.to_date,
+				leave_policy: frm.doc.leave_policy,
+			},
+			callback: function (r) {
+				frm.dashboard.add_section(
+					frappe.render_template("leave_allocation_dashboard", {
+						allocations: r.message
+					}),
+					__("Leaves Allocated")
+				);
+				frm.dashboard.show();
+			},
+		});
 	},
 });
 

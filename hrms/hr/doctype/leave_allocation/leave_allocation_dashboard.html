@@ -1,16 +1,16 @@
-{% if monthly_leaves %}
+{% if allocations.length %}
 <table class="table table-bordered small">
 	<thead>
 		<tr>
-			<th style="width: 50%">{{ __("Month") }}</th>
+			<th style="width: 50%">{{ __("Date") }}</th>
 			<th style="width: 50%">{{ __("No. of Leaves") }}</th>
 		</tr>
 	</thead>
 	<tbody>
-		{% for(const value of months) { %} {% %}
+		{% for(const i of allocations) { %} {% %}
 		<tr>
-			<td>{%= value %}</td>
-			<td>{%= monthly_leaves %}</td>
+			<td>{%= i.date %}</td>
+			<td>{%= i.leaves %}</td>
 		</tr>
 		{% } %}
 	</tbody>
