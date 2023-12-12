@@ -4,6 +4,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.query_builder import DocType
 from frappe.utils import (
 	add_days,
 	comma_and,
@@ -377,15 +378,18 @@ def allocate_earned_leaves():
 	if failed_allocations:
 		allocations = comma_and([get_link_to_form("Leave Allocation", x) for x in failed_allocations])
 
-		hr_managers = frappe.db.sql_list(
-			"""
-					SELECT DISTINCT(has_role.parent)
-					FROM `tabHas Role` has_role LEFT JOIN `tabUser` user
-					ON has_role.parent = user.name
-					WHERE has_role.parenttype = 'User' AND user.enabled = 1 AND has_role.role = %s
-					""",
-			"HR Manager",
+		User = DocType("User")
+		HasRole = DocType("Has Role")
+		query = (
+			frappe.qb.from_(HasRole)
+			.left_join(User)
+			.on(HasRole.parent == User.name)
+			.select(HasRole.parent)
+			.distinct()
+			.where((HasRole.parenttype == "User") & (User.enabled == 1) & (HasRole.role == "HR Manager"))
 		)
+		hr_managers = query.run(pluck=True)
+
 		frappe.sendmail(
 			recipients=hr_managers,
 			subject=_("Failure of Automatic Allocation of Earned Leaves"),
