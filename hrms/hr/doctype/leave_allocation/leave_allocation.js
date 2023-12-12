@@ -195,7 +195,7 @@ frappe.ui.form.on("Leave Allocation", {
 						rounding: frm.rounding,
 					},
 					callback: function (r) {
-						frm.monthly_leaves = r.message;
+						frm.monthly_earned_leave = r.message;
 						frm.new_leaves = r.message;
 						frm.trigger("make_dashboard");
 					},
@@ -230,18 +230,19 @@ frappe.ui.form.on("Leave Allocation", {
 		$("div").remove(".form-dashboard-section.custom");
 
 		frappe.call({
-			method: "hrms.hr.utils.get_monthly_allocations",
+			method: "hrms.hr.utils.get_monthly_allocation_dates",
 			args: {
-				employee: frm.doc.employee,
 				leave_type: frm.doc.leave_type,
 				from_date: frm.doc.from_date,
 				to_date: frm.doc.to_date,
 				leave_policy: frm.doc.leave_policy,
+				monthly_earned_leave: frm.monthly_earned_leave,
 			},
 			callback: function (r) {
 				frm.dashboard.add_section(
 					frappe.render_template("leave_allocation_dashboard", {
-						allocations: r.message
+						allocation_dates: r.message,
+						monthly_earned_leave: frm.monthly_earned_leave,
 					}),
 					__("Leaves Allocated")
 				);

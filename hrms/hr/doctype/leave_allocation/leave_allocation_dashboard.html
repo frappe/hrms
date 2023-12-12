@@ -1,4 +1,4 @@
-{% if allocations.length %}
+{% if allocation_dates.length %}
 <table class="table table-bordered small">
 	<thead>
 		<tr>
@@ -7,10 +7,10 @@
 		</tr>
 	</thead>
 	<tbody>
-		{% for(const i of allocations) { %} {% %}
+		{% for(const date of allocation_dates) { %} {% %}
 		<tr>
-			<td>{%= i.date %}</td>
-			<td>{%= i.leaves %}</td>
+			<td>{%= date %}</td>
+			<td>{%= monthly_earned_leave %}</td>
 		</tr>
 		{% } %}
 	</tbody>

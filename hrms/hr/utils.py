@@ -523,33 +523,30 @@ def allocate_leaves_manually(allocation_name, new_leaves):
 
 
 @frappe.whitelist()
-def get_monthly_allocations(employee, leave_type, from_date, to_date, leave_policy):
+def get_monthly_allocation_dates(
+	leave_type, from_date, to_date, leave_policy, monthly_earned_leave
+):
 	annual_allocation = frappe.db.get_value(
 		"Leave Policy Detail", {"parent": leave_policy, "leave_type": leave_type}, "annual_allocation"
 	)
-	date_of_joining = frappe.db.get_value("Employee", employee, "date_of_joining")
-	allocate_on_day, rounding = frappe.db.get_value(
-		"Leave Type", leave_type, ["allocate_on_day", "rounding"]
-	)
-	monthly_earned_leave = get_monthly_earned_leave(
-		date_of_joining, annual_allocation, "Monthly", rounding, pro_rated=False
-	)
+	allocate_on_day = frappe.db.get_value("Leave Type", leave_type, "allocate_on_day")
+	date = get_month_allocation_date(from_date, allocate_on_day)
 
 	allocations = []
-	date = get_monthly_allocation_date(from_date, allocate_on_day)
-	total_leaves = 0
+	monthly_earned_leave = float(monthly_earned_leave)
+	total_leaves = monthly_earned_leave
 	if date < from_date:
 		date = add_months(date, 1)
-		date = get_monthly_allocation_date(date, allocate_on_day)
+		date = get_month_allocation_date(date, allocate_on_day)
 	while date <= to_date and total_leaves <= annual_allocation:
-		allocations.append({"date": date, "leaves": monthly_earned_leave})
+		allocations.append(date)
 		date = add_months(date, 1)
-		date = get_monthly_allocation_date(date, allocate_on_day)
+		date = get_month_allocation_date(date, allocate_on_day)
 		total_leaves += monthly_earned_leave
 	return allocations
 
 
-def get_monthly_allocation_date(date, allocate_on_day):
+def get_month_allocation_date(date, allocate_on_day):
 	allocation_date = {
 		"First Day": get_first_day(date),
 		"Last Day": get_last_day(date),
