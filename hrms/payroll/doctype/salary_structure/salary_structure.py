@@ -21,6 +21,22 @@ class SalaryStructure(Document):
 		self.validate_component_based_on_tax_slab()
 		self.validate_payment_days_based_dependent_component()
 		self.validate_timesheet_component()
+		self.validate_formula_setup()
+
+	def validate_formula_setup(self):
+		for table in ["earnings", "deductions"]:
+			for row in self.get(table):
+				if not row.amount_based_on_formula and row.formula:
+					frappe.msgprint(
+						_("{0} Row #{1}: Formula is set but {2} is disabled for the Salary Component {3}.").format(
+							table.capitalize(),
+							row.idx,
+							frappe.bold(_("Amount Based on Formula")),
+							frappe.bold(row.salary_component),
+						),
+						title=_("Warning"),
+						indicator="orange",
+					)
 
 	def set_missing_values(self):
 		overwritten_fields = [
