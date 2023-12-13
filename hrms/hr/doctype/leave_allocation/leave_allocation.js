@@ -250,7 +250,7 @@ frappe.ui.form.on("Leave Allocation", {
 						allocation_dates: r.message,
 						monthly_earned_leave: frm.monthly_earned_leave,
 					}),
-					__("Leaves Allocated")
+					__("Leave Allocation Schedule")
 				);
 				frm.dashboard.show();
 			},
