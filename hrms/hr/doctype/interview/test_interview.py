@@ -12,7 +12,10 @@ from frappe.utils import add_days, get_time, getdate, nowtime
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
 
-from hrms.hr.doctype.interview.interview import DuplicateInterviewRoundError
+from hrms.hr.doctype.interview.interview import (
+	DuplicateInterviewRoundError,
+	update_job_applicant_status,
+)
 from hrms.hr.doctype.job_applicant.job_applicant import get_interview_details
 from hrms.tests.test_utils import create_job_applicant
 
@@ -109,8 +112,32 @@ class TestInterview(FrappeTestCase):
 			},
 		)
 
+	def test_job_applicant_status_update_on_interview_submit(self):
+		self.assertEqual(
+			submit_interview_with_status("test_job_applicant1@example.com", "Cleared", "Accepted"),
+			"Accepted",
+		)
+
 	def tearDown(self):
 		frappe.db.rollback()
+
+
+def submit_interview_with_status(email_id, interview_status, job_applicant_status):
+	import json
+
+	job_applicant = create_job_applicant(email_id=email_id)
+	interview = create_interview_and_dependencies(job_applicant.name)
+
+	interview.status = interview_status
+	interview.save()
+	interview.submit()
+
+	update_job_applicant_status(
+		json.dumps({"job_applicant": job_applicant.name, "status": job_applicant_status})
+	)
+	job_applicant.reload()
+
+	return job_applicant.status
 
 
 def create_interview_and_dependencies(
