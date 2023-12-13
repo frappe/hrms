@@ -9,13 +9,17 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.query_builder import Criterion
-from frappe.utils import add_days, cstr, get_link_to_form, get_time, getdate, now_datetime
+from frappe.utils import add_days, cint, cstr, get_link_to_form, get_time, getdate, now_datetime
 
 from hrms.hr.utils import validate_active_employee
 from hrms.utils import generate_date_range
 
 
 class OverlappingShiftError(frappe.ValidationError):
+	pass
+
+
+class MultipleShiftError(frappe.ValidationError):
 	pass
 
 
@@ -30,10 +34,38 @@ class ShiftAssignment(Document):
 	def validate_overlapping_shifts(self):
 		overlapping_dates = self.get_overlapping_dates()
 		if len(overlapping_dates):
+			self.validate_same_date_multiple_shifts(overlapping_dates)
 			# if dates are overlapping, check if timings are overlapping, else allow
 			overlapping_timings = has_overlapping_timings(self.shift_type, overlapping_dates[0].shift_type)
 			if overlapping_timings:
 				self.throw_overlap_error(overlapping_dates[0])
+
+	def validate_same_date_multiple_shifts(self, overlapping_dates):
+		if cint(frappe.db.get_single_value("HR Settings", "allow_multiple_shift_assignments")):
+			if not self.docstatus:
+				frappe.msgprint(
+					_(
+						"Warning: {0} already has an active Shift Assignment {1} for some/all of these dates."
+					).format(
+						frappe.bold(self.employee), get_link_to_form("Shift Assignment", overlapping_dates[0].name)
+					)
+				)
+		else:
+			msg = _("{0} already has an active Shift Assignment {1} for some/all of these dates.").format(
+				frappe.bold(self.employee),
+				get_link_to_form("Shift Assignment", overlapping_dates[0].name),
+			)
+			msg += "<br><br>"
+			msg += _("To allow this, enable {0} under {1}.").format(
+				frappe.bold(_("Allow Multiple Shift Assignments for Same Date")),
+				get_link_to_form("HR Settings", "HR Settings"),
+			)
+
+			frappe.throw(
+				title=_("Multiple Shift Assignments"),
+				msg=msg,
+				exc=MultipleShiftError,
+			)
 
 	def get_overlapping_dates(self):
 		if not self.name:

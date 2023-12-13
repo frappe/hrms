@@ -173,6 +173,9 @@ class SalarySlip(TransactionBase):
 		self.total_in_words = money_in_words(total, doc_currency)
 		self.base_total_in_words = money_in_words(base_total, company_currency)
 
+	def on_update(self):
+		self.publish_update()
+
 	def on_submit(self):
 		if self.net_pay < 0:
 			frappe.throw(_("Net Pay cannot be less than 0"))
@@ -215,6 +218,17 @@ class SalarySlip(TransactionBase):
 		self.update_payment_status_for_gratuity()
 
 		cancel_loan_repayment_entry(self)
+		self.publish_update()
+
+	def publish_update(self):
+		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
+		if frappe.session.user == employee_user:
+			frappe.publish_realtime(
+				event="hrms:update_salary_slips",
+				message={"employee": self.employee},
+				user=frappe.session.user,
+				after_commit=True,
+			)
 
 	def on_trash(self):
 		from frappe.model.naming import revert_series_if_last
@@ -1791,6 +1805,7 @@ class SalarySlip(TransactionBase):
 
 		if receiver:
 			email_args = {
+				"sender": payroll_settings.sender_email,
 				"recipients": [receiver],
 				"message": _(message),
 				"subject": "Salary Slip - from {0} to {1}".format(self.start_date, self.end_date),
@@ -2235,3 +2250,25 @@ def _check_attributes(code: str) -> None:
 			and node.attr in UNSAFE_ATTRIBUTES
 		):
 			raise SyntaxError(f'Illegal rule {frappe.bold(code)}. Cannot use "{node.attr}"')
+
+
+@frappe.whitelist()
+def enqueue_email_salary_slips(names) -> None:
+	"""enqueue bulk emailing salary slips"""
+	import json
+
+	if isinstance(names, str):
+		names = json.loads(names)
+
+	frappe.enqueue("hrms.payroll.doctype.salary_slip.salary_slip.email_salary_slips", names=names)
+	frappe.msgprint(
+		_("Salary slip emails have been enqueued for sending. Check {0} for status.").format(
+			f"""<a href='{frappe.utils.get_url_to_list("Email Queue")}' target='blank'>Email Queue</a>"""
+		)
+	)
+
+
+def email_salary_slips(names) -> None:
+	for name in names:
+		salary_slip = frappe.get_doc("Salary Slip", name)
+		salary_slip.email_salary_slip()

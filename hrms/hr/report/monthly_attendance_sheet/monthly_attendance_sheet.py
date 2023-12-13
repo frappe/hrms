@@ -223,6 +223,9 @@ def get_attendance_map(filters: Filters) -> Dict:
 			leave_map.setdefault(d.employee, []).append(d.day_of_month)
 			continue
 
+		if d.shift is None:
+			d.shift = ""
+
 		attendance_map.setdefault(d.employee, {}).setdefault(d.shift, {})
 		attendance_map[d.employee][d.shift][d.day_of_month] = d.status
 

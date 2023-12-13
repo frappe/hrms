@@ -2,6 +2,15 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('HR Settings', {
+	refresh: function (frm) {
+		frm.set_query("sender", () => {
+			return {
+				filters: {
+					enable_outgoing: 1,
+				},
+			};
+		});
+	}
 });
 
 frappe.tour['HR Settings'] = [

@@ -9,6 +9,7 @@ from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_lis
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.leave_application.test_leave_application import make_allocation_record
+from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 from hrms.hr.report.monthly_attendance_sheet.monthly_attendance_sheet import execute
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
@@ -16,14 +17,15 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 )
 from hrms.tests.test_utils import get_first_day_for_prev_month
 
-test_dependencies = ["Shift Type"]
-
 
 class TestMonthlyAttendanceSheet(FrappeTestCase):
 	def setUp(self):
 		self.company = "_Test Company"
 		self.employee = make_employee("test_employee@example.com", company=self.company)
 		frappe.db.delete("Attendance")
+
+		if not frappe.db.exists("Shift Type", "Day Shift"):
+			setup_shift_type(shift_type="Day Shift")
 
 		date = getdate()
 		from_date = get_year_start(date)
@@ -90,7 +92,7 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		self.assertEqual(day_shift_row[1], "A")  # absent on the 1st day of the month
 		self.assertEqual(day_shift_row[2], "P")  # present on the 2nd day
 
-		self.assertEqual(row_without_shift["shift"], None)
+		self.assertEqual(row_without_shift["shift"], "")
 		self.assertEqual(row_without_shift[4], "P")  # present on the 4th day
 
 		# leave should be shown against every shift
@@ -234,7 +236,7 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		self.assertEqual(day_shift_row[1], "A")  # absent on the 1st day of the month
 		self.assertEqual(day_shift_row[2], "P")  # present on the 2nd day
 
-		self.assertEqual(row_without_shift["shift"], None)
+		self.assertEqual(row_without_shift["shift"], "")
 		self.assertEqual(row_without_shift[3], "L")  # on leave on the 3rd day
 		self.assertEqual(row_without_shift[4], "P")  # present on the 4th day
 
