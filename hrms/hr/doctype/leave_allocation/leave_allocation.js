@@ -211,7 +211,7 @@ frappe.ui.form.on("Leave Allocation", {
 				new_leaves: frm.new_leaves,
 			},
 			callback: function () {
-				frm.refresh();
+				frm.reload_doc();
 			},
 		});
 	},
