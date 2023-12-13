@@ -22,7 +22,6 @@ from frappe.utils import (
 
 from erpnext.buying.doctype.supplier_scorecard.supplier_scorecard import daterange
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
-from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
 
 from hrms.hr.doctype.leave_block_list.leave_block_list import get_applicable_block_dates
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
@@ -501,8 +500,6 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 	def get_consecutive_leave_details(self) -> dict:
 		leave_applications = set()
-		raise_exception = False if frappe.flags.in_patch else True
-		holiday_list = get_holiday_list_for_employee(self.employee, raise_exception=raise_exception)
 
 		def _get_first_from_date(reference_date):
 			"""gets `from_date` of first leave application from previous consecutive leave applications"""
@@ -516,9 +513,6 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			if application:
 				leave_applications.add(application.name)
 				return _get_first_from_date(application.from_date)
-			elif is_holiday(holiday_list, prev_date):
-				return _get_first_from_date(prev_date)
-
 			return reference_date
 
 		def _get_last_to_date(reference_date):
@@ -533,9 +527,6 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			if application:
 				leave_applications.add(application.name)
 				return _get_last_to_date(application.to_date)
-			elif is_holiday(holiday_list, next_date):
-				return _get_last_to_date(next_date)
-
 			return reference_date
 
 		first_from_date = _get_first_from_date(self.from_date)
