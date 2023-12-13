@@ -224,7 +224,13 @@ frappe.ui.form.on("Leave Allocation", {
 		leave_type = response.message;
 		if (
 			!leave_type.is_earned_leave ||
-			leave_type.earned_leave_frequency != "Monthly"
+			leave_type.earned_leave_frequency != "Monthly" ||
+			!(
+				frm.doc.from_date &&
+				frm.doc.to_date &&
+				frm.doc.leave_policy &&
+				frm.monthly_earned_leave
+			)
 		)
 			return;
 		$("div").remove(".form-dashboard-section.custom");
