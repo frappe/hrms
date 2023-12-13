@@ -194,7 +194,11 @@
 			>
 				<ErrorMessage
 					class="mb-2"
-					:message="docList.insert.error || documentResource?.setValue?.error"
+					:message="
+						formErrorMessage ||
+						docList?.insert?.error ||
+						documentResource?.setValue?.error
+					"
 				/>
 
 				<Button
@@ -379,6 +383,7 @@ const router = useRouter()
 let activeTab = ref(props.tabs?.[0].name)
 let fileAttachments = ref([])
 let statusColor = ref("")
+let formErrorMessage = ref("")
 let isFormDirty = ref(false)
 let isFormUpdated = ref(false)
 let showDeleteDialog = ref(false)
@@ -609,12 +614,35 @@ function hasPermission(action) {
 }
 
 function handleDocInsert() {
+	if (!validateMandatoryFields()) return
 	docList.insert.submit(formModel.value)
+}
+
+function validateMandatoryFields() {
+	const errorFields = props.fields
+		.filter(
+			(field) =>
+				field.reqd && !field.hidden && !formModel.value[field.fieldname]
+		)
+		.map((field) => field.label)
+
+	if (errorFields.length) {
+		formErrorMessage.value = `${errorFields.join(", ")} ${
+			errorFields.length > 1 ? "fields are mandatory" : "field is mandatory"
+		}`
+		return false
+	} else {
+		formErrorMessage.value = ""
+		return true
+	}
 }
 
 async function handleDocUpdate(action) {
 	if (documentResource.doc) {
 		let params = { ...formModel.value }
+
+		if (!validateMandatoryFields()) return
+
 		if (action == "submit") {
 			params.docstatus = 1
 		} else if (action == "cancel") {
