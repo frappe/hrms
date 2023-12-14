@@ -7,7 +7,7 @@ import datetime
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cstr, flt, get_datetime, get_link_to_form, getdate, nowtime
+from frappe.utils import cint, cstr, flt, get_datetime, get_link_to_form, getdate, nowtime
 
 
 class DuplicateInterviewRoundError(frappe.ValidationError):
@@ -163,7 +163,7 @@ def send_interview_reminder():
 		as_dict=True,
 	)
 
-	if not reminder_settings.send_interview_reminder:
+	if not cint(reminder_settings.send_interview_reminder):
 		return
 
 	remind_before = cstr(frappe.db.get_single_value("HR Settings", "remind_before")) or "01:00:00"
@@ -211,7 +211,7 @@ def send_daily_feedback_reminder():
 		as_dict=True,
 	)
 
-	if not reminder_settings.send_interview_feedback_reminder:
+	if not cint(reminder_settings.send_interview_feedback_reminder):
 		return
 
 	interview_feedback_template = frappe.get_doc(
