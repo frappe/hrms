@@ -236,6 +236,7 @@ def create_return_through_additional_salary(doc):
 	additional_salary = frappe.new_doc("Additional Salary")
 	additional_salary.employee = doc.employee
 	additional_salary.currency = doc.currency
+	additional_salary.overwrite_salary_structure_amount = 0
 	additional_salary.amount = doc.paid_amount - doc.claimed_amount
 	additional_salary.company = doc.company
 	additional_salary.ref_doctype = doc.doctype
