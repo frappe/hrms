@@ -224,6 +224,41 @@ const defaultFilters = computed(() => {
 	return filters
 })
 
+// resources
+const documents = createResource({
+	url: "frappe.desk.reportview.get",
+	onSuccess: (data) => {
+		if (data.values?.length < listOptions.value.page_length) {
+			hasNextPage.value = false
+		}
+	},
+	transform(data) {
+		if (data.length === 0) {
+			return []
+		}
+
+		// convert keys and values arrays to docs object
+		const fields = data["keys"]
+		const values = data["values"]
+		const docs = values.map((value) => {
+			const doc = {}
+			fields.forEach((field, index) => {
+				doc[field] = value[index]
+			})
+			return doc
+		})
+
+		let pagedData
+		if (!documents.params.start || documents.params.start === 0) {
+			pagedData = docs
+		} else {
+			pagedData = documents.data.concat(docs)
+		}
+
+		return pagedData
+	},
+})
+
 // helper functions
 function initializeFilters() {
 	props.filterConfig.forEach((filter) => {
@@ -270,6 +305,10 @@ function clearFilters() {
 }
 
 function fetchDocumentList(start = 0) {
+	if (start === 0) {
+		hasNextPage.value = true
+	}
+
 	const filters = [[props.doctype, "docstatus", "!=", "2"]]
 	filters.push(...defaultFilters.value)
 
@@ -285,40 +324,6 @@ function fetchDocumentList(start = 0) {
 		filters: filters,
 	})
 }
-
-const documents = createResource({
-	url: "frappe.desk.reportview.get",
-	onSuccess: (data) => {
-		if (data.values?.length < listOptions.value.page_length) {
-			hasNextPage.value = false
-		}
-	},
-	transform(data) {
-		if (data.length === 0) {
-			return []
-		}
-
-		// convert keys and values arrays to docs object
-		const fields = data["keys"]
-		const values = data["values"]
-		const docs = values.map((value) => {
-			const doc = {}
-			fields.forEach((field, index) => {
-				doc[field] = value[index]
-			})
-			return doc
-		})
-
-		let pagedData
-		if (!documents.params.start || documents.params.start === 0) {
-			pagedData = docs
-		} else {
-			pagedData = documents.data.concat(docs)
-		}
-
-		return pagedData
-	},
-})
 
 const handleScroll = debounce(() => {
 	if (!hasNextPage.value) return
@@ -342,7 +347,6 @@ const handleRefresh = (event) => {
 watch(
 	() => activeTab.value,
 	(_value) => {
-		hasNextPage.value = true
 		fetchDocumentList()
 	}
 )
@@ -352,7 +356,6 @@ onMounted(async () => {
 	await workflow.workflowDoc.promise
 	workflowStateField.value = workflow.getWorkflowStateField()
 
-	hasNextPage.value = true
 	fetchDocumentList()
 
 	socket.emit("doctype_subscribe", props.doctype)
