@@ -1,14 +1,17 @@
 <template>
-	<ListView
-		doctype="Employee Advance"
-		pageTitle="Employee Advances"
-		:tabButtons="TAB_BUTTONS"
-		:fields="EMPLOYEE_ADVANCE_FIELDS"
-		:filterConfig="FILTER_CONFIG"
-	/>
+	<ion-page>
+		<ListView
+			doctype="Employee Advance"
+			pageTitle="Employee Advances"
+			:tabButtons="TAB_BUTTONS"
+			:fields="EMPLOYEE_ADVANCE_FIELDS"
+			:filterConfig="FILTER_CONFIG"
+		/>
+	</ion-page>
 </template>
 
 <script setup>
+import { IonPage } from "@ionic/vue"
 import ListView from "@/components/ListView.vue"
 
 const TAB_BUTTONS = ["My Advances", "Team Advances"]
