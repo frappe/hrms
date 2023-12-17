@@ -289,8 +289,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		if attendance_name:
 			# update existing attendance, change absent to on leave
 			doc = frappe.get_doc("Attendance", attendance_name)
-			if doc.status != status:
-				doc.db_set({"status": status, "leave_type": self.leave_type, "leave_application": self.name})
+			doc.db_set({"status": status, "leave_type": self.leave_type, "leave_application": self.name})
 		else:
 			# make new attendance and submit it
 			doc = frappe.new_doc("Attendance")
@@ -478,8 +477,66 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 	def validate_max_days(self):
 		max_days = frappe.db.get_value("Leave Type", self.leave_type, "max_continuous_days_allowed")
-		if max_days and self.total_leave_days > cint(max_days):
-			frappe.throw(_("Leave of type {0} cannot be longer than {1}").format(self.leave_type, max_days))
+		if not max_days:
+			return
+
+		details = self.get_consecutive_leave_details()
+
+		if details.total_consecutive_leaves > cint(max_days):
+			msg = _("Leave of type {0} cannot be longer than {1}.").format(
+				get_link_to_form("Leave Type", self.leave_type), max_days
+			)
+			if details.leave_applications:
+				msg += "<br><br>" + _("Reference: {0}").format(
+					", ".join(get_link_to_form("Leave Application", name) for name in details.leave_applications)
+				)
+
+			frappe.throw(msg, title=_("Maximum Consecutive Leaves Exceeded"))
+
+	def get_consecutive_leave_details(self) -> dict:
+		leave_applications = set()
+
+		def _get_first_from_date(reference_date):
+			"""gets `from_date` of first leave application from previous consecutive leave applications"""
+			prev_date = add_days(reference_date, -1)
+			application = frappe.db.get_value(
+				"Leave Application",
+				{"employee": self.employee, "leave_type": self.leave_type, "to_date": prev_date},
+				["name", "from_date"],
+				as_dict=True,
+			)
+			if application:
+				leave_applications.add(application.name)
+				return _get_first_from_date(application.from_date)
+			return reference_date
+
+		def _get_last_to_date(reference_date):
+			"""gets `to_date` of last leave application from following consecutive leave applications"""
+			next_date = add_days(reference_date, 1)
+			application = frappe.db.get_value(
+				"Leave Application",
+				{"employee": self.employee, "leave_type": self.leave_type, "from_date": next_date},
+				["name", "to_date"],
+				as_dict=True,
+			)
+			if application:
+				leave_applications.add(application.name)
+				return _get_last_to_date(application.to_date)
+			return reference_date
+
+		first_from_date = _get_first_from_date(self.from_date)
+		last_to_date = _get_last_to_date(self.to_date)
+
+		total_consecutive_leaves = get_number_of_leave_days(
+			self.employee, self.leave_type, first_from_date, last_to_date
+		)
+
+		return frappe._dict(
+			{
+				"total_consecutive_leaves": total_consecutive_leaves,
+				"leave_applications": leave_applications,
+			}
+		)
 
 	def validate_attendance(self):
 		attendance = frappe.db.sql(
