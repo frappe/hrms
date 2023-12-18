@@ -50,7 +50,6 @@
 
 <script setup>
 import { IonHeader, IonContent, IonPage } from "@ionic/vue"
-import { onMounted } from "vue"
 import { FeatherIcon, Avatar } from "frappe-ui"
 
 import { unreadNotificationsCount } from "@/data/notifications"
@@ -58,7 +57,6 @@ import { unreadNotificationsCount } from "@/data/notifications"
 import { inject } from "vue"
 
 const user = inject("$user")
-const socket = inject("$socket")
 
 const props = defineProps({
 	pageTitle: {
@@ -66,11 +64,5 @@ const props = defineProps({
 		required: false,
 		default: "Frappe HR",
 	},
-})
-
-onMounted(() => {
-	socket.on("hrms:update_notifications", () => {
-		unreadNotificationsCount.reload()
-	})
 })
 </script>
