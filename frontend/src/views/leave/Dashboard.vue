@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import { inject, onMounted, onBeforeUnmount, markRaw } from "vue"
+import { markRaw } from "vue"
 
 import BaseLayout from "@/components/BaseLayout.vue"
 import LeaveBalance from "@/components/LeaveBalance.vue"
@@ -43,19 +43,4 @@ import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
 import Holidays from "@/components/Holidays.vue"
 
 import { myLeaves } from "@/data/leaves"
-
-const socket = inject("$socket")
-const employee = inject("$employee")
-
-onMounted(() => {
-	socket.on("hrms:update_leaves", (data) => {
-		if (data.employee === employee.data.name) {
-			myLeaves.reload()
-		}
-	})
-})
-
-onBeforeUnmount(() => {
-	socket.off("hrms:update_leaves")
-})
 </script>

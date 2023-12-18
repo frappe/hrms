@@ -6,7 +6,7 @@ export default function useWorkflow(doctype) {
 	const workflowDoc = createResource({
 		url: "hrms.api.get_workflow",
 		params: { doctype: doctype },
-		cache: `Workflow:${doctype}`,
+		cache: ["hrms:workflow", doctype],
 		onSuccess: (data) => {
 			console.log("Workflow loaded successfully ✅", data)
 		},

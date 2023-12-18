@@ -105,13 +105,15 @@ const notifications = createListResource({
 	],
 	auto: true,
 	orderBy: "creation desc",
+	onSuccess() {
+		unreadNotificationsCount.reload()
+	},
 })
 
 const markAllAsRead = createResource({
 	url: "hrms.api.mark_all_notifications_as_read",
 	onSuccess() {
 		notifications.reload()
-		unreadNotificationsCount.reload()
 	},
 })
 
