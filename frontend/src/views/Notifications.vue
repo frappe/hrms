@@ -78,37 +78,17 @@
 <script setup>
 import { IonContent, IonPage } from "@ionic/vue"
 import { useRouter } from "vue-router"
-import { createListResource, createResource, FeatherIcon } from "frappe-ui"
+import { createResource, FeatherIcon } from "frappe-ui"
 
-import { inject, onMounted } from "vue"
+import { inject } from "vue"
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 
-import { unreadNotificationsCount } from "@/data/notifications"
+import { unreadNotificationsCount, notifications } from "@/data/notifications"
 import EmptyState from "@/components/EmptyState.vue"
 
 const user = inject("$user")
 const dayjs = inject("$dayjs")
-const socket = inject("$socket")
 const router = useRouter()
-
-const notifications = createListResource({
-	doctype: "PWA Notification",
-	filters: { to_user: user.data.name },
-	fields: [
-		"name",
-		"from_user",
-		"message",
-		"read",
-		"creation",
-		"reference_document_type",
-		"reference_document_name",
-	],
-	auto: true,
-	orderBy: "creation desc",
-	onSuccess() {
-		unreadNotificationsCount.reload()
-	},
-})
 
 const markAllAsRead = createResource({
 	url: "hrms.api.mark_all_notifications_as_read",
@@ -134,10 +114,4 @@ function getItemRoute(item) {
 		params: { id: item.reference_document_name },
 	}
 }
-
-onMounted(() => {
-	socket.on("hrms:update_notifications", () => {
-		notifications.reload()
-	})
-})
 </script>
