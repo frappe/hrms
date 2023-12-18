@@ -117,7 +117,6 @@ import {
 	computed,
 	reactive,
 	onMounted,
-	onBeforeUnmount,
 } from "vue"
 import {
 	modalController,
@@ -142,6 +141,7 @@ import ListFiltersActionSheet from "@/components/ListFiltersActionSheet.vue"
 import CustomIonModal from "@/components/CustomIonModal.vue"
 
 import useWorkflow from "@/composables/workflow"
+import { useListUpdate } from "@/composables/realtime"
 
 const props = defineProps({
 	doctype: {
@@ -352,17 +352,8 @@ onMounted(async () => {
 	const workflow = useWorkflow(props.doctype)
 	await workflow.workflowDoc.promise
 	workflowStateField.value = workflow.getWorkflowStateField()
-
 	fetchDocumentList()
 
-	socket.emit("doctype_subscribe", props.doctype)
-	socket.on("list_update", (data) => {
-		if (data?.doctype !== props.doctype) return
-		fetchDocumentList()
-	})
-})
-
-onBeforeUnmount(() => {
-	socket.off("list_update")
+	useListUpdate(socket, props.doctype, () => fetchDocumentList())
 })
 </script>
