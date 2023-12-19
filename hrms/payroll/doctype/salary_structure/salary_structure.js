@@ -96,9 +96,9 @@ frappe.ui.form.on("Salary Structure", {
 		frm.fields_dict['deductions'].grid.set_column_disp("default_amount", false);
 
 		if (frm.doc.docstatus === 1) {
-			frm.page.set_primary_action(__("Bulk Assign Structure"), () => {
+			frm.add_custom_button(__("Bulk Assign Structure"), () => {
 				frm.trigger("assign_to_employees")
-			})
+			}).addClass("btn-primary");
 
 			frm.add_custom_button(__("Assign to Single Employee"), function() {
 				let doc = frappe.model.get_new_doc("Salary Structure Assignment");
