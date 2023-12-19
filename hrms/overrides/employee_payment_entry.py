@@ -42,7 +42,7 @@ class EmployeePaymentEntry(PaymentEntry):
 				)
 
 				for field, value in ref_details.items():
-					if d.exchange_gain_loss is not None:
+					if d.exchange_gain_loss:
 						# for cases where gain/loss is booked into invoice
 						# exchange_gain_loss is calculated from invoice & populated
 						# and row.exchange_rate is already set to payment entry's exchange rate
