@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-import { FeatherIcon, createResource } from "frappe-ui"
+import { FeatherIcon } from "frappe-ui"
 import { computed } from "vue"
 
 import { expenseClaimSummary as summary } from "@/data/claims"
