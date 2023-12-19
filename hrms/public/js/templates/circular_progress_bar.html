@@ -1,6 +1,7 @@
 <div class="circular-progress mx-auto mb-3">
-	{% degree = Math.floor(rating*360/5) %} {% deg_right = degree > 180 ? 180 :
-	degree %} {% deg_left = degree > 180 ? degree - 180 : 0 %}
+	{% degree = Math.floor(rating*360/5) %}
+	{% deg_right = degree > 180 ? 180 : degree %}
+	{% deg_left = degree > 180 ? degree - 180 : 0 %}
 	<span class="progress-left" style="--deg-left: {{ deg_left }}deg">
 		<span class="progress-bar" style="border-color: var(--gray-600)"></span>
 	</span>

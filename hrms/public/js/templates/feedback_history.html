@@ -38,9 +38,7 @@
 						<div class="time small text-muted mr-2">
 							{{ frappe.datetime.comment_when(feedback_history[i].added_on) }}
 						</div>
-						<a
-							href="{{ frappe.utils.get_form_link(feedback_doctype, feedback_history[i].name) }}"
-							title="{{ __("Open Feedback") }}">
+						<a href="{{ frappe.utils.get_form_link(feedback_doctype, feedback_history[i].name) }}" title="{{ __("Open Feedback") }}">
 							<svg class="icon icon-sm">
 								<use href="#icon-link-url"></use>
 							</svg>
