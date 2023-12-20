@@ -12,12 +12,12 @@
   "employee_name",
   "department",
   "company",
-  "ignore_holiday",
   "column_break_5",
   "from_date",
   "to_date",
   "half_day",
   "half_day_date",
+  "include_holidays",
   "shift",
   "reason_section",
   "reason",
@@ -129,14 +129,14 @@
   },
   {
    "default": "0",
-   "fieldname": "ignore_holiday",
+   "fieldname": "include_holidays",
    "fieldtype": "Check",
-   "label": "Ignore Holiday"
+   "label": "Include Holidays"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-04 22:34:16.895767",
+ "modified": "2023-12-20 16:18:31.864719",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance Request",
