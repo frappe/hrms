@@ -16,6 +16,7 @@ from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_lis
 
 from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
 from hrms.hr.doctype.leave_application.leave_application import (
+	InsufficientLeaveBalanceError,
 	get_leave_balance_on,
 	get_leave_details,
 )
@@ -480,6 +481,38 @@ class TestLeaveAllocation(FrappeTestCase):
 			"remaining_leaves": 4.0,
 		}
 		self.assertEqual(leave_allocation, expected)
+
+	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	def test_backdated_earned_leave_application(self):
+		today = getdate()
+		year_start = get_year_start(today)
+
+		# earned leaves allocated for the first 3 months during allocation
+		frappe.flags.current_date = add_months(year_start, 2)
+		leave_policy_assignments = make_policy_assignment(
+			self.employee, allocate_on_day="First Day", start_date=year_start
+		)
+		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
+		self.assertEqual(leaves_allocated, 3)
+
+		# 1 more leave allocated in the next 2 months, balance = 5
+		allocate_earned_leaves_for_months(2)
+
+		# 4 leaves consumed, current balance = 1
+		first_sunday = get_first_sunday(self.holiday_list, for_date=frappe.flags.current_date)
+		leave_date = add_days(first_sunday, 1)
+		make_leave_application(self.employee.name, leave_date, add_days(leave_date, 3), self.leave_type)
+
+		# backdated leave application to consume 2 leaves - insufficient balance
+		frappe.flags.current_date = add_months(year_start, 1)
+		first_sunday = get_first_sunday(self.holiday_list, for_date=frappe.flags.current_date)
+		leave_from_date = add_days(first_sunday, 1)
+		leave_to_date = add_days(leave_from_date, 1)
+		with self.assertRaises(InsufficientLeaveBalanceError):
+			make_leave_application(self.employee.name, leave_from_date, leave_to_date, self.leave_type)
+
+		# backdated leave application to consume 1 leave - allowed
+		make_leave_application(self.employee.name, leave_from_date, leave_from_date, self.leave_type)
 
 	def tearDown(self):
 		frappe.db.set_value("Employee", self.employee.name, "date_of_joining", self.original_doj)

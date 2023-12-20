@@ -1186,7 +1186,7 @@ class TestLeaveApplication(FrappeTestCase):
 def create_carry_forwarded_allocation(employee, leave_type, date=None):
 	date = date or nowdate()
 
-	# initial leave allocation
+	# initial leave allocation = 15 days
 	leave_allocation = create_leave_allocation(
 		leave_type="_Test_CF_leave_expiry",
 		employee=employee.name,
@@ -1197,7 +1197,7 @@ def create_carry_forwarded_allocation(employee, leave_type, date=None):
 	)
 	leave_allocation.submit()
 
-	# carry forward leave allocation
+	# carry forward leave allocation = 15 days
 	leave_allocation = create_leave_allocation(
 		leave_type="_Test_CF_leave_expiry",
 		employee=employee.name,
