@@ -380,7 +380,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 					self.leave_type,
 					self.from_date,
 					self.to_date,
-					consider_all_leaves_in_the_allocation_period=True,
+					consider_all_leaves_in_the_allocation_period=False,
 					for_consumption=True,
 				)
 				self.leave_balance = leave_balance.get("leave_balance")
@@ -906,19 +906,42 @@ def get_leave_balance_on(
 	allocation_records = get_leave_allocation_records(employee, date, leave_type)
 	allocation = allocation_records.get(leave_type, frappe._dict())
 
-	end_date = allocation.to_date if cint(consider_all_leaves_in_the_allocation_period) else date
 	cf_expiry = get_allocation_expiry_for_cf_leaves(
 		employee, leave_type, to_date, allocation.from_date
 	)
 
+	end_date = allocation.to_date if cint(consider_all_leaves_in_the_allocation_period) else date
 	leaves_taken = get_leaves_for_period(employee, leave_type, allocation.from_date, end_date)
 
 	remaining_leaves = get_remaining_leaves(allocation, leaves_taken, date, cf_expiry)
 
 	if for_consumption:
-		return remaining_leaves
+		return adjust_leave_balance_for_complete_period(
+			employee, leave_type, allocation, remaining_leaves
+		)
 	else:
 		return remaining_leaves.get("leave_balance")
+
+
+def adjust_leave_balance_for_complete_period(
+	employee: str, leave_type: str, allocation: dict, remaining_leaves: dict
+) -> dict[str, float]:
+	"""
+	check leave balance for complete period to ensure current balance
+	isn't consumed anytime later in the period
+	"""
+	leave_balance_for_period = get_leave_balance_on(
+		employee,
+		leave_type,
+		allocation.to_date,
+		allocation.to_date,
+		True,
+	)
+
+	if leave_balance_for_period < remaining_leaves.get("leave_balance_for_consumption"):
+		remaining_leaves["leave_balance_for_consumption"] = leave_balance_for_period
+
+	return remaining_leaves
 
 
 def get_leave_allocation_records(employee, date, leave_type=None):
