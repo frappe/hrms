@@ -174,7 +174,7 @@ class AttendanceRequest(Document):
 		for day in range(request_days):
 			attendance_date = add_days(self.from_date, day)
 
-			if is_holiday(self.employee, attendance_date):
+			if not self.include_holidays and is_holiday(self.employee, attendance_date):
 				attendance_warnings.append({"date": attendance_date, "reason": "Holiday", "action": "Skip"})
 			elif self.has_leave_record(attendance_date):
 				attendance_warnings.append({"date": attendance_date, "reason": "On Leave", "action": "Skip"})
