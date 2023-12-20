@@ -69,21 +69,12 @@
 </template>
 
 <script setup>
-import { FeatherIcon, createResource } from "frappe-ui"
-import { computed, inject, onMounted, onBeforeUnmount } from "vue"
+import { FeatherIcon } from "frappe-ui"
+import { computed } from "vue"
+
+import { expenseClaimSummary as summary } from "@/data/claims"
 
 import { formatCurrency } from "@/utils/formatters"
-
-const employee = inject("$employee")
-const socket = inject("$socket")
-
-const summary = createResource({
-	url: "hrms.api.get_expense_claim_summary",
-	params: {
-		employee: employee.data.name,
-	},
-	auto: true,
-})
 
 const total_claimed_amount = computed(() => {
 	return (
@@ -94,16 +85,4 @@ const total_claimed_amount = computed(() => {
 })
 
 const company_currency = computed(() => summary.data?.currency)
-
-onMounted(() => {
-	socket.on("hrms:update_expense_claims", (data) => {
-		if (data.employee === employee.data.name) {
-			summary.reload()
-		}
-	})
-})
-
-onBeforeUnmount(() => {
-	socket.off("hrms:update_expense_claims")
-})
 </script>
