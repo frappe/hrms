@@ -1,14 +1,17 @@
 <template>
-	<ListView
-		doctype="Leave Application"
-		pageTitle="Leave History"
-		:tabButtons="TAB_BUTTONS"
-		:fields="LEAVE_FIELDS"
-		:filterConfig="FILTER_CONFIG"
-	/>
+	<ion-page>
+		<ListView
+			doctype="Leave Application"
+			pageTitle="Leave History"
+			:tabButtons="TAB_BUTTONS"
+			:fields="LEAVE_FIELDS"
+			:filterConfig="FILTER_CONFIG"
+		/>
+	</ion-page>
 </template>
 
 <script setup>
+import { IonPage } from "@ionic/vue"
 import ListView from "@/components/ListView.vue"
 
 const TAB_BUTTONS = ["My Leaves", "Team Leaves"]

@@ -13,6 +13,7 @@ from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_a
 from erpnext.accounts.general_ledger import make_gl_entries
 from erpnext.controllers.accounts_controller import AccountsController
 
+import hrms
 from hrms.hr.utils import set_employee_name, share_doc_with_approver, validate_active_employee
 from hrms.mixins.pwa_notifications import PWANotificationsMixin
 
@@ -100,12 +101,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 
 	def publish_update(self):
 		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
-		frappe.publish_realtime(
-			event="hrms:update_expense_claims",
-			message={"employee": self.employee},
-			user=employee_user,
-			after_commit=True,
-		)
+		hrms.refetch_resource("hrms:my_claims", employee_user)
 
 	def set_payable_account(self):
 		if not self.payable_account and not self.is_paid:

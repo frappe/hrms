@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { ref, inject, onMounted, computed, markRaw, onBeforeUnmount } from "vue"
+import { ref, inject, onMounted, computed, markRaw } from "vue"
 
 import TabButtons from "@/components/TabButtons.vue"
 import RequestList from "@/components/RequestList.vue"
@@ -24,6 +24,8 @@ import { myClaims, teamClaims } from "@/data/claims"
 
 import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
 import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
+
+import { useListUpdate } from "@/composables/realtime"
 
 const activeTab = ref("My Requests")
 
@@ -57,22 +59,7 @@ const teamRequests = computed(() => {
 })
 
 onMounted(() => {
-	socket.emit("doctype_subscribe", "Leave Application")
-	socket.emit("doctype_subscribe", "Expense Claim")
-	socket.on("list_update", (data) => {
-		if (data.doctype === "Leave Application") {
-			myLeaves.reload()
-			teamLeaves.reload()
-		} else if (data.doctype === "Expense Claim") {
-			myClaims.reload()
-			teamClaims.reload()
-		}
-	})
-})
-
-onBeforeUnmount(() => {
-	socket.emit("doctype_unsubscribe", "Leave Application")
-	socket.emit("doctype_unsubscribe", "Expense Claim")
-	socket.off("list_update")
+	useListUpdate(socket, "Leave Application", () => teamLeaves.reload())
+	useListUpdate(socket, "Expense Claim", () => teamClaims.reload())
 })
 </script>
