@@ -495,17 +495,19 @@ class TestLeaveAllocation(FrappeTestCase):
 		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
 		self.assertEqual(leaves_allocated, 3)
 
-		# 1 more leave allocated in the next 2 months, balance = 5
+		# 2 more leave allocated in the next 2 months, balance = 5
 		allocate_earned_leaves_for_months(2)
 
+		# reset current date
+		frappe.flags.current_date = None
+
 		# 4 leaves consumed, current balance = 1
-		first_sunday = get_first_sunday(self.holiday_list, for_date=frappe.flags.current_date)
+		first_sunday = get_first_sunday(self.holiday_list)
 		leave_date = add_days(first_sunday, 1)
 		make_leave_application(self.employee.name, leave_date, add_days(leave_date, 3), self.leave_type)
 
 		# backdated leave application to consume 2 leaves - insufficient balance
-		frappe.flags.current_date = add_months(year_start, 1)
-		first_sunday = get_first_sunday(self.holiday_list, for_date=frappe.flags.current_date)
+		first_sunday = get_first_sunday(self.holiday_list, for_date=add_months(year_start, 1))
 		leave_from_date = add_days(first_sunday, 1)
 		leave_to_date = add_days(leave_from_date, 1)
 		with self.assertRaises(InsufficientLeaveBalanceError):

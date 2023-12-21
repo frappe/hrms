@@ -917,29 +917,40 @@ def get_leave_balance_on(
 
 	if for_consumption:
 		return adjust_leave_balance_for_complete_period(
-			employee, leave_type, allocation, remaining_leaves
+			employee, leave_type, allocation.to_date, remaining_leaves
 		)
 	else:
 		return remaining_leaves.get("leave_balance")
 
 
 def adjust_leave_balance_for_complete_period(
-	employee: str, leave_type: str, allocation: dict, remaining_leaves: dict
+	employee: str, leave_type: str, allocation_to_date: str, remaining_leaves: dict
 ) -> dict[str, float]:
 	"""
 	check leave balance for complete period to ensure current balance
 	isn't consumed anytime later in the period
 	"""
-	leave_balance_for_period = get_leave_balance_on(
-		employee,
-		leave_type,
-		allocation.to_date,
-		allocation.to_date,
-		True,
+	if not allocation_to_date:
+		return remaining_leaves
+
+	# check total leaves allocated for the period
+	allocation = get_leave_allocation_records(employee, allocation_to_date, leave_type).get(
+		leave_type
+	)
+	leaves_taken_for_period = get_leaves_for_period(
+		employee, leave_type, allocation.from_date, allocation.to_date
 	)
 
-	if leave_balance_for_period < remaining_leaves.get("leave_balance_for_consumption"):
-		remaining_leaves["leave_balance_for_consumption"] = leave_balance_for_period
+	leave_balance_for_period = (
+		allocation.new_leaves_allocated
+		+ allocation.unused_leaves
+		# adding leaves taken because it's a -ve value in ledger
+		+ leaves_taken_for_period
+	)
+
+	remaining_leaves["leave_balance_for_consumption"] = min(
+		remaining_leaves["leave_balance_for_consumption"], leave_balance_for_period
+	)
 
 	return remaining_leaves
 
