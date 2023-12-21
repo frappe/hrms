@@ -187,7 +187,7 @@
    "fieldname": "condition",
    "fieldtype": "Code",
    "label": "Condition",
-   "options": "Python"
+   "options": "PythonExpression"
   },
   {
    "default": "0",
@@ -268,7 +268,7 @@
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-19 16:25:36.745511",
+ "modified": "2023-12-21 15:20:57.785309",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",
