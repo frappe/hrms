@@ -23,11 +23,15 @@ frappe.ui.form.on("Salary Component", {
 	},
 
 	refresh: function (frm) {
+<<<<<<< HEAD
 		if (!frm.doc.__islocal) {
 			frm.add_custom_button(__("Salary Structure"), () => {
 				frm.trigger("create_salary_structure");
 			}, __("Create"));
 		}
+=======
+		frm.trigger("setup_autocompletions");
+>>>>>>> 0625e7bc2 (feat: add autocompletion to code fields)
 	},
 
 	is_flexible_benefit: function (frm) {
@@ -70,6 +74,7 @@ frappe.ui.form.on("Salary Component", {
 		}
 	},
 
+<<<<<<< HEAD
 	create_salary_structure: function (frm) {
 		frappe.model.with_doctype("Salary Structure", () => {
 			const salary_structure = frappe.model.get_new_doc("Salary Structure");
@@ -80,6 +85,20 @@ frappe.ui.form.on("Salary Component", {
 			salary_detail.salary_component = frm.doc.name;
 			frappe.set_route("Form", "Salary Structure", salary_structure.name);
 		});
+=======
+	setup_autocompletions: function (frm) {
+		frappe.db
+			.get_list("Salary Component", { fields: ["salary_component_abbr"] })
+			.then((data) => {
+				const autocompletions = data.map((d) => ({
+					value: d.salary_component_abbr,
+					score: 10,
+					meta: "Salary Component",
+				}));
+				frm.set_df_property("condition", "autocompletions", autocompletions);
+				frm.set_df_property("formula", "autocompletions", autocompletions);
+			});
+>>>>>>> 0625e7bc2 (feat: add autocompletion to code fields)
 	},
 });
 
