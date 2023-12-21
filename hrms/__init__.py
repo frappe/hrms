@@ -1,9 +1,6 @@
-<<<<<<< HEAD
-__version__ = "15.0.0"
-=======
 import frappe
 
-__version__ = "16.0.0-dev"
+__version__ = "15.0.0"
 
 
 def refetch_resource(cache_key: str | list, user=None):
@@ -13,4 +10,3 @@ def refetch_resource(cache_key: str | list, user=None):
 		user=user or frappe.session.user,
 		after_commit=True,
 	)
->>>>>>> 728cae8e4 (feat(PWA): socket setup - add `refetch_resource` listener)
