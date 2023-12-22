@@ -31,7 +31,13 @@ frappe.ui.form.on("Salary Component", {
 		}
 =======
 		frm.trigger("setup_autocompletions");
+<<<<<<< HEAD
 >>>>>>> 0625e7bc2 (feat: add autocompletion to code fields)
+=======
+		if (!frm.doc.__islocal) {
+			frm.trigger("add_update_structure_button");
+		}
+>>>>>>> 5c5f91b36 (feat: add option to sync formula and condition for existing structures)
 	},
 
 	is_flexible_benefit: function (frm) {
@@ -99,6 +105,31 @@ frappe.ui.form.on("Salary Component", {
 				frm.set_df_property("formula", "autocompletions", autocompletions);
 			});
 >>>>>>> 0625e7bc2 (feat: add autocompletion to code fields)
+	},
+
+	add_update_structure_button: function (frm) {
+		for (const df of ["Condition", "Formula"]) {
+			frm.add_custom_button(
+				__("Sync {0}", [df]),
+				function () {
+					frappe.confirm(
+						__("Update {0} for all existing Salary Structures?", [df]),
+						() => {
+							frappe.call({
+								method:
+									"hrms.payroll.doctype.salary_detail.salary_detail.update_salary_structures",
+								args: {
+									component: frm.doc.name,
+									field: df.toLowerCase(),
+									value: frm.get_field(df.toLowerCase()).value,
+								},
+							});
+						}
+					);
+				},
+				__("Update Salary Structures")
+			);
+		}
 	},
 });
 
