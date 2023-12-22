@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.model.naming import append_number_if_name_exists
 
@@ -9,6 +10,14 @@ from frappe.model.naming import append_number_if_name_exists
 class SalaryComponent(Document):
 	def validate(self):
 		self.validate_abbr()
+
+	def after_insert(self):
+		if not (self.statistical_component or (self.accounts and all(d.account for d in self.accounts))):
+			frappe.msgprint(
+				title=_("Warning"),
+				msg=_("Accounts not set for Salary Component {0}").format(self.name),
+				indicator="orange",
+			)
 
 	def clear_cache(self):
 		from hrms.payroll.doctype.salary_slip.salary_slip import (
