@@ -72,14 +72,22 @@ frappe.ui.form.on("Salary Component", {
 	setup_autocompletions: function (frm) {
 		frappe.db
 			.get_list("Salary Component", { fields: ["salary_component_abbr"] })
-			.then((data) => {
-				const autocompletions = data.map((d) => ({
+			.then((salary_components) => {
+				const autocompletions = salary_components.map((d) => ({
 					value: d.salary_component_abbr,
 					score: 10,
 					meta: "Salary Component",
 				}));
-				frm.set_df_property("condition", "autocompletions", autocompletions);
-				frm.set_df_property("formula", "autocompletions", autocompletions);
+				frappe.db.get_doc("DocType", "Employee").then((employee_doc) => {
+					const employee_fields = employee_doc.fields.map((f) => ({
+						value: f.fieldname,
+						score: 9,
+						meta: "Employee Field",
+					}));
+					autocompletions.push(...employee_fields);
+					frm.set_df_property("condition", "autocompletions", autocompletions);
+					frm.set_df_property("formula", "autocompletions", autocompletions);
+				});
 			});
 	},
 
