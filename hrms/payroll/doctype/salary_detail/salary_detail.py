@@ -12,8 +12,10 @@ class SalaryDetail(Document):
 
 @frappe.whitelist()
 def update_salary_structures(component, field, value):
-	salary_details = frappe.get_list(
-		"Salary Detail", filters={"salary_component": component}, pluck="name"
-	)
-	for d in salary_details:
-		frappe.db.set_value("Salary Detail", d, field, value)
+	SalaryDetail = frappe.qb.DocType("Salary Detail")
+	SalaryStructure = frappe.qb.DocType("Salary Structure")
+	frappe.qb.update(SalaryDetail).inner_join(SalaryStructure).on(
+		SalaryDetail.parent == SalaryStructure.name
+	).set(SalaryDetail[field], value).where(
+		(SalaryDetail.salary_component == component) & (SalaryStructure.docstatus == 1)
+	).run()
