@@ -222,13 +222,12 @@ class SalarySlip(TransactionBase):
 
 	def publish_update(self):
 		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
-		if frappe.session.user == employee_user:
-			frappe.publish_realtime(
-				event="hrms:update_salary_slips",
-				message={"employee": self.employee},
-				user=frappe.session.user,
-				after_commit=True,
-			)
+		frappe.publish_realtime(
+			event="hrms:update_salary_slips",
+			message={"employee": self.employee},
+			user=employee_user,
+			after_commit=True,
+		)
 
 	def on_trash(self):
 		from frappe.model.naming import revert_series_if_last
