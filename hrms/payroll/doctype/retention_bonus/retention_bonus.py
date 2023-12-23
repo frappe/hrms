@@ -45,12 +45,12 @@ class RetentionBonus(Document):
 		additional_salary = self.get_additional_salary()
 		if additional_salary:
 			bonus_removed = (
-				frappe.db.get_value("Additional Salary", self.additional_salary, "amount") - self.bonus_amount
+				frappe.db.get_value("Additional Salary", additional_salary, "amount") - self.bonus_amount
 			)
 			if bonus_removed == 0:
-				frappe.get_doc("Additional Salary", self.additional_salary).cancel()
+				frappe.get_doc("Additional Salary", additional_salary).cancel()
 			else:
-				frappe.db.set_value("Additional Salary", self.additional_salary, "amount", bonus_removed)
+				frappe.db.set_value("Additional Salary", additional_salary, "amount", bonus_removed)
 
 			# self.db_set('additional_salary', '')
 
