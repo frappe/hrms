@@ -13,6 +13,7 @@ from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_a
 from erpnext.accounts.general_ledger import make_gl_entries
 from erpnext.controllers.accounts_controller import AccountsController
 
+import hrms
 from hrms.hr.utils import set_employee_name, share_doc_with_approver, validate_active_employee
 from hrms.mixins.pwa_notifications import PWANotificationsMixin
 
@@ -81,6 +82,8 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 
 		if update:
 			self.db_set("status", status)
+			self.publish_update()
+			self.notify_update()
 		else:
 			self.status = status
 
@@ -92,18 +95,13 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 	def after_delete(self):
 		self.publish_update()
 
+	def before_submit(self):
+		if not self.payable_account and not self.is_paid:
+			frappe.throw(_("Payable Account is mandatory to submit an Expense Claim"))
+
 	def publish_update(self):
 		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
-		if frappe.session.user in [employee_user, self.expense_approver]:
-			frappe.publish_realtime(
-				event="hrms:update_expense_claims",
-				message={
-					"approver": self.expense_approver,
-					"employee": self.employee,
-				},
-				user=frappe.session.user,
-				after_commit=True,
-			)
+		hrms.refetch_resource("hrms:my_claims", employee_user)
 
 	def set_payable_account(self):
 		if not self.payable_account and not self.is_paid:
