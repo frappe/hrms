@@ -100,7 +100,7 @@ frappe.ui.form.on("Salary Structure", {
 				frm.trigger("assign_to_employees")
 			}).addClass("btn-primary");
 
-			frm.add_custom_button(__("Assign to Single Employee"), function() {
+			frm.add_custom_button(__("Assign to Employee"), function() {
 				let doc = frappe.model.get_new_doc("Salary Structure Assignment");
 				doc.salary_structure = frm.doc.name;
 				doc.company = frm.doc.company;
