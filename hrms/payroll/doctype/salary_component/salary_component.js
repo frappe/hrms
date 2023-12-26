@@ -93,6 +93,7 @@ frappe.ui.form.on("Salary Component", {
 		});
 =======
 	setup_autocompletions: function (frm) {
+<<<<<<< HEAD
 		frappe.db
 			.get_list("Salary Component", { fields: ["salary_component_abbr"] })
 			.then((salary_components) => {
@@ -113,6 +114,43 @@ frappe.ui.form.on("Salary Component", {
 				});
 			});
 >>>>>>> 0625e7bc2 (feat: add autocompletion to code fields)
+=======
+		const autocompletions = [];
+		frappe.run_serially([
+			...["Employee", "Salary Structure", "Salary Slip"].map((doctype) =>
+				frappe.model.with_doctype(doctype, () => {
+					autocompletions.push(
+						...frappe.get_meta(doctype).fields.map((f) => ({
+							value: f.fieldname,
+							score: 9,
+							meta: __("{0} Field", [doctype]),
+						}))
+					);
+				})
+			),
+			() => {
+				frappe.db
+					.get_list("Salary Component", {
+						fields: ["salary_component_abbr"],
+					})
+					.then((salary_components) => {
+						autocompletions.push(
+							...salary_components.map((d) => ({
+								value: d.salary_component_abbr,
+								score: 10,
+								meta: __("Salary Component"),
+							}))
+						);
+						frm.set_df_property(
+							"condition",
+							"autocompletions",
+							autocompletions
+						);
+						frm.set_df_property("formula", "autocompletions", autocompletions);
+					});
+			},
+		]);
+>>>>>>> 6c06213b6 (feat: add autocompletions for Salary Structure and Salary Slip fields)
 	},
 
 	add_update_structure_button: function (frm) {
