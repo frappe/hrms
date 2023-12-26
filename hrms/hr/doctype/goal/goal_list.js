@@ -36,24 +36,15 @@ frappe.listview_settings["Goal"] = {
 			__("Update Status")
 		);
 
-		listview.page.add_custom_menu_item(status_menu, __("Complete"), () =>
-			this.trigger_update_status_dialog("Completed", listview)
-		);
-
-		listview.page.add_custom_menu_item(status_menu, __("Archive"), () =>
-			this.trigger_update_status_dialog("Archived", listview)
-		);
-
-		listview.page.add_custom_menu_item(status_menu, __("Close"), () =>
-			this.trigger_update_status_dialog("Closed", listview)
-		);
-
-		listview.page.add_custom_menu_item(status_menu, __("Unarchive"), () =>
-			this.trigger_update_status_dialog("Unarchived", listview)
-		);
-
-		listview.page.add_custom_menu_item(status_menu, __("Reopen"), () =>
-			this.trigger_update_status_dialog("Reopened", listview)
+		["Complete", "Archive", "Close", "Unarchive", "Reopen"].forEach(
+			(option) => {
+				listview.page.add_custom_menu_item(status_menu, __(option), () =>
+					this.trigger_update_status_dialog(
+						option + option.slice(-1) === "e" ? "d" : "ed",
+						listview
+					)
+				);
+			}
 		);
 	},
 
