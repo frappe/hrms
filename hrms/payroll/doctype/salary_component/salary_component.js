@@ -70,25 +70,41 @@ frappe.ui.form.on("Salary Component", {
 	},
 
 	setup_autocompletions: function (frm) {
-		frappe.db
-			.get_list("Salary Component", { fields: ["salary_component_abbr"] })
-			.then((salary_components) => {
-				const autocompletions = salary_components.map((d) => ({
-					value: d.salary_component_abbr,
-					score: 10,
-					meta: "Salary Component",
-				}));
-				frappe.db.get_doc("DocType", "Employee").then((employee_doc) => {
-					const employee_fields = employee_doc.fields.map((f) => ({
-						value: f.fieldname,
-						score: 9,
-						meta: "Employee Field",
-					}));
-					autocompletions.push(...employee_fields);
-					frm.set_df_property("condition", "autocompletions", autocompletions);
-					frm.set_df_property("formula", "autocompletions", autocompletions);
-				});
-			});
+		const autocompletions = [];
+		frappe.run_serially([
+			...["Employee", "Salary Structure", "Salary Slip"].map((doctype) =>
+				frappe.model.with_doctype(doctype, () => {
+					autocompletions.push(
+						...frappe.get_meta(doctype).fields.map((f) => ({
+							value: f.fieldname,
+							score: 9,
+							meta: __("{0} Field", [doctype]),
+						}))
+					);
+				})
+			),
+			() => {
+				frappe.db
+					.get_list("Salary Component", {
+						fields: ["salary_component_abbr"],
+					})
+					.then((salary_components) => {
+						autocompletions.push(
+							...salary_components.map((d) => ({
+								value: d.salary_component_abbr,
+								score: 10,
+								meta: __("Salary Component"),
+							}))
+						);
+						frm.set_df_property(
+							"condition",
+							"autocompletions",
+							autocompletions
+						);
+						frm.set_df_property("formula", "autocompletions", autocompletions);
+					});
+			},
+		]);
 	},
 
 	add_update_structure_button: function (frm) {
