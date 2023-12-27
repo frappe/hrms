@@ -123,8 +123,8 @@ class AdditionalSalary(Document):
 				"salary_component": self.salary_component,
 				"payroll_date": self.payroll_date,
 				"overwrite_salary_structure_amount": 1,
-				"employee" :  self.employee,
-				"docstatus" :  1,
+				"employee": self.employee,
+				"docstatus": 1,
 			},
 		)
 
