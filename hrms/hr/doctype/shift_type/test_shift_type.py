@@ -461,7 +461,9 @@ class TestShiftType(FrappeTestCase):
 
 		default_shift = setup_shift_type()
 		employee = make_employee(
-			"test_employee_checkin@example.com", company="_Test Company", default_shift=default_shift.name
+			"test_employee_checkin_default@example.com",
+			company="_Test Company",
+			default_shift=default_shift.name,
 		)
 
 		assigned_shift = setup_shift_type(shift_type="Test Absent with no Attendance")
@@ -611,8 +613,8 @@ def setup_shift_type(**args):
 		{
 			"doctype": "Shift Type",
 			"__newname": args.shift_type or "_Test Shift",
-			"start_time": "08:00:00",
-			"end_time": "12:00:00",
+			"start_time": args.start_time or "08:00:00",
+			"end_time": args.end_time or "12:00:00",
 			"enable_auto_attendance": 1,
 			"determine_check_in_and_check_out": "Alternating entries as IN and OUT during the same shift",
 			"working_hours_calculation_based_on": "First Check-in and Last Check-out",

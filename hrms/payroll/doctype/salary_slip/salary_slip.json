@@ -50,7 +50,7 @@
   "total_working_hours",
   "hour_rate",
   "base_hour_rate",
-  "earning_deduction",
+  "earning_deduction_sb",
   "earnings",
   "column_break_k1jz",
   "deductions",
@@ -311,11 +311,6 @@
    "label": "Deduct Tax For Unsubmitted Tax Exemption Proof"
   },
   {
-   "fieldname": "earning_deduction",
-   "fieldtype": "Section Break",
-   "oldfieldtype": "Section Break"
-  },
-  {
    "fieldname": "earnings",
    "fieldtype": "Table",
    "label": "Earnings",
@@ -550,11 +545,13 @@
   },
   {
    "fieldname": "section_break_6",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Employee Info"
   },
   {
    "fieldname": "section_break_gsts",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Payroll Info"
   },
   {
    "fieldname": "column_break_obdl",
@@ -709,7 +706,8 @@
   {
    "depends_on": "eval:doc.salary_slip_based_on_timesheet",
    "fieldname": "timesheets_section",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Timesheet Details"
   },
   {
    "fieldname": "help_section",
@@ -719,13 +717,18 @@
    "fieldname": "payment_days_calculation_help",
    "fieldtype": "HTML",
    "label": "Payment Days Calculation Help"
+  },
+  {
+   "fieldname": "earning_deduction_sb",
+   "fieldtype": "Section Break",
+   "oldfieldtype": "Section Break"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-09-25 19:31:53.460393",
+ "modified": "2023-11-07 23:05:43.633760",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
@@ -757,6 +760,7 @@
    "write": 1
   },
   {
+   "print": 1,
    "read": 1,
    "role": "Employee"
   }

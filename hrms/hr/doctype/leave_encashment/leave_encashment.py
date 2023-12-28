@@ -3,9 +3,9 @@
 
 
 import frappe
-from frappe import _
+from frappe import _, bold
 from frappe.model.document import Document
-from frappe.utils import getdate, nowdate
+from frappe.utils import format_date, get_link_to_form, getdate
 
 from hrms.hr.doctype.leave_application.leave_application import get_leaves_for_period
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
@@ -19,17 +19,16 @@ class LeaveEncashment(Document):
 	def validate(self):
 		set_employee_name(self)
 		validate_active_employee(self.employee)
+		self.encashment_date = self.encashment_date or getdate()
+		self.set_salary_structure()
 		self.get_leave_details_for_encashment()
-		self.validate_salary_structure()
 
-		if not self.encashment_date:
-			self.encashment_date = getdate(nowdate())
-
-	def validate_salary_structure(self):
-		if not frappe.db.exists("Salary Structure Assignment", {"employee": self.employee}):
+	def set_salary_structure(self):
+		self._salary_structure = get_assigned_salary_structure(self.employee, self.encashment_date)
+		if not self._salary_structure:
 			frappe.throw(
-				_("There is no Salary Structure assigned to {0}. First assign a Salary Stucture.").format(
-					self.employee
+				_("No Salary Structure assigned to Employee {0} on the given date {1}").format(
+					self.employee, frappe.bold(format_date(self.encashment_date))
 				)
 			)
 
@@ -39,7 +38,8 @@ class LeaveEncashment(Document):
 
 	def on_submit(self):
 		if not self.leave_allocation:
-			self.leave_allocation = self.get_leave_allocation().get("name")
+			self.db_set("leave_allocation", self.get_leave_allocation().get("name"))
+
 		additional_salary = frappe.new_doc("Additional Salary")
 		additional_salary.company = frappe.get_value("Employee", self.employee, "company")
 		additional_salary.employee = self.employee
@@ -60,7 +60,7 @@ class LeaveEncashment(Document):
 			self.leave_allocation,
 			"total_leaves_encashed",
 			frappe.db.get_value("Leave Allocation", self.leave_allocation, "total_leaves_encashed")
-			+ self.encashable_days,
+			+ self.encashment_days,
 		)
 
 		self.create_leave_ledger_entry()
@@ -76,27 +76,70 @@ class LeaveEncashment(Document):
 				self.leave_allocation,
 				"total_leaves_encashed",
 				frappe.db.get_value("Leave Allocation", self.leave_allocation, "total_leaves_encashed")
-				- self.encashable_days,
+				- self.encashment_days,
 			)
 		self.create_leave_ledger_entry(submit=False)
 
 	@frappe.whitelist()
 	def get_leave_details_for_encashment(self):
-		salary_structure = get_assigned_salary_structure(
-			self.employee, self.encashment_date or getdate(nowdate())
+		self.set_leave_balance()
+		self.set_actual_encashable_days()
+		self.set_encashment_days()
+		self.set_encashment_amount()
+
+	def get_encashment_settings(self):
+		return frappe.get_cached_value(
+			"Leave Type",
+			self.leave_type,
+			["allow_encashment", "non_encashable_leaves", "max_encashable_leaves"],
+			as_dict=True,
 		)
-		if not salary_structure:
+
+	def set_actual_encashable_days(self):
+		encashment_settings = self.get_encashment_settings()
+		if not encashment_settings.allow_encashment:
+			frappe.throw(_("Leave Type {0} is not encashable").format(self.leave_type))
+
+		self.actual_encashable_days = self.leave_balance
+		leave_form_link = get_link_to_form("Leave Type", self.leave_type)
+
+		# TODO: Remove this weird setting if possible. Retained for backward compatibility
+		if encashment_settings.non_encashable_leaves:
+			actual_encashable_days = self.leave_balance - encashment_settings.non_encashable_leaves
+			self.actual_encashable_days = actual_encashable_days if actual_encashable_days > 0 else 0
+			frappe.msgprint(
+				_("Excluded {0} Non-Encashable Leaves for {1}").format(
+					bold(encashment_settings.non_encashable_leaves),
+					leave_form_link,
+				),
+			)
+
+		if encashment_settings.max_encashable_leaves:
+			self.actual_encashable_days = min(
+				self.actual_encashable_days, encashment_settings.max_encashable_leaves
+			)
+			frappe.msgprint(
+				_("Maximum encashable leaves for {0} are {1}").format(
+					leave_form_link, bold(encashment_settings.max_encashable_leaves)
+				),
+				title=_("Encashment Limit Applied"),
+			)
+
+	def set_encashment_days(self):
+		# allow overwriting encashment days
+		if not self.encashment_days:
+			self.encashment_days = self.actual_encashable_days
+
+		if self.encashment_days > self.actual_encashable_days:
 			frappe.throw(
-				_("No Salary Structure assigned for Employee {0} on given date {1}").format(
-					self.employee, self.encashment_date
+				_("Encashment Days cannot exceed {0} {1} as per Leave Type settings").format(
+					bold(_("Actual Encashable Days")),
+					self.actual_encashable_days,
 				)
 			)
 
-		if not frappe.db.get_value("Leave Type", self.leave_type, "allow_encashment"):
-			frappe.throw(_("Leave Type {0} is not encashable").format(self.leave_type))
-
+	def set_leave_balance(self):
 		allocation = self.get_leave_allocation()
-
 		if not allocation:
 			frappe.throw(
 				_("No Leaves Allocated to Employee: {0} for Leave Type: {1}").format(
@@ -112,21 +155,18 @@ class LeaveEncashment(Document):
 				self.employee, self.leave_type, allocation.from_date, self.encashment_date
 			)
 		)
+		self.leave_allocation = allocation.name
 
-		encashable_days = self.leave_balance - frappe.db.get_value(
-			"Leave Type", self.leave_type, "encashment_threshold_days"
-		)
-		self.encashable_days = encashable_days if encashable_days > 0 else 0
+	def set_encashment_amount(self):
+		if not hasattr(self, "_salary_structure"):
+			self.set_salary_structure()
 
 		per_day_encashment = frappe.db.get_value(
-			"Salary Structure", salary_structure, "leave_encashment_amount_per_day"
+			"Salary Structure", self._salary_structure, "leave_encashment_amount_per_day"
 		)
 		self.encashment_amount = (
-			self.encashable_days * per_day_encashment if per_day_encashment > 0 else 0
+			self.encashment_days * per_day_encashment if per_day_encashment > 0 else 0
 		)
-
-		self.leave_allocation = allocation.name
-		return True
 
 	def get_leave_allocation(self):
 		date = self.encashment_date or getdate()
@@ -153,7 +193,7 @@ class LeaveEncashment(Document):
 
 	def create_leave_ledger_entry(self, submit=True):
 		args = frappe._dict(
-			leaves=self.encashable_days * -1,
+			leaves=self.encashment_days * -1,
 			from_date=self.encashment_date,
 			to_date=self.encashment_date,
 			is_carry_forward=0,
@@ -166,9 +206,9 @@ class LeaveEncashment(Document):
 			return
 
 		to_date = leave_allocation.get("to_date")
-		if to_date < getdate(nowdate()):
+		if to_date < getdate():
 			args = frappe._dict(
-				leaves=self.encashable_days, from_date=to_date, to_date=to_date, is_carry_forward=0
+				leaves=self.encashment_days, from_date=to_date, to_date=to_date, is_carry_forward=0
 			)
 			create_leave_ledger_entry(self, args, submit)
 

@@ -8,20 +8,22 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "leave_period",
   "employee",
   "employee_name",
   "department",
   "company",
   "column_break_4",
+  "leave_period",
   "leave_type",
   "leave_allocation",
   "leave_balance",
-  "encashable_days",
-  "amended_from",
+  "column_break_cevy",
+  "actual_encashable_days",
+  "encashment_days",
   "payroll",
   "encashment_date",
   "additional_salary",
+  "amended_from",
   "column_break_14",
   "currency",
   "encashment_amount"
@@ -86,13 +88,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "encashable_days",
-   "fieldtype": "Float",
-   "label": "Encashable days",
-   "no_copy": 1,
-   "read_only": 1
-  },
-  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -150,11 +145,29 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "encashment_days",
+   "fieldtype": "Float",
+   "label": "Encashment Days",
+   "no_copy": 1
+  },
+  {
+   "description": "Number of leaves eligible for encashment based on leave type settings",
+   "fieldname": "actual_encashable_days",
+   "fieldtype": "Float",
+   "label": "Actual Encashable Days",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_cevy",
+   "fieldtype": "Column Break"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-18 19:16:52.414356",
+ "modified": "2023-10-23 16:49:16.737157",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Encashment",

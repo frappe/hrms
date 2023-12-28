@@ -8,6 +8,7 @@ from frappe.utils import add_days, get_datetime, getdate, nowdate
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.shift_assignment.shift_assignment import (
+	MultipleShiftError,
 	OverlappingShiftError,
 	get_actual_start_end_datetime_of_shift,
 	get_events,
@@ -65,6 +66,39 @@ class TestShiftAssignment(FrappeTestCase):
 		)
 
 		self.assertRaises(OverlappingShiftError, shift_assignment.save)
+
+	def test_multiple_shift_assignments_for_same_date(self):
+		setup_shift_type(shift_type="Day Shift")
+		shift_assignment_1 = frappe.get_doc(
+			{
+				"doctype": "Shift Assignment",
+				"shift_type": "Day Shift",
+				"company": "_Test Company",
+				"employee": "_T-Employee-00001",
+				"start_date": nowdate(),
+				"end_date": add_days(nowdate(), 30),
+				"status": "Active",
+			}
+		).insert()
+		shift_assignment_1.submit()
+
+		setup_shift_type(shift_type="Night Shift", start_time="19:00:00", end_time="23:00:00")
+		shift_assignment_2 = frappe.get_doc(
+			{
+				"doctype": "Shift Assignment",
+				"shift_type": "Night Shift",
+				"company": "_Test Company",
+				"employee": "_T-Employee-00001",
+				"start_date": nowdate(),
+				"end_date": add_days(nowdate(), 30),
+				"status": "Active",
+			}
+		)
+
+		frappe.db.set_single_value("HR Settings", "allow_multiple_shift_assignments", 0)
+		self.assertRaises(MultipleShiftError, shift_assignment_2.save)
+		frappe.db.set_single_value("HR Settings", "allow_multiple_shift_assignments", 1)
+		shift_assignment_2.save()  # would throw error if multiple shift assignments not allowed
 
 	def test_overlapping_for_fixed_period_shift(self):
 		# shift should is for Fixed period if Only start_date and end_date both are present and status = Active
