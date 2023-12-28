@@ -307,3 +307,15 @@
 	flex-direction: column;
 	align-items: center;
 }
+[data-theme="dark"] {
+	.node-name {
+		color: var(--text-dark);
+	}
+	.node-info .text-muted {
+		color: var(--gray-700) !important;
+	}
+	.node-edit-icon .es-icon{
+		fill: var(--gray-800);
+		stroke: var(--gray-800);
+	}
+}
