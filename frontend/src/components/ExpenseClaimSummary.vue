@@ -69,20 +69,12 @@
 </template>
 
 <script setup>
-import { FeatherIcon, createResource } from "frappe-ui"
-import { computed, inject } from "vue"
+import { FeatherIcon } from "frappe-ui"
+import { computed } from "vue"
+
+import { expenseClaimSummary as summary } from "@/data/claims"
 
 import { formatCurrency } from "@/utils/formatters"
-
-const employee = inject("$employee")
-
-const summary = createResource({
-	url: "hrms.api.get_expense_claim_summary",
-	params: {
-		employee: employee.data.name,
-	},
-	auto: true,
-})
 
 const total_claimed_amount = computed(() => {
 	return (

@@ -100,7 +100,7 @@ const formFields = createResource({
 	},
 	onSuccess(_data) {
 		expenseApproverDetails.reload()
-		costCenter.reload()
+		companyDetails.reload()
 	},
 })
 formFields.reload()
@@ -148,11 +148,13 @@ const expenseApproverDetails = createResource({
 	},
 })
 
-const costCenter = createResource({
-	url: "hrms.api.get_company_cost_center",
+const companyDetails = createResource({
+	url: "hrms.api.get_company_cost_center_and_expense_account",
 	params: { company: expenseClaim.value.company },
 	onSuccess(data) {
-		expenseClaim.value.cost_center = data
+		expenseClaim.value.cost_center = data?.cost_center
+		expenseClaim.value.payable_account =
+			data?.default_expense_claim_payable_account
 	},
 })
 

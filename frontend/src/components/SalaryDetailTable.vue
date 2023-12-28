@@ -27,7 +27,11 @@
 			</span>
 		</div>
 	</div>
-	<EmptyState v-else message="No expenses added" :isTableField="true" />
+	<EmptyState
+		v-else
+		:message="`No ${props.type?.toLowerCase()}s added`"
+		:isTableField="true"
+	/>
 </template>
 
 <script setup>

@@ -160,12 +160,14 @@ const expenseItem = ref({})
 const editingIdx = ref(null)
 
 const isModalOpen = ref(false)
+const isFirstRender = ref(false)
 
 const openModal = async (item, idx) => {
 	if (item) {
 		expenseItem.value = { ...item }
 		editingIdx.value = idx
 	}
+	isFirstRender.value = true
 	isModalOpen.value = true
 }
 
@@ -184,6 +186,7 @@ const updateExpenseItem = () => {
 }
 
 function resetSelectedItem() {
+	isFirstRender.value = false
 	isModalOpen.value = false
 	expenseItem.value = {}
 	editingIdx.value = null
@@ -226,7 +229,10 @@ const addButtonDisabled = computed(() => {
 watch(
 	() => expenseItem.value.expense_type,
 	(value) => {
-		expenseItem.value.description = claimTypesByID[value]?.description
+		if (!expenseItem.value.description) {
+			expenseItem.value.description = claimTypesByID[value]?.description
+		}
+
 		expenseItem.value.cost_center = props.expenseClaim.cost_center
 	}
 )
@@ -234,7 +240,11 @@ watch(
 watch(
 	() => expenseItem.value.amount,
 	(value) => {
-		expenseItem.value.sanctioned_amount = parseFloat(value)
+		if (!isFirstRender.value) {
+			expenseItem.value.sanctioned_amount = parseFloat(value)
+		} else {
+			isFirstRender.value = false
+		}
 	}
 )
 </script>

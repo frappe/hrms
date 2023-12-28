@@ -28,8 +28,8 @@
 						variant="outline"
 					/>
 					<Badge
-						v-if="formModel?.status"
-						:label="formModel?.status"
+						v-if="status"
+						:label="status"
 						:theme="statusColor"
 						class="whitespace-nowrap text-[8px]"
 					/>
@@ -42,7 +42,7 @@
 								condition: showDeleteButton,
 								onClick: () => (showDeleteDialog = true),
 							},
-							{ label: 'Reload', onClick: () => handleDocReload() },
+							{ label: 'Reload', onClick: () => reloadDoc() },
 						]"
 						:button="{
 							label: 'Menu',
@@ -170,14 +170,35 @@
 				</div>
 			</div>
 
-			<!-- Bottom Save Button -->
+			<!-- Form Primary/Secondary Button -->
+			<!-- custom form button eg: Download button in salary slips -->
 			<div
-				v-if="formButton"
+				v-if="!showFormButton"
+				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
+			>
+				<slot name="formButton"></slot>
+			</div>
+
+			<!-- workflow actions -->
+			<WorkflowActionSheet
+				v-else-if="!isFormDirty && workflow?.hasWorkflow"
+				:doc="documentResource.doc"
+				:workflow="workflow"
+				@workflowApplied="reloadDoc()"
+			/>
+
+			<!-- save/submit/cancel -->
+			<div
+				v-else-if="isFormDirty || (!workflow?.hasWorkflow && formButton)"
 				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
 			>
 				<ErrorMessage
 					class="mb-2"
-					:message="docList.insert.error || documentResource?.setValue?.error"
+					:message="
+						formErrorMessage ||
+						docList?.insert?.error ||
+						documentResource?.setValue?.error
+					"
 				/>
 
 				<Button
@@ -185,20 +206,12 @@
 					:class="formButton === 'Cancel' ? 'shadow' : ''"
 					@click="formButton === 'Save' ? saveForm() : submitOrCancelForm()"
 					:variant="formButton === 'Cancel' ? 'subtle' : 'solid'"
-					:disabled="saveButtonDisabled"
 					:loading="
 						docList.insert.loading || documentResource?.setValue?.loading
 					"
 				>
 					{{ formButton }}
 				</Button>
-			</div>
-
-			<div
-				v-else
-				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
-			>
-				<slot name="formButton"></slot>
 			</div>
 		</div>
 	</div>
@@ -316,8 +329,10 @@ import {
 } from "frappe-ui"
 import FormField from "@/components/FormField.vue"
 import FileUploaderView from "@/components/FileUploaderView.vue"
+import WorkflowActionSheet from "@/components/WorkflowActionSheet.vue"
 
 import { FileAttachment, guessStatusColor } from "@/composables"
+import useWorkflow from "@/composables/workflow"
 import { getCompanyCurrency } from "@/data/currencies"
 import { formatCurrency } from "@/utils/formatters"
 
@@ -368,12 +383,14 @@ const router = useRouter()
 let activeTab = ref(props.tabs?.[0].name)
 let fileAttachments = ref([])
 let statusColor = ref("")
+let formErrorMessage = ref("")
 let isFormDirty = ref(false)
 let isFormUpdated = ref(false)
 let showDeleteDialog = ref(false)
 let showSubmitDialog = ref(false)
 let showCancelDialog = ref(false)
 let isFileUploading = ref(false)
+let workflow = ref(null)
 
 const formModel = computed({
 	get() {
@@ -382,6 +399,17 @@ const formModel = computed({
 	set(newValue) {
 		emit("update:modelValue", newValue)
 	},
+})
+
+const status = computed(() => {
+	if (!props.id) return ""
+
+	if (workflow.value) {
+		const stateField = workflow.value.getWorkflowStateField()
+		if (stateField) return formModel.value[stateField]
+	}
+
+	return formModel.value.status || formModel.value.approval_status
 })
 
 watch(
@@ -396,6 +424,15 @@ watch(
 		}
 	},
 	{ deep: true }
+)
+
+watch(
+	() => status.value,
+	async (value) => {
+		if (!value) return
+		statusColor.value = await guessStatusColor(props.doctype, status.value)
+	},
+	{ immediate: true }
 )
 
 const tabFields = computed(() => {
@@ -554,18 +591,6 @@ const docPermissions = createResource({
 	url: "frappe.client.get_doc_permissions",
 })
 
-const saveButtonDisabled = computed(() => {
-	if (props.id && formButton.value === "Save" && !isFormDirty.value) {
-		return true
-	}
-
-	return props.fields?.some((field) => {
-		if (field.reqd && !field.hidden && !formModel.value[field.fieldname]) {
-			return true
-		}
-	})
-})
-
 const formButton = computed(() => {
 	if (!props.showFormButton) return
 
@@ -589,12 +614,35 @@ function hasPermission(action) {
 }
 
 function handleDocInsert() {
+	if (!validateMandatoryFields()) return
 	docList.insert.submit(formModel.value)
+}
+
+function validateMandatoryFields() {
+	const errorFields = props.fields
+		.filter(
+			(field) =>
+				field.reqd && !field.hidden && !formModel.value[field.fieldname]
+		)
+		.map((field) => field.label)
+
+	if (errorFields.length) {
+		formErrorMessage.value = `${errorFields.join(", ")} ${
+			errorFields.length > 1 ? "fields are mandatory" : "field is mandatory"
+		}`
+		return false
+	} else {
+		formErrorMessage.value = ""
+		return true
+	}
 }
 
 async function handleDocUpdate(action) {
 	if (documentResource.doc) {
 		let params = { ...formModel.value }
+
+		if (!validateMandatoryFields()) return
+
 		if (action == "submit") {
 			params.docstatus = 1
 		} else if (action == "cancel") {
@@ -603,14 +651,7 @@ async function handleDocUpdate(action) {
 
 		await documentResource.setValue.submit(params)
 		await documentResource.get.promise
-
-		formModel.value = { ...documentResource.doc }
-
-		nextTick(() => {
-			setStatusColor()
-			isFormDirty.value = false
-			isFormUpdated.value = true
-		})
+		resetForm()
 	}
 
 	if (action === "submit") showSubmitDialog.value = false
@@ -643,15 +684,17 @@ function handleDocDelete() {
 	showDeleteDialog.value = false
 }
 
-function handleDocReload() {
-	documentResource.reload()
+async function reloadDoc() {
+	await documentResource.reload()
+	resetForm()
 }
 
-async function setStatusColor() {
-	const status = formModel.value.status || formModel.value.approval_status
-	if (status) {
-		statusColor.value = await guessStatusColor(props.doctype, status)
-	}
+function resetForm() {
+	formModel.value = { ...documentResource.doc }
+	nextTick(() => {
+		isFormDirty.value = false
+		isFormUpdated.value = true
+	})
 }
 
 async function setFormattedCurrency() {
@@ -675,9 +718,16 @@ async function setFormattedCurrency() {
 	})
 }
 
-const isFormReadOnly = computed(
-	() => props.id && formModel.value.docstatus !== 0
-)
+const isFormReadOnly = computed(() => {
+	if (!isFormReady.value) return true
+	if (!props.id) return false
+
+	// submited & cancelled docs are read only
+	if (formModel.value.docstatus !== 0) return true
+
+	// read only due to workflow based on current user's roles
+	if (workflow.value?.isReadOnly(formModel.value)) return true
+})
 
 const isFormReady = computed(() => {
 	if (!props.id) return true
@@ -692,7 +742,10 @@ onMounted(async () => {
 		await docPermissions.fetch({ doctype: props.doctype, docname: props.id })
 		await attachedFiles.reload()
 		await setFormattedCurrency()
-		await setStatusColor()
+
+		// workflow
+		workflow.value = useWorkflow(props.doctype)
+
 		isFormDirty.value = false
 	}
 })

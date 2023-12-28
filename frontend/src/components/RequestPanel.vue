@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { ref, inject, onMounted, computed, markRaw, onBeforeUnmount } from "vue"
+import { ref, inject, onMounted, computed, markRaw } from "vue"
 
 import TabButtons from "@/components/TabButtons.vue"
 import RequestList from "@/components/RequestList.vue"
@@ -24,6 +24,8 @@ import { myClaims, teamClaims } from "@/data/claims"
 
 import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
 import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
+
+import { useListUpdate } from "@/composables/realtime"
 
 const activeTab = ref("My Requests")
 
@@ -57,27 +59,7 @@ const teamRequests = computed(() => {
 })
 
 onMounted(() => {
-	socket.on("hrms:update_leaves", (data) => {
-		if (data.employee === employee.data.name) {
-			myLeaves.reload()
-		}
-		if (data.approver === employee.data.user_id) {
-			teamLeaves.reload()
-		}
-	})
-
-	socket.on("hrms:update_expense_claims", (data) => {
-		if (data.employee === employee.data.name) {
-			myClaims.reload()
-		}
-		if (data.approver === employee.data.user_id) {
-			teamClaims.reload()
-		}
-	})
-})
-
-onBeforeUnmount(() => {
-	socket.off("hrms:update_leaves")
-	socket.off("hrms:update_expense_claims")
+	useListUpdate(socket, "Leave Application", () => teamLeaves.reload())
+	useListUpdate(socket, "Expense Claim", () => teamClaims.reload())
 })
 </script>

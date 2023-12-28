@@ -15,7 +15,7 @@
 		"@ionic/vue-router": "^7.4.3",
 		"dayjs": "^1.11.7",
 		"feather-icons": "^4.28.0",
-		"frappe-ui": "^0.1.14",
+		"frappe-ui": "^0.1.18",
 		"vue": "^3.2.25",
 		"vue-router": "^4.0.12"
 	},

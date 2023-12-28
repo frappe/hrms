@@ -1,20 +1,18 @@
 <template>
 	<ion-page>
-		<ion-content :fullscreen="true">
-			<ListView
-				doctype="Expense Claim"
-				pageTitle="Claim History"
-				:tabButtons="TAB_BUTTONS"
-				:fields="EXPENSE_CLAIM_FIELDS"
-				groupBy="`tabExpense Claim`.name"
-				:filterConfig="FILTER_CONFIG"
-			/>
-		</ion-content>
+		<ListView
+			doctype="Expense Claim"
+			pageTitle="Claim History"
+			:tabButtons="TAB_BUTTONS"
+			:fields="EXPENSE_CLAIM_FIELDS"
+			groupBy="`tabExpense Claim`.name"
+			:filterConfig="FILTER_CONFIG"
+		/>
 	</ion-page>
 </template>
 
 <script setup>
-import { IonPage, IonContent } from "@ionic/vue"
+import { IonPage } from "@ionic/vue"
 import ListView from "@/components/ListView.vue"
 
 const TAB_BUTTONS = ["My Claims", "Team Claims"]

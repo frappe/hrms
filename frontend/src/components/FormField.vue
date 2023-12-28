@@ -18,6 +18,7 @@
 		<Autocomplete
 			v-if="['Link', 'Select'].includes(props.fieldtype)"
 			ref="autocompleteRef"
+			:class="isReadOnly ? 'pointer-events-none' : ''"
 			:value="modelValue"
 			:placeholder="`Select ${props.options}`"
 			:options="selectionList"
@@ -206,7 +207,7 @@ const linkFieldList = createResource({
 		return data.map((doc) => {
 			const title = doc?.description?.split(",")?.[0]
 			return {
-				label: title ? `${title} : ${doc.value}`: doc.value,
+				label: title ? `${title} : ${doc.value}` : doc.value,
 				value: doc.value,
 			}
 		})
