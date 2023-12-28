@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests.utils import FrappeTestCase, change_settings
 from frappe.utils import (
 	add_days,
 	get_time,
@@ -169,6 +169,7 @@ class TestEmployeeCheckin(FrappeTestCase):
 		log = make_checkin(employee, timestamp)
 		self.assertIsNone(log.shift)
 
+	@change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
 	def test_fetch_shift_for_assignment_with_end_date(self):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 
@@ -443,6 +444,7 @@ class TestEmployeeCheckin(FrappeTestCase):
 			self.assertEqual(log.shift_actual_start, start_timestamp)
 			self.assertEqual(log.shift_actual_end, end_timestamp)
 
+	@change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
 	def test_consecutive_shift_assignments_overlapping_within_grace_period(self):
 		# test adjustment for start and end times if they are overlapping
 		# within "begin_check_in_before_shift_start_time" and "allow_check_out_after_shift_end_time" periods

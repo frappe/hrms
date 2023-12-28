@@ -55,15 +55,18 @@
 
 <script setup>
 import { createListResource, toast, FeatherIcon } from "frappe-ui"
-import { computed, inject, ref } from "vue"
+import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
 
+const DOCTYPE = "Employee Checkin"
+
+const socket = inject("$socket")
 const employee = inject("$employee")
 const dayjs = inject("$dayjs")
 const checkinTimestamp = ref(null)
 
 const checkins = createListResource({
-	doctype: "Employee Checkin",
+	doctype: DOCTYPE,
 	fields: [
 		"name",
 		"employee",
@@ -138,4 +141,18 @@ const submitLog = (logType) => {
 		}
 	)
 }
+
+onMounted(() => {
+	socket.emit("doctype_subscribe", DOCTYPE)
+	socket.on("list_update", (data) => {
+		if (data.doctype == DOCTYPE) {
+			checkins.reload()
+		}
+	})
+})
+
+onBeforeUnmount(() => {
+	socket.emit("doctype_unsubscribe", DOCTYPE)
+	socket.off("list_update")
+})
 </script>

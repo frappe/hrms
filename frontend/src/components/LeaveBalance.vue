@@ -44,30 +44,9 @@
 </template>
 
 <script setup>
-import { inject } from "vue"
-import { createResource } from "frappe-ui"
-
 import SemicircleChart from "@/components/SemicircleChart.vue"
 
-const employee = inject("$employee")
-
-const leaveBalance = createResource({
-	url: "hrms.api.get_leave_balance_map",
-	params: {
-		employee: employee.data.name,
-	},
-	auto: true,
-	transform: (data) => {
-		// Calculate balance percentage for each leave type
-		return Object.fromEntries(
-			Object.entries(data).map(([leave_type, allocation]) => {
-				allocation.balance_percentage =
-					(allocation.balance_leaves / allocation.allocated_leaves) * 100
-				return [leave_type, allocation]
-			})
-		)
-	},
-})
+import { leaveBalance } from "@/data/leaves"
 
 const getChartColor = (index) => {
 	// note: tw colors - rose-400, pink-400 & purple-500 of the old frappeui palette #918ef5

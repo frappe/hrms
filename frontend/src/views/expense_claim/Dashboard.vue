@@ -35,7 +35,6 @@
 							Employee Advance Balance
 						</div>
 						<router-link
-							v-if="advanceBalance?.data?.length"
 							:to="{ name: 'EmployeeAdvanceListView' }"
 							class="text-sm text-gray-800 font-semibold cursor-pointer underline underline-offset-2"
 						>
@@ -51,7 +50,7 @@
 </template>
 
 <script setup>
-import { markRaw, inject, onBeforeUnmount, onMounted } from "vue"
+import { markRaw } from "vue"
 
 import BaseLayout from "@/components/BaseLayout.vue"
 import ExpenseClaimSummary from "@/components/ExpenseClaimSummary.vue"
@@ -61,28 +60,4 @@ import EmployeeAdvanceBalance from "@/components/EmployeeAdvanceBalance.vue"
 
 import { myClaims } from "@/data/claims"
 import { advanceBalance } from "@/data/advances"
-
-const socket = inject("$socket")
-const employee = inject("$employee")
-
-onMounted(() => {
-	socket.off("hrms:update_expense_claims")
-	socket.on("hrms:update_expense_claims", (data) => {
-		if (data.employee === employee.data.name) {
-			myClaims.reload()
-		}
-	})
-
-	socket.off("hrms:update_employee_advances")
-	socket.on("hrms:update_employee_advances", (data) => {
-		if (data.employee === employee.data.name) {
-			advanceBalance.reload()
-		}
-	})
-})
-
-onBeforeUnmount(() => {
-	socket.off("hrms:update_expense_claims")
-	socket.off("hrms:update_employee_advances")
-})
 </script>

@@ -5,13 +5,8 @@ from frappe import _
 
 
 def get_dashboard_for_employee(data):
-	return {
-		"heatmap": True,
-		"heatmap_message": _("This is based on the attendance of this Employee"),
-		"fieldname": "employee",
-		"non_standard_fieldnames": {"Bank Account": "party", "Employee Grievance": "raised_by"},
-		"method": "hrms.overrides.employee_master.get_timeline_data",
-		"transactions": [
+	data["transactions"].extend(
+		[
 			{"label": _("Attendance"), "items": ["Attendance", "Attendance Request", "Employee Checkin"]},
 			{
 				"label": _("Leave"),
@@ -50,8 +45,21 @@ def get_dashboard_for_employee(data):
 				"items": ["Training Event", "Training Result", "Training Feedback", "Employee Skill Map"],
 			},
 			{"label": _("Evaluation"), "items": ["Appraisal"]},
-		],
-	}
+		]
+	)
+
+	data["non_standard_fieldnames"].update(
+		{"Bank Account": "party", "Employee Grievance": "raised_by"}
+	)
+	data.update(
+		{
+			"heatmap": True,
+			"heatmap_message": _("This is based on the attendance of this Employee"),
+			"fieldname": "employee",
+			"method": "hrms.overrides.employee_master.get_timeline_data",
+		}
+	)
+	return data
 
 
 def get_dashboard_for_holiday_list(data):
