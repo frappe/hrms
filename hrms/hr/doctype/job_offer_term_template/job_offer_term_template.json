@@ -7,25 +7,25 @@
  "engine": "InnoDB",
  "field_order": [
   "title",
-  "job_offer_term"
+  "offer_terms"
  ],
  "fields": [
-  {
-   "fieldname": "job_offer_term",
-   "fieldtype": "Table",
-   "label": "Job Offer Term",
-   "options": "Job Offer Term"
-  },
   {
    "fieldname": "title",
    "fieldtype": "Data",
    "label": "Title",
    "unique": 1
+  },
+  {
+   "fieldname": "offer_terms",
+   "fieldtype": "Table",
+   "label": "Offer Terms",
+   "options": "Job Offer Term"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-21 14:36:28.917809",
+ "modified": "2023-12-29 13:08:24.269275",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer Term Template",
@@ -41,6 +41,18 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
    "share": 1,
    "write": 1
   }
