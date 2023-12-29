@@ -30,7 +30,7 @@ frappe.ui.form.on('Interview Feedback', {
 		frappe.call({
 			method: 'hrms.hr.doctype.interview_feedback.interview_feedback.get_applicable_interviewers',
 			args: {
-				parent: frm.doc.interview || ''
+				interview_round: frm.doc.interview_round || ''
 			},
 			callback: function(r) {
 				frm.set_query('interviewer', function() {

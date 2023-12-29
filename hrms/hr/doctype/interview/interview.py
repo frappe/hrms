@@ -154,6 +154,13 @@ class Interview(Document):
 		return query.run(as_dict=True)
 
 
+@frappe.whitelist()
+def get_applicable_interviewers(interview_round: str) -> list[str]:
+	return frappe.get_all(
+		"Interviewer", filters={"parent": interview_round}, fields=["user as interviewer"]
+	)
+
+
 def get_recipients(name, for_feedback=0):
 	interview = frappe.get_doc("Interview", name)
 	interviewers = [x.user for x in interview.interviewers]
