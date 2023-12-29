@@ -1,0 +1,37 @@
+{
+ "actions": [],
+ "creation": "2021-04-12 16:24:10.382863",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "interviewer",
+  "column_break_4"
+ ],
+ "fields": [
+  {
+   "fieldname": "interviewer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Interviewer",
+   "options": "User"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-12-29 17:37:55.632240",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Interview Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
