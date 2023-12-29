@@ -18,7 +18,7 @@
   "from_time",
   "to_time",
   "section_break_hqvh",
-  "interviewers",
+  "interview_details",
   "ratings_section",
   "expected_average_rating",
   "column_break_12",
@@ -177,14 +177,14 @@
    "label": "Feedback HTML"
   },
   {
-   "fieldname": "interviewers",
-   "fieldtype": "Table",
-   "label": "Interviewers",
-   "options": "Interviewer"
-  },
-  {
    "fieldname": "section_break_hqvh",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "interview_details",
+   "fieldtype": "Table",
+   "label": "Interviewers",
+   "options": "Interview Detail"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -195,7 +195,7 @@
    "link_fieldname": "interview"
   }
  ],
- "modified": "2023-11-23 18:30:25.476693",
+ "modified": "2023-12-29 17:37:29.784687",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview",
