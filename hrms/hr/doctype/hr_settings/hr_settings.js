@@ -10,6 +10,13 @@ frappe.ui.form.on('HR Settings', {
 				},
 			};
 		});
+		frm.set_query("hiring_sender", () => {
+			return {
+				filters: {
+					enable_outgoing: 1,
+				},
+			};
+		});
 	}
 });
 
