@@ -69,8 +69,7 @@
   },
   {
    "fieldname": "column_break_4",
-   "fieldtype": "Column Break",
-   "read_only": 1
+   "fieldtype": "Column Break"
   },
   {
    "default": "1",
