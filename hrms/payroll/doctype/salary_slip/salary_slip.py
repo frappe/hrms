@@ -919,6 +919,7 @@ class SalarySlip(TransactionBase):
 			posting_date = frappe.utils.add_months(self.posting_date, sub_period)
 
 		else:
+			days_to_add = 0
 			if self.payroll_frequency == "Weekly":
 				days_to_add = sub_period * 6
 
