@@ -274,9 +274,6 @@
    "fieldtype": "Column Break"
   },
   {
-<<<<<<< HEAD
-   "default": "1",
-=======
    "fieldname": "hiring_sender",
    "fieldtype": "Link",
    "label": "Sender",
@@ -292,7 +289,6 @@
   },
   {
    "default": "0",
->>>>>>> 35538e97d (feat(Interview): Add setting for sender in interview & interview feedback reminder emails (#1033))
    "fieldname": "allow_multiple_shift_assignments",
    "fieldtype": "Check",
    "label": "Allow Multiple Shift Assignments for Same Date"
@@ -307,11 +303,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2023-12-07 14:55:37.309553",
-=======
  "modified": "2023-12-28 23:07:36.317223",
->>>>>>> 35538e97d (feat(Interview): Add setting for sender in interview & interview feedback reminder emails (#1033))
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
