@@ -287,7 +287,7 @@
    "read_only": 1
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "allow_multiple_shift_assignments",
    "fieldtype": "Check",
    "label": "Allow Multiple Shift Assignments for Same Date"
