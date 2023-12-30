@@ -41,6 +41,7 @@
    "reqd": 1
   },
   {
+   "fetch_from": "job_applicant.job_title",
    "fieldname": "job_opening",
    "fieldtype": "Link",
    "label": "Job Opening",
@@ -89,6 +90,8 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "job_applicant.resume_link",
+   "fetch_if_empty": 1,
    "fieldname": "resume_link",
    "fieldtype": "Data",
    "label": "Resume link"
@@ -195,7 +198,7 @@
    "link_fieldname": "interview"
   }
  ],
- "modified": "2023-12-29 17:37:29.784687",
+ "modified": "2023-12-30 12:13:59.157555",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview",
