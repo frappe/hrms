@@ -15,8 +15,6 @@ source_link = "http://github.com/frappe/hrms"
 # app_include_css = "/assets/hrms/css/hrms.css"
 app_include_js = [
 	"hrms.bundle.js",
-	"performance.bundle.js",
-	"interview.bundle.js",
 ]
 app_include_css = "hrms.bundle.css"
 
