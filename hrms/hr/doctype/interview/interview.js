@@ -17,7 +17,10 @@ frappe.ui.form.on("Interview", {
 
 		frm.trigger("load_skills_average_rating");
 		frm.trigger("load_feedback");
+		frm.trigger("add_custom_buttons");
+	},
 
+	add_custom_buttons: function(frm) {
 		if (frm.doc.docstatus != 2 && !frm.doc.__islocal) {
 			if (frm.doc.status === "Pending") {
 				frm.add_custom_button(__("Reschedule Interview"), function () {
@@ -180,55 +183,19 @@ frappe.ui.form.on("Interview", {
 	},
 
 	interview_round: function (frm) {
-		frm.events.reset_values(frm);
 		frm.set_value("job_applicant", "");
 		frm.trigger("set_applicable_interviewers");
 	},
 
 	job_applicant: function (frm) {
 		if (!frm.doc.interview_round) {
-			frm.doc.job_applicant = "";
-			frm.refresh();
+			frm.set_value("job_applicant", "");
 			frappe.throw(__("Select Interview Round First"));
 		}
 
-		if (frm.doc.job_applicant) {
-			frm.events.set_designation_and_job_opening(frm);
-		} else {
-			frm.events.reset_values(frm);
+		if (frm.doc.job_applicant && !frm.doc.designation) {
+			frm.add_fetch("job_applicant", "designation", "designation");
 		}
-	},
-
-	set_designation_and_job_opening: async function (frm) {
-		let round_data = (
-			await frappe.db.get_value(
-				"Interview Round",
-				frm.doc.interview_round,
-				"designation"
-			)
-		).message;
-		frm.set_value("designation", round_data.designation);
-
-		let job_applicant_data = (
-			await frappe.db.get_value("Job Applicant", frm.doc.job_applicant, [
-				"designation",
-				"job_title",
-				"resume_link",
-			])
-		).message;
-
-		if (!round_data.designation) {
-			frm.set_value("designation", job_applicant_data.designation);
-		}
-
-		frm.set_value("job_opening", job_applicant_data.job_title);
-		frm.set_value("resume_link", job_applicant_data.resume_link);
-	},
-
-	reset_values: function (frm) {
-		frm.set_value("designation", "");
-		frm.set_value("job_opening", "");
-		frm.set_value("resume_link", "");
 	},
 
 	set_applicable_interviewers(frm) {
