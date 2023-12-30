@@ -213,27 +213,23 @@ frappe.ui.form.on("Interview", {
 	},
 
 	load_skills_average_rating(frm) {
-		frm
-			.call({
-				method: "get_skills_average_rating",
-				doc: frm.doc,
-			})
-			.then((r) => {
-				frm.skills_average_rating = r.message;
-			});
+		frappe.call({
+			method: "hrms.hr.doctype.interview.interview.get_skills_average_rating",
+			args: { interview: frm.doc.name}
+		}).then((r) => {
+			frm.skills_average_rating = r.message;
+		});
 	},
 
 	load_feedback(frm) {
-		frm
-			.call({
-				method: "get_feedback",
-				doc: frm.doc,
-			})
-			.then((r) => {
-				frm.feedback = r.message;
-				frm.events.calculate_reviews_per_rating(frm);
-				frm.events.render_feedback(frm);
-			});
+		frappe.call({
+			method: "hrms.hr.doctype.interview.interview.get_feedback",
+			args: { interview: frm.doc.name },
+		}).then((r) => {
+			frm.feedback = r.message;
+			frm.events.calculate_reviews_per_rating(frm);
+			frm.events.render_feedback(frm);
+		});
 	},
 
 	render_feedback(frm) {
