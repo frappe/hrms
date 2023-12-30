@@ -115,44 +115,6 @@ class Interview(Document):
 
 		frappe.msgprint(_("Interview Rescheduled successfully"), indicator="green")
 
-	@frappe.whitelist()
-	def get_feedback(self):
-		interview_feedback = frappe.qb.DocType("Interview Feedback")
-		employee = frappe.qb.DocType("Employee")
-		query = (
-			frappe.qb.select(
-				interview_feedback.name,
-				interview_feedback.modified.as_("added_on"),
-				interview_feedback.interviewer.as_("user"),
-				interview_feedback.feedback,
-				(interview_feedback.average_rating * 5).as_("total_score"),
-				employee.employee_name.as_("reviewer_name"),
-				employee.designation.as_("reviewer_designation"),
-			)
-			.from_(interview_feedback)
-			.where((interview_feedback.interview == self.name) & (interview_feedback.docstatus == 1))
-			.join(employee)
-			.on(interview_feedback.interviewer == employee.user_id)
-		)
-		return query.run(as_dict=True)
-
-	@frappe.whitelist()
-	def get_skills_average_rating(self):
-		skill_assessment = frappe.qb.DocType("Skill Assessment")
-		interview_feedback = frappe.qb.DocType("Interview Feedback")
-		query = (
-			frappe.qb.select(
-				skill_assessment.skill,
-				Avg(skill_assessment.rating).as_("rating"),
-			)
-			.from_(skill_assessment)
-			.join(interview_feedback)
-			.on(skill_assessment.parent == interview_feedback.name)
-			.where((interview_feedback.interview == self.name) & (interview_feedback.docstatus == 1))
-			.groupby(skill_assessment.skill)
-		)
-		return query.run(as_dict=True)
-
 
 @frappe.whitelist()
 def get_applicable_interviewers(interview_round: str) -> list[str]:
@@ -175,6 +137,46 @@ def get_recipients(name, for_feedback=0):
 		recipients.append(frappe.db.get_value("Job Applicant", interview.job_applicant, "email_id"))
 
 	return recipients
+
+
+@frappe.whitelist()
+def get_feedback(interview: str) -> list[dict]:
+	interview_feedback = frappe.qb.DocType("Interview Feedback")
+	employee = frappe.qb.DocType("Employee")
+	query = (
+		frappe.qb.select(
+			interview_feedback.name,
+			interview_feedback.modified.as_("added_on"),
+			interview_feedback.interviewer.as_("user"),
+			interview_feedback.feedback,
+			(interview_feedback.average_rating * 5).as_("total_score"),
+			employee.employee_name.as_("reviewer_name"),
+			employee.designation.as_("reviewer_designation"),
+		)
+		.from_(interview_feedback)
+		.where((interview_feedback.interview == interview) & (interview_feedback.docstatus == 1))
+		.join(employee)
+		.on(interview_feedback.interviewer == employee.user_id)
+	)
+	return query.run(as_dict=True)
+
+
+@frappe.whitelist()
+def get_skills_average_rating(interview: str) -> list[dict]:
+	skill_assessment = frappe.qb.DocType("Skill Assessment")
+	interview_feedback = frappe.qb.DocType("Interview Feedback")
+	query = (
+		frappe.qb.select(
+			skill_assessment.skill,
+			Avg(skill_assessment.rating).as_("rating"),
+		)
+		.from_(skill_assessment)
+		.join(interview_feedback)
+		.on(skill_assessment.parent == interview_feedback.name)
+		.where((interview_feedback.interview == interview) & (interview_feedback.docstatus == 1))
+		.groupby(skill_assessment.skill)
+	)
+	return query.run(as_dict=True)
 
 
 @frappe.whitelist()
