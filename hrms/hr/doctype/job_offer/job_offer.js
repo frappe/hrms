@@ -21,6 +21,18 @@ frappe.ui.form.on("Job Offer", {
 			}
 		});
 	},
+	job_offer_term_template: function (frm) {
+		if (!frm.doc.job_offer_term_template) return;
+
+		frappe.db.get_doc("Job Offer Term Template", frm.doc.job_offer_term_template).then((doc) => {
+			frm.clear_table("offer_terms");
+			doc.offer_terms.forEach((term) => {
+				frm.add_child("offer_terms", term);
+			})
+			refresh_field("offer_terms");
+		})
+
+	},
 
 	refresh: function (frm) {
 		if ((!frm.doc.__islocal) && (frm.doc.status == 'Accepted')

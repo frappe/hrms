@@ -7,7 +7,7 @@ frappe.pages['organizational-chart'].on_page_load = function(wrapper) {
 
 	$(wrapper).bind('show', () => {
 		frappe.require('hierarchy-chart.bundle.js', () => {
-			let organizational_chart = undefined;
+			let organizational_chart;
 			let method = 'hrms.hr.page.organizational_chart.organizational_chart.get_children';
 
 			if (frappe.is_mobile()) {
