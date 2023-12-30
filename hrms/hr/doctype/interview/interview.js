@@ -15,9 +15,12 @@ frappe.ui.form.on("Interview", {
 			};
 		});
 
-		frm.trigger("load_skills_average_rating");
-		frm.trigger("load_feedback");
 		frm.trigger("add_custom_buttons");
+
+		frappe.run_serially([
+			() => frm.trigger("load_skills_average_rating"),
+			() => frm.trigger("load_feedback"),
+		]);
 	},
 
 	add_custom_buttons: function(frm) {
