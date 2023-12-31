@@ -227,7 +227,7 @@ frappe.ui.form.on("Interview", {
 
 	load_skills_average_rating(frm) {
 		frappe.call({
-			method: "hrms.hr.doctype.interview.interview.get_skills_average_rating",
+			method: "hrms.hr.doctype.interview.interview.get_skill_wise_average_rating",
 			args: { interview: frm.doc.name}
 		}).then((r) => {
 			frm.skills_average_rating = r.message;

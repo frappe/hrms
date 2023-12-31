@@ -8,12 +8,15 @@ import frappe
 from frappe import _
 from frappe.core.doctype.user_permission.test_user_permission import create_user
 from frappe.tests.utils import FrappeTestCase
-from frappe.utils import add_days, get_time, getdate, nowtime
+from frappe.utils import add_days, get_datetime, get_time, getdate, nowtime
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
+from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.interview.interview import (
 	DuplicateInterviewRoundError,
+	get_feedback,
+	get_skill_wise_average_rating,
 	update_job_applicant_status,
 )
 from hrms.hr.doctype.job_applicant.job_applicant import get_interview_details
@@ -112,6 +115,75 @@ class TestInterview(FrappeTestCase):
 			},
 		)
 
+	def test_skill_wise_average_rating(self):
+		from hrms.hr.doctype.interview_feedback.test_interview_feedback import create_interview_feedback
+
+		job_applicant = create_job_applicant()
+		interview = create_interview_and_dependencies(job_applicant.name)
+
+		feedback_1 = create_interview_feedback(
+			interview.name,
+			"test_interviewer1@example.com",
+			[{"skill": "Python", "rating": 0.9}, {"skill": "JS", "rating": 0.8}],
+		)
+		feedback_2 = create_interview_feedback(
+			interview.name,
+			"test_interviewer2@example.com",
+			[{"skill": "Python", "rating": 0.6}, {"skill": "JS", "rating": 0.9}],
+		)
+
+		ratings = get_skill_wise_average_rating(interview.name)
+		self.assertEqual(ratings, [{"skill": "Python", "rating": 0.75}, {"skill": "JS", "rating": 0.85}])
+
+	def test_get_feedback(self):
+		from hrms.hr.doctype.interview_feedback.test_interview_feedback import create_interview_feedback
+
+		job_applicant = create_job_applicant()
+		interview = create_interview_and_dependencies(job_applicant.name)
+		make_employee(
+			"test_interviewer2@example.com",
+			company="_Test Company",
+			first_name="Test",
+			date_of_joining=frappe.utils.add_years(getdate(), -2),
+			designation="Engineer",
+			user_id="test_interviewer2@example.com",
+		)
+
+		feedback_1 = create_interview_feedback(
+			interview.name,
+			"test_interviewer1@example.com",
+			[{"skill": "Python", "rating": 0.9}, {"skill": "JS", "rating": 0.8}],
+		)
+		feedback_2 = create_interview_feedback(
+			interview.name,
+			"test_interviewer2@example.com",
+			[{"skill": "Python", "rating": 0.6}, {"skill": "JS", "rating": 0.9}],
+		)
+
+		feedback = get_feedback(interview.name)
+		expected_data = [
+			{
+				"name": feedback_1.name,
+				"added_on": get_datetime(feedback_1.modified),
+				"user": feedback_1.interviewer,
+				"feedback": feedback_1.feedback,
+				"total_score": feedback_1.average_rating * 5,
+				"reviewer_name": None,
+				"reviewer_designation": None,
+			},
+			{
+				"name": feedback_2.name,
+				"added_on": get_datetime(feedback_2.modified),
+				"user": feedback_2.interviewer,
+				"feedback": feedback_2.feedback,
+				"total_score": feedback_2.average_rating * 5,
+				"reviewer_name": "Test",
+				"reviewer_designation": "Engineer",
+			},
+		]
+
+		self.assertEqual(feedback, expected_data)
+
 	def test_job_applicant_status_update_on_interview_submit(self):
 		job_applicant = create_job_applicant()
 		interview = create_interview_and_dependencies(job_applicant.name, status="Cleared")
@@ -133,7 +205,6 @@ def create_interview_and_dependencies(
 	designation=None,
 	status=None,
 	save=True,
-	average_rating=1,
 ):
 	if designation:
 		designation = create_designation(designation_name="_Test_Sales_manager").name
@@ -155,7 +226,6 @@ def create_interview_and_dependencies(
 	interview.scheduled_on = scheduled_on or getdate()
 	interview.from_time = from_time or nowtime()
 	interview.to_time = to_time or nowtime()
-	interview.average_rating = average_rating
 	interview.append("interview_details", {"interviewer": "test_interviewer1@example.com"})
 	interview.append("interview_details", {"interviewer": "test_interviewer2@example.com"})
 
