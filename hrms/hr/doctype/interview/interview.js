@@ -32,7 +32,7 @@ frappe.ui.form.on("Interview", {
 				});
 			}
 
-			const disable_button = frm.doc.interview_details.some(
+			const allow_feedback_submission = frm.doc.interview_details.some(
 				interviewer => interviewer.interviewer === frappe.session.user
 			);
 
@@ -46,7 +46,7 @@ frappe.ui.form.on("Interview", {
 				"name",
 				(r) => {
 					if (Object.keys(r).length === 0) {
-						frm
+						const button = frm
 							.add_custom_button(__("Submit Feedback"), function () {
 								frappe.call({
 									method:
@@ -60,8 +60,15 @@ frappe.ui.form.on("Interview", {
 									},
 								});
 							})
-							.addClass("btn-primary")
-							.prop("disabled", disable_button);
+
+						if (allow_feedback_submission) {
+							button.addClass("btn-primary");
+						} else {
+							button
+								.prop("disabled", true)
+								.attr("title", __("Only interviewers can submit feedback"))
+								.tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
+						}
 					}
 				}
 			);
