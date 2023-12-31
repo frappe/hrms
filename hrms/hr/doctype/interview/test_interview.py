@@ -156,8 +156,8 @@ def create_interview_and_dependencies(
 	interview.from_time = from_time or nowtime()
 	interview.to_time = to_time or nowtime()
 	interview.average_rating = average_rating
-	interview.append("interviewers", {"user": "test_interviewer1@example.com"})
-	interview.append("interviewers", {"user": "test_interviewer2@example.com"})
+	interview.append("interview_details", {"interviewer": "test_interviewer1@example.com"})
+	interview.append("interview_details", {"interviewer": "test_interviewer2@example.com"})
 
 	if status:
 		interview.status = status
@@ -168,7 +168,7 @@ def create_interview_and_dependencies(
 	return interview
 
 
-def create_interview_round(name, skill_set, interviewers=[], designation=None, save=True):
+def create_interview_round(name, skill_set, interviewers=None, designation=None, save=True):
 	create_skill_set(skill_set)
 	interview_round = frappe.new_doc("Interview Round")
 	interview_round.round_name = name

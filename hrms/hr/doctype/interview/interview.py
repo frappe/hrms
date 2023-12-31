@@ -125,11 +125,11 @@ def get_interviewers(interview_round: str) -> list[str]:
 
 def get_recipients(name, for_feedback=0):
 	interview = frappe.get_doc("Interview", name)
-	interviewers = [x.user for x in interview.interviewers]
+	interviewers = [d.interviewer for d in interview.interview_details]
 
 	if for_feedback:
 		feedback_given_interviewers = frappe.get_all(
-			"Interview Feedback", filters={"interview": name}, pluck="interviewer"
+			"Interview Feedback", filters={"interview": name, "docstatus": 1}, pluck="interviewer"
 		)
 		recipients = [d for d in interviewers if d not in feedback_given_interviewers]
 	else:
