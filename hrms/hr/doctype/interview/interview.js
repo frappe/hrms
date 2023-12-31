@@ -29,7 +29,7 @@ frappe.ui.form.on("Interview", {
 				frm.add_custom_button(__("Reschedule Interview"), function () {
 					frm.events.show_reschedule_dialog(frm);
 					frm.refresh();
-				});
+				}, __("Actions"));
 			}
 
 			const allow_feedback_submission = frm.doc.interview_details.some(
