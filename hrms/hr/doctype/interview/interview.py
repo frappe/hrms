@@ -149,8 +149,10 @@ def get_recipients(name, for_feedback=0):
 def get_feedback(interview: str) -> list[dict]:
 	interview_feedback = frappe.qb.DocType("Interview Feedback")
 	employee = frappe.qb.DocType("Employee")
-	query = (
-		frappe.qb.select(
+
+	return (
+		frappe.qb.from_(interview_feedback)
+		.select(
 			interview_feedback.name,
 			interview_feedback.modified.as_("added_on"),
 			interview_feedback.interviewer.as_("user"),
@@ -159,12 +161,10 @@ def get_feedback(interview: str) -> list[dict]:
 			employee.employee_name.as_("reviewer_name"),
 			employee.designation.as_("reviewer_designation"),
 		)
-		.from_(interview_feedback)
-		.where((interview_feedback.interview == interview) & (interview_feedback.docstatus == 1))
-		.join(employee)
+		.left_join(employee)
 		.on(interview_feedback.interviewer == employee.user_id)
-	)
-	return query.run(as_dict=True)
+		.where((interview_feedback.interview == interview) & (interview_feedback.docstatus == 1))
+	).run(as_dict=True)
 
 
 @frappe.whitelist()
