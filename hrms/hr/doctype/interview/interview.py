@@ -290,13 +290,13 @@ def send_daily_feedback_reminder():
 			"scheduled_on": ["<=", getdate()],
 			"to_time": ["<=", nowtime()],
 		},
-		fields=["name", "interview_round"],
+		pluck="name",
 	)
 
-	for entry in interviews:
-		recipients = get_recipients(entry.name, for_feedback=1)
+	for interview in interviews:
+		recipients = get_recipients(interview, for_feedback=1)
 
-		doc = frappe.get_doc("Interview", entry.name)
+		doc = frappe.get_doc("Interview", interview)
 		context = doc.as_dict()
 
 		message = frappe.render_template(interview_feedback_template.response, context)
@@ -308,7 +308,7 @@ def send_daily_feedback_reminder():
 				subject=interview_feedback_template.subject,
 				message=message,
 				reference_doctype="Interview",
-				reference_name=entry.name,
+				reference_name=interview,
 			)
 
 
