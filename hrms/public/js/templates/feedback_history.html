@@ -11,7 +11,7 @@
 						<div class="col-xs-10">
 							<div class="ml-2">
 								<div class="title font-weight-bold">
-									{{ strip_html(feedback_history[i].reviewer_name) }}
+									{{ strip_html(feedback_history[i].reviewer_name || feedback_history[i].user) }}
 								</div>
 								{% if (feedback_history[i].reviewer_designation) { %}
 									<div class="small text-muted">
