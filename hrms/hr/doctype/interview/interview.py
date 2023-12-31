@@ -141,14 +141,15 @@ def get_feedback(interview: str) -> list[dict]:
 		.left_join(employee)
 		.on(interview_feedback.interviewer == employee.user_id)
 		.where((interview_feedback.interview == interview) & (interview_feedback.docstatus == 1))
+		.orderby(interview_feedback.modified)
 	).run(as_dict=True)
 
 
 @frappe.whitelist()
-def get_skills_average_rating(interview: str) -> list[dict]:
+def get_skill_wise_average_rating(interview: str) -> list[dict]:
 	skill_assessment = frappe.qb.DocType("Skill Assessment")
 	interview_feedback = frappe.qb.DocType("Interview Feedback")
-	query = (
+	return (
 		frappe.qb.select(
 			skill_assessment.skill,
 			Avg(skill_assessment.rating).as_("rating"),
@@ -158,8 +159,8 @@ def get_skills_average_rating(interview: str) -> list[dict]:
 		.on(skill_assessment.parent == interview_feedback.name)
 		.where((interview_feedback.interview == interview) & (interview_feedback.docstatus == 1))
 		.groupby(skill_assessment.skill)
-	)
-	return query.run(as_dict=True)
+		.orderby(skill_assessment.idx)
+	).run(as_dict=True)
 
 
 @frappe.whitelist()
