@@ -84,6 +84,12 @@ class Interview(Document):
 
 	@frappe.whitelist()
 	def reschedule_interview(self, scheduled_on, from_time, to_time):
+		if scheduled_on == self.scheduled_on and from_time == self.from_time and to_time == self.to_time:
+			frappe.msgprint(
+				_("No changes found in timings."), indicator="orange", title=_("Interview Not Rescheduled")
+			)
+			return
+
 		original_date = self.scheduled_on
 		original_from_time = self.from_time
 		original_to_time = self.to_time
