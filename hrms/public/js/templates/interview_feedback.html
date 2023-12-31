@@ -3,8 +3,13 @@
 	<h4 class="my-4 mx-5" style="font-size: 18px">
 		{{ __("Overall Average Rating") }}
 	</h4>
-	{%= frappe.render_template("feedback_summary",
-	{ number_of_stars: 5, average_rating: average_rating, feedback_count: feedbacks.length, reviews_per_rating: reviews_per_rating }) %}
+	{%=
+		frappe.render_template(
+			"feedback_summary",
+			{ number_of_stars: 5, average_rating: average_rating, feedback_count: feedbacks.length, reviews_per_rating: reviews_per_rating }
+		)
+	%}
+
 	<div class="m-5">
 		<h4 class="mb-2" style="font-size: 18px">{{ __("Feedback Summary") }}</h4>
 		<p class="mb-5 text-secondary">
@@ -19,5 +24,6 @@
 		</div>
 	</div>
 	{% } %}
+
 	{%= frappe.render_template("feedback_history", { feedback_history: feedbacks, feedback_doctype: "Interview Feedback" }) %}
 </div>
