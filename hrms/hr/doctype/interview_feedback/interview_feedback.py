@@ -75,8 +75,10 @@ class InterviewFeedback(Document):
 		)
 		data = query.run(as_dict=True)
 		average_rating = data[0].average
-		if average_rating:
-			frappe.db.set_value("Interview", self.interview, "average_rating", average_rating)
+
+		interview = frappe.get_doc("Interview", self.interview)
+		interview.db_set("average_rating", average_rating)
+		interview.notify_update()
 
 
 @frappe.whitelist()
