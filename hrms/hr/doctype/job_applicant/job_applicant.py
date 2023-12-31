@@ -10,6 +10,8 @@ from frappe.model.document import Document
 from frappe.model.naming import append_number_if_name_exists
 from frappe.utils import flt, validate_email_address
 
+from hrms.hr.doctype.interview.interview import get_interviewers
+
 
 class DuplicationError(frappe.ValidationError):
 	pass
@@ -78,6 +80,10 @@ def create_interview(doc, interview_round):
 	interview.designation = doc.designation
 	interview.resume_link = doc.resume_link
 	interview.job_opening = doc.job_title
+
+	interviewers = get_interviewers(interview_round)
+	for d in interviewers:
+		interview.append("interview_details", {"interviewer": d.interviewer})
 
 	return interview
 

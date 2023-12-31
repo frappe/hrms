@@ -204,7 +204,7 @@ frappe.ui.form.on("Interview", {
 	set_applicable_interviewers(frm) {
 		frappe.call({
 			method:
-				"hrms.hr.doctype.interview.interview.get_applicable_interviewers",
+				"hrms.hr.doctype.interview.interview.get_interviewers",
 			args: {
 				interview_round: frm.doc.interview_round || "",
 			},
