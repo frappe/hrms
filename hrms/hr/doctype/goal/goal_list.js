@@ -35,17 +35,18 @@ frappe.listview_settings["Goal"] = {
 		const status_menu = listview.page.add_custom_button_group(
 			__("Update Status")
 		);
-
-		["Complete", "Archive", "Close", "Unarchive", "Reopen"].forEach(
-			(option) => {
-				listview.page.add_custom_menu_item(status_menu, __(option), () =>
-					this.trigger_update_status_dialog(
-						option + option.slice(-1) === "e" ? "d" : "ed",
-						listview
-					)
-				);
-			}
-		);
+		const options = [
+			{ present: "Complete", past: "Completed" },
+			{ present: "Archive", past: "Archived" },
+			{ present: "Close", past: "Closed" },
+			{ present: "Unarchive", past: "Unarchived" },
+			{ present: "Reopen", past: "Reopened" },
+		];
+		options.forEach((option) => {
+			listview.page.add_custom_menu_item(status_menu, __(option.present), () =>
+				this.trigger_update_status_dialog(option.past, listview)
+			);
+		});
 	},
 
 	trigger_update_status_dialog: function (status, listview) {
@@ -98,8 +99,9 @@ frappe.listview_settings["Goal"] = {
 
 		if (checked_items.some((item) => item.is_group))
 			frappe.msgprint({
+				title: __("Error"),
 				message: __("Cannot update status of Goal groups"),
-				indicator: "yellow",
+				indicator: "orange",
 			});
 
 		const applicable_statuses = applicable_current_statuses(status);
@@ -107,11 +109,12 @@ frappe.listview_settings["Goal"] = {
 			checked_items.some((item) => !applicable_statuses.includes(item.status))
 		)
 			frappe.msgprint({
+				title: __("Error"),
 				message: __("Only {0} Goals can be {1}", [
 					frappe.utils.comma_and(applicable_statuses),
 					status,
 				]),
-				indicator: "yellow",
+				indicator: "orange",
 			});
 	},
 
