@@ -58,37 +58,37 @@ frappe.listview_settings["Goal"] = {
 					applicable_current_statuses(status).includes(item.status)
 			)
 			.map((item) => item.name);
+		if (!items_to_be_updated.length)
+			return this.trigger_error_dialogs(checked_items, status);
 
-		if (items_to_be_updated.length) {
-			if (status === "Unarchived" || status === "Reopened") {
-				const simple_present_tense = {
-					Unarchived: "Unarchive",
-					Reopened: "Reopen",
-				};
-				frappe.confirm(
-					__("{0} {1} {2}?", [
-						simple_present_tense[status],
-						items_to_be_updated.length.toString(),
-						items_to_be_updated.length === 1 ? "item" : "items",
-					]),
-					() => {
-						this.update_status("", items_to_be_updated, listview);
-						this.trigger_error_dialogs(checked_items, status);
-					}
-				);
-			} else
-				frappe.confirm(
-					__("Mark {0} {1} as {2}?", [
-						items_to_be_updated.length.toString(),
-						items_to_be_updated.length === 1 ? "item" : "items",
-						status,
-					]),
-					() => {
-						this.update_status(status, items_to_be_updated, listview);
-						this.trigger_error_dialogs(checked_items, status);
-					}
-				);
-		} else this.trigger_error_dialogs(checked_items, status);
+		if (status === "Unarchived" || status === "Reopened") {
+			const simple_present_tense = {
+				Unarchived: "Unarchive",
+				Reopened: "Reopen",
+			};
+			frappe.confirm(
+				__("{0} {1} {2}?", [
+					simple_present_tense[status],
+					items_to_be_updated.length.toString(),
+					items_to_be_updated.length === 1 ? "item" : "items",
+				]),
+				() => {
+					this.update_status("", items_to_be_updated, listview);
+					this.trigger_error_dialogs(checked_items, status);
+				}
+			);
+		} else
+			frappe.confirm(
+				__("Mark {0} {1} as {2}?", [
+					items_to_be_updated.length.toString(),
+					items_to_be_updated.length === 1 ? "item" : "items",
+					status,
+				]),
+				() => {
+					this.update_status(status, items_to_be_updated, listview);
+					this.trigger_error_dialogs(checked_items, status);
+				}
+			);
 	},
 
 	trigger_error_dialogs: function (checked_items, status) {
