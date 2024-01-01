@@ -187,7 +187,8 @@
    "fieldname": "interview_details",
    "fieldtype": "Table",
    "label": "Interviewers",
-   "options": "Interview Detail"
+   "options": "Interview Detail",
+   "allow_on_submit": 1
   }
  ],
  "index_web_pages_for_search": 1,
