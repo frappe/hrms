@@ -49,5 +49,5 @@ class SalaryComponent(Document):
 		frappe.qb.update(SalaryDetail).inner_join(SalaryStructure).on(
 			SalaryDetail.parent == SalaryStructure.name
 		).set(SalaryDetail[field], value).where(
-			(SalaryDetail.salary_component == self.name) & (SalaryStructure.docstatus == 1)
+			(SalaryDetail.salary_component == self.name) & (SalaryStructure.docstatus != 2)
 		).run()
