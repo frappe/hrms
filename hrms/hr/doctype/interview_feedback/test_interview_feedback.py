@@ -21,7 +21,7 @@ class TestInterviewFeedback(FrappeTestCase):
 		)
 		skill_ratings = get_skills_rating(interview.interview_round)
 
-		interviewer = interview.interview_details[0].interviewer
+		interviewer = "test_interviewer1@example.com"
 		create_skill_set(["Leadership"])
 
 		interview_feedback = create_interview_feedback(interview.name, interviewer, skill_ratings)
@@ -40,7 +40,7 @@ class TestInterviewFeedback(FrappeTestCase):
 		skill_ratings = get_skills_rating(interview.interview_round)
 
 		# For First Interviewer Feedback
-		interviewer = interview.interview_details[0].interviewer
+		interviewer = "test_interviewer1@example.com"
 		frappe.set_user(interviewer)
 
 		# calculating Average
@@ -57,21 +57,8 @@ class TestInterviewFeedback(FrappeTestCase):
 
 		self.assertEqual(flt(avg_rating, 2), flt(feedback_1.average_rating, 2))
 
-		avg_on_interview_detail = frappe.db.get_value(
-			"Interview Detail",
-			{
-				"parent": feedback_1.interview,
-				"interviewer": feedback_1.interviewer,
-				"interview_feedback": feedback_1.name,
-			},
-			"average_rating",
-		)
-
-		# 1. average should be reflected in Interview Detail.
-		self.assertEqual(flt(avg_on_interview_detail, 2), flt(feedback_1.average_rating, 2))
-
 		"""For Second Interviewer Feedback"""
-		interviewer = interview.interview_details[1].interviewer
+		interviewer = "test_interviewer2@example.com"
 		frappe.set_user(interviewer)
 
 		feedback_2 = create_interview_feedback(interview.name, interviewer, skill_ratings)

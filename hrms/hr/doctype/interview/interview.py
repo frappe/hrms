@@ -7,7 +7,8 @@ import datetime
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cint, cstr, flt, get_datetime, get_link_to_form, getdate, nowtime
+from frappe.query_builder.functions import Avg
+from frappe.utils import cint, cstr, get_datetime, get_link_to_form, getdate, nowtime
 
 
 class DuplicateInterviewRoundError(frappe.ValidationError):
@@ -18,8 +19,6 @@ class Interview(Document):
 	def validate(self):
 		self.validate_duplicate_interview()
 		self.validate_designation()
-		self.validate_overlap()
-		self.set_average_rating()
 
 	def on_submit(self):
 		if self.status not in ["Cleared", "Rejected"]:
@@ -60,50 +59,6 @@ class Interview(Document):
 		else:
 			self.designation = applicant_designation
 
-	def validate_overlap(self):
-		interviewers = [entry.interviewer for entry in self.interview_details] or [""]
-
-		overlaps = frappe.db.sql(
-			"""
-			SELECT interview.name
-			FROM `tabInterview` as interview
-			INNER JOIN `tabInterview Detail` as detail
-			WHERE
-				interview.scheduled_on = %s and interview.name != %s and interview.docstatus != 2
-				and (interview.job_applicant = %s or detail.interviewer IN %s) and
-				((from_time < %s and to_time > %s) or
-				(from_time > %s and to_time < %s) or
-				(from_time = %s))
-			""",
-			(
-				self.scheduled_on,
-				self.name,
-				self.job_applicant,
-				interviewers,
-				self.from_time,
-				self.to_time,
-				self.from_time,
-				self.to_time,
-				self.from_time,
-			),
-		)
-
-		if overlaps:
-			overlapping_details = _("Interview overlaps with {0}").format(
-				get_link_to_form("Interview", overlaps[0][0])
-			)
-			frappe.throw(overlapping_details, title=_("Overlap"))
-
-	def set_average_rating(self):
-		total_rating = 0
-		for entry in self.interview_details:
-			if entry.average_rating:
-				total_rating += entry.average_rating
-
-		self.average_rating = flt(
-			total_rating / len(self.interview_details) if len(self.interview_details) else 0
-		)
-
 	def show_job_applicant_update_dialog(self):
 		job_applicant_status = self.get_job_applicant_status()
 		if not job_applicant_status:
@@ -129,6 +84,12 @@ class Interview(Document):
 
 	@frappe.whitelist()
 	def reschedule_interview(self, scheduled_on, from_time, to_time):
+		if scheduled_on == self.scheduled_on and from_time == self.from_time and to_time == self.to_time:
+			frappe.msgprint(
+				_("No changes found in timings."), indicator="orange", title=_("Interview Not Rescheduled")
+			)
+			return
+
 		original_date = self.scheduled_on
 		original_from_time = self.from_time
 		original_to_time = self.to_time
@@ -161,16 +122,68 @@ class Interview(Document):
 		frappe.msgprint(_("Interview Rescheduled successfully"), indicator="green")
 
 
+@frappe.whitelist()
+def get_interviewers(interview_round: str) -> list[str]:
+	return frappe.get_all(
+		"Interviewer", filters={"parent": interview_round}, fields=["user as interviewer"]
+	)
+
+
 def get_recipients(name, for_feedback=0):
 	interview = frappe.get_doc("Interview", name)
+	interviewers = [d.interviewer for d in interview.interview_details]
 
 	if for_feedback:
-		recipients = [d.interviewer for d in interview.interview_details if not d.interview_feedback]
+		feedback_given_interviewers = frappe.get_all(
+			"Interview Feedback", filters={"interview": name, "docstatus": 1}, pluck="interviewer"
+		)
+		recipients = [d for d in interviewers if d not in feedback_given_interviewers]
 	else:
-		recipients = [d.interviewer for d in interview.interview_details]
+		recipients = interviewers
 		recipients.append(frappe.db.get_value("Job Applicant", interview.job_applicant, "email_id"))
 
 	return recipients
+
+
+@frappe.whitelist()
+def get_feedback(interview: str) -> list[dict]:
+	interview_feedback = frappe.qb.DocType("Interview Feedback")
+	employee = frappe.qb.DocType("Employee")
+
+	return (
+		frappe.qb.from_(interview_feedback)
+		.select(
+			interview_feedback.name,
+			interview_feedback.modified.as_("added_on"),
+			interview_feedback.interviewer.as_("user"),
+			interview_feedback.feedback,
+			(interview_feedback.average_rating * 5).as_("total_score"),
+			employee.employee_name.as_("reviewer_name"),
+			employee.designation.as_("reviewer_designation"),
+		)
+		.left_join(employee)
+		.on(interview_feedback.interviewer == employee.user_id)
+		.where((interview_feedback.interview == interview) & (interview_feedback.docstatus == 1))
+		.orderby(interview_feedback.modified)
+	).run(as_dict=True)
+
+
+@frappe.whitelist()
+def get_skill_wise_average_rating(interview: str) -> list[dict]:
+	skill_assessment = frappe.qb.DocType("Skill Assessment")
+	interview_feedback = frappe.qb.DocType("Interview Feedback")
+	return (
+		frappe.qb.select(
+			skill_assessment.skill,
+			Avg(skill_assessment.rating).as_("rating"),
+		)
+		.from_(skill_assessment)
+		.join(interview_feedback)
+		.on(skill_assessment.parent == interview_feedback.name)
+		.where((interview_feedback.interview == interview) & (interview_feedback.docstatus == 1))
+		.groupby(skill_assessment.skill)
+		.orderby(skill_assessment.idx)
+	).run(as_dict=True)
 
 
 @frappe.whitelist()
@@ -200,13 +213,6 @@ def update_job_applicant_status(args):
 			alert=True,
 			indicator="red",
 		)
-
-
-@frappe.whitelist()
-def get_interviewers(interview_round):
-	return frappe.get_all(
-		"Interviewer", filters={"parent": interview_round}, fields=["user as interviewer"]
-	)
 
 
 def send_interview_reminder():
@@ -285,12 +291,13 @@ def send_daily_feedback_reminder():
 			"scheduled_on": ["<=", getdate()],
 			"to_time": ["<=", nowtime()],
 		},
+		pluck="name",
 	)
 
-	for entry in interviews:
-		recipients = get_recipients(entry.name, for_feedback=1)
+	for interview in interviews:
+		recipients = get_recipients(interview, for_feedback=1)
 
-		doc = frappe.get_doc("Interview", entry.name)
+		doc = frappe.get_doc("Interview", interview)
 		context = doc.as_dict()
 
 		message = frappe.render_template(interview_feedback_template.response, context)
@@ -302,7 +309,7 @@ def send_daily_feedback_reminder():
 				subject=interview_feedback_template.subject,
 				message=message,
 				reference_doctype="Interview",
-				reference_name=entry.name,
+				reference_name=interview,
 			)
 
 

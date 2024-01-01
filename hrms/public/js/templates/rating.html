@@ -21,7 +21,7 @@
 	</div>
 	{% if (!for_summary) { %}
 		<p class="ml-3" style="line-height: 2;">
-			({{ average_rating }})
+			({{ flt(average_rating, 2) }})
 		</p>
 	{% } %}
 </div>

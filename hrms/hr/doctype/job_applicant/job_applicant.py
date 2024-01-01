@@ -80,10 +80,11 @@ def create_interview(doc, interview_round):
 	interview.designation = doc.designation
 	interview.resume_link = doc.resume_link
 	interview.job_opening = doc.job_title
-	interviewer_detail = get_interviewers(interview_round)
 
-	for d in interviewer_detail:
+	interviewers = get_interviewers(interview_round)
+	for d in interviewers:
 		interview.append("interview_details", {"interviewer": d.interviewer})
+
 	return interview
 
 
