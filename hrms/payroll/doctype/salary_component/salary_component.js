@@ -161,15 +161,23 @@ frappe.ui.form.on("Salary Component", {
 					frappe.confirm(
 						__("Update {0} for all existing Salary Structures?", [df]),
 						() => {
-							frappe.call({
-								method:
-									"hrms.payroll.doctype.salary_detail.salary_detail.update_salary_structures",
-								args: {
-									component: frm.doc.name,
-									field: df.toLowerCase(),
-									value: frm.get_field(df.toLowerCase()).value,
-								},
-							});
+							frappe
+								.call({
+									method: "update_salary_structures",
+									doc: frm.doc,
+									args: {
+										field: df.toLowerCase(),
+										value: frm.get_field(df.toLowerCase()).value,
+									},
+								})
+								.then((r) => {
+									if (!r.exc) {
+										frappe.show_alert({
+											message: __("Salary Structures updated successfully"),
+											indicator: "green",
+										});
+									}
+								});
 						}
 					);
 				},
