@@ -207,10 +207,12 @@ def update_progress(progress: float, goal: str) -> None:
 
 
 @frappe.whitelist()
-def update_status(status: str, goals: str) -> None:
-	import json
+def update_status(status: str, goals: str | list) -> None:
+	if type(goals) is not list:
+		import json
 
-	goals = json.loads(goals)
+		goals = json.loads(goals)
+
 	for goal in goals:
 		goal = frappe.get_doc("Goal", goal)
 		goal.status = status
