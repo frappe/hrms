@@ -29,6 +29,10 @@ def set_loan_repayment(doc: "SalarySlip"):
 	doc.total_interest_amount = 0
 	doc.total_principal_amount = 0
 
+	# Initialize loans if it's None
+        if doc.get("loans") is None:
+                doc.loans = []
+
 	if not doc.get("loans"):
 		for loan in _get_loan_details(doc):
 			amounts = calculate_amounts(loan.name, doc.posting_date, "Regular Payment")
