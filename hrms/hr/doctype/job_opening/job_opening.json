@@ -1,11 +1,7 @@
 {
  "actions": [],
  "allow_import": 1,
-<<<<<<< HEAD
- "autoname": "HR-OPN-.YYYY.-.#### ",
-=======
  "autoname": "HR-OPN-.YYYY.-.####",
->>>>>>> 3aed02e80 (fix: url encoding in job application routes (#1251))
  "creation": "2013-01-15 16:13:36",
  "description": "Description of a Job Opening",
  "doctype": "DocType",
