@@ -8,7 +8,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.query_builder.functions import Avg
-from frappe.utils import cstr, get_datetime, get_link_to_form, getdate, nowtime
+from frappe.utils import cint, cstr, get_datetime, get_link_to_form, getdate, nowtime
 
 
 class DuplicateInterviewRoundError(frappe.ValidationError):
@@ -58,6 +58,29 @@ class Interview(Document):
 				)
 		else:
 			self.designation = applicant_designation
+
+	def show_job_applicant_update_dialog(self):
+		job_applicant_status = self.get_job_applicant_status()
+		if not job_applicant_status:
+			return
+
+		job_application_name = frappe.db.get_value("Job Applicant", self.job_applicant, "applicant_name")
+
+		frappe.msgprint(
+			_("Do you want to update the Job Applicant {0} as {1} based on this interview result?").format(
+				frappe.bold(job_application_name), frappe.bold(job_applicant_status)
+			),
+			title=_("Update Job Applicant"),
+			primary_action={
+				"label": _("Mark as {0}").format(job_applicant_status),
+				"server_action": "hrms.hr.doctype.interview.interview.update_job_applicant_status",
+				"args": {"job_applicant": self.job_applicant, "status": job_applicant_status},
+			},
+		)
+
+	def get_job_applicant_status(self) -> str | None:
+		status_map = {"Cleared": "Accepted", "Rejected": "Rejected"}
+		return status_map.get(self.status, None)
 
 	@frappe.whitelist()
 	def reschedule_interview(self, scheduled_on, from_time, to_time):
@@ -190,13 +213,6 @@ def update_job_applicant_status(args):
 			alert=True,
 			indicator="red",
 		)
-
-
-@frappe.whitelist()
-def get_interviewers(interview_round):
-	return frappe.get_all(
-		"Interviewer", filters={"parent": interview_round}, fields=["user as interviewer"]
-	)
 
 
 def send_interview_reminder():
