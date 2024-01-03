@@ -42,7 +42,7 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 		const { feedback_history, reviews_per_rating, avg_feedback_score } = data || {};
 		const can_create = await this.can_create();
 
-		const feedback_html = frappe.render_template("performance_feedback_history", {
+		const feedback_html = frappe.render_template("performance_feedback", {
 			feedback_history: feedback_history,
 			average_feedback_score: avg_feedback_score,
 			reviews_per_rating: reviews_per_rating,

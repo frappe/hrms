@@ -45,8 +45,7 @@
   {
    "fieldname": "expected_average_rating",
    "fieldtype": "Rating",
-   "label": "Expected Average Rating",
-   "reqd": 1
+   "label": "Expected Average Rating"
   },
   {
    "fieldname": "column_break_3",
@@ -56,8 +55,7 @@
    "fieldname": "interview_type",
    "fieldtype": "Link",
    "label": "Interview Type",
-   "options": "Interview Type",
-   "reqd": 1
+   "options": "Interview Type"
   },
   {
    "fieldname": "interviewers",
@@ -68,10 +66,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-09-30 13:01:25.666660",
+ "modified": "2023-09-18 18:05:19.732870",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview Round",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -114,5 +113,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }

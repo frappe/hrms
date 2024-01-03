@@ -5,6 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.query_builder.functions import Avg
 from frappe.utils import flt, get_link_to_form, getdate
 
 
@@ -16,10 +17,10 @@ class InterviewFeedback(Document):
 		self.calculate_average_rating()
 
 	def on_submit(self):
-		self.update_interview_details()
+		self.update_interview_average_rating()
 
 	def on_cancel(self):
-		self.update_interview_details()
+		self.update_interview_average_rating()
 
 	def validate_interviewer(self):
 		applicable_interviewers = get_applicable_interviewers(self.interview)
@@ -65,27 +66,21 @@ class InterviewFeedback(Document):
 			total_rating / len(self.skill_assessment) if len(self.skill_assessment) else 0
 		)
 
-	def update_interview_details(self):
-		doc = frappe.get_doc("Interview", self.interview)
+	def update_interview_average_rating(self):
+		interview_feedback = frappe.qb.DocType("Interview Feedback")
+		query = (
+			frappe.qb.from_(interview_feedback)
+			.where((interview_feedback.interview == self.interview) & (interview_feedback.docstatus == 1))
+			.select(Avg(interview_feedback.average_rating).as_("average"))
+		)
+		data = query.run(as_dict=True)
+		average_rating = data[0].average
 
-		if self.docstatus == 2:
-			for entry in doc.interview_details:
-				if entry.interview_feedback == self.name:
-					entry.average_rating = entry.interview_feedback = entry.comments = entry.result = None
-					break
-		else:
-			for entry in doc.interview_details:
-				if entry.interviewer == self.interviewer:
-					entry.average_rating = self.average_rating
-					entry.interview_feedback = self.name
-					entry.comments = self.feedback
-					entry.result = self.result
-
-		doc.save()
-		doc.notify_update()
+		interview = frappe.get_doc("Interview", self.interview)
+		interview.db_set("average_rating", average_rating)
+		interview.notify_update()
 
 
 @frappe.whitelist()
-def get_applicable_interviewers(interview):
-	data = frappe.get_all("Interview Detail", filters={"parent": interview}, fields=["interviewer"])
-	return [d.interviewer for d in data]
+def get_applicable_interviewers(interview: str) -> list[str]:
+	return frappe.get_all("Interview Detail", filters={"parent": interview}, pluck="interviewer")

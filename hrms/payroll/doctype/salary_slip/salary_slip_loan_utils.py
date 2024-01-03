@@ -29,7 +29,7 @@ def set_loan_repayment(doc: "SalarySlip"):
 	doc.total_interest_amount = 0
 	doc.total_principal_amount = 0
 
-	if not doc.get("loans"):
+	if not doc.get("loans", []):
 		for loan in _get_loan_details(doc):
 			amounts = calculate_amounts(loan.name, doc.posting_date, "Regular Payment")
 
@@ -46,7 +46,7 @@ def set_loan_repayment(doc: "SalarySlip"):
 					},
 				)
 
-	for payment in doc.get("loans"):
+	for payment in doc.get("loans", []):
 		amounts = calculate_amounts(payment.loan, doc.posting_date, "Regular Payment")
 		total_amount = amounts["interest_amount"] + amounts["payable_principal_amount"]
 		if payment.total_payment > total_amount:
