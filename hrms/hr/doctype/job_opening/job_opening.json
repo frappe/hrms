@@ -1,7 +1,7 @@
 {
  "actions": [],
- "autoname": "HR-OPN-.YYYY.-.#### ",
  "allow_import": 1,
+ "autoname": "HR-OPN-.YYYY.-.####",
  "creation": "2013-01-15 16:13:36",
  "description": "Description of a Job Opening",
  "doctype": "DocType",
@@ -246,7 +246,7 @@
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2023-09-15 13:41:54.111743",
+ "modified": "2024-01-03 14:34:32.159138",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",

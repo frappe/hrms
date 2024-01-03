@@ -17,13 +17,14 @@
 		<div class="ml-auto">
 			{%- if status == "Open" -%}
 				{%- if job_application_route -%}
-					{% set route = "/" + job_application_route + "/new?job_title=" + name %}
-				{%- else -%}
-					{% set route = "/job_application/new?job_title=" + name %}
+					<a class="btn btn-primary btn-lg" href="/{{ job_application_route }}/new?job_title={{ name }}">
+						{{ _("Apply Now") }}
+					</a>
+				{% else %}
+					<a class="btn btn-primary btn-lg" href="/job_application/new?job_title={{ name }}">
+						{{ _("Apply Now") }}
+					</a>
 				{% endif %}
-				<a class="btn btn-primary btn-lg" href={{ route }}>
-					{{ _("Apply Now") }}
-				</a>
 			{%- else -%}
 				<div class="py-4 px-10 font-weight-bold text-nowrap"
 						style="background: var(--bg-gray);
