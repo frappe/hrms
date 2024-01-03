@@ -55,7 +55,7 @@ frappe.listview_settings["Goal"] = {
 			.filter(
 				(item) =>
 					!item.is_group &&
-					applicable_current_statuses(status).includes(item.status)
+					get_applicable_current_statuses(status).includes(item.status)
 			)
 			.map((item) => item.name);
 		if (!items_to_be_updated.length)
@@ -70,18 +70,18 @@ frappe.listview_settings["Goal"] = {
 				__("{0} {1} {2}?", [
 					simple_present_tense[status],
 					items_to_be_updated.length.toString(),
-					items_to_be_updated.length === 1 ? "item" : "items",
+					items_to_be_updated.length === 1 ? __("goal") : __("goals"),
 				]),
 				() => {
 					this.update_status("", items_to_be_updated, listview);
 					this.trigger_error_dialogs(checked_items, status);
 				}
 			);
-		} else
+		} else {
 			frappe.confirm(
 				__("Mark {0} {1} as {2}?", [
 					items_to_be_updated.length.toString(),
-					items_to_be_updated.length === 1 ? "item" : "items",
+					items_to_be_updated.length === 1 ? __("goal") : __("goals"),
 					status,
 				]),
 				() => {
@@ -89,6 +89,7 @@ frappe.listview_settings["Goal"] = {
 					this.trigger_error_dialogs(checked_items, status);
 				}
 			);
+		}
 	},
 
 	trigger_error_dialogs: function (checked_items, status) {
@@ -104,7 +105,7 @@ frappe.listview_settings["Goal"] = {
 				indicator: "orange",
 			});
 
-		const applicable_statuses = applicable_current_statuses(status);
+		const applicable_statuses = get_applicable_current_statuses(status);
 		if (
 			checked_items.some((item) => !applicable_statuses.includes(item.status))
 		)
@@ -143,7 +144,7 @@ frappe.listview_settings["Goal"] = {
 };
 
 // Returns all possible current statuses that can be changed to the new one
-const applicable_current_statuses = (new_status) => {
+const get_applicable_current_statuses = (new_status) => {
 	switch (new_status) {
 		case "Completed":
 			return ["Pending", "In Progress"];

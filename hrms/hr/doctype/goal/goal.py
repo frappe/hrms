@@ -208,7 +208,7 @@ def update_progress(progress: float, goal: str) -> None:
 
 @frappe.whitelist()
 def update_status(status: str, goals: str | list) -> None:
-	if type(goals) is not list:
+	if isinstance(goals, str):
 		import json
 
 		goals = json.loads(goals)
