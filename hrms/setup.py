@@ -39,8 +39,6 @@ def get_custom_fields():
 				"fieldtype": "Link",
 				"ignore_user_permissions": 1,
 				"label": "Employment Type",
-				"oldfieldname": "employment_type",
-				"oldfieldtype": "Link",
 				"options": "Employment Type",
 				"insert_after": "department",
 			},
