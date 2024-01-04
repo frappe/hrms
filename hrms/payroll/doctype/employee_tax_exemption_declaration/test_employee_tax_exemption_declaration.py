@@ -131,8 +131,8 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 		current_country = frappe.flags.country
 		frappe.flags.country = "India"
 
-		setup_hra_exemption_prerequisites("Monthly")
 		employee = frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name")
+		setup_hra_exemption_prerequisites("Monthly", employee)
 
 		declaration = frappe.get_doc(
 			{
@@ -173,8 +173,8 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 		current_country = frappe.flags.country
 		frappe.flags.country = "India"
 
-		setup_hra_exemption_prerequisites("Daily")
 		employee = frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name")
+		setup_hra_exemption_prerequisites("Daily", employee)
 
 		declaration = frappe.get_doc(
 			{
@@ -210,8 +210,8 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 		current_country = frappe.flags.country
 		frappe.flags.country = "India"
 
-		setup_hra_exemption_prerequisites("Weekly")
 		employee = frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name")
+		setup_hra_exemption_prerequisites("Weekly", employee)
 
 		declaration = frappe.get_doc(
 			{
@@ -247,8 +247,8 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 		current_country = frappe.flags.country
 		frappe.flags.country = "India"
 
-		setup_hra_exemption_prerequisites("Fortnightly")
 		employee = frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name")
+		setup_hra_exemption_prerequisites("Fortnightly", employee)
 
 		declaration = frappe.get_doc(
 			{
@@ -284,8 +284,8 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 		current_country = frappe.flags.country
 		frappe.flags.country = "India"
 
-		setup_hra_exemption_prerequisites("Bimonthly")
 		employee = frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name")
+		setup_hra_exemption_prerequisites("Bimonthly", employee)
 
 		declaration = frappe.get_doc(
 			{
