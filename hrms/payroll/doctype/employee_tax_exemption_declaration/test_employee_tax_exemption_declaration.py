@@ -10,15 +10,27 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.utils import DuplicateDeclarationError
 
+PAYROLL_PERIOD_NAME = "_Test Exemption Period"
+PAYROLL_PERIOD_START = "2022-01-01"
+PAYROLL_PERIOD_END = "2022-12-31"
+
 
 class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 	def setUp(self):
-		make_employee("employee@taxexemption.com", company="_Test Company")
-		make_employee("employee1@taxexemption.com", company="_Test Company")
-		create_payroll_period(company="_Test Company")
-		create_exemption_category()
 		frappe.db.delete("Employee Tax Exemption Declaration")
 		frappe.db.delete("Salary Structure Assignment")
+		frappe.db.delete("Salary Slip")
+
+		make_employee("employee@taxexemption.com", company="_Test Company")
+		make_employee("employee1@taxexemption.com", company="_Test Company")
+
+		create_payroll_period(
+			company="_Test Company",
+			name=PAYROLL_PERIOD_NAME,
+			start_date=PAYROLL_PERIOD_START,
+			end_date=PAYROLL_PERIOD_END,
+		)
+		create_exemption_category()
 
 	def test_duplicate_category_in_declaration(self):
 		declaration = frappe.get_doc(
@@ -26,7 +38,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 				"doctype": "Employee Tax Exemption Declaration",
 				"employee": frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name"),
 				"company": erpnext.get_default_company(),
-				"payroll_period": "_Test Payroll Period",
+				"payroll_period": PAYROLL_PERIOD_NAME,
 				"currency": erpnext.get_default_currency(),
 				"declarations": [
 					dict(
@@ -50,7 +62,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 				"doctype": "Employee Tax Exemption Declaration",
 				"employee": frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name"),
 				"company": erpnext.get_default_company(),
-				"payroll_period": "_Test Payroll Period",
+				"payroll_period": PAYROLL_PERIOD_NAME,
 				"currency": erpnext.get_default_currency(),
 				"declarations": [
 					dict(
@@ -72,7 +84,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 				"doctype": "Employee Tax Exemption Declaration",
 				"employee": frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name"),
 				"company": erpnext.get_default_company(),
-				"payroll_period": "_Test Payroll Period",
+				"payroll_period": PAYROLL_PERIOD_NAME,
 				"currency": erpnext.get_default_currency(),
 				"declarations": [
 					dict(
@@ -95,7 +107,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 				"doctype": "Employee Tax Exemption Declaration",
 				"employee": frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name"),
 				"company": erpnext.get_default_company(),
-				"payroll_period": "_Test Payroll Period",
+				"payroll_period": PAYROLL_PERIOD_NAME,
 				"currency": erpnext.get_default_currency(),
 				"declarations": [
 					dict(
@@ -127,7 +139,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 				"doctype": "Employee Tax Exemption Declaration",
 				"employee": employee,
 				"company": "_Test Company",
-				"payroll_period": "_Test Payroll Period",
+				"payroll_period": PAYROLL_PERIOD_NAME,
 				"currency": "INR",
 				"monthly_house_rent": 50000,
 				"rented_in_metro_city": 1,
@@ -169,7 +181,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 				"doctype": "Employee Tax Exemption Declaration",
 				"employee": employee,
 				"company": "_Test Company",
-				"payroll_period": "_Test Payroll Period",
+				"payroll_period": PAYROLL_PERIOD_NAME,
 				"currency": "INR",
 				"monthly_house_rent": 170000,
 				"rented_in_metro_city": 1,
@@ -206,7 +218,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 				"doctype": "Employee Tax Exemption Declaration",
 				"employee": employee,
 				"company": "_Test Company",
-				"payroll_period": "_Test Payroll Period",
+				"payroll_period": PAYROLL_PERIOD_NAME,
 				"currency": "INR",
 				"monthly_house_rent": 170000,
 				"rented_in_metro_city": 1,
@@ -243,7 +255,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 				"doctype": "Employee Tax Exemption Declaration",
 				"employee": employee,
 				"company": "_Test Company",
-				"payroll_period": "_Test Payroll Period",
+				"payroll_period": PAYROLL_PERIOD_NAME,
 				"currency": "INR",
 				"monthly_house_rent": 170000,
 				"rented_in_metro_city": 1,
@@ -280,7 +292,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 				"doctype": "Employee Tax Exemption Declaration",
 				"employee": employee,
 				"company": "_Test Company",
-				"payroll_period": "_Test Payroll Period",
+				"payroll_period": PAYROLL_PERIOD_NAME,
 				"currency": "INR",
 				"monthly_house_rent": 50000,
 				"rented_in_metro_city": 1,
@@ -321,8 +333,8 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 		frappe.flags.country = "India"
 
 		employee = make_employee("employee@taxexemption2.com", company="_Test Company")
-		payroll_period = create_payroll_period(name="_Test Payroll Period", company="_Test Company")
 
+		payroll_period = frappe.get_doc("Payroll Period", PAYROLL_PERIOD_NAME)
 		create_tax_slab(
 			payroll_period,
 			allow_tax_exemption=True,
@@ -463,7 +475,12 @@ def setup_hra_exemption_prerequisites(frequency, employee=None):
 	from hrms.payroll.doctype.salary_slip.test_salary_slip import create_tax_slab
 	from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
-	payroll_period = create_payroll_period(name="_Test Payroll Period", company="_Test Company")
+	payroll_period = create_payroll_period(
+		name=PAYROLL_PERIOD_NAME,
+		company="_Test Company",
+		start_date=PAYROLL_PERIOD_START,
+		end_date=PAYROLL_PERIOD_END,
+	)
 	if not employee:
 		employee = frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name")
 
