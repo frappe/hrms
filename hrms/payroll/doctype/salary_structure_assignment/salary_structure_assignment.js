@@ -58,6 +58,11 @@ frappe.ui.form.on("Salary Structure Assignment", {
 				frm.doc.__onload.earning_and_deduction_entries_does_not_exists;
 			frm.trigger("set_earnings_and_taxation_section_visibility");
 		}
+
+		if (frm.doc.docstatus === 1)
+			frm.add_custom_button(__("Preview Salary Slip"), function () {
+				frm.trigger("preview_salary_slip");
+			});
 	},
 
 	employee: function (frm) {
@@ -76,6 +81,7 @@ frappe.ui.form.on("Salary Structure Assignment", {
 				frm.doc.company,
 				"default_payroll_payable_account",
 				(r) => {
+<<<<<<< HEAD
 					frm.set_value("payroll_payable_account", r.default_payroll_payable_account);
 				},
 			);
@@ -94,6 +100,60 @@ frappe.ui.form.on("Salary Structure Assignment", {
 		}
 	},
 
+=======
+					frm.set_value(
+						"payroll_payable_account",
+						r.default_payroll_payable_account
+					);
+				}
+			);
+		}
+	},
+
+	preview_salary_slip: function (frm) {
+		frappe.db.get_value(
+			"Salary Structure",
+			frm.doc.salary_structure,
+			"salary_slip_based_on_timesheet",
+			(r) => {
+				const print_format = r.salary_slip_based_on_timesheet
+					? "Salary Slip based on Timesheet"
+					: "Salary Slip Standard";
+				frappe.call({
+					method:
+						"hrms.payroll.doctype.salary_structure.salary_structure.make_salary_slip",
+					args: {
+						source_name: frm.doc.salary_structure,
+						employee: frm.doc.employee,
+						as_print: 1,
+						print_format: print_format,
+						for_preview: 1,
+					},
+					callback: function (r) {
+						const new_window = window.open();
+						new_window.document.write(r.message);
+					},
+				});
+			}
+		);
+	},
+
+	set_payroll_cost_centers: function (frm) {
+		if (
+			frm.doc.payroll_cost_centers &&
+			frm.doc.payroll_cost_centers.length < 1
+		) {
+			frappe.call({
+				method: "set_payroll_cost_centers",
+				doc: frm.doc,
+				callback: function (data) {
+					refresh_field("payroll_cost_centers");
+				},
+			});
+		}
+	},
+
+>>>>>>> 65547990c (feat: Preview Salary Slip from Salary Structure Assignment)
 	valiadte_joining_date_and_salary_slips: function (frm) {
 		frappe.call({
 			method: "earning_and_deduction_entries_does_not_exists",
