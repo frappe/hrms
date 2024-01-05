@@ -11,6 +11,7 @@ from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_lis
 
 from hrms.hr.doctype.leave_application.test_leave_application import get_first_sunday
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
+from hrms.tests.test_utils import add_date_to_holiday_list
 
 
 class TestShiftType(FrappeTestCase):
@@ -648,18 +649,3 @@ def make_shift_assignment(shift_type, employee, start_date, end_date=None, do_no
 		shift_assignment.submit()
 
 	return shift_assignment
-
-
-def add_date_to_holiday_list(date: str, holiday_list: str) -> None:
-	if frappe.db.exists("Holiday", {"parent": holiday_list, "holiday_date": date}):
-		return
-
-	holiday_list = frappe.get_doc("Holiday List", holiday_list)
-	holiday_list.append(
-		"holidays",
-		{
-			"holiday_date": date,
-			"description": "test",
-		},
-	)
-	holiday_list.save()
