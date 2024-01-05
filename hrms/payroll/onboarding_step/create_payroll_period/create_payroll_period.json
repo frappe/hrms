@@ -5,7 +5,6 @@
  "doctype": "Onboarding Step",
  "idx": 0,
  "is_complete": 0,
- "is_mandatory": 1,
  "is_single": 0,
  "is_skipped": 0,
  "modified": "2020-06-29 11:53:54.553947",
@@ -13,6 +12,7 @@
  "name": "Create Payroll Period",
  "owner": "Administrator",
  "reference_document": "Payroll Period",
+ "show_form_tour": 0,
  "show_full_form": 0,
  "title": "Create Payroll Period",
  "validate_action": 1
