@@ -7,6 +7,9 @@ from frappe.tests.utils import FrappeTestCase
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
+	PAYROLL_PERIOD_END,
+	PAYROLL_PERIOD_NAME,
+	PAYROLL_PERIOD_START,
 	create_exemption_category,
 	create_payroll_period,
 	setup_hra_exemption_prerequisites,
@@ -15,11 +18,18 @@ from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_e
 
 class TestEmployeeTaxExemptionProofSubmission(FrappeTestCase):
 	def setUp(self):
-		make_employee("employee@proofsubmission.com", company="_Test Company")
-		create_payroll_period(company="_Test Company")
-		create_exemption_category()
 		frappe.db.delete("Employee Tax Exemption Proof Submission")
 		frappe.db.delete("Salary Structure Assignment")
+
+		make_employee("employee@proofsubmission.com", company="_Test Company")
+		create_payroll_period(
+			company="_Test Company",
+			name=PAYROLL_PERIOD_NAME,
+			start_date=PAYROLL_PERIOD_START,
+			end_date=PAYROLL_PERIOD_END,
+		)
+
+		create_exemption_category()
 
 	def test_exemption_amount_lesser_than_category_max(self):
 		proof = frappe.get_doc(
@@ -86,21 +96,18 @@ class TestEmployeeTaxExemptionProofSubmission(FrappeTestCase):
 
 		employee = frappe.get_value("Employee", {"user_id": "employee@proofsubmission.com"}, "name")
 		setup_hra_exemption_prerequisites("Monthly", employee)
-		payroll_period = frappe.db.get_value(
-			"Payroll Period", "_Test Payroll Period", ["start_date", "end_date"], as_dict=True
-		)
 
 		proof = frappe.get_doc(
 			{
 				"doctype": "Employee Tax Exemption Proof Submission",
 				"employee": employee,
 				"company": "_Test Company",
-				"payroll_period": "_Test Payroll Period",
+				"payroll_period": PAYROLL_PERIOD_NAME,
 				"currency": "INR",
 				"house_rent_payment_amount": 600000,
 				"rented_in_metro_city": 1,
-				"rented_from_date": payroll_period.start_date,
-				"rented_to_date": payroll_period.end_date,
+				"rented_from_date": PAYROLL_PERIOD_START,
+				"rented_to_date": PAYROLL_PERIOD_END,
 				"tax_exemption_proofs": [
 					dict(
 						exemption_sub_category="_Test Sub Category",
