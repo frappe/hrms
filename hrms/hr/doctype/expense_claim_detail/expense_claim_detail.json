@@ -57,10 +57,15 @@
    "read_only": 1
   },
   {
+<<<<<<< HEAD
    "fieldname": "section_break_4",
    "fieldtype": "Section Break"
   },
   {
+=======
+   "fetch_from": "expense_type.description",
+   "fetch_if_empty": 1,
+>>>>>>> 60a26223a (fix(Expense Claim): description not saved (#1265))
    "fieldname": "description",
    "fieldtype": "Text Editor",
    "in_list_view": 1,
@@ -126,7 +131,11 @@
  "idx": 1,
  "istable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-06-24 00:56:08.900677",
+=======
+ "modified": "2024-01-08 11:47:28.315381",
+>>>>>>> 60a26223a (fix(Expense Claim): description not saved (#1265))
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim Detail",
