@@ -102,7 +102,7 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 		"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
 	)
 
-	for loan in doc.loans:
+	for loan in doc.get("loans", []):
 		if not loan.total_payment:
 			continue
 
@@ -128,7 +128,7 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 
 @if_lending_app_installed
 def cancel_loan_repayment_entry(doc: "SalarySlip"):
-	for loan in doc.loans:
+	for loan in doc.get("loans", []):
 		if loan.loan_repayment_entry:
 			repayment_entry = frappe.get_doc("Loan Repayment", loan.loan_repayment_entry)
 			repayment_entry.cancel()
