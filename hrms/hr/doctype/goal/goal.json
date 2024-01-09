@@ -108,6 +108,7 @@
    "default": "0",
    "fieldname": "is_group",
    "fieldtype": "Check",
+   "in_list_view": 1,
    "label": "Is Group",
    "set_only_once": 1
   },
@@ -213,7 +214,7 @@
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2023-09-29 12:38:53.405179",
+ "modified": "2023-10-18 13:32:02.981442",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Goal",

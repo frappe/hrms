@@ -7,7 +7,7 @@ from frappe.tests.utils import FrappeTestCase
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.appraisal_template.test_appraisal_template import create_kras
-from hrms.hr.doctype.goal.goal import get_children
+from hrms.hr.doctype.goal.goal import get_children, update_status
 
 
 class TestGoal(FrappeTestCase):
@@ -172,6 +172,37 @@ class TestGoal(FrappeTestCase):
 
 		self.assertEqual(child_goal1.kra, "Quality")
 		self.assertEqual(child_goal2.kra, "Quality")
+
+	def test_update_status(self):
+		goal1 = create_goal(self.employee1)
+		self.assertEqual(goal1.status, "Pending")
+		self.assertEqual(goal1.progress, 0)
+		goal2 = create_goal(self.employee1)
+		self.assertEqual(goal2.status, "Pending")
+		self.assertEqual(goal2.progress, 0)
+
+		update_status("Archived", [goal1.name, goal2.name])
+
+		goal1.reload()
+		self.assertEqual(goal1.status, "Archived")
+		goal2.reload()
+		self.assertEqual(goal2.status, "Archived")
+
+		update_status("Unarchived", [goal1.name, goal2.name])
+
+		goal1.reload()
+		self.assertEqual(goal1.status, "Pending")
+		goal2.reload()
+		self.assertEqual(goal2.status, "Pending")
+
+		update_status("Completed", [goal1.name, goal2.name])
+
+		goal1.reload()
+		self.assertEqual(goal1.status, "Completed")
+		self.assertEqual(goal1.progress, 100)
+		goal2.reload()
+		self.assertEqual(goal2.status, "Completed")
+		self.assertEqual(goal2.progress, 100)
 
 
 def create_goal(
