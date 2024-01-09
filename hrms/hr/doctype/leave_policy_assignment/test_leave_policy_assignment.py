@@ -24,6 +24,7 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 			"Leave Application",
 			"Leave Allocation",
 			"Leave Policy Assignment",
+			"Leave Policy",
 			"Leave Ledger Entry",
 		]:
 			frappe.db.delete(doctype)
@@ -123,7 +124,7 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 	# tests no of leaves for passed months if assignment is based on Leave Period / Joining Date
 	def test_get_leaves_for_passed_months(self):
 		annual_allocation = 10
-		leave_type = create_leave_type(is_earned_leave=True)
+		leave_type = create_leave_type(leave_type_name="_Test Earned Leave", is_earned_leave=True)
 		leave_policy = create_leave_policy(leave_type=leave_type, annual_allocation=annual_allocation)
 		leave_policy.submit()
 
