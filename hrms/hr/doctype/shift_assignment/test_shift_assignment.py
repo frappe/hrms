@@ -227,7 +227,7 @@ class TestShiftAssignment(FrappeTestCase):
 		date = getdate()
 		make_shift_assignment(shift_type.name, employee, date)
 
-	def test_shift_assignment_calendar(self):
+	def test_calendar(self):
 		employee1 = make_employee("test_shift_assignment1@example.com", company="_Test Company")
 		employee2 = make_employee("test_shift_assignment2@example.com", company="_Test Company")
 
@@ -241,6 +241,17 @@ class TestShiftAssignment(FrappeTestCase):
 		)
 		self.assertEqual(len(events), 1)
 		self.assertEqual(events[0]["name"], shift1.name)
+
+	def test_calendar_for_night_shift(self):
+		employee1 = make_employee("test_shift_assignment1@example.com", company="_Test Company")
+
+		shift_type = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="02:00:00")
+		date = getdate()
+		shift = make_shift_assignment(shift_type.name, employee1, date, date)
+
+		events = get_events(start=date, end=date)
+		self.assertEqual(events[0]["start_date"], get_datetime(f"{date} 08:00:00"))
+		self.assertEqual(events[0]["end_date"], get_datetime(f"{add_days(date, 1)} 02:00:00"))
 
 	def test_consecutive_day_and_night_shifts(self):
 		# defaults
