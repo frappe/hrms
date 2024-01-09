@@ -177,6 +177,7 @@ class SalaryStructure(Document):
 	@frappe.whitelist()
 	def assign_salary_structure(
 		self,
+		branch=None,
 		grade=None,
 		department=None,
 		designation=None,
@@ -188,7 +189,12 @@ class SalaryStructure(Document):
 		income_tax_slab=None,
 	):
 		employees = self.get_employees(
-			company=self.company, grade=grade, department=department, designation=designation, name=employee
+			company=self.company,
+			grade=grade,
+			department=department,
+			designation=designation,
+			name=employee,
+			branch=branch,
 		)
 
 		if employees:
