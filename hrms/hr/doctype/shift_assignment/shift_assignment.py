@@ -163,11 +163,14 @@ def get_events(start, end, filters=None):
 	return get_shift_events(assignments)
 
 
-def get_shift_assignments(start: str, end: str, filters: list) -> list[dict]:
+def get_shift_assignments(start: str, end: str, filters: str | list | None = None) -> list[dict]:
 	import json
 
 	if isinstance(filters, str):
 		filters = json.loads(filters)
+	if not filters:
+		filters = []
+
 	filters.extend([["start_date", ">=", start], ["end_date", "<=", end], ["docstatus", "=", 1]])
 
 	return frappe.get_list(
