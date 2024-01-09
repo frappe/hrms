@@ -58,14 +58,15 @@ frappe.query_reports["Employee Leave Balance"] = {
 			depends_on: "eval: !doc.employee",
 		}
 	],
-
 	onload: () => {
+		const today = frappe.datetime.now_date();
+
 		frappe.call({
 			type: "GET",
 			method: "hrms.hr.utils.get_leave_period",
 			args: {
-				"from_date": frappe.defaults.get_default("year_start_date"),
-				"to_date": frappe.defaults.get_default("year_end_date"),
+				"from_date": today,
+				"to_date": today,
 				"company": frappe.defaults.get_user_default("Company")
 			},
 			freeze: true,
