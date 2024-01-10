@@ -158,6 +158,8 @@ class LeaveEncashment(Document):
 		self.leave_allocation = allocation.name
 
 	def set_encashment_amount(self):
+		if not self.is_new():
+            		return	
 		if not hasattr(self, "_salary_structure"):
 			self.set_salary_structure()
 
