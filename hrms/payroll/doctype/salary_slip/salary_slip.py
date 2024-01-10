@@ -145,7 +145,7 @@ class SalarySlip(TransactionBase):
 		else:
 			self.get_working_days_details(lwp=self.leave_without_pay)
 
-		self.set_salary_structure_assignement()
+		self.set_salary_structure_assignment()
 		self.calculate_net_pay()
 		self.compute_year_to_date()
 		self.compute_month_to_date()
@@ -710,7 +710,7 @@ class SalarySlip(TransactionBase):
 			}
 			doc.append("earnings", wages_row)
 
-	def set_salary_structure_assignement(self):
+	def set_salary_structure_assignment(self):
 		self._salary_structure_assignment = frappe.db.get_value(
 			"Salary Structure Assignment",
 			{
@@ -1111,11 +1111,11 @@ class SalarySlip(TransactionBase):
 		employee = frappe.get_cached_doc("Employee", self.employee).as_dict()
 
 		if not hasattr(self, "_salary_structure_assignment"):
-			self.set_salary_structure_assignement()
+			self.set_salary_structure_assignment()
 
 		data.update(self._salary_structure_assignment)
-		data.update(employee)
 		data.update(self.as_dict())
+		data.update(employee)
 
 		data.update(self.get_component_abbr_map())
 
