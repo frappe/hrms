@@ -201,7 +201,10 @@ def get_allocated_and_expired_leaves(
 			# leave allocations ending before to_date, reduce leaves taken within that period
 			# since they are already used, they won't expire
 			expired_leaves += record.leaves
-			expired_leaves += get_leaves_for_period(employee, leave_type, record.from_date, record.to_date)
+			leaves_for_period = get_leaves_for_period(
+				employee, leave_type, record.from_date, record.to_date
+			)
+			expired_leaves -= min(abs(leaves_for_period), record.leaves)
 
 		if record.from_date >= getdate(from_date):
 			if record.is_carry_forward:
