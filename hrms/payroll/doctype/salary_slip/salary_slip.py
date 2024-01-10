@@ -1042,8 +1042,8 @@ class SalarySlip(TransactionBase):
 			)
 
 		data.update(salary_structure_assignment)
-		data.update(employee)
 		data.update(self.as_dict())
+		data.update(employee)
 
 		# set values for components
 		salary_components = frappe.get_all("Salary Component", fields=["salary_component_abbr"])
