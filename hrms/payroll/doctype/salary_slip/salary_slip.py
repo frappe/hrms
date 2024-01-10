@@ -95,6 +95,10 @@ class SalarySlip(TransactionBase):
 		else:
 			self.get_working_days_details(lwp=self.leave_without_pay)
 
+<<<<<<< HEAD
+=======
+		self.set_salary_structure_assignment()
+>>>>>>> 786e7db76 (fix(Salary Slip): data evaluation (#1283))
 		self.calculate_net_pay()
 		self.compute_year_to_date()
 		self.compute_month_to_date()
@@ -642,6 +646,33 @@ class SalarySlip(TransactionBase):
 			}
 			doc.append("earnings", wages_row)
 
+<<<<<<< HEAD
+=======
+	def set_salary_structure_assignment(self):
+		self._salary_structure_assignment = frappe.db.get_value(
+			"Salary Structure Assignment",
+			{
+				"employee": self.employee,
+				"salary_structure": self.salary_structure,
+				"from_date": ("<=", self.actual_start_date),
+				"docstatus": 1,
+			},
+			"*",
+			order_by="from_date desc",
+			as_dict=True,
+		)
+
+		if not self._salary_structure_assignment:
+			frappe.throw(
+				_(
+					"Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
+				).format(
+					frappe.bold(self.employee_name),
+					frappe.bold(formatdate(self.actual_start_date)),
+				)
+			)
+
+>>>>>>> 786e7db76 (fix(Salary Slip): data evaluation (#1283))
 	def calculate_net_pay(self):
 		if self.salary_structure:
 			self.calculate_component_amounts("earnings")
@@ -1013,6 +1044,7 @@ class SalarySlip(TransactionBase):
 		data = frappe._dict()
 		employee = frappe.get_doc("Employee", self.employee).as_dict()
 
+<<<<<<< HEAD
 		start_date = getdate(self.start_date)
 		date_to_validate = (
 			employee.date_of_joining if employee.date_of_joining > start_date else start_date
@@ -1043,7 +1075,14 @@ class SalarySlip(TransactionBase):
 
 		data.update(salary_structure_assignment)
 		data.update(employee)
+=======
+		if not hasattr(self, "_salary_structure_assignment"):
+			self.set_salary_structure_assignment()
+
+		data.update(self._salary_structure_assignment)
+>>>>>>> 786e7db76 (fix(Salary Slip): data evaluation (#1283))
 		data.update(self.as_dict())
+		data.update(employee)
 
 		# set values for components
 		salary_components = frappe.get_all("Salary Component", fields=["salary_component_abbr"])
