@@ -13,7 +13,7 @@
  "documentation_url": "https://docs.erpnext.com/docs/user/manual/en/human-resources/payroll-entry",
  "idx": 0,
  "is_complete": 0,
- "modified": "2024-01-05 13:05:01.281209",
+ "modified": "2024-01-11 13:25:33.806391",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll",
@@ -29,10 +29,7 @@
    "step": "Create Income Tax Slab"
   },
   {
-   "step": "Create Salary Structure"
-  },
-  {
-   "step": "Assign Salary Structure"
+   "step": "Create & Assign Salary Structure"
   },
   {
    "step": "Create Salary Slip"
