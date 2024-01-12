@@ -76,6 +76,7 @@ class PayrollEntry(Document):
 				(SalarySlip.employee.isin([emp.employee for emp in self.employees]))
 				& (SalarySlip.start_date == self.start_date)
 				& (SalarySlip.end_date == self.end_date)
+				& (SalarySlip.docstatus != 2)
 			)
 		).run(as_dict=True)
 
