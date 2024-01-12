@@ -13,7 +13,7 @@
  "owner": "Administrator",
  "reference_document": "Payroll Period",
  "show_form_tour": 0,
- "show_full_form": 0,
+ "show_full_form": 1,
  "title": "Create Payroll Period",
  "validate_action": 1
 }
