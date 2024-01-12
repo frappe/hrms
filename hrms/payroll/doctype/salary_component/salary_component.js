@@ -24,9 +24,9 @@ frappe.ui.form.on("Salary Component", {
 
 	refresh: function (frm) {
 		if (!frm.doc.__islocal) {
-			frm.add_custom_button(__("Create Salary Structure"), () => {
+			frm.add_custom_button(__("Salary Structure"), () => {
 				frm.trigger("create_salary_structure");
-			});
+			}, __("Create"));
 		}
 	},
 
