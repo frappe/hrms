@@ -62,6 +62,7 @@ class PayrollEntry(Document):
 		else:
 			self.status = status
 
+<<<<<<< HEAD
 	def validate_employee_details(self):
 		emp_with_sal_slip = []
 		for employee_details in self.employees:
@@ -75,9 +76,47 @@ class PayrollEntry(Document):
 				},
 			):
 				emp_with_sal_slip.append(employee_details.employee)
+=======
+	def before_submit(self):
+		self.validate_existing_salary_slips()
+		self.validate_payroll_payable_account()
+		if self.get_employees_with_unmarked_attendance():
+			frappe.throw(_("Cannot submit. Attendance is not marked for some employees."))
 
-		if len(emp_with_sal_slip):
-			frappe.throw(_("Salary Slip already exists for {0}").format(comma_and(emp_with_sal_slip)))
+	def on_submit(self):
+		self.set_status(update=True, status="Submitted")
+		self.create_salary_slips()
+
+	def validate_existing_salary_slips(self):
+		if not self.employees:
+			return
+
+		existing_salary_slips = []
+		SalarySlip = frappe.qb.DocType("Salary Slip")
+
+		existing_salary_slips = (
+			frappe.qb.from_(SalarySlip)
+			.select(SalarySlip.employee, SalarySlip.name)
+			.where(
+				(SalarySlip.employee.isin([emp.employee for emp in self.employees]))
+				& (SalarySlip.start_date == self.start_date)
+				& (SalarySlip.end_date == self.end_date)
+			)
+		).run(as_dict=True)
+>>>>>>> cc7113e59 (fix(Payroll Entry): creation of duplicate Salary Slips (#1303))
+
+		if len(existing_salary_slips):
+			msg = _("Salary Slip already exists for {0} for the given dates").format(
+				comma_and([frappe.bold(d.employee) for d in existing_salary_slips])
+			)
+			msg += "<br><br>"
+			msg += _("Reference: {0}").format(
+				comma_and([get_link_to_form("Salary Slip", d.name) for d in existing_salary_slips])
+			)
+			frappe.throw(
+				msg,
+				title=_("Duplicate Entry"),
+			)
 
 	def validate_payroll_payable_account(self):
 		if frappe.db.get_value("Account", self.payroll_payable_account, "account_type"):
