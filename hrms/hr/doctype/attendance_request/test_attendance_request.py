@@ -150,6 +150,32 @@ class TestAttendanceRequest(FrappeTestCase):
 		self.assertEqual(records[0].attendance_date, add_days(today, -1))
 		self.assertEqual(records[0].status, "Present")
 
+	def test_include_holidays_check(self):
+		# Create a holiday on today's date
+		today = getdate()
+		holiday_list = frappe.get_doc("Holiday List", self.holiday_list)
+		holiday_list.append(
+			"holidays",
+			{
+				"holiday_date": today,
+				"description": "Test Holiday",
+			},
+		)
+
+		# Create an Attendance Request with include_holidays checked
+		attendance_request = create_attendance_request(
+			employee=self.employee.name,
+			reason="On Duty",
+			company="_Test Company",
+			include_holidays=1,  # Set include_holidays to True
+		)
+
+		# Check if the attendance record is created on the holiday
+		records = self.get_attendance_records(attendance_request.name)
+		self.assertEqual(len(records), 2)
+		self.assertEqual(records[0].status, "Present")
+		self.assertEqual(records[0].attendance_date, today)
+
 	def get_attendance_records(self, attendance_request: str) -> list[dict]:
 		return frappe.db.get_all(
 			"Attendance",
