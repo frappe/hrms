@@ -14,7 +14,7 @@
 
 <div class="row">
 	<!-- Filters -->
-	<div class="col-3 text-15">
+	<div class="col-3 text-15 d-none d-sm-block">
 		<div class="flex align-items-center">
 			<p class="text-18 font-weight-bold mb-0">{{ _("Filters") }}</p>
 			<a id="clear-filters" class="ml-auto" role="button">{{ _("Clear All") }}</a>
@@ -50,10 +50,10 @@
 		{% endfor %}
 	</div>
 
-	<div class="col-9">
+	<div class="col-sm-9">
 		<div class="row px-4 mb-10 align-items-center">
 			<!-- Search  -->
-			<div class="col-8 pl-0">
+			<div class="col-sm-8 px-0">
 				<div class="input-group search-bar flex text-muted">
 					<div class="search-box-container">
 						<input
@@ -74,7 +74,7 @@
 			<!-- Sort -->
 			{% set sort = frappe.form_dict.sort %}
 			<div class="col-4 flex pr-0">
-				<div class="ml-auto flex align-items-center">
+				<div class="ml-auto flex align-items-center d-none d-sm-block">
 					<div class="btn-group border h-100" style="border-radius: 8px">
 						<button id="sort" class="btn btn-default btn-order bg-white">
 							<span class="sort-order">
@@ -106,7 +106,7 @@
 
 		<div class="row">
 			{% for jo in job_openings %}
-			<div name="card" id="{{ jo.route }}" class="mb-8 col-6" role="button">
+			<div name="card" id="{{ jo.route }}" class="mb-8 col-sm-6" role="button">
 				<div class="card border h-100 flex flex-col">
 					<div class="p-6">
 						<div class="flex mb-5">
