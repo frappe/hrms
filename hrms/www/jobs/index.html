@@ -53,7 +53,7 @@
 	<div class="col-sm-9">
 		<div class="row px-4 mb-10 align-items-center">
 			<!-- Search  -->
-			<div class="col-sm-8 px-0">
+			<div class="col-9 col-sm-8 px-0">
 				<div class="input-group search-bar flex text-muted">
 					<div class="search-box-container">
 						<input
@@ -71,10 +71,12 @@
 				</div>
 			</div>
 
-			<!-- Sort -->
-			{% set sort = frappe.form_dict.sort %}
-			<div class="col-4 flex pr-0">
-				<div class="ml-auto flex align-items-center d-none d-sm-block">
+
+			<div class="col-3 col-sm-4 flex pr-0">
+				<div class="ml-auto flex align-items-center">
+
+					<!-- Sort -->
+					{% set sort = frappe.form_dict.sort %}
 					<div class="btn-group border h-100" style="border-radius: 8px">
 						<button id="sort" class="btn btn-default btn-order bg-white">
 							<span class="sort-order">
@@ -87,11 +89,26 @@
 							</span>
 						</button>
 						<div
-							class="border-left px-3 flex align-items-center bg-white"
+							class="border-left px-3 flex align-items-center bg-white d-none d-sm-block"
 							style="border-radius: 0px 8px 8px 0px"
 						>
 							<span class="text-14">{{ _("Posting Date") }}</span>
 						</div>
+
+						<button
+							id="filter"
+							class="btn btn-default btn-order bg-white border-left d-sm-none"
+						>
+							<span class="sort-order">
+								<svg class="icon icon-sm">
+									<use
+										class
+										href="#icon-filter"
+									></use>
+								</svg>
+							</span>
+						</button>
+
 					</div>
 				</div>
 			</div>
