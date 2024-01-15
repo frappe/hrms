@@ -228,11 +228,15 @@ class LeaveAllocation(Document):
 
 	@frappe.whitelist()
 	def set_total_leaves_allocated(self):
-		self.unused_leaves = get_carry_forwarded_leaves(
-			self.employee, self.leave_type, self.from_date, self.carry_forward
+		self.unused_leaves = flt(
+			get_carry_forwarded_leaves(self.employee, self.leave_type, self.from_date, self.carry_forward),
+			self.precision("unused_leaves"),
 		)
 
-		self.total_leaves_allocated = flt(self.unused_leaves) + flt(self.new_leaves_allocated)
+		self.total_leaves_allocated = flt(
+			flt(self.unused_leaves) + flt(self.new_leaves_allocated),
+			self.precision("total_leaves_allocated"),
+		)
 
 		self.limit_carry_forward_based_on_max_allowed_leaves()
 
