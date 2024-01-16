@@ -2,12 +2,39 @@ $(() => {
 	const query_params = frappe.utils.get_query_params();
 	update_ui_with_filters();
 
-	$("input:checkbox").change(function () {
-		scroll_up_and_update_params(get_new_params());
+	$(".desktop-filters").change(function () {
+		scroll_up_and_update_params(get_new_params(".desktop-filters"));
 	});
 
-	$("#clear-filters").on("click", function () {
+	$(".mobile-filters").change(function () {
+		scroll_up_and_update_params(get_new_params(".mobile-filters"));
+	});
+
+	$("[name=clear-filters]").on("click", function () {
 		scroll_up_and_update_params();
+	});
+
+	$("#filter").click(function (e) {
+		if ($("#filters-drawer").css("bottom") != "0px") e.stopPropagation();
+		$("#filters-drawer").css("bottom", "0px");
+		// $("body").css("opacity", "0.6");
+		// $("html, body").css({
+		// 	overflow: "hidden",
+		// 	height: "100%",
+		// });
+	});
+
+	$(window).click(function () {
+		$("#filters-drawer").css("bottom", "-60vh");
+		// $("body").css("opacity", "1");
+		// $("html, body").css({
+		// 	overflow: "auto",
+		// 	height: "auto",
+		// });
+	});
+
+	$("#filters-drawer").click(function (e) {
+		e.stopPropagation();
 	});
 
 	$("#search-box").bind("search", function () {
@@ -53,20 +80,18 @@ $(() => {
 			JSON.parse($("#data").data("filters").replace(/'/g, '"'))
 		);
 		for (const filter in query_params) {
-			if (filter === "query") {
-				$("#search-box").val(query_params["query"]);
-			} else if (filter === "page") {
-				disable_inapplicable_pagination_buttons();
-			} else if (allowed_filters.includes(filter)) {
-				if (typeof query_params[filter] === "string") {
-					$("#" + $.escapeSelector(query_params[filter])).prop("checked", true);
-				} else {
+			if (filter === "query") $("#search-box").val(query_params["query"]);
+			else if (filter === "page") disable_inapplicable_pagination_buttons();
+			else if (allowed_filters.includes(filter)) {
+				if (typeof query_params[filter] === "string")
+					$(".filter-" + query_params[filter].split(" ").join("-")).prop(
+						"checked",
+						true
+					);
+				else
 					for (const d of query_params[filter])
-						$("#" + $.escapeSelector(d)).prop("checked", true);
-				}
-			} else {
-				continue;
-			}
+						$(".filter-" + d.split(" ").join("-")).prop("checked", true);
+			} else continue;
 		}
 	}
 
@@ -80,10 +105,12 @@ $(() => {
 		}
 	}
 
-	function get_new_params() {
+	function get_new_params(filter_group) {
 		return "sort" in query_params
-			? $("input").serialize() + "&" + $.param({ sort: query_params["sort"] })
-			: $("input").serialize();
+			? $(filter_group).serialize() +
+					"&" +
+					$.param({ sort: query_params["sort"] })
+			: $(filter_group).serialize();
 	}
 });
 
