@@ -3,42 +3,39 @@ $(() => {
 	update_ui_with_filters();
 
 	$(".desktop-filters").change(function () {
-		scroll_up_and_update_params(get_new_params(".desktop-filters"));
+		update_params(get_new_params(".desktop-filters"));
 	});
 
 	$(".mobile-filters").change(function () {
-		scroll_up_and_update_params(get_new_params(".mobile-filters"));
+		update_params(get_new_params(".mobile-filters"));
 	});
 
 	$("[name=clear-filters]").on("click", function () {
-		scroll_up_and_update_params();
+		update_params();
 	});
 
 	$("#filter").click(function (e) {
-		if ($("#filters-drawer").css("bottom") != "0px") e.stopPropagation();
-		$("#filters-drawer").css("bottom", "0px");
-		// $("body").css("opacity", "0.6");
-		// $("html, body").css({
-		// 	overflow: "hidden",
-		// 	height: "100%",
-		// });
+		scroll_up_and_execute(() => {
+			$("#filters-drawer").css("bottom", "0px");
+			$("#overlay").show();
+			$("html, body").css({
+				overflow: "hidden",
+				height: "100%",
+			});
+		});
 	});
 
-	$(window).click(function () {
+	$("#overlay").click(function () {
 		$("#filters-drawer").css("bottom", "-60vh");
-		// $("body").css("opacity", "1");
-		// $("html, body").css({
-		// 	overflow: "auto",
-		// 	height: "auto",
-		// });
-	});
-
-	$("#filters-drawer").click(function (e) {
-		e.stopPropagation();
+		$("#overlay").hide();
+		$("html, body").css({
+			overflow: "auto",
+			height: "auto",
+		});
 	});
 
 	$("#search-box").bind("search", function () {
-		scroll_up_and_update_params(get_new_params());
+		update_params(get_new_params());
 	});
 
 	$("#search-box").keyup(function (e) {
@@ -50,8 +47,8 @@ $(() => {
 	$("#sort").on("click", function () {
 		const filters = $("input").serialize();
 		query_params.sort === "asc"
-			? scroll_up_and_update_params(filters)
-			: scroll_up_and_update_params(filters + "&sort=asc");
+			? update_params(filters)
+			: update_params(filters + "&sort=asc");
 	});
 
 	$("[name=card]").on("click", function () {
@@ -60,19 +57,19 @@ $(() => {
 
 	$("[name=pagination]").on("click", function () {
 		const filters = $("input").serialize();
-		scroll_up_and_update_params(filters + "&page=" + this.id);
+		update_params(filters + "&page=" + this.id);
 	});
 
 	$("#previous").on("click", function () {
 		const new_page = (Number(query_params?.page) || 1) - 1;
 		const filters = $("input").serialize();
-		scroll_up_and_update_params(filters + "&page=" + new_page);
+		update_params(filters + "&page=" + new_page);
 	});
 
 	$("#next").on("click", function () {
 		const new_page = (Number(query_params?.page) || 1) + 1;
 		const filters = $("input").serialize();
-		scroll_up_and_update_params(filters + "&page=" + new_page);
+		update_params(filters + "&page=" + new_page);
 	});
 
 	function update_ui_with_filters() {
@@ -83,14 +80,20 @@ $(() => {
 			if (filter === "query") $("#search-box").val(query_params["query"]);
 			else if (filter === "page") disable_inapplicable_pagination_buttons();
 			else if (allowed_filters.includes(filter)) {
-				if (typeof query_params[filter] === "string")
-					$(".filter-" + query_params[filter].split(" ").join("-")).prop(
+				if (typeof query_params[filter] === "string") {
+					$("#desktop-" + $.escapeSelector(query_params[filter])).prop(
 						"checked",
 						true
 					);
-				else
-					for (const d of query_params[filter])
-						$(".filter-" + d.split(" ").join("-")).prop("checked", true);
+					$("#mobile-" + $.escapeSelector(query_params[filter])).prop(
+						"checked",
+						true
+					);
+				} else
+					for (const d of query_params[filter]) {
+						$("#desktop-" + $.escapeSelector(d)).prop("checked", true);
+						$("#mobile-" + $.escapeSelector(d)).prop("checked", true);
+					}
 			} else continue;
 		}
 	}
@@ -114,17 +117,29 @@ $(() => {
 	}
 });
 
-function scroll_up_and_update_params(params = "") {
-	if (window.scrollY === 0) {
-		window.location.href = "/jobs?" + params;
-	} else {
+function update_params(params = "") {
+	if ($("#filters-drawer").css("bottom") != "0px")
+		return scroll_up_and_execute(
+			() => (window.location.href = "/jobs?" + params)
+		);
+	$("#filters-drawer").css("bottom", "-60vh");
+	$("#filters-drawer").on(
+		"transitionend webkitTransitionEnd oTransitionEnd",
+		() =>
+			scroll_up_and_execute(() => (window.location.href = "/jobs?" + params))
+	);
+}
+
+function scroll_up_and_execute(callback) {
+	if (window.scrollY === 0) callback();
+	else {
 		window.scroll({
 			top: 0,
 			behavior: "smooth",
 		});
 		window.addEventListener("scroll", function () {
 			if (window.scrollY === 0) {
-				window.location.href = "/jobs?" + params;
+				callback();
 			}
 		});
 	}

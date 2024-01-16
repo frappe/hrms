@@ -30,15 +30,16 @@
 			{% for value in values %}
 			<div class="form-group form-check">
 				<input
-					type="checkbox"
+					id="{{ 'desktop-' ~ value }}"
 					name="{{ name }}"
-					class="form-check-input desktop-filters {{ 'filter-' ~ value | replace(' ', '-') }}"
 					value="{{ value }}"
+					class="form-check-input desktop-filters"
+					type="checkbox"
 					role="button"
 				/>
 				<label
 					class="form-check-label align-top"
-					for="{{ value }}"
+					for="{{ 'desktop-' ~ value }}"
 					role="button"
 				>
 					{{ value }}
@@ -302,35 +303,40 @@
 			<p class="text-18 font-weight-bold mb-0">{{ _("Filters") }}</p>
 			<a name="clear-filters" class="ml-auto" role="button">{{ _("Clear All") }}</a>
 		</div>
-		<hr />
+		<hr class="mb-0" />
 
-		{% for name, values in all_filters.items() %}
-		<div class="px-6 py-4">
-			<p class="font-weight-bold mb-4">
-				{{ name.title() | replace('_', ' ') }}
-			</p>
+		<div class="px-6 py-8 h-100" style="overflow-y: auto;">
+			{% for name, values in all_filters.items() %}
+			<div class="mb-6">
+				<p class="font-weight-bold mb-4">
+					{{ name.title() | replace('_', ' ') }}
+				</p>
 
-			{% for value in values %}
-			<div class="form-group form-check">
-				<input
-					type="checkbox"
-					name="{{ name }}"
-					class="form-check-input mobile-filters {{ 'filter-' ~ value | replace(' ', '-') }}"
-					value="{{ value }}"
-					role="button"
-				/>
-				<label
-					class="form-check-label align-top"
-					for="{{ value }}"
-					role="button"
-				>
-					{{ value }}
-				</label>
+				{% for value in values %}
+				<div class="form-group form-check">
+					<input
+						id="{{ 'mobile-' ~ value }}"
+						name="{{ name }}"
+						value="{{ value }}"
+						class="form-check-input mobile-filters"
+						type="checkbox"
+						role="button"
+					/>
+					<label
+						class="form-check-label align-top"
+						for="{{ 'mobile-' ~ value }}"
+						role="button"
+					>
+						{{ value }}
+					</label>
+				</div>
+				{% endfor %}
 			</div>
 			{% endfor %}
 		</div>
-		{% endfor %}
 	</div>
+
+	<div class="overlay d-sm-none" id="overlay"></div>
 
 </div>
 {% endblock page_content %}
