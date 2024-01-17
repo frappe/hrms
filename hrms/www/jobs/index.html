@@ -133,7 +133,7 @@
 				>
 					<div class="p-6">
 						<div class="flex mb-5">
-							<div class="col-9 px-0">
+							<div class="col-12 col-sm-9 px-0">
 								<h4
 									class="mt-0 mb-1 jobs-page text-truncate"
 									title="{{ jo.job_title }}"
@@ -149,7 +149,7 @@
 							</div>
 
 							{%- if jo.employment_type -%}
-							<div class="col-3 px-0 flex">
+							<div class="col-3 px-0 flex d-none d-sm-flex">
 								<div class="ml-auto font-weight-bold text-nowrap text-12">
 									{%- if jo.employment_type == "Full-time" -%}
 									<div class="py-1 px-2 full-time-badge">
@@ -304,13 +304,12 @@
 		id="filters-drawer"
 		class="filters-drawer position-fixed bg-white w-100 d-sm-none"
 	>
-		<div class="flex align-items-center pt-5 px-6">
+		<div class="flex align-items-center py-4 px-6 border-bottom">
 			<p class="text-18 font-weight-bold mb-0">{{ _("Filters") }}</p>
 			<a name="clear-filters" class="ml-auto" role="button">{{ _("Clear All") }}</a>
 		</div>
-		<hr class="mb-0" />
 
-		<div class="px-6 py-8 h-100" style="overflow-y: auto;">
+		<div class="px-6 pt-6 overflow-auto">
 			{% for name, values in all_filters.items() %}
 			<div class="mb-6">
 				<p class="font-weight-bold mb-4">

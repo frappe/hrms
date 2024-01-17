@@ -26,7 +26,7 @@ $(() => {
 	});
 
 	$("#overlay").click(function () {
-		$("#filters-drawer").css("bottom", "-60vh");
+		$("#filters-drawer").css("bottom", "-80vh");
 		$("#overlay").hide();
 		$("html, body").css({
 			overflow: "auto",
@@ -124,7 +124,7 @@ function update_params(params = "") {
 			() => (window.location.href = "/jobs?" + params)
 		);
 
-	$("#filters-drawer").css("bottom", "-60vh");
+	$("#filters-drawer").css("bottom", "-80vh");
 	$("#filters-drawer").on(
 		"transitionend webkitTransitionEnd oTransitionEnd",
 		() =>
