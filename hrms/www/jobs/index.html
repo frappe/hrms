@@ -124,8 +124,13 @@
 
 		<div class="row">
 			{% for jo in job_openings %}
-			<div name="card" id="{{ jo.route }}" class="mb-8 col-sm-6" role="button">
-				<div class="card border h-100 flex flex-col">
+			<div class="mb-8 col-sm-6">
+				<div
+					id="{{ jo.route }}"
+					name="card"
+					class="card border h-100 flex flex-col"
+					role="button"
+				>
 					<div class="p-6">
 						<div class="flex mb-5">
 							<div class="col-9 px-0">
