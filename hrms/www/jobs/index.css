@@ -79,8 +79,10 @@ h4.jobs-page {
 }
 
 .filters-drawer {
-	height: 60vh;
-	bottom: -60vh;
+	height: 80vh;
+	bottom: -80vh;
+	display: flex;
+	flex-direction: column;
 	left: 0;
 	transition: bottom 0.3s ease;
 	box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.1);
