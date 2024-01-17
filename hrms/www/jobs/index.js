@@ -14,9 +14,9 @@ $(() => {
 		update_params();
 	});
 
-	$("#filter").click(function (e) {
+	$("#filter").click(function () {
 		scroll_up_and_execute(() => {
-			$("#filters-drawer").css("bottom", "0px");
+			$("#filters-drawer").css("bottom", 0);
 			$("#overlay").show();
 			$("html, body").css({
 				overflow: "hidden",
@@ -35,7 +35,7 @@ $(() => {
 	});
 
 	$("#search-box").bind("search", function () {
-		update_params(get_new_params());
+		update_params(get_new_params(".desktop-filters"));
 	});
 
 	$("#search-box").keyup(function (e) {
@@ -45,7 +45,7 @@ $(() => {
 	});
 
 	$("#sort").on("click", function () {
-		const filters = $("input").serialize();
+		const filters = $(".desktop-filters").serialize();
 		query_params.sort === "asc"
 			? update_params(filters)
 			: update_params(filters + "&sort=asc");
@@ -56,19 +56,19 @@ $(() => {
 	});
 
 	$("[name=pagination]").on("click", function () {
-		const filters = $("input").serialize();
+		const filters = $(".desktop-filters").serialize();
 		update_params(filters + "&page=" + this.id);
 	});
 
 	$("#previous").on("click", function () {
 		const new_page = (Number(query_params?.page) || 1) - 1;
-		const filters = $("input").serialize();
+		const filters = $(".desktop-filters").serialize();
 		update_params(filters + "&page=" + new_page);
 	});
 
 	$("#next").on("click", function () {
 		const new_page = (Number(query_params?.page) || 1) + 1;
-		const filters = $("input").serialize();
+		const filters = $(".desktop-filters").serialize();
 		update_params(filters + "&page=" + new_page);
 	});
 
@@ -76,6 +76,7 @@ $(() => {
 		const allowed_filters = Object.keys(
 			JSON.parse($("#data").data("filters").replace(/'/g, '"'))
 		);
+
 		for (const filter in query_params) {
 			if (filter === "query") $("#search-box").val(query_params["query"]);
 			else if (filter === "page") disable_inapplicable_pagination_buttons();
@@ -122,6 +123,7 @@ function update_params(params = "") {
 		return scroll_up_and_execute(
 			() => (window.location.href = "/jobs?" + params)
 		);
+
 	$("#filters-drawer").css("bottom", "-60vh");
 	$("#filters-drawer").on(
 		"transitionend webkitTransitionEnd oTransitionEnd",
@@ -131,16 +133,18 @@ function update_params(params = "") {
 }
 
 function scroll_up_and_execute(callback) {
-	if (window.scrollY === 0) callback();
-	else {
-		window.scroll({
-			top: 0,
-			behavior: "smooth",
-		});
-		window.addEventListener("scroll", function () {
-			if (window.scrollY === 0) {
-				callback();
-			}
-		});
+	if (window.scrollY === 0) return callback();
+
+	function execute_after_scrolling_up() {
+		if (window.scrollY === 0) {
+			callback();
+			window.removeEventListener("scroll", execute_after_scrolling_up);
+		}
 	}
+
+	window.scroll({
+		top: 0,
+		behavior: "smooth",
+	});
+	window.addEventListener("scroll", execute_after_scrolling_up);
 }
