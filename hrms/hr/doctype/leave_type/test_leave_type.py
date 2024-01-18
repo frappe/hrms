@@ -10,7 +10,7 @@ def create_leave_type(**args):
 	args = frappe._dict(args)
 	leave_type_name = args.leave_type_name or "_Test Leave Type"
 	if frappe.db.exists("Leave Type", leave_type_name):
-		frappe.delete_doc("Leave Type", leave_type_name)
+		frappe.delete_doc("Leave Type", leave_type_name, force=True)
 
 	leave_type = frappe.get_doc(
 		{
