@@ -1,13 +1,18 @@
 {% extends "templates/web.html" %}
 {% block page_content %}
 
-<div class="py-6 py-md-12">
+<div class="py-12">
 	<!-- Header -->
 	<div class="row">
 		<div class="col-md-9 mb-8">
-			<h1 class="mt-0 mb-2 mb-md-3" style="@include media-breakpoint-up(md) {font-size: 3rem}">{{ job_title }}</h1>
+			<h1
+				class="mt-0 mb-2 mb-md-3 mx-auto mx-md-0 text-center text-md-left"
+				style="@include media-breakpoint-up(md) {font-size: 3rem}"
+			>
+				{{ job_title }}
+			</h1>
 			<div class="flex align-items-center">
-				<div>
+				<div class="mx-auto mx-md-0">
 					<span class="font-weight-bold">{{ company }}</span>
 					{{ " · " }}
 					{{ posted_on }}
@@ -15,16 +20,20 @@
 			</div>
 		</div>
 		<div class="col-md-3 flex">
-			<div class="ml-md-auto">
+			<div class="ml-auto d-none d-md-block">
 				{%- if status == "Open" -%}
-					<a class="btn btn-primary btn-lg d-none d-md-block" href="/{{ job_application_route if job_application_route else 'job_application' }}/new?job_title={{ name }}">
+					<a
+						class="btn btn-primary btn-lg"
+						href="/{{ job_application_route if job_application_route else 'job_application' }}/new?job_title={{ name }}"
+					>
 						{{ _("Apply Now") }}
 					</a>
 				{%- else -%}
-					<div class="py-4 px-10 font-weight-bold text-nowrap d-none d-md-block"
-							style="background: var(--bg-gray);
-								font-size: 1.1rem;
-								border-radius: var(--border-radius)"
+					<div
+						class="py-4 px-10 font-weight-bold text-nowrap"
+						style="background: var(--bg-gray);
+							font-size: 1.1rem;
+							border-radius: var(--border-radius)"
 					>
 						{{ _("Opening closed.") }}
 					</div>
@@ -119,10 +128,12 @@
 				<div class="col-12 col-md-4 mb-6 mb-md-8">
 					<div class="flex flex-row align-items-center">
 						<div class="rounded-circle p-4" style="background: var(--yellow-50)">
-							<svg class="icon"
-									style="height: 28px;
-										width: 28px;
-										--icon-stroke: var(--yellow-700)">
+							<svg
+								class="icon"
+								style="height: 28px;
+									width: 28px;
+									--icon-stroke: var(--yellow-700)"
+							>
 								<use href="#icon-hr"></use>
 							</svg>
 						</div>
@@ -137,10 +148,12 @@
 			<div class="col-12 col-md-4 mb-6 mb-md-8">
 				<div class="flex flex-row align-items-center">
 					<div class="rounded-circle p-4" style="background: var(--orange-50)">
-						<svg class="icon"
-								style="height: 28px;
-									width: 28px;
-									--icon-stroke: var(--orange-700)">
+						<svg
+							class="icon"
+							style="height: 28px;
+								width: 28px;
+								--icon-stroke: var(--orange-700)"
+						>
 							<use href="#icon-users"></use>
 						</svg>
 					</div>
@@ -155,15 +168,22 @@
 				<div class="col-12 col-md-4 mb-6 mb-md-8">
 					<div class="flex flex-row align-items-center">
 						<div class="rounded-circle p-4" style="background: var(--red-50)">
-							<svg class="icon"
-									style="height: 28px;
-										width: 28px;
-										--icon-stroke: var(--red-700)">
+							<svg
+								class="icon"
+								style="height: 28px;
+									width: 28px;
+									--icon-stroke: var(--red-700)"
+							>
 								<use href="#icon-calendar"></use>
 							</svg>
 						</div>
 						<div class="ml-5">
-							<div class="text-secondary text-uppercase" style="font-size: 11px">{{ _("Closes On") if status == "Open" else _("Closed On") }}</div>
+							<div
+								class="text-secondary text-uppercase"
+								style="font-size: 11px"
+							>
+								{{ _("Closes On") if status == "Open" else _("Closed On") }}
+							</div>
 							<div class="font-weight-bold">
 								{{ frappe.format_date(closes_on if status == "Open" else closed_on, "d MMM, YYYY") }}
 							</div>
@@ -175,6 +195,29 @@
 	</div>
 
 	{%- if description -%}<p>{{ description }}</p>{% endif %}
+
+	<!-- Mobile Apply Now Button -->
+	<div id="sticky-div" class="position-sticky d-md-none" style="bottom: 0; ">
+		<div class="w-100 bg-white py-8">
+			{%- if status == "Open" -%}
+				<a
+					class="btn btn-primary btn-lg w-100"
+					href="/{{ job_application_route if job_application_route else 'job_application' }}/new?job_title={{ name }}"
+				>
+					{{ _("Apply Now") }}
+				</a>
+			{%- else -%}
+				<div
+					class="py-4 px-10 text-center font-weight-bold text-nowrap"
+					style="background: var(--bg-gray);
+						font-size: 1.1rem;
+						border-radius: var(--border-radius)"
+				>
+					{{ _("Opening closed.") }}
+				</div>
+			{% endif %}
+		</div>
+	</div>
 </div>
 
 {% endblock page_content %}
