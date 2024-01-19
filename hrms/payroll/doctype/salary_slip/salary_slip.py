@@ -1393,8 +1393,9 @@ class SalarySlip(TransactionBase):
 	def get_income_tax_slabs(self):
 		income_tax_slab, ss_assignment_name = frappe.db.get_value(
 			"Salary Structure Assignment",
-			{"employee": self.employee, "salary_structure": self.salary_structure, "docstatus": 1},
+			{"employee": self.employee, "salary_structure": self.salary_structure, "docstatus": 1, "from_date": ("<=",  self.end_date)},
 			["income_tax_slab", "name"],
+			order_by="from_date desc",
 		)
 
 		if not income_tax_slab:
