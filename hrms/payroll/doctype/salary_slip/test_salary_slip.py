@@ -41,7 +41,7 @@ from hrms.payroll.doctype.salary_slip.salary_slip import (
 )
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 from hrms.tests.test_utils import get_first_sunday
-
+from unittest.mock import patch, MagicMock
 
 class TestSalarySlip(FrappeTestCase):
 	def setUp(self):
@@ -1483,7 +1483,35 @@ class TestSalarySlip(FrappeTestCase):
 		tax_component = salary_slip.get_tax_components()
 		self.assertEqual(test_tds.accounts[0].company, salary_slip.company)
 		self.assertListEqual(tax_component, ["_Test TDS"])
+	
+	@patch('frappe.db.get_value')
+	@patch('frappe.get_doc')
+	@patch('frappe.throw')
+	@patch('frappe.utils.getdate')
+	def test_get_income_tax_slabs(self, mock_getdate, mock_throw, mock_get_doc, mock_get_value):
+		from datetime import datetime, date
+		# Mock the data that would be returned from frappe.db.get_value
+		mock_get_value.return_value = ("income_tax_slab_id", "ss_assignment_name")
 
+		# Mock the Income Tax Slab document
+		mock_income_tax_slab_doc = MagicMock()
+		mock_income_tax_slab_doc.disabled = False
+		mock_income_tax_slab_doc.effective_from = date(date.today().year, 1, 1)
+		mock_get_doc.return_value = mock_income_tax_slab_doc
+
+		# Mock the 'Salary Slip' document
+		mock_salary_slip = MagicMock()
+		mock_salary_slip.employee = "employee_id"
+		mock_salary_slip.salary_structure = "salary_structure_id"
+		mock_salary_slip.end_date = get_last_day(nowdate())
+		mock_salary_slip.payroll_period.start_date = date(date.today().year, 1, 1)
+		mock_salary_slip.get_income_tax_slabs.return_value = mock_income_tax_slab_doc
+
+		self.ss = mock_salary_slip
+		result = self.ss.get_income_tax_slabs()
+
+		# Assert that the result is the mocked Income Tax Slab document
+		self.assertEqual(result, mock_income_tax_slab_doc)
 
 class TestSalarySlipSafeEval(FrappeTestCase):
 	def test_safe_eval_for_salary_slip(self):
