@@ -22,6 +22,7 @@
   "email_salary_slip_to_employee",
   "sender",
   "sender_email",
+  "email_template",
   "column_break_iewr",
   "encrypt_salary_slips_in_emails",
   "password_policy",
@@ -172,13 +173,20 @@
    "fieldtype": "Data",
    "label": "Sender Email",
    "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.email_salary_slip_to_employee",
+   "fieldname": "email_template",
+   "fieldtype": "Link",
+   "label": "Email Template",
+   "options": "Email Template"
   }
  ],
  "icon": "fa fa-cog",
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-11-01 13:51:04.225492",
+ "modified": "2024-01-23 17:42:52.958013",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",
