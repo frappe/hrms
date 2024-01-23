@@ -52,6 +52,7 @@ class TestSalarySlip(FrappeTestCase):
 	def setUp(self):
 		setup_test()
 		frappe.flags.pop("via_payroll_entry", None)
+		create_ss_email_template()
 		clear_cache()
 
 	def tearDown(self):
@@ -596,6 +597,22 @@ class TestSalarySlip(FrappeTestCase):
 
 	@change_settings("Payroll Settings", {"email_salary_slip_to_employee": 1})
 	def test_email_salary_slip(self):
+		frappe.db.delete("Email Queue")
+
+		emp_id = make_employee("test_email_salary_slip@salary.com", company="_Test Company")
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Salary Slip Email")
+		ss.company = "_Test Company"
+		ss.save()
+		ss.submit()
+
+		email_queue = frappe.db.a_row_exists("Email Queue")
+		self.assertTrue(email_queue)
+
+	@change_settings(
+		"Payroll Settings",
+		{"email_salary_slip_to_employee": 1, "email_template": "Salary Slip"}
+	)
+	def test_email_salary_slip_with_email_template(self):
 		frappe.db.delete("Email Queue")
 
 		emp_id = make_employee("test_email_salary_slip@salary.com", company="_Test Company")
@@ -2389,6 +2406,20 @@ def mark_attendance(
 	attendance.flags.ignore_validate = ignore_validate
 	attendance.insert()
 	attendance.submit()
+
+
+def create_ss_email_template():
+	if not frappe.db.exists("Email Template", "Salary Slip"):
+		ss_template = frappe.get_doc(
+			{
+				"doctype": "Email Template",
+				"name": "Salary Slip",
+				"response": "Test Salary Slip",
+				"subject": "Test Subject",
+				"owner": frappe.session.user,
+			}
+		)
+		ss_template.insert()
 
 
 def clear_cache():

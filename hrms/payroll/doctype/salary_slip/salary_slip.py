@@ -1794,21 +1794,29 @@ class SalarySlip(TransactionBase):
 	def email_salary_slip(self):
 		receiver = frappe.db.get_value("Employee", self.employee, "prefered_email", cache=True)
 		payroll_settings = frappe.get_single("Payroll Settings")
-		message = "Please see attachment"
+		subject = "Salary Slip - from {0} to {1}".format(self.start_date, self.end_date)
+		message = _("Please see attachment")
+		if payroll_settings.email_template:
+			email_template = frappe.get_doc("Email Template", payroll_settings.email_template)
+			doc = frappe.get_doc("Salary Slip", self.name)
+			context = doc.as_dict()
+			subject = frappe.render_template(email_template.subject, context)
+			message = frappe.render_template(email_template.response_, context)
 		password = None
 		if payroll_settings.encrypt_salary_slips_in_emails:
 			password = generate_password_for_pdf(payroll_settings.password_policy, self.employee)
-			message += """<br>Note: Your salary slip is password protected,
-				the password to unlock the PDF is of the format {0}. """.format(
-				payroll_settings.password_policy
-			)
+			if not payroll_settings.email_template:
+				message += _("""<br>Note: Your salary slip is password protected,
+					the password to unlock the PDF is of the format {0}. """.format(
+					payroll_settings.password_policy)
+				)
 
 		if receiver:
 			email_args = {
 				"sender": payroll_settings.sender_email,
 				"recipients": [receiver],
-				"message": _(message),
-				"subject": "Salary Slip - from {0} to {1}".format(self.start_date, self.end_date),
+				"message": message,
+				"subject": subject,
 				"attachments": [
 					frappe.attach_print(self.doctype, self.name, file_name=self.name, password=password)
 				],
