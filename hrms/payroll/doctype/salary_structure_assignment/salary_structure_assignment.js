@@ -58,7 +58,7 @@ frappe.ui.form.on('Salary Structure Assignment', {
 			frm.trigger("set_earnings_and_taxation_section_visibility");
 		}
 
-		if (frm.doc.__islocal) return;
+		if (frm.doc.docstatus != 1) return;
 		frm.add_custom_button(
 			__("Payroll Entry"),
 			() => {
@@ -69,6 +69,7 @@ frappe.ui.form.on('Salary Structure Assignment', {
 			},
 			__("Create")
 		);
+		frm.page.set_inner_btn_group_as_primary(__('Create'));
 	},
 
 	employee: function(frm) {
