@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Income Tax Slab", {
 	refresh: function (frm) {
-		if (frm.doc.__islocal) return;
+		if (frm.doc.docstatus != 1) return;
 		frm.add_custom_button(
 			__("Salary Structure Assignment"),
 			() => {
@@ -15,6 +15,7 @@ frappe.ui.form.on("Income Tax Slab", {
 			},
 			__("Create")
 		);
+		frm.page.set_inner_btn_group_as_primary(__("Create"));
 	},
 
 	currency: function (frm) {
