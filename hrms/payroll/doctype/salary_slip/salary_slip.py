@@ -1397,7 +1397,7 @@ class SalarySlip(TransactionBase):
 				"employee": self.employee,
 				"salary_structure": self.salary_structure,
 				"docstatus": 1,
-				"from_date": ("<=",  self.end_date)
+				"from_date": ("<=", self.end_date),
 			},
 			["income_tax_slab", "name"],
 			order_by="from_date desc",
