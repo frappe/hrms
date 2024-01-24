@@ -306,7 +306,6 @@
 	>
 		<div class="flex align-items-center py-4 px-6 border-bottom">
 			<p class="text-18 font-weight-bold mb-0">{{ _("Filters") }}</p>
-			<a name="clear-filters" class="ml-auto" role="button">{{ _("Clear All") }}</a>
 		</div>
 
 		<div class="px-6 pt-6 overflow-auto">
@@ -337,6 +336,11 @@
 				{% endfor %}
 			</div>
 			{% endfor %}
+		</div>
+
+		<div class="flex align-items-center py-4 border-top">
+			<a name="clear-filters" class="text-17 text-center w-50 mx-6" role="button">{{ _("Clear All") }}</a>
+			<a id="apply-filters" class="btn btn-primary btn-lg w-50 mx-6">{{ _("Apply") }}</a>
 		</div>
 	</div>
 
