@@ -25,7 +25,7 @@ $(() => {
 		});
 	});
 
-	$("#overlay").click(function () {
+	$("[name=close-filters-drawer").click(function () {
 		$("#filters-drawer").css("bottom", "-80vh");
 		$("#overlay").hide();
 		$("html, body").css({
