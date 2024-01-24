@@ -32,7 +32,7 @@ class CompensatoryLeaveRequest(Document):
 		self.validate_holidays()
 		self.validate_attendance()
 		if not self.leave_type:
-			frappe.throw(_("Leave Type is madatory"))
+			frappe.throw(_("Leave Type is mandatory"))
 
 	def validate_attendance(self):
 		attendance_records = frappe.get_all(
