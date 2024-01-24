@@ -6,7 +6,7 @@ $(() => {
 		update_params(get_new_params(".desktop-filters"));
 	});
 
-	$(".mobile-filters").change(function () {
+	$("#apply-filters").on("click", function () {
 		update_params(get_new_params(".mobile-filters"));
 	});
 
