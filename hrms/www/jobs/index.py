@@ -8,6 +8,7 @@ from frappe.utils import pretty_date
 
 
 def get_context(context):
+	context.no_cache = 1
 	context.parents = [{"name": _("My Account"), "route": "/"}]
 	context.body_class = "jobs-page"
 	page_len = 20
