@@ -722,7 +722,7 @@ const isFormReadOnly = computed(() => {
 	if (!isFormReady.value) return true
 	if (!props.id) return false
 
-	// submited & cancelled docs are read only
+	// submitted & cancelled docs are read only
 	if (formModel.value.docstatus !== 0) return true
 
 	// read only due to workflow based on current user's roles
