@@ -104,7 +104,7 @@ def get_interviews(interviews):
 		interviews = json.loads(interviews)
 
 	if not len(interviews):
-		frappe.throw(_("Atleast one interview has to be selected."))
+		frappe.throw(_("At least one interview has to be selected."))
 
 	return interviews
 
