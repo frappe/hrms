@@ -306,6 +306,11 @@
 	>
 		<div class="flex align-items-center py-4 px-6 border-bottom">
 			<p class="text-18 font-weight-bold mb-0">{{ _("Filters") }}</p>
+			<div name="close-filters-drawer" class="ml-auto">
+				<svg class="icon icon-lg">
+					<use href="#icon-close"></use>
+				</svg>
+			</div>
 		</div>
 
 		<div class="px-6 pt-6 overflow-auto">
@@ -344,7 +349,7 @@
 		</div>
 	</div>
 
-	<div class="overlay d-lg-none" id="overlay"></div>
+	<div  id="overlay" name="close-filters-drawer" class="overlay d-lg-none"></div>
 
 </div>
 {% endblock page_content %}
