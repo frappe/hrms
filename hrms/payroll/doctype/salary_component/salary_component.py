@@ -6,8 +6,14 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.model.naming import append_number_if_name_exists
 
+from hrms.payroll.utils import sanitize_expression
+
 
 class SalaryComponent(Document):
+	def before_validate(self):
+		self.condition = sanitize_expression(self.condition)
+		self.formula = sanitize_expression(self.formula)
+
 	def validate(self):
 		self.validate_abbr()
 
