@@ -19,11 +19,19 @@
 					</header>
 
 					<div class="flex flex-col items-center mt-5 p-4">
+						<!-- Profile Image -->
 						<img
+							v-if="user.data.user_image"
 							class="h-24 w-24 rounded-full object-cover"
 							:src="user.data.user_image"
 							:alt="user.data.first_name"
 						/>
+						<div
+							v-else
+							class="flex items-center justify-center bg-gray-200 uppercase text-gray-600 h-24 w-24 rounded-full object-cover"
+						>
+							{{ user.data.first_name[0] }}
+						</div>
 
 						<div class="flex flex-col gap-1.5 items-center mt-2 mb-5">
 							<span v-if="employee" class="text-lg font-bold text-gray-900">{{
