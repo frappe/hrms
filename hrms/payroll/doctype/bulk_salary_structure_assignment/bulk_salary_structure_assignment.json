@@ -1,0 +1,164 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-01-25 12:52:26.250137",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "set_assignment_details_section",
+  "salary_structure",
+  "from_date",
+  "income_tax_slab",
+  "column_break_rsep",
+  "payroll_payable_account",
+  "base_variable_section",
+  "base",
+  "column_break_zsgt",
+  "variable",
+  "section_break_snxy",
+  "branch",
+  "department",
+  "column_break_jcpq",
+  "designation",
+  "employee_grade",
+  "advanced_filters_section",
+  "filter_list",
+  "select_employees_section",
+  "employees_html"
+ ],
+ "fields": [
+  {
+   "fieldname": "set_assignment_details_section",
+   "fieldtype": "Section Break",
+   "label": "Set Assignment Details"
+  },
+  {
+   "fieldname": "salary_structure",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Salary Structure",
+   "options": "Salary Structure",
+   "reqd": 1
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "income_tax_slab",
+   "fieldtype": "Link",
+   "label": "Income Tax Slab",
+   "options": "Income Tax Slab"
+  },
+  {
+   "fieldname": "column_break_rsep",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "payroll_payable_account",
+   "fieldtype": "Link",
+   "label": "Payroll Payable Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "base_variable_section",
+   "fieldtype": "Section Break",
+   "label": "Base & Variable"
+  },
+  {
+   "fieldname": "base",
+   "fieldtype": "Currency",
+   "label": "Base"
+  },
+  {
+   "fieldname": "column_break_zsgt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "variable",
+   "fieldtype": "Currency",
+   "label": "Variable"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_snxy",
+   "fieldtype": "Section Break",
+   "label": "Quick Filters"
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "Branch"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "column_break_jcpq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "employee_grade",
+   "fieldtype": "Link",
+   "label": "Employee Grade",
+   "options": "Employee Grade"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "advanced_filters_section",
+   "fieldtype": "Section Break",
+   "label": "Advanced Filters"
+  },
+  {
+   "fieldname": "filter_list",
+   "fieldtype": "HTML",
+   "label": "Filter List"
+  },
+  {
+   "fieldname": "select_employees_section",
+   "fieldtype": "Section Break",
+   "label": "Select Employees"
+  },
+  {
+   "fieldname": "employees_html",
+   "fieldtype": "HTML",
+   "label": "Employees HTML"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-01-25 13:48:28.502117",
+ "modified_by": "Administrator",
+ "module": "Payroll",
+ "name": "Bulk Salary Structure Assignment",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
