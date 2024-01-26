@@ -228,7 +228,7 @@ scheduler_events = {
 	"monthly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_monthly"],
 }
 
-advance_payment_doctypes = ["Gratuity", "Employee Advance"]
+advance_payment_payable_doctypes = ["Gratuity", "Employee Advance"]
 
 invoice_doctypes = ["Expense Claim"]
 
