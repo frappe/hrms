@@ -15,12 +15,14 @@
   "base",
   "column_break_zsgt",
   "variable",
-  "section_break_snxy",
+  "quick_filters_section",
+  "company",
   "branch",
   "department",
   "column_break_jcpq",
+  "employment_type",
   "designation",
-  "employee_grade",
+  "grade",
   "advanced_filters_section",
   "filter_list",
   "select_employees_section",
@@ -83,12 +85,6 @@
    "label": "Variable"
   },
   {
-   "collapsible": 1,
-   "fieldname": "section_break_snxy",
-   "fieldtype": "Section Break",
-   "label": "Quick Filters"
-  },
-  {
    "fieldname": "branch",
    "fieldtype": "Link",
    "label": "Branch",
@@ -111,12 +107,6 @@
    "options": "Designation"
   },
   {
-   "fieldname": "employee_grade",
-   "fieldtype": "Link",
-   "label": "Employee Grade",
-   "options": "Employee Grade"
-  },
-  {
    "collapsible": 1,
    "fieldname": "advanced_filters_section",
    "fieldtype": "Section Break",
@@ -136,12 +126,36 @@
    "fieldname": "employees_html",
    "fieldtype": "HTML",
    "label": "Employees HTML"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "employment_type",
+   "fieldtype": "Link",
+   "label": "Employment Type",
+   "options": "Employment Type"
+  },
+  {
+   "fieldname": "grade",
+   "fieldtype": "Link",
+   "label": "Employee Grade",
+   "options": "Employee Grade"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "quick_filters_section",
+   "fieldtype": "Section Break",
+   "label": "Quick Filters"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-01-25 13:48:28.502117",
+ "modified": "2024-01-29 16:05:23.083034",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Bulk Salary Structure Assignment",
