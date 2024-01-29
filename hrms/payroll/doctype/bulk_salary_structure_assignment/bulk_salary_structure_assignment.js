@@ -2,14 +2,14 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Bulk Salary Structure Assignment", {
-	setup: function (frm) {
+	setup(frm) {
 		frm.trigger("set_query");
-		frappe.model.with_doctype("Employee", () =>
-			frm.trigger("setup_filter_group")
-		);
+		frm.trigger("setup_filter_group");
 	},
 
-	refresh(frm) {
+	async refresh(frm) {
+		frm.trigger("set_primary_action");
+		await frm.trigger("set_payroll_payable_account");
 		frm.trigger("get_employees");
 	},
 
@@ -17,7 +17,8 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 		frm.trigger("get_employees");
 	},
 
-	company(frm) {
+	async company(frm) {
+		await frm.trigger("set_payroll_payable_account");
 		frm.trigger("get_employees");
 	},
 
@@ -41,36 +42,83 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 		frm.trigger("get_employees");
 	},
 
+	set_primary_action(frm) {
+		frm.disable_save();
+		frm.page.set_primary_action(__("Assign Structure"), () => {
+			console.log("Assigning");
+		});
+	},
+
 	set_query(frm) {
-		frm.set_query("payroll_payable_account", function () {
+		frm.set_query("salary_structure", function () {
 			return {
 				filters: {
-					root_type: "Liability",
-					is_group: 0,
+					company: frm.doc.company,
+					is_active: "Yes",
+					docstatus: 1,
 				},
 			};
 		});
+		frm.set_query("income_tax_slab", function () {
+			return {
+				filters: {
+					company: frm.doc.company,
+					disabled: 0,
+					docstatus: 1,
+					currency: frm.doc.currency,
+				},
+			};
+		});
+		frm.set_query("payroll_payable_account", function () {
+			const company_currency = erpnext.get_currency(frm.doc.company);
+			return {
+				filters: {
+					company: frm.doc.company,
+					root_type: "Liability",
+					is_group: 0,
+					account_currency: ["in", [frm.doc.currency, company_currency]],
+				},
+			};
+		});
+	},
+
+	set_payroll_payable_account(frm) {
+		if (frm.doc.company) {
+			frappe.db.get_value(
+				"Company",
+				frm.doc.company,
+				"default_payroll_payable_account",
+				(r) => {
+					frm.set_value(
+						"payroll_payable_account",
+						r.default_payroll_payable_account
+					);
+				}
+			);
+		}
 	},
 
 	setup_filter_group(frm) {
 		const filter_wrapper = frm.fields_dict.filter_list.$wrapper;
 		filter_wrapper.empty();
 
-		frm.filter_list = new frappe.ui.FilterGroup({
-			parent: filter_wrapper,
-			doctype: "Employee",
-			on_change: () => {
-				frm.advanced_filters = frm.filter_list
-					.get_filters()
-					.reduce((filters, item) => {
-						// item[3] is the value from the array [doctype, fieldname, condition, value]
-						if (item[3]) {
-							filters.push(item.slice(1, 4));
-						}
-						return filters;
-					}, []);
-				frm.trigger("get_employees");
-			},
+		frappe.model.with_doctype("Employee", () => {
+			frm.filter_list = new frappe.ui.FilterGroup({
+				parent: filter_wrapper,
+				doctype: "Employee",
+				on_change: () => {
+					frm.advanced_filters = frm.filter_list
+						.get_filters()
+						.reduce((filters, item) => {
+							// item[3] is the value from the array [doctype, fieldname, condition, value]
+							if (item[3]) {
+								filters.push(item.slice(1, 4));
+							}
+							return filters;
+						}, []);
+					frm.trigger("get_employees");
+				},
+			});
 		});
 	},
 
@@ -94,7 +142,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	},
 
 	render_employees_table(frm) {
-		const columns = frm.events.get_columns_for_employees_table();
+		const columns = frm.events.columns_for_employees_table();
 
 		if (frm.employees_datatable) {
 			frm.employees_datatable.rowmanager.checkMap = [];
@@ -125,32 +173,34 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 		);
 	},
 
-	get_columns_for_employees_table() {
+	columns_for_employees_table() {
 		return [
 			{
 				name: "employee",
 				id: "employee",
 				content: __("Employee"),
+				editable: false,
+				focusable: false,
 			},
 			{
 				name: "employee_name",
 				id: "employee_name",
 				content: __("Name"),
+				editable: false,
+				focusable: false,
 			},
 			{
-				name: "company",
-				id: "company",
-				content: __("Company"),
+				name: "base",
+				id: "base",
+				content: __("Base"),
 			},
 			{
-				name: "department",
-				id: "department",
-				content: __("Department"),
+				name: "variable",
+				id: "variable",
+				content: __("Variable"),
 			},
 		].map((x) => ({
 			...x,
-			editable: false,
-			focusable: false,
 			dropdown: false,
 			align: "left",
 		}));

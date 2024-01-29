@@ -10,19 +10,16 @@
   "from_date",
   "income_tax_slab",
   "column_break_rsep",
-  "payroll_payable_account",
-  "base_variable_section",
-  "base",
-  "column_break_zsgt",
-  "variable",
-  "quick_filters_section",
   "company",
+  "payroll_payable_account",
+  "currency",
+  "quick_filters_section",
   "branch",
   "department",
-  "column_break_jcpq",
-  "employment_type",
   "designation",
+  "column_break_jcpq",
   "grade",
+  "employment_type",
   "advanced_filters_section",
   "filter_list",
   "select_employees_section",
@@ -60,29 +57,11 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": ".default_payroll_payable_account",
    "fieldname": "payroll_payable_account",
    "fieldtype": "Link",
    "label": "Payroll Payable Account",
    "options": "Account"
-  },
-  {
-   "fieldname": "base_variable_section",
-   "fieldtype": "Section Break",
-   "label": "Base & Variable"
-  },
-  {
-   "fieldname": "base",
-   "fieldtype": "Currency",
-   "label": "Base"
-  },
-  {
-   "fieldname": "column_break_zsgt",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "variable",
-   "fieldtype": "Currency",
-   "label": "Variable"
   },
   {
    "fieldname": "branch",
@@ -131,7 +110,8 @@
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
-   "options": "Company"
+   "options": "Company",
+   "reqd": 1
   },
   {
    "fieldname": "employment_type",
@@ -150,12 +130,21 @@
    "fieldname": "quick_filters_section",
    "fieldtype": "Section Break",
    "label": "Quick Filters"
+  },
+  {
+   "depends_on": "salary_structure",
+   "fetch_from": "salary_structure.currency",
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-01-29 16:05:23.083034",
+ "modified": "2024-01-29 18:19:29.013027",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Bulk Salary Structure Assignment",
