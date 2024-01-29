@@ -3,7 +3,6 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.query_builder.terms import SubQuery
 
 
 class BulkSalaryStructureAssignment(Document):
@@ -36,5 +35,5 @@ class BulkSalaryStructureAssignment(Document):
 		return frappe.get_list(
 			"Employee",
 			filters=filters,
-			fields=["employee", "employee_name", "company", "department"],
+			fields=["employee", "employee_name"],
 		)
