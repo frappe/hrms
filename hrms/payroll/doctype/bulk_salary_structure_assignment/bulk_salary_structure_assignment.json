@@ -47,6 +47,7 @@
    "reqd": 1
   },
   {
+   "depends_on": "salary_structure",
    "fieldname": "income_tax_slab",
    "fieldtype": "Link",
    "label": "Income Tax Slab",
@@ -144,7 +145,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-01-29 18:19:29.013027",
+ "modified": "2024-01-29 18:47:02.551273",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Bulk Salary Structure Assignment",
