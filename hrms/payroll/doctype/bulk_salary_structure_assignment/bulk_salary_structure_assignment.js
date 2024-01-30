@@ -83,19 +83,17 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	},
 
 	set_payroll_payable_account(frm) {
-		if (frm.doc.company) {
-			frappe.db.get_value(
-				"Company",
-				frm.doc.company,
-				"default_payroll_payable_account",
-				(r) => {
-					frm.set_value(
-						"payroll_payable_account",
-						r.default_payroll_payable_account
-					);
-				}
-			);
-		}
+		frappe.db.get_value(
+			"Company",
+			frm.doc.company,
+			"default_payroll_payable_account",
+			(r) => {
+				frm.set_value(
+					"payroll_payable_account",
+					r.default_payroll_payable_account
+				);
+			}
+		);
 	},
 
 	setup_filter_group(frm) {
@@ -136,7 +134,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 				frm.set_df_property("quick_filters_section", "collapsible", 0);
 				frm.set_df_property("advanced_filters_section", "collapsible", 0);
 
-				frm.employees = r.message;
+				frm.employees = r.message.map((d) => ({ base: 0, variable: 0, ...d }));
 				frm.events.render_employees_table(frm);
 			});
 	},
