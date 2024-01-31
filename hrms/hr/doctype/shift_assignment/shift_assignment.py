@@ -9,13 +9,17 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.query_builder import Criterion
-from frappe.utils import add_days, cstr, get_link_to_form, get_time, getdate, now_datetime
+from frappe.utils import add_days, cint, cstr, get_link_to_form, get_time, getdate, now_datetime
 
 from hrms.hr.utils import validate_active_employee
 from hrms.utils import generate_date_range
 
 
 class OverlappingShiftError(frappe.ValidationError):
+	pass
+
+
+class MultipleShiftError(frappe.ValidationError):
 	pass
 
 
@@ -30,10 +34,38 @@ class ShiftAssignment(Document):
 	def validate_overlapping_shifts(self):
 		overlapping_dates = self.get_overlapping_dates()
 		if len(overlapping_dates):
+			self.validate_same_date_multiple_shifts(overlapping_dates)
 			# if dates are overlapping, check if timings are overlapping, else allow
 			overlapping_timings = has_overlapping_timings(self.shift_type, overlapping_dates[0].shift_type)
 			if overlapping_timings:
 				self.throw_overlap_error(overlapping_dates[0])
+
+	def validate_same_date_multiple_shifts(self, overlapping_dates):
+		if cint(frappe.db.get_single_value("HR Settings", "allow_multiple_shift_assignments")):
+			if not self.docstatus:
+				frappe.msgprint(
+					_(
+						"Warning: {0} already has an active Shift Assignment {1} for some/all of these dates."
+					).format(
+						frappe.bold(self.employee), get_link_to_form("Shift Assignment", overlapping_dates[0].name)
+					)
+				)
+		else:
+			msg = _("{0} already has an active Shift Assignment {1} for some/all of these dates.").format(
+				frappe.bold(self.employee),
+				get_link_to_form("Shift Assignment", overlapping_dates[0].name),
+			)
+			msg += "<br><br>"
+			msg += _("To allow this, enable {0} under {1}.").format(
+				frappe.bold(_("Allow Multiple Shift Assignments for Same Date")),
+				get_link_to_form("HR Settings", "HR Settings"),
+			)
+
+			frappe.throw(
+				title=_("Multiple Shift Assignments"),
+				msg=msg,
+				exc=MultipleShiftError,
+			)
 
 	def get_overlapping_dates(self):
 		if not self.name:
@@ -127,19 +159,21 @@ def get_events(start, end, filters=None):
 		employee = ""
 		company = frappe.db.get_value("Global Defaults", None, "default_company")
 
-	events = add_assignments(start, end, filters)
-	return events
+	assignments = get_shift_assignments(start, end, filters)
+	return get_shift_events(assignments)
 
 
-def add_assignments(start, end, filters):
+def get_shift_assignments(start: str, end: str, filters: str | list | None = None) -> list[dict]:
 	import json
 
-	events = []
 	if isinstance(filters, str):
 		filters = json.loads(filters)
+	if not filters:
+		filters = []
+
 	filters.extend([["start_date", ">=", start], ["end_date", "<=", end], ["docstatus", "=", 1]])
 
-	records = frappe.get_list(
+	return frappe.get_list(
 		"Shift Assignment",
 		filters=filters,
 		fields=[
@@ -153,21 +187,28 @@ def add_assignments(start, end, filters):
 		],
 	)
 
-	shift_timing_map = get_shift_type_timing([d.shift_type for d in records])
 
-	for d in records:
+def get_shift_events(assignments: list[dict]) -> list[dict]:
+	events = []
+	shift_timing_map = get_shift_type_timing([d.shift_type for d in assignments])
+
+	for d in assignments:
 		daily_event_start = d.start_date
-		daily_event_end = d.end_date if d.end_date else getdate()
+		daily_event_end = d.end_date or getdate()
+		shift_start = shift_timing_map[d.shift_type]["start_time"]
+		shift_end = shift_timing_map[d.shift_type]["end_time"]
+
 		delta = timedelta(days=1)
 		while daily_event_start <= daily_event_end:
-			start_timing = (
-				frappe.utils.get_datetime(daily_event_start) + shift_timing_map[d.shift_type]["start_time"]
-			)
-			end_timing = (
-				frappe.utils.get_datetime(daily_event_start) + shift_timing_map[d.shift_type]["end_time"]
-			)
-			daily_event_start += delta
-			e = {
+			start_timing = frappe.utils.get_datetime(daily_event_start) + shift_start
+
+			if shift_start > shift_end:
+				# shift spans across 2 days
+				end_timing = frappe.utils.get_datetime(daily_event_start) + shift_end + delta
+			else:
+				end_timing = frappe.utils.get_datetime(daily_event_start) + shift_end
+
+			event = {
 				"name": d.name,
 				"doctype": "Shift Assignment",
 				"start_date": start_timing,
@@ -177,8 +218,10 @@ def add_assignments(start, end, filters):
 				"allDay": 0,
 				"convertToUserTz": 0,
 			}
-			if e not in events:
-				events.append(e)
+			if event not in events:
+				events.append(event)
+
+			daily_event_start += delta
 
 	return events
 

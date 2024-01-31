@@ -1,18 +1,9 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
 
-cur_frm.add_fetch('company', 'default_letter_head', 'letter_head');
-
-
-cur_frm.cscript.onload = function(doc, dt, dn){
-	var e_tbl = doc.earnings || [];
-	var d_tbl = doc.deductions || [];
-	if (e_tbl.length == 0 && d_tbl.length == 0)
-		return function(r, rt) { refresh_many(['earnings', 'deductions']);};
-}
-
-frappe.ui.form.on('Salary Structure', {
+frappe.ui.form.on("Salary Structure", {
 	onload: function(frm) {
+		frm.alerted_rows = []
 
 		let help_button = $(`<a class = 'control-label'>
 			${__("Condition and Formula Help")}
@@ -105,16 +96,25 @@ frappe.ui.form.on('Salary Structure', {
 		frm.fields_dict['deductions'].grid.set_column_disp("default_amount", false);
 
 		if (frm.doc.docstatus === 1) {
-			frm.add_custom_button(__("Assign to Employees"), function() {
-				frm.trigger("assign_to_employees")
-			}, __("Actions"));
-
-			frm.add_custom_button(__("Assign Salary Structure"), function() {
-				let doc = frappe.model.get_new_doc("Salary Structure Assignment");
+			frm.add_custom_button(__("Single Assignment"), function() {
+				const doc = frappe.model.get_new_doc("Salary Structure Assignment");
 				doc.salary_structure = frm.doc.name;
 				doc.company = frm.doc.company;
 				frappe.set_route("Form", "Salary Structure Assignment", doc.name);
-			}, __("Actions"));
+			}, __("Create"));
+
+			frm.add_custom_button(__("Bulk Assignments"), () => {
+				frm.trigger("assign_to_employees")
+			}, __("Create"))
+
+			frm.add_custom_button(__("Income Tax Slab"), () => {
+				frappe.model.with_doctype("Income Tax Slab", () => {
+					const doc = frappe.model.get_new_doc("Income Tax Slab");
+					frappe.set_route("Form", "Income Tax Slab", doc.name);
+				});
+			}, __("Create"));
+
+			frm.page.set_inner_btn_group_as_primary(__('Create'));
 
 			frm.add_custom_button(__("Preview Salary Slip"), function() {
 				frm.trigger("preview_salary_slip");
@@ -136,12 +136,13 @@ frappe.ui.form.on('Salary Structure', {
 
 	assign_to_employees:function (frm) {
 		var d = new frappe.ui.Dialog({
-			title: __("Assign to Employees"),
+			title: __("Bulk Salary Structure Assignment"),
 			fields: [
-				{fieldname: "sec_break", fieldtype: "Section Break", label: __("Filter Employees By (Optional)")},
-				{fieldname: "grade", fieldtype: "Link", options: "Employee Grade", label: __("Employee Grade")},
-				{fieldname:'department', fieldtype:'Link', options: 'Department', label: __('Department')},
+				{fieldname: "sec_break", fieldtype: "Section Break", label: __("Employee Filters")},
+				{fieldname: "branch", fieldtype: "Link", options: "Branch", label: __("Branch")},
 				{fieldname:'designation', fieldtype:'Link', options: 'Designation', label: __('Designation')},
+				{fieldname:'department', fieldtype:'Link', options: 'Department', label: __('Department')},
+				{fieldname: "grade", fieldtype: "Link", options: "Employee Grade", label: __("Employee Grade")},
 				{fieldname:"employee", fieldtype: "Link", options: "Employee", label: __("Employee")},
 				{fieldname:"payroll_payable_account", fieldtype: "Link", options: "Account", filters: {"company": frm.doc.company, "root_type": "Liability", "is_group": 0, "account_currency": frm.doc.currency}, label: __("Payroll Payable Account")},
 				{fieldname:'base_variable', fieldtype:'Section Break'},
@@ -311,6 +312,19 @@ frappe.ui.form.on('Salary Detail', {
 		calculate_totals(frm.doc);
 	},
 
+	formula: function(frm, cdt, cdn) {
+		const row = locals[cdt][cdn];
+		if (row.formula && !row?.amount_based_on_formula && !frm.alerted_rows.includes(cdn)) {
+			frappe.msgprint({
+				message: __("{0} Row #{1}: {2} needs to be enabled for the formula to be considered.",
+					[toTitle(row.parentfield), row.idx, __("Amount based on formula").bold()]),
+				title: __("Warning"),
+				indicator: "orange",
+			});
+			frm.alerted_rows.push(cdn)
+		}
+	},
+
 	salary_component: function(frm, cdt, cdn) {
 		var child = locals[cdt][cdn];
 		if(child.salary_component){
@@ -347,10 +361,11 @@ frappe.ui.form.on('Salary Detail', {
 
 	amount_based_on_formula: function(frm, cdt, cdn) {
 		var child = locals[cdt][cdn];
-		if(child.amount_based_on_formula == 1){
+		if (child.amount_based_on_formula == 1) {
 			frappe.model.set_value(cdt, cdn, 'amount', null);
-		}
-		else{
+			const index = frm.alerted_rows.indexOf(cdn);
+			if (index > -1) frm.alerted_rows.splice(index, 1);
+		} else {
 			frappe.model.set_value(cdt, cdn, 'formula', null);
 		}
 	}

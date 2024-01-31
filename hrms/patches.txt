@@ -11,6 +11,7 @@ hrms.patches.v14_0.update_payroll_frequency_to_none_if_salary_slip_is_based_on_t
 hrms.patches.v14_0.update_ess_user_access #2023-08-14
 execute:frappe.db.set_default("date_format", frappe.db.get_single_value("System Settings", "date_format"))
 hrms.patches.v14_0.create_vehicle_service_item
+hrms.patches.v14_0.add_expense_claim_to_repost_settings
 hrms.patches.v15_0.notify_about_loan_app_separation
 hrms.patches.v15_0.rename_enable_late_entry_early_exit_grace_period
 hrms.patches.v14_0.update_repay_from_salary_and_payroll_payable_account_fields
@@ -18,3 +19,4 @@ hrms.patches.v14_0.create_custom_field_in_loan
 hrms.patches.v14_0.update_loan_repayment_repay_from_salary
 hrms.patches.v15_0.migrate_loan_type_to_loan_product
 hrms.patches.v15_0.rename_and_update_leave_encashment_fields
+hrms.patches.v14_0.update_title_in_employee_onboarding_and_separation_templates

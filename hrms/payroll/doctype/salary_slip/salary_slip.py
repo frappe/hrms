@@ -145,7 +145,7 @@ class SalarySlip(TransactionBase):
 		else:
 			self.get_working_days_details(lwp=self.leave_without_pay)
 
-		self.set_salary_structure_assignement()
+		self.set_salary_structure_assignment()
 		self.calculate_net_pay()
 		self.compute_year_to_date()
 		self.compute_month_to_date()
@@ -172,6 +172,9 @@ class SalarySlip(TransactionBase):
 		base_total = self.base_net_pay if self.is_rounding_total_disabled() else self.base_rounded_total
 		self.total_in_words = money_in_words(total, doc_currency)
 		self.base_total_in_words = money_in_words(base_total, company_currency)
+
+	def on_update(self):
+		self.publish_update()
 
 	def on_submit(self):
 		if self.net_pay < 0:
@@ -215,6 +218,16 @@ class SalarySlip(TransactionBase):
 		self.update_payment_status_for_gratuity()
 
 		cancel_loan_repayment_entry(self)
+		self.publish_update()
+
+	def publish_update(self):
+		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
+		frappe.publish_realtime(
+			event="hrms:update_salary_slips",
+			message={"employee": self.employee},
+			user=employee_user,
+			after_commit=True,
+		)
 
 	def on_trash(self):
 		from frappe.model.naming import revert_series_if_last
@@ -697,7 +710,7 @@ class SalarySlip(TransactionBase):
 			}
 			doc.append("earnings", wages_row)
 
-	def set_salary_structure_assignement(self):
+	def set_salary_structure_assignment(self):
 		self._salary_structure_assignment = frappe.db.get_value(
 			"Salary Structure Assignment",
 			{
@@ -1007,6 +1020,7 @@ class SalarySlip(TransactionBase):
 			posting_date = frappe.utils.add_months(self.posting_date, sub_period)
 
 		else:
+			days_to_add = 0
 			if self.payroll_frequency == "Weekly":
 				days_to_add = sub_period * 6
 
@@ -1097,11 +1111,11 @@ class SalarySlip(TransactionBase):
 		employee = frappe.get_cached_doc("Employee", self.employee).as_dict()
 
 		if not hasattr(self, "_salary_structure_assignment"):
-			self.set_salary_structure_assignement()
+			self.set_salary_structure_assignment()
 
 		data.update(self._salary_structure_assignment)
-		data.update(employee)
 		data.update(self.as_dict())
+		data.update(employee)
 
 		data.update(self.get_component_abbr_map())
 
@@ -1780,21 +1794,29 @@ class SalarySlip(TransactionBase):
 	def email_salary_slip(self):
 		receiver = frappe.db.get_value("Employee", self.employee, "prefered_email", cache=True)
 		payroll_settings = frappe.get_single("Payroll Settings")
-		message = "Please see attachment"
+
+		subject = "Salary Slip - from {0} to {1}".format(self.start_date, self.end_date)
+		message = _("Please see attachment")
+		if payroll_settings.email_template:
+			email_template = frappe.get_doc("Email Template", payroll_settings.email_template)
+			context = self.as_dict()
+			subject = frappe.render_template(email_template.subject, context)
+			message = frappe.render_template(email_template.response, context)
+
 		password = None
 		if payroll_settings.encrypt_salary_slips_in_emails:
 			password = generate_password_for_pdf(payroll_settings.password_policy, self.employee)
-			message += """<br>Note: Your salary slip is password protected,
-				the password to unlock the PDF is of the format {0}. """.format(
-				payroll_settings.password_policy
-			)
+			if not payroll_settings.email_template:
+				message += "<br>" + _(
+					"Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
+				).format(payroll_settings.password_policy)
 
 		if receiver:
 			email_args = {
 				"sender": payroll_settings.sender_email,
 				"recipients": [receiver],
-				"message": _(message),
-				"subject": "Salary Slip - from {0} to {1}".format(self.start_date, self.end_date),
+				"message": message,
+				"subject": subject,
 				"attachments": [
 					frappe.attach_print(self.doctype, self.name, file_name=self.name, password=password)
 				],
@@ -2236,3 +2258,25 @@ def _check_attributes(code: str) -> None:
 			and node.attr in UNSAFE_ATTRIBUTES
 		):
 			raise SyntaxError(f'Illegal rule {frappe.bold(code)}. Cannot use "{node.attr}"')
+
+
+@frappe.whitelist()
+def enqueue_email_salary_slips(names) -> None:
+	"""enqueue bulk emailing salary slips"""
+	import json
+
+	if isinstance(names, str):
+		names = json.loads(names)
+
+	frappe.enqueue("hrms.payroll.doctype.salary_slip.salary_slip.email_salary_slips", names=names)
+	frappe.msgprint(
+		_("Salary slip emails have been enqueued for sending. Check {0} for status.").format(
+			f"""<a href='{frappe.utils.get_url_to_list("Email Queue")}' target='blank'>Email Queue</a>"""
+		)
+	)
+
+
+def email_salary_slips(names) -> None:
+	for name in names:
+		salary_slip = frappe.get_doc("Salary Slip", name)
+		salary_slip.email_salary_slip()

@@ -1,19 +1,27 @@
 {
  "actions": [],
  "allow_import": 1,
- "autoname": "field:route",
+ "autoname": "HR-OPN-.YYYY.-.####",
  "creation": "2013-01-15 16:13:36",
  "description": "Description of a Job Opening",
  "doctype": "DocType",
  "document_type": "Document",
  "engine": "InnoDB",
  "field_order": [
+  "job_details_section",
   "job_title",
-  "company",
-  "status",
-  "column_break_5",
   "designation",
+  "column_break_5",
+  "status",
+  "posted_on",
+  "closes_on",
+  "closed_on",
+  "section_break_nngy",
+  "company",
   "department",
+  "column_break_dxpv",
+  "employment_type",
+  "location",
   "references_section",
   "staffing_plan",
   "planned_vacancies",
@@ -31,6 +39,7 @@
   "lower_range",
   "upper_range",
   "column_break_20",
+  "salary_per",
   "publish_salary_range"
  ],
  "fields": [
@@ -181,16 +190,67 @@
    "fieldtype": "Int",
    "label": "Vacancies",
    "read_only": 1
+  },
+  {
+   "default": "Now",
+   "fieldname": "posted_on",
+   "fieldtype": "Datetime",
+   "label": "Posted On"
+  },
+  {
+   "depends_on": "eval:doc.status == 'Open'",
+   "description": "If set, the job opening will be closed automatically after this date",
+   "fieldname": "closes_on",
+   "fieldtype": "Date",
+   "label": "Closes On"
+  },
+  {
+   "fieldname": "employment_type",
+   "fieldtype": "Link",
+   "label": "Employment Type",
+   "options": "Employment Type"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Branch"
+  },
+  {
+   "fieldname": "section_break_nngy",
+   "fieldtype": "Section Break",
+   "label": "Company Details"
+  },
+  {
+   "fieldname": "column_break_dxpv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "job_details_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.status == 'Closed'",
+   "fieldname": "closed_on",
+   "fieldtype": "Date",
+   "label": "Closed On"
+  },
+  {
+   "default": "Month",
+   "fieldname": "salary_per",
+   "fieldtype": "Select",
+   "label": "Salary Paid Per",
+   "options": "Month\nYear"
   }
  ],
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2023-09-14 16:50:39.316079",
+ "modified": "2024-01-03 14:34:32.159138",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
- "naming_rule": "By fieldname",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -211,5 +271,15 @@
  ],
  "sort_field": "modified",
  "sort_order": "ASC",
- "states": []
+ "states": [
+  {
+   "color": "Green",
+   "title": "Open"
+  },
+  {
+   "color": "Gray",
+   "title": "Closed"
+  }
+ ],
+ "title_field": "job_title"
 }

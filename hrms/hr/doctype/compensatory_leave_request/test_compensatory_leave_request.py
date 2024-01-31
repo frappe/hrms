@@ -8,6 +8,7 @@ from frappe.utils import add_days, add_months, today
 from hrms.hr.doctype.attendance_request.test_attendance_request import get_employee
 from hrms.hr.doctype.leave_application.leave_application import get_leave_balance_on
 from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
+from hrms.tests.test_utils import add_date_to_holiday_list
 
 test_dependencies = ["Employee"]
 
@@ -128,6 +129,31 @@ class TestCompensatoryLeaveRequest(FrappeTestCase):
 
 		self.assertEqual(leave_ledger_entry[0].leaves, 0.5)
 
+	def test_request_on_leave_period_boundary(self):
+		frappe.db.delete("Leave Period")
+		create_leave_period("2023-01-01", "2023-12-31", "_Test Company")
+
+		employee = get_employee()
+		boundary_date = "2023-12-31"
+		add_date_to_holiday_list(boundary_date, employee.holiday_list)
+		mark_attendance(employee, boundary_date, "Present")
+
+		# no leave period found of "2024-01-01"
+		compensatory_leave_request = frappe.new_doc("Compensatory Leave Request")
+		compensatory_leave_request.update(
+			dict(
+				employee=employee.name,
+				leave_type="Compensatory Off",
+				work_from_date=boundary_date,
+				work_end_date=boundary_date,
+				reason="test",
+			)
+		)
+		self.assertRaises(frappe.ValidationError, compensatory_leave_request.submit)
+
+		create_leave_period("2023-01-01", "2023-12-31", "_Test Company")
+		compensatory_leave_request.submit()
+
 
 def get_compensatory_leave_request(employee, leave_date=today()):
 	prev_comp_leave_req = frappe.db.get_value(
@@ -155,7 +181,10 @@ def get_compensatory_leave_request(employee, leave_date=today()):
 	).insert()
 
 
-def mark_attendance(employee, date=today(), status="Present"):
+def mark_attendance(employee, date=None, status="Present"):
+	if not date:
+		date = today()
+
 	if not frappe.db.exists(
 		dict(doctype="Attendance", employee=employee.name, attendance_date=date, status="Present")
 	):

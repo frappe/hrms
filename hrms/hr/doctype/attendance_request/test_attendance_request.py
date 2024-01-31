@@ -137,7 +137,7 @@ class TestAttendanceRequest(FrappeTestCase):
 			leave_type=leave_type.name, from_date=self.from_date, to_date=self.to_date
 		)
 		today = getdate()
-		make_leave_application(self.employee.name, today, add_days(today, 1), leave_type.name)
+		make_leave_application(self.employee.name, today, today, leave_type.name)
 
 		attendance_request = create_attendance_request(
 			employee=self.employee.name, reason="On Duty", company="_Test Company"

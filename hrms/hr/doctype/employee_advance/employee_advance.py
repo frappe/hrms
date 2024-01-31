@@ -11,6 +11,7 @@ from frappe.utils import flt, nowdate
 import erpnext
 from erpnext.accounts.doctype.journal_entry.journal_entry import get_default_bank_cash_account
 
+import hrms
 from hrms.hr.utils import validate_active_employee
 
 
@@ -31,6 +32,16 @@ class EmployeeAdvance(Document):
 	def on_cancel(self):
 		self.ignore_linked_doctypes = "GL Entry"
 		self.set_status(update=True)
+
+	def on_update(self):
+		self.publish_update()
+
+	def after_delete(self):
+		self.publish_update()
+
+	def publish_update(self):
+		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
+		hrms.refetch_resource("hrms:employee_advance_balance", employee_user)
 
 	def set_status(self, update=False):
 		precision = self.precision("paid_amount")
@@ -65,6 +76,8 @@ class EmployeeAdvance(Document):
 
 		if update:
 			self.db_set("status", status)
+			self.publish_update()
+			self.notify_update()
 		else:
 			self.status = status
 
@@ -103,13 +116,18 @@ class EmployeeAdvance(Document):
 		if return_amount != 0:
 			return_amount = flt(return_amount) / flt(self.exchange_rate)
 
-		if flt(paid_amount) > self.advance_amount:
+		precision = self.precision("paid_amount")
+		paid_amount = flt(paid_amount, precision)
+		if paid_amount > flt(self.advance_amount, precision):
 			frappe.throw(
 				_("Row {0}# Paid Amount cannot be greater than requested advance amount"),
 				EmployeeAdvanceOverPayment,
 			)
 
-		if flt(return_amount) > 0 and flt(return_amount) > (self.paid_amount - self.claimed_amount):
+		precision = self.precision("return_amount")
+		return_amount = flt(return_amount, precision)
+
+		if return_amount > 0 and return_amount > flt(self.paid_amount - self.claimed_amount, precision):
 			frappe.throw(_("Return amount cannot be greater than unclaimed amount"))
 
 		self.db_set("paid_amount", paid_amount)
@@ -236,6 +254,7 @@ def create_return_through_additional_salary(doc):
 	additional_salary = frappe.new_doc("Additional Salary")
 	additional_salary.employee = doc.employee
 	additional_salary.currency = doc.currency
+	additional_salary.overwrite_salary_structure_amount = 0
 	additional_salary.amount = doc.paid_amount - doc.claimed_amount
 	additional_salary.company = doc.company
 	additional_salary.ref_doctype = doc.doctype

@@ -17,7 +17,7 @@
   "scheduled_on",
   "from_time",
   "to_time",
-  "interview_feedback_section",
+  "section_break_hqvh",
   "interview_details",
   "ratings_section",
   "expected_average_rating",
@@ -26,7 +26,9 @@
   "section_break_13",
   "interview_summary",
   "reminded",
-  "amended_from"
+  "amended_from",
+  "feedback_tab",
+  "feedback_html"
  ],
  "fields": [
   {
@@ -39,6 +41,7 @@
    "reqd": 1
   },
   {
+   "fetch_from": "job_applicant.job_title",
    "fieldname": "job_opening",
    "fieldtype": "Link",
    "label": "Job Opening",
@@ -87,6 +90,8 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "job_applicant.resume_link",
+   "fetch_if_empty": 1,
    "fieldname": "resume_link",
    "fieldtype": "Data",
    "label": "Resume link"
@@ -149,17 +154,6 @@
    "label": "Reminded"
   },
   {
-   "allow_on_submit": 1,
-   "fieldname": "interview_details",
-   "fieldtype": "Table",
-   "options": "Interview Detail"
-  },
-  {
-   "fieldname": "interview_feedback_section",
-   "fieldtype": "Section Break",
-   "label": "Feedback"
-  },
-  {
    "fieldname": "from_time",
    "fieldtype": "Time",
    "in_list_view": 1,
@@ -174,6 +168,27 @@
    "label": "To Time",
    "reqd": 1,
    "set_only_once": 1
+  },
+  {
+   "fieldname": "feedback_tab",
+   "fieldtype": "Tab Break",
+   "label": "Feedback"
+  },
+  {
+   "fieldname": "feedback_html",
+   "fieldtype": "HTML",
+   "label": "Feedback HTML"
+  },
+  {
+   "fieldname": "section_break_hqvh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "interview_details",
+   "fieldtype": "Table",
+   "label": "Interviewers",
+   "options": "Interview Detail",
+   "allow_on_submit": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -184,10 +199,11 @@
    "link_fieldname": "interview"
   }
  ],
- "modified": "2021-09-30 13:30:05.421035",
+ "modified": "2023-12-30 12:13:59.157555",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -249,6 +265,7 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "job_applicant",
  "track_changes": 1
 }

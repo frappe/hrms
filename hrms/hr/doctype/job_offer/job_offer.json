@@ -16,6 +16,7 @@
   "designation",
   "company",
   "section_break_4",
+  "job_offer_term_template",
   "offer_terms",
   "section_break_14",
   "select_terms",
@@ -156,11 +157,17 @@
    "options": "Job Offer",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "job_offer_term_template",
+   "fieldtype": "Link",
+   "label": "Job Offer Term Template",
+   "options": "Job Offer Term Template"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-06-25 00:56:24.756395",
+ "modified": "2023-11-21 13:41:22.022838",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",
