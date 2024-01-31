@@ -17,6 +17,7 @@
   "to_date",
   "half_day",
   "half_day_date",
+  "include_holidays",
   "shift",
   "reason_section",
   "reason",
@@ -125,11 +126,17 @@
    "fieldtype": "Link",
    "label": "Shift",
    "options": "Shift Type"
+  },
+  {
+   "default": "0",
+   "fieldname": "include_holidays",
+   "fieldtype": "Check",
+   "label": "Include Holidays"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-08-04 18:15:42.567091",
+ "modified": "2023-12-20 16:18:31.864719",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance Request",
