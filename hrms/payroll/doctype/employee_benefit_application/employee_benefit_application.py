@@ -148,7 +148,7 @@ class EmployeeBenefitApplication(Document):
 		)
 		if application:
 			frappe.throw(
-				_("Employee {0} already submited an apllication {1} for the payroll period {2}").format(
+				_("Employee {0} already submitted an application {1} for the payroll period {2}").format(
 					self.employee, application, self.payroll_period
 				)
 			)
