@@ -17,6 +17,11 @@
   "to_date",
   "half_day",
   "half_day_date",
+<<<<<<< HEAD
+=======
+  "include_holidays",
+  "shift",
+>>>>>>> f1e34133b (feat(Attendance Request):  add 'Include Holidays' checkbox (#1040))
   "reason_section",
   "reason",
   "column_break_4",
@@ -117,11 +122,31 @@
    "options": "Attendance Request",
    "print_hide": 1,
    "read_only": 1
+<<<<<<< HEAD
+=======
+  },
+  {
+   "description": "Note: Shift will not be overwritten in existing attendance records",
+   "fieldname": "shift",
+   "fieldtype": "Link",
+   "label": "Shift",
+   "options": "Shift Type"
+  },
+  {
+   "default": "0",
+   "fieldname": "include_holidays",
+   "fieldtype": "Check",
+   "label": "Include Holidays"
+>>>>>>> f1e34133b (feat(Attendance Request):  add 'Include Holidays' checkbox (#1040))
   }
  ],
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-05-03 09:31:53.325203",
+=======
+ "modified": "2023-12-20 16:18:31.864719",
+>>>>>>> f1e34133b (feat(Attendance Request):  add 'Include Holidays' checkbox (#1040))
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance Request",
