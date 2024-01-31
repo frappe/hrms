@@ -45,7 +45,7 @@ from hrms.payroll.doctype.salary_slip.salary_slip import (
 )
 from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
-from hrms.tests.test_utils import get_first_sunday
+from hrms.tests.test_utils import get_email_by_subject, get_first_sunday
 
 
 class TestSalarySlip(FrappeTestCase):
@@ -605,12 +605,10 @@ class TestSalarySlip(FrappeTestCase):
 		ss.save()
 		ss.submit()
 
-		email_queue = frappe.db.a_row_exists("Email Queue")
-		self.assertTrue(email_queue)
+		self.assertIsNotNone(get_email_by_subject("Salary Slip - from"))
 
 	@change_settings(
-		"Payroll Settings",
-		{"email_salary_slip_to_employee": 1, "email_template": "Salary Slip"}
+		"Payroll Settings", {"email_salary_slip_to_employee": 1, "email_template": "Salary Slip"}
 	)
 	def test_email_salary_slip_with_email_template(self):
 		frappe.db.delete("Email Queue")
@@ -621,8 +619,7 @@ class TestSalarySlip(FrappeTestCase):
 		ss.save()
 		ss.submit()
 
-		email_queue = frappe.db.a_row_exists("Email Queue")
-		self.assertTrue(email_queue)
+		self.assertIsNotNone(get_email_by_subject("Test Salary Slip Email Template"))
 
 	@if_lending_app_installed
 	def test_loan_repayment_salary_slip(self):
@@ -2415,7 +2412,7 @@ def create_ss_email_template():
 				"doctype": "Email Template",
 				"name": "Salary Slip",
 				"response": "Test Salary Slip",
-				"subject": "Test Subject",
+				"subject": "Test Salary Slip Email Template",
 				"owner": frappe.session.user,
 			}
 		)
