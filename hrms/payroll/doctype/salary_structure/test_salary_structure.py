@@ -18,6 +18,9 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_earning_salary_component,
 	make_employee_salary_slip,
 )
+from hrms.payroll.doctype.salary_structure.salary_structure import (
+	create_salary_structure_assignment as create_assignment,
+)
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 
 test_dependencies = ["Fiscal Year"]
@@ -122,8 +125,14 @@ class TestSalaryStructure(FrappeTestCase):
 			("test_assign_stucture@salary.com", salary_structure.name),
 		)
 		# test structure_assignment
-		salary_structure.assign_salary_structure(
-			employee=employee_doc_name, from_date="2013-01-01", base=5000, variable=200
+		create_assignment(
+			employee=employee_doc_name,
+			salary_structure=salary_structure.name,
+			from_date="2013-01-01",
+			company=salary_structure.company,
+			currency=salary_structure.currency,
+			base=5000,
+			variable=200,
 		)
 		salary_structure_assignment = frappe.get_doc(
 			"Salary Structure Assignment", {"employee": employee_doc_name, "from_date": "2013-01-01"}
@@ -140,7 +149,13 @@ class TestSalaryStructure(FrappeTestCase):
 		employee = make_employee("test_employee_grade@salary.com", company="_Test Company", grade="Lead")
 
 		# structure assignment should have the default salary structure and base pay
-		salary_structure.assign_salary_structure(employee=employee, from_date=nowdate())
+		create_assignment(
+			employee=employee,
+			salary_structure=salary_structure.name,
+			company=salary_structure.company,
+			currency=salary_structure.currency,
+			from_date=nowdate(),
+		)
 		structure, base = frappe.db.get_value(
 			"Salary Structure Assignment",
 			{"employee": employee, "salary_structure": salary_structure.name, "from_date": nowdate()},

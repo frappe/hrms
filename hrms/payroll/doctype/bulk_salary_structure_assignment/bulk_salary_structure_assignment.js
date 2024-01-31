@@ -45,7 +45,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	set_primary_action(frm) {
 		frm.disable_save();
 		frm.page.set_primary_action(__("Assign Structure"), () => {
-			console.log("Assigning");
+			frm.trigger("assign_structure");
 		});
 	},
 
@@ -202,5 +202,28 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 			dropdown: false,
 			align: "left",
 		}));
+	},
+
+	assign_structure(frm) {
+		const check_map = frm.employees_datatable.rowmanager.checkMap;
+		const selected_employees = [];
+		check_map.forEach((is_checked, idx) => {
+			if (is_checked)
+				selected_employees.push(frm.employees_datatable.datamanager.data[idx]);
+		});
+		frm
+			.call({
+				method: "bulk_assign_structure",
+				doc: frm.doc,
+				args: {
+					employees: selected_employees,
+				},
+				freeze: true,
+				freeze_message: __("Assigning Salary Structure"),
+			})
+			.then((r) => {
+				// refresh only on complete/partial success
+				if (r.message.success) frm.refresh();
+			});
 	},
 });
