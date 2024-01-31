@@ -130,3 +130,7 @@ def create_job_applicant(**args):
 	job_applicant.update(filters)
 	job_applicant.save()
 	return job_applicant
+
+
+def get_email_by_subject(subject: str) -> str | None:
+	return frappe.db.exists("Email Queue", {"message": ("like", f"%{subject}%")})
