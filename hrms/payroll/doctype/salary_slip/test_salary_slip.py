@@ -3,7 +3,6 @@
 
 import calendar
 import random
-from unittest.mock import MagicMock, patch
 
 import frappe
 from frappe.model.document import Document
@@ -41,7 +40,9 @@ from hrms.payroll.doctype.salary_slip.salary_slip import (
 	make_salary_slip_from_timesheet,
 )
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
-from hrms.tests.test_utils import get_first_sunday
+from hrms.tests.test_utils import create_company, get_first_sunday
+
+HOLIDAY_LIST = "Salary Slip Test Holiday List"
 
 
 class TestSalarySlip(FrappeTestCase):
@@ -63,9 +64,7 @@ class TestSalarySlip(FrappeTestCase):
 		employee_doc.reload()
 
 		make_holiday_list()
-		frappe.db.set_value(
-			"Company", employee_doc.company, "default_holiday_list", "Salary Slip Test Holiday List"
-		)
+		frappe.db.set_value("Company", employee_doc.company, "default_holiday_list", HOLIDAY_LIST)
 
 		frappe.db.sql(
 			"""delete from `tabSalary Structure` where name='Test Inactive Employee Salary Slip'"""
@@ -229,7 +228,7 @@ class TestSalarySlip(FrappeTestCase):
 
 		for days in range(date_diff(relieving_date, joining_date) + 1):
 			date = add_days(joining_date, days)
-			if not is_holiday("Salary Slip Test Holiday List", date):
+			if not is_holiday(HOLIDAY_LIST, date):
 				mark_attendance(new_emp_id, date, "Present", ignore_validate=True)
 			else:
 				holidays += 1
@@ -275,7 +274,7 @@ class TestSalarySlip(FrappeTestCase):
 
 		for days in range(date_diff(relieving_date, joining_date) + 1):
 			date = add_days(joining_date, days)
-			if not is_holiday("Salary Slip Test Holiday List", date):
+			if not is_holiday(HOLIDAY_LIST, date):
 				mark_attendance(new_emp_id, date, "Present", ignore_validate=True)
 			else:
 				holidays += 1
@@ -339,7 +338,7 @@ class TestSalarySlip(FrappeTestCase):
 		emp = make_employee(
 			"test_employee_timesheet@salary.com",
 			company="_Test Company",
-			holiday_list="Salary Slip Test Holiday List",
+			holiday_list=HOLIDAY_LIST,
 		)
 		frappe.db.set_value("Employee", emp, {"relieving_date": None, "status": "Active"})
 
@@ -1485,35 +1484,59 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertEqual(test_tds.accounts[0].company, salary_slip.company)
 		self.assertListEqual(tax_component, ["_Test TDS"])
 
-	@patch("frappe.db.get_value")
-	@patch("frappe.get_doc")
-	@patch("frappe.throw")
-	@patch("frappe.utils.getdate")
-	def test_get_income_tax_slabs(self, mock_getdate, mock_throw, mock_get_doc, mock_get_value):
-		from datetime import date, datetime
+	def test_get_income_tax_slabs(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
-		# Mock the data that would be returned from frappe.db.get_value
-		mock_get_value.return_value = ("income_tax_slab_id", "ss_assignment_name")
+		company = create_company("_Test Tax Slab").name
+		frappe.db.delete("Payroll Period", {"company": company})
+		employee = make_employee("test_tax_slab@salary.com", company=company, holiday_list=HOLIDAY_LIST)
 
-		# Mock the Income Tax Slab document
-		mock_income_tax_slab_doc = MagicMock()
-		mock_income_tax_slab_doc.disabled = False
-		mock_income_tax_slab_doc.effective_from = date(date.today().year, 1, 1)
-		mock_get_doc.return_value = mock_income_tax_slab_doc
+		fiscal_year = get_fiscal_year(getdate(), as_dict=True)
+		year_start, year_end = fiscal_year.year_start_date, fiscal_year.year_end_date
+		mid_year = add_months(year_start, 6)
 
-		# Mock the 'Salary Slip' document
-		mock_salary_slip = MagicMock()
-		mock_salary_slip.employee = "employee_id"
-		mock_salary_slip.salary_structure = "salary_structure_id"
-		mock_salary_slip.end_date = get_last_day(nowdate())
-		mock_salary_slip.payroll_period.start_date = date(date.today().year, 1, 1)
-		mock_salary_slip.get_income_tax_slabs.return_value = mock_income_tax_slab_doc
+		payroll_period = create_payroll_period(
+			name="Payroll Period Test",
+			company=company,
+			start_date=year_start,
+			end_date=year_end,
+		)
 
-		self.ss = mock_salary_slip
-		result = self.ss.get_income_tax_slabs()
+		tax_slabs = []
+		salary_structures = []
+		for start_date, end_date in [(year_start, mid_year), (mid_year, year_end)]:
+			tax_slab = create_tax_slab(
+				payroll_period,
+				allow_tax_exemption=True,
+				currency="INR",
+				effective_date=getdate(start_date),
+				company=company,
+			)
+			tax_slabs.append(tax_slab)
+			salary_structure = make_salary_structure(
+				f"Structure {start_date}",
+				"Monthly",
+				employee=employee,
+				company=company,
+				currency="INR",
+				from_date=start_date,
+				payroll_period=payroll_period,
+				allow_duplicate=True,
+			)
+			salary_structures.append(salary_structure)
 
-		# Assert that the result is the mocked Income Tax Slab document
-		self.assertEqual(result, mock_income_tax_slab_doc)
+		# fetches the correct tax slab for backdated salary slip
+		salary_slip = make_salary_slip(
+			salary_structures[0].name, employee=employee, posting_date=year_start
+		)
+		salary_slip.insert()
+		self.assertEqual(salary_slip.get_income_tax_slabs().name, tax_slabs[0])
+
+		salary_slip = make_salary_slip(
+			salary_structures[1].name, employee=employee, posting_date=add_days(mid_year, 1)
+		)
+		salary_slip.insert()
+		self.assertEqual(salary_slip.get_income_tax_slabs().name, tax_slabs[1])
 
 
 class TestSalarySlipSafeEval(FrappeTestCase):
@@ -2042,7 +2065,7 @@ def setup_test():
 	make_payroll_period()
 
 	frappe.db.set_value(
-		"Company", erpnext.get_default_company(), "default_holiday_list", "Salary Slip Test Holiday List"
+		"Company", erpnext.get_default_company(), "default_holiday_list", HOLIDAY_LIST
 	)
 
 	frappe.db.set_value("Payroll Settings", None, "email_salary_slip_to_employee", 0)
@@ -2072,7 +2095,7 @@ def make_payroll_period():
 
 def make_holiday_list(list_name=None, from_date=None, to_date=None, add_weekly_offs=True):
 	fiscal_year = get_fiscal_year(nowdate(), company=erpnext.get_default_company())
-	name = list_name or "Salary Slip Test Holiday List"
+	name = list_name or HOLIDAY_LIST
 
 	frappe.delete_doc_if_exists("Holiday List", name, force=True)
 
