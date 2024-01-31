@@ -1629,10 +1629,13 @@ def make_employee_salary_slip(emp_id, payroll_frequency, salary_structure=None, 
 	salary_slip_name = frappe.db.get_value("Salary Slip", {"employee": emp_id})
 
 	if not salary_slip_name:
-		salary_slip = make_salary_slip(salary_structure_doc.name, employee=employee.name)
+		date = posting_date or nowdate()
+		salary_slip = make_salary_slip(
+			salary_structure_doc.name, employee=employee.name, posting_date=date
+		)
 		salary_slip.employee_name = employee.employee_name
 		salary_slip.payroll_frequency = payroll_frequency
-		salary_slip.posting_date = posting_date or nowdate()
+		salary_slip.posting_date = date
 		salary_slip.insert()
 	else:
 		salary_slip = frappe.get_doc("Salary Slip", salary_slip_name)
