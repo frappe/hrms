@@ -1808,10 +1808,8 @@ class SalarySlip(TransactionBase):
 			password = generate_password_for_pdf(payroll_settings.password_policy, self.employee)
 			if not payroll_settings.email_template:
 				message += "<br>" + _(
-					"Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}.".format(
-						payroll_settings.password_policy
-					)
-				)
+					"Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
+				).format(payroll_settings.password_policy)
 
 		if receiver:
 			email_args = {
