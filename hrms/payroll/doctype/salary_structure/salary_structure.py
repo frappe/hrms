@@ -200,39 +200,44 @@ def create_salary_structure_assignment(
 	variable=None,
 	income_tax_slab=None,
 ):
-	if not payroll_payable_account:
-		payroll_payable_account = frappe.db.get_value(
-			"Company", company, "default_payroll_payable_account"
-		)
-		if not payroll_payable_account:
-			frappe.throw(_('Please set "Default Payroll Payable Account" in Company Defaults'))
-	payroll_payable_account_currency = frappe.db.get_value(
-		"Account", payroll_payable_account, "account_currency"
-	)
-	company_curency = erpnext.get_company_currency(company)
-	if (
-		payroll_payable_account_currency != currency
-		and payroll_payable_account_currency != company_curency
-	):
-		frappe.throw(
-			_("Invalid Payroll Payable Account. The account currency must be {0} or {1}").format(
-				currency, company_curency
-			)
-		)
+	try:
+		assignment = frappe.new_doc("Salary Structure Assignment")
 
-	assignment = frappe.new_doc("Salary Structure Assignment")
-	assignment.employee = employee
-	assignment.salary_structure = salary_structure
-	assignment.company = company
-	assignment.currency = currency
-	assignment.payroll_payable_account = payroll_payable_account
-	assignment.from_date = from_date
-	assignment.base = base
-	assignment.variable = variable
-	assignment.income_tax_slab = income_tax_slab
-	assignment.save(ignore_permissions=True)
-	assignment.submit()
-	return assignment.name
+		if not payroll_payable_account:
+			payroll_payable_account = frappe.db.get_value(
+				"Company", company, "default_payroll_payable_account"
+			)
+			if not payroll_payable_account:
+				frappe.throw(_('Please set "Default Payroll Payable Account" in Company Defaults'))
+		payroll_payable_account_currency = frappe.db.get_value(
+			"Account", payroll_payable_account, "account_currency"
+		)
+		company_curency = erpnext.get_company_currency(company)
+		if (
+			payroll_payable_account_currency != currency
+			and payroll_payable_account_currency != company_curency
+		):
+			frappe.throw(
+				_("Invalid Payroll Payable Account. The account currency must be {0} or {1}").format(
+					currency, company_curency
+				)
+			)
+
+		assignment.employee = employee
+		assignment.salary_structure = salary_structure
+		assignment.company = company
+		assignment.currency = currency
+		assignment.payroll_payable_account = payroll_payable_account
+		assignment.from_date = from_date
+		assignment.base = base
+		assignment.variable = variable
+		assignment.income_tax_slab = income_tax_slab
+		assignment.save(ignore_permissions=True)
+		assignment.submit()
+		return assignment.name
+
+	except Exception:
+		assignment.log_error(f"Salary Structure Assignment failed for employee {employee}")
 
 
 def get_existing_assignments(employees, salary_structure, from_date):
