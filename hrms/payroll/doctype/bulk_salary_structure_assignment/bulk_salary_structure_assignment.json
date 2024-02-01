@@ -1,6 +1,6 @@
 {
  "actions": [],
- "allow_rename": 1,
+ "allow_copy": 1,
  "creation": "2024-01-25 12:52:26.250137",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -142,10 +142,10 @@
    "read_only": 1
   }
  ],
- "index_web_pages_for_search": 1,
+ "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-01-29 18:47:02.551273",
+ "modified": "2024-02-01 16:03:03.189628",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Bulk Salary Structure Assignment",
@@ -162,6 +162,7 @@
    "write": 1
   }
  ],
+ "read_only": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
