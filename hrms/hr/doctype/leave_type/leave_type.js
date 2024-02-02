@@ -23,7 +23,12 @@ frappe.tour["Leave Type"] = [
 	{
 		fieldname: "is_compensatory",
 		title: "Is Compensatory Leave",
-		description: __("Leaves you can avail against a holiday you worked on. You can claim Compensatory Off Leave using Compensatory Leave request. Click") + " <a href='https://docs.erpnext.com/docs/v13/user/manual/en/human-resources/compensatory-leave-request' target='_blank'>here</a> " + __('to know more')
+		description: __(
+			"Leaves you can avail against a holiday you worked on. You can claim Compensatory Off Leave using Compensatory Leave Request. Click {0} to know more",
+			[
+				`<a href='https://frappehr.com/docs/v14/en/compensatory-leave-request' target='_blank'>${__("here")}</a>`
+			]
+		)
 	},
 	{
 		fieldname: "allow_encashment",
