@@ -25,12 +25,16 @@ frappe.ui.form.on("Salary Component", {
 	refresh: function (frm) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		if (!frm.doc.__islocal) {
 			frm.add_custom_button(__("Salary Structure"), () => {
 				frm.trigger("create_salary_structure");
 			}, __("Create"));
 =======
 		hrms.payroll_common.get_autocompletions_for_condition_and_formula(frm);
+=======
+		hrms.payroll_common.set_autocompletions_for_condition_and_formula(frm);
+>>>>>>> c6817a203 (feat: setup autocompletions for salary structure fields)
 
 		if (!frm.doc.__islocal) {
 			frm.trigger("add_update_structure_button");
