@@ -200,7 +200,7 @@
    "fieldname": "formula",
    "fieldtype": "Code",
    "label": "Formula",
-   "options": "Python"
+   "options": "PythonExpression"
   },
   {
    "depends_on": "eval:doc.amount_based_on_formula!==1",
@@ -268,7 +268,7 @@
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-21 15:20:57.785309",
+ "modified": "2024-02-02 13:55:55.989527",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",
