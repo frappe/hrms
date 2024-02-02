@@ -1,5 +1,5 @@
 hrms.payroll_common = {
-	get_autocompletions_for_condition_and_formula: function (frm) {
+	set_autocompletions_for_condition_and_formula: function (frm, child_row="") {
 		const autocompletions = [];
 		frappe.run_serially([
 			...["Employee", "Salary Structure", "Salary Slip"].map((doctype) =>
@@ -26,12 +26,25 @@ hrms.payroll_common = {
 								meta: __("Salary Component"),
 							}))
 						);
-						frm.set_df_property(
-							"condition",
-							"autocompletions",
-							autocompletions
-						);
-						frm.set_df_property("formula", "autocompletions", autocompletions);
+
+						if (child_row) {
+							["condition", "formula"].forEach((field) => {
+								frm.set_df_property(
+									child_row.parentfield,
+									"autocompletions",
+									autocompletions,
+									frm.doc.name,
+									field,
+									child_row.name
+								);
+							});
+
+							frm.refresh_field(child_row.parentfield);
+						} else {
+							["condition", "formula"].forEach((field) => {
+								frm.set_df_property(field, "autocompletions", autocompletions);
+							});
+						}
 					});
 			},
 		]);
