@@ -24,10 +24,24 @@ frappe.ui.form.on("Salary Component", {
 
 	refresh: function (frm) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		if (!frm.doc.__islocal) {
 			frm.add_custom_button(__("Salary Structure"), () => {
 				frm.trigger("create_salary_structure");
 			}, __("Create"));
+=======
+		hrms.payroll_common.get_autocompletions_for_condition_and_formula(frm);
+
+		if (!frm.doc.__islocal) {
+			frm.trigger("add_update_structure_button");
+			frm.add_custom_button(
+				__("Salary Structure"),
+				() => {
+					frm.trigger("create_salary_structure");
+				},
+				__("Create")
+			);
+>>>>>>> cbf31f93e (chore: commonify condition/formula autocompletions)
 		}
 =======
 		frm.trigger("setup_autocompletions");
@@ -80,6 +94,7 @@ frappe.ui.form.on("Salary Component", {
 		}
 	},
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 	create_salary_structure: function (frm) {
 		frappe.model.with_doctype("Salary Structure", () => {
@@ -153,6 +168,8 @@ frappe.ui.form.on("Salary Component", {
 >>>>>>> 6c06213b6 (feat: add autocompletions for Salary Structure and Salary Slip fields)
 	},
 
+=======
+>>>>>>> cbf31f93e (chore: commonify condition/formula autocompletions)
 	add_update_structure_button: function (frm) {
 		for (const df of ["Condition", "Formula"]) {
 			frm.add_custom_button(
@@ -184,6 +201,21 @@ frappe.ui.form.on("Salary Component", {
 				__("Update Salary Structures")
 			);
 		}
+<<<<<<< HEAD
+=======
+	},
+
+	create_salary_structure: function (frm) {
+		frappe.model.with_doctype("Salary Structure", () => {
+			const salary_structure = frappe.model.get_new_doc("Salary Structure");
+			const salary_detail = frappe.model.add_child(
+				salary_structure,
+				frm.doc.type === "Earning" ? "earnings" : "deductions"
+			);
+			salary_detail.salary_component = frm.doc.name;
+			frappe.set_route("Form", "Salary Structure", salary_structure.name);
+		});
+>>>>>>> cbf31f93e (chore: commonify condition/formula autocompletions)
 	},
 });
 
