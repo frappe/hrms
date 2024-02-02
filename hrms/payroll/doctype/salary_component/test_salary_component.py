@@ -8,7 +8,7 @@ from hrms.payroll.doctype.salary_structure.test_salary_structure import make_sal
 
 
 class TestSalaryComponent(FrappeTestCase):
-	def test_update_salary_structuress(self):
+	def test_update_salary_structures(self):
 		salary_component = create_salary_component("Special Allowance")
 		salary_component.condition = "H < 10000"
 		salary_component.formula = "BS*.5"
@@ -52,9 +52,6 @@ class TestSalaryComponent(FrappeTestCase):
 		self.assertEqual(ss2_detail.formula, "BS*.3")
 		ss3_detail.reload()
 		self.assertEqual(ss3_detail.formula, "BS*.5")
-
-	def tearDown(self):
-		frappe.db.rollback()
 
 
 def create_salary_component(component_name, **args):
