@@ -11,11 +11,18 @@ from hrms.payroll.utils import sanitize_expression
 
 class SalaryComponent(Document):
 	def before_validate(self):
-		self.condition = sanitize_expression(self.condition)
-		self.formula = sanitize_expression(self.formula)
+		self._condition, self.condition = self.condition, sanitize_expression(self.condition)
+		self._formula, self.formula = self.formula, sanitize_expression(self.formula)
 
 	def validate(self):
 		self.validate_abbr()
+
+	def on_update(self):
+		# set old values (allowing multiline strings for better readability in the doctype form)
+		if self._condition != self.condition:
+			self.db_set("condition", self._condition)
+		if self._formula != self.formula:
+			self.db_set("formula", self._formula)
 
 	def after_insert(self):
 		if not (self.statistical_component or (self.accounts and all(d.account for d in self.accounts))):
