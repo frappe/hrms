@@ -15,7 +15,6 @@ source_link = "http://github.com/frappe/hrms"
 # app_include_css = "/assets/hrms/css/hrms.css"
 app_include_js = [
 	"hrms.bundle.js",
-	"performance.bundle.js",
 ]
 app_include_css = "hrms.bundle.css"
 
@@ -186,9 +185,13 @@ doc_events = {
 	"Loan": {"validate": "hrms.hr.utils.validate_loan_repay_from_salary"},
 	"Employee": {
 		"validate": "hrms.overrides.employee_master.validate_onboarding_process",
-		"on_update": "hrms.overrides.employee_master.update_approver_role",
+		"on_update": [
+			"hrms.overrides.employee_master.update_approver_role",
+			"hrms.overrides.employee_master.publish_update",
+		],
 		"after_insert": "hrms.overrides.employee_master.update_job_applicant_and_offer",
 		"on_trash": "hrms.overrides.employee_master.update_employee_transfer",
+		"after_delete": "hrms.overrides.employee_master.publish_update",
 	},
 	"Project": {
 		"validate": "hrms.controllers.employee_boarding_controller.update_employee_boarding_status"
@@ -225,7 +228,7 @@ scheduler_events = {
 	"monthly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_monthly"],
 }
 
-advance_payment_doctypes = ["Gratuity", "Employee Advance"]
+advance_payment_payable_doctypes = ["Gratuity", "Employee Advance"]
 
 invoice_doctypes = ["Expense Claim"]
 

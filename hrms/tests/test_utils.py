@@ -69,6 +69,21 @@ def get_first_day_for_prev_month():
 	return prev_month_first
 
 
+def add_date_to_holiday_list(date: str, holiday_list: str) -> None:
+	if frappe.db.exists("Holiday", {"parent": holiday_list, "holiday_date": date}):
+		return
+
+	holiday_list = frappe.get_doc("Holiday List", holiday_list)
+	holiday_list.append(
+		"holidays",
+		{
+			"holiday_date": date,
+			"description": "test",
+		},
+	)
+	holiday_list.save()
+
+
 def create_company(name: str = "_Test Company"):
 	if frappe.db.exists("Company", name):
 		return frappe.get_doc("Company", name)
@@ -115,3 +130,7 @@ def create_job_applicant(**args):
 	job_applicant.update(filters)
 	job_applicant.save()
 	return job_applicant
+
+
+def get_email_by_subject(subject: str) -> str | None:
+	return frappe.db.exists("Email Queue", {"message": ("like", f"%{subject}%")})

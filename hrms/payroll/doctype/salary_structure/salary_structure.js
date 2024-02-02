@@ -96,16 +96,25 @@ frappe.ui.form.on("Salary Structure", {
 		frm.fields_dict['deductions'].grid.set_column_disp("default_amount", false);
 
 		if (frm.doc.docstatus === 1) {
-			frm.add_custom_button(__("Assign to Employees"), function() {
-				frm.trigger("assign_to_employees")
-			}, __("Actions"));
-
-			frm.add_custom_button(__("Assign Salary Structure"), function() {
-				let doc = frappe.model.get_new_doc("Salary Structure Assignment");
+			frm.add_custom_button(__("Single Assignment"), function() {
+				const doc = frappe.model.get_new_doc("Salary Structure Assignment");
 				doc.salary_structure = frm.doc.name;
 				doc.company = frm.doc.company;
 				frappe.set_route("Form", "Salary Structure Assignment", doc.name);
-			}, __("Actions"));
+			}, __("Create"));
+
+			frm.add_custom_button(__("Bulk Assignments"), () => {
+				frm.trigger("assign_to_employees")
+			}, __("Create"))
+
+			frm.add_custom_button(__("Income Tax Slab"), () => {
+				frappe.model.with_doctype("Income Tax Slab", () => {
+					const doc = frappe.model.get_new_doc("Income Tax Slab");
+					frappe.set_route("Form", "Income Tax Slab", doc.name);
+				});
+			}, __("Create"));
+
+			frm.page.set_inner_btn_group_as_primary(__('Create'));
 
 			frm.add_custom_button(__("Preview Salary Slip"), function() {
 				frm.trigger("preview_salary_slip");
@@ -127,12 +136,13 @@ frappe.ui.form.on("Salary Structure", {
 
 	assign_to_employees:function (frm) {
 		var d = new frappe.ui.Dialog({
-			title: __("Assign to Employees"),
+			title: __("Bulk Salary Structure Assignment"),
 			fields: [
-				{fieldname: "sec_break", fieldtype: "Section Break", label: __("Filter Employees By (Optional)")},
-				{fieldname: "grade", fieldtype: "Link", options: "Employee Grade", label: __("Employee Grade")},
-				{fieldname:'department', fieldtype:'Link', options: 'Department', label: __('Department')},
+				{fieldname: "sec_break", fieldtype: "Section Break", label: __("Employee Filters")},
+				{fieldname: "branch", fieldtype: "Link", options: "Branch", label: __("Branch")},
 				{fieldname:'designation', fieldtype:'Link', options: 'Designation', label: __('Designation')},
+				{fieldname:'department', fieldtype:'Link', options: 'Department', label: __('Department')},
+				{fieldname: "grade", fieldtype: "Link", options: "Employee Grade", label: __("Employee Grade")},
 				{fieldname:"employee", fieldtype: "Link", options: "Employee", label: __("Employee")},
 				{fieldname:"payroll_payable_account", fieldtype: "Link", options: "Account", filters: {"company": frm.doc.company, "root_type": "Liability", "is_group": 0, "account_currency": frm.doc.currency}, label: __("Payroll Payable Account")},
 				{fieldname:'base_variable', fieldtype:'Section Break'},

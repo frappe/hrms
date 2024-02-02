@@ -14,6 +14,7 @@ export const advanceBalance = createResource({
 		employee: employeeResource.data.name,
 	},
 	auto: true,
+	cache: "hrms:employee_advance_balance",
 	transform(data) {
 		return transformAdvanceData(data)
 	},

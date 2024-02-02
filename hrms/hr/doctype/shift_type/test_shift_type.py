@@ -11,6 +11,7 @@ from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_lis
 
 from hrms.hr.doctype.leave_application.test_leave_application import get_first_sunday
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
+from hrms.tests.test_utils import add_date_to_holiday_list
 
 
 class TestShiftType(FrappeTestCase):
@@ -43,7 +44,9 @@ class TestShiftType(FrappeTestCase):
 
 		shift_type.process_auto_attendance()
 
-		attendance = frappe.db.get_value("Attendance", {"shift": shift_type.name}, "status")
+		attendance = frappe.db.get_value(
+			"Attendance", {"employee": employee, "shift": shift_type.name}, "status"
+		)
 		self.assertEqual(attendance, "Present")
 
 	def test_mark_attendance_with_different_shift_start_time(self):
@@ -68,7 +71,9 @@ class TestShiftType(FrappeTestCase):
 
 		shift_type.process_auto_attendance()
 
-		attendance = frappe.db.get_value("Attendance", {"shift": shift_type.name}, "status")
+		attendance = frappe.db.get_value(
+			"Attendance", {"employee": employee, "shift": shift_type.name}, "status"
+		)
 		self.assertEqual(attendance, "Present")
 
 	def test_attendance_date_for_different_start_and_actual_start_date(self):
@@ -129,7 +134,7 @@ class TestShiftType(FrappeTestCase):
 
 		attendance = frappe.db.get_value(
 			"Attendance",
-			{"shift": shift_type.name},
+			{"shift": shift_type.name, "employee": employee},
 			["status", "name", "late_entry", "early_exit"],
 			as_dict=True,
 		)
@@ -246,15 +251,7 @@ class TestShiftType(FrappeTestCase):
 
 		# add current date as holiday
 		date = getdate()
-		holiday_list = frappe.get_doc("Holiday List", self.holiday_list)
-		holiday_list.append(
-			"holidays",
-			{
-				"holiday_date": date,
-				"description": "test",
-			},
-		)
-		holiday_list.save()
+		add_date_to_holiday_list(date, self.holiday_list)
 
 		shift_type = setup_shift_type(
 			shift_type="Test Holiday Shift", mark_auto_attendance_on_holidays=True
@@ -285,15 +282,7 @@ class TestShiftType(FrappeTestCase):
 
 		# add current date as holiday
 		date = getdate()
-		holiday_list = frappe.get_doc("Holiday List", self.holiday_list)
-		holiday_list.append(
-			"holidays",
-			{
-				"holiday_date": date,
-				"description": "test",
-			},
-		)
-		holiday_list.save()
+		add_date_to_holiday_list(date, self.holiday_list)
 
 		shift_type = setup_shift_type(
 			shift_type="Test Holiday Shift", mark_auto_attendance_on_holidays=False

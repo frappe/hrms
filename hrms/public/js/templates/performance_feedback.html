@@ -1,0 +1,37 @@
+<div class="feedback-section col-xs-12">
+	{% if (feedback_history.length) { %}
+		<div class="feedback-summary mb-5 pb-2">
+			{%=
+				frappe.render_template(
+					"feedback_summary",
+					{
+						number_of_stars: 5,
+						average_rating: average_feedback_score,
+						feedback_count: feedback_history.length,
+						reviews_per_rating: reviews_per_rating
+					}
+				)
+			%}
+		</div>
+	{% } %}
+
+	{% if (can_create) { %}
+		<div class="new-btn pb-3 text-right">
+			<button
+				class="new-feedback-btn btn btn-sm d-inline-flex align-items-center justify-content-center px-3 py-2 border"
+			>
+				<svg class="icon icon-sm">
+					<use href="#icon-add"></use>
+				</svg>
+				{{ __("New Feedback") }}
+			</button>
+		</div>
+	{% } %}
+
+	{%=
+		frappe.render_template(
+			"feedback_history",
+			{ feedback_history: feedback_history, feedback_doctype: "Employee Performance Feedback" }
+		)
+	%}
+</div>

@@ -1,7 +1,7 @@
 import { createApp } from "vue"
 import App from "./App.vue"
 import router from "./router"
-import socket from "./socket"
+import { initSocket } from "./socket"
 
 import {
 	Button,
@@ -31,6 +31,7 @@ import "./theme/variables.css"
 import "./main.css"
 
 const app = createApp(App)
+const socket = initSocket()
 
 setConfig("resourceFetcher", frappeRequest)
 app.use(resourcesPlugin)

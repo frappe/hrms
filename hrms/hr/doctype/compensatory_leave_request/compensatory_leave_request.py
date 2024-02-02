@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import add_days, cint, date_diff, format_date, getdate
+from frappe.utils import add_days, cint, date_diff, format_date, get_url_to_list, getdate
 
 from hrms.hr.utils import (
 	create_additional_leave_ledger_entry,
@@ -32,7 +32,7 @@ class CompensatoryLeaveRequest(Document):
 		self.validate_holidays()
 		self.validate_attendance()
 		if not self.leave_type:
-			frappe.throw(_("Leave Type is madatory"))
+			frappe.throw(_("Leave Type is mandatory"))
 
 	def validate_attendance(self):
 		attendance_records = frappe.get_all(
@@ -75,7 +75,9 @@ class CompensatoryLeaveRequest(Document):
 		date_difference = date_diff(self.work_end_date, self.work_from_date) + 1
 		if self.half_day:
 			date_difference -= 0.5
-		leave_period = get_leave_period(self.work_from_date, self.work_end_date, company)
+
+		comp_leave_valid_from = add_days(self.work_end_date, 1)
+		leave_period = get_leave_period(comp_leave_valid_from, comp_leave_valid_from, company)
 		if leave_period:
 			leave_allocation = self.get_existing_allocation_for_period(leave_period)
 			if leave_allocation:
@@ -85,19 +87,22 @@ class CompensatoryLeaveRequest(Document):
 				leave_allocation.db_set("total_leaves_allocated", leave_allocation.total_leaves_allocated)
 
 				# generate additional ledger entry for the new compensatory leaves off
-				create_additional_leave_ledger_entry(
-					leave_allocation, date_difference, add_days(self.work_end_date, 1)
-				)
+				create_additional_leave_ledger_entry(leave_allocation, date_difference, comp_leave_valid_from)
 
 			else:
 				leave_allocation = self.create_leave_allocation(leave_period, date_difference)
 			self.db_set("leave_allocation", leave_allocation.name)
 		else:
-			frappe.throw(
-				_("There is no leave period in between {0} and {1}").format(
-					format_date(self.work_from_date), format_date(self.work_end_date)
-				)
+			comp_leave_valid_from = frappe.bold(format_date(comp_leave_valid_from))
+			msg = _("This compensatory leave will be applicable from {0}.").format(comp_leave_valid_from)
+			msg += " " + _(
+				"Currently, there is no {0} leave period for this date to create/update leave allocation."
+			).format(frappe.bold(_("active")))
+			msg += "<br><br>" + _("Please create a new {0} for the date {1} first.").format(
+				f"""<a href='{get_url_to_list("Leave Period")}'>Leave Period</a>""",
+				comp_leave_valid_from,
 			)
+			frappe.throw(msg, title=_("No Leave Period Found"))
 
 	def on_cancel(self):
 		if self.leave_allocation:

@@ -23,6 +23,7 @@ from frappe.utils import (
 from erpnext.buying.doctype.supplier_scorecard.supplier_scorecard import daterange
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 
+import hrms
 from hrms.hr.doctype.leave_block_list.leave_block_list import get_applicable_block_dates
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
 from hrms.hr.utils import (
@@ -129,12 +130,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 	def publish_update(self):
 		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
-		frappe.publish_realtime(
-			event="hrms:update_leaves",
-			message={"employee": self.employee},
-			user=employee_user,
-			after_commit=True,
-		)
+		hrms.refetch_resource("hrms:my_leaves", employee_user)
 
 	def validate_applicable_after(self):
 		if self.leave_type:
@@ -168,15 +164,15 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				if not allowed_role:
 					frappe.throw(
 						_("Backdated Leave Application is restricted. Please set the {} in {}").format(
-							frappe.bold("Role Allowed to Create Backdated Leave Application"),
-							get_link_to_form("HR Settings", "HR Settings"),
+							frappe.bold(_("Role Allowed to Create Backdated Leave Application")),
+							get_link_to_form("HR Settings", "HR Settings", _("HR Settings")),
 						)
 					)
 
 				if allowed_role and allowed_role not in user_roles:
 					frappe.throw(
 						_("Only users with the {0} role can create backdated leave applications").format(
-							allowed_role
+							_(allowed_role)
 						)
 					)
 
