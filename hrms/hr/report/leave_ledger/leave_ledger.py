@@ -3,16 +3,19 @@
 
 import frappe
 from frappe import _
+from frappe.query_builder.functions import Date
+
+Filters = frappe._dict
 
 
-def execute(filters=None):
+def execute(filters: Filters = None) -> tuple:
 	columns = get_columns()
 	data = get_data(filters)
 
 	return columns, data
 
 
-def get_columns():
+def get_columns() -> list[dict]:
 	return [
 		{
 			"label": _("Leave Ledger Entry"),
@@ -26,13 +29,19 @@ def get_columns():
 			"fieldname": "employee",
 			"fieldtype": "Link",
 			"options": "Employee",
-			"width": 250,
+			"width": 240,
 		},
 		{
 			"label": _("Employee Name"),
 			"fieldname": "employee_name",
 			"fieldtype": "Data",
 			"hidden": 1,
+		},
+		{
+			"label": _("Creation Date"),
+			"fieldname": "date",
+			"fieldtype": "Date",
+			"width": 120,
 		},
 		{
 			"label": _("From Date"),
@@ -64,7 +73,7 @@ def get_columns():
 			"fieldname": "transaction_type",
 			"fieldtype": "Link",
 			"options": "DocType",
-			"width": 150,
+			"width": 130,
 		},
 		{
 			"label": _("Transaction Name"),
@@ -108,7 +117,7 @@ def get_columns():
 	]
 
 
-def get_data(filters):
+def get_data(filters: Filters) -> list[dict]:
 	Employee = frappe.qb.DocType("Employee")
 	Ledger = frappe.qb.DocType("Leave Ledger Entry")
 
@@ -122,6 +131,7 @@ def get_data(filters):
 			Ledger.name.as_("leave_ledger_entry"),
 			Ledger.employee,
 			Ledger.employee_name,
+			Date(Ledger.creation).as_("date"),
 			Ledger.from_date,
 			Ledger.to_date,
 			Ledger.leave_type,
@@ -154,5 +164,38 @@ def get_data(filters):
 		query = query.where(Employee.status == filters.get("status"))
 
 	query = query.orderby(Ledger.employee, Ledger.leave_type, Ledger.creation)
+	result = query.run(as_dict=True)
 
-	return query.run(as_dict=True)
+	result = add_total_row(result, filters)
+
+	return result
+
+
+def add_total_row(result: list[dict], filters: Filters) -> list[dict]:
+	add_total_row = False
+	leave_type = filters.get("leave_type")
+
+	if filters.get("employee") and filters.get("leave_type"):
+		add_total_row = True
+
+	if not add_total_row:
+		if not filters.get("employee"):
+			# check if all rows have the same employee
+			employees_from_result = list(set([row.employee for row in result]))
+			if len(employees_from_result) != 1:
+				return result
+
+		# check if all rows have the same leave type
+		leave_types_from_result = list(set([row.leave_type for row in result]))
+		if len(leave_types_from_result) == 1:
+			leave_type = leave_types_from_result[0]
+			add_total_row = True
+
+	if not add_total_row:
+		return result
+
+	total_row = {"employee": _("Balance Leaves ({0})").format(leave_type)}
+	total_row["leaves"] = sum((row.get("leaves") or 0) for row in result)
+
+	result.append(total_row)
+	return result
