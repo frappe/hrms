@@ -1,5 +1,4 @@
 frappe.provide("hrms");
-frappe.provide("hrms.utils");
 
 $.extend(hrms, {
 	proceed_save_with_reminders_frequency_change: () => {
