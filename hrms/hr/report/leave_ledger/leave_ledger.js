@@ -38,6 +38,12 @@ frappe.query_reports["Leave Ledger"] = {
 			options: "Employee",
 		},
 		{
+			fieldname: "leave_type",
+			label: __("Leave Type"),
+			fieldtype: "Link",
+			options: "Leave Type",
+		},
+		{
 			fieldname: "status",
 			label: __("Employee Status"),
 			fieldtype: "Select",
