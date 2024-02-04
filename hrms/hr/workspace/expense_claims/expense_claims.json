@@ -247,7 +247,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Vehicle Expenses",
    "link_count": 0,
    "link_to": "Vehicle Expenses",
