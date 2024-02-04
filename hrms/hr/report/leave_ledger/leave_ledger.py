@@ -151,17 +151,13 @@ def get_data(filters: Filters) -> list[dict]:
 		)
 	)
 
-	if filters.get("employee"):
-		query = query.where(Ledger.employee == filters.get("employee"))
-	if filters.get("leave_type"):
-		query = query.where(Ledger.leave_type == filters.get("leave_type"))
-	if filters.get("company"):
-		query = query.where(Ledger.company == filters.get("company"))
+	for field in ("employee", "leave_type", "company", "transaction_type", "transaction_name"):
+		if filters.get(field):
+			query = query.where(Ledger[field] == filters.get(field))
 
-	if filters.get("department"):
-		query = query.where(Employee.department == filters.get("department"))
-	if filters.get("status"):
-		query = query.where(Employee.status == filters.get("status"))
+	for field in ("department", "status"):
+		if filters.get(field):
+			query = query.where(Employee[field] == filters.get(field))
 
 	query = query.orderby(Ledger.employee, Ledger.leave_type, Ledger.creation)
 	result = query.run(as_dict=True)
@@ -194,7 +190,7 @@ def add_total_row(result: list[dict], filters: Filters) -> list[dict]:
 	if not add_total_row:
 		return result
 
-	total_row = {"employee": _("Balance Leaves ({0})").format(leave_type)}
+	total_row = {"employee": _("Total Leaves ({0})").format(leave_type)}
 	total_row["leaves"] = sum((row.get("leaves") or 0) for row in result)
 
 	result.append(total_row)

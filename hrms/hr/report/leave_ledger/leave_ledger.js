@@ -18,30 +18,16 @@ frappe.query_reports["Leave Ledger"] = {
 			default: frappe.defaults.get_default("year_end_date")
 		},
 		{
-			label: __("Company"),
-			fieldname: "company",
+			fieldname: "leave_type",
+			label: __("Leave Type"),
 			fieldtype: "Link",
-			options: "Company",
-			reqd: 1,
-			default: frappe.defaults.get_user_default("Company")
-		},
-		{
-			fieldname: "department",
-			label: __("Department"),
-			fieldtype: "Link",
-			options: "Department",
+			options: "Leave Type",
 		},
 		{
 			fieldname: "employee",
 			label: __("Employee"),
 			fieldtype: "Link",
 			options: "Employee",
-		},
-		{
-			fieldname: "leave_type",
-			label: __("Leave Type"),
-			fieldtype: "Link",
-			options: "Leave Type",
 		},
 		{
 			fieldname: "status",
@@ -56,6 +42,30 @@ frappe.query_reports["Leave Ledger"] = {
 			],
 			default: "Active",
 		},
+		{
+			label: __("Company"),
+			fieldname: "company",
+			fieldtype: "Link",
+			options: "Company",
+			default: frappe.defaults.get_user_default("Company")
+		},
+		{
+			fieldname: "department",
+			label: __("Department"),
+			fieldtype: "Link",
+			options: "Department",
+		},
+		{
+			fieldname: "transaction_type",
+			label: __("Transaction Type"),
+			fieldtype: "Select",
+			options: ["", "Leave Allocation", "Leave Application", "Leave Encashment"],
+		},
+		{
+			fieldname: "transaction_name",
+			label: __("Transaction Name"),
+			fieldtype: "Data",
+		}
 	],
 	formatter: (value, row, column, data, default_formatter) => {
 		value = default_formatter(value, row, column, data);
@@ -68,6 +78,11 @@ frappe.query_reports["Leave Ledger"] = {
 		return value;
 	},
 	onload: () => {
+		if (
+			frappe.query_report.get_filter_value("from_date") &&
+			frappe.query_report.get_filter_value("to_date")
+		) return;
+
 		const today = frappe.datetime.now_date();
 
 		frappe.call({
