@@ -184,42 +184,18 @@ frappe.ui.form.on("Salary Component", {
 							method: "get_structures_to_be_updated",
 							doc: frm.doc,
 						})
-						.then((res) => {
-							let msg = __(
-								"{0} will be updated for the following Salary Structures: {1}.",
-								[
-									df,
-									frappe.utils.comma_and(
-										res.message.map((d) =>
-											frappe.utils
-												.get_form_link("Salary Structure", d, true)
-												.bold()
-										)
+						.then((r) => {
+							if (r.message.length)
+								frm.events.update_salary_structures(frm, df, r.message);
+							else
+								frappe.msgprint({
+									message: __(
+										"Salary Component {0} is currently not utilized by any Salary Structure.",
+										[frm.doc.name.bold()]
 									),
-								]
-							);
-							msg += "<br>";
-							msg += __("Are you sure you want to proceed?");
-							frappe.confirm(msg, () => {
-								frappe
-									.call({
-										method: "update_salary_structures",
-										doc: frm.doc,
-										args: {
-											structures: res.message,
-											field: df.toLowerCase(),
-											value: frm.get_field(df.toLowerCase()).value,
-										},
-									})
-									.then((r) => {
-										if (!r.exc) {
-											frappe.show_alert({
-												message: __("Salary Structures updated successfully"),
-												indicator: "green",
-											});
-										}
-									});
-							});
+									title: __("No Salary Structures"),
+									indicator: "orange",
+								});
 						});
 				},
 				__("Update Salary Structures")
@@ -227,6 +203,42 @@ frappe.ui.form.on("Salary Component", {
 		}
 <<<<<<< HEAD
 =======
+	},
+
+	update_salary_structures: function (frm, df, structures) {
+		let msg = __(
+			"{0} will be updated for the following Salary Structures: {1}.",
+			[
+				df,
+				frappe.utils.comma_and(
+					structures.map((d) =>
+						frappe.utils.get_form_link("Salary Structure", d, true).bold()
+					)
+				),
+			]
+		);
+		msg += "<br>";
+		msg += __("Are you sure you want to proceed?");
+		frappe.confirm(msg, () => {
+			frappe
+				.call({
+					method: "update_salary_structures",
+					doc: frm.doc,
+					args: {
+						structures: structures,
+						field: df.toLowerCase(),
+						value: frm.get_field(df.toLowerCase()).value,
+					},
+				})
+				.then((r) => {
+					if (!r.exc) {
+						frappe.show_alert({
+							message: __("Salary Structures updated successfully"),
+							indicator: "green",
+						});
+					}
+				});
+		});
 	},
 
 	create_salary_structure: function (frm) {
