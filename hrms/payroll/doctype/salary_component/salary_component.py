@@ -18,12 +18,7 @@ class SalaryComponent(Document):
 
 	def validate(self):
 		self.validate_abbr()
-		if not (self.statistical_component or (self.accounts and all(d.account for d in self.accounts))):
-			frappe.msgprint(
-				title=_("Warning"),
-				msg=_("Accounts not set for Salary Component {0}").format(self.name),
-				indicator="orange",
-			)
+		self.validate_accounts()
 
 	def on_update(self):
 		# set old values (allowing multiline strings for better readability in the doctype form)
@@ -54,6 +49,14 @@ class SalaryComponent(Document):
 			separator="_",
 			filters={"name": ["!=", self.name]},
 		)
+
+	def validate_accounts(self):
+		if not (self.statistical_component or (self.accounts and all(d.account for d in self.accounts))):
+			frappe.msgprint(
+				title=_("Warning"),
+				msg=_("Accounts not set for Salary Component {0}").format(self.name),
+				indicator="orange",
+			)
 
 	@frappe.whitelist()
 	def get_structures_to_be_updated(self):
