@@ -187,7 +187,16 @@ frappe.ui.form.on("Salary Component", {
 						.then((res) => {
 							let msg = __(
 								"{0} will be updated for the following Salary Structures: {1}.",
-								[df, frappe.utils.comma_and(res.message.map((d) => d.bold()))]
+								[
+									df,
+									frappe.utils.comma_and(
+										res.message.map((d) =>
+											frappe.utils
+												.get_form_link("Salary Structure", d, true)
+												.bold()
+										)
+									),
+								]
 							);
 							msg += "<br>";
 							msg += __("Are you sure you want to proceed?");
