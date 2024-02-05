@@ -54,6 +54,19 @@ class SalaryComponent(Document):
 		)
 
 	@frappe.whitelist()
+	def get_structures_to_be_updated(self):
+		SalaryStructure = frappe.qb.DocType("Salary Structure")
+		SalaryDetail = frappe.qb.DocType("Salary Detail")
+		return (
+			frappe.qb.from_(SalaryStructure)
+			.inner_join(SalaryDetail)
+			.on(SalaryStructure.name == SalaryDetail.parent)
+			.select(SalaryStructure.name)
+			.where((SalaryDetail.salary_component == self.name) & (SalaryStructure.docstatus != 2))
+			.run(pluck=True)
+		)
+
+	@frappe.whitelist()
 	def update_salary_structures(self, field, value):
 		SalaryDetail = frappe.qb.DocType("Salary Detail")
 		SalaryStructure = frappe.qb.DocType("Salary Structure")

@@ -82,28 +82,38 @@ frappe.ui.form.on("Salary Component", {
 			frm.add_custom_button(
 				__("Sync {0}", [df]),
 				function () {
-					frappe.confirm(
-						__("Update {0} for all existing Salary Structures?", [df]),
-						() => {
-							frappe
-								.call({
-									method: "update_salary_structures",
-									doc: frm.doc,
-									args: {
-										field: df.toLowerCase(),
-										value: frm.get_field(df.toLowerCase()).value,
-									},
-								})
-								.then((r) => {
-									if (!r.exc) {
-										frappe.show_alert({
-											message: __("Salary Structures updated successfully"),
-											indicator: "green",
-										});
-									}
-								});
-						}
-					);
+					frappe
+						.call({
+							method: "get_structures_to_be_updated",
+							doc: frm.doc,
+						})
+						.then((res) => {
+							let msg = __(
+								"{0} will be updated for the following Salary Structures: {1}.",
+								[df, frappe.utils.comma_and(res.message.map((d) => d.bold()))]
+							);
+							msg += "<br>";
+							msg += __("Are you sure you want to proceed?");
+							frappe.confirm(msg, () => {
+								frappe
+									.call({
+										method: "update_salary_structures",
+										doc: frm.doc,
+										args: {
+											field: df.toLowerCase(),
+											value: frm.get_field(df.toLowerCase()).value,
+										},
+									})
+									.then((r) => {
+										if (!r.exc) {
+											frappe.show_alert({
+												message: __("Salary Structures updated successfully"),
+												indicator: "green",
+											});
+										}
+									});
+							});
+						});
 				},
 				__("Update Salary Structures")
 			);
