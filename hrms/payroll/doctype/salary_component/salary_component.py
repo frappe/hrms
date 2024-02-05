@@ -16,6 +16,12 @@ class SalaryComponent(Document):
 
 	def validate(self):
 		self.validate_abbr()
+		if not (self.statistical_component or (self.accounts and all(d.account for d in self.accounts))):
+			frappe.msgprint(
+				title=_("Warning"),
+				msg=_("Accounts not set for Salary Component {0}").format(self.name),
+				indicator="orange",
+			)
 
 	def on_update(self):
 		# set old values (allowing multiline strings for better readability in the doctype form)
@@ -23,14 +29,6 @@ class SalaryComponent(Document):
 			self.db_set("condition", self._condition)
 		if self._formula != self.formula:
 			self.db_set("formula", self._formula)
-
-	def after_insert(self):
-		if not (self.statistical_component or (self.accounts and all(d.account for d in self.accounts))):
-			frappe.msgprint(
-				title=_("Warning"),
-				msg=_("Accounts not set for Salary Component {0}").format(self.name),
-				indicator="orange",
-			)
 
 	def clear_cache(self):
 		from hrms.payroll.doctype.salary_slip.salary_slip import (
