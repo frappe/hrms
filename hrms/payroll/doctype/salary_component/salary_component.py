@@ -1,6 +1,8 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+import copy
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -67,11 +69,12 @@ class SalaryComponent(Document):
 		)
 
 	@frappe.whitelist()
-	def update_salary_structures(self, field, value):
-		SalaryDetail = frappe.qb.DocType("Salary Detail")
-		SalaryStructure = frappe.qb.DocType("Salary Structure")
-		frappe.qb.update(SalaryDetail).inner_join(SalaryStructure).on(
-			SalaryDetail.parent == SalaryStructure.name
-		).set(SalaryDetail[field], value).where(
-			(SalaryDetail.salary_component == self.name) & (SalaryStructure.docstatus != 2)
-		).run()
+	def update_salary_structures(self, structures, field, value):
+		for structure in structures:
+			salary_detail = frappe.get_last_doc(
+				"Salary Detail", filters={"parent": structure, "salary_component": self.name}
+			)
+			salary_detail._doc_before_save = copy.deepcopy(salary_detail)
+			salary_detail.db_set(field, value)
+			salary_detail.db_update()
+			salary_detail.save_version()
