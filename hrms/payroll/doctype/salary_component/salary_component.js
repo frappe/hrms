@@ -197,6 +197,7 @@ frappe.ui.form.on("Salary Component", {
 										method: "update_salary_structures",
 										doc: frm.doc,
 										args: {
+											structures: res.message,
 											field: df.toLowerCase(),
 											value: frm.get_field(df.toLowerCase()).value,
 										},
