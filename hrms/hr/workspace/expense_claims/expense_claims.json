@@ -247,7 +247,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Vehicle Expenses",
    "link_count": 0,
    "link_to": "Vehicle Expenses",
@@ -256,7 +256,7 @@
    "type": "Link"
   }
  ],
- "modified": "2023-08-02 10:19:14.376183",
+ "modified": "2024-02-05 09:10:45.636550",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claims",
