@@ -116,7 +116,7 @@ class TestInterview(FrappeTestCase):
 		job_applicant = create_job_applicant()
 		interview = create_interview_and_dependencies(job_applicant.name, status="Cleared")
 
-		update_job_applicant_status({"job_applicant": job_applicant.name, "status": "Accepted"})
+		update_job_applicant_status(job_applicant=job_applicant.name, status="Accepted")
 		job_applicant.reload()
 
 		self.assertEqual(job_applicant.status, "Accepted")

@@ -174,18 +174,60 @@ def get_recipients(name, for_feedback=0):
 
 
 @frappe.whitelist()
+<<<<<<< HEAD
 def update_job_applicant_status(args):
 	import json
 
-	try:
-		if isinstance(args, str):
-			args = json.loads(args)
+=======
+def get_feedback(interview: str) -> list[dict]:
+	interview_feedback = frappe.qb.DocType("Interview Feedback")
+	employee = frappe.qb.DocType("Employee")
 
-		if not args.get("job_applicant"):
+	return (
+		frappe.qb.from_(interview_feedback)
+		.select(
+			interview_feedback.name,
+			interview_feedback.modified.as_("added_on"),
+			interview_feedback.interviewer.as_("user"),
+			interview_feedback.feedback,
+			(interview_feedback.average_rating * 5).as_("total_score"),
+			employee.employee_name.as_("reviewer_name"),
+			employee.designation.as_("reviewer_designation"),
+		)
+		.left_join(employee)
+		.on(interview_feedback.interviewer == employee.user_id)
+		.where((interview_feedback.interview == interview) & (interview_feedback.docstatus == 1))
+		.orderby(interview_feedback.modified)
+	).run(as_dict=True)
+
+
+@frappe.whitelist()
+def get_skill_wise_average_rating(interview: str) -> list[dict]:
+	skill_assessment = frappe.qb.DocType("Skill Assessment")
+	interview_feedback = frappe.qb.DocType("Interview Feedback")
+	return (
+		frappe.qb.select(
+			skill_assessment.skill,
+			Avg(skill_assessment.rating).as_("rating"),
+		)
+		.from_(skill_assessment)
+		.join(interview_feedback)
+		.on(skill_assessment.parent == interview_feedback.name)
+		.where((interview_feedback.interview == interview) & (interview_feedback.docstatus == 1))
+		.groupby(skill_assessment.skill)
+		.orderby(skill_assessment.idx)
+	).run(as_dict=True)
+
+
+@frappe.whitelist()
+def update_job_applicant_status(status: str, job_applicant: str):
+>>>>>>> 80e619384 (fix: change server-action args (#1398))
+	try:
+		if not job_applicant:
 			frappe.throw(_("Please specify the job applicant to be updated."))
 
-		job_applicant = frappe.get_doc("Job Applicant", args["job_applicant"])
-		job_applicant.status = args["status"]
+		job_applicant = frappe.get_doc("Job Applicant", job_applicant)
+		job_applicant.status = status
 		job_applicant.save()
 
 		frappe.msgprint(
