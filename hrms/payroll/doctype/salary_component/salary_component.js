@@ -93,7 +93,7 @@ frappe.ui.form.on("Salary Component", {
 							else
 								frappe.msgprint({
 									message: __(
-										"Salary Component {0} is currently not utilized by any Salary Structure.",
+										"Salary Component {0} is currently not used in any Salary Structure.",
 										[frm.doc.name.bold()]
 									),
 									title: __("No Salary Structures"),
