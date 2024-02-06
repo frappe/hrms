@@ -72,12 +72,26 @@ class SalaryComponent(Document):
 		)
 
 	@frappe.whitelist()
-	def update_salary_structures(self, structures, field, value):
+	def update_salary_structures(self, field, value, structures=None):
+		if not structures:
+			structures = self.get_structures_to_be_updated()
+
 		for structure in structures:
-			salary_detail = frappe.get_last_doc(
-				"Salary Detail", filters={"parent": structure, "salary_component": self.name}
+			salary_structure = frappe.get_doc("Salary Structure", structure)
+			# this is only used for versioning and we do not want
+			# to make separate db calls by using load_doc_before_save
+			# which proves to be expensive while doing bulk replace
+			salary_structure._doc_before_save = copy.deepcopy(salary_structure)
+
+			salary_detail_row = next(
+				(d for d in salary_structure.get(f"{self.type.lower()}s") if d.salary_component == self.name),
+				None,
 			)
-			salary_detail._doc_before_save = copy.deepcopy(salary_detail)
-			salary_detail.db_set(field, value)
-			salary_detail.db_update()
-			salary_detail.save_version()
+			salary_detail_row.set(field, value)
+			salary_structure.db_update_all()
+			salary_structure.flags.updater_reference = {
+				"doctype": self.doctype,
+				"docname": self.name,
+				"label": _("via Salary Component sync"),
+			}
+			salary_structure.save_version()
