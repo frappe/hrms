@@ -15,7 +15,7 @@ hrms.payroll_common = {
 					autocompletions.push(
 						...frappe.get_meta(doctype).fields.map((f) => ({
 							value: f.fieldname,
-							score: 9,
+							score: 8,
 							meta: __("{0} Field", [doctype]),
 						}))
 					);
@@ -30,8 +30,16 @@ hrms.payroll_common = {
 						autocompletions.push(
 							...salary_components.map((d) => ({
 								value: d.salary_component_abbr,
-								score: 10,
+								score: 9,
 								meta: __("Salary Component"),
+							}))
+						);
+
+						autocompletions.push(
+							...["base", "variable"].map((d) => ({
+								value: d,
+								score: 10,
+								meta: __("Salary Structure Assignment field"),
 							}))
 						);
 
