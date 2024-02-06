@@ -23,18 +23,7 @@ frappe.ui.form.on("Salary Component", {
 	},
 
 	refresh: function (frm) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-		if (!frm.doc.__islocal) {
-			frm.add_custom_button(__("Salary Structure"), () => {
-				frm.trigger("create_salary_structure");
-			}, __("Create"));
-=======
-		hrms.payroll_common.get_autocompletions_for_condition_and_formula(frm);
-=======
 		hrms.payroll_common.set_autocompletions_for_condition_and_formula(frm);
->>>>>>> c6817a203 (feat: setup autocompletions for salary structure fields)
 
 		if (!frm.doc.__islocal) {
 			frm.trigger("add_update_structure_button");
@@ -45,17 +34,7 @@ frappe.ui.form.on("Salary Component", {
 				},
 				__("Create")
 			);
->>>>>>> cbf31f93e (chore: commonify condition/formula autocompletions)
 		}
-=======
-		frm.trigger("setup_autocompletions");
-<<<<<<< HEAD
->>>>>>> 0625e7bc2 (feat: add autocompletion to code fields)
-=======
-		if (!frm.doc.__islocal) {
-			frm.trigger("add_update_structure_button");
-		}
->>>>>>> 5c5f91b36 (feat: add option to sync formula and condition for existing structures)
 	},
 
 	is_flexible_benefit: function (frm) {
@@ -98,82 +77,6 @@ frappe.ui.form.on("Salary Component", {
 		}
 	},
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-	create_salary_structure: function (frm) {
-		frappe.model.with_doctype("Salary Structure", () => {
-			const salary_structure = frappe.model.get_new_doc("Salary Structure");
-			const salary_detail = frappe.model.add_child(
-				salary_structure,
-				frm.doc.type === "Earning" ? "earnings" : "deductions"
-			);
-			salary_detail.salary_component = frm.doc.name;
-			frappe.set_route("Form", "Salary Structure", salary_structure.name);
-		});
-=======
-	setup_autocompletions: function (frm) {
-<<<<<<< HEAD
-		frappe.db
-			.get_list("Salary Component", { fields: ["salary_component_abbr"] })
-			.then((salary_components) => {
-				const autocompletions = salary_components.map((d) => ({
-					value: d.salary_component_abbr,
-					score: 10,
-					meta: "Salary Component",
-				}));
-				frappe.db.get_doc("DocType", "Employee").then((employee_doc) => {
-					const employee_fields = employee_doc.fields.map((f) => ({
-						value: f.fieldname,
-						score: 9,
-						meta: "Employee Field",
-					}));
-					autocompletions.push(...employee_fields);
-					frm.set_df_property("condition", "autocompletions", autocompletions);
-					frm.set_df_property("formula", "autocompletions", autocompletions);
-				});
-			});
->>>>>>> 0625e7bc2 (feat: add autocompletion to code fields)
-=======
-		const autocompletions = [];
-		frappe.run_serially([
-			...["Employee", "Salary Structure", "Salary Slip"].map((doctype) =>
-				frappe.model.with_doctype(doctype, () => {
-					autocompletions.push(
-						...frappe.get_meta(doctype).fields.map((f) => ({
-							value: f.fieldname,
-							score: 9,
-							meta: __("{0} Field", [doctype]),
-						}))
-					);
-				})
-			),
-			() => {
-				frappe.db
-					.get_list("Salary Component", {
-						fields: ["salary_component_abbr"],
-					})
-					.then((salary_components) => {
-						autocompletions.push(
-							...salary_components.map((d) => ({
-								value: d.salary_component_abbr,
-								score: 10,
-								meta: __("Salary Component"),
-							}))
-						);
-						frm.set_df_property(
-							"condition",
-							"autocompletions",
-							autocompletions
-						);
-						frm.set_df_property("formula", "autocompletions", autocompletions);
-					});
-			},
-		]);
->>>>>>> 6c06213b6 (feat: add autocompletions for Salary Structure and Salary Slip fields)
-	},
-
-=======
->>>>>>> cbf31f93e (chore: commonify condition/formula autocompletions)
 	add_update_structure_button: function (frm) {
 		for (const df of ["Condition", "Formula"]) {
 			frm.add_custom_button(
@@ -201,8 +104,6 @@ frappe.ui.form.on("Salary Component", {
 				__("Update Salary Structures")
 			);
 		}
-<<<<<<< HEAD
-=======
 	},
 
 	update_salary_structures: function (frm, df, structures) {
@@ -251,7 +152,6 @@ frappe.ui.form.on("Salary Component", {
 			salary_detail.salary_component = frm.doc.name;
 			frappe.set_route("Form", "Salary Structure", salary_structure.name);
 		});
->>>>>>> cbf31f93e (chore: commonify condition/formula autocompletions)
 	},
 });
 
