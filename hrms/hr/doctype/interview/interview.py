@@ -187,18 +187,13 @@ def get_skill_wise_average_rating(interview: str) -> list[dict]:
 
 
 @frappe.whitelist()
-def update_job_applicant_status(args):
-	import json
-
+def update_job_applicant_status(status: str, job_applicant: str):
 	try:
-		if isinstance(args, str):
-			args = json.loads(args)
-
-		if not args.get("job_applicant"):
+		if not job_applicant:
 			frappe.throw(_("Please specify the job applicant to be updated."))
 
-		job_applicant = frappe.get_doc("Job Applicant", args["job_applicant"])
-		job_applicant.status = args["status"]
+		job_applicant = frappe.get_doc("Job Applicant", job_applicant)
+		job_applicant.status = status
 		job_applicant.save()
 
 		frappe.msgprint(
