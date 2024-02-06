@@ -31,14 +31,18 @@
   "expense_approver_mandatory_in_expense_claim",
   "show_leaves_of_all_department_members_in_calendar",
   "auto_leave_encashment",
+  "shift_settings_section",
+  "allow_multiple_shift_assignments",
   "hiring_settings_section",
   "check_vacancies",
   "send_interview_reminder",
   "interview_reminder_template",
   "remind_before",
-  "column_break_4",
   "send_interview_feedback_reminder",
   "feedback_reminder_notification_template",
+  "column_break_4",
+  "hiring_sender",
+  "hiring_sender_email",
   "employee_exit_section",
   "exit_questionnaire_web_form",
   "column_break_34",
@@ -267,13 +271,38 @@
   {
    "fieldname": "column_break_hyec",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hiring_sender",
+   "fieldtype": "Link",
+   "label": "Sender",
+   "options": "Email Account"
+  },
+  {
+   "depends_on": "eval:doc.hiring_sender",
+   "fetch_from": "hiring_sender.email_id",
+   "fieldname": "hiring_sender_email",
+   "fieldtype": "Data",
+   "label": "Sender Email",
+   "read_only": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_multiple_shift_assignments",
+   "fieldtype": "Check",
+   "label": "Allow Multiple Shift Assignments for Same Date"
+  },
+  {
+   "fieldname": "shift_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Shift Settings"
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-11-01 11:06:31.329718",
+ "modified": "2023-12-28 23:07:36.317223",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",

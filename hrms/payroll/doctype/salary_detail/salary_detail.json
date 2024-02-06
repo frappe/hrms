@@ -36,6 +36,7 @@
  ],
  "fields": [
   {
+   "columns": 2,
    "fieldname": "salary_component",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -64,7 +65,6 @@
    "fetch_from": "salary_component.statistical_component",
    "fieldname": "statistical_component",
    "fieldtype": "Check",
-   "in_list_view": 1,
    "label": "Statistical Component"
   },
   {
@@ -135,6 +135,7 @@
    "depends_on": "eval:doc.parenttype=='Salary Structure'",
    "fieldname": "amount_based_on_formula",
    "fieldtype": "Check",
+   "in_list_view": 1,
    "label": "Amount based on formula"
   },
   {
@@ -250,7 +251,7 @@
  ],
  "istable": 1,
  "links": [],
- "modified": "2023-01-17 13:04:44.167515",
+ "modified": "2023-12-12 13:52:30.726505",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Detail",

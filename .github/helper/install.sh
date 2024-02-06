@@ -41,12 +41,11 @@ sed -i 's/redis_socketio:/# redis_socketio:/g' Procfile
 
 bench get-app payments --branch ${BRANCH_TO_CLONE%"-hotfix"}
 bench get-app https://github.com/frappe/erpnext --branch "$BRANCH_TO_CLONE" --resolve-deps
+bench get-app hrms "${GITHUB_WORKSPACE}"
 bench setup requirements --dev
 
-bench start &> bench_run_logs.txt &
+bench start &>> ~/frappe-bench/bench_start.log &
 CI=Yes bench build --app frappe &
 bench --site test_site reinstall --yes
 
-bench get-app hrms "${GITHUB_WORKSPACE}"
-bench --site test_site install-app hrms
-bench setup requirements --dev
+bench --verbose --site test_site install-app hrms

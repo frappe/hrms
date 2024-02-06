@@ -145,21 +145,28 @@ class Attendance(Document):
 			frappe.throw(_("Cannot mark attendance for an Inactive employee {0}").format(self.employee))
 
 	def check_leave_record(self):
-		leave_record = frappe.db.sql(
-			"""
-			select leave_type, half_day, half_day_date
-			from `tabLeave Application`
-			where employee = %s
-				and %s between from_date and to_date
-				and status = 'Approved'
-				and docstatus = 1
-		""",
-			(self.employee, self.attendance_date),
-			as_dict=True,
-		)
+		LeaveApplication = frappe.qb.DocType("Leave Application")
+		leave_record = (
+			frappe.qb.from_(LeaveApplication)
+			.select(
+				LeaveApplication.leave_type,
+				LeaveApplication.half_day,
+				LeaveApplication.half_day_date,
+				LeaveApplication.name,
+			)
+			.where(
+				(LeaveApplication.employee == self.employee)
+				& (self.attendance_date >= LeaveApplication.from_date)
+				& (self.attendance_date <= LeaveApplication.to_date)
+				& (LeaveApplication.status == "Approved")
+				& (LeaveApplication.docstatus == 1)
+			)
+		).run(as_dict=True)
+
 		if leave_record:
 			for d in leave_record:
 				self.leave_type = d.leave_type
+				self.leave_application = d.name
 				if d.half_day_date == getdate(self.attendance_date):
 					self.status = "Half Day"
 					frappe.msgprint(

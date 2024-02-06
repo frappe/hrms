@@ -47,6 +47,7 @@
    "reqd": 1
   },
   {
+   "fetch_from": "company.default_letter_head",
    "fieldname": "letter_head",
    "fieldtype": "Link",
    "label": "Letter Head",
@@ -235,7 +236,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-06-13 18:02:31.779947",
+ "modified": "2023-12-12 14:11:22.774017",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure",

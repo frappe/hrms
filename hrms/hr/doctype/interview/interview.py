@@ -7,7 +7,7 @@ import datetime
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cstr, flt, get_datetime, get_link_to_form, getdate, nowtime
+from frappe.utils import cint, cstr, flt, get_datetime, get_link_to_form, getdate, nowtime
 
 
 class DuplicateInterviewRoundError(frappe.ValidationError):
@@ -24,8 +24,10 @@ class Interview(Document):
 	def on_submit(self):
 		if self.status not in ["Cleared", "Rejected"]:
 			frappe.throw(
-				_("Only Interviews with Cleared or Rejected status can be submitted."), title=_("Not Allowed")
+				_("Only Interviews with Cleared or Rejected status can be submitted."),
+				title=_("Not Allowed"),
 			)
+		self.show_job_applicant_update_dialog()
 
 	def validate_duplicate_interview(self):
 		duplicate_interview = frappe.db.exists(
@@ -102,6 +104,29 @@ class Interview(Document):
 			total_rating / len(self.interview_details) if len(self.interview_details) else 0
 		)
 
+	def show_job_applicant_update_dialog(self):
+		job_applicant_status = self.get_job_applicant_status()
+		if not job_applicant_status:
+			return
+
+		job_application_name = frappe.db.get_value("Job Applicant", self.job_applicant, "applicant_name")
+
+		frappe.msgprint(
+			_("Do you want to update the Job Applicant {0} as {1} based on this interview result?").format(
+				frappe.bold(job_application_name), frappe.bold(job_applicant_status)
+			),
+			title=_("Update Job Applicant"),
+			primary_action={
+				"label": _("Mark as {0}").format(job_applicant_status),
+				"server_action": "hrms.hr.doctype.interview.interview.update_job_applicant_status",
+				"args": {"job_applicant": self.job_applicant, "status": job_applicant_status},
+			},
+		)
+
+	def get_job_applicant_status(self) -> str | None:
+		status_map = {"Cleared": "Accepted", "Rejected": "Rejected"}
+		return status_map.get(self.status, None)
+
 	@frappe.whitelist()
 	def reschedule_interview(self, scheduled_on, from_time, to_time):
 		original_date = self.scheduled_on
@@ -149,6 +174,35 @@ def get_recipients(name, for_feedback=0):
 
 
 @frappe.whitelist()
+def update_job_applicant_status(args):
+	import json
+
+	try:
+		if isinstance(args, str):
+			args = json.loads(args)
+
+		if not args.get("job_applicant"):
+			frappe.throw(_("Please specify the job applicant to be updated."))
+
+		job_applicant = frappe.get_doc("Job Applicant", args["job_applicant"])
+		job_applicant.status = args["status"]
+		job_applicant.save()
+
+		frappe.msgprint(
+			_("Updated the Job Applicant status to {0}").format(job_applicant.status),
+			alert=True,
+			indicator="green",
+		)
+	except Exception:
+		job_applicant.log_error("Failed to update Job Applicant status")
+		frappe.msgprint(
+			_("Failed to update the Job Applicant status"),
+			alert=True,
+			indicator="red",
+		)
+
+
+@frappe.whitelist()
 def get_interviewers(interview_round):
 	return frappe.get_all(
 		"Interviewer", filters={"parent": interview_round}, fields=["user as interviewer"]
@@ -159,11 +213,11 @@ def send_interview_reminder():
 	reminder_settings = frappe.db.get_value(
 		"HR Settings",
 		"HR Settings",
-		["send_interview_reminder", "interview_reminder_template"],
+		["send_interview_reminder", "interview_reminder_template", "hiring_sender_email"],
 		as_dict=True,
 	)
 
-	if not reminder_settings.send_interview_reminder:
+	if not cint(reminder_settings.send_interview_reminder):
 		return
 
 	remind_before = cstr(frappe.db.get_single_value("HR Settings", "remind_before")) or "01:00:00"
@@ -193,6 +247,7 @@ def send_interview_reminder():
 		recipients = get_recipients(doc.name)
 
 		frappe.sendmail(
+			sender=reminder_settings.hiring_sender_email,
 			recipients=recipients,
 			subject=interview_template.subject,
 			message=message,
@@ -207,11 +262,15 @@ def send_daily_feedback_reminder():
 	reminder_settings = frappe.db.get_value(
 		"HR Settings",
 		"HR Settings",
-		["send_interview_feedback_reminder", "feedback_reminder_notification_template"],
+		[
+			"send_interview_feedback_reminder",
+			"feedback_reminder_notification_template",
+			"hiring_sender_email",
+		],
 		as_dict=True,
 	)
 
-	if not reminder_settings.send_interview_feedback_reminder:
+	if not cint(reminder_settings.send_interview_feedback_reminder):
 		return
 
 	interview_feedback_template = frappe.get_doc(
@@ -238,6 +297,7 @@ def send_daily_feedback_reminder():
 
 		if len(recipients):
 			frappe.sendmail(
+				sender=reminder_settings.hiring_sender_email,
 				recipients=recipients,
 				subject=interview_feedback_template.subject,
 				message=message,

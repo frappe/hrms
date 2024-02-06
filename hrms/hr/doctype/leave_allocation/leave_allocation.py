@@ -228,11 +228,15 @@ class LeaveAllocation(Document):
 
 	@frappe.whitelist()
 	def set_total_leaves_allocated(self):
-		self.unused_leaves = get_carry_forwarded_leaves(
-			self.employee, self.leave_type, self.from_date, self.carry_forward
+		self.unused_leaves = flt(
+			get_carry_forwarded_leaves(self.employee, self.leave_type, self.from_date, self.carry_forward),
+			self.precision("unused_leaves"),
 		)
 
-		self.total_leaves_allocated = flt(self.unused_leaves) + flt(self.new_leaves_allocated)
+		self.total_leaves_allocated = flt(
+			flt(self.unused_leaves) + flt(self.new_leaves_allocated),
+			self.precision("total_leaves_allocated"),
+		)
 
 		self.limit_carry_forward_based_on_max_allowed_leaves()
 
@@ -309,18 +313,27 @@ class LeaveAllocation(Document):
 
 def get_previous_allocation(from_date, leave_type, employee):
 	"""Returns document properties of previous allocation"""
-	return frappe.db.get_value(
-		"Leave Allocation",
-		filters={
-			"to_date": ("<", from_date),
-			"leave_type": leave_type,
-			"employee": employee,
-			"docstatus": 1,
-		},
-		order_by="to_date DESC",
-		fieldname=["name", "from_date", "to_date", "employee", "leave_type"],
-		as_dict=1,
-	)
+	Allocation = frappe.qb.DocType("Leave Allocation")
+	allocations = (
+		frappe.qb.from_(Allocation)
+		.select(
+			Allocation.name,
+			Allocation.from_date,
+			Allocation.to_date,
+			Allocation.employee,
+			Allocation.leave_type,
+		)
+		.where(
+			(Allocation.employee == employee)
+			& (Allocation.leave_type == leave_type)
+			& (Allocation.to_date < from_date)
+			& (Allocation.docstatus == 1)
+		)
+		.orderby(Allocation.to_date, order=frappe.qb.desc)
+		.limit(1)
+	).run(as_dict=True)
+
+	return allocations[0] if allocations else None
 
 
 def get_leave_allocation_for_period(

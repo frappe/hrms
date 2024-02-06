@@ -8,6 +8,7 @@ from frappe.utils import add_days, get_datetime, getdate, nowdate
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.shift_assignment.shift_assignment import (
+	MultipleShiftError,
 	OverlappingShiftError,
 	get_actual_start_end_datetime_of_shift,
 	get_events,
@@ -65,6 +66,39 @@ class TestShiftAssignment(FrappeTestCase):
 		)
 
 		self.assertRaises(OverlappingShiftError, shift_assignment.save)
+
+	def test_multiple_shift_assignments_for_same_date(self):
+		setup_shift_type(shift_type="Day Shift")
+		shift_assignment_1 = frappe.get_doc(
+			{
+				"doctype": "Shift Assignment",
+				"shift_type": "Day Shift",
+				"company": "_Test Company",
+				"employee": "_T-Employee-00001",
+				"start_date": nowdate(),
+				"end_date": add_days(nowdate(), 30),
+				"status": "Active",
+			}
+		).insert()
+		shift_assignment_1.submit()
+
+		setup_shift_type(shift_type="Night Shift", start_time="19:00:00", end_time="23:00:00")
+		shift_assignment_2 = frappe.get_doc(
+			{
+				"doctype": "Shift Assignment",
+				"shift_type": "Night Shift",
+				"company": "_Test Company",
+				"employee": "_T-Employee-00001",
+				"start_date": nowdate(),
+				"end_date": add_days(nowdate(), 30),
+				"status": "Active",
+			}
+		)
+
+		frappe.db.set_single_value("HR Settings", "allow_multiple_shift_assignments", 0)
+		self.assertRaises(MultipleShiftError, shift_assignment_2.save)
+		frappe.db.set_single_value("HR Settings", "allow_multiple_shift_assignments", 1)
+		shift_assignment_2.save()  # would throw error if multiple shift assignments not allowed
 
 	def test_overlapping_for_fixed_period_shift(self):
 		# shift should is for Fixed period if Only start_date and end_date both are present and status = Active
@@ -193,7 +227,7 @@ class TestShiftAssignment(FrappeTestCase):
 		date = getdate()
 		make_shift_assignment(shift_type.name, employee, date)
 
-	def test_shift_assignment_calendar(self):
+	def test_calendar(self):
 		employee1 = make_employee("test_shift_assignment1@example.com", company="_Test Company")
 		employee2 = make_employee("test_shift_assignment2@example.com", company="_Test Company")
 
@@ -207,6 +241,17 @@ class TestShiftAssignment(FrappeTestCase):
 		)
 		self.assertEqual(len(events), 1)
 		self.assertEqual(events[0]["name"], shift1.name)
+
+	def test_calendar_for_night_shift(self):
+		employee1 = make_employee("test_shift_assignment1@example.com", company="_Test Company")
+
+		shift_type = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="02:00:00")
+		date = getdate()
+		shift = make_shift_assignment(shift_type.name, employee1, date, date)
+
+		events = get_events(start=date, end=date)
+		self.assertEqual(events[0]["start_date"], get_datetime(f"{date} 08:00:00"))
+		self.assertEqual(events[0]["end_date"], get_datetime(f"{add_days(date, 1)} 02:00:00"))
 
 	def test_consecutive_day_and_night_shifts(self):
 		# defaults

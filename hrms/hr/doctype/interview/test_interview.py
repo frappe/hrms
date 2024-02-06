@@ -12,7 +12,10 @@ from frappe.utils import add_days, get_time, getdate, nowtime
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
 
-from hrms.hr.doctype.interview.interview import DuplicateInterviewRoundError
+from hrms.hr.doctype.interview.interview import (
+	DuplicateInterviewRoundError,
+	update_job_applicant_status,
+)
 from hrms.hr.doctype.job_applicant.job_applicant import get_interview_details
 from hrms.tests.test_utils import create_job_applicant
 
@@ -61,13 +64,15 @@ class TestInterview(FrappeTestCase):
 
 		interview = create_interview_and_dependencies(job_applicant.name, scheduled_on=scheduled_on)
 
-		frappe.db.sql("DELETE FROM `tabEmail Queue`")
+		frappe.db.delete("Email Queue")
+
+		frappe.db.set_single_value("HR Settings", "send_interview_reminder", 0)
 		send_interview_reminder()
+		self.assertFalse(get_email_by_subject("Subject: Interview Reminder"))
 
-		interview.reload()
-
-		email_queue = frappe.db.sql("""select * from `tabEmail Queue`""", as_dict=True)
-		self.assertTrue("Subject: Interview Reminder" in email_queue[0].message)
+		frappe.db.set_single_value("HR Settings", "send_interview_reminder", 1)
+		send_interview_reminder()
+		self.assertTrue(get_email_by_subject("Subject: Interview Reminder"))
 
 	def test_notification_for_feedback_submission(self):
 		from hrms.hr.doctype.interview.interview import send_daily_feedback_reminder
@@ -80,11 +85,15 @@ class TestInterview(FrappeTestCase):
 			job_applicant.name, scheduled_on=scheduled_on, status="Under Review"
 		)
 
-		frappe.db.sql("DELETE FROM `tabEmail Queue`")
-		send_daily_feedback_reminder()
+		frappe.db.delete("Email Queue")
 
-		email_queue = frappe.db.sql("""select * from `tabEmail Queue`""", as_dict=True)
-		self.assertTrue("Subject: Interview Feedback Reminder" in email_queue[0].message)
+		frappe.db.set_single_value("HR Settings", "send_interview_feedback_reminder", 0)
+		send_daily_feedback_reminder()
+		self.assertFalse(get_email_by_subject("Subject: Interview Feedback Reminder"))
+
+		frappe.db.set_single_value("HR Settings", "send_interview_feedback_reminder", 1)
+		send_daily_feedback_reminder()
+		self.assertTrue(get_email_by_subject("Subject: Interview Feedback Reminder"))
 
 	def test_get_interview_details_for_applicant_dashboard(self):
 		job_applicant = create_job_applicant()
@@ -102,6 +111,15 @@ class TestInterview(FrappeTestCase):
 				"status": "Pending",
 			},
 		)
+
+	def test_job_applicant_status_update_on_interview_submit(self):
+		job_applicant = create_job_applicant()
+		interview = create_interview_and_dependencies(job_applicant.name, status="Cleared")
+
+		update_job_applicant_status({"job_applicant": job_applicant.name, "status": "Accepted"})
+		job_applicant.reload()
+
+		self.assertEqual(job_applicant.status, "Accepted")
 
 	def tearDown(self):
 		frappe.db.rollback()
@@ -224,3 +242,7 @@ def setup_reminder_settings():
 	hr_settings.interview_reminder_template = _("Interview Reminder")
 	hr_settings.feedback_reminder_notification_template = _("Interview Feedback Reminder")
 	hr_settings.save()
+
+
+def get_email_by_subject(subject: str) -> bool:
+	return frappe.db.exists("Email Queue", {"message": ("like", f"%{subject}%")})

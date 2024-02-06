@@ -147,15 +147,15 @@ class LeaveApplication(Document):
 				if not allowed_role:
 					frappe.throw(
 						_("Backdated Leave Application is restricted. Please set the {} in {}").format(
-							frappe.bold("Role Allowed to Create Backdated Leave Application"),
-							get_link_to_form("HR Settings", "HR Settings"),
+							frappe.bold(_("Role Allowed to Create Backdated Leave Application")),
+							get_link_to_form("HR Settings", "HR Settings", _("HR Settings")),
 						)
 					)
 
 				if allowed_role and allowed_role not in user_roles:
 					frappe.throw(
 						_("Only users with the {0} role can create backdated leave applications").format(
-							allowed_role
+							_(allowed_role)
 						)
 					)
 
@@ -268,8 +268,7 @@ class LeaveApplication(Document):
 		if attendance_name:
 			# update existing attendance, change absent to on leave
 			doc = frappe.get_doc("Attendance", attendance_name)
-			if doc.status != status:
-				doc.db_set({"status": status, "leave_type": self.leave_type, "leave_application": self.name})
+			doc.db_set({"status": status, "leave_type": self.leave_type, "leave_application": self.name})
 		else:
 			# make new attendance and submit it
 			doc = frappe.new_doc("Attendance")
@@ -457,8 +456,66 @@ class LeaveApplication(Document):
 
 	def validate_max_days(self):
 		max_days = frappe.db.get_value("Leave Type", self.leave_type, "max_continuous_days_allowed")
-		if max_days and self.total_leave_days > cint(max_days):
-			frappe.throw(_("Leave of type {0} cannot be longer than {1}").format(self.leave_type, max_days))
+		if not max_days:
+			return
+
+		details = self.get_consecutive_leave_details()
+
+		if details.total_consecutive_leaves > cint(max_days):
+			msg = _("Leave of type {0} cannot be longer than {1}.").format(
+				get_link_to_form("Leave Type", self.leave_type), max_days
+			)
+			if details.leave_applications:
+				msg += "<br><br>" + _("Reference: {0}").format(
+					", ".join(get_link_to_form("Leave Application", name) for name in details.leave_applications)
+				)
+
+			frappe.throw(msg, title=_("Maximum Consecutive Leaves Exceeded"))
+
+	def get_consecutive_leave_details(self) -> dict:
+		leave_applications = set()
+
+		def _get_first_from_date(reference_date):
+			"""gets `from_date` of first leave application from previous consecutive leave applications"""
+			prev_date = add_days(reference_date, -1)
+			application = frappe.db.get_value(
+				"Leave Application",
+				{"employee": self.employee, "leave_type": self.leave_type, "to_date": prev_date},
+				["name", "from_date"],
+				as_dict=True,
+			)
+			if application:
+				leave_applications.add(application.name)
+				return _get_first_from_date(application.from_date)
+			return reference_date
+
+		def _get_last_to_date(reference_date):
+			"""gets `to_date` of last leave application from following consecutive leave applications"""
+			next_date = add_days(reference_date, 1)
+			application = frappe.db.get_value(
+				"Leave Application",
+				{"employee": self.employee, "leave_type": self.leave_type, "from_date": next_date},
+				["name", "to_date"],
+				as_dict=True,
+			)
+			if application:
+				leave_applications.add(application.name)
+				return _get_last_to_date(application.to_date)
+			return reference_date
+
+		first_from_date = _get_first_from_date(self.from_date)
+		last_to_date = _get_last_to_date(self.to_date)
+
+		total_consecutive_leaves = get_number_of_leave_days(
+			self.employee, self.leave_type, first_from_date, last_to_date
+		)
+
+		return frappe._dict(
+			{
+				"total_consecutive_leaves": total_consecutive_leaves,
+				"leave_applications": leave_applications,
+			}
+		)
 
 	def validate_attendance(self):
 		attendance = frappe.db.sql(
@@ -713,19 +770,22 @@ def get_allocation_expiry_for_cf_leaves(
 	employee: str, leave_type: str, to_date: datetime.date, from_date: datetime.date
 ) -> str:
 	"""Returns expiry of carry forward allocation in leave ledger entry"""
-	expiry = frappe.get_all(
-		"Leave Ledger Entry",
-		filters={
-			"employee": employee,
-			"leave_type": leave_type,
-			"is_carry_forward": 1,
-			"transaction_type": "Leave Allocation",
-			"to_date": ["between", (from_date, to_date)],
-			"docstatus": 1,
-		},
-		fields=["to_date"],
-	)
-	return expiry[0]["to_date"] if expiry else ""
+	Ledger = frappe.qb.DocType("Leave Ledger Entry")
+	expiry = (
+		frappe.qb.from_(Ledger)
+		.select(Ledger.to_date)
+		.where(
+			(Ledger.employee == employee)
+			& (Ledger.leave_type == leave_type)
+			& (Ledger.is_carry_forward == 1)
+			& (Ledger.transaction_type == "Leave Allocation")
+			& (Ledger.to_date.between(from_date, to_date))
+			& (Ledger.docstatus == 1)
+		)
+		.limit(1)
+	).run()
+
+	return expiry[0][0] if expiry else ""
 
 
 @frappe.whitelist()
@@ -1029,7 +1089,7 @@ def get_leaves_for_period(
 			if leave_entry.leaves % 1:
 				half_day = 1
 				half_day_date = frappe.db.get_value(
-					"Leave Application", {"name": leave_entry.transaction_name}, ["half_day_date"]
+					"Leave Application", leave_entry.transaction_name, "half_day_date"
 				)
 
 			leave_days += (

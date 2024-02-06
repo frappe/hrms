@@ -5,7 +5,7 @@
 import frappe
 from frappe import _, bold
 from frappe.model.document import Document
-from frappe.utils import comma_and, date_diff, formatdate, getdate
+from frappe.utils import comma_and, date_diff, formatdate, get_link_to_form, getdate
 
 from hrms.hr.utils import validate_active_employee
 
@@ -25,6 +25,7 @@ class AdditionalSalary(Document):
 		self.validate_salary_structure()
 		self.validate_recurring_additional_salary_overlap()
 		self.validate_employee_referral()
+		self.validate_duplicate_additional_salary()
 
 		if self.amount < 0:
 			frappe.throw(_("Amount should not be less than zero"))
@@ -111,6 +112,32 @@ class AdditionalSalary(Document):
 						"Additional Salary for referral bonus can only be created against Employee Referral with status {0}"
 					).format(frappe.bold("Accepted"))
 				)
+
+	def validate_duplicate_additional_salary(self):
+		if not self.overwrite_salary_structure_amount:
+			return
+
+		existing_additional_salary = frappe.db.exists(
+			"Additional Salary",
+			{
+				"name": ["!=", self.name],
+				"salary_component": self.salary_component,
+				"payroll_date": self.payroll_date,
+				"overwrite_salary_structure_amount": 1,
+				"employee": self.employee,
+				"docstatus": 1,
+			},
+		)
+
+		if existing_additional_salary:
+			msg = _(
+				"Additional Salary for this salary component with {0} enabled already exists for this date"
+			).format(frappe.bold("Overwrite Salary Structure Amount"))
+			msg += "<br><br>"
+			msg += _("Reference: {0}").format(
+				get_link_to_form("Additional Salary", existing_additional_salary)
+			)
+			frappe.throw(msg, title=_("Duplicate Overwritten Salary"))
 
 	def update_return_amount_in_employee_advance(self):
 		if self.ref_doctype == "Employee Advance" and self.ref_docname:

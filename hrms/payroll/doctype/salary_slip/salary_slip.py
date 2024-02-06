@@ -919,6 +919,7 @@ class SalarySlip(TransactionBase):
 			posting_date = frappe.utils.add_months(self.posting_date, sub_period)
 
 		else:
+			days_to_add = 0
 			if self.payroll_frequency == "Weekly":
 				days_to_add = sub_period * 6
 
@@ -1041,8 +1042,8 @@ class SalarySlip(TransactionBase):
 			)
 
 		data.update(salary_structure_assignment)
-		data.update(employee)
 		data.update(self.as_dict())
+		data.update(employee)
 
 		# set values for components
 		salary_components = frappe.get_all("Salary Component", fields=["salary_component_abbr"])
@@ -1392,10 +1393,15 @@ class SalarySlip(TransactionBase):
 	def get_income_tax_slabs(self):
 		income_tax_slab, ss_assignment_name = frappe.db.get_value(
 			"Salary Structure Assignment",
-			{"employee": self.employee, "salary_structure": self.salary_structure, "docstatus": 1},
+			{
+				"employee": self.employee,
+				"salary_structure": self.salary_structure,
+				"docstatus": 1,
+				"from_date": ("<=", self.end_date),
+			},
 			["income_tax_slab", "name"],
+			order_by="from_date desc",
 		)
-
 		if not income_tax_slab:
 			frappe.throw(
 				_("Income Tax Slab not set in Salary Structure Assignment: {0}").format(ss_assignment_name)
@@ -2301,3 +2307,25 @@ def _check_attributes(code: str) -> None:
 			and node.attr in UNSAFE_ATTRIBUTES
 		):
 			raise SyntaxError(f'Illegal rule {frappe.bold(code)}. Cannot use "{node.attr}"')
+
+
+@frappe.whitelist()
+def enqueue_email_salary_slips(names) -> None:
+	"""enqueue bulk emailing salary slips"""
+	import json
+
+	if isinstance(names, str):
+		names = json.loads(names)
+
+	frappe.enqueue("hrms.payroll.doctype.salary_slip.salary_slip.email_salary_slips", names=names)
+	frappe.msgprint(
+		_("Salary slip emails have been enqueued for sending. Check {0} for status.").format(
+			f"""<a href='{frappe.utils.get_url_to_list("Email Queue")}' target='blank'>Email Queue</a>"""
+		)
+	)
+
+
+def email_salary_slips(names) -> None:
+	for name in names:
+		salary_slip = frappe.get_doc("Salary Slip", name)
+		salary_slip.email_salary_slip()
