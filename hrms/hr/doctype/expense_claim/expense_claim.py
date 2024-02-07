@@ -49,6 +49,7 @@ class ExpenseClaim(AccountsController):
 
 		precision = self.precision("grand_total")
 
+<<<<<<< HEAD
 		if (
 			# set as paid
 			self.is_paid
@@ -59,21 +60,28 @@ class ExpenseClaim(AccountsController):
 					(
 						self.docstatus == 1
 						and flt(self.grand_total, precision) == flt(self.total_amount_reimbursed, precision)
+=======
+		if self.docstatus == 1:
+			if self.approval_status == "Approved":
+				if (
+					# set as paid
+					self.is_paid
+					or (
+						flt(self.total_sanctioned_amount) > 0
+						and (
+							# grand total is reimbursed
+							(flt(self.grand_total, precision) == flt(self.total_amount_reimbursed, precision))
+							# grand total (to be paid) is 0 since linked advances already cover the claimed amount
+							or (flt(self.grand_total, precision) == 0)
+						)
+>>>>>>> 64039786b (fix(Expense Claim): status update on document cancellation (#1392))
 					)
-					# grand total (to be paid) is 0 since linked advances already cover the claimed amount
-					or (flt(self.grand_total, precision) == 0)
-				)
-			)
-		) and self.approval_status == "Approved":
-			status = "Paid"
-		elif (
-			flt(self.total_sanctioned_amount) > 0
-			and self.docstatus == 1
-			and self.approval_status == "Approved"
-		):
-			status = "Unpaid"
-		elif self.docstatus == 1 and self.approval_status == "Rejected":
-			status = "Rejected"
+				):
+					status = "Paid"
+				elif flt(self.total_sanctioned_amount) > 0:
+					status = "Unpaid"
+			elif self.approval_status == "Rejected":
+				status = "Rejected"
 
 		if update:
 			self.db_set("status", status)
