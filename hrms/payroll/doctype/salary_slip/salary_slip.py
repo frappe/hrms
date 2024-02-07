@@ -9,7 +9,7 @@ import frappe
 from frappe import _, msgprint
 from frappe.model.naming import make_autoname
 from frappe.query_builder import Order
-from frappe.query_builder.functions import Sum
+from frappe.query_builder.functions import Count, Sum
 from frappe.utils import (
 	add_days,
 	ceil,
@@ -479,13 +479,15 @@ class SalarySlip(TransactionBase):
 				payroll_settings.payroll_based_on == "Attendance"
 				and consider_unmarked_attendance_as == "Absent"
 			):
-				unmarked_days = self.get_unmarked_days(payroll_settings.include_holidays_in_total_working_days)
+				unmarked_days = self.get_unmarked_days(
+					payroll_settings.include_holidays_in_total_working_days, holidays
+				)
 				self.absent_days += unmarked_days  # will be treated as absent
 				self.payment_days -= unmarked_days
 		else:
 			self.payment_days = 0
 
-	def get_unmarked_days(self, include_holidays_in_total_working_days):
+	def get_unmarked_days(self, include_holidays_in_total_working_days, holidays=None):
 		unmarked_days = self.total_working_days
 
 		if self.actual_start_date != self.start_date:
@@ -505,14 +507,23 @@ class SalarySlip(TransactionBase):
 			)
 
 		# exclude days for which attendance has been marked
-		marked_days = frappe.db.count(
-			"Attendance",
-			filters={
-				"attendance_date": ["between", [self.actual_start_date, self.actual_end_date]],
-				"employee": self.employee,
-				"docstatus": 1,
-			},
+		Attendance = frappe.qb.DocType("Attendance")
+		query = (
+			frappe.qb.from_(Attendance)
+			.select(Count("*"))
+			.where(
+				(Attendance.attendance_date.between(self.actual_start_date, self.actual_end_date))
+				& (Attendance.employee == self.employee)
+				& (Attendance.docstatus == 1)
+			)
 		)
+
+		if include_holidays_in_total_working_days and holidays:
+			query = query.where(Attendance.attendance_date.notin(holidays))
+			if self.actual_start_date == self.start_date and self.actual_end_date == self.end_date:
+				unmarked_days -= len(holidays)
+
+		marked_days = query.run()[0][0]
 		unmarked_days -= marked_days
 
 		return unmarked_days
