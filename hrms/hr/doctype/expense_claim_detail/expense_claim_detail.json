@@ -58,8 +58,6 @@
    "read_only": 1
   },
   {
-   "fetch_from": "expense_type.description",
-   "fetch_if_empty": 1,
    "fieldname": "description",
    "fieldtype": "Text Editor",
    "in_list_view": 1,
