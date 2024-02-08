@@ -96,16 +96,25 @@ frappe.ui.form.on("Salary Structure", {
 		frm.fields_dict['deductions'].grid.set_column_disp("default_amount", false);
 
 		if (frm.doc.docstatus === 1) {
-			frm.add_custom_button(__("Bulk Assign Structure"), () => {
-				frm.trigger("assign_to_employees")
-			}).addClass("btn-primary");
-
-			frm.add_custom_button(__("Assign to Employee"), function() {
-				let doc = frappe.model.get_new_doc("Salary Structure Assignment");
+			frm.add_custom_button(__("Single Assignment"), function() {
+				const doc = frappe.model.get_new_doc("Salary Structure Assignment");
 				doc.salary_structure = frm.doc.name;
 				doc.company = frm.doc.company;
 				frappe.set_route("Form", "Salary Structure Assignment", doc.name);
-			}, __("Actions"));
+			}, __("Create"));
+
+			frm.add_custom_button(__("Bulk Assignments"), () => {
+				frm.trigger("assign_to_employees")
+			}, __("Create"))
+
+			frm.add_custom_button(__("Income Tax Slab"), () => {
+				frappe.model.with_doctype("Income Tax Slab", () => {
+					const doc = frappe.model.get_new_doc("Income Tax Slab");
+					frappe.set_route("Form", "Income Tax Slab", doc.name);
+				});
+			}, __("Create"));
+
+			frm.page.set_inner_btn_group_as_primary(__('Create'));
 
 			frm.add_custom_button(__("Preview Salary Slip"), function() {
 				frm.trigger("preview_salary_slip");
@@ -291,6 +300,11 @@ cur_frm.cscript.validate = function(doc, cdt, cdn) {
 
 
 frappe.ui.form.on('Salary Detail', {
+	form_render: function(frm, cdt, cdn) {
+		const row = locals[cdt][cdn];
+		hrms.payroll_common.set_autocompletions_for_condition_and_formula(frm, row);
+	},
+
 	amount: function(frm) {
 		calculate_totals(frm.doc);
 	},

@@ -133,10 +133,16 @@ def get_custom_fields():
 		],
 		"Company": [
 			{
+				"fieldname": "hr_and_payroll_tab",
+				"fieldtype": "Tab Break",
+				"label": "HR & Payroll",
+				"insert_after": "credit_limit",
+			},
+			{
 				"fieldname": "hr_settings_section",
 				"fieldtype": "Section Break",
 				"label": "HR & Payroll Settings",
-				"insert_after": "credit_limit",
+				"insert_after": "hr_and_payroll_tab",
 			},
 			{
 				"depends_on": "eval:!doc.__islocal",
