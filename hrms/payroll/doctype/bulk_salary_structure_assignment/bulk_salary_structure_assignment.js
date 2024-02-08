@@ -164,6 +164,27 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 			cellHeight: 35,
 			noDataMessage: __("No Data"),
 			disableReorderColumn: true,
+			getEditor: function (colIndex, rowIndex, value, parent, column) {
+				if (!["base", "variable"].includes(column.name)) return;
+				const $input = document.createElement("input");
+				$input.className = "dt-input h-100";
+				$input.type = "number";
+				$input.min = 0;
+				parent.appendChild($input);
+
+				return {
+					initValue(value) {
+						$input.focus();
+						$input.value = value;
+					},
+					setValue(value) {
+						$input.value = value;
+					},
+					getValue() {
+						return $input.value;
+					},
+				};
+			},
 		};
 		frm.employees_datatable = new frappe.DataTable(
 			frm.employee_wrapper.get(0),
