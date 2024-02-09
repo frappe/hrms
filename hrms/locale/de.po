@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-02-02 13:38\n"
+"PO-Revision-Date: 2024-02-09 09:54\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -7176,7 +7176,7 @@ msgstr "Verfall Zuteilung"
 #: hr/doctype/leave_type/leave_type.json
 msgctxt "Leave Type"
 msgid "Expire Carry Forwarded Leaves (Days)"
-msgstr "Verfallsdatum für weitergeleitete Blätter (Tage)"
+msgstr "Verfall Übertragene Abwesenheiten (Tage)"
 
 #: hr/doctype/leave_allocation/leave_allocation_list.js:8
 msgid "Expired"
@@ -7192,7 +7192,7 @@ msgstr "Verfallen"
 #: payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgctxt "Salary Slip Leave"
 msgid "Expired Leave(s)"
-msgstr "Verfallene Urlaubstage"
+msgstr "Verfallene Abwesenheiten"
 
 #. Label of a Small Text field in DocType 'Attendance Request'
 #: hr/doctype/attendance_request/attendance_request.json
@@ -8393,11 +8393,11 @@ msgstr "Hilfe"
 
 #: controllers/employee_reminders.py:72
 msgid "Hey {}! This email is to remind you about the upcoming holidays."
-msgstr ""
+msgstr "Hallo {}! Diese E-Mail soll Sie an die bevorstehenden Feiertage erinnern."
 
 #: hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:44
 msgid "Hiring Count"
-msgstr ""
+msgstr "Einstellungsanzahl"
 
 #. Label of a Section Break field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -8459,7 +8459,7 @@ msgstr "Feiertagsliste"
 #: hr/doctype/leave_period/leave_period.json
 msgctxt "Leave Period"
 msgid "Holiday List for Optional Leave"
-msgstr "Feiertagsliste für optionalen Urlaub"
+msgstr "Liste der arbeitsfreien Tage für optionalen Urlaub"
 
 #. Label of a Check field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -8469,11 +8469,11 @@ msgstr "Arbeitsfreie Tage"
 
 #: controllers/employee_reminders.py:65
 msgid "Holidays this Month."
-msgstr ""
+msgstr "Arbeitsfreie Tage in diesem Monat."
 
 #: controllers/employee_reminders.py:65
 msgid "Holidays this Week."
-msgstr ""
+msgstr "Arbeitsfreie Tage diese Woche."
 
 #. Label of a Currency field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -8491,7 +8491,7 @@ msgstr "Stundensatz"
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Hour Rate (Company Currency)"
-msgstr ""
+msgstr "Stundensatz (Währung des Unternehmens)"
 
 #. Label of a Float field in DocType 'Training Result Employee'
 #: hr/doctype/training_result_employee/training_result_employee.json
@@ -8513,7 +8513,7 @@ msgstr "Die Mietdauer des Hauses sollte mindestens 15 Tage betragen"
 
 #: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:53
 msgid "IFSC"
-msgstr ""
+msgstr "IFSC"
 
 #: payroll/report/bank_remittance/bank_remittance.py:44
 msgid "IFSC Code"
@@ -8574,7 +8574,7 @@ msgstr "Wenn diese Option aktiviert ist, wird der gesamte Betrag vom steuerpflic
 #: payroll/doctype/payroll_settings/payroll_settings.json
 msgctxt "Payroll Settings"
 msgid "If checked, then the system will enable the provision to set the opening balance for earnings and deductions till date while creating a Salary Structure Assignment (if any)"
-msgstr ""
+msgstr "Falls aktiviert, ermöglicht es das System, bei der Erstellung einer Gehaltsstrukturzuordnung (falls vorhanden) den Eröffnungssaldo für Verdienste und Abzüge bis zum Datum festzulegen"
 
 #. Description of the 'Allow Tax Exemption' (Check) field in DocType 'Income
 #. Tax Slab'
@@ -8588,7 +8588,7 @@ msgstr "Wenn aktiviert, wird die Steuerbefreiungserklärung für die Berechnung 
 #: hr/doctype/shift_type/shift_type.json
 msgctxt "Shift Type"
 msgid "If enabled, auto attendance will be marked on holidays if Employee Checkins exist"
-msgstr ""
+msgstr "Falls aktiviert, wird die automatische Anwesenheit an arbeitsfreien Tagen markiert, wenn Mitarbeiter-Checkins vorhanden sind"
 
 #. Description of the 'Consider Marked Attendance on Holidays' (Check) field in
 #. DocType 'Payroll Settings'
@@ -8602,35 +8602,35 @@ msgstr ""
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "If enabled, the component will be considered as a tax component and the amount will be auto-calculated as per the configured income tax slabs"
-msgstr ""
+msgstr "Falls aktiviert, wird die Komponente als Steuerkomponente betrachtet und der Betrag wird automatisch gemäß den konfigurierten Einkommensteuertarifen berechnet"
 
 #. Description of the 'Is Income Tax Component' (Check) field in DocType
 #. 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "If enabled, the component will be considered in the Income Tax Deductions report"
-msgstr ""
+msgstr "Falls aktiviert, wird die Komponente im Bericht Einkommenssteuerabzüge berücksichtigt"
 
 #. Description of the 'Remove if Zero Valued' (Check) field in DocType 'Salary
 #. Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "If enabled, the component will not be displayed in the salary slip if the amount is zero"
-msgstr ""
+msgstr "Falls aktiviert, wird die Komponente nicht in der Gehaltsabrechnung angezeigt, wenn der Betrag Null ist"
 
 #. Description of the 'Statistical Component' (Check) field in DocType 'Salary
 #. Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "If enabled, the value specified or calculated in this component will not contribute to the earnings or deductions. However, it's value can be referenced by other components that can be added or deducted. "
-msgstr ""
+msgstr "Falls aktiviert, trägt der in dieser Komponente angegebene oder berechnete Wert nicht zu den Einnahmen oder Abzügen bei. Der Wert kann jedoch durch andere Komponenten referenziert werden, die hinzugefügt oder abgezogen werden können. "
 
 #. Description of the 'Include holidays in Total no. of Working Days' (Check)
 #. field in DocType 'Payroll Settings'
 #: payroll/doctype/payroll_settings/payroll_settings.json
 msgctxt "Payroll Settings"
 msgid "If enabled, total no. of working days will include holidays, and this will reduce the value of Salary Per Day"
-msgstr ""
+msgstr "Falls aktiviert, werden in der Gesamtzahl der Arbeitstage auch die arbeitsfreien Tage berücksichtigt, wodurch sich das Gehalt pro Tag verringert"
 
 #. Description of the 'Applies to Company' (Check) field in DocType 'Leave
 #. Block List'
@@ -8654,7 +8654,7 @@ msgstr "Wenn aktiviert, wird die Job-Öffnung nach diesem Datum automatisch gesc
 
 #: patches/v15_0/notify_about_loan_app_separation.py:17
 msgid "If you are using loans in salary slips, please install the {0} app from Frappe Cloud Marketplace or GitHub to continue using loan integration with payroll."
-msgstr ""
+msgstr "Wenn Sie Darlehen in Gehaltsabrechnungen verwenden, installieren Sie bitte die App {0} vom Frappe Cloud Marketplace oder GitHub, um die Darlehensintegration mit der Gehaltsabrechnung weiterhin zu nutzen."
 
 #. Label of a Section Break field in DocType 'Upload Attendance'
 #: hr/doctype/upload_attendance/upload_attendance.json
@@ -8714,7 +8714,7 @@ msgstr "Rechtzeitig"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:120
 msgid "In case of any error during this background process, the system will add a comment about the error on this Payroll Entry and revert to the Submitted status"
-msgstr ""
+msgstr "Falls während dieses Hintergrundprozesses ein Fehler auftritt, fügt das System einen Kommentar über den Fehler zu diesem Lohnbuchungseintrag hinzu und kehrt zum Status Gebucht zurück"
 
 #: hr/report/employee_leave_balance/employee_leave_balance.js:47
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:41
@@ -8731,7 +8731,7 @@ msgstr "Inaktiv"
 #: payroll/doctype/employee_incentive/employee_incentive.json
 msgctxt "Employee Incentive"
 msgid "Incentive"
-msgstr ""
+msgstr "Anreiz"
 
 #. Label of a Currency field in DocType 'Employee Incentive'
 #: payroll/doctype/employee_incentive/employee_incentive.json
@@ -8760,7 +8760,7 @@ msgstr "Urlaube innerhalb von Abwesenheiten als Abwesenheiten mit einbeziehen"
 #: payroll/doctype/employee_other_income/employee_other_income.json
 msgctxt "Employee Other Income"
 msgid "Income Source"
-msgstr ""
+msgstr "Einkommensquelle"
 
 #: payroll/report/income_tax_deductions/income_tax_deductions.py:47
 msgid "Income Tax Amount"
@@ -8770,7 +8770,7 @@ msgstr "Einkommensteuerbetrag"
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Income Tax Breakup"
-msgstr ""
+msgstr "Aufschlüsselung der Einkommensteuer"
 
 #: payroll/report/income_tax_deductions/income_tax_deductions.py:45
 msgid "Income Tax Component"
@@ -8784,7 +8784,7 @@ msgstr "Einkommensteuerkomponente"
 #: payroll/workspace/salary_payout/salary_payout.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Income Tax Computation"
-msgstr ""
+msgstr "Berechnung der Einkommensteuer"
 
 #. Label of a Currency field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -8844,7 +8844,7 @@ msgstr "Einkommensteuerplatte: {0} ist deaktiviert"
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Income from Other Sources"
-msgstr ""
+msgstr "Einkommen aus anderen Quellen"
 
 #: hr/doctype/appraisal/appraisal.py:154
 #: hr/doctype/appraisal_template/appraisal_template.py:28
@@ -8857,7 +8857,7 @@ msgstr "Falsche Gewichtsverteilung"
 #: hr/doctype/leave_type/leave_type.json
 msgctxt "Leave Type"
 msgid "Indicates the number of leaves that cannot be encashed from the leave balance. E.g. with a leave balance of 10 and 4 Non-Encashable Leaves, you can encash 6, while the remaining 4 can be carried forward or expired"
-msgstr ""
+msgstr "Gibt die Anzahl der Abwesenheiten an, die nicht vom Urlaubssaldo ausbezahlt werden können. Z.B. bei einem Urlaubssaldo von 10 und 4 nicht auszahlbaren Abwesenheiten können 6 ausgezahlt werden, während die restlichen 4 übertragen werden oder verfallen können"
 
 #. Option for the 'Type' (Select) field in DocType 'Vehicle Service'
 #: hr/doctype/vehicle_service/vehicle_service.json
@@ -8894,7 +8894,7 @@ msgstr "Zinsbetrag"
 #: payroll/doctype/salary_slip_loan/salary_slip_loan.json
 msgctxt "Salary Slip Loan"
 msgid "Interest Income Account"
-msgstr ""
+msgstr "Konto für Zinserträge"
 
 #. Option for the 'Level' (Select) field in DocType 'Training Event'
 #: hr/doctype/training_event/training_event.json
@@ -9147,19 +9147,19 @@ msgstr "Ungültig"
 
 #: payroll/doctype/salary_structure/salary_structure.py:281
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
-msgstr ""
+msgstr "Ungültiges Konto für die Gehaltsabrechnung. Die Kontowährung muss {0} oder {1} sein"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgctxt "Employee Grievance"
 msgid "Investigated"
-msgstr ""
+msgstr "Untersucht"
 
 #. Label of a Section Break field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgctxt "Employee Grievance"
 msgid "Investigation Details"
-msgstr ""
+msgstr "Untersuchungsdetails"
 
 #. Option for the 'Status' (Select) field in DocType 'Training Event Employee'
 #: hr/doctype/training_event_employee/training_event_employee.json
@@ -9201,7 +9201,7 @@ msgstr "Ist aktiv(iert)"
 #: hr/doctype/employee_referral/employee_referral.json
 msgctxt "Employee Referral"
 msgid "Is Applicable for Referral Bonus"
-msgstr ""
+msgstr "Gilt für Empfehlungsbonus"
 
 #. Label of a Check field in DocType 'Leave Ledger Entry'
 #: hr/doctype/leave_ledger_entry/leave_ledger_entry.json
@@ -9297,7 +9297,7 @@ msgstr "Ist obligatorisch"
 #: hr/doctype/leave_type/leave_type.json
 msgctxt "Leave Type"
 msgid "Is Optional Leave"
-msgstr "Ist optional verlassen"
+msgstr "Ist optional"
 
 #. Label of a Check field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
@@ -9321,7 +9321,7 @@ msgstr "Wiederholt sich"
 #: payroll/doctype/salary_detail/salary_detail.json
 msgctxt "Salary Detail"
 msgid "Is Recurring Additional Salary"
-msgstr ""
+msgstr "Ist wiederkehrendes Zusatzgehalt"
 
 #. Label of a Check field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -9344,44 +9344,44 @@ msgstr "Jan."
 #: hr/doctype/job_applicant/job_applicant.json
 #: hr/report/recruitment_analytics/recruitment_analytics.py:39
 msgid "Job Applicant"
-msgstr ""
+msgstr "Bewerber"
 
 #. Label of a Link field in DocType 'Appointment Letter'
 #: hr/doctype/appointment_letter/appointment_letter.json
 msgctxt "Appointment Letter"
 msgid "Job Applicant"
-msgstr ""
+msgstr "Bewerber"
 
 #. Label of a Link field in DocType 'Employee Onboarding'
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 msgctxt "Employee Onboarding"
 msgid "Job Applicant"
-msgstr ""
+msgstr "Bewerber"
 
 #. Label of a Link field in DocType 'Interview'
 #: hr/doctype/interview/interview.json
 msgctxt "Interview"
 msgid "Job Applicant"
-msgstr ""
+msgstr "Bewerber"
 
 #. Label of a Link field in DocType 'Interview Feedback'
 #: hr/doctype/interview_feedback/interview_feedback.json
 msgctxt "Interview Feedback"
 msgid "Job Applicant"
-msgstr ""
+msgstr "Bewerber"
 
 #. Label of a Link in the Recruitment Workspace
 #. Label of a shortcut in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
 msgctxt "Job Applicant"
 msgid "Job Applicant"
-msgstr ""
+msgstr "Bewerber"
 
 #. Label of a Link field in DocType 'Job Offer'
 #: hr/doctype/job_offer/job_offer.json
 msgctxt "Job Offer"
 msgid "Job Applicant"
-msgstr ""
+msgstr "Bewerber"
 
 #. Name of a DocType
 #: hr/doctype/job_applicant_source/job_applicant_source.json
@@ -9390,11 +9390,11 @@ msgstr "Bewerber-Quelle"
 
 #: hr/doctype/employee_referral/employee_referral.py:51
 msgid "Job Applicant {0} created successfully."
-msgstr ""
+msgstr "Bewerber {0} erfolgreich erstellt."
 
 #: hr/doctype/interview/interview.py:39
 msgid "Job Applicants are not allowed to appear twice for the same Interview round. Interview {0} already scheduled for Job Applicant {1}"
-msgstr ""
+msgstr "Bewerber dürfen nicht zweimal zum selben Vorstellungsgespräch erscheinen. Vorstellungsgespräch {0} bereits geplant für Bewerber {1}"
 
 #. Label of a Data field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
@@ -9578,7 +9578,7 @@ msgstr "Buchungssatz"
 #. Label of a Card Break in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Journey"
-msgstr ""
+msgstr "Verlauf"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:19
 #: public/js/salary_slip_deductions_report_filters.js:25
@@ -9593,31 +9593,31 @@ msgstr "Juni"
 #. Name of a DocType
 #: hr/doctype/goal/goal_tree.js:136 hr/doctype/kra/kra.json
 msgid "KRA"
-msgstr ""
+msgstr "KRA"
 
 #. Label of a Link field in DocType 'Appraisal KRA'
 #: hr/doctype/appraisal_kra/appraisal_kra.json
 msgctxt "Appraisal KRA"
 msgid "KRA"
-msgstr ""
+msgstr "KRA"
 
 #. Label of a Link field in DocType 'Appraisal Template Goal'
 #: hr/doctype/appraisal_template_goal/appraisal_template_goal.json
 msgctxt "Appraisal Template Goal"
 msgid "KRA"
-msgstr ""
+msgstr "KRA"
 
 #. Label of a Link field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "KRA"
-msgstr ""
+msgstr "KRA"
 
 #. Label of a Link in the Performance Workspace
 #: hr/workspace/performance/performance.json
 msgctxt "KRA"
 msgid "KRA"
-msgstr ""
+msgstr "KRA"
 
 #. Label of a Select field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
@@ -9627,7 +9627,7 @@ msgstr "KRA-Bewertungsmethode"
 
 #: hr/doctype/goal/goal.py:99
 msgid "KRA updated for all child goals."
-msgstr ""
+msgstr "KRA aktualisiert für alle untergeordneten Ziele."
 
 #. Label of a Table field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -9698,7 +9698,7 @@ msgstr "Familienname"
 #: hr/doctype/vehicle_log/vehicle_log.json
 msgctxt "Vehicle Log"
 msgid "Last Odometer Value "
-msgstr ""
+msgstr "Letzter Kilometerzählerstand "
 
 #. Label of a Datetime field in DocType 'Shift Type'
 #: hr/doctype/shift_type/shift_type.json
@@ -9756,32 +9756,32 @@ msgstr "Verlassen"
 #. Name of a DocType
 #: hr/doctype/leave_allocation/leave_allocation.json
 msgid "Leave Allocation"
-msgstr "Urlaubszuordnung"
+msgstr "Abwesenheitskontingent"
 
 #. Label of a Link field in DocType 'Compensatory Leave Request'
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.json
 msgctxt "Compensatory Leave Request"
 msgid "Leave Allocation"
-msgstr "Urlaubszuordnung"
+msgstr "Abwesenheitskontingent"
 
 #. Label of a Link in the Leaves Workspace
 #. Label of a shortcut in the Leaves Workspace
 #: hr/workspace/leaves/leaves.json
 msgctxt "Leave Allocation"
 msgid "Leave Allocation"
-msgstr "Urlaubszuordnung"
+msgstr "Abwesenheitskontingent"
 
 #. Label of a Link field in DocType 'Leave Encashment'
 #: hr/doctype/leave_encashment/leave_encashment.json
 msgctxt "Leave Encashment"
 msgid "Leave Allocation"
-msgstr "Urlaubszuordnung"
+msgstr "Abwesenheitskontingent"
 
 #. Label of a Section Break field in DocType 'Leave Policy'
 #: hr/doctype/leave_policy/leave_policy.json
 msgctxt "Leave Policy"
 msgid "Leave Allocations"
-msgstr "Zuteilungen verlassen"
+msgstr "Abwesenheitskontingente"
 
 #. Name of a DocType
 #: hr/doctype/leave_application/leave_application.json
@@ -9838,7 +9838,7 @@ msgstr "Berechtigungsauslöser in Abwesenheitsanwendung auslassen"
 #: hr/doctype/leave_application/leave_application.json
 msgctxt "Leave Application"
 msgid "Leave Approver Name"
-msgstr "Name des Urlaubsgenehmigers"
+msgstr "Name des Abwesenheitsgenehmigers"
 
 #. Label of a Float field in DocType 'Leave Encashment'
 #: hr/doctype/leave_encashment/leave_encashment.json
@@ -10197,7 +10197,7 @@ msgstr "Abwesenheit des Typs {0} kann nicht länger als {1} sein."
 
 #: hr/report/employee_leave_balance/employee_leave_balance.py:72
 msgid "Leave(s) Expired"
-msgstr ""
+msgstr "Abgelaufene Abwesenheit(en)"
 
 #. Label of a Float field in DocType 'Salary Slip Leave'
 #: payroll/doctype/salary_slip_leave/salary_slip_leave.json
@@ -10207,7 +10207,7 @@ msgstr "Urlaubstage zur Genehmigung ausstehend"
 
 #: hr/report/employee_leave_balance/employee_leave_balance.py:66
 msgid "Leave(s) Taken"
-msgstr ""
+msgstr "Genommene Abwesenheit(en)"
 
 #. Label of a Card Break in the HR Workspace
 #. Name of a Workspace
@@ -10233,7 +10233,7 @@ msgstr "Abwesenheiten"
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 msgctxt "Leave Policy Assignment"
 msgid "Leaves Allocated"
-msgstr "Zugeordnete Abwesenheit"
+msgstr "Zugeordnete Abwesenheiten"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:76
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
@@ -10333,17 +10333,17 @@ msgstr "Darlehen"
 #: payroll/doctype/salary_slip_loan/salary_slip_loan.json
 msgctxt "Salary Slip Loan"
 msgid "Loan Account"
-msgstr ""
+msgstr "Darlehenskonto"
 
 #. Label of a Link field in DocType 'Salary Slip Loan'
 #: payroll/doctype/salary_slip_loan/salary_slip_loan.json
 msgctxt "Salary Slip Loan"
 msgid "Loan Product"
-msgstr ""
+msgstr "Darlehensprodukt"
 
 #: payroll/report/salary_register/salary_register.py:223
 msgid "Loan Repayment"
-msgstr ""
+msgstr "Darlehensrückzahlung"
 
 #. Label of a Link field in DocType 'Salary Slip Loan'
 #: payroll/doctype/salary_slip_loan/salary_slip_loan.json
@@ -10353,7 +10353,7 @@ msgstr "Kreditrückzahlungseintrag"
 
 #: hr/utils.py:702
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
-msgstr ""
+msgstr "Das Darlehen kann nicht vom Gehalt des Mitarbeiters {0} zurückgezahlt werden, da das Gehalt in der Währung {1} verarbeitet wird"
 
 #: hr/report/vehicle_expenses/vehicle_expenses.py:33
 #: templates/generators/job_opening.html:61
@@ -10408,7 +10408,7 @@ msgstr "Unterer Bereich"
 
 #: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:54
 msgid "MICR"
-msgstr ""
+msgstr "MICR"
 
 #: hr/report/vehicle_expenses/vehicle_expenses.py:31
 msgid "Make"
@@ -10458,7 +10458,7 @@ msgstr "Markieren Sie die Anwesenheit"
 #: hr/doctype/shift_type/shift_type.json
 msgctxt "Shift Type"
 msgid "Mark Auto Attendance on Holidays"
-msgstr ""
+msgstr "Automatische Anwesenheit an arbeitsfreien Tagen markieren"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:48
 #: hr/doctype/employee_onboarding/employee_onboarding.js:48
@@ -10472,11 +10472,11 @@ msgstr "Als „In Bearbeitung“ markieren"
 
 #: hr/doctype/interview/interview.py:75
 msgid "Mark as {0}"
-msgstr ""
+msgstr "Als {0} markieren"
 
 #: hr/doctype/attendance/attendance_list.js:102
 msgid "Mark attendance as {0} for {1} on selected dates?"
-msgstr ""
+msgstr "Anwesenheit als {0} für {1} an ausgewählten Tagen markieren?"
 
 #. Description of the 'Enable Auto Attendance' (Check) field in DocType 'Shift
 #. Type'
@@ -10491,11 +10491,11 @@ msgstr "Markieren Sie den Zyklus als {0}, falls erforderlich."
 
 #: hr/doctype/goal/goal_tree.js:269
 msgid "Mark {0} as Completed?"
-msgstr ""
+msgstr "{0} als abgeschlossen markieren?"
 
 #: hr/doctype/goal/goal_list.js:84
 msgid "Mark {0} {1} as {2}?"
-msgstr ""
+msgstr "{0} {1} als {2} markieren?"
 
 #. Label of a Section Break field in DocType 'Employee Attendance Tool'
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
@@ -10511,7 +10511,7 @@ msgstr "Marked Teilnahme HTML"
 
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.js:215
 msgid "Marking Attendance"
-msgstr ""
+msgstr "Anwesenheit markieren"
 
 #. Label of a Card Break in the Performance Workspace
 #. Label of a Card Break in the Salary Payout Workspace
@@ -10708,7 +10708,7 @@ msgstr "Nicht ausgefüllte Felder"
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.py:29
 msgid "Missing Relieving Date"
-msgstr ""
+msgstr "Fehlendes Austrittsdatum"
 
 #. Label of a Select field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -10862,7 +10862,7 @@ msgstr ""
 
 #: hr/doctype/shift_assignment/shift_assignment.py:65
 msgid "Multiple Shift Assignments"
-msgstr ""
+msgstr "Mehrere Schichtzuweisungen"
 
 #: www/jobs/index.py:11
 msgid "My Account"
@@ -10884,7 +10884,7 @@ msgstr "Name"
 #: payroll/doctype/salary_slip/salary_slip.py:1163
 #: payroll/doctype/salary_slip/salary_slip.py:2112
 msgid "Name error"
-msgstr ""
+msgstr "Namensfehler"
 
 #. Label of a Data field in DocType 'Travel Request'
 #: hr/doctype/travel_request/travel_request.json
@@ -11026,7 +11026,7 @@ msgstr "Kein Urlaubszeitraum gefunden"
 
 #: hr/doctype/leave_encashment/leave_encashment.py:145
 msgid "No Leaves Allocated to Employee: {0} for Leave Type: {1}"
-msgstr "Keine Blätter dem Mitarbeiter zugewiesen: {0} für Urlaubstyp: {1}"
+msgstr "Kein Abwesenheitskontingent für Mitarbeiter: {0} für Abwesenheitsart: {1}"
 
 #: payroll/doctype/gratuity/gratuity.py:297
 msgid "No Salary Slip is found for Employee: {0}"
@@ -11354,11 +11354,11 @@ msgstr ""
 
 #: hr/doctype/interview/interview.py:331
 msgid "Only Interviewer Are allowed to submit Interview Feedback"
-msgstr ""
+msgstr "Nur Interviewer dürfen ein Interview-Feedback buchen"
 
 #: hr/doctype/interview/interview.py:26
 msgid "Only Interviews with Cleared or Rejected status can be submitted."
-msgstr ""
+msgstr "Es können nur Interviews mit dem Status \"Freigegeben\" oder \"Abgelehnt\" gebucht werden."
 
 #: hr/doctype/leave_application/leave_application.py:103
 msgid "Only Leave Applications with status 'Approved' and 'Rejected' can be submitted"
@@ -11380,7 +11380,7 @@ msgstr "Nur abgelaufene Zuordnungen können storniert werden"
 
 #: hr/doctype/interview/interview.js:69
 msgid "Only interviewers can submit feedback"
-msgstr ""
+msgstr "Nur Interviewer können Feedback abgeben"
 
 #: hr/doctype/leave_application/leave_application.py:174
 msgid "Only users with the {0} role can create backdated leave applications"
@@ -11388,7 +11388,7 @@ msgstr "Nur Benutzer mit der Rolle {0} können zurückliegende Urlaubsanträge e
 
 #: hr/doctype/goal/goal_list.js:115
 msgid "Only {0} Goals can be {1}"
-msgstr ""
+msgstr "Nur {0} Ziele können {1} sein"
 
 #. Option for the 'Status' (Select) field in DocType 'Daily Work Summary'
 #: hr/doctype/daily_work_summary/daily_work_summary.json
@@ -11430,7 +11430,7 @@ msgstr "Offen"
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Open & Approved"
-msgstr ""
+msgstr "Offen & Genehmigt"
 
 #: hr/doctype/leave_application/leave_application_email_template.html:30
 msgid "Open Now"
@@ -11454,7 +11454,7 @@ msgstr "Optionale Abwesenheiten sind Urlaubstage, die Arbeitnehmer aus einer vom
 
 #: hr/page/organizational_chart/organizational_chart.js:4
 msgid "Organizational Chart"
-msgstr ""
+msgstr "Organigramm"
 
 #. Label of a Section Break field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
@@ -11514,7 +11514,7 @@ msgstr "Von 5"
 #. Label of a chart in the Payroll Workspace
 #: payroll/workspace/payroll/payroll.json
 msgid "Outgoing Salary"
-msgstr ""
+msgstr "Ausgehendes Gehalt"
 
 #: hr/report/unpaid_expense_claim/unpaid_expense_claim.py:23
 msgid "Outstanding Amount"
@@ -11595,7 +11595,7 @@ msgstr "PF-Darlehen"
 #. Name of a DocType
 #: hr/doctype/pwa_notification/pwa_notification.json
 msgid "PWA Notification"
-msgstr ""
+msgstr "PWA-Benachrichtigung"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
@@ -11649,7 +11649,7 @@ msgstr "Gezahlter Betrag"
 #: hr/doctype/full_and_final_outstanding_statement/full_and_final_outstanding_statement.json
 msgctxt "Full and Final Outstanding Statement"
 msgid "Paid via Salary Slip"
-msgstr ""
+msgstr "Bezahlt per Gehaltsabrechnung"
 
 #: hr/report/employee_analytics/employee_analytics.js:17
 msgid "Parameter"
@@ -11659,7 +11659,7 @@ msgstr "Parameter"
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "Parent Goal"
-msgstr ""
+msgstr "Übergeordnetes Ziel"
 
 #: setup.py:381
 msgid "Part-time"
@@ -11723,7 +11723,7 @@ msgstr "Zahlung gegen Leistungsanspruch"
 #: payroll/doctype/gratuity/gratuity.json
 msgctxt "Gratuity"
 msgid "Pay via Salary Slip"
-msgstr ""
+msgstr "Via Gehaltsabrechnung zahlen"
 
 #. Label of a Link field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
@@ -11739,7 +11739,7 @@ msgstr "Verbindlichkeiten-Konto"
 
 #: hr/doctype/expense_claim/expense_claim.py:100
 msgid "Payable Account is mandatory to submit an Expense Claim"
-msgstr ""
+msgstr "Verbindlichkeitskonto ist erforderlich, um eine Spesenabrechnung zu buchen"
 
 #. Label of a Section Break field in DocType 'Full and Final Statement'
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
@@ -11772,7 +11772,7 @@ msgstr "Zahlungskonto ist obligatorisch"
 
 #: payroll/report/bank_remittance/bank_remittance.py:25
 msgid "Payment Date"
-msgstr ""
+msgstr "Zahlungsdatum"
 
 #: payroll/report/salary_register/salary_register.py:181
 msgid "Payment Days"
@@ -11789,7 +11789,7 @@ msgstr "Zahlungsziel"
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Payment Days Calculation Help"
-msgstr ""
+msgstr "Hilfe zur Berechnung der Zahlungstage"
 
 #: payroll/doctype/salary_structure/salary_structure.py:101
 msgid "Payment Days Dependency"
@@ -11813,7 +11813,7 @@ msgstr "Zahlung"
 #: payroll/doctype/gratuity/gratuity.json
 msgctxt "Gratuity"
 msgid "Payment and Accounting"
-msgstr ""
+msgstr "Zahlung und Buchhaltung"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:989
 msgid "Payment of {0} from {1} to {2}"
@@ -11837,7 +11837,7 @@ msgstr "Lohn-und Gehaltsabrechnung"
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgctxt "Salary Structure Assignment"
 msgid "Payroll Cost Centers"
-msgstr ""
+msgstr "Kostenstellen für die Gehaltsabrechnung"
 
 #. Label of a Date field in DocType 'Additional Salary'
 #: payroll/doctype/additional_salary/additional_salary.json
@@ -11909,7 +11909,7 @@ msgstr "Lohnabrechnungszeitraum"
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Payroll Info"
-msgstr ""
+msgstr "Infos zur Gehaltsabrechnung"
 
 #: payroll/report/bank_remittance/bank_remittance.py:12
 msgid "Payroll Number"
@@ -12182,15 +12182,15 @@ msgstr "Bitte eine CSV-Datei auswählen."
 
 #: hr/doctype/attendance/attendance.py:308
 msgid "Please select a date."
-msgstr ""
+msgstr "Bitte wählen Sie ein Datum aus."
 
 #: hr/utils.py:693
 msgid "Please select an Applicant"
-msgstr ""
+msgstr "Bitte wählen Sie einen Bewerber aus"
 
 #: hr/doctype/employee_advance/employee_advance.js:16
 msgid "Please select employee first"
-msgstr ""
+msgstr "Bitte wählen Sie zuerst einen Mitarbeiter aus"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:111
 msgid "Please select employees to create appraisals for"
@@ -12198,7 +12198,7 @@ msgstr "Bitte wählen Sie Mitarbeiter aus, für die Sie Beurteilungen erstellen 
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:33
 msgid "Please select month and year."
-msgstr ""
+msgstr "Bitte wählen Sie Monat und Jahr aus."
 
 #: hr/doctype/goal/goal.js:87
 msgid "Please select the Appraisal Cycle first."
@@ -12206,15 +12206,15 @@ msgstr "Bitte wählen Sie zuerst den Beurteilungszyklus aus."
 
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.js:192
 msgid "Please select the attendance status."
-msgstr ""
+msgstr "Bitte wählen Sie den Anwesenheitsstatus aus."
 
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.js:185
 msgid "Please select the employees you want to mark attendance for."
-msgstr ""
+msgstr "Bitte wählen Sie die Mitarbeiter aus, für die Sie die Anwesenheit markieren möchten."
 
 #: payroll/doctype/salary_slip/salary_slip_list.js:7
 msgid "Please select the salary slips to email"
-msgstr ""
+msgstr "Bitte wählen Sie die Gehaltsabrechnungen aus, die Sie per E-Mail versenden möchten"
 
 #: payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.js:19
 msgid "Please select {0}"
@@ -12238,16 +12238,16 @@ msgstr "Bitte stellen Sie die Personalabrechnung basierend auf den Einstellungen
 
 #: payroll/doctype/gratuity/gratuity.py:152
 msgid "Please set Relieving Date for employee: {0}"
-msgstr ""
+msgstr "Bitte legen Sie das Austrittsdatum für den Mitarbeiter fest: {0}"
 
 #: hr/doctype/employee_advance/employee_advance.py:177
 #: hr/doctype/employee_advance/employee_advance.py:281
 msgid "Please set a Default Cash Account in Company defaults"
-msgstr ""
+msgstr "Bitte legen Sie in den Unternehmenseinstellungen ein Standard-Kassenkonto fest"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:307
 msgid "Please set account in Salary Component {0}"
-msgstr ""
+msgstr "Bitte legen Sie das Konto in der Gehaltskomponente {0} fest"
 
 #: hr/doctype/leave_application/leave_application.py:612
 msgid "Please set default template for Leave Approval Notification in HR Settings."
@@ -12271,24 +12271,24 @@ msgstr "Bitte setzen Sie das Datum des Beitritts für Mitarbeiter {0}"
 
 #: controllers/employee_boarding_controller.py:110
 msgid "Please set the Holiday List."
-msgstr ""
+msgstr "Bitte stellen Sie die Liste der arbeitsfreien Tage ein."
 
 #: hr/doctype/exit_interview/exit_interview.js:17
 #: hr/doctype/exit_interview/exit_interview.py:21
 msgid "Please set the relieving date for employee {0}"
-msgstr ""
+msgstr "Bitte legen Sie das Austrittsdatum für den Mitarbeiter {0} fest"
 
 #: hr/doctype/exit_interview/exit_interview.py:124
 msgid "Please set {0} and {1} in {2}."
-msgstr ""
+msgstr "Bitte stellen Sie {0} und {1} in {2} ein."
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.py:25
 msgid "Please set {0} for Employee {1}"
-msgstr ""
+msgstr "Bitte setzen Sie {0} für Mitarbeiter {1}"
 
 #: hr/doctype/department_approver/department_approver.py:86
 msgid "Please set {0} for the Employee: {1}"
-msgstr ""
+msgstr "Bitte stellen Sie {0} für den Mitarbeiter ein: {1}"
 
 #: hr/doctype/shift_type/shift_type.js:16
 #: hr/doctype/shift_type/shift_type.js:21
@@ -12309,7 +12309,7 @@ msgstr "Bitte teilen Sie Ihr Feedback mit dem Training ab, indem Sie auf &#39;Tr
 
 #: hr/doctype/interview/interview.py:198
 msgid "Please specify the job applicant to be updated."
-msgstr ""
+msgstr "Bitte geben Sie den Bewerber an, der aktualisiert werden soll."
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:157
 msgid "Please submit the {0} before marking the cycle as Completed"
@@ -12377,7 +12377,7 @@ msgstr "Buchungsdatum"
 #: payroll/doctype/gratuity/gratuity.json
 msgctxt "Gratuity"
 msgid "Posting date"
-msgstr ""
+msgstr "Buchungsdatum"
 
 #. Label of a Data field in DocType 'Travel Itinerary'
 #: hr/doctype/travel_itinerary/travel_itinerary.json
@@ -12477,7 +12477,7 @@ msgstr "Kompetenz"
 
 #: hr/report/project_profitability/project_profitability.py:185
 msgid "Profit"
-msgstr ""
+msgstr "Gewinn"
 
 #: hr/doctype/goal/goal_tree.js:78
 msgid "Progress"
@@ -12538,7 +12538,7 @@ msgstr "Projekt"
 #: hr/report/project_profitability/project_profitability.json
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Project Profitability"
-msgstr ""
+msgstr "Projektrentabilität"
 
 #. Label of a Card Break in the Performance Workspace
 #: hr/workspace/performance/performance.json
@@ -12590,7 +12590,7 @@ msgstr "Zweck"
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Purpose & Amount"
-msgstr ""
+msgstr "Zweck & Betrag"
 
 #. Name of a DocType
 #: hr/doctype/purpose_of_travel/purpose_of_travel.json
@@ -12628,7 +12628,7 @@ msgstr "Quartalsweise"
 #: hr/doctype/exit_interview/exit_interview.json
 msgctxt "Exit Interview"
 msgid "Questionnaire Email Sent"
-msgstr ""
+msgstr "Fragebogen per E-Mail gesendet"
 
 #. Option for the 'Status' (Select) field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
@@ -12703,7 +12703,7 @@ msgstr "Bewertungen"
 #: hr/doctype/employee_transfer/employee_transfer.json
 msgctxt "Employee Transfer"
 msgid "Re-allocate Leaves"
-msgstr "Blatt neu zuweisen"
+msgstr "Abwesenheiten neu zuteilen"
 
 #. Label of a Check field in DocType 'PWA Notification'
 #: hr/doctype/pwa_notification/pwa_notification.json
@@ -12740,11 +12740,11 @@ msgstr "Grund"
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Reason for Requesting"
-msgstr ""
+msgstr "Grund der Anfrage"
 
 #: hr/doctype/employee_checkin/employee_checkin.py:251
 msgid "Reason for skipping auto attendance:"
-msgstr ""
+msgstr "Grund für das Überspringen der automatischen Anwesenheit:"
 
 #. Label of a Section Break field in DocType 'Full and Final Statement'
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
@@ -12852,13 +12852,13 @@ msgstr "Referenzen"
 #: hr/doctype/employee_referral/employee_referral.json
 msgctxt "Employee Referral"
 msgid "Referral Bonus Payment Status"
-msgstr ""
+msgstr "Empfehlungsbonus Zahlungsstatus"
 
 #. Label of a Section Break field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
 msgctxt "Employee Referral"
 msgid "Referral Details"
-msgstr ""
+msgstr "Empfehlungsdetails"
 
 #. Label of a Link field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
@@ -12870,13 +12870,13 @@ msgstr "Referrer"
 #: hr/doctype/employee_referral/employee_referral.json
 msgctxt "Employee Referral"
 msgid "Referrer Details"
-msgstr ""
+msgstr "Details zum Empfehler"
 
 #. Label of a Data field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
 msgctxt "Employee Referral"
 msgid "Referrer Name"
-msgstr ""
+msgstr "Name des Empfehlers"
 
 #. Label of a Section Break field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -12892,7 +12892,7 @@ msgstr "Betankungs Einzelheiten"
 
 #: hr/doctype/employee_referral/employee_referral.js:7
 msgid "Reject Employee Referral"
-msgstr ""
+msgstr "Mitarbeiterempfehlung ablehnen"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
@@ -12969,7 +12969,7 @@ msgstr "Freistellungsdatum "
 #: hr/doctype/exit_interview/exit_interview.js:19
 #: hr/doctype/exit_interview/exit_interview.py:24
 msgid "Relieving Date Missing"
-msgstr ""
+msgstr "Austrittsdatum fehlt"
 
 #. Label of a Currency field in DocType 'Employee Benefit Application'
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
@@ -13018,7 +13018,7 @@ msgstr "Erinnerung"
 #: hr/doctype/hr_settings/hr_settings.json
 msgctxt "HR Settings"
 msgid "Reminders"
-msgstr ""
+msgstr "Erinnerungen"
 
 #. Label of a Check field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -13373,7 +13373,7 @@ msgstr "Zeile {0}: Bezahlter Betrag darf nicht größer sein als der geforderte 
 
 #: payroll/doctype/gratuity_rule/gratuity_rule.py:15
 msgid "Row {0}: From (Year) can not be greater than To (Year)"
-msgstr ""
+msgstr "Zeile {0}: Von (Jahr) kann nicht größer sein als Bis (Jahr)"
 
 #: hr/doctype/appraisal/appraisal.py:133
 msgid "Row {0}: Goal Score cannot be greater than 5"
@@ -13381,7 +13381,7 @@ msgstr "Zeile {0}: Zielpunktzahl darf nicht größer als 5 sein"
 
 #: payroll/doctype/salary_slip/salary_slip_loan_utils.py:54
 msgid "Row {0}: Paid amount {1} is greater than pending accrued amount {2} against loan {3}"
-msgstr ""
+msgstr "Zeile {0}: Der gezahlte Betrag {1} ist größer als der ausstehende aufgelaufene Betrag {2} für das Darlehen {3}"
 
 #: hr/doctype/expense_claim/expense_claim.py:280
 msgid "Row {0}: {1} is required in the expenses table to book an expense claim."
@@ -13485,7 +13485,7 @@ msgstr "Gehaltsdetails"
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Salary Expectation"
-msgstr ""
+msgstr "Gehaltserwartung"
 
 #. Label of a Select field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
@@ -13529,25 +13529,25 @@ msgstr "Gehalt Register"
 #. Name of a DocType
 #: payroll/doctype/salary_slip/salary_slip.json
 msgid "Salary Slip"
-msgstr ""
+msgstr "Gehaltsabrechnung"
 
 #. Label of a Link field in DocType 'Employee Benefit Claim'
 #: payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgctxt "Employee Benefit Claim"
 msgid "Salary Slip"
-msgstr ""
+msgstr "Gehaltsabrechnung"
 
 #. Label of a Link field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
 msgctxt "Leave Application"
 msgid "Salary Slip"
-msgstr ""
+msgstr "Gehaltsabrechnung"
 
 #. Label of a Section Break field in DocType 'Payroll Settings'
 #: payroll/doctype/payroll_settings/payroll_settings.json
 msgctxt "Payroll Settings"
 msgid "Salary Slip"
-msgstr ""
+msgstr "Gehaltsabrechnung"
 
 #. Label of a Link in the Payroll Workspace
 #. Label of a Link in the Salary Payout Workspace
@@ -13556,7 +13556,7 @@ msgstr ""
 #: payroll/workspace/salary_payout/salary_payout.json
 msgctxt "Salary Slip"
 msgid "Salary Slip"
-msgstr ""
+msgstr "Gehaltsabrechnung"
 
 #. Label of a Check field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
@@ -13607,7 +13607,7 @@ msgstr ""
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:240
 msgid "Salary Slip creation is queued. It may take a few minutes"
-msgstr ""
+msgstr "Die Erstellung der Gehaltsabrechnung befindet sich in der Warteschlange. Es kann einige Minuten dauern"
 
 #: payroll/doctype/salary_slip/salary_slip.py:285
 msgid "Salary Slip of employee {0} already created for this period"
@@ -13707,7 +13707,7 @@ msgstr "Gehaltsstruktur sollte flexible Leistungskomponente (n) haben, um den Le
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:85
 msgid "Salary Structure {0} does not belong to company {1}"
-msgstr ""
+msgstr "Gehaltsstruktur {0} gehört nicht zum Unternehmen {1}"
 
 #: hr/doctype/leave_application/leave_application.py:330
 msgid "Salary already processed for period between {0} and {1}, Leave application period cannot be between this date range."
@@ -13729,12 +13729,12 @@ msgstr ""
 
 #: payroll/doctype/salary_slip/salary_slip.py:2265
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
-msgstr ""
+msgstr "E-Mails mit Gehaltsabrechnungen wurden in die Warteschlange für den Versand gestellt. Prüfen Sie den Status unter {0}."
 
 #. Subtitle of the Module Onboarding 'Payroll'
 #: payroll/module_onboarding/payroll/payroll.json
 msgid "Salary, Compensation, and more."
-msgstr ""
+msgstr "Gehalt, Vergütung und mehr."
 
 #: hr/report/project_profitability/project_profitability.py:150
 msgid "Sales Invoice"
@@ -13940,11 +13940,11 @@ msgstr "Die E-Mails senden um"
 
 #: hr/doctype/exit_interview/exit_interview.js:7
 msgid "Send Exit Questionnaire"
-msgstr ""
+msgstr "Austrittsfragebogen senden"
 
 #: hr/doctype/exit_interview/exit_interview_list.js:15
 msgid "Send Exit Questionnaires"
-msgstr ""
+msgstr "Austrittsfragebögen versenden"
 
 #. Label of a Check field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -14112,7 +14112,7 @@ msgstr ""
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.py:54
 msgid "Set Relieving Date for Employee: {0}"
-msgstr ""
+msgstr "Austrittsdatum für Mitarbeiter festlegen: {0}"
 
 #. Description of the 'Set Attendance Details' (Section Break) field in DocType
 #. 'Employee Attendance Tool'
@@ -14166,7 +14166,7 @@ msgstr "Einstellungen"
 
 #: hr/doctype/exit_interview/exit_interview.py:129
 msgid "Settings Missing"
-msgstr ""
+msgstr "Einstellungen fehlen"
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.py:35
 msgid "Settle all Payables and Receivables before submission"
@@ -14223,7 +14223,7 @@ msgstr ""
 #. Name of a Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift & Attendance"
-msgstr ""
+msgstr "Schicht & Anwesenheit"
 
 #. Label of a Datetime field in DocType 'Employee Checkin'
 #: hr/doctype/employee_checkin/employee_checkin.json
@@ -14981,11 +14981,11 @@ msgstr "Suspendiert"
 
 #: payroll/doctype/salary_slip/salary_slip.py:1170
 msgid "Syntax error"
-msgstr ""
+msgstr "Syntaxfehler"
 
 #: payroll/doctype/salary_slip/salary_slip.py:2115
 msgid "Syntax error in condition: {0} in Income Tax Slab"
-msgstr ""
+msgstr "Syntaxfehler in der Bedingung: {0} in der Einkommensteuertabelle"
 
 #. Name of a role
 #: hr/doctype/appointment_letter/appointment_letter.json
@@ -15072,17 +15072,17 @@ msgstr "Vorgangsgewichtung"
 #. Name of a Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Tax & Benefits"
-msgstr ""
+msgstr "Steuern & Sozialleistungen"
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:41
 msgid "Tax Deducted Till Date"
-msgstr ""
+msgstr "Abgezogene Steuern bis Datum"
 
 #. Label of a Currency field in DocType 'Salary Structure Assignment'
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgctxt "Salary Structure Assignment"
 msgid "Tax Deducted Till Date"
-msgstr ""
+msgstr "Abgezogene Steuern bis Datum"
 
 #. Label of a Link field in DocType 'Employee Tax Exemption Sub Category'
 #: payroll/doctype/employee_tax_exemption_sub_category/employee_tax_exemption_sub_category.json
@@ -15111,7 +15111,7 @@ msgstr "Steuerbefreiungsbeweise"
 #. Label of a Card Break in the Tax & Benefits Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Tax Setup"
-msgstr ""
+msgstr "Steuereinstellungen"
 
 #. Label of a Currency field in DocType 'Salary Detail'
 #: payroll/doctype/salary_detail/salary_detail.json
@@ -15127,13 +15127,13 @@ msgstr "Steuer auf flexiblen Vorteil"
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:40
 msgid "Taxable Earnings Till Date"
-msgstr ""
+msgstr "Steuerpflichtiges Einkommen bis heute"
 
 #. Label of a Currency field in DocType 'Salary Structure Assignment'
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgctxt "Salary Structure Assignment"
 msgid "Taxable Earnings Till Date"
-msgstr ""
+msgstr "Steuerpflichtiges Einkommen bis heute"
 
 #. Name of a DocType
 #: payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
@@ -15151,7 +15151,7 @@ msgstr "Steuerbare Lohnplatten"
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Taxes & Charges"
-msgstr ""
+msgstr "Steuern & Abgaben"
 
 #. Label of a Section Break field in DocType 'Income Tax Slab'
 #: payroll/doctype/income_tax_slab/income_tax_slab.json
@@ -15163,7 +15163,7 @@ msgstr "Steuern und Abgaben auf die Einkommensteuer"
 #: hr/doctype/travel_itinerary/travel_itinerary.json
 msgctxt "Travel Itinerary"
 msgid "Taxi"
-msgstr ""
+msgstr "Taxi"
 
 #. Label of a Link in the HR Workspace
 #: hr/page/team_updates/team_updates.js:4 hr/workspace/hr/hr.json
@@ -15201,12 +15201,12 @@ msgstr "Danke"
 #. Success message of the Module Onboarding 'Human Resource'
 #: hr/module_onboarding/human_resource/human_resource.json
 msgid "The Human Resource Module is all set up!"
-msgstr ""
+msgstr "Das Modul Personalwesen ist fertig eingerichtet!"
 
 #. Success message of the Module Onboarding 'Payroll'
 #: payroll/module_onboarding/payroll/payroll.json
 msgid "The Payroll Module is all set up!"
-msgstr ""
+msgstr "Das Lohn- und Gehaltsabrechnungsmodul ist fertig eingerichtet!"
 
 #. Description of the 'Payroll Date' (Date) field in DocType 'Additional
 #. Salary'
@@ -15587,15 +15587,15 @@ msgstr "Das Datum muss vor dem Datum liegen"
 #: payroll/doctype/gratuity_rule_slab/gratuity_rule_slab.json
 msgctxt "Gratuity Rule Slab"
 msgid "To(Year)"
-msgstr ""
+msgstr "Bis (Jahr)"
 
 #: payroll/doctype/gratuity_rule/gratuity_rule.js:37
 msgid "To(Year) year can not be less than From(year)"
-msgstr ""
+msgstr "Bis (Jahr) darf nicht kleiner sein als Von (Jahr)"
 
 #: controllers/employee_reminders.py:122
 msgid "Today is {0}'s birthday 🎉"
-msgstr ""
+msgstr "Heute ist {0}s Geburtstag 🎉"
 
 #: controllers/employee_reminders.py:258
 msgid "Today {0} at our Company! 🎉"
@@ -15662,7 +15662,7 @@ msgstr "Gesamterstattungsbetrag"
 
 #: payroll/doctype/gratuity/gratuity.py:94
 msgid "Total Amount can not be zero"
-msgstr ""
+msgstr "Der Gesamtbetrag kann nicht Null sein"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:232
 #: hr/report/project_profitability/project_profitability.py:199
@@ -15702,7 +15702,7 @@ msgstr "Gesamtabzug"
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Total Deduction (Company Currency)"
-msgstr ""
+msgstr "Gesamtabzug (Währung des Unternehmens)"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:133
 msgid "Total Early Exits"
@@ -15781,7 +15781,7 @@ msgstr "Urlaubstage insgesamt"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:107
 msgid "Total Leaves"
-msgstr "insgesamt Blätter"
+msgstr "Abwesenheiten insgesamt"
 
 #. Label of a Float field in DocType 'Leave Allocation'
 #: hr/doctype/leave_allocation/leave_allocation.json
@@ -15793,7 +15793,7 @@ msgstr "Insgesamt zugewiesene Urlaubstage"
 #: hr/doctype/leave_allocation/leave_allocation.json
 msgctxt "Leave Allocation"
 msgid "Total Leaves Encashed"
-msgstr "Insgesamt Blätter umkränzt"
+msgstr "Ausbezahlte Abwesenheiten insgesamt"
 
 #: payroll/report/salary_payments_based_on_payment_mode/salary_payments_based_on_payment_mode.py:158
 msgid "Total Net Pay"
@@ -15893,7 +15893,7 @@ msgstr ""
 
 #: hr/doctype/leave_allocation/leave_allocation.py:252
 msgid "Total leaves allocated is mandatory for Leave Type {0}"
-msgstr "Die Gesamtzahl der zugewiesenen Blätter ist für Abwesenheitsart {0} erforderlich."
+msgstr "Die Summe der zugewiesenen Abwesenheiten ist für die Abwesenheitsart {0} obligatorisch."
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:141
 msgid "Total percentage against cost centers should be 100"
