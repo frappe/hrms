@@ -491,27 +491,14 @@ class SalarySlip(TransactionBase):
 		self, include_holidays_in_total_working_days: bool, holidays: list | None = None
 	) -> float:
 		"""Calculates the number of unmarked days for an employee within a date range"""
-		unmarked_days = self.total_working_days
-		unmarked_days -= self._get_days_outside_period(include_holidays_in_total_working_days, holidays)
-
-		# Exclude days with marked attendance
-		Attendance = frappe.qb.DocType("Attendance")
-		query = (
-			frappe.qb.from_(Attendance)
-			.select(Count("*"))
-			.where(
-				(Attendance.attendance_date.between(self.actual_start_date, self.actual_end_date))
-				& (Attendance.employee == self.employee)
-				& (Attendance.docstatus == 1)
-			)
+		unmarked_days = (
+			self.total_working_days
+			- self._get_days_outside_period(include_holidays_in_total_working_days, holidays)
+			- self._get_marked_attendance_days(holidays)
 		)
 
 		if include_holidays_in_total_working_days and holidays:
-			query = query.where(Attendance.attendance_date.notin(holidays))
 			unmarked_days -= self._get_number_of_holidays(holidays)
-
-		marked_days = query.run()[0][0]
-		unmarked_days -= marked_days
 
 		return unmarked_days
 
@@ -553,6 +540,19 @@ class SalarySlip(TransactionBase):
 				no_of_holidays += 1
 
 		return no_of_holidays
+
+	def _get_marked_attendance_days(self, holidays: list | None = None) -> float:
+		Attendance = frappe.qb.DocType("Attendance")
+		return (
+			frappe.qb.from_(Attendance)
+			.select(Count("*"))
+			.where(
+				(Attendance.attendance_date.between(self.actual_start_date, self.actual_end_date))
+				& (Attendance.employee == self.employee)
+				& (Attendance.docstatus == 1)
+				& (Attendance.attendance_date.notin(holidays))
+			)
+		).run()[0][0]
 
 	def get_payment_days(self, include_holidays_in_total_working_days):
 		if self.joining_date and self.joining_date > getdate(self.end_date):
