@@ -487,26 +487,14 @@ class SalarySlip(TransactionBase):
 		else:
 			self.payment_days = 0
 
-	def get_unmarked_days(self, include_holidays_in_total_working_days, holidays=None):
+	def get_unmarked_days(
+		self, include_holidays_in_total_working_days: bool, holidays: list | None = None
+	) -> float:
+		"""Calculates the number of unmarked days for an employee within a date range"""
 		unmarked_days = self.total_working_days
+		unmarked_days -= self._get_days_outside_period(include_holidays_in_total_working_days, holidays)
 
-		if self.actual_start_date != self.start_date:
-			unmarked_days = self.get_unmarked_days_based_on_doj_or_relieving(
-				unmarked_days,
-				include_holidays_in_total_working_days,
-				self.start_date,
-				add_days(self.joining_date, -1),
-			)
-
-		if self.actual_end_date != self.end_date:
-			unmarked_days = self.get_unmarked_days_based_on_doj_or_relieving(
-				unmarked_days,
-				include_holidays_in_total_working_days,
-				add_days(self.relieving_date, 1),
-				self.end_date,
-			)
-
-		# exclude days for which attendance has been marked
+		# Exclude days with marked attendance
 		Attendance = frappe.qb.DocType("Attendance")
 		query = (
 			frappe.qb.from_(Attendance)
@@ -520,33 +508,51 @@ class SalarySlip(TransactionBase):
 
 		if include_holidays_in_total_working_days and holidays:
 			query = query.where(Attendance.attendance_date.notin(holidays))
-			if self.actual_start_date == self.start_date and self.actual_end_date == self.end_date:
-				unmarked_days -= len(holidays)
+			unmarked_days -= self._get_number_of_holidays(holidays)
 
 		marked_days = query.run()[0][0]
 		unmarked_days -= marked_days
 
 		return unmarked_days
 
-	def get_unmarked_days_based_on_doj_or_relieving(
-		self, unmarked_days, include_holidays_in_total_working_days, start_date, end_date
+	def _get_days_outside_period(
+		self, include_holidays_in_total_working_days: bool, holidays: list | None = None
 	):
-		"""
-		Exclude days before DOJ or after
-		Relieving Date from unmarked days
-		"""
-		from erpnext.setup.doctype.employee.employee import is_holiday
+		"""Returns days before DOJ or after relieving date"""
 
-		if include_holidays_in_total_working_days:
-			unmarked_days -= date_diff(end_date, start_date) + 1
-		else:
-			# exclude only if not holidays
-			for days in range(date_diff(end_date, start_date) + 1):
-				date = add_days(end_date, -days)
-				if not is_holiday(self.employee, date):
-					unmarked_days -= 1
+		def _get_days(start_date, end_date):
+			no_of_days = date_diff(end_date, start_date) + 1
 
-		return unmarked_days
+			if include_holidays_in_total_working_days:
+				return no_of_days
+			else:
+				days = 0
+				end_date = getdate(end_date)
+				for day in range(no_of_days):
+					date = add_days(end_date, -day)
+					if date not in holidays:
+						days += 1
+				return days
+
+		days = 0
+		if self.actual_start_date != self.start_date:
+			days += _get_days(self.start_date, add_days(self.joining_date, -1))
+
+		if self.actual_end_date != self.end_date:
+			days += _get_days(add_days(self.relieving_date, 1), self.end_date)
+
+		return days
+
+	def _get_number_of_holidays(self, holidays: list | None = None) -> float:
+		no_of_holidays = 0
+		actual_end_date = getdate(self.actual_end_date)
+
+		for days in range(date_diff(self.actual_end_date, self.actual_start_date) + 1):
+			date = add_days(actual_end_date, -days)
+			if date in holidays:
+				no_of_holidays += 1
+
+		return no_of_holidays
 
 	def get_payment_days(self, include_holidays_in_total_working_days):
 		if self.joining_date and self.joining_date > getdate(self.end_date):
