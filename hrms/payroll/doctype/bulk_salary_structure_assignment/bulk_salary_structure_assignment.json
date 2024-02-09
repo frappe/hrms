@@ -145,7 +145,7 @@
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-02-01 16:03:03.189628",
+ "modified": "2024-02-09 19:08:44.834075",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Bulk Salary Structure Assignment",
@@ -153,11 +153,10 @@
  "permissions": [
   {
    "create": 1,
-   "delete": 1,
    "email": 1,
    "print": 1,
    "read": 1,
-   "role": "System Manager",
+   "role": "HR User",
    "share": 1,
    "write": 1
   }
