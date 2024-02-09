@@ -543,16 +543,19 @@ class SalarySlip(TransactionBase):
 
 	def _get_marked_attendance_days(self, holidays: list | None = None) -> float:
 		Attendance = frappe.qb.DocType("Attendance")
-		return (
+		query = (
 			frappe.qb.from_(Attendance)
 			.select(Count("*"))
 			.where(
 				(Attendance.attendance_date.between(self.actual_start_date, self.actual_end_date))
 				& (Attendance.employee == self.employee)
 				& (Attendance.docstatus == 1)
-				& (Attendance.attendance_date.notin(holidays))
 			)
-		).run()[0][0]
+		)
+		if holidays:
+			query = query.where(Attendance.attendance_date.notin(holidays))
+
+		return query.run()[0][0]
 
 	def get_payment_days(self, include_holidays_in_total_working_days):
 		if self.joining_date and self.joining_date > getdate(self.end_date):
