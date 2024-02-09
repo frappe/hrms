@@ -224,14 +224,11 @@ class TestSalarySlip(FrappeTestCase):
 
 		new_emp_id = make_employee("test_payment_days_based_on_joining_date@salary.com")
 		joining_date, relieving_date = add_days(month_start_date, 3), add_days(month_end_date, -5)
-		holidays = 0
 
 		for days in range(date_diff(relieving_date, joining_date) + 1):
 			date = add_days(joining_date, days)
 			if not is_holiday(HOLIDAY_LIST, date):
 				mark_attendance(new_emp_id, date, "Present", ignore_validate=True)
-			else:
-				holidays += 1
 
 		frappe.db.set_value(
 			"Employee",
@@ -246,7 +243,7 @@ class TestSalarySlip(FrappeTestCase):
 		)
 
 		self.assertEqual(new_ss.total_working_days, no_of_days[0])
-		self.assertEqual(new_ss.payment_days, no_of_days[0] - holidays - 8)
+		self.assertEqual(new_ss.payment_days, no_of_days[0] - 8)
 
 	@change_settings(
 		"Payroll Settings",

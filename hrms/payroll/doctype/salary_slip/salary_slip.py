@@ -9,7 +9,7 @@ import frappe
 from frappe import _, msgprint
 from frappe.model.naming import make_autoname
 from frappe.query_builder import Order
-from frappe.query_builder.functions import Sum
+from frappe.query_builder.functions import Count, Sum
 from frappe.utils import (
 	add_days,
 	ceil,
@@ -74,11 +74,55 @@ class SalarySlip(TransactionBase):
 		self.name = make_autoname(self.series)
 
 	@property
+	def joining_date(self):
+		if not hasattr(self, "__joining_date"):
+			self.__joining_date = frappe.get_cached_value(
+				"Employee",
+				self.employee,
+				"date_of_joining",
+			)
+
+		return self.__joining_date
+
+	@property
+	def relieving_date(self):
+		if not hasattr(self, "__relieving_date"):
+			self.__relieving_date = frappe.get_cached_value(
+				"Employee",
+				self.employee,
+				"relieving_date",
+			)
+
+		return self.__relieving_date
+
+	@property
 	def payroll_period(self):
 		if not hasattr(self, "_payroll_period"):
 			self._payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
 
 		return self._payroll_period
+
+	@property
+	def actual_start_date(self):
+		if not hasattr(self, "__actual_start_date"):
+			self.__actual_start_date = self.start_date
+
+			if self.joining_date and getdate(self.start_date) < self.joining_date <= getdate(self.end_date):
+				self.__actual_start_date = self.joining_date
+
+		return self.__actual_start_date
+
+	@property
+	def actual_end_date(self):
+		if not hasattr(self, "__actual_end_date"):
+			self.__actual_end_date = self.end_date
+
+			if self.relieving_date and getdate(self.start_date) <= self.relieving_date < getdate(
+				self.end_date
+			):
+				self.__actual_end_date = self.relieving_date
+
+		return self.__actual_end_date
 
 	def validate(self):
 		self.status = self.get_status()
@@ -402,50 +446,83 @@ class SalarySlip(TransactionBase):
 			)
 
 			if payroll_based_on == "Attendance" and consider_unmarked_attendance_as == "Absent":
-				unmarked_days = self.get_unmarked_days(include_holidays_in_total_working_days)
+				unmarked_days = self.get_unmarked_days(include_holidays_in_total_working_days, holidays)
 				self.absent_days += unmarked_days  # will be treated as absent
 				self.payment_days -= unmarked_days
 		else:
 			self.payment_days = 0
 
-	def get_unmarked_days(self, include_holidays_in_total_working_days):
-		unmarked_days = self.total_working_days
+	def get_unmarked_days(
+		self, include_holidays_in_total_working_days: bool, holidays: list | None = None
+	) -> float:
 		joining_date, relieving_date = frappe.get_cached_value(
 			"Employee", self.employee, ["date_of_joining", "relieving_date"]
 		)
-		start_date = self.start_date
-		end_date = self.end_date
 
-		if joining_date and (getdate(self.start_date) < joining_date <= getdate(self.end_date)):
-			start_date = joining_date
-			unmarked_days = self.get_unmarked_days_based_on_doj_or_relieving(
-				unmarked_days,
-				include_holidays_in_total_working_days,
-				self.start_date,
-				add_days(joining_date, -1),
-			)
+		unmarked_days = (
+			self.total_working_days
+			- self._get_days_outside_period(include_holidays_in_total_working_days, holidays)
+			- self._get_marked_attendance_days(holidays)
+		)
 
-		if relieving_date and (getdate(self.start_date) <= relieving_date < getdate(self.end_date)):
-			end_date = relieving_date
-			unmarked_days = self.get_unmarked_days_based_on_doj_or_relieving(
-				unmarked_days,
-				include_holidays_in_total_working_days,
-				add_days(relieving_date, 1),
-				self.end_date,
-			)
-
-		# exclude days for which attendance has been marked
-		unmarked_days -= frappe.get_all(
-			"Attendance",
-			filters={
-				"attendance_date": ["between", [start_date, end_date]],
-				"employee": self.employee,
-				"docstatus": 1,
-			},
-			fields=["COUNT(*) as marked_days"],
-		)[0].marked_days
+		if include_holidays_in_total_working_days and holidays:
+			unmarked_days -= self._get_number_of_holidays(holidays)
 
 		return unmarked_days
+
+	def _get_days_outside_period(
+		self, include_holidays_in_total_working_days: bool, holidays: list | None = None
+	):
+		"""Returns days before DOJ or after relieving date"""
+
+		def _get_days(start_date, end_date):
+			no_of_days = date_diff(end_date, start_date) + 1
+
+			if include_holidays_in_total_working_days:
+				return no_of_days
+			else:
+				days = 0
+				end_date = getdate(end_date)
+				for day in range(no_of_days):
+					date = add_days(self.end_date, -day)
+					if cstr(date) not in holidays:
+						days += 1
+				return days
+
+		days = 0
+		if self.actual_start_date != self.start_date:
+			days += _get_days(self.start_date, add_days(self.joining_date, -1))
+
+		if self.actual_end_date != self.end_date:
+			days += _get_days(add_days(self.relieving_date, 1), self.end_date)
+
+		return days
+
+	def _get_number_of_holidays(self, holidays: list | None = None) -> float:
+		no_of_holidays = 0
+
+		for days in range(date_diff(self.actual_end_date, self.actual_start_date) + 1):
+			date = add_days(self.actual_end_date, -days)
+			if cstr(date) in holidays:
+				no_of_holidays += 1
+
+		return no_of_holidays
+
+	def _get_marked_attendance_days(self, holidays: list | None = None) -> float:
+		Attendance = frappe.qb.DocType("Attendance")
+		query = (
+			frappe.qb.from_(Attendance)
+			.select(Count("*"))
+			.where(
+				(Attendance.attendance_date.between(self.actual_start_date, self.actual_end_date))
+				& (Attendance.employee == self.employee)
+				& (Attendance.docstatus == 1)
+			)
+		)
+		if holidays:
+			query = query.where(Attendance.attendance_date.notin(holidays))
+
+		return query.run()[0][0]
 
 	def get_unmarked_days_based_on_doj_or_relieving(
 		self, unmarked_days, include_holidays_in_total_working_days, start_date, end_date
