@@ -1239,7 +1239,13 @@ def add_leaves(events, start, end, filter_conditions=None):
 		color
 	FROM `tabLeave Application`
 	WHERE
-		from_date <= %(end)s AND to_date >= %(start)s <= to_date
+		(
+			(%(start)s <= from_date AND from_date <= %(end)s)
+			OR (%(start)s <= to_date AND to_date <= %(end)s)
+			OR (
+				from_date < %(start)s AND to_date > %(end)s
+			)
+		)
 		AND docstatus < 2
 		AND status in ('Approved', 'Open')
 	"""
@@ -1250,7 +1256,7 @@ def add_leaves(events, start, end, filter_conditions=None):
 	if filter_conditions:
 		query += filter_conditions
 
-	for d in frappe.db.sql(query, {"start": start, "end": end}, as_dict=True):
+	for d in frappe.db.sql(query, {"start": getdate(start), "end": getdate(end)}, as_dict=True):
 		e = {
 			"name": d.name,
 			"doctype": "Leave Application",
@@ -1258,7 +1264,7 @@ def add_leaves(events, start, end, filter_conditions=None):
 			"to_date": d.to_date,
 			"docstatus": d.docstatus,
 			"color": d.color,
-			"all_day": int(not d.half_day),
+			"allDay": int(not d.half_day),
 			"title": cstr(d.employee_name)
 			+ f" ({cstr(d.leave_type)})"
 			+ (" " + _("(Half Day)") if d.half_day else ""),
