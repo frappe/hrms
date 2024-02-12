@@ -58,33 +58,34 @@ def get_applicable_block_dates(
 def get_applicable_block_lists(employee=None, company=None, all_lists=False, leave_type=None):
 	block_lists = []
 
-	if not employee:
-		employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user})
-		if not employee:
-			return []
-
-	if not company:
-		company = frappe.db.get_value("Employee", employee, "company")
-
 	def add_block_list(block_list):
 		for d in block_list:
 			if all_lists or not is_user_in_allow_list(d):
 				block_lists.append(d)
 
-	# per department
-	department = frappe.db.get_value("Employee", employee, "department")
-	if department:
-		block_list = frappe.db.get_value("Department", department, "leave_block_list")
-		block_list_leave_type = frappe.db.get_value("Leave Block List", block_list, "leave_type")
-		if not block_list_leave_type or not leave_type or block_list_leave_type == leave_type:
-			add_block_list([block_list])
+	if not company:
+		company = frappe.db.get_value("Employee", employee, "company")
+	
+	if company:
+		# global
+		conditions = {"applies_to_all_departments": 1, "company": company}
+		if leave_type:
+			conditions["leave_type"] = ["IN", (leave_type, "", None)]
 
-	# global
-	conditions = {"applies_to_all_departments": 1, "company": company}
-	if leave_type:
-		conditions["leave_type"] = ["IN", (leave_type, "", None)]
+		add_block_list(frappe.db.get_all("Leave Block List", filters=conditions, pluck="name"))
 
-	add_block_list(frappe.db.get_all("Leave Block List", filters=conditions, pluck="name"))
+	if not employee:
+		employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user})
+
+	if employee:
+		# per department
+		department = frappe.db.get_value("Employee", employee, "department")
+		if department:
+			block_list = frappe.db.get_value("Department", department, "leave_block_list")
+			block_list_leave_type = frappe.db.get_value("Leave Block List", block_list, "leave_type")
+			if not block_list_leave_type or not leave_type or block_list_leave_type == leave_type:
+				add_block_list([block_list])
+
 	return list(set(block_lists))
 
 
