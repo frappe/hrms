@@ -42,7 +42,6 @@ class LeaveBlockList(Document):
 		return date_list
 
 
-@frappe.whitelist()
 def get_applicable_block_dates(
 	from_date, to_date, employee=None, company=None, all_lists=False, leave_type=None
 ):
