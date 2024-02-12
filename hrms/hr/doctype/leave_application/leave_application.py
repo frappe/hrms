@@ -1286,7 +1286,6 @@ def add_leaves(events, start, end, filter_conditions=None):
 
 
 def add_block_dates(events, start, end, employee, company):
-	# block days
 	cnt = 0
 	block_dates = get_applicable_block_dates(start, end, employee, company, all_lists=True)
 
@@ -1298,6 +1297,7 @@ def add_block_dates(events, start, end, employee, company):
 				"to_date": block_date.block_date,
 				"title": _("Leave Blocked") + ": " + block_date.reason,
 				"name": "_" + str(cnt),
+				"allDay": 1,
 			}
 		)
 		cnt += 1
@@ -1321,6 +1321,7 @@ def add_holidays(events, start, end, employee, company):
 				"to_date": holiday.holiday_date,
 				"title": _("Holiday") + ": " + cstr(holiday.description),
 				"name": holiday.name,
+				"allDay": True,
 			}
 		)
 
