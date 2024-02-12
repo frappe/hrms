@@ -49,18 +49,6 @@ class ExpenseClaim(AccountsController):
 
 		precision = self.precision("grand_total")
 
-<<<<<<< HEAD
-		if (
-			# set as paid
-			self.is_paid
-			or (
-				flt(self.total_sanctioned_amount > 0)
-				and (
-					# grand total is reimbursed
-					(
-						self.docstatus == 1
-						and flt(self.grand_total, precision) == flt(self.total_amount_reimbursed, precision)
-=======
 		if self.docstatus == 1:
 			if self.approval_status == "Approved":
 				if (
@@ -74,7 +62,6 @@ class ExpenseClaim(AccountsController):
 							# grand total (to be paid) is 0 since linked advances already cover the claimed amount
 							or (flt(self.grand_total, precision) == 0)
 						)
->>>>>>> 64039786b (fix(Expense Claim): status update on document cancellation (#1392))
 					)
 				):
 					status = "Paid"
