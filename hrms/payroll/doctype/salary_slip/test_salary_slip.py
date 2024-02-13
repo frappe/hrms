@@ -232,14 +232,11 @@ class TestSalarySlip(FrappeTestCase):
 
 		new_emp_id = make_employee("test_payment_days_based_on_joining_date@salary.com")
 		joining_date, relieving_date = add_days(month_start_date, 3), add_days(month_end_date, -5)
-		holidays = 0
 
 		for days in range(date_diff(relieving_date, joining_date) + 1):
 			date = add_days(joining_date, days)
 			if not is_holiday("Salary Slip Test Holiday List", date):
 				mark_attendance(new_emp_id, date, "Present", ignore_validate=True)
-			else:
-				holidays += 1
 
 		frappe.db.set_value(
 			"Employee",
@@ -254,7 +251,7 @@ class TestSalarySlip(FrappeTestCase):
 		)
 
 		self.assertEqual(new_ss.total_working_days, no_of_days[0])
-		self.assertEqual(new_ss.payment_days, no_of_days[0] - holidays - 8)
+		self.assertEqual(new_ss.payment_days, no_of_days[0] - 8)
 
 	@change_settings(
 		"Payroll Settings",
@@ -518,6 +515,55 @@ class TestSalarySlip(FrappeTestCase):
 		frappe.db.set_single_value("Payroll Settings", "consider_marked_attendance_on_holidays", 0)
 		ss.save()
 		self.assertEqual(ss.total_working_days, no_of_days[0])
+
+	@change_settings(
+		"Payroll Settings",
+		{
+			"payroll_based_on": "Attendance",
+			"consider_unmarked_attendance_as": "Absent",
+			"include_holidays_in_total_working_days": 1,
+			"consider_marked_attendance_on_holidays": 1,
+		},
+	)
+	def test_consider_marked_attendance_on_holidays_with_unmarked_attendance(self):
+		from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
+
+		no_of_days = get_no_of_days()
+		month_start_date, month_end_date = get_first_day(nowdate()), get_last_day(nowdate())
+		joining_date = add_days(month_start_date, 3)
+
+		emp_id = make_employee(
+			"test_salary_slip_with_holidays_included@salary.com",
+			status="Active",
+			joining_date=joining_date,
+			relieving_date=None,
+		)
+
+		for days in range(date_diff(month_end_date, add_days(joining_date, 1)) + 1):
+			date = add_days(joining_date, days)
+			if not is_holiday("Salary Slip Test Holiday List", date):
+				mark_attendance(emp_id, date, "Present", ignore_validate=True)
+
+		# mark absent on holiday
+		first_sunday = get_first_sunday(for_date=getdate())
+		mark_attendance(emp_id, first_sunday, "Absent", ignore_validate=True)
+
+		ss = make_employee_salary_slip(
+			emp_id,
+			"Monthly",
+			"Test Salary Slip With Holidays Included",
+		)
+
+		self.assertEqual(ss.total_working_days, no_of_days[0])
+		# no_of_days - absent on holiday - period before DOJ - 1 unmarked attendance
+		self.assertEqual(ss.payment_days, no_of_days[0] - 1 - 3 - 1)
+
+		# disable consider marked attendance on holidays
+		frappe.db.set_single_value("Payroll Settings", "consider_marked_attendance_on_holidays", 0)
+		ss.save()
+		self.assertEqual(ss.total_working_days, no_of_days[0])
+		# no_of_days - period before DOJ
+		self.assertEqual(ss.payment_days, no_of_days[0] - 3 - 1)
 
 	@change_settings("Payroll Settings", {"include_holidays_in_total_working_days": 1})
 	def test_payment_days(self):
