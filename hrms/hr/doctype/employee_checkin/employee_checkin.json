@@ -45,11 +45,11 @@
    "options": "\nIN\nOUT"
   },
   {
+   "fetch_from": "employee.default_shift",
    "fieldname": "shift",
    "fieldtype": "Link",
    "label": "Shift",
    "options": "Shift Type",
-   "read_only": 1,
    "search_index": 1
   },
   {
@@ -109,7 +109,7 @@
   }
  ],
  "links": [],
- "modified": "2023-05-12 14:52:22.660264",
+ "modified": "2024-02-08 09:59:45.629211",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Checkin",
