@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-02-12 08:29\n"
+"PO-Revision-Date: 2024-02-13 09:42\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -10930,13 +10930,13 @@ msgstr "Nettolohn"
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Net Pay (Company Currency)"
-msgstr ""
+msgstr "Nettogehalt (Währung des Unternehmens)"
 
 #. Label of a Tab Break field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Net Pay Info"
-msgstr ""
+msgstr "Infos zum Nettogehalt"
 
 #: payroll/doctype/salary_slip/salary_slip.py:181
 msgid "Net Pay cannot be less than 0"
