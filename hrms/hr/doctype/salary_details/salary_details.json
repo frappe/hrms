@@ -1,0 +1,135 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-09-10 01:02:53.106897",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "designation",
+  "last_salary",
+  "last_variable",
+  "from_date",
+  "shift",
+  "column_break_gqqpx",
+  "employee_name",
+  "department",
+  "new_salary",
+  "new_variable",
+  "location",
+  "ref_ss_assignment"
+ ],
+ "fields": [
+  {
+   "fetch_from": "ss_assignment.employee",
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.designation",
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Designation",
+   "options": "Designation",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.department",
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Department",
+   "options": "Department",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "ss_assignment.base",
+   "fieldname": "last_salary",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Last Salary",
+   "read_only": 1
+  },
+  {
+   "fieldname": "new_salary",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "New Salary"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "From Date"
+  },
+  {
+   "fetch_from": "employee.branch",
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Location",
+   "options": "Branch",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.default_shift",
+   "fieldname": "shift",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Shift",
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_gqqpx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "ss_assignment.variable",
+   "fieldname": "last_variable",
+   "fieldtype": "Float",
+   "label": "Last Variable",
+   "read_only": 1
+  },
+  {
+   "fieldname": "new_variable",
+   "fieldtype": "Float",
+   "label": "New Variable"
+  },
+  {
+   "fieldname": "ref_ss_assignment",
+   "fieldtype": "Link",
+   "label": "Reference Salary Structure Assignment ",
+   "options": "Salary Structure Assignment"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-02-13 12:57:33.089957",
+ "modified_by": "Administrator",
+ "module": "hr",
+ "name": "Salary Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
