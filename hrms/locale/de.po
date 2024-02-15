@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-02-14 10:56\n"
+"PO-Revision-Date: 2024-02-15 10:51\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -3124,7 +3124,7 @@ msgstr "Abgeschlossen"
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Completed On"
-msgstr ""
+msgstr "Abgeschlossen am"
 
 #: hr/doctype/employee_onboarding/employee_onboarding.js:95
 msgid "Completing onboarding"
@@ -3908,7 +3908,7 @@ msgstr "Datum"
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgctxt "Employee Grievance"
 msgid "Date "
-msgstr ""
+msgstr "Datum "
 
 #: hr/doctype/goal/goal_tree.js:38
 #: hr/report/daily_work_summary_replies/daily_work_summary_replies.js:16
