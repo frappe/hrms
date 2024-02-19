@@ -588,7 +588,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			frappe.msgprint(_("Please set default template for Leave Status Notification in HR Settings."))
 			return
 		email_template = frappe.get_doc("Email Template", template)
-		message = frappe.render_template(email_template.response, args)
+		message = frappe.render_template(email_template.response_, args)
 
 		self.notify(
 			{
@@ -613,7 +613,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				)
 				return
 			email_template = frappe.get_doc("Email Template", template)
-			message = frappe.render_template(email_template.response, args)
+			message = frappe.render_template(email_template.response_, args)
 
 			self.notify(
 				{
