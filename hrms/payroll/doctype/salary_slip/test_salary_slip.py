@@ -784,6 +784,8 @@ class TestSalarySlip(FrappeTestCase):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 		applicant = make_employee("test_loan_repayment_salary_slip@salary.com", company="_Test Company")
+		frappe.db.delete("Loan", {"applicant": applicant})
+		frappe.db.delete("Loan Application", {"applicant": applicant})
 		set_loan_settings_in_company("_Test Company")
 
 		create_loan_accounts()
@@ -814,9 +816,6 @@ class TestSalarySlip(FrappeTestCase):
 			from_date=payroll_period.start_date,
 		)
 
-		frappe.db.sql(
-			"delete from tabLoan where applicant = 'test_loan_repayment_salary_slip@salary.com'"
-		)
 		loan = create_loan(
 			applicant,
 			"Personal Loan",
