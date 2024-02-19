@@ -498,10 +498,10 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			application = frappe.db.get_value(
 				"Leave Application",
 				{
-					"employee": self.employee, 
-	 				"leave_type": self.leave_type, 
-					"to_date": prev_date, 
-					"docstatus": ["!=", 2], 
+					"employee": self.employee,
+	 				"leave_type": self.leave_type,
+					"to_date": prev_date,
+					"docstatus": ["!=", 2],
 					"status": ["in", ["Open", "Approved"]],
 				},
 				["name", "from_date"],
@@ -518,10 +518,10 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			application = frappe.db.get_value(
 				"Leave Application",
 				{
-					"employee": self.employee, 
-	 				"leave_type": self.leave_type, 
-					"from_date": next_date, 
-					"docstatus": ["!=", 2], 
+					"employee": self.employee,
+	 				"leave_type": self.leave_type,
+					"from_date": next_date,
+					"docstatus": ["!=", 2],
 					"status": ["in", ["Open", "Approved"]],
 				},
 				["name", "to_date"],
