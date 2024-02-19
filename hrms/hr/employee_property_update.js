@@ -57,7 +57,7 @@ frappe.ui.form.on(cur_frm.doctype, {
 			frappe.model.with_doctype("Employee", () => {
 				const field_label_map = {};
 				frappe.get_meta("Employee").fields.forEach(d => {
-					field_label_map[d.fieldname] = __(d.label) + ` (${d.fieldname})`;
+					field_label_map[d.fieldname] = __(d.label, null, d.parent) + ` (${d.fieldname})`;
 					if (
 						!in_list(exclude_field_types, d.fieldtype)
 						&& !in_list(exclude_fields, d.fieldname)
