@@ -499,7 +499,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				"Leave Application",
 				{
 					"employee": self.employee,
-	 				"leave_type": self.leave_type,
+					"leave_type": self.leave_type,
 					"to_date": prev_date,
 					"docstatus": ["!=", 2],
 					"status": ["in", ["Open", "Approved"]],
@@ -519,7 +519,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				"Leave Application",
 				{
 					"employee": self.employee,
-	 				"leave_type": self.leave_type,
+					"leave_type": self.leave_type,
 					"from_date": next_date,
 					"docstatus": ["!=", 2],
 					"status": ["in", ["Open", "Approved"]],
