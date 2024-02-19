@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-02-15 10:51\n"
+"PO-Revision-Date: 2024-02-19 16:40\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -4600,169 +4600,169 @@ msgstr "Beschreibung"
 #: payroll/report/income_tax_computation/income_tax_computation.py:501
 #: payroll/report/salary_register/salary_register.py:149
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
 msgctxt "Appraisal"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgctxt "Appraisal Cycle"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Linked DocType in Appraisal Template's connections
 #: hr/doctype/appraisal_template/appraisal_template.json
 msgctxt "Appraisal Template"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Data field in DocType 'Appraisee'
 #: hr/doctype/appraisee/appraisee.json
 msgctxt "Appraisee"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgctxt "Designation"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgctxt "Employee Grievance"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Employee Onboarding'
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 msgctxt "Employee Onboarding"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Employee Onboarding Template'
 #: hr/doctype/employee_onboarding_template/employee_onboarding_template.json
 msgctxt "Employee Onboarding Template"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Employee Performance Feedback'
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.json
 msgctxt "Employee Performance Feedback"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Employee Separation'
 #: hr/doctype/employee_separation/employee_separation.json
 msgctxt "Employee Separation"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Employee Separation Template'
 #: hr/doctype/employee_separation_template/employee_separation_template.json
 msgctxt "Employee Separation Template"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Read Only field in DocType 'Employee Skill Map'
 #: hr/doctype/employee_skill_map/employee_skill_map.json
 msgctxt "Employee Skill Map"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
 msgctxt "Exit Interview"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Full and Final Statement'
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
 msgctxt "Full and Final Statement"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Data field in DocType 'Gratuity'
 #: payroll/doctype/gratuity/gratuity.json
 msgctxt "Gratuity"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Interview'
 #: hr/doctype/interview/interview.json
 msgctxt "Interview"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Interview Round'
 #: hr/doctype/interview_round/interview_round.json
 msgctxt "Interview Round"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Job Offer'
 #: hr/doctype/job_offer/job_offer.json
 msgctxt "Job Offer"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Leave Control Panel'
 #: hr/doctype/leave_control_panel/leave_control_panel.json
 msgctxt "Leave Control Panel"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Data field in DocType 'Payroll Employee Detail'
 #: payroll/doctype/payroll_employee_detail/payroll_employee_detail.json
 msgctxt "Payroll Employee Detail"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Salary Structure Assignment'
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgctxt "Salary Structure Assignment"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Label of a Link field in DocType 'Staffing Plan Detail'
 #: hr/doctype/staffing_plan_detail/staffing_plan_detail.json
 msgctxt "Staffing Plan Detail"
 msgid "Designation"
-msgstr ""
+msgstr "Position"
 
 #. Name of a DocType
 #: hr/doctype/designation_skill/designation_skill.json
@@ -7908,13 +7908,13 @@ msgstr "Ziel erfolgreich aktualisiert"
 
 #: hr/doctype/appraisal/appraisal.py:130
 msgid "Goals"
-msgstr ""
+msgstr "Ziele"
 
 #. Label of a Table field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
 msgctxt "Appraisal"
 msgid "Goals"
-msgstr ""
+msgstr "Ziele"
 
 #: hr/doctype/goal/goal_list.js:134
 msgid "Goals updated successfully"
@@ -11544,25 +11544,25 @@ msgstr ""
 #: hr/doctype/appraisal/appraisal.json
 msgctxt "Appraisal"
 msgid "Overview"
-msgstr ""
+msgstr "Übersicht"
 
 #. Label of a Tab Break field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgctxt "Appraisal Cycle"
 msgid "Overview"
-msgstr ""
+msgstr "Übersicht"
 
 #. Label of a Tab Break field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Overview"
-msgstr ""
+msgstr "Übersicht"
 
 #. Label of a Tab Break field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "Overview"
-msgstr ""
+msgstr "Übersicht"
 
 #. Label of a Check field in DocType 'Additional Salary'
 #: payroll/doctype/additional_salary/additional_salary.json
@@ -12087,7 +12087,7 @@ msgstr "Prozentabzug"
 #: payroll/doctype/employee_cost_center/employee_cost_center.json
 msgctxt "Employee Cost Center"
 msgid "Percentage (%)"
-msgstr ""
+msgstr "Prozentsatz (%)"
 
 #. Name of a Workspace
 #: hr/workspace/performance/performance.json
@@ -13468,7 +13468,7 @@ msgstr "Gehaltskomponente für Zeiterfassung basierte Abrechnung."
 #: hr/doctype/employee_promotion/employee_promotion.json
 msgctxt "Employee Promotion"
 msgid "Salary Currency"
-msgstr ""
+msgstr "Gehaltswährung"
 
 #. Name of a DocType
 #: payroll/doctype/salary_detail/salary_detail.json
