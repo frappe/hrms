@@ -674,6 +674,7 @@ class TestSalarySlip(FrappeTestCase):
 			create_loan_accounts,
 			create_loan_product,
 			make_loan_disbursement_entry,
+			set_loan_settings_in_company,
 		)
 		from lending.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
 			process_loan_interest_accrual_for_term_loans,
@@ -681,6 +682,7 @@ class TestSalarySlip(FrappeTestCase):
 
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
+		set_loan_settings_in_company("_Test Company")
 		applicant = make_employee("test_loan_repayment_salary_slip@salary.com", company="_Test Company")
 
 		create_loan_accounts()
@@ -691,7 +693,6 @@ class TestSalarySlip(FrappeTestCase):
 			500000,
 			8.4,
 			is_term_loan=1,
-			mode_of_payment="Cash",
 			disbursement_account="Disbursement Account - _TC",
 			payment_account="Payment Account - _TC",
 			loan_account="Loan Account - _TC",
@@ -708,6 +709,7 @@ class TestSalarySlip(FrappeTestCase):
 			employee=applicant,
 			currency="INR",
 			payroll_period=payroll_period,
+			company="_Test Company",
 		)
 
 		frappe.db.sql(
@@ -770,9 +772,10 @@ class TestSalarySlip(FrappeTestCase):
 		from lending.loan_management.doctype.loan.test_loan import (
 			create_loan,
 			create_loan_accounts,
-			create_loan_type,
+			create_loan_product,
 			create_repayment_entry,
 			make_loan_disbursement_entry,
+			set_loan_settings_in_company,
 		)
 		from lending.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
 			process_loan_interest_accrual_for_term_loans,
@@ -781,15 +784,18 @@ class TestSalarySlip(FrappeTestCase):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 		applicant = make_employee("test_loan_repayment_salary_slip@salary.com", company="_Test Company")
+		frappe.db.delete("Loan", {"applicant": applicant})
+		frappe.db.delete("Loan Application", {"applicant": applicant})
+		set_loan_settings_in_company("_Test Company")
 
 		create_loan_accounts()
 
-		create_loan_type(
+		create_loan_product(
+			"Personal Loan",
 			"Personal Loan",
 			12000,
 			0,
 			is_term_loan=1,
-			mode_of_payment="Cash",
 			disbursement_account="Disbursement Account - _TC",
 			payment_account="Payment Account - _TC",
 			loan_account="Loan Account - _TC",
@@ -807,11 +813,9 @@ class TestSalarySlip(FrappeTestCase):
 			company="_Test Company",
 			currency="INR",
 			payroll_period=payroll_period,
+			from_date=payroll_period.start_date,
 		)
 
-		frappe.db.sql(
-			"delete from tabLoan where applicant = 'test_loan_repayment_salary_slip@salary.com'"
-		)
 		loan = create_loan(
 			applicant,
 			"Personal Loan",
@@ -819,6 +823,7 @@ class TestSalarySlip(FrappeTestCase):
 			"Repay Over Number of Periods",
 			12,
 			posting_date=payroll_period.start_date,
+			repayment_start_date=payroll_period.start_date,
 		)
 		loan.repay_from_salary = 1
 		loan.submit()
@@ -1650,10 +1655,13 @@ def make_employee_salary_slip(emp_id, payroll_frequency, salary_structure=None, 
 	salary_slip_name = frappe.db.get_value("Salary Slip", {"employee": emp_id})
 
 	if not salary_slip_name:
-		salary_slip = make_salary_slip(salary_structure_doc.name, employee=employee.name)
+		date = posting_date or nowdate()
+		salary_slip = make_salary_slip(
+			salary_structure_doc.name, employee=employee.name, posting_date=date
+		)
 		salary_slip.employee_name = employee.employee_name
 		salary_slip.payroll_frequency = payroll_frequency
-		salary_slip.posting_date = posting_date or nowdate()
+		salary_slip.posting_date = date
 		salary_slip.insert()
 	else:
 		salary_slip = frappe.get_doc("Salary Slip", salary_slip_name)
