@@ -824,6 +824,7 @@ class TestSalarySlip(FrappeTestCase):
 			"Repay Over Number of Periods",
 			12,
 			posting_date=payroll_period.start_date,
+			repayment_start_date=payroll_period.start_date,
 		)
 		loan.repay_from_salary = 1
 		loan.submit()
