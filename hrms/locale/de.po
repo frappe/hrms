@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-02-19 16:40\n"
+"PO-Revision-Date: 2024-02-20 17:25\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -2318,7 +2318,7 @@ msgstr ""
 
 #: payroll/doctype/salary_structure/salary_structure.js:106
 msgid "Bulk Assignments"
-msgstr ""
+msgstr "Massenzuweisungen"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment_list.js:3
 msgid "Bulk Leave Policy Assignment"
@@ -10136,7 +10136,7 @@ msgstr "Die Abwesenheitsart kann entweder unbezahlt oder teilweise bezahlt sein"
 
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.py:35
 msgid "Leave Type is mandatory"
-msgstr ""
+msgstr "Abwesenheitsart ist obligatorisch"
 
 #: hr/doctype/leave_allocation/leave_allocation.py:183
 msgid "Leave Type {0} cannot be allocated since it is leave without pay"
@@ -13603,7 +13603,7 @@ msgstr "Gehaltszettel Timesheet"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:84
 msgid "Salary Slip already exists for {0} for the given dates"
-msgstr ""
+msgstr "Die Gehaltsabrechnung existiert bereits für {0} für die angegebenen Daten"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:240
 msgid "Salary Slip creation is queued. It may take a few minutes"
@@ -14194,31 +14194,31 @@ msgstr ""
 #: hr/report/shift_attendance/shift_attendance.py:205
 #: overrides/dashboard_overrides.py:28
 msgid "Shift"
-msgstr ""
+msgstr "Schicht"
 
 #. Label of a Link field in DocType 'Attendance'
 #: hr/doctype/attendance/attendance.json
 msgctxt "Attendance"
 msgid "Shift"
-msgstr ""
+msgstr "Schicht"
 
 #. Label of a Link field in DocType 'Attendance Request'
 #: hr/doctype/attendance_request/attendance_request.json
 msgctxt "Attendance Request"
 msgid "Shift"
-msgstr ""
+msgstr "Schicht"
 
 #. Label of a Link field in DocType 'Employee Attendance Tool'
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgctxt "Employee Attendance Tool"
 msgid "Shift"
-msgstr ""
+msgstr "Schicht"
 
 #. Label of a Link field in DocType 'Employee Checkin'
 #: hr/doctype/employee_checkin/employee_checkin.json
 msgctxt "Employee Checkin"
 msgid "Shift"
-msgstr ""
+msgstr "Schicht"
 
 #. Name of a Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
@@ -14383,7 +14383,7 @@ msgstr "Krankheitsbedingte Abwesenheit"
 
 #: payroll/doctype/salary_structure/salary_structure.js:99
 msgid "Single Assignment"
-msgstr ""
+msgstr "Einzelne Zuweisung"
 
 #. Name of a DocType
 #: hr/doctype/interview/interview.js:186 hr/doctype/skill/skill.json
