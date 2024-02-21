@@ -4,6 +4,7 @@
 		<Toasts />
 
 		<InstallPrompt />
+		<FrappeNotification />
 	</ion-app>
 </template>
 
@@ -13,4 +14,5 @@ import { IonApp, IonRouterOutlet } from "@ionic/vue"
 import { Toasts } from "frappe-ui"
 
 import InstallPrompt from "@/components/InstallPrompt.vue"
+import FrappeNotification from "@/components/FrappeNotification.vue"
 </script>
