@@ -480,7 +480,13 @@ class LeaveApplication(Document):
 			prev_date = add_days(reference_date, -1)
 			application = frappe.db.get_value(
 				"Leave Application",
-				{"employee": self.employee, "leave_type": self.leave_type, "to_date": prev_date},
+				{
+					"employee": self.employee,
+					"leave_type": self.leave_type,
+					"to_date": prev_date,
+					"docstatus": ["!=", 2],
+					"status": ["in", ["Open", "Approved"]],
+				},
 				["name", "from_date"],
 				as_dict=True,
 			)
@@ -494,7 +500,13 @@ class LeaveApplication(Document):
 			next_date = add_days(reference_date, 1)
 			application = frappe.db.get_value(
 				"Leave Application",
-				{"employee": self.employee, "leave_type": self.leave_type, "from_date": next_date},
+				{
+					"employee": self.employee,
+					"leave_type": self.leave_type,
+					"from_date": next_date,
+					"docstatus": ["!=", 2],
+					"status": ["in", ["Open", "Approved"]],
+				},
 				["name", "to_date"],
 				as_dict=True,
 			)
@@ -570,7 +582,7 @@ class LeaveApplication(Document):
 			frappe.msgprint(_("Please set default template for Leave Status Notification in HR Settings."))
 			return
 		email_template = frappe.get_doc("Email Template", template)
-		message = frappe.render_template(email_template.response, args)
+		message = frappe.render_template(email_template.response_, args)
 
 		self.notify(
 			{
@@ -595,7 +607,7 @@ class LeaveApplication(Document):
 				)
 				return
 			email_template = frappe.get_doc("Email Template", template)
-			message = frappe.render_template(email_template.response, args)
+			message = frappe.render_template(email_template.response_, args)
 
 			self.notify(
 				{
