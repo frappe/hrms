@@ -174,7 +174,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 				frm.set_df_property("quick_filters_section", "collapsible", 0);
 				frm.set_df_property("advanced_filters_section", "collapsible", 0);
 
-				frm.employees = r.message.map((d) => ({ base: 0, variable: 0, ...d }));
+				frm.employees = r.message;
 				frm.events.render_employees_datatable(frm);
 			});
 	},

@@ -1,6 +1,8 @@
 # Copyright (c) 2024, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+from pypika import functions as fn
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -38,11 +40,21 @@ class BulkSalaryStructureAssignment(Document):
 			+ quick_filters
 			+ advanced_filters
 		)
-		return frappe.get_list(
-			"Employee",
-			filters=filters,
-			fields=["employee", "employee_name"],
+
+		Employee = frappe.qb.DocType("Employee")
+		Grade = frappe.qb.DocType("Employee Grade")
+		query = (
+			frappe.qb.get_query(Employee, filters=filters)
+			.left_join(Grade)
+			.on(Employee.grade == Grade.name)
+			.select(
+				Employee.employee,
+				Employee.employee_name,
+				fn.Coalesce(Grade.default_base_pay, 0).as_("base"),
+				fn.Coalesce(0).as_("variable"),
+			)
 		)
+		return query.run(as_dict=True)
 
 	def validate_fields(self, employees: list):
 		for d in ["salary_structure", "from_date", "company"]:
@@ -55,7 +67,7 @@ class BulkSalaryStructureAssignment(Document):
 			)
 
 	@frappe.whitelist()
-	def bulk_assign_structure(self, employees: list):
+	def bulk_assign_structure(self, employees: list) -> dict:
 		self.validate_fields(employees)
 
 		def _bulk_assign_structure():
