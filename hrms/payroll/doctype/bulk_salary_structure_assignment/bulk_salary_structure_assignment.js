@@ -102,6 +102,17 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 			frm.add_custom_button(
 				__(d),
 				function () {
+					const checked_rows =
+						frm.employees_datatable.rowmanager.getCheckedRows();
+					if (!checked_rows.length)
+						frappe.throw({
+							title: __("No Employees Selected"),
+							message: __(
+								"Please select the employees for whom you want to set the {0}.",
+								[d]
+							),
+						});
+
 					const dialog = new frappe.ui.Dialog({
 						title: __("Set {0} for Selected Employees", [__(d)]),
 						fields: [
@@ -116,8 +127,6 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 							const col_idx = frm.employees_datatable.datamanager.columns.find(
 								(col) => col.content === d
 							).colIndex;
-							const checked_rows =
-								frm.employees_datatable.rowmanager.getCheckedRows();
 							checked_rows.forEach((row_idx) => {
 								frm.employees_datatable.cellmanager.updateCell(
 									col_idx,
