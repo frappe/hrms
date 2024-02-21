@@ -512,7 +512,7 @@ def get_attendance_status_for_detailed_view(
 				status = get_holiday_status(day, holidays)
 
 			abbr = status_map.get(status, "")
-			row[day] = abbr
+			row[cstr(day)] = abbr
 
 		attendance_values.append(row)
 
