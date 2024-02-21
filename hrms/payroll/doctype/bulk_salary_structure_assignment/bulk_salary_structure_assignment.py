@@ -44,12 +44,12 @@ class BulkSalaryStructureAssignment(Document):
 		Employee = frappe.qb.DocType("Employee")
 		Grade = frappe.qb.DocType("Employee Grade")
 		query = (
-			frappe.qb.get_query(Employee, filters=filters)
+			frappe.qb.get_query(
+				Employee, fields=[Employee.employee, Employee.employee_name], filters=filters
+			)
 			.left_join(Grade)
 			.on(Employee.grade == Grade.name)
 			.select(
-				Employee.employee,
-				Employee.employee_name,
 				fn.Coalesce(Grade.default_base_pay, 0).as_("base"),
 				fn.Coalesce(0).as_("variable"),
 			)

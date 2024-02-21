@@ -221,7 +221,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 						$input.value = value;
 					},
 					getValue() {
-						return $input.value;
+						return Number($input.value);
 					},
 				};
 			},
@@ -266,17 +266,24 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	},
 
 	assign_structure(frm) {
-		const checked_rows = frm.employees_datatable.rowmanager.getCheckedRows();
-		const selected_employees = [];
-		checked_rows.forEach((idx) =>
-			selected_employees.push(frm.employees_datatable.datamanager.data[idx])
-		);
+		const rows = frm.employees_datatable.getRows();
+		const checked_rows_indexes =
+			frm.employees_datatable.rowmanager.getCheckedRows();
+		const checked_rows_content = [];
+		checked_rows_indexes.forEach((idx) => {
+			const row_content = {};
+			rows[idx].forEach((cell) => {
+				if (["employee", "base", "variable"].includes(cell.column.name))
+					row_content[cell.column.name] = cell.content;
+			});
+			checked_rows_content.push(row_content);
+		});
 		frm
 			.call({
 				method: "bulk_assign_structure",
 				doc: frm.doc,
 				args: {
-					employees: selected_employees,
+					employees: checked_rows_content,
 				},
 				freeze: true,
 				freeze_message: __("Assigning Salary Structure"),
