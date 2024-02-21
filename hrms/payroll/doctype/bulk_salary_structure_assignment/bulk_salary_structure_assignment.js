@@ -11,6 +11,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 		frm.trigger("set_primary_action");
 		await frm.trigger("set_payroll_payable_account");
 		frm.trigger("get_employees");
+		frm.trigger("render_update_button");
 	},
 
 	from_date(frm) {
@@ -96,6 +97,45 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 		);
 	},
 
+	render_update_button(frm) {
+		["Base", "Variable"].forEach((d) =>
+			frm.add_custom_button(
+				__(d),
+				function () {
+					const dialog = new frappe.ui.Dialog({
+						title: __("Set {0} for Selected Employees", [__(d)]),
+						fields: [
+							{
+								label: __(d),
+								fieldname: d,
+								fieldtype: "Currency",
+							},
+						],
+						primary_action_label: __("Update"),
+						primary_action(values) {
+							const col_idx = frm.employees_datatable.datamanager.columns.find(
+								(col) => col.content === d
+							).colIndex;
+							const checked_rows =
+								frm.employees_datatable.rowmanager.getCheckedRows();
+							checked_rows.forEach((row_idx) => {
+								frm.employees_datatable.cellmanager.updateCell(
+									col_idx,
+									row_idx,
+									values[d],
+									true
+								);
+							});
+							dialog.hide();
+						},
+					});
+					dialog.show();
+				},
+				__("Update")
+			)
+		);
+	},
+
 	setup_filter_group(frm) {
 		const filter_wrapper = frm.fields_dict.filter_list.$wrapper;
 		filter_wrapper.empty();
@@ -135,12 +175,12 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 				frm.set_df_property("advanced_filters_section", "collapsible", 0);
 
 				frm.employees = r.message.map((d) => ({ base: 0, variable: 0, ...d }));
-				frm.events.render_employees_table(frm);
+				frm.events.render_employees_datatable(frm);
 			});
 	},
 
-	render_employees_table(frm) {
-		const columns = frm.events.columns_for_employees_table();
+	render_employees_datatable(frm) {
+		const columns = frm.events.columns_for_employees_datatable();
 
 		if (frm.employees_datatable) {
 			frm.employees_datatable.rowmanager.checkMap = [];
@@ -164,7 +204,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 			cellHeight: 35,
 			noDataMessage: __("No Data"),
 			disableReorderColumn: true,
-			getEditor: function (colIndex, rowIndex, value, parent, column) {
+			getEditor(colIndex, rowIndex, value, parent, column) {
 				if (!["base", "variable"].includes(column.name)) return;
 				const $input = document.createElement("input");
 				$input.className = "dt-input h-100";
@@ -192,7 +232,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 		);
 	},
 
-	columns_for_employees_table() {
+	columns_for_employees_datatable() {
 		return [
 			{
 				name: "employee",
@@ -226,12 +266,11 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	},
 
 	assign_structure(frm) {
-		const check_map = frm.employees_datatable.rowmanager.checkMap;
+		const checked_rows = frm.employees_datatable.rowmanager.getCheckedRows();
 		const selected_employees = [];
-		check_map.forEach((is_checked, idx) => {
-			if (is_checked)
-				selected_employees.push(frm.employees_datatable.datamanager.data[idx]);
-		});
+		checked_rows.forEach((idx) =>
+			selected_employees.push(frm.employees_datatable.datamanager.data[idx])
+		);
 		frm
 			.call({
 				method: "bulk_assign_structure",
