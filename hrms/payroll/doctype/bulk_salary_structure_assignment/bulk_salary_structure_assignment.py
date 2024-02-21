@@ -45,7 +45,7 @@ class BulkSalaryStructureAssignment(Document):
 		Grade = frappe.qb.DocType("Employee Grade")
 		query = (
 			frappe.qb.get_query(
-				Employee, fields=[Employee.employee, Employee.employee_name], filters=filters
+				Employee, fields=[Employee.employee, Employee.employee_name, Employee.grade], filters=filters
 			)
 			.left_join(Grade)
 			.on(Employee.grade == Grade.name)
