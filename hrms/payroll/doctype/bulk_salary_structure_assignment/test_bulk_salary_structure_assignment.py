@@ -60,5 +60,46 @@ class TestBulkSalaryStructureAssignment(FrappeTestCase):
 		# employee grade default base pay fetched
 		self.assertEqual(employees[0].base, self.grade.default_base_pay)
 		# no employee grade
-		self.assertFalse(employees[1].base)
+		self.assertEqual(employees[1].base, 0)
 		self.assertEqual(len(employees), 2)
+
+	def test_bulk_assign_structure(self):
+		today = getdate()
+		salary_structure = make_salary_structure(
+			"Salary Structure 1", "Monthly", company="_Test Company"
+		)
+
+		args = {
+			"doctype": "Bulk Salary Structure Assignment",
+			"salary_structure": salary_structure,
+			"from_date": today,
+			"company": "_Test Company",
+		}
+		bulk_assignment = BulkSalaryStructureAssignment(args)
+
+		employees = [
+			{"employee": self.emp1, "base": 50000, "variable": 2000},
+			{"employee": self.emp2, "base": 40000, "variable": 0},
+		]
+		bulk_assignment.bulk_assign_structure(employees)
+
+		ssa1 = frappe.get_value(
+			"Salary Structure Assignment",
+			{"employee": self.emp1},
+			["salary_structure", "from_date", "company", "base", "variable"],
+			as_dict=1,
+		)
+		self.assertEqual(ssa1.salary_structure, salary_structure.name)
+		self.assertEqual(ssa1.from_date, today)
+		self.assertEqual(ssa1.company, "_Test Company")
+		self.assertEqual(ssa1.base, 50000)
+		self.assertEqual(ssa1.variable, 2000)
+
+		ssa2 = frappe.get_value(
+			"Salary Structure Assignment",
+			{"employee": self.emp2},
+			["base", "variable"],
+			as_dict=1,
+		)
+		self.assertEqual(ssa2.base, 40000)
+		self.assertEqual(ssa2.variable, 0)
