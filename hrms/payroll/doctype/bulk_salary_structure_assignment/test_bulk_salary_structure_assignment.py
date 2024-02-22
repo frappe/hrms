@@ -10,18 +10,15 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.payroll.doctype.bulk_salary_structure_assignment.bulk_salary_structure_assignment import (
 	BulkSalaryStructureAssignment,
 )
-from hrms.payroll.doctype.salary_structure.test_salary_structure import (
-	create_employee_grade,
-	make_salary_structure,
-)
-from hrms.tests.test_utils import create_company, create_department
+from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.tests.test_utils import create_company, create_department, create_employee_grade
 
 
 class TestBulkSalaryStructureAssignment(FrappeTestCase):
 	def setUp(self):
 		create_company()
 		create_department("Accounts")
-		create_employee_grade("Test Grade")
+		self.grade = create_employee_grade("Test Grade")
 
 		# employee grade with default base pay 50000
 		self.emp1 = make_employee(
@@ -61,7 +58,7 @@ class TestBulkSalaryStructureAssignment(FrappeTestCase):
 		# employee_name advanced filter applied
 		self.assertNotIn(self.emp5, employee_names)
 		# employee grade default base pay fetched
-		self.assertEqual(employees[0].base, 50000)
+		self.assertEqual(employees[0].base, self.grade.default_base_pay)
 		# no employee grade
 		self.assertFalse(employees[1].base)
 		self.assertEqual(len(employees), 2)
