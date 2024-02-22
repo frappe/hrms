@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	setup(frm) {
-		frm.trigger("set_query");
+		frm.trigger("set_queries");
 		frm.trigger("setup_filter_group");
 	},
 
@@ -49,7 +49,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 		});
 	},
 
-	set_query(frm) {
+	set_queries(frm) {
 		frm.set_query("salary_structure", function () {
 			return {
 				filters: {
@@ -94,44 +94,6 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 				);
 			}
 		);
-	},
-
-	render_update_button(frm) {
-		["Base", "Variable"].forEach((d) =>
-			frm.add_custom_button(
-				__(d),
-				function () {
-					const dialog = new frappe.ui.Dialog({
-						title: __("Set {0} for Selected Employees", [__(d)]),
-						fields: [
-							{
-								label: __(d),
-								fieldname: d,
-								fieldtype: "Currency",
-							},
-						],
-						primary_action_label: __("Update"),
-						primary_action(values) {
-							const col_idx = frm.employees_datatable.datamanager.columns.find(
-								(col) => col.content === d
-							).colIndex;
-							frm.checked_rows.forEach((row_idx) => {
-								frm.employees_datatable.cellmanager.updateCell(
-									col_idx,
-									row_idx,
-									values[d],
-									true
-								);
-							});
-							dialog.hide();
-						},
-					});
-					dialog.show();
-				},
-				__("Update")
-			)
-		);
-		frm.update_button_rendered = true;
 	},
 
 	setup_filter_group(frm) {
@@ -204,6 +166,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 			disableReorderColumn: true,
 			getEditor(colIndex, rowIndex, value, parent, column) {
 				if (!["base", "variable"].includes(column.name)) return;
+
 				const $input = document.createElement("input");
 				$input.className = "dt-input h-100";
 				$input.type = "number";
@@ -275,23 +238,61 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 		}));
 	},
 
+	render_update_button(frm) {
+		["Base", "Variable"].forEach((d) =>
+			frm.add_custom_button(
+				__(d),
+				function () {
+					const dialog = new frappe.ui.Dialog({
+						title: __("Set {0} for Selected Employees", [__(d)]),
+						fields: [
+							{
+								label: __(d),
+								fieldname: d,
+								fieldtype: "Currency",
+							},
+						],
+						primary_action_label: __("Update"),
+						primary_action(values) {
+							const col_idx = frm.employees_datatable.datamanager.columns.find(
+								(col) => col.content === d
+							).colIndex;
+							frm.checked_rows_indexes.forEach((row_idx) => {
+								frm.employees_datatable.cellmanager.updateCell(
+									col_idx,
+									row_idx,
+									values[d],
+									true
+								);
+							});
+							dialog.hide();
+						},
+					});
+					dialog.show();
+				},
+				__("Update")
+			)
+		);
+		frm.update_button_rendered = true;
+	},
+
 	handle_row_check(frm) {
-		frm.checked_rows = frm.employees_datatable.rowmanager.getCheckedRows();
-		if (!frm.checked_rows.length && frm.update_button_rendered) {
+		frm.checked_rows_indexes =
+			frm.employees_datatable.rowmanager.getCheckedRows();
+		if (!frm.checked_rows_indexes.length && frm.update_button_rendered) {
 			["Base", "Variable"].forEach((d) =>
 				frm.remove_custom_button(__(d), __("Update"))
 			);
 			frm.update_button_rendered = false;
-		} else if (frm.checked_rows.length && !frm.update_button_rendered)
+		} else if (frm.checked_rows_indexes.length && !frm.update_button_rendered)
 			frm.trigger("render_update_button");
 	},
 
 	assign_structure(frm) {
 		const rows = frm.employees_datatable.getRows();
-		const checked_rows_indexes =
-			frm.employees_datatable.rowmanager.getCheckedRows();
 		const checked_rows_content = [];
-		checked_rows_indexes.forEach((idx) => {
+
+		frm.checked_rows_indexes.forEach((idx) => {
 			const row_content = {};
 			rows[idx].forEach((cell) => {
 				if (["employee", "base", "variable"].includes(cell.column.name))
@@ -299,6 +300,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 			});
 			checked_rows_content.push(row_content);
 		});
+
 		frm
 			.call({
 				method: "bulk_assign_structure",
