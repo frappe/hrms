@@ -62,7 +62,7 @@ class BulkSalaryStructureAssignment(Document):
 				frappe.throw(_("{0} is required").format(self.meta.get_label(d)), title=_("Missing Field"))
 		if not employees:
 			frappe.throw(
-				_("Please select the employees to whom the salary structure should be assigned"),
+				_("Please select the employees to whom the Salary Structure should be assigned."),
 				title=_("No Employees Selected"),
 			)
 
