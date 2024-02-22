@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-02-20 17:25\n"
+"PO-Revision-Date: 2024-02-22 19:34\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -36,15 +36,15 @@ msgstr "\"Das Ab-Datum kann nicht größer als das Bis-Datum sein\""
 
 #: public/frontend/assets/BaseLayout-1fb5efbf.js:1
 msgid "$user"
-msgstr ""
+msgstr "$user"
 
 #: public/frontend/assets/LeaveBalance-814d62cc.js:1
 msgid "${c} balance"
-msgstr ""
+msgstr "${c} balance"
 
 #: public/frontend/assets/LeaveBalance-814d62cc.js:1
 msgid "${t.balance_leaves}/${t.allocated_leaves}"
-msgstr ""
+msgstr "${t.balance_leaves}/${t.allocated_leaves}"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:88
 msgid "% Utilization (B + NB) / T"
@@ -1812,7 +1812,7 @@ msgstr "Zugehöriger Dokumenttyp"
 
 #: hr/doctype/exit_interview/exit_interview.py:107
 msgid "At least one interview has to be selected."
-msgstr ""
+msgstr "Es muss mindestens ein Gespräch ausgewählt werden."
 
 #. Label of a Attach field in DocType 'Employee Benefit Claim'
 #: payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
@@ -6413,7 +6413,7 @@ msgstr "Der Mitarbeiter {0} hat bereits einen aktiven Shift {1}: {2}, der sich m
 
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.py:151
 msgid "Employee {0} already submitted an application {1} for the payroll period {2}"
-msgstr ""
+msgstr "Mitarbeiter {0} hat bereits eine Bewerbung {1} für die Abrechnungsperiode {2} eingereicht"
 
 #: hr/doctype/shift_request/shift_request.py:128
 msgid "Employee {0} has already applied for Shift {1}: {2} that overlaps within this period"
