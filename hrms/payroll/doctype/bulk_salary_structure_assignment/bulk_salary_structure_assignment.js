@@ -121,6 +121,9 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	},
 
 	get_employees(frm) {
+		if (!frm.doc.from_date)
+			return frm.events.render_employees_datatable(frm, []);
+
 		frm
 			.call({
 				method: "get_employees",
@@ -129,22 +132,25 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 				},
 				doc: frm.doc,
 			})
-			.then((r) => {
-				// section automatically collapses on applying a single filter
-				frm.set_df_property("quick_filters_section", "collapsible", 0);
-				frm.set_df_property("advanced_filters_section", "collapsible", 0);
-
-				frm.employees = r.message;
-				frm.events.render_employees_datatable(frm);
-			});
+			.then((r) => frm.events.render_employees_datatable(frm, r.message));
 	},
 
-	render_employees_datatable(frm) {
+	render_employees_datatable(frm, employees) {
+		// section automatically collapses on applying a single filter
+		frm.set_df_property("quick_filters_section", "collapsible", 0);
+		frm.set_df_property("advanced_filters_section", "collapsible", 0);
+
 		const columns = frm.events.employees_datatable_columns();
+		const no_data_message = __(
+			frm.doc.from_date
+				? "There are no Employees without a Salary Structure Assignment on this date based on the given filters."
+				: "Please select From Date."
+		);
 
 		if (frm.employees_datatable) {
 			frm.employees_datatable.rowmanager.checkMap = [];
-			frm.employees_datatable.refresh(frm.employees, columns);
+			frm.employees_datatable.options.noDataMessage = no_data_message;
+			frm.employees_datatable.refresh(employees, columns);
 			return;
 		}
 
@@ -154,7 +160,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 		);
 		const datatable_options = {
 			columns: columns,
-			data: frm.employees,
+			data: employees,
 			checkboxColumn: true,
 			checkedRowStatus: false,
 			serialNoColumn: false,
@@ -162,7 +168,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 			inlineFilters: true,
 			layout: "fluid",
 			cellHeight: 35,
-			noDataMessage: __("No Data"),
+			noDataMessage: no_data_message,
 			disableReorderColumn: true,
 			getEditor(colIndex, rowIndex, value, parent, column) {
 				if (!["base", "variable"].includes(column.name)) return;
