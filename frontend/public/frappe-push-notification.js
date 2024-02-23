@@ -1,15 +1,14 @@
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"
 import {
 	getMessaging,
 	getToken,
 	onMessage as onFCMMessage,
 	isSupported,
-	deleteToken
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
-
+	deleteToken,
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js"
 
 class FrappePushNotification {
-	static relayServerBaseURL = 'http://notification-relay:8003';
+	static relayServerBaseURL = "http://notification-relay:8003"
 
 	// Type definitions
 	/**
@@ -31,20 +30,20 @@ class FrappePushNotification {
 	 */
 	constructor(projectName) {
 		// client info
-		this.projectName = projectName;
+		this.projectName = projectName
 		/** @type {webConfigType | null}  */
-		this.webConfig = null;
-		this.vapidPublicKey = "";
-		this.token = null;
+		this.webConfig = null
+		this.vapidPublicKey = ""
+		this.token = null
 
 		// state
-		this.initialized = false;
-		this.messaging = null;
+		this.initialized = false
+		this.messaging = null
 		/** @type {ServiceWorkerRegistration | null} */
-		this.serviceWorkerRegistration = null;
+		this.serviceWorkerRegistration = null
 
 		// event handlers
-		this.onMessageHandler = null;
+		this.onMessageHandler = null
 	}
 
 	/**
@@ -55,13 +54,13 @@ class FrappePushNotification {
 	 */
 	async initialize(serviceWorkerRegistration) {
 		if (this.initialized) {
-			return;
+			return
 		}
-		this.serviceWorkerRegistration = serviceWorkerRegistration;
-		const config = await this.fetchWebConfig();
-		this.messaging = getMessaging(initializeApp(config));
-		this.onMessage(this.onMessageHandler);
-		this.initialized = true;
+		this.serviceWorkerRegistration = serviceWorkerRegistration
+		const config = await this.fetchWebConfig()
+		this.messaging = getMessaging(initializeApp(config))
+		// this.onMessage(this.onMessageHandler)
+		this.initialized = true
 	}
 
 	/**
@@ -72,9 +71,9 @@ class FrappePushNotification {
 	 * @returns {Promise<string>} - Service worker URL with config
 	 */
 	async appendConfigToServiceWorkerURL(url, parameter_name = "config") {
-		let config = await this.fetchWebConfig();
-		const encode_config = encodeURIComponent(JSON.stringify(config));
-		return `${url}?${parameter_name}=${encode_config}`;
+		let config = await this.fetchWebConfig()
+		const encode_config = encodeURIComponent(JSON.stringify(config))
+		return `${url}?${parameter_name}=${encode_config}`
 	}
 
 	/**
@@ -84,15 +83,14 @@ class FrappePushNotification {
 	 */
 	async fetchWebConfig() {
 		if (this.webConfig !== null && this.webConfig !== undefined) {
-			return this.webConfig;
+			return this.webConfig
 		}
 		let url = `${FrappePushNotification.relayServerBaseURL}/api/method/notification_relay.api.get_config?project_name=${this.projectName}`
-		let response = await fetch(url);
-		let response_json = await response.json();
-		this.webConfig = response_json.config;
-		return this.webConfig;
+		let response = await fetch(url)
+		let response_json = await response.json()
+		this.webConfig = response_json.config
+		return this.webConfig
 	}
-
 
 	/**
 	 * Fetch VAPID public key
@@ -101,15 +99,14 @@ class FrappePushNotification {
 	 */
 	async fetchVapidPublicKey() {
 		if (this.vapidPublicKey !== "") {
-			return this.vapidPublicKey;
+			return this.vapidPublicKey
 		}
 		let url = `${FrappePushNotification.relayServerBaseURL}/api/method/notification_relay.api.get_config?project_name=${this.projectName}`
-		let response = await fetch(url);
-		let response_json = await response.json();
-		this.vapidPublicKey = response_json.vapid_public_key;
-		return this.vapidPublicKey;
+		let response = await fetch(url)
+		let response_json = await response.json()
+		this.vapidPublicKey = response_json.vapid_public_key
+		return this.vapidPublicKey
 	}
-
 
 	/**
 	 * Register on message handler
@@ -125,9 +122,10 @@ class FrappePushNotification {
 	 * )} callback - Callback function to handle message
 	 */
 	onMessage(callback) {
-		if (callback == null) return;
-		this.onMessageHandler = callback;
-		if (this.messaging == null) return;
+		console.log("onMessage")
+		if (callback == null) return
+		this.onMessageHandler = callback
+		if (this.messaging == null) return
 		onFCMMessage(this.messaging, this.onMessageHandler)
 	}
 
@@ -137,7 +135,7 @@ class FrappePushNotification {
 	 * @returns {boolean}
 	 */
 	isNotificationEnabled() {
-		return localStorage.getItem(`firebase_token_${this.projectName}`) !== null;
+		return localStorage.getItem(`firebase_token_${this.projectName}`) !== null
 	}
 
 	/**
@@ -147,27 +145,27 @@ class FrappePushNotification {
 	 * @returns {Promise<{permission_granted: boolean, token: string}>}
 	 */
 	async enableNotification() {
-		if (!await isSupported()) {
-			throw new Error("Push notification not supported");
+		if (!(await isSupported())) {
+			throw new Error("Push notification not supported")
 		}
 		// Return if token already presence in the instance
 		if (this.token != null) {
 			return {
 				permission_granted: true,
 				token: this.token,
-			};
+			}
 		}
 		// ask for permission
-		const permission = await Notification.requestPermission();
+		const permission = await Notification.requestPermission()
 		if (permission !== "granted") {
 			return {
 				permission_granted: false,
 				token: "",
-			};
+			}
 		}
 		// check in local storage for old token
-		let oldToken = localStorage.getItem(`firebase_token_${this.projectName}`);
-		const vapidKey = await this.fetchVapidPublicKey();
+		let oldToken = localStorage.getItem(`firebase_token_${this.projectName}`)
+		const vapidKey = await this.fetchVapidPublicKey()
 		let newToken = await getToken(this.messaging, {
 			vapidKey: vapidKey,
 			serviceWorkerRegistration: this.serviceWorkerRegistration,
@@ -176,21 +174,21 @@ class FrappePushNotification {
 		if (oldToken !== newToken) {
 			// unsubscribe old token
 			if (oldToken) {
-				await this.unregisterTokenHandler(oldToken);
+				await this.unregisterTokenHandler(oldToken)
 			}
 			// subscribe push notification and register token
-			let isSubscriptionSuccessful = await this.registerTokenHandler(newToken);
+			let isSubscriptionSuccessful = await this.registerTokenHandler(newToken)
 			if (isSubscriptionSuccessful === false) {
-				throw new Error("Failed to subscribe to push notification");
+				throw new Error("Failed to subscribe to push notification")
 			}
 			// save token to local storage
-			localStorage.setItem(`firebase_token_${this.projectName}`, newToken);
+			localStorage.setItem(`firebase_token_${this.projectName}`, newToken)
 		}
-		this.token = newToken;
+		this.token = newToken
 		return {
 			permission_granted: true,
-			token: newToken
-		};
+			token: newToken,
+		}
 	}
 
 	/**
@@ -202,27 +200,27 @@ class FrappePushNotification {
 	async disableNotification() {
 		if (this.token == null) {
 			// try to fetch token from local storage
-			this.token = localStorage.getItem(`firebase_token_${this.projectName}`);
+			this.token = localStorage.getItem(`firebase_token_${this.projectName}`)
 			if (this.token == null || this.token === "") {
-				return;
+				return
 			}
 		}
 		// delete old token from firebase
 		try {
 			await deleteToken(this.messaging)
 		} catch (e) {
-			console.error("Failed to delete token from firebase");
-			console.error(e);
+			console.error("Failed to delete token from firebase")
+			console.error(e)
 		}
 		try {
-			await this.unregisterTokenHandler(this.token);
+			await this.unregisterTokenHandler(this.token)
 		} catch {
-			console.error("Failed to unsubscribe from push notification");
-			console.error(e);
+			console.error("Failed to unsubscribe from push notification")
+			console.error(e)
 		}
 		// remove token
-		localStorage.removeItem(`firebase_token_${this.projectName}`);
-		this.token = null;
+		localStorage.removeItem(`firebase_token_${this.projectName}`)
+		this.token = null
 	}
 
 	/**
@@ -233,13 +231,19 @@ class FrappePushNotification {
 	 */
 	async registerTokenHandler(token) {
 		try {
-			let response = await fetch("/api/method/frappe.push_notification.subscribe?fcm_token=" + token + "&project_name=" + this.projectName, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
+			let response = await fetch(
+				"/api/method/frappe.push_notification.subscribe?fcm_token=" +
+					token +
+					"&project_name=" +
+					this.projectName,
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
 				}
-			});
-			return response.status === 200;
+			)
+			return response.status === 200
 		} catch (e) {
 			console.error(e)
 			return false
@@ -254,20 +258,24 @@ class FrappePushNotification {
 	 */
 	async unregisterTokenHandler(token) {
 		try {
-			let response = await fetch("/api/method/frappe.push_notification.unsubscribe?fcm_token=" + token + "&project_name=" + this.projectName, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
+			let response = await fetch(
+				"/api/method/frappe.push_notification.unsubscribe?fcm_token=" +
+					token +
+					"&project_name=" +
+					this.projectName,
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
 				}
-			});
-			return response.status === 200;
-
+			)
+			return response.status === 200
 		} catch (e) {
 			console.error(e)
 			return false
 		}
 	}
-
 }
 
 export default FrappePushNotification

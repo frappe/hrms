@@ -20,6 +20,7 @@ const notificationBody = ref("")
 
 onMounted(() => {
 	window.frappePushNotification.onMessage((payload) => {
+		console.log("Push Notification", payload)
 		notificationTitle.value = payload.data.title
 		notificationBody.value = payload.data.body
 		showDialog.value = true

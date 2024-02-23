@@ -177,27 +177,33 @@
 			media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
 		/>
 
-		 <!-- Import Frappe Notification JS -->
-		 <script type="module">
-			import FrappePushNotification from "./public/frappe-push-notification";
+		<!-- Import Frappe Notification JS -->
+		<script type="module">
+			import FrappePushNotification from "./public/frappe-push-notification"
 
-			window.frappePushNotification = new FrappePushNotification("hrms");
+			window.frappePushNotification = new FrappePushNotification("hrms")
 			document.addEventListener("DOMContentLoaded", () => {
-				window.frappePushNotification.appendConfigToServiceWorkerURL("/assets/hrms/frontend/frappe-push-notification-sw.js")
+				window.frappePushNotification
+					.appendConfigToServiceWorkerURL(
+						"/assets/hrms/frontend/frappe-push-notification-sw.js"
+					)
 					.then((url) => {
-						navigator.serviceWorker.register(url, {
-							type: "module",
-						}).then((registration) => {
-							window.frappePushNotification.initialize(registration).then(() => {
-								console.log("Frappe Notification Initialized");
-							});
-						})
+						navigator.serviceWorker
+							.register(url, {
+								type: "module",
+							})
+							.then((registration) => {
+								window.frappePushNotification
+									.initialize(registration)
+									.then(() => {
+										console.log("Frappe Notification Initialized")
+									})
+							})
 					})
 					.catch((err) => {
-						console.error(err);
-					});
-			});
-
+						console.error(err)
+					})
+			})
 		</script>
 		<!-- END ! Import Frappe Notification JS -->
 	</head>
