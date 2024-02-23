@@ -27,3 +27,7 @@ known_frappe = ["frappe"]
 known_erpnext = ["erpnext"]
 known_hrms = ["hrms"]
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FRAPPE", "ERPNEXT", "HRMS", "FIRSTPARTY", "LOCALFOLDER"]
+
+[tool.bench.frappe-dependencies]
+frappe = ">=15.0.0,<16.0.0"
+erpnext = ">=15.0.0,<16.0.0"
