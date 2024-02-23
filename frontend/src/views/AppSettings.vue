@@ -7,7 +7,11 @@
 						class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b sticky top-0 z-10"
 					>
 						<div class="flex flex-row items-center">
-							<Button variant="ghost" class="!pl-0 hover:bg-white" @click="router.back()">
+							<Button
+								variant="ghost"
+								class="!pl-0 hover:bg-white"
+								@click="router.back()"
+							>
 								<FeatherIcon name="chevron-left" class="h-5 w-5" />
 							</Button>
 							<h2 class="text-xl font-semibold text-gray-900">Settings</h2>
@@ -38,53 +42,57 @@ import { FeatherIcon, Switch, toast } from "frappe-ui"
 import { ref } from "vue"
 
 const router = useRouter()
-const pushNotificationState = ref(window.frappePushNotification.isNotificationEnabled())
+const pushNotificationState = ref(
+	window.frappePushNotification.isNotificationEnabled()
+)
 
 const togglePushNotifications = (newValue) => {
 	if (newValue) {
-		enablePushNotifications();
+		enablePushNotifications()
 	} else {
-		window.frappePushNotification.disableNotification().then((data) => {
-			pushNotificationState.value = false; // Disable the switch
-			toast({
-				title: "Success",
-				text: "Push notifications disabled",
-				icon: "check-circle",
-				position: "bottom-center",
-				iconClasses: "text-green-500",
-			});
-		}).catch((err) => {
-			console.log(err);
-			toast({
-				title: "Error",
-				text: "Something went wrong",
-				icon: "error",
-				position: "bottom-center",
-				iconClasses: "text-red-500",
-			});
-		})
+		window.frappePushNotification
+			.disableNotification()
+			.then((data) => {
+				pushNotificationState.value = false // Disable the switch
+				toast({
+					title: "Success",
+					text: "Push notifications disabled",
+					icon: "check-circle",
+					position: "bottom-center",
+					iconClasses: "text-green-500",
+				})
+			})
+			.catch((err) => {
+				console.log(err)
+				toast({
+					title: "Error",
+					text: "Something went wrong",
+					icon: "error",
+					position: "bottom-center",
+					iconClasses: "text-red-500",
+				})
+			})
 	}
-};
+}
 
 const enablePushNotifications = () => {
-	window.frappePushNotification.enableNotification()
+	window.frappePushNotification
+		.enableNotification()
 		.then((data) => {
-			console.log(data);
-			let permission_granted = data.permission_granted;
-			let token = data.token;
+			console.log(data)
+			let permission_granted = data.permission_granted
+			let token = data.token
 			if (permission_granted) {
 				alert("Notification Activated")
-				pushNotificationState.value = true;
+				pushNotificationState.value = true
 			} else {
-				alert("Permission Denied ! Retry again later");
-				pushNotificationState.value = false;
+				alert("Permission Denied ! Retry again later")
+				pushNotificationState.value = false
 			}
 		})
 		.catch((err) => {
-			console.log(err);
-			pushNotificationState.value = false;
+			console.log(err)
+			pushNotificationState.value = false
 		})
 }
-
 </script>
-
