@@ -173,6 +173,7 @@
    "fieldname": "return_amount",
    "fieldtype": "Currency",
    "label": "Returned Amount",
+   "no_copy": 1,
    "options": "currency",
    "read_only": 1
   },
@@ -187,6 +188,7 @@
    "fieldname": "pending_amount",
    "fieldtype": "Currency",
    "label": "Pending Amount",
+   "no_copy": 1,
    "options": "currency",
    "read_only": 1
   },
