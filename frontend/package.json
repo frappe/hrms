@@ -31,7 +31,12 @@
 		"vite": "^5.1.4",
 		"vite-plugin-pwa": "^0.19.0",
 		"workbox-precaching": "^7.0.0",
+<<<<<<< HEAD
 		"workbox-core": "^7.0.0"
 >>>>>>> a4d7c7749 (chore: add workbox dependencies)
+=======
+		"workbox-core": "^7.0.0",
+		"firebase": "^10.8.0"
+>>>>>>> 6fea7ce86 (refactor: replace firebase namespaced API with dependency & register sw as classic instead of module)
 	}
 }

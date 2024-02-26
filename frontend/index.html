@@ -188,7 +188,7 @@
 					.then((url) => {
 						navigator.serviceWorker
 							.register(url, {
-								type: "module",
+								type: "classic",
 							})
 							.then((registration) => {
 								window.frappePushNotification
