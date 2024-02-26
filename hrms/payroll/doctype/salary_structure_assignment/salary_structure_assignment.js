@@ -59,10 +59,27 @@ frappe.ui.form.on("Salary Structure Assignment", {
 			frm.trigger("set_earnings_and_taxation_section_visibility");
 		}
 
-		if (frm.doc.docstatus === 1)
-			frm.add_custom_button(__("Preview Salary Slip"), function () {
+		if (frm.doc.docstatus != 1) return;
+
+		frm.add_custom_button(
+			__("Payroll Entry"),
+			() => {
+				frappe.model.with_doctype("Payroll Entry", () => {
+					const doc = frappe.model.get_new_doc("Payroll Entry");
+					frappe.set_route("Form", "Payroll Entry", doc.name);
+				});
+			},
+			__("Create")
+		);
+		frm.page.set_inner_btn_group_as_primary(__("Create"));
+
+		frm.add_custom_button(
+			__("Preview Salary Slip"),
+			function () {
 				frm.trigger("preview_salary_slip");
-			});
+			},
+			__("Actions")
+		);
 	},
 
 	employee: function (frm) {

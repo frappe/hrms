@@ -66,22 +66,32 @@ class PayrollEntry(Document):
 		if not self.employees:
 			return
 
-		emp_with_sal_slip = []
+		existing_salary_slips = []
 		SalarySlip = frappe.qb.DocType("Salary Slip")
 
-		emp_with_sal_slip = (
+		existing_salary_slips = (
 			frappe.qb.from_(SalarySlip)
-			.select(SalarySlip.employee)
+			.select(SalarySlip.employee, SalarySlip.name)
 			.where(
 				(SalarySlip.employee.isin([emp.employee for emp in self.employees]))
 				& (SalarySlip.start_date == self.start_date)
 				& (SalarySlip.end_date == self.end_date)
-				& (SalarySlip.docstatus == 1)
+				& (SalarySlip.docstatus != 2)
 			)
-		).run(pluck=True)
+		).run(as_dict=True)
 
-		if len(emp_with_sal_slip):
-			frappe.throw(_("Salary Slip already exists for {0}").format(comma_and(emp_with_sal_slip)))
+		if len(existing_salary_slips):
+			msg = _("Salary Slip already exists for {0} for the given dates").format(
+				comma_and([frappe.bold(d.employee) for d in existing_salary_slips])
+			)
+			msg += "<br><br>"
+			msg += _("Reference: {0}").format(
+				comma_and([get_link_to_form("Salary Slip", d.name) for d in existing_salary_slips])
+			)
+			frappe.throw(
+				msg,
+				title=_("Duplicate Entry"),
+			)
 
 	def validate_payroll_payable_account(self):
 		if frappe.db.get_value("Account", self.payroll_payable_account, "account_type"):

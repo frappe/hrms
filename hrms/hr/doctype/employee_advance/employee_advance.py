@@ -116,13 +116,18 @@ class EmployeeAdvance(Document):
 		if return_amount != 0:
 			return_amount = flt(return_amount) / flt(self.exchange_rate)
 
-		if flt(paid_amount) > self.advance_amount:
+		precision = self.precision("paid_amount")
+		paid_amount = flt(paid_amount, precision)
+		if paid_amount > flt(self.advance_amount, precision):
 			frappe.throw(
 				_("Row {0}# Paid Amount cannot be greater than requested advance amount"),
 				EmployeeAdvanceOverPayment,
 			)
 
-		if flt(return_amount) > 0 and flt(return_amount) > (self.paid_amount - self.claimed_amount):
+		precision = self.precision("return_amount")
+		return_amount = flt(return_amount, precision)
+
+		if return_amount > 0 and return_amount > flt(self.paid_amount - self.claimed_amount, precision):
 			frappe.throw(_("Return amount cannot be greater than unclaimed amount"))
 
 		self.db_set("paid_amount", paid_amount)
