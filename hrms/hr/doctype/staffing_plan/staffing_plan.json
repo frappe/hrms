@@ -70,6 +70,7 @@
    "fieldname": "total_estimated_budget",
    "fieldtype": "Currency",
    "label": "Total Estimated Budget",
+   "options": "Company:company:default_currency",
    "read_only": 1
   },
   {
@@ -89,7 +90,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-11 18:06:32.989641",
+ "modified": "2024-02-23 18:20:51.305004",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Staffing Plan",
