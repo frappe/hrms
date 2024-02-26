@@ -202,11 +202,7 @@
  ],
  "is_submittable": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2023-03-21 18:24:06.416439",
-=======
  "modified": "2024-02-26 14:42:01.853329",
->>>>>>> cd6b82a03 (fix: enable no copy for Pending Amount & Returned Amount (#1466))
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Advance",
