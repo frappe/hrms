@@ -184,9 +184,7 @@
 			window.frappePushNotification = new FrappePushNotification("hrms")
 			document.addEventListener("DOMContentLoaded", () => {
 				window.frappePushNotification
-					.appendConfigToServiceWorkerURL(
-						"/assets/hrms/frontend/frappe-push-notification-sw.js"
-					)
+					.appendConfigToServiceWorkerURL("/assets/hrms/frontend/sw.js")
 					.then((url) => {
 						navigator.serviceWorker
 							.register(url, {
@@ -196,7 +194,7 @@
 								window.frappePushNotification
 									.initialize(registration)
 									.then(() => {
-										console.log("Frappe Notification Initialized")
+										console.log("Frappe Push Notification initialized")
 									})
 							})
 					})
@@ -205,7 +203,7 @@
 					})
 			})
 		</script>
-		<!-- END ! Import Frappe Notification JS -->
+		<!-- END Import Frappe Notification JS -->
 	</head>
 	<body class="antialiased">
 		<div id="app"></div>
@@ -215,6 +213,7 @@
 		<script>
 			window.csrf_token = "{{ csrf_token }}"
 		</script>
+
 		<script type="module" src="/src/main.js"></script>
 	</body>
 </html>
