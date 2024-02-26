@@ -14,8 +14,12 @@ export default defineConfig({
 		vue(),
 		VitePWA({
 			registerType: "autoUpdate",
+			strategies: "injectManifest",
+			injectRegister: null,
 			devOptions: {
 				enabled: true,
+				type: "module",
+				navigateFallback: "index.html",
 			},
 			manifest: {
 				display: "standalone",
@@ -23,6 +27,7 @@ export default defineConfig({
 				short_name: "Frappe HR",
 				start_url: "/hrms",
 				description: "Everyday HR & Payroll operations at your fingertips",
+				theme_color: "#ffffff",
 				icons: [
 					{
 						src: "/assets/hrms/manifest/manifest-icon-192.maskable.png",
