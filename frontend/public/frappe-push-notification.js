@@ -1,11 +1,11 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"
+import { initializeApp } from "firebase/app"
 import {
 	getMessaging,
 	getToken,
-	onMessage as onFCMMessage,
 	isSupported,
 	deleteToken,
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js"
+	onMessage as onFCMMessage,
+} from "firebase/messaging"
 
 class FrappePushNotification {
 	static relayServerBaseURL = "http://notification-relay:8003"
@@ -59,7 +59,7 @@ class FrappePushNotification {
 		this.serviceWorkerRegistration = serviceWorkerRegistration
 		const config = await this.fetchWebConfig()
 		this.messaging = getMessaging(initializeApp(config))
-		// this.onMessage(this.onMessageHandler)
+		this.onMessage(this.onMessageHandler)
 		this.initialized = true
 	}
 
