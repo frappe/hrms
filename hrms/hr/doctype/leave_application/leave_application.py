@@ -164,15 +164,15 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				if not allowed_role:
 					frappe.throw(
 						_("Backdated Leave Application is restricted. Please set the {} in {}").format(
-							frappe.bold("Role Allowed to Create Backdated Leave Application"),
-							get_link_to_form("HR Settings", "HR Settings"),
+							frappe.bold(_("Role Allowed to Create Backdated Leave Application")),
+							get_link_to_form("HR Settings", "HR Settings", _("HR Settings")),
 						)
 					)
 
 				if allowed_role and allowed_role not in user_roles:
 					frappe.throw(
 						_("Only users with the {0} role can create backdated leave applications").format(
-							allowed_role
+							_(allowed_role)
 						)
 					)
 
@@ -497,7 +497,13 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			prev_date = add_days(reference_date, -1)
 			application = frappe.db.get_value(
 				"Leave Application",
-				{"employee": self.employee, "leave_type": self.leave_type, "to_date": prev_date},
+				{
+					"employee": self.employee,
+					"leave_type": self.leave_type,
+					"to_date": prev_date,
+					"docstatus": ["!=", 2],
+					"status": ["in", ["Open", "Approved"]],
+				},
 				["name", "from_date"],
 				as_dict=True,
 			)
@@ -511,7 +517,13 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			next_date = add_days(reference_date, 1)
 			application = frappe.db.get_value(
 				"Leave Application",
-				{"employee": self.employee, "leave_type": self.leave_type, "from_date": next_date},
+				{
+					"employee": self.employee,
+					"leave_type": self.leave_type,
+					"from_date": next_date,
+					"docstatus": ["!=", 2],
+					"status": ["in", ["Open", "Approved"]],
+				},
 				["name", "to_date"],
 				as_dict=True,
 			)
@@ -588,7 +600,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			frappe.msgprint(_("Please set default template for Leave Status Notification in HR Settings."))
 			return
 		email_template = frappe.get_doc("Email Template", template)
-		message = frappe.render_template(email_template.response, args)
+		message = frappe.render_template(email_template.response_, args)
 
 		self.notify(
 			{
@@ -613,7 +625,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				)
 				return
 			email_template = frappe.get_doc("Email Template", template)
-			message = frappe.render_template(email_template.response, args)
+			message = frappe.render_template(email_template.response_, args)
 
 			self.notify(
 				{

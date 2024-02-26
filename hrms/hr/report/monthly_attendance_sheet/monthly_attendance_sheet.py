@@ -160,12 +160,13 @@ def get_columns_for_days(filters: Filters) -> List[Dict]:
 	days = []
 
 	for day in range(1, total_days + 1):
+		day = cstr(day)
 		# forms the dates from selected year and month from filters
-		date = "{}-{}-{}".format(cstr(filters.year), cstr(filters.month), cstr(day))
+		date = "{}-{}-{}".format(cstr(filters.year), cstr(filters.month), day)
 		# gets abbr from weekday number
 		weekday = day_abbr[getdate(date).weekday()]
 		# sets days as 1 Mon, 2 Tue, 3 Wed
-		label = "{} {}".format(cstr(day), weekday)
+		label = "{} {}".format(day, weekday)
 		days.append({"label": label, "fieldtype": "Data", "fieldname": day, "width": 65})
 
 	return days
@@ -511,7 +512,7 @@ def get_attendance_status_for_detailed_view(
 				status = get_holiday_status(day, holidays)
 
 			abbr = status_map.get(status, "")
-			row[day] = abbr
+			row[cstr(day)] = abbr
 
 		attendance_values.append(row)
 
@@ -619,7 +620,7 @@ def get_chart_data(attendance_map: Dict, filters: Filters) -> Dict:
 
 		for employee, attendance_dict in attendance_map.items():
 			for shift, attendance in attendance_dict.items():
-				attendance_on_day = attendance.get(day["fieldname"])
+				attendance_on_day = attendance.get(cint(day["fieldname"]))
 
 				if attendance_on_day == "On Leave":
 					# leave should be counted only once for the entire day

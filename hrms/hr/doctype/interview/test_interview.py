@@ -20,7 +20,7 @@ from hrms.hr.doctype.interview.interview import (
 	update_job_applicant_status,
 )
 from hrms.hr.doctype.job_applicant.job_applicant import get_interview_details
-from hrms.tests.test_utils import create_job_applicant
+from hrms.tests.test_utils import create_job_applicant, get_email_by_subject
 
 
 class TestInterview(FrappeTestCase):
@@ -188,7 +188,7 @@ class TestInterview(FrappeTestCase):
 		job_applicant = create_job_applicant()
 		interview = create_interview_and_dependencies(job_applicant.name, status="Cleared")
 
-		update_job_applicant_status({"job_applicant": job_applicant.name, "status": "Accepted"})
+		update_job_applicant_status(job_applicant=job_applicant.name, status="Accepted")
 		job_applicant.reload()
 
 		self.assertEqual(job_applicant.status, "Accepted")
@@ -317,7 +317,3 @@ def setup_reminder_settings():
 	hr_settings.interview_reminder_template = _("Interview Reminder")
 	hr_settings.feedback_reminder_notification_template = _("Interview Feedback Reminder")
 	hr_settings.save()
-
-
-def get_email_by_subject(subject: str) -> bool:
-	return frappe.db.exists("Email Queue", {"message": ("like", f"%{subject}%")})
