@@ -24,8 +24,20 @@
 								size="md"
 								label="Enable Push Notifications"
 								:model-value="pushNotificationState"
+								:disabled="isLoading"
 								@update:model-value="togglePushNotifications"
 							/>
+						</div>
+						<!-- Loading Indicator -->
+						<div
+							v-if="isLoading"
+							class="flex -mt-2 items-center justify-center gap-2"
+						>
+							<LoadingIndicator class="w-3 h-3 text-gray-800" />
+							<span class="text-gray-900 text-sm">
+								{{ pushNotificationState ? "Disabling" : "Enabling" }} Push
+								Notifications...
+							</span>
 						</div>
 					</div>
 				</div>
@@ -37,7 +49,7 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { useRouter } from "vue-router"
-import { FeatherIcon, Switch, toast } from "frappe-ui"
+import { FeatherIcon, Switch, toast, LoadingIndicator } from "frappe-ui"
 
 import { ref } from "vue"
 
@@ -45,11 +57,13 @@ const router = useRouter()
 const pushNotificationState = ref(
 	window.frappePushNotification.isNotificationEnabled()
 )
+const isLoading = ref(false)
 
 const togglePushNotifications = (newValue) => {
 	if (newValue) {
 		enablePushNotifications()
 	} else {
+		isLoading.value = true
 		window.frappePushNotification
 			.disableNotification()
 			.then((data) => {
@@ -72,14 +86,18 @@ const togglePushNotifications = (newValue) => {
 					iconClasses: "text-red-500",
 				})
 			})
+			.finally(() => {
+				isLoading.value = false
+			})
 	}
 }
 
 const enablePushNotifications = () => {
+	isLoading.value = true
+
 	window.frappePushNotification
 		.enableNotification()
 		.then((data) => {
-			console.log(data)
 			if (data.permission_granted) {
 				pushNotificationState.value = true
 			} else {
@@ -102,6 +120,9 @@ const enablePushNotifications = () => {
 				iconClasses: "text-red-500",
 			})
 			pushNotificationState.value = false
+		})
+		.finally(() => {
+			isLoading.value = false
 		})
 }
 </script>
