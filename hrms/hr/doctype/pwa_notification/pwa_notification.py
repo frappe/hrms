@@ -2,7 +2,6 @@
 # For license information, please see license.txt
 import frappe
 from frappe.model.document import Document
-from frappe.push_notification import PushNotification
 
 import hrms
 
@@ -16,6 +15,8 @@ class PWANotification(Document):
 
 	def send_push_notification(self):
 		try:
+			from frappe.push_notification import PushNotification
+
 			push_notification = PushNotification("hrms")
 			if push_notification.is_enabled():
 				push_notification.send_notification_to_user(
@@ -24,6 +25,9 @@ class PWANotification(Document):
 					self.message,
 					link=self.get_notification_link(),
 				)
+		except ImportError:
+			# push notifications are not supported in the current framework version
+			pass
 		except Exception:
 			self.log_error(f"Error sending push notification: {self.name}")
 
