@@ -42,6 +42,7 @@
 							}}</span>
 						</div>
 
+						<!-- Profile Links -->
 						<div class="flex flex-col gap-5 my-4 w-full">
 							<div class="flex flex-col bg-white rounded">
 								<div
@@ -64,6 +65,30 @@
 										class="h-5 w-5 text-gray-500"
 									/>
 								</div>
+							</div>
+						</div>
+
+						<!-- Settings -->
+						<div class="flex flex-col gap-5 my-4 w-full">
+							<div class="flex flex-col bg-white rounded">
+								<router-link
+									:to="{ name: 'Settings' }"
+									class="flex flex-row cursor-pointer flex-start p-4 items-center justify-between border-b"
+								>
+									<div class="flex flex-row items-center gap-3 grow">
+										<FeatherIcon
+											name="settings"
+											class="h-5 w-5 text-gray-500"
+										/>
+										<div class="text-base font-normal text-gray-800">
+											Settings
+										</div>
+									</div>
+									<FeatherIcon
+										name="chevron-right"
+										class="h-5 w-5 text-gray-500"
+									/>
+								</router-link>
 							</div>
 						</div>
 

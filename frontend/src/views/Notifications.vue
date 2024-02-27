@@ -19,24 +19,35 @@
 					</header>
 
 					<div class="flex flex-col gap-4 mt-5 p-4">
-						<div
-							v-if="unreadNotificationsCount.data"
-							class="flex flex-row justify-between items-center"
-						>
-							<div class="text-lg text-gray-800 font-semibold">
+						<div class="flex flex-row justify-between items-center">
+							<div
+								class="text-lg text-gray-800 font-semibold"
+								v-if="unreadNotificationsCount.data"
+							>
 								{{ unreadNotificationsCount.data }} Unread
 							</div>
-							<Button
-								variant="outline"
-								class="ml-auto"
-								@click="markAllAsRead.submit"
-								:loading="markAllAsRead.loading"
-							>
-								<template #prefix>
-									<FeatherIcon name="check-circle" class="w-4" />
-								</template>
-								Mark all as read
-							</Button>
+							<div class="flex ml-auto gap-1">
+								<Button
+									variant="outline"
+									@click="router.push({ name: 'Settings' })"
+								>
+									<template #prefix>
+										<FeatherIcon name="settings" class="w-4" />
+									</template>
+									Settings
+								</Button>
+								<Button
+									v-if="unreadNotificationsCount.data"
+									variant="outline"
+									@click="markAllAsRead.submit"
+									:loading="markAllAsRead.loading"
+								>
+									<template #prefix>
+										<FeatherIcon name="check-circle" class="w-4" />
+									</template>
+									Mark all as read
+								</Button>
+							</div>
 						</div>
 
 						<div
