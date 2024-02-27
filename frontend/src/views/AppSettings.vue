@@ -54,6 +54,7 @@ const togglePushNotifications = (newValue) => {
 			.disableNotification()
 			.then((data) => {
 				pushNotificationState.value = false // Disable the switch
+				// TODO: add commonfied toast util for success and error messages
 				toast({
 					title: "Success",
 					text: "Push notifications disabled",
@@ -62,12 +63,11 @@ const togglePushNotifications = (newValue) => {
 					iconClasses: "text-green-500",
 				})
 			})
-			.catch((err) => {
-				console.log(err)
+			.catch((error) => {
 				toast({
 					title: "Error",
-					text: "Something went wrong",
-					icon: "error",
+					text: error.message,
+					icon: "alert-circle",
 					position: "bottom-center",
 					iconClasses: "text-red-500",
 				})
@@ -80,18 +80,27 @@ const enablePushNotifications = () => {
 		.enableNotification()
 		.then((data) => {
 			console.log(data)
-			let permission_granted = data.permission_granted
-			let token = data.token
-			if (permission_granted) {
-				alert("Notification Activated")
+			if (data.permission_granted) {
 				pushNotificationState.value = true
 			} else {
-				alert("Permission Denied ! Retry again later")
+				toast({
+					title: "Error",
+					text: "Push Notification permission denied",
+					icon: "alert-circle",
+					position: "bottom-center",
+					iconClasses: "text-red-500",
+				})
 				pushNotificationState.value = false
 			}
 		})
-		.catch((err) => {
-			console.log(err)
+		.catch((error) => {
+			toast({
+				title: "Error",
+				text: error.message,
+				icon: "alert-circle",
+				position: "bottom-center",
+				iconClasses: "text-red-500",
+			})
 			pushNotificationState.value = false
 		})
 }
