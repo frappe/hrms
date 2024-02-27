@@ -122,7 +122,6 @@ class FrappePushNotification {
 	 * )} callback - Callback function to handle message
 	 */
 	onMessage(callback) {
-		console.log("onMessage")
 		if (callback == null) return
 		this.onMessageHandler = callback
 		if (this.messaging == null) return
