@@ -182,26 +182,29 @@
 			import FrappePushNotification from "./public/frappe-push-notification"
 
 			window.frappePushNotification = new FrappePushNotification("hrms")
-			document.addEventListener("DOMContentLoaded", () => {
-				window.frappePushNotification
-					.appendConfigToServiceWorkerURL("/assets/hrms/frontend/sw.js")
-					.then((url) => {
-						navigator.serviceWorker
-							.register(url, {
-								type: "classic",
-							})
-							.then((registration) => {
-								window.frappePushNotification
-									.initialize(registration)
-									.then(() => {
-										console.log("Frappe Push Notification initialized")
-									})
-							})
-					})
-					.catch((err) => {
-						console.error(err)
-					})
-			})
+
+			if ("serviceWorker" in navigator) {
+				document.addEventListener("DOMContentLoaded", () => {
+					window.frappePushNotification
+						.appendConfigToServiceWorkerURL("/assets/hrms/frontend/sw.js")
+						.then((url) => {
+							navigator.serviceWorker
+								.register(url, {
+									type: "classic",
+								})
+								.then((registration) => {
+									window.frappePushNotification
+										.initialize(registration)
+										.then(() => {
+											console.log("Frappe Push Notification initialized")
+										})
+								})
+						})
+						.catch((err) => {
+							console.error("Failed to register service worker", err)
+						})
+				})
+			}
 		</script>
 		<!-- END Import Frappe Notification JS -->
 	</head>

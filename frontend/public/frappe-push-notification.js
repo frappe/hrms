@@ -145,7 +145,7 @@ class FrappePushNotification {
 	 */
 	async enableNotification() {
 		if (!(await isSupported())) {
-			throw new Error("Push notification not supported")
+			throw new Error("Push notifications are not supported on your device")
 		}
 		// Return if token already presence in the instance
 		if (this.token != null) {
