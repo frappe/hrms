@@ -16,12 +16,23 @@ class PWANotification(Document):
 
 	def send_push_notification(self):
 		try:
-			url = frappe.utils.get_url()
-
 			push_notification = PushNotification("hrms")
 			if push_notification.is_enabled():
 				push_notification.send_notification_to_user(
-					self.to_user, self.reference_document_type, self.message, link=url, truncate_body=True
+					self.to_user,
+					self.reference_document_type,
+					self.message,
+					link=self.get_notification_link(),
 				)
 		except Exception:
 			self.log_error(f"Error sending push notification: {self.name}")
+
+	def get_notification_link(self):
+		base_url = f"{frappe.utils.get_url()}/hrms"
+
+		if self.reference_document_type == "Leave Application":
+			return f"{base_url}/leave-applications/{self.reference_document_name}"
+		elif self.reference_document_type == "Expense Claim":
+			return f"{base_url}/expense-claims/{self.reference_document_name}"
+
+		return base_url
