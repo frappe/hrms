@@ -217,7 +217,7 @@ frappe.ui.form.on('Payroll Entry', {
 			'currency', 'department', 'branch', 'designation', 'salary_slip_based_on_timesheet','grade'];
 
 		fields.forEach(field => {
-			if (frm.doc[field]) {
+			if (frm.doc[field] || frm.doc[field] === 0) {
 				filters[field] = frm.doc[field];
 			}
 		});
