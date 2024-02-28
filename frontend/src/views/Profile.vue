@@ -69,7 +69,10 @@
 						</div>
 
 						<!-- Settings -->
-						<div class="flex flex-col gap-5 my-4 w-full">
+						<div
+							class="flex flex-col gap-5 my-4 w-full"
+							v-if="allowPushNotifications"
+						>
 							<div class="flex flex-col bg-white rounded">
 								<router-link
 									:to="{ name: 'Settings' }"
@@ -134,12 +137,12 @@
 </template>
 
 <script setup>
-import { inject, ref, onMounted, onBeforeUnmount } from "vue"
+import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { useRouter } from "vue-router"
 import { IonModal, IonPage, IonContent } from "@ionic/vue"
+import { FeatherIcon, createDocumentResource, createResource } from "frappe-ui"
 
 import { showErrorAlert } from "@/utils/dialogs"
-import { FeatherIcon, createDocumentResource, createResource } from "frappe-ui"
 import { formatCurrency } from "@/utils/formatters"
 
 import ProfileInfoModal from "@/components/ProfileInfoModal.vue"
@@ -209,6 +212,10 @@ const profileLinks = [
 
 const isInfoModalOpen = ref(false)
 const selectedItem = ref(null)
+
+const allowPushNotifications = computed(
+	() => window.push_relay_server_url && window.push_notifications_enabled
+)
 
 const openInfoModal = async (request) => {
 	selectedItem.value = request
