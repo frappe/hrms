@@ -28,6 +28,7 @@
 							</div>
 							<div class="flex ml-auto gap-1">
 								<Button
+									v-if="allowPushNotifications"
 									variant="outline"
 									@click="router.push({ name: 'Settings' })"
 								>
@@ -91,15 +92,19 @@ import { IonContent, IonPage } from "@ionic/vue"
 import { useRouter } from "vue-router"
 import { createResource, FeatherIcon } from "frappe-ui"
 
-import { inject } from "vue"
+import { computed, inject } from "vue"
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
+import EmptyState from "@/components/EmptyState.vue"
 
 import { unreadNotificationsCount, notifications } from "@/data/notifications"
-import EmptyState from "@/components/EmptyState.vue"
 
 const user = inject("$user")
 const dayjs = inject("$dayjs")
 const router = useRouter()
+
+const allowPushNotifications = computed(
+	() => window.push_relay_server_url && window.push_notifications_enabled
+)
 
 const markAllAsRead = createResource({
 	url: "hrms.api.mark_all_notifications_as_read",

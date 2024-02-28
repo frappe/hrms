@@ -23,8 +23,10 @@
 							<Switch
 								size="md"
 								label="Enable Push Notifications"
+								:class="description ? 'p-2' : ''"
 								:model-value="pushNotificationState"
-								:disabled="isLoading"
+								:disabled="disablePushSetting"
+								:description="description"
 								@update:model-value="togglePushNotifications"
 							/>
 						</div>
@@ -51,13 +53,26 @@ import { IonPage, IonContent } from "@ionic/vue"
 import { useRouter } from "vue-router"
 import { FeatherIcon, Switch, toast, LoadingIndicator } from "frappe-ui"
 
-import { ref } from "vue"
+import { computed, ref } from "vue"
 
 const router = useRouter()
 const pushNotificationState = ref(
 	window.frappePushNotification?.isNotificationEnabled()
 )
 const isLoading = ref(false)
+
+const disablePushSetting = computed(() => {
+	return (
+		!(window.push_relay_server_url && window.push_notifications_enabled) ||
+		isLoading.value
+	)
+})
+
+const description = computed(() => {
+	return disablePushSetting.value
+		? "Push notifications have been disabled on your site"
+		: ""
+})
 
 const togglePushNotifications = (newValue) => {
 	if (newValue) {
