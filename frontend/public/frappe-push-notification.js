@@ -8,7 +8,13 @@ import {
 } from "firebase/messaging"
 
 class FrappePushNotification {
-	static relayServerBaseURL = "http://notification-relay:8003"
+	static get relayServerBaseURL() {
+		return window.push_relay_server_url
+	}
+
+	static get isNotificationRelayEnabled() {
+		return window.push_notifications_enabled
+	}
 
 	// Type definitions
 	/**

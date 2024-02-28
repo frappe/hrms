@@ -55,7 +55,7 @@ import { ref } from "vue"
 
 const router = useRouter()
 const pushNotificationState = ref(
-	window.frappePushNotification.isNotificationEnabled()
+	window.frappePushNotification?.isNotificationEnabled()
 )
 const isLoading = ref(false)
 
