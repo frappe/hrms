@@ -176,37 +176,6 @@
 			href="/assets/hrms/manifest/apple-splash-1136-640.jpg"
 			media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
 		/>
-
-		<!-- Import Frappe Notification JS -->
-		<script type="module">
-			import FrappePushNotification from "./public/frappe-push-notification"
-
-			window.frappePushNotification = new FrappePushNotification("hrms")
-
-			if ("serviceWorker" in navigator) {
-				document.addEventListener("DOMContentLoaded", () => {
-					window.frappePushNotification
-						.appendConfigToServiceWorkerURL("/assets/hrms/frontend/sw.js")
-						.then((url) => {
-							navigator.serviceWorker
-								.register(url, {
-									type: "classic",
-								})
-								.then((registration) => {
-									window.frappePushNotification
-										.initialize(registration)
-										.then(() => {
-											console.log("Frappe Push Notification initialized")
-										})
-								})
-						})
-						.catch((err) => {
-							console.error("Failed to register service worker", err)
-						})
-				})
-			}
-		</script>
-		<!-- END Import Frappe Notification JS -->
 	</head>
 	<body class="antialiased">
 		<div id="app"></div>
