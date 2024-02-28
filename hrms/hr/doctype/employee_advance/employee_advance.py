@@ -158,14 +158,16 @@ class EmployeeAdvance(Document):
 		self.set_status(update=True)
 
 	def set_pending_amount(self):
-		employee_due_amount = frappe.get_all(
-			"Employee Advance",
-			filters={"employee": self.employee, "docstatus": 1, "posting_date": ("<=", self.posting_date)},
-			fields=["advance_amount", "paid_amount"],
-		)
-		self.pending_amount = sum(
-			[(emp.advance_amount - emp.paid_amount) for emp in employee_due_amount]
-		)
+		Advance = frappe.qb.DocType("Employee Advance")
+		self.pending_amount = (
+			frappe.qb.from_(Advance)
+			.select(Sum(Advance.advance_amount - Advance.paid_amount))
+			.where(
+				(Advance.employee == self.employee)
+				& (Advance.docstatus == 1)
+				& (Advance.posting_date <= self.posting_date)
+			)
+		).run()[0][0] or 0.0
 
 
 @frappe.whitelist()
