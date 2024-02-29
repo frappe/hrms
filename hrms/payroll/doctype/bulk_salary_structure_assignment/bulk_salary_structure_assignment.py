@@ -1,11 +1,11 @@
 # Copyright (c) 2024, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
-from pypika import functions as fn
-
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.query_builder.custom import ConstantColumn
+from frappe.query_builder.functions import Coalesce
 
 from hrms.hr.utils import notify_bulk_action_status
 from hrms.payroll.doctype.salary_structure.salary_structure import (
@@ -50,8 +50,8 @@ class BulkSalaryStructureAssignment(Document):
 			.left_join(Grade)
 			.on(Employee.grade == Grade.name)
 			.select(
-				fn.Coalesce(Grade.default_base_pay, 0).as_("base"),
-				fn.Coalesce(0).as_("variable"),
+				Coalesce(Grade.default_base_pay, 0).as_("base"),
+				ConstantColumn(0).as_("variable"),
 			)
 		)
 		return query.run(as_dict=True)
