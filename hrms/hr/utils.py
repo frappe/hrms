@@ -776,7 +776,7 @@ def get_ec_matching_query(bank_account, company, exact_match, from_date=None, to
 	"""
 
 
-def notify_status(doctype: str, failure: list, success: list) -> None:
+def notify_bulk_action_status(doctype: str, failure: list, success: list) -> None:
 	frappe.clear_messages()
 
 	msg = ""

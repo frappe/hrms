@@ -9,7 +9,7 @@ from frappe.utils import cint, flt
 
 from erpnext import get_default_company
 
-from hrms.hr.utils import notify_status
+from hrms.hr.utils import notify_bulk_action_status
 
 
 class LeaveControlPanel(Document):
@@ -67,7 +67,7 @@ class LeaveControlPanel(Document):
 				allocation.log_error(f"Leave Allocation failed for employee {employee}")
 				failure.append(employee)
 
-		notify_status("Leave Allocation", failure, success)
+		notify_bulk_action_status("Leave Allocation", failure, success)
 		return {"failed": failure, "success": success}
 
 	def create_leave_policy_assignments(self, employees: list) -> dict:
@@ -98,7 +98,7 @@ class LeaveControlPanel(Document):
 				assignment.log_error(f"Leave Policy Assignment failed for employee {employee}")
 				failure.append(employee)
 
-		notify_status("Leave Policy Assignment", failure, success)
+		notify_bulk_action_status("Leave Policy Assignment", failure, success)
 		return {"failed": failure, "success": success}
 
 	def get_from_to_date(self):

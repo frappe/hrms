@@ -7,7 +7,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 
-from hrms.hr.utils import notify_status
+from hrms.hr.utils import notify_bulk_action_status
 from hrms.payroll.doctype.salary_structure.salary_structure import (
 	create_salary_structure_assignment,
 )
@@ -97,7 +97,7 @@ class BulkSalaryStructureAssignment(Document):
 				count += 1
 				frappe.publish_progress(count * 100 / len(employees), title=_("Assigning Structure..."))
 
-			notify_status("Salary Structure Assignment", failure, success)
+			notify_bulk_action_status("Salary Structure Assignment", failure, success)
 			return {"success": success, "failure": failure}
 
 		if len(employees) <= 20:
