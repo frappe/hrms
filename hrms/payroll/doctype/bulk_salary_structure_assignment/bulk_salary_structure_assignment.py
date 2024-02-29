@@ -103,4 +103,4 @@ class BulkSalaryStructureAssignment(Document):
 		if len(employees) <= 20:
 			return _bulk_assign_structure()
 
-		return frappe.enqueue(_bulk_assign_structure, timeout=600)
+		return frappe.enqueue(_bulk_assign_structure, timeout=3000)
