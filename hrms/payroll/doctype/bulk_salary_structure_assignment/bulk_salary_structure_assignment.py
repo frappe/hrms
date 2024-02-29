@@ -6,6 +6,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.query_builder.custom import ConstantColumn
 from frappe.query_builder.functions import Coalesce
+from frappe.query_builder.terms import SubQuery
 
 from hrms.hr.utils import notify_bulk_action_status
 from hrms.payroll.doctype.salary_structure.salary_structure import (
@@ -16,15 +17,6 @@ from hrms.payroll.doctype.salary_structure.salary_structure import (
 class BulkSalaryStructureAssignment(Document):
 	@frappe.whitelist()
 	def get_employees(self, advanced_filters: list) -> list:
-		Assignment = frappe.qb.DocType("Salary Structure Assignment")
-		employees_with_assignments = (
-			frappe.qb.from_(Assignment)
-			.select(Assignment.employee)
-			.distinct()
-			.where((Assignment.from_date == self.from_date) & (Assignment.docstatus == 1))
-			.run(pluck=True)
-		)
-
 		quick_filter_fields = [
 			"company",
 			"employment_type",
@@ -33,19 +25,30 @@ class BulkSalaryStructureAssignment(Document):
 			"designation",
 			"grade",
 		]
-		quick_filters = [[d, "=", self.get(d)] for d in quick_filter_fields if self.get(d)]
+		filters = [[d, "=", self.get(d)] for d in quick_filter_fields if self.get(d)]
+		filters += advanced_filters
 
-		filters = (
-			[["status", "=", "Active"], ["employee", "not in", employees_with_assignments]]
-			+ quick_filters
-			+ advanced_filters
+		Assignment = frappe.qb.DocType("Salary Structure Assignment")
+		employees_with_assignments = SubQuery(
+			frappe.qb.from_(Assignment)
+			.select(Assignment.employee)
+			.distinct()
+			.where((Assignment.from_date == self.from_date) & (Assignment.docstatus == 1))
 		)
 
 		Employee = frappe.qb.DocType("Employee")
 		Grade = frappe.qb.DocType("Employee Grade")
 		query = (
 			frappe.qb.get_query(
-				Employee, fields=[Employee.employee, Employee.employee_name, Employee.grade], filters=filters
+				Employee,
+				fields=[Employee.employee, Employee.employee_name, Employee.grade],
+				filters=filters,
+			)
+			.where(
+				(Employee.status == "Active")
+				& (Employee.date_of_joining <= self.from_date)
+				& ((Employee.relieving_date > self.from_date) | (Employee.relieving_date.isnull()))
+				& (Employee.employee.notin(employees_with_assignments))
 			)
 			.left_join(Grade)
 			.on(Employee.grade == Grade.name)
