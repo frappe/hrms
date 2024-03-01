@@ -174,6 +174,93 @@ class SalaryStructure(Document):
 
 		return employees
 
+	@frappe.whitelist()
+	def assign_salary_structure(
+		self,
+		branch=None,
+		grade=None,
+		department=None,
+		designation=None,
+		employee=None,
+		payroll_payable_account=None,
+		from_date=None,
+		base=None,
+		variable=None,
+		income_tax_slab=None,
+	):
+		employees = self.get_employees(
+			company=self.company,
+			grade=grade,
+			department=department,
+			designation=designation,
+			name=employee,
+			branch=branch,
+		)
+
+		if employees:
+			if len(employees) > 20:
+				frappe.enqueue(
+					assign_salary_structure_for_employees,
+					timeout=3000,
+					employees=employees,
+					salary_structure=self,
+					payroll_payable_account=payroll_payable_account,
+					from_date=from_date,
+					base=base,
+					variable=variable,
+					income_tax_slab=income_tax_slab,
+				)
+			else:
+				assign_salary_structure_for_employees(
+					employees,
+					self,
+					payroll_payable_account=payroll_payable_account,
+					from_date=from_date,
+					base=base,
+					variable=variable,
+					income_tax_slab=income_tax_slab,
+				)
+		else:
+			frappe.msgprint(_("No Employee Found"))
+
+
+def assign_salary_structure_for_employees(
+	employees,
+	salary_structure,
+	payroll_payable_account=None,
+	from_date=None,
+	base=None,
+	variable=None,
+	income_tax_slab=None,
+):
+	salary_structure_assignments = []
+	existing_assignments_for = get_existing_assignments(employees, salary_structure, from_date)
+	count = 0
+	for employee in employees:
+		if employee in existing_assignments_for:
+			continue
+		count += 1
+
+		salary_structure_assignment = create_salary_structure_assignment(
+			employee,
+			salary_structure.name,
+			salary_structure.company,
+			salary_structure.currency,
+			from_date,
+			payroll_payable_account,
+			base,
+			variable,
+			income_tax_slab,
+		)
+		salary_structure_assignments.append(salary_structure_assignment)
+		frappe.publish_progress(
+			count * 100 / len(set(employees) - set(existing_assignments_for)),
+			title=_("Assigning Structures..."),
+		)
+
+	if salary_structure_assignments:
+		frappe.msgprint(_("Structures have been assigned successfully"))
+
 
 def create_salary_structure_assignment(
 	employee,
