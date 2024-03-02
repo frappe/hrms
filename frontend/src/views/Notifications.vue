@@ -96,14 +96,20 @@ import { computed, inject } from "vue"
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 import EmptyState from "@/components/EmptyState.vue"
 
-import { unreadNotificationsCount, notifications } from "@/data/notifications"
+import {
+	unreadNotificationsCount,
+	notifications,
+	arePushNotificationsEnabled,
+} from "@/data/notifications"
 
 const user = inject("$user")
 const dayjs = inject("$dayjs")
 const router = useRouter()
 
 const allowPushNotifications = computed(
-	() => window.push_relay_server_url && window.push_notifications_enabled
+	() =>
+		window.frappe?.boot.push_relay_server_url &&
+		arePushNotificationsEnabled.data
 )
 
 const markAllAsRead = createResource({
