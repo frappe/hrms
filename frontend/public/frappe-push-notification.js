@@ -9,11 +9,11 @@ import {
 
 class FrappePushNotification {
 	static get relayServerBaseURL() {
-		return window.push_relay_server_url
+		return window.frappe?.boot.push_relay_server_url
 	}
 
 	static get isNotificationRelayEnabled() {
-		return window.push_notifications_enabled
+		return window.frappe?.boot.push_notifications_enabled
 	}
 
 	// Type definitions

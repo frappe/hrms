@@ -86,9 +86,8 @@ router.isReady().then(() => {
 		frappeRequest({
 			url: "/api/method/hrms.www.hrms.get_context_for_dev",
 		}).then((values) => {
-			for (let key in values) {
-				window[key] = values[key]
-			}
+			if (!window.frappe) window.frappe = {}
+			window.frappe.boot = values
 			registerServiceWorker()
 			app.mount("#app")
 		})
