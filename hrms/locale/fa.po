@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-02-28 15:39\n"
+"PO-Revision-Date: 2024-03-02 16:02\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -3260,7 +3260,7 @@ msgstr ""
 
 #: hr/report/project_profitability/project_profitability.py:178
 msgid "Cost"
-msgstr ""
+msgstr "هزینه"
 
 #. Label of a Link field in DocType 'Employee Cost Center'
 #: payroll/doctype/employee_cost_center/employee_cost_center.json
@@ -3393,7 +3393,7 @@ msgstr ""
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_department/create_department.json
 msgid "Create Department"
-msgstr ""
+msgstr "ایجاد دپارتمان"
 
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_designation/create_designation.json
@@ -3446,7 +3446,7 @@ msgstr ""
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_leave_type/create_leave_type.json
 msgid "Create Leave Type"
-msgstr ""
+msgstr "ایجاد نوع مرخصی"
 
 #. Label of a Check field in DocType 'Employee Transfer'
 #: hr/doctype/employee_transfer/employee_transfer.json
@@ -10975,7 +10975,7 @@ msgstr ""
 #: payroll/doctype/salary_structure/salary_structure.json
 msgctxt "Salary Structure"
 msgid "No"
-msgstr ""
+msgstr "خیر"
 
 #: payroll/doctype/gratuity/gratuity.py:310
 msgid "No Applicable Component is present in last month salary slip"
