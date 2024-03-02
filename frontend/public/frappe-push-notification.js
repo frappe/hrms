@@ -12,10 +12,6 @@ class FrappePushNotification {
 		return window.frappe?.boot.push_relay_server_url
 	}
 
-	static get isNotificationRelayEnabled() {
-		return window.frappe?.boot.push_notifications_enabled
-	}
-
 	// Type definitions
 	/**
 	 * Web Config

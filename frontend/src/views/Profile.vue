@@ -147,6 +147,8 @@ import { formatCurrency } from "@/utils/formatters"
 
 import ProfileInfoModal from "@/components/ProfileInfoModal.vue"
 
+import { arePushNotificationsEnabled } from "@/data/notifications"
+
 const DOCTYPE = "Employee"
 
 const socket = inject("$socket")
@@ -214,7 +216,9 @@ const isInfoModalOpen = ref(false)
 const selectedItem = ref(null)
 
 const allowPushNotifications = computed(
-	() => window.push_relay_server_url && window.push_notifications_enabled
+	() =>
+		window.frappe?.boot.push_relay_server_url &&
+		arePushNotificationsEnabled.data
 )
 
 const openInfoModal = async (request) => {

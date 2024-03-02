@@ -55,6 +55,8 @@ import { FeatherIcon, Switch, toast, LoadingIndicator } from "frappe-ui"
 
 import { computed, ref } from "vue"
 
+import { arePushNotificationsEnabled } from "@/data/notifications"
+
 const router = useRouter()
 const pushNotificationState = ref(
 	window.frappePushNotification?.isNotificationEnabled()
@@ -63,8 +65,10 @@ const isLoading = ref(false)
 
 const disablePushSetting = computed(() => {
 	return (
-		!(window.push_relay_server_url && window.push_notifications_enabled) ||
-		isLoading.value
+		!(
+			window.frappe?.boot.push_relay_server_url &&
+			arePushNotificationsEnabled.data
+		) || isLoading.value
 	)
 })
 

@@ -20,11 +20,4 @@ def get_context_for_dev():
 
 
 def get_boot():
-	return frappe._dict(
-		{
-			"push_notifications_enabled": frappe.db.get_single_value(
-				"Push Notification Settings", "enable_push_notification_relay"
-			),
-			"push_relay_server_url": frappe.conf.get("push_relay_server_url"),
-		}
-	)
+	return frappe._dict({"push_relay_server_url": frappe.conf.get("push_relay_server_url")})
