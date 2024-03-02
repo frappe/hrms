@@ -73,7 +73,10 @@ const disablePushSetting = computed(() => {
 })
 
 const description = computed(() => {
-	return disablePushSetting.value
+	return !(
+		window.frappe?.boot.push_relay_server_url &&
+		arePushNotificationsEnabled.data
+	)
 		? "Push notifications have been disabled on your site"
 		: ""
 })
