@@ -21,12 +21,15 @@
 		"vue-router": "^4.0.12",
 		"autoprefixer": "^10.4.2",
 		"postcss": "^8.4.5",
+<<<<<<< HEAD
 		"eslint": "^8.39.0",
 		"eslint-plugin-vue": "^9.11.0",
 		"prettier": "^2.8.8",
 <<<<<<< HEAD
 		"tailwindcss": "^3.0.15"
 =======
+=======
+>>>>>>> 7bcd4140e (chore: fix dev dependencies)
 		"tailwindcss": "^3.0.15",
 		"vite": "^5.1.4",
 		"vite-plugin-pwa": "^0.19.0",
@@ -37,6 +40,14 @@
 =======
 		"workbox-core": "^7.0.0",
 		"firebase": "^10.8.0"
+<<<<<<< HEAD
 >>>>>>> 6fea7ce86 (refactor: replace firebase namespaced API with dependency & register sw as classic instead of module)
+=======
+	},
+	"devDependencies": {
+		"eslint": "^8.39.0",
+		"eslint-plugin-vue": "^9.11.0",
+		"prettier": "^2.8.8"
+>>>>>>> 7bcd4140e (chore: fix dev dependencies)
 	}
 }
