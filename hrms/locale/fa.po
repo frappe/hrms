@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-03-02 16:02\n"
+"PO-Revision-Date: 2024-03-03 16:01\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -11376,37 +11376,37 @@ msgstr ""
 #: hr/doctype/daily_work_summary/daily_work_summary.json
 msgctxt "Daily Work Summary"
 msgid "Open"
-msgstr ""
+msgstr "باز"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgctxt "Employee Grievance"
 msgid "Open"
-msgstr ""
+msgstr "باز"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Open"
-msgstr ""
+msgstr "باز"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Open"
-msgstr ""
+msgstr "باز"
 
 #. Option for the 'Status' (Select) field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
 msgctxt "Leave Application"
 msgid "Open"
-msgstr ""
+msgstr "باز"
 
 #. Option for the 'Status' (Select) field in DocType 'Training Event Employee'
 #: hr/doctype/training_event_employee/training_event_employee.json
 msgctxt "Training Event Employee"
 msgid "Open"
-msgstr ""
+msgstr "باز"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
