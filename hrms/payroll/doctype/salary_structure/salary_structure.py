@@ -11,17 +11,24 @@ from frappe.utils import cint, cstr, flt
 
 import erpnext
 
+from hrms.payroll.utils import sanitize_expression
+
 
 class SalaryStructure(Document):
+	def before_validate(self):
+		self.sanitize_condition_and_formula_fields()
+
 	def validate(self):
 		self.set_missing_values()
 		self.validate_amount()
-		self.strip_condition_and_formula_fields()
 		self.validate_max_benefits_with_flexi()
 		self.validate_component_based_on_tax_slab()
 		self.validate_payment_days_based_dependent_component()
 		self.validate_timesheet_component()
 		self.validate_formula_setup()
+
+	def on_update(self):
+		self.reset_condition_and_formula_fields()
 
 	def validate_formula_setup(self):
 		for table in ["earnings", "deductions"]:
@@ -121,15 +128,22 @@ class SalaryStructure(Document):
 				)
 				break
 
-	def strip_condition_and_formula_fields(self):
-		# remove whitespaces from condition and formula fields
-		for row in self.earnings:
-			row.condition = row.condition.strip() if row.condition else ""
-			row.formula = row.formula.strip() if row.formula else ""
+	def sanitize_condition_and_formula_fields(self):
+		for table in ("earnings", "deductions"):
+			for row in self.get(table):
+				row.condition = row.condition.strip() if row.condition else ""
+				row.formula = row.formula.strip() if row.formula else ""
+				row._condition, row.condition = row.condition, sanitize_expression(row.condition)
+				row._formula, row.formula = row.formula, sanitize_expression(row.formula)
 
-		for row in self.deductions:
-			row.condition = row.condition.strip() if row.condition else ""
-			row.formula = row.formula.strip() if row.formula else ""
+	def reset_condition_and_formula_fields(self):
+		# set old values (allowing multiline strings for better readability in the doctype form)
+		for table in ("earnings", "deductions"):
+			for row in self.get(table):
+				row.condition = row._condition
+				row.formula = row._formula
+
+		self.db_update_all()
 
 	def validate_max_benefits_with_flexi(self):
 		have_a_flexi = False

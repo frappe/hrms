@@ -186,7 +186,8 @@
   {
    "fieldname": "condition",
    "fieldtype": "Code",
-   "label": "Condition"
+   "label": "Condition",
+   "options": "PythonExpression"
   },
   {
    "default": "0",
@@ -198,7 +199,8 @@
    "depends_on": "amount_based_on_formula",
    "fieldname": "formula",
    "fieldtype": "Code",
-   "label": "Formula"
+   "label": "Formula",
+   "options": "PythonExpression"
   },
   {
    "depends_on": "eval:doc.amount_based_on_formula!==1",
@@ -266,7 +268,7 @@
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-08-25 13:35:37.413696",
+ "modified": "2024-02-02 13:55:55.989527",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",
