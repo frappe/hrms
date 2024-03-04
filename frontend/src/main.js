@@ -22,6 +22,8 @@ import { employeeResource } from "@/data/employee"
 import dayjs from "@/utils/dayjs"
 import getIonicConfig from "@/utils/ionicConfig"
 
+import FrappePushNotification from "../public/frappe-push-notification"
+
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/vue/css/core.css"
 
@@ -54,8 +56,45 @@ app.provide("$employee", employeeResource)
 app.provide("$socket", socket)
 app.provide("$dayjs", dayjs)
 
+const registerServiceWorker = () => {
+	window.frappePushNotification = new FrappePushNotification("hrms")
+
+	if ("serviceWorker" in navigator) {
+		window.frappePushNotification
+			.appendConfigToServiceWorkerURL("/assets/hrms/frontend/sw.js")
+			.then((url) => {
+				navigator.serviceWorker
+					.register(url, {
+						type: "classic",
+					})
+					.then((registration) => {
+						window.frappePushNotification.initialize(registration).then(() => {
+							console.log("Frappe Push Notification initialized")
+						})
+					})
+			})
+			.catch((err) => {
+				console.error("Failed to register service worker", err)
+			})
+	} else {
+		console.error("Service worker not enabled/supported by browser")
+	}
+}
+
 router.isReady().then(() => {
-	app.mount("#app")
+	if (import.meta.env.DEV) {
+		frappeRequest({
+			url: "/api/method/hrms.www.hrms.get_context_for_dev",
+		}).then((values) => {
+			if (!window.frappe) window.frappe = {}
+			window.frappe.boot = values
+			registerServiceWorker()
+			app.mount("#app")
+		})
+	} else {
+		registerServiceWorker()
+		app.mount("#app")
+	}
 })
 
 router.beforeEach(async (to, from, next) => {
