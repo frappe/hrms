@@ -240,7 +240,8 @@ def add_custom_roles_for_reports():
 		"Income Tax Deductions",
 	):
 		if not frappe.db.get_value("Custom Role", dict(report=report_name)):
-			frappe.get_doc(
+			doc = frappe.new_doc("Custom Role")
+			doc.update(
 				dict(
 					doctype="Custom Role",
 					report=report_name,
