@@ -76,27 +76,32 @@ class BulkSalaryStructureAssignment(Document):
 		def _bulk_assign_structure():
 			success, failure = [], []
 			count = 0
-			savepoint = "before_assignments_submission"
-			frappe.db.savepoint(savepoint)
+			savepoint = "before_salary_assignment"
 
 			for d in employees:
-				assignment = create_salary_structure_assignment(
-					employee=d["employee"],
-					salary_structure=self.salary_structure,
-					company=self.company,
-					currency=self.currency,
-					payroll_payable_account=self.payroll_payable_account,
-					from_date=self.from_date,
-					base=d["base"],
-					variable=d["variable"],
-					income_tax_slab=self.income_tax_slab,
-				)
-				if not assignment:
+				try:
+					frappe.db.savepoint(savepoint)
+					create_salary_structure_assignment(
+						employee=d["employee"],
+						salary_structure=self.salary_structure,
+						company=self.company,
+						currency=self.currency,
+						payroll_payable_account=self.payroll_payable_account,
+						from_date=self.from_date,
+						base=d["base"],
+						variable=d["variable"],
+						income_tax_slab=self.income_tax_slab,
+					)
+				except Exception:
 					frappe.db.rollback(save_point=savepoint)
+					frappe.log_error(
+						f"Bulk Assignment - Salary Structure Assignment failed for employee {d['employee']}.",
+						reference_doctype="Salary Structure Assignment",
+					)
 					failure.append(d["employee"])
-					continue
+				else:
+					success.append(d["employee"])
 
-				success.append(d["employee"])
 				count += 1
 				frappe.publish_progress(count * 100 / len(employees), title=_("Assigning Structure..."))
 
