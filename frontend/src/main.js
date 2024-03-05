@@ -56,28 +56,38 @@ app.provide("$employee", employeeResource)
 app.provide("$socket", socket)
 app.provide("$dayjs", dayjs)
 
-const registerServiceWorker = () => {
+const registerServiceWorker = async () => {
 	window.frappePushNotification = new FrappePushNotification("hrms")
 
 	if ("serviceWorker" in navigator) {
-		window.frappePushNotification
-			.appendConfigToServiceWorkerURL("/assets/hrms/frontend/sw.js")
-			.then((url) => {
-				navigator.serviceWorker
-					.register(url, {
-						type: "classic",
+		let serviceWorkerURL = "/assets/hrms/frontend/sw.js"
+		let config = ""
+
+		try {
+			config = await window.frappePushNotification.fetchWebConfig()
+			serviceWorkerURL = `${serviceWorkerURL}?config=${encodeURIComponent(
+				JSON.stringify(config)
+			)}`
+		} catch (err) {
+			console.error("Failed to fetch FCM config", err)
+		}
+
+		navigator.serviceWorker
+			.register(serviceWorkerURL, {
+				type: "classic",
+			})
+			.then((registration) => {
+				if (config) {
+					window.frappePushNotification.initialize(registration).then(() => {
+						console.log("Frappe Push Notification initialized")
 					})
-					.then((registration) => {
-						window.frappePushNotification.initialize(registration).then(() => {
-							console.log("Frappe Push Notification initialized")
-						})
-					})
+				}
 			})
 			.catch((err) => {
 				console.error("Failed to register service worker", err)
 			})
 	} else {
-		console.error("Service worker not enabled/supported by browser")
+		console.error("Service worker not enabled/supported by the browser")
 	}
 }
 
