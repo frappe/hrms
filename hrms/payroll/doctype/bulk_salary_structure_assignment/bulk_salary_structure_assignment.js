@@ -143,7 +143,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 		const columns = frm.events.employees_datatable_columns();
 		const no_data_message = __(
 			frm.doc.from_date
-				? "There are no Employees without a Salary Structure Assignment on this date based on the given filters."
+				? "There are no employees without a Salary Structure Assignment on this date based on the given filters."
 				: "Please select From Date."
 		);
 
