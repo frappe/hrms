@@ -1,0 +1,20 @@
+{% if allocation_dates.length %}
+<table class="table table-bordered small">
+	<thead>
+		<tr>
+			<th style="width: 50%">{{ __("Date") }}</th>
+			<th style="width: 50%">{{ __("No. of Leaves") }}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for(const date of allocation_dates) { %} {% %}
+		<tr>
+			<td>{%= date %}</td>
+			<td>{%= monthly_earned_leave %}</td>
+		</tr>
+		{% } %}
+	</tbody>
+</table>
+{% else %}
+<p style="margin-top: 30px">No Leave has been allocated.</p>
+{% endif %}

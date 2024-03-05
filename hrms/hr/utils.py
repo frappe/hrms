@@ -4,8 +4,11 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.query_builder import DocType
 from frappe.utils import (
 	add_days,
+	add_months,
+	comma_and,
 	cstr,
 	flt,
 	format_datetime,
@@ -338,6 +341,7 @@ def allocate_earned_leaves():
 	e_leave_types = get_earned_leaves()
 	today = frappe.flags.current_date or getdate()
 
+	failed_allocations = []
 	for e_leave_type in e_leave_types:
 		leave_allocations = get_leave_allocations(today, e_leave_type.name)
 
@@ -368,7 +372,32 @@ def allocate_earned_leaves():
 			if check_effective_date(
 				from_date, today, e_leave_type.earned_leave_frequency, e_leave_type.allocate_on_day
 			):
-				update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, date_of_joining)
+				try:
+					update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, date_of_joining)
+				except Exception:
+					failed_allocations.append(allocation.name)
+	if failed_allocations:
+		allocations = comma_and([get_link_to_form("Leave Allocation", x) for x in failed_allocations])
+
+		User = DocType("User")
+		HasRole = DocType("Has Role")
+		query = (
+			frappe.qb.from_(HasRole)
+			.left_join(User)
+			.on(HasRole.parent == User.name)
+			.select(HasRole.parent)
+			.distinct()
+			.where((HasRole.parenttype == "User") & (User.enabled == 1) & (HasRole.role == "HR Manager"))
+		)
+		hr_managers = query.run(pluck=True)
+
+		frappe.sendmail(
+			recipients=hr_managers,
+			subject=_("Failure of Automatic Allocation of Earned Leaves"),
+			message=_("Automatic Leave Allocation has failed for the following Earned Leaves: {0}.").format(
+				allocations
+			),
+		)
 
 
 def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, date_of_joining):
@@ -411,6 +440,7 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 		allocation.add_comment(comment_type="Info", text=text)
 
 
+@frappe.whitelist()
 def get_monthly_earned_leave(
 	date_of_joining,
 	annual_leaves,
@@ -477,6 +507,53 @@ def get_earned_leaves():
 			"allocate_on_day",
 		],
 		filters={"is_earned_leave": 1},
+	)
+
+
+@frappe.whitelist()
+def allocate_leaves_manually(allocation_name, new_leaves):
+	allocation = frappe.get_doc("Leave Allocation", allocation_name)
+	today_date = frappe.flags.current_date or getdate()
+
+	create_additional_leave_ledger_entry(allocation, new_leaves, today_date)
+	text = _("{0} leaves were manually allocated by {1} on {2}").format(
+		frappe.bold(new_leaves), frappe.session.user, frappe.bold(formatdate(today_date))
+	)
+	allocation.add_comment(comment_type="Info", text=text)
+
+
+@frappe.whitelist()
+def get_monthly_allocation_dates(
+	leave_type, from_date, to_date, leave_policy, monthly_earned_leave
+):
+	annual_allocation = frappe.db.get_value(
+		"Leave Policy Detail", {"parent": leave_policy, "leave_type": leave_type}, "annual_allocation"
+	)
+	allocate_on_day = frappe.db.get_value("Leave Type", leave_type, "allocate_on_day")
+	date = get_month_allocation_date(from_date, allocate_on_day)
+
+	allocations = []
+	monthly_earned_leave = float(monthly_earned_leave)
+	total_leaves = monthly_earned_leave
+	if date < from_date:
+		date = add_months(date, 1)
+		date = get_month_allocation_date(date, allocate_on_day)
+	while date <= to_date and total_leaves <= annual_allocation:
+		allocations.append(date)
+		date = add_months(date, 1)
+		date = get_month_allocation_date(date, allocate_on_day)
+		total_leaves += monthly_earned_leave
+	return allocations
+
+
+def get_month_allocation_date(date, allocate_on_day):
+	allocation_date = {
+		"First Day": get_first_day(date),
+		"Last Day": get_last_day(date),
+		"Date of Joining": date[:-2] + "15",
+	}[allocate_on_day]
+	return (
+		allocation_date if allocate_on_day == "Date of Joining" else allocation_date.strftime("%Y-%m-%d")
 	)
 
 
