@@ -12,7 +12,7 @@ from hrms.overrides.company import delete_company_fixtures
 
 
 def after_install():
-	create_custom_fields(get_custom_fields())
+	create_custom_fields(get_custom_fields(), ignore_validate=True)
 	create_salary_slip_loan_fields()
 	make_fixtures()
 	setup_notifications()
@@ -302,7 +302,7 @@ def get_custom_fields():
 
 def create_salary_slip_loan_fields():
 	if "lending" in frappe.get_installed_apps():
-		create_custom_fields(SALARY_SLIP_LOAN_FIELDS)
+		create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
 
 
 def after_app_install(app_name):
@@ -311,7 +311,7 @@ def after_app_install(app_name):
 		return
 
 	print("Updating payroll setup for loans")
-	create_custom_fields(SALARY_SLIP_LOAN_FIELDS)
+	create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
 
 
 def before_app_uninstall(app_name):
