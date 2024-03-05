@@ -246,7 +246,7 @@ def add_custom_roles_for_reports():
 					report=report_name,
 					roles=[dict(role="HR User"), dict(role="HR Manager"), dict(role="Employee")],
 				)
-			).insert()
+			).insert(ignore_permissions=True)
 
 
 def create_gratuity_rule_for_india():
@@ -272,5 +272,4 @@ def create_gratuity_rule_for_india():
 			],
 		}
 	)
-	rule.flags.ignore_mandatory = True
-	rule.save()
+	rule.insert(ignore_permissions=True, ignore_mandatory=True)
