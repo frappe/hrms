@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-03-04 16:06\n"
+"PO-Revision-Date: 2024-03-05 12:11\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -699,7 +699,7 @@ msgstr ""
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.json
 msgctxt "Employee Performance Feedback"
 msgid "Added On"
-msgstr ""
+msgstr "Añadido el"
 
 #: payroll/doctype/salary_slip/salary_slip.py:1255
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
@@ -3024,7 +3024,7 @@ msgstr "Compañía"
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Company Details"
-msgstr ""
+msgstr "Detalles de la Compañía"
 
 #. Name of a DocType
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.json
