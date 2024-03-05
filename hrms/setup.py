@@ -12,7 +12,12 @@ from hrms.overrides.company import delete_company_fixtures
 
 
 def after_install():
+<<<<<<< HEAD
 	create_custom_fields(get_custom_fields())
+=======
+	create_custom_fields(get_custom_fields(), ignore_validate=True)
+	create_salary_slip_loan_fields()
+>>>>>>> 6ca8cab4c (fix: company fixture setup error handling & flags (#1504))
 	make_fixtures()
 	setup_notifications()
 	update_hr_defaults()
@@ -329,6 +334,32 @@ def get_custom_fields():
 	}
 
 
+<<<<<<< HEAD
+=======
+def create_salary_slip_loan_fields():
+	if "lending" in frappe.get_installed_apps():
+		create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
+
+
+def after_app_install(app_name):
+	"""Set up loan integration with payroll"""
+	if app_name != "lending":
+		return
+
+	print("Updating payroll setup for loans")
+	create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
+
+
+def before_app_uninstall(app_name):
+	"""Clean up loan integration with payroll"""
+	if app_name != "lending":
+		return
+
+	print("Updating payroll setup for loans")
+	delete_custom_fields(SALARY_SLIP_LOAN_FIELDS)
+
+
+>>>>>>> 6ca8cab4c (fix: company fixture setup error handling & flags (#1504))
 def make_fixtures():
 	records = [
 		# expense claim type
