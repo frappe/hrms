@@ -87,11 +87,17 @@ class FrappePushNotification {
 		if (this.webConfig !== null && this.webConfig !== undefined) {
 			return this.webConfig
 		}
-		let url = `${FrappePushNotification.relayServerBaseURL}/api/method/notification_relay.api.get_config?project_name=${this.projectName}`
-		let response = await fetch(url)
-		let response_json = await response.json()
-		this.webConfig = response_json.config
-		return this.webConfig
+		try {
+			let url = `${FrappePushNotification.relayServerBaseURL}/api/method/notification_relay.api.get_config?project_name=${this.projectName}`
+			let response = await fetch(url)
+			let response_json = await response.json()
+			this.webConfig = response_json.config
+			return this.webConfig
+		} catch (e) {
+			throw new Error(
+				"Push Notification Relay is not configured properly on your site."
+			)
+		}
 	}
 
 	/**
@@ -103,11 +109,17 @@ class FrappePushNotification {
 		if (this.vapidPublicKey !== "") {
 			return this.vapidPublicKey
 		}
-		let url = `${FrappePushNotification.relayServerBaseURL}/api/method/notification_relay.api.get_config?project_name=${this.projectName}`
-		let response = await fetch(url)
-		let response_json = await response.json()
-		this.vapidPublicKey = response_json.vapid_public_key
-		return this.vapidPublicKey
+		try {
+			let url = `${FrappePushNotification.relayServerBaseURL}/api/method/notification_relay.api.get_config?project_name=${this.projectName}`
+			let response = await fetch(url)
+			let response_json = await response.json()
+			this.vapidPublicKey = response_json.vapid_public_key
+			return this.vapidPublicKey
+		} catch (e) {
+			throw new Error(
+				"Push Notification Relay is not configured properly on your site."
+			)
+		}
 	}
 
 	/**
