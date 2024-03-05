@@ -243,7 +243,6 @@ def add_custom_roles_for_reports():
 			doc = frappe.new_doc("Custom Role")
 			doc.update(
 				dict(
-					doctype="Custom Role",
 					report=report_name,
 					roles=[dict(role="HR User"), dict(role="HR Manager"), dict(role="Employee")],
 				)
