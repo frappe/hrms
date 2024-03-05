@@ -1,3 +1,4 @@
 files:
   - source: /hrms/locale/main.pot
     translation: /hrms/locale/%two_letters_code%.po
+pull_request_title: "chore: sync translations from crowdin"
