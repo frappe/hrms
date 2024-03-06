@@ -74,7 +74,7 @@ class BulkSalaryStructureAssignment(Document):
 		self.validate_fields(employees)
 
 		if len(employees) <= 30:
-			return self._bulk_assign_structure(employees, publish_progress=True)
+			return self._bulk_assign_structure(employees)
 
 		frappe.enqueue(self._bulk_assign_structure, timeout=3000, employees=employees)
 		frappe.msgprint(
@@ -83,7 +83,7 @@ class BulkSalaryStructureAssignment(Document):
 			indicator="blue",
 		)
 
-	def _bulk_assign_structure(self, employees: list, publish_progress: bool = False) -> dict:
+	def _bulk_assign_structure(self, employees: list, publish_progress: bool = True) -> dict:
 		success, failure = [], []
 		count = 0
 		savepoint = "before_salary_assignment"
