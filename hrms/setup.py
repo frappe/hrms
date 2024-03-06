@@ -12,7 +12,7 @@ from hrms.overrides.company import delete_company_fixtures
 
 
 def after_install():
-	create_custom_fields(get_custom_fields())
+	create_custom_fields(get_custom_fields(), ignore_validate=True)
 	make_fixtures()
 	setup_notifications()
 	update_hr_defaults()

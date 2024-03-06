@@ -519,20 +519,25 @@ class TestSalarySlip(FrappeTestCase):
 		joining_date = add_days(month_start_date, 3)
 
 		emp_id = make_employee(
-			"test_salary_slip_with_holidays_included@salary.com",
+			"test_salary_slip_with_holidays_included1@salary.com",
 			status="Active",
-			joining_date=joining_date,
+			date_of_joining=joining_date,
 			relieving_date=None,
 		)
 
-		for days in range(date_diff(month_end_date, add_days(joining_date, 1)) + 1):
+		for days in range(date_diff(month_end_date, joining_date) + 1):
 			date = add_days(joining_date, days)
 			if not is_holiday("Salary Slip Test Holiday List", date):
 				mark_attendance(emp_id, date, "Present", ignore_validate=True)
 
 		# mark absent on holiday
-		first_sunday = get_first_sunday(for_date=getdate())
+		first_sunday = get_first_sunday(for_date=joining_date, find_after_for_date=True)
 		mark_attendance(emp_id, first_sunday, "Absent", ignore_validate=True)
+
+		# unmarked attendance for a day
+		frappe.db.delete(
+			"Attendance", {"employee": emp_id, "attendance_date": add_days(first_sunday, 1)}
+		)
 
 		ss = make_employee_salary_slip(
 			emp_id,
