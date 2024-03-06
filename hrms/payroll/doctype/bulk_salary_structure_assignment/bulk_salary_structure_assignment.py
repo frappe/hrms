@@ -73,42 +73,48 @@ class BulkSalaryStructureAssignment(Document):
 	def bulk_assign_structure(self, employees: list) -> dict:
 		self.validate_fields(employees)
 
-		def _bulk_assign_structure():
-			success, failure = [], []
-			count = 0
-			savepoint = "before_salary_assignment"
+		if len(employees) <= 30:
+			return self._bulk_assign_structure(employees, publish_progress=True)
 
-			for d in employees:
-				try:
-					frappe.db.savepoint(savepoint)
-					create_salary_structure_assignment(
-						employee=d["employee"],
-						salary_structure=self.salary_structure,
-						company=self.company,
-						currency=self.currency,
-						payroll_payable_account=self.payroll_payable_account,
-						from_date=self.from_date,
-						base=d["base"],
-						variable=d["variable"],
-						income_tax_slab=self.income_tax_slab,
-					)
-				except Exception:
-					frappe.db.rollback(save_point=savepoint)
-					frappe.log_error(
-						f"Bulk Assignment - Salary Structure Assignment failed for employee {d['employee']}.",
-						reference_doctype="Salary Structure Assignment",
-					)
-					failure.append(d["employee"])
-				else:
-					success.append(d["employee"])
+		frappe.enqueue(self._bulk_assign_structure, timeout=3000, employees=employees)
+		frappe.msgprint(
+			_("Creation of Salary Structure Assignments has been queued. It may take a few minutes."),
+			alert=True,
+			indicator="blue",
+		)
 
+	def _bulk_assign_structure(self, employees: list, publish_progress: bool = False) -> dict:
+		success, failure = [], []
+		count = 0
+		savepoint = "before_salary_assignment"
+
+		for d in employees:
+			try:
+				frappe.db.savepoint(savepoint)
+				create_salary_structure_assignment(
+					employee=d["employee"],
+					salary_structure=self.salary_structure,
+					company=self.company,
+					currency=self.currency,
+					payroll_payable_account=self.payroll_payable_account,
+					from_date=self.from_date,
+					base=d["base"],
+					variable=d["variable"],
+					income_tax_slab=self.income_tax_slab,
+				)
+			except Exception:
+				frappe.db.rollback(save_point=savepoint)
+				frappe.log_error(
+					f"Bulk Assignment - Salary Structure Assignment failed for employee {d['employee']}.",
+					reference_doctype="Salary Structure Assignment",
+				)
+				failure.append(d["employee"])
+			else:
+				success.append(d["employee"])
+
+			if publish_progress:
 				count += 1
 				frappe.publish_progress(count * 100 / len(employees), title=_("Assigning Structure..."))
 
-			notify_bulk_action_status("Salary Structure Assignment", failure, success)
-			return {"success": success, "failure": failure}
-
-		if len(employees) <= 20:
-			return _bulk_assign_structure()
-
-		return frappe.enqueue(_bulk_assign_structure, timeout=3000)
+		notify_bulk_action_status("Salary Structure Assignment", failure, success)
+		return {"success": success, "failure": failure}
