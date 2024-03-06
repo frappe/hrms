@@ -349,7 +349,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 			})
 			.then((r) => {
 				// refresh only on complete/partial success
-				if (r.message.success) frm.refresh();
+				if (r.message?.success) frm.refresh();
 			});
 	},
 });
