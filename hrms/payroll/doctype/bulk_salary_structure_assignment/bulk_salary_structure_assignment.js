@@ -10,6 +10,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	async refresh(frm) {
 		frm.trigger("set_primary_action");
 		await frm.trigger("set_payroll_payable_account");
+		frm.trigger("handle_realtime");
 		frm.trigger("get_employees");
 	},
 
@@ -92,6 +93,23 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 					"payroll_payable_account",
 					r.default_payroll_payable_account
 				);
+			}
+		);
+	},
+
+	handle_realtime(frm) {
+		frappe.realtime.off("completed_bulk_salary_structure_assignment");
+		frappe.realtime.on(
+			"completed_bulk_salary_structure_assignment",
+			(message) => {
+				hrms.notify_bulk_action_status(
+					"Salary Stucture Assignment",
+					message.failure,
+					message.success
+				);
+
+				// refresh only on complete/partial success
+				if (message.success) frm.refresh();
 			}
 		);
 	},
@@ -337,19 +355,14 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	},
 
 	bulk_assign_structure(frm, employees) {
-		frm
-			.call({
-				method: "bulk_assign_structure",
-				doc: frm.doc,
-				args: {
-					employees: employees,
-				},
-				freeze: true,
-				freeze_message: __("Assigning Salary Structure"),
-			})
-			.then((r) => {
-				// refresh only on complete/partial success
-				if (r.message?.success) frm.refresh();
-			});
+		frm.call({
+			method: "bulk_assign_structure",
+			doc: frm.doc,
+			args: {
+				employees: employees,
+			},
+			freeze: true,
+			freeze_message: __("Assigning Salary Structure"),
+		});
 	},
 });

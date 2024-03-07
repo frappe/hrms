@@ -8,7 +8,6 @@ from frappe.query_builder.custom import ConstantColumn
 from frappe.query_builder.functions import Coalesce
 from frappe.query_builder.terms import SubQuery
 
-from hrms.hr.utils import notify_bulk_action_status
 from hrms.payroll.doctype.salary_structure.salary_structure import (
 	create_salary_structure_assignment,
 )
@@ -70,7 +69,7 @@ class BulkSalaryStructureAssignment(Document):
 			)
 
 	@frappe.whitelist()
-	def bulk_assign_structure(self, employees: list) -> dict:
+	def bulk_assign_structure(self, employees: list):
 		self.validate_fields(employees)
 
 		if len(employees) <= 30:
@@ -83,7 +82,7 @@ class BulkSalaryStructureAssignment(Document):
 			indicator="blue",
 		)
 
-	def _bulk_assign_structure(self, employees: list, publish_progress: bool = True) -> dict:
+	def _bulk_assign_structure(self, employees: list):
 		success, failure = [], []
 		count = 0
 		savepoint = "before_salary_assignment"
@@ -112,9 +111,12 @@ class BulkSalaryStructureAssignment(Document):
 			else:
 				success.append(d["employee"])
 
-			if publish_progress:
-				count += 1
-				frappe.publish_progress(count * 100 / len(employees), title=_("Assigning Structure..."))
+			count += 1
+			frappe.publish_progress(count * 100 / len(employees), title=_("Assigning Structure..."))
 
-		notify_bulk_action_status("Salary Structure Assignment", failure, success)
-		return {"success": success, "failure": failure}
+		frappe.publish_realtime(
+			"completed_bulk_salary_structure_assignment",
+			message={"success": success, "failure": failure},
+			doctype="Bulk Salary Structure Assignment",
+			after_commit=True,
+		)
