@@ -32,35 +32,36 @@ $.extend(hrms, {
 	},
 
 	notify_bulk_action_status: (doctype, failure, success) => {
-		let msg = "";
-		let title = "";
+		let message = "";
+		let title = __("Success");
 		let indicator = "green";
 
 		if (failure.length) {
-			msg += __("Failed to create/submit {0} for employees:", [doctype]);
-			msg += " " + frappe.utils.comma_and(failure) + "<hr>";
-			msg += __(
+			message += __("Failed to create/submit {0} for employees:", [doctype]);
+			message += " " + frappe.utils.comma_and(failure) + "<hr>";
+			message += __(
 				"Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details",
 				[doctype, __("Error Log")]
 			);
+			title = __("Creation Failed");
+			indicator = "red";
 
 			if (success.length) {
+				message += "<hr>";
 				title = __("Partial Success");
-				msg += "<hr>";
-			} else title = __("Creation Failed");
-		} else title = __("Success");
-
-		if (success.length) {
-			msg += __("Successfully created {0} for employees:", [doctype]);
-			msg += " " + frappe.utils.comma_and(success);
+				indicator = "orange";
+			}
 		}
 
-		if (failure.length) indicator = success ? "orange" : "red";
+		if (success.length) {
+			message += __("Successfully created {0} for employees:", [doctype]);
+			message += " " + frappe.utils.comma_and(success);
+		}
 
 		frappe.msgprint({
-			message: msg,
-			indicator: indicator,
-			title: title,
+			message,
+			title,
+			indicator,
 			is_minimizable: true,
 		});
 	},
