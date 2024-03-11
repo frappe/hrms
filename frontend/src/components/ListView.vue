@@ -109,15 +109,7 @@
 
 <script setup>
 import { useRouter } from "vue-router"
-import {
-	inject,
-	ref,
-	markRaw,
-	watch,
-	computed,
-	reactive,
-	onMounted,
-} from "vue"
+import { inject, ref, markRaw, watch, computed, reactive, onMounted } from "vue"
 import {
 	modalController,
 	IonHeader,
