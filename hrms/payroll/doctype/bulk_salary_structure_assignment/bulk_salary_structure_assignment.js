@@ -337,7 +337,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 				checked_rows_content
 			);
 
-		frm.events.bulk_assign_structure(frm, checked_rows_content);
+		return frm.events.show_confirm_dialog(frm, checked_rows_content);
 	},
 
 	validate_base_zero(frm, employees_with_base_zero, checked_rows_content) {
@@ -352,6 +352,12 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 			},
 			__("Continue")
 		);
+	},
+
+	show_confirm_dialog(frm, checked_rows_content) {
+		frappe.confirm(__("Assign Salary Structure to selected employees?"), () => {
+			frm.events.bulk_assign_structure(frm, checked_rows_content);
+		});
 	},
 
 	bulk_assign_structure(frm, employees) {
