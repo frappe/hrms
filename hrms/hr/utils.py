@@ -6,6 +6,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import (
 	add_days,
+	comma_and,
 	cstr,
 	flt,
 	format_datetime,
@@ -773,3 +774,42 @@ def get_ec_matching_query(bank_account, company, exact_match, from_date=None, to
 			AND mode_of_payment in {mode_of_payments}
 			{filter_by_date}
 	"""
+
+
+def notify_bulk_action_status(doctype: str, failure: list, success: list) -> None:
+	frappe.clear_messages()
+
+	msg = ""
+	title = ""
+	if failure:
+		msg += _("Failed to create/submit {0} for employees:").format(doctype)
+		msg += " " + comma_and(failure, False) + "<hr>"
+		msg += (
+			_("Check {0} for more details")
+			.format("<a href='/app/List/Error Log?reference_doctype={0}'>{1}</a>")
+			.format(doctype, _("Error Log"))
+		)
+
+		if success:
+			title = _("Partial Success")
+			msg += "<hr>"
+		else:
+			title = _("Creation Failed")
+	else:
+		title = _("Success")
+
+	if success:
+		msg += _("Successfully created {0} for employees:").format(doctype)
+		msg += " " + comma_and(success, False)
+
+	if failure:
+		indicator = "orange" if success else "red"
+	else:
+		indicator = "green"
+
+	frappe.msgprint(
+		msg,
+		indicator=indicator,
+		title=title,
+		is_minimizable=True,
+	)
