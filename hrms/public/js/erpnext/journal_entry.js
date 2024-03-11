@@ -49,7 +49,7 @@ frappe.ui.form.on("Journal Entry", {
 				]
 			};
 
-			if (in_list(["Sales Invoice", "Purchase Invoice"], jvd.reference_type)) {
+			if (["Sales Invoice", "Purchase Invoice"].includes(jvd.reference_type)) {
 				out.filters.push([jvd.reference_type, "outstanding_amount", "!=", 0]);
 				// Filter by cost center
 				if (jvd.cost_center) {
@@ -61,7 +61,7 @@ frappe.ui.form.on("Journal Entry", {
 				out.filters.push([jvd.reference_type, party_account_field, "=", jvd.account]);
 			}
 
-			if (in_list(["Sales Order", "Purchase Order"], jvd.reference_type)) {
+			if (["Sales Order", "Purchase Order"].includes(jvd.reference_type)) {
 				// party_type and party mandatory
 				frappe.model.validate_missing(jvd, "party_type");
 				frappe.model.validate_missing(jvd, "party");
