@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-03-06 12:09\n"
+"PO-Revision-Date: 2024-03-08 16:15\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -1728,7 +1728,7 @@ msgstr ""
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:87
 msgid "Are you sure you want to proceed?"
-msgstr ""
+msgstr "¿Está seguro de que desea continuar?"
 
 #: hr/doctype/employee_referral/employee_referral.js:9
 msgid "Are you sure you want to reject the Employee Referral?"
@@ -13373,7 +13373,7 @@ msgstr "Fila {0}: {1} es obligatorio en la tabla de gastos para registrar una re
 #: payroll/doctype/gratuity_rule/gratuity_rule.json
 msgctxt "Gratuity Rule"
 msgid "Rules"
-msgstr ""
+msgstr "Reglas"
 
 #. Label of a Section Break field in DocType 'Additional Salary'
 #: payroll/doctype/additional_salary/additional_salary.json
@@ -13720,7 +13720,7 @@ msgstr ""
 
 #: hr/report/project_profitability/project_profitability.py:150
 msgid "Sales Invoice"
-msgstr "Factura de venta"
+msgstr "Factura de Venta"
 
 #: hr/doctype/expense_claim_type/expense_claim_type.py:22
 msgid "Same Company is entered more than once"
@@ -15587,13 +15587,13 @@ msgstr ""
 #: payroll/report/provident_fund_deductions/provident_fund_deductions.py:40
 #: payroll/report/salary_payments_based_on_payment_mode/salary_payments_based_on_payment_mode.py:40
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. Label of a Currency field in DocType 'Expense Taxes and Charges'
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
 msgctxt "Expense Taxes and Charges"
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:108
 msgid "Total Absent"
