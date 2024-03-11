@@ -215,7 +215,7 @@ class SalaryStructure(Document):
 			if len(employees) > 20:
 				frappe.enqueue(
 					assign_salary_structure_for_employees,
-					timeout=600,
+					timeout=3000,
 					employees=employees,
 					salary_structure=self,
 					payroll_payable_account=payroll_payable_account,
@@ -247,61 +247,84 @@ def assign_salary_structure_for_employees(
 	variable=None,
 	income_tax_slab=None,
 ):
-	salary_structures_assignments = []
+	assignments = []
 	existing_assignments_for = get_existing_assignments(employees, salary_structure, from_date)
 	count = 0
+	savepoint = "before_assignment_submission"
+
 	for employee in employees:
-		if employee in existing_assignments_for:
-			continue
-		count += 1
+		try:
+			frappe.db.savepoint(savepoint)
+			if employee in existing_assignments_for:
+				continue
 
-		salary_structures_assignment = create_salary_structures_assignment(
-			employee, salary_structure, payroll_payable_account, from_date, base, variable, income_tax_slab
-		)
-		salary_structures_assignments.append(salary_structures_assignment)
-		frappe.publish_progress(
-			count * 100 / len(set(employees) - set(existing_assignments_for)),
-			title=_("Assigning Structures..."),
-		)
+			count += 1
 
-	if salary_structures_assignments:
+			assignment = create_salary_structure_assignment(
+				employee,
+				salary_structure.name,
+				salary_structure.company,
+				salary_structure.currency,
+				from_date,
+				payroll_payable_account,
+				base,
+				variable,
+				income_tax_slab,
+			)
+			assignments.append(assignment)
+			frappe.publish_progress(
+				count * 100 / len(set(employees) - set(existing_assignments_for)),
+				title=_("Assigning Structures..."),
+			)
+		except Exception:
+			frappe.db.rollback(save_point=savepoint)
+			frappe.log_error(
+				f"Salary Structure Assignment failed for employee {employee}",
+				reference_doctype="Salary Structure Assignment",
+			)
+
+	if assignments:
 		frappe.msgprint(_("Structures have been assigned successfully"))
 
 
-def create_salary_structures_assignment(
+def create_salary_structure_assignment(
 	employee,
 	salary_structure,
-	payroll_payable_account,
+	company,
+	currency,
 	from_date,
-	base,
-	variable,
+	payroll_payable_account=None,
+	base=None,
+	variable=None,
 	income_tax_slab=None,
 ):
+	assignment = frappe.new_doc("Salary Structure Assignment")
+
 	if not payroll_payable_account:
 		payroll_payable_account = frappe.db.get_value(
-			"Company", salary_structure.company, "default_payroll_payable_account"
+			"Company", company, "default_payroll_payable_account"
 		)
 		if not payroll_payable_account:
 			frappe.throw(_('Please set "Default Payroll Payable Account" in Company Defaults'))
+
 	payroll_payable_account_currency = frappe.db.get_value(
 		"Account", payroll_payable_account, "account_currency"
 	)
-	company_curency = erpnext.get_company_currency(salary_structure.company)
+	company_curency = erpnext.get_company_currency(company)
 	if (
-		payroll_payable_account_currency != salary_structure.currency
+		payroll_payable_account_currency != currency
 		and payroll_payable_account_currency != company_curency
 	):
 		frappe.throw(
 			_("Invalid Payroll Payable Account. The account currency must be {0} or {1}").format(
-				salary_structure.currency, company_curency
+				currency, company_curency
 			)
 		)
 
-	assignment = frappe.new_doc("Salary Structure Assignment")
 	assignment.employee = employee
-	assignment.salary_structure = salary_structure.name
-	assignment.company = salary_structure.company
-	assignment.currency = salary_structure.currency
+	assignment.salary_structure = salary_structure
+	assignment.company = company
+	assignment.currency = currency
 	assignment.payroll_payable_account = payroll_payable_account
 	assignment.from_date = from_date
 	assignment.base = base
@@ -309,6 +332,7 @@ def create_salary_structures_assignment(
 	assignment.income_tax_slab = income_tax_slab
 	assignment.save(ignore_permissions=True)
 	assignment.submit()
+
 	return assignment.name
 
 
