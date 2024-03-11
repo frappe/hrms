@@ -118,6 +118,19 @@ def create_department(name: str, company: str = "_Test Company") -> str:
 	return department.name
 
 
+def create_employee_grade(grade: str, default_structure: str = None, default_base: float = 50000):
+	if frappe.db.exists("Employee Grade", grade):
+		return frappe.get_doc("Employee Grade", grade)
+	return frappe.get_doc(
+		{
+			"doctype": "Employee Grade",
+			"__newname": grade,
+			"default_salary_structure": default_structure,
+			"default_base_pay": default_base,
+		}
+	).insert()
+
+
 def create_job_applicant(**args):
 	args = frappe._dict(args)
 	filters = {
