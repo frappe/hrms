@@ -1303,7 +1303,7 @@ def add_holidays(events, start, end, employee, company):
 				"to_date": holiday.holiday_date,
 				"title": _("Holiday") + ": " + cstr(holiday.description),
 				"name": holiday.name,
-				"allDay": True,
+				"allDay": 1,
 			}
 		)
 
