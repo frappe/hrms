@@ -43,7 +43,7 @@ def validate_leave_allocation_against_leave_application(ledger):
 			leave_application_links.append(frappe.utils.get_link_to_form("Leave Application", leave_application))
 		frappe.throw(
 			_("Leave allocation {0} is linked with the Leave Application {1}").format(
-				ledger.transaction_name, ", ".join(leave_application_links)
+				ledger.transaction_name, ", ".join(get_link_to_form("Leave Application", application) for application in leave_application_records)
 			)
 		)
 
