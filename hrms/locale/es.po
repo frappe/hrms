@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-03-08 16:15\n"
+"PO-Revision-Date: 2024-03-12 09:41\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -2345,7 +2345,7 @@ msgstr "Llamadas"
 
 #: setup.py:392
 msgid "Campaign"
-msgstr ""
+msgstr "Campaña"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:126
 msgid "Cancellation Queued"
