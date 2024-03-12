@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import DATE_FORMAT, flt, getdate, today
+from frappe.utils import DATE_FORMAT, flt, getdate, today, get_link_to_form
 
 
 class LeaveLedgerEntry(Document):
