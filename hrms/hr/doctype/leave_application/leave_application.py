@@ -1246,7 +1246,6 @@ def add_leaves(events, start, end, filter_conditions=None):
 		leave_type,
 		from_date,
 		to_date,
-		half_day,
 		status,
 		color
 	FROM `tabLeave Application`
@@ -1276,10 +1275,8 @@ def add_leaves(events, start, end, filter_conditions=None):
 			"to_date": d.to_date,
 			"docstatus": d.docstatus,
 			"color": d.color,
-			"allDay": int(not d.half_day),
-			"title": cstr(d.employee_name)
-			+ f" ({cstr(d.leave_type)})"
-			+ (" " + _("(Half Day)") if d.half_day else ""),
+			"allDay": 1,
+			"title": f"{d.employee_name} ({d.leave_type})",
 		}
 		if e not in events:
 			events.append(e)
