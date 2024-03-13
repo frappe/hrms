@@ -151,7 +151,7 @@ def get_emp_bank_ifsc_code(salary_slips):
 		ifsc_codes_map[code.name] = code
 
 	for slip in salary_slips:
-		slip["ifsc_code"] = ifsc_codes_map[code.name]["ifsc_code"]
+		slip["ifsc_code"] = ifsc_codes_map[slip.employee]["ifsc_code"]
 
 	return salary_slips
 
