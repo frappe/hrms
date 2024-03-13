@@ -57,6 +57,11 @@ const routes = [
 		component: () => import("@/views/Notifications.vue"),
 	},
 	{
+		path: "/settings",
+		name: "Settings",
+		component: () => import("@/views/AppSettings.vue"),
+	},
+	{
 		path: "/invalid-employee",
 		name: "InvalidEmployee",
 		component: () => import("@/views/InvalidEmployee.vue"),

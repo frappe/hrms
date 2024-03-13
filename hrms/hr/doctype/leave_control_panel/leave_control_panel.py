@@ -3,11 +3,13 @@
 
 
 import frappe
-from frappe import _, msgprint
+from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cint, comma_and, flt
+from frappe.utils import cint, flt
 
 from erpnext import get_default_company
+
+from hrms.hr.utils import notify_bulk_action_status
 
 
 class LeaveControlPanel(Document):
@@ -65,7 +67,7 @@ class LeaveControlPanel(Document):
 				allocation.log_error(f"Leave Allocation failed for employee {employee}")
 				failure.append(employee)
 
-		self.notify_status("Leave Allocation", failure, success)
+		notify_bulk_action_status("Leave Allocation", failure, success)
 		return {"failed": failure, "success": success}
 
 	def create_leave_policy_assignments(self, employees: list) -> dict:
@@ -96,7 +98,7 @@ class LeaveControlPanel(Document):
 				assignment.log_error(f"Leave Policy Assignment failed for employee {employee}")
 				failure.append(employee)
 
-		self.notify_status("Leave Policy Assignment", failure, success)
+		notify_bulk_action_status("Leave Policy Assignment", failure, success)
 		return {"failed": failure, "success": success}
 
 	def get_from_to_date(self):
@@ -106,44 +108,6 @@ class LeaveControlPanel(Document):
 			return frappe.db.get_value("Leave Period", self.leave_period, ["from_date", "to_date"])
 		else:
 			return self.from_date, self.to_date
-
-	def notify_status(self, doctype: str, failure: list, success: list) -> None:
-		frappe.clear_messages()
-
-		msg = ""
-		title = ""
-		if failure:
-			msg += _("Failed to create/submit {0} for employees:").format(doctype)
-			msg += " " + comma_and(failure, False) + "<hr>"
-			msg += (
-				_("Check {0} for more details")
-				.format("<a href='/app/List/Error Log?reference_doctype={0}'>{1}</a>")
-				.format(doctype, _("Error Log"))
-			)
-
-			if success:
-				title = _("Partial Success")
-				msg += "<hr>"
-			else:
-				title = _("Creation Failed")
-		else:
-			title = _("Success")
-
-		if success:
-			msg += _("Successfully created {0} records for:").format(doctype)
-			msg += " " + comma_and(success, False)
-
-		if failure:
-			indicator = "orange" if success else "red"
-		else:
-			indicator = "green"
-
-		msgprint(
-			msg,
-			indicator=indicator,
-			title=title,
-			is_minimizable=True,
-		)
 
 	@frappe.whitelist()
 	def get_employees(self, advanced_filters: list) -> list:
