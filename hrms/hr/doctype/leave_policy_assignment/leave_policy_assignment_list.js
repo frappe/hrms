@@ -20,14 +20,22 @@ frappe.listview_settings['Leave Policy Assignment'] = {
 				{
 					fieldname: 'assignment_based_on',
 					fieldtype: 'Select',
-					options: ["", "Leave Period"],
+					options: ["", "Leave Period", "Joining Date"],
 					label: __('Assignment Based On'),
 					onchange: () => {
 						if (cur_dialog.fields_dict.assignment_based_on.value === "Leave Period") {
+							cur_dialog.set_df_property("effective_from", "reqd", 1);
+							cur_dialog.set_df_property("effective_from", "hidden", 0);
 							cur_dialog.set_df_property("effective_from", "read_only", 1);
 							cur_dialog.set_df_property("leave_period", "reqd", 1);
 							cur_dialog.set_df_property("effective_to", "read_only", 1);
+						} else if (cur_dialog.fields_dict.assignment_based_on.value === "Joining Date") {
+							cur_dialog.set_df_property("effective_from", "reqd", 0);
+							cur_dialog.set_df_property("effective_from", "hidden", 1);
+							cur_dialog.set_value("effective_from", "");
 						} else {
+							cur_dialog.set_df_property("effective_from", "reqd", 1);
+							cur_dialog.set_df_property("effective_from", "hidden", 0);
 							cur_dialog.set_df_property("effective_from", "read_only", 0);
 							cur_dialog.set_df_property("leave_period", "reqd", 0);
 							cur_dialog.set_df_property("effective_to", "read_only", 0);
