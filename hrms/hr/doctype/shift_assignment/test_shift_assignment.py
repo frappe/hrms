@@ -230,17 +230,32 @@ class TestShiftAssignment(FrappeTestCase):
 	def test_calendar(self):
 		employee1 = make_employee("test_shift_assignment1@example.com", company="_Test Company")
 		employee2 = make_employee("test_shift_assignment2@example.com", company="_Test Company")
+		employee3 = make_employee("test_shift_assignment3@example.com", company="_Test Company")
 
 		shift_type = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="12:00:00")
 		date = getdate()
-		shift1 = make_shift_assignment(shift_type.name, employee1, date)
-		make_shift_assignment(shift_type.name, employee2, date)
+		shift1 = make_shift_assignment(shift_type.name, employee1, date)  # 1 day
+		make_shift_assignment(shift_type.name, employee2, date)  # excluded due to employee filter
+		make_shift_assignment(
+			shift_type.name, employee3, add_days(date, -3), add_days(date, -2)
+		)  # excluded
+		shift2 = make_shift_assignment(shift_type.name, employee3, add_days(date, -1), date)  # 2 days
+		shift3 = make_shift_assignment(
+			shift_type.name, employee3, add_days(date, 1), add_days(date, 2)
+		)  # 2 days
+		shift4 = make_shift_assignment(
+			shift_type.name, employee3, add_days(date, 30), add_days(date, 30)
+		)  # 1 day
+		make_shift_assignment(shift_type.name, employee3, add_days(date, 31))  # excluded
 
 		events = get_events(
-			start=date, end=date, filters=[["Shift Assignment", "employee", "=", employee1, False]]
+			start=date,
+			end=add_days(date, 30),
+			filters=[["Shift Assignment", "employee", "!=", employee2, False]],
 		)
-		self.assertEqual(len(events), 1)
-		self.assertEqual(events[0]["name"], shift1.name)
+		self.assertEqual(len(events), 6)
+		for shift in events:
+			self.assertIn(shift["name"], [shift1.name, shift2.name, shift3.name, shift4.name])
 
 	def test_calendar_for_night_shift(self):
 		employee1 = make_employee("test_shift_assignment1@example.com", company="_Test Company")
