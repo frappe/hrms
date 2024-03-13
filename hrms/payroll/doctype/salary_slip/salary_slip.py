@@ -670,7 +670,7 @@ class SalarySlip(TransactionBase):
 				not consider_marked_attendance_on_holidays
 				and formatdate(d.attendance_date, "yyyy-mm-dd") in holidays
 			):
-				if d.status == "Absent" or (
+				if d.status in ["Absent", "Half Day"] or (
 					d.leave_type
 					and d.leave_type in leave_type_map.keys()
 					and not leave_type_map[d.leave_type]["include_holiday"]
