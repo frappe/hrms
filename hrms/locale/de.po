@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-02-22 19:34\n"
+"PO-Revision-Date: 2024-03-13 09:42\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -15897,7 +15897,7 @@ msgstr "Die Summe der zugewiesenen Abwesenheiten ist für die Abwesenheitsart {0
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:141
 msgid "Total percentage against cost centers should be 100"
-msgstr ""
+msgstr "Der Gesamtprozentsatz für die Kostenstellen sollte 100 betragen"
 
 #. Description of the 'Year To Date' (Currency) field in DocType 'Salary
 #. Detail'
