@@ -235,7 +235,7 @@ class TestShiftAssignment(FrappeTestCase):
 		shift_type = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="12:00:00")
 		date = getdate()
 		shift1 = make_shift_assignment(shift_type.name, employee1, date)  # 1 day
-		make_shift_assignment(shift_type.name, employee2, date)  # excluded
+		make_shift_assignment(shift_type.name, employee2, date)  # excluded due to employee filter
 		make_shift_assignment(
 			shift_type.name, employee3, add_days(date, -3), add_days(date, -2)
 		)  # excluded
