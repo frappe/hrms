@@ -1235,8 +1235,10 @@ def add_leaves(events, start, end, filters=None):
 		leave_applications = frappe.get_list("Leave Application", filters=filters, fields=fields)
 
 	for d in leave_applications:
+		d["title"] = f"{d['employee_name']} ({d['leave_type']})"
+		del d["employee_name"]
+		del d["leave_type"]
 		if d not in events:
-			d["title"] = f"{d['employee_name']} ({d['leave_type']})"
 			events.append(d)
 
 
