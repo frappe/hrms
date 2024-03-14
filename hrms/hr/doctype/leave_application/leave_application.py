@@ -1186,6 +1186,7 @@ def get_events(start, end, filters=None):
 
 	filters = json.loads(filters)
 	for idx, filter in enumerate(filters):
+		# taking relevant fields from the list [doctype, fieldname, condition, value, hidden]
 		filters[idx] = filter[1:-1]
 
 	events = []
