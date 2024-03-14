@@ -1244,8 +1244,8 @@ def add_leaves(events, start, end, filters=None):
 		"'Leave Application' as doctype",
 	]
 
-	show_leaves_of_all_members = frappe.db.get_value(
-		"HR Settings", None, "show_leaves_of_all_department_members_in_calendar"
+	show_leaves_of_all_members = frappe.db.get_single_value(
+		"HR Settings", "show_leaves_of_all_department_members_in_calendar"
 	)
 	if cint(show_leaves_of_all_members):
 		leave_applications = frappe.get_all("Leave Application", filters=filters, fields=fields)
