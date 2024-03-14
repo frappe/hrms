@@ -1164,7 +1164,11 @@ def is_lwp(leave_type):
 
 @frappe.whitelist()
 def get_events(start, end, filters=None):
-	from frappe.desk.reportview import get_filters_cond
+	import json
+
+	filters = json.loads(filters)
+	for idx, filter in enumerate(filters):
+		filters[idx] = filter[1:-1]
 
 	events = []
 
@@ -1178,12 +1182,11 @@ def get_events(start, end, filters=None):
 		employee = ""
 		company = frappe.db.get_value("Global Defaults", None, "default_company")
 
-	conditions = get_filters_cond("Leave Application", filters, [])
 	# show department leaves for employee
 	if "Employee" in frappe.get_roles():
 		add_department_leaves(events, start, end, employee, company)
 
-	add_leaves(events, start, end, conditions)
+	add_leaves(events, start, end, filters)
 	add_block_dates(events, start, end, employee, company)
 	add_holidays(events, start, end, employee, company)
 
@@ -1191,77 +1194,50 @@ def get_events(start, end, filters=None):
 
 
 def add_department_leaves(events, start, end, employee, company):
-	department = frappe.db.get_value("Employee", employee, "department")
+	if department := frappe.db.get_value("Employee", employee, "department"):
+		department_employees = frappe.get_list(
+			"Employee", filters={"department": department, "company": company}, pluck="name"
+		)
+		filters = [["employee", "in", department_employees]]
+		add_leaves(events, start, end, filters=filters)
 
-	if not department:
-		return
 
-	# department leaves
-	department_employees = frappe.db.sql_list(
-		"""select name from tabEmployee where department=%s
-		and company=%s""",
-		(department, company),
+def add_leaves(events, start, end, filters=None):
+	if not filters:
+		filters = []
+	filters.extend(
+		[
+			["from_date", "<=", getdate(end)],
+			["to_date", ">=", getdate(start)],
+			["status", "in", ["Approved", "Open"]],
+			["docstatus", "<", 2],
+		]
 	)
 
-	filter_conditions = ' and employee in ("%s")' % '", "'.join(department_employees)
-	add_leaves(events, start, end, filter_conditions=filter_conditions)
+	fields = [
+		"name",
+		"from_date",
+		"to_date",
+		"color",
+		"docstatus",
+		"employee_name",
+		"leave_type",
+		"(1) as allDay",
+		"'Leave Application' as doctype",
+	]
 
+	show_leaves_of_all_members = frappe.db.get_value(
+		"HR Settings", None, "show_leaves_of_all_department_members_in_calendar"
+	)
+	if cint(show_leaves_of_all_members):
+		leave_applications = frappe.get_all("Leave Application", filters=filters, fields=fields)
+	else:
+		leave_applications = frappe.get_list("Leave Application", filters=filters, fields=fields)
 
-def add_leaves(events, start, end, filter_conditions=None):
-	from frappe.desk.reportview import build_match_conditions
-
-	conditions = []
-
-	if not cint(
-		frappe.db.get_value("HR Settings", None, "show_leaves_of_all_department_members_in_calendar")
-	):
-		match_conditions = build_match_conditions("Leave Application")
-
-		if match_conditions:
-			conditions.append(match_conditions)
-
-	query = """SELECT
-		docstatus,
-		name,
-		employee,
-		employee_name,
-		leave_type,
-		from_date,
-		to_date,
-		status,
-		color
-	FROM `tabLeave Application`
-	WHERE
-		(
-			(%(start)s <= from_date AND from_date <= %(end)s)
-			OR (%(start)s <= to_date AND to_date <= %(end)s)
-			OR (
-				from_date < %(start)s AND to_date > %(end)s
-			)
-		)
-		AND docstatus < 2
-		AND status in ('Approved', 'Open')
-	"""
-
-	if conditions:
-		query += " AND " + " AND ".join(conditions)
-
-	if filter_conditions:
-		query += filter_conditions
-
-	for d in frappe.db.sql(query, {"start": getdate(start), "end": getdate(end)}, as_dict=True):
-		e = {
-			"name": d.name,
-			"doctype": "Leave Application",
-			"from_date": d.from_date,
-			"to_date": d.to_date,
-			"docstatus": d.docstatus,
-			"color": d.color,
-			"allDay": 1,
-			"title": f"{d.employee_name} ({d.leave_type})",
-		}
-		if e not in events:
-			events.append(e)
+	for d in leave_applications:
+		if d not in events:
+			d["title"] = f"{d['employee_name']} ({d['leave_type']})"
+			events.append(d)
 
 
 def add_block_dates(events, start, end, employee, company):
