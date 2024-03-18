@@ -26,12 +26,30 @@ class EmployeeAdvance(Document):
 
 	def validate(self):
 		validate_active_employee(self.employee)
+		self.validate_exchange_rate()
 		self.set_status()
 
 	def on_cancel(self):
 		self.ignore_linked_doctypes = "GL Entry"
 		self.set_status(update=True)
 
+<<<<<<< HEAD
+=======
+	def on_update(self):
+		self.publish_update()
+
+	def after_delete(self):
+		self.publish_update()
+
+	def publish_update(self):
+		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
+		hrms.refetch_resource("hrms:employee_advance_balance", employee_user)
+
+	def validate_exchange_rate(self):
+		if not self.exchange_rate:
+			frappe.throw(_("Exchange Rate cannot be zero."))
+
+>>>>>>> a51523cb2 (fix: zero exchange rate)
 	def set_status(self, update=False):
 		precision = self.precision("paid_amount")
 		total_amount = flt(flt(self.claimed_amount) + flt(self.return_amount), precision)
