@@ -43,7 +43,7 @@ def get_connections(employee: str, lft: int, rgt: int) -> int:
 	query = (
 		frappe.qb.from_(Employee)
 		.select(Count(Employee.name))
-		.where((Employee.lft > lft) & (Employee.rgt < rgt))
+		.where((Employee.lft > lft) & (Employee.rgt < rgt) & (Employee.status == "Active"))
 	).run()
 
 	return query[0][0]

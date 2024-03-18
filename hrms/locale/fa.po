@@ -1,37 +1,42 @@
-# Translations template for Frappe HR.
-# Copyright (C) 2024 Frappe Technologies Pvt. Ltd.
-# This file is distributed under the same license as the Frappe HR project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: Frappe HR VERSION\n"
+"Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-01-29 18:15+0053\n"
+"PO-Revision-Date: 2024-03-04 16:06\n"
 "Last-Translator: contact@frappe.io\n"
-"Language-Team: contact@frappe.io\n"
+"Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.13.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: frappe\n"
+"X-Crowdin-Project-ID: 639578\n"
+"X-Crowdin-Language: fa\n"
+"X-Crowdin-File: /[frappe.hrms] develop/hrms/locale/main.pot\n"
+"X-Crowdin-File-ID: 58\n"
+"Language: fa_IR\n"
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:32
-msgid ""
-"\n"
+msgid "\n"
 "\t\t\t\t\t\tNot found any salary slip record(s) for the employee {0}. <br><br>\n"
 "\t\t\t\t\t\tPlease specify {1} and {2} (if any),\n"
 "\t\t\t\t\t\tfor the correct tax calculation in future salary slips.\n"
 "\t\t\t\t\t\t"
-msgstr ""
+msgstr "\n"
+"\t\t\t\t\t\tهیچ سابقه فیش حقوقی برای کارمند پیدا نشد {0}. <br><br>\n"
+"\t\t\t\t\t\tلطفاً {1} و {2} (در صورت وجود)،\n"
+"\t\t\t\t\t\tرا برای محاسبه صحیح مالیات در فیش های حقوقی آینده مشخص کنید.\n"
+"\t\t\t\t\t\t"
 
 #: hr/report/employee_leave_balance/employee_leave_balance.py:22
 msgid "\"From Date\" can not be greater than or equal to \"To Date\""
-msgstr ""
+msgstr "\"از تاریخ\" نمی تواند بزرگتر یا مساوی \"تا تاریخ\" باشد"
 
 #: public/frontend/assets/BaseLayout-1fb5efbf.js:1
 msgid "$user"
-msgstr "$user"
+msgstr ""
 
 #: public/frontend/assets/LeaveBalance-814d62cc.js:1
 msgid "${c} balance"
@@ -65,187 +70,187 @@ msgstr ") برای {0}"
 #: hr/doctype/leave_type/leave_type.json
 msgctxt "Leave Type"
 msgid "0.25"
-msgstr ""
+msgstr "0.25"
 
 #. Option for the 'Rounding' (Select) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
 msgctxt "Leave Type"
 msgid "0.5"
-msgstr ""
+msgstr "0.5"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "00:00"
-msgstr ""
+msgstr "00:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "01:00"
-msgstr ""
+msgstr "01:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "02:00"
-msgstr ""
+msgstr "02:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "03:00"
-msgstr ""
+msgstr "03:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "04:00"
-msgstr ""
+msgstr "04:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "05:00"
-msgstr ""
+msgstr "05:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "06:00"
-msgstr ""
+msgstr "06:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "07:00"
-msgstr ""
+msgstr "07:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "08:00"
-msgstr ""
+msgstr "08:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "09:00"
-msgstr ""
+msgstr "09:00"
 
 #. Option for the 'Rounding' (Select) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
 msgctxt "Leave Type"
 msgid "1.0"
-msgstr ""
+msgstr "1.0"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "10:00"
-msgstr ""
+msgstr "10:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "11:00"
-msgstr ""
+msgstr "11:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "12:00"
-msgstr ""
+msgstr "12:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "13:00"
-msgstr ""
+msgstr "13:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "14:00"
-msgstr ""
+msgstr "14:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "15:00"
-msgstr ""
+msgstr "15:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "16:00"
-msgstr ""
+msgstr "16:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "17:00"
-msgstr ""
+msgstr "17:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "18:00"
-msgstr ""
+msgstr "18:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "19:00"
-msgstr ""
+msgstr "19:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "20:00"
-msgstr ""
+msgstr "20:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "21:00"
-msgstr ""
+msgstr "21:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "22:00"
-msgstr ""
+msgstr "22:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "23:00"
-msgstr ""
+msgstr "23:00"
 
 #. Description of the 'Password Policy' (Data) field in DocType 'Payroll
 #. Settings'
@@ -261,44 +266,36 @@ msgstr "<b>کل برگهای تخصیص یافته</b> بیشتر از تعدا�
 
 #. Description of the Onboarding Step 'Data Import'
 #: hr/onboarding_step/data_import/data_import.json
-msgid ""
-"<h3>Data Import</h3>\n"
-"\n"
+msgid "<h3>Data Import</h3>\n\n"
 "Data import is the tool to migrate your existing data like Employee, Customer, Supplier, and a lot more to our ERPNext system.\n"
 "Go through the video for a detailed explanation of this tool."
-msgstr ""
+msgstr "<h3>وارد کردن داده</h3>\n\n"
+"واردات داده ابزاری برای انتقال داده های موجود شما مانند کارمند، مشتری، تامین کننده و بسیاری موارد دیگر به سیستم ERPNext ما است.\n"
+"برای توضیح دقیق این ابزار ویدیو را مرور کنید."
 
 #. Description of the Onboarding Step 'Create Employee'
 #: hr/onboarding_step/create_employee/create_employee.json
-msgid ""
-"<h3>Employee</h3>\n"
-"\n"
+msgid "<h3>Employee</h3>\n\n"
 "An individual who works and is recognized for his rights and duties in your company is your Employee. You can manage the Employee master. It captures the demographic, personal and professional details, joining and leave details, etc."
 msgstr ""
 
 #. Description of the Onboarding Step 'HR Settings'
 #: hr/onboarding_step/hr_settings/hr_settings.json
-msgid ""
-"<h3>HR Settings</h3>\n"
-"\n"
+msgid "<h3>HR Settings</h3>\n\n"
 "Hr Settings consists of major settings related to Employee Lifecycle, Leave Management, etc. Click on Explore, to explore Hr Settings."
 msgstr ""
 
 #. Content of the 'Help' (HTML) field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
-msgid ""
-"<h3>Help</h3>\n"
-"\n"
-"<p>Notes:</p>\n"
-"\n"
+msgid "<h3>Help</h3>\n\n"
+"<p>Notes:</p>\n\n"
 "<ol>\n"
 "<li>Use field <code>base</code> for using base salary of the Employee</li>\n"
 "<li>Use Salary Component abbreviations in conditions and formulas. <code>BS = Basic Salary</code></li>\n"
 "<li>Use field name for employee details in conditions and formulas. <code>Employment Type = employment_type</code><code>Branch = branch</code></li>\n"
 "<li>Use field name from Salary Slip in conditions and formulas. <code>Payment Days = payment_days</code><code>Leave without pay = leave_without_pay</code></li>\n"
-"<li>Direct Amount can also be entered based on Condition. See example 3</li></ol>\n"
-"\n"
+"<li>Direct Amount can also be entered based on Condition. See example 3</li></ol>\n\n"
 "<h4>Examples</h4>\n"
 "<ol>\n"
 "<li>Calculating Basic Salary based on <code>base</code>\n"
@@ -315,41 +312,32 @@ msgstr ""
 
 #. Description of the Onboarding Step 'Create Holiday List'
 #: hr/onboarding_step/create_holiday_list/create_holiday_list.json
-msgid ""
-"<h3>Holiday List.</h3>\n"
-"\n"
+msgid "<h3>Holiday List.</h3>\n\n"
 "Holiday List is a list which contains the dates of holidays. Most organizations have a standard Holiday List for their employees. However, some of them may have different holiday lists based on different Locations or Departments. In ERPNext, you can configure multiple Holiday Lists."
 msgstr ""
 
 #. Description of the Onboarding Step 'Create Leave Allocation'
 #: hr/onboarding_step/create_leave_allocation/create_leave_allocation.json
-msgid ""
-"<h3>Leave Allocation</h3>\n"
-"\n"
+msgid "<h3>Leave Allocation</h3>\n\n"
 "Leave Allocation enables you to allocate a specific number of leaves of a particular type to an Employee so that, an employee will be able to create a Leave Application only if Leaves are allocated. "
 msgstr ""
 
 #. Description of the Onboarding Step 'Create Leave Application'
 #: hr/onboarding_step/create_leave_application/create_leave_application.json
-msgid ""
-"<h3>Leave Application</h3>\n"
-"\n"
+msgid "<h3>Leave Application</h3>\n\n"
 "Leave Application is a formal document created by an Employee to apply for Leaves for a particular time period based on there leave allocation and leave type according to there need."
 msgstr ""
 
 #. Description of the Onboarding Step 'Create Leave Type'
 #: hr/onboarding_step/create_leave_type/create_leave_type.json
-msgid ""
-"<h3>Leave Type</h3>\n"
-"\n"
+msgid "<h3>Leave Type</h3>\n\n"
 "Leave type is defined based on many factors and features like encashment, earned leaves, partially paid, without pay and, a lot more. To check other options and to define your leave type click on Show Tour."
 msgstr ""
 
 #. Content of the 'html_6' (HTML) field in DocType 'Taxable Salary Slab'
 #: payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
 msgctxt "Taxable Salary Slab"
-msgid ""
-"<h4>Condition Examples</h4>\n"
+msgid "<h4>Condition Examples</h4>\n"
 "<ol>\n"
 "<li>Applying tax if employee born between 31-12-1937 and 01-01-1958 (Employees aged 60 to 80)<br>\n"
 "<code>Condition: date_of_birth&gt;date(1937, 12, 31) and date_of_birth&lt;date(1958, 01, 01)</code></li><br><li>Applying tax by employee gender<br>\n"
@@ -374,13 +362,13 @@ msgstr "یک {0} بین {1} و {2} وجود دارد ("
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "Abbr"
-msgstr "اببر"
+msgstr ""
 
 #. Label of a Data field in DocType 'Salary Detail'
 #: payroll/doctype/salary_detail/salary_detail.json
 msgctxt "Salary Detail"
 msgid "Abbr"
-msgstr "اببر"
+msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Attendance'
 #: hr/doctype/attendance/attendance.json
@@ -518,7 +506,7 @@ msgstr "جزئیات حسابداری"
 #: payroll/workspace/salary_payout/salary_payout.json
 msgctxt "Accounting Dimension"
 msgid "Accounting Dimension"
-msgstr "بعد حسابداری"
+msgstr "بُعد حسابداری"
 
 #. Label of a Section Break field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
@@ -2318,7 +2306,7 @@ msgstr "شعبه: {0}"
 
 #: payroll/doctype/salary_structure/salary_structure.js:106
 msgid "Bulk Assignments"
-msgstr "تکالیف انبوه"
+msgstr ""
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment_list.js:3
 msgid "Bulk Leave Policy Assignment"
@@ -2330,13 +2318,13 @@ msgstr "تخصیص ساختار حقوق و دستمزد انبوه"
 
 #: payroll/report/income_tax_computation/income_tax_computation.py:515
 msgid "CTC"
-msgstr "CTC"
+msgstr ""
 
 #. Label of a Currency field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "CTC"
-msgstr "CTC"
+msgstr ""
 
 #. Label of a Select field in DocType 'Gratuity Rule'
 #: payroll/doctype/gratuity_rule/gratuity_rule.json
@@ -3411,7 +3399,7 @@ msgstr "ایجاد ارزیابی"
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_department/create_department.json
 msgid "Create Department"
-msgstr ""
+msgstr "ایجاد دپارتمان"
 
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_designation/create_designation.json
@@ -3464,7 +3452,7 @@ msgstr ""
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_leave_type/create_leave_type.json
 msgid "Create Leave Type"
-msgstr ""
+msgstr "ایجاد نوع مرخصی"
 
 #. Label of a Check field in DocType 'Employee Transfer'
 #: hr/doctype/employee_transfer/employee_transfer.json
@@ -6413,7 +6401,7 @@ msgstr "کارمند {0} قبلاً یک Shift فعال {1} دارد: {2} که �
 
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.py:151
 msgid "Employee {0} already submitted an application {1} for the payroll period {2}"
-msgstr "کارمند {0} قبلاً یک درخواست {1} برای دوره حقوق و دستمزد {2} ارسال کرده است"
+msgstr ""
 
 #: hr/doctype/shift_request/shift_request.py:128
 msgid "Employee {0} has already applied for Shift {1}: {2} that overlaps within this period"
@@ -8286,7 +8274,7 @@ msgstr "HR-VLOG-.YYYY.-"
 
 #: config/desktop.py:5
 msgid "HRMS"
-msgstr "HRMS"
+msgstr "سیستم مدیریت منابع انسانی"
 
 #. Option for the 'Status' (Select) field in DocType 'Attendance'
 #: hr/doctype/attendance/attendance.json
@@ -8513,7 +8501,7 @@ msgstr "تاریخ اجاره خانه باید حداقل 15 روز فاصله 
 
 #: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:53
 msgid "IFSC"
-msgstr "IFSC"
+msgstr ""
 
 #: payroll/report/bank_remittance/bank_remittance.py:44
 msgid "IFSC Code"
@@ -9119,7 +9107,7 @@ msgstr "مصاحبه کنندگان"
 #. Label of a Card Break in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
 msgid "Interviews"
-msgstr ""
+msgstr "مصاحبه ها"
 
 #. Label of a Long Text field in DocType 'Appointment Letter'
 #: hr/doctype/appointment_letter/appointment_letter.json
@@ -9545,7 +9533,7 @@ msgstr "مشخصات شغلی، مدارک مورد نیاز و غیره"
 #. Label of a Card Break in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
 msgid "Jobs"
-msgstr ""
+msgstr "شغل ها"
 
 #. Option for the 'Dates Based On' (Select) field in DocType 'Leave Control
 #. Panel'
@@ -9578,7 +9566,7 @@ msgstr "مطلب ثبت شده در دفتر وقایع روزانه"
 #. Label of a Card Break in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Journey"
-msgstr ""
+msgstr "سفر"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:19
 #: public/js/salary_slip_deductions_report_filters.js:25
@@ -9593,31 +9581,31 @@ msgstr "ژوئن"
 #. Name of a DocType
 #: hr/doctype/goal/goal_tree.js:136 hr/doctype/kra/kra.json
 msgid "KRA"
-msgstr "KRA"
+msgstr ""
 
 #. Label of a Link field in DocType 'Appraisal KRA'
 #: hr/doctype/appraisal_kra/appraisal_kra.json
 msgctxt "Appraisal KRA"
 msgid "KRA"
-msgstr "KRA"
+msgstr ""
 
 #. Label of a Link field in DocType 'Appraisal Template Goal'
 #: hr/doctype/appraisal_template_goal/appraisal_template_goal.json
 msgctxt "Appraisal Template Goal"
 msgid "KRA"
-msgstr "KRA"
+msgstr ""
 
 #. Label of a Link field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "KRA"
-msgstr "KRA"
+msgstr ""
 
 #. Label of a Link in the Performance Workspace
 #: hr/workspace/performance/performance.json
 msgctxt "KRA"
 msgid "KRA"
-msgstr "KRA"
+msgstr ""
 
 #. Label of a Select field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
@@ -10408,7 +10396,7 @@ msgstr "محدوده پایین تر"
 
 #: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:54
 msgid "MICR"
-msgstr "MICR"
+msgstr ""
 
 #: hr/report/vehicle_expenses/vehicle_expenses.py:31
 msgid "Make"
@@ -11394,37 +11382,37 @@ msgstr "فقط {0} هدف می تواند {1} باشد"
 #: hr/doctype/daily_work_summary/daily_work_summary.json
 msgctxt "Daily Work Summary"
 msgid "Open"
-msgstr "باز کن"
+msgstr "باز"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgctxt "Employee Grievance"
 msgid "Open"
-msgstr "باز کن"
+msgstr "باز"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Open"
-msgstr "باز کن"
+msgstr "باز"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Open"
-msgstr "باز کن"
+msgstr "باز"
 
 #. Option for the 'Status' (Select) field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
 msgctxt "Leave Application"
 msgid "Open"
-msgstr "باز کن"
+msgstr "باز"
 
 #. Option for the 'Status' (Select) field in DocType 'Training Event Employee'
 #: hr/doctype/training_event_employee/training_event_employee.json
 msgctxt "Training Event Employee"
 msgid "Open"
-msgstr "باز کن"
+msgstr "باز"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
@@ -11988,7 +11976,7 @@ msgstr "دوره های حقوق و دستمزد"
 #. Label of a Card Break in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Payroll Reports"
-msgstr ""
+msgstr "گزارش حقوق و دستمزد"
 
 #. Name of a DocType
 #. Title of an Onboarding Step
@@ -12087,12 +12075,12 @@ msgstr "درصد کسر"
 #: payroll/doctype/employee_cost_center/employee_cost_center.json
 msgctxt "Employee Cost Center"
 msgid "Percentage (%)"
-msgstr ""
+msgstr "درصد (%)"
 
 #. Name of a Workspace
 #: hr/workspace/performance/performance.json
 msgid "Performance"
-msgstr ""
+msgstr "کارایی"
 
 #. Label of a Data field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -12755,7 +12743,7 @@ msgstr "مطالبات"
 #. Name of a Workspace
 #: hr/workspace/recruitment/recruitment.json
 msgid "Recruitment"
-msgstr ""
+msgstr "استخدام"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -12768,7 +12756,7 @@ msgstr "تجزیه و تحلیل استخدام"
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Recruitment Dashboard"
-msgstr ""
+msgstr "داشبورد استخدام"
 
 #: hr/doctype/expense_claim/expense_claim_dashboard.py:10
 #: hr/doctype/leave_allocation/leave_allocation.py:207
@@ -13510,7 +13498,7 @@ msgstr "پرداخت حقوق از طریق ECS"
 #. Name of a Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Salary Payout"
-msgstr ""
+msgstr "پرداخت حقوق"
 
 #: templates/generators/job_opening.html:103
 msgid "Salary Range"
@@ -14239,7 +14227,7 @@ msgstr "تغییر زمان پایان واقعی"
 #: hr/doctype/employee_checkin/employee_checkin.json
 msgctxt "Employee Checkin"
 msgid "Shift Actual Start"
-msgstr "Shift Actual Start"
+msgstr ""
 
 #: hr/report/shift_attendance/shift_attendance.py:111
 msgid "Shift Actual Start Time"
@@ -14271,7 +14259,7 @@ msgstr "حضور و غیاب شیفت"
 #: hr/doctype/employee_checkin/employee_checkin.json
 msgctxt "Employee Checkin"
 msgid "Shift End"
-msgstr "Shift End"
+msgstr ""
 
 #: hr/report/shift_attendance/shift_attendance.py:61
 msgid "Shift End Time"
@@ -14305,11 +14293,11 @@ msgstr "تنظیمات Shift"
 #: hr/doctype/employee_checkin/employee_checkin.json
 msgctxt "Employee Checkin"
 msgid "Shift Start"
-msgstr "Shift Start"
+msgstr ""
 
 #: hr/report/shift_attendance/shift_attendance.py:55
 msgid "Shift Start Time"
-msgstr "Shift Start Time"
+msgstr ""
 
 #. Name of a DocType
 #: hr/doctype/shift_type/shift_type.json
@@ -14383,7 +14371,7 @@ msgstr "مرخصی استعلاجی"
 
 #: payroll/doctype/salary_structure/salary_structure.js:99
 msgid "Single Assignment"
-msgstr "تکلیف"
+msgstr ""
 
 #. Name of a DocType
 #: hr/doctype/interview/interview.js:186 hr/doctype/skill/skill.json
@@ -16408,7 +16396,7 @@ msgstr "HTML را آپلود کنید"
 
 #: public/frontend/assets/InsertVideo-f4f3d0f2.js:2
 msgid "Uploading ${h}%"
-msgstr ""
+msgstr "در حال آپلود ${h}%"
 
 #. Label of a Currency field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -16954,7 +16942,7 @@ msgstr "بخش"
 #: hr/doctype/daily_work_summary_group_user/daily_work_summary_group_user.json
 msgctxt "Daily Work Summary Group User"
 msgid "email"
-msgstr "پست الکترونیک"
+msgstr "ایمیل"
 
 #: hr/doctype/department_approver/department_approver.py:90
 msgid "or for Department: {0}"
@@ -16970,7 +16958,7 @@ msgstr "نتایج"
 
 #: hr/doctype/leave_type/leave_type.js:26
 msgid "to know more"
-msgstr ""
+msgstr "برای دانستن بیشتر"
 
 #: public/frontend/assets/InsertVideo-f4f3d0f2.js:2
 msgid "video"
