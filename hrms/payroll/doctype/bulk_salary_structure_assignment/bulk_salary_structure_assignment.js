@@ -4,7 +4,7 @@
 frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	setup(frm) {
 		frm.trigger("set_queries");
-		frm.trigger("setup_filter_group");
+		hrms.setup_employee_filter_group(frm);
 	},
 
 	async refresh(frm) {
@@ -112,30 +112,6 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 				if (message.success) frm.refresh();
 			}
 		);
-	},
-
-	setup_filter_group(frm) {
-		const filter_wrapper = frm.fields_dict.filter_list.$wrapper;
-		filter_wrapper.empty();
-
-		frappe.model.with_doctype("Employee", () => {
-			frm.filter_list = new frappe.ui.FilterGroup({
-				parent: filter_wrapper,
-				doctype: "Employee",
-				on_change: () => {
-					frm.advanced_filters = frm.filter_list
-						.get_filters()
-						.reduce((filters, item) => {
-							// item[3] is the value from the array [doctype, fieldname, condition, value]
-							if (item[3]) {
-								filters.push(item.slice(1, 4));
-							}
-							return filters;
-						}, []);
-					frm.trigger("get_employees");
-				},
-			});
-		});
 	},
 
 	get_employees(frm) {

@@ -31,6 +31,30 @@ $.extend(hrms, {
 		return employee;
 	},
 
+	setup_employee_filter_group: (frm) => {
+		const filter_wrapper = frm.fields_dict.filter_list.$wrapper;
+		filter_wrapper.empty();
+
+		frappe.model.with_doctype("Employee", () => {
+			frm.filter_list = new frappe.ui.FilterGroup({
+				parent: filter_wrapper,
+				doctype: "Employee",
+				on_change: () => {
+					frm.advanced_filters = frm.filter_list
+						.get_filters()
+						.reduce((filters, item) => {
+							// item[3] is the value from the array [doctype, fieldname, condition, value]
+							if (item[3]) {
+								filters.push(item.slice(1, 4));
+							}
+							return filters;
+						}, []);
+					frm.trigger("get_employees");
+				},
+			});
+		});
+	},
+
 	notify_bulk_action_status: (doctype, failure, success) => {
 		let message = "";
 		let title = __("Success");
