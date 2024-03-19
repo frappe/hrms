@@ -53,7 +53,7 @@
    "depends_on": "eval:doc.action === \"Assign Shift\"",
    "fieldname": "assign_shift_section",
    "fieldtype": "Section Break",
-   "label": "Assign Shift"
+   "label": "Set Assignment Details"
   },
   {
    "fieldname": "shift_type",
@@ -151,7 +151,7 @@
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-03-19 16:56:51.912229",
+ "modified": "2024-03-19 18:17:30.849104",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment Tool",
