@@ -64,45 +64,13 @@ frappe.ui.form.on("Shift Assignment Tool", {
 	},
 
 	render_employees_datatable(frm, employees) {
-		// section automatically collapses on applying a single filter
-		frm.set_df_property("quick_filters_section", "collapsible", 0);
-		frm.set_df_property("advanced_filters_section", "collapsible", 0);
-
 		const columns = frm.events.employees_datatable_columns();
 		const no_data_message = __(
 			frm.doc.start_date
 				? "There are no employees without Shift Assignments for these dates based on the given filters."
 				: "Please select the assignment date(s)."
 		);
-
-		if (frm.employees_datatable) {
-			frm.employees_datatable.rowmanager.checkMap = [];
-			frm.employees_datatable.options.noDataMessage = no_data_message;
-			frm.employees_datatable.refresh(employees, columns);
-			return;
-		}
-
-		const $wrapper = frm.get_field("employees_html").$wrapper;
-		frm.employee_wrapper = $(`<div class="employee_wrapper">`).appendTo(
-			$wrapper
-		);
-		const datatable_options = {
-			columns: columns,
-			data: employees,
-			checkboxColumn: true,
-			checkedRowStatus: false,
-			serialNoColumn: false,
-			dynamicRowHeight: true,
-			inlineFilters: true,
-			layout: "fluid",
-			cellHeight: 35,
-			noDataMessage: no_data_message,
-			disableReorderColumn: true,
-		};
-		frm.employees_datatable = new frappe.DataTable(
-			frm.employee_wrapper.get(0),
-			datatable_options
-		);
+		hrms.render_employees_datatable(frm, columns, employees, no_data_message);
 	},
 
 	employees_datatable_columns() {

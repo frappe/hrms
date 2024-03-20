@@ -16,7 +16,7 @@
   "leave_policy",
   "leave_type",
   "no_of_days",
-  "filters_section",
+  "quick_filters_section",
   "company",
   "branch",
   "department",
@@ -137,12 +137,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "collapsible": 1,
-   "fieldname": "filters_section",
-   "fieldtype": "Section Break",
-   "label": "Quick Filters"
-  },
-  {
    "fieldname": "employees_html",
    "fieldtype": "HTML",
    "label": "Employees HTML",
@@ -179,6 +173,12 @@
    "fieldname": "filter_list",
    "fieldtype": "HTML",
    "label": "Filter List"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "quick_filters_section",
+   "fieldtype": "Section Break",
+   "label": "Quick Filters"
   }
  ],
  "hide_toolbar": 1,
@@ -186,7 +186,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-09-29 13:06:06.940985",
+ "modified": "2024-03-20 15:05:39.635388",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Control Panel",
