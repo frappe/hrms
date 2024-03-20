@@ -59,7 +59,9 @@ $.extend(hrms, {
 		frm,
 		columns,
 		employees,
-		no_data_message = __("No Data")
+		no_data_message = __("No Data"),
+		get_editor = null,
+		events = {}
 	) => {
 		// section automatically collapses on applying a single filter
 		frm.set_df_property("quick_filters_section", "collapsible", 0);
@@ -88,6 +90,8 @@ $.extend(hrms, {
 			cellHeight: 35,
 			noDataMessage: no_data_message,
 			disableReorderColumn: true,
+			getEditor: get_editor,
+			events: events,
 		};
 		frm.employees_datatable = new frappe.DataTable(
 			employee_wrapper.get(0),
