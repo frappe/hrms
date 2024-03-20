@@ -110,51 +110,12 @@ frappe.ui.form.on("Leave Control Panel", {
 				doc: frm.doc,
 			})
 			.then((r) => {
-				// section automatically collapses on applying a single filter
-				frm.set_df_property("filters_section", "collapsible", 0);
-				frm.set_df_property("advanced_filters_section", "collapsible", 0);
-
-				frm.employees = r.message;
-				frm.set_df_property("select_employees_section", "hidden", 0);
-				frm.events.show_employees(frm, frm.employees);
+				const columns = frm.events.employees_datatable_columns();
+				hrms.render_employees_datatable(frm, columns, r.message);
 			});
 	},
 
-	show_employees(frm, employees) {
-		const $wrapper = frm.get_field("employees_html").$wrapper;
-		frm.employee_wrapper = $(`<div class="employee_wrapper pb-5">`).appendTo(
-			$wrapper
-		);
-		frm.events.render_datatable(frm, employees, frm.employee_wrapper);
-	},
-
-	render_datatable(frm, data, wrapper) {
-		const columns = frm.events.get_columns_for_employees_table();
-		if (!frm.employees_datatable) {
-			const datatable_options = {
-				columns: columns,
-				data: data,
-				checkboxColumn: true,
-				checkedRowStatus: false,
-				serialNoColumn: false,
-				dynamicRowHeight: true,
-				inlineFilters: true,
-				layout: "fluid",
-				cellHeight: 35,
-				noDataMessage: __("No Data"),
-				disableReorderColumn: true,
-			};
-			frm.employees_datatable = new frappe.DataTable(
-				wrapper.get(0),
-				datatable_options
-			);
-		} else {
-			frm.employees_datatable.rowmanager.checkMap = [];
-			frm.employees_datatable.refresh(data, columns);
-		}
-	},
-
-	get_columns_for_employees_table() {
+	employees_datatable_columns() {
 		return [
 			{
 				name: "employee",
