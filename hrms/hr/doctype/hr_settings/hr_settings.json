@@ -33,6 +33,7 @@
   "auto_leave_encashment",
   "shift_settings_section",
   "allow_multiple_shift_assignments",
+  "disable_employee_checkin_for_mobile",
   "hiring_settings_section",
   "check_vacancies",
   "send_interview_reminder",
@@ -296,7 +297,12 @@
    "fieldname": "shift_settings_section",
    "fieldtype": "Section Break",
    "label": "Shift Settings"
-  }
+  },
+  {
+    "fieldname": "disable_employee_checkin_for_mobile",
+    "fieldtype": "Check",
+    "label": "Disable Employee Checkin For Mobile"
+   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
