@@ -3,36 +3,29 @@
 
 
 import frappe
-from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cint, flt
 
 from erpnext import get_default_company
 
-from hrms.hr.utils import notify_bulk_action_status
+from hrms.hr.utils import notify_bulk_action_status, validate_bulk_tool_fields
 
 
 class LeaveControlPanel(Document):
 	def validate_fields(self, employees: list):
-		fields = []
+		mandatory_fields = []
 		if self.dates_based_on == "Leave Period":
-			fields.append("leave_period")
+			mandatory_fields.append("leave_period")
 		elif self.dates_based_on == "Joining Date":
-			fields.append("to_date")
+			mandatory_fields.append("to_date")
 		else:
-			self.validate_from_to_dates("from_date", "to_date")
-			fields.extend(["from_date", "to_date"])
+			mandatory_fields.extend(["from_date", "to_date"])
 
 		if self.allocate_based_on_leave_policy:
-			fields.append("leave_policy")
+			mandatory_fields.append("leave_policy")
 		else:
-			fields.extend(["leave_type", "no_of_days"])
-
-		for f in fields:
-			if not self.get(f):
-				frappe.throw(_("{0} is required").format(self.meta.get_label(f)))
-		if not employees:
-			frappe.throw(_("No employee(s) selected"))
+			mandatory_fields.extend(["leave_type", "no_of_days"])
+		validate_bulk_tool_fields(self, mandatory_fields, employees, "from_date", "to_date")
 
 	@frappe.whitelist()
 	def allocate_leave(self, employees: list):

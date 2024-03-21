@@ -9,6 +9,8 @@ from frappe.model.document import Document
 from frappe.query_builder import Case, Interval
 from frappe.query_builder.terms import SubQuery
 
+from hrms.hr.utils import validate_bulk_tool_fields
+
 
 class ShiftAssignmentTool(Document):
 	@frappe.whitelist()
@@ -85,7 +87,8 @@ class ShiftAssignmentTool(Document):
 
 	@frappe.whitelist()
 	def bulk_assign_shift(self, employees: list):
-		self.validate_fields(employees)
+		mandatory_fields = ["company", "shift_type", "start_date"]
+		validate_bulk_tool_fields(self, mandatory_fields, employees, "start_date", "end_date")
 
 		if len(employees) <= 30:
 			return self._bulk_assign_shift(employees)
@@ -96,18 +99,6 @@ class ShiftAssignmentTool(Document):
 			alert=True,
 			indicator="blue",
 		)
-
-	def validate_fields(self, employees: list):
-		for d in ["company", "shift_type", "start_date"]:
-			if not self.get(d):
-				frappe.throw(_("{0} is required").format(self.meta.get_label(d)), title=_("Missing Field"))
-		if self.end_date:
-			self.validate_from_to_dates("start_date", "end_date")
-		if not employees:
-			frappe.throw(
-				_("Please select at least one employee to assign the Shift."),
-				title=_("No Employees Selected"),
-			)
 
 	def _bulk_assign_shift(self, employees: list):
 		success, failure = [], []
