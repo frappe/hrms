@@ -52,7 +52,9 @@ frappe.ui.form.on("Shift Assignment Tool", {
 
 	set_primary_action(frm) {
 		frm.disable_save();
-		frm.page.set_primary_action(__("Assign Shift"), () => {});
+		frm.page.set_primary_action(__("Assign Shift"), () => {
+			frm.trigger("assign_shift");
+		});
 	},
 
 	get_employees(frm) {
@@ -99,5 +101,31 @@ frappe.ui.form.on("Shift Assignment Tool", {
 			dropdown: false,
 			align: "left",
 		}));
+	},
+
+	assign_shift(frm) {
+		const rows = frm.employees_datatable.datamanager.data;
+		const selected_employees = [];
+		const checked_row_indexes =
+			frm.employees_datatable.rowmanager.getCheckedRows();
+		checked_row_indexes.forEach((idx) => {
+			selected_employees.push(rows[idx].employee);
+		});
+
+		frappe.confirm(__("Assign Shift to selected employees?"), () => {
+			frm.events.bulk_assign_shift(frm, selected_employees);
+		});
+	},
+
+	bulk_assign_shift(frm, employees) {
+		frm.call({
+			method: "bulk_assign_shift",
+			doc: frm.doc,
+			args: {
+				employees: employees,
+			},
+			freeze: true,
+			freeze_message: __("Assigning Shift"),
+		});
 	},
 });
