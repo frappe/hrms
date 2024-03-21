@@ -33,6 +33,8 @@
   "auto_leave_encashment",
   "shift_settings_section",
   "allow_multiple_shift_assignments",
+  "checkin_settings_section",
+  "disable_employee_checkin_for_mobile_app",
   "hiring_settings_section",
   "check_vacancies",
   "send_interview_reminder",
@@ -296,13 +298,24 @@
    "fieldname": "shift_settings_section",
    "fieldtype": "Section Break",
    "label": "Shift Settings"
+  },
+  {
+   "fieldname": "checkin_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Checkin Settings"
+  },
+  {
+   "default": "0",
+   "fieldname": "disable_employee_checkin_for_mobile_app",
+   "fieldtype": "Check",
+   "label": "Disable Employee Checkin for mobile app"
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-12-28 23:07:36.317223",
+ "modified": "2024-03-21 13:16:33.252813",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",

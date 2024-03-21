@@ -634,3 +634,11 @@ def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 	return [
 		transition.state for transition in workflow.transitions if transition.allowed in user_roles
 	]
+
+
+@frappe.whitelist()
+def get_disable_checkin_for_mobile_setting():
+	disable_checkin_for_mobile_setting = frappe.db.get_single_value(
+		"HR Settings", "disable_employee_checkin_for_mobile_app"
+	)
+	return disable_checkin_for_mobile_setting
