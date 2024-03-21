@@ -19,9 +19,9 @@ from hrms.hr.doctype.expense_claim.expense_claim import get_outstanding_amount_f
 class EmployeePaymentEntry(PaymentEntry):
 	def get_valid_reference_doctypes(self):
 		if self.party_type == "Customer":
-			return ("Sales Order", "Sales Invoice", "Journal Entry", "Dunning")
+			return ("Sales Order", "Sales Invoice", "Journal Entry", "Dunning", "Payment Entry")
 		elif self.party_type == "Supplier":
-			return ("Purchase Order", "Purchase Invoice", "Journal Entry")
+			return ("Purchase Order", "Purchase Invoice", "Journal Entry", "Payment Entry")
 		elif self.party_type == "Shareholder":
 			return ("Journal Entry",)
 		elif self.party_type == "Employee":
@@ -44,7 +44,8 @@ class EmployeePaymentEntry(PaymentEntry):
 					d.reference_doctype, d.reference_name, self.party_account_currency
 				)
 
-				if ref_exchange_rate:
+				# Only update exchange rate when the reference is Journal Entry
+				if ref_exchange_rate and d.reference_doctype == "Journal Entry":
 					ref_details.update({"exchange_rate": ref_exchange_rate})
 
 				for field, value in ref_details.items():

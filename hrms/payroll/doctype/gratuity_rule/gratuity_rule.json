@@ -63,8 +63,8 @@
    "default": "Round off Work Experience",
    "fieldname": "work_experience_calculation_function",
    "fieldtype": "Select",
-   "label": "Work Experience Calculation method",
-   "options": "Round off Work Experience\nTake Exact Completed Years"
+   "label": "Work Experience Calculation Method",
+   "options": "Round off Work Experience\nTake Exact Completed Years\nManual"
   },
   {
    "default": "365",
@@ -93,7 +93,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-01-05 12:36:32.412409",
+ "modified": "2024-03-15 01:48:52.295003",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Gratuity Rule",
