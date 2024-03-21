@@ -788,6 +788,21 @@ def get_ec_matching_query(
 	return ec_query
 
 
+def validate_bulk_tool_fields(
+	self, fields: list, employees: list, from_date: str | None = None, to_date: str | None = None
+) -> None:
+	for d in fields:
+		if not self.get(d):
+			frappe.throw(_("{0} is required").format(self.meta.get_label(d)), title=_("Missing Field"))
+	if self.get(from_date) and self.get(to_date):
+		self.validate_from_to_dates(from_date, to_date)
+	if not employees:
+		frappe.throw(
+			_("Please select at least one employee to perform this action."),
+			title=_("No Employees Selected"),
+		)
+
+
 def notify_bulk_action_status(doctype: str, failure: list, success: list) -> None:
 	frappe.clear_messages()
 
