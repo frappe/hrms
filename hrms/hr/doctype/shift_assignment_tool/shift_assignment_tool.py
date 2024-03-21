@@ -131,6 +131,13 @@ class ShiftAssignmentTool(Document):
 			count += 1
 			frappe.publish_progress(count * 100 / len(employees), title=_("Assigning Shift..."))
 
+		frappe.publish_realtime(
+			"completed_bulk_shift_assignment",
+			message={"success": success, "failure": failure},
+			doctype="Shift Assignment Tool",
+			after_commit=True,
+		)
+
 	def create_shift_assignment(self, employee: str):
 		assignment = frappe.new_doc("Shift Assignment")
 		assignment.employee = employee
