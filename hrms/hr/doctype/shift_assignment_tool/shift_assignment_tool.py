@@ -4,6 +4,7 @@
 from datetime import timedelta
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.query_builder import Case, Interval
 from frappe.query_builder.terms import SubQuery
@@ -81,3 +82,62 @@ class ShiftAssignmentTool(Document):
 			query = query.where((end_time_case >= shift_start) & (ShiftType.start_time <= shift_end))
 
 		return query
+
+	@frappe.whitelist()
+	def bulk_assign_shift(self, employees: list):
+		self.validate_fields(employees)
+
+		if len(employees) <= 30:
+			return self._bulk_assign_shift(employees)
+
+		frappe.enqueue(self._bulk_assign_shift, timeout=3000, employees=employees)
+		frappe.msgprint(
+			_("Creation of Shift Assignments has been queued. It may take a few minutes."),
+			alert=True,
+			indicator="blue",
+		)
+
+	def validate_fields(self, employees: list):
+		for d in ["company", "shift_type", "start_date"]:
+			if not self.get(d):
+				frappe.throw(_("{0} is required").format(self.meta.get_label(d)), title=_("Missing Field"))
+		if self.end_date:
+			self.validate_from_to_dates("start_date", "end_date")
+		if not employees:
+			frappe.throw(
+				_("Please select at least one employee to assign the Shift."),
+				title=_("No Employees Selected"),
+			)
+
+	def _bulk_assign_shift(self, employees: list):
+		success, failure = [], []
+		count = 0
+		savepoint = "before_shift_assignment"
+
+		for d in employees:
+			try:
+				frappe.db.savepoint(savepoint)
+				self.create_shift_assignment(d)
+			except Exception:
+				frappe.db.rollback(save_point=savepoint)
+				frappe.log_error(
+					f"Bulk Assignment - Shift Assignment failed for employee {d}.",
+					reference_doctype="Shift Assignment",
+				)
+				failure.append(d)
+			else:
+				success.append(d)
+
+			count += 1
+			frappe.publish_progress(count * 100 / len(employees), title=_("Assigning Shift..."))
+
+	def create_shift_assignment(self, employee: str):
+		assignment = frappe.new_doc("Shift Assignment")
+		assignment.employee = employee
+		assignment.company = self.company
+		assignment.shift_type = self.shift_type
+		assignment.start_date = self.start_date
+		assignment.end_date = self.end_date
+		assignment.status = self.status
+		assignment.save()
+		assignment.submit()
