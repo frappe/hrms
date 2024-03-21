@@ -20,10 +20,13 @@ frappe.ui.form.on("Shift Assignment Tool", {
 	},
 
 	start_date(frm) {
+		if (frm.doc.start_date > frm.doc.end_date) frm.set_value("end_date", null);
 		frm.trigger("get_employees");
 	},
 
 	end_date(frm) {
+		if (frm.doc.end_date < frm.doc.start_date)
+			frm.set_value("start_date", null);
 		frm.trigger("get_employees");
 	},
 
