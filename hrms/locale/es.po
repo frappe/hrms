@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-03-20 08:16\n"
+"PO-Revision-Date: 2024-03-22 09:21\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -719,7 +719,7 @@ msgstr "Monto adicional"
 #: hr/doctype/employee_referral/employee_referral.json
 msgctxt "Employee Referral"
 msgid "Additional Information "
-msgstr ""
+msgstr "Información Adicional "
 
 #: payroll/report/provident_fund_deductions/provident_fund_deductions.py:34
 msgid "Additional PF"
