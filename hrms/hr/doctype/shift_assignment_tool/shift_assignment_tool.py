@@ -26,6 +26,11 @@ class ShiftAssignmentTool(Document):
 		filters = [[d, "=", self.get(d)] for d in quick_filter_fields if self.get(d)]
 		filters += advanced_filters
 
+		if self.action == "Assign Shift":
+			return self.get_employees_for_assigning_shift(filters)
+		return self.get_shift_requests(filters)
+
+	def get_employees_for_assigning_shift(self, filters):
 		Employee = frappe.qb.DocType("Employee")
 		query = frappe.qb.get_query(
 			Employee,
@@ -44,6 +49,31 @@ class ShiftAssignmentTool(Document):
 			query = query.where(
 				Employee.employee.notin(SubQuery(self.get_query_for_employees_with_shifts()))
 			)
+		return query.run(as_dict=True)
+
+	def get_shift_requests(self, filters):
+		Employee = frappe.qb.DocType("Employee")
+		ShiftRequest = frappe.qb.DocType("Shift Request")
+		query = (
+			frappe.qb.get_query(
+				Employee,
+				fields=[Employee.employee, Employee.employee_name],
+				filters=filters,
+			)
+			.inner_join(ShiftRequest)
+			.on(ShiftRequest.employee == Employee.name)
+			.where(ShiftRequest.status == "Draft")
+		)
+
+		if self.shift_type_filter:
+			query = query.where(ShiftRequest.shift_type == self.shift_type_filter)
+		if self.approver:
+			query = query.where(ShiftRequest.approver == self.approver)
+		if self.from_date:
+			query = query.where((ShiftRequest.to_date >= self.from_date) | (ShiftRequest.to_date.isnull()))
+		if self.to_date:
+			query = query.where(ShiftRequest.from_date <= self.to_date)
+
 		return query.run(as_dict=True)
 
 	def get_query_for_employees_with_shifts(self):
