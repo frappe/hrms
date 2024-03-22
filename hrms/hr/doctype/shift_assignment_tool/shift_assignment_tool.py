@@ -35,11 +35,14 @@ class ShiftAssignmentTool(Document):
 			(Employee.status == "Active")
 			& (Employee.date_of_joining <= self.start_date)
 			& ((Employee.relieving_date >= self.start_date) | (Employee.relieving_date.isnull()))
-			& (Employee.employee.notin(SubQuery(self.get_query_for_employees_with_shifts())))
 		)
 		if self.end_date:
 			query = query.where(
 				(Employee.relieving_date >= self.end_date) | (Employee.relieving_date.isnull())
+			)
+		if self.status == "Active":
+			query = query.where(
+				Employee.employee.notin(SubQuery(self.get_query_for_employees_with_shifts()))
 			)
 		return query.run(as_dict=True)
 
