@@ -99,6 +99,16 @@ $.extend(hrms, {
 		);
 	},
 
+	handle_realtime_bulk_action_notification: (frm, event, doctype) => {
+		frappe.realtime.off(event);
+		frappe.realtime.on(event, (message) => {
+			hrms.notify_bulk_action_status(doctype, message.failure, message.success);
+
+			// refresh only on complete/partial success
+			if (message.success) frm.refresh();
+		});
+	},
+
 	notify_bulk_action_status: (doctype, failure, success) => {
 		let message = "";
 		let title = __("Success");

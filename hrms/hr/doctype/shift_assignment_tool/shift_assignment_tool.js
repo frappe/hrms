@@ -8,8 +8,12 @@ frappe.ui.form.on("Shift Assignment Tool", {
 
 	async refresh(frm) {
 		frm.trigger("set_primary_action");
-		frm.trigger("handle_realtime");
 		frm.trigger("get_employees");
+		hrms.handle_realtime_bulk_action_notification(
+			frm,
+			"completed_bulk_shift_assignment",
+			"Shift Assignment"
+		);
 	},
 
 	company(frm) {
@@ -59,20 +63,6 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		frm.disable_save();
 		frm.page.set_primary_action(__("Assign Shift"), () => {
 			frm.trigger("assign_shift");
-		});
-	},
-
-	handle_realtime(frm) {
-		frappe.realtime.off("completed_bulk_shift_assignment");
-		frappe.realtime.on("completed_bulk_shift_assignment", (message) => {
-			hrms.notify_bulk_action_status(
-				"Shift Assignment",
-				message.failure,
-				message.success
-			);
-
-			// refresh only on complete/partial success
-			if (message.success) frm.refresh();
 		});
 	},
 
