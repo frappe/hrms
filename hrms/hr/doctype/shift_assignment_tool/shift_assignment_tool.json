@@ -165,11 +165,13 @@
    "fieldtype": "Column Break"
   },
   {
+   "description": "Shift Requests ending before this date will be excluded.",
    "fieldname": "from_date",
    "fieldtype": "Date",
    "label": "From Date"
   },
   {
+   "description": "Shift Requests starting after this date will be excluded.",
    "fieldname": "to_date",
    "fieldtype": "Date",
    "label": "To Date"
@@ -190,7 +192,7 @@
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-03-22 15:35:05.538568",
+ "modified": "2024-03-22 16:46:00.716860",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment Tool",
