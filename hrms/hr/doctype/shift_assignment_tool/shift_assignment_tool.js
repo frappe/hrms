@@ -107,19 +107,24 @@ frappe.ui.form.on("Shift Assignment Tool", {
 	},
 
 	render_employees_datatable(frm, employees) {
-		const columns = frm.events.employees_datatable_columns();
-		let no_data_message = __(
-			frm.doc.shift_type && frm.doc.start_date
-				? "There are no employees without Shift Assignments for these dates based on the given filters."
-				: "Please select Shift Type and assignment date(s)."
-		);
-		if (frm.doc.action === "Process Requests")
+		let columns = undefined;
+		let no_data_message = undefined;
+		if (frm.doc.action === "Assign Shift") {
+			columns = frm.events.assign_shift_datatable_columns();
+			no_data_message = __(
+				frm.doc.shift_type && frm.doc.start_date
+					? "There are no employees without Shift Assignments for these dates based on the given filters."
+					: "Please select Shift Type and assignment date(s)."
+			);
+		} else {
+			columns = frm.events.process_requests_datatable_columns();
 			no_data_message =
 				"There are no open Shift Requests based on the given filters.";
+		}
 		hrms.render_employees_datatable(frm, columns, employees, no_data_message);
 	},
 
-	employees_datatable_columns() {
+	assign_shift_datatable_columns() {
 		return [
 			{
 				name: "employee",
@@ -140,6 +145,41 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		}));
 	},
 
+	process_requests_datatable_columns() {
+		return [
+			{
+				name: "shift_request",
+				id: "name",
+				content: __("Shift Request"),
+			},
+			{
+				name: "employee",
+				id: "employee",
+				content: __("Employee"),
+			},
+			{
+				name: "shift_type",
+				id: "shift_type",
+				content: __("Shift Type"),
+			},
+			{
+				name: "from_date",
+				id: "from_date",
+				content: __("From Date"),
+			},
+			{
+				name: "to_date",
+				id: "to_date",
+				content: __("To Date"),
+			},
+		].map((x) => ({
+			...x,
+			editable: false,
+			focusable: false,
+			dropdown: false,
+			align: "left",
+		}));
+	},
 	assign_shift(frm) {
 		const rows = frm.employees_datatable.datamanager.data;
 		const selected_employees = [];
