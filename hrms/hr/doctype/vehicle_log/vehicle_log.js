@@ -2,6 +2,15 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Vehicle Log", {
+	setup: function (frm) {
+		frm.set_query("employee", function () {
+			return {
+				filters: {
+					status: "Active",
+				},
+			};
+		});
+	},
 	refresh: function(frm) {
 		if(frm.doc.docstatus == 1) {
 			frm.add_custom_button(__('Expense Claim'), function() {
