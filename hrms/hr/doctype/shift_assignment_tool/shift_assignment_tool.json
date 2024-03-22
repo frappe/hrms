@@ -26,7 +26,7 @@
   "department",
   "designation",
   "column_break_zius",
-  "employee_grade",
+  "grade",
   "employment_type",
   "advanced_filters_section",
   "filter_list",
@@ -116,12 +116,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "employee_grade",
-   "fieldtype": "Link",
-   "label": "Employee Grade",
-   "options": "Employee Grade"
-  },
-  {
    "fieldname": "employment_type",
    "fieldtype": "Link",
    "label": "Employment Type",
@@ -187,12 +181,18 @@
    "fieldname": "shift_assignment_details_section",
    "fieldtype": "Section Break",
    "label": "Shift Assignment Details"
+  },
+  {
+   "fieldname": "grade",
+   "fieldtype": "Link",
+   "label": "Employee Grade",
+   "options": "Employee Grade"
   }
  ],
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-03-22 16:46:00.716860",
+ "modified": "2024-03-22 17:43:30.511277",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment Tool",
