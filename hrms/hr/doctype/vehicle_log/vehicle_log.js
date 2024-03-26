@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Vehicle Log", {
 	setup: function (frm) {
-		frm.set_query("employee", function () {
+		frm.set_query("employee", function() {
 			return {
 				filters: {
 					status: "Active",
