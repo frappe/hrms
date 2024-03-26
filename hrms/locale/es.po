@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-03-22 09:21\n"
+"PO-Revision-Date: 2024-03-26 09:53\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -12412,7 +12412,7 @@ msgstr ""
 #: hr/doctype/job_offer/job_offer.json
 msgctxt "Job Offer"
 msgid "Print Heading"
-msgstr ""
+msgstr "Imprimir Encabezado"
 
 #. Label of a Section Break field in DocType 'Job Offer'
 #: hr/doctype/job_offer/job_offer.json
