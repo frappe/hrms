@@ -598,10 +598,15 @@ class SalarySlip(TransactionBase):
 
 				equivalent_lwp_count = (1 - daily_wages_fraction_for_half_day) if is_half_day_leave else 1
 
+<<<<<<< HEAD
 				if is_partially_paid_leave:
 					equivalent_lwp_count *= (
 						fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
 					)
+=======
+			if not leave.include_holiday and getdate(d) in holidays:
+				continue
+>>>>>>> 03995bfd3 (fix: calculate lwp based on LA for leave types including holidays on salary slip (#1574))
 
 				lwp += equivalent_lwp_count
 
