@@ -148,25 +148,7 @@ frappe.ui.form.on('Employee Advance', {
 	},
 
 	employee: function(frm) {
-		if (frm.doc.employee) {
-			frappe.run_serially([
-				() => frm.trigger('get_employee_currency'),
-				() => frm.trigger('get_pending_amount')
-			]);
-		}
-	},
-
-	get_pending_amount: function(frm) {
-		frappe.call({
-			method: "hrms.hr.doctype.employee_advance.employee_advance.get_pending_amount",
-			args: {
-				"employee": frm.doc.employee,
-				"posting_date": frm.doc.posting_date
-			},
-			callback: function(r) {
-				frm.set_value("pending_amount", r.message);
-			}
-		});
+		if (frm.doc.employee) frm.trigger('get_employee_currency')
 	},
 
 	get_employee_currency: function(frm) {
