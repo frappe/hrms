@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-03-12 09:41\n"
+"PO-Revision-Date: 2024-03-22 09:21\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -719,7 +719,7 @@ msgstr "Monto adicional"
 #: hr/doctype/employee_referral/employee_referral.json
 msgctxt "Employee Referral"
 msgid "Additional Information "
-msgstr ""
+msgstr "Información Adicional "
 
 #: payroll/report/provident_fund_deductions/provident_fund_deductions.py:34
 msgid "Additional PF"
@@ -3186,13 +3186,13 @@ msgstr "Conferencia"
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Connections"
-msgstr ""
+msgstr "Conexiones"
 
 #. Label of a Tab Break field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Connections"
-msgstr ""
+msgstr "Conexiones"
 
 #: hr/report/shift_attendance/shift_attendance.js:58
 msgid "Consider Grace Period"
@@ -4949,7 +4949,7 @@ msgstr ""
 #: hr/doctype/appraisal/appraisal.py:60
 #: payroll/doctype/payroll_entry/payroll_entry.py:93
 msgid "Duplicate Entry"
-msgstr ""
+msgstr "Entrada duplicada"
 
 #: hr/doctype/job_requisition/job_requisition.py:35
 msgid "Duplicate Job Requisition"
@@ -6708,7 +6708,7 @@ msgstr ""
 #: hr/doctype/goal/goal_list.js:103 hr/doctype/goal/goal_list.js:113
 #: payroll/doctype/additional_salary/additional_salary.py:234
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #: hr/doctype/leave_control_panel/leave_control_panel.py:121
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:331
