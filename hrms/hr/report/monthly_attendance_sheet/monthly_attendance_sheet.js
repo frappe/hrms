@@ -83,6 +83,10 @@ frappe.query_reports["Monthly Attendance Sheet"] = {
 		const summarized_view = frappe.query_report.get_filter_value('summarized_view');
 		const group_by = frappe.query_report.get_filter_value('group_by');
 
+		if (group_by && column.colIndex === 1) {
+			value = "<strong>" + value + "</strong>";
+		}
+
 		if (!summarized_view) {
 			if ((group_by && column.colIndex > 3) || (!group_by && column.colIndex > 2)) {
 				if (value == 'P' || value == 'WFH')
