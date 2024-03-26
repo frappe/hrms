@@ -246,6 +246,7 @@
   {
    "default": "1",
    "depends_on": "publish",
+   "description": "If enabled, the total no. of applications received for this opening will be displayed on the website",
    "fieldname": "publish_applications_received",
    "fieldtype": "Check",
    "label": "Publish Applications Received"
@@ -254,7 +255,7 @@
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2024-03-19 14:30:25.431428",
+ "modified": "2024-03-26 15:35:23.564869",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
