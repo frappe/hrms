@@ -84,7 +84,7 @@ class ShiftAssignmentTool(Document):
 		data = query.run(as_dict=True)
 		for d in data:
 			d.employee += ": " + d.employee_name
-			d.name = get_link_to_form("Shift Request", d.name)
+			d.shift_request = get_link_to_form("Shift Request", d.name)
 
 		return data
 
@@ -184,3 +184,46 @@ class ShiftAssignmentTool(Document):
 		assignment.status = self.status
 		assignment.save()
 		assignment.submit()
+
+	@frappe.whitelist()
+	def bulk_process_requests(self, shift_requests: list, status: str):
+		if not shift_requests:
+			frappe.throw(
+				_("Please select at least one Shift Request to perform this action."),
+				title=_("No Shift Requests Selected"),
+			)
+
+		if len(shift_requests) <= 30:
+			return self._bulk_process_requests(shift_requests, status)
+
+		frappe.enqueue(
+			self._bulk_process_requests, timeout=3000, shift_requests=shift_requests, status=status
+		)
+		frappe.msgprint(
+			_("Processing of Shift Requests has been queued. It may take a few minutes."),
+			alert=True,
+			indicator="blue",
+		)
+
+	def _bulk_process_requests(self, shift_requests: list, status: str):
+		success, failure = [], []
+		count = 0
+
+		for d in shift_requests:
+			try:
+				shift_request = frappe.get_doc("Shift Request", d)
+				shift_request.status = status
+				shift_request.save()
+				shift_request.submit()
+
+			except Exception:
+				frappe.log_error(
+					f"Bulk Processing - Processing failed for Shift Request {d}.",
+					reference_doctype="Shift Request",
+				)
+				failure.append(d)
+			else:
+				success.append(d)
+
+			count += 1
+			frappe.publish_progress(count * 100 / len(shift_requests), title=_("Processing Requests..."))
