@@ -320,7 +320,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			select start_date, end_date from `tabSalary Slip`
 			where docstatus = 1 and employee = %s
 			and ((%s between start_date and end_date) or (%s between start_date and end_date))
-			order by modified desc limit 1
+			order by creation desc limit 1
 		""",
 			(self.employee, self.to_date, self.from_date),
 		)

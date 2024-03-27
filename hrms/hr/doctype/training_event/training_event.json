@@ -198,7 +198,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-04-28 13:29:35.139497",
+ "modified": "2024-03-27 13:10:53.965453",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Training Event",
@@ -224,7 +224,7 @@
  ],
  "search_fields": "event_name",
  "show_name_in_global_search": 1,
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "event_name"

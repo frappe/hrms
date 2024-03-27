@@ -383,11 +383,10 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-01 10:08:47.862274",
+ "modified": "2024-03-27 13:09:43.559361",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim",
- "name_case": "Title Case",
  "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
@@ -447,7 +446,7 @@
  ],
  "search_fields": "employee,employee_name",
  "show_name_in_global_search": 1,
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [
   {

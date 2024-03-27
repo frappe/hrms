@@ -164,7 +164,7 @@ def get_feedback(interview: str) -> list[dict]:
 		.left_join(employee)
 		.on(interview_feedback.interviewer == employee.user_id)
 		.where((interview_feedback.interview == interview) & (interview_feedback.docstatus == 1))
-		.orderby(interview_feedback.modified)
+		.orderby(interview_feedback.creation)
 	).run(as_dict=True)
 
 

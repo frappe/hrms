@@ -40,7 +40,7 @@
   }
  ],
  "links": [],
- "modified": "2022-01-18 19:25:14.614616",
+ "modified": "2024-03-27 13:06:31.135009",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appointment Letter Template",
@@ -73,7 +73,7 @@
   }
  ],
  "search_fields": "template_name",
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "template_name",
