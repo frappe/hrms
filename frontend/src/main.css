@@ -12,7 +12,7 @@ input:disabled {
 }
 
 /* For Webkit-based browsers */
-div {
+body {
 	-webkit-tap-highlight-color: transparent;
 }
 
