@@ -40,7 +40,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Action",
-   "options": "Assign Shift\nProcess Requests",
+   "options": "Assign Shift\nProcess Shift Requests",
    "reqd": 1
   },
   {
@@ -171,7 +171,7 @@
    "label": "To Date"
   },
   {
-   "depends_on": "eval:doc.action === \"Process Requests\"",
+   "depends_on": "eval:doc.action === \"Process Shift Requests\"",
    "fieldname": "shift_request_filters_section",
    "fieldtype": "Section Break",
    "label": "Shift Request Filters"
@@ -192,7 +192,7 @@
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-03-22 17:43:30.511277",
+ "modified": "2024-03-27 17:37:26.667481",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment Tool",
