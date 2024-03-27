@@ -72,12 +72,19 @@ def get_columns(filters: Filters) -> List[Dict]:
 	columns = []
 
 	if filters.group_by:
+		options_mapping = {
+			"Branch": "Branch",
+			"Grade": "Employee Grade",
+			"Department": "Department",
+			"Designation": "Designation",
+		}
+		options = options_mapping.get(filters.group_by)
 		columns.append(
 			{
 				"label": _(filters.group_by),
 				"fieldname": frappe.scrub(filters.group_by),
 				"fieldtype": "Link",
-				"options": "Branch",
+				"options": options,
 				"width": 120,
 			}
 		)
@@ -191,7 +198,7 @@ def get_data(filters: Filters, attendance_map: Dict) -> List[Dict]:
 			records = get_rows(employee_details[value], filters, holiday_map, attendance_map)
 
 			if records:
-				data.append({group_by_column: frappe.bold(value)})
+				data.append({group_by_column: value})
 				data.extend(records)
 	else:
 		data = get_rows(employee_details, filters, holiday_map, attendance_map)
