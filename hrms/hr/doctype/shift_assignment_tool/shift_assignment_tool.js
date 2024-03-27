@@ -7,6 +7,7 @@ frappe.ui.form.on("Shift Assignment Tool", {
 	},
 
 	async refresh(frm) {
+		frm.disable_save();
 		frm.trigger("set_primary_action");
 		frm.trigger("get_employees");
 		hrms.handle_realtime_bulk_action_notification(
@@ -17,6 +18,7 @@ frappe.ui.form.on("Shift Assignment Tool", {
 	},
 
 	action(frm) {
+		frm.trigger("set_primary_action");
 		frm.trigger("get_employees");
 	},
 
@@ -82,10 +84,31 @@ frappe.ui.form.on("Shift Assignment Tool", {
 	},
 
 	set_primary_action(frm) {
-		frm.disable_save();
-		frm.page.set_primary_action(__("Assign Shift"), () => {
-			frm.trigger("assign_shift");
-		});
+		if (frm.doc.action === "Assign Shift") {
+			frm.clear_custom_buttons();
+			frm.page.set_primary_action(__("Assign Shift"), () => {
+				frm.trigger("assign_shift");
+			});
+			return;
+		}
+
+		frm.page.clear_primary_action();
+		frm.page.add_inner_button(
+			__("Approve"),
+			() => {
+				frm.events.process_requests(frm, "Approved");
+			},
+			__("Process Requests")
+		);
+		frm.page.add_inner_button(
+			__("Reject"),
+			() => {
+				frm.events.process_requests(frm, "Rejected");
+			},
+			__("Process Requests")
+		);
+		frm.page.set_inner_btn_group_as_primary(__("Process Requests"));
+		frm.page.clear_menu();
 	},
 
 	get_employees(frm) {
@@ -149,7 +172,7 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		return [
 			{
 				name: "shift_request",
-				id: "name",
+				id: "shift_request",
 				content: __("Shift Request"),
 			},
 			{
@@ -203,6 +226,36 @@ frappe.ui.form.on("Shift Assignment Tool", {
 			},
 			freeze: true,
 			freeze_message: __("Assigning Shift"),
+		});
+	},
+
+	process_requests(frm, status) {
+		const rows = frm.employees_datatable.datamanager.data;
+		const selected_requests = [];
+		const checked_row_indexes =
+			frm.employees_datatable.rowmanager.getCheckedRows();
+		checked_row_indexes.forEach((idx) => {
+			selected_requests.push(rows[idx].name);
+		});
+
+		frappe.confirm(
+			__("Process selected Shift Requests as '{0}'?", [status]),
+			() => {
+				frm.events.bulk_process_requests(frm, selected_requests, status);
+			}
+		);
+	},
+
+	bulk_process_requests(frm, shift_requests, status) {
+		frm.call({
+			method: "bulk_process_requests",
+			doc: frm.doc,
+			args: {
+				shift_requests: shift_requests,
+				status: status,
+			},
+			freeze: true,
+			freeze_message: __("Processing Requests"),
 		});
 	},
 });
