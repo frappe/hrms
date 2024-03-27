@@ -239,7 +239,7 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		});
 
 		frappe.confirm(
-			__("Process selected Shift Requests as '{0}'?", [status]),
+			__("Process selected Shift Requests as <b>{0}</b>?", [status]),
 			() => {
 				frm.events.bulk_process_requests(frm, selected_requests, status);
 			}
