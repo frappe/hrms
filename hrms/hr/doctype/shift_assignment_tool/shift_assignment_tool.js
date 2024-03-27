@@ -89,11 +89,16 @@ frappe.ui.form.on("Shift Assignment Tool", {
 	},
 
 	set_primary_action(frm) {
+		const select_rows_section_head = document
+			.querySelector('[data-fieldname="select_rows_section"]')
+			.querySelector(".section-head");
+
 		if (frm.doc.action === "Assign Shift") {
 			frm.clear_custom_buttons();
 			frm.page.set_primary_action(__("Assign Shift"), () => {
 				frm.trigger("assign_shift");
 			});
+			select_rows_section_head.textContent = __("Select Employees");
 			return;
 		}
 
@@ -114,6 +119,7 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		);
 		frm.page.set_inner_btn_group_as_primary(__("Process Requests"));
 		frm.page.clear_menu();
+		select_rows_section_head.textContent = __("Select Shift Requests");
 	},
 
 	get_employees(frm) {

@@ -30,7 +30,7 @@
   "employment_type",
   "advanced_filters_section",
   "filter_list",
-  "select_employees_section",
+  "select_rows_section",
   "employees_html"
  ],
  "fields": [
@@ -133,11 +133,6 @@
    "label": "Filter List"
   },
   {
-   "fieldname": "select_employees_section",
-   "fieldtype": "Section Break",
-   "label": "Select Employees"
-  },
-  {
    "fieldname": "employees_html",
    "fieldtype": "HTML",
    "label": "Employees HTML"
@@ -187,12 +182,17 @@
    "fieldtype": "Link",
    "label": "Employee Grade",
    "options": "Employee Grade"
+  },
+  {
+   "fieldname": "select_rows_section",
+   "fieldtype": "Section Break",
+   "label": "Select Employees"
   }
  ],
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-03-27 17:37:26.667481",
+ "modified": "2024-03-27 17:54:33.829320",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment Tool",
