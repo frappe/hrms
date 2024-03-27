@@ -102,26 +102,43 @@ $.extend(hrms, {
 	handle_realtime_bulk_action_notification: (frm, event, doctype) => {
 		frappe.realtime.off(event);
 		frappe.realtime.on(event, (message) => {
-			hrms.notify_bulk_action_status(doctype, message.failure, message.success);
+			hrms.notify_bulk_action_status(
+				doctype,
+				message.failure,
+				message.success,
+				message.for_processing
+			);
 
 			// refresh only on complete/partial success
 			if (message.success) frm.refresh();
 		});
 	},
 
-	notify_bulk_action_status: (doctype, failure, success) => {
+	notify_bulk_action_status: (
+		doctype,
+		failure,
+		success,
+		for_processing = false
+	) => {
+		let action = __("create/submit");
+		let action_past = __("created");
+		if (for_processing) {
+			action = __("process");
+			action_past = __("processed");
+		}
+
 		let message = "";
 		let title = __("Success");
 		let indicator = "green";
 
 		if (failure.length) {
-			message += __("Failed to create/submit {0} for employees:", [doctype]);
+			message += __("Failed to {0} {1} for employees:", [action, doctype]);
 			message += " " + frappe.utils.comma_and(failure) + "<hr>";
 			message += __(
 				"Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details",
 				[doctype, __("Error Log")]
 			);
-			title = __("Creation Failed");
+			title = __("Failure");
 			indicator = "red";
 
 			if (success.length) {
@@ -132,7 +149,10 @@ $.extend(hrms, {
 		}
 
 		if (success.length) {
-			message += __("Successfully created {0} for employees:", [doctype]);
+			message += __("Successfully {0} {1} for employees:", [
+				action_past,
+				doctype,
+			]);
 			message += " " + frappe.utils.comma_and(success);
 		}
 

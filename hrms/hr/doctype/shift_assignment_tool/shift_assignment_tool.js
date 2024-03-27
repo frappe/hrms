@@ -15,6 +15,11 @@ frappe.ui.form.on("Shift Assignment Tool", {
 			"completed_bulk_shift_assignment",
 			"Shift Assignment"
 		);
+		hrms.handle_realtime_bulk_action_notification(
+			frm,
+			"completed_bulk_shift_request_processing",
+			"Shift Request"
+		);
 	},
 
 	action(frm) {
@@ -177,7 +182,7 @@ frappe.ui.form.on("Shift Assignment Tool", {
 			},
 			{
 				name: "employee",
-				id: "employee",
+				id: "employee_name",
 				content: __("Employee"),
 			},
 			{
@@ -235,7 +240,10 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		const checked_row_indexes =
 			frm.employees_datatable.rowmanager.getCheckedRows();
 		checked_row_indexes.forEach((idx) => {
-			selected_requests.push(rows[idx].name);
+			selected_requests.push({
+				shift_request: rows[idx].name,
+				employee: rows[idx].employee,
+			});
 		});
 
 		frappe.confirm(

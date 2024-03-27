@@ -83,7 +83,7 @@ class ShiftAssignmentTool(Document):
 
 		data = query.run(as_dict=True)
 		for d in data:
-			d.employee += ": " + d.employee_name
+			d.employee_name = d.employee + ": " + d.employee_name
 			d.shift_request = get_link_to_form("Shift Request", d.name)
 
 		return data
@@ -211,19 +211,26 @@ class ShiftAssignmentTool(Document):
 
 		for d in shift_requests:
 			try:
-				shift_request = frappe.get_doc("Shift Request", d)
+				shift_request = frappe.get_doc("Shift Request", d["shift_request"])
 				shift_request.status = status
 				shift_request.save()
 				shift_request.submit()
 
 			except Exception:
 				frappe.log_error(
-					f"Bulk Processing - Processing failed for Shift Request {d}.",
+					f"Bulk Processing - Processing failed for Shift Request {d['shift_request']}.",
 					reference_doctype="Shift Request",
 				)
-				failure.append(d)
+				failure.append(d["employee"])
 			else:
-				success.append(d)
+				success.append(d["employee"])
 
 			count += 1
 			frappe.publish_progress(count * 100 / len(shift_requests), title=_("Processing Requests..."))
+
+		frappe.publish_realtime(
+			"completed_bulk_shift_request_processing",
+			message={"success": success, "failure": failure, "for_processing": True},
+			doctype="Shift Assignment Tool",
+			after_commit=True,
+		)
