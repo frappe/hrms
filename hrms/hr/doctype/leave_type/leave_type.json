@@ -234,7 +234,7 @@
  "icon": "fa fa-flag",
  "idx": 1,
  "links": [],
- "modified": "2023-10-23 15:34:04.281308",
+ "modified": "2024-03-27 13:10:02.014828",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Type",
@@ -268,7 +268,7 @@
    "role": "Employee"
   }
  ],
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "track_changes": 1
