@@ -25,11 +25,6 @@
 				{{ nextAction.label }}
 			</Button>
 		</template>
-		<template v-else>
-			<div class="font-medium text-sm text-gray-500 mt-1.5">
-				Employee check-in has been disabled for the mobile app
-			</div>
-		</template>
 	</div>
 
 	<ion-modal
