@@ -35,7 +35,13 @@ class ShiftAssignmentTool(Document):
 		Employee = frappe.qb.DocType("Employee")
 		query = frappe.qb.get_query(
 			Employee,
-			fields=[Employee.employee, Employee.employee_name],
+			fields=[
+				Employee.employee,
+				Employee.employee_name,
+				Employee.branch,
+				Employee.department,
+				Employee.default_shift,
+			],
 			filters=filters,
 		).where(
 			(Employee.status == "Active")
