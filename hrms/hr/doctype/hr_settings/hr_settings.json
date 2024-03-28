@@ -302,7 +302,7 @@
   {
    "fieldname": "checkin_settings_section",
    "fieldtype": "Section Break",
-   "label": "Checkin Settings"
+   "label": "Mobile App Settings"
   },
   {
    "default": "1",
@@ -315,7 +315,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-03-28 13:03:49.362246",
+ "modified": "2024-03-28 13:17:49.584977",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
