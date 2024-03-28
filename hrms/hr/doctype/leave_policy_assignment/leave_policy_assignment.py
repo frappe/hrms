@@ -32,6 +32,9 @@ class LeavePolicyAssignment(Document):
 		self.grant_leave_alloc_for_employee()
 
 	def set_dates(self):
+		if frappe.flags.in_lpa_correction:
+			return
+
 		if self.assignment_based_on == "Leave Period":
 			self.effective_from, self.effective_to = frappe.db.get_value(
 				"Leave Period", self.leave_period, ["from_date", "to_date"]
