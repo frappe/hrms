@@ -168,7 +168,7 @@ frappe.ui.form.on("Shift Assignment Tool", {
 			{
 				name: "employee_name",
 				id: "employee_name",
-				content: __("Name"),
+				content: __("Employee Name"),
 			},
 			{
 				name: "branch",
