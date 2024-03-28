@@ -4,14 +4,18 @@
 frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	setup(frm) {
 		frm.trigger("set_queries");
-		frm.trigger("setup_filter_group");
+		hrms.setup_employee_filter_group(frm);
 	},
 
 	async refresh(frm) {
 		frm.trigger("set_primary_action");
 		await frm.trigger("set_payroll_payable_account");
-		frm.trigger("handle_realtime");
 		frm.trigger("get_employees");
+		hrms.handle_realtime_bulk_action_notification(
+			frm,
+			"completed_bulk_salary_structure_assignment",
+			"Salary Structure Assignment"
+		);
 	},
 
 	from_date(frm) {
@@ -97,47 +101,6 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 		);
 	},
 
-	handle_realtime(frm) {
-		frappe.realtime.off("completed_bulk_salary_structure_assignment");
-		frappe.realtime.on(
-			"completed_bulk_salary_structure_assignment",
-			(message) => {
-				hrms.notify_bulk_action_status(
-					"Salary Stucture Assignment",
-					message.failure,
-					message.success
-				);
-
-				// refresh only on complete/partial success
-				if (message.success) frm.refresh();
-			}
-		);
-	},
-
-	setup_filter_group(frm) {
-		const filter_wrapper = frm.fields_dict.filter_list.$wrapper;
-		filter_wrapper.empty();
-
-		frappe.model.with_doctype("Employee", () => {
-			frm.filter_list = new frappe.ui.FilterGroup({
-				parent: filter_wrapper,
-				doctype: "Employee",
-				on_change: () => {
-					frm.advanced_filters = frm.filter_list
-						.get_filters()
-						.reduce((filters, item) => {
-							// item[3] is the value from the array [doctype, fieldname, condition, value]
-							if (item[3]) {
-								filters.push(item.slice(1, 4));
-							}
-							return filters;
-						}, []);
-					frm.trigger("get_employees");
-				},
-			});
-		});
-	},
-
 	get_employees(frm) {
 		if (!frm.doc.from_date)
 			return frm.events.render_employees_datatable(frm, []);
@@ -154,9 +117,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	},
 
 	render_employees_datatable(frm, employees) {
-		// section automatically collapses on applying a single filter
-		frm.set_df_property("quick_filters_section", "collapsible", 0);
-		frm.set_df_property("advanced_filters_section", "collapsible", 0);
+		frm.checked_rows_indexes = [];
 
 		const columns = frm.events.employees_datatable_columns();
 		const no_data_message = __(
@@ -164,63 +125,39 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 				? "There are no employees without a Salary Structure Assignment on this date based on the given filters."
 				: "Please select From Date."
 		);
-
-		frm.checked_rows_indexes = [];
-
-		if (frm.employees_datatable) {
-			frm.employees_datatable.rowmanager.checkMap = [];
-			frm.employees_datatable.options.noDataMessage = no_data_message;
-			frm.employees_datatable.refresh(employees, columns);
-			return;
-		}
-
-		const $wrapper = frm.get_field("employees_html").$wrapper;
-		frm.employee_wrapper = $(`<div class="employee_wrapper">`).appendTo(
-			$wrapper
-		);
-		const datatable_options = {
-			columns: columns,
-			data: employees,
-			checkboxColumn: true,
-			checkedRowStatus: false,
-			serialNoColumn: false,
-			dynamicRowHeight: true,
-			inlineFilters: true,
-			layout: "fluid",
-			cellHeight: 35,
-			noDataMessage: no_data_message,
-			disableReorderColumn: true,
-			getEditor(colIndex, rowIndex, value, parent, column) {
-				if (!["base", "variable"].includes(column.name)) return;
-
-				const $input = document.createElement("input");
-				$input.className = "dt-input h-100";
-				$input.type = "number";
-				$input.min = 0;
-				parent.appendChild($input);
-
-				return {
-					initValue(value) {
-						$input.focus();
-						$input.value = value;
-					},
-					setValue(value) {
-						$input.value = value;
-					},
-					getValue() {
-						return Number($input.value);
-					},
-				};
-			},
-			events: {
-				onCheckRow() {
-					frm.trigger("handle_row_check");
+		const get_editor = (colIndex, rowIndex, value, parent, column) => {
+			if (!["base", "variable"].includes(column.name)) return;
+			const $input = document.createElement("input");
+			$input.className = "dt-input h-100";
+			$input.type = "number";
+			$input.min = 0;
+			parent.appendChild($input);
+			return {
+				initValue(value) {
+					$input.focus();
+					$input.value = value;
 				},
+				setValue(value) {
+					$input.value = value;
+				},
+				getValue() {
+					return Number($input.value);
+				},
+			};
+		};
+		const events = {
+			onCheckRow() {
+				frm.trigger("handle_row_check");
 			},
 		};
-		frm.employees_datatable = new frappe.DataTable(
-			frm.employee_wrapper.get(0),
-			datatable_options
+
+		hrms.render_employees_datatable(
+			frm,
+			columns,
+			employees,
+			no_data_message,
+			get_editor,
+			events
 		);
 	},
 

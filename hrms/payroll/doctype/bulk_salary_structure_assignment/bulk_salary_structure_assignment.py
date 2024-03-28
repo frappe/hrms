@@ -8,6 +8,7 @@ from frappe.query_builder.custom import ConstantColumn
 from frappe.query_builder.functions import Coalesce
 from frappe.query_builder.terms import SubQuery
 
+from hrms.hr.utils import validate_bulk_tool_fields
 from hrms.payroll.doctype.salary_structure.salary_structure import (
 	create_salary_structure_assignment,
 )
@@ -58,19 +59,10 @@ class BulkSalaryStructureAssignment(Document):
 		)
 		return query.run(as_dict=True)
 
-	def validate_fields(self, employees: list):
-		for d in ["salary_structure", "from_date", "company"]:
-			if not self.get(d):
-				frappe.throw(_("{0} is required").format(self.meta.get_label(d)), title=_("Missing Field"))
-		if not employees:
-			frappe.throw(
-				_("Please select at least one employee to assign the Salary Structure."),
-				title=_("No Employees Selected"),
-			)
-
 	@frappe.whitelist()
-	def bulk_assign_structure(self, employees: list):
-		self.validate_fields(employees)
+	def bulk_assign_structure(self, employees: list) -> None:
+		mandatory_fields = ["salary_structure", "from_date", "company"]
+		validate_bulk_tool_fields(self, mandatory_fields, employees)
 
 		if len(employees) <= 30:
 			return self._bulk_assign_structure(employees)
@@ -82,7 +74,7 @@ class BulkSalaryStructureAssignment(Document):
 			indicator="blue",
 		)
 
-	def _bulk_assign_structure(self, employees: list):
+	def _bulk_assign_structure(self, employees: list) -> None:
 		success, failure = [], []
 		count = 0
 		savepoint = "before_salary_assignment"
