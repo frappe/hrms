@@ -2,8 +2,11 @@
 # License: GNU General Public License v3. See license.txt
 
 
+import json
+
 import frappe
 from frappe import _
+from frappe.desk.reportview import get_filters_cond
 from frappe.model.document import Document
 from frappe.utils import (
 	add_days,
@@ -15,6 +18,8 @@ from frappe.utils import (
 	getdate,
 	nowdate,
 )
+
+from erpnext.controllers.status_updater import validate_status
 
 from hrms.hr.doctype.shift_assignment.shift_assignment import has_overlapping_timings
 from hrms.hr.utils import (
@@ -34,7 +39,6 @@ class OverlappingShiftAttendanceError(frappe.ValidationError):
 
 class Attendance(Document):
 	def validate(self):
-		from erpnext.controllers.status_updater import validate_status
 
 		validate_status(self.status, ["Present", "Absent", "On Leave", "Half Day", "Work From Home"])
 		validate_active_employee(self.employee)
@@ -238,8 +242,6 @@ def get_events(start, end, filters=None):
 	if not employee:
 		return events
 
-	from frappe.desk.reportview import get_filters_cond
-
 	conditions = get_filters_cond("Attendance", filters, [])
 	add_attendance(events, start, end, conditions=conditions)
 	add_holidays(events, start, end, employee)
@@ -324,7 +326,6 @@ def mark_attendance(
 
 @frappe.whitelist()
 def mark_bulk_attendance(data):
-	import json
 
 	if isinstance(data, str):
 		data = json.loads(data)
