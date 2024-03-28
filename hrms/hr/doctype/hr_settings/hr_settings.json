@@ -34,7 +34,7 @@
   "shift_settings_section",
   "allow_multiple_shift_assignments",
   "checkin_settings_section",
-  "disable_employee_checkin_for_mobile_app",
+  "allow_employee_checkin_for_mobile_app",
   "hiring_settings_section",
   "check_vacancies",
   "send_interview_reminder",
@@ -306,9 +306,9 @@
   },
   {
    "default": "1",
-   "fieldname": "disable_employee_checkin_for_mobile_app",
+   "fieldname": "allow_employee_checkin_for_mobile_app",
    "fieldtype": "Check",
-   "label": "Enable Employee Checkin for mobile app"
+   "label": "Allow Employee Checkin for mobile app"
   }
  ],
  "icon": "fa fa-cog",

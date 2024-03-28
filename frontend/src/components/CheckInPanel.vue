@@ -3,7 +3,7 @@
 		<h2 class="text-lg font-bold text-gray-900">
 			Hey, {{ employee?.data?.first_name }} 👋
 		</h2>
-		<template v-if="EnableCheckinForMobile.data">
+		<template v-if="allowCheckinForMobile.data">
 			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
 				Last {{ lastLogType }} was at {{ lastLogTime }}
 			</div>
@@ -59,9 +59,9 @@
 import { createListResource, toast, FeatherIcon } from "frappe-ui"
 import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
-import { EnableCheckinForMobile } from "@/data/settings";
+import { allowCheckinForMobile } from "@/data/settings"
 
-console.log("checkin setting", EnableCheckinForMobile.data)
+console.log("checkin setting", allowCheckinForMobile.data)
 
 const DOCTYPE = "Employee Checkin"
 
