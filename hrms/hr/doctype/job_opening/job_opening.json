@@ -255,7 +255,7 @@
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2024-03-26 15:35:23.564869",
+ "modified": "2024-03-27 13:09:57.992794",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
@@ -278,7 +278,7 @@
    "role": "Guest"
   }
  ],
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "ASC",
  "states": [
   {

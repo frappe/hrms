@@ -1,5 +1,4 @@
 {
- "_comments": "[]",
  "actions": [],
  "autoname": "hash",
  "creation": "2022-08-26 09:38:43.014018",
@@ -62,14 +61,14 @@
  ],
  "istable": 1,
  "links": [],
- "modified": "2023-03-27 12:21:24.929426",
+ "modified": "2024-03-27 13:06:31.917170",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal KRA",
  "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [],
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": []
 }
