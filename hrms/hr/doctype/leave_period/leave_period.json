@@ -56,7 +56,7 @@
   }
  ],
  "links": [],
- "modified": "2022-01-13 13:28:12.951025",
+ "modified": "2024-03-27 13:10:01.453851",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Period",
@@ -101,7 +101,7 @@
   }
  ],
  "search_fields": "from_date, to_date, company",
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "track_changes": 1

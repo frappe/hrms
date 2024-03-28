@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-02-02 13:38\n"
+"PO-Revision-Date: 2024-03-15 11:00\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -13031,7 +13031,7 @@ msgstr "Rappelé"
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "Reminder"
-msgstr ""
+msgstr "Rappel"
 
 #. Label of a Section Break field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
