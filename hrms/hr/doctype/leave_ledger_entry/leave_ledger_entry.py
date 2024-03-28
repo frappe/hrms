@@ -2,6 +2,8 @@
 # For license information, please see license.txt
 
 
+import json
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -185,6 +187,10 @@ def get_remaining_leaves(allocation):
 @frappe.whitelist()
 def expire_allocation(allocation, expiry_date=None):
 	"""expires non-carry forwarded allocation"""
+	if isinstance(allocation, str):
+		allocation = json.loads(allocation)
+		allocation = frappe.get_doc("Leave Allocation", allocation["name"])
+
 	leaves = get_remaining_leaves(allocation)
 	expiry_date = expiry_date if expiry_date else allocation.to_date
 
