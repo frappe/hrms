@@ -7,6 +7,7 @@ frappe.ui.form.on("Shift Assignment Tool", {
 	},
 
 	async refresh(frm) {
+		frm.page.clear_indicator();
 		frm.disable_save();
 		frm.trigger("set_primary_action");
 		frm.trigger("get_employees");
