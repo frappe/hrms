@@ -103,7 +103,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-08-10 17:59:31.550558",
+ "modified": "2024-03-27 13:10:40.687344",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Request",
@@ -148,8 +148,9 @@
    "write": 1
   }
  ],
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "employee_name",
  "track_changes": 1
 }
