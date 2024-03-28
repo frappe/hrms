@@ -3,12 +3,7 @@
 		<h2 class="text-lg font-bold text-gray-900">
 			Hey, {{ employee?.data?.first_name }} 👋
 		</h2>
-		<template v-if="DisableCheckinForMobileSetting.data">
-			<div class="font-medium text-sm text-gray-500 mt-1.5">
-				Checkin is disabled.
-			</div>
-		</template>
-		<template v-else>
+		<template v-if="EnableCheckinForMobile.data">
 			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
 				Last {{ lastLogType }} was at {{ lastLogTime }}
 			</div>
@@ -29,6 +24,11 @@
 				</template>
 				{{ nextAction.label }}
 			</Button>
+		</template>
+		<template v-else>
+			<div class="font-medium text-sm text-gray-500 mt-1.5">
+				Employee check-in has been disabled for the mobile app
+			</div>
 		</template>
 	</div>
 
@@ -64,8 +64,9 @@
 import { createListResource, toast, FeatherIcon } from "frappe-ui"
 import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
-import { DisableCheckinForMobileSetting } from "@/data/settings";
+import { EnableCheckinForMobile } from "@/data/settings";
 
+console.log("checkin setting", EnableCheckinForMobile.data)
 
 const DOCTYPE = "Employee Checkin"
 

@@ -305,17 +305,17 @@
    "label": "Checkin Settings"
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "disable_employee_checkin_for_mobile_app",
    "fieldtype": "Check",
-   "label": "Disable Employee Checkin for mobile app"
+   "label": "Enable Employee Checkin for mobile app"
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-03-21 13:16:33.252813",
+ "modified": "2024-03-28 13:03:49.362246",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",

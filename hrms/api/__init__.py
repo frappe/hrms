@@ -637,8 +637,8 @@ def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 
 
 @frappe.whitelist()
-def get_disable_checkin_for_mobile_setting():
-	disable_checkin_for_mobile_setting = frappe.db.get_single_value(
-		"HR Settings", "disable_employee_checkin_for_mobile_app"
+def get_enable_checkin_for_mobile_setting():
+	enable_checkin_for_mobile_setting = frappe.db.get_single_value(
+		"HR Settings", "enable_employee_checkin_for_mobile_app"
 	)
-	return disable_checkin_for_mobile_setting
+	return enable_checkin_for_mobile_setting
