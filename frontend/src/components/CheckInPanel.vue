@@ -61,8 +61,6 @@ import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
 import { allowCheckinForMobile } from "@/data/settings"
 
-console.log("checkin setting", allowCheckinForMobile.data)
-
 const DOCTYPE = "Employee Checkin"
 
 const socket = inject("$socket")
