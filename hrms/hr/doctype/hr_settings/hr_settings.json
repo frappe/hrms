@@ -300,7 +300,7 @@
    "label": "Shift Settings"
   },
   {
-   "fieldname": "checkin_settings_section",
+   "fieldname": "mobile_app_settings_section",
    "fieldtype": "Section Break",
    "label": "Mobile App Settings"
   },
