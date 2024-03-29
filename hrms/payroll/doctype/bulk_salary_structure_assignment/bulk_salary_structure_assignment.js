@@ -119,7 +119,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	render_employees_datatable(frm, employees) {
 		frm.checked_rows_indexes = [];
 
-		const columns = frm.events.employees_datatable_columns();
+		const columns = frm.events.get_employees_datatable_columns();
 		const no_data_message = __(
 			frm.doc.from_date
 				? "There are no employees without a Salary Structure Assignment on this date based on the given filters."
@@ -161,7 +161,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 		);
 	},
 
-	employees_datatable_columns() {
+	get_employees_datatable_columns() {
 		return [
 			{
 				name: "employee",
