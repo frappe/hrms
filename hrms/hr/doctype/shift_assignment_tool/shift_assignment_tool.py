@@ -195,7 +195,7 @@ class ShiftAssignmentTool(Document):
 		assignment.submit()
 
 	@frappe.whitelist()
-	def bulk_process_requests(self, shift_requests: list, status: str):
+	def bulk_process_shift_requests(self, shift_requests: list, status: str):
 		if not shift_requests:
 			frappe.throw(
 				_("Please select at least one Shift Request to perform this action."),
@@ -203,10 +203,10 @@ class ShiftAssignmentTool(Document):
 			)
 
 		if len(shift_requests) <= 30:
-			return self._bulk_process_requests(shift_requests, status)
+			return self._bulk_process_shift_requests(shift_requests, status)
 
 		frappe.enqueue(
-			self._bulk_process_requests, timeout=3000, shift_requests=shift_requests, status=status
+			self._bulk_process_shift_requests, timeout=3000, shift_requests=shift_requests, status=status
 		)
 		frappe.msgprint(
 			_("Processing of Shift Requests has been queued. It may take a few minutes."),
@@ -214,7 +214,7 @@ class ShiftAssignmentTool(Document):
 			indicator="blue",
 		)
 
-	def _bulk_process_requests(self, shift_requests: list, status: str):
+	def _bulk_process_shift_requests(self, shift_requests: list, status: str):
 		success, failure = [], []
 		count = 0
 
