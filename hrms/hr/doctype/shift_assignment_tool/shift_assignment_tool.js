@@ -145,21 +145,21 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		let columns = undefined;
 		let no_data_message = undefined;
 		if (frm.doc.action === "Assign Shift") {
-			columns = frm.events.assign_shift_datatable_columns();
+			columns = frm.events.get_assign_shift_datatable_columns();
 			no_data_message = __(
 				frm.doc.shift_type && frm.doc.start_date
 					? "There are no employees without Shift Assignments for these dates based on the given filters."
 					: "Please select Shift Type and assignment date(s)."
 			);
 		} else {
-			columns = frm.events.process_shift_requests_datatable_columns();
+			columns = frm.events.get_process_shift_requests_datatable_columns();
 			no_data_message =
 				"There are no open Shift Requests based on the given filters.";
 		}
 		hrms.render_employees_datatable(frm, columns, employees, no_data_message);
 	},
 
-	assign_shift_datatable_columns() {
+	get_assign_shift_datatable_columns() {
 		return [
 			{
 				name: "employee",
@@ -195,7 +195,7 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		}));
 	},
 
-	process_shift_requests_datatable_columns() {
+	get_process_shift_requests_datatable_columns() {
 		return [
 			{
 				name: "shift_request",

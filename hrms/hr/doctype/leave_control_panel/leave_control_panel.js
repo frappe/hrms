@@ -110,12 +110,12 @@ frappe.ui.form.on("Leave Control Panel", {
 				doc: frm.doc,
 			})
 			.then((r) => {
-				const columns = frm.events.employees_datatable_columns();
+				const columns = frm.events.get_employees_datatable_columns();
 				hrms.render_employees_datatable(frm, columns, r.message);
 			});
 	},
 
-	employees_datatable_columns() {
+	get_employees_datatable_columns() {
 		return [
 			{
 				name: "employee",
