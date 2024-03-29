@@ -140,11 +140,8 @@ class TestAdditionalSalary(FrappeTestCase):
 		self.assertEqual(tds_component.additional_salary, additional_salary.name)
 		self.assertEqual(tds_component.amount, 5000)
 
-		# Calculates TDS as per tax slabs since additional salary did not have overwrite enabled
+		# Calculates TDS as per tax slabs
 		additional_salary.cancel()
-		additional_salary = get_additional_salary(
-			emp_id, recurring=False, payroll_date=date, salary_component="TDS", overwrite_salary_structure=0
-		)
 		salary_slip = make_salary_slip(salary_structure.name, employee=emp_id, posting_date=date)
 		tds_component = _get_tds_component(salary_slip)
 		self.assertIsNone(tds_component.additional_salary)
