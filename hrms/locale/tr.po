@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-03-28 10:35\n"
+"PO-Revision-Date: 2024-03-29 05:38\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,10 @@ msgid "\n"
 "\t\t\t\t\t\tPlease specify {1} and {2} (if any),\n"
 "\t\t\t\t\t\tfor the correct tax calculation in future salary slips.\n"
 "\t\t\t\t\t\t"
-msgstr ""
+msgstr "\n"
+"\t\t\t\t\t\t{0} isimli personele ait maaş bordrosu bulunamadı . <br><br>\n"
+"\t\t\t\t\t\tGelecek maaş bordrolarında verginin doğru hesaplanması için lütfen {1} ve {2} (varsa),\n"
+"\t\t\t\t\t\talanlarını belirtiniz."
 
 #: hr/report/employee_leave_balance/employee_leave_balance.py:22
 msgid "\"From Date\" can not be greater than or equal to \"To Date\""
@@ -258,26 +261,30 @@ msgstr "<b>Örnek:</b> SAL- {first_name} - {date_of_birth.year} <br> Bu SAL-Jane
 #: hr/doctype/leave_allocation/leave_allocation.py:280
 #: hr/doctype/leave_allocation/leave_allocation.py:286
 msgid "<b>Total Leaves Allocated</b> are more than the number of days in the allocation period"
-msgstr ""
+msgstr "<b>Toplam Verilen İzinler</b>, izin dönemindeki gün sayısından fazladır"
 
 #. Description of the Onboarding Step 'Data Import'
 #: hr/onboarding_step/data_import/data_import.json
 msgid "<h3>Data Import</h3>\n\n"
 "Data import is the tool to migrate your existing data like Employee, Customer, Supplier, and a lot more to our ERPNext system.\n"
 "Go through the video for a detailed explanation of this tool."
-msgstr ""
+msgstr "<h3>Veri İçe Aktarma</h3>\n\n"
+"Veri içe aktarma, Personel, Müşteri, Tedarikçi ve daha birçok mevcut verinizi ERPNext sistemimize taşımak için kullanılan araçtır.\n"
+"Bu aracın detaylı açıklaması için videoyu izleyin."
 
 #. Description of the Onboarding Step 'Create Employee'
 #: hr/onboarding_step/create_employee/create_employee.json
 msgid "<h3>Employee</h3>\n\n"
 "An individual who works and is recognized for his rights and duties in your company is your Employee. You can manage the Employee master. It captures the demographic, personal and professional details, joining and leave details, etc."
-msgstr ""
+msgstr "<h3>Personel</h3>\n\n"
+"Şirketinizde çalışan ve hakları ile sorumlulukları tanınan birey sizin Personelinizdir. Personel ana kaydını yönetebilirsiniz. Bu, demografik, kişisel ve mesleki detayları, işe başlama ve ayrılma detaylarını vb. içerir."
 
 #. Description of the Onboarding Step 'HR Settings'
 #: hr/onboarding_step/hr_settings/hr_settings.json
 msgid "<h3>HR Settings</h3>\n\n"
 "Hr Settings consists of major settings related to Employee Lifecycle, Leave Management, etc. Click on Explore, to explore Hr Settings."
-msgstr ""
+msgstr "<h3> İnsan Kaynakları Ayarları</h3>\n"
+"Personel Yaşam Döngüsü, İzin Yönetimi vb. ile ilgili önemli ayarları içerir. Daha Fazla Ayarı keşfetmek için Keşfet'e tıklayın."
 
 #. Content of the 'Help' (HTML) field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -326,7 +333,8 @@ msgstr ""
 #: hr/onboarding_step/create_leave_type/create_leave_type.json
 msgid "<h3>Leave Type</h3>\n\n"
 "Leave type is defined based on many factors and features like encashment, earned leaves, partially paid, without pay and, a lot more. To check other options and to define your leave type click on Show Tour."
-msgstr ""
+msgstr "<h3>İzin Türü</h3>\n\n"
+"İzin türü, nakde çevrilebilir izinler, kazanılmış izinler, kısmen ücretli, ücretsiz ve çok daha fazlası gibi birçok faktör ve özelliğe göre tanımlanır. Diğer seçenekleri kontrol etmek ve izin türünüzü tanımlamak için Turu Göster'e tıklayın."
 
 #. Content of the 'html_6' (HTML) field in DocType 'Taxable Salary Slab'
 #: payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
@@ -346,7 +354,7 @@ msgstr ""
 
 #: controllers/employee_reminders.py:123 controllers/employee_reminders.py:216
 msgid "A friendly reminder of an important date for our team."
-msgstr ""
+msgstr "Ekibimiz için önemli bir tarihin dostça bir hatırlatması."
 
 #: hr/utils.py:230 payroll/doctype/payroll_period/payroll_period.py:49
 msgid "A {0} exists between {1} and {2} ("
@@ -356,13 +364,13 @@ msgstr "{1} ve {2} arasında bir {0} var ("
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "Abbr"
-msgstr ""
+msgstr "Kısaltma"
 
 #. Label of a Data field in DocType 'Salary Detail'
 #: payroll/doctype/salary_detail/salary_detail.json
 msgctxt "Salary Detail"
 msgid "Abbr"
-msgstr ""
+msgstr "Kısaltma"
 
 #. Option for the 'Status' (Select) field in DocType 'Attendance'
 #: hr/doctype/attendance/attendance.json
