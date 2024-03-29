@@ -1489,8 +1489,9 @@ class SalarySlip(TransactionBase):
 		if not income_tax_slab:
 			frappe.throw(
 				_("Income Tax Slab not set in Salary Structure Assignment: {0}").format(
-					self._salary_structure_assignment
-				)
+					get_link_to_form("Salary Structure Assignment", self._salary_structure_assignment.name)
+				),
+				title=_("Missing Tax Slab"),
 			)
 
 		income_tax_slab_doc = frappe.get_cached_doc("Income Tax Slab", income_tax_slab)
