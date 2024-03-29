@@ -15,7 +15,10 @@ from hrms.hr.utils import validate_bulk_tool_fields
 
 class ShiftAssignmentTool(Document):
 	@frappe.whitelist()
-	def get_employees(self, advanced_filters: list) -> list:
+	def get_employees(self, advanced_filters: list | None = None) -> list:
+		if not advanced_filters:
+			advanced_filters = []
+
 		quick_filter_fields = [
 			"company",
 			"branch",
