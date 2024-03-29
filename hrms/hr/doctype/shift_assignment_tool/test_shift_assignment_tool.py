@@ -81,7 +81,6 @@ class TestShiftAssignmentTool(FrappeTestCase):
 			employee.save()
 
 		request1 = make_shift_request(
-			approver="employee1@test.com",
 			employee=self.emp1,
 			employee_name="employee1@test.com",
 			from_date=today,
@@ -90,7 +89,6 @@ class TestShiftAssignmentTool(FrappeTestCase):
 			do_not_submit=1,
 		)
 		request2 = make_shift_request(
-			approver="employee1@test.com",
 			employee=self.emp2,
 			employee_name="employee2@test.com",
 			from_date=add_days(today, 6),
@@ -99,7 +97,6 @@ class TestShiftAssignmentTool(FrappeTestCase):
 			do_not_submit=1,
 		)
 		request3 = make_shift_request(
-			approver="employee1@test.com",
 			employee=self.emp2,
 			employee_name="employee2@test.com",
 			from_date=add_days(today, -5),
@@ -108,21 +105,18 @@ class TestShiftAssignmentTool(FrappeTestCase):
 			do_not_submit=1,
 		)
 		request4 = make_shift_request(
-			approver="employee1@test.com",
 			employee=self.emp4,
 			employee_name="employee4@test.com",
 			status="Approved",
 		)
 
 		request5 = make_shift_request(
-			approver="employee1@test.com",
 			employee=self.emp5,
 			employee_name="employee5@test.com",
 			status="Approved",
 		)
 		# request excluded as it is approved
 		make_shift_request(
-			approver="employee1@test.com",
 			employee=self.emp3,
 			employee_name="employee3@test.com",
 			status="Approved",
@@ -156,7 +150,7 @@ class TestShiftAssignmentTool(FrappeTestCase):
 		args = {
 			"doctype": "Shift Assignment Tool",
 			"action": "Assign Shift",
-			"company": "_Test Company",  # excludes emp4
+			"company": "_Test Company",
 			"shift_type": self.shift1.name,
 			"status": "Active",
 			"start_date": today,
@@ -180,3 +174,57 @@ class TestShiftAssignmentTool(FrappeTestCase):
 		self.assertIn(self.emp1, shift_assignment_employees)
 		self.assertIn(self.emp2, shift_assignment_employees)
 		self.assertIn(self.emp3, shift_assignment_employees)
+
+	def test_bulk_process_shift_requests(self):
+		for emp in [self.emp1, self.emp2, self.emp3]:
+			employee = frappe.get_doc("Employee", emp)
+			employee.shift_request_approver = "employee1@test.com"
+			employee.save()
+
+		request1 = make_shift_request(
+			employee=self.emp1,
+			employee_name="employee1@test.com",
+			status="Draft",
+			do_not_submit=1,
+		)
+		request2 = make_shift_request(
+			employee=self.emp2,
+			employee_name="employee2@test.com",
+			status="Draft",
+			do_not_submit=1,
+		)
+		request3 = make_shift_request(
+			employee=self.emp3,
+			employee_name="employee3@test.com",
+			status="Draft",
+			do_not_submit=1,
+		)
+
+		args = {
+			"doctype": "Shift Assignment Tool",
+			"action": "Process Shift Requests",
+			"company": "_Test Company",
+		}
+		shift_assignment_tool = ShiftAssignmentTool(args)
+
+		requests = [
+			{"employee": self.emp1, "shift_request": request1.name},
+			{"employee": self.emp2, "shift_request": request2.name},
+		]
+		shift_assignment_tool.bulk_process_shift_requests(requests, "Rejected")
+		processed_shift_requests = frappe.get_list(
+			"Shift Request",
+			filters={"status": "Rejected", "docstatus": 1},
+			pluck="name",
+		)
+		self.assertIn(request1.name, processed_shift_requests)
+		self.assertIn(request2.name, processed_shift_requests)
+
+		requests = [{"employee": self.emp3, "shift_request": request3.name}]
+		shift_assignment_tool.bulk_process_shift_requests(requests, "Approved")
+		status, docstatus = frappe.db.get_value("Shift Request", request3.name, ["status", "docstatus"])
+		self.assertEqual(status, "Approved")
+		self.assertEqual(docstatus, 1)
+
+		shift_assignment = frappe.db.exists("Shift Assignment", {"shift_request": request3.name})
+		self.assertTrue(shift_assignment)

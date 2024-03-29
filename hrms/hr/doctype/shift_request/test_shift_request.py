@@ -238,7 +238,7 @@ def set_shift_approver(department):
 
 
 def make_shift_request(
-	approver,
+	approver=None,
 	employee="_T-Employee-00001",
 	employee_name="_Test Employee",
 	status="Approved",
@@ -248,6 +248,7 @@ def make_shift_request(
 ):
 	from_date = from_date or nowdate()
 	to_date = to_date or add_days(nowdate(), 10)
+	approver = approver or frappe.db.get_value("Employee", employee, "shift_request_approver")
 
 	shift_request = frappe.get_doc(
 		{
