@@ -107,14 +107,14 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		frm.page.add_inner_button(
 			__("Approve"),
 			() => {
-				frm.events.process_requests(frm, "Approved");
+				frm.events.process_shift_requests(frm, "Approved");
 			},
 			__("Process Requests")
 		);
 		frm.page.add_inner_button(
 			__("Reject"),
 			() => {
-				frm.events.process_requests(frm, "Rejected");
+				frm.events.process_shift_requests(frm, "Rejected");
 			},
 			__("Process Requests")
 		);
@@ -152,7 +152,7 @@ frappe.ui.form.on("Shift Assignment Tool", {
 					: "Please select Shift Type and assignment date(s)."
 			);
 		} else {
-			columns = frm.events.process_requests_datatable_columns();
+			columns = frm.events.process_shift_requests_datatable_columns();
 			no_data_message =
 				"There are no open Shift Requests based on the given filters.";
 		}
@@ -195,7 +195,7 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		}));
 	},
 
-	process_requests_datatable_columns() {
+	process_shift_requests_datatable_columns() {
 		return [
 			{
 				name: "shift_request",
@@ -256,7 +256,7 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		});
 	},
 
-	process_requests(frm, status) {
+	process_shift_requests(frm, status) {
 		const rows = frm.employees_datatable.datamanager.data;
 		const selected_requests = [];
 		const checked_row_indexes =
@@ -271,14 +271,14 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		frappe.confirm(
 			__("Process selected Shift Requests as <b>{0}</b>?", [status]),
 			() => {
-				frm.events.bulk_process_requests(frm, selected_requests, status);
+				frm.events.bulk_process_shift_requests(frm, selected_requests, status);
 			}
 		);
 	},
 
-	bulk_process_requests(frm, shift_requests, status) {
+	bulk_process_shift_requests(frm, shift_requests, status) {
 		frm.call({
-			method: "bulk_process_requests",
+			method: "bulk_process_shift_requests",
 			doc: frm.doc,
 			args: {
 				shift_requests: shift_requests,
