@@ -149,3 +149,34 @@ class TestShiftAssignmentTool(FrappeTestCase):
 		shift_requests = shift_assignment_tool.get_employees(advanced_filters)
 		self.assertEqual(len(shift_requests), 1)  # request1
 		self.assertEqual(shift_requests[0].name, request1.name)
+
+	def test_bulk_assign_shift(self):
+		today = getdate()
+
+		args = {
+			"doctype": "Shift Assignment Tool",
+			"action": "Assign Shift",
+			"company": "_Test Company",  # excludes emp4
+			"shift_type": self.shift1.name,
+			"status": "Active",
+			"start_date": today,
+			"end_date": add_days(today, 10),
+		}
+		shift_assignment_tool = ShiftAssignmentTool(args)
+
+		employees = [self.emp1, self.emp2, self.emp3]
+		shift_assignment_tool.bulk_assign_shift(employees)
+		shift_assignment_employees = frappe.get_list(
+			"Shift Assignment",
+			filters={
+				"shift_type": self.shift1.name,
+				"status": "Active",
+				"start_date": today,
+				"end_date": add_days(today, 10),
+				"docstatus": 1,
+			},
+			pluck="employee",
+		)
+		self.assertIn(self.emp1, shift_assignment_employees)
+		self.assertIn(self.emp2, shift_assignment_employees)
+		self.assertIn(self.emp3, shift_assignment_employees)
