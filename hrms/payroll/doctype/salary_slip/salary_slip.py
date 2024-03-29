@@ -1263,6 +1263,9 @@ class SalarySlip(TransactionBase):
 			else:
 				self.other_deduction_components.append(d.salary_component)
 
+		if has_overwritten_tax := self.handle_additional_salary_tax_component():
+			return
+
 		# consider manually added tax component
 		if not tax_components:
 			tax_components = [
@@ -1334,6 +1337,26 @@ class SalarySlip(TransactionBase):
 			tax_components[key].append(component.name)
 
 		return tax_components
+
+	def handle_additional_salary_tax_component(self) -> bool:
+		component = next(
+			(
+				d for d in self.get("deductions") if d.variable_based_on_taxable_salary and d.additional_salary
+			),
+			None,
+		)
+
+		if not component:
+			return False
+
+		if frappe.db.get_value(
+			"Additional Salary", component.additional_salary, "overwrite_salary_structure_amount"
+		):
+			return True
+		else:
+			# overwriting disabled, remove addtional salary tax component
+			self.get("deductions", []).remove(component)
+			return False
 
 	def update_component_row(
 		self,
