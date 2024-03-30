@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-03-28 10:35\n"
+"PO-Revision-Date: 2024-03-30 05:52\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -10975,7 +10975,7 @@ msgstr "Nuevas ausencias asignadas (en días)"
 #: payroll/doctype/salary_structure/salary_structure.json
 msgctxt "Salary Structure"
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #: payroll/doctype/gratuity/gratuity.py:310
 msgid "No Applicable Component is present in last month salary slip"
