@@ -74,7 +74,7 @@ class JobOpening(WebsiteGenerator):
 			staffing_plan_company = frappe.db.get_value("Staffing Plan", self.staffing_plan, "company")
 
 			designation_counts = get_designation_counts(self.designation, self.company, self.name)
-			current_count = designation_counts["employee_count"] + designation_counts["job_openings"]
+			current_count = designation_counts["job_openings"]
 
 			number_of_positions = frappe.db.get_value(
 				"Staffing Plan Detail",
@@ -87,7 +87,8 @@ class JobOpening(WebsiteGenerator):
 					_(
 						"Job Openings for the designation {0} are already open or the hiring is complete as per the Staffing Plan {1}"
 					).format(
-						frappe.bold(self.designation), get_link_to_form("Staffing Plan", self.staffing_plan)
+						frappe.bold(self.designation),
+						get_link_to_form("Staffing Plan", self.staffing_plan),
 					),
 					title=_("Vacancies fulfilled"),
 				)
