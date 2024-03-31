@@ -46,15 +46,13 @@ try {
 		self.registration.showNotification(notificationTitle, notificationOptions)
 	})
 
-	if (isChrome()) {
-		self.addEventListener("notificationclick", (event) => {
-			event.stopImmediatePropagation()
-			event.notification.close()
-			if (event.notification.data && event.notification.data.url) {
-				clients.openWindow(event.notification.data.url)
-			}
-		})
-	}
+	self.addEventListener("notificationclick", (event) => {
+		event.stopImmediatePropagation()
+		event.notification.close()
+		if (event.notification.data && event.notification.data.url) {
+			event.waitUntil(clients.openWindow(event.notification.data));
+		}
+	})
 } catch (error) {
 	console.log("Failed to initialize Firebase", error)
 }
