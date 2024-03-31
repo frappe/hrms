@@ -47,9 +47,13 @@ try {
 	})
 
 	self.addEventListener("notificationclick", (event) => {
-		event.stopImmediatePropagation()
+		console.log("event", event)
+		event.preventDefault()
 		event.notification.close()
-		if (event.notification.data && event.notification.data.url) {
+
+		if (event.action) {
+			event.waitUntil(clients.openWindow(event.action))
+		} else if (event.notification?.data) {
 			event.waitUntil(clients.openWindow(event.notification.data));
 		}
 	})
