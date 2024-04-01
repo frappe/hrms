@@ -47,14 +47,13 @@ try {
 	})
 
 	self.addEventListener("notificationclick", (event) => {
-		console.log("event", event)
 		event.preventDefault()
-		event.notification.close()
+		event.notification.close();
 
 		if (event.action) {
-			event.waitUntil(clients.openWindow(event.action))
+			clients.openWindow(event.action)
 		} else if (event.notification?.data) {
-			event.waitUntil(clients.openWindow(event.notification.data));
+			clients.openWindow(event.notification.data)
 		}
 	})
 } catch (error) {

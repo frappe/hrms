@@ -91,6 +91,15 @@ const registerServiceWorker = async () => {
 	}
 }
 
+if ("serviceWorker" in navigator) {
+	navigator.serviceWorker.onmessage = event => {
+		const click_action = event?.data?.notification?.click_action;
+		if (event?.data?.messageType === "notification-clicked" && click_action) {
+			window.location.href = click_action
+		}
+	};
+}
+
 router.isReady().then(() => {
 	if (import.meta.env.DEV) {
 		frappeRequest({
