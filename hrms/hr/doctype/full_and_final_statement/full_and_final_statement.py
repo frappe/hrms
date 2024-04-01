@@ -14,10 +14,12 @@ class FullandFinalStatement(Document):
 	def validate(self):
 		self.validate_relieving_date()
 		self.get_assets_statements()
-		if self.docstatus == 1:
-			self.validate_settlement("payables")
-			self.validate_settlement("receivables")
-			self.validate_asset()
+		self.set_total_asset_recovery_cost()
+
+	def before_submit(self):
+		self.validate_settlement("payables")
+		self.validate_settlement("receivables")
+		self.validate_assets()
 
 	def validate_relieving_date(self):
 		if not self.relieving_date:
@@ -34,10 +36,21 @@ class FullandFinalStatement(Document):
 			if data.status == "Unsettled":
 				frappe.throw(_("Settle all Payables and Receivables before submission"))
 
-	def validate_asset(self):
+	def validate_assets(self):
+		pending_returns = []
+
 		for data in self.assets_allocated:
-			if data.status == "Owned":
-				frappe.throw(_("All allocated assets should be returned before submission"))
+			if data.action == "Return":
+				if data.status == "Owned":
+					pending_returns.append(_("Row {0}: {1}").format(data.idx, frappe.bold(data.asset_name)))
+			elif data.action == "Recover Cost":
+				data.status = "Owned"
+
+		if pending_returns:
+			msg = _("All allocated assets should be returned before submission")
+			msg += "<br><br>"
+			msg += ", ".join(d for d in pending_returns)
+			frappe.throw(msg, title=_("Pending Asset Returns"))
 
 	@frappe.whitelist()
 	def get_outstanding_statements(self):
@@ -58,6 +71,14 @@ class FullandFinalStatement(Document):
 		if not len(self.get("assets_allocated", [])):
 			for data in self.get_assets_movement():
 				self.append("assets_allocated", data)
+
+	def set_total_asset_recovery_cost(self):
+		total_cost = 0
+		for data in self.assets_allocated:
+			if data.action == "Recover Cost":
+				total_cost += data.cost
+
+		self.total_asset_recovery_cost = flt(total_cost, self.precision("total_asset_recovery_cost"))
 
 	def create_component_row(self, components, component_type):
 		for component in components:
@@ -113,6 +134,8 @@ class FullandFinalStatement(Document):
 						"reference": movement.parent,
 						"asset_name": movement.asset_name,
 						"date": frappe.db.get_value("Asset Movement", movement.parent, "transaction_date"),
+						"cost": frappe.db.get_value("Asset", movement.asset, "total_asset_cost"),
+						"action": "Return",
 						"status": "Owned",
 					}
 				)
