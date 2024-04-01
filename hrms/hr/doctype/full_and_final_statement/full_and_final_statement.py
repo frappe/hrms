@@ -15,6 +15,7 @@ class FullandFinalStatement(Document):
 		self.validate_relieving_date()
 		self.get_assets_statements()
 		self.set_total_asset_recovery_cost()
+		self.set_totals()
 
 	def before_submit(self):
 		self.validate_settlement("payables")
@@ -79,6 +80,16 @@ class FullandFinalStatement(Document):
 				total_cost += data.cost
 
 		self.total_asset_recovery_cost = flt(total_cost, self.precision("total_asset_recovery_cost"))
+
+	def set_totals(self):
+		total_payable = sum(row.amount for row in self.payables)
+		total_receivable = sum(row.amount for row in self.receivables)
+
+		self.total_payable_amount = flt(total_payable, self.precision("total_payable_amount"))
+		self.total_receivable_amount = flt(
+			total_receivable + flt(self.total_asset_recovery_cost),
+			self.precision("total_receivable_amount"),
+		)
 
 	def create_component_row(self, components, component_type):
 		for component in components:

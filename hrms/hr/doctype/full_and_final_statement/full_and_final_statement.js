@@ -98,18 +98,20 @@ frappe.ui.form.on("Full and Final Outstanding Statement", {
 		}
 	},
 
-	amount: function(frm) {
-		var total_payable_amount = 0;
-		var total_receivable_amount = 0;
+	amount: function(frm, cdt, cdn) {
+		let amount = 0;
+		const child_row = locals[cdt][cdn];
+		const table = child_row.parentfield;
 
-		frm.doc.payables.forEach(element => {
-			total_payable_amount = total_payable_amount + element.amount;
-		});
+		frm.doc[table]?.forEach(row => amount += row.amount);
 
-		frm.doc.receivables.forEach(element => {
-			total_receivable_amount = total_receivable_amount + element.amount;
-		});
-		frm.set_value("total_payable_amount", flt(total_payable_amount));
-		frm.set_value("total_receivable_amount", flt(total_receivable_amount));
+		if (table === "payables") {
+			frm.set_value("total_payable_amount", flt(amount));
+		} else {
+			frm.set_value(
+				"total_receivable_amount",
+				flt(amount) + flt(frm.doc.total_asset_recovery_cost)
+			);
+		}
 	}
 });
