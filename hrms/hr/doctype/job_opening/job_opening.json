@@ -255,7 +255,11 @@
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2024-01-03 14:34:32.159138",
+=======
+ "modified": "2024-04-01 11:32:47.167232",
+>>>>>>> 6257339b2 (fix(Job Opening): update modified to sync doctype update (#1606))
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
