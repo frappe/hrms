@@ -71,18 +71,10 @@ class JobOpening(WebsiteGenerator):
 			)
 
 		if self.staffing_plan and self.planned_vacancies:
-			staffing_plan_company = frappe.db.get_value("Staffing Plan", self.staffing_plan, "company")
-
 			designation_counts = get_designation_counts(self.designation, self.company, self.name)
-			current_count = designation_counts["employee_count"] + designation_counts["job_openings"]
+			current_count = designation_counts["job_openings"]
 
-			number_of_positions = frappe.db.get_value(
-				"Staffing Plan Detail",
-				{"parent": self.staffing_plan, "designation": self.designation},
-				"number_of_positions",
-			)
-
-			if number_of_positions <= current_count:
+			if self.planned_vacancies <= current_count:
 				frappe.throw(
 					_(
 						"Job Openings for the designation {0} are already open or the hiring is complete as per the Staffing Plan {1}"
