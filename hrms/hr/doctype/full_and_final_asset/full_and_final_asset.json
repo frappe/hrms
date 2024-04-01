@@ -8,7 +8,11 @@
   "reference",
   "asset_name",
   "date",
+  "cost",
+  "column_break_xezj",
+  "action",
   "status",
+  "section_break_hudu",
   "description"
  ],
  "fields": [
@@ -44,15 +48,43 @@
   {
    "fieldname": "date",
    "fieldtype": "Datetime",
-   "in_list_view": 1,
    "label": "Date",
    "read_only": 1
+  },
+  {
+   "fieldname": "column_break_xezj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Return",
+   "fieldname": "action",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Action",
+   "options": "Return\nRecover Cost",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_hudu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "cost",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Cost",
+   "mandatory_depends_on": "eval:doc.action == \"Recover Cost\"",
+   "read_only_depends_on": "eval:doc.action != \"Recover Cost\""
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2021-07-15 15:17:31.309834",
+=======
+ "modified": "2024-04-01 19:03:26.169709",
+>>>>>>> e05357082 (feat(FnF): Option to recover asset costs instead of returning)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Full and Final Asset",
