@@ -12,7 +12,7 @@ from hrms.overrides.company import delete_company_fixtures
 
 
 def after_install():
-	create_custom_fields(get_custom_fields())
+	create_custom_fields(get_custom_fields(), ignore_validate=True)
 	create_salary_slip_loan_fields()
 	make_fixtures()
 	setup_notifications()
@@ -33,110 +33,18 @@ def before_uninstall():
 def get_custom_fields():
 	"""HR specific custom fields that need to be added to the masters in ERPNext"""
 	return {
-		"Employee": [
-			{
-				"fieldname": "employment_type",
-				"fieldtype": "Link",
-				"ignore_user_permissions": 1,
-				"label": "Employment Type",
-				"options": "Employment Type",
-				"insert_after": "department",
-			},
-			{
-				"fieldname": "job_applicant",
-				"fieldtype": "Link",
-				"label": "Job Applicant",
-				"options": "Job Applicant",
-				"insert_after": "employment_details",
-			},
-			{
-				"fieldname": "grade",
-				"fieldtype": "Link",
-				"label": "Grade",
-				"options": "Employee Grade",
-				"insert_after": "branch",
-			},
-			{
-				"fieldname": "default_shift",
-				"fieldtype": "Link",
-				"label": "Default Shift",
-				"options": "Shift Type",
-				"insert_after": "holiday_list",
-			},
-			{
-				"collapsible": 1,
-				"fieldname": "health_insurance_section",
-				"fieldtype": "Section Break",
-				"label": "Health Insurance",
-				"insert_after": "health_details",
-			},
-			{
-				"fieldname": "health_insurance_provider",
-				"fieldtype": "Link",
-				"label": "Health Insurance Provider",
-				"options": "Employee Health Insurance",
-				"insert_after": "health_insurance_section",
-			},
-			{
-				"depends_on": "eval:doc.health_insurance_provider",
-				"fieldname": "health_insurance_no",
-				"fieldtype": "Data",
-				"label": "Health Insurance No",
-				"insert_after": "health_insurance_provider",
-			},
-			{
-				"fieldname": "approvers_section",
-				"fieldtype": "Section Break",
-				"label": "Approvers",
-				"insert_after": "default_shift",
-			},
-			{
-				"fieldname": "expense_approver",
-				"fieldtype": "Link",
-				"label": "Expense Approver",
-				"options": "User",
-				"insert_after": "approvers_section",
-			},
-			{
-				"fieldname": "leave_approver",
-				"fieldtype": "Link",
-				"label": "Leave Approver",
-				"options": "User",
-				"insert_after": "expense_approver",
-			},
-			{
-				"fieldname": "column_break_45",
-				"fieldtype": "Column Break",
-				"insert_after": "leave_approver",
-			},
-			{
-				"fieldname": "shift_request_approver",
-				"fieldtype": "Link",
-				"label": "Shift Request Approver",
-				"options": "User",
-				"insert_after": "column_break_45",
-			},
-			{
-				"fieldname": "salary_cb",
-				"fieldtype": "Column Break",
-				"insert_after": "salary_mode",
-			},
-			{
-				"fetch_from": "department.payroll_cost_center",
-				"fetch_if_empty": 1,
-				"fieldname": "payroll_cost_center",
-				"fieldtype": "Link",
-				"label": "Payroll Cost Center",
-				"options": "Cost Center",
-				"insert_after": "salary_cb",
-			},
-		],
 		"Company": [
+			{
+				"fieldname": "hr_and_payroll_tab",
+				"fieldtype": "Tab Break",
+				"label": "HR & Payroll",
+				"insert_after": "credit_limit",
+			},
 			{
 				"fieldname": "hr_settings_section",
 				"fieldtype": "Section Break",
 				"label": "HR & Payroll Settings",
-				"insert_after": "credit_limit",
+				"insert_after": "hr_and_payroll_tab",
 			},
 			{
 				"depends_on": "eval:!doc.__islocal",
@@ -251,6 +159,104 @@ def get_custom_fields():
 				"insert_after": "required_skills_section",
 			},
 		],
+		"Employee": [
+			{
+				"fieldname": "employment_type",
+				"fieldtype": "Link",
+				"ignore_user_permissions": 1,
+				"label": "Employment Type",
+				"options": "Employment Type",
+				"insert_after": "department",
+			},
+			{
+				"fieldname": "job_applicant",
+				"fieldtype": "Link",
+				"label": "Job Applicant",
+				"options": "Job Applicant",
+				"insert_after": "employment_details",
+			},
+			{
+				"fieldname": "grade",
+				"fieldtype": "Link",
+				"label": "Grade",
+				"options": "Employee Grade",
+				"insert_after": "branch",
+			},
+			{
+				"fieldname": "default_shift",
+				"fieldtype": "Link",
+				"label": "Default Shift",
+				"options": "Shift Type",
+				"insert_after": "holiday_list",
+			},
+			{
+				"collapsible": 1,
+				"fieldname": "health_insurance_section",
+				"fieldtype": "Section Break",
+				"label": "Health Insurance",
+				"insert_after": "health_details",
+			},
+			{
+				"fieldname": "health_insurance_provider",
+				"fieldtype": "Link",
+				"label": "Health Insurance Provider",
+				"options": "Employee Health Insurance",
+				"insert_after": "health_insurance_section",
+			},
+			{
+				"depends_on": "eval:doc.health_insurance_provider",
+				"fieldname": "health_insurance_no",
+				"fieldtype": "Data",
+				"label": "Health Insurance No",
+				"insert_after": "health_insurance_provider",
+			},
+			{
+				"fieldname": "approvers_section",
+				"fieldtype": "Section Break",
+				"label": "Approvers",
+				"insert_after": "default_shift",
+			},
+			{
+				"fieldname": "expense_approver",
+				"fieldtype": "Link",
+				"label": "Expense Approver",
+				"options": "User",
+				"insert_after": "approvers_section",
+			},
+			{
+				"fieldname": "leave_approver",
+				"fieldtype": "Link",
+				"label": "Leave Approver",
+				"options": "User",
+				"insert_after": "expense_approver",
+			},
+			{
+				"fieldname": "column_break_45",
+				"fieldtype": "Column Break",
+				"insert_after": "leave_approver",
+			},
+			{
+				"fieldname": "shift_request_approver",
+				"fieldtype": "Link",
+				"label": "Shift Request Approver",
+				"options": "User",
+				"insert_after": "column_break_45",
+			},
+			{
+				"fieldname": "salary_cb",
+				"fieldtype": "Column Break",
+				"insert_after": "salary_mode",
+			},
+			{
+				"fetch_from": "department.payroll_cost_center",
+				"fetch_if_empty": 1,
+				"fieldname": "payroll_cost_center",
+				"fieldtype": "Link",
+				"label": "Payroll Cost Center",
+				"options": "Cost Center",
+				"insert_after": "salary_cb",
+			},
+		],
 		"Project": [
 			{
 				"fieldname": "total_expense_claim",
@@ -296,7 +302,7 @@ def get_custom_fields():
 
 def create_salary_slip_loan_fields():
 	if "lending" in frappe.get_installed_apps():
-		create_custom_fields(SALARY_SLIP_LOAN_FIELDS)
+		create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
 
 
 def after_app_install(app_name):
@@ -305,7 +311,7 @@ def after_app_install(app_name):
 		return
 
 	print("Updating payroll setup for loans")
-	create_custom_fields(SALARY_SLIP_LOAN_FIELDS)
+	create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
 
 
 def before_app_uninstall(app_name):

@@ -12,9 +12,7 @@ def create_gratuity_rules_for_uae():
 	docs = get_gratuity_rules()
 	for d in docs:
 		doc = frappe.get_doc(d)
-		doc.flags.ignore_mandatory = True
-		doc.flags.ignore_permissions = True
-		doc.insert(ignore_if_duplicate=True)
+		doc.insert(ignore_if_duplicate=True, ignore_permissions=True, ignore_mandatory=True)
 
 
 def get_gratuity_rules():

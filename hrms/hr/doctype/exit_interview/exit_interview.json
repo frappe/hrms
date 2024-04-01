@@ -218,7 +218,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-07 23:39:22.645401",
+ "modified": "2024-03-27 13:09:43.272097",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Exit Interview",
@@ -239,8 +239,9 @@
   }
  ],
  "sender_field": "email",
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "employee_name",
  "track_changes": 1
 }

@@ -230,9 +230,13 @@
 
 					<div class="px-4 py-2 job-card-footer mt-auto">
 						<div class="row text-12 text-secondary">
-							<p class="col-6 text-center border-right mb-0">
-								{{ _("Applications received:") + " " }}
-								<b>{{ jo.no_of_applications }}</b>
+							<p class="col-6 text-center mb-0 {{ 'border-right' if (jo.publish_applications_received or jo.closes_on) }}">
+								{%- if jo.publish_applications_received -%}
+									{{ _("Applications received:") + " " }}
+									<b>{{ jo.no_of_applications }}</b>
+								{% else %}
+									‎
+								{% endif %}
 							</p>
 							<p class="col-6 text-center mb-0">
 								{%- if jo.closes_on -%}

@@ -168,7 +168,7 @@
   }
  ],
  "links": [],
- "modified": "2023-08-22 11:31:24.381593",
+ "modified": "2024-03-27 13:10:40.843867",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Type",
@@ -209,7 +209,7 @@
   }
  ],
  "quick_entry": 1,
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "track_changes": 1
