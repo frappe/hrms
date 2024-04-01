@@ -188,7 +188,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-04-01 19:22:40.101070",
+ "modified": "2024-04-01 21:08:52.804868",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Full and Final Statement",
@@ -220,6 +220,7 @@
    "write": 1
   },
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
