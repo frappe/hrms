@@ -252,8 +252,6 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	},
 
 	assign_structure(frm) {
-		hrms.validate_mandatory_fields(frm);
-
 		const rows = frm.employees_datatable.getRows();
 		const checked_rows_content = [];
 		const employees_with_base_zero = [];
@@ -269,6 +267,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 				employees_with_base_zero.push(`<b>${row_content["employee"]}</b>`);
 		});
 
+		hrms.validate_mandatory_fields(frm, checked_rows_content);
 		if (employees_with_base_zero.length)
 			return frm.events.validate_base_zero(
 				frm,
@@ -283,20 +282,25 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 		frappe.warn(
 			__("Are you sure you want to proceed?"),
 			__(
-				"<b>Base</b> amount has not been set for the following employees: {0}",
+				"<b>Base</b> amount has not been set for the following employee(s): {0}",
 				[employees_with_base_zero.join(", ")]
 			),
 			() => {
-				frm.events.bulk_assign_structure(frm, checked_rows_content);
+				frm.events.show_confirm_dialog(frm, checked_rows_content);
 			},
 			__("Continue")
 		);
 	},
 
 	show_confirm_dialog(frm, checked_rows_content) {
-		frappe.confirm(__("Assign Salary Structure to selected employees?"), () => {
-			frm.events.bulk_assign_structure(frm, checked_rows_content);
-		});
+		frappe.confirm(
+			__("Assign Salary Structure to {0} employee(s)?", [
+				checked_rows_content.length,
+			]),
+			() => {
+				frm.events.bulk_assign_structure(frm, checked_rows_content);
+			}
+		);
 	},
 
 	bulk_assign_structure(frm, employees) {

@@ -231,8 +231,6 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		}));
 	},
 	assign_shift(frm) {
-		hrms.validate_mandatory_fields(frm);
-
 		const rows = frm.employees_datatable.datamanager.data;
 		const selected_employees = [];
 		const checked_row_indexes =
@@ -241,9 +239,13 @@ frappe.ui.form.on("Shift Assignment Tool", {
 			selected_employees.push(rows[idx].employee);
 		});
 
-		frappe.confirm(__("Assign Shift to selected employees?"), () => {
-			frm.events.bulk_assign_shift(frm, selected_employees);
-		});
+		hrms.validate_mandatory_fields(frm, selected_employees);
+		frappe.confirm(
+			__("Assign Shift to {0} employee(s)?", [selected_employees.length]),
+			() => {
+				frm.events.bulk_assign_shift(frm, selected_employees);
+			}
+		);
 	},
 
 	bulk_assign_shift(frm, employees) {
@@ -259,8 +261,6 @@ frappe.ui.form.on("Shift Assignment Tool", {
 	},
 
 	process_shift_requests(frm, status) {
-		hrms.validate_mandatory_fields(frm);
-
 		const rows = frm.employees_datatable.datamanager.data;
 		const selected_requests = [];
 		const checked_row_indexes =
@@ -272,8 +272,12 @@ frappe.ui.form.on("Shift Assignment Tool", {
 			});
 		});
 
+		hrms.validate_mandatory_fields(frm, selected_requests, "Shift Requests");
 		frappe.confirm(
-			__("Process selected Shift Requests as <b>{0}</b>?", [status]),
+			__("Process {0} Shift Request(s) as <b>{1}</b>?", [
+				selected_requests.length,
+				status,
+			]),
 			() => {
 				frm.events.bulk_process_shift_requests(frm, selected_requests, status);
 			}
