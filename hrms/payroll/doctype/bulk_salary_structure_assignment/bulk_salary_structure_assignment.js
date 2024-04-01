@@ -252,6 +252,8 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	},
 
 	assign_structure(frm) {
+		hrms.validate_mandatory_fields(frm);
+
 		const rows = frm.employees_datatable.getRows();
 		const checked_rows_content = [];
 		const employees_with_base_zero = [];
