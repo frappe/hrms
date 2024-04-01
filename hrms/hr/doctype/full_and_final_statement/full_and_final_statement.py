@@ -35,7 +35,9 @@ class FullandFinalStatement(Document):
 	def validate_settlement(self, component_type):
 		for data in self.get(component_type, []):
 			if data.status == "Unsettled":
-				frappe.throw(_("Settle all Payables and Receivables before submission"))
+				frappe.throw(
+					_("Settle all Payables and Receivables before submission"), title=_("Unsettled Transactions")
+				)
 
 	def validate_assets(self):
 		pending_returns = []
@@ -185,6 +187,18 @@ class FullandFinalStatement(Document):
 					account_dict["party"] = self.employee
 
 				jv.append("accounts", account_dict)
+
+		for data in self.assets_allocated:
+			if data.action == "Recover Cost":
+				jv.append(
+					"accounts",
+					{
+						"account": data.account,
+						"credit_in_account_currency": flt(data.cost, precision),
+						"party_type": "Employee",
+						"party": self.employee,
+					},
+				)
 
 		jv.append(
 			"accounts",

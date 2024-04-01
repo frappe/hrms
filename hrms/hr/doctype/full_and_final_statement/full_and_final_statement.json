@@ -189,10 +189,14 @@
  "is_submittable": 1,
  "links": [],
 <<<<<<< HEAD
+<<<<<<< HEAD
  "modified": "2024-01-11 18:06:22.669089",
 =======
  "modified": "2024-04-01 19:22:40.101070",
 >>>>>>> e05357082 (feat(FnF): Option to recover asset costs instead of returning)
+=======
+ "modified": "2024-04-01 21:08:52.804868",
+>>>>>>> 0a4ea6d10 (feat: map asset recovery in Journal Entry)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Full and Final Statement",
@@ -224,6 +228,7 @@
    "write": 1
   },
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
