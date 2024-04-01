@@ -170,6 +170,8 @@ frappe.ui.form.on("Leave Control Panel", {
 	},
 
 	allocate_leave(frm) {
+		hrms.validate_mandatory_fields(frm);
+
 		const check_map = frm.employees_datatable.rowmanager.checkMap;
 		const selected_employees = [];
 		check_map.forEach((is_checked, idx) => {

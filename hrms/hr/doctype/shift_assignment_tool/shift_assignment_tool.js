@@ -231,6 +231,8 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		}));
 	},
 	assign_shift(frm) {
+		hrms.validate_mandatory_fields(frm);
+
 		const rows = frm.employees_datatable.datamanager.data;
 		const selected_employees = [];
 		const checked_row_indexes =
@@ -257,6 +259,8 @@ frappe.ui.form.on("Shift Assignment Tool", {
 	},
 
 	process_shift_requests(frm, status) {
+		hrms.validate_mandatory_fields(frm);
+
 		const rows = frm.employees_datatable.datamanager.data;
 		const selected_requests = [];
 		const checked_row_indexes =

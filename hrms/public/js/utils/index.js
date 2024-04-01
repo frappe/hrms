@@ -31,6 +31,22 @@ $.extend(hrms, {
 		return employee;
 	},
 
+	validate_mandatory_fields: (frm) => {
+		const missing_fields = [];
+		for (d in frm.fields_dict) {
+			if (frm.fields_dict[d].df.reqd && !frm.doc[d] && d !== "__newname")
+				missing_fields.push(frm.fields_dict[d].df.label);
+		}
+		if (!missing_fields.length) return;
+
+		let message = __("Mandatory fields required for this action");
+		message += "<br><br><ul><li>" + missing_fields.join("</li><li>") + "</ul>";
+		frappe.throw({
+			message: message,
+			title: __("Missing Fields"),
+		});
+	},
+
 	setup_employee_filter_group: (frm) => {
 		const filter_wrapper = frm.fields_dict.filter_list.$wrapper;
 		filter_wrapper.empty();
