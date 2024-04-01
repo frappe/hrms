@@ -94,6 +94,7 @@ const registerServiceWorker = async () => {
 if ("serviceWorker" in navigator) {
 	navigator.serviceWorker.onmessage = event => {
 		const click_action = event?.data?.notification?.click_action;
+		console.log("=======event", event, click_action)
 		if (event?.data?.messageType === "notification-clicked" && click_action) {
 			window.location.href = click_action
 		}
