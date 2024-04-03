@@ -1,11 +1,71 @@
 <template>
 	<div class="flex flex-col bg-white rounded w-full py-6 px-4 border-none">
+<<<<<<< HEAD
 		<h2 class="text-lg font-bold text-gray-900">Hey, {{ employee?.data?.first_name }} 👋</h2>
 
 		<template v-if="allowCheckinFromMobile.data">
 			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
 				Last {{ lastLogType }} was at {{ lastLogTime }}
+=======
+		<h2 class="text-lg font-bold text-gray-900">
+			Hey, {{ employee?.data?.first_name }} 👋
+		</h2>
+		<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
+			Last {{ lastLogType }} was at {{ lastLogTime }}
+		</div>
+		<Button
+			class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
+			id="open-checkin-modal"
+			@click="fetchLocation"
+		>
+			<template #prefix>
+				<FeatherIcon
+					:name="
+						nextAction.action === 'IN'
+							? 'arrow-right-circle'
+							: 'arrow-left-circle'
+					"
+					class="w-4"
+				/>
+			</template>
+			{{ nextAction.label }}
+		</Button>
+	</div>
+
+	<ion-modal
+		ref="modal"
+		trigger="open-checkin-modal"
+		:initial-breakpoint="1"
+		:breakpoints="[0, 1]"
+	>
+		<div
+			class="h-120 w-full flex flex-col items-center justify-center gap-5 p-4 mb-5"
+		>
+			<div class="flex flex-col gap-1.5 mt-2 items-center justify-center">
+				<div class="font-bold text-xl">
+					{{ dayjs(checkinTimestamp).format("hh:mm:ss a") }}
+				</div>
+				<div class="font-medium text-gray-500 text-sm">
+					{{ dayjs().format("D MMM, YYYY") }}
+				</div>
+>>>>>>> 90237231c (feat(PWA): capture geolocation in checkins)
 			</div>
+
+			<span v-if="locationStatus" class="font-medium text-gray-500 text-sm">
+				{{ locationStatus }}
+			</span>
+
+			<iframe
+				width="370"
+				height="170"
+				frameborder="1"
+				scrolling="no"
+				marginheight="0"
+				marginwidth="0"
+				:src="`https://maps.google.com/maps?q=${latitude},${longitude}&hl=en&z=15&amp;output=embed`"
+			>
+			</iframe>
+
 			<Button
 				class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
 				id="open-checkin-modal"
@@ -64,6 +124,9 @@ const socket = inject("$socket")
 const employee = inject("$employee")
 const dayjs = inject("$dayjs")
 const checkinTimestamp = ref(null)
+const latitude = ref("")
+const longitude = ref("")
+const locationStatus = ref("")
 
 const checkins = createListResource({
 	doctype: DOCTYPE,
@@ -101,6 +164,40 @@ const lastLogTime = computed(() => {
 
 	return `${formattedTime} on ${dayjs(timestamp).format("D MMM, YYYY")}`
 })
+
+function success(position) {
+	latitude.value = position.coords.latitude
+	longitude.value = position.coords.longitude
+
+	locationStatus.value = `Latitude: ${latitude.value} °, Longitude: ${longitude.value} °`
+}
+
+function error() {
+	locationStatus.value = "Unable to retrieve your location"
+}
+
+const fetchLocation = () => {
+	checkinTimestamp.value = dayjs().format("YYYY-MM-DD HH:mm:ss")
+
+	if (!navigator.geolocation) {
+		locationStatus.value =
+			"Geolocation is not supported by your current browser"
+	} else {
+		locationStatus.value = "Locating..."
+		navigator.geolocation.getCurrentPosition(success, error)
+	}
+
+	if ("geolocation" in navigator) {
+	} else {
+		toast({
+			title: "Error",
+			text: "Your current browser does not support geolocation",
+			icon: "alert-circle",
+			position: "bottom-center",
+			iconClasses: "text-red-500",
+		})
+	}
+}
 
 const submitLog = (logType) => {
 	const action = logType === "IN" ? "Check-in" : "Check-out"
