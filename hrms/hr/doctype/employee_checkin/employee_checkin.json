@@ -15,8 +15,13 @@
   "device_id",
   "skip_auto_attendance",
   "attendance",
+  "location_section",
+  "coordinates",
+  "geolocation",
+  "shift_timings_section",
   "shift_start",
   "shift_end",
+  "column_break_vyyt",
   "shift_actual_start",
   "shift_actual_end"
  ],
@@ -107,10 +112,39 @@
    "fieldtype": "Datetime",
    "hidden": 1,
    "label": "Shift Actual End"
+  },
+  {
+   "fieldname": "location_section",
+   "fieldtype": "Section Break",
+   "label": "Location"
+  },
+  {
+   "fieldname": "coordinates",
+   "fieldtype": "Data",
+   "label": "Coordinates",
+   "read_only": 1
+  },
+  {
+   "fieldname": "geolocation",
+   "fieldtype": "Geolocation",
+   "label": "Geolocation"
+  },
+  {
+   "fieldname": "shift_timings_section",
+   "fieldtype": "Section Break",
+   "label": "Shift Timings"
+  },
+  {
+   "fieldname": "column_break_vyyt",
+   "fieldtype": "Column Break"
   }
  ],
  "links": [],
+<<<<<<< HEAD
  "modified": "2024-04-02 01:50:23.150627",
+=======
+ "modified": "2024-04-03 06:36:07.640893",
+>>>>>>> e54e79b27 (feat: geolocation in Employee Checkin)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Checkin",
