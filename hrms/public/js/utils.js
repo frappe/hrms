@@ -173,11 +173,18 @@ $.extend(hrms, {
 		}
 
 		if (success.length) {
-			message += __("Successfully {0} {1} for employees:", [
+			message += __("Successfully {0} {1} for the following employees:", [
 				action_past,
 				doctype,
 			]);
-			message += " " + frappe.utils.comma_and(success);
+			message += __(
+				"<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>",
+				[__("Employee"), doctype]
+			);
+			for (const d of success) {
+				message += `<tr><td>${d.employee}</td><td>${d.doc}</td></tr>`;
+			}
+			message += "</table>";
 		}
 
 		frappe.msgprint({

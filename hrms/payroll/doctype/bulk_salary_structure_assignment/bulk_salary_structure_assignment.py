@@ -7,6 +7,7 @@ from frappe.model.document import Document
 from frappe.query_builder.custom import ConstantColumn
 from frappe.query_builder.functions import Coalesce
 from frappe.query_builder.terms import SubQuery
+from frappe.utils import get_link_to_form
 
 from hrms.hr.utils import validate_bulk_tool_fields
 from hrms.payroll.doctype.salary_structure.salary_structure import (
@@ -82,7 +83,7 @@ class BulkSalaryStructureAssignment(Document):
 		for d in employees:
 			try:
 				frappe.db.savepoint(savepoint)
-				create_salary_structure_assignment(
+				assignment = create_salary_structure_assignment(
 					employee=d["employee"],
 					salary_structure=self.salary_structure,
 					company=self.company,
@@ -101,7 +102,12 @@ class BulkSalaryStructureAssignment(Document):
 				)
 				failure.append(d["employee"])
 			else:
-				success.append(d["employee"])
+				success.append(
+					{
+						"doc": get_link_to_form("Salary Structure Assignment", assignment),
+						"employee": d["employee"],
+					}
+				)
 
 			count += 1
 			frappe.publish_progress(count * 100 / len(employees), title=_("Assigning Structure..."))

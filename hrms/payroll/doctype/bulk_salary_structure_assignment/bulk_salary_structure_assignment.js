@@ -8,6 +8,8 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	},
 
 	async refresh(frm) {
+		frm.page.clear_indicator();
+		frm.disable_save();
 		frm.trigger("set_primary_action");
 		await frm.trigger("set_payroll_payable_account");
 		frm.trigger("get_employees");
@@ -48,7 +50,6 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	},
 
 	set_primary_action(frm) {
-		frm.disable_save();
 		frm.page.set_primary_action(__("Assign Structure"), () => {
 			frm.trigger("assign_structure");
 		});
