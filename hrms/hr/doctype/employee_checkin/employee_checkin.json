@@ -24,6 +24,7 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "Employee",
    "options": "Employee",
    "reqd": 1,
@@ -109,7 +110,7 @@
   }
  ],
  "links": [],
- "modified": "2023-05-12 14:52:22.660264",
+ "modified": "2024-04-02 01:50:23.150627",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Checkin",

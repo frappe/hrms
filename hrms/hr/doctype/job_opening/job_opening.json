@@ -30,6 +30,7 @@
   "section_break_6",
   "publish",
   "route",
+  "publish_applications_received",
   "column_break_12",
   "job_application_route",
   "section_break_14",
@@ -241,12 +242,20 @@
    "fieldtype": "Select",
    "label": "Salary Paid Per",
    "options": "Month\nYear"
+  },
+  {
+   "default": "1",
+   "depends_on": "publish",
+   "description": "If enabled, the total no. of applications received for this opening will be displayed on the website",
+   "fieldname": "publish_applications_received",
+   "fieldtype": "Check",
+   "label": "Publish Applications Received"
   }
  ],
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2024-01-03 14:34:32.159138",
+ "modified": "2024-04-01 11:32:47.167232",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
