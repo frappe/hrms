@@ -162,7 +162,7 @@ class ShiftAssignmentTool(Document):
 		for d in employees:
 			try:
 				frappe.db.savepoint(savepoint)
-				self.create_shift_assignment(d)
+				assignment = self.create_shift_assignment(d)
 			except Exception:
 				frappe.db.rollback(save_point=savepoint)
 				frappe.log_error(
@@ -171,7 +171,7 @@ class ShiftAssignmentTool(Document):
 				)
 				failure.append(d)
 			else:
-				success.append(d)
+				success.append({"doc": get_link_to_form("Shift Assignment", assignment), "employee": d})
 
 			count += 1
 			frappe.publish_progress(count * 100 / len(employees), title=_("Assigning Shift..."))
@@ -193,6 +193,7 @@ class ShiftAssignmentTool(Document):
 		assignment.status = self.status
 		assignment.save()
 		assignment.submit()
+		return assignment.name
 
 	@frappe.whitelist()
 	def bulk_process_shift_requests(self, shift_requests: list, status: str):
@@ -232,7 +233,9 @@ class ShiftAssignmentTool(Document):
 				)
 				failure.append(d["employee"])
 			else:
-				success.append(d["employee"])
+				success.append(
+					{"doc": get_link_to_form("Shift Request", shift_request.name), "employee": d["employee"]}
+				)
 
 			count += 1
 			frappe.publish_progress(count * 100 / len(shift_requests), title=_("Processing Requests..."))
