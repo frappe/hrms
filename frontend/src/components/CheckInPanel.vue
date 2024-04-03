@@ -172,7 +172,10 @@ function success(position) {
 	latitude.value = position.coords.latitude
 	longitude.value = position.coords.longitude
 
-	locationStatus.value = `Latitude: ${latitude.value} °, Longitude: ${longitude.value} °`
+	locationStatus.value = `
+		Latitude: ${Number(latitude.value).toFixed(5)} °,
+		Longitude: ${Number(longitude.value).toFixed(5)} °
+	`
 }
 
 function error() {
