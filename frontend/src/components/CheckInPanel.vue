@@ -47,16 +47,19 @@
 				{{ locationStatus }}
 			</span>
 
-			<iframe
-				width="370"
-				height="170"
-				frameborder="1"
-				scrolling="no"
-				marginheight="0"
-				marginwidth="0"
-				:src="`https://maps.google.com/maps?q=${latitude},${longitude}&hl=en&z=15&amp;output=embed`"
-			>
-			</iframe>
+			<div class="rounded border-4 translate-z-0 block overflow-hidden w-350 h-170">
+				<iframe
+					width="350"
+					height="170"
+					frameborder="0"
+					scrolling="no"
+					marginheight="0"
+					marginwidth="0"
+					style="border:0"
+					:src="`https://maps.google.com/maps?q=${latitude},${longitude}&hl=en&z=15&amp;output=embed`"
+				>
+				</iframe>
+			</div>
 
 			<Button
 				variant="solid"
