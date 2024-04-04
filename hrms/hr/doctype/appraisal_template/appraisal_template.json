@@ -74,7 +74,7 @@
    "link_fieldname": "appraisal_template"
   }
  ],
- "modified": "2023-03-17 18:58:23.471479",
+ "modified": "2024-03-27 13:06:32.049388",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal Template",
@@ -108,7 +108,7 @@
    "role": "Employee"
   }
  ],
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": []
 }

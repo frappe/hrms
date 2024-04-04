@@ -207,7 +207,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-06-15 20:09:21.730465",
+ "modified": "2024-03-27 13:06:36.160893",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance",
@@ -257,7 +257,7 @@
   }
  ],
  "search_fields": "employee,employee_name,attendance_date,status",
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name",

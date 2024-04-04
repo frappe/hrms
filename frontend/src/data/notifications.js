@@ -27,3 +27,9 @@ export const notifications = createListResource({
 		unreadNotificationsCount.reload()
 	},
 })
+
+export const arePushNotificationsEnabled = createResource({
+	url: "hrms.api.are_push_notifications_enabled",
+	cache: "hrms:push_notifications_enabled",
+	auto: true,
+})

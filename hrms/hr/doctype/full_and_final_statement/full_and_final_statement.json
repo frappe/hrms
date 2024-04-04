@@ -181,7 +181,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-11 18:06:22.669089",
+ "modified": "2024-03-27 13:09:45.013128",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Full and Final Statement",
@@ -226,7 +226,7 @@
    "write": 1
   }
  ],
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name",

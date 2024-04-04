@@ -32,6 +32,7 @@ def get_job_openings(filters=None, txt=None, sort=None, limit=20, offset=0):
 			jo.status,
 			jo.job_title,
 			jo.description,
+			jo.publish_applications_received,
 			jo.publish_salary_range,
 			jo.lower_range,
 			jo.upper_range,
