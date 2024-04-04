@@ -770,6 +770,7 @@ def setup_lending():
 	from lending.loan_management.doctype.loan.test_loan import (
 		create_loan_accounts,
 		create_loan_product,
+		set_loan_settings_in_company,
 	)
 
 	company = "_Test Company"
@@ -778,6 +779,7 @@ def setup_lending():
 	if not frappe.db.exists("Branch", branch):
 		frappe.get_doc({"doctype": "Branch", "branch": branch}).insert()
 
+	set_loan_settings_in_company(company)
 	applicant = make_employee("test_employee@loan.com", company="_Test Company", branch=branch)
 	company_doc = frappe.get_doc("Company", company)
 
@@ -797,7 +799,6 @@ def setup_lending():
 			500000,
 			8.4,
 			is_term_loan=1,
-			mode_of_payment="Cash",
 			disbursement_account="Disbursement Account - _TC",
 			payment_account="Payment Account - _TC",
 			loan_account="Loan Account - _TC",

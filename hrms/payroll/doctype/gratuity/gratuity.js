@@ -48,22 +48,18 @@ frappe.ui.form.on('Gratuity', {
 			});
 		}
 	},
+
 	employee: function (frm) {
 		frm.events.calculate_work_experience_and_amount(frm);
 	},
+
 	gratuity_rule: function (frm) {
 		frm.events.calculate_work_experience_and_amount(frm);
 	},
-	calculate_work_experience_and_amount: function (frm) {
 
+	calculate_work_experience_and_amount: function (frm) {
 		if (frm.doc.employee && frm.doc.gratuity_rule) {
-			frappe.call({
-				method: "hrms.payroll.doctype.gratuity.gratuity.calculate_work_experience_and_amount",
-				args: {
-					employee: frm.doc.employee,
-					gratuity_rule: frm.doc.gratuity_rule
-				}
-			}).then((r) => {
+			frm.call("calculate_work_experience_and_amount").then((r) => {
 				frm.set_value("current_work_experience", r.message['current_work_experience']);
 				frm.set_value("amount", r.message['amount']);
 			});

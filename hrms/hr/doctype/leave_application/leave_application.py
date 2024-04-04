@@ -164,15 +164,15 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				if not allowed_role:
 					frappe.throw(
 						_("Backdated Leave Application is restricted. Please set the {} in {}").format(
-							frappe.bold("Role Allowed to Create Backdated Leave Application"),
-							get_link_to_form("HR Settings", "HR Settings"),
+							frappe.bold(_("Role Allowed to Create Backdated Leave Application")),
+							get_link_to_form("HR Settings", "HR Settings", _("HR Settings")),
 						)
 					)
 
 				if allowed_role and allowed_role not in user_roles:
 					frappe.throw(
 						_("Only users with the {0} role can create backdated leave applications").format(
-							allowed_role
+							_(allowed_role)
 						)
 					)
 
@@ -320,7 +320,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			select start_date, end_date from `tabSalary Slip`
 			where docstatus = 1 and employee = %s
 			and ((%s between start_date and end_date) or (%s between start_date and end_date))
-			order by modified desc limit 1
+			order by creation desc limit 1
 		""",
 			(self.employee, self.to_date, self.from_date),
 		)
@@ -497,7 +497,13 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			prev_date = add_days(reference_date, -1)
 			application = frappe.db.get_value(
 				"Leave Application",
-				{"employee": self.employee, "leave_type": self.leave_type, "to_date": prev_date},
+				{
+					"employee": self.employee,
+					"leave_type": self.leave_type,
+					"to_date": prev_date,
+					"docstatus": ["!=", 2],
+					"status": ["in", ["Open", "Approved"]],
+				},
 				["name", "from_date"],
 				as_dict=True,
 			)
@@ -511,7 +517,13 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			next_date = add_days(reference_date, 1)
 			application = frappe.db.get_value(
 				"Leave Application",
-				{"employee": self.employee, "leave_type": self.leave_type, "from_date": next_date},
+				{
+					"employee": self.employee,
+					"leave_type": self.leave_type,
+					"from_date": next_date,
+					"docstatus": ["!=", 2],
+					"status": ["in", ["Open", "Approved"]],
+				},
 				["name", "to_date"],
 				as_dict=True,
 			)
@@ -588,7 +600,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			frappe.msgprint(_("Please set default template for Leave Status Notification in HR Settings."))
 			return
 		email_template = frappe.get_doc("Email Template", template)
-		message = frappe.render_template(email_template.response, args)
+		message = frappe.render_template(email_template.response_, args)
 
 		self.notify(
 			{
@@ -613,7 +625,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				)
 				return
 			email_template = frappe.get_doc("Email Template", template)
-			message = frappe.render_template(email_template.response, args)
+			message = frappe.render_template(email_template.response_, args)
 
 			self.notify(
 				{
@@ -1170,7 +1182,12 @@ def is_lwp(leave_type):
 
 @frappe.whitelist()
 def get_events(start, end, filters=None):
-	from frappe.desk.reportview import get_filters_cond
+	import json
+
+	filters = json.loads(filters)
+	for idx, filter in enumerate(filters):
+		# taking relevant fields from the list [doctype, fieldname, condition, value, hidden]
+		filters[idx] = filter[1:-1]
 
 	events = []
 
@@ -1184,12 +1201,11 @@ def get_events(start, end, filters=None):
 		employee = ""
 		company = frappe.db.get_value("Global Defaults", None, "default_company")
 
-	conditions = get_filters_cond("Leave Application", filters, [])
 	# show department leaves for employee
 	if "Employee" in frappe.get_roles():
 		add_department_leaves(events, start, end, employee, company)
 
-	add_leaves(events, start, end, conditions)
+	add_leaves(events, start, end, filters)
 	add_block_dates(events, start, end, employee, company)
 	add_holidays(events, start, end, employee, company)
 
@@ -1197,78 +1213,55 @@ def get_events(start, end, filters=None):
 
 
 def add_department_leaves(events, start, end, employee, company):
-	department = frappe.db.get_value("Employee", employee, "department")
+	if department := frappe.db.get_value("Employee", employee, "department"):
+		department_employees = frappe.get_list(
+			"Employee", filters={"department": department, "company": company}, pluck="name"
+		)
+		filters = [["employee", "in", department_employees]]
+		add_leaves(events, start, end, filters=filters)
 
-	if not department:
-		return
 
-	# department leaves
-	department_employees = frappe.db.sql_list(
-		"""select name from tabEmployee where department=%s
-		and company=%s""",
-		(department, company),
+def add_leaves(events, start, end, filters=None):
+	if not filters:
+		filters = []
+	filters.extend(
+		[
+			["from_date", "<=", getdate(end)],
+			["to_date", ">=", getdate(start)],
+			["status", "in", ["Approved", "Open"]],
+			["docstatus", "<", 2],
+		]
 	)
 
-	filter_conditions = ' and employee in ("%s")' % '", "'.join(department_employees)
-	add_leaves(events, start, end, filter_conditions=filter_conditions)
+	fields = [
+		"name",
+		"from_date",
+		"to_date",
+		"color",
+		"docstatus",
+		"employee_name",
+		"leave_type",
+		"(1) as allDay",
+		"'Leave Application' as doctype",
+	]
 
+	show_leaves_of_all_members = frappe.db.get_single_value(
+		"HR Settings", "show_leaves_of_all_department_members_in_calendar"
+	)
+	if cint(show_leaves_of_all_members):
+		leave_applications = frappe.get_all("Leave Application", filters=filters, fields=fields)
+	else:
+		leave_applications = frappe.get_list("Leave Application", filters=filters, fields=fields)
 
-def add_leaves(events, start, end, filter_conditions=None):
-	from frappe.desk.reportview import build_match_conditions
-
-	conditions = []
-
-	if not cint(
-		frappe.db.get_value("HR Settings", None, "show_leaves_of_all_department_members_in_calendar")
-	):
-		match_conditions = build_match_conditions("Leave Application")
-
-		if match_conditions:
-			conditions.append(match_conditions)
-
-	query = """SELECT
-		docstatus,
-		name,
-		employee,
-		employee_name,
-		leave_type,
-		from_date,
-		to_date,
-		half_day,
-		status,
-		color
-	FROM `tabLeave Application`
-	WHERE
-		from_date <= %(end)s AND to_date >= %(start)s <= to_date
-		AND docstatus < 2
-		AND status in ('Approved', 'Open')
-	"""
-
-	if conditions:
-		query += " AND " + " AND ".join(conditions)
-
-	if filter_conditions:
-		query += filter_conditions
-
-	for d in frappe.db.sql(query, {"start": start, "end": end}, as_dict=True):
-		e = {
-			"name": d.name,
-			"doctype": "Leave Application",
-			"from_date": d.from_date,
-			"to_date": d.to_date,
-			"docstatus": d.docstatus,
-			"color": d.color,
-			"all_day": int(not d.half_day),
-			"title": cstr(d.employee_name)
-			+ f" ({cstr(d.leave_type)})"
-			+ (" " + _("(Half Day)") if d.half_day else ""),
-		}
-		if e not in events:
-			events.append(e)
+	for d in leave_applications:
+		d["title"] = f"{d['employee_name']} ({d['leave_type']})"
+		del d["employee_name"]
+		del d["leave_type"]
+		if d not in events:
+			events.append(d)
 
 
 def add_block_dates(events, start, end, employee, company):
-	# block days
 	cnt = 0
 	block_dates = get_applicable_block_dates(start, end, employee, company, all_lists=True)
 
@@ -1280,6 +1273,7 @@ def add_block_dates(events, start, end, employee, company):
 				"to_date": block_date.block_date,
 				"title": _("Leave Blocked") + ": " + block_date.reason,
 				"name": "_" + str(cnt),
+				"allDay": 1,
 			}
 		)
 		cnt += 1
@@ -1303,6 +1297,7 @@ def add_holidays(events, start, end, employee, company):
 				"to_date": holiday.holiday_date,
 				"title": _("Holiday") + ": " + cstr(holiday.description),
 				"name": holiday.name,
+				"allDay": 1,
 			}
 		)
 

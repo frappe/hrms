@@ -15,10 +15,25 @@ from erpnext.controllers.accounts_controller import AccountsController
 
 class Gratuity(AccountsController):
 	def validate(self):
-		data = calculate_work_experience_and_amount(self.employee, self.gratuity_rule)
+		data = self.calculate_work_experience_and_amount()
 		self.current_work_experience = data["current_work_experience"]
 		self.amount = data["amount"]
 		self.set_status()
+
+	@frappe.whitelist()
+	def calculate_work_experience_and_amount(self):
+		rule = get_gratuity_rule_config(self.gratuity_rule)
+
+		if rule.method == "Manual":
+			current_work_experience = flt(self.current_work_experience)
+		else:
+			current_work_experience = calculate_work_experience(self.employee, self.gratuity_rule) or 0
+
+		gratuity_amount = (
+			calculate_gratuity_amount(self.employee, self.gratuity_rule, current_work_experience) or 0
+		)
+
+		return {"current_work_experience": current_work_experience, "amount": gratuity_amount}
 
 	def set_status(self, update=False):
 		precision = self.precision("paid_amount")
@@ -130,19 +145,21 @@ class Gratuity(AccountsController):
 		self.set_status(update=True)
 
 
-@frappe.whitelist()
-def calculate_work_experience_and_amount(employee, gratuity_rule):
-	current_work_experience = calculate_work_experience(employee, gratuity_rule) or 0
-	gratuity_amount = calculate_gratuity_amount(employee, gratuity_rule, current_work_experience) or 0
-
-	return {"current_work_experience": current_work_experience, "amount": gratuity_amount}
+def get_gratuity_rule_config(gratuity_rule: str) -> dict:
+	return frappe.db.get_value(
+		"Gratuity Rule",
+		gratuity_rule,
+		[
+			"work_experience_calculation_function as method",
+			"total_working_days_per_year",
+			"minimum_year_for_gratuity",
+		],
+		as_dict=True,
+	)
 
 
 def calculate_work_experience(employee, gratuity_rule):
-
-	total_working_days_per_year, minimum_year_for_gratuity = frappe.db.get_value(
-		"Gratuity Rule", gratuity_rule, ["total_working_days_per_year", "minimum_year_for_gratuity"]
-	)
+	rule = get_gratuity_rule_config(gratuity_rule)
 
 	date_of_joining, relieving_date = frappe.db.get_value(
 		"Employee", employee, ["date_of_joining", "relieving_date"]
@@ -154,16 +171,13 @@ def calculate_work_experience(employee, gratuity_rule):
 			)
 		)
 
-	method = frappe.db.get_value(
-		"Gratuity Rule", gratuity_rule, "work_experience_calculation_function"
-	)
 	employee_total_workings_days = calculate_employee_total_workings_days(
 		employee, date_of_joining, relieving_date
 	)
 
-	current_work_experience = employee_total_workings_days / total_working_days_per_year or 1
+	current_work_experience = employee_total_workings_days / rule.total_working_days_per_year or 1
 	current_work_experience = get_work_experience_using_method(
-		method, current_work_experience, minimum_year_for_gratuity, employee
+		rule.method, current_work_experience, rule.minimum_year_for_gratuity, employee
 	)
 	return current_work_experience
 

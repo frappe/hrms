@@ -19,6 +19,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_employee_salary_slip,
 )
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+from hrms.tests.test_utils import create_employee_grade
 
 test_dependencies = ["Fiscal Year"]
 
@@ -270,15 +271,3 @@ def get_payable_account(company=None):
 	if not company:
 		company = erpnext.get_default_company()
 	return frappe.db.get_value("Company", company, "default_payroll_payable_account")
-
-
-def create_employee_grade(grade, default_structure=None):
-	if not frappe.db.exists("Employee Grade", grade):
-		frappe.get_doc(
-			{
-				"doctype": "Employee Grade",
-				"__newname": grade,
-				"default_salary_structure": default_structure,
-				"default_base_pay": 50000,
-			}
-		).insert()

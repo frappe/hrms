@@ -31,13 +31,11 @@ def delete_company_fixtures():
 		except (ImportError, AttributeError):
 			# regional file or method does not exist
 			pass
-		except Exception:
-			frappe.log_error("Unable to delete country fixtures for HRMS")
-			frappe.throw(
-				_("Failed to delete defaults for country {0}. Please contact support.").format(
-					frappe.bold(country)
-				)
-			)
+		except Exception as e:
+			frappe.log_error("Unable to delete country fixtures for Frappe HR")
+			msg = _("Failed to delete defaults for country {0}.").format(frappe.bold(country))
+			msg += "<br><br>" + _("{0}: {1}").format(frappe.bold(_("Error")), get_error_message(e))
+			frappe.throw(msg, title=_("Country Fixture Deletion Failed"))
 
 
 def run_regional_setup(country):
@@ -46,13 +44,24 @@ def run_regional_setup(country):
 		frappe.get_attr(module_name)()
 	except ImportError:
 		pass
+	except Exception as e:
+		frappe.log_error("Unable to setup country fixtures for Frappe HR")
+		msg = _("Failed to setup defaults for country {0}.").format(frappe.bold(country))
+		msg += "<br><br>" + _("{0}: {1}").format(frappe.bold(_("Error")), get_error_message(e))
+		frappe.throw(msg, title=_("Country Setup failed"))
+
+
+def get_error_message(error) -> str:
+	try:
+		message_log = frappe.message_log.pop() if frappe.message_log else str(error)
+		if isinstance(message_log, str):
+			error_message = json.loads(message_log).get("message")
+		else:
+			error_message = message_log.get("message")
 	except Exception:
-		frappe.log_error("Unable to setup country fixtures for HRMS")
-		frappe.throw(
-			_("Failed to setup defaults for country {0}. Please contact support.").format(
-				frappe.bold(country)
-			)
-		)
+		error_message = message_log
+
+	return error_message
 
 
 def make_salary_components(country):
