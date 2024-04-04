@@ -180,12 +180,25 @@ frappe.ui.form.on("Leave Control Panel", {
 		});
 
 		hrms.validate_mandatory_fields(frm, selected_employees);
+		frm.events.show_confirm_dialog(frm, selected_employees);
+	},
+
+	show_confirm_dialog(frm, selected_employees) {
+		frappe.confirm(
+			__("Allocate Leave to {0} employee(s)?", [selected_employees.length]),
+			() => {
+				frm.events.bulk_allocate_leave(frm, selected_employees);
+			}
+		);
+	},
+
+	bulk_allocate_leave(frm, employees) {
 		frm
 			.call({
 				method: "allocate_leave",
 				doc: frm.doc,
 				args: {
-					employees: selected_employees,
+					employees: employees,
 				},
 				freeze: true,
 				freeze_message: __("Allocating Leave"),
