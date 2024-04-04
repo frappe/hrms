@@ -4,11 +4,11 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import cint, flt
+from frappe.utils import cint, flt, get_link_to_form
 
 from erpnext import get_default_company
 
-from hrms.hr.utils import notify_bulk_action_status, validate_bulk_tool_fields
+from hrms.hr.utils import validate_bulk_tool_fields
 
 
 class LeaveControlPanel(Document):
@@ -54,14 +54,20 @@ class LeaveControlPanel(Document):
 				allocation.new_leaves_allocated = flt(self.no_of_days)
 				allocation.insert()
 				allocation.submit()
-				success.append(employee)
-			except Exception as e:
+				success.append(
+					{"doc": get_link_to_form("Leave Allocation", allocation.name), "employee": employee}
+				)
+			except Exception:
 				frappe.db.rollback(save_point=savepoint)
 				allocation.log_error(f"Leave Allocation failed for employee {employee}")
 				failure.append(employee)
 
-		notify_bulk_action_status("Leave Allocation", failure, success)
-		return {"failed": failure, "success": success}
+		frappe.publish_realtime(
+			"completed_bulk_leave_allocation",
+			message={"success": success, "failure": failure},
+			doctype="Bulk Salary Structure Assignment",
+			after_commit=True,
+		)
 
 	def create_leave_policy_assignments(self, employees: list) -> dict:
 		from_date, to_date = self.get_from_to_date()
@@ -85,14 +91,20 @@ class LeaveControlPanel(Document):
 				assignment.carry_forward = self.carry_forward
 				assignment.save()
 				assignment.submit()
-				success.append(employee)
+				success.append(
+					{"doc": get_link_to_form("Leave Policy Assignment", assignment.name), "employee": employee}
+				)
 			except Exception:
 				frappe.db.rollback(save_point=savepoint)
 				assignment.log_error(f"Leave Policy Assignment failed for employee {employee}")
 				failure.append(employee)
 
-		notify_bulk_action_status("Leave Policy Assignment", failure, success)
-		return {"failed": failure, "success": success}
+		frappe.publish_realtime(
+			"completed_bulk_leave_policy_assignment",
+			message={"success": success, "failure": failure},
+			doctype="Bulk Salary Structure Assignment",
+			after_commit=True,
+		)
 
 	def get_from_to_date(self):
 		if self.dates_based_on == "Joining Date":
