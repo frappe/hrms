@@ -23,6 +23,7 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "Employee",
    "options": "Employee",
    "reqd": 1,
@@ -103,7 +104,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:10:40.534158",
+ "modified": "2024-04-04 16:10:34.273274",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment",
