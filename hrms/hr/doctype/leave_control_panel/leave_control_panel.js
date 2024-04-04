@@ -204,20 +204,14 @@ frappe.ui.form.on("Leave Control Panel", {
 	},
 
 	bulk_allocate_leave(frm, employees) {
-		frm
-			.call({
-				method: "allocate_leave",
-				doc: frm.doc,
-				args: {
-					employees: employees,
-				},
-				freeze: true,
-				freeze_message: __("Allocating Leave"),
-			})
-			.then((r) => {
-				// don't refresh on complete failure
-				if (r.message.failed && !r.message.success) return;
-				frm.refresh();
-			});
+		frm.call({
+			method: "allocate_leave",
+			doc: frm.doc,
+			args: {
+				employees: employees,
+			},
+			freeze: true,
+			freeze_message: __("Allocating Leave"),
+		});
 	},
 });
