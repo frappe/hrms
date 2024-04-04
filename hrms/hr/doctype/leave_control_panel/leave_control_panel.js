@@ -9,9 +9,20 @@ frappe.ui.form.on("Leave Control Panel", {
 	},
 
 	refresh: function (frm) {
+		frm.page.clear_indicator();
 		frm.disable_save();
 		frm.trigger("get_employees");
 		frm.trigger("set_primary_action");
+		hrms.handle_realtime_bulk_action_notification(
+			frm,
+			"completed_bulk_leave_policy_assignment",
+			"Leave Policy Assignment"
+		);
+		hrms.handle_realtime_bulk_action_notification(
+			frm,
+			"completed_bulk_leave_allocation",
+			"Leave Allocation"
+		);
 	},
 
 	company: function (frm) {
