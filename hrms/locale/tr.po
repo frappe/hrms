@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-03-29 05:38\n"
+"PO-Revision-Date: 2024-04-04 13:28\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -309,13 +309,33 @@ msgid "<h3>Help</h3>\n\n"
 "<pre><code>Condition: employment_type==\"Intern\"</code></pre>\n"
 "<pre><code>Amount: 1000</code></pre></li>\n"
 "</ol>"
-msgstr ""
+msgstr "<h3>Yardım</h3>\n\n"
+"<p>Notlar:</p>\n\n"
+"<ol>\n"
+"<li>Personelin brüt maaşını kullanmak için <code>base</code> alanını kullanın</li>\n"
+"<li>Koşullar ve formüllerde Maaş Bileşeni kısaltmalarını kullanın. <code>BS = Brüt Maaş</code></li>\n"
+"<li>Personel detayları için koşullar ve formüllerde alan adını kullanın. <code>İstihdam Türü = employment_type</code><code>Şube = branch</code></li>\n"
+"<li>Maaş Bordrosundaki alan adını koşullar ve formüllerde kullanın. <code>Ödeme Günleri = payment_days</code><code>Ücretsiz izin = leave_without_pay</code></li>\n"
+"<li>Doğrudan Miktar da Koşula bağlı olarak girilebilir. Örnek 3'e bakın</li></ol>\n\n"
+"<h4>Örnekler</h4>\n"
+"<ol>\n"
+"<li><code>base</code> üzerinden Brüt Maaş hesaplama\n"
+"<pre><code>Koşul: base &lt; 10000</code></pre>\n"
+"<pre><code>Formül: base * .2</code></pre></li>\n"
+"<li>Brüt Maaşa dayalı HRA hesaplama<code>BS</code> \n"
+"<pre><code>Koşul: BS &gt; 2000</code></pre>\n"
+"<pre><code>Formül: BS * .1</code></pre></li>\n"
+"<li>İstihdam Türüne dayalı Gelir Vergisi Kesintisi hesaplama<code>employment_type</code> \n"
+"<pre><code>Koşul: employment_type==\"Stajyer\"</code></pre>\n"
+"<pre><code>Miktar: 1000</code></pre></li>\n"
+"</ol>"
 
 #. Description of the Onboarding Step 'Create Holiday List'
 #: hr/onboarding_step/create_holiday_list/create_holiday_list.json
 msgid "<h3>Holiday List.</h3>\n\n"
 "Holiday List is a list which contains the dates of holidays. Most organizations have a standard Holiday List for their employees. However, some of them may have different holiday lists based on different Locations or Departments. In ERPNext, you can configure multiple Holiday Lists."
-msgstr ""
+msgstr "<h3>Tatil Listesi.</h3>\n\n"
+"Tatil Listesi, tatillerin tarihlerinin yer aldığı bir listedir. Çoğu kurumun çalışanları için standart bir Tatil Listesi bulunmaktadır. Ancak bazıları, farklı Konumlar veya Departmanlar bazında farklı tatil listelerine sahip olabilir. Birden fazla Tatil Listesi tanımlayabilirsiniz."
 
 #. Description of the Onboarding Step 'Create Leave Allocation'
 #: hr/onboarding_step/create_leave_allocation/create_leave_allocation.json
@@ -496,7 +516,7 @@ msgstr ""
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Accounting & Payment"
-msgstr ""
+msgstr "Hesap Bilgisi & Ödeme"
 
 #. Label of a Section Break field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
@@ -674,7 +694,7 @@ msgstr ""
 
 #: hr/employee_property_update.js:45
 msgid "Add Employee Property"
-msgstr ""
+msgstr "Personel Özelliği Ekle"
 
 #: public/js/performance/performance_feedback.js:93
 msgid "Add Feedback"
@@ -1689,19 +1709,19 @@ msgstr "Onay Durumu 'Onaylandı' veya 'Reddedildi' olmalıdır"
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Approved"
-msgstr ""
+msgstr "Onaylandı"
 
 #. Option for the 'Status' (Select) field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
 msgctxt "Leave Application"
 msgid "Approved"
-msgstr ""
+msgstr "Onaylandı"
 
 #. Option for the 'Status' (Select) field in DocType 'Shift Request'
 #: hr/doctype/shift_request/shift_request.json
 msgctxt "Shift Request"
 msgid "Approved"
-msgstr ""
+msgstr "Onaylandı"
 
 #. Label of a Link field in DocType 'Department Approver'
 #: hr/doctype/department_approver/department_approver.json
@@ -3838,18 +3858,18 @@ msgstr "Günlük İş Özeti Cevapları"
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 #: payroll/workspace/payroll/payroll.json
 msgid "Dashboard"
-msgstr ""
+msgstr "Gösterge Paneli"
 
 #. Label of a Tab Break field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Dashboard"
-msgstr ""
+msgstr "Gösterge Paneli"
 
 #. Title of an Onboarding Step
 #: hr/onboarding_step/data_import/data_import.json
 msgid "Data Import"
-msgstr ""
+msgstr "Veri İçe Aktarma"
 
 #: hr/notification/training_scheduled/training_scheduled.html:27
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:9
@@ -3960,7 +3980,7 @@ msgstr ""
 #: hr/doctype/leave_application/leave_application.json
 msgctxt "Leave Application"
 msgid "Dates & Reason"
-msgstr ""
+msgstr "Tarih & Gerekçe"
 
 #. Label of a Select field in DocType 'Leave Control Panel'
 #: hr/doctype/leave_control_panel/leave_control_panel.json
@@ -5074,13 +5094,13 @@ msgstr "Kazanç"
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Earnings & Deductions"
-msgstr ""
+msgstr "Kazançlar & Kesintiler"
 
 #. Label of a Tab Break field in DocType 'Salary Structure'
 #: payroll/doctype/salary_structure/salary_structure.json
 msgctxt "Salary Structure"
 msgid "Earnings & Deductions"
-msgstr ""
+msgstr "Kazançlar & Kesintiler"
 
 #. Label of a Section Break field in DocType 'Salary Structure Assignment'
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
@@ -5128,7 +5148,7 @@ msgstr "E-posta Address"
 #: hr/doctype/exit_interview/exit_interview.json
 msgctxt "Exit Interview"
 msgid "Email ID"
-msgstr ""
+msgstr "E-Posta ID"
 
 #. Label of a Check field in DocType 'Payroll Settings'
 #: payroll/doctype/payroll_settings/payroll_settings.json
@@ -5790,7 +5810,7 @@ msgstr "Çalışan Teşvik"
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Employee Info"
-msgstr ""
+msgstr "Personel Bilgisi"
 
 #. Name of a report
 #. Label of a Link in the Employee Lifecycle Workspace
@@ -6089,7 +6109,7 @@ msgstr ""
 #: hr/doctype/hr_settings/hr_settings.json
 msgctxt "HR Settings"
 msgid "Employee Naming By"
-msgstr ""
+msgstr "Personel İsimlendirmesi"
 
 #. Option for the 'Employee Naming By' (Select) field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -6686,13 +6706,13 @@ msgstr "Bitiş saati başlangıç saatinden önce olamaz"
 #: hr/workspace/performance/performance.json
 msgctxt "Energy Point Log"
 msgid "Energy Point Log"
-msgstr ""
+msgstr "Personel Puanı Kayıtları"
 
 #. Label of a Link in the Performance Workspace
 #: hr/workspace/performance/performance.json
 msgctxt "Energy Point Rule"
 msgid "Energy Point Rule"
-msgstr ""
+msgstr "Personel Puanı Kuralı"
 
 #. Label of a Link in the Performance Workspace
 #: hr/workspace/performance/performance.json
@@ -6703,7 +6723,7 @@ msgstr ""
 #. Label of a Card Break in the Performance Workspace
 #: hr/workspace/performance/performance.json
 msgid "Energy Points"
-msgstr ""
+msgstr "Personel Puanı"
 
 #: hr/doctype/hr_settings/hr_settings.js:32
 msgid "Enter the Standard Working Hours for a normal work day. These hours will be used in calculations of reports such as Employee Hours Utilization and Project Profitability analysis."
@@ -7363,7 +7383,7 @@ msgstr ""
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Filter Employees"
-msgstr ""
+msgstr "Personeli Filtrele"
 
 #. Label of a HTML field in DocType 'Leave Control Panel'
 #: hr/doctype/leave_control_panel/leave_control_panel.json
