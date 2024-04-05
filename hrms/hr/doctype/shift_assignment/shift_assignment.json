@@ -23,6 +23,7 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "Employee",
    "options": "Employee",
    "reqd": 1,
