@@ -559,6 +559,13 @@ def get_user_types_data():
 	}
 
 
+def get_lending_doctypes_for_ess():
+	return {
+		"Loan": ["read"],
+		"Loan Application": ["read"],
+	}
+
+
 def create_custom_role(data):
 	if data.get("role") and not frappe.db.exists("Role", data.get("role")):
 		frappe.get_doc(
@@ -587,7 +594,14 @@ def create_user_type(user_type, data):
 
 
 def create_role_permissions_for_doctype(doc, data):
-	for doctype, perms in data.get("doctypes").items():
+	append_user_doctypes_to_user_type(data.get("doctypes").items(), doc)
+
+	if doc.role == "Employee Self Service" and "lending" in frappe.get_installed_apps():
+		append_user_doctypes_to_user_type(get_lending_doctypes_for_ess().items(), doc)
+
+
+def append_user_doctypes_to_user_type(doctypes, doc):
+	for doctype, perms in doctypes:
 		args = {"document_type": doctype}
 		for perm in perms:
 			args[perm] = 1
