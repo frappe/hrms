@@ -2,11 +2,8 @@
 # License: GNU General Public License v3. See license.txt
 
 
-import json
-
 import frappe
 from frappe import _
-from frappe.desk.reportview import get_filters_cond
 from frappe.model.document import Document
 from frappe.utils import (
 	add_days,
@@ -18,8 +15,6 @@ from frappe.utils import (
 	getdate,
 	nowdate,
 )
-
-from erpnext.controllers.status_updater import validate_status
 
 from hrms.hr.doctype.shift_assignment.shift_assignment import has_overlapping_timings
 from hrms.hr.utils import (
@@ -39,6 +34,7 @@ class OverlappingShiftAttendanceError(frappe.ValidationError):
 
 class Attendance(Document):
 	def validate(self):
+		from erpnext.controllers.status_updater import validate_status
 
 		validate_status(self.status, ["Present", "Absent", "On Leave", "Half Day", "Work From Home"])
 		validate_active_employee(self.employee)
@@ -235,6 +231,8 @@ class Attendance(Document):
 
 @frappe.whitelist()
 def get_events(start, end, filters=None):
+	from frappe.desk.reportview import get_filters_cond
+
 	events = []
 
 	employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user})
@@ -250,9 +248,9 @@ def get_events(start, end, filters=None):
 
 def add_attendance(events, start, end, conditions=None):
 	query = """select name, attendance_date, status, employee_name
-        from `tabAttendance` where
-        attendance_date between %(from_date)s and %(to_date)s
-        and docstatus < 2"""
+		from `tabAttendance` where
+		attendance_date between %(from_date)s and %(to_date)s
+		and docstatus < 2"""
 
 	if conditions:
 		query += conditions
@@ -263,7 +261,7 @@ def add_attendance(events, start, end, conditions=None):
 			"doctype": "Attendance",
 			"start": d.attendance_date,
 			"end": d.attendance_date,
-			"title": f"{d.employee_name}-{cstr(d.status)}",
+			"title": f"{d.employee_name}: {cstr(d.status)}",
 			"status": d.status,
 			"docstatus": d.docstatus,
 		}
@@ -326,6 +324,7 @@ def mark_attendance(
 
 @frappe.whitelist()
 def mark_bulk_attendance(data):
+	import json
 
 	if isinstance(data, str):
 		data = json.loads(data)
