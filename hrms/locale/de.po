@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-03-29 05:38\n"
+"PO-Revision-Date: 2024-04-05 13:25\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -3338,7 +3338,7 @@ msgstr "Kalkulation"
 #: hr/doctype/travel_request/travel_request.json
 msgctxt "Travel Request"
 msgid "Costing Details"
-msgstr ""
+msgstr "Kostendetails"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:1426
 msgid "Could not submit some Salary Slips: {}"
