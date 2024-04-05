@@ -207,7 +207,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-06-15 20:09:21.730465",
+ "modified": "2024-04-05 20:55:02.905452",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance",
@@ -254,6 +254,16 @@
    "share": 1,
    "submit": 1,
    "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "select": 1,
+   "share": 1
   }
  ],
  "search_fields": "employee,employee_name,attendance_date,status",
