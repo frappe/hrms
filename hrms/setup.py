@@ -563,6 +563,27 @@ def get_lending_doctypes_for_ess():
 	return {
 		"Loan": ["read"],
 		"Loan Application": ["read"],
+		"Loan Balance Adjustment": ["read"],
+		"Loan Disbursement": ["read"],
+		"Loan Interest Accrual": ["read"],
+		"Loan Refund": ["read"],
+		"Loan Repayment": ["read"],
+		"Loan Repayment Detail": ["read"],
+		"Loan Security": ["read"],
+		"Loan Security Pledge": ["read"],
+		"Loan Security Price": ["read"],
+		"Loan Security ShortFall": ["read"],
+		"Loan Security Type": ["read"],
+		"Loan Security Unpledge": ["read"],
+		"Loan Type": ["read"],
+		"Loan Write Off": ["read"],
+		"Pledge": ["read"],
+		"Process Loan Interest Accrual": ["read"],
+		"Process Loan Security Shortfall": ["read"],
+		"Proposed Pledge": ["read"],
+		"Repayment Schedule": ["read"],
+		"Sanctioned Loan Amount": ["read"],
+		"Unpledge": ["read"],
 	}
 
 
