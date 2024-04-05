@@ -28,7 +28,7 @@ frappe.ui.form.on('Leave Encashment', {
 			frm.set_intro(__("Fill the form and save it"));
 		}
 
-		hrms.leaves.add_view_ledger_button(frm);
+		hrms.leave_utils.add_view_ledger_button(frm);
 	},
 	employee: function(frm) {
 		if (frm.doc.employee) {
