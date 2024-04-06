@@ -7,7 +7,8 @@ $.extend(hrms, {
 			method:
 				"hrms.hr.doctype.hr_settings.hr_settings.set_proceed_with_frequency_change",
 			callback: () => {
-				cur_frm.save(); //nosemgrep
+				// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
+				cur_frm.save();
 			},
 		});
 	},
