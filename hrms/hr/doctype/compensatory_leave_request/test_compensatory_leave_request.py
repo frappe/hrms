@@ -132,6 +132,7 @@ class TestCompensatoryLeaveRequest(FrappeTestCase):
 	def test_request_on_leave_period_boundary(self):
 		frappe.db.delete("Leave Period")
 		create_leave_period("2023-01-01", "2023-12-31", "_Test Company")
+		create_holiday_list("2023-01-01", "2023-12-31")
 
 		employee = get_employee()
 		boundary_date = "2023-12-31"
@@ -149,9 +150,11 @@ class TestCompensatoryLeaveRequest(FrappeTestCase):
 				reason="test",
 			)
 		)
+		compensatory_leave_request.insert()
 		self.assertRaises(frappe.ValidationError, compensatory_leave_request.submit)
 
-		create_leave_period("2023-01-01", "2023-12-31", "_Test Company")
+		create_leave_period("2024-01-01", "2024-12-31", "_Test Company")
+		compensatory_leave_request.reload()
 		compensatory_leave_request.submit()
 
 
@@ -195,20 +198,27 @@ def mark_attendance(employee, date=None, status="Present"):
 		attendance.submit()
 
 
-def create_holiday_list():
-	if frappe.db.exists("Holiday List", "_Test Compensatory Leave"):
-		return
+def create_holiday_list(from_date=None, to_date=None):
+	list_name = "_Test Compensatory Leave"
+	if frappe.db.exists("Holiday List", list_name):
+		frappe.db.delete("Holiday List", list_name)
+		frappe.db.delete("Holiday", {"parent": list_name})
+
+	if from_date:
+		holiday_date = add_days(from_date, 1)
+	else:
+		holiday_date = today()
 
 	holiday_list = frappe.get_doc(
 		{
 			"doctype": "Holiday List",
-			"from_date": add_months(today(), -3),
-			"to_date": add_months(today(), 3),
+			"from_date": from_date or add_months(today(), -3),
+			"to_date": to_date or add_months(today(), 3),
 			"holidays": [
-				{"description": "Test Holiday", "holiday_date": today()},
-				{"description": "Test Holiday 1", "holiday_date": add_days(today(), -1)},
+				{"description": "Test Holiday", "holiday_date": holiday_date},
+				{"description": "Test Holiday 1", "holiday_date": add_days(holiday_date, -1)},
 			],
-			"holiday_list_name": "_Test Compensatory Leave",
+			"holiday_list_name": list_name,
 		}
 	)
 	holiday_list.save()

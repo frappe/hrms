@@ -506,21 +506,19 @@ def create_earned_leave_type(leave_type, allocate_on_day="Last Day", rounding=0.
 	).insert()
 
 
-def create_leave_period(name, start_date=None):
+def create_leave_period(name, start_date=None, end_date=None):
 	frappe.delete_doc_if_exists("Leave Period", name, force=1)
 
 	if not start_date:
 		start_date = get_first_day(getdate())
 
 	return frappe.get_doc(
-		dict(
-			name=name,
-			doctype="Leave Period",
-			from_date=start_date,
-			to_date=add_months(start_date, 12),
-			company="_Test Company",
-			is_active=1,
-		)
+		name=name,
+		doctype="Leave Period",
+		from_date=start_date,
+		to_date=end_date or add_months(start_date, 12),
+		company="_Test Company",
+		is_active=1,
 	).insert()
 
 
@@ -530,12 +528,15 @@ def make_policy_assignment(
 	rounding=0.5,
 	earned_leave_frequency="Monthly",
 	start_date=None,
+	end_date=None,
 	annual_allocation=12,
 	carry_forward=0,
 	assignment_based_on="Leave Period",
 ):
 	leave_type = create_earned_leave_type("Test Earned Leave", allocate_on_day, rounding)
-	leave_period = create_leave_period("Test Earned Leave Period", start_date=start_date)
+	leave_period = create_leave_period(
+		"Test Earned Leave Period", start_date=start_date, end_date=end_date
+	)
 	leave_policy = frappe.get_doc(
 		{
 			"doctype": "Leave Policy",
