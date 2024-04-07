@@ -55,15 +55,17 @@
 				{{ locationStatus }}
 			</span>
 
-			<div class="rounded border-4 translate-z-0 block overflow-hidden w-350 h-170">
+			<div
+				class="rounded border-4 translate-z-0 block overflow-hidden w-full h-170"
+			>
 				<iframe
-					width="350"
+					width="100%"
 					height="170"
 					frameborder="0"
 					scrolling="no"
 					marginheight="0"
 					marginwidth="0"
-					style="border:0"
+					style="border: 0"
 					:src="`https://maps.google.com/maps?q=${latitude},${longitude}&hl=en&z=15&amp;output=embed`"
 				>
 				</iframe>
@@ -168,18 +170,19 @@ const lastLogTime = computed(() => {
 	return `${formattedTime} on ${dayjs(timestamp).format("D MMM, YYYY")}`
 })
 
-function success(position) {
+function handleLocationSuccess(position) {
 	latitude.value = position.coords.latitude
 	longitude.value = position.coords.longitude
 
 	locationStatus.value = `
-		Latitude: ${Number(latitude.value).toFixed(5)} °,
-		Longitude: ${Number(longitude.value).toFixed(5)} °
+		Latitude: ${Number(latitude.value).toFixed(5)}°,
+		Longitude: ${Number(longitude.value).toFixed(5)}°
 	`
 }
 
-function error() {
+function handleLocationError(error) {
 	locationStatus.value = "Unable to retrieve your location"
+	if (error) locationStatus.value += `: ERROR(${error.code}): ${error.message}`
 }
 
 const fetchLocation = () => {
@@ -190,18 +193,10 @@ const fetchLocation = () => {
 			"Geolocation is not supported by your current browser"
 	} else {
 		locationStatus.value = "Locating..."
-		navigator.geolocation.getCurrentPosition(success, error)
-	}
-
-	if ("geolocation" in navigator) {
-	} else {
-		toast({
-			title: "Error",
-			text: "Your current browser does not support geolocation",
-			icon: "alert-circle",
-			position: "bottom-center",
-			iconClasses: "text-red-500",
-		})
+		navigator.geolocation.getCurrentPosition(
+			handleLocationSuccess,
+			handleLocationError
+		)
 	}
 }
 
