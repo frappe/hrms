@@ -513,14 +513,12 @@ def create_leave_period(name, start_date=None, end_date=None):
 		start_date = get_first_day(getdate())
 
 	return frappe.get_doc(
-		dict(
-			name=name,
-			doctype="Leave Period",
-			from_date=start_date,
-			to_date=end_date or add_months(start_date, 12),
-			company="_Test Company",
-			is_active=1,
-		)
+		name=name,
+		doctype="Leave Period",
+		from_date=start_date,
+		to_date=end_date or add_months(start_date, 12),
+		company="_Test Company",
+		is_active=1,
 	).insert()
 
 
