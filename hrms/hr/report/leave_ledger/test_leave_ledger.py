@@ -140,5 +140,49 @@ class TestLeaveLedger(FrappeTestCase):
 
 		self.assertEqual(actual_result, expected_result)
 
+	def test_totals(self):
+		def get_total_row(filters):
+			report = execute(filters)
+			return report[1][-1]
+
+		# CASE 1: no filters, skip total row
+		filters = frappe._dict(
+			{
+				"from_date": self.year_start,
+				"to_date": self.year_end,
+			}
+		)
+
+		total_row = get_total_row(filters)
+		self.assertNotIn("Total", total_row.employee)
+
+		# CASE 2: employee filter, add total row
+		filters = frappe._dict(
+			{
+				"from_date": self.year_start,
+				"to_date": self.year_end,
+				"employee": self.employee_1.name,
+			}
+		)
+
+		total_row = get_total_row(filters)
+		self.assertIn(f"Total Leaves ({self.earned_leave})", total_row.employee)
+		# 4 leaves allocated, 2 leaves taken
+		self.assertEqual(total_row.leaves, 2)
+
+		# CASE 3: leave type filter with only 1 allocation, add total row
+		filters = frappe._dict(
+			{
+				"from_date": self.year_start,
+				"to_date": self.year_end,
+				"leave_type": self.casual_leave,
+			}
+		)
+
+		total_row = get_total_row(filters)
+		self.assertEqual(f"Total Leaves ({self.casual_leave})", total_row.employee)
+		# 15 leave allocated, 2 leave taken
+		self.assertEqual(total_row.leaves, 13)
+
 	def tearDown(self):
 		frappe.flags.current_date = None
