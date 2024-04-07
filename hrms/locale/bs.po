@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-06 13:29\n"
+"PO-Revision-Date: 2024-04-07 13:40\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -2655,7 +2655,7 @@ msgstr ""
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:117
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:122
 msgid "Collapse All"
-msgstr ""
+msgstr "Sklopi sve"
 
 #. Label of a Color field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
@@ -3186,13 +3186,13 @@ msgstr ""
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Connections"
-msgstr ""
+msgstr "Veze"
 
 #. Label of a Tab Break field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Connections"
-msgstr ""
+msgstr "Veze"
 
 #: hr/report/shift_attendance/shift_attendance.js:58
 msgid "Consider Grace Period"
@@ -3222,7 +3222,7 @@ msgstr ""
 #: hr/doctype/travel_request/travel_request.json
 msgctxt "Travel Request"
 msgid "Contact Email"
-msgstr ""
+msgstr "Kontakt e-pošta"
 
 #. Label of a Data field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
@@ -3848,43 +3848,43 @@ msgstr "Uvoz podataka"
 #: hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.py:22
 #: hr/report/vehicle_expenses/vehicle_expenses.py:42
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. Label of a Date field in DocType 'Employee Attendance Tool'
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgctxt "Employee Attendance Tool"
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. Label of a Date field in DocType 'Employee Benefit Application'
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
 msgctxt "Employee Benefit Application"
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. Label of a Date field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
 msgctxt "Employee Referral"
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. Label of a Date field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
 msgctxt "Exit Interview"
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. Label of a Datetime field in DocType 'Full and Final Asset'
 #: hr/doctype/full_and_final_asset/full_and_final_asset.json
 msgctxt "Full and Final Asset"
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. Label of a Date field in DocType 'Vehicle Log'
 #: hr/doctype/vehicle_log/vehicle_log.json
 msgctxt "Vehicle Log"
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. Label of a Date field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
@@ -3895,7 +3895,7 @@ msgstr ""
 #: hr/doctype/goal/goal_tree.js:38
 #: hr/report/daily_work_summary_replies/daily_work_summary_replies.js:16
 msgid "Date Range"
-msgstr ""
+msgstr "Raspon datuma"
 
 #: hr/doctype/leave_block_list/leave_block_list.py:19
 msgid "Date is repeated"
@@ -4891,50 +4891,50 @@ msgstr ""
 #: hr/doctype/upload_attendance/upload_attendance.json
 msgctxt "Upload Attendance"
 msgid "Download Template"
-msgstr ""
+msgstr "Preuzmite skicu"
 
 #. Option for the 'Status' (Select) field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
 msgctxt "Appraisal"
 msgid "Draft"
-msgstr ""
+msgstr "Nacrt"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Draft"
-msgstr ""
+msgstr "Nacrt"
 
 #. Option for the 'Approval Status' (Select) field in DocType 'Expense Claim'
 #. Option for the 'Status' (Select) field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Draft"
-msgstr ""
+msgstr "Nacrt"
 
 #. Option for the 'Status' (Select) field in DocType 'Gratuity'
 #: payroll/doctype/gratuity/gratuity.json
 msgctxt "Gratuity"
 msgid "Draft"
-msgstr ""
+msgstr "Nacrt"
 
 #. Option for the 'Status' (Select) field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Draft"
-msgstr ""
+msgstr "Nacrt"
 
 #. Option for the 'Status' (Select) field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Draft"
-msgstr ""
+msgstr "Nacrt"
 
 #. Option for the 'Status' (Select) field in DocType 'Shift Request'
 #: hr/doctype/shift_request/shift_request.json
 msgctxt "Shift Request"
 msgid "Draft"
-msgstr ""
+msgstr "Nacrt"
 
 #. Label of a Link in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
@@ -7667,7 +7667,7 @@ msgstr ""
 #: hr/doctype/pwa_notification/pwa_notification.json
 msgctxt "PWA Notification"
 msgid "From User"
-msgstr ""
+msgstr "Od korisnika"
 
 #: hr/utils.py:179
 msgid "From date can not be less than employee's joining date"
@@ -7719,13 +7719,13 @@ msgstr ""
 #: hr/doctype/employee_referral/employee_referral.json
 msgctxt "Employee Referral"
 msgid "Full Name"
-msgstr ""
+msgstr "Puno ime"
 
 #. Option for the 'Employee Naming By' (Select) field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
 msgctxt "HR Settings"
 msgid "Full Name"
-msgstr ""
+msgstr "Puno ime"
 
 #. Name of a DocType
 #: hr/doctype/full_and_final_asset/full_and_final_asset.json
