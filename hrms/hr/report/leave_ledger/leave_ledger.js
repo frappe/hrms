@@ -70,7 +70,7 @@ frappe.query_reports["Leave Ledger"] = {
 	formatter: (value, row, column, data, default_formatter) => {
 		value = default_formatter(value, row, column, data);
 		if (column.fieldname === "leaves") {
-			if (data.leaves < 0)
+			if (data?.leaves < 0)
 				value = `<span style='color:red!important'>${value}</span>`;
 			else
 				value = `<span style='color:green!important'>${value}</span>`;
