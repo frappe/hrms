@@ -159,7 +159,7 @@ def get_data(filters: Filters) -> list[dict]:
 		if filters.get(field):
 			query = query.where(Employee[field] == filters.get(field))
 
-	query = query.orderby(Ledger.employee, Ledger.leave_type, Ledger.creation)
+	query = query.orderby(Ledger.employee, Ledger.leave_type, Ledger.from_date)
 	result = query.run(as_dict=True)
 
 	result = add_total_row(result, filters)
@@ -190,7 +190,7 @@ def add_total_row(result: list[dict], filters: Filters) -> list[dict]:
 	if not add_total_row:
 		return result
 
-	total_row = {"employee": _("Total Leaves ({0})").format(leave_type)}
+	total_row = frappe._dict({"employee": _("Total Leaves ({0})").format(leave_type)})
 	total_row["leaves"] = sum((row.get("leaves") or 0) for row in result)
 
 	result.append(total_row)
