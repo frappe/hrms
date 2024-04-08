@@ -19,7 +19,6 @@ from frappe.utils import (
 	get_link_to_form,
 	getdate,
 	rounded,
-	getdate,
 )
 
 
@@ -143,8 +142,7 @@ class LeavePolicyAssignment(Document):
 			new_leaves_allocated = 0
 
 		elif leave_details.is_earned_leave:
-			
-				
+
 			# get leaves for past months if assignment is based on Leave Period / Joining Date
 			new_leaves_allocated = self.get_leaves_for_passed_months(
 				annual_allocation, leave_details, date_of_joining
@@ -214,7 +212,7 @@ class LeavePolicyAssignment(Document):
 			)
 
 			period_end_date = _get_pro_rata_period_end_date(consider_current_month)
-	
+
 			if getdate(self.effective_from) <= date_of_joining <= period_end_date:
 				# if the employee joined within the allocation period in some previous month,
 				# calculate pro-rated leave for that month
