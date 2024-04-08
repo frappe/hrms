@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-03-04 16:06\n"
+"PO-Revision-Date: 2024-04-03 13:30\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -36,15 +36,15 @@ msgstr "\"از تاریخ\" نمی تواند بزرگتر یا مساوی \"ت�
 
 #: public/frontend/assets/BaseLayout-1fb5efbf.js:1
 msgid "$user"
-msgstr ""
+msgstr "$user"
 
 #: public/frontend/assets/LeaveBalance-814d62cc.js:1
 msgid "${c} balance"
-msgstr ""
+msgstr "${c} تراز"
 
 #: public/frontend/assets/LeaveBalance-814d62cc.js:1
 msgid "${t.balance_leaves}/${t.allocated_leaves}"
-msgstr ""
+msgstr "${t.balance_leaves}/${t.allocated_leaves}"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:88
 msgid "% Utilization (B + NB) / T"
@@ -2306,7 +2306,7 @@ msgstr "شعبه: {0}"
 
 #: payroll/doctype/salary_structure/salary_structure.js:106
 msgid "Bulk Assignments"
-msgstr ""
+msgstr "اختصاص انبوه"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment_list.js:3
 msgid "Bulk Leave Policy Assignment"
@@ -6401,7 +6401,7 @@ msgstr "کارمند {0} قبلاً یک Shift فعال {1} دارد: {2} که �
 
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.py:151
 msgid "Employee {0} already submitted an application {1} for the payroll period {2}"
-msgstr ""
+msgstr "کارمند {0} قبلاً یک درخواست {1} برای دوره حقوق و دستمزد {2} ارسال کرده است"
 
 #: hr/doctype/shift_request/shift_request.py:128
 msgid "Employee {0} has already applied for Shift {1}: {2} that overlaps within this period"
@@ -14371,7 +14371,7 @@ msgstr "مرخصی استعلاجی"
 
 #: payroll/doctype/salary_structure/salary_structure.js:99
 msgid "Single Assignment"
-msgstr ""
+msgstr "اختصاص تکی"
 
 #. Name of a DocType
 #: hr/doctype/interview/interview.js:186 hr/doctype/skill/skill.json

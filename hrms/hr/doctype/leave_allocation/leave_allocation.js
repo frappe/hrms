@@ -25,6 +25,8 @@ frappe.ui.form.on("Leave Allocation", {
 	},
 
 	refresh: function(frm) {
+		hrms.leave_utils.add_view_ledger_button(frm);
+
 		if (frm.doc.docstatus === 1 && frm.doc.expired) {
 			var valid_expiry = moment(frappe.datetime.get_today()).isBetween(frm.doc.from_date, frm.doc.to_date);
 			if (valid_expiry) {
