@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-07 13:40\n"
+"PO-Revision-Date: 2024-04-08 13:43\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -3535,115 +3535,115 @@ msgstr ""
 #: payroll/report/salary_register/salary_register.js:26
 #: payroll/report/salary_register/salary_register.py:244
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Additional Salary'
 #: payroll/doctype/additional_salary/additional_salary.json
 msgctxt "Additional Salary"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
 msgctxt "Currency"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Employee Benefit Application'
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
 msgctxt "Employee Benefit Application"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Employee Benefit Claim'
 #: payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgctxt "Employee Benefit Claim"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Employee Grade'
 #: hr/doctype/employee_grade/employee_grade.json
 msgctxt "Employee Grade"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Employee Incentive'
 #: payroll/doctype/employee_incentive/employee_incentive.json
 msgctxt "Employee Incentive"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Employee Tax Exemption Declaration'
 #: payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.json
 msgctxt "Employee Tax Exemption Declaration"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Employee Tax Exemption Proof Submission'
 #: payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.json
 msgctxt "Employee Tax Exemption Proof Submission"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Income Tax Slab'
 #: payroll/doctype/income_tax_slab/income_tax_slab.json
 msgctxt "Income Tax Slab"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Leave Encashment'
 #: hr/doctype/leave_encashment/leave_encashment.json
 msgctxt "Leave Encashment"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Retention Bonus'
 #: payroll/doctype/retention_bonus/retention_bonus.json
 msgctxt "Retention Bonus"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Salary Structure'
 #: payroll/doctype/salary_structure/salary_structure.json
 msgctxt "Salary Structure"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Link field in DocType 'Salary Structure Assignment'
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgctxt "Salary Structure Assignment"
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. Label of a Section Break field in DocType 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
@@ -3657,13 +3657,13 @@ msgstr ""
 
 #: hr/employee_property_update.js:85
 msgid "Current"
-msgstr ""
+msgstr "Trentuno"
 
 #. Label of a Data field in DocType 'Employee Property History'
 #: hr/doctype/employee_property_history/employee_property_history.json
 msgctxt "Employee Property History"
 msgid "Current"
-msgstr ""
+msgstr "Trentuno"
 
 #. Label of a Currency field in DocType 'Employee Promotion'
 #: hr/doctype/employee_promotion/employee_promotion.json
@@ -4871,7 +4871,7 @@ msgstr ""
 
 #: hr/doctype/goal/goal.js:98
 msgid "Do you still want to proceed?"
-msgstr ""
+msgstr "Želite li i dalje nastaviti?"
 
 #: hr/doctype/interview/interview.py:70
 msgid "Do you want to update the Job Applicant {0} as {1} based on this interview result?"
@@ -4949,7 +4949,7 @@ msgstr ""
 #: hr/doctype/appraisal/appraisal.py:60
 #: payroll/doctype/payroll_entry/payroll_entry.py:93
 msgid "Duplicate Entry"
-msgstr ""
+msgstr "Dvostruki unos"
 
 #: hr/doctype/job_requisition/job_requisition.py:35
 msgid "Duplicate Job Requisition"
@@ -7823,19 +7823,19 @@ msgstr ""
 #. Name of a DocType
 #: hr/doctype/goal/goal.json hr/doctype/goal/goal_tree.js:45
 msgid "Goal"
-msgstr ""
+msgstr "Cilj"
 
 #. Linked DocType in Appraisal Cycle's connections
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgctxt "Appraisal Cycle"
 msgid "Goal"
-msgstr ""
+msgstr "Cilj"
 
 #. Label of a Small Text field in DocType 'Appraisal Goal'
 #: hr/doctype/appraisal_goal/appraisal_goal.json
 msgctxt "Appraisal Goal"
 msgid "Goal"
-msgstr ""
+msgstr "Cilj"
 
 #. Label of a Data field in DocType 'Goal'
 #. Label of a Link in the Performance Workspace
@@ -7843,7 +7843,7 @@ msgstr ""
 #: hr/doctype/goal/goal.json hr/workspace/performance/performance.json
 msgctxt "Goal"
 msgid "Goal"
-msgstr ""
+msgstr "Cilj"
 
 #. Label of a Percent field in DocType 'Appraisal KRA'
 #: hr/doctype/appraisal_kra/appraisal_kra.json
@@ -8037,11 +8037,11 @@ msgstr ""
 
 #: hr/report/daily_work_summary_replies/daily_work_summary_replies.js:9
 msgid "Group"
-msgstr ""
+msgstr "Grupiši"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:58
 msgid "Group By"
-msgstr ""
+msgstr "Grupiši po"
 
 #: hr/doctype/goal/goal.js:13
 msgid "Group goal's progress is auto-calculated based on the child goals."
@@ -8648,7 +8648,7 @@ msgstr ""
 #: hr/doctype/upload_attendance/upload_attendance.json
 msgctxt "Upload Attendance"
 msgid "Import Log"
-msgstr ""
+msgstr "Dnevnik uvoza"
 
 #: hr/doctype/upload_attendance/upload_attendance.js:46
 msgid "Importing {0} of {1}"
