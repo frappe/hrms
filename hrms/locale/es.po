@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-02 13:21\n"
+"PO-Revision-Date: 2024-04-03 13:30\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -4871,7 +4871,7 @@ msgstr "No incluir en total"
 
 #: hr/doctype/goal/goal.js:98
 msgid "Do you still want to proceed?"
-msgstr ""
+msgstr "¿Aún quiere continuar?"
 
 #: hr/doctype/interview/interview.py:70
 msgid "Do you want to update the Job Applicant {0} as {1} based on this interview result?"
