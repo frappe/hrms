@@ -26,6 +26,7 @@ class AdditionalSalary(Document):
 		self.validate_recurring_additional_salary_overlap()
 		self.validate_employee_referral()
 		self.validate_duplicate_additional_salary()
+		self.validate_tax_component_overwrite()
 
 		if self.amount < 0:
 			frappe.throw(_("Amount should not be less than zero"))
@@ -131,12 +132,36 @@ class AdditionalSalary(Document):
 		if existing_additional_salary:
 			msg = _(
 				"Additional Salary for this salary component with {0} enabled already exists for this date"
-			).format(frappe.bold("Overwrite Salary Structure Amount"))
+			).format(frappe.bold(_("Overwrite Salary Structure Amount")))
 			msg += "<br><br>"
 			msg += _("Reference: {0}").format(
 				get_link_to_form("Additional Salary", existing_additional_salary)
 			)
 			frappe.throw(msg, title=_("Duplicate Overwritten Salary"))
+
+	def validate_tax_component_overwrite(self):
+		if not frappe.db.get_value(
+			"Salary Component", self.salary_component, "variable_based_on_taxable_salary"
+		):
+			return
+
+		if self.overwrite_salary_structure_amount:
+			frappe.msgprint(
+				_(
+					"This will overwrite the tax component {0} in the salary slip and tax won't be calculated based on the Income Tax Slabs"
+				).format(frappe.bold(self.salary_component)),
+				title=_("Warning"),
+				indicator="orange",
+			)
+		else:
+			msg = _("{0} has {1} enabled").format(
+				get_link_to_form("Salary Component", self.salary_component),
+				frappe.bold(_("Variable Based On Taxable Salary")),
+			)
+			msg += "<br><br>" + _(
+				"To overwrite the salary component amount for a tax component, please enable {0}"
+			).format(frappe.bold(_("Overwrite Salary Structure Amount")))
+			frappe.throw(msg, title=_("Invalid Additional Salary"))
 
 	def update_return_amount_in_employee_advance(self):
 		if self.ref_doctype == "Employee Advance" and self.ref_docname:

@@ -23,10 +23,17 @@ frappe.ui.form.on("Salary Component", {
 	},
 
 	refresh: function (frm) {
+		hrms.payroll_utils.set_autocompletions_for_condition_and_formula(frm);
+
 		if (!frm.doc.__islocal) {
-			frm.add_custom_button(__("Salary Structure"), () => {
-				frm.trigger("create_salary_structure");
-			}, __("Create"));
+			frm.trigger("add_update_structure_button");
+			frm.add_custom_button(
+				__("Salary Structure"),
+				() => {
+					frm.trigger("create_salary_structure");
+				},
+				__("Create")
+			);
 		}
 	},
 
@@ -68,6 +75,71 @@ frappe.ui.form.on("Salary Component", {
 		if (frm.only_tax_impact) {
 			frm.set_value("create_separate_payment_entry_against_benefit_claim", 0);
 		}
+	},
+
+	add_update_structure_button: function (frm) {
+		for (const df of ["Condition", "Formula"]) {
+			frm.add_custom_button(
+				__("Sync {0}", [df]),
+				function () {
+					frappe
+						.call({
+							method: "get_structures_to_be_updated",
+							doc: frm.doc,
+						})
+						.then((r) => {
+							if (r.message.length)
+								frm.events.update_salary_structures(frm, df, r.message);
+							else
+								frappe.msgprint({
+									message: __(
+										"Salary Component {0} is currently not used in any Salary Structure.",
+										[frm.doc.name.bold()]
+									),
+									title: __("No Salary Structures"),
+									indicator: "orange",
+								});
+						});
+				},
+				__("Update Salary Structures")
+			);
+		}
+	},
+
+	update_salary_structures: function (frm, df, structures) {
+		let msg = __(
+			"{0} will be updated for the following Salary Structures: {1}.",
+			[
+				df,
+				frappe.utils.comma_and(
+					structures.map((d) =>
+						frappe.utils.get_form_link("Salary Structure", d, true).bold()
+					)
+				),
+			]
+		);
+		msg += "<br>";
+		msg += __("Are you sure you want to proceed?");
+		frappe.confirm(msg, () => {
+			frappe
+				.call({
+					method: "update_salary_structures",
+					doc: frm.doc,
+					args: {
+						structures: structures,
+						field: df.toLowerCase(),
+						value: frm.get_field(df.toLowerCase()).value,
+					},
+				})
+				.then((r) => {
+					if (!r.exc) {
+						frappe.show_alert({
+							message: __("Salary Structures updated successfully"),
+							indicator: "green",
+						});
+					}
+				});
+		});
 	},
 
 	create_salary_structure: function (frm) {

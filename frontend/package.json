@@ -13,21 +13,24 @@
 	"dependencies": {
 		"@ionic/vue": "^7.4.3",
 		"@ionic/vue-router": "^7.4.3",
+		"@vitejs/plugin-vue": "^4.4.0",
 		"dayjs": "^1.11.7",
 		"feather-icons": "^4.28.0",
 		"frappe-ui": "^0.1.18",
 		"vue": "^3.2.25",
-		"vue-router": "^4.0.12"
+		"vue-router": "^4.0.12",
+		"autoprefixer": "^10.4.2",
+		"postcss": "^8.4.5",
+		"tailwindcss": "^3.0.15",
+		"vite": "^5.1.4",
+		"vite-plugin-pwa": "^0.19.0",
+		"workbox-precaching": "^7.0.0",
+		"workbox-core": "^7.0.0",
+		"firebase": "^10.8.0"
 	},
 	"devDependencies": {
-		"@vitejs/plugin-vue": "^4.4.0",
-		"autoprefixer": "^10.4.2",
 		"eslint": "^8.39.0",
 		"eslint-plugin-vue": "^9.11.0",
-		"postcss": "^8.4.5",
-		"prettier": "^2.8.8",
-		"tailwindcss": "^3.0.15",
-		"vite": "^4.5.0",
-		"vite-plugin-pwa": "^0.16.6"
+		"prettier": "^2.8.8"
 	}
 }

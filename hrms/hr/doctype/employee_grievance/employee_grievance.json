@@ -202,7 +202,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-28 16:27:28.626837",
+ "modified": "2024-03-27 13:09:39.125808",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Grievance",
@@ -266,7 +266,7 @@
   }
  ],
  "search_fields": "subject,raised_by,grievance_against_party",
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "subject",
