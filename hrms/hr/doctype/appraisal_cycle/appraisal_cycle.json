@@ -171,7 +171,7 @@
    "link_fieldname": "appraisal_cycle"
   }
  ],
- "modified": "2023-03-29 12:28:36.247120",
+ "modified": "2024-03-27 13:06:31.540312",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal Cycle",
@@ -225,7 +225,7 @@
   }
  ],
  "search_fields": "start_date, end_date",
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [
   {

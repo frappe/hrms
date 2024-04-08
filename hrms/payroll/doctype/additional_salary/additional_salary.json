@@ -205,7 +205,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-14 10:31:03.071277",
+ "modified": "2024-03-27 13:05:58.117102",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Additional Salary",
@@ -242,7 +242,7 @@
   }
  ],
  "search_fields": "employee_name",
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name",

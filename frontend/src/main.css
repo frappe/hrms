@@ -11,6 +11,11 @@ input:disabled {
 	color: var(--tw-text-color);
 }
 
+/* For Webkit-based browsers */
+body {
+	-webkit-tap-highlight-color: transparent;
+}
+
 /* For Webkit-based browsers (Chrome, Safari and Opera) */
 .hide-scrollbar::-webkit-scrollbar {
 	display: none;

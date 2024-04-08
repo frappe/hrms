@@ -1,4 +1,4 @@
-hrms.payroll_common = {
+hrms.payroll_utils = {
 	set_autocompletions_for_condition_and_formula: function (
 		frm,
 		child_row = ""

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-02-22 19:34\n"
+"PO-Revision-Date: 2024-04-05 13:25\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -3338,7 +3338,7 @@ msgstr "Kalkulation"
 #: hr/doctype/travel_request/travel_request.json
 msgctxt "Travel Request"
 msgid "Costing Details"
-msgstr ""
+msgstr "Kostendetails"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:1426
 msgid "Could not submit some Salary Slips: {}"
@@ -10670,19 +10670,19 @@ msgstr "Medizinisch"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:1398
 msgid "Message"
-msgstr "Botschaft"
+msgstr "Nachricht"
 
 #. Label of a Text Editor field in DocType 'Daily Work Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "Message"
-msgstr "Botschaft"
+msgstr "Nachricht"
 
 #. Label of a Text Editor field in DocType 'PWA Notification'
 #: hr/doctype/pwa_notification/pwa_notification.json
 msgctxt "PWA Notification"
 msgid "Message"
-msgstr "Botschaft"
+msgstr "Nachricht"
 
 #. Option for the 'Frequency' (Select) field in DocType 'Vehicle Service'
 #: hr/doctype/vehicle_service/vehicle_service.json
@@ -10714,31 +10714,31 @@ msgstr "Fehlendes Austrittsdatum"
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Mode Of Payment"
-msgstr "Zahlungsart"
+msgstr "Zahlungsweise"
 
 #. Label of a Link field in DocType 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Mode of Payment"
-msgstr "Zahlungsart"
+msgstr "Zahlungsweise"
 
 #. Label of a Link field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Mode of Payment"
-msgstr "Zahlungsart"
+msgstr "Zahlungsweise"
 
 #. Label of a Link field in DocType 'Gratuity'
 #: payroll/doctype/gratuity/gratuity.json
 msgctxt "Gratuity"
 msgid "Mode of Payment"
-msgstr "Zahlungsart"
+msgstr "Zahlungsweise"
 
 #. Label of a Link field in DocType 'Salary Structure'
 #: payroll/doctype/salary_structure/salary_structure.json
 msgctxt "Salary Structure"
 msgid "Mode of Payment"
-msgstr "Zahlungsart"
+msgstr "Zahlungsweise"
 
 #. Label of a Select field in DocType 'Travel Itinerary'
 #: hr/doctype/travel_itinerary/travel_itinerary.json
@@ -15456,7 +15456,7 @@ msgstr "Bezeichnung"
 
 #: payroll/report/salary_register/salary_register.js:16
 msgid "To"
-msgstr "Zu"
+msgstr "An"
 
 #. Label of a Currency field in DocType 'Taxable Salary Slab'
 #: payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
@@ -15897,7 +15897,7 @@ msgstr "Die Summe der zugewiesenen Abwesenheiten ist für die Abwesenheitsart {0
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:141
 msgid "Total percentage against cost centers should be 100"
-msgstr ""
+msgstr "Der Gesamtprozentsatz für die Kostenstellen sollte 100 betragen"
 
 #. Description of the 'Year To Date' (Currency) field in DocType 'Salary
 #. Detail'
