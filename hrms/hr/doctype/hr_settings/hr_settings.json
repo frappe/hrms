@@ -33,8 +33,6 @@
   "auto_leave_encashment",
   "shift_settings_section",
   "allow_multiple_shift_assignments",
-  "checkin_settings_section",
-  "allow_employee_checkin_for_mobile_app",
   "hiring_settings_section",
   "check_vacancies",
   "send_interview_reminder",
@@ -48,7 +46,9 @@
   "employee_exit_section",
   "exit_questionnaire_web_form",
   "column_break_34",
-  "exit_questionnaire_notification_template"
+  "exit_questionnaire_notification_template",
+  "mobile_settings_section",
+  "allow_employee_checkin_from_mobile_app"
  ],
  "fields": [
   {
@@ -300,22 +300,22 @@
    "label": "Shift Settings"
   },
   {
-   "fieldname": "mobile_app_settings_section",
-   "fieldtype": "Section Break",
-   "label": "Mobile App Settings"
+   "default": "1",
+   "fieldname": "allow_employee_checkin_from_mobile_app",
+   "fieldtype": "Check",
+   "label": "Allow Employee Checkin from mobile app"
   },
   {
-   "default": "1",
-   "fieldname": "allow_employee_checkin_for_mobile_app",
-   "fieldtype": "Check",
-   "label": "Allow Employee Checkin for mobile app"
+   "fieldname": "mobile_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Mobile Settings"
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-03-28 13:18:49.584977",
+ "modified": "2024-04-08 12:24:44.076302",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",

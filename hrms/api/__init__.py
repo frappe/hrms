@@ -639,4 +639,4 @@ def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 
 @frappe.whitelist()
 def is_employee_checkin_allowed():
-	return cint(frappe.db.get_single_value("HR Settings", "allow_employee_checkin_for_mobile_app"))
+	return cint(frappe.db.get_single_value("HR Settings", "allow_employee_checkin_from_mobile_app"))
