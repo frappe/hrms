@@ -306,10 +306,22 @@ def create_salary_slip_loan_fields():
 		create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
 
 
+def add_lending_doctypes_to_ess():
+	doc = frappe.get_doc("User Type", "Employee Self Service")
+
+	loan_doctypes = get_lending_doctypes_for_ess()
+	append_user_doctypes_to_user_type(loan_doctypes.items(), doc)
+
+	doc.name = "Employee Self Service"
+	doc.save(ignore_permissions=True)
+
+
 def after_app_install(app_name):
 	"""Set up loan integration with payroll"""
 	if app_name != "lending":
 		return
+
+	add_lending_doctypes_to_ess()
 
 	print("Updating payroll setup for loans")
 	create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
