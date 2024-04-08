@@ -171,6 +171,7 @@ class EmployeeAdvance(Document):
 				(Advance.employee == self.employee)
 				& (Advance.docstatus == 1)
 				& (Advance.posting_date <= self.posting_date)
+				& (Advance.status == "Unpaid")
 			)
 		).run()[0][0] or 0.0
 
