@@ -303,7 +303,7 @@
    "default": "1",
    "fieldname": "allow_employee_checkin_from_mobile_app",
    "fieldtype": "Check",
-   "label": "Allow Employee Checkin from mobile app"
+   "label": "Allow Employee Checkin from Mobile App"
   },
   {
    "fieldname": "mobile_settings_section",
@@ -315,7 +315,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-04-08 12:24:44.076302",
+ "modified": "2024-04-08 14:41:54.265048",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
