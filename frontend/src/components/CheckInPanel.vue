@@ -4,7 +4,7 @@
 			Hey, {{ employee?.data?.first_name }} 👋
 		</h2>
 		<div class="font-medium text-gray-500 text-sm mt-4">
-			{{dayjs().format("D MMM, YYYY")}}
+			{{dayjs().format("ddd, D MMM, YYYY")}}
 		</div>
 		<template v-if="allowCheckinFromMobile.data">
 			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
