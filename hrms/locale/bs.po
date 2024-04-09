@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-08 13:43\n"
+"PO-Revision-Date: 2024-04-09 13:44\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -4837,19 +4837,19 @@ msgstr ""
 #: payroll/doctype/additional_salary/additional_salary.json
 msgctxt "Additional Salary"
 msgid "Disabled"
-msgstr ""
+msgstr "Onemogućeno"
 
 #. Label of a Check field in DocType 'Income Tax Slab'
 #: payroll/doctype/income_tax_slab/income_tax_slab.json
 msgctxt "Income Tax Slab"
 msgid "Disabled"
-msgstr ""
+msgstr "Onemogućeno"
 
 #. Label of a Check field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "Disabled"
-msgstr ""
+msgstr "Onemogućeno"
 
 #. Label of a Currency field in DocType 'Employee Benefit Application'
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
@@ -7545,15 +7545,15 @@ msgstr ""
 #: hr/doctype/vehicle_service/vehicle_service.json
 msgctxt "Vehicle Service"
 msgid "Frequency"
-msgstr ""
+msgstr "Učestalost"
 
 #: hr/doctype/leave_block_list/leave_block_list.js:57
 msgid "Friday"
-msgstr ""
+msgstr "Petak"
 
 #: payroll/report/salary_register/salary_register.js:8
 msgid "From"
-msgstr ""
+msgstr "Od"
 
 #. Label of a Currency field in DocType 'Taxable Salary Slab'
 #: payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
@@ -7572,67 +7572,67 @@ msgstr ""
 #: payroll/doctype/salary_structure/salary_structure.js:149
 #: payroll/report/bank_remittance/bank_remittance.js:17
 msgid "From Date"
-msgstr ""
+msgstr "Od datuma"
 
 #. Label of a Date field in DocType 'Additional Salary'
 #: payroll/doctype/additional_salary/additional_salary.json
 msgctxt "Additional Salary"
 msgid "From Date"
-msgstr ""
+msgstr "Od datuma"
 
 #. Label of a Date field in DocType 'Attendance Request'
 #: hr/doctype/attendance_request/attendance_request.json
 msgctxt "Attendance Request"
 msgid "From Date"
-msgstr ""
+msgstr "Od datuma"
 
 #. Label of a Date field in DocType 'Leave Allocation'
 #: hr/doctype/leave_allocation/leave_allocation.json
 msgctxt "Leave Allocation"
 msgid "From Date"
-msgstr ""
+msgstr "Od datuma"
 
 #. Label of a Date field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
 msgctxt "Leave Application"
 msgid "From Date"
-msgstr ""
+msgstr "Od datuma"
 
 #. Label of a Date field in DocType 'Leave Control Panel'
 #: hr/doctype/leave_control_panel/leave_control_panel.json
 msgctxt "Leave Control Panel"
 msgid "From Date"
-msgstr ""
+msgstr "Od datuma"
 
 #. Label of a Date field in DocType 'Leave Ledger Entry'
 #: hr/doctype/leave_ledger_entry/leave_ledger_entry.json
 msgctxt "Leave Ledger Entry"
 msgid "From Date"
-msgstr ""
+msgstr "Od datuma"
 
 #. Label of a Date field in DocType 'Leave Period'
 #: hr/doctype/leave_period/leave_period.json
 msgctxt "Leave Period"
 msgid "From Date"
-msgstr ""
+msgstr "Od datuma"
 
 #. Label of a Date field in DocType 'Salary Structure Assignment'
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgctxt "Salary Structure Assignment"
 msgid "From Date"
-msgstr ""
+msgstr "Od datuma"
 
 #. Label of a Date field in DocType 'Shift Request'
 #: hr/doctype/shift_request/shift_request.json
 msgctxt "Shift Request"
 msgid "From Date"
-msgstr ""
+msgstr "Od datuma"
 
 #. Label of a Date field in DocType 'Staffing Plan'
 #: hr/doctype/staffing_plan/staffing_plan.json
 msgctxt "Staffing Plan"
 msgid "From Date"
-msgstr ""
+msgstr "Od datuma"
 
 #: hr/doctype/staffing_plan/staffing_plan.py:29
 #: payroll/doctype/salary_structure/salary_structure.js:266
@@ -7778,7 +7778,7 @@ msgstr ""
 #: hr/report/employee_analytics/employee_analytics.py:36
 #: hr/report/employee_birthday/employee_birthday.py:27
 msgid "Gender"
-msgstr ""
+msgstr "Spol"
 
 #. Label of a Link in the Expense Claims Workspace
 #. Label of a Link in the Salary Payout Workspace
