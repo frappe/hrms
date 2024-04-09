@@ -309,8 +309,8 @@ def create_salary_slip_loan_fields():
 def add_lending_docperms_to_ess():
 	doc = frappe.get_doc("User Type", "Employee Self Service")
 
-	loan_doctypes = get_lending_docperms_for_ess()
-	append_docperms_to_user_type(loan_doctypes, doc)
+	loan_docperms = get_lending_docperms_for_ess()
+	append_docperms_to_user_type(loan_docperms, doc)
 
 	doc.name = "Employee Self Service"
 	doc.save(ignore_permissions=True)
@@ -574,28 +574,8 @@ def get_user_types_data():
 def get_lending_docperms_for_ess():
 	return {
 		"Loan": ["read"],
-		"Loan Application": ["read"],
-		"Loan Balance Adjustment": ["read"],
-		"Loan Disbursement": ["read"],
-		"Loan Interest Accrual": ["read"],
-		"Loan Refund": ["read"],
-		"Loan Repayment": ["read"],
-		"Loan Repayment Detail": ["read"],
-		"Loan Security": ["read"],
-		"Loan Security Pledge": ["read"],
-		"Loan Security Price": ["read"],
-		"Loan Security ShortFall": ["read"],
-		"Loan Security Type": ["read"],
-		"Loan Security Unpledge": ["read"],
-		"Loan Type": ["read"],
-		"Loan Write Off": ["read"],
-		"Pledge": ["read"],
-		"Process Loan Interest Accrual": ["read"],
-		"Process Loan Security Shortfall": ["read"],
-		"Proposed Pledge": ["read"],
-		"Repayment Schedule": ["read"],
-		"Sanctioned Loan Amount": ["read"],
-		"Unpledge": ["read"],
+		"Loan Application": ["read", "write", "create", "delete", "submit"],
+		"Loan Product": ["read"],
 	}
 
 
@@ -627,14 +607,14 @@ def create_user_type(user_type, data):
 
 
 def create_role_permissions_for_doctype(doc, data):
-	append_docperms_to_user_type(data.get("doctypes").items(), doc)
+	append_docperms_to_user_type(data.get("doctypes"), doc)
 
 	if doc.role == "Employee Self Service" and "lending" in frappe.get_installed_apps():
-		append_docperms_to_user_type(get_lending_docperms_for_ess().items(), doc)
+		append_docperms_to_user_type(get_lending_docperms_for_ess(), doc)
 
 
 def append_docperms_to_user_type(docperms, doc):
-	for doctype, perms in docperms.items:
+	for doctype, perms in docperms.items():
 		args = {"document_type": doctype}
 		for perm in perms:
 			args[perm] = 1
