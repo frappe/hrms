@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-09 13:44\n"
+"PO-Revision-Date: 2024-04-10 14:01\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -6967,7 +6967,7 @@ msgstr ""
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:112
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:116
 msgid "Expand All"
-msgstr ""
+msgstr "Proširi sve"
 
 #. Label of a Rating field in DocType 'Interview'
 #: hr/doctype/interview/interview.json
@@ -7162,13 +7162,13 @@ msgstr ""
 
 #: hr/doctype/leave_allocation/leave_allocation_list.js:8
 msgid "Expired"
-msgstr ""
+msgstr "Isteklo"
 
 #. Label of a Check field in DocType 'Leave Allocation'
 #: hr/doctype/leave_allocation/leave_allocation.json
 msgctxt "Leave Allocation"
 msgid "Expired"
-msgstr ""
+msgstr "Isteklo"
 
 #. Label of a Float field in DocType 'Salary Slip Leave'
 #: payroll/doctype/salary_slip_leave/salary_slip_leave.json
@@ -7189,7 +7189,7 @@ msgstr ""
 
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:108
 msgid "Export"
-msgstr ""
+msgstr "Izvoz"
 
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:129
 msgid "Exporting..."
@@ -7333,7 +7333,7 @@ msgstr ""
 #: hr/doctype/employee_property_history/employee_property_history.json
 msgctxt "Employee Property History"
 msgid "Field Name"
-msgstr ""
+msgstr "Naziv polja"
 
 #: hr/doctype/expense_claim/expense_claim.js:106
 #: hr/doctype/leave_application/leave_application.js:104
@@ -8365,13 +8365,13 @@ msgstr ""
 
 #: hr/notification/training_feedback/training_feedback.html:1
 msgid "Hello"
-msgstr ""
+msgstr "Zdravo"
 
 #. Label of a HTML field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "Help"
-msgstr ""
+msgstr "Pomoć"
 
 #: controllers/employee_reminders.py:72
 msgid "Hey {}! This email is to remind you about the upcoming holidays."
@@ -8882,7 +8882,7 @@ msgstr ""
 #: hr/doctype/training_event/training_event.json
 msgctxt "Training Event"
 msgid "Intermediate"
-msgstr ""
+msgstr "Srednji"
 
 #: setup.py:386
 msgid "Intern"
@@ -9107,25 +9107,25 @@ msgstr ""
 #: hr/doctype/appointment_letter/appointment_letter.json
 msgctxt "Appointment Letter"
 msgid "Introduction"
-msgstr ""
+msgstr "Uvod"
 
 #. Label of a Long Text field in DocType 'Appointment Letter Template'
 #: hr/doctype/appointment_letter_template/appointment_letter_template.json
 msgctxt "Appointment Letter Template"
 msgid "Introduction"
-msgstr ""
+msgstr "Uvod"
 
 #. Label of a Text Editor field in DocType 'Training Event'
 #: hr/doctype/training_event/training_event.json
 msgctxt "Training Event"
 msgid "Introduction"
-msgstr ""
+msgstr "Uvod"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgctxt "Employee Grievance"
 msgid "Invalid"
-msgstr ""
+msgstr "Nevažeći"
 
 #: payroll/doctype/salary_structure/salary_structure.py:281
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
@@ -9211,7 +9211,7 @@ msgstr ""
 #: payroll/doctype/salary_structure/salary_structure.json
 msgctxt "Salary Structure"
 msgid "Is Default"
-msgstr ""
+msgstr "Zadano je"
 
 #: hr/doctype/leave_type/leave_type.py:40
 msgid "Is Earned Leave"
@@ -9674,7 +9674,7 @@ msgstr ""
 #: hr/doctype/employee_referral/employee_referral.json
 msgctxt "Employee Referral"
 msgid "Last Name"
-msgstr ""
+msgstr "Prezime"
 
 #. Label of a Int field in DocType 'Vehicle Log'
 #: hr/doctype/vehicle_log/vehicle_log.json
@@ -10232,13 +10232,13 @@ msgstr ""
 #: hr/report/employee_leave_balance/employee_leave_balance.js:49
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:43
 msgid "Left"
-msgstr ""
+msgstr "Lijevo"
 
 #. Label of a Int field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "Left"
-msgstr ""
+msgstr "Lijevo"
 
 #. Title of the Module Onboarding 'Human Resource'
 #: hr/module_onboarding/human_resource/human_resource.json
