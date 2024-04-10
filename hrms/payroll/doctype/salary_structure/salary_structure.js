@@ -255,7 +255,7 @@ cur_frm.cscript.validate = function(doc, cdt, cdn) {
 frappe.ui.form.on('Salary Detail', {
 	form_render: function(frm, cdt, cdn) {
 		const row = locals[cdt][cdn];
-		hrms.payroll_common.set_autocompletions_for_condition_and_formula(frm, row);
+		hrms.payroll_utils.set_autocompletions_for_condition_and_formula(frm, row);
 	},
 
 	amount: function(frm) {

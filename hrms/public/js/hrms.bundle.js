@@ -3,4 +3,5 @@ import "./templates/feedback_summary.html";
 import "./templates/feedback_history.html";
 import "./templates/rating.html";
 import "./utils";
-import "./payroll_common";
+import "./utils/payroll_utils";
+import "./utils/leave_utils";
