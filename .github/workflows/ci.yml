@@ -126,13 +126,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Download artifacts
         uses: actions/download-artifact@v3
 
       - name: Upload coverage data
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           verbose: true
