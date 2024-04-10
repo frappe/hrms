@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-03-26 09:53\n"
+"PO-Revision-Date: 2024-04-03 13:30\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -541,7 +541,7 @@ msgstr "Libro de contabilidad"
 #: hr/workspace/expense_claims/expense_claims.json
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Accounting Reports"
-msgstr ""
+msgstr "Informes Contables"
 
 #. Label of a Table field in DocType 'Expense Claim Type'
 #: hr/doctype/expense_claim_type/expense_claim_type.json
@@ -1398,19 +1398,19 @@ msgstr "Dirección de correo electrónico del solicitante"
 #: hr/doctype/appointment_letter/appointment_letter.json
 msgctxt "Appointment Letter"
 msgid "Applicant Name"
-msgstr ""
+msgstr "Nombre del Solicitante"
 
 #. Label of a Data field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Applicant Name"
-msgstr ""
+msgstr "Nombre del Solicitante"
 
 #. Label of a Data field in DocType 'Job Offer'
 #: hr/doctype/job_offer/job_offer.json
 msgctxt "Job Offer"
 msgid "Applicant Name"
-msgstr ""
+msgstr "Nombre del Solicitante"
 
 #. Label of a Rating field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -2143,19 +2143,19 @@ msgstr "Beneficio"
 #. Label of a Card Break in the Tax & Benefits Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Benefits"
-msgstr ""
+msgstr "Beneficios"
 
 #. Label of a Section Break field in DocType 'Employee Benefit Application'
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
 msgctxt "Employee Benefit Application"
 msgid "Benefits"
-msgstr ""
+msgstr "Beneficios"
 
 #. Label of a Section Break field in DocType 'Employee Benefit Claim'
 #: payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgctxt "Employee Benefit Claim"
 msgid "Benefits"
-msgstr ""
+msgstr "Beneficios"
 
 #: hr/report/project_profitability/project_profitability.py:171
 msgid "Bill Amount"
@@ -2300,7 +2300,7 @@ msgstr ""
 
 #: payroll/doctype/salary_structure/salary_structure.js:106
 msgid "Bulk Assignments"
-msgstr ""
+msgstr "Asignación masiva"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment_list.js:3
 msgid "Bulk Leave Policy Assignment"
@@ -4871,7 +4871,7 @@ msgstr "No incluir en total"
 
 #: hr/doctype/goal/goal.js:98
 msgid "Do you still want to proceed?"
-msgstr ""
+msgstr "¿Aún quiere continuar?"
 
 #: hr/doctype/interview/interview.py:70
 msgid "Do you want to update the Job Applicant {0} as {1} based on this interview result?"
@@ -5517,7 +5517,7 @@ msgstr "Avances de Empleado"
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 #: hr/workspace/hr/hr.json
 msgid "Employee Analytics"
-msgstr ""
+msgstr "Análisis de los empleados"
 
 #. Name of a DocType
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
@@ -6852,7 +6852,7 @@ msgstr "Exento del impuesto sobre la renta"
 #. Label of a Card Break in the Tax & Benefits Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Exemption"
-msgstr ""
+msgstr "Exención"
 
 #. Label of a Link field in DocType 'Employee Tax Exemption Declaration
 #. Category'
@@ -8060,7 +8060,7 @@ msgstr ""
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "HR Dashboard"
-msgstr ""
+msgstr "Cuadro de mandos de RRHH"
 
 #. Name of a role
 #: hr/doctype/appointment_letter/appointment_letter.json
@@ -9101,7 +9101,7 @@ msgstr ""
 #. Label of a Card Break in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
 msgid "Interviews"
-msgstr ""
+msgstr "Entrevistas"
 
 #. Label of a Long Text field in DocType 'Appointment Letter'
 #: hr/doctype/appointment_letter/appointment_letter.json
@@ -10975,7 +10975,7 @@ msgstr "Nuevas ausencias asignadas (en días)"
 #: payroll/doctype/salary_structure/salary_structure.json
 msgctxt "Salary Structure"
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #: payroll/doctype/gratuity/gratuity.py:310
 msgid "No Applicable Component is present in last month salary slip"
@@ -11970,7 +11970,7 @@ msgstr "Períodos de Nómina"
 #. Label of a Card Break in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Payroll Reports"
-msgstr ""
+msgstr "Informes de nómina"
 
 #. Name of a DocType
 #. Title of an Onboarding Step
@@ -12074,7 +12074,7 @@ msgstr ""
 #. Name of a Workspace
 #: hr/workspace/performance/performance.json
 msgid "Performance"
-msgstr ""
+msgstr "Rendimiento"
 
 #. Label of a Data field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -13144,13 +13144,13 @@ msgstr ""
 
 #: hr/doctype/interview/interview.js:145
 msgid "Result"
-msgstr ""
+msgstr "Resultado"
 
 #. Label of a Select field in DocType 'Interview Feedback'
 #: hr/doctype/interview_feedback/interview_feedback.json
 msgctxt "Interview Feedback"
 msgid "Result"
-msgstr ""
+msgstr "Resultado"
 
 #. Label of a Attach field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
@@ -14205,7 +14205,7 @@ msgstr ""
 #. Name of a Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift & Attendance"
-msgstr ""
+msgstr "Turno y Asistencia"
 
 #. Label of a Datetime field in DocType 'Employee Checkin'
 #: hr/doctype/employee_checkin/employee_checkin.json
@@ -14320,7 +14320,7 @@ msgstr "Tipo de Cambio"
 #. Label of a Card Break in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shifts"
-msgstr ""
+msgstr "Turnos"
 
 #: hr/doctype/job_offer/job_offer.js:48
 msgid "Show Employee"
@@ -14365,7 +14365,7 @@ msgstr "Permiso por enfermedad"
 
 #: payroll/doctype/salary_structure/salary_structure.js:99
 msgid "Single Assignment"
-msgstr ""
+msgstr "Asignación única"
 
 #. Name of a DocType
 #: hr/doctype/interview/interview.js:186 hr/doctype/skill/skill.json
@@ -15054,7 +15054,7 @@ msgstr "Peso de la Tarea"
 #. Name of a Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Tax & Benefits"
-msgstr ""
+msgstr "Impuestos y Beneficios"
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:41
 msgid "Tax Deducted Till Date"
@@ -15093,7 +15093,7 @@ msgstr "Pruebas de Exención de Impuestos"
 #. Label of a Card Break in the Tax & Benefits Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Tax Setup"
-msgstr ""
+msgstr "Configuración de impuestos"
 
 #. Label of a Currency field in DocType 'Salary Detail'
 #: payroll/doctype/salary_detail/salary_detail.json
@@ -16540,7 +16540,7 @@ msgstr "Vehículo"
 #: hr/report/vehicle_expenses/vehicle_expenses.json
 #: hr/workspace/expense_claims/expense_claims.json
 msgid "Vehicle Expenses"
-msgstr ""
+msgstr "Gasto de Vehículo"
 
 #. Name of a DocType
 #: hr/doctype/vehicle_log/vehicle_log.json
@@ -16586,7 +16586,7 @@ msgstr ""
 #: hr/doctype/expense_claim/expense_claim.js:226
 #: hr/doctype/job_applicant/job_applicant.js:35
 msgid "View"
-msgstr ""
+msgstr "Ver"
 
 #: hr/doctype/appraisal/appraisal.js:48
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:21
@@ -17062,7 +17062,7 @@ msgstr "{0}: Desde {0} del tipo {1}"
 
 #: hr/doctype/exit_interview/exit_interview.py:136
 msgid "{0}: {1}"
-msgstr ""
+msgstr "{0}: {1}"
 
 #: public/frontend/assets/index-4bb445d5.js:131
 msgid "{|}~.]+@[-a-z0-9]+(.[-a-z0-9]+)*.[a-z]+)(?=$|s)/gmi,w=/<()(?:mailto:)?([-.w]+@[-a-z0-9]+(.[-a-z0-9]+)*.[a-z]+)>/gi,k=function(f){return function(g,m,y,x,_,S,E){y=y.replace(r.helper.regexes.asteriskDashAndColon,r.helper.escapeCharactersCallback);var P=y,$=\"\",L=\"\",I=m||\"\",A=E||\"\";return/^www./i.test(y)&&(y=y.replace(/^www./i,\"http://www.\")),f.excludeTrailingPunctuationFromURLs&&S&&($=S),f.openLinksInNewWindow&&(L=' rel=\"noopener noreferrer\" target=\"¨E95Eblank\"'),I+'<a href=\"'+y+'\"'+L+\">\"+P+\"</a>\"+$+A}},C=function(f,g){return function(m,y,x){var _=\"mailto:\";return y=y||\"\",x=r.subParser(\"unescapeSpecialChars\")(x,f,g),f.encodeEmails?(_=r.helper.encodeEmailAddress(_+x),x=r.helper.encodeEmailAddress(x)):_=_+x,y+'<a href=\"'+_+'\">'+x+\"</a>\"}};r.subParser(\"autoLinks\",function(f,g,m){return f=m.converter._dispatch(\"autoLinks.before\",f,g,m),f=f.replace(v,k(g)),f=f.replace(w,C(g,m)),f=m.converter._dispatch(\"autoLinks.after\",f,g,m),f}),r.subParser(\"simplifiedAutoLinks\",function(f,g,m){return g.simplifiedAutoLink&&(f=m.converter._dispatch(\"simplifiedAutoLinks.before\",f,g,m),g.excludeTrailingPunctuationFromURLs?f=f.replace(p,k(g)):f=f.replace(h,k(g)),f=f.replace(b,C(g,m)),f=m.converter._dispatch(\"simplifiedAutoLinks.after\",f,g,m)),f}),r.subParser(\"blockGamut\",function(f,g,m){return f=m.converter._dispatch(\"blockGamut.before\",f,g,m),f=r.subParser(\"blockQuotes\")(f,g,m),f=r.subParser(\"headers\")(f,g,m),f=r.subParser(\"horizontalRule\")(f,g,m),f=r.subParser(\"lists\")(f,g,m),f=r.subParser(\"codeBlocks\")(f,g,m),f=r.subParser(\"tables\")(f,g,m),f=r.subParser(\"hashHTMLBlocks\")(f,g,m),f=r.subParser(\"paragraphs\")(f,g,m),f=m.converter._dispatch(\"blockGamut.after\",f,g,m),f}),r.subParser(\"blockQuotes\",function(f,g,m){f=m.converter._dispatch(\"blockQuotes.before\",f,g,m),f=f+"

@@ -1,5 +1,4 @@
 frappe.provide("hrms");
-frappe.provide("hrms.utils");
 
 $.extend(hrms, {
 	proceed_save_with_reminders_frequency_change: () => {
@@ -8,6 +7,7 @@ $.extend(hrms, {
 			method:
 				"hrms.hr.doctype.hr_settings.hr_settings.set_proceed_with_frequency_change",
 			callback: () => {
+				// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 				cur_frm.save();
 			},
 		});

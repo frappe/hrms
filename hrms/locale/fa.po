@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-03-04 16:06\n"
+"PO-Revision-Date: 2024-04-09 13:44\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -36,23 +36,23 @@ msgstr "\"از تاریخ\" نمی تواند بزرگتر یا مساوی \"ت�
 
 #: public/frontend/assets/BaseLayout-1fb5efbf.js:1
 msgid "$user"
-msgstr ""
+msgstr "$user"
 
 #: public/frontend/assets/LeaveBalance-814d62cc.js:1
 msgid "${c} balance"
-msgstr ""
+msgstr "${c} تراز"
 
 #: public/frontend/assets/LeaveBalance-814d62cc.js:1
 msgid "${t.balance_leaves}/${t.allocated_leaves}"
-msgstr ""
+msgstr "${t.balance_leaves}/${t.allocated_leaves}"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:88
 msgid "% Utilization (B + NB) / T"
-msgstr ""
+msgstr "% استفاده (B + NB) / T"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:94
 msgid "% Utilization (B / T)"
-msgstr ""
+msgstr "% استفاده (B / T)"
 
 #: hr/doctype/employee_checkin/employee_checkin.py:84
 msgid "'employee_field_value' and 'timestamp' are required."
@@ -2306,7 +2306,7 @@ msgstr "شعبه: {0}"
 
 #: payroll/doctype/salary_structure/salary_structure.js:106
 msgid "Bulk Assignments"
-msgstr ""
+msgstr "اختصاص انبوه"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment_list.js:3
 msgid "Bulk Leave Policy Assignment"
@@ -3386,7 +3386,7 @@ msgstr "جلد نامه"
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.js:72
 #: public/js/erpnext/delivery_trip.js:12
 msgid "Create"
-msgstr "ايجاد كردن"
+msgstr "ایجاد کردن"
 
 #: hr/doctype/employee_referral/employee_referral.js:39
 msgid "Create Additional Salary"
@@ -6401,7 +6401,7 @@ msgstr "کارمند {0} قبلاً یک Shift فعال {1} دارد: {2} که �
 
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.py:151
 msgid "Employee {0} already submitted an application {1} for the payroll period {2}"
-msgstr ""
+msgstr "کارمند {0} قبلاً یک درخواست {1} برای دوره حقوق و دستمزد {2} ارسال کرده است"
 
 #: hr/doctype/shift_request/shift_request.py:128
 msgid "Employee {0} has already applied for Shift {1}: {2} that overlaps within this period"
@@ -6556,7 +6556,7 @@ msgstr "Late Entry Marking را فعال کنید"
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "Enabled"
-msgstr "فعال شد"
+msgstr "فعال"
 
 #. Label of a Section Break field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
@@ -8051,7 +8051,7 @@ msgstr "دسته بندی بر اساس"
 
 #: hr/doctype/goal/goal.js:13
 msgid "Group goal's progress is auto-calculated based on the child goals."
-msgstr "پیشرفت هدف گروه به صورت خودکار بر اساس اهداف کودک محاسبه می شود."
+msgstr "پیشرفت هدف گروه به صورت خودکار بر اساس اهداف فرزند محاسبه می شود."
 
 #. Name of a role
 #: hr/doctype/job_opening/job_opening.json
@@ -8066,7 +8066,7 @@ msgstr "منابع انسانی"
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "HR Dashboard"
-msgstr ""
+msgstr "داشبورد منابع انسانی"
 
 #. Name of a role
 #: hr/doctype/appointment_letter/appointment_letter.json
@@ -8396,7 +8396,7 @@ msgstr "تنظیمات استخدام"
 #. Label of a chart in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Hiring vs Attrition Count"
-msgstr ""
+msgstr "تعداد استخدام در مقابل ترک کار"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -9615,7 +9615,7 @@ msgstr "روش ارزیابی KRA"
 
 #: hr/doctype/goal/goal.py:99
 msgid "KRA updated for all child goals."
-msgstr "KRA برای همه اهداف کودک به روز شد."
+msgstr "KRA برای همه اهداف فرزند به روز شد."
 
 #. Label of a Table field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -14371,7 +14371,7 @@ msgstr "مرخصی استعلاجی"
 
 #: payroll/doctype/salary_structure/salary_structure.js:99
 msgid "Single Assignment"
-msgstr ""
+msgstr "اختصاص تکی"
 
 #. Name of a DocType
 #: hr/doctype/interview/interview.js:186 hr/doctype/skill/skill.json

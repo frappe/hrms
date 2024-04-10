@@ -145,24 +145,26 @@
 				</div>
 			{% endif %}
 
-			<div class="col-12 col-md-4 mb-6 mb-md-8">
-				<div class="flex flex-row align-items-center">
-					<div class="rounded-circle p-4" style="background: var(--orange-50)">
-						<svg
-							class="icon"
-							style="height: 28px;
-								width: 28px;
-								--icon-stroke: var(--orange-700)"
-						>
-							<use href="#icon-users"></use>
-						</svg>
-					</div>
-					<div class="ml-5">
-						<div class="text-secondary text-uppercase" style="font-size: 11px">{{ _("Applications Received") }}</div>
-						<div class="font-weight-bold">{{ no_of_applications }}</div>
+			{%- if publish_applications_received -%}
+				<div class="col-12 col-md-4 mb-6 mb-md-8">
+					<div class="flex flex-row align-items-center">
+						<div class="rounded-circle p-4" style="background: var(--orange-50)">
+							<svg
+								class="icon"
+								style="height: 28px;
+									width: 28px;
+									--icon-stroke: var(--orange-700)"
+							>
+								<use href="#icon-users"></use>
+							</svg>
+						</div>
+						<div class="ml-5">
+							<div class="text-secondary text-uppercase" style="font-size: 11px">{{ _("Applications Received") }}</div>
+							<div class="font-weight-bold">{{ no_of_applications }}</div>
+						</div>
 					</div>
 				</div>
-			</div>
+			{%- endif -%}
 
 			{%- if (status == 'Open' and closes_on) or (status == 'Closed' and closed_on) -%}
 				<div class="col-12 col-md-4 mb-6 mb-md-8">
