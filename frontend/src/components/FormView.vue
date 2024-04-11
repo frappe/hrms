@@ -171,7 +171,7 @@
 			<!-- custom form button eg: Download button in salary slips -->
 			<div
 				v-if="!showFormButton"
-				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
+				class="px-4 pt-4 pb-4 standalone:pb-safe-bottom mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg"
 			>
 				<slot name="formButton"></slot>
 			</div>
@@ -187,7 +187,7 @@
 			<!-- save/submit/cancel -->
 			<div
 				v-else-if="isFormDirty || (!workflow?.hasWorkflow && formButton)"
-				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
+				class="px-4 pt-4 pb-4 standalone:pb-safe-bottom sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg"
 			>
 				<ErrorMessage
 					class="mb-2"
@@ -199,7 +199,7 @@
 				/>
 
 				<Button
-					class="w-full rounded mt-2 py-5 text-base disabled:bg-gray-700 disabled:text-white"
+					class="w-full rounded py-5 text-base disabled:bg-gray-700 disabled:text-white"
 					:class="formButton === 'Cancel' ? 'shadow' : ''"
 					@click="formButton === 'Save' ? saveForm() : submitOrCancelForm()"
 					:variant="formButton === 'Cancel' ? 'subtle' : 'solid'"
