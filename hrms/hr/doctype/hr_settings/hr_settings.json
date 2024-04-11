@@ -46,7 +46,9 @@
   "employee_exit_section",
   "exit_questionnaire_web_form",
   "column_break_34",
-  "exit_questionnaire_notification_template"
+  "exit_questionnaire_notification_template",
+  "mobile_settings_section",
+  "allow_employee_checkin_from_mobile_app"
  ],
  "fields": [
   {
@@ -296,13 +298,24 @@
    "fieldname": "shift_settings_section",
    "fieldtype": "Section Break",
    "label": "Shift Settings"
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_employee_checkin_from_mobile_app",
+   "fieldtype": "Check",
+   "label": "Allow Employee Checkin from Mobile App"
+  },
+  {
+   "fieldname": "mobile_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Mobile Settings"
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-12-28 23:07:36.317223",
+ "modified": "2024-04-10 14:25:29.958973",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
