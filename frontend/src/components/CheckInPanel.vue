@@ -3,26 +3,32 @@
 		<h2 class="text-lg font-bold text-gray-900">
 			Hey, {{ employee?.data?.first_name }} 👋
 		</h2>
-		<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
-			Last {{ lastLogType }} was at {{ lastLogTime }}
+
+		<template v-if="allowCheckinFromMobile.data">
+			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
+				Last {{ lastLogType }} was at {{ lastLogTime }}
+			</div>
+			<Button
+				class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
+				id="open-checkin-modal"
+				@click="checkinTimestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')"
+			>
+				<template #prefix>
+					<FeatherIcon
+						:name="
+							nextAction.action === 'IN'
+								? 'arrow-right-circle'
+								: 'arrow-left-circle'
+						"
+						class="w-4"
+					/>
+				</template>
+				{{ nextAction.label }}
+			</Button>
+		</template>
+		<div v-else class="font-medium text-sm text-gray-500 mt-1.5">
+			{{ dayjs().format("ddd, D MMMM, YYYY") }}
 		</div>
-		<Button
-			class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
-			id="open-checkin-modal"
-			@click="checkinTimestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')"
-		>
-			<template #prefix>
-				<FeatherIcon
-					:name="
-						nextAction.action === 'IN'
-							? 'arrow-right-circle'
-							: 'arrow-left-circle'
-					"
-					class="w-4"
-				/>
-			</template>
-			{{ nextAction.label }}
-		</Button>
 	</div>
 
 	<ion-modal
@@ -57,6 +63,7 @@
 import { createListResource, toast, FeatherIcon } from "frappe-ui"
 import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
+import { allowCheckinFromMobile } from "@/data/settings"
 
 const DOCTYPE = "Employee Checkin"
 
