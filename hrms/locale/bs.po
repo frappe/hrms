@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-10 14:01\n"
+"PO-Revision-Date: 2024-04-11 14:09\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -8338,7 +8338,7 @@ msgstr ""
 #: hr/doctype/vehicle_service/vehicle_service.json
 msgctxt "Vehicle Service"
 msgid "Half Yearly"
-msgstr ""
+msgstr "Polugodišnje"
 
 #: hr/doctype/attendance_request/attendance_request.py:29
 msgid "Half day date should be in between from date and to date"
@@ -10254,31 +10254,31 @@ msgstr ""
 #: hr/doctype/job_offer/job_offer.json
 msgctxt "Job Offer"
 msgid "Letter Head"
-msgstr ""
+msgstr "Zaglavlje pisma"
 
 #. Label of a Link field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
 msgctxt "Leave Application"
 msgid "Letter Head"
-msgstr ""
+msgstr "Zaglavlje pisma"
 
 #. Label of a Link field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Letter Head"
-msgstr ""
+msgstr "Zaglavlje pisma"
 
 #. Label of a Link field in DocType 'Salary Structure'
 #: payroll/doctype/salary_structure/salary_structure.json
 msgctxt "Salary Structure"
 msgid "Letter Head"
-msgstr ""
+msgstr "Zaglavlje pisma"
 
 #. Label of a Select field in DocType 'Training Event'
 #: hr/doctype/training_event/training_event.json
 msgctxt "Training Event"
 msgid "Level"
-msgstr ""
+msgstr "Nivo"
 
 #. Label of a Link field in DocType 'Vehicle Log'
 #: hr/doctype/vehicle_log/vehicle_log.json
@@ -10410,7 +10410,7 @@ msgstr ""
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.js:193
 #: hr/doctype/goal/goal.js:88
 msgid "Mandatory"
-msgstr ""
+msgstr "Obavezno"
 
 #: payroll/doctype/payroll_entry/payroll_entry.js:189
 msgid "Mandatory fields required in {0}"
@@ -10652,19 +10652,19 @@ msgstr ""
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:1398
 msgid "Message"
-msgstr ""
+msgstr "Poruka"
 
 #. Label of a Text Editor field in DocType 'Daily Work Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "Message"
-msgstr ""
+msgstr "Poruka"
 
 #. Label of a Text Editor field in DocType 'PWA Notification'
 #: hr/doctype/pwa_notification/pwa_notification.json
 msgctxt "PWA Notification"
 msgid "Message"
-msgstr ""
+msgstr "Poruka"
 
 #. Option for the 'Frequency' (Select) field in DocType 'Vehicle Service'
 #: hr/doctype/vehicle_service/vehicle_service.json
@@ -10686,7 +10686,7 @@ msgstr ""
 
 #: payroll/doctype/payroll_entry/payroll_entry.js:202
 msgid "Missing Fields"
-msgstr ""
+msgstr "Nedostajuća polja"
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.py:29
 msgid "Missing Relieving Date"
