@@ -315,11 +315,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2023-12-28 23:07:36.317223",
-=======
  "modified": "2024-04-10 14:25:29.958973",
->>>>>>> 06995c1e8 (feat: add setting to enable employee checkin for mobile app (#1569))
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
