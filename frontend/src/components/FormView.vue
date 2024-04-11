@@ -1,10 +1,8 @@
 <template>
 	<div class="flex flex-col h-full w-full" v-if="isFormReady">
-		<div
-			class="w-full h-full bg-white sm:w-96 flex flex-col relative overflow-y-auto"
-		>
+		<div class="w-full h-full bg-white sm:w-96 flex flex-col">
 			<header
-				class="flex flex-row bg-white shadow-sm py-4 px-3 items-center border-b sticky top-0 z-[1000]"
+				class="flex flex-row bg-white shadow-sm py-4 px-3 items-center sticky top-0 z-[1000]"
 			>
 				<Button
 					variant="ghost"
@@ -57,79 +55,78 @@
 			</header>
 
 			<!-- Form -->
-			<div class="bg-white grow">
+			<div class="bg-white grow overflow-y-auto">
 				<!-- Tabs -->
-				<div
-					class="px-4 sticky top-15 z-[100] bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
-				>
-					<ul class="flex -mb-px overflow-auto hide-scrollbar">
-						<li class="mr-2 whitespace-nowrap" v-for="tab in tabs">
-							<button
-								@click="activeTab = tab.name"
-								class="inline-block p-4 border-b-2 border-transparent rounded-t-lg"
-								:class="[
-									activeTab === tab.name
-										? '!text-gray-800 !border-gray-800'
-										: 'hover:text-gray-600 hover:border-gray-300',
-								]"
-							>
-								{{ tab.name }}
-							</button>
-						</li>
-					</ul>
-				</div>
-
-				<template
-					v-if="tabbedView"
-					v-for="(fieldList, tabName, index) in tabFields"
-				>
+				<template v-if="tabbedView">
 					<div
-						v-show="tabName === activeTab"
-						class="flex flex-col space-y-4 p-4"
+						class="px-4 sticky top-0 z-[100] bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
 					>
-						<template v-for="field in fieldList" :key="field.fieldname">
-							<slot
-								v-if="field.fieldtype == 'Table'"
-								:name="field.fieldname"
-								:isFormReadOnly="isFormReadOnly"
-							></slot>
-
-							<FormField
-								v-else
-								:fieldtype="field.fieldtype"
-								:fieldname="field.fieldname"
-								v-model="formModel[field.fieldname]"
-								:default="field.default"
-								:label="field.label"
-								:options="field.options"
-								:linkFilters="field.linkFilters"
-								:documentList="field.documentList"
-								:readOnly="Boolean(field.read_only) || isFormReadOnly"
-								:reqd="Boolean(field.reqd)"
-								:hidden="Boolean(field.hidden)"
-								:errorMessage="field.error_message"
-								:minDate="field.minDate"
-								:maxDate="field.maxDate"
-								:addSectionPadding="fieldList[0].name !== field.name"
-							/>
-						</template>
-
-						<!-- Attachment upload -->
-						<div
-							class="flex flex-row gap-2 items-center justify-center p-5"
-							v-if="isFileUploading"
-						>
-							<LoadingIndicator class="w-3 h-3 text-gray-800" />
-							<span class="text-gray-900 text-sm">Uploading...</span>
-						</div>
-
-						<FileUploaderView
-							v-else-if="showAttachmentView && index === 0"
-							v-model="fileAttachments"
-							@handleFileSelect="handleFileSelect"
-							@handleFileDelete="handleFileDelete"
-						/>
+						<ul class="flex -mb-px overflow-auto hide-scrollbar">
+							<li class="mr-2 whitespace-nowrap" v-for="tab in tabs">
+								<button
+									@click="activeTab = tab.name"
+									class="inline-block py-4 px-2 border-b-2 border-transparent rounded-t-lg"
+									:class="[
+										activeTab === tab.name
+											? '!text-gray-800 !border-gray-800'
+											: 'hover:text-gray-600 hover:border-gray-300',
+									]"
+								>
+									{{ tab.name }}
+								</button>
+							</li>
+						</ul>
 					</div>
+
+					<template v-for="(fieldList, tabName, index) in tabFields">
+						<div
+							v-show="tabName === activeTab"
+							class="flex flex-col space-y-4 p-4"
+						>
+							<template v-for="field in fieldList" :key="field.fieldname">
+								<slot
+									v-if="field.fieldtype == 'Table'"
+									:name="field.fieldname"
+									:isFormReadOnly="isFormReadOnly"
+								></slot>
+
+								<FormField
+									v-else
+									:fieldtype="field.fieldtype"
+									:fieldname="field.fieldname"
+									v-model="formModel[field.fieldname]"
+									:default="field.default"
+									:label="field.label"
+									:options="field.options"
+									:linkFilters="field.linkFilters"
+									:documentList="field.documentList"
+									:readOnly="Boolean(field.read_only) || isFormReadOnly"
+									:reqd="Boolean(field.reqd)"
+									:hidden="Boolean(field.hidden)"
+									:errorMessage="field.error_message"
+									:minDate="field.minDate"
+									:maxDate="field.maxDate"
+									:addSectionPadding="fieldList[0].name !== field.name"
+								/>
+							</template>
+
+							<!-- Attachment upload -->
+							<div
+								class="flex flex-row gap-2 items-center justify-center p-5"
+								v-if="isFileUploading"
+							>
+								<LoadingIndicator class="w-3 h-3 text-gray-800" />
+								<span class="text-gray-900 text-sm">Uploading...</span>
+							</div>
+
+							<FileUploaderView
+								v-else-if="showAttachmentView && index === 0"
+								v-model="fileAttachments"
+								@handleFileSelect="handleFileSelect"
+								@handleFileDelete="handleFileDelete"
+							/>
+						</div>
+					</template>
 				</template>
 
 				<div class="flex flex-col space-y-4 p-4" v-else>
@@ -174,7 +171,7 @@
 			<!-- custom form button eg: Download button in salary slips -->
 			<div
 				v-if="!showFormButton"
-				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
+				class="px-4 pt-4 pb-4 standalone:pb-safe-bottom sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg"
 			>
 				<slot name="formButton"></slot>
 			</div>
@@ -190,7 +187,7 @@
 			<!-- save/submit/cancel -->
 			<div
 				v-else-if="isFormDirty || (!workflow?.hasWorkflow && formButton)"
-				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
+				class="px-4 pt-4 pb-4 standalone:pb-safe-bottom sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg"
 			>
 				<ErrorMessage
 					class="mb-2"
@@ -202,7 +199,7 @@
 				/>
 
 				<Button
-					class="w-full rounded mt-2 py-5 text-base disabled:bg-gray-700 disabled:text-white"
+					class="w-full rounded py-5 text-base disabled:bg-gray-700 disabled:text-white"
 					:class="formButton === 'Cancel' ? 'shadow' : ''"
 					@click="formButton === 'Save' ? saveForm() : submitOrCancelForm()"
 					:variant="formButton === 'Cancel' ? 'subtle' : 'solid'"
