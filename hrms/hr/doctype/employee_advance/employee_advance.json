@@ -104,7 +104,7 @@
    "reqd": 1
   },
   {
-   "description": "Amount that has been paid for this Advance",
+   "description": "Amount that has been paid against this advance",
    "fieldname": "paid_amount",
    "fieldtype": "Currency",
    "label": "Paid Amount",
@@ -173,7 +173,7 @@
   },
   {
    "allow_on_submit": 1,
-   "description": "Amount returned by the Employee after Advance is paid",
+   "description": "Amount returned by the employee after the advance is paid",
    "fieldname": "return_amount",
    "fieldtype": "Currency",
    "label": "Returned Amount",
@@ -189,7 +189,7 @@
   },
   {
    "depends_on": "eval:cur_frm.doc.employee",
-   "description": "Pending (Unpaid) amount from previous Advances",
+   "description": "Pending (unpaid) amount from previous advances",
    "fieldname": "pending_amount",
    "fieldtype": "Currency",
    "label": "Pending Amount",
@@ -242,10 +242,14 @@
  "is_submittable": 1,
  "links": [],
 <<<<<<< HEAD
+<<<<<<< HEAD
  "modified": "2024-02-28 15:06:33.076761",
 =======
  "modified": "2024-04-08 13:09:37.272548",
 >>>>>>> 75c3fb666 (fix: fetch only unpaid advances)
+=======
+ "modified": "2024-04-12 12:53:55.442187",
+>>>>>>> abfe38696 (chore: fix casing in doctype descriptions)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Advance",
