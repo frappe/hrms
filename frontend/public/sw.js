@@ -21,6 +21,15 @@ try {
 		return navigator.userAgent.toLowerCase().includes("chrome")
 	}
 
+	function openTargetWindow(event) {
+		if (event.action) {
+			client.postMessage(event.action + event?.notification?.data?.url);
+			clients.openWindow(event.action)
+		} else if (event.notification?.data) {
+			clients.openWindow(event.notification.data)
+		}
+	}
+
 	onBackgroundMessage(messaging, (payload) => {
 		const notificationTitle = payload.data.title
 		let notificationOptions = {
@@ -29,32 +38,37 @@ try {
 		if (payload.data.notification_icon) {
 			notificationOptions["icon"] = payload.data.notification_icon
 		}
-		if (isChrome()) {
-			notificationOptions["data"] = {
-				url: payload.data.click_action,
-			}
-		} else {
-			if (payload.data.click_action) {
-				notificationOptions["actions"] = [
-					{
-						action: payload.data.click_action,
-						title: "View Details",
-					},
-				]
-			}
+
+		notificationOptions["data"] = {
+			url: payload.data.click_action,
+		}
+
+		if (!isChrome() && payload.data.click_action) {
+			notificationOptions["actions"] = [
+				{
+					action: payload.data.click_action,
+					title: "View Details",
+				},
+			]
 		}
 		self.registration.showNotification(notificationTitle, notificationOptions)
 	})
 
 	self.addEventListener("notificationclick", (event) => {
-		event.preventDefault()
 		event.notification.close();
 
-		if (event.action) {
-			clients.openWindow(event.action)
-		} else if (event.notification?.data) {
-			clients.openWindow(event.notification.data)
-		}
+		// Checks if the current window is already open and focuses if it is
+		event.waitUntil(
+			clients.matchAll({ type: "window" })
+			.then((clientList) => {
+				for (const client of clientList) {
+					if ("focus" in client)
+						return client.focus();
+				}
+
+				openTargetWindow()
+			}),
+		);
 	})
 } catch (error) {
 	console.log("Failed to initialize Firebase", error)
