@@ -21,15 +21,6 @@ try {
 		return navigator.userAgent.toLowerCase().includes("chrome")
 	}
 
-	function openTargetWindow(event) {
-		if (event.action) {
-			client.postMessage(event.action + event?.notification?.data?.url);
-			clients.openWindow(event.action)
-		} else if (event.notification?.data) {
-			clients.openWindow(event.notification.data)
-		}
-	}
-
 	onBackgroundMessage(messaging, (payload) => {
 		const notificationTitle = payload.data.title
 		let notificationOptions = {
@@ -55,18 +46,25 @@ try {
 	})
 
 	self.addEventListener("notificationclick", (event) => {
+		console.log("Notification clicked", event)
 		event.notification.close();
 
-		// Checks if the current window is already open and focuses if it is
+		// Checks if the current window is already open
 		event.waitUntil(
 			clients.matchAll({ type: "window" })
 			.then((clientList) => {
 				for (const client of clientList) {
-					if ("focus" in client)
-						return client.focus();
-				}
+					if ("focus" in client) {
+						client.focus()
 
-				openTargetWindow()
+						if (event.action) {
+							client.postMessage(event.action + event?.notification?.data?.url);
+							self.clients.openWindow(event.action)
+						} else if (event.notification?.data) {
+							self.clients.openWindow(event.notification.data)
+						}
+					}
+				}
 			}),
 		);
 	})
