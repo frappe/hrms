@@ -116,6 +116,7 @@ def get_leave_applications(
 	filters = get_leave_application_filters(employee, approver_id, for_approval)
 	fields = [
 		"name",
+		"posting_date",
 		"employee",
 		"employee_name",
 		"leave_type",
@@ -297,6 +298,7 @@ def get_expense_claims(
 	filters = get_expense_claim_filters(employee, approver_id, for_approval)
 	fields = [
 		"`tabExpense Claim`.name",
+		"`tabExpense Claim`.posting_date",
 		"`tabExpense Claim`.employee",
 		"`tabExpense Claim`.employee_name",
 		"`tabExpense Claim`.approval_status",
