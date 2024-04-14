@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/frappe/hrms/issues"
   },
-  "aworkspaces": [
+  "workspaces": [
     "frappe-ui",
     "frontend"
   ],
