@@ -76,7 +76,7 @@ def create_job_offer(**args):
 		job_applicant = create_job_applicant()
 
 	if not frappe.db.exists("Designation", args.designation):
-		designation = create_designation(designation_name=args.designation)
+		create_designation(designation_name=args.designation)
 
 	job_offer = frappe.get_doc(
 		{

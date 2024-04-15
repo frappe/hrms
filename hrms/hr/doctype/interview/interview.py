@@ -418,8 +418,16 @@ def get_events(start, end, filters=None):
 
 		color = event_color.get(d.status)
 		interview_data = {
-			"from": get_datetime("%s %s" % (d.scheduled_on, d.from_time or "00:00:00")),
-			"to": get_datetime("%s %s" % (d.scheduled_on, d.to_time or "00:00:00")),
+			"from": get_datetime(
+				"{scheduled_on} {from_time}".format(
+					scheduled_on=d.scheduled_on, from_time=d.from_time or "00:00:00"
+				)
+			),
+			"to": get_datetime(
+				"{scheduled_on} {to_time}".format(
+					scheduled_on=d.scheduled_on, to_time=d.to_time or "00:00:00"
+				)
+			),
 			"name": d.name,
 			"subject": "\n".join(subject_data),
 			"color": color if color else "#89bcde",

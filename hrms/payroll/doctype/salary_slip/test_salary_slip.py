@@ -305,7 +305,7 @@ class TestSalarySlip(FrappeTestCase):
 		# 3 days LWP
 		make_leave_application(emp_id, first_sunday, add_days(first_sunday, 3), "Leave Without Pay")
 
-		leave_type_ppl = create_leave_type(leave_type_name="Test Partially Paid Leave", is_ppl=1)
+		create_leave_type(leave_type_name="Test Partially Paid Leave", is_ppl=1)
 
 		alloc = create_leave_allocation(
 			employee=emp_id,
@@ -1029,7 +1029,7 @@ class TestSalarySlip(FrappeTestCase):
 			"Salary Structure Assignment",
 		]
 		for doc in delete_docs:
-			frappe.db.sql("delete from `tab%s` where employee='%s'" % (doc, employee))
+			frappe.db.sql(f"DELETE FROM `tab{doc}` WHERE employee='{employee}'")
 
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
@@ -1166,7 +1166,7 @@ class TestSalarySlip(FrappeTestCase):
 			"Salary Structure Assignment",
 		]
 		for doc in delete_docs:
-			frappe.db.sql("delete from `tab%s` where employee='%s'" % (doc, employee))
+			frappe.db.sql(f"DELETE FROM `tab{doc}` WHERE employee='{employee}'")
 
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
@@ -1214,7 +1214,7 @@ class TestSalarySlip(FrappeTestCase):
 		from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
 
 		emp = make_employee("test_employee_6@salary.com", company="_Test Company")
-		salary_structure = make_salary_structure_for_timesheet(emp)
+		make_salary_structure_for_timesheet(emp)
 		timesheet = make_timesheet(emp, simulate=True, is_billable=1)
 		salary_slip = make_salary_slip_from_timesheet(timesheet.name)
 		salary_slip.submit()
@@ -1354,7 +1354,6 @@ class TestSalarySlip(FrappeTestCase):
 
 		prev_period = math.ceil(remaining_sub_periods)
 
-		annual_tax = 93288
 		monthly_tax_amount = 7774.0
 		monthly_earnings = 77800
 
@@ -2141,7 +2140,7 @@ def make_payroll_period():
 		)
 
 		if not payroll_period:
-			pp = create_payroll_period(company=company, name=company_based_payroll_period[company])
+			create_payroll_period(company=company, name=company_based_payroll_period[company])
 
 
 def make_holiday_list(list_name=None, from_date=None, to_date=None, add_weekly_offs=True):

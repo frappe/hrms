@@ -98,7 +98,8 @@ class TestLeaveApplication(FrappeTestCase):
 		from_date = get_year_start(getdate())
 		to_date = get_year_ending(getdate())
 		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
-		list_without_weekly_offs = make_holiday_list(
+		# list_without_weekly_offs
+		make_holiday_list(
 			"Holiday List w/o Weekly Offs", from_date=from_date, to_date=to_date, add_weekly_offs=False
 		)
 
@@ -1050,7 +1051,7 @@ class TestLeaveApplication(FrappeTestCase):
 		)
 
 		# leave application across cf expiry
-		application = make_leave_application(
+		make_leave_application(
 			employee.name,
 			cf_expiry,
 			add_days(cf_expiry, 3),
@@ -1084,7 +1085,7 @@ class TestLeaveApplication(FrappeTestCase):
 		)
 
 		# leave application across cf expiry, 20 days leave
-		application = make_leave_application(
+		make_leave_application(
 			employee.name,
 			add_days(cf_expiry, -16),
 			add_days(cf_expiry, 3),
@@ -1126,7 +1127,7 @@ class TestLeaveApplication(FrappeTestCase):
 		)
 
 		# leave application after cf expiry
-		application = make_leave_application(
+		make_leave_application(
 			employee.name,
 			add_days(cf_expiry, 1),
 			add_days(cf_expiry, 4),

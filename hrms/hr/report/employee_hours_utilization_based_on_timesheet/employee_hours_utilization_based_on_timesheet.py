@@ -156,7 +156,7 @@ class EmployeeHoursReport:
 	def generate_stats_by_employee(self):
 		self.stats_by_employee = frappe._dict()
 
-		for emp, hours, is_billable, project in self.filtered_time_logs:
+		for emp, hours, is_billable, __ in self.filtered_time_logs:
 			self.stats_by_employee.setdefault(emp, frappe._dict()).setdefault("billed_hours", 0.0)
 
 			self.stats_by_employee[emp].setdefault("non_billed_hours", 0.0)
@@ -176,7 +176,7 @@ class EmployeeHoursReport:
 
 	def calculate_utilizations(self):
 		TOTAL_HOURS = flt(self.standard_working_hours * self.day_span, 2)
-		for emp, data in self.stats_by_employee.items():
+		for __, data in self.stats_by_employee.items():
 			data["total_hours"] = TOTAL_HOURS
 			data["untracked_hours"] = flt(TOTAL_HOURS - data["billed_hours"] - data["non_billed_hours"], 2)
 

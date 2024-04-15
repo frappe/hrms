@@ -507,7 +507,7 @@ def add_non_standard_user_types():
 	user_types = get_user_types_data()
 
 	user_type_limit = {}
-	for user_type, data in user_types.items():
+	for user_type, __ in user_types.items():
 		user_type_limit.setdefault(frappe.scrub(user_type), 30)
 
 	update_site_config("user_type_doctype_limit", user_type_limit)
