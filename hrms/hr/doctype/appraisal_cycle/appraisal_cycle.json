@@ -159,7 +159,8 @@
   {
    "fieldname": "final_score_formula",
    "fieldtype": "Code",
-   "label": "Final Score Formula"
+   "label": "Final Score Formula",
+   "options": "PythonExpression"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -177,7 +178,7 @@
    "link_fieldname": "appraisal_cycle"
   }
  ],
- "modified": "2024-04-12 12:59:05.846610",
+ "modified": "2024-04-15 13:14:47.607412",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal Cycle",
