@@ -1,7 +1,6 @@
 hrms.appraisal_utils = {
 	set_autocompletions_for_final_score_formula: function (frm) {
-		const autocompletions = [];
-		fields_data = [
+		const autocompletions = [
 			{
 				value: "goal_score",
 				score: 8,
@@ -18,11 +17,10 @@ hrms.appraisal_utils = {
 				meta: "Apraisal field",
 			},
 		];
-		autocompletions.push(fields_data);
 		frm.set_df_property(
 			"final_score_formula",
 			"autocompletions",
 			autocompletions
 		);
-	},
+			},
 };
