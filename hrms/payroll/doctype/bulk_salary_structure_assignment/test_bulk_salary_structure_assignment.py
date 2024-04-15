@@ -65,9 +65,7 @@ class TestBulkSalaryStructureAssignment(FrappeTestCase):
 
 	def test_bulk_assign_structure(self):
 		today = getdate()
-		salary_structure = make_salary_structure(
-			"Salary Structure 1", "Monthly", company="_Test Company"
-		)
+		salary_structure = make_salary_structure("Salary Structure 1", "Monthly", company="_Test Company")
 
 		args = {
 			"doctype": "Bulk Salary Structure Assignment",

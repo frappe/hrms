@@ -62,7 +62,7 @@ class LeaveControlPanel(Document):
 				allocation.insert()
 				allocation.submit()
 				success.append(employee)
-			except Exception as e:
+			except Exception:
 				frappe.db.rollback(save_point=savepoint)
 				allocation.log_error(f"Leave Allocation failed for employee {employee}")
 				failure.append(employee)
@@ -123,9 +123,7 @@ class LeaveControlPanel(Document):
 
 		return []
 
-	def get_employees_without_allocations(
-		self, all_employees: list, from_date: str, to_date: str
-	) -> list:
+	def get_employees_without_allocations(self, all_employees: list, from_date: str, to_date: str) -> list:
 		Allocation = frappe.qb.DocType("Leave Allocation")
 		Employee = frappe.qb.DocType("Employee")
 
@@ -135,9 +133,7 @@ class LeaveControlPanel(Document):
 			.on(Allocation.employee == Employee.name)
 			.select(Employee.name)
 			.distinct()
-			.where(
-				(Allocation.docstatus == 1) & (Allocation.employee.isin([d.name for d in all_employees]))
-			)
+			.where((Allocation.docstatus == 1) & (Allocation.employee.isin([d.name for d in all_employees])))
 		)
 
 		if self.dates_based_on == "Joining Date":

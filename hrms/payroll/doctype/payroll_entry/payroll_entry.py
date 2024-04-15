@@ -481,7 +481,9 @@ class PayrollEntry(Document):
 				)
 
 				if not default_cost_center and department:
-					default_cost_center = frappe.get_cached_value("Department", department, "payroll_cost_center")
+					default_cost_center = frappe.get_cached_value(
+						"Department", department, "payroll_cost_center"
+					)
 
 				if not default_cost_center:
 					default_cost_center = self.cost_center
@@ -803,9 +805,7 @@ class PayrollEntry(Document):
 
 		return row
 
-	def get_amount_and_exchange_rate_for_journal_entry(
-		self, account, amount, company_currency, currencies
-	):
+	def get_amount_and_exchange_rate_for_journal_entry(self, account, amount, company_currency, currencies):
 		conversion_rate = 1
 		exchange_rate = self.exchange_rate
 		account_currency = frappe.db.get_value("Account", account, "account_currency")
@@ -1029,7 +1029,11 @@ class PayrollEntry(Document):
 
 			if unmarked_days > 0:
 				unmarked_attendance.append(
-					{"employee": emp.employee, "employee_name": emp.employee_name, "unmarked_days": unmarked_days}
+					{
+						"employee": emp.employee,
+						"employee_name": emp.employee_name,
+						"unmarked_days": unmarked_days,
+					}
 				)
 
 		return unmarked_attendance
@@ -1279,9 +1283,7 @@ def get_frequency_kwargs(frequency_name):
 def get_end_date(start_date, frequency):
 	start_date = getdate(start_date)
 	frequency = frequency.lower() if frequency else "monthly"
-	kwargs = (
-		get_frequency_kwargs(frequency) if frequency != "bimonthly" else get_frequency_kwargs("monthly")
-	)
+	kwargs = get_frequency_kwargs(frequency) if frequency != "bimonthly" else get_frequency_kwargs("monthly")
 
 	# weekly, fortnightly and daily intervals have fixed days so no problems
 	end_date = add_to_date(start_date, **kwargs) - relativedelta(days=1)
@@ -1467,7 +1469,9 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 
 			count += 1
 			if publish_progress:
-				frappe.publish_progress(count * 100 / len(salary_slips), title=_("Submitting Salary Slips..."))
+				frappe.publish_progress(
+					count * 100 / len(salary_slips), title=_("Submitting Salary Slips...")
+				)
 
 		if submitted:
 			payroll_entry.make_accrual_jv_entry(submitted)
@@ -1491,15 +1495,13 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 @frappe.validate_and_sanitize_search_inputs
 def get_payroll_entries_for_jv(doctype, txt, searchfield, start, page_len, filters):
 	return frappe.db.sql(
-		"""
+		f"""
 		select name from `tabPayroll Entry`
-		where `{key}` LIKE %(txt)s
+		where `{searchfield}` LIKE %(txt)s
 		and name not in
 			(select reference_name from `tabJournal Entry Account`
 				where reference_type="Payroll Entry")
-		order by name limit %(start)s, %(page_len)s""".format(
-			key=searchfield
-		),
+		order by name limit %(start)s, %(page_len)s""",
 		{"txt": "%%%s%%" % txt, "start": start, "page_len": page_len},
 	)
 

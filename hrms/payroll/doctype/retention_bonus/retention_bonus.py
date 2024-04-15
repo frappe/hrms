@@ -41,7 +41,6 @@ class RetentionBonus(Document):
 			self.db_set("additional_salary", additional_salary)
 
 	def on_cancel(self):
-
 		additional_salary = self.get_additional_salary()
 		if additional_salary:
 			bonus_removed = (

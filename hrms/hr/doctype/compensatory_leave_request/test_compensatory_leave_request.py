@@ -38,9 +38,7 @@ class TestCompensatoryLeaveRequest(FrappeTestCase):
 		compensatory_leave_request.submit()
 
 		self.assertEqual(
-			get_leave_balance_on(
-				employee.name, compensatory_leave_request.leave_type, add_days(today(), 1)
-			),
+			get_leave_balance_on(employee.name, compensatory_leave_request.leave_type, add_days(today(), 1)),
 			before + 1,
 		)
 

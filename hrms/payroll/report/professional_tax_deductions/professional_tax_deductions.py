@@ -36,7 +36,6 @@ def get_columns(filters):
 
 
 def get_data(filters):
-
 	data = []
 
 	component_type_dict = frappe._dict(
@@ -66,7 +65,6 @@ def get_data(filters):
 	)
 
 	for d in entry:
-
 		employee = {"employee": d.employee, "employee_name": d.employee_name, "amount": d.amount}
 
 		data.append(employee)
