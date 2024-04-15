@@ -14,6 +14,7 @@
   "column_break_3",
   "start_date",
   "end_date",
+  "final_score_formula",
   "section_break_4",
   "description",
   "settings_section",
@@ -154,6 +155,11 @@
    "label": "Status",
    "options": "Not Started\nIn Progress\nCompleted",
    "read_only": 1
+  },
+  {
+   "fieldname": "final_score_formula",
+   "fieldtype": "Code",
+   "label": "Final Score Formula"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -171,7 +177,7 @@
    "link_fieldname": "appraisal_cycle"
   }
  ],
- "modified": "2024-03-27 13:06:31.540312",
+ "modified": "2024-04-12 12:59:05.846610",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal Cycle",
