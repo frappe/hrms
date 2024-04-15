@@ -465,7 +465,10 @@ def make_n_checkins(employee, n, hours_to_reverse=1):
 	return logs
 
 
-def make_checkin(employee, time=now_datetime()):
+def make_checkin(employee, time=None):
+	if not time:
+		time = now_datetime()
+
 	log = frappe.get_doc(
 		{
 			"doctype": "Employee Checkin",

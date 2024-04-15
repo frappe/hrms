@@ -560,6 +560,6 @@ def get_allocated_leaves(assignment):
 
 
 def allocate_earned_leaves_for_months(months):
-	for i in range(0, months):
+	for _ in range(0, months):
 		frappe.flags.current_date = add_months(frappe.flags.current_date, 1)
 		allocate_earned_leaves()

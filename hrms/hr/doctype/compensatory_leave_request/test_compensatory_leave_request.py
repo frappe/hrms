@@ -156,7 +156,10 @@ class TestCompensatoryLeaveRequest(FrappeTestCase):
 		compensatory_leave_request.submit()
 
 
-def get_compensatory_leave_request(employee, leave_date=today()):
+def get_compensatory_leave_request(employee, leave_date=None):
+	if not leave_date:
+		leave_date = today()
+
 	prev_comp_leave_req = frappe.db.get_value(
 		"Compensatory Leave Request",
 		dict(

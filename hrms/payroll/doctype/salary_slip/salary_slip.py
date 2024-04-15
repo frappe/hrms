@@ -57,7 +57,7 @@ from hrms.payroll.utils import sanitize_expression
 
 class SalarySlip(TransactionBase):
 	def __init__(self, *args, **kwargs):
-		super(SalarySlip, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 		self.series = f"Sal Slip/{self.employee}/.#####"
 		self.whitelisted_globals = {
 			"int": int,

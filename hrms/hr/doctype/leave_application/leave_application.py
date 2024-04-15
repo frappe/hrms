@@ -2,7 +2,6 @@
 # License: GNU General Public License v3. See license.txt
 
 import datetime
-from typing import Dict, Optional, Tuple, Union
 
 import frappe
 from frappe import _

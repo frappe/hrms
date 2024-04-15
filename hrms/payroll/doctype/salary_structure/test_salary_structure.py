@@ -163,12 +163,15 @@ def make_salary_structure(
 	other_details=None,
 	test_tax=False,
 	company=None,
-	currency=erpnext.get_default_currency(),
+	currency=None,
 	payroll_period=None,
 	include_flexi_benefits=False,
 	base=None,
 	allow_duplicate=False,
 ):
+	if not currency:
+		currency = erpnext.get_default_currency()
+
 	if frappe.db.exists("Salary Structure", salary_structure):
 		frappe.db.delete("Salary Structure", salary_structure)
 
@@ -227,11 +230,14 @@ def create_salary_structure_assignment(
 	salary_structure,
 	from_date=None,
 	company=None,
-	currency=erpnext.get_default_currency(),
+	currency=None,
 	payroll_period=None,
 	base=None,
 	allow_duplicate=False,
 ):
+	if not currency:
+		currency = erpnext.get_default_currency()
+
 	if not allow_duplicate and frappe.db.exists("Salary Structure Assignment", {"employee": employee}):
 		frappe.db.sql("""delete from `tabSalary Structure Assignment` where employee=%s""", (employee))
 

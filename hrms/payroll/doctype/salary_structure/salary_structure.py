@@ -292,13 +292,12 @@ def create_salary_structures_assignment(
 
 def get_existing_assignments(employees, salary_structure, from_date):
 	salary_structures_assignments = frappe.db.sql_list(
-		"""
-		select distinct employee from `tabSalary Structure Assignment`
-		where salary_structure=%s and employee in (%s)
-		and from_date=%s  and company= %s and docstatus=1
-	"""
-		% ("%s", ", ".join(["%s"] * len(employees)), "%s", "%s"),
-		[salary_structure.name] + employees + [from_date] + [salary_structure.company],
+		f"""
+		SELECT DISTINCT employee FROM `tabSalary Structure Assignment`
+		WHERE salary_structure=%s AND employee IN ({", ".join(["%s"] * len(employees))})
+		AND from_date=%s AND company=%s AND docstatus=1
+		""",
+		[salary_structure.name, *employees, from_date, salary_structure.company],
 	)
 	if salary_structures_assignments:
 		frappe.msgprint(

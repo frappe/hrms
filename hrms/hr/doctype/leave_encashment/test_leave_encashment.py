@@ -55,11 +55,9 @@ class TestLeaveEncashment(FrappeTestCase):
 			"leave_period": self.leave_period.name,
 		}
 
-		leave_policy_assignments = create_assignment_for_multiple_employees(
-			[self.employee], frappe._dict(data)
-		)
+		create_assignment_for_multiple_employees([self.employee], frappe._dict(data))
 
-		salary_structure = make_salary_structure(
+		make_salary_structure(
 			"Salary Structure for Encashment",
 			"Monthly",
 			self.employee,

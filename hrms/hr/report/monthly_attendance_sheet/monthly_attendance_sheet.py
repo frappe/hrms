@@ -4,7 +4,6 @@
 
 from calendar import monthrange
 from itertools import groupby
-from typing import Dict, List, Optional, Tuple
 
 import frappe
 from frappe import _
@@ -613,8 +612,8 @@ def get_chart_data(attendance_map: dict, filters: Filters) -> dict:
 		labels.append(day["label"])
 		total_absent_on_day = total_leaves_on_day = total_present_on_day = 0
 
-		for employee, attendance_dict in attendance_map.items():
-			for shift, attendance in attendance_dict.items():
+		for __, attendance_dict in attendance_map.items():
+			for __, attendance in attendance_dict.items():
 				attendance_on_day = attendance.get(cint(day["fieldname"]))
 
 				if attendance_on_day == "On Leave":

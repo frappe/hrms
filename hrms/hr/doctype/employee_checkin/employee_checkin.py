@@ -246,7 +246,9 @@ def handle_attendance_exception(log_names: list, error_message: str):
 
 
 def add_comment_in_checkins(log_names: list, error_message: str):
-	text = "{0}<br>{1}".format(frappe.bold(_("Reason for skipping auto attendance:")), error_message)
+	text = "{prefix}<br>{error_message}".format(
+		prefix=frappe.bold(_("Reason for skipping auto attendance:")), error_message=error_message
+	)
 
 	for name in log_names:
 		frappe.get_doc(

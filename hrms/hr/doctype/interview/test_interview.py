@@ -62,7 +62,7 @@ class TestInterview(FrappeTestCase):
 		job_applicant = create_job_applicant()
 		scheduled_on = datetime.datetime.now() + datetime.timedelta(minutes=10)
 
-		interview = create_interview_and_dependencies(job_applicant.name, scheduled_on=scheduled_on)
+		create_interview_and_dependencies(job_applicant.name, scheduled_on=scheduled_on)
 
 		frappe.db.delete("Email Queue")
 
@@ -81,7 +81,7 @@ class TestInterview(FrappeTestCase):
 
 		job_applicant = create_job_applicant()
 		scheduled_on = add_days(getdate(), -4)
-		interview = create_interview_and_dependencies(
+		create_interview_and_dependencies(
 			job_applicant.name, scheduled_on=scheduled_on, status="Under Review"
 		)
 
@@ -114,7 +114,7 @@ class TestInterview(FrappeTestCase):
 
 	def test_job_applicant_status_update_on_interview_submit(self):
 		job_applicant = create_job_applicant()
-		interview = create_interview_and_dependencies(job_applicant.name, status="Cleared")
+		create_interview_and_dependencies(job_applicant.name, status="Cleared")
 
 		update_job_applicant_status({"job_applicant": job_applicant.name, "status": "Accepted"})
 		job_applicant.reload()
