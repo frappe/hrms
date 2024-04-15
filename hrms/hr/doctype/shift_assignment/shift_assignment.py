@@ -3,7 +3,6 @@
 
 
 from datetime import datetime, timedelta
-from typing import Dict, List
 
 import frappe
 from frappe import _
@@ -155,10 +154,9 @@ def get_events(start, end, filters=None):
 		"Employee", {"user_id": frappe.session.user}, ["name", "company"], as_dict=True
 	)
 	if employee:
-		employee, company = employee.name, employee.company
+		employee = employee.name
 	else:
 		employee = ""
-		company = frappe.db.get_value("Global Defaults", None, "default_company")
 
 	assignments = get_shift_assignments(start, end, filters)
 	return get_shift_events(assignments)
@@ -393,9 +391,9 @@ def get_shift_for_timestamp(employee: str, for_timestamp: datetime) -> dict:
 
 def get_employee_shift(
 	employee: str,
-	for_timestamp: datetime = None,
+	for_timestamp: datetime | None = None,
 	consider_default_shift: bool = False,
-	next_shift_direction: str = None,
+	next_shift_direction: str | None = None,
 ) -> dict:
 	"""Returns a Shift Type for the given employee on the given date
 
@@ -474,7 +472,7 @@ def get_prev_or_next_shift(
 
 
 def get_employee_shift_timings(
-	employee: str, for_timestamp: datetime = None, consider_default_shift: bool = False
+	employee: str, for_timestamp: datetime | None = None, consider_default_shift: bool = False
 ) -> list[dict]:
 	"""Returns previous shift, current/upcoming shift, next_shift for the given timestamp and employee"""
 	if for_timestamp is None:
@@ -556,7 +554,7 @@ def get_exact_shift(shifts: list, for_timestamp: datetime) -> dict:
 	)
 
 
-def get_shift_details(shift_type_name: str, for_timestamp: datetime = None) -> dict:
+def get_shift_details(shift_type_name: str, for_timestamp: datetime | None = None) -> dict:
 	"""Returns a Dict containing shift details with the following data:
 	'shift_type' - Object of DocType Shift Type,
 	'start_datetime' - datetime of shift start on given timestamp,

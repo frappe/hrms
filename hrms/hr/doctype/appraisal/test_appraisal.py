@@ -115,12 +115,16 @@ class TestAppraisal(FrappeTestCase):
 
 		parent1 = create_goal(self.employee1, "Quality", 1, appraisal_cycle=cycle.name)
 		child1 = create_goal(self.employee1, is_group=1, parent_goal=parent1.name)
-		child1_1 = create_goal(self.employee1, parent_goal=child1.name, progress=25)
-		child1_2 = create_goal(self.employee1, parent_goal=child1.name)
+		# child1_1
+		create_goal(self.employee1, parent_goal=child1.name, progress=25)
+		# child1_1
+		create_goal(self.employee1, parent_goal=child1.name)
 
 		parent2 = create_goal(self.employee1, "Development", 1, appraisal_cycle=cycle.name)
-		child2_1 = create_goal(self.employee1, parent_goal=parent2.name, progress=100)
-		child2_2 = create_goal(self.employee1, parent_goal=parent2.name)
+		# child2_1
+		create_goal(self.employee1, parent_goal=parent2.name, progress=100)
+		# child2_2
+		create_goal(self.employee1, parent_goal=parent2.name)
 
 		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
 		appraisal = frappe.get_doc("Appraisal", appraisal)
@@ -159,11 +163,13 @@ class TestAppraisal(FrappeTestCase):
 		cycle.create_appraisals()
 
 		parent1 = create_goal(self.employee1, "Quality", 1, appraisal_cycle=cycle.name)
-		child1 = create_goal(self.employee1, parent_goal=parent1.name, progress=50)
+		# child1
+		create_goal(self.employee1, parent_goal=parent1.name, progress=50)
 
 		parent2 = create_goal(self.employee1, "Development", 1, appraisal_cycle=cycle.name)
 		child2_1 = create_goal(self.employee1, parent_goal=parent2.name, progress=50)
-		child2_2 = create_goal(self.employee1, parent_goal=parent2.name)
+		# child2_2
+		create_goal(self.employee1, parent_goal=parent2.name)
 
 		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
 		appraisal = frappe.get_doc("Appraisal", appraisal)
@@ -280,7 +286,7 @@ class TestAppraisal(FrappeTestCase):
 		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
 		appraisal = frappe.get_doc("Appraisal", appraisal)
 
-		goal = create_goal(self.employee1, "Quality", appraisal_cycle=cycle.name)
+		create_goal(self.employee1, "Quality", appraisal_cycle=cycle.name)
 		feedback = create_performance_feedback(
 			self.employee1,
 			employee2,

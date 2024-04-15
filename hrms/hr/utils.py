@@ -668,7 +668,7 @@ def share_doc_with_approver(doc, user):
 
 
 def validate_active_employee(employee, method=None):
-	if isinstance(employee, (dict, Document)):
+	if isinstance(employee, dict | Document):
 		employee = employee.get("employee")
 
 	if employee and frappe.db.get_value("Employee", employee, "status") == "Inactive":

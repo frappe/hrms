@@ -109,7 +109,7 @@ def are_push_notifications_enabled() -> bool:
 @frappe.whitelist()
 def get_leave_applications(
 	employee: str,
-	approver_id: str = None,
+	approver_id: str | None = None,
 	for_approval: bool = False,
 	limit: int | None = None,
 ) -> list[dict]:
@@ -151,7 +151,7 @@ def get_leave_applications(
 
 def get_leave_application_filters(
 	employee: str,
-	approver_id: str = None,
+	approver_id: str | None = None,
 	for_approval: bool = False,
 ) -> dict:
 	filters = frappe._dict()
@@ -290,7 +290,7 @@ def get_leave_types(employee: str, date: str) -> list:
 @frappe.whitelist()
 def get_expense_claims(
 	employee: str,
-	approver_id: str = None,
+	approver_id: str | None = None,
 	for_approval: bool = False,
 	limit: int | None = None,
 ) -> list[dict]:
@@ -330,7 +330,7 @@ def get_expense_claims(
 
 def get_expense_claim_filters(
 	employee: str,
-	approver_id: str = None,
+	approver_id: str | None = None,
 	for_approval: bool = False,
 ) -> dict:
 	filters = frappe._dict()

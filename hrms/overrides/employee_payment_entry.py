@@ -69,7 +69,6 @@ def get_payment_entry_for_employee(dt, dn, party_amount=None, bank_account=None,
 	"""Function to make Payment Entry for Employee Advance, Gratuity, Expense Claim"""
 	doc = frappe.get_doc(dt, dn)
 
-	party_type = "Employee"
 	party_account = get_party_account(doc)
 	party_account_currency = get_account_currency(party_account)
 	payment_type = "Pay"

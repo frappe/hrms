@@ -60,14 +60,16 @@ class TestShiftType(FrappeTestCase):
 		make_shift_assignment(shift_type.name, employee, date)
 
 		timestamp = datetime.combine(date, get_time("08:00:00"))
-		log_in = make_checkin(employee, timestamp)
+		# log in
+		make_checkin(employee, timestamp)
 
 		# change config before adding OUT log
 		shift_type.begin_check_in_before_shift_start_time = 120
 		shift_type.save()
 
 		timestamp = datetime.combine(date, get_time("12:00:00"))
-		log_out = make_checkin(employee, timestamp)
+		# log out
+		make_checkin(employee, timestamp)
 
 		shift_type.process_auto_attendance()
 
@@ -86,10 +88,12 @@ class TestShiftType(FrappeTestCase):
 		make_shift_assignment(shift_type.name, employee, date, date)
 
 		timestamp = datetime.combine(date, get_time("00:30:00"))
-		log_in = make_checkin(employee, timestamp)
+		# log in
+		make_checkin(employee, timestamp)
 
 		timestamp = datetime.combine(date, get_time("10:00:00"))
-		log_out = make_checkin(employee, timestamp)
+		# log out
+		make_checkin(employee, timestamp)
 
 		shift_type.process_auto_attendance()
 
@@ -261,9 +265,9 @@ class TestShiftType(FrappeTestCase):
 
 		# make logs
 		timestamp = datetime.combine(date, get_time("08:00:00"))
-		log = make_checkin(employee, timestamp)
+		make_checkin(employee, timestamp)
 		timestamp = datetime.combine(date, get_time("12:00:00"))
-		log = make_checkin(employee, timestamp)
+		make_checkin(employee, timestamp)
 
 		shift_type.process_auto_attendance()
 
@@ -290,9 +294,9 @@ class TestShiftType(FrappeTestCase):
 
 		# make logs
 		timestamp = datetime.combine(date, get_time("08:00:00"))
-		log = make_checkin(employee, timestamp)
+		make_checkin(employee, timestamp)
 		timestamp = datetime.combine(date, get_time("12:00:00"))
-		log = make_checkin(employee, timestamp)
+		make_checkin(employee, timestamp)
 
 		shift_type.process_auto_attendance()
 
@@ -387,9 +391,9 @@ class TestShiftType(FrappeTestCase):
 
 		# make logs
 		timestamp = datetime.combine(prev_date, get_time("15:00:00"))
-		log = make_checkin(employee, timestamp)
+		make_checkin(employee, timestamp)
 		timestamp = datetime.combine(prev_date, get_time("23:30:00"))
-		log = make_checkin(employee, timestamp)
+		make_checkin(employee, timestamp)
 
 		# last sync of checkin is 00:30:00 and the checkin logs are not applicable for attendance yet
 		# so it should not mark the employee as absent either
@@ -452,10 +456,12 @@ class TestShiftType(FrappeTestCase):
 		make_shift_assignment(assigned_shift.name, employee, date)
 
 		timestamp = datetime.combine(date, get_time("08:00:00"))
-		log_in = make_checkin(employee, timestamp)
+		# log in
+		make_checkin(employee, timestamp)
 
 		timestamp = datetime.combine(date, get_time("10:00:00"))
-		log_out = make_checkin(employee, timestamp)
+		# log out
+		make_checkin(employee, timestamp)
 
 		default_shift.process_auto_attendance()
 		attendance = frappe.db.get_value(

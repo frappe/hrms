@@ -403,7 +403,7 @@ class IncomeTaxComputationReport:
 
 	def get_total_taxable_amount(self):
 		self.add_column("Total Taxable Amount")
-		for emp, emp_details in self.employees.items():
+		for __, emp_details in self.employees.items():
 			emp_details["total_taxable_amount"] = flt(emp_details.get("ctc")) - flt(
 				emp_details.get("total_exemption")
 			)
@@ -461,7 +461,7 @@ class IncomeTaxComputationReport:
 	def get_payable_tax(self):
 		self.add_column("Payable Tax")
 
-		for emp, emp_details in self.employees.items():
+		for __, emp_details in self.employees.items():
 			emp_details["payable_tax"] = flt(emp_details.get("applicable_tax")) - flt(
 				emp_details.get("total_tax_deducted")
 			)

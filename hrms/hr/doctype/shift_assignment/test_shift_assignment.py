@@ -260,7 +260,7 @@ class TestShiftAssignment(FrappeTestCase):
 
 		shift_type = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="02:00:00")
 		date = getdate()
-		shift = make_shift_assignment(shift_type.name, employee1, date, date)
+		make_shift_assignment(shift_type.name, employee1, date, date)
 
 		events = get_events(start=date, end=date)
 		self.assertEqual(events[0]["start_date"], get_datetime(f"{date} 08:00:00"))

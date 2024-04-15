@@ -588,7 +588,7 @@ class PayrollEntry(Document):
 		payroll_payable_account=None,
 		voucher_type="Journal Entry",
 		user_remark="",
-		submitted_salary_slips: list = None,
+		submitted_salary_slips: list | None = None,
 		submit_journal_entry=False,
 	):
 		multi_currency = 0
@@ -1175,7 +1175,7 @@ def get_filtered_employees(
 	return query.run(as_dict=as_dict)
 
 
-def set_fields_to_select(query, fields: list[str] = None):
+def set_fields_to_select(query, fields: list[str] | None = None):
 	default_fields = ["employee", "employee_name", "department", "designation"]
 
 	if fields:
@@ -1510,7 +1510,7 @@ def get_employee_list(
 	filters: frappe._dict,
 	searchfield=None,
 	search_string=None,
-	fields: list[str] = None,
+	fields: list[str] | None = None,
 	as_dict=True,
 	limit=None,
 	offset=None,
@@ -1549,7 +1549,6 @@ def get_employee_list(
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def employee_query(doctype, txt, searchfield, start, page_len, filters):
-	doctype = "Employee"
 	filters = frappe._dict(filters)
 
 	if not filters.payroll_frequency:

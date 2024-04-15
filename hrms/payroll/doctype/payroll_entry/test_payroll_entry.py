@@ -531,7 +531,7 @@ class TestPayrollEntry(FrappeTestCase):
 
 		# payroll entry
 		dates = get_start_end_dates("Monthly", nowdate())
-		payroll_entry = make_payroll_entry(
+		make_payroll_entry(
 			start_date=dates.start_date,
 			end_date=dates.end_date,
 			payable_account=company_doc.default_payroll_payable_account,

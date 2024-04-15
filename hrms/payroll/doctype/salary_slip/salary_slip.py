@@ -63,7 +63,7 @@ TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 
 class SalarySlip(TransactionBase):
 	def __init__(self, *args, **kwargs):
-		super(SalarySlip, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 		self.series = f"Sal Slip/{self.employee}/.#####"
 		self.whitelisted_globals = {
 			"int": int,
@@ -611,7 +611,7 @@ class SalarySlip(TransactionBase):
 
 			equivalent_lwp_count = (1 - daily_wages_fraction_for_half_day) if is_half_day_leave else 1
 
-			if is_partially_paid_leave := cint(leave.is_ppl):
+			if cint(leave.is_ppl):
 				equivalent_lwp_count *= (
 					fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
 				)
@@ -1251,7 +1251,7 @@ class SalarySlip(TransactionBase):
 			else:
 				self.other_deduction_components.append(d.salary_component)
 
-		if has_overwritten_tax := self.handle_additional_salary_tax_component():
+		if self.handle_additional_salary_tax_component():
 			return
 
 		# consider manually added tax component

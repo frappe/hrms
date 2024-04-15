@@ -129,7 +129,7 @@ class TestEmployeeReminders(FrappeTestCase):
 			send_work_anniversary_reminders,
 		)
 
-		emp = make_employee(
+		make_employee(
 			"test_emp_work_anniversary@gmail.com",
 			company="_Test Company",
 			date_of_joining=frappe.utils.add_years(getdate(), -2),

@@ -51,15 +51,15 @@ def get_data(filters):
 	conditions = get_conditions(filters)
 
 	entry = frappe.db.sql(
-		""" select sal.employee, sal.employee_name, ded.salary_component, ded.amount
-		from `tabSalary Slip` sal, `tabSalary Detail` ded
-		where sal.name = ded.parent
-		and ded.parentfield = 'deductions'
-		and ded.parenttype = 'Salary Slip'
-		and sal.docstatus = 1 %s
-		and ded.salary_component in (%s)
-	"""
-		% (conditions, ", ".join(["%s"] * len(component_type_dict))),
+		"""SELECT sal.employee, sal.employee_name, ded.salary_component, ded.amount
+		FROM `tabSalary Slip` sal, `tabSalary Detail` ded
+		WHERE sal.name = ded.parent
+		AND ded.parentfield = 'deductions'
+		AND ded.parenttype = 'Salary Slip'
+		AND sal.docstatus = 1 %s
+		AND ded.salary_component IN (%s)
+		""",
+		(conditions, ", ".join(["%s"] * len(component_type_dict))),
 		tuple(component_type_dict.keys()),
 		as_dict=1,
 	)
