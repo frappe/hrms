@@ -49,7 +49,6 @@
 						class="inline-flex items-center justify-center gap-2 transition-colors focus:outline-none text-white bg-gray-900 hover:bg-gray-800 active:bg-gray-700 focus-visible:ring focus-visible:ring-gray-400 h-7 text-base px-2 rounded"
 						:href="resetPasswordLink"
 						target="_blank"
-						onClick
 					>
 						Go to Reset Password page
 					</a>
