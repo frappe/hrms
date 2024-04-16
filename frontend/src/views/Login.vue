@@ -23,7 +23,7 @@
 							placeholder="••••••"
 							v-model="password"
 						/>
-						<ErrorMessage :message="session.login.error" />
+						<ErrorMessage :message="errorMessage" />
 						<Button
 							:loading="session.login.loading"
 							variant="solid"
@@ -34,6 +34,26 @@
 					</form>
 				</div>
 			</div>
+
+			<Dialog v-model="resetPassword">
+				<template #body-title>
+					<h2 class="text-lg font-bold">Reset Password</h2>
+				</template>
+				<template #body-content>
+					<p>
+						Your password has expired. Please reset your password to continue
+					</p>
+				</template>
+				<template #actions>
+					<a
+						class="inline-flex items-center justify-center gap-2 transition-colors focus:outline-none text-white bg-gray-900 hover:bg-gray-800 active:bg-gray-700 focus-visible:ring focus-visible:ring-gray-400 h-7 text-base px-2 rounded"
+						:href="resetPasswordLink"
+						target="_blank"
+					>
+						Go to Reset Password page
+					</a>
+				</template>
+			</Dialog>
 		</ion-content>
 	</ion-page>
 </template>
@@ -41,18 +61,30 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { inject, ref } from "vue"
-import { Input, Button, ErrorMessage } from "frappe-ui"
+import { Input, Button, ErrorMessage, Dialog } from "frappe-ui"
 
 import FrappeHRLogo from "@/components/icons/FrappeHRLogo.vue"
 
 const email = ref(null)
 const password = ref(null)
+const errorMessage = ref("")
+const resetPassword = ref(false)
+const resetPasswordLink = ref("")
 
 const session = inject("$session")
-function submit(e) {
-	session.login.submit({
-		email: email.value,
-		password: password.value,
-	})
+
+async function submit(e) {
+	try {
+		const response = await session.login(email.value, password.value)
+		if (response.message === "Password Reset") {
+			resetPassword.value = true
+			resetPasswordLink.value = response.redirect_to
+		} else {
+			resetPassword.value = false
+			resetPasswordLink.value = ""
+		}
+	} catch (error) {
+		errorMessage.value = error.messages.join("\n")
+	}
 }
 </script>
