@@ -1,5 +1,5 @@
 hrms.appraisal_utils = {
-	set_autocompletions_for_final_score_formula: function (frm) {
+	set_autocompletions_for_final_score_formula: async function (frm) {
 		const autocompletions = [
 			{
 				value: "goal_score",
@@ -16,11 +16,25 @@ hrms.appraisal_utils = {
 				score: 8,
 				meta: "Apraisal field",
 			},
+		]
+
+		const doctypes = [
+			"Employee",
+			"Appraisal Cycle"
 		];
-		frm.set_df_property(
-			"final_score_formula",
-			"autocompletions",
-			autocompletions
-		);
-			},
+
+		await Promise.all(doctypes.map((doctype) =>
+			frappe.model.with_doctype(doctype, () => {
+				autocompletions.push(
+					...frappe.get_meta(doctype).fields.map((f) => ({
+						value: f.fieldname,
+						score: 8,
+						meta: __("{0} Field", [doctype]),
+					}))
+				);
+			})
+		))
+		frm.set_df_property("final_score_formula", "autocompletions", autocompletions);
+
+	},
 };
