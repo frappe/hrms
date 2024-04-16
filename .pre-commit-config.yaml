@@ -24,7 +24,7 @@ repos:
         # Ignore fronetend folder and any files that might contain jinja / bundles
         exclude: |
             (?x)^(
-                hrms/frontend/.*|
+                frontend/.*|
                 hrms/public/dist/.*|
                 .*node_modules.*|
                 .*boilerplate.*|
