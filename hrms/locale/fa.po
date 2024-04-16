@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-03 13:30\n"
+"PO-Revision-Date: 2024-04-15 10:53\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -48,11 +48,11 @@ msgstr "${t.balance_leaves}/${t.allocated_leaves}"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:88
 msgid "% Utilization (B + NB) / T"
-msgstr ""
+msgstr "% استفاده (B + NB) / T"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:94
 msgid "% Utilization (B / T)"
-msgstr ""
+msgstr "% استفاده (B / T)"
 
 #: hr/doctype/employee_checkin/employee_checkin.py:84
 msgid "'employee_field_value' and 'timestamp' are required."
@@ -1853,7 +1853,7 @@ msgstr ""
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Attendance Dashboard"
-msgstr ""
+msgstr "داشبورد حضور و غیاب"
 
 #: hr/report/shift_attendance/shift_attendance.py:43
 msgid "Attendance Date"
@@ -3386,7 +3386,7 @@ msgstr "جلد نامه"
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.js:72
 #: public/js/erpnext/delivery_trip.js:12
 msgid "Create"
-msgstr "ايجاد كردن"
+msgstr "ایجاد کردن"
 
 #: hr/doctype/employee_referral/employee_referral.js:39
 msgid "Create Additional Salary"
@@ -6556,7 +6556,7 @@ msgstr "Late Entry Marking را فعال کنید"
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "Enabled"
-msgstr "فعال شد"
+msgstr "فعال"
 
 #. Label of a Section Break field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
@@ -8051,7 +8051,7 @@ msgstr "دسته بندی بر اساس"
 
 #: hr/doctype/goal/goal.js:13
 msgid "Group goal's progress is auto-calculated based on the child goals."
-msgstr "پیشرفت هدف گروه به صورت خودکار بر اساس اهداف کودک محاسبه می شود."
+msgstr "پیشرفت هدف گروه به صورت خودکار بر اساس اهداف فرزند محاسبه می شود."
 
 #. Name of a role
 #: hr/doctype/job_opening/job_opening.json
@@ -8066,7 +8066,7 @@ msgstr "منابع انسانی"
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "HR Dashboard"
-msgstr ""
+msgstr "داشبورد منابع انسانی"
 
 #. Name of a role
 #: hr/doctype/appointment_letter/appointment_letter.json
@@ -8396,7 +8396,7 @@ msgstr "تنظیمات استخدام"
 #. Label of a chart in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Hiring vs Attrition Count"
-msgstr ""
+msgstr "تعداد استخدام در مقابل ترک کار"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -9615,7 +9615,7 @@ msgstr "روش ارزیابی KRA"
 
 #: hr/doctype/goal/goal.py:99
 msgid "KRA updated for all child goals."
-msgstr "KRA برای همه اهداف کودک به روز شد."
+msgstr "KRA برای همه اهداف فرزند به روز شد."
 
 #. Label of a Table field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
