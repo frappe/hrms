@@ -101,30 +101,26 @@ frappe.ui.form.on("Leave Control Panel", {
 	},
 
 	load_employees(frm) {
-		frm
-			.call({
-				method: "get_employees",
-				args: {
-					advanced_filters: frm.advanced_filters || [],
-				},
-				doc: frm.doc,
-			})
-			.then((r) => {
-				// section automatically collapses on applying a single filter
-				frm.set_df_property("filters_section", "collapsible", 0);
-				frm.set_df_property("advanced_filters_section", "collapsible", 0);
+		frm.call({
+			method: "get_employees",
+			args: {
+				advanced_filters: frm.advanced_filters || [],
+			},
+			doc: frm.doc,
+		}).then((r) => {
+			// section automatically collapses on applying a single filter
+			frm.set_df_property("filters_section", "collapsible", 0);
+			frm.set_df_property("advanced_filters_section", "collapsible", 0);
 
-				frm.employees = r.message;
-				frm.set_df_property("select_employees_section", "hidden", 0);
-				frm.events.show_employees(frm, frm.employees);
-			});
+			frm.employees = r.message;
+			frm.set_df_property("select_employees_section", "hidden", 0);
+			frm.events.show_employees(frm, frm.employees);
+		});
 	},
 
 	show_employees(frm, employees) {
 		const $wrapper = frm.get_field("employees_html").$wrapper;
-		frm.employee_wrapper = $(`<div class="employee_wrapper pb-5">`).appendTo(
-			$wrapper
-		);
+		frm.employee_wrapper = $(`<div class="employee_wrapper pb-5">`).appendTo($wrapper);
 		frm.events.render_datatable(frm, employees, frm.employee_wrapper);
 	},
 
@@ -144,10 +140,7 @@ frappe.ui.form.on("Leave Control Panel", {
 				noDataMessage: __("No Data"),
 				disableReorderColumn: true,
 			};
-			frm.employees_datatable = new frappe.DataTable(
-				wrapper.get(0),
-				datatable_options
-			);
+			frm.employees_datatable = new frappe.DataTable(wrapper.get(0), datatable_options);
 		} else {
 			frm.employees_datatable.rowmanager.checkMap = [];
 			frm.employees_datatable.refresh(data, columns);
@@ -213,25 +206,21 @@ frappe.ui.form.on("Leave Control Panel", {
 		const selected_employees = [];
 		check_map.forEach((is_checked, idx) => {
 			if (is_checked)
-				selected_employees.push(
-					frm.employees_datatable.datamanager.data[idx].employee
-				);
+				selected_employees.push(frm.employees_datatable.datamanager.data[idx].employee);
 		});
-		frm
-			.call({
-				method: "allocate_leave",
-				doc: frm.doc,
-				args: {
-					employees: selected_employees,
-				},
-				freeze: true,
-				freeze_message: __("Allocating Leave"),
-			})
-			.then((r) => {
-				// don't refresh on complete failure
-				if (r.message.failed && !r.message.success) return;
-				frm.refresh();
-			});
+		frm.call({
+			method: "allocate_leave",
+			doc: frm.doc,
+			args: {
+				employees: selected_employees,
+			},
+			freeze: true,
+			freeze_message: __("Allocating Leave"),
+		}).then((r) => {
+			// don't refresh on complete failure
+			if (r.message.failed && !r.message.success) return;
+			frm.refresh();
+		});
 	},
 });
 
@@ -243,15 +232,13 @@ const set_field_options = (frm) => {
 		parent: filter_wrapper,
 		doctype: "Employee",
 		on_change: () => {
-			frm.advanced_filters = frm.filter_list
-				.get_filters()
-				.reduce((filters, item) => {
-					// item[3] is the value from the array [doctype, fieldname, condition, value]
-					if (item[3]) {
-						filters.push(item.slice(1, 4));
-					}
-					return filters;
-				}, []);
+			frm.advanced_filters = frm.filter_list.get_filters().reduce((filters, item) => {
+				// item[3] is the value from the array [doctype, fieldname, condition, value]
+				if (item[3]) {
+					filters.push(item.slice(1, 4));
+				}
+				return filters;
+			}, []);
 			frm.trigger("load_employees");
 		},
 	});

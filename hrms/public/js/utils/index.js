@@ -4,8 +4,7 @@ $.extend(hrms, {
 	proceed_save_with_reminders_frequency_change: () => {
 		frappe.ui.hide_open_dialog();
 		frappe.call({
-			method:
-				"hrms.hr.doctype.hr_settings.hr_settings.set_proceed_with_frequency_change",
+			method: "hrms.hr.doctype.hr_settings.hr_settings.set_proceed_with_frequency_change",
 			callback: () => {
 				// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 				cur_frm.save();
@@ -21,11 +20,7 @@ $.extend(hrms, {
 
 	get_current_employee: async (frm) => {
 		const employee = (
-			await frappe.db.get_value(
-				"Employee",
-				{ user_id: frappe.session.user },
-				"name"
-			)
+			await frappe.db.get_value("Employee", { user_id: frappe.session.user }, "name")
 		)?.message?.name;
 
 		return employee;
@@ -41,7 +36,7 @@ $.extend(hrms, {
 			message += " " + frappe.utils.comma_and(failure) + "<hr>";
 			message += __(
 				"Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details",
-				[doctype, __("Error Log")]
+				[doctype, __("Error Log")],
 			);
 			title = __("Creation Failed");
 			indicator = "red";
