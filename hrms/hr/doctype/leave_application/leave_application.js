@@ -105,7 +105,7 @@ frappe.ui.form.on("Leave Application", {
 		}
 
 		frm.trigger("set_employee");
-		if (frm.doc.employee) {
+		if (frm.doc.docstatus === 0) {
 			frm.trigger("make_dashboard");
 		}
 	},
