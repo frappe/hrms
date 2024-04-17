@@ -41,7 +41,7 @@ frappe.ui.form.on('Shift Type', {
 					}
 				});
 			},
-		 __("Actions")
+			__("Actions")
 		);
 	}
 });
