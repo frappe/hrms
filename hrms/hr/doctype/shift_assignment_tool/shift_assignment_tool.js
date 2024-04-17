@@ -6,11 +6,12 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		hrms.setup_employee_filter_group(frm);
 	},
 
-	async refresh(frm) {
+	refresh(frm) {
 		frm.page.clear_indicator();
 		frm.disable_save();
 		frm.trigger("set_primary_action");
 		frm.trigger("get_employees");
+
 		hrms.handle_realtime_bulk_action_notification(
 			frm,
 			"completed_bulk_shift_assignment",

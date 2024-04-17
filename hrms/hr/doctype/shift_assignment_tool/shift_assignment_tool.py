@@ -176,6 +176,7 @@ class ShiftAssignmentTool(Document):
 			count += 1
 			frappe.publish_progress(count * 100 / len(employees), title=_("Assigning Shift..."))
 
+		frappe.clear_messages()
 		frappe.publish_realtime(
 			"completed_bulk_shift_assignment",
 			message={"success": success, "failure": failure},
@@ -240,6 +241,7 @@ class ShiftAssignmentTool(Document):
 			count += 1
 			frappe.publish_progress(count * 100 / len(shift_requests), title=_("Processing Requests..."))
 
+		frappe.clear_messages()
 		frappe.publish_realtime(
 			"completed_bulk_shift_request_processing",
 			message={"success": success, "failure": failure, "for_processing": True},
