@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-13 09:43\n"
+"PO-Revision-Date: 2024-04-16 11:00\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -9159,25 +9159,25 @@ msgstr ""
 #: payroll/doctype/employee_tax_exemption_category/employee_tax_exemption_category.json
 msgctxt "Employee Tax Exemption Category"
 msgid "Is Active"
-msgstr ""
+msgstr "Je aktivan"
 
 #. Label of a Check field in DocType 'Employee Tax Exemption Sub Category'
 #: payroll/doctype/employee_tax_exemption_sub_category/employee_tax_exemption_sub_category.json
 msgctxt "Employee Tax Exemption Sub Category"
 msgid "Is Active"
-msgstr ""
+msgstr "Je aktivan"
 
 #. Label of a Check field in DocType 'Leave Period'
 #: hr/doctype/leave_period/leave_period.json
 msgctxt "Leave Period"
 msgid "Is Active"
-msgstr ""
+msgstr "Je aktivan"
 
 #. Label of a Select field in DocType 'Salary Structure'
 #: payroll/doctype/salary_structure/salary_structure.json
 msgctxt "Salary Structure"
 msgid "Is Active"
-msgstr ""
+msgstr "Je aktivan"
 
 #. Label of a Check field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
@@ -10848,20 +10848,20 @@ msgstr ""
 
 #: www/jobs/index.py:11
 msgid "My Account"
-msgstr ""
+msgstr "Moj račun"
 
 #: hr/doctype/leave_control_panel/leave_control_panel.js:167
 #: hr/report/employee_analytics/employee_analytics.py:31
 #: hr/report/employee_birthday/employee_birthday.py:22
 #: hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.py:21
 msgid "Name"
-msgstr ""
+msgstr "Naziv"
 
 #. Label of a Data field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "Name"
-msgstr ""
+msgstr "Naziv"
 
 #: payroll/doctype/salary_slip/salary_slip.py:1163
 #: payroll/doctype/salary_slip/salary_slip.py:2112
@@ -10878,19 +10878,19 @@ msgstr ""
 #: hr/doctype/exit_interview/exit_interview.json
 msgctxt "Exit Interview"
 msgid "Naming Series"
-msgstr ""
+msgstr "Imenovanje serije"
 
 #. Option for the 'Employee Naming By' (Select) field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
 msgctxt "HR Settings"
 msgid "Naming Series"
-msgstr ""
+msgstr "Imenovanje serije"
 
 #. Label of a Select field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Naming Series"
-msgstr ""
+msgstr "Imenovanje serije"
 
 #: payroll/report/salary_register/salary_register.py:237
 msgid "Net Pay"
@@ -12412,7 +12412,7 @@ msgstr ""
 #: hr/doctype/job_offer/job_offer.json
 msgctxt "Job Offer"
 msgid "Print Heading"
-msgstr ""
+msgstr "Štampanje naslova"
 
 #. Label of a Section Break field in DocType 'Job Offer'
 #: hr/doctype/job_offer/job_offer.json
@@ -12463,13 +12463,13 @@ msgstr ""
 
 #: hr/doctype/goal/goal_tree.js:78
 msgid "Progress"
-msgstr ""
+msgstr "Napredak"
 
 #. Label of a Percent field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "Progress"
-msgstr ""
+msgstr "Napredak"
 
 #: hr/doctype/employee_onboarding/employee_onboarding.js:31
 #: hr/doctype/employee_separation/employee_separation.js:19
@@ -12477,43 +12477,43 @@ msgstr ""
 #: hr/report/project_profitability/project_profitability.js:43
 #: hr/report/project_profitability/project_profitability.py:164
 msgid "Project"
-msgstr ""
+msgstr "Projekat"
 
 #. Label of a Link field in DocType 'Employee Onboarding'
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 msgctxt "Employee Onboarding"
 msgid "Project"
-msgstr ""
+msgstr "Projekat"
 
 #. Label of a Link field in DocType 'Employee Separation'
 #: hr/doctype/employee_separation/employee_separation.json
 msgctxt "Employee Separation"
 msgid "Project"
-msgstr ""
+msgstr "Projekat"
 
 #. Label of a Link field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Project"
-msgstr ""
+msgstr "Projekat"
 
 #. Label of a Link field in DocType 'Expense Claim Detail'
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
 msgctxt "Expense Claim Detail"
 msgid "Project"
-msgstr ""
+msgstr "Projekat"
 
 #. Label of a Link field in DocType 'Expense Taxes and Charges'
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
 msgctxt "Expense Taxes and Charges"
 msgid "Project"
-msgstr ""
+msgstr "Projekat"
 
 #. Label of a Link field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Project"
-msgstr ""
+msgstr "Projekat"
 
 #. Name of a report
 #. Label of a Link in the Shift & Attendance Workspace
@@ -12537,7 +12537,7 @@ msgstr ""
 #: hr/doctype/employee_property_history/employee_property_history.json
 msgctxt "Employee Property History"
 msgid "Property"
-msgstr ""
+msgstr "Svojstvo"
 
 #: hr/employee_property_update.js:142
 msgid "Property already added"
