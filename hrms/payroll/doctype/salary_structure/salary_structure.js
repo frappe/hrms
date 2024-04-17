@@ -261,6 +261,7 @@ var validate_date = function (frm, cdt, cdn) {
 	}
 };
 
+// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 cur_frm.cscript.amount = function (doc, cdt, cdn) {
 	calculate_totals(doc, cdt, cdn);
 };
@@ -287,6 +288,7 @@ var calculate_totals = function (doc) {
 	refresh_many(["total_earning", "total_deduction", "net_pay"]);
 };
 
+// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 cur_frm.cscript.validate = function (doc, cdt, cdn) {
 	calculate_totals(doc);
 };

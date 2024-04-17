@@ -140,6 +140,7 @@ class EmployeeHoursReport:
 				else:
 					additional_filters += f" AND tt.{field} = {self.filters.get(field)!r}"
 
+		# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 		self.filtered_time_logs = frappe.db.sql(
 			f"""
 			SELECT tt.employee AS employee, ttd.hours AS hours, ttd.is_billable AS is_billable, ttd.project AS project

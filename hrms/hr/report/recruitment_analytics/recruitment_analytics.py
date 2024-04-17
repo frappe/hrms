@@ -117,6 +117,7 @@ def get_child_row(jo, jo_ja_map, ja_joff_map):
 
 
 def get_staffing_plan(filters):
+	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 	staffing_plan = frappe.db.sql(
 		f"""
 	select

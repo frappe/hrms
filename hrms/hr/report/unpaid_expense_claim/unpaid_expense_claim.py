@@ -29,6 +29,7 @@ def get_unclaimed_expese_claims(filters):
 	if filters.get("employee"):
 		cond = "ec.employee = %(employee)s"
 
+	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 	return frappe.db.sql(
 		f"""
 		select

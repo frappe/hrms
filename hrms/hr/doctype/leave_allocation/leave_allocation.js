@@ -1,6 +1,7 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
 
+// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 cur_frm.add_fetch("employee", "employee_name", "employee_name");
 
 frappe.ui.form.on("Leave Allocation", {

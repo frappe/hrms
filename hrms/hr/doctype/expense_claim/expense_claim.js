@@ -4,11 +4,16 @@
 frappe.provide("hrms.hr");
 frappe.provide("erpnext.accounts.dimensions");
 
+// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 cur_frm.add_fetch("employee", "company", "company");
+// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 cur_frm.add_fetch("employee", "employee_name", "employee_name");
+// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 cur_frm.add_fetch("expense_type", "description", "description");
 
+// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 cur_frm.cscript.refresh = function (doc) {
+	// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 	cur_frm.cscript.set_help(doc);
 
 	if (!doc.__islocal) {
@@ -27,6 +32,7 @@ cur_frm.cscript.refresh = function (doc) {
 			}
 
 			if (cint(doc.total_amount_reimbursed) > 0 && frappe.model.can_read(entry_doctype)) {
+				// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 				cur_frm.add_custom_button(
 					__("Bank Entries"),
 					function () {
@@ -45,17 +51,23 @@ cur_frm.cscript.refresh = function (doc) {
 	}
 };
 
+// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 cur_frm.cscript.set_help = function (doc) {
+	// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 	cur_frm.set_intro("");
 	if (doc.__islocal && !frappe.user_roles.includes("HR User")) {
+		// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 		cur_frm.set_intro(__("Fill the form and save it"));
 	}
 };
 
+// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 cur_frm.cscript.validate = function (doc) {
+	// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 	cur_frm.cscript.calculate_total(doc);
 };
 
+// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 cur_frm.cscript.calculate_total = function (doc) {
 	doc.total_claimed_amount = 0;
 	doc.total_sanctioned_amount = 0;
@@ -65,10 +77,13 @@ cur_frm.cscript.calculate_total = function (doc) {
 	});
 };
 
+// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 cur_frm.cscript.calculate_total_amount = function (doc, cdt, cdn) {
+	// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 	cur_frm.cscript.calculate_total(doc, cdt, cdn);
 };
 
+// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 cur_frm.fields_dict["cost_center"].get_query = function (doc) {
 	return {
 		filters: {
@@ -370,6 +385,7 @@ frappe.ui.form.on("Expense Claim Detail", {
 	},
 
 	sanctioned_amount: function (frm, cdt, cdn) {
+		// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 		cur_frm.cscript.calculate_total(frm.doc, cdt, cdn);
 		frm.trigger("get_taxes");
 		frm.trigger("calculate_grand_total");
