@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-11 14:09\n"
+"PO-Revision-Date: 2024-04-16 11:00\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -8652,7 +8652,7 @@ msgstr "Dnevnik uvoza"
 
 #: hr/doctype/upload_attendance/upload_attendance.js:46
 msgid "Importing {0} of {1}"
-msgstr ""
+msgstr "Uvoz {0} od {1}"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Onboarding'
 #: hr/doctype/employee_onboarding/employee_onboarding.json
@@ -8676,13 +8676,13 @@ msgstr ""
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgctxt "Appraisal Cycle"
 msgid "In Progress"
-msgstr ""
+msgstr "U toku"
 
 #. Option for the 'Status' (Select) field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "In Progress"
-msgstr ""
+msgstr "U toku"
 
 #: hr/report/shift_attendance/shift_attendance.py:67
 msgid "In Time"
@@ -8701,13 +8701,13 @@ msgstr ""
 #: hr/report/employee_leave_balance/employee_leave_balance.js:47
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:41
 msgid "Inactive"
-msgstr ""
+msgstr "Neaktivan"
 
 #. Option for the 'Status' (Select) field in DocType 'Shift Assignment'
 #: hr/doctype/shift_assignment/shift_assignment.json
 msgctxt "Shift Assignment"
 msgid "Inactive"
-msgstr ""
+msgstr "Neaktivan"
 
 #. Label of a Section Break field in DocType 'Employee Incentive'
 #: payroll/doctype/employee_incentive/employee_incentive.json
@@ -9159,25 +9159,25 @@ msgstr ""
 #: payroll/doctype/employee_tax_exemption_category/employee_tax_exemption_category.json
 msgctxt "Employee Tax Exemption Category"
 msgid "Is Active"
-msgstr ""
+msgstr "Je aktivan"
 
 #. Label of a Check field in DocType 'Employee Tax Exemption Sub Category'
 #: payroll/doctype/employee_tax_exemption_sub_category/employee_tax_exemption_sub_category.json
 msgctxt "Employee Tax Exemption Sub Category"
 msgid "Is Active"
-msgstr ""
+msgstr "Je aktivan"
 
 #. Label of a Check field in DocType 'Leave Period'
 #: hr/doctype/leave_period/leave_period.json
 msgctxt "Leave Period"
 msgid "Is Active"
-msgstr ""
+msgstr "Je aktivan"
 
 #. Label of a Select field in DocType 'Salary Structure'
 #: payroll/doctype/salary_structure/salary_structure.json
 msgctxt "Salary Structure"
 msgid "Is Active"
-msgstr ""
+msgstr "Je aktivan"
 
 #. Label of a Check field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
@@ -10744,19 +10744,19 @@ msgstr ""
 
 #: hr/doctype/leave_block_list/leave_block_list.js:37
 msgid "Monday"
-msgstr ""
+msgstr "Ponedjeljak"
 
 #: hr/report/employee_birthday/employee_birthday.js:8
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:9
 #: public/js/salary_slip_deductions_report_filters.js:15
 msgid "Month"
-msgstr ""
+msgstr "Mjesec"
 
 #. Option for the 'Salary Paid Per' (Select) field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Month"
-msgstr ""
+msgstr "Mjesec"
 
 #. Label of a Currency field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -10775,39 +10775,39 @@ msgstr ""
 #: hr/doctype/hr_settings/hr_settings.json
 msgctxt "HR Settings"
 msgid "Monthly"
-msgstr ""
+msgstr "Mjesečno"
 
 #. Option for the 'Earned Leave Frequency' (Select) field in DocType 'Leave
 #. Type'
 #: hr/doctype/leave_type/leave_type.json
 msgctxt "Leave Type"
 msgid "Monthly"
-msgstr ""
+msgstr "Mjesečno"
 
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Monthly"
-msgstr ""
+msgstr "Mjesečno"
 
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Monthly"
-msgstr ""
+msgstr "Mjesečno"
 
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary
 #. Structure'
 #: payroll/doctype/salary_structure/salary_structure.json
 msgctxt "Salary Structure"
 msgid "Monthly"
-msgstr ""
+msgstr "Mjesečno"
 
 #. Option for the 'Frequency' (Select) field in DocType 'Vehicle Service'
 #: hr/doctype/vehicle_service/vehicle_service.json
 msgctxt "Vehicle Service"
 msgid "Monthly"
-msgstr ""
+msgstr "Mjesečno"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -10820,7 +10820,7 @@ msgstr ""
 
 #: hr/page/team_updates/team_updates.js:25
 msgid "More"
-msgstr ""
+msgstr "Više"
 
 #. Label of a Section Break field in DocType 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
@@ -10848,20 +10848,20 @@ msgstr ""
 
 #: www/jobs/index.py:11
 msgid "My Account"
-msgstr ""
+msgstr "Moj račun"
 
 #: hr/doctype/leave_control_panel/leave_control_panel.js:167
 #: hr/report/employee_analytics/employee_analytics.py:31
 #: hr/report/employee_birthday/employee_birthday.py:22
 #: hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.py:21
 msgid "Name"
-msgstr ""
+msgstr "Naziv"
 
 #. Label of a Data field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "Name"
-msgstr ""
+msgstr "Naziv"
 
 #: payroll/doctype/salary_slip/salary_slip.py:1163
 #: payroll/doctype/salary_slip/salary_slip.py:2112
@@ -10878,19 +10878,19 @@ msgstr ""
 #: hr/doctype/exit_interview/exit_interview.json
 msgctxt "Exit Interview"
 msgid "Naming Series"
-msgstr ""
+msgstr "Imenovanje serije"
 
 #. Option for the 'Employee Naming By' (Select) field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
 msgctxt "HR Settings"
 msgid "Naming Series"
-msgstr ""
+msgstr "Imenovanje serije"
 
 #. Label of a Select field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Naming Series"
-msgstr ""
+msgstr "Imenovanje serije"
 
 #: payroll/report/salary_register/salary_register.py:237
 msgid "Net Pay"
@@ -10975,7 +10975,7 @@ msgstr ""
 #: payroll/doctype/salary_structure/salary_structure.json
 msgctxt "Salary Structure"
 msgid "No"
-msgstr ""
+msgstr "Br"
 
 #: payroll/doctype/gratuity/gratuity.py:310
 msgid "No Applicable Component is present in last month salary slip"
@@ -10988,7 +10988,7 @@ msgstr ""
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.js:122
 #: hr/doctype/leave_control_panel/leave_control_panel.js:144
 msgid "No Data"
-msgstr ""
+msgstr "Nema podataka"
 
 #: payroll/doctype/salary_structure/salary_structure.py:224
 msgid "No Employee Found"
@@ -11139,11 +11139,11 @@ msgstr ""
 #: hr/doctype/leave_type/leave_type.py:42
 #: hr/doctype/leave_type/leave_type.py:45
 msgid "Not Allowed"
-msgstr ""
+msgstr "Nije dozvoljeno"
 
 #: utils/hierarchy_chart.py:15
 msgid "Not Permitted"
-msgstr ""
+msgstr "Nije dozvoljeno"
 
 #. Option for the 'Status' (Select) field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
@@ -11297,7 +11297,7 @@ msgstr ""
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "On Hold"
-msgstr ""
+msgstr "Na čekanju"
 
 #. Option for the 'Status' (Select) field in DocType 'Attendance'
 #: hr/doctype/attendance/attendance.json
@@ -11376,37 +11376,37 @@ msgstr ""
 #: hr/doctype/daily_work_summary/daily_work_summary.json
 msgctxt "Daily Work Summary"
 msgid "Open"
-msgstr ""
+msgstr "Otvori"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgctxt "Employee Grievance"
 msgid "Open"
-msgstr ""
+msgstr "Otvori"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Open"
-msgstr ""
+msgstr "Otvori"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Open"
-msgstr ""
+msgstr "Otvori"
 
 #. Option for the 'Status' (Select) field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
 msgctxt "Leave Application"
 msgid "Open"
-msgstr ""
+msgstr "Otvori"
 
 #. Option for the 'Status' (Select) field in DocType 'Training Event Employee'
 #: hr/doctype/training_event_employee/training_event_employee.json
 msgctxt "Training Event Employee"
 msgid "Open"
-msgstr ""
+msgstr "Otvori"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
@@ -11635,7 +11635,7 @@ msgstr ""
 
 #: hr/report/employee_analytics/employee_analytics.js:17
 msgid "Parameter"
-msgstr ""
+msgstr "Parametar"
 
 #. Label of a Link field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
@@ -11649,7 +11649,7 @@ msgstr ""
 
 #: hr/doctype/leave_control_panel/leave_control_panel.py:125
 msgid "Partial Success"
-msgstr ""
+msgstr "Djelimičan uspjeh"
 
 #. Option for the 'Travel Funding' (Select) field in DocType 'Travel Request'
 #: hr/doctype/travel_request/travel_request.json
@@ -11997,43 +11997,43 @@ msgstr ""
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 msgctxt "Employee Onboarding"
 msgid "Pending"
-msgstr ""
+msgstr "Na čekanju"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
 msgctxt "Employee Referral"
 msgid "Pending"
-msgstr ""
+msgstr "Na čekanju"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Separation'
 #: hr/doctype/employee_separation/employee_separation.json
 msgctxt "Employee Separation"
 msgid "Pending"
-msgstr ""
+msgstr "Na čekanju"
 
 #. Option for the 'Status' (Select) field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
 msgctxt "Exit Interview"
 msgid "Pending"
-msgstr ""
+msgstr "Na čekanju"
 
 #. Option for the 'Status' (Select) field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "Pending"
-msgstr ""
+msgstr "Na čekanju"
 
 #. Option for the 'Status' (Select) field in DocType 'Interview'
 #: hr/doctype/interview/interview.json
 msgctxt "Interview"
 msgid "Pending"
-msgstr ""
+msgstr "Na čekanju"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Pending"
-msgstr ""
+msgstr "Na čekanju"
 
 #. Label of a Currency field in DocType 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
@@ -12057,7 +12057,7 @@ msgstr ""
 #: payroll/doctype/income_tax_slab_other_charges/income_tax_slab_other_charges.json
 msgctxt "Income Tax Slab Other Charges"
 msgid "Percent"
-msgstr ""
+msgstr "Procenat"
 
 #. Label of a Percent field in DocType 'Taxable Salary Slab'
 #: payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
@@ -12200,7 +12200,7 @@ msgstr ""
 
 #: payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.js:19
 msgid "Please select {0}"
-msgstr ""
+msgstr "Molimo odaberite {0}"
 
 #: payroll/doctype/salary_structure/salary_structure.py:271
 msgid "Please set \"Default Payroll Payable Account\" in Company Defaults"
@@ -12412,7 +12412,7 @@ msgstr ""
 #: hr/doctype/job_offer/job_offer.json
 msgctxt "Job Offer"
 msgid "Print Heading"
-msgstr ""
+msgstr "Štampanje naslova"
 
 #. Label of a Section Break field in DocType 'Job Offer'
 #: hr/doctype/job_offer/job_offer.json
@@ -12463,13 +12463,13 @@ msgstr ""
 
 #: hr/doctype/goal/goal_tree.js:78
 msgid "Progress"
-msgstr ""
+msgstr "Napredak"
 
 #. Label of a Percent field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "Progress"
-msgstr ""
+msgstr "Napredak"
 
 #: hr/doctype/employee_onboarding/employee_onboarding.js:31
 #: hr/doctype/employee_separation/employee_separation.js:19
@@ -12477,43 +12477,43 @@ msgstr ""
 #: hr/report/project_profitability/project_profitability.js:43
 #: hr/report/project_profitability/project_profitability.py:164
 msgid "Project"
-msgstr ""
+msgstr "Projekat"
 
 #. Label of a Link field in DocType 'Employee Onboarding'
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 msgctxt "Employee Onboarding"
 msgid "Project"
-msgstr ""
+msgstr "Projekat"
 
 #. Label of a Link field in DocType 'Employee Separation'
 #: hr/doctype/employee_separation/employee_separation.json
 msgctxt "Employee Separation"
 msgid "Project"
-msgstr ""
+msgstr "Projekat"
 
 #. Label of a Link field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Project"
-msgstr ""
+msgstr "Projekat"
 
 #. Label of a Link field in DocType 'Expense Claim Detail'
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
 msgctxt "Expense Claim Detail"
 msgid "Project"
-msgstr ""
+msgstr "Projekat"
 
 #. Label of a Link field in DocType 'Expense Taxes and Charges'
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
 msgctxt "Expense Taxes and Charges"
 msgid "Project"
-msgstr ""
+msgstr "Projekat"
 
 #. Label of a Link field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Project"
-msgstr ""
+msgstr "Projekat"
 
 #. Name of a report
 #. Label of a Link in the Shift & Attendance Workspace
@@ -12537,7 +12537,7 @@ msgstr ""
 #: hr/doctype/employee_property_history/employee_property_history.json
 msgctxt "Employee Property History"
 msgid "Property"
-msgstr ""
+msgstr "Svojstvo"
 
 #: hr/employee_property_update.js:142
 msgid "Property already added"
