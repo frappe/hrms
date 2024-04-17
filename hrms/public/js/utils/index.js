@@ -4,8 +4,7 @@ $.extend(hrms, {
 	proceed_save_with_reminders_frequency_change: () => {
 		frappe.ui.hide_open_dialog();
 		frappe.call({
-			method:
-				"hrms.hr.doctype.hr_settings.hr_settings.set_proceed_with_frequency_change",
+			method: "hrms.hr.doctype.hr_settings.hr_settings.set_proceed_with_frequency_change",
 			callback: () => {
 				// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 				cur_frm.save();
@@ -21,11 +20,7 @@ $.extend(hrms, {
 
 	get_current_employee: async (frm) => {
 		const employee = (
-			await frappe.db.get_value(
-				"Employee",
-				{ user_id: frappe.session.user },
-				"name"
-			)
+			await frappe.db.get_value("Employee", { user_id: frappe.session.user }, "name")
 		)?.message?.name;
 
 		return employee;
@@ -40,8 +35,7 @@ $.extend(hrms, {
 
 		if (missing_fields.length) {
 			let message = __("Mandatory fields required for this action");
-			message +=
-				"<br><br><ul><li>" + missing_fields.join("</li><li>") + "</ul>";
+			message += "<br><br><ul><li>" + missing_fields.join("</li><li>") + "</ul>";
 			frappe.throw({
 				message: message,
 				title: __("Missing Fields"),
@@ -85,7 +79,7 @@ $.extend(hrms, {
 		employees,
 		no_data_message = __("No Data"),
 		get_editor = null,
-		events = {}
+		events = {},
 	) => {
 		// section automatically collapses on applying a single filter
 		frm.set_df_property("quick_filters_section", "collapsible", 0);
@@ -99,9 +93,7 @@ $.extend(hrms, {
 		}
 
 		const $wrapper = frm.get_field("employees_html").$wrapper;
-		const employee_wrapper = $(`<div class="employee_wrapper">`).appendTo(
-			$wrapper
-		);
+		const employee_wrapper = $(`<div class="employee_wrapper">`).appendTo($wrapper);
 		const datatable_options = {
 			columns: columns,
 			data: employees,
@@ -117,10 +109,7 @@ $.extend(hrms, {
 			getEditor: get_editor,
 			events: events,
 		};
-		frm.employees_datatable = new frappe.DataTable(
-			employee_wrapper.get(0),
-			datatable_options
-		);
+		frm.employees_datatable = new frappe.DataTable(employee_wrapper.get(0), datatable_options);
 	},
 
 	handle_realtime_bulk_action_notification: (frm, event, doctype) => {
@@ -130,7 +119,7 @@ $.extend(hrms, {
 				doctype,
 				message.failure,
 				message.success,
-				message.for_processing
+				message.for_processing,
 			);
 
 			// refresh only on complete/partial success
@@ -138,12 +127,7 @@ $.extend(hrms, {
 		});
 	},
 
-	notify_bulk_action_status: (
-		doctype,
-		failure,
-		success,
-		for_processing = false
-	) => {
+	notify_bulk_action_status: (doctype, failure, success, for_processing = false) => {
 		let action = __("create/submit");
 		let action_past = __("created");
 		if (for_processing) {
@@ -160,7 +144,7 @@ $.extend(hrms, {
 			message += " " + frappe.utils.comma_and(failure) + "<hr>";
 			message += __(
 				"Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details",
-				[doctype, __("Error Log")]
+				[doctype, __("Error Log")],
 			);
 			title = __("Failure");
 			indicator = "red";
@@ -179,7 +163,7 @@ $.extend(hrms, {
 			]);
 			message += __(
 				"<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>",
-				[__("Employee"), doctype]
+				[__("Employee"), doctype],
 			);
 			for (const d of success) {
 				message += `<tr><td>${d.employee}</td><td>${d.doc}</td></tr>`;

@@ -5,7 +5,7 @@ import frappe
 from frappe import _
 
 
-def execute(filters: dict = None) -> tuple:
+def execute(filters: dict | None = None) -> tuple:
 	filters = frappe._dict(filters or {})
 	columns = get_columns()
 	data = get_data(filters)
@@ -65,7 +65,7 @@ def get_columns() -> list[dict]:
 	]
 
 
-def get_data(filters: dict = None) -> list[dict]:
+def get_data(filters: dict | None = None) -> list[dict]:
 	Appraisal = frappe.qb.DocType("Appraisal")
 	query = (
 		frappe.qb.from_(Appraisal)
@@ -86,7 +86,7 @@ def get_data(filters: dict = None) -> list[dict]:
 
 	for condition in ["appraisal_cycle", "employee", "department", "designation", "company"]:
 		if filters.get(condition):
-			query = query.where((Appraisal[condition] == filters.get(condition)))
+			query = query.where(Appraisal[condition] == filters.get(condition))
 
 	query = query.orderby(Appraisal.appraisal_cycle)
 	query = query.orderby(Appraisal.final_score, order=frappe.qb.desc)

@@ -88,7 +88,8 @@ class TestShiftAssignmentTool(FrappeTestCase):
 			status="Draft",
 			do_not_submit=1,
 		)
-		request2 = make_shift_request(
+		# request2
+		make_shift_request(
 			employee=self.emp2,
 			employee_name="employee2@test.com",
 			from_date=add_days(today, 6),
@@ -96,7 +97,8 @@ class TestShiftAssignmentTool(FrappeTestCase):
 			status="Draft",
 			do_not_submit=1,
 		)
-		request3 = make_shift_request(
+		# request3
+		make_shift_request(
 			employee=self.emp2,
 			employee_name="employee2@test.com",
 			from_date=add_days(today, -5),
@@ -104,13 +106,14 @@ class TestShiftAssignmentTool(FrappeTestCase):
 			status="Draft",
 			do_not_submit=1,
 		)
-		request4 = make_shift_request(
+		# request4
+		make_shift_request(
 			employee=self.emp4,
 			employee_name="employee4@test.com",
 			status="Approved",
 		)
-
-		request5 = make_shift_request(
+		# request5
+		make_shift_request(
 			employee=self.emp5,
 			employee_name="employee5@test.com",
 			status="Approved",

@@ -57,7 +57,7 @@ frappe.query_reports["Shift Attendance"] = {
 			fieldname: "consider_grace_period",
 			label: __("Consider Grace Period"),
 			fieldtype: "Check",
-			default: 1
+			default: 1,
 		},
 	],
 	formatter: (value, row, column, data, default_formatter) => {

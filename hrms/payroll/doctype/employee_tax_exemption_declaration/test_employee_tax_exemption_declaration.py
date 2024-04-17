@@ -57,7 +57,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 		self.assertRaises(frappe.ValidationError, declaration.save)
 
 	def test_duplicate_entry_for_payroll_period(self):
-		declaration = frappe.get_doc(
+		frappe.get_doc(
 			{
 				"doctype": "Employee Tax Exemption Declaration",
 				"employee": frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name"),
@@ -441,7 +441,7 @@ def create_payroll_period(**args):
 
 def create_exemption_category():
 	if not frappe.db.exists("Employee Tax Exemption Category", "_Test Category"):
-		category = frappe.get_doc(
+		frappe.get_doc(
 			{
 				"doctype": "Employee Tax Exemption Category",
 				"name": "_Test Category",

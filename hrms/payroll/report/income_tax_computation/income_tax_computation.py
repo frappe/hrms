@@ -14,7 +14,7 @@ def execute(filters=None):
 	return IncomeTaxComputationReport(filters).run()
 
 
-class IncomeTaxComputationReport(object):
+class IncomeTaxComputationReport:
 	def __init__(self, filters=None):
 		self.filters = frappe._dict(filters or {})
 		self.columns = []
@@ -220,9 +220,7 @@ class IncomeTaxComputationReport(object):
 
 		existing_ss_exemptions = frappe._dict()
 		for d in records:
-			existing_ss_exemptions.setdefault(d.employee, {}).setdefault(
-				scrub(d.salary_component), d.amount
-			)
+			existing_ss_exemptions.setdefault(d.employee, {}).setdefault(scrub(d.salary_component), d.amount)
 
 		for employee in list(self.employees.keys()):
 			if not self.employees[employee]["allow_tax_exemption"]:
@@ -405,7 +403,7 @@ class IncomeTaxComputationReport(object):
 
 	def get_total_taxable_amount(self):
 		self.add_column("Total Taxable Amount")
-		for emp, emp_details in self.employees.items():
+		for __, emp_details in self.employees.items():
 			emp_details["total_taxable_amount"] = flt(emp_details.get("ctc")) - flt(
 				emp_details.get("total_exemption")
 			)
@@ -425,7 +423,10 @@ class IncomeTaxComputationReport(object):
 				tax_slab = frappe.get_cached_doc("Income Tax Slab", tax_slab)
 				employee_dict = frappe.get_doc("Employee", emp).as_dict()
 				tax_amount = calculate_tax_by_tax_slab(
-					emp_details["total_taxable_amount"], tax_slab, eval_globals=None, eval_locals=employee_dict
+					emp_details["total_taxable_amount"],
+					tax_slab,
+					eval_globals=None,
+					eval_locals=employee_dict,
 				)
 			else:
 				tax_amount = 0.0
@@ -460,7 +461,7 @@ class IncomeTaxComputationReport(object):
 	def get_payable_tax(self):
 		self.add_column("Payable Tax")
 
-		for emp, emp_details in self.employees.items():
+		for __, emp_details in self.employees.items():
 			emp_details["payable_tax"] = flt(emp_details.get("applicable_tax")) - flt(
 				emp_details.get("total_tax_deducted")
 			)

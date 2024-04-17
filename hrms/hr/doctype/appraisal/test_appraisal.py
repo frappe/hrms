@@ -30,9 +30,7 @@ class TestAppraisal(FrappeTestCase):
 		engineer.appraisal_template = self.template.name
 		engineer.save()
 
-		self.employee1 = make_employee(
-			"employee1@example.com", company=self.company, designation="Engineer"
-		)
+		self.employee1 = make_employee("employee1@example.com", company=self.company, designation="Engineer")
 
 	def test_validate_duplicate(self):
 		cycle = create_appraisal_cycle(designation="Engineer")
@@ -53,9 +51,7 @@ class TestAppraisal(FrappeTestCase):
 		cycle = create_appraisal_cycle(designation="Engineer", kra_evaluation_method="Manual Rating")
 		cycle.create_appraisals()
 
-		appraisal = frappe.db.exists(
-			"Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1}
-		)
+		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
 		appraisal = frappe.get_doc("Appraisal", appraisal)
 
 		# 30% weightage
@@ -74,9 +70,7 @@ class TestAppraisal(FrappeTestCase):
 		cycle = create_appraisal_cycle(designation="Engineer", kra_evaluation_method="Manual Rating")
 		cycle.create_appraisals()
 
-		appraisal = frappe.db.exists(
-			"Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1}
-		)
+		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
 		appraisal = frappe.get_doc("Appraisal", appraisal)
 
 		# GOAL SCORE
@@ -121,16 +115,18 @@ class TestAppraisal(FrappeTestCase):
 
 		parent1 = create_goal(self.employee1, "Quality", 1, appraisal_cycle=cycle.name)
 		child1 = create_goal(self.employee1, is_group=1, parent_goal=parent1.name)
-		child1_1 = create_goal(self.employee1, parent_goal=child1.name, progress=25)
-		child1_2 = create_goal(self.employee1, parent_goal=child1.name)
+		# child1_1
+		create_goal(self.employee1, parent_goal=child1.name, progress=25)
+		# child1_1
+		create_goal(self.employee1, parent_goal=child1.name)
 
 		parent2 = create_goal(self.employee1, "Development", 1, appraisal_cycle=cycle.name)
-		child2_1 = create_goal(self.employee1, parent_goal=parent2.name, progress=100)
-		child2_2 = create_goal(self.employee1, parent_goal=parent2.name)
+		# child2_1
+		create_goal(self.employee1, parent_goal=parent2.name, progress=100)
+		# child2_2
+		create_goal(self.employee1, parent_goal=parent2.name)
 
-		appraisal = frappe.db.exists(
-			"Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1}
-		)
+		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
 		appraisal = frappe.get_doc("Appraisal", appraisal)
 
 		# Quality KRA, 30% weightage
@@ -167,15 +163,15 @@ class TestAppraisal(FrappeTestCase):
 		cycle.create_appraisals()
 
 		parent1 = create_goal(self.employee1, "Quality", 1, appraisal_cycle=cycle.name)
-		child1 = create_goal(self.employee1, parent_goal=parent1.name, progress=50)
+		# child1
+		create_goal(self.employee1, parent_goal=parent1.name, progress=50)
 
 		parent2 = create_goal(self.employee1, "Development", 1, appraisal_cycle=cycle.name)
 		child2_1 = create_goal(self.employee1, parent_goal=parent2.name, progress=50)
-		child2_2 = create_goal(self.employee1, parent_goal=parent2.name)
+		# child2_2
+		create_goal(self.employee1, parent_goal=parent2.name)
 
-		appraisal = frappe.db.exists(
-			"Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1}
-		)
+		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
 		appraisal = frappe.get_doc("Appraisal", appraisal)
 
 		# Quality KRA, 30% weightage
@@ -205,9 +201,7 @@ class TestAppraisal(FrappeTestCase):
 
 		goal = create_goal(self.employee1, "Quality", appraisal_cycle=cycle.name, progress=50)
 
-		appraisal = frappe.db.exists(
-			"Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1}
-		)
+		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
 		appraisal = frappe.get_doc("Appraisal", appraisal)
 
 		# Quality KRA, 30% weightage
@@ -231,9 +225,7 @@ class TestAppraisal(FrappeTestCase):
 
 		goal = create_goal(self.employee1, "Quality", appraisal_cycle=cycle.name, progress=50)
 
-		appraisal = frappe.db.exists(
-			"Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1}
-		)
+		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
 		appraisal = frappe.get_doc("Appraisal", appraisal)
 
 		# Quality KRA, 30% weightage
@@ -249,9 +241,7 @@ class TestAppraisal(FrappeTestCase):
 		cycle = create_appraisal_cycle(designation="Engineer")
 		cycle.create_appraisals()
 
-		appraisal = frappe.db.exists(
-			"Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1}
-		)
+		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
 		appraisal = frappe.get_doc("Appraisal", appraisal)
 
 		ratings = appraisal.self_ratings
@@ -270,9 +260,7 @@ class TestAppraisal(FrappeTestCase):
 		# unsubmitted appraisals
 		self.assertRaises(frappe.ValidationError, cycle.complete_cycle)
 
-		appraisal = frappe.db.exists(
-			"Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1}
-		)
+		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
 		appraisal = frappe.get_doc("Appraisal", appraisal)
 		appraisal.submit()
 
@@ -295,12 +283,10 @@ class TestAppraisal(FrappeTestCase):
 		cycle = create_appraisal_cycle(designation="Engineer")
 		cycle.create_appraisals()
 
-		appraisal = frappe.db.exists(
-			"Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1}
-		)
+		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
 		appraisal = frappe.get_doc("Appraisal", appraisal)
 
-		goal = create_goal(self.employee1, "Quality", appraisal_cycle=cycle.name)
+		create_goal(self.employee1, "Quality", appraisal_cycle=cycle.name)
 		feedback = create_performance_feedback(
 			self.employee1,
 			employee2,

@@ -42,8 +42,6 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		self.calculate_total_amount()
 		self.validate_advances()
 		self.set_expense_account(validate=True)
-		self.set_payable_account()
-		self.set_cost_center()
 		self.calculate_taxes()
 		self.set_status()
 		if self.task and not self.project:
@@ -97,16 +95,6 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 	def publish_update(self):
 		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
 		hrms.refetch_resource("hrms:my_claims", employee_user)
-
-	def set_payable_account(self):
-		if not self.payable_account and not self.is_paid:
-			self.payable_account = frappe.get_cached_value(
-				"Company", self.company, "default_expense_claim_payable_account"
-			)
-
-	def set_cost_center(self):
-		if not self.cost_center:
-			self.cost_center = frappe.get_cached_value("Company", self.company, "cost_center")
 
 	def on_submit(self):
 		if self.approval_status == "Draft":

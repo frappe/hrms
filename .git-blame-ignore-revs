@@ -22,3 +22,9 @@ f37f15b2b5329e3b0b35891e1c4fd82f48562c6d
 
 # bulk formatting PWA frontend code
 920daa1a3ddccaefaf7b9348f850831d6e0a0e6b
+
+# python ruff formatting
+b68457552bb3540565267f23fbfcee35c9f86e1c
+
+# js, scss prettier formatting
+1ab1d6238171a5cee3263812402a8b82e7131cb1
