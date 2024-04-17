@@ -82,8 +82,8 @@ frappe.ui.form.on(cur_frm.doctype, {
 					field_label_map[d.fieldname] =
 						__(d.label, null, d.parent) + ` (${d.fieldname})`;
 					if (
-						!in_list(exclude_field_types, d.fieldtype) &&
-						!in_list(exclude_fields, d.fieldname) &&
+						!exclude_field_types.includes(d.fieldtype) &&
+						!exclude_fields.includes(d.fieldname) &&
 						!d.hidden &&
 						!d.read_only
 					) {
