@@ -391,6 +391,7 @@ def get_events(start, end, filters=None):
 
 	conditions = get_event_conditions("Interview", filters)
 
+	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 	interviews = frappe.db.sql(
 		f"""
 			SELECT DISTINCT

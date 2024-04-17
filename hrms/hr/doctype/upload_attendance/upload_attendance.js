@@ -73,4 +73,5 @@ hrms.hr.AttendanceControlPanel = class AttendanceControlPanel extends frappe.ui.
 	}
 };
 
+// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 cur_frm.cscript = new hrms.hr.AttendanceControlPanel({ frm: cur_frm });

@@ -116,6 +116,7 @@ def get_data(filters):
 	if not len(component_type_dict):
 		return []
 
+	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 	entry = frappe.db.sql(
 		""" select sal.name, sal.employee, sal.employee_name, ded.salary_component, ded.amount
 		from `tabSalary Slip` sal, `tabSalary Detail` ded

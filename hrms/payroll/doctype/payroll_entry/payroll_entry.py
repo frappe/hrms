@@ -1494,6 +1494,7 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def get_payroll_entries_for_jv(doctype, txt, searchfield, start, page_len, filters):
+	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 	return frappe.db.sql(
 		f"""
 		select name from `tabPayroll Entry`

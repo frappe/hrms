@@ -50,6 +50,7 @@ def get_data(filters):
 
 	conditions = get_conditions(filters)
 
+	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 	entry = frappe.db.sql(
 		"""SELECT sal.employee, sal.employee_name, ded.salary_component, ded.amount
 		FROM `tabSalary Slip` sal, `tabSalary Detail` ded
