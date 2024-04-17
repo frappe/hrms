@@ -4,64 +4,6 @@
 frappe.provide("hrms.hr");
 frappe.provide("erpnext.accounts.dimensions");
 
-frappe.ui.form.on("Expense Claim", {
-	onload: function (frm) {
-		erpnext.accounts.dimensions.setup_dimension_filters(frm, frm.doctype);
-	},
-	company: function (frm) {
-		erpnext.accounts.dimensions.update_dimension(frm, frm.doctype);
-		var expenses = frm.doc.expenses;
-		for (var i = 0; i < expenses.length; i++) {
-			var expense = expenses[i];
-			if (!expense.expense_type) {
-				continue;
-			}
-			frappe.call({
-				method: "hrms.hr.doctype.expense_claim.expense_claim.get_expense_claim_account_and_cost_center",
-				args: {
-					expense_claim_type: expense.expense_type,
-					company: frm.doc.company,
-				},
-				callback: function (r) {
-					if (r.message) {
-						expense.default_account = r.message.account;
-						expense.cost_center = r.message.cost_center;
-					}
-				},
-			});
-		}
-	},
-});
-
-frappe.ui.form.on("Expense Claim Detail", {
-	expense_type: function (frm, cdt, cdn) {
-		var d = locals[cdt][cdn];
-		if (!frm.doc.company) {
-			d.expense_type = "";
-			frappe.msgprint(__("Please set the Company"));
-			this.frm.refresh_fields();
-			return;
-		}
-
-		if (!d.expense_type) {
-			return;
-		}
-		return frappe.call({
-			method: "hrms.hr.doctype.expense_claim.expense_claim.get_expense_claim_account_and_cost_center",
-			args: {
-				expense_claim_type: d.expense_type,
-				company: frm.doc.company,
-			},
-			callback: function (r) {
-				if (r.message) {
-					d.default_account = r.message.account;
-					d.cost_center = r.message.cost_center;
-				}
-			},
-		});
-	},
-});
-
 cur_frm.add_fetch("employee", "company", "company");
 cur_frm.add_fetch("employee", "employee_name", "employee_name");
 cur_frm.add_fetch("expense_type", "description", "description");
@@ -105,7 +47,7 @@ cur_frm.cscript.refresh = function (doc) {
 
 cur_frm.cscript.set_help = function (doc) {
 	cur_frm.set_intro("");
-	if (doc.__islocal && !in_list(frappe.user_roles, "HR User")) {
+	if (doc.__islocal && !frappe.user_roles.includes("HR User")) {
 		cur_frm.set_intro(__("Fill the form and save it"));
 	}
 };
@@ -201,6 +143,8 @@ frappe.ui.form.on("Expense Claim", {
 	},
 
 	onload: function (frm) {
+		erpnext.accounts.dimensions.setup_dimension_filters(frm, frm.doctype);
+
 		if (frm.doc.docstatus == 0) {
 			return frappe.call({
 				method: "hrms.hr.doctype.leave_application.leave_application.get_mandatory_approval",
@@ -297,6 +241,30 @@ frappe.ui.form.on("Expense Claim", {
 		});
 	},
 
+	company: function (frm) {
+		erpnext.accounts.dimensions.update_dimension(frm, frm.doctype);
+		var expenses = frm.doc.expenses;
+		for (var i = 0; i < expenses.length; i++) {
+			var expense = expenses[i];
+			if (!expense.expense_type) {
+				continue;
+			}
+			frappe.call({
+				method: "hrms.hr.doctype.expense_claim.expense_claim.get_expense_claim_account_and_cost_center",
+				args: {
+					expense_claim_type: expense.expense_type,
+					company: frm.doc.company,
+				},
+				callback: function (r) {
+					if (r.message) {
+						expense.default_account = r.message.account;
+						expense.cost_center = r.message.cost_center;
+					}
+				},
+			});
+		}
+	},
+
 	is_paid: function (frm) {
 		frm.trigger("toggle_fields");
 	},
@@ -369,6 +337,33 @@ frappe.ui.form.on("Expense Claim", {
 });
 
 frappe.ui.form.on("Expense Claim Detail", {
+	expense_type: function (frm, cdt, cdn) {
+		var d = locals[cdt][cdn];
+		if (!frm.doc.company) {
+			d.expense_type = "";
+			frappe.msgprint(__("Please set the Company"));
+			this.frm.refresh_fields();
+			return;
+		}
+
+		if (!d.expense_type) {
+			return;
+		}
+		return frappe.call({
+			method: "hrms.hr.doctype.expense_claim.expense_claim.get_expense_claim_account_and_cost_center",
+			args: {
+				expense_claim_type: d.expense_type,
+				company: frm.doc.company,
+			},
+			callback: function (r) {
+				if (r.message) {
+					d.default_account = r.message.account;
+					d.cost_center = r.message.cost_center;
+				}
+			},
+		});
+	},
+
 	amount: function (frm, cdt, cdn) {
 		var child = locals[cdt][cdn];
 		frappe.model.set_value(cdt, cdn, "sanctioned_amount", child.amount);

@@ -361,7 +361,11 @@ class TestLeaveApplication(FrappeTestCase):
 		# Case 2: leave type with 'Include holidays within leaves as leaves' disabled
 		frappe.delete_doc_if_exists("Leave Type", "Test Do Not Include Holidays", force=1)
 		leave_type = frappe.get_doc(
-			dict(leave_type_name="Test Do Not Include Holidays", doctype="Leave Type", include_holiday=False)
+			{
+				"leave_type_name": "Test Do Not Include Holidays",
+				"doctype": "Leave Type",
+				"include_holiday": False,
+			}
 		).insert()
 
 		date = getdate()
