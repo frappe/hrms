@@ -5,13 +5,24 @@ frappe.ui.form.on("Leave Control Panel", {
 	setup: function (frm) {
 		frm.trigger("set_query");
 		frm.trigger("set_leave_details");
-		frappe.model.with_doctype("Employee", () => set_field_options(frm));
+		hrms.setup_employee_filter_group(frm);
 	},
 
 	refresh: function (frm) {
+		frm.page.clear_indicator();
 		frm.disable_save();
-		frm.trigger("load_employees");
+		frm.trigger("get_employees");
 		frm.trigger("set_primary_action");
+		hrms.handle_realtime_bulk_action_notification(
+			frm,
+			"completed_bulk_leave_policy_assignment",
+			"Leave Policy Assignment"
+		);
+		hrms.handle_realtime_bulk_action_notification(
+			frm,
+			"completed_bulk_leave_allocation",
+			"Leave Allocation"
+		);
 	},
 
 	company: function (frm) {
@@ -24,56 +35,56 @@ frappe.ui.form.on("Leave Control Panel", {
 				};
 			});
 		}
-		frm.trigger("load_employees");
+		frm.trigger("get_employees");
 	},
 
 	employment_type(frm) {
-		frm.trigger("load_employees");
+		frm.trigger("get_employees");
 	},
 
 	branch(frm) {
-		frm.trigger("load_employees");
+		frm.trigger("get_employees");
 	},
 
 	department(frm) {
-		frm.trigger("load_employees");
+		frm.trigger("get_employees");
 	},
 
 	designation(frm) {
-		frm.trigger("load_employees");
+		frm.trigger("get_employees");
 	},
 
 	employee_grade(frm) {
-		frm.trigger("load_employees");
+		frm.trigger("get_employees");
 	},
 
 	dates_based_on(frm) {
 		frm.trigger("reset_leave_details");
-		frm.trigger("load_employees");
+		frm.trigger("get_employees");
 	},
 
 	from_date(frm) {
-		frm.trigger("load_employees");
+		frm.trigger("get_employees");
 	},
 
 	to_date(frm) {
-		frm.trigger("load_employees");
+		frm.trigger("get_employees");
 	},
 
 	leave_period(frm) {
-		frm.trigger("load_employees");
+		frm.trigger("get_employees");
 	},
 
 	allocate_based_on_leave_policy(frm) {
-		frm.trigger("load_employees");
+		frm.trigger("get_employees");
 	},
 
 	leave_type(frm) {
-		frm.trigger("load_employees");
+		frm.trigger("get_employees");
 	},
 
 	leave_policy(frm) {
-		frm.trigger("load_employees");
+		frm.trigger("get_employees");
 	},
 
 	reset_leave_details(frm) {
@@ -100,7 +111,7 @@ frappe.ui.form.on("Leave Control Panel", {
 		});
 	},
 
-	load_employees(frm) {
+	get_employees(frm) {
 		frm
 			.call({
 				method: "get_employees",
@@ -110,51 +121,12 @@ frappe.ui.form.on("Leave Control Panel", {
 				doc: frm.doc,
 			})
 			.then((r) => {
-				// section automatically collapses on applying a single filter
-				frm.set_df_property("filters_section", "collapsible", 0);
-				frm.set_df_property("advanced_filters_section", "collapsible", 0);
-
-				frm.employees = r.message;
-				frm.set_df_property("select_employees_section", "hidden", 0);
-				frm.events.show_employees(frm, frm.employees);
+				const columns = frm.events.get_employees_datatable_columns();
+				hrms.render_employees_datatable(frm, columns, r.message);
 			});
 	},
 
-	show_employees(frm, employees) {
-		const $wrapper = frm.get_field("employees_html").$wrapper;
-		frm.employee_wrapper = $(`<div class="employee_wrapper pb-5">`).appendTo(
-			$wrapper
-		);
-		frm.events.render_datatable(frm, employees, frm.employee_wrapper);
-	},
-
-	render_datatable(frm, data, wrapper) {
-		const columns = frm.events.get_columns_for_employees_table();
-		if (!frm.employees_datatable) {
-			const datatable_options = {
-				columns: columns,
-				data: data,
-				checkboxColumn: true,
-				checkedRowStatus: false,
-				serialNoColumn: false,
-				dynamicRowHeight: true,
-				inlineFilters: true,
-				layout: "fluid",
-				cellHeight: 35,
-				noDataMessage: __("No Data"),
-				disableReorderColumn: true,
-			};
-			frm.employees_datatable = new frappe.DataTable(
-				wrapper.get(0),
-				datatable_options
-			);
-		} else {
-			frm.employees_datatable.rowmanager.checkMap = [];
-			frm.employees_datatable.refresh(data, columns);
-		}
-	},
-
-	get_columns_for_employees_table() {
+	get_employees_datatable_columns() {
 		return [
 			{
 				name: "employee",
@@ -217,42 +189,29 @@ frappe.ui.form.on("Leave Control Panel", {
 					frm.employees_datatable.datamanager.data[idx].employee
 				);
 		});
-		frm
-			.call({
-				method: "allocate_leave",
-				doc: frm.doc,
-				args: {
-					employees: selected_employees,
-				},
-				freeze: true,
-				freeze_message: __("Allocating Leave"),
-			})
-			.then((r) => {
-				// don't refresh on complete failure
-				if (r.message.failed && !r.message.success) return;
-				frm.refresh();
-			});
+
+		hrms.validate_mandatory_fields(frm, selected_employees);
+		frm.events.show_confirm_dialog(frm, selected_employees);
+	},
+
+	show_confirm_dialog(frm, selected_employees) {
+		frappe.confirm(
+			__("Allocate Leave to {0} employee(s)?", [selected_employees.length]),
+			() => {
+				frm.events.bulk_allocate_leave(frm, selected_employees);
+			}
+		);
+	},
+
+	bulk_allocate_leave(frm, employees) {
+		frm.call({
+			method: "allocate_leave",
+			doc: frm.doc,
+			args: {
+				employees: employees,
+			},
+			freeze: true,
+			freeze_message: __("Allocating Leave"),
+		});
 	},
 });
-
-const set_field_options = (frm) => {
-	const filter_wrapper = frm.fields_dict.filter_list.$wrapper;
-	filter_wrapper.empty();
-
-	frm.filter_list = new frappe.ui.FilterGroup({
-		parent: filter_wrapper,
-		doctype: "Employee",
-		on_change: () => {
-			frm.advanced_filters = frm.filter_list
-				.get_filters()
-				.reduce((filters, item) => {
-					// item[3] is the value from the array [doctype, fieldname, condition, value]
-					if (item[3]) {
-						filters.push(item.slice(1, 4));
-					}
-					return filters;
-				}, []);
-			frm.trigger("load_employees");
-		},
-	});
-};

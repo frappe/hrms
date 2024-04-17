@@ -3,6 +3,17 @@
 
 frappe.ui.form.on('Shift Type', {
 	refresh: function(frm) {
+		if (frm.doc.__islocal) return;
+
+		frm.add_custom_button(__("Bulk Assign Shift"), () => {
+			const doc = frappe.model.get_new_doc("Shift Assignment Tool");
+			doc.action = "Assign Shift";
+			doc.company = frappe.defaults.get_default("company");
+			doc.shift_type = frm.doc.name;
+			doc.status = "Active";
+			frappe.set_route("Form", "Shift Assignment Tool", doc.name);
+		}, __("Actions"));
+
 		frm.add_custom_button(
 			__('Mark Attendance'),
 			() => {
@@ -29,7 +40,8 @@ frappe.ui.form.on('Shift Type', {
 						frappe.msgprint(__('Attendance has been marked as per employee check-ins'));
 					}
 				});
-			}
+			},
+			__("Actions")
 		);
 	}
 });

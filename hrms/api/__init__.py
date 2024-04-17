@@ -3,6 +3,7 @@ from frappe import _
 from frappe.model.workflow import get_workflow_name
 from frappe.query_builder import Order
 from frappe.utils import getdate
+from frappe.utils.data import cint
 
 SUPPORTED_FIELD_TYPES = [
 	"Link",
@@ -115,6 +116,7 @@ def get_leave_applications(
 	filters = get_leave_application_filters(employee, approver_id, for_approval)
 	fields = [
 		"name",
+		"posting_date",
 		"employee",
 		"employee_name",
 		"leave_type",
@@ -296,6 +298,7 @@ def get_expense_claims(
 	filters = get_expense_claim_filters(employee, approver_id, for_approval)
 	fields = [
 		"`tabExpense Claim`.name",
+		"`tabExpense Claim`.posting_date",
 		"`tabExpense Claim`.employee",
 		"`tabExpense Claim`.employee_name",
 		"`tabExpense Claim`.approval_status",
@@ -634,3 +637,8 @@ def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 	return [
 		transition.state for transition in workflow.transitions if transition.allowed in user_roles
 	]
+
+
+@frappe.whitelist()
+def is_employee_checkin_allowed():
+	return cint(frappe.db.get_single_value("HR Settings", "allow_employee_checkin_from_mobile_app"))

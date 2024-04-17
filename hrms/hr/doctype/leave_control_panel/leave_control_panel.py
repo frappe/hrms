@@ -3,36 +3,29 @@
 
 
 import frappe
-from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cint, flt
+from frappe.utils import cint, flt, get_link_to_form
 
 from erpnext import get_default_company
 
-from hrms.hr.utils import notify_bulk_action_status
+from hrms.hr.utils import validate_bulk_tool_fields
 
 
 class LeaveControlPanel(Document):
 	def validate_fields(self, employees: list):
-		fields = []
+		mandatory_fields = []
 		if self.dates_based_on == "Leave Period":
-			fields.append("leave_period")
+			mandatory_fields.append("leave_period")
 		elif self.dates_based_on == "Joining Date":
-			fields.append("to_date")
+			mandatory_fields.append("to_date")
 		else:
-			self.validate_from_to_dates("from_date", "to_date")
-			fields.extend(["from_date", "to_date"])
+			mandatory_fields.extend(["from_date", "to_date"])
 
 		if self.allocate_based_on_leave_policy:
-			fields.append("leave_policy")
+			mandatory_fields.append("leave_policy")
 		else:
-			fields.extend(["leave_type", "no_of_days"])
-
-		for f in fields:
-			if not self.get(f):
-				frappe.throw(_("{0} is required").format(self.meta.get_label(f)))
-		if not employees:
-			frappe.throw(_("No employee(s) selected"))
+			mandatory_fields.extend(["leave_type", "no_of_days"])
+		validate_bulk_tool_fields(self, mandatory_fields, employees, "from_date", "to_date")
 
 	@frappe.whitelist()
 	def allocate_leave(self, employees: list):
@@ -61,14 +54,21 @@ class LeaveControlPanel(Document):
 				allocation.new_leaves_allocated = flt(self.no_of_days)
 				allocation.insert()
 				allocation.submit()
-				success.append(employee)
-			except Exception as e:
+				success.append(
+					{"doc": get_link_to_form("Leave Allocation", allocation.name), "employee": employee}
+				)
+			except Exception:
 				frappe.db.rollback(save_point=savepoint)
 				allocation.log_error(f"Leave Allocation failed for employee {employee}")
 				failure.append(employee)
 
-		notify_bulk_action_status("Leave Allocation", failure, success)
-		return {"failed": failure, "success": success}
+		frappe.clear_messages()
+		frappe.publish_realtime(
+			"completed_bulk_leave_allocation",
+			message={"success": success, "failure": failure},
+			doctype="Bulk Salary Structure Assignment",
+			after_commit=True,
+		)
 
 	def create_leave_policy_assignments(self, employees: list) -> dict:
 		from_date, to_date = self.get_from_to_date()
@@ -92,14 +92,21 @@ class LeaveControlPanel(Document):
 				assignment.carry_forward = self.carry_forward
 				assignment.save()
 				assignment.submit()
-				success.append(employee)
+				success.append(
+					{"doc": get_link_to_form("Leave Policy Assignment", assignment.name), "employee": employee}
+				)
 			except Exception:
 				frappe.db.rollback(save_point=savepoint)
 				assignment.log_error(f"Leave Policy Assignment failed for employee {employee}")
 				failure.append(employee)
 
-		notify_bulk_action_status("Leave Policy Assignment", failure, success)
-		return {"failed": failure, "success": success}
+		frappe.clear_messages()
+		frappe.publish_realtime(
+			"completed_bulk_leave_policy_assignment",
+			message={"success": success, "failure": failure},
+			doctype="Bulk Salary Structure Assignment",
+			after_commit=True,
+		)
 
 	def get_from_to_date(self):
 		if self.dates_based_on == "Joining Date":
