@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-15 10:53\n"
+"PO-Revision-Date: 2024-04-17 11:21\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -48,11 +48,11 @@ msgstr "${t.balance_leaves}/${t.allocated_leaves}"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:88
 msgid "% Utilization (B + NB) / T"
-msgstr "% استفاده (B + NB) / T"
+msgstr ""
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:94
 msgid "% Utilization (B / T)"
-msgstr "% استفاده (B / T)"
+msgstr ""
 
 #: hr/doctype/employee_checkin/employee_checkin.py:84
 msgid "'employee_field_value' and 'timestamp' are required."
@@ -1853,7 +1853,7 @@ msgstr ""
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Attendance Dashboard"
-msgstr "داشبورد حضور و غیاب"
+msgstr ""
 
 #: hr/report/shift_attendance/shift_attendance.py:43
 msgid "Attendance Date"
@@ -3362,7 +3362,7 @@ msgstr "دوره"
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Cover Letter"
-msgstr "جلد نامه"
+msgstr "معرفی نامه"
 
 #: hr/doctype/employee_advance/employee_advance.js:50
 #: hr/doctype/employee_advance/employee_advance.js:61
@@ -4148,271 +4148,271 @@ msgstr "سفر تحویل"
 #: public/js/salary_slip_deductions_report_filters.js:42 setup.py:400
 #: templates/generators/job_opening.html:82
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Additional Salary'
 #: payroll/doctype/additional_salary/additional_salary.json
 msgctxt "Additional Salary"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
 msgctxt "Appraisal"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgctxt "Appraisal Cycle"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Appraisee'
 #: hr/doctype/appraisee/appraisee.json
 msgctxt "Appraisee"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Attendance'
 #: hr/doctype/attendance/attendance.json
 msgctxt "Attendance"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Attendance Request'
 #: hr/doctype/attendance_request/attendance_request.json
 msgctxt "Attendance Request"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Compensatory Leave Request'
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.json
 msgctxt "Compensatory Leave Request"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgctxt "Department"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Employee Attendance Tool'
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgctxt "Employee Attendance Tool"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Employee Benefit Application'
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
 msgctxt "Employee Benefit Application"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Employee Benefit Claim'
 #: payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgctxt "Employee Benefit Claim"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Employee Incentive'
 #: payroll/doctype/employee_incentive/employee_incentive.json
 msgctxt "Employee Incentive"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Employee Onboarding'
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 msgctxt "Employee Onboarding"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Employee Onboarding Template'
 #: hr/doctype/employee_onboarding_template/employee_onboarding_template.json
 msgctxt "Employee Onboarding Template"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Employee Performance Feedback'
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.json
 msgctxt "Employee Performance Feedback"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Employee Promotion'
 #: hr/doctype/employee_promotion/employee_promotion.json
 msgctxt "Employee Promotion"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
 msgctxt "Employee Referral"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Employee Separation'
 #: hr/doctype/employee_separation/employee_separation.json
 msgctxt "Employee Separation"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Employee Separation Template'
 #: hr/doctype/employee_separation_template/employee_separation_template.json
 msgctxt "Employee Separation Template"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Employee Tax Exemption Declaration'
 #: payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.json
 msgctxt "Employee Tax Exemption Declaration"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Employee Tax Exemption Proof Submission'
 #: payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.json
 msgctxt "Employee Tax Exemption Proof Submission"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Employee Transfer'
 #: hr/doctype/employee_transfer/employee_transfer.json
 msgctxt "Employee Transfer"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
 msgctxt "Exit Interview"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Full and Final Statement'
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
 msgctxt "Full and Final Statement"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Gratuity'
 #: payroll/doctype/gratuity/gratuity.json
 msgctxt "Gratuity"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Leave Allocation'
 #: hr/doctype/leave_allocation/leave_allocation.json
 msgctxt "Leave Allocation"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
 msgctxt "Leave Application"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Leave Control Panel'
 #: hr/doctype/leave_control_panel/leave_control_panel.json
 msgctxt "Leave Control Panel"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Leave Encashment'
 #: hr/doctype/leave_encashment/leave_encashment.json
 msgctxt "Leave Encashment"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Payroll Employee Detail'
 #: payroll/doctype/payroll_employee_detail/payroll_employee_detail.json
 msgctxt "Payroll Employee Detail"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Retention Bonus'
 #: payroll/doctype/retention_bonus/retention_bonus.json
 msgctxt "Retention Bonus"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Salary Structure Assignment'
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgctxt "Salary Structure Assignment"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Shift Assignment'
 #: hr/doctype/shift_assignment/shift_assignment.json
 msgctxt "Shift Assignment"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Shift Request'
 #: hr/doctype/shift_request/shift_request.json
 msgctxt "Shift Request"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Staffing Plan'
 #: hr/doctype/staffing_plan/staffing_plan.json
 msgctxt "Staffing Plan"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Training Event Employee'
 #: hr/doctype/training_event_employee/training_event_employee.json
 msgctxt "Training Event Employee"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Training Feedback'
 #: hr/doctype/training_feedback/training_feedback.json
 msgctxt "Training Feedback"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Label of a Link field in DocType 'Training Result Employee'
 #: hr/doctype/training_result_employee/training_result_employee.json
 msgctxt "Training Result Employee"
 msgid "Department"
-msgstr "بخش"
+msgstr "دپارتمان"
 
 #. Name of a DocType
 #: hr/doctype/department_approver/department_approver.json
@@ -4426,7 +4426,7 @@ msgstr ""
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:192
 msgid "Department: {0}"
-msgstr "بخش: {0}"
+msgstr "دپارتمان: {0}"
 
 #. Label of a Datetime field in DocType 'Travel Itinerary'
 #: hr/doctype/travel_itinerary/travel_itinerary.json
@@ -4588,178 +4588,178 @@ msgstr "شرح"
 #: payroll/report/income_tax_computation/income_tax_computation.py:501
 #: payroll/report/salary_register/salary_register.py:149
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
 msgctxt "Appraisal"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgctxt "Appraisal Cycle"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Linked DocType in Appraisal Template's connections
 #: hr/doctype/appraisal_template/appraisal_template.json
 msgctxt "Appraisal Template"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Data field in DocType 'Appraisee'
 #: hr/doctype/appraisee/appraisee.json
 msgctxt "Appraisee"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgctxt "Designation"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgctxt "Employee Grievance"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Employee Onboarding'
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 msgctxt "Employee Onboarding"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Employee Onboarding Template'
 #: hr/doctype/employee_onboarding_template/employee_onboarding_template.json
 msgctxt "Employee Onboarding Template"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Employee Performance Feedback'
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.json
 msgctxt "Employee Performance Feedback"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Employee Separation'
 #: hr/doctype/employee_separation/employee_separation.json
 msgctxt "Employee Separation"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Employee Separation Template'
 #: hr/doctype/employee_separation_template/employee_separation_template.json
 msgctxt "Employee Separation Template"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Read Only field in DocType 'Employee Skill Map'
 #: hr/doctype/employee_skill_map/employee_skill_map.json
 msgctxt "Employee Skill Map"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
 msgctxt "Exit Interview"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Full and Final Statement'
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
 msgctxt "Full and Final Statement"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Data field in DocType 'Gratuity'
 #: payroll/doctype/gratuity/gratuity.json
 msgctxt "Gratuity"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Interview'
 #: hr/doctype/interview/interview.json
 msgctxt "Interview"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Interview Round'
 #: hr/doctype/interview_round/interview_round.json
 msgctxt "Interview Round"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Job Offer'
 #: hr/doctype/job_offer/job_offer.json
 msgctxt "Job Offer"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Leave Control Panel'
 #: hr/doctype/leave_control_panel/leave_control_panel.json
 msgctxt "Leave Control Panel"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Data field in DocType 'Payroll Employee Detail'
 #: payroll/doctype/payroll_employee_detail/payroll_employee_detail.json
 msgctxt "Payroll Employee Detail"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Salary Structure Assignment'
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgctxt "Salary Structure Assignment"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Label of a Link field in DocType 'Staffing Plan Detail'
 #: hr/doctype/staffing_plan_detail/staffing_plan_detail.json
 msgctxt "Staffing Plan Detail"
 msgid "Designation"
-msgstr "تعیین"
+msgstr "نقش سازمانی"
 
 #. Name of a DocType
 #: hr/doctype/designation_skill/designation_skill.json
 msgid "Designation Skill"
-msgstr "مهارت تعیین"
+msgstr "مهارت نقش سازمانی"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:194
 msgid "Designation: {0}"
-msgstr "نامگذاری: {0}"
+msgstr "نقش سازمانی: {0}"
 
 #: templates/emails/training_event.html:4
 msgid "Details"
@@ -8066,7 +8066,7 @@ msgstr "منابع انسانی"
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "HR Dashboard"
-msgstr "داشبورد منابع انسانی"
+msgstr ""
 
 #. Name of a role
 #: hr/doctype/appointment_letter/appointment_letter.json
@@ -8396,7 +8396,7 @@ msgstr "تنظیمات استخدام"
 #. Label of a chart in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Hiring vs Attrition Count"
-msgstr "تعداد استخدام در مقابل ترک کار"
+msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -9457,32 +9457,32 @@ msgstr "Job Offer: {0} قبلاً برای متقاضی شغل است: {1}"
 #: hr/doctype/job_requisition/job_requisition.js:40
 #: hr/report/recruitment_analytics/recruitment_analytics.py:32
 msgid "Job Opening"
-msgstr "باز شدن موقعیت شغلی"
+msgstr "موقعیت شغلی"
 
 #. Label of a Link field in DocType 'Interview'
 #: hr/doctype/interview/interview.json
 msgctxt "Interview"
 msgid "Job Opening"
-msgstr "باز شدن موقعیت شغلی"
+msgstr "موقعیت شغلی"
 
 #. Label of a Link field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Job Opening"
-msgstr "باز شدن موقعیت شغلی"
+msgstr "موقعیت شغلی"
 
 #. Label of a Link in the Recruitment Workspace
 #. Label of a shortcut in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
 msgctxt "Job Opening"
 msgid "Job Opening"
-msgstr "باز شدن موقعیت شغلی"
+msgstr "موقعیت شغلی"
 
 #. Linked DocType in Job Requisition's connections
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Job Opening"
-msgstr "باز شدن موقعیت شغلی"
+msgstr "موقعیت شغلی"
 
 #: hr/doctype/job_requisition/job_requisition.py:51
 msgid "Job Opening Associated"
@@ -10386,13 +10386,13 @@ msgstr "نوع گزارش برای اعلام حضور در شیفت مورد ن
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Lower Range"
-msgstr "محدوده پایین تر"
+msgstr "محدوده پایین"
 
 #. Label of a Currency field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Lower Range"
-msgstr "محدوده پایین تر"
+msgstr "محدوده پایین"
 
 #: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:54
 msgid "MICR"
@@ -13162,13 +13162,13 @@ msgstr "نتیجه"
 #: hr/doctype/employee_referral/employee_referral.json
 msgctxt "Employee Referral"
 msgid "Resume"
-msgstr "از سرگیری"
+msgstr "رزومه"
 
 #. Label of a Section Break field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Resume"
-msgstr "از سرگیری"
+msgstr "رزومه"
 
 #. Label of a Attach field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -13285,7 +13285,7 @@ msgstr "نقش مجاز برای ایجاد برنامه مرخصی دارای �
 #: hr/doctype/interview_round/interview_round.json
 msgctxt "Interview Round"
 msgid "Round Name"
-msgstr "نام گرد"
+msgstr "نام دور"
 
 #. Option for the 'Work Experience Calculation method' (Select) field in
 #. DocType 'Gratuity Rule'
@@ -16402,13 +16402,13 @@ msgstr "در حال آپلود ${h}%"
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Upper Range"
-msgstr "محدوده بالایی"
+msgstr "محدوده بالا"
 
 #. Label of a Currency field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Upper Range"
-msgstr "محدوده بالایی"
+msgstr "محدوده بالا"
 
 #. Label of a Float field in DocType 'Salary Slip Leave'
 #: payroll/doctype/salary_slip_leave/salary_slip_leave.json
