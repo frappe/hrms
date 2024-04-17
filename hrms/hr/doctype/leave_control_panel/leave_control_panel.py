@@ -62,6 +62,7 @@ class LeaveControlPanel(Document):
 				allocation.log_error(f"Leave Allocation failed for employee {employee}")
 				failure.append(employee)
 
+		frappe.clear_messages()
 		frappe.publish_realtime(
 			"completed_bulk_leave_allocation",
 			message={"success": success, "failure": failure},
@@ -99,6 +100,7 @@ class LeaveControlPanel(Document):
 				assignment.log_error(f"Leave Policy Assignment failed for employee {employee}")
 				failure.append(employee)
 
+		frappe.clear_messages()
 		frappe.publish_realtime(
 			"completed_bulk_leave_policy_assignment",
 			message={"success": success, "failure": failure},
