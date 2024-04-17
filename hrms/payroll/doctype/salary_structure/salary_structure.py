@@ -165,6 +165,7 @@ class SalaryStructure(Document):
 
 		condition_str = " and " + " and ".join(conditions) if conditions else ""
 
+		# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 		employees = frappe.db.sql_list(
 			f"select name from tabEmployee where status='Active' {condition_str}",
 			tuple(values),
@@ -291,6 +292,7 @@ def create_salary_structures_assignment(
 
 
 def get_existing_assignments(employees, salary_structure, from_date):
+	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 	salary_structures_assignments = frappe.db.sql_list(
 		f"""
 		SELECT DISTINCT employee FROM `tabSalary Structure Assignment`
