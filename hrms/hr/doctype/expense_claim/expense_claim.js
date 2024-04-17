@@ -5,17 +5,7 @@ frappe.provide("hrms.hr");
 frappe.provide("erpnext.accounts.dimensions");
 
 // nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
-cur_frm.add_fetch("employee", "company", "company");
-// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
-cur_frm.add_fetch("employee", "employee_name", "employee_name");
-// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
-cur_frm.add_fetch("expense_type", "description", "description");
-
-// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 cur_frm.cscript.refresh = function (doc) {
-	// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
-	cur_frm.cscript.set_help(doc);
-
 	if (!doc.__islocal) {
 		if (doc.docstatus === 1) {
 			/* eslint-disable */
@@ -52,16 +42,6 @@ cur_frm.cscript.refresh = function (doc) {
 };
 
 // nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
-cur_frm.cscript.set_help = function (doc) {
-	// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
-	cur_frm.set_intro("");
-	if (doc.__islocal && !frappe.user_roles.includes("HR User")) {
-		// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
-		cur_frm.set_intro(__("Fill the form and save it"));
-	}
-};
-
-// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 cur_frm.cscript.validate = function (doc) {
 	// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
 	cur_frm.cscript.calculate_total(doc);
@@ -83,20 +63,8 @@ cur_frm.cscript.calculate_total_amount = function (doc, cdt, cdn) {
 	cur_frm.cscript.calculate_total(doc, cdt, cdn);
 };
 
-// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
-cur_frm.fields_dict["cost_center"].get_query = function (doc) {
-	return {
-		filters: {
-			company: doc.company,
-		},
-	};
-};
-
 frappe.ui.form.on("Expense Claim", {
 	setup: function (frm) {
-		frm.add_fetch("company", "cost_center", "cost_center");
-		frm.add_fetch("company", "default_expense_claim_payable_account", "payable_account");
-
 		frm.set_query("employee_advance", "advances", function () {
 			return {
 				filters: [
