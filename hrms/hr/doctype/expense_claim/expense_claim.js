@@ -4,65 +4,6 @@
 frappe.provide("hrms.hr");
 frappe.provide("erpnext.accounts.dimensions");
 
-// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
-cur_frm.cscript.refresh = function (doc) {
-	if (!doc.__islocal) {
-		if (doc.docstatus === 1) {
-			/* eslint-disable */
-			// no idea how `me` works here
-			var entry_doctype, entry_reference_doctype, entry_reference_name;
-			if (doc.__onload.make_payment_via_journal_entry) {
-				entry_doctype = "Journal Entry";
-				entry_reference_doctype = "Journal Entry Account.reference_type";
-				entry_reference_name = "Journal Entry.reference_name";
-			} else {
-				entry_doctype = "Payment Entry";
-				entry_reference_doctype = "Payment Entry Reference.reference_doctype";
-				entry_reference_name = "Payment Entry Reference.reference_name";
-			}
-
-			if (cint(doc.total_amount_reimbursed) > 0 && frappe.model.can_read(entry_doctype)) {
-				// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
-				cur_frm.add_custom_button(
-					__("Bank Entries"),
-					function () {
-						frappe.route_options = {
-							party_type: "Employee",
-							party: doc.employee,
-							company: doc.company,
-						};
-						frappe.set_route("List", entry_doctype);
-					},
-					__("View"),
-				);
-			}
-			/* eslint-enable */
-		}
-	}
-};
-
-// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
-cur_frm.cscript.validate = function (doc) {
-	// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
-	cur_frm.cscript.calculate_total(doc);
-};
-
-// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
-cur_frm.cscript.calculate_total = function (doc) {
-	doc.total_claimed_amount = 0;
-	doc.total_sanctioned_amount = 0;
-	$.each(doc.expenses || [], function (i, d) {
-		doc.total_claimed_amount += d.amount;
-		doc.total_sanctioned_amount += d.sanctioned_amount;
-	});
-};
-
-// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
-cur_frm.cscript.calculate_total_amount = function (doc, cdt, cdn) {
-	// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
-	cur_frm.cscript.calculate_total(doc, cdt, cdn);
-};
-
 frappe.ui.form.on("Expense Claim", {
 	setup: function (frm) {
 		frm.set_query("employee_advance", "advances", function () {
@@ -145,7 +86,28 @@ frappe.ui.form.on("Expense Claim", {
 
 	refresh: function (frm) {
 		frm.trigger("toggle_fields");
+		frm.trigger("add_ledger_buttons");
 
+		if (
+			frm.doc.docstatus === 1 &&
+			frm.doc.status !== "Paid" &&
+			frappe.model.can_create("Payment Entry")
+		) {
+			frm.add_custom_button(
+				__("Payment"),
+				function () {
+					frm.events.make_payment_entry(frm);
+				},
+				__("Create"),
+			);
+		}
+	},
+
+	validate: function (frm) {
+		frm.trigger("calculate_total");
+	},
+
+	add_ledger_buttons: function (frm) {
 		if (frm.doc.docstatus > 0 && frm.doc.approval_status !== "Rejected") {
 			frm.add_custom_button(
 				__("Accounting Ledger"),
@@ -164,19 +126,56 @@ frappe.ui.form.on("Expense Claim", {
 			);
 		}
 
-		if (
-			frm.doc.docstatus === 1 &&
-			frm.doc.status !== "Paid" &&
-			frappe.model.can_create("Payment Entry")
-		) {
-			frm.add_custom_button(
-				__("Payment"),
-				function () {
-					frm.events.make_payment_entry(frm);
-				},
-				__("Create"),
-			);
+		if (!frm.doc.__islocal && frm.doc.docstatus === 1) {
+			let entry_doctype, entry_reference_doctype, entry_reference_name;
+			if (frm.doc.__onload.make_payment_via_journal_entry) {
+				entry_doctype = "Journal Entry";
+				entry_reference_doctype = "Journal Entry Account.reference_type";
+				entry_reference_name = "Journal Entry.reference_name";
+			} else {
+				entry_doctype = "Payment Entry";
+				entry_reference_doctype = "Payment Entry Reference.reference_doctype";
+				entry_reference_name = "Payment Entry Reference.reference_name";
+			}
+
+			if (
+				cint(frm.doc.total_amount_reimbursed) > 0 &&
+				frappe.model.can_read(entry_doctype)
+			) {
+				// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
+				frm.add_custom_button(
+					__("Bank Entries"),
+					function () {
+						frappe.route_options = {
+							party_type: "Employee",
+							party: frm.doc.employee,
+							company: frm.doc.company,
+						};
+						frappe.set_route("List", entry_doctype);
+					},
+					__("View"),
+				);
+			}
 		}
+	},
+
+	calculate_total: function (frm) {
+		let total_claimed_amount = 0;
+		let total_sanctioned_amount = 0;
+
+		frm.doc.expenses.forEach((row) => {
+			total_claimed_amount += row.amount;
+			total_sanctioned_amount += row.sanctioned_amount;
+		});
+
+		frm.set_value(
+			"total_claimed_amount",
+			flt(total_claimed_amount, precision("total_claimed_amount")),
+		);
+		frm.set_value(
+			"total_sanctioned_amount",
+			flt(total_sanctioned_amount, precision("total_sanctioned_amount")),
+		);
 	},
 
 	calculate_grand_total: function (frm) {
@@ -353,8 +352,7 @@ frappe.ui.form.on("Expense Claim Detail", {
 	},
 
 	sanctioned_amount: function (frm, cdt, cdn) {
-		// nosemgrep: frappe-semgrep-rules.rules.frappe-cur-frm-usage
-		cur_frm.cscript.calculate_total(frm.doc, cdt, cdn);
+		frm.trigger("calculate_total");
 		frm.trigger("get_taxes");
 		frm.trigger("calculate_grand_total");
 	},
