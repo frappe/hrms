@@ -32,7 +32,7 @@ frappe.ui.form.on("Salary Component", {
 				() => {
 					frm.trigger("create_salary_structure");
 				},
-				__("Create")
+				__("Create"),
 			);
 		}
 	},
@@ -94,30 +94,27 @@ frappe.ui.form.on("Salary Component", {
 								frappe.msgprint({
 									message: __(
 										"Salary Component {0} is currently not used in any Salary Structure.",
-										[frm.doc.name.bold()]
+										[frm.doc.name.bold()],
 									),
 									title: __("No Salary Structures"),
 									indicator: "orange",
 								});
 						});
 				},
-				__("Update Salary Structures")
+				__("Update Salary Structures"),
 			);
 		}
 	},
 
 	update_salary_structures: function (frm, df, structures) {
-		let msg = __(
-			"{0} will be updated for the following Salary Structures: {1}.",
-			[
-				df,
-				frappe.utils.comma_and(
-					structures.map((d) =>
-						frappe.utils.get_form_link("Salary Structure", d, true).bold()
-					)
+		let msg = __("{0} will be updated for the following Salary Structures: {1}.", [
+			df,
+			frappe.utils.comma_and(
+				structures.map((d) =>
+					frappe.utils.get_form_link("Salary Structure", d, true).bold(),
 				),
-			]
-		);
+			),
+		]);
 		msg += "<br>";
 		msg += __("Are you sure you want to proceed?");
 		frappe.confirm(msg, () => {
@@ -147,7 +144,7 @@ frappe.ui.form.on("Salary Component", {
 			const salary_structure = frappe.model.get_new_doc("Salary Structure");
 			const salary_detail = frappe.model.add_child(
 				salary_structure,
-				frm.doc.type === "Earning" ? "earnings" : "deductions"
+				frm.doc.type === "Earning" ? "earnings" : "deductions",
 			);
 			salary_detail.salary_component = frm.doc.name;
 			frappe.set_route("Form", "Salary Structure", salary_structure.name);

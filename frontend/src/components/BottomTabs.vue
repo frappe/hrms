@@ -1,7 +1,7 @@
 <template>
 	<ion-tab-bar
 		slot="bottom"
-		class="bg-white shadow-md sm:w-96 py-2 standalone:pb-safe-bottom"
+		class="bg-white shadow-md sm:w-96 py-2 pb-2 standalone:pb-safe-bottom"
 	>
 		<ion-tab-button
 			v-for="item in tabItems"

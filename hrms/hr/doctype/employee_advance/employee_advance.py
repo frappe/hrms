@@ -29,6 +29,7 @@ class EmployeeAdvance(Document):
 		validate_active_employee(self.employee)
 		self.validate_exchange_rate()
 		self.set_status()
+		self.set_pending_amount()
 
 	def on_cancel(self):
 		self.ignore_linked_doctypes = "GL Entry"
@@ -161,15 +162,18 @@ class EmployeeAdvance(Document):
 		self.reload()
 		self.set_status(update=True)
 
-
-@frappe.whitelist()
-def get_pending_amount(employee, posting_date):
-	employee_due_amount = frappe.get_all(
-		"Employee Advance",
-		filters={"employee": employee, "docstatus": 1, "posting_date": ("<=", posting_date)},
-		fields=["advance_amount", "paid_amount"],
-	)
-	return sum([(emp.advance_amount - emp.paid_amount) for emp in employee_due_amount])
+	def set_pending_amount(self):
+		Advance = frappe.qb.DocType("Employee Advance")
+		self.pending_amount = (
+			frappe.qb.from_(Advance)
+			.select(Sum(Advance.advance_amount - Advance.paid_amount))
+			.where(
+				(Advance.employee == self.employee)
+				& (Advance.docstatus == 1)
+				& (Advance.posting_date <= self.posting_date)
+				& (Advance.status == "Unpaid")
+			)
+		).run()[0][0] or 0.0
 
 
 @frappe.whitelist()

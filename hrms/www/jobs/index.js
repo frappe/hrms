@@ -74,7 +74,7 @@ $(() => {
 
 	function update_ui_with_filters() {
 		const allowed_filters = Object.keys(
-			JSON.parse($("#data").data("filters").replace(/'/g, '"'))
+			JSON.parse($("#data").data("filters").replace(/'/g, '"')),
 		);
 
 		for (const filter in query_params) {
@@ -82,14 +82,8 @@ $(() => {
 			else if (filter === "page") disable_inapplicable_pagination_buttons();
 			else if (allowed_filters.includes(filter)) {
 				if (typeof query_params[filter] === "string") {
-					$("#desktop-" + $.escapeSelector(query_params[filter])).prop(
-						"checked",
-						true
-					);
-					$("#mobile-" + $.escapeSelector(query_params[filter])).prop(
-						"checked",
-						true
-					);
+					$("#desktop-" + $.escapeSelector(query_params[filter])).prop("checked", true);
+					$("#mobile-" + $.escapeSelector(query_params[filter])).prop("checked", true);
 				} else
 					for (const d of query_params[filter]) {
 						$("#desktop-" + $.escapeSelector(d)).prop("checked", true);
@@ -111,24 +105,18 @@ $(() => {
 
 	function get_new_params(filter_group) {
 		return "sort" in query_params
-			? $(filter_group).serialize() +
-					"&" +
-					$.param({ sort: query_params["sort"] })
+			? $(filter_group).serialize() + "&" + $.param({ sort: query_params["sort"] })
 			: $(filter_group).serialize();
 	}
 });
 
 function update_params(params = "") {
 	if ($("#filters-drawer").css("bottom") != "0px")
-		return scroll_up_and_execute(
-			() => (window.location.href = "/jobs?" + params)
-		);
+		return scroll_up_and_execute(() => (window.location.href = "/jobs?" + params));
 
 	$("#filters-drawer").css("bottom", "-80vh");
-	$("#filters-drawer").on(
-		"transitionend webkitTransitionEnd oTransitionEnd",
-		() =>
-			scroll_up_and_execute(() => (window.location.href = "/jobs?" + params))
+	$("#filters-drawer").on("transitionend webkitTransitionEnd oTransitionEnd", () =>
+		scroll_up_and_execute(() => (window.location.href = "/jobs?" + params)),
 	);
 }
 

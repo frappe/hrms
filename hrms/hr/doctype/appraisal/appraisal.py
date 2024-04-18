@@ -41,7 +41,10 @@ class Appraisal(Document):
 					| (
 						(Appraisal.start_date.between(self.start_date, self.end_date))
 						| (Appraisal.end_date.between(self.start_date, self.end_date))
-						| ((self.start_date >= Appraisal.start_date) & (self.start_date <= Appraisal.end_date))
+						| (
+							(self.start_date >= Appraisal.start_date)
+							& (self.start_date <= Appraisal.end_date)
+						)
 						| ((self.end_date >= Appraisal.start_date) & (self.end_date <= Appraisal.end_date))
 					)
 				)
@@ -53,9 +56,7 @@ class Appraisal(Document):
 			frappe.throw(
 				_(
 					"Appraisal {0} already exists for Employee {1} for this Appraisal Cycle or overlapping period"
-				).format(
-					get_link_to_form("Appraisal", duplicate), frappe.bold(self.employee_name)
-				),
+				).format(get_link_to_form("Appraisal", duplicate), frappe.bold(self.employee_name)),
 				exc=frappe.DuplicateEntryError,
 				title=_("Duplicate Entry"),
 			)
@@ -308,7 +309,7 @@ def get_kras_for_employee(doctype, txt, searchfield, start, page_len, filters):
 
 	return frappe.get_all(
 		"Appraisal KRA",
-		filters={"parent": appraisal, "kra": ("like", "{0}%".format(txt))},
+		filters={"parent": appraisal, "kra": ("like", f"{txt}%")},
 		fields=["kra"],
 		as_list=1,
 	)

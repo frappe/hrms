@@ -28,35 +28,34 @@ import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 import { useListUpdate } from "@/composables/realtime"
 
 const activeTab = ref("My Requests")
-
 const socket = inject("$socket")
-const employee = inject("$employee")
 
-const myRequests = computed(() => {
-	const requests = [...(myLeaves.data || []), ...(myClaims.data || [])]
+const myRequests = computed(() => updateRequestDetails(myLeaves, myClaims))
 
-	return requests.map((item) => {
-		if (item.doctype === "Leave Application")
-			item.component = markRaw(LeaveRequestItem)
-		else if (item.doctype === "Expense Claim")
-			item.component = markRaw(ExpenseClaimItem)
+const teamRequests = computed(() =>
+	updateRequestDetails(teamLeaves, teamClaims)
+)
 
-		return item
+function updateRequestDetails(leaves, claims) {
+	const requests = [...(leaves.data || []), ...(claims.data || [])]
+	requests.forEach((request) => {
+		if (request.doctype === "Leave Application") {
+			request.component = markRaw(LeaveRequestItem)
+		} else if (request.doctype === "Expense Claim") {
+			request.component = markRaw(ExpenseClaimItem)
+		}
 	})
-})
+	return getSortedRequests(requests)
+}
 
-const teamRequests = computed(() => {
-	const requests = [...(teamLeaves.data || []), ...(teamClaims.data || [])]
-
-	return requests.map((item) => {
-		if (item.doctype === "Leave Application")
-			item.component = markRaw(LeaveRequestItem)
-		else if (item.doctype === "Expense Claim")
-			item.component = markRaw(ExpenseClaimItem)
-
-		return item
-	})
-})
+function getSortedRequests(list) {
+	// return top 10 requests sorted by posting date
+	return list
+		.sort((a, b) => {
+			return new Date(b.posting_date) - new Date(a.posting_date)
+		})
+		.splice(0, 10)
+}
 
 onMounted(() => {
 	useListUpdate(socket, "Leave Application", () => teamLeaves.reload())

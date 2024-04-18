@@ -31,9 +31,7 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { inject, ref } from "vue"
-import { Input, Button, ErrorMessage, Dialog } from "frappe-ui"
-
-import FrappeHRLogo from "@/components/icons/FrappeHRLogo.vue"
+import { Dialog } from "frappe-ui"
 
 const session = inject("$session")
 const showDialog = ref(true)

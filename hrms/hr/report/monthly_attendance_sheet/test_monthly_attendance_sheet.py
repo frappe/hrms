@@ -68,9 +68,7 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 
 		# attendance with shift
 		mark_attendance(self.employee, previous_month_first, "Absent", "Day Shift")
-		mark_attendance(
-			self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift"
-		)
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift")
 
 		# attendance without shift
 		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "On Leave")
@@ -104,9 +102,7 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 
 		# attendance with shift
 		mark_attendance(self.employee, previous_month_first, "Absent", "Day Shift")
-		mark_attendance(
-			self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift"
-		)
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift")
 
 		# attendance without shift
 		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "On Leave")
@@ -158,12 +154,8 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 
 		# attendance with shift
 		mark_attendance(self.employee, previous_month_first, "Absent", "Day Shift")
-		mark_attendance(
-			self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift"
-		)
-		mark_attendance(
-			self.employee, previous_month_first + relativedelta(days=2), "Half Day"
-		)  # half day
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift")
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "Half Day")  # half day
 
 		mark_attendance(
 			self.employee, previous_month_first + relativedelta(days=3), "Present"
@@ -207,9 +199,7 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 
 		# attendance with shift
 		mark_attendance(self.employee, previous_month_first, "Absent", "Day Shift")
-		mark_attendance(
-			self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift"
-		)
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift")
 
 		# attendance without shift
 		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "On Leave")

@@ -182,9 +182,7 @@ class ShiftType(Document):
 		holiday_list = self.get_holiday_list(employee)
 		holiday_dates = get_holiday_dates_between(holiday_list, start_date, end_date)
 		# skip dates with attendance
-		marked_attendance_dates = self.get_marked_attendance_dates_between(
-			employee, start_date, end_date
-		)
+		marked_attendance_dates = self.get_marked_attendance_dates_between(employee, start_date, end_date)
 
 		return sorted(set(date_range) - set(holiday_dates) - set(marked_attendance_dates))
 
@@ -222,9 +220,7 @@ class ShiftType(Document):
 			return None, None
 		return start_date, end_date
 
-	def get_marked_attendance_dates_between(
-		self, employee: str, start_date: str, end_date: str
-	) -> list[str]:
+	def get_marked_attendance_dates_between(self, employee: str, start_date: str, end_date: str) -> list[str]:
 		Attendance = frappe.qb.DocType("Attendance")
 		return (
 			frappe.qb.from_(Attendance)
