@@ -8,9 +8,10 @@
   "reference",
   "asset_name",
   "date",
+  "actual_cost",
   "cost",
-  "account",
   "column_break_xezj",
+  "account",
   "action",
   "status",
   "section_break_hudu",
@@ -89,11 +90,18 @@
    "in_list_view": 1,
    "label": "Account",
    "options": "Account"
+  },
+  {
+   "fieldname": "actual_cost",
+   "fieldtype": "Currency",
+   "label": "Actual Cost",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
  "modified": "2021-07-15 15:17:31.309834",
@@ -103,6 +111,9 @@
 =======
  "modified": "2024-04-01 21:13:47.553812",
 >>>>>>> 0a4ea6d10 (feat: map asset recovery in Journal Entry)
+=======
+ "modified": "2024-04-19 13:20:41.123440",
+>>>>>>> 9977a47c9 (feat: set actual asset cost)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Full and Final Asset",

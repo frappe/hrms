@@ -147,12 +147,14 @@ class FullandFinalStatement(Document):
 			inwards_counts = [movement.asset for movement in inward_movements].count(movement.asset)
 
 			if inwards_counts > outwards_count:
+				cost = frappe.db.get_value("Asset", movement.asset, "total_asset_cost")
 				data.append(
 					{
 						"reference": movement.parent,
 						"asset_name": movement.asset_name,
 						"date": frappe.db.get_value("Asset Movement", movement.parent, "transaction_date"),
-						"cost": frappe.db.get_value("Asset", movement.asset, "total_asset_cost"),
+						"actual_cost": cost,
+						"cost": cost,
 						"action": "Return",
 						"status": "Owned",
 					}
@@ -170,7 +172,7 @@ class FullandFinalStatement(Document):
 		difference = self.total_payable_amount - self.total_receivable_amount
 
 		for data in self.payables:
-			if data.amount > 0 and not data.paid_via_salary_slip:
+			if flt(data.amount) > 0 and not data.paid_via_salary_slip:
 				account_dict = {
 					"account": data.account,
 					"debit_in_account_currency": flt(data.amount, precision),
@@ -183,7 +185,7 @@ class FullandFinalStatement(Document):
 				jv.append("accounts", account_dict)
 
 		for data in self.receivables:
-			if data.amount > 0:
+			if flt(data.amount) > 0:
 				account_dict = {
 					"account": data.account,
 					"credit_in_account_currency": flt(data.amount, precision),
