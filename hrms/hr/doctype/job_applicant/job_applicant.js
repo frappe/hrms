@@ -80,7 +80,11 @@ frappe.ui.form.on("Job Applicant", {
 					options: 'Interview Round'
 				},
 			],
+<<<<<<< HEAD
 			primary_action_label: 'Create Interview',
+=======
+			primary_action_label: __("Create Interview"),
+>>>>>>> 0906abb30 (fix(Job Applicant): Translate dialog label (#1682))
 			primary_action(values) {
 				frm.events.create_interview(frm, values);
 				d.hide();
