@@ -68,9 +68,7 @@ def create_asset_movement(employee):
 
 
 def create_asset():
-	pr = make_purchase_receipt(
-		item_code="Macbook Pro", qty=1, rate=100000.0, location="Test Location"
-	)
+	pr = make_purchase_receipt(item_code="Macbook Pro", qty=1, rate=100000.0, location="Test Location")
 
 	asset_name = frappe.db.get_value("Asset", {"purchase_receipt": pr.name}, "name")
 	asset = frappe.get_doc("Asset", asset_name)

@@ -1,62 +1,62 @@
 <template>
 	<div class="flex flex-col bg-white rounded w-full py-6 px-4 border-none">
-		<h2 class="text-lg font-bold text-gray-900">
-			Hey, {{ employee?.data?.first_name }} 👋
-		</h2>
-		<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
-			Last {{ lastLogType }} was at {{ lastLogTime }}
-		</div>
-		<Button
-			class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
-			id="open-checkin-modal"
-			@click="checkinTimestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')"
-		>
-			<template #prefix>
-				<FeatherIcon
-					:name="
-						nextAction.action === 'IN'
-							? 'arrow-right-circle'
-							: 'arrow-left-circle'
-					"
-					class="w-4"
-				/>
-			</template>
-			{{ nextAction.label }}
-		</Button>
-	</div>
+		<h2 class="text-lg font-bold text-gray-900">Hey, {{ employee?.data?.first_name }} 👋</h2>
 
-	<ion-modal
-		ref="modal"
-		trigger="open-checkin-modal"
-		:initial-breakpoint="1"
-		:breakpoints="[0, 1]"
-	>
-		<div
-			class="h-40 w-full flex flex-col items-center justify-center gap-5 p-4 mb-5"
-		>
-			<div class="flex flex-col gap-1.5 items-center justify-center">
-				<div class="font-bold text-xl">
-					{{ dayjs(checkinTimestamp).format("hh:mm:ss a") }}
-				</div>
-				<div class="font-medium text-gray-500 text-sm">
-					{{ dayjs().format("D MMM, YYYY") }}
-				</div>
+		<template v-if="allowCheckinFromMobile.data">
+			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
+				Last {{ lastLogType }} was at {{ lastLogTime }}
 			</div>
 			<Button
-				variant="solid"
-				class="w-full py-5 text-sm"
-				@click="submitLog(nextAction.action)"
+				class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
+				id="open-checkin-modal"
+				@click="checkinTimestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')"
 			>
-				Confirm {{ nextAction.label }}
+				<template #prefix>
+					<FeatherIcon
+						:name="nextAction.action === 'IN' ? 'arrow-right-circle' : 'arrow-left-circle'"
+						class="w-4"
+					/>
+				</template>
+				{{ nextAction.label }}
 			</Button>
+
+			<ion-modal
+				ref="modal"
+				trigger="open-checkin-modal"
+				:initial-breakpoint="1"
+				:breakpoints="[0, 1]"
+			>
+				<div class="h-40 w-full flex flex-col items-center justify-center gap-5 p-4 mb-5">
+					<div class="flex flex-col gap-1.5 items-center justify-center">
+						<div class="font-bold text-xl">
+							{{ dayjs(checkinTimestamp).format("hh:mm:ss a") }}
+						</div>
+						<div class="font-medium text-gray-500 text-sm">
+							{{ dayjs().format("D MMM, YYYY") }}
+						</div>
+					</div>
+					<Button
+						variant="solid"
+						class="w-full py-5 text-sm"
+						@click="submitLog(nextAction.action)"
+					>
+						Confirm {{ nextAction.label }}
+					</Button>
+				</div>
+			</ion-modal>
+		</template>
+
+		<div v-else class="font-medium text-sm text-gray-500 mt-1.5">
+			{{ dayjs().format("ddd, D MMMM, YYYY") }}
 		</div>
-	</ion-modal>
+	</div>
 </template>
 
 <script setup>
 import { createListResource, toast, FeatherIcon } from "frappe-ui"
 import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
+import { allowCheckinFromMobile } from "@/data/settings"
 
 const DOCTYPE = "Employee Checkin"
 
@@ -67,14 +67,7 @@ const checkinTimestamp = ref(null)
 
 const checkins = createListResource({
 	doctype: DOCTYPE,
-	fields: [
-		"name",
-		"employee",
-		"employee_name",
-		"log_type",
-		"time",
-		"device_id",
-	],
+	fields: ["name", "employee", "employee_name", "log_type", "time", "device_id"],
 	filters: {
 		employee: employee.data.name,
 	},

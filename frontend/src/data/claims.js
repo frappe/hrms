@@ -22,7 +22,7 @@ export const myClaims = createResource({
 	url: "hrms.api.get_expense_claims",
 	params: {
 		employee: employeeResource.data.name,
-		limit: 5,
+		limit: 10,
 	},
 	auto: true,
 	cache: "hrms:my_claims",
@@ -40,7 +40,7 @@ export const teamClaims = createResource({
 		employee: employeeResource.data.name,
 		approver_id: employeeResource.data.user_id,
 		for_approval: 1,
-		limit: 5,
+		limit: 10,
 	},
 	auto: true,
 	cache: "hrms:team_claims",

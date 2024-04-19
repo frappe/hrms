@@ -1,4 +1,4 @@
-frappe.listview_settings['Employee Referral'] = {
+frappe.listview_settings["Employee Referral"] = {
 	add_fields: ["status"],
 	get_indicator: function (doc) {
 		if (doc.status == "Pending") {
