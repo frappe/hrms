@@ -5,4 +5,3 @@ import "./templates/rating.html";
 import "./utils";
 import "./utils/payroll_utils";
 import "./utils/leave_utils";
-import "./utils/appraisal_utils";
