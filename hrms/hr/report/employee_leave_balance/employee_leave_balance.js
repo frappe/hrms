@@ -43,10 +43,17 @@ frappe.query_reports["Employee Leave Balance"] = {
 			fieldtype: "Select",
 			options: [
 				"",
+<<<<<<< HEAD
 				{ "value": "Active", "label": __("Active") },
 				{ "value": "Inactive", "label": __("Inactive") },
 				{ "value": "Suspended", "label": __("Suspended") },
 				{ "value": "Left", "label": __("Left") },
+=======
+				{ value: "Active", label: __("Active") },
+				{ value: "Inactive", label: __("Inactive") },
+				{ value: "Suspended", label: __("Suspended") },
+				{ value: "Left", label: __("Left", null, "Employee") },
+>>>>>>> 97f393e8b (fix(Leave Balance): Add context to translation for "Left" (Employee) (#1683))
 			],
 			default: "Active",
 		},
