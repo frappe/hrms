@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-16 11:00\n"
+"PO-Revision-Date: 2024-04-19 12:50\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -6678,24 +6678,24 @@ msgstr ""
 #: hr/workspace/performance/performance.json
 msgctxt "Energy Point Log"
 msgid "Energy Point Log"
-msgstr ""
+msgstr "Dnevnik energetske tačke"
 
 #. Label of a Link in the Performance Workspace
 #: hr/workspace/performance/performance.json
 msgctxt "Energy Point Rule"
 msgid "Energy Point Rule"
-msgstr ""
+msgstr "Pravilo energetske tačke"
 
 #. Label of a Link in the Performance Workspace
 #: hr/workspace/performance/performance.json
 msgctxt "Energy Point Settings"
 msgid "Energy Point Settings"
-msgstr ""
+msgstr "Postavke energetske tačke"
 
 #. Label of a Card Break in the Performance Workspace
 #: hr/workspace/performance/performance.json
 msgid "Energy Points"
-msgstr ""
+msgstr "Energetske točke"
 
 #: hr/doctype/hr_settings/hr_settings.js:32
 msgid "Enter the Standard Working Hours for a normal work day. These hours will be used in calculations of reports such as Employee Hours Utilization and Project Profitability analysis."
@@ -10414,7 +10414,7 @@ msgstr "Obavezno"
 
 #: payroll/doctype/payroll_entry/payroll_entry.js:189
 msgid "Mandatory fields required in {0}"
-msgstr ""
+msgstr "Obavezna polja su obavezna u {0}"
 
 #. Option for the 'KRA Evaluation Method' (Select) field in DocType 'Appraisal
 #. Cycle'
@@ -12846,7 +12846,7 @@ msgstr ""
 #: hr/doctype/employee_referral/employee_referral.json
 msgctxt "Employee Referral"
 msgid "Referrer"
-msgstr ""
+msgstr "Preporučilac"
 
 #. Label of a Section Break field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
@@ -12994,7 +12994,7 @@ msgstr ""
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgctxt "Daily Work Summary Group"
 msgid "Reminder"
-msgstr ""
+msgstr "Podsjetnik"
 
 #. Label of a Section Break field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -13144,13 +13144,13 @@ msgstr ""
 
 #: hr/doctype/interview/interview.js:145
 msgid "Result"
-msgstr ""
+msgstr "Rezultat"
 
 #. Label of a Select field in DocType 'Interview Feedback'
 #: hr/doctype/interview_feedback/interview_feedback.json
 msgctxt "Interview Feedback"
 msgid "Result"
-msgstr ""
+msgstr "Rezultat"
 
 #. Label of a Attach field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
