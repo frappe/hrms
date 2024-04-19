@@ -36,7 +36,8 @@ class FullandFinalStatement(Document):
 		for data in self.get(component_type, []):
 			if data.status == "Unsettled":
 				frappe.throw(
-					_("Settle all Payables and Receivables before submission"), title=_("Unsettled Transactions")
+					_("Settle all Payables and Receivables before submission"),
+					title=_("Unsettled Transactions"),
 				)
 
 	def validate_assets(self):
@@ -79,13 +80,17 @@ class FullandFinalStatement(Document):
 		total_cost = 0
 		for data in self.assets_allocated:
 			if data.action == "Recover Cost":
-				total_cost += data.cost
+				if not data.description:
+					data.description = _("Asset Recovery Cost for {0}: {1}").format(
+						data.reference, data.asset_name
+					)
+				total_cost += flt(data.cost)
 
 		self.total_asset_recovery_cost = flt(total_cost, self.precision("total_asset_recovery_cost"))
 
 	def set_totals(self):
-		total_payable = sum(row.amount for row in self.payables)
-		total_receivable = sum(row.amount for row in self.receivables)
+		total_payable = sum(flt(row.amount) for row in self.payables)
+		total_receivable = sum(flt(row.amount) for row in self.receivables)
 
 		self.total_payable_amount = flt(total_payable, self.precision("total_payable_amount"))
 		self.total_receivable_amount = flt(
@@ -169,6 +174,7 @@ class FullandFinalStatement(Document):
 				account_dict = {
 					"account": data.account,
 					"debit_in_account_currency": flt(data.amount, precision),
+					"user_remark": data.remark,
 				}
 				if data.reference_document_type == "Expense Claim":
 					account_dict["party_type"] = "Employee"
@@ -181,6 +187,7 @@ class FullandFinalStatement(Document):
 				account_dict = {
 					"account": data.account,
 					"credit_in_account_currency": flt(data.amount, precision),
+					"user_remark": data.remark,
 				}
 				if data.reference_document_type == "Employee Advance":
 					account_dict["party_type"] = "Employee"
@@ -197,6 +204,7 @@ class FullandFinalStatement(Document):
 						"credit_in_account_currency": flt(data.cost, precision),
 						"party_type": "Employee",
 						"party": self.employee,
+						"user_remark": data.description,
 					},
 				)
 
