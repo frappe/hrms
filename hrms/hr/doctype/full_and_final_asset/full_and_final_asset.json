@@ -8,9 +8,10 @@
   "reference",
   "asset_name",
   "date",
+  "actual_cost",
   "cost",
-  "account",
   "column_break_xezj",
+  "account",
   "action",
   "status",
   "section_break_hudu",
@@ -89,12 +90,18 @@
    "in_list_view": 1,
    "label": "Account",
    "options": "Account"
+  },
+  {
+   "fieldname": "actual_cost",
+   "fieldtype": "Currency",
+   "label": "Actual Cost",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-04-01 21:13:47.553812",
+ "modified": "2024-04-19 13:20:41.123440",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Full and Final Asset",
