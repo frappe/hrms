@@ -3,43 +3,6 @@
 
 frappe.ui.form.on("Appraisal Cycle", {
 	refresh(frm) {
-		async function set_autocompletions_for_final_score_formula(frm) {
-			const autocompletions = [
-				{
-					value: "goal_score",
-					score: 8,
-					meta: "Goal field",
-				},
-				{
-					value: "average_feedback_score",
-					score: 8,
-					meta: "Appraisal field",
-				},
-				{
-					value: "self_appraisal_score",
-					score: 8,
-					meta: "Appraisal field",
-				},
-			];
-
-			const doctypes = ["Employee", "Appraisal Cycle"];
-
-			await Promise.all(
-				doctypes.map((doctype) =>
-					frappe.model.with_doctype(doctype, () => {
-						autocompletions.push(
-							...frappe.get_meta(doctype).fields.map((f) => ({
-								value: f.fieldname,
-								score: 8,
-								meta: __("{0} Field", [doctype]),
-							})),
-						);
-					}),
-				),
-			);
-			frm.set_df_property("final_score_formula", "autocompletions", autocompletions);
-		}
-
 		set_autocompletions_for_final_score_formula(frm);
 		frm.set_query("department", () => {
 			return {
@@ -92,6 +55,43 @@ frappe.ui.form.on("Appraisal Cycle", {
 				frm.save();
 			});
 		}
+	},
+
+	set_autocompletions_for_final_score_formula: async (frm) => {
+		const autocompletions = [
+			{
+				value: "goal_score",
+				score: 8,
+				meta: "Goal field",
+			},
+			{
+				value: "average_feedback_score",
+				score: 8,
+				meta: "Appraisal field",
+			},
+			{
+				value: "self_appraisal_score",
+				score: 8,
+				meta: "Appraisal field",
+			},
+		];
+
+		const doctypes = ["Employee", "Appraisal Cycle"];
+
+		await Promise.all(
+			doctypes.map((doctype) =>
+				frappe.model.with_doctype(doctype, () => {
+					autocompletions.push(
+						...frappe.get_meta(doctype).fields.map((f) => ({
+							value: f.fieldname,
+							score: 8,
+							meta: __("{0} Field", [doctype]),
+						})),
+					);
+				}),
+			),
+		);
+		frm.set_df_property("final_score_formula", "autocompletions", autocompletions);
 	},
 
 	get_employees(frm) {

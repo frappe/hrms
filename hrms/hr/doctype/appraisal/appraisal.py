@@ -183,16 +183,16 @@ class Appraisal(Document):
 		if self.appraisal_cycle:
 			final_score = 0
 			appraisal_cycle_doc = frappe.get_doc("Appraisal Cycle", self.appraisal_cycle)
-			employee_doc = frappe.get_doc("Employee", self.employee)
 
 			formula = appraisal_cycle_doc.final_score_formula
 			based_on_formula = appraisal_cycle_doc.calculate_final_score_based_on_formula
 
-			if not based_on_formula == 1:
+			if not based_on_formula:
 				final_score = (
 					flt(self.total_score) + flt(self.avg_feedback_score) + flt(self.self_score)
 				) / 3
 			else:
+				employee_doc = frappe.get_doc("Employee", self.employee)
 				sanitized_formula = sanitize_expression(formula)
 
 				data = {
