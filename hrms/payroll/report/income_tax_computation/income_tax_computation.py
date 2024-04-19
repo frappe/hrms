@@ -423,9 +423,20 @@ class IncomeTaxComputationReport(object):
 			tax_slab = emp_details.get("income_tax_slab")
 			if tax_slab:
 				tax_slab = frappe.get_cached_doc("Income Tax Slab", tax_slab)
-				employee_dict = frappe.get_doc("Employee", emp).as_dict()
+				salary_slip = frappe.new_doc("Salary Slip")
+				salary_slip.employee = emp
+				salary_slip.salary_structure = emp_details.salary_structure
+				salary_slip.process_salary_structure()
+				eval_locals, __ = salary_slip.get_data_for_eval()
 				tax_amount = calculate_tax_by_tax_slab(
+<<<<<<< HEAD
 					emp_details["total_taxable_amount"], tax_slab, eval_globals=None, eval_locals=employee_dict
+=======
+					emp_details["total_taxable_amount"],
+					tax_slab,
+					eval_globals=None,
+					eval_locals=eval_locals,
+>>>>>>> 180fdb11f (fix(Income Tax Computation): eval locals for Income Tax Slab)
 				)
 			else:
 				tax_amount = 0.0
