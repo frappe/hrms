@@ -54,7 +54,15 @@ frappe.ui.form.on('Full and Final Statement', {
 		frm.events.get_outstanding_statements(frm);
 	},
 
+<<<<<<< HEAD
 	get_outstanding_statements: function(frm) {
+=======
+	total_asset_recovery_cost: function (frm) {
+		frm.trigger("calculate_total_receivable_amt");
+	},
+
+	get_outstanding_statements: function (frm) {
+>>>>>>> 7f3f5d123 (refactor: total amount calculation on the client-side)
 		if (frm.doc.employee) {
 			frappe.call({
 				method: "get_outstanding_statements",
@@ -66,7 +74,50 @@ frappe.ui.form.on('Full and Final Statement', {
 		}
 	},
 
+<<<<<<< HEAD
 	create_journal_entry: function(frm) {
+=======
+	calculate_total_payable_amt: function (frm) {
+		let total_payable_amount = 0;
+
+		frm.doc.payables?.forEach(
+			(row) => (total_payable_amount += flt(row.amount, precision("amount", row))),
+		);
+		frm.set_value(
+			"total_payable_amount",
+			flt(total_payable_amount, precision("total_payable_amount")),
+		);
+	},
+
+	calculate_total_receivable_amt: function (frm) {
+		let total_asset_recovery_cost = 0;
+		let total_receivable_amount = 0;
+
+		frm.doc.assets_allocated?.forEach((row) => {
+			if (row.action === "Recover Cost") {
+				total_asset_recovery_cost += flt(row.cost, precision("cost", row));
+			}
+		});
+
+		frm.doc.receivables?.forEach(
+			(row) => (total_receivable_amount += flt(row.amount, precision("amount", row))),
+		);
+
+		frm.set_value(
+			"total_asset_recovery_cost",
+			flt(total_asset_recovery_cost, precision("total_asset_recovery_cost")),
+		);
+		frm.set_value(
+			"total_receivable_amount",
+			flt(
+				total_asset_recovery_cost + total_receivable_amount,
+				precision("total_receivable_amount"),
+			),
+		);
+	},
+
+	create_journal_entry: function (frm) {
+>>>>>>> 7f3f5d123 (refactor: total amount calculation on the client-side)
 		frappe.call({
 			method: "create_journal_entry",
 			doc: frm.doc,
@@ -79,8 +130,13 @@ frappe.ui.form.on('Full and Final Statement', {
 });
 
 frappe.ui.form.on("Full and Final Outstanding Statement", {
+<<<<<<< HEAD
 	reference_document: function(frm, cdt, cdn) {
 		var child = locals[cdt][cdn];
+=======
+	reference_document: function (frm, cdt, cdn) {
+		const child = locals[cdt][cdn];
+>>>>>>> 7f3f5d123 (refactor: total amount calculation on the client-side)
 		if (child.reference_document_type && child.reference_document) {
 			frappe.call({
 				method: "hrms.hr.doctype.full_and_final_statement.full_and_final_statement.get_account_and_amount",
@@ -98,20 +154,20 @@ frappe.ui.form.on("Full and Final Outstanding Statement", {
 		}
 	},
 
-	amount: function(frm, cdt, cdn) {
-		let amount = 0;
+	amount: function (frm, cdt, cdn) {
 		const child_row = locals[cdt][cdn];
 		const table = child_row.parentfield;
 
-		frm.doc[table]?.forEach(row => amount += row.amount);
-
 		if (table === "payables") {
-			frm.set_value("total_payable_amount", flt(amount));
+			frm.trigger("calculate_total_payable_amt");
 		} else {
-			frm.set_value(
-				"total_receivable_amount",
-				flt(amount) + flt(frm.doc.total_asset_recovery_cost)
-			);
+			frm.trigger("calculate_total_receivable_amt");
 		}
-	}
+	},
+});
+
+frappe.ui.form.on("Full and Final Asset", {
+	cost: function (frm, _cdt, _cdn) {
+		frm.trigger("calculate_total_receivable_amt");
+	},
 });
