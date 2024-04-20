@@ -54,15 +54,11 @@ frappe.ui.form.on('Full and Final Statement', {
 		frm.events.get_outstanding_statements(frm);
 	},
 
-<<<<<<< HEAD
-	get_outstanding_statements: function(frm) {
-=======
 	total_asset_recovery_cost: function (frm) {
 		frm.trigger("calculate_total_receivable_amt");
 	},
 
 	get_outstanding_statements: function (frm) {
->>>>>>> 7f3f5d123 (refactor: total amount calculation on the client-side)
 		if (frm.doc.employee) {
 			frappe.call({
 				method: "get_outstanding_statements",
@@ -74,9 +70,6 @@ frappe.ui.form.on('Full and Final Statement', {
 		}
 	},
 
-<<<<<<< HEAD
-	create_journal_entry: function(frm) {
-=======
 	calculate_total_payable_amt: function (frm) {
 		let total_payable_amount = 0;
 
@@ -117,7 +110,6 @@ frappe.ui.form.on('Full and Final Statement', {
 	},
 
 	create_journal_entry: function (frm) {
->>>>>>> 7f3f5d123 (refactor: total amount calculation on the client-side)
 		frappe.call({
 			method: "create_journal_entry",
 			doc: frm.doc,
@@ -130,13 +122,8 @@ frappe.ui.form.on('Full and Final Statement', {
 });
 
 frappe.ui.form.on("Full and Final Outstanding Statement", {
-<<<<<<< HEAD
-	reference_document: function(frm, cdt, cdn) {
-		var child = locals[cdt][cdn];
-=======
 	reference_document: function (frm, cdt, cdn) {
 		const child = locals[cdt][cdn];
->>>>>>> 7f3f5d123 (refactor: total amount calculation on the client-side)
 		if (child.reference_document_type && child.reference_document) {
 			frappe.call({
 				method: "hrms.hr.doctype.full_and_final_statement.full_and_final_statement.get_account_and_amount",

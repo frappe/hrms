@@ -187,18 +187,6 @@
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
-<<<<<<< HEAD
- "links": [],
-<<<<<<< HEAD
-<<<<<<< HEAD
- "modified": "2024-01-11 18:06:22.669089",
-=======
- "modified": "2024-04-01 19:22:40.101070",
->>>>>>> e05357082 (feat(FnF): Option to recover asset costs instead of returning)
-=======
- "modified": "2024-04-01 21:08:52.804868",
->>>>>>> 0a4ea6d10 (feat: map asset recovery in Journal Entry)
-=======
  "links": [
   {
    "is_child_table": 1,
@@ -209,7 +197,6 @@
   }
  ],
  "modified": "2024-04-19 15:45:04.206575",
->>>>>>> bb2c04174 (fix: adjust grid cols and add connection to Journal Entry)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Full and Final Statement",
