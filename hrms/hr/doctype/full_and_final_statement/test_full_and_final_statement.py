@@ -38,7 +38,9 @@ class TestFullandFinalStatement(FrappeTestCase):
 		receivable_bootstraped_component = ["Loan", "Employee Advance"]
 
 		# checking payables and receivables bootstraped value
-		self.assertEqual([payable.component for payable in self.fnf.payables], payables_bootstraped_component)
+		self.assertEqual(
+			[payable.component for payable in self.fnf.payables], payables_bootstraped_component
+		)
 		self.assertEqual(
 			[receivable.component for receivable in self.fnf.receivables], receivable_bootstraped_component
 		)
