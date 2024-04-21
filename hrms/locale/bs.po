@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-19 12:50\n"
+"PO-Revision-Date: 2024-04-21 13:39\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -12691,7 +12691,7 @@ msgstr ""
 #: hr/doctype/pwa_notification/pwa_notification.json
 msgctxt "PWA Notification"
 msgid "Read"
-msgstr ""
+msgstr "Čitaj"
 
 #. Label of a Section Break field in DocType 'Attendance Request'
 #. Label of a Select field in DocType 'Attendance Request'
@@ -13261,13 +13261,13 @@ msgstr ""
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "Right"
-msgstr ""
+msgstr "Desno"
 
 #. Label of a Link field in DocType 'Employee Boarding Activity'
 #: hr/doctype/employee_boarding_activity/employee_boarding_activity.json
 msgctxt "Employee Boarding Activity"
 msgid "Role"
-msgstr ""
+msgstr "Uloga"
 
 #. Label of a Link field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -13962,13 +13962,13 @@ msgstr ""
 #: hr/doctype/hr_settings/hr_settings.json
 msgctxt "HR Settings"
 msgid "Sender Email"
-msgstr ""
+msgstr "E-pošta pošiljaoca"
 
 #. Label of a Data field in DocType 'Payroll Settings'
 #: payroll/doctype/payroll_settings/payroll_settings.json
 msgctxt "Payroll Settings"
 msgid "Sender Email"
-msgstr ""
+msgstr "E-pošta pošiljaoca"
 
 #. Option for the 'Status' (Select) field in DocType 'Daily Work Summary'
 #: hr/doctype/daily_work_summary/daily_work_summary.json
@@ -14165,7 +14165,7 @@ msgstr ""
 #. Label of a Card Break in the Leaves Workspace
 #: hr/workspace/hr/hr.json hr/workspace/leaves/leaves.json
 msgid "Setup"
-msgstr ""
+msgstr "Postavljanja"
 
 #: hr/utils.py:656
 msgid "Shared with the user {0} with {1} access"
@@ -14353,7 +14353,7 @@ msgstr ""
 #: hr/onboarding_step/create_leave_application/create_leave_application.json
 #: hr/onboarding_step/create_leave_type/create_leave_type.json
 msgid "Show Tour"
-msgstr ""
+msgstr "Prikaži obilazak"
 
 #: www/jobs/index.html:103
 msgid "Showing"
@@ -15342,7 +15342,7 @@ msgstr ""
 
 #: hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.js:28
 msgid "Time Interval"
-msgstr ""
+msgstr "Vremenski interval"
 
 #. Label of a Link field in DocType 'Salary Slip Timesheet'
 #: payroll/doctype/salary_slip_timesheet/salary_slip_timesheet.json
@@ -15530,7 +15530,7 @@ msgstr ""
 #: hr/doctype/pwa_notification/pwa_notification.json
 msgctxt "PWA Notification"
 msgid "To User"
-msgstr ""
+msgstr "Za korisnika"
 
 #: hr/doctype/shift_assignment/shift_assignment.py:59
 msgid "To allow this, enable {0} under {1}."
