@@ -13,7 +13,7 @@ frappe.ui.form.on("Income Tax Slab", {
 					frappe.set_route("Form", "Salary Structure Assignment", doc.name);
 				});
 			},
-			__("Create")
+			__("Create"),
 		);
 		frm.page.set_inner_btn_group_as_primary(__("Create"));
 	},

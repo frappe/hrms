@@ -51,9 +51,7 @@ class Interview(Document):
 				frappe.throw(
 					_(
 						"Interview Round {0} is only for Designation {1}. Job Applicant has applied for the role {2}"
-					).format(
-						self.interview_round, frappe.bold(self.designation), applicant_designation
-					),
+					).format(self.interview_round, frappe.bold(self.designation), applicant_designation),
 					exc=DuplicateInterviewRoundError,
 				)
 		else:
@@ -116,7 +114,9 @@ class Interview(Document):
 			)
 		except Exception:
 			frappe.msgprint(
-				_("Failed to send the Interview Reschedule notification. Please configure your email account.")
+				_(
+					"Failed to send the Interview Reschedule notification. Please configure your email account."
+				)
 			)
 
 		frappe.msgprint(_("Interview Rescheduled successfully"), indicator="green")
@@ -124,9 +124,7 @@ class Interview(Document):
 
 @frappe.whitelist()
 def get_interviewers(interview_round: str) -> list[str]:
-	return frappe.get_all(
-		"Interviewer", filters={"parent": interview_round}, fields=["user as interviewer"]
-	)
+	return frappe.get_all("Interviewer", filters={"parent": interview_round}, fields=["user as interviewer"])
 
 
 def get_recipients(name, for_feedback=0):
@@ -164,7 +162,7 @@ def get_feedback(interview: str) -> list[dict]:
 		.left_join(employee)
 		.on(interview_feedback.interviewer == employee.user_id)
 		.where((interview_feedback.interview == interview) & (interview_feedback.docstatus == 1))
-		.orderby(interview_feedback.modified)
+		.orderby(interview_feedback.creation)
 	).run(as_dict=True)
 
 
@@ -187,18 +185,13 @@ def get_skill_wise_average_rating(interview: str) -> list[dict]:
 
 
 @frappe.whitelist()
-def update_job_applicant_status(args):
-	import json
-
+def update_job_applicant_status(status: str, job_applicant: str):
 	try:
-		if isinstance(args, str):
-			args = json.loads(args)
-
-		if not args.get("job_applicant"):
+		if not job_applicant:
 			frappe.throw(_("Please specify the job applicant to be updated."))
 
-		job_applicant = frappe.get_doc("Job Applicant", args["job_applicant"])
-		job_applicant.status = args["status"]
+		job_applicant = frappe.get_doc("Job Applicant", job_applicant)
+		job_applicant.status = status
 		job_applicant.save()
 
 		frappe.msgprint(
@@ -242,9 +235,7 @@ def send_interview_reminder():
 		},
 	)
 
-	interview_template = frappe.get_doc(
-		"Email Template", reminder_settings.interview_reminder_template
-	)
+	interview_template = frappe.get_doc("Email Template", reminder_settings.interview_reminder_template)
 
 	for d in interviews:
 		doc = frappe.get_doc("Interview", d.name)
@@ -356,7 +347,7 @@ def create_interview_feedback(data, interview_name, interviewer, job_applicant):
 @frappe.validate_and_sanitize_search_inputs
 def get_interviewer_list(doctype, txt, searchfield, start, page_len, filters):
 	filters = [
-		["Has Role", "parent", "like", "%{}%".format(txt)],
+		["Has Role", "parent", "like", f"%{txt}%"],
 		["Has Role", "role", "=", "interviewer"],
 		["Has Role", "parenttype", "=", "User"],
 	]
@@ -395,8 +386,9 @@ def get_events(start, end, filters=None):
 
 	conditions = get_event_conditions("Interview", filters)
 
+	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 	interviews = frappe.db.sql(
-		"""
+		f"""
 			SELECT DISTINCT
 				`tabInterview`.name, `tabInterview`.job_applicant, `tabInterview`.interview_round,
 				`tabInterview`.scheduled_on, `tabInterview`.status, `tabInterview`.from_time as from_time,
@@ -407,9 +399,7 @@ def get_events(start, end, filters=None):
 				(`tabInterview`.scheduled_on between %(start)s and %(end)s)
 				and docstatus != 2
 				{conditions}
-			""".format(
-			conditions=conditions
-		),
+			""",
 		{"start": start, "end": end},
 		as_dict=True,
 		update={"allDay": 0},
@@ -424,8 +414,16 @@ def get_events(start, end, filters=None):
 
 		color = event_color.get(d.status)
 		interview_data = {
-			"from": get_datetime("%s %s" % (d.scheduled_on, d.from_time or "00:00:00")),
-			"to": get_datetime("%s %s" % (d.scheduled_on, d.to_time or "00:00:00")),
+			"from": get_datetime(
+				"{scheduled_on} {from_time}".format(
+					scheduled_on=d.scheduled_on, from_time=d.from_time or "00:00:00"
+				)
+			),
+			"to": get_datetime(
+				"{scheduled_on} {to_time}".format(
+					scheduled_on=d.scheduled_on, to_time=d.to_time or "00:00:00"
+				)
+			),
 			"name": d.name,
 			"subject": "\n".join(subject_data),
 			"color": color if color else "#89bcde",

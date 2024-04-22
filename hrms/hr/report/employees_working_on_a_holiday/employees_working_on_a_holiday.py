@@ -33,9 +33,7 @@ def get_employees(filters):
 	if filters.holiday_list:
 		holiday_filter.append(["parent", "=", filters.holiday_list])
 
-	holidays = frappe.get_all(
-		"Holiday", fields=["holiday_date", "description"], filters=holiday_filter
-	)
+	holidays = frappe.get_all("Holiday", fields=["holiday_date", "description"], filters=holiday_filter)
 
 	holiday_names = {}
 	holidays_list = []

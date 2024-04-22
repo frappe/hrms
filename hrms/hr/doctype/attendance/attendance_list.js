@@ -15,7 +15,7 @@ frappe.listview_settings["Attendance"] = {
 		let me = this;
 
 		list_view.page.add_inner_button(__("Mark Attendance"), function () {
-			let first_day_of_month = moment().startOf('month');
+			let first_day_of_month = moment().startOf("month");
 
 			if (moment().toDate().getDate() === 1) {
 				first_day_of_month = first_day_of_month.subtract(1, "month");
@@ -59,7 +59,7 @@ frappe.listview_settings["Attendance"] = {
 						fieldtype: "Date",
 						fieldname: "to_date",
 						reqd: 1,
-						default: moment().subtract(1, 'days').toDate(),
+						default: moment().subtract(1, "days").toDate(),
 						onchange: () => me.get_unmarked_days(dialog),
 					},
 					{
@@ -94,8 +94,8 @@ frappe.listview_settings["Attendance"] = {
 						frappe.msgprint(
 							__(
 								"Attendance from {0} to {1} has already been marked for the Employee {2}",
-								[data.from_date, data.to_date, data.employee]
-							)
+								[data.from_date, data.to_date, data.employee],
+							),
 						);
 					} else {
 						frappe.confirm(
@@ -119,7 +119,7 @@ frappe.listview_settings["Attendance"] = {
 										}
 									},
 								});
-							}
+							},
 						);
 					}
 					dialog.hide();
@@ -134,11 +134,7 @@ frappe.listview_settings["Attendance"] = {
 	reset_dialog: function (dialog) {
 		let fields = dialog.fields_dict;
 
-		dialog.set_df_property(
-			"time_period_section",
-			"hidden",
-			fields.employee.value ? 0 : 1
-		);
+		dialog.set_df_property("time_period_section", "hidden", fields.employee.value ? 0 : 1);
 
 		dialog.set_df_property("days_section", "hidden", 1);
 		dialog.set_df_property("unmarked_days", "options", []);
@@ -146,10 +142,10 @@ frappe.listview_settings["Attendance"] = {
 		fields.exclude_holidays.value = false;
 
 		fields.to_date.datepicker.update({
-            maxDate: moment().subtract(1, 'days').toDate()
-        });
+			maxDate: moment().subtract(1, "days").toDate(),
+		});
 
-		this.get_unmarked_days(dialog)
+		this.get_unmarked_days(dialog);
 	},
 
 	get_unmarked_days: function (dialog) {
@@ -187,7 +183,7 @@ frappe.listview_settings["Attendance"] = {
 					dialog.set_df_property(
 						"unmarked_days",
 						"options",
-						options.length > 0 ? options : []
+						options.length > 0 ? options : [],
 					);
 					dialog.no_unmarked_days_left = options.length === 0;
 				});

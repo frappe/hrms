@@ -68,9 +68,7 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 
 		# attendance with shift
 		mark_attendance(self.employee, previous_month_first, "Absent", "Day Shift")
-		mark_attendance(
-			self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift"
-		)
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift")
 
 		# attendance without shift
 		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "On Leave")
@@ -89,14 +87,14 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		row_without_shift = report[1][1]
 
 		self.assertEqual(day_shift_row["shift"], "Day Shift")
-		self.assertEqual(day_shift_row[1], "A")  # absent on the 1st day of the month
-		self.assertEqual(day_shift_row[2], "P")  # present on the 2nd day
+		self.assertEqual(day_shift_row["1"], "A")  # absent on the 1st day of the month
+		self.assertEqual(day_shift_row["2"], "P")  # present on the 2nd day
 
 		self.assertEqual(row_without_shift["shift"], "")
-		self.assertEqual(row_without_shift[4], "P")  # present on the 4th day
+		self.assertEqual(row_without_shift["4"], "P")  # present on the 4th day
 
 		# leave should be shown against every shift
-		self.assertTrue(day_shift_row[3] == row_without_shift[3] == "L")
+		self.assertTrue(day_shift_row["3"] == row_without_shift["3"] == "L")
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_single_shift_with_leaves_in_detailed_view(self):
@@ -104,9 +102,7 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 
 		# attendance with shift
 		mark_attendance(self.employee, previous_month_first, "Absent", "Day Shift")
-		mark_attendance(
-			self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift"
-		)
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift")
 
 		# attendance without shift
 		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "On Leave")
@@ -125,9 +121,9 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		day_shift_row = report[1][0]
 
 		self.assertEqual(day_shift_row["shift"], "Day Shift")
-		self.assertEqual(day_shift_row[1], "A")  # absent on the 1st day of the month
-		self.assertEqual(day_shift_row[2], "P")  # present on the 2nd day
-		self.assertEqual(day_shift_row[3], "L")  # leave on the 3rd day
+		self.assertEqual(day_shift_row["1"], "A")  # absent on the 1st day of the month
+		self.assertEqual(day_shift_row["2"], "P")  # present on the 2nd day
+		self.assertEqual(day_shift_row["3"], "L")  # leave on the 3rd day
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_single_leave_record(self):
@@ -150,7 +146,7 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		row = report[1][0]
 
 		self.assertIsNone(row["shift"])
-		self.assertEqual(row[1], "L")
+		self.assertEqual(row["1"], "L")
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_summarized_view(self):
@@ -158,12 +154,8 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 
 		# attendance with shift
 		mark_attendance(self.employee, previous_month_first, "Absent", "Day Shift")
-		mark_attendance(
-			self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift"
-		)
-		mark_attendance(
-			self.employee, previous_month_first + relativedelta(days=2), "Half Day"
-		)  # half day
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift")
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "Half Day")  # half day
 
 		mark_attendance(
 			self.employee, previous_month_first + relativedelta(days=3), "Present"
@@ -207,9 +199,7 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 
 		# attendance with shift
 		mark_attendance(self.employee, previous_month_first, "Absent", "Day Shift")
-		mark_attendance(
-			self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift"
-		)
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift")
 
 		# attendance without shift
 		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "On Leave")
@@ -233,12 +223,12 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		row_without_shift = report[1][2]
 
 		self.assertEqual(day_shift_row["shift"], "Day Shift")
-		self.assertEqual(day_shift_row[1], "A")  # absent on the 1st day of the month
-		self.assertEqual(day_shift_row[2], "P")  # present on the 2nd day
+		self.assertEqual(day_shift_row["1"], "A")  # absent on the 1st day of the month
+		self.assertEqual(day_shift_row["2"], "P")  # present on the 2nd day
 
 		self.assertEqual(row_without_shift["shift"], "")
-		self.assertEqual(row_without_shift[3], "L")  # on leave on the 3rd day
-		self.assertEqual(row_without_shift[4], "P")  # present on the 4th day
+		self.assertEqual(row_without_shift["3"], "L")  # on leave on the 3rd day
+		self.assertEqual(row_without_shift["4"], "P")  # present on the 4th day
 
 	def test_attendance_with_employee_filter(self):
 		previous_month_first = get_first_day_for_prev_month()

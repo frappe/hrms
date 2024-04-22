@@ -15,7 +15,7 @@ class IncompleteTaskError(frappe.ValidationError):
 
 class EmployeeOnboarding(EmployeeBoardingController):
 	def validate(self):
-		super(EmployeeOnboarding, self).validate()
+		super().validate()
 		self.set_employee()
 		self.validate_duplicate_employee_onboarding()
 
@@ -50,13 +50,13 @@ class EmployeeOnboarding(EmployeeBoardingController):
 						)
 
 	def on_submit(self):
-		super(EmployeeOnboarding, self).on_submit()
+		super().on_submit()
 
 	def on_update_after_submit(self):
 		self.create_task_and_notify_user()
 
 	def on_cancel(self):
-		super(EmployeeOnboarding, self).on_cancel()
+		super().on_cancel()
 
 	@frappe.whitelist()
 	def mark_onboarding_as_completed(self):

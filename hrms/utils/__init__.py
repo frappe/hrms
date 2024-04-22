@@ -36,9 +36,7 @@ def get_date_range(start_date: str, end_date: str) -> list[str]:
 	return [add_days(start_date, i) for i in range(no_of_days)]
 
 
-def generate_date_range(
-	start_date: str, end_date: str, reverse: bool = False
-) -> Generator[str, None, None]:
+def generate_date_range(start_date: str, end_date: str, reverse: bool = False) -> Generator[str, None, None]:
 	no_of_days = date_diff(end_date, start_date) + 1
 
 	date_field = end_date if reverse else start_date

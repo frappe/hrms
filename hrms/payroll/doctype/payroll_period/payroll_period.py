@@ -49,7 +49,7 @@ class PayrollPeriod(Document):
 				_("A {0} exists between {1} and {2} (").format(
 					self.doctype, formatdate(self.start_date), formatdate(self.end_date)
 				)
-				+ """ <b><a href="/app/Form/{0}/{1}">{1}</a></b>""".format(self.doctype, overlap_doc[0].name)
+				+ f""" <b><a href="/app/Form/{self.doctype}/{overlap_doc[0].name}">{overlap_doc[0].name}</a></b>"""
 				+ _(") for {0}").format(self.company)
 			)
 			frappe.throw(msg)
@@ -73,9 +73,7 @@ def get_payroll_period_days(start_date, end_date, employee, company=None):
 	if len(payroll_period) > 0:
 		actual_no_of_days = date_diff(getdate(payroll_period[0][2]), getdate(payroll_period[0][1])) + 1
 		working_days = actual_no_of_days
-		if not cint(
-			frappe.db.get_value("Payroll Settings", None, "include_holidays_in_total_working_days")
-		):
+		if not cint(frappe.db.get_single_value("Payroll Settings", "include_holidays_in_total_working_days")):
 			holidays = get_holiday_dates_for_employee(
 				employee, getdate(payroll_period[0][1]), getdate(payroll_period[0][2])
 			)

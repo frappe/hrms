@@ -166,9 +166,7 @@ class TestEmployeeAdvance(FrappeTestCase):
 
 		args = {"type": "Deduction"}
 		create_salary_component("Advance Salary - Deduction", **args)
-		make_salary_structure(
-			"Test Additional Salary for Advance Return", "Monthly", employee=employee_name
-		)
+		make_salary_structure("Test Additional Salary for Advance Return", "Monthly", employee=employee_name)
 
 		# additional salary for 700 first
 		advance.reload()
@@ -257,6 +255,21 @@ class TestEmployeeAdvance(FrappeTestCase):
 		# precision is respected
 		self.assertEqual(advance.return_amount, 380.66)
 		self.assertEqual(advance.status, "Partly Claimed and Returned")
+
+	def test_pending_amount(self):
+		employee_name = make_employee("_T@employee.advance")
+
+		advance1 = make_employee_advance(employee_name)
+		make_payment_entry(advance1, 500)
+
+		advance2 = make_employee_advance(employee_name)
+		# 1000 - 500
+		self.assertEqual(advance2.pending_amount, 500)
+		make_payment_entry(advance2, 700)
+
+		advance3 = make_employee_advance(employee_name)
+		# (1000 - 500) + (1000 - 700)
+		self.assertEqual(advance3.pending_amount, 800)
 
 
 def make_journal_entry_for_advance(advance):

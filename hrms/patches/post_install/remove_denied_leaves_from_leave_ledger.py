@@ -17,9 +17,7 @@ def execute():
 
 
 def get_denied_leave_application_list():
-	return frappe.db.sql_list(
-		""" Select name from `tabLeave Application` where status <> 'Approved' """
-	)
+	return frappe.db.sql_list(""" Select name from `tabLeave Application` where status <> 'Approved' """)
 
 
 def delete_denied_leaves_from_leave_ledger_entry(leave_application_list):
