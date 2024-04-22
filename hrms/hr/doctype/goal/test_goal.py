@@ -84,11 +84,13 @@ class TestGoal(FrappeTestCase):
 		        |_ child4
 		"""
 		parent_goal = create_goal(self.employee1, "Development", 1)
-		child_goal1 = create_goal(self.employee1, parent_goal=parent_goal.name)
+		# child_goal1
+		create_goal(self.employee1, parent_goal=parent_goal.name)
 
 		child_goal2 = create_goal(self.employee1, "Development", 1, parent_goal.name)
 		child_goal3 = create_goal(self.employee1, parent_goal=child_goal2.name)
-		child_goal4 = create_goal(self.employee1, parent_goal=child_goal2.name)
+		# child_goal4
+		create_goal(self.employee1, parent_goal=child_goal2.name)
 
 		child_goal3.progress = 50
 		child_goal3.save()
@@ -126,12 +128,14 @@ class TestGoal(FrappeTestCase):
 		parent1 = create_goal(self.employee1, "Development", 1)
 		child1 = create_goal(self.employee1, is_group=1, parent_goal=parent1.name)
 		child1_1 = create_goal(self.employee1, parent_goal=child1.name)
-		child1_2 = create_goal(self.employee1, parent_goal=child1.name)
+		# child1_2
+		create_goal(self.employee1, parent_goal=child1.name)
 
 		parent2 = create_goal(self.employee1, "Development", 1)
 		child2 = create_goal(self.employee1, is_group=1, parent_goal=parent2.name)
 		child2_1 = create_goal(self.employee1, parent_goal=child2.name)
-		child2_2 = create_goal(self.employee1, parent_goal=child2.name)
+		# child2_2
+		create_goal(self.employee1, parent_goal=child2.name)
 
 		child1_1.progress = 25
 		child1_1.save()
