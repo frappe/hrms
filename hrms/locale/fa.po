@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-17 11:21\n"
+"PO-Revision-Date: 2024-04-22 13:37\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -668,7 +668,7 @@ msgstr "موجودی واقعی در دسترس نیست زیرا برنامه �
 #: hr/doctype/leave_block_list/leave_block_list.json
 msgctxt "Leave Block List"
 msgid "Add Day-wise Dates"
-msgstr "خرماهای روزانه را اضافه کنید"
+msgstr ""
 
 #: hr/employee_property_update.js:45
 msgid "Add Employee Property"
