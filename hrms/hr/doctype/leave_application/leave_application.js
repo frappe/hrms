@@ -102,6 +102,8 @@ frappe.ui.form.on("Leave Application", {
 		frm.set_intro("");
 		if (frm.doc.__islocal && !in_list(frappe.user_roles, "Employee")) {
 			frm.set_intro(__("Fill the form and save it"));
+		} else if (frm.doc.docstatus === 0 && !frm.is_new()) {
+			frm.set_intro(__("Submit this Leave Application for further processing."));
 		}
 
 		frm.trigger("set_employee");
