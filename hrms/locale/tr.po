@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-22 13:37\n"
+"PO-Revision-Date: 2024-04-23 13:59\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -459,19 +459,19 @@ msgstr "Kabul Edildi"
 #: hr/doctype/full_and_final_outstanding_statement/full_and_final_outstanding_statement.json
 msgctxt "Full and Final Outstanding Statement"
 msgid "Account"
-msgstr ""
+msgstr "Hesap"
 
 #. Label of a Link field in DocType 'Salary Component Account'
 #: payroll/doctype/salary_component_account/salary_component_account.json
 msgctxt "Salary Component Account"
 msgid "Account"
-msgstr ""
+msgstr "Hesap"
 
 #. Label of a Tab Break field in DocType 'Salary Structure'
 #: payroll/doctype/salary_structure/salary_structure.json
 msgctxt "Salary Structure"
 msgid "Account"
-msgstr ""
+msgstr "Hesap"
 
 #. Label of a Link field in DocType 'Expense Taxes and Charges'
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
@@ -12339,49 +12339,49 @@ msgstr ""
 #: payroll/report/income_tax_deductions/income_tax_deductions.py:60
 #: www/jobs/index.html:93
 msgid "Posting Date"
-msgstr ""
+msgstr "Tarih"
 
 #. Label of a Date field in DocType 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Posting Date"
-msgstr ""
+msgstr "Tarih"
 
 #. Label of a Date field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Posting Date"
-msgstr ""
+msgstr "Tarih"
 
 #. Label of a Date field in DocType 'Expense Claim Advance'
 #: hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgctxt "Expense Claim Advance"
 msgid "Posting Date"
-msgstr ""
+msgstr "Tarih"
 
 #. Label of a Date field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Posting Date"
-msgstr ""
+msgstr "Tarih"
 
 #. Label of a Date field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
 msgctxt "Leave Application"
 msgid "Posting Date"
-msgstr ""
+msgstr "Tarih"
 
 #. Label of a Date field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Posting Date"
-msgstr ""
+msgstr "Tarih"
 
 #. Label of a Date field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Posting Date"
-msgstr ""
+msgstr "Tarih"
 
 #. Label of a Date field in DocType 'Gratuity'
 #: payroll/doctype/gratuity/gratuity.json
@@ -13748,7 +13748,7 @@ msgstr ""
 
 #: hr/report/project_profitability/project_profitability.py:150
 msgid "Sales Invoice"
-msgstr ""
+msgstr "Satış Faturası"
 
 #: hr/doctype/expense_claim_type/expense_claim_type.py:22
 msgid "Same Company is entered more than once"
