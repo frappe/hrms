@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Appraisal Cycle", {
 	refresh(frm) {
-		set_autocompletions_for_final_score_formula(frm);
+		frm.events.set_autocompletions_for_final_score_formula(frm);
 		frm.set_query("department", () => {
 			return {
 				filters: {
