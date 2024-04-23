@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-22 13:37\n"
+"PO-Revision-Date: 2024-04-23 13:59\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,7 @@ msgid "\n"
 "\t\t\t\t\t\tfor the correct tax calculation in future salary slips.\n"
 "\t\t\t\t\t\t"
 msgstr "\n"
-"\t\t\t\t\t\tهیچ سابقه فیش حقوقی برای کارمند پیدا نشد {0}. <br><br>\n"
+"\t\t\t\t\t\tهیچ سابقه فیش حقوقی برای کارمند {0} پیدا نشد. <br><br>\n"
 "\t\t\t\t\t\tلطفاً {1} و {2} (در صورت وجود)،\n"
 "\t\t\t\t\t\tرا برای محاسبه صحیح مالیات در فیش های حقوقی آینده مشخص کنید.\n"
 "\t\t\t\t\t\t"
@@ -48,11 +48,11 @@ msgstr "${t.balance_leaves}/${t.allocated_leaves}"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:88
 msgid "% Utilization (B + NB) / T"
-msgstr ""
+msgstr "% استفاده (B + NB) / T"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:94
 msgid "% Utilization (B / T)"
-msgstr ""
+msgstr "% استفاده (B / T)"
 
 #: hr/doctype/employee_checkin/employee_checkin.py:84
 msgid "'employee_field_value' and 'timestamp' are required."
@@ -506,7 +506,7 @@ msgstr "جزئیات حسابداری"
 #: payroll/workspace/salary_payout/salary_payout.json
 msgctxt "Accounting Dimension"
 msgid "Accounting Dimension"
-msgstr "بُعد حسابداری"
+msgstr "بعد حسابداری"
 
 #. Label of a Section Break field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
@@ -540,7 +540,7 @@ msgstr "ابعاد حسابداری"
 
 #: hr/doctype/expense_claim/expense_claim.js:216
 msgid "Accounting Ledger"
-msgstr "دفتر حسابداری"
+msgstr "دفتر کل حسابداری"
 
 #. Label of a Card Break in the Expense Claims Workspace
 #. Label of a Card Break in the Salary Payout Workspace
@@ -668,7 +668,7 @@ msgstr "موجودی واقعی در دسترس نیست زیرا برنامه �
 #: hr/doctype/leave_block_list/leave_block_list.json
 msgctxt "Leave Block List"
 msgid "Add Day-wise Dates"
-msgstr ""
+msgstr "خرماهای روزانه را اضافه کنید"
 
 #: hr/employee_property_update.js:45
 msgid "Add Employee Property"
@@ -1853,7 +1853,7 @@ msgstr ""
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Attendance Dashboard"
-msgstr ""
+msgstr "داشبورد حضور و غیاب"
 
 #: hr/report/shift_attendance/shift_attendance.py:43
 msgid "Attendance Date"
@@ -3416,7 +3416,7 @@ msgstr "ایجاد کارمند"
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_holiday_list/create_holiday_list.json
 msgid "Create Holiday List"
-msgstr ""
+msgstr "ایجاد لیست تعطیلات"
 
 #. Title of an Onboarding Step
 #: payroll/onboarding_step/create_income_tax_slab/create_income_tax_slab.json
@@ -3437,7 +3437,7 @@ msgstr "ایجاد فرصت شغلی"
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.js:10
 msgid "Create Journal Entry"
-msgstr "ایجاد ورودی مجله"
+msgstr "ایجاد ورودی دفتر روزنامه"
 
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_leave_allocation/create_leave_allocation.json
@@ -4095,7 +4095,7 @@ msgstr "مقدار پیش فرض"
 #: payroll/doctype/salary_component_account/salary_component_account.json
 msgctxt "Salary Component Account"
 msgid "Default Bank / Cash account will be automatically updated in Salary Journal Entry when this mode is selected."
-msgstr "با انتخاب این حالت، حساب پیش‌فرض بانک / نقدی به‌طور خودکار در ورود مجله حقوق و دستمزد به‌روزرسانی می‌شود."
+msgstr "با انتخاب این حالت، حساب پیش‌فرض بانک / نقدی به‌طور خودکار در ورود دفتر روزنامه حقوق و دستمزد به‌روزرسانی می‌شود."
 
 #. Label of a Currency field in DocType 'Employee Grade'
 #: hr/doctype/employee_grade/employee_grade.json
@@ -5488,7 +5488,7 @@ msgstr "شماره تهویه مطبوع کارمند"
 #. Name of a DocType
 #: hr/doctype/employee_advance/employee_advance.json
 msgid "Employee Advance"
-msgstr "پیشبرد کارمندان"
+msgstr "پیش پرداخت کارمند"
 
 #. Label of a Link in the Expense Claims Workspace
 #. Label of a shortcut in the Expense Claims Workspace
@@ -5496,13 +5496,13 @@ msgstr "پیشبرد کارمندان"
 #: hr/workspace/expense_claims/expense_claims.json hr/workspace/hr/hr.json
 msgctxt "Employee Advance"
 msgid "Employee Advance"
-msgstr "پیشبرد کارمندان"
+msgstr "پیش پرداخت کارمند"
 
 #. Label of a Link field in DocType 'Expense Claim Advance'
 #: hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgctxt "Expense Claim Advance"
 msgid "Employee Advance"
-msgstr "پیشبرد کارمندان"
+msgstr "پیش پرداخت کارمند"
 
 #. Name of a report
 #. Label of a Link in the Expense Claims Workspace
@@ -5510,11 +5510,11 @@ msgstr "پیشبرد کارمندان"
 #: hr/report/employee_advance_summary/employee_advance_summary.json
 #: hr/workspace/expense_claims/expense_claims.json hr/workspace/hr/hr.json
 msgid "Employee Advance Summary"
-msgstr "خلاصه کارمندی پیشرفته"
+msgstr "خلاصه پیش پرداخت کارمند"
 
 #: overrides/company.py:104
 msgid "Employee Advances"
-msgstr "پیشرفت کارمندان"
+msgstr "پیش پرداخت‌ های کارمند"
 
 #. Name of a report
 #. Label of a Link in the Employee Lifecycle Workspace
@@ -5818,12 +5818,12 @@ msgstr "خلاصه تراز مرخصی کارکنان"
 #. Name of a Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Employee Lifecycle"
-msgstr ""
+msgstr "چرخه حیات کارمند"
 
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Employee Lifecycle Dashboard"
-msgstr ""
+msgstr "داشبورد چرخه حیات کارمند"
 
 #: hr/report/appraisal_overview/appraisal_overview.py:26
 #: hr/report/employee_exits/employee_exits.py:30
@@ -7042,7 +7042,7 @@ msgstr "تصویب کننده هزینه"
 #: hr/doctype/hr_settings/hr_settings.json
 msgctxt "HR Settings"
 msgid "Expense Approver Mandatory In Expense Claim"
-msgstr "تصویب کننده هزینه اجباری در ادعای هزینه"
+msgstr "تصویب کننده هزینه اجباری در مطالبه هزینه"
 
 #. Name of a DocType
 #. Label of a Card Break in the HR Workspace
@@ -7052,7 +7052,7 @@ msgstr "تصویب کننده هزینه اجباری در ادعای هزینه
 #: hr/report/unpaid_expense_claim/unpaid_expense_claim.py:20
 #: hr/workspace/hr/hr.json public/js/erpnext/delivery_trip.js:7
 msgid "Expense Claim"
-msgstr "ادعای هزینه"
+msgstr "مطالبه هزینه"
 
 #. Label of a Link in the Expense Claims Workspace
 #. Label of a shortcut in the Expense Claims Workspace
@@ -7060,12 +7060,12 @@ msgstr "ادعای هزینه"
 #: hr/workspace/expense_claims/expense_claims.json hr/workspace/hr/hr.json
 msgctxt "Expense Claim"
 msgid "Expense Claim"
-msgstr "ادعای هزینه"
+msgstr "مطالبه هزینه"
 
 #. Name of a DocType
 #: hr/doctype/expense_claim_account/expense_claim_account.json
 msgid "Expense Claim Account"
-msgstr "حساب ادعای هزینه"
+msgstr "حساب مطالبه هزینه"
 
 #. Name of a DocType
 #: hr/doctype/expense_claim_advance/expense_claim_advance.json
@@ -7075,18 +7075,18 @@ msgstr "پیش پرداخت هزینه"
 #. Name of a DocType
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
 msgid "Expense Claim Detail"
-msgstr "جزئیات ادعای هزینه"
+msgstr "جزئیات مطالبه هزینه"
 
 #. Name of a DocType
 #: hr/doctype/expense_claim_type/expense_claim_type.json
 msgid "Expense Claim Type"
-msgstr "نوع ادعای هزینه"
+msgstr "نوع مطالبه هزینه"
 
 #. Label of a Link field in DocType 'Expense Claim Detail'
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
 msgctxt "Expense Claim Detail"
 msgid "Expense Claim Type"
-msgstr "نوع ادعای هزینه"
+msgstr "نوع مطالبه هزینه"
 
 #. Label of a Data field in DocType 'Expense Claim Type'
 #. Label of a Link in the Expense Claims Workspace
@@ -7094,26 +7094,26 @@ msgstr "نوع ادعای هزینه"
 #: hr/workspace/expense_claims/expense_claims.json
 msgctxt "Expense Claim Type"
 msgid "Expense Claim Type"
-msgstr "نوع ادعای هزینه"
+msgstr "نوع مطالبه هزینه"
 
 #: hr/doctype/vehicle_log/vehicle_log.py:48
 msgid "Expense Claim for Vehicle Log {0}"
-msgstr "ادعای هزینه برای گزارش خودرو {0}"
+msgstr "مطالبه هزینه برای گزارش خودرو {0}"
 
 #: hr/doctype/vehicle_log/vehicle_log.py:36
 msgid "Expense Claim {0} already exists for the Vehicle Log"
-msgstr "ادعای هزینه {0} از قبل برای گزارش خودرو وجود دارد"
+msgstr "مطالبه هزینه {0} از قبل برای گزارش خودرو وجود دارد"
 
 #. Name of a Workspace
 #. Label of a chart in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
 msgid "Expense Claims"
-msgstr ""
+msgstr "مطالبات هزینه"
 
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Expense Claims Dashboard"
-msgstr ""
+msgstr "داشبورد مطالبات هزینه"
 
 #. Label of a Date field in DocType 'Expense Claim Detail'
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
@@ -7791,7 +7791,7 @@ msgstr "جنسیت"
 #: hr/workspace/expense_claims/expense_claims.json
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "General Ledger"
-msgstr "دفتر کل"
+msgstr "دفتر کل مرکزی"
 
 #: payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.js:44
 msgid "Get Details From Declaration"
@@ -8066,7 +8066,7 @@ msgstr "منابع انسانی"
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "HR Dashboard"
-msgstr ""
+msgstr "داشبورد منابع انسانی"
 
 #. Name of a role
 #: hr/doctype/appointment_letter/appointment_letter.json
@@ -8396,7 +8396,7 @@ msgstr "تنظیمات استخدام"
 #. Label of a chart in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Hiring vs Attrition Count"
-msgstr ""
+msgstr "تعداد استخدام در مقابل ترک کار"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -9555,13 +9555,13 @@ msgstr "تاریخ عضویت"
 #: payroll/workspace/salary_payout/salary_payout.json
 msgctxt "Journal Entry"
 msgid "Journal Entry"
-msgstr "مطلب ثبت شده در دفتر وقایع روزانه"
+msgstr "مطلب ثبت شده در دفتر روزنامه"
 
 #. Label of a Link field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Journal Entry"
-msgstr "مطلب ثبت شده در دفتر وقایع روزانه"
+msgstr "مطلب ثبت شده در دفتر روزنامه"
 
 #. Label of a Card Break in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
@@ -10034,7 +10034,7 @@ msgstr "اعلان وضعیت مرخصی"
 #: hr/doctype/hr_settings/hr_settings.json
 msgctxt "HR Settings"
 msgid "Leave Status Notification Template"
-msgstr "مرخصی الگوی اعلان وضعیت"
+msgstr "الگوی اعلان وضعیت مرخصی"
 
 #. Name of a DocType
 #: hr/doctype/leave_type/leave_type.json
@@ -10294,7 +10294,7 @@ msgstr "پلاک وسیله نقلیه"
 
 #: overrides/dashboard_overrides.py:16
 msgid "Lifecycle"
-msgstr "چرخه زندگی"
+msgstr "چرخه حیات"
 
 #: hr/doctype/goal/goal_tree.js:99
 msgid "Link the cycle and tag KRA to your goal to update the appraisal's goal score based on the goal progress"
@@ -11583,7 +11583,7 @@ msgstr "وام PF"
 #. Name of a DocType
 #: hr/doctype/pwa_notification/pwa_notification.json
 msgid "PWA Notification"
-msgstr "اطلاعیه PWA"
+msgstr "اعلان PWA"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
@@ -11727,7 +11727,7 @@ msgstr "حساب پرداختنی"
 
 #: hr/doctype/expense_claim/expense_claim.py:100
 msgid "Payable Account is mandatory to submit an Expense Claim"
-msgstr "حساب پرداختنی برای ارسال ادعای هزینه الزامی است"
+msgstr "حساب پرداختنی برای ارسال مطالبه هزینه الزامی است"
 
 #. Label of a Section Break field in DocType 'Full and Final Statement'
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
@@ -13213,7 +13213,7 @@ msgstr "پاداش حفظ"
 #: hr/doctype/hr_settings/hr_settings.json
 msgctxt "HR Settings"
 msgid "Retirement Age (In Years)"
-msgstr "سن بازنشستگی (در سال)"
+msgstr "سن بازنشستگی (به سال)"
 
 #: hr/doctype/employee_advance/employee_advance.js:70
 msgid "Return"
@@ -13243,7 +13243,7 @@ msgstr "مبلغ برگشتی"
 
 #: hr/doctype/hr_settings/hr_settings.js:37
 msgid "Review various other settings related to Employee Leaves and Expense Claim"
-msgstr "تنظیمات مختلف دیگر مربوط به مرخصی های کارمند و ادعای هزینه را مرور کنید"
+msgstr "تنظیمات مختلف دیگر مربوط به مرخصی های کارمند و مطالبه هزینه را مرور کنید"
 
 #. Label of a Link field in DocType 'Employee Performance Feedback'
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.json
@@ -13345,7 +13345,7 @@ msgstr "ردیف #{0}: مقدار برگه زمانی، مقدار مؤلفه د
 
 #: hr/doctype/expense_claim/expense_claim.py:580
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
-msgstr "ردیف شماره {0}: مبلغ نمی تواند بیشتر از مبلغ معوق در برابر ادعای هزینه {1} باشد. مبلغ معوقه {2} است"
+msgstr "ردیف شماره {0}: مبلغ نمی تواند بیشتر از مبلغ معوق در برابر مطالبه هزینه {1} باشد. مبلغ معوقه {2} است"
 
 #: hr/doctype/expense_claim/expense_claim.py:347
 msgid "Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}"
@@ -13373,7 +13373,7 @@ msgstr "ردیف {0}: مبلغ پرداخت شده {1} بیشتر از مبلغ 
 
 #: hr/doctype/expense_claim/expense_claim.py:280
 msgid "Row {0}: {1} is required in the expenses table to book an expense claim."
-msgstr "ردیف {0}: {1} در جدول هزینه‌ها برای رزرو ادعای هزینه لازم است."
+msgstr "ردیف {0}: {1} در جدول هزینه‌ها برای رزرو مطالبه هزینه لازم است."
 
 #. Label of a Section Break field in DocType 'Gratuity Rule'
 #: payroll/doctype/gratuity_rule/gratuity_rule.json
@@ -13851,7 +13851,7 @@ msgstr "کاربران را انتخاب کنید"
 
 #: hr/doctype/expense_claim/expense_claim.js:370
 msgid "Select an employee to get the employee advance."
-msgstr "یک کارمند را برای پیشبرد کارمند انتخاب کنید."
+msgstr "یک کارمند را برای پیش پرداخت کارمند انتخاب کنید."
 
 #: hr/doctype/leave_allocation/leave_allocation.js:116
 msgid "Select the Employee for which you want to allocate leaves."
@@ -14211,7 +14211,7 @@ msgstr "تغییر مکان"
 #. Name of a Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift & Attendance"
-msgstr ""
+msgstr "شیفت و حضور غیاب"
 
 #. Label of a Datetime field in DocType 'Employee Checkin'
 #: hr/doctype/employee_checkin/employee_checkin.json
@@ -15329,7 +15329,7 @@ msgstr "این بر اساس حضور این کارمند است"
 
 #: payroll/doctype/payroll_entry/payroll_entry.js:378
 msgid "This will submit Salary Slips and create accrual Journal Entry. Do you want to proceed?"
-msgstr "این برگه های حقوق و دستمزد را ارسال می کند و ورودی مجله تعهدی ایجاد می کند. آیا شما می خواهید ادامه دهید؟"
+msgstr "این برگه های حقوق و دستمزد را ارسال می کند و ورودی دفتر روزنامه تعهدی ایجاد می کند. آیا شما می خواهید ادامه دهید؟"
 
 #: hr/doctype/leave_block_list/leave_block_list.js:52
 msgid "Thursday"
@@ -15530,7 +15530,7 @@ msgstr "To Date باید بزرگتر از From Date باشد"
 #: hr/doctype/interview/interview.json
 msgctxt "Interview"
 msgid "To Time"
-msgstr "به زمان"
+msgstr "تا زمان"
 
 #. Label of a Link field in DocType 'PWA Notification'
 #: hr/doctype/pwa_notification/pwa_notification.json
@@ -16198,25 +16198,25 @@ msgstr "سه‌شنبه"
 
 #: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.js:10
 msgid "Type"
-msgstr "تایپ کنید"
+msgstr "نوع"
 
 #. Label of a Select field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "Type"
-msgstr "تایپ کنید"
+msgstr "نوع"
 
 #. Label of a Select field in DocType 'Training Event'
 #: hr/doctype/training_event/training_event.json
 msgctxt "Training Event"
 msgid "Type"
-msgstr "تایپ کنید"
+msgstr "نوع"
 
 #. Label of a Select field in DocType 'Vehicle Service'
 #: hr/doctype/vehicle_service/vehicle_service.json
 msgctxt "Vehicle Service"
 msgid "Type"
-msgstr "تایپ کنید"
+msgstr "نوع"
 
 #. Label of a Data field in DocType 'Employee Tax Exemption Proof Submission
 #. Detail'
@@ -16310,7 +16310,7 @@ msgstr "پرداخت نشده"
 #: hr/report/unpaid_expense_claim/unpaid_expense_claim.json
 #: hr/workspace/expense_claims/expense_claims.json
 msgid "Unpaid Expense Claim"
-msgstr "ادعای هزینه پرداخت نشده"
+msgstr "مطالبه هزینه پرداخت نشده"
 
 #. Option for the 'Status' (Select) field in DocType 'Full and Final
 #. Outstanding Statement'
