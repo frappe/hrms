@@ -24,7 +24,7 @@ jobs:
     timeout-minutes: 60
     env:
       NODE_ENV: "production"
-      WITH_COVERAGE: ${{ github.event_name !== 'pull_request' }}
+      WITH_COVERAGE: ${{ github.event_name != 'pull_request' }}
 
     strategy:
       fail-fast: false
@@ -112,11 +112,11 @@ jobs:
         run: cd ~/frappe-bench/ && bench --site test_site run-parallel-tests --app hrms --total-builds 2 --build-number ${{ matrix.container }}
         env:
           TYPE: server
-          CAPTURE_COVERAGE: ${{ github.event_name !== 'pull_request' }}
+          CAPTURE_COVERAGE: ${{ github.event_name != 'pull_request' }}
 
       - name: Upload coverage data
         uses: actions/upload-artifact@v3
-        if: github.event_name !== 'pull_request'
+        if: github.event_name != 'pull_request'
         with:
           name: coverage-${{ matrix.container }}
           path: /home/runner/frappe-bench/sites/coverage.xml
