@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-21 13:39\n"
+"PO-Revision-Date: 2024-04-24 14:10\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -13373,7 +13373,7 @@ msgstr ""
 #: payroll/doctype/gratuity_rule/gratuity_rule.json
 msgctxt "Gratuity Rule"
 msgid "Rules"
-msgstr ""
+msgstr "Pravila"
 
 #. Label of a Section Break field in DocType 'Additional Salary'
 #: payroll/doctype/additional_salary/additional_salary.json
@@ -15178,7 +15178,7 @@ msgstr ""
 
 #: templates/emails/training_event.html:20
 msgid "Thank you"
-msgstr ""
+msgstr "Hvala vam"
 
 #. Success message of the Module Onboarding 'Human Resource'
 #: hr/module_onboarding/human_resource/human_resource.json
