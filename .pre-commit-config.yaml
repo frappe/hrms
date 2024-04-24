@@ -21,16 +21,16 @@ repos:
     hooks:
       - id: prettier
         types_or: [javascript, vue, css, scss]
-        # Ignore fronetend folder and any files that might contain jinja / bundles
+        # Ignore any files that might contain jinja / bundles
         exclude: |
             (?x)^(
-                frontend/.*|
                 hrms/public/dist/.*|
                 .*node_modules.*|
                 .*boilerplate.*|
                 hrms/templates/includes/.*|
                 hrms/hr/doctype/employee_promotion/employee_promotion.js|
                 hrms/hr/doctype/employee_transfer/employee_transfer.js|
+                hrms/payroll/doctype/salary_structure/salary_structure.js|
             )$
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
