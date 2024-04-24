@@ -240,9 +240,7 @@ def get_account_and_amount(ref_doctype, ref_document):
 		return [payable_account, amount]
 
 	if ref_doctype == "Gratuity":
-		payable_account, amount = frappe.db.get_value(
-			"Gratuity", ref_document, ["payable_account", "amount"]
-		)
+		payable_account, amount = frappe.db.get_value("Gratuity", ref_document, ["payable_account", "amount"])
 		return [payable_account, amount]
 
 	if ref_doctype == "Expense Claim":

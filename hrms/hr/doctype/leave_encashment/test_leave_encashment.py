@@ -260,6 +260,4 @@ class TestLeaveEncashment(FrappeTestCase):
 		# check if leave ledger entry is deleted on cancellation
 		frappe.db.delete("Additional Salary", {"ref_docname": leave_encashment.name})
 		leave_encashment.cancel()
-		self.assertFalse(
-			frappe.db.exists("Leave Ledger Entry", {"transaction_name": leave_encashment.name})
-		)
+		self.assertFalse(frappe.db.exists("Leave Ledger Entry", {"transaction_name": leave_encashment.name}))

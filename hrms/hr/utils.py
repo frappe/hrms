@@ -233,7 +233,7 @@ def throw_overlap_error(doc, exists_for, overlap_doc, from_date, to_date):
 		_("A {0} exists between {1} and {2} (").format(
 			doc.doctype, formatdate(from_date), formatdate(to_date)
 		)
-		+ """ <b><a href="/app/Form/{0}/{1}">{1}</a></b>""".format(doc.doctype, overlap_doc)
+		+ f""" <b><a href="/app/Form/{doc.doctype}/{overlap_doc}">{overlap_doc}</a></b>"""
 		+ _(") for {0}").format(exists_for)
 	)
 	frappe.throw(msg)
@@ -251,9 +251,7 @@ def validate_duplicate_exemption_for_payroll_period(doctype, docname, payroll_pe
 	)
 	if existing_record:
 		frappe.throw(
-			_("{0} already exists for employee {1} and period {2}").format(
-				doctype, employee, payroll_period
-			),
+			_("{0} already exists for employee {1} and period {2}").format(doctype, employee, payroll_period),
 			DuplicateDeclarationError,
 		)
 
@@ -581,9 +579,7 @@ def get_holiday_dates_for_employee(employee, start_date, end_date):
 	return [cstr(h.holiday_date) for h in holidays]
 
 
-def get_holidays_for_employee(
-	employee, start_date, end_date, raise_exception=True, only_non_weekly=False
-):
+def get_holidays_for_employee(employee, start_date, end_date, raise_exception=True, only_non_weekly=False):
 	"""Get Holidays for a given employee
 
 	`employee` (str)

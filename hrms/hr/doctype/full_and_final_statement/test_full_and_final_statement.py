@@ -38,9 +38,7 @@ class TestFullandFinalStatement(FrappeTestCase):
 		receivable_bootstraped_component = ["Loan", "Employee Advance"]
 
 		# checking payables and receivables bootstraped value
-		self.assertEqual(
-			[payable.component for payable in self.fnf.payables], payables_bootstraped_component
-		)
+		self.assertEqual([payable.component for payable in self.fnf.payables], payables_bootstraped_component)
 		self.assertEqual(
 			[receivable.component for receivable in self.fnf.receivables], receivable_bootstraped_component
 		)
@@ -98,9 +96,7 @@ def create_asset_movement(employee):
 
 
 def create_asset():
-	pr = make_purchase_receipt(
-		item_code="Macbook Pro", qty=1, rate=100000.0, location="Test Location"
-	)
+	pr = make_purchase_receipt(item_code="Macbook Pro", qty=1, rate=100000.0, location="Test Location")
 
 	asset_name = frappe.db.get_value("Asset", {"purchase_receipt": pr.name}, "name")
 	asset = frappe.get_doc("Asset", asset_name)

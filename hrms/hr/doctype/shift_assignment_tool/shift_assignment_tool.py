@@ -56,9 +56,7 @@ class ShiftAssignmentTool(Document):
 				(Employee.relieving_date >= self.end_date) | (Employee.relieving_date.isnull())
 			)
 		if self.status == "Active":
-			query = query.where(
-				Employee.employee.notin(SubQuery(self.get_query_for_employees_with_shifts()))
-			)
+			query = query.where(Employee.employee.notin(SubQuery(self.get_query_for_employees_with_shifts())))
 		return query.run(as_dict=True)
 
 	def get_shift_requests(self, filters):
@@ -101,9 +99,7 @@ class ShiftAssignmentTool(Document):
 		ShiftAssignment = frappe.qb.DocType("Shift Assignment")
 		query = frappe.qb.from_(ShiftAssignment)
 
-		allow_multiple_shifts = frappe.db.get_single_value(
-			"HR Settings", "allow_multiple_shift_assignments"
-		)
+		allow_multiple_shifts = frappe.db.get_single_value("HR Settings", "allow_multiple_shift_assignments")
 		# join Shift Type if multiple shifts are allowed as we need to know shift timings only in this case
 		if allow_multiple_shifts:
 			ShiftType = frappe.qb.DocType("Shift Type")

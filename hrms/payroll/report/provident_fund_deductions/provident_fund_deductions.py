@@ -75,7 +75,6 @@ def prepare_data(entry, component_type_dict):
 	)
 
 	for d in entry:
-
 		component_type = component_type_dict.get(d.salary_component)
 
 		if data_list.get(d.name):

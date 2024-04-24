@@ -475,9 +475,7 @@ class TestLeaveAllocation(FrappeTestCase):
 
 		# check if leave ledger entry is deleted on cancellation
 		leave_allocation.cancel()
-		self.assertFalse(
-			frappe.db.exists("Leave Ledger Entry", {"transaction_name": leave_allocation.name})
-		)
+		self.assertFalse(frappe.db.exists("Leave Ledger Entry", {"transaction_name": leave_allocation.name}))
 
 	def test_leave_addition_after_submit(self):
 		leave_allocation = create_leave_allocation(
