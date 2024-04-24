@@ -197,15 +197,6 @@ const expensesTableFields = createResource({
 	params: { doctype: "Expense Claim Detail" },
 	transform(data) {
 		const excludeFields = ["description_sb", "amounts_sb"]
-		const dimensionFields = [
-			"cost_center",
-			"project",
-			"branch",
-			"accounting_dimensions_section",
-		]
-
-		if (!props.id) excludeFields.push(...dimensionFields)
-
 		return data.filter((field) => !excludeFields.includes(field.fieldname))
 	},
 })
