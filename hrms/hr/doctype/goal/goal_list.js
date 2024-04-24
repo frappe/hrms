@@ -1,18 +1,18 @@
 frappe.listview_settings["Goal"] = {
 	add_fields: ["end_date", "status"],
-	get_indicator: function(doc) {
+	get_indicator: function (doc) {
 		const status_color = {
-			"Pending": "yellow",
+			Pending: "yellow",
 			"In Progress": "orange",
-			"Completed": "green",
-			"Archived": "gray",
-			"Closed": "red",
+			Completed: "green",
+			Archived: "gray",
+			Closed: "red",
 		};
 		return [__(doc.status), status_color[doc.status], "status,=," + doc.status];
 	},
 	formatters: {
 		end_date(value, df, doc) {
-			if (!value) return ""
+			if (!value) return "";
 			if (doc.status === "Completed" || doc.status === "Archived") return "";
 
 			const d = moment(value);
@@ -26,6 +26,6 @@ frappe.listview_settings["Goal"] = {
 					${d.fromNow()}
 				</div>
 			`;
-		}
-	}
-}
+		},
+	},
+};

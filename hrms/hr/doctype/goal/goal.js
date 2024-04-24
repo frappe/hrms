@@ -10,7 +10,7 @@ frappe.ui.form.on("Goal", {
 			frm.set_df_property(
 				"progress",
 				"description",
-				__("Group goal's progress is auto-calculated based on the child goals.")
+				__("Group goal's progress is auto-calculated based on the child goals."),
 			);
 		}
 	},
@@ -22,8 +22,8 @@ frappe.ui.form.on("Goal", {
 					is_group: 1,
 					name: ["!=", frm.doc.name],
 					employee: frm.doc.employee,
-				}
-			}
+				},
+			};
 		});
 
 		frm.set_query("kra", () => {
@@ -32,7 +32,7 @@ frappe.ui.form.on("Goal", {
 				filters: {
 					employee: frm.doc.employee,
 					appraisal_cycle: frm.doc.appraisal_cycle,
-				}
+				},
 			};
 		});
 
@@ -41,7 +41,7 @@ frappe.ui.form.on("Goal", {
 				filters: {
 					status: ["!=", "Completed"],
 					company: frm.doc.company,
-				}
+				},
 			};
 		});
 	},
@@ -51,31 +51,47 @@ frappe.ui.form.on("Goal", {
 		const doc_status = frm.doc.status;
 
 		if (doc_status === "Archived") {
-			frm.add_custom_button(__("Unarchive"), () => {
-				frm.set_value("status", "");
-				frm.save();
-			}, __("Status"));
+			frm.add_custom_button(
+				__("Unarchive"),
+				() => {
+					frm.set_value("status", "");
+					frm.save();
+				},
+				__("Status"),
+			);
 		}
 
 		if (doc_status === "Closed") {
-			frm.add_custom_button(__("Reopen"), () => {
-				frm.set_value("status", "");
-				frm.save();
-			}, __("Status"));
+			frm.add_custom_button(
+				__("Reopen"),
+				() => {
+					frm.set_value("status", "");
+					frm.save();
+				},
+				__("Status"),
+			);
 		}
 
 		if (doc_status !== "Archived") {
-			frm.add_custom_button(__("Archive"), () => {
-				frm.set_value("status", "Archived");
-				frm.save();
-			}, __("Status"));
+			frm.add_custom_button(
+				__("Archive"),
+				() => {
+					frm.set_value("status", "Archived");
+					frm.save();
+				},
+				__("Status"),
+			);
 		}
 
 		if (doc_status !== "Closed") {
-			frm.add_custom_button(__("Close"), () => {
-				frm.set_value("status", "Closed");
-				frm.save();
-			}, __("Status"));
+			frm.add_custom_button(
+				__("Close"),
+				() => {
+					frm.set_value("status", "Closed");
+					frm.save();
+				},
+				__("Status"),
+			);
 		}
 	},
 
@@ -85,7 +101,7 @@ frappe.ui.form.on("Goal", {
 
 			frappe.msgprint({
 				message: __("Please select the Appraisal Cycle first."),
-				title: __("Mandatory")
+				title: __("Mandatory"),
 			});
 
 			return;
@@ -93,7 +109,9 @@ frappe.ui.form.on("Goal", {
 
 		if (frm.doc.__islocal || !frm.doc.is_group) return;
 
-		let msg = __("Changing KRA in this parent goal will align all the child goals to the same KRA, if any.");
+		let msg = __(
+			"Changing KRA in this parent goal will align all the child goals to the same KRA, if any.",
+		);
 		msg += "<br>";
 		msg += __("Do you still want to proceed?");
 
@@ -101,8 +119,10 @@ frappe.ui.form.on("Goal", {
 			msg,
 			() => {},
 			() => {
-				frappe.db.get_value("Goal", frm.doc.name, "kra", (r) => frm.set_value("kra", r.kra));
-			}
+				frappe.db.get_value("Goal", frm.doc.name, "kra", (r) =>
+					frm.set_value("kra", r.kra),
+				);
+			},
 		);
 	},
 
@@ -110,5 +130,5 @@ frappe.ui.form.on("Goal", {
 		if (frm.doc.__islocal && frm.doc.is_group) {
 			frm.set_value("progress", 0);
 		}
-	}
+	},
 });
