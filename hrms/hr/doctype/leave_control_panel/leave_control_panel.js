@@ -16,12 +16,12 @@ frappe.ui.form.on("Leave Control Panel", {
 		hrms.handle_realtime_bulk_action_notification(
 			frm,
 			"completed_bulk_leave_policy_assignment",
-			"Leave Policy Assignment"
+			"Leave Policy Assignment",
 		);
 		hrms.handle_realtime_bulk_action_notification(
 			frm,
 			"completed_bulk_leave_allocation",
-			"Leave Allocation"
+			"Leave Allocation",
 		);
 	},
 
@@ -112,18 +112,16 @@ frappe.ui.form.on("Leave Control Panel", {
 	},
 
 	get_employees(frm) {
-		frm
-			.call({
-				method: "get_employees",
-				args: {
-					advanced_filters: frm.advanced_filters || [],
-				},
-				doc: frm.doc,
-			})
-			.then((r) => {
-				const columns = frm.events.get_employees_datatable_columns();
-				hrms.render_employees_datatable(frm, columns, r.message);
-			});
+		frm.call({
+			method: "get_employees",
+			args: {
+				advanced_filters: frm.advanced_filters || [],
+			},
+			doc: frm.doc,
+		}).then((r) => {
+			const columns = frm.events.get_employees_datatable_columns();
+			hrms.render_employees_datatable(frm, columns, r.message);
+		});
 	},
 
 	get_employees_datatable_columns() {
@@ -185,9 +183,7 @@ frappe.ui.form.on("Leave Control Panel", {
 		const selected_employees = [];
 		check_map.forEach((is_checked, idx) => {
 			if (is_checked)
-				selected_employees.push(
-					frm.employees_datatable.datamanager.data[idx].employee
-				);
+				selected_employees.push(frm.employees_datatable.datamanager.data[idx].employee);
 		});
 
 		hrms.validate_mandatory_fields(frm, selected_employees);
@@ -199,7 +195,7 @@ frappe.ui.form.on("Leave Control Panel", {
 			__("Allocate Leave to {0} employee(s)?", [selected_employees.length]),
 			() => {
 				frm.events.bulk_allocate_leave(frm, selected_employees);
-			}
+			},
 		);
 	},
 

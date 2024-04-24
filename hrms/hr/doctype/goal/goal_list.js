@@ -32,9 +32,7 @@ frappe.listview_settings["Goal"] = {
 	},
 
 	onload: function (listview) {
-		const status_menu = listview.page.add_custom_button_group(
-			__("Update Status")
-		);
+		const status_menu = listview.page.add_custom_button_group(__("Update Status"));
 		const options = [
 			{ present: "Complete", past: "Completed" },
 			{ present: "Archive", past: "Archived" },
@@ -44,7 +42,7 @@ frappe.listview_settings["Goal"] = {
 		];
 		options.forEach((option) => {
 			listview.page.add_custom_menu_item(status_menu, __(option.present), () =>
-				this.trigger_update_status_dialog(option.past, listview)
+				this.trigger_update_status_dialog(option.past, listview),
 			);
 		});
 	},
@@ -55,11 +53,10 @@ frappe.listview_settings["Goal"] = {
 			.filter(
 				(item) =>
 					!item.is_group &&
-					get_applicable_current_statuses(status).includes(item.status)
+					get_applicable_current_statuses(status).includes(item.status),
 			)
 			.map((item) => item.name);
-		if (!items_to_be_updated.length)
-			return this.trigger_error_dialogs(checked_items, status);
+		if (!items_to_be_updated.length) return this.trigger_error_dialogs(checked_items, status);
 
 		if (status === "Unarchived" || status === "Reopened") {
 			const simple_present_tense = {
@@ -75,7 +72,7 @@ frappe.listview_settings["Goal"] = {
 				() => {
 					this.update_status("", items_to_be_updated, listview);
 					this.trigger_error_dialogs(checked_items, status);
-				}
+				},
 			);
 		} else {
 			frappe.confirm(
@@ -87,7 +84,7 @@ frappe.listview_settings["Goal"] = {
 				() => {
 					this.update_status(status, items_to_be_updated, listview);
 					this.trigger_error_dialogs(checked_items, status);
-				}
+				},
 			);
 		}
 	},
@@ -106,9 +103,7 @@ frappe.listview_settings["Goal"] = {
 			});
 
 		const applicable_statuses = get_applicable_current_statuses(status);
-		if (
-			checked_items.some((item) => !applicable_statuses.includes(item.status))
-		)
+		if (checked_items.some((item) => !applicable_statuses.includes(item.status)))
 			frappe.msgprint({
 				title: __("Error"),
 				message: __("Only {0} Goals can be {1}", [
