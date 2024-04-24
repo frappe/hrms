@@ -86,7 +86,7 @@ def get_data(filters: dict = None) -> list[dict]:
 
 	for condition in ["appraisal_cycle", "employee", "department", "designation", "company"]:
 		if filters.get(condition):
-			query = query.where((Appraisal[condition] == filters.get(condition)))
+			query = query.where(Appraisal[condition] == filters.get(condition))
 
 	query = query.orderby(Appraisal.appraisal_cycle)
 	query = query.orderby(Appraisal.final_score, order=frappe.qb.desc)
