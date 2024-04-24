@@ -80,7 +80,7 @@ frappe.ui.form.on("Job Applicant", {
 					options: 'Interview Round'
 				},
 			],
-			primary_action_label: 'Create Interview',
+			primary_action_label: __("Create Interview"),
 			primary_action(values) {
 				frm.events.create_interview(frm, values);
 				d.hide();

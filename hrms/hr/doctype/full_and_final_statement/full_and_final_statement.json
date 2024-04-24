@@ -23,12 +23,13 @@
   "payables",
   "section_break_10",
   "receivables",
+  "section_break_15",
+  "assets_allocated",
+  "total_asset_recovery_cost",
   "totals_section",
   "total_payable_amount",
   "column_break_21",
-  "total_receivable_amount",
-  "section_break_15",
-  "assets_allocated"
+  "total_receivable_amount"
  ],
  "fields": [
   {
@@ -176,12 +177,26 @@
    "in_list_view": 1,
    "label": "Total Receivable Amount",
    "read_only": 1
+  },
+  {
+   "fieldname": "total_asset_recovery_cost",
+   "fieldtype": "Currency",
+   "label": "Total Asset Recovery Cost",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2024-01-11 18:06:22.669089",
+ "links": [
+  {
+   "is_child_table": 1,
+   "link_doctype": "Journal Entry Account",
+   "link_fieldname": "reference_name",
+   "parent_doctype": "Journal Entry",
+   "table_fieldname": "accounts"
+  }
+ ],
+ "modified": "2024-04-19 15:45:04.206575",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Full and Final Statement",
@@ -213,6 +228,7 @@
    "write": 1
   },
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
