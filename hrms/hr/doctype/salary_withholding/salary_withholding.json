@@ -1,0 +1,116 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-04-24 13:14:11.553108",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_fwuv",
+  "employee",
+  "date_of_joining",
+  "date_of_relieving",
+  "column_break_rhlv",
+  "amended_from",
+  "exit_details_section",
+  "status",
+  "from_date",
+  "to_date",
+  "column_break_hdbc",
+  "reason_for_withholding_salary"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_fwuv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Salary Withholding",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "exit_details_section",
+   "fieldtype": "Section Break",
+   "label": "Exit Details"
+  },
+  {
+   "fieldname": "date_of_joining",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date of joining",
+   "reqd": 1
+  },
+  {
+   "fieldname": "date_of_relieving",
+   "fieldtype": "Date",
+   "label": "Date of relieving"
+  },
+  {
+   "fieldname": "reason_for_withholding_salary",
+   "fieldtype": "Small Text",
+   "label": "Reason for withholding salary"
+  },
+  {
+   "default": "Withheld",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Withheld\nReleased"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date"
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date"
+  },
+  {
+   "fieldname": "column_break_rhlv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_hdbc",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-04-24 17:33:30.552823",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Salary Withholding",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
