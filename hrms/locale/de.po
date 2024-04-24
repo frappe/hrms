@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-05 13:25\n"
+"PO-Revision-Date: 2024-04-17 11:21\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -7454,7 +7454,7 @@ msgstr "Fuhrparkverwaltung"
 #. Name of a role
 #: hr/doctype/vehicle_log/vehicle_log.json
 msgid "Fleet Manager"
-msgstr "Flottenverwalter"
+msgstr "Fuhrparkverwalter"
 
 #. Label of a Tab Break field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json

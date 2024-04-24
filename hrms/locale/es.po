@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-03 13:30\n"
+"PO-Revision-Date: 2024-04-19 12:50\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -8365,7 +8365,7 @@ msgstr "Nombre del Seguro de Salud"
 
 #: hr/notification/training_feedback/training_feedback.html:1
 msgid "Hello"
-msgstr ""
+msgstr "Hola"
 
 #. Label of a HTML field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
