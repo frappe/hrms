@@ -28,7 +28,9 @@ class SalaryStructure(Document):
 			for row in self.get(table):
 				if not row.amount_based_on_formula and row.formula:
 					frappe.msgprint(
-						_("{0} Row #{1}: Formula is set but {2} is disabled for the Salary Component {3}.").format(
+						_(
+							"{0} Row #{1}: Formula is set but {2} is disabled for the Salary Component {3}."
+						).format(
 							table.capitalize(),
 							row.idx,
 							frappe.bold(_("Amount Based on Formula")),
@@ -95,9 +97,7 @@ class SalaryStructure(Document):
 					)
 					message += "<br><br>" + _(
 						"Disable {0} for the {1} component, to prevent the amount from being deducted twice, as its formula already uses a payment-days-based component."
-					).format(
-						frappe.bold("Depends On Payment Days"), frappe.bold(row.salary_component)
-					)
+					).format(frappe.bold("Depends On Payment Days"), frappe.bold(row.salary_component))
 					frappe.throw(message, title=_("Payment Days Dependency"))
 
 	def get_component_abbreviations(self):
@@ -160,15 +160,13 @@ class SalaryStructure(Document):
 		conditions, values = [], []
 		for field, value in kwargs.items():
 			if value:
-				conditions.append("{0}=%s".format(field))
+				conditions.append(f"{field}=%s")
 				values.append(value)
 
 		condition_str = " and " + " and ".join(conditions) if conditions else ""
 
 		employees = frappe.db.sql_list(
-			"select name from tabEmployee where status='Active' {condition}".format(
-				condition=condition_str
-			),
+			f"select name from tabEmployee where status='Active' {condition_str}",
 			tuple(values),
 		)
 
@@ -358,7 +356,7 @@ def make_salary_slip(
 	)
 
 	if cint(as_print):
-		doc.name = "Preview for {0}".format(employee)
+		doc.name = f"Preview for {employee}"
 		return frappe.get_print(doc.doctype, doc.name, doc=doc, print_format=print_format)
 	else:
 		return doc
@@ -395,7 +393,7 @@ def get_salary_component(doctype, txt, searchfield, start, page_len, filters):
 		.where(
 			(sc.type == filters.get("component_type"))
 			& (sc.disabled == 0)
-			& (sc[searchfield].like("%{0}%".format(txt)) | sc.name.like("%{0}%".format(txt)))
+			& (sc[searchfield].like(f"%{txt}%") | sc.name.like(f"%{txt}%"))
 		)
 		.limit(page_len)
 		.offset(start)

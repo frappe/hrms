@@ -64,7 +64,7 @@ def get_vehicle_log_data(filters):
 	conditions, values = get_conditions(filters)
 
 	data = frappe.db.sql(
-		"""
+		f"""
 		SELECT
 			vhcl.license_plate as vehicle, vhcl.make, vhcl.model,
 			vhcl.location, log.name as log_name, log.odometer,
@@ -77,10 +77,8 @@ def get_vehicle_log_data(filters):
 			vhcl.license_plate = log.license_plate
 			and log.docstatus = 1
 			and date between %(start_date)s and %(end_date)s
-			{0}
-		ORDER BY date""".format(
-			conditions
-		),
+			{conditions}
+		ORDER BY date""",
 		values,
 		as_dict=1,
 	)

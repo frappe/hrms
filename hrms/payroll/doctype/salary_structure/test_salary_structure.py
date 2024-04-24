@@ -53,7 +53,6 @@ class TestSalaryStructure(FrappeTestCase):
 			holiday_list.save()
 
 	def test_salary_structure_deduction_based_on_gross_pay(self):
-
 		emp = make_employee("test_employee_3@salary.com")
 
 		sal_struct = make_salary_structure("Salary Structure 2", "Monthly", dont_submit=True)
@@ -233,9 +232,7 @@ def create_salary_structure_assignment(
 	base=None,
 	allow_duplicate=False,
 ):
-	if not allow_duplicate and frappe.db.exists(
-		"Salary Structure Assignment", {"employee": employee}
-	):
+	if not allow_duplicate and frappe.db.exists("Salary Structure Assignment", {"employee": employee}):
 		frappe.db.sql("""delete from `tabSalary Structure Assignment` where employee=%s""", (employee))
 
 	if not payroll_period:

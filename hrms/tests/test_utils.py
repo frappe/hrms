@@ -41,14 +41,10 @@ def set_defaults():
 	from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 
 	make_holiday_list("Salary Slip Test Holiday List")
-	frappe.db.set_value(
-		"Company", "_Test Company", "default_holiday_list", "Salary Slip Test Holiday List"
-	)
+	frappe.db.set_value("Company", "_Test Company", "default_holiday_list", "Salary Slip Test Holiday List")
 
 
-def get_first_sunday(
-	holiday_list="Salary Slip Test Holiday List", for_date=None, find_after_for_date=False
-):
+def get_first_sunday(holiday_list="Salary Slip Test Holiday List", for_date=None, find_after_for_date=False):
 	date = for_date or getdate()
 	month_start_date = get_first_day(date)
 

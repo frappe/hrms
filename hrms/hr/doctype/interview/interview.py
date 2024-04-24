@@ -52,9 +52,7 @@ class Interview(Document):
 				frappe.throw(
 					_(
 						"Interview Round {0} is only for Designation {1}. Job Applicant has applied for the role {2}"
-					).format(
-						self.interview_round, frappe.bold(self.designation), applicant_designation
-					),
+					).format(self.interview_round, frappe.bold(self.designation), applicant_designation),
 					exc=DuplicateInterviewRoundError,
 				)
 		else:
@@ -155,7 +153,9 @@ class Interview(Document):
 			)
 		except Exception:
 			frappe.msgprint(
-				_("Failed to send the Interview Reschedule notification. Please configure your email account.")
+				_(
+					"Failed to send the Interview Reschedule notification. Please configure your email account."
+				)
 			)
 
 		frappe.msgprint(_("Interview Rescheduled successfully"), indicator="green")
@@ -204,9 +204,7 @@ def update_job_applicant_status(args):
 
 @frappe.whitelist()
 def get_interviewers(interview_round):
-	return frappe.get_all(
-		"Interviewer", filters={"parent": interview_round}, fields=["user as interviewer"]
-	)
+	return frappe.get_all("Interviewer", filters={"parent": interview_round}, fields=["user as interviewer"])
 
 
 def send_interview_reminder():
@@ -236,9 +234,7 @@ def send_interview_reminder():
 		},
 	)
 
-	interview_template = frappe.get_doc(
-		"Email Template", reminder_settings.interview_reminder_template
-	)
+	interview_template = frappe.get_doc("Email Template", reminder_settings.interview_reminder_template)
 
 	for d in interviews:
 		doc = frappe.get_doc("Interview", d.name)
@@ -349,7 +345,7 @@ def create_interview_feedback(data, interview_name, interviewer, job_applicant):
 @frappe.validate_and_sanitize_search_inputs
 def get_interviewer_list(doctype, txt, searchfield, start, page_len, filters):
 	filters = [
-		["Has Role", "parent", "like", "%{}%".format(txt)],
+		["Has Role", "parent", "like", f"%{txt}%"],
 		["Has Role", "role", "=", "interviewer"],
 		["Has Role", "parenttype", "=", "User"],
 	]
@@ -389,7 +385,7 @@ def get_events(start, end, filters=None):
 	conditions = get_event_conditions("Interview", filters)
 
 	interviews = frappe.db.sql(
-		"""
+		f"""
 			SELECT DISTINCT
 				`tabInterview`.name, `tabInterview`.job_applicant, `tabInterview`.interview_round,
 				`tabInterview`.scheduled_on, `tabInterview`.status, `tabInterview`.from_time as from_time,
@@ -400,9 +396,7 @@ def get_events(start, end, filters=None):
 				(`tabInterview`.scheduled_on between %(start)s and %(end)s)
 				and docstatus != 2
 				{conditions}
-			""".format(
-			conditions=conditions
-		),
+			""",
 		{"start": start, "end": end},
 		as_dict=True,
 		update={"allDay": 0},

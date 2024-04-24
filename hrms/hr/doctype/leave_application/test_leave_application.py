@@ -360,9 +360,7 @@ class TestLeaveApplication(FrappeTestCase):
 		# Case 2: leave type with 'Include holidays within leaves as leaves' disabled
 		frappe.delete_doc_if_exists("Leave Type", "Test Do Not Include Holidays", force=1)
 		leave_type = frappe.get_doc(
-			dict(
-				leave_type_name="Test Do Not Include Holidays", doctype="Leave Type", include_holiday=False
-			)
+			dict(leave_type_name="Test Do Not Include Holidays", doctype="Leave Type", include_holiday=False)
 		).insert()
 
 		date = getdate()
@@ -865,9 +863,7 @@ class TestLeaveApplication(FrappeTestCase):
 
 		# check if leave ledger entry is deleted on cancellation
 		leave_application.cancel()
-		self.assertFalse(
-			frappe.db.exists("Leave Ledger Entry", {"transaction_name": leave_application.name})
-		)
+		self.assertFalse(frappe.db.exists("Leave Ledger Entry", {"transaction_name": leave_application.name}))
 
 	def test_ledger_entry_creation_on_intermediate_allocation_expiry(self):
 		employee = get_employee()
@@ -974,9 +970,7 @@ class TestLeaveApplication(FrappeTestCase):
 		year_end = getdate(get_year_ending(date))
 
 		# ALLOCATION = 30
-		allocation = make_allocation_record(
-			employee=employee.name, from_date=year_start, to_date=year_end
-		)
+		allocation = make_allocation_record(employee=employee.name, from_date=year_start, to_date=year_end)
 
 		# USED LEAVES = 4
 		first_sunday = get_first_sunday(self.holiday_list)

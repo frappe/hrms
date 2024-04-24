@@ -197,9 +197,7 @@ def calculate_working_hours(logs, check_in_out_type, working_hours_calc_type):
 	elif check_in_out_type == "Strictly based on Log Type in Employee Checkin":
 		if working_hours_calc_type == "First Check-in and Last Check-out":
 			first_in_log_index = find_index_in_dict(logs, "log_type", "IN")
-			first_in_log = (
-				logs[first_in_log_index] if first_in_log_index or first_in_log_index == 0 else None
-			)
+			first_in_log = logs[first_in_log_index] if first_in_log_index or first_in_log_index == 0 else None
 			last_out_log_index = find_index_in_dict(reversed(logs), "log_type", "OUT")
 			last_out_log = (
 				logs[len(logs) - 1 - last_out_log_index]

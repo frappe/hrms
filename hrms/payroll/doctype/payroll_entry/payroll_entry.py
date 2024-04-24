@@ -290,7 +290,8 @@ class PayrollEntry(Document):
 					ss.employee,
 				)
 				.where(
-					(ssd.parentfield == component_type) & (ss.name.isin(tuple([d.name for d in salary_slips])))
+					(ssd.parentfield == component_type)
+					& (ss.name.isin(tuple([d.name for d in salary_slips])))
 				)
 			).run(as_dict=True)
 
@@ -561,7 +562,9 @@ class PayrollEntry(Document):
 				}
 				"""
 				for employee, employee_details in self.employee_based_payroll_payable_entries.items():
-					payable_amount = employee_details.get("earnings", 0) - employee_details.get("deductions", 0)
+					payable_amount = employee_details.get("earnings", 0) - employee_details.get(
+						"deductions", 0
+					)
 
 					payable_amount = self.get_accounting_entries_and_payable_amount(
 						payroll_payable_account,
@@ -693,9 +696,7 @@ class PayrollEntry(Document):
 
 		return row
 
-	def get_amount_and_exchange_rate_for_journal_entry(
-		self, account, amount, company_currency, currencies
-	):
+	def get_amount_and_exchange_rate_for_journal_entry(self, account, amount, company_currency, currencies):
 		conversion_rate = 1
 		exchange_rate = self.exchange_rate
 		account_currency = frappe.db.get_value("Account", account, "account_currency")
@@ -1106,9 +1107,7 @@ def get_frequency_kwargs(frequency_name):
 def get_end_date(start_date, frequency):
 	start_date = getdate(start_date)
 	frequency = frequency.lower() if frequency else "monthly"
-	kwargs = (
-		get_frequency_kwargs(frequency) if frequency != "bimonthly" else get_frequency_kwargs("monthly")
-	)
+	kwargs = get_frequency_kwargs(frequency) if frequency != "bimonthly" else get_frequency_kwargs("monthly")
 
 	# weekly, fortnightly and daily intervals have fixed days so no problems
 	end_date = add_to_date(start_date, **kwargs) - relativedelta(days=1)
@@ -1286,7 +1285,9 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 
 			count += 1
 			if publish_progress:
-				frappe.publish_progress(count * 100 / len(salary_slips), title=_("Submitting Salary Slips..."))
+				frappe.publish_progress(
+					count * 100 / len(salary_slips), title=_("Submitting Salary Slips...")
+				)
 
 		if submitted:
 			payroll_entry.make_accrual_jv_entry()
@@ -1310,15 +1311,13 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 @frappe.validate_and_sanitize_search_inputs
 def get_payroll_entries_for_jv(doctype, txt, searchfield, start, page_len, filters):
 	return frappe.db.sql(
-		"""
+		f"""
 		select name from `tabPayroll Entry`
-		where `{key}` LIKE %(txt)s
+		where `{searchfield}` LIKE %(txt)s
 		and name not in
 			(select reference_name from `tabJournal Entry Account`
 				where reference_type="Payroll Entry")
-		order by name limit %(start)s, %(page_len)s""".format(
-			key=searchfield
-		),
+		order by name limit %(start)s, %(page_len)s""",
 		{"txt": "%%%s%%" % txt, "start": start, "page_len": page_len},
 	)
 
@@ -1362,9 +1361,7 @@ def employee_query(doctype, txt, searchfield, start, page_len, filters):
 	if filters.start_date and filters.end_date:
 		employee_list = get_employee_list(filters)
 		emp = filters.get("employees") or []
-		include_employees = [
-			employee.employee for employee in employee_list if employee.employee not in emp
-		]
+		include_employees = [employee.employee for employee in employee_list if employee.employee not in emp]
 		filters.pop("start_date")
 		filters.pop("end_date")
 		if "salary_slip_based_on_timesheet" in filters:

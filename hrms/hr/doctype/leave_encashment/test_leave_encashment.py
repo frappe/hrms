@@ -41,9 +41,7 @@ class TestLeaveEncashment(FrappeTestCase):
 		make_holiday_list("_Test Leave Encashment", year_start, year_end)
 
 		# create the leave policy
-		leave_policy = create_leave_policy(
-			leave_type="_Test Leave Type Encashment", annual_allocation=10
-		)
+		leave_policy = create_leave_policy(leave_type="_Test Leave Type Encashment", annual_allocation=10)
 		leave_policy.submit()
 
 		# create employee, salary structure and assignment
@@ -148,11 +146,7 @@ class TestLeaveEncashment(FrappeTestCase):
 
 		# check if leave ledger entry is deleted on cancellation
 
-		frappe.db.sql(
-			"Delete from `tabAdditional Salary` WHERE ref_docname = %s", (leave_encashment.name)
-		)
+		frappe.db.sql("Delete from `tabAdditional Salary` WHERE ref_docname = %s", (leave_encashment.name))
 
 		leave_encashment.cancel()
-		self.assertFalse(
-			frappe.db.exists("Leave Ledger Entry", {"transaction_name": leave_encashment.name})
-		)
+		self.assertFalse(frappe.db.exists("Leave Ledger Entry", {"transaction_name": leave_encashment.name}))
