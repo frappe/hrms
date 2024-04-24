@@ -751,7 +751,6 @@ def get_ec_matching_query(bank_account, company, exact_match, from_date=None, to
 	filter_by_date = ""
 	if from_date and to_date:
 		filter_by_date = f"AND posting_date BETWEEN '{from_date}' AND '{to_date}'"
-		order_by = "posting_date"
 
 	return f"""
 		SELECT

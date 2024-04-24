@@ -1178,7 +1178,7 @@ class TestSalarySlip(FrappeTestCase):
 		from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
 
 		emp = make_employee("test_employee_6@salary.com", company="_Test Company")
-		salary_structure = make_salary_structure_for_timesheet(emp, "_Test Company")
+		make_salary_structure_for_timesheet(emp, "_Test Company")
 		timesheet = make_timesheet(emp, simulate=True, is_billable=1)
 		salary_slip = make_salary_slip_from_timesheet(timesheet.name)
 		salary_slip.submit()
@@ -1579,7 +1579,7 @@ class TestSalarySlip(FrappeTestCase):
 
 		tax_slabs = []
 		salary_structures = []
-		for start_date, end_date in [(year_start, mid_year), (mid_year, year_end)]:
+		for start_date, __ in [(year_start, mid_year), (mid_year, year_end)]:
 			tax_slab = create_tax_slab(
 				payroll_period,
 				allow_tax_exemption=True,

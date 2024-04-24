@@ -1012,13 +1012,10 @@ def get_filter_condition(filters):
 
 
 def get_joining_relieving_condition(start_date, end_date):
-	cond = """
-		and ifnull(t1.date_of_joining, '1900-01-01') <= '%(end_date)s'
-		and ifnull(t1.relieving_date, '2199-12-31') >= '%(start_date)s'
-	""" % {
-		"start_date": start_date,
-		"end_date": end_date,
-	}
+	cond = f"""
+		and ifnull(t1.date_of_joining, '1900-01-01') <= '{end_date}'
+		and ifnull(t1.relieving_date, '2199-12-31') >= '{start_date}'
+	"""
 	return cond
 
 
@@ -1256,12 +1253,11 @@ def get_existing_salary_slips(employees, args):
 	return frappe.db.sql_list(
 		"""
 		select distinct employee from `tabSalary Slip`
-		where docstatus!= 2 and company = %s and payroll_entry = %s
-			and start_date >= %s and end_date <= %s
-			and employee in (%s)
-	"""
-		% ("%s", "%s", "%s", "%s", ", ".join(["%s"] * len(employees))),
-		[args.company, args.payroll_entry, args.start_date, args.end_date] + employees,
+		where docstatus != 2 and company = {} and payroll_entry = {}
+			and start_date >= {} and end_date <= {}
+			and employee in ({})
+		""".format("%s", "%s", "%s", "%s", ", ".join(["%s"] * len(employees))),
+		[args.company, args.payroll_entry, args.start_date, args.end_date, *employees],
 	)
 
 
