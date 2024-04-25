@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-24 14:09\n"
+"PO-Revision-Date: 2024-04-25 14:15\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -848,7 +848,7 @@ msgstr ""
 #: hr/doctype/leave_control_panel/leave_control_panel.json
 msgctxt "Leave Control Panel"
 msgid "Advanced Filters"
-msgstr ""
+msgstr "Gelişmiş Filtreler"
 
 #. Label of a Card Break in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
@@ -3918,7 +3918,7 @@ msgstr ""
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgctxt "Employee Grievance"
 msgid "Date "
-msgstr ""
+msgstr "Tarih "
 
 #: hr/doctype/goal/goal_tree.js:38
 #: hr/report/daily_work_summary_replies/daily_work_summary_replies.js:16
@@ -9153,7 +9153,7 @@ msgstr ""
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgctxt "Employee Grievance"
 msgid "Invalid"
-msgstr ""
+msgstr "Geçersiz"
 
 #: payroll/doctype/salary_structure/salary_structure.py:281
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
@@ -9830,13 +9830,13 @@ msgstr "İzin Onay Bildirimi Şablonunu"
 #. Name of a role
 #: hr/doctype/leave_application/leave_application.json
 msgid "Leave Approver"
-msgstr ""
+msgstr "İzni Onaylayan"
 
 #. Label of a Link field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
 msgctxt "Leave Application"
 msgid "Leave Approver"
-msgstr ""
+msgstr "İzni Onaylayan"
 
 #. Label of a Check field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
