@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-24 14:09\n"
+"PO-Revision-Date: 2024-04-25 14:15\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -415,7 +415,7 @@ msgstr "سوابق غایب"
 #. Name of a role
 #: hr/doctype/interest/interest.json
 msgid "Academics User"
-msgstr "کاربر دانشگاهیان"
+msgstr "کاربر دانشگاهی"
 
 #: overrides/employee_master.py:64 overrides/employee_master.py:80
 msgid "Accepted"
@@ -8139,7 +8139,7 @@ msgstr "داشبورد منابع انسانی"
 #: payroll/doctype/salary_structure/salary_structure.json
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgid "HR Manager"
-msgstr "مدیریت منابع انسانی"
+msgstr "مدیر منابع انسانی"
 
 #. Name of a DocType
 #. Title of an Onboarding Step
@@ -12291,7 +12291,7 @@ msgstr "لطفاً {0} را تنظیم کنید."
 
 #: overrides/employee_master.py:16
 msgid "Please setup Employee Naming System in Human Resource > HR Settings"
-msgstr "لطفاً سیستم نامگذاری کارکنان را در منابع انسانی > تنظیمات منابع انسانی راه اندازی کنید"
+msgstr "لطفاً سیستم نامگذاری کارکنان را در منابع انسانی > تنظیمات منابع انسانی راه‌اندازی کنید"
 
 #: hr/doctype/upload_attendance/upload_attendance.py:161
 msgid "Please setup numbering series for Attendance via Setup > Numbering Series"
