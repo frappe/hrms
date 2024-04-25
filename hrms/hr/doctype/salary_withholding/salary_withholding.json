@@ -10,6 +10,7 @@
   "date_of_joining",
   "date_of_relieving",
   "column_break_rhlv",
+  "number_of_withholding_cycles",
   "amended_from",
   "exit_details_section",
   "status",
@@ -85,12 +86,18 @@
   {
    "fieldname": "column_break_hdbc",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "number_of_withholding_cycles",
+   "fieldtype": "Int",
+   "label": "Number of withholding cycles",
+   "non_negative": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-04-24 17:33:30.552823",
+ "modified": "2024-04-25 11:14:29.057088",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Salary Withholding",
