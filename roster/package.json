@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "serve": "vite preview",
+		"build": "vite build --base=/assets/hrms/roster/ && yarn copy-html-entry",
+		"copy-html-entry": "cp ../hrms/public/roster/index.html ../hrms/www/roster.html"
   },
   "dependencies": {
     "feather-icons": "^4.29.1",
