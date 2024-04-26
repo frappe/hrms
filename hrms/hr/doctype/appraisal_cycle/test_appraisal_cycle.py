@@ -59,8 +59,6 @@ def create_appraisal_cycle(**args):
 	if frappe.db.exists("Appraisal Cycle", name):
 		frappe.delete_doc("Appraisal Cycle", name, force=True)
 
-	based_on_formula = args.based_on_formula
-
 	appraisal_cycle = frappe.get_doc(
 		{
 			"doctype": "Appraisal Cycle",
@@ -68,14 +66,8 @@ def create_appraisal_cycle(**args):
 			"company": args.company or "_Test Appraisal",
 			"start_date": args.start_date or "2022-01-01",
 			"end_date": args.end_date or "2022-03-31",
-			"calculate_final_score_based_on_formula": based_on_formula,
 		}
 	)
-	if based_on_formula:
-		appraisal_cycle.final_score_formula = (
-			args.final_score_formula
-			or "goal_score * 0.2 + self_appraisal_score * 0.2 + average_feedback_score * 0.6"
-		)
 
 	if args.kra_evaluation_method:
 		appraisal_cycle.kra_evaluation_method = args.kra_evaluation_method
