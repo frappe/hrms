@@ -515,15 +515,8 @@ def check_effective_date(from_date, today, frequency, allocate_on_day):
 
 
 def get_salary_assignments(employee, payroll_period):
-<<<<<<< HEAD
-	start_date, end_date = frappe.db.get_value(
-		"Payroll Period", payroll_period, ["start_date", "end_date"]
-	)
-	assignments = frappe.db.get_all(
-=======
 	start_date, end_date = frappe.db.get_value("Payroll Period", payroll_period, ["start_date", "end_date"])
 	assignments = frappe.get_all(
->>>>>>> 005cfd1cd (fix(HRA calculation): fetch active salary assignment assigned before payroll period if none in period)
 		"Salary Structure Assignment",
 		filters={"employee": employee, "docstatus": 1, "from_date": ["between", (start_date, end_date)]},
 		fields=["*"],
