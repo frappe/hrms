@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-23 13:59\n"
+"PO-Revision-Date: 2024-04-25 14:15\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -277,13 +277,15 @@ msgstr "<h3>وارد کردن داده</h3>\n\n"
 #: hr/onboarding_step/create_employee/create_employee.json
 msgid "<h3>Employee</h3>\n\n"
 "An individual who works and is recognized for his rights and duties in your company is your Employee. You can manage the Employee master. It captures the demographic, personal and professional details, joining and leave details, etc."
-msgstr ""
+msgstr "<h3>کارمند</h3>\n\n"
+"فردی که کار می کند و برای حقوق و وظایفش در شرکت شما شناخته می شود، کارمند شماست. شما می توانید Employee master را مدیریت کنید. جزئیات جمعیتی، شخصی و حرفه ای، جزئیات پیوستن و مرخصی و غیره را ثبت می کند."
 
 #. Description of the Onboarding Step 'HR Settings'
 #: hr/onboarding_step/hr_settings/hr_settings.json
 msgid "<h3>HR Settings</h3>\n\n"
 "Hr Settings consists of major settings related to Employee Lifecycle, Leave Management, etc. Click on Explore, to explore Hr Settings."
-msgstr ""
+msgstr "<h3>تنظیمات HR</h3>\n\n"
+"تنظیمات منابع انسانی شامل تنظیمات اصلی مربوط به چرخه حیات کارمندان، مدیریت مرخصی، و غیره است. برای بررسی تنظیمات HR روی کاوش کلیک کنید."
 
 #. Content of the 'Help' (HTML) field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -314,25 +316,29 @@ msgstr ""
 #: hr/onboarding_step/create_holiday_list/create_holiday_list.json
 msgid "<h3>Holiday List.</h3>\n\n"
 "Holiday List is a list which contains the dates of holidays. Most organizations have a standard Holiday List for their employees. However, some of them may have different holiday lists based on different Locations or Departments. In ERPNext, you can configure multiple Holiday Lists."
-msgstr ""
+msgstr "<h3>لیست تعطیلات.</h3>\n\n"
+"لیست تعطیلات لیستی است که شامل تاریخ تعطیلات است. اکثر سازمان ها یک لیست تعطیلات استاندارد برای کارمندان خود دارند. با این حال، برخی از آنها ممکن است لیست تعطیلات متفاوتی بر اساس مکان ها یا بخش های مختلف داشته باشند. در ERPNext، می توانید چندین لیست تعطیلات را پیکربندی کنید."
 
 #. Description of the Onboarding Step 'Create Leave Allocation'
 #: hr/onboarding_step/create_leave_allocation/create_leave_allocation.json
 msgid "<h3>Leave Allocation</h3>\n\n"
 "Leave Allocation enables you to allocate a specific number of leaves of a particular type to an Employee so that, an employee will be able to create a Leave Application only if Leaves are allocated. "
-msgstr ""
+msgstr "<h3>تخصیص مرخصی</h3>\n\n"
+"تخصیص مرخصی به شما امکان می دهد تعداد مشخصی از مرخصی ها را از یک نوع خاص به یک کارمند اختصاص دهید به طوری که یک کارمند تنها در صورتی قادر به ایجاد یک درخواست مرخصی باشد که مرخصی ها تخصیص داده شده باشد. "
 
 #. Description of the Onboarding Step 'Create Leave Application'
 #: hr/onboarding_step/create_leave_application/create_leave_application.json
 msgid "<h3>Leave Application</h3>\n\n"
 "Leave Application is a formal document created by an Employee to apply for Leaves for a particular time period based on there leave allocation and leave type according to there need."
-msgstr ""
+msgstr "<h3>درخواست مرخصی</h3>\n\n"
+"درخواست مرخصی یک سند رسمی است که توسط یک کارمند برای درخواست مرخصی برای یک دوره زمانی خاص بر اساس تخصیص مرخصی و نوع مرخصی بر اساس نیاز ایجاد شده است."
 
 #. Description of the Onboarding Step 'Create Leave Type'
 #: hr/onboarding_step/create_leave_type/create_leave_type.json
 msgid "<h3>Leave Type</h3>\n\n"
 "Leave type is defined based on many factors and features like encashment, earned leaves, partially paid, without pay and, a lot more. To check other options and to define your leave type click on Show Tour."
-msgstr ""
+msgstr "<h3>نوع مرخصی</h3>\n\n"
+"نوع مرخصی بر اساس عوامل و ویژگی های زیادی مانند نقدی، مرخصی استحقاقی، پرداخت جزئی، بدون حقوق و بسیاری موارد دیگر تعریف می شود. برای بررسی سایر گزینه ها و تعریف نوع مرخصی خود بر روی Show Tour کلیک کنید."
 
 #. Content of the 'html_6' (HTML) field in DocType 'Taxable Salary Slab'
 #: payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
@@ -362,13 +368,13 @@ msgstr "یک {0} بین {1} و {2} وجود دارد ("
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "Abbr"
-msgstr ""
+msgstr "مخفف"
 
 #. Label of a Data field in DocType 'Salary Detail'
 #: payroll/doctype/salary_detail/salary_detail.json
 msgctxt "Salary Detail"
 msgid "Abbr"
-msgstr ""
+msgstr "مخفف"
 
 #. Option for the 'Status' (Select) field in DocType 'Attendance'
 #: hr/doctype/attendance/attendance.json
@@ -409,7 +415,7 @@ msgstr "سوابق غایب"
 #. Name of a role
 #: hr/doctype/interest/interest.json
 msgid "Academics User"
-msgstr "کاربر دانشگاهیان"
+msgstr "کاربر دانشگاهی"
 
 #: overrides/employee_master.py:64 overrides/employee_master.py:80
 msgid "Accepted"
@@ -547,7 +553,7 @@ msgstr "دفتر کل حسابداری"
 #: hr/workspace/expense_claims/expense_claims.json
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Accounting Reports"
-msgstr ""
+msgstr "گزارش‌های حسابداری"
 
 #. Label of a Table field in DocType 'Expense Claim Type'
 #: hr/doctype/expense_claim_type/expense_claim_type.json
@@ -1431,7 +1437,7 @@ msgstr "نام متقاضی"
 #. Label of a Card Break in the Leaves Workspace
 #: hr/workspace/leaves/leaves.json
 msgid "Application"
-msgstr ""
+msgstr "درخواست"
 
 #: hr/report/recruitment_analytics/recruitment_analytics.py:47
 msgid "Application Status"
@@ -1769,7 +1775,7 @@ msgstr "اختصاص دهید"
 #. Title of an Onboarding Step
 #: payroll/onboarding_step/assign_salary_structure/assign_salary_structure.json
 msgid "Assign Salary Structure"
-msgstr ""
+msgstr "تعیین ساختار حقوق و دستمزد"
 
 #: payroll/doctype/salary_structure/salary_structure.py:250
 msgid "Assigning Structures..."
@@ -1848,7 +1854,7 @@ msgstr "حضور"
 #. Label of a chart in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Attendance Count"
-msgstr ""
+msgstr "تعداد حضور و غیاب"
 
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
@@ -2318,13 +2324,13 @@ msgstr "تخصیص ساختار حقوق و دستمزد انبوه"
 
 #: payroll/report/income_tax_computation/income_tax_computation.py:515
 msgid "CTC"
-msgstr ""
+msgstr "CTC"
 
 #. Label of a Currency field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "CTC"
-msgstr ""
+msgstr "CTC"
 
 #. Label of a Select field in DocType 'Gratuity Rule'
 #: payroll/doctype/gratuity_rule/gratuity_rule.json
@@ -3404,7 +3410,7 @@ msgstr "ایجاد دپارتمان"
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_designation/create_designation.json
 msgid "Create Designation"
-msgstr ""
+msgstr "ایجاد نقش سازمانی"
 
 #. Title of an Onboarding Step
 #: hr/doctype/job_offer/job_offer.js:40
@@ -3421,7 +3427,7 @@ msgstr "ایجاد لیست تعطیلات"
 #. Title of an Onboarding Step
 #: payroll/onboarding_step/create_income_tax_slab/create_income_tax_slab.json
 msgid "Create Income Tax Slab"
-msgstr ""
+msgstr "ایجاد صفحه مالیات بر درآمد"
 
 #: hr/doctype/interview_round/interview_round.js:7
 msgid "Create Interview"
@@ -3442,12 +3448,12 @@ msgstr "ایجاد ورودی دفتر روزنامه"
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_leave_allocation/create_leave_allocation.json
 msgid "Create Leave Allocation"
-msgstr ""
+msgstr "ایجاد تخصیص مرخصی"
 
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_leave_application/create_leave_application.json
 msgid "Create Leave Application"
-msgstr ""
+msgstr "ایجاد درخواست مرخصی"
 
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_leave_type/create_leave_type.json
@@ -3467,12 +3473,12 @@ msgstr "ایجاد ورودی پرداخت"
 #. Title of an Onboarding Step
 #: payroll/onboarding_step/create_payroll_period/create_payroll_period.json
 msgid "Create Payroll Period"
-msgstr ""
+msgstr "ایجاد دوره حقوق و دستمزد"
 
 #. Title of an Onboarding Step
 #: payroll/onboarding_step/create_salary_component/create_salary_component.json
 msgid "Create Salary Component"
-msgstr ""
+msgstr "ایجاد مولفه حقوق و دستمزد"
 
 #. Title of an Onboarding Step
 #: payroll/onboarding_step/create_salary_slip/create_salary_slip.json
@@ -3489,7 +3495,7 @@ msgstr "ایجاد فیش حقوقی"
 #. Title of an Onboarding Step
 #: payroll/onboarding_step/create_salary_structure/create_salary_structure.json
 msgid "Create Salary Structure"
-msgstr ""
+msgstr "ایجاد ساختار حقوق و دستمزد"
 
 #. Label of a Check field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -4048,7 +4054,7 @@ msgstr "کسر"
 #. Label of a Card Break in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Deduction Reports"
-msgstr ""
+msgstr "گزارش های کسر"
 
 #: hr/doctype/employee_advance/employee_advance.js:74
 msgid "Deduction from Salary"
@@ -4422,7 +4428,7 @@ msgstr "تایید کننده دپارتمان"
 #. Label of a chart in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
 msgid "Department Wise Openings"
-msgstr ""
+msgstr "افتتاحیه های مبتنی بر دپارتمان"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:192
 msgid "Department: {0}"
@@ -6434,7 +6440,7 @@ msgstr "کارمند {0} در نیم روز در {1}"
 #. Subtitle of the Module Onboarding 'Human Resource'
 #: hr/module_onboarding/human_resource/human_resource.json
 msgid "Employee, Leaves, and more."
-msgstr ""
+msgstr "کارمند، مرخصی، و بیشتر."
 
 #: payroll/doctype/gratuity/gratuity.py:195
 msgid "Employee: {0} have to complete minimum {1} years for gratuity"
@@ -6483,7 +6489,7 @@ msgstr "HTML کارکنان"
 #. Label of a Link in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Employees Working on a Holiday"
-msgstr ""
+msgstr "کارمندانی که در تعطیلات کار می کنند"
 
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.py:31
 msgid "Employees cannot give feedback to themselves. Use {0} instead: {1}"
@@ -6858,7 +6864,7 @@ msgstr "معاف از مالیات بر درآمد"
 #. Label of a Card Break in the Tax & Benefits Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Exemption"
-msgstr ""
+msgstr "معافیت"
 
 #. Label of a Link field in DocType 'Employee Tax Exemption Declaration
 #. Category'
@@ -7191,7 +7197,7 @@ msgstr "توضیح"
 #. Label of an action in the Onboarding Step 'HR Settings'
 #: hr/onboarding_step/hr_settings/hr_settings.json
 msgid "Explore"
-msgstr ""
+msgstr "کاوش"
 
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:108
 msgid "Export"
@@ -7437,7 +7443,7 @@ msgstr "سال مالی {0} یافت نشد"
 #. Label of a Card Break in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
 msgid "Fleet Management"
-msgstr ""
+msgstr "مدیریت ناوگان"
 
 #. Name of a role
 #: hr/doctype/vehicle_log/vehicle_log.json
@@ -7492,7 +7498,7 @@ msgstr "برای کارمند"
 #, python-format
 msgctxt "Leave Type"
 msgid "For a day of leave taken, if you still pay (say) 50% of the daily salary, then enter 0.50 in this field."
-msgstr ""
+msgstr "برای یک روز مرخصی گرفته شده، اگر باز هم (مثلا) 50 درصد حقوق روزانه را پرداخت می کنید، در این قسمت 0.50 را وارد کنید."
 
 #. Label of a Code field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -7747,7 +7753,7 @@ msgstr "بیانیه کامل و نهایی برجسته"
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgctxt "Full and Final Statement"
 msgid "Full and Final Settlement"
-msgstr ""
+msgstr "تسویه حساب کامل و نهایی"
 
 #. Name of a DocType
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
@@ -7855,7 +7861,7 @@ msgstr "هدف"
 #: hr/doctype/appraisal_kra/appraisal_kra.json
 msgctxt "Appraisal KRA"
 msgid "Goal Completion (%)"
-msgstr ""
+msgstr "تکمیل هدف (%)"
 
 #: hr/report/appraisal_overview/appraisal_overview.py:55
 #: hr/report/appraisal_overview/appraisal_overview.py:122
@@ -7866,7 +7872,7 @@ msgstr "امتیاز گل"
 #: hr/doctype/appraisal/appraisal.json
 msgctxt "Appraisal"
 msgid "Goal Score (%)"
-msgstr ""
+msgstr "امتیاز هدف (%)"
 
 #. Label of a Float field in DocType 'Appraisal KRA'
 #: hr/doctype/appraisal_kra/appraisal_kra.json
@@ -7974,7 +7980,7 @@ msgstr "دال قانون انعام"
 #. Label of a Card Break in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Grievance"
-msgstr ""
+msgstr "شکایت"
 
 #. Label of a Dynamic Link field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
@@ -8133,7 +8139,7 @@ msgstr "داشبورد منابع انسانی"
 #: payroll/doctype/salary_structure/salary_structure.json
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgid "HR Manager"
-msgstr "مدیریت منابع انسانی"
+msgstr "مدیر منابع انسانی"
 
 #. Name of a DocType
 #. Title of an Onboarding Step
@@ -8501,7 +8507,7 @@ msgstr "تاریخ اجاره خانه باید حداقل 15 روز فاصله 
 
 #: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:53
 msgid "IFSC"
-msgstr ""
+msgstr "IFSC"
 
 #: payroll/report/bank_remittance/bank_remittance.py:44
 msgid "IFSC Code"
@@ -9581,31 +9587,31 @@ msgstr "ژوئن"
 #. Name of a DocType
 #: hr/doctype/goal/goal_tree.js:136 hr/doctype/kra/kra.json
 msgid "KRA"
-msgstr ""
+msgstr "KRA"
 
 #. Label of a Link field in DocType 'Appraisal KRA'
 #: hr/doctype/appraisal_kra/appraisal_kra.json
 msgctxt "Appraisal KRA"
 msgid "KRA"
-msgstr ""
+msgstr "KRA"
 
 #. Label of a Link field in DocType 'Appraisal Template Goal'
 #: hr/doctype/appraisal_template_goal/appraisal_template_goal.json
 msgctxt "Appraisal Template Goal"
 msgid "KRA"
-msgstr ""
+msgstr "KRA"
 
 #. Label of a Link field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "KRA"
-msgstr ""
+msgstr "KRA"
 
 #. Label of a Link in the Performance Workspace
 #: hr/workspace/performance/performance.json
 msgctxt "KRA"
 msgid "KRA"
-msgstr ""
+msgstr "KRA"
 
 #. Label of a Select field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
@@ -9649,7 +9655,7 @@ msgstr "حوزه عملکرد کلیدی"
 #. Label of a Card Break in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Key Reports"
-msgstr ""
+msgstr "گزارش های کلیدی"
 
 #. Description of the 'Goal' (Small Text) field in DocType 'Appraisal Goal'
 #: hr/doctype/appraisal_goal/appraisal_goal.json
@@ -10233,7 +10239,7 @@ msgstr "مرخصی در سال"
 
 #: hr/doctype/leave_type/leave_type.js:26
 msgid "Leaves you can avail against a holiday you worked on. You can claim Compensatory Off Leave using Compensatory Leave request. Click"
-msgstr ""
+msgstr "مرخصی هایی که می توانید در برابر تعطیلاتی که در آن کار کرده اید استفاده کنید. می توانید با استفاده از درخواست مرخصی جبرانی، درخواست مرخصی جبرانی کنید. کلیک"
 
 #: hr/report/employee_leave_balance/employee_leave_balance.js:49
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:43
@@ -10249,12 +10255,12 @@ msgstr "ترک کرد"
 #. Title of the Module Onboarding 'Human Resource'
 #: hr/module_onboarding/human_resource/human_resource.json
 msgid "Let's Set Up the Human Resource Module. "
-msgstr ""
+msgstr "بیایید ماژول منابع انسانی را راه‌اندازی کنیم. "
 
 #. Title of the Module Onboarding 'Payroll'
 #: payroll/module_onboarding/payroll/payroll.json
 msgid "Let's Set Up the Payroll Module. "
-msgstr ""
+msgstr "بیایید ماژول حقوق و دستمزد را راه‌اندازی کنیم. "
 
 #. Label of a Link field in DocType 'Job Offer'
 #: hr/doctype/job_offer/job_offer.json
@@ -10396,7 +10402,7 @@ msgstr "محدوده پایین"
 
 #: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:54
 msgid "MICR"
-msgstr ""
+msgstr "MICR"
 
 #: hr/report/vehicle_expenses/vehicle_expenses.py:31
 msgid "Make"
@@ -10506,7 +10512,7 @@ msgstr "علامت گذاری حضور و غیاب"
 #: hr/workspace/performance/performance.json
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Masters"
-msgstr ""
+msgstr "کارشناسی ارشد"
 
 #. Label of a Currency field in DocType 'Employee Benefit Claim'
 #: payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
@@ -11314,7 +11320,7 @@ msgstr "در مرخصی"
 #. Label of a Card Break in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Onboarding"
-msgstr ""
+msgstr "آشناسازی"
 
 #. Label of a Section Break field in DocType 'Employee Onboarding'
 #: hr/doctype/employee_onboarding/employee_onboarding.json
@@ -11465,7 +11471,7 @@ msgstr "جزئیات دیگر"
 #. Label of a Card Break in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Other Reports"
-msgstr ""
+msgstr "گزارش های دیگر"
 
 #. Label of a Section Break field in DocType 'Payroll Settings'
 #: payroll/doctype/payroll_settings/payroll_settings.json
@@ -11502,7 +11508,7 @@ msgstr "از 5"
 #. Label of a chart in the Payroll Workspace
 #: payroll/workspace/payroll/payroll.json
 msgid "Outgoing Salary"
-msgstr ""
+msgstr "حقوق خروجی"
 
 #: hr/report/unpaid_expense_claim/unpaid_expense_claim.py:23
 msgid "Outstanding Amount"
@@ -12285,7 +12291,7 @@ msgstr "لطفاً {0} را تنظیم کنید."
 
 #: overrides/employee_master.py:16
 msgid "Please setup Employee Naming System in Human Resource > HR Settings"
-msgstr "لطفاً سیستم نامگذاری کارکنان را در منابع انسانی > تنظیمات منابع انسانی راه اندازی کنید"
+msgstr "لطفاً سیستم نامگذاری کارکنان را در منابع انسانی > تنظیمات منابع انسانی راه‌اندازی کنید"
 
 #: hr/doctype/upload_attendance/upload_attendance.py:161
 msgid "Please setup numbering series for Attendance via Setup > Numbering Series"
@@ -12531,7 +12537,7 @@ msgstr "سودآوری پروژه"
 #. Label of a Card Break in the Performance Workspace
 #: hr/workspace/performance/performance.json
 msgid "Promotion"
-msgstr ""
+msgstr "ارتقا"
 
 #. Label of a Date field in DocType 'Employee Promotion'
 #: hr/doctype/employee_promotion/employee_promotion.json
@@ -12633,7 +12639,7 @@ msgstr "فیلترهای سریع"
 #. Label of a Card Break in the Payroll Workspace
 #: payroll/workspace/payroll/payroll.json
 msgid "Quick Links"
-msgstr ""
+msgstr "لینک های سریع"
 
 #. Label of a Link field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
@@ -13722,7 +13728,7 @@ msgstr "ایمیل های فیش حقوقی برای ارسال در نوبت ق
 #. Subtitle of the Module Onboarding 'Payroll'
 #: payroll/module_onboarding/payroll/payroll.json
 msgid "Salary, Compensation, and more."
-msgstr ""
+msgstr "حقوق، غرامت و غیره."
 
 #: hr/report/project_profitability/project_profitability.py:150
 msgid "Sales Invoice"
@@ -14227,7 +14233,7 @@ msgstr "تغییر زمان پایان واقعی"
 #: hr/doctype/employee_checkin/employee_checkin.json
 msgctxt "Employee Checkin"
 msgid "Shift Actual Start"
-msgstr ""
+msgstr "شروع واقعی شیفت"
 
 #: hr/report/shift_attendance/shift_attendance.py:111
 msgid "Shift Actual Start Time"
@@ -14259,7 +14265,7 @@ msgstr "حضور و غیاب شیفت"
 #: hr/doctype/employee_checkin/employee_checkin.json
 msgctxt "Employee Checkin"
 msgid "Shift End"
-msgstr ""
+msgstr "پایان شیفت"
 
 #: hr/report/shift_attendance/shift_attendance.py:61
 msgid "Shift End Time"
@@ -14293,11 +14299,11 @@ msgstr "تنظیمات Shift"
 #: hr/doctype/employee_checkin/employee_checkin.json
 msgctxt "Employee Checkin"
 msgid "Shift Start"
-msgstr ""
+msgstr "شروع شیفت"
 
 #: hr/report/shift_attendance/shift_attendance.py:55
 msgid "Shift Start Time"
-msgstr ""
+msgstr "زمان شروع شیفت"
 
 #. Name of a DocType
 #: hr/doctype/shift_type/shift_type.json
@@ -14326,7 +14332,7 @@ msgstr "نوع شیفت"
 #. Label of a Card Break in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shifts"
-msgstr ""
+msgstr "شیفت‌ها"
 
 #: hr/doctype/job_offer/job_offer.js:48
 msgid "Show Employee"
@@ -15060,7 +15066,7 @@ msgstr "وزن وظیفه"
 #. Name of a Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Tax & Benefits"
-msgstr ""
+msgstr "مالیات و مزایا"
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:41
 msgid "Tax Deducted Till Date"
@@ -15099,7 +15105,7 @@ msgstr "مدارک معافیت مالیاتی"
 #. Label of a Card Break in the Tax & Benefits Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Tax Setup"
-msgstr ""
+msgstr "تنظیم مالیات"
 
 #. Label of a Currency field in DocType 'Salary Detail'
 #: payroll/doctype/salary_detail/salary_detail.json
@@ -15189,12 +15195,12 @@ msgstr "متشکرم"
 #. Success message of the Module Onboarding 'Human Resource'
 #: hr/module_onboarding/human_resource/human_resource.json
 msgid "The Human Resource Module is all set up!"
-msgstr ""
+msgstr "ماژول منابع انسانی آماده است!"
 
 #. Success message of the Module Onboarding 'Payroll'
 #: payroll/module_onboarding/payroll/payroll.json
 msgid "The Payroll Module is all set up!"
-msgstr ""
+msgstr "ماژول حقوق و دستمزد آماده است!"
 
 #. Description of the 'Payroll Date' (Date) field in DocType 'Additional
 #. Salary'
@@ -15908,12 +15914,12 @@ msgstr "کل حقوق رزرو شده برای این کارمند از ابتد
 
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.py:52
 msgid "Total weightage for all criteria must add up to 100. Currently, it is {0}%"
-msgstr ""
+msgstr "وزن کل برای همه معیارها باید تا 100 جمع شود. در حال حاضر {0}% است"
 
 #: hr/doctype/appraisal/appraisal.py:151
 #: hr/doctype/appraisal_template/appraisal_template.py:25
 msgid "Total weightage for all {0} must add up to 100. Currently, it is {1}%"
-msgstr ""
+msgstr "سنجش کل برای همه {0} باید تا 100 جمع شود. در حال حاضر {1}% است"
 
 #. Label of a Int field in DocType 'Gratuity Rule'
 #: payroll/doctype/gratuity_rule/gratuity_rule.json
@@ -16669,25 +16675,25 @@ msgstr "هفتگی"
 #: hr/doctype/appraisal_goal/appraisal_goal.json
 msgctxt "Appraisal Goal"
 msgid "Weightage (%)"
-msgstr ""
+msgstr "سنجش (%)"
 
 #. Label of a Percent field in DocType 'Appraisal KRA'
 #: hr/doctype/appraisal_kra/appraisal_kra.json
 msgctxt "Appraisal KRA"
 msgid "Weightage (%)"
-msgstr ""
+msgstr "سنجش (%)"
 
 #. Label of a Percent field in DocType 'Appraisal Template Goal'
 #: hr/doctype/appraisal_template_goal/appraisal_template_goal.json
 msgctxt "Appraisal Template Goal"
 msgid "Weightage (%)"
-msgstr ""
+msgstr "سنجش (%)"
 
 #. Label of a Percent field in DocType 'Employee Feedback Rating'
 #: hr/doctype/employee_feedback_rating/employee_feedback_rating.json
 msgctxt "Employee Feedback Rating"
 msgid "Weightage (%)"
-msgstr ""
+msgstr "سنجش (%)"
 
 #: hr/doctype/leave_type/leave_type.py:35
 msgid "Whereas allocation for Compensatory Leaves is automatically created or updated on submission of Compensatory Leave Request."
