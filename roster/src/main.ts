@@ -4,9 +4,10 @@ import { createApp } from "vue";
 import router from "./router";
 import App from "./App.vue";
 
+// @ts-ignore
 import { Button, setConfig, frappeRequest, resourcesPlugin } from "frappe-ui";
 
-let app = createApp(App);
+const app = createApp(App);
 
 setConfig("resourceFetcher", frappeRequest);
 
