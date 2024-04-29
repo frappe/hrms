@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "vite",
     "serve": "vite preview",
-		"build": "vite build --base=/assets/hrms/roster/ && yarn copy-html-entry",
-		"copy-html-entry": "cp ../hrms/public/roster/index.html ../hrms/www/roster.html"
+    "build": "vite build --base=/assets/hrms/roster/ && yarn copy-html-entry",
+    "copy-html-entry": "cp ../hrms/public/roster/index.html ../hrms/www/roster.html"
   },
   "dependencies": {
     "feather-icons": "^4.29.1",
@@ -19,6 +19,8 @@
     "autoprefixer": "^10.4.2",
     "postcss": "^8.4.5",
     "tailwindcss": "^3.0.15",
-    "vite": "^5.2.10"
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10",
+    "vue-tsc": "^2.0.14"
   }
 }
