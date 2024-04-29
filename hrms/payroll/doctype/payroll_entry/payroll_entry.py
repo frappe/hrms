@@ -882,6 +882,9 @@ class PayrollEntry(Document):
 
 					salary_slip_total -= salary_detail.amount
 
+		for loan in self.get_loans():
+			salary_slip_total -= loan.total_payment
+
 		if salary_slip_total > 0:
 			self.set_accounting_entries_for_bank_entry(salary_slip_total, "salary")
 
@@ -900,6 +903,29 @@ class PayrollEntry(Document):
 				SalaryDetail.salary_component,
 				SalaryDetail.amount,
 				SalaryDetail.parentfield,
+			)
+			.where(
+				(SalarySlip.docstatus == 1)
+				& (SalarySlip.start_date >= self.start_date)
+				& (SalarySlip.end_date <= self.end_date)
+				& (SalarySlip.payroll_entry == self.name)
+			)
+		).run(as_dict=True)
+
+	def get_loans(self) -> list:
+		"""
+		Returns list of loans for selected employees
+		"""
+		SalarySlip = frappe.qb.DocType("Salary Slip")
+		SalarySlipLoan = frappe.qb.DocType("Salary Slip Loan")
+
+		return (
+			frappe.qb.from_(SalarySlip)
+			.join(SalarySlipLoan)
+			.on(SalarySlip.name == SalarySlipLoan.parent)
+			.select(
+				SalarySlip.employee,
+				SalarySlipLoan.total_payment
 			)
 			.where(
 				(SalarySlip.docstatus == 1)
