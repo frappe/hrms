@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-28 14:40\n"
+"PO-Revision-Date: 2024-04-29 15:01\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -1261,55 +1261,55 @@ msgstr "Izmijenjeno od"
 
 #: payroll/report/professional_tax_deductions/professional_tax_deductions.py:32
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. Label of a Currency field in DocType 'Additional Salary'
 #: payroll/doctype/additional_salary/additional_salary.json
 msgctxt "Additional Salary"
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. Label of a Currency field in DocType 'Employee Benefit Application Detail'
 #: payroll/doctype/employee_benefit_application_detail/employee_benefit_application_detail.json
 msgctxt "Employee Benefit Application Detail"
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. Label of a Currency field in DocType 'Employee Other Income'
 #: payroll/doctype/employee_other_income/employee_other_income.json
 msgctxt "Employee Other Income"
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. Label of a Currency field in DocType 'Expense Claim Detail'
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
 msgctxt "Expense Claim Detail"
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. Label of a Currency field in DocType 'Expense Taxes and Charges'
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
 msgctxt "Expense Taxes and Charges"
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. Label of a Currency field in DocType 'Full and Final Outstanding Statement'
 #: hr/doctype/full_and_final_outstanding_statement/full_and_final_outstanding_statement.json
 msgctxt "Full and Final Outstanding Statement"
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. Label of a Currency field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. Label of a Currency field in DocType 'Salary Detail'
 #: payroll/doctype/salary_detail/salary_detail.json
 msgctxt "Salary Detail"
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #: payroll/doctype/salary_structure/salary_structure.py:34
 msgid "Amount Based on Formula"
