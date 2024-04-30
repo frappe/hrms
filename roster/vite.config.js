@@ -20,9 +20,17 @@ export default defineConfig({
 		outDir: `../${path.basename(path.resolve(".."))}/public/roster`,
 		emptyOutDir: true,
 		target: "es2015",
+		commonjsOptions: {
+			include: [/tailwind.config.js/, /node_modules/],
+		},
 	},
 	optimizeDeps: {
-		include: ["frappe-ui > feather-icons", "showdown", "engine.io-client"],
+		include: [
+			"frappe-ui > feather-icons",
+			"showdown",
+			"tailwind.config.js",
+			"engine.io-client",
+		],
 	},
 });
 

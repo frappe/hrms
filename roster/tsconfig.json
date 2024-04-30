@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		"allowJs": true,
+		"checkJs": true,
 		"target": "ESNext",
 		"useDefineForClassFields": true,
 		"module": "ESNext",
@@ -14,5 +15,5 @@
 		"lib": ["ESNext", "DOM"],
 		"skipLibCheck": true
 	},
-	"include": ["src/**/*.ts", "src/**/*.d.ts"]
+"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"]
 }
