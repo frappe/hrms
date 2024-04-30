@@ -154,19 +154,17 @@ frappe.ui.form.on('Employee Advance', {
 		if (frm.doc.employee) frm.trigger('get_employee_currency')
 	},
 
-	get_employee_currency: function(frm) {
-		frappe.call({
-			method: "hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
-			args: {
-				employee: frm.doc.employee,
+	get_employee_currency: function (frm) {
+		frappe.db.get_value(
+			"Salary Structure Assignment",
+			{ employee: frm.doc.employee, docstatus: 1 },
+			"currency",
+			(r) => {
+				if (r.currency) frm.set_value("currency", r.currency);
+				else frm.set_value("currency", erpnext.get_currency(frm.doc.company));
+				frm.refresh_fields();
 			},
-			callback: function(r) {
-				if (r.message) {
-					frm.set_value('currency', r.message);
-					frm.refresh_fields();
-				}
-			}
-		});
+		);
 	},
 
 	currency: function(frm) {
