@@ -7,6 +7,7 @@
  "field_order": [
   "section_break_fwuv",
   "employee",
+  "employee_name",
   "status",
   "amended_from",
   "column_break_rhlv",
@@ -93,12 +94,17 @@
    "fieldtype": "Int",
    "label": "Number of Withholding Cycles",
    "non_negative": 1
+  },
+  {
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-04-30 14:04:35.828994",
+ "modified": "2024-04-30 16:27:04.111208",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Salary Withholding",

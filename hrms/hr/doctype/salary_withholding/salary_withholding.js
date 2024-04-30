@@ -7,10 +7,10 @@ frappe.ui.form.on("Salary Withholding", {
 
 		frappe.db.get_doc("Employee", frm.doc.employee).then((doc) => {
 			frm.doc.date_of_joining = doc.date_of_joining
-
 			frm.doc.date_of_relieving = doc.relieving_date || doc.resignation_letter_date && frappe.datetime.add_months(doc.resignation_letter_date, months = doc.notice)
-			console.log(doc.date_of_joining)
+			frm.doc.employee_name = doc.full_name
 
+			frm.refresh_field("employee_name")
 			frm.refresh_field("date_of_joining")
 			frm.refresh_field("date_of_relieving")
 		})
