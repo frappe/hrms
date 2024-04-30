@@ -7,15 +7,15 @@
  "field_order": [
   "section_break_fwuv",
   "employee",
-  "date_of_joining",
-  "date_of_relieving",
+  "status",
+  "amended_from",
   "column_break_rhlv",
   "number_of_withholding_cycles",
-  "amended_from",
-  "exit_details_section",
-  "status",
   "from_date",
   "to_date",
+  "exit_details_section",
+  "date_of_joining",
+  "date_of_relieving",
   "column_break_hdbc",
   "reason_for_withholding_salary"
  ],
@@ -49,23 +49,24 @@
    "fieldname": "date_of_joining",
    "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "Date of joining",
+   "label": "Date of Joining",
    "reqd": 1
   },
   {
    "fieldname": "date_of_relieving",
    "fieldtype": "Date",
-   "label": "Date of relieving"
+   "label": "Date of Relieving"
   },
   {
    "fieldname": "reason_for_withholding_salary",
    "fieldtype": "Small Text",
-   "label": "Reason for withholding salary"
+   "label": "Reason for Withholding Salary"
   },
   {
    "default": "Withheld",
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Status",
    "options": "Withheld\nReleased"
   },
@@ -90,14 +91,14 @@
   {
    "fieldname": "number_of_withholding_cycles",
    "fieldtype": "Int",
-   "label": "Number of withholding cycles",
+   "label": "Number of Withholding Cycles",
    "non_negative": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-04-25 11:14:29.057088",
+ "modified": "2024-04-30 14:04:35.828994",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Salary Withholding",
