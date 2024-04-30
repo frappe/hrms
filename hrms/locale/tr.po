@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-26 14:11\n"
+"PO-Revision-Date: 2024-04-30 15:01\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -12228,7 +12228,7 @@ msgstr ""
 
 #: payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.js:19
 msgid "Please select {0}"
-msgstr ""
+msgstr "Lütfen {0} seçin"
 
 #: payroll/doctype/salary_structure/salary_structure.py:271
 msgid "Please set \"Default Payroll Payable Account\" in Company Defaults"
