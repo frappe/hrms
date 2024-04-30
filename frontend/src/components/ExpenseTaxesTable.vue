@@ -191,14 +191,6 @@ const taxesTableFields = createResource({
 	params: { doctype: "Expense Taxes and Charges" },
 	transform(data) {
 		const excludeFields = ["description_sb"]
-		const dimensionFields = [
-			"cost_center",
-			"project",
-			"accounting_dimensions_section",
-		]
-
-		if (!props.id) excludeFields.push(...dimensionFields)
-
 		return data
 			.map((field) => {
 				if (field.fieldname === "account_head") {

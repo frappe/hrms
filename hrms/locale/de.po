@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-05 13:25\n"
+"PO-Revision-Date: 2024-04-25 14:15\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -7237,7 +7237,7 @@ msgstr "Die Benachrichtigung über die Verschiebung des Vorstellungsgesprächs k
 
 #: overrides/company.py:52
 msgid "Failed to setup defaults for country {0}. Please contact support."
-msgstr ""
+msgstr "Die Standardeinstellungen für das Land {0} konnten nicht eingerichtet werden. Bitte kontaktieren Sie den Support."
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:326
 msgid "Failed to submit some leave policy assignments:"
@@ -7454,7 +7454,7 @@ msgstr "Fuhrparkverwaltung"
 #. Name of a role
 #: hr/doctype/vehicle_log/vehicle_log.json
 msgid "Fleet Manager"
-msgstr "Flottenverwalter"
+msgstr "Fuhrparkverwalter"
 
 #. Label of a Tab Break field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -7765,7 +7765,7 @@ msgstr "Schlussabrechnung"
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
 #: hr/report/employee_exits/employee_exits.py:58
 msgid "Full and Final Statement"
-msgstr ""
+msgstr "Schlussabrechnung"
 
 #: setup.py:380
 msgid "Full-time"
