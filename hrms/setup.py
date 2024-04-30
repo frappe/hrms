@@ -629,21 +629,7 @@ def set_single_defaults():
 
 def get_post_install_patches():
 	return (
-		"erpnext.patches.v10_0.rename_offer_letter_to_job_offer",
-		"erpnext.patches.v10_0.migrate_daily_work_summary_settings_to_daily_work_summary_group",
-		"erpnext.patches.v11_0.move_leave_approvers_from_employee",
-		"erpnext.patches.v11_0.rename_field_max_days_allowed",
-		"erpnext.patches.v11_0.add_expense_claim_default_account",
-		"erpnext.patches.v11_0.rename_additional_salary_component_additional_salary",
-		"erpnext.patches.v11_1.set_salary_details_submittable",
-		"erpnext.patches.v11_1.rename_depends_on_lwp",
-		"erpnext.patches.v12_0.generate_leave_ledger_entries",
-		"erpnext.patches.v12_0.remove_denied_leaves_from_leave_ledger",
-		"erpnext.patches.v12_0.set_employee_preferred_emails",
-		"erpnext.patches.v12_0.set_job_offer_applicant_email",
 		"erpnext.patches.v13_0.move_tax_slabs_from_payroll_period_to_income_tax_slab",
-		"erpnext.patches.v12_0.remove_duplicate_leave_ledger_entries",
-		"erpnext.patches.v12_0.move_due_advance_amount_to_pending_amount",
 		"erpnext.patches.v13_0.move_doctype_reports_and_notification_from_hr_to_payroll",
 		"erpnext.patches.v13_0.move_payroll_setting_separately_from_hr_settings",
 		"erpnext.patches.v13_0.update_start_end_date_for_old_shift_assignment",
