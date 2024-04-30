@@ -3,20 +3,17 @@
 
 frappe.ui.form.on("Salary Withholding", {
 	employee: function (frm) {
-		if (frm.doc.employee) {
-			frappe.db.get_doc("Employee", frm.doc.employee).then((doc) => {
-				frm.doc.date_of_joining = doc.date_of_joining
-				if (doc.relieving_date) {
-					frm.doc.relieving_date = doc.relieving_date
-				}
-				else {
-					const relieving_date = frappe.datetime.add_months(frappe.datetime.get_today(), months = doc.notice)
-					frm.doc.relieving_date = relieving_date
-				}
-				refresh_field("date_of_joining")
-				refresh_field("relieving_date")
-			})
-		}
+		if (!frm.doc.employee) return
+
+		frappe.db.get_doc("Employee", frm.doc.employee).then((doc) => {
+			frm.doc.date_of_joining = doc.date_of_joining
+
+			frm.doc.date_of_relieving = doc.relieving_date || doc.resignation_letter_date && frappe.datetime.add_months(doc.resignation_letter_date, months = doc.notice)
+			console.log(doc.date_of_joining)
+
+			frm.refresh_field("date_of_joining")
+			frm.refresh_field("date_of_relieving")
+		})
 	},
 	from_date: function (frm) {
 		if (frm.doc.number_of_withholding_cycles) {
