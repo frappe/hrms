@@ -149,12 +149,14 @@ frappe.ui.form.on("Leave Application", {
 	},
 
 	from_date: function (frm) {
+		frm.events.validate_from_to_date(frm, "to_date");
 		frm.trigger("make_dashboard");
 		frm.trigger("half_day_datepicker");
 		frm.trigger("calculate_total_days");
 	},
 
 	to_date: function (frm) {
+		frm.events.validate_from_to_date(frm, "from_date");
 		frm.trigger("make_dashboard");
 		frm.trigger("half_day_datepicker");
 		frm.trigger("calculate_total_days");
@@ -164,9 +166,17 @@ frappe.ui.form.on("Leave Application", {
 		frm.trigger("calculate_total_days");
 	},
 
+	validate_from_to_date: function (frm, null_date) {
+		const from_date = Date.parse(frm.doc.from_date);
+		const to_date = Date.parse(frm.doc.to_date);
+		if (to_date < from_date) frm.set_value(null_date, "");
+	},
+
 	half_day_datepicker: function (frm) {
 		frm.set_value("half_day_date", "");
-		let half_day_datepicker = frm.fields_dict.half_day_date.datepicker;
+		if (!(frm.doc.half_day && frm.doc.from_date && frm.doc.to_date)) return;
+
+		const half_day_datepicker = frm.fields_dict.half_day_date.datepicker;
 		half_day_datepicker.update({
 			minDate: frappe.datetime.str_to_obj(frm.doc.from_date),
 			maxDate: frappe.datetime.str_to_obj(frm.doc.to_date),
@@ -203,14 +213,6 @@ frappe.ui.form.on("Leave Application", {
 
 	calculate_total_days: function (frm) {
 		if (frm.doc.from_date && frm.doc.to_date && frm.doc.employee && frm.doc.leave_type) {
-			let from_date = Date.parse(frm.doc.from_date);
-			let to_date = Date.parse(frm.doc.to_date);
-
-			if (to_date < from_date) {
-				frappe.msgprint(__("To Date cannot be less than From Date"));
-				frm.set_value("to_date", "");
-				return;
-			}
 			// server call is done to include holidays in leave days calculations
 			return frappe.call({
 				method: "hrms.hr.doctype.leave_application.leave_application.get_number_of_leave_days",
