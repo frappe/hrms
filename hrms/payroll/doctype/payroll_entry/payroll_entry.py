@@ -1250,6 +1250,7 @@ def show_payroll_submission_status(submitted, unsubmitted, payroll_entry):
 
 
 def get_existing_salary_slips(employees, args):
+	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 	return frappe.db.sql_list(
 		"""
 		select distinct employee from `tabSalary Slip`

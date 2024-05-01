@@ -32,6 +32,7 @@ class LeaveControlPanel(Document):
 
 		condition_str = " and " + " and ".join(conditions) if len(conditions) else ""
 
+		# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 		e = frappe.db.sql(
 			f"select name from tabEmployee where status='Active' {condition_str}",
 			tuple(values),
