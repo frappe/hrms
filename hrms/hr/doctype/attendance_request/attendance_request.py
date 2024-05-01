@@ -117,7 +117,7 @@ class AttendanceRequest(Document):
 
 	def should_mark_attendance(self, attendance_date: str) -> bool:
 		# Check if attendance_date is a holiday
-		if is_holiday(self.employee, attendance_date):
+		if not self.include_holidays and is_holiday(self.employee, attendance_date):
 			frappe.msgprint(
 				_("Attendance not submitted for {0} as it is a Holiday.").format(
 					frappe.bold(format_date(attendance_date))
@@ -173,7 +173,7 @@ class AttendanceRequest(Document):
 		for day in range(request_days):
 			attendance_date = add_days(self.from_date, day)
 
-			if is_holiday(self.employee, attendance_date):
+			if not self.include_holidays and is_holiday(self.employee, attendance_date):
 				attendance_warnings.append({"date": attendance_date, "reason": "Holiday", "action": "Skip"})
 			elif self.has_leave_record(attendance_date):
 				attendance_warnings.append({"date": attendance_date, "reason": "On Leave", "action": "Skip"})
