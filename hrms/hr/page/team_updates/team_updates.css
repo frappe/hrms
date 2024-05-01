@@ -1,17 +1,17 @@
 .date-indicator {
-    background:none;
-    font-size:12px;
-    vertical-align:middle;
-    font-weight:bold;
-    color:#6c7680;
+	background: none;
+	font-size: 12px;
+	vertical-align: middle;
+	font-weight: bold;
+	color: #6c7680;
 }
 .date-indicator::after {
-    margin:0 -4px 0 12px;
-    content:'';
-    display:inline-block;
-    height:8px;
-    width:8px;
-    border-radius:8px;
+	margin: 0 -4px 0 12px;
+	content: "";
+	display: inline-block;
+	height: 8px;
+	width: 8px;
+	border-radius: 8px;
 	background: #d1d8dd;
 }
 

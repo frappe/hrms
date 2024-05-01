@@ -101,7 +101,8 @@ class Attendance(Document):
 			query = query.where(
 				((Attendance.shift.isnull()) | (Attendance.shift == ""))
 				| (
-					((Attendance.shift.isnotnull()) | (Attendance.shift != "")) & (Attendance.shift == self.shift)
+					((Attendance.shift.isnotnull()) | (Attendance.shift != ""))
+					& (Attendance.shift == self.shift)
 				)
 			)
 
@@ -174,12 +175,16 @@ class Attendance(Document):
 				if d.half_day_date == getdate(self.attendance_date):
 					self.status = "Half Day"
 					frappe.msgprint(
-						_("Employee {0} on Half day on {1}").format(self.employee, format_date(self.attendance_date))
+						_("Employee {0} on Half day on {1}").format(
+							self.employee, format_date(self.attendance_date)
+						)
 					)
 				else:
 					self.status = "On Leave"
 					frappe.msgprint(
-						_("Employee {0} is on Leave on {1}").format(self.employee, format_date(self.attendance_date))
+						_("Employee {0} is on Leave on {1}").format(
+							self.employee, format_date(self.attendance_date)
+						)
 					)
 
 		if self.status in ("On Leave", "Half Day"):

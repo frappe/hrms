@@ -26,16 +26,15 @@ class LeaveControlPanel(Document):
 				elif field == "employee_grade":
 					conditions.append("grade=%s")
 				else:
-					conditions.append("{0}=%s".format(field))
+					conditions.append(f"{field}=%s")
 
 				values.append(self.get(field))
 
 		condition_str = " and " + " and ".join(conditions) if len(conditions) else ""
 
+		# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 		e = frappe.db.sql(
-			"select name from tabEmployee where status='Active' {condition}".format(
-				condition=condition_str
-			),
+			f"select name from tabEmployee where status='Active' {condition_str}",
 			tuple(values),
 		)
 

@@ -1,14 +1,15 @@
-import frappe
 import os
-import click
-from frappe import _
 
+import click
+
+import frappe
+from frappe import _
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.installer import update_site_config
 
-from hrms.subscription_utils import update_erpnext_access
 from hrms.overrides.company import delete_company_fixtures
+from hrms.subscription_utils import update_erpnext_access
 
 
 def after_install():
@@ -512,7 +513,7 @@ def add_non_standard_user_types():
 	user_types = get_user_types_data()
 
 	user_type_limit = {}
-	for user_type, data in user_types.items():
+	for user_type, __ in user_types.items():
 		user_type_limit.setdefault(frappe.scrub(user_type), 30)
 
 	update_site_config("user_type_doctype_limit", user_type_limit)

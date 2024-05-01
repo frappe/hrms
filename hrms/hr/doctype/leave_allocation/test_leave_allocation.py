@@ -206,7 +206,7 @@ class TestLeaveAllocation(FrappeTestCase):
 		self.assertRaises(OverAllocationError, allocation.save)
 
 	def test_validate_back_dated_allocation_update(self):
-		leave_type = create_leave_type(leave_type_name="_Test_CF_leave", is_carry_forward=1)
+		create_leave_type(leave_type_name="_Test_CF_leave", is_carry_forward=1)
 
 		# initial leave allocation = 15
 		leave_allocation = create_leave_allocation(
@@ -234,7 +234,7 @@ class TestLeaveAllocation(FrappeTestCase):
 		self.assertRaises(BackDatedAllocationError, leave_allocation.save)
 
 	def test_carry_forward_calculation(self):
-		leave_type = create_leave_type(
+		create_leave_type(
 			leave_type_name="_Test_CF_leave",
 			is_carry_forward=1,
 			maximum_carry_forwarded_leaves=10,
@@ -283,7 +283,7 @@ class TestLeaveAllocation(FrappeTestCase):
 
 	@change_settings("System Settings", {"float_precision": 2})
 	def test_precision(self):
-		leave_type = create_leave_type(
+		create_leave_type(
 			leave_type_name="_Test_CF_leave",
 			is_carry_forward=1,
 		)
@@ -314,7 +314,7 @@ class TestLeaveAllocation(FrappeTestCase):
 		self.assertEqual(leave_allocation_1.total_leaves_allocated, 1)
 
 	def test_carry_forward_leaves_expiry(self):
-		leave_type = create_leave_type(
+		create_leave_type(
 			leave_type_name="_Test_CF_leave_expiry",
 			is_carry_forward=1,
 			expire_carry_forwarded_leaves_after_days=90,
@@ -475,9 +475,7 @@ class TestLeaveAllocation(FrappeTestCase):
 
 		# check if leave ledger entry is deleted on cancellation
 		leave_allocation.cancel()
-		self.assertFalse(
-			frappe.db.exists("Leave Ledger Entry", {"transaction_name": leave_allocation.name})
-		)
+		self.assertFalse(frappe.db.exists("Leave Ledger Entry", {"transaction_name": leave_allocation.name}))
 
 	def test_leave_addition_after_submit(self):
 		leave_allocation = create_leave_allocation(

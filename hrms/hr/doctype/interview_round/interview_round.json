@@ -11,9 +11,9 @@
   "interview_type",
   "interviewers",
   "column_break_3",
-  "designation",
   "expected_average_rating",
   "expected_skills_section",
+  "designation",
   "expected_skill_set"
  ],
  "fields": [
@@ -33,12 +33,12 @@
   },
   {
    "fieldname": "expected_skills_section",
-   "fieldtype": "Section Break",
-   "label": "Expected Skillset"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "expected_skill_set",
    "fieldtype": "Table",
+   "label": "Expected Skillset",
    "options": "Expected Skill Set",
    "reqd": 1
   },
@@ -68,7 +68,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-09-30 13:01:25.666660",
+ "modified": "2024-05-01 11:57:32.754037",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview Round",

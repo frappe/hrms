@@ -3,25 +3,25 @@
 
 frappe.ui.form.on("Journal Entry", {
 	refresh(frm) {
-		frm.set_query("reference_name", "accounts", function(frm, cdt, cdn) {
+		frm.set_query("reference_name", "accounts", function (frm, cdt, cdn) {
 			let jvd = frappe.get_doc(cdt, cdn);
 
 			// filters for hrms doctypes
 			if (jvd.reference_type === "Expense Claim") {
 				return {
 					filters: {
-						"total_sanctioned_amount": [">", 0],
-						"status": ["!=", "Paid"],
-						"docstatus": 1
-					}
+						total_sanctioned_amount: [">", 0],
+						status: ["!=", "Paid"],
+						docstatus: 1,
+					},
 				};
 			}
 
 			if (jvd.reference_type === "Employee Advance") {
 				return {
 					filters: {
-						"docstatus": 1
-					}
+						docstatus: 1,
+					},
 				};
 			}
 
@@ -38,26 +38,30 @@ frappe.ui.form.on("Journal Entry", {
 					query: "erpnext.accounts.doctype.journal_entry.journal_entry.get_against_jv",
 					filters: {
 						account: jvd.account,
-						party: jvd.party
-					}
+						party: jvd.party,
+					},
 				};
 			}
 
 			const out = {
-				filters: [
-					[jvd.reference_type, "docstatus", "=", 1]
-				]
+				filters: [[jvd.reference_type, "docstatus", "=", 1]],
 			};
 
 			if (["Sales Invoice", "Purchase Invoice"].includes(jvd.reference_type)) {
 				out.filters.push([jvd.reference_type, "outstanding_amount", "!=", 0]);
 				// Filter by cost center
 				if (jvd.cost_center) {
-					out.filters.push([jvd.reference_type, "cost_center", "in", ["", jvd.cost_center]]);
+					out.filters.push([
+						jvd.reference_type,
+						"cost_center",
+						"in",
+						["", jvd.cost_center],
+					]);
 				}
 				// account filter
 				frappe.model.validate_missing(jvd, "account");
-				const party_account_field = jvd.reference_type === "Sales Invoice" ? "debit_to": "credit_to";
+				const party_account_field =
+					jvd.reference_type === "Sales Invoice" ? "debit_to" : "credit_to";
 				out.filters.push([jvd.reference_type, party_account_field, "=", jvd.account]);
 			}
 
@@ -84,5 +88,5 @@ frappe.ui.form.on("Journal Entry", {
 
 			return out;
 		});
-	}
-})
+	},
+});

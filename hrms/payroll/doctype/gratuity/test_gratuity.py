@@ -198,9 +198,7 @@ def set_mode_of_payment_account():
 	mode_of_payment = frappe.get_doc("Mode of Payment", "Cash")
 
 	mode_of_payment.accounts = []
-	mode_of_payment.append(
-		"accounts", {"company": "_Test Company", "default_account": "_Test Bank - _TC"}
-	)
+	mode_of_payment.append("accounts", {"company": "_Test Company", "default_account": "_Test Bank - _TC"})
 	mode_of_payment.save()
 
 

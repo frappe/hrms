@@ -12,9 +12,7 @@ from hrms.hr.doctype.vehicle_log.vehicle_log import make_expense_claim
 
 class TestVehicleLog(FrappeTestCase):
 	def setUp(self):
-		employee_id = frappe.db.sql(
-			"""select name from `tabEmployee` where name='testdriver@example.com'"""
-		)
+		employee_id = frappe.db.sql("""select name from `tabEmployee` where name='testdriver@example.com'""")
 		self.employee_id = employee_id[0][0] if employee_id else None
 
 		if not self.employee_id:

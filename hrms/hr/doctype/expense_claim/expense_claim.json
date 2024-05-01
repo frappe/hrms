@@ -264,6 +264,8 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "company.default_expense_claim_payable_account",
+   "fetch_if_empty": 1,
    "fieldname": "payable_account",
    "fieldtype": "Link",
    "label": "Payable Account",
@@ -271,6 +273,8 @@
    "reqd": 1
   },
   {
+   "fetch_from": "company.cost_center",
+   "fetch_if_empty": 1,
    "fieldname": "cost_center",
    "fieldtype": "Link",
    "label": "Cost Center",
@@ -379,7 +383,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-11-22 16:26:57.787838",
+ "modified": "2024-04-17 19:38:30.373122",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim",

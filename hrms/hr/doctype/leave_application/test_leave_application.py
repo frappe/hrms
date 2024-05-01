@@ -98,7 +98,8 @@ class TestLeaveApplication(FrappeTestCase):
 		from_date = get_year_start(getdate())
 		to_date = get_year_ending(getdate())
 		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
-		list_without_weekly_offs = make_holiday_list(
+		# list_without_weekly_offs
+		make_holiday_list(
 			"Holiday List w/o Weekly Offs", from_date=from_date, to_date=to_date, add_weekly_offs=False
 		)
 
@@ -360,9 +361,11 @@ class TestLeaveApplication(FrappeTestCase):
 		# Case 2: leave type with 'Include holidays within leaves as leaves' disabled
 		frappe.delete_doc_if_exists("Leave Type", "Test Do Not Include Holidays", force=1)
 		leave_type = frappe.get_doc(
-			dict(
-				leave_type_name="Test Do Not Include Holidays", doctype="Leave Type", include_holiday=False
-			)
+			{
+				"leave_type_name": "Test Do Not Include Holidays",
+				"doctype": "Leave Type",
+				"include_holiday": False,
+			}
 		).insert()
 
 		date = getdate()
@@ -865,9 +868,7 @@ class TestLeaveApplication(FrappeTestCase):
 
 		# check if leave ledger entry is deleted on cancellation
 		leave_application.cancel()
-		self.assertFalse(
-			frappe.db.exists("Leave Ledger Entry", {"transaction_name": leave_application.name})
-		)
+		self.assertFalse(frappe.db.exists("Leave Ledger Entry", {"transaction_name": leave_application.name}))
 
 	def test_ledger_entry_creation_on_intermediate_allocation_expiry(self):
 		employee = get_employee()
@@ -974,9 +975,7 @@ class TestLeaveApplication(FrappeTestCase):
 		year_end = getdate(get_year_ending(date))
 
 		# ALLOCATION = 30
-		allocation = make_allocation_record(
-			employee=employee.name, from_date=year_start, to_date=year_end
-		)
+		allocation = make_allocation_record(employee=employee.name, from_date=year_start, to_date=year_end)
 
 		# USED LEAVES = 4
 		first_sunday = get_first_sunday(self.holiday_list)
@@ -1056,7 +1055,7 @@ class TestLeaveApplication(FrappeTestCase):
 		)
 
 		# leave application across cf expiry
-		application = make_leave_application(
+		make_leave_application(
 			employee.name,
 			cf_expiry,
 			add_days(cf_expiry, 3),
@@ -1090,7 +1089,7 @@ class TestLeaveApplication(FrappeTestCase):
 		)
 
 		# leave application across cf expiry, 20 days leave
-		application = make_leave_application(
+		make_leave_application(
 			employee.name,
 			add_days(cf_expiry, -16),
 			add_days(cf_expiry, 3),
@@ -1132,7 +1131,7 @@ class TestLeaveApplication(FrappeTestCase):
 		)
 
 		# leave application after cf expiry
-		application = make_leave_application(
+		make_leave_application(
 			employee.name,
 			add_days(cf_expiry, 1),
 			add_days(cf_expiry, 4),
