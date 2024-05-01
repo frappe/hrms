@@ -162,7 +162,7 @@ frappe.ui.form.on("Employee Attendance Tool", {
 						return `<span style="color:red">${__(value)}</span>`;
 					else if (value == "Half Day")
 						return `<span style="color:orange">${__(value)}</span>`;
-					else if (value == "Leave")
+					else if (value == "On Leave")
 						return `<span style="color:#318AD8">${__(value)}</span>`;
 				},
 			},
