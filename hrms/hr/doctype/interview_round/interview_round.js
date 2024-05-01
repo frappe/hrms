@@ -9,7 +9,21 @@ frappe.ui.form.on("Interview Round", {
 			});
 		}
 	},
-	create_interview: function(frm) {
+	designation: function (frm) {
+		if (frm.doc.designation) {
+			frappe.db.get_doc("Designation", frm.doc.designation).then((designation) => {
+				frappe.model.clear_table(frm.doc, "expected_skill_set");
+
+				designation.skills.forEach((designation_skill) => {
+					const row = frm.add_child("expected_skill_set");
+					row.skill = designation_skill.skill;
+				});
+
+				refresh_field("expected_skill_set");
+			});
+		}
+	},
+	create_interview: function (frm) {
 		frappe.call({
 			method: "hrms.hr.doctype.interview_round.interview_round.create_interview",
 			args: {
