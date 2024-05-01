@@ -255,11 +255,7 @@
  "is_submittable": 1,
  "links": [],
  "max_attachments": 3,
-<<<<<<< HEAD
- "modified": "2023-11-27 10:10:04.069667",
-=======
  "modified": "2024-04-08 13:56:03.818019",
->>>>>>> 0137c2b78 (fix(Leave Application): half day date picker rendering (#1643))
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Application",
