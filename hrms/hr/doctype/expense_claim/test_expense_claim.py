@@ -49,9 +49,7 @@ class TestExpenseClaim(FrappeTestCase):
 
 		payable_account = get_payable_account(company_name)
 
-		make_expense_claim(
-			payable_account, 300, 200, company_name, "Travel Expenses - _TC3", project, task
-		)
+		make_expense_claim(payable_account, 300, 200, company_name, "Travel Expenses - _TC3", project, task)
 
 		self.assertEqual(frappe.db.get_value("Task", task, "total_expense_claim"), 200)
 		self.assertEqual(frappe.db.get_value("Project", project, "total_expense_claim"), 200)
@@ -71,9 +69,7 @@ class TestExpenseClaim(FrappeTestCase):
 	def test_expense_claim_status_as_payment_from_journal_entry(self):
 		# Via Journal Entry
 		payable_account = get_payable_account(company_name)
-		expense_claim = make_expense_claim(
-			payable_account, 300, 200, company_name, "Travel Expenses - _TC3"
-		)
+		expense_claim = make_expense_claim(payable_account, 300, 200, company_name, "Travel Expenses - _TC3")
 
 		je = make_journal_entry(expense_claim)
 
@@ -90,18 +86,14 @@ class TestExpenseClaim(FrappeTestCase):
 		self.assertEqual(claim.status, "Submitted")
 
 		# no gl entries created
-		gl_entry = frappe.get_all(
-			"GL Entry", {"voucher_type": "Expense Claim", "voucher_no": claim.name}
-		)
+		gl_entry = frappe.get_all("GL Entry", {"voucher_type": "Expense Claim", "voucher_no": claim.name})
 		self.assertEqual(len(gl_entry), 0)
 
 	def test_expense_claim_status_as_payment_from_payment_entry(self):
 		# Via Payment Entry
 		payable_account = get_payable_account(company_name)
 
-		expense_claim = make_expense_claim(
-			payable_account, 300, 200, company_name, "Travel Expenses - _TC3"
-		)
+		expense_claim = make_expense_claim(payable_account, 300, 200, company_name, "Travel Expenses - _TC3")
 
 		pe = make_payment_entry(expense_claim, 200)
 
@@ -124,9 +116,7 @@ class TestExpenseClaim(FrappeTestCase):
 		if not employee:
 			employee = make_employee("test_employee1@expenseclaim.com", company=company_name)
 
-		expense_claim1 = make_expense_claim(
-			payable_account, 300, 200, company_name, "Travel Expenses - _TC3"
-		)
+		expense_claim1 = make_expense_claim(payable_account, 300, 200, company_name, "Travel Expenses - _TC3")
 
 		expense_claim2 = make_expense_claim(
 			payable_account, 300, 200, company_name, "Travel Expenses - _TC3", employee=employee
@@ -614,15 +604,12 @@ def make_expense_claim(
 	taxes=None,
 	employee=None,
 ):
-
 	if not employee:
 		employee = frappe.db.get_value("Employee", {"status": "Active", "company": company})
 		if not employee:
 			employee = make_employee("test_employee@expenseclaim.com", company=company)
 
-	currency, cost_center = frappe.db.get_value(
-		"Company", company, ["default_currency", "cost_center"]
-	)
+	currency, cost_center = frappe.db.get_value("Company", company, ["default_currency", "cost_center"])
 	expense_claim = {
 		"doctype": "Expense Claim",
 		"employee": employee,

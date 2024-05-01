@@ -45,9 +45,7 @@ def execute(filters=None):
 	]
 
 	if frappe.db.has_column("Employee", "ifsc_code"):
-		columns.append(
-			{"label": _("IFSC Code"), "fieldtype": "Data", "fieldname": "bank_code", "width": 100}
-		)
+		columns.append({"label": _("IFSC Code"), "fieldtype": "Data", "fieldname": "bank_code", "width": 100})
 
 	columns += [
 		{"label": _("Currency"), "fieldtype": "Data", "fieldname": "currency", "width": 50},

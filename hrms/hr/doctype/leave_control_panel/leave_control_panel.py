@@ -93,7 +93,10 @@ class LeaveControlPanel(Document):
 				assignment.save()
 				assignment.submit()
 				success.append(
-					{"doc": get_link_to_form("Leave Policy Assignment", assignment.name), "employee": employee}
+					{
+						"doc": get_link_to_form("Leave Policy Assignment", assignment.name),
+						"employee": employee,
+					}
 				)
 			except Exception:
 				frappe.db.rollback(save_point=savepoint)
@@ -130,9 +133,7 @@ class LeaveControlPanel(Document):
 
 		return []
 
-	def get_employees_without_allocations(
-		self, all_employees: list, from_date: str, to_date: str
-	) -> list:
+	def get_employees_without_allocations(self, all_employees: list, from_date: str, to_date: str) -> list:
 		Allocation = frappe.qb.DocType("Leave Allocation")
 		Employee = frappe.qb.DocType("Employee")
 
@@ -142,9 +143,7 @@ class LeaveControlPanel(Document):
 			.on(Allocation.employee == Employee.name)
 			.select(Employee.name)
 			.distinct()
-			.where(
-				(Allocation.docstatus == 1) & (Allocation.employee.isin([d.name for d in all_employees]))
-			)
+			.where((Allocation.docstatus == 1) & (Allocation.employee.isin([d.name for d in all_employees])))
 		)
 
 		if self.dates_based_on == "Joining Date":

@@ -48,9 +48,7 @@ def get_dashboard_for_employee(data):
 		]
 	)
 
-	data["non_standard_fieldnames"].update(
-		{"Bank Account": "party", "Employee Grievance": "raised_by"}
-	)
+	data["non_standard_fieldnames"].update({"Bank Account": "party", "Employee Grievance": "raised_by"})
 	data.update(
 		{
 			"heatmap": True,

@@ -24,9 +24,7 @@ class CompensatoryLeaveRequest(Document):
 		if self.half_day:
 			if not self.half_day_date:
 				frappe.throw(_("Half Day Date is mandatory"))
-			if (
-				not getdate(self.work_from_date) <= getdate(self.half_day_date) <= getdate(self.work_end_date)
-			):
+			if not getdate(self.work_from_date) <= getdate(self.half_day_date) <= getdate(self.work_end_date):
 				frappe.throw(_("Half Day Date should be in between Work From Date and Work End Date"))
 		validate_overlap(self, self.work_from_date, self.work_end_date)
 		self.validate_holidays()
@@ -63,7 +61,8 @@ class CompensatoryLeaveRequest(Document):
 		if len(holidays) < date_diff(self.work_end_date, self.work_from_date) + 1:
 			if date_diff(self.work_end_date, self.work_from_date):
 				msg = _("The days between {0} to {1} are not valid holidays.").format(
-					frappe.bold(format_date(self.work_from_date)), frappe.bold(format_date(self.work_end_date))
+					frappe.bold(format_date(self.work_from_date)),
+					frappe.bold(format_date(self.work_end_date)),
 				)
 			else:
 				msg = _("{0} is not a holiday.").format(frappe.bold(format_date(self.work_from_date)))

@@ -1,33 +1,33 @@
 // Copyright (c) 2020, Frappe Technologies Pvt. Ltd. and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('Gratuity', {
+frappe.ui.form.on("Gratuity", {
 	setup: function (frm) {
 		frm.set_query("salary_component", function () {
 			return {
 				filters: {
-					type: "Earning"
-				}
+					type: "Earning",
+				},
 			};
 		});
 
 		frm.set_query("expense_account", function () {
 			return {
 				filters: {
-					"root_type": "Expense",
-					"is_group": 0,
-					"company": frm.doc.company
-				}
+					root_type: "Expense",
+					is_group: 0,
+					company: frm.doc.company,
+				},
 			};
 		});
 
 		frm.set_query("payable_account", function () {
 			return {
 				filters: {
-					"root_type": "Liability",
-					"is_group": 0,
-					"company": frm.doc.company
-				}
+					root_type: "Liability",
+					is_group: 0,
+					company: frm.doc.company,
+				},
 			};
 		});
 	},
@@ -37,13 +37,13 @@ frappe.ui.form.on('Gratuity', {
 				return frappe.call({
 					method: "hrms.overrides.employee_payment_entry.get_payment_entry_for_employee",
 					args: {
-						"dt": frm.doc.doctype,
-						"dn": frm.doc.name
+						dt: frm.doc.doctype,
+						dn: frm.doc.name,
 					},
 					callback: function (r) {
 						var doclist = frappe.model.sync(r.message);
 						frappe.set_route("Form", doclist[0].doctype, doclist[0].name);
-					}
+					},
 				});
 			});
 		}
@@ -60,10 +60,9 @@ frappe.ui.form.on('Gratuity', {
 	calculate_work_experience_and_amount: function (frm) {
 		if (frm.doc.employee && frm.doc.gratuity_rule) {
 			frm.call("calculate_work_experience_and_amount").then((r) => {
-				frm.set_value("current_work_experience", r.message['current_work_experience']);
-				frm.set_value("amount", r.message['amount']);
+				frm.set_value("current_work_experience", r.message["current_work_experience"]);
+				frm.set_value("amount", r.message["amount"]);
 			});
 		}
-	}
-
+	},
 });

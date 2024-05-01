@@ -42,9 +42,7 @@ class Gratuity(AccountsController):
 		if self.docstatus == 0:
 			status = "Draft"
 		elif self.docstatus == 1:
-			if flt(self.paid_amount) > 0 and flt(self.amount, precision) == flt(
-				self.paid_amount, precision
-			):
+			if flt(self.paid_amount) > 0 and flt(self.amount, precision) == flt(self.paid_amount, precision):
 				status = "Paid"
 			else:
 				status = "Unpaid"
@@ -196,9 +194,7 @@ def calculate_employee_total_workings_days(employee, date_of_joining, relieving_
 	return employee_total_workings_days
 
 
-def get_work_experience_using_method(
-	method, current_work_experience, minimum_year_for_gratuity, employee
-):
+def get_work_experience_using_method(method, current_work_experience, minimum_year_for_gratuity, employee):
 	if method == "Round off Work Experience":
 		current_work_experience = round(current_work_experience)
 	else:
@@ -214,7 +210,6 @@ def get_work_experience_using_method(
 
 
 def get_non_working_days(employee, relieving_date, status):
-
 	filters = {
 		"docstatus": 1,
 		"status": status,
@@ -337,9 +332,7 @@ def calculate_amount_based_on_current_slab(
 	slab_found = False
 	gratuity_amount = 0
 	if experience >= from_year and (to_year == 0 or experience < to_year):
-		gratuity_amount = (
-			total_applicable_components_amount * experience * fraction_of_applicable_earnings
-		)
+		gratuity_amount = total_applicable_components_amount * experience * fraction_of_applicable_earnings
 		if fraction_of_applicable_earnings:
 			slab_found = True
 

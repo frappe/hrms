@@ -6,9 +6,7 @@ def execute():
 	frappe.reload_doc("hr", "doctype", "training_event_employee")
 
 	# no need to run the update query as there is no old data
-	if not frappe.db.exists(
-		"Training Event Employee", {"attendance": ("in", ("Mandatory", "Optional"))}
-	):
+	if not frappe.db.exists("Training Event Employee", {"attendance": ("in", ("Mandatory", "Optional"))}):
 		return
 
 	frappe.db.sql(
