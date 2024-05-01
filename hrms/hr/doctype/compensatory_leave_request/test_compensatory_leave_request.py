@@ -38,9 +38,7 @@ class TestCompensatoryLeaveRequest(FrappeTestCase):
 		compensatory_leave_request.submit()
 
 		self.assertEqual(
-			get_leave_balance_on(
-				employee.name, compensatory_leave_request.leave_type, add_days(today(), 1)
-			),
+			get_leave_balance_on(employee.name, compensatory_leave_request.leave_type, add_days(today(), 1)),
 			before + 1,
 		)
 
@@ -158,7 +156,10 @@ class TestCompensatoryLeaveRequest(FrappeTestCase):
 		compensatory_leave_request.submit()
 
 
-def get_compensatory_leave_request(employee, leave_date=today()):
+def get_compensatory_leave_request(employee, leave_date=None):
+	if not leave_date:
+		leave_date = today()
+
 	prev_comp_leave_req = frappe.db.get_value(
 		"Compensatory Leave Request",
 		dict(

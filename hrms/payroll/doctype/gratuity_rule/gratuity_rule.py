@@ -16,7 +16,9 @@ class GratuityRule(Document):
 				)
 
 			if (
-				current_slab.to_year == 0 and current_slab.from_year == 0 and len(self.gratuity_rule_slabs) > 1
+				current_slab.to_year == 0
+				and current_slab.from_year == 0
+				and len(self.gratuity_rule_slabs) > 1
 			):
 				frappe.throw(
 					_("You can not define multiple slabs if you have a slab with no lower and upper limits.")
@@ -28,9 +30,7 @@ def get_gratuity_rule(name, slabs, **args):
 
 	rule = frappe.new_doc("Gratuity Rule")
 	rule.name = name
-	rule.calculate_gratuity_amount_based_on = (
-		args.calculate_gratuity_amount_based_on or "Current Slab"
-	)
+	rule.calculate_gratuity_amount_based_on = args.calculate_gratuity_amount_based_on or "Current Slab"
 	rule.work_experience_calculation_method = (
 		args.work_experience_calculation_method or "Take Exact Completed Years"
 	)

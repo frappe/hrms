@@ -27,11 +27,19 @@ frappe.ui.form.on("Appraisal", {
 			frappe.run_serially([
 				() => {
 					if (frm.doc.__islocal && frm.doc.appraisal_cycle) {
-						frappe.db.get_value("Appraisal Cycle", frm.doc.appraisal_cycle, "kra_evaluation_method", (r) => {
-							if (r.kra_evaluation_method) {
-								frm.set_value("rate_goals_manually", cint(r.kra_evaluation_method === "Manual Rating"));
-							}
-						});
+						frappe.db.get_value(
+							"Appraisal Cycle",
+							frm.doc.appraisal_cycle,
+							"kra_evaluation_method",
+							(r) => {
+								if (r.kra_evaluation_method) {
+									frm.set_value(
+										"rate_goals_manually",
+										cint(r.kra_evaluation_method === "Manual Rating"),
+									);
+								}
+							},
+						);
 					}
 				},
 				() => {
@@ -39,13 +47,13 @@ frappe.ui.form.on("Appraisal", {
 						method: "set_appraisal_template",
 						doc: frm.doc,
 					});
-				}
+				},
 			]);
 		}
 	},
 
 	add_custom_buttons(frm) {
-		frm.add_custom_button(__("View Goals"), function() {
+		frm.add_custom_button(__("View Goals"), function () {
 			frappe.route_options = {
 				company: frm.doc.company,
 				employee: frm.doc.employee,
@@ -90,16 +98,16 @@ frappe.ui.form.on("Appraisal", {
 							name: "Score Obtained",
 							chartType: "bar",
 							values: scores,
-						}
-					]
+						},
+					],
 				},
 				title: __("Scores"),
 				height: 250,
 				type: "bar",
 				barOptions: {
-					spaceRatio: 0.7
+					spaceRatio: 0.7,
 				},
-				colors: ["blue", "green"]
+				colors: ["blue", "green"],
 			});
 		}
 	},
@@ -112,9 +120,8 @@ frappe.ui.form.on("Appraisal", {
 		});
 
 		frm.set_value("total_score", total);
-	}
+	},
 });
-
 
 frappe.ui.form.on("Appraisal Goal", {
 	score(frm, cdt, cdn) {
@@ -140,9 +147,9 @@ frappe.ui.form.on("Appraisal Goal", {
 	set_score_earned(frm, cdt, cdn) {
 		let d = frappe.get_doc(cdt, cdn);
 
-		let score_earned = flt(d.score) * flt(d.per_weightage) / 100;
+		let score_earned = (flt(d.score) * flt(d.per_weightage)) / 100;
 		frappe.model.set_value(cdt, cdn, "score_earned", score_earned);
 
 		frm.trigger("calculate_total");
-	}
+	},
 });

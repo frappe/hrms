@@ -133,9 +133,7 @@ class LeavePolicyAssignment(Document):
 	def get_new_leaves(self, annual_allocation, leave_details, date_of_joining):
 		from frappe.model.meta import get_field_precision
 
-		precision = get_field_precision(
-			frappe.get_meta("Leave Allocation").get_field("new_leaves_allocated")
-		)
+		precision = get_field_precision(frappe.get_meta("Leave Allocation").get_field("new_leaves_allocated"))
 
 		# Earned Leaves and Compensatory Leaves are allocated by scheduler, initially allocate 0
 		if leave_details.is_compensatory:
@@ -306,7 +304,7 @@ def create_assignment_for_multiple_employees(employees, data):
 		try:
 			frappe.db.savepoint(savepoint)
 			assignment.submit()
-		except Exception as e:
+		except Exception:
 			frappe.db.rollback(save_point=savepoint)
 			assignment.log_error("Leave Policy Assignment submission failed")
 			failed.append(assignment.name)

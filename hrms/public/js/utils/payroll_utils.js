@@ -1,25 +1,18 @@
 hrms.payroll_utils = {
-	set_autocompletions_for_condition_and_formula: function (
-		frm,
-		child_row = ""
-	) {
+	set_autocompletions_for_condition_and_formula: function (frm, child_row = "") {
 		const autocompletions = [];
 		frappe.run_serially([
-			...[
-				"Employee",
-				"Salary Structure",
-				"Salary Structure Assignment",
-				"Salary Slip",
-			].map((doctype) =>
-				frappe.model.with_doctype(doctype, () => {
-					autocompletions.push(
-						...frappe.get_meta(doctype).fields.map((f) => ({
-							value: f.fieldname,
-							score: 8,
-							meta: __("{0} Field", [doctype]),
-						}))
-					);
-				})
+			...["Employee", "Salary Structure", "Salary Structure Assignment", "Salary Slip"].map(
+				(doctype) =>
+					frappe.model.with_doctype(doctype, () => {
+						autocompletions.push(
+							...frappe.get_meta(doctype).fields.map((f) => ({
+								value: f.fieldname,
+								score: 8,
+								meta: __("{0} Field", [doctype]),
+							})),
+						);
+					}),
 			),
 			() => {
 				frappe.db
@@ -32,7 +25,7 @@ hrms.payroll_utils = {
 								value: d.salary_component_abbr,
 								score: 9,
 								meta: __("Salary Component"),
-							}))
+							})),
 						);
 
 						autocompletions.push(
@@ -40,7 +33,7 @@ hrms.payroll_utils = {
 								value: d,
 								score: 10,
 								meta: __("Salary Structure Assignment field"),
-							}))
+							})),
 						);
 
 						if (child_row) {
@@ -51,7 +44,7 @@ hrms.payroll_utils = {
 									autocompletions,
 									frm.doc.name,
 									field,
-									child_row.name
+									child_row.name,
 								);
 							});
 

@@ -164,9 +164,7 @@ class LeaveEncashment(Document):
 		per_day_encashment = frappe.db.get_value(
 			"Salary Structure", self._salary_structure, "leave_encashment_amount_per_day"
 		)
-		self.encashment_amount = (
-			self.encashment_days * per_day_encashment if per_day_encashment > 0 else 0
-		)
+		self.encashment_amount = self.encashment_days * per_day_encashment if per_day_encashment > 0 else 0
 
 	def get_leave_allocation(self):
 		date = self.encashment_date or getdate()
