@@ -2,23 +2,23 @@
 // License: GNU General Public License v3. See license.txt
 
 frappe.ui.form.on("Leave Control Panel", {
-	onload: function(frm) {
+	onload: function (frm) {
 		if (!frm.doc.from_date) {
-			frm.set_value('from_date', frappe.datetime.get_today());
+			frm.set_value("from_date", frappe.datetime.get_today());
 		}
 	},
-	refresh: function(frm) {
+	refresh: function (frm) {
 		frm.disable_save();
 	},
-	company: function(frm) {
-		if(frm.doc.company) {
-			frm.set_query("department", function() {
+	company: function (frm) {
+		if (frm.doc.company) {
+			frm.set_query("department", function () {
 				return {
-					"filters": {
-						"company": frm.doc.company,
-					}
+					filters: {
+						company: frm.doc.company,
+					},
 				};
 			});
 		}
-	}
+	},
 });

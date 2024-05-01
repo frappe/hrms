@@ -91,9 +91,9 @@ def make_salary_components(country):
 
 def read_data_file(file_path):
 	try:
-		with open(file_path, "r") as f:
+		with open(file_path) as f:
 			return f.read()
-	except IOError:
+	except OSError:
 		return "{}"
 
 

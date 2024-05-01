@@ -49,16 +49,12 @@ class AttendanceRequest(Document):
 			self.throw_overlap_error(overlapping_request[0].name)
 
 	def throw_overlap_error(self, overlapping_request: str):
-		msg = _(
-			"Employee {0} already has an Attendance Request {1} that overlaps with this period"
-		).format(
+		msg = _("Employee {0} already has an Attendance Request {1} that overlaps with this period").format(
 			frappe.bold(self.employee),
 			get_link_to_form("Attendance Request", overlapping_request),
 		)
 
-		frappe.throw(
-			msg, title=_("Overlapping Attendance Request"), exc=OverlappingAttendanceRequestError
-		)
+		frappe.throw(msg, title=_("Overlapping Attendance Request"), exc=OverlappingAttendanceRequestError)
 
 	def on_submit(self):
 		self.create_attendance_records()

@@ -50,9 +50,7 @@ class InterviewFeedback(Document):
 			frappe.throw(
 				_(
 					"Feedback already submitted for the Interview {0}. Please cancel the previous Interview Feedback {1} to continue."
-				).format(
-					self.interview, get_link_to_form("Interview Feedback", duplicate_feedback)
-				)
+				).format(self.interview, get_link_to_form("Interview Feedback", duplicate_feedback))
 			)
 
 	def calculate_average_rating(self):
