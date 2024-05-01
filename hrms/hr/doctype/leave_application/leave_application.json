@@ -123,7 +123,7 @@
    "label": "Half Day"
   },
   {
-   "depends_on": "eval:doc.half_day && (doc.from_date != doc.to_date)",
+   "depends_on": "eval:doc.half_day && doc.from_date && doc.to_date && (doc.from_date != doc.to_date)",
    "fieldname": "half_day_date",
    "fieldtype": "Date",
    "label": "Half Day Date"
@@ -255,7 +255,7 @@
  "is_submittable": 1,
  "links": [],
  "max_attachments": 3,
- "modified": "2023-11-27 10:10:04.069667",
+ "modified": "2024-04-08 13:56:03.818019",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Application",
