@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-27 14:37\n"
+"PO-Revision-Date: 2024-04-29 15:01\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -780,41 +780,41 @@ msgstr ""
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Advance Account"
-msgstr ""
+msgstr "Avansni račun"
 
 #. Label of a Link field in DocType 'Expense Claim Advance'
 #: hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgctxt "Expense Claim Advance"
 msgid "Advance Account"
-msgstr ""
+msgstr "Avansni račun"
 
 #: hr/report/employee_advance_summary/employee_advance_summary.py:62
 msgid "Advance Amount"
-msgstr ""
+msgstr "Iznos avansa"
 
 #. Label of a Currency field in DocType 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Advance Amount"
-msgstr ""
+msgstr "Iznos avansa"
 
 #. Label of a Data field in DocType 'Travel Itinerary'
 #: hr/doctype/travel_itinerary/travel_itinerary.json
 msgctxt "Travel Itinerary"
 msgid "Advance Amount"
-msgstr ""
+msgstr "Iznos avansa"
 
 #. Label of a Currency field in DocType 'Expense Claim Advance'
 #: hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgctxt "Expense Claim Advance"
 msgid "Advance Paid"
-msgstr ""
+msgstr "Avansno plaćeno"
 
 #. Label of a Section Break field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Advance Payments"
-msgstr ""
+msgstr "Avansna plaćanja"
 
 #. Label of a Section Break field in DocType 'Leave Control Panel'
 #: hr/doctype/leave_control_panel/leave_control_panel.json
@@ -825,13 +825,13 @@ msgstr ""
 #. Label of a Card Break in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
 msgid "Advances"
-msgstr ""
+msgstr "Avansi"
 
 #. Label of a Table field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Advances"
-msgstr ""
+msgstr "Avansi"
 
 #. Name of a role
 #: hr/doctype/leave_application/leave_application.json
@@ -875,7 +875,7 @@ msgstr ""
 #: hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgctxt "Expense Claim Advance"
 msgid "Allocated Amount"
-msgstr ""
+msgstr "Alocirani iznos"
 
 #: hr/doctype/leave_application/leave_application.js:79
 msgid "Allocated Leaves"
@@ -892,13 +892,13 @@ msgstr ""
 #. Label of a Card Break in the Leaves Workspace
 #: hr/workspace/leaves/leaves.json
 msgid "Allocation"
-msgstr ""
+msgstr "Alokacija"
 
 #. Label of a Section Break field in DocType 'Leave Allocation'
 #: hr/doctype/leave_allocation/leave_allocation.json
 msgctxt "Leave Allocation"
 msgid "Allocation"
-msgstr ""
+msgstr "Alokacija"
 
 #: hr/doctype/leave_allocation/leave_allocation.js:56
 msgid "Allocation Expired!"
@@ -1261,55 +1261,55 @@ msgstr "Izmijenjeno od"
 
 #: payroll/report/professional_tax_deductions/professional_tax_deductions.py:32
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. Label of a Currency field in DocType 'Additional Salary'
 #: payroll/doctype/additional_salary/additional_salary.json
 msgctxt "Additional Salary"
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. Label of a Currency field in DocType 'Employee Benefit Application Detail'
 #: payroll/doctype/employee_benefit_application_detail/employee_benefit_application_detail.json
 msgctxt "Employee Benefit Application Detail"
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. Label of a Currency field in DocType 'Employee Other Income'
 #: payroll/doctype/employee_other_income/employee_other_income.json
 msgctxt "Employee Other Income"
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. Label of a Currency field in DocType 'Expense Claim Detail'
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
 msgctxt "Expense Claim Detail"
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. Label of a Currency field in DocType 'Expense Taxes and Charges'
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
 msgctxt "Expense Taxes and Charges"
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. Label of a Currency field in DocType 'Full and Final Outstanding Statement'
 #: hr/doctype/full_and_final_outstanding_statement/full_and_final_outstanding_statement.json
 msgctxt "Full and Final Outstanding Statement"
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. Label of a Currency field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. Label of a Currency field in DocType 'Salary Detail'
 #: payroll/doctype/salary_detail/salary_detail.json
 msgctxt "Salary Detail"
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #: payroll/doctype/salary_structure/salary_structure.py:34
 msgid "Amount Based on Formula"
