@@ -66,11 +66,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2023-09-18 18:05:19.732870",
-=======
  "modified": "2024-05-01 11:57:32.754037",
->>>>>>> 64386f112 (fix: autofill skills on entering designation in Interview Round (#1706))
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview Round",

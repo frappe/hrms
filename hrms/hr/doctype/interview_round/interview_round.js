@@ -9,9 +9,6 @@ frappe.ui.form.on("Interview Round", {
 			});
 		}
 	},
-<<<<<<< HEAD
-	create_interview: function(frm) {
-=======
 	designation: function (frm) {
 		if (frm.doc.designation) {
 			frappe.db.get_doc("Designation", frm.doc.designation).then((designation) => {
@@ -27,7 +24,6 @@ frappe.ui.form.on("Interview Round", {
 		}
 	},
 	create_interview: function (frm) {
->>>>>>> 64386f112 (fix: autofill skills on entering designation in Interview Round (#1706))
 		frappe.call({
 			method: "hrms.hr.doctype.interview_round.interview_round.create_interview",
 			args: {
