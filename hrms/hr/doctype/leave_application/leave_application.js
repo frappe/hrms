@@ -145,23 +145,15 @@ frappe.ui.form.on("Leave Application", {
 		frm.trigger("calculate_total_days");
 	},
 
-<<<<<<< HEAD
-	from_date: function(frm) {
-=======
 	from_date: function (frm) {
 		frm.events.validate_from_to_date(frm, "to_date");
->>>>>>> 0137c2b78 (fix(Leave Application): half day date picker rendering (#1643))
 		frm.trigger("make_dashboard");
 		frm.trigger("half_day_datepicker");
 		frm.trigger("calculate_total_days");
 	},
 
-<<<<<<< HEAD
-	to_date: function(frm) {
-=======
 	to_date: function (frm) {
 		frm.events.validate_from_to_date(frm, "from_date");
->>>>>>> 0137c2b78 (fix(Leave Application): half day date picker rendering (#1643))
 		frm.trigger("make_dashboard");
 		frm.trigger("half_day_datepicker");
 		frm.trigger("calculate_total_days");
@@ -171,9 +163,6 @@ frappe.ui.form.on("Leave Application", {
 		frm.trigger("calculate_total_days");
 	},
 
-<<<<<<< HEAD
-	half_day_datepicker: function(frm) {
-=======
 	validate_from_to_date: function (frm, null_date) {
 		const from_date = Date.parse(frm.doc.from_date);
 		const to_date = Date.parse(frm.doc.to_date);
@@ -181,7 +170,6 @@ frappe.ui.form.on("Leave Application", {
 	},
 
 	half_day_datepicker: function (frm) {
->>>>>>> 0137c2b78 (fix(Leave Application): half day date picker rendering (#1643))
 		frm.set_value("half_day_date", "");
 		if (!(frm.doc.half_day && frm.doc.from_date && frm.doc.to_date)) return;
 
