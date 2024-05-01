@@ -312,7 +312,18 @@ def add_lending_docperms_to_ess():
 	loan_docperms = get_lending_docperms_for_ess()
 	append_docperms_to_user_type(loan_docperms, doc)
 
-	doc.name = "Employee Self Service"
+	doc.save(ignore_permissions=True)
+
+
+def remove_lending_docperms_from_ess():
+	doc = frappe.get_doc("User Type", "Employee Self Service")
+
+	loan_docperms = get_lending_docperms_for_ess()
+
+	for row in list(doc.user_doctypes):
+		if row.document_type in loan_docperms:
+			doc.user_doctypes.remove(row)
+
 	doc.save(ignore_permissions=True)
 
 
@@ -321,10 +332,9 @@ def after_app_install(app_name):
 	if app_name != "lending":
 		return
 
-	add_lending_docperms_to_ess()
-
 	print("Updating payroll setup for loans")
 	create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
+	add_lending_docperms_to_ess()
 
 
 def before_app_uninstall(app_name):
@@ -334,6 +344,7 @@ def before_app_uninstall(app_name):
 
 	print("Updating payroll setup for loans")
 	delete_custom_fields(SALARY_SLIP_LOAN_FIELDS)
+	remove_lending_docperms_from_ess()
 
 
 def make_fixtures():
@@ -614,7 +625,12 @@ def create_role_permissions_for_doctype(doc, data):
 
 
 def append_docperms_to_user_type(docperms, doc):
+	existing_doctypes = [d.document_type for d in doc.user_doctypes]
+
 	for doctype, perms in docperms.items():
+		if doctype in existing_doctypes:
+			continue
+
 		args = {"document_type": doctype}
 		for perm in perms:
 			args[perm] = 1
