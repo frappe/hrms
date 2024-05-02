@@ -11,24 +11,22 @@ class SalaryWithholding(Document):
 
 @frappe.whitelist()
 def get_employee_details(employee):
-	employee_doc = frappe.get_doc("Employee", employee)
-
-	list = frappe.db.get_list(
+	salary_structure_assignment = frappe.db.get_value(
 		"Salary Structure Assignment",
-		filters={"employee": employee},
-		fields=["salary_structure"],
-		order_by="from_date desc",
+		{"employee": employee},
+		"salary_structure",
 	)
-	payroll_frequency = len(list) and frappe.db.get_value(
-		"Salary Structure", list[0].salary_structure, "payroll_frequency"
+
+	payroll_frequency = frappe.db.get_value(
+		"Salary Structure", salary_structure_assignment, "payroll_frequency"
 	)
 
 	details = {
-		"date_of_joining": employee_doc.date_of_joining,
-		"relieving_date": employee_doc.relieving_date,
-		"employee_name": employee_doc.employee_name,
-		"resignation_letter_date": employee_doc.resignation_letter_date,
-		"notice_number_of_days": employee_doc.notice_number_of_days,
+		"date_of_joining": frappe.get_value("Employee", employee, "date_of_joining"),
+		"relieving_date": frappe.get_value("Employee", employee, "relieving_date"),
+		"employee_name": frappe.get_value("Employee", employee, "employee_name"),
+		"resignation_letter_date": frappe.get_value("Employee", employee, "resignation_letter_date"),
+		"notice_number_of_days": frappe.get_value("Employee", employee, "notice_number_of_days"),
 		"payroll_frequency": payroll_frequency,
 	}
 	return details
