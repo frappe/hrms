@@ -41,24 +41,18 @@ frappe.ui.form.on("Salary Withholding", {
 			frm.doc.from_date = null
 			frm.refresh_field("from_date")
 		}
-		from_date = frm.doc.from_date
 
-		switch (frm.doc.payroll_frequency) {
-			case "Monthly":
-				frm.doc.to_date = frappe.datetime.add_months(from_date, months = frm.doc.number_of_withholding_cycles)
-				break
-			case "Bimonthly":
-				frm.doc.to_date = frappe.datetime.add_months(from_date, months = frm.doc.number_of_withholding_cycles * 2)
-				break
-			case "Weekly":
-				frm.doc.to_date = frappe.datetime.add_days(from_date, days = frm.doc.number_of_withholding_cycles * 7)
-				break
-			case "Fortnightly":
-				frm.doc.to_date = frappe.datetime.add_days(from_date, days = frm.doc.number_of_withholding_cycles * 14)
-				break
-			case "Daily":
-				frm.doc.to_date = frappe.datetime.add_days(from_date, days = frm.doc.number_of_withholding_cycles)
-		}
-		refresh_field("to_date")
+		frappe.call({
+			method: "hrms.hr.doctype.salary_withholding.salary_withholding.calculate_to_date",
+			args: {
+				payroll_frequency: frm.doc.payroll_frequency,
+				from_date: frm.doc.from_date,
+				number_of_withholding_cycles: frm.doc.number_of_withholding_cycles
+			},
+			callback: function (r) {
+				frm.doc.to_date = r.message.to_date
+				refresh_field("to_date")
+			}
+		})
 	}
 });

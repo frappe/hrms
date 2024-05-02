@@ -32,3 +32,19 @@ def get_employee_details(employee):
 		"payroll_frequency": payroll_frequency,
 	}
 	return details
+
+
+@frappe.whitelist()
+def calculate_to_date(payroll_frequency, from_date, number_of_withholding_cycles):
+	if payroll_frequency == "Monthly":
+		to_date = frappe.utils.add_months(from_date, months=int(number_of_withholding_cycles))
+	elif payroll_frequency == "Bimonthly":
+		to_date = frappe.utils.add_months(from_date, months=int(number_of_withholding_cycles) * 2)
+	elif payroll_frequency == "Weekly":
+		to_date = frappe.utils.add_days(from_date, days=int(number_of_withholding_cycles) * 7)
+	elif payroll_frequency == "Fortnightly":
+		to_date = frappe.utils.add_days(from_date, days=int(number_of_withholding_cycles) * 14)
+	elif payroll_frequency == "Daily":
+		to_date = frappe.utils.add_days(from_date, days=int(number_of_withholding_cycles))
+
+	return {"to_date": to_date}
