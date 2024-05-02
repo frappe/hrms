@@ -110,7 +110,7 @@ frappe.ui.form.on("Leave Application", {
 			!frappe.model.has_workflow(this.doctype) &&
 			frm.doc.docstatus === 0
 		) {
-			frm.set_intro(__("Submit this Leave Application for further processing."));
+			frm.set_intro(__("Submit this Leave Application to confirm."));
 		}
 
 		frm.trigger("set_employee");
