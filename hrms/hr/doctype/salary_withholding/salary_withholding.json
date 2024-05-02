@@ -8,12 +8,13 @@
   "section_break_fwuv",
   "employee",
   "employee_name",
+  "payroll_frequency",
   "status",
-  "amended_from",
   "column_break_rhlv",
   "number_of_withholding_cycles",
   "from_date",
   "to_date",
+  "amended_from",
   "exit_details_section",
   "date_of_joining",
   "date_of_relieving",
@@ -99,12 +100,17 @@
    "fieldname": "employee_name",
    "fieldtype": "Data",
    "label": "Employee Name"
+  },
+  {
+   "fieldname": "payroll_frequency",
+   "fieldtype": "Data",
+   "label": "Payroll Frequency"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-04-30 16:27:04.111208",
+ "modified": "2024-05-02 12:02:23.445514",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Salary Withholding",

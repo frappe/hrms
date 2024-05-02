@@ -3,53 +3,62 @@
 
 frappe.ui.form.on("Salary Withholding", {
 	employee: function (frm) {
-		if (!frm.doc.employee) return
+		if (!frm.doc.employee) {
+			frm.set_value("employee_name", null)
+			frm.set_value("payroll_frequency", null)
+			frm.set_value("date_of_joining", null)
+			frm.set_value("date_of_relieving", null)
+			return
+		}
 
-		frappe.db.get_doc("Employee", frm.doc.employee).then((doc) => {
-			frm.doc.date_of_joining = doc.date_of_joining
-			frm.doc.date_of_relieving = doc.relieving_date || doc.resignation_letter_date && frappe.datetime.add_months(doc.resignation_letter_date, months = doc.notice)
-			frm.doc.employee_name = doc.full_name
+		frappe.call({
+			"method": "hrms.hr.doctype.salary_withholding.salary_withholding.get_employee_details",
+			"args": { employee: frm.doc.employee },
+			"callback": function (r) {
+				frm.doc.date_of_joining = r.message.date_of_joining
+				frm.doc.date_of_relieving = r.message.relieving_date ||
+					r.message.resignation_letter_date &&
+					frappe.datetime.add_months(r.message.resignation_letter_date, months = r.message.notice_number_of_days)
+				frm.doc.employee_name = r.message.employee_name
+				frm.doc.payroll_frequency = r.message.payroll_frequency
 
-			frm.refresh_field("employee_name")
-			frm.refresh_field("date_of_joining")
-			frm.refresh_field("date_of_relieving")
+				frm.refresh_field("employee_name")
+				frm.refresh_field("payroll_frequency")
+				frm.refresh_field("date_of_joining")
+				frm.refresh_field("date_of_relieving")
+			}
 		})
 	},
+
 	from_date: function (frm) {
-		if (frm.doc.number_of_withholding_cycles) {
-			from_date = frm.doc.from_date
-			frappe.db.get_list("Salary Structure Assignment", {
-				filters: {
-					employee: frm.doc.employee
-				},
-				fields: ["salary_structure"],
-				order_by: "from_date desc"
-			}).then((data) => {
-				frappe.db.get_value("Salary Structure", data[0].salary_structure, "payroll_frequency").then((r) => {
-					switch (r.message.payroll_frequency) {
-						case "Monthly":
-							console.log("monthly")
-							frm.doc.to_date = frappe.datetime.add_months(from_date, months = frm.doc.number_of_withholding_cycles)
-							break
-						case "Bimonthly":
-							console.log("bimonthly")
-							frm.doc.to_date = frappe.datetime.add_months(from_date, months = frm.doc.number_of_withholding_cycles * 2)
-							break
-						case "Weekly":
-							console.log("weekly")
-							frm.doc.to_date = frappe.datetime.add_days(from_date, days = frm.doc.number_of_withholding_cycles * 7)
-							break
-						case "Fortnightly":
-							console.log("fortnightly")
-							frm.doc.to_date = frappe.datetime.add_days(from_date, days = frm.doc.number_of_withholding_cycles * 14)
-							break
-						case "Daily":
-							console.log("daily")
-							frm.doc.to_date = frappe.datetime.add_days(from_date, days = frm.doc.number_of_withholding_cycles)
-					}
-					refresh_field("to_date")
-				})
-			})
+		if (!frm.doc.employee) {
+			frappe.throw(__("Please select an employee"))
+			frm.doc.from_date = null
+			frm.refresh_field("from_date")
 		}
+		if (!frm.doc.number_of_withholding_cycles) {
+			frappe.throw(__("Please select number of withholding cycles"))
+			frm.doc.from_date = null
+			frm.refresh_field("from_date")
+		}
+		from_date = frm.doc.from_date
+
+		switch (frm.doc.payroll_frequency) {
+			case "Monthly":
+				frm.doc.to_date = frappe.datetime.add_months(from_date, months = frm.doc.number_of_withholding_cycles)
+				break
+			case "Bimonthly":
+				frm.doc.to_date = frappe.datetime.add_months(from_date, months = frm.doc.number_of_withholding_cycles * 2)
+				break
+			case "Weekly":
+				frm.doc.to_date = frappe.datetime.add_days(from_date, days = frm.doc.number_of_withholding_cycles * 7)
+				break
+			case "Fortnightly":
+				frm.doc.to_date = frappe.datetime.add_days(from_date, days = frm.doc.number_of_withholding_cycles * 14)
+				break
+			case "Daily":
+				frm.doc.to_date = frappe.datetime.add_days(from_date, days = frm.doc.number_of_withholding_cycles)
+		}
+		refresh_field("to_date")
 	}
 });
