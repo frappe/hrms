@@ -102,6 +102,15 @@ frappe.ui.form.on("Leave Application", {
 		frm.set_intro("");
 		if (frm.doc.__islocal && !in_list(frappe.user_roles, "Employee")) {
 			frm.set_intro(__("Fill the form and save it"));
+		} else if (
+			frm.perm[0] &&
+			frm.perm[0].submit &&
+			!frm.is_dirty() &&
+			!frm.is_new() &&
+			!frappe.model.has_workflow(this.doctype) &&
+			frm.doc.docstatus === 0
+		) {
+			frm.set_intro(__("Submit this Leave Application to confirm."));
 		}
 
 		frm.trigger("set_employee");
