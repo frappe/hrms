@@ -24,15 +24,20 @@
 					<tr>
 						<th class="min-w-24 py-2"></th>
 						<th v-for="day in daysOfMonth" :key="day" class="min-w-24 py-2">
-							<div>{{ day.name }}</div>
-							<div>{{ day.no }}</div>
+							<div>{{ day.name }} {{ day.no }}</div>
 						</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr v-for="employee in employees.data" :key="employee.name">
-						<td class="min-w-24 py-2"></td>
-						<td v-for="day in daysOfMonth" :key="day" class="min-w-24 py-2"></td>
+						<td class="min-w-24 py-2">{{ employee.employee_name }}</td>
+						<td v-for="day in daysOfMonth" :key="day" class="min-w-24 py-2">
+							<div v-if="shifts.data?.[employee.name]?.[day.no]">
+								<div v-for="shift in shifts.data[employee.name][day.no]">
+									{{ shift["shift_type"] }}
+								</div>
+							</div>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -59,13 +64,11 @@ const daysOfMonth = computed(() => {
 
 const fetchShifts = () => {
 	shifts.params = {
-		filters: {
-			start_date: ["<=", firstOfMonth.value.endOf("month").format("YYYY-MM-DD")],
-		},
-		or_filters: {
-			end_date: [">=", firstOfMonth.value.format("YYYY-MM-DD")],
-			end_date: ["is", "not set"],
-		},
+		filters: { start_date: ["<=", firstOfMonth.value.endOf("month").format("YYYY-MM-DD")] },
+		or_filters: [
+			["end_date", ">=", firstOfMonth.value.format("YYYY-MM-DD")],
+			["end_date", "is", "not set"],
+		],
 	};
 	shifts.fetch();
 };
@@ -79,8 +82,29 @@ const employees = createResource({
 
 const shifts = createResource({
 	url: "hrms.api.roster.get_shifts",
-	onSuccess: (data) => {
-		console.log(data);
+	transform: (data) => {
+		const mappedData = {};
+		for (const employee in data) {
+			mappedData[employee] = {};
+			for (let d = 1; d <= firstOfMonth.value.daysInMonth(); d++) {
+				const date = firstOfMonth.value.date(d);
+				for (const assignment of data[employee]) {
+					if (
+						dayjs(assignment.start_date).isSameOrBefore(date) &&
+						(dayjs(assignment.end_date).isSameOrAfter(date) || !assignment.end_date)
+					) {
+						const key = date.format("DD");
+						if (!mappedData[employee][key]) mappedData[employee][key] = [];
+						mappedData[employee][key].push({
+							name: assignment.name,
+							shift_type: assignment.shift_type,
+							status: assignment.status,
+						});
+					}
+				}
+			}
+		}
+		return mappedData;
 	},
 });
 fetchShifts();
