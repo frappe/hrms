@@ -23,15 +23,21 @@
 				<thead>
 					<tr>
 						<th class="min-w-24 py-2"></th>
-						<th v-for="day in daysOfMonth" :key="day" class="min-w-24 py-2">
+						<th v-for="day in daysOfMonth" :key="day" class="min-w-24 py-2 border-l">
 							<div>{{ day.name }} {{ day.no }}</div>
 						</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr v-for="employee in employees.data" :key="employee.name">
-						<td class="min-w-24 py-2">{{ employee.employee_name }}</td>
-						<td v-for="day in daysOfMonth" :key="day" class="min-w-24 py-2">
+						<td class="min-w-24 py-2 border-t">
+							{{ employee.employee_name }}
+						</td>
+						<td
+							v-for="day in daysOfMonth"
+							:key="day"
+							class="min-w-24 py-2 border-l border-t"
+						>
 							<div v-if="shifts.data?.[employee.name]?.[day.no]">
 								<div v-for="shift in shifts.data[employee.name][day.no]">
 									{{ shift["shift_type"] }}
