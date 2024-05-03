@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-01 16:08\n"
+"PO-Revision-Date: 2024-05-02 16:32\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -3772,7 +3772,7 @@ msgstr ""
 #: hr/report/project_profitability/project_profitability.js:31
 #: hr/report/project_profitability/project_profitability.py:135
 msgid "Customer"
-msgstr ""
+msgstr "Müşteri"
 
 #. Label of a Data field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
@@ -9313,7 +9313,7 @@ msgstr "İsteğe bağlı bırakılıyor"
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Is Paid"
-msgstr ""
+msgstr "Ödendi"
 
 #. Label of a Check field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
@@ -12783,13 +12783,13 @@ msgstr "İşe Alım Kontrol Paneli"
 #: hr/doctype/expense_claim/expense_claim_dashboard.py:10
 #: hr/doctype/leave_allocation/leave_allocation.py:207
 msgid "Reference"
-msgstr ""
+msgstr "Referans"
 
 #. Label of a Link field in DocType 'Full and Final Asset'
 #: hr/doctype/full_and_final_asset/full_and_final_asset.json
 msgctxt "Full and Final Asset"
 msgid "Reference"
-msgstr ""
+msgstr "Referans"
 
 #. Label of a Dynamic Link field in DocType 'Additional Salary'
 #: payroll/doctype/additional_salary/additional_salary.json
@@ -13934,7 +13934,7 @@ msgstr ""
 #: hr/doctype/training_event/training_event.json
 msgctxt "Training Event"
 msgid "Self-Study"
-msgstr "Bireysel çalışma"
+msgstr "Bireysel Çalışma"
 
 #. Option for the 'Type' (Select) field in DocType 'Training Event'
 #: hr/doctype/training_event/training_event.json
@@ -16614,7 +16614,7 @@ msgstr ""
 #: hr/doctype/expense_claim/expense_claim.js:226
 #: hr/doctype/job_applicant/job_applicant.js:35
 msgid "View"
-msgstr ""
+msgstr "Göster"
 
 #: hr/doctype/appraisal/appraisal.js:48
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:21
