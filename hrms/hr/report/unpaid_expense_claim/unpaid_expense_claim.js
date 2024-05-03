@@ -2,12 +2,12 @@
 // For license information, please see license.txt
 
 frappe.query_reports["Unpaid Expense Claim"] = {
-	"filters": [
+	filters: [
 		{
-			"fieldname": "employee",
-			"label": __("Employee"),
-			"fieldtype": "Link",
-			"options": "Employee"
-		}
-	]
-}
+			fieldname: "employee",
+			label: __("Employee"),
+			fieldtype: "Link",
+			options: "Employee",
+		},
+	],
+};

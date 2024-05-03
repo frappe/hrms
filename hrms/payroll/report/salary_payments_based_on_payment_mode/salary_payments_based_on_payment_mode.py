@@ -117,15 +117,12 @@ def get_data(filters, mode_of_payments):
 		data.append({"branch": "<b>Total Net Pay</b>", mode_of_payments[0]: total_row.get("total")})
 
 		currency = erpnext.get_company_currency(filters.company)
-		report_summary = get_report_summary(
-			gross_pay, total_deductions, total_row.get("total"), currency
-		)
+		report_summary = get_report_summary(gross_pay, total_deductions, total_row.get("total"), currency)
 
 	return data, total_row, report_summary
 
 
 def get_total_based_on_mode_of_payment(data, mode_of_payments):
-
 	total = 0
 	total_row = {"branch": "<b>Total</b>"}
 	for mode in mode_of_payments:
@@ -172,8 +169,6 @@ def get_chart(mode_of_payments, data):
 			values.append(data[mode])
 			labels.append([mode])
 
-		chart = {
-			"data": {"labels": labels, "datasets": [{"name": "Mode Of Payments", "values": values}]}
-		}
+		chart = {"data": {"labels": labels, "datasets": [{"name": "Mode Of Payments", "values": values}]}}
 		chart["type"] = "bar"
 		return chart

@@ -16,11 +16,11 @@ frappe.ui.form.on("Attendance Request", {
 						frappe.render_template("attendance_warnings", {
 							warnings: r.message || [],
 						}),
-						__("Attendance Warnings")
+						__("Attendance Warnings"),
 					);
 					frm.dashboard.show();
 				}
-			})
+			});
 		}
-	}
+	},
 });

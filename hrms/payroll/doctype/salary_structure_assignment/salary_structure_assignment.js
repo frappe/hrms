@@ -69,7 +69,7 @@ frappe.ui.form.on("Salary Structure Assignment", {
 					frappe.set_route("Form", "Payroll Entry", doc.name);
 				});
 			},
-			__("Create")
+			__("Create"),
 		);
 		frm.page.set_inner_btn_group_as_primary(__("Create"));
 

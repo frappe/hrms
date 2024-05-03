@@ -1,6 +1,6 @@
 frappe.ui.form.on("Employee Attendance Tool", {
 	refresh(frm) {
-		frm.trigger("reset_attendance_fields")
+		frm.trigger("reset_attendance_fields");
 		frm.trigger("load_employees");
 		frm.trigger("set_primary_action");
 	},
@@ -37,36 +37,37 @@ frappe.ui.form.on("Employee Attendance Tool", {
 	},
 
 	load_employees(frm) {
-		if (!frm.doc.date)
-			return;
+		if (!frm.doc.date) return;
 
-		frappe.call({
-			method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.get_employees",
-			args: {
-				date: frm.doc.date,
-				department: frm.doc.department,
-				branch: frm.doc.branch,
-				company: frm.doc.company
-			}
-		}).then((r) => {
-			frm.employees = r.message["unmarked"];
+		frappe
+			.call({
+				method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.get_employees",
+				args: {
+					date: frm.doc.date,
+					department: frm.doc.department,
+					branch: frm.doc.branch,
+					company: frm.doc.company,
+				},
+			})
+			.then((r) => {
+				frm.employees = r.message["unmarked"];
 
-			if (r.message["unmarked"].length > 0) {
-				unhide_field("unmarked_attendance_section");
-				unhide_field("attendance_details_section");
-				frm.events.show_unmarked_employees(frm, r.message["unmarked"]);
-			} else {
-				hide_field("unmarked_attendance_section");
-				hide_field("attendance_details_section");
-			}
+				if (r.message["unmarked"].length > 0) {
+					unhide_field("unmarked_attendance_section");
+					unhide_field("attendance_details_section");
+					frm.events.show_unmarked_employees(frm, r.message["unmarked"]);
+				} else {
+					hide_field("unmarked_attendance_section");
+					hide_field("attendance_details_section");
+				}
 
-			if (r.message["marked"].length > 0) {
-				unhide_field("marked_attendance_html");
-				frm.events.show_marked_employees(frm, r.message["marked"]);
-			} else {
-				hide_field("marked_attendance_html");
-			}
-		});
+				if (r.message["marked"].length > 0) {
+					unhide_field("marked_attendance_html");
+					frm.events.show_marked_employees(frm, r.message["marked"]);
+				} else {
+					hide_field("marked_attendance_html");
+				}
+			});
 	},
 
 	show_unmarked_employees(frm, unmarked_employees) {
@@ -161,11 +162,11 @@ frappe.ui.form.on("Employee Attendance Tool", {
 						return `<span style="color:red">${__(value)}</span>`;
 					else if (value == "Half Day")
 						return `<span style="color:orange">${__(value)}</span>`;
-					else if (value == "Leave")
+					else if (value == "On Leave")
 						return `<span style="color:#318AD8">${__(value)}</span>`;
-				}
+				},
 			},
-		]
+		];
 	},
 
 	set_primary_action(frm) {
@@ -173,9 +174,11 @@ frappe.ui.form.on("Employee Attendance Tool", {
 		frm.page.set_primary_action(__("Mark Attendance"), () => {
 			if (frm.employees.length === 0) {
 				frappe.msgprint({
-					message: __("Attendance for all the employees under this criteria has been marked already."),
+					message: __(
+						"Attendance for all the employees under this criteria has been marked already.",
+					),
 					title: __("Attendance Marked"),
-					indicator: "green"
+					indicator: "green",
 				});
 				return;
 			}
@@ -183,14 +186,14 @@ frappe.ui.form.on("Employee Attendance Tool", {
 			if (frm.employees_multicheck.get_checked_options().length === 0) {
 				frappe.throw({
 					message: __("Please select the employees you want to mark attendance for."),
-					title: __("Mandatory")
+					title: __("Mandatory"),
 				});
 			}
 
 			if (!frm.doc.status) {
 				frappe.throw({
 					message: __("Please select the attendance status."),
-					title: __("Mandatory")
+					title: __("Mandatory"),
 				});
 			}
 
@@ -201,23 +204,28 @@ frappe.ui.form.on("Employee Attendance Tool", {
 	mark_attendance(frm) {
 		const marked_employees = frm.employees_multicheck.get_checked_options();
 
-		frappe.call({
-			method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
-			args: {
-				employee_list: marked_employees,
-				status: frm.doc.status,
-				date: frm.doc.date,
-				late_entry: frm.doc.late_entry,
-				early_exit: frm.doc.early_exit,
-				shift: frm.doc.shift,
-			},
-			freeze: true,
-			freeze_message: __("Marking Attendance")
-		}).then((r) => {
-			if (!r.exc) {
-				frappe.show_alert({ message: __("Attendance marked successfully"), indicator: "green" });
-				frm.refresh();
-			}
-		});
+		frappe
+			.call({
+				method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
+				args: {
+					employee_list: marked_employees,
+					status: frm.doc.status,
+					date: frm.doc.date,
+					late_entry: frm.doc.late_entry,
+					early_exit: frm.doc.early_exit,
+					shift: frm.doc.shift,
+				},
+				freeze: true,
+				freeze_message: __("Marking Attendance"),
+			})
+			.then((r) => {
+				if (!r.exc) {
+					frappe.show_alert({
+						message: __("Attendance marked successfully"),
+						indicator: "green",
+					});
+					frm.refresh();
+				}
+			});
 	},
 });

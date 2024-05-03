@@ -17,7 +17,11 @@ from frappe.utils import (
 )
 
 from hrms.hr.doctype.shift_assignment.shift_assignment import has_overlapping_timings
-from hrms.hr.utils import get_holiday_dates_for_employee, validate_active_employee
+from hrms.hr.utils import (
+	get_holiday_dates_for_employee,
+	get_holidays_for_employee,
+	validate_active_employee,
+)
 
 
 class DuplicateAttendanceError(frappe.ValidationError):
@@ -97,7 +101,8 @@ class Attendance(Document):
 			query = query.where(
 				((Attendance.shift.isnull()) | (Attendance.shift == ""))
 				| (
-					((Attendance.shift.isnotnull()) | (Attendance.shift != "")) & (Attendance.shift == self.shift)
+					((Attendance.shift.isnotnull()) | (Attendance.shift != ""))
+					& (Attendance.shift == self.shift)
 				)
 			)
 
@@ -170,12 +175,16 @@ class Attendance(Document):
 				if d.half_day_date == getdate(self.attendance_date):
 					self.status = "Half Day"
 					frappe.msgprint(
-						_("Employee {0} on Half day on {1}").format(self.employee, format_date(self.attendance_date))
+						_("Employee {0} on Half day on {1}").format(
+							self.employee, format_date(self.attendance_date)
+						)
 					)
 				else:
 					self.status = "On Leave"
 					frappe.msgprint(
-						_("Employee {0} is on Leave on {1}").format(self.employee, format_date(self.attendance_date))
+						_("Employee {0} is on Leave on {1}").format(
+							self.employee, format_date(self.attendance_date)
+						)
 					)
 
 		if self.status in ("On Leave", "Half Day"):
@@ -227,6 +236,8 @@ class Attendance(Document):
 
 @frappe.whitelist()
 def get_events(start, end, filters=None):
+	from frappe.desk.reportview import get_filters_cond
+
 	events = []
 
 	employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user})
@@ -234,18 +245,18 @@ def get_events(start, end, filters=None):
 	if not employee:
 		return events
 
-	from frappe.desk.reportview import get_filters_cond
-
 	conditions = get_filters_cond("Attendance", filters, [])
 	add_attendance(events, start, end, conditions=conditions)
+	add_holidays(events, start, end, employee)
 	return events
 
 
 def add_attendance(events, start, end, conditions=None):
-	query = """select name, attendance_date, status
+	query = """select name, attendance_date, status, employee_name
 		from `tabAttendance` where
 		attendance_date between %(from_date)s and %(to_date)s
 		and docstatus < 2"""
+
 	if conditions:
 		query += conditions
 
@@ -255,11 +266,30 @@ def add_attendance(events, start, end, conditions=None):
 			"doctype": "Attendance",
 			"start": d.attendance_date,
 			"end": d.attendance_date,
-			"title": cstr(d.status),
+			"title": f"{d.employee_name}: {cstr(d.status)}",
+			"status": d.status,
 			"docstatus": d.docstatus,
 		}
 		if e not in events:
 			events.append(e)
+
+
+def add_holidays(events, start, end, employee=None):
+	holidays = get_holidays_for_employee(employee, start, end)
+	if not holidays:
+		return
+
+	for holiday in holidays:
+		events.append(
+			{
+				"doctype": "Holiday",
+				"start": holiday.holiday_date,
+				"end": holiday.holiday_date,
+				"title": _("Holiday") + ": " + cstr(holiday.description),
+				"name": holiday.name,
+				"allDay": 1,
+			}
+		)
 
 
 def mark_attendance(

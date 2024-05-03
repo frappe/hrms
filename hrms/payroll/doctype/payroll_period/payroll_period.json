@@ -53,7 +53,7 @@
   }
  ],
  "links": [],
- "modified": "2020-06-29 17:17:12.689089",
+ "modified": "2024-03-27 13:10:12.419714",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Period",
@@ -97,7 +97,8 @@
   }
  ],
  "quick_entry": 1,
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }
