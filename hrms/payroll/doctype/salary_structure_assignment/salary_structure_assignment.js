@@ -62,7 +62,13 @@ frappe.ui.form.on("Salary Structure Assignment", {
 		if (frm.doc.docstatus === 1)
 			frm.add_custom_button(__("Preview Salary Slip"), function () {
 				frm.trigger("preview_salary_slip");
+<<<<<<< HEAD
 			});
+=======
+			},
+			__("Actions"),
+		);
+>>>>>>> 6f0cab593 (chore: fix linter)
 	},
 
 	employee: function (frm) {
@@ -81,6 +87,7 @@ frappe.ui.form.on("Salary Structure Assignment", {
 				frm.doc.company,
 				"default_payroll_payable_account",
 				(r) => {
+<<<<<<< HEAD
 <<<<<<< HEAD
 					frm.set_value("payroll_payable_account", r.default_payroll_payable_account);
 				},
@@ -106,6 +113,10 @@ frappe.ui.form.on("Salary Structure Assignment", {
 						r.default_payroll_payable_account
 					);
 				}
+=======
+					frm.set_value("payroll_payable_account", r.default_payroll_payable_account);
+				},
+>>>>>>> 6f0cab593 (chore: fix linter)
 			);
 		}
 	},
@@ -120,8 +131,7 @@ frappe.ui.form.on("Salary Structure Assignment", {
 					? "Salary Slip based on Timesheet"
 					: "Salary Slip Standard";
 				frappe.call({
-					method:
-						"hrms.payroll.doctype.salary_structure.salary_structure.make_salary_slip",
+					method: "hrms.payroll.doctype.salary_structure.salary_structure.make_salary_slip",
 					args: {
 						source_name: frm.doc.salary_structure,
 						employee: frm.doc.employee,
@@ -134,15 +144,12 @@ frappe.ui.form.on("Salary Structure Assignment", {
 						new_window.document.write(r.message);
 					},
 				});
-			}
+			},
 		);
 	},
 
 	set_payroll_cost_centers: function (frm) {
-		if (
-			frm.doc.payroll_cost_centers &&
-			frm.doc.payroll_cost_centers.length < 1
-		) {
+		if (frm.doc.payroll_cost_centers && frm.doc.payroll_cost_centers.length < 1) {
 			frappe.call({
 				method: "set_payroll_cost_centers",
 				doc: frm.doc,
