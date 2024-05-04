@@ -153,8 +153,7 @@
   },
   {
    "default": "0",
-   "depends_on": "include_holidays_in_total_working_days",
-   "description": "If enabled, deducts payment days for absent attendance on holidays. By default, holidays are considered as paid",
+   "description": "When 'Include holidays in Total no. of Working Days' is enabled, it deducts payment days for absences on holidays. When disabled, it adds to present days if an employee is present on holidays.",
    "fieldname": "consider_marked_attendance_on_holidays",
    "fieldtype": "Check",
    "label": "Consider Marked Attendance on Holidays"
