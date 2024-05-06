@@ -7,9 +7,9 @@
 				variant="ghost"
 				@click="firstOfMonth = firstOfMonth.subtract(1, 'M')"
 			/>
-			<span class="px-1 w-20 text-center my-auto"
-				>{{ firstOfMonth.format("MMM") }} '{{ firstOfMonth.format("YY") }}</span
-			>
+			<span class="px-1 w-20 text-center my-auto">
+				{{ firstOfMonth.format("MMM") }} '{{ firstOfMonth.format("YY") }}
+			</span>
 			<Button
 				icon="chevron-right"
 				variant="ghost"
@@ -22,24 +22,40 @@
 			<table>
 				<thead>
 					<tr>
-						<th class="min-w-24 py-2"></th>
-						<th v-for="day in daysOfMonth" :key="day" class="min-w-24 py-2 border-l">
-							<div>{{ day.name }} {{ day.no }}</div>
+						<th></th>
+						<th v-for="day in daysOfMonth" :key="day" class="border-l">
+							{{ day.name }} {{ day.no }}
 						</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr v-for="employee in employees.data" :key="employee.name">
-						<td class="min-w-24 py-2 border-t">
-							{{ employee.employee_name }}
+						<td class="border-t align-middle">
+							<div class="flex">
+								<Avatar
+									:label="employee.employee_name"
+									:image="employee.image"
+									size="2xl"
+								/>
+								<div class="flex flex-col ml-2 my-1 text-xs truncate">
+									<div class="truncate">
+										{{ employee.employee_name }}
+									</div>
+									<div class="mt-auto text-gray-500 truncate">
+										{{ employee.designation }}
+									</div>
+								</div>
+							</div>
 						</td>
-						<td
-							v-for="day in daysOfMonth"
-							:key="day"
-							class="min-w-24 py-2 border-l border-t"
-						>
-							<div v-if="shifts.data?.[employee.name]?.[day.no]">
-								<div v-for="shift in shifts.data[employee.name][day.no]">
+						<td v-for="day in daysOfMonth" :key="day" class="border-l border-t">
+							<div
+								v-if="shifts.data?.[employee.name]?.[day.no]"
+								class="flex flex-col space-y-2"
+							>
+								<div
+									v-for="shift in shifts.data[employee.name][day.no]"
+									class="rounded border px-2 py-1"
+								>
 									{{ shift["shift_type"] }}
 								</div>
 							</div>
@@ -54,7 +70,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import dayjs from "../utils/dayjs";
-import { createResource } from "frappe-ui";
+import { Avatar, createResource } from "frappe-ui";
 
 const firstOfMonth = ref(dayjs().date(1));
 watch(firstOfMonth, () => fetchShifts());
@@ -115,3 +131,14 @@ const shifts = createResource({
 });
 fetchShifts();
 </script>
+
+<style>
+th,
+td {
+	max-width: 10rem;
+	min-width: 10rem;
+	padding: 0.5rem;
+	vertical-align: top;
+	font-size: 0.875rem;
+}
+</style>
