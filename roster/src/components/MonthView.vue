@@ -54,9 +54,15 @@
 							>
 								<div
 									v-for="shift in shifts.data[employee.name][day.no]"
-									class="rounded border px-2 py-1"
+									class="rounded border-2 px-2 py-1"
+									:class="
+										shift.status === 'Active' ? 'bg-gray-50' : 'border-dashed'
+									"
 								>
-									{{ shift["shift_type"] }}
+									<div class="mb-1">{{ shift["shiftType"] }}</div>
+									<div class="text-xs text-gray-500">
+										{{ shift["startTime"] }} - {{ shift["endTime"] }}
+									</div>
 								</div>
 							</div>
 						</td>
@@ -86,11 +92,8 @@ const daysOfMonth = computed(() => {
 
 const fetchShifts = () => {
 	shifts.params = {
-		filters: { start_date: ["<=", firstOfMonth.value.endOf("month").format("YYYY-MM-DD")] },
-		or_filters: [
-			["end_date", ">=", firstOfMonth.value.format("YYYY-MM-DD")],
-			["end_date", "is", "not set"],
-		],
+		month_start: firstOfMonth.value.format("YYYY-MM-DD"),
+		month_end: firstOfMonth.value.endOf("month").format("YYYY-MM-DD"),
 	};
 	shifts.fetch();
 };
@@ -105,25 +108,33 @@ const employees = createResource({
 const shifts = createResource({
 	url: "hrms.api.roster.get_shifts",
 	transform: (data) => {
+		// convert employee -> shift assignments to employee -> day -> shifts
 		const mappedData = {};
 		for (const employee in data) {
 			mappedData[employee] = {};
 			for (let d = 1; d <= firstOfMonth.value.daysInMonth(); d++) {
 				const date = firstOfMonth.value.date(d);
+				const key = date.format("DD");
 				for (const assignment of data[employee]) {
 					if (
 						dayjs(assignment.start_date).isSameOrBefore(date) &&
 						(dayjs(assignment.end_date).isSameOrAfter(date) || !assignment.end_date)
 					) {
-						const key = date.format("DD");
 						if (!mappedData[employee][key]) mappedData[employee][key] = [];
 						mappedData[employee][key].push({
 							name: assignment.name,
-							shift_type: assignment.shift_type,
+							shiftType: assignment.shift_type,
 							status: assignment.status,
+							startTime: assignment.start_time.split(":").slice(0, 2).join(":"),
+							endTime: assignment.end_time.split(":").slice(0, 2).join(":"),
 						});
 					}
 				}
+				// sort shifts by start time
+				if (mappedData[employee][key])
+					mappedData[employee][key].sort((a, b) =>
+						a.startTime.localeCompare(b.startTime),
+					);
 			}
 		}
 		return mappedData;
@@ -137,7 +148,7 @@ th,
 td {
 	max-width: 10rem;
 	min-width: 10rem;
-	padding: 0.5rem;
+	padding: 0.375rem;
 	vertical-align: top;
 	font-size: 0.875rem;
 }
