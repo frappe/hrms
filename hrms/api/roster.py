@@ -6,7 +6,9 @@ def get_employees(filters: dict | None = None) -> list[dict[str, str]]:
 	if not filters:
 		filters = {}
 	filters["status"] = "Active"
-	return frappe.get_list("Employee", filters=filters, fields=["name", "employee_name"])
+	return frappe.get_list(
+		"Employee", filters=filters, fields=["name", "employee_name", "designation", "image"]
+	)
 
 
 @frappe.whitelist()
