@@ -2,16 +2,6 @@ import frappe
 
 
 @frappe.whitelist()
-def get_employees(filters: dict | None = None) -> list[dict[str, str]]:
-	if not filters:
-		filters = {}
-	filters["status"] = "Active"
-	return frappe.get_list(
-		"Employee", filters=filters, fields=["name", "employee_name", "designation", "image"]
-	)
-
-
-@frappe.whitelist()
 def get_shifts(month_start: str, month_end: str) -> dict[str, list]:
 	ShiftAssignment = frappe.qb.DocType("Shift Assignment")
 	ShiftType = frappe.qb.DocType("Shift Type")
@@ -43,13 +33,3 @@ def get_shifts(month_start: str, month_end: str) -> dict[str, list]:
 			{k: v for k, v in shift.items() if k != "employee"}
 		)
 	return grouped_shifts
-
-
-@frappe.whitelist()
-def get_shift_assignment(name: str) -> dict[str, str]:
-	return frappe.get_doc("Shift Assignment", name).as_dict()
-
-
-@frappe.whitelist()
-def update_shift_assignment(name: str, values: dict[str, str]) -> None:
-	frappe.db.set_value("Shift Assignment", name, values)

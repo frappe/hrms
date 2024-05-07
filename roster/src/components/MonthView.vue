@@ -59,7 +59,8 @@
 										shift.status === 'Active' ? 'bg-gray-50' : 'border-dashed'
 									"
 									@click="
-										selectedShiftAssignment = shift.name;
+										if (shiftAssignment?.name !== shift.name)
+											shiftAssignment = getShiftAssignment(shift.name);
 										showShiftAssignmentDialog = true;
 									"
 								>
@@ -77,7 +78,7 @@
 	</div>
 	<Dialog
 		v-model="showShiftAssignmentDialog"
-		:options="{ title: `Shift Assignment ${selectedShiftAssignment}`, size: '4xl' }"
+		:options="{ title: `Shift Assignment ${shiftAssignment?.name}`, size: '4xl' }"
 	>
 		<template #body-content>
 			<div class="grid grid-cols-2 gap-6">
@@ -85,31 +86,31 @@
 					:type="'text'"
 					:disabled="true"
 					label="Employee"
-					:value="shiftAssignment.data?.employee"
+					:value="shiftAssignment.doc?.employee"
 				/>
 				<FormControl
 					:type="'text'"
 					:disabled="true"
 					label="Company"
-					:value="shiftAssignment.data?.company"
+					:value="shiftAssignment.doc?.company"
 				/>
 				<FormControl
 					:type="'text'"
 					:disabled="true"
 					label="Employee Name"
-					:value="shiftAssignment.data?.employee_name"
+					:value="shiftAssignment.doc?.employee_name"
 				/>
 				<FormControl
 					:type="'date'"
 					:disabled="true"
 					label="Start Date"
-					:value="shiftAssignment.data?.start_date"
+					:value="shiftAssignment.doc?.start_date"
 				/>
 				<FormControl
 					:type="'text'"
 					:disabled="true"
 					label="Shift Type"
-					:value="shiftAssignment.data?.shift_type"
+					:value="shiftAssignment.doc?.shift_type"
 				/>
 				<FormControl
 					id="end_date"
@@ -128,7 +129,7 @@
 					:type="'text'"
 					:disabled="true"
 					label="Department"
-					:value="shiftAssignment.data?.department"
+					:value="shiftAssignment.doc?.department"
 				/>
 			</div>
 		</template>
@@ -146,10 +147,17 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import dayjs from "../utils/dayjs";
-import { Avatar, Dialog, FormControl, createResource } from "frappe-ui";
+import {
+	Avatar,
+	Dialog,
+	FormControl,
+	createListResource,
+	createResource,
+	createDocumentResource,
+} from "frappe-ui";
 
 const firstOfMonth = ref(dayjs().date(1));
-const selectedShiftAssignment = ref("");
+const shiftAssignment = ref(null);
 const showShiftAssignmentDialog = ref(false);
 const shiftAssignmentStatus = ref("");
 const shiftAssignmentEndDate = ref("");
@@ -164,21 +172,17 @@ const daysOfMonth = computed(() => {
 });
 const isUpdateButtonDisabled = computed(() => {
 	return (
-		!shiftAssignment.data ||
-		(shiftAssignment.data?.status === shiftAssignmentStatus.value &&
-			shiftAssignment.data?.end_date === shiftAssignmentEndDate.value)
+		!shiftAssignment.value.doc ||
+		(shiftAssignment.value.doc?.status === shiftAssignmentStatus.value &&
+			shiftAssignment.value.doc?.end_date === shiftAssignmentEndDate.value)
 	);
 });
 
 watch(firstOfMonth, () => fetchShifts());
 watch(showShiftAssignmentDialog, () => {
 	if (showShiftAssignmentDialog.value) return;
-	shiftAssignmentStatus.value = shiftAssignment.data.status;
-	shiftAssignmentEndDate.value = shiftAssignment.data.end_date;
-});
-watch(selectedShiftAssignment, () => {
-	shiftAssignment.params = { name: selectedShiftAssignment.value };
-	shiftAssignment.fetch();
+	shiftAssignmentStatus.value = shiftAssignment.value.doc.status;
+	shiftAssignmentEndDate.value = shiftAssignment.value.doc.end_date;
 });
 
 const fetchShifts = () => {
@@ -191,8 +195,10 @@ const fetchShifts = () => {
 
 // RESOURCES
 
-const employees = createResource({
-	url: "hrms.api.roster.get_employees",
+const employees = createListResource({
+	doctype: "Employee",
+	fields: ["name", "employee_name", "designation", "image"],
+	filters: { status: "Active" },
 	auto: true,
 });
 
@@ -232,13 +238,16 @@ const shifts = createResource({
 	},
 });
 
-const shiftAssignment = createResource({
-	url: "hrms.api.roster.get_shift_assignment",
-	onSuccess: (data) => {
-		shiftAssignmentStatus.value = data.status;
-		shiftAssignmentEndDate.value = data.end_date;
-	},
-});
+const getShiftAssignment = (name) => {
+	return createDocumentResource({
+		doctype: "Shift Assignment",
+		name: name,
+		onSuccess: (data) => {
+			shiftAssignmentStatus.value = data.status;
+			shiftAssignmentEndDate.value = data.end_date;
+		},
+	});
+};
 
 fetchShifts();
 </script>
