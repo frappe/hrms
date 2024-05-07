@@ -63,8 +63,7 @@
 										shift.status === 'Active' ? 'bg-gray-50' : 'border-dashed'
 									"
 									@click="
-										if (shiftAssignment?.name !== shift.name)
-											shiftAssignment = getShiftAssignment(shift.name);
+										shiftAssignment = shift.name;
 										showShiftAssignmentDialog = true;
 									"
 								>
@@ -81,7 +80,10 @@
 									variant="outline"
 									icon="plus"
 									class="border-2 active:bg-gray-200 w-full"
-									@click="showShiftAssignmentDialog = true"
+									@click="
+										shiftAssignment = null;
+										showShiftAssignmentDialog = true;
+									"
 								/>
 							</div>
 						</td>
@@ -90,83 +92,12 @@
 			</table>
 		</div>
 	</div>
-	<Dialog
-		v-if="shiftAssignment?.doc"
+	<ShiftAssignmentDialog
 		v-model="showShiftAssignmentDialog"
-		:options="{ title: `Shift Assignment ${shiftAssignment?.name}`, size: '4xl' }"
-	>
-		<template #body-content>
-			<div class="grid grid-cols-2 gap-6">
-				<FormControl
-					:type="'text'"
-					:disabled="true"
-					label="Employee"
-					:value="shiftAssignment.doc.employee"
-				/>
-				<FormControl
-					:type="'text'"
-					:disabled="true"
-					label="Company"
-					:value="shiftAssignment.doc.company"
-				/>
-				<FormControl
-					:type="'text'"
-					:disabled="true"
-					label="Employee Name"
-					:value="shiftAssignment.doc.employee_name"
-				/>
-				<FormControl
-					:type="'date'"
-					:disabled="true"
-					label="Start Date"
-					:value="shiftAssignment.doc.start_date"
-				/>
-				<FormControl
-					:type="'text'"
-					:disabled="true"
-					label="Shift Type"
-					:value="shiftAssignment.doc.shift_type"
-				/>
-				<FormControl
-					id="end_date"
-					:type="'date'"
-					label="End Date"
-					v-model="shiftAssignment.doc.end_date"
-				/>
-				<FormControl
-					id="staus"
-					:type="'select'"
-					:options="['Active', 'Inactive']"
-					label="Status"
-					v-model="shiftAssignment.doc.status"
-				/>
-				<FormControl
-					:type="'text'"
-					:disabled="true"
-					label="Department"
-					:value="shiftAssignment.doc.department"
-				/>
-			</div>
-		</template>
-		<template #actions>
-			<div class="flex">
-				<Button class="ml-auto" @click="showShiftAssignmentDialog = false"> Close </Button>
-				<Button
-					variant="solid"
-					class="ml-2"
-					:disabled="!shiftAssignment.isDirty"
-					@click="
-						shiftAssignment.setValue.submit({
-							status: shiftAssignment.doc.status,
-							end_date: shiftAssignment.doc.end_date,
-						})
-					"
-				>
-					Update
-				</Button>
-			</div>
-		</template>
-	</Dialog>
+		:shiftAssignmentName="shiftAssignment"
+		@fetchShifts="fetchShifts"
+		@closeDialog="showShiftAssignmentDialog = false"
+	/>
 </template>
 
 <script setup lang="ts">
@@ -180,6 +111,8 @@ import {
 	createResource,
 	createDocumentResource,
 } from "frappe-ui";
+
+import ShiftAssignmentDialog from "./ShiftAssignmentDialog.vue";
 
 const firstOfMonth = ref(dayjs().date(1));
 const shiftAssignment = ref(null);
@@ -249,18 +182,6 @@ const shifts = createResource({
 		return mappedData;
 	},
 });
-
-const getShiftAssignment = (name) =>
-	createDocumentResource({
-		doctype: "Shift Assignment",
-		name: name,
-		setValue: {
-			onSuccess() {
-				showShiftAssignmentDialog.value = false;
-				fetchShifts();
-			},
-		},
-	});
 
 fetchShifts();
 </script>
