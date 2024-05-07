@@ -53,11 +53,7 @@
   }
  ],
  "links": [],
-<<<<<<< HEAD
- "modified": "2020-06-29 17:17:12.689089",
-=======
  "modified": "2024-05-05 14:50:12.419714",
->>>>>>> ce8647884 (chore: grant Employee role read permission for Payroll Period (#1746))
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Period",
