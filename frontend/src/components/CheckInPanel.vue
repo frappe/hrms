@@ -4,14 +4,14 @@
 			Hey, {{ employee?.data?.first_name }} 👋
 		</h2>
 
-		<template v-if="allowCheckinFromMobile.data">
+		<template v-if="HRSettings.doc?.allow_employee_checkin_from_mobile_app">
 			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
 				Last {{ lastLogType }} was at {{ lastLogTime }}
 			</div>
 			<Button
 				class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
 				id="open-checkin-modal"
-				@click="fetchLocation"
+				@click="handleEmployeeCheckin"
 			>
 				<template #prefix>
 					<FeatherIcon
@@ -32,6 +32,7 @@
 	</div>
 
 	<ion-modal
+		v-if="HRSettings.doc?.allow_employee_checkin_from_mobile_app"
 		ref="modal"
 		trigger="open-checkin-modal"
 		:initial-breakpoint="1"
@@ -49,25 +50,27 @@
 				</div>
 			</div>
 
-			<span v-if="locationStatus" class="font-medium text-gray-500 text-sm">
-				{{ locationStatus }}
-			</span>
+			<template v-if="HRSettings.doc?.allow_geolocation_tracking">
+				<span v-if="locationStatus" class="font-medium text-gray-500 text-sm">
+					{{ locationStatus }}
+				</span>
 
-			<div
-				class="rounded border-4 translate-z-0 block overflow-hidden w-full h-170"
-			>
-				<iframe
-					width="100%"
-					height="170"
-					frameborder="0"
-					scrolling="no"
-					marginheight="0"
-					marginwidth="0"
-					style="border: 0"
-					:src="`https://maps.google.com/maps?q=${latitude},${longitude}&hl=en&z=15&amp;output=embed`"
+				<div
+					class="rounded border-4 translate-z-0 block overflow-hidden w-full h-170"
 				>
-				</iframe>
-			</div>
+					<iframe
+						width="100%"
+						height="170"
+						frameborder="0"
+						scrolling="no"
+						marginheight="0"
+						marginwidth="0"
+						style="border: 0"
+						:src="`https://maps.google.com/maps?q=${latitude},${longitude}&hl=en&z=15&amp;output=embed`"
+					>
+					</iframe>
+				</div>
+			</template>
 
 			<Button
 				variant="solid"
@@ -84,7 +87,7 @@
 import { createListResource, toast, FeatherIcon } from "frappe-ui"
 import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
-import { allowCheckinFromMobile } from "@/data/settings"
+import { HRSettings } from "@/data/HRSettings"
 
 const DOCTYPE = "Employee Checkin"
 
@@ -156,8 +159,6 @@ function handleLocationError(error) {
 }
 
 const fetchLocation = () => {
-	checkinTimestamp.value = dayjs().format("YYYY-MM-DD HH:mm:ss")
-
 	if (!navigator.geolocation) {
 		locationStatus.value =
 			"Geolocation is not supported by your current browser"
@@ -167,6 +168,14 @@ const fetchLocation = () => {
 			handleLocationSuccess,
 			handleLocationError
 		)
+	}
+}
+
+const handleEmployeeCheckin = () => {
+	checkinTimestamp.value = dayjs().format("YYYY-MM-DD HH:mm:ss")
+
+	if (HRSettings.doc?.allow_geolocation_tracking) {
+		fetchLocation()
 	}
 }
 
