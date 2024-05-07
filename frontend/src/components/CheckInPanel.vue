@@ -3,15 +3,39 @@
 <<<<<<< HEAD
 		<h2 class="text-lg font-bold text-gray-900">Hey, {{ employee?.data?.first_name }} 👋</h2>
 
-		<template v-if="allowCheckinFromMobile.data">
+		<template v-if="HRSettings.doc?.allow_employee_checkin_from_mobile_app">
 			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
 				Last {{ lastLogType }} was at {{ lastLogTime }}
+<<<<<<< HEAD
 =======
 		<h2 class="text-lg font-bold text-gray-900">
 			Hey, {{ employee?.data?.first_name }} 👋
 		</h2>
 		<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
 			Last {{ lastLogType }} was at {{ lastLogTime }}
+=======
+			</div>
+			<Button
+				class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
+				id="open-checkin-modal"
+				@click="handleEmployeeCheckin"
+			>
+				<template #prefix>
+					<FeatherIcon
+						:name="
+							nextAction.action === 'IN'
+								? 'arrow-right-circle'
+								: 'arrow-left-circle'
+						"
+						class="w-4"
+					/>
+				</template>
+				{{ nextAction.label }}
+			</Button>
+		</template>
+		<div v-else class="font-medium text-sm text-gray-500 mt-1.5">
+			{{ dayjs().format("ddd, D MMMM, YYYY") }}
+>>>>>>> 74eeb3e0c (feat: HR Setting to enable geolocation tracking)
 		</div>
 		<Button
 			class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
@@ -33,6 +57,7 @@
 	</div>
 
 	<ion-modal
+		v-if="HRSettings.doc?.allow_employee_checkin_from_mobile_app"
 		ref="modal"
 		trigger="open-checkin-modal"
 		:initial-breakpoint="1"
@@ -51,25 +76,27 @@
 >>>>>>> 90237231c (feat(PWA): capture geolocation in checkins)
 			</div>
 
-			<span v-if="locationStatus" class="font-medium text-gray-500 text-sm">
-				{{ locationStatus }}
-			</span>
+			<template v-if="HRSettings.doc?.allow_geolocation_tracking">
+				<span v-if="locationStatus" class="font-medium text-gray-500 text-sm">
+					{{ locationStatus }}
+				</span>
 
-			<div
-				class="rounded border-4 translate-z-0 block overflow-hidden w-full h-170"
-			>
-				<iframe
-					width="100%"
-					height="170"
-					frameborder="0"
-					scrolling="no"
-					marginheight="0"
-					marginwidth="0"
-					style="border: 0"
-					:src="`https://maps.google.com/maps?q=${latitude},${longitude}&hl=en&z=15&amp;output=embed`"
+				<div
+					class="rounded border-4 translate-z-0 block overflow-hidden w-full h-170"
 				>
-				</iframe>
-			</div>
+					<iframe
+						width="100%"
+						height="170"
+						frameborder="0"
+						scrolling="no"
+						marginheight="0"
+						marginwidth="0"
+						style="border: 0"
+						:src="`https://maps.google.com/maps?q=${latitude},${longitude}&hl=en&z=15&amp;output=embed`"
+					>
+					</iframe>
+				</div>
+			</template>
 
 			<Button
 				class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
@@ -121,7 +148,7 @@
 import { createListResource, toast, FeatherIcon } from "frappe-ui"
 import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
-import { allowCheckinFromMobile } from "@/data/settings"
+import { HRSettings } from "@/data/HRSettings"
 
 const DOCTYPE = "Employee Checkin"
 
@@ -186,8 +213,6 @@ function handleLocationError(error) {
 }
 
 const fetchLocation = () => {
-	checkinTimestamp.value = dayjs().format("YYYY-MM-DD HH:mm:ss")
-
 	if (!navigator.geolocation) {
 		locationStatus.value =
 			"Geolocation is not supported by your current browser"
@@ -197,6 +222,14 @@ const fetchLocation = () => {
 			handleLocationSuccess,
 			handleLocationError
 		)
+	}
+}
+
+const handleEmployeeCheckin = () => {
+	checkinTimestamp.value = dayjs().format("YYYY-MM-DD HH:mm:ss")
+
+	if (HRSettings.doc?.allow_geolocation_tracking) {
+		fetchLocation()
 	}
 }
 
