@@ -39,5 +39,6 @@ frappe.ready(function() {
         handleFormSubmission(event);
     });
     $("input[data-fieldname='job_title']").prop('readonly', true);
+    $("input[data-fieldname='job_titles']").prop('readonly', true);
 });
  

@@ -10,9 +10,11 @@
  "amount_based_on_field": 0,
  "anonymous": 0,
  "apply_document_permissions": 0,
- "client_script": "frappe.web_form.on('resume_link', (field, value) => {\n    if (!frappe.utils.is_url(value)) {\n        frappe.msgprint(__('Resume link not valid'));\n    }\n});\n\n\n\nfrappe.web_form.validate = () => {\n    console.log(\"Before save event triggered\");\n\n    // Get the values of job_title and email_id fields\n    var jobTitle = frappe.web_form.get_value('job_title');\n    var email = frappe.web_form.get_value('email_id');\n\n    console.log(\"Job Title:\", jobTitle);\n    console.log(\"Email:\", email);\n\n    // Check if the job title and email are valid\n    if (jobTitle && email) {\n        console.log(\"Validation started\");\n\n        // Check if the email is already used for this job title\n        frappe.call({\n            method: \"custom_app.custom_script.validate_job_application\",\n            args: {\n                job_title: jobTitle,\n                email: email\n            },\n            callback: function(response) {\n                console.log(\"Validation response:\", response);\n\n                if ( response.message  === \"False\") {\n                    console.log(\"Validation error:\", response.message.message);\n                    frappe.msgprint('An application with this job title and email already exists.');\n                    // Manipulate the form elements to indicate the error\n                    $('[data-fieldname=\"email_id\"]').addClass('is-invalid'); // Example, you may need to adjust this selector based on your HTML structure\n                    $('[data-fieldname=\"email_id\"]').siblings('.invalid-feedback').html(response.message.message); // Example, you may need to adjust this selector based on your HTML structure\n                    // Prevent form submission\n                    return false;\n                } else {\n                    console.log(\"Validation successful\");\n                    // Allow form submission if validation is successful\n                    return true;\n                }\n            }\n        });\n    } else {\n        console.log(\"Invalid job title or email\");\n        // Prevent form submission if fields are not valid\n        return false;\n    }\n};\n\n\n",
+ "button_label": "Save",
+ "client_script": "frappe.web_form.on('resume_link', (field, value) => {\n    if (!frappe.utils.is_url(value)) {\n        frappe.msgprint(__('Resume link not valid'));\n    }\n});\n\n\n\nfrappe.web_form.validate = () => {\n    console.log(\"Before save event triggered\");\n\n    // Get the values of job_title and email_id fields\n    var jobTitle = frappe.web_form.get_value('job_title');\n    var email = frappe.web_form.get_value('email_id');\n\n    console.log(\"Job Title:\", jobTitle);\n    console.log(\"Email:\", email);\n\n    // Check if the job title and email are valid\n    if (jobTitle && email) {\n        console.log(\"Validation started\");\n        $('.web-form-title ellipsis').text(jobTitle);\n        // Check if the email is already used for this job title\n        frappe.call({\n            method: \"custom_app.custom_script.validate_job_application\",\n            args: {\n                job_title: jobTitle,\n                email: email\n            },\n            callback: function(response) {\n                console.log(\"Validation response:\", response);\n\n                if ( response.message  === \"False\") {\n                    console.log(\"Validation error:\", response.message.message);\n                    frappe.msgprint('An application with this job title and email already exists.');\n                    // Manipulate the form elements to indicate the error\n                    $('[data-fieldname=\"email_id\"]').addClass('is-invalid'); // Example, you may need to adjust this selector based on your HTML structure\n                    $('[data-fieldname=\"email_id\"]').siblings('.invalid-feedback').html(response.message.message); // Example, you may need to adjust this selector based on your HTML structure\n                    // Prevent form submission\n                    return false;\n                } else {\n                    console.log(\"Validation successful\");\n                    // Allow form submission if validation is successful\n                    return true;\n                }\n            }\n        });\n    } else {\n        console.log(\"Invalid job title or email\");\n        // Prevent form submission if fields are not valid\n        return false;\n    }\n};\n\n\n",
  "condition_json": "[]",
- "creation": "2016-09-10 02:53:16.598314",
+ "creation": "2024-05-07 10:03:22.997890",
+ "currency": "INR",
  "doc_type": "Job Applicant",
  "docstatus": 0,
  "doctype": "Web Form",
@@ -22,11 +24,12 @@
  "list_columns": [],
  "login_required": 0,
  "max_attachment_size": 0,
- "modified": "2024-05-06 16:52:03.499258",
+ "modified": "2024-05-07 11:13:01.458600",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "job-application",
  "owner": "Administrator",
+ "payment_button_label": "Buy Now",
  "published": 1,
  "route": "job_application",
  "show_attachments": 0,
@@ -38,6 +41,19 @@
  "web_form_fields": [
   {
    "allow_read_on_all_link_options": 0,
+   "fieldname": "job_titles",
+   "fieldtype": "Data",
+   "hidden": 0,
+   "label": "Job Title",
+   "max_length": 0,
+   "max_value": 0,
+   "precision": "",
+   "read_only": 0,
+   "reqd": 0,
+   "show_in_filter": 0
+  },
+  {
+   "allow_read_on_all_link_options": 0,
    "fieldname": "job_title",
    "fieldtype": "Data",
    "hidden": 0,
@@ -45,6 +61,7 @@
    "max_length": 0,
    "max_value": 0,
    "options": "",
+   "precision": "",
    "read_only": 0,
    "reqd": 1,
    "show_in_filter": 0
@@ -57,6 +74,7 @@
    "label": "Applicant Name",
    "max_length": 0,
    "max_value": 0,
+   "precision": "",
    "read_only": 0,
    "reqd": 1,
    "show_in_filter": 0
@@ -70,6 +88,7 @@
    "max_length": 0,
    "max_value": 0,
    "options": "Email",
+   "precision": "",
    "read_only": 0,
    "reqd": 1,
    "show_in_filter": 0
@@ -83,6 +102,7 @@
    "max_length": 0,
    "max_value": 0,
    "options": "Phone",
+   "precision": "",
    "read_only": 0,
    "reqd": 1,
    "show_in_filter": 0
@@ -95,6 +115,7 @@
    "label": "Resume Link",
    "max_length": 0,
    "max_value": 0,
+   "precision": "",
    "read_only": 0,
    "reqd": 0,
    "show_in_filter": 0
@@ -107,6 +128,7 @@
    "label": "Resume Attachment",
    "max_length": 0,
    "max_value": 0,
+   "precision": "",
    "read_only": 0,
    "reqd": 1,
    "show_in_filter": 0
@@ -119,6 +141,7 @@
    "label": "Expected Salary Range per month",
    "max_length": 0,
    "max_value": 0,
+   "precision": "",
    "read_only": 0,
    "reqd": 1,
    "show_in_filter": 0
@@ -133,6 +156,7 @@
    "max_length": 0,
    "max_value": 0,
    "options": "",
+   "precision": "",
    "read_only": 1,
    "reqd": 1,
    "show_in_filter": 0
@@ -144,6 +168,7 @@
    "hidden": 0,
    "max_length": 0,
    "max_value": 0,
+   "precision": "",
    "read_only": 0,
    "reqd": 0,
    "show_in_filter": 0
@@ -157,6 +182,7 @@
    "max_length": 0,
    "max_value": 0,
    "options": "currency",
+   "precision": "",
    "read_only": 0,
    "reqd": 0,
    "show_in_filter": 0
@@ -168,6 +194,7 @@
    "hidden": 0,
    "max_length": 0,
    "max_value": 0,
+   "precision": "",
    "read_only": 0,
    "reqd": 0,
    "show_in_filter": 0
@@ -181,6 +208,7 @@
    "max_length": 0,
    "max_value": 0,
    "options": "currency",
+   "precision": "",
    "read_only": 0,
    "reqd": 0,
    "show_in_filter": 0
@@ -437,12 +465,14 @@
   },
   {
    "allow_read_on_all_link_options": 0,
+   "description": "Eg. English/Hindi",
    "fieldname": "language_proficiencies",
    "fieldtype": "Data",
    "hidden": 0,
    "label": "Language Proficiencies",
    "max_length": 0,
    "max_value": 0,
+   "options": "",
    "precision": "",
    "read_only": 0,
    "reqd": 0,

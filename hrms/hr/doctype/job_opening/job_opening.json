@@ -266,13 +266,14 @@
    "fieldname": "experience_level",
    "fieldtype": "Select",
    "label": "Experience level",
-   "options": "\nIntern/Fresher\nExperienced"
+   "options": "\nIntern/Fresher\nExperienced",
+   "reqd": 1
   }
  ],
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2024-05-06 16:47:41.656369",
+ "modified": "2024-05-07 11:04:19.021225",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
@@ -295,6 +296,7 @@
    "role": "Guest"
   }
  ],
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "ASC",
  "states": [

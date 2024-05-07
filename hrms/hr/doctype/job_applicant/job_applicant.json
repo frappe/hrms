@@ -17,6 +17,7 @@
   "country",
   "column_break_3",
   "job_title",
+  "job_titles",
   "designation",
   "status",
   "current_address",
@@ -241,6 +242,12 @@
    "label": "Current Address"
   },
   {
+   "fetch_from": "job_title.job_title",
+   "fieldname": "job_titles",
+   "fieldtype": "Data",
+   "label": "Job Title"
+  },
+  {
    "fieldname": "education_section_section",
    "fieldtype": "Section Break",
    "label": "Education Section"
@@ -251,13 +258,19 @@
    "label": "Highest Level Of Education Completed"
   },
   {
-   "fieldname": "name_of_the_last_schoolcollegeuniversity",
-   "fieldtype": "Data",
-   "label": "Name Of the Last School/college/University"
+   "fieldname": "year_of_pass_out",
+   "fieldtype": "Select",
+   "label": "Year Of Pass Out",
+   "options": "\n2010\n2011\n2012\n2013\n2014\n2015\n2016\n2017\n2018\n2019\n2020\n2021\n2022"
   },
   {
    "fieldname": "column_break_hrry",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "name_of_the_last_schoolcollegeuniversity",
+   "fieldtype": "Data",
+   "label": "Name Of the Last School/college/University"
   },
   {
    "fieldname": "column_break_dhfu",
@@ -267,12 +280,6 @@
    "fieldname": "relevant_certifications_or_training",
    "fieldtype": "Data",
    "label": "Relevant Certifications or Training"
-  },
-  {
-   "fieldname": "year_of_pass_out",
-   "fieldtype": "Select",
-   "label": "Year Of Pass Out",
-   "options": "\n2010\n2011\n2012\n2013\n2014\n2015\n2016\n2017\n2018\n2019\n2020\n2021\n2022"
   },
   {
    "fieldname": "section_break_edoh",
@@ -417,6 +424,18 @@
    "permlevel": 2
   },
   {
+   "fieldname": "column_break_ybyv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Applied",
+   "fieldname": "applicant_status",
+   "fieldtype": "Select",
+   "label": "Applicant Status",
+   "options": "Applied\nIn Review\nPhone Screen Scheduled\nPhone Screen Completed\nInterview Scheduled\nFirst Round Interview\nSecond Round Interview\nTechnical Assessment Scheduled\nTechnical Assessment Completed\nReference Check\nOffer Extended\nOffer Accepted\nHired\nRejected\nOn Hold\nWithdrawn\nPending\nNot Selected\nFuture Consideration\nCandidate not responded",
+   "permlevel": 2
+  },
+  {
    "fieldname": "reason_for_leaving_previous_company",
    "fieldtype": "Date",
    "label": "Reason for Leaving previous company",
@@ -459,25 +478,13 @@
    "permlevel": 2
   },
   {
-   "fieldname": "hr_notes",
-   "fieldtype": "Small Text",
-   "label": "HR Notes",
-   "permlevel": 2
-  },
-  {
-   "fieldname": "column_break_ybyv",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "section_break_zmkd",
    "fieldtype": "Section Break"
   },
   {
-   "default": "Applied",
-   "fieldname": "applicant_status",
-   "fieldtype": "Select",
-   "label": "Applicant Status",
-   "options": "Applied\nIn Review\nPhone Screen Scheduled\nPhone Screen Completed\nInterview Scheduled\nFirst Round Interview\nSecond Round Interview\nTechnical Assessment Scheduled\nTechnical Assessment Completed\nReference Check\nOffer Extended\nOffer Accepted\nHired\nRejected\nOn Hold\nWithdrawn\nPending\nNot Selected\nFuture Consideration\nCandidate not responded",
+   "fieldname": "hr_notes",
+   "fieldtype": "Small Text",
+   "label": "HR Notes",
    "permlevel": 2
   }
  ],
@@ -487,7 +494,7 @@
  "links": [],
  "make_attachments_public": 1,
  "max_attachments": 2,
- "modified": "2024-05-06 19:25:03.399721",
+ "modified": "2024-05-07 10:34:32.090094",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Applicant",
