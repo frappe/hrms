@@ -50,13 +50,17 @@
 						<td v-for="day in daysOfMonth" :key="day" class="border-l border-t">
 							<div
 								v-if="shifts.data?.[employee.name]?.[day.no]"
-								class="flex flex-col space-y-2"
+								class="flex flex-col space-y-1.5"
 							>
 								<div
 									v-for="shift in shifts.data[employee.name][day.no]"
-									class="rounded border-2 px-2 py-1"
+									class="rounded border-2 px-2 py-1 cursor-pointer"
 									:class="
 										shift.status === 'Active' ? 'bg-gray-50' : 'border-dashed'
+									"
+									@click="
+										selectedShiftAssignment = shift.name;
+										showShiftAssignmentDialog = true;
 									"
 								>
 									<div class="mb-1">{{ shift["shiftType"] }}</div>
@@ -71,15 +75,84 @@
 			</table>
 		</div>
 	</div>
+	<Dialog
+		v-model="showShiftAssignmentDialog"
+		:options="{ title: `Shift Assignment ${selectedShiftAssignment}`, size: '4xl' }"
+	>
+		<template #body-content>
+			<div class="grid grid-cols-2 gap-6">
+				<FormControl
+					:type="'text'"
+					:disabled="true"
+					label="Employee"
+					:value="shiftAssignment.data?.employee"
+				/>
+				<FormControl
+					:type="'text'"
+					:disabled="true"
+					label="Company"
+					:value="shiftAssignment.data?.company"
+				/>
+				<FormControl
+					:type="'text'"
+					:disabled="true"
+					label="Employee Name"
+					:value="shiftAssignment.data?.employee_name"
+				/>
+				<FormControl
+					:type="'date'"
+					:disabled="true"
+					label="Start Date"
+					:value="shiftAssignment.data?.start_date"
+				/>
+				<FormControl
+					:type="'text'"
+					:disabled="true"
+					label="Shift Type"
+					:value="shiftAssignment.data?.shift_type"
+				/>
+				<FormControl
+					id="end_date"
+					:type="'date'"
+					label="End Date"
+					v-model="shiftAssignmentEndDate"
+				/>
+				<FormControl
+					id="staus"
+					:type="'select'"
+					:options="['Active', 'Inactive']"
+					label="Status"
+					v-model="shiftAssignmentStatus"
+				/>
+				<FormControl
+					:type="'text'"
+					:disabled="true"
+					label="Department"
+					:value="shiftAssignment.data?.department"
+				/>
+			</div>
+		</template>
+		<template #actions>
+			<div class="flex">
+				<Button class="ml-auto" @click="showShiftAssignmentDialog = false"> Close </Button>
+				<Button variant="solid" class="ml-2" :disabled="isUpdateButtonDisabled">
+					Update
+				</Button>
+			</div>
+		</template>
+	</Dialog>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import dayjs from "../utils/dayjs";
-import { Avatar, createResource } from "frappe-ui";
+import { Avatar, Dialog, FormControl, createResource } from "frappe-ui";
 
 const firstOfMonth = ref(dayjs().date(1));
-watch(firstOfMonth, () => fetchShifts());
+const selectedShiftAssignment = ref("");
+const showShiftAssignmentDialog = ref(false);
+const shiftAssignmentStatus = ref("");
+const shiftAssignmentEndDate = ref("");
 
 const daysOfMonth = computed(() => {
 	const daysOfMonth = [];
@@ -88,6 +161,24 @@ const daysOfMonth = computed(() => {
 		daysOfMonth.push({ no: date.format("DD"), name: date.format("ddd") });
 	}
 	return daysOfMonth;
+});
+const isUpdateButtonDisabled = computed(() => {
+	return (
+		!shiftAssignment.data ||
+		(shiftAssignment.data?.status === shiftAssignmentStatus.value &&
+			shiftAssignment.data?.end_date === shiftAssignmentEndDate.value)
+	);
+});
+
+watch(firstOfMonth, () => fetchShifts());
+watch(showShiftAssignmentDialog, () => {
+	if (showShiftAssignmentDialog.value) return;
+	shiftAssignmentStatus.value = shiftAssignment.data.status;
+	shiftAssignmentEndDate.value = shiftAssignment.data.end_date;
+});
+watch(selectedShiftAssignment, () => {
+	shiftAssignment.params = { name: selectedShiftAssignment.value };
+	shiftAssignment.fetch();
 });
 
 const fetchShifts = () => {
@@ -140,6 +231,15 @@ const shifts = createResource({
 		return mappedData;
 	},
 });
+
+const shiftAssignment = createResource({
+	url: "hrms.api.roster.get_shift_assignment",
+	onSuccess: (data) => {
+		shiftAssignmentStatus.value = data.status;
+		shiftAssignmentEndDate.value = data.end_date;
+	},
+});
+
 fetchShifts();
 </script>
 
