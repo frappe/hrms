@@ -1158,6 +1158,7 @@ def get_filtered_employees(
 	query = set_fields_to_select(query, fields)
 	query = set_searchfield(query, searchfield, search_string, qb_object=Employee)
 	query = set_filter_conditions(query, filters, qb_object=Employee)
+	salary_withholding_documents = frappe.db.get_all("Salary Withholding")
 
 	if not ignore_match_conditions:
 		query = set_match_conditions(query=query, qb_object=Employee)
@@ -1168,7 +1169,26 @@ def get_filtered_employees(
 	if offset:
 		query = query.offset(offset)
 
-	return query.run(as_dict=as_dict)
+	employees = query.run(as_dict=as_dict)
+
+	employees = get_employees_without_salary_withholding(
+		employees, salary_withholding_documents, filters.start_date, filters.end_date
+	)
+	return employees
+
+
+def get_employees_without_salary_withholding(
+	employees, salary_withholding_documents, start_date, end_date
+):
+	print(employees, salary_withholding_documents)
+	withheld_employees = [
+		d.employee
+		for d in filter(
+			lambda x: x.from_date <= end_date | x.to_date >= start_date, salary_withholding_documents
+		)
+	]
+
+	return [d for d in employees if d.employee not in withheld_employees]
 
 
 def set_fields_to_select(query, fields: list[str] = None):
