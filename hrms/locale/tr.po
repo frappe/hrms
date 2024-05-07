@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-02 16:32\n"
+"PO-Revision-Date: 2024-05-03 16:52\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -869,7 +869,7 @@ msgstr "Tümü"
 
 #: hr/doctype/goal/goal_tree.js:219
 msgid "All Goals"
-msgstr ""
+msgstr "Tüm Hedefler"
 
 #: hr/doctype/job_opening/job_opening.py:106
 msgid "All Jobs"
@@ -7235,7 +7235,7 @@ msgstr ""
 
 #: overrides/company.py:37
 msgid "Failed to delete defaults for country {0}. Please contact support."
-msgstr ""
+msgstr "{0} ülkesi için varsayılanlar silinemedi. Lütfen desteğe başvurun."
 
 #: api/__init__.py:589
 msgid "Failed to download Salary Slip PDF"
@@ -14087,7 +14087,7 @@ msgstr "Hizmet Masrafı"
 
 #: hr/report/vehicle_expenses/vehicle_expenses.py:169
 msgid "Service Expenses"
-msgstr ""
+msgstr "Hizmet Giderleri"
 
 #. Label of a Link field in DocType 'Vehicle Service'
 #: hr/doctype/vehicle_service/vehicle_service.json
