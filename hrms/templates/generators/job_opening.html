@@ -202,7 +202,8 @@
 			{%- if status == "Open" -%}
 				<a
 					class="btn btn-primary btn-lg w-100"
-					href="/{{ job_application_route if job_application_route else 'job_application' }}/new?job_title={{ name }}&job_titles={{ job_title }}&job_type={{experience_level}}"Apply Now") }}
+					href="/{{ job_application_route if job_application_route else 'job_application' }}/new?job_title={{ name }}&job_titles={{ job_title }}&job_type={{experience_level}}">
+					{{ ("Apply Now") }}
 				</a>
 			{%- else -%}
 				<div
