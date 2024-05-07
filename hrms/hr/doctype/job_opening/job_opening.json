@@ -13,11 +13,13 @@
   "designation",
   "vacancy",
   "job_type",
+  "companys",
   "column_break_5",
   "status",
   "posted_on",
   "closes_on",
   "closed_on",
+  "experience_level",
   "section_break_nngy",
   "company",
   "department",
@@ -117,9 +119,9 @@
   },
   {
    "description": "Job profile, qualifications required etc.",
+   "fetch_from": "designation.description",
    "fieldname": "description",
    "fieldtype": "Text Editor",
-   "in_list_view": 1,
    "label": "Description"
   },
   {
@@ -254,12 +256,23 @@
    "fieldtype": "Select",
    "label": "Job Type",
    "options": "Full Time"
+  },
+  {
+   "fieldname": "companys",
+   "fieldtype": "Data",
+   "label": "Company"
+  },
+  {
+   "fieldname": "experience_level",
+   "fieldtype": "Select",
+   "label": "Experience level",
+   "options": "\nIntern/Fresher\nExperienced"
   }
  ],
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2024-02-09 10:08:02.958475",
+ "modified": "2024-05-06 16:47:41.656369",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",

@@ -11,6 +11,7 @@
 	data-filters="{{ all_filters }}"
 	data-no-of-pages="{{ no_of_pages }}"
 />
+<a href="/applyforjob" id="apply-for-other-jobs" class="btn btn-primary" style="position: absolute; top: 10px; right: 100px; background-color: #0e7c07; color: #fff; border-color: #ff5722;">Apply for other jobs</a>
 
 <div class="row">
 	<!-- Desktop Filters -->
@@ -230,10 +231,10 @@
 
 					<div class="px-4 py-2 job-card-footer mt-auto">
 						<div class="row text-12 text-secondary">
-							<p class="col-6 text-center border-right mb-0">
+							<!-- <p class="col-6 text-center border-right mb-0">
 								{{ _("Applications received:") + " " }}
 								<b>{{ jo.no_of_applications }}</b>
-							</p>
+							</p> -->
 							<p class="col-6 text-center mb-0">
 								{%- if jo.closes_on -%}
 									{{ _("Closes on:") + " " }}

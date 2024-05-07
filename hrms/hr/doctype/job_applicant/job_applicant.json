@@ -19,6 +19,30 @@
   "job_title",
   "designation",
   "status",
+  "current_address",
+  "education_section_section",
+  "highest_level_of_education_completed",
+  "year_of_pass_out",
+  "column_break_hrry",
+  "name_of_the_last_schoolcollegeuniversity",
+  "column_break_dhfu",
+  "relevant_certifications_or_training",
+  "section_break_edoh",
+  "job_type",
+  "last_ctc",
+  "desired_salary",
+  "job_title_and_primary_duties",
+  "column_break_nrok",
+  "reason_for_leaving",
+  "currentlast_employer",
+  "skills_and_qualification_section",
+  "specialized_skillstraining_or_qualifications",
+  "column_break_ugzj",
+  "list_any_programming_or_software_or_tools_you_are_proficient_in",
+  "column_break_zsxp",
+  "language_proficiencies",
+  "additional_questions_section_section",
+  "explain_any_gaps_in_your_employment_history",
   "source_and_rating_section",
   "source",
   "source_name",
@@ -34,7 +58,29 @@
   "currency",
   "column_break_18",
   "lower_range",
-  "upper_range"
+  "upper_range",
+  "section_break_uljw",
+  "agree",
+  "hr_information_tab",
+  "skills",
+  "total_work_experience",
+  "relevant_work_experience",
+  "current__last_company",
+  "current__last_job_title",
+  "is_currently_working",
+  "notice_period_in_days",
+  "avaibility_for_joining_date",
+  "column_break_ybyv",
+  "applicant_status",
+  "reason_for_leaving_previous_company",
+  "current_ctc",
+  "expected_ctc",
+  "current_location_area_and_city_name",
+  "relocation_preferences",
+  "linkedin_profile",
+  "sources",
+  "section_break_zmkd",
+  "hr_notes"
  ],
  "fields": [
   {
@@ -124,7 +170,7 @@
   {
    "fieldname": "resume_link",
    "fieldtype": "Data",
-   "label": "Resume Link"
+   "label": "Resume Link(Google Drive Link)"
   },
   {
    "fieldname": "applicant_rating",
@@ -188,6 +234,251 @@
    "fieldtype": "Link",
    "label": "Designation",
    "options": "Designation"
+  },
+  {
+   "fieldname": "current_address",
+   "fieldtype": "Small Text",
+   "label": "Current Address"
+  },
+  {
+   "fieldname": "education_section_section",
+   "fieldtype": "Section Break",
+   "label": "Education Section"
+  },
+  {
+   "fieldname": "highest_level_of_education_completed",
+   "fieldtype": "Data",
+   "label": "Highest Level Of Education Completed"
+  },
+  {
+   "fieldname": "name_of_the_last_schoolcollegeuniversity",
+   "fieldtype": "Data",
+   "label": "Name Of the Last School/college/University"
+  },
+  {
+   "fieldname": "column_break_hrry",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_dhfu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "relevant_certifications_or_training",
+   "fieldtype": "Data",
+   "label": "Relevant Certifications or Training"
+  },
+  {
+   "fieldname": "year_of_pass_out",
+   "fieldtype": "Select",
+   "label": "Year Of Pass Out",
+   "options": "\n2010\n2011\n2012\n2013\n2014\n2015\n2016\n2017\n2018\n2019\n2020\n2021\n2022"
+  },
+  {
+   "fieldname": "section_break_edoh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "job_type",
+   "fieldtype": "Select",
+   "label": "Job Type",
+   "options": "Intern/Fresher\nExperienced"
+  },
+  {
+   "fieldname": "last_ctc",
+   "fieldtype": "Data",
+   "label": "Last CTC"
+  },
+  {
+   "fieldname": "desired_salary",
+   "fieldtype": "Data",
+   "label": "Desired Salary"
+  },
+  {
+   "fieldname": "job_title_and_primary_duties",
+   "fieldtype": "Small Text",
+   "label": "Job Title and Primary Duties"
+  },
+  {
+   "fieldname": "column_break_nrok",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reason_for_leaving",
+   "fieldtype": "Small Text",
+   "label": "Reason For Leaving"
+  },
+  {
+   "fieldname": "currentlast_employer",
+   "fieldtype": "Small Text",
+   "label": "Current/last Employer"
+  },
+  {
+   "fieldname": "skills_and_qualification_section",
+   "fieldtype": "Section Break",
+   "label": "Skills and Qualification"
+  },
+  {
+   "fieldname": "specialized_skillstraining_or_qualifications",
+   "fieldtype": "Small Text",
+   "label": "Specialized Skills,Training or Qualifications"
+  },
+  {
+   "fieldname": "column_break_ugzj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "list_any_programming_or_software_or_tools_you_are_proficient_in",
+   "fieldtype": "Small Text",
+   "label": "List any Programming or Software or Tools You are Proficient in"
+  },
+  {
+   "fieldname": "column_break_zsxp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "language_proficiencies",
+   "fieldtype": "Data",
+   "label": "Language Proficiencies"
+  },
+  {
+   "fieldname": "additional_questions_section_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Questions Section"
+  },
+  {
+   "fieldname": "explain_any_gaps_in_your_employment_history",
+   "fieldtype": "Small Text",
+   "label": "Explain Any gaps In Your Employment History"
+  },
+  {
+   "fieldname": "section_break_uljw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "description": "I certify that the information contained in this application is true and complete. I understand that false information may be grounds for not hiring me or for immediate termination of employment at any point in the future if I am hired. I authorize the verification of any or all information listed above.",
+   "fieldname": "agree",
+   "fieldtype": "Check",
+   "label": "Agree"
+  },
+  {
+   "fieldname": "hr_information_tab",
+   "fieldtype": "Tab Break",
+   "label": "Recruiter"
+  },
+  {
+   "fieldname": "skills",
+   "fieldtype": "Data",
+   "label": "Skills",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "total_work_experience",
+   "fieldtype": "Data",
+   "label": "Total Work Experience",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "relevant_work_experience",
+   "fieldtype": "Data",
+   "label": "Relevant Work Experience",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "current__last_company",
+   "fieldtype": "Data",
+   "label": "Current / Last Company",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "current__last_job_title",
+   "fieldtype": "Data",
+   "label": "Current / Last Job Title",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "is_currently_working",
+   "fieldtype": "Select",
+   "label": "Is currently working",
+   "options": "Yes\nNo\nAlready in notice period",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "notice_period_in_days",
+   "fieldtype": "Data",
+   "label": "Notice period (In Days)",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "avaibility_for_joining_date",
+   "fieldtype": "Date",
+   "label": "Avaibility for joining Date",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "reason_for_leaving_previous_company",
+   "fieldtype": "Date",
+   "label": "Reason for Leaving previous company",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "current_ctc",
+   "fieldtype": "Currency",
+   "label": "Current CTC",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "expected_ctc",
+   "fieldtype": "Currency",
+   "label": "Expected CTC",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "current_location_area_and_city_name",
+   "fieldtype": "Data",
+   "label": "Current Location (Area and City Name)",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "relocation_preferences",
+   "fieldtype": "Data",
+   "label": "Relocation Preferences",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "linkedin_profile",
+   "fieldtype": "Data",
+   "label": "LinkedIn Profile",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "sources",
+   "fieldtype": "Data",
+   "label": "Source",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "hr_notes",
+   "fieldtype": "Small Text",
+   "label": "HR Notes",
+   "permlevel": 2
+  },
+  {
+   "fieldname": "column_break_ybyv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_zmkd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "Applied",
+   "fieldname": "applicant_status",
+   "fieldtype": "Select",
+   "label": "Applicant Status",
+   "options": "Applied\nIn Review\nPhone Screen Scheduled\nPhone Screen Completed\nInterview Scheduled\nFirst Round Interview\nSecond Round Interview\nTechnical Assessment Scheduled\nTechnical Assessment Completed\nReference Check\nOffer Extended\nOffer Accepted\nHired\nRejected\nOn Hold\nWithdrawn\nPending\nNot Selected\nFuture Consideration\nCandidate not responded",
+   "permlevel": 2
   }
  ],
  "icon": "fa fa-user",
@@ -196,7 +487,7 @@
  "links": [],
  "make_attachments_public": 1,
  "max_attachments": 2,
- "modified": "2024-02-12 14:57:24.213815",
+ "modified": "2024-05-06 19:25:03.399721",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Applicant",
