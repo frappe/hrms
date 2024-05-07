@@ -295,3 +295,36 @@ class TestShiftAssignment(FrappeTestCase):
 		self.assertEqual(checkin.shift_type, checkout.shift_type)
 		self.assertEqual(checkin.actual_start.date(), today)
 		self.assertEqual(checkout.actual_end.date(), today)
+
+	def test_shift_details_on_consecutive_days_with_overlapping_timings(self):
+		# defaults
+		employee = make_employee("test_shift_assignment@example.com", company="_Test Company")
+		today = getdate()
+		yesterday = add_days(today, -1)
+
+		# shift 1
+		shift_type = setup_shift_type(shift_type="Morning", start_time="07:00:00", end_time="12:00:00")
+		make_shift_assignment(shift_type.name, employee, add_days(yesterday, -1), yesterday)
+
+		# shift 2
+		shift_type = setup_shift_type(shift_type="Afternoon", start_time="09:30:00", end_time="14:00:00")
+		make_shift_assignment(shift_type.name, employee, today, add_days(today, 1))
+
+		# current_shift shift log - checkin in the grace period of current shift, non-overlapping with prev shift
+		current_shift = get_actual_start_end_datetime_of_shift(
+			employee, get_datetime(f"{today} 14:01:00"), True
+		)
+		self.assertEqual(current_shift.shift_type.name, "Afternoon")
+		self.assertEqual(current_shift.actual_start, get_datetime(f"{today} 08:30:00"))
+		self.assertEqual(current_shift.actual_end, get_datetime(f"{today} 15:00:00"))
+
+		# previous shift
+		checkin = get_actual_start_end_datetime_of_shift(
+			employee, get_datetime(f"{yesterday} 07:01:00"), True
+		)
+		checkout = get_actual_start_end_datetime_of_shift(
+			employee, get_datetime(f"{yesterday} 13:00:00"), True
+		)
+		self.assertTrue(checkin.shift_type.name == checkout.shift_type.name == "Morning")
+		self.assertEqual(checkin.actual_start, get_datetime(f"{yesterday} 06:00:00"))
+		self.assertEqual(checkout.actual_end, get_datetime(f"{yesterday} 13:00:00"))
