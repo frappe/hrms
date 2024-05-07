@@ -43,3 +43,13 @@ def get_shifts(month_start: str, month_end: str) -> dict[str, list]:
 			{k: v for k, v in shift.items() if k != "employee"}
 		)
 	return grouped_shifts
+
+
+@frappe.whitelist()
+def get_shift_assignment(name: str) -> dict[str, str]:
+	return frappe.get_doc("Shift Assignment", name).as_dict()
+
+
+@frappe.whitelist()
+def update_shift_assignment(name: str, values: dict[str, str]) -> None:
+	frappe.db.set_value("Shift Assignment", name, values)
