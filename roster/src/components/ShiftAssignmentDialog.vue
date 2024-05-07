@@ -1,0 +1,135 @@
+<template>
+	<Dialog :options="{ title: dialog.title, size: '4xl' }">
+		<template #body-content>
+			<div class="grid grid-cols-2 gap-6">
+				<FormControl
+					:type="'text'"
+					label="Employee"
+					v-model="form.employee"
+					:disabled="!!props.shiftAssignmentName"
+				/>
+				<FormControl
+					type="text"
+					label="Company"
+					v-model="form.company"
+					:disabled="!!props.shiftAssignmentName"
+				/>
+				<FormControl
+					type="text"
+					label="Employee Name"
+					v-model="form.employee_name"
+					:disabled="true"
+				/>
+				<FormControl
+					type="date"
+					label="Start Date"
+					v-model="form.start_date"
+					:disabled="!!props.shiftAssignmentName"
+				/>
+				<FormControl
+					type="text"
+					label="Shift Type"
+					v-model="form.shift_type"
+					:disabled="!!props.shiftAssignmentName"
+				/>
+				<FormControl id="end_date" type="date" label="End Date" v-model="form.end_date" />
+				<FormControl
+					id="staus"
+					type="select"
+					:options="['Active', 'Inactive']"
+					label="Status"
+					v-model="form.status"
+				/>
+				<FormControl
+					type="text"
+					label="Department"
+					v-model="form.department"
+					:disabled="true"
+				/>
+			</div>
+		</template>
+		<template #actions>
+			<div class="flex">
+				<Button class="ml-auto" @click="emit('closeDialog')"> Close </Button>
+				<Button variant="solid" class="ml-2" @click="dialog.action">
+					{{ dialog.button }}
+				</Button>
+			</div>
+		</template>
+	</Dialog>
+</template>
+
+<script setup lang="ts">
+import { reactive, ref, computed, watch } from "vue";
+import { Dialog, FormControl, createDocumentResource } from "frappe-ui";
+
+const props = defineProps({
+	shiftAssignmentName: {
+		type: String,
+		required: false,
+	},
+});
+
+const emit = defineEmits(["fetchShifts", "closeDialog"]);
+
+const emptyForm = {
+	employee: "",
+	company: "",
+	employee_name: "",
+	start_date: "",
+	shift_type: "",
+	end_date: "",
+	status: "",
+	department: "",
+};
+
+const form = reactive({ ...emptyForm });
+const shiftAssignment = ref();
+
+const dialog = computed(() => {
+	if (props.shiftAssignmentName)
+		return {
+			title: `Shift Assignment ${props.shiftAssignmentName}`,
+			button: "Update",
+			action: updateShiftAssigment,
+		};
+	return {
+		title: "New Shift Assignment",
+		button: "Submit",
+		action: createShiftAssigment,
+	};
+});
+
+watch(
+	() => props.shiftAssignmentName,
+	() => {
+		if (props.shiftAssignmentName)
+			shiftAssignment.value = getShiftAssignment(props.shiftAssignmentName);
+		else Object.assign(form, emptyForm);
+	},
+);
+
+const updateShiftAssigment = async () => {
+	await shiftAssignment.value.setValue.submit({ status: form.status, end_date: form.end_date });
+	emit("fetchShifts");
+	emit("closeDialog");
+};
+
+const createShiftAssigment = () => {
+	emit("fetchShifts");
+	emit("closeDialog");
+};
+
+// RESOURCES
+
+const getShiftAssignment = (name) =>
+	createDocumentResource({
+		doctype: "Shift Assignment",
+		name: name,
+		onSuccess: (data) => {
+			Object.keys(form).forEach((key) => {
+				form[key] = data[key];
+			});
+		},
+	});
+</script>
