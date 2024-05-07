@@ -40,5 +40,6 @@ frappe.ready(function() {
     });
     $("input[data-fieldname='job_title']").prop('readonly', true);
     $("input[data-fieldname='job_titles']").prop('readonly', true);
+    $("input[data-fieldname='job_type']").prop('readonly', true);
 });
  
