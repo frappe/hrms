@@ -1137,12 +1137,15 @@ def get_filtered_employees(
 	ignore_match_conditions=False,
 ) -> list:
 	SalaryStructureAssignment = frappe.qb.DocType("Salary Structure Assignment")
+	SalaryWithholding = frappe.qb.DocType("Salary Withholding")
 	Employee = frappe.qb.DocType("Employee")
 
 	query = (
 		frappe.qb.from_(Employee)
 		.join(SalaryStructureAssignment)
 		.on(Employee.name == SalaryStructureAssignment.employee)
+		.join(SalaryWithholding)
+		.on(Employee.name == SalaryWithholding.employee)
 		.where(
 			(SalaryStructureAssignment.docstatus == 1)
 			& (Employee.status != "Inactive")
@@ -1152,6 +1155,14 @@ def get_filtered_employees(
 			& (SalaryStructureAssignment.salary_structure.isin(sal_struct))
 			& (SalaryStructureAssignment.payroll_payable_account == filters.payroll_payable_account)
 			& (filters.end_date >= SalaryStructureAssignment.from_date)
+			& (
+				(SalaryWithholding.name == None)
+				| (
+					SalaryWithholding.from_date
+					> filters.end_date | SalaryWithholding.to_date
+					< filters.start_date
+				)
+			)
 		)
 	)
 
@@ -1171,24 +1182,7 @@ def get_filtered_employees(
 
 	employees = query.run(as_dict=as_dict)
 
-	employees = get_employees_without_salary_withholding(
-		employees, salary_withholding_documents, filters.start_date, filters.end_date
-	)
 	return employees
-
-
-def get_employees_without_salary_withholding(
-	employees, salary_withholding_documents, start_date, end_date
-):
-	print(employees, salary_withholding_documents)
-	withheld_employees = [
-		d.employee
-		for d in filter(
-			lambda x: x.from_date <= end_date | x.to_date >= start_date, salary_withholding_documents
-		)
-	]
-
-	return [d for d in employees if d.employee not in withheld_employees]
 
 
 def set_fields_to_select(query, fields: list[str] = None):
