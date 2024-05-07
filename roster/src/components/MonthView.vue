@@ -77,6 +77,7 @@
 		</div>
 	</div>
 	<Dialog
+		v-if="shiftAssignment?.doc"
 		v-model="showShiftAssignmentDialog"
 		:options="{ title: `Shift Assignment ${shiftAssignment?.name}`, size: '4xl' }"
 	>
@@ -86,57 +87,67 @@
 					:type="'text'"
 					:disabled="true"
 					label="Employee"
-					:value="shiftAssignment.doc?.employee"
+					:value="shiftAssignment.doc.employee"
 				/>
 				<FormControl
 					:type="'text'"
 					:disabled="true"
 					label="Company"
-					:value="shiftAssignment.doc?.company"
+					:value="shiftAssignment.doc.company"
 				/>
 				<FormControl
 					:type="'text'"
 					:disabled="true"
 					label="Employee Name"
-					:value="shiftAssignment.doc?.employee_name"
+					:value="shiftAssignment.doc.employee_name"
 				/>
 				<FormControl
 					:type="'date'"
 					:disabled="true"
 					label="Start Date"
-					:value="shiftAssignment.doc?.start_date"
+					:value="shiftAssignment.doc.start_date"
 				/>
 				<FormControl
 					:type="'text'"
 					:disabled="true"
 					label="Shift Type"
-					:value="shiftAssignment.doc?.shift_type"
+					:value="shiftAssignment.doc.shift_type"
 				/>
 				<FormControl
 					id="end_date"
 					:type="'date'"
 					label="End Date"
-					v-model="shiftAssignmentEndDate"
+					v-model="shiftAssignment.doc.end_date"
 				/>
 				<FormControl
 					id="staus"
 					:type="'select'"
 					:options="['Active', 'Inactive']"
 					label="Status"
-					v-model="shiftAssignmentStatus"
+					v-model="shiftAssignment.doc.status"
 				/>
 				<FormControl
 					:type="'text'"
 					:disabled="true"
 					label="Department"
-					:value="shiftAssignment.doc?.department"
+					:value="shiftAssignment.doc.department"
 				/>
 			</div>
 		</template>
 		<template #actions>
 			<div class="flex">
 				<Button class="ml-auto" @click="showShiftAssignmentDialog = false"> Close </Button>
-				<Button variant="solid" class="ml-2" :disabled="isUpdateButtonDisabled">
+				<Button
+					variant="solid"
+					class="ml-2"
+					:disabled="!shiftAssignment.isDirty"
+					@click="
+						shiftAssignment.setValue.submit({
+							status: shiftAssignment.doc.status,
+							end_date: shiftAssignment.doc.end_date,
+						})
+					"
+				>
 					Update
 				</Button>
 			</div>
@@ -159,8 +170,6 @@ import {
 const firstOfMonth = ref(dayjs().date(1));
 const shiftAssignment = ref(null);
 const showShiftAssignmentDialog = ref(false);
-const shiftAssignmentStatus = ref("");
-const shiftAssignmentEndDate = ref("");
 
 const daysOfMonth = computed(() => {
 	const daysOfMonth = [];
@@ -170,20 +179,8 @@ const daysOfMonth = computed(() => {
 	}
 	return daysOfMonth;
 });
-const isUpdateButtonDisabled = computed(() => {
-	return (
-		!shiftAssignment.value.doc ||
-		(shiftAssignment.value.doc?.status === shiftAssignmentStatus.value &&
-			shiftAssignment.value.doc?.end_date === shiftAssignmentEndDate.value)
-	);
-});
 
 watch(firstOfMonth, () => fetchShifts());
-watch(showShiftAssignmentDialog, () => {
-	if (showShiftAssignmentDialog.value) return;
-	shiftAssignmentStatus.value = shiftAssignment.value.doc.status;
-	shiftAssignmentEndDate.value = shiftAssignment.value.doc.end_date;
-});
 
 const fetchShifts = () => {
 	shifts.params = {
@@ -238,16 +235,17 @@ const shifts = createResource({
 	},
 });
 
-const getShiftAssignment = (name) => {
-	return createDocumentResource({
+const getShiftAssignment = (name) =>
+	createDocumentResource({
 		doctype: "Shift Assignment",
 		name: name,
-		onSuccess: (data) => {
-			shiftAssignmentStatus.value = data.status;
-			shiftAssignmentEndDate.value = data.end_date;
+		setValue: {
+			onSuccess() {
+				showShiftAssignmentDialog.value = false;
+				fetchShifts();
+			},
 		},
 	});
-};
 
 fetchShifts();
 </script>
