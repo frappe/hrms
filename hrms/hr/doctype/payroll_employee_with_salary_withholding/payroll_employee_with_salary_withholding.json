@@ -1,0 +1,72 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-05-07 13:13:44.838662",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "employee_name",
+  "designation",
+  "column_break_yjhn",
+  "salary_withholding",
+  "salary_withholding_status",
+  "from_date",
+  "to_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Data",
+   "label": "Designation"
+  },
+  {
+   "fieldname": "column_break_yjhn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "salary_withholding",
+   "fieldtype": "Data",
+   "label": "Salary Withholding"
+  },
+  {
+   "fieldname": "salary_withholding_status",
+   "fieldtype": "Data",
+   "label": "Salary Withholding Status"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Data",
+   "label": "From Date"
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Data",
+   "label": "To Date"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-05-08 10:24:07.631993",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Payroll Employee with Salary Withholding",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

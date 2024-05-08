@@ -40,7 +40,8 @@
    "fieldname": "employee",
    "fieldtype": "Link",
    "label": "Employee",
-   "options": "Employee"
+   "options": "Employee",
+   "search_index": 1
   },
   {
    "fieldname": "exit_details_section",
@@ -110,7 +111,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-05-02 12:02:23.445514",
+ "modified": "2024-05-03 14:12:46.075239",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Salary Withholding",

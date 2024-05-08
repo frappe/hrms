@@ -10,6 +10,7 @@
   "select_payroll_period",
   "posting_date",
   "company",
+  "release_withheld_salaries",
   "column_break_5",
   "currency",
   "exchange_rate",
@@ -331,12 +332,18 @@
    "fieldtype": "Link",
    "label": "Grade",
    "options": "Employee Grade"
+  },
+  {
+   "default": "0",
+   "fieldname": "release_withheld_salaries",
+   "fieldtype": "Check",
+   "label": "Release withheld salaries"
   }
  ],
  "icon": "fa fa-cog",
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:10:12.205570",
+ "modified": "2024-05-02 15:46:03.207497",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",
