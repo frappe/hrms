@@ -53,7 +53,7 @@
   }
  ],
  "links": [],
- "modified": "2020-06-29 17:17:12.689089",
+ "modified": "2024-05-05 14:50:12.419714",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Period",
@@ -71,6 +71,15 @@
    "share": 1,
    "write": 1
   },
+  {
+    "email": 1,
+    "export": 1,
+    "print": 1,
+    "read": 1,
+    "report": 1,
+    "role": "Employee",
+    "share": 1
+   },
   {
    "create": 1,
    "delete": 1,

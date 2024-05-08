@@ -31,6 +31,26 @@ def before_uninstall():
 	delete_company_fixtures()
 
 
+def after_app_install(app_name):
+	"""Set up loan integration with payroll"""
+	if app_name != "lending":
+		return
+
+	print("Updating payroll setup for loans")
+	create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
+	add_lending_docperms_to_ess()
+
+
+def before_app_uninstall(app_name):
+	"""Clean up loan integration with payroll"""
+	if app_name != "lending":
+		return
+
+	print("Updating payroll setup for loans")
+	delete_custom_fields(SALARY_SLIP_LOAN_FIELDS)
+	remove_lending_docperms_from_ess()
+
+
 def get_custom_fields():
 	"""HR specific custom fields that need to be added to the masters in ERPNext"""
 	return {
@@ -301,29 +321,6 @@ def get_custom_fields():
 	}
 
 
-def create_salary_slip_loan_fields():
-	if "lending" in frappe.get_installed_apps():
-		create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
-
-
-def after_app_install(app_name):
-	"""Set up loan integration with payroll"""
-	if app_name != "lending":
-		return
-
-	print("Updating payroll setup for loans")
-	create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
-
-
-def before_app_uninstall(app_name):
-	"""Clean up loan integration with payroll"""
-	if app_name != "lending":
-		return
-
-	print("Updating payroll setup for loans")
-	delete_custom_fields(SALARY_SLIP_LOAN_FIELDS)
-
-
 def make_fixtures():
 	records = [
 		# expense claim type
@@ -503,6 +500,106 @@ def update_hr_defaults():
 	hr_settings.save()
 
 
+def set_single_defaults():
+	for dt in ("HR Settings", "Payroll Settings"):
+		default_values = frappe.get_all(
+			"DocField",
+			filters={"parent": dt},
+			fields=["fieldname", "default"],
+			as_list=True,
+		)
+		if default_values:
+			try:
+				doc = frappe.get_doc(dt, dt)
+				for fieldname, value in default_values:
+					doc.set(fieldname, value)
+				doc.flags.ignore_mandatory = True
+				doc.save()
+			except frappe.ValidationError:
+				pass
+
+
+def create_default_role_profiles():
+	for role_profile_name, roles in DEFAULT_ROLE_PROFILES.items():
+		if frappe.db.exists("Role Profile", role_profile_name):
+			continue
+
+		role_profile = frappe.new_doc("Role Profile")
+		role_profile.role_profile = role_profile_name
+		for role in roles:
+			role_profile.append("roles", {"role": role})
+
+		role_profile.insert(ignore_permissions=True)
+
+
+def get_post_install_patches():
+	return (
+		"erpnext.patches.v13_0.move_tax_slabs_from_payroll_period_to_income_tax_slab",
+		"erpnext.patches.v13_0.move_doctype_reports_and_notification_from_hr_to_payroll",
+		"erpnext.patches.v13_0.move_payroll_setting_separately_from_hr_settings",
+		"erpnext.patches.v13_0.update_start_end_date_for_old_shift_assignment",
+		"erpnext.patches.v13_0.updates_for_multi_currency_payroll",
+		"erpnext.patches.v13_0.update_reason_for_resignation_in_employee",
+		"erpnext.patches.v13_0.set_company_in_leave_ledger_entry",
+		"erpnext.patches.v13_0.rename_stop_to_send_birthday_reminders",
+		"erpnext.patches.v13_0.set_training_event_attendance",
+		"erpnext.patches.v14_0.set_payroll_cost_centers",
+		"erpnext.patches.v13_0.update_employee_advance_status",
+		"erpnext.patches.v13_0.update_expense_claim_status_for_paid_advances",
+		"erpnext.patches.v14_0.delete_employee_transfer_property_doctype",
+		"erpnext.patches.v13_0.set_payroll_entry_status",
+		# HRMS
+		"create_country_fixtures",
+		"update_allocate_on_in_leave_type",
+		"update_performance_module_changes",
+	)
+
+
+def run_post_install_patches():
+	print("\nPatching Existing Data...")
+
+	POST_INSTALL_PATCHES = get_post_install_patches()
+	frappe.flags.in_patch = True
+
+	try:
+		for patch in POST_INSTALL_PATCHES:
+			patch_name = patch.split(".")[-1]
+			if not patch_name:
+				continue
+
+			frappe.get_attr(f"hrms.patches.post_install.{patch_name}.execute")()
+	finally:
+		frappe.flags.in_patch = False
+
+
+# LENDING APP SETUP & CLEANUP
+def create_salary_slip_loan_fields():
+	if "lending" in frappe.get_installed_apps():
+		create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
+
+
+def add_lending_docperms_to_ess():
+	doc = frappe.get_doc("User Type", "Employee Self Service")
+
+	loan_docperms = get_lending_docperms_for_ess()
+	append_docperms_to_user_type(loan_docperms, doc)
+
+	doc.save(ignore_permissions=True)
+
+
+def remove_lending_docperms_from_ess():
+	doc = frappe.get_doc("User Type", "Employee Self Service")
+
+	loan_docperms = get_lending_docperms_for_ess()
+
+	for row in list(doc.user_doctypes):
+		if row.document_type in loan_docperms:
+			doc.user_doctypes.remove(row)
+
+	doc.save(ignore_permissions=True)
+
+
+# ESS USER TYPE SETUP & CLEANUP
 def add_non_standard_user_types():
 	user_types = get_user_types_data()
 
@@ -559,6 +656,14 @@ def get_user_types_data():
 	}
 
 
+def get_lending_docperms_for_ess():
+	return {
+		"Loan": ["read"],
+		"Loan Application": ["read", "write", "create", "delete", "submit"],
+		"Loan Product": ["read"],
+	}
+
+
 def create_custom_role(data):
 	if data.get("role") and not frappe.db.exists("Role", data.get("role")):
 		frappe.get_doc(
@@ -581,13 +686,23 @@ def create_user_type(user_type, data):
 			}
 		)
 
-	create_role_permissions_for_doctype(doc, data)
+	docperms = data.get("doctypes")
+	if doc.role == "Employee Self Service" and "lending" in frappe.get_installed_apps():
+		docperms.update(get_lending_docperms_for_ess())
+
+	append_docperms_to_user_type(docperms, doc)
+
 	doc.flags.ignore_links = True
 	doc.save(ignore_permissions=True)
 
 
-def create_role_permissions_for_doctype(doc, data):
-	for doctype, perms in data.get("doctypes").items():
+def append_docperms_to_user_type(docperms, doc):
+	existing_doctypes = [d.document_type for d in doc.user_doctypes]
+
+	for doctype, perms in docperms.items():
+		if doctype in existing_doctypes:
+			continue
+
 		args = {"document_type": doctype}
 		for perm in perms:
 			args[perm] = 1
@@ -609,65 +724,6 @@ def update_select_perm_after_install():
 	frappe.flags.update_select_perm_after_migrate = False
 
 
-def set_single_defaults():
-	for dt in ("HR Settings", "Payroll Settings"):
-		default_values = frappe.db.sql(
-			"""
-			select fieldname, `default` from `tabDocField`
-			where parent=%s""",
-			dt,
-		)
-		if default_values:
-			try:
-				doc = frappe.get_doc(dt, dt)
-				for fieldname, value in default_values:
-					doc.set(fieldname, value)
-				doc.flags.ignore_mandatory = True
-				doc.save()
-			except frappe.ValidationError:
-				pass
-
-
-def get_post_install_patches():
-	return (
-		"erpnext.patches.v13_0.move_tax_slabs_from_payroll_period_to_income_tax_slab",
-		"erpnext.patches.v13_0.move_doctype_reports_and_notification_from_hr_to_payroll",
-		"erpnext.patches.v13_0.move_payroll_setting_separately_from_hr_settings",
-		"erpnext.patches.v13_0.update_start_end_date_for_old_shift_assignment",
-		"erpnext.patches.v13_0.updates_for_multi_currency_payroll",
-		"erpnext.patches.v13_0.update_reason_for_resignation_in_employee",
-		"erpnext.patches.v13_0.set_company_in_leave_ledger_entry",
-		"erpnext.patches.v13_0.rename_stop_to_send_birthday_reminders",
-		"erpnext.patches.v13_0.set_training_event_attendance",
-		"erpnext.patches.v14_0.set_payroll_cost_centers",
-		"erpnext.patches.v13_0.update_employee_advance_status",
-		"erpnext.patches.v13_0.update_expense_claim_status_for_paid_advances",
-		"erpnext.patches.v14_0.delete_employee_transfer_property_doctype",
-		"erpnext.patches.v13_0.set_payroll_entry_status",
-		# HRMS
-		"create_country_fixtures",
-		"update_allocate_on_in_leave_type",
-		"update_performance_module_changes",
-	)
-
-
-def run_post_install_patches():
-	print("\nPatching Existing Data...")
-
-	POST_INSTALL_PATCHES = get_post_install_patches()
-	frappe.flags.in_patch = True
-
-	try:
-		for patch in POST_INSTALL_PATCHES:
-			patch_name = patch.split(".")[-1]
-			if not patch_name:
-				continue
-
-			frappe.get_attr(f"hrms.patches.post_install.{patch_name}.execute")()
-	finally:
-		frappe.flags.in_patch = False
-
-
 def delete_custom_fields(custom_fields: dict):
 	"""
 	:param custom_fields: a dict like `{'Salary Slip': [{fieldname: 'loans', ...}]}`
@@ -682,19 +738,6 @@ def delete_custom_fields(custom_fields: dict):
 		)
 
 		frappe.clear_cache(doctype=doctype)
-
-
-def create_default_role_profiles():
-	for role_profile_name, roles in DEFAULT_ROLE_PROFILES.items():
-		if frappe.db.exists("Role Profile", role_profile_name):
-			continue
-
-		role_profile = frappe.new_doc("Role Profile")
-		role_profile.role_profile = role_profile_name
-		for role in roles:
-			role_profile.append("roles", {"role": role})
-
-		role_profile.insert(ignore_permissions=True)
 
 
 DEFAULT_ROLE_PROFILES = {
