@@ -24,7 +24,7 @@
 					<tr>
 						<th></th>
 						<th v-for="day in daysOfMonth" :key="day" class="border-l">
-							{{ day.name }} {{ day.no }}
+							{{ day.dayName }} {{ dayjs(day.date).format("DD") }}
 						</th>
 					</tr>
 				</thead>
@@ -51,13 +51,13 @@
 							v-for="day in daysOfMonth"
 							:key="day"
 							class="border-l border-t"
-							:class="shifts.data?.[employee.name]?.[day.no] && 'align-top'"
-							@mouseover="hoveredCell = { employee: employee.name, day: day.no }"
-							@mouseleave="hoveredCell = { employee: '', day: '' }"
+							:class="shifts.data?.[employee.name]?.[day.date] && 'align-top'"
+							@mouseover="hoveredCell = { employee: employee.name, date: day.date }"
+							@mouseleave="hoveredCell = { employee: '', date: '' }"
 						>
 							<div class="flex flex-col space-y-1.5">
 								<div
-									v-for="shift in shifts.data?.[employee.name]?.[day.no]"
+									v-for="shift in shifts.data?.[employee.name]?.[day.date]"
 									class="rounded border-2 border-gray-300 hover:border-gray-400 active:bg-gray-200 px-2 py-1 cursor-pointer"
 									:class="
 										shift.status === 'Active' ? 'bg-gray-50' : 'border-dashed'
@@ -75,7 +75,7 @@
 								<Button
 									v-if="
 										hoveredCell.employee === employee.name &&
-										hoveredCell.day === day.no
+										hoveredCell.date === day.date
 									"
 									variant="outline"
 									icon="plus"
@@ -119,13 +119,13 @@ import ShiftAssignmentDialog from "./ShiftAssignmentDialog.vue";
 const firstOfMonth = ref(dayjs().date(1));
 const shiftAssignment = ref(null);
 const showShiftAssignmentDialog = ref(false);
-const hoveredCell = ref({ employee: "", day: "" });
+const hoveredCell = ref({ employee: "", date: "" });
 
 const daysOfMonth = computed(() => {
 	const daysOfMonth = [];
 	for (let i = 1; i <= firstOfMonth.value.daysInMonth(); i++) {
 		const date = firstOfMonth.value.date(i);
-		daysOfMonth.push({ no: date.format("DD"), name: date.format("ddd") });
+		daysOfMonth.push({ dayName: date.format("ddd"), date: date.format("YYYY-MM-DD") });
 	}
 	return daysOfMonth;
 });
@@ -156,7 +156,7 @@ const shifts = createResource({
 			mappedData[employee] = {};
 			for (let d = 1; d <= firstOfMonth.value.daysInMonth(); d++) {
 				const date = firstOfMonth.value.date(d);
-				const key = date.format("DD");
+				const key = date.format("YYYY-MM-DD");
 				for (const assignment of data[employee]) {
 					if (
 						dayjs(assignment.start_date).isSameOrBefore(date) &&
