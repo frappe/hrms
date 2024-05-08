@@ -162,6 +162,7 @@ const createShiftAssigment = () => {
 		...form,
 		employee: form.employee.value,
 		shift_type: form.shift_type.value,
+		docstatus: 1,
 	});
 };
 
