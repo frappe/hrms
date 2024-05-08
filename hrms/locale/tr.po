@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-07 12:46\n"
+"PO-Revision-Date: 2024-05-08 12:51\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -14987,7 +14987,7 @@ msgstr ""
 #: hr/report/employee_leave_balance/employee_leave_balance.js:48
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:42
 msgid "Suspended"
-msgstr ""
+msgstr "Beklemede"
 
 #: payroll/doctype/salary_slip/salary_slip.py:1170
 msgid "Syntax error"
