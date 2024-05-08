@@ -95,7 +95,9 @@
 	<ShiftAssignmentDialog
 		v-model="showShiftAssignmentDialog"
 		:shiftAssignmentName="shiftAssignment"
-		@fetchShifts="fetchShifts"
+		:selectedCell="hoveredCell"
+		:employees="employees.data"
+		@fetchShifts="shifts.fetch()"
 		@closeDialog="showShiftAssignmentDialog = false"
 	/>
 </template>
@@ -128,15 +130,7 @@ const daysOfMonth = computed(() => {
 	return daysOfMonth;
 });
 
-watch(firstOfMonth, () => fetchShifts());
-
-const fetchShifts = () => {
-	shifts.params = {
-		month_start: firstOfMonth.value.format("YYYY-MM-DD"),
-		month_end: firstOfMonth.value.endOf("month").format("YYYY-MM-DD"),
-	};
-	shifts.fetch();
-};
+watch(firstOfMonth, () => shifts.fetch());
 
 // RESOURCES
 
@@ -149,6 +143,12 @@ const employees = createListResource({
 
 const shifts = createResource({
 	url: "hrms.api.roster.get_shifts",
+	makeParams() {
+		return {
+			month_start: firstOfMonth.value.format("YYYY-MM-DD"),
+			month_end: firstOfMonth.value.endOf("month").format("YYYY-MM-DD"),
+		};
+	},
 	transform: (data) => {
 		// convert employee -> shift assignments to employee -> day -> shifts
 		const mappedData = {};
@@ -181,9 +181,8 @@ const shifts = createResource({
 		}
 		return mappedData;
 	},
+	auto: true,
 });
-
-fetchShifts();
 </script>
 
 <style>
