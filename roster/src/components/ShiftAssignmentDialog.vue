@@ -83,7 +83,7 @@ const props = defineProps({
 
 const emit = defineEmits(["fetchShifts", "closeDialog"]);
 
-const emptyForm = {
+const defaultForm = {
 	employee: "",
 	company: "",
 	employee_name: "",
@@ -94,7 +94,7 @@ const emptyForm = {
 	department: "",
 };
 
-const form = reactive({ ...emptyForm });
+const form = reactive({ ...defaultForm });
 const shiftAssignment = ref();
 
 const dialog = computed(() => {
@@ -123,16 +123,18 @@ watch(
 	(val) => {
 		if (val) shiftAssignment.value = getShiftAssignment(val);
 		else {
-			Object.assign(form, emptyForm);
+			Object.assign(form, defaultForm);
 			form.employee = { value: props.selectedCell.employee };
-			form.start_date = props.selectedCell.day;
+			form.start_date = props.selectedCell.date;
 		}
 	},
 );
 watch(
 	() => props.selectedCell,
 	(val) => {
-		if (val.employee) form.employee = { value: val.employee };
+		if (props.shiftAssignmentName || !val.employee) return;
+		form.employee = { value: val.employee };
+		form.start_date = val.date;
 	},
 );
 watch(
