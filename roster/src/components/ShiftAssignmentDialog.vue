@@ -2,18 +2,14 @@
 	<Dialog :options="{ title: dialog.title, size: '4xl' }">
 		<template #body-content>
 			<div class="grid grid-cols-2 gap-6">
-				<FormControl
+				<Autocomplete
 					:type="'text'"
 					label="Employee"
 					v-model="form.employee"
-					:disabled="!!props.shiftAssignmentName"
+					:class="!!props.shiftAssignmentName && 'pointer-events-none'"
+					:options="employees"
 				/>
-				<FormControl
-					type="text"
-					label="Company"
-					v-model="form.company"
-					:disabled="!!props.shiftAssignmentName"
-				/>
+				<FormControl type="text" label="Company" v-model="form.company" :disabled="true" />
 				<FormControl
 					type="text"
 					label="Employee Name"
@@ -61,12 +57,27 @@
 
 <script setup lang="ts">
 import { reactive, ref, computed, watch } from "vue";
-import { Dialog, FormControl, createDocumentResource } from "frappe-ui";
+import {
+	Dialog,
+	Autocomplete,
+	FormControl,
+	createDocumentResource,
+	createResource,
+} from "frappe-ui";
 
 const props = defineProps({
 	shiftAssignmentName: {
 		type: String,
 		required: false,
+	},
+	selectedCell: {
+		type: Object,
+		required: true,
+	},
+	employees: {
+		type: Array,
+		required: false,
+		default: [],
 	},
 });
 
@@ -79,7 +90,7 @@ const emptyForm = {
 	start_date: "",
 	shift_type: "",
 	end_date: "",
-	status: "",
+	status: "Active",
 	department: "",
 };
 
@@ -99,13 +110,42 @@ const dialog = computed(() => {
 		action: createShiftAssigment,
 	};
 });
+const employees = computed(() => {
+	return props.employees.map((employee) => ({
+		label: `${employee.name}: ${employee.employee_name}`,
+		value: employee.name,
+		employee_name: employee.employee_name,
+	}));
+});
 
 watch(
 	() => props.shiftAssignmentName,
-	() => {
-		if (props.shiftAssignmentName)
-			shiftAssignment.value = getShiftAssignment(props.shiftAssignmentName);
-		else Object.assign(form, emptyForm);
+	(val) => {
+		if (val) shiftAssignment.value = getShiftAssignment(val);
+		else {
+			Object.assign(form, emptyForm);
+			form.employee = { value: props.selectedCell.employee };
+			form.start_date = props.selectedCell.day;
+		}
+	},
+);
+watch(
+	() => props.selectedCell,
+	(val) => {
+		if (val.employee) form.employee = { value: val.employee };
+	},
+);
+watch(
+	() => form.employee,
+	(val) => {
+		if (props.shiftAssignmentName) return;
+		if (val) {
+			employee.fetch();
+		} else {
+			form.employee_name = "";
+			form.company = "";
+			form.department = "";
+		}
 	},
 );
 
@@ -132,4 +172,20 @@ const getShiftAssignment = (name) =>
 			});
 		},
 	});
+
+const employee = createResource({
+	url: "hrms.api.roster.get_values",
+	makeParams() {
+		return {
+			doctype: "Employee",
+			name: form.employee.value,
+			fields: ["employee_name", "company", "department"],
+		};
+	},
+	onSuccess: (data) => {
+		form.employee_name = data.employee_name;
+		form.company = data.company;
+		form.department = data.department;
+	},
+});
 </script>

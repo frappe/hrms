@@ -2,6 +2,15 @@ import frappe
 
 
 @frappe.whitelist()
+def get_values(
+	doctype: str,
+	name: str,
+	fields: list,
+) -> dict[str, str]:
+	return frappe.db.get_value(doctype, name, fields, as_dict=True)
+
+
+@frappe.whitelist()
 def get_shifts(month_start: str, month_end: str) -> dict[str, list]:
 	ShiftAssignment = frappe.qb.DocType("Shift Assignment")
 	ShiftType = frappe.qb.DocType("Shift Type")
