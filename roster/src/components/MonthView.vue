@@ -116,7 +116,7 @@ import {
 
 import ShiftAssignmentDialog from "./ShiftAssignmentDialog.vue";
 
-const firstOfMonth = ref(dayjs().date(1));
+const firstOfMonth = ref(dayjs().date(1).startOf("D"));
 const shiftAssignment = ref(null);
 const showShiftAssignmentDialog = ref(false);
 const hoveredCell = ref({ employee: "", date: "" });
