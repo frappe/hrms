@@ -21,10 +21,10 @@ def get_employee_details(employee):
 		"Salary Structure", salary_structure_assignment, "payroll_frequency"
 	)
 
-	employee = frappe.db.get_all(
+	employee_details = frappe.db.get_value(
 		"Employee",
-		filters={"name": employee},
-		fields=[
+		{"name": employee},
+		[
 			"date_of_joining",
 			"relieving_date",
 			"employee_name",
@@ -34,11 +34,11 @@ def get_employee_details(employee):
 	)
 
 	details = {
-		"date_of_joining": employee[0].get("date_of_joining"),
-		"relieving_date": employee[0].get("relieving_date"),
-		"employee_name": employee[0].get("employee_name"),
-		"resignation_letter_date": employee[0].get("resignation_date"),
-		"notice_number_of_days": employee[0].get("notice_number_of_days"),
+		"date_of_joining": employee_details.date_of_joining,
+		"relieving_date": employee_details.relieving_date,
+		"employee_name": employee_details.employee_name,
+		"resignation_letter_date": employee_details.resignation_date,
+		"notice_number_of_days": employee_details.notice_number_of_days,
 		"payroll_frequency": payroll_frequency,
 	}
 	return details
