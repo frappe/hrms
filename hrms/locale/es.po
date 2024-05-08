@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-03 13:30\n"
+"PO-Revision-Date: 2024-04-25 14:15\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -561,7 +561,7 @@ msgstr "Cuentas"
 #: hr/workspace/expense_claims/expense_claims.json
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Accounts Payable"
-msgstr "Cuentas por pagar"
+msgstr "Cuentas por Pagar"
 
 #. Label of a Link in the Expense Claims Workspace
 #. Label of a Link in the Salary Payout Workspace
@@ -8365,7 +8365,7 @@ msgstr "Nombre del Seguro de Salud"
 
 #: hr/notification/training_feedback/training_feedback.html:1
 msgid "Hello"
-msgstr ""
+msgstr "Hola"
 
 #. Label of a HTML field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -10118,7 +10118,7 @@ msgstr ""
 
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.py:35
 msgid "Leave Type is mandatory"
-msgstr ""
+msgstr "Tipo de Licencia es obligatorio"
 
 #: hr/doctype/leave_allocation/leave_allocation.py:183
 msgid "Leave Type {0} cannot be allocated since it is leave without pay"
@@ -13585,7 +13585,7 @@ msgstr "Registro de Horas de Nómina"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:84
 msgid "Salary Slip already exists for {0} for the given dates"
-msgstr ""
+msgstr "El Recibo de Sueldo ya existe para {0} para las fechas indicadas"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:240
 msgid "Salary Slip creation is queued. It may take a few minutes"

@@ -16,9 +16,7 @@ def get_data(start=0):
 	)
 
 	for d in data:
-		d.sender_name = (
-			frappe.db.get_value("Employee", {"user_id": d.sender}, "employee_name") or d.sender
-		)
+		d.sender_name = frappe.db.get_value("Employee", {"user_id": d.sender}, "employee_name") or d.sender
 		if d.text_content:
 			d.content = frappe.utils.md_to_html(EmailReplyParser.parse_reply(d.text_content))
 

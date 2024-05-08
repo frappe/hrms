@@ -1,30 +1,30 @@
 // Copyright (c) 2016, Frappe Technologies Pvt. Ltd. and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('Leave Block List', {
-	add_day_wise_dates: function(frm) {
+frappe.ui.form.on("Leave Block List", {
+	add_day_wise_dates: function (frm) {
 		let d = new frappe.ui.Dialog({
-			title: 'Add Leave Block Dates',
+			title: "Add Leave Block Dates",
 			fields: [
 				{
-					label: 'Start Date',
-					fieldname: 'start_date',
-					fieldtype: 'Date',
-					reqd: 1
+					label: "Start Date",
+					fieldname: "start_date",
+					fieldtype: "Date",
+					reqd: 1,
 				},
 				{
-					fieldname: 'col_break_0',
-					fieldtype: 'Column Break'
+					fieldname: "col_break_0",
+					fieldtype: "Column Break",
 				},
 				{
-					label: 'End Date',
-					fieldname: 'end_date',
-					fieldtype: 'Date',
-					reqd: 1
+					label: "End Date",
+					fieldname: "end_date",
+					fieldtype: "Date",
+					reqd: 1,
 				},
 				{
-					fieldname: 'sec_break_0',
-					fieldtype: 'Section Break'
+					fieldname: "sec_break_0",
+					fieldtype: "Section Break",
 				},
 				{
 					fieldname: "days",
@@ -71,29 +71,29 @@ frappe.ui.form.on('Leave Block List', {
 					],
 				},
 				{
-					fieldname: 'sec_break_0',
-					fieldtype: 'Section Break'
+					fieldname: "sec_break_0",
+					fieldtype: "Section Break",
 				},
 				{
-					label: 'Reason',
-					fieldname: 'reason',
-					fieldtype: 'Small Text',
-					reqd: 1
+					label: "Reason",
+					fieldname: "reason",
+					fieldtype: "Small Text",
+					reqd: 1,
 				},
 			],
-			primary_action_label: 'Add',
+			primary_action_label: "Add",
 			primary_action(values) {
-				frm.call('set_weekly_off_dates', {
-					'start_date': d.get_value('start_date'),
-					'end_date': d.get_value('end_date'),
-					'reason': d.get_value('reason'),
-					'days': d.get_value('days')
+				frm.call("set_weekly_off_dates", {
+					start_date: d.get_value("start_date"),
+					end_date: d.get_value("end_date"),
+					reason: d.get_value("reason"),
+					days: d.get_value("days"),
 				});
 				frm.dirty();
 				d.hide();
-			}
+			},
 		});
 
 		d.show();
-	}
+	},
 });

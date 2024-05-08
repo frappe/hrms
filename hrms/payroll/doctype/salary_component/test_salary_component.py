@@ -19,21 +19,21 @@ class TestSalaryComponent(FrappeTestCase):
 		salary_structure3 = make_salary_structure("Salary Structure 3", "Monthly")
 		salary_structure3.cancel()  # Details should not update for cancelled Salary Structures
 
-		ss1_detail = [
-			d for d in salary_structure1.earnings if d.salary_component == "Special Allowance"
-		][0]
+		ss1_detail = next(
+			(d for d in salary_structure1.earnings if d.salary_component == "Special Allowance"), None
+		)
 		self.assertEqual(ss1_detail.condition, "H < 10000")
 		self.assertEqual(ss1_detail.formula, "BS*.5")
 
-		ss2_detail = [
-			d for d in salary_structure2.earnings if d.salary_component == "Special Allowance"
-		][0]
+		ss2_detail = next(
+			(d for d in salary_structure2.earnings if d.salary_component == "Special Allowance"), None
+		)
 		self.assertEqual(ss2_detail.condition, "H < 10000")
 		self.assertEqual(ss2_detail.formula, "BS*.5")
 
-		ss3_detail = [
-			d for d in salary_structure3.earnings if d.salary_component == "Special Allowance"
-		][0]
+		ss3_detail = next(
+			(d for d in salary_structure3.earnings if d.salary_component == "Special Allowance"), None
+		)
 		self.assertEqual(ss3_detail.condition, "H < 10000")
 		self.assertEqual(ss3_detail.formula, "BS*.5")
 

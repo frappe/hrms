@@ -111,7 +111,7 @@ class TestLeaveControlPanel(FrappeTestCase):
 		}
 
 		lcp = LeaveControlPanel(arg)
-		test = lcp.allocate_leave([self.emp4])
+		lcp.allocate_leave([self.emp4])
 
 		lpa = frappe.get_value(
 			"Leave Policy Assignment",
@@ -124,7 +124,6 @@ class TestLeaveControlPanel(FrappeTestCase):
 		self.assertEqual(lpa.effective_to, to_date)
 
 	def test_get_employees(self):
-		doj = date(2030, 1, 5)
 		allocation = create_leave_allocation(
 			employee=self.emp1,
 			leave_type="Casual Leave",

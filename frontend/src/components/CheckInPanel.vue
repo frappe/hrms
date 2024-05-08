@@ -1,8 +1,6 @@
 <template>
 	<div class="flex flex-col bg-white rounded w-full py-6 px-4 border-none">
-		<h2 class="text-lg font-bold text-gray-900">
-			Hey, {{ employee?.data?.first_name }} 👋
-		</h2>
+		<h2 class="text-lg font-bold text-gray-900">Hey, {{ employee?.data?.first_name }} 👋</h2>
 
 		<template v-if="HRSettings.doc?.allow_employee_checkin_from_mobile_app">
 			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
@@ -15,17 +13,14 @@
 			>
 				<template #prefix>
 					<FeatherIcon
-						:name="
-							nextAction.action === 'IN'
-								? 'arrow-right-circle'
-								: 'arrow-left-circle'
-						"
+						:name="nextAction.action === 'IN' ? 'arrow-right-circle' : 'arrow-left-circle'"
 						class="w-4"
 					/>
 				</template>
 				{{ nextAction.label }}
 			</Button>
 		</template>
+
 		<div v-else class="font-medium text-sm text-gray-500 mt-1.5">
 			{{ dayjs().format("ddd, D MMMM, YYYY") }}
 		</div>
@@ -101,14 +96,7 @@ const locationStatus = ref("")
 
 const checkins = createListResource({
 	doctype: DOCTYPE,
-	fields: [
-		"name",
-		"employee",
-		"employee_name",
-		"log_type",
-		"time",
-		"device_id",
-	],
+	fields: ["name", "employee", "employee_name", "log_type", "time", "device_id"],
 	filters: {
 		employee: employee.data.name,
 	},
