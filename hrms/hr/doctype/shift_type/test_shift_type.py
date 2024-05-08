@@ -371,6 +371,29 @@ class TestShiftType(FrappeTestCase):
 		self.assertEqual(len(absent_records), 2)
 
 	def test_do_not_mark_absent_before_shift_actual_end_time(self):
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+
+		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
+		today = getdate()
+		yesterday = add_days(today, -1)
+
+		# shift 1
+		shift_1 = setup_shift_type(shift_type="Morning", start_time="07:00:00", end_time="12:30:00")
+		make_shift_assignment(shift_1.name, employee, add_days(yesterday, -1), yesterday)
+
+		# shift 2
+		shift_2 = setup_shift_type(shift_type="Afternoon", start_time="09:30:00", end_time="18:00:00")
+		make_shift_assignment(shift_2.name, employee, today, add_days(today, 1))
+
+		# update last sync of checkin for shift 2
+		shift_2.process_attendance_after = add_days(today, -2)
+		shift_2.last_sync_of_checkin = datetime.combine(today, get_time("09:01:00"))
+		shift_2.save()
+		shift_2.process_auto_attendance()
+
+		self.assertIsNone(frappe.db.get_value("Attendance", {"attendance_date": today, "employee": employee}))
+
+	def test_do_not_mark_absent_before_shift_actual_end_time_for_midnight_shift(self):
 		"""
 		Tests employee is not marked absent for a shift spanning 2 days
 		before its actual end time
