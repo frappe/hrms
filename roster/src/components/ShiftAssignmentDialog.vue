@@ -3,7 +3,7 @@
 		<template #body-content>
 			<div class="grid grid-cols-2 gap-6">
 				<Autocomplete
-					:type="'text'"
+					type="text"
 					label="Employee"
 					v-model="form.employee"
 					:class="!!props.shiftAssignmentName && 'pointer-events-none'"
@@ -22,11 +22,12 @@
 					v-model="form.start_date"
 					:disabled="!!props.shiftAssignmentName"
 				/>
-				<FormControl
+				<Autocomplete
 					type="text"
-					label="Shift Type"
+					label="Employee"
 					v-model="form.shift_type"
-					:disabled="!!props.shiftAssignmentName"
+					:class="!!props.shiftAssignmentName && 'pointer-events-none'"
+					:options="shiftTypes.data"
 				/>
 				<FormControl id="end_date" type="date" label="End Date" v-model="form.end_date" />
 				<FormControl
@@ -63,6 +64,7 @@ import {
 	FormControl,
 	createDocumentResource,
 	createResource,
+	createListResource,
 } from "frappe-ui";
 
 const props = defineProps({
@@ -151,15 +153,16 @@ watch(
 	},
 );
 
-const updateShiftAssigment = async () => {
-	await shiftAssignment.value.setValue.submit({ status: form.status, end_date: form.end_date });
-	emit("fetchShifts");
-	emit("closeDialog");
+const updateShiftAssigment = () => {
+	shiftAssignment.value.setValue.submit({ status: form.status, end_date: form.end_date });
 };
 
 const createShiftAssigment = () => {
-	emit("fetchShifts");
-	emit("closeDialog");
+	shiftAssignments.insert.submit({
+		...form,
+		employee: form.employee.value,
+		shift_type: form.shift_type.value,
+	});
 };
 
 // RESOURCES
@@ -172,6 +175,12 @@ const getShiftAssignment = (name) =>
 			Object.keys(form).forEach((key) => {
 				form[key] = data[key];
 			});
+		},
+		setValue: {
+			onSuccess() {
+				emit("fetchShifts");
+				emit("closeDialog");
+			},
 		},
 	});
 
@@ -188,6 +197,23 @@ const employee = createResource({
 		form.employee_name = data.employee_name;
 		form.company = data.company;
 		form.department = data.department;
+	},
+});
+
+const shiftTypes = createListResource({
+	doctype: "Shift Type",
+	fields: ["name"],
+	transform: (data) => data.map((shiftType) => shiftType.name),
+	auto: true,
+});
+
+const shiftAssignments = createListResource({
+	doctype: "Shift Assignment",
+	insert: {
+		onSuccess() {
+			emit("fetchShifts");
+			emit("closeDialog");
+		},
 	},
 });
 </script>
