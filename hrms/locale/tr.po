@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-08 12:51\n"
+"PO-Revision-Date: 2024-05-09 12:50\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -5142,7 +5142,7 @@ msgstr ""
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Email Address"
-msgstr ""
+msgstr "E-posta Adresi"
 
 #. Label of a Data field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
@@ -9271,13 +9271,13 @@ msgstr "esnek Fayda mı"
 
 #: hr/doctype/goal/goal_tree.js:51
 msgid "Is Group"
-msgstr ""
+msgstr "Grup"
 
 #. Label of a Check field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "Is Group"
-msgstr ""
+msgstr "Grup"
 
 #. Label of a Check field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
