@@ -68,6 +68,10 @@ import {
 } from "frappe-ui";
 
 const props = defineProps({
+	isDialogOpen: {
+		type: Boolean,
+		required: true,
+	},
 	shiftAssignmentName: {
 		type: String,
 		required: false,
@@ -132,11 +136,12 @@ watch(
 	},
 );
 watch(
-	() => props.selectedCell,
+	() => props.isDialogOpen,
 	(val) => {
-		if (props.shiftAssignmentName || !val.employee) return;
-		form.employee = { value: val.employee };
-		form.start_date = val.date;
+		if (val && !props.shiftAssignmentName) {
+			form.employee = { value: props.selectedCell.employee };
+			form.start_date = props.selectedCell.date;
+		}
 	},
 );
 watch(

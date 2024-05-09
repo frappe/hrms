@@ -94,6 +94,7 @@
 	</div>
 	<ShiftAssignmentDialog
 		v-model="showShiftAssignmentDialog"
+		:isDialogOpen="showShiftAssignmentDialog"
 		:shiftAssignmentName="shiftAssignment"
 		:selectedCell="hoveredCell"
 		:employees="employees.data"
