@@ -46,9 +46,24 @@
 			</div>
 		</template>
 		<template #actions>
-			<div class="flex">
+			<div class="flex space-x-2">
 				<Button class="ml-auto" @click="emit('closeDialog')"> Close </Button>
-				<Button variant="solid" class="ml-2" @click="dialog.action">
+				<Dropdown
+					v-if="props.shiftAssignmentName"
+					:options="[
+						{
+							label: 'Delete Assignment',
+							icon: 'trash',
+							onClick: async () => {
+								await shiftAssignment.setValue.submit({ docstatus: 2 });
+								shiftAssignments.delete.submit(props.shiftAssignmentName);
+							},
+						},
+					]"
+				>
+					<Button icon="more-vertical" />
+				</Dropdown>
+				<Button variant="solid" :disabled="dialog.actionDisabled" @click="dialog.action">
 					{{ dialog.button }}
 				</Button>
 			</div>
@@ -62,6 +77,7 @@ import {
 	Dialog,
 	Autocomplete,
 	FormControl,
+	Dropdown,
 	createDocumentResource,
 	createResource,
 	createListResource,
@@ -109,11 +125,15 @@ const dialog = computed(() => {
 			title: `Shift Assignment ${props.shiftAssignmentName}`,
 			button: "Update",
 			action: updateShiftAssigment,
+			actionDisabled:
+				form.status === shiftAssignment.value?.doc?.status &&
+				form.end_date === shiftAssignment.value?.doc?.end_date,
 		};
 	return {
 		title: "New Shift Assignment",
 		button: "Submit",
 		action: createShiftAssigment,
+		actionDisabled: false,
 	};
 });
 const employees = computed(() => {
@@ -216,6 +236,12 @@ const shiftTypes = createListResource({
 const shiftAssignments = createListResource({
 	doctype: "Shift Assignment",
 	insert: {
+		onSuccess() {
+			emit("fetchShifts");
+			emit("closeDialog");
+		},
+	},
+	delete: {
 		onSuccess() {
 			emit("fetchShifts");
 			emit("closeDialog");
