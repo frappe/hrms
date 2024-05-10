@@ -60,15 +60,13 @@ frappe.ui.form.on("Salary Structure Assignment", {
 		}
 
 		if (frm.doc.docstatus === 1)
-			frm.add_custom_button(__("Preview Salary Slip"), function () {
-				frm.trigger("preview_salary_slip");
-<<<<<<< HEAD
-			});
-=======
-			},
-			__("Actions"),
-		);
->>>>>>> 6f0cab593 (chore: fix linter)
+			frm.add_custom_button(
+				__("Preview Salary Slip"),
+				function () {
+					frm.trigger("preview_salary_slip");
+				},
+				__("Actions"),
+			);
 	},
 
 	employee: function (frm) {
@@ -87,8 +85,6 @@ frappe.ui.form.on("Salary Structure Assignment", {
 				frm.doc.company,
 				"default_payroll_payable_account",
 				(r) => {
-<<<<<<< HEAD
-<<<<<<< HEAD
 					frm.set_value("payroll_payable_account", r.default_payroll_payable_account);
 				},
 			);
@@ -104,20 +100,6 @@ frappe.ui.form.on("Salary Structure Assignment", {
 					refresh_field("payroll_cost_centers");
 				},
 			});
-		}
-	},
-
-=======
-					frm.set_value(
-						"payroll_payable_account",
-						r.default_payroll_payable_account
-					);
-				}
-=======
-					frm.set_value("payroll_payable_account", r.default_payroll_payable_account);
-				},
->>>>>>> 6f0cab593 (chore: fix linter)
-			);
 		}
 	},
 
@@ -148,19 +130,6 @@ frappe.ui.form.on("Salary Structure Assignment", {
 		);
 	},
 
-	set_payroll_cost_centers: function (frm) {
-		if (frm.doc.payroll_cost_centers && frm.doc.payroll_cost_centers.length < 1) {
-			frappe.call({
-				method: "set_payroll_cost_centers",
-				doc: frm.doc,
-				callback: function (data) {
-					refresh_field("payroll_cost_centers");
-				},
-			});
-		}
-	},
-
->>>>>>> 65547990c (feat: Preview Salary Slip from Salary Structure Assignment)
 	valiadte_joining_date_and_salary_slips: function (frm) {
 		frappe.call({
 			method: "earning_and_deduction_entries_does_not_exists",

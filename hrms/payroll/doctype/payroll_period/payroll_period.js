@@ -2,10 +2,6 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Payroll Period", {
-<<<<<<< HEAD
-<<<<<<< HEAD
-	refresh: function (frm) {},
-=======
 	refresh: function (frm) {
 		// sets start date and end date as that of the current fiscal year if no payroll period exists
 		frappe.db.exists("Payroll Period").then((period_exists) => {
@@ -14,7 +10,8 @@ frappe.ui.form.on("Payroll Period", {
 				frm.set_value("end_date", frappe.defaults.get_default("year_end_date"));
 			}
 		});
-=======
+	},
+
 	onload: function (frm) {
 		frm.trigger("set_start_date");
 	},
@@ -45,7 +42,5 @@ frappe.ui.form.on("Payroll Period", {
 			"end_date",
 			frappe.datetime.add_days(frappe.datetime.add_months(frm.doc.start_date, 12), -1),
 		);
->>>>>>> 22a9000b3 (fix: set payroll period dates based on last payroll period/current fiscal year)
 	},
->>>>>>> a3060da3d (feat(Create Payroll Period): set Start & End Date as that of Fiscal Year if no Payroll Period exists)
 });

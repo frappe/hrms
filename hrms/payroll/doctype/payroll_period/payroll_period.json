@@ -53,11 +53,7 @@
   }
  ],
  "links": [],
-<<<<<<< HEAD
- "modified": "2024-05-05 14:50:12.419714",
-=======
  "modified": "2024-05-07 17:27:51.903593",
->>>>>>> 22a9000b3 (fix: set payroll period dates based on last payroll period/current fiscal year)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Period",
@@ -109,12 +105,7 @@
    "write": 1
   }
  ],
-<<<<<<< HEAD
- "quick_entry": 1,
- "sort_field": "modified",
-=======
  "sort_field": "creation",
->>>>>>> 22a9000b3 (fix: set payroll period dates based on last payroll period/current fiscal year)
  "sort_order": "DESC",
  "track_changes": 1
 }
