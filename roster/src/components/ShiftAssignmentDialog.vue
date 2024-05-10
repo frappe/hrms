@@ -46,8 +46,7 @@
 			</div>
 		</template>
 		<template #actions>
-			<div class="flex space-x-2">
-				<Button class="ml-auto" @click="emit('closeDialog')"> Close </Button>
+			<div class="flex space-x-2 justify-end">
 				<Dropdown
 					v-if="props.shiftAssignmentName"
 					:options="[
@@ -61,9 +60,15 @@
 						},
 					]"
 				>
-					<Button icon="more-vertical" />
+					<Button size="md" icon="more-vertical" />
 				</Dropdown>
-				<Button variant="solid" :disabled="dialog.actionDisabled" @click="dialog.action">
+				<Button
+					size="md"
+					variant="solid"
+					:disabled="dialog.actionDisabled"
+					class="w-28"
+					@click="dialog.action"
+				>
 					{{ dialog.button }}
 				</Button>
 			</div>
@@ -103,7 +108,7 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits(["fetchShifts", "closeDialog"]);
+const emit = defineEmits(["fetchShifts"]);
 
 const defaultForm = {
 	employee: "",
@@ -205,7 +210,6 @@ const getShiftAssignment = (name) =>
 		setValue: {
 			onSuccess() {
 				emit("fetchShifts");
-				emit("closeDialog");
 			},
 		},
 	});
@@ -238,13 +242,11 @@ const shiftAssignments = createListResource({
 	insert: {
 		onSuccess() {
 			emit("fetchShifts");
-			emit("closeDialog");
 		},
 	},
 	delete: {
 		onSuccess() {
 			emit("fetchShifts");
-			emit("closeDialog");
 		},
 	},
 });

@@ -107,8 +107,10 @@
 		:shiftAssignmentName="shiftAssignment"
 		:selectedCell="hoveredCell"
 		:employees="employees.data"
-		@fetchShifts="shifts.fetch()"
-		@closeDialog="showShiftAssignmentDialog = false"
+		@fetchShifts="
+			shifts.fetch();
+			showShiftAssignmentDialog = false;
+		"
 	/>
 </template>
 
