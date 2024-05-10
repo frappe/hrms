@@ -91,18 +91,6 @@ frappe.ui.form.on("Salary Structure Assignment", {
 		}
 	},
 
-	set_payroll_cost_centers: function (frm) {
-		if (frm.doc.payroll_cost_centers && frm.doc.payroll_cost_centers.length < 1) {
-			frappe.call({
-				method: "set_payroll_cost_centers",
-				doc: frm.doc,
-				callback: function (data) {
-					refresh_field("payroll_cost_centers");
-				},
-			});
-		}
-	},
-
 	preview_salary_slip: function (frm) {
 		frappe.db.get_value(
 			"Salary Structure",
@@ -128,6 +116,18 @@ frappe.ui.form.on("Salary Structure Assignment", {
 				});
 			},
 		);
+	},
+
+	set_payroll_cost_centers: function (frm) {
+		if (frm.doc.payroll_cost_centers && frm.doc.payroll_cost_centers.length < 1) {
+			frappe.call({
+				method: "set_payroll_cost_centers",
+				doc: frm.doc,
+				callback: function (data) {
+					refresh_field("payroll_cost_centers");
+				},
+			});
+		}
 	},
 
 	valiadte_joining_date_and_salary_slips: function (frm) {
