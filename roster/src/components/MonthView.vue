@@ -19,11 +19,15 @@
 
 		<!-- Table -->
 		<div class="rounded-lg border overflow-x-auto">
-			<table>
+			<table class="border-separate border-spacing-0">
 				<thead>
 					<tr>
-						<th></th>
-						<th v-for="day in daysOfMonth" :key="day" class="border-l">
+						<th />
+						<th
+							v-for="(day, idx) in daysOfMonth"
+							:key="day"
+							:class="{ 'border-l': idx }"
+						>
 							{{ day.dayName }} {{ dayjs(day.date).format("DD") }}
 						</th>
 					</tr>
@@ -48,10 +52,13 @@
 							</div>
 						</td>
 						<td
-							v-for="day in daysOfMonth"
+							v-for="(day, idx) in daysOfMonth"
 							:key="day"
-							class="border-l border-t"
-							:class="shifts.data?.[employee.name]?.[day.date] && 'align-top'"
+							class="border-t"
+							:class="{
+								'border-l': idx,
+								'align-top': shifts.data?.[employee.name]?.[day.date],
+							}"
 							@mouseover="hoveredCell = { employee: employee.name, date: day.date }"
 							@mouseleave="hoveredCell = { employee: '', date: '' }"
 						>
@@ -189,9 +196,12 @@ const shifts = createResource({
 <style>
 th,
 td {
-	max-width: 10rem;
-	min-width: 10rem;
-	padding: 0.375rem;
+	@apply max-w-40 min-w-40 p-1.5;
 	font-size: 0.875rem;
+}
+
+th:first-child,
+td:first-child {
+	@apply sticky left-0 bg-white border-r;
 }
 </style>
