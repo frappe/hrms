@@ -74,19 +74,21 @@
 										showShiftAssignmentDialog = true;
 									"
 								>
-									<div class="mb-1">{{ shift["shiftType"] }}</div>
+									<div class="truncate mb-1">{{ shift["shiftType"] }}</div>
 									<div class="text-xs text-gray-500">
 										{{ shift["startTime"] }} - {{ shift["endTime"] }}
 									</div>
 								</div>
 								<Button
-									v-if="
-										hoveredCell.employee === employee.name &&
-										hoveredCell.date === day.date
-									"
 									variant="outline"
 									icon="plus"
 									class="border-2 active:bg-gray-200 w-full"
+									:class="
+										hoveredCell.employee === employee.name &&
+										hoveredCell.date === day.date
+											? 'visible'
+											: 'invisible'
+									"
 									@click="
 										shiftAssignment = null;
 										showShiftAssignmentDialog = true;
