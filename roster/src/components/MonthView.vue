@@ -41,11 +41,11 @@
 									:image="employee.image"
 									size="2xl"
 								/>
-								<div class="flex flex-col ml-2 my-1 text-xs truncate">
-									<div class="truncate">
+								<div class="flex flex-col ml-2 my-0.5 truncate">
+									<div class="truncate text-base">
 										{{ employee.employee_name }}
 									</div>
-									<div class="mt-auto text-gray-500 truncate">
+									<div class="mt-auto text-xs text-gray-500 truncate">
 										{{ employee.designation }}
 									</div>
 								</div>
@@ -196,12 +196,12 @@ const shifts = createResource({
 <style>
 th,
 td {
-	@apply max-w-40 min-w-40 p-1.5;
+	@apply max-w-32 min-w-32 p-1.5;
 	font-size: 0.875rem;
 }
 
 th:first-child,
 td:first-child {
-	@apply sticky left-0 bg-white border-r;
+	@apply sticky left-0 max-w-48 min-w-48 bg-white border-r;
 }
 </style>
