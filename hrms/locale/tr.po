@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-02 16:32\n"
+"PO-Revision-Date: 2024-05-07 12:46\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -869,7 +869,7 @@ msgstr "Tümü"
 
 #: hr/doctype/goal/goal_tree.js:219
 msgid "All Goals"
-msgstr ""
+msgstr "Tüm Hedefler"
 
 #: hr/doctype/job_opening/job_opening.py:106
 msgid "All Jobs"
@@ -2009,7 +2009,7 @@ msgstr ""
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:20
 #: public/js/salary_slip_deductions_report_filters.js:26
 msgid "Aug"
-msgstr "ağustos"
+msgstr "Ağustos"
 
 #. Label of a Section Break field in DocType 'Shift Type'
 #: hr/doctype/shift_type/shift_type.json
@@ -7235,7 +7235,7 @@ msgstr ""
 
 #: overrides/company.py:37
 msgid "Failed to delete defaults for country {0}. Please contact support."
-msgstr ""
+msgstr "{0} ülkesi için varsayılanlar silinemedi. Lütfen desteğe başvurun."
 
 #: api/__init__.py:589
 msgid "Failed to download Salary Slip PDF"
@@ -9671,7 +9671,7 @@ msgstr "Kilit Performans Alanı"
 #. Label of a Card Break in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Key Reports"
-msgstr ""
+msgstr "Anahtar Raporlar"
 
 #. Description of the 'Goal' (Small Text) field in DocType 'Appraisal Goal'
 #: hr/doctype/appraisal_goal/appraisal_goal.json
@@ -9796,7 +9796,7 @@ msgstr "Tahsisleri Bırak"
 #. Name of a DocType
 #: hr/doctype/leave_application/leave_application.json
 msgid "Leave Application"
-msgstr "izin başvurusu"
+msgstr "İzin Formu"
 
 #. Label of a Link field in DocType 'Attendance'
 #: hr/doctype/attendance/attendance.json
@@ -11487,7 +11487,7 @@ msgstr ""
 #. Label of a Card Break in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Other Reports"
-msgstr ""
+msgstr "Diğer Raporlar"
 
 #. Label of a Section Break field in DocType 'Payroll Settings'
 #: payroll/doctype/payroll_settings/payroll_settings.json
@@ -14087,7 +14087,7 @@ msgstr "Hizmet Masrafı"
 
 #: hr/report/vehicle_expenses/vehicle_expenses.py:169
 msgid "Service Expenses"
-msgstr ""
+msgstr "Hizmet Giderleri"
 
 #. Label of a Link field in DocType 'Vehicle Service'
 #: hr/doctype/vehicle_service/vehicle_service.json
