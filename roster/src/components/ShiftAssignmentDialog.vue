@@ -117,7 +117,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-	(e: "fetchShifts"): void;
+	(e: "fetchEvents"): void;
 }>();
 
 const defaultForm: Form = {
@@ -222,7 +222,7 @@ const getShiftAssignment = (name: string) =>
 		},
 		setValue: {
 			onSuccess() {
-				emit("fetchShifts");
+				emit("fetchEvents");
 			},
 		},
 	});
@@ -255,12 +255,12 @@ const shiftAssignments = createListResource({
 	doctype: "Shift Assignment",
 	insert: {
 		onSuccess() {
-			emit("fetchShifts");
+			emit("fetchEvents");
 		},
 	},
 	delete: {
 		onSuccess() {
-			emit("fetchShifts");
+			emit("fetchEvents");
 		},
 	},
 });

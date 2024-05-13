@@ -20,6 +20,7 @@
 		<!-- Table -->
 		<div class="rounded-lg border overflow-x-auto">
 			<table class="border-separate border-spacing-0">
+				<!-- Day/Date Row -->
 				<thead>
 					<tr>
 						<th />
@@ -34,6 +35,7 @@
 				</thead>
 				<tbody>
 					<tr v-for="employee in employees.data" :key="employee.name">
+						<!-- Employee Column -->
 						<td class="border-t">
 							<div class="flex">
 								<Avatar
@@ -51,20 +53,34 @@
 								</div>
 							</div>
 						</td>
+
+						<!-- Events -->
 						<td
 							v-for="(day, idx) in daysOfMonth"
 							:key="idx"
 							class="border-t"
 							:class="{
 								'border-l': idx,
-								'align-top': shifts.data?.[employee.name]?.[day.date],
+								'align-top': events.data?.[employee.name]?.[day.date],
 							}"
 							@mouseover="hoveredCell = { employee: employee.name, date: day.date }"
 							@mouseleave="hoveredCell = { employee: '', date: '' }"
 						>
-							<div class="flex flex-col space-y-1.5">
+							<!-- Holiday -->
+							<div
+								v-if="events.data?.[employee.name]?.[day.date]?.name"
+								class="rounded border-2 border-gray-300 bg-gray-50 px-2 py-1"
+							>
+								<div class="truncate mb-1">Holiday</div>
+								<div class="text-xs text-gray-500">
+									{{ events.data?.[employee.name]?.[day.date]?.["description"] }}
+								</div>
+							</div>
+
+							<!-- Shifts -->
+							<div v-else class="flex flex-col space-y-1.5">
 								<div
-									v-for="shift in shifts.data?.[employee.name]?.[day.date]"
+									v-for="shift in events.data?.[employee.name]?.[day.date]"
 									class="rounded border-2 border-gray-300 hover:border-gray-400 active:bg-gray-200 px-2 py-1 cursor-pointer"
 									:class="
 										shift.status === 'Active' ? 'bg-gray-50' : 'border-dashed'
@@ -79,6 +95,8 @@
 										{{ shift["start_time"] }} - {{ shift["end_time"] }}
 									</div>
 								</div>
+
+								<!-- Add Shift -->
 								<Button
 									variant="outline"
 									icon="plus"
@@ -107,8 +125,8 @@
 		:shiftAssignmentName="shiftAssignment"
 		:selectedCell="hoveredCell"
 		:employees="employees.data"
-		@fetchShifts="
-			shifts.fetch();
+		@fetchEvents="
+			events.fetch();
 			showShiftAssignmentDialog = false;
 		"
 	/>
@@ -121,12 +139,27 @@ import { Avatar, createListResource, createResource } from "frappe-ui";
 
 import ShiftAssignmentDialog from "./ShiftAssignmentDialog.vue";
 
-interface ShiftAssignment {
+interface Holiday {
+	name: string;
+	description: string;
+	weekly_off: 0 | 1;
+}
+
+interface HolidayDate extends Holiday {
+	holiday_date: string;
+}
+
+interface Shift {
 	name: string;
 	shift_type: string;
 	status: string;
 	start_time: string;
 	end_time: string;
+}
+
+interface ShiftAssignment extends Shift {
+	start_date: string;
+	end_date: string;
 }
 
 const firstOfMonth = ref(dayjs().date(1).startOf("D"));
@@ -146,7 +179,7 @@ const daysOfMonth = computed(() => {
 	return daysOfMonth;
 });
 
-watch(firstOfMonth, () => shifts.fetch());
+watch(firstOfMonth, () => events.fetch());
 
 // RESOURCES
 
@@ -157,40 +190,53 @@ const employees = createListResource({
 	auto: true,
 });
 
-const shifts = createResource({
-	url: "hrms.api.roster.get_shifts",
+const events = createResource({
+	url: "hrms.api.roster.get_events",
 	makeParams() {
 		return {
 			month_start: firstOfMonth.value.format("YYYY-MM-DD"),
 			month_end: firstOfMonth.value.endOf("month").format("YYYY-MM-DD"),
 		};
 	},
-	transform: (data: Record<string, ShiftAssignment>) => {
-		// convert employee -> shift assignments to employee -> day -> shifts
-		const mappedData: Record<string, Record<string, ShiftAssignment[]>> = {};
+	transform: (data: Record<string, (ShiftAssignment | HolidayDate)[]>) => {
+		// convert employee -> events to employee -> date -> holiday/shifts
+		const mappedData: Record<string, Record<string, Holiday | Shift[]>> = {};
 		for (const employee in data) {
 			mappedData[employee] = {};
 			for (let d = 1; d <= firstOfMonth.value.daysInMonth(); d++) {
 				const date = firstOfMonth.value.date(d);
 				const key = date.format("YYYY-MM-DD");
-				for (const assignment of Object.values(data[employee])) {
-					if (
-						dayjs(assignment.start_date).isSameOrBefore(date) &&
-						(dayjs(assignment.end_date).isSameOrAfter(date) || !assignment.end_date)
+				for (const event of Object.values(data[employee])) {
+					// holiday
+					if ("holiday_date" in event) {
+						if (date.isSame(event.holiday_date))
+							mappedData[employee][key] = {
+								name: event.name,
+								description: event.description,
+								weekly_off: event.weekly_off,
+							};
+					}
+
+					// shift
+					else if (
+						dayjs(event.start_date).isSameOrBefore(date) &&
+						(dayjs(event.end_date).isSameOrAfter(date) || !event.end_date)
 					) {
-						if (!mappedData[employee][key]) mappedData[employee][key] = [];
+						if (!Array.isArray(mappedData[employee][key]))
+							mappedData[employee][key] = [];
 						mappedData[employee][key].push({
-							name: assignment.name,
-							shift_type: assignment.shift_type,
-							status: assignment.status,
-							start_time: assignment.start_time.split(":").slice(0, 2).join(":"),
-							end_time: assignment.end_time.split(":").slice(0, 2).join(":"),
+							name: event.name,
+							shift_type: event.shift_type,
+							status: event.status,
+							start_time: event.start_time.split(":").slice(0, 2).join(":"),
+							end_time: event.end_time.split(":").slice(0, 2).join(":"),
 						});
 					}
 				}
+
 				// sort shifts by start time
-				if (mappedData[employee][key])
-					mappedData[employee][key].sort((a: ShiftAssignment, b: ShiftAssignment) =>
+				if (Array.isArray(mappedData[employee][key]))
+					mappedData[employee][key].sort((a: Shift, b: Shift) =>
 						a.start_time.localeCompare(b.start_time),
 					);
 			}
