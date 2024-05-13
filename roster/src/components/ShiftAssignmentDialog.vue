@@ -88,29 +88,39 @@ import {
 	createListResource,
 } from "frappe-ui";
 
-const props = defineProps({
-	isDialogOpen: {
-		type: Boolean,
-		required: true,
-	},
-	shiftAssignmentName: {
-		type: String,
-		required: false,
-	},
+interface Form {
+	employee: string | { value: string };
+	company: string;
+	employee_name: string;
+	start_date: string;
+	shift_type: string | { value: string };
+	end_date: string;
+	status: "Active" | "Inactive";
+	department: string;
+}
+
+interface Props {
+	isDialogOpen: boolean;
+	shiftAssignmentName?: string;
 	selectedCell: {
-		type: Object,
-		required: true,
-	},
-	employees: {
-		type: Array,
-		required: false,
-		default: [],
-	},
+		employee: string;
+		date: string;
+	};
+	employees?: {
+		name: string;
+		employee_name: string;
+	}[];
+}
+
+const props = withDefaults(defineProps<Props>(), {
+	employees: () => [],
 });
 
-const emit = defineEmits(["fetchShifts"]);
+const emit = defineEmits<{
+	(e: "fetchShifts"): void;
+}>();
 
-const defaultForm = {
+const defaultForm: Form = {
 	employee: "",
 	company: "",
 	employee_name: "",
@@ -188,23 +198,26 @@ const updateShiftAssigment = () => {
 };
 
 const createShiftAssigment = () => {
+	const employee = (form.employee as { value: string }).value;
+	const shiftType = (form.shift_type as { value: string }).value;
+
 	shiftAssignments.insert.submit({
 		...form,
-		employee: form.employee.value,
-		shift_type: form.shift_type.value,
+		employee: employee,
+		shift_type: shiftType,
 		docstatus: 1,
 	});
 };
 
 // RESOURCES
 
-const getShiftAssignment = (name) =>
+const getShiftAssignment = (name: string) =>
 	createDocumentResource({
 		doctype: "Shift Assignment",
 		name: name,
-		onSuccess: (data) => {
+		onSuccess: (data: Record<string, any>) => {
 			Object.keys(form).forEach((key) => {
-				form[key] = data[key];
+				form[key as keyof Form] = data[key];
 			});
 		},
 		setValue: {
@@ -217,13 +230,14 @@ const getShiftAssignment = (name) =>
 const employee = createResource({
 	url: "hrms.api.roster.get_values",
 	makeParams() {
+		const employee = (form.employee as { value: string }).value;
 		return {
 			doctype: "Employee",
-			name: form.employee.value,
+			name: employee,
 			fields: ["employee_name", "company", "department"],
 		};
 	},
-	onSuccess: (data) => {
+	onSuccess: (data: { employee_name: string; company: string; department: string }) => {
 		form.employee_name = data.employee_name;
 		form.company = data.company;
 		form.department = data.department;
@@ -233,7 +247,7 @@ const employee = createResource({
 const shiftTypes = createListResource({
 	doctype: "Shift Type",
 	fields: ["name"],
-	transform: (data) => data.map((shiftType) => shiftType.name),
+	transform: (data: { name: string }[]) => data.map((shiftType) => shiftType.name),
 	auto: true,
 });
 

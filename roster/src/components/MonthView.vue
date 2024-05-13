@@ -25,7 +25,7 @@
 						<th />
 						<th
 							v-for="(day, idx) in daysOfMonth"
-							:key="day"
+							:key="idx"
 							:class="{ 'border-l': idx }"
 						>
 							{{ day.dayName }} {{ dayjs(day.date).format("DD") }}
@@ -53,7 +53,7 @@
 						</td>
 						<td
 							v-for="(day, idx) in daysOfMonth"
-							:key="day"
+							:key="idx"
 							class="border-t"
 							:class="{
 								'border-l': idx,
@@ -74,9 +74,9 @@
 										showShiftAssignmentDialog = true;
 									"
 								>
-									<div class="truncate mb-1">{{ shift["shiftType"] }}</div>
+									<div class="truncate mb-1">{{ shift["shift_type"] }}</div>
 									<div class="text-xs text-gray-500">
-										{{ shift["startTime"] }} - {{ shift["endTime"] }}
+										{{ shift["start_time"] }} - {{ shift["end_time"] }}
 									</div>
 								</div>
 								<Button
@@ -117,19 +117,20 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import dayjs from "../utils/dayjs";
-import {
-	Avatar,
-	Dialog,
-	FormControl,
-	createListResource,
-	createResource,
-	createDocumentResource,
-} from "frappe-ui";
+import { Avatar, createListResource, createResource } from "frappe-ui";
 
 import ShiftAssignmentDialog from "./ShiftAssignmentDialog.vue";
 
+interface ShiftAssignment {
+	name: string;
+	shift_type: string;
+	status: string;
+	start_time: string;
+	end_time: string;
+}
+
 const firstOfMonth = ref(dayjs().date(1).startOf("D"));
-const shiftAssignment = ref(null);
+const shiftAssignment = ref();
 const showShiftAssignmentDialog = ref(false);
 const hoveredCell = ref({ employee: "", date: "" });
 
@@ -137,7 +138,10 @@ const daysOfMonth = computed(() => {
 	const daysOfMonth = [];
 	for (let i = 1; i <= firstOfMonth.value.daysInMonth(); i++) {
 		const date = firstOfMonth.value.date(i);
-		daysOfMonth.push({ dayName: date.format("ddd"), date: date.format("YYYY-MM-DD") });
+		daysOfMonth.push({
+			dayName: date.format("ddd"),
+			date: date.format("YYYY-MM-DD"),
+		});
 	}
 	return daysOfMonth;
 });
@@ -161,15 +165,15 @@ const shifts = createResource({
 			month_end: firstOfMonth.value.endOf("month").format("YYYY-MM-DD"),
 		};
 	},
-	transform: (data) => {
+	transform: (data: Record<string, ShiftAssignment>) => {
 		// convert employee -> shift assignments to employee -> day -> shifts
-		const mappedData = {};
+		const mappedData: Record<string, Record<string, ShiftAssignment[]>> = {};
 		for (const employee in data) {
 			mappedData[employee] = {};
 			for (let d = 1; d <= firstOfMonth.value.daysInMonth(); d++) {
 				const date = firstOfMonth.value.date(d);
 				const key = date.format("YYYY-MM-DD");
-				for (const assignment of data[employee]) {
+				for (const assignment of Object.values(data[employee])) {
 					if (
 						dayjs(assignment.start_date).isSameOrBefore(date) &&
 						(dayjs(assignment.end_date).isSameOrAfter(date) || !assignment.end_date)
@@ -177,17 +181,17 @@ const shifts = createResource({
 						if (!mappedData[employee][key]) mappedData[employee][key] = [];
 						mappedData[employee][key].push({
 							name: assignment.name,
-							shiftType: assignment.shift_type,
+							shift_type: assignment.shift_type,
 							status: assignment.status,
-							startTime: assignment.start_time.split(":").slice(0, 2).join(":"),
-							endTime: assignment.end_time.split(":").slice(0, 2).join(":"),
+							start_time: assignment.start_time.split(":").slice(0, 2).join(":"),
+							end_time: assignment.end_time.split(":").slice(0, 2).join(":"),
 						});
 					}
 				}
 				// sort shifts by start time
 				if (mappedData[employee][key])
-					mappedData[employee][key].sort((a, b) =>
-						a.startTime.localeCompare(b.startTime),
+					mappedData[employee][key].sort((a: ShiftAssignment, b: ShiftAssignment) =>
+						a.start_time.localeCompare(b.start_time),
 					);
 			}
 		}
