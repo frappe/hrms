@@ -45,8 +45,7 @@ watch(
 	() => filters.company.model,
 	(val) => {
 		if (val) {
-			departments.filters = { company: val.value };
-			departments.fetch();
+			getFilterOptions("Department", filters.department, { company: val.value });
 		} else {
 			filters.department.model = null;
 			filters.department.options = [];
@@ -56,25 +55,18 @@ watch(
 
 // RESOURCES
 
-const getFilterOptions = (doctype: string, filter: Filter) => {
+const getFilterOptions = (doctype: string, filter: Filter, filters: { company?: string } = {}) => {
 	createListResource({
 		doctype: doctype,
 		fields: ["name"],
+		filters: filters,
 		onSuccess: (data: { name: string }[]) => {
+			filter.model = { value: "" };
 			filter.options = data.map((item) => item.name);
 		},
 		auto: true,
 	});
 };
-
-const departments = createListResource({
-	doctype: "Department",
-	fields: ["name"],
-	onSuccess: (data: { name: string }[]) => {
-		filters.department.model = { value: "" };
-		filters.department.options = data.map((item) => item.name);
-	},
-});
 
 getFilterOptions("Company", filters.company);
 getFilterOptions("Branch", filters.branch);
