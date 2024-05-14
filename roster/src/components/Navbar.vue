@@ -22,6 +22,6 @@
 	</div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Dropdown, Avatar } from "frappe-ui";
 </script>
