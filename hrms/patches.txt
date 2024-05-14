@@ -23,4 +23,4 @@ hrms.patches.v14_0.update_title_in_employee_onboarding_and_separation_templates
 hrms.patches.v15_0.make_hr_settings_tab_in_company_master
 hrms.patches.v15_0.enable_allow_checkin_setting
 hrms.patches.v15_0.set_default_asset_action_in_fnf
-hrms.patches.v15_0.add_loan_docperms_to_ess
+hrms.patches.v15_0.add_loan_docperms_to_ess #2024-05-14
