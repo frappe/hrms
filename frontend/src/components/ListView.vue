@@ -15,7 +15,16 @@
 							? '!border !border-gray-800 !bg-white !text-gray-900 !font-semibold'
 							: '',
 					]" />
-					<Button id="show-sort-modal" icon="sort" variant="subtle" :class="[]" />
+					<Button @click="toggleSortOrder">
+						<FeatherIcon name="arrow-up" v-if="sortOrder.order === 'asc'" class="h-5 w-5" />
+						<FeatherIcon name="arrow-down" v-if="sortOrder.order === 'desc'" class="h-5 w-5" />
+					</Button>
+					<Dropdown :options="sortOptions">
+						<Button id="show-sort-modal" variant="subtle" :class="[]">
+							{{ sortOrder.field }}
+						</Button>
+					</Dropdown>
+
 					<router-link :to="{ name: formViewRoute }" v-slot="{ navigate }">
 						<Button variant="solid" class="mr-2" @click="navigate">
 							<template #prefix>
@@ -64,14 +73,6 @@
 					@clearFilters="clearFilters" v-model:filters="filterMap" />
 			</template>
 		</CustomIonModal>
-
-
-		<CustomIonModal trigger="show-sort-modal">
-			<!-- Sort Action Sheet -->
-			<template #actionSheet>
-				<ListSortActionSheet :sortFields="fields" @applySort="applySort" v-model:sortOrder="sortOrder" />
-			</template>
-		</CustomIonModal>
 	</ion-content>
 </template>
 
@@ -88,6 +89,7 @@ import {
 
 import {
 	FeatherIcon,
+	Dropdown,
 	createResource,
 	LoadingIndicator,
 	debounce,
@@ -141,14 +143,16 @@ const router = useRouter()
 const socket = inject("$socket")
 const employee = inject("$employee")
 const filterMap = reactive({})
+const sortOrder = ref({
+	field: "Modified",
+	order: "asc"
+})
 const activeTab = ref(props.tabButtons[0])
 const areFiltersApplied = ref(false)
 const appliedFilters = ref([])
 const workflowStateField = ref(null)
-const sortOrder = reactive({
-	field: "Modified",
-	order: "asc"
-})
+const sortOptions = reactive([])
+
 
 // infinite scroll
 const scrollContainer = ref(null)
@@ -157,14 +161,17 @@ const listOptions = ref({
 	doctype: props.doctype,
 	fields: props.fields,
 	group_by: props.groupBy,
-	order_by: `\`tab${props.doctype}\`.${sortOrder.field} ${sortOrder.order}`,
+	order_by: `\`tab${props.doctype}\`.modified asc`,
 	page_length: 50,
 })
 
-watch("sortOrder", (newValue, oldValue) => {
-	console.log(newValue);
-}
-)
+watch(() => sortOrder.value, (newValue, oldValue) => {
+	listOptions.value.order_by = `\`tab${props.doctype}\`. ${newValue.field} ${newValue.order}`
+}, { deep: true })
+
+watch(() => listOptions.value, (newValue, oldValue) => {
+	fetchDocumentList()
+}, { deep: true })
 
 // computed properties
 const isTeamRequest = computed(() => {
@@ -191,6 +198,10 @@ const defaultFilters = computed(() => {
 	return filters
 })
 
+const toggleSortOrder = () => {
+	sortOrder.value.order = sortOrder.value.order == "asc" ? "desc" : "asc"
+}
+
 // resources
 const documents = createResource({
 	url: "frappe.desk.reportview.get",
@@ -203,7 +214,6 @@ const documents = createResource({
 		if (data.length === 0) {
 			return []
 		}
-
 		// convert keys and values arrays to docs object
 		const fields = data["keys"]
 		const values = data["values"]
@@ -239,6 +249,24 @@ function initializeFilters() {
 }
 initializeFilters()
 
+const updateSortOrder = (field) => {
+	sortOrder.value.field = field
+	sortOrder.value.order = 'desc'
+}
+
+function initializeSortOptions() {
+	props.fields.forEach(field => {
+		sortOptions.push({
+			label: field,
+			onClick: () => {
+				updateSortOrder(field)
+			}
+		})
+	})
+}
+
+initializeSortOptions()
+
 function prepareFilters() {
 	let condition = ""
 	let value = ""
@@ -271,10 +299,6 @@ function clearFilters() {
 	areFiltersApplied.value = false
 }
 
-function applySort() {
-	fetchDocumentList()
-	modalController.dismiss()
-}
 
 function fetchDocumentList(start = 0) {
 	if (start === 0) {
