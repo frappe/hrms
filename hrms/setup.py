@@ -602,16 +602,22 @@ def remove_lending_docperms_from_ess():
 # ESS USER TYPE SETUP & CLEANUP
 def add_non_standard_user_types():
 	user_types = get_user_types_data()
-
-	user_type_limit = {}
-	for user_type, __ in user_types.items():
-		user_type_limit.setdefault(frappe.scrub(user_type), 30)
-
-	update_site_config("user_type_doctype_limit", user_type_limit)
+	update_user_type_doctype_limit(user_types)
 
 	for user_type, data in user_types.items():
 		create_custom_role(data)
 		create_user_type(user_type, data)
+
+
+def update_user_type_doctype_limit(user_types=None):
+	if not user_types:
+		user_types = get_user_types_data()
+
+	user_type_limit = {}
+	for user_type, __ in user_types.items():
+		user_type_limit.setdefault(frappe.scrub(user_type), 40)
+
+	update_site_config("user_type_doctype_limit", user_type_limit)
 
 
 def get_user_types_data():
