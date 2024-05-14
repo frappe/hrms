@@ -125,7 +125,7 @@ frappe.ui.form.on("Salary Component", {
 					args: {
 						structures: structures,
 						field: df.toLowerCase(),
-						value: frm.get_field(df.toLowerCase()).value,
+						value: frm.get_field(df.toLowerCase()).value || "",
 					},
 				})
 				.then((r) => {
