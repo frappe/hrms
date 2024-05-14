@@ -5,12 +5,12 @@
 			<span class="text-2xl">Full Schedule</span>
 		</div>
 		<div class="ml-auto space-x-2 flex">
-			<div v-for="filter in filters" class="w-40">
+			<div v-for="[key, value] of Object.entries(filters)" :key="key" class="w-40">
 				<Autocomplete
-					:placeholder="filter.placeholder"
-					:options="filter.options"
-					v-model="filter.model"
-					:class="!filter.options.length && 'pointer-events-none'"
+					:placeholder="key"
+					:options="value.options"
+					v-model="value.model"
+					:class="!value.options.length && 'pointer-events-none'"
 				/>
 			</div>
 		</div>
@@ -22,53 +22,55 @@ import { reactive, watch } from "vue";
 import { FeatherIcon, Autocomplete, createListResource } from "frappe-ui";
 
 interface Filter {
-	placeholder: string;
 	options: string[];
 	model: { value: string } | null;
 }
 
 interface Filters {
-	company: Filter;
-	department: Filter;
-	branch: Filter;
-	shift_type: Filter;
+	Company: Filter;
+	Department: Filter;
+	Branch: Filter;
+	"Shift Type": Filter;
 }
 
 const filters: Filters = reactive({
-	company: { placeholder: "Company", options: [], model: { value: "" } },
-	department: { placeholder: "Department", options: [], model: { value: "" } },
-	branch: { placeholder: "Branch", options: [], model: { value: "" } },
-	shift_type: { placeholder: "Shift Type", options: [], model: { value: "" } },
+	Company: { options: [], model: { value: "" } },
+	Department: { options: [], model: { value: "" } },
+	Branch: { options: [], model: { value: "" } },
+	"Shift Type": { options: [], model: { value: "" } },
 });
 
 watch(
-	() => filters.company.model,
+	() => filters.Company.model,
 	(val) => {
-		if (val) {
-			getFilterOptions("Department", filters.department, { company: val.value });
+		if (val?.value) {
+			getFilterOptions("Department", { company: val.value });
 		} else {
-			filters.department.model = null;
-			filters.department.options = [];
+			filters.Department.model = null;
+			filters.Department.options = [];
 		}
 	},
 );
 
 // RESOURCES
 
-const getFilterOptions = (doctype: string, filter: Filter, filters: { company?: string } = {}) => {
+const getFilterOptions = (
+	doctype: "Company" | "Department" | "Branch" | "Shift Type",
+	listFilters: { company?: string } = {},
+) => {
 	createListResource({
 		doctype: doctype,
 		fields: ["name"],
-		filters: filters,
+		filters: listFilters,
 		onSuccess: (data: { name: string }[]) => {
-			filter.model = { value: "" };
-			filter.options = data.map((item) => item.name);
+			filters[doctype].model = { value: "" };
+			filters[doctype].options = data.map((item) => item.name);
 		},
 		auto: true,
 	});
 };
 
-getFilterOptions("Company", filters.company);
-getFilterOptions("Branch", filters.branch);
-getFilterOptions("Shift Type", filters.shift_type);
+getFilterOptions("Company");
+getFilterOptions("Branch");
+getFilterOptions("Shift Type");
 </script>
