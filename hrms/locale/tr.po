@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-07 12:46\n"
+"PO-Revision-Date: 2024-05-10 12:53\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -341,13 +341,15 @@ msgstr "<h3>Tatil Listesi.</h3>\n\n"
 #: hr/onboarding_step/create_leave_allocation/create_leave_allocation.json
 msgid "<h3>Leave Allocation</h3>\n\n"
 "Leave Allocation enables you to allocate a specific number of leaves of a particular type to an Employee so that, an employee will be able to create a Leave Application only if Leaves are allocated. "
-msgstr ""
+msgstr "<h3>İzin Ataması</h3>\n"
+"İzin Ataması, çeşitli türlerde belirli bir sayıda izin gününü bir Personele atamanıza olanak tanır. Böylece, bir personel sadece kendisine izin günleri atanmışsa İzin Talebi oluşturabilir."
 
 #. Description of the Onboarding Step 'Create Leave Application'
 #: hr/onboarding_step/create_leave_application/create_leave_application.json
 msgid "<h3>Leave Application</h3>\n\n"
 "Leave Application is a formal document created by an Employee to apply for Leaves for a particular time period based on there leave allocation and leave type according to there need."
-msgstr ""
+msgstr "<h3>İzin Talebi</h3>\n"
+"İzin Talebi, bir personelin belirli bir zaman dilimi için izinlerine başvuruda bulunmak amacıyla oluşturduğu resmi bir belgedir. Bu başvuru, personelin izin atamasına ve ihtiyacına göre belirlenen izin türüne dayanır."
 
 #. Description of the Onboarding Step 'Create Leave Type'
 #: hr/onboarding_step/create_leave_type/create_leave_type.json
@@ -366,11 +368,17 @@ msgid "<h4>Condition Examples</h4>\n"
 "<code>Condition: gender==\"Male\"</code></li><br>\n"
 "<li>Applying tax by Salary Component<br>\n"
 "<code>Condition: base &gt; 10000</code></li></ol>"
-msgstr ""
+msgstr "<h4>Koşul Örnekleri</h4>\n"
+"<ol>\n"
+"<li>31-12-1937 ile 01-01-1958 tarihleri arasında doğan personelden vergi alınması (60 ile 80 yaş arası personel)<br>\n"
+"<code>Koşul: date_of_birth&gt;date(1937, 12, 31) ve date_of_birth&lt;date(1958, 01, 01)</code></li><br><li>Personelin cinsiyetine göre vergilendirme<br>\n"
+"<code>Koşul: gender==\"Erkek\"</code></li><br>\n"
+"<li>Maaş Bileşeni üzerinden vergilendirme<br>\n"
+"<code>Koşul: base &gt; 10000</code></li></ol>"
 
 #: hr/doctype/job_requisition/job_requisition.py:30
 msgid "A Job Requisition for {0} requested by {1} already exists: {2}"
-msgstr ""
+msgstr "{1} tarafından talep edilen {0} için zaten bir İş Talebi mevcut: {2}"
 
 #: controllers/employee_reminders.py:123 controllers/employee_reminders.py:216
 msgid "A friendly reminder of an important date for our team."
@@ -477,7 +485,7 @@ msgstr "Hesap"
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
 msgctxt "Expense Taxes and Charges"
 msgid "Account Head"
-msgstr ""
+msgstr "Ana Hesap"
 
 #: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:49
 msgid "Account No"
@@ -485,7 +493,7 @@ msgstr "Hesap No"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:99
 msgid "Account type cannot be set for payroll payable account {0}, please remove and try again"
-msgstr ""
+msgstr "Bordro ödenecek {0} hesabı için hesap türü ayarlanamıyor, lütfen kaldırın ve tekrar deneyin"
 
 #: overrides/company.py:115
 msgid "Account {0} does not belong to company: {1}"
@@ -493,24 +501,24 @@ msgstr ""
 
 #: hr/doctype/expense_claim_type/expense_claim_type.py:29
 msgid "Account {0} does not match with Company {1}"
-msgstr ""
+msgstr "{0} Hesabı, {1} Şirketi ile eşleşmiyor"
 
 #. Label of a Card Break in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Accounting"
-msgstr ""
+msgstr "Muhasebe"
 
 #. Label of a Section Break field in DocType 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Accounting"
-msgstr ""
+msgstr "Muhasebe"
 
 #. Label of a Tab Break field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Accounting"
-msgstr ""
+msgstr "Muhasebe"
 
 #. Label of a Tab Break field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
@@ -522,13 +530,13 @@ msgstr "Hesap Bilgisi & Ödeme"
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Accounting Details"
-msgstr ""
+msgstr "Muhasebe Detayları"
 
 #. Label of a Link in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
 msgctxt "Accounting Dimension"
 msgid "Accounting Dimension"
-msgstr ""
+msgstr "Muhasebe Boyutları"
 
 #. Label of a Section Break field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
@@ -569,7 +577,7 @@ msgstr ""
 #: hr/workspace/expense_claims/expense_claims.json
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Accounting Reports"
-msgstr ""
+msgstr "Muhasebe Raporları"
 
 #. Label of a Table field in DocType 'Expense Claim Type'
 #: hr/doctype/expense_claim_type/expense_claim_type.json
@@ -589,7 +597,7 @@ msgstr ""
 #: hr/workspace/expense_claims/expense_claims.json
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Accounts Payable"
-msgstr ""
+msgstr "Borç Hesabı"
 
 #. Label of a Link in the Expense Claims Workspace
 #. Label of a Link in the Salary Payout Workspace
@@ -674,23 +682,23 @@ msgstr "Gerçek Tutar"
 
 #: hr/doctype/leave_encashment/leave_encashment.py:136
 msgid "Actual Encashable Days"
-msgstr ""
+msgstr "Paraya Çevrilebilir Günler"
 
 #. Label of a Float field in DocType 'Leave Encashment'
 #: hr/doctype/leave_encashment/leave_encashment.json
 msgctxt "Leave Encashment"
 msgid "Actual Encashable Days"
-msgstr ""
+msgstr "Paraya Çevrilebilir Günler"
 
 #: hr/doctype/leave_application/leave_application.py:399
 msgid "Actual balances aren't available because the leave application spans over different leave allocations. You can still apply for leaves which would be compensated during the next allocation."
-msgstr ""
+msgstr "Gerçek bakiyeler mevcut değil çünkü izin başvurusu farklı izin atamalarını kapsıyor. Yine de, bir sonraki atamada telafi edilecek izinler için başvuruda bulunabilirsiniz."
 
 #. Label of a Button field in DocType 'Leave Block List'
 #: hr/doctype/leave_block_list/leave_block_list.json
 msgctxt "Leave Block List"
 msgid "Add Day-wise Dates"
-msgstr ""
+msgstr "Gün Bazında Tarih Ekle"
 
 #: hr/employee_property_update.js:45
 msgid "Add Employee Property"
@@ -721,7 +729,7 @@ msgstr "Önceki ödeneklerden çalıştırman izinleri ekle"
 #: hr/doctype/leave_control_panel/leave_control_panel.json
 msgctxt "Leave Control Panel"
 msgid "Add unused leaves from previous leave period's allocation to this allocation"
-msgstr ""
+msgstr "Önceki izin döneminin atamasından kullanılmayan izinleri bu atamaya ekle"
 
 #. Label of a Datetime field in DocType 'Employee Performance Feedback'
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.json
@@ -731,7 +739,7 @@ msgstr "Eklenme Tarihi"
 
 #: payroll/doctype/salary_slip/salary_slip.py:1255
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
-msgstr ""
+msgstr "Maaş yapısında vergi bileşeni olmadığı için, Maaş Bileşeni ana kaydından vergi bileşenleri eklendi."
 
 #: hr/employee_property_update.js:163
 msgid "Added to details"
@@ -1776,7 +1784,7 @@ msgstr "Atanan Maaş Yapınıza göre, faydalar için başvuruda bulunamazsını
 #: hr/doctype/full_and_final_asset/full_and_final_asset.json
 msgctxt "Full and Final Asset"
 msgid "Asset Name"
-msgstr ""
+msgstr "Varlık İsmi"
 
 #. Label of a Section Break field in DocType 'Full and Final Statement'
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
@@ -5142,7 +5150,7 @@ msgstr ""
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Email Address"
-msgstr ""
+msgstr "E-posta Adresi"
 
 #. Label of a Data field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
@@ -9271,13 +9279,13 @@ msgstr "esnek Fayda mı"
 
 #: hr/doctype/goal/goal_tree.js:51
 msgid "Is Group"
-msgstr ""
+msgstr "Grup"
 
 #. Label of a Check field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "Is Group"
-msgstr ""
+msgstr "Grup"
 
 #. Label of a Check field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -14987,7 +14995,7 @@ msgstr ""
 #: hr/report/employee_leave_balance/employee_leave_balance.js:48
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:42
 msgid "Suspended"
-msgstr ""
+msgstr "Beklemede"
 
 #: payroll/doctype/salary_slip/salary_slip.py:1170
 msgid "Syntax error"
