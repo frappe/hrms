@@ -7,8 +7,8 @@
 				variant="ghost"
 				@click="firstOfMonth = firstOfMonth.subtract(1, 'M')"
 			/>
-			<span class="px-1 w-20 text-center my-auto">
-				{{ firstOfMonth.format("MMM") }} '{{ firstOfMonth.format("YY") }}
+			<span class="px-1 w-24 text-center my-auto">
+				{{ firstOfMonth.format("MMM") }} {{ firstOfMonth.format("YYYY") }}
 			</span>
 			<Button
 				icon="chevron-right"
@@ -20,10 +20,18 @@
 		<!-- Table -->
 		<div class="rounded-lg border overflow-x-auto">
 			<table class="border-separate border-spacing-0">
-				<!-- Day/Date Row -->
 				<thead>
 					<tr>
-						<th />
+						<!-- Employee Search -->
+						<th>
+							<Autocomplete
+								:options="employeeSearchOptions"
+								v-model="employeeSearch"
+								placeholder="Search Employee"
+							/>
+						</th>
+
+						<!-- Day/Date Row -->
 						<th
 							v-for="(day, idx) in daysOfMonth"
 							:key="idx"
@@ -36,7 +44,12 @@
 				<tbody>
 					<tr v-for="employee in employees.data" :key="employee.name">
 						<!-- Employee Column -->
-						<td class="border-t">
+						<td
+							v-if="
+								!employeeSearch?.value || employeeSearch?.value === employee?.name
+							"
+							class="border-t"
+						>
 							<div class="flex">
 								<Avatar
 									:label="employee.employee_name"
@@ -56,6 +69,9 @@
 
 						<!-- Events -->
 						<td
+							v-if="
+								!employeeSearch?.value || employeeSearch?.value === employee?.name
+							"
 							v-for="(day, idx) in daysOfMonth"
 							:key="idx"
 							class="border-t"
@@ -135,7 +151,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import dayjs from "../utils/dayjs";
-import { Avatar, createListResource, createResource } from "frappe-ui";
+import { Avatar, Autocomplete, createListResource, createResource } from "frappe-ui";
 
 import ShiftAssignmentDialog from "./ShiftAssignmentDialog.vue";
 
@@ -163,6 +179,7 @@ interface ShiftAssignment extends Shift {
 }
 
 const firstOfMonth = ref(dayjs().date(1).startOf("D"));
+const employeeSearch = ref({ value: "", label: "" });
 const shiftAssignment = ref();
 const showShiftAssignmentDialog = ref(false);
 const hoveredCell = ref({ employee: "", date: "" });
@@ -177,6 +194,12 @@ const daysOfMonth = computed(() => {
 		});
 	}
 	return daysOfMonth;
+});
+const employeeSearchOptions = computed(() => {
+	return employees?.data?.map((employee: { name: string; employee_name: string }) => ({
+		value: employee.name,
+		label: employee.employee_name,
+	}));
 });
 
 watch(firstOfMonth, () => events.fetch());
