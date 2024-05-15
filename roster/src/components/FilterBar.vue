@@ -21,19 +21,18 @@
 import { reactive, watch } from "vue";
 import { FeatherIcon, Autocomplete, createListResource } from "frappe-ui";
 
-interface Filter {
-	options: string[];
-	model: { value: string } | null;
-}
+import { FilterDoctype } from "../pages/FullSchedule.vue";
 
-interface Filters {
-	Company: Filter;
-	Department: Filter;
-	Branch: Filter;
-	"Shift Type": Filter;
-}
+const emit = defineEmits<{
+	(e: "updateFilters", newFilters: { [K in FilterDoctype]: string }): void;
+}>();
 
-const filters: Filters = reactive({
+const filters: {
+	[K in FilterDoctype]: {
+		options: string[];
+		model?: { value: string } | null;
+	};
+} = reactive({
 	Company: { options: [], model: { value: "" } },
 	Department: { options: [], model: { value: "" } },
 	Branch: { options: [], model: { value: "" } },
@@ -43,21 +42,28 @@ const filters: Filters = reactive({
 watch(
 	() => filters.Company.model,
 	(val) => {
-		if (val?.value) {
-			getFilterOptions("Department", { company: val.value });
-		} else {
+		if (val?.value) return getFilterOptions("Department", { company: val.value });
+		else {
 			filters.Department.model = null;
 			filters.Department.options = [];
 		}
 	},
 );
 
+watch(filters, (val) => {
+	const newFilters = {
+		Company: val.Company.model?.value || "",
+		Department: val.Department.model?.value || "",
+		Branch: val.Branch.model?.value || "",
+		"Shift Type": val["Shift Type"].model?.value || "",
+	};
+
+	emit("updateFilters", newFilters);
+});
+
 // RESOURCES
 
-const getFilterOptions = (
-	doctype: "Company" | "Department" | "Branch" | "Shift Type",
-	listFilters: { company?: string } = {},
-) => {
+const getFilterOptions = (doctype: FilterDoctype, listFilters: { company?: string } = {}) => {
 	createListResource({
 		doctype: doctype,
 		fields: ["name"],
