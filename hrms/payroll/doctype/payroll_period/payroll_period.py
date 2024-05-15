@@ -122,8 +122,6 @@ def get_period_factor(
 
 	if relieving_date and getdate(relieving_date) < getdate(period_end):
 		period_end = relieving_date
-		if month_diff(period_end, start_date) > 1:
-			start_date = add_months(start_date, -(month_diff(period_end, start_date) + 1))
 
 	total_sub_periods, remaining_sub_periods = 0.0, 0.0
 
