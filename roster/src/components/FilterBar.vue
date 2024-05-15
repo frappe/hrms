@@ -7,7 +7,7 @@
 		<div class="ml-auto space-x-2 flex">
 			<div v-for="[key, value] of Object.entries(filters)" :key="key" class="w-40">
 				<Autocomplete
-					:placeholder="key"
+					:placeholder="toTitleCase(key)"
 					:options="value.options"
 					v-model="value.model"
 					:class="!value.options.length && 'pointer-events-none'"
@@ -21,62 +21,68 @@
 import { reactive, watch } from "vue";
 import { FeatherIcon, Autocomplete, createListResource } from "frappe-ui";
 
-import { FilterDoctype } from "../pages/FullSchedule.vue";
+import { FilterField } from "../pages/FullSchedule.vue";
 
 const emit = defineEmits<{
-	(e: "updateFilters", newFilters: { [K in FilterDoctype]: string }): void;
+	(e: "updateFilters", newFilters: { [K in FilterField]: string }): void;
 }>();
 
 const filters: {
-	[K in FilterDoctype]: {
+	[K in FilterField]: {
 		options: string[];
 		model?: { value: string } | null;
 	};
 } = reactive({
-	Company: { options: [], model: { value: "" } },
-	Department: { options: [], model: { value: "" } },
-	Branch: { options: [], model: { value: "" } },
-	"Shift Type": { options: [], model: { value: "" } },
+	company: { options: [], model: { value: "" } },
+	department: { options: [], model: { value: "" } },
+	branch: { options: [], model: { value: "" } },
+	shift_type: { options: [], model: { value: "" } },
 });
 
 watch(
-	() => filters.Company.model,
+	() => filters.company.model,
 	(val) => {
-		if (val?.value) return getFilterOptions("Department", { company: val.value });
+		if (val?.value) return getFilterOptions("department", { company: val.value });
 		else {
-			filters.Department.model = null;
-			filters.Department.options = [];
+			filters.department.model = null;
+			filters.department.options = [];
 		}
 	},
 );
 
 watch(filters, (val) => {
 	const newFilters = {
-		Company: val.Company.model?.value || "",
-		Department: val.Department.model?.value || "",
-		Branch: val.Branch.model?.value || "",
-		"Shift Type": val["Shift Type"].model?.value || "",
+		company: val.company.model?.value || "",
+		department: val.department.model?.value || "",
+		branch: val.branch.model?.value || "",
+		shift_type: val.shift_type.model?.value || "",
 	};
 
 	emit("updateFilters", newFilters);
 });
 
+const toTitleCase = (str: string) =>
+	str
+		.split("_")
+		.map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+		.join(" ");
+
 // RESOURCES
 
-const getFilterOptions = (doctype: FilterDoctype, listFilters: { company?: string } = {}) => {
+const getFilterOptions = (field: FilterField, listFilters: { company?: string } = {}) => {
 	createListResource({
-		doctype: doctype,
+		doctype: toTitleCase(field),
 		fields: ["name"],
 		filters: listFilters,
 		onSuccess: (data: { name: string }[]) => {
-			filters[doctype].model = { value: "" };
-			filters[doctype].options = data.map((item) => item.name);
+			filters[field].model = { value: "" };
+			filters[field].options = data.map((item) => item.name);
 		},
 		auto: true,
 	});
 };
 
-getFilterOptions("Company");
-getFilterOptions("Branch");
-getFilterOptions("Shift Type");
+getFilterOptions("company");
+getFilterOptions("branch");
+getFilterOptions("shift_type");
 </script>

@@ -153,7 +153,7 @@ import { ref, computed, watch } from "vue";
 import dayjs from "../utils/dayjs";
 import { Avatar, Autocomplete, createListResource, createResource } from "frappe-ui";
 
-import { FilterDoctype } from "../pages/FullSchedule.vue";
+import { FilterField } from "../pages/FullSchedule.vue";
 import ShiftAssignmentDialog from "./ShiftAssignmentDialog.vue";
 
 interface Holiday {
@@ -176,7 +176,7 @@ interface ShiftAssignment extends Shift {
 }
 
 const props = defineProps<{
-	filters: { [K in FilterDoctype]: string };
+	filters: { [K in FilterField]: string };
 }>();
 
 const firstOfMonth = ref(dayjs().date(1).startOf("D"));
@@ -190,7 +190,7 @@ const employeeFilters = computed(() => {
 		status: "Active",
 	};
 	Object.entries(props.filters).forEach(([key, value]) => {
-		if (key !== "Shift Type" && value) filters[key.toLowerCase()] = value;
+		if (key !== "shift_type" && value) filters[key] = value;
 	});
 	return filters;
 });
@@ -237,7 +237,9 @@ const events = createResource({
 			month_start: firstOfMonth.value.format("YYYY-MM-DD"),
 			month_end: firstOfMonth.value.endOf("month").format("YYYY-MM-DD"),
 			employee_filters: employeeFilters.value,
-			shift_filters: { shift_type: props.filters["Shift Type"] },
+			shift_filters: props.filters.shift_type
+				? { shift_type: props.filters.shift_type }
+				: {},
 		};
 	},
 	transform: (data: Record<string, (ShiftAssignment | HolidayWithDate)[]>) => {

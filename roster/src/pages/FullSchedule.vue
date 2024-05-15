@@ -11,9 +11,9 @@ import { reactive } from "vue";
 import FilterBar from "../components/FilterBar.vue";
 import MonthView from "../components/MonthView.vue";
 
-export type FilterDoctype = "Company" | "Department" | "Branch" | "Shift Type";
+export type FilterField = "company" | "department" | "branch" | "shift_type";
 
-const filters = reactive({ Company: "", Department: "", Branch: "", "Shift Type": "" });
+const filters = reactive({ company: "", department: "", branch: "", shift_type: "" });
 
 const updateFilters = (newFilters: typeof filters) => {
 	Object.assign(filters, newFilters);

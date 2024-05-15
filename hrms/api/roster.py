@@ -60,12 +60,10 @@ def get_shifts(
 	)
 
 	for filter in employee_filters:
-		if employee_filters[filter]:
-			query = query.where(Employee[filter] == employee_filters[filter])
+		query = query.where(Employee[filter] == employee_filters[filter])
 
 	for filter in shift_filters:
-		if shift_filters[filter]:
-			query = query.where(ShiftAssignment[filter] == shift_filters[filter])
+		query = query.where(ShiftAssignment[filter] == shift_filters[filter])
 
 	shifts = query.run(as_dict=True)
 
@@ -100,8 +98,7 @@ def get_holidays(month_start: str, month_end: str, employee_filters: dict[str, s
 	)
 
 	for filter in employee_filters:
-		if employee_filters[filter]:
-			query = query.where(Employee[filter] == employee_filters[filter])
+		query = query.where(Employee[filter] == employee_filters[filter])
 
 	holidays = query.run(as_dict=True)
 
