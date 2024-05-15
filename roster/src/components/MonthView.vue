@@ -153,6 +153,7 @@ import { ref, computed, watch } from "vue";
 import dayjs from "../utils/dayjs";
 import { Avatar, Autocomplete, createListResource, createResource } from "frappe-ui";
 
+import { FilterDoctype } from "../pages/FullSchedule.vue";
 import ShiftAssignmentDialog from "./ShiftAssignmentDialog.vue";
 
 interface Holiday {
@@ -161,28 +162,38 @@ interface Holiday {
 	weekly_off: 0 | 1;
 }
 
-interface HolidayDate extends Holiday {
+interface HolidayWithDate extends Holiday {
 	holiday_date: string;
 }
 
-interface Shift {
-	name: string;
-	shift_type: string;
-	status: string;
-	start_time: string;
-	end_time: string;
-}
+type Shift = {
+	[K in "name" | "shift_type" | "status" | "start_time" | "end_time"]: string;
+};
 
 interface ShiftAssignment extends Shift {
 	start_date: string;
 	end_date: string;
 }
 
+const props = defineProps<{
+	filters: { [K in FilterDoctype]: string };
+}>();
+
 const firstOfMonth = ref(dayjs().date(1).startOf("D"));
 const employeeSearch = ref({ value: "", label: "" });
 const shiftAssignment = ref();
 const showShiftAssignmentDialog = ref(false);
 const hoveredCell = ref({ employee: "", date: "" });
+
+const employeeFilters = computed(() => {
+	const filters: Record<string, string> = {
+		status: "Active",
+	};
+	Object.entries(props.filters).forEach(([key, value]) => {
+		if (key !== "Shift Type" && value) filters[key.toLowerCase()] = value;
+	});
+	return filters;
+});
 
 const daysOfMonth = computed(() => {
 	const daysOfMonth = [];
@@ -195,6 +206,7 @@ const daysOfMonth = computed(() => {
 	}
 	return daysOfMonth;
 });
+
 const employeeSearchOptions = computed(() => {
 	return employees?.data?.map((employee: { name: string; employee_name: string }) => ({
 		value: employee.name,
@@ -203,13 +215,18 @@ const employeeSearchOptions = computed(() => {
 });
 
 watch(firstOfMonth, () => events.fetch());
+watch(props.filters, () => {
+	events.fetch();
+	employees.filters = employeeFilters.value;
+	employees.reload();
+});
 
 // RESOURCES
 
 const employees = createListResource({
 	doctype: "Employee",
 	fields: ["name", "employee_name", "designation", "image"],
-	filters: { status: "Active" },
+	filters: employeeFilters.value,
 	auto: true,
 });
 
@@ -219,9 +236,11 @@ const events = createResource({
 		return {
 			month_start: firstOfMonth.value.format("YYYY-MM-DD"),
 			month_end: firstOfMonth.value.endOf("month").format("YYYY-MM-DD"),
+			employee_filters: employeeFilters.value,
+			shift_filters: { shift_type: props.filters["Shift Type"] },
 		};
 	},
-	transform: (data: Record<string, (ShiftAssignment | HolidayDate)[]>) => {
+	transform: (data: Record<string, (ShiftAssignment | HolidayWithDate)[]>) => {
 		// convert employee -> events to employee -> date -> holiday/shifts
 		const mappedData: Record<string, Record<string, Holiday | Shift[]>> = {};
 		for (const employee in data) {
