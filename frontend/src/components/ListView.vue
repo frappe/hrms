@@ -15,13 +15,12 @@
 							? '!border !border-gray-800 !bg-white !text-gray-900 !font-semibold'
 							: '',
 					]" />
-					<Button @click="toggleSortOrder">
-						<FeatherIcon name="arrow-up" v-if="sortOrder.order === 'asc'" class="h-5 w-5" />
-						<FeatherIcon name="arrow-down" v-if="sortOrder.order === 'desc'" class="h-5 w-5" />
-					</Button>
 					<Dropdown :options="sortOptions">
-						<Button id="show-sort-modal" variant="subtle" :class="[]">
-							{{ sortOrder.field }}
+						<Button id="show-sort-modal" variant="subtle">
+							<span>
+								<FeatherIcon name="arrow-up" v-if="sortOrder.order === 'asc'" class="h-5 w-5" />
+								<FeatherIcon name="arrow-down" v-if="sortOrder.order === 'desc'" class="h-5 w-5" />
+							</span>
 						</Button>
 					</Dropdown>
 
@@ -93,6 +92,8 @@ import {
 	createResource,
 	LoadingIndicator,
 	debounce,
+	frappeRequest,
+	Checkbox
 } from "frappe-ui"
 
 import TabButtons from "@/components/TabButtons.vue"
@@ -151,7 +152,7 @@ const activeTab = ref(props.tabButtons[0])
 const areFiltersApplied = ref(false)
 const appliedFilters = ref([])
 const workflowStateField = ref(null)
-const sortOptions = reactive([])
+const sortOptions = ref([])
 
 
 // infinite scroll
@@ -250,16 +251,25 @@ function initializeFilters() {
 initializeFilters()
 
 const updateSortOrder = (field) => {
+	if (sortOrder.value.field === field) return sortOrder.value.order = sortOrder.value.order == "asc" ? "desc" : "asc"
 	sortOrder.value.field = field
-	sortOrder.value.order = 'desc'
+	sortOrder.value.order = 'asc'
+}
+
+const updateSortOptions = (field) => {
+	sortOptions.value.forEach(option => {
+		option.icon = ""
+	})
+	if (sortOptions.value.length) sortOptions.value.find(option => option.label === field).icon = "check"
 }
 
 function initializeSortOptions() {
 	props.fields.forEach(field => {
-		sortOptions.push({
+		sortOptions.value.push({
 			label: field,
 			onClick: () => {
 				updateSortOrder(field)
+				updateSortOptions(field)
 			}
 		})
 	})
@@ -352,7 +362,6 @@ onMounted(async () => {
 	await workflow.workflowDoc.promise
 	workflowStateField.value = workflow.getWorkflowStateField()
 	fetchDocumentList()
-
 	useListUpdate(socket, props.doctype, () => fetchDocumentList())
 })
 </script>
