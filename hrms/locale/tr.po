@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-15 14:59\n"
+"PO-Revision-Date: 2024-05-16 15:01\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -4478,134 +4478,134 @@ msgstr "Ödeme Günlerine bağlıdır"
 
 #: hr/doctype/goal/goal_tree.js:156
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Long Text field in DocType 'Appointment Letter content'
 #: hr/doctype/appointment_letter_content/appointment_letter_content.json
 msgctxt "Appointment Letter content"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Section Break field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgctxt "Appraisal Cycle"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Section Break field in DocType 'Appraisal Template'
 #: hr/doctype/appraisal_template/appraisal_template.json
 msgctxt "Appraisal Template"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Text Editor field in DocType 'Employee Boarding Activity'
 #: hr/doctype/employee_boarding_activity/employee_boarding_activity.json
 msgctxt "Employee Boarding Activity"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Text field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgctxt "Employee Grievance"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Small Text field in DocType 'Expected Skill Set'
 #: hr/doctype/expected_skill_set/expected_skill_set.json
 msgctxt "Expected Skill Set"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Text Editor field in DocType 'Expense Claim Detail'
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
 msgctxt "Expense Claim Detail"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Small Text field in DocType 'Expense Claim Type'
 #: hr/doctype/expense_claim_type/expense_claim_type.json
 msgctxt "Expense Claim Type"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Small Text field in DocType 'Expense Taxes and Charges'
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
 msgctxt "Expense Taxes and Charges"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Small Text field in DocType 'Full and Final Asset'
 #: hr/doctype/full_and_final_asset/full_and_final_asset.json
 msgctxt "Full and Final Asset"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Section Break field in DocType 'Goal'
 #. Label of a Text Editor field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Text field in DocType 'Grievance Type'
 #: hr/doctype/grievance_type/grievance_type.json
 msgctxt "Grievance Type"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Data field in DocType 'Income Tax Slab Other Charges'
 #: payroll/doctype/income_tax_slab_other_charges/income_tax_slab_other_charges.json
 msgctxt "Income Tax Slab Other Charges"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Text field in DocType 'Interview Type'
 #: hr/doctype/interview_type/interview_type.json
 msgctxt "Interview Type"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Text Editor field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Small Text field in DocType 'KRA'
 #: hr/doctype/kra/kra.json
 msgctxt "KRA"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Small Text field in DocType 'Leave Allocation'
 #: hr/doctype/leave_allocation/leave_allocation.json
 msgctxt "Leave Allocation"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Small Text field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Text field in DocType 'Skill'
 #: hr/doctype/skill/skill.json
 msgctxt "Skill"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Text Editor field in DocType 'Training Program'
 #: hr/doctype/training_program/training_program.json
 msgctxt "Training Program"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Section Break field in DocType 'Travel Request'
 #: hr/doctype/travel_request/travel_request.json
 msgctxt "Travel Request"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #: hr/report/appraisal_overview/appraisal_overview.js:35
 #: hr/report/appraisal_overview/appraisal_overview.py:30
