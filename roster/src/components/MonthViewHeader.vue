@@ -9,7 +9,12 @@
 
 		<!-- Filters -->
 		<div class="ml-auto space-x-2 flex">
-			<div v-for="[key, value] of Object.entries(filters)" :key="key" class="w-40">
+			<div
+				v-if="showFilters"
+				v-for="[key, value] of Object.entries(filters)"
+				:key="key"
+				class="w-40"
+			>
 				<Autocomplete
 					:placeholder="toTitleCase(key)"
 					:options="value.options"
@@ -17,12 +22,13 @@
 					:class="!value.options.length && 'pointer-events-none'"
 				/>
 			</div>
+			<Button icon="filter" variant="ghost" @click="showFilters = !showFilters" />
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from "vue";
+import { ref, reactive, watch } from "vue";
 import { Autocomplete, createListResource } from "frappe-ui";
 import { Dayjs } from "dayjs";
 
@@ -36,6 +42,8 @@ const emit = defineEmits<{
 	(e: "addToMonth", change: number): void;
 	(e: "updateFilters", newFilters: { [K in FilterField]: string }): void;
 }>();
+
+const showFilters = ref(false);
 
 const filters: {
 	[K in FilterField]: {
