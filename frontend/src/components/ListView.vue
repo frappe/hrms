@@ -18,8 +18,8 @@
 					<Dropdown :options="sortOptions">
 						<Button id="show-sort-modal" variant="subtle">
 							<span>
-								<FeatherIcon name="arrow-up" v-if="sortOrder.order === 'asc'" class="h-5 w-5" />
-								<FeatherIcon name="arrow-down" v-if="sortOrder.order === 'desc'" class="h-5 w-5" />
+								<PhSortAscending v-if="sortOrder.order === 'desc'" />
+								<PhSortDescending v-else />
 							</span>
 						</Button>
 					</Dropdown>
@@ -92,8 +92,6 @@ import {
 	createResource,
 	LoadingIndicator,
 	debounce,
-	frappeRequest,
-	Checkbox
 } from "frappe-ui"
 
 import TabButtons from "@/components/TabButtons.vue"
@@ -101,9 +99,9 @@ import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
 import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 import EmployeeAdvanceItem from "@/components/EmployeeAdvanceItem.vue"
 import ListFiltersActionSheet from "@/components/ListFiltersActionSheet.vue"
-import ListSortActionSheet from "@/components/ListSortActionSheet.vue"
 import CustomIonModal from "@/components/CustomIonModal.vue"
-
+import PhSortAscending from "@/components/icons/PhSortAscending.vue"
+import PhSortDescending from "@/components/icons/PhSortDescending.vue"
 import useWorkflow from "@/composables/workflow"
 import { useListUpdate } from "@/composables/realtime"
 
