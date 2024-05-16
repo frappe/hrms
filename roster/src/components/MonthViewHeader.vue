@@ -8,22 +8,22 @@
 		<Button icon="chevron-right" variant="ghost" @click="emit('addToMonth', 1)" />
 
 		<!-- Filters -->
-		<div class="ml-auto space-x-2 flex">
+		<div class="ml-auto px-2 overflow-x-clip">
 			<div
-				v-if="showFilters"
-				v-for="[key, value] of Object.entries(filters)"
-				:key="key"
-				class="w-40"
+				class="ml-auto space-x-2 flex transition-all"
+				:class="showFilters ? 'w-full' : 'w-0 overflow-hidden'"
 			>
-				<Autocomplete
-					:placeholder="toTitleCase(key)"
-					:options="value.options"
-					v-model="value.model"
-					:class="!value.options.length && 'pointer-events-none'"
-				/>
+				<div v-for="[key, value] of Object.entries(filters)" :key="key" class="w-40">
+					<Autocomplete
+						:placeholder="toTitleCase(key)"
+						:options="value.options"
+						v-model="value.model"
+						:class="!value.options.length && 'pointer-events-none'"
+					/>
+				</div>
 			</div>
-			<Button icon="filter" variant="ghost" @click="showFilters = !showFilters" />
 		</div>
+		<Button icon="filter" variant="ghost" @click="showFilters = !showFilters" />
 	</div>
 </template>
 
