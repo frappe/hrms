@@ -1,11 +1,11 @@
 <template>
 	<div class="bg-gray-50 h-screen">
 		<NavBar />
-		<FullSchedule />
+		<MonthView />
 	</div>
 </template>
 
 <script setup lang="ts">
 import NavBar from "../components/NavBar.vue";
-import FullSchedule from "./FullSchedule.vue";
+import MonthView from "./MonthView.vue";
 </script>

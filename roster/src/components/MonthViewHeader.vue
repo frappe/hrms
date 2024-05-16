@@ -1,9 +1,13 @@
 <template>
-	<div class="bg-white border rounded-lg p-4 flex">
-		<div class="flex items-center">
-			<FeatherIcon name="calendar" class="h-6 w-6 text-gray-400 mr-2" />
-			<span class="text-2xl">Full Schedule</span>
-		</div>
+	<div class="flex mb-4">
+		<!-- Month Change -->
+		<Button icon="chevron-left" variant="ghost" @click="emit('addToMonth', -1)" />
+		<span class="px-1 w-24 text-center my-auto">
+			{{ props.firstOfMonth.format("MMM") }} {{ firstOfMonth.format("YYYY") }}
+		</span>
+		<Button icon="chevron-right" variant="ghost" @click="emit('addToMonth', 1)" />
+
+		<!-- Filters -->
 		<div class="ml-auto space-x-2 flex">
 			<div v-for="[key, value] of Object.entries(filters)" :key="key" class="w-40">
 				<Autocomplete
@@ -19,11 +23,17 @@
 
 <script setup lang="ts">
 import { reactive, watch } from "vue";
-import { FeatherIcon, Autocomplete, createListResource } from "frappe-ui";
+import { Autocomplete, createListResource } from "frappe-ui";
+import { Dayjs } from "dayjs";
 
-import { FilterField } from "../pages/FullSchedule.vue";
+export type FilterField = "company" | "department" | "branch" | "shift_type";
+
+const props = defineProps<{
+	firstOfMonth: Dayjs;
+}>();
 
 const emit = defineEmits<{
+	(e: "addToMonth", change: number): void;
 	(e: "updateFilters", newFilters: { [K in FilterField]: string }): void;
 }>();
 
@@ -57,7 +67,6 @@ watch(filters, (val) => {
 		branch: val.branch.model?.value || "",
 		shift_type: val.shift_type.model?.value || "",
 	};
-
 	emit("updateFilters", newFilters);
 });
 
