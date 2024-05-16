@@ -21,6 +21,10 @@
 						:class="!value.options.length && 'pointer-events-none'"
 					/>
 				</div>
+				<Button
+					icon="x"
+					@click="Object.values(filters).forEach((d) => (d.model = null))"
+				/>
 			</div>
 		</div>
 		<Button icon="filter" variant="ghost" @click="showFilters = !showFilters" />
@@ -51,10 +55,10 @@ const filters: {
 		model?: { value: string } | null;
 	};
 } = reactive({
-	company: { options: [], model: { value: "" } },
-	department: { options: [], model: { value: "" } },
-	branch: { options: [], model: { value: "" } },
-	shift_type: { options: [], model: { value: "" } },
+	company: { options: [], model: null },
+	department: { options: [], model: null },
+	branch: { options: [], model: null },
+	shift_type: { options: [], model: null },
 });
 
 watch(
