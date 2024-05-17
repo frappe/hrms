@@ -88,16 +88,20 @@ import {
 	createListResource,
 } from "frappe-ui";
 
-interface Form {
-	employee: string | { value: string };
-	company: string;
-	employee_name: string;
-	start_date: string;
-	shift_type: string | { value: string };
-	end_date: string;
-	status: "Active" | "Inactive";
-	department: string;
-}
+type Status = "Active" | "Inactive";
+
+type Form = {
+	[K in
+		| "company"
+		| "employee_name"
+		| "start_date"
+		| "end_date"
+		| "department"
+		| "employee"
+		| "shift_type"]: string | { value: string; label?: string };
+} & {
+	status: Status | { value: Status; label?: Status };
+};
 
 interface Props {
 	isDialogOpen: boolean;
@@ -240,7 +244,7 @@ const employee = createResource({
 			fields: ["employee_name", "company", "department"],
 		};
 	},
-	onSuccess: (data: { employee_name: string; company: string; department: string }) => {
+	onSuccess: (data: { [K in "employee_name" | "company" | "department"]: string }) => {
 		form.employee_name = data.employee_name;
 		form.company = data.company;
 		form.department = data.department;
