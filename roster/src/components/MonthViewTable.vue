@@ -13,7 +13,12 @@
 					</th>
 
 					<!-- Day/Date Row -->
-					<th v-for="(day, idx) in daysOfMonth" :key="idx" :class="{ 'border-l': idx }">
+					<th
+						v-for="(day, idx) in daysOfMonth"
+						:key="idx"
+						class="font-medium"
+						:class="{ 'border-l': idx }"
+					>
 						{{ day.dayName }} {{ dayjs(day.date).format("DD") }}
 					</th>
 				</tr>
