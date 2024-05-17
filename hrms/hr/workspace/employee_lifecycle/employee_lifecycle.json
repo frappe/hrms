@@ -289,8 +289,8 @@
    "type": "Link"
   }
  ],
- "modified": "2024-05-01 18:31:01.424306",
- "modified_by": "lokesh@360ithub.com",
+ "modified": "2024-05-16 17:12:05.000331",
+ "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Lifecycle",
  "number_cards": [],
@@ -315,7 +315,7 @@
   }
  ],
  "roles": [],
- "sequence_id": 24.0,
+ "sequence_id": 25.0,
  "shortcuts": [
   {
    "color": "Grey",

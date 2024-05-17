@@ -11,15 +11,15 @@
   "job_details_section",
   "job_title",
   "designation",
+  "column_break_udgm",
   "vacancy",
   "job_type",
-  "companys",
+  "experience_level",
   "column_break_5",
   "status",
   "posted_on",
   "closes_on",
   "closed_on",
-  "experience_level",
   "section_break_nngy",
   "company",
   "department",
@@ -39,12 +39,15 @@
   "section_break_14",
   "description",
   "section_break_16",
-  "currency",
-  "lower_range",
-  "upper_range",
-  "column_break_20",
   "salary_per",
-  "publish_salary_range"
+  "currency",
+  "column_break_20",
+  "upper_range",
+  "column_break_whlz",
+  "lower_range",
+  "publish_salary_range",
+  "for_internal_section",
+  "salary_paid_per_copy"
  ],
  "fields": [
   {
@@ -56,9 +59,8 @@
   },
   {
    "fieldname": "company",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "Company",
-   "options": "Company",
    "reqd": 1
   },
   {
@@ -82,9 +84,8 @@
   },
   {
    "fieldname": "department",
-   "fieldtype": "Link",
-   "label": "Department",
-   "options": "Department"
+   "fieldtype": "Data",
+   "label": "Department"
   },
   {
    "fieldname": "staffing_plan",
@@ -138,8 +139,10 @@
    "fieldtype": "Section Break"
   },
   {
+   "default": "INR",
    "fieldname": "currency",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Currency",
    "options": "Currency"
   },
@@ -216,9 +219,8 @@
   },
   {
    "fieldname": "location",
-   "fieldtype": "Link",
-   "label": "Location",
-   "options": "Branch"
+   "fieldtype": "Data",
+   "label": "Location"
   },
   {
    "fieldname": "section_break_nngy",
@@ -249,7 +251,7 @@
   {
    "fieldname": "vacancy",
    "fieldtype": "Data",
-   "label": "Vacancy"
+   "label": "No. of Vacancy"
   },
   {
    "fieldname": "job_type",
@@ -258,22 +260,37 @@
    "options": "Full Time"
   },
   {
-   "fieldname": "companys",
-   "fieldtype": "Data",
-   "label": "Company"
-  },
-  {
    "fieldname": "experience_level",
    "fieldtype": "Select",
    "label": "Experience level",
    "options": "\nIntern/Fresher\nExperienced",
    "reqd": 1
+  },
+  {
+   "fieldname": "column_break_udgm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_whlz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "for_internal_section",
+   "fieldtype": "Section Break",
+   "label": "For Internal"
+  },
+  {
+   "default": "Month",
+   "fieldname": "salary_paid_per_copy",
+   "fieldtype": "Select",
+   "label": "Salary Paid Per Copy",
+   "options": "Month\nYear"
   }
  ],
  "icon": "fa fa-bookmark",
  "idx": 1,
  "links": [],
- "modified": "2024-05-07 11:04:19.021225",
+ "modified": "2024-05-14 18:53:03.884290",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
@@ -296,7 +313,6 @@
    "role": "Guest"
   }
  ],
- "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "ASC",
  "states": [

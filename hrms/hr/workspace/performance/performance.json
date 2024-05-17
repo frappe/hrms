@@ -173,8 +173,8 @@
    "type": "Link"
   }
  ],
- "modified": "2024-05-01 18:31:01.508467",
- "modified_by": "lokesh@360ithub.com",
+ "modified": "2024-05-16 17:12:05.082494",
+ "modified_by": "Administrator",
  "module": "HR",
  "name": "Performance",
  "number_cards": [],
@@ -183,7 +183,7 @@
  "public": 1,
  "quick_lists": [],
  "roles": [],
- "sequence_id": 25.0,
+ "sequence_id": 26.0,
  "shortcuts": [
   {
    "color": "Orange",

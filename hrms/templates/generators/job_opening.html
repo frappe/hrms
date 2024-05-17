@@ -1,13 +1,15 @@
 {% extends "templates/web.html" %}
 {% block page_content %}
 
-<div class="py-12">
+<div class="py-12" style="
+padding: 1rem !important;
+">
 	<!-- Header -->
 	<div class="row">
 		<div class="col-md-9 mb-8">
 			<h1
 				class="mt-0 mb-2 mb-md-3 mx-auto mx-md-0 text-center text-md-left"
-				style="@include media-breakpoint-up(md) {font-size: 3rem}"
+				style="@include media-breakpoint-up(md) {font-size: 3rem}font-size: xx-large;"
 			>
 				{{ job_title }}
 			</h1>
@@ -147,7 +149,7 @@
 
 			<!-- <div class="col-12 col-md-4 mb-6 mb-md-8">
 				<div class="flex flex-row align-items-center">
-					<!-- <div class="rounded-circle p-4" style="background: var(--orange-50)">
+					 <div class="rounded-circle p-4" style="background: var(--orange-50)">
 						<svg
 							class="icon"
 							style="height: 28px;
@@ -162,7 +164,7 @@
 						<div class="font-weight-bold">{{ no_of_applications }}</div>
 					</div> -->
 				</div>
-			</div> -->
+			</div> 
 
 			{%- if (status == 'Open' and closes_on) or (status == 'Closed' and closed_on) -%}
 				<div class="col-12 col-md-4 mb-6 mb-md-8">
@@ -195,6 +197,25 @@
 	</div>
 
 	{%- if description -%}<p>{{ description }}</p>{% endif %}
+	{%- if custom_must_have_skills_sets -%}
+    <p>
+        <strong>Must Have Skills Sets:</strong>
+        {% for skill in custom_must_have_skills_sets %}
+            <strong>{{ skill.skills }}</strong>
+            {% if not loop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+	{%- endif %}
+	{%- if custom_good_to_have_preffered_skills_sets -%}
+    <p>
+        <strong>Good to have Preffered Skills Sets:</strong>
+        {% for skill in custom_good_to_have_preffered_skills_sets %}
+            <strong>{{ skill.skills }}</strong>
+            {% if not loop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+	{%- endif %}
+
 
 	<!-- Mobile Apply Now Button -->
 	<div id="sticky-div" class="position-sticky d-md-none" style="bottom: 0; ">

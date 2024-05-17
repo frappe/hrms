@@ -12,17 +12,26 @@
  "field_order": [
   "details_section",
   "applicant_name",
+  "gender",
   "email_id",
   "phone_number",
-  "country",
+  "alternate_mobile_no",
   "column_break_3",
   "job_title",
   "job_titles",
-  "designation",
   "status",
+  "designation",
+  "date_of_birth",
+  "section_break_zmaw",
   "current_address",
+  "column_break_fdfs",
+  "current_location_area_and_city_name",
+  "state",
+  "country",
+  "pin_code",
   "education_section_section",
   "highest_level_of_education_completed",
+  "degree_name",
   "year_of_pass_out",
   "column_break_hrry",
   "name_of_the_last_schoolcollegeuniversity",
@@ -30,58 +39,61 @@
   "relevant_certifications_or_training",
   "section_break_edoh",
   "job_type",
-  "last_ctc",
-  "desired_salary",
-  "job_title_and_primary_duties",
+  "relevant_work_experience",
+  "relocation_preferences",
+  "preffered_location",
+  "total_work_experience",
+  "notice_period_in_days",
+  "column_break_iicx",
+  "current__last_job_title",
+  "avaibility_for_joining_date",
+  "is_currently_working",
+  "current_ctc",
+  "expected_ctc",
   "column_break_nrok",
-  "reason_for_leaving",
-  "currentlast_employer",
+  "reason_for_leaving_previous_company",
+  "current__last_company",
+  "language_known_section",
+  "language",
   "skills_and_qualification_section",
-  "specialized_skillstraining_or_qualifications",
+  "skills",
   "column_break_ugzj",
-  "list_any_programming_or_software_or_tools_you_are_proficient_in",
+  "skill_data",
   "column_break_zsxp",
-  "language_proficiencies",
+  "list_any_programming_or_software_or_tools_you_are_proficient_in",
   "additional_questions_section_section",
   "explain_any_gaps_in_your_employment_history",
-  "source_and_rating_section",
-  "source",
-  "source_name",
-  "employee_referral",
-  "column_break_13",
-  "applicant_rating",
   "section_break_6",
   "notes",
   "cover_letter",
   "resume_attachment",
   "resume_link",
+  "linkedin_profile",
+  "heard_about_this_job_from",
   "section_break_16",
+  "lower_range",
   "currency",
   "column_break_18",
-  "lower_range",
   "upper_range",
   "section_break_uljw",
   "agree",
   "hr_information_tab",
-  "skills",
-  "total_work_experience",
-  "relevant_work_experience",
-  "current__last_company",
-  "current__last_job_title",
-  "is_currently_working",
-  "notice_period_in_days",
-  "avaibility_for_joining_date",
-  "column_break_ybyv",
+  "column_break_qrqq",
   "applicant_status",
-  "reason_for_leaving_previous_company",
-  "current_ctc",
-  "expected_ctc",
-  "current_location_area_and_city_name",
-  "relocation_preferences",
-  "linkedin_profile",
-  "sources",
+  "contract_job",
+  "column_break_ybyv",
+  "rate_as",
+  "reason_for_rejection",
+  "section_break_epjy",
+  "note",
   "section_break_zmkd",
-  "hr_notes"
+  "hr_notes",
+  "source_and_rating_section",
+  "source",
+  "source_name",
+  "employee_referral",
+  "column_break_13",
+  "applicant_rating"
  ],
  "fields": [
   {
@@ -106,7 +118,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Open\nReplied\nRejected\nHold\nAccepted",
+   "options": "Open\nReplied\nRejected\nHold\nAccepted\nShortlisted\nFuture Consideration\nWithdrawn\nCandidate not responded",
    "reqd": 1
   },
   {
@@ -120,6 +132,7 @@
    "in_list_view": 1,
    "label": "Job Opening",
    "options": "Job Opening",
+   "reqd": 1,
    "search_index": 1
   },
   {
@@ -163,6 +176,7 @@
    "options": "Phone"
   },
   {
+   "default": "India",
    "fieldname": "country",
    "fieldtype": "Link",
    "label": "Country",
@@ -182,6 +196,7 @@
   {
    "fieldname": "section_break_16",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Salary Expectation"
   },
   {
@@ -203,8 +218,10 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "INR",
    "fieldname": "currency",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Currency",
    "options": "Currency"
   },
@@ -230,6 +247,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "job_title.designation",
    "fetch_if_empty": 1,
    "fieldname": "designation",
    "fieldtype": "Link",
@@ -245,6 +263,7 @@
    "fetch_from": "job_title.job_title",
    "fieldname": "job_titles",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Job Title"
   },
   {
@@ -254,14 +273,15 @@
   },
   {
    "fieldname": "highest_level_of_education_completed",
-   "fieldtype": "Data",
-   "label": "Highest Level Of Education Completed"
+   "fieldtype": "Select",
+   "label": "Highest Level Of Education Completed",
+   "options": "10th (High School)\n12th (High School)\nGraduate (Bachelor's Degree)\nPost Graduate (Master's Degree)\nDoctorate (PhD, MD, etc.)\nOther (Specify)"
   },
   {
    "fieldname": "year_of_pass_out",
    "fieldtype": "Select",
    "label": "Year Of Pass Out",
-   "options": "\n2010\n2011\n2012\n2013\n2014\n2015\n2016\n2017\n2018\n2019\n2020\n2021\n2022"
+   "options": "\n1990\n1991\n1992\n1993\n1994\n1995\n1996\n1997\n1998\n1999\n2000\n2001\n2002\n2003\n2004\n2005\n2006\n2007\n2008\n2009\n2010\n2011\n2012\n2013\n2014\n2015\n2016\n2017\n2018\n2019\n2020\n2021\n2022\n2023\n2024"
   },
   {
    "fieldname": "column_break_hrry",
@@ -270,7 +290,7 @@
   {
    "fieldname": "name_of_the_last_schoolcollegeuniversity",
    "fieldtype": "Data",
-   "label": "Name Of the Last School/college/University"
+   "label": "College / University Name"
   },
   {
    "fieldname": "column_break_dhfu",
@@ -283,7 +303,8 @@
   },
   {
    "fieldname": "section_break_edoh",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Experienced"
   },
   {
    "fieldname": "job_type",
@@ -292,43 +313,13 @@
    "options": "Intern/Fresher\nExperienced"
   },
   {
-   "fieldname": "last_ctc",
-   "fieldtype": "Data",
-   "label": "Last CTC"
-  },
-  {
-   "fieldname": "desired_salary",
-   "fieldtype": "Data",
-   "label": "Desired Salary"
-  },
-  {
-   "fieldname": "job_title_and_primary_duties",
-   "fieldtype": "Small Text",
-   "label": "Job Title and Primary Duties"
-  },
-  {
    "fieldname": "column_break_nrok",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "reason_for_leaving",
-   "fieldtype": "Small Text",
-   "label": "Reason For Leaving"
-  },
-  {
-   "fieldname": "currentlast_employer",
-   "fieldtype": "Small Text",
-   "label": "Current/last Employer"
   },
   {
    "fieldname": "skills_and_qualification_section",
    "fieldtype": "Section Break",
    "label": "Skills and Qualification"
-  },
-  {
-   "fieldname": "specialized_skillstraining_or_qualifications",
-   "fieldtype": "Small Text",
-   "label": "Specialized Skills,Training or Qualifications"
   },
   {
    "fieldname": "column_break_ugzj",
@@ -337,16 +328,11 @@
   {
    "fieldname": "list_any_programming_or_software_or_tools_you_are_proficient_in",
    "fieldtype": "Small Text",
-   "label": "List any Programming or Software or Tools You are Proficient in"
+   "label": "List any Other Skills or Software or Tools You are Proficient in"
   },
   {
    "fieldname": "column_break_zsxp",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "language_proficiencies",
-   "fieldtype": "Data",
-   "label": "Language Proficiencies"
   },
   {
    "fieldname": "additional_questions_section_section",
@@ -376,52 +362,53 @@
   },
   {
    "fieldname": "skills",
-   "fieldtype": "Data",
+   "fieldtype": "Table MultiSelect",
    "label": "Skills",
+   "options": "Multiselect Skills",
    "permlevel": 2
   },
   {
+   "depends_on": "eval:doc.job_type == 'Experienced'",
    "fieldname": "total_work_experience",
    "fieldtype": "Data",
-   "label": "Total Work Experience",
-   "permlevel": 2
+   "label": "Total Work Experience(Years)"
   },
   {
+   "depends_on": "eval:doc.job_type == 'Experienced'",
    "fieldname": "relevant_work_experience",
    "fieldtype": "Data",
-   "label": "Relevant Work Experience",
-   "permlevel": 2
+   "label": "Relevant Work Experience(Years)"
   },
   {
+   "depends_on": "eval:doc.job_type == 'Experienced'",
    "fieldname": "current__last_company",
    "fieldtype": "Data",
-   "label": "Current / Last Company",
-   "permlevel": 2
+   "label": "Current / Last Company Name"
   },
   {
+   "depends_on": "eval:doc.job_type == 'Experienced'",
    "fieldname": "current__last_job_title",
    "fieldtype": "Data",
-   "label": "Current / Last Job Title",
-   "permlevel": 2
+   "label": "Current / Last Job Title"
   },
   {
+   "depends_on": "eval:doc.job_type == 'Experienced'",
    "fieldname": "is_currently_working",
    "fieldtype": "Select",
    "label": "Is currently working",
-   "options": "Yes\nNo\nAlready in notice period",
-   "permlevel": 2
+   "options": "Yes\nNo\nAlready in notice period"
   },
   {
+   "depends_on": "eval:doc.job_type == 'Experienced'",
    "fieldname": "notice_period_in_days",
    "fieldtype": "Data",
-   "label": "Notice period (In Days)",
-   "permlevel": 2
+   "label": "Notice period (In Days)"
   },
   {
+   "depends_on": "eval:doc.job_type == 'Experienced'",
    "fieldname": "avaibility_for_joining_date",
    "fieldtype": "Date",
-   "label": "Avaibility for joining Date",
-   "permlevel": 2
+   "label": "Avaibility for joining Date"
   },
   {
    "fieldname": "column_break_ybyv",
@@ -436,46 +423,35 @@
    "permlevel": 2
   },
   {
+   "depends_on": "eval:doc.job_type == 'Experienced'",
    "fieldname": "reason_for_leaving_previous_company",
-   "fieldtype": "Date",
+   "fieldtype": "Data",
    "label": "Reason for Leaving previous company",
    "permlevel": 2
   },
   {
+   "depends_on": "eval:doc.job_type == 'Experienced'",
    "fieldname": "current_ctc",
    "fieldtype": "Currency",
-   "label": "Current CTC",
-   "permlevel": 2
-  },
-  {
-   "fieldname": "expected_ctc",
-   "fieldtype": "Currency",
-   "label": "Expected CTC",
-   "permlevel": 2
+   "label": "Current CTC"
   },
   {
    "fieldname": "current_location_area_and_city_name",
    "fieldtype": "Data",
-   "label": "Current Location (Area and City Name)",
-   "permlevel": 2
+   "label": "Current Location (Area Name)",
+   "permlevel": 2,
+   "reqd": 1
   },
   {
    "fieldname": "relocation_preferences",
-   "fieldtype": "Data",
+   "fieldtype": "Select",
    "label": "Relocation Preferences",
-   "permlevel": 2
+   "options": "\nWilling to Relocate Anywhere\nWilling to Relocate to Specific Cities (please specify)\nNot Willing to Relocate\nOpen to Remote Work"
   },
   {
    "fieldname": "linkedin_profile",
    "fieldtype": "Data",
-   "label": "LinkedIn Profile",
-   "permlevel": 2
-  },
-  {
-   "fieldname": "sources",
-   "fieldtype": "Data",
-   "label": "Source",
-   "permlevel": 2
+   "label": "LinkedIn Profile"
   },
   {
    "fieldname": "section_break_zmkd",
@@ -486,6 +462,117 @@
    "fieldtype": "Small Text",
    "label": "HR Notes",
    "permlevel": 2
+  },
+  {
+   "fieldname": "degree_name",
+   "fieldtype": "Data",
+   "label": "Degree Name"
+  },
+  {
+   "fieldname": "preffered_location",
+   "fieldtype": "Data",
+   "label": "Preffered Location (City Names)"
+  },
+  {
+   "fieldname": "skill_data",
+   "fieldtype": "Data",
+   "label": "Skill Data"
+  },
+  {
+   "fieldname": "alternate_mobile_no",
+   "fieldtype": "Data",
+   "label": "Alternate Mobile No."
+  },
+  {
+   "fieldname": "gender",
+   "fieldtype": "Link",
+   "label": "Gender",
+   "options": "Gender"
+  },
+  {
+   "fieldname": "language_known_section",
+   "fieldtype": "Section Break",
+   "label": "Language Known"
+  },
+  {
+   "fieldname": "language",
+   "fieldtype": "Table",
+   "label": "Language",
+   "options": "Language Known"
+  },
+  {
+   "fieldname": "rate_as",
+   "fieldtype": "Select",
+   "label": "Rate As",
+   "options": "Good Fit\nMay Be\nNot a Fit"
+  },
+  {
+   "fieldname": "reason_for_rejection",
+   "fieldtype": "Small Text",
+   "label": "Reason For Rejection",
+   "permlevel": 2,
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_zmaw",
+   "fieldtype": "Section Break",
+   "label": "Address"
+  },
+  {
+   "fieldname": "column_break_fdfs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Data",
+   "label": "State"
+  },
+  {
+   "fieldname": "column_break_qrqq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_iicx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date_of_birth",
+   "fieldtype": "Date",
+   "label": "Date Of Birth",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expected_ctc",
+   "fieldtype": "Currency",
+   "label": "Expected CTC"
+  },
+  {
+   "fieldname": "pin_code",
+   "fieldtype": "Data",
+   "label": "Pin Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "heard_about_this_job_from",
+   "fieldtype": "Data",
+   "label": "Heard About This Job From"
+  },
+  {
+   "default": "No",
+   "fieldname": "contract_job",
+   "fieldtype": "Select",
+   "label": "Contract Job",
+   "options": "Yes\nNo"
+  },
+  {
+   "fieldname": "section_break_epjy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "note",
+   "fieldtype": "Table",
+   "label": "Note",
+   "options": "CRM Note"
   }
  ],
  "icon": "fa fa-user",
@@ -494,7 +581,7 @@
  "links": [],
  "make_attachments_public": 1,
  "max_attachments": 2,
- "modified": "2024-05-07 10:34:32.090094",
+ "modified": "2024-05-16 09:57:15.512275",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Applicant",
