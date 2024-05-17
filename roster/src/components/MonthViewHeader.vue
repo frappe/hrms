@@ -2,7 +2,7 @@
 	<div class="flex mb-4">
 		<!-- Month Change -->
 		<Button icon="chevron-left" variant="ghost" @click="emit('addToMonth', -1)" />
-		<span class="px-1 w-24 text-center my-auto">
+		<span class="px-1 w-24 text-center my-auto font-medium">
 			{{ props.firstOfMonth.format("MMM") }} {{ firstOfMonth.format("YYYY") }}
 		</span>
 		<Button icon="chevron-right" variant="ghost" @click="emit('addToMonth', 1)" />
