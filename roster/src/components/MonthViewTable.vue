@@ -52,8 +52,14 @@
 							'border-l': idx,
 							'align-top': events.data?.[employee.name]?.[day.date],
 						}"
-						@mouseover="hoveredCell = { employee: employee.name, date: day.date }"
-						@mouseleave="hoveredCell = { employee: '', date: '' }"
+						@mouseover="
+							hoveredCell.employee = employee.name;
+							hoveredCell.date = day.date;
+						"
+						@mouseleave="
+							hoveredCell.employee = '';
+							hoveredCell.date = '';
+						"
 					>
 						<!-- Holiday -->
 						<div
@@ -70,8 +76,21 @@
 						<div v-else class="flex flex-col space-y-1.5">
 							<div
 								v-for="shift in events.data?.[employee.name]?.[day.date]"
-								class="rounded border-2 border-gray-300 hover:border-gray-400 active:bg-gray-200 px-2 py-1 cursor-pointer"
-								:class="shift.status === 'Active' ? 'bg-gray-50' : 'border-dashed'"
+								@mouseover="hoveredCell.shift = shift.name"
+								@mouseleave="hoveredCell.shift = ''"
+								class="rounded border-2 px-2 py-1 cursor-pointer"
+								:class="shift.status === 'Inactive' && 'border-dashed'"
+								:style="{
+									borderColor:
+										hoveredCell.shift === shift.name &&
+										hoveredCell.date === day.date
+											? colors[shift.color as Color][300]
+											: colors[shift.color as Color][200],
+									backgroundColor:
+										shift.status === 'Active'
+											? colors[shift.color as Color][50]
+											: 'white',
+								}"
 								@click="
 									shiftAssignment = shift.name;
 									showShiftAssignmentDialog = true;
@@ -87,7 +106,7 @@
 							<Button
 								variant="outline"
 								icon="plus"
-								class="border-2 active:bg-gray-200 w-full"
+								class="border-2 active:bg-white w-full"
 								:class="
 									hoveredCell.employee === employee.name &&
 									hoveredCell.date === day.date
@@ -110,7 +129,7 @@
 		v-model="showShiftAssignmentDialog"
 		:isDialogOpen="showShiftAssignmentDialog"
 		:shiftAssignmentName="shiftAssignment"
-		:selectedCell="hoveredCell"
+		:selectedCell="{ employee: hoveredCell.employee, date: hoveredCell.date }"
 		:employees="employees.data"
 		@fetchEvents="
 			events.fetch();
@@ -121,6 +140,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
+import colors from "tailwindcss/colors";
 import { Avatar, Autocomplete, createListResource, createResource } from "frappe-ui";
 import { Dayjs } from "dayjs";
 
@@ -138,8 +158,22 @@ interface HolidayWithDate extends Holiday {
 	holiday_date: string;
 }
 
+type Color =
+	| "blue"
+	| "cyan"
+	| "fuchsia"
+	| "green"
+	| "lime"
+	| "orange"
+	| "pink"
+	| "red"
+	| "violet"
+	| "yellow";
+
 type Shift = {
 	[K in "name" | "shift_type" | "status" | "start_time" | "end_time"]: string;
+} & {
+	color: Color;
 };
 
 interface ShiftAssignment extends Shift {
@@ -155,7 +189,7 @@ const props = defineProps<{
 const employeeSearch = ref({ value: "", label: "" });
 const shiftAssignment = ref();
 const showShiftAssignmentDialog = ref(false);
-const hoveredCell = ref({ employee: "", date: "" });
+const hoveredCell = ref({ employee: "", date: "", shift: "" });
 
 const employeeFilters = computed(() => {
 	const filters: Record<string, string> = {
@@ -219,7 +253,7 @@ const events = createResource({
 		};
 	},
 	transform: (data: Record<string, (ShiftAssignment | HolidayWithDate)[]>) => {
-		// convert employee -> events to employee -> date -> holiday/shifts
+		// convert employee -> events (holidays/shift assignments) to employee -> date -> holiday/shifts
 		const mappedData: Record<string, Record<string, Holiday | Shift[]>> = {};
 		for (const employee in data) {
 			mappedData[employee] = {};
@@ -250,6 +284,7 @@ const events = createResource({
 							status: event.status,
 							start_time: event.start_time.split(":").slice(0, 2).join(":"),
 							end_time: event.end_time.split(":").slice(0, 2).join(":"),
+							color: event.color.toLowerCase() as Color,
 						});
 					}
 				}
