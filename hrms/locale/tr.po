@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-16 15:01\n"
+"PO-Revision-Date: 2024-05-17 15:58\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -1756,7 +1756,7 @@ msgstr ""
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "Archived"
-msgstr ""
+msgstr "Arşivlendi"
 
 #: payroll/doctype/salary_slip/salary_slip_list.js:11
 msgid "Are you sure you want to email the selected salary slips?"
