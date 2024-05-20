@@ -15,15 +15,31 @@
 							? '!border !border-gray-800 !bg-white !text-gray-900 !font-semibold'
 							: '',
 					]" />
-					<Dropdown :options="sortOptions">
-						<Button id="show-sort-modal" variant="subtle">
-							<span>
-								<PhSortAscending v-if="sortOrder.order === 'desc'" />
-								<PhSortDescending v-else />
-							</span>
-						</Button>
-					</Dropdown>
+					<Popover v-if="!doctypeFieldLabels.loading && doctypeFieldLabels.data?.length">
+						<template #target="{ togglePopover }">
+							<Button variant="subtle" @click="togglePopover()">
+								<span>
+									<PhSortDescending v-if="sortOrder.order === 'desc'" />
+									<PhSortAscending v-else />
+								</span>
+							</Button>
+						</template>
+						<template #body-main>
+							<div class="flex p-1">
+								<div>
+									<Select :options="selectOptions" v-model="sortOrder.field">
+									</Select>
+								</div>
+								<div class="ml-1">
+									<Button @click="toggleSortOrder()">
+										<PhSortAscending v-if="sortOrder.order === 'desc'" />
+										<PhSortDescending v-else />
+									</Button>
+								</div>
+							</div>
+						</template>
 
+					</Popover>
 					<router-link :to="{ name: formViewRoute }" v-slot="{ navigate }">
 						<Button variant="solid" class="mr-2" @click="navigate">
 							<template #prefix>
@@ -88,10 +104,11 @@ import {
 
 import {
 	FeatherIcon,
-	Dropdown,
+	Popover,
 	createResource,
 	LoadingIndicator,
 	debounce,
+	Select
 } from "frappe-ui"
 
 import TabButtons from "@/components/TabButtons.vue"
@@ -143,14 +160,14 @@ const socket = inject("$socket")
 const employee = inject("$employee")
 const filterMap = reactive({})
 const sortOrder = ref({
-	field: "Modified",
+	field: "Creation",
 	order: "asc"
 })
 const activeTab = ref(props.tabButtons[0])
 const areFiltersApplied = ref(false)
 const appliedFilters = ref([])
 const workflowStateField = ref(null)
-const sortOptions = ref([])
+const selectOptions = ref([])
 
 
 // infinite scroll
@@ -160,12 +177,14 @@ const listOptions = ref({
 	doctype: props.doctype,
 	fields: props.fields,
 	group_by: props.groupBy,
-	order_by: `\`tab${props.doctype}\`.modified asc`,
+	order_by: `\`tab${props.doctype}\`.creation asc`,
 	page_length: 50,
 })
 
 watch(() => sortOrder.value, (newValue, oldValue) => {
-	listOptions.value.order_by = `\`tab${props.doctype}\`. ${newValue.field} ${newValue.order}`
+	console.log("doctype field labels", doctypeFieldLabels.data)
+	const fieldname = doctypeFieldLabels.data.find(field => newValue.field === field.value).value
+	listOptions.value.order_by = `\`tab${props.doctype}\`.${fieldname} ${newValue.order}`
 }, { deep: true })
 
 watch(() => listOptions.value, (newValue, oldValue) => {
@@ -197,7 +216,7 @@ const defaultFilters = computed(() => {
 	return filters
 })
 
-const toggleSortOrder = () => {
+const toggleSortOrder = (e) => {
 	sortOrder.value.order = sortOrder.value.order == "asc" ? "desc" : "asc"
 }
 
@@ -235,6 +254,21 @@ const documents = createResource({
 	},
 })
 
+const doctypeFieldLabels = createResource({
+	url: "hrms.api.get_doctype_sortable_fields",
+	params: {
+		doctype: props.doctype
+	},
+	transform: (data) => {
+		const newData = data.map(field => {
+			return {
+				value: field.fieldname,
+				label: field.label
+			}
+		})
+		console.log("new data", newData)
+	}
+})
 // helper functions
 function initializeFilters() {
 	props.filterConfig.forEach((filter) => {
@@ -248,32 +282,16 @@ function initializeFilters() {
 }
 initializeFilters()
 
-const updateSortOrder = (field) => {
-	if (sortOrder.value.field === field) return sortOrder.value.order = sortOrder.value.order == "asc" ? "desc" : "asc"
-	sortOrder.value.field = field
-	sortOrder.value.order = 'asc'
-}
-
-const updateSortOptions = (field) => {
-	sortOptions.value.forEach(option => {
-		option.icon = ""
-	})
-	if (sortOptions.value.length) sortOptions.value.find(option => option.label === field).icon = "check"
-}
-
-function initializeSortOptions() {
-	props.fields.forEach(field => {
-		sortOptions.value.push({
-			label: field,
-			onClick: () => {
-				updateSortOrder(field)
-				updateSortOptions(field)
-			}
+function initializeSelectOptions() {
+	doctypeFieldLabels.fields.forEach(field => {
+		selectOptions.value.push({
+			value: fieldname,
+			label
 		})
 	})
 }
 
-initializeSortOptions()
+// initializeSelectOptions()
 
 function prepareFilters() {
 	let condition = ""
@@ -361,5 +379,6 @@ onMounted(async () => {
 	workflowStateField.value = workflow.getWorkflowStateField()
 	fetchDocumentList()
 	useListUpdate(socket, props.doctype, () => fetchDocumentList())
+	doctypeFieldLabels.submit()
 })
 </script>
