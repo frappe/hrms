@@ -1,5 +1,8 @@
 import frappe
+import frappe.model
+import frappe.permissions
 from frappe import _
+from frappe.model import no_value_fields
 from frappe.model.workflow import get_workflow_name
 from frappe.query_builder import Order
 from frappe.utils import getdate
@@ -632,3 +635,37 @@ def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 @frappe.whitelist()
 def is_employee_checkin_allowed():
 	return cint(frappe.db.get_single_value("HR Settings", "allow_employee_checkin_from_mobile_app"))
+
+
+@frappe.whitelist()
+def get_doctype_sortable_fields(doctype):
+	meta = frappe.get_meta(doctype)
+	if not meta:
+		return
+
+	_options = [
+		{"fieldname": "modified", "label": "Modified"},
+		{"fieldname": "name", "label": "Name"},
+		{"fieldname": "creation", "label": "Creation"},
+		{"fieldname": "idx", "label": "Most Used"},
+	]
+
+	# bold, mandatory and fields that are available in list view
+
+	for docfield in meta.fields:
+		df = docfield.as_dict()
+		print("condition", (is_value_type(df.fieldtype)))
+		if (bool(df.mandatory) or bool(df.bold) or bool(df.in_list_view) or bool(df.reqd)) and (
+			is_value_type(df.fieldtype)
+		):
+			_options.append(
+				{"fieldname": df.fieldname, "label": df.label or frappe.meta.get_label(doctype, df.fieldname)}
+			)
+	return _options
+
+
+def is_value_type(fieldtype):
+	if type(fieldtype) == "object":
+		fieldtype = fieldtype.fieldtype
+	# not in no-value type
+	return fieldtype not in frappe.model.no_value_fields
