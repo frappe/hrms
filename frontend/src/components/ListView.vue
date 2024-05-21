@@ -27,14 +27,14 @@
 						<template #body-main>
 							<div class="flex p-1">
 								<div>
-									<Select :options="doctypeFieldLabels.data" v-model="sortOrder.field">
-									</Select>
+									<FormControl type="select" :options="doctypeFieldLabels.data"
+										v-model="sortOrder.field" label="Fields">
+									</FormControl>
 								</div>
 								<div class="ml-1">
-									<Button @click="toggleSortOrder()">
-										<PhSortAscending v-if="sortOrder.order === 'desc'" />
-										<PhSortDescending v-else />
-									</Button>
+									<FormControl type="select" :options="sortOrderOptions" v-model="sortOrder.order"
+										label="Order">
+									</FormControl>
 								</div>
 							</div>
 						</template>
@@ -108,7 +108,7 @@ import {
 	createResource,
 	LoadingIndicator,
 	debounce,
-	Select
+	FormControl
 } from "frappe-ui"
 
 import TabButtons from "@/components/TabButtons.vue"
@@ -149,6 +149,17 @@ const props = defineProps({
 	},
 })
 
+const sortOrderOptions = [
+	{
+		value: "asc",
+		label: "Ascending"
+	},
+	{
+		value: "desc",
+		label: "Descending"
+	}
+]
+
 const listItemComponent = {
 	"Leave Application": markRaw(LeaveRequestItem),
 	"Expense Claim": markRaw(ExpenseClaimItem),
@@ -180,8 +191,8 @@ const listOptions = ref({
 })
 
 watch(() => sortOrder.value, (newValue, oldValue) => {
-	console.log("doctype field labels", doctypeFieldLabels)
-	const fieldname = doctypeFieldLabels.data.find(field => newValue.field === field.value).value
+	console.log("doctype field labels", doctypeFieldLabels, newValue.field)
+	const fieldname = doctypeFieldLabels.data.find(field => newValue.field === field.label).label
 	listOptions.value.order_by = `\`tab${props.doctype}\`.${fieldname} ${newValue.order}`
 }, { deep: true })
 
