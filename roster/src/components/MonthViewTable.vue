@@ -56,6 +56,8 @@
 						:class="{
 							'border-l': idx,
 							'align-top': events.data?.[employee.name]?.[day.date],
+							'align-bottom bg-gray-50':
+								events.data?.[employee.name]?.[day.date]?.name,
 						}"
 						@mouseover="
 							hoveredCell.employee = employee.name;
@@ -69,12 +71,13 @@
 						<!-- Holiday -->
 						<div
 							v-if="events.data?.[employee.name]?.[day.date]?.name"
-							class="rounded border-2 border-gray-300 bg-gray-50 px-2 py-1"
+							class="text-sm text-gray-500"
 						>
-							<div class="truncate mb-1">Holiday</div>
-							<div class="text-xs text-gray-500">
-								{{ events.data?.[employee.name]?.[day.date]?.["description"] }}
-							</div>
+							{{
+								events.data[employee.name][day.date]["weekly_off"]
+									? "Weekly Off"
+									: events.data[employee.name][day.date]["description"]
+							}}
 						</div>
 
 						<!-- Shifts -->
