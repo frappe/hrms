@@ -27,7 +27,7 @@
 						<template #body-main>
 							<div class="flex p-1">
 								<div>
-									<Select :options="selectOptions" v-model="sortOrder.field">
+									<Select :options="doctypeFieldLabels.data" v-model="sortOrder.field">
 									</Select>
 								</div>
 								<div class="ml-1">
@@ -167,8 +167,6 @@ const activeTab = ref(props.tabButtons[0])
 const areFiltersApplied = ref(false)
 const appliedFilters = ref([])
 const workflowStateField = ref(null)
-const selectOptions = ref([])
-
 
 // infinite scroll
 const scrollContainer = ref(null)
@@ -182,7 +180,7 @@ const listOptions = ref({
 })
 
 watch(() => sortOrder.value, (newValue, oldValue) => {
-	console.log("doctype field labels", doctypeFieldLabels.data)
+	console.log("doctype field labels", doctypeFieldLabels)
 	const fieldname = doctypeFieldLabels.data.find(field => newValue.field === field.value).value
 	listOptions.value.order_by = `\`tab${props.doctype}\`.${fieldname} ${newValue.order}`
 }, { deep: true })
@@ -218,6 +216,7 @@ const defaultFilters = computed(() => {
 
 const toggleSortOrder = (e) => {
 	sortOrder.value.order = sortOrder.value.order == "asc" ? "desc" : "asc"
+	e.stopPropagation()
 }
 
 // resources
@@ -260,13 +259,12 @@ const doctypeFieldLabels = createResource({
 		doctype: props.doctype
 	},
 	transform: (data) => {
-		const newData = data.map(field => {
+		return data.map(field => {
 			return {
 				value: field.fieldname,
 				label: field.label
 			}
 		})
-		console.log("new data", newData)
 	}
 })
 // helper functions
@@ -281,17 +279,6 @@ function initializeFilters() {
 	appliedFilters.value = []
 }
 initializeFilters()
-
-function initializeSelectOptions() {
-	doctypeFieldLabels.fields.forEach(field => {
-		selectOptions.value.push({
-			value: fieldname,
-			label
-		})
-	})
-}
-
-// initializeSelectOptions()
 
 function prepareFilters() {
 	let condition = ""
