@@ -58,7 +58,7 @@ class InterviewFeedback(Document):
 		total_rating = 0
 		for d in self.skill_assessment:
 			if d.rating:
-				total_rating += d.rating
+				total_rating += flt(d.rating)
 
 		self.average_rating = flt(
 			total_rating / len(self.skill_assessment) if len(self.skill_assessment) else 0
