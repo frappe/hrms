@@ -1,7 +1,9 @@
 <template>
 	<ion-header class="ion-no-border">
 		<div class="w-full sm:w-96">
-			<div class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b">
+			<div
+				class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b"
+			>
 				<div class="flex flex-row items-center">
 					<Button variant="ghost" class="!pl-0 hover:bg-white" @click="router.back()">
 						<FeatherIcon name="chevron-left" class="h-5 w-5" />
@@ -10,35 +12,47 @@
 				</div>
 
 				<div class="flex flex-row gap-2">
-					<Button id="show-filter-modal" icon="filter" variant="subtle" :class="[
-						areFiltersApplied
-							? '!border !border-gray-800 !bg-white !text-gray-900 !font-semibold'
-							: '',
-					]" />
-					<Popover v-if="!doctypeFieldLabels.loading && doctypeFieldLabels.data?.length">
+					<Button
+						id="show-filter-modal"
+						icon="filter"
+						variant="subtle"
+						:class="[
+							areFiltersApplied
+								? '!border !border-gray-800 !bg-white !text-gray-900 !font-semibold'
+								: '',
+						]"
+					/>
+					<Popover v-if="!sortFieldsOption.loading && sortFieldsOption.data?.length">
 						<template #target="{ togglePopover }">
 							<Button variant="subtle" @click="togglePopover()">
 								<span>
-									<PhSortDescending v-if="sortOrder.order === 'desc'" />
-									<PhSortAscending v-else />
+									<SortDescendingIcon v-if="currentSortStatus.order === 'desc'" />
+									<SortAscendingIcon v-else />
 								</span>
 							</Button>
 						</template>
 						<template #body-main>
 							<div class="flex p-1">
 								<div>
-									<FormControl type="select" :options="doctypeFieldLabels.data"
-										v-model="sortOrder.field" label="Fields">
+									<FormControl
+										type="select"
+										:options="sortFieldsOption.data"
+										v-model="currentSortStatus.field"
+										label="Fields"
+									>
 									</FormControl>
 								</div>
 								<div class="ml-1">
-									<FormControl type="select" :options="sortOrderOptions" v-model="sortOrder.order"
-										label="Order">
+									<FormControl
+										type="select"
+										:options="sortOrderOption"
+										v-model="currentSortStatus.order"
+										label="Order"
+									>
 									</FormControl>
 								</div>
 							</div>
 						</template>
-
 					</Popover>
 					<router-link :to="{ name: formViewRoute }" v-slot="{ navigate }">
 						<Button variant="solid" class="mr-2" @click="navigate">
@@ -58,21 +72,44 @@
 			<ion-refresher-content></ion-refresher-content>
 		</ion-refresher>
 
-		<div class="flex flex-col items-center mb-7 p-4 h-full w-full sm:w-96 overflow-y-auto" ref="scrollContainer"
-			@scroll="() => handleScroll()">
+		<div
+			class="flex flex-col items-center mb-7 p-4 h-full w-full sm:w-96 overflow-y-auto"
+			ref="scrollContainer"
+			@scroll="() => handleScroll()"
+		>
 			<div class="w-full mt-5">
-				<TabButtons :buttons="[{ label: tabButtons[0] }, { label: tabButtons[1] }]" v-model="activeTab" />
+				<TabButtons
+					:buttons="[{ label: tabButtons[0] }, { label: tabButtons[1] }]"
+					v-model="activeTab"
+				/>
 
-				<div class="flex flex-col bg-white rounded mt-5" v-if="!documents.loading && documents.data?.length">
-					<div class="p-3.5 items-center justify-between border-b cursor-pointer"
-						v-for="link in documents.data" :key="link.name">
-						<router-link :to="{ name: detailViewRoute, params: { id: link.name } }" v-slot="{ navigate }">
-							<component :is="listItemComponent[doctype]" :doc="link" :isTeamRequest="isTeamRequest"
-								:workflowStateField="workflowStateField" @click="navigate" />
+				<div
+					class="flex flex-col bg-white rounded mt-5"
+					v-if="!documents.loading && documents.data?.length"
+				>
+					<div
+						class="p-3.5 items-center justify-between border-b cursor-pointer"
+						v-for="link in documents.data"
+						:key="link.name"
+					>
+						<router-link
+							:to="{ name: detailViewRoute, params: { id: link.name } }"
+							v-slot="{ navigate }"
+						>
+							<component
+								:is="listItemComponent[doctype]"
+								:doc="link"
+								:isTeamRequest="isTeamRequest"
+								:workflowStateField="workflowStateField"
+								@click="navigate"
+							/>
 						</router-link>
 					</div>
 				</div>
-				<EmptyState :message="`No ${props.doctype?.toLowerCase()}s found`" v-else-if="!documents.loading" />
+				<EmptyState
+					:message="`No ${props.doctype?.toLowerCase()}s found`"
+					v-else-if="!documents.loading"
+				/>
 
 				<!-- Loading Indicator -->
 				<div v-if="documents.loading" class="flex mt-2 items-center justify-center">
@@ -84,8 +121,12 @@
 		<CustomIonModal trigger="show-filter-modal">
 			<!-- Filter Action Sheet -->
 			<template #actionSheet>
-				<ListFiltersActionSheet :filterConfig="filterConfig" @applyFilters="applyFilters"
-					@clearFilters="clearFilters" v-model:filters="filterMap" />
+				<ListFiltersActionSheet
+					:filterConfig="filterConfig"
+					@applyFilters="applyFilters"
+					@clearFilters="clearFilters"
+					v-model:filters="filterMap"
+				/>
 			</template>
 		</CustomIonModal>
 	</ion-content>
@@ -108,7 +149,7 @@ import {
 	createResource,
 	LoadingIndicator,
 	debounce,
-	FormControl
+	FormControl,
 } from "frappe-ui"
 
 import TabButtons from "@/components/TabButtons.vue"
@@ -117,8 +158,8 @@ import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 import EmployeeAdvanceItem from "@/components/EmployeeAdvanceItem.vue"
 import ListFiltersActionSheet from "@/components/ListFiltersActionSheet.vue"
 import CustomIonModal from "@/components/CustomIonModal.vue"
-import PhSortAscending from "@/components/icons/PhSortAscending.vue"
-import PhSortDescending from "@/components/icons/PhSortDescending.vue"
+import SortAscendingIcon from "@/components/icons/SortAscendingIcon.vue"
+import SortDescendingIcon from "@/components/icons/SortDescendingIcon.vue"
 import useWorkflow from "@/composables/workflow"
 import { useListUpdate } from "@/composables/realtime"
 
@@ -149,15 +190,15 @@ const props = defineProps({
 	},
 })
 
-const sortOrderOptions = [
+const sortOrderOption = [
 	{
 		value: "asc",
-		label: "Ascending"
+		label: "Ascending",
 	},
 	{
 		value: "desc",
-		label: "Descending"
-	}
+		label: "Descending",
+	},
 ]
 
 const listItemComponent = {
@@ -170,14 +211,14 @@ const router = useRouter()
 const socket = inject("$socket")
 const employee = inject("$employee")
 const filterMap = reactive({})
-const sortOrder = ref({
-	field: "Creation",
-	order: "asc"
-})
 const activeTab = ref(props.tabButtons[0])
 const areFiltersApplied = ref(false)
 const appliedFilters = ref([])
 const workflowStateField = ref(null)
+const currentSortStatus = ref({
+	field: "modified",
+	order: "desc",
+})
 
 // infinite scroll
 const scrollContainer = ref(null)
@@ -186,19 +227,9 @@ const listOptions = ref({
 	doctype: props.doctype,
 	fields: props.fields,
 	group_by: props.groupBy,
-	order_by: `\`tab${props.doctype}\`.creation asc`,
+	order_by: `\`tab${props.doctype}\`.modified desc`,
 	page_length: 50,
 })
-
-watch(() => sortOrder.value, (newValue, oldValue) => {
-	console.log("doctype field labels", doctypeFieldLabels, newValue.field)
-	const fieldname = doctypeFieldLabels.data.find(field => newValue.field === field.label).label
-	listOptions.value.order_by = `\`tab${props.doctype}\`.${fieldname} ${newValue.order}`
-}, { deep: true })
-
-watch(() => listOptions.value, (newValue, oldValue) => {
-	fetchDocumentList()
-}, { deep: true })
 
 // computed properties
 const isTeamRequest = computed(() => {
@@ -224,11 +255,6 @@ const defaultFilters = computed(() => {
 
 	return filters
 })
-
-const toggleSortOrder = (e) => {
-	sortOrder.value.order = sortOrder.value.order == "asc" ? "desc" : "asc"
-	e.stopPropagation()
-}
 
 // resources
 const documents = createResource({
@@ -264,20 +290,21 @@ const documents = createResource({
 	},
 })
 
-const doctypeFieldLabels = createResource({
+const sortFieldsOption = createResource({
 	url: "hrms.api.get_doctype_sortable_fields",
 	params: {
-		doctype: props.doctype
+		doctype: props.doctype,
 	},
 	transform: (data) => {
-		return data.map(field => {
+		return data.map((field) => {
 			return {
 				value: field.fieldname,
-				label: field.label
+				label: field.label,
 			}
 		})
-	}
+	},
 })
+
 // helper functions
 function initializeFilters() {
 	props.filterConfig.forEach((filter) => {
@@ -304,8 +331,7 @@ function prepareFilters() {
 		}
 
 		value = filterMap[fieldname].value
-		if (condition && value)
-			appliedFilters.value.push([props.doctype, fieldname, condition, value])
+		if (condition && value) appliedFilters.value.push([props.doctype, fieldname, condition, value])
 	}
 }
 
@@ -322,7 +348,6 @@ function clearFilters() {
 	modalController.dismiss()
 	areFiltersApplied.value = false
 }
-
 
 function fetchDocumentList(start = 0) {
 	if (start === 0) {
@@ -365,6 +390,22 @@ const handleRefresh = (event) => {
 }
 
 watch(
+	() => currentSortStatus.value,
+	(newValue) => {
+		listOptions.value.order_by = `\`tab${props.doctype}\`.${newValue.field} ${newValue.order}`
+	},
+	{ deep: true }
+)
+
+watch(
+	() => listOptions.value,
+	() => {
+		fetchDocumentList()
+	},
+	{ deep: true }
+)
+
+watch(
 	() => activeTab.value,
 	(_value) => {
 		fetchDocumentList()
@@ -376,7 +417,8 @@ onMounted(async () => {
 	await workflow.workflowDoc.promise
 	workflowStateField.value = workflow.getWorkflowStateField()
 	fetchDocumentList()
+
 	useListUpdate(socket, props.doctype, () => fetchDocumentList())
-	doctypeFieldLabels.submit()
+	sortFieldsOption.submit()
 })
 </script>
