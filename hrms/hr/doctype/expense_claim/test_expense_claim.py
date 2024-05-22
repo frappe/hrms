@@ -392,7 +392,10 @@ class TestExpenseClaim(FrappeTestCase):
 		expense_claim.submit()
 
 		# Payment entry 1: paying 500
-		make_payment_entry(expense_claim, 500)
+		pe1 = make_payment_entry(expense_claim, 500)
+		pe1.reload()
+		self.assertEqual(pe1.references[0].outstanding_amount, 5000)
+
 		outstanding_amount, total_amount_reimbursed = get_outstanding_and_total_reimbursed_amounts(
 			expense_claim
 		)
@@ -400,7 +403,12 @@ class TestExpenseClaim(FrappeTestCase):
 		self.assertEqual(total_amount_reimbursed, 500)
 
 		# Payment entry 1: paying 2000
-		make_payment_entry(expense_claim, 2000)
+		pe2 = make_payment_entry(expense_claim, 2000)
+		pe2.reload()
+		self.assertEqual(pe2.references[0].outstanding_amount, 3000)
+		pe1.reload()
+		self.assertEqual(pe1.references[0].outstanding_amount, 3000)
+
 		outstanding_amount, total_amount_reimbursed = get_outstanding_and_total_reimbursed_amounts(
 			expense_claim
 		)
@@ -408,7 +416,14 @@ class TestExpenseClaim(FrappeTestCase):
 		self.assertEqual(total_amount_reimbursed, 2500)
 
 		# Payment entry 1: paying 3000
-		make_payment_entry(expense_claim, 3000)
+		pe3 = make_payment_entry(expense_claim, 3000)
+		pe3.reload()
+		self.assertEqual(pe3.references[0].outstanding_amount, 0)
+		pe2.reload()
+		self.assertEqual(pe2.references[0].outstanding_amount, 0)
+		pe1.reload()
+		self.assertEqual(pe1.references[0].outstanding_amount, 0)
+
 		outstanding_amount, total_amount_reimbursed = get_outstanding_and_total_reimbursed_amounts(
 			expense_claim
 		)
