@@ -368,13 +368,13 @@ def update_reimbursed_amount(doc):
 
 	doc.set_status(update=True)
 
-	if payment_entry_reference := frappe.db.exists(
-		{"doctype": "Payment Entry Reference", "reference_name": doc.name, "docstatus": 1}
-	):
-		outstanding_amount = get_outstanding_amount_for_claim(doc)
-		frappe.db.set_value(
-			"Payment Entry Reference", payment_entry_reference, "outstanding_amount", outstanding_amount
-		)
+	outstanding_amount = get_outstanding_amount_for_claim(doc)
+	PaymentEntryReference = frappe.qb.DocType("Payment Entry Reference")
+	(
+		frappe.qb.update(PaymentEntryReference)
+		.set(PaymentEntryReference.outstanding_amount, outstanding_amount)
+		.where((PaymentEntryReference.reference_name == doc.name) & (PaymentEntryReference.docstatus == 1))
+	).run()
 
 
 def get_total_reimbursed_amount(doc):
