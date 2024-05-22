@@ -368,6 +368,14 @@ def update_reimbursed_amount(doc):
 
 	doc.set_status(update=True)
 
+	if payment_entry_reference := frappe.db.exists(
+		{"doctype": "Payment Entry Reference", "reference_name": doc.name, "docstatus": 1}
+	):
+		outstanding_amount = get_outstanding_amount_for_claim(doc)
+		frappe.db.set_value(
+			"Payment Entry Reference", payment_entry_reference, "outstanding_amount", outstanding_amount
+		)
+
 
 def get_total_reimbursed_amount(doc):
 	if doc.is_paid:
@@ -547,10 +555,7 @@ def update_payment_for_expense_claim(doc, method=None):
 	for d in doc.get(payment_table):
 		if d.get(doctype_field) == "Expense Claim" and d.reference_name:
 			expense_claim = frappe.get_doc("Expense Claim", d.reference_name)
-			if doc.docstatus == 2:
-				update_reimbursed_amount(expense_claim)
-			else:
-				update_reimbursed_amount(expense_claim)
+			update_reimbursed_amount(expense_claim)
 
 
 def validate_expense_claim_in_jv(doc, method=None):
