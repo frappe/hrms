@@ -49,7 +49,7 @@ class TestInterviewFeedback(FrappeTestCase):
 		total_rating = 0
 		for d in feedback_1.skill_assessment:
 			if d.rating:
-				total_rating += d.rating
+				total_rating += flt(d.rating)
 
 		avg_rating = flt(
 			total_rating / len(feedback_1.skill_assessment) if len(feedback_1.skill_assessment) else 0
