@@ -32,7 +32,7 @@
 							!employeeSearch?.length ||
 							employeeSearch?.some((item) => item.value === employee?.name)
 						"
-						class="border-t px-2 py-3"
+						class="border-t px-2 py-7"
 					>
 						<div class="flex">
 							<Avatar
@@ -63,7 +63,7 @@
 						:class="{
 							'border-l': idx,
 							'align-top': events.data?.[employee.name]?.[day.date],
-							'align-bottom bg-gray-50':
+							'align-middle bg-gray-50':
 								events.data?.[employee.name]?.[day.date]?.name,
 						}"
 						@mouseover="
@@ -78,12 +78,12 @@
 						<!-- Holiday -->
 						<div
 							v-if="events.data?.[employee.name]?.[day.date]?.name"
-							class="text-sm text-gray-500"
+							class="text-sm text-gray-500 text-center p-2"
 						>
 							{{
-								events.data[employee.name][day.date]["weekly_off"]
-									? "Weekly Off"
-									: events.data[employee.name][day.date]["description"]
+								events.data[employee.name][day.date].weekly_off
+									? "WO"
+									: events.data[employee.name][day.date].description
 							}}
 						</div>
 
