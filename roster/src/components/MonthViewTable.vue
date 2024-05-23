@@ -4,7 +4,7 @@
 			<thead>
 				<tr>
 					<!-- Employee Search -->
-					<th>
+					<th class="p-2">
 						<Autocomplete
 							:options="employeeSearchOptions"
 							v-model="employeeSearch"
@@ -28,7 +28,7 @@
 					<!-- Employee Column -->
 					<td
 						v-if="!employeeSearch?.value || employeeSearch?.value === employee?.name"
-						class="border-t"
+						class="border-t px-2 py-3"
 					>
 						<div class="flex">
 							<Avatar
@@ -52,7 +52,7 @@
 						v-if="!employeeSearch?.value || employeeSearch?.value === employee?.name"
 						v-for="(day, idx) in daysOfMonth"
 						:key="idx"
-						class="border-t"
+						class="border-t p-1.5"
 						:class="{
 							'border-l': idx,
 							'align-top': events.data?.[employee.name]?.[day.date],
@@ -313,7 +313,7 @@ const events = createResource({
 <style>
 th,
 td {
-	@apply max-w-32 min-w-32 p-1.5;
+	@apply max-w-32 min-w-32;
 	font-size: 0.875rem;
 }
 
