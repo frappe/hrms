@@ -9,6 +9,7 @@
 							:options="employeeSearchOptions"
 							v-model="employeeSearch"
 							placeholder="Search Employee"
+							:multiple="true"
 						/>
 					</th>
 
@@ -27,7 +28,10 @@
 				<tr v-for="employee in employees.data" :key="employee.name">
 					<!-- Employee Column -->
 					<td
-						v-if="!employeeSearch?.value || employeeSearch?.value === employee?.name"
+						v-if="
+							!employeeSearch?.length ||
+							employeeSearch?.some((item) => item.value === employee?.name)
+						"
 						class="border-t px-2 py-3"
 					>
 						<div class="flex">
@@ -49,7 +53,10 @@
 
 					<!-- Events -->
 					<td
-						v-if="!employeeSearch?.value || employeeSearch?.value === employee?.name"
+						v-if="
+							!employeeSearch?.length ||
+							employeeSearch?.some((item) => item.value === employee?.name)
+						"
 						v-for="(day, idx) in daysOfMonth"
 						:key="idx"
 						class="border-t p-1.5"
@@ -122,7 +129,7 @@
 										: 'invisible'
 								"
 								@click="
-									shiftAssignment = null;
+									shiftAssignment = '';
 									showShiftAssignmentDialog = true;
 								"
 							/>
@@ -194,8 +201,8 @@ const props = defineProps<{
 	filters: { [K in FilterField]: string };
 }>();
 
-const employeeSearch = ref({ value: "", label: "" });
-const shiftAssignment = ref();
+const employeeSearch = ref<{ value: string; label: string }[]>();
+const shiftAssignment = ref<string>();
 const showShiftAssignmentDialog = ref(false);
 const hoveredCell = ref({ employee: "", date: "", shift: "" });
 
