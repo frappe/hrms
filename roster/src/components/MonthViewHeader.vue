@@ -40,7 +40,7 @@ import { ref, reactive, watch } from "vue";
 import { Autocomplete, createListResource } from "frappe-ui";
 import { Dayjs } from "dayjs";
 
-export type FilterField = "company" | "department" | "branch" | "shift_type";
+export type FilterField = "company" | "department" | "branch" | "designation" | "shift_type";
 
 const props = defineProps<{
 	firstOfMonth: Dayjs;
@@ -62,6 +62,7 @@ const filters: {
 	company: { options: [], model: null },
 	department: { options: [], model: null },
 	branch: { options: [], model: null },
+	designation: { options: [], model: null },
 	shift_type: { options: [], model: null },
 });
 
@@ -81,6 +82,7 @@ watch(filters, (val) => {
 		company: val.company.model?.value || "",
 		department: val.department.model?.value || "",
 		branch: val.branch.model?.value || "",
+		designation: val.designation.model?.value || "",
 		shift_type: val.shift_type.model?.value || "",
 	};
 	emit("updateFilters", newFilters);
@@ -107,7 +109,7 @@ const getFilterOptions = (field: FilterField, listFilters: { company?: string } 
 	});
 };
 
-getFilterOptions("company");
-getFilterOptions("branch");
-getFilterOptions("shift_type");
+["company", "branch", "designation", "shift_type"].forEach((field) =>
+	getFilterOptions(field as FilterField),
+);
 </script>

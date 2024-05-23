@@ -20,7 +20,13 @@ import MonthViewHeader from "../components/MonthViewHeader.vue";
 
 const firstOfMonth = ref(dayjs().date(1).startOf("D"));
 
-const filters = reactive({ company: "", department: "", branch: "", shift_type: "" });
+const filters = reactive({
+	company: "",
+	department: "",
+	branch: "",
+	designation: "",
+	shift_type: "",
+});
 
 const addToMonth = (change: number) => {
 	firstOfMonth.value = firstOfMonth.value.add(change, "M");
