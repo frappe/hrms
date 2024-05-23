@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-22 06:09\n"
+"PO-Revision-Date: 2024-05-23 07:10\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -8077,7 +8077,7 @@ msgstr ""
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:58
 msgid "Group By"
-msgstr ""
+msgstr "Gruplama"
 
 #: hr/doctype/goal/goal.js:13
 msgid "Group goal's progress is auto-calculated based on the child goals."
