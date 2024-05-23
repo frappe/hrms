@@ -27,7 +27,11 @@
 				/>
 			</div>
 		</div>
-		<Button icon="filter" variant="ghost" @click="showFilters = !showFilters" />
+		<Button
+			:icon="showFilters ? 'chevrons-right' : 'chevrons-left'"
+			variant="ghost"
+			@click="showFilters = !showFilters"
+		/>
 	</div>
 </template>
 
@@ -47,7 +51,7 @@ const emit = defineEmits<{
 	(e: "updateFilters", newFilters: { [K in FilterField]: string }): void;
 }>();
 
-const showFilters = ref(false);
+const showFilters = ref(true);
 
 const filters: {
 	[K in FilterField]: {
