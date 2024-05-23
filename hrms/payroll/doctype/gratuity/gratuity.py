@@ -27,11 +27,9 @@ class Gratuity(AccountsController):
 		if rule.method == "Manual":
 			current_work_experience = flt(self.current_work_experience)
 		else:
-			current_work_experience = calculate_work_experience(self.employee, self.gratuity_rule) or 0
+			current_work_experience = self.calculate_work_experience() or 0
 
-		gratuity_amount = (
-			calculate_gratuity_amount(self.employee, self.gratuity_rule, current_work_experience) or 0
-		)
+		gratuity_amount = self.calculate_gratuity_amount(current_work_experience) or 0
 
 		return {"current_work_experience": current_work_experience, "amount": gratuity_amount}
 
@@ -104,7 +102,7 @@ class Gratuity(AccountsController):
 				)
 			)
 		else:
-			frappe.throw(_("Total Amount can not be zero"))
+			frappe.throw(_("Total Amount cannot be zero"))
 
 		return gl_entry
 
@@ -142,6 +140,179 @@ class Gratuity(AccountsController):
 		self.db_set("paid_amount", paid_amount)
 		self.set_status(update=True)
 
+	def calculate_work_experience(self):
+		rule = get_gratuity_rule_config(self.gratuity_rule)
+		total_working_days = self.calculate_total_working_days()
+		current_work_experience = self.get_work_experience(total_working_days, rule)
+		return current_work_experience
+
+	def calculate_total_working_days(self):
+		date_of_joining, relieving_date = frappe.db.get_value(
+			"Employee", self.employee, ["date_of_joining", "relieving_date"]
+		)
+		if not relieving_date:
+			frappe.throw(
+				_("Please set Relieving Date for employee: {0}").format(
+					bold(get_link_to_form("Employee", self.employee))
+				)
+			)
+
+		total_working_days = (get_datetime(relieving_date) - get_datetime(date_of_joining)).days
+
+		payroll_based_on = frappe.db.get_single_value("Payroll Settings", "payroll_based_on") or "Leave"
+		if payroll_based_on == "Leave":
+			total_lwp = self.get_non_working_days(relieving_date, "On Leave")
+			total_working_days -= total_lwp
+		elif payroll_based_on == "Attendance":
+			total_absent = self.get_non_working_days(relieving_date, "Absent")
+			total_working_days -= total_absent
+
+		return total_working_days
+
+	def get_non_working_days(self, relieving_date, status):
+		filters = {
+			"docstatus": 1,
+			"status": status,
+			"employee": self.employee,
+			"attendance_date": ("<=", get_datetime(relieving_date)),
+		}
+
+		if status == "On Leave":
+			lwp_leave_types = frappe.get_all("Leave Type", filters={"is_lwp": 1}, pluck="name")
+			filters["leave_type"] = ("IN", lwp_leave_types)
+
+		record = frappe.get_all("Attendance", filters=filters, fields=["COUNT(*) as total_lwp"])
+		return record[0].total_lwp if len(record) else 0
+
+	def get_work_experience(self, total_working_days, rule):
+		work_experience = total_working_days / rule.total_working_days_per_year or 1
+
+		if rule.method == "Round off Work Experience":
+			work_experience = round(work_experience)
+		else:
+			work_experience = floor(work_experience)
+
+		if work_experience < rule.minimum_year_for_gratuity:
+			frappe.throw(
+				_("Employee: {0} have to complete minimum {1} years for gratuity").format(
+					bold(self.employee), rule.minimum_year_for_gratuity
+				)
+			)
+		return work_experience
+
+	def calculate_gratuity_amount(self, experience):
+		applicable_earning_components = self.get_applicable_components()
+		total_applicable_components_amount = self.get_total_component_amount(applicable_earning_components)
+
+		calculate_gratuity_amount_based_on = frappe.db.get_value(
+			"Gratuity Rule", self.gratuity_rule, "calculate_gratuity_amount_based_on"
+		)
+		gratuity_amount = 0
+		slabs = get_gratuity_rule_slabs(self.gratuity_rule)
+		slab_found = False
+		year_left = experience
+
+		for slab in slabs:
+			if calculate_gratuity_amount_based_on == "Current Slab":
+				slab_found, gratuity_amount = self.calculate_amount_based_on_current_slab(
+					slab.from_year,
+					slab.to_year,
+					experience,
+					total_applicable_components_amount,
+					slab.fraction_of_applicable_earnings,
+				)
+				if slab_found:
+					break
+
+			elif calculate_gratuity_amount_based_on == "Sum of all previous slabs":
+				if slab.to_year == 0 and slab.from_year == 0:
+					gratuity_amount += (
+						year_left * total_applicable_components_amount * slab.fraction_of_applicable_earnings
+					)
+					slab_found = True
+					break
+
+				if experience > slab.to_year and experience > slab.from_year and slab.to_year != 0:
+					gratuity_amount += (
+						(slab.to_year - slab.from_year)
+						* total_applicable_components_amount
+						* slab.fraction_of_applicable_earnings
+					)
+					year_left -= slab.to_year - slab.from_year
+					slab_found = True
+				elif slab.from_year <= experience and (experience < slab.to_year or slab.to_year == 0):
+					gratuity_amount += (
+						year_left * total_applicable_components_amount * slab.fraction_of_applicable_earnings
+					)
+					slab_found = True
+
+		if not slab_found:
+			frappe.throw(
+				_("No Suitable Slab found for Calculation of gratuity amount in Gratuity Rule: {0}").format(
+					bold(self.gratuity_rule)
+				)
+			)
+
+		return gratuity_amount
+
+	def get_applicable_components(self):
+		applicable_earning_components = frappe.get_all(
+			"Gratuity Applicable Component", filters={"parent": self.gratuity_rule}, pluck="salary_component"
+		)
+		if not applicable_earning_components:
+			frappe.throw(
+				_("No applicable Earning components found for Gratuity Rule: {0}").format(
+					bold(get_link_to_form("Gratuity Rule", self.gratuity_rule))
+				)
+			)
+
+		return applicable_earning_components
+
+	def get_total_component_amount(self, applicable_earning_components):
+		salary_slip = get_last_salary_slip(self.employee)
+		if not salary_slip:
+			frappe.throw(_("No Salary Slip found for Employee: {0}").format(bold(self.employee)))
+
+		# consider full payment days for calculation as last month's salary slip
+		# might have less payment days as per attendance, making it non-deterministic
+		salary_slip.payment_days = salary_slip.total_working_days
+		salary_slip.process_salary_structure()
+
+		total_amount = 0
+		component_found = False
+		for row in salary_slip.earnings:
+			if row.salary_component in applicable_earning_components:
+				total_amount += flt(row.amount)
+				component_found = True
+
+		if not component_found:
+			frappe.throw(
+				_("No applicable Earning component found in last salary slip for Gratuity Rule: {0}").format(
+					bold(get_link_to_form("Gratuity Rule", self.gratuity_rule))
+				)
+			)
+
+		return total_amount
+
+	def calculate_amount_based_on_current_slab(
+		self,
+		from_year,
+		to_year,
+		experience,
+		total_applicable_components_amount,
+		fraction_of_applicable_earnings,
+	):
+		slab_found = False
+		gratuity_amount = 0
+		if experience >= from_year and (to_year == 0 or experience < to_year):
+			gratuity_amount = (
+				total_applicable_components_amount * experience * fraction_of_applicable_earnings
+			)
+			if fraction_of_applicable_earnings:
+				slab_found = True
+
+		return slab_found, gratuity_amount
+
 
 def get_gratuity_rule_config(gratuity_rule: str) -> dict:
 	return frappe.db.get_value(
@@ -154,194 +325,6 @@ def get_gratuity_rule_config(gratuity_rule: str) -> dict:
 		],
 		as_dict=True,
 	)
-
-
-def calculate_work_experience(employee, gratuity_rule):
-	rule = get_gratuity_rule_config(gratuity_rule)
-
-	date_of_joining, relieving_date = frappe.db.get_value(
-		"Employee", employee, ["date_of_joining", "relieving_date"]
-	)
-	if not relieving_date:
-		frappe.throw(
-			_("Please set Relieving Date for employee: {0}").format(
-				bold(get_link_to_form("Employee", employee))
-			)
-		)
-
-	employee_total_workings_days = calculate_employee_total_workings_days(
-		employee, date_of_joining, relieving_date
-	)
-
-	current_work_experience = employee_total_workings_days / rule.total_working_days_per_year or 1
-	current_work_experience = get_work_experience_using_method(
-		rule.method, current_work_experience, rule.minimum_year_for_gratuity, employee
-	)
-	return current_work_experience
-
-
-def calculate_employee_total_workings_days(employee, date_of_joining, relieving_date):
-	employee_total_workings_days = (get_datetime(relieving_date) - get_datetime(date_of_joining)).days
-
-	payroll_based_on = frappe.db.get_value("Payroll Settings", None, "payroll_based_on") or "Leave"
-	if payroll_based_on == "Leave":
-		total_lwp = get_non_working_days(employee, relieving_date, "On Leave")
-		employee_total_workings_days -= total_lwp
-	elif payroll_based_on == "Attendance":
-		total_absents = get_non_working_days(employee, relieving_date, "Absent")
-		employee_total_workings_days -= total_absents
-
-	return employee_total_workings_days
-
-
-def get_work_experience_using_method(method, current_work_experience, minimum_year_for_gratuity, employee):
-	if method == "Round off Work Experience":
-		current_work_experience = round(current_work_experience)
-	else:
-		current_work_experience = floor(current_work_experience)
-
-	if current_work_experience < minimum_year_for_gratuity:
-		frappe.throw(
-			_("Employee: {0} have to complete minimum {1} years for gratuity").format(
-				bold(employee), minimum_year_for_gratuity
-			)
-		)
-	return current_work_experience
-
-
-def get_non_working_days(employee, relieving_date, status):
-	filters = {
-		"docstatus": 1,
-		"status": status,
-		"employee": employee,
-		"attendance_date": ("<=", get_datetime(relieving_date)),
-	}
-
-	if status == "On Leave":
-		lwp_leave_types = frappe.get_list("Leave Type", filters={"is_lwp": 1})
-		lwp_leave_types = [leave_type.name for leave_type in lwp_leave_types]
-		filters["leave_type"] = ("IN", lwp_leave_types)
-
-	record = frappe.get_all("Attendance", filters=filters, fields=["COUNT(name) as total_lwp"])
-	return record[0].total_lwp if len(record) else 0
-
-
-def calculate_gratuity_amount(employee, gratuity_rule, experience):
-	applicable_earnings_component = get_applicable_components(gratuity_rule)
-	total_applicable_components_amount = get_total_applicable_component_amount(
-		employee, applicable_earnings_component, gratuity_rule
-	)
-
-	calculate_gratuity_amount_based_on = frappe.db.get_value(
-		"Gratuity Rule", gratuity_rule, "calculate_gratuity_amount_based_on"
-	)
-	gratuity_amount = 0
-	slabs = get_gratuity_rule_slabs(gratuity_rule)
-	slab_found = False
-	year_left = experience
-
-	for slab in slabs:
-		if calculate_gratuity_amount_based_on == "Current Slab":
-			slab_found, gratuity_amount = calculate_amount_based_on_current_slab(
-				slab.from_year,
-				slab.to_year,
-				experience,
-				total_applicable_components_amount,
-				slab.fraction_of_applicable_earnings,
-			)
-			if slab_found:
-				break
-
-		elif calculate_gratuity_amount_based_on == "Sum of all previous slabs":
-			if slab.to_year == 0 and slab.from_year == 0:
-				gratuity_amount += (
-					year_left * total_applicable_components_amount * slab.fraction_of_applicable_earnings
-				)
-				slab_found = True
-				break
-
-			if experience > slab.to_year and experience > slab.from_year and slab.to_year != 0:
-				gratuity_amount += (
-					(slab.to_year - slab.from_year)
-					* total_applicable_components_amount
-					* slab.fraction_of_applicable_earnings
-				)
-				year_left -= slab.to_year - slab.from_year
-				slab_found = True
-			elif slab.from_year <= experience and (experience < slab.to_year or slab.to_year == 0):
-				gratuity_amount += (
-					year_left * total_applicable_components_amount * slab.fraction_of_applicable_earnings
-				)
-				slab_found = True
-
-	if not slab_found:
-		frappe.throw(
-			_("No Suitable Slab found for Calculation of gratuity amount in Gratuity Rule: {0}").format(
-				bold(gratuity_rule)
-			)
-		)
-	return gratuity_amount
-
-
-def get_applicable_components(gratuity_rule):
-	applicable_earnings_component = frappe.get_all(
-		"Gratuity Applicable Component", filters={"parent": gratuity_rule}, fields=["salary_component"]
-	)
-	if len(applicable_earnings_component) == 0:
-		frappe.throw(
-			_("No Applicable Earnings Component found for Gratuity Rule: {0}").format(
-				bold(get_link_to_form("Gratuity Rule", gratuity_rule))
-			)
-		)
-	applicable_earnings_component = [
-		component.salary_component for component in applicable_earnings_component
-	]
-
-	return applicable_earnings_component
-
-
-def get_total_applicable_component_amount(employee, applicable_earnings_component, gratuity_rule):
-	salary_slip = get_last_salary_slip(employee)
-	if not salary_slip:
-		frappe.throw(_("No Salary Slip found for Employee: {0}").format(bold(employee)))
-
-	# consider full payment days for calculation as last month's salary slip
-	# might have less payment days as per attendance, making it non-deterministic
-	salary_slip.payment_days = salary_slip.total_working_days
-	salary_slip.process_salary_structure()
-
-	total_amount = 0
-	component_found = False
-	for row in salary_slip.earnings:
-		if row.salary_component in applicable_earnings_component:
-			total_amount += flt(row.amount)
-			component_found = True
-
-	if not component_found:
-		frappe.throw(
-			_("No applicable Earning component found in last salary slip for Gratuity Rule: {0}").format(
-				bold(get_link_to_form("Gratuity Rule", gratuity_rule))
-			)
-		)
-
-	return total_amount
-
-
-def calculate_amount_based_on_current_slab(
-	from_year,
-	to_year,
-	experience,
-	total_applicable_components_amount,
-	fraction_of_applicable_earnings,
-):
-	slab_found = False
-	gratuity_amount = 0
-	if experience >= from_year and (to_year == 0 or experience < to_year):
-		gratuity_amount = total_applicable_components_amount * experience * fraction_of_applicable_earnings
-		if fraction_of_applicable_earnings:
-			slab_found = True
-
-	return slab_found, gratuity_amount
 
 
 def get_gratuity_rule_slabs(gratuity_rule):
