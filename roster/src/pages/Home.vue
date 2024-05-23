@@ -1,5 +1,5 @@
 <template>
-	<div class="bg-gray-50 h-screen">
+	<div class="bg-gray-50 min-h-screen">
 		<NavBar />
 		<MonthView />
 	</div>
