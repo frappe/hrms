@@ -212,7 +212,7 @@ class Gratuity(AccountsController):
 		calculate_amount_based_on = self.gratuity_settings.calculate_gratuity_amount_based_on
 
 		gratuity_amount = 0
-		slabs = get_gratuity_rule_slabs(self.gratuity_rule)
+		slabs = self.get_gratuity_rule_slabs()
 		slab_found = False
 		years_left = experience
 
@@ -302,17 +302,19 @@ class Gratuity(AccountsController):
 
 		return applicable_earning_components
 
+	def get_gratuity_rule_slabs(self) -> list[dict]:
+		return frappe.get_all(
+			"Gratuity Rule Slab",
+			filters={"parent": self.gratuity_rule},
+			fields=["from_year", "to_year", "fraction_of_applicable_earnings"],
+			order_by="idx",
+		)
+
 	def _is_experience_within_slab(self, slab: dict, experience: float) -> bool:
 		return bool(slab.from_year <= experience and (experience < slab.to_year or slab.to_year == 0))
 
 	def _is_experience_beyond_slab(self, slab: dict, experience: float) -> bool:
 		return bool(slab.from_year < experience and (slab.to_year < experience and slab.to_year != 0))
-
-
-def get_gratuity_rule_slabs(gratuity_rule):
-	return frappe.get_all(
-		"Gratuity Rule Slab", filters={"parent": gratuity_rule}, fields=["*"], order_by="idx"
-	)
 
 
 def get_last_salary_slip(employee: str) -> dict | None:
