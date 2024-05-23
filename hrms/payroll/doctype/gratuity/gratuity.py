@@ -7,7 +7,7 @@ from math import floor
 import frappe
 from frappe import _, bold
 from frappe.query_builder.functions import Sum
-from frappe.utils import flt, get_datetime, get_link_to_form
+from frappe.utils import cstr, flt, get_datetime, get_link_to_form
 
 from erpnext.accounts.general_ledger import make_gl_entries
 from erpnext.controllers.accounts_controller import AccountsController
@@ -20,32 +20,32 @@ class Gratuity(AccountsController):
 		self.amount = data["amount"]
 		self.set_status()
 
-	@frappe.whitelist()
-	def calculate_work_experience_and_amount(self):
-		rule = get_gratuity_rule_config(self.gratuity_rule)
+	@property
+	def gratuity_settings(self):
+		if not hasattr(self, "_gratuity_settings"):
+			self._gratuity_settings = frappe.db.get_value(
+				"Gratuity Rule",
+				self.gratuity_rule,
+				[
+					"work_experience_calculation_function as method",
+					"total_working_days_per_year",
+					"minimum_year_for_gratuity",
+					"calculate_gratuity_amount_based_on",
+				],
+				as_dict=True,
+			)
 
-		if rule.method == "Manual":
-			current_work_experience = flt(self.current_work_experience)
-		else:
-			current_work_experience = self.calculate_work_experience() or 0
-
-		gratuity_amount = self.calculate_gratuity_amount(current_work_experience) or 0
-
-		return {"current_work_experience": current_work_experience, "amount": gratuity_amount}
+		return self._gratuity_settings
 
 	def set_status(self, update=False):
-		precision = self.precision("paid_amount")
-		status = None
+		status = {"0": "Draft", "1": "Submitted", "2": "Cancelled"}[cstr(self.docstatus or 0)]
 
-		if self.docstatus == 0:
-			status = "Draft"
-		elif self.docstatus == 1:
+		if self.docstatus == 1:
+			precision = self.precision("paid_amount")
 			if flt(self.paid_amount) > 0 and flt(self.amount, precision) == flt(self.paid_amount, precision):
 				status = "Paid"
 			else:
 				status = "Unpaid"
-		elif self.docstatus == 2:
-			status = "Cancelled"
 
 		if update:
 			self.db_set("status", status)
@@ -140,13 +140,36 @@ class Gratuity(AccountsController):
 		self.db_set("paid_amount", paid_amount)
 		self.set_status(update=True)
 
-	def calculate_work_experience(self):
-		rule = get_gratuity_rule_config(self.gratuity_rule)
-		total_working_days = self.calculate_total_working_days()
-		current_work_experience = self.get_work_experience(total_working_days, rule)
-		return current_work_experience
+	@frappe.whitelist()
+	def calculate_work_experience_and_amount(self) -> dict:
+		if self.gratuity_settings.method == "Manual":
+			current_work_experience = flt(self.current_work_experience)
+		else:
+			current_work_experience = self.get_work_experience()
 
-	def calculate_total_working_days(self):
+		gratuity_amount = self.get_gratuity_amount(current_work_experience)
+
+		return {"current_work_experience": current_work_experience, "amount": gratuity_amount}
+
+	def get_work_experience(self) -> float:
+		total_working_days = self.get_total_working_days()
+		rule = self.gratuity_settings
+		work_experience = total_working_days / (rule.total_working_days_per_year or 1)
+
+		if rule.method == "Round off Work Experience":
+			work_experience = round(work_experience)
+		else:
+			work_experience = floor(work_experience)
+
+		if work_experience < rule.minimum_year_for_gratuity:
+			frappe.throw(
+				_("Employee: {0} have to complete minimum {1} years for gratuity").format(
+					bold(self.employee), rule.minimum_year_for_gratuity
+				)
+			)
+		return work_experience or 0
+
+	def get_total_working_days(self) -> float:
 		date_of_joining, relieving_date = frappe.db.get_value(
 			"Employee", self.employee, ["date_of_joining", "relieving_date"]
 		)
@@ -169,7 +192,7 @@ class Gratuity(AccountsController):
 
 		return total_working_days
 
-	def get_non_working_days(self, relieving_date, status):
+	def get_non_working_days(self, relieving_date: str, status: str) -> float:
 		filters = {
 			"docstatus": 1,
 			"status": status,
@@ -184,91 +207,63 @@ class Gratuity(AccountsController):
 		record = frappe.get_all("Attendance", filters=filters, fields=["COUNT(*) as total_lwp"])
 		return record[0].total_lwp if len(record) else 0
 
-	def get_work_experience(self, total_working_days, rule):
-		work_experience = total_working_days / rule.total_working_days_per_year or 1
+	def get_gratuity_amount(self, experience: float) -> float:
+		total_component_amount = self.get_total_component_amount()
+		calculate_amount_based_on = self.gratuity_settings.calculate_gratuity_amount_based_on
 
-		if rule.method == "Round off Work Experience":
-			work_experience = round(work_experience)
-		else:
-			work_experience = floor(work_experience)
-
-		if work_experience < rule.minimum_year_for_gratuity:
-			frappe.throw(
-				_("Employee: {0} have to complete minimum {1} years for gratuity").format(
-					bold(self.employee), rule.minimum_year_for_gratuity
-				)
-			)
-		return work_experience
-
-	def calculate_gratuity_amount(self, experience):
-		applicable_earning_components = self.get_applicable_components()
-		total_applicable_components_amount = self.get_total_component_amount(applicable_earning_components)
-
-		calculate_gratuity_amount_based_on = frappe.db.get_value(
-			"Gratuity Rule", self.gratuity_rule, "calculate_gratuity_amount_based_on"
-		)
 		gratuity_amount = 0
 		slabs = get_gratuity_rule_slabs(self.gratuity_rule)
 		slab_found = False
-		year_left = experience
+		years_left = experience
 
 		for slab in slabs:
-			if calculate_gratuity_amount_based_on == "Current Slab":
-				slab_found, gratuity_amount = self.calculate_amount_based_on_current_slab(
-					slab.from_year,
-					slab.to_year,
-					experience,
-					total_applicable_components_amount,
-					slab.fraction_of_applicable_earnings,
-				)
+			if calculate_amount_based_on == "Current Slab":
+				if self._is_experience_within_slab(slab, experience):
+					gratuity_amount = (
+						total_component_amount * experience * slab.fraction_of_applicable_earnings
+					)
+					if slab.fraction_of_applicable_earnings:
+						slab_found = True
+
 				if slab_found:
 					break
 
-			elif calculate_gratuity_amount_based_on == "Sum of all previous slabs":
+			elif calculate_amount_based_on == "Sum of all previous slabs":
+				# no slabs, fraction applicable for all years
 				if slab.to_year == 0 and slab.from_year == 0:
 					gratuity_amount += (
-						year_left * total_applicable_components_amount * slab.fraction_of_applicable_earnings
+						years_left * total_component_amount * slab.fraction_of_applicable_earnings
 					)
 					slab_found = True
 					break
 
-				if experience > slab.to_year and experience > slab.from_year and slab.to_year != 0:
+				# completed more years than the current slab, so consider fraction for current slab too
+				if self._is_experience_beyond_slab(slab, experience):
 					gratuity_amount += (
 						(slab.to_year - slab.from_year)
-						* total_applicable_components_amount
+						* total_component_amount
 						* slab.fraction_of_applicable_earnings
 					)
-					year_left -= slab.to_year - slab.from_year
+					years_left -= slab.to_year - slab.from_year
 					slab_found = True
-				elif slab.from_year <= experience and (experience < slab.to_year or slab.to_year == 0):
+
+				elif self._is_experience_within_slab(slab, experience):
 					gratuity_amount += (
-						year_left * total_applicable_components_amount * slab.fraction_of_applicable_earnings
+						years_left * total_component_amount * slab.fraction_of_applicable_earnings
 					)
 					slab_found = True
 
 		if not slab_found:
 			frappe.throw(
-				_("No Suitable Slab found for Calculation of gratuity amount in Gratuity Rule: {0}").format(
-					bold(self.gratuity_rule)
-				)
+				_(
+					"No applicable slab found for the calculation of gratuity amount as per the Gratuity Rule: {0}"
+				).format(bold(self.gratuity_rule))
 			)
 
-		return gratuity_amount
+		return flt(gratuity_amount, self.precision("amount"))
 
-	def get_applicable_components(self):
-		applicable_earning_components = frappe.get_all(
-			"Gratuity Applicable Component", filters={"parent": self.gratuity_rule}, pluck="salary_component"
-		)
-		if not applicable_earning_components:
-			frappe.throw(
-				_("No applicable Earning components found for Gratuity Rule: {0}").format(
-					bold(get_link_to_form("Gratuity Rule", self.gratuity_rule))
-				)
-			)
-
-		return applicable_earning_components
-
-	def get_total_component_amount(self, applicable_earning_components):
+	def get_total_component_amount(self) -> float:
+		applicable_earning_components = self.get_applicable_components()
 		salary_slip = get_last_salary_slip(self.employee)
 		if not salary_slip:
 			frappe.throw(_("No Salary Slip found for Employee: {0}").format(bold(self.employee)))
@@ -294,52 +289,30 @@ class Gratuity(AccountsController):
 
 		return total_amount
 
-	def calculate_amount_based_on_current_slab(
-		self,
-		from_year,
-		to_year,
-		experience,
-		total_applicable_components_amount,
-		fraction_of_applicable_earnings,
-	):
-		slab_found = False
-		gratuity_amount = 0
-		if experience >= from_year and (to_year == 0 or experience < to_year):
-			gratuity_amount = (
-				total_applicable_components_amount * experience * fraction_of_applicable_earnings
+	def get_applicable_components(self) -> list[str]:
+		applicable_earning_components = frappe.get_all(
+			"Gratuity Applicable Component", filters={"parent": self.gratuity_rule}, pluck="salary_component"
+		)
+		if not applicable_earning_components:
+			frappe.throw(
+				_("No applicable Earning components found for Gratuity Rule: {0}").format(
+					bold(get_link_to_form("Gratuity Rule", self.gratuity_rule))
+				)
 			)
-			if fraction_of_applicable_earnings:
-				slab_found = True
 
-		return slab_found, gratuity_amount
+		return applicable_earning_components
 
+	def _is_experience_within_slab(self, slab: dict, experience: float) -> bool:
+		return bool(slab.from_year <= experience and (experience < slab.to_year or slab.to_year == 0))
 
-def get_gratuity_rule_config(gratuity_rule: str) -> dict:
-	return frappe.db.get_value(
-		"Gratuity Rule",
-		gratuity_rule,
-		[
-			"work_experience_calculation_function as method",
-			"total_working_days_per_year",
-			"minimum_year_for_gratuity",
-		],
-		as_dict=True,
-	)
+	def _is_experience_beyond_slab(self, slab: dict, experience: float) -> bool:
+		return bool(slab.from_year < experience and (slab.to_year < experience and slab.to_year != 0))
 
 
 def get_gratuity_rule_slabs(gratuity_rule):
 	return frappe.get_all(
 		"Gratuity Rule Slab", filters={"parent": gratuity_rule}, fields=["*"], order_by="idx"
 	)
-
-
-def get_salary_structure(employee):
-	return frappe.get_list(
-		"Salary Structure Assignment",
-		filters={"employee": employee, "docstatus": 1},
-		fields=["from_date", "salary_structure"],
-		order_by="from_date desc",
-	)[0].salary_structure
 
 
 def get_last_salary_slip(employee: str) -> dict | None:
