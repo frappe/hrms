@@ -301,25 +301,30 @@ def get_applicable_components(gratuity_rule):
 
 
 def get_total_applicable_component_amount(employee, applicable_earnings_component, gratuity_rule):
-	sal_slip = get_last_salary_slip(employee)
-	if not sal_slip:
-		frappe.throw(_("No Salary Slip is found for Employee: {0}").format(bold(employee)))
-	component_and_amounts = frappe.get_all(
-		"Salary Detail",
-		filters={
-			"docstatus": 1,
-			"parent": sal_slip,
-			"parentfield": "earnings",
-			"salary_component": ("in", applicable_earnings_component),
-		},
-		fields=["amount"],
-	)
-	total_applicable_components_amount = 0
-	if not len(component_and_amounts):
-		frappe.throw(_("No Applicable Component is present in last month salary slip"))
-	for data in component_and_amounts:
-		total_applicable_components_amount += data.amount
-	return total_applicable_components_amount
+	salary_slip = get_last_salary_slip(employee)
+	if not salary_slip:
+		frappe.throw(_("No Salary Slip found for Employee: {0}").format(bold(employee)))
+
+	# consider full payment days for calculation as last month's salary slip
+	# might have less payment days as per attendance, making it non-deterministic
+	salary_slip.payment_days = salary_slip.total_working_days
+	salary_slip.process_salary_structure()
+
+	total_amount = 0
+	component_found = False
+	for row in salary_slip.earnings:
+		if row.salary_component in applicable_earnings_component:
+			total_amount += flt(row.amount)
+			component_found = True
+
+	if not component_found:
+		frappe.throw(
+			_("No applicable Earning component found in last salary slip for Gratuity Rule: {0}").format(
+				bold(get_link_to_form("Gratuity Rule", gratuity_rule))
+			)
+		)
+
+	return total_amount
 
 
 def calculate_amount_based_on_current_slab(
@@ -354,10 +359,9 @@ def get_salary_structure(employee):
 	)[0].salary_structure
 
 
-def get_last_salary_slip(employee):
-	salary_slips = frappe.get_list(
-		"Salary Slip", filters={"employee": employee, "docstatus": 1}, order_by="start_date desc"
+def get_last_salary_slip(employee: str) -> dict | None:
+	salary_slip = frappe.db.get_value(
+		"Salary Slip", {"employee": employee, "docstatus": 1}, order_by="start_date desc"
 	)
-	if not salary_slips:
-		return
-	return salary_slips[0].name
+	if salary_slip:
+		return frappe.get_doc("Salary Slip", salary_slip)
