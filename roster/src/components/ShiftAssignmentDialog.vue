@@ -2,11 +2,11 @@
 	<Dialog :options="{ title: dialog.title, size: '4xl' }">
 		<template #body-content>
 			<div class="grid grid-cols-2 gap-6">
-				<Autocomplete
-					type="text"
+				<FormControl
+					type="autocomplete"
 					label="Employee"
 					v-model="form.employee"
-					:class="!!props.shiftAssignmentName && 'pointer-events-none'"
+					:disabled="!!props.shiftAssignmentName"
 					:options="employees"
 				/>
 				<FormControl type="text" label="Company" v-model="form.company" :disabled="true" />
@@ -22,16 +22,15 @@
 					v-model="form.start_date"
 					:disabled="!!props.shiftAssignmentName"
 				/>
-				<Autocomplete
-					type="text"
-					label="Employee"
+				<FormControl
+					type="autocomplete"
+					label="Shift Type"
 					v-model="form.shift_type"
-					:class="!!props.shiftAssignmentName && 'pointer-events-none'"
+					:disabled="!!props.shiftAssignmentName"
 					:options="shiftTypes.data"
 				/>
-				<FormControl id="end_date" type="date" label="End Date" v-model="form.end_date" />
+				<FormControl type="date" label="End Date" v-model="form.end_date" />
 				<FormControl
-					id="staus"
 					type="select"
 					:options="['Active', 'Inactive']"
 					label="Status"
@@ -80,7 +79,6 @@
 import { reactive, ref, computed, watch } from "vue";
 import {
 	Dialog,
-	Autocomplete,
 	FormControl,
 	Dropdown,
 	createDocumentResource,
