@@ -32,17 +32,17 @@
 							</Button>
 						</template>
 						<template #body-main>
-							<div class="flex p-1">
+							<div class="flex p-2">
 								<div>
 									<FormControl
-										type="select"
+										type="autocomplete"
 										:options="sortFieldsOption.data"
 										v-model="currentSortStatus.field"
 										label="Fields"
 									>
 									</FormControl>
 								</div>
-								<div class="ml-1">
+								<div class="ml-2">
 									<FormControl
 										type="select"
 										:options="sortOrderOption"
@@ -392,7 +392,8 @@ const handleRefresh = (event) => {
 watch(
 	() => currentSortStatus.value,
 	(newValue) => {
-		listOptions.value.order_by = `\`tab${props.doctype}\`.${newValue.field} ${newValue.order}`
+		console.log("newValue", newValue)
+		listOptions.value.order_by = `\`tab${props.doctype}\`.${newValue.field.value} ${newValue.order}`
 	},
 	{ deep: true }
 )
