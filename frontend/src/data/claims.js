@@ -1,14 +1,50 @@
 import { createResource } from "frappe-ui"
 import { employeeResource } from "./employee"
 import { reactive } from "vue"
+import dayjs from "@/utils/dayjs"
 
 export const expenseClaimSummary = createResource({
 	url: "hrms.api.get_expense_claim_summary",
-	params: {
-		employee: employeeResource.data.name,
+	makeParams(params) {
+		return {
+			employee: employeeResource.data.name,
+			start_date: params ? params.year_start_date : null,
+			end_date: params ? params.year_end_date : null,
+		}
 	},
 	auto: true,
-	cache: "hrms:expense_claim_summary",
+})
+
+function getPeriodLabel(period) {
+	return `${dayjs(period?.year_start_date).format("MMM YYYY")} - ${dayjs(
+		period?.year_end_date
+	).format("MMM YYYY")}`
+}
+
+const add_options = (period) => {
+	return {
+		...period,
+		value: getPeriodLabel(period),
+		label: getPeriodLabel(period),
+	}
+}
+
+export const fiscalYears = createResource({
+	url: "hrms.api.get_fiscal_years_for_company",
+	params: {
+		company: employeeResource.data?.company,
+		current_date: dayjs().format("YYYY-MM-DD"),
+	},
+	auto: true,
+	transform: (data) => {
+		const newdata = {
+			current_fiscal_year: add_options(data.current_fiscal_year),
+			fiscal_years: data.fiscal_years.map((period) => {
+				return add_options(period)
+			}),
+		}
+		return newdata
+	},
 })
 
 const transformClaimData = (data) => {

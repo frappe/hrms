@@ -64,17 +64,29 @@
 					</span>
 				</div>
 			</div>
+			<div class="flex flex-col gap-1.5">
+				<span class="text-gray-600 text-base font-medium leading-5"> Fiscal Year </span>
+				<Autocomplete
+					label="Select Fiscal Year"
+					class="w-full"
+					placeholder="Select Fiscal Year"
+					:options="fiscalYears.data.fiscal_years"
+					v-model="selectedPeriod"
+				/>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
-import { FeatherIcon } from "frappe-ui"
-import { computed } from "vue"
-
-import { expenseClaimSummary as summary } from "@/data/claims"
-
+import { FeatherIcon, Autocomplete } from "frappe-ui"
+import { computed, ref, watch, inject, onMounted } from "vue"
 import { formatCurrency } from "@/utils/formatters"
+import { expenseClaimSummary as summary, fiscalYears } from "@/data/claims"
+
+const dayjs = inject("$dayjs")
+
+let selectedPeriod = ref({})
 
 const total_claimed_amount = computed(() => {
 	return (
@@ -84,5 +96,24 @@ const total_claimed_amount = computed(() => {
 	)
 })
 
+const fetchExpenseClaimSummary = (selectedPeriod) => {
+	const year_start_date = selectedPeriod && selectedPeriod.year_start_date
+	const year_end_date = selectedPeriod && selectedPeriod.year_end_date
+	summary.reload({ year_start_date, year_end_date })
+}
+
+watch(
+	() => selectedPeriod.value,
+	(newValue) => {
+		return fetchExpenseClaimSummary(newValue)
+	},
+	{ deep: true }
+)
+
 const company_currency = computed(() => summary.data?.currency)
+
+onMounted(() => {
+	selectedPeriod.value = fiscalYears.data.current_fiscal_year
+	fetchExpenseClaimSummary(selectedPeriod.value)
+})
 </script>

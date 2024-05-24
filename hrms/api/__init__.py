@@ -5,6 +5,8 @@ from frappe.query_builder import Order
 from frappe.utils import getdate
 from frappe.utils.data import cint
 
+from erpnext.accounts.utils import get_fiscal_year, get_fiscal_years
+
 SUPPORTED_FIELD_TYPES = [
 	"Link",
 	"Select",
@@ -355,8 +357,13 @@ def get_expense_claim_filters(
 
 
 @frappe.whitelist()
-def get_expense_claim_summary(employee: str) -> dict:
+def get_expense_claim_summary(
+	employee: str, start_date: str | None = None, end_date: str | None = None
+) -> dict:
 	from frappe.query_builder.functions import Sum
+
+	start_date = frappe.utils.data.get_datetime(start_date)
+	end_date = frappe.utils.data.get_datetime(end_date)
 
 	Claim = frappe.qb.DocType("Expense Claim")
 
@@ -379,7 +386,7 @@ def get_expense_claim_summary(employee: str) -> dict:
 	)
 	sum_rejected_claims = Sum(rejected_claims_case).as_("total_rejected_amount")
 
-	summary = (
+	query = (
 		frappe.qb.from_(Claim)
 		.select(
 			sum_pending_claims,
@@ -388,8 +395,12 @@ def get_expense_claim_summary(employee: str) -> dict:
 			Claim.company,
 		)
 		.where((Claim.docstatus != 2) & (Claim.employee == employee))
-	).run(as_dict=True)[0]
+	)
 
+	if start_date and end_date:
+		query = query.where((Claim.posting_date >= start_date) & (Claim.posting_date <= end_date))
+
+	summary = query.run(as_dict=True)[0]
 	currency = frappe.db.get_value("Company", summary.company, "default_currency")
 	summary["currency"] = currency
 
@@ -632,3 +643,11 @@ def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 @frappe.whitelist()
 def is_employee_checkin_allowed():
 	return cint(frappe.db.get_single_value("HR Settings", "allow_employee_checkin_from_mobile_app"))
+
+
+@frappe.whitelist()
+def get_fiscal_years_for_company(company):
+	today = getdate()
+	fiscal_years = get_fiscal_years(company=company, as_dict=True)
+	current_fiscal_year = get_fiscal_year(company=company, date=today, as_dict=True)
+	return {"fiscal_years": fiscal_years, "current_fiscal_year": current_fiscal_year}
