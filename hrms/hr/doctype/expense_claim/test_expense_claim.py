@@ -10,6 +10,7 @@ from erpnext.accounts.doctype.payment_entry.test_payment_entry import get_paymen
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.expense_claim.expense_claim import (
+	get_outstanding_amount_for_claim,
 	make_bank_entry,
 	make_expense_claim_for_delivery_trip,
 )
@@ -392,28 +393,34 @@ class TestExpenseClaim(FrappeTestCase):
 		expense_claim.submit()
 
 		# Payment entry 1: paying 500
-		make_payment_entry(expense_claim, 500)
-		outstanding_amount, total_amount_reimbursed = get_outstanding_and_total_reimbursed_amounts(
-			expense_claim
-		)
+		pe1 = make_payment_entry(expense_claim, 500)
+		pe1.reload()
+		self.assertEqual(pe1.references[0].outstanding_amount, 5000)
+
+		expense_claim.reload()
+		outstanding_amount = get_outstanding_amount_for_claim(expense_claim)
 		self.assertEqual(outstanding_amount, 5000)
-		self.assertEqual(total_amount_reimbursed, 500)
+		self.assertEqual(expense_claim.total_amount_reimbursed, 500)
 
-		# Payment entry 1: paying 2000
-		make_payment_entry(expense_claim, 2000)
-		outstanding_amount, total_amount_reimbursed = get_outstanding_and_total_reimbursed_amounts(
-			expense_claim
-		)
+		# Payment entry 2: paying 2000
+		pe2 = make_payment_entry(expense_claim, 2000)
+		pe2.reload()
+		self.assertEqual(pe2.references[0].outstanding_amount, 3000)
+
+		expense_claim.reload()
+		outstanding_amount = get_outstanding_amount_for_claim(expense_claim)
 		self.assertEqual(outstanding_amount, 3000)
-		self.assertEqual(total_amount_reimbursed, 2500)
+		self.assertEqual(expense_claim.total_amount_reimbursed, 2500)
 
-		# Payment entry 1: paying 3000
-		make_payment_entry(expense_claim, 3000)
-		outstanding_amount, total_amount_reimbursed = get_outstanding_and_total_reimbursed_amounts(
-			expense_claim
-		)
+		# Payment entry 3: paying 3000
+		pe3 = make_payment_entry(expense_claim, 3000)
+		pe3.reload()
+		self.assertEqual(pe3.references[0].outstanding_amount, 0)
+
+		expense_claim.reload()
+		outstanding_amount = get_outstanding_amount_for_claim(expense_claim)
 		self.assertEqual(outstanding_amount, 0)
-		self.assertEqual(total_amount_reimbursed, 5500)
+		self.assertEqual(expense_claim.total_amount_reimbursed, 5500)
 
 	def test_expense_claim_against_delivery_trip(self):
 		from erpnext.stock.doctype.delivery_trip.test_delivery_trip import (
@@ -642,17 +649,6 @@ def make_expense_claim(
 		return expense_claim
 	expense_claim.submit()
 	return expense_claim
-
-
-def get_outstanding_and_total_reimbursed_amounts(expense_claim):
-	outstanding_amount = flt(
-		frappe.db.get_value("Expense Claim", expense_claim.name, "total_sanctioned_amount")
-	) - flt(frappe.db.get_value("Expense Claim", expense_claim.name, "total_amount_reimbursed"))
-	total_amount_reimbursed = flt(
-		frappe.db.get_value("Expense Claim", expense_claim.name, "total_amount_reimbursed")
-	)
-
-	return outstanding_amount, total_amount_reimbursed
 
 
 def make_payment_entry(expense_claim, amount):
