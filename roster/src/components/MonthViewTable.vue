@@ -64,7 +64,9 @@
 							'border-l': idx,
 							'align-top': events.data?.[employee.name]?.[day.date],
 							'align-middle bg-gray-50':
-								events.data?.[employee.name]?.[day.date]?.name,
+								events.data?.[employee.name]?.[day.date]?.holiday,
+							'align-middle bg-blue-50':
+								events.data?.[employee.name]?.[day.date]?.leave,
 						}"
 						@mouseover="
 							hoveredCell.employee = employee.name;
@@ -77,14 +79,22 @@
 					>
 						<!-- Holiday -->
 						<div
-							v-if="events.data?.[employee.name]?.[day.date]?.name"
-							class="text-sm text-gray-500 text-center p-2"
+							v-if="events.data?.[employee.name]?.[day.date]?.holiday"
+							class="blocked-cell"
 						>
 							{{
 								events.data[employee.name][day.date].weekly_off
 									? "WO"
 									: events.data[employee.name][day.date].description
 							}}
+						</div>
+
+						<!-- Leave -->
+						<div
+							v-else-if="events.data?.[employee.name]?.[day.date]?.leave"
+							class="blocked-cell"
+						>
+							{{ events.data[employee.name][day.date].leave_type }}
 						</div>
 
 						<!-- Shifts -->
@@ -164,13 +174,23 @@ import { FilterField } from "./MonthViewHeader.vue";
 import ShiftAssignmentDialog from "./ShiftAssignmentDialog.vue";
 
 interface Holiday {
-	name: string;
+	holiday: string;
 	description: string;
 	weekly_off: 0 | 1;
 }
 
 interface HolidayWithDate extends Holiday {
 	holiday_date: string;
+}
+
+interface Leave {
+	leave: string;
+	leave_type: string;
+}
+
+interface LeaveApplication extends Leave {
+	from_date: string;
+	to_date: string;
 }
 
 type Color =
@@ -267,9 +287,11 @@ const events = createResource({
 				: {},
 		};
 	},
-	transform: (data: Record<string, (ShiftAssignment | HolidayWithDate)[]>) => {
+	transform: (
+		data: Record<string, (HolidayWithDate | LeaveApplication | ShiftAssignment)[]>,
+	) => {
 		// convert employee -> events (holidays/shift assignments) to employee -> date -> holiday/shifts
-		const mappedData: Record<string, Record<string, Holiday | Shift[]>> = {};
+		const mappedData: Record<string, Record<string, Holiday | Leave | Shift[]>> = {};
 		for (const employee in data) {
 			mappedData[employee] = {};
 			for (let d = 1; d <= props.firstOfMonth.daysInMonth(); d++) {
@@ -277,13 +299,29 @@ const events = createResource({
 				const key = date.format("YYYY-MM-DD");
 				for (const event of Object.values(data[employee])) {
 					// holiday
-					if ("holiday_date" in event) {
-						if (date.isSame(event.holiday_date))
+					if ("holiday" in event) {
+						if (date.isSame(event.holiday_date)) {
 							mappedData[employee][key] = {
-								name: event.name,
+								holiday: event.holiday,
 								description: event.description,
 								weekly_off: event.weekly_off,
 							};
+							break;
+						}
+					}
+
+					// leave
+					else if ("leave" in event) {
+						if (
+							dayjs(event.from_date).isSameOrBefore(date) &&
+							dayjs(event.to_date).isSameOrAfter(date)
+						) {
+							mappedData[employee][key] = {
+								leave: event.leave,
+								leave_type: event.leave_type,
+							};
+							break;
+						}
 					}
 
 					// shift
@@ -327,5 +365,9 @@ td {
 th:first-child,
 td:first-child {
 	@apply sticky left-0 max-w-48 min-w-48 bg-white border-r;
+}
+
+.blocked-cell {
+	@apply text-sm text-gray-500 text-center p-2;
 }
 </style>
