@@ -14,11 +14,12 @@
 				:class="showFilters ? 'w-full' : 'w-0 overflow-hidden'"
 			>
 				<div v-for="[key, value] of Object.entries(filters)" :key="key" class="w-40">
-					<Autocomplete
+					<FormControl
+						type="autocomplete"
 						:placeholder="toTitleCase(key)"
 						:options="value.options"
 						v-model="value.model"
-						:class="!value.options.length && 'pointer-events-none'"
+						:disabled="!value.options.length"
 					/>
 				</div>
 				<Button
@@ -37,7 +38,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, watch } from "vue";
-import { Autocomplete, createListResource } from "frappe-ui";
+import { FormControl, createListResource } from "frappe-ui";
 import { Dayjs } from "dayjs";
 
 export type FilterField = "company" | "department" | "branch" | "designation" | "shift_type";
