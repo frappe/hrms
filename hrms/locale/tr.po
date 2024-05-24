@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-23 07:10\n"
+"PO-Revision-Date: 2024-05-24 07:11\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -7381,7 +7381,7 @@ msgstr "Form doldurucu ve denetleyicileri"
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Filled"
-msgstr ""
+msgstr "Dolduruldu"
 
 #: hr/report/vehicle_expenses/vehicle_expenses.js:7
 msgid "Filter Based On"
@@ -11448,7 +11448,7 @@ msgstr ""
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Open & Approved"
-msgstr ""
+msgstr "Açık & Onaylandı"
 
 #: hr/doctype/leave_application/leave_application_email_template.html:30
 msgid "Open Now"
@@ -15368,13 +15368,13 @@ msgstr ""
 #. Label of a Card Break in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Time"
-msgstr ""
+msgstr "Zaman"
 
 #. Label of a Datetime field in DocType 'Employee Checkin'
 #: hr/doctype/employee_checkin/employee_checkin.json
 msgctxt "Employee Checkin"
 msgid "Time"
-msgstr ""
+msgstr "Zaman"
 
 #: hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.js:28
 msgid "Time Interval"
