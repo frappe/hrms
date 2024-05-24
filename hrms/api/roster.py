@@ -70,7 +70,6 @@ def get_leaves(month_start: str, month_end: str, employee_filters: dict[str, str
 			LeaveApplication.leave_type,
 			LeaveApplication.from_date,
 			LeaveApplication.to_date,
-			LeaveApplication.half_day,
 		)
 		.from_(LeaveApplication)
 		.left_join(Employee)
