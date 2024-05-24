@@ -271,7 +271,7 @@ class Gratuity(AccountsController):
 		# consider full payment days for calculation as last month's salary slip
 		# might have less payment days as per attendance, making it non-deterministic
 		salary_slip.payment_days = salary_slip.total_working_days
-		salary_slip.process_salary_structure()
+		salary_slip.calculate_net_pay()
 
 		total_amount = 0
 		component_found = False
