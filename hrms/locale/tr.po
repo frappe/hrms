@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-24 07:11\n"
+"PO-Revision-Date: 2024-05-25 07:08\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -1349,7 +1349,7 @@ msgstr "Tutar"
 
 #: payroll/doctype/salary_structure/salary_structure.py:34
 msgid "Amount Based on Formula"
-msgstr ""
+msgstr "Formüle Dayalı Tutar"
 
 #. Label of a Check field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -1365,7 +1365,7 @@ msgstr "Tutar formüle dayalı"
 
 #: payroll/doctype/additional_salary/additional_salary.py:31
 msgid "Amount should not be less than zero"
-msgstr ""
+msgstr "Tutar sıfırdan az olmamalıdır"
 
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.py:58
 msgid "An amount of {0} already claimed for the component {1}, set the amount equal or greater than {2}"
@@ -1385,7 +1385,7 @@ msgstr "Yıllık Maaş"
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Annual Taxable Amount"
-msgstr ""
+msgstr "Yıllık Vergilendirilebilir Tutar"
 
 #. Label of a Small Text field in DocType 'Travel Request'
 #: hr/doctype/travel_request/travel_request.json
@@ -2195,7 +2195,7 @@ msgstr ""
 
 #: hr/report/project_profitability/project_profitability.py:171
 msgid "Bill Amount"
-msgstr ""
+msgstr "Fatura Tutarı"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:254
 msgid "Billed Hours"
@@ -7960,7 +7960,7 @@ msgstr ""
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Grand Total"
-msgstr ""
+msgstr "Genel Toplam"
 
 #. Name of a DocType
 #: payroll/doctype/gratuity/gratuity.json
@@ -12075,7 +12075,7 @@ msgstr "Bekliyor"
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Pending Amount"
-msgstr ""
+msgstr "Bekleyen Tutar"
 
 #: hr/report/employee_exits/employee_exits.py:227
 msgid "Pending FnF"
@@ -12608,7 +12608,7 @@ msgstr ""
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Purpose & Amount"
-msgstr ""
+msgstr "Amaç & Miktar"
 
 #. Name of a DocType
 #: hr/doctype/purpose_of_travel/purpose_of_travel.json
@@ -13269,7 +13269,7 @@ msgstr ""
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Returned Amount"
-msgstr ""
+msgstr "İade Edilen Tutar"
 
 #: hr/doctype/hr_settings/hr_settings.js:37
 msgid "Review various other settings related to Employee Leaves and Expense Claim"
@@ -15658,19 +15658,19 @@ msgstr ""
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
 msgctxt "Employee Benefit Application"
 msgid "Total Amount"
-msgstr ""
+msgstr "Toplam Tutar"
 
 #. Label of a Currency field in DocType 'Gratuity'
 #: payroll/doctype/gratuity/gratuity.json
 msgctxt "Gratuity"
 msgid "Total Amount"
-msgstr ""
+msgstr "Toplam Tutar"
 
 #. Label of a Currency field in DocType 'Travel Request Costing'
 #: hr/doctype/travel_request_costing/travel_request_costing.json
 msgctxt "Travel Request Costing"
 msgid "Total Amount"
-msgstr ""
+msgstr "Toplam Tutar"
 
 #. Label of a Currency field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
