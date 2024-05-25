@@ -70,6 +70,7 @@ class SalarySlip(TransactionBase):
 			"float": float,
 			"long": int,
 			"round": round,
+			"rounded": rounded,
 			"date": date,
 			"getdate": getdate,
 			"ceil": ceil,

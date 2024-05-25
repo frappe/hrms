@@ -80,33 +80,12 @@ class ShiftAssignment(Document):
 				& (shift.docstatus == 1)
 				& (shift.name != self.name)
 				& (shift.status == "Active")
+				& ((shift.end_date >= self.start_date) | (shift.end_date.isnull()))
 			)
 		)
 
 		if self.end_date:
-			query = query.where(
-				Criterion.any(
-					[
-						Criterion.any(
-							[
-								shift.end_date.isnull(),
-								((self.start_date >= shift.start_date) & (self.start_date <= shift.end_date)),
-							]
-						),
-						Criterion.any(
-							[
-								((self.end_date >= shift.start_date) & (self.end_date <= shift.end_date)),
-								shift.start_date.between(self.start_date, self.end_date),
-							]
-						),
-					]
-				)
-			)
-		else:
-			query = query.where(
-				shift.end_date.isnull()
-				| ((self.start_date >= shift.start_date) & (self.start_date <= shift.end_date))
-			)
+			query = query.where(shift.start_date <= self.end_date)
 
 		return query.run(as_dict=True)
 

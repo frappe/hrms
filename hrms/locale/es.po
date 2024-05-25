@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-25 14:15\n"
+"PO-Revision-Date: 2024-05-09 12:50\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -3895,7 +3895,7 @@ msgstr ""
 #: hr/doctype/goal/goal_tree.js:38
 #: hr/report/daily_work_summary_replies/daily_work_summary_replies.js:16
 msgid "Date Range"
-msgstr ""
+msgstr "Rango de Fechas"
 
 #: hr/doctype/leave_block_list/leave_block_list.py:19
 msgid "Date is repeated"
