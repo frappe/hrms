@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-25 07:08\n"
+"PO-Revision-Date: 2024-05-26 07:11\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -7251,7 +7251,7 @@ msgstr ""
 
 #: hr/doctype/interview/interview.py:119
 msgid "Failed to send the Interview Reschedule notification. Please configure your email account."
-msgstr ""
+msgstr "Mülakat Yeniden Planlama bildirimi gönderilemedi. Lütfen e-posta hesabınızı yapılandırın."
 
 #: overrides/company.py:52
 msgid "Failed to setup defaults for country {0}. Please contact support."
