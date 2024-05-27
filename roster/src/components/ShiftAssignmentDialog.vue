@@ -270,8 +270,10 @@ watch(selectDays, (val) => {
 
 const selectDefaultWorkingDay = () => {
 	Object.assign(workingDays, workingDaysObject);
-	const day = dayjs(form.start_date).format("ddd");
-	workingDays[day as keyof typeof workingDays] = true;
+	if (form.start_date) {
+		const day = dayjs(form.start_date).format("ddd");
+		workingDays[day as keyof typeof workingDays] = true;
+	}
 };
 
 const updateShiftAssigment = () => {
