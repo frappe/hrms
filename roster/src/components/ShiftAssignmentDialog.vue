@@ -42,6 +42,40 @@
 					v-model="form.department"
 					:disabled="true"
 				/>
+				<div v-if="!props.shiftAssignmentName">
+					<FormControl
+						type="checkbox"
+						label="Select Working Days"
+						v-model="selectDays"
+						:disabled="differenceBetweenDates <= 7"
+					/>
+				</div>
+				<div v-if="!props.shiftAssignmentName" />
+				<div v-if="!props.shiftAssignmentName && selectDays" class="space-y-1.5">
+					<div class="text-xs text-gray-600">Days</div>
+					<div
+						class="border rounded grid grid-flow-col h-7 justify-stretch overflow-clip"
+					>
+						<div
+							v-for="(isSelected, day) of workingDays"
+							class="cursor-pointer flex flex-col"
+							:class="{
+								'border-r': day !== 'Sun',
+								'bg-gray-100 text-gray-600': !isSelected,
+							}"
+							@click="workingDays[day] = !workingDays[day]"
+						>
+							<div class="text-center text-sm my-auto">{{ day }}</div>
+						</div>
+					</div>
+				</div>
+				<FormControl
+					v-if="!props.shiftAssignmentName && selectDays"
+					type="select"
+					:options="['Every Week', 'Every 2 Weeks', 'Every 3 Weeks', 'Every 4 Weeks']"
+					label="Frequency"
+					v-model="frequency"
+				/>
 			</div>
 		</template>
 		<template #actions>
@@ -86,18 +120,17 @@ import {
 	createListResource,
 } from "frappe-ui";
 
+import dayjs from "../utils/dayjs";
+
 type Status = "Active" | "Inactive";
 
 type Form = {
-	[K in
-		| "company"
-		| "employee_name"
-		| "start_date"
-		| "end_date"
-		| "department"
-		| "employee"
-		| "shift_type"]: string | { value: string; label?: string };
+	[K in "company" | "employee_name" | "department" | "employee" | "shift_type"]:
+		| string
+		| { value: string; label?: string };
 } & {
+	start_date: string;
+	end_date: string;
 	status: Status | { value: Status; label?: Status };
 };
 
@@ -133,8 +166,22 @@ const defaultForm: Form = {
 	department: "",
 };
 
+const defaultWorkingDays = {
+	Mon: false,
+	Tue: false,
+	Wed: false,
+	Thu: false,
+	Fri: false,
+	Sat: false,
+	Sun: false,
+};
+
 const form = reactive({ ...defaultForm });
+const workingDays = reactive({ ...defaultWorkingDays });
+
 const shiftAssignment = ref();
+const selectDays = ref(false);
+const frequency = ref("Every Week");
 
 const dialog = computed(() => {
 	if (props.shiftAssignmentName)
@@ -152,6 +199,14 @@ const dialog = computed(() => {
 		action: createShiftAssigment,
 		actionDisabled: false,
 	};
+});
+
+const differenceBetweenDates = computed(() => {
+	let difference = 0;
+	if (form.start_date && form.end_date)
+		difference = dayjs(form.end_date).diff(dayjs(form.start_date), "d");
+	if (difference <= 7) selectDays.value = false;
+	return difference;
 });
 
 const employees = computed(() => {
@@ -180,6 +235,7 @@ watch(
 		if (val && !props.shiftAssignmentName) {
 			form.employee = { value: props.selectedCell.employee };
 			form.start_date = props.selectedCell.date;
+			form.end_date = props.selectedCell.date;
 		}
 	},
 );
@@ -197,6 +253,13 @@ watch(
 		}
 	},
 );
+
+watch(selectDays, (val) => {
+	if (!val) {
+		Object.assign(workingDays, defaultWorkingDays);
+		frequency.value = "Every Week";
+	}
+});
 
 const updateShiftAssigment = () => {
 	shiftAssignment.value.setValue.submit({ status: form.status, end_date: form.end_date });
