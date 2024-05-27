@@ -155,7 +155,7 @@ const emit = defineEmits<{
 	(e: "fetchEvents"): void;
 }>();
 
-const defaultForm: Form = {
+const formObject: Form = {
 	employee: "",
 	company: "",
 	employee_name: "",
@@ -166,7 +166,7 @@ const defaultForm: Form = {
 	department: "",
 };
 
-const defaultWorkingDays = {
+const workingDaysObject = {
 	Mon: false,
 	Tue: false,
 	Wed: false,
@@ -176,8 +176,8 @@ const defaultWorkingDays = {
 	Sun: false,
 };
 
-const form = reactive({ ...defaultForm });
-const workingDays = reactive({ ...defaultWorkingDays });
+const form = reactive({ ...formObject });
+const workingDays = reactive({ ...workingDaysObject });
 
 const shiftAssignment = ref();
 const selectDays = ref(false);
@@ -222,7 +222,7 @@ watch(
 	(val) => {
 		if (val) shiftAssignment.value = getShiftAssignment(val);
 		else {
-			Object.assign(form, defaultForm);
+			Object.assign(form, formObject);
 			form.employee = { value: props.selectedCell.employee };
 			form.start_date = props.selectedCell.date;
 		}
@@ -254,12 +254,25 @@ watch(
 	},
 );
 
+watch(
+	() => form.start_date,
+	() => {
+		selectDefaultWorkingDay();
+	},
+);
+
 watch(selectDays, (val) => {
 	if (!val) {
-		Object.assign(workingDays, defaultWorkingDays);
+		selectDefaultWorkingDay();
 		frequency.value = "Every Week";
 	}
 });
+
+const selectDefaultWorkingDay = () => {
+	Object.assign(workingDays, workingDaysObject);
+	const day = dayjs(form.start_date).format("ddd");
+	workingDays[day as keyof typeof workingDays] = true;
+};
 
 const updateShiftAssigment = () => {
 	shiftAssignment.value.setValue.submit({ status: form.status, end_date: form.end_date });
