@@ -60,12 +60,14 @@
 							v-for="(isSelected, day) of workingDays"
 							class="cursor-pointer flex flex-col"
 							:class="{
-								'border-r': day !== 'Sun',
+								'border-r': day !== 'Sunday',
 								'bg-gray-100 text-gray-600': !isSelected,
 							}"
 							@click="workingDays[day] = !workingDays[day]"
 						>
-							<div class="text-center text-sm my-auto">{{ day }}</div>
+							<div class="text-center text-sm my-auto">
+								{{ day.substring(0, 3) }}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -167,13 +169,13 @@ const formObject: Form = {
 };
 
 const workingDaysObject = {
-	Mon: false,
-	Tue: false,
-	Wed: false,
-	Thu: false,
-	Fri: false,
-	Sat: false,
-	Sun: false,
+	Monday: false,
+	Tuesday: false,
+	Wednesday: false,
+	Thursday: false,
+	Friday: false,
+	Saturday: false,
+	Sunday: false,
 };
 
 const form = reactive({ ...formObject });
@@ -271,7 +273,7 @@ watch(selectDays, (val) => {
 const selectDefaultWorkingDay = () => {
 	Object.assign(workingDays, workingDaysObject);
 	if (form.start_date) {
-		const day = dayjs(form.start_date).format("ddd");
+		const day = dayjs(form.start_date).format("dddd");
 		workingDays[day as keyof typeof workingDays] = true;
 	}
 };
@@ -281,15 +283,14 @@ const updateShiftAssigment = () => {
 };
 
 const createShiftAssigment = () => {
-	const employee = (form.employee as { value: string }).value;
-	const shiftType = (form.shift_type as { value: string }).value;
-
-	shiftAssignments.insert.submit({
-		...form,
-		employee: employee,
-		shift_type: shiftType,
-		docstatus: 1,
-	});
+	if (selectDays.value) repeatingShiftAssignment.submit();
+	else
+		shiftAssignments.insert.submit({
+			...form,
+			employee: (form.employee as { value: string }).value,
+			shift_type: (form.shift_type as { value: string }).value,
+			docstatus: 1,
+		});
 };
 
 // RESOURCES
@@ -345,6 +346,27 @@ const shiftAssignments = createListResource({
 		onSuccess() {
 			emit("fetchEvents");
 		},
+	},
+});
+
+const repeatingShiftAssignment = createResource({
+	url: "hrms.api.roster.create_repeating_shift_assignment",
+	makeParams() {
+		return {
+			employee: (form.employee as { value: string }).value,
+			shift_type: (form.shift_type as { value: string }).value,
+			company: form.company,
+			status: form.status,
+			start_date: form.start_date,
+			end_date: form.end_date,
+			days: Object.keys(workingDays).filter(
+				(day) => workingDays[day as keyof typeof workingDays],
+			),
+			frequency: frequency.value,
+		};
+	},
+	onSuccess: () => {
+		emit("fetchEvents");
 	},
 });
 </script>
