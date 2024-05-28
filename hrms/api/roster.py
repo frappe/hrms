@@ -1,24 +1,17 @@
 import frappe
-from frappe.utils import add_days, date_diff, get_weekday
+from frappe.utils import add_days, date_diff, get_weekday, random_string
 
 from hrms.hr.doctype.shift_assignment_tool.shift_assignment_tool import create_shift_assignment
 
 
 @frappe.whitelist()
-def get_values(
-	doctype: str,
-	name: str,
-	fields: list,
-) -> dict[str, str]:
+def get_values(doctype: str, name: str, fields: list) -> dict[str, str]:
 	return frappe.db.get_value(doctype, name, fields, as_dict=True)
 
 
 @frappe.whitelist()
 def get_events(
-	month_start: str,
-	month_end: str,
-	employee_filters: dict[str, str],
-	shift_filters: dict[str, str],
+	month_start: str, month_end: str, employee_filters: dict[str, str], shift_filters: dict[str, str]
 ) -> dict[str, list[dict]]:
 	holidays = get_holidays(month_start, month_end, employee_filters)
 	leaves = get_leaves(month_start, month_end, employee_filters)
@@ -65,6 +58,12 @@ def create_repeating_shift_assignment(
 	)
 
 
+@frappe.whitelist()
+def delete_repeating_shift_assignment(group: str) -> None:
+	frappe.db.delete("Shift Assignment", {"group": group})
+	frappe.delete_doc("Shift Assignment Group", group)
+
+
 def _create_repeating_shift_assignment(
 	employee: str,
 	company: str,
@@ -75,15 +74,10 @@ def _create_repeating_shift_assignment(
 	days: list[str],
 	frequency: str,
 ) -> None:
+	group = frappe.get_doc({"doctype": "Shift Assignment Group", "group": random_string(10)}).insert()
+
 	def create_individual_assignment(start_date, end_date):
-		create_shift_assignment(
-			employee,
-			company,
-			shift_type,
-			start_date,
-			end_date,
-			status,
-		)
+		create_shift_assignment(employee, company, shift_type, start_date, end_date, status, group.name)
 
 	gap = {
 		"Every Week": 0,
@@ -102,23 +96,14 @@ def _create_repeating_shift_assignment(
 			if not individual_assignment_start:
 				individual_assignment_start = date
 			if date == end_date:
-				create_individual_assignment(
-					individual_assignment_start,
-					date,
-				)
+				create_individual_assignment(individual_assignment_start, date)
 
 		elif individual_assignment_start:
-			create_individual_assignment(
-				individual_assignment_start,
-				add_days(date, -1),
-			)
+			create_individual_assignment(individual_assignment_start, add_days(date, -1))
 			individual_assignment_start = None
 
 		if weekday == week_end_day and gap:
-			create_individual_assignment(
-				individual_assignment_start,
-				date,
-			)
+			create_individual_assignment(individual_assignment_start, date)
 			individual_assignment_start = None
 			date = add_days(date, 7 * gap)
 
