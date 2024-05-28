@@ -1,5 +1,5 @@
 import frappe
-from frappe.utils import add_days
+from frappe.utils import add_days, get_weekday
 
 from hrms.hr.doctype.shift_assignment_tool.shift_assignment_tool import create_shift_assignment
 
@@ -54,18 +54,36 @@ def create_repeating_shift_assignment(
 	}[frequency]
 
 	date = start_date
-	week_end_day = frappe.utils.get_weekday(add_days(start_date, -1))
+	new_assignment_start = None
+	week_end_day = get_weekday(add_days(start_date, -1))
+
 	while date <= end_date:
-		if frappe.utils.get_weekday(date) in days:
+		weekday = get_weekday(date)
+		if weekday in days:
+			if not new_assignment_start:
+				new_assignment_start = date
+			if date == end_date:
+				create_shift_assignment(
+					employee,
+					company,
+					shift_type,
+					new_assignment_start,
+					date,
+					status,
+				)
+
+		elif new_assignment_start:
 			create_shift_assignment(
 				employee,
 				company,
 				shift_type,
-				date,
-				date,
+				new_assignment_start,
+				add_days(date, -1),
 				status,
 			)
-		if frappe.utils.get_weekday(date) == week_end_day:
+			new_assignment_start = None
+
+		if weekday == week_end_day:
 			date = add_days(date, 7 * gap)
 		date = add_days(date, 1)
 
