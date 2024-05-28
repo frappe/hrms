@@ -11,6 +11,7 @@
   "employee_name",
   "shift_type",
   "status",
+  "group",
   "column_break_3",
   "company",
   "start_date",
@@ -101,11 +102,18 @@
    "fieldtype": "Select",
    "label": "Status",
    "options": "Active\nInactive"
+  },
+  {
+   "fieldname": "group",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Group",
+   "options": "Shift Assignment Group"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-04-04 17:13:13.137431",
+ "modified": "2024-05-28 16:30:03.478358",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment",
