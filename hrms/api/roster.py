@@ -1,5 +1,5 @@
 import frappe
-from frappe.utils import add_days, get_weekday
+from frappe.utils import add_days, date_diff, get_weekday
 
 from hrms.hr.doctype.shift_assignment_tool.shift_assignment_tool import create_shift_assignment
 
@@ -37,6 +37,35 @@ def get_events(
 
 @frappe.whitelist()
 def create_repeating_shift_assignment(
+	employee: str,
+	company: str,
+	shift_type: str,
+	status: str,
+	start_date: str,
+	end_date: str,
+	days: list[str],
+	frequency: str,
+) -> None:
+	if date_diff(end_date, start_date) <= 100:
+		return _create_repeating_shift_assignment(
+			employee, company, shift_type, status, start_date, end_date, days, frequency
+		)
+
+	frappe.enqueue(
+		_create_repeating_shift_assignment,
+		timeout=4500,
+		employee=employee,
+		company=company,
+		shift_type=shift_type,
+		status=status,
+		start_date=start_date,
+		end_date=end_date,
+		days=days,
+		frequency=frequency,
+	)
+
+
+def _create_repeating_shift_assignment(
 	employee: str,
 	company: str,
 	shift_type: str,
