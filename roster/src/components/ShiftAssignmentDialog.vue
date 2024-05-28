@@ -82,19 +82,7 @@
 		</template>
 		<template #actions>
 			<div class="flex space-x-2 justify-end">
-				<Dropdown
-					v-if="props.shiftAssignmentName"
-					:options="[
-						{
-							label: 'Delete Assignment',
-							icon: 'trash',
-							onClick: async () => {
-								await shiftAssignment.setValue.submit({ docstatus: 2 });
-								shiftAssignments.delete.submit(props.shiftAssignmentName);
-							},
-						},
-					]"
-				>
+				<Dropdown v-if="props.shiftAssignmentName" :options="actions">
 					<Button size="md" icon="more-vertical" />
 				</Dropdown>
 				<Button
@@ -134,6 +122,7 @@ type Form = {
 	start_date: string;
 	end_date: string;
 	status: Status | { value: Status; label?: Status };
+	group?: string;
 };
 
 interface Props {
@@ -166,6 +155,7 @@ const formObject: Form = {
 	end_date: "",
 	status: "Active",
 	department: "",
+	group: "",
 };
 
 const workingDaysObject = {
@@ -201,6 +191,28 @@ const dialog = computed(() => {
 		action: createShiftAssigment,
 		actionDisabled: false,
 	};
+});
+
+const actions = computed(() => {
+	const options = [
+		{
+			label: "Delete Current Shift",
+			icon: "trash",
+			onClick: async () => {
+				await shiftAssignment.value.setValue.submit({ docstatus: 2 });
+				shiftAssignments.delete.submit(props.shiftAssignmentName);
+			},
+		},
+	];
+	if (form.group)
+		options.push({
+			label: "Delete Shift Group",
+			icon: "trash",
+			onClick: async () => {
+				deleteRepeatingShiftAssignment.submit(form.group);
+			},
+		});
+	return options;
 });
 
 const differenceBetweenDates = computed(() => {
@@ -283,7 +295,7 @@ const updateShiftAssigment = () => {
 };
 
 const createShiftAssigment = () => {
-	if (selectDays.value) repeatingShiftAssignment.submit();
+	if (selectDays.value) createRepeatingShiftAssignment.submit();
 	else
 		shiftAssignments.insert.submit({
 			...form,
@@ -349,7 +361,7 @@ const shiftAssignments = createListResource({
 	},
 });
 
-const repeatingShiftAssignment = createResource({
+const createRepeatingShiftAssignment = createResource({
 	url: "hrms.api.roster.create_repeating_shift_assignment",
 	makeParams() {
 		return {
@@ -364,6 +376,16 @@ const repeatingShiftAssignment = createResource({
 			),
 			frequency: frequency.value,
 		};
+	},
+	onSuccess: () => {
+		emit("fetchEvents");
+	},
+});
+
+const deleteRepeatingShiftAssignment = createResource({
+	url: "hrms.api.roster.delete_repeating_shift_assignment",
+	makeParams() {
+		return { group: form.group };
 	},
 	onSuccess: () => {
 		emit("fetchEvents");

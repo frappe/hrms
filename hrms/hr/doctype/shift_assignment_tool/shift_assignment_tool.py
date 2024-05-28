@@ -237,7 +237,13 @@ class ShiftAssignmentTool(Document):
 
 
 def create_shift_assignment(
-	employee: str, company: str, shift_type: str, start_date: str, end_date: str, status: str
+	employee: str,
+	company: str,
+	shift_type: str,
+	start_date: str,
+	end_date: str,
+	status: str,
+	group: str | None = None,
 ) -> str:
 	assignment = frappe.new_doc("Shift Assignment")
 	assignment.employee = employee
@@ -246,6 +252,7 @@ def create_shift_assignment(
 	assignment.start_date = start_date
 	assignment.end_date = end_date
 	assignment.status = status
+	assignment.group = group
 	assignment.save()
 	assignment.submit()
 	return assignment.name
