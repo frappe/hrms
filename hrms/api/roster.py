@@ -46,6 +46,16 @@ def create_repeating_shift_assignment(
 	days: list[str],
 	frequency: str,
 ) -> None:
+	def create_individual_assignment(start_date, end_date):
+		create_shift_assignment(
+			employee,
+			company,
+			shift_type,
+			start_date,
+			end_date,
+			status,
+		)
+
 	gap = {
 		"Every Week": 0,
 		"Every 2 Weeks": 1,
@@ -54,37 +64,35 @@ def create_repeating_shift_assignment(
 	}[frequency]
 
 	date = start_date
-	new_assignment_start = None
+	individual_assignment_start = None
 	week_end_day = get_weekday(add_days(start_date, -1))
 
 	while date <= end_date:
 		weekday = get_weekday(date)
 		if weekday in days:
-			if not new_assignment_start:
-				new_assignment_start = date
+			if not individual_assignment_start:
+				individual_assignment_start = date
 			if date == end_date:
-				create_shift_assignment(
-					employee,
-					company,
-					shift_type,
-					new_assignment_start,
+				create_individual_assignment(
+					individual_assignment_start,
 					date,
-					status,
 				)
 
-		elif new_assignment_start:
-			create_shift_assignment(
-				employee,
-				company,
-				shift_type,
-				new_assignment_start,
+		elif individual_assignment_start:
+			create_individual_assignment(
+				individual_assignment_start,
 				add_days(date, -1),
-				status,
 			)
-			new_assignment_start = None
+			individual_assignment_start = None
 
-		if weekday == week_end_day:
+		if weekday == week_end_day and gap:
+			create_individual_assignment(
+				individual_assignment_start,
+				date,
+			)
+			individual_assignment_start = None
 			date = add_days(date, 7 * gap)
+
 		date = add_days(date, 1)
 
 
