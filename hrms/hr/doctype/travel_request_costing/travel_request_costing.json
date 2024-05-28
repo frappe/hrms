@@ -75,6 +75,7 @@
    "unique": 0
   }, 
   {
+<<<<<<< HEAD
    "allow_bulk_edit": 0, 
    "allow_on_submit": 0, 
    "bold": 0, 
@@ -167,6 +168,28 @@
    "translatable": 0, 
    "unique": 0
   }, 
+=======
+   "fieldname": "sponsored_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Sponsored Amount",
+   "options": "Company:company:default_currency"
+  },
+  {
+   "fieldname": "funded_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Funded Amount",
+   "options": "Company:company:default_currency"
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total Amount",
+   "options": "Company:company:default_currency"
+  },
+>>>>>>> 533b96873 (fix(Travel Request): get currency from Employee Master's Company (#1807))
   {
    "allow_bulk_edit": 0, 
    "allow_on_submit": 0, 
@@ -228,6 +251,7 @@
    "translatable": 0, 
    "unique": 0
   }
+<<<<<<< HEAD
  ], 
  "has_web_view": 0, 
  "hide_heading": 0, 
@@ -254,4 +278,20 @@
  "sort_order": "DESC", 
  "track_changes": 1, 
  "track_seen": 0
+=======
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2024-05-24 12:00:47.413806",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Travel Request Costing",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+>>>>>>> 533b96873 (fix(Travel Request): get currency from Employee Master's Company (#1807))
 }
