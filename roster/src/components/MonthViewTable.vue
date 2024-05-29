@@ -216,6 +216,9 @@ interface ShiftAssignment extends Shift {
 	end_date: string;
 }
 
+type Events = Record<string, (HolidayWithDate | LeaveApplication | ShiftAssignment)[]>;
+type MappedEvents = Record<string, Record<string, Holiday | Leave | Shift[]>>;
+
 const props = defineProps<{
 	firstOfMonth: Dayjs;
 	filters: { [K in FilterField]: string };
@@ -287,72 +290,89 @@ const events = createResource({
 				: {},
 		};
 	},
-	transform: (
-		data: Record<string, (HolidayWithDate | LeaveApplication | ShiftAssignment)[]>,
-	) => {
-		// convert employee -> events (holidays/shift assignments) to employee -> date -> holiday/shifts
-		const mappedData: Record<string, Record<string, Holiday | Leave | Shift[]>> = {};
+	transform: (data: Events) => {
+		const mappedEvents: MappedEvents = {};
 		for (const employee in data) {
-			mappedData[employee] = {};
-			for (let d = 1; d <= props.firstOfMonth.daysInMonth(); d++) {
-				const date = props.firstOfMonth.date(d);
-				const key = date.format("YYYY-MM-DD");
-				for (const event of Object.values(data[employee])) {
-					// holiday
-					if ("holiday" in event) {
-						if (date.isSame(event.holiday_date)) {
-							mappedData[employee][key] = {
-								holiday: event.holiday,
-								description: event.description,
-								weekly_off: event.weekly_off,
-							};
-							break;
-						}
-					}
-
-					// leave
-					else if ("leave" in event) {
-						if (
-							dayjs(event.from_date).isSameOrBefore(date) &&
-							dayjs(event.to_date).isSameOrAfter(date)
-						) {
-							mappedData[employee][key] = {
-								leave: event.leave,
-								leave_type: event.leave_type,
-							};
-							break;
-						}
-					}
-
-					// shift
-					else if (
-						dayjs(event.start_date).isSameOrBefore(date) &&
-						(dayjs(event.end_date).isSameOrAfter(date) || !event.end_date)
-					) {
-						if (!Array.isArray(mappedData[employee][key]))
-							mappedData[employee][key] = [];
-						mappedData[employee][key].push({
-							name: event.name,
-							shift_type: event.shift_type,
-							status: event.status,
-							start_time: event.start_time.split(":").slice(0, 2).join(":"),
-							end_time: event.end_time.split(":").slice(0, 2).join(":"),
-							color: event.color.toLowerCase() as Color,
-						});
-					}
-				}
-
-				// sort shifts by start time
-				if (Array.isArray(mappedData[employee][key]))
-					mappedData[employee][key].sort((a: Shift, b: Shift) =>
-						a.start_time.localeCompare(b.start_time),
-					);
-			}
+			mapEventsToDates(data, mappedEvents, employee);
 		}
-		return mappedData;
+		return mappedEvents;
 	},
 	auto: true,
 });
+
+const mapEventsToDates = (data: Events, mappedEvents: MappedEvents, employee: string) => {
+	mappedEvents[employee] = {};
+	for (let d = 1; d <= props.firstOfMonth.daysInMonth(); d++) {
+		const date = props.firstOfMonth.date(d);
+		const key = date.format("YYYY-MM-DD");
+
+		for (const event of Object.values(data[employee])) {
+			let result: Holiday | Leave | undefined;
+			if ("holiday" in event) {
+				result = handleHoliday(event, date);
+				if (result) {
+					mappedEvents[employee][key] = result;
+					break;
+				}
+			} else if ("leave" in event) {
+				result = handleLeave(event, date);
+				if (result) {
+					mappedEvents[employee][key] = result;
+					break;
+				}
+			} else handleShifts(event, date, mappedEvents, employee, key);
+		}
+		sortShiftsByStartTime(mappedEvents, employee, key);
+	}
+};
+
+const handleHoliday = (event: HolidayWithDate, date: Dayjs) => {
+	if (date.isSame(event.holiday_date)) {
+		return {
+			holiday: event.holiday,
+			description: event.description,
+			weekly_off: event.weekly_off,
+		};
+	}
+};
+
+const handleLeave = (event: LeaveApplication, date: Dayjs) => {
+	if (dayjs(event.from_date).isSameOrBefore(date) && dayjs(event.to_date).isSameOrAfter(date))
+		return {
+			leave: event.leave,
+			leave_type: event.leave_type,
+		};
+};
+
+const handleShifts = (
+	event: ShiftAssignment,
+	date: Dayjs,
+	mappedEvents: MappedEvents,
+	employee: string,
+	key: string,
+) => {
+	if (
+		dayjs(event.start_date).isSameOrBefore(date) &&
+		(dayjs(event.end_date).isSameOrAfter(date) || !event.end_date)
+	) {
+		if (!Array.isArray(mappedEvents[employee][key])) mappedEvents[employee][key] = [];
+		mappedEvents[employee][key].push({
+			name: event.name,
+			shift_type: event.shift_type,
+			status: event.status,
+			start_time: event.start_time.split(":").slice(0, 2).join(":"),
+			end_time: event.end_time.split(":").slice(0, 2).join(":"),
+			color: event.color.toLowerCase() as Color,
+		});
+	}
+};
+
+const sortShiftsByStartTime = (mappedEvents: MappedEvents, employee: string, key: string) => {
+	if (Array.isArray(mappedEvents[employee][key]))
+		mappedEvents[employee][key].sort((a: Shift, b: Shift) =>
+			a.start_time.localeCompare(b.start_time),
+		);
+};
 </script>
 
 <style>
