@@ -32,6 +32,8 @@
   "column_break_wyhp",
   "salary_slip_based_on_timesheet",
   "section_break_gerh",
+  "salary_status",
+  "column_break_thuu",
   "deduct_tax_for_unclaimed_employee_benefits",
   "deduct_tax_for_unsubmitted_tax_exemption_proof",
   "payment_days_tab",
@@ -721,13 +723,23 @@
    "fieldname": "earning_deduction_sb",
    "fieldtype": "Section Break",
    "oldfieldtype": "Section Break"
+  },
+  {
+   "fieldname": "salary_status",
+   "fieldtype": "Select",
+   "label": "Salary Status",
+   "options": "Withheld\nReleased"
+  },
+  {
+   "fieldname": "column_break_thuu",
+   "fieldtype": "Column Break"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:10:34.358893",
+ "modified": "2024-05-29 13:13:54.945123",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
