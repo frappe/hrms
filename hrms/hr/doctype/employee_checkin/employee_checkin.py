@@ -18,7 +18,7 @@ class EmployeeCheckin(Document):
 		validate_active_employee(self.employee)
 		self.validate_duplicate_log()
 		self.fetch_shift()
-		self.set_geolocation_coordinates()
+		self.set_geolocation_from_coordinates()
 
 	def validate_duplicate_log(self):
 		doc = frappe.db.exists(
@@ -61,18 +61,23 @@ class EmployeeCheckin(Document):
 		else:
 			self.shift = None
 
-	def set_geolocation_coordinates(self):
-		if not self.geolocation:
+	def set_geolocation_from_coordinates(self):
+		if not (self.latitude and self.longitude):
 			return
 
-		try:
-			self.coordinates = str(get_coordinates_from_geolocation(self.geolocation))
-		except Exception:
-			frappe.log_error("Error parsing geolocation field")
-
-
-def get_coordinates_from_geolocation(geolocation: str):
-	return frappe.parse_json(geolocation)["features"][0]["geometry"]["coordinates"]
+		self.geolocation = frappe.json.dumps(
+			{
+				"type": "FeatureCollection",
+				"features": [
+					{
+						"type": "Feature",
+						"properties": {},
+						# geojson needs coordinates in reverse order: long, lat instead of lat, long
+						"geometry": {"type": "Point", "coordinates": [self.longitude, self.latitude]},
+					}
+				],
+			}
+		)
 
 
 @frappe.whitelist()
