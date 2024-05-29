@@ -61,7 +61,7 @@
 							class="cursor-pointer flex flex-col"
 							:class="{
 								'border-r': day !== 'Sunday',
-								'bg-gray-100 text-gray-600': !isSelected,
+								'bg-gray-100 text-gray-500': !isSelected,
 							}"
 							@click="workingDays[day] = !workingDays[day]"
 						>
