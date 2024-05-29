@@ -625,15 +625,4 @@ def get_workflow_state_field(doctype: str) -> str | None:
 
 def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 	user_roles = frappe.get_roles(user_id)
-<<<<<<< HEAD
 	return [transition.state for transition in workflow.transitions if transition.allowed in user_roles]
-
-
-@frappe.whitelist()
-def is_employee_checkin_allowed():
-	return cint(frappe.db.get_single_value("HR Settings", "allow_employee_checkin_from_mobile_app"))
-=======
-	return [
-		transition.state for transition in workflow.transitions if transition.allowed in user_roles
-	]
->>>>>>> 74eeb3e0c (feat: HR Setting to enable geolocation tracking)

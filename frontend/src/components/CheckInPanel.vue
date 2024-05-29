@@ -1,19 +1,10 @@
 <template>
 	<div class="flex flex-col bg-white rounded w-full py-6 px-4 border-none">
-<<<<<<< HEAD
 		<h2 class="text-lg font-bold text-gray-900">Hey, {{ employee?.data?.first_name }} 👋</h2>
 
 		<template v-if="HRSettings.doc?.allow_employee_checkin_from_mobile_app">
 			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
 				Last {{ lastLogType }} was at {{ lastLogTime }}
-<<<<<<< HEAD
-=======
-		<h2 class="text-lg font-bold text-gray-900">
-			Hey, {{ employee?.data?.first_name }} 👋
-		</h2>
-		<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
-			Last {{ lastLogType }} was at {{ lastLogTime }}
-=======
 			</div>
 			<Button
 				class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
@@ -22,38 +13,17 @@
 			>
 				<template #prefix>
 					<FeatherIcon
-						:name="
-							nextAction.action === 'IN'
-								? 'arrow-right-circle'
-								: 'arrow-left-circle'
-						"
+						:name="nextAction.action === 'IN' ? 'arrow-right-circle' : 'arrow-left-circle'"
 						class="w-4"
 					/>
 				</template>
 				{{ nextAction.label }}
 			</Button>
 		</template>
+
 		<div v-else class="font-medium text-sm text-gray-500 mt-1.5">
 			{{ dayjs().format("ddd, D MMMM, YYYY") }}
->>>>>>> 74eeb3e0c (feat: HR Setting to enable geolocation tracking)
 		</div>
-		<Button
-			class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
-			id="open-checkin-modal"
-			@click="fetchLocation"
-		>
-			<template #prefix>
-				<FeatherIcon
-					:name="
-						nextAction.action === 'IN'
-							? 'arrow-right-circle'
-							: 'arrow-left-circle'
-					"
-					class="w-4"
-				/>
-			</template>
-			{{ nextAction.label }}
-		</Button>
 	</div>
 
 	<ion-modal
@@ -71,7 +41,6 @@
 				<div class="font-medium text-gray-500 text-sm">
 					{{ dayjs().format("D MMM, YYYY") }}
 				</div>
->>>>>>> 90237231c (feat(PWA): capture geolocation in checkins)
 			</div>
 
 			<template v-if="HRSettings.doc?.allow_geolocation_tracking">
@@ -94,55 +63,11 @@
 				</div>
 			</template>
 
-<<<<<<< HEAD
-			<Button
-				class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
-				id="open-checkin-modal"
-				@click="checkinTimestamp = dayjs().format('YYYY-MM-DD HH:mm:ss')"
-			>
-				<template #prefix>
-					<FeatherIcon
-						:name="nextAction.action === 'IN' ? 'arrow-right-circle' : 'arrow-left-circle'"
-						class="w-4"
-					/>
-				</template>
-				{{ nextAction.label }}
-=======
 			<Button variant="solid" class="w-full py-5 text-sm" @click="submitLog(nextAction.action)">
 				Confirm {{ nextAction.label }}
->>>>>>> 239e1a499 (feat: split coordinates field into lat, long and set geolocation on validate)
 			</Button>
-
-			<ion-modal
-				ref="modal"
-				trigger="open-checkin-modal"
-				:initial-breakpoint="1"
-				:breakpoints="[0, 1]"
-			>
-				<div class="h-40 w-full flex flex-col items-center justify-center gap-5 p-4 mb-5">
-					<div class="flex flex-col gap-1.5 items-center justify-center">
-						<div class="font-bold text-xl">
-							{{ dayjs(checkinTimestamp).format("hh:mm:ss a") }}
-						</div>
-						<div class="font-medium text-gray-500 text-sm">
-							{{ dayjs().format("D MMM, YYYY") }}
-						</div>
-					</div>
-					<Button
-						variant="solid"
-						class="w-full py-5 text-sm"
-						@click="submitLog(nextAction.action)"
-					>
-						Confirm {{ nextAction.label }}
-					</Button>
-				</div>
-			</ion-modal>
-		</template>
-
-		<div v-else class="font-medium text-sm text-gray-500 mt-1.5">
-			{{ dayjs().format("ddd, D MMMM, YYYY") }}
 		</div>
-	</div>
+	</ion-modal>
 </template>
 
 <script setup>

@@ -167,19 +167,7 @@
   }
  ],
  "links": [],
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
- "modified": "2024-04-02 01:50:23.150627",
-=======
- "modified": "2024-04-03 06:36:07.640893",
->>>>>>> e54e79b27 (feat: geolocation in Employee Checkin)
-=======
- "modified": "2024-05-29 20:09:19.489203",
->>>>>>> 239e1a499 (feat: split coordinates field into lat, long and set geolocation on validate)
-=======
  "modified": "2024-05-29 21:19:11.550766",
->>>>>>> ced4969cf (feat(Desk): fetch geolocation btn in Employee Checkin form)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Checkin",
