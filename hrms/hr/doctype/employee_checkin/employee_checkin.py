@@ -61,6 +61,7 @@ class EmployeeCheckin(Document):
 		else:
 			self.shift = None
 
+	@frappe.whitelist()
 	def set_geolocation_from_coordinates(self):
 		if not (self.latitude and self.longitude):
 			return
