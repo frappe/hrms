@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-28 09:25\n"
+"PO-Revision-Date: 2024-05-29 09:23\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -816,13 +816,13 @@ msgstr "İletmek"
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Advance Account"
-msgstr ""
+msgstr "Avans Hesabı"
 
 #. Label of a Link field in DocType 'Expense Claim Advance'
 #: hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgctxt "Expense Claim Advance"
 msgid "Advance Account"
-msgstr ""
+msgstr "Avans Hesabı"
 
 #: hr/report/employee_advance_summary/employee_advance_summary.py:62
 msgid "Advance Amount"
@@ -844,7 +844,7 @@ msgstr "Peşinat Tutarı"
 #: hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgctxt "Expense Claim Advance"
 msgid "Advance Paid"
-msgstr ""
+msgstr "Avans Ödemesi"
 
 #. Label of a Section Break field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
