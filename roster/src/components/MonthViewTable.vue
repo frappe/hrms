@@ -384,7 +384,7 @@ td {
 
 th:first-child,
 td:first-child {
-	@apply sticky left-0 max-w-48 min-w-48 bg-white border-r;
+	@apply sticky left-0 max-w-64 min-w-64 bg-white border-r;
 }
 
 .blocked-cell {
