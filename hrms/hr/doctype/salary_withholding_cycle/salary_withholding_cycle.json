@@ -1,0 +1,46 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-05-29 14:23:26.731156",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "from_date",
+  "to_date",
+  "salary_status"
+ ],
+ "fields": [
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Data",
+   "label": "To Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "salary_status",
+   "fieldtype": "Select",
+   "label": "Salary Status",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-05-29 14:28:36.719742",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Salary Withholding Cycle",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

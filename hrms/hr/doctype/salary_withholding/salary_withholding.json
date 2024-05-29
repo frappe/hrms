@@ -12,14 +12,17 @@
   "status",
   "column_break_rhlv",
   "number_of_withholding_cycles",
+  "number_of_withheld_cycles",
   "from_date",
   "to_date",
-  "amended_from",
   "exit_details_section",
   "date_of_joining",
   "date_of_relieving",
+  "amended_from",
   "column_break_hdbc",
-  "reason_for_withholding_salary"
+  "reason_for_withholding_salary",
+  "section_break_xeyl",
+  "cycles"
  ],
  "fields": [
   {
@@ -41,6 +44,7 @@
    "fieldtype": "Link",
    "label": "Employee",
    "options": "Employee",
+   "reqd": 1,
    "search_index": 1
   },
   {
@@ -71,7 +75,8 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "Withheld\nReleased"
+   "options": "Withheld\nReleased",
+   "reqd": 1
   },
   {
    "fieldname": "from_date",
@@ -95,7 +100,8 @@
    "fieldname": "number_of_withholding_cycles",
    "fieldtype": "Int",
    "label": "Number of Withholding Cycles",
-   "non_negative": 1
+   "non_negative": 1,
+   "reqd": 1
   },
   {
    "fieldname": "employee_name",
@@ -106,12 +112,29 @@
    "fieldname": "payroll_frequency",
    "fieldtype": "Data",
    "label": "Payroll Frequency"
+  },
+  {
+   "fieldname": "number_of_withheld_cycles",
+   "fieldtype": "Int",
+   "label": "Number of Cycles Withheld",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_xeyl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "cycles",
+   "fieldtype": "Table",
+   "label": "Cycles",
+   "options": "Salary Withholding Cycle"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-05-03 14:12:46.075239",
+ "modified": "2024-05-29 14:27:53.676611",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Salary Withholding",
