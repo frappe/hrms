@@ -71,7 +71,7 @@ class TestAppraisal(FrappeTestCase):
 		cycle.create_appraisals()
 		appraisal = self.setup_appraisal_cycle(cycle)
 
-		self.assertEqual(appraisal.final_score, 3.77)
+		self.assertEqual(appraisal.final_score, 3.767)
 
 	def test_final_score_using_formula(self):
 		cycle = create_appraisal_cycle(designation="Engineer", kra_evaluation_method="Manual Rating")
@@ -86,7 +86,7 @@ class TestAppraisal(FrappeTestCase):
 		cycle.create_appraisals()
 		appraisal = self.setup_appraisal_cycle(cycle)
 
-		self.assertEqual(appraisal.final_score, 3.77)
+		self.assertEqual(appraisal.final_score, 3.767)
 
 	def setup_appraisal_cycle(self, cycle):
 		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
