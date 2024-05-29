@@ -18,6 +18,7 @@ class EmployeeCheckin(Document):
 		validate_active_employee(self.employee)
 		self.validate_duplicate_log()
 		self.fetch_shift()
+		self.set_geolocation_from_coordinates()
 
 	def validate_duplicate_log(self):
 		doc = frappe.db.exists(
@@ -59,6 +60,28 @@ class EmployeeCheckin(Document):
 				self.shift_end = shift_actual_timings.end_datetime
 		else:
 			self.shift = None
+
+	@frappe.whitelist()
+	def set_geolocation_from_coordinates(self):
+		if not frappe.db.get_single_value("HR Settings", "allow_geolocation_tracking"):
+			return
+
+		if not (self.latitude and self.longitude):
+			return
+
+		self.geolocation = frappe.json.dumps(
+			{
+				"type": "FeatureCollection",
+				"features": [
+					{
+						"type": "Feature",
+						"properties": {},
+						# geojson needs coordinates in reverse order: long, lat instead of lat, long
+						"geometry": {"type": "Point", "coordinates": [self.longitude, self.latitude]},
+					}
+				],
+			}
+		)
 
 
 @frappe.whitelist()
