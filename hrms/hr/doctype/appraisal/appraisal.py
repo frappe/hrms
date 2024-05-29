@@ -9,6 +9,7 @@ from frappe.utils import flt, get_link_to_form, now
 
 from hrms.hr.doctype.appraisal_cycle.appraisal_cycle import validate_active_appraisal_cycle
 from hrms.hr.utils import validate_active_employee
+from hrms.payroll.utils import sanitize_expression
 
 
 class Appraisal(Document):
@@ -179,7 +180,27 @@ class Appraisal(Document):
 			self.db_update()
 
 	def calculate_final_score(self):
-		final_score = (flt(self.total_score) + flt(self.avg_feedback_score) + flt(self.self_score)) / 3
+		final_score = 0
+		appraisal_cycle_doc = frappe.get_cached_doc("Appraisal Cycle", self.appraisal_cycle)
+
+		formula = appraisal_cycle_doc.final_score_formula
+		based_on_formula = appraisal_cycle_doc.calculate_final_score_based_on_formula
+
+		if based_on_formula:
+			employee_doc = frappe.get_cached_doc("Employee", self.employee)
+			data = {
+				"goal_score": flt(self.total_score),
+				"average_feedback_score": flt(self.avg_feedback_score),
+				"self_appraisal_score": flt(self.self_score),
+			}
+			data.update(appraisal_cycle_doc.as_dict())
+			data.update(employee_doc.as_dict())
+			data.update(self.as_dict())
+
+			sanitized_formula = sanitize_expression(formula)
+			final_score = frappe.safe_eval(sanitized_formula, data)
+		else:
+			final_score = (flt(self.total_score) + flt(self.avg_feedback_score) + flt(self.self_score)) / 3
 
 		self.final_score = flt(final_score, self.precision("final_score"))
 
