@@ -63,6 +63,9 @@ class EmployeeCheckin(Document):
 
 	@frappe.whitelist()
 	def set_geolocation_from_coordinates(self):
+		if not frappe.db.get_single_value("HR Settings", "allow_geolocation_tracking"):
+			return
+
 		if not (self.latitude and self.longitude):
 			return
 
