@@ -169,7 +169,7 @@ import colors from "tailwindcss/colors";
 import { Avatar, Autocomplete, createListResource, createResource } from "frappe-ui";
 import { Dayjs } from "dayjs";
 
-import dayjs from "../utils/dayjs";
+import { dayjs, raiseToast } from "../utils";
 import { FilterField } from "./MonthViewHeader.vue";
 import ShiftAssignmentDialog from "./ShiftAssignmentDialog.vue";
 
@@ -276,10 +276,14 @@ const employees = createListResource({
 	fields: ["name", "employee_name", "designation", "image"],
 	filters: employeeFilters.value,
 	auto: true,
+	onError(error: { messages: string[] }) {
+		raiseToast("error", error.messages[0]);
+	},
 });
 
 const events = createResource({
 	url: "hrms.api.roster.get_events",
+	auto: true,
 	makeParams() {
 		return {
 			month_start: props.firstOfMonth.format("YYYY-MM-DD"),
@@ -290,6 +294,9 @@ const events = createResource({
 				: {},
 		};
 	},
+	onError(error: { messages: string[] }) {
+		raiseToast("error", error.messages[0]);
+	},
 	transform: (data: Events) => {
 		const mappedEvents: MappedEvents = {};
 		for (const employee in data) {
@@ -297,7 +304,6 @@ const events = createResource({
 		}
 		return mappedEvents;
 	},
-	auto: true,
 });
 
 const mapEventsToDates = (data: Events, mappedEvents: MappedEvents, employee: string) => {

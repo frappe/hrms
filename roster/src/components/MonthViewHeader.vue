@@ -41,6 +41,8 @@ import { ref, reactive, watch } from "vue";
 import { FormControl, createListResource } from "frappe-ui";
 import { Dayjs } from "dayjs";
 
+import { raiseToast } from "../utils";
+
 export type FilterField = "company" | "department" | "branch" | "designation" | "shift_type";
 
 const props = defineProps<{
@@ -102,11 +104,14 @@ const getFilterOptions = (field: FilterField, listFilters: { company?: string } 
 		doctype: toTitleCase(field),
 		fields: ["name"],
 		filters: listFilters,
+		auto: true,
 		onSuccess: (data: { name: string }[]) => {
 			filters[field].model = { value: "" };
 			filters[field].options = data.map((item) => item.name);
 		},
-		auto: true,
+		onError(error: { messages: string[] }) {
+			raiseToast("error", error.messages[0]);
+		},
 	});
 };
 

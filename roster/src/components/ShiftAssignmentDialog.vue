@@ -110,7 +110,7 @@ import {
 	createListResource,
 } from "frappe-ui";
 
-import dayjs from "../utils/dayjs";
+import { dayjs, raiseToast } from "../utils";
 
 type Status = "Active" | "Inactive";
 
@@ -316,9 +316,16 @@ const getShiftAssignment = (name: string) =>
 				form[key as keyof Form] = data[key];
 			});
 		},
+		onError(error: { messages: string[] }) {
+			raiseToast("error", error.messages[0]);
+		},
 		setValue: {
 			onSuccess() {
+				raiseToast("success", "Shift Assignment updated successfully!");
 				emit("fetchEvents");
+			},
+			onError(error: { messages: string[] }) {
+				raiseToast("error", error.messages[0]);
 			},
 		},
 	});
@@ -338,25 +345,36 @@ const employee = createResource({
 		form.company = data.company;
 		form.department = data.department;
 	},
+	onError(error: { messages: string[] }) {
+		raiseToast("error", error.messages[0]);
+	},
 });
 
 const shiftTypes = createListResource({
 	doctype: "Shift Type",
 	fields: ["name"],
-	transform: (data: { name: string }[]) => data.map((shiftType) => shiftType.name),
 	auto: true,
+	transform: (data: { name: string }[]) => data.map((shiftType) => shiftType.name),
 });
 
 const shiftAssignments = createListResource({
 	doctype: "Shift Assignment",
 	insert: {
 		onSuccess() {
+			raiseToast("success", "Shift Assignment created successfully!");
 			emit("fetchEvents");
+		},
+		onError(error: { messages: string[] }) {
+			raiseToast("error", error.messages[0]);
 		},
 	},
 	delete: {
 		onSuccess() {
+			raiseToast("success", "Shift Assignment deleted successfully!");
 			emit("fetchEvents");
+		},
+		onError(error: { messages: string[] }) {
+			raiseToast("error", error.messages[0]);
 		},
 	},
 });
@@ -378,7 +396,11 @@ const createRepeatingShiftAssignment = createResource({
 		};
 	},
 	onSuccess: () => {
+		raiseToast("success", "Shift Assignment Group created successfully!");
 		emit("fetchEvents");
+	},
+	onError(error: { messages: string[] }) {
+		raiseToast("error", error.messages[0]);
 	},
 });
 
@@ -388,7 +410,11 @@ const deleteRepeatingShiftAssignment = createResource({
 		return { group: form.group };
 	},
 	onSuccess: () => {
+		raiseToast("success", "Shift Assignment Group deleted successfully!");
 		emit("fetchEvents");
+	},
+	onError(error: { messages: string[] }) {
+		raiseToast("error", error.messages[0]);
 	},
 });
 </script>

@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue";
 
-import dayjs from "../utils/dayjs";
+import { dayjs } from "../utils";
 import MonthViewTable from "../components/MonthViewTable.vue";
 import MonthViewHeader from "../components/MonthViewHeader.vue";
 
