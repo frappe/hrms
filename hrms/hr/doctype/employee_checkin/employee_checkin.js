@@ -29,10 +29,8 @@ frappe.ui.form.on("Employee Checkin", {
 
 		navigator.geolocation.getCurrentPosition(
 			async (position) => {
-				frm.set_value({
-					latitude: position.coords.latitude,
-					longitude: position.coords.longitude,
-				});
+				frm.set_value("latitude", position.coords.latitude);
+				frm.set_value("longitude", position.coords.longitude);
 
 				await frm.call("set_geolocation_from_coordinates");
 				frappe.dom.unfreeze();
