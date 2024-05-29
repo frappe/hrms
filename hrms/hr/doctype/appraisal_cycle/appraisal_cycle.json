@@ -17,10 +17,11 @@
   "section_break_4",
   "description",
   "settings_section",
+  "column_break_vhzx",
+  "kra_evaluation_method",
+  "section_break_zykh",
   "calculate_final_score_based_on_formula",
   "final_score_formula",
-  "column_break_wpgg",
-  "kra_evaluation_method",
   "applicable_for_tab",
   "filters_section",
   "branch",
@@ -163,18 +164,25 @@
    "fieldname": "final_score_formula",
    "fieldtype": "Code",
    "label": "Final Score Formula",
+   "mandatory_depends_on": "calculate_final_score_based_on_formula",
    "max_height": "5rem",
    "options": "PythonExpression"
   },
   {
    "default": "0",
+   "description": "By default, the Final Score is calculated as the average of Goal Score, Feedback Score, and Self Appraisal Score. Enable this to set a different formula",
    "fieldname": "calculate_final_score_based_on_formula",
    "fieldtype": "Check",
    "label": "Calculate Final Score based on Formula"
   },
   {
-   "fieldname": "column_break_wpgg",
+   "fieldname": "column_break_vhzx",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_zykh",
+   "fieldtype": "Section Break",
+   "hide_border": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -194,6 +202,7 @@
  ],
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
  "modified": "2023-03-29 12:28:36.247120",
 =======
  "modified": "2024-04-16 13:15:55.493958",
@@ -201,6 +210,9 @@
 =======
  "modified": "2024-05-29 16:45:22.291678",
 >>>>>>> 3a8091d11 (fix: formula checkbox label)
+=======
+ "modified": "2024-05-29 18:15:06.443594",
+>>>>>>> 70e30c72f (feat: set desc for formula setting & make formula mandatory if checkbox is enabled)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal Cycle",
