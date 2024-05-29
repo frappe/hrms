@@ -38,6 +38,37 @@ class TestEmployeeCheckin(FrappeTestCase):
 		to_date = get_year_ending(getdate())
 		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
 
+	def test_geolocation_tracking(self):
+		employee = make_employee("test_add_log_based_on_employee_field@example.com")
+		checkin = make_checkin(employee)
+		checkin.latitude = 23.31773
+		checkin.longitude = 66.82876
+		checkin.save()
+
+		# geolocation tracking is disabled
+		self.assertIsNone(checkin.geolocation)
+
+		hr_settings = frappe.get_single("HR Settings")
+		hr_settings.allow_geolocation_tracking = 1
+		hr_settings.save()
+
+		checkin.save()
+		self.assertEqual(
+			checkin.geolocation,
+			frappe.json.dumps(
+				{
+					"type": "FeatureCollection",
+					"features": [
+						{
+							"type": "Feature",
+							"properties": {},
+							"geometry": {"type": "Point", "coordinates": [66.82876, 23.31773]},
+						}
+					],
+				}
+			),
+		)
+
 	def test_add_log_based_on_employee_field(self):
 		employee = make_employee("test_add_log_based_on_employee_field@example.com")
 		employee = frappe.get_doc("Employee", employee)
