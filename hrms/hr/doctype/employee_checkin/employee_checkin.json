@@ -16,7 +16,10 @@
   "skip_auto_attendance",
   "attendance",
   "location_section",
-  "coordinates",
+  "latitude",
+  "column_break_yqpi",
+  "longitude",
+  "section_break_ksbo",
   "geolocation",
   "shift_timings_section",
   "shift_start",
@@ -119,12 +122,6 @@
    "label": "Location"
   },
   {
-   "fieldname": "coordinates",
-   "fieldtype": "Data",
-   "label": "Coordinates",
-   "read_only": 1
-  },
-  {
    "fieldname": "geolocation",
    "fieldtype": "Geolocation",
    "label": "Geolocation"
@@ -137,10 +134,33 @@
   {
    "fieldname": "column_break_vyyt",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "latitude",
+   "fieldtype": "Float",
+   "label": "Latitude",
+   "precision": "7",
+   "read_only": 1
+  },
+  {
+   "fieldname": "longitude",
+   "fieldtype": "Float",
+   "label": "Longitude",
+   "precision": "7",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_yqpi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_ksbo",
+   "fieldtype": "Section Break",
+   "hide_border": 1
   }
  ],
  "links": [],
- "modified": "2024-04-03 06:36:07.640893",
+ "modified": "2024-05-29 20:09:19.489203",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Checkin",

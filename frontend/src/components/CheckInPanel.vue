@@ -33,9 +33,7 @@
 		:initial-breakpoint="1"
 		:breakpoints="[0, 1]"
 	>
-		<div
-			class="h-120 w-full flex flex-col items-center justify-center gap-5 p-4 mb-5"
-		>
+		<div class="h-120 w-full flex flex-col items-center justify-center gap-5 p-4 mb-5">
 			<div class="flex flex-col gap-1.5 mt-2 items-center justify-center">
 				<div class="font-bold text-xl">
 					{{ dayjs(checkinTimestamp).format("hh:mm:ss a") }}
@@ -50,9 +48,7 @@
 					{{ locationStatus }}
 				</span>
 
-				<div
-					class="rounded border-4 translate-z-0 block overflow-hidden w-full h-170"
-				>
+				<div class="rounded border-4 translate-z-0 block overflow-hidden w-full h-170">
 					<iframe
 						width="100%"
 						height="170"
@@ -67,11 +63,7 @@
 				</div>
 			</template>
 
-			<Button
-				variant="solid"
-				class="w-full py-5 text-sm"
-				@click="submitLog(nextAction.action)"
-			>
+			<Button variant="solid" class="w-full py-5 text-sm" @click="submitLog(nextAction.action)">
 				Confirm {{ nextAction.label }}
 			</Button>
 		</div>
@@ -90,8 +82,8 @@ const socket = inject("$socket")
 const employee = inject("$employee")
 const dayjs = inject("$dayjs")
 const checkinTimestamp = ref(null)
-const latitude = ref("")
-const longitude = ref("")
+const latitude = ref(0)
+const longitude = ref(0)
 const locationStatus = ref("")
 
 const checkins = createListResource({
@@ -148,14 +140,10 @@ function handleLocationError(error) {
 
 const fetchLocation = () => {
 	if (!navigator.geolocation) {
-		locationStatus.value =
-			"Geolocation is not supported by your current browser"
+		locationStatus.value = "Geolocation is not supported by your current browser"
 	} else {
 		locationStatus.value = "Locating..."
-		navigator.geolocation.getCurrentPosition(
-			handleLocationSuccess,
-			handleLocationError
-		)
+		navigator.geolocation.getCurrentPosition(handleLocationSuccess, handleLocationError)
 	}
 }
 
@@ -175,6 +163,8 @@ const submitLog = (logType) => {
 			employee: employee.data.name,
 			log_type: logType,
 			time: checkinTimestamp.value,
+			latitude: latitude.value,
+			longitude: longitude.value,
 		},
 		{
 			onSuccess() {
