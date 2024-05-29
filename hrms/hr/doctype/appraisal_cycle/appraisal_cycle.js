@@ -60,7 +60,7 @@ frappe.ui.form.on("Appraisal Cycle", {
 	set_autocompletions_for_final_score_formula: async (frm) => {
 		const autocompletions = [
 			{
-				value: "total_score",
+				value: "goal_score",
 				score: 10,
 				meta: __("Total Goal Score"),
 			},
