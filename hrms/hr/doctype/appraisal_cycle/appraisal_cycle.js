@@ -3,7 +3,6 @@
 
 frappe.ui.form.on("Appraisal Cycle", {
 	refresh(frm) {
-		frm.trigger("set_autocompletions_for_final_score_formula");
 		frm.set_query("department", () => {
 			return {
 				filters: {
@@ -14,6 +13,7 @@ frappe.ui.form.on("Appraisal Cycle", {
 
 		frm.trigger("show_custom_buttons");
 		frm.trigger("show_appraisal_summary");
+		frm.trigger("set_autocompletions_for_final_score_formula");
 	},
 
 	show_custom_buttons(frm) {
@@ -60,26 +60,24 @@ frappe.ui.form.on("Appraisal Cycle", {
 	set_autocompletions_for_final_score_formula: async (frm) => {
 		const autocompletions = [
 			{
-				value: "goal_score",
-				score: 8,
-				meta: "Goal field",
+				value: "total_score",
+				score: 10,
+				meta: __("Total Goal Score"),
 			},
 			{
 				value: "average_feedback_score",
-				score: 8,
-				meta: "Appraisal field",
+				score: 10,
+				meta: __("Average Feedback Score"),
 			},
 			{
 				value: "self_appraisal_score",
-				score: 8,
-				meta: "Appraisal field",
+				score: 10,
+				meta: __("Self Appraisal Score"),
 			},
 		];
 
-		const doctypes = ["Employee", "Appraisal Cycle"];
-
 		await Promise.all(
-			doctypes.map((doctype) =>
+			["Employee", "Appraisal Cycle", "Appraisal"].map((doctype) =>
 				frappe.model.with_doctype(doctype, () => {
 					autocompletions.push(
 						...frappe.get_meta(doctype).fields.map((f) => ({
@@ -91,6 +89,7 @@ frappe.ui.form.on("Appraisal Cycle", {
 				}),
 			),
 		);
+
 		frm.set_df_property("final_score_formula", "autocompletions", autocompletions);
 	},
 
