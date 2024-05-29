@@ -13,8 +13,6 @@
 				{
 					label: 'Switch to Desk',
 				},
-				,
-				,
 			]"
 		>
 			<Avatar size="lg" class="cursor-pointer" />
