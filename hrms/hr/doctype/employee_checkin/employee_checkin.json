@@ -15,8 +15,17 @@
   "device_id",
   "skip_auto_attendance",
   "attendance",
+  "location_section",
+  "latitude",
+  "column_break_yqpi",
+  "longitude",
+  "section_break_ksbo",
+  "fetch_geolocation",
+  "geolocation",
+  "shift_timings_section",
   "shift_start",
   "shift_end",
+  "column_break_vyyt",
   "shift_actual_start",
   "shift_actual_end"
  ],
@@ -107,10 +116,58 @@
    "fieldtype": "Datetime",
    "hidden": 1,
    "label": "Shift Actual End"
+  },
+  {
+   "fieldname": "location_section",
+   "fieldtype": "Section Break",
+   "label": "Location"
+  },
+  {
+   "fieldname": "geolocation",
+   "fieldtype": "Geolocation",
+   "label": "Geolocation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "shift_timings_section",
+   "fieldtype": "Section Break",
+   "label": "Shift Timings"
+  },
+  {
+   "fieldname": "column_break_vyyt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "latitude",
+   "fieldtype": "Float",
+   "label": "Latitude",
+   "precision": "7",
+   "read_only": 1
+  },
+  {
+   "fieldname": "longitude",
+   "fieldtype": "Float",
+   "label": "Longitude",
+   "precision": "7",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_yqpi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_ksbo",
+   "fieldtype": "Section Break",
+   "hide_border": 1
+  },
+  {
+   "fieldname": "fetch_geolocation",
+   "fieldtype": "Button",
+   "label": "Fetch Geolocation"
   }
  ],
  "links": [],
- "modified": "2024-04-02 01:50:23.150627",
+ "modified": "2024-05-29 21:19:11.550766",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Checkin",

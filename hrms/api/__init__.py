@@ -3,7 +3,6 @@ from frappe import _
 from frappe.model.workflow import get_workflow_name
 from frappe.query_builder import Order
 from frappe.utils import getdate
-from frappe.utils.data import cint
 
 SUPPORTED_FIELD_TYPES = [
 	"Link",
@@ -627,8 +626,3 @@ def get_workflow_state_field(doctype: str) -> str | None:
 def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 	user_roles = frappe.get_roles(user_id)
 	return [transition.state for transition in workflow.transitions if transition.allowed in user_roles]
-
-
-@frappe.whitelist()
-def is_employee_checkin_allowed():
-	return cint(frappe.db.get_single_value("HR Settings", "allow_employee_checkin_from_mobile_app"))
