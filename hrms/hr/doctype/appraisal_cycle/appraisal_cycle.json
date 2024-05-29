@@ -200,19 +200,7 @@
    "link_fieldname": "appraisal_cycle"
   }
  ],
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
- "modified": "2023-03-29 12:28:36.247120",
-=======
- "modified": "2024-04-16 13:15:55.493958",
->>>>>>> 1712990de (feat: allow adding formula to calculate final score in appraisal cycle)
-=======
- "modified": "2024-05-29 16:45:22.291678",
->>>>>>> 3a8091d11 (fix: formula checkbox label)
-=======
  "modified": "2024-05-29 18:15:06.443594",
->>>>>>> 70e30c72f (feat: set desc for formula setting & make formula mandatory if checkbox is enabled)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal Cycle",
