@@ -31,7 +31,7 @@ frappe.ui.form.on("Salary Withholding", {
 	},
 
 	from_date: function (frm) {
-		if (!frm.doc.employee) {
+				if (!frm.doc.employee) {
 			frappe.throw(__("Please select an employee"))
 			frm.doc.from_date = null
 			frm.refresh_field("from_date")
@@ -43,15 +43,25 @@ frappe.ui.form.on("Salary Withholding", {
 		}
 
 		frappe.call({
-			method: "hrms.hr.doctype.salary_withholding.salary_withholding.calculate_to_date",
+			method: "hrms.hr.doctype.salary_withholding.salary_withholding.get_salary_withholding_cycles_and_to_date",
 			args: {
 				payroll_frequency: frm.doc.payroll_frequency,
 				from_date: frm.doc.from_date,
 				number_of_withholding_cycles: frm.doc.number_of_withholding_cycles
 			},
 			callback: function (r) {
-				frm.doc.to_date = r.message.to_date
+				cycles = r.message.cycles
+				to_date = r.message.to_date
+
+				frm.doc.to_date = to_date
+				frm.doc.cycles = cycles.map(c => {
+					return {
+						...c,
+						salary_status: "Withheld"
+					}
+				})
 				refresh_field("to_date")
+				refresh_field("cycles")
 			}
 		})
 	}
