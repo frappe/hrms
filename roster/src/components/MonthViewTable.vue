@@ -1,5 +1,5 @@
 <template>
-	<div class="rounded-lg border overflow-auto h-[45rem]">
+	<div class="rounded-lg border overflow-auto max-h-[45rem]">
 		<table class="border-separate border-spacing-0">
 			<thead>
 				<tr class="sticky top-0 bg-white z-10">
