@@ -359,7 +359,7 @@ def make_salary_slip(
 	print_format=None,
 	for_preview=0,
 	ignore_permissions=False,
-	docstatus=1
+	salary_structure_assignment=None
 ):
 	def postprocess(source, target):
 		if employee:
@@ -367,7 +367,7 @@ def make_salary_slip(
 			if posting_date:
 				target.posting_date = posting_date
 
-		target.run_method("process_salary_structure", for_preview=for_preview, docstatus=docstatus)
+		target.run_method("process_salary_structure", for_preview=for_preview, salary_structure_assignment=salary_structure_assignment)
 
 	doc = get_mapped_doc(
 		"Salary Structure",
