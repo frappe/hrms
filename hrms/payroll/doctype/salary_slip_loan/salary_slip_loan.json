@@ -66,22 +66,6 @@
    "in_list_view": 1,
    "label": "Total Payment",
    "options": "Company:company:default_currency"
-  },
-  {
-   "fieldname": "loan_repayment_entry",
-   "fieldtype": "Link",
-   "label": "Loan Repayment Entry",
-   "no_copy": 1,
-   "options": "Loan Repayment",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "loan.loan_product",
-   "fieldname": "loan_product",
-   "fieldtype": "Link",
-   "label": "Loan Product",
-   "options": "Loan Product",
-   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,

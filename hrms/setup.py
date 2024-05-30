@@ -100,6 +100,22 @@ def get_custom_fields():
 				"options": "Account",
 				"insert_after": "column_break_10",
 			},
+			{
+				"fieldname": "loan_repayment_entry",
+				"fieldtype": "Link",
+				"label": "Loan Repayment Entry",
+				"no_copy": 1,
+				"options": "Loan Repayment",
+				"read_only": 1
+			},
+			{
+				"fetch_from": "loan.loan_product",
+				"fieldname": "loan_product",
+				"fieldtype": "Link",
+				"label": "Loan Product",
+				"options": "Loan Product",
+				"read_only": 1
+			},
 		],
 		"Department": [
 			{
