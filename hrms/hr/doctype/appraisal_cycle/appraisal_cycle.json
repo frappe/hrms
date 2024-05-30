@@ -17,7 +17,11 @@
   "section_break_4",
   "description",
   "settings_section",
+  "column_break_vhzx",
   "kra_evaluation_method",
+  "section_break_zykh",
+  "calculate_final_score_based_on_formula",
+  "final_score_formula",
   "applicable_for_tab",
   "filters_section",
   "branch",
@@ -154,6 +158,31 @@
    "label": "Status",
    "options": "Not Started\nIn Progress\nCompleted",
    "read_only": 1
+  },
+  {
+   "depends_on": "calculate_final_score_based_on_formula",
+   "fieldname": "final_score_formula",
+   "fieldtype": "Code",
+   "label": "Final Score Formula",
+   "mandatory_depends_on": "calculate_final_score_based_on_formula",
+   "max_height": "5rem",
+   "options": "PythonExpression"
+  },
+  {
+   "default": "0",
+   "description": "By default, the Final Score is calculated as the average of Goal Score, Feedback Score, and Self Appraisal Score. Enable this to set a different formula",
+   "fieldname": "calculate_final_score_based_on_formula",
+   "fieldtype": "Check",
+   "label": "Calculate Final Score based on Formula"
+  },
+  {
+   "fieldname": "column_break_vhzx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_zykh",
+   "fieldtype": "Section Break",
+   "hide_border": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -171,7 +200,7 @@
    "link_fieldname": "appraisal_cycle"
   }
  ],
- "modified": "2023-03-29 12:28:36.247120",
+ "modified": "2024-05-29 18:15:06.443594",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal Cycle",

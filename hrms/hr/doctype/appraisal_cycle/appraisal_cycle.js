@@ -13,6 +13,7 @@ frappe.ui.form.on("Appraisal Cycle", {
 
 		frm.trigger("show_custom_buttons");
 		frm.trigger("show_appraisal_summary");
+		frm.trigger("set_autocompletions_for_final_score_formula");
 	},
 
 	show_custom_buttons(frm) {
@@ -26,34 +27,84 @@ frappe.ui.form.on("Appraisal Cycle", {
 			frappe.set_route("Tree", "Goal");
 		});
 
-		let className = "";
 		let appraisals_created = frm.doc.__onload?.appraisals_created;
 
 		if (frm.doc.status !== "Completed") {
-			className = appraisals_created ? "btn-default" : "btn-primary";
-
-			frm.add_custom_button(__("Create Appraisals"), () => {
-				frm.trigger("create_appraisals");
-			}).addClass(className);
+			if (appraisals_created) {
+				frm.add_custom_button(__("Create Appraisals"), () => {
+					frm.trigger("create_appraisals");
+				});
+			} else {
+				frm.page.set_primary_action(__("Create Appraisals"), () => {
+					frm.trigger("create_appraisals");
+				});
+			}
 		}
 
-		className = appraisals_created ? "btn-primary" : "btn-default";
-
 		if (frm.doc.status === "Not Started") {
-			frm.add_custom_button(__("Start"), () => {
-				frm.set_value("status", "In Progress");
-				frm.save();
-			}).addClass(className);
+			if (appraisals_created) {
+				frm.page.set_primary_action(__("Start"), () => {
+					frm.set_value("status", "In Progress");
+					frm.save();
+				});
+			} else {
+				frm.add_custom_button(__("Start"), () => {
+					frm.set_value("status", "In Progress");
+					frm.save();
+				});
+			}
 		} else if (frm.doc.status === "In Progress") {
-			frm.add_custom_button(__("Mark as Completed"), () => {
-				frm.trigger("complete_cycle");
-			}).addClass(className);
+			if (appraisals_created) {
+				frm.page.set_primary_action(__("Mark as Completed"), () => {
+					frm.trigger("complete_cycle");
+				});
+			} else {
+				frm.add_custom_button(__("Mark as Completed"), () => {
+					frm.trigger("complete_cycle");
+				});
+			}
 		} else if (frm.doc.status === "Completed") {
 			frm.add_custom_button(__("Mark as In Progress"), () => {
 				frm.set_value("status", "In Progress");
 				frm.save();
 			});
 		}
+	},
+
+	set_autocompletions_for_final_score_formula: async (frm) => {
+		const autocompletions = [
+			{
+				value: "goal_score",
+				score: 10,
+				meta: __("Total Goal Score"),
+			},
+			{
+				value: "average_feedback_score",
+				score: 10,
+				meta: __("Average Feedback Score"),
+			},
+			{
+				value: "self_appraisal_score",
+				score: 10,
+				meta: __("Self Appraisal Score"),
+			},
+		];
+
+		await Promise.all(
+			["Employee", "Appraisal Cycle", "Appraisal"].map((doctype) =>
+				frappe.model.with_doctype(doctype, () => {
+					autocompletions.push(
+						...frappe.get_meta(doctype).fields.map((f) => ({
+							value: f.fieldname,
+							score: 8,
+							meta: __("{0} Field", [doctype]),
+						})),
+					);
+				}),
+			),
+		);
+
+		frm.set_df_property("final_score_formula", "autocompletions", autocompletions);
 	},
 
 	get_employees(frm) {
