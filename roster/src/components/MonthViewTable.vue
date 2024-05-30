@@ -25,7 +25,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="employee in employees.data" :key="employee.name">
+				<tr v-for="employee in employees" :key="employee.name">
 					<!-- Employee Column -->
 					<td
 						v-if="
@@ -155,7 +155,7 @@
 		:isDialogOpen="showShiftAssignmentDialog"
 		:shiftAssignmentName="shiftAssignment"
 		:selectedCell="{ employee: hoveredCell.employee, date: hoveredCell.date }"
-		:employees="employees.data"
+		:employees="employees"
 		@fetchEvents="
 			events.fetch();
 			showShiftAssignmentDialog = false;
@@ -166,11 +166,11 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import colors from "tailwindcss/colors";
-import { Avatar, Autocomplete, createListResource, createResource } from "frappe-ui";
+import { Avatar, Autocomplete, createResource } from "frappe-ui";
 import { Dayjs } from "dayjs";
 
 import { dayjs, raiseToast } from "../utils";
-import { FilterField } from "./MonthViewHeader.vue";
+import { EmployeeFilters } from "../pages/MonthView.vue";
 import ShiftAssignmentDialog from "./ShiftAssignmentDialog.vue";
 
 interface Holiday {
@@ -221,23 +221,17 @@ type MappedEvents = Record<string, Record<string, Holiday | Leave | Shift[]>>;
 
 const props = defineProps<{
 	firstOfMonth: Dayjs;
-	filters: { [K in FilterField]: string };
+	employees: {
+		[K in "name" | "employee_name" | "designation" | "image"]: string;
+	}[];
+	employeeFilters: { [K in keyof EmployeeFilters]?: string };
+	shiftTypeFilter: string;
 }>();
 
 const employeeSearch = ref<{ value: string; label: string }[]>();
 const shiftAssignment = ref<string>();
 const showShiftAssignmentDialog = ref(false);
 const hoveredCell = ref({ employee: "", date: "", shift: "" });
-
-const employeeFilters = computed(() => {
-	const filters: Record<string, string> = {
-		status: "Active",
-	};
-	Object.entries(props.filters).forEach(([key, value]) => {
-		if (key !== "shift_type" && value) filters[key] = value;
-	});
-	return filters;
-});
 
 const daysOfMonth = computed(() => {
 	const daysOfMonth = [];
@@ -252,34 +246,18 @@ const daysOfMonth = computed(() => {
 });
 
 const employeeSearchOptions = computed(() => {
-	return employees?.data?.map((employee: { name: string; employee_name: string }) => ({
+	return props.employees?.map((employee: { name: string; employee_name: string }) => ({
 		value: employee.name,
 		label: `${employee.name}: ${employee.employee_name}`,
 	}));
 });
 
 watch(
-	() => props.firstOfMonth,
+	() => [props.firstOfMonth, props.employeeFilters, props.shiftTypeFilter],
 	() => events.fetch(),
 );
 
-watch(props.filters, () => {
-	employees.filters = employeeFilters.value;
-	employees.fetch();
-	events.fetch();
-});
-
 // RESOURCES
-
-const employees = createListResource({
-	doctype: "Employee",
-	fields: ["name", "employee_name", "designation", "image"],
-	filters: employeeFilters.value,
-	auto: true,
-	onError(error: { messages: string[] }) {
-		raiseToast("error", error.messages[0]);
-	},
-});
 
 const events = createResource({
 	url: "hrms.api.roster.get_events",
@@ -288,10 +266,8 @@ const events = createResource({
 		return {
 			month_start: props.firstOfMonth.format("YYYY-MM-DD"),
 			month_end: props.firstOfMonth.endOf("month").format("YYYY-MM-DD"),
-			employee_filters: employeeFilters.value,
-			shift_filters: props.filters.shift_type
-				? { shift_type: props.filters.shift_type }
-				: {},
+			employee_filters: props.employeeFilters,
+			shift_filters: props.shiftTypeFilter ? { shift_type: props.shiftTypeFilter } : {},
 		};
 	},
 	onError(error: { messages: string[] }) {
