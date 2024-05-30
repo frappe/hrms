@@ -12,8 +12,8 @@
     "dayjs": "^1.11.11",
     "feather-icons": "^4.29.1",
     "frappe-ui": "^0.1.53",
-    "vue": "^3.4.25",
-    "vue-router": "^4.3.2"
+    "vite": "^5.2.12",
+    "vue": "^3.4.25"
   },
   "devDependencies": {
     "@types/vue": "^2.0.0",
@@ -22,7 +22,6 @@
     "postcss": "^8.4.5",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.4.5",
-    "vite": "^5.2.10",
     "vue-tsc": "^2.0.14"
   }
 }
