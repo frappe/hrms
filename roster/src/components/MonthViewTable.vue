@@ -170,7 +170,7 @@ import { Avatar, Autocomplete, createResource } from "frappe-ui";
 import { Dayjs } from "dayjs";
 
 import { dayjs, raiseToast } from "../utils";
-import { EmployeeFilters } from "../pages/MonthView.vue";
+import { EmployeeFilters } from "../views/MonthView.vue";
 import ShiftAssignmentDialog from "./ShiftAssignmentDialog.vue";
 
 interface Holiday {
