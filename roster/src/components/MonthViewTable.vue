@@ -281,6 +281,7 @@ const events = createResource({
 		return mappedEvents;
 	},
 });
+defineExpose({ events });
 
 const mapEventsToDates = (data: Events, mappedEvents: MappedEvents, employee: string) => {
 	mappedEvents[employee] = {};

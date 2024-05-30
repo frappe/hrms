@@ -28,6 +28,7 @@
 				@addToMonth="addToMonth"
 			/>
 			<MonthViewTable
+				ref="monthViewTable"
 				:firstOfMonth="firstOfMonth"
 				:employees="employees.data"
 				:employeeFilters="employeeFilters"
@@ -39,6 +40,10 @@
 		v-model="showShiftAssignmentDialog"
 		:isDialogOpen="showShiftAssignmentDialog"
 		:employees="employees.data"
+		@fetchEvents="
+			monthViewTable?.events.fetch();
+			showShiftAssignmentDialog = false;
+		"
 	/>
 </template>
 
@@ -55,6 +60,7 @@ export type EmployeeFilters = {
 	[K in "status" | "company" | "department" | "branch" | "designation"]?: string;
 };
 
+const monthViewTable = ref<InstanceType<typeof MonthViewTable>>();
 const showShiftAssignmentDialog = ref(false);
 const firstOfMonth = ref(dayjs().date(1).startOf("D"));
 const shiftTypeFilter = ref("");
