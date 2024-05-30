@@ -82,9 +82,11 @@
 		</template>
 		<template #actions>
 			<div class="flex space-x-2 justify-end">
-				<Dropdown v-if="props.shiftAssignmentName" :options="actions">
-					<Button size="md" icon="more-vertical" />
-				</Dropdown>
+				<Dropdown
+					v-if="props.shiftAssignmentName"
+					:options="actions"
+					:button="{ size: 'md', icon: 'more-vertical' }"
+				/>
 				<Button
 					size="md"
 					variant="solid"
@@ -128,7 +130,7 @@ type Form = {
 interface Props {
 	isDialogOpen: boolean;
 	shiftAssignmentName?: string;
-	selectedCell: {
+	selectedCell?: {
 		employee: string;
 		date: string;
 	};
@@ -237,6 +239,7 @@ watch(
 		if (val) shiftAssignment.value = getShiftAssignment(val);
 		else {
 			Object.assign(form, formObject);
+			if (!props.selectedCell) return;
 			form.employee = { value: props.selectedCell.employee };
 			form.start_date = props.selectedCell.date;
 		}
@@ -246,7 +249,7 @@ watch(
 watch(
 	() => props.isDialogOpen,
 	(val) => {
-		if (val && !props.shiftAssignmentName) {
+		if (val && !props.shiftAssignmentName && props.selectedCell) {
 			form.employee = { value: props.selectedCell.employee };
 			form.start_date = props.selectedCell.date;
 			form.end_date = props.selectedCell.date;
