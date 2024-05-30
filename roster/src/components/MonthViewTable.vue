@@ -34,7 +34,7 @@
 						"
 						class="border-t px-2 py-7"
 					>
-						<div class="flex">
+						<div class="flex" :class="!employee.designation && 'items-center'">
 							<Avatar
 								:label="employee.employee_name"
 								:image="employee.image"
