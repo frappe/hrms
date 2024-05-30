@@ -725,7 +725,7 @@ class SalarySlip(TransactionBase):
 			}
 			doc.append("earnings", wages_row)
 
-	def set_salary_structure_assignment(self,salary_structure_assignment=None,docstatus=1):
+	def set_salary_structure_assignment(self, salary_structure_assignment=None, docstatus=1):
 		if not salary_structure_assignment:
 			self._salary_structure_assignment = frappe.db.get_value(
 				"Salary Structure Assignment",
@@ -741,7 +741,8 @@ class SalarySlip(TransactionBase):
 			)
 		else:
 			self._salary_structure_assignment = frappe.db.get_value(
-				"Salary Structure Assignment",salary_structure_assignment,
+				"Salary Structure Assignment",
+				salary_structure_assignment,
 				"*",
 				order_by="from_date desc",
 				as_dict=True,
@@ -757,7 +758,7 @@ class SalarySlip(TransactionBase):
 				)
 			)
 
-	def calculate_net_pay(self, salary_structure_assignment=None,docstatus=1):
+	def calculate_net_pay(self, salary_structure_assignment=None, docstatus=1):
 		if self.salary_structure:
 			self.calculate_component_amounts("earnings", salary_structure_assignment, docstatus)
 
@@ -1878,13 +1879,13 @@ class SalarySlip(TransactionBase):
 			status = self.get_status()
 		self.db_set("status", status)
 
-	def process_salary_structure(self, for_preview=0, salary_structure_assignment=None,docstatus=1):
+	def process_salary_structure(self, for_preview=0, salary_structure_assignment=None, docstatus=1):
 		"""Calculate salary after salary structure details have been updated"""
 		if not self.salary_slip_based_on_timesheet:
 			self.get_date_details()
 		self.pull_emp_details()
 		self.get_working_days_details(for_preview=for_preview)
-		self.calculate_net_pay(salary_structure_assignment,docstatus)
+		self.calculate_net_pay(salary_structure_assignment, docstatus)
 
 	def pull_emp_details(self):
 		account_details = frappe.get_cached_value(
