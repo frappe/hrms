@@ -1,10 +1,10 @@
 <template>
-	<div class="rounded-lg border overflow-x-auto">
+	<div class="rounded-lg border overflow-auto h-[45rem]">
 		<table class="border-separate border-spacing-0">
 			<thead>
-				<tr>
+				<tr class="sticky top-0 bg-white z-10">
 					<!-- Employee Search -->
-					<th class="p-2">
+					<th class="p-2 border-b">
 						<Autocomplete
 							:options="employeeSearchOptions"
 							v-model="employeeSearch"
@@ -17,7 +17,7 @@
 					<th
 						v-for="(day, idx) in daysOfMonth"
 						:key="idx"
-						class="font-medium"
+						class="font-medium border-b"
 						:class="{ 'border-l': idx }"
 					>
 						{{ day.dayName }} {{ dayjs(day.date).format("DD") }}
@@ -25,14 +25,15 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="employee in employees" :key="employee.name">
+				<tr v-for="(employee, rowIdx) in employees" :key="employee.name">
 					<!-- Employee Column -->
 					<td
 						v-if="
 							!employeeSearch?.length ||
 							employeeSearch?.some((item) => item.value === employee?.name)
 						"
-						class="border-t px-2 py-7"
+						class="px-2 py-7"
+						:class="{ 'border-t': rowIdx }"
 					>
 						<div class="flex" :class="!employee.designation && 'items-center'">
 							<Avatar
@@ -57,11 +58,12 @@
 							!employeeSearch?.length ||
 							employeeSearch?.some((item) => item.value === employee?.name)
 						"
-						v-for="(day, idx) in daysOfMonth"
-						:key="idx"
-						class="border-t p-1.5"
+						v-for="(day, colIdx) in daysOfMonth"
+						:key="colIdx"
+						class="p-1.5"
 						:class="{
-							'border-l': idx,
+							'border-l': colIdx,
+							'border-t': rowIdx,
 							'align-top': events.data?.[employee.name]?.[day.date],
 							'align-middle bg-gray-50':
 								events.data?.[employee.name]?.[day.date]?.holiday,
@@ -246,7 +248,7 @@ const daysOfMonth = computed(() => {
 });
 
 const employeeSearchOptions = computed(() => {
-	return props.employees?.map((employee: { name: string; employee_name: string }) => ({
+	return props.employees.map((employee: { name: string; employee_name: string }) => ({
 		value: employee.name,
 		label: `${employee.name}: ${employee.employee_name}`,
 	}));

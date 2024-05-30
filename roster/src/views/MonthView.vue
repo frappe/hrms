@@ -30,7 +30,7 @@
 			<MonthViewTable
 				ref="monthViewTable"
 				:firstOfMonth="firstOfMonth"
-				:employees="employees.data"
+				:employees="employees.data || []"
 				:employeeFilters="employeeFilters"
 				:shiftTypeFilter="shiftTypeFilter"
 			/>
