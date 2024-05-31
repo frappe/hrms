@@ -124,7 +124,7 @@ type Form = {
 	start_date: string;
 	end_date: string;
 	status: Status | { value: Status; label?: Status };
-	group?: string;
+	schedule?: string;
 };
 
 interface Props {
@@ -157,7 +157,7 @@ const formObject: Form = {
 	end_date: "",
 	status: "Active",
 	department: "",
-	group: "",
+	schedule: "",
 };
 
 const workingDaysObject = {
@@ -206,12 +206,12 @@ const actions = computed(() => {
 			},
 		},
 	];
-	if (form.group)
+	if (form.schedule)
 		options.push({
-			label: "Delete Shift Group",
+			label: "Delete Shift Schedule",
 			icon: "trash",
 			onClick: async () => {
-				deleteRepeatingShiftAssignment.submit(form.group);
+				deleteRepeatingShiftAssignment.submit(form.schedule);
 			},
 		});
 	return options;
@@ -399,7 +399,7 @@ const createRepeatingShiftAssignment = createResource({
 		};
 	},
 	onSuccess: () => {
-		raiseToast("success", "Shift Assignment Group created successfully!");
+		raiseToast("success", "Shift Assignment Schedule created successfully!");
 		emit("fetchEvents");
 	},
 	onError(error: { messages: string[] }) {
@@ -410,10 +410,10 @@ const createRepeatingShiftAssignment = createResource({
 const deleteRepeatingShiftAssignment = createResource({
 	url: "hrms.api.roster.delete_repeating_shift_assignment",
 	makeParams() {
-		return { group: form.group };
+		return { schedule: form.schedule };
 	},
 	onSuccess: () => {
-		raiseToast("success", "Shift Assignment Group deleted successfully!");
+		raiseToast("success", "Shift Assignment Schedule deleted successfully!");
 		emit("fetchEvents");
 	},
 	onError(error: { messages: string[] }) {

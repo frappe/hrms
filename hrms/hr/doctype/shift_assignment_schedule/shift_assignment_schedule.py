@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class ShiftAssignmentGroup(Document):
+class ShiftAssignmentSchedule(Document):
 	pass

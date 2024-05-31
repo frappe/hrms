@@ -59,9 +59,9 @@ def create_repeating_shift_assignment(
 
 
 @frappe.whitelist()
-def delete_repeating_shift_assignment(group: str) -> None:
-	frappe.db.delete("Shift Assignment", {"group": group})
-	frappe.delete_doc("Shift Assignment Group", group)
+def delete_repeating_shift_assignment(schedule: str) -> None:
+	frappe.db.delete("Shift Assignment", {"schedule": schedule})
+	frappe.delete_doc("Shift Assignment Schedule", schedule)
 
 
 def _create_repeating_shift_assignment(
@@ -74,10 +74,17 @@ def _create_repeating_shift_assignment(
 	days: list[str],
 	frequency: str,
 ) -> None:
-	group = frappe.get_doc({"doctype": "Shift Assignment Group", "group": random_string(10)}).insert()
+	schedule = frappe.get_doc(
+		{
+			"doctype": "Shift Assignment Schedule",
+			"schedule": random_string(10),
+			"frequency": frequency,
+			"days": [{"day": day} for day in days],
+		}
+	).insert()
 
 	def create_individual_assignment(start_date, end_date):
-		create_shift_assignment(employee, company, shift_type, start_date, end_date, status, group.name)
+		create_shift_assignment(employee, company, shift_type, start_date, end_date, status, schedule.name)
 
 	gap = {
 		"Every Week": 0,
