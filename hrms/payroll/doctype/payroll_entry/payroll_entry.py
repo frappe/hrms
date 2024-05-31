@@ -1137,15 +1137,12 @@ def get_filtered_employees(
 	ignore_match_conditions=False,
 ) -> list:
 	SalaryStructureAssignment = frappe.qb.DocType("Salary Structure Assignment")
-	SalaryWithholding = frappe.qb.DocType("Salary Withholding")
 	Employee = frappe.qb.DocType("Employee")
 
 	query = (
 		frappe.qb.from_(Employee)
 		.join(SalaryStructureAssignment)
 		.on(Employee.name == SalaryStructureAssignment.employee)
-		.join(SalaryWithholding)
-		.on(Employee.name == SalaryWithholding.employee)
 		.where(
 			(SalaryStructureAssignment.docstatus == 1)
 			& (Employee.status != "Inactive")
@@ -1155,21 +1152,12 @@ def get_filtered_employees(
 			& (SalaryStructureAssignment.salary_structure.isin(sal_struct))
 			& (SalaryStructureAssignment.payroll_payable_account == filters.payroll_payable_account)
 			& (filters.end_date >= SalaryStructureAssignment.from_date)
-			& (
-				(SalaryWithholding.name == None)
-				| (
-					SalaryWithholding.from_date
-					> filters.end_date | SalaryWithholding.to_date
-					< filters.start_date
-				)
-			)
 		)
 	)
 
 	query = set_fields_to_select(query, fields)
 	query = set_searchfield(query, searchfield, search_string, qb_object=Employee)
 	query = set_filter_conditions(query, filters, qb_object=Employee)
-	salary_withholding_documents = frappe.db.get_all("Salary Withholding")
 
 	if not ignore_match_conditions:
 		query = set_match_conditions(query=query, qb_object=Employee)
@@ -1181,7 +1169,6 @@ def get_filtered_employees(
 		query = query.offset(offset)
 
 	employees = query.run(as_dict=as_dict)
-
 	return employees
 
 
@@ -1391,8 +1378,45 @@ def create_salary_slips_for_employees(employees, args, publish_progress=True):
 		count = 0
 
 		employees = list(set(employees) - set(salary_slips_exist_for))
+
 		for emp in employees:
-			args.update({"doctype": "Salary Slip", "employee": emp})
+			SalaryWithholding = frappe.qb.DocType("Salary Withholding")
+			SalaryWithholdingCycle = frappe.qb.DocType("Salary Withholding Cycle")
+
+			query = (
+				frappe.qb.from_(SalaryWithholding)
+				.where(
+					(SalaryWithholding.employee == emp)
+					& (
+						(SalaryWithholding.from_date <= getdate(args.start_date))
+						& (SalaryWithholding.to_date >= getdate(args.end_date))
+					)
+					& (SalaryWithholding.docstatus == 1)
+				)
+				.select("*")
+			)
+
+			salary_withholding_document = query.run(as_dict=True)[0]
+
+			query = (
+				frappe.qb.from_(SalaryWithholdingCycle)
+				.where(
+					(SalaryWithholdingCycle.parent == salary_withholding_document.name)
+					& (SalaryWithholdingCycle.from_date == getdate(args.start_date))
+					& (SalaryWithholdingCycle.to_date == getdate(args.end_date))
+				)
+				.select("*")
+			)
+
+			salary_withholding_cycle = query.run(as_dict=True)[0]
+
+			args.update(
+				{
+					"doctype": "Salary Slip",
+					"employee": emp,
+					"salary_status": salary_withholding_cycle.salary_status,
+				}
+			)
 			frappe.get_doc(args).insert()
 
 			count += 1
