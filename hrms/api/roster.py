@@ -103,8 +103,9 @@ def _create_repeating_shift_assignment(
 			individual_assignment_start = None
 
 		if weekday == week_end_day and gap:
-			create_individual_assignment(individual_assignment_start, date)
-			individual_assignment_start = None
+			if individual_assignment_start:
+				create_individual_assignment(individual_assignment_start, date)
+				individual_assignment_start = None
 			date = add_days(date, 7 * gap)
 
 		date = add_days(date, 1)
