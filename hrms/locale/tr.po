@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-29 09:23\n"
+"PO-Revision-Date: 2024-05-30 09:35\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -2105,7 +2105,7 @@ msgstr ""
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Bank Account No"
-msgstr ""
+msgstr "Banka Hesap Numarası"
 
 #. Label of a Tab Break field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -5629,7 +5629,7 @@ msgstr "Personel Giriş Çıkış"
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgctxt "Employee Checkin"
 msgid "Employee Checkin"
-msgstr "Çalışan Checkin"
+msgstr "Personel Giriş Çıkış"
 
 #. Name of a DocType
 #: payroll/doctype/employee_cost_center/employee_cost_center.json
@@ -9810,7 +9810,7 @@ msgstr "İzin Formu"
 #: hr/doctype/attendance/attendance.json
 msgctxt "Attendance"
 msgid "Leave Application"
-msgstr "izin başvurusu"
+msgstr "İzin Formu"
 
 #. Label of a Link in the HR Workspace
 #. Label of a shortcut in the HR Workspace
@@ -9819,7 +9819,7 @@ msgstr "izin başvurusu"
 #: hr/workspace/hr/hr.json hr/workspace/leaves/leaves.json
 msgctxt "Leave Application"
 msgid "Leave Application"
-msgstr "izin başvurusu"
+msgstr "İzin Formu"
 
 #: hr/doctype/leave_application/leave_application.py:705
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
@@ -13176,7 +13176,7 @@ msgstr "Sorumluluklar"
 #: hr/doctype/hr_settings/hr_settings.json
 msgctxt "HR Settings"
 msgid "Restrict Backdated Leave Application"
-msgstr ""
+msgstr "Geçmiş Tarihli İzin Başvurusunu Kısıtla"
 
 #: hr/doctype/interview/interview.js:145
 msgid "Result"
