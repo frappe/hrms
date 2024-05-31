@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-30 09:35\n"
+"PO-Revision-Date: 2024-05-31 09:45\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -5835,7 +5835,7 @@ msgstr "Personel Bilgileri"
 #: hr/report/employee_leave_balance/employee_leave_balance.json
 #: hr/workspace/hr/hr.json hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance"
-msgstr ""
+msgstr "Personel İzin Bakiyesi"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -5843,7 +5843,7 @@ msgstr ""
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.json
 #: hr/workspace/hr/hr.json hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance Summary"
-msgstr ""
+msgstr "Personel İzin Bakiyesi Özeti"
 
 #. Name of a Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
@@ -7821,7 +7821,7 @@ msgstr ""
 #: hr/workspace/expense_claims/expense_claims.json
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "General Ledger"
-msgstr ""
+msgstr "Genel Muhasebe"
 
 #: payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.js:44
 msgid "Get Details From Declaration"
@@ -15129,7 +15129,7 @@ msgstr "Vergi Muafiyet İspatları"
 #. Label of a Card Break in the Tax & Benefits Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Tax Setup"
-msgstr ""
+msgstr "Vergi Kurulumu"
 
 #. Label of a Currency field in DocType 'Salary Detail'
 #: payroll/doctype/salary_detail/salary_detail.json
