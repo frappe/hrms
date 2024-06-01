@@ -31,7 +31,8 @@ frappe.ui.form.on("Salary Withholding", {
 	},
 
 	from_date: function (frm) {
-				if (!frm.doc.employee) {
+		if (!frm.doc.from_date) return
+		if (!frm.doc.employee) {
 			frappe.throw(__("Please select an employee"))
 			frm.doc.from_date = null
 			frm.refresh_field("from_date")
