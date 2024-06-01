@@ -33,7 +33,6 @@
   "salary_slip_based_on_timesheet",
   "section_break_gerh",
   "salary_withholding",
-  "salary_status",
   "column_break_thuu",
   "deduct_tax_for_unclaimed_employee_benefits",
   "deduct_tax_for_unsubmitted_tax_exemption_proof",
@@ -726,13 +725,6 @@
    "oldfieldtype": "Section Break"
   },
   {
-   "default": "Released",
-   "fieldname": "salary_status",
-   "fieldtype": "Select",
-   "label": "Salary Status",
-   "options": "Withheld\nReleased"
-  },
-  {
    "fieldname": "column_break_thuu",
    "fieldtype": "Column Break"
   },
@@ -748,7 +740,7 @@
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-06-01 18:57:16.826817",
+ "modified": "2024-06-01 19:03:07.455752",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
