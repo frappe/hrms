@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class PayrollEmployeewithSalaryWithholding(Document):
+class PayrollEmployeewithReleasedSalary(Document):
 	pass
