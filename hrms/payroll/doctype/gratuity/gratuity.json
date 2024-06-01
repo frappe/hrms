@@ -199,7 +199,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-15 02:50:10.282517",
+ "modified": "2024-03-27 13:09:45.947818",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Gratuity",
@@ -232,7 +232,7 @@
   }
  ],
  "search_fields": "employee_name",
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name"

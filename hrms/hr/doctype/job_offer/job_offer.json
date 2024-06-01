@@ -167,7 +167,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-21 13:41:22.022838",
+ "modified": "2024-03-27 13:09:57.574961",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",
@@ -191,7 +191,8 @@
   }
  ],
  "show_name_in_global_search": 1,
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "applicant_name"
 }

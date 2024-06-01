@@ -93,9 +93,7 @@ def get_data(filters: Filters, is_indian_company: bool) -> list[dict]:
 
 
 def get_income_tax_deductions(filters: Filters) -> list[dict]:
-	component_types = frappe.get_all(
-		"Salary Component", filters={"is_income_tax_component": 1}, pluck="name"
-	)
+	component_types = frappe.get_all("Salary Component", filters={"is_income_tax_component": 1}, pluck="name")
 	if not component_types:
 		return []
 

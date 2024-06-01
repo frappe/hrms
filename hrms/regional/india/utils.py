@@ -26,11 +26,15 @@ def calculate_annual_eligible_hra_exemption(doc):
 		assignments = get_salary_assignments(doc.employee, doc.payroll_period)
 
 		if not assignments and doc.docstatus == 1:
-			frappe.throw(
-				_("Salary Structure must be submitted before submission of {0}").format(doc.doctype)
-			)
+			frappe.throw(_("Salary Structure must be submitted before submission of {0}").format(doc.doctype))
 
-		assignment_dates = [assignment.from_date for assignment in assignments]
+		period_start_date = frappe.db.get_value("Payroll Period", doc.payroll_period, "start_date")
+
+		assignment_dates = []
+		for assignment in assignments:
+			# if assignment is before payroll period, use period start date to get the correct days
+			assignment.from_date = max(assignment.from_date, period_start_date)
+			assignment_dates.append(assignment.from_date)
 
 		for idx, assignment in enumerate(assignments):
 			if has_hra_component(assignment.salary_structure, hra_component):
@@ -99,9 +103,7 @@ def get_end_date_for_assignment(assignment_dates, idx, payroll_period):
 	return end_date
 
 
-def get_component_amt_from_salary_slip(
-	employee, salary_structure, basic_component, hra_component, from_date
-):
+def get_component_amt_from_salary_slip(employee, salary_structure, basic_component, hra_component, from_date):
 	salary_slip = make_salary_slip(
 		salary_structure,
 		employee=employee,
