@@ -889,7 +889,7 @@ class PayrollEntry(Document):
 		SalarySlip = frappe.qb.DocType("Salary Slip")
 		SalaryDetail = frappe.qb.DocType("Salary Detail")
 
-		return (
+		salary_slips = (
 			frappe.qb.from_(SalarySlip)
 			.join(SalaryDetail)
 			.on(SalarySlip.name == SalaryDetail.parent)
@@ -897,17 +897,35 @@ class PayrollEntry(Document):
 				SalarySlip.name,
 				SalarySlip.employee,
 				SalarySlip.salary_structure,
+				SalarySlip.salary_withholding,
 				SalaryDetail.salary_component,
 				SalaryDetail.amount,
 				SalaryDetail.parentfield,
 			)
 			.where(
 				(SalarySlip.docstatus == 1)
+				& (SalarySlip.salary_status == "Released")
 				& (SalarySlip.start_date >= self.start_date)
 				& (SalarySlip.end_date <= self.end_date)
 				& (SalarySlip.payroll_entry == self.name)
 			)
 		).run(as_dict=True)
+
+		def check_if_salary_released(salary_slip):
+			SalaryWithholdingCycle = frappe.qb.DocType("Salary Withholding Cycle")
+			query = (
+				frappe.qb.from_(SalaryWithholdingCycle)
+				.where(
+					(SalaryWithholdingCycle.parent == salary_slip.salary_withholding)
+					& (SalaryWithholdingCycle.from_date == getdate(self.start_date))
+					& (SalaryWithholdingCycle.to_date == getdate(self.end_date))
+				)
+				.select("*")
+			)
+			salary_withholding_cycle = query.run(as_dict=True)[0]
+			return True if salary_withholding_cycle.salary_status == "Released" else False
+
+		return filter(check_if_salary_released, salary_slips)
 
 	def set_accounting_entries_for_bank_entry(self, je_payment_amount, user_remark):
 		payroll_payable_account = self.payroll_payable_account
@@ -1381,7 +1399,6 @@ def create_salary_slips_for_employees(employees, args, publish_progress=True):
 
 		for emp in employees:
 			SalaryWithholding = frappe.qb.DocType("Salary Withholding")
-			SalaryWithholdingCycle = frappe.qb.DocType("Salary Withholding Cycle")
 
 			query = (
 				frappe.qb.from_(SalaryWithholding)
@@ -1398,23 +1415,11 @@ def create_salary_slips_for_employees(employees, args, publish_progress=True):
 
 			salary_withholding_document = query.run(as_dict=True)[0]
 
-			query = (
-				frappe.qb.from_(SalaryWithholdingCycle)
-				.where(
-					(SalaryWithholdingCycle.parent == salary_withholding_document.name)
-					& (SalaryWithholdingCycle.from_date == getdate(args.start_date))
-					& (SalaryWithholdingCycle.to_date == getdate(args.end_date))
-				)
-				.select("*")
-			)
-
-			salary_withholding_cycle = query.run(as_dict=True)[0]
-
 			args.update(
 				{
 					"doctype": "Salary Slip",
 					"employee": emp,
-					"salary_status": salary_withholding_cycle.salary_status,
+					"salary_withholding": salary_withholding_document.name,
 				}
 			)
 			frappe.get_doc(args).insert()
