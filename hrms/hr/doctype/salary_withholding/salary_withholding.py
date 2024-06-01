@@ -56,17 +56,15 @@ def add_days_to_date(from_date, days, n):
 @frappe.whitelist()
 def calculate_to_date(payroll_frequency, from_date, number_of_withholding_cycles):
 	if payroll_frequency == "Monthly":
-		to_date = add_months_to_date(from_date, int(number_of_withholding_cycles), 1)
+		return add_months_to_date(from_date, int(number_of_withholding_cycles), 1)
 	elif payroll_frequency == "Bimonthly":
-		to_date = add_months_to_date(from_date, int(number_of_withholding_cycles), 2)
+		return add_months_to_date(from_date, int(number_of_withholding_cycles), 2)
 	elif payroll_frequency == "Weekly":
-		to_date = add_days_to_date(from_date, int(number_of_withholding_cycles), 7)
+		return add_days_to_date(from_date, int(number_of_withholding_cycles), 7)
 	elif payroll_frequency == "Fortnightly":
-		to_date = add_days_to_date(from_date, int(number_of_withholding_cycles), 14)
+		return add_days_to_date(from_date, int(number_of_withholding_cycles), 14)
 	elif payroll_frequency == "Daily":
-		to_date = add_days_to_date(from_date, int(number_of_withholding_cycles), 1)
-
-	return to_date
+		return add_days_to_date(from_date, int(number_of_withholding_cycles), 1)
 
 
 @frappe.whitelist()
