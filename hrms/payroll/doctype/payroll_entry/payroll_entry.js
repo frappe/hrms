@@ -52,7 +52,7 @@ frappe.ui.form.on('Payroll Entry', {
 	},
 
 	refresh: function (frm) {
-		if (frm.doc.status === "Queued") frm.page.btn_secondary.hide()
+				if (frm.doc.status === "Queued") frm.page.btn_secondary.hide()
 
 		if (frm.doc.docstatus === 0 && !frm.is_new()) {
 			frm.page.clear_primary_action();
@@ -156,12 +156,20 @@ frappe.ui.form.on('Payroll Entry', {
 			method: 'hrms.payroll.doctype.payroll_entry.payroll_entry.payroll_entry_has_bank_entries',
 			args: {
 				'name': frm.doc.name,
-				'payroll_payable_account': frm.doc.payroll_payable_account
+				'payroll_payable_account': frm.doc.payroll_payable_account,
+				'total_employees': frm.doc.employees.length,
+				'withheld_salary_employees': frm.doc.employees.filter(e => e.salary_withheld).length
 			},
 			callback: function (r) {
-				if (r.message && !r.message.submitted) {
+				if (!r.message || r.message.status == "fulfilled") return
+				if (r.message.status == "make bank entry") {
 					frm.add_custom_button(__("Make Bank Entry"), function () {
 						make_bank_entry(frm);
+					}).addClass("btn-primary");
+				}
+				if (r.message.status == "make bank entry for withheld salaries") {
+					frm.add_custom_button(__("Release Withheld Salaries"), function () {
+						release_withheld_salaries(frm);
 					}).addClass("btn-primary");
 				}
 			}
@@ -406,8 +414,8 @@ let make_bank_entry = function (frm) {
 			callback: function () {
 				frappe.set_route(
 					'List', 'Journal Entry', {
-						"Journal Entry Account.reference_name": frm.doc.name
-					}
+					"Journal Entry Account.reference_name": frm.doc.name
+				}
 				);
 			},
 			freeze: true,
@@ -418,6 +426,24 @@ let make_bank_entry = function (frm) {
 		frm.scroll_to_field('payment_account');
 	}
 };
+
+const release_withheld_salaries = (frm) => {
+	return frappe.call({
+		doc: frm.doc,
+		method: "make_bank_entry_for_withheld_salaries",
+		args: {},
+		callback: function () {
+			frappe.set_route(
+				'List', 'Journal Entry', {
+				"Journal Entry Account.reference_name": frm.doc.name
+			}
+			);
+		},
+		freeze: true,
+		freeze_message: __("Creating Payment Entries......")
+	})
+}
+
 
 let render_employee_attendance = function (frm, data) {
 	frm.fields_dict.attendance_detail_html.html(
