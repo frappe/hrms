@@ -78,6 +78,12 @@
 							hoveredCell.employee = '';
 							hoveredCell.date = '';
 						"
+						@drop="
+							droppedCell.employee = employee.name;
+							droppedCell.date = day.date;
+							moveShift.submit();
+						"
+						@dragover.prevent
 					>
 						<!-- Holiday -->
 						<div
@@ -105,6 +111,7 @@
 								v-for="shift in events.data?.[employee.name]?.[day.date]"
 								@mouseover="hoveredCell.shift = shift.name"
 								@mouseleave="hoveredCell.shift = ''"
+								:draggable="true"
 								class="rounded border-2 px-2 py-1 cursor-pointer"
 								:class="shift.status === 'Inactive' && 'border-dashed'"
 								:style="{
@@ -234,6 +241,7 @@ const employeeSearch = ref<{ value: string; label: string }[]>();
 const shiftAssignment = ref<string>();
 const showShiftAssignmentDialog = ref(false);
 const hoveredCell = ref({ employee: "", date: "", shift: "" });
+const droppedCell = ref({ employee: "", date: "" });
 
 const daysOfMonth = computed(() => {
 	const daysOfMonth = [];
@@ -284,6 +292,25 @@ const events = createResource({
 	},
 });
 defineExpose({ events });
+
+const moveShift = createResource({
+	url: "hrms.api.roster.move_shift",
+	makeParams() {
+		return {
+			shift_assignment: hoveredCell.value.shift,
+			break_on_date: hoveredCell.value.date,
+			move_to_employee: droppedCell.value.employee,
+			move_to_date: droppedCell.value.date,
+		};
+	},
+	onSuccess: () => {
+		raiseToast("success", "Shift moved successfully!");
+		events.fetch();
+	},
+	onError(error: { messages: string[] }) {
+		raiseToast("error", error.messages[0]);
+	},
+});
 
 const mapEventsToDates = (data: Events, mappedEvents: MappedEvents, employee: string) => {
 	mappedEvents[employee] = {};

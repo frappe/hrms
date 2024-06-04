@@ -64,6 +64,37 @@ def delete_repeating_shift_assignment(schedule: str) -> None:
 	frappe.delete_doc("Shift Assignment Schedule", schedule)
 
 
+@frappe.whitelist()
+def move_shift(shift_assignment: str, break_on_date: str, move_to_employee: str, move_to_date: str) -> None:
+	company = frappe.db.get_value("Employee", move_to_employee, "company")
+	shift_type, status = frappe.db.get_value("Shift Assignment", shift_assignment, ["shift_type", "status"])
+	create_shift_assignment(move_to_employee, company, shift_type, move_to_date, move_to_date, status)
+	break_shift(shift_assignment, break_on_date)
+
+
+def break_shift(shift_assignment: str, date: str) -> None:
+	start_date, end_date = frappe.db.get_value(
+		"Shift Assignment", shift_assignment, ["start_date", "end_date"]
+	)
+	if end_date and date_diff(end_date, date) < 0:
+		frappe.throw("Cannot break shift after end date")
+	if date_diff(start_date, date) > 0:
+		frappe.throw("Cannot break shift before start date")
+
+	employee, company, shift_type, status = frappe.db.get_value(
+		"Shift Assignment", shift_assignment, ["employee", "company", "shift_type", "status"]
+	)
+
+	if date_diff(date, start_date) == 0:
+		frappe.db.set_value("Shift Assignment", shift_assignment, "docstatus", 2)
+		frappe.delete_doc("Shift Assignment", shift_assignment)
+	else:
+		frappe.db.set_value("Shift Assignment", shift_assignment, "end_date", add_days(date, -1))
+
+	if not end_date or date_diff(end_date, date) > 0:
+		create_shift_assignment(employee, company, shift_type, add_days(date, 1), end_date, status)
+
+
 def _create_repeating_shift_assignment(
 	employee: str,
 	company: str,
