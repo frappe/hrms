@@ -5,8 +5,7 @@ from frappe import _
 from frappe.model import no_value_fields
 from frappe.model.workflow import get_workflow_name
 from frappe.query_builder import Order
-from frappe.utils import getdate
-from frappe.utils.data import cint
+from frappe.utils import getdate, strip_html
 
 SUPPORTED_FIELD_TYPES = [
 	"Link",
@@ -211,12 +210,17 @@ def get_holidays_for_employee(employee: str) -> list[dict]:
 		return []
 
 	Holiday = frappe.qb.DocType("Holiday")
-	return (
+	holidays = (
 		frappe.qb.from_(Holiday)
 		.select(Holiday.name, Holiday.holiday_date, Holiday.description)
 		.where((Holiday.parent == holiday_list) & (Holiday.weekly_off == 0))
 		.orderby(Holiday.holiday_date, order=Order.asc)
 	).run(as_dict=True)
+
+	for holiday in holidays:
+		holiday["description"] = strip_html(holiday["description"] or "").strip()
+
+	return holidays
 
 
 @frappe.whitelist()

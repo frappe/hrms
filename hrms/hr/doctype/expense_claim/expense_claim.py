@@ -547,10 +547,17 @@ def update_payment_for_expense_claim(doc, method=None):
 	for d in doc.get(payment_table):
 		if d.get(doctype_field) == "Expense Claim" and d.reference_name:
 			expense_claim = frappe.get_doc("Expense Claim", d.reference_name)
-			if doc.docstatus == 2:
-				update_reimbursed_amount(expense_claim)
-			else:
-				update_reimbursed_amount(expense_claim)
+			update_reimbursed_amount(expense_claim)
+
+			if doc.doctype == "Payment Entry":
+				update_outstanding_amount_in_payment_entry(expense_claim, d.name)
+
+
+def update_outstanding_amount_in_payment_entry(expense_claim: dict, pe_reference: str):
+	"""updates outstanding amount back in Payment Entry reference"""
+	# TODO: refactor convoluted code after erpnext payment entry becomes extensible
+	outstanding_amount = get_outstanding_amount_for_claim(expense_claim)
+	frappe.db.set_value("Payment Entry Reference", pe_reference, "outstanding_amount", outstanding_amount)
 
 
 def validate_expense_claim_in_jv(doc, method=None):
