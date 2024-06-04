@@ -101,14 +101,26 @@ class PayrollEntry(Document):
 				).format(frappe.bold(get_link_to_form("Account", self.payroll_payable_account)))
 			)
 
+	def change_salary_withholdings_status(self, status):
+		salary_slips = self.get_linked_salary_slips()
+		for s in salary_slips:
+			cycle_name = frappe.db.get_value(
+				"Salary Withholding Cycle",
+				{"parent": s.salary_withholding, "from_date": s.start_date, "to_date": s.end_date},
+				["name"],
+			)
+			frappe.get_doc("Salary Withholding Cycle", cycle_name).db_set("salary_status", status)
+
 	def on_cancel(self):
 		self.ignore_linked_doctypes = ("GL Entry", "Salary Slip", "Journal Entry")
 
+		self.change_salary_withholdings_status("Withheld")
 		self.delete_linked_salary_slips()
 		self.cancel_linked_journal_entries()
 
 		# reset flags & update status
 		self.db_set("salary_slips_created", 0)
+		self.db_set("withheld_salaries_released", 0)
 		self.db_set("salary_slips_submitted", 0)
 		self.set_status(update=True, status="Cancelled")
 		self.db_set("error_message", "")
@@ -151,7 +163,11 @@ class PayrollEntry(Document):
 			frappe.get_doc("Journal Entry", je).cancel()
 
 	def get_linked_salary_slips(self):
-		return frappe.get_all("Salary Slip", {"payroll_entry": self.name}, ["name", "docstatus"])
+		return frappe.get_all(
+			"Salary Slip",
+			{"payroll_entry": self.name},
+			["name", "docstatus", "salary_withholding", "start_date", "end_date"],
+		)
 
 	def make_filters(self):
 		filters = frappe._dict(
@@ -891,6 +907,8 @@ class PayrollEntry(Document):
 		for s in salary_slips:
 			frappe.get_doc("Salary Slip", s.name).db_set("status", "Submitted")
 		self.make_bank_entry()
+		self.db_set("withheld_salaries_released", 1)
+		self.change_salary_withholdings_status("Released")
 		return
 
 	def get_salary_slip_details(self):
@@ -1370,19 +1388,13 @@ def get_payroll_entry_bank_entries(payroll_entry_name):
 
 
 @frappe.whitelist()
-def payroll_entry_has_bank_entries(
-	name: str, total_employees: int, withheld_salary_employees: int
-):
+def payroll_entry_has_bank_entries(name: str, number_of_unwithheld_employees: int):
 	response = {}
 	bank_entries = get_payroll_entry_bank_entries(name)
-	if bank_entries:
-		response["status"] = "fulfilled"
-	elif (
-		withheld_salary_employees and len(bank_entries) == total_employees - withheld_salary_employees
-	):
-		response["status"] = "make bank entry for withheld salaries"
-	else:
+	if number_of_unwithheld_employees and not bank_entries:
 		response["status"] = "make bank entry"
+	else:
+		response["status"] = "fulfilled"
 	return response
 
 
@@ -1446,7 +1458,7 @@ def create_salary_slips_for_employees(employees, args, publish_progress=True):
 			)
 
 			salary_slip = frappe.get_doc(args).insert()
-			salary_slip.db_set("status", "Withheld" if is_salary_withheld else "Draft", notify=True)
+			salary_slip.db_set("status", "Withheld" if is_salary_withheld else "Draft")
 			salary_slip.reload()
 
 			count += 1
@@ -1528,8 +1540,9 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 				unsubmitted.append(entry[0])
 			else:
 				try:
+					salary_slip_draft_status = salary_slip.status
 					salary_slip.submit()
-					if salary_slip.status == "Withheld":
+					if salary_slip_draft_status == "Withheld":
 						salary_slip.db_set("status", "Withheld")
 					submitted.append(salary_slip)
 				except frappe.ValidationError:

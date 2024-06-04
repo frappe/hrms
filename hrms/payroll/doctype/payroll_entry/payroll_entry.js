@@ -52,7 +52,7 @@ frappe.ui.form.on('Payroll Entry', {
 	},
 
 	refresh: function (frm) {
-				if (frm.doc.status === "Queued") frm.page.btn_secondary.hide()
+		if (frm.doc.status === "Queued") frm.page.btn_secondary.hide()
 
 		if (frm.doc.docstatus === 0 && !frm.is_new()) {
 			frm.page.clear_primary_action();
@@ -157,19 +157,18 @@ frappe.ui.form.on('Payroll Entry', {
 			args: {
 				'name': frm.doc.name,
 				'payroll_payable_account': frm.doc.payroll_payable_account,
-				'total_employees': frm.doc.employees.length,
-				'withheld_salary_employees': frm.doc.employees.filter(e => e.salary_withheld).length
+				'number_of_unwithheld_employees': frm.doc.employees.filter(e => !e.salary_withheld).length
 			},
 			callback: function (r) {
-				if (!r.message || r.message.status == "fulfilled") return
+				if (!r.message) return
+				if (r.message.status == "fulfilled" && !frm.doc.withheld_salaries_released) {
+					frm.add_custom_button(__("Release Withheld Salaries"), function () {
+						release_withheld_salaries(frm);
+					}).addClass("btn-primary");
+				}
 				if (r.message.status == "make bank entry") {
 					frm.add_custom_button(__("Make Bank Entry"), function () {
 						make_bank_entry(frm);
-					}).addClass("btn-primary");
-				}
-				if (r.message.status == "make bank entry for withheld salaries") {
-					frm.add_custom_button(__("Release Withheld Salaries"), function () {
-						release_withheld_salaries(frm);
 					}).addClass("btn-primary");
 				}
 			}
