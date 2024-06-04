@@ -10,7 +10,6 @@
   "select_payroll_period",
   "posting_date",
   "company",
-  "release_withheld_salaries",
   "column_break_5",
   "currency",
   "exchange_rate",
@@ -34,11 +33,9 @@
   "number_of_employees",
   "section_break_24",
   "employees",
-  "employees_with_released_salaries_section",
-  "table_qonz",
   "section_break_26",
   "validate_attendance",
-  "attendance_detail_html",
+"attendance_detail_html",
   "accounting_dimensions_tab",
   "accounting_dimensions_section",
   "cost_center",
@@ -117,7 +114,7 @@
    "fieldtype": "Check",
    "label": "Validate Attendance"
   },
-  {
+{
    "fieldname": "attendance_detail_html",
    "fieldtype": "HTML"
   },
@@ -334,28 +331,12 @@
    "fieldtype": "Link",
    "label": "Grade",
    "options": "Employee Grade"
-  },
-  {
-   "default": "0",
-   "fieldname": "release_withheld_salaries",
-   "fieldtype": "Check",
-   "label": "Release withheld salaries"
-  },
-  {
-   "fieldname": "employees_with_released_salaries_section",
-   "fieldtype": "Section Break",
-   "label": "Employees with released Salary"
-  },
-  {
-   "fieldname": "table_qonz",
-   "fieldtype": "Table",
-   "options": "Payroll Employee with Released Salary"
   }
  ],
  "icon": "fa fa-cog",
  "is_submittable": 1,
  "links": [],
- "modified": "2024-06-01 22:38:26.370150",
+ "modified": "2024-06-04 15:10:53.653425",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",
