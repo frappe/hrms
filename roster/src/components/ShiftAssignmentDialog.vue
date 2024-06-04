@@ -211,7 +211,7 @@ const actions = computed(() => {
 			label: "Delete Shift Schedule",
 			icon: "trash",
 			onClick: async () => {
-				deleteRepeatingShiftAssignment.submit(form.schedule);
+				deleteRepeatingShiftAssignment.submit();
 			},
 		});
 	return options;
