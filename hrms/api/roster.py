@@ -65,11 +65,29 @@ def delete_repeating_shift_assignment(schedule: str) -> None:
 
 
 @frappe.whitelist()
-def move_shift(shift_assignment: str, break_on_date: str, move_to_employee: str, move_to_date: str) -> None:
-	company = frappe.db.get_value("Employee", move_to_employee, "company")
-	shift_type, status = frappe.db.get_value("Shift Assignment", shift_assignment, ["shift_type", "status"])
-	create_shift_assignment(move_to_employee, company, shift_type, move_to_date, move_to_date, status)
-	break_shift(shift_assignment, break_on_date)
+def swap_shift(
+	src_shift: str, src_date: str, tgt_employee: str, tgt_date: str, tgt_shift: str | None
+) -> None:
+	if src_shift == tgt_shift:
+		return
+
+	if tgt_shift:
+		tgt_company, tgt_shift_type, tgt_status = frappe.db.get_value(
+			"Shift Assignment", tgt_shift, ["company", "shift_type", "status"]
+		)
+		break_shift(tgt_shift, tgt_date)
+	else:
+		tgt_company = frappe.db.get_value("Employee", tgt_employee, "company")
+
+	src_employee, src_company, src_shift_type, src_status = frappe.db.get_value(
+		"Shift Assignment", src_shift, ["employee", "company", "shift_type", "status"]
+	)
+
+	create_shift_assignment(tgt_employee, tgt_company, src_shift_type, tgt_date, tgt_date, src_status)
+	break_shift(src_shift, src_date)
+
+	if tgt_shift:
+		create_shift_assignment(src_employee, src_company, tgt_shift_type, src_date, src_date, tgt_status)
 
 
 def break_shift(shift_assignment: str, date: str) -> None:

@@ -32,7 +32,7 @@
 							!employeeSearch?.length ||
 							employeeSearch?.some((item) => item.value === employee?.name)
 						"
-						class="px-2 py-7"
+						class="px-2 py-7 z-10"
 						:class="{ 'border-t': rowIdx }"
 					>
 						<div class="flex" :class="!employee.designation && 'items-center'">
@@ -78,11 +78,15 @@
 							hoveredCell.employee = '';
 							hoveredCell.date = '';
 						"
-						@drop="
+						@dragover="
 							droppedCell.employee = employee.name;
 							droppedCell.date = day.date;
-							moveShift.submit();
 						"
+						@dragleave="
+							droppedCell.employee = employee.name;
+							droppedCell.date = day.date;
+						"
+						@drop="swapShift.submit()"
 						@dragover.prevent
 					>
 						<!-- Holiday -->
@@ -106,11 +110,13 @@
 						</div>
 
 						<!-- Shifts -->
-						<div v-else class="flex flex-col space-y-1.5">
+						<div v-else class="flex flex-col space-y-1.5 translate-x-0 translate-y-0">
 							<div
 								v-for="shift in events.data?.[employee.name]?.[day.date]"
 								@mouseover="hoveredCell.shift = shift.name"
 								@mouseleave="hoveredCell.shift = ''"
+								@dragover="droppedCell.shift = shift.name"
+								@dragleave="droppedCell.shift = ''"
 								:draggable="true"
 								class="rounded border-2 px-2 py-1 cursor-pointer"
 								:class="shift.status === 'Inactive' && 'border-dashed'"
@@ -241,7 +247,7 @@ const employeeSearch = ref<{ value: string; label: string }[]>();
 const shiftAssignment = ref<string>();
 const showShiftAssignmentDialog = ref(false);
 const hoveredCell = ref({ employee: "", date: "", shift: "" });
-const droppedCell = ref({ employee: "", date: "" });
+const droppedCell = ref({ employee: "", date: "", shift: "" });
 
 const daysOfMonth = computed(() => {
 	const daysOfMonth = [];
@@ -293,14 +299,15 @@ const events = createResource({
 });
 defineExpose({ events });
 
-const moveShift = createResource({
-	url: "hrms.api.roster.move_shift",
+const swapShift = createResource({
+	url: "hrms.api.roster.swap_shift",
 	makeParams() {
 		return {
-			shift_assignment: hoveredCell.value.shift,
-			break_on_date: hoveredCell.value.date,
-			move_to_employee: droppedCell.value.employee,
-			move_to_date: droppedCell.value.date,
+			src_shift: hoveredCell.value.shift,
+			src_date: hoveredCell.value.date,
+			tgt_employee: droppedCell.value.employee,
+			tgt_date: droppedCell.value.date,
+			tgt_shift: droppedCell.value.shift,
 		};
 	},
 	onSuccess: () => {
