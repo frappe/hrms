@@ -35,7 +35,7 @@
   "employees",
   "section_break_26",
   "validate_attendance",
-"attendance_detail_html",
+  "attendance_detail_html",
   "accounting_dimensions_tab",
   "accounting_dimensions_section",
   "cost_center",
@@ -51,7 +51,8 @@
   "error_message",
   "section_break_41",
   "amended_from",
-  "connections_tab"
+  "connections_tab",
+  "withheld_salaries_released"
  ],
  "fields": [
   {
@@ -331,12 +332,21 @@
    "fieldtype": "Link",
    "label": "Grade",
    "options": "Employee Grade"
+  },
+  {
+   "default": "0",
+   "fieldname": "withheld_salaries_released",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Withheld Salaries Released",
+   "no_copy": 1,
+   "read_only": 1
   }
  ],
  "icon": "fa fa-cog",
  "is_submittable": 1,
  "links": [],
- "modified": "2024-06-04 15:10:53.653425",
+ "modified": "2024-06-04 21:39:53.865123",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",
