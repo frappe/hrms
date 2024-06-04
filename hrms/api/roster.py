@@ -1,6 +1,7 @@
 import frappe
 from frappe.utils import add_days, date_diff, get_weekday, random_string
 
+from hrms.hr.doctype.shift_assignment.shift_assignment import ShiftAssignment
 from hrms.hr.doctype.shift_assignment_tool.shift_assignment_tool import create_shift_assignment
 
 
@@ -72,42 +73,50 @@ def swap_shift(
 		return
 
 	if tgt_shift:
-		tgt_company, tgt_shift_type, tgt_status = frappe.db.get_value(
-			"Shift Assignment", tgt_shift, ["company", "shift_type", "status"]
-		)
-		break_shift(tgt_shift, tgt_date)
+		tgt_shift_doc = frappe.get_doc("Shift Assignment", tgt_shift)
+		tgt_company = tgt_shift_doc.company
+		break_shift(tgt_shift_doc, tgt_date)
 	else:
 		tgt_company = frappe.db.get_value("Employee", tgt_employee, "company")
 
-	src_employee, src_company, src_shift_type, src_status = frappe.db.get_value(
-		"Shift Assignment", src_shift, ["employee", "company", "shift_type", "status"]
+	src_shift_doc = frappe.get_doc("Shift Assignment", src_shift)
+	create_shift_assignment(
+		tgt_employee, tgt_company, src_shift_doc.shift_type, tgt_date, tgt_date, src_shift_doc.status
 	)
-
-	create_shift_assignment(tgt_employee, tgt_company, src_shift_type, tgt_date, tgt_date, src_status)
-	break_shift(src_shift, src_date)
+	break_shift(src_shift_doc, src_date)
 
 	if tgt_shift:
-		create_shift_assignment(src_employee, src_company, tgt_shift_type, src_date, src_date, tgt_status)
+		create_shift_assignment(
+			src_shift_doc.employee,
+			src_shift_doc.company,
+			tgt_shift_doc.shift_type,
+			src_date,
+			src_date,
+			tgt_shift_doc.status,
+		)
 
 
-def break_shift(shift_assignment: str, date: str) -> None:
-	start_date, end_date = frappe.db.get_value(
-		"Shift Assignment", shift_assignment, ["start_date", "end_date"]
-	)
-	if end_date and date_diff(end_date, date) < 0:
+def break_shift(assignment: str | ShiftAssignment, date: str) -> None:
+	if isinstance(assignment, str):
+		assignment = frappe.get_doc("Shift Assignment", assignment)
+
+	if assignment.end_date and date_diff(assignment.end_date, date) < 0:
 		frappe.throw("Cannot break shift after end date")
-	if date_diff(start_date, date) > 0:
+	if date_diff(assignment.start_date, date) > 0:
 		frappe.throw("Cannot break shift before start date")
 
-	employee, company, shift_type, status = frappe.db.get_value(
-		"Shift Assignment", shift_assignment, ["employee", "company", "shift_type", "status"]
-	)
+	employee = assignment.employee
+	company = assignment.company
+	shift_type = assignment.shift_type
+	status = assignment.status
+	end_date = assignment.end_date
 
-	if date_diff(date, start_date) == 0:
-		frappe.db.set_value("Shift Assignment", shift_assignment, "docstatus", 2)
-		frappe.delete_doc("Shift Assignment", shift_assignment)
+	if date_diff(date, assignment.start_date) == 0:
+		assignment.cancel()
+		assignment.delete()
 	else:
-		frappe.db.set_value("Shift Assignment", shift_assignment, "end_date", add_days(date, -1))
+		assignment.end_date = add_days(date, -1)
+		assignment.save()
 
 	if not end_date or date_diff(end_date, date) > 0:
 		create_shift_assignment(employee, company, shift_type, add_days(date, 1), end_date, status)
