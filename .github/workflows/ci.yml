@@ -31,12 +31,9 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     timeout-minutes: 60
-<<<<<<< HEAD
-=======
     env:
       NODE_ENV: "production"
       WITH_COVERAGE: ${{ github.event_name !== 'pull_request' }}
->>>>>>> d05f55da1 (ci: don't report coverage on individual PRs (#1674))
 
     strategy:
       fail-fast: false
