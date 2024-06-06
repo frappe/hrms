@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-08 12:51\n"
+"PO-Revision-Date: 2024-06-06 10:56\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -10254,25 +10254,25 @@ msgstr ""
 #: hr/doctype/job_offer/job_offer.json
 msgctxt "Job Offer"
 msgid "Letter Head"
-msgstr ""
+msgstr "Memorandum"
 
 #. Label of a Link field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
 msgctxt "Leave Application"
 msgid "Letter Head"
-msgstr ""
+msgstr "Memorandum"
 
 #. Label of a Link field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Letter Head"
-msgstr ""
+msgstr "Memorandum"
 
 #. Label of a Link field in DocType 'Salary Structure'
 #: payroll/doctype/salary_structure/salary_structure.json
 msgctxt "Salary Structure"
 msgid "Letter Head"
-msgstr ""
+msgstr "Memorandum"
 
 #. Label of a Select field in DocType 'Training Event'
 #: hr/doctype/training_event/training_event.json
