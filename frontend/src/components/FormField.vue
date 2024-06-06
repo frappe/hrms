@@ -14,16 +14,22 @@
 			{{ props.label }}
 		</span>
 
-		<!-- Link & Select -->
+		<!-- Link -->
+		<Link
+			v-if="props.fieldtype === 'Link'"
+			:doctype="props.options"
+			:modelValue="modelValue"
+			:filters="props.linkFilters"
+			@update:modelValue="(v) => emit('update:modelValue', v)"
+		/>
+
+		<!-- Select -->
 		<Autocomplete
-			v-if="['Link', 'Select'].includes(props.fieldtype)"
-			ref="autocompleteRef"
+			v-else-if="props.fieldtype === 'Select'"
 			:class="isReadOnly ? 'pointer-events-none' : ''"
-			:value="modelValue"
-			:placeholder="`Select ${props.options}`"
+			:placeholder="`Select ${props.label}`"
 			:options="selectionList"
 			@change="(v) => emit('update:modelValue', v?.value)"
-			@update:query="(q) => updateLinkFieldOptions(q)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
 		/>
@@ -130,8 +136,10 @@
 </template>
 
 <script setup>
-import { createResource, Autocomplete, ErrorMessage, debounce } from "frappe-ui"
-import { ref, computed, onMounted, inject, watchEffect } from "vue"
+import { Autocomplete, ErrorMessage } from "frappe-ui"
+import { ref, computed, onMounted, inject } from "vue"
+
+import Link from "@/components/Link.vue"
 
 const props = defineProps({
 	fieldtype: String,
@@ -161,8 +169,6 @@ const emit = defineEmits(["change", "update:modelValue"])
 const dayjs = inject("$dayjs")
 
 let date = ref(null)
-const autocompleteRef = ref(null)
-const searchText = ref("")
 
 const showField = computed(() => {
 	if (props.readOnly && !isLayoutField.value && !props.modelValue) return false
@@ -183,9 +189,7 @@ const isReadOnly = computed(() => {
 })
 
 const selectionList = computed(() => {
-	if (props.fieldtype == "Link" && props.options) {
-		return props.documentList || linkFieldList?.data
-	} else if (props.fieldtype == "Select" && props.options) {
+	if (props.fieldtype == "Select" && props.options) {
 		const options = props.options.split("\n")
 		return options.map((option) => ({
 			label: option,
@@ -194,24 +198,6 @@ const selectionList = computed(() => {
 	}
 
 	return []
-})
-
-const linkFieldList = createResource({
-	url: "frappe.desk.search.search_link",
-	params: {
-		doctype: props.options,
-		txt: searchText.value,
-		filters: props.linkFilters,
-	},
-	transform: (data) => {
-		return data.map((doc) => {
-			const title = doc?.description?.split(",")?.[0]
-			return {
-				label: title ? `${title} : ${doc.value}` : doc.value,
-				value: doc.value,
-			}
-		})
-	},
 })
 
 function setDefaultValue() {
@@ -234,20 +220,6 @@ function setDefaultValue() {
 			: emit("update:modelValue", "")
 	}
 }
-
-const updateLinkFieldOptions = debounce((query) => {
-	searchText.value = query || ""
-	linkFieldList.reload()
-}, 500)
-
-// get link field options from DB only when the field is clicked
-watchEffect(() => {
-	if (autocompleteRef.value && props.fieldtype === "Link") {
-		autocompleteRef.value?.$refs?.search?.$el?.addEventListener("focus", () => {
-			linkFieldList.reload()
-		})
-	}
-})
 
 onMounted(() => {
 	setDefaultValue()
