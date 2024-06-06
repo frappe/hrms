@@ -14,24 +14,25 @@
 			{{ props.label }}
 		</span>
 
-		<!-- Link -->
+		<!-- Select or Link field with predefined options -->
+		<Autocomplete
+			v-if="props.fieldtype === 'Select' || props.documentList"
+			:class="isReadOnly ? 'pointer-events-none' : ''"
+			:placeholder="`Select ${props.label}`"
+			:options="selectionList"
+			:modelValue="modelValue"
+			@update:modelValue="(v) => emit('update:modelValue', v?.value)"
+			v-bind="$attrs"
+			:disabled="isReadOnly"
+		/>
+
+		<!-- Link field -->
 		<Link
-			v-if="props.fieldtype === 'Link'"
+			v-else-if="props.fieldtype === 'Link'"
 			:doctype="props.options"
 			:modelValue="modelValue"
 			:filters="props.linkFilters"
 			@update:modelValue="(v) => emit('update:modelValue', v)"
-		/>
-
-		<!-- Select -->
-		<Autocomplete
-			v-else-if="props.fieldtype === 'Select'"
-			:class="isReadOnly ? 'pointer-events-none' : ''"
-			:placeholder="`Select ${props.label}`"
-			:options="selectionList"
-			@change="(v) => emit('update:modelValue', v?.value)"
-			v-bind="$attrs"
-			:disabled="isReadOnly"
 		/>
 
 		<!-- Text -->
@@ -189,7 +190,9 @@ const isReadOnly = computed(() => {
 })
 
 const selectionList = computed(() => {
-	if (props.fieldtype == "Select" && props.options) {
+	if (props.fieldtype === "Link" && props.documentList) {
+		return props.documentList
+	} else if (props.fieldtype == "Select" && props.options) {
 		const options = props.options.split("\n")
 		return options.map((option) => ({
 			label: option,
