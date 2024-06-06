@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-31 09:45\n"
+"PO-Revision-Date: 2024-06-06 10:56\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -6513,7 +6513,7 @@ msgstr "çalışanlar, HTML"
 #. Label of a Link in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Employees Working on a Holiday"
-msgstr ""
+msgstr "Tatilde Çalışan Personeller"
 
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.py:31
 msgid "Employees cannot give feedback to themselves. Use {0} instead: {1}"
@@ -8426,7 +8426,7 @@ msgstr "Kiralama Ayarları"
 #. Label of a chart in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Hiring vs Attrition Count"
-msgstr ""
+msgstr "İşe Başlayan ve Ayrılan Sayısı"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -16087,7 +16087,7 @@ msgstr "Eğitim Görüşleri"
 #. Name of a DocType
 #: hr/doctype/training_program/training_program.json
 msgid "Training Program"
-msgstr "Eğitim programı"
+msgstr "Eğitim Programı"
 
 #. Label of a Link field in DocType 'Training Event'
 #: hr/doctype/training_event/training_event.json
