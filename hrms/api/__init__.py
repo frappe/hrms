@@ -75,6 +75,16 @@ def get_all_employees() -> list[dict]:
 	)
 
 
+# HR Settings
+@frappe.whitelist()
+def get_hr_settings() -> dict:
+	settings = frappe.db.get_singles_dict("HR Settings", cast=True)
+	return frappe._dict(
+		allow_employee_checkin_from_mobile_app=settings.allow_employee_checkin_from_mobile_app,
+		allow_geolocation_tracking=settings.allow_geolocation_tracking,
+	)
+
+
 # Notifications
 @frappe.whitelist()
 def get_unread_notifications_count() -> int:

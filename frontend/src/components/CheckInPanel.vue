@@ -2,7 +2,7 @@
 	<div class="flex flex-col bg-white rounded w-full py-6 px-4 border-none">
 		<h2 class="text-lg font-bold text-gray-900">Hey, {{ employee?.data?.first_name }} 👋</h2>
 
-		<template v-if="HRSettings.doc?.allow_employee_checkin_from_mobile_app">
+		<template v-if="settings.data?.allow_employee_checkin_from_mobile_app">
 			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
 				Last {{ lastLogType }} was at {{ lastLogTime }}
 			</div>
@@ -27,7 +27,7 @@
 	</div>
 
 	<ion-modal
-		v-if="HRSettings.doc?.allow_employee_checkin_from_mobile_app"
+		v-if="settings.data?.allow_employee_checkin_from_mobile_app"
 		ref="modal"
 		trigger="open-checkin-modal"
 		:initial-breakpoint="1"
@@ -43,7 +43,7 @@
 				</div>
 			</div>
 
-			<template v-if="HRSettings.doc?.allow_geolocation_tracking">
+			<template v-if="settings.data?.allow_geolocation_tracking">
 				<span v-if="locationStatus" class="font-medium text-gray-500 text-sm">
 					{{ locationStatus }}
 				</span>
@@ -71,10 +71,9 @@
 </template>
 
 <script setup>
-import { createListResource, toast, FeatherIcon } from "frappe-ui"
+import { createResource, createListResource, toast, FeatherIcon } from "frappe-ui"
 import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
-import { HRSettings } from "@/data/HRSettings"
 
 const DOCTYPE = "Employee Checkin"
 
@@ -85,6 +84,11 @@ const checkinTimestamp = ref(null)
 const latitude = ref(0)
 const longitude = ref(0)
 const locationStatus = ref("")
+
+const settings = createResource({
+	url: "hrms.api.get_hr_settings",
+	auto: true,
+})
 
 const checkins = createListResource({
 	doctype: DOCTYPE,
@@ -150,7 +154,7 @@ const fetchLocation = () => {
 const handleEmployeeCheckin = () => {
 	checkinTimestamp.value = dayjs().format("YYYY-MM-DD HH:mm:ss")
 
-	if (HRSettings.doc?.allow_geolocation_tracking) {
+	if (settings.data?.allow_geolocation_tracking) {
 		fetchLocation()
 	}
 }
