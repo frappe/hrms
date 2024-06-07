@@ -21,9 +21,9 @@
 			:placeholder="`Select ${props.label}`"
 			:options="selectionList"
 			:modelValue="modelValue"
-			@update:modelValue="(v) => emit('update:modelValue', v?.value)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
+			@update:modelValue="(v) => emit('update:modelValue', v?.value)"
 		/>
 
 		<!-- Link field -->
@@ -32,6 +32,7 @@
 			:doctype="props.options"
 			:modelValue="modelValue"
 			:filters="props.linkFilters"
+			:disabled="isReadOnly"
 			@update:modelValue="(v) => emit('update:modelValue', v)"
 		/>
 
