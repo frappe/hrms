@@ -1,18 +1,19 @@
-import frappe
 import os
-import click
-from frappe import _
 
+import click
+
+import frappe
+from frappe import _
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.installer import update_site_config
 
-from hrms.subscription_utils import update_erpnext_access
 from hrms.overrides.company import delete_company_fixtures
+from hrms.subscription_utils import update_erpnext_access
 
 
 def after_install():
-	create_custom_fields(get_custom_fields())
+	create_custom_fields(get_custom_fields(), ignore_validate=True)
 	create_salary_slip_loan_fields()
 	make_fixtures()
 	setup_notifications()
@@ -30,115 +31,41 @@ def before_uninstall():
 	delete_company_fixtures()
 
 
+def after_app_install(app_name):
+	"""Set up loan integration with payroll"""
+	if app_name != "lending":
+		return
+
+	print("Updating payroll setup for loans")
+	create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
+	add_lending_docperms_to_ess()
+
+
+def before_app_uninstall(app_name):
+	"""Clean up loan integration with payroll"""
+	if app_name != "lending":
+		return
+
+	print("Updating payroll setup for loans")
+	delete_custom_fields(SALARY_SLIP_LOAN_FIELDS)
+	remove_lending_docperms_from_ess()
+
+
 def get_custom_fields():
 	"""HR specific custom fields that need to be added to the masters in ERPNext"""
 	return {
-		"Employee": [
-			{
-				"fieldname": "employment_type",
-				"fieldtype": "Link",
-				"ignore_user_permissions": 1,
-				"label": "Employment Type",
-				"oldfieldname": "employment_type",
-				"oldfieldtype": "Link",
-				"options": "Employment Type",
-				"insert_after": "department",
-			},
-			{
-				"fieldname": "job_applicant",
-				"fieldtype": "Link",
-				"label": "Job Applicant",
-				"options": "Job Applicant",
-				"insert_after": "employment_details",
-			},
-			{
-				"fieldname": "grade",
-				"fieldtype": "Link",
-				"label": "Grade",
-				"options": "Employee Grade",
-				"insert_after": "branch",
-			},
-			{
-				"fieldname": "default_shift",
-				"fieldtype": "Link",
-				"label": "Default Shift",
-				"options": "Shift Type",
-				"insert_after": "holiday_list",
-			},
-			{
-				"collapsible": 1,
-				"fieldname": "health_insurance_section",
-				"fieldtype": "Section Break",
-				"label": "Health Insurance",
-				"insert_after": "health_details",
-			},
-			{
-				"fieldname": "health_insurance_provider",
-				"fieldtype": "Link",
-				"label": "Health Insurance Provider",
-				"options": "Employee Health Insurance",
-				"insert_after": "health_insurance_section",
-			},
-			{
-				"depends_on": "eval:doc.health_insurance_provider",
-				"fieldname": "health_insurance_no",
-				"fieldtype": "Data",
-				"label": "Health Insurance No",
-				"insert_after": "health_insurance_provider",
-			},
-			{
-				"fieldname": "approvers_section",
-				"fieldtype": "Section Break",
-				"label": "Approvers",
-				"insert_after": "default_shift",
-			},
-			{
-				"fieldname": "expense_approver",
-				"fieldtype": "Link",
-				"label": "Expense Approver",
-				"options": "User",
-				"insert_after": "approvers_section",
-			},
-			{
-				"fieldname": "leave_approver",
-				"fieldtype": "Link",
-				"label": "Leave Approver",
-				"options": "User",
-				"insert_after": "expense_approver",
-			},
-			{
-				"fieldname": "column_break_45",
-				"fieldtype": "Column Break",
-				"insert_after": "leave_approver",
-			},
-			{
-				"fieldname": "shift_request_approver",
-				"fieldtype": "Link",
-				"label": "Shift Request Approver",
-				"options": "User",
-				"insert_after": "column_break_45",
-			},
-			{
-				"fieldname": "salary_cb",
-				"fieldtype": "Column Break",
-				"insert_after": "salary_mode",
-			},
-			{
-				"fetch_from": "department.payroll_cost_center",
-				"fetch_if_empty": 1,
-				"fieldname": "payroll_cost_center",
-				"fieldtype": "Link",
-				"label": "Payroll Cost Center",
-				"options": "Cost Center",
-				"insert_after": "salary_cb",
-			},
-		],
 		"Company": [
+			{
+				"fieldname": "hr_and_payroll_tab",
+				"fieldtype": "Tab Break",
+				"label": "HR & Payroll",
+				"insert_after": "credit_limit",
+			},
 			{
 				"fieldname": "hr_settings_section",
 				"fieldtype": "Section Break",
 				"label": "HR & Payroll Settings",
-				"insert_after": "credit_limit",
+				"insert_after": "hr_and_payroll_tab",
 			},
 			{
 				"depends_on": "eval:!doc.__islocal",
@@ -253,6 +180,104 @@ def get_custom_fields():
 				"insert_after": "required_skills_section",
 			},
 		],
+		"Employee": [
+			{
+				"fieldname": "employment_type",
+				"fieldtype": "Link",
+				"ignore_user_permissions": 1,
+				"label": "Employment Type",
+				"options": "Employment Type",
+				"insert_after": "department",
+			},
+			{
+				"fieldname": "job_applicant",
+				"fieldtype": "Link",
+				"label": "Job Applicant",
+				"options": "Job Applicant",
+				"insert_after": "employment_details",
+			},
+			{
+				"fieldname": "grade",
+				"fieldtype": "Link",
+				"label": "Grade",
+				"options": "Employee Grade",
+				"insert_after": "branch",
+			},
+			{
+				"fieldname": "default_shift",
+				"fieldtype": "Link",
+				"label": "Default Shift",
+				"options": "Shift Type",
+				"insert_after": "holiday_list",
+			},
+			{
+				"collapsible": 1,
+				"fieldname": "health_insurance_section",
+				"fieldtype": "Section Break",
+				"label": "Health Insurance",
+				"insert_after": "health_details",
+			},
+			{
+				"fieldname": "health_insurance_provider",
+				"fieldtype": "Link",
+				"label": "Health Insurance Provider",
+				"options": "Employee Health Insurance",
+				"insert_after": "health_insurance_section",
+			},
+			{
+				"depends_on": "eval:doc.health_insurance_provider",
+				"fieldname": "health_insurance_no",
+				"fieldtype": "Data",
+				"label": "Health Insurance No",
+				"insert_after": "health_insurance_provider",
+			},
+			{
+				"fieldname": "approvers_section",
+				"fieldtype": "Section Break",
+				"label": "Approvers",
+				"insert_after": "default_shift",
+			},
+			{
+				"fieldname": "expense_approver",
+				"fieldtype": "Link",
+				"label": "Expense Approver",
+				"options": "User",
+				"insert_after": "approvers_section",
+			},
+			{
+				"fieldname": "leave_approver",
+				"fieldtype": "Link",
+				"label": "Leave Approver",
+				"options": "User",
+				"insert_after": "expense_approver",
+			},
+			{
+				"fieldname": "column_break_45",
+				"fieldtype": "Column Break",
+				"insert_after": "leave_approver",
+			},
+			{
+				"fieldname": "shift_request_approver",
+				"fieldtype": "Link",
+				"label": "Shift Request Approver",
+				"options": "User",
+				"insert_after": "column_break_45",
+			},
+			{
+				"fieldname": "salary_cb",
+				"fieldtype": "Column Break",
+				"insert_after": "salary_mode",
+			},
+			{
+				"fetch_from": "department.payroll_cost_center",
+				"fetch_if_empty": 1,
+				"fieldname": "payroll_cost_center",
+				"fieldtype": "Link",
+				"label": "Payroll Cost Center",
+				"options": "Cost Center",
+				"insert_after": "salary_cb",
+			},
+		],
 		"Project": [
 			{
 				"fieldname": "total_expense_claim",
@@ -294,29 +319,6 @@ def get_custom_fields():
 			},
 		],
 	}
-
-
-def create_salary_slip_loan_fields():
-	if "lending" in frappe.get_installed_apps():
-		create_custom_fields(SALARY_SLIP_LOAN_FIELDS)
-
-
-def after_app_install(app_name):
-	"""Set up loan integration with payroll"""
-	if app_name != "lending":
-		return
-
-	print("Updating payroll setup for loans")
-	create_custom_fields(SALARY_SLIP_LOAN_FIELDS)
-
-
-def before_app_uninstall(app_name):
-	"""Clean up loan integration with payroll"""
-	if app_name != "lending":
-		return
-
-	print("Updating payroll setup for loans")
-	delete_custom_fields(SALARY_SLIP_LOAN_FIELDS)
 
 
 def make_fixtures():
@@ -498,18 +500,124 @@ def update_hr_defaults():
 	hr_settings.save()
 
 
+def set_single_defaults():
+	for dt in ("HR Settings", "Payroll Settings"):
+		default_values = frappe.get_all(
+			"DocField",
+			filters={"parent": dt},
+			fields=["fieldname", "default"],
+			as_list=True,
+		)
+		if default_values:
+			try:
+				doc = frappe.get_doc(dt, dt)
+				for fieldname, value in default_values:
+					doc.set(fieldname, value)
+				doc.flags.ignore_mandatory = True
+				doc.save()
+			except frappe.ValidationError:
+				pass
+
+
+def create_default_role_profiles():
+	for role_profile_name, roles in DEFAULT_ROLE_PROFILES.items():
+		if frappe.db.exists("Role Profile", role_profile_name):
+			continue
+
+		role_profile = frappe.new_doc("Role Profile")
+		role_profile.role_profile = role_profile_name
+		for role in roles:
+			role_profile.append("roles", {"role": role})
+
+		role_profile.insert(ignore_permissions=True)
+
+
+def get_post_install_patches():
+	return (
+		"erpnext.patches.v13_0.move_tax_slabs_from_payroll_period_to_income_tax_slab",
+		"erpnext.patches.v13_0.move_doctype_reports_and_notification_from_hr_to_payroll",
+		"erpnext.patches.v13_0.move_payroll_setting_separately_from_hr_settings",
+		"erpnext.patches.v13_0.update_start_end_date_for_old_shift_assignment",
+		"erpnext.patches.v13_0.updates_for_multi_currency_payroll",
+		"erpnext.patches.v13_0.update_reason_for_resignation_in_employee",
+		"erpnext.patches.v13_0.set_company_in_leave_ledger_entry",
+		"erpnext.patches.v13_0.rename_stop_to_send_birthday_reminders",
+		"erpnext.patches.v13_0.set_training_event_attendance",
+		"erpnext.patches.v14_0.set_payroll_cost_centers",
+		"erpnext.patches.v13_0.update_employee_advance_status",
+		"erpnext.patches.v13_0.update_expense_claim_status_for_paid_advances",
+		"erpnext.patches.v14_0.delete_employee_transfer_property_doctype",
+		"erpnext.patches.v13_0.set_payroll_entry_status",
+		# HRMS
+		"create_country_fixtures",
+		"update_allocate_on_in_leave_type",
+		"update_performance_module_changes",
+	)
+
+
+def run_post_install_patches():
+	print("\nPatching Existing Data...")
+
+	POST_INSTALL_PATCHES = get_post_install_patches()
+	frappe.flags.in_patch = True
+
+	try:
+		for patch in POST_INSTALL_PATCHES:
+			patch_name = patch.split(".")[-1]
+			if not patch_name:
+				continue
+
+			frappe.get_attr(f"hrms.patches.post_install.{patch_name}.execute")()
+	finally:
+		frappe.flags.in_patch = False
+
+
+# LENDING APP SETUP & CLEANUP
+def create_salary_slip_loan_fields():
+	if "lending" in frappe.get_installed_apps():
+		create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
+
+
+def add_lending_docperms_to_ess():
+	doc = frappe.get_doc("User Type", "Employee Self Service")
+
+	loan_docperms = get_lending_docperms_for_ess()
+	append_docperms_to_user_type(loan_docperms, doc)
+
+	doc.save(ignore_permissions=True)
+
+
+def remove_lending_docperms_from_ess():
+	doc = frappe.get_doc("User Type", "Employee Self Service")
+
+	loan_docperms = get_lending_docperms_for_ess()
+
+	for row in list(doc.user_doctypes):
+		if row.document_type in loan_docperms:
+			doc.user_doctypes.remove(row)
+
+	doc.save(ignore_permissions=True)
+
+
+# ESS USER TYPE SETUP & CLEANUP
 def add_non_standard_user_types():
 	user_types = get_user_types_data()
-
-	user_type_limit = {}
-	for user_type, data in user_types.items():
-		user_type_limit.setdefault(frappe.scrub(user_type), 30)
-
-	update_site_config("user_type_doctype_limit", user_type_limit)
+	update_user_type_doctype_limit(user_types)
 
 	for user_type, data in user_types.items():
 		create_custom_role(data)
 		create_user_type(user_type, data)
+
+
+def update_user_type_doctype_limit(user_types=None):
+	if not user_types:
+		user_types = get_user_types_data()
+
+	user_type_limit = {}
+	for user_type, __ in user_types.items():
+		user_type_limit.setdefault(frappe.scrub(user_type), 40)
+
+	update_site_config("user_type_doctype_limit", user_type_limit)
 
 
 def get_user_types_data():
@@ -554,6 +662,14 @@ def get_user_types_data():
 	}
 
 
+def get_lending_docperms_for_ess():
+	return {
+		"Loan": ["read"],
+		"Loan Application": ["read", "write", "create", "delete", "submit"],
+		"Loan Product": ["read"],
+	}
+
+
 def create_custom_role(data):
 	if data.get("role") and not frappe.db.exists("Role", data.get("role")):
 		frappe.get_doc(
@@ -576,13 +692,23 @@ def create_user_type(user_type, data):
 			}
 		)
 
-	create_role_permissions_for_doctype(doc, data)
+	docperms = data.get("doctypes")
+	if doc.role == "Employee Self Service" and "lending" in frappe.get_installed_apps():
+		docperms.update(get_lending_docperms_for_ess())
+
+	append_docperms_to_user_type(docperms, doc)
+
 	doc.flags.ignore_links = True
 	doc.save(ignore_permissions=True)
 
 
-def create_role_permissions_for_doctype(doc, data):
-	for doctype, perms in data.get("doctypes").items():
+def append_docperms_to_user_type(docperms, doc):
+	existing_doctypes = [d.document_type for d in doc.user_doctypes]
+
+	for doctype, perms in docperms.items():
+		if doctype in existing_doctypes:
+			continue
+
 		args = {"document_type": doctype}
 		for perm in perms:
 			args[perm] = 1
@@ -604,79 +730,6 @@ def update_select_perm_after_install():
 	frappe.flags.update_select_perm_after_migrate = False
 
 
-def set_single_defaults():
-	for dt in ("HR Settings", "Payroll Settings"):
-		default_values = frappe.db.sql(
-			"""
-			select fieldname, `default` from `tabDocField`
-			where parent=%s""",
-			dt,
-		)
-		if default_values:
-			try:
-				doc = frappe.get_doc(dt, dt)
-				for fieldname, value in default_values:
-					doc.set(fieldname, value)
-				doc.flags.ignore_mandatory = True
-				doc.save()
-			except frappe.ValidationError:
-				pass
-
-
-def get_post_install_patches():
-	return (
-		"erpnext.patches.v10_0.rename_offer_letter_to_job_offer",
-		"erpnext.patches.v10_0.migrate_daily_work_summary_settings_to_daily_work_summary_group",
-		"erpnext.patches.v11_0.move_leave_approvers_from_employee",
-		"erpnext.patches.v11_0.rename_field_max_days_allowed",
-		"erpnext.patches.v11_0.add_expense_claim_default_account",
-		"erpnext.patches.v11_0.rename_additional_salary_component_additional_salary",
-		"erpnext.patches.v11_1.set_salary_details_submittable",
-		"erpnext.patches.v11_1.rename_depends_on_lwp",
-		"erpnext.patches.v12_0.generate_leave_ledger_entries",
-		"erpnext.patches.v12_0.remove_denied_leaves_from_leave_ledger",
-		"erpnext.patches.v12_0.set_employee_preferred_emails",
-		"erpnext.patches.v12_0.set_job_offer_applicant_email",
-		"erpnext.patches.v13_0.move_tax_slabs_from_payroll_period_to_income_tax_slab",
-		"erpnext.patches.v12_0.remove_duplicate_leave_ledger_entries",
-		"erpnext.patches.v12_0.move_due_advance_amount_to_pending_amount",
-		"erpnext.patches.v13_0.move_doctype_reports_and_notification_from_hr_to_payroll",
-		"erpnext.patches.v13_0.move_payroll_setting_separately_from_hr_settings",
-		"erpnext.patches.v13_0.update_start_end_date_for_old_shift_assignment",
-		"erpnext.patches.v13_0.updates_for_multi_currency_payroll",
-		"erpnext.patches.v13_0.update_reason_for_resignation_in_employee",
-		"erpnext.patches.v13_0.set_company_in_leave_ledger_entry",
-		"erpnext.patches.v13_0.rename_stop_to_send_birthday_reminders",
-		"erpnext.patches.v13_0.set_training_event_attendance",
-		"erpnext.patches.v14_0.set_payroll_cost_centers",
-		"erpnext.patches.v13_0.update_employee_advance_status",
-		"erpnext.patches.v13_0.update_expense_claim_status_for_paid_advances",
-		"erpnext.patches.v14_0.delete_employee_transfer_property_doctype",
-		"erpnext.patches.v13_0.set_payroll_entry_status",
-		# HRMS
-		"create_country_fixtures",
-		"update_allocate_on_in_leave_type",
-		"update_performance_module_changes",
-	)
-
-
-def run_post_install_patches():
-	print("\nPatching Existing Data...")
-
-	POST_INSTALL_PATCHES = get_post_install_patches()
-	frappe.flags.in_patch = True
-
-	try:
-		for patch in POST_INSTALL_PATCHES:
-			patch_name = patch.split(".")[-1]
-			if not patch_name:
-				continue
-
-			frappe.get_attr(f"hrms.patches.post_install.{patch_name}.execute")()
-	finally:
-		frappe.flags.in_patch = False
-
-
 def delete_custom_fields(custom_fields: dict):
 	"""
 	:param custom_fields: a dict like `{'Salary Slip': [{fieldname: 'loans', ...}]}`
@@ -691,19 +744,6 @@ def delete_custom_fields(custom_fields: dict):
 		)
 
 		frappe.clear_cache(doctype=doctype)
-
-
-def create_default_role_profiles():
-	for role_profile_name, roles in DEFAULT_ROLE_PROFILES.items():
-		if frappe.db.exists("Role Profile", role_profile_name):
-			continue
-
-		role_profile = frappe.new_doc("Role Profile")
-		role_profile.role_profile = role_profile_name
-		for role in roles:
-			role_profile.append("roles", {"role": role})
-
-		role_profile.insert(ignore_permissions=True)
 
 
 DEFAULT_ROLE_PROFILES = {

@@ -24,11 +24,15 @@ export const myLeaves = createResource({
 	url: "hrms.api.get_leave_applications",
 	params: {
 		employee: employeeResource.data.name,
-		limit: 5,
+		limit: 10,
 	},
 	auto: true,
+	cache: "hrms:my_leaves",
 	transform(data) {
 		return transformLeaveData(data)
+	},
+	onSuccess() {
+		leaveBalance.reload()
 	},
 })
 
@@ -38,10 +42,30 @@ export const teamLeaves = createResource({
 		employee: employeeResource.data.name,
 		approver_id: employeeResource.data.user_id,
 		for_approval: 1,
-		limit: 5,
+		limit: 10,
 	},
 	auto: true,
+	cache: "hrms:team_leaves",
 	transform(data) {
 		return transformLeaveData(data)
+	},
+})
+
+export const leaveBalance = createResource({
+	url: "hrms.api.get_leave_balance_map",
+	params: {
+		employee: employeeResource.data.name,
+	},
+	auto: true,
+	cache: "hrms:leave_balance",
+	transform: (data) => {
+		// Calculate balance percentage for each leave type
+		return Object.fromEntries(
+			Object.entries(data).map(([leave_type, allocation]) => {
+				allocation.balance_percentage =
+					(allocation.balance_leaves / allocation.allocated_leaves) * 100
+				return [leave_type, allocation]
+			})
+		)
 	},
 })

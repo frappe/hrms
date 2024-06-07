@@ -132,7 +132,6 @@ watch(
 )
 
 onMounted(() => {
-	socket.off("hrms:update_salary_slips")
 	socket.on("hrms:update_salary_slips", (data) => {
 		if (data.employee === employee.data.name) {
 			documents.reload()

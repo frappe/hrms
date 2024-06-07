@@ -100,7 +100,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-04-28 13:32:29.261421",
+ "modified": "2024-03-27 13:10:54.277257",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Training Feedback",
@@ -136,7 +136,7 @@
   }
  ],
  "search_fields": "employee_name, training_event, event_name",
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name"

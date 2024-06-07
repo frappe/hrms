@@ -66,22 +66,32 @@ class PayrollEntry(Document):
 		if not self.employees:
 			return
 
-		emp_with_sal_slip = []
+		existing_salary_slips = []
 		SalarySlip = frappe.qb.DocType("Salary Slip")
 
-		emp_with_sal_slip = (
+		existing_salary_slips = (
 			frappe.qb.from_(SalarySlip)
-			.select(SalarySlip.employee)
+			.select(SalarySlip.employee, SalarySlip.name)
 			.where(
 				(SalarySlip.employee.isin([emp.employee for emp in self.employees]))
 				& (SalarySlip.start_date == self.start_date)
 				& (SalarySlip.end_date == self.end_date)
-				& (SalarySlip.docstatus == 1)
+				& (SalarySlip.docstatus != 2)
 			)
-		).run(pluck=True)
+		).run(as_dict=True)
 
-		if len(emp_with_sal_slip):
-			frappe.throw(_("Salary Slip already exists for {0}").format(comma_and(emp_with_sal_slip)))
+		if len(existing_salary_slips):
+			msg = _("Salary Slip already exists for {0} for the given dates").format(
+				comma_and([frappe.bold(d.employee) for d in existing_salary_slips])
+			)
+			msg += "<br><br>"
+			msg += _("Reference: {0}").format(
+				comma_and([get_link_to_form("Salary Slip", d.name) for d in existing_salary_slips])
+			)
+			frappe.throw(
+				msg,
+				title=_("Duplicate Entry"),
+			)
 
 	def validate_payroll_payable_account(self):
 		if frappe.db.get_value("Account", self.payroll_payable_account, "account_type"):
@@ -471,7 +481,9 @@ class PayrollEntry(Document):
 				)
 
 				if not default_cost_center and department:
-					default_cost_center = frappe.get_cached_value("Department", department, "payroll_cost_center")
+					default_cost_center = frappe.get_cached_value(
+						"Department", department, "payroll_cost_center"
+					)
 
 				if not default_cost_center:
 					default_cost_center = self.cost_center
@@ -576,7 +588,7 @@ class PayrollEntry(Document):
 		payroll_payable_account=None,
 		voucher_type="Journal Entry",
 		user_remark="",
-		submitted_salary_slips: list = None,
+		submitted_salary_slips: list | None = None,
 		submit_journal_entry=False,
 	):
 		multi_currency = 0
@@ -680,7 +692,7 @@ class PayrollEntry(Document):
 			}
 			"""
 			for employee, employee_details in self.employee_based_payroll_payable_entries.items():
-				payable_amount = employee_details.get("earnings") - (employee_details.get("deductions") or 0)
+				payable_amount = employee_details.get("earnings", 0) - employee_details.get("deductions", 0)
 
 				payable_amount = self.get_accounting_entries_and_payable_amount(
 					payroll_payable_account,
@@ -793,9 +805,7 @@ class PayrollEntry(Document):
 
 		return row
 
-	def get_amount_and_exchange_rate_for_journal_entry(
-		self, account, amount, company_currency, currencies
-	):
+	def get_amount_and_exchange_rate_for_journal_entry(self, account, amount, company_currency, currencies):
 		conversion_rate = 1
 		exchange_rate = self.exchange_rate
 		account_currency = frappe.db.get_value("Account", account, "account_currency")
@@ -926,8 +936,8 @@ class PayrollEntry(Document):
 
 		if self.employee_based_payroll_payable_entries:
 			for employee, employee_details in self.employee_based_payroll_payable_entries.items():
-				je_payment_amount = employee_details.get("earnings") - (
-					employee_details.get("deductions") or 0
+				je_payment_amount = employee_details.get("earnings", 0) - (
+					employee_details.get("deductions", 0)
 				)
 				exchange_rate, amount = self.get_amount_and_exchange_rate_for_journal_entry(
 					self.payment_account, je_payment_amount, company_currency, currencies
@@ -1019,7 +1029,11 @@ class PayrollEntry(Document):
 
 			if unmarked_days > 0:
 				unmarked_attendance.append(
-					{"employee": emp.employee, "employee_name": emp.employee_name, "unmarked_days": unmarked_days}
+					{
+						"employee": emp.employee,
+						"employee_name": emp.employee_name,
+						"unmarked_days": unmarked_days,
+					}
 				)
 
 		return unmarked_attendance
@@ -1161,7 +1175,7 @@ def get_filtered_employees(
 	return query.run(as_dict=as_dict)
 
 
-def set_fields_to_select(query, fields: list[str] = None):
+def set_fields_to_select(query, fields: list[str] | None = None):
 	default_fields = ["employee", "employee_name", "department", "designation"]
 
 	if fields:
@@ -1269,9 +1283,7 @@ def get_frequency_kwargs(frequency_name):
 def get_end_date(start_date, frequency):
 	start_date = getdate(start_date)
 	frequency = frequency.lower() if frequency else "monthly"
-	kwargs = (
-		get_frequency_kwargs(frequency) if frequency != "bimonthly" else get_frequency_kwargs("monthly")
-	)
+	kwargs = get_frequency_kwargs(frequency) if frequency != "bimonthly" else get_frequency_kwargs("monthly")
 
 	# weekly, fortnightly and daily intervals have fixed days so no problems
 	end_date = add_to_date(start_date, **kwargs) - relativedelta(days=1)
@@ -1457,7 +1469,9 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 
 			count += 1
 			if publish_progress:
-				frappe.publish_progress(count * 100 / len(salary_slips), title=_("Submitting Salary Slips..."))
+				frappe.publish_progress(
+					count * 100 / len(salary_slips), title=_("Submitting Salary Slips...")
+				)
 
 		if submitted:
 			payroll_entry.make_accrual_jv_entry(submitted)
@@ -1480,16 +1494,15 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def get_payroll_entries_for_jv(doctype, txt, searchfield, start, page_len, filters):
+	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 	return frappe.db.sql(
-		"""
+		f"""
 		select name from `tabPayroll Entry`
-		where `{key}` LIKE %(txt)s
+		where `{searchfield}` LIKE %(txt)s
 		and name not in
 			(select reference_name from `tabJournal Entry Account`
 				where reference_type="Payroll Entry")
-		order by name limit %(start)s, %(page_len)s""".format(
-			key=searchfield
-		),
+		order by name limit %(start)s, %(page_len)s""",
 		{"txt": "%%%s%%" % txt, "start": start, "page_len": page_len},
 	)
 
@@ -1498,7 +1511,7 @@ def get_employee_list(
 	filters: frappe._dict,
 	searchfield=None,
 	search_string=None,
-	fields: list[str] = None,
+	fields: list[str] | None = None,
 	as_dict=True,
 	limit=None,
 	offset=None,
@@ -1537,7 +1550,6 @@ def get_employee_list(
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def employee_query(doctype, txt, searchfield, start, page_len, filters):
-	doctype = "Employee"
 	filters = frappe._dict(filters)
 
 	if not filters.payroll_frequency:

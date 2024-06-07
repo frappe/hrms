@@ -6,7 +6,6 @@ app_email = "contact@frappe.io"
 app_license = "GNU General Public License (v3)"
 required_apps = ["frappe/erpnext"]
 source_link = "http://github.com/frappe/hrms"
-app_logo_url = "/assets/hrms/images/frappe-hr-logo.svg"
 
 
 # Includes in <head>
@@ -16,7 +15,6 @@ app_logo_url = "/assets/hrms/images/frappe-hr-logo.svg"
 # app_include_css = "/assets/hrms/css/hrms.css"
 app_include_js = [
 	"hrms.bundle.js",
-	"performance.bundle.js",
 ]
 app_include_css = "hrms.bundle.css"
 
@@ -71,7 +69,6 @@ calendars = ["Leave Application"]
 website_generators = ["Job Opening"]
 
 website_route_rules = [
-	{"from_route": "/jobs", "to_route": "Job Opening"},
 	{"from_route": "/hrms/<path:app_path>", "to_route": "hrms"},
 ]
 # Jinja
@@ -131,9 +128,7 @@ before_app_uninstall = "hrms.setup.before_app_uninstall"
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
 
-has_upload_permission = {
-	"Employee": "erpnext.setup.doctype.employee.employee.has_upload_permission"
-}
+has_upload_permission = {"Employee": "erpnext.setup.doctype.employee.employee.has_upload_permission"}
 
 # DocType Class
 # ---------------
@@ -188,13 +183,15 @@ doc_events = {
 	"Loan": {"validate": "hrms.hr.utils.validate_loan_repay_from_salary"},
 	"Employee": {
 		"validate": "hrms.overrides.employee_master.validate_onboarding_process",
-		"on_update": "hrms.overrides.employee_master.update_approver_role",
+		"on_update": [
+			"hrms.overrides.employee_master.update_approver_role",
+			"hrms.overrides.employee_master.publish_update",
+		],
 		"after_insert": "hrms.overrides.employee_master.update_job_applicant_and_offer",
 		"on_trash": "hrms.overrides.employee_master.update_employee_transfer",
+		"after_delete": "hrms.overrides.employee_master.publish_update",
 	},
-	"Project": {
-		"validate": "hrms.controllers.employee_boarding_controller.update_employee_boarding_status"
-	},
+	"Project": {"validate": "hrms.controllers.employee_boarding_controller.update_employee_boarding_status"},
 	"Task": {"on_update": "hrms.controllers.employee_boarding_controller.update_task"},
 }
 
@@ -216,6 +213,7 @@ scheduler_events = {
 		"hrms.controllers.employee_reminders.send_work_anniversary_reminders",
 		"hrms.hr.doctype.daily_work_summary_group.daily_work_summary_group.send_summary",
 		"hrms.hr.doctype.interview.interview.send_daily_feedback_reminder",
+		"hrms.hr.doctype.job_opening.job_opening.close_expired_job_openings",
 	],
 	"daily_long": [
 		"hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry.process_expired_allocation",
@@ -226,7 +224,7 @@ scheduler_events = {
 	"monthly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_monthly"],
 }
 
-advance_payment_doctypes = ["Gratuity", "Employee Advance"]
+advance_payment_payable_doctypes = ["Gratuity", "Employee Advance"]
 
 invoice_doctypes = ["Expense Claim"]
 

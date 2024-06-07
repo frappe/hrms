@@ -166,9 +166,7 @@ class TestEmployeeAdvance(FrappeTestCase):
 
 		args = {"type": "Deduction"}
 		create_salary_component("Advance Salary - Deduction", **args)
-		make_salary_structure(
-			"Test Additional Salary for Advance Return", "Monthly", employee=employee_name
-		)
+		make_salary_structure("Test Additional Salary for Advance Return", "Monthly", employee=employee_name)
 
 		# additional salary for 700 first
 		advance.reload()
@@ -218,6 +216,60 @@ class TestEmployeeAdvance(FrappeTestCase):
 		advance.reload()
 		self.assertEqual(advance.status, "Unpaid")
 		self.assertEqual(advance.paid_amount, 700)
+
+	def test_precision(self):
+		employee_name = make_employee("_T@employee.advance")
+		advance = make_employee_advance(employee_name)
+		journal_entry = make_journal_entry_for_advance(advance)
+		journal_entry.submit()
+
+		# PARTLY CLAIMED AND RETURNED
+		payable_account = get_payable_account("_Test Company")
+		claim = make_expense_claim(
+			payable_account, 650.35, 619.34, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+		)
+
+		claim = get_advances_for_claim(claim, advance.name, amount=619.34)
+		claim.save()
+		claim.submit()
+
+		advance.reload()
+		self.assertEqual(advance.status, "Paid")
+
+		entry = make_return_entry(
+			employee=advance.employee,
+			company=advance.company,
+			employee_advance_name=advance.name,
+			return_amount=advance.paid_amount - advance.claimed_amount,
+			advance_account=advance.advance_account,
+			mode_of_payment=advance.mode_of_payment,
+			currency=advance.currency,
+			exchange_rate=advance.exchange_rate,
+		)
+
+		entry = frappe.get_doc(entry)
+		entry.insert()
+		entry.submit()
+
+		advance.reload()
+		# precision is respected
+		self.assertEqual(advance.return_amount, 380.66)
+		self.assertEqual(advance.status, "Partly Claimed and Returned")
+
+	def test_pending_amount(self):
+		employee_name = make_employee("_T@employee.advance")
+
+		advance1 = make_employee_advance(employee_name)
+		make_payment_entry(advance1, 500)
+
+		advance2 = make_employee_advance(employee_name)
+		# 1000 - 500
+		self.assertEqual(advance2.pending_amount, 500)
+		make_payment_entry(advance2, 700)
+
+		advance3 = make_employee_advance(employee_name)
+		# (1000 - 500) + (1000 - 700)
+		self.assertEqual(advance3.pending_amount, 800)
 
 
 def make_journal_entry_for_advance(advance):

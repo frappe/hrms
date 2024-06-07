@@ -63,9 +63,7 @@ class TestPayrollEntry(FrappeTestCase):
 		frappe.db.set_single_value("Payroll Settings", "email_salary_slip_to_employee", 0)
 
 		# set default payable account
-		default_account = frappe.db.get_value(
-			"Company", "_Test Company", "default_payroll_payable_account"
-		)
+		default_account = frappe.db.get_value("Company", "_Test Company", "default_payroll_payable_account")
 		if not default_account or default_account != "_Test Payroll Payable - _TC":
 			create_account(
 				account_name="_Test Payroll Payable",
@@ -148,9 +146,7 @@ class TestPayrollEntry(FrappeTestCase):
 			department=department,
 			company="_Test Company",
 		)
-		employee2 = make_employee(
-			"test_emp2@example.com", department=department, company="_Test Company"
-		)
+		employee2 = make_employee("test_emp2@example.com", department=department, company="_Test Company")
 
 		create_assignments_with_cost_centers(employee1, employee2)
 
@@ -208,9 +204,7 @@ class TestPayrollEntry(FrappeTestCase):
 		[applicant, branch, currency, payroll_payable_account] = setup_lending()
 		loan = create_loan_for_employee(applicant)
 
-		make_loan_disbursement_entry(
-			loan.name, loan.loan_amount, disbursement_date=add_months(nowdate(), -1)
-		)
+		make_loan_disbursement_entry(loan.name, loan.loan_amount, disbursement_date=add_months(nowdate(), -1))
 		process_loan_interest_accrual_for_term_loans(posting_date=nowdate())
 
 		dates = get_start_end_dates("Monthly", nowdate())
@@ -225,9 +219,7 @@ class TestPayrollEntry(FrappeTestCase):
 			payment_account="Cash - _TC",
 		)
 
-		name = frappe.db.get_value(
-			"Salary Slip", {"posting_date": nowdate(), "employee": applicant}, "name"
-		)
+		name = frappe.db.get_value("Salary Slip", {"posting_date": nowdate(), "employee": applicant}, "name")
 
 		salary_slip = frappe.get_doc("Salary Slip", name)
 		for row in salary_slip.loans:
@@ -256,9 +248,7 @@ class TestPayrollEntry(FrappeTestCase):
 		[applicant, branch, currency, payroll_payable_account] = setup_lending()
 		loan = create_loan_for_employee(applicant)
 
-		make_loan_disbursement_entry(
-			loan.name, loan.loan_amount, disbursement_date=add_months(nowdate(), -1)
-		)
+		make_loan_disbursement_entry(loan.name, loan.loan_amount, disbursement_date=add_months(nowdate(), -1))
 		process_loan_interest_accrual_for_term_loans(posting_date=nowdate())
 
 		dates = get_start_end_dates("Monthly", nowdate())
@@ -541,7 +531,7 @@ class TestPayrollEntry(FrappeTestCase):
 
 		# payroll entry
 		dates = get_start_end_dates("Monthly", nowdate())
-		payroll_entry = make_payroll_entry(
+		make_payroll_entry(
 			start_date=dates.start_date,
 			end_date=dates.end_date,
 			payable_account=company_doc.default_payroll_payable_account,
@@ -579,9 +569,7 @@ class TestPayrollEntry(FrappeTestCase):
 			department=department,
 			company="_Test Company",
 		)
-		employee2 = make_employee(
-			"test_emp2@example.com", department=department, company="_Test Company"
-		)
+		employee2 = make_employee("test_emp2@example.com", department=department, company="_Test Company")
 
 		create_assignments_with_cost_centers(employee1, employee2)
 
@@ -757,12 +745,8 @@ def create_assignments_with_cost_centers(employee1, employee2):
 
 	ssa_doc = frappe.get_doc("Salary Structure Assignment", ssa)
 	ssa_doc.payroll_cost_centers = []
-	ssa_doc.append(
-		"payroll_cost_centers", {"cost_center": "_Test Cost Center - _TC", "percentage": 60}
-	)
-	ssa_doc.append(
-		"payroll_cost_centers", {"cost_center": "_Test Cost Center 2 - _TC", "percentage": 40}
-	)
+	ssa_doc.append("payroll_cost_centers", {"cost_center": "_Test Cost Center - _TC", "percentage": 60})
+	ssa_doc.append("payroll_cost_centers", {"cost_center": "_Test Cost Center 2 - _TC", "percentage": 40})
 	ssa_doc.save()
 
 
@@ -770,6 +754,7 @@ def setup_lending():
 	from lending.loan_management.doctype.loan.test_loan import (
 		create_loan_accounts,
 		create_loan_product,
+		set_loan_settings_in_company,
 	)
 
 	company = "_Test Company"
@@ -778,6 +763,7 @@ def setup_lending():
 	if not frappe.db.exists("Branch", branch):
 		frappe.get_doc({"doctype": "Branch", "branch": branch}).insert()
 
+	set_loan_settings_in_company(company)
 	applicant = make_employee("test_employee@loan.com", company="_Test Company", branch=branch)
 	company_doc = frappe.get_doc("Company", company)
 
@@ -797,7 +783,6 @@ def setup_lending():
 			500000,
 			8.4,
 			is_term_loan=1,
-			mode_of_payment="Cash",
 			disbursement_account="Disbursement Account - _TC",
 			payment_account="Payment Account - _TC",
 			loan_account="Loan Account - _TC",

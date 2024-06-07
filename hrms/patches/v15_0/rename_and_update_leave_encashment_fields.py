@@ -18,11 +18,11 @@ def execute():
 	(
 		frappe.qb.update(LeaveEncashment)
 		.set(LeaveEncashment.encashment_days, LeaveEncashment.encashable_days)
-		.where((LeaveEncashment.encashment_days.isnull()))
+		.where(LeaveEncashment.encashment_days.isnull())
 	).run()
 
 	(
 		frappe.qb.update(LeaveEncashment)
 		.set(LeaveEncashment.actual_encashable_days, LeaveEncashment.encashable_days)
-		.where((LeaveEncashment.actual_encashable_days.isnull()))
+		.where(LeaveEncashment.actual_encashable_days.isnull())
 	).run()

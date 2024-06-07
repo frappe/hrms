@@ -11,9 +11,9 @@
   "interview_type",
   "interviewers",
   "column_break_3",
-  "designation",
   "expected_average_rating",
   "expected_skills_section",
+  "designation",
   "expected_skill_set"
  ],
  "fields": [
@@ -33,20 +33,19 @@
   },
   {
    "fieldname": "expected_skills_section",
-   "fieldtype": "Section Break",
-   "label": "Expected Skillset"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "expected_skill_set",
    "fieldtype": "Table",
+   "label": "Expected Skillset",
    "options": "Expected Skill Set",
    "reqd": 1
   },
   {
    "fieldname": "expected_average_rating",
    "fieldtype": "Rating",
-   "label": "Expected Average Rating",
-   "reqd": 1
+   "label": "Expected Average Rating"
   },
   {
    "fieldname": "column_break_3",
@@ -56,8 +55,7 @@
    "fieldname": "interview_type",
    "fieldtype": "Link",
    "label": "Interview Type",
-   "options": "Interview Type",
-   "reqd": 1
+   "options": "Interview Type"
   },
   {
    "fieldname": "interviewers",
@@ -68,10 +66,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-09-30 13:01:25.666660",
+ "modified": "2024-05-01 11:57:32.754037",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview Round",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -112,7 +111,8 @@
    "write": 1
   }
  ],
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }

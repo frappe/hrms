@@ -29,7 +29,7 @@ def set_loan_repayment(doc: "SalarySlip"):
 	doc.total_interest_amount = 0
 	doc.total_principal_amount = 0
 
-	if not doc.get("loans"):
+	if not doc.get("loans", []):
 		for loan in _get_loan_details(doc):
 			amounts = calculate_amounts(loan.name, doc.posting_date, "Regular Payment")
 
@@ -46,7 +46,7 @@ def set_loan_repayment(doc: "SalarySlip"):
 					},
 				)
 
-	for payment in doc.get("loans"):
+	for payment in doc.get("loans", []):
 		amounts = calculate_amounts(payment.loan, doc.posting_date, "Regular Payment")
 		total_amount = amounts["interest_amount"] + amounts["payable_principal_amount"]
 		if payment.total_payment > total_amount:
@@ -102,7 +102,7 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 		"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
 	)
 
-	for loan in doc.loans:
+	for loan in doc.get("loans", []):
 		if not loan.total_payment:
 			continue
 
@@ -128,7 +128,7 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 
 @if_lending_app_installed
 def cancel_loan_repayment_entry(doc: "SalarySlip"):
-	for loan in doc.loans:
+	for loan in doc.get("loans", []):
 		if loan.loan_repayment_entry:
 			repayment_entry = frappe.get_doc("Loan Repayment", loan.loan_repayment_entry)
 			repayment_entry.cancel()
@@ -140,8 +140,6 @@ def get_payroll_payable_account(company, payroll_entry):
 			"Payroll Entry", payroll_entry, "payroll_payable_account"
 		)
 	else:
-		payroll_payable_account = frappe.db.get_value(
-			"Company", company, "default_payroll_payable_account"
-		)
+		payroll_payable_account = frappe.db.get_value("Company", company, "default_payroll_payable_account")
 
 	return payroll_payable_account

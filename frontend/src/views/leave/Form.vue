@@ -8,6 +8,7 @@
 				:isSubmittable="true"
 				:fields="formFields.data"
 				:id="props.id"
+				:showAttachmentView="true"
 				@validateForm="validateForm"
 			/>
 		</ion-content>
@@ -104,7 +105,10 @@ watch(
 watch(
 	() => leaveApplication.value.from_date,
 	(from_date) => {
-		leaveApplication.value.to_date = from_date
+		if (!leaveApplication.value.to_date) {
+			leaveApplication.value.to_date = from_date
+		}
+
 		// fetch leave types for the selected date
 		leaveTypes.fetch({
 			employee: employee.data.name,

@@ -123,7 +123,7 @@
    "label": "Half Day"
   },
   {
-   "depends_on": "eval:doc.half_day && (doc.from_date != doc.to_date)",
+   "depends_on": "eval:doc.half_day && doc.from_date && doc.to_date && (doc.from_date != doc.to_date)",
    "fieldname": "half_day_date",
    "fieldtype": "Date",
    "label": "Half Day Date"
@@ -255,7 +255,7 @@
  "is_submittable": 1,
  "links": [],
  "max_attachments": 3,
- "modified": "2023-08-01 22:45:57.851854",
+ "modified": "2024-04-08 13:56:03.818019",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Application",
@@ -283,7 +283,6 @@
    "read": 1,
    "report": 1,
    "role": "HR Manager",
-   "set_user_permissions": 1,
    "share": 1,
    "submit": 1,
    "write": 1
@@ -303,7 +302,6 @@
    "read": 1,
    "report": 1,
    "role": "HR User",
-   "set_user_permissions": 1,
    "share": 1,
    "submit": 1,
    "write": 1
@@ -325,19 +323,30 @@
    "permlevel": 1,
    "read": 1,
    "report": 1,
-   "role": "HR User",
+   "role": "Leave Approver",
    "write": 1
   },
   {
    "permlevel": 1,
    "read": 1,
    "report": 1,
-   "role": "Leave Approver",
+   "role": "HR User",
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
    "write": 1
   }
  ],
  "search_fields": "employee,employee_name,leave_type,from_date,to_date,total_leave_days",
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "timeline_field": "employee",

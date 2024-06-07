@@ -52,7 +52,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-18 19:31:44.900034",
+ "modified": "2024-03-27 13:10:54.562111",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Training Result",
@@ -76,7 +76,7 @@
   }
  ],
  "search_fields": "training_event",
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "training_event"

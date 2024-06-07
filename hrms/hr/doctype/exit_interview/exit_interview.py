@@ -75,9 +75,7 @@ def send_exit_questionnaire(interviews):
 
 		context = interview.as_dict()
 		context.update(employee.as_dict())
-		template_name = frappe.db.get_single_value(
-			"HR Settings", "exit_questionnaire_notification_template"
-		)
+		template_name = frappe.db.get_single_value("HR Settings", "exit_questionnaire_notification_template")
 		template = frappe.get_doc("Email Template", template_name)
 
 		if email:
@@ -104,7 +102,7 @@ def get_interviews(interviews):
 		interviews = json.loads(interviews)
 
 	if not len(interviews):
-		frappe.throw(_("Atleast one interview has to be selected."))
+		frappe.throw(_("At least one interview has to be selected."))
 
 	return interviews
 
@@ -117,9 +115,7 @@ def validate_questionnaire_settings():
 		as_dict=True,
 	)
 
-	if (
-		not settings.exit_questionnaire_web_form or not settings.exit_questionnaire_notification_template
-	):
+	if not settings.exit_questionnaire_web_form or not settings.exit_questionnaire_notification_template:
 		frappe.throw(
 			_("Please set {0} and {1} in {2}.").format(
 				frappe.bold("Exit Questionnaire Web Form"),
@@ -141,6 +137,4 @@ def show_email_summary(email_success, email_failure):
 			frappe.bold("Sending Failed"), ", ".join(email_failure)
 		)
 
-	frappe.msgprint(
-		message, title=_("Exit Questionnaire"), indicator="blue", is_minimizable=True, wide=True
-	)
+	frappe.msgprint(message, title=_("Exit Questionnaire"), indicator="blue", is_minimizable=True, wide=True)

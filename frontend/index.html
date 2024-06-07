@@ -184,7 +184,10 @@
 
 		<script>
 			window.csrf_token = "{{ csrf_token }}"
+			if (!window.frappe) window.frappe = {}
+			frappe.boot = {{ boot }}
 		</script>
+
 		<script type="module" src="/src/main.js"></script>
 	</body>
 </html>

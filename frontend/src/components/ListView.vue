@@ -1,8 +1,8 @@
 <template>
-	<div class="flex flex-col h-screen w-screen">
+	<ion-header class="ion-no-border">
 		<div class="w-full sm:w-96">
-			<header
-				class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b sticky top-0 z-10"
+			<div
+				class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b"
 			>
 				<div class="flex flex-row items-center">
 					<Button
@@ -35,79 +35,95 @@
 						</Button>
 					</router-link>
 				</div>
-			</header>
+			</div>
+		</div>
+	</ion-header>
 
-			<div class="flex flex-col items-center mt-5 mb-7 p-4">
-				<div class="w-full">
-					<TabButtons
-						:buttons="[{ label: tabButtons[0] }, { label: tabButtons[1] }]"
-						v-model="activeTab"
-					/>
+	<ion-content>
+		<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+			<ion-refresher-content></ion-refresher-content>
+		</ion-refresher>
 
-					<!-- Loading Indicator -->
+		<div
+			class="flex flex-col items-center mb-7 p-4 h-full w-full sm:w-96 overflow-y-auto"
+			ref="scrollContainer"
+			@scroll="() => handleScroll()"
+		>
+			<div class="w-full mt-5">
+				<TabButtons
+					:buttons="[{ label: tabButtons[0] }, { label: tabButtons[1] }]"
+					v-model="activeTab"
+				/>
+
+				<div
+					class="flex flex-col bg-white rounded mt-5"
+					v-if="!documents.loading && documents.data?.length"
+				>
 					<div
-						v-if="documents.loading"
-						class="flex h-64 items-center justify-center"
+						class="p-3.5 items-center justify-between border-b cursor-pointer"
+						v-for="link in documents.data"
+						:key="link.name"
 					>
-						<LoadingIndicator class="w-8 h-8 text-gray-800" />
-					</div>
-
-					<div
-						class="flex flex-col bg-white rounded mt-5 overflow-auto"
-						v-else-if="documents.data?.length"
-					>
-						<div
-							class="p-3.5 items-center justify-between border-b cursor-pointer"
-							v-for="link in documents.data"
-							:key="link.name"
+						<router-link
+							:to="{ name: detailViewRoute, params: { id: link.name } }"
+							v-slot="{ navigate }"
 						>
-							<router-link
-								:to="{ name: detailViewRoute, params: { id: link.name } }"
-								v-slot="{ navigate }"
-							>
-								<component
-									:is="listItemComponent[doctype]"
-									:doc="link"
-									:isTeamRequest="isTeamRequest"
-									@click="navigate"
-								/>
-							</router-link>
-						</div>
+							<component
+								:is="listItemComponent[doctype]"
+								:doc="link"
+								:isTeamRequest="isTeamRequest"
+								:workflowStateField="workflowStateField"
+								@click="navigate"
+							/>
+						</router-link>
 					</div>
-					<EmptyState message="No leaves found" v-else />
+				</div>
+				<EmptyState
+					:message="`No ${props.doctype?.toLowerCase()}s found`"
+					v-else-if="!documents.loading"
+				/>
+
+				<!-- Loading Indicator -->
+				<div
+					v-if="documents.loading"
+					class="flex mt-2 items-center justify-center"
+				>
+					<LoadingIndicator class="w-8 h-8 text-gray-800" />
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<CustomIonModal trigger="show-filter-modal">
-		<!-- Filter Action Sheet -->
-		<template #actionSheet>
-			<ListFiltersActionSheet
-				:filterConfig="filterConfig"
-				@applyFilters="applyFilters"
-				@clearFilters="clearFilters"
-				v-model:filters="filterMap"
-			/>
-		</template>
-	</CustomIonModal>
+		<CustomIonModal trigger="show-filter-modal">
+			<!-- Filter Action Sheet -->
+			<template #actionSheet>
+				<ListFiltersActionSheet
+					:filterConfig="filterConfig"
+					@applyFilters="applyFilters"
+					@clearFilters="clearFilters"
+					v-model:filters="filterMap"
+				/>
+			</template>
+		</CustomIonModal>
+	</ion-content>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router"
+import { inject, ref, markRaw, watch, computed, reactive, onMounted } from "vue"
 import {
-	inject,
-	ref,
-	markRaw,
-	watch,
-	computed,
-	reactive,
-	onMounted,
-	onBeforeUnmount,
-} from "vue"
-import { modalController } from "@ionic/vue"
+	modalController,
+	IonHeader,
+	IonContent,
+	IonRefresher,
+	IonRefresherContent,
+} from "@ionic/vue"
 
-import { FeatherIcon, createResource, LoadingIndicator } from "frappe-ui"
+import {
+	FeatherIcon,
+	createResource,
+	LoadingIndicator,
+	debounce,
+} from "frappe-ui"
 
 import TabButtons from "@/components/TabButtons.vue"
 import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
@@ -115,6 +131,9 @@ import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 import EmployeeAdvanceItem from "@/components/EmployeeAdvanceItem.vue"
 import ListFiltersActionSheet from "@/components/ListFiltersActionSheet.vue"
 import CustomIonModal from "@/components/CustomIonModal.vue"
+
+import useWorkflow from "@/composables/workflow"
+import { useListUpdate } from "@/composables/realtime"
 
 const props = defineProps({
 	doctype: {
@@ -156,6 +175,18 @@ const filterMap = reactive({})
 const activeTab = ref(props.tabButtons[0])
 const areFiltersApplied = ref(false)
 const appliedFilters = ref([])
+const workflowStateField = ref(null)
+
+// infinite scroll
+const scrollContainer = ref(null)
+const hasNextPage = ref(true)
+const listOptions = ref({
+	doctype: props.doctype,
+	fields: props.fields,
+	group_by: props.groupBy,
+	order_by: `\`tab${props.doctype}\`.modified desc`,
+	page_length: 50,
+})
 
 // computed properties
 const isTeamRequest = computed(() => {
@@ -180,6 +211,41 @@ const defaultFilters = computed(() => {
 	}
 
 	return filters
+})
+
+// resources
+const documents = createResource({
+	url: "frappe.desk.reportview.get",
+	onSuccess: (data) => {
+		if (data.values?.length < listOptions.value.page_length) {
+			hasNextPage.value = false
+		}
+	},
+	transform(data) {
+		if (data.length === 0) {
+			return []
+		}
+
+		// convert keys and values arrays to docs object
+		const fields = data["keys"]
+		const values = data["values"]
+		const docs = values.map((value) => {
+			const doc = {}
+			fields.forEach((field, index) => {
+				doc[field] = value[index]
+			})
+			return doc
+		})
+
+		let pagedData
+		if (!documents.params.start || documents.params.start === 0) {
+			pagedData = docs
+		} else {
+			pagedData = documents.data.concat(docs)
+		}
+
+		return pagedData
+	},
 })
 
 // helper functions
@@ -227,61 +293,59 @@ function clearFilters() {
 	areFiltersApplied.value = false
 }
 
-function fetchDocumentList() {
+function fetchDocumentList(start = 0) {
+	if (start === 0) {
+		hasNextPage.value = true
+	}
+
 	const filters = [[props.doctype, "docstatus", "!=", "2"]]
 	filters.push(...defaultFilters.value)
 
 	if (appliedFilters.value) filters.push(...appliedFilters.value)
 
+	if (workflowStateField.value) {
+		listOptions.value.fields.push(workflowStateField.value)
+	}
+
 	documents.submit({
-		doctype: props.doctype,
-		fields: props.fields,
+		...listOptions.value,
+		start: start || 0,
 		filters: filters,
-		group_by: props.groupBy,
-		order_by: `\`tab${props.doctype}\`.modified desc`,
 	})
 }
 
-const documents = createResource({
-	url: "frappe.desk.reportview.get",
-	transform(data) {
-		if (data.length === 0) {
-			return []
-		}
+const handleScroll = debounce(() => {
+	if (!hasNextPage.value) return
 
-		// convert keys and values arrays to docs object
-		const fields = data["keys"]
-		const values = data["values"]
-		const docs = values.map((value) => {
-			const doc = {}
-			fields.forEach((field, index) => {
-				doc[field] = value[index]
-			})
-			return doc
-		})
-		return docs
-	},
-})
+	const { scrollTop, scrollHeight, clientHeight } = scrollContainer.value
+	const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100
+
+	if (scrollPercentage >= 90) {
+		const start = documents.params.start + listOptions.value.page_length
+		fetchDocumentList(start)
+	}
+}, 500)
+
+const handleRefresh = (event) => {
+	setTimeout(() => {
+		fetchDocumentList()
+		event.target.complete()
+	}, 500)
+}
 
 watch(
 	() => activeTab.value,
 	(_value) => {
 		fetchDocumentList()
-	},
-	{ immediate: true }
+	}
 )
 
-onMounted(() => {
-	socket.emit("doctype_subscribe", props.doctype)
-	socket.off("list_update")
-	socket.on("list_update", (data) => {
-		if (data?.doctype !== props.doctype) return
-		fetchDocumentList()
-	})
-})
+onMounted(async () => {
+	const workflow = useWorkflow(props.doctype)
+	await workflow.workflowDoc.promise
+	workflowStateField.value = workflow.getWorkflowStateField()
+	fetchDocumentList()
 
-onBeforeUnmount(() => {
-	socket.emit("doctype_unsubscribe", props.doctype)
-	socket.off("list_update")
+	useListUpdate(socket, props.doctype, () => fetchDocumentList())
 })
 </script>

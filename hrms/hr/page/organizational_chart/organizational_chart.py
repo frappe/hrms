@@ -4,7 +4,7 @@ from frappe.query_builder.functions import Count
 
 @frappe.whitelist()
 def get_children(parent=None, company=None, exclude_node=None):
-	filters = [["status", "!=", "Left"]]
+	filters = [["status", "=", "Active"]]
 	if company and company != "All Companies":
 		filters.append(["company", "=", company])
 
@@ -43,7 +43,7 @@ def get_connections(employee: str, lft: int, rgt: int) -> int:
 	query = (
 		frappe.qb.from_(Employee)
 		.select(Count(Employee.name))
-		.where((Employee.lft > lft) & (Employee.rgt < rgt))
+		.where((Employee.lft > lft) & (Employee.rgt < rgt) & (Employee.status == "Active"))
 	).run()
 
 	return query[0][0]

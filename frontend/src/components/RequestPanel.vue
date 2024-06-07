@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { ref, inject, onMounted, computed, markRaw, onBeforeUnmount } from "vue"
+import { ref, inject, onMounted, computed, markRaw } from "vue"
 
 import TabButtons from "@/components/TabButtons.vue"
 import RequestList from "@/components/RequestList.vue"
@@ -25,59 +25,40 @@ import { myClaims, teamClaims } from "@/data/claims"
 import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
 import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 
+import { useListUpdate } from "@/composables/realtime"
+
 const activeTab = ref("My Requests")
-
 const socket = inject("$socket")
-const employee = inject("$employee")
 
-const myRequests = computed(() => {
-	const requests = [...(myLeaves.data || []), ...(myClaims.data || [])]
+const myRequests = computed(() => updateRequestDetails(myLeaves, myClaims))
 
-	return requests.map((item) => {
-		if (item.doctype === "Leave Application")
-			item.component = markRaw(LeaveRequestItem)
-		else if (item.doctype === "Expense Claim")
-			item.component = markRaw(ExpenseClaimItem)
+const teamRequests = computed(() =>
+	updateRequestDetails(teamLeaves, teamClaims)
+)
 
-		return item
+function updateRequestDetails(leaves, claims) {
+	const requests = [...(leaves.data || []), ...(claims.data || [])]
+	requests.forEach((request) => {
+		if (request.doctype === "Leave Application") {
+			request.component = markRaw(LeaveRequestItem)
+		} else if (request.doctype === "Expense Claim") {
+			request.component = markRaw(ExpenseClaimItem)
+		}
 	})
-})
+	return getSortedRequests(requests)
+}
 
-const teamRequests = computed(() => {
-	const requests = [...(teamLeaves.data || []), ...(teamClaims.data || [])]
-
-	return requests.map((item) => {
-		if (item.doctype === "Leave Application")
-			item.component = markRaw(LeaveRequestItem)
-		else if (item.doctype === "Expense Claim")
-			item.component = markRaw(ExpenseClaimItem)
-
-		return item
-	})
-})
+function getSortedRequests(list) {
+	// return top 10 requests sorted by posting date
+	return list
+		.sort((a, b) => {
+			return new Date(b.posting_date) - new Date(a.posting_date)
+		})
+		.splice(0, 10)
+}
 
 onMounted(() => {
-	socket.on("hrms:update_leaves", (data) => {
-		if (data.employee === employee.data.name) {
-			myLeaves.reload()
-		}
-		if (data.approver === employee.data.user_id) {
-			teamLeaves.reload()
-		}
-	})
-
-	socket.on("hrms:update_expense_claims", (data) => {
-		if (data.employee === employee.data.name) {
-			myClaims.reload()
-		}
-		if (data.approver === employee.data.user_id) {
-			teamClaims.reload()
-		}
-	})
-})
-
-onBeforeUnmount(() => {
-	socket.off("hrms:update_leaves")
-	socket.off("hrms:update_expense_claims")
+	useListUpdate(socket, "Leave Application", () => teamLeaves.reload())
+	useListUpdate(socket, "Expense Claim", () => teamClaims.reload())
 })
 </script>

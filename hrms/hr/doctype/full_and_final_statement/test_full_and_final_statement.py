@@ -12,19 +12,21 @@ from erpnext.stock.doctype.purchase_receipt.test_purchase_receipt import make_pu
 
 class TestFullandFinalStatement(FrappeTestCase):
 	def setUp(self):
+		for dt in ["Full and Final Statement", "Asset", "Asset Movement", "Asset Movement Item"]:
+			frappe.db.delete(dt)
+
+		self.setup_fnf()
+
+	def setup_fnf(self):
 		create_asset_data()
 
-	def tearDown(self):
-		frappe.db.sql("Delete from `tabFull and Final Statement`")
-		frappe.db.sql("Delete from `tabAsset`")
-		frappe.db.sql("Delete from `tabAsset Movement`")
+		self.employee = make_employee(
+			"test_fnf@example.com", company="_Test Company", relieving_date=add_days(today(), 30)
+		)
+		self.movement = create_asset_movement(self.employee)
+		self.fnf = create_full_and_final_statement(self.employee)
 
 	def test_check_bootstraped_data_asset_movement_and_jv_creation(self):
-		employee = make_employee("test_fnf@example.com", company="_Test Company")
-		movement = create_asset_movement(employee)
-		frappe.db.set_value("Employee", employee, "relieving_date", add_days(today(), 30))
-		fnf = create_full_and_final_statement(employee)
-
 		payables_bootstraped_component = [
 			"Salary Slip",
 			"Gratuity",
@@ -35,14 +37,40 @@ class TestFullandFinalStatement(FrappeTestCase):
 
 		receivable_bootstraped_component = ["Loan", "Employee Advance"]
 
-		# checking payable s and receivables bootstraped value
-		self.assertEqual([payable.component for payable in fnf.payables], payables_bootstraped_component)
+		# checking payables and receivables bootstraped value
+		self.assertEqual([payable.component for payable in self.fnf.payables], payables_bootstraped_component)
 		self.assertEqual(
-			[receivable.component for receivable in fnf.receivables], receivable_bootstraped_component
+			[receivable.component for receivable in self.fnf.receivables], receivable_bootstraped_component
 		)
 
 		# checking allocated asset
-		self.assertIn(movement, [asset.reference for asset in fnf.assets_allocated])
+		self.assertIn(self.movement, [asset.reference for asset in self.fnf.assets_allocated])
+
+	def test_asset_cost(self):
+		self.fnf.receivables[0].amount = 50000
+
+		self.fnf.assets_allocated[0].action = "Recover Cost"
+		self.fnf.save()
+
+		self.assertEqual(self.fnf.assets_allocated[0].actual_cost, 100000.0)
+		self.assertEqual(self.fnf.assets_allocated[0].cost, 100000.0)
+		self.assertEqual(self.fnf.total_asset_recovery_cost, 100000.0)
+		self.assertEqual(self.fnf.total_receivable_amount, 150000.0)
+
+	def test_journal_entry(self):
+		self.fnf.receivables[0].amount = 50000
+		self.fnf.assets_allocated[0].action = "Recover Cost"
+		self.fnf.save()
+
+		jv = self.fnf.create_journal_entry()
+
+		self.assertEqual(jv.accounts[0].credit_in_account_currency, 50000.0)
+		self.assertEqual(jv.accounts[1].credit_in_account_currency, 100000.0)
+
+		debit_entry = jv.accounts[-1]
+		self.assertEqual(debit_entry.debit_in_account_currency, 150000.0)
+		self.assertEqual(debit_entry.reference_type, "Full and Final Statement")
+		self.assertEqual(debit_entry.reference_name, self.fnf.name)
 
 
 def create_full_and_final_statement(employee):
@@ -68,9 +96,7 @@ def create_asset_movement(employee):
 
 
 def create_asset():
-	pr = make_purchase_receipt(
-		item_code="Macbook Pro", qty=1, rate=100000.0, location="Test Location"
-	)
+	pr = make_purchase_receipt(item_code="Macbook Pro", qty=1, rate=100000.0, location="Test Location")
 
 	asset_name = frappe.db.get_value("Asset", {"purchase_receipt": pr.name}, "name")
 	asset = frappe.get_doc("Asset", asset_name)

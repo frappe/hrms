@@ -3,20 +3,19 @@
 
 frappe.views.calendar["Leave Application"] = {
 	field_map: {
-		"start": "from_date",
-		"end": "to_date",
-		"id": "name",
-		"title": "title",
-		"docstatus": 1,
-		"color": "color",
-		"allDay": "all_day"
+		start: "from_date",
+		end: "to_date",
+		id: "name",
+		title: "title",
+		docstatus: 1,
+		color: "color",
 	},
 	options: {
 		header: {
-			left: 'prev,next today',
-			center: 'title',
-			right: 'month'
-		}
+			left: "prev,next today",
+			center: "title",
+			right: "month",
+		},
 	},
-	get_events_method: "hrms.hr.doctype.leave_application.leave_application.get_events"
-}
+	get_events_method: "hrms.hr.doctype.leave_application.leave_application.get_events",
+};

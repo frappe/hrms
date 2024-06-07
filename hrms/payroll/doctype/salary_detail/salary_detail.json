@@ -36,6 +36,7 @@
  ],
  "fields": [
   {
+   "columns": 2,
    "fieldname": "salary_component",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -65,7 +66,6 @@
    "fetch_from": "salary_component.statistical_component",
    "fieldname": "statistical_component",
    "fieldtype": "Check",
-   "in_list_view": 1,
    "label": "Statistical Component"
   },
   {
@@ -131,13 +131,15 @@
    "depends_on": "eval:doc.parenttype=='Salary Structure'",
    "fieldname": "condition",
    "fieldtype": "Code",
-   "label": "Condition"
+   "label": "Condition",
+   "options": "PythonExpression"
   },
   {
    "default": "0",
    "depends_on": "eval:doc.parenttype=='Salary Structure'",
    "fieldname": "amount_based_on_formula",
    "fieldtype": "Check",
+   "in_list_view": 1,
    "label": "Amount based on formula"
   },
   {
@@ -146,7 +148,8 @@
    "fieldname": "formula",
    "fieldtype": "Code",
    "in_list_view": 1,
-   "label": "Formula"
+   "label": "Formula",
+   "options": "PythonExpression"
   },
   {
    "depends_on": "eval:doc.amount_based_on_formula!==1 || doc.parenttype==='Salary Slip'",
@@ -254,14 +257,14 @@
  ],
  "istable": 1,
  "links": [],
- "modified": "2023-04-24 11:17:11.397523",
+ "modified": "2024-03-27 13:10:34.183281",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Detail",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": []
 }

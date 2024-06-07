@@ -7,7 +7,7 @@ from frappe.tests.utils import FrappeTestCase
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.appraisal_template.test_appraisal_template import create_kras
-from hrms.hr.doctype.goal.goal import get_children
+from hrms.hr.doctype.goal.goal import get_children, update_status
 
 
 class TestGoal(FrappeTestCase):
@@ -84,11 +84,13 @@ class TestGoal(FrappeTestCase):
 		        |_ child4
 		"""
 		parent_goal = create_goal(self.employee1, "Development", 1)
-		child_goal1 = create_goal(self.employee1, parent_goal=parent_goal.name)
+		# child_goal1
+		create_goal(self.employee1, parent_goal=parent_goal.name)
 
 		child_goal2 = create_goal(self.employee1, "Development", 1, parent_goal.name)
 		child_goal3 = create_goal(self.employee1, parent_goal=child_goal2.name)
-		child_goal4 = create_goal(self.employee1, parent_goal=child_goal2.name)
+		# child_goal4
+		create_goal(self.employee1, parent_goal=child_goal2.name)
 
 		child_goal3.progress = 50
 		child_goal3.save()
@@ -126,12 +128,14 @@ class TestGoal(FrappeTestCase):
 		parent1 = create_goal(self.employee1, "Development", 1)
 		child1 = create_goal(self.employee1, is_group=1, parent_goal=parent1.name)
 		child1_1 = create_goal(self.employee1, parent_goal=child1.name)
-		child1_2 = create_goal(self.employee1, parent_goal=child1.name)
+		# child1_2
+		create_goal(self.employee1, parent_goal=child1.name)
 
 		parent2 = create_goal(self.employee1, "Development", 1)
 		child2 = create_goal(self.employee1, is_group=1, parent_goal=parent2.name)
 		child2_1 = create_goal(self.employee1, parent_goal=child2.name)
-		child2_2 = create_goal(self.employee1, parent_goal=child2.name)
+		# child2_2
+		create_goal(self.employee1, parent_goal=child2.name)
 
 		child1_1.progress = 25
 		child1_1.save()
@@ -172,6 +176,37 @@ class TestGoal(FrappeTestCase):
 
 		self.assertEqual(child_goal1.kra, "Quality")
 		self.assertEqual(child_goal2.kra, "Quality")
+
+	def test_update_status(self):
+		goal1 = create_goal(self.employee1)
+		self.assertEqual(goal1.status, "Pending")
+		self.assertEqual(goal1.progress, 0)
+		goal2 = create_goal(self.employee1)
+		self.assertEqual(goal2.status, "Pending")
+		self.assertEqual(goal2.progress, 0)
+
+		update_status("Archived", [goal1.name, goal2.name])
+
+		goal1.reload()
+		self.assertEqual(goal1.status, "Archived")
+		goal2.reload()
+		self.assertEqual(goal2.status, "Archived")
+
+		update_status("Unarchived", [goal1.name, goal2.name])
+
+		goal1.reload()
+		self.assertEqual(goal1.status, "Pending")
+		goal2.reload()
+		self.assertEqual(goal2.status, "Pending")
+
+		update_status("Completed", [goal1.name, goal2.name])
+
+		goal1.reload()
+		self.assertEqual(goal1.status, "Completed")
+		self.assertEqual(goal1.progress, 100)
+		goal2.reload()
+		self.assertEqual(goal2.status, "Completed")
+		self.assertEqual(goal2.progress, 100)
 
 
 def create_goal(

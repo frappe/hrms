@@ -1,10 +1,8 @@
 <template>
 	<div class="flex flex-col h-full w-full" v-if="isFormReady">
-		<div
-			class="w-full h-full bg-white sm:w-96 flex flex-col relative overflow-y-auto"
-		>
+		<div class="w-full h-full bg-white sm:w-96 flex flex-col">
 			<header
-				class="flex flex-row bg-white shadow-sm py-4 px-3 items-center border-b sticky top-0 z-[1000]"
+				class="flex flex-row bg-white shadow-sm py-4 px-3 items-center sticky top-0 z-[1000]"
 			>
 				<Button
 					variant="ghost"
@@ -28,8 +26,8 @@
 						variant="outline"
 					/>
 					<Badge
-						v-if="formModel?.status"
-						:label="formModel?.status"
+						v-if="status"
+						:label="status"
 						:theme="statusColor"
 						class="whitespace-nowrap text-[8px]"
 					/>
@@ -42,7 +40,7 @@
 								condition: showDeleteButton,
 								onClick: () => (showDeleteDialog = true),
 							},
-							{ label: 'Reload', onClick: () => handleDocReload() },
+							{ label: 'Reload', onClick: () => reloadDoc() },
 						]"
 						:button="{
 							label: 'Menu',
@@ -57,79 +55,78 @@
 			</header>
 
 			<!-- Form -->
-			<div class="bg-white grow">
+			<div class="bg-white grow overflow-y-auto">
 				<!-- Tabs -->
-				<div
-					class="px-4 sticky top-15 z-[100] bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
-				>
-					<ul class="flex -mb-px overflow-auto hide-scrollbar">
-						<li class="mr-2 whitespace-nowrap" v-for="tab in tabs">
-							<button
-								@click="activeTab = tab.name"
-								class="inline-block p-4 border-b-2 border-transparent rounded-t-lg"
-								:class="[
-									activeTab === tab.name
-										? '!text-gray-800 !border-gray-800'
-										: 'hover:text-gray-600 hover:border-gray-300',
-								]"
-							>
-								{{ tab.name }}
-							</button>
-						</li>
-					</ul>
-				</div>
-
-				<template
-					v-if="tabbedView"
-					v-for="(fieldList, tabName, index) in tabFields"
-				>
+				<template v-if="tabbedView">
 					<div
-						v-show="tabName === activeTab"
-						class="flex flex-col space-y-4 p-4"
+						class="px-4 sticky top-0 z-[100] bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
 					>
-						<template v-for="field in fieldList" :key="field.fieldname">
-							<slot
-								v-if="field.fieldtype == 'Table'"
-								:name="field.fieldname"
-								:isFormReadOnly="isFormReadOnly"
-							></slot>
-
-							<FormField
-								v-else
-								:fieldtype="field.fieldtype"
-								:fieldname="field.fieldname"
-								v-model="formModel[field.fieldname]"
-								:default="field.default"
-								:label="field.label"
-								:options="field.options"
-								:linkFilters="field.linkFilters"
-								:documentList="field.documentList"
-								:readOnly="Boolean(field.read_only) || isFormReadOnly"
-								:reqd="Boolean(field.reqd)"
-								:hidden="Boolean(field.hidden)"
-								:errorMessage="field.error_message"
-								:minDate="field.minDate"
-								:maxDate="field.maxDate"
-								:addSectionPadding="fieldList[0].name !== field.name"
-							/>
-						</template>
-
-						<!-- Attachment upload -->
-						<div
-							class="flex flex-row gap-2 items-center justify-center p-5"
-							v-if="isFileUploading"
-						>
-							<LoadingIndicator class="w-3 h-3 text-gray-800" />
-							<span class="text-gray-900 text-sm">Uploading...</span>
-						</div>
-
-						<FileUploaderView
-							v-else-if="showAttachmentView && index === 0"
-							v-model="fileAttachments"
-							@handleFileSelect="handleFileSelect"
-							@handleFileDelete="handleFileDelete"
-						/>
+						<ul class="flex -mb-px overflow-auto hide-scrollbar">
+							<li class="mr-2 whitespace-nowrap" v-for="tab in tabs">
+								<button
+									@click="activeTab = tab.name"
+									class="inline-block py-4 px-2 border-b-2 border-transparent rounded-t-lg"
+									:class="[
+										activeTab === tab.name
+											? '!text-gray-800 !border-gray-800'
+											: 'hover:text-gray-600 hover:border-gray-300',
+									]"
+								>
+									{{ tab.name }}
+								</button>
+							</li>
+						</ul>
 					</div>
+
+					<template v-for="(fieldList, tabName, index) in tabFields">
+						<div
+							v-show="tabName === activeTab"
+							class="flex flex-col space-y-4 p-4"
+						>
+							<template v-for="field in fieldList" :key="field.fieldname">
+								<slot
+									v-if="field.fieldtype == 'Table'"
+									:name="field.fieldname"
+									:isFormReadOnly="isFormReadOnly"
+								></slot>
+
+								<FormField
+									v-else
+									:fieldtype="field.fieldtype"
+									:fieldname="field.fieldname"
+									v-model="formModel[field.fieldname]"
+									:default="field.default"
+									:label="field.label"
+									:options="field.options"
+									:linkFilters="field.linkFilters"
+									:documentList="field.documentList"
+									:readOnly="Boolean(field.read_only) || isFormReadOnly"
+									:reqd="Boolean(field.reqd)"
+									:hidden="Boolean(field.hidden)"
+									:errorMessage="field.error_message"
+									:minDate="field.minDate"
+									:maxDate="field.maxDate"
+									:addSectionPadding="fieldList[0].name !== field.name"
+								/>
+							</template>
+
+							<!-- Attachment upload -->
+							<div
+								class="flex flex-row gap-2 items-center justify-center p-5"
+								v-if="isFileUploading"
+							>
+								<LoadingIndicator class="w-3 h-3 text-gray-800" />
+								<span class="text-gray-900 text-sm">Uploading...</span>
+							</div>
+
+							<FileUploaderView
+								v-else-if="showAttachmentView && index === 0"
+								v-model="fileAttachments"
+								@handleFileSelect="handleFileSelect"
+								@handleFileDelete="handleFileDelete"
+							/>
+						</div>
+					</template>
 				</template>
 
 				<div class="flex flex-col space-y-4 p-4" v-else>
@@ -170,35 +167,48 @@
 				</div>
 			</div>
 
-			<!-- Bottom Save Button -->
+			<!-- Form Primary/Secondary Button -->
+			<!-- custom form button eg: Download button in salary slips -->
 			<div
-				v-if="formButton"
-				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
+				v-if="!showFormButton"
+				class="px-4 pt-4 pb-4 standalone:pb-safe-bottom sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg"
+			>
+				<slot name="formButton"></slot>
+			</div>
+
+			<!-- workflow actions -->
+			<WorkflowActionSheet
+				v-else-if="!isFormDirty && workflow?.hasWorkflow"
+				:doc="documentResource.doc"
+				:workflow="workflow"
+				@workflowApplied="reloadDoc()"
+			/>
+
+			<!-- save/submit/cancel -->
+			<div
+				v-else-if="isFormDirty || (!workflow?.hasWorkflow && formButton)"
+				class="px-4 pt-4 pb-4 standalone:pb-safe-bottom sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg"
 			>
 				<ErrorMessage
 					class="mb-2"
-					:message="docList.insert.error || documentResource?.setValue?.error"
+					:message="
+						formErrorMessage ||
+						docList?.insert?.error ||
+						documentResource?.setValue?.error
+					"
 				/>
 
 				<Button
-					class="w-full rounded mt-2 py-5 text-base disabled:bg-gray-700 disabled:text-white"
+					class="w-full rounded py-5 text-base disabled:bg-gray-700 disabled:text-white"
 					:class="formButton === 'Cancel' ? 'shadow' : ''"
 					@click="formButton === 'Save' ? saveForm() : submitOrCancelForm()"
 					:variant="formButton === 'Cancel' ? 'subtle' : 'solid'"
-					:disabled="saveButtonDisabled"
 					:loading="
 						docList.insert.loading || documentResource?.setValue?.loading
 					"
 				>
 					{{ formButton }}
 				</Button>
-			</div>
-
-			<div
-				v-else
-				class="px-4 pt-4 mt-2 sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg pb-10"
-			>
-				<slot name="formButton"></slot>
 			</div>
 		</div>
 	</div>
@@ -316,8 +326,10 @@ import {
 } from "frappe-ui"
 import FormField from "@/components/FormField.vue"
 import FileUploaderView from "@/components/FileUploaderView.vue"
+import WorkflowActionSheet from "@/components/WorkflowActionSheet.vue"
 
 import { FileAttachment, guessStatusColor } from "@/composables"
+import useWorkflow from "@/composables/workflow"
 import { getCompanyCurrency } from "@/data/currencies"
 import { formatCurrency } from "@/utils/formatters"
 
@@ -368,12 +380,14 @@ const router = useRouter()
 let activeTab = ref(props.tabs?.[0].name)
 let fileAttachments = ref([])
 let statusColor = ref("")
+let formErrorMessage = ref("")
 let isFormDirty = ref(false)
 let isFormUpdated = ref(false)
 let showDeleteDialog = ref(false)
 let showSubmitDialog = ref(false)
 let showCancelDialog = ref(false)
 let isFileUploading = ref(false)
+let workflow = ref(null)
 
 const formModel = computed({
 	get() {
@@ -382,6 +396,17 @@ const formModel = computed({
 	set(newValue) {
 		emit("update:modelValue", newValue)
 	},
+})
+
+const status = computed(() => {
+	if (!props.id) return ""
+
+	if (workflow.value) {
+		const stateField = workflow.value.getWorkflowStateField()
+		if (stateField) return formModel.value[stateField]
+	}
+
+	return formModel.value.status || formModel.value.approval_status
 })
 
 watch(
@@ -396,6 +421,15 @@ watch(
 		}
 	},
 	{ deep: true }
+)
+
+watch(
+	() => status.value,
+	async (value) => {
+		if (!value) return
+		statusColor.value = await guessStatusColor(props.doctype, status.value)
+	},
+	{ immediate: true }
 )
 
 const tabFields = computed(() => {
@@ -554,18 +588,6 @@ const docPermissions = createResource({
 	url: "frappe.client.get_doc_permissions",
 })
 
-const saveButtonDisabled = computed(() => {
-	if (props.id && formButton.value === "Save" && !isFormDirty.value) {
-		return true
-	}
-
-	return props.fields?.some((field) => {
-		if (field.reqd && !field.hidden && !formModel.value[field.fieldname]) {
-			return true
-		}
-	})
-})
-
 const formButton = computed(() => {
 	if (!props.showFormButton) return
 
@@ -589,12 +611,35 @@ function hasPermission(action) {
 }
 
 function handleDocInsert() {
+	if (!validateMandatoryFields()) return
 	docList.insert.submit(formModel.value)
+}
+
+function validateMandatoryFields() {
+	const errorFields = props.fields
+		.filter(
+			(field) =>
+				field.reqd && !field.hidden && !formModel.value[field.fieldname]
+		)
+		.map((field) => field.label)
+
+	if (errorFields.length) {
+		formErrorMessage.value = `${errorFields.join(", ")} ${
+			errorFields.length > 1 ? "fields are mandatory" : "field is mandatory"
+		}`
+		return false
+	} else {
+		formErrorMessage.value = ""
+		return true
+	}
 }
 
 async function handleDocUpdate(action) {
 	if (documentResource.doc) {
 		let params = { ...formModel.value }
+
+		if (!validateMandatoryFields()) return
+
 		if (action == "submit") {
 			params.docstatus = 1
 		} else if (action == "cancel") {
@@ -603,14 +648,7 @@ async function handleDocUpdate(action) {
 
 		await documentResource.setValue.submit(params)
 		await documentResource.get.promise
-
-		formModel.value = { ...documentResource.doc }
-
-		nextTick(() => {
-			setStatusColor()
-			isFormDirty.value = false
-			isFormUpdated.value = true
-		})
+		resetForm()
 	}
 
 	if (action === "submit") showSubmitDialog.value = false
@@ -643,15 +681,17 @@ function handleDocDelete() {
 	showDeleteDialog.value = false
 }
 
-function handleDocReload() {
-	documentResource.reload()
+async function reloadDoc() {
+	await documentResource.reload()
+	resetForm()
 }
 
-async function setStatusColor() {
-	const status = formModel.value.status || formModel.value.approval_status
-	if (status) {
-		statusColor.value = await guessStatusColor(props.doctype, status)
-	}
+function resetForm() {
+	formModel.value = { ...documentResource.doc }
+	nextTick(() => {
+		isFormDirty.value = false
+		isFormUpdated.value = true
+	})
 }
 
 async function setFormattedCurrency() {
@@ -675,9 +715,16 @@ async function setFormattedCurrency() {
 	})
 }
 
-const isFormReadOnly = computed(
-	() => props.id && formModel.value.docstatus !== 0
-)
+const isFormReadOnly = computed(() => {
+	if (!isFormReady.value) return true
+	if (!props.id) return false
+
+	// submitted & cancelled docs are read only
+	if (formModel.value.docstatus !== 0) return true
+
+	// read only due to workflow based on current user's roles
+	if (workflow.value?.isReadOnly(formModel.value)) return true
+})
 
 const isFormReady = computed(() => {
 	if (!props.id) return true
@@ -692,7 +739,10 @@ onMounted(async () => {
 		await docPermissions.fetch({ doctype: props.doctype, docname: props.id })
 		await attachedFiles.reload()
 		await setFormattedCurrency()
-		await setStatusColor()
+
+		// workflow
+		workflow.value = useWorkflow(props.doctype)
+
 		isFormDirty.value = false
 	}
 })

@@ -2,10 +2,13 @@
 # License: GNU General Public License v3. See license.txt
 
 import frappe
-from frappe import _
+from frappe import _, qb
 from frappe.model.document import Document
+from frappe.query_builder import Criterion
+from frappe.query_builder.custom import ConstantColumn
 from frappe.utils import (
 	add_days,
+	comma_and,
 	cstr,
 	flt,
 	format_datetime,
@@ -230,7 +233,7 @@ def throw_overlap_error(doc, exists_for, overlap_doc, from_date, to_date):
 		_("A {0} exists between {1} and {2} (").format(
 			doc.doctype, formatdate(from_date), formatdate(to_date)
 		)
-		+ """ <b><a href="/app/Form/{0}/{1}">{1}</a></b>""".format(doc.doctype, overlap_doc)
+		+ f""" <b><a href="/app/Form/{doc.doctype}/{overlap_doc}">{overlap_doc}</a></b>"""
 		+ _(") for {0}").format(exists_for)
 	)
 	frappe.throw(msg)
@@ -248,9 +251,7 @@ def validate_duplicate_exemption_for_payroll_period(doctype, docname, payroll_pe
 	)
 	if existing_record:
 		frappe.throw(
-			_("{0} already exists for employee {1} and period {2}").format(
-				doctype, employee, payroll_period
-			),
+			_("{0} already exists for employee {1} and period {2}").format(doctype, employee, payroll_period),
 			DuplicateDeclarationError,
 		)
 
@@ -515,15 +516,24 @@ def check_effective_date(from_date, today, frequency, allocate_on_day):
 
 
 def get_salary_assignments(employee, payroll_period):
-	start_date, end_date = frappe.db.get_value(
-		"Payroll Period", payroll_period, ["start_date", "end_date"]
-	)
-	assignments = frappe.db.get_all(
+	start_date, end_date = frappe.db.get_value("Payroll Period", payroll_period, ["start_date", "end_date"])
+	assignments = frappe.get_all(
 		"Salary Structure Assignment",
 		filters={"employee": employee, "docstatus": 1, "from_date": ["between", (start_date, end_date)]},
 		fields=["*"],
 		order_by="from_date",
 	)
+
+	if not assignments:
+		# if no assignments found for the given period
+		# get the last one assigned before the period that is still active
+		assignments = frappe.get_all(
+			"Salary Structure Assignment",
+			filters={"employee": employee, "docstatus": 1, "from_date": ["<=", start_date]},
+			fields=["*"],
+			order_by="from_date desc",
+			limit=1,
+		)
 
 	return assignments
 
@@ -569,9 +579,7 @@ def get_holiday_dates_for_employee(employee, start_date, end_date):
 	return [cstr(h.holiday_date) for h in holidays]
 
 
-def get_holidays_for_employee(
-	employee, start_date, end_date, raise_exception=True, only_non_weekly=False
-):
+def get_holidays_for_employee(employee, start_date, end_date, raise_exception=True, only_non_weekly=False):
 	"""Get Holidays for a given employee
 
 	`employee` (str)
@@ -671,7 +679,7 @@ def share_doc_with_approver(doc, user):
 
 
 def validate_active_employee(employee, method=None):
-	if isinstance(employee, (dict, Document)):
+	if isinstance(employee, dict | Document):
 		employee = employee.get("employee")
 
 	if employee and frappe.db.get_value("Employee", employee, "status") == "Inactive":
@@ -720,56 +728,120 @@ def get_matching_queries(
 	filter_by_reference_date=None,
 	from_reference_date=None,
 	to_reference_date=None,
+	common_filters=None,
 ):
 	"""Returns matching queries for Bank Reconciliation"""
 	queries = []
 	if transaction.withdrawal > 0:
 		if "expense_claim" in document_types:
 			ec_amount_matching = get_ec_matching_query(
-				bank_account, company, exact_match, from_date, to_date
+				bank_account, company, exact_match, from_date, to_date, common_filters
 			)
 			queries.extend([ec_amount_matching])
 
 	return queries
 
 
-def get_ec_matching_query(bank_account, company, exact_match, from_date=None, to_date=None):
+def get_ec_matching_query(
+	bank_account, company, exact_match, from_date=None, to_date=None, common_filters=None
+):
 	# get matching Expense Claim query
+	filters = []
+	ec = qb.DocType("Expense Claim")
+
 	mode_of_payments = [
 		x["parent"]
 		for x in frappe.db.get_all(
 			"Mode of Payment Account", filters={"default_account": bank_account}, fields=["parent"]
 		)
 	]
-
-	mode_of_payments = "('" + "', '".join(mode_of_payments) + "' )"
 	company_currency = get_company_currency(company)
 
-	filter_by_date = ""
-	if from_date and to_date:
-		filter_by_date = f"AND posting_date BETWEEN '{from_date}' AND '{to_date}'"
-		order_by = "posting_date"
+	filters.append(ec.docstatus == 1)
+	filters.append(ec.is_paid == 1)
+	filters.append(ec.clearance_date.isnull())
+	filters.append(ec.mode_of_payment.isin(mode_of_payments))
+	if exact_match:
+		filters.append(ec.total_sanctioned_amount == common_filters.amount)
+	else:
+		filters.append(ec.total_sanctioned_amount.gt(common_filters.amount))
 
-	return f"""
-		SELECT
-			( CASE WHEN employee = %(party)s THEN 1 ELSE 0 END
-			+ 1 ) AS rank,
-			'Expense Claim' as doctype,
-			name,
-			total_sanctioned_amount as paid_amount,
-			'' as reference_no,
-			'' as reference_date,
-			employee as party,
-			'Employee' as party_type,
-			posting_date,
-			{company_currency!r} as currency
-		FROM
-			`tabExpense Claim`
-		WHERE
-			total_sanctioned_amount {'= %(amount)s' if exact_match else '> 0.0'}
-			AND docstatus = 1
-			AND is_paid = 1
-			AND ifnull(clearance_date, '') = ""
-			AND mode_of_payment in {mode_of_payments}
-			{filter_by_date}
-	"""
+	if from_date and to_date:
+		filters.append(ec.posting_date[from_date:to_date])
+
+	ref_rank = frappe.qb.terms.Case().when(ec.employee == common_filters.party, 1).else_(0)
+
+	ec_query = (
+		qb.from_(ec)
+		.select(
+			(ref_rank + 1).as_("rank"),
+			ec.name,
+			ec.total_sanctioned_amount.as_("paid_amount"),
+			ConstantColumn("").as_("reference_no"),
+			ConstantColumn("").as_("reference_date"),
+			ec.employee.as_("party"),
+			ConstantColumn("Employee").as_("party_type"),
+			ec.posting_date,
+			ConstantColumn(company_currency).as_("currency"),
+		)
+		.where(Criterion.all(filters))
+	)
+
+	if from_date and to_date:
+		ec_query = ec_query.orderby(ec.posting_date)
+
+	return ec_query
+
+
+def validate_bulk_tool_fields(
+	self, fields: list, employees: list, from_date: str | None = None, to_date: str | None = None
+) -> None:
+	for d in fields:
+		if not self.get(d):
+			frappe.throw(_("{0} is required").format(self.meta.get_label(d)), title=_("Missing Field"))
+	if self.get(from_date) and self.get(to_date):
+		self.validate_from_to_dates(from_date, to_date)
+	if not employees:
+		frappe.throw(
+			_("Please select at least one employee to perform this action."),
+			title=_("No Employees Selected"),
+		)
+
+
+def notify_bulk_action_status(doctype: str, failure: list, success: list) -> None:
+	frappe.clear_messages()
+
+	msg = ""
+	title = ""
+	if failure:
+		msg += _("Failed to create/submit {0} for employees:").format(doctype)
+		msg += " " + comma_and(failure, False) + "<hr>"
+		msg += (
+			_("Check {0} for more details")
+			.format("<a href='/app/List/Error Log?reference_doctype={0}'>{1}</a>")
+			.format(doctype, _("Error Log"))
+		)
+
+		if success:
+			title = _("Partial Success")
+			msg += "<hr>"
+		else:
+			title = _("Creation Failed")
+	else:
+		title = _("Success")
+
+	if success:
+		msg += _("Successfully created {0} for employees:").format(doctype)
+		msg += " " + comma_and(success, False)
+
+	if failure:
+		indicator = "orange" if success else "red"
+	else:
+		indicator = "green"
+
+	frappe.msgprint(
+		msg,
+		indicator=indicator,
+		title=title,
+		is_minimizable=True,
+	)

@@ -205,7 +205,7 @@ class LeaveAllocation(Document):
 
 			frappe.throw(
 				_("Reference")
-				+ ': <a href="/app/Form/Leave Allocation/{0}">{0}</a>'.format(leave_allocation[0][0]),
+				+ f': <a href="/app/Form/Leave Allocation/{leave_allocation[0][0]}">{leave_allocation[0][0]}</a>',
 				OverlapError,
 			)
 
@@ -228,11 +228,15 @@ class LeaveAllocation(Document):
 
 	@frappe.whitelist()
 	def set_total_leaves_allocated(self):
-		self.unused_leaves = get_carry_forwarded_leaves(
-			self.employee, self.leave_type, self.from_date, self.carry_forward
+		self.unused_leaves = flt(
+			get_carry_forwarded_leaves(self.employee, self.leave_type, self.from_date, self.carry_forward),
+			self.precision("unused_leaves"),
 		)
 
-		self.total_leaves_allocated = flt(self.unused_leaves) + flt(self.new_leaves_allocated)
+		self.total_leaves_allocated = flt(
+			flt(self.unused_leaves) + flt(self.new_leaves_allocated),
+			self.precision("total_leaves_allocated"),
+		)
 
 		self.limit_carry_forward_based_on_max_allowed_leaves()
 
@@ -244,9 +248,7 @@ class LeaveAllocation(Document):
 			and not frappe.db.get_value("Leave Type", self.leave_type, "is_earned_leave")
 			and not frappe.db.get_value("Leave Type", self.leave_type, "is_compensatory")
 		):
-			frappe.throw(
-				_("Total leaves allocated is mandatory for Leave Type {0}").format(self.leave_type)
-			)
+			frappe.throw(_("Total leaves allocated is mandatory for Leave Type {0}").format(self.leave_type))
 
 	def limit_carry_forward_based_on_max_allowed_leaves(self):
 		max_leaves_allowed = frappe.db.get_value("Leave Type", self.leave_type, "max_leaves_allowed")
@@ -273,13 +275,17 @@ class LeaveAllocation(Document):
 		if date_difference < self.total_leaves_allocated:
 			if frappe.db.get_value("Leave Type", self.leave_type, "allow_over_allocation"):
 				frappe.msgprint(
-					_("<b>Total Leaves Allocated</b> are more than the number of days in the allocation period"),
+					_(
+						"<b>Total Leaves Allocated</b> are more than the number of days in the allocation period"
+					),
 					indicator="orange",
 					alert=True,
 				)
 			else:
 				frappe.throw(
-					_("<b>Total Leaves Allocated</b> are more than the number of days in the allocation period"),
+					_(
+						"<b>Total Leaves Allocated</b> are more than the number of days in the allocation period"
+					),
 					exc=OverAllocationError,
 					title=_("Over Allocation"),
 				)
@@ -309,23 +315,30 @@ class LeaveAllocation(Document):
 
 def get_previous_allocation(from_date, leave_type, employee):
 	"""Returns document properties of previous allocation"""
-	return frappe.db.get_value(
-		"Leave Allocation",
-		filters={
-			"to_date": ("<", from_date),
-			"leave_type": leave_type,
-			"employee": employee,
-			"docstatus": 1,
-		},
-		order_by="to_date DESC",
-		fieldname=["name", "from_date", "to_date", "employee", "leave_type"],
-		as_dict=1,
-	)
+	Allocation = frappe.qb.DocType("Leave Allocation")
+	allocations = (
+		frappe.qb.from_(Allocation)
+		.select(
+			Allocation.name,
+			Allocation.from_date,
+			Allocation.to_date,
+			Allocation.employee,
+			Allocation.leave_type,
+		)
+		.where(
+			(Allocation.employee == employee)
+			& (Allocation.leave_type == leave_type)
+			& (Allocation.to_date < from_date)
+			& (Allocation.docstatus == 1)
+		)
+		.orderby(Allocation.to_date, order=frappe.qb.desc)
+		.limit(1)
+	).run(as_dict=True)
+
+	return allocations[0] if allocations else None
 
 
-def get_leave_allocation_for_period(
-	employee, leave_type, from_date, to_date, exclude_allocation=None
-):
+def get_leave_allocation_for_period(employee, leave_type, from_date, to_date, exclude_allocation=None):
 	from frappe.query_builder.functions import Sum
 
 	Allocation = frappe.qb.DocType("Leave Allocation")

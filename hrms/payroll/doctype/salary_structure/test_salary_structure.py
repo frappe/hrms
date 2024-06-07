@@ -19,6 +19,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_employee_salary_slip,
 )
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+from hrms.tests.test_utils import create_employee_grade
 
 test_dependencies = ["Fiscal Year"]
 
@@ -53,7 +54,6 @@ class TestSalaryStructure(FrappeTestCase):
 			holiday_list.save()
 
 	def test_salary_structure_deduction_based_on_gross_pay(self):
-
 		emp = make_employee("test_employee_3@salary.com")
 
 		sal_struct = make_salary_structure("Salary Structure 2", "Monthly", dont_submit=True)
@@ -164,11 +164,14 @@ def make_salary_structure(
 	other_details=None,
 	test_tax=False,
 	company=None,
-	currency=erpnext.get_default_currency(),
+	currency=None,
 	payroll_period=None,
 	include_flexi_benefits=False,
 	base=None,
 ):
+	if not currency:
+		currency = erpnext.get_default_currency()
+
 	if frappe.db.exists("Salary Structure", salary_structure):
 		frappe.db.delete("Salary Structure", salary_structure)
 
@@ -226,14 +229,15 @@ def create_salary_structure_assignment(
 	salary_structure,
 	from_date=None,
 	company=None,
-	currency=erpnext.get_default_currency(),
+	currency=None,
 	payroll_period=None,
 	base=None,
 	allow_duplicate=False,
 ):
-	if not allow_duplicate and frappe.db.exists(
-		"Salary Structure Assignment", {"employee": employee}
-	):
+	if not currency:
+		currency = erpnext.get_default_currency()
+
+	if not allow_duplicate and frappe.db.exists("Salary Structure Assignment", {"employee": employee}):
 		frappe.db.sql("""delete from `tabSalary Structure Assignment` where employee=%s""", (employee))
 
 	if not payroll_period:
@@ -270,15 +274,3 @@ def get_payable_account(company=None):
 	if not company:
 		company = erpnext.get_default_company()
 	return frappe.db.get_value("Company", company, "default_payroll_payable_account")
-
-
-def create_employee_grade(grade, default_structure=None):
-	if not frappe.db.exists("Employee Grade", grade):
-		frappe.get_doc(
-			{
-				"doctype": "Employee Grade",
-				"__newname": grade,
-				"default_salary_structure": default_structure,
-				"default_base_pay": 50000,
-			}
-		).insert()

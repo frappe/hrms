@@ -1,5 +1,5 @@
 import { computed, reactive } from "vue"
-import { createResource } from "frappe-ui"
+import { createResource, call } from "frappe-ui"
 import { userResource } from "./user"
 import { employeeResource } from "./employee"
 import router from "@/router"
@@ -14,23 +14,17 @@ export function sessionUser() {
 }
 
 export const session = reactive({
-	login: createResource({
-		url: "login",
-		makeParams({ email, password }) {
-			return {
-				usr: email,
-				pwd: password,
-			}
-		},
-		onSuccess(data) {
+	login: async (email, password) => {
+		const response = await call("login", { usr: email, pwd: password })
+		if (response.message === "Logged In") {
 			userResource.reload()
 			employeeResource.reload()
 
 			session.user = sessionUser()
-			session.login.reset()
-			router.replace(data.default_route || "/")
-		},
-	}),
+			router.replace(response.default_route || "/")
+		}
+		return response
+	},
 	logout: createResource({
 		url: "logout",
 		onSuccess() {
