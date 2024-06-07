@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-04-25 14:15\n"
+"PO-Revision-Date: 2024-06-06 10:56\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -6725,7 +6725,7 @@ msgstr "خطا"
 #: hr/doctype/leave_control_panel/leave_control_panel.py:121
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:331
 msgid "Error Log"
-msgstr "گزارش خطا"
+msgstr "لاگ خطا"
 
 #. Label of a Small Text field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
@@ -7345,7 +7345,7 @@ msgstr "واکشی کارکنان"
 #: hr/doctype/employee_property_history/employee_property_history.json
 msgctxt "Employee Property History"
 msgid "Field Name"
-msgstr "نام زمینه"
+msgstr "نام فیلد"
 
 #: hr/doctype/expense_claim/expense_claim.js:106
 #: hr/doctype/leave_application/leave_application.js:104
@@ -8660,7 +8660,7 @@ msgstr "حضور و غیاب وارداتی"
 #: hr/doctype/upload_attendance/upload_attendance.json
 msgctxt "Upload Attendance"
 msgid "Import Log"
-msgstr "ورود به سیستم"
+msgstr "لاگ واردات"
 
 #: hr/doctype/upload_attendance/upload_attendance.js:46
 msgid "Importing {0} of {1}"
@@ -10382,7 +10382,7 @@ msgstr "اسکان مورد نیاز"
 #: hr/doctype/employee_checkin/employee_checkin.json
 msgctxt "Employee Checkin"
 msgid "Log Type"
-msgstr "نوع گزارش"
+msgstr "نوع لاگ"
 
 #: hr/doctype/employee_checkin/employee_checkin.py:50
 msgid "Log Type is required for check-ins falling in the shift: {0}."
@@ -11653,7 +11653,7 @@ msgstr "پارامتر"
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "Parent Goal"
-msgstr "هدف والدین"
+msgstr ""
 
 #: setup.py:381
 msgid "Part-time"
@@ -16564,13 +16564,13 @@ msgstr "گزارش خودرو"
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Vehicle Log"
-msgstr "گزارش خودرو"
+msgstr "لاگ خودرو"
 
 #. Label of a Link in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
 msgctxt "Vehicle Log"
 msgid "Vehicle Log"
-msgstr "گزارش خودرو"
+msgstr "لاگ خودرو"
 
 #. Name of a DocType
 #: hr/doctype/vehicle_service/vehicle_service.json

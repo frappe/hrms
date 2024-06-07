@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-15 14:59\n"
+"PO-Revision-Date: 2024-06-06 10:56\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -610,7 +610,7 @@ msgstr "Alacak Hesapları"
 #: payroll/workspace/salary_payout/salary_payout.json
 msgctxt "Accounts Settings"
 msgid "Accounts Settings"
-msgstr ""
+msgstr "Muhasebe Ayarları"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:575
 msgid "Accrual Journal Entry for salaries from {0} to {1}"
@@ -816,13 +816,13 @@ msgstr "İletmek"
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Advance Account"
-msgstr ""
+msgstr "Avans Hesabı"
 
 #. Label of a Link field in DocType 'Expense Claim Advance'
 #: hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgctxt "Expense Claim Advance"
 msgid "Advance Account"
-msgstr ""
+msgstr "Avans Hesabı"
 
 #: hr/report/employee_advance_summary/employee_advance_summary.py:62
 msgid "Advance Amount"
@@ -844,7 +844,7 @@ msgstr "Peşinat Tutarı"
 #: hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgctxt "Expense Claim Advance"
 msgid "Advance Paid"
-msgstr ""
+msgstr "Avans Ödemesi"
 
 #. Label of a Section Break field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
@@ -1349,7 +1349,7 @@ msgstr "Tutar"
 
 #: payroll/doctype/salary_structure/salary_structure.py:34
 msgid "Amount Based on Formula"
-msgstr ""
+msgstr "Formüle Dayalı Tutar"
 
 #. Label of a Check field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -1365,7 +1365,7 @@ msgstr "Tutar formüle dayalı"
 
 #: payroll/doctype/additional_salary/additional_salary.py:31
 msgid "Amount should not be less than zero"
-msgstr ""
+msgstr "Tutar sıfırdan az olmamalıdır"
 
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.py:58
 msgid "An amount of {0} already claimed for the component {1}, set the amount equal or greater than {2}"
@@ -1385,7 +1385,7 @@ msgstr "Yıllık Maaş"
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Annual Taxable Amount"
-msgstr ""
+msgstr "Yıllık Vergilendirilebilir Tutar"
 
 #. Label of a Small Text field in DocType 'Travel Request'
 #: hr/doctype/travel_request/travel_request.json
@@ -1461,7 +1461,7 @@ msgstr "Başvuranın ismi"
 #. Label of a Card Break in the Leaves Workspace
 #: hr/workspace/leaves/leaves.json
 msgid "Application"
-msgstr ""
+msgstr "Başvuru"
 
 #: hr/report/recruitment_analytics/recruitment_analytics.py:47
 msgid "Application Status"
@@ -1756,7 +1756,7 @@ msgstr ""
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "Archived"
-msgstr ""
+msgstr "Arşivlendi"
 
 #: payroll/doctype/salary_slip/salary_slip_list.js:11
 msgid "Are you sure you want to email the selected salary slips?"
@@ -2105,7 +2105,7 @@ msgstr ""
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Bank Account No"
-msgstr ""
+msgstr "Banka Hesap Numarası"
 
 #. Label of a Tab Break field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -2195,7 +2195,7 @@ msgstr ""
 
 #: hr/report/project_profitability/project_profitability.py:171
 msgid "Bill Amount"
-msgstr ""
+msgstr "Fatura Tutarı"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:254
 msgid "Billed Hours"
@@ -3952,37 +3952,37 @@ msgstr ""
 #: payroll/report/income_tax_computation/income_tax_computation.py:507
 #: payroll/report/salary_register/salary_register.py:129 setup.py:394
 msgid "Date of Joining"
-msgstr ""
+msgstr "İşe Başlama Tarihi"
 
 #. Label of a Date field in DocType 'Employee Onboarding'
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 msgctxt "Employee Onboarding"
 msgid "Date of Joining"
-msgstr ""
+msgstr "İşe Başlama Tarihi"
 
 #. Label of a Date field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
 msgctxt "Exit Interview"
 msgid "Date of Joining"
-msgstr ""
+msgstr "İşe Başlama Tarihi"
 
 #. Label of a Date field in DocType 'Full and Final Statement'
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
 msgctxt "Full and Final Statement"
 msgid "Date of Joining"
-msgstr ""
+msgstr "İşe Başlama Tarihi"
 
 #. Option for the 'Allocate on Day' (Select) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
 msgctxt "Leave Type"
 msgid "Date of Joining"
-msgstr ""
+msgstr "İşe Başlama Tarihi"
 
 #. Label of a Data field in DocType 'Retention Bonus'
 #: payroll/doctype/retention_bonus/retention_bonus.json
 msgctxt "Retention Bonus"
 msgid "Date of Joining"
-msgstr ""
+msgstr "İşe Başlama Tarihi"
 
 #. Label of a Section Break field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
@@ -4478,134 +4478,134 @@ msgstr "Ödeme Günlerine bağlıdır"
 
 #: hr/doctype/goal/goal_tree.js:156
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Long Text field in DocType 'Appointment Letter content'
 #: hr/doctype/appointment_letter_content/appointment_letter_content.json
 msgctxt "Appointment Letter content"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Section Break field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgctxt "Appraisal Cycle"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Section Break field in DocType 'Appraisal Template'
 #: hr/doctype/appraisal_template/appraisal_template.json
 msgctxt "Appraisal Template"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Text Editor field in DocType 'Employee Boarding Activity'
 #: hr/doctype/employee_boarding_activity/employee_boarding_activity.json
 msgctxt "Employee Boarding Activity"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Text field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgctxt "Employee Grievance"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Small Text field in DocType 'Expected Skill Set'
 #: hr/doctype/expected_skill_set/expected_skill_set.json
 msgctxt "Expected Skill Set"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Text Editor field in DocType 'Expense Claim Detail'
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
 msgctxt "Expense Claim Detail"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Small Text field in DocType 'Expense Claim Type'
 #: hr/doctype/expense_claim_type/expense_claim_type.json
 msgctxt "Expense Claim Type"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Small Text field in DocType 'Expense Taxes and Charges'
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
 msgctxt "Expense Taxes and Charges"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Small Text field in DocType 'Full and Final Asset'
 #: hr/doctype/full_and_final_asset/full_and_final_asset.json
 msgctxt "Full and Final Asset"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Section Break field in DocType 'Goal'
 #. Label of a Text Editor field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Text field in DocType 'Grievance Type'
 #: hr/doctype/grievance_type/grievance_type.json
 msgctxt "Grievance Type"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Data field in DocType 'Income Tax Slab Other Charges'
 #: payroll/doctype/income_tax_slab_other_charges/income_tax_slab_other_charges.json
 msgctxt "Income Tax Slab Other Charges"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Text field in DocType 'Interview Type'
 #: hr/doctype/interview_type/interview_type.json
 msgctxt "Interview Type"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Text Editor field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Small Text field in DocType 'KRA'
 #: hr/doctype/kra/kra.json
 msgctxt "KRA"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Small Text field in DocType 'Leave Allocation'
 #: hr/doctype/leave_allocation/leave_allocation.json
 msgctxt "Leave Allocation"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Small Text field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgctxt "Salary Component"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Text field in DocType 'Skill'
 #: hr/doctype/skill/skill.json
 msgctxt "Skill"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Text Editor field in DocType 'Training Program'
 #: hr/doctype/training_program/training_program.json
 msgctxt "Training Program"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. Label of a Section Break field in DocType 'Travel Request'
 #: hr/doctype/travel_request/travel_request.json
 msgctxt "Travel Request"
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #: hr/report/appraisal_overview/appraisal_overview.js:35
 #: hr/report/appraisal_overview/appraisal_overview.py:30
@@ -5620,7 +5620,7 @@ msgstr "Çalışan Yatılı Etkinliği"
 #. Name of a DocType
 #: hr/doctype/employee_checkin/employee_checkin.json
 msgid "Employee Checkin"
-msgstr "Çalışan Checkin"
+msgstr "Personel Giriş Çıkış"
 
 #. Label of a Link in the HR Workspace
 #. Label of a Link in the Shift & Attendance Workspace
@@ -5629,7 +5629,7 @@ msgstr "Çalışan Checkin"
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgctxt "Employee Checkin"
 msgid "Employee Checkin"
-msgstr "Çalışan Checkin"
+msgstr "Personel Giriş Çıkış"
 
 #. Name of a DocType
 #: payroll/doctype/employee_cost_center/employee_cost_center.json
@@ -5835,7 +5835,7 @@ msgstr "Personel Bilgileri"
 #: hr/report/employee_leave_balance/employee_leave_balance.json
 #: hr/workspace/hr/hr.json hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance"
-msgstr ""
+msgstr "Personel İzin Bakiyesi"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -5843,7 +5843,7 @@ msgstr ""
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.json
 #: hr/workspace/hr/hr.json hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance Summary"
-msgstr ""
+msgstr "Personel İzin Bakiyesi Özeti"
 
 #. Name of a Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
@@ -6513,7 +6513,7 @@ msgstr "çalışanlar, HTML"
 #. Label of a Link in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Employees Working on a Holiday"
-msgstr ""
+msgstr "Tatilde Çalışan Personeller"
 
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.py:31
 msgid "Employees cannot give feedback to themselves. Use {0} instead: {1}"
@@ -7060,13 +7060,13 @@ msgstr ""
 #: hr/doctype/employee_advance/employee_advance.json
 #: hr/doctype/expense_claim/expense_claim.json
 msgid "Expense Approver"
-msgstr ""
+msgstr "Harcama Onaylayıcısı"
 
 #. Label of a Link field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Expense Approver"
-msgstr ""
+msgstr "Harcama Onaylayıcısı"
 
 #. Label of a Check field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -7251,7 +7251,7 @@ msgstr ""
 
 #: hr/doctype/interview/interview.py:119
 msgid "Failed to send the Interview Reschedule notification. Please configure your email account."
-msgstr ""
+msgstr "Mülakat Yeniden Planlama bildirimi gönderilemedi. Lütfen e-posta hesabınızı yapılandırın."
 
 #: overrides/company.py:52
 msgid "Failed to setup defaults for country {0}. Please contact support."
@@ -7381,7 +7381,7 @@ msgstr "Form doldurucu ve denetleyicileri"
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Filled"
-msgstr ""
+msgstr "Dolduruldu"
 
 #: hr/report/vehicle_expenses/vehicle_expenses.js:7
 msgid "Filter Based On"
@@ -7401,19 +7401,19 @@ msgstr ""
 
 #: www/jobs/index.html:19
 msgid "Filters"
-msgstr ""
+msgstr "Filtreler"
 
 #. Label of a Section Break field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgctxt "Appraisal Cycle"
 msgid "Filters"
-msgstr ""
+msgstr "Filtreler"
 
 #. Label of a Section Break field in DocType 'Employee Attendance Tool'
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgctxt "Employee Attendance Tool"
 msgid "Filters"
-msgstr ""
+msgstr "Filtreler"
 
 #: hr/report/employee_exits/employee_exits.js:57
 #: hr/report/employee_exits/employee_exits.py:52
@@ -7458,7 +7458,7 @@ msgstr ""
 
 #: hr/report/vehicle_expenses/vehicle_expenses.js:15
 msgid "Fiscal Year"
-msgstr ""
+msgstr "Mali Yıl"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:1320
 msgid "Fiscal Year {0} not found"
@@ -7589,7 +7589,7 @@ msgstr ""
 
 #: payroll/report/salary_register/salary_register.js:8
 msgid "From"
-msgstr ""
+msgstr "Gönderen"
 
 #. Label of a Currency field in DocType 'Taxable Salary Slab'
 #: payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
@@ -7821,7 +7821,7 @@ msgstr ""
 #: hr/workspace/expense_claims/expense_claims.json
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "General Ledger"
-msgstr ""
+msgstr "Genel Muhasebe"
 
 #: payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.js:44
 msgid "Get Details From Declaration"
@@ -7960,7 +7960,7 @@ msgstr ""
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Grand Total"
-msgstr ""
+msgstr "Genel Toplam"
 
 #. Name of a DocType
 #: payroll/doctype/gratuity/gratuity.json
@@ -8077,7 +8077,7 @@ msgstr ""
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:58
 msgid "Group By"
-msgstr ""
+msgstr "Gruplama"
 
 #: hr/doctype/goal/goal.js:13
 msgid "Group goal's progress is auto-calculated based on the child goals."
@@ -8426,7 +8426,7 @@ msgstr "Kiralama Ayarları"
 #. Label of a chart in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Hiring vs Attrition Count"
-msgstr ""
+msgstr "İşe Başlayan ve Ayrılan Sayısı"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -9195,25 +9195,25 @@ msgstr "Fatura Ref"
 #: payroll/doctype/employee_tax_exemption_category/employee_tax_exemption_category.json
 msgctxt "Employee Tax Exemption Category"
 msgid "Is Active"
-msgstr ""
+msgstr "Aktif"
 
 #. Label of a Check field in DocType 'Employee Tax Exemption Sub Category'
 #: payroll/doctype/employee_tax_exemption_sub_category/employee_tax_exemption_sub_category.json
 msgctxt "Employee Tax Exemption Sub Category"
 msgid "Is Active"
-msgstr ""
+msgstr "Aktif"
 
 #. Label of a Check field in DocType 'Leave Period'
 #: hr/doctype/leave_period/leave_period.json
 msgctxt "Leave Period"
 msgid "Is Active"
-msgstr ""
+msgstr "Aktif"
 
 #. Label of a Select field in DocType 'Salary Structure'
 #: payroll/doctype/salary_structure/salary_structure.json
 msgctxt "Salary Structure"
 msgid "Is Active"
-msgstr ""
+msgstr "Aktif"
 
 #. Label of a Check field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
@@ -9810,7 +9810,7 @@ msgstr "İzin Formu"
 #: hr/doctype/attendance/attendance.json
 msgctxt "Attendance"
 msgid "Leave Application"
-msgstr "izin başvurusu"
+msgstr "İzin Formu"
 
 #. Label of a Link in the HR Workspace
 #. Label of a shortcut in the HR Workspace
@@ -9819,7 +9819,7 @@ msgstr "izin başvurusu"
 #: hr/workspace/hr/hr.json hr/workspace/leaves/leaves.json
 msgctxt "Leave Application"
 msgid "Leave Application"
-msgstr "izin başvurusu"
+msgstr "İzin Formu"
 
 #: hr/doctype/leave_application/leave_application.py:705
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
@@ -11076,7 +11076,7 @@ msgstr ""
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:37
 msgid "No attendance records found."
-msgstr ""
+msgstr "Giriş Çıkış kaydı bulunamadı."
 
 #: hr/doctype/interview/interview.py:89
 msgid "No changes found in timings."
@@ -11100,7 +11100,7 @@ msgstr ""
 
 #: payroll/report/income_tax_computation/income_tax_computation.py:70
 msgid "No employees found with selected filters and active salary structure"
-msgstr ""
+msgstr "Seçilen filtrelere ve aktif maaş yapısına sahip Personel bulunamadı"
 
 #: hr/doctype/goal/goal_list.js:97
 msgid "No items selected"
@@ -11175,7 +11175,7 @@ msgstr "Vejeteryan olmayan"
 #: hr/doctype/leave_type/leave_type.py:42
 #: hr/doctype/leave_type/leave_type.py:45
 msgid "Not Allowed"
-msgstr ""
+msgstr "İzin Verilmiyor"
 
 #: utils/hierarchy_chart.py:15
 msgid "Not Permitted"
@@ -11350,7 +11350,7 @@ msgstr "Tanıtım"
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 msgctxt "Employee Onboarding"
 msgid "Onboarding Activities"
-msgstr ""
+msgstr "Tanıtım Aktiviteleri"
 
 #. Label of a Date field in DocType 'Employee Onboarding'
 #: hr/doctype/employee_onboarding/employee_onboarding.json
@@ -11448,7 +11448,7 @@ msgstr ""
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Open & Approved"
-msgstr ""
+msgstr "Açık & Onaylandı"
 
 #: hr/doctype/leave_application/leave_application_email_template.html:30
 msgid "Open Now"
@@ -11501,7 +11501,7 @@ msgstr "Diğer Raporlar"
 #: payroll/doctype/payroll_settings/payroll_settings.json
 msgctxt "Payroll Settings"
 msgid "Other Settings"
-msgstr ""
+msgstr "Diğer Ayarlar"
 
 #. Label of a Table field in DocType 'Income Tax Slab'
 #: payroll/doctype/income_tax_slab/income_tax_slab.json
@@ -12075,7 +12075,7 @@ msgstr "Bekliyor"
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Pending Amount"
-msgstr ""
+msgstr "Bekleyen Tutar"
 
 #: hr/report/employee_exits/employee_exits.py:227
 msgid "Pending FnF"
@@ -12134,7 +12134,7 @@ msgstr ""
 
 #: payroll/doctype/retention_bonus/retention_bonus.js:8
 msgid "Please Select Company First"
-msgstr ""
+msgstr "Lütfen Önce Firma Seçin"
 
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.py:94
 msgid "Please add the remaining benefits {0} to any of the existing component"
@@ -12513,43 +12513,43 @@ msgstr ""
 #: hr/report/project_profitability/project_profitability.js:43
 #: hr/report/project_profitability/project_profitability.py:164
 msgid "Project"
-msgstr ""
+msgstr "Proje"
 
 #. Label of a Link field in DocType 'Employee Onboarding'
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 msgctxt "Employee Onboarding"
 msgid "Project"
-msgstr ""
+msgstr "Proje"
 
 #. Label of a Link field in DocType 'Employee Separation'
 #: hr/doctype/employee_separation/employee_separation.json
 msgctxt "Employee Separation"
 msgid "Project"
-msgstr ""
+msgstr "Proje"
 
 #. Label of a Link field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Project"
-msgstr ""
+msgstr "Proje"
 
 #. Label of a Link field in DocType 'Expense Claim Detail'
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
 msgctxt "Expense Claim Detail"
 msgid "Project"
-msgstr ""
+msgstr "Proje"
 
 #. Label of a Link field in DocType 'Expense Taxes and Charges'
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
 msgctxt "Expense Taxes and Charges"
 msgid "Project"
-msgstr ""
+msgstr "Proje"
 
 #. Label of a Link field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Project"
-msgstr ""
+msgstr "Proje"
 
 #. Name of a report
 #. Label of a Link in the Shift & Attendance Workspace
@@ -12608,7 +12608,7 @@ msgstr ""
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Purpose & Amount"
-msgstr ""
+msgstr "Amaç & Miktar"
 
 #. Name of a DocType
 #: hr/doctype/purpose_of_travel/purpose_of_travel.json
@@ -12658,7 +12658,7 @@ msgstr ""
 #: hr/doctype/leave_control_panel/leave_control_panel.json
 msgctxt "Leave Control Panel"
 msgid "Quick Filters"
-msgstr ""
+msgstr "Hızlı Filtreler"
 
 #. Label of a Card Break in the Payroll Workspace
 #: payroll/workspace/payroll/payroll.json
@@ -13176,7 +13176,7 @@ msgstr "Sorumluluklar"
 #: hr/doctype/hr_settings/hr_settings.json
 msgctxt "HR Settings"
 msgid "Restrict Backdated Leave Application"
-msgstr ""
+msgstr "Geçmiş Tarihli İzin Başvurusunu Kısıtla"
 
 #: hr/doctype/interview/interview.js:145
 msgid "Result"
@@ -13269,7 +13269,7 @@ msgstr ""
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Returned Amount"
-msgstr ""
+msgstr "İade Edilen Tutar"
 
 #: hr/doctype/hr_settings/hr_settings.js:37
 msgid "Review various other settings related to Employee Leaves and Expense Claim"
@@ -13547,25 +13547,25 @@ msgstr "Maaş Kaydı"
 #. Name of a DocType
 #: payroll/doctype/salary_slip/salary_slip.json
 msgid "Salary Slip"
-msgstr ""
+msgstr "Maaş Bordrosu"
 
 #. Label of a Link field in DocType 'Employee Benefit Claim'
 #: payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgctxt "Employee Benefit Claim"
 msgid "Salary Slip"
-msgstr ""
+msgstr "Maaş Bordrosu"
 
 #. Label of a Link field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
 msgctxt "Leave Application"
 msgid "Salary Slip"
-msgstr ""
+msgstr "Maaş Bordrosu"
 
 #. Label of a Section Break field in DocType 'Payroll Settings'
 #: payroll/doctype/payroll_settings/payroll_settings.json
 msgctxt "Payroll Settings"
 msgid "Salary Slip"
-msgstr ""
+msgstr "Maaş Bordrosu"
 
 #. Label of a Link in the Payroll Workspace
 #. Label of a Link in the Salary Payout Workspace
@@ -13574,7 +13574,7 @@ msgstr ""
 #: payroll/workspace/salary_payout/salary_payout.json
 msgctxt "Salary Slip"
 msgid "Salary Slip"
-msgstr ""
+msgstr "Maaş Bordrosu"
 
 #. Label of a Check field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
@@ -13917,7 +13917,7 @@ msgstr ""
 
 #: hr/doctype/leave_application/leave_application.js:272
 msgid "Select your Leave Approver i.e. the person who approves or rejects your leaves."
-msgstr ""
+msgstr "İzin Onaylayıcınızı, yani izinlerinizi onaylayan veya reddeden kişiyi seçin."
 
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.py:32
 msgid "Self Appraisal"
@@ -14168,19 +14168,19 @@ msgstr ""
 #: hr/doctype/employee_promotion/employee_promotion.json
 msgctxt "Employee Promotion"
 msgid "Set the properties that should be updated in the Employee master on promotion submission"
-msgstr ""
+msgstr "Terfi sonrası personel özelliklerinde gerçekleşecek değişiklikleri ayarlayın."
 
 #. Label of a Card Break in the HR Workspace
 #. Label of a Card Break in the Payroll Workspace
 #: hr/workspace/hr/hr.json payroll/workspace/payroll/payroll.json
 msgid "Settings"
-msgstr ""
+msgstr "Ayarlar"
 
 #. Label of a Section Break field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgctxt "Appraisal Cycle"
 msgid "Settings"
-msgstr ""
+msgstr "Ayarlar"
 
 #: hr/doctype/exit_interview/exit_interview.py:129
 msgid "Settings Missing"
@@ -14663,181 +14663,181 @@ msgstr "İstatistiksel Bileşenler"
 #: hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.py:23
 #: hr/report/shift_attendance/shift_attendance.py:49
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
 msgctxt "Appraisal"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgctxt "Appraisal Cycle"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Attendance'
 #: hr/doctype/attendance/attendance.json
 msgctxt "Attendance"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Daily Work Summary'
 #: hr/doctype/daily_work_summary/daily_work_summary.json
 msgctxt "Daily Work Summary"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
 msgctxt "Employee Advance"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Employee Attendance Tool'
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgctxt "Employee Attendance Tool"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgctxt "Employee Grievance"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Employee Onboarding'
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 msgctxt "Employee Onboarding"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
 msgctxt "Employee Referral"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Employee Separation'
 #: hr/doctype/employee_separation/employee_separation.json
 msgctxt "Employee Separation"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
 msgctxt "Exit Interview"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
 msgctxt "Expense Claim"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Full and Final Asset'
 #: hr/doctype/full_and_final_asset/full_and_final_asset.json
 msgctxt "Full and Final Asset"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Full and Final Outstanding Statement'
 #: hr/doctype/full_and_final_outstanding_statement/full_and_final_outstanding_statement.json
 msgctxt "Full and Final Outstanding Statement"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Full and Final Statement'
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
 msgctxt "Full and Final Statement"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
 msgctxt "Goal"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Gratuity'
 #: payroll/doctype/gratuity/gratuity.json
 msgctxt "Gratuity"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Interview'
 #: hr/doctype/interview/interview.json
 msgctxt "Interview"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Job Offer'
 #: hr/doctype/job_offer/job_offer.json
 msgctxt "Job Offer"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
 msgctxt "Leave Application"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgctxt "Salary Slip"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Shift Assignment'
 #: hr/doctype/shift_assignment/shift_assignment.json
 msgctxt "Shift Assignment"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Shift Request'
 #: hr/doctype/shift_request/shift_request.json
 msgctxt "Shift Request"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Training Event Employee'
 #: hr/doctype/training_event_employee/training_event_employee.json
 msgctxt "Training Event Employee"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. Label of a Select field in DocType 'Training Program'
 #: hr/doctype/training_program/training_program.json
 msgctxt "Training Program"
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #: setup.py:399
 msgid "Stock Options"
@@ -14886,7 +14886,7 @@ msgstr ""
 #: hr/doctype/job_requisition/job_requisition.js:59
 #: public/js/performance/performance_feedback.js:97
 msgid "Submit"
-msgstr ""
+msgstr "Gönder"
 
 #: hr/doctype/interview/interview.js:50 hr/doctype/interview/interview.js:129
 msgid "Submit Feedback"
@@ -14978,19 +14978,19 @@ msgstr ""
 #: hr/doctype/training_event/training_event.json
 msgctxt "Training Event"
 msgid "Supplier"
-msgstr ""
+msgstr "Tedarikçi"
 
 #. Label of a Link field in DocType 'Training Program'
 #: hr/doctype/training_program/training_program.json
 msgctxt "Training Program"
 msgid "Supplier"
-msgstr ""
+msgstr "Tedarikçi"
 
 #. Label of a Link field in DocType 'Vehicle Log'
 #: hr/doctype/vehicle_log/vehicle_log.json
 msgctxt "Vehicle Log"
 msgid "Supplier"
-msgstr ""
+msgstr "Tedarikçi"
 
 #: hr/report/employee_leave_balance/employee_leave_balance.js:48
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:42
@@ -15129,7 +15129,7 @@ msgstr "Vergi Muafiyet İspatları"
 #. Label of a Card Break in the Tax & Benefits Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Tax Setup"
-msgstr ""
+msgstr "Vergi Kurulumu"
 
 #. Label of a Currency field in DocType 'Salary Detail'
 #: payroll/doctype/salary_detail/salary_detail.json
@@ -15368,13 +15368,13 @@ msgstr ""
 #. Label of a Card Break in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Time"
-msgstr ""
+msgstr "Zaman"
 
 #. Label of a Datetime field in DocType 'Employee Checkin'
 #: hr/doctype/employee_checkin/employee_checkin.json
 msgctxt "Employee Checkin"
 msgid "Time"
-msgstr ""
+msgstr "Zaman"
 
 #: hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.js:28
 msgid "Time Interval"
@@ -15658,19 +15658,19 @@ msgstr ""
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
 msgctxt "Employee Benefit Application"
 msgid "Total Amount"
-msgstr ""
+msgstr "Toplam Tutar"
 
 #. Label of a Currency field in DocType 'Gratuity'
 #: payroll/doctype/gratuity/gratuity.json
 msgctxt "Gratuity"
 msgid "Total Amount"
-msgstr ""
+msgstr "Toplam Tutar"
 
 #. Label of a Currency field in DocType 'Travel Request Costing'
 #: hr/doctype/travel_request_costing/travel_request_costing.json
 msgctxt "Travel Request Costing"
 msgid "Total Amount"
-msgstr ""
+msgstr "Toplam Tutar"
 
 #. Label of a Currency field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
@@ -16087,7 +16087,7 @@ msgstr "Eğitim Görüşleri"
 #. Name of a DocType
 #: hr/doctype/training_program/training_program.json
 msgid "Training Program"
-msgstr "Eğitim programı"
+msgstr "Eğitim Programı"
 
 #. Label of a Link field in DocType 'Training Event'
 #: hr/doctype/training_event/training_event.json
@@ -17009,7 +17009,7 @@ msgstr ""
 
 #: hr/doctype/department_approver/department_approver.py:91
 msgid "{0} Missing"
-msgstr ""
+msgstr "{0} Eksik"
 
 #: payroll/doctype/salary_structure/salary_structure.py:31
 msgid "{0} Row #{1}: Formula is set but {2} is disabled for the Salary Component {3}."

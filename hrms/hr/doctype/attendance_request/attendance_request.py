@@ -141,6 +141,7 @@ class AttendanceRequest(Document):
 				"docstatus": 1,
 				"from_date": ("<=", attendance_date),
 				"to_date": (">=", attendance_date),
+				"status": "Approved",
 			},
 		)
 
