@@ -5,8 +5,8 @@
 		v-model="value"
 		:placeholder="`Select ${doctype}`"
 		:options="options.data"
-		:class="isReadOnly ? 'pointer-events-none' : ''"
-		:disabled="isReadOnly"
+		:class="disabled ? 'pointer-events-none' : ''"
+		:disabled="disabled"
 	/>
 </template>
 
@@ -28,7 +28,7 @@ const props = defineProps({
 		type: Object,
 		default: {},
 	},
-	isReadOnly: {
+	disabled: {
 		type: Boolean,
 		default: false,
 	},
