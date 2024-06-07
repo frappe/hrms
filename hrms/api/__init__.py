@@ -637,11 +637,6 @@ def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 
 
 @frappe.whitelist()
-def is_employee_checkin_allowed():
-	return cint(frappe.db.get_single_value("HR Settings", "allow_employee_checkin_from_mobile_app"))
-
-
-@frappe.whitelist()
 def get_doctype_sortable_fields(doctype):
 	meta = frappe.get_meta(doctype)
 	if not meta:
