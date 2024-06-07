@@ -2,7 +2,7 @@ import frappe
 from frappe import _
 from frappe.model.workflow import get_workflow_name
 from frappe.query_builder import Order
-from frappe.utils import getdate
+from frappe.utils import getdate, strip_html
 
 SUPPORTED_FIELD_TYPES = [
 	"Link",
@@ -72,6 +72,16 @@ def get_all_employees() -> list[dict]:
 			"status",
 		],
 		limit=999999,
+	)
+
+
+# HR Settings
+@frappe.whitelist()
+def get_hr_settings() -> dict:
+	settings = frappe.db.get_singles_dict("HR Settings", cast=True)
+	return frappe._dict(
+		allow_employee_checkin_from_mobile_app=settings.allow_employee_checkin_from_mobile_app,
+		allow_geolocation_tracking=settings.allow_geolocation_tracking,
 	)
 
 
@@ -207,12 +217,17 @@ def get_holidays_for_employee(employee: str) -> list[dict]:
 		return []
 
 	Holiday = frappe.qb.DocType("Holiday")
-	return (
+	holidays = (
 		frappe.qb.from_(Holiday)
 		.select(Holiday.name, Holiday.holiday_date, Holiday.description)
 		.where((Holiday.parent == holiday_list) & (Holiday.weekly_off == 0))
 		.orderby(Holiday.holiday_date, order=Order.asc)
 	).run(as_dict=True)
+
+	for holiday in holidays:
+		holiday["description"] = strip_html(holiday["description"] or "").strip()
+
+	return holidays
 
 
 @frappe.whitelist()
