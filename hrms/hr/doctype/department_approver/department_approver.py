@@ -5,6 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.utils import get_link_to_form
 
 
 class DepartmentApprover(Document):
@@ -81,10 +82,13 @@ def get_approvers(doctype, txt, searchfield, start, page_len, filters):
 
 	if len(approvers) == 0:
 		error_msg = _("Please set {0} for the Employee: {1}").format(
-			_(field_name), frappe.bold(employee.employee_name)
+			frappe.bold(_(field_name)),
+			get_link_to_form("Employee", filters.get("employee"), employee.employee_name),
 		)
 		if department_list:
-			error_msg += " " + _("or for Department: {0}").format(frappe.bold(employee_department))
+			error_msg += " " + _("or for the Employee's Department: {0}").format(
+				get_link_to_form("Department", employee_department)
+			)
 		frappe.throw(error_msg, title=_("{0} Missing").format(_(field_name)))
 
 	return set(tuple(approver) for approver in approvers)
