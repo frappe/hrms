@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-06-06 10:56\n"
+"PO-Revision-Date: 2024-06-09 11:11\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -2357,7 +2357,7 @@ msgstr "تماس می گیرد"
 
 #: setup.py:392
 msgid "Campaign"
-msgstr "پویش"
+msgstr "کمپین"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:126
 msgid "Cancellation Queued"
@@ -12744,7 +12744,7 @@ msgstr "دلیل عدم حضور خودکار:"
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
 msgctxt "Full and Final Statement"
 msgid "Receivables"
-msgstr "مطالبات"
+msgstr "دریافتنی ها"
 
 #. Name of a Workspace
 #: hr/workspace/recruitment/recruitment.json
@@ -13044,7 +13044,7 @@ msgstr "بازپرداخت مبلغ مطالبه نشده از حقوق"
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Replied"
-msgstr "پاسخ داد"
+msgstr "پاسخ داده شده"
 
 #: hr/report/daily_work_summary_replies/daily_work_summary_replies.py:22
 msgid "Replies"
