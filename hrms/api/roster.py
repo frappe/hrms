@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 from frappe.utils import add_days, date_diff, get_weekday, random_string
 
 from hrms.hr.doctype.shift_assignment.shift_assignment import ShiftAssignment
@@ -101,9 +102,9 @@ def break_shift(assignment: str | ShiftAssignment, date: str) -> None:
 		assignment = frappe.get_doc("Shift Assignment", assignment)
 
 	if assignment.end_date and date_diff(assignment.end_date, date) < 0:
-		frappe.throw("Cannot break shift after end date")
+		frappe.throw(_("Cannot break shift after end date"))
 	if date_diff(assignment.start_date, date) > 0:
-		frappe.throw("Cannot break shift before start date")
+		frappe.throw(_("Cannot break shift before start date"))
 
 	employee = assignment.employee
 	company = assignment.company
