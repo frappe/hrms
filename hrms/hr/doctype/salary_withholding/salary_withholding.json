@@ -1,6 +1,6 @@
 {
  "actions": [],
- "allow_rename": 1,
+ "autoname": "Sal Wh-.#####",
  "creation": "2024-04-24 13:14:11.553108",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -9,6 +9,7 @@
   "employee",
   "employee_name",
   "payroll_frequency",
+  "company",
   "column_break_rhlv",
   "number_of_withholding_cycles",
   "number_of_withheld_cycles",
@@ -54,13 +55,13 @@
   {
    "fieldname": "date_of_joining",
    "fieldtype": "Date",
-   "in_list_view": 1,
    "label": "Date of Joining",
    "reqd": 1
   },
   {
    "fieldname": "date_of_relieving",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "Date of Relieving"
   },
   {
@@ -96,6 +97,7 @@
   {
    "fieldname": "employee_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Employee Name"
   },
   {
@@ -119,15 +121,23 @@
    "fieldtype": "Table",
    "label": "Cycles",
    "options": "Salary Withholding Cycle"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-05-30 11:51:14.939010",
+ "modified": "2024-06-10 15:07:14.576175",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Salary Withholding",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
