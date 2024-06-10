@@ -204,6 +204,7 @@ function getFilteredFields(fields) {
 		"task",
 		"taxes_and_charges_sb",
 		"advance_payments_sb",
+		"approval_status"
 	]
 	const extraFields = [
 		"employee",
