@@ -32,7 +32,7 @@
 							!employeeSearch?.length ||
 							employeeSearch?.some((item) => item.value === employee?.name)
 						"
-						class="px-2 py-7 z-10"
+						class="px-2 py-7 z-[5]"
 						:class="{ 'border-t': rowIdx }"
 					>
 						<div class="flex" :class="!employee.designation && 'items-center'">
