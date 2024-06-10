@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-06-06 10:56\n"
+"PO-Revision-Date: 2024-06-10 11:21\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -1873,7 +1873,7 @@ msgstr "Puantaj"
 #: hr/doctype/training_event_employee/training_event_employee.json
 msgctxt "Training Event Employee"
 msgid "Attendance"
-msgstr "Puantaj"
+msgstr "Katılım"
 
 #. Label of a chart in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
@@ -2008,7 +2008,7 @@ msgstr "Katılım bu giriş daha sonra otomatik olarak işaretlenecektir."
 #: hr/doctype/training_event/training_event.json
 msgctxt "Training Event"
 msgid "Attendees"
-msgstr "gönderici"
+msgstr "Katılımcılar"
 
 #: hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:45
 msgid "Attrition Count"
@@ -2660,17 +2660,17 @@ msgstr ""
 
 #: templates/generators/job_opening.html:170
 msgid "Closes On"
-msgstr ""
+msgstr "Kapanış Tarihi"
 
 #. Label of a Date field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Closes On"
-msgstr ""
+msgstr "Kapanış Tarihi"
 
 #: www/jobs/index.html:216
 msgid "Closes on:"
-msgstr ""
+msgstr "Kapanış Tarihi:"
 
 #: hr/report/employee_leave_balance/employee_leave_balance.py:78
 msgid "Closing Balance"
@@ -5558,13 +5558,13 @@ msgstr ""
 #. Name of a DocType
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgid "Employee Attendance Tool"
-msgstr "Çalışan Seyirci Aracı"
+msgstr "Personel Devam Takip Aracı"
 
 #. Label of a Link in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgctxt "Employee Attendance Tool"
 msgid "Employee Attendance Tool"
-msgstr "Çalışan Seyirci Aracı"
+msgstr "Personel Devam Takip Aracı"
 
 #. Name of a DocType
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
@@ -6472,25 +6472,25 @@ msgstr ""
 
 #: hr/dashboard_chart_source/employees_by_age/employees_by_age.py:42
 msgid "Employees"
-msgstr "çalışanlar"
+msgstr "Personeller"
 
 #. Label of a Section Break field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgctxt "Appraisal Cycle"
 msgid "Employees"
-msgstr "çalışanlar"
+msgstr "Personeller"
 
 #. Label of a Tab Break field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Employees"
-msgstr "çalışanlar"
+msgstr "Personeller"
 
 #. Label of a Table field in DocType 'Training Event'
 #: hr/doctype/training_event/training_event.json
 msgctxt "Training Event"
 msgid "Employees"
-msgstr "çalışanlar"
+msgstr "Personeller"
 
 #. Label of a Table field in DocType 'Training Result'
 #: hr/doctype/training_result/training_result.json
@@ -8668,7 +8668,7 @@ msgstr "Seçilirse, bu bilgiler içinde belirtilen veya hesaplanan değer kazanc
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "If set, the job opening will be closed automatically after this date"
-msgstr ""
+msgstr "İş ilanı bu tarihten sonra otomatik olarak kapatılacaktır"
 
 #: patches/v15_0/notify_about_loan_app_separation.py:17
 msgid "If you are using loans in salary slips, please install the {0} app from Frappe Cloud Marketplace or GitHub to continue using loan integration with payroll."
@@ -9418,7 +9418,7 @@ msgstr ""
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Job Application Route"
-msgstr ""
+msgstr "İş Başvuru Yolu"
 
 #: setup.py:401
 msgid "Job Description"
@@ -9487,32 +9487,32 @@ msgstr "İş Teklifi: {0}, İş Başvurusu Sahibi için zaten: {1}"
 #: hr/doctype/job_requisition/job_requisition.js:40
 #: hr/report/recruitment_analytics/recruitment_analytics.py:32
 msgid "Job Opening"
-msgstr "İş Açılışı"
+msgstr "İş İlanı"
 
 #. Label of a Link field in DocType 'Interview'
 #: hr/doctype/interview/interview.json
 msgctxt "Interview"
 msgid "Job Opening"
-msgstr "İş Açılışı"
+msgstr "İş İlanı"
 
 #. Label of a Link field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
 msgctxt "Job Applicant"
 msgid "Job Opening"
-msgstr "İş Açılışı"
+msgstr "İş İlanı"
 
 #. Label of a Link in the Recruitment Workspace
 #. Label of a shortcut in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
 msgctxt "Job Opening"
 msgid "Job Opening"
-msgstr "İş Açılışı"
+msgstr "İş İlanı"
 
 #. Linked DocType in Job Requisition's connections
 #: hr/doctype/job_requisition/job_requisition.json
 msgctxt "Job Requisition"
 msgid "Job Opening"
-msgstr "İş Açılışı"
+msgstr "İş İlanı"
 
 #: hr/doctype/job_requisition/job_requisition.py:51
 msgid "Job Opening Associated"
@@ -11056,7 +11056,7 @@ msgstr ""
 
 #: hr/doctype/job_opening/job_opening.js:32
 msgid "No Staffing Plans found for this Designation"
-msgstr "Bu belirleme için hiçbir kişisel tesis bulunamadı"
+msgstr "Bu Unvan için Personel Planı Bulunamadı"
 
 #: payroll/doctype/gratuity/gratuity.py:270
 msgid "No Suitable Slab found for Calculation of gratuity amount in Gratuity Rule: {0}"
@@ -12596,7 +12596,7 @@ msgstr ""
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Publish on website"
-msgstr "Web sitesinde yayımlamak"
+msgstr "Web Sitesinde Yayınla"
 
 #. Label of a Small Text field in DocType 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
@@ -13315,7 +13315,7 @@ msgstr "Gecikmeli İzin Başvurusu Oluşturma Rolüne İzin Verildi"
 #: hr/doctype/interview_round/interview_round.json
 msgctxt "Interview Round"
 msgid "Round Name"
-msgstr ""
+msgstr "Aşama Adı"
 
 #. Option for the 'Work Experience Calculation method' (Select) field in
 #. DocType 'Gratuity Rule'
@@ -13359,7 +13359,7 @@ msgstr ""
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Route to the custom Job Application Webform"
-msgstr ""
+msgstr "İş Başvurusunu Web Formuna Yönlendirme"
 
 #: payroll/doctype/salary_structure/salary_structure.py:71
 msgid "Row #{0}: Cannot set amount or formula for Salary Component {1} with Variable Based On Taxable Salary"
@@ -13509,7 +13509,7 @@ msgstr ""
 #: hr/doctype/job_opening/job_opening.json
 msgctxt "Job Opening"
 msgid "Salary Paid Per"
-msgstr ""
+msgstr "Maaş Döngüsü"
 
 #. Name of a report
 #. Label of a Link in the Salary Payout Workspace
@@ -13837,13 +13837,13 @@ msgstr ""
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgctxt "Employee Attendance Tool"
 msgid "Select Employees"
-msgstr ""
+msgstr "Personel Seçin"
 
 #. Label of a Section Break field in DocType 'Leave Control Panel'
 #: hr/doctype/leave_control_panel/leave_control_panel.json
 msgctxt "Leave Control Panel"
 msgid "Select Employees"
-msgstr ""
+msgstr "Personel Seçin"
 
 #: hr/doctype/interview/interview.js:206
 msgid "Select Interview Round First"
@@ -14144,7 +14144,7 @@ msgstr ""
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgctxt "Employee Attendance Tool"
 msgid "Set filters to fetch employees"
-msgstr ""
+msgstr "Personel listelemek için filtreler ayarlayın"
 
 #. Description of the 'Filters' (Section Break) field in DocType 'Appraisal
 #. Cycle'
@@ -15989,31 +15989,31 @@ msgstr "Tren"
 #: hr/doctype/training_event/training_event.json
 msgctxt "Training Event"
 msgid "Trainer Email"
-msgstr "eğitmen E-posta"
+msgstr "Eğitmen E-posta"
 
 #. Label of a Data field in DocType 'Training Program'
 #: hr/doctype/training_program/training_program.json
 msgctxt "Training Program"
 msgid "Trainer Email"
-msgstr "eğitmen E-posta"
+msgstr "Eğitmen E-posta"
 
 #. Label of a Data field in DocType 'Training Event'
 #: hr/doctype/training_event/training_event.json
 msgctxt "Training Event"
 msgid "Trainer Name"
-msgstr "eğitmen Adı"
+msgstr "Eğitmen Adı"
 
 #. Label of a Data field in DocType 'Training Feedback'
 #: hr/doctype/training_feedback/training_feedback.json
 msgctxt "Training Feedback"
 msgid "Trainer Name"
-msgstr "eğitmen Adı"
+msgstr "Eğitmen Adı"
 
 #. Label of a Data field in DocType 'Training Program'
 #: hr/doctype/training_program/training_program.json
 msgctxt "Training Program"
 msgid "Trainer Name"
-msgstr "eğitmen Adı"
+msgstr "Eğitmen Adı"
 
 #. Label of a Card Break in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
@@ -16076,13 +16076,13 @@ msgstr "Eğitim Etkinlikleri"
 #: hr/doctype/training_event/training_event.js:16
 #: hr/doctype/training_feedback/training_feedback.json
 msgid "Training Feedback"
-msgstr "Eğitim Görüşleri"
+msgstr "Eğitim Geri Bildirimi"
 
 #. Label of a Link in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgctxt "Training Feedback"
 msgid "Training Feedback"
-msgstr "Eğitim Görüşleri"
+msgstr "Eğitim Geri Bildirimi"
 
 #. Name of a DocType
 #: hr/doctype/training_program/training_program.json
@@ -16093,7 +16093,7 @@ msgstr "Eğitim Programı"
 #: hr/doctype/training_event/training_event.json
 msgctxt "Training Event"
 msgid "Training Program"
-msgstr "Eğitim programı"
+msgstr "Eğitim Programı"
 
 #. Label of a Data field in DocType 'Training Program'
 #. Label of a Link in the Employee Lifecycle Workspace
@@ -16101,7 +16101,7 @@ msgstr "Eğitim programı"
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgctxt "Training Program"
 msgid "Training Program"
-msgstr "Eğitim programı"
+msgstr "Eğitim Programı"
 
 #. Name of a DocType
 #: hr/doctype/training_event/training_event.js:10
@@ -16143,7 +16143,7 @@ msgstr "İşlem Adı"
 #: hr/doctype/leave_ledger_entry/leave_ledger_entry.json
 msgctxt "Leave Ledger Entry"
 msgid "Transaction Type"
-msgstr ""
+msgstr "İşlem Türü"
 
 #: hr/doctype/leave_period/leave_period_dashboard.py:7
 msgid "Transactions"
@@ -16761,19 +16761,19 @@ msgstr "Tarihten Çalışma"
 #: hr/doctype/attendance/attendance.json
 msgctxt "Attendance"
 msgid "Work From Home"
-msgstr "evden çalışmak"
+msgstr "Evden Çalışma"
 
 #. Option for the 'Reason' (Select) field in DocType 'Attendance Request'
 #: hr/doctype/attendance_request/attendance_request.json
 msgctxt "Attendance Request"
 msgid "Work From Home"
-msgstr "evden çalışmak"
+msgstr "Evden Çalışma"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Attendance Tool'
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgctxt "Employee Attendance Tool"
 msgid "Work From Home"
-msgstr "evden çalışmak"
+msgstr "Evden Çalışma"
 
 #. Label of a Text Editor field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
