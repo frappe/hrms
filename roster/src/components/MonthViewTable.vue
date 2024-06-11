@@ -70,7 +70,7 @@
 							'align-middle bg-blue-50':
 								events.data?.[employee.name]?.[day.date]?.leave,
 						}"
-						@mouseover="
+						@mouseenter="
 							hoveredCell.employee = employee.name;
 							hoveredCell.date = day.date;
 						"
@@ -79,24 +79,24 @@
 							hoveredCell.date = '';
 						"
 						@dragover.prevent
-						@dragover="
-							droppedCell.employee = employee.name;
-							droppedCell.date = day.date;
-						"
-						@dragleave="
-							droppedCell.employee = employee.name;
-							droppedCell.date = day.date;
+						@dragenter="
+							dropCell.employee = employee.name;
+							dropCell.date = day.date;
 						"
 						@drop="
-							() => {
+							async () => {
 								if (
 									!(
 										events.data?.[employee.name]?.[day.date]?.holiday ||
 										events.data?.[employee.name]?.[day.date]?.leave ||
-										hoveredCell.shift === droppedCell.shift
+										(Array.isArray(events.data?.[employee.name]?.[day.date]) &&
+											events.data?.[employee.name]?.[day.date]
+												.map((shift: Shift) => shift.name)
+												.includes(hoveredCell.shift))
 									)
 								)
-									swapShift.submit();
+									await swapShift.submit();
+								dropCell = { employee: '', date: '', shift: '' };
 							}
 						"
 					>
@@ -124,10 +124,10 @@
 						<div v-else class="flex flex-col space-y-1.5 translate-x-0 translate-y-0">
 							<div
 								v-for="shift in events.data?.[employee.name]?.[day.date]"
-								@mouseover="hoveredCell.shift = shift.name"
+								@mouseenter="hoveredCell.shift = shift.name"
 								@mouseleave="hoveredCell.shift = ''"
-								@dragover="droppedCell.shift = shift.name"
-								@dragleave="droppedCell.shift = ''"
+								@dragover="dropCell.shift = shift.name"
+								@dragleave="dropCell.shift = ''"
 								:draggable="true"
 								@dragstart="
 									(event) => {
@@ -137,7 +137,14 @@
 									}
 								"
 								class="rounded border-2 px-2 py-1 cursor-pointer"
-								:class="shift.status === 'Inactive' && 'border-dashed'"
+								:class="[
+									shift.status === 'Inactive' && 'border-dashed',
+									dropCell.employee === employee.name &&
+										dropCell.date === day.date &&
+										dropCell.shift === shift.name &&
+										dropCell.shift !== hoveredCell.shift &&
+										'scale-105',
+								]"
 								:style="{
 									borderColor:
 										hoveredCell.shift === shift.name &&
@@ -154,8 +161,10 @@
 									showShiftAssignmentDialog = true;
 								"
 							>
-								<div class="truncate mb-1">{{ shift["shift_type"] }}</div>
-								<div class="text-xs text-gray-500">
+								<div class="truncate mb-1 pointer-events-none">
+									{{ shift["shift_type"] }}
+								</div>
+								<div class="text-xs text-gray-500 pointer-events-none">
 									{{ shift["start_time"] }} - {{ shift["end_time"] }}
 								</div>
 							</div>
@@ -265,7 +274,7 @@ const employeeSearch = ref<{ value: string; label: string }[]>();
 const shiftAssignment = ref<string>();
 const showShiftAssignmentDialog = ref(false);
 const hoveredCell = ref({ employee: "", date: "", shift: "" });
-const droppedCell = ref({ employee: "", date: "", shift: "" });
+const dropCell = ref({ employee: "", date: "", shift: "" });
 
 const daysOfMonth = computed(() => {
 	const daysOfMonth = [];
@@ -323,13 +332,13 @@ const swapShift = createResource({
 		return {
 			src_shift: hoveredCell.value.shift,
 			src_date: hoveredCell.value.date,
-			tgt_employee: droppedCell.value.employee,
-			tgt_date: droppedCell.value.date,
-			tgt_shift: droppedCell.value.shift,
+			tgt_employee: dropCell.value.employee,
+			tgt_date: dropCell.value.date,
+			tgt_shift: dropCell.value.shift,
 		};
 	},
 	onSuccess: () => {
-		raiseToast("success", "Shift moved successfully!");
+		raiseToast("success", `Shift ${dropCell.value.shift ? "swapped" : "moved"} successfully!`);
 		events.fetch();
 	},
 	onError(error: { messages: string[] }) {
