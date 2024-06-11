@@ -123,6 +123,7 @@ def break_shift(assignment: str | ShiftAssignment, date: str) -> None:
 		create_shift_assignment(employee, company, shift_type, add_days(date, 1), end_date, status)
 
 
+@frappe.whitelist()
 def insert_shift(
 	employee: str, company: str, shift_type: str, start_date: str, end_date: str, status: str
 ) -> None:

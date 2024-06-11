@@ -293,13 +293,7 @@ const updateShiftAssigment = () => {
 
 const createShiftAssigment = () => {
 	if (selectDays.value) createRepeatingShiftAssignment.submit();
-	else
-		shiftAssignments.insert.submit({
-			...form,
-			employee: (form.employee as { value: string }).value,
-			shift_type: (form.shift_type as { value: string }).value,
-			docstatus: 1,
-		});
+	else insertShift.submit();
 };
 
 // RESOURCES
@@ -373,6 +367,27 @@ const shiftAssignments = createListResource({
 		onError(error: { messages: string[] }) {
 			raiseToast("error", error.messages[0]);
 		},
+	},
+});
+
+const insertShift = createResource({
+	url: "hrms.api.roster.insert_shift",
+	makeParams() {
+		return {
+			employee: (form.employee as { value: string }).value,
+			shift_type: (form.shift_type as { value: string }).value,
+			company: form.company,
+			status: form.status,
+			start_date: form.start_date,
+			end_date: form.end_date,
+		};
+	},
+	onSuccess: () => {
+		raiseToast("success", "Shift Assignment Schedule created successfully!");
+		emit("fetchEvents");
+	},
+	onError(error: { messages: string[] }) {
+		raiseToast("error", error.messages[0]);
 	},
 });
 
