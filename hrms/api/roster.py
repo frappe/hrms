@@ -31,7 +31,7 @@ def get_events(
 
 
 @frappe.whitelist()
-def create_repeating_shift_assignment(
+def create_shift_assignment_schedule(
 	employee: str,
 	company: str,
 	shift_type: str,
@@ -42,12 +42,12 @@ def create_repeating_shift_assignment(
 	frequency: str,
 ) -> None:
 	if date_diff(end_date, start_date) <= 100:
-		return _create_repeating_shift_assignment(
+		return _create_shift_assignment_schedule(
 			employee, company, shift_type, status, start_date, end_date, days, frequency
 		)
 
 	frappe.enqueue(
-		_create_repeating_shift_assignment,
+		_create_shift_assignment_schedule,
 		timeout=4500,
 		employee=employee,
 		company=company,
@@ -61,7 +61,7 @@ def create_repeating_shift_assignment(
 
 
 @frappe.whitelist()
-def delete_repeating_shift_assignment(schedule: str) -> None:
+def delete_shift_assignment_schedule(schedule: str) -> None:
 	frappe.db.delete("Shift Assignment", {"schedule": schedule})
 	frappe.delete_doc("Shift Assignment Schedule", schedule)
 
@@ -152,7 +152,7 @@ def insert_shift(
 		create_shift_assignment(employee, company, shift_type, start_date, end_date, status)
 
 
-def _create_repeating_shift_assignment(
+def _create_shift_assignment_schedule(
 	employee: str,
 	company: str,
 	shift_type: str,
