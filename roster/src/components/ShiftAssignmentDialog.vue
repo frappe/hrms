@@ -418,7 +418,7 @@ const deleteCurrentShift = createResource({
 });
 
 const createShiftAssignmentSchedule = createResource({
-	url: "hrms.api.roster.create_repeating_shift_assignment",
+	url: "hrms.api.roster.create_shift_assignment_schedule",
 	makeParams() {
 		return {
 			employee: (form.employee as { value: string }).value,
@@ -443,7 +443,7 @@ const createShiftAssignmentSchedule = createResource({
 });
 
 const deleteShiftAssignmentSchedule = createResource({
-	url: "hrms.api.roster.delete_repeating_shift_assignment",
+	url: "hrms.api.roster.delete_shift_assignment_schedule",
 	makeParams() {
 		return { schedule: form.schedule };
 	},
