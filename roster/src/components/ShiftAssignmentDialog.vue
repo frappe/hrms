@@ -174,13 +174,14 @@ const form = reactive({ ...formObject });
 const workingDays = reactive({ ...workingDaysObject });
 
 const shiftAssignment = ref();
+const selectedDate = ref();
 const selectDays = ref(false);
 const frequency = ref("Every Week");
 
 const dialog = computed(() => {
 	if (props.shiftAssignmentName)
 		return {
-			title: `Shift Assignment ${props.shiftAssignmentName}`,
+			title: `[${selectedDate.value}] Shift Assignment ${props.shiftAssignmentName}`,
 			button: "Update",
 			action: updateShiftAssigment,
 			actionDisabled:
@@ -200,6 +201,13 @@ const actions = computed(() => {
 		{
 			label: "Delete Current Shift",
 			icon: "trash",
+			onClick: () => {
+				deleteCurrentShift.submit();
+			},
+		},
+		{
+			label: "Delete Consecutive Shifts",
+			icon: "trash",
 			onClick: async () => {
 				await shiftAssignment.value.setValue.submit({ docstatus: 2 });
 				shiftAssignments.delete.submit(props.shiftAssignmentName);
@@ -210,8 +218,8 @@ const actions = computed(() => {
 		options.push({
 			label: "Delete Shift Schedule",
 			icon: "trash",
-			onClick: async () => {
-				deleteRepeatingShiftAssignment.submit();
+			onClick: () => {
+				deleteShiftAssignmentSchedule.submit();
 			},
 		});
 	return options;
@@ -240,6 +248,7 @@ watch(
 
 		if (props.shiftAssignmentName) {
 			shiftAssignment.value = getShiftAssignment(props.shiftAssignmentName);
+			if (props.selectedCell) selectedDate.value = props.selectedCell.date;
 		} else {
 			Object.assign(form, formObject);
 			if (!props.selectedCell) return;
@@ -292,7 +301,7 @@ const updateShiftAssigment = () => {
 };
 
 const createShiftAssigment = () => {
-	if (selectDays.value) createRepeatingShiftAssignment.submit();
+	if (selectDays.value) createShiftAssignmentSchedule.submit();
 	else insertShift.submit();
 };
 
@@ -391,7 +400,24 @@ const insertShift = createResource({
 	},
 });
 
-const createRepeatingShiftAssignment = createResource({
+const deleteCurrentShift = createResource({
+	url: "hrms.api.roster.break_shift",
+	makeParams() {
+		return {
+			assignment: props.shiftAssignmentName,
+			date: selectedDate.value,
+		};
+	},
+	onSuccess: () => {
+		raiseToast("success", "Shift deleted successfully!");
+		emit("fetchEvents");
+	},
+	onError(error: { messages: string[] }) {
+		raiseToast("error", error.messages[0]);
+	},
+});
+
+const createShiftAssignmentSchedule = createResource({
 	url: "hrms.api.roster.create_repeating_shift_assignment",
 	makeParams() {
 		return {
@@ -416,7 +442,7 @@ const createRepeatingShiftAssignment = createResource({
 	},
 });
 
-const deleteRepeatingShiftAssignment = createResource({
+const deleteShiftAssignmentSchedule = createResource({
 	url: "hrms.api.roster.delete_repeating_shift_assignment",
 	makeParams() {
 		return { schedule: form.schedule };
