@@ -2164,6 +2164,8 @@ def get_lwp_or_ppl_for_date_range(employee, start_date, end_date):
 			LeaveType.is_ppl,
 			LeaveType.fraction_of_daily_salary_per_leave,
 			LeaveType.include_holiday,
+			LeaveApplication.from_date,
+			LeaveApplication.to_date,
 			LeaveApplication.half_day,
 			LeaveApplication.half_day_date,
 			Attendance.attendance_date,
