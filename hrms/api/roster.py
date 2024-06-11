@@ -97,6 +97,7 @@ def swap_shift(
 		)
 
 
+@frappe.whitelist()
 def break_shift(assignment: str | ShiftAssignment, date: str) -> None:
 	if isinstance(assignment, str):
 		assignment = frappe.get_doc("Shift Assignment", assignment)
