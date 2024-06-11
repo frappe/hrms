@@ -774,11 +774,7 @@
  "idx": 9,
  "is_submittable": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2023-09-25 19:33:53.460393",
-=======
  "modified": "2024-06-11 10:00:16.606996",
->>>>>>> de55c0709 (fix(Salary Slip): remove company filter from employee (#1873))
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
