@@ -2152,41 +2152,34 @@ def eval_tax_slab_condition(condition, eval_globals=None, eval_locals=None):
 def get_lwp_or_ppl_for_date_range(employee, start_date, end_date):
 	LeaveApplication = frappe.qb.DocType("Leave Application")
 	LeaveType = frappe.qb.DocType("Leave Type")
-
+	Attendance = frappe.qb.DocType("Attendance")
 	leaves = (
-		frappe.qb.from_(LeaveApplication)
+		frappe.qb.from_(Attendance)
 		.inner_join(LeaveType)
-		.on(LeaveType.name == LeaveApplication.leave_type)
+		.on(LeaveType.name == Attendance.leave_type)
+		.inner_join(LeaveApplication)
+		.on(LeaveApplication.name == Attendance.leave_application)
 		.select(
-			LeaveApplication.name,
+			Attendance.name,
 			LeaveType.is_ppl,
 			LeaveType.fraction_of_daily_salary_per_leave,
 			LeaveType.include_holiday,
-			LeaveApplication.from_date,
-			LeaveApplication.to_date,
 			LeaveApplication.half_day,
 			LeaveApplication.half_day_date,
+			Attendance.attendance_date,
 		)
 		.where(
 			((LeaveType.is_lwp == 1) | (LeaveType.is_ppl == 1))
 			& (LeaveApplication.docstatus == 1)
 			& (LeaveApplication.status == "Approved")
-			& (LeaveApplication.employee == employee)
-			& ((LeaveApplication.salary_slip.isnull()) | (LeaveApplication.salary_slip == ""))
-			& ((LeaveApplication.from_date >= start_date) & (LeaveApplication.to_date <= end_date))
+			& (Attendance.employee == employee)
+			& ((Attendance.attendance_date >= start_date) & (Attendance.attendance_date <= end_date))
 		)
 	).run(as_dict=True)
 
 	leave_date_mapper = frappe._dict()
 	for leave in leaves:
-		if leave.from_date == leave.to_date:
-			leave_date_mapper[leave.from_date] = leave
-		else:
-			date_diff = (getdate(leave.to_date) - getdate(leave.from_date)).days
-			for i in range(date_diff + 1):
-				date = add_days(leave.from_date, i)
-				leave_date_mapper[date] = leave
-
+		leave_date_mapper[leave.attendance_date] = leave
 	return leave_date_mapper
 
 
