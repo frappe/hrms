@@ -81,13 +81,13 @@ def swap_shift(
 		tgt_company = frappe.db.get_value("Employee", tgt_employee, "company")
 
 	src_shift_doc = frappe.get_doc("Shift Assignment", src_shift)
-	create_shift_assignment(
+	break_shift(src_shift_doc, src_date)
+	insert_shift(
 		tgt_employee, tgt_company, src_shift_doc.shift_type, tgt_date, tgt_date, src_shift_doc.status
 	)
-	break_shift(src_shift_doc, src_date)
 
 	if tgt_shift:
-		create_shift_assignment(
+		insert_shift(
 			src_shift_doc.employee,
 			src_shift_doc.company,
 			tgt_shift_doc.shift_type,
@@ -121,6 +121,33 @@ def break_shift(assignment: str | ShiftAssignment, date: str) -> None:
 
 	if not end_date or date_diff(end_date, date) > 0:
 		create_shift_assignment(employee, company, shift_type, add_days(date, 1), end_date, status)
+
+
+def insert_shift(
+	employee: str, company: str, shift_type: str, start_date: str, end_date: str, status: str
+) -> None:
+	filters = {
+		"doctype": "Shift Assignment",
+		"employee": employee,
+		"company": company,
+		"shift_type": shift_type,
+		"status": status,
+	}
+	prev_shift = frappe.db.exists(dict({"end_date": add_days(start_date, -1)}, **filters))
+	next_shift = frappe.db.exists(dict({"start_date": add_days(end_date, 1)}, **filters))
+
+	if prev_shift:
+		if next_shift:
+			end_date = frappe.db.get_value("Shift Assignment", next_shift, "end_date")
+			frappe.db.set_value("Shift Assignment", next_shift, "docstatus", 2)
+			frappe.delete_doc("Shift Assignment", next_shift)
+		frappe.db.set_value("Shift Assignment", prev_shift, "end_date", end_date)
+
+	elif next_shift:
+		frappe.db.set_value("Shift Assignment", next_shift, "start_date", start_date)
+
+	else:
+		create_shift_assignment(employee, company, shift_type, start_date, end_date, status)
 
 
 def _create_repeating_shift_assignment(

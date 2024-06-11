@@ -234,22 +234,16 @@ const employees = computed(() => {
 });
 
 watch(
-	() => props.shiftAssignmentName,
-	(val) => {
-		if (val) shiftAssignment.value = getShiftAssignment(val);
-		else {
-			Object.assign(form, formObject);
-			if (!props.selectedCell) return;
-			form.employee = { value: props.selectedCell.employee };
-			form.start_date = props.selectedCell.date;
-		}
-	},
-);
-
-watch(
 	() => props.isDialogOpen,
 	(val) => {
-		if (val && !props.shiftAssignmentName && props.selectedCell) {
+		if (!val) return;
+
+		if (props.shiftAssignmentName) {
+			shiftAssignment.value = getShiftAssignment(props.shiftAssignmentName);
+		} else {
+			Object.assign(form, formObject);
+			if (!props.selectedCell) return;
+
 			form.employee = { value: props.selectedCell.employee };
 			form.start_date = props.selectedCell.date;
 			form.end_date = props.selectedCell.date;
