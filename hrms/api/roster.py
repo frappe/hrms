@@ -71,7 +71,7 @@ def swap_shift(
 	src_shift: str, src_date: str, tgt_employee: str, tgt_date: str, tgt_shift: str | None
 ) -> None:
 	if src_shift == tgt_shift:
-		return
+		frappe.throw(_("Source and target shifts cannot be the same"))
 
 	if tgt_shift:
 		tgt_shift_doc = frappe.get_doc("Shift Assignment", tgt_shift)
