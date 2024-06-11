@@ -437,11 +437,7 @@ def get_prev_or_next_shift(
 
 		for date_range in shift_dates:
 			# midnight shifts will span more than a day
-			start_date, end_date = date_range[0], add_days(date_range[1], 1)
-			if isinstance(start_date, datetime):
-				start_date = start_date.date()
-			if isinstance(end_date, datetime):
-				end_date = end_date.date()
+			start_date, end_date = getdate(date_range[0]), getdate(add_days(date_range[1], 1))
 
 			if reverse := (next_shift_direction == "reverse"):
 				end_date = min(end_date, for_timestamp.date())
