@@ -78,6 +78,7 @@
 							hoveredCell.employee = '';
 							hoveredCell.date = '';
 						"
+						@dragover.prevent
 						@dragover="
 							droppedCell.employee = employee.name;
 							droppedCell.date = day.date;
@@ -86,8 +87,18 @@
 							droppedCell.employee = employee.name;
 							droppedCell.date = day.date;
 						"
-						@drop="swapShift.submit()"
-						@dragover.prevent
+						@drop="
+							() => {
+								if (
+									!(
+										events.data?.[employee.name]?.[day.date]?.holiday ||
+										events.data?.[employee.name]?.[day.date]?.leave ||
+										hoveredCell.shift === droppedCell.shift
+									)
+								)
+									swapShift.submit();
+							}
+						"
 					>
 						<!-- Holiday -->
 						<div
@@ -118,6 +129,13 @@
 								@dragover="droppedCell.shift = shift.name"
 								@dragleave="droppedCell.shift = ''"
 								:draggable="true"
+								@dragstart="
+									(event) => {
+										if (event.dataTransfer) {
+											event.dataTransfer.effectAllowed = 'move';
+										}
+									}
+								"
 								class="rounded border-2 px-2 py-1 cursor-pointer"
 								:class="shift.status === 'Inactive' && 'border-dashed'"
 								:style="{
