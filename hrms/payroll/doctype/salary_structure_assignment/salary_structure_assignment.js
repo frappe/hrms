@@ -118,6 +118,7 @@ frappe.ui.form.on("Salary Structure Assignment", {
 					args: {
 						source_name: frm.doc.salary_structure,
 						employee: frm.doc.employee,
+						posting_date: frm.doc.from_date,
 						as_print: 1,
 						print_format: print_format,
 						for_preview: 1,
