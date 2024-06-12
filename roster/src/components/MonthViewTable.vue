@@ -97,9 +97,11 @@
 										events.data?.[employee.name]?.[day.date]?.holiday ||
 										events.data?.[employee.name]?.[day.date]?.leave ||
 										(Array.isArray(events.data?.[employee.name]?.[day.date]) &&
-											events.data?.[employee.name]?.[day.date]
-												.map((shift: Shift) => shift.name)
-												.includes(hoveredCell.shift))
+											events.data?.[employee.name]?.[day.date].some(
+												(shift: Shift) =>
+													shift.shift_type === hoveredCell.shift_type &&
+													shift.status === hoveredCell.shift_status,
+											))
 									)
 								)
 									swapShift.submit();
@@ -130,8 +132,16 @@
 						<div v-else class="flex flex-col space-y-1.5 translate-x-0 translate-y-0">
 							<div
 								v-for="shift in events.data?.[employee.name]?.[day.date]"
-								@mouseenter="hoveredCell.shift = shift.name"
-								@mouseleave="hoveredCell.shift = ''"
+								@mouseenter="
+									hoveredCell.shift = shift.name;
+									hoveredCell.shift_type = shift.shift_type;
+									hoveredCell.shift_status = shift.status;
+								"
+								@mouseleave="
+									hoveredCell.shift = '';
+									hoveredCell.shift_type = '';
+									hoveredCell.shift_status = '';
+								"
 								@dragenter="dropCell.shift = shift.name"
 								@dragleave="dropCell.shift = ''"
 								:draggable="true"
@@ -149,7 +159,11 @@
 									dropCell.employee === employee.name &&
 										dropCell.date === day.date &&
 										dropCell.shift === shift.name &&
-										dropCell.shift !== hoveredCell.shift &&
+										!events.data?.[employee.name]?.[day.date].some(
+											(shift: Shift) =>
+												shift.shift_type === hoveredCell.shift_type &&
+												shift.status === hoveredCell.shift_status,
+										) &&
 										'scale-105',
 								]"
 								:style="{
@@ -281,7 +295,7 @@ const props = defineProps<{
 const employeeSearch = ref<{ value: string; label: string }[]>();
 const shiftAssignment = ref<string>();
 const showShiftAssignmentDialog = ref(false);
-const hoveredCell = ref({ employee: "", date: "", shift: "" });
+const hoveredCell = ref({ employee: "", date: "", shift: "", shift_type: "", shift_status: "" });
 const dropCell = ref({ employee: "", date: "", shift: "" });
 
 const daysOfMonth = computed(() => {
