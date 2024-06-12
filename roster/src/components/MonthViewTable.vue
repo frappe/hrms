@@ -155,6 +155,11 @@
 										dropCell.shift === shift.name &&
 										!hasSameShift(employee.name, day.date) &&
 										'scale-105',
+									hoveredCell.employee === employee.name &&
+										hoveredCell.date === day.date &&
+										hoveredCell.shift === shift.name &&
+										dropCell.employee &&
+										'opacity-0',
 								]"
 								:style="{
 									borderColor:
