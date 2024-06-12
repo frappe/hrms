@@ -65,10 +65,17 @@
 							'border-l': colIdx,
 							'border-t': rowIdx,
 							'align-top': events.data?.[employee.name]?.[day.date],
-							'align-middle bg-gray-50':
-								events.data?.[employee.name]?.[day.date]?.holiday,
 							'align-middle bg-blue-50':
+								events.data?.[employee.name]?.[day.date]?.holiday,
+							'align-middle bg-pink-50':
 								events.data?.[employee.name]?.[day.date]?.leave,
+							'bg-gray-50':
+								dropCell.employee === employee.name &&
+								dropCell.date === day.date &&
+								!(
+									events.data?.[employee.name]?.[day.date]?.holiday ||
+									events.data?.[employee.name]?.[day.date]?.leave
+								),
 						}"
 						@mouseenter="
 							hoveredCell.employee = employee.name;
@@ -84,7 +91,7 @@
 							dropCell.date = day.date;
 						"
 						@drop="
-							async () => {
+							() => {
 								if (
 									!(
 										events.data?.[employee.name]?.[day.date]?.holiday ||
@@ -95,8 +102,7 @@
 												.includes(hoveredCell.shift))
 									)
 								)
-									await swapShift.submit();
-								dropCell = { employee: '', date: '', shift: '' };
+									swapShift.submit();
 							}
 						"
 					>
@@ -126,7 +132,7 @@
 								v-for="shift in events.data?.[employee.name]?.[day.date]"
 								@mouseenter="hoveredCell.shift = shift.name"
 								@mouseleave="hoveredCell.shift = ''"
-								@dragover="dropCell.shift = shift.name"
+								@dragenter="dropCell.shift = shift.name"
 								@dragleave="dropCell.shift = ''"
 								:draggable="true"
 								@dragstart="
@@ -136,6 +142,7 @@
 										}
 									}
 								"
+								@dragend="dropCell = { employee: '', date: '', shift: '' }"
 								class="rounded border-2 px-2 py-1 cursor-pointer"
 								:class="[
 									shift.status === 'Inactive' && 'border-dashed',
@@ -176,7 +183,8 @@
 								class="border-2 active:bg-white w-full"
 								:class="
 									hoveredCell.employee === employee.name &&
-									hoveredCell.date === day.date
+									hoveredCell.date === day.date &&
+									!dropCell.employee
 										? 'visible'
 										: 'invisible'
 								"

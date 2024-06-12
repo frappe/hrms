@@ -200,14 +200,14 @@ const actions = computed(() => {
 	const options = [
 		{
 			label: "Delete Current Shift",
-			icon: "trash",
+			icon: "trash-2",
 			onClick: () => {
 				deleteCurrentShift.submit();
 			},
 		},
 		{
 			label: "Delete Consecutive Shifts",
-			icon: "trash",
+			icon: "trash-2",
 			onClick: async () => {
 				await shiftAssignment.value.setValue.submit({ docstatus: 2 });
 				shiftAssignments.delete.submit(props.shiftAssignmentName);
@@ -217,7 +217,7 @@ const actions = computed(() => {
 	if (form.schedule)
 		options.push({
 			label: "Delete Shift Schedule",
-			icon: "trash",
+			icon: "trash-2",
 			onClick: () => {
 				deleteShiftAssignmentSchedule.submit();
 			},
