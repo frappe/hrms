@@ -56,7 +56,8 @@
   {
     "fieldname": "attach_proof",
     "fieldtype": "Attach",
-    "label": "Attach Proof"
+    "label": "Attach Proof",
+    "in_list_view": 1
    }
    
  ],

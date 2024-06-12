@@ -54,6 +54,19 @@ frappe.ui.form.on("Employee Tax Exemption Proof Submission", {
 				});
 			});
 		}
+
+
+		if(frm.doc.attachments)
+			{
+				frm.set_df_property('attachments',  'hidden', 0);
+
+			}
+
+		else 
+		{
+			frm.set_df_property('attachments',  'hidden', 1);
+
+		}
 	},
 
 	currency: function (frm) {
