@@ -9,7 +9,8 @@
   "exemption_category",
   "max_amount",
   "type_of_proof",
-  "amount"
+  "amount",
+  "proof_attach"
  ],
  "fields": [
   {
@@ -51,7 +52,13 @@
    "in_list_view": 1,
    "label": "Actual Amount",
    "options": "currency"
-  }
+  },
+  {
+    "fieldname": "proof_attach",
+    "fieldtype": "Attach Image",
+    "label": "Proof Attach",
+    "in_list_view": 1
+   }
  ],
  "istable": 1,
  "links": [],
