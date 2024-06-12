@@ -214,6 +214,7 @@ function getFilteredFields(fields) {
 		"is_paid",
 		"mode_of_payment",
 		"clearance_date",
+		"approval_status",
 	]
 
 	if (!props.id) excludeFields.push(...extraFields)
