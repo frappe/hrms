@@ -1,5 +1,8 @@
 <template>
-	<div class="rounded-lg border overflow-auto max-h-[45rem]">
+	<div
+		class="rounded-lg border overflow-auto max-h-[45rem]"
+		:class="loading && 'animate-pulse pointer-events-none'"
+	>
 		<table class="border-separate border-spacing-0">
 			<thead>
 				<tr class="sticky top-0 bg-white z-10">
@@ -97,8 +100,10 @@
 										isHolidayOrLeave(employee.name, day.date) ||
 										hasSameShift(employee.name, day.date)
 									)
-								)
+								) {
+									loading = true;
 									swapShift.submit();
+								}
 							}
 						"
 					>
@@ -287,6 +292,7 @@ const props = defineProps<{
 	shiftTypeFilter: string;
 }>();
 
+const loading = ref(true);
 const employeeSearch = ref<{ value: string; label: string }[]>();
 const shiftAssignment = ref<string>();
 const showShiftAssignmentDialog = ref(false);
@@ -314,7 +320,11 @@ const employeeSearchOptions = computed(() => {
 
 watch(
 	() => [props.firstOfMonth, props.employeeFilters, props.shiftTypeFilter],
-	() => events.fetch(),
+	() => {
+		loading.value = true;
+		events.fetch();
+	},
+	{ deep: true },
 );
 
 const isHolidayOrLeave = (employee: string, day: string) =>
@@ -341,6 +351,9 @@ const events = createResource({
 			shift_filters: props.shiftTypeFilter ? { shift_type: props.shiftTypeFilter } : {},
 		};
 	},
+	onSuccess() {
+		loading.value = false;
+	},
 	onError(error: { messages: string[] }) {
 		raiseToast("error", error.messages[0]);
 	},
@@ -366,10 +379,10 @@ const swapShift = createResource({
 		};
 	},
 	onSuccess: () => {
-		raiseToast("success", `Shift ${dropCell.value.shift ? "swapped" : "moved"} successfully!`);
 		events.fetch();
 	},
 	onError(error: { messages: string[] }) {
+		loading.value = false;
 		raiseToast("error", error.messages[0]);
 	},
 });
