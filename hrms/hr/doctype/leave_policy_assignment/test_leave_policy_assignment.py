@@ -117,10 +117,7 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 		# pro-rated leave allocation for 9 months
 		self.assertEqual(allocation, 9)
 
-	def tearDown(self):
-		frappe.db.set_value("Employee", self.employee.name, "date_of_joining", self.original_doj)
-
-	def test_optional_policy(self):
+	def test_pro_rated_leave_allocation_for_custom_date_range(self):
 		leave_type = frappe.get_doc(
 			{
 				"doctype": "Leave Type",
@@ -163,3 +160,6 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 		)
 
 		self.assertGreater(new_leaves_allocated, 0)
+
+	def tearDown(self):
+		frappe.db.set_value("Employee", self.employee.name, "date_of_joining", self.original_doj)

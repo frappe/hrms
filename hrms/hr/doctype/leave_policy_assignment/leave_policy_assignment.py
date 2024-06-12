@@ -140,8 +140,6 @@ class LeavePolicyAssignment(Document):
 			new_leaves_allocated = 0
 
 		elif leave_details.is_earned_leave:
-
-			# get leaves for past months if assignment is based on Leave Period / Joining Date
 			new_leaves_allocated = self.get_leaves_for_passed_months(
 				annual_allocation, leave_details, date_of_joining
 			)
