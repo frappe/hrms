@@ -73,8 +73,8 @@
 								dropCell.employee === employee.name &&
 								dropCell.date === day.date &&
 								!(
-									events.data?.[employee.name]?.[day.date]?.holiday ||
-									events.data?.[employee.name]?.[day.date]?.leave
+									isHolidayOrLeave(employee.name, day.date) ||
+									hasSameShift(employee.name, day.date)
 								),
 						}"
 						@mouseenter="
@@ -94,14 +94,8 @@
 							() => {
 								if (
 									!(
-										events.data?.[employee.name]?.[day.date]?.holiday ||
-										events.data?.[employee.name]?.[day.date]?.leave ||
-										(Array.isArray(events.data?.[employee.name]?.[day.date]) &&
-											events.data?.[employee.name]?.[day.date].some(
-												(shift: Shift) =>
-													shift.shift_type === hoveredCell.shift_type &&
-													shift.status === hoveredCell.shift_status,
-											))
+										isHolidayOrLeave(employee.name, day.date) ||
+										hasSameShift(employee.name, day.date)
 									)
 								)
 									swapShift.submit();
@@ -159,11 +153,7 @@
 									dropCell.employee === employee.name &&
 										dropCell.date === day.date &&
 										dropCell.shift === shift.name &&
-										!events.data?.[employee.name]?.[day.date].some(
-											(shift: Shift) =>
-												shift.shift_type === hoveredCell.shift_type &&
-												shift.status === hoveredCell.shift_status,
-										) &&
+										!hasSameShift(employee.name, day.date) &&
 										'scale-105',
 								]"
 								:style="{
@@ -321,6 +311,17 @@ watch(
 	() => [props.firstOfMonth, props.employeeFilters, props.shiftTypeFilter],
 	() => events.fetch(),
 );
+
+const isHolidayOrLeave = (employee: string, day: string) =>
+	events.data?.[employee]?.[day]?.holiday || events.data?.[employee]?.[day]?.leave;
+
+const hasSameShift = (employee: string, day: string) =>
+	Array.isArray(events.data?.[employee]?.[day]) &&
+	events.data?.[employee]?.[day].some(
+		(shift: Shift) =>
+			shift.shift_type === hoveredCell.value.shift_type &&
+			shift.status === hoveredCell.value.shift_status,
+	);
 
 // RESOURCES
 
