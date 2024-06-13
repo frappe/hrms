@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-06-12 11:37\n"
+"PO-Revision-Date: 2024-06-13 11:39\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -7032,7 +7032,7 @@ msgstr ""
 #. Name of a DocType
 #: hr/doctype/expected_skill_set/expected_skill_set.json
 msgid "Expected Skill Set"
-msgstr ""
+msgstr "Gerekli Beceriler"
 
 #. Label of a Section Break field in DocType 'Interview Round'
 #: hr/doctype/interview_round/interview_round.json
@@ -12652,7 +12652,7 @@ msgstr ""
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgctxt "Payroll Entry"
 msgid "Queued"
-msgstr ""
+msgstr "Kuyrukta"
 
 #. Label of a Section Break field in DocType 'Leave Control Panel'
 #: hr/doctype/leave_control_panel/leave_control_panel.json
@@ -16488,7 +16488,7 @@ msgstr ""
 
 #: hr/report/project_profitability/project_profitability.py:190
 msgid "Utilization"
-msgstr ""
+msgstr "Kullanım"
 
 #. Label of a Int field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
