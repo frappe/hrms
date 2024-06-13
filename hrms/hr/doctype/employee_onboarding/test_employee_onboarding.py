@@ -37,19 +37,15 @@ class TestEmployeeOnboarding(FrappeTestCase):
 		self.assertEqual(onboarding.boarding_status, "Pending")
 
 		# start and end dates
-		start_date, end_date = frappe.db.get_value(
-			"Task", onboarding.activities[0].task, ["exp_start_date", "exp_end_date"]
-		)
-		self.assertEqual(getdate(start_date), getdate(onboarding.boarding_begins_on))
-		self.assertEqual(getdate(end_date), add_days(start_date, onboarding.activities[0].duration))
+		start_date, end_date = get_task_dates(onboarding.activities[0].task)
+		self.assertEqual(start_date, onboarding.boarding_begins_on)
+		self.assertEqual(end_date, add_days(start_date, onboarding.activities[0].duration))
 
-		start_date, end_date = frappe.db.get_value(
-			"Task", onboarding.activities[1].task, ["exp_start_date", "exp_end_date"]
-		)
+		start_date, end_date = get_task_dates(onboarding.activities[1].task)
 		self.assertEqual(
-			getdate(start_date), add_days(onboarding.boarding_begins_on, onboarding.activities[0].duration)
+			start_date, add_days(onboarding.boarding_begins_on, onboarding.activities[0].duration)
 		)
-		self.assertEqual(getdate(end_date), add_days(start_date, onboarding.activities[1].duration))
+		self.assertEqual(end_date, add_days(start_date, onboarding.activities[1].duration))
 
 		# complete the task
 		project = frappe.get_doc("Project", onboarding.project)
@@ -154,3 +150,8 @@ def create_employee_onboarding():
 	onboarding.submit()
 
 	return onboarding
+
+
+def get_task_dates(task: str) -> tuple[str, str]:
+	start_date, end_date = frappe.db.get_value("Task", task, ["exp_start_date", "exp_end_date"])
+	return getdate(start_date), getdate(end_date)

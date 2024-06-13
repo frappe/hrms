@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-05-09 12:50\n"
+"PO-Revision-Date: 2024-06-04 10:48\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -24,11 +24,15 @@ msgid "\n"
 "\t\t\t\t\t\tPlease specify {1} and {2} (if any),\n"
 "\t\t\t\t\t\tfor the correct tax calculation in future salary slips.\n"
 "\t\t\t\t\t\t"
-msgstr ""
+msgstr "\n"
+"\t\t\t\t\t\tNo se encontraron registro(s) de recibo de salarios para el empleado {0}. <br><br>\n"
+"\t\t\t\t\t\tPor favor, especifique {1} y {2} (si lo hay),\n"
+"\t\t\t\t\t\tpara el correcto cálculo de los impuestos en futuros recibos salariales.\n"
+"\t\t\t\t\t\t"
 
 #: hr/report/employee_leave_balance/employee_leave_balance.py:22
 msgid "\"From Date\" can not be greater than or equal to \"To Date\""
-msgstr ""
+msgstr "La fecha 'Desde' no puede ser mayor que la fecha 'Hasta'"
 
 #: public/frontend/assets/BaseLayout-1fb5efbf.js:1
 msgid "$user"
@@ -44,11 +48,11 @@ msgstr ""
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:88
 msgid "% Utilization (B + NB) / T"
-msgstr ""
+msgstr "% Utilización (B + NB) / T"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:94
 msgid "% Utilization (B / T)"
-msgstr ""
+msgstr "% Utilización (B / T)"
 
 #: hr/doctype/employee_checkin/employee_checkin.py:84
 msgid "'employee_field_value' and 'timestamp' are required."
@@ -258,7 +262,7 @@ msgstr "<b>Ejemplo:</b> SAL- {first_name} - {date_of_birth.year} <br> Esto gener
 #: hr/doctype/leave_allocation/leave_allocation.py:280
 #: hr/doctype/leave_allocation/leave_allocation.py:286
 msgid "<b>Total Leaves Allocated</b> are more than the number of days in the allocation period"
-msgstr ""
+msgstr "<b>El total de permisos asignados</b> es superior al número de días del periodo de asignación"
 
 #. Description of the Onboarding Step 'Data Import'
 #: hr/onboarding_step/data_import/data_import.json
@@ -342,11 +346,11 @@ msgstr ""
 
 #: hr/doctype/job_requisition/job_requisition.py:30
 msgid "A Job Requisition for {0} requested by {1} already exists: {2}"
-msgstr ""
+msgstr "Ya existe una Solicitud de Trabajo para {0} solicitada por {1}: {2}"
 
 #: controllers/employee_reminders.py:123 controllers/employee_reminders.py:216
 msgid "A friendly reminder of an important date for our team."
-msgstr ""
+msgstr "Un agradable recordatorio de una fecha importante para nuestro equipo."
 
 #: hr/utils.py:230 payroll/doctype/payroll_period/payroll_period.py:49
 msgid "A {0} exists between {1} and {2} ("
@@ -398,7 +402,7 @@ msgstr "Días ausentes"
 
 #: hr/report/shift_attendance/shift_attendance.py:174
 msgid "Absent Records"
-msgstr ""
+msgstr "Registros de Ausentes"
 
 #. Name of a role
 #: hr/doctype/interest/interest.json
@@ -457,7 +461,7 @@ msgstr "Cuenta No"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:99
 msgid "Account type cannot be set for payroll payable account {0}, please remove and try again"
-msgstr ""
+msgstr "No se puede establecer el tipo de cuenta para la cuenta a pagar de nóminas {0}, por favor elimínelo e inténtelo de nuevo"
 
 #: overrides/company.py:115
 msgid "Account {0} does not belong to company: {1}"
@@ -465,7 +469,7 @@ msgstr "Cuenta {0} no pertenece a la compañía: {1}"
 
 #: hr/doctype/expense_claim_type/expense_claim_type.py:29
 msgid "Account {0} does not match with Company {1}"
-msgstr ""
+msgstr "La cuenta {0} no pertenece a la compañía {1}"
 
 #. Label of a Card Break in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
@@ -646,13 +650,13 @@ msgstr "Cantidad real"
 
 #: hr/doctype/leave_encashment/leave_encashment.py:136
 msgid "Actual Encashable Days"
-msgstr ""
+msgstr "Días reales cobrables"
 
 #. Label of a Float field in DocType 'Leave Encashment'
 #: hr/doctype/leave_encashment/leave_encashment.json
 msgctxt "Leave Encashment"
 msgid "Actual Encashable Days"
-msgstr ""
+msgstr "Días reales cobrables"
 
 #: hr/doctype/leave_application/leave_application.py:399
 msgid "Actual balances aren't available because the leave application spans over different leave allocations. You can still apply for leaves which would be compensated during the next allocation."

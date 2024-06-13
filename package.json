@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "hrms",
   "description": "Open Source HR & Payroll System powered by the Frappe Framework",
   "repository": {
@@ -11,10 +12,7 @@
   "bugs": {
     "url": "https://github.com/frappe/hrms/issues"
   },
-  "aworkspaces": [
-    "frappe-ui",
-    "frontend"
-  ],
+  "workspaces": ["frappe-ui", "frontend"],
   "scripts": {
     "postinstall": "cd frontend && yarn install --check-files",
     "dev": "cd frontend && yarn dev",

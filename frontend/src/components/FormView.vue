@@ -100,7 +100,7 @@
 									:options="field.options"
 									:linkFilters="field.linkFilters"
 									:documentList="field.documentList"
-									:readOnly="Boolean(field.read_only) || isFormReadOnly"
+									:readOnly="isFieldReadOnly(field)"
 									:reqd="Boolean(field.reqd)"
 									:hidden="Boolean(field.hidden)"
 									:errorMessage="field.error_message"
@@ -141,7 +141,7 @@
 						:options="field.options"
 						:linkFilters="field.linkFilters"
 						:documentList="field.documentList"
-						:readOnly="Boolean(field.read_only) || isFormReadOnly"
+						:readOnly="isFieldReadOnly(field)"
 						:reqd="Boolean(field.reqd)"
 						:hidden="Boolean(field.hidden)"
 						:errorMessage="field.error_message"
@@ -586,6 +586,12 @@ const documentResource = createDocumentResource({
 
 const docPermissions = createResource({
 	url: "frappe.client.get_doc_permissions",
+	params: { doctype: props.doctype, docname: props.id },
+})
+
+const permittedWriteFields = createResource({
+	url: "hrms.api.get_permitted_fields_for_write",
+	params: { doctype: props.doctype },
 })
 
 const formButton = computed(() => {
@@ -608,6 +614,14 @@ function showDeleteButton() {
 
 function hasPermission(action) {
 	return docPermissions.data?.permissions[action]
+}
+
+function isFieldReadOnly(field) {
+	return (
+		Boolean(field.read_only)
+		|| isFormReadOnly.value
+		|| (props.id && !permittedWriteFields.data?.includes(field.fieldname))
+	)
 }
 
 function handleDocInsert() {
@@ -736,7 +750,8 @@ onMounted(async () => {
 	if (props.id) {
 		await documentResource.get.promise
 		formModel.value = { ...documentResource.doc }
-		await docPermissions.fetch({ doctype: props.doctype, docname: props.id })
+		await docPermissions.reload()
+		await permittedWriteFields.reload()
 		await attachedFiles.reload()
 		await setFormattedCurrency()
 
