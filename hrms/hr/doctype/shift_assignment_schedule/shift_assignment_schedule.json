@@ -6,10 +6,10 @@
  "engine": "InnoDB",
  "field_order": [
   "schedule",
-  "days",
-  "column_break_iprq",
   "status",
-  "frequency"
+  "column_break_iprq",
+  "frequency",
+  "days"
  ],
  "fields": [
   {
@@ -51,7 +51,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-06-13 10:52:22.607667",
+ "modified": "2024-06-13 11:07:12.134142",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment Schedule",
