@@ -25,12 +25,19 @@ class MultipleShiftError(frappe.ValidationError):
 class ShiftAssignment(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
-		self.validate_overlapping_shifts()
-
 		if self.end_date:
 			self.validate_from_to_dates("start_date", "end_date")
+		self.validate_overlapping_shifts()
+
+	def on_update_after_submit(self):
+		if self.end_date:
+			self.validate_from_to_dates("start_date", "end_date")
+		self.validate_overlapping_shifts()
 
 	def validate_overlapping_shifts(self):
+		if self.status == "Inactive":
+			return
+
 		overlapping_dates = self.get_overlapping_dates()
 		if len(overlapping_dates):
 			self.validate_same_date_multiple_shifts(overlapping_dates)
