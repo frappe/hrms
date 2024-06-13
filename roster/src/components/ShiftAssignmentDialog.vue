@@ -47,7 +47,7 @@
 						type="checkbox"
 						label="Select Working Days"
 						v-model="selectDays"
-						:disabled="differenceBetweenDates <= 7"
+						:disabled="disableSelectDays"
 					/>
 				</div>
 				<div v-if="!props.shiftAssignmentName" />
@@ -225,12 +225,12 @@ const actions = computed(() => {
 	return options;
 });
 
-const differenceBetweenDates = computed(() => {
-	let difference = 0;
-	if (form.start_date && form.end_date)
-		difference = dayjs(form.end_date).diff(dayjs(form.start_date), "d");
-	if (difference <= 7) selectDays.value = false;
-	return difference;
+const disableSelectDays = computed(() => {
+	if (!form.start_date || dayjs(form.end_date).diff(dayjs(form.start_date), "d") < 7) {
+		selectDays.value = false;
+		return true;
+	}
+	return false;
 });
 
 const employees = computed(() => {
