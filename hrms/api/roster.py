@@ -1,6 +1,6 @@
 import frappe
 from frappe import _
-from frappe.utils import add_days, date_diff, get_weekday, random_string
+from frappe.utils import add_days, date_diff, random_string
 
 from hrms.hr.doctype.shift_assignment.shift_assignment import ShiftAssignment
 from hrms.hr.doctype.shift_assignment_tool.shift_assignment_tool import create_shift_assignment
@@ -37,27 +37,28 @@ def create_shift_assignment_schedule(
 	shift_type: str,
 	status: str,
 	start_date: str,
-	end_date: str,
+	end_date: str | None,
 	days: list[str],
 	frequency: str,
 ) -> None:
-	if date_diff(end_date, start_date) <= 100:
-		return _create_shift_assignment_schedule(
-			employee, company, shift_type, status, start_date, end_date, days, frequency
-		)
+	schedule = frappe.get_doc(
+		{
+			"doctype": "Shift Assignment Schedule",
+			"schedule": random_string(10),
+			"frequency": frequency,
+			"days": [{"day": day} for day in days],
+			"status": "Inactive" if end_date else "Active",
+			"employee": employee,
+			"company": company,
+			"shift_type": shift_type,
+			"shift_status": status,
+		}
+	).insert()
 
-	frappe.enqueue(
-		_create_shift_assignment_schedule,
-		timeout=4500,
-		employee=employee,
-		company=company,
-		shift_type=shift_type,
-		status=status,
-		start_date=start_date,
-		end_date=end_date,
-		days=days,
-		frequency=frequency,
-	)
+	if not end_date or date_diff(end_date, start_date) <= 90:
+		return schedule.create_shifts(start_date, end_date)
+
+	frappe.enqueue(schedule.create_shifts, timeout=4500, start_date=start_date, end_date=end_date)
 
 
 @frappe.whitelist()
@@ -150,60 +151,6 @@ def insert_shift(
 
 	else:
 		create_shift_assignment(employee, company, shift_type, start_date, end_date, status)
-
-
-def _create_shift_assignment_schedule(
-	employee: str,
-	company: str,
-	shift_type: str,
-	status: str,
-	start_date: str,
-	end_date: str,
-	days: list[str],
-	frequency: str,
-) -> None:
-	schedule = frappe.get_doc(
-		{
-			"doctype": "Shift Assignment Schedule",
-			"schedule": random_string(10),
-			"frequency": frequency,
-			"days": [{"day": day} for day in days],
-		}
-	).insert()
-
-	def create_individual_assignment(start_date, end_date):
-		create_shift_assignment(employee, company, shift_type, start_date, end_date, status, schedule.name)
-
-	gap = {
-		"Every Week": 0,
-		"Every 2 Weeks": 1,
-		"Every 3 Weeks": 2,
-		"Every 4 Weeks": 3,
-	}[frequency]
-
-	date = start_date
-	individual_assignment_start = None
-	week_end_day = get_weekday(add_days(start_date, -1))
-
-	while date <= end_date:
-		weekday = get_weekday(date)
-		if weekday in days:
-			if not individual_assignment_start:
-				individual_assignment_start = date
-			if date == end_date:
-				create_individual_assignment(individual_assignment_start, date)
-
-		elif individual_assignment_start:
-			create_individual_assignment(individual_assignment_start, add_days(date, -1))
-			individual_assignment_start = None
-
-		if weekday == week_end_day and gap:
-			if individual_assignment_start:
-				create_individual_assignment(individual_assignment_start, date)
-				individual_assignment_start = None
-			date = add_days(date, 7 * gap)
-
-		date = add_days(date, 1)
 
 
 def get_holidays(month_start: str, month_end: str, employee_filters: dict[str, str]) -> dict[str, list[dict]]:

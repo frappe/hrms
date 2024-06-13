@@ -5,11 +5,19 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "schedule_settings_section",
   "schedule",
-  "status",
-  "column_break_iprq",
   "frequency",
-  "days"
+  "days",
+  "column_break_iprq",
+  "status",
+  "last_shift_end_date",
+  "shift_details_section",
+  "employee",
+  "shift_type",
+  "column_break_toss",
+  "company",
+  "shift_status"
  ],
  "fields": [
   {
@@ -47,11 +55,56 @@
    "label": "Days",
    "options": "Assignment Rule Day",
    "reqd": 1
+  },
+  {
+   "fieldname": "last_shift_end_date",
+   "fieldtype": "Date",
+   "label": "End Date of Last Shift Created"
+  },
+  {
+   "fieldname": "shift_details_section",
+   "fieldtype": "Section Break",
+   "label": "Shift Details"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_toss",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "shift_type",
+   "fieldtype": "Link",
+   "label": "Shift Type",
+   "options": "Shift Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "shift_status",
+   "fieldtype": "Select",
+   "label": "Shift Status",
+   "options": "Active\nInactive"
+  },
+  {
+   "fieldname": "schedule_settings_section",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-06-13 11:07:12.134142",
+ "modified": "2024-06-13 13:44:38.008686",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment Schedule",
