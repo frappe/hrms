@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-06-09 11:11\n"
+"PO-Revision-Date: 2024-06-16 12:18\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -14532,7 +14532,7 @@ msgstr "ساعت کاری استاندارد"
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:43
 #: hr/doctype/attendance/attendance_list.js:46
 msgid "Start"
-msgstr "شروع کنید"
+msgstr "شروع"
 
 #: hr/doctype/goal/goal_tree.js:86
 #: hr/report/project_profitability/project_profitability.js:17
@@ -16123,7 +16123,7 @@ msgstr "نوع معامله"
 
 #: hr/doctype/leave_period/leave_period_dashboard.py:7
 msgid "Transactions"
-msgstr "معاملات"
+msgstr "تراکنش‌ها"
 
 #: hr/utils.py:679
 msgid "Transactions cannot be created for an Inactive Employee {0}."
