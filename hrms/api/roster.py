@@ -63,7 +63,11 @@ def create_shift_assignment_schedule(
 
 @frappe.whitelist()
 def delete_shift_assignment_schedule(schedule: str) -> None:
-	frappe.db.delete("Shift Assignment", {"schedule": schedule})
+	for shift_assignment in frappe.get_all("Shift Assignment", {"schedule": schedule}, pluck="name"):
+		doc = frappe.get_doc("Shift Assignment", shift_assignment)
+		if doc.docstatus == 1:
+			doc.cancel()
+		frappe.delete_doc("Shift Assignment", shift_assignment)
 	frappe.delete_doc("Shift Assignment Schedule", schedule)
 
 
