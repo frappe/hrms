@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-06-13 11:39\n"
+"PO-Revision-Date: 2024-06-14 11:49\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -7472,7 +7472,7 @@ msgstr "Filo Yönetimi"
 #. Name of a role
 #: hr/doctype/vehicle_log/vehicle_log.json
 msgid "Fleet Manager"
-msgstr ""
+msgstr "Filo Yöneticisi"
 
 #. Label of a Tab Break field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -10446,7 +10446,7 @@ msgstr ""
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.js:193
 #: hr/doctype/goal/goal.js:88
 msgid "Mandatory"
-msgstr ""
+msgstr "Zorunlu"
 
 #: payroll/doctype/payroll_entry/payroll_entry.js:189
 msgid "Mandatory fields required in {0}"
