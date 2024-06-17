@@ -16,8 +16,7 @@
 					v-model="form.employee_name"
 					:disabled="true"
 				/>
-				<FormControl
-					type="date"
+				<DatePicker
 					label="Start Date"
 					v-model="form.start_date"
 					:disabled="!!props.shiftAssignmentName"
@@ -29,7 +28,7 @@
 					:disabled="!!props.shiftAssignmentName"
 					:options="shiftTypes.data"
 				/>
-				<FormControl type="date" label="End Date" v-model="form.end_date" />
+				<DatePicker label="End Date" v-model="form.end_date" />
 				<FormControl
 					type="select"
 					:options="['Active', 'Inactive']"
@@ -104,6 +103,7 @@
 <script setup lang="ts">
 import { reactive, ref, computed, watch } from "vue";
 import {
+	DatePicker,
 	Dialog,
 	FormControl,
 	Dropdown,
