@@ -131,7 +131,7 @@ def break_shift(assignment: str | ShiftAssignment, date: str) -> None:
 
 @frappe.whitelist()
 def insert_shift(
-	employee: str, company: str, shift_type: str, start_date: str, end_date: str, status: str
+	employee: str, company: str, shift_type: str, start_date: str, end_date: str | None, status: str
 ) -> None:
 	filters = {
 		"doctype": "Shift Assignment",
@@ -141,7 +141,9 @@ def insert_shift(
 		"status": status,
 	}
 	prev_shift = frappe.db.exists(dict({"end_date": add_days(start_date, -1)}, **filters))
-	next_shift = frappe.db.exists(dict({"start_date": add_days(end_date, 1)}, **filters))
+	next_shift = (
+		frappe.db.exists(dict({"start_date": add_days(end_date, 1)}, **filters)) if end_date else None
+	)
 
 	if prev_shift:
 		if next_shift:
