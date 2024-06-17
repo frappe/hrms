@@ -41,42 +41,48 @@
 					v-model="form.department"
 					:disabled="true"
 				/>
-				<div v-if="!props.shiftAssignmentName">
-					<FormControl
-						type="checkbox"
-						label="Select Working Days"
-						v-model="selectDays"
-						:disabled="disableSelectDays"
-					/>
-				</div>
-				<div v-if="!props.shiftAssignmentName" />
-				<div v-if="!props.shiftAssignmentName && selectDays" class="space-y-1.5">
-					<div class="text-xs text-gray-600">Days</div>
-					<div
-						class="border rounded grid grid-flow-col h-7 justify-stretch overflow-clip"
-					>
+			</div>
+
+			<!-- Shift Schedule Settings -->
+			<div
+				v-if="!props.shiftAssignmentName && showShiftScheduleSettings"
+				class="mt-6 space-y-6"
+			>
+				<hr />
+				<h4 class="font-semibold">Shift Schedule Settings</h4>
+				<div class="grid grid-cols-2 gap-6">
+					<div class="space-y-1.5">
+						<div class="text-xs text-gray-600">Days</div>
 						<div
-							v-for="(isSelected, day) of workingDays"
-							class="cursor-pointer flex flex-col"
-							:class="{
-								'border-r': day !== 'Sunday',
-								'bg-gray-100 text-gray-500': !isSelected,
-							}"
-							@click="workingDays[day] = !workingDays[day]"
+							class="border rounded grid grid-flow-col h-7 justify-stretch overflow-clip"
 						>
-							<div class="text-center text-sm my-auto">
-								{{ day.substring(0, 3) }}
+							<div
+								v-for="(isSelected, day) of workingDays"
+								class="cursor-pointer flex flex-col"
+								:class="{
+									'border-r': day !== 'Sunday',
+									'bg-gray-100 text-gray-500': !isSelected,
+								}"
+								@click="workingDays[day] = !workingDays[day]"
+							>
+								<div class="text-center text-sm my-auto">
+									{{ day.substring(0, 3) }}
+								</div>
 							</div>
 						</div>
 					</div>
+					<FormControl
+						type="select"
+						:options="[
+							'Every Week',
+							'Every 2 Weeks',
+							'Every 3 Weeks',
+							'Every 4 Weeks',
+						]"
+						label="Frequency"
+						v-model="frequency"
+					/>
 				</div>
-				<FormControl
-					v-if="!props.shiftAssignmentName && selectDays"
-					type="select"
-					:options="['Every Week', 'Every 2 Weeks', 'Every 3 Weeks', 'Every 4 Weeks']"
-					label="Frequency"
-					v-model="frequency"
-				/>
 			</div>
 		</template>
 		<template #actions>
@@ -161,13 +167,13 @@ const formObject: Form = {
 };
 
 const workingDaysObject = {
-	Monday: false,
-	Tuesday: false,
-	Wednesday: false,
-	Thursday: false,
-	Friday: false,
-	Saturday: false,
-	Sunday: false,
+	Monday: true,
+	Tuesday: true,
+	Wednesday: true,
+	Thursday: true,
+	Friday: true,
+	Saturday: true,
+	Sunday: true,
 };
 
 const form = reactive({ ...formObject });
@@ -175,7 +181,6 @@ const workingDays = reactive({ ...workingDaysObject });
 
 const shiftAssignment = ref();
 const selectedDate = ref();
-const selectDays = ref(false);
 const frequency = ref("Every Week");
 
 const dialog = computed(() => {
@@ -225,12 +230,13 @@ const actions = computed(() => {
 	return options;
 });
 
-const disableSelectDays = computed(() => {
+const showShiftScheduleSettings = computed(() => {
 	if (!form.start_date || dayjs(form.end_date).diff(dayjs(form.start_date), "d") < 7) {
-		selectDays.value = false;
-		return true;
+		Object.assign(workingDays, workingDaysObject);
+		frequency.value = "Every Week";
+		return false;
 	}
-	return false;
+	return true;
 });
 
 const employees = computed(() => {
@@ -274,34 +280,13 @@ watch(
 	},
 );
 
-watch(
-	() => form.start_date,
-	() => {
-		selectDefaultWorkingDay();
-	},
-);
-
-watch(selectDays, (val) => {
-	if (!val) {
-		selectDefaultWorkingDay();
-		frequency.value = "Every Week";
-	}
-});
-
-const selectDefaultWorkingDay = () => {
-	Object.assign(workingDays, workingDaysObject);
-	if (form.start_date) {
-		const day = dayjs(form.start_date).format("dddd");
-		workingDays[day as keyof typeof workingDays] = true;
-	}
-};
-
 const updateShiftAssigment = () => {
 	shiftAssignment.value.setValue.submit({ status: form.status, end_date: form.end_date });
 };
 
 const createShiftAssigment = () => {
-	if (selectDays.value) createShiftAssignmentSchedule.submit();
+	if (Object.values(workingDays).some((day) => !day) || frequency.value !== "Every Week")
+		createShiftAssignmentSchedule.submit();
 	else insertShift.submit();
 };
 
