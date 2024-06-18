@@ -13,6 +13,7 @@
   "last_shift_end_date",
   "shift_details_section",
   "employee",
+  "employee_name",
   "shift_type",
   "column_break_toss",
   "company",
@@ -36,6 +37,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Status",
    "options": "Active\nInactive",
    "reqd": 1
@@ -60,7 +62,7 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
-   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Employee",
    "options": "Employee",
    "reqd": 1
@@ -80,6 +82,7 @@
    "fieldname": "shift_type",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Shift Type",
    "options": "Shift Type",
    "reqd": 1
@@ -93,14 +96,22 @@
   {
    "fieldname": "schedule_settings_section",
    "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-06-18 14:12:18.009719",
+ "modified": "2024-06-18 14:50:36.944218",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment Schedule",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -138,5 +149,6 @@
  ],
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "employee_name"
 }
