@@ -1,6 +1,6 @@
 import frappe
 from frappe import _
-from frappe.utils import add_days, date_diff, random_string
+from frappe.utils import add_days, date_diff
 
 from hrms.hr.doctype.shift_assignment.shift_assignment import ShiftAssignment
 from hrms.hr.doctype.shift_assignment_tool.shift_assignment_tool import create_shift_assignment
@@ -44,7 +44,6 @@ def create_shift_assignment_schedule(
 	schedule = frappe.get_doc(
 		{
 			"doctype": "Shift Assignment Schedule",
-			"schedule": random_string(10),
 			"frequency": frequency,
 			"days": [{"day": day} for day in days],
 			"status": "Inactive" if end_date else "Active",
