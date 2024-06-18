@@ -10,7 +10,7 @@
   "days",
   "column_break_iprq",
   "status",
-  "last_shift_end_date",
+  "create_shifts_after",
   "shift_details_section",
   "employee",
   "employee_name",
@@ -34,6 +34,7 @@
   },
   {
    "default": "Active",
+   "description": "Select 'Active' if you want new shift assignments to be created automatically.",
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
@@ -48,11 +49,6 @@
    "label": "Days",
    "options": "Assignment Rule Day",
    "reqd": 1
-  },
-  {
-   "fieldname": "last_shift_end_date",
-   "fieldtype": "Date",
-   "label": "End Date of Last Shift Created"
   },
   {
    "fieldname": "shift_details_section",
@@ -103,11 +99,25 @@
    "fieldtype": "Data",
    "label": "Employee Name",
    "read_only": 1
+  },
+  {
+   "default": "Today",
+   "depends_on": "eval:doc.status === 'Active'",
+   "description": "New shift assignments will be created after this date.",
+   "fieldname": "create_shifts_after",
+   "fieldtype": "Date",
+   "label": "Create Shifts After",
+   "mandatory_depends_on": "eval:doc.status === 'Active'"
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2024-06-18 14:50:36.944218",
+ "links": [
+  {
+   "link_doctype": "Shift Assignment",
+   "link_fieldname": "schedule"
+  }
+ ],
+ "modified": "2024-06-18 16:33:37.677879",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment Schedule",

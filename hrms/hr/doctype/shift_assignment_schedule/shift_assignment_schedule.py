@@ -49,7 +49,7 @@ class ShiftAssignmentSchedule(Document):
 		create_shift_assignment(
 			self.employee, self.company, self.shift_type, start_date, end_date, self.shift_status, self.name
 		)
-		self.last_shift_end_date = end_date
+		self.create_shifts_after = end_date
 		self.save()
 
 
