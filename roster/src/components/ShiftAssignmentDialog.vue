@@ -45,7 +45,7 @@
 
 			<!-- Shift Schedule Settings -->
 			<div
-				v-if="!props.shiftAssignmentName && showShiftScheduleSettings"
+				v-if="(!props.shiftAssignmentName && showShiftScheduleSettings) || form.schedule"
 				class="mt-6 space-y-6"
 			>
 				<hr />
@@ -62,6 +62,7 @@
 								:class="{
 									'border-r': day !== 'Sunday',
 									'bg-gray-100 text-gray-500': !isSelected,
+									'pointer-events-none': !!props.shiftAssignmentName,
 								}"
 								@click="workingDays[day] = !workingDays[day]"
 							>
@@ -81,6 +82,7 @@
 						]"
 						label="Frequency"
 						v-model="frequency"
+						:disabled="!!props.shiftAssignmentName"
 					/>
 				</div>
 			</div>
@@ -300,6 +302,7 @@ const getShiftAssignment = (name: string) =>
 			Object.keys(form).forEach((key) => {
 				form[key as keyof Form] = data[key];
 			});
+			if (form.schedule) getShiftAssignmentSchedule(form.schedule);
 		},
 		onError(error: { messages: string[] }) {
 			raiseToast("error", error.messages[0]);
@@ -312,6 +315,22 @@ const getShiftAssignment = (name: string) =>
 			onError(error: { messages: string[] }) {
 				raiseToast("error", error.messages[0]);
 			},
+		},
+	});
+
+const getShiftAssignmentSchedule = (name: string) =>
+	createDocumentResource({
+		doctype: "Shift Assignment Schedule",
+		name: name,
+		onSuccess: (data: Record<string, any>) => {
+			frequency.value = data.frequency;
+			const days = data.days.map((day) => day.day);
+			for (const day in workingDays) {
+				workingDays[day] = days.includes(day);
+			}
+		},
+		onError(error: { messages: string[] }) {
+			raiseToast("error", error.messages[0]);
 		},
 	});
 
