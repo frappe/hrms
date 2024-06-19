@@ -86,6 +86,8 @@
 					/>
 				</div>
 			</div>
+
+			<ConfirmDialog v-model="showDeleteDialog" :options="deleteDialogOptions" />
 		</template>
 		<template #actions>
 			<div class="flex space-x-2 justify-end">
@@ -121,6 +123,7 @@ import {
 } from "frappe-ui";
 
 import { dayjs, raiseToast } from "../utils";
+import ConfirmDialog from "./ConfirmDialog.vue";
 
 type Status = "Active" | "Inactive";
 
@@ -184,6 +187,8 @@ const workingDays = reactive({ ...workingDaysObject });
 const shiftAssignment = ref();
 const selectedDate = ref();
 const frequency = ref("Every Week");
+const showDeleteDialog = ref(false);
+const deleteDialogOptions = ref({ title: "", message: "" });
 
 const dialog = computed(() => {
 	if (props.shiftAssignmentName)
@@ -209,15 +214,29 @@ const actions = computed(() => {
 			label: "Delete Current Shift",
 			icon: "trash-2",
 			onClick: () => {
-				deleteCurrentShift.submit();
+				deleteDialogOptions.value = {
+					title: "Delete Shift?",
+					message: `This will split Shift Assignment ${props.shiftAssignmentName} on ${selectedDate.value}.`,
+					action: () => deleteCurrentShift.submit(),
+				};
+				showDeleteDialog.value = true;
 			},
 		},
 		{
 			label: "Delete Consecutive Shifts",
 			icon: "trash-2",
-			onClick: async () => {
-				await shiftAssignment.value.setValue.submit({ docstatus: 2 });
-				shiftAssignments.delete.submit(props.shiftAssignmentName);
+			onClick: () => {
+				deleteDialogOptions.value = {
+					title: "Delete Shift Assignment?",
+					message: `This will delete Shift Assignment ${props.shiftAssignmentName} (${
+						form.start_date
+					} - ${form.end_date ? form.end_date : "N/A"}).`,
+					action: async () => {
+						await shiftAssignment.value.setValue.submit({ docstatus: 2 });
+						shiftAssignments.delete.submit(props.shiftAssignmentName);
+					},
+				};
+				showDeleteDialog.value = true;
 			},
 		},
 	];
@@ -226,7 +245,12 @@ const actions = computed(() => {
 			label: "Delete Shift Schedule",
 			icon: "trash-2",
 			onClick: () => {
-				deleteShiftAssignmentSchedule.submit();
+				deleteDialogOptions.value = {
+					title: "Delete Shift Assignment Schedule?",
+					message: `This will delete Shift Assignment Schedule ${form.schedule} and all the shifts associated with it.`,
+					action: () => deleteShiftAssignmentSchedule.submit(),
+				};
+				showDeleteDialog.value = true;
 			},
 		});
 	return options;
@@ -253,6 +277,8 @@ watch(
 	() => props.isDialogOpen,
 	(val) => {
 		if (!val) return;
+
+		showDeleteDialog.value = false;
 
 		if (props.shiftAssignmentName) {
 			shiftAssignment.value = getShiftAssignment(props.shiftAssignmentName);
