@@ -112,6 +112,7 @@
    "label": "Approval Status",
    "no_copy": 1,
    "options": "Draft\nApproved\nRejected",
+   "permlevel": 1,
    "search_index": 1
   },
   {
@@ -387,7 +388,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-04-17 19:38:30.373122",
+ "modified": "2024-06-12 15:56:45.609119",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim",
@@ -447,6 +448,39 @@
    "share": 1,
    "submit": 1,
    "write": 1
+  },
+  {
+   "permlevel": 1,
+   "read": 1,
+   "role": "HR Manager",
+   "write": 1
+  },
+  {
+   "permlevel": 1,
+   "read": 1,
+   "role": "HR User",
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Expense Approver",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1
   }
  ],
  "search_fields": "employee,employee_name",

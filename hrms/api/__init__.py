@@ -1,5 +1,6 @@
 import frappe
 from frappe import _
+from frappe.model import get_permitted_fields
 from frappe.model.workflow import get_workflow_name
 from frappe.query_builder import Order
 from frappe.utils import getdate, strip_html
@@ -641,3 +642,9 @@ def get_workflow_state_field(doctype: str) -> str | None:
 def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 	user_roles = frappe.get_roles(user_id)
 	return [transition.state for transition in workflow.transitions if transition.allowed in user_roles]
+
+
+# Permissions
+@frappe.whitelist()
+def get_permitted_fields_for_write(doctype: str) -> list[str]:
+	return get_permitted_fields(doctype, permission_type="write")

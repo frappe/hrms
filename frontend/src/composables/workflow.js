@@ -7,9 +7,6 @@ export default function useWorkflow(doctype) {
 		url: "hrms.api.get_workflow",
 		params: { doctype: doctype },
 		cache: ["hrms:workflow", doctype],
-		onSuccess: (data) => {
-			console.log("Workflow loaded successfully ✅", data)
-		},
 	})
 	workflowDoc.reload()
 
