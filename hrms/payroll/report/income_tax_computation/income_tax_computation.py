@@ -231,7 +231,8 @@ class IncomeTaxComputationReport:
 			self.employees[employee].update(exemptions)
 
 			total_exemptions = sum(list(exemptions.values()))
-			self.add_to_total_exemption(employee, total_exemptions)
+			self.employees[employee]["total_exemption"] = 0
+			self.employees[employee]["total_exemption"] += total_exemptions
 
 	def add_exemptions_from_future_salary_slips(self, employee, exemptions):
 		for ss in self.future_salary_slips.get(employee, []):
@@ -271,10 +272,6 @@ class IncomeTaxComputationReport:
 			self.add_column(d)
 
 		return tax_exempted_components
-
-	def add_to_total_exemption(self, employee, amount):
-		self.employees[employee].setdefault("total_exemption", 0)
-		self.employees[employee]["total_exemption"] += amount
 
 	def get_employee_tax_exemptions(self):
 		# add columns
@@ -323,7 +320,7 @@ class IncomeTaxComputationReport:
 				amount = max_eligible_amount
 
 			self.employees[d.employee].setdefault(scrub(d.exemption_category), amount)
-			self.add_to_total_exemption(d.employee, amount)
+			self.employees[d.employee]["total_exemption"] += amount
 
 			if (
 				source == "Employee Tax Exemption Proof Submission"
@@ -375,7 +372,8 @@ class IncomeTaxComputationReport:
 
 			if d[0] not in self.employees_with_proofs:
 				self.employees[d[0]].setdefault("hra", d[1])
-				self.add_to_total_exemption(d[0], d[1])
+
+				self.employees[d[0]]["total_exemption"] += d[1]
 				self.employees_with_proofs.append(d[0])
 
 	def get_standard_tax_exemption(self):
@@ -397,7 +395,7 @@ class IncomeTaxComputationReport:
 			income_tax_slab = emp_details.get("income_tax_slab")
 			standard_exemption = standard_exemptions_per_slab.get(income_tax_slab, 0)
 			emp_details["standard_tax_exemption"] = standard_exemption
-			self.add_to_total_exemption(emp, standard_exemption)
+			self.employees[emp]["total_exemption"] += standard_exemption
 
 		self.add_column("Total Exemption")
 
