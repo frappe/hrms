@@ -17,6 +17,7 @@
   "effective_from",
   "effective_to",
   "leaves_allocated",
+  "mid_period_change",
   "amended_from"
  ],
  "fields": [
@@ -109,11 +110,17 @@
    "label": "Leaves Allocated",
    "no_copy": 1,
    "print_hide": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "mid_period_change",
+   "fieldtype": "Check",
+   "label": "Allow mid-period policy change"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:10:01.746553",
+ "modified": "2024-06-20 16:11:45.975901",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Policy Assignment",

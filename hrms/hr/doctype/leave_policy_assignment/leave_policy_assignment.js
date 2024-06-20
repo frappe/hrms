@@ -22,6 +22,24 @@ frappe.ui.form.on("Leave Policy Assignment", {
 		});
 	},
 
+	before_submit: async function (frm) {
+		if (frm.doc.mid_period_change) {
+			const promise = new Promise((resolve, reject) => {
+				frappe.confirm(
+					__(
+						"Are you sure you want to apply the new leave policy <b style='color:red;'>in the middle of current policy assignment period</b>? This change will take effect immediately and cannot be undone."
+					),
+					resolve,
+					reject
+				);
+			});
+			await promise.catch(() => {
+				$(".primary-action").prop("disabled", false);
+				frappe.throw(__("Please untick <b>Allow Mid-Period Policy Change</b> checkbox."));
+			});
+		}
+	},
+
 	assignment_based_on: function (frm) {
 		if (frm.doc.assignment_based_on) {
 			frm.events.set_effective_date(frm);
@@ -43,12 +61,12 @@ frappe.ui.form.on("Leave Policy Assignment", {
 				let from_date = frappe.model.get_value(
 					"Leave Period",
 					frm.doc.leave_period,
-					"from_date",
+					"from_date"
 				);
 				let to_date = frappe.model.get_value(
 					"Leave Period",
 					frm.doc.leave_period,
-					"to_date",
+					"to_date"
 				);
 				frm.set_value("effective_from", from_date);
 				frm.set_value("effective_to", to_date);
@@ -58,12 +76,12 @@ frappe.ui.form.on("Leave Policy Assignment", {
 				let from_date = frappe.model.get_value(
 					"Employee",
 					frm.doc.employee,
-					"date_of_joining",
+					"date_of_joining"
 				);
 				frm.set_value("effective_from", from_date);
 				frm.set_value(
 					"effective_to",
-					frappe.datetime.add_months(frm.doc.effective_from, 12),
+					frappe.datetime.add_months(frm.doc.effective_from, 12)
 				);
 			});
 		}
