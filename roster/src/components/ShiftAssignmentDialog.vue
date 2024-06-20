@@ -87,20 +87,7 @@
 				</div>
 			</div>
 
-			<Dialog
-				v-model="showDeleteDialog"
-				:options="{
-					title: deleteDialogOptions.title,
-					message: deleteDialogOptions.message,
-					actions: [
-						{
-							label: 'Confirm',
-							variant: 'solid',
-							onClick: deleteDialogOptions.action,
-						},
-					],
-				}"
-			/>
+			<ConfirmDialog v-model="showDeleteDialog" :options="deleteDialogOptions" />
 		</template>
 		<template #actions>
 			<div class="flex space-x-2 justify-end">
