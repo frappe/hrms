@@ -43,13 +43,13 @@
 				/>
 			</div>
 
-			<!-- Shift Schedule Settings -->
+			<!-- Shift Assignment Schedule Settings -->
 			<div
 				v-if="(!props.shiftAssignmentName && showShiftScheduleSettings) || form.schedule"
 				class="mt-6 space-y-6"
 			>
 				<hr />
-				<h4 class="font-semibold">Shift Schedule Settings</h4>
+				<h4 class="font-semibold">Shift Assignment Schedule Settings</h4>
 				<div class="grid grid-cols-2 gap-6">
 					<div class="space-y-1.5">
 						<div class="text-xs text-gray-600">Days</div>
@@ -87,14 +87,30 @@
 				</div>
 			</div>
 
-			<ConfirmDialog v-model="showDeleteDialog" :options="deleteDialogOptions" />
+			<Dialog
+				v-model="showDeleteDialog"
+				:options="{
+					title: deleteDialogOptions.title,
+					actions: [
+						{
+							label: 'Confirm',
+							variant: 'solid',
+							onClick: deleteDialogOptions.action,
+						},
+					],
+				}"
+			>
+				<template #body-content>
+					<div v-html="deleteDialogOptions.message" />
+				</template>
+			</Dialog>
 		</template>
 		<template #actions>
 			<div class="flex space-x-2 justify-end">
 				<Dropdown
 					v-if="props.shiftAssignmentName"
 					:options="actions"
-					:button="{ size: 'md', icon: 'more-vertical' }"
+					:button="{ size: 'md', icon: 'trash-2' }"
 				/>
 				<Button
 					size="md"
@@ -188,7 +204,7 @@ const shiftAssignment = ref();
 const selectedDate = ref();
 const frequency = ref("Every Week");
 const showDeleteDialog = ref(false);
-const deleteDialogOptions = ref({ title: "", message: "" });
+const deleteDialogOptions = ref({ title: "", message: "", action: () => {} });
 
 const dialog = computed(() => {
 	if (props.shiftAssignmentName)
@@ -211,26 +227,28 @@ const dialog = computed(() => {
 const actions = computed(() => {
 	const options = [
 		{
-			label: "Delete Current Shift",
-			icon: "trash-2",
+			label: `Shift for ${selectedDate.value}`,
 			onClick: () => {
 				deleteDialogOptions.value = {
-					title: "Delete Shift?",
-					message: `This will split Shift Assignment ${props.shiftAssignmentName} on ${selectedDate.value}.`,
+					title: "Remove Shift?",
+					message: `This will remove Shift Assignment: <a href='/app/shift-assignment/${props.shiftAssignmentName}' target='_blank'><u>${props.shiftAssignmentName}</u></a> scheduled for <b>${selectedDate.value}</b>.`,
 					action: () => deleteCurrentShift.submit(),
 				};
 				showDeleteDialog.value = true;
 			},
 		},
 		{
-			label: "Delete Consecutive Shifts",
-			icon: "trash-2",
+			label: "All Consecutive Shifts",
 			onClick: () => {
 				deleteDialogOptions.value = {
 					title: "Delete Shift Assignment?",
-					message: `This will delete Shift Assignment ${props.shiftAssignmentName} (${
-						form.start_date
-					} - ${form.end_date ? form.end_date : "N/A"}).`,
+					message: `This will delete Shift Assignment: <a href='/app/shift-assignment/${
+						props.shiftAssignmentName
+					}' target='_blank'><u>${
+						props.shiftAssignmentName
+					}</u></a> (scheduled from <b>${form.start_date}</b>${
+						form.end_date ? ` to <b>${form.end_date}</b>` : ""
+					}).`,
 					action: async () => {
 						await shiftAssignment.value.setValue.submit({ docstatus: 2 });
 						shiftAssignments.delete.submit(props.shiftAssignmentName);
@@ -242,12 +260,11 @@ const actions = computed(() => {
 	];
 	if (form.schedule)
 		options.push({
-			label: "Delete Shift Schedule",
-			icon: "trash-2",
+			label: "Shift Assignment Schedule",
 			onClick: () => {
 				deleteDialogOptions.value = {
 					title: "Delete Shift Assignment Schedule?",
-					message: `This will delete Shift Assignment Schedule ${form.schedule} and all the shifts associated with it.`,
+					message: `This will delete Shift Assignment Schedule: <a href='/app/shift-assignment-schedule/${form.schedule}' target='_blank'><u>${form.schedule}</u></a> and all the shifts associated with it.`,
 					action: () => deleteShiftAssignmentSchedule.submit(),
 				};
 				showDeleteDialog.value = true;
