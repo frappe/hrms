@@ -56,9 +56,9 @@ class ShiftAssignmentSchedule(Document):
 def process_auto_shift_creation():
 	schedules = frappe.get_all(
 		"Shift Assignment Schedule",
-		filters={"status": "Active", "last_shift_end_date": ["<=", nowdate()]},
+		filters={"status": "Active", "create_shifts_after": ["<=", nowdate()]},
 		pluck="name",
 	)
 	for d in schedules:
 		doc = frappe.get_doc("Shift Assignment Schedule", d)
-		doc.create_shifts(add_days(doc.last_shift_end_date, 1))
+		doc.create_shifts(add_days(doc.create_shifts_after, 1))
