@@ -102,6 +102,9 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 		"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
 	)
 
+	if not doc.get("loans"):
+		doc.set("loans", [])
+	
 	for loan in doc.get("loans", []):
 		if not loan.total_payment:
 			continue
