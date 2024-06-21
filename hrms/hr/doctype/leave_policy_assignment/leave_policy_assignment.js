@@ -27,10 +27,10 @@ frappe.ui.form.on("Leave Policy Assignment", {
 			const promise = new Promise((resolve, reject) => {
 				frappe.confirm(
 					__(
-						"Are you sure you want to apply the new leave policy <b style='color:red;'>in the middle of current policy assignment period</b>? This change will take effect immediately and cannot be undone."
+						"Are you sure you want to apply the new leave policy <b style='color:red;'>in the middle of current policy assignment period</b>? This change will take effect immediately and cannot be undone.",
 					),
 					resolve,
-					reject
+					reject,
 				);
 			});
 			await promise.catch(() => {
@@ -61,12 +61,12 @@ frappe.ui.form.on("Leave Policy Assignment", {
 				let from_date = frappe.model.get_value(
 					"Leave Period",
 					frm.doc.leave_period,
-					"from_date"
+					"from_date",
 				);
 				let to_date = frappe.model.get_value(
 					"Leave Period",
 					frm.doc.leave_period,
-					"to_date"
+					"to_date",
 				);
 				frm.set_value("effective_from", from_date);
 				frm.set_value("effective_to", to_date);
@@ -81,7 +81,7 @@ frappe.ui.form.on("Leave Policy Assignment", {
 				frm.set_value("effective_from", from_date);
 				frm.set_value(
 					"effective_to",
-					frappe.datetime.add_months(frm.doc.effective_from, 12)
+					frappe.datetime.add_months(frm.doc.effective_from, 12),
 				);
 			});
 		}

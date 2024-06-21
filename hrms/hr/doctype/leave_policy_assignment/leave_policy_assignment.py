@@ -127,30 +127,32 @@ class LeavePolicyAssignment(Document):
 		if leave_policy_assignment_name:
 			end_date = add_days(self.effective_from, -1)
 			leave_allocations = frappe.get_all(
-				"Leave Allocation", 
+				"Leave Allocation",
 				filters={
 					"leave_policy_assignment": leave_policy_assignment_name,
 					"docstatus": 1,
-				}, 
+				},
 				pluck="name",
 			)
 
-			frappe.db.set_value("Leave Policy Assignment", leave_policy_assignment_name, "effective_to", end_date)
+			frappe.db.set_value(
+				"Leave Policy Assignment", leave_policy_assignment_name, "effective_to", end_date
+			)
 			for allocation in leave_allocations:
 				frappe.db.set_value("Leave Allocation", allocation, "to_date", end_date)
 				frappe.db.set_value(
-					"Leave Ledger Entry", 
+					"Leave Ledger Entry",
 					{
 						"transaction_name": allocation,
 						"docstatus": 1,
-					}, 
-					"to_date", 
+					},
+					"to_date",
 					end_date,
 				)
 	
 	def validate_leave_application_across_allocations(self):
 		leave_applications = frappe.get_all(
-			"Leave Application", 
+			"Leave Application",
 			filters={
 				"employee": self.employee,
 				"docstatus": 1,
@@ -167,7 +169,7 @@ class LeavePolicyAssignment(Document):
 				).format(
 					"</li><li>".join(
 						[get_link_to_form("Leave Application", d, d) for d in leave_applications]
-						)
+					)
 				),
 				exc=LeaveAcrossAllocationsMidPeriodError,
 			)
