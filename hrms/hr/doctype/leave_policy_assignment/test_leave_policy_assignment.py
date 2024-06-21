@@ -228,13 +228,11 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 		)
 
 	def test_leave_across_allocations_mid_period_leave_policy_change(self):
+		employee = frappe.get_doc("Employee", "_T-Employee-00002")
 		leave_type = frappe.get_doc(
 			{
 				"doctype": "Leave Type",
 				"leave_type_name": "_Test Leave Type Across Mid Period Policy Change",
-				"include_holiday": 1,
-				"is_earned_leave": 1,
-				"allocate_on_day": "First Day",
 			}
 		).insert()
 		leave_policy_1 = create_leave_policy(leave_type=leave_type.name).submit()
@@ -243,7 +241,7 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 		year_start = datetime.date(getdate().year + 1, 1, 1)
 		year_end = getdate(get_year_ending(year_start))
 		leave_policy_assignment = create_leave_policy_assignment(
-			self.employee.name,
+			employee.name,
 			leave_policy_1.name,
 			year_start,
 			year_end,
@@ -253,7 +251,7 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 		leave_application = frappe.get_doc(
 			dict(
 				doctype="Leave Application",
-				employee=self.employee,
+				employee=employee.name,
 				leave_type=leave_type.name,
 				from_date=add_days(new_assignment_date, -1),
 				to_date=add_days(new_assignment_date, 1),
@@ -261,9 +259,10 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 				status="Approved",
 				leave_approver="test@example.com",
 			)
-		).submit()
+		)
+		leave_application.submit()
 		new_leave_policy_assignment = create_leave_policy_assignment(
-			self.employee.name,
+			employee.name,
 			leave_policy_2.name,
 			new_assignment_date,
 			year_end,

@@ -149,7 +149,7 @@ class LeavePolicyAssignment(Document):
 					"to_date",
 					end_date,
 				)
-	
+
 	def validate_leave_application_across_allocations(self):
 		leave_applications = frappe.get_all(
 			"Leave Application",

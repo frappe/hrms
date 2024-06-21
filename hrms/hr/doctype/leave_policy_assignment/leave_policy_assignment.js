@@ -76,7 +76,7 @@ frappe.ui.form.on("Leave Policy Assignment", {
 				let from_date = frappe.model.get_value(
 					"Employee",
 					frm.doc.employee,
-					"date_of_joining"
+					"date_of_joining",
 				);
 				frm.set_value("effective_from", from_date);
 				frm.set_value(
