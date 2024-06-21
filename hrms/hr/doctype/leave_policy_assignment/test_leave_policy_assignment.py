@@ -240,7 +240,7 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 		leave_policy_1 = create_leave_policy(leave_type=leave_type.name).submit()
 		leave_policy_2 = create_leave_policy(eave_type=leave_type.name).submit()
 
-		year_start = datetime.date(getdate().year - 1, 1, 1)
+		year_start = datetime.date(getdate().year + 1, 1, 1)
 		year_end = getdate(get_year_ending(year_start))
 		leave_policy_assignment = create_leave_policy_assignment(
 			self.employee.name,
