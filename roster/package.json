@@ -21,8 +21,6 @@
     "vue-router": "^4.3.2"
   },
   "devDependencies": {
-    "@types/vue": "^2.0.0",
-    "typescript": "^5.4.5",
-    "vue-tsc": "^2.0.14"
+    "typescript": "^5.4.5"
   }
 }
