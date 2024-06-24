@@ -232,7 +232,7 @@ def get_employee_currency(employee):
 
 def get_tax_component(salary_structure: str) -> str | None:
 	salary_structure = frappe.get_cached_doc("Salary Structure", salary_structure)
-	for d in salary_structure.get("deductions"):
+	for d in salary_structure.deductions:
 		if cint(d.variable_based_on_taxable_salary) and not d.formula and not flt(d.amount):
 			return d.salary_component
 	return None
