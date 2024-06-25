@@ -104,7 +104,7 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 
 	if not doc.get("loans"):
 		doc.set("loans", [])
-	
+
 	for loan in doc.get("loans", []):
 		if not loan.total_payment:
 			continue
@@ -133,7 +133,7 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 def cancel_loan_repayment_entry(doc: "SalarySlip"):
 	if not doc.get("loans"):
 		doc.set("loans", [])
-	
+
 	for loan in doc.get("loans", []):
 		if loan.loan_repayment_entry:
 			repayment_entry = frappe.get_doc("Loan Repayment", loan.loan_repayment_entry)
