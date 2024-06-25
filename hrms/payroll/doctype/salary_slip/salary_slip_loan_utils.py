@@ -47,7 +47,7 @@ def set_loan_repayment(doc: "SalarySlip"):
 				)
 	if not doc.get("loans"):
 		doc.set("loans", [])
-	
+
 	for payment in doc.get("loans", []):
 		amounts = calculate_amounts(payment.loan, doc.posting_date, "Regular Payment")
 		total_amount = amounts["interest_amount"] + amounts["payable_principal_amount"]
