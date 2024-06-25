@@ -87,33 +87,12 @@ class ShiftAssignment(Document):
 				& (shift.docstatus == 1)
 				& (shift.name != self.name)
 				& (shift.status == "Active")
+				& ((shift.end_date >= self.start_date) | (shift.end_date.isnull()))
 			)
 		)
 
 		if self.end_date:
-			query = query.where(
-				Criterion.any(
-					[
-						Criterion.any(
-							[
-								shift.end_date.isnull(),
-								((self.start_date >= shift.start_date) & (self.start_date <= shift.end_date)),
-							]
-						),
-						Criterion.any(
-							[
-								((self.end_date >= shift.start_date) & (self.end_date <= shift.end_date)),
-								shift.start_date.between(self.start_date, self.end_date),
-							]
-						),
-					]
-				)
-			)
-		else:
-			query = query.where(
-				shift.end_date.isnull()
-				| ((self.start_date >= shift.start_date) & (self.start_date <= shift.end_date))
-			)
+			query = query.where(shift.start_date <= self.end_date)
 
 		return query.run(as_dict=True)
 
@@ -465,8 +444,12 @@ def get_prev_or_next_shift(
 
 		for date_range in shift_dates:
 			# midnight shifts will span more than a day
-			start_date, end_date = date_range[0], add_days(date_range[1], 1)
-			reverse = next_shift_direction == "reverse"
+			start_date, end_date = getdate(date_range[0]), getdate(add_days(date_range[1], 1))
+
+			if reverse := (next_shift_direction == "reverse"):
+				end_date = min(end_date, for_timestamp.date())
+			elif next_shift_direction == "forward":
+				start_date = max(start_date, for_timestamp.date())
 
 			for dt in generate_date_range(start_date, end_date, reverse=reverse):
 				shift_details = get_employee_shift(

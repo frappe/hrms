@@ -93,33 +93,16 @@ class ShiftRequest(Document):
 		query = (
 			frappe.qb.from_(shift)
 			.select(shift.name, shift.shift_type)
-			.where((shift.employee == self.employee) & (shift.docstatus < 2) & (shift.name != self.name))
+			.where(
+				(shift.employee == self.employee)
+				& (shift.docstatus < 2)
+				& (shift.name != self.name)
+				& ((shift.to_date >= self.from_date) | (shift.to_date.isnull()))
+			)
 		)
 
 		if self.to_date:
-			query = query.where(
-				Criterion.any(
-					[
-						Criterion.any(
-							[
-								shift.to_date.isnull(),
-								((self.from_date >= shift.from_date) & (self.from_date <= shift.to_date)),
-							]
-						),
-						Criterion.any(
-							[
-								((self.to_date >= shift.from_date) & (self.to_date <= shift.to_date)),
-								shift.from_date.between(self.from_date, self.to_date),
-							]
-						),
-					]
-				)
-			)
-		else:
-			query = query.where(
-				shift.to_date.isnull()
-				| ((self.from_date >= shift.from_date) & (self.from_date <= shift.to_date))
-			)
+			query = query.where(shift.from_date <= self.to_date)
 
 		return query.run(as_dict=True)
 

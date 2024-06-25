@@ -58,6 +58,13 @@ section-order = [
     "local-folder",
 ]
 
+
+[project.urls]
+Homepage = "https://frappehr.com/"
+Repository = "https://github.com/frappe/hrms.git"
+"Bug Reports" = "https://github.com/frappe/hrms/issues"
+
+
 [tool.bench.frappe-dependencies]
 frappe = ">=16.0.0-dev,<17.0.0"
 erpnext = ">=16.0.0-dev,<17.0.0"

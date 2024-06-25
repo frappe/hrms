@@ -160,7 +160,7 @@ class IncomeTaxComputationReport:
 				"docstatus": 1,
 				"start_date": ["between", [self.payroll_period_start_date, self.payroll_period_end_date]],
 			},
-			["start_date", "end_date", "salary_structure", "payroll_frequency"],
+			["name", "start_date", "end_date", "salary_structure", "payroll_frequency"],
 			order_by="start_date desc",
 			as_dict=1,
 		)
@@ -231,7 +231,8 @@ class IncomeTaxComputationReport:
 			self.employees[employee].update(exemptions)
 
 			total_exemptions = sum(list(exemptions.values()))
-			self.add_to_total_exemption(employee, total_exemptions)
+			self.employees[employee]["total_exemption"] = 0
+			self.employees[employee]["total_exemption"] += total_exemptions
 
 	def add_exemptions_from_future_salary_slips(self, employee, exemptions):
 		for ss in self.future_salary_slips.get(employee, []):
@@ -271,10 +272,6 @@ class IncomeTaxComputationReport:
 			self.add_column(d)
 
 		return tax_exempted_components
-
-	def add_to_total_exemption(self, employee, amount):
-		self.employees[employee].setdefault("total_exemption", 0)
-		self.employees[employee]["total_exemption"] += amount
 
 	def get_employee_tax_exemptions(self):
 		# add columns
@@ -323,7 +320,7 @@ class IncomeTaxComputationReport:
 				amount = max_eligible_amount
 
 			self.employees[d.employee].setdefault(scrub(d.exemption_category), amount)
-			self.add_to_total_exemption(d.employee, amount)
+			self.employees[d.employee]["total_exemption"] += amount
 
 			if (
 				source == "Employee Tax Exemption Proof Submission"
@@ -375,7 +372,8 @@ class IncomeTaxComputationReport:
 
 			if d[0] not in self.employees_with_proofs:
 				self.employees[d[0]].setdefault("hra", d[1])
-				self.add_to_total_exemption(d[0], d[1])
+
+				self.employees[d[0]]["total_exemption"] += d[1]
 				self.employees_with_proofs.append(d[0])
 
 	def get_standard_tax_exemption(self):
@@ -397,7 +395,7 @@ class IncomeTaxComputationReport:
 			income_tax_slab = emp_details.get("income_tax_slab")
 			standard_exemption = standard_exemptions_per_slab.get(income_tax_slab, 0)
 			emp_details["standard_tax_exemption"] = standard_exemption
-			self.add_to_total_exemption(emp, standard_exemption)
+			self.employees[emp]["total_exemption"] += standard_exemption
 
 		self.add_column("Total Exemption")
 
@@ -421,12 +419,12 @@ class IncomeTaxComputationReport:
 			tax_slab = emp_details.get("income_tax_slab")
 			if tax_slab:
 				tax_slab = frappe.get_cached_doc("Income Tax Slab", tax_slab)
-				employee_dict = frappe.get_doc("Employee", emp).as_dict()
+				eval_globals, eval_locals = self.get_data_for_eval(emp, emp_details)
 				tax_amount = calculate_tax_by_tax_slab(
 					emp_details["total_taxable_amount"],
 					tax_slab,
-					eval_globals=None,
-					eval_locals=employee_dict,
+					eval_globals=eval_globals,
+					eval_locals=eval_locals,
 				)
 			else:
 				tax_amount = 0.0
@@ -434,6 +432,28 @@ class IncomeTaxComputationReport:
 			if is_tax_rounded:
 				tax_amount = rounded(tax_amount)
 			emp_details["applicable_tax"] = tax_amount
+
+	def get_data_for_eval(self, emp: str, emp_details: dict) -> tuple:
+		last_ss = self.get_last_salary_slip(emp)
+
+		if last_ss:
+			salary_slip = frappe.get_cached_doc("Salary Slip", last_ss.name)
+		else:
+			salary_slip = frappe.new_doc("Salary Slip")
+			salary_slip.employee = emp
+			salary_slip.salary_structure = emp_details.salary_structure
+			salary_slip.start_date = self.payroll_period_start_date
+			salary_slip.payroll_frequency = frappe.db.get_value(
+				"Salary Structure", emp_details.salary_structure, "payroll_frequency"
+			)
+			salary_slip.end_date = get_start_end_dates(
+				salary_slip.payroll_frequency, salary_slip.start_date
+			).end_date
+			salary_slip.process_salary_structure()
+
+		eval_locals, __ = salary_slip.get_data_for_eval()
+
+		return salary_slip.whitelisted_globals, eval_locals
 
 	def get_total_deducted_tax(self):
 		self.add_column("Total Tax Deducted")
