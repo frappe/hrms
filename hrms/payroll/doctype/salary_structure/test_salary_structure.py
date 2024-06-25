@@ -264,8 +264,8 @@ def create_salary_structure_assignment(
 	salary_structure_assignment.currency = currency
 	salary_structure_assignment.payroll_payable_account = get_payable_account(company)
 	salary_structure_assignment.company = company or erpnext.get_default_company()
-	salary_structure_assignment.save(ignore_permissions=True)
 	salary_structure_assignment.income_tax_slab = income_tax_slab
+	salary_structure_assignment.save(ignore_permissions=True)
 	salary_structure_assignment.submit()
 	return salary_structure_assignment
 
