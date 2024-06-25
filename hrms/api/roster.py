@@ -38,14 +38,14 @@ def create_shift_assignment_schedule(
 	status: str,
 	start_date: str,
 	end_date: str | None,
-	days: list[str],
+	repeat_on_days: list[str],
 	frequency: str,
 ) -> None:
 	schedule = frappe.get_doc(
 		{
 			"doctype": "Shift Assignment Schedule",
 			"frequency": frequency,
-			"days": [{"day": day} for day in days],
+			"repeat_on_days": [{"day": day} for day in repeat_on_days],
 			"status": "Inactive" if end_date else "Active",
 			"employee": employee,
 			"company": company,

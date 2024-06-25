@@ -43,28 +43,28 @@
 				/>
 			</div>
 
-			<!-- Shift Assignment Schedule Settings -->
+			<!-- Schedule Settings -->
 			<div
 				v-if="(!props.shiftAssignmentName && showShiftScheduleSettings) || form.schedule"
 				class="mt-6 space-y-6"
 			>
 				<hr />
-				<h4 class="font-semibold">Shift Assignment Schedule Settings</h4>
+				<h4 class="font-semibold">Schedule Settings</h4>
 				<div class="grid grid-cols-2 gap-6">
 					<div class="space-y-1.5">
-						<div class="text-xs text-gray-600">Days</div>
+						<div class="text-xs text-gray-600">Repeat On Days</div>
 						<div
 							class="border rounded grid grid-flow-col h-7 justify-stretch overflow-clip"
 						>
 							<div
-								v-for="(isSelected, day) of workingDays"
+								v-for="(isSelected, day) of repeatOnDays"
 								class="cursor-pointer flex flex-col"
 								:class="{
 									'border-r': day !== 'Sunday',
 									'bg-gray-100 text-gray-500': !isSelected,
 									'pointer-events-none': !!props.shiftAssignmentName,
 								}"
-								@click="workingDays[day] = !workingDays[day]"
+								@click="repeatOnDays[day] = !repeatOnDays[day]"
 							>
 								<div class="text-center text-sm my-auto">
 									{{ day.substring(0, 3) }}
@@ -187,7 +187,7 @@ const formObject: Form = {
 	schedule: "",
 };
 
-const workingDaysObject = {
+const repeatOnDaysObject = {
 	Monday: true,
 	Tuesday: true,
 	Wednesday: true,
@@ -198,7 +198,7 @@ const workingDaysObject = {
 };
 
 const form = reactive({ ...formObject });
-const workingDays = reactive({ ...workingDaysObject });
+const repeatOnDays = reactive({ ...repeatOnDaysObject });
 
 const shiftAssignment = ref();
 const selectedDate = ref();
@@ -275,7 +275,7 @@ const actions = computed(() => {
 
 const showShiftScheduleSettings = computed(() => {
 	if (!form.start_date || dayjs(form.end_date).diff(dayjs(form.start_date), "d") < 7) {
-		Object.assign(workingDays, workingDaysObject);
+		Object.assign(repeatOnDays, repeatOnDaysObject);
 		frequency.value = "Every Week";
 		return false;
 	}
@@ -330,7 +330,7 @@ const updateShiftAssigment = () => {
 };
 
 const createShiftAssigment = () => {
-	if (Object.values(workingDays).some((day) => !day) || frequency.value !== "Every Week")
+	if (Object.values(repeatOnDays).some((day) => !day) || frequency.value !== "Every Week")
 		createShiftAssignmentSchedule.submit();
 	else insertShift.submit();
 };
@@ -368,8 +368,8 @@ const getShiftAssignmentSchedule = (name: string) =>
 		onSuccess: (data: Record<string, any>) => {
 			frequency.value = data.frequency;
 			const days = data.days.map((day) => day.day);
-			for (const day in workingDays) {
-				workingDays[day] = days.includes(day);
+			for (const day in repeatOnDays) {
+				repeatOnDays[day] = days.includes(day);
 			}
 		},
 		onError(error: { messages: string[] }) {
@@ -474,8 +474,8 @@ const createShiftAssignmentSchedule = createResource({
 			status: form.status,
 			start_date: form.start_date,
 			end_date: form.end_date,
-			days: Object.keys(workingDays).filter(
-				(day) => workingDays[day as keyof typeof workingDays],
+			repeat_on_days: Object.keys(repeatOnDays).filter(
+				(day) => repeatOnDays[day as keyof typeof repeatOnDays],
 			),
 			frequency: frequency.value,
 		};

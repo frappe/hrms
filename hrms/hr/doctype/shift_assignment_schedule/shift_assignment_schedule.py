@@ -20,14 +20,14 @@ class ShiftAssignmentSchedule(Document):
 		date = start_date
 		individual_assignment_start = None
 		week_end_day = get_weekday(add_days(start_date, -1))
-		schedule_days = [day.day for day in self.days]
+		repeat_on_days = [day.day for day in self.repeat_on_days]
 
 		if not end_date:
 			end_date = add_days(start_date, 90)
 
 		while date <= end_date:
 			weekday = get_weekday(date)
-			if weekday in schedule_days:
+			if weekday in repeat_on_days:
 				if not individual_assignment_start:
 					individual_assignment_start = date
 				if date == end_date:

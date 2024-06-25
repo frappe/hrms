@@ -7,7 +7,7 @@
  "field_order": [
   "schedule_settings_section",
   "frequency",
-  "days",
+  "repeat_on_days",
   "column_break_iprq",
   "status",
   "create_shifts_after",
@@ -41,13 +41,6 @@
    "in_standard_filter": 1,
    "label": "Status",
    "options": "Active\nInactive",
-   "reqd": 1
-  },
-  {
-   "fieldname": "days",
-   "fieldtype": "Table",
-   "label": "Days",
-   "options": "Assignment Rule Day",
    "reqd": 1
   },
   {
@@ -108,6 +101,13 @@
    "fieldtype": "Date",
    "label": "Create Shifts After",
    "mandatory_depends_on": "eval:doc.status === 'Active'"
+  },
+  {
+   "fieldname": "repeat_on_days",
+   "fieldtype": "Table",
+   "label": "Repeat On Days",
+   "options": "Assignment Rule Day",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -117,7 +117,7 @@
    "link_fieldname": "schedule"
   }
  ],
- "modified": "2024-06-18 16:33:37.677879",
+ "modified": "2024-06-25 16:49:16.848569",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment Schedule",
