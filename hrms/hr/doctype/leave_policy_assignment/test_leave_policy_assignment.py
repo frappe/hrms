@@ -240,7 +240,7 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 
 		year_start = datetime.date(getdate().year + 1, 1, 1)
 		year_end = getdate(get_year_ending(year_start))
-		leave_policy_assignment = create_leave_policy_assignment(
+		create_leave_policy_assignment(
 			employee.name,
 			leave_policy_1.name,
 			year_start,
@@ -249,16 +249,14 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 
 		new_assignment_date = add_months(year_start, 6)
 		leave_application = frappe.get_doc(
-			dict(
-				doctype="Leave Application",
-				employee=employee.name,
-				leave_type=leave_type.name,
-				from_date=add_days(new_assignment_date, -1),
-				to_date=add_days(new_assignment_date, 1),
-				company="_Test Company",
-				status="Approved",
-				leave_approver="test@example.com",
-			)
+			doctype="Leave Application",
+			employee=employee.name,
+			leave_type=leave_type.name,
+			from_date=add_days(new_assignment_date, -1),
+			to_date=add_days(new_assignment_date, 1),
+			company="_Test Company",
+			status="Approved",
+			leave_approver="test@example.com",
 		)
 		leave_application.submit()
 		new_leave_policy_assignment = create_leave_policy_assignment(

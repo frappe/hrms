@@ -22,6 +22,7 @@ from frappe.utils import (
 	rounded,
 )
 
+
 class LeaveAcrossAllocationsMidPeriodError(frappe.ValidationError):
 	pass
 
@@ -165,7 +166,7 @@ class LeavePolicyAssignment(Document):
 		if leave_applications:
 			frappe.throw(
 				_(
-					"Leave Application period cannot be across two allocation records. Please cancel the following Leave Application records:\n<b><ul><li>{0}</li></ul></b>"
+					"Leave Application period cannot be across two allocation records. Please cancel the following Leave Application records:<br/><b><ul><li>{0}</li></ul></b>"
 				).format(
 					"</li><li>".join(
 						[get_link_to_form("Leave Application", d, d) for d in leave_applications]
@@ -183,18 +184,16 @@ class LeavePolicyAssignment(Document):
 		new_leaves_allocated = self.get_new_leaves(annual_allocation, leave_details, date_of_joining)
 
 		allocation = frappe.get_doc(
-			dict(
-				doctype="Leave Allocation",
-				employee=self.employee,
-				leave_type=leave_details.name,
-				from_date=self.effective_from,
-				to_date=self.effective_to,
-				new_leaves_allocated=new_leaves_allocated,
-				leave_period=self.leave_period if self.assignment_based_on == "Leave Policy" else "",
-				leave_policy_assignment=self.name,
-				leave_policy=self.leave_policy,
-				carry_forward=carry_forward,
-			)
+			doctype="Leave Allocation",
+			employee=self.employee,
+			leave_type=leave_details.name,
+			from_date=self.effective_from,
+			to_date=self.effective_to,
+			new_leaves_allocated=new_leaves_allocated,
+			leave_period=self.leave_period if self.assignment_based_on == "Leave Policy" else "",
+			leave_policy_assignment=self.name,
+			leave_policy=self.leave_policy,
+			carry_forward=carry_forward,
 		)
 		allocation.save(ignore_permissions=True)
 		allocation.submit()
