@@ -151,7 +151,9 @@
 										}
 									}
 								"
-								@dragend="dropCell = { employee: '', date: '', shift: '' }"
+								@dragend="
+									if (!loading) dropCell = { employee: '', date: '', shift: '' };
+								"
 								class="rounded border-2 px-2 py-1 cursor-pointer"
 								:class="[
 									shift.status === 'Inactive' && 'border-dashed',
@@ -327,6 +329,10 @@ watch(
 	{ deep: true },
 );
 
+watch(loading, (val) => {
+	if (!val) dropCell.value = { employee: "", date: "", shift: "" };
+});
+
 const isHolidayOrLeave = (employee: string, day: string) =>
 	events.data?.[employee]?.[day]?.holiday || events.data?.[employee]?.[day]?.leave;
 
@@ -379,6 +385,7 @@ const swapShift = createResource({
 		};
 	},
 	onSuccess: () => {
+		raiseToast("success", `Shift ${dropCell.value.shift ? "swapped" : "moved"} successfully!`);
 		events.fetch();
 	},
 	onError(error: { messages: string[] }) {
