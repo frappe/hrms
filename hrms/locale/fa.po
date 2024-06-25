@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-01-29 18:15+0053\n"
-"PO-Revision-Date: 2024-06-16 12:18\n"
+"PO-Revision-Date: 2024-06-25 11:32\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -461,7 +461,7 @@ msgstr "حساب"
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
 msgctxt "Expense Taxes and Charges"
 msgid "Account Head"
-msgstr "رئیس حساب"
+msgstr "سرفصل حساب"
 
 #: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:49
 msgid "Account No"
