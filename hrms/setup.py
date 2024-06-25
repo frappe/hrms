@@ -584,6 +584,7 @@ def add_lending_docperms_to_ess():
 	loan_docperms = get_lending_docperms_for_ess()
 	append_docperms_to_user_type(loan_docperms, doc)
 
+	doc.flags.ignore_links = True
 	doc.save(ignore_permissions=True)
 
 
