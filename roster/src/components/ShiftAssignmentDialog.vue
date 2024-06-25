@@ -439,7 +439,7 @@ const insertShift = createResource({
 		};
 	},
 	onSuccess: () => {
-		raiseToast("success", "Shift Assignment Schedule created successfully!");
+		raiseToast("success", "Shift Assignment created successfully!");
 		emit("fetchEvents");
 	},
 	onError(error: { messages: string[] }) {
