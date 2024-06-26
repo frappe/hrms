@@ -54,13 +54,41 @@
 					</a>
 				</template>
 			</Dialog>
+
+			<Dialog v-model="otp.showDialog">
+				<template #body-title>
+					<h2 class="text-lg font-bold">OTP</h2>
+				</template>
+				<template #body-content>
+					<p class="mb-4" v-if="otp.verification.prompt">
+						{{ otp.verification.prompt }}
+					</p>
+
+					<form class="flex flex-col space-y-4" @submit.prevent="submit">
+						<Input
+							label="OTP Code"
+							type="text"
+							placeholder="000000"
+							v-model="otp.code"
+						/>
+						<ErrorMessage :message="errorMessage" />
+						<Button
+							:loading="session.otp.loading"
+							variant="solid"
+							class="disabled:bg-gray-700 disabled:text-white !mt-6"
+						>
+							Verify
+						</Button>
+					</form>
+				</template>
+			</Dialog>
 		</ion-content>
 	</ion-page>
 </template>
 
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
-import { inject, ref } from "vue"
+import { inject, reactive, ref } from "vue"
 import { Input, Button, ErrorMessage, Dialog } from "frappe-ui"
 
 import FrappeHRLogo from "@/components/icons/FrappeHRLogo.vue"
@@ -70,18 +98,41 @@ const password = ref(null)
 const errorMessage = ref("")
 const resetPassword = ref(false)
 const resetPasswordLink = ref("")
+const otp = reactive({
+	showDialog: false,
+	tmp_id: "",
+	code: "",
+	verification: {},
+})
 
 const session = inject("$session")
 
 async function submit(e) {
 	try {
-		const response = await session.login(email.value, password.value)
+		let response;
+		if (otp.showDialog) {
+			response = await session.otp(otp.tmp_id, otp.code)
+		} else {
+			response = await session.login(email.value, password.value)
+		}
+
 		if (response.message === "Password Reset") {
 			resetPassword.value = true
 			resetPasswordLink.value = response.redirect_to
 		} else {
 			resetPassword.value = false
 			resetPasswordLink.value = ""
+		}
+
+		if (response.verification) {
+			if (response.verification.setup) {
+				otp.showDialog = true
+				otp.tmp_id = response.tmp_id
+				otp.verification = response.verification
+			} else {
+				// Don't bother handling impossible OTP setup (e.g. no phone number).
+				window.location.href = "/login?redirect-to=" + encodeURIComponent(window.location.pathname)
+			}
 		}
 	} catch (error) {
 		errorMessage.value = error.messages.join("\n")
