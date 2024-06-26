@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import flt, getdate
+from frappe.utils import cint, flt, get_link_to_form, getdate
 
 
 class DuplicateAssignment(frappe.ValidationError):
@@ -90,6 +90,18 @@ class SalaryStructureAssignment(Document):
 			)
 
 	def validate_income_tax_slab(self):
+		tax_component = get_tax_component(self.salary_structure)
+		if tax_component and not self.income_tax_slab:
+			frappe.throw(
+				_(
+					"Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
+				).format(
+					get_link_to_form("Salary Structure", self.salary_structure), frappe.bold(tax_component)
+				),
+				exc=frappe.MandatoryError,
+				title=_("Missing Mandatory Field"),
+			)
+
 		if not self.income_tax_slab:
 			return
 
@@ -216,3 +228,11 @@ def get_employee_currency(employee):
 			)
 		)
 	return employee_currency
+
+
+def get_tax_component(salary_structure: str) -> str | None:
+	salary_structure = frappe.get_cached_doc("Salary Structure", salary_structure)
+	for d in salary_structure.deductions:
+		if cint(d.variable_based_on_taxable_salary) and not d.formula and not flt(d.amount):
+			return d.salary_component
+	return None
