@@ -16,12 +16,14 @@
 							placeholder="johndoe@mail.com"
 							v-model="email"
 							:type="email !== 'Administrator' ? 'email' : 'text'"
+							autocomplete="username"
 						/>
 						<Input
 							label="Password"
 							type="password"
 							placeholder="••••••"
 							v-model="password"
+							autocomplete="current-password"
 						/>
 						<ErrorMessage :message="errorMessage" />
 						<Button
@@ -70,6 +72,7 @@
 							type="text"
 							placeholder="000000"
 							v-model="otp.code"
+							autocomplete="one-time-code"
 						/>
 						<ErrorMessage :message="errorMessage" />
 						<Button
