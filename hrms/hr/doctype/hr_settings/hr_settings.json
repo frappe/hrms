@@ -302,11 +302,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2023-12-28 23:07:36.317223",
-=======
  "modified": "2024-06-26 15:20:17.802079",
->>>>>>> 6062f15ad (fix: HR Settings permissions (#1924))
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
@@ -320,8 +316,6 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
-<<<<<<< HEAD
-=======
   },
   {
    "email": 1,
@@ -341,7 +335,6 @@
   {
    "read": 1,
    "role": "Employee"
->>>>>>> 6062f15ad (fix: HR Settings permissions (#1924))
   }
  ],
  "sort_field": "modified",
