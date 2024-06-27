@@ -137,7 +137,6 @@ import {
 } from "frappe-ui";
 
 import { dayjs, raiseToast } from "../utils";
-import ConfirmDialog from "./ConfirmDialog.vue";
 
 type Status = "Active" | "Inactive";
 
@@ -378,9 +377,11 @@ const getShiftAssignmentSchedule = (name: string) =>
 		name: name,
 		onSuccess: (data: Record<string, any>) => {
 			frequency.value = data.frequency;
-			const days = data.repeat_on_days.map((day) => day.day);
+			const days = data.repeat_on_days.map(
+				(day: { day: keyof typeof repeatOnDays }) => day.day,
+			);
 			for (const day in repeatOnDays) {
-				repeatOnDays[day] = days.includes(day);
+				repeatOnDays[day as keyof typeof repeatOnDays] = days.includes(day);
 			}
 		},
 		onError(error: { messages: string[] }) {
