@@ -46,7 +46,7 @@ def create_shift_assignment_schedule(
 			"doctype": "Shift Assignment Schedule",
 			"frequency": frequency,
 			"repeat_on_days": [{"day": day} for day in repeat_on_days],
-			"status": "Inactive" if end_date else "Active",
+			"enabled": 0 if end_date else 1,
 			"employee": employee,
 			"company": company,
 			"shift_type": shift_type,
