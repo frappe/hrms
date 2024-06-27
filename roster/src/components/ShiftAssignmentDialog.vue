@@ -106,12 +106,10 @@
 			</Dialog>
 		</template>
 		<template #actions>
-			<div class="flex space-x-2 justify-end">
-				<Dropdown
-					v-if="props.shiftAssignmentName"
-					:options="actions"
-					:button="{ size: 'md', icon: 'trash-2' }"
-				/>
+			<div class="flex space-x-3 justify-end">
+				<Dropdown v-if="props.shiftAssignmentName" :options="actions">
+					<Button size="md" label="Delete" class="w-28 text-red-600" />
+				</Dropdown>
 				<Button
 					size="md"
 					variant="solid"
@@ -230,7 +228,7 @@ const actions = computed(() => {
 			label: `Shift for ${selectedDate.value}`,
 			onClick: () => {
 				deleteDialogOptions.value = {
-					title: "Remove Shift?",
+					title: "Delete Shift?",
 					message: `This will remove Shift Assignment: <a href='/app/shift-assignment/${props.shiftAssignmentName}' target='_blank'><u>${props.shiftAssignmentName}</u></a> scheduled for <b>${selectedDate.value}</b>.`,
 					action: () => deleteCurrentShift.submit(),
 				};
