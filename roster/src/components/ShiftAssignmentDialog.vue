@@ -188,13 +188,13 @@ const formObject: Form = {
 };
 
 const repeatOnDaysObject = {
-	Monday: true,
-	Tuesday: true,
-	Wednesday: true,
-	Thursday: true,
-	Friday: true,
-	Saturday: true,
-	Sunday: true,
+	Monday: false,
+	Tuesday: false,
+	Wednesday: false,
+	Thursday: false,
+	Friday: false,
+	Saturday: false,
+	Sunday: false,
 };
 
 const form = reactive({ ...formObject });
@@ -275,7 +275,6 @@ const actions = computed(() => {
 
 const showShiftScheduleSettings = computed(() => {
 	if (!form.start_date || dayjs(form.end_date).diff(dayjs(form.start_date), "d") < 7) {
-		Object.assign(repeatOnDays, repeatOnDaysObject);
 		frequency.value = "Every Week";
 		return false;
 	}
@@ -325,12 +324,26 @@ watch(
 	},
 );
 
+watch(
+	() => form.start_date,
+	() => {
+		Object.assign(repeatOnDays, repeatOnDaysObject);
+		if (!form.start_date) return;
+		const day = dayjs(form.start_date).format("dddd");
+		repeatOnDays[day as keyof typeof repeatOnDays] = true;
+	},
+	{ immediate: true },
+);
+
 const updateShiftAssigment = () => {
 	shiftAssignment.value.setValue.submit({ status: form.status, end_date: form.end_date });
 };
 
 const createShiftAssigment = () => {
-	if (Object.values(repeatOnDays).some((day) => !day) || frequency.value !== "Every Week")
+	if (
+		showShiftScheduleSettings.value &&
+		(Object.values(repeatOnDays).some((day) => !day) || frequency.value !== "Every Week")
+	)
 		createShiftAssignmentSchedule.submit();
 	else insertShift.submit();
 };
@@ -367,7 +380,7 @@ const getShiftAssignmentSchedule = (name: string) =>
 		name: name,
 		onSuccess: (data: Record<string, any>) => {
 			frequency.value = data.frequency;
-			const days = data.days.map((day) => day.day);
+			const days = data.repeat_on_days.map((day) => day.day);
 			for (const day in repeatOnDays) {
 				repeatOnDays[day] = days.includes(day);
 			}
