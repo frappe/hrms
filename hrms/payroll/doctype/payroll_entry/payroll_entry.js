@@ -158,19 +158,16 @@ frappe.ui.form.on("Payroll Entry", {
 	},
 
 	add_bank_entry_button: function (frm) {
-		frappe.call({
-			method: "hrms.payroll.doctype.payroll_entry.payroll_entry.payroll_entry_has_bank_entries",
-			args: {
-				name: frm.doc.name,
-				payroll_payable_account: frm.doc.payroll_payable_account,
-			},
-			callback: function (r) {
-				if (r.message && !r.message.submitted) {
-					frm.add_custom_button(__("Make Bank Entry"), function () {
-						make_bank_entry(frm);
-					}).addClass("btn-primary");
-				}
-			},
+		frm.call("has_bank_entries").then((r) => {
+			if (!r.message.has_bank_entries) {
+				frm.add_custom_button(__("Make Bank Entry"), function () {
+					make_bank_entry(frm);
+				}).addClass("btn-primary");
+			} else if (!r.message.has_bank_entries_for_withheld_salaries) {
+				frm.add_custom_button(__("Release Withheld Salaries"), function () {
+					frm.trigger("make_bank_entry_for_withheld_salaries");
+				}).addClass("btn-primary");
+			}
 		});
 	},
 
@@ -389,6 +386,25 @@ frappe.ui.form.on("Payroll Entry", {
 		} else {
 			frm.fields_dict.attendance_detail_html.html("");
 		}
+	},
+
+	make_bank_entry_for_withheld_salaries: function (frm) {
+		frappe
+			.call({
+				method: "run_doc_method",
+				args: {
+					method: "make_bank_entry_for_withheld_salaries",
+					dt: "Payroll Entry",
+					dn: frm.doc.name,
+				},
+				freeze: true,
+				freeze_message: __("Creating Bank Entries") + "...",
+			})
+			.then(() => {
+				frappe.set_route("List", "Journal Entry", {
+					"Journal Entry Account.reference_name": frm.doc.name,
+				});
+			});
 	},
 
 	clear_employee_table: function (frm) {
