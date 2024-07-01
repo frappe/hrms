@@ -141,8 +141,10 @@ class Attendance(Document):
 			)
 		).run(as_dict=True)
 
-		if same_date_attendance and has_overlapping_timings(self.shift, same_date_attendance[0].shift):
-			return same_date_attendance[0]
+		for d in same_date_attendance:
+			if has_overlapping_timings(self.shift, d.shift):
+				return d
+
 		return {}
 
 	def validate_employee_status(self):
