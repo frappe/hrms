@@ -58,6 +58,10 @@
    "read_only": 1
   },
   {
+   "fieldname": "column_break_hbju",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "payroll_frequency",
    "fieldtype": "Select",
    "in_standard_filter": 1,
@@ -66,14 +70,21 @@
    "read_only": 1
   },
   {
-   "fieldname": "column_break_rhlv",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "number_of_withholding_cycles",
    "fieldtype": "Int",
    "label": "Number of Withholding Cycles",
    "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_rhlv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
    "reqd": 1
   },
   {
@@ -103,14 +114,20 @@
    "read_only": 1
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Salary Withholding",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
+   "fieldname": "column_break_qlwx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.relieving_date",
+   "fieldname": "relieving_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Relieving Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reason_section",
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "reason_for_withholding_salary",
@@ -128,39 +145,22 @@
    "options": "Salary Withholding Cycle"
   },
   {
-   "fetch_from": "employee.relieving_date",
-   "fieldname": "relieving_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Relieving Date",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_hbju",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "Today",
-   "fieldname": "posting_date",
-   "fieldtype": "Date",
-   "label": "Posting Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "reason_section",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "column_break_qlwx",
-   "fieldtype": "Column Break"
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Salary Withholding",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-01 11:20:02.023272",
+ "modified": "2024-07-01 11:36:47.960586",
  "modified_by": "Administrator",
- "module": "HR",
+ "module": "Payroll",
  "name": "Salary Withholding",
  "naming_rule": "Expression",
  "owner": "Administrator",
