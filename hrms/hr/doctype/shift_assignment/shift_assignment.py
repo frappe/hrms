@@ -114,7 +114,7 @@ def has_overlapping_timings(shift_1: str, shift_2: str) -> bool:
 		if d.end_time <= d.start_time:
 			d.end_time += timedelta(days=1)
 
-	return s1.end_time >= s2.start_time and s1.start_time <= s2.end_time
+	return s1.end_time > s2.start_time and s1.start_time < s2.end_time
 
 
 @frappe.whitelist()
