@@ -205,20 +205,7 @@ class PayrollEntry(Document):
 		return self.get_employees_with_unmarked_attendance()
 
 	def update_employees_with_withheld_salaries(self):
-		Withholding = frappe.qb.DocType("Salary Withholding")
-		WithholdingCycle = frappe.qb.DocType("Salary Withholding Cycle")
-		withheld_salaries = (
-			frappe.qb.from_(Withholding)
-			.join(WithholdingCycle)
-			.on(WithholdingCycle.parent == Withholding.name)
-			.select(Withholding.employee)
-			.where(
-				(WithholdingCycle.from_date == self.start_date)
-				& (WithholdingCycle.to_date == self.end_date)
-				& (WithholdingCycle.docstatus == 1)
-				& (WithholdingCycle.is_salary_released != 1)
-			)
-		).run(pluck=True)
+		withheld_salaries = get_salary_withholdings(self.start_date, self.end_date, pluck="employee")
 
 		for employee in self.employees:
 			if employee.employee in withheld_salaries:
@@ -1591,3 +1578,32 @@ def employee_query(doctype, txt, searchfield, start, page_len, filters):
 	)
 
 	return employee_list
+
+
+def get_salary_withholdings(
+	start_date: str,
+	end_date: str,
+	employee: str | None = None,
+	pluck: str | None = None,
+) -> list[str] | list[dict]:
+	Withholding = frappe.qb.DocType("Salary Withholding")
+	WithholdingCycle = frappe.qb.DocType("Salary Withholding Cycle")
+	withheld_salaries = (
+		frappe.qb.from_(Withholding)
+		.join(WithholdingCycle)
+		.on(WithholdingCycle.parent == Withholding.name)
+		.select(Withholding.employee, Withholding.name)
+		.where(
+			(WithholdingCycle.from_date == start_date)
+			& (WithholdingCycle.to_date == end_date)
+			& (WithholdingCycle.docstatus == 1)
+			& (WithholdingCycle.is_salary_released != 1)
+		)
+	)
+
+	if employee:
+		withheld_salaries = withheld_salaries.where(Withholding.employee == employee)
+
+	if pluck:
+		return withheld_salaries.run(pluck=pluck)
+	return withheld_salaries.run(as_dict=True)
