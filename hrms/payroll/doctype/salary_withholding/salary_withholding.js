@@ -7,7 +7,7 @@ frappe.ui.form.on("Salary Withholding", {
 
 		frappe
 			.call({
-				method: "hrms.hr.doctype.salary_withholding.salary_withholding.get_payroll_frequency",
+				method: "hrms.payroll.doctype.salary_withholding.salary_withholding.get_payroll_frequency",
 				args: {
 					employee: frm.doc.employee,
 					posting_date: frm.doc.posting_date,
