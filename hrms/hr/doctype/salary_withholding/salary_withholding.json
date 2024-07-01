@@ -9,20 +9,22 @@
   "employee",
   "employee_name",
   "company",
+  "column_break_hbju",
   "payroll_frequency",
-  "column_break_rhlv",
   "number_of_withholding_cycles",
-  "number_of_withheld_cycles",
+  "column_break_rhlv",
+  "posting_date",
   "from_date",
   "to_date",
   "exit_details_section",
   "date_of_joining",
+  "column_break_qlwx",
   "relieving_date",
-  "amended_from",
-  "column_break_hdbc",
+  "reason_section",
   "reason_for_withholding_salary",
   "section_break_xeyl",
-  "cycles"
+  "cycles",
+  "amended_from"
  ],
  "fields": [
   {
@@ -57,9 +59,10 @@
   },
   {
    "fieldname": "payroll_frequency",
-   "fieldtype": "Data",
+   "fieldtype": "Select",
    "in_standard_filter": 1,
    "label": "Payroll Frequency",
+   "options": "\nMonthly\nFortnightly\nBimonthly\nWeekly\nDaily",
    "read_only": 1
   },
   {
@@ -74,24 +77,20 @@
    "reqd": 1
   },
   {
-   "fieldname": "number_of_withheld_cycles",
-   "fieldtype": "Int",
-   "label": "Number of Cycles Withheld",
-   "non_negative": 1,
-   "read_only": 1
-  },
-  {
    "fieldname": "from_date",
    "fieldtype": "Date",
-   "label": "From Date"
+   "label": "From Date",
+   "reqd": 1
   },
   {
    "fieldname": "to_date",
    "fieldtype": "Date",
-   "label": "To Date"
+   "label": "To Date",
+   "read_only": 1,
+   "reqd": 1
   },
   {
-   "depends_on": "doc.relieving_date",
+   "depends_on": "relieving_date",
    "fieldname": "exit_details_section",
    "fieldtype": "Section Break",
    "label": "Exit Details"
@@ -112,10 +111,6 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
-  },
-  {
-   "fieldname": "column_break_hdbc",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "reason_for_withholding_salary",
@@ -139,12 +134,31 @@
    "in_list_view": 1,
    "label": "Relieving Date",
    "read_only": 1
+  },
+  {
+   "fieldname": "column_break_hbju",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reason_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_qlwx",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-01 07:39:46.155042",
+ "modified": "2024-07-01 11:20:02.023272",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Salary Withholding",
