@@ -161,12 +161,13 @@ frappe.ui.form.on("Payroll Entry", {
 		frappe.call({
 			method: "hrms.payroll.doctype.payroll_entry.payroll_entry.payroll_entry_has_bank_entries",
 			args: {
-				'name': frm.doc.name,
-				'payroll_payable_account': frm.doc.payroll_payable_account,
-				'number_of_unwithheld_employees': frm.doc.employees.filter(e => !e.salary_withheld).length
+				name: frm.doc.name,
+				payroll_payable_account: frm.doc.payroll_payable_account,
+				number_of_unwithheld_employees: frm.doc.employees.filter((e) => !e.salary_withheld)
+					.length,
 			},
 			callback: function (r) {
-				if (!r.message) return
+				if (!r.message) return;
 				if (r.message.status == "fulfilled" && !frm.doc.withheld_salaries_released) {
 					frm.add_custom_button(__("Release Withheld Salaries"), function () {
 						release_withheld_salaries(frm);
@@ -458,17 +459,14 @@ const release_withheld_salaries = (frm) => {
 		method: "make_bank_entry_for_withheld_salaries",
 		args: {},
 		callback: function () {
-			frappe.set_route(
-				'List', 'Journal Entry', {
-				"Journal Entry Account.reference_name": frm.doc.name
-			}
-			);
+			frappe.set_route("List", "Journal Entry", {
+				"Journal Entry Account.reference_name": frm.doc.name,
+			});
 		},
 		freeze: true,
-		freeze_message: __("Creating Payment Entries......")
-	})
-}
-
+		freeze_message: __("Creating Payment Entries......"),
+	});
+};
 
 let render_employee_attendance = function (frm, data) {
 	frm.fields_dict.attendance_detail_html.html(

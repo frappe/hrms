@@ -73,9 +73,7 @@ def get_salary_withholding_cycles_and_to_date(
 ):
 	cycles = []
 
-	withholding_to_date = calculate_to_date(
-		payroll_frequency, from_date, number_of_withholding_cycles
-	)
+	withholding_to_date = calculate_to_date(payroll_frequency, from_date, number_of_withholding_cycles)
 	cycle_from_date = from_date
 	cycle_to_date = from_date
 
