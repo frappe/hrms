@@ -911,6 +911,7 @@ class PayrollEntry(Document):
 			)
 			.where(
 				(SalarySlip.docstatus == 1)
+				& (SalarySlip.status != "Withheld")
 				& (SalarySlip.start_date >= self.start_date)
 				& (SalarySlip.end_date <= self.end_date)
 				& (SalarySlip.payroll_entry == self.name)
