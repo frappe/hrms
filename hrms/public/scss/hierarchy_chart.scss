@@ -20,12 +20,12 @@
 }
 
 .node-card.exported {
-	box-shadow: none
+	box-shadow: none;
 }
 
 .node-image {
-	width: 3.0rem;
-	height: 3.0rem;
+	width: 3rem;
+	height: 3rem;
 }
 
 .node-name {
@@ -60,7 +60,7 @@
 		display: flex;
 		background: var(--gray-300);
 		color: var(--gray-800);
-		font-size: .75rem;
+		font-size: 0.75rem;
 		align-items: center;
 		justify-content: center;
 		box-shadow: var(--shadow-sm);
@@ -94,7 +94,7 @@
 	border-radius: 0.5rem;
 	padding: 0.75rem;
 	width: 15rem;
-	height: 3.0rem;
+	height: 3rem;
 
 	.btn-edit-node {
 		display: none !important;
@@ -140,7 +140,7 @@
 	border-radius: 0.5rem;
 	padding: 0.75rem;
 	width: 15rem;
-	height: 3.0rem;
+	height: 3rem;
 
 	.btn-edit-node {
 		display: none !important;
@@ -202,7 +202,8 @@
 	margin: 0px 0px 16px 0px;
 }
 
-.hierarchy, .hierarchy-mobile {
+.hierarchy,
+.hierarchy-mobile {
 	.level {
 		margin-right: 8px;
 		align-items: flex-start;

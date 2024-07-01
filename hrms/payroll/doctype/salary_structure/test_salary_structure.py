@@ -54,7 +54,6 @@ class TestSalaryStructure(FrappeTestCase):
 			holiday_list.save()
 
 	def test_salary_structure_deduction_based_on_gross_pay(self):
-
 		emp = make_employee("test_employee_3@salary.com")
 
 		sal_struct = make_salary_structure("Salary Structure 2", "Monthly", dont_submit=True)
@@ -165,11 +164,14 @@ def make_salary_structure(
 	other_details=None,
 	test_tax=False,
 	company=None,
-	currency=erpnext.get_default_currency(),
+	currency=None,
 	payroll_period=None,
 	include_flexi_benefits=False,
 	base=None,
 ):
+	if not currency:
+		currency = erpnext.get_default_currency()
+
 	if frappe.db.exists("Salary Structure", salary_structure):
 		frappe.db.delete("Salary Structure", salary_structure)
 
@@ -227,14 +229,15 @@ def create_salary_structure_assignment(
 	salary_structure,
 	from_date=None,
 	company=None,
-	currency=erpnext.get_default_currency(),
+	currency=None,
 	payroll_period=None,
 	base=None,
 	allow_duplicate=False,
 ):
-	if not allow_duplicate and frappe.db.exists(
-		"Salary Structure Assignment", {"employee": employee}
-	):
+	if not currency:
+		currency = erpnext.get_default_currency()
+
+	if not allow_duplicate and frappe.db.exists("Salary Structure Assignment", {"employee": employee}):
 		frappe.db.sql("""delete from `tabSalary Structure Assignment` where employee=%s""", (employee))
 
 	if not payroll_period:
@@ -261,8 +264,8 @@ def create_salary_structure_assignment(
 	salary_structure_assignment.currency = currency
 	salary_structure_assignment.payroll_payable_account = get_payable_account(company)
 	salary_structure_assignment.company = company or erpnext.get_default_company()
-	salary_structure_assignment.save(ignore_permissions=True)
 	salary_structure_assignment.income_tax_slab = income_tax_slab
+	salary_structure_assignment.save(ignore_permissions=True)
 	salary_structure_assignment.submit()
 	return salary_structure_assignment
 

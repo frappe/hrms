@@ -16,7 +16,7 @@
 		"@vitejs/plugin-vue": "^4.4.0",
 		"dayjs": "^1.11.7",
 		"feather-icons": "^4.28.0",
-		"frappe-ui": "^0.1.18",
+		"frappe-ui": "^0.1.59",
 		"vue": "^3.2.25",
 		"vue-router": "^4.0.12",
 		"autoprefixer": "^10.4.2",

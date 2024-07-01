@@ -36,12 +36,16 @@ class EmployeePaymentEntry(PaymentEntry):
 		for d in self.get("references"):
 			if d.allocated_amount:
 				if update_ref_details_only_for and (
-					not (d.reference_doctype, d.reference_name) in update_ref_details_only_for
+					(d.reference_doctype, d.reference_name) not in update_ref_details_only_for
 				):
 					continue
 
 				ref_details = get_payment_reference_details(
-					d.reference_doctype, d.reference_name, self.party_account_currency
+					d.reference_doctype,
+					d.reference_name,
+					self.party_account_currency,
+					self.party_type,
+					self.party,
 				)
 
 				# Only update exchange rate when the reference is Journal Entry
@@ -69,7 +73,6 @@ def get_payment_entry_for_employee(dt, dn, party_amount=None, bank_account=None,
 	"""Function to make Payment Entry for Employee Advance, Gratuity, Expense Claim"""
 	doc = frappe.get_doc(dt, dn)
 
-	party_type = "Employee"
 	party_account = get_party_account(doc)
 	party_account_currency = get_account_currency(party_account)
 	payment_type = "Pay"
@@ -202,13 +205,15 @@ def get_paid_amount_and_received_amount(
 
 
 @frappe.whitelist()
-def get_payment_reference_details(reference_doctype, reference_name, party_account_currency):
+def get_payment_reference_details(
+	reference_doctype, reference_name, party_account_currency, party_type=None, party=None
+):
 	if reference_doctype in ("Expense Claim", "Employee Advance", "Gratuity"):
-		return get_reference_details_for_employee(
-			reference_doctype, reference_name, party_account_currency
-		)
+		return get_reference_details_for_employee(reference_doctype, reference_name, party_account_currency)
 	else:
-		return get_reference_details(reference_doctype, reference_name, party_account_currency)
+		return get_reference_details(
+			reference_doctype, reference_name, party_account_currency, party_type, party
+		)
 
 
 @frappe.whitelist()
@@ -220,9 +225,7 @@ def get_reference_details_for_employee(reference_doctype, reference_name, party_
 	total_amount = outstanding_amount = exchange_rate = None
 
 	ref_doc = frappe.get_doc(reference_doctype, reference_name)
-	company_currency = ref_doc.get("company_currency") or erpnext.get_company_currency(
-		ref_doc.company
-	)
+	company_currency = ref_doc.get("company_currency") or erpnext.get_company_currency(ref_doc.company)
 
 	total_amount, exchange_rate = get_total_amount_and_exchange_rate(
 		ref_doc, party_account_currency, company_currency

@@ -166,9 +166,7 @@ class TestEmployeeAdvance(FrappeTestCase):
 
 		args = {"type": "Deduction"}
 		create_salary_component("Advance Salary - Deduction", **args)
-		make_salary_structure(
-			"Test Additional Salary for Advance Return", "Monthly", employee=employee_name
-		)
+		make_salary_structure("Test Additional Salary for Advance Return", "Monthly", employee=employee_name)
 
 		# additional salary for 700 first
 		advance.reload()

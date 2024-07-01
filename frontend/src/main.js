@@ -107,7 +107,7 @@ router.isReady().then(() => {
 	}
 })
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _, next) => {
 	let isLoggedIn = session.isLoggedIn
 
 	try {
@@ -116,9 +116,16 @@ router.beforeEach(async (to, from, next) => {
 		isLoggedIn = false
 	}
 
-	if (!isLoggedIn && to.name !== "Login") {
-		next({ name: "Login" })
-	} else if (isLoggedIn && to.name !== "InvalidEmployee") {
+	if (!isLoggedIn) {
+		// password reset page is outside the PWA scope
+		if (to.path === "/update-password") {
+			return next(false)
+		} else if (to.name !== "Login") {
+			next({ name: "Login" })
+		}
+	}
+
+	if (isLoggedIn && to.name !== "InvalidEmployee") {
 		await employeeResource.promise
 		// user should be an employee to access the app
 		// since all views are employee specific
