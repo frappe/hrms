@@ -200,8 +200,29 @@ class PayrollEntry(Document):
 
 		self.set("employees", employees)
 		self.number_of_employees = len(self.employees)
+		self.update_employees_with_withheld_salaries()
 
 		return self.get_employees_with_unmarked_attendance()
+
+	def update_employees_with_withheld_salaries(self):
+		Withholding = frappe.qb.DocType("Salary Withholding")
+		WithholdingCycle = frappe.qb.DocType("Salary Withholding Cycle")
+		withheld_salaries = (
+			frappe.qb.from_(Withholding)
+			.join(WithholdingCycle)
+			.on(WithholdingCycle.parent == Withholding.name)
+			.select(Withholding.employee)
+			.where(
+				(WithholdingCycle.from_date == self.start_date)
+				& (WithholdingCycle.to_date == self.end_date)
+				& (WithholdingCycle.docstatus == 1)
+				& (WithholdingCycle.is_salary_released != 1)
+			)
+		).run(pluck=True)
+
+		for employee in self.employees:
+			if employee.employee in withheld_salaries:
+				employee.salary_withheld = 1
 
 	@frappe.whitelist()
 	def create_salary_slips(self):
