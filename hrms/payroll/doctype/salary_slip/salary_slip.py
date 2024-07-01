@@ -2249,7 +2249,11 @@ def get_lwp_or_ppl_for_date(date, employee, holidays):
 			& (LeaveApplication.status == "Approved")
 			& (LeaveApplication.employee == employee)
 			& ((LeaveApplication.salary_slip.isnull()) | (LeaveApplication.salary_slip == ""))
+<<<<<<< HEAD
 			& ((LeaveApplication.from_date <= date) & (date <= LeaveApplication.to_date))
+=======
+			& ((LeaveApplication.from_date <= end_date) & (LeaveApplication.to_date >= start_date))
+>>>>>>> d8e53a94a (fix(Salary Slip): fetching of lwp leave applications)
 		)
 	)
 
