@@ -61,18 +61,19 @@ class FullandFinalStatement(Document):
 
 	@frappe.whitelist()
 	def get_outstanding_statements(self):
-		if self.relieving_date:
-			if not len(self.get("payables", [])):
-				components = self.get_payable_component()
-				self.create_component_row(components, "payables")
-			if not len(self.get("receivables", [])):
-				components = self.get_receivable_component()
-				self.create_component_row(components, "receivables")
-			self.get_assets_statements()
-		else:
+		if not self.relieving_date:
 			frappe.throw(
 				_("Set Relieving Date for Employee: {0}").format(get_link_to_form("Employee", self.employee))
 			)
+
+		if not self.payables:
+			self.add_withheld_salary_slips()
+			components = self.get_payable_component()
+			self.create_component_row(components, "payables")
+		if not self.receivables:
+			components = self.get_receivable_component()
+			self.create_component_row(components, "receivables")
+		self.get_assets_statements()
 
 	def get_assets_statements(self):
 		if not len(self.get("assets_allocated", [])):
@@ -101,6 +102,30 @@ class FullandFinalStatement(Document):
 			self.precision("total_receivable_amount"),
 		)
 
+	def add_withheld_salary_slips(self):
+		salary_slips = frappe.get_all(
+			"Salary Slip",
+			filters={
+				"employee": self.employee,
+				"status": "Withheld",
+				"docstatus": ("!=", 2),
+			},
+			fields=["name", "net_pay"],
+		)
+
+		for slip in salary_slips:
+			self.append(
+				"payables",
+				{
+					"status": "Unsettled",
+					"component": "Salary Slip",
+					"reference_document_type": "Salary Slip",
+					"reference_document": slip.name,
+					"amount": slip.net_pay,
+					"paid_via_salary_slip": 1,
+				},
+			)
+
 	def create_component_row(self, components, component_type):
 		for component in components:
 			self.append(
@@ -114,7 +139,6 @@ class FullandFinalStatement(Document):
 
 	def get_payable_component(self):
 		return [
-			"Salary Slip",
 			"Gratuity",
 			"Expense Claim",
 			"Bonus",
@@ -122,10 +146,10 @@ class FullandFinalStatement(Document):
 		]
 
 	def get_receivable_component(self):
-		return [
-			"Loan",
-			"Employee Advance",
-		]
+		receivables = ["Employee Advance"]
+		if "lending" in frappe.get_installed_apps():
+			receivables.append("Loan")
+		return receivables
 
 	def get_assets_movement(self):
 		asset_movements = frappe.get_all(
