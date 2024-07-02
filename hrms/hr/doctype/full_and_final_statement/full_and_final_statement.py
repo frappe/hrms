@@ -22,6 +22,9 @@ class FullandFinalStatement(Document):
 		self.validate_settlement("receivables")
 		self.validate_assets()
 
+	def on_cancel(self):
+		self.ignore_linked_doctypes = ("GL Entry",)
+
 	def validate_relieving_date(self):
 		if not self.relieving_date:
 			frappe.throw(
@@ -280,4 +283,6 @@ def update_full_and_final_statement_status(doc, method=None):
 
 	for entry in doc.accounts:
 		if entry.reference_type == "Full and Final Statement":
-			frappe.db.set_value("Full and Final Statement", entry.reference_name, "status", status)
+			fnf = frappe.get_doc("Full and Final Statement", entry.reference_name)
+			fnf.db_set("status", status)
+			fnf.notify_update()
