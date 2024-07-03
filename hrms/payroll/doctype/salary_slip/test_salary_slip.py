@@ -340,6 +340,21 @@ class TestSalarySlip(FrappeTestCase):
 
 		self.assertEqual(ss.payment_days, days_in_month - no_of_holidays - 3.75)
 
+	@change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
+	def test_payment_days_calculation_for_varying_leave_ranges(self):
+		emp_id = make_employee("test_payment_days_based_on_leave_application@salary.com")
+
+		make_leave_application(emp_id, "2024-06-28", "2024-07-03", "Leave Without Pay")  # 3 days in July
+		make_leave_application(emp_id, "2024-07-10", "2024-07-13", "Leave Without Pay")  # 4 days in July
+		make_leave_application(emp_id, "2024-07-28", "2024-08-05", "Leave Without Pay")  # 3 days in July
+
+		ss = make_employee_salary_slip(
+			emp_id, "Monthly", "Test Payment Based On Leave Application", "2024-07-01"
+		)
+
+		self.assertEqual(ss.leave_without_pay, 10)
+		self.assertEqual(ss.payment_days, 17)
+
 	@change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
 	def test_payment_days_in_salary_slip_based_on_timesheet(self):
 		from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
