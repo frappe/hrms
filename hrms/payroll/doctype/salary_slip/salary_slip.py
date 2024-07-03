@@ -2173,7 +2173,7 @@ def get_lwp_or_ppl_for_date_range(employee, start_date, end_date):
 			& (LeaveApplication.status == "Approved")
 			& (LeaveApplication.employee == employee)
 			& ((LeaveApplication.salary_slip.isnull()) | (LeaveApplication.salary_slip == ""))
-			& ((LeaveApplication.from_date >= start_date) & (LeaveApplication.to_date <= end_date))
+			& ((LeaveApplication.from_date <= end_date) & (LeaveApplication.to_date >= start_date))
 		)
 	).run(as_dict=True)
 
