@@ -41,6 +41,8 @@
   "send_interview_feedback_reminder",
   "feedback_reminder_notification_template",
   "column_break_4",
+  "send_reminder_for_rescheduled_interview",
+  "rescheduled_interview_reminder_template",
   "hiring_sender",
   "hiring_sender_email",
   "employee_exit_section",
@@ -316,13 +318,26 @@
    "fieldname": "attendance_settings_section",
    "fieldtype": "Section Break",
    "label": "Attendance Settings"
+  },
+  {
+   "default": "0",
+   "fieldname": "send_reminder_for_rescheduled_interview",
+   "fieldtype": "Check",
+   "label": "Send Reminder For Rescheduled Interview"
+  },
+  {
+   "depends_on": "send_reminder_for_rescheduled_interview",
+   "fieldname": "rescheduled_interview_reminder_template",
+   "fieldtype": "Link",
+   "label": "Rescheduled Interview Reminder Template",
+   "options": "Email Template"
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-06-26 15:20:17.802079",
+ "modified": "2024-07-04 12:18:37.906016",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
