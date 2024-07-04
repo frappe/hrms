@@ -855,26 +855,24 @@ def notify_bulk_action_status(doctype: str, failure: list, success: list) -> Non
 	)
 
 
-def check_app_permission():
-	"""Check if user has permission to access the app (for showing the app on app screen)"""
-	if frappe.session.user == "Administrator":
-		return True
+@frappe.whitelist()
+def set_geolocation_from_coordinates(doc):
+	if not frappe.db.get_single_value("HR Settings", "allow_geolocation_tracking"):
+		return
 
-	if frappe.has_permission("Employee", ptype="read"):
-		return True
+	if not (doc.latitude and doc.longitude):
+		return
 
-	return False
-
-
-def get_exact_month_diff(string_ed_date: DateTimeLikeObject, string_st_date: DateTimeLikeObject) -> int:
-	"""Return the difference between given two dates in months."""
-	ed_date = getdate(string_ed_date)
-	st_date = getdate(string_st_date)
-	diff = (ed_date.year - st_date.year) * 12 + ed_date.month - st_date.month
-
-	# count the last month only if end date's day > start date's day
-	# to handle cases like 16th Jul 2024 - 15th Jul 2025
-	# where framework's month_diff will calculate diff as 13 months
-	if ed_date.day > st_date.day:
-		diff += 1
-	return diff
+	doc.geolocation = frappe.json.dumps(
+		{
+			"type": "FeatureCollection",
+			"features": [
+				{
+					"type": "Feature",
+					"properties": {},
+					# geojson needs coordinates in reverse order: long, lat instead of lat, long
+					"geometry": {"type": "Point", "coordinates": [doc.longitude, doc.latitude]},
+				}
+			],
+		}
+	)
