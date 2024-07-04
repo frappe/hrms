@@ -845,3 +845,26 @@ def notify_bulk_action_status(doctype: str, failure: list, success: list) -> Non
 		title=title,
 		is_minimizable=True,
 	)
+
+
+@frappe.whitelist()
+def set_geolocation_from_coordinates(doc):
+	if not frappe.db.get_single_value("HR Settings", "allow_geolocation_tracking"):
+		return
+
+	if not (doc.latitude and doc.longitude):
+		return
+
+	doc.geolocation = frappe.json.dumps(
+		{
+			"type": "FeatureCollection",
+			"features": [
+				{
+					"type": "Feature",
+					"properties": {},
+					# geojson needs coordinates in reverse order: long, lat instead of lat, long
+					"geometry": {"type": "Point", "coordinates": [doc.longitude, doc.latitude]},
+				}
+			],
+		}
+	)
