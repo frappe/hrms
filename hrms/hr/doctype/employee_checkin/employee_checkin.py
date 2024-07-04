@@ -8,7 +8,11 @@ from frappe.model.document import Document
 from frappe.utils import cint, get_datetime
 
 from hrms.hr.doctype.shift_assignment.shift_assignment import get_actual_start_end_datetime_of_shift
-from hrms.hr.utils import set_geolocation_from_coordinates, validate_active_employee
+from hrms.hr.utils import (
+	get_distance_between_coordinates,
+	set_geolocation_from_coordinates,
+	validate_active_employee,
+)
 
 
 class EmployeeCheckin(Document):
@@ -17,6 +21,7 @@ class EmployeeCheckin(Document):
 		self.validate_duplicate_log()
 		self.fetch_shift()
 		set_geolocation_from_coordinates(self)
+		self.validate_distance_from_shift_location()
 
 	def validate_duplicate_log(self):
 		doc = frappe.db.exists(
@@ -61,6 +66,33 @@ class EmployeeCheckin(Document):
 			self.shift_actual_end = shift_actual_timings.actual_end
 			self.shift_start = shift_actual_timings.start_datetime
 			self.shift_end = shift_actual_timings.end_datetime
+
+	def validate_distance_from_shift_location(self):
+		assignment_locations = frappe.get_all(
+			"Shift Assignment",
+			filters={
+				"employee": self.employee,
+				"shift_type": self.shift,
+				"start_date": ["<=", self.time],
+				"shift_location": ["is", "set"],
+			},
+			or_filters=[["end_date", ">=", self.time], ["end_date", "is", "not set"]],
+			pluck="shift_location",
+		)
+		if not assignment_locations:
+			return
+
+		checkin_radius, latitude, longitude = frappe.db.get_value(
+			"Shift Location", assignment_locations[0], ["checkin_radius", "latitude", "longitude"]
+		)
+		if checkin_radius <= 0:
+			return
+
+		distance = get_distance_between_coordinates(latitude, longitude, self.latitude, self.longitude)
+		if distance > checkin_radius:
+			frappe.throw(
+				_("You must be within {0} meters of your shift location to check in.").format(checkin_radius)
+			)
 
 
 @frappe.whitelist()
