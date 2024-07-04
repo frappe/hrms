@@ -47,8 +47,9 @@
   "exit_questionnaire_web_form",
   "column_break_34",
   "exit_questionnaire_notification_template",
-  "mobile_settings_section",
-  "allow_employee_checkin_from_mobile_app"
+  "attendance_settings_section",
+  "allow_employee_checkin_from_mobile_app",
+  "allow_geolocation_tracking"
  ],
  "fields": [
   {
@@ -306,16 +307,22 @@
    "label": "Allow Employee Checkin from Mobile App"
   },
   {
-   "fieldname": "mobile_settings_section",
+   "default": "0",
+   "fieldname": "allow_geolocation_tracking",
+   "fieldtype": "Check",
+   "label": "Allow Geolocation Tracking"
+  },
+  {
+   "fieldname": "attendance_settings_section",
    "fieldtype": "Section Break",
-   "label": "Mobile Settings"
+   "label": "Attendance Settings"
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-04-10 14:25:29.958973",
+ "modified": "2024-06-26 15:20:17.802079",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
@@ -329,6 +336,25 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "HR User",
+   "share": 1
+  },
+  {
+   "read": 1,
+   "role": "Employee"
   }
  ],
  "sort_field": "creation",
