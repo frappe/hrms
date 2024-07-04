@@ -322,7 +322,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-05-08 00:40:32.809157",
+ "modified": "2024-06-26 15:20:17.802079",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
@@ -336,6 +336,21 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "HR User",
+   "share": 1
   },
   {
    "read": 1,
