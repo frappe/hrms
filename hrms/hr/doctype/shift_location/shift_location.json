@@ -12,6 +12,7 @@
   "latitude",
   "longitude",
   "section_break_xxli",
+  "fetch_geolocation",
   "geolocation"
  ],
  "fields": [
@@ -51,10 +52,15 @@
    "fieldname": "latitude",
    "fieldtype": "Float",
    "label": "Latitude"
+  },
+  {
+   "fieldname": "fetch_geolocation",
+   "fieldtype": "Button",
+   "label": "Fetch Geolocation"
   }
  ],
  "links": [],
- "modified": "2024-07-04 12:31:00.609940",
+ "modified": "2024-07-04 15:11:06.272970",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Location",

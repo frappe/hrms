@@ -79,7 +79,7 @@ $.extend(hrms, {
 		employees,
 		no_data_message = __("No Data"),
 		get_editor = null,
-		events = {},
+		events = {}
 	) => {
 		// section automatically collapses on applying a single filter
 		frm.set_df_property("quick_filters_section", "collapsible", 0);
@@ -119,7 +119,7 @@ $.extend(hrms, {
 				doctype,
 				message.failure,
 				message.success,
-				message.for_processing,
+				message.for_processing
 			);
 
 			// refresh only on complete/partial success
@@ -144,7 +144,7 @@ $.extend(hrms, {
 			message += " " + frappe.utils.comma_and(failure) + "<hr>";
 			message += __(
 				"Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details",
-				[doctype, __("Error Log")],
+				[doctype, __("Error Log")]
 			);
 			title = __("Failure");
 			indicator = "red";
@@ -163,7 +163,7 @@ $.extend(hrms, {
 			]);
 			message += __(
 				"<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>",
-				[__("Employee"), doctype],
+				[__("Employee"), doctype]
 			);
 			for (const d of success) {
 				message += `<tr><td>${d.employee}</td><td>${d.doc}</td></tr>`;
@@ -177,6 +177,43 @@ $.extend(hrms, {
 			indicator,
 			is_minimizable: true,
 		});
+	},
+
+	fetch_geolocation: async (frm) => {
+		if (!navigator.geolocation) {
+			frappe.msgprint({
+				message: __("Geolocation is not supported by your current browser"),
+				title: __("Geolocation Error"),
+				indicator: "red",
+			});
+			hide_field(["geolocation"]);
+			return;
+		}
+
+		frappe.dom.freeze(__("Fetching your geolocation") + "...");
+
+		navigator.geolocation.getCurrentPosition(
+			async (position) => {
+				frm.set_value("latitude", position.coords.latitude);
+				frm.set_value("longitude", position.coords.longitude);
+
+				await frm.call("hrms.hr.utils.set_geolocation_from_coordinates");
+				frappe.dom.unfreeze();
+			},
+			(error) => {
+				frappe.dom.unfreeze();
+
+				let msg = __("Unable to retrieve your location") + "<br><br>";
+				if (error) {
+					msg += __("ERROR({0}): {1}", [error.code, error.message]);
+				}
+				frappe.msgprint({
+					message: msg,
+					title: __("Geolocation Error"),
+					indicator: "red",
+				});
+			}
+		);
 	},
 
 	get_doctype_fields_for_autocompletion: (doctype) => {
