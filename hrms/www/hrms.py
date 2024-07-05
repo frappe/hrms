@@ -1,4 +1,5 @@
 import frappe
+from frappe.boot import load_translations
 
 no_cache = 1
 
@@ -20,9 +21,18 @@ def get_context_for_dev():
 
 
 def get_boot():
+<<<<<<< HEAD
 	return frappe._dict(
+=======
+	bootinfo = frappe._dict(
+>>>>>>> 371287843 (feat(PWA): Add translations to bootinfo)
 		{
 			"site_name": frappe.local.site,
 			"push_relay_server_url": frappe.conf.get("push_relay_server_url") or "",
 		}
 	)
+
+	bootinfo.lang = frappe.local.lang
+	load_translations(bootinfo)
+
+	return bootinfo
