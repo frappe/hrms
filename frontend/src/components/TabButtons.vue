@@ -11,7 +11,7 @@
 			"
 			@click="$emit('update:modelValue', button.label)"
 		>
-			{{ button.label }}
+			{{ __(button.label) }}
 		</button>
 	</div>
 </template>

@@ -2,7 +2,7 @@
 	<ion-page>
 		<ListView
 			doctype="Employee Advance"
-			pageTitle="Employee Advances"
+			:pageTitle="__('Employee Advances')"
 			:tabButtons="TAB_BUTTONS"
 			:fields="EMPLOYEE_ADVANCE_FIELDS"
 			:filterConfig="FILTER_CONFIG"

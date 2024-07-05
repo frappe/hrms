@@ -2,7 +2,7 @@
 	<ion-page>
 		<ListView
 			doctype="Expense Claim"
-			pageTitle="Claim History"
+			:pageTitle="('Claim History')"
 			:tabButtons="TAB_BUTTONS"
 			:fields="EXPENSE_CLAIM_FIELDS"
 			groupBy="`tabExpense Claim`.name"

@@ -31,7 +31,7 @@
 							<template #prefix>
 								<FeatherIcon name="plus" class="w-4" />
 							</template>
-							New
+							{{ __("New", null, props.doctype) }}
 						</Button>
 					</router-link>
 				</div>
@@ -90,7 +90,7 @@
 					</div>
 				</div>
 				<EmptyState
-					:message="`No ${props.doctype?.toLowerCase()}s found`"
+					:message="__('No {0} found', [__(props.doctype)])"
 					v-else-if="!documents.loading"
 				/>
 
