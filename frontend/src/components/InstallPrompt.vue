@@ -2,15 +2,15 @@
 	<!-- Install PWA dialog -->
 	<Dialog v-model="showDialog">
 		<template #body-title>
-			<h2 class="text-lg font-bold">Install Frappe HR</h2>
+			<h2 class="text-lg font-bold">{{ __("Install Frappe HR") }} </h2>
 		</template>
 		<template #body-content>
-			<p>Get the app on your device for easy access & a better experience!</p>
+			<p>{{ __("Get the app on your device for easy access & a better experience!") }} </p>
 		</template>
 		<template #actions>
 			<Button variant="solid" @click="() => install()" class="py-5 w-full">
 				<template #prefix><FeatherIcon name="download" class="w-4" /></template>
-				Install
+				{{ __("Install") }}
 			</Button>
 		</template>
 	</Dialog>
@@ -25,7 +25,7 @@
 					class="flex flex-row text-center items-center justify-between mb-1 px-3"
 				>
 					<span class="text-base text-gray-900 font-bold">
-						Install Frappe HR
+						{{ __("Install Frappe HR") }}
 					</span>
 					<span class="inline-flex items-baseline">
 						<FeatherIcon
@@ -38,7 +38,7 @@
 				<div class="text-xs text-gray-800 px-3">
 					<span class="flex flex-col gap-2">
 						<span>
-							Get the app on your iPhone for easy access & a better experience
+							{{ __("Get the app on your iPhone for easy access & a better experience") }}
 						</span>
 						<span class="inline-flex items-start whitespace-nowrap">
 							<span>Tap&nbsp;</span>

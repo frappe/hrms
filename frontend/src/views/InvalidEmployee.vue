@@ -4,12 +4,12 @@
 			<div class="flex h-screen w-screen flex-col justify-center bg-white">
 				<Dialog
 					:options="{
-						title: 'Login Failed',
-						message: `No active employee found associated with the email ID ${session?.user}. Try logging in with your employee email ID or contact your HR manager for access.`,
+						title: __('Login Failed'),
+						message: __('No active employee found associated with the email ID {0}. Try logging in with your employee email ID or contact your HR manager for access.', [session?.user]),
 						size: 'lg',
 						actions: [
 							{
-								label: 'Go to Login',
+								label: __('Go to Login'),
 								variant: 'solid',
 								onClick: () => session.logout.submit(),
 							},

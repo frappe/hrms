@@ -2,7 +2,7 @@
 	<ion-page>
 		<ListView
 			doctype="Leave Application"
-			pageTitle="Leave History"
+			:pageTitle="__('Leave History')"
 			:tabButtons="TAB_BUTTONS"
 			:fields="LEAVE_FIELDS"
 			:filterConfig="FILTER_CONFIG"
