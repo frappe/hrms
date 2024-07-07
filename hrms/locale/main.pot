@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frappe HR VERSION\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-06-30 09:34+0000\n"
-"PO-Revision-Date: 2024-06-30 09:34+0000\n"
+"POT-Creation-Date: 2024-07-07 09:34+0000\n"
+"PO-Revision-Date: 2024-07-07 09:34+0000\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: contact@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -1327,7 +1327,7 @@ msgstr ""
 msgid "Appraisee"
 msgstr ""
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.js:165
+#: hr/doctype/appraisal_cycle/appraisal_cycle.js:159
 msgid "Appraisees: {0}"
 msgstr ""
 
@@ -1390,7 +1390,7 @@ msgstr ""
 msgid "Are you sure you want to email the selected salary slips?"
 msgstr ""
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.js:140
+#: hr/doctype/appraisal_cycle/appraisal_cycle.js:134
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:270
 #: payroll/doctype/salary_component/salary_component.js:119
 msgid "Are you sure you want to proceed?"
@@ -4810,11 +4810,11 @@ msgstr ""
 msgid "Employees will miss holiday reminders from {} until {}. <br> Do you want to proceed with this change?"
 msgstr ""
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.js:173
+#: hr/doctype/appraisal_cycle/appraisal_cycle.js:167
 msgid "Employees without Feedback: {0}"
 msgstr ""
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.js:177
+#: hr/doctype/appraisal_cycle/appraisal_cycle.js:171
 msgid "Employees without Goals: {0}"
 msgstr ""
 
@@ -5523,7 +5523,7 @@ msgstr ""
 msgid "Fetch Geolocation"
 msgstr ""
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.js:115
+#: hr/doctype/appraisal_cycle/appraisal_cycle.js:109
 #: payroll/doctype/payroll_entry/payroll_entry.js:114
 msgid "Fetching Employees"
 msgstr ""
@@ -10613,7 +10613,7 @@ msgstr ""
 #: payroll/doctype/retention_bonus/retention_bonus.json
 #: payroll/doctype/salary_component/salary_component.json
 #: payroll/doctype/salary_structure/salary_structure.json
-#: public/js/utils/payroll_utils.js:27
+#: public/js/utils/payroll_utils.js:23
 msgid "Salary Component"
 msgstr ""
 
@@ -10841,7 +10841,7 @@ msgctxt "Salary Structure Assignment"
 msgid "Salary Structure Assignment"
 msgstr ""
 
-#: public/js/utils/payroll_utils.js:35
+#: public/js/utils/payroll_utils.js:31
 msgid "Salary Structure Assignment field"
 msgstr ""
 
@@ -11060,7 +11060,7 @@ msgstr ""
 msgid "Self Appraisal"
 msgstr ""
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.js:169
+#: hr/doctype/appraisal_cycle/appraisal_cycle.js:163
 msgid "Self Appraisal Pending: {0}"
 msgstr ""
 
@@ -12174,7 +12174,7 @@ msgstr ""
 msgid "These leaves are holidays permitted by the company however, availing it is optional for an Employee."
 msgstr ""
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.js:136
+#: hr/doctype/appraisal_cycle/appraisal_cycle.js:130
 msgid "This action will prevent making changes to the linked appraisal feedback/goals."
 msgstr ""
 
@@ -13634,8 +13634,7 @@ msgstr ""
 msgid "{0} Appraisal(s) are not submitted yet"
 msgstr ""
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.js:100
-#: public/js/utils/payroll_utils.js:12
+#: public/js/utils/index.js:192
 msgid "{0} Field"
 msgstr ""
 
