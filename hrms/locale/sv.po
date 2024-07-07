@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-06-30 09:34+0000\n"
-"PO-Revision-Date: 2024-07-05 15:01\n"
+"PO-Revision-Date: 2024-07-07 15:30\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -2122,7 +2122,7 @@ msgstr "Klagomål Orsak"
 #. Option for the 'Type' (Select) field in DocType 'Vehicle Service'
 #: hr/doctype/vehicle_service/vehicle_service.json
 msgid "Change"
-msgstr "Växel"
+msgstr "Växel Belopp"
 
 #: hr/doctype/goal/goal.js:112
 msgid "Changing KRA in this parent goal will align all the child goals to the same KRA, if any."
