@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-06-30 09:34+0000\n"
-"PO-Revision-Date: 2024-07-03 14:37\n"
+"POT-Creation-Date: 2024-07-07 09:34+0000\n"
+"PO-Revision-Date: 2024-07-09 16:04\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -1309,7 +1309,7 @@ msgstr "crwdns105268:0{0}crwdnd105268:0{1}crwdne105268:0"
 msgid "Appraisee"
 msgstr "crwdns105270:0crwdne105270:0"
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.js:165
+#: hr/doctype/appraisal_cycle/appraisal_cycle.js:159
 msgid "Appraisees: {0}"
 msgstr "crwdns105272:0{0}crwdne105272:0"
 
@@ -1372,7 +1372,7 @@ msgstr "crwdns141004:0crwdne141004:0"
 msgid "Are you sure you want to email the selected salary slips?"
 msgstr "crwdns105298:0crwdne105298:0"
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.js:140
+#: hr/doctype/appraisal_cycle/appraisal_cycle.js:134
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:270
 #: payroll/doctype/salary_component/salary_component.js:119
 msgid "Are you sure you want to proceed?"
@@ -4792,11 +4792,11 @@ msgstr "crwdns106926:0{0}crwdnd106926:0{1}crwdne106926:0"
 msgid "Employees will miss holiday reminders from {} until {}. <br> Do you want to proceed with this change?"
 msgstr "crwdns106928:0crwdne106928:0"
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.js:173
+#: hr/doctype/appraisal_cycle/appraisal_cycle.js:167
 msgid "Employees without Feedback: {0}"
 msgstr "crwdns106930:0{0}crwdne106930:0"
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.js:177
+#: hr/doctype/appraisal_cycle/appraisal_cycle.js:171
 msgid "Employees without Goals: {0}"
 msgstr "crwdns106932:0{0}crwdne106932:0"
 
@@ -5505,7 +5505,7 @@ msgstr "crwdns107236:0{0}crwdne107236:0"
 msgid "Fetch Geolocation"
 msgstr "crwdns141506:0crwdne141506:0"
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.js:115
+#: hr/doctype/appraisal_cycle/appraisal_cycle.js:109
 #: payroll/doctype/payroll_entry/payroll_entry.js:114
 msgid "Fetching Employees"
 msgstr "crwdns107238:0crwdne107238:0"
@@ -10595,7 +10595,7 @@ msgstr "crwdns142316:0crwdne142316:0"
 #: payroll/doctype/retention_bonus/retention_bonus.json
 #: payroll/doctype/salary_component/salary_component.json
 #: payroll/doctype/salary_structure/salary_structure.json
-#: public/js/utils/payroll_utils.js:27
+#: public/js/utils/payroll_utils.js:23
 msgid "Salary Component"
 msgstr "crwdns109414:0crwdne109414:0"
 
@@ -10823,7 +10823,7 @@ msgctxt "Salary Structure Assignment"
 msgid "Salary Structure Assignment"
 msgstr "crwdns109514:0crwdne109514:0"
 
-#: public/js/utils/payroll_utils.js:35
+#: public/js/utils/payroll_utils.js:31
 msgid "Salary Structure Assignment field"
 msgstr "crwdns142340:0crwdne142340:0"
 
@@ -11042,7 +11042,7 @@ msgstr "crwdns109606:0crwdne109606:0"
 msgid "Self Appraisal"
 msgstr "crwdns109608:0crwdne109608:0"
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.js:169
+#: hr/doctype/appraisal_cycle/appraisal_cycle.js:163
 msgid "Self Appraisal Pending: {0}"
 msgstr "crwdns109612:0{0}crwdne109612:0"
 
@@ -12156,7 +12156,7 @@ msgstr "crwdns110086:0{0}crwdnd110086:0{1}crwdne110086:0"
 msgid "These leaves are holidays permitted by the company however, availing it is optional for an Employee."
 msgstr "crwdns142536:0crwdne142536:0"
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.js:136
+#: hr/doctype/appraisal_cycle/appraisal_cycle.js:130
 msgid "This action will prevent making changes to the linked appraisal feedback/goals."
 msgstr "crwdns110090:0crwdne110090:0"
 
@@ -13616,8 +13616,7 @@ msgstr "crwdns110718:0{0}crwdne110718:0"
 msgid "{0} Appraisal(s) are not submitted yet"
 msgstr "crwdns110720:0{0}crwdne110720:0"
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.js:100
-#: public/js/utils/payroll_utils.js:12
+#: public/js/utils/index.js:192
 msgid "{0} Field"
 msgstr "crwdns142776:0{0}crwdne142776:0"
 
