@@ -13,6 +13,7 @@ from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import (
 	expire_allocation,
 )
 from hrms.hr.utils import create_additional_leave_ledger_entry, get_leave_period, set_employee_name
+from hrms.hr.utils import get_monthly_earned_leave as _get_monthly_earned_leave
 
 
 class OverlapError(frappe.ValidationError):
@@ -345,6 +346,30 @@ class LeaveAllocation(Document):
 				frappe.bold(new_leaves), frappe.session.user, frappe.bold(formatdate(date))
 			)
 			self.add_comment(comment_type="Info", text=text)
+
+	@frappe.whitelist()
+	def get_monthly_earned_leave(self):
+		doj = frappe.db.get_value("Employee", self.employee, "date_of_joining")
+
+		annual_allocation = frappe.db.get_value(
+			"Leave Policy Detail",
+			{
+				"parent": self.leave_policy,
+				"leave_type": self.leave_type,
+			},
+			"annual_allocation",
+		)
+
+		frequency, rounding = frappe.db.get_value(
+			"Leave Type",
+			self.leave_type,
+			[
+				"earned_leave_frequency",
+				"rounding",
+			],
+		)
+
+		return _get_monthly_earned_leave(doj, annual_allocation, frequency, rounding)
 
 
 def get_previous_allocation(from_date, leave_type, employee):
