@@ -49,7 +49,10 @@ frappe.ui.form.on("Leave Allocation", {
 	},
 
 	add_allocate_leaves_button: async function (frm) {
-		const monthly_earned_leave = await frm.trigger("get_monthly_earned_leave");
+		const { message: monthly_earned_leave } = await frappe.call({
+			method: "get_monthly_earned_leave",
+			doc: frm.doc,
+		});
 
 		frm.add_custom_button(__("Allocate Leaves Manually"), function () {
 			const dialog = new frappe.ui.Dialog({
@@ -77,43 +80,6 @@ frappe.ui.form.on("Leave Allocation", {
 			dialog.fields_dict.new_leaves.set_value(monthly_earned_leave);
 			dialog.show();
 		});
-	},
-
-	get_monthly_earned_leave: async function (frm) {
-		const {
-			message: { date_of_joining },
-		} = await frappe.db.get_value("Employee", frm.doc.employee, "date_of_joining");
-
-		const {
-			message: { annual_allocation },
-		} = await frappe.db.get_value(
-			"Leave Policy Detail",
-			{
-				parent: frm.doc.leave_policy,
-				leave_type: frm.doc.leave_type,
-			},
-			"annual_allocation",
-			() => {},
-			"Leave Policy",
-		);
-
-		const {
-			message: { earned_leave_frequency, rounding },
-		} = await frappe.db.get_value("Leave Type", frm.doc.leave_type, [
-			"earned_leave_frequency",
-			"rounding",
-		]);
-
-		const { message } = await frappe.call({
-			method: "hrms.hr.utils.get_monthly_earned_leave",
-			args: {
-				date_of_joining: date_of_joining,
-				annual_leaves: annual_allocation,
-				frequency: earned_leave_frequency,
-				rounding: rounding,
-			},
-		});
-		return message;
 	},
 
 	expire_allocation: function (frm) {
