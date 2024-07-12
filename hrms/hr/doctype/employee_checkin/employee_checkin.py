@@ -75,6 +75,7 @@ class EmployeeCheckin(Document):
 				"shift_type": self.shift,
 				"start_date": ["<=", self.time],
 				"shift_location": ["is", "set"],
+				"docstatus": 1,
 			},
 			or_filters=[["end_date", ">=", self.time], ["end_date", "is", "not set"]],
 			pluck="shift_location",

@@ -8,7 +8,7 @@ frappe.ui.form.on("Shift Location", {
 			"allow_geolocation_tracking",
 		);
 
-		if (!allow_geolocation_tracking) {
+		if (!allow_geolocation_tracking)
 			hide_field([
 				"checkin_radius",
 				"fetch_geolocation",
@@ -16,8 +16,6 @@ frappe.ui.form.on("Shift Location", {
 				"longitude",
 				"geolocation",
 			]);
-			return;
-		}
 	},
 
 	fetch_geolocation: (frm) => {
