@@ -15,6 +15,10 @@ from hrms.hr.utils import (
 )
 
 
+class CheckinRadiusExceededError(frappe.ValidationError):
+	pass
+
+
 class EmployeeCheckin(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
@@ -68,6 +72,12 @@ class EmployeeCheckin(Document):
 			self.shift_end = shift_actual_timings.end_datetime
 
 	def validate_distance_from_shift_location(self):
+		if not frappe.db.get_single_value("HR Settings", "allow_geolocation_tracking"):
+			return
+
+		if not (self.latitude or self.longitude):
+			frappe.throw(_("Latitude and longitude values are required for checking in."))
+
 		assignment_locations = frappe.get_all(
 			"Shift Assignment",
 			filters={
@@ -92,7 +102,8 @@ class EmployeeCheckin(Document):
 		distance = get_distance_between_coordinates(latitude, longitude, self.latitude, self.longitude)
 		if distance > checkin_radius:
 			frappe.throw(
-				_("You must be within {0} meters of your shift location to check in.").format(checkin_radius)
+				_("You must be within {0} meters of your shift location to check in.").format(checkin_radius),
+				exc=CheckinRadiusExceededError,
 			)
 
 
