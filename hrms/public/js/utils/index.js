@@ -214,6 +214,8 @@ $.extend(hrms, {
 				});
 			},
 		);
+	},
+
 	get_doctype_fields_for_autocompletion: (doctype) => {
 		const fields = frappe.get_meta(doctype).fields;
 		const autocompletions = [];
