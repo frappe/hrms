@@ -215,4 +215,21 @@ $.extend(hrms, {
 			},
 		);
 	},
+
+	get_doctype_fields_for_autocompletion: (doctype) => {
+		const fields = frappe.get_meta(doctype).fields;
+		const autocompletions = [];
+
+		fields
+			.filter((df) => !frappe.model.no_value_type.includes(df.fieldtype))
+			.map((df) => {
+				autocompletions.push({
+					value: df.fieldname,
+					score: 8,
+					meta: __("{0} Field", [doctype]),
+				});
+			});
+
+		return autocompletions;
+	},
 });
