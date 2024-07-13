@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-07-07 09:34+0000\n"
-"PO-Revision-Date: 2024-07-10 16:11\n"
+"PO-Revision-Date: 2024-07-13 20:39\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -2446,7 +2446,7 @@ msgstr "Kompensation Ledighet Förfråga"
 #: hr/workspace/hr/hr.json hr/workspace/leaves/leaves.json
 msgctxt "Compensatory Leave Request"
 msgid "Compensatory Leave Request"
-msgstr "Kompensation Ledighet Förfråga"
+msgstr "Kompensation Ledighet Ansökan"
 
 #: setup.py:351 setup.py:352
 msgid "Compensatory Off"
@@ -9044,7 +9044,7 @@ msgstr "Överlappande Skift"
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/salary_component/salary_component.json
 msgid "Overview"
-msgstr "Recension "
+msgstr "Översikt"
 
 #. Label of the overwrite_salary_structure_amount (Check) field in DocType
 #. 'Additional Salary'
@@ -13630,7 +13630,7 @@ msgstr "recension"
 
 #: public/js/templates/feedback_summary.html:16
 msgid "reviews"
-msgstr "recension "
+msgstr "recensioner"
 
 #: payroll/report/salary_register/salary_register.html:8
 msgid "to"
