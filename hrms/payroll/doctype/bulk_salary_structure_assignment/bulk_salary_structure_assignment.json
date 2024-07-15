@@ -108,10 +108,12 @@
    "label": "Employees HTML"
   },
   {
+   "fetch_from": "salary_structure.company",
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
    "options": "Company",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -145,7 +147,7 @@
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-02-09 19:08:44.834075",
+ "modified": "2024-07-09 19:33:40.135057",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Bulk Salary Structure Assignment",

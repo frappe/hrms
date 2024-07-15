@@ -76,6 +76,8 @@
    "reqd": 1
   },
   {
+   "fetch_from": "job_applicant.designation",
+   "fetch_if_empty": 1,
    "fieldname": "designation",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -167,7 +169,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-21 13:41:22.022838",
+ "modified": "2024-07-08 15:53:30.761581",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",
