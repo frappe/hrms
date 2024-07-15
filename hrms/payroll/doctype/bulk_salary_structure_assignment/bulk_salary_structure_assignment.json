@@ -147,11 +147,7 @@
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2024-02-09 19:08:44.834075",
-=======
  "modified": "2024-07-09 19:33:40.135057",
->>>>>>> 1c8a96b4a (fix(Bulk Salary Assignments): fetch company from structure & fix casing in error message)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Bulk Salary Structure Assignment",

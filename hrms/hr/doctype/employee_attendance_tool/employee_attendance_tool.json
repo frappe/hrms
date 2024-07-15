@@ -134,11 +134,7 @@
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2023-02-28 14:13:59.849205",
-=======
  "modified": "2024-07-08 20:02:36.408240",
->>>>>>> d15b1fe48 (fix: employee attendance tool datatable width)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Attendance Tool",

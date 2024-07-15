@@ -169,11 +169,7 @@
  ],
  "is_submittable": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2023-11-21 13:41:22.022838",
-=======
  "modified": "2024-07-08 15:53:30.761581",
->>>>>>> 92b4fa12d (fix: fetch applicant's designation in job offer)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",
