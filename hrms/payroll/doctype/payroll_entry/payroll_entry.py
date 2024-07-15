@@ -1421,13 +1421,17 @@ def show_payroll_submission_status(submitted, unsubmitted, payroll_entry):
 		frappe.msgprint(
 			_("Salary Slips submitted for period from {0} to {1}").format(
 				payroll_entry.start_date, payroll_entry.end_date
-			)
+			),
+			title=_("Success"),
+			indicator="green",
 		)
 	elif unsubmitted:
 		frappe.msgprint(
 			_("Could not submit some Salary Slips: {}").format(
 				", ".join(get_link_to_form("Salary Slip", entry) for entry in unsubmitted)
-			)
+			),
+			title=_("Failure"),
+			indicator="red",
 		)
 
 
