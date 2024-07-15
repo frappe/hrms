@@ -543,7 +543,7 @@ class SalarySlip(TransactionBase):
 			if self.relieving_date < getdate(self.start_date) and employee_status != "Left":
 				frappe.throw(
 					_("Employee {0} relieved on {1} must be set as 'Left'").format(
-						self.employee, self.relieving_date
+						get_link_to_form("Employee", self.employee), formatdate(self.relieving_date)
 					)
 				)
 >>>>>>> 3b30c751f (fix: error messages in payroll)
