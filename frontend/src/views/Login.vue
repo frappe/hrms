@@ -4,9 +4,7 @@
 			<div class="flex h-screen w-screen flex-col justify-center bg-white">
 				<div class="flex flex-col mx-auto gap-3 items-center">
 					<FrappeHRLogo class="h-8 w-8" />
-					<div class="text-3xl font-semibold text-gray-900 text-center">
-						Login to Frappe HR
-					</div>
+					<div class="text-3xl font-semibold text-gray-900 text-center">Login to Frappe HR</div>
 				</div>
 
 				<div class="mx-auto mt-10 w-full px-8 sm:w-96">
@@ -37,19 +35,17 @@
 				</div>
 			</div>
 
-			<Dialog v-model="resetPassword">
+			<Dialog v-model="resetPassword.showDialog">
 				<template #body-title>
 					<h2 class="text-lg font-bold">Reset Password</h2>
 				</template>
 				<template #body-content>
-					<p>
-						Your password has expired. Please reset your password to continue
-					</p>
+					<p>Your password has expired. Please reset your password to continue</p>
 				</template>
 				<template #actions>
 					<a
 						class="inline-flex items-center justify-center gap-2 transition-colors focus:outline-none text-white bg-gray-900 hover:bg-gray-800 active:bg-gray-700 focus-visible:ring focus-visible:ring-gray-400 h-7 text-base px-2 rounded"
-						:href="resetPasswordLink"
+						:href="resetPassword.link"
 						target="_blank"
 					>
 						Go to Reset Password page
@@ -59,7 +55,7 @@
 
 			<Dialog v-model="otp.showDialog">
 				<template #body-title>
-					<h2 class="text-lg font-bold">OTP</h2>
+					<h2 class="text-lg font-bold">OTP Verification</h2>
 				</template>
 				<template #body-content>
 					<p class="mb-4" v-if="otp.verification.prompt">
@@ -99,8 +95,11 @@ import FrappeHRLogo from "@/components/icons/FrappeHRLogo.vue"
 const email = ref(null)
 const password = ref(null)
 const errorMessage = ref("")
-const resetPassword = ref(false)
-const resetPasswordLink = ref("")
+
+const resetPassword = reactive({
+	showDialog: false,
+	link: "",
+})
 const otp = reactive({
 	showDialog: false,
 	tmp_id: "",
@@ -112,7 +111,7 @@ const session = inject("$session")
 
 async function submit(e) {
 	try {
-		let response;
+		let response
 		if (otp.showDialog) {
 			response = await session.otp(otp.tmp_id, otp.code)
 		} else {
@@ -120,13 +119,14 @@ async function submit(e) {
 		}
 
 		if (response.message === "Password Reset") {
-			resetPassword.value = true
-			resetPasswordLink.value = response.redirect_to
+			resetPassword.showDialog = true
+			resetPassword.link = response.redirect_to
 		} else {
-			resetPassword.value = false
-			resetPasswordLink.value = ""
+			resetPassword.showDialog = false
+			resetPassword.link = ""
 		}
 
+		// OTP verification
 		if (response.verification) {
 			if (response.verification.setup) {
 				otp.showDialog = true
@@ -134,7 +134,7 @@ async function submit(e) {
 				otp.verification = response.verification
 			} else {
 				// Don't bother handling impossible OTP setup (e.g. no phone number).
-				window.location.href = "/login?redirect-to=" + encodeURIComponent(window.location.pathname)
+				window.open("/login?redirect-to=" + encodeURIComponent(window.location.pathname), "_blank")
 			}
 		}
 	} catch (error) {

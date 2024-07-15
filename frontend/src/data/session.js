@@ -13,7 +13,7 @@ export function sessionUser() {
 	return _sessionUser
 }
 
-function afterLogin(response) {
+function handleLogin(response) {
 	if (response.message === "Logged In") {
 		userResource.reload()
 		employeeResource.reload()
@@ -26,12 +26,12 @@ function afterLogin(response) {
 export const session = reactive({
 	login: async (email, password) => {
 		const response = await call("login", { usr: email, pwd: password })
-		afterLogin(response)
+		handleLogin(response)
 		return response
 	},
 	otp: async (tmp_id, otp) => {
 		const response = await call("login", { tmp_id, otp })
-		afterLogin(response)
+		handleLogin(response)
 		return response
 	},
 	logout: createResource({
