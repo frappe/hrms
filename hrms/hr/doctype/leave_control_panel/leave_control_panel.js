@@ -188,8 +188,9 @@ frappe.ui.form.on("Leave Control Panel", {
 
 		hrms.validate_mandatory_fields(frm, selected_employees);
 
-		frappe.confirm(__("Allocate Leave to {0} employee(s)?", [selected_employees.length]), () =>
-			frm.events.bulk_allocate_leave(frm, selected_employees),
+		frappe.confirm(
+			__("Allocate leaves to {0} employee(s)?", [selected_employees.length]),
+			() => frm.events.bulk_allocate_leave(frm, selected_employees),
 		);
 	},
 
