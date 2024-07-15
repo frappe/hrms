@@ -528,6 +528,7 @@ class SalarySlip(TransactionBase):
 		"""
 		from erpnext.setup.doctype.employee.employee import is_holiday
 
+<<<<<<< HEAD
 		if include_holidays_in_total_working_days:
 			unmarked_days -= date_diff(end_date, start_date) + 1
 		else:
@@ -536,6 +537,16 @@ class SalarySlip(TransactionBase):
 				date = add_days(end_date, -days)
 				if not is_holiday(self.employee, date):
 					unmarked_days -= 1
+=======
+		if self.relieving_date:
+			employee_status = frappe.db.get_value("Employee", self.employee, "status")
+			if self.relieving_date < getdate(self.start_date) and employee_status != "Left":
+				frappe.throw(
+					_("Employee {0} relieved on {1} must be set as 'Left'").format(
+						self.employee, self.relieving_date
+					)
+				)
+>>>>>>> 3b30c751f (fix: error messages in payroll)
 
 		return unmarked_days
 
