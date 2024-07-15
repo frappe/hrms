@@ -5,6 +5,7 @@ import leaveRoutes from "./leaves"
 import claimRoutes from "./claims"
 import employeeAdvanceRoutes from "./advances"
 import salarySlipRoutes from "./salary_slips"
+import attendanceRequestRoutes from "./attendanceRequest"
 
 const routes = [
 	{
@@ -39,6 +40,11 @@ const routes = [
 				name: "SalarySlipsDashboard",
 				component: () => import("@/views/salary_slip/Dashboard.vue"),
 			},
+			{
+				path: '/lists/attendance-request',
+				name: 'AttendanceRequestList',
+				component: () => import("@/views/attendance_request/List.vue")
+			},
 		],
 	},
 	{
@@ -70,6 +76,7 @@ const routes = [
 	...claimRoutes,
 	...employeeAdvanceRoutes,
 	...salarySlipRoutes,
+	...attendanceRequestRoutes
 ]
 
 const router = createRouter({
