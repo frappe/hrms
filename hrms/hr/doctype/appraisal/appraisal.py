@@ -9,11 +9,7 @@ from frappe.utils import flt, get_link_to_form, now
 
 from hrms.hr.doctype.appraisal_cycle.appraisal_cycle import validate_active_appraisal_cycle
 from hrms.hr.utils import validate_active_employee
-<<<<<<< HEAD
-=======
 from hrms.mixins.appraisal import AppraisalMixin
-from hrms.payroll.utils import sanitize_expression
->>>>>>> bb1b916f5 (refactor: validate total weightage in all appraisal forms (#1976))
 
 
 class Appraisal(Document, AppraisalMixin):
