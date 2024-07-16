@@ -10,10 +10,11 @@
   "employee_name",
   "company",
   "column_break_hbju",
+  "posting_date",
   "payroll_frequency",
   "number_of_withholding_cycles",
   "column_break_rhlv",
-  "posting_date",
+  "status",
   "from_date",
   "to_date",
   "exit_details_section",
@@ -101,7 +102,6 @@
    "reqd": 1
   },
   {
-   "depends_on": "relieving_date",
    "fieldname": "exit_details_section",
    "fieldtype": "Section Break",
    "label": "Exit Details"
@@ -124,10 +124,6 @@
    "in_list_view": 1,
    "label": "Relieving Date",
    "read_only": 1
-  },
-  {
-   "fieldname": "reason_section",
-   "fieldtype": "Section Break"
   },
   {
    "fieldname": "reason_for_withholding_salary",
@@ -153,12 +149,28 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "\nDraft\nWithheld\nReleased\nCancelled",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "reason_section",
+   "fieldtype": "Section Break",
+   "label": "Reason"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-01 11:36:47.960586",
+ "modified": "2024-07-02 13:31:47.510265",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Withholding",
@@ -203,6 +215,23 @@
  ],
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": [],
+ "states": [
+  {
+   "color": "Red",
+   "title": "Draft"
+  },
+  {
+   "color": "Yellow",
+   "title": "Withheld"
+  },
+  {
+   "color": "Green",
+   "title": "Released"
+  },
+  {
+   "color": "Red",
+   "title": "Cancelled"
+  }
+ ],
  "title_field": "employee_name"
 }
