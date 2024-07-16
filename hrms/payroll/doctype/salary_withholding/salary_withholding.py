@@ -10,6 +10,25 @@ from frappe.utils import add_days, add_to_date, cint, getdate
 
 
 class SalaryWithholding(Document):
+	def validate(self):
+		self.set_status()
+
+	def set_status(self, update=False):
+		if self.docstatus == 0:
+			status = "Draft"
+		elif self.docstatus == 1:
+			if all(cycle.is_salary_released for cycle in self.cycles):
+				status = "Released"
+			else:
+				status = "Withheld"
+		elif self.docstatus == 2:
+			status = "Cancelled"
+
+		if update:
+			self.db_set("status", status)
+		else:
+			self.status = status
+
 	@frappe.whitelist()
 	def set_withholding_cycles_and_to_date(self):
 		self.to_date = self.get_to_date()
