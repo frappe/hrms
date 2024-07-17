@@ -9,9 +9,10 @@ from frappe.utils import flt, get_link_to_form, now
 
 from hrms.hr.doctype.appraisal_cycle.appraisal_cycle import validate_active_appraisal_cycle
 from hrms.hr.utils import validate_active_employee
+from hrms.mixins.appraisal import AppraisalMixin
 
 
-class Appraisal(Document):
+class Appraisal(Document, AppraisalMixin):
 	def validate(self):
 		if not self.status:
 			self.status = "Draft"
@@ -21,6 +22,8 @@ class Appraisal(Document):
 		validate_active_employee(self.employee)
 		validate_active_appraisal_cycle(self.appraisal_cycle)
 		self.validate_duplicate()
+		self.validate_total_weightage("appraisal_kra", "KRAs")
+		self.validate_total_weightage("self_ratings", "Self Ratings")
 
 		self.set_goal_score()
 		self.calculate_self_appraisal_score()
