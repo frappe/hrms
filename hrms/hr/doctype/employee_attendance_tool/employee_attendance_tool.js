@@ -118,7 +118,7 @@ frappe.ui.form.on("Employee Attendance Tool", {
 				data: data,
 				dynamicRowHeight: true,
 				inlineFilters: true,
-				layout: "fixed",
+				layout: "fluid",
 				cellHeight: 35,
 				noDataMessage: __("No Data"),
 				disableReorderColumn: true,

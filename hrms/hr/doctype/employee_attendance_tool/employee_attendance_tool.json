@@ -21,7 +21,8 @@
   "column_break_kecn",
   "shift",
   "marked_attendance_section",
-  "marked_attendance_html"
+  "marked_attendance_html",
+  "column_break_khjs"
  ],
  "fields": [
   {
@@ -124,12 +125,16 @@
    "fieldtype": "Link",
    "label": "Shift",
    "options": "Shift Type"
+  },
+  {
+   "fieldname": "column_break_khjs",
+   "fieldtype": "Column Break"
   }
  ],
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-02-28 14:13:59.849205",
+ "modified": "2024-07-08 20:02:36.408240",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Attendance Tool",

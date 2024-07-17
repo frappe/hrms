@@ -13,16 +13,25 @@ export function sessionUser() {
 	return _sessionUser
 }
 
+function handleLogin(response) {
+	if (response.message === "Logged In") {
+		userResource.reload()
+		employeeResource.reload()
+
+		session.user = sessionUser()
+		router.replace(response.default_route || "/")
+	}
+}
+
 export const session = reactive({
 	login: async (email, password) => {
 		const response = await call("login", { usr: email, pwd: password })
-		if (response.message === "Logged In") {
-			userResource.reload()
-			employeeResource.reload()
-
-			session.user = sessionUser()
-			router.replace(response.default_route || "/")
-		}
+		handleLogin(response)
+		return response
+	},
+	otp: async (tmp_id, otp) => {
+		const response = await call("login", { tmp_id, otp })
+		handleLogin(response)
 		return response
 	},
 	logout: createResource({
