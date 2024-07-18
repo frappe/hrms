@@ -90,3 +90,14 @@ def get_payroll_frequency(employee: str, posting_date: str) -> str | None:
 		)
 
 	return frappe.db.get_value("Salary Structure", salary_structure, "payroll_frequency")
+
+
+def link_bank_entry_in_salary_withholdings(salary_slips: list[dict], bank_entry: str):
+	WithholdingCycle = frappe.qb.DocType("Salary Withholding Cycle")
+	(
+		frappe.qb.update(WithholdingCycle)
+		.set(WithholdingCycle.journal_entry, bank_entry)
+		.where(
+			WithholdingCycle.name.isin([salary_slip.salary_withholding_cycle for salary_slip in salary_slips])
+		)
+	).run()

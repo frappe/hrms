@@ -168,9 +168,10 @@ class SalarySlip(TransactionBase):
 				)
 
 	def check_salary_withholding(self):
-		salary_withholding = get_salary_withholdings(self.start_date, self.end_date, self.employee)
-		if salary_withholding:
-			self.salary_withholding = salary_withholding[0].name
+		withholding = get_salary_withholdings(self.start_date, self.end_date, self.employee)
+		if withholding:
+			self.salary_withholding = withholding[0].salary_withholding
+			self.salary_withholding_cycle = withholding[0].salary_withholding_cycle
 		else:
 			self.salary_withholding = None
 

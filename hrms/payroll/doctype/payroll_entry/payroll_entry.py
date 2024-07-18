@@ -28,6 +28,8 @@ from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
 )
 from erpnext.accounts.utils import get_fiscal_year
 
+from hrms.payroll.doctype.salary_withholding.salary_withholding import link_bank_entry_in_salary_withholdings
+
 
 class PayrollEntry(Document):
 	def onload(self):
@@ -598,7 +600,7 @@ class PayrollEntry(Document):
 		user_remark="",
 		submitted_salary_slips: list | None = None,
 		submit_journal_entry=False,
-	):
+	) -> str:
 		multi_currency = 0
 		if len(currencies) > 1:
 			multi_currency = 1
@@ -622,7 +624,7 @@ class PayrollEntry(Document):
 				journal_entry.submit()
 
 			if submitted_salary_slips:
-				self.update_salary_slip_status(submitted_salary_slips, jv_name=journal_entry.name)
+				self.set_journal_entry_in_salary_slips(submitted_salary_slips, jv_name=journal_entry.name)
 
 		except Exception as e:
 			if type(e) in (str, list, tuple):
@@ -630,6 +632,8 @@ class PayrollEntry(Document):
 
 			self.log_error("Journal Entry creation against Salary Slip failed")
 			raise
+
+		return journal_entry
 
 	def get_payable_amount_for_earnings_and_deductions(
 		self,
@@ -915,11 +919,11 @@ class PayrollEntry(Document):
 					salary_slip_total -= salary_detail.amount
 
 		if salary_slip_total > 0:
-			self.set_accounting_entries_for_bank_entry(salary_slip_total, "salary")
+			remark = "withheld salaries" if for_withheld_salaries else "salaries"
+			bank_entry = self.set_accounting_entries_for_bank_entry(salary_slip_total, remark)
 
-	@frappe.whitelist()
-	def make_bank_entry_for_withheld_salaries(self):
-		self.make_bank_entry(for_withheld_salaries=True)
+		if for_withheld_salaries:
+			link_bank_entry_in_salary_withholdings(salary_slips, bank_entry.name)
 
 	def get_salary_slip_details(self, for_withheld_salaries=False):
 		SalarySlip = frappe.qb.DocType("Salary Slip")
@@ -933,6 +937,7 @@ class PayrollEntry(Document):
 				SalarySlip.name,
 				SalarySlip.employee,
 				SalarySlip.salary_structure,
+				SalarySlip.salary_withholding_cycle,
 				SalaryDetail.salary_component,
 				SalaryDetail.amount,
 				SalaryDetail.parentfield,
@@ -1024,16 +1029,16 @@ class PayrollEntry(Document):
 				)
 			)
 
-		self.make_journal_entry(
+		return self.make_journal_entry(
 			accounts,
 			currencies,
 			voucher_type="Bank Entry",
 			user_remark=_("Payment of {0} from {1} to {2}").format(
-				user_remark, self.start_date, self.end_date
+				_(user_remark), self.start_date, self.end_date
 			),
 		)
 
-	def update_salary_slip_status(self, submitted_salary_slips, jv_name=None):
+	def set_journal_entry_in_salary_slips(self, submitted_salary_slips, jv_name=None):
 		SalarySlip = frappe.qb.DocType("Salary Slip")
 		(
 			frappe.qb.update(SalarySlip)
@@ -1594,7 +1599,11 @@ def get_salary_withholdings(
 		frappe.qb.from_(Withholding)
 		.join(WithholdingCycle)
 		.on(WithholdingCycle.parent == Withholding.name)
-		.select(Withholding.employee, Withholding.name)
+		.select(
+			Withholding.employee,
+			Withholding.name.as_("salary_withholding"),
+			WithholdingCycle.name.as_("salary_withholding_cycle"),
+		)
 		.where(
 			(WithholdingCycle.from_date == start_date)
 			& (WithholdingCycle.to_date == end_date)
