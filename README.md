@@ -10,7 +10,7 @@
 [![CI](https://github.com/frappe/hrms/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/frappe/hrms/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/frappe/hrms/branch/develop/graph/badge.svg?token=0TwvyUg3I5)](https://codecov.io/gh/frappe/hrms)
 
-[https://frappehr.com](https://frappehr.com)
+[https://frappe.io/hr](https://frappe.io/hr)
 
 <p align="center">
 	<a href="https://www.producthunt.com/posts/frappe-hr?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-frappe&#0045;hr" target="_blank">
