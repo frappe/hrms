@@ -81,9 +81,9 @@ class ShiftRequest(Document):
 		overlapping_dates = self.get_overlapping_dates()
 		if len(overlapping_dates):
 			# if dates are overlapping, check if timings are overlapping, else allow
-			overlapping_timings = has_overlapping_timings(self.shift_type, overlapping_dates[0].shift_type)
-			if overlapping_timings:
-				self.throw_overlap_error(overlapping_dates[0])
+			for d in overlapping_dates:
+				if has_overlapping_timings(self.shift_type, d.shift_type):
+					self.throw_overlap_error(d)
 
 	def get_overlapping_dates(self):
 		if not self.name:
