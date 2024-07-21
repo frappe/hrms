@@ -104,7 +104,7 @@ frappe.ui.form.on("Leave Application", {
 			frm.perm[0].submit &&
 			!frm.is_dirty() &&
 			!frm.is_new() &&
-			!frappe.model.has_workflow(this.doctype) &&
+			!frappe.model.has_workflow(frm.doctype) &&
 			frm.doc.docstatus === 0
 		) {
 			frm.set_intro(__("Submit this Leave Application to confirm."));
