@@ -138,7 +138,8 @@
    "fieldname": "cycles",
    "fieldtype": "Table",
    "label": "Cycles",
-   "options": "Salary Withholding Cycle"
+   "options": "Salary Withholding Cycle",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -175,7 +176,7 @@
    "link_fieldname": "salary_withholding"
   }
  ],
- "modified": "2024-07-22 18:04:27.707525",
+ "modified": "2024-07-22 18:24:24.217371",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Withholding",
