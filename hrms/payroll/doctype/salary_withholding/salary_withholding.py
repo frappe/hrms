@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import add_days, add_to_date, cint, getdate
+from frappe.utils import add_days, add_to_date, cint, get_link_to_form, getdate
 
 
 class SalaryWithholding(Document):
@@ -17,7 +17,31 @@ class SalaryWithholding(Document):
 			self.payroll_frequency = get_payroll_frequency(self.employee, self.from_date)
 
 		self.set_withholding_cycles_and_to_date()
+		self.validate_duplicate_record()
 		self.set_status()
+
+	def validate_duplicate_record(self):
+		Withholding = frappe.qb.DocType("Salary Withholding")
+		duplicate = (
+			frappe.qb.from_(Withholding)
+			.select(Withholding.name)
+			.where(
+				(Withholding.employee == self.employee)
+				& (Withholding.docstatus != 2)
+				& (Withholding.name != self.name)
+				& (Withholding.to_date >= self.from_date)
+				& (Withholding.from_date <= self.to_date)
+			)
+		).run(pluck=True)
+
+		if duplicate:
+			frappe.throw(
+				_("Salary Withholding {0} already exists for employee {1} for the selected period").format(
+					get_link_to_form("Salary Withholding", duplicate[0]),
+					frappe.bold(f"{self.employee}: {self.employee_name}"),
+				),
+				title=_("Duplicate Salary Withholding"),
+			)
 
 	def set_status(self, update=False):
 		if self.docstatus == 0:
