@@ -1,6 +1,8 @@
 # Copyright (c) 2024, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+from datetime import date
+
 from dateutil.relativedelta import relativedelta
 
 import frappe
@@ -11,6 +13,10 @@ from frappe.utils import add_days, add_to_date, cint, getdate
 
 class SalaryWithholding(Document):
 	def validate(self):
+		if not self.payroll_frequency:
+			self.payroll_frequency = get_payroll_frequency(self.employee, self.from_date)
+
+		self.set_withholding_cycles_and_to_date()
 		self.set_status()
 
 	def set_status(self, update=False):
@@ -69,7 +75,7 @@ class SalaryWithholding(Document):
 
 
 @frappe.whitelist()
-def get_payroll_frequency(employee: str, posting_date: str) -> str | None:
+def get_payroll_frequency(employee: str, posting_date: str | date) -> str | None:
 	salary_structure = frappe.db.get_value(
 		"Salary Structure Assignment",
 		{
