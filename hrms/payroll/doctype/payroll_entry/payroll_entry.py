@@ -925,6 +925,8 @@ class PayrollEntry(Document):
 		if for_withheld_salaries:
 			link_bank_entry_in_salary_withholdings(salary_slips, bank_entry.name)
 
+		return bank_entry
+
 	def get_salary_slip_details(self, for_withheld_salaries=False):
 		SalarySlip = frappe.qb.DocType("Salary Slip")
 		SalaryDetail = frappe.qb.DocType("Salary Detail")
