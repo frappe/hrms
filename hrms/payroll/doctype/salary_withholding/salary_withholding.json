@@ -169,8 +169,13 @@
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2024-07-02 13:31:47.510265",
+ "links": [
+  {
+   "link_doctype": "Salary Slip",
+   "link_fieldname": "salary_withholding"
+  }
+ ],
+ "modified": "2024-07-22 18:04:27.707525",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Withholding",
