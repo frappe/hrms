@@ -211,7 +211,7 @@ class PayrollEntry(Document):
 
 		for employee in self.employees:
 			if employee.employee in withheld_salaries:
-				employee.salary_withheld = 1
+				employee.is_salary_withheld = 1
 
 	@frappe.whitelist()
 	def create_salary_slips(self):
@@ -850,12 +850,12 @@ class PayrollEntry(Document):
 			)
 		).run(as_dict=True)
 
-		response = {"has_bank_entries": bool(bank_entries)}
-
-		if any(employee.salary_withheld for employee in self.employees):
-			response["has_bank_entries_for_withheld_salaries"] = False
-
-		return response
+		return {
+			"has_bank_entries": bool(bank_entries),
+			"has_bank_entries_for_withheld_salaries": not any(
+				employee.is_salary_withheld for employee in self.employees
+			),
+		}
 
 	@frappe.whitelist()
 	def make_bank_entry(self, for_withheld_salaries=False):
