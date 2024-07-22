@@ -101,3 +101,53 @@ def link_bank_entry_in_salary_withholdings(salary_slips: list[dict], bank_entry:
 			WithholdingCycle.name.isin([salary_slip.salary_withholding_cycle for salary_slip in salary_slips])
 		)
 	).run()
+
+
+def update_salary_withholding_payment_status(doc: "SalaryWithholding", method: str | None = None):
+	"""update withholding status on bank entry submission/cancellation. Called from hooks"""
+	WithholdingCycle = frappe.qb.DocType("Salary Withholding Cycle")
+	withholdings = (
+		frappe.qb.from_(WithholdingCycle)
+		.select(
+			WithholdingCycle.name.as_("salary_withholding_cycle"),
+			WithholdingCycle.parent.as_("salary_withholding"),
+		)
+		.where((WithholdingCycle.journal_entry == doc.name) & (WithholdingCycle.docstatus == 1))
+	).run(as_dict=True)
+
+	if not withholdings:
+		return
+
+	cancel = method == "on_cancel"
+	_update_payment_status_in_payroll(withholdings, cancel=cancel)
+	_update_salary_withholdings(withholdings, cancel=cancel)
+
+
+def _update_payment_status_in_payroll(withholdings: list[dict], cancel: bool = False) -> None:
+	status = "Withheld" if cancel else "Submitted"
+
+	SalarySlip = frappe.qb.DocType("Salary Slip")
+	(
+		frappe.qb.update(SalarySlip)
+		.set(SalarySlip.status, status)
+		.where(
+			SalarySlip.salary_withholding_cycle.isin(
+				[withholding.salary_withholding_cycle for withholding in withholdings]
+			)
+		)
+	).run()
+
+
+def _update_salary_withholdings(withholdings: list[dict], cancel: bool = False) -> None:
+	is_salary_released = 0 if cancel else 1
+
+	for withholding in withholdings:
+		withholding_doc = frappe.get_doc("Salary Withholding", withholding.salary_withholding)
+		for cycle in withholding_doc.cycles:
+			if cycle.name == withholding.salary_withholding_cycle:
+				cycle.db_set("is_salary_released", is_salary_released)
+				if cancel:
+					cycle.db_set("journal_entry", None)
+				break
+
+		withholding_doc.set_status(update=True)
