@@ -105,12 +105,16 @@ def link_bank_entry_in_salary_withholdings(salary_slips: list[dict], bank_entry:
 
 def update_salary_withholding_payment_status(doc: "SalaryWithholding", method: str | None = None):
 	"""update withholding status on bank entry submission/cancellation. Called from hooks"""
+	Withholding = frappe.qb.DocType("Salary Withholding")
 	WithholdingCycle = frappe.qb.DocType("Salary Withholding Cycle")
 	withholdings = (
 		frappe.qb.from_(WithholdingCycle)
+		.inner_join(Withholding)
+		.on(WithholdingCycle.parent == Withholding.name)
 		.select(
 			WithholdingCycle.name.as_("salary_withholding_cycle"),
 			WithholdingCycle.parent.as_("salary_withholding"),
+			Withholding.employee,
 		)
 		.where((WithholdingCycle.journal_entry == doc.name) & (WithholdingCycle.docstatus == 1))
 	).run(as_dict=True)
@@ -135,6 +139,15 @@ def _update_payment_status_in_payroll(withholdings: list[dict], cancel: bool = F
 				[withholding.salary_withholding_cycle for withholding in withholdings]
 			)
 		)
+	).run()
+
+	employees = [withholding.employee for withholding in withholdings]
+	is_salary_withheld = 1 if cancel else 0
+	PayrollEmployee = frappe.qb.DocType("Payroll Employee Detail")
+	(
+		frappe.qb.update(PayrollEmployee)
+		.set(PayrollEmployee.is_salary_withheld, is_salary_withheld)
+		.where(PayrollEmployee.employee.isin(employees))
 	).run()
 
 

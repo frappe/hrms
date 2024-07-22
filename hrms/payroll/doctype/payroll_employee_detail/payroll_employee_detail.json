@@ -10,10 +10,11 @@
   "column_break_3",
   "department",
   "designation",
-  "salary_withheld"
+  "is_salary_withheld"
  ],
  "fields": [
   {
+   "columns": 2,
    "fieldname": "employee",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -50,20 +51,25 @@
    "read_only": 1
   },
   {
+   "columns": 2,
    "default": "0",
-   "fieldname": "salary_withheld",
+   "fieldname": "is_salary_withheld",
    "fieldtype": "Check",
    "in_list_view": 1,
-   "label": "Salary Withheld"
+   "label": "Is Salary Withheld"
   }
  ],
  "istable": 1,
  "links": [],
 <<<<<<< HEAD
+<<<<<<< HEAD
  "modified": "2020-12-17 15:43:29.542977",
 =======
  "modified": "2024-07-01 11:52:24.730907",
 >>>>>>> 9c5e4c87a (feat: fetch employees with withheld salaries in payroll entry)
+=======
+ "modified": "2024-07-22 13:28:40.573807",
+>>>>>>> a0fef7c96 (feat: update withholding status in payroll employee table)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Employee Detail",
