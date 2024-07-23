@@ -41,7 +41,7 @@ from hrms.payroll.doctype.employee_benefit_claim.employee_benefit_claim import (
 	get_benefit_claim_amount,
 	get_last_payroll_period_benefits,
 )
-from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
+from hrms.payroll.doctype.payroll_entry.payroll_entry import get_salary_withholdings, get_start_end_dates
 from hrms.payroll.doctype.payroll_period.payroll_period import (
 	get_payroll_period,
 	get_period_factor,
@@ -132,6 +132,7 @@ class SalarySlip(TransactionBase):
 		return self.__actual_end_date
 
 	def validate(self):
+		self.check_salary_withholding()
 		self.status = self.get_status()
 		validate_active_employee(self.employee)
 		self.validate_dates()
@@ -165,6 +166,14 @@ class SalarySlip(TransactionBase):
 					),
 					alert=True,
 				)
+
+	def check_salary_withholding(self):
+		withholding = get_salary_withholdings(self.start_date, self.end_date, self.employee)
+		if withholding:
+			self.salary_withholding = withholding[0].salary_withholding
+			self.salary_withholding_cycle = withholding[0].salary_withholding_cycle
+		else:
+			self.salary_withholding = None
 
 	def set_net_total_in_words(self):
 		doc_currency = self.currency
@@ -236,13 +245,15 @@ class SalarySlip(TransactionBase):
 		revert_series_if_last(self.series, self.name)
 
 	def get_status(self):
-		if self.docstatus == 0:
-			status = "Draft"
-		elif self.docstatus == 1:
-			status = "Submitted"
-		elif self.docstatus == 2:
-			status = "Cancelled"
-		return status
+		if self.docstatus == 2:
+			return "Cancelled"
+		else:
+			if self.salary_withholding:
+				return "Withheld"
+			elif self.docstatus == 0:
+				return "Draft"
+			elif self.docstatus == 1:
+				return "Submitted"
 
 	def validate_dates(self):
 		self.validate_from_to_dates("start_date", "end_date")

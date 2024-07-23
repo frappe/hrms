@@ -9,10 +9,12 @@
   "employee_name",
   "column_break_3",
   "department",
-  "designation"
+  "designation",
+  "is_salary_withheld"
  ],
  "fields": [
   {
+   "columns": 2,
    "fieldname": "employee",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -47,11 +49,19 @@
    "in_list_view": 1,
    "label": "Designation",
    "read_only": 1
+  },
+  {
+   "columns": 2,
+   "default": "0",
+   "fieldname": "is_salary_withheld",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is Salary Withheld"
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2020-12-17 15:43:29.542977",
+ "modified": "2024-07-22 13:28:40.573807",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Employee Detail",

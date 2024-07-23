@@ -10,6 +10,7 @@
   "section_break_6",
   "employee",
   "employee_name",
+  "company",
   "department",
   "designation",
   "branch",
@@ -18,7 +19,8 @@
   "letter_head",
   "column_break_18",
   "status",
-  "company",
+  "salary_withholding",
+  "salary_withholding_cycle",
   "currency",
   "exchange_rate",
   "section_break_gsts",
@@ -170,7 +172,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Draft\nSubmitted\nCancelled",
+   "options": "Draft\nSubmitted\nCancelled\nWithheld",
    "read_only": 1
   },
   {
@@ -720,13 +722,31 @@
    "fieldname": "earning_deduction_sb",
    "fieldtype": "Section Break",
    "oldfieldtype": "Section Break"
+  },
+  {
+   "fieldname": "salary_withholding",
+   "fieldtype": "Link",
+   "label": "Salary Withholding",
+   "no_copy": 1,
+   "options": "Salary Withholding",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "salary_withholding_cycle",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Salary Withholding Cycle",
+   "no_copy": 1,
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-06-11 10:00:16.606996",
+ "modified": "2024-07-01 21:25:36.651583",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
@@ -767,7 +787,24 @@
  "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
+ "states": [
+  {
+   "color": "Red",
+   "title": "Draft"
+  },
+  {
+   "color": "Blue",
+   "title": "Submitted"
+  },
+  {
+   "color": "Gray",
+   "title": "Cancelled"
+  },
+  {
+   "color": "Yellow",
+   "title": "Withheld"
+  }
+ ],
  "timeline_field": "employee",
  "title_field": "employee_name"
 }
