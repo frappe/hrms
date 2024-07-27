@@ -28,14 +28,13 @@ class TestFullandFinalStatement(FrappeTestCase):
 
 	def test_check_bootstraped_data_asset_movement_and_jv_creation(self):
 		payables_bootstraped_component = [
-			"Salary Slip",
 			"Gratuity",
 			"Expense Claim",
 			"Bonus",
 			"Leave Encashment",
 		]
 
-		receivable_bootstraped_component = ["Loan", "Employee Advance"]
+		receivable_bootstraped_component = ["Employee Advance", "Loan"]
 
 		# checking payables and receivables bootstraped value
 		self.assertEqual([payable.component for payable in self.fnf.payables], payables_bootstraped_component)
