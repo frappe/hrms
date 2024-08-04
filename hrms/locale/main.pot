@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frappe HR VERSION\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-07-21 09:34+0000\n"
-"PO-Revision-Date: 2024-07-21 09:34+0000\n"
+"POT-Creation-Date: 2024-08-04 09:33+0000\n"
+"PO-Revision-Date: 2024-08-04 09:33+0000\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: contact@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -399,7 +399,7 @@ msgstr ""
 msgid "Account No"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:99
+#: payroll/doctype/payroll_entry/payroll_entry.py:101
 msgid "Account type cannot be set for payroll payable account {0}, please remove and try again"
 msgstr ""
 
@@ -436,7 +436,6 @@ msgstr ""
 
 #. Label of a Link in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Accounting Dimension"
 msgid "Accounting Dimension"
 msgstr ""
 
@@ -494,7 +493,6 @@ msgstr ""
 
 #. Label of a Link in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Accounts Settings"
 msgid "Accounts Settings"
 msgstr ""
 
@@ -502,7 +500,7 @@ msgstr ""
 msgid "Accounts not set for Salary Component {0}"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:577
+#: payroll/doctype/payroll_entry/payroll_entry.py:587
 msgid "Accrual Journal Entry for salaries from {0} to {1}"
 msgstr ""
 
@@ -563,7 +561,6 @@ msgstr ""
 
 #. Label of a Link in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
-msgctxt "Activity Type"
 msgid "Activity Type"
 msgstr ""
 
@@ -626,7 +623,7 @@ msgstr ""
 msgid "Added On"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1271
+#: payroll/doctype/salary_slip/salary_slip.py:1282
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
 msgstr ""
 
@@ -650,19 +647,15 @@ msgid "Additional PF"
 msgstr ""
 
 #. Label of the additional_salary (Link) field in DocType 'Leave Encashment'
-#. Name of a DocType
-#: hr/doctype/leave_encashment/leave_encashment.json
-#: payroll/doctype/additional_salary/additional_salary.json
-msgid "Additional Salary"
-msgstr ""
-
 #. Label of a Link in the Expense Claims Workspace
+#. Name of a DocType
 #. Label of a Link in the Salary Payout Workspace
 #. Label of a shortcut in the Tax & Benefits Workspace
+#: hr/doctype/leave_encashment/leave_encashment.json
 #: hr/workspace/expense_claims/expense_claims.json
+#: payroll/doctype/additional_salary/additional_salary.json
 #: payroll/workspace/salary_payout/salary_payout.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
-msgctxt "Additional Salary"
 msgid "Additional Salary"
 msgstr ""
 
@@ -754,7 +747,7 @@ msgstr ""
 msgid "All Jobs"
 msgstr ""
 
-#: hr/doctype/full_and_final_statement/full_and_final_statement.py:54
+#: hr/doctype/full_and_final_statement/full_and_final_statement.py:57
 msgid "All allocated assets should be returned before submission"
 msgstr ""
 
@@ -937,6 +930,7 @@ msgstr ""
 #. Label of the amended_from (Link) field in DocType 'Salary Structure'
 #. Label of the amended_from (Link) field in DocType 'Salary Structure
 #. Assignment'
+#. Label of the amended_from (Link) field in DocType 'Salary Withholding'
 #: hr/doctype/appraisal/appraisal.json hr/doctype/attendance/attendance.json
 #: hr/doctype/attendance_request/attendance_request.json
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.json
@@ -983,6 +977,7 @@ msgstr ""
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/doctype/salary_structure/salary_structure.json
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Amended From"
 msgstr ""
 
@@ -1186,27 +1181,19 @@ msgid "Appointment Date"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/appointment_letter/appointment_letter.json
-msgid "Appointment Letter"
-msgstr ""
-
 #. Label of a Link in the Recruitment Workspace
+#: hr/doctype/appointment_letter/appointment_letter.json
 #: hr/workspace/recruitment/recruitment.json
-msgctxt "Appointment Letter"
 msgid "Appointment Letter"
 msgstr ""
 
 #. Label of the appointment_letter_template (Link) field in DocType
 #. 'Appointment Letter'
 #. Name of a DocType
+#. Label of a Link in the Recruitment Workspace
 #: hr/doctype/appointment_letter/appointment_letter.json
 #: hr/doctype/appointment_letter_template/appointment_letter_template.json
-msgid "Appointment Letter Template"
-msgstr ""
-
-#. Label of a Link in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
-msgctxt "Appointment Letter Template"
 msgid "Appointment Letter Template"
 msgstr ""
 
@@ -1219,17 +1206,12 @@ msgstr ""
 #. Label of the appraisal (Link) field in DocType 'Employee Performance
 #. Feedback'
 #. Label of a Card Break in the Performance Workspace
+#. Label of a Link in the Performance Workspace
+#. Label of a shortcut in the Performance Workspace
 #: hr/doctype/appraisal/appraisal.json
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.json
 #: hr/report/appraisal_overview/appraisal_overview.py:44
 #: hr/workspace/performance/performance.json
-msgid "Appraisal"
-msgstr ""
-
-#. Label of a Link in the Performance Workspace
-#. Label of a shortcut in the Performance Workspace
-#: hr/workspace/performance/performance.json
-msgctxt "Appraisal"
 msgid "Appraisal"
 msgstr ""
 
@@ -1238,6 +1220,7 @@ msgstr ""
 #. Label of the appraisal_cycle (Link) field in DocType 'Employee Performance
 #. Feedback'
 #. Label of the appraisal_cycle (Link) field in DocType 'Goal'
+#. Label of a Link in the Performance Workspace
 #: hr/doctype/appraisal/appraisal.json
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.json
@@ -1245,12 +1228,7 @@ msgstr ""
 #: hr/doctype/goal/goal_tree.js:105
 #: hr/report/appraisal_overview/appraisal_overview.js:18
 #: hr/report/appraisal_overview/appraisal_overview.py:37
-msgid "Appraisal Cycle"
-msgstr ""
-
-#. Label of a Link in the Performance Workspace
 #: hr/workspace/performance/performance.json
-msgctxt "Appraisal Cycle"
 msgid "Appraisal Cycle"
 msgstr ""
 
@@ -1279,15 +1257,11 @@ msgstr ""
 #. Label of the appraisal_template (Link) field in DocType 'Appraisal'
 #. Name of a DocType
 #. Label of the appraisal_template (Link) field in DocType 'Appraisee'
+#. Label of a Link in the Performance Workspace
 #: hr/doctype/appraisal/appraisal.json
 #: hr/doctype/appraisal_template/appraisal_template.json
 #: hr/doctype/appraisee/appraisee.json
-msgid "Appraisal Template"
-msgstr ""
-
-#. Label of a Link in the Performance Workspace
 #: hr/workspace/performance/performance.json
-msgctxt "Appraisal Template"
 msgid "Appraisal Template"
 msgstr ""
 
@@ -1413,7 +1387,7 @@ msgstr ""
 msgid "Asset Name"
 msgstr ""
 
-#: hr/doctype/full_and_final_statement/full_and_final_statement.py:84
+#: hr/doctype/full_and_final_statement/full_and_final_statement.py:88
 msgid "Asset Recovery Cost for {0}: {1}"
 msgstr ""
 
@@ -1505,7 +1479,10 @@ msgstr ""
 #. Name of a DocType
 #. Label of the attendance (Select) field in DocType 'Training Event Employee'
 #. Label of a Card Break in the HR Workspace
+#. Label of a Link in the HR Workspace
 #. Label of a Card Break in the Shift & Attendance Workspace
+#. Label of a Link in the Shift & Attendance Workspace
+#. Label of a shortcut in the Shift & Attendance Workspace
 #. Option for the 'Calculate Payroll Working Days Based On' (Select) field in
 #. DocType 'Payroll Settings'
 #: hr/doctype/attendance/attendance.json
@@ -1515,15 +1492,6 @@ msgstr ""
 #: overrides/dashboard_overrides.py:10
 #: payroll/doctype/payroll_settings/payroll_settings.json
 #: templates/emails/training_event.html:9
-msgid "Attendance"
-msgstr ""
-
-#. Label of a Link in the HR Workspace
-#. Label of a Link in the Shift & Attendance Workspace
-#. Label of a shortcut in the Shift & Attendance Workspace
-#: hr/workspace/hr/hr.json
-#: hr/workspace/shift_&_attendance/shift_&_attendance.json
-msgctxt "Attendance"
 msgid "Attendance"
 msgstr ""
 
@@ -1565,16 +1533,12 @@ msgstr ""
 
 #. Label of the attendance_request (Link) field in DocType 'Attendance'
 #. Name of a DocType
-#: hr/doctype/attendance/attendance.json
-#: hr/doctype/attendance_request/attendance_request.json
-msgid "Attendance Request"
-msgstr ""
-
 #. Label of a Link in the HR Workspace
 #. Label of a Link in the Shift & Attendance Workspace
+#: hr/doctype/attendance/attendance.json
+#: hr/doctype/attendance_request/attendance_request.json
 #: hr/workspace/hr/hr.json
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
-msgctxt "Attendance Request"
 msgid "Attendance Request"
 msgstr ""
 
@@ -1816,7 +1780,7 @@ msgstr ""
 msgid "Below is the list of upcoming holidays for you:"
 msgstr ""
 
-#: overrides/dashboard_overrides.py:30
+#: overrides/dashboard_overrides.py:35
 msgid "Benefit"
 msgstr ""
 
@@ -1847,9 +1811,12 @@ msgstr ""
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary Slip'
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary
 #. Structure'
+#. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary
+#. Withholding'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/doctype/salary_structure/salary_structure.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Bimonthly"
 msgstr ""
 
@@ -1912,6 +1879,7 @@ msgstr ""
 #. Label of the branch (Link) field in DocType 'Employee Attendance Tool'
 #. Label of the branch (Link) field in DocType 'Leave Control Panel'
 #. Label of the branch (Link) field in DocType 'Shift Assignment Tool'
+#. Label of a Link in the HR Workspace
 #. Label of the branch (Link) field in DocType 'Bulk Salary Structure
 #. Assignment'
 #. Label of the branch (Link) field in DocType 'Payroll Entry'
@@ -1923,7 +1891,7 @@ msgstr ""
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.js:171
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hr/report/employee_analytics/employee_analytics.py:33
-#: hr/report/employee_birthday/employee_birthday.py:24
+#: hr/report/employee_birthday/employee_birthday.py:24 hr/workspace/hr/hr.json
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -1934,13 +1902,7 @@ msgstr ""
 msgid "Branch"
 msgstr ""
 
-#. Label of a Link in the HR Workspace
-#: hr/workspace/hr/hr.json
-msgctxt "Branch"
-msgid "Branch"
-msgstr ""
-
-#: payroll/doctype/payroll_entry/payroll_entry.py:190
+#: payroll/doctype/payroll_entry/payroll_entry.py:192
 msgid "Branch: {0}"
 msgstr ""
 
@@ -1957,14 +1919,10 @@ msgid "Bulk Leave Policy Assignment"
 msgstr ""
 
 #. Name of a DocType
+#. Label of a Link in the Salary Payout Workspace
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: payroll/doctype/salary_structure/salary_structure_list.js:3
-msgid "Bulk Salary Structure Assignment"
-msgstr ""
-
-#. Label of a Link in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Bulk Salary Structure Assignment"
 msgid "Bulk Salary Structure Assignment"
 msgstr ""
 
@@ -2011,7 +1969,7 @@ msgstr ""
 msgid "Campaign"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:126
+#: payroll/doctype/payroll_entry/payroll_entry.py:128
 msgid "Cancellation Queued"
 msgstr ""
 
@@ -2026,6 +1984,7 @@ msgstr ""
 #. Option for the 'Status' (Select) field in DocType 'Gratuity'
 #. Option for the 'Status' (Select) field in DocType 'Payroll Entry'
 #. Option for the 'Status' (Select) field in DocType 'Salary Slip'
+#. Option for the 'Status' (Select) field in DocType 'Salary Withholding'
 #: hr/doctype/appraisal/appraisal.json
 #: hr/doctype/employee_advance/employee_advance.json
 #: hr/doctype/exit_interview/exit_interview.json
@@ -2037,14 +1996,15 @@ msgstr ""
 #: payroll/doctype/gratuity/gratuity.json
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/salary_slip/salary_slip.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Cancelled"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:256
+#: payroll/doctype/salary_slip/salary_slip.py:267
 msgid "Cannot create Salary Slip for Employee joining after Payroll Period"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:259
+#: payroll/doctype/salary_slip/salary_slip.py:270
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr ""
 
@@ -2064,7 +2024,7 @@ msgstr ""
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:59
+#: payroll/doctype/payroll_entry/payroll_entry.py:61
 msgid "Cannot submit. Attendance is not marked for some employees."
 msgstr ""
 
@@ -2110,13 +2070,11 @@ msgstr ""
 
 #. Label of a Link in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Account"
 msgid "Chart of Accounts"
 msgstr ""
 
 #. Label of a Link in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Cost Center"
 msgid "Chart of Cost Centers"
 msgstr ""
 
@@ -2124,7 +2082,7 @@ msgstr ""
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1367
+#: payroll/doctype/payroll_entry/payroll_entry.py:1388
 msgid "Check Error Log {0} for more details."
 msgstr ""
 
@@ -2179,7 +2137,7 @@ msgstr ""
 
 #. Label of a Card Break in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
-#: overrides/dashboard_overrides.py:79
+#: overrides/dashboard_overrides.py:84
 msgid "Claims"
 msgstr ""
 
@@ -2299,6 +2257,7 @@ msgstr ""
 #. Label of the company (Link) field in DocType 'Training Event'
 #. Label of the company (Link) field in DocType 'Training Program'
 #. Label of the company (Link) field in DocType 'Travel Request'
+#. Label of a Link in the HR Workspace
 #. Label of the company (Link) field in DocType 'Additional Salary'
 #. Label of the company (Link) field in DocType 'Bulk Salary Structure
 #. Assignment'
@@ -2319,6 +2278,7 @@ msgstr ""
 #. Label of the company (Link) field in DocType 'Salary Slip'
 #. Label of the company (Link) field in DocType 'Salary Structure'
 #. Label of the company (Link) field in DocType 'Salary Structure Assignment'
+#. Label of the company (Link) field in DocType 'Salary Withholding'
 #: hr/dashboard_chart_source/employees_by_age/employees_by_age.js:8
 #: hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.js:8
 #: hr/doctype/appointment_letter/appointment_letter.json
@@ -2376,7 +2336,7 @@ msgstr ""
 #: hr/report/project_profitability/project_profitability.js:9
 #: hr/report/recruitment_analytics/recruitment_analytics.js:9
 #: hr/report/shift_attendance/shift_attendance.js:40
-#: hr/report/shift_attendance/shift_attendance.py:104
+#: hr/report/shift_attendance/shift_attendance.py:104 hr/workspace/hr/hr.json
 #: payroll/doctype/additional_salary/additional_salary.json
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
@@ -2394,17 +2354,12 @@ msgstr ""
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/doctype/salary_structure/salary_structure.json
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 #: payroll/report/bank_remittance/bank_remittance.js:9
 #: payroll/report/income_tax_computation/income_tax_computation.js:9
 #: payroll/report/salary_register/salary_register.js:39
 #: payroll/report/salary_register/salary_register.py:154
 #: public/js/salary_slip_deductions_report_filters.js:7
-msgid "Company"
-msgstr ""
-
-#. Label of a Link in the HR Workspace
-#: hr/workspace/hr/hr.json
-msgctxt "Company"
 msgid "Company"
 msgstr ""
 
@@ -2416,15 +2371,11 @@ msgstr ""
 
 #. Name of a DocType
 #. Label of the compensatory_request (Link) field in DocType 'Leave Allocation'
-#: hr/doctype/compensatory_leave_request/compensatory_leave_request.json
-#: hr/doctype/leave_allocation/leave_allocation.json
-msgid "Compensatory Leave Request"
-msgstr ""
-
 #. Label of a Link in the HR Workspace
 #. Label of a Link in the Leaves Workspace
-#: hr/workspace/hr/hr.json hr/workspace/leaves/leaves.json
-msgctxt "Compensatory Leave Request"
+#: hr/doctype/compensatory_leave_request/compensatory_leave_request.json
+#: hr/doctype/leave_allocation/leave_allocation.json hr/workspace/hr/hr.json
+#: hr/workspace/leaves/leaves.json
 msgid "Compensatory Leave Request"
 msgstr ""
 
@@ -2623,7 +2574,7 @@ msgstr ""
 msgid "Costing Details"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1430
+#: payroll/doctype/payroll_entry/payroll_entry.py:1451
 msgid "Could not submit some Salary Slips: {}"
 msgstr ""
 
@@ -2798,11 +2749,11 @@ msgstr ""
 msgid "Creating Appraisals"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.js:440
+#: payroll/doctype/payroll_entry/payroll_entry.js:438
 msgid "Creating Payment Entries......"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1390
+#: payroll/doctype/payroll_entry/payroll_entry.py:1411
 msgid "Creating Salary Slips..."
 msgstr ""
 
@@ -2856,6 +2807,7 @@ msgstr ""
 #. Label of the currency (Link) field in DocType 'Salary Slip'
 #. Label of the currency (Link) field in DocType 'Salary Structure'
 #. Label of the currency (Link) field in DocType 'Salary Structure Assignment'
+#. Label of a Link in the Salary Payout Workspace
 #: hr/doctype/employee_advance/employee_advance.json
 #: hr/doctype/employee_grade/employee_grade.json
 #: hr/doctype/job_applicant/job_applicant.json
@@ -2878,12 +2830,7 @@ msgstr ""
 #: payroll/report/bank_remittance/bank_remittance.py:51
 #: payroll/report/salary_register/salary_register.js:26
 #: payroll/report/salary_register/salary_register.py:242
-msgid "Currency"
-msgstr ""
-
-#. Label of a Link in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Currency"
 msgid "Currency"
 msgstr ""
 
@@ -2976,44 +2923,43 @@ msgstr ""
 msgid "Cycle Name"
 msgstr ""
 
+#. Label of the cycles (Table) field in DocType 'Salary Withholding'
+#: payroll/doctype/salary_withholding/salary_withholding.json
+msgid "Cycles"
+msgstr ""
+
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Payroll Entry'
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary Slip'
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary
 #. Structure'
+#. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary
+#. Withholding'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/doctype/salary_structure/salary_structure.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Daily"
 msgstr ""
 
 #. Name of a DocType
 #. Label of a Card Break in the Employee Lifecycle Workspace
+#. Label of a Link in the Employee Lifecycle Workspace
 #: hr/doctype/daily_work_summary/daily_work_summary.json
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.js:7
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Daily Work Summary"
 msgstr ""
 
-#. Label of a Link in the Employee Lifecycle Workspace
-#: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Daily Work Summary"
-msgid "Daily Work Summary"
-msgstr ""
-
 #. Label of the daily_work_summary_group (Link) field in DocType 'Daily Work
 #. Summary'
 #. Name of a DocType
+#. Label of a Link in the Employee Lifecycle Workspace
+#. Label of a Link in the HR Workspace
 #: hr/doctype/daily_work_summary/daily_work_summary.json
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hr/page/team_updates/team_updates.js:12
-msgid "Daily Work Summary Group"
-msgstr ""
-
-#. Label of a Link in the Employee Lifecycle Workspace
-#. Label of a Link in the HR Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 #: hr/workspace/hr/hr.json
-msgctxt "Daily Work Summary Group"
 msgid "Daily Work Summary Group"
 msgstr ""
 
@@ -3099,12 +3045,14 @@ msgstr ""
 #. Statement'
 #. Option for the 'Allocate on Day' (Select) field in DocType 'Leave Type'
 #. Label of the date_of_joining (Data) field in DocType 'Retention Bonus'
+#. Label of the date_of_joining (Date) field in DocType 'Salary Withholding'
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 #: hr/doctype/exit_interview/exit_interview.json
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
 #: hr/doctype/leave_type/leave_type.json
 #: hr/report/employee_exits/employee_exits.py:32
 #: payroll/doctype/retention_bonus/retention_bonus.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 #: payroll/report/income_tax_computation/income_tax_computation.py:528
 #: payroll/report/salary_register/salary_register.py:127 setup.py:398
 msgid "Date of Joining"
@@ -3291,6 +3239,7 @@ msgstr ""
 #. Label of the department (Link) field in DocType 'Training Event Employee'
 #. Label of the department (Link) field in DocType 'Training Feedback'
 #. Label of the department (Link) field in DocType 'Training Result Employee'
+#. Label of a Link in the HR Workspace
 #. Label of the department (Link) field in DocType 'Additional Salary'
 #. Label of the department (Link) field in DocType 'Bulk Salary Structure
 #. Assignment'
@@ -3355,7 +3304,7 @@ msgstr ""
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.py:24
 #: hr/report/leave_ledger/leave_ledger.js:54
 #: hr/report/shift_attendance/shift_attendance.js:34
-#: hr/report/shift_attendance/shift_attendance.py:97
+#: hr/report/shift_attendance/shift_attendance.py:97 hr/workspace/hr/hr.json
 #: payroll/doctype/additional_salary/additional_salary.json
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
@@ -3377,12 +3326,6 @@ msgstr ""
 msgid "Department"
 msgstr ""
 
-#. Label of a Link in the HR Workspace
-#: hr/workspace/hr/hr.json
-msgctxt "Department"
-msgid "Department"
-msgstr ""
-
 #. Name of a DocType
 #: hr/doctype/department_approver/department_approver.json
 msgid "Department Approver"
@@ -3393,7 +3336,7 @@ msgstr ""
 msgid "Department Wise Openings"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:192
+#: payroll/doctype/payroll_entry/payroll_entry.py:194
 msgid "Department: {0}"
 msgstr ""
 
@@ -3498,6 +3441,7 @@ msgstr ""
 #. Label of the designation (Link) field in DocType 'Leave Control Panel'
 #. Label of the designation (Link) field in DocType 'Shift Assignment Tool'
 #. Label of the designation (Link) field in DocType 'Staffing Plan Detail'
+#. Label of a Link in the HR Workspace
 #. Label of the designation (Link) field in DocType 'Bulk Salary Structure
 #. Assignment'
 #. Label of the designation (Data) field in DocType 'Gratuity'
@@ -3533,6 +3477,7 @@ msgstr ""
 #: hr/report/employee_exits/employee_exits.js:33
 #: hr/report/employee_exits/employee_exits.py:72
 #: hr/report/recruitment_analytics/recruitment_analytics.py:58
+#: hr/workspace/hr/hr.json
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: payroll/doctype/gratuity/gratuity.json
 #: payroll/doctype/payroll_employee_detail/payroll_employee_detail.json
@@ -3544,18 +3489,12 @@ msgstr ""
 msgid "Designation"
 msgstr ""
 
-#. Label of a Link in the HR Workspace
-#: hr/workspace/hr/hr.json
-msgctxt "Designation"
-msgid "Designation"
-msgstr ""
-
 #. Name of a DocType
 #: hr/doctype/designation_skill/designation_skill.json
 msgid "Designation Skill"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:194
+#: payroll/doctype/payroll_entry/payroll_entry.py:196
 msgid "Designation: {0}"
 msgstr ""
 
@@ -3670,6 +3609,7 @@ msgstr ""
 #. Option for the 'Status' (Select) field in DocType 'Gratuity'
 #. Option for the 'Status' (Select) field in DocType 'Payroll Entry'
 #. Option for the 'Status' (Select) field in DocType 'Salary Slip'
+#. Option for the 'Status' (Select) field in DocType 'Salary Withholding'
 #: hr/doctype/appraisal/appraisal.json
 #: hr/doctype/employee_advance/employee_advance.json
 #: hr/doctype/expense_claim/expense_claim.json
@@ -3677,12 +3617,12 @@ msgstr ""
 #: payroll/doctype/gratuity/gratuity.json
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/salary_slip/salary_slip.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Draft"
 msgstr ""
 
 #. Label of a Link in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
-msgctxt "Driver"
 msgid "Driver"
 msgstr ""
 
@@ -3691,7 +3631,7 @@ msgid "Duplicate Attendance"
 msgstr ""
 
 #: hr/doctype/appraisal/appraisal.py:65
-#: payroll/doctype/payroll_entry/payroll_entry.py:93
+#: payroll/doctype/payroll_entry/payroll_entry.py:95
 msgid "Duplicate Entry"
 msgstr ""
 
@@ -3701,6 +3641,10 @@ msgstr ""
 
 #: payroll/doctype/additional_salary/additional_salary.py:140
 msgid "Duplicate Overwritten Salary"
+msgstr ""
+
+#: payroll/doctype/salary_withholding/salary_withholding.py:43
+msgid "Duplicate Salary Withholding"
 msgstr ""
 
 #. Label of the duration (Int) field in DocType 'Employee Boarding Activity'
@@ -3897,6 +3841,8 @@ msgstr ""
 #. Label of the employee (Link) field in DocType 'Travel Request'
 #. Label of the employee (Link) field in DocType 'Vehicle Log'
 #. Label of a Card Break in the HR Workspace
+#. Label of a Link in the HR Workspace
+#. Label of a shortcut in the HR Workspace
 #. Label of the employee (Link) field in DocType 'Additional Salary'
 #. Label of the employee (Link) field in DocType 'Employee Benefit Application'
 #. Label of the employee (Link) field in DocType 'Employee Benefit Claim'
@@ -3917,6 +3863,7 @@ msgstr ""
 #. Bonus'
 #. Label of the employee (Link) field in DocType 'Salary Slip'
 #. Label of the employee (Link) field in DocType 'Salary Structure Assignment'
+#. Label of the employee (Link) field in DocType 'Salary Withholding'
 #: hr/doctype/appraisal/appraisal.json
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 #: hr/doctype/appraisal_template/appraisal_template.json
@@ -4007,6 +3954,7 @@ msgstr ""
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/doctype/salary_structure/salary_structure.js:197
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 #: payroll/report/income_tax_computation/income_tax_computation.js:26
 #: payroll/report/income_tax_computation/income_tax_computation.py:502
 #: payroll/report/income_tax_deductions/income_tax_deductions.py:25
@@ -4019,13 +3967,6 @@ msgstr ""
 msgid "Employee"
 msgstr ""
 
-#. Label of a Link in the HR Workspace
-#. Label of a shortcut in the HR Workspace
-#: hr/workspace/hr/hr.json
-msgctxt "Employee"
-msgid "Employee"
-msgstr ""
-
 #: payroll/report/bank_remittance/bank_remittance.py:40
 msgid "Employee A/C Number"
 msgstr ""
@@ -4033,16 +3974,12 @@ msgstr ""
 #. Name of a DocType
 #. Label of the employee_advance (Link) field in DocType 'Expense Claim
 #. Advance'
-#: hr/doctype/employee_advance/employee_advance.json
-#: hr/doctype/expense_claim_advance/expense_claim_advance.json
-msgid "Employee Advance"
-msgstr ""
-
 #. Label of a Link in the Expense Claims Workspace
 #. Label of a shortcut in the Expense Claims Workspace
 #. Label of a Link in the HR Workspace
+#: hr/doctype/employee_advance/employee_advance.json
+#: hr/doctype/expense_claim_advance/expense_claim_advance.json
 #: hr/workspace/expense_claims/expense_claims.json hr/workspace/hr/hr.json
-msgctxt "Employee Advance"
 msgid "Employee Advance"
 msgstr ""
 
@@ -4068,24 +4005,16 @@ msgid "Employee Analytics"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
-msgid "Employee Attendance Tool"
-msgstr ""
-
 #. Label of a Link in the Shift & Attendance Workspace
+#: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
-msgctxt "Employee Attendance Tool"
 msgid "Employee Attendance Tool"
 msgstr ""
 
 #. Name of a DocType
-#: payroll/doctype/employee_benefit_application/employee_benefit_application.json
-msgid "Employee Benefit Application"
-msgstr ""
-
 #. Label of a Link in the Tax & Benefits Workspace
+#: payroll/doctype/employee_benefit_application/employee_benefit_application.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
-msgctxt "Employee Benefit Application"
 msgid "Employee Benefit Application"
 msgstr ""
 
@@ -4095,13 +4024,9 @@ msgid "Employee Benefit Application Detail"
 msgstr ""
 
 #. Name of a DocType
-#: payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
-msgid "Employee Benefit Claim"
-msgstr ""
-
 #. Label of a Link in the Tax & Benefits Workspace
+#: payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
-msgctxt "Employee Benefit Claim"
 msgid "Employee Benefit Claim"
 msgstr ""
 
@@ -4127,16 +4052,11 @@ msgid "Employee Boarding Activity"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/employee_checkin/employee_checkin.json
-msgid "Employee Checkin"
-msgstr ""
-
 #. Label of a Link in the HR Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #. Label of a shortcut in the Shift & Attendance Workspace
-#: hr/workspace/hr/hr.json
+#: hr/doctype/employee_checkin/employee_checkin.json hr/workspace/hr/hr.json
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
-msgctxt "Employee Checkin"
 msgid "Employee Checkin"
 msgstr ""
 
@@ -4192,13 +4112,9 @@ msgid "Employee Exits"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/employee_feedback_criteria/employee_feedback_criteria.json
-msgid "Employee Feedback Criteria"
-msgstr ""
-
 #. Label of a Link in the Performance Workspace
+#: hr/doctype/employee_feedback_criteria/employee_feedback_criteria.json
 #: hr/workspace/performance/performance.json
-msgctxt "Employee Feedback Criteria"
 msgid "Employee Feedback Criteria"
 msgstr ""
 
@@ -4216,6 +4132,7 @@ msgstr ""
 #. Template'
 #. Label of the employee_grade (Link) field in DocType 'Leave Control Panel'
 #. Label of the grade (Link) field in DocType 'Shift Assignment Tool'
+#. Label of a Link in the HR Workspace
 #. Label of the grade (Link) field in DocType 'Bulk Salary Structure
 #. Assignment'
 #: hr/doctype/employee_grade/employee_grade.json
@@ -4225,31 +4142,21 @@ msgstr ""
 #: hr/doctype/employee_separation_template/employee_separation_template.json
 #: hr/doctype/leave_control_panel/leave_control_panel.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
+#: hr/workspace/hr/hr.json
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 msgid "Employee Grade"
 msgstr ""
 
-#. Label of a Link in the HR Workspace
-#: hr/workspace/hr/hr.json
-msgctxt "Employee Grade"
-msgid "Employee Grade"
-msgstr ""
-
 #. Name of a DocType
-#: hr/doctype/employee_grievance/employee_grievance.json
-msgid "Employee Grievance"
-msgstr ""
-
 #. Label of a Link in the Employee Lifecycle Workspace
 #. Label of a shortcut in the Employee Lifecycle Workspace
+#: hr/doctype/employee_grievance/employee_grievance.json
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Employee Grievance"
 msgid "Employee Grievance"
 msgstr ""
 
 #. Label of a Link in the HR Workspace
 #: hr/workspace/hr/hr.json
-msgctxt "Employee Group"
 msgid "Employee Group"
 msgstr ""
 
@@ -4271,13 +4178,9 @@ msgid "Employee Image"
 msgstr ""
 
 #. Name of a DocType
-#: payroll/doctype/employee_incentive/employee_incentive.json
-msgid "Employee Incentive"
-msgstr ""
-
 #. Label of a Link in the Salary Payout Workspace
+#: payroll/doctype/employee_incentive/employee_incentive.json
 #: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Employee Incentive"
 msgid "Employee Incentive"
 msgstr ""
 
@@ -4370,6 +4273,7 @@ msgstr ""
 #. Label of the employee_name (Read Only) field in DocType 'Salary Slip'
 #. Label of the employee_name (Data) field in DocType 'Salary Structure
 #. Assignment'
+#. Label of the employee_name (Data) field in DocType 'Salary Withholding'
 #: hr/doctype/appraisal/appraisal.json hr/doctype/appraisee/appraisee.json
 #: hr/doctype/attendance/attendance.json
 #: hr/doctype/attendance_request/attendance_request.json
@@ -4418,6 +4322,7 @@ msgstr ""
 #: payroll/doctype/retention_bonus/retention_bonus.json
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 #: payroll/report/bank_remittance/bank_remittance.py:32
 #: payroll/report/income_tax_computation/income_tax_computation.py:509
 #: payroll/report/income_tax_deductions/income_tax_deductions.py:32
@@ -4440,28 +4345,20 @@ msgid "Employee Number"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/employee_onboarding/employee_onboarding.json
-msgid "Employee Onboarding"
-msgstr ""
-
 #. Label of a Link in the Employee Lifecycle Workspace
 #. Label of a shortcut in the Employee Lifecycle Workspace
+#: hr/doctype/employee_onboarding/employee_onboarding.json
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Employee Onboarding"
 msgid "Employee Onboarding"
 msgstr ""
 
 #. Label of the employee_onboarding_template (Link) field in DocType 'Employee
 #. Onboarding'
 #. Name of a DocType
+#. Label of a Link in the Employee Lifecycle Workspace
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 #: hr/doctype/employee_onboarding_template/employee_onboarding_template.json
-msgid "Employee Onboarding Template"
-msgstr ""
-
-#. Label of a Link in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Employee Onboarding Template"
 msgid "Employee Onboarding Template"
 msgstr ""
 
@@ -4475,27 +4372,19 @@ msgid "Employee Other Income"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/employee_performance_feedback/employee_performance_feedback.json
-msgid "Employee Performance Feedback"
-msgstr ""
-
 #. Label of a Link in the Performance Workspace
 #. Label of a shortcut in the Performance Workspace
+#: hr/doctype/employee_performance_feedback/employee_performance_feedback.json
 #: hr/workspace/performance/performance.json
-msgctxt "Employee Performance Feedback"
 msgid "Employee Performance Feedback"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/employee_promotion/employee_promotion.json
-msgid "Employee Promotion"
-msgstr ""
-
 #. Label of a Link in the Employee Lifecycle Workspace
 #. Label of a Link in the Performance Workspace
+#: hr/doctype/employee_promotion/employee_promotion.json
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 #: hr/workspace/performance/performance.json
-msgctxt "Employee Promotion"
 msgid "Employee Promotion"
 msgstr ""
 
@@ -4516,15 +4405,11 @@ msgstr ""
 
 #. Name of a DocType
 #. Label of the employee_referral (Link) field in DocType 'Job Applicant'
+#. Label of a Link in the Recruitment Workspace
 #: hr/doctype/employee_referral/employee_referral.json
 #: hr/doctype/job_applicant/job_applicant.json
-#: hr/doctype/job_requisition/job_requisition.js:18 setup.py:395
-msgid "Employee Referral"
-msgstr ""
-
-#. Label of a Link in the Recruitment Workspace
-#: hr/workspace/recruitment/recruitment.json
-msgctxt "Employee Referral"
+#: hr/doctype/job_requisition/job_requisition.js:18
+#: hr/workspace/recruitment/recruitment.json setup.py:395
 msgid "Employee Referral"
 msgstr ""
 
@@ -4548,28 +4433,20 @@ msgid "Employee Retained"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/employee_separation/employee_separation.json
-msgid "Employee Separation"
-msgstr ""
-
 #. Label of a Link in the Employee Lifecycle Workspace
 #. Label of a shortcut in the Employee Lifecycle Workspace
+#: hr/doctype/employee_separation/employee_separation.json
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Employee Separation"
 msgid "Employee Separation"
 msgstr ""
 
 #. Label of the employee_separation_template (Link) field in DocType 'Employee
 #. Separation'
 #. Name of a DocType
+#. Label of a Link in the Employee Lifecycle Workspace
 #: hr/doctype/employee_separation/employee_separation.json
 #: hr/doctype/employee_separation_template/employee_separation_template.json
-msgid "Employee Separation Template"
-msgstr ""
-
-#. Label of a Link in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Employee Separation Template"
 msgid "Employee Separation Template"
 msgstr ""
 
@@ -4585,13 +4462,9 @@ msgid "Employee Skill"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/employee_skill_map/employee_skill_map.json
-msgid "Employee Skill Map"
-msgstr ""
-
 #. Label of a Link in the Employee Lifecycle Workspace
+#: hr/doctype/employee_skill_map/employee_skill_map.json
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Employee Skill Map"
 msgid "Employee Skill Map"
 msgstr ""
 
@@ -4613,36 +4486,24 @@ msgid "Employee Tax Exemption Category"
 msgstr ""
 
 #. Name of a DocType
-#: payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.json
-msgid "Employee Tax Exemption Declaration"
-msgstr ""
-
 #. Label of a Link in the Tax & Benefits Workspace
 #. Label of a shortcut in the Tax & Benefits Workspace
+#: payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
-msgctxt "Employee Tax Exemption Declaration"
 msgid "Employee Tax Exemption Declaration"
 msgstr ""
 
 #. Name of a DocType
-#: payroll/doctype/employee_tax_exemption_declaration_category/employee_tax_exemption_declaration_category.json
-msgid "Employee Tax Exemption Declaration Category"
-msgstr ""
-
 #. Label of a Link in the Tax & Benefits Workspace
+#: payroll/doctype/employee_tax_exemption_declaration_category/employee_tax_exemption_declaration_category.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
-msgctxt "Employee Tax Exemption Declaration Category"
 msgid "Employee Tax Exemption Declaration Category"
 msgstr ""
 
 #. Name of a DocType
-#: payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.json
-msgid "Employee Tax Exemption Proof Submission"
-msgstr ""
-
 #. Label of a Link in the Tax & Benefits Workspace
+#: payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
-msgctxt "Employee Tax Exemption Proof Submission"
 msgid "Employee Tax Exemption Proof Submission"
 msgstr ""
 
@@ -4652,13 +4513,9 @@ msgid "Employee Tax Exemption Proof Submission Detail"
 msgstr ""
 
 #. Name of a DocType
-#: payroll/doctype/employee_tax_exemption_sub_category/employee_tax_exemption_sub_category.json
-msgid "Employee Tax Exemption Sub Category"
-msgstr ""
-
 #. Label of a Link in the Tax & Benefits Workspace
+#: payroll/doctype/employee_tax_exemption_sub_category/employee_tax_exemption_sub_category.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
-msgctxt "Employee Tax Exemption Sub Category"
 msgid "Employee Tax Exemption Sub Category"
 msgstr ""
 
@@ -4668,13 +4525,9 @@ msgid "Employee Training"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/employee_transfer/employee_transfer.json
-msgid "Employee Transfer"
-msgstr ""
-
 #. Label of a Link in the Employee Lifecycle Workspace
+#: hr/doctype/employee_transfer/employee_transfer.json
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Employee Transfer"
 msgid "Employee Transfer"
 msgstr ""
 
@@ -4708,7 +4561,7 @@ msgstr ""
 msgid "Employee records are created using the selected option"
 msgstr ""
 
-#: hr/doctype/shift_type/shift_type.py:168
+#: hr/doctype/shift_type/shift_type.py:169
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr ""
 
@@ -4756,7 +4609,7 @@ msgstr ""
 msgid "Employee {0} on Half day on {1}"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:564
+#: payroll/doctype/salary_slip/salary_slip.py:575
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
 msgstr ""
 
@@ -4934,7 +4787,7 @@ msgstr ""
 msgid "End Time"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:198
+#: payroll/doctype/payroll_entry/payroll_entry.py:200
 msgid "End date: {0}"
 msgstr ""
 
@@ -4944,19 +4797,16 @@ msgstr ""
 
 #. Label of a Link in the Performance Workspace
 #: hr/workspace/performance/performance.json
-msgctxt "Energy Point Log"
 msgid "Energy Point Log"
 msgstr ""
 
 #. Label of a Link in the Performance Workspace
 #: hr/workspace/performance/performance.json
-msgctxt "Energy Point Rule"
 msgid "Energy Point Rule"
 msgstr ""
 
 #. Label of a Link in the Performance Workspace
 #: hr/workspace/performance/performance.json
-msgctxt "Energy Point Settings"
 msgid "Energy Point Settings"
 msgstr ""
 
@@ -4976,6 +4826,7 @@ msgstr ""
 #: hr/doctype/goal/goal_list.js:100 hr/doctype/goal/goal_list.js:108
 #: overrides/company.py:37 overrides/company.py:50
 #: payroll/doctype/additional_salary/additional_salary.py:259
+#: payroll/doctype/salary_withholding/salary_withholding.py:119
 msgid "Error"
 msgstr ""
 
@@ -4989,11 +4840,11 @@ msgstr ""
 msgid "Error Message"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1187
+#: payroll/doctype/salary_slip/salary_slip.py:1198
 msgid "Error in formula or condition"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:2152
+#: payroll/doctype/salary_slip/salary_slip.py:2163
 msgid "Error in formula or condition: {0} in Income Tax Slab"
 msgstr ""
 
@@ -5001,7 +4852,7 @@ msgstr ""
 msgid "Error in some rows"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:2231
+#: payroll/doctype/salary_slip/salary_slip.py:2242
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
 msgstr ""
 
@@ -5011,7 +4862,7 @@ msgstr ""
 msgid "Estimated Cost Per Position"
 msgstr ""
 
-#: overrides/dashboard_overrides.py:47
+#: overrides/dashboard_overrides.py:52
 msgid "Evaluation"
 msgstr ""
 
@@ -5145,15 +4996,17 @@ msgstr ""
 msgid "Exit Confirmed"
 msgstr ""
 
-#. Name of a DocType
-#: hr/doctype/exit_interview/exit_interview.json
-#: hr/report/employee_exits/employee_exits.py:39
-msgid "Exit Interview"
+#. Label of the exit_details_section (Section Break) field in DocType 'Salary
+#. Withholding'
+#: payroll/doctype/salary_withholding/salary_withholding.json
+msgid "Exit Details"
 msgstr ""
 
+#. Name of a DocType
 #. Label of a Link in the Employee Lifecycle Workspace
+#: hr/doctype/exit_interview/exit_interview.json
+#: hr/report/employee_exits/employee_exits.py:39
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Exit Interview"
 msgid "Exit Interview"
 msgstr ""
 
@@ -5237,7 +5090,7 @@ msgstr ""
 
 #. Label of the expense_amount (Currency) field in DocType 'Vehicle Service'
 #: hr/doctype/vehicle_service/vehicle_service.json
-#: overrides/dashboard_overrides.py:29
+#: overrides/dashboard_overrides.py:34
 msgid "Expense"
 msgstr ""
 
@@ -5260,20 +5113,16 @@ msgid "Expense Approver Mandatory In Expense Claim"
 msgstr ""
 
 #. Name of a DocType
+#. Label of a Link in the Expense Claims Workspace
+#. Label of a shortcut in the Expense Claims Workspace
 #. Label of a Card Break in the HR Workspace
+#. Label of a Link in the HR Workspace
 #: hr/doctype/employee_advance/employee_advance.js:62
 #: hr/doctype/expense_claim/expense_claim.json
 #: hr/doctype/vehicle_log/vehicle_log.js:17
 #: hr/report/unpaid_expense_claim/unpaid_expense_claim.py:20
-#: hr/workspace/hr/hr.json public/js/erpnext/delivery_trip.js:8
-msgid "Expense Claim"
-msgstr ""
-
-#. Label of a Link in the Expense Claims Workspace
-#. Label of a shortcut in the Expense Claims Workspace
-#. Label of a Link in the HR Workspace
 #: hr/workspace/expense_claims/expense_claims.json hr/workspace/hr/hr.json
-msgctxt "Expense Claim"
+#: public/js/erpnext/delivery_trip.js:8
 msgid "Expense Claim"
 msgstr ""
 
@@ -5295,14 +5144,10 @@ msgstr ""
 #. Label of the expense_type (Link) field in DocType 'Expense Claim Detail'
 #. Name of a DocType
 #. Label of the expense_type (Data) field in DocType 'Expense Claim Type'
+#. Label of a Link in the Expense Claims Workspace
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
 #: hr/doctype/expense_claim_type/expense_claim_type.json
-msgid "Expense Claim Type"
-msgstr ""
-
-#. Label of a Link in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
-msgctxt "Expense Claim Type"
 msgid "Expense Claim Type"
 msgstr ""
 
@@ -5439,7 +5284,7 @@ msgstr ""
 msgid "Failed to {0} {1} for employees:"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1433
+#: payroll/doctype/payroll_entry/payroll_entry.py:1454
 #: public/js/utils/index.js:149
 msgid "Failure"
 msgstr ""
@@ -5615,7 +5460,7 @@ msgstr ""
 msgid "Fiscal Year"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1322
+#: payroll/doctype/payroll_entry/payroll_entry.py:1371
 msgid "Fiscal Year {0} not found"
 msgstr ""
 
@@ -5683,9 +5528,12 @@ msgstr ""
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary Slip'
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary
 #. Structure'
+#. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary
+#. Withholding'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/doctype/salary_structure/salary_structure.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Fortnightly"
 msgstr ""
 
@@ -5743,6 +5591,8 @@ msgstr ""
 #. Label of the from_date (Date) field in DocType 'Bulk Salary Structure
 #. Assignment'
 #. Label of the from_date (Date) field in DocType 'Salary Structure Assignment'
+#. Label of the from_date (Date) field in DocType 'Salary Withholding'
+#. Label of the from_date (Date) field in DocType 'Salary Withholding Cycle'
 #: hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.js:15
 #: hr/doctype/attendance_request/attendance_request.json
 #: hr/doctype/leave_allocation/leave_allocation.json
@@ -5766,6 +5616,8 @@ msgstr ""
 #: payroll/doctype/additional_salary/additional_salary.json
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
+#: payroll/doctype/salary_withholding_cycle/salary_withholding_cycle.json
 #: payroll/report/bank_remittance/bank_remittance.js:17
 msgid "From Date"
 msgstr ""
@@ -5858,7 +5710,6 @@ msgstr ""
 
 #. Label of a Link in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Full and Final Statement"
 msgid "Full and Final Settlement"
 msgstr ""
 
@@ -5948,15 +5799,10 @@ msgstr ""
 #. Label of the kra (Small Text) field in DocType 'Appraisal Goal'
 #. Name of a DocType
 #. Label of the goal_name (Data) field in DocType 'Goal'
-#: hr/doctype/appraisal_goal/appraisal_goal.json hr/doctype/goal/goal.json
-#: hr/doctype/goal/goal_tree.js:45
-msgid "Goal"
-msgstr ""
-
 #. Label of a Link in the Performance Workspace
 #. Label of a shortcut in the Performance Workspace
-#: hr/workspace/performance/performance.json
-msgctxt "Goal"
+#: hr/doctype/appraisal_goal/appraisal_goal.json hr/doctype/goal/goal.json
+#: hr/doctype/goal/goal_tree.js:45 hr/workspace/performance/performance.json
 msgid "Goal"
 msgstr ""
 
@@ -6076,14 +5922,10 @@ msgstr ""
 
 #. Label of the grievance_type (Link) field in DocType 'Employee Grievance'
 #. Name of a DocType
+#. Label of a Link in the Employee Lifecycle Workspace
 #: hr/doctype/employee_grievance/employee_grievance.json
 #: hr/doctype/grievance_type/grievance_type.json
-msgid "Grievance Type"
-msgstr ""
-
-#. Label of a Link in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Grievance Type"
 msgid "Grievance Type"
 msgstr ""
 
@@ -6204,20 +6046,16 @@ msgstr ""
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/doctype/salary_structure/salary_structure.json
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "HR Manager"
 msgstr ""
 
 #. Name of a DocType
 #. Title of an Onboarding Step
+#. Label of a Link in the HR Workspace
 #: hr/doctype/hr_settings/hr_settings.json
 #: hr/doctype/leave_application/leave_application.py:165
-#: hr/onboarding_step/hr_settings/hr_settings.json
-msgid "HR Settings"
-msgstr ""
-
-#. Label of a Link in the HR Workspace
-#: hr/workspace/hr/hr.json
-msgctxt "HR Settings"
+#: hr/onboarding_step/hr_settings/hr_settings.json hr/workspace/hr/hr.json
 msgid "HR Settings"
 msgstr ""
 
@@ -6400,18 +6238,13 @@ msgstr ""
 #. Label of the holiday_list (Link) field in DocType 'Employee Onboarding'
 #. Label of the holiday_list (Link) field in DocType 'Leave Ledger Entry'
 #. Label of the holiday_list (Link) field in DocType 'Shift Type'
+#. Label of a Link in the Leaves Workspace
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 #: hr/doctype/leave_ledger_entry/leave_ledger_entry.json
 #: hr/doctype/shift_type/shift_type.json
 #: hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.js:22
-#: hr/report/leave_ledger/leave_ledger.py:111
-msgid "Holiday List"
-msgstr ""
-
-#. Label of a Link in the Leaves Workspace
-#: hr/workspace/leaves/leaves.json
-msgctxt "Holiday List"
+#: hr/report/leave_ledger/leave_ledger.py:111 hr/workspace/leaves/leaves.json
 msgid "Holiday List"
 msgstr ""
 
@@ -6628,7 +6461,7 @@ msgstr ""
 msgid "In Time"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:120
+#: payroll/doctype/payroll_entry/payroll_entry.py:122
 msgid "In case of any error during this background process, the system will add a comment about the error on this Payroll Entry and revert to the Submitted status"
 msgstr ""
 
@@ -6725,19 +6558,15 @@ msgstr ""
 #. Name of a DocType
 #. Label of the income_tax_slab (Link) field in DocType 'Salary Structure
 #. Assignment'
+#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Tax & Benefits Workspace
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: payroll/doctype/income_tax_slab/income_tax_slab.json
 #: payroll/doctype/salary_structure/salary_structure.js:142
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: payroll/report/income_tax_computation/income_tax_computation.py:530
-msgid "Income Tax Slab"
-msgstr ""
-
-#. Label of a Link in the Salary Payout Workspace
-#. Label of a Link in the Tax & Benefits Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
-msgctxt "Income Tax Slab"
 msgid "Income Tax Slab"
 msgstr ""
 
@@ -6750,15 +6579,15 @@ msgstr ""
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1515
+#: payroll/doctype/salary_slip/salary_slip.py:1526
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1503
+#: payroll/doctype/salary_slip/salary_slip.py:1514
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1511
+#: payroll/doctype/salary_slip/salary_slip.py:1522
 msgid "Income Tax Slab: {0} is disabled"
 msgstr ""
 
@@ -6829,16 +6658,12 @@ msgstr ""
 
 #. Name of a DocType
 #. Label of the interview (Link) field in DocType 'Interview Feedback'
+#. Label of a Link in the Recruitment Workspace
 #: hr/doctype/interview/interview.json
 #: hr/doctype/interview_feedback/interview_feedback.json
 #: hr/doctype/job_applicant/job_applicant.js:25
 #: hr/doctype/job_applicant/job_applicant_dashboard.html:7
-msgid "Interview"
-msgstr ""
-
-#. Label of a Link in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
-msgctxt "Interview"
 msgid "Interview"
 msgstr ""
 
@@ -6854,13 +6679,9 @@ msgid "Interview Details"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/interview_feedback/interview_feedback.json
-msgid "Interview Feedback"
-msgstr ""
-
 #. Label of a Link in the Recruitment Workspace
+#: hr/doctype/interview_feedback/interview_feedback.json
 #: hr/workspace/recruitment/recruitment.json
-msgctxt "Interview Feedback"
 msgid "Interview Feedback"
 msgstr ""
 
@@ -6901,16 +6722,12 @@ msgstr ""
 #. Label of the interview_round (Link) field in DocType 'Interview'
 #. Label of the interview_round (Link) field in DocType 'Interview Feedback'
 #. Name of a DocType
+#. Label of a Link in the Recruitment Workspace
 #: hr/doctype/interview/interview.json
 #: hr/doctype/interview_feedback/interview_feedback.json
 #: hr/doctype/interview_round/interview_round.json
 #: hr/doctype/job_applicant/job_applicant_dashboard.html:8
-msgid "Interview Round"
-msgstr ""
-
-#. Label of a Link in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
-msgctxt "Interview Round"
 msgid "Interview Round"
 msgstr ""
 
@@ -6938,14 +6755,10 @@ msgstr ""
 
 #. Label of the interview_type (Link) field in DocType 'Interview Round'
 #. Name of a DocType
+#. Label of a Link in the Recruitment Workspace
 #: hr/doctype/interview_round/interview_round.json
 #: hr/doctype/interview_type/interview_type.json
-msgid "Interview Type"
-msgstr ""
-
-#. Label of a Link in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
-msgctxt "Interview Type"
 msgid "Interview Type"
 msgstr ""
 
@@ -7134,6 +6947,18 @@ msgstr ""
 msgid "Is Recurring Additional Salary"
 msgstr ""
 
+#. Label of the is_salary_released (Check) field in DocType 'Salary Withholding
+#. Cycle'
+#: payroll/doctype/salary_withholding_cycle/salary_withholding_cycle.json
+msgid "Is Salary Released"
+msgstr ""
+
+#. Label of the is_salary_withheld (Check) field in DocType 'Payroll Employee
+#. Detail'
+#: payroll/doctype/payroll_employee_detail/payroll_employee_detail.json
+msgid "Is Salary Withheld"
+msgstr ""
+
 #. Label of the is_tax_applicable (Check) field in DocType 'Salary Component'
 #. Label of the is_tax_applicable (Check) field in DocType 'Salary Detail'
 #: payroll/doctype/salary_component/salary_component.json
@@ -7152,6 +6977,8 @@ msgstr ""
 #. Label of the job_applicant (Link) field in DocType 'Interview Feedback'
 #. Name of a DocType
 #. Label of the job_applicant (Link) field in DocType 'Job Offer'
+#. Label of a Link in the Recruitment Workspace
+#. Label of a shortcut in the Recruitment Workspace
 #: hr/doctype/appointment_letter/appointment_letter.json
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 #: hr/doctype/interview/interview.json
@@ -7159,13 +6986,7 @@ msgstr ""
 #: hr/doctype/job_applicant/job_applicant.json
 #: hr/doctype/job_offer/job_offer.json
 #: hr/report/recruitment_analytics/recruitment_analytics.py:38
-msgid "Job Applicant"
-msgstr ""
-
-#. Label of a Link in the Recruitment Workspace
-#. Label of a shortcut in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
-msgctxt "Job Applicant"
 msgid "Job Applicant"
 msgstr ""
 
@@ -7196,18 +7017,14 @@ msgstr ""
 
 #. Label of the job_offer (Link) field in DocType 'Employee Onboarding'
 #. Name of a DocType
+#. Label of a Link in the Recruitment Workspace
+#. Label of a shortcut in the Recruitment Workspace
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 #: hr/doctype/job_applicant/job_applicant.js:38
 #: hr/doctype/job_applicant/job_applicant.js:48
 #: hr/doctype/job_offer/job_offer.json
 #: hr/report/recruitment_analytics/recruitment_analytics.py:52
-msgid "Job Offer"
-msgstr ""
-
-#. Label of a Link in the Recruitment Workspace
-#. Label of a shortcut in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
-msgctxt "Job Offer"
 msgid "Job Offer"
 msgstr ""
 
@@ -7239,18 +7056,14 @@ msgstr ""
 #. Label of the job_opening (Link) field in DocType 'Interview'
 #. Label of the job_title (Link) field in DocType 'Job Applicant'
 #. Name of a DocType
+#. Label of a Link in the Recruitment Workspace
+#. Label of a shortcut in the Recruitment Workspace
 #: hr/doctype/interview/interview.json
 #: hr/doctype/job_applicant/job_applicant.json
 #: hr/doctype/job_opening/job_opening.json
 #: hr/doctype/job_requisition/job_requisition.js:54
 #: hr/report/recruitment_analytics/recruitment_analytics.py:31
-msgid "Job Opening"
-msgstr ""
-
-#. Label of a Link in the Recruitment Workspace
-#. Label of a shortcut in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
-msgctxt "Job Opening"
 msgid "Job Opening"
 msgstr ""
 
@@ -7268,14 +7081,10 @@ msgstr ""
 
 #. Label of the job_requisition (Link) field in DocType 'Job Opening'
 #. Name of a DocType
+#. Label of a Link in the Recruitment Workspace
 #: hr/doctype/job_opening/job_opening.json
 #: hr/doctype/job_requisition/job_requisition.json
-msgid "Job Requisition"
-msgstr ""
-
-#. Label of a Link in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
-msgctxt "Job Requisition"
 msgid "Job Requisition"
 msgstr ""
 
@@ -7308,16 +7117,15 @@ msgstr ""
 msgid "Joining Date"
 msgstr ""
 
-#. Label of the journal_entry (Link) field in DocType 'Salary Slip'
-#: payroll/doctype/salary_slip/salary_slip.json
-msgid "Journal Entry"
-msgstr ""
-
 #. Label of a Link in the Expense Claims Workspace
+#. Label of the journal_entry (Link) field in DocType 'Salary Slip'
+#. Label of the journal_entry (Link) field in DocType 'Salary Withholding
+#. Cycle'
 #. Label of a Link in the Salary Payout Workspace
 #: hr/workspace/expense_claims/expense_claims.json
+#: payroll/doctype/salary_slip/salary_slip.json
+#: payroll/doctype/salary_withholding_cycle/salary_withholding_cycle.json
 #: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Journal Entry"
 msgid "Journal Entry"
 msgstr ""
 
@@ -7341,16 +7149,11 @@ msgstr ""
 #. Goal'
 #. Label of the kra (Link) field in DocType 'Goal'
 #. Name of a DocType
+#. Label of a Link in the Performance Workspace
 #: hr/doctype/appraisal_kra/appraisal_kra.json
 #: hr/doctype/appraisal_template_goal/appraisal_template_goal.json
 #: hr/doctype/goal/goal.json hr/doctype/goal/goal_tree.js:134
-#: hr/doctype/kra/kra.json
-msgid "KRA"
-msgstr ""
-
-#. Label of a Link in the Performance Workspace
-#: hr/workspace/performance/performance.json
-msgctxt "KRA"
+#: hr/doctype/kra/kra.json hr/workspace/performance/performance.json
 msgid "KRA"
 msgstr ""
 
@@ -7465,16 +7268,12 @@ msgstr ""
 #. Request'
 #. Name of a DocType
 #. Label of the leave_allocation (Link) field in DocType 'Leave Encashment'
+#. Label of a Link in the Leaves Workspace
+#. Label of a shortcut in the Leaves Workspace
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.json
 #: hr/doctype/leave_allocation/leave_allocation.json
 #: hr/doctype/leave_encashment/leave_encashment.json
-msgid "Leave Allocation"
-msgstr ""
-
-#. Label of a Link in the Leaves Workspace
-#. Label of a shortcut in the Leaves Workspace
 #: hr/workspace/leaves/leaves.json
-msgctxt "Leave Allocation"
 msgid "Leave Allocation"
 msgstr ""
 
@@ -7486,17 +7285,13 @@ msgstr ""
 
 #. Label of the leave_application (Link) field in DocType 'Attendance'
 #. Name of a DocType
-#: hr/doctype/attendance/attendance.json
-#: hr/doctype/leave_application/leave_application.json
-msgid "Leave Application"
-msgstr ""
-
 #. Label of a Link in the HR Workspace
 #. Label of a shortcut in the HR Workspace
 #. Label of a Link in the Leaves Workspace
 #. Label of a shortcut in the Leaves Workspace
-#: hr/workspace/hr/hr.json hr/workspace/leaves/leaves.json
-msgctxt "Leave Application"
+#: hr/doctype/attendance/attendance.json
+#: hr/doctype/leave_application/leave_application.json hr/workspace/hr/hr.json
+#: hr/workspace/leaves/leaves.json
 msgid "Leave Application"
 msgstr ""
 
@@ -7542,13 +7337,9 @@ msgid "Leave Balance Before Application"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/leave_block_list/leave_block_list.json
-msgid "Leave Block List"
-msgstr ""
-
 #. Label of a Link in the Leaves Workspace
+#: hr/doctype/leave_block_list/leave_block_list.json
 #: hr/workspace/leaves/leaves.json
-msgctxt "Leave Block List"
 msgid "Leave Block List"
 msgstr ""
 
@@ -7585,13 +7376,9 @@ msgid "Leave Blocked"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/leave_control_panel/leave_control_panel.json
-msgid "Leave Control Panel"
-msgstr ""
-
 #. Label of a Link in the Leaves Workspace
+#: hr/doctype/leave_control_panel/leave_control_panel.json
 #: hr/workspace/leaves/leaves.json
-msgctxt "Leave Control Panel"
 msgid "Leave Control Panel"
 msgstr ""
 
@@ -7601,13 +7388,9 @@ msgid "Leave Details"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/leave_encashment/leave_encashment.json
-msgid "Leave Encashment"
-msgstr ""
-
 #. Label of a Link in the Leaves Workspace
+#: hr/doctype/leave_encashment/leave_encashment.json
 #: hr/workspace/leaves/leaves.json
-msgctxt "Leave Encashment"
 msgid "Leave Encashment"
 msgstr ""
 
@@ -7637,17 +7420,13 @@ msgstr ""
 #. Option for the 'Assignment based on' (Select) field in DocType 'Leave Policy
 #. Assignment'
 #. Label of the leave_period (Link) field in DocType 'Leave Policy Assignment'
+#. Label of a Link in the Leaves Workspace
 #: hr/doctype/leave_allocation/leave_allocation.json
 #: hr/doctype/leave_control_panel/leave_control_panel.json
 #: hr/doctype/leave_encashment/leave_encashment.json
 #: hr/doctype/leave_period/leave_period.json
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.json
-msgid "Leave Period"
-msgstr ""
-
-#. Label of a Link in the Leaves Workspace
 #: hr/workspace/leaves/leaves.json
-msgctxt "Leave Period"
 msgid "Leave Period"
 msgstr ""
 
@@ -7655,30 +7434,22 @@ msgstr ""
 #. Label of the leave_policy (Link) field in DocType 'Leave Control Panel'
 #. Name of a DocType
 #. Label of the leave_policy (Link) field in DocType 'Leave Policy Assignment'
+#. Label of a Link in the Leaves Workspace
 #: hr/doctype/leave_allocation/leave_allocation.json
 #: hr/doctype/leave_control_panel/leave_control_panel.json
 #: hr/doctype/leave_policy/leave_policy.json
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.json
-msgid "Leave Policy"
-msgstr ""
-
-#. Label of a Link in the Leaves Workspace
 #: hr/workspace/leaves/leaves.json
-msgctxt "Leave Policy"
 msgid "Leave Policy"
 msgstr ""
 
 #. Label of the leave_policy_assignment (Link) field in DocType 'Leave
 #. Allocation'
 #. Name of a DocType
+#. Label of a Link in the Leaves Workspace
 #: hr/doctype/leave_allocation/leave_allocation.json
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.json
-msgid "Leave Policy Assignment"
-msgstr ""
-
-#. Label of a Link in the Leaves Workspace
 #: hr/workspace/leaves/leaves.json
-msgctxt "Leave Policy Assignment"
 msgid "Leave Policy Assignment"
 msgstr ""
 
@@ -7720,6 +7491,7 @@ msgstr ""
 #. Label of the leave_type (Link) field in DocType 'Leave Ledger Entry'
 #. Label of the leave_type (Link) field in DocType 'Leave Policy Detail'
 #. Name of a DocType
+#. Label of a Link in the Leaves Workspace
 #. Label of the leave_type (Link) field in DocType 'Salary Slip Leave'
 #: hr/doctype/attendance/attendance.json
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.json
@@ -7734,14 +7506,8 @@ msgstr ""
 #: hr/doctype/leave_type/leave_type.json
 #: hr/report/employee_leave_balance/employee_leave_balance.py:33
 #: hr/report/leave_ledger/leave_ledger.js:22
-#: hr/report/leave_ledger/leave_ledger.py:65
+#: hr/report/leave_ledger/leave_ledger.py:65 hr/workspace/leaves/leaves.json
 #: payroll/doctype/salary_slip_leave/salary_slip_leave.json
-msgid "Leave Type"
-msgstr ""
-
-#. Label of a Link in the Leaves Workspace
-#: hr/workspace/leaves/leaves.json
-msgctxt "Leave Type"
 msgid "Leave Type"
 msgstr ""
 
@@ -7781,7 +7547,7 @@ msgstr ""
 msgid "Leave Without Pay"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:455
+#: payroll/doctype/salary_slip/salary_slip.py:466
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr ""
 
@@ -8001,7 +7767,7 @@ msgstr ""
 msgid "Make"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.js:169
+#: payroll/doctype/payroll_entry/payroll_entry.js:163
 msgid "Make Bank Entry"
 msgstr ""
 
@@ -8015,7 +7781,7 @@ msgstr ""
 msgid "Mandatory fields required for this action"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.js:195
+#: payroll/doctype/payroll_entry/payroll_entry.js:192
 msgid "Mandatory fields required in {0}"
 msgstr ""
 
@@ -8253,7 +8019,7 @@ msgstr ""
 #. Label of the message (Text Editor) field in DocType 'PWA Notification'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hr/doctype/pwa_notification/pwa_notification.json
-#: payroll/doctype/payroll_entry/payroll_entry.py:1400
+#: payroll/doctype/payroll_entry/payroll_entry.py:1421
 msgid "Message"
 msgstr ""
 
@@ -8278,7 +8044,7 @@ msgstr ""
 msgid "Missing Field"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.js:208
+#: payroll/doctype/payroll_entry/payroll_entry.js:205
 #: public/js/utils/index.js:41
 msgid "Missing Fields"
 msgstr ""
@@ -8287,11 +8053,11 @@ msgstr ""
 msgid "Missing Mandatory Field"
 msgstr ""
 
-#: hr/doctype/full_and_final_statement/full_and_final_statement.py:32
+#: hr/doctype/full_and_final_statement/full_and_final_statement.py:35
 msgid "Missing Relieving Date"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1506
+#: payroll/doctype/salary_slip/salary_slip.py:1517
 msgid "Missing Tax Slab"
 msgstr ""
 
@@ -8357,12 +8123,15 @@ msgstr ""
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary Slip'
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary
 #. Structure'
+#. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary
+#. Withholding'
 #: hr/doctype/hr_settings/hr_settings.json
 #: hr/doctype/leave_type/leave_type.json
 #: hr/doctype/vehicle_service/vehicle_service.json
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/doctype/salary_structure/salary_structure.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Monthly"
 msgstr ""
 
@@ -8413,8 +8182,8 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1173
-#: payroll/doctype/salary_slip/salary_slip.py:2147
+#: payroll/doctype/salary_slip/salary_slip.py:1184
+#: payroll/doctype/salary_slip/salary_slip.py:2158
 msgid "Name error"
 msgstr ""
 
@@ -8451,7 +8220,7 @@ msgstr ""
 msgid "Net Pay Info"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:182
+#: payroll/doctype/salary_slip/salary_slip.py:191
 msgid "Net Pay cannot be less than 0"
 msgstr ""
 
@@ -8537,6 +8306,10 @@ msgstr ""
 msgid "No Salary Slip found for Employee: {0}"
 msgstr ""
 
+#: payroll/doctype/salary_withholding/salary_withholding.py:116
+msgid "No Salary Structure Assignment found for employee {0} on or before {1}"
+msgstr ""
+
 #: hr/doctype/leave_encashment/leave_encashment.py:30
 msgid "No Salary Structure assigned to Employee {0} on the given date {1}"
 msgstr ""
@@ -8553,7 +8326,7 @@ msgstr ""
 msgid "No Staffing Plans found for this Designation"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:381
+#: payroll/doctype/salary_slip/salary_slip.py:392
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
 msgstr ""
 
@@ -8585,11 +8358,11 @@ msgstr ""
 msgid "No changes found in timings."
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:199
+#: payroll/doctype/payroll_entry/payroll_entry.py:201
 msgid "No employees found"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:182
+#: payroll/doctype/payroll_entry/payroll_entry.py:184
 msgid "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
 msgstr ""
 
@@ -8634,7 +8407,7 @@ msgstr ""
 msgid "No replies from"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1416
+#: payroll/doctype/payroll_entry/payroll_entry.py:1437
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr ""
 
@@ -8705,7 +8478,7 @@ msgstr ""
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1839
+#: payroll/doctype/salary_slip/salary_slip.py:1850
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr ""
 
@@ -8747,6 +8520,12 @@ msgstr ""
 #. Detail'
 #: hr/doctype/staffing_plan_detail/staffing_plan_detail.json
 msgid "Number Of Positions"
+msgstr ""
+
+#. Label of the number_of_withholding_cycles (Int) field in DocType 'Salary
+#. Withholding'
+#: payroll/doctype/salary_withholding/salary_withholding.json
+msgid "Number of Withholding Cycles"
 msgstr ""
 
 #. Description of the 'Actual Encashable Days' (Float) field in DocType 'Leave
@@ -9180,7 +8959,7 @@ msgstr ""
 msgid "Payment Account"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.js:443
+#: payroll/doctype/payroll_entry/payroll_entry.js:441
 msgid "Payment Account is mandatory"
 msgstr ""
 
@@ -9209,16 +8988,12 @@ msgstr ""
 msgid "Payment Days calculations are based on these Payroll Settings"
 msgstr ""
 
-#. Label of the account (Section Break) field in DocType 'Payroll Entry'
-#: payroll/doctype/payroll_entry/payroll_entry.json
-msgid "Payment Entry"
-msgstr ""
-
 #. Label of a Link in the Expense Claims Workspace
+#. Label of the account (Section Break) field in DocType 'Payroll Entry'
 #. Label of a Link in the Salary Payout Workspace
 #: hr/workspace/expense_claims/expense_claims.json
+#: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Payment Entry"
 msgid "Payment Entry"
 msgstr ""
 
@@ -9227,7 +9002,7 @@ msgstr ""
 msgid "Payment and Accounting"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:989
+#: payroll/doctype/payroll_entry/payroll_entry.py:1038
 msgid "Payment of {0} from {1} to {2}"
 msgstr ""
 
@@ -9235,7 +9010,7 @@ msgstr ""
 #. Name of a Workspace
 #. Label of a Card Break in the Salary Payout Workspace
 #: hr/doctype/leave_encashment/leave_encashment.json
-#: overrides/dashboard_overrides.py:32 overrides/dashboard_overrides.py:72
+#: overrides/dashboard_overrides.py:37 overrides/dashboard_overrides.py:77
 #: payroll/workspace/payroll/payroll.json
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Payroll"
@@ -9267,31 +9042,30 @@ msgstr ""
 
 #. Name of a DocType
 #. Label of the payroll_entry (Link) field in DocType 'Salary Slip'
-#: payroll/doctype/payroll_entry/payroll_entry.json
-#: payroll/doctype/salary_slip/salary_slip.json
-#: payroll/doctype/salary_structure_assignment/salary_structure_assignment.js:65
-msgid "Payroll Entry"
-msgstr ""
-
 #. Label of a Link in the Payroll Workspace
 #. Label of a Link in the Salary Payout Workspace
 #. Label of a shortcut in the Salary Payout Workspace
+#: payroll/doctype/payroll_entry/payroll_entry.json
+#: payroll/doctype/salary_slip/salary_slip.json
+#: payroll/doctype/salary_structure_assignment/salary_structure_assignment.js:65
 #: payroll/workspace/payroll/payroll.json
 #: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Payroll Entry"
 msgid "Payroll Entry"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:118
+#: payroll/doctype/payroll_entry/payroll_entry.py:120
 msgid "Payroll Entry cancellation is queued. It may take a few minutes"
 msgstr ""
 
 #. Label of the payroll_frequency (Select) field in DocType 'Payroll Entry'
 #. Label of the payroll_frequency (Select) field in DocType 'Salary Slip'
 #. Label of the payroll_frequency (Select) field in DocType 'Salary Structure'
+#. Label of the payroll_frequency (Select) field in DocType 'Salary
+#. Withholding'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/doctype/salary_structure/salary_structure.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Payroll Frequency"
 msgstr ""
 
@@ -9330,18 +9104,14 @@ msgstr ""
 #. Label of the payroll_period (Link) field in DocType 'Employee Tax Exemption
 #. Proof Submission'
 #. Name of a DocType
+#. Label of a Link in the Salary Payout Workspace
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
 #: payroll/doctype/employee_other_income/employee_other_income.json
 #: payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.json
 #: payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.json
 #: payroll/doctype/payroll_period/payroll_period.json
 #: payroll/report/income_tax_computation/income_tax_computation.js:18
-msgid "Payroll Period"
-msgstr ""
-
-#. Label of a Link in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Payroll Period"
 msgid "Payroll Period"
 msgstr ""
 
@@ -9364,14 +9134,10 @@ msgstr ""
 
 #. Name of a DocType
 #. Title of an Onboarding Step
+#. Label of a Link in the Payroll Workspace
 #: payroll/doctype/payroll_settings/payroll_settings.json
 #: payroll/onboarding_step/payroll_settings/payroll_settings.json
-msgid "Payroll Settings"
-msgstr ""
-
-#. Label of a Link in the Payroll Workspace
 #: payroll/workspace/payroll/payroll.json
-msgctxt "Payroll Settings"
 msgid "Payroll Settings"
 msgstr ""
 
@@ -9410,7 +9176,7 @@ msgstr ""
 msgid "Pending Amount"
 msgstr ""
 
-#: hr/doctype/full_and_final_statement/full_and_final_statement.py:57
+#: hr/doctype/full_and_final_statement/full_and_final_statement.py:60
 msgid "Pending Asset Returns"
 msgstr ""
 
@@ -9478,7 +9244,7 @@ msgstr ""
 msgid "Please add the remaining benefits {0} to the application as pro-rata component"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:748
+#: payroll/doctype/salary_slip/salary_slip.py:759
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr ""
 
@@ -9502,7 +9268,7 @@ msgstr ""
 msgid "Please enter the designation"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1828
+#: payroll/doctype/salary_slip/salary_slip.py:1839
 msgid "Please see attachment"
 msgstr ""
 
@@ -9517,6 +9283,10 @@ msgstr ""
 #: hr/doctype/department_approver/department_approver.py:19
 #: hr/employee_property_update.js:45
 msgid "Please select Employee first."
+msgstr ""
+
+#: payroll/doctype/salary_withholding/salary_withholding.js:25
+msgid "Please select From Date and Payroll Frequency first"
 msgstr ""
 
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:113
@@ -9608,7 +9378,7 @@ msgstr ""
 msgid "Please set Earning Component for Leave type: {0}."
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:439
+#: payroll/doctype/salary_slip/salary_slip.py:450
 msgid "Please set Payroll based on in Payroll settings"
 msgstr ""
 
@@ -9621,7 +9391,7 @@ msgstr ""
 msgid "Please set a Default Cash Account in Company defaults"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:307
+#: payroll/doctype/payroll_entry/payroll_entry.py:317
 msgid "Please set account in Salary Component {0}"
 msgstr ""
 
@@ -9641,7 +9411,7 @@ msgstr ""
 msgid "Please set the Company"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:252
+#: payroll/doctype/salary_slip/salary_slip.py:263
 msgid "Please set the Date Of Joining for employee {0}"
 msgstr ""
 
@@ -9658,7 +9428,7 @@ msgstr ""
 msgid "Please set {0} and {1} in {2}."
 msgstr ""
 
-#: hr/doctype/full_and_final_statement/full_and_final_statement.py:28
+#: hr/doctype/full_and_final_statement/full_and_final_statement.py:31
 msgid "Please set {0} for Employee {1}"
 msgstr ""
 
@@ -9707,6 +9477,7 @@ msgstr ""
 #. Label of the posting_date (Date) field in DocType 'Leave Application'
 #. Label of the posting_date (Date) field in DocType 'Payroll Entry'
 #. Label of the posting_date (Date) field in DocType 'Salary Slip'
+#. Label of the posting_date (Date) field in DocType 'Salary Withholding'
 #: hr/doctype/employee_advance/employee_advance.json
 #: hr/doctype/expense_claim/expense_claim.json
 #: hr/doctype/expense_claim_advance/expense_claim_advance.json
@@ -9715,6 +9486,7 @@ msgstr ""
 #: hr/report/employee_advance_summary/employee_advance_summary.py:60
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/salary_slip/salary_slip.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 #: payroll/report/income_tax_deductions/income_tax_deductions.py:60
 #: www/jobs/index.html:95
 msgid "Posting Date"
@@ -9927,14 +9699,10 @@ msgstr ""
 #. Name of a DocType
 #. Label of the purpose_of_travel (Data) field in DocType 'Purpose of Travel'
 #. Label of the purpose_of_travel (Link) field in DocType 'Travel Request'
+#. Label of a Link in the Expense Claims Workspace
 #: hr/doctype/purpose_of_travel/purpose_of_travel.json
 #: hr/doctype/travel_request/travel_request.json
-msgid "Purpose of Travel"
-msgstr ""
-
-#. Label of a Link in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
-msgctxt "Purpose of Travel"
 msgid "Purpose of Travel"
 msgstr ""
 
@@ -10026,17 +9794,26 @@ msgstr ""
 #. Request'
 #. Label of the description (Small Text) field in DocType 'Leave Application'
 #. Label of the reason (Text) field in DocType 'Leave Block List Date'
+#. Label of the reason_section (Section Break) field in DocType 'Salary
+#. Withholding'
 #: hr/doctype/attendance_request/attendance_request.json
 #: hr/doctype/attendance_request/attendance_warnings.html:9
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.json
 #: hr/doctype/leave_application/leave_application.json
 #: hr/doctype/leave_block_list_date/leave_block_list_date.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Reason"
 msgstr ""
 
 #. Label of the reason_for_requesting (Text) field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgid "Reason for Requesting"
+msgstr ""
+
+#. Label of the reason_for_withholding_salary (Small Text) field in DocType
+#. 'Salary Withholding'
+#: payroll/doctype/salary_withholding/salary_withholding.json
+msgid "Reason for Withholding Salary"
 msgstr ""
 
 #: hr/doctype/employee_checkin/employee_checkin.py:273
@@ -10111,7 +9888,7 @@ msgstr ""
 
 #: hr/doctype/leave_application/leave_application.py:481
 #: payroll/doctype/additional_salary/additional_salary.py:137
-#: payroll/doctype/payroll_entry/payroll_entry.py:88
+#: payroll/doctype/payroll_entry/payroll_entry.py:90
 msgid "Reference: {0}"
 msgstr ""
 
@@ -10194,10 +9971,21 @@ msgstr ""
 msgid "Rejected"
 msgstr ""
 
+#: payroll/doctype/payroll_entry/payroll_entry.js:167
+msgid "Release Withheld Salaries"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Salary Withholding'
+#: payroll/doctype/salary_withholding/salary_withholding.json
+msgid "Released"
+msgstr ""
+
 #. Label of the relieving_date (Date) field in DocType 'Exit Interview'
+#. Label of the relieving_date (Date) field in DocType 'Salary Withholding'
 #: hr/doctype/exit_interview/exit_interview.json
-#: hr/doctype/full_and_final_statement/full_and_final_statement.py:29
+#: hr/doctype/full_and_final_statement/full_and_final_statement.py:32
 #: hr/report/employee_exits/employee_exits.py:37
+#: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Relieving Date"
 msgstr ""
 
@@ -10415,13 +10203,9 @@ msgid "Retained"
 msgstr ""
 
 #. Name of a DocType
-#: payroll/doctype/retention_bonus/retention_bonus.json
-msgid "Retention Bonus"
-msgstr ""
-
 #. Label of a Link in the Salary Payout Workspace
+#: payroll/doctype/retention_bonus/retention_bonus.json
 #: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Retention Bonus"
 msgid "Retention Bonus"
 msgstr ""
 
@@ -10578,7 +10362,7 @@ msgstr ""
 msgid "Row {0}: Paid amount {1} is greater than pending accrued amount {2} against loan {3}"
 msgstr ""
 
-#: hr/doctype/full_and_final_statement/full_and_final_statement.py:49
+#: hr/doctype/full_and_final_statement/full_and_final_statement.py:52
 msgid "Row {0}: {1}"
 msgstr ""
 
@@ -10604,19 +10388,15 @@ msgstr ""
 #. Label of the salary_component (Link) field in DocType 'Retention Bonus'
 #. Name of a DocType
 #. Label of the salary_component (Link) field in DocType 'Salary Structure'
+#. Label of a Link in the Salary Payout Workspace
 #: payroll/doctype/additional_salary/additional_salary.json
 #: payroll/doctype/employee_incentive/employee_incentive.json
 #: payroll/doctype/gratuity/gratuity.json
 #: payroll/doctype/retention_bonus/retention_bonus.json
 #: payroll/doctype/salary_component/salary_component.json
 #: payroll/doctype/salary_structure/salary_structure.json
-#: public/js/utils/payroll_utils.js:23
-msgid "Salary Component"
-msgstr ""
-
-#. Label of a Link in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Salary Component"
+#: public/js/utils/payroll_utils.js:23
 msgid "Salary Component"
 msgstr ""
 
@@ -10711,19 +10491,15 @@ msgstr ""
 #. Label of the column_break_rnoq (Section Break) field in DocType 'Payroll
 #. Settings'
 #. Name of a DocType
+#. Label of a Link in the Payroll Workspace
+#. Label of a Link in the Salary Payout Workspace
+#. Label of a shortcut in the Salary Payout Workspace
 #: hr/doctype/leave_application/leave_application.json
 #: payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 #: payroll/doctype/payroll_settings/payroll_settings.json
 #: payroll/doctype/salary_slip/salary_slip.json
-msgid "Salary Slip"
-msgstr ""
-
-#. Label of a Link in the Payroll Workspace
-#. Label of a Link in the Salary Payout Workspace
-#. Label of a shortcut in the Salary Payout Workspace
 #: payroll/workspace/payroll/payroll.json
 #: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Salary Slip"
 msgid "Salary Slip"
 msgstr ""
 
@@ -10760,27 +10536,27 @@ msgstr ""
 msgid "Salary Slip Timesheet"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:84
+#: payroll/doctype/payroll_entry/payroll_entry.py:86
 msgid "Salary Slip already exists for {0} for the given dates"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:240
+#: payroll/doctype/payroll_entry/payroll_entry.py:250
 msgid "Salary Slip creation is queued. It may take a few minutes"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:286
+#: payroll/doctype/salary_slip/salary_slip.py:297
 msgid "Salary Slip of employee {0} already created for this period"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:292
+#: payroll/doctype/salary_slip/salary_slip.py:303
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:285
+#: payroll/doctype/payroll_entry/payroll_entry.py:295
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1355
+#: payroll/doctype/payroll_entry/payroll_entry.py:1376
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr ""
 
@@ -10798,11 +10574,11 @@ msgstr ""
 msgid "Salary Slips Submitted"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1397
+#: payroll/doctype/payroll_entry/payroll_entry.py:1418
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1422
+#: payroll/doctype/payroll_entry/payroll_entry.py:1443
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr ""
 
@@ -10812,29 +10588,21 @@ msgstr ""
 #. Name of a DocType
 #. Label of the salary_structure (Link) field in DocType 'Salary Structure
 #. Assignment'
+#. Label of a Link in the Salary Payout Workspace
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: payroll/doctype/salary_component/salary_component.js:31
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/doctype/salary_structure/salary_structure.json
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-msgid "Salary Structure"
-msgstr ""
-
-#. Label of a Link in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Salary Structure"
 msgid "Salary Structure"
 msgstr ""
 
 #. Name of a DocType
+#. Label of a Link in the Salary Payout Workspace
 #: payroll/doctype/income_tax_slab/income_tax_slab.js:8
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-msgid "Salary Structure Assignment"
-msgstr ""
-
-#. Label of a Link in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Salary Structure Assignment"
 msgid "Salary Structure Assignment"
 msgstr ""
 
@@ -10846,7 +10614,7 @@ msgstr ""
 msgid "Salary Structure Assignment for Employee already exists"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:384
+#: payroll/doctype/salary_slip/salary_slip.py:395
 msgid "Salary Structure Missing"
 msgstr ""
 
@@ -10870,6 +10638,26 @@ msgstr ""
 msgid "Salary Structures updated successfully"
 msgstr ""
 
+#. Label of the salary_withholding (Link) field in DocType 'Salary Slip'
+#. Name of a DocType
+#. Label of a Link in the Salary Payout Workspace
+#: payroll/doctype/salary_slip/salary_slip.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
+#: payroll/workspace/salary_payout/salary_payout.json
+msgid "Salary Withholding"
+msgstr ""
+
+#. Label of the salary_withholding_cycle (Data) field in DocType 'Salary Slip'
+#. Name of a DocType
+#: payroll/doctype/salary_slip/salary_slip.json
+#: payroll/doctype/salary_withholding_cycle/salary_withholding_cycle.json
+msgid "Salary Withholding Cycle"
+msgstr ""
+
+#: payroll/doctype/salary_withholding/salary_withholding.py:39
+msgid "Salary Withholding {0} already exists for employee {1} for the selected period"
+msgstr ""
+
 #: hr/doctype/leave_application/leave_application.py:324
 msgid "Salary already processed for period between {0} and {1}, Leave application period cannot be between this date range."
 msgstr ""
@@ -10886,7 +10674,7 @@ msgstr ""
 msgid "Salary components should be part of the Salary Structure."
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:2296
+#: payroll/doctype/salary_slip/salary_slip.py:2307
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr ""
 
@@ -10988,7 +10776,7 @@ msgstr ""
 msgid "Select Payment Account to make Bank Entry"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1560
+#: payroll/doctype/payroll_entry/payroll_entry.py:1581
 msgid "Select Payroll Frequency."
 msgstr ""
 
@@ -11215,7 +11003,7 @@ msgstr ""
 msgid "Set Leave Details"
 msgstr ""
 
-#: hr/doctype/full_and_final_statement/full_and_final_statement.py:71
+#: hr/doctype/full_and_final_statement/full_and_final_statement.py:66
 msgid "Set Relieving Date for Employee: {0}"
 msgstr ""
 
@@ -11269,7 +11057,7 @@ msgstr ""
 msgid "Settings Missing"
 msgstr ""
 
-#: hr/doctype/full_and_final_statement/full_and_final_statement.py:39
+#: hr/doctype/full_and_final_statement/full_and_final_statement.py:42
 msgid "Settle all Payables and Receivables before submission"
 msgstr ""
 
@@ -11300,7 +11088,7 @@ msgstr ""
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:145
 #: hr/report/shift_attendance/shift_attendance.py:36
 #: hr/report/shift_attendance/shift_attendance.py:205
-#: overrides/dashboard_overrides.py:28
+#: overrides/dashboard_overrides.py:33
 msgid "Shift"
 msgstr ""
 
@@ -11329,13 +11117,9 @@ msgid "Shift Actual Start Time"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/shift_assignment/shift_assignment.json
-msgid "Shift Assignment"
-msgstr ""
-
 #. Label of a Link in the Shift & Attendance Workspace
+#: hr/doctype/shift_assignment/shift_assignment.json
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
-msgctxt "Shift Assignment"
 msgid "Shift Assignment"
 msgstr ""
 
@@ -11346,16 +11130,12 @@ msgid "Shift Assignment Details"
 msgstr ""
 
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
 #: hr/doctype/shift_assignment/shift_assignment_list.js:3
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hr/doctype/shift_request/shift_request_list.js:3
 #: hr/doctype/shift_type/shift_type_list.js:3
-msgid "Shift Assignment Tool"
-msgstr ""
-
-#. Label of a Link in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
-msgctxt "Shift Assignment Tool"
 msgid "Shift Assignment Tool"
 msgstr ""
 
@@ -11381,16 +11161,12 @@ msgstr ""
 
 #. Label of the shift_request (Link) field in DocType 'Shift Assignment'
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
+#. Label of a shortcut in the Shift & Attendance Workspace
 #: hr/doctype/shift_assignment/shift_assignment.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.js:197
 #: hr/doctype/shift_request/shift_request.json
-msgid "Shift Request"
-msgstr ""
-
-#. Label of a Link in the Shift & Attendance Workspace
-#. Label of a shortcut in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
-msgctxt "Shift Request"
 msgid "Shift Request"
 msgstr ""
 
@@ -11438,18 +11214,14 @@ msgstr ""
 #. Tool'
 #. Label of the shift_type (Link) field in DocType 'Shift Request'
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
 #: hr/doctype/shift_assignment/shift_assignment.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.js:207
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hr/doctype/shift_request/shift_request.json
 #: hr/doctype/shift_type/shift_type.json
 #: hr/report/shift_attendance/shift_attendance.js:28
-msgid "Shift Type"
-msgstr ""
-
-#. Label of a Link in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
-msgctxt "Shift Type"
 msgid "Shift Type"
 msgstr ""
 
@@ -11579,15 +11351,11 @@ msgstr ""
 
 #. Label of the staffing_plan (Link) field in DocType 'Job Opening'
 #. Name of a DocType
+#. Label of a Link in the Recruitment Workspace
 #: hr/doctype/job_opening/job_opening.json
 #: hr/doctype/staffing_plan/staffing_plan.json
 #: hr/report/recruitment_analytics/recruitment_analytics.py:24
-msgid "Staffing Plan"
-msgstr ""
-
-#. Label of a Link in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
-msgctxt "Staffing Plan"
 msgid "Staffing Plan"
 msgstr ""
 
@@ -11657,11 +11425,11 @@ msgstr ""
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1448
+#: payroll/doctype/salary_slip/salary_slip.py:1459
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:196
+#: payroll/doctype/payroll_entry/payroll_entry.py:198
 msgid "Start date: {0}"
 msgstr ""
 
@@ -11704,6 +11472,7 @@ msgstr ""
 #. Label of the status (Select) field in DocType 'Gratuity'
 #. Label of the status (Select) field in DocType 'Payroll Entry'
 #. Label of the status (Select) field in DocType 'Salary Slip'
+#. Label of the status (Select) field in DocType 'Salary Withholding'
 #: hr/doctype/appraisal/appraisal.json
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 #: hr/doctype/attendance/attendance.json
@@ -11741,6 +11510,7 @@ msgstr ""
 #: payroll/doctype/gratuity/gratuity.json
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/salary_slip/salary_slip.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Status"
 msgstr ""
 
@@ -11824,11 +11594,11 @@ msgstr ""
 msgid "Submitted"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.js:413
+#: payroll/doctype/payroll_entry/payroll_entry.js:410
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1477
+#: payroll/doctype/payroll_entry/payroll_entry.py:1498
 msgid "Submitting Salary Slips..."
 msgstr ""
 
@@ -11837,7 +11607,7 @@ msgid "Subsidiary companies have already planned for {1} vacancies at a budget o
 msgstr ""
 
 #: hr/doctype/employee_referral/employee_referral.py:54 hr/utils.py:831
-#: payroll/doctype/payroll_entry/payroll_entry.py:1425
+#: payroll/doctype/payroll_entry/payroll_entry.py:1446
 #: public/js/utils/index.js:139
 msgid "Success"
 msgstr ""
@@ -11883,11 +11653,11 @@ msgstr ""
 msgid "Sync {0}"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1180
+#: payroll/doctype/salary_slip/salary_slip.py:1191
 msgid "Syntax error"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:2150
+#: payroll/doctype/salary_slip/salary_slip.py:2161
 msgid "Syntax error in condition: {0} in Income Tax Slab"
 msgstr ""
 
@@ -11940,6 +11710,7 @@ msgstr ""
 #: payroll/doctype/payroll_settings/payroll_settings.json
 #: payroll/doctype/retention_bonus/retention_bonus.json
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "System Manager"
 msgstr ""
 
@@ -12150,7 +11921,7 @@ msgstr ""
 msgid "Theory"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:436
+#: payroll/doctype/salary_slip/salary_slip.py:447
 msgid "There are more holidays than working days this month."
 msgstr ""
 
@@ -12185,15 +11956,15 @@ msgstr ""
 msgid "This employee already has a log with the same timestamp.{0}"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1188
+#: payroll/doctype/salary_slip/salary_slip.py:1199
 msgid "This error can be due to invalid formula or condition."
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1181
+#: payroll/doctype/salary_slip/salary_slip.py:1192
 msgid "This error can be due to invalid syntax."
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1174
+#: payroll/doctype/salary_slip/salary_slip.py:1185
 msgid "This error can be due to missing or deleted field."
 msgstr ""
 
@@ -12205,7 +11976,7 @@ msgstr ""
 msgid "This field allows you to set the maximum number of leaves that can be allocated annually for this Leave Type while creating the Leave Policy"
 msgstr ""
 
-#: overrides/dashboard_overrides.py:55
+#: overrides/dashboard_overrides.py:60
 msgid "This is based on the attendance of this Employee"
 msgstr ""
 
@@ -12217,7 +11988,7 @@ msgstr ""
 msgid "This will overwrite the tax component {0} in the salary slip and tax won't be calculated based on the Income Tax Slabs"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.js:404
+#: payroll/doctype/payroll_entry/payroll_entry.js:401
 msgid "This will submit Salary Slips and create accrual Journal Entry. Do you want to proceed?"
 msgstr ""
 
@@ -12264,13 +12035,9 @@ msgstr ""
 msgid "Timelines"
 msgstr ""
 
-#: hr/report/project_profitability/project_profitability.py:157
-msgid "Timesheet"
-msgstr ""
-
 #. Label of a Link in the Shift & Attendance Workspace
+#: hr/report/project_profitability/project_profitability.py:157
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
-msgctxt "Timesheet"
 msgid "Timesheet"
 msgstr ""
 
@@ -12318,6 +12085,8 @@ msgstr ""
 #. Label of the to_date (Date) field in DocType 'Shift Request'
 #. Label of the to_date (Date) field in DocType 'Staffing Plan'
 #. Label of the to_date (Date) field in DocType 'Additional Salary'
+#. Label of the to_date (Date) field in DocType 'Salary Withholding'
+#. Label of the to_date (Date) field in DocType 'Salary Withholding Cycle'
 #: hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.js:22
 #: hr/doctype/attendance_request/attendance_request.json
 #: hr/doctype/leave_allocation/leave_allocation.json
@@ -12339,6 +12108,8 @@ msgstr ""
 #: hr/report/shift_attendance/shift_attendance.js:15
 #: hr/report/vehicle_expenses/vehicle_expenses.js:32
 #: payroll/doctype/additional_salary/additional_salary.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
+#: payroll/doctype/salary_withholding_cycle/salary_withholding_cycle.json
 #: payroll/report/bank_remittance/bank_remittance.js:22
 msgid "To Date"
 msgstr ""
@@ -12712,7 +12483,7 @@ msgstr ""
 msgid "Total working Days Per Year"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:163
+#: payroll/doctype/salary_slip/salary_slip.py:164
 msgid "Total working hours should not be greater than max working hours {0}"
 msgstr ""
 
@@ -12755,7 +12526,7 @@ msgstr ""
 #. Label of a Card Break in the Employee Lifecycle Workspace
 #: hr/doctype/employee_training/employee_training.json
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
-#: overrides/dashboard_overrides.py:44
+#: overrides/dashboard_overrides.py:49
 msgid "Training"
 msgstr ""
 
@@ -12767,18 +12538,14 @@ msgstr ""
 #. Name of a DocType
 #. Label of the training_event (Link) field in DocType 'Training Feedback'
 #. Label of the training_event (Link) field in DocType 'Training Result'
+#. Label of a Link in the Employee Lifecycle Workspace
 #: hr/doctype/training_event/training_event.json
 #: hr/doctype/training_feedback/training_feedback.json
 #: hr/doctype/training_feedback/training_feedback.py:14
 #: hr/doctype/training_result/training_result.json
 #: hr/doctype/training_result/training_result.py:16
-#: templates/emails/training_event.html:1
-msgid "Training Event"
-msgstr ""
-
-#. Label of a Link in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Training Event"
+#: templates/emails/training_event.html:1
 msgid "Training Event"
 msgstr ""
 
@@ -12796,40 +12563,28 @@ msgid "Training Events"
 msgstr ""
 
 #. Name of a DocType
+#. Label of a Link in the Employee Lifecycle Workspace
 #: hr/doctype/training_event/training_event.js:16
 #: hr/doctype/training_feedback/training_feedback.json
-msgid "Training Feedback"
-msgstr ""
-
-#. Label of a Link in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Training Feedback"
 msgid "Training Feedback"
 msgstr ""
 
 #. Label of the training_program (Link) field in DocType 'Training Event'
 #. Name of a DocType
 #. Label of the training_program (Data) field in DocType 'Training Program'
+#. Label of a Link in the Employee Lifecycle Workspace
 #: hr/doctype/training_event/training_event.json
 #: hr/doctype/training_program/training_program.json
-msgid "Training Program"
-msgstr ""
-
-#. Label of a Link in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Training Program"
 msgid "Training Program"
 msgstr ""
 
 #. Name of a DocType
+#. Label of a Link in the Employee Lifecycle Workspace
 #: hr/doctype/training_event/training_event.js:10
 #: hr/doctype/training_result/training_result.json
-msgid "Training Result"
-msgstr ""
-
-#. Label of a Link in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Training Result"
 msgid "Training Result"
 msgstr ""
 
@@ -12909,14 +12664,10 @@ msgid "Travel Itinerary"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/travel_request/travel_request.json
-msgid "Travel Request"
-msgstr ""
-
 #. Label of a Link in the Expense Claims Workspace
 #. Label of a Link in the HR Workspace
+#: hr/doctype/travel_request/travel_request.json
 #: hr/workspace/expense_claims/expense_claims.json hr/workspace/hr/hr.json
-msgctxt "Travel Request"
 msgid "Travel Request"
 msgstr ""
 
@@ -13033,7 +12784,7 @@ msgstr ""
 msgid "Unsettled"
 msgstr ""
 
-#: hr/doctype/full_and_final_statement/full_and_final_statement.py:40
+#: hr/doctype/full_and_final_statement/full_and_final_statement.py:43
 msgid "Unsettled Transactions"
 msgstr ""
 
@@ -13102,13 +12853,9 @@ msgid "Updated the status of linked Job Applicant {0} to {1}"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/upload_attendance/upload_attendance.json
-msgid "Upload Attendance"
-msgstr ""
-
 #. Label of a Link in the Shift & Attendance Workspace
+#: hr/doctype/upload_attendance/upload_attendance.json
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
-msgctxt "Upload Attendance"
 msgid "Upload Attendance"
 msgstr ""
 
@@ -13175,7 +12922,7 @@ msgstr ""
 msgid "Validate Attendance"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.js:387
+#: payroll/doctype/payroll_entry/payroll_entry.js:384
 msgid "Validating Employee Attendance..."
 msgstr ""
 
@@ -13211,14 +12958,10 @@ msgstr ""
 msgid "Vegetarian"
 msgstr ""
 
+#. Label of a Link in the Expense Claims Workspace
 #: hr/report/vehicle_expenses/vehicle_expenses.js:40
 #: hr/report/vehicle_expenses/vehicle_expenses.py:27
-msgid "Vehicle"
-msgstr ""
-
-#. Label of a Link in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
-msgctxt "Vehicle"
 msgid "Vehicle"
 msgstr ""
 
@@ -13232,15 +12975,11 @@ msgstr ""
 
 #. Label of the vehicle_log (Link) field in DocType 'Expense Claim'
 #. Name of a DocType
+#. Label of a Link in the Expense Claims Workspace
 #: hr/doctype/expense_claim/expense_claim.json
 #: hr/doctype/vehicle_log/vehicle_log.json
 #: hr/report/vehicle_expenses/vehicle_expenses.py:37
-msgid "Vehicle Log"
-msgstr ""
-
-#. Label of a Link in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
-msgctxt "Vehicle Log"
 msgid "Vehicle Log"
 msgstr ""
 
@@ -13250,13 +12989,9 @@ msgid "Vehicle Service"
 msgstr ""
 
 #. Name of a DocType
-#: hr/doctype/vehicle_service_item/vehicle_service_item.json
-msgid "Vehicle Service Item"
-msgstr ""
-
 #. Label of a Link in the Expense Claims Workspace
+#: hr/doctype/vehicle_service_item/vehicle_service_item.json
 #: hr/workspace/expense_claims/expense_claims.json
-msgctxt "Vehicle Service Item"
 msgid "Vehicle Service Item"
 msgstr ""
 
@@ -13329,10 +13064,13 @@ msgstr ""
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary Slip'
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary
 #. Structure'
+#. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary
+#. Withholding'
 #: hr/doctype/hr_settings/hr_settings.json
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/doctype/salary_structure/salary_structure.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Weekly"
 msgstr ""
 
@@ -13363,6 +13101,13 @@ msgstr ""
 #. Referral'
 #: hr/doctype/employee_referral/employee_referral.json
 msgid "Why is this Candidate Qualified for this Position?"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Salary Slip'
+#. Option for the 'Status' (Select) field in DocType 'Salary Withholding'
+#: payroll/doctype/salary_slip/salary_slip.json
+#: payroll/doctype/salary_withholding/salary_withholding.json
+msgid "Withheld"
 msgstr ""
 
 #. Label of the send_work_anniversary_reminders (Check) field in DocType 'HR
@@ -13620,7 +13365,7 @@ msgstr ""
 msgid "{0} & {1}"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:2146
+#: payroll/doctype/salary_slip/salary_slip.py:2157
 msgid "{0} <br> This error can be due to missing or deleted field."
 msgstr ""
 
@@ -13721,7 +13466,7 @@ msgstr ""
 msgid "{0} {1} {2}?"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1860
+#: payroll/doctype/salary_slip/salary_slip.py:1871
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr ""
 
@@ -13736,102 +13481,49 @@ msgstr ""
 
 #. Count format of shortcut in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
-msgctxt "Employee Checkin"
 msgid "{} "
 msgstr ""
 
 #. Count format of shortcut in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
-msgctxt "Job Offer"
 msgid "{} Accepted"
 msgstr ""
 
 #. Count format of shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
-msgctxt "Employee"
 msgid "{} Active"
 msgstr ""
 
+#. Count format of shortcut in the Salary Payout Workspace
 #. Count format of shortcut in the Tax & Benefits Workspace
+#: payroll/workspace/salary_payout/salary_payout.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
-msgctxt "Employee Tax Exemption Declaration"
 msgid "{} Draft"
 msgstr ""
 
-#. Count format of shortcut in the Salary Payout Workspace
-#: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Payroll Entry"
-msgid "{} Draft"
-msgstr ""
-
-#. Count format of shortcut in the Salary Payout Workspace
-#: payroll/workspace/salary_payout/salary_payout.json
-msgctxt "Salary Slip"
-msgid "{} Draft"
-msgstr ""
-
+#. Count format of shortcut in the Employee Lifecycle Workspace
 #. Count format of shortcut in the HR Workspace
-#: hr/workspace/hr/hr.json
-msgid "{} Open"
-msgstr ""
-
-#. Count format of shortcut in the Employee Lifecycle Workspace
-#: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Employee Grievance"
-msgid "{} Open"
-msgstr ""
-
-#. Count format of shortcut in the Recruitment Workspace
-#: hr/workspace/recruitment/recruitment.json
-msgctxt "Job Applicant"
-msgid "{} Open"
-msgstr ""
-
-#. Count format of shortcut in the Recruitment Workspace
-#: hr/workspace/recruitment/recruitment.json
-msgctxt "Job Opening"
-msgid "{} Open"
-msgstr ""
-
 #. Count format of shortcut in the Leaves Workspace
-#: hr/workspace/leaves/leaves.json
-msgctxt "Leave Application"
+#. Count format of shortcut in the Recruitment Workspace
+#: hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hr/workspace/hr/hr.json hr/workspace/leaves/leaves.json
+#: hr/workspace/recruitment/recruitment.json
 msgid "{} Open"
 msgstr ""
 
+#. Count format of shortcut in the Employee Lifecycle Workspace
+#. Count format of shortcut in the Expense Claims Workspace
 #. Count format of shortcut in the Performance Workspace
-#: hr/workspace/performance/performance.json
-msgctxt "Appraisal"
-msgid "{} Pending"
-msgstr ""
-
-#. Count format of shortcut in the Employee Lifecycle Workspace
-#: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Employee Onboarding"
-msgid "{} Pending"
-msgstr ""
-
-#. Count format of shortcut in the Employee Lifecycle Workspace
-#: hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgctxt "Employee Separation"
-msgid "{} Pending"
-msgstr ""
-
-#. Count format of shortcut in the Expense Claims Workspace
-#: hr/workspace/expense_claims/expense_claims.json
-msgctxt "Expense Claim"
-msgid "{} Pending"
-msgstr ""
-
 #. Count format of shortcut in the Shift & Attendance Workspace
+#: hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hr/workspace/expense_claims/expense_claims.json
+#: hr/workspace/performance/performance.json
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
-msgctxt "Shift Request"
 msgid "{} Pending"
 msgstr ""
 
 #. Count format of shortcut in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
-msgctxt "Employee Advance"
 msgid "{} Unclaimed"
 msgstr ""
 
