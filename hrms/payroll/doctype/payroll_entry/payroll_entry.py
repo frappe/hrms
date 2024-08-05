@@ -918,12 +918,13 @@ class PayrollEntry(Document):
 
 					salary_slip_total -= salary_detail.amount
 
+		bank_entry = None
 		if salary_slip_total > 0:
 			remark = "withheld salaries" if for_withheld_salaries else "salaries"
 			bank_entry = self.set_accounting_entries_for_bank_entry(salary_slip_total, remark)
 
-		if for_withheld_salaries:
-			link_bank_entry_in_salary_withholdings(salary_slips, bank_entry.name)
+			if for_withheld_salaries:
+				link_bank_entry_in_salary_withholdings(salary_slips, bank_entry.name)
 
 		return bank_entry
 
