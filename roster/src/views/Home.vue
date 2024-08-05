@@ -25,7 +25,7 @@ const user = createResource({
 	url: "hrms.api.get_current_user_info",
 	auto: true,
 	onError() {
-		window.location.href = "/login?redirect-to=%2Froster";
+		window.location.href = "/login?redirect-to=%2Fhr%2Froster";
 	},
 });
 </script>
