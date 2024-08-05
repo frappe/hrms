@@ -57,10 +57,9 @@ def get_data(filters):
 		WHERE sal.name = ded.parent
 		AND ded.parentfield = 'deductions'
 		AND ded.parenttype = 'Salary Slip'
-		AND sal.docstatus = 1 %s
-		AND ded.salary_component IN (%s)
-		""",
-		(conditions, ", ".join(["%s"] * len(component_type_dict))),
+		AND sal.docstatus = 1 {}
+		AND ded.salary_component IN ({})
+		""".format(conditions, ", ".join(["%s"] * len(component_type_dict))),
 		tuple(component_type_dict.keys()),
 		as_dict=1,
 	)
