@@ -1,7 +1,6 @@
 {
-  "name": "frappe-ui-frontend",
+  "name": "roster",
   "private": true,
-  "version": "0.0.0",
   "scripts": {
     "dev": "vite",
     "serve": "vite preview",
