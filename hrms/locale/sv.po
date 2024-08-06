@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-08-04 09:33+0000\n"
-"PO-Revision-Date: 2024-08-05 09:22\n"
+"PO-Revision-Date: 2024-08-06 09:20\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -1758,7 +1758,7 @@ msgstr "Bank Poster"
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/report/bank_remittance/bank_remittance.py:38
 msgid "Bank Name"
-msgstr "bank Namn"
+msgstr "Bank Namn"
 
 #. Name of a report
 #. Label of a Link in the Salary Payout Workspace
@@ -8699,7 +8699,7 @@ msgstr "Endast {0} Mål kan bli {1}"
 #: hr/doctype/leave_application/leave_application.json
 #: hr/doctype/training_event_employee/training_event_employee.json
 msgid "Open"
-msgstr "Öppen"
+msgstr "Öppna"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
@@ -9731,7 +9731,7 @@ msgstr "Rese Anledning"
 #: hr/doctype/leave_type/leave_type.json
 #: hr/doctype/vehicle_service/vehicle_service.json
 msgid "Quarterly"
-msgstr "Kvartal"
+msgstr "Varje Kvartal"
 
 #. Label of the questionnaire_email_sent (Check) field in DocType 'Exit
 #. Interview'
@@ -13511,7 +13511,7 @@ msgstr "{} Godkänd"
 #. Count format of shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "{} Active"
-msgstr "{} Aktiv"
+msgstr "{} Aktiva"
 
 #. Count format of shortcut in the Salary Payout Workspace
 #. Count format of shortcut in the Tax & Benefits Workspace
@@ -13528,7 +13528,7 @@ msgstr "{} Utkast"
 #: hr/workspace/hr/hr.json hr/workspace/leaves/leaves.json
 #: hr/workspace/recruitment/recruitment.json
 msgid "{} Open"
-msgstr "{} Öppen"
+msgstr "{} Öppna"
 
 #. Count format of shortcut in the Employee Lifecycle Workspace
 #. Count format of shortcut in the Expense Claims Workspace
@@ -13539,7 +13539,7 @@ msgstr "{} Öppen"
 #: hr/workspace/performance/performance.json
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "{} Pending"
-msgstr "{}Pågående"
+msgstr "{} Väntande"
 
 #. Count format of shortcut in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
