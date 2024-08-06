@@ -2,14 +2,14 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.require("assets/hrms/js/salary_slip_deductions_report_filters.js", function () {
-	let ecs_checklist_filter = hrms.salary_slip_deductions_report_filters;
-	ecs_checklist_filter["filters"].push({
-		fieldname: "type",
-		label: __("Type"),
-		fieldtype: "Select",
-		options: ["", "Bank", "Cash", "Cheque"],
-	});
+frappe.query_reports["Salary Payments via ECS"] = $.extend(
+	{},
+	hrms.salary_slip_deductions_report_filters,
+);
 
-	frappe.query_reports["Salary Payments via ECS"] = ecs_checklist_filter;
+frappe.query_reports["Salary Payments via ECS"]["filters"].push({
+	fieldname: "type",
+	label: __("Type"),
+	fieldtype: "Select",
+	options: ["", "Bank", "Cash", "Cheque"],
 });
