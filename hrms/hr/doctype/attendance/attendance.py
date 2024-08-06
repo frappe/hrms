@@ -95,6 +95,7 @@ class Attendance(Document):
 				& (Attendance.attendance_date == self.attendance_date)
 				& (Attendance.name != self.name)
 			)
+			.for_update()
 		)
 
 		if self.shift:
