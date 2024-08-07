@@ -2,6 +2,7 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.require("assets/hrms/js/salary_slip_deductions_report_filters.js", function () {
-	frappe.query_reports["Provident Fund Deductions"] = hrms.salary_slip_deductions_report_filters;
-});
+frappe.query_reports["Provident Fund Deductions"] = $.extend(
+	{},
+	hrms.salary_slip_deductions_report_filters,
+);
