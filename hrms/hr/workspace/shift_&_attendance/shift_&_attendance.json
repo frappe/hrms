@@ -165,7 +165,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Shifts",
-   "link_count": 4,
+   "link_count": 5,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -193,6 +193,16 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Shift Assignment Schedule",
+   "link_count": 0,
+   "link_to": "Shift Assignment Schedule",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Shift Request",
    "link_count": 0,
    "link_to": "Shift Request",
@@ -211,7 +221,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-08-05 14:02:53.259058",
+ "modified": "2024-08-07 14:42:16.893494",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift & Attendance",
