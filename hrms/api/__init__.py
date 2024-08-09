@@ -142,7 +142,9 @@ def get_attendance_for_calendar(employee: str, from_date: str, to_date: str) -> 
 		{"employee": employee, "attendance_date": ["between", [from_date, to_date]]},
 		["attendance_date", "status"],
 	)
-	return {d["attendance_date"]: d["status"] for d in attendance}
+	return {
+		d["attendance_date"]: "WFH" if d["status"] == "Work From Home" else d["status"] for d in attendance
+	}
 
 
 def get_holidays_for_calendar(employee: str, from_date: str, to_date: str) -> list[str]:
