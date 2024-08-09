@@ -41,6 +41,11 @@ const tabItems = [
 	},
 	{
 		icon: LeaveIcon,
+		title: "Attendance",
+		route: "/dashboard/attendance",
+	},
+	{
+		icon: LeaveIcon,
 		title: "Leaves",
 		route: "/dashboard/leaves",
 	},
