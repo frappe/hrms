@@ -35,13 +35,9 @@
 
 <script setup>
 import { FeatherIcon } from "frappe-ui"
-import { computed, inject, ref } from "vue"
+import { computed, watch } from "vue"
 
-import { calendarEvents } from "@/data/attendance"
-
-const dayjs = inject("$dayjs")
-
-const firstOfMonth = ref(dayjs().date(1).startOf("D"))
+import { calendarEvents, firstOfMonth } from "@/data/attendance"
 
 const colorMap = {
 	Present: "green",
@@ -65,4 +61,11 @@ const summary = computed(() => {
 
 	return summary
 })
+
+watch(
+	() => firstOfMonth.value,
+	() => {
+		calendarEvents.fetch()
+	}
+)
 </script>
