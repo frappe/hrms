@@ -10,7 +10,4 @@ export const calendarEvents = createResource({
 	},
 	auto: true,
 	cache: "hrms:calendar_events",
-	onSuccess: (data) => {
-		console.log(data)
-	},
 })
