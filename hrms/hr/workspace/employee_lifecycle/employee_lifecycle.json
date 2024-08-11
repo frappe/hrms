@@ -230,7 +230,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Daily Work Summary Replies",
    "link_count": 0,
    "link_to": "Daily Work Summary Replies",
@@ -287,7 +287,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-09-16 11:35:33.462001",
+ "modified": "2024-08-11 11:35:33.462001",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Lifecycle",
