@@ -282,7 +282,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "General Ledger",
    "link_count": 0,
    "link_to": "General Ledger",
@@ -292,7 +292,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Accounts Payable",
    "link_count": 0,
    "link_to": "Accounts Payable",
@@ -302,7 +302,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Accounts Receivable",
    "link_count": 0,
    "link_to": "Accounts Receivable",
@@ -370,7 +370,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-07-22 18:07:37.351654",
+ "modified": "2024-08-11 11:45:37.351654",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Payout",
