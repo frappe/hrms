@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-08-04 09:33+0000\n"
-"PO-Revision-Date: 2024-08-10 11:49\n"
+"POT-Creation-Date: 2024-08-11 09:34+0000\n"
+"PO-Revision-Date: 2024-08-12 12:09\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -229,8 +229,8 @@ msgstr "<b>کل برگهای تخصیص یافته</b> بیشتر از تعدا�
 msgid "<h3>Data Import</h3>\n\n"
 "Data import is the tool to migrate your existing data like Employee, Customer, Supplier, and a lot more to our ERPNext system.\n"
 "Go through the video for a detailed explanation of this tool."
-msgstr "<h3>وارد کردن داده</h3>\n\n"
-"واردات داده ابزاری برای انتقال داده های موجود شما مانند کارمند، مشتری، تامین کننده و بسیاری موارد دیگر به سیستم ERPNext ما است.\n"
+msgstr "<h3>درون‌بُرد داده</h3>\n\n"
+"درون‌بُرد داده ابزاری برای انتقال داده های موجود شما مانند کارمند، مشتری، تامین کننده و بسیاری موارد دیگر به سیستم ERPNext ما است.\n"
 "برای توضیح دقیق این ابزار ویدیو را مرور کنید."
 
 #. Description of the Onboarding Step 'Create Employee'
@@ -1567,7 +1567,7 @@ msgstr "تاریخ حضور {0} نمی تواند کمتر از تاریخ عض�
 msgid "Attendance for all the employees under this criteria has been marked already."
 msgstr "حضور همه کارکنان تحت این معیار قبلاً مشخص شده است."
 
-#: hr/doctype/attendance/attendance.py:118
+#: hr/doctype/attendance/attendance.py:119
 msgid "Attendance for employee {0} is already marked for an overlapping shift {1}: {2}"
 msgstr "حضور و غیاب کارمند {0} قبلاً برای یک شیفت همپوشانی {1} علامت گذاری شده است: {2}"
 
@@ -1625,7 +1625,7 @@ msgstr "شرکت کنندگان"
 
 #: hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:45
 msgid "Attrition Count"
-msgstr "تعداد ساییدگی"
+msgstr "تعداد ترک کار"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:19
 #: public/js/salary_slip_deductions_report_filters.js:26
@@ -2014,7 +2014,7 @@ msgstr "نمی‌توان تراکنش‌ها را بر اساس یک چرخه �
 msgid "Cannot find active Leave Period"
 msgstr "نمی توان دوره مرخصی فعال را پیدا کرد"
 
-#: hr/doctype/attendance/attendance.py:152
+#: hr/doctype/attendance/attendance.py:153
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr "نمی توان حضور برای یک کارمند غیرفعال را علامت گذاری کرد {0}"
 
@@ -2076,7 +2076,7 @@ msgstr "نمودار مراکز هزینه"
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1388
+#: payroll/doctype/payroll_entry/payroll_entry.py:1389
 msgid "Check Error Log {0} for more details."
 msgstr "برای جزئیات بیشتر، Log خطا {0} را بررسی کنید."
 
@@ -2568,7 +2568,7 @@ msgstr "هزینه یابی"
 msgid "Costing Details"
 msgstr "جزئیات هزینه"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1451
+#: payroll/doctype/payroll_entry/payroll_entry.py:1452
 msgid "Could not submit some Salary Slips: {}"
 msgstr "برخی از فیش حقوقی ارسال نشد: {}"
 
@@ -2747,7 +2747,7 @@ msgstr "ایجاد ارزیابی ها"
 msgid "Creating Payment Entries......"
 msgstr "ایجاد ورودی های پرداخت......"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1411
+#: payroll/doctype/payroll_entry/payroll_entry.py:1412
 msgid "Creating Salary Slips..."
 msgstr "ایجاد فیش حقوقی ..."
 
@@ -2989,7 +2989,7 @@ msgstr "داشبورد"
 #. Title of an Onboarding Step
 #: hr/onboarding_step/data_import/data_import.json
 msgid "Data Import"
-msgstr "واردات داده"
+msgstr "درون‌بُرد داده"
 
 #. Label of the date (Date) field in DocType 'Employee Attendance Tool'
 #. Label of the date (Date) field in DocType 'Employee Referral'
@@ -3796,7 +3796,7 @@ msgstr "ایمیل ارسال شد به"
 msgid "Email Template"
 msgstr "قالب ایمیل"
 
-#: hr/doctype/leave_application/leave_application.py:657
+#: hr/doctype/leave_application/leave_application.py:659
 msgid "Email sent to {0}"
 msgstr "ایمیل به {0} ارسال شد"
 
@@ -4587,11 +4587,11 @@ msgstr "کارمند {0} قبلاً برای {1} بین {2} و {3} درخواس�
 msgid "Employee {0} has no maximum benefit amount"
 msgstr "کارمند {0} حداکثر مقدار سود ندارد"
 
-#: hr/doctype/attendance/attendance.py:209
+#: hr/doctype/attendance/attendance.py:210
 msgid "Employee {0} is not active or does not exist"
 msgstr "کارمند {0} فعال نیست یا وجود ندارد"
 
-#: hr/doctype/attendance/attendance.py:187
+#: hr/doctype/attendance/attendance.py:188
 msgid "Employee {0} is on Leave on {1}"
 msgstr "کارمند {0} در تاریخ {1} در مرخصی است"
 
@@ -4599,7 +4599,7 @@ msgstr "کارمند {0} در تاریخ {1} در مرخصی است"
 msgid "Employee {0} not found in Training Event Participants."
 msgstr "کارمند {0} در شرکت کنندگان رویداد آموزشی یافت نشد."
 
-#: hr/doctype/attendance/attendance.py:180
+#: hr/doctype/attendance/attendance.py:181
 msgid "Employee {0} on Half day on {1}"
 msgstr "کارمند {0} در نیم روز در {1}"
 
@@ -5235,11 +5235,11 @@ msgstr "کاوش"
 
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:116
 msgid "Export"
-msgstr "صادرات"
+msgstr "برون‌بُرد"
 
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:137
 msgid "Exporting..."
-msgstr "در حال صادرات..."
+msgstr "در حال برون‌بُرد..."
 
 #. Option for the 'Status' (Select) field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
@@ -5278,7 +5278,7 @@ msgstr "به روز رسانی وضعیت متقاضی شغل ناموفق بو�
 msgid "Failed to {0} {1} for employees:"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1454
+#: payroll/doctype/payroll_entry/payroll_entry.py:1455
 #: public/js/utils/index.js:149
 msgid "Failure"
 msgstr "شکست"
@@ -5454,7 +5454,7 @@ msgstr " نام کوچک"
 msgid "Fiscal Year"
 msgstr "سال مالی"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1371
+#: payroll/doctype/payroll_entry/payroll_entry.py:1372
 msgid "Fiscal Year {0} not found"
 msgstr "سال مالی {0} یافت نشد"
 
@@ -6222,8 +6222,8 @@ msgstr "تعداد استخدام در مقابل ترک کار"
 msgid "Hold"
 msgstr "نگه داشتن"
 
-#: hr/doctype/attendance/attendance.py:290
-#: hr/doctype/leave_application/leave_application.py:1284
+#: hr/doctype/attendance/attendance.py:291
+#: hr/doctype/leave_application/leave_application.py:1286
 #: hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.py:24
 msgid "Holiday"
 msgstr "تعطیلات"
@@ -6419,20 +6419,20 @@ msgstr "اگر از وام‌ها در فیش‌های حقوق استفاده �
 #. Attendance'
 #: hr/doctype/upload_attendance/upload_attendance.json
 msgid "Import Attendance"
-msgstr "حضور و غیاب وارداتی"
+msgstr "درون‌بُرد حضور و غیاب"
 
 #. Label of the import_log (HTML) field in DocType 'Upload Attendance'
 #: hr/doctype/upload_attendance/upload_attendance.json
 msgid "Import Log"
-msgstr "لاگ واردات"
+msgstr "لاگ درون‌بُرد"
 
 #: hr/doctype/upload_attendance/upload_attendance.js:67
 msgid "Import Successful"
-msgstr "واردات با موفقیت انجام شد"
+msgstr "درون‌بُرد با موفقیت انجام شد"
 
 #: hr/doctype/upload_attendance/upload_attendance.js:50
 msgid "Importing {0} of {1}"
-msgstr "در حال وارد کردن {0} از {1}"
+msgstr "در حال درون‌بُرد {0} از {1}"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Onboarding'
 #. Option for the 'Status' (Select) field in DocType 'Employee Referral'
@@ -7289,7 +7289,7 @@ msgstr "تخصیص‌های مرخصی"
 msgid "Leave Application"
 msgstr "درخواست مرخصی"
 
-#: hr/doctype/leave_application/leave_application.py:712
+#: hr/doctype/leave_application/leave_application.py:714
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 msgstr "دوره درخواست مرخصی نمی تواند بین دو تخصیص مرخصی غیر متوالی {0} و {1} باشد."
 
@@ -7365,7 +7365,7 @@ msgstr "تاریخ های فهرست بلاک مرخصی"
 msgid "Leave Block List Name"
 msgstr "نام لیست بلوک مرخصی"
 
-#: hr/doctype/leave_application/leave_application.py:1260
+#: hr/doctype/leave_application/leave_application.py:1262
 msgid "Leave Blocked"
 msgstr "مسدود شده مرخصی"
 
@@ -8013,7 +8013,7 @@ msgstr "پزشکی"
 #. Label of the message (Text Editor) field in DocType 'PWA Notification'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hr/doctype/pwa_notification/pwa_notification.json
-#: payroll/doctype/payroll_entry/payroll_entry.py:1421
+#: payroll/doctype/payroll_entry/payroll_entry.py:1422
 msgid "Message"
 msgstr "پیام"
 
@@ -8376,7 +8376,7 @@ msgstr ""
 msgid "No items selected"
 msgstr "هیچ موردی انتخاب نشده است"
 
-#: hr/doctype/attendance/attendance.py:195
+#: hr/doctype/attendance/attendance.py:196
 msgid "No leave record found for employee {0} on {1}"
 msgstr "هیچ سابقه مرخصی برای کارمند {0} در {1} یافت نشد"
 
@@ -8401,7 +8401,7 @@ msgstr "هیچ رکوردی پیدا نشد"
 msgid "No replies from"
 msgstr "هیچ پاسخی از طرف"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1437
+#: payroll/doctype/payroll_entry/payroll_entry.py:1438
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "هیچ فیش حقوقی برای ارائه برای معیارهای انتخابی بالا یا فیش حقوقی که قبلاً ارسال شده است یافت نشد"
 
@@ -8773,7 +8773,7 @@ msgstr ""
 msgid "Overlapping Attendance Request"
 msgstr "درخواست حضور و غیاب همپوشانی"
 
-#: hr/doctype/attendance/attendance.py:123
+#: hr/doctype/attendance/attendance.py:124
 msgid "Overlapping Shift Attendance"
 msgstr "حضور و غیاب شیفت همپوشانی"
 
@@ -8996,7 +8996,7 @@ msgstr "ثبت پرداخت"
 msgid "Payment and Accounting"
 msgstr "پرداخت و حسابداری"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1038
+#: payroll/doctype/payroll_entry/payroll_entry.py:1039
 msgid "Payment of {0} from {1} to {2}"
 msgstr "پرداخت {0} از {1} به {2}"
 
@@ -9308,7 +9308,7 @@ msgstr "لطفا ابتدا یک شرکت را انتخاب کنید."
 msgid "Please select a csv file"
 msgstr "لطفا یک فایل csv انتخاب کنید"
 
-#: hr/doctype/attendance/attendance.py:340
+#: hr/doctype/attendance/attendance.py:341
 msgid "Please select a date."
 msgstr "لطفا تاریخ را انتخاب کنید"
 
@@ -9389,7 +9389,7 @@ msgstr "لطفاً یک حساب پیش‌فرض نقدی را در پیش‌ف�
 msgid "Please set account in Salary Component {0}"
 msgstr "لطفاً حساب را در مؤلفه حقوق و دستمزد {0} تنظیم کنید"
 
-#: hr/doctype/leave_application/leave_application.py:621
+#: hr/doctype/leave_application/leave_application.py:622
 msgid "Please set default template for Leave Approval Notification in HR Settings."
 msgstr "لطفاً الگوی پیش‌فرض را برای اعلان تأیید خروج در تنظیمات منابع انسانی تنظیم کنید."
 
@@ -10550,7 +10550,7 @@ msgstr "فیش حقوق کارمند {0} قبلاً برای برگه زمانی
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr "ارسال فیش حقوقی در صف است. ممکن است چند دقیقه طول بکشد"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1376
+#: payroll/doctype/payroll_entry/payroll_entry.py:1377
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr "فیش حقوقی {0} برای ثبت حقوق و دستمزد {1} ناموفق بود"
 
@@ -10568,11 +10568,11 @@ msgstr "فیش حقوقی ایجاد شد"
 msgid "Salary Slips Submitted"
 msgstr "فیش حقوقی ارسال شد"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1418
+#: payroll/doctype/payroll_entry/payroll_entry.py:1419
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr "فیش حقوق از قبل برای کارمندان {} وجود دارد و توسط این لیست حقوق و دستمزد پردازش نخواهد شد."
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1443
+#: payroll/doctype/payroll_entry/payroll_entry.py:1444
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr "فیش حقوقی ارسال شده برای دوره از {0} تا {1}"
 
@@ -10770,7 +10770,7 @@ msgstr "ابتدا مصاحبه را انتخاب کنید"
 msgid "Select Payment Account to make Bank Entry"
 msgstr "برای ثبت بانکی، حساب پرداخت را انتخاب کنید"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1581
+#: payroll/doctype/payroll_entry/payroll_entry.py:1582
 msgid "Select Payroll Frequency."
 msgstr "فرکانس حقوق و دستمزد را انتخاب کنید."
 
@@ -11592,7 +11592,7 @@ msgstr "ارسال شده"
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "ارسال فیش حقوقی و ایجاد دفترچه ..."
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1498
+#: payroll/doctype/payroll_entry/payroll_entry.py:1499
 msgid "Submitting Salary Slips..."
 msgstr "ارسال فیش حقوقی..."
 
@@ -11601,7 +11601,7 @@ msgid "Subsidiary companies have already planned for {1} vacancies at a budget o
 msgstr "شرکت های تابعه قبلاً برای {1} جای خالی با بودجه {2} برنامه ریزی کرده اند. طرح کارکنان برای {0} باید تعداد بیشتری از مشاغل و بودجه برای {3} نسبت به شرکت های تابعه خود اختصاص دهد."
 
 #: hr/doctype/employee_referral/employee_referral.py:54 hr/utils.py:831
-#: payroll/doctype/payroll_entry/payroll_entry.py:1446
+#: payroll/doctype/payroll_entry/payroll_entry.py:1447
 #: public/js/utils/index.js:139
 msgid "Success"
 msgstr "موفقیت"
@@ -12690,7 +12690,7 @@ msgstr "سه‌شنبه"
 #: hr/doctype/training_event/training_event.json
 #: hr/doctype/vehicle_service/vehicle_service.json
 #: payroll/doctype/salary_component/salary_component.json
-#: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.js:9
+#: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.js:12
 msgid "Type"
 msgstr "نوع"
 
@@ -12723,11 +12723,11 @@ msgstr "مبلغ مطالبه نشده"
 msgid "Under Review"
 msgstr "تحت بررسی"
 
-#: hr/doctype/attendance/attendance.py:229
+#: hr/doctype/attendance/attendance.py:230
 msgid "Unlinked Attendance record from Employee Checkins: {}"
 msgstr "سابقه حضور و غیاب بدون پیوند از ورود کارکنان: {}"
 
-#: hr/doctype/attendance/attendance.py:232
+#: hr/doctype/attendance/attendance.py:233
 msgid "Unlinked logs"
 msgstr "گزارش‌های بدون پیوند"
 
