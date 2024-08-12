@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-08-04 09:33+0000\n"
-"PO-Revision-Date: 2024-08-05 09:22\n"
+"POT-Creation-Date: 2024-08-11 09:34+0000\n"
+"PO-Revision-Date: 2024-08-12 12:09\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -1555,7 +1555,7 @@ msgstr "crwdns105372:0{0}crwdnd105372:0{1}crwdnd105372:0{2}crwdne105372:0"
 msgid "Attendance for all the employees under this criteria has been marked already."
 msgstr "crwdns105374:0crwdne105374:0"
 
-#: hr/doctype/attendance/attendance.py:118
+#: hr/doctype/attendance/attendance.py:119
 msgid "Attendance for employee {0} is already marked for an overlapping shift {1}: {2}"
 msgstr "crwdns105376:0{0}crwdnd105376:0{1}crwdnd105376:0{2}crwdne105376:0"
 
@@ -2002,7 +2002,7 @@ msgstr "crwdns105564:0{0}crwdne105564:0"
 msgid "Cannot find active Leave Period"
 msgstr "crwdns105566:0crwdne105566:0"
 
-#: hr/doctype/attendance/attendance.py:152
+#: hr/doctype/attendance/attendance.py:153
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr "crwdns105568:0{0}crwdne105568:0"
 
@@ -2064,7 +2064,7 @@ msgstr "crwdns143246:0crwdne143246:0"
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr "crwdns141134:0{0}crwdnd141134:0{1}crwdne141134:0"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1388
+#: payroll/doctype/payroll_entry/payroll_entry.py:1389
 msgid "Check Error Log {0} for more details."
 msgstr "crwdns105594:0{0}crwdne105594:0"
 
@@ -2556,7 +2556,7 @@ msgstr "crwdns141204:0crwdne141204:0"
 msgid "Costing Details"
 msgstr "crwdns141206:0crwdne141206:0"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1451
+#: payroll/doctype/payroll_entry/payroll_entry.py:1452
 msgid "Could not submit some Salary Slips: {}"
 msgstr "crwdns105872:0crwdne105872:0"
 
@@ -2735,7 +2735,7 @@ msgstr "crwdns105932:0crwdne105932:0"
 msgid "Creating Payment Entries......"
 msgstr "crwdns105934:0crwdne105934:0"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1411
+#: payroll/doctype/payroll_entry/payroll_entry.py:1412
 msgid "Creating Salary Slips..."
 msgstr "crwdns105936:0crwdne105936:0"
 
@@ -3784,7 +3784,7 @@ msgstr "crwdns141358:0crwdne141358:0"
 msgid "Email Template"
 msgstr "crwdns141360:0crwdne141360:0"
 
-#: hr/doctype/leave_application/leave_application.py:657
+#: hr/doctype/leave_application/leave_application.py:659
 msgid "Email sent to {0}"
 msgstr "crwdns106492:0{0}crwdne106492:0"
 
@@ -4575,11 +4575,11 @@ msgstr "crwdns106894:0{0}crwdnd106894:0{1}crwdnd106894:0{2}crwdnd106894:0{3}crwd
 msgid "Employee {0} has no maximum benefit amount"
 msgstr "crwdns106896:0{0}crwdne106896:0"
 
-#: hr/doctype/attendance/attendance.py:209
+#: hr/doctype/attendance/attendance.py:210
 msgid "Employee {0} is not active or does not exist"
 msgstr "crwdns106898:0{0}crwdne106898:0"
 
-#: hr/doctype/attendance/attendance.py:187
+#: hr/doctype/attendance/attendance.py:188
 msgid "Employee {0} is on Leave on {1}"
 msgstr "crwdns106900:0{0}crwdnd106900:0{1}crwdne106900:0"
 
@@ -4587,7 +4587,7 @@ msgstr "crwdns106900:0{0}crwdnd106900:0{1}crwdne106900:0"
 msgid "Employee {0} not found in Training Event Participants."
 msgstr "crwdns106902:0{0}crwdne106902:0"
 
-#: hr/doctype/attendance/attendance.py:180
+#: hr/doctype/attendance/attendance.py:181
 msgid "Employee {0} on Half day on {1}"
 msgstr "crwdns106904:0{0}crwdnd106904:0{1}crwdne106904:0"
 
@@ -5266,7 +5266,7 @@ msgstr "crwdns107200:0crwdne107200:0"
 msgid "Failed to {0} {1} for employees:"
 msgstr "crwdns141490:0{0}crwdnd141490:0{1}crwdne141490:0"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1454
+#: payroll/doctype/payroll_entry/payroll_entry.py:1455
 #: public/js/utils/index.js:149
 msgid "Failure"
 msgstr "crwdns141492:0crwdne141492:0"
@@ -5442,7 +5442,7 @@ msgstr "crwdns141524:0crwdne141524:0"
 msgid "Fiscal Year"
 msgstr "crwdns107272:0crwdne107272:0"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1371
+#: payroll/doctype/payroll_entry/payroll_entry.py:1372
 msgid "Fiscal Year {0} not found"
 msgstr "crwdns107274:0{0}crwdne107274:0"
 
@@ -6210,8 +6210,8 @@ msgstr "crwdns107582:0crwdne107582:0"
 msgid "Hold"
 msgstr "crwdns141616:0crwdne141616:0"
 
-#: hr/doctype/attendance/attendance.py:290
-#: hr/doctype/leave_application/leave_application.py:1284
+#: hr/doctype/attendance/attendance.py:291
+#: hr/doctype/leave_application/leave_application.py:1286
 #: hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.py:24
 msgid "Holiday"
 msgstr "crwdns107586:0crwdne107586:0"
@@ -7277,7 +7277,7 @@ msgstr "crwdns141798:0crwdne141798:0"
 msgid "Leave Application"
 msgstr "crwdns108064:0crwdne108064:0"
 
-#: hr/doctype/leave_application/leave_application.py:712
+#: hr/doctype/leave_application/leave_application.py:714
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 msgstr "crwdns108070:0{0}crwdnd108070:0{1}crwdne108070:0"
 
@@ -7353,7 +7353,7 @@ msgstr "crwdns141812:0crwdne141812:0"
 msgid "Leave Block List Name"
 msgstr "crwdns141814:0crwdne141814:0"
 
-#: hr/doctype/leave_application/leave_application.py:1260
+#: hr/doctype/leave_application/leave_application.py:1262
 msgid "Leave Blocked"
 msgstr "crwdns108102:0crwdne108102:0"
 
@@ -8001,7 +8001,7 @@ msgstr "crwdns108392:0crwdne108392:0"
 #. Label of the message (Text Editor) field in DocType 'PWA Notification'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hr/doctype/pwa_notification/pwa_notification.json
-#: payroll/doctype/payroll_entry/payroll_entry.py:1421
+#: payroll/doctype/payroll_entry/payroll_entry.py:1422
 msgid "Message"
 msgstr "crwdns108394:0crwdne108394:0"
 
@@ -8364,7 +8364,7 @@ msgstr "crwdns141968:0crwdne141968:0"
 msgid "No items selected"
 msgstr "crwdns108556:0crwdne108556:0"
 
-#: hr/doctype/attendance/attendance.py:195
+#: hr/doctype/attendance/attendance.py:196
 msgid "No leave record found for employee {0} on {1}"
 msgstr "crwdns108558:0{0}crwdnd108558:0{1}crwdne108558:0"
 
@@ -8389,7 +8389,7 @@ msgstr "crwdns108564:0crwdne108564:0"
 msgid "No replies from"
 msgstr "crwdns108566:0crwdne108566:0"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1437
+#: payroll/doctype/payroll_entry/payroll_entry.py:1438
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "crwdns108568:0crwdne108568:0"
 
@@ -8761,7 +8761,7 @@ msgstr "crwdns142038:0crwdne142038:0"
 msgid "Overlapping Attendance Request"
 msgstr "crwdns108726:0crwdne108726:0"
 
-#: hr/doctype/attendance/attendance.py:123
+#: hr/doctype/attendance/attendance.py:124
 msgid "Overlapping Shift Attendance"
 msgstr "crwdns108728:0crwdne108728:0"
 
@@ -8984,7 +8984,7 @@ msgstr "crwdns142074:0crwdne142074:0"
 msgid "Payment and Accounting"
 msgstr "crwdns142076:0crwdne142076:0"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1038
+#: payroll/doctype/payroll_entry/payroll_entry.py:1039
 msgid "Payment of {0} from {1} to {2}"
 msgstr "crwdns108834:0{0}crwdnd108834:0{1}crwdnd108834:0{2}crwdne108834:0"
 
@@ -9296,7 +9296,7 @@ msgstr "crwdns108968:0crwdne108968:0"
 msgid "Please select a csv file"
 msgstr "crwdns108970:0crwdne108970:0"
 
-#: hr/doctype/attendance/attendance.py:340
+#: hr/doctype/attendance/attendance.py:341
 msgid "Please select a date."
 msgstr "crwdns108972:0crwdne108972:0"
 
@@ -9377,7 +9377,7 @@ msgstr "crwdns109002:0crwdne109002:0"
 msgid "Please set account in Salary Component {0}"
 msgstr "crwdns109004:0{0}crwdne109004:0"
 
-#: hr/doctype/leave_application/leave_application.py:621
+#: hr/doctype/leave_application/leave_application.py:622
 msgid "Please set default template for Leave Approval Notification in HR Settings."
 msgstr "crwdns109006:0crwdne109006:0"
 
@@ -10538,7 +10538,7 @@ msgstr "crwdns109488:0{0}crwdnd109488:0{1}crwdne109488:0"
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr "crwdns109490:0crwdne109490:0"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1376
+#: payroll/doctype/payroll_entry/payroll_entry.py:1377
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr "crwdns109492:0{0}crwdnd109492:0{1}crwdne109492:0"
 
@@ -10556,11 +10556,11 @@ msgstr "crwdns142336:0crwdne142336:0"
 msgid "Salary Slips Submitted"
 msgstr "crwdns142338:0crwdne142338:0"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1418
+#: payroll/doctype/payroll_entry/payroll_entry.py:1419
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr "crwdns109500:0crwdne109500:0"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1443
+#: payroll/doctype/payroll_entry/payroll_entry.py:1444
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr "crwdns109502:0{0}crwdnd109502:0{1}crwdne109502:0"
 
@@ -10758,7 +10758,7 @@ msgstr "crwdns109576:0crwdne109576:0"
 msgid "Select Payment Account to make Bank Entry"
 msgstr "crwdns142358:0crwdne142358:0"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1581
+#: payroll/doctype/payroll_entry/payroll_entry.py:1582
 msgid "Select Payroll Frequency."
 msgstr "crwdns109580:0crwdne109580:0"
 
@@ -11580,7 +11580,7 @@ msgstr "crwdns142480:0crwdne142480:0"
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "crwdns109966:0crwdne109966:0"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1498
+#: payroll/doctype/payroll_entry/payroll_entry.py:1499
 msgid "Submitting Salary Slips..."
 msgstr "crwdns109968:0crwdne109968:0"
 
@@ -11589,7 +11589,7 @@ msgid "Subsidiary companies have already planned for {1} vacancies at a budget o
 msgstr "crwdns109970:0{1}crwdnd109970:0{2}crwdnd109970:0{0}crwdnd109970:0{3}crwdne109970:0"
 
 #: hr/doctype/employee_referral/employee_referral.py:54 hr/utils.py:831
-#: payroll/doctype/payroll_entry/payroll_entry.py:1446
+#: payroll/doctype/payroll_entry/payroll_entry.py:1447
 #: public/js/utils/index.js:139
 msgid "Success"
 msgstr "crwdns109972:0crwdne109972:0"
@@ -12678,7 +12678,7 @@ msgstr "crwdns110424:0crwdne110424:0"
 #: hr/doctype/training_event/training_event.json
 #: hr/doctype/vehicle_service/vehicle_service.json
 #: payroll/doctype/salary_component/salary_component.json
-#: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.js:9
+#: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.js:12
 msgid "Type"
 msgstr "crwdns110426:0crwdne110426:0"
 
@@ -12711,11 +12711,11 @@ msgstr "crwdns142668:0crwdne142668:0"
 msgid "Under Review"
 msgstr "crwdns142670:0crwdne142670:0"
 
-#: hr/doctype/attendance/attendance.py:229
+#: hr/doctype/attendance/attendance.py:230
 msgid "Unlinked Attendance record from Employee Checkins: {}"
 msgstr "crwdns110444:0crwdne110444:0"
 
-#: hr/doctype/attendance/attendance.py:232
+#: hr/doctype/attendance/attendance.py:233
 msgid "Unlinked logs"
 msgstr "crwdns110446:0crwdne110446:0"
 
