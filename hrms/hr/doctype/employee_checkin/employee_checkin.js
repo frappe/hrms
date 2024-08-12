@@ -2,7 +2,9 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Employee Checkin", {
-	refresh: async (_frm) => {
+	refresh: async (frm) => {
+		if (!frm.doc.__islocal) frm.trigger("add_fetch_shift_button");
+
 		const allow_geolocation_tracking = await frappe.db.get_single_value(
 			"HR Settings",
 			"allow_geolocation_tracking",
@@ -12,6 +14,21 @@ frappe.ui.form.on("Employee Checkin", {
 			hide_field(["fetch_geolocation", "latitude", "longitude", "geolocation"]);
 			return;
 		}
+	},
+
+	add_fetch_shift_button(frm) {
+		frm.add_custom_button(__("Fetch Shift"), function () {
+			frappe.call({
+				method: "fetch_shift",
+				doc: frm.doc,
+				freeze: true,
+				freeze_message: __("Fetching Shift"),
+				callback: function () {
+					frm.dirty();
+					frm.save();
+				},
+			});
+		});
 	},
 
 	fetch_geolocation: async (frm) => {

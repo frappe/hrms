@@ -36,30 +36,33 @@ class EmployeeCheckin(Document):
 				_("This employee already has a log with the same timestamp.{0}").format("<Br>" + doc_link)
 			)
 
+	@frappe.whitelist()
 	def fetch_shift(self):
-		shift_actual_timings = get_actual_start_end_datetime_of_shift(
-			self.employee, get_datetime(self.time), True
-		)
-		if shift_actual_timings:
-			if (
-				shift_actual_timings.shift_type.determine_check_in_and_check_out
-				== "Strictly based on Log Type in Employee Checkin"
-				and not self.log_type
-				and not self.skip_auto_attendance
-			):
-				frappe.throw(
-					_("Log Type is required for check-ins falling in the shift: {0}.").format(
-						shift_actual_timings.shift_type.name
-					)
-				)
-			if not self.attendance:
-				self.shift = shift_actual_timings.shift_type.name
-				self.shift_actual_start = shift_actual_timings.actual_start
-				self.shift_actual_end = shift_actual_timings.actual_end
-				self.shift_start = shift_actual_timings.start_datetime
-				self.shift_end = shift_actual_timings.end_datetime
-		else:
+		if not (
+			shift_actual_timings := get_actual_start_end_datetime_of_shift(
+				self.employee, get_datetime(self.time), True
+			)
+		):
 			self.shift = None
+			return
+
+		if (
+			shift_actual_timings.shift_type.determine_check_in_and_check_out
+			== "Strictly based on Log Type in Employee Checkin"
+			and not self.log_type
+			and not self.skip_auto_attendance
+		):
+			frappe.throw(
+				_("Log Type is required for check-ins falling in the shift: {0}.").format(
+					shift_actual_timings.shift_type.name
+				)
+			)
+		if not self.attendance:
+			self.shift = shift_actual_timings.shift_type.name
+			self.shift_actual_start = shift_actual_timings.actual_start
+			self.shift_actual_end = shift_actual_timings.actual_end
+			self.shift_start = shift_actual_timings.start_datetime
+			self.shift_end = shift_actual_timings.end_datetime
 
 	@frappe.whitelist()
 	def set_geolocation_from_coordinates(self):
@@ -132,6 +135,17 @@ def add_log_based_on_employee_field(
 	doc.insert()
 
 	return doc
+
+
+@frappe.whitelist()
+def bulk_fetch_shift(checkins: list[str] | str) -> None:
+	if isinstance(checkins, str):
+		checkins = frappe.json.loads(checkins)
+	for d in checkins:
+		doc = frappe.get_doc("Employee Checkin", d)
+		doc.fetch_shift()
+		doc.flags.ignore_validate = True
+		doc.save()
 
 
 def mark_attendance_and_link_log(
