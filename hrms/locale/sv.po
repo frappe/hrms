@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-08-04 09:33+0000\n"
-"PO-Revision-Date: 2024-08-06 09:20\n"
+"PO-Revision-Date: 2024-08-11 12:05\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -3829,7 +3829,7 @@ msgstr "E-post skickad till {0}"
 #. 'Payroll Settings'
 #: payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Emails salary slip to employee based on preferred email selected in Employee"
-msgstr "E-postar Löne Besked till personal baserat på önskad e-post adress vald i Personal Inställningar"
+msgstr "Skickar Lön Besked baserat på önskad e-post adress vald i Personal Inställningar"
 
 #. Label of the employee (Link) field in DocType 'Appraisal'
 #. Name of a role
@@ -5506,7 +5506,7 @@ msgstr "Flyg"
 
 #: hr/report/employee_exits/employee_exits.js:73
 msgid "FnF Pending"
-msgstr "FnF Väntande"
+msgstr "FnF Pågående"
 
 #. Label of the follow_via_email (Check) field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
@@ -9197,19 +9197,19 @@ msgstr "Väntar på Kvantitet"
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.py:60
 msgid "Pending Asset Returns"
-msgstr "Väntande Tillgång Retur"
+msgstr "Pågående Tillgång Retur"
 
 #: hr/report/employee_exits/employee_exits.py:227
 msgid "Pending FnF"
-msgstr "Väntande Slutlig Avtal"
+msgstr "Pågående Slutlig Avtal"
 
 #: hr/report/employee_exits/employee_exits.py:221
 msgid "Pending Interviews"
-msgstr "Väntande Intervjuer"
+msgstr "Pågående Intervjuer"
 
 #: hr/report/employee_exits/employee_exits.py:233
 msgid "Pending Questionnaires"
-msgstr "Väntande Frågeformulär"
+msgstr "Pågående Frågeformulär"
 
 #. Label of the percent (Percent) field in DocType 'Income Tax Slab Other
 #. Charges'
@@ -10866,7 +10866,7 @@ msgstr "Själv Bedömning"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:163
 msgid "Self Appraisal Pending: {0}"
-msgstr "Väntande Självbedömning: {0}"
+msgstr "Pågående Självbedömning: {0}"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:89
 msgid "Self Appraisal Score"
@@ -11909,7 +11909,7 @@ msgstr "Bråkdel av dagslön som ska betalas för halvdags närvaro"
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:35
 #: hr/report/project_profitability/project_profitability.py:101
 msgid "The metrics for this report are calculated based on the Standard Working Hours. Please set {0} in {1}."
-msgstr "Mätvärde för denna rapport beräknas utifrån standard arbetstid. Ange <b>Standard Arbetstid</b> i Personal Inställningar/{1}."
+msgstr "Mätvärde för denna rapport beräknas utifrån standardarbetstid. Ange {0} i {1}."
 
 #. Description of the 'Encrypt Salary Slips in Emails' (Check) field in DocType
 #. 'Payroll Settings'
@@ -13539,7 +13539,7 @@ msgstr "{} Öppna"
 #: hr/workspace/performance/performance.json
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "{} Pending"
-msgstr "{} Väntande"
+msgstr "{} Pågående"
 
 #. Count format of shortcut in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
