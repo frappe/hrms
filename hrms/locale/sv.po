@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-08-04 09:33+0000\n"
-"PO-Revision-Date: 2024-08-11 12:05\n"
+"POT-Creation-Date: 2024-08-11 09:34+0000\n"
+"PO-Revision-Date: 2024-08-13 12:05\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -1592,7 +1592,7 @@ msgstr "Närvaro datum {0} får inte vara tidigare än personal {1}  anslutning 
 msgid "Attendance for all the employees under this criteria has been marked already."
 msgstr "Närvaro för all personal under dessa kriterier är redan angiven."
 
-#: hr/doctype/attendance/attendance.py:118
+#: hr/doctype/attendance/attendance.py:119
 msgid "Attendance for employee {0} is already marked for an overlapping shift {1}: {2}"
 msgstr "Närvaro för personal {0} är redan angiven för överlappande skift {1}: {2}"
 
@@ -2039,7 +2039,7 @@ msgstr "Kan inte skapa eller ändra transaktioner mot {0} Utvärdering Cykel."
 msgid "Cannot find active Leave Period"
 msgstr "Kan inte hitta aktiv Ledighet Period"
 
-#: hr/doctype/attendance/attendance.py:152
+#: hr/doctype/attendance/attendance.py:153
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr "Kan inte ange närvaro för inaktiv personal {0}"
 
@@ -2101,7 +2101,7 @@ msgstr "Resultat Enheter"
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr "Se <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> för mer information"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1388
+#: payroll/doctype/payroll_entry/payroll_entry.py:1389
 msgid "Check Error Log {0} for more details."
 msgstr "Se Fel Logg {0} för mer detaljer."
 
@@ -2593,7 +2593,7 @@ msgstr "Kostnad"
 msgid "Costing Details"
 msgstr "Kostnad Detaljer"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1451
+#: payroll/doctype/payroll_entry/payroll_entry.py:1452
 msgid "Could not submit some Salary Slips: {}"
 msgstr "Kunde inte godkänna vissa Löne Besked: {}"
 
@@ -2772,7 +2772,7 @@ msgstr "Skapa Utvärderingar"
 msgid "Creating Payment Entries......"
 msgstr "......Skapar Betalning Poster......"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1411
+#: payroll/doctype/payroll_entry/payroll_entry.py:1412
 msgid "Creating Salary Slips..."
 msgstr "Skapar Lön Besked..."
 
@@ -3821,7 +3821,7 @@ msgstr "E-post Skickad Till"
 msgid "Email Template"
 msgstr "E-post Mall"
 
-#: hr/doctype/leave_application/leave_application.py:657
+#: hr/doctype/leave_application/leave_application.py:659
 msgid "Email sent to {0}"
 msgstr "E-post skickad till {0}"
 
@@ -4612,11 +4612,11 @@ msgstr "Personal {0} har redan ansökt om {1} mellan {2} och {3}: {4}"
 msgid "Employee {0} has no maximum benefit amount"
 msgstr "Personal {0} har ingen maximum Förmån Belopp"
 
-#: hr/doctype/attendance/attendance.py:209
+#: hr/doctype/attendance/attendance.py:210
 msgid "Employee {0} is not active or does not exist"
 msgstr "Personal {0} är inte aktiv eller finns inte"
 
-#: hr/doctype/attendance/attendance.py:187
+#: hr/doctype/attendance/attendance.py:188
 msgid "Employee {0} is on Leave on {1}"
 msgstr "Personal {0} är Ledig {1}"
 
@@ -4624,7 +4624,7 @@ msgstr "Personal {0} är Ledig {1}"
 msgid "Employee {0} not found in Training Event Participants."
 msgstr "Personal {0} hittades inte i Utbildning Händelse Deltagare."
 
-#: hr/doctype/attendance/attendance.py:180
+#: hr/doctype/attendance/attendance.py:181
 msgid "Employee {0} on Half day on {1}"
 msgstr "Personal {0} halvdag {1}"
 
@@ -5303,7 +5303,7 @@ msgstr "Misslyckades med att uppdatera Jobb Sökande Status"
 msgid "Failed to {0} {1} for employees:"
 msgstr "Kunde inte {0} {1} för personal:"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1454
+#: payroll/doctype/payroll_entry/payroll_entry.py:1455
 #: public/js/utils/index.js:149
 msgid "Failure"
 msgstr "Fel"
@@ -5479,7 +5479,7 @@ msgstr "Förnamn"
 msgid "Fiscal Year"
 msgstr "Bokföringsår"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1371
+#: payroll/doctype/payroll_entry/payroll_entry.py:1372
 msgid "Fiscal Year {0} not found"
 msgstr "Bokföringsår {0} hittades inte"
 
@@ -6247,8 +6247,8 @@ msgstr "Anställningar mot Avgångar"
 msgid "Hold"
 msgstr "Spärra"
 
-#: hr/doctype/attendance/attendance.py:290
-#: hr/doctype/leave_application/leave_application.py:1284
+#: hr/doctype/attendance/attendance.py:291
+#: hr/doctype/leave_application/leave_application.py:1286
 #: hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.py:24
 msgid "Holiday"
 msgstr "Helgdag"
@@ -7314,7 +7314,7 @@ msgstr "Ledighet Tilldelningar"
 msgid "Leave Application"
 msgstr "Ledighet Ansökan"
 
-#: hr/doctype/leave_application/leave_application.py:712
+#: hr/doctype/leave_application/leave_application.py:714
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 msgstr "Ledighet Ansökan Period kan inte vara över två ej efterföljande ledighet tilldelningar {0} och {1}."
 
@@ -7390,7 +7390,7 @@ msgstr "Ledighet Spärr Lista Datum"
 msgid "Leave Block List Name"
 msgstr "Ledighet Spärr Lista Namn"
 
-#: hr/doctype/leave_application/leave_application.py:1260
+#: hr/doctype/leave_application/leave_application.py:1262
 msgid "Leave Blocked"
 msgstr "Ledighet Spärrad"
 
@@ -8038,7 +8038,7 @@ msgstr "Vård"
 #. Label of the message (Text Editor) field in DocType 'PWA Notification'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hr/doctype/pwa_notification/pwa_notification.json
-#: payroll/doctype/payroll_entry/payroll_entry.py:1421
+#: payroll/doctype/payroll_entry/payroll_entry.py:1422
 msgid "Message"
 msgstr "Meddelande"
 
@@ -8401,7 +8401,7 @@ msgstr "Ingen återkoppling har mottagits än"
 msgid "No items selected"
 msgstr "Inga poster valda"
 
-#: hr/doctype/attendance/attendance.py:195
+#: hr/doctype/attendance/attendance.py:196
 msgid "No leave record found for employee {0} on {1}"
 msgstr "Ingen Ledighet Post hittades för Personal {0} {1}"
 
@@ -8426,7 +8426,7 @@ msgstr "Ingen post hittad"
 msgid "No replies from"
 msgstr "Inga svar från"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1437
+#: payroll/doctype/payroll_entry/payroll_entry.py:1438
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "Ingen Lön Besked hittad att godkänna för ovanstående valda kriterier eller Lön Besked är redan godkänd"
 
@@ -8798,7 +8798,7 @@ msgstr "Övergripande Genomsnittlig Betyg"
 msgid "Overlapping Attendance Request"
 msgstr "Överlappande Närvaro Begäran"
 
-#: hr/doctype/attendance/attendance.py:123
+#: hr/doctype/attendance/attendance.py:124
 msgid "Overlapping Shift Attendance"
 msgstr "Överlappande Skift Närvaro"
 
@@ -9021,7 +9021,7 @@ msgstr "Kontering Post"
 msgid "Payment and Accounting"
 msgstr "Betalning och Bokföring"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1038
+#: payroll/doctype/payroll_entry/payroll_entry.py:1039
 msgid "Payment of {0} from {1} to {2}"
 msgstr "Betalning av {0} från {1} till {2}"
 
@@ -9333,7 +9333,7 @@ msgstr "Välj Bolag"
 msgid "Please select a csv file"
 msgstr "Välj CSV fil"
 
-#: hr/doctype/attendance/attendance.py:340
+#: hr/doctype/attendance/attendance.py:341
 msgid "Please select a date."
 msgstr "Välj Datum"
 
@@ -9414,7 +9414,7 @@ msgstr "Ange Standard Kassa Konto i Bolag Inställningar"
 msgid "Please set account in Salary Component {0}"
 msgstr "Ange konto i Lön Komponent {0}"
 
-#: hr/doctype/leave_application/leave_application.py:621
+#: hr/doctype/leave_application/leave_application.py:622
 msgid "Please set default template for Leave Approval Notification in HR Settings."
 msgstr "Ange Standard Mall för Ledighet Godkännande Avisering i Personal Inställningar."
 
@@ -10575,7 +10575,7 @@ msgstr "Löne besked för {0} redan skapad för Tidrapport {1}"
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr "Löne besked i kö. Det kan ta några minuter"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1376
+#: payroll/doctype/payroll_entry/payroll_entry.py:1377
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr "Löne besked {0} misslyckades för Löne Post {1}"
 
@@ -10593,11 +10593,11 @@ msgstr "Löne besked Skapade"
 msgid "Salary Slips Submitted"
 msgstr "Löne besked Godkända"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1418
+#: payroll/doctype/payroll_entry/payroll_entry.py:1419
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr "Löne besked finns redan för {} och kommer inte att behandlas av denna lönelista."
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1443
+#: payroll/doctype/payroll_entry/payroll_entry.py:1444
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr "Löne besked inlämnade  för period från {0} till {1}"
 
@@ -10795,7 +10795,7 @@ msgstr "Välj Intervju"
 msgid "Select Payment Account to make Bank Entry"
 msgstr "Välj Betalning Konto att skapa Bank Post"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1581
+#: payroll/doctype/payroll_entry/payroll_entry.py:1582
 msgid "Select Payroll Frequency."
 msgstr "Välj Löne Intervall"
 
@@ -11617,7 +11617,7 @@ msgstr "Godkänd"
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "Godkänner Lön Besked och skapar Journal Post..."
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1498
+#: payroll/doctype/payroll_entry/payroll_entry.py:1499
 msgid "Submitting Salary Slips..."
 msgstr "Godkänner Lön Besked..."
 
@@ -11626,7 +11626,7 @@ msgid "Subsidiary companies have already planned for {1} vacancies at a budget o
 msgstr "Dotterbolag har redan planerat för {1} lediga tjänster till en budget på {2}. Bemanningsplan för {0} ska tilldela fler lediga tjänster och budget för {3} än planerat för dotterbolag"
 
 #: hr/doctype/employee_referral/employee_referral.py:54 hr/utils.py:831
-#: payroll/doctype/payroll_entry/payroll_entry.py:1446
+#: payroll/doctype/payroll_entry/payroll_entry.py:1447
 #: public/js/utils/index.js:139
 msgid "Success"
 msgstr "Slutförd"
@@ -12715,7 +12715,7 @@ msgstr "Tisdag"
 #: hr/doctype/training_event/training_event.json
 #: hr/doctype/vehicle_service/vehicle_service.json
 #: payroll/doctype/salary_component/salary_component.json
-#: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.js:9
+#: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.js:12
 msgid "Type"
 msgstr "Typ"
 
@@ -12748,11 +12748,11 @@ msgstr "Oanvänd Belopp"
 msgid "Under Review"
 msgstr "Under Recension"
 
-#: hr/doctype/attendance/attendance.py:229
+#: hr/doctype/attendance/attendance.py:230
 msgid "Unlinked Attendance record from Employee Checkins: {}"
 msgstr "Olänkad Närvaro post från Personal In/Utcheckningar: {}"
 
-#: hr/doctype/attendance/attendance.py:232
+#: hr/doctype/attendance/attendance.py:233
 msgid "Unlinked logs"
 msgstr "Olänkade Loggar"
 
@@ -13544,7 +13544,7 @@ msgstr "{} Pågående"
 #. Count format of shortcut in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
 msgid "{} Unclaimed"
-msgstr "{} Outtagen"
+msgstr "{} Ej Uttagna"
 
 #: hr/doctype/employee_checkin/employee_checkin.py:194
 msgid "{} is an invalid Attendance Status."
