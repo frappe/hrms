@@ -523,7 +523,7 @@ class TestEmployeeCheckin(FrappeTestCase):
 		self.assertEqual(log1.shift, shift2.name)
 		log2.reload()
 		# shift does not change since attendance is already marked
-		self.assertEqual(log1.shift, shift1.name)
+		self.assertEqual(log2.shift, shift1.name)
 
 
 def make_n_checkins(employee, n, hours_to_reverse=1):
