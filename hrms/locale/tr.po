@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-08-04 09:33+0000\n"
-"PO-Revision-Date: 2024-08-10 11:49\n"
+"POT-Creation-Date: 2024-08-11 09:34+0000\n"
+"PO-Revision-Date: 2024-08-14 12:24\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -1591,7 +1591,7 @@ msgstr ""
 msgid "Attendance for all the employees under this criteria has been marked already."
 msgstr ""
 
-#: hr/doctype/attendance/attendance.py:118
+#: hr/doctype/attendance/attendance.py:119
 msgid "Attendance for employee {0} is already marked for an overlapping shift {1}: {2}"
 msgstr ""
 
@@ -1985,7 +1985,7 @@ msgstr "Aramalar"
 
 #: setup.py:396
 msgid "Campaign"
-msgstr ""
+msgstr "Kampanya"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:128
 msgid "Cancellation Queued"
@@ -2038,7 +2038,7 @@ msgstr ""
 msgid "Cannot find active Leave Period"
 msgstr "Aktif İzin Dönemi bulunamıyor"
 
-#: hr/doctype/attendance/attendance.py:152
+#: hr/doctype/attendance/attendance.py:153
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr ""
 
@@ -2100,7 +2100,7 @@ msgstr "Maliyet Merkezleri Grafiği"
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1388
+#: payroll/doctype/payroll_entry/payroll_entry.py:1389
 msgid "Check Error Log {0} for more details."
 msgstr ""
 
@@ -2592,7 +2592,7 @@ msgstr "Maliyet"
 msgid "Costing Details"
 msgstr "Maliyet Detayları"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1451
+#: payroll/doctype/payroll_entry/payroll_entry.py:1452
 msgid "Could not submit some Salary Slips: {}"
 msgstr ""
 
@@ -2771,7 +2771,7 @@ msgstr ""
 msgid "Creating Payment Entries......"
 msgstr "Ödeme Girişleri Oluşturuluyor..."
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1411
+#: payroll/doctype/payroll_entry/payroll_entry.py:1412
 msgid "Creating Salary Slips..."
 msgstr "Maaş Fişleri Oluşturuluyor..."
 
@@ -3152,7 +3152,7 @@ msgstr "Kesinti"
 #. Label of a Card Break in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Deduction Reports"
-msgstr ""
+msgstr "Kesinti Raporları"
 
 #: hr/doctype/employee_advance/employee_advance.js:90
 msgid "Deduction from Salary"
@@ -3820,7 +3820,7 @@ msgstr "E-posta Gönderildi"
 msgid "Email Template"
 msgstr "E-posta şablonu"
 
-#: hr/doctype/leave_application/leave_application.py:657
+#: hr/doctype/leave_application/leave_application.py:659
 msgid "Email sent to {0}"
 msgstr ""
 
@@ -4611,11 +4611,11 @@ msgstr ""
 msgid "Employee {0} has no maximum benefit amount"
 msgstr "{0} çalışanının maksimum fayda miktarı yok"
 
-#: hr/doctype/attendance/attendance.py:209
+#: hr/doctype/attendance/attendance.py:210
 msgid "Employee {0} is not active or does not exist"
 msgstr "Çalışan {0} aktif değil veya yok."
 
-#: hr/doctype/attendance/attendance.py:187
+#: hr/doctype/attendance/attendance.py:188
 msgid "Employee {0} is on Leave on {1}"
 msgstr "{0} çalışanı, {1} tarihinde devam ediyor"
 
@@ -4623,7 +4623,7 @@ msgstr "{0} çalışanı, {1} tarihinde devam ediyor"
 msgid "Employee {0} not found in Training Event Participants."
 msgstr ""
 
-#: hr/doctype/attendance/attendance.py:180
+#: hr/doctype/attendance/attendance.py:181
 msgid "Employee {0} on Half day on {1}"
 msgstr "Yarım günde Çalışan {0}, {1}"
 
@@ -4835,7 +4835,7 @@ msgstr "Personel Puanı"
 
 #: hr/doctype/hr_settings/hr_settings.js:34
 msgid "Enter the Standard Working Hours for a normal work day. These hours will be used in calculations of reports such as Employee Hours Utilization and Project Profitability analysis."
-msgstr ""
+msgstr "Normal bir iş günü için Standart Çalışma Saatlerini girin. Bu saatler Çalışan Saat Kullanımı ve Proje Karlılığı analizi gibi raporların hesaplanmasında kullanılacaktır."
 
 #: hr/doctype/leave_allocation/leave_allocation.js:155
 msgid "Enter the number of leaves you want to allocate for the period."
@@ -5302,7 +5302,7 @@ msgstr ""
 msgid "Failed to {0} {1} for employees:"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1454
+#: payroll/doctype/payroll_entry/payroll_entry.py:1455
 #: public/js/utils/index.js:149
 msgid "Failure"
 msgstr "Başarısız"
@@ -5478,7 +5478,7 @@ msgstr "Adı "
 msgid "Fiscal Year"
 msgstr "Mali Yıl"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1371
+#: payroll/doctype/payroll_entry/payroll_entry.py:1372
 msgid "Fiscal Year {0} not found"
 msgstr "bulunamadı Mali Yılı {0}"
 
@@ -5862,7 +5862,7 @@ msgstr ""
 
 #: hr/doctype/goal/goal_tree.js:288
 msgid "Goal updated successfully"
-msgstr ""
+msgstr "Hedef başarıyla güncellendi"
 
 #. Label of the goals (Table) field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json hr/doctype/appraisal/appraisal.py:135
@@ -5871,7 +5871,7 @@ msgstr "Hedefler"
 
 #: hr/doctype/goal/goal_list.js:129
 msgid "Goals updated successfully"
-msgstr ""
+msgstr "Hedefler başarıyla güncellendi"
 
 #. Label of the grade (Data) field in DocType 'Training Result Employee'
 #. Label of the grade (Link) field in DocType 'Payroll Entry'
@@ -6246,8 +6246,8 @@ msgstr "İşe Başlayan ve Ayrılan Sayısı"
 msgid "Hold"
 msgstr ""
 
-#: hr/doctype/attendance/attendance.py:290
-#: hr/doctype/leave_application/leave_application.py:1284
+#: hr/doctype/attendance/attendance.py:291
+#: hr/doctype/leave_application/leave_application.py:1286
 #: hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.py:24
 msgid "Holiday"
 msgstr ""
@@ -6392,7 +6392,7 @@ msgstr ""
 #. 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgid "If enabled, the component will be considered in the Income Tax Deductions report"
-msgstr ""
+msgstr "Bu bileşen Gelir Vergisi Kesintileri raporunda dikkate alınacaktır"
 
 #. Description of the 'Remove if Zero Valued' (Check) field in DocType 'Salary
 #. Component'
@@ -7313,7 +7313,7 @@ msgstr "Tahsisleri Bırak"
 msgid "Leave Application"
 msgstr "İzin Formu"
 
-#: hr/doctype/leave_application/leave_application.py:712
+#: hr/doctype/leave_application/leave_application.py:714
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 msgstr ""
 
@@ -7389,7 +7389,7 @@ msgstr "izin engel listesi süreleri"
 msgid "Leave Block List Name"
 msgstr "izin engel listesi adı"
 
-#: hr/doctype/leave_application/leave_application.py:1260
+#: hr/doctype/leave_application/leave_application.py:1262
 msgid "Leave Blocked"
 msgstr "İzin Engellendi"
 
@@ -8037,7 +8037,7 @@ msgstr "Tıbbi"
 #. Label of the message (Text Editor) field in DocType 'PWA Notification'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hr/doctype/pwa_notification/pwa_notification.json
-#: payroll/doctype/payroll_entry/payroll_entry.py:1421
+#: payroll/doctype/payroll_entry/payroll_entry.py:1422
 msgid "Message"
 msgstr "Mesaj"
 
@@ -8400,7 +8400,7 @@ msgstr ""
 msgid "No items selected"
 msgstr ""
 
-#: hr/doctype/attendance/attendance.py:195
+#: hr/doctype/attendance/attendance.py:196
 msgid "No leave record found for employee {0} on {1}"
 msgstr "{1} tarihinde {0} çalışanı için izin kaydı bulunamadı"
 
@@ -8425,7 +8425,7 @@ msgstr "Kayıt Bulunamadı"
 msgid "No replies from"
 msgstr "Şundan yanıt yok"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1437
+#: payroll/doctype/payroll_entry/payroll_entry.py:1438
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "Yukarıdaki özelliklere göre maaş fişi bulunmayan VEYA maaş fişi zaten gönderildi"
 
@@ -8797,7 +8797,7 @@ msgstr ""
 msgid "Overlapping Attendance Request"
 msgstr ""
 
-#: hr/doctype/attendance/attendance.py:123
+#: hr/doctype/attendance/attendance.py:124
 msgid "Overlapping Shift Attendance"
 msgstr ""
 
@@ -8951,7 +8951,7 @@ msgstr ""
 #: hr/doctype/expense_claim/expense_claim.json
 #: payroll/doctype/gratuity/gratuity.json
 msgid "Payable Account"
-msgstr ""
+msgstr "Borç Hesabı"
 
 #: hr/doctype/expense_claim/expense_claim.py:93
 msgid "Payable Account is mandatory to submit an Expense Claim"
@@ -8961,7 +8961,7 @@ msgstr ""
 #. Final Statement'
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
 msgid "Payables"
-msgstr ""
+msgstr "Borçlar"
 
 #: hr/doctype/employee_advance/employee_advance.js:50
 #: hr/doctype/expense_claim/expense_claim.js:97
@@ -9020,7 +9020,7 @@ msgstr "Ödeme Girişi"
 msgid "Payment and Accounting"
 msgstr "Ödeme ve Muhasebe"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1038
+#: payroll/doctype/payroll_entry/payroll_entry.py:1039
 msgid "Payment of {0} from {1} to {2}"
 msgstr "{1} ile {2} arasındaki {0} ödemesi"
 
@@ -9112,7 +9112,7 @@ msgstr ""
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgid "Payroll Payable Account"
-msgstr ""
+msgstr "Bordro Borç Hesabı"
 
 #. Label of the payroll_period (Link) field in DocType 'Employee Benefit
 #. Application'
@@ -9148,7 +9148,7 @@ msgstr "Bordro Dönemleri"
 #. Label of a Card Break in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Payroll Reports"
-msgstr ""
+msgstr "Bordro Raporları"
 
 #. Name of a DocType
 #. Title of an Onboarding Step
@@ -9332,7 +9332,7 @@ msgstr ""
 msgid "Please select a csv file"
 msgstr "Bir csv dosyasını seçiniz"
 
-#: hr/doctype/attendance/attendance.py:340
+#: hr/doctype/attendance/attendance.py:341
 msgid "Please select a date."
 msgstr "Lütfen bir tarih seçin."
 
@@ -9413,7 +9413,7 @@ msgstr ""
 msgid "Please set account in Salary Component {0}"
 msgstr ""
 
-#: hr/doctype/leave_application/leave_application.py:621
+#: hr/doctype/leave_application/leave_application.py:622
 msgid "Please set default template for Leave Approval Notification in HR Settings."
 msgstr "Lütfen İK Ayarları&#39;nda Onay Onay Bildirimi için varsayılan şablonu ayarı."
 
@@ -10117,7 +10117,7 @@ msgstr "Raporlar"
 #: hr/report/employee_exits/employee_exits.js:45
 #: hr/report/employee_exits/employee_exits.py:79
 msgid "Reports To"
-msgstr ""
+msgstr "Raporlanan Kişi"
 
 #. Label of the requested_by (Link) field in DocType 'Job Requisition'
 #. Label of the section_break_7 (Section Break) field in DocType 'Job
@@ -10574,7 +10574,7 @@ msgstr "çalışanın maaş Kuponu {0} zaten zaman ayırmak için çalışanlar 
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1376
+#: payroll/doctype/payroll_entry/payroll_entry.py:1377
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr ""
 
@@ -10592,11 +10592,11 @@ msgstr "Maaş Balıkları Oluşturuldu"
 msgid "Salary Slips Submitted"
 msgstr "Maaş Balıkları Gönderildi"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1418
+#: payroll/doctype/payroll_entry/payroll_entry.py:1419
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1443
+#: payroll/doctype/payroll_entry/payroll_entry.py:1444
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr ""
 
@@ -10794,7 +10794,7 @@ msgstr ""
 msgid "Select Payment Account to make Bank Entry"
 msgstr "Banka Girişi Yapmak İçin Ödeme Hesabını Seçin"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1581
+#: payroll/doctype/payroll_entry/payroll_entry.py:1582
 msgid "Select Payroll Frequency."
 msgstr ""
 
@@ -10922,7 +10922,7 @@ msgstr "İzin Bildirimi Gönder"
 #: hr/doctype/hr_settings/hr_settings.json
 #: payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Sender"
-msgstr "Gönderici"
+msgstr "Gönderen"
 
 #. Label of the sender_email (Data) field in DocType 'HR Settings'
 #. Label of the hiring_sender_email (Data) field in DocType 'HR Settings'
@@ -11616,7 +11616,7 @@ msgstr ""
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "Maaş Fişleri Gönderme ve Yevmiye Kaydı Oluşturma ..."
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1498
+#: payroll/doctype/payroll_entry/payroll_entry.py:1499
 msgid "Submitting Salary Slips..."
 msgstr "Maaş Fişleri Gönderiliyor ..."
 
@@ -11625,7 +11625,7 @@ msgid "Subsidiary companies have already planned for {1} vacancies at a budget o
 msgstr ""
 
 #: hr/doctype/employee_referral/employee_referral.py:54 hr/utils.py:831
-#: payroll/doctype/payroll_entry/payroll_entry.py:1446
+#: payroll/doctype/payroll_entry/payroll_entry.py:1447
 #: public/js/utils/index.js:139
 msgid "Success"
 msgstr ""
@@ -12714,7 +12714,7 @@ msgstr "Salı"
 #: hr/doctype/training_event/training_event.json
 #: hr/doctype/vehicle_service/vehicle_service.json
 #: payroll/doctype/salary_component/salary_component.json
-#: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.js:9
+#: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.js:12
 msgid "Type"
 msgstr "Türü"
 
@@ -12747,11 +12747,11 @@ msgstr ""
 msgid "Under Review"
 msgstr ""
 
-#: hr/doctype/attendance/attendance.py:229
+#: hr/doctype/attendance/attendance.py:230
 msgid "Unlinked Attendance record from Employee Checkins: {}"
 msgstr ""
 
-#: hr/doctype/attendance/attendance.py:232
+#: hr/doctype/attendance/attendance.py:233
 msgid "Unlinked logs"
 msgstr "Bağlantısız kayıtlar"
 
