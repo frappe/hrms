@@ -16,7 +16,7 @@ def notify_existing_users():
 	subject = _("WARNING: Loan Management module has been separated from ERPNext.") + "<br>"
 	subject += _(
 		"If you are using loans in salary slips, please install the {0} app from Frappe Cloud Marketplace or GitHub to continue using loan integration with payroll."
-	).format(frappe.bold("Lending"))
+	).format(frappe.bold(_("Lending")))
 
 	notification = {
 		"subject": subject,
