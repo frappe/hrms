@@ -766,6 +766,9 @@ class SalarySlip(TransactionBase):
 			)
 
 	def calculate_net_pay(self):
+		if self.salary_structure:
+			self.calculate_component_amounts("earnings")
+
 		# get remaining numbers of sub-period (period for which one salary is processed)
 		if self.payroll_period:
 			self.remaining_sub_periods = get_period_factor(
@@ -778,8 +781,12 @@ class SalarySlip(TransactionBase):
 				relieving_date=self.relieving_date,
 			)[1]
 
+		self.gross_pay = self.get_component_totals("earnings", depends_on_payment_days=1)
+		self.base_gross_pay = flt(
+			flt(self.gross_pay) * flt(self.exchange_rate), self.precision("base_gross_pay")
+		)
+
 		if self.salary_structure:
-			self.calculate_component_amounts("earnings")
 			self.calculate_component_amounts("deductions")
 
 			deductions_abbr = [d.abbr for d in self.deductions]
@@ -791,10 +798,6 @@ class SalarySlip(TransactionBase):
 						self.add_structure_component(d, "earnings")
 						self.update_dependent_components_recursively("deductions", d.abbr)
 
-		self.gross_pay = self.get_component_totals("earnings", depends_on_payment_days=1)
-		self.base_gross_pay = flt(
-			flt(self.gross_pay) * flt(self.exchange_rate), self.precision("base_gross_pay")
-		)
 		set_loan_repayment(self)
 
 		self.set_precision_for_component_amounts()
