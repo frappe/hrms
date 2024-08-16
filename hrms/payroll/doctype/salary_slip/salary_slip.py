@@ -789,14 +789,8 @@ class SalarySlip(TransactionBase):
 		if self.salary_structure:
 			self.calculate_component_amounts("deductions")
 
-			deductions_abbr = [d.abbr for d in self.deductions]
-			for d in self._salary_structure_doc.earnings:
-				if not d.amount_based_on_formula:
-					continue
-				for var in get_variables_from_formula(d.formula):
-					if var in deductions_abbr:
-						self.add_structure_component(d, "earnings")
-						self.update_dependent_components_recursively("deductions", d.abbr)
+			deduction_abbrs = [d.abbr for d in self.deductions]
+			self.update_dependent_components_recursively("earnings", deduction_abbrs)
 
 		set_loan_repayment(self)
 
@@ -804,14 +798,19 @@ class SalarySlip(TransactionBase):
 		self.set_net_pay()
 		self.compute_income_tax_breakup()
 
-	def update_dependent_components_recursively(self, component_type: str, updated_var: str) -> None:
+	def update_dependent_components_recursively(
+		self, component_type: str, updated_var: str | list[str]
+	) -> None:
+		def is_var_updated(var: str | list[str]) -> bool:
+			return var == updated_var if isinstance(updated_var, str) else var in updated_var
+
 		other_component_type = "deductions" if component_type == "earnings" else "earnings"
 
 		for d in self._salary_structure_doc.get(component_type):
 			if not d.amount_based_on_formula:
 				continue
 			for var in get_variables_from_formula(d.formula):
-				if var == updated_var:
+				if is_var_updated(var):
 					self.add_structure_component(d, component_type)
 					self.update_dependent_components_recursively(other_component_type, d.abbr)
 
