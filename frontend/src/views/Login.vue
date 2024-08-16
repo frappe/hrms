@@ -13,7 +13,7 @@
 							label="Email"
 							placeholder="johndoe@mail.com"
 							v-model="email"
-							:type="email !== 'Administrator' ? 'email' : 'text'"
+							type="text"
 							autocomplete="username"
 						/>
 						<Input
