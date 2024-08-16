@@ -766,6 +766,12 @@ class SalarySlip(TransactionBase):
 			)
 
 	def calculate_net_pay(self):
+		def set_gross_pay_and_base_gross_pay():
+			self.gross_pay = self.get_component_totals("earnings", depends_on_payment_days=1)
+			self.base_gross_pay = flt(
+				flt(self.gross_pay) * flt(self.exchange_rate), self.precision("base_gross_pay")
+			)
+
 		if self.salary_structure:
 			self.calculate_component_amounts("earnings")
 
@@ -781,16 +787,17 @@ class SalarySlip(TransactionBase):
 				relieving_date=self.relieving_date,
 			)[1]
 
-		self.gross_pay = self.get_component_totals("earnings", depends_on_payment_days=1)
-		self.base_gross_pay = flt(
-			flt(self.gross_pay) * flt(self.exchange_rate), self.precision("base_gross_pay")
-		)
+		set_gross_pay_and_base_gross_pay()
 
 		if self.salary_structure:
 			self.calculate_component_amounts("deductions")
 
 			deduction_abbrs = [d.abbr for d in self.deductions]
 			self.update_dependent_components_recursively("earnings", deduction_abbrs)
+
+		set_gross_pay_and_base_gross_pay()
+		self.update_dependent_components_recursively("deductions", "gross_pay")
+		self.update_dependent_components_recursively("deductions", "base_gross_pay")
 
 		set_loan_repayment(self)
 
