@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-08-11 09:34+0000\n"
-"PO-Revision-Date: 2024-08-16 12:36\n"
+"PO-Revision-Date: 2024-08-17 12:46\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -767,7 +767,7 @@ msgstr "Tüm işler"
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.py:57
 msgid "All allocated assets should be returned before submission"
-msgstr ""
+msgstr "Tahsis edilen tüm varlıklar teslim edilmeden önce iade edilmelidir"
 
 #: hr/doctype/employee_onboarding/employee_onboarding.py:48
 msgid "All the mandatory tasks for employee creation are not completed yet."
@@ -13306,7 +13306,7 @@ msgstr ""
 
 #: overrides/employee_master.py:83
 msgid "You may add additional details, if any, and submit the offer."
-msgstr ""
+msgstr "Varsa ek bilgilerinizi ekleyip teklifinizi kaydedebilirsiniz."
 
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.py:51
 msgid "You were only present for Half Day on {}. Cannot apply for a full day compensatory leave"
