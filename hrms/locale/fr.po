@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-08-04 09:33+0000\n"
-"PO-Revision-Date: 2024-08-10 11:49\n"
+"POT-Creation-Date: 2024-08-11 09:34+0000\n"
+"PO-Revision-Date: 2024-08-18 12:41\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -1592,7 +1592,7 @@ msgstr "La date de participation {0} ne peut pas être inférieure à la date d'
 msgid "Attendance for all the employees under this criteria has been marked already."
 msgstr "La présence de tous les employés selon ces critères a déjà été marquée."
 
-#: hr/doctype/attendance/attendance.py:118
+#: hr/doctype/attendance/attendance.py:119
 msgid "Attendance for employee {0} is already marked for an overlapping shift {1}: {2}"
 msgstr "La présence de l'employé {0} est déjà marquée comme chevauchant le poste {1}: {2}"
 
@@ -2039,7 +2039,7 @@ msgstr "Impossible de créer ou de modifier les transactions par rapport à un c
 msgid "Cannot find active Leave Period"
 msgstr "Impossible de trouver une période de congés active"
 
-#: hr/doctype/attendance/attendance.py:152
+#: hr/doctype/attendance/attendance.py:153
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr "Impossible de marquer la présence d'un employé inactif {0}"
 
@@ -2101,7 +2101,7 @@ msgstr "Tableau des centres de coûts"
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1388
+#: payroll/doctype/payroll_entry/payroll_entry.py:1389
 msgid "Check Error Log {0} for more details."
 msgstr "Consultez le journal des erreurs {0} pour plus de détails."
 
@@ -2593,7 +2593,7 @@ msgstr "Coût"
 msgid "Costing Details"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1451
+#: payroll/doctype/payroll_entry/payroll_entry.py:1452
 msgid "Could not submit some Salary Slips: {}"
 msgstr "Impossible de soumettre quelques fiches de salaire : {}"
 
@@ -2772,7 +2772,7 @@ msgstr "Créer des évaluations"
 msgid "Creating Payment Entries......"
 msgstr "Créer des écritures de paiement..."
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1411
+#: payroll/doctype/payroll_entry/payroll_entry.py:1412
 msgid "Creating Salary Slips..."
 msgstr "Création des fiches de paie en cours..."
 
@@ -3821,7 +3821,7 @@ msgstr "Email envoyé à"
 msgid "Email Template"
 msgstr "Modèle d&#39;email"
 
-#: hr/doctype/leave_application/leave_application.py:657
+#: hr/doctype/leave_application/leave_application.py:659
 msgid "Email sent to {0}"
 msgstr "Email envoyé à {0}"
 
@@ -4612,11 +4612,11 @@ msgstr "L'employé {0} a déjà postulé pour {1} entre {2} et {3} : {4}"
 msgid "Employee {0} has no maximum benefit amount"
 msgstr "L'employé {0} n'a pas de montant maximal d'avantages sociaux"
 
-#: hr/doctype/attendance/attendance.py:209
+#: hr/doctype/attendance/attendance.py:210
 msgid "Employee {0} is not active or does not exist"
 msgstr "L'employé {0} n'est pas actif, ou n'existe pas"
 
-#: hr/doctype/attendance/attendance.py:187
+#: hr/doctype/attendance/attendance.py:188
 msgid "Employee {0} is on Leave on {1}"
 msgstr "L'employé {0} est en congés le {1}"
 
@@ -4624,7 +4624,7 @@ msgstr "L'employé {0} est en congés le {1}"
 msgid "Employee {0} not found in Training Event Participants."
 msgstr "Employé {0} introuvable dans l'événement de formation."
 
-#: hr/doctype/attendance/attendance.py:180
+#: hr/doctype/attendance/attendance.py:181
 msgid "Employee {0} on Half day on {1}"
 msgstr "Employé {0} sur une demi-journée sur {1}"
 
@@ -5303,7 +5303,7 @@ msgstr "Impossible de mettre à jour le statut du candidat"
 msgid "Failed to {0} {1} for employees:"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1454
+#: payroll/doctype/payroll_entry/payroll_entry.py:1455
 #: public/js/utils/index.js:149
 msgid "Failure"
 msgstr "Échec"
@@ -5479,7 +5479,7 @@ msgstr "Prénom "
 msgid "Fiscal Year"
 msgstr "Exercice fiscal"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1371
+#: payroll/doctype/payroll_entry/payroll_entry.py:1372
 msgid "Fiscal Year {0} not found"
 msgstr "Exercice Fiscal {0} introuvable"
 
@@ -6247,8 +6247,8 @@ msgstr "Embaucher contre Attrition Count"
 msgid "Hold"
 msgstr "Mettre en attente"
 
-#: hr/doctype/attendance/attendance.py:290
-#: hr/doctype/leave_application/leave_application.py:1284
+#: hr/doctype/attendance/attendance.py:291
+#: hr/doctype/leave_application/leave_application.py:1286
 #: hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.py:24
 msgid "Holiday"
 msgstr "Vacances"
@@ -7314,7 +7314,7 @@ msgstr "Allocations de congé"
 msgid "Leave Application"
 msgstr "Demande de Congés"
 
-#: hr/doctype/leave_application/leave_application.py:712
+#: hr/doctype/leave_application/leave_application.py:714
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 msgstr "La période de demande de congé ne peut pas dépasser deux allocations de congés non consécutives {0} et {1}."
 
@@ -7390,7 +7390,7 @@ msgstr "Dates de la Liste de Blocage des Congés"
 msgid "Leave Block List Name"
 msgstr "Nom de la Liste de Blocage des Congés"
 
-#: hr/doctype/leave_application/leave_application.py:1260
+#: hr/doctype/leave_application/leave_application.py:1262
 msgid "Leave Blocked"
 msgstr "Laisser Verrouillé"
 
@@ -8038,7 +8038,7 @@ msgstr "Médical"
 #. Label of the message (Text Editor) field in DocType 'PWA Notification'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hr/doctype/pwa_notification/pwa_notification.json
-#: payroll/doctype/payroll_entry/payroll_entry.py:1421
+#: payroll/doctype/payroll_entry/payroll_entry.py:1422
 msgid "Message"
 msgstr ""
 
@@ -8401,7 +8401,7 @@ msgstr ""
 msgid "No items selected"
 msgstr "Aucun élément sélectionné"
 
-#: hr/doctype/attendance/attendance.py:195
+#: hr/doctype/attendance/attendance.py:196
 msgid "No leave record found for employee {0} on {1}"
 msgstr "Aucun enregistrement de congé trouvé pour l'employé {0} le {1}"
 
@@ -8426,7 +8426,7 @@ msgstr "Aucun Enregistrement Trouvé"
 msgid "No replies from"
 msgstr "Pas de réponse de"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1437
+#: payroll/doctype/payroll_entry/payroll_entry.py:1438
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "Aucune fiche de paie ne peut être soumise pour les critères sélectionnés ci-dessus OU la fiche de paie est déjà soumise"
 
@@ -8798,7 +8798,7 @@ msgstr ""
 msgid "Overlapping Attendance Request"
 msgstr "Requête de présence chevauchée"
 
-#: hr/doctype/attendance/attendance.py:123
+#: hr/doctype/attendance/attendance.py:124
 msgid "Overlapping Shift Attendance"
 msgstr "Présence du chevauchement"
 
@@ -9021,7 +9021,7 @@ msgstr "Écriture de Paiement"
 msgid "Payment and Accounting"
 msgstr "Paiement et comptabilité"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1038
+#: payroll/doctype/payroll_entry/payroll_entry.py:1039
 msgid "Payment of {0} from {1} to {2}"
 msgstr "Paiement de {0} de {1} à {2}"
 
@@ -9333,7 +9333,7 @@ msgstr "Veuillez d'abord sélectionner une entreprise."
 msgid "Please select a csv file"
 msgstr "Veuillez sélectionner un fichier csv"
 
-#: hr/doctype/attendance/attendance.py:340
+#: hr/doctype/attendance/attendance.py:341
 msgid "Please select a date."
 msgstr "Veuillez sélectionner une date."
 
@@ -9414,7 +9414,7 @@ msgstr "Veuillez définir un compte de trésorerie par défaut dans la société
 msgid "Please set account in Salary Component {0}"
 msgstr "Veuillez définir le compte dans le composant salarial {0}"
 
-#: hr/doctype/leave_application/leave_application.py:621
+#: hr/doctype/leave_application/leave_application.py:622
 msgid "Please set default template for Leave Approval Notification in HR Settings."
 msgstr "Veuillez définir un modèle par défaut pour les notifications d'autorisation de congés dans les paramètres RH."
 
@@ -10575,7 +10575,7 @@ msgstr "Fiche de Paie de l'employé {0} déjà créée pour la feuille de temps 
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr "La soumission du bulletin de salaire est en file d'attente. Cela peut prendre quelques minutes"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1376
+#: payroll/doctype/payroll_entry/payroll_entry.py:1377
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr "Le bulletin de salaire {0} a échoué pour l'entrée de la paie {1}"
 
@@ -10593,11 +10593,11 @@ msgstr "Bon de salaire créé"
 msgid "Salary Slips Submitted"
 msgstr "Slips Slips Soumis"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1418
+#: payroll/doctype/payroll_entry/payroll_entry.py:1419
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr "Les bordereaux de salaire existent déjà pour les employés {}, et ne seront pas traités par cette paie."
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1443
+#: payroll/doctype/payroll_entry/payroll_entry.py:1444
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr "Billets de salaire soumis pour la période de {0} à {1}"
 
@@ -10795,7 +10795,7 @@ msgstr "Sélectionnez d'abord l'entretien"
 msgid "Select Payment Account to make Bank Entry"
 msgstr "Sélectionner Compte de Crédit pour faire l'Écriture Bancaire"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1581
+#: payroll/doctype/payroll_entry/payroll_entry.py:1582
 msgid "Select Payroll Frequency."
 msgstr "Sélectionnez la fréquence de la paie."
 
@@ -11617,7 +11617,7 @@ msgstr "Validé"
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "Validation des fiches de salaire et créer une écriture au journal ..."
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1498
+#: payroll/doctype/payroll_entry/payroll_entry.py:1499
 msgid "Submitting Salary Slips..."
 msgstr "Validation des bulletins de salaire ..."
 
@@ -11626,7 +11626,7 @@ msgid "Subsidiary companies have already planned for {1} vacancies at a budget o
 msgstr "Les entreprises subsidiaires ont déjà prévu des postes vacants à {1} pour un budget de {2}. Le plan de dotation pour {0} devrait allouer plus de postes vacants et de budget à {3} que prévu pour ses filiales"
 
 #: hr/doctype/employee_referral/employee_referral.py:54 hr/utils.py:831
-#: payroll/doctype/payroll_entry/payroll_entry.py:1446
+#: payroll/doctype/payroll_entry/payroll_entry.py:1447
 #: public/js/utils/index.js:139
 msgid "Success"
 msgstr "Succès"
@@ -12715,7 +12715,7 @@ msgstr "Mardi"
 #: hr/doctype/training_event/training_event.json
 #: hr/doctype/vehicle_service/vehicle_service.json
 #: payroll/doctype/salary_component/salary_component.json
-#: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.js:9
+#: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.js:12
 msgid "Type"
 msgstr ""
 
@@ -12748,11 +12748,11 @@ msgstr "Montant non réclamé"
 msgid "Under Review"
 msgstr "En cours de révision"
 
-#: hr/doctype/attendance/attendance.py:229
+#: hr/doctype/attendance/attendance.py:230
 msgid "Unlinked Attendance record from Employee Checkins: {}"
 msgstr "Enregistrement de présences dissocié des enregistrements des employés : {}"
 
-#: hr/doctype/attendance/attendance.py:232
+#: hr/doctype/attendance/attendance.py:233
 msgid "Unlinked logs"
 msgstr "Journaux non liés"
 

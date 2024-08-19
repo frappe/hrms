@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-08-11 09:34+0000\n"
-"PO-Revision-Date: 2024-08-13 12:05\n"
+"PO-Revision-Date: 2024-08-18 12:41\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -8367,11 +8367,11 @@ msgstr "Ingen tillämplig tabell hittades för beräkning av Dricks Belopp i Dri
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:43
 msgid "No attendance records found for this criteria."
-msgstr "Inga närvaro poster hittades för detta kriteria."
+msgstr "Inga närvaro poster funna för dessa kriterier."
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:36
 msgid "No attendance records found."
-msgstr "Inga närvaro poster hittades."
+msgstr "Inga närvaro poster funna."
 
 #: hr/doctype/interview/interview.py:87
 msgid "No changes found in timings."

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-08-11 09:34+0000\n"
-"PO-Revision-Date: 2024-08-12 12:09\n"
+"PO-Revision-Date: 2024-08-18 12:41\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -12498,7 +12498,7 @@ msgstr "جمع کل"
 #. Option for the 'Mode of Travel' (Select) field in DocType 'Travel Itinerary'
 #: hr/doctype/travel_itinerary/travel_itinerary.json
 msgid "Train"
-msgstr "قطار - تعلیم دادن"
+msgstr "قطار"
 
 #. Label of the trainer_email (Data) field in DocType 'Training Event'
 #. Label of the trainer_email (Data) field in DocType 'Training Program'

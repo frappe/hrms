@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-08-11 09:34+0000\n"
-"PO-Revision-Date: 2024-08-15 12:20\n"
+"PO-Revision-Date: 2024-08-17 12:46\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -35,11 +35,11 @@ msgstr "\"Başlangıç Tarihi\", \"Bitiş Tarihi \"nden büyük veya eşit olama
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:88
 msgid "% Utilization (B + NB) / T"
-msgstr ""
+msgstr "% Kullanım (B + NB) / T"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:94
 msgid "% Utilization (B / T)"
-msgstr ""
+msgstr "% Kullanım (B / T)"
 
 #: hr/doctype/employee_checkin/employee_checkin.py:107
 msgid "'employee_field_value' and 'timestamp' are required."
@@ -52,165 +52,165 @@ msgstr ") {0} için"
 #. Option for the 'Rounding' (Select) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
 msgid "0.25"
-msgstr ""
+msgstr "0.25"
 
 #. Option for the 'Rounding' (Select) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
 msgid "0.5"
-msgstr ""
+msgstr "0.5"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "00:00"
-msgstr ""
+msgstr "00:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "01:00"
-msgstr ""
+msgstr "00:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "02:00"
-msgstr ""
+msgstr "02:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "03:00"
-msgstr ""
+msgstr "03:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "04:00"
-msgstr ""
+msgstr "04:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "05:00"
-msgstr ""
+msgstr "05:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "06:00"
-msgstr ""
+msgstr "06:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "07:00"
-msgstr ""
+msgstr "07:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "08:00"
-msgstr ""
+msgstr "08:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "09:00"
-msgstr ""
+msgstr "09:00"
 
 #. Option for the 'Rounding' (Select) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
 msgid "1.0"
-msgstr ""
+msgstr "1.0"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "10:00"
-msgstr ""
+msgstr "10:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "11:00"
-msgstr ""
+msgstr "11:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "12:00"
-msgstr ""
+msgstr "12:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "13:00"
-msgstr ""
+msgstr "13:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "14:00"
-msgstr ""
+msgstr "14:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "15:00"
-msgstr ""
+msgstr "15:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "16:00"
-msgstr ""
+msgstr "16:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "17:00"
-msgstr ""
+msgstr "17:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "18:00"
-msgstr ""
+msgstr "18:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "19:00"
-msgstr ""
+msgstr "19:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "20:00"
-msgstr ""
+msgstr "20:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "21:00"
-msgstr ""
+msgstr "21:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "22:00"
-msgstr ""
+msgstr "22:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "23:00"
-msgstr ""
+msgstr "23:00"
 
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:272
 msgid "<b>Base</b> amount has not been set for the following employee(s): {0}"
-msgstr ""
+msgstr "Aşağıdaki personeller için <b>baz</b> tutar belirlenmemiştir: {0}"
 
 #. Description of the 'Password Policy' (Data) field in DocType 'Payroll
 #. Settings'
@@ -336,7 +336,7 @@ msgstr "<h4>Koşul Örnekleri</h4>\n"
 
 #: public/js/utils/index.js:166
 msgid "<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>"
-msgstr ""
+msgstr "<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>"
 
 #: hr/doctype/job_requisition/job_requisition.py:30
 msgid "A Job Requisition for {0} requested by {1} already exists: {2}"
@@ -516,7 +516,7 @@ msgstr "Muhasebe Ayarları"
 
 #: payroll/doctype/salary_component/salary_component.py:57
 msgid "Accounts not set for Salary Component {0}"
-msgstr ""
+msgstr "Maaş Bileşeni için ayarlanmamış hesaplar {0}"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:587
 msgid "Accrual Journal Entry for salaries from {0} to {1}"
@@ -531,7 +531,7 @@ msgstr "İşlem"
 
 #: hr/doctype/attendance_request/attendance_warnings.html:8
 msgid "Action on Submission"
-msgstr ""
+msgstr "Teslim Üzerine Eylem"
 
 #: hr/doctype/interview/interview.js:36
 #: hr/doctype/job_requisition/job_requisition.js:46
@@ -684,11 +684,11 @@ msgstr "Ek Maaş"
 
 #: payroll/doctype/additional_salary/additional_salary.py:111
 msgid "Additional Salary for referral bonus can only be created against Employee Referral with status {0}"
-msgstr ""
+msgstr "Yönlendirme bonusu için Ek Maaş yalnızca {0} statüsündeki Personel Yönlendirmesine karşı oluşturulabilir"
 
 #: payroll/doctype/additional_salary/additional_salary.py:133
 msgid "Additional Salary for this salary component with {0} enabled already exists for this date"
-msgstr ""
+msgstr "Bu maaş bileşeni için {0} etkinleştirilmiş Ek Maaş bu tarih için zaten mevcut"
 
 #: payroll/doctype/additional_salary/additional_salary.py:63
 msgid "Additional Salary: {0} already exist for Salary Component: {1} for period {2} and {3}"
@@ -767,7 +767,7 @@ msgstr "Tüm işler"
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.py:57
 msgid "All allocated assets should be returned before submission"
-msgstr ""
+msgstr "Tahsis edilen tüm varlıklar teslim edilmeden önce iade edilmelidir"
 
 #: hr/doctype/employee_onboarding/employee_onboarding.py:48
 msgid "All the mandatory tasks for employee creation are not completed yet."
@@ -837,7 +837,7 @@ msgstr "Paraya çevirmeye İzin Ver"
 #. Settings'
 #: hr/doctype/hr_settings/hr_settings.json
 msgid "Allow Geolocation Tracking"
-msgstr ""
+msgstr "Coğrafi Konum İzlemeye İzin Ver"
 
 #. Label of the allow_multiple_shift_assignments (Check) field in DocType 'HR
 #. Settings'
@@ -1045,7 +1045,7 @@ msgstr ""
 #. Advance'
 #: hr/doctype/employee_advance/employee_advance.json
 msgid "Amount of expense"
-msgstr ""
+msgstr "Harcama tutarı"
 
 #. Description of the 'Returned Amount' (Currency) field in DocType 'Employee
 #. Advance'
@@ -1379,13 +1379,13 @@ msgstr "Arşivlendi"
 
 #: payroll/doctype/salary_slip/salary_slip_list.js:19
 msgid "Are you sure you want to email the selected salary slips?"
-msgstr ""
+msgstr "Seçilen maaş bordrolarını e-posta ile göndermek istediğinizden emin misiniz?"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:134
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:270
 #: payroll/doctype/salary_component/salary_component.js:119
 msgid "Are you sure you want to proceed?"
-msgstr ""
+msgstr "Devam etmek istediğinizden emin misiniz?"
 
 #: hr/doctype/employee_referral/employee_referral.js:9
 msgid "Are you sure you want to reject the Employee Referral?"
@@ -1443,7 +1443,7 @@ msgstr "Vardiya Atama"
 
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.py:173
 msgid "Assigning Shift..."
-msgstr ""
+msgstr "Vardiya Atanıyor..."
 
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.py:113
 msgid "Assigning Structure..."
@@ -1811,7 +1811,7 @@ msgstr "Yarar"
 #: payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Benefits"
-msgstr ""
+msgstr "Faydalar"
 
 #: hr/report/project_profitability/project_profitability.py:171
 msgid "Bill Amount"
@@ -1876,7 +1876,7 @@ msgstr "Vücut"
 #. Bonus'
 #: payroll/doctype/retention_bonus/retention_bonus.json
 msgid "Bonus"
-msgstr ""
+msgstr "Bonus"
 
 #. Label of the bonus_amount (Currency) field in DocType 'Retention Bonus'
 #: payroll/doctype/retention_bonus/retention_bonus.json
@@ -1930,7 +1930,7 @@ msgstr ""
 
 #: payroll/doctype/salary_structure/salary_structure.js:131
 msgid "Bulk Assignments"
-msgstr ""
+msgstr "Toplu Atamalar"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment_list.js:3
 msgid "Bulk Leave Policy Assignment"
@@ -1942,7 +1942,7 @@ msgstr ""
 #: payroll/doctype/salary_structure/salary_structure_list.js:3
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Bulk Salary Structure Assignment"
-msgstr ""
+msgstr "Toplu Maaş Yapısı Ataması"
 
 #. Description of the 'Calculate Final Score based on Formula' (Check) field in
 #. DocType 'Appraisal Cycle'
@@ -2024,11 +2024,11 @@ msgstr ""
 
 #: payroll/doctype/salary_slip/salary_slip.py:270
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
-msgstr ""
+msgstr "Maaş Bordrosu Döneminden Önce Ayrılan Çalışan için Maaş Bordrosu Oluşturulamaz"
 
 #: hr/doctype/job_applicant/job_applicant.py:49
 msgid "Cannot create a Job Applicant against a closed Job Opening"
-msgstr ""
+msgstr "Kapalı bir İş İlanı için İş Başvurusu oluşturulamaz"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:200
 msgid "Cannot create or change transactions against a {0} Appraisal Cycle."
@@ -2102,7 +2102,7 @@ msgstr ""
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:1389
 msgid "Check Error Log {0} for more details."
-msgstr ""
+msgstr "Daha fazla ayrıntı için Hata Günlüğü {0} adresini kontrol edin."
 
 #. Label of the check_vacancies (Check) field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -2112,7 +2112,7 @@ msgstr "İş Teklifi Oluşturmada Açık Pozisyonları Kontrol Et"
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:323
 #: hr/utils.py:820
 msgid "Check {0} for more details"
-msgstr ""
+msgstr "Daha fazla ayrıntı için {0} adresini kontrol edin"
 
 #. Label of the check_in_date (Date) field in DocType 'Travel Itinerary'
 #: hr/doctype/travel_itinerary/travel_itinerary.json
@@ -2507,7 +2507,7 @@ msgstr ""
 
 #: payroll/report/income_tax_computation/income_tax_computation.js:40
 msgid "Consider Tax Exemption Declaration"
-msgstr ""
+msgstr "Vergi Muafiyet Beyanını Göz Önünde Bulundurun"
 
 #. Label of the consider_unmarked_attendance_as (Select) field in DocType
 #. 'Payroll Settings'
@@ -2518,7 +2518,7 @@ msgstr "İşaretlenmemiş Katılımı Düşünün Olarak"
 
 #: hr/report/employee_leave_balance/employee_leave_balance.js:55
 msgid "Consolidate Leave Types"
-msgstr ""
+msgstr "İzin Türlerini Birleştirin"
 
 #. Label of the prefered_email (Data) field in DocType 'Travel Request'
 #: hr/doctype/travel_request/travel_request.json
@@ -2594,15 +2594,15 @@ msgstr "Maliyet Detayları"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:1452
 msgid "Could not submit some Salary Slips: {}"
-msgstr ""
+msgstr "Bazı Maaş Bordroları gönderilemedi: {}"
 
 #: hr/doctype/goal/goal_tree.js:292
 msgid "Could not update Goal"
-msgstr ""
+msgstr "Hedef güncellenemedi"
 
 #: hr/doctype/goal/goal_list.js:133
 msgid "Could not update goals"
-msgstr ""
+msgstr "Hedefler güncellenemedi"
 
 #. Label of the country (Link) field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -2656,11 +2656,11 @@ msgstr "Oluştur"
 #. Title of an Onboarding Step
 #: payroll/onboarding_step/create_&_assign_salary_structure/create_&_assign_salary_structure.json
 msgid "Create & Assign Salary Structure"
-msgstr ""
+msgstr "Maaş Yapısını Oluştur ve Ata"
 
 #: hr/doctype/employee_referral/employee_referral.js:40
 msgid "Create Additional Salary"
-msgstr ""
+msgstr "Ek Maaş Oluştur"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:34
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:38
@@ -2704,7 +2704,7 @@ msgstr ""
 
 #: hr/doctype/job_requisition/job_requisition.js:39
 msgid "Create Job Opening"
-msgstr ""
+msgstr "İş İlanı Oluştur"
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.js:10
 msgid "Create Journal Entry"
@@ -2785,7 +2785,7 @@ msgstr ""
 
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.py:73
 msgid "Creation of Salary Structure Assignments has been queued. It may take a few minutes."
-msgstr ""
+msgstr "Maaş Yapısı Atamalarının oluşturulması sıraya alındı. Birkaç dakika sürebilir."
 
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.py:148
 msgid "Creation of Shift Assignments has been queued. It may take a few minutes."
@@ -3672,7 +3672,7 @@ msgstr "Süre (Gün)"
 
 #: hr/doctype/employee_checkin/employee_checkin.js:43
 msgid "ERROR({0}): {1}"
-msgstr ""
+msgstr "HATA ({0}): {1}"
 
 #. Label of the early_exit (Check) field in DocType 'Attendance'
 #. Label of the early_exit (Check) field in DocType 'Employee Attendance Tool'
@@ -3808,7 +3808,7 @@ msgstr "Çalışan e-posta Maaş Kayma"
 
 #: payroll/doctype/salary_slip/salary_slip_list.js:13
 msgid "Email Salary Slips"
-msgstr ""
+msgstr "E-posta Maaş Bordroları"
 
 #. Label of the email_sent_to (Code) field in DocType 'Daily Work Summary'
 #: hr/doctype/daily_work_summary/daily_work_summary.json
@@ -4020,7 +4020,7 @@ msgstr "Personel Avansları"
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 #: hr/workspace/hr/hr.json
 msgid "Employee Analytics"
-msgstr ""
+msgstr "Personel Analitiği"
 
 #. Name of a DocType
 #. Label of a Link in the Shift & Attendance Workspace
@@ -4081,7 +4081,7 @@ msgstr "Personel Giriş Çıkış"
 #. Name of a DocType
 #: payroll/doctype/employee_cost_center/employee_cost_center.json
 msgid "Employee Cost Center"
-msgstr ""
+msgstr "Personel Maliyet Merkezi"
 
 #. Label of the details_section (Section Break) field in DocType 'Employee
 #. Onboarding'
@@ -4139,7 +4139,7 @@ msgstr "Personel Geri Bildirim Kriteri"
 #. Name of a DocType
 #: hr/doctype/employee_feedback_rating/employee_feedback_rating.json
 msgid "Employee Feedback Rating"
-msgstr ""
+msgstr "Personel Geri Bildirimi Değerlendirmesi"
 
 #. Name of a DocType
 #. Label of the employee_grade (Link) field in DocType 'Employee Onboarding'
@@ -5018,7 +5018,7 @@ msgstr ""
 #. Withholding'
 #: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Exit Details"
-msgstr ""
+msgstr "Çıkış Detayları"
 
 #. Name of a DocType
 #. Label of a Link in the Employee Lifecycle Workspace
@@ -5026,11 +5026,11 @@ msgstr ""
 #: hr/report/employee_exits/employee_exits.py:39
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Exit Interview"
-msgstr ""
+msgstr "Çıkış Görüşmesi"
 
 #: hr/report/employee_exits/employee_exits.js:63
 msgid "Exit Interview Pending"
-msgstr ""
+msgstr "Çıkış Görüşmesi Bekleniyor"
 
 #. Label of the exit_interview (Text Editor) field in DocType 'Employee
 #. Separation'
@@ -5245,7 +5245,7 @@ msgstr ""
 
 #: hr/doctype/leave_application/leave_application_dashboard.html:8
 msgid "Expired Leaves"
-msgstr ""
+msgstr "Son kullanma tarihi geçmiş izinler"
 
 #. Label of the explanation (Small Text) field in DocType 'Attendance Request'
 #: hr/doctype/attendance_request/attendance_request.json
@@ -5255,7 +5255,7 @@ msgstr "açıklama"
 #. Label of an action in the Onboarding Step 'HR Settings'
 #: hr/onboarding_step/hr_settings/hr_settings.json
 msgid "Explore"
-msgstr ""
+msgstr "Keşfet"
 
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:116
 msgid "Export"
@@ -5272,7 +5272,7 @@ msgstr "Başarısız Oldu"
 
 #: hr/utils.py:817
 msgid "Failed to create/submit {0} for employees:"
-msgstr ""
+msgstr "Personeller için {0} oluşturulamadı/gönderilemedi:"
 
 #: overrides/company.py:36
 msgid "Failed to delete defaults for country {0}."
@@ -5311,7 +5311,7 @@ msgstr "Başarısız"
 #. Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgid "Failure Details"
-msgstr ""
+msgstr "Arıza Detayları"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:13
 #: public/js/salary_slip_deductions_report_filters.js:20
@@ -5335,29 +5335,29 @@ msgstr "Geri Bildirim"
 
 #: hr/report/appraisal_overview/appraisal_overview.py:48
 msgid "Feedback Count"
-msgstr ""
+msgstr "Geri Bildirim Sayısı"
 
 #. Label of the feedback_html (HTML) field in DocType 'Appraisal'
 #. Label of the feedback_html (HTML) field in DocType 'Interview'
 #: hr/doctype/appraisal/appraisal.json hr/doctype/interview/interview.json
 msgid "Feedback HTML"
-msgstr ""
+msgstr "Geri bildirim HTML"
 
 #. Label of the feedback_ratings (Table) field in DocType 'Employee Performance
 #. Feedback'
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.json
 msgid "Feedback Ratings"
-msgstr ""
+msgstr "Geri Bildirim Puanı"
 
 #. Label of the feedback_reminder_notification_template (Link) field in DocType
 #. 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
 msgid "Feedback Reminder Notification Template"
-msgstr ""
+msgstr "Geri Bildirim Hatırlatma Bildirim Şablonu"
 
 #: hr/report/appraisal_overview/appraisal_overview.py:124
 msgid "Feedback Score"
-msgstr ""
+msgstr "Geri Bildirim Puanı"
 
 #. Option for the 'Status' (Select) field in DocType 'Training Event Employee'
 #: hr/doctype/training_event_employee/training_event_employee.json
@@ -5366,7 +5366,7 @@ msgstr "Geri Bildirim Alındı"
 
 #: public/js/templates/interview_feedback.html:14
 msgid "Feedback Summary"
-msgstr ""
+msgstr "Geri Bildirim Özeti"
 
 #: hr/doctype/interview_feedback/interview_feedback.py:52
 msgid "Feedback already submitted for the Interview {0}. Please cancel the previous Interview Feedback {1} to continue."
@@ -7113,7 +7113,7 @@ msgstr ""
 #. Label of the job_title (Data) field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
 msgid "Job Title"
-msgstr "Ünvan"
+msgstr "İş İlanı Başlığı"
 
 #. Description of the 'Description' (Text Editor) field in DocType 'Job
 #. Opening'
@@ -7857,7 +7857,7 @@ msgstr ""
 #. Type'
 #: hr/doctype/shift_type/shift_type.json
 msgid "Mark attendance based on 'Employee Checkin' for Employees assigned to this shift."
-msgstr "Bu vardiyaya atanan çalışanlar için 'Çalışan Checkin'e araştırmaya dayalı."
+msgstr ""
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:204
 msgid "Mark the cycle as {0} if required."
@@ -7961,16 +7961,16 @@ msgstr "Maksimum Devredilen İzin"
 #. Label of the max_continuous_days_allowed (Int) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
 msgid "Maximum Consecutive Leaves Allowed"
-msgstr ""
+msgstr "İzin Verilen Maksimum Ardışık İzinler"
 
 #: hr/doctype/leave_application/leave_application.py:487
 msgid "Maximum Consecutive Leaves Exceeded"
-msgstr ""
+msgstr "Maksimum Ardışık İzin Sayısı Aşıldı"
 
 #. Label of the max_encashable_leaves (Int) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
 msgid "Maximum Encashable Leaves"
-msgstr ""
+msgstr "Maksimum Paraya Çevrilebilir İzinler"
 
 #. Label of the max_amount (Currency) field in DocType 'Employee Tax Exemption
 #. Declaration Category'
@@ -8203,7 +8203,7 @@ msgstr "Adı"
 #: payroll/doctype/salary_slip/salary_slip.py:1184
 #: payroll/doctype/salary_slip/salary_slip.py:2158
 msgid "Name error"
-msgstr ""
+msgstr "İsim hatası"
 
 #. Label of the name_of_organizer (Data) field in DocType 'Travel Request'
 #: hr/doctype/travel_request/travel_request.json
@@ -8398,7 +8398,7 @@ msgstr ""
 
 #: hr/doctype/goal/goal_list.js:94
 msgid "No items selected"
-msgstr ""
+msgstr "Hiçbir öğe seçilmedi"
 
 #: hr/doctype/attendance/attendance.py:196
 msgid "No leave record found for employee {0} on {1}"
@@ -8711,7 +8711,7 @@ msgstr ""
 
 #: hr/doctype/leave_application/leave_application_email_template.html:30
 msgid "Open Now"
-msgstr ""
+msgstr "Şimdi Açık"
 
 #: hr/report/employee_leave_balance/employee_leave_balance.py:54
 msgid "Opening Balance"
@@ -9309,7 +9309,7 @@ msgstr ""
 
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:113
 msgid "Please select From Date."
-msgstr ""
+msgstr "Lütfen Başlangıç Tarihini seçin."
 
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.js:144
 msgid "Please select Shift Type and assignment date(s)."
@@ -9321,12 +9321,12 @@ msgstr "Bir Şirket Seçiniz"
 
 #: public/js/hierarchy_chart/hierarchy_chart_mobile.js:233
 msgid "Please select a company first"
-msgstr ""
+msgstr "Lütfen önce bir Şirket seçin"
 
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:103
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:299
 msgid "Please select a company first."
-msgstr ""
+msgstr "Lütfen önce bir şirket seçin."
 
 #: hr/doctype/upload_attendance/upload_attendance.py:172
 msgid "Please select a csv file"
@@ -9342,15 +9342,15 @@ msgstr "Lütfen bir Başvuru Seçin"
 
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.py:199
 msgid "Please select at least one Shift Request to perform this action."
-msgstr ""
+msgstr "Bu işlemi gerçekleştirmek için lütfen en az bir Vardiya Talebi seçin."
 
 #: hr/utils.py:806
 msgid "Please select at least one employee to perform this action."
-msgstr ""
+msgstr "Lütfen bu işlemi gerçekleştirmek için en az bir personel seçin."
 
 #: public/js/utils/index.js:47
 msgid "Please select at least one row to perform this action."
-msgstr ""
+msgstr "Bu işlemi gerçekleştirmek için lütfen en az bir satır seçin."
 
 #: hr/doctype/employee_advance/employee_advance.js:16
 msgid "Please select employee first"
@@ -9358,15 +9358,15 @@ msgstr "Lütfen önce Personeli seçin"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:111
 msgid "Please select employees to create appraisals for"
-msgstr ""
+msgstr "Lütfen değerlendirmeleri oluşturmak için personelleri seçin"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:32
 msgid "Please select month and year."
-msgstr ""
+msgstr "Lütfen ay ve yıl seçin."
 
 #: hr/doctype/goal/goal.js:103
 msgid "Please select the Appraisal Cycle first."
-msgstr ""
+msgstr "Lütfen öncelikle Değerlendirme Döngüsünü seçin."
 
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.js:195
 msgid "Please select the attendance status."
@@ -9378,7 +9378,7 @@ msgstr ""
 
 #: payroll/doctype/salary_slip/salary_slip_list.js:15
 msgid "Please select the salary slips to email"
-msgstr ""
+msgstr "Lütfen e-postayla gönderilecek maaş bordrolarını seçin"
 
 #: payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.js:19
 msgid "Please select {0}"
@@ -9473,7 +9473,7 @@ msgstr "Eğitime geribildiriminizi &#39;Eğitim Geri Bildirimi&#39; ve ardından
 
 #: hr/doctype/interview/interview.py:191
 msgid "Please specify the job applicant to be updated."
-msgstr ""
+msgstr "Lütfen güncellenecek iş başvurusu sahibini belirtiniz."
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:157
 msgid "Please submit the {0} before marking the cycle as Completed"
@@ -9736,7 +9736,7 @@ msgstr "Üç Aylık"
 #. Interview'
 #: hr/doctype/exit_interview/exit_interview.json
 msgid "Questionnaire Email Sent"
-msgstr ""
+msgstr "Anket E-postası Gönderildi"
 
 #. Option for the 'Status' (Select) field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
@@ -9758,7 +9758,7 @@ msgstr "Hızlı Filtreler"
 #. Label of a Card Break in the Payroll Workspace
 #: payroll/workspace/payroll/payroll.json
 msgid "Quick Links"
-msgstr ""
+msgstr "Hızlı Bağlantılar"
 
 #. Label of the raised_by (Link) field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
@@ -9773,7 +9773,7 @@ msgstr "Fiyat"
 #. Label of the rate_goals_manually (Check) field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
 msgid "Rate Goals Manually"
-msgstr ""
+msgstr "Hedefleri Manuel Olarak Değerlendirin"
 
 #. Label of the rating (Rating) field in DocType 'Employee Feedback Rating'
 #. Label of the rating (Rating) field in DocType 'Skill Assessment'
@@ -9787,7 +9787,7 @@ msgstr "Değerlendirme"
 #. Label of the rating_criteria (Table) field in DocType 'Appraisal Template'
 #: hr/doctype/appraisal_template/appraisal_template.json
 msgid "Rating Criteria"
-msgstr ""
+msgstr "Değerlendirme Kriteri"
 
 #. Label of the section_break_23 (Section Break) field in DocType 'Appraisal'
 #. Label of the ratings_section (Section Break) field in DocType 'Interview'
@@ -10382,7 +10382,7 @@ msgstr ""
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.py:52
 msgid "Row {0}: {1}"
-msgstr ""
+msgstr "Satır {0}: {1}"
 
 #: hr/doctype/expense_claim/expense_claim.py:263
 msgid "Row {0}: {1} is required in the expenses table to book an expense claim."
@@ -10392,7 +10392,7 @@ msgstr "Satır {0}: Bir gider talebi rezerve etmek için gider tablosunda {1} ge
 #. 'Gratuity Rule'
 #: payroll/doctype/gratuity_rule/gratuity_rule.json
 msgid "Rules"
-msgstr ""
+msgstr "Kurallar"
 
 #. Label of the salary_details_section (Section Break) field in DocType
 #. 'Additional Salary'
@@ -10694,7 +10694,7 @@ msgstr ""
 
 #: payroll/doctype/salary_slip/salary_slip.py:2307
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
-msgstr ""
+msgstr "Maaş bordrosu e-postaları gönderilmek üzere sıraya alınmıştır. Durum için {0} adresini kontrol edin."
 
 #. Subtitle of the Module Onboarding 'Payroll'
 #: payroll/module_onboarding/payroll/payroll.json
@@ -11007,7 +11007,7 @@ msgstr ""
 #. 'Bulk Salary Structure Assignment'
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 msgid "Set Assignment Details"
-msgstr ""
+msgstr "Atama Ayrıntılarını Ayarla"
 
 #. Label of the attendance_details_section (Section Break) field in DocType
 #. 'Employee Attendance Tool'
@@ -11060,7 +11060,7 @@ msgstr "Terfi sonrası personel özelliklerinde gerçekleşecek değişiklikleri
 
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:200
 msgid "Set {0} for selected employees"
-msgstr ""
+msgstr "Seçilen Personeller için {0} adresini ayarlayın"
 
 #. Label of the settings_section (Section Break) field in DocType 'Appraisal
 #. Cycle'
@@ -11175,7 +11175,7 @@ msgstr "vardiya sonu"
 
 #: hr/report/shift_attendance/shift_attendance.py:61
 msgid "Shift End Time"
-msgstr ""
+msgstr "Vardiya Bitiş Saati"
 
 #. Label of the shift_request (Link) field in DocType 'Shift Assignment'
 #. Name of a DocType
@@ -11192,13 +11192,13 @@ msgstr "Vardiya İsteği"
 #. 'Shift Assignment Tool'
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 msgid "Shift Request Filters"
-msgstr ""
+msgstr "Vardiya Talep Filtreleri"
 
 #. Description of the 'From Date' (Date) field in DocType 'Shift Assignment
 #. Tool'
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 msgid "Shift Requests ending before this date will be excluded."
-msgstr ""
+msgstr "Bu tarihten önce biten Vardiya Talepleri hariç tutulacaktır."
 
 #. Description of the 'To Date' (Date) field in DocType 'Shift Assignment Tool'
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
@@ -11246,7 +11246,7 @@ msgstr "Vardiya Türü"
 #. Label of a Card Break in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shifts"
-msgstr ""
+msgstr "Vardiyalar"
 
 #: hr/doctype/job_offer/job_offer.js:51
 msgid "Show Employee"
@@ -11256,7 +11256,7 @@ msgstr "Çalışanı Göster"
 #. 'Payroll Settings'
 #: payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Show Leave Balances in Salary Slip"
-msgstr ""
+msgstr "Maaş Bordrosunda İzin Bakiyesini Göster"
 
 #. Label of the show_leaves_of_all_department_members_in_calendar (Check) field
 #. in DocType 'HR Settings'
@@ -11669,7 +11669,7 @@ msgstr "Beklemede"
 
 #: payroll/doctype/salary_component/salary_component.js:83
 msgid "Sync {0}"
-msgstr ""
+msgstr "Senkronize Et {0}"
 
 #: payroll/doctype/salary_slip/salary_slip.py:1191
 msgid "Syntax error"
@@ -12473,7 +12473,7 @@ msgstr "{0} İzin Türü için koruma toplam izinler süreleri"
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:153
 msgid "Total percentage against cost centers should be 100"
-msgstr ""
+msgstr "Maliyet merkezlerine karşı toplam yüzde 100 olmalıdır"
 
 #. Description of the 'Year To Date' (Currency) field in DocType 'Salary
 #. Detail'
@@ -12896,7 +12896,7 @@ msgstr ""
 
 #: hr/doctype/leave_application/leave_application_dashboard.html:9
 msgid "Used Leaves"
-msgstr ""
+msgstr "Kullanılan İzinler"
 
 #. Label of the user (Link) field in DocType 'Daily Work Summary Group User'
 #. Label of the user (Link) field in DocType 'Employee Boarding Activity'
@@ -13103,7 +13103,7 @@ msgstr "Haftalık"
 #: hr/doctype/appraisal_template_goal/appraisal_template_goal.json
 #: hr/doctype/employee_feedback_rating/employee_feedback_rating.json
 msgid "Weightage (%)"
-msgstr ""
+msgstr "Ağırlık (%)"
 
 #. Description of the 'Status' (Select) field in DocType 'Shift Assignment
 #. Tool'
@@ -13306,7 +13306,7 @@ msgstr ""
 
 #: overrides/employee_master.py:83
 msgid "You may add additional details, if any, and submit the offer."
-msgstr ""
+msgstr "Varsa ek bilgilerinizi ekleyip teklifinizi kaydedebilirsiniz."
 
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.py:51
 msgid "You were only present for Half Day on {}. Cannot apply for a full day compensatory leave"
@@ -13376,7 +13376,7 @@ msgstr "alıcı"
 
 #: payroll/doctype/salary_component/salary_component.py:95
 msgid "via Salary Component sync"
-msgstr ""
+msgstr "Maaş Bileşeni senkronizasyonu aracılığıyla"
 
 #: controllers/employee_reminders.py:120 controllers/employee_reminders.py:253
 #: controllers/employee_reminders.py:257
