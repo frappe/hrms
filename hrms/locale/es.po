@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-08-11 09:34+0000\n"
-"PO-Revision-Date: 2024-08-14 12:24\n"
+"POT-Creation-Date: 2024-08-18 09:34+0000\n"
+"PO-Revision-Date: 2024-08-19 12:44\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +42,7 @@ msgstr "% Utilización (B + NB) / T"
 msgid "% Utilization (B / T)"
 msgstr "% Utilización (B / T)"
 
-#: hr/doctype/employee_checkin/employee_checkin.py:107
+#: hr/doctype/employee_checkin/employee_checkin.py:110
 msgid "'employee_field_value' and 'timestamp' are required."
 msgstr "&#39;employee_field_value&#39; y &#39;timestamp&#39; son obligatorios."
 
@@ -3638,7 +3638,7 @@ msgstr ""
 msgid "Duration (Days)"
 msgstr "Duración (Días)"
 
-#: hr/doctype/employee_checkin/employee_checkin.js:43
+#: hr/doctype/employee_checkin/employee_checkin.js:69
 msgid "ERROR({0}): {1}"
 msgstr ""
 
@@ -4551,7 +4551,7 @@ msgstr ""
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr ""
 
-#: hr/doctype/employee_checkin/employee_checkin.py:184
+#: hr/doctype/employee_checkin/employee_checkin.py:198
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr ""
 
@@ -5353,12 +5353,24 @@ msgstr ""
 msgid "Fetch Geolocation"
 msgstr ""
 
+#: hr/doctype/employee_checkin/employee_checkin.js:21
+msgid "Fetch Shift"
+msgstr ""
+
+#: hr/doctype/employee_checkin/employee_checkin_list.js:3
+msgid "Fetch Shifts"
+msgstr ""
+
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:109
 #: payroll/doctype/payroll_entry/payroll_entry.js:114
 msgid "Fetching Employees"
 msgstr ""
 
-#: hr/doctype/employee_checkin/employee_checkin.js:28
+#: hr/doctype/employee_checkin/employee_checkin.js:27
+msgid "Fetching Shift"
+msgstr ""
+
+#: hr/doctype/employee_checkin/employee_checkin.js:54
 msgid "Fetching your geolocation"
 msgstr ""
 
@@ -5747,12 +5759,12 @@ msgstr "Balance general"
 msgid "Geolocation"
 msgstr "Geolocalización"
 
-#: hr/doctype/employee_checkin/employee_checkin.js:21
 #: hr/doctype/employee_checkin/employee_checkin.js:47
+#: hr/doctype/employee_checkin/employee_checkin.js:73
 msgid "Geolocation Error"
 msgstr ""
 
-#: hr/doctype/employee_checkin/employee_checkin.js:20
+#: hr/doctype/employee_checkin/employee_checkin.js:46
 msgid "Geolocation is not supported by your current browser"
 msgstr ""
 
@@ -7727,7 +7739,7 @@ msgstr "Alojamiento Requerido"
 msgid "Log Type"
 msgstr "Tipo de registro"
 
-#: hr/doctype/employee_checkin/employee_checkin.py:51
+#: hr/doctype/employee_checkin/employee_checkin.py:56
 msgid "Log Type is required for check-ins falling in the shift: {0}."
 msgstr "El tipo de registro es necesario para los registros que se realizan en el turno: {0}."
 
@@ -8268,7 +8280,7 @@ msgstr "No hay datos"
 msgid "No Employee Found"
 msgstr "Ningún empleado encontrado"
 
-#: hr/doctype/employee_checkin/employee_checkin.py:119
+#: hr/doctype/employee_checkin/employee_checkin.py:122
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "No se encontró ningún empleado para el valor de campo de empleado dado. &#39;{}&#39;: {}"
 
@@ -9393,7 +9405,7 @@ msgstr "Configure la plantilla predeterminada para la Notifiación de Estado de 
 msgid "Please set the Appraisal Template for all the {0} or select the template in the Employees table below."
 msgstr ""
 
-#: hr/doctype/expense_claim/expense_claim.js:326
+#: hr/doctype/expense_claim/expense_claim.js:327
 msgid "Please set the Company"
 msgstr "Por favor establezca la empresa"
 
@@ -9802,7 +9814,7 @@ msgstr ""
 msgid "Reason for Withholding Salary"
 msgstr ""
 
-#: hr/doctype/employee_checkin/employee_checkin.py:273
+#: hr/doctype/employee_checkin/employee_checkin.py:287
 msgid "Reason for skipping auto attendance:"
 msgstr ""
 
@@ -10785,7 +10797,7 @@ msgstr "Seleccione términos y condiciones"
 msgid "Select Users"
 msgstr "Seleccionar Usuarios"
 
-#: hr/doctype/expense_claim/expense_claim.js:369
+#: hr/doctype/expense_claim/expense_claim.js:370
 msgid "Select an employee to get the employee advance."
 msgstr "Seleccione un empleado para obtener el adelanto del empleado."
 
@@ -11210,6 +11222,10 @@ msgstr ""
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Type"
 msgstr "Tipo de Cambio"
+
+#: hr/doctype/employee_checkin/employee_checkin.js:33
+msgid "Shift has been successfully updated to {0}."
+msgstr ""
 
 #. Label of a Card Break in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
@@ -12696,7 +12712,7 @@ msgstr "Tipo de Prueba"
 msgid "Unable to find Salary Component {0}"
 msgstr "No se puede encontrar el componente de salario {0}"
 
-#: hr/doctype/employee_checkin/employee_checkin.js:41
+#: hr/doctype/employee_checkin/employee_checkin.js:67
 msgid "Unable to retrieve your location"
 msgstr ""
 
@@ -13513,7 +13529,7 @@ msgstr ""
 msgid "{} Unclaimed"
 msgstr ""
 
-#: hr/doctype/employee_checkin/employee_checkin.py:194
+#: hr/doctype/employee_checkin/employee_checkin.py:208
 msgid "{} is an invalid Attendance Status."
 msgstr "{} es un estado de asistencia no válido."
 
