@@ -1,8 +1,6 @@
 <template>
 	<div class="flex flex-col w-full gap-5" v-if="calendarEvents.data">
-		<div class="flex flex-row justify-between items-center px-4">
-			<div class="text-lg text-gray-800 font-bold">Attendance Calendar</div>
-		</div>
+		<div class="px-4 text-lg text-gray-800 font-bold">Attendance Calendar</div>
 
 		<div class="flex flex-col gap-4 bg-white py-6 px-3.5 rounded-lg border-none">
 			<div class="flex flex-row justify-between items-center px-4 mb-2">
@@ -29,12 +27,12 @@
 					{{ day }}
 				</div>
 				<div v-for="_ in firstOfMonth.get('d')" />
-				<div v-for="index in firstOfMonth.endOf('M').get('D')" class="flex justify-center">
+				<div v-for="index in firstOfMonth.endOf('M').get('D')">
 					<div
-						class="h-8 w-8 flex justify-center rounded-full"
+						class="h-8 w-8 flex rounded-full mx-auto"
 						:class="getEventOnDate(index) && `bg-${colorMap[getEventOnDate(index)]}-200`"
 					>
-						<span class="text-gray-800 text-sm font-medium leading-6 my-auto">
+						<span class="text-gray-800 text-sm font-medium m-auto">
 							{{ index }}
 						</span>
 					</div>
