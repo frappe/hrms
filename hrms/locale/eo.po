@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-08-11 09:34+0000\n"
-"PO-Revision-Date: 2024-08-12 12:09\n"
+"POT-Creation-Date: 2024-08-18 09:34+0000\n"
+"PO-Revision-Date: 2024-08-19 12:45\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr "crwdns104718:0crwdne104718:0"
 msgid "% Utilization (B / T)"
 msgstr "crwdns104720:0crwdne104720:0"
 
-#: hr/doctype/employee_checkin/employee_checkin.py:107
+#: hr/doctype/employee_checkin/employee_checkin.py:110
 msgid "'employee_field_value' and 'timestamp' are required."
 msgstr "crwdns104722:0crwdne104722:0"
 
@@ -3634,7 +3634,7 @@ msgstr "crwdns143252:0crwdne143252:0"
 msgid "Duration (Days)"
 msgstr "crwdns141324:0crwdne141324:0"
 
-#: hr/doctype/employee_checkin/employee_checkin.js:43
+#: hr/doctype/employee_checkin/employee_checkin.js:69
 msgid "ERROR({0}): {1}"
 msgstr "crwdns141326:0{0}crwdnd141326:0{1}crwdne141326:0"
 
@@ -4547,7 +4547,7 @@ msgstr "crwdns141396:0crwdne141396:0"
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr "crwdns106882:0crwdne106882:0"
 
-#: hr/doctype/employee_checkin/employee_checkin.py:184
+#: hr/doctype/employee_checkin/employee_checkin.py:198
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr "crwdns106884:0crwdne106884:0"
 
@@ -5349,12 +5349,24 @@ msgstr "crwdns107236:0{0}crwdne107236:0"
 msgid "Fetch Geolocation"
 msgstr "crwdns141506:0crwdne141506:0"
 
+#: hr/doctype/employee_checkin/employee_checkin.js:21
+msgid "Fetch Shift"
+msgstr "crwdns143570:0crwdne143570:0"
+
+#: hr/doctype/employee_checkin/employee_checkin_list.js:3
+msgid "Fetch Shifts"
+msgstr "crwdns143572:0crwdne143572:0"
+
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:109
 #: payroll/doctype/payroll_entry/payroll_entry.js:114
 msgid "Fetching Employees"
 msgstr "crwdns107238:0crwdne107238:0"
 
-#: hr/doctype/employee_checkin/employee_checkin.js:28
+#: hr/doctype/employee_checkin/employee_checkin.js:27
+msgid "Fetching Shift"
+msgstr "crwdns143574:0crwdne143574:0"
+
+#: hr/doctype/employee_checkin/employee_checkin.js:54
 msgid "Fetching your geolocation"
 msgstr "crwdns141508:0crwdne141508:0"
 
@@ -5743,12 +5755,12 @@ msgstr "crwdns107404:0crwdne107404:0"
 msgid "Geolocation"
 msgstr "crwdns141566:0crwdne141566:0"
 
-#: hr/doctype/employee_checkin/employee_checkin.js:21
 #: hr/doctype/employee_checkin/employee_checkin.js:47
+#: hr/doctype/employee_checkin/employee_checkin.js:73
 msgid "Geolocation Error"
 msgstr "crwdns141568:0crwdne141568:0"
 
-#: hr/doctype/employee_checkin/employee_checkin.js:20
+#: hr/doctype/employee_checkin/employee_checkin.js:46
 msgid "Geolocation is not supported by your current browser"
 msgstr "crwdns141570:0crwdne141570:0"
 
@@ -7723,7 +7735,7 @@ msgstr "crwdns141856:0crwdne141856:0"
 msgid "Log Type"
 msgstr "crwdns141858:0crwdne141858:0"
 
-#: hr/doctype/employee_checkin/employee_checkin.py:51
+#: hr/doctype/employee_checkin/employee_checkin.py:56
 msgid "Log Type is required for check-ins falling in the shift: {0}."
 msgstr "crwdns108288:0{0}crwdne108288:0"
 
@@ -8264,7 +8276,7 @@ msgstr "crwdns108516:0crwdne108516:0"
 msgid "No Employee Found"
 msgstr "crwdns108518:0crwdne108518:0"
 
-#: hr/doctype/employee_checkin/employee_checkin.py:119
+#: hr/doctype/employee_checkin/employee_checkin.py:122
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "crwdns108520:0crwdne108520:0"
 
@@ -9389,7 +9401,7 @@ msgstr "crwdns109008:0crwdne109008:0"
 msgid "Please set the Appraisal Template for all the {0} or select the template in the Employees table below."
 msgstr "crwdns109010:0{0}crwdne109010:0"
 
-#: hr/doctype/expense_claim/expense_claim.js:326
+#: hr/doctype/expense_claim/expense_claim.js:327
 msgid "Please set the Company"
 msgstr "crwdns109012:0crwdne109012:0"
 
@@ -9798,7 +9810,7 @@ msgstr "crwdns142192:0crwdne142192:0"
 msgid "Reason for Withholding Salary"
 msgstr "crwdns143276:0crwdne143276:0"
 
-#: hr/doctype/employee_checkin/employee_checkin.py:273
+#: hr/doctype/employee_checkin/employee_checkin.py:287
 msgid "Reason for skipping auto attendance:"
 msgstr "crwdns109184:0crwdne109184:0"
 
@@ -10781,7 +10793,7 @@ msgstr "crwdns142362:0crwdne142362:0"
 msgid "Select Users"
 msgstr "crwdns142364:0crwdne142364:0"
 
-#: hr/doctype/expense_claim/expense_claim.js:369
+#: hr/doctype/expense_claim/expense_claim.js:370
 msgid "Select an employee to get the employee advance."
 msgstr "crwdns109588:0crwdne109588:0"
 
@@ -11206,6 +11218,10 @@ msgstr "crwdns142442:0crwdne142442:0"
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Type"
 msgstr "crwdns109754:0crwdne109754:0"
+
+#: hr/doctype/employee_checkin/employee_checkin.js:33
+msgid "Shift has been successfully updated to {0}."
+msgstr "crwdns143576:0{0}crwdne143576:0"
 
 #. Label of a Card Break in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
@@ -12692,7 +12708,7 @@ msgstr "crwdns142664:0crwdne142664:0"
 msgid "Unable to find Salary Component {0}"
 msgstr "crwdns110436:0{0}crwdne110436:0"
 
-#: hr/doctype/employee_checkin/employee_checkin.js:41
+#: hr/doctype/employee_checkin/employee_checkin.js:67
 msgid "Unable to retrieve your location"
 msgstr "crwdns142666:0crwdne142666:0"
 
@@ -13509,7 +13525,7 @@ msgstr "crwdns143298:0crwdne143298:0"
 msgid "{} Unclaimed"
 msgstr "crwdns143300:0crwdne143300:0"
 
-#: hr/doctype/employee_checkin/employee_checkin.py:194
+#: hr/doctype/employee_checkin/employee_checkin.py:208
 msgid "{} is an invalid Attendance Status."
 msgstr "crwdns110770:0crwdne110770:0"
 

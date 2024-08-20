@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-08-11 09:34+0000\n"
-"PO-Revision-Date: 2024-08-18 12:41\n"
+"POT-Creation-Date: 2024-08-18 09:34+0000\n"
+"PO-Revision-Date: 2024-08-19 12:44\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +42,7 @@ msgstr "% Användning (B + NB) / T"
 msgid "% Utilization (B / T)"
 msgstr "% Användning (B / T)"
 
-#: hr/doctype/employee_checkin/employee_checkin.py:107
+#: hr/doctype/employee_checkin/employee_checkin.py:110
 msgid "'employee_field_value' and 'timestamp' are required."
 msgstr "'employee_field_value' och 'timestamp' erfodras."
 
@@ -3671,7 +3671,7 @@ msgstr "Dubbla Lön Kvarhållning"
 msgid "Duration (Days)"
 msgstr "Varaktighet (Dagar)"
 
-#: hr/doctype/employee_checkin/employee_checkin.js:43
+#: hr/doctype/employee_checkin/employee_checkin.js:69
 msgid "ERROR({0}): {1}"
 msgstr "FEL ({0}): {1}"
 
@@ -4584,7 +4584,7 @@ msgstr "Personal poster skapas med valda alternativ"
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr "Personal angavs Frånvarande på grund av saknade incheckningar."
 
-#: hr/doctype/employee_checkin/employee_checkin.py:184
+#: hr/doctype/employee_checkin/employee_checkin.py:198
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr "Personal angavs Frånvarande för att inte ha uppfyllt arbetstid gräns."
 
@@ -5386,12 +5386,24 @@ msgstr "Återkoppling {0} har lagts till"
 msgid "Fetch Geolocation"
 msgstr "Hämta Geolokalisering"
 
+#: hr/doctype/employee_checkin/employee_checkin.js:21
+msgid "Fetch Shift"
+msgstr "Hämta Skift"
+
+#: hr/doctype/employee_checkin/employee_checkin_list.js:3
+msgid "Fetch Shifts"
+msgstr "Hämta Skift"
+
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:109
 #: payroll/doctype/payroll_entry/payroll_entry.js:114
 msgid "Fetching Employees"
 msgstr "Hämtar Personal"
 
-#: hr/doctype/employee_checkin/employee_checkin.js:28
+#: hr/doctype/employee_checkin/employee_checkin.js:27
+msgid "Fetching Shift"
+msgstr "Hämtar Skift"
+
+#: hr/doctype/employee_checkin/employee_checkin.js:54
 msgid "Fetching your geolocation"
 msgstr "Hämta din geolokalisering"
 
@@ -5780,12 +5792,12 @@ msgstr "Bokföring Register"
 msgid "Geolocation"
 msgstr "Geolocation"
 
-#: hr/doctype/employee_checkin/employee_checkin.js:21
 #: hr/doctype/employee_checkin/employee_checkin.js:47
+#: hr/doctype/employee_checkin/employee_checkin.js:73
 msgid "Geolocation Error"
 msgstr "Geolokalisering Fel"
 
-#: hr/doctype/employee_checkin/employee_checkin.js:20
+#: hr/doctype/employee_checkin/employee_checkin.js:46
 msgid "Geolocation is not supported by your current browser"
 msgstr "Geolokalisering stöds inte av din nuvarande webbläsare"
 
@@ -7760,7 +7772,7 @@ msgstr "Logi Erfodras"
 msgid "Log Type"
 msgstr "Typ"
 
-#: hr/doctype/employee_checkin/employee_checkin.py:51
+#: hr/doctype/employee_checkin/employee_checkin.py:56
 msgid "Log Type is required for check-ins falling in the shift: {0}."
 msgstr "Logg Typ erfodras för In/Utcheckningar som infaller under skift: {0}."
 
@@ -8301,7 +8313,7 @@ msgstr "Ingen Data"
 msgid "No Employee Found"
 msgstr "Ingen Personal hittades"
 
-#: hr/doctype/employee_checkin/employee_checkin.py:119
+#: hr/doctype/employee_checkin/employee_checkin.py:122
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "Ingen Personal hittades för angiven Personal fält värde. '{}': {}"
 
@@ -9426,7 +9438,7 @@ msgstr "Ange Standard Mall för Ledighet Status Avisering i Personal Inställnin
 msgid "Please set the Appraisal Template for all the {0} or select the template in the Employees table below."
 msgstr "Ange Utvärdering Mall för alla {0} eller välj mall i Personal Inställningar"
 
-#: hr/doctype/expense_claim/expense_claim.js:326
+#: hr/doctype/expense_claim/expense_claim.js:327
 msgid "Please set the Company"
 msgstr "Ange Bolag"
 
@@ -9835,7 +9847,7 @@ msgstr "Anledning till Förfråga"
 msgid "Reason for Withholding Salary"
 msgstr "Anledning till Kvarhållande av Lön"
 
-#: hr/doctype/employee_checkin/employee_checkin.py:273
+#: hr/doctype/employee_checkin/employee_checkin.py:287
 msgid "Reason for skipping auto attendance:"
 msgstr "Anledning att hoppa över Automatisk Närvaro:"
 
@@ -10818,7 +10830,7 @@ msgstr "Välj Villkor"
 msgid "Select Users"
 msgstr "Välj Användare"
 
-#: hr/doctype/expense_claim/expense_claim.js:369
+#: hr/doctype/expense_claim/expense_claim.js:370
 msgid "Select an employee to get the employee advance."
 msgstr "Välj Personal att hämta Personal Förskott."
 
@@ -11243,6 +11255,10 @@ msgstr "Skift Tider"
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Type"
 msgstr "Skift Typ"
+
+#: hr/doctype/employee_checkin/employee_checkin.js:33
+msgid "Shift has been successfully updated to {0}."
+msgstr "Skift har uppdaterats till {0}."
 
 #. Label of a Card Break in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
@@ -12729,7 +12745,7 @@ msgstr "Typ av Verifikat"
 msgid "Unable to find Salary Component {0}"
 msgstr "Kunde inte att hitta Lön Komponent {0}"
 
-#: hr/doctype/employee_checkin/employee_checkin.js:41
+#: hr/doctype/employee_checkin/employee_checkin.js:67
 msgid "Unable to retrieve your location"
 msgstr "Kunde inte hämta din position"
 
@@ -13546,7 +13562,7 @@ msgstr "{} Pågående"
 msgid "{} Unclaimed"
 msgstr "{} Ej Uttagna"
 
-#: hr/doctype/employee_checkin/employee_checkin.py:194
+#: hr/doctype/employee_checkin/employee_checkin.py:208
 msgid "{} is an invalid Attendance Status."
 msgstr "{} är ogiltig Närvaro status."
 
