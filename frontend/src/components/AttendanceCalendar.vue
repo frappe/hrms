@@ -1,9 +1,9 @@
 <template>
 	<div class="flex flex-col w-full gap-5" v-if="calendarEvents.data">
-		<div class="px-4 text-lg text-gray-800 font-bold">Attendance Calendar</div>
+		<div class="text-lg text-gray-800 font-bold">Attendance Calendar</div>
 
-		<div class="flex flex-col gap-4 bg-white py-6 px-3.5 rounded-lg border-none">
-			<div class="flex flex-row justify-between items-center px-4 mb-2">
+		<div class="flex flex-col gap-6 bg-white py-6 px-3.5 rounded-lg border-none">
+			<div class="flex flex-row justify-between items-center px-4">
 				<Button
 					icon="chevron-left"
 					variant="ghost"
@@ -30,7 +30,7 @@
 				<div v-for="index in firstOfMonth.endOf('M').get('D')">
 					<div
 						class="h-8 w-8 flex rounded-full mx-auto"
-						:class="getEventOnDate(index) && `bg-${colorMap[getEventOnDate(index)]}-200`"
+						:class="getEventOnDate(index) && `bg-${colorMap[getEventOnDate(index)]}`"
 					>
 						<span class="text-gray-800 text-sm font-medium m-auto">
 							{{ index }}
@@ -38,14 +38,13 @@
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="flex flex-col gap-4 bg-white py-3 px-3.5 rounded-lg border-none">
-			<div class="grid grid-cols-3 gap-3">
-				<div v-for="[status, color] of Object.entries(colorMap)" class="flex flex-col gap-1">
+			<hr />
+
+			<div class="grid grid-cols-4 gap-3">
+				<div v-for="status in summaryStatuses" class="flex flex-col gap-1">
 					<div class="flex flex-row gap-1 items-center">
 						<span class="text-gray-600 text-sm font-medium leading-5"> {{ status }} </span>
-						<FeatherIcon name="check-circle" :class="`text-${color}-500 h-3 w-3`" />
 					</div>
 					<span class="text-gray-800 text-base font-semibold leading-6">
 						{{ summary[status] || 0 }}
@@ -57,28 +56,30 @@
 </template>
 
 <script setup>
-import { FeatherIcon } from "frappe-ui"
 import { computed, watch } from "vue"
 
 import { calendarEvents, firstOfMonth } from "@/data/attendance"
 
 const colorMap = {
-	Present: "green",
-	WFH: "yellow",
-	"Half Day": "orange",
-	Absent: "red",
-	"On Leave": "blue",
-	Holiday: "gray",
+	Present: "green-200",
+	"Work From Home": "green-200",
+	"Half Day": "yellow-100",
+	Absent: "red-100",
+	"On Leave": "blue-100",
+	Holiday: "gray-100",
 }
+
+const summaryStatuses = ["Present", "Half Day", "Absent", "On Leave"]
 
 const summary = computed(() => {
 	const summary = {}
 
 	for (const status of Object.values(calendarEvents.data)) {
-		if (status in summary) {
-			summary[status] += 1
+		let updatedStatus = status === "Work From Home" ? "Present" : status
+		if (updatedStatus in summary) {
+			summary[updatedStatus] += 1
 		} else {
-			summary[status] = 1
+			summary[updatedStatus] = 1
 		}
 	}
 
