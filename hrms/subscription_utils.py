@@ -89,12 +89,7 @@ def update_erpnext_workspaces(disable: bool = True):
 		"Accounting",
 		"Buying",
 		"CRM",
-<<<<<<< HEAD
-		"ERPNext Integrations",
-		"ERPNext Settings",
 		"Loans",
-=======
->>>>>>> 9baf7119e (fix: setup wizard breaks for non-admin user during ERPNext setup on frappehr.com domains (#2100))
 		"Manufacturing",
 		"Quality",
 		"Retail",
