@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-08-18 09:34+0000\n"
-"PO-Revision-Date: 2024-08-19 12:44\n"
+"PO-Revision-Date: 2024-08-21 13:26\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -2177,7 +2177,7 @@ msgstr "Temizlendi"
 
 #: payroll/doctype/salary_slip/salary_slip.js:297
 msgid "Click {0} to change the configuration and then resave salary slip"
-msgstr ""
+msgstr "Yapılandırmayı değiştirmek ve ardından maaş bordrosunu yeniden kaydetmek için {0} öğesine tıklayın"
 
 #: hr/doctype/goal/goal.js:88
 msgid "Close"
@@ -4163,7 +4163,7 @@ msgstr "Personel Geri Bildirimi Değerlendirmesi"
 #: hr/workspace/hr/hr.json
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 msgid "Employee Grade"
-msgstr "Personel Notu"
+msgstr "Personel Ünvanı"
 
 #. Name of a DocType
 #. Label of a Link in the Employee Lifecycle Workspace
