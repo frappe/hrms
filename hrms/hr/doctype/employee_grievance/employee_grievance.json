@@ -143,6 +143,7 @@
    "fetch_from": "raised_by.reports_to",
    "fieldname": "reports_to",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "Reports To",
    "options": "Employee",
    "read_only": 1
@@ -202,7 +203,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-28 16:27:28.626837",
+ "modified": "2024-08-21 15:46:21.711485",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Grievance",
