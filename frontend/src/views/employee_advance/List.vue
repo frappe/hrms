@@ -14,7 +14,7 @@
 import { IonPage } from "@ionic/vue"
 import ListView from "@/components/ListView.vue"
 
-const TAB_BUTTONS = ["My Advances", "Team Advances"]
+const TAB_BUTTONS = ["My Advances", "Team Advances"] // __("My Advances"), __("Team Advances")
 const EMPLOYEE_ADVANCE_FIELDS = [
 	"name",
 	"employee",
