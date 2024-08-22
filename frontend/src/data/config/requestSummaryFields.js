@@ -15,7 +15,7 @@ export const LEAVE_FIELDS = [
 	{
 		fieldname: "leave_dates",
 		label: "Leave Dates",
-		fieldtype: "DateRange",
+		fieldtype: "Data",
 	},
 	{
 		fieldname: "half_day",
@@ -110,5 +110,38 @@ export const EXPENSE_CLAIM_FIELDS = [
 		fieldname: "approval_status",
 		label: "Approval Status",
 		fieldtype: "Select",
+	},
+]
+
+export const SHIFT_FIELDS = [
+	{
+		fieldname: "name",
+		label: "ID",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "shift_type",
+		label: "Shift Type",
+		fieldtype: "Link",
+	},
+	{
+		fieldname: "shift_timing",
+		label: "Shift Timing",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "shift_dates",
+		label: "Shift Dates",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "total_shift_days",
+		label: "Total Shift Days",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "employee",
+		label: "Employee",
+		fieldtype: "Link",
 	},
 ]
