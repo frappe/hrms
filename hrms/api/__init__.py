@@ -156,6 +156,31 @@ def get_holidays_for_calendar(employee: str, from_date: str, to_date: str) -> li
 	return []
 
 
+@frappe.whitelist()
+def get_shifts(employee: str) -> list[dict[str, str]]:
+	ShiftAssignment = frappe.qb.DocType("Shift Assignment")
+	ShiftType = frappe.qb.DocType("Shift Type")
+	return (
+		frappe.qb.from_(ShiftAssignment)
+		.join(ShiftType)
+		.on(ShiftAssignment.shift_type == ShiftType.name)
+		.select(
+			ShiftAssignment.name,
+			ShiftAssignment.shift_type,
+			ShiftAssignment.start_date,
+			ShiftAssignment.end_date,
+			ShiftType.start_time,
+			ShiftType.end_time,
+		)
+		.where(
+			(ShiftAssignment.employee == employee)
+			& (ShiftAssignment.status == "Active")
+			& (ShiftAssignment.docstatus == 1)
+		)
+		.orderby(ShiftAssignment.start_date, order=Order.asc)
+	).run(as_dict=True)
+
+
 # Leaves and Holidays
 @frappe.whitelist()
 def get_leave_applications(
