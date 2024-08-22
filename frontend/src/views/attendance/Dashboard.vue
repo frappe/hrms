@@ -3,6 +3,7 @@
 		<template #body>
 			<div class="flex flex-col mt-7 mb-7 p-4 gap-7">
 				<AttendanceCalendar />
+				<Shifts />
 			</div>
 		</template>
 	</BaseLayout>
@@ -11,4 +12,5 @@
 <script setup>
 import BaseLayout from "@/components/BaseLayout.vue"
 import AttendanceCalendar from "@/components/AttendanceCalendar.vue"
+import Shifts from "@/components/Shifts.vue"
 </script>
