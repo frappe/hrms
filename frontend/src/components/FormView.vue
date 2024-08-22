@@ -511,7 +511,7 @@ const docList = createListResource({
 		async onSuccess(data) {
 			toast({
 				title: __("Success"),
-				text: __([__(props.doctype)], '{0} created successfully!'),
+				text: __("{0} created successfully!", [__(props.doctype)]),
 				icon: "check-circle",
 				position: "bottom-center",
 				iconClasses: "text-green-500",
@@ -526,7 +526,7 @@ const docList = createListResource({
 		onError() {
 			toast({
 				title: __("Error"),
-				text: __('Error creating {0}', [__(props.doctype)]),
+				text: __("Error creating {0}", [__(props.doctype)]),
 				icon: "alert-circle",
 				position: "bottom-center",
 				iconClasses: "text-red-500",
@@ -544,7 +544,7 @@ const documentResource = createDocumentResource({
 		onSuccess() {
 			toast({
 				title: __("Success"),
-				text: __([__(props.doctype)], '{0} updated successfully!'),
+				text: __("{0} updated successfully!", [__(props.doctype)]),
 				icon: "check-circle",
 				position: "bottom-center",
 				iconClasses: "text-green-500",
@@ -553,7 +553,7 @@ const documentResource = createDocumentResource({
 		onError() {
 			toast({
 				title: __("Error"),
-				text: __('Error updating {0}', [__(props.doctype)]),
+				text: __("Error updating {0}", [__(props.doctype)]),
 				icon: "alert-circle",
 				position: "bottom-center",
 				iconClasses: "text-red-500",
@@ -566,7 +566,7 @@ const documentResource = createDocumentResource({
 			router.back()
 			toast({
 				title: __("Success"),
-				text: __([__(props.doctype)],  '{0} deleted successfully!'),
+				text: __("{0} deleted successfully!", [__(props.doctype)]),
 				icon: "check-circle",
 				position: "bottom-center",
 				iconClasses: "text-green-500",
@@ -575,7 +575,7 @@ const documentResource = createDocumentResource({
 		onError() {
 			toast({
 				title: __("Error"),
-				text: __('Error deleting {0}', [__(props.doctype)]),
+				text: __("Error deleting {0}", [__(props.doctype)]),
 				icon: "alert-circle",
 				position: "bottom-center",
 				iconClasses: "text-red-500",
