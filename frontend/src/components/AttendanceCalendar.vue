@@ -3,6 +3,7 @@
 		<div class="text-lg text-gray-800 font-bold">Attendance Calendar</div>
 
 		<div class="flex flex-col gap-6 bg-white py-6 px-3.5 rounded-lg border-none">
+			<!-- Month Change -->
 			<div class="flex flex-row justify-between items-center px-4">
 				<Button
 					icon="chevron-left"
@@ -19,6 +20,7 @@
 				/>
 			</div>
 
+			<!-- Calendar -->
 			<div class="grid grid-cols-7 gap-y-3">
 				<div
 					v-for="day in DAYS"
@@ -41,12 +43,14 @@
 
 			<hr />
 
-			<div class="grid grid-cols-4 gap-3">
+			<!-- Summary -->
+			<div class="grid grid-cols-4 mx-2">
 				<div v-for="status in summaryStatuses" class="flex flex-col gap-1">
 					<div class="flex flex-row gap-1 items-center">
+						<span class="rounded full h-3 w-3" :class="`bg-${colorMap[status]}`" />
 						<span class="text-gray-600 text-sm font-medium leading-5"> {{ status }} </span>
 					</div>
-					<span class="text-gray-800 text-base font-semibold leading-6">
+					<span class="text-gray-800 text-base font-semibold leading-6 mx-auto">
 						{{ summary[status] || 0 }}
 					</span>
 				</div>
