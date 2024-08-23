@@ -99,12 +99,12 @@ class SalaryStructure(Document):
 					message = _("Row #{0}: The {1} Component has the options {2} and {3} enabled.").format(
 						row.idx,
 						frappe.bold(row.salary_component),
-						frappe.bold("Amount based on formula"),
-						frappe.bold("Depends On Payment Days"),
+						frappe.bold(_("Amount based on formula")),
+						frappe.bold(_("Depends On Payment Days")),
 					)
 					message += "<br><br>" + _(
 						"Disable {0} for the {1} component, to prevent the amount from being deducted twice, as its formula already uses a payment-days-based component."
-					).format(frappe.bold("Depends On Payment Days"), frappe.bold(row.salary_component))
+					).format(frappe.bold(_("Depends On Payment Days")), frappe.bold(row.salary_component))
 					frappe.throw(message, title=_("Payment Days Dependency"))
 
 	def get_component_abbreviations(self):
