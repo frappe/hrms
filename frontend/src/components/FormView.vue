@@ -15,22 +15,34 @@
 					v-if="id"
 					class="flex flex-row items-center gap-2 overflow-hidden grow"
 				>
-					<h2
-						class="text-xl font-semibold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis"
-					>
-						{{ doctype }}
-					</h2>
-					<Badge
-						:label="id"
-						class="whitespace-nowrap text-[8px]"
-						variant="outline"
-					/>
-					<Badge
-						v-if="status"
-						:label="status"
-						:theme="statusColor"
-						class="whitespace-nowrap text-[8px]"
-					/>
+				<div class="flex flex-col items-center overflow-hidden grow">
+					<Popover>
+						<template #target="{ togglePopover }">
+							<div class="flex flex-row gap-2 items-center" @click="togglePopover()">
+								<h2
+									class="text-xl font-semibold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis"
+								>
+									{{ doctype }}
+								</h2>
+								<Badge
+								v-if="status"
+								:label="status"
+								:theme="statusColor"
+								class="whitespace-nowrap text-[8px]"
+							/>
+							</div>
+						</template>
+						<template #body-main>
+							<div class="flex place-content-center p-2">
+								<Badge
+									:label="id"
+									class="whitespace-nowrap text-[8px]"
+									variant="outline"
+								/>
+							</div>
+						</template>
+					</Popover>
+				</div>
 
 					<Dropdown
 						class="ml-auto"
@@ -323,6 +335,7 @@ import {
 	Dropdown,
 	Dialog,
 	LoadingIndicator,
+	Popover,
 } from "frappe-ui"
 import FormField from "@/components/FormField.vue"
 import FileUploaderView from "@/components/FileUploaderView.vue"
