@@ -20,6 +20,9 @@ class EmployeeCheckin(Document):
 		self.fetch_shift()
 		self.set_geolocation_from_coordinates()
 
+	def on_update(self):
+		self.update_last_sync_of_checkin()
+
 	def validate_duplicate_log(self):
 		doc = frappe.db.exists(
 			"Employee Checkin",
@@ -63,6 +66,16 @@ class EmployeeCheckin(Document):
 			self.shift_actual_end = shift_actual_timings.actual_end
 			self.shift_start = shift_actual_timings.start_datetime
 			self.shift_end = shift_actual_timings.end_datetime
+
+	@frappe.whitelist()
+	def update_last_sync_of_checkin(self):
+		if self.skip_auto_attendance or not self.shift:
+			return
+
+		latest_checkin = frappe.get_last_doc(
+			"Employee Checkin", filters={"shift": self.shift}, order_by="time desc"
+		)
+		frappe.db.set_value("Shift Type", self.shift, "last_sync_of_checkin", latest_checkin.time)
 
 	@frappe.whitelist()
 	def set_geolocation_from_coordinates(self):
