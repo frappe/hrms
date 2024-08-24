@@ -37,7 +37,7 @@ frappe.tour["HR Settings"] = [
 	},
 	{
 		fieldname: "leave_and_expense_claim_settings",
-		title: "Leave and Expense Clain Settings",
+		title: "Leave and Expense Claim Settings",
 		description: __(
 			"Review various other settings related to Employee Leaves and Expense Claim",
 		),
