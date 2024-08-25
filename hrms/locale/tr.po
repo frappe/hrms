@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-08-18 09:34+0000\n"
-"PO-Revision-Date: 2024-08-21 13:26\n"
+"PO-Revision-Date: 2024-08-23 13:32\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -1540,7 +1540,7 @@ msgstr "tarihinden  Tarihine kadar katılım zorunludur"
 
 #: hr/report/shift_attendance/shift_attendance.py:123
 msgid "Attendance ID"
-msgstr ""
+msgstr "Katılım Kimliği"
 
 #. Label of the attendance (Link) field in DocType 'Employee Checkin'
 #: hr/doctype/attendance/attendance_list.js:115
@@ -1682,11 +1682,11 @@ msgstr ""
 #. Label of the available_leaves (Float) field in DocType 'Salary Slip Leave'
 #: payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Available Leave(s)"
-msgstr ""
+msgstr "Mevcut İzinler"
 
 #: hr/doctype/leave_application/leave_application_dashboard.html:11
 msgid "Available Leaves"
-msgstr ""
+msgstr "Mevcut İzinler"
 
 #. Label of the avg_feedback_score (Float) field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -1948,7 +1948,7 @@ msgstr "Toplu Maaş Yapısı Ataması"
 #. DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgid "By default, the Final Score is calculated as the average of Goal Score, Feedback Score, and Self Appraisal Score. Enable this to set a different formula"
-msgstr ""
+msgstr "Varsayılan olarak, Son Puan Hedef Puanı, Geri Bildirim Puanı ve Öz Değerlendirme Puanının ortalaması olarak hesaplanır. Farklı bir formül ayarlamak için bunu etkinleştirin"
 
 #. Label of the ctc (Currency) field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -2032,7 +2032,7 @@ msgstr "Kapalı bir İş İlanı için İş Başvurusu oluşturulamaz"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:200
 msgid "Cannot create or change transactions against a {0} Appraisal Cycle."
-msgstr ""
+msgstr "{0} Değerlendirme Döngüsüne karşı işlem oluşturulamaz veya değiştirilemez."
 
 #: hr/doctype/leave_application/leave_application.py:561
 msgid "Cannot find active Leave Period"
@@ -2098,7 +2098,7 @@ msgstr "Maliyet Merkezleri Grafiği"
 
 #: public/js/utils/index.js:147
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
-msgstr ""
+msgstr "Daha fazla ayrıntı için <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> adresini kontrol edin"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:1389
 msgid "Check Error Log {0} for more details."
@@ -2670,7 +2670,7 @@ msgstr ""
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_department/create_department.json
 msgid "Create Department"
-msgstr ""
+msgstr "Departman Oluştur"
 
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_designation/create_designation.json
@@ -2738,7 +2738,7 @@ msgstr "Ödeme Girişi Oluştur"
 #. Title of an Onboarding Step
 #: payroll/onboarding_step/create_payroll_period/create_payroll_period.json
 msgid "Create Payroll Period"
-msgstr ""
+msgstr "Maaş Bordrosu Dönemi Oluştur"
 
 #. Title of an Onboarding Step
 #: payroll/onboarding_step/create_salary_component/create_salary_component.json
@@ -2781,7 +2781,7 @@ msgstr ""
 
 #: hr/utils.py:829
 msgid "Creation Failed"
-msgstr ""
+msgstr "Oluşturulamadı"
 
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.py:73
 msgid "Creation of Salary Structure Assignments has been queued. It may take a few minutes."
@@ -3356,7 +3356,7 @@ msgstr ""
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:194
 msgid "Department: {0}"
-msgstr ""
+msgstr "Departman: {0}"
 
 #. Label of the departure_date (Datetime) field in DocType 'Travel Itinerary'
 #: hr/doctype/travel_itinerary/travel_itinerary.json
@@ -3429,7 +3429,7 @@ msgstr "Açıklama"
 #. Description of a DocType
 #: hr/doctype/job_opening/job_opening.json
 msgid "Description of a Job Opening"
-msgstr ""
+msgstr "İş İlanının Açıklaması"
 
 #. Label of the designation (Link) field in DocType 'Appraisal'
 #. Label of the designation (Link) field in DocType 'Appraisal Cycle'
@@ -3818,7 +3818,7 @@ msgstr "E-posta Gönderildi"
 #. Label of the email_template (Link) field in DocType 'Payroll Settings'
 #: payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Email Template"
-msgstr "E-posta şablonu"
+msgstr "E-Posta Şablonu"
 
 #: hr/doctype/leave_application/leave_application.py:659
 msgid "Email sent to {0}"
@@ -4443,7 +4443,7 @@ msgstr ""
 #. Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgid "Employee Responsible "
-msgstr ""
+msgstr "Personel Sorumluluğu"
 
 #. Option for the 'Final Decision' (Select) field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
@@ -4601,7 +4601,7 @@ msgstr ""
 
 #: hr/doctype/shift_request/shift_request.py:111
 msgid "Employee {0} has already applied for Shift {1}: {2} that overlaps within this period"
-msgstr ""
+msgstr "Personel {0} , bu dönem içinde çakışan {1}: {2} vardiyası için zaten başvuruda bulunmuştur"
 
 #: hr/doctype/leave_application/leave_application.py:450
 msgid "Employee {0} has already applied for {1} between {2} and {3} : {4}"
@@ -4972,7 +4972,7 @@ msgstr "Gelir Vergisinden Muaf"
 #. Label of a Card Break in the Tax & Benefits Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Exemption"
-msgstr ""
+msgstr "Muafiyet"
 
 #. Label of the exemption_category (Link) field in DocType 'Employee Tax
 #. Exemption Declaration Category'
@@ -5276,7 +5276,7 @@ msgstr "Personeller için {0} oluşturulamadı/gönderilemedi:"
 
 #: overrides/company.py:36
 msgid "Failed to delete defaults for country {0}."
-msgstr ""
+msgstr "{0} ülkesinin varsayılanları silinemedi."
 
 #: api/__init__.py:609
 msgid "Failed to download Salary Slip PDF"
@@ -5288,7 +5288,7 @@ msgstr "Mülakat Yeniden Planlama bildirimi gönderilemedi. Lütfen e-posta hesa
 
 #: overrides/company.py:49
 msgid "Failed to setup defaults for country {0}."
-msgstr ""
+msgstr "Ülke için varsayılanlar ayarlanamadı {0}."
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:320
 msgid "Failed to submit some leave policy assignments:"
@@ -5387,20 +5387,20 @@ msgstr ""
 
 #: hr/doctype/employee_checkin/employee_checkin.js:21
 msgid "Fetch Shift"
-msgstr ""
+msgstr "Vardiyayı Getir"
 
 #: hr/doctype/employee_checkin/employee_checkin_list.js:3
 msgid "Fetch Shifts"
-msgstr ""
+msgstr "Vardiyaları Getir"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:109
 #: payroll/doctype/payroll_entry/payroll_entry.js:114
 msgid "Fetching Employees"
-msgstr ""
+msgstr "Personelleri Getir"
 
 #: hr/doctype/employee_checkin/employee_checkin.js:27
 msgid "Fetching Shift"
-msgstr ""
+msgstr "Vardiya Getiriliyor"
 
 #: hr/doctype/employee_checkin/employee_checkin.js:54
 msgid "Fetching your geolocation"
@@ -5468,7 +5468,7 @@ msgstr "Final Puanı"
 #. Label of the final_score_formula (Code) field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgid "Final Score Formula"
-msgstr ""
+msgstr "Nihai Puan Formülü"
 
 #. Option for the 'Working Hours Calculation Based On' (Select) field in
 #. DocType 'Shift Type'
@@ -5682,7 +5682,7 @@ msgstr "Başlangıç Zamanı"
 #. Label of the from_user (Link) field in DocType 'PWA Notification'
 #: hr/doctype/pwa_notification/pwa_notification.json
 msgid "From User"
-msgstr ""
+msgstr "Kullanıcıdan"
 
 #: hr/utils.py:182
 msgid "From date can not be less than employee's joining date"
@@ -5694,7 +5694,7 @@ msgstr "İşçinin işe giriş yükünün önceki tarihi olamaz."
 
 #: hr/doctype/leave_type/leave_type.js:42
 msgid "From here, you can enable encashment for the balance leaves."
-msgstr ""
+msgstr "Buradan izinlerin paraya çevrilmesini aktif hale getirebilirsiniz."
 
 #. Label of the from_year (Int) field in DocType 'Gratuity Rule Slab'
 #: payroll/doctype/gratuity_rule_slab/gratuity_rule_slab.json
@@ -5839,7 +5839,7 @@ msgstr "Hedef"
 #. Label of the goal_completion (Percent) field in DocType 'Appraisal KRA'
 #: hr/doctype/appraisal_kra/appraisal_kra.json
 msgid "Goal Completion (%)"
-msgstr ""
+msgstr "Hedef Tamamlama (%)"
 
 #: hr/report/appraisal_overview/appraisal_overview.py:55
 #: hr/report/appraisal_overview/appraisal_overview.py:122
@@ -6392,7 +6392,7 @@ msgstr ""
 #. DocType 'Payroll Settings'
 #: payroll/doctype/payroll_settings/payroll_settings.json
 msgid "If enabled, deducts payment days for absent attendance on holidays. By default, holidays are considered as paid"
-msgstr ""
+msgstr "Etkinleştirilirse, tatil günlerinde devamsızlık için ödeme günlerini düşer. Varsayılan olarak, tatiller ücretli olarak kabul edilir"
 
 #. Description of the 'Variable Based On Taxable Salary' (Check) field in
 #. DocType 'Salary Component'
@@ -6566,7 +6566,7 @@ msgstr "Gelir Vergisi Bileşenleri"
 #: payroll/workspace/salary_payout/salary_payout.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Income Tax Computation"
-msgstr ""
+msgstr "Gelir Vergisi Hesaplaması"
 
 #. Label of the income_tax_deducted_till_date (Currency) field in DocType
 #. 'Salary Slip'
@@ -7415,7 +7415,7 @@ msgstr "İzin Kontrol Paneli"
 #. Label of the leave_details (Table) field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgid "Leave Details"
-msgstr ""
+msgstr "İzin Detayları"
 
 #. Name of a DocType
 #. Label of a Link in the Leaves Workspace
@@ -7433,7 +7433,7 @@ msgstr "Gündem Muhafaza Miktarını Bırak"
 #. Name of a report
 #: hr/report/leave_ledger/leave_ledger.json
 msgid "Leave Ledger"
-msgstr ""
+msgstr "İzin Defteri"
 
 #. Name of a DocType
 #: hr/doctype/leave_ledger_entry/leave_ledger_entry.json
@@ -7471,7 +7471,7 @@ msgstr "İzin Dönemi"
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 #: hr/workspace/leaves/leaves.json
 msgid "Leave Policy"
-msgstr "Politikadan Ayrıl"
+msgstr "İzin Politikası"
 
 #. Label of the leave_policy_assignment (Link) field in DocType 'Leave
 #. Allocation'
@@ -7485,7 +7485,7 @@ msgstr "İzin Politikası Ataması"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:63
 msgid "Leave Policy Assignment Overlap"
-msgstr ""
+msgstr "İzin Politikası Atama Çakışması"
 
 #. Name of a DocType
 #: hr/doctype/leave_policy_detail/leave_policy_detail.json
@@ -7877,7 +7877,7 @@ msgstr ""
 
 #: hr/doctype/goal/goal_tree.js:262
 msgid "Mark {0} as Completed?"
-msgstr ""
+msgstr "{0} Tamamlandı olarak işaretlensin mi?"
 
 #: hr/doctype/goal/goal_list.js:81
 msgid "Mark {0} {1} as {2}?"
@@ -8072,7 +8072,7 @@ msgstr ""
 
 #: hr/utils.py:801
 msgid "Missing Field"
-msgstr ""
+msgstr "Eksik Veri"
 
 #: payroll/doctype/payroll_entry/payroll_entry.js:205
 #: public/js/utils/index.js:41
@@ -8081,7 +8081,7 @@ msgstr "Eksik Alanlar"
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:102
 msgid "Missing Mandatory Field"
-msgstr ""
+msgstr "Zorunlu Alan Eksik"
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.py:35
 msgid "Missing Relieving Date"
@@ -8443,7 +8443,7 @@ msgstr "Yukarıdaki özelliklere göre maaş fişi bulunmayan VEYA maaş fişi z
 
 #: public/js/utils/index.js:48
 msgid "No {0} Selected"
-msgstr ""
+msgstr "Hiç {0} Seçilmedi"
 
 #. Option for the 'Meal Preference' (Select) field in DocType 'Travel
 #. Itinerary'
@@ -9237,7 +9237,7 @@ msgstr "Yüzde kesinti"
 #. Label of the percentage (Int) field in DocType 'Employee Cost Center'
 #: payroll/doctype/employee_cost_center/employee_cost_center.json
 msgid "Percentage (%)"
-msgstr ""
+msgstr "Yüzde (%)"
 
 #. Name of a Workspace
 #: hr/workspace/performance/performance.json
@@ -9398,7 +9398,7 @@ msgstr "Lütfen {0} seçin"
 
 #: payroll/doctype/salary_structure/salary_structure.py:305
 msgid "Please set \"Default Payroll Payable Account\" in Company Defaults"
-msgstr ""
+msgstr "Lütfen Şirket Varsayılanları'nda \"Varsayılan Bordro Ödenecek Hesabı \"nı ayarlayın"
 
 #: regional/india/utils.py:18
 msgid "Please set Basic and HRA component in Company {0}"
@@ -9419,7 +9419,7 @@ msgstr ""
 #: hr/doctype/employee_advance/employee_advance.py:186
 #: hr/doctype/employee_advance/employee_advance.py:290
 msgid "Please set a Default Cash Account in Company defaults"
-msgstr ""
+msgstr "Lütfen Şirket Varsayılanlarında Varsayılan Nakit Hesabı ayarlayın"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:317
 msgid "Please set account in Salary Component {0}"
@@ -10226,7 +10226,7 @@ msgstr "Özgeçmişin Bağlantısı"
 #. Label of the resume_link (Data) field in DocType 'Interview'
 #: hr/doctype/interview/interview.json
 msgid "Resume link"
-msgstr ""
+msgstr "Özgeçmişin Bağlantısı"
 
 #: hr/report/employee_exits/employee_exits.py:193
 msgid "Retained"
@@ -11053,7 +11053,7 @@ msgstr "Personel listelemek için filtreler ayarlayın"
 #. Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgid "Set optional filters to fetch employees in the appraisee list"
-msgstr ""
+msgstr "Değerlendirilenler listesindeki personelleri getirmek için isteğe bağlı filtreler ayarlayın"
 
 #: hr/doctype/expense_claim/expense_claim.py:473
 msgid "Set the default account for the {0} {1}"
@@ -11546,7 +11546,7 @@ msgstr "İstatistiksel Bileşen"
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Status"
-msgstr "Durumu"
+msgstr "Durum"
 
 #: setup.py:403
 msgid "Stock Options"
@@ -11772,7 +11772,7 @@ msgstr "Görev Ağırlığı"
 #. Name of a Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Tax & Benefits"
-msgstr ""
+msgstr "Vergi & Kazançlar"
 
 #. Label of the tax_deducted_till_date (Currency) field in DocType 'Salary
 #. Structure Assignment'
@@ -11842,7 +11842,7 @@ msgstr "Vergilendirilebilir Maaş Levhaları"
 #. Claim'
 #: hr/doctype/expense_claim/expense_claim.json
 msgid "Taxes & Charges"
-msgstr ""
+msgstr "Vergiler & Kesintiler"
 
 #. Label of the taxes_and_charges_on_income_tax_section (Section Break) field
 #. in DocType 'Income Tax Slab'
@@ -11885,18 +11885,18 @@ msgstr "Teşekkürler"
 #. Success message of the Module Onboarding 'Human Resource'
 #: hr/module_onboarding/human_resource/human_resource.json
 msgid "The Human Resource Module is all set up!"
-msgstr ""
+msgstr "İnsan Kaynakları Modülü tamamen hazır!"
 
 #. Success message of the Module Onboarding 'Payroll'
 #: payroll/module_onboarding/payroll/payroll.json
 msgid "The Payroll Module is all set up!"
-msgstr ""
+msgstr "Bordro Modülü tamamen hazır!"
 
 #. Description of the 'Payroll Date' (Date) field in DocType 'Additional
 #. Salary'
 #: payroll/doctype/additional_salary/additional_salary.json
 msgid "The date on which Salary Component with Amount will contribute for Earnings/Deduction in Salary Slip. "
-msgstr ""
+msgstr "Maaş Bordrosunda Maaş Bileşeninin Tutar ile Kazanç/Kesintiye katkı sağlayacağı tarih. "
 
 #. Description of the 'Allocate on Day' (Select) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
@@ -11996,7 +11996,7 @@ msgstr ""
 
 #: payroll/doctype/salary_slip/salary_slip.py:1192
 msgid "This error can be due to invalid syntax."
-msgstr ""
+msgstr "Bu hata geçersiz söz diziminden kaynaklanıyor olabilir."
 
 #: payroll/doctype/salary_slip/salary_slip.py:1185
 msgid "This error can be due to missing or deleted field."
@@ -12056,12 +12056,12 @@ msgstr "Check-out sırasındaki katılım için vardiya sonundan sonraki zaman."
 #. Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgid "Time taken to fill the open positions"
-msgstr ""
+msgstr "Açık pozisyonların doldurulması için gereken süre"
 
 #. Label of the time_to_fill (Duration) field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgid "Time to Fill"
-msgstr ""
+msgstr "Doldurma Zamanı"
 
 #. Label of the timelines_tab (Section Break) field in DocType 'Job
 #. Requisition'
@@ -13318,7 +13318,7 @@ msgstr "İzin Depozitini geçerli bir nakit miktarı için gönderebilirsiniz."
 
 #: api/__init__.py:566
 msgid "You can only upload JPG, PNG, PDF, TXT or Microsoft documents."
-msgstr ""
+msgstr "Sadece JPG, PNG, PDF, TXT veya Microsoft belgelerini yükleyebilirsiniz."
 
 #: overrides/employee_master.py:83
 msgid "You may add additional details, if any, and submit the offer."
