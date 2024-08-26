@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-08-18 09:34+0000\n"
-"PO-Revision-Date: 2024-08-19 12:45\n"
+"POT-Creation-Date: 2024-08-25 09:34+0000\n"
+"PO-Revision-Date: 2024-08-26 13:57\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -30,11 +30,11 @@ msgstr "crwdns104708:0{0}crwdnd104708:0{1}crwdnd104708:0{2}crwdne104708:0"
 msgid "\"From Date\" can not be greater than or equal to \"To Date\""
 msgstr "crwdns104710:0crwdne104710:0"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:88
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:86
 msgid "% Utilization (B + NB) / T"
 msgstr "crwdns104718:0crwdne104718:0"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:94
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:92
 msgid "% Utilization (B / T)"
 msgstr "crwdns104720:0crwdne104720:0"
 
@@ -220,25 +220,6 @@ msgstr "crwdns140850:0{first_name}crwdnd140850:0{date_of_birth.year}crwdne140850
 msgid "<b>Total Leaves Allocated</b> are more than the number of days in the allocation period"
 msgstr "crwdns104784:0crwdne104784:0"
 
-#. Description of the Onboarding Step 'Data Import'
-#: hr/onboarding_step/data_import/data_import.json
-msgid "<h3>Data Import</h3>\n\n"
-"Data import is the tool to migrate your existing data like Employee, Customer, Supplier, and a lot more to our ERPNext system.\n"
-"Go through the video for a detailed explanation of this tool."
-msgstr "crwdns104786:0crwdne104786:0"
-
-#. Description of the Onboarding Step 'Create Employee'
-#: hr/onboarding_step/create_employee/create_employee.json
-msgid "<h3>Employee</h3>\n\n"
-"An individual who works and is recognized for his rights and duties in your company is your Employee. You can manage the Employee master. It captures the demographic, personal and professional details, joining and leave details, etc."
-msgstr "crwdns104788:0crwdne104788:0"
-
-#. Description of the Onboarding Step 'HR Settings'
-#: hr/onboarding_step/hr_settings/hr_settings.json
-msgid "<h3>HR Settings</h3>\n\n"
-"Hr Settings consists of major settings related to Employee Lifecycle, Leave Management, etc. Click on Explore, to explore Hr Settings."
-msgstr "crwdns104790:0crwdne104790:0"
-
 #. Content of the 'Help' (HTML) field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgid "<h3>Help</h3>\n\n"
@@ -263,30 +244,6 @@ msgid "<h3>Help</h3>\n\n"
 "</ol>"
 msgstr "crwdns140852:0crwdne140852:0"
 
-#. Description of the Onboarding Step 'Create Holiday List'
-#: hr/onboarding_step/create_holiday_list/create_holiday_list.json
-msgid "<h3>Holiday List.</h3>\n\n"
-"Holiday List is a list which contains the dates of holidays. Most organizations have a standard Holiday List for their employees. However, some of them may have different holiday lists based on different Locations or Departments. In ERPNext, you can configure multiple Holiday Lists."
-msgstr "crwdns104794:0crwdne104794:0"
-
-#. Description of the Onboarding Step 'Create Leave Allocation'
-#: hr/onboarding_step/create_leave_allocation/create_leave_allocation.json
-msgid "<h3>Leave Allocation</h3>\n\n"
-"Leave Allocation enables you to allocate a specific number of leaves of a particular type to an Employee so that, an employee will be able to create a Leave Application only if Leaves are allocated. "
-msgstr "crwdns104796:0crwdne104796:0"
-
-#. Description of the Onboarding Step 'Create Leave Application'
-#: hr/onboarding_step/create_leave_application/create_leave_application.json
-msgid "<h3>Leave Application</h3>\n\n"
-"Leave Application is a formal document created by an Employee to apply for Leaves for a particular time period based on there leave allocation and leave type according to there need."
-msgstr "crwdns104798:0crwdne104798:0"
-
-#. Description of the Onboarding Step 'Create Leave Type'
-#: hr/onboarding_step/create_leave_type/create_leave_type.json
-msgid "<h3>Leave Type</h3>\n\n"
-"Leave type is defined based on many factors and features like encashment, earned leaves, partially paid, without pay and, a lot more. To check other options and to define your leave type click on Show Tour."
-msgstr "crwdns104800:0crwdne104800:0"
-
 #. Content of the 'html_6' (HTML) field in DocType 'Taxable Salary Slab'
 #: payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
 msgid "<h4>Condition Examples</h4>\n"
@@ -297,6 +254,59 @@ msgid "<h4>Condition Examples</h4>\n"
 "<li>Applying tax by Salary Component<br>\n"
 "<code>Condition: base &gt; 10000</code></li></ol>"
 msgstr "crwdns140854:0crwdne140854:0"
+
+#. Header text in the Employee Lifecycle Workspace
+#. Header text in the Expense Claims Workspace
+#. Header text in the Leaves Workspace
+#. Header text in the Recruitment Workspace
+#. Header text in the Tax & Benefits Workspace
+#: hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hr/workspace/expense_claims/expense_claims.json
+#: hr/workspace/leaves/leaves.json hr/workspace/recruitment/recruitment.json
+#: payroll/workspace/tax_&_benefits/tax_&_benefits.json
+msgid "<span class=\"h4\"><b>Masters &amp; Reports</b></span>"
+msgstr "crwdns148472:0crwdne148472:0"
+
+#. Header text in the Performance Workspace
+#: hr/workspace/performance/performance.json
+msgid "<span class=\"h4\"><b>Masters &amp; Transactions</b></span>"
+msgstr "crwdns148474:0crwdne148474:0"
+
+#. Header text in the HR Workspace
+#: hr/workspace/hr/hr.json
+msgid "<span class=\"h4\"><b>Reports &amp; Masters</b></span>"
+msgstr "crwdns148476:0crwdne148476:0"
+
+#. Header text in the Salary Payout Workspace
+#: payroll/workspace/salary_payout/salary_payout.json
+msgid "<span class=\"h4\"><b>Transactions &amp; Reports</b></span>"
+msgstr "crwdns148478:0crwdne148478:0"
+
+#. Header text in the Employee Lifecycle Workspace
+#. Header text in the Expense Claims Workspace
+#. Header text in the HR Workspace
+#. Header text in the Leaves Workspace
+#. Header text in the Performance Workspace
+#. Header text in the Recruitment Workspace
+#. Header text in the Shift & Attendance Workspace
+#. Header text in the Payroll Workspace
+#. Header text in the Salary Payout Workspace
+#. Header text in the Tax & Benefits Workspace
+#: hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hr/workspace/expense_claims/expense_claims.json hr/workspace/hr/hr.json
+#: hr/workspace/leaves/leaves.json hr/workspace/performance/performance.json
+#: hr/workspace/recruitment/recruitment.json
+#: hr/workspace/shift_&_attendance/shift_&_attendance.json
+#: payroll/workspace/payroll/payroll.json
+#: payroll/workspace/salary_payout/salary_payout.json
+#: payroll/workspace/tax_&_benefits/tax_&_benefits.json
+msgid "<span class=\"h4\"><b>Your Shortcuts</b></span>"
+msgstr "crwdns148480:0crwdne148480:0"
+
+#. Header text in the Shift & Attendance Workspace
+#: hr/workspace/shift_&_attendance/shift_&_attendance.json
+msgid "<span style=\"font-size: 18px;\"><b>Masters &amp; Reports</b></span>"
+msgstr "crwdns148482:0crwdne148482:0"
 
 #: public/js/utils/index.js:166
 msgid "<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>"
@@ -356,6 +366,7 @@ msgstr "crwdns104826:0crwdne104826:0"
 #: hr/doctype/job_applicant/job_applicant.json
 #: hr/doctype/job_offer/job_offer.json overrides/employee_master.py:64
 #: overrides/employee_master.py:80
+#: payroll/doctype/additional_salary/additional_salary.py:113
 msgid "Accepted"
 msgstr "crwdns104828:0crwdne104828:0"
 
@@ -996,6 +1007,7 @@ msgstr "crwdns105146:0crwdne105146:0"
 #. Detail'
 #: payroll/doctype/salary_component/salary_component.json
 #: payroll/doctype/salary_detail/salary_detail.json
+#: payroll/doctype/salary_structure/salary_structure.py:102
 msgid "Amount based on formula"
 msgstr "crwdns140950:0crwdne140950:0"
 
@@ -1037,7 +1049,7 @@ msgstr "crwdns105154:0{0}crwdnd105154:0{1}crwdnd105154:0{2}crwdne105154:0"
 msgid "Annual Allocation"
 msgstr "crwdns140960:0crwdne140960:0"
 
-#: setup.py:399
+#: setup.py:397
 msgid "Annual Salary"
 msgstr "crwdns105158:0crwdne105158:0"
 
@@ -1286,7 +1298,7 @@ msgstr "crwdns105270:0crwdne105270:0"
 msgid "Appraisees: {0}"
 msgstr "crwdns105272:0{0}crwdne105272:0"
 
-#: setup.py:391
+#: setup.py:389
 msgid "Apprentice"
 msgstr "crwdns105274:0crwdne105274:0"
 
@@ -1677,11 +1689,11 @@ msgstr "crwdns141074:0crwdne141074:0"
 msgid "Avg Feedback Score"
 msgstr "crwdns105416:0crwdne105416:0"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:220
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:218
 msgid "Avg Utilization"
 msgstr "crwdns105418:0crwdne105418:0"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:226
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:224
 msgid "Avg Utilization (Billed Only)"
 msgstr "crwdns105420:0crwdne105420:0"
 
@@ -1777,15 +1789,15 @@ msgstr "crwdns105456:0crwdne105456:0"
 msgid "Benefits"
 msgstr "crwdns105458:0crwdne105458:0"
 
-#: hr/report/project_profitability/project_profitability.py:171
+#: hr/report/project_profitability/project_profitability.py:169
 msgid "Bill Amount"
 msgstr "crwdns105464:0crwdne105464:0"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:251
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:249
 msgid "Billed Hours"
 msgstr "crwdns105466:0crwdne105466:0"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:70
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:68
 msgid "Billed Hours (B)"
 msgstr "crwdns105468:0crwdne105468:0"
 
@@ -1943,11 +1955,11 @@ msgstr "crwdns141120:0crwdne141120:0"
 msgid "Calculated in days"
 msgstr "crwdns141122:0crwdne141122:0"
 
-#: setup.py:327
+#: setup.py:325
 msgid "Calls"
 msgstr "crwdns105530:0crwdne105530:0"
 
-#: setup.py:396
+#: setup.py:394
 msgid "Campaign"
 msgstr "crwdns105532:0crwdne105532:0"
 
@@ -1995,8 +2007,8 @@ msgid "Cannot create a Job Applicant against a closed Job Opening"
 msgstr "crwdns105562:0crwdne105562:0"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:200
-msgid "Cannot create or change transactions against a {0} Appraisal Cycle."
-msgstr "crwdns105564:0{0}crwdne105564:0"
+msgid "Cannot create or change transactions against an Appraisal Cycle with status {0}."
+msgstr "crwdns148484:0{0}crwdne148484:0"
 
 #: hr/doctype/leave_application/leave_application.py:561
 msgid "Cannot find active Leave Period"
@@ -2032,7 +2044,7 @@ msgstr "crwdns141126:0crwdne141126:0"
 msgid "Carry Forwarded Leaves"
 msgstr "crwdns141128:0crwdne141128:0"
 
-#: setup.py:342 setup.py:343
+#: setup.py:340 setup.py:341
 msgid "Casual Leave"
 msgstr "crwdns105582:0crwdne105582:0"
 
@@ -2074,7 +2086,7 @@ msgid "Check Vacancies On Job Offer Creation"
 msgstr "crwdns141136:0crwdne141136:0"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:323
-#: hr/utils.py:820
+#: hr/utils.py:818
 msgid "Check {0} for more details"
 msgstr "crwdns105598:0{0}crwdne105598:0"
 
@@ -2198,7 +2210,7 @@ msgstr "crwdns141158:0crwdne141158:0"
 msgid "Comments"
 msgstr "crwdns141160:0crwdne141160:0"
 
-#: setup.py:388
+#: setup.py:386
 msgid "Commission"
 msgstr "crwdns105658:0crwdne105658:0"
 
@@ -2361,7 +2373,7 @@ msgstr "crwdns141162:0crwdne141162:0"
 msgid "Compensatory Leave Request"
 msgstr "crwdns105768:0crwdne105768:0"
 
-#: setup.py:351 setup.py:352
+#: setup.py:349 setup.py:350
 msgid "Compensatory Off"
 msgstr "crwdns105774:0crwdne105774:0"
 
@@ -2376,6 +2388,7 @@ msgstr "crwdns105774:0crwdne105774:0"
 #. Option for the 'Status' (Select) field in DocType 'Training Program'
 #: hr/doctype/appraisal/appraisal.json
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
+#: hr/doctype/appraisal_cycle/appraisal_cycle.py:201
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 #: hr/doctype/employee_separation/employee_separation.json
 #: hr/doctype/exit_interview/exit_interview.json hr/doctype/goal/goal.json
@@ -2507,7 +2520,7 @@ msgstr "crwdns141194:0crwdne141194:0"
 msgid "Continue"
 msgstr "crwdns141196:0crwdne141196:0"
 
-#: setup.py:387
+#: setup.py:385
 msgid "Contract"
 msgstr "crwdns105846:0crwdne105846:0"
 
@@ -2518,7 +2531,7 @@ msgstr "crwdns141198:0crwdne141198:0"
 
 #. Label of the cost (Currency) field in DocType 'Full and Final Asset'
 #: hr/doctype/full_and_final_asset/full_and_final_asset.json
-#: hr/report/project_profitability/project_profitability.py:178
+#: hr/report/project_profitability/project_profitability.py:176
 msgid "Cost"
 msgstr "crwdns105850:0crwdne105850:0"
 
@@ -2530,6 +2543,7 @@ msgstr "crwdns105850:0crwdne105850:0"
 #. Label of the cost_center (Link) field in DocType 'Gratuity'
 #. Label of the cost_center (Link) field in DocType 'Payroll Entry'
 #: hr/doctype/expense_claim/expense_claim.json
+#: hr/doctype/expense_claim/expense_claim.py:264
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
 #: hr/doctype/travel_request/travel_request.json
@@ -2617,11 +2631,6 @@ msgstr "crwdns141216:0crwdne141216:0"
 msgid "Create"
 msgstr "crwdns105886:0crwdne105886:0"
 
-#. Title of an Onboarding Step
-#: payroll/onboarding_step/create_&_assign_salary_structure/create_&_assign_salary_structure.json
-msgid "Create & Assign Salary Structure"
-msgstr "crwdns141218:0crwdne141218:0"
-
 #: hr/doctype/employee_referral/employee_referral.js:40
 msgid "Create Additional Salary"
 msgstr "crwdns105888:0crwdne105888:0"
@@ -2631,31 +2640,9 @@ msgstr "crwdns105888:0crwdne105888:0"
 msgid "Create Appraisals"
 msgstr "crwdns105890:0crwdne105890:0"
 
-#. Title of an Onboarding Step
-#: hr/onboarding_step/create_department/create_department.json
-msgid "Create Department"
-msgstr "crwdns105892:0crwdne105892:0"
-
-#. Title of an Onboarding Step
-#: hr/onboarding_step/create_designation/create_designation.json
-msgid "Create Designation"
-msgstr "crwdns105894:0crwdne105894:0"
-
-#. Title of an Onboarding Step
 #: hr/doctype/job_offer/job_offer.js:45
-#: hr/onboarding_step/create_employee/create_employee.json
 msgid "Create Employee"
 msgstr "crwdns105896:0crwdne105896:0"
-
-#. Title of an Onboarding Step
-#: hr/onboarding_step/create_holiday_list/create_holiday_list.json
-msgid "Create Holiday List"
-msgstr "crwdns105898:0crwdne105898:0"
-
-#. Title of an Onboarding Step
-#: payroll/onboarding_step/create_income_tax_slab/create_income_tax_slab.json
-msgid "Create Income Tax Slab"
-msgstr "crwdns105900:0crwdne105900:0"
 
 #: hr/doctype/interview_round/interview_round.js:7
 #: hr/doctype/job_applicant/job_applicant.js:95
@@ -2674,21 +2661,6 @@ msgstr "crwdns105906:0crwdne105906:0"
 msgid "Create Journal Entry"
 msgstr "crwdns105908:0crwdne105908:0"
 
-#. Title of an Onboarding Step
-#: hr/onboarding_step/create_leave_allocation/create_leave_allocation.json
-msgid "Create Leave Allocation"
-msgstr "crwdns105910:0crwdne105910:0"
-
-#. Title of an Onboarding Step
-#: hr/onboarding_step/create_leave_application/create_leave_application.json
-msgid "Create Leave Application"
-msgstr "crwdns105912:0crwdne105912:0"
-
-#. Title of an Onboarding Step
-#: hr/onboarding_step/create_leave_type/create_leave_type.json
-msgid "Create Leave Type"
-msgstr "crwdns105914:0crwdne105914:0"
-
 #. Label of the create_new_employee_id (Check) field in DocType 'Employee
 #. Transfer'
 #: hr/doctype/employee_transfer/employee_transfer.json
@@ -2699,18 +2671,6 @@ msgstr "crwdns141220:0crwdne141220:0"
 msgid "Create Payment Entry"
 msgstr "crwdns105918:0crwdne105918:0"
 
-#. Title of an Onboarding Step
-#: payroll/onboarding_step/create_payroll_period/create_payroll_period.json
-msgid "Create Payroll Period"
-msgstr "crwdns105920:0crwdne105920:0"
-
-#. Title of an Onboarding Step
-#: payroll/onboarding_step/create_salary_component/create_salary_component.json
-msgid "Create Salary Component"
-msgstr "crwdns105922:0crwdne105922:0"
-
-#. Title of an Onboarding Step
-#: payroll/onboarding_step/create_salary_slip/create_salary_slip.json
 #: public/js/erpnext/timesheet.js:8
 msgid "Create Salary Slip"
 msgstr "crwdns105924:0crwdne105924:0"
@@ -2743,7 +2703,7 @@ msgstr "crwdns105936:0crwdne105936:0"
 msgid "Creation Date"
 msgstr "crwdns141224:0crwdne141224:0"
 
-#: hr/utils.py:829
+#: hr/utils.py:827
 msgid "Creation Failed"
 msgstr "crwdns105938:0crwdne105938:0"
 
@@ -2795,7 +2755,7 @@ msgstr "crwdns141230:0crwdne141230:0"
 #: hr/doctype/job_applicant/job_applicant.json
 #: hr/doctype/job_opening/job_opening.json
 #: hr/doctype/leave_encashment/leave_encashment.json
-#: hr/report/project_profitability/project_profitability.py:206
+#: hr/report/project_profitability/project_profitability.py:204
 #: payroll/doctype/additional_salary/additional_salary.json
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
@@ -2896,7 +2856,7 @@ msgid "Custom Range"
 msgstr "crwdns141252:0crwdne141252:0"
 
 #: hr/report/project_profitability/project_profitability.js:31
-#: hr/report/project_profitability/project_profitability.py:135
+#: hr/report/project_profitability/project_profitability.py:133
 msgid "Customer"
 msgstr "crwdns106020:0crwdne106020:0"
 
@@ -2974,11 +2934,6 @@ msgstr "crwdns106042:0crwdne106042:0"
 msgid "Dashboard"
 msgstr "crwdns106044:0crwdne106044:0"
 
-#. Title of an Onboarding Step
-#: hr/onboarding_step/data_import/data_import.json
-msgid "Data Import"
-msgstr "crwdns106048:0crwdne106048:0"
-
 #. Label of the date (Date) field in DocType 'Employee Attendance Tool'
 #. Label of the date (Date) field in DocType 'Employee Referral'
 #. Label of the date (Date) field in DocType 'Exit Interview'
@@ -3036,7 +2991,7 @@ msgstr "crwdns106070:0crwdne106070:0"
 #: payroll/doctype/retention_bonus/retention_bonus.json
 #: payroll/doctype/salary_withholding/salary_withholding.json
 #: payroll/report/income_tax_computation/income_tax_computation.py:528
-#: payroll/report/salary_register/salary_register.py:127 setup.py:398
+#: payroll/report/salary_register/salary_register.py:127 setup.py:396
 msgid "Date of Joining"
 msgstr "crwdns106074:0crwdne106074:0"
 
@@ -3157,6 +3112,10 @@ msgstr "crwdns141282:0crwdne141282:0"
 #: hr/doctype/employee_grade/employee_grade.json
 msgid "Default Base Pay"
 msgstr "crwdns141284:0crwdne141284:0"
+
+#: overrides/company.py:133
+msgid "Default Payroll Payable Account"
+msgstr "crwdns148486:0crwdne148486:0"
 
 #. Label of the default_salary_structure (Link) field in DocType 'Employee
 #. Grade'
@@ -3280,7 +3239,7 @@ msgstr "crwdns141294:0crwdne141294:0"
 #: hr/report/employee_exits/employee_exits.js:27
 #: hr/report/employee_exits/employee_exits.py:65
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.js:37
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:62
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:60
 #: hr/report/employee_leave_balance/employee_leave_balance.js:30
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:30
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.py:24
@@ -3303,7 +3262,7 @@ msgstr "crwdns141294:0crwdne141294:0"
 #: payroll/report/income_tax_computation/income_tax_computation.js:33
 #: payroll/report/income_tax_computation/income_tax_computation.py:515
 #: payroll/report/salary_register/salary_register.py:140
-#: public/js/salary_slip_deductions_report_filters.js:42 setup.py:404
+#: public/js/salary_slip_deductions_report_filters.js:42 setup.py:402
 #: templates/generators/job_opening.html:87
 msgid "Department"
 msgstr "crwdns106146:0crwdne106146:0"
@@ -3326,6 +3285,11 @@ msgstr "crwdns106240:0{0}crwdne106240:0"
 #: hr/doctype/travel_itinerary/travel_itinerary.json
 msgid "Departure Datetime"
 msgstr "crwdns141296:0crwdne141296:0"
+
+#: payroll/doctype/salary_structure/salary_structure.py:103
+#: payroll/doctype/salary_structure/salary_structure.py:107
+msgid "Depends On Payment Days"
+msgstr "crwdns148488:0crwdne148488:0"
 
 #. Label of the depends_on_payment_days (Check) field in DocType 'Salary
 #. Component'
@@ -3902,7 +3866,7 @@ msgstr "crwdns141362:0crwdne141362:0"
 #: hr/report/employee_exits/employee_exits.js:39
 #: hr/report/employee_exits/employee_exits.py:24
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.js:31
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:55
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:53
 #: hr/report/employee_leave_balance/employee_leave_balance.js:36
 #: hr/report/employee_leave_balance/employee_leave_balance.py:40
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:24
@@ -3913,7 +3877,7 @@ msgstr "crwdns141362:0crwdne141362:0"
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:35
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:92
 #: hr/report/project_profitability/project_profitability.js:37
-#: hr/report/project_profitability/project_profitability.py:142
+#: hr/report/project_profitability/project_profitability.py:140
 #: hr/report/shift_attendance/shift_attendance.js:22
 #: hr/report/shift_attendance/shift_attendance.py:22
 #: hr/report/unpaid_expense_claim/unpaid_expense_claim.js:8
@@ -4015,7 +3979,7 @@ msgstr "crwdns106602:0crwdne106602:0"
 #. Label of the employee_benefits (Table) field in DocType 'Employee Benefit
 #. Application'
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
-#: setup.py:401
+#: setup.py:399
 msgid "Employee Benefits"
 msgstr "crwdns106606:0crwdne106606:0"
 
@@ -4289,7 +4253,7 @@ msgstr "crwdns106690:0crwdne106690:0"
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.py:23
 #: hr/report/leave_ledger/leave_ledger.py:35
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:98
-#: hr/report/project_profitability/project_profitability.py:147
+#: hr/report/project_profitability/project_profitability.py:145
 #: hr/report/shift_attendance/shift_attendance.py:31
 #: hr/report/unpaid_expense_claim/unpaid_expense_claim.py:19
 #: payroll/doctype/additional_salary/additional_salary.json
@@ -4391,7 +4355,7 @@ msgstr "crwdns106806:0crwdne106806:0"
 #: hr/doctype/employee_referral/employee_referral.json
 #: hr/doctype/job_applicant/job_applicant.json
 #: hr/doctype/job_requisition/job_requisition.js:18
-#: hr/workspace/recruitment/recruitment.json setup.py:395
+#: hr/workspace/recruitment/recruitment.json setup.py:393
 msgid "Employee Referral"
 msgstr "crwdns106808:0crwdne106808:0"
 
@@ -4595,11 +4559,6 @@ msgstr "crwdns106904:0{0}crwdnd106904:0{1}crwdne106904:0"
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
 msgstr "crwdns142906:0{0}crwdnd142906:0{1}crwdne142906:0"
 
-#. Subtitle of the Module Onboarding 'Human Resource'
-#: hr/module_onboarding/human_resource/human_resource.json
-msgid "Employee, Leaves, and more."
-msgstr "crwdns106906:0crwdne106906:0"
-
 #: payroll/doctype/gratuity/gratuity.py:166
 msgid "Employee: {0} have to complete minimum {1} years for gratuity"
 msgstr "crwdns106908:0{0}crwdnd106908:0{1}crwdne106908:0"
@@ -4751,7 +4710,7 @@ msgstr "crwdns106966:0crwdne106966:0"
 #: hr/doctype/shift_assignment/shift_assignment.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hr/report/project_profitability/project_profitability.js:24
-#: hr/report/project_profitability/project_profitability.py:204
+#: hr/report/project_profitability/project_profitability.py:202
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/payroll_period/payroll_period.json
 #: payroll/doctype/payroll_period_date/payroll_period_date.json
@@ -4813,7 +4772,7 @@ msgid "Error"
 msgstr "crwdns107008:0crwdne107008:0"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:325
-#: hr/utils.py:822
+#: hr/utils.py:820
 msgid "Error Log"
 msgstr "crwdns107010:0crwdne107010:0"
 
@@ -5015,8 +4974,8 @@ msgstr "crwdns107092:0crwdne107092:0"
 
 #: hr/doctype/exit_interview/test_exit_interview.py:108
 #: hr/doctype/exit_interview/test_exit_interview.py:118
-#: hr/doctype/exit_interview/test_exit_interview.py:120 setup.py:476
-#: setup.py:478 setup.py:499
+#: hr/doctype/exit_interview/test_exit_interview.py:120 setup.py:474
+#: setup.py:476 setup.py:497
 msgid "Exit Questionnaire Notification"
 msgstr "crwdns107096:0crwdne107096:0"
 
@@ -5032,6 +4991,7 @@ msgstr "crwdns107100:0crwdne107100:0"
 
 #. Label of the exit_questionnaire_web_form (Link) field in DocType 'HR
 #. Settings'
+#: hr/doctype/exit_interview/exit_interview.py:121
 #: hr/doctype/hr_settings/hr_settings.json
 msgid "Exit Questionnaire Web Form"
 msgstr "crwdns141452:0crwdne141452:0"
@@ -5127,6 +5087,7 @@ msgstr "crwdns107138:0crwdne107138:0"
 #. Name of a DocType
 #. Label of the expense_type (Data) field in DocType 'Expense Claim Type'
 #. Label of a Link in the Expense Claims Workspace
+#: hr/doctype/expense_claim/expense_claim.py:474
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
 #: hr/doctype/expense_claim_type/expense_claim_type.json
 #: hr/workspace/expense_claims/expense_claims.json
@@ -5216,11 +5177,6 @@ msgstr "crwdns141480:0crwdne141480:0"
 msgid "Explanation"
 msgstr "crwdns141482:0crwdne141482:0"
 
-#. Label of an action in the Onboarding Step 'HR Settings'
-#: hr/onboarding_step/hr_settings/hr_settings.json
-msgid "Explore"
-msgstr "crwdns107180:0crwdne107180:0"
-
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:116
 msgid "Export"
 msgstr "crwdns107182:0crwdne107182:0"
@@ -5234,7 +5190,7 @@ msgstr "crwdns107184:0crwdne107184:0"
 msgid "Failed"
 msgstr "crwdns141484:0crwdne141484:0"
 
-#: hr/utils.py:817
+#: hr/utils.py:815
 msgid "Failed to create/submit {0} for employees:"
 msgstr "crwdns107188:0{0}crwdne107188:0"
 
@@ -5488,7 +5444,7 @@ msgstr "crwdns107284:0crwdne107284:0"
 msgid "Follow via Email"
 msgstr "crwdns141530:0crwdne141530:0"
 
-#: setup.py:328
+#: setup.py:326
 msgid "Food"
 msgstr "crwdns107288:0crwdne107288:0"
 
@@ -5549,7 +5505,7 @@ msgstr "crwdns141542:0crwdne141542:0"
 msgid "Fraction of Daily Salary per Leave"
 msgstr "crwdns141544:0crwdne141544:0"
 
-#: hr/report/project_profitability/project_profitability.py:193
+#: hr/report/project_profitability/project_profitability.py:191
 msgid "Fractional Cost"
 msgstr "crwdns107314:0crwdne107314:0"
 
@@ -5713,7 +5669,7 @@ msgstr "crwdns143264:0crwdne143264:0"
 msgid "Full and Final Statement"
 msgstr "crwdns107390:0crwdne107390:0"
 
-#: setup.py:384
+#: setup.py:382
 msgid "Full-time"
 msgstr "crwdns107392:0crwdne107392:0"
 
@@ -6045,11 +6001,10 @@ msgid "HR Manager"
 msgstr "crwdns107508:0crwdne107508:0"
 
 #. Name of a DocType
-#. Title of an Onboarding Step
 #. Label of a Link in the HR Workspace
 #: hr/doctype/hr_settings/hr_settings.json
 #: hr/doctype/leave_application/leave_application.py:165
-#: hr/onboarding_step/hr_settings/hr_settings.json hr/workspace/hr/hr.json
+#: hr/workspace/hr/hr.json
 msgid "HR Settings"
 msgstr "crwdns107510:0crwdne107510:0"
 
@@ -6445,7 +6400,8 @@ msgstr "crwdns141670:0crwdne141670:0"
 
 #. Option for the 'Status' (Select) field in DocType 'Appraisal Cycle'
 #. Option for the 'Status' (Select) field in DocType 'Goal'
-#: hr/doctype/appraisal_cycle/appraisal_cycle.json hr/doctype/goal/goal.json
+#: hr/doctype/appraisal_cycle/appraisal_cycle.json
+#: hr/doctype/appraisal_cycle/appraisal_cycle.py:204 hr/doctype/goal/goal.json
 msgid "In Progress"
 msgstr "crwdns141672:0crwdne141672:0"
 
@@ -6482,7 +6438,7 @@ msgid "Incentive Amount"
 msgstr "crwdns141676:0crwdne141676:0"
 
 #. Label of a Card Break in the Salary Payout Workspace
-#: payroll/workspace/salary_payout/salary_payout.json setup.py:409
+#: payroll/workspace/salary_payout/salary_payout.json setup.py:407
 msgid "Incentives"
 msgstr "crwdns107698:0crwdne107698:0"
 
@@ -6636,7 +6592,7 @@ msgstr "crwdns141700:0crwdne141700:0"
 msgid "Intermediate"
 msgstr "crwdns141702:0crwdne141702:0"
 
-#: setup.py:390
+#: setup.py:388
 msgid "Intern"
 msgstr "crwdns107754:0crwdne107754:0"
 
@@ -6675,6 +6631,7 @@ msgstr "crwdns141708:0crwdne141708:0"
 #. Name of a DocType
 #. Label of a Link in the Recruitment Workspace
 #: hr/doctype/interview_feedback/interview_feedback.json
+#: hr/doctype/interview_feedback/interview_feedback.py:40
 #: hr/workspace/recruitment/recruitment.json
 msgid "Interview Feedback"
 msgstr "crwdns107770:0crwdne107770:0"
@@ -6682,8 +6639,8 @@ msgstr "crwdns107770:0crwdne107770:0"
 #: hr/doctype/interview/test_interview.py:300
 #: hr/doctype/interview/test_interview.py:309
 #: hr/doctype/interview/test_interview.py:311
-#: hr/doctype/interview/test_interview.py:318 setup.py:462 setup.py:464
-#: setup.py:497
+#: hr/doctype/interview/test_interview.py:318 setup.py:460 setup.py:462
+#: setup.py:495
 msgid "Interview Feedback Reminder"
 msgstr "crwdns107776:0crwdne107776:0"
 
@@ -6698,8 +6655,8 @@ msgstr "crwdns107780:0crwdne107780:0"
 #: hr/doctype/interview/test_interview.py:284
 #: hr/doctype/interview/test_interview.py:293
 #: hr/doctype/interview/test_interview.py:295
-#: hr/doctype/interview/test_interview.py:317 setup.py:450 setup.py:452
-#: setup.py:493
+#: hr/doctype/interview/test_interview.py:317 setup.py:448 setup.py:450
+#: setup.py:491
 msgid "Interview Reminder"
 msgstr "crwdns107782:0crwdne107782:0"
 
@@ -6732,6 +6689,10 @@ msgstr "crwdns107798:0{0}crwdnd107798:0{1}crwdne107798:0"
 #: hr/doctype/interview/interview.py:52
 msgid "Interview Round {0} is only for Designation {1}. Job Applicant has applied for the role {2}"
 msgstr "crwdns107800:0{0}crwdnd107800:0{1}crwdnd107800:0{2}crwdne107800:0"
+
+#: hr/doctype/interview_feedback/interview_feedback.py:40
+msgid "Interview Scheduled Date"
+msgstr "crwdns148490:0crwdne148490:0"
 
 #: hr/report/employee_exits/employee_exits.js:51
 #: hr/report/employee_exits/employee_exits.py:46
@@ -7005,7 +6966,7 @@ msgstr "crwdns141760:0crwdne141760:0"
 #. Label of the job_description_tab (Tab Break) field in DocType 'Job
 #. Requisition'
 #. Label of the description (Text Editor) field in DocType 'Job Requisition'
-#: hr/doctype/job_requisition/job_requisition.json setup.py:405
+#: hr/doctype/job_requisition/job_requisition.json setup.py:403
 msgid "Job Description"
 msgstr "crwdns107930:0crwdne107930:0"
 
@@ -7293,7 +7254,7 @@ msgstr "crwdns108064:0crwdne108064:0"
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 msgstr "crwdns108070:0{0}crwdnd108070:0{1}crwdne108070:0"
 
-#: setup.py:427 setup.py:429 setup.py:489
+#: setup.py:425 setup.py:427 setup.py:487
 msgid "Leave Approval Notification"
 msgstr "crwdns108072:0crwdne108072:0"
 
@@ -7465,7 +7426,7 @@ msgstr "crwdns141822:0crwdne141822:0"
 msgid "Leave Policy: {0} already assigned for Employee {1} for period {2} to {3}"
 msgstr "crwdns108152:0{0}crwdnd108152:0{1}crwdnd108152:0{2}crwdnd108152:0{3}crwdne108152:0"
 
-#: setup.py:436 setup.py:438 setup.py:490
+#: setup.py:434 setup.py:436 setup.py:488
 msgid "Leave Status Notification"
 msgstr "crwdns108154:0crwdne108154:0"
 
@@ -7536,8 +7497,8 @@ msgstr "crwdns108194:0{0}crwdne108194:0"
 
 #. Label of the leave_without_pay (Float) field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
-#: payroll/report/salary_register/salary_register.py:173 setup.py:376
-#: setup.py:377
+#: payroll/report/salary_register/salary_register.py:173 setup.py:374
+#: setup.py:375
 msgid "Leave Without Pay"
 msgstr "crwdns108196:0crwdne108196:0"
 
@@ -7615,7 +7576,7 @@ msgstr "crwdns141834:0crwdne141834:0"
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
 msgstr "crwdns108230:0{0}crwdne108230:0"
 
-#: setup.py:407
+#: setup.py:405
 msgid "Leaves per Year"
 msgstr "crwdns108232:0crwdne108232:0"
 
@@ -7634,16 +7595,6 @@ msgstr "crwdns108236:0crwdne108236:0"
 msgctxt "Employee"
 msgid "Left"
 msgstr "crwdns141838:0crwdne141838:0"
-
-#. Title of the Module Onboarding 'Human Resource'
-#: hr/module_onboarding/human_resource/human_resource.json
-msgid "Let's Set Up the Human Resource Module. "
-msgstr "crwdns108240:0crwdne108240:0"
-
-#. Title of the Module Onboarding 'Payroll'
-#: payroll/module_onboarding/payroll/payroll.json
-msgid "Let's Set Up the Payroll Module. "
-msgstr "crwdns108242:0crwdne108242:0"
 
 #. Label of the letter_head (Link) field in DocType 'Job Offer'
 #. Label of the letter_head (Link) field in DocType 'Leave Application'
@@ -7704,7 +7655,7 @@ msgstr "crwdns108270:0crwdne108270:0"
 msgid "Loan Repayment Entry"
 msgstr "crwdns141852:0crwdne141852:0"
 
-#: hr/utils.py:710
+#: hr/utils.py:708
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr "crwdns108274:0{0}crwdnd108274:0{1}crwdne108274:0"
 
@@ -7834,10 +7785,6 @@ msgstr "crwdns108320:0{0}crwdnd108320:0{1}crwdne108320:0"
 #: hr/doctype/shift_type/shift_type.json
 msgid "Mark attendance based on 'Employee Checkin' for Employees assigned to this shift."
 msgstr "crwdns141872:0crwdne141872:0"
-
-#: hr/doctype/appraisal_cycle/appraisal_cycle.py:204
-msgid "Mark the cycle as {0} if required."
-msgstr "crwdns108324:0{0}crwdne108324:0"
 
 #: hr/doctype/goal/goal_tree.js:262
 msgid "Mark {0} as Completed?"
@@ -8004,7 +7951,7 @@ msgstr "crwdns108388:0crwdne108388:0"
 msgid "Meal Preference"
 msgstr "crwdns141906:0crwdne141906:0"
 
-#: setup.py:329
+#: setup.py:327
 msgid "Medical"
 msgstr "crwdns108392:0crwdne108392:0"
 
@@ -8034,7 +7981,7 @@ msgstr "crwdns141910:0crwdne141910:0"
 msgid "Minimum Year for Gratuity"
 msgstr "crwdns141912:0crwdne141912:0"
 
-#: hr/utils.py:801
+#: hr/utils.py:799
 msgid "Missing Field"
 msgstr "crwdns141914:0crwdne141914:0"
 
@@ -8280,7 +8227,7 @@ msgstr "crwdns108518:0crwdne108518:0"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "crwdns108520:0crwdne108520:0"
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hr/utils.py:807
+#: hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hr/utils.py:805
 msgid "No Employees Selected"
 msgstr "crwdns108522:0crwdne108522:0"
 
@@ -8420,11 +8367,11 @@ msgstr "crwdns141976:0crwdne141976:0"
 msgid "Non Taxable Earnings"
 msgstr "crwdns141978:0crwdne141978:0"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:252
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:250
 msgid "Non-Billed Hours"
 msgstr "crwdns108574:0crwdne108574:0"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:76
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:74
 msgid "Non-Billed Hours (NB)"
 msgstr "crwdns108576:0crwdne108576:0"
 
@@ -8487,9 +8434,13 @@ msgstr "crwdns141992:0crwdne141992:0"
 msgid "Nothing to change"
 msgstr "crwdns108596:0crwdne108596:0"
 
-#: setup.py:408
+#: setup.py:406
 msgid "Notice Period"
 msgstr "crwdns108598:0crwdne108598:0"
+
+#: hr/doctype/exit_interview/exit_interview.py:122
+msgid "Notification Template"
+msgstr "crwdns148492:0crwdne148492:0"
 
 #. Label of the notify_users_by_email (Check) field in DocType 'Employee
 #. Onboarding'
@@ -8737,7 +8688,7 @@ msgstr "crwdns142032:0crwdne142032:0"
 msgid "Other Taxes and Charges"
 msgstr "crwdns142034:0crwdne142034:0"
 
-#: setup.py:330
+#: setup.py:328
 msgid "Others"
 msgstr "crwdns108712:0crwdne108712:0"
 
@@ -8869,11 +8820,11 @@ msgstr "crwdns108774:0crwdne108774:0"
 msgid "Parent Goal"
 msgstr "crwdns142050:0crwdne142050:0"
 
-#: setup.py:385
+#: setup.py:383
 msgid "Part-time"
 msgstr "crwdns108778:0crwdne108778:0"
 
-#: hr/utils.py:826 public/js/utils/index.js:154
+#: hr/utils.py:824 public/js/utils/index.js:154
 msgid "Partial Success"
 msgstr "crwdns108780:0crwdne108780:0"
 
@@ -9127,10 +9078,8 @@ msgid "Payroll Reports"
 msgstr "crwdns108892:0crwdne108892:0"
 
 #. Name of a DocType
-#. Title of an Onboarding Step
 #. Label of a Link in the Payroll Workspace
 #: payroll/doctype/payroll_settings/payroll_settings.json
-#: payroll/onboarding_step/payroll_settings/payroll_settings.json
 #: payroll/workspace/payroll/payroll.json
 msgid "Payroll Settings"
 msgstr "crwdns108894:0crwdne108894:0"
@@ -9213,7 +9162,7 @@ msgstr "crwdns108930:0crwdne108930:0"
 msgid "Phone Number"
 msgstr "crwdns142104:0crwdne142104:0"
 
-#: setup.py:389
+#: setup.py:387
 msgid "Piecework"
 msgstr "crwdns108934:0crwdne108934:0"
 
@@ -9291,7 +9240,7 @@ msgstr "crwdns142110:0crwdne142110:0"
 msgid "Please select Shift Type and assignment date(s)."
 msgstr "crwdns142112:0crwdne142112:0"
 
-#: hr/utils.py:704
+#: hr/utils.py:702
 msgid "Please select a Company"
 msgstr "crwdns108964:0crwdne108964:0"
 
@@ -9312,7 +9261,7 @@ msgstr "crwdns108970:0crwdne108970:0"
 msgid "Please select a date."
 msgstr "crwdns108972:0crwdne108972:0"
 
-#: hr/utils.py:701
+#: hr/utils.py:699
 msgid "Please select an Applicant"
 msgstr "crwdns108974:0crwdne108974:0"
 
@@ -9320,7 +9269,7 @@ msgstr "crwdns108974:0crwdne108974:0"
 msgid "Please select at least one Shift Request to perform this action."
 msgstr "crwdns142114:0crwdne142114:0"
 
-#: hr/utils.py:806
+#: hr/utils.py:804
 msgid "Please select at least one employee to perform this action."
 msgstr "crwdns142116:0crwdne142116:0"
 
@@ -9539,15 +9488,15 @@ msgstr "crwdns142132:0crwdne142132:0"
 msgid "Printing Details"
 msgstr "crwdns142134:0crwdne142134:0"
 
-#: setup.py:368 setup.py:369
+#: setup.py:366 setup.py:367
 msgid "Privilege Leave"
 msgstr "crwdns109080:0crwdne109080:0"
 
-#: setup.py:386
+#: setup.py:384
 msgid "Probation"
 msgstr "crwdns109082:0crwdne109082:0"
 
-#: setup.py:400
+#: setup.py:398
 msgid "Probationary Period"
 msgstr "crwdns109084:0crwdne109084:0"
 
@@ -9601,7 +9550,7 @@ msgstr "crwdns109090:0crwdne109090:0"
 msgid "Proficiency"
 msgstr "crwdns142152:0crwdne142152:0"
 
-#: hr/report/project_profitability/project_profitability.py:185
+#: hr/report/project_profitability/project_profitability.py:183
 msgid "Profit"
 msgstr "crwdns109094:0crwdne109094:0"
 
@@ -9625,7 +9574,7 @@ msgstr "crwdns109096:0crwdne109096:0"
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.js:43
 #: hr/report/project_profitability/project_profitability.js:43
-#: hr/report/project_profitability/project_profitability.py:164
+#: hr/report/project_profitability/project_profitability.py:162
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgid "Project"
 msgstr "crwdns109100:0crwdne109100:0"
@@ -10050,7 +9999,7 @@ msgstr "crwdns142242:0crwdne142242:0"
 msgid "Reopen"
 msgstr "crwdns109282:0crwdne109282:0"
 
-#: hr/utils.py:716
+#: hr/utils.py:714
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "crwdns109284:0crwdne109284:0"
 
@@ -10151,7 +10100,7 @@ msgstr "crwdns142262:0crwdne142262:0"
 msgid "Resolved By"
 msgstr "crwdns142264:0crwdne142264:0"
 
-#: setup.py:406
+#: setup.py:404
 msgid "Responsibilities"
 msgstr "crwdns109320:0crwdne109320:0"
 
@@ -10229,11 +10178,6 @@ msgstr "crwdns142278:0crwdne142278:0"
 #: hr/doctype/employee_advance/employee_advance.json
 msgid "Returned Amount"
 msgstr "crwdns142280:0crwdne142280:0"
-
-#. Label of an action in the Onboarding Step 'Payroll Settings'
-#: payroll/onboarding_step/payroll_settings/payroll_settings.json
-msgid "Review Payroll Settings"
-msgstr "crwdns142282:0crwdne142282:0"
 
 #: hr/doctype/hr_settings/hr_settings.js:41
 msgid "Review various other settings related to Employee Leaves and Expense Claim"
@@ -10328,7 +10272,7 @@ msgstr "crwdns109390:0#{0}crwdnd109390:0{1}crwdnd109390:0{2}crwdnd109390:0{3}crw
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
 msgstr "crwdns109392:0#{0}crwdnd109392:0{1}crwdne109392:0"
 
-#: hr/doctype/expense_claim/expense_claim.py:570
+#: hr/doctype/expense_claim/expense_claim.py:571
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
 msgstr "crwdns109394:0{0}crwdnd109394:0{1}crwdnd109394:0{2}crwdne109394:0"
 
@@ -10672,12 +10616,7 @@ msgstr "crwdns142346:0crwdne142346:0"
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "crwdns109534:0{0}crwdne109534:0"
 
-#. Subtitle of the Module Onboarding 'Payroll'
-#: payroll/module_onboarding/payroll/payroll.json
-msgid "Salary, Compensation, and more."
-msgstr "crwdns109536:0crwdne109536:0"
-
-#: hr/report/project_profitability/project_profitability.py:150
+#: hr/report/project_profitability/project_profitability.py:148
 msgid "Sales Invoice"
 msgstr "crwdns109538:0crwdne109538:0"
 
@@ -10908,10 +10847,18 @@ msgstr "crwdns142380:0crwdne142380:0"
 msgid "Sender Email"
 msgstr "crwdns142382:0crwdne142382:0"
 
+#: hr/doctype/exit_interview/exit_interview.py:136
+msgid "Sending Failed due to missing email information for employee(s): {1}"
+msgstr "crwdns148494:0{1}crwdne148494:0"
+
 #. Option for the 'Status' (Select) field in DocType 'Daily Work Summary'
 #: hr/doctype/daily_work_summary/daily_work_summary.json
 msgid "Sent"
 msgstr "crwdns142384:0crwdne142384:0"
+
+#: hr/doctype/exit_interview/exit_interview.py:132
+msgid "Sent Successfully: {0}"
+msgstr "crwdns148496:0{0}crwdne148496:0"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:20
 #: public/js/salary_slip_deductions_report_filters.js:27
@@ -11034,6 +10981,10 @@ msgstr "crwdns142412:0crwdne142412:0"
 msgid "Set the properties that should be updated in the Employee master on promotion submission"
 msgstr "crwdns142414:0crwdne142414:0"
 
+#: hr/doctype/appraisal_cycle/appraisal_cycle.py:204
+msgid "Set the status to {0} if required."
+msgstr "crwdns148498:0{0}crwdne148498:0"
+
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:200
 msgid "Set {0} for selected employees"
 msgstr "crwdns142908:0{0}crwdne142908:0"
@@ -11067,9 +11018,9 @@ msgstr "crwdns142418:0crwdne142418:0"
 msgid "Setup"
 msgstr "crwdns109706:0crwdne109706:0"
 
-#: hr/utils.py:664
-msgid "Shared with the user {0} with {1} access"
-msgstr "crwdns109708:0{0}crwdnd109708:0{1}crwdne109708:0"
+#: hr/utils.py:663
+msgid "Shared with the user {0} with 'submit' permisions"
+msgstr "crwdns148500:0{0}crwdne148500:0"
 
 #. Label of the shift (Link) field in DocType 'Attendance'
 #. Label of the shift (Link) field in DocType 'Attendance Request'
@@ -11248,24 +11199,11 @@ msgstr "crwdns142446:0crwdne142446:0"
 msgid "Show Salary Slip"
 msgstr "crwdns109770:0crwdne109770:0"
 
-#. Label of an action in the Onboarding Step 'Create Employee'
-#. Label of an action in the Onboarding Step 'Create Holiday List'
-#. Label of an action in the Onboarding Step 'Create Leave Allocation'
-#. Label of an action in the Onboarding Step 'Create Leave Application'
-#. Label of an action in the Onboarding Step 'Create Leave Type'
-#: hr/onboarding_step/create_employee/create_employee.json
-#: hr/onboarding_step/create_holiday_list/create_holiday_list.json
-#: hr/onboarding_step/create_leave_allocation/create_leave_allocation.json
-#: hr/onboarding_step/create_leave_application/create_leave_application.json
-#: hr/onboarding_step/create_leave_type/create_leave_type.json
-msgid "Show Tour"
-msgstr "crwdns109772:0crwdne109772:0"
-
 #: www/jobs/index.html:121
 msgid "Showing"
 msgstr "crwdns109774:0crwdne109774:0"
 
-#: setup.py:360 setup.py:361
+#: setup.py:358 setup.py:359
 msgid "Sick Leave"
 msgstr "crwdns109776:0crwdne109776:0"
 
@@ -11377,6 +11315,8 @@ msgstr "crwdns142464:0crwdne142464:0"
 
 #. Label of the standard_working_hours (Float) field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:36
+#: hr/report/project_profitability/project_profitability.py:102
 msgid "Standard Working Hours"
 msgstr "crwdns142466:0crwdne142466:0"
 
@@ -11401,7 +11341,7 @@ msgstr "crwdns109832:0crwdne109832:0"
 #: hr/doctype/shift_assignment/shift_assignment.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hr/report/project_profitability/project_profitability.js:17
-#: hr/report/project_profitability/project_profitability.py:203
+#: hr/report/project_profitability/project_profitability.py:201
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/payroll_period/payroll_period.json
 #: payroll/doctype/payroll_period_date/payroll_period_date.json
@@ -11512,7 +11452,7 @@ msgstr "crwdns142468:0crwdne142468:0"
 msgid "Status"
 msgstr "crwdns109868:0crwdne109868:0"
 
-#: setup.py:403
+#: setup.py:401
 msgid "Stock Options"
 msgstr "crwdns109928:0crwdne109928:0"
 
@@ -11548,6 +11488,10 @@ msgstr "crwdns142476:0crwdne142476:0"
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:331
 msgid "Submission Failed"
 msgstr "crwdns109942:0crwdne109942:0"
+
+#: hr/doctype/interview_feedback/interview_feedback.py:39
+msgid "Submission of {0} before {1} is not allowed"
+msgstr "crwdns148502:0{0}crwdnd148502:0{1}crwdne148502:0"
 
 #: hr/doctype/job_requisition/job_requisition.js:75
 #: public/js/performance/performance_feedback.js:99
@@ -11604,13 +11548,13 @@ msgstr "crwdns109968:0crwdne109968:0"
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "crwdns109970:0{1}crwdnd109970:0{2}crwdnd109970:0{0}crwdnd109970:0{3}crwdne109970:0"
 
-#: hr/doctype/employee_referral/employee_referral.py:54 hr/utils.py:831
+#: hr/doctype/employee_referral/employee_referral.py:54 hr/utils.py:829
 #: payroll/doctype/payroll_entry/payroll_entry.py:1447
 #: public/js/utils/index.js:139
 msgid "Success"
 msgstr "crwdns109972:0crwdne109972:0"
 
-#: hr/utils.py:834
+#: hr/utils.py:832
 msgid "Successfully created {0} for employees:"
 msgstr "crwdns142482:0{0}crwdne142482:0"
 
@@ -11846,15 +11790,9 @@ msgstr "crwdns142518:0crwdne142518:0"
 msgid "Thank you"
 msgstr "crwdns110050:0crwdne110050:0"
 
-#. Success message of the Module Onboarding 'Human Resource'
-#: hr/module_onboarding/human_resource/human_resource.json
-msgid "The Human Resource Module is all set up!"
-msgstr "crwdns110052:0crwdne110052:0"
-
-#. Success message of the Module Onboarding 'Payroll'
-#: payroll/module_onboarding/payroll/payroll.json
-msgid "The Payroll Module is all set up!"
-msgstr "crwdns110054:0crwdne110054:0"
+#: overrides/company.py:131
+msgid "The currency of {0} should be same as the company's default currency. Please select another account."
+msgstr "crwdns148504:0{0}crwdne148504:0"
 
 #. Description of the 'Payroll Date' (Date) field in DocType 'Additional
 #. Salary'
@@ -11885,10 +11823,13 @@ msgstr "crwdns110064:0crwdne110064:0"
 msgid "The fraction of daily wages to be paid for half-day attendance"
 msgstr "crwdns142524:0crwdne142524:0"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:35
 #: hr/report/project_profitability/project_profitability.py:101
-msgid "The metrics for this report are calculated based on the Standard Working Hours. Please set {0} in {1}."
-msgstr "crwdns110068:0{0}crwdnd110068:0{1}crwdne110068:0"
+msgid "The metrics for this report are calculated based on the {0}. Please set {0} in {1}."
+msgstr "crwdns148506:0{0}crwdnd148506:0{0}crwdnd148506:0{1}crwdne148506:0"
+
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:35
+msgid "The metrics for this report are calculated based on {0}. Please set {0} in {1}."
+msgstr "crwdns148508:0{0}crwdnd148508:0{0}crwdnd148508:0{1}crwdne148508:0"
 
 #. Description of the 'Encrypt Salary Slips in Emails' (Check) field in DocType
 #. 'Payroll Settings'
@@ -12034,7 +11975,7 @@ msgid "Timelines"
 msgstr "crwdns142550:0crwdne142550:0"
 
 #. Label of a Link in the Shift & Attendance Workspace
-#: hr/report/project_profitability/project_profitability.py:157
+#: hr/report/project_profitability/project_profitability.py:155
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Timesheet"
 msgstr "crwdns110128:0crwdne110128:0"
@@ -12241,8 +12182,8 @@ msgstr "crwdns142576:0crwdne142576:0"
 msgid "Total Asset Recovery Cost"
 msgstr "crwdns142578:0crwdne142578:0"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:229
-#: hr/report/project_profitability/project_profitability.py:199
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:227
+#: hr/report/project_profitability/project_profitability.py:197
 msgid "Total Billed Hours"
 msgstr "crwdns110228:0crwdne110228:0"
 
@@ -12321,7 +12262,7 @@ msgstr "crwdns110258:0crwdne110258:0"
 msgid "Total Holidays"
 msgstr "crwdns110260:0crwdne110260:0"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:68
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:66
 msgid "Total Hours (T)"
 msgstr "crwdns110262:0crwdne110262:0"
 
@@ -12363,7 +12304,7 @@ msgstr "crwdns142606:0crwdne142606:0"
 msgid "Total Net Pay"
 msgstr "crwdns110276:0crwdne110276:0"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:230
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:228
 msgid "Total Non-Billed Hours"
 msgstr "crwdns110278:0crwdne110278:0"
 
@@ -12623,7 +12564,7 @@ msgstr "crwdns142650:0crwdne142650:0"
 msgid "Transactions"
 msgstr "crwdns110396:0crwdne110396:0"
 
-#: hr/utils.py:687
+#: hr/utils.py:685
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr "crwdns110398:0{0}crwdne110398:0"
 
@@ -12633,7 +12574,7 @@ msgid "Transfer Date"
 msgstr "crwdns142652:0crwdne142652:0"
 
 #. Label of a Card Break in the Expense Claims Workspace
-#: hr/workspace/expense_claims/expense_claims.json setup.py:331
+#: hr/workspace/expense_claims/expense_claims.json setup.py:329
 msgid "Travel"
 msgstr "crwdns110402:0crwdne110402:0"
 
@@ -12790,11 +12731,11 @@ msgstr "crwdns142680:0crwdne142680:0"
 msgid "Unsubmitted Appraisals"
 msgstr "crwdns110470:0crwdne110470:0"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:253
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:251
 msgid "Untracked Hours"
 msgstr "crwdns110472:0crwdne110472:0"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:82
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:80
 msgid "Untracked Hours (U)"
 msgstr "crwdns110474:0crwdne110474:0"
 
@@ -12896,7 +12837,7 @@ msgstr "crwdns110512:0crwdne110512:0"
 msgid "Users"
 msgstr "crwdns142694:0crwdne142694:0"
 
-#: hr/report/project_profitability/project_profitability.py:190
+#: hr/report/project_profitability/project_profitability.py:188
 msgid "Utilization"
 msgstr "crwdns110526:0crwdne110526:0"
 
@@ -13018,7 +12959,7 @@ msgstr "crwdns142706:0crwdne142706:0"
 msgid "WARNING: Loan Management module has been separated from ERPNext."
 msgstr "crwdns110576:0crwdne110576:0"
 
-#: setup.py:394
+#: setup.py:392
 msgid "Walk In"
 msgstr "crwdns110578:0crwdne110578:0"
 
@@ -13048,7 +12989,7 @@ msgstr "crwdns110586:0crwdne110586:0"
 msgid "Warning: {0} already has an active Shift Assignment {1} for some/all of these dates."
 msgstr "crwdns110588:0{0}crwdnd110588:0{1}crwdne110588:0"
 
-#: setup.py:393
+#: setup.py:391
 msgid "Website Listing"
 msgstr "crwdns110590:0crwdne110590:0"
 
@@ -13176,7 +13117,7 @@ msgstr "crwdns142732:0crwdne142732:0"
 #. Label of the working_hours (Float) field in DocType 'Salary Slip Timesheet'
 #: hr/doctype/attendance/attendance.json
 #: payroll/doctype/salary_slip_timesheet/salary_slip_timesheet.json
-#: setup.py:402
+#: setup.py:400
 msgid "Working Hours"
 msgstr "crwdns110640:0crwdne110640:0"
 
@@ -13403,14 +13344,6 @@ msgstr "crwdns110732:0{0}crwdnd110732:0{1}crwdne110732:0"
 msgid "{0} applicable after {1} working days"
 msgstr "crwdns110734:0{0}crwdnd110734:0{1}crwdne110734:0"
 
-#: overrides/company.py:131
-msgid "{0} currency must be same as company's default currency. Please select another account."
-msgstr "crwdns110736:0{0}crwdne110736:0"
-
-#: hr/doctype/exit_interview/exit_interview.py:136
-msgid "{0} due to missing email information for employee(s): {1}"
-msgstr "crwdns110738:0{0}crwdnd110738:0{1}crwdne110738:0"
-
 #: payroll/doctype/additional_salary/additional_salary.py:157
 msgid "{0} has {1} enabled"
 msgstr "crwdns142778:0{0}crwdnd142778:0{1}crwdne142778:0"
@@ -13435,7 +13368,7 @@ msgstr "crwdns110746:0{0}crwdne110746:0"
 msgid "{0} is not in a valid Payroll Period"
 msgstr "crwdns110748:0{0}crwdne110748:0"
 
-#: hr/utils.py:801
+#: hr/utils.py:799
 msgid "{0} is required"
 msgstr "crwdns110750:0{0}crwdne110750:0"
 
@@ -13447,10 +13380,6 @@ msgstr "crwdns110752:0{0}crwdne110752:0"
 #: hr/doctype/goal/goal.py:194
 msgid "{0} of {1} Completed"
 msgstr "crwdns110754:0{0}crwdnd110754:0{1}crwdne110754:0"
-
-#: hr/doctype/interview_feedback/interview_feedback.py:39
-msgid "{0} submission before {1} is not allowed"
-msgstr "crwdns110756:0{0}crwdnd110756:0{1}crwdne110756:0"
 
 #: hr/doctype/staffing_plan/staffing_plan.py:129
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
@@ -13472,8 +13401,7 @@ msgstr "crwdns110762:0{0}crwdne110762:0"
 msgid "{0}: From {0} of type {1}"
 msgstr "crwdns110764:0{0}crwdnd110764:0{0}crwdnd110764:0{1}crwdne110764:0"
 
-#: hr/doctype/exit_interview/exit_interview.py:132 overrides/company.py:37
-#: overrides/company.py:50
+#: overrides/company.py:37 overrides/company.py:50
 msgid "{0}: {1}"
 msgstr "crwdns110766:0{0}crwdnd110766:0{1}crwdne110766:0"
 
