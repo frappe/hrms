@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "@ionic/vue-router"
 
 import TabbedView from "@/views/TabbedView.vue"
+import attendanceRoutes from "./attendance"
 import leaveRoutes from "./leaves"
 import claimRoutes from "./claims"
 import employeeAdvanceRoutes from "./advances"
@@ -71,6 +72,7 @@ const routes = [
 		name: "InvalidEmployee",
 		component: () => import("@/views/InvalidEmployee.vue"),
 	},
+	...attendanceRoutes,
 	...leaveRoutes,
 	...claimRoutes,
 	...employeeAdvanceRoutes,
