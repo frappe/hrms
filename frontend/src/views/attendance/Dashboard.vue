@@ -10,7 +10,7 @@
 						:component="markRaw(ShiftRequestItem)"
 						:items="shiftRequests?.data?.slice(0, 5)"
 						:addListButton="true"
-						listButtonRoute="LeaveApplicationListView"
+						listButtonRoute="ShiftRequestListView"
 					/>
 				</div>
 
@@ -29,10 +29,10 @@ import ShiftRequestItem from "@/components/ShiftRequestItem.vue"
 import RequestList from "@/components/RequestList.vue"
 import AttendanceCalendar from "@/components/AttendanceCalendar.vue"
 import Shifts from "@/components/Shifts.vue"
-import { getLeaveDates } from "@/data/leaves"
+
+import { getShiftRequestDates, getTotalShiftRequestDays } from "@/data/attendance"
 
 const employee = inject("$employee")
-const dayjs = inject("$dayjs")
 
 const shiftRequests = createListResource({
 	doctype: "Shift Request",
@@ -47,17 +47,10 @@ const shiftRequests = createListResource({
 	transform: (data) => {
 		return data.map((request) => {
 			request.doctype = "Shift Request"
-			request.shift_dates = getLeaveDates(request)
-			request.total_shift_days = getTotalShiftDays(request)
+			request.shift_dates = getShiftRequestDates(request)
+			request.total_shift_days = getTotalShiftRequestDays(request)
 			return request
 		})
 	},
 })
-
-const getTotalShiftDays = (shift) => {
-	if (!shift.to_date) return null
-	const to_date = dayjs(shift.to_date)
-	const from_date = dayjs(shift.from_date)
-	return to_date.diff(from_date, "d") + 1
-}
 </script>

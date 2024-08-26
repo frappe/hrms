@@ -8,11 +8,13 @@
 						{{ props.doc.shift_type }}
 					</div>
 					<div class="text-xs font-normal text-gray-500">
-						<span>{{ props.doc.shift_dates }}</span>
-						<span v-if="props.doc.end_date" class="whitespace-pre"> &middot; </span>
-						<span v-if="props.doc.end_date" class="whitespace-nowrap">{{
-							`${props.doc.total_shift_days}d`
-						}}</span>
+						<span>{{ props.doc.shift_dates || getShiftRequestDates(props.doc) }}</span>
+						<span v-if="props.doc.to_date">
+							<span class="whitespace-pre"> &middot; </span>
+							<span class="whitespace-nowrap">{{
+								`${props.doc.total_shift_days || getTotalShiftRequestDays(props.doc)}d`
+							}}</span>
+						</span>
 					</div>
 				</div>
 			</div>
@@ -27,6 +29,8 @@
 <script setup>
 import { computed } from "vue"
 import { Badge, FeatherIcon } from "frappe-ui"
+
+import { getShiftRequestDates, getTotalShiftRequestDays } from "@/data/attendance"
 
 const props = defineProps({
 	doc: {
