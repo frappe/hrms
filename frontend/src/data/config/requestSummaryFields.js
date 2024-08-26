@@ -145,3 +145,36 @@ export const SHIFT_FIELDS = [
 		fieldtype: "Link",
 	},
 ]
+
+export const SHIFT_REQUEST_FIELDS = [
+	{
+		fieldname: "name",
+		label: "ID",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "shift_type",
+		label: "Shift Type",
+		fieldtype: "Link",
+	},
+	{
+		fieldname: "shift_dates",
+		label: "Shift Dates",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "total_shift_days",
+		label: "Total Shift Days",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "employee",
+		label: "Employee",
+		fieldtype: "Link",
+	},
+	{
+		fieldname: "status",
+		label: "Status",
+		fieldtype: "Select",
+	},
+]
