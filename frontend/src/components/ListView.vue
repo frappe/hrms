@@ -7,7 +7,7 @@
 				<div class="flex flex-row items-center">
 					<Button
 						variant="ghost"
-						class="!pl-0 hover:bg-white"
+						class="!px-1 mr-1 hover:bg-white"
 						@click="router.back()"
 					>
 						<FeatherIcon name="chevron-left" class="h-5 w-5" />
@@ -126,6 +126,7 @@ import {
 } from "frappe-ui"
 
 import TabButtons from "@/components/TabButtons.vue"
+import ShiftRequestItem from "@/components/ShiftRequestItem.vue"
 import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
 import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 import EmployeeAdvanceItem from "@/components/EmployeeAdvanceItem.vue"
@@ -163,6 +164,7 @@ const props = defineProps({
 })
 
 const listItemComponent = {
+	"Shift Request": markRaw(ShiftRequestItem),
 	"Leave Application": markRaw(LeaveRequestItem),
 	"Expense Claim": markRaw(ExpenseClaimItem),
 	"Employee Advance": markRaw(EmployeeAdvanceItem),

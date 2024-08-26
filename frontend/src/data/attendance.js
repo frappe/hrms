@@ -6,6 +6,19 @@ import dayjs from "@/utils/dayjs"
 
 export const firstOfMonth = ref(dayjs().date(1).startOf("D"))
 
+export const getShiftRequestDates = (shift) => {
+	const fromDate = dayjs(shift.from_date).format("D MMM")
+	const toDate = shift.to_date ? dayjs(shift.to_date).format("D MMM") : "Ongoing"
+	return fromDate == toDate ? fromDate : `${fromDate} - ${toDate}`
+}
+
+export const getTotalShiftRequestDays = (shift) => {
+	if (!shift.to_date) return null
+	const toDate = dayjs(shift.to_date)
+	const fromDate = dayjs(shift.from_date)
+	return toDate.diff(fromDate, "d") + 1
+}
+
 const getShiftDates = (shift) => {
 	const startDate = dayjs(shift.start_date).format("D MMM")
 	const endDate = shift.end_date ? dayjs(shift.end_date).format("D MMM") : "Ongoing"
