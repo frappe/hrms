@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-08-18 09:34+0000\n"
-"PO-Revision-Date: 2024-08-19 12:44\n"
+"POT-Creation-Date: 2024-08-25 09:34+0000\n"
+"PO-Revision-Date: 2024-08-26 13:57\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -34,11 +34,11 @@ msgstr "\n"
 msgid "\"From Date\" can not be greater than or equal to \"To Date\""
 msgstr "\"Från Datum\" kan inte vara senare än eller lika med \"Till Datum\""
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:88
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:86
 msgid "% Utilization (B + NB) / T"
 msgstr "% Användning (B + NB) / T"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:94
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:92
 msgid "% Utilization (B / T)"
 msgstr "% Användning (B / T)"
 
@@ -224,29 +224,6 @@ msgstr "<b>Exempel:</b> SAL- {first_name} - {date_of_birth.year} <br> Detta komm
 msgid "<b>Total Leaves Allocated</b> are more than the number of days in the allocation period"
 msgstr "<b>Totalt Tilldelade Ledigheter</b> är fler dagar än antal dagar i tilldelning period"
 
-#. Description of the Onboarding Step 'Data Import'
-#: hr/onboarding_step/data_import/data_import.json
-msgid "<h3>Data Import</h3>\n\n"
-"Data import is the tool to migrate your existing data like Employee, Customer, Supplier, and a lot more to our ERPNext system.\n"
-"Go through the video for a detailed explanation of this tool."
-msgstr "<h3>Data Import</h3>\n\n"
-"Data import är verktyg för att överföra befintlig data så som Personal, Kund, Leverantör och mycket mer.\n"
-"R videon för en detaljerad förklaring av detta verktyg."
-
-#. Description of the Onboarding Step 'Create Employee'
-#: hr/onboarding_step/create_employee/create_employee.json
-msgid "<h3>Employee</h3>\n\n"
-"An individual who works and is recognized for his rights and duties in your company is your Employee. You can manage the Employee master. It captures the demographic, personal and professional details, joining and leave details, etc."
-msgstr "<h3>Personal</h3>\n\n"
-"En person som jobbar och är erkänd för sina rättigheter och skyldigheter i bolaget utgör Personal. Man kan hantera Personal via Personal Översikt. Det sammlar in demografiska, personliga och professionella detaljer, hämtar och lämnar detaljer, osv."
-
-#. Description of the Onboarding Step 'HR Settings'
-#: hr/onboarding_step/hr_settings/hr_settings.json
-msgid "<h3>HR Settings</h3>\n\n"
-"Hr Settings consists of major settings related to Employee Lifecycle, Leave Management, etc. Click on Explore, to explore Hr Settings."
-msgstr "<h3>Personal Inställningar</h3>\n\n"
-"Personal inställningar består av inställningar relaterade till Anställning, Ledighet Hantering, osv. Klicka på Utforska för att utforska Personal inställningar."
-
 #. Content of the 'Help' (HTML) field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
 msgid "<h3>Help</h3>\n\n"
@@ -290,34 +267,6 @@ msgstr "<h3>Hjälp</h3>\n\n"
 "<pre><code>Belopp: 1000</code></pre></li>\n"
 "</ol>"
 
-#. Description of the Onboarding Step 'Create Holiday List'
-#: hr/onboarding_step/create_holiday_list/create_holiday_list.json
-msgid "<h3>Holiday List.</h3>\n\n"
-"Holiday List is a list which contains the dates of holidays. Most organizations have a standard Holiday List for their employees. However, some of them may have different holiday lists based on different Locations or Departments. In ERPNext, you can configure multiple Holiday Lists."
-msgstr "<h3>Helglista</h3>\n\n"
-"Helg Lista är lista som innehåller datum för helgdagar. De flesta bolag har standard helg lista för sina personal. Vissa av dem kan dock ha olika helg listor baserat på olika platser eller avdelningar. Man kan konfigurera flera helg listor."
-
-#. Description of the Onboarding Step 'Create Leave Allocation'
-#: hr/onboarding_step/create_leave_allocation/create_leave_allocation.json
-msgid "<h3>Leave Allocation</h3>\n\n"
-"Leave Allocation enables you to allocate a specific number of leaves of a particular type to an Employee so that, an employee will be able to create a Leave Application only if Leaves are allocated. "
-msgstr "<h3>Lediget Tilldelning</h3>\n\n"
-"Ledighet Tilldelning gör det möjligt att tilldela specifikt antal ledigheter av viss typ till personal så att personal kan skapa ledighet ansökan endast om ledighet tilldelas. "
-
-#. Description of the Onboarding Step 'Create Leave Application'
-#: hr/onboarding_step/create_leave_application/create_leave_application.json
-msgid "<h3>Leave Application</h3>\n\n"
-"Leave Application is a formal document created by an Employee to apply for Leaves for a particular time period based on there leave allocation and leave type according to there need."
-msgstr "<h3>Ledighet Ansökan</h3>\n\n"
-"Ledighet Ansökan är dokument som skapas av personal för att ansöka om ledighet för viss tidsperiod baserat på ledighet tilldelning och typ av ledighet enligt deras behov."
-
-#. Description of the Onboarding Step 'Create Leave Type'
-#: hr/onboarding_step/create_leave_type/create_leave_type.json
-msgid "<h3>Leave Type</h3>\n\n"
-"Leave type is defined based on many factors and features like encashment, earned leaves, partially paid, without pay and, a lot more. To check other options and to define your leave type click on Show Tour."
-msgstr "<h3>Ledighet Typ</h3>\n\n"
-"Ledighet Typ definieras utifrån många faktorer och funktioner som uttag, intjänad ledigheter, delvis betald, utan lön osv. För att kontrollera andra alternativ och för att definiera ledighets typer klicka på Visa Introduktion."
-
 #. Content of the 'html_6' (HTML) field in DocType 'Taxable Salary Slab'
 #: payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
 msgid "<h4>Condition Examples</h4>\n"
@@ -334,6 +283,59 @@ msgstr "<h4>Villkor Exempel</h4>\n"
 "<code>Villkor: gender==\"Man\"</code></li><br>\n"
 "<li>Tillämpa skatt efter löne komponent<br>\n"
 "<code>Villkor: bas &gt; 10 000</code></li></ol>"
+
+#. Header text in the Employee Lifecycle Workspace
+#. Header text in the Expense Claims Workspace
+#. Header text in the Leaves Workspace
+#. Header text in the Recruitment Workspace
+#. Header text in the Tax & Benefits Workspace
+#: hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hr/workspace/expense_claims/expense_claims.json
+#: hr/workspace/leaves/leaves.json hr/workspace/recruitment/recruitment.json
+#: payroll/workspace/tax_&_benefits/tax_&_benefits.json
+msgid "<span class=\"h4\"><b>Masters &amp; Reports</b></span>"
+msgstr ""
+
+#. Header text in the Performance Workspace
+#: hr/workspace/performance/performance.json
+msgid "<span class=\"h4\"><b>Masters &amp; Transactions</b></span>"
+msgstr ""
+
+#. Header text in the HR Workspace
+#: hr/workspace/hr/hr.json
+msgid "<span class=\"h4\"><b>Reports &amp; Masters</b></span>"
+msgstr "<span class=\"h4\"><b>Rapporter &amp; Inställningar</b></span>"
+
+#. Header text in the Salary Payout Workspace
+#: payroll/workspace/salary_payout/salary_payout.json
+msgid "<span class=\"h4\"><b>Transactions &amp; Reports</b></span>"
+msgstr ""
+
+#. Header text in the Employee Lifecycle Workspace
+#. Header text in the Expense Claims Workspace
+#. Header text in the HR Workspace
+#. Header text in the Leaves Workspace
+#. Header text in the Performance Workspace
+#. Header text in the Recruitment Workspace
+#. Header text in the Shift & Attendance Workspace
+#. Header text in the Payroll Workspace
+#. Header text in the Salary Payout Workspace
+#. Header text in the Tax & Benefits Workspace
+#: hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hr/workspace/expense_claims/expense_claims.json hr/workspace/hr/hr.json
+#: hr/workspace/leaves/leaves.json hr/workspace/performance/performance.json
+#: hr/workspace/recruitment/recruitment.json
+#: hr/workspace/shift_&_attendance/shift_&_attendance.json
+#: payroll/workspace/payroll/payroll.json
+#: payroll/workspace/salary_payout/salary_payout.json
+#: payroll/workspace/tax_&_benefits/tax_&_benefits.json
+msgid "<span class=\"h4\"><b>Your Shortcuts</b></span>"
+msgstr "<span class=\"h4\"><b>Genvägar</b></span>"
+
+#. Header text in the Shift & Attendance Workspace
+#: hr/workspace/shift_&_attendance/shift_&_attendance.json
+msgid "<span style=\"font-size: 18px;\"><b>Masters &amp; Reports</b></span>"
+msgstr ""
 
 #: public/js/utils/index.js:166
 msgid "<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>"
@@ -393,6 +395,7 @@ msgstr "Läsår Användare"
 #: hr/doctype/job_applicant/job_applicant.json
 #: hr/doctype/job_offer/job_offer.json overrides/employee_master.py:64
 #: overrides/employee_master.py:80
+#: payroll/doctype/additional_salary/additional_salary.py:113
 msgid "Accepted"
 msgstr "Godkänd"
 
@@ -1033,6 +1036,7 @@ msgstr "Belopp Baserad på Formel"
 #. Detail'
 #: payroll/doctype/salary_component/salary_component.json
 #: payroll/doctype/salary_detail/salary_detail.json
+#: payroll/doctype/salary_structure/salary_structure.py:102
 msgid "Amount based on formula"
 msgstr "Belopp Baserad på Formel"
 
@@ -1074,7 +1078,7 @@ msgstr "elopp på {0} som redan tilldelad för komponent {1}, ange belopp lika m
 msgid "Annual Allocation"
 msgstr "Årlig Tilldelning"
 
-#: setup.py:399
+#: setup.py:397
 msgid "Annual Salary"
 msgstr "Årslön"
 
@@ -1323,7 +1327,7 @@ msgstr "Utvärderare"
 msgid "Appraisees: {0}"
 msgstr "Utvärderare: {0}"
 
-#: setup.py:391
+#: setup.py:389
 msgid "Apprentice"
 msgstr "Lärling"
 
@@ -1714,11 +1718,11 @@ msgstr "Genomsnittlig bedömning av uppvisade färdigheter"
 msgid "Avg Feedback Score"
 msgstr "Genomsnittlig Återkoppling Resultat"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:220
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:218
 msgid "Avg Utilization"
 msgstr "Genomsnittlig Användning"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:226
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:224
 msgid "Avg Utilization (Billed Only)"
 msgstr "Genomsnittlig Användning(Endast Fakturerad) "
 
@@ -1814,15 +1818,15 @@ msgstr "Förmån"
 msgid "Benefits"
 msgstr "Förmåner"
 
-#: hr/report/project_profitability/project_profitability.py:171
+#: hr/report/project_profitability/project_profitability.py:169
 msgid "Bill Amount"
 msgstr "Faktura Belopp"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:251
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:249
 msgid "Billed Hours"
 msgstr "Fakturerade Timmar"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:70
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:68
 msgid "Billed Hours (B)"
 msgstr "Fakturerade Timmar"
 
@@ -1980,11 +1984,11 @@ msgstr "Beräkna Löne Dagar Baserat På"
 msgid "Calculated in days"
 msgstr "Beräknad (i Dagar)"
 
-#: setup.py:327
+#: setup.py:325
 msgid "Calls"
 msgstr "Samtal"
 
-#: setup.py:396
+#: setup.py:394
 msgid "Campaign"
 msgstr "Kampanj"
 
@@ -2032,8 +2036,8 @@ msgid "Cannot create a Job Applicant against a closed Job Opening"
 msgstr "Kan inte skapa Jobb Sökande mot stängd Jobb Erbjudande"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:200
-msgid "Cannot create or change transactions against a {0} Appraisal Cycle."
-msgstr "Kan inte skapa eller ändra transaktioner mot {0} Utvärdering Cykel."
+msgid "Cannot create or change transactions against an Appraisal Cycle with status {0}."
+msgstr ""
 
 #: hr/doctype/leave_application/leave_application.py:561
 msgid "Cannot find active Leave Period"
@@ -2069,7 +2073,7 @@ msgstr "Vidarebefodra"
 msgid "Carry Forwarded Leaves"
 msgstr "Vidarebefodra Ledighet"
 
-#: setup.py:342 setup.py:343
+#: setup.py:340 setup.py:341
 msgid "Casual Leave"
 msgstr "Oplanerad Ledighet"
 
@@ -2081,7 +2085,7 @@ msgstr "Klagomål Orsak"
 #. Option for the 'Type' (Select) field in DocType 'Vehicle Service'
 #: hr/doctype/vehicle_service/vehicle_service.json
 msgid "Change"
-msgstr "Växel Belopp"
+msgstr "Ändra"
 
 #: hr/doctype/goal/goal.js:112
 msgid "Changing KRA in this parent goal will align all the child goals to the same KRA, if any."
@@ -2111,7 +2115,7 @@ msgid "Check Vacancies On Job Offer Creation"
 msgstr "Kontrollera Lediga Jobb vid skapande av Jobb Erbjudande"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:323
-#: hr/utils.py:820
+#: hr/utils.py:818
 msgid "Check {0} for more details"
 msgstr "Se {0} för mer detaljer."
 
@@ -2235,7 +2239,7 @@ msgstr "Färg"
 msgid "Comments"
 msgstr "Kommentarer"
 
-#: setup.py:388
+#: setup.py:386
 msgid "Commission"
 msgstr "Provision"
 
@@ -2398,7 +2402,7 @@ msgstr "Bolag Detaljer"
 msgid "Compensatory Leave Request"
 msgstr "Kompensation Ledighet Förfråga"
 
-#: setup.py:351 setup.py:352
+#: setup.py:349 setup.py:350
 msgid "Compensatory Off"
 msgstr "Kompensation Av"
 
@@ -2413,6 +2417,7 @@ msgstr "Kompensation Av"
 #. Option for the 'Status' (Select) field in DocType 'Training Program'
 #: hr/doctype/appraisal/appraisal.json
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
+#: hr/doctype/appraisal_cycle/appraisal_cycle.py:201
 #: hr/doctype/employee_onboarding/employee_onboarding.json
 #: hr/doctype/employee_separation/employee_separation.json
 #: hr/doctype/exit_interview/exit_interview.json hr/doctype/goal/goal.json
@@ -2544,7 +2549,7 @@ msgstr "Kontakt Nummer"
 msgid "Continue"
 msgstr "Fortsätt"
 
-#: setup.py:387
+#: setup.py:385
 msgid "Contract"
 msgstr "Avtal"
 
@@ -2555,7 +2560,7 @@ msgstr "Kopia av Inbjudan / Tillkännagivande"
 
 #. Label of the cost (Currency) field in DocType 'Full and Final Asset'
 #: hr/doctype/full_and_final_asset/full_and_final_asset.json
-#: hr/report/project_profitability/project_profitability.py:178
+#: hr/report/project_profitability/project_profitability.py:176
 msgid "Cost"
 msgstr "Kostnad"
 
@@ -2567,6 +2572,7 @@ msgstr "Kostnad"
 #. Label of the cost_center (Link) field in DocType 'Gratuity'
 #. Label of the cost_center (Link) field in DocType 'Payroll Entry'
 #: hr/doctype/expense_claim/expense_claim.json
+#: hr/doctype/expense_claim/expense_claim.py:264
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
 #: hr/doctype/travel_request/travel_request.json
@@ -2654,11 +2660,6 @@ msgstr "Personlig Brev"
 msgid "Create"
 msgstr "Skapa"
 
-#. Title of an Onboarding Step
-#: payroll/onboarding_step/create_&_assign_salary_structure/create_&_assign_salary_structure.json
-msgid "Create & Assign Salary Structure"
-msgstr "Skapa & Tilldela Lön Struktur"
-
 #: hr/doctype/employee_referral/employee_referral.js:40
 msgid "Create Additional Salary"
 msgstr "Skapa Extra Lön"
@@ -2668,31 +2669,9 @@ msgstr "Skapa Extra Lön"
 msgid "Create Appraisals"
 msgstr "Skapa Utvärdering"
 
-#. Title of an Onboarding Step
-#: hr/onboarding_step/create_department/create_department.json
-msgid "Create Department"
-msgstr "Skapa Avdelning"
-
-#. Title of an Onboarding Step
-#: hr/onboarding_step/create_designation/create_designation.json
-msgid "Create Designation"
-msgstr "Skapa Beteckning"
-
-#. Title of an Onboarding Step
 #: hr/doctype/job_offer/job_offer.js:45
-#: hr/onboarding_step/create_employee/create_employee.json
 msgid "Create Employee"
 msgstr "Skapa Personal"
-
-#. Title of an Onboarding Step
-#: hr/onboarding_step/create_holiday_list/create_holiday_list.json
-msgid "Create Holiday List"
-msgstr "Skapa Helg Lista"
-
-#. Title of an Onboarding Step
-#: payroll/onboarding_step/create_income_tax_slab/create_income_tax_slab.json
-msgid "Create Income Tax Slab"
-msgstr "Skapa Inkomst Skatt Tabell"
 
 #: hr/doctype/interview_round/interview_round.js:7
 #: hr/doctype/job_applicant/job_applicant.js:95
@@ -2711,21 +2690,6 @@ msgstr "Skapa Jobb Erbjudande"
 msgid "Create Journal Entry"
 msgstr "Skapa Journal Post"
 
-#. Title of an Onboarding Step
-#: hr/onboarding_step/create_leave_allocation/create_leave_allocation.json
-msgid "Create Leave Allocation"
-msgstr "Skapa Ledighet Tilldelning"
-
-#. Title of an Onboarding Step
-#: hr/onboarding_step/create_leave_application/create_leave_application.json
-msgid "Create Leave Application"
-msgstr "Skapa Ledighet Ansökan"
-
-#. Title of an Onboarding Step
-#: hr/onboarding_step/create_leave_type/create_leave_type.json
-msgid "Create Leave Type"
-msgstr "Skapa Ledighet Typ"
-
 #. Label of the create_new_employee_id (Check) field in DocType 'Employee
 #. Transfer'
 #: hr/doctype/employee_transfer/employee_transfer.json
@@ -2736,18 +2700,6 @@ msgstr "Skapa Ny Personal"
 msgid "Create Payment Entry"
 msgstr "Skapa Betalning Post"
 
-#. Title of an Onboarding Step
-#: payroll/onboarding_step/create_payroll_period/create_payroll_period.json
-msgid "Create Payroll Period"
-msgstr "Skapa Lön Period"
-
-#. Title of an Onboarding Step
-#: payroll/onboarding_step/create_salary_component/create_salary_component.json
-msgid "Create Salary Component"
-msgstr "Skapa Lön Komponent"
-
-#. Title of an Onboarding Step
-#: payroll/onboarding_step/create_salary_slip/create_salary_slip.json
 #: public/js/erpnext/timesheet.js:8
 msgid "Create Salary Slip"
 msgstr "Skapa Lön Besked"
@@ -2780,7 +2732,7 @@ msgstr "Skapar Lön Besked..."
 msgid "Creation Date"
 msgstr "Skapad Datum"
 
-#: hr/utils.py:829
+#: hr/utils.py:827
 msgid "Creation Failed"
 msgstr "Skapande Misslyckades"
 
@@ -2832,7 +2784,7 @@ msgstr "Kriterier baserade på vilken Personal som ska Bedömas i Prestation Åt
 #: hr/doctype/job_applicant/job_applicant.json
 #: hr/doctype/job_opening/job_opening.json
 #: hr/doctype/leave_encashment/leave_encashment.json
-#: hr/report/project_profitability/project_profitability.py:206
+#: hr/report/project_profitability/project_profitability.py:204
 #: payroll/doctype/additional_salary/additional_salary.json
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
@@ -2933,7 +2885,7 @@ msgid "Custom Range"
 msgstr "Anpassat Intervall"
 
 #: hr/report/project_profitability/project_profitability.js:31
-#: hr/report/project_profitability/project_profitability.py:135
+#: hr/report/project_profitability/project_profitability.py:133
 msgid "Customer"
 msgstr "Kund"
 
@@ -3011,11 +2963,6 @@ msgstr "Daglig Arbete Översikt Svar"
 msgid "Dashboard"
 msgstr "Översikt Panel"
 
-#. Title of an Onboarding Step
-#: hr/onboarding_step/data_import/data_import.json
-msgid "Data Import"
-msgstr "Data Import"
-
 #. Label of the date (Date) field in DocType 'Employee Attendance Tool'
 #. Label of the date (Date) field in DocType 'Employee Referral'
 #. Label of the date (Date) field in DocType 'Exit Interview'
@@ -3073,7 +3020,7 @@ msgstr "Födelsedag Datum"
 #: payroll/doctype/retention_bonus/retention_bonus.json
 #: payroll/doctype/salary_withholding/salary_withholding.json
 #: payroll/report/income_tax_computation/income_tax_computation.py:528
-#: payroll/report/salary_register/salary_register.py:127 setup.py:398
+#: payroll/report/salary_register/salary_register.py:127 setup.py:396
 msgid "Date of Joining"
 msgstr "Anställning Datum"
 
@@ -3194,6 +3141,10 @@ msgstr "Standard Bank / Kassa Konto kommer att uppdateras automatiskt i Lön Jou
 #: hr/doctype/employee_grade/employee_grade.json
 msgid "Default Base Pay"
 msgstr "Standard Grund Lön"
+
+#: overrides/company.py:133
+msgid "Default Payroll Payable Account"
+msgstr ""
 
 #. Label of the default_salary_structure (Link) field in DocType 'Employee
 #. Grade'
@@ -3317,7 +3268,7 @@ msgstr "Leverans Rutt"
 #: hr/report/employee_exits/employee_exits.js:27
 #: hr/report/employee_exits/employee_exits.py:65
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.js:37
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:62
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:60
 #: hr/report/employee_leave_balance/employee_leave_balance.js:30
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:30
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.py:24
@@ -3340,7 +3291,7 @@ msgstr "Leverans Rutt"
 #: payroll/report/income_tax_computation/income_tax_computation.js:33
 #: payroll/report/income_tax_computation/income_tax_computation.py:515
 #: payroll/report/salary_register/salary_register.py:140
-#: public/js/salary_slip_deductions_report_filters.js:42 setup.py:404
+#: public/js/salary_slip_deductions_report_filters.js:42 setup.py:402
 #: templates/generators/job_opening.html:87
 msgid "Department"
 msgstr "Avdelning"
@@ -3363,6 +3314,11 @@ msgstr "Avdelning: {0}"
 #: hr/doctype/travel_itinerary/travel_itinerary.json
 msgid "Departure Datetime"
 msgstr "Avgång Datum och Tid"
+
+#: payroll/doctype/salary_structure/salary_structure.py:103
+#: payroll/doctype/salary_structure/salary_structure.py:107
+msgid "Depends On Payment Days"
+msgstr ""
 
 #. Label of the depends_on_payment_days (Check) field in DocType 'Salary
 #. Component'
@@ -3939,7 +3895,7 @@ msgstr "Skickar Lön Besked baserat på önskad e-post adress vald i Personal In
 #: hr/report/employee_exits/employee_exits.js:39
 #: hr/report/employee_exits/employee_exits.py:24
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.js:31
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:55
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:53
 #: hr/report/employee_leave_balance/employee_leave_balance.js:36
 #: hr/report/employee_leave_balance/employee_leave_balance.py:40
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:24
@@ -3950,7 +3906,7 @@ msgstr "Skickar Lön Besked baserat på önskad e-post adress vald i Personal In
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:35
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:92
 #: hr/report/project_profitability/project_profitability.js:37
-#: hr/report/project_profitability/project_profitability.py:142
+#: hr/report/project_profitability/project_profitability.py:140
 #: hr/report/shift_attendance/shift_attendance.js:22
 #: hr/report/shift_attendance/shift_attendance.py:22
 #: hr/report/unpaid_expense_claim/unpaid_expense_claim.js:8
@@ -4052,7 +4008,7 @@ msgstr "Förmån Anspråk"
 #. Label of the employee_benefits (Table) field in DocType 'Employee Benefit
 #. Application'
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
-#: setup.py:401
+#: setup.py:399
 msgid "Employee Benefits"
 msgstr "Förmåner"
 
@@ -4326,7 +4282,7 @@ msgstr "Livscykel Översikt Panel"
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.py:23
 #: hr/report/leave_ledger/leave_ledger.py:35
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:98
-#: hr/report/project_profitability/project_profitability.py:147
+#: hr/report/project_profitability/project_profitability.py:145
 #: hr/report/shift_attendance/shift_attendance.py:31
 #: hr/report/unpaid_expense_claim/unpaid_expense_claim.py:19
 #: payroll/doctype/additional_salary/additional_salary.json
@@ -4428,7 +4384,7 @@ msgstr "Egenskap Historik"
 #: hr/doctype/employee_referral/employee_referral.json
 #: hr/doctype/job_applicant/job_applicant.json
 #: hr/doctype/job_requisition/job_requisition.js:18
-#: hr/workspace/recruitment/recruitment.json setup.py:395
+#: hr/workspace/recruitment/recruitment.json setup.py:393
 msgid "Employee Referral"
 msgstr "Referens"
 
@@ -4632,11 +4588,6 @@ msgstr "Personal {0} halvdag {1}"
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
 msgstr "Personal {0} som avskedades {1} måste anges som 'Slutat'"
 
-#. Subtitle of the Module Onboarding 'Human Resource'
-#: hr/module_onboarding/human_resource/human_resource.json
-msgid "Employee, Leaves, and more."
-msgstr "Personal, Ledighet med mera."
-
 #: payroll/doctype/gratuity/gratuity.py:166
 msgid "Employee: {0} have to complete minimum {1} years for gratuity"
 msgstr "Personal: {0} måste arbeta minst {1} år för dricks"
@@ -4788,7 +4739,7 @@ msgstr "Slut"
 #: hr/doctype/shift_assignment/shift_assignment.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hr/report/project_profitability/project_profitability.js:24
-#: hr/report/project_profitability/project_profitability.py:204
+#: hr/report/project_profitability/project_profitability.py:202
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/payroll_period/payroll_period.json
 #: payroll/doctype/payroll_period_date/payroll_period_date.json
@@ -4850,7 +4801,7 @@ msgid "Error"
 msgstr "Fel"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:325
-#: hr/utils.py:822
+#: hr/utils.py:820
 msgid "Error Log"
 msgstr "Fel Logg"
 
@@ -5052,8 +5003,8 @@ msgstr "Avgång Frågeformulär"
 
 #: hr/doctype/exit_interview/test_exit_interview.py:108
 #: hr/doctype/exit_interview/test_exit_interview.py:118
-#: hr/doctype/exit_interview/test_exit_interview.py:120 setup.py:476
-#: setup.py:478 setup.py:499
+#: hr/doctype/exit_interview/test_exit_interview.py:120 setup.py:474
+#: setup.py:476 setup.py:497
 msgid "Exit Questionnaire Notification"
 msgstr "Avgång Frågeförmulär Avisering"
 
@@ -5069,6 +5020,7 @@ msgstr "Avgång Frågeformulär Väntar"
 
 #. Label of the exit_questionnaire_web_form (Link) field in DocType 'HR
 #. Settings'
+#: hr/doctype/exit_interview/exit_interview.py:121
 #: hr/doctype/hr_settings/hr_settings.json
 msgid "Exit Questionnaire Web Form"
 msgstr "Avgång Frågeförmulär Webbformulär"
@@ -5164,6 +5116,7 @@ msgstr "Utlägg Detalj"
 #. Name of a DocType
 #. Label of the expense_type (Data) field in DocType 'Expense Claim Type'
 #. Label of a Link in the Expense Claims Workspace
+#: hr/doctype/expense_claim/expense_claim.py:474
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
 #: hr/doctype/expense_claim_type/expense_claim_type.json
 #: hr/workspace/expense_claims/expense_claims.json
@@ -5253,11 +5206,6 @@ msgstr "Utgången Ledighet"
 msgid "Explanation"
 msgstr "Förklaring"
 
-#. Label of an action in the Onboarding Step 'HR Settings'
-#: hr/onboarding_step/hr_settings/hr_settings.json
-msgid "Explore"
-msgstr "Utforska"
-
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:116
 msgid "Export"
 msgstr "Exportera"
@@ -5271,7 +5219,7 @@ msgstr "Exporterar..."
 msgid "Failed"
 msgstr "Misslyckad"
 
-#: hr/utils.py:817
+#: hr/utils.py:815
 msgid "Failed to create/submit {0} for employees:"
 msgstr "Misslyckades med att skapa/godkänna {0} för personal:"
 
@@ -5525,7 +5473,7 @@ msgstr "FnF Pågående"
 msgid "Follow via Email"
 msgstr "Följ via E-post"
 
-#: setup.py:328
+#: setup.py:326
 msgid "Food"
 msgstr "Mat"
 
@@ -5586,7 +5534,7 @@ msgstr "Andel av Daglig Lön för Halvdag"
 msgid "Fraction of Daily Salary per Leave"
 msgstr "Andel Daglig Lön per Ledighet"
 
-#: hr/report/project_profitability/project_profitability.py:193
+#: hr/report/project_profitability/project_profitability.py:191
 msgid "Fractional Cost"
 msgstr "Delkostnad"
 
@@ -5750,7 +5698,7 @@ msgstr "Avgång Avtal"
 msgid "Full and Final Statement"
 msgstr "Avgång Avtal"
 
-#: setup.py:384
+#: setup.py:382
 msgid "Full-time"
 msgstr "Heltid"
 
@@ -6082,11 +6030,10 @@ msgid "HR Manager"
 msgstr "Personal Huvudansvarig"
 
 #. Name of a DocType
-#. Title of an Onboarding Step
 #. Label of a Link in the HR Workspace
 #: hr/doctype/hr_settings/hr_settings.json
 #: hr/doctype/leave_application/leave_application.py:165
-#: hr/onboarding_step/hr_settings/hr_settings.json hr/workspace/hr/hr.json
+#: hr/workspace/hr/hr.json
 msgid "HR Settings"
 msgstr "Personal Inställningar"
 
@@ -6482,7 +6429,8 @@ msgstr "Pågående"
 
 #. Option for the 'Status' (Select) field in DocType 'Appraisal Cycle'
 #. Option for the 'Status' (Select) field in DocType 'Goal'
-#: hr/doctype/appraisal_cycle/appraisal_cycle.json hr/doctype/goal/goal.json
+#: hr/doctype/appraisal_cycle/appraisal_cycle.json
+#: hr/doctype/appraisal_cycle/appraisal_cycle.py:204 hr/doctype/goal/goal.json
 msgid "In Progress"
 msgstr "Pågående"
 
@@ -6519,7 +6467,7 @@ msgid "Incentive Amount"
 msgstr "Motivation Belopp"
 
 #. Label of a Card Break in the Salary Payout Workspace
-#: payroll/workspace/salary_payout/salary_payout.json setup.py:409
+#: payroll/workspace/salary_payout/salary_payout.json setup.py:407
 msgid "Incentives"
 msgstr "Motivation"
 
@@ -6673,7 +6621,7 @@ msgstr "Ränte Intäkt Konto"
 msgid "Intermediate"
 msgstr "Mellanhand"
 
-#: setup.py:390
+#: setup.py:388
 msgid "Intern"
 msgstr "Intern"
 
@@ -6712,6 +6660,7 @@ msgstr "Intevju Detaljer"
 #. Name of a DocType
 #. Label of a Link in the Recruitment Workspace
 #: hr/doctype/interview_feedback/interview_feedback.json
+#: hr/doctype/interview_feedback/interview_feedback.py:40
 #: hr/workspace/recruitment/recruitment.json
 msgid "Interview Feedback"
 msgstr "Intervju Återkoppling"
@@ -6719,8 +6668,8 @@ msgstr "Intervju Återkoppling"
 #: hr/doctype/interview/test_interview.py:300
 #: hr/doctype/interview/test_interview.py:309
 #: hr/doctype/interview/test_interview.py:311
-#: hr/doctype/interview/test_interview.py:318 setup.py:462 setup.py:464
-#: setup.py:497
+#: hr/doctype/interview/test_interview.py:318 setup.py:460 setup.py:462
+#: setup.py:495
 msgid "Interview Feedback Reminder"
 msgstr "Intervju Återkoppling Påminnelse"
 
@@ -6735,8 +6684,8 @@ msgstr "Intervju Ej Ombokad"
 #: hr/doctype/interview/test_interview.py:284
 #: hr/doctype/interview/test_interview.py:293
 #: hr/doctype/interview/test_interview.py:295
-#: hr/doctype/interview/test_interview.py:317 setup.py:450 setup.py:452
-#: setup.py:493
+#: hr/doctype/interview/test_interview.py:317 setup.py:448 setup.py:450
+#: setup.py:491
 msgid "Interview Reminder"
 msgstr "Intervju Påminnelse"
 
@@ -6769,6 +6718,10 @@ msgstr "Intervju Omgång {0} är endast tillämplig för Beteckning {1}"
 #: hr/doctype/interview/interview.py:52
 msgid "Interview Round {0} is only for Designation {1}. Job Applicant has applied for the role {2}"
 msgstr "Intervju Omgång {0} är endast för Beteckning {1}. Jobb Sökande har ansökt {2} roll"
+
+#: hr/doctype/interview_feedback/interview_feedback.py:40
+msgid "Interview Scheduled Date"
+msgstr ""
 
 #: hr/report/employee_exits/employee_exits.js:51
 #: hr/report/employee_exits/employee_exits.py:46
@@ -7042,7 +6995,7 @@ msgstr "Jobb Erbjudande Sökväg"
 #. Label of the job_description_tab (Tab Break) field in DocType 'Job
 #. Requisition'
 #. Label of the description (Text Editor) field in DocType 'Job Requisition'
-#: hr/doctype/job_requisition/job_requisition.json setup.py:405
+#: hr/doctype/job_requisition/job_requisition.json setup.py:403
 msgid "Job Description"
 msgstr "Jobb Beskrivning"
 
@@ -7330,7 +7283,7 @@ msgstr "Ledighet Ansökan"
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 msgstr "Ledighet Ansökan Period kan inte vara över två ej efterföljande ledighet tilldelningar {0} och {1}."
 
-#: setup.py:427 setup.py:429 setup.py:489
+#: setup.py:425 setup.py:427 setup.py:487
 msgid "Leave Approval Notification"
 msgstr "Ledighet Godkännande Avisering"
 
@@ -7502,7 +7455,7 @@ msgstr "Ledighet Princip Detaljer"
 msgid "Leave Policy: {0} already assigned for Employee {1} for period {2} to {3}"
 msgstr "Ledighet Princip: {0} redan tilldelad för personal {1} för period {2} till {3}"
 
-#: setup.py:436 setup.py:438 setup.py:490
+#: setup.py:434 setup.py:436 setup.py:488
 msgid "Leave Status Notification"
 msgstr "Ledighet Status Meddelande"
 
@@ -7573,8 +7526,8 @@ msgstr "Ledighet Typ {0} är inte uttagbar"
 
 #. Label of the leave_without_pay (Float) field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
-#: payroll/report/salary_register/salary_register.py:173 setup.py:376
-#: setup.py:377
+#: payroll/report/salary_register/salary_register.py:173 setup.py:374
+#: setup.py:375
 msgid "Leave Without Pay"
 msgstr "Obetald Ledighet"
 
@@ -7652,7 +7605,7 @@ msgstr "Ledigheter som väntar på Godkännande"
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
 msgstr "Ledighet för Ledighet Typ {0} kommer inte att vidarebefordras eftersom vidarebefordran är inaktiverad."
 
-#: setup.py:407
+#: setup.py:405
 msgid "Leaves per Year"
 msgstr "Ledighet per År"
 
@@ -7671,16 +7624,6 @@ msgstr "Slutat"
 msgctxt "Employee"
 msgid "Left"
 msgstr "Slutat"
-
-#. Title of the Module Onboarding 'Human Resource'
-#: hr/module_onboarding/human_resource/human_resource.json
-msgid "Let's Set Up the Human Resource Module. "
-msgstr "Konfigurera Personal Modul"
-
-#. Title of the Module Onboarding 'Payroll'
-#: payroll/module_onboarding/payroll/payroll.json
-msgid "Let's Set Up the Payroll Module. "
-msgstr "Konfigurera Löne Modul"
 
 #. Label of the letter_head (Link) field in DocType 'Job Offer'
 #. Label of the letter_head (Link) field in DocType 'Leave Application'
@@ -7741,7 +7684,7 @@ msgstr "Lån Återbetalning"
 msgid "Loan Repayment Entry"
 msgstr "Lån Återbetalning Post"
 
-#: hr/utils.py:710
+#: hr/utils.py:708
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr "Lån kan inte återbetalas från lön för personal {0} eftersom lön är i valuta {1}"
 
@@ -7871,10 +7814,6 @@ msgstr "Ange närvaro som {0} för {1} på valda datum?"
 #: hr/doctype/shift_type/shift_type.json
 msgid "Mark attendance based on 'Employee Checkin' for Employees assigned to this shift."
 msgstr "Ange närvaro baserat på 'Personal In/Utcheckning' för Personal som tilldelats detta skift."
-
-#: hr/doctype/appraisal_cycle/appraisal_cycle.py:204
-msgid "Mark the cycle as {0} if required."
-msgstr "Ange Utvärdering Cykel som {0} vid behov."
 
 #: hr/doctype/goal/goal_tree.js:262
 msgid "Mark {0} as Completed?"
@@ -8041,7 +7980,7 @@ msgstr "Maj"
 msgid "Meal Preference"
 msgstr "Måltid Preferens"
 
-#: setup.py:329
+#: setup.py:327
 msgid "Medical"
 msgstr "Vård"
 
@@ -8071,7 +8010,7 @@ msgstr "Minimum Beskattningsbar Inkomst"
 msgid "Minimum Year for Gratuity"
 msgstr "Minimum antal år för Dricks"
 
-#: hr/utils.py:801
+#: hr/utils.py:799
 msgid "Missing Field"
 msgstr "Fält Värde saknas"
 
@@ -8317,7 +8256,7 @@ msgstr "Ingen Personal hittades"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "Ingen Personal hittades för angiven Personal fält värde. '{}': {}"
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hr/utils.py:807
+#: hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hr/utils.py:805
 msgid "No Employees Selected"
 msgstr "Ingen Personal Vald"
 
@@ -8457,11 +8396,11 @@ msgstr "Ej Mejeri"
 msgid "Non Taxable Earnings"
 msgstr "Ej Beskattningbara Inkomster"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:252
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:250
 msgid "Non-Billed Hours"
 msgstr "Ofakturerade Timmar"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:76
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:74
 msgid "Non-Billed Hours (NB)"
 msgstr "Ofakturerade Timmar"
 
@@ -8524,9 +8463,13 @@ msgstr "Anteckningar"
 msgid "Nothing to change"
 msgstr "Inget att ändra"
 
-#: setup.py:408
+#: setup.py:406
 msgid "Notice Period"
 msgstr "Avisering Period"
+
+#: hr/doctype/exit_interview/exit_interview.py:122
+msgid "Notification Template"
+msgstr ""
 
 #. Label of the notify_users_by_email (Check) field in DocType 'Employee
 #. Onboarding'
@@ -8774,7 +8717,7 @@ msgstr "Övriga Inställningar"
 msgid "Other Taxes and Charges"
 msgstr "Övriga Skatter och Avgifter"
 
-#: setup.py:330
+#: setup.py:328
 msgid "Others"
 msgstr "Övriga"
 
@@ -8906,11 +8849,11 @@ msgstr "Parameter"
 msgid "Parent Goal"
 msgstr "Övergripande Mål"
 
-#: setup.py:385
+#: setup.py:383
 msgid "Part-time"
 msgstr "Deltid"
 
-#: hr/utils.py:826 public/js/utils/index.js:154
+#: hr/utils.py:824 public/js/utils/index.js:154
 msgid "Partial Success"
 msgstr "Delvis Klar"
 
@@ -9164,10 +9107,8 @@ msgid "Payroll Reports"
 msgstr "Lön Rapporter"
 
 #. Name of a DocType
-#. Title of an Onboarding Step
 #. Label of a Link in the Payroll Workspace
 #: payroll/doctype/payroll_settings/payroll_settings.json
-#: payroll/onboarding_step/payroll_settings/payroll_settings.json
 #: payroll/workspace/payroll/payroll.json
 msgid "Payroll Settings"
 msgstr "Lön Inställningar"
@@ -9250,7 +9191,7 @@ msgstr "Prestation"
 msgid "Phone Number"
 msgstr "Telefon Nummer"
 
-#: setup.py:389
+#: setup.py:387
 msgid "Piecework"
 msgstr "Ackord"
 
@@ -9328,7 +9269,7 @@ msgstr "Välj Från Datum."
 msgid "Please select Shift Type and assignment date(s)."
 msgstr "Vänligen välj Skift Typ och Tilldelning Datum."
 
-#: hr/utils.py:704
+#: hr/utils.py:702
 msgid "Please select a Company"
 msgstr "Välj Bolag"
 
@@ -9349,7 +9290,7 @@ msgstr "Välj CSV fil"
 msgid "Please select a date."
 msgstr "Välj Datum"
 
-#: hr/utils.py:701
+#: hr/utils.py:699
 msgid "Please select an Applicant"
 msgstr "Välj Sökande"
 
@@ -9357,7 +9298,7 @@ msgstr "Välj Sökande"
 msgid "Please select at least one Shift Request to perform this action."
 msgstr "Välj minst en Skift Begäran för att utföra denna åtgärd."
 
-#: hr/utils.py:806
+#: hr/utils.py:804
 msgid "Please select at least one employee to perform this action."
 msgstr "Välj minst en i personal för att utföra denna åtgärd."
 
@@ -9576,15 +9517,15 @@ msgstr "Utskriven"
 msgid "Printing Details"
 msgstr "Utskrift Detaljer"
 
-#: setup.py:368 setup.py:369
+#: setup.py:366 setup.py:367
 msgid "Privilege Leave"
 msgstr "Privilegierad Ledighet"
 
-#: setup.py:386
+#: setup.py:384
 msgid "Probation"
 msgstr "Prov"
 
-#: setup.py:400
+#: setup.py:398
 msgid "Probationary Period"
 msgstr "Prov Period"
 
@@ -9638,7 +9579,7 @@ msgstr "Professionell Moms Avdrag"
 msgid "Proficiency"
 msgstr "Skicklighet"
 
-#: hr/report/project_profitability/project_profitability.py:185
+#: hr/report/project_profitability/project_profitability.py:183
 msgid "Profit"
 msgstr "Vinst"
 
@@ -9662,7 +9603,7 @@ msgstr "Framsteg"
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.js:43
 #: hr/report/project_profitability/project_profitability.js:43
-#: hr/report/project_profitability/project_profitability.py:164
+#: hr/report/project_profitability/project_profitability.py:162
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgid "Project"
 msgstr "Projekt"
@@ -10087,7 +10028,7 @@ msgstr "Hyrbil"
 msgid "Reopen"
 msgstr "Öppna Igen"
 
-#: hr/utils.py:716
+#: hr/utils.py:714
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "Återbetalning från Lön kan endast väljas för Långfristiga Lån"
 
@@ -10188,7 +10129,7 @@ msgstr "Löst"
 msgid "Resolved By"
 msgstr "Löst av"
 
-#: setup.py:406
+#: setup.py:404
 msgid "Responsibilities"
 msgstr "Ansvar"
 
@@ -10266,11 +10207,6 @@ msgstr "Retur"
 #: hr/doctype/employee_advance/employee_advance.json
 msgid "Returned Amount"
 msgstr "Returnerad Belopp"
-
-#. Label of an action in the Onboarding Step 'Payroll Settings'
-#: payroll/onboarding_step/payroll_settings/payroll_settings.json
-msgid "Review Payroll Settings"
-msgstr "Granska Lön Inställningar"
 
 #: hr/doctype/hr_settings/hr_settings.js:41
 msgid "Review various other settings related to Employee Leaves and Expense Claim"
@@ -10365,7 +10301,7 @@ msgstr "Rad #{0}: Komponent {1} har alternativ {2} och {3} aktiverade."
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
 msgstr "Rad #{0}: Tidrapport belopp kommer att skriva över Inkomst komponent belopp för löne komponent {1}"
 
-#: hr/doctype/expense_claim/expense_claim.py:570
+#: hr/doctype/expense_claim/expense_claim.py:571
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
 msgstr "Rad #{0}: Belopp kan inte vara högre än Utestående Belopp mot Utlägg {1}. Utestående Belopp är {2}"
 
@@ -10501,7 +10437,7 @@ msgstr "Lön Utbetalningar via ECS"
 #. Name of a Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Salary Payout"
-msgstr " Lön Beredning"
+msgstr "Löner"
 
 #: templates/generators/job_opening.html:108
 msgid "Salary Range"
@@ -10709,12 +10645,7 @@ msgstr "Lönekomponenter ska ingå i Lönestruktur."
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "Lönebesked e-post är i kö att skickas. Kontrollera {0} för status."
 
-#. Subtitle of the Module Onboarding 'Payroll'
-#: payroll/module_onboarding/payroll/payroll.json
-msgid "Salary, Compensation, and more."
-msgstr "Lön, Kompensation, och mer."
-
-#: hr/report/project_profitability/project_profitability.py:150
+#: hr/report/project_profitability/project_profitability.py:148
 msgid "Sales Invoice"
 msgstr "Försäljning Faktura"
 
@@ -10945,10 +10876,18 @@ msgstr "Avsändare"
 msgid "Sender Email"
 msgstr "Avsändare E-post"
 
+#: hr/doctype/exit_interview/exit_interview.py:136
+msgid "Sending Failed due to missing email information for employee(s): {1}"
+msgstr ""
+
 #. Option for the 'Status' (Select) field in DocType 'Daily Work Summary'
 #: hr/doctype/daily_work_summary/daily_work_summary.json
 msgid "Sent"
 msgstr "Skickad"
+
+#: hr/doctype/exit_interview/exit_interview.py:132
+msgid "Sent Successfully: {0}"
+msgstr ""
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:20
 #: public/js/salary_slip_deductions_report_filters.js:27
@@ -11071,6 +11010,10 @@ msgstr "Ange Intervall för Helg Påminnelser "
 msgid "Set the properties that should be updated in the Employee master on promotion submission"
 msgstr "Ange egenskaper som ska uppdateras i Personal Tabell vid befordran"
 
+#: hr/doctype/appraisal_cycle/appraisal_cycle.py:204
+msgid "Set the status to {0} if required."
+msgstr ""
+
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:200
 msgid "Set {0} for selected employees"
 msgstr "Ange {0} för vald personal"
@@ -11104,9 +11047,9 @@ msgstr "Avstämd"
 msgid "Setup"
 msgstr "Inställning"
 
-#: hr/utils.py:664
-msgid "Shared with the user {0} with {1} access"
-msgstr "Delad med användare {0} med {1} åtkomst"
+#: hr/utils.py:663
+msgid "Shared with the user {0} with 'submit' permisions"
+msgstr ""
 
 #. Label of the shift (Link) field in DocType 'Attendance'
 #. Label of the shift (Link) field in DocType 'Attendance Request'
@@ -11285,24 +11228,11 @@ msgstr "Visa Ledighet för alla Avdelning Medlemmar på Kalender"
 msgid "Show Salary Slip"
 msgstr "Visa Lön Besked"
 
-#. Label of an action in the Onboarding Step 'Create Employee'
-#. Label of an action in the Onboarding Step 'Create Holiday List'
-#. Label of an action in the Onboarding Step 'Create Leave Allocation'
-#. Label of an action in the Onboarding Step 'Create Leave Application'
-#. Label of an action in the Onboarding Step 'Create Leave Type'
-#: hr/onboarding_step/create_employee/create_employee.json
-#: hr/onboarding_step/create_holiday_list/create_holiday_list.json
-#: hr/onboarding_step/create_leave_allocation/create_leave_allocation.json
-#: hr/onboarding_step/create_leave_application/create_leave_application.json
-#: hr/onboarding_step/create_leave_type/create_leave_type.json
-msgid "Show Tour"
-msgstr "Visa Introduktion"
-
 #: www/jobs/index.html:121
 msgid "Showing"
 msgstr "Visning"
 
-#: setup.py:360 setup.py:361
+#: setup.py:358 setup.py:359
 msgid "Sick Leave"
 msgstr "Sjuk Ledighet"
 
@@ -11414,6 +11344,8 @@ msgstr "Standard Skatt Dispans Belopp"
 
 #. Label of the standard_working_hours (Float) field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:36
+#: hr/report/project_profitability/project_profitability.py:102
 msgid "Standard Working Hours"
 msgstr "Standard Arbets Timmar"
 
@@ -11438,7 +11370,7 @@ msgstr "Start"
 #: hr/doctype/shift_assignment/shift_assignment.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hr/report/project_profitability/project_profitability.js:17
-#: hr/report/project_profitability/project_profitability.py:203
+#: hr/report/project_profitability/project_profitability.py:201
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/payroll_period/payroll_period.json
 #: payroll/doctype/payroll_period_date/payroll_period_date.json
@@ -11549,7 +11481,7 @@ msgstr "Statistisk Komponent"
 msgid "Status"
 msgstr "Status"
 
-#: setup.py:403
+#: setup.py:401
 msgid "Stock Options"
 msgstr "Lager Optioner"
 
@@ -11585,6 +11517,10 @@ msgstr "Godkännande Datum"
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:331
 msgid "Submission Failed"
 msgstr "Godkännade Misslyckad"
+
+#: hr/doctype/interview_feedback/interview_feedback.py:39
+msgid "Submission of {0} before {1} is not allowed"
+msgstr ""
 
 #: hr/doctype/job_requisition/job_requisition.js:75
 #: public/js/performance/performance_feedback.js:99
@@ -11641,13 +11577,13 @@ msgstr "Godkänner Lön Besked..."
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "Dotterbolag har redan planerat för {1} lediga tjänster till en budget på {2}. Bemanningsplan för {0} ska tilldela fler lediga tjänster och budget för {3} än planerat för dotterbolag"
 
-#: hr/doctype/employee_referral/employee_referral.py:54 hr/utils.py:831
+#: hr/doctype/employee_referral/employee_referral.py:54 hr/utils.py:829
 #: payroll/doctype/payroll_entry/payroll_entry.py:1447
 #: public/js/utils/index.js:139
 msgid "Success"
 msgstr "Slutförd"
 
-#: hr/utils.py:834
+#: hr/utils.py:832
 msgid "Successfully created {0} for employees:"
 msgstr "Skapad {0} för personal:"
 
@@ -11883,15 +11819,9 @@ msgstr "Regler och Villkor"
 msgid "Thank you"
 msgstr "Tack"
 
-#. Success message of the Module Onboarding 'Human Resource'
-#: hr/module_onboarding/human_resource/human_resource.json
-msgid "The Human Resource Module is all set up!"
-msgstr "Personal Modul är klar!"
-
-#. Success message of the Module Onboarding 'Payroll'
-#: payroll/module_onboarding/payroll/payroll.json
-msgid "The Payroll Module is all set up!"
-msgstr "Löne Modul är klar!"
+#: overrides/company.py:131
+msgid "The currency of {0} should be same as the company's default currency. Please select another account."
+msgstr ""
 
 #. Description of the 'Payroll Date' (Date) field in DocType 'Additional
 #. Salary'
@@ -11922,10 +11852,13 @@ msgstr "Bråkdel av dagslön per ledighet ska vara mellan 0 och 1"
 msgid "The fraction of daily wages to be paid for half-day attendance"
 msgstr "Bråkdel av dagslön som ska betalas för halvdags närvaro"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:35
 #: hr/report/project_profitability/project_profitability.py:101
-msgid "The metrics for this report are calculated based on the Standard Working Hours. Please set {0} in {1}."
-msgstr "Mätvärde för denna rapport beräknas utifrån standardarbetstid. Ange {0} i {1}."
+msgid "The metrics for this report are calculated based on the {0}. Please set {0} in {1}."
+msgstr ""
+
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:35
+msgid "The metrics for this report are calculated based on {0}. Please set {0} in {1}."
+msgstr ""
 
 #. Description of the 'Encrypt Salary Slips in Emails' (Check) field in DocType
 #. 'Payroll Settings'
@@ -12071,7 +12004,7 @@ msgid "Timelines"
 msgstr "Tidsram"
 
 #. Label of a Link in the Shift & Attendance Workspace
-#: hr/report/project_profitability/project_profitability.py:157
+#: hr/report/project_profitability/project_profitability.py:155
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Timesheet"
 msgstr "Tidrapport"
@@ -12278,8 +12211,8 @@ msgstr "Totalt Belopp kan inte vara noll"
 msgid "Total Asset Recovery Cost"
 msgstr "Totalt Återställning Kostnad för Tillgångar"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:229
-#: hr/report/project_profitability/project_profitability.py:199
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:227
+#: hr/report/project_profitability/project_profitability.py:197
 msgid "Total Billed Hours"
 msgstr "Totalt Fakturerade Timmar"
 
@@ -12358,7 +12291,7 @@ msgstr "Totalt Brutto Lön"
 msgid "Total Holidays"
 msgstr "Totalt Helg Dagar"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:68
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:66
 msgid "Total Hours (T)"
 msgstr "Tottalt Timmar (T)"
 
@@ -12400,7 +12333,7 @@ msgstr "Totalt Ledighet Uttagen"
 msgid "Total Net Pay"
 msgstr "Totalt Netto Lön"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:230
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:228
 msgid "Total Non-Billed Hours"
 msgstr "Totalt Ofakturerade Timmar"
 
@@ -12501,7 +12434,7 @@ msgstr "Totalt lön som bokförts mot denna komponent för denna personal från 
 #. Description of the 'Month To Date' (Currency) field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgid "Total salary booked for this employee from the beginning of the month up to the current salary slip's end date."
-msgstr "Totalt lön bokgörd för denna personal från början av månaden fram till aktuell lönebeskeds slutdatum."
+msgstr "Totalt lön bokförd för denna personal från början av månaden fram till aktuell lönebesked slutdatum."
 
 #. Description of the 'Year To Date' (Currency) field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -12660,7 +12593,7 @@ msgstr "Transaktion Typ"
 msgid "Transactions"
 msgstr "Transaktioner"
 
-#: hr/utils.py:687
+#: hr/utils.py:685
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr "Transaktioner kan inte skapas för en inaktiv personal {0}."
 
@@ -12670,7 +12603,7 @@ msgid "Transfer Date"
 msgstr "Överföring Datum"
 
 #. Label of a Card Break in the Expense Claims Workspace
-#: hr/workspace/expense_claims/expense_claims.json setup.py:331
+#: hr/workspace/expense_claims/expense_claims.json setup.py:329
 msgid "Travel"
 msgstr "Resa"
 
@@ -12827,11 +12760,11 @@ msgstr "Oreglerade Transaktioner"
 msgid "Unsubmitted Appraisals"
 msgstr "Ej Godkännda Uppskattningar"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:253
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:251
 msgid "Untracked Hours"
 msgstr "Ej Spårade Timmar"
 
-#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:82
+#: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:80
 msgid "Untracked Hours (U)"
 msgstr "Ej Spårade Timmar (U)"
 
@@ -12933,7 +12866,7 @@ msgstr "Användare"
 msgid "Users"
 msgstr "Användare"
 
-#: hr/report/project_profitability/project_profitability.py:190
+#: hr/report/project_profitability/project_profitability.py:188
 msgid "Utilization"
 msgstr "Användning"
 
@@ -13055,7 +12988,7 @@ msgstr "Visa Bokföring Register"
 msgid "WARNING: Loan Management module has been separated from ERPNext."
 msgstr "Varning: Lån Hantering modul är separerad från System."
 
-#: setup.py:394
+#: setup.py:392
 msgid "Walk In"
 msgstr "Besök"
 
@@ -13085,7 +13018,7 @@ msgstr "Varning: Ledighet Ansökan innehåller följande spärrade datum"
 msgid "Warning: {0} already has an active Shift Assignment {1} for some/all of these dates."
 msgstr "Varning: {0} har redan en aktiv Skift Tilldelning {1} för några/alla dessa datum."
 
-#: setup.py:393
+#: setup.py:391
 msgid "Website Listing"
 msgstr "Webbplats Lista"
 
@@ -13213,7 +13146,7 @@ msgstr "Arbetsdagar och Tid"
 #. Label of the working_hours (Float) field in DocType 'Salary Slip Timesheet'
 #: hr/doctype/attendance/attendance.json
 #: payroll/doctype/salary_slip_timesheet/salary_slip_timesheet.json
-#: setup.py:402
+#: setup.py:400
 msgid "Working Hours"
 msgstr "Arbets Timmar"
 
@@ -13440,14 +13373,6 @@ msgstr "{0} har redan Skift Tilldelning för några/alla dessa datum,"
 msgid "{0} applicable after {1} working days"
 msgstr "{0} gäller efter {1} arbetsdagar"
 
-#: overrides/company.py:131
-msgid "{0} currency must be same as company's default currency. Please select another account."
-msgstr "{0} valuta måste vara sama som bolag standard valuta.välj annan konto"
-
-#: hr/doctype/exit_interview/exit_interview.py:136
-msgid "{0} due to missing email information for employee(s): {1}"
-msgstr "{0} på grund av saknad e-post information för anställd(a): {1}"
-
 #: payroll/doctype/additional_salary/additional_salary.py:157
 msgid "{0} has {1} enabled"
 msgstr "{0} har {1} aktiverat"
@@ -13472,7 +13397,7 @@ msgstr "{0} finns inte i valfri Helg Lista"
 msgid "{0} is not in a valid Payroll Period"
 msgstr "{0} är inte i en giltig Lön Period"
 
-#: hr/utils.py:801
+#: hr/utils.py:799
 msgid "{0} is required"
 msgstr "{0} erfodras"
 
@@ -13484,10 +13409,6 @@ msgstr "{0} måste godkännas"
 #: hr/doctype/goal/goal.py:194
 msgid "{0} of {1} Completed"
 msgstr "{0} av {1} Slutförda"
-
-#: hr/doctype/interview_feedback/interview_feedback.py:39
-msgid "{0} submission before {1} is not allowed"
-msgstr "{0} godkännande före {1} är inte tillåtet"
 
 #: hr/doctype/staffing_plan/staffing_plan.py:129
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
@@ -13509,8 +13430,7 @@ msgstr "{0}: Personal E-post hittades inte, därför skickades inte E-post"
 msgid "{0}: From {0} of type {1}"
 msgstr "{0}: Från {0} av typ {1}"
 
-#: hr/doctype/exit_interview/exit_interview.py:132 overrides/company.py:37
-#: overrides/company.py:50
+#: overrides/company.py:37 overrides/company.py:50
 msgid "{0}: {1}"
 msgstr "{0}: {1}"
 
