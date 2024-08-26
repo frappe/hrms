@@ -36,7 +36,7 @@ const employee = inject("$employee")
 
 const shiftRequests = createListResource({
 	doctype: "Shift Request",
-	fields: ["name", "shift_type", "from_date", "to_date", "approver", "status", "docstatus"],
+	fields: ["name", "shift_type", "from_date", "to_date", "status", "docstatus"],
 	filters: {
 		employee: employee.data?.name,
 		docstatus: ["!=", 2],
