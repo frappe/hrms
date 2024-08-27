@@ -113,6 +113,44 @@ export const EXPENSE_CLAIM_FIELDS = [
 	},
 ]
 
+export const ATTENDANCE_REQUEST_FIELDS = [
+	{
+		fieldname: "name",
+		label: "ID",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "attendance_dates",
+		label: "Attendance Dates",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "total_attendance_days",
+		label: "Total Attendance Days",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "include_holidays",
+		label: "Include Holidays",
+		fieldtype: "Check",
+	},
+	{
+		fieldname: "shift",
+		label: "Shift",
+		fieldtype: "Link",
+	},
+	{
+		fieldname: "reason",
+		label: "Reason",
+		fieldtype: "Select",
+	},
+	{
+		fieldname: "employee",
+		label: "Employee",
+		fieldtype: "Link",
+	},
+]
+
 export const SHIFT_FIELDS = [
 	{
 		fieldname: "name",

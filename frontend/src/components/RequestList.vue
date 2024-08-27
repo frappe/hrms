@@ -49,6 +49,7 @@ import RequestActionSheet from "@/components/RequestActionSheet.vue"
 import {
 	LEAVE_FIELDS,
 	EXPENSE_CLAIM_FIELDS,
+	ATTENDANCE_REQUEST_FIELDS,
 	SHIFT_REQUEST_FIELDS,
 } from "@/data/config/requestSummaryFields"
 
@@ -76,6 +77,7 @@ const props = defineProps({
 const fieldsMap = {
 	"Leave Application": LEAVE_FIELDS,
 	"Expense Claim": EXPENSE_CLAIM_FIELDS,
+	"Attendance Request": ATTENDANCE_REQUEST_FIELDS,
 	"Shift Request": SHIFT_REQUEST_FIELDS,
 }
 

@@ -52,7 +52,7 @@ const employee = inject("$employee")
 
 const attendanceRequests = createListResource({
 	doctype: "Attendance Request",
-	fields: ["name", "reason", "from_date", "to_date", "docstatus"],
+	fields: ["name", "reason", "from_date", "to_date", "include_holidays", "shift", "docstatus"],
 	filters: {
 		employee: employee.data?.name,
 		docstatus: ["!=", 2],
