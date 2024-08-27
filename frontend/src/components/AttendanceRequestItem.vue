@@ -5,14 +5,14 @@
 				<FeatherIcon name="clock" class="h-5 w-5 text-gray-500" />
 				<div class="flex flex-col items-start gap-1.5">
 					<div class="text-base font-normal text-gray-800">
-						{{ props.doc.shift_type }}
+						{{ props.doc.reason }}
 					</div>
 					<div class="text-xs font-normal text-gray-500">
-						<span>{{ props.doc.shift_dates || getDates(props.doc) }}</span>
+						<span>{{ props.doc.attendance_dates || getDates(props.doc) }}</span>
 						<span v-if="props.doc.to_date">
 							<span class="whitespace-pre"> &middot; </span>
 							<span class="whitespace-nowrap">{{
-								`${props.doc.total_shift_days || getTotalDays(props.doc)}d`
+								`${props.doc.total_attendance_days || getTotalDays(props.doc)}d`
 							}}</span>
 						</span>
 					</div>
@@ -54,13 +54,11 @@ const props = defineProps({
 })
 
 const status = computed(() => {
-	if (props.workflowStateField) return props.doc[props.workflowStateField]
-	return props.doc.docstatus ? props.doc.status : "Open"
+	return props.workflowStateField ? props.doc[props.workflowStateField] : props.doc.docstatus
 })
 
 const colorMap = {
-	Approved: "green",
-	Rejected: "red",
-	Open: "orange",
+	Draft: "gray",
+	Submitted: "blue",
 }
 </script>
