@@ -37,6 +37,7 @@ const shiftRequest = ref({})
 const formFields = createResource({
 	url: "hrms.api.get_doctype_fields",
 	params: { doctype: "Shift Request" },
+	auto: true,
 	transform(data) {
 		if (props.id) return data
 		return data.filter(
@@ -44,7 +45,20 @@ const formFields = createResource({
 		)
 	},
 })
-formFields.reload()
+
+createResource({
+	url: "hrms.api.get_shift_request_approvers",
+	params: { employee: employee.data.name },
+	auto: !props.id,
+	onSuccess(data) {
+		const approver = formFields.data?.find((field) => field.fieldname === "approver")
+		approver.documentList = data?.map((approver) => ({
+			label: approver.full_name ? `${approver.name} : ${approver.full_name}` : approver.name,
+			value: approver.name,
+		}))
+		shiftRequest.value.approver = data[0]?.name
+	},
+})
 
 // form scripts
 watch(
@@ -86,17 +100,6 @@ function validateDates(from_date, to_date) {
 
 	const from_date_field = formFields.data.find((field) => field.fieldname === "from_date")
 	from_date_field.error_message = error_message
-}
-
-// TODO: fix this
-function setApprover(data) {
-	const approver = formFields.data?.find((field) => field.fieldname === "approver")
-	approver.documentList = data?.department_approvers.map((approver) => ({
-		label: approver.full_name ? `${approver.name} : ${approver.full_name}` : approver.name,
-		value: approver.name,
-	}))
-
-	shiftRequest.value.approver = data?.approver
 }
 
 function validateForm() {
