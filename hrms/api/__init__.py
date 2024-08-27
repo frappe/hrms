@@ -157,6 +157,36 @@ def get_holidays_for_calendar(employee: str, from_date: str, to_date: str) -> li
 
 
 @frappe.whitelist()
+def get_shift_request_approvers(employee: str) -> str | list[str]:
+	shift_request_approver, department = frappe.get_cached_value(
+		"Employee",
+		employee,
+		["shift_request_approver", "department"],
+	)
+
+	department_approvers = []
+	if department:
+		department_approvers = get_department_approvers(department, "shift_request_approver")
+		if not shift_request_approver:
+			shift_request_approver = frappe.db.get_value(
+				"Department Approver",
+				{"parent": department, "parentfield": "shift_request_approver", "idx": 1},
+				"approver",
+			)
+
+	shift_request_approver_name = frappe.db.get_value("User", shift_request_approver, "full_name", cache=True)
+
+	if shift_request_approver and shift_request_approver not in [
+		approver.name for approver in department_approvers
+	]:
+		department_approvers.insert(
+			0, {"name": shift_request_approver, "full_name": shift_request_approver_name}
+		)
+
+	return department_approvers
+
+
+@frappe.whitelist()
 def get_shifts(employee: str) -> list[dict[str, str]]:
 	ShiftAssignment = frappe.qb.DocType("Shift Assignment")
 	ShiftType = frappe.qb.DocType("Shift Type")
