@@ -256,7 +256,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-02-05 09:10:45.636550",
+ "modified": "2024-08-26 20:32:14.973579",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claims",
@@ -265,7 +265,11 @@
  "parent_page": "HR",
  "public": 1,
  "quick_lists": [],
- "roles": [],
+ "roles": [
+  {
+   "role": "Erpnext User"
+  }
+ ],
  "sequence_id": 8.0,
  "shortcuts": [
   {

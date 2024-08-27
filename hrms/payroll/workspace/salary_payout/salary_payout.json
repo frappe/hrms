@@ -370,7 +370,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-07-22 18:07:37.351654",
+ "modified": "2024-08-26 20:37:19.664818",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Payout",
@@ -379,7 +379,11 @@
  "parent_page": "Payroll",
  "public": 1,
  "quick_lists": [],
- "roles": [],
+ "roles": [
+  {
+   "role": "Erpnext User"
+  }
+ ],
  "sequence_id": 10.0,
  "shortcuts": [
   {
