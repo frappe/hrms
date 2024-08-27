@@ -7,6 +7,7 @@
 		:options="options.data"
 		:class="disabled ? 'pointer-events-none' : ''"
 		:disabled="disabled"
+		@update:query="handleQueryUpdate"
 	/>
 </template>
 
@@ -84,14 +85,10 @@ watch(
 	{ immediate: true }
 )
 
-watch(
-	() => autocompleteRef.value?.query,
-	(val) => {
-		val = val || ""
-		if (searchText.value === val) return
-		searchText.value = val
-		reloadOptions(val)
-	},
-	{ immediate: true }
-)
+const handleQueryUpdate = (newQuery) => {
+  const val = newQuery || ""
+  if (searchText.value === val) return
+  searchText.value = val
+  reloadOptions(val)
+}
 </script>
