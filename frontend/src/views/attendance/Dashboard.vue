@@ -3,13 +3,20 @@
 		<template #body>
 			<div class="flex flex-col mt-7 mb-7 p-4 gap-7">
 				<AttendanceCalendar />
+				<div class="w-full">
+					<router-link :to="{ name: 'AttendanceRequestFormView' }" v-slot="{ navigate }">
+						<Button @click="navigate" variant="solid" class="w-full py-5 text-base">
+							Request Attendance
+						</Button>
+					</router-link>
+				</div>
 				<div>
 					<div class="text-lg text-gray-800 font-bold">Recent Attendance Requests</div>
 					<RequestList
 						:component="markRaw(AttendanceRequestItem)"
 						:items="attendanceRequests?.data?.slice(0, 5)"
 						:addListButton="true"
-						listButtonRoute="ShiftRequestListView"
+						listButtonRoute="AttendanceRequestListView"
 					/>
 				</div>
 				<div>

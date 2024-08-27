@@ -126,6 +126,7 @@ import {
 } from "frappe-ui"
 
 import TabButtons from "@/components/TabButtons.vue"
+import AttendanceRequestItem from "@/components/AttendanceRequestItem.vue"
 import ShiftRequestItem from "@/components/ShiftRequestItem.vue"
 import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
 import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
@@ -164,6 +165,7 @@ const props = defineProps({
 })
 
 const listItemComponent = {
+	"Attendance Request": markRaw(AttendanceRequestItem),
 	"Shift Request": markRaw(ShiftRequestItem),
 	"Leave Application": markRaw(LeaveRequestItem),
 	"Expense Claim": markRaw(ExpenseClaimItem),
