@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-08-25 09:34+0000\n"
-"PO-Revision-Date: 2024-08-26 13:57\n"
+"PO-Revision-Date: 2024-08-27 13:54\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -294,12 +294,12 @@ msgstr "<h4>Villkor Exempel</h4>\n"
 #: hr/workspace/leaves/leaves.json hr/workspace/recruitment/recruitment.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "<span class=\"h4\"><b>Masters &amp; Reports</b></span>"
-msgstr ""
+msgstr "<span class=\"h4\"><b>Inställningar &amp; Rapporter</b></span>"
 
 #. Header text in the Performance Workspace
 #: hr/workspace/performance/performance.json
 msgid "<span class=\"h4\"><b>Masters &amp; Transactions</b></span>"
-msgstr ""
+msgstr "<span class=\"h4\"><b>Inställningar &amp; Transaktioner</b></span>"
 
 #. Header text in the HR Workspace
 #: hr/workspace/hr/hr.json
@@ -309,7 +309,7 @@ msgstr "<span class=\"h4\"><b>Rapporter &amp; Inställningar</b></span>"
 #. Header text in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "<span class=\"h4\"><b>Transactions &amp; Reports</b></span>"
-msgstr ""
+msgstr "<span class=\"h4\"><b>Transaktioner &amp; Rapporter</b></span>"
 
 #. Header text in the Employee Lifecycle Workspace
 #. Header text in the Expense Claims Workspace
@@ -335,7 +335,7 @@ msgstr "<span class=\"h4\"><b>Genvägar</b></span>"
 #. Header text in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "<span style=\"font-size: 18px;\"><b>Masters &amp; Reports</b></span>"
-msgstr ""
+msgstr "<span style=\"font-size: 18px;\"><b>Inställningar &amp; Rapporter</b></span>"
 
 #: public/js/utils/index.js:166
 msgid "<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>"
@@ -2037,7 +2037,7 @@ msgstr "Kan inte skapa Jobb Sökande mot stängd Jobb Erbjudande"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:200
 msgid "Cannot create or change transactions against an Appraisal Cycle with status {0}."
-msgstr ""
+msgstr "Kan inte skapa eller ändra transaktioner mot utvärderingscykel med status {0}."
 
 #: hr/doctype/leave_application/leave_application.py:561
 msgid "Cannot find active Leave Period"
@@ -3144,7 +3144,7 @@ msgstr "Standard Grund Lön"
 
 #: overrides/company.py:133
 msgid "Default Payroll Payable Account"
-msgstr ""
+msgstr "Standard Löneutbetalning Konto"
 
 #. Label of the default_salary_structure (Link) field in DocType 'Employee
 #. Grade'
@@ -3318,7 +3318,7 @@ msgstr "Avgång Datum och Tid"
 #: payroll/doctype/salary_structure/salary_structure.py:103
 #: payroll/doctype/salary_structure/salary_structure.py:107
 msgid "Depends On Payment Days"
-msgstr ""
+msgstr "Beror på Betalning Dagar"
 
 #. Label of the depends_on_payment_days (Check) field in DocType 'Salary
 #. Component'
@@ -6721,7 +6721,7 @@ msgstr "Intervju Omgång {0} är endast för Beteckning {1}. Jobb Sökande har a
 
 #: hr/doctype/interview_feedback/interview_feedback.py:40
 msgid "Interview Scheduled Date"
-msgstr ""
+msgstr "Intervju Schemalagd Datum"
 
 #: hr/report/employee_exits/employee_exits.js:51
 #: hr/report/employee_exits/employee_exits.py:46
@@ -8469,7 +8469,7 @@ msgstr "Avisering Period"
 
 #: hr/doctype/exit_interview/exit_interview.py:122
 msgid "Notification Template"
-msgstr ""
+msgstr "Avisering Mall"
 
 #. Label of the notify_users_by_email (Check) field in DocType 'Employee
 #. Onboarding'
@@ -10878,7 +10878,7 @@ msgstr "Avsändare E-post"
 
 #: hr/doctype/exit_interview/exit_interview.py:136
 msgid "Sending Failed due to missing email information for employee(s): {1}"
-msgstr ""
+msgstr "Kunde inte skicka på grund av saknad e-post information för personal: {1}"
 
 #. Option for the 'Status' (Select) field in DocType 'Daily Work Summary'
 #: hr/doctype/daily_work_summary/daily_work_summary.json
@@ -10887,7 +10887,7 @@ msgstr "Skickad"
 
 #: hr/doctype/exit_interview/exit_interview.py:132
 msgid "Sent Successfully: {0}"
-msgstr ""
+msgstr "Skickat: {0}"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:20
 #: public/js/salary_slip_deductions_report_filters.js:27
@@ -11012,7 +11012,7 @@ msgstr "Ange egenskaper som ska uppdateras i Personal Tabell vid befordran"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:204
 msgid "Set the status to {0} if required."
-msgstr ""
+msgstr "Ange status till {0} om det erfordras."
 
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:200
 msgid "Set {0} for selected employees"
@@ -11049,7 +11049,7 @@ msgstr "Inställning"
 
 #: hr/utils.py:663
 msgid "Shared with the user {0} with 'submit' permisions"
-msgstr ""
+msgstr "Delad med användare {0} med 'godkännande' behörighet"
 
 #. Label of the shift (Link) field in DocType 'Attendance'
 #. Label of the shift (Link) field in DocType 'Attendance Request'
@@ -11520,7 +11520,7 @@ msgstr "Godkännade Misslyckad"
 
 #: hr/doctype/interview_feedback/interview_feedback.py:39
 msgid "Submission of {0} before {1} is not allowed"
-msgstr ""
+msgstr "Godkännande av {0} före {1} är inte tillåtet"
 
 #: hr/doctype/job_requisition/job_requisition.js:75
 #: public/js/performance/performance_feedback.js:99
@@ -11821,7 +11821,7 @@ msgstr "Tack"
 
 #: overrides/company.py:131
 msgid "The currency of {0} should be same as the company's default currency. Please select another account."
-msgstr ""
+msgstr "Valuta för {0} ska vara samma som bolag standard valuta. Välj annan konto."
 
 #. Description of the 'Payroll Date' (Date) field in DocType 'Additional
 #. Salary'
@@ -11854,11 +11854,11 @@ msgstr "Bråkdel av dagslön som ska betalas för halvdags närvaro"
 
 #: hr/report/project_profitability/project_profitability.py:101
 msgid "The metrics for this report are calculated based on the {0}. Please set {0} in {1}."
-msgstr ""
+msgstr "Parametrar för denna rapport beräknas baserat på {0}. Ange {0} i {1}."
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:35
 msgid "The metrics for this report are calculated based on {0}. Please set {0} in {1}."
-msgstr ""
+msgstr "Parametrar för denna rapport beräknas baserat på {0}. Ange {0} i {1}."
 
 #. Description of the 'Encrypt Salary Slips in Emails' (Check) field in DocType
 #. 'Payroll Settings'
