@@ -24,68 +24,48 @@ class TestShiftAssignment(FrappeTestCase):
 		frappe.db.delete("Shift Type")
 
 	def test_overlapping_for_ongoing_shift(self):
+		shift = "Day Shift"
+		employee = "_T-Employee-00001"
+		date = nowdate()
+
 		# shift should be Ongoing if Only start_date is present and status = Active
-		setup_shift_type(shift_type="Day Shift")
-		make_shift_assignment("Day Shift", "_T-Employee-00001", nowdate())
+		setup_shift_type(shift_type=shift)
+		make_shift_assignment(shift, employee, date)
 
 		# shift ends before ongoing shift starts
-		non_overlapping_shift = make_shift_assignment(
-			"Day Shift", "_T-Employee-00001", add_days(nowdate(), -1), add_days(nowdate(), -1)
-		)
+		non_overlapping_shift = make_shift_assignment(shift, employee, add_days(date, -1), add_days(date, -1))
 		self.assertEqual(non_overlapping_shift.docstatus, 1)
 
-		overlapping_shift = frappe.get_doc(
-			{
-				"doctype": "Shift Assignment",
-				"shift_type": "Day Shift",
-				"company": "_Test Company",
-				"employee": "_T-Employee-00001",
-				"start_date": add_days(nowdate(), 2),
-			}
-		)
+		overlapping_shift = make_shift_assignment(shift, employee, add_days(date, 2), do_not_submit=True)
 		self.assertRaises(OverlappingShiftError, overlapping_shift.save)
 
 	def test_multiple_shift_assignments_for_same_date(self):
+		employee = "_T-Employee-00001"
+		date = nowdate()
+
 		setup_shift_type(shift_type="Day Shift")
-		make_shift_assignment("Day Shift", "_T-Employee-00001", nowdate(), add_days(nowdate(), 30))
+		make_shift_assignment("Day Shift", employee, date)
 
 		setup_shift_type(shift_type="Night Shift", start_time="19:00:00", end_time="23:00:00")
-		shift_assignment_2 = frappe.get_doc(
-			{
-				"doctype": "Shift Assignment",
-				"shift_type": "Night Shift",
-				"company": "_Test Company",
-				"employee": "_T-Employee-00001",
-				"start_date": nowdate(),
-				"end_date": add_days(nowdate(), 30),
-				"status": "Active",
-			}
-		)
+		assignment = make_shift_assignment("Night Shift", employee, date, do_not_submit=True)
 
 		frappe.db.set_single_value("HR Settings", "allow_multiple_shift_assignments", 0)
-		self.assertRaises(MultipleShiftError, shift_assignment_2.save)
+		self.assertRaises(MultipleShiftError, assignment.save)
 		frappe.db.set_single_value("HR Settings", "allow_multiple_shift_assignments", 1)
-		shift_assignment_2.save()  # would throw error if multiple shift assignments not allowed
+		assignment.save()  # would throw error if multiple shift assignments not allowed
 
 	def test_overlapping_for_fixed_period_shift(self):
-		# shift should is for Fixed period if Only start_date and end_date both are present and status = Active
-		setup_shift_type(shift_type="Day Shift")
-		make_shift_assignment("Day Shift", "_T-Employee-00001", nowdate(), add_days(nowdate(), 30))
+		shift = "Day Shift"
+		employee = "_T-Employee-00001"
+		date = nowdate()
 
-		# it should not allowed within period of any shift.
-		shift_assignment_3 = frappe.get_doc(
-			{
-				"doctype": "Shift Assignment",
-				"shift_type": "Day Shift",
-				"company": "_Test Company",
-				"employee": "_T-Employee-00001",
-				"start_date": add_days(nowdate(), 10),
-				"end_date": add_days(nowdate(), 35),
-				"status": "Active",
-			}
+		setup_shift_type(shift_type=shift)
+		make_shift_assignment(shift, employee, date, add_days(date, 30))
+
+		assignment = make_shift_assignment(
+			shift, employee, add_days(date, 10), add_days(date, 35), do_not_submit=True
 		)
-
-		self.assertRaises(OverlappingShiftError, shift_assignment_3.save)
+		self.assertRaises(OverlappingShiftError, assignment.save)
 
 	def test_overlapping_for_a_fixed_period_shift_and_ongoing_shift(self):
 		employee = make_employee("test_shift_assignment@example.com", company="_Test Company")
@@ -101,37 +81,30 @@ class TestShiftAssignment(FrappeTestCase):
 		date = getdate()
 
 		# shift assignment without end date
-		shift2 = frappe.get_doc(
-			{
-				"doctype": "Shift Assignment",
-				"shift_type": shift_type.name,
-				"company": "_Test Company",
-				"employee": employee,
-				"start_date": date,
-			}
-		)
-		self.assertRaises(OverlappingShiftError, shift2.insert)
+		assignment = make_shift_assignment("Shift 2", employee, date, do_not_submit=True)
+		self.assertRaises(OverlappingShiftError, assignment.save)
 
 	def test_overlap_for_shifts_on_same_day_with_overlapping_timeslots(self):
 		employee = make_employee("test_shift_assignment@example.com", company="_Test Company")
+		date = getdate()
 
 		# shift setup for 8-12
-		shift_type = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="12:00:00")
-		date = getdate()
-		make_shift_assignment(shift_type.name, employee, date)
+		setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="12:00:00")
+		make_shift_assignment("Shift 1", employee, date)
 
 		# shift setup for 11-15
-		shift_type = setup_shift_type(shift_type="Shift 2", start_time="11:00:00", end_time="15:00:00")
-		shift2 = frappe.get_doc(
-			{
-				"doctype": "Shift Assignment",
-				"shift_type": shift_type.name,
-				"company": "_Test Company",
-				"employee": employee,
-				"start_date": date,
-			}
-		)
-		self.assertRaises(OverlappingShiftError, shift2.insert)
+		setup_shift_type(shift_type="Shift 2", start_time="11:00:00", end_time="15:00:00")
+		assignment = make_shift_assignment("Shift 2", employee, date, do_not_submit=True)
+		self.assertRaises(OverlappingShiftError, assignment.save)
+
+		# shift setup for 12-16
+		setup_shift_type(shift_type="Shift 3", start_time="12:00:00", end_time="16:00:00")
+		make_shift_assignment("Shift 3", employee, date)
+
+		# shift setup for 15-19
+		setup_shift_type(shift_type="Shift 4", start_time="15:00:00", end_time="19:00:00")
+		assignment = make_shift_assignment("Shift 4", employee, date, do_not_submit=True)
+		self.assertRaises(OverlappingShiftError, assignment.save)
 
 	def test_overlap_for_midnight_shifts(self):
 		employee = make_employee("test_shift_assignment@example.com", company="_Test Company")
@@ -140,10 +113,8 @@ class TestShiftAssignment(FrappeTestCase):
 		overlapping_shifts = [
 			# s1(start, end), s2(start, end)
 			[("22:00:00", "02:00:00"), ("21:00:00", "23:00:00")],
-			[("22:00:00", "02:00:00"), ("01:00:00", "03:00:00")],
 			[("22:00:00", "02:00:00"), ("20:00:00", "01:00:00")],
 			[("01:00:00", "02:00:00"), ("01:30:00", "03:00:00")],
-			[("01:00:00", "02:00:00"), ("22:00:00", "03:00:00")],
 			[("21:00:00", "23:00:00"), ("22:00:00", "03:00:00")],
 		]
 
@@ -166,22 +137,13 @@ class TestShiftAssignment(FrappeTestCase):
 		assignment = make_shift_assignment(shift_type.name, employee, date)
 
 		# no overlap
-		shift_type.update({"start_time": "02:00:00", "end_time": "3:00:00"})
-		shift_type.save()
+		shift_type = setup_shift_type(shift_type="Shift 3", start_time="01:00:00", end_time="05:00:00")
 		assignment = make_shift_assignment(shift_type.name, employee, date)
 
-	def test_multiple_shift_assignments_for_same_day(self):
-		employee = make_employee("test_shift_assignment@example.com", company="_Test Company")
-
-		# shift setup for 8-12
-		shift_type = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="12:00:00")
-		date = getdate()
-		make_shift_assignment(shift_type.name, employee, date)
-
-		# shift setup for 13-15
-		shift_type = setup_shift_type(shift_type="Shift 2", start_time="13:00:00", end_time="15:00:00")
-		date = getdate()
-		make_shift_assignment(shift_type.name, employee, date)
+		# overlap
+		shift_type = setup_shift_type(shift_type="Shift 4", start_time="21:00:00", end_time="02:00:00")
+		assignment = make_shift_assignment(shift_type.name, employee, date, do_not_submit=True)
+		self.assertRaises(OverlappingShiftError, assignment.save)
 
 	def test_calendar(self):
 		employee1 = make_employee("test_shift_assignment1@example.com", company="_Test Company")

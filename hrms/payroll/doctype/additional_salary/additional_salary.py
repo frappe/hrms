@@ -110,7 +110,7 @@ class AdditionalSalary(Document):
 				frappe.throw(
 					_(
 						"Additional Salary for referral bonus can only be created against Employee Referral with status {0}"
-					).format(frappe.bold("Accepted"))
+					).format(frappe.bold(_("Accepted")))
 				)
 
 	def validate_duplicate_additional_salary(self):

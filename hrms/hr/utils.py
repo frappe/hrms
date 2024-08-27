@@ -660,9 +660,7 @@ def share_doc_with_approver(doc, user):
 			doc.doctype, doc.name, user, submit=1, flags={"ignore_share_permission": True}
 		)
 
-		frappe.msgprint(
-			_("Shared with the user {0} with {1} access").format(user, frappe.bold("submit"), alert=True)
-		)
+		frappe.msgprint(_("Shared with the user {0} with 'submit' permisions").format(user, alert=True))
 
 	# remove shared doc if approver changes
 	doc_before_save = doc.get_doc_before_save()
@@ -845,3 +843,14 @@ def notify_bulk_action_status(doctype: str, failure: list, success: list) -> Non
 		title=title,
 		is_minimizable=True,
 	)
+
+
+def check_app_permission():
+	"""Check if user has permission to access the app (for showing the app on app screen)"""
+	if frappe.session.user == "Administrator":
+		return True
+
+	if frappe.has_permission("Employee", ptype="read"):
+		return True
+
+	return False

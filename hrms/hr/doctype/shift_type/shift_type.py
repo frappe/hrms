@@ -2,8 +2,8 @@
 # For license information, please see license.txt
 
 
-import itertools
 from datetime import datetime, timedelta
+from itertools import groupby
 
 import frappe
 from frappe.model.document import Document
@@ -36,7 +36,8 @@ class ShiftType(Document):
 
 		logs = self.get_employee_checkins()
 
-		for key, group in itertools.groupby(logs, key=lambda x: (x["employee"], x["shift_start"])):
+		group_key = lambda x: (x["employee"], x["shift_start"])  # noqa
+		for key, group in groupby(sorted(logs, key=group_key), key=group_key):
 			single_shift_logs = list(group)
 			attendance_date = key[1].date()
 			employee = key[0]

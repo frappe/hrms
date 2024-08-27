@@ -20,6 +20,7 @@ from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_lis
 
 from hrms.hr.doctype.employee_checkin.employee_checkin import (
 	add_log_based_on_employee_field,
+	bulk_fetch_shift,
 	calculate_working_hours,
 	mark_attendance_and_link_log,
 )
@@ -489,6 +490,40 @@ class TestEmployeeCheckin(FrappeTestCase):
 		timestamp = datetime.combine(date, get_time("12:01:00"))
 		log = make_checkin(employee, timestamp)
 		self.assertEqual(log.shift, shift2.name)
+
+	def test_bulk_fetch_shift(self):
+		emp1 = make_employee("emp1@example.com", company="_Test Company")
+		emp2 = make_employee("emp2@example.com", company="_Test Company")
+
+		# 8 - 12
+		shift1 = setup_shift_type(shift_type="Shift 1")
+		# 12:30 - 16:30
+		shift2 = setup_shift_type(shift_type="Shift 2", start_time="12:30:00", end_time="16:30:00")
+
+		frappe.db.set_value("Employee", emp1, "default_shift", shift1.name)
+		frappe.db.set_value("Employee", emp2, "default_shift", shift1.name)
+
+		date = getdate()
+		timestamp = datetime.combine(date, get_time("12:30:00"))
+
+		log1 = make_checkin(emp1, timestamp)
+		self.assertEqual(log1.shift, shift1.name)
+		log2 = make_checkin(emp2, timestamp)
+		self.assertEqual(log2.shift, shift1.name)
+
+		mark_attendance_and_link_log([log2], "Present", date)
+
+		make_shift_assignment(shift2.name, emp1, date)
+		make_shift_assignment(shift2.name, emp2, date)
+
+		bulk_fetch_shift([log1.name, log2.name])
+
+		log1.reload()
+		# shift changes according to the new assignment
+		self.assertEqual(log1.shift, shift2.name)
+		log2.reload()
+		# shift does not change since attendance is already marked
+		self.assertEqual(log2.shift, shift1.name)
 
 
 def make_n_checkins(employee, n, hours_to_reverse=1):
