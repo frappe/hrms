@@ -796,8 +796,7 @@ class SalarySlip(TransactionBase):
 			self.update_dependent_components_recursively("earnings", deduction_abbrs)
 
 		set_gross_pay_and_base_gross_pay()
-		self.update_dependent_components_recursively("deductions", "gross_pay")
-		self.update_dependent_components_recursively("deductions", "base_gross_pay")
+		self.update_dependent_components_recursively("deductions", ["gross_pay", "base_gross_pay"])
 
 		set_loan_repayment(self)
 
