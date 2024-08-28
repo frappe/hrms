@@ -66,7 +66,7 @@ const options = createResource({
 	},
 })
 
-const reloadOptions = debounce((searchTextVal) => {
+const reloadOptions = (searchTextVal) => {
 	options.update({
 		params: {
 			txt: searchTextVal,
@@ -74,6 +74,13 @@ const reloadOptions = debounce((searchTextVal) => {
 		},
 	})
 	options.reload()
+}
+
+const handleQueryUpdate = debounce((newQuery) => {
+	const val = newQuery || ""
+	if (searchText.value === val) return
+	searchText.val = val
+	reloadOptions(val)
 }, 300)
 
 watch(
@@ -84,11 +91,4 @@ watch(
 	},
 	{ immediate: true }
 )
-
-const handleQueryUpdate = (newQuery) => {
-  const val = newQuery || ""
-  if (searchText.value === val) return
-  searchText.value = val
-  reloadOptions(val)
-}
 </script>
