@@ -1,10 +1,10 @@
 import os
 
-import click
-
 import frappe
-from frappe import _
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+from frappe.desk.page.setup_wizard.install_fixtures import (
+	_,  # NOTE: this is not the real translation function
+)
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.installer import update_site_config
 
@@ -25,7 +25,7 @@ def after_install():
 
 def before_uninstall():
 	delete_custom_fields(get_custom_fields())
-	delete_custom_fields(SALARY_SLIP_LOAN_FIELDS)
+	delete_custom_fields(get_salary_slip_loan_fields())
 	delete_company_fixtures()
 
 
@@ -35,7 +35,7 @@ def after_app_install(app_name):
 		return
 
 	print("Updating payroll setup for loans")
-	create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
+	create_custom_fields(get_salary_slip_loan_fields(), ignore_validate=True)
 	add_lending_docperms_to_ess()
 
 
@@ -45,7 +45,7 @@ def before_app_uninstall(app_name):
 		return
 
 	print("Updating payroll setup for loans")
-	delete_custom_fields(SALARY_SLIP_LOAN_FIELDS)
+	delete_custom_fields(get_salary_slip_loan_fields())
 	remove_lending_docperms_from_ess()
 
 
@@ -56,13 +56,13 @@ def get_custom_fields():
 			{
 				"fieldname": "hr_and_payroll_tab",
 				"fieldtype": "Tab Break",
-				"label": "HR & Payroll",
+				"label": _("HR & Payroll"),
 				"insert_after": "credit_limit",
 			},
 			{
 				"fieldname": "hr_settings_section",
 				"fieldtype": "Section Break",
-				"label": "HR & Payroll Settings",
+				"label": _("HR & Payroll Settings"),
 				"insert_after": "hr_and_payroll_tab",
 			},
 			{
@@ -70,7 +70,7 @@ def get_custom_fields():
 				"fieldname": "default_expense_claim_payable_account",
 				"fieldtype": "Link",
 				"ignore_user_permissions": 1,
-				"label": "Default Expense Claim Payable Account",
+				"label": _("Default Expense Claim Payable Account"),
 				"no_copy": 1,
 				"options": "Account",
 				"insert_after": "hr_settings_section",
@@ -78,7 +78,7 @@ def get_custom_fields():
 			{
 				"fieldname": "default_employee_advance_account",
 				"fieldtype": "Link",
-				"label": "Default Employee Advance Account",
+				"label": _("Default Employee Advance Account"),
 				"no_copy": 1,
 				"options": "Account",
 				"insert_after": "default_expense_claim_payable_account",
@@ -93,7 +93,7 @@ def get_custom_fields():
 				"fieldname": "default_payroll_payable_account",
 				"fieldtype": "Link",
 				"ignore_user_permissions": 1,
-				"label": "Default Payroll Payable Account",
+				"label": _("Default Payroll Payable Account"),
 				"no_copy": 1,
 				"options": "Account",
 				"insert_after": "column_break_10",
@@ -108,7 +108,7 @@ def get_custom_fields():
 			{
 				"fieldname": "payroll_cost_center",
 				"fieldtype": "Link",
-				"label": "Payroll Cost Center",
+				"label": _("Payroll Cost Center"),
 				"options": "Cost Center",
 				"insert_after": "section_break_4",
 			},
@@ -118,39 +118,39 @@ def get_custom_fields():
 				"insert_after": "payroll_cost_center",
 			},
 			{
-				"description": "Days for which Holidays are blocked for this department.",
+				"description": _("Days for which Holidays are blocked for this department."),
 				"fieldname": "leave_block_list",
 				"fieldtype": "Link",
 				"in_list_view": 1,
-				"label": "Leave Block List",
+				"label": _("Leave Block List"),
 				"options": "Leave Block List",
 				"insert_after": "column_break_9",
 			},
 			{
-				"description": "The first Approver in the list will be set as the default Approver.",
+				"description": _("The first Approver in the list will be set as the default Approver."),
 				"fieldname": "approvers",
 				"fieldtype": "Section Break",
-				"label": "Approvers",
+				"label": _("Approvers"),
 				"insert_after": "leave_block_list",
 			},
 			{
 				"fieldname": "shift_request_approver",
 				"fieldtype": "Table",
-				"label": "Shift Request Approver",
+				"label": _("Shift Request Approver"),
 				"options": "Department Approver",
 				"insert_after": "approvers",
 			},
 			{
 				"fieldname": "leave_approvers",
 				"fieldtype": "Table",
-				"label": "Leave Approver",
+				"label": _("Leave Approver"),
 				"options": "Department Approver",
 				"insert_after": "shift_request_approver",
 			},
 			{
 				"fieldname": "expense_approvers",
 				"fieldtype": "Table",
-				"label": "Expense Approver",
+				"label": _("Expense Approver"),
 				"options": "Department Approver",
 				"insert_after": "leave_approvers",
 			},
@@ -159,7 +159,7 @@ def get_custom_fields():
 			{
 				"fieldname": "appraisal_template",
 				"fieldtype": "Link",
-				"label": "Appraisal Template",
+				"label": _("Appraisal Template"),
 				"options": "Appraisal Template",
 				"insert_after": "description",
 				"allow_in_quick_entry": 1,
@@ -167,13 +167,13 @@ def get_custom_fields():
 			{
 				"fieldname": "required_skills_section",
 				"fieldtype": "Section Break",
-				"label": "Required Skills",
+				"label": _("Required Skills"),
 				"insert_after": "appraisal_template",
 			},
 			{
 				"fieldname": "skills",
 				"fieldtype": "Table",
-				"label": "Skills",
+				"label": _("Skills"),
 				"options": "Designation Skill",
 				"insert_after": "required_skills_section",
 			},
@@ -183,28 +183,28 @@ def get_custom_fields():
 				"fieldname": "employment_type",
 				"fieldtype": "Link",
 				"ignore_user_permissions": 1,
-				"label": "Employment Type",
+				"label": _("Employment Type"),
 				"options": "Employment Type",
 				"insert_after": "department",
 			},
 			{
 				"fieldname": "job_applicant",
 				"fieldtype": "Link",
-				"label": "Job Applicant",
+				"label": _("Job Applicant"),
 				"options": "Job Applicant",
 				"insert_after": "employment_details",
 			},
 			{
 				"fieldname": "grade",
 				"fieldtype": "Link",
-				"label": "Grade",
+				"label": _("Grade"),
 				"options": "Employee Grade",
 				"insert_after": "branch",
 			},
 			{
 				"fieldname": "default_shift",
 				"fieldtype": "Link",
-				"label": "Default Shift",
+				"label": _("Default Shift"),
 				"options": "Shift Type",
 				"insert_after": "holiday_list",
 			},
@@ -212,13 +212,13 @@ def get_custom_fields():
 				"collapsible": 1,
 				"fieldname": "health_insurance_section",
 				"fieldtype": "Section Break",
-				"label": "Health Insurance",
+				"label": _("Health Insurance"),
 				"insert_after": "health_details",
 			},
 			{
 				"fieldname": "health_insurance_provider",
 				"fieldtype": "Link",
-				"label": "Health Insurance Provider",
+				"label": _("Health Insurance Provider"),
 				"options": "Employee Health Insurance",
 				"insert_after": "health_insurance_section",
 			},
@@ -226,26 +226,26 @@ def get_custom_fields():
 				"depends_on": "eval:doc.health_insurance_provider",
 				"fieldname": "health_insurance_no",
 				"fieldtype": "Data",
-				"label": "Health Insurance No",
+				"label": _("Health Insurance No"),
 				"insert_after": "health_insurance_provider",
 			},
 			{
 				"fieldname": "approvers_section",
 				"fieldtype": "Section Break",
-				"label": "Approvers",
+				"label": _("Approvers"),
 				"insert_after": "default_shift",
 			},
 			{
 				"fieldname": "expense_approver",
 				"fieldtype": "Link",
-				"label": "Expense Approver",
+				"label": _("Expense Approver"),
 				"options": "User",
 				"insert_after": "approvers_section",
 			},
 			{
 				"fieldname": "leave_approver",
 				"fieldtype": "Link",
-				"label": "Leave Approver",
+				"label": _("Leave Approver"),
 				"options": "User",
 				"insert_after": "expense_approver",
 			},
@@ -257,7 +257,7 @@ def get_custom_fields():
 			{
 				"fieldname": "shift_request_approver",
 				"fieldtype": "Link",
-				"label": "Shift Request Approver",
+				"label": _("Shift Request Approver"),
 				"options": "User",
 				"insert_after": "column_break_45",
 			},
@@ -271,7 +271,7 @@ def get_custom_fields():
 				"fetch_if_empty": 1,
 				"fieldname": "payroll_cost_center",
 				"fieldtype": "Link",
-				"label": "Payroll Cost Center",
+				"label": _("Payroll Cost Center"),
 				"options": "Cost Center",
 				"insert_after": "salary_cb",
 			},
@@ -280,7 +280,7 @@ def get_custom_fields():
 			{
 				"fieldname": "total_expense_claim",
 				"fieldtype": "Currency",
-				"label": "Total Expense Claim (via Expense Claims)",
+				"label": _("Total Expense Claim (via Expense Claims)"),
 				"read_only": 1,
 				"insert_after": "total_costing_amount",
 			},
@@ -289,7 +289,7 @@ def get_custom_fields():
 			{
 				"fieldname": "total_expense_claim",
 				"fieldtype": "Currency",
-				"label": "Total Expense Claim (via Expense Claim)",
+				"label": _("Total Expense Claim (via Expense Claim)"),
 				"options": "Company:company:default_currency",
 				"read_only": 1,
 				"insert_after": "total_costing_amount",
@@ -299,7 +299,7 @@ def get_custom_fields():
 			{
 				"fieldname": "salary_slip",
 				"fieldtype": "Link",
-				"label": "Salary Slip",
+				"label": _("Salary Slip"),
 				"no_copy": 1,
 				"options": "Salary Slip",
 				"print_hide": 1,
@@ -312,7 +312,7 @@ def get_custom_fields():
 				"default": "1",
 				"fieldname": "hr",
 				"fieldtype": "Check",
-				"label": "HR",
+				"label": _("HR"),
 				"insert_after": "buying",
 			},
 		],
@@ -573,7 +573,7 @@ def run_post_install_patches():
 # LENDING APP SETUP & CLEANUP
 def create_salary_slip_loan_fields():
 	if "lending" in frappe.get_installed_apps():
-		create_custom_fields(SALARY_SLIP_LOAN_FIELDS, ignore_validate=True)
+		create_custom_fields(get_salary_slip_loan_fields(), ignore_validate=True)
 
 
 def add_lending_docperms_to_ess():
@@ -754,97 +754,99 @@ DEFAULT_ROLE_PROFILES = {
 	],
 }
 
-SALARY_SLIP_LOAN_FIELDS = {
-	"Salary Slip": [
-		{
-			"fieldname": "loan_repayment_sb_1",
-			"fieldtype": "Section Break",
-			"label": "Loan Repayment",
-			"depends_on": "total_loan_repayment",
-			"insert_after": "base_total_deduction",
-		},
-		{
-			"fieldname": "loans",
-			"fieldtype": "Table",
-			"label": "Employee Loan",
-			"options": "Salary Slip Loan",
-			"print_hide": 1,
-			"insert_after": "loan_repayment_sb_1",
-		},
-		{
-			"fieldname": "loan_details_sb_1",
-			"fieldtype": "Section Break",
-			"depends_on": "eval:doc.docstatus != 0",
-			"insert_after": "loans",
-		},
-		{
-			"fieldname": "total_principal_amount",
-			"fieldtype": "Currency",
-			"label": "Total Principal Amount",
-			"default": "0",
-			"options": "Company:company:default_currency",
-			"read_only": 1,
-			"insert_after": "loan_details_sb_1",
-		},
-		{
-			"fieldname": "total_interest_amount",
-			"fieldtype": "Currency",
-			"label": "Total Interest Amount",
-			"default": "0",
-			"options": "Company:company:default_currency",
-			"read_only": 1,
-			"insert_after": "total_principal_amount",
-		},
-		{
-			"fieldname": "loan_cb_1",
-			"fieldtype": "Column Break",
-			"insert_after": "total_interest_amount",
-		},
-		{
-			"fieldname": "total_loan_repayment",
-			"fieldtype": "Currency",
-			"label": "Total Loan Repayment",
-			"default": "0",
-			"options": "Company:company:default_currency",
-			"read_only": 1,
-			"insert_after": "loan_cb_1",
-		},
-	],
-	"Loan": [
-		{
-			"default": "0",
-			"depends_on": 'eval:doc.applicant_type=="Employee"',
-			"fieldname": "repay_from_salary",
-			"fieldtype": "Check",
-			"label": "Repay From Salary",
-			"insert_after": "status",
-		},
-	],
-	"Loan Repayment": [
-		{
-			"default": "0",
-			"fieldname": "repay_from_salary",
-			"fieldtype": "Check",
-			"label": "Repay From Salary",
-			"insert_after": "is_term_loan",
-		},
-		{
-			"depends_on": "eval:doc.repay_from_salary",
-			"fieldname": "payroll_payable_account",
-			"fieldtype": "Link",
-			"label": "Payroll Payable Account",
-			"mandatory_depends_on": "eval:doc.repay_from_salary",
-			"options": "Account",
-			"insert_after": "payment_account",
-		},
-		{
-			"default": "0",
-			"depends_on": 'eval:doc.applicant_type=="Employee"',
-			"fieldname": "process_payroll_accounting_entry_based_on_employee",
-			"hidden": 1,
-			"fieldtype": "Check",
-			"label": "Process Payroll Accounting Entry based on Employee",
-			"insert_after": "repay_from_salary",
-		},
-	],
-}
+
+def get_salary_slip_loan_fields():
+	return {
+		"Salary Slip": [
+			{
+				"fieldname": "loan_repayment_sb_1",
+				"fieldtype": "Section Break",
+				"label": _("Loan Repayment"),
+				"depends_on": "total_loan_repayment",
+				"insert_after": "base_total_deduction",
+			},
+			{
+				"fieldname": "loans",
+				"fieldtype": "Table",
+				"label": _("Employee Loan"),
+				"options": "Salary Slip Loan",
+				"print_hide": 1,
+				"insert_after": "loan_repayment_sb_1",
+			},
+			{
+				"fieldname": "loan_details_sb_1",
+				"fieldtype": "Section Break",
+				"depends_on": "eval:doc.docstatus != 0",
+				"insert_after": "loans",
+			},
+			{
+				"fieldname": "total_principal_amount",
+				"fieldtype": "Currency",
+				"label": _("Total Principal Amount"),
+				"default": "0",
+				"options": "Company:company:default_currency",
+				"read_only": 1,
+				"insert_after": "loan_details_sb_1",
+			},
+			{
+				"fieldname": "total_interest_amount",
+				"fieldtype": "Currency",
+				"label": _("Total Interest Amount"),
+				"default": "0",
+				"options": "Company:company:default_currency",
+				"read_only": 1,
+				"insert_after": "total_principal_amount",
+			},
+			{
+				"fieldname": "loan_cb_1",
+				"fieldtype": "Column Break",
+				"insert_after": "total_interest_amount",
+			},
+			{
+				"fieldname": "total_loan_repayment",
+				"fieldtype": "Currency",
+				"label": _("Total Loan Repayment"),
+				"default": "0",
+				"options": "Company:company:default_currency",
+				"read_only": 1,
+				"insert_after": "loan_cb_1",
+			},
+		],
+		"Loan": [
+			{
+				"default": "0",
+				"depends_on": 'eval:doc.applicant_type=="Employee"',
+				"fieldname": "repay_from_salary",
+				"fieldtype": "Check",
+				"label": _("Repay From Salary"),
+				"insert_after": "status",
+			},
+		],
+		"Loan Repayment": [
+			{
+				"default": "0",
+				"fieldname": "repay_from_salary",
+				"fieldtype": "Check",
+				"label": _("Repay From Salary"),
+				"insert_after": "is_term_loan",
+			},
+			{
+				"depends_on": "eval:doc.repay_from_salary",
+				"fieldname": "payroll_payable_account",
+				"fieldtype": "Link",
+				"label": _("Payroll Payable Account"),
+				"mandatory_depends_on": "eval:doc.repay_from_salary",
+				"options": "Account",
+				"insert_after": "payment_account",
+			},
+			{
+				"default": "0",
+				"depends_on": 'eval:doc.applicant_type=="Employee"',
+				"fieldname": "process_payroll_accounting_entry_based_on_employee",
+				"hidden": 1,
+				"fieldtype": "Check",
+				"label": _("Process Payroll Accounting Entry based on Employee"),
+				"insert_after": "repay_from_salary",
+			},
+		],
+	}
