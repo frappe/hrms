@@ -158,7 +158,9 @@ class ShiftAssignmentTool(Document):
 		for d in employees:
 			try:
 				frappe.db.savepoint(savepoint)
-				assignment = self.create_shift_assignment(d)
+				assignment = create_shift_assignment(
+					d, self.company, self.shift_type, self.start_date, self.end_date, self.status
+				)
 			except Exception:
 				frappe.db.rollback(save_point=savepoint)
 				frappe.log_error(
@@ -179,18 +181,6 @@ class ShiftAssignmentTool(Document):
 			doctype="Shift Assignment Tool",
 			after_commit=True,
 		)
-
-	def create_shift_assignment(self, employee: str):
-		assignment = frappe.new_doc("Shift Assignment")
-		assignment.employee = employee
-		assignment.company = self.company
-		assignment.shift_type = self.shift_type
-		assignment.start_date = self.start_date
-		assignment.end_date = self.end_date
-		assignment.status = self.status
-		assignment.save()
-		assignment.submit()
-		return assignment.name
 
 	@frappe.whitelist()
 	def bulk_process_shift_requests(self, shift_requests: list, status: str):
@@ -244,3 +234,25 @@ class ShiftAssignmentTool(Document):
 			doctype="Shift Assignment Tool",
 			after_commit=True,
 		)
+
+
+def create_shift_assignment(
+	employee: str,
+	company: str,
+	shift_type: str,
+	start_date: str,
+	end_date: str,
+	status: str,
+	schedule: str | None = None,
+) -> str:
+	assignment = frappe.new_doc("Shift Assignment")
+	assignment.employee = employee
+	assignment.company = company
+	assignment.shift_type = shift_type
+	assignment.start_date = start_date
+	assignment.end_date = end_date
+	assignment.status = status
+	assignment.schedule = schedule
+	assignment.save()
+	assignment.submit()
+	return assignment.name

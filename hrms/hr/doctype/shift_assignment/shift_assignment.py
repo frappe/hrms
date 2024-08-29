@@ -25,12 +25,57 @@ class MultipleShiftError(frappe.ValidationError):
 class ShiftAssignment(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
-		self.validate_overlapping_shifts()
-
 		if self.end_date:
 			self.validate_from_to_dates("start_date", "end_date")
+		self.validate_overlapping_shifts()
+
+	def on_update_after_submit(self):
+		if self.end_date:
+			self.validate_from_to_dates("start_date", "end_date")
+		self.validate_overlapping_shifts()
+
+	def on_cancel(self):
+		self.validate_employee_checkin()
+		self.validate_attendance()
+
+	def validate_employee_checkin(self):
+		checkins = frappe.get_all(
+			"Employee Checkin",
+			filters={
+				"employee": self.employee,
+				"shift": self.shift_type,
+				"time": ["between", [self.start_date, self.end_date]],
+			},
+			pluck="name",
+		)
+		if checkins:
+			frappe.throw(
+				_("Cannot cancel Shift Assignment: {0} as it is linked to Employee Checkin: {1}").format(
+					self.name, get_link_to_form("Employee Checkin", checkins[0])
+				)
+			)
+
+	def validate_attendance(self):
+		attendances = frappe.get_all(
+			"Attendance",
+			filters={
+				"employee": self.employee,
+				"shift": self.shift_type,
+				"attendance_date": ["between", [self.start_date, self.end_date]],
+			},
+			pluck="name",
+		)
+		if attendances:
+			frappe.throw(
+				_("Cannot cancel Shift Assignment: {0} as it is linked to Attendance: {1}").format(
+					self.name, get_link_to_form("Attendance", attendances[0])
+				)
+			)
 
 	def validate_overlapping_shifts(self):
+		if self.status == "Inactive":
+			return
+
 		overlapping_dates = self.get_overlapping_dates()
 		if len(overlapping_dates):
 			self.validate_same_date_multiple_shifts(overlapping_dates)
