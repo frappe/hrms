@@ -176,11 +176,7 @@
   }
  ],
  "links": [],
-<<<<<<< HEAD
- "modified": "2023-08-22 11:31:24.381593",
-=======
  "modified": "2024-05-17 15:48:27.191003",
->>>>>>> cf3b37100 (feat: add colors for shift types)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Type",
