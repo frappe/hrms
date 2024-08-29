@@ -1451,6 +1451,30 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertEqual(flt(salary_slip.future_income_tax_deductions, 2), 125439.65)
 		self.assertEqual(flt(salary_slip.total_income_tax, 2), 136843.25)
 
+	def test_tax_period_for_mid_month_payroll_period(self):
+		from hrms.payroll.doctype.payroll_period.payroll_period import get_period_factor
+
+		frappe.db.delete("Payroll Period", {"company": "_Test Company"})
+		payroll_period = create_payroll_period(
+			name="Test Mid Month Payroll Period",
+			company="_Test Company",
+			start_date="2024-07-16",
+			end_date="2025-07-15",
+		)
+		emp_id = make_employee("test_mid_month_payroll@salary.com")
+
+		period_factor = get_period_factor(
+			emp_id,
+			"2024-07-16",
+			"2024-08-15",
+			"Monthly",
+			payroll_period,
+		)[1]
+
+		# count the last month only if end date's day > start date's day
+		# to handle cases like 16th Jul 2024 - 15th Jul 2025
+		self.assertEqual(period_factor, 12)
+
 	@change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
 	def test_lwp_calculation_based_on_relieving_date(self):
 		emp_id = make_employee("test_lwp_based_on_relieving_date@salary.com")
@@ -1610,6 +1634,69 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertEqual(test_tds.accounts[0].company, salary_slip.company)
 		self.assertListEqual(tax_component, ["_Test TDS"])
 
+	def test_circular_dependency_in_formula(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+			create_salary_structure_assignment,
+		)
+
+		earnings = [
+			{
+				"salary_component": "Dependent Earning",
+				"abbr": "DE",
+				"type": "Earning",
+				"depends_on_payment_days": 0,
+				"amount_based_on_formula": 1,
+				"formula": "ID * 10",
+			},
+		]
+		make_salary_component(earnings, False, company_list=[])
+
+		deductions = [
+			{
+				"salary_component": "Independent Deduction",
+				"abbr": "ID",
+				"type": "Deduction",
+				"amount": 500,
+			},
+			{
+				"salary_component": "Dependent Deduction",
+				"abbr": "DD",
+				"type": "Deduction",
+				"amount_based_on_formula": 1,
+				"formula": "DE / 5",
+			},
+		]
+		make_salary_component(deductions, False, company_list=[])
+
+		details = {
+			"doctype": "Salary Structure",
+			"name": "Test Salary Structure for Circular Dependency",
+			"company": "_Test Company",
+			"payroll_frequency": "Monthly",
+			"payment_account": get_random("Account", filters={"account_currency": "USD"}),
+			"currency": "INR",
+		}
+		salary_structure = frappe.get_doc(details)
+
+		for entry in earnings:
+			salary_structure.append("earnings", entry)
+		for entry in deductions:
+			salary_structure.append("deductions", entry)
+
+		salary_structure.insert()
+		salary_structure.submit()
+
+		emp = make_employee("test_circ_dep@salary.com", company="_Test Company")
+
+		create_salary_structure_assignment(emp, salary_structure.name, currency="INR")
+		salary_slip = make_salary_slip(
+			salary_structure.name, employee=emp, posting_date=getdate(), for_preview=1
+		)
+
+		self.assertEqual(salary_slip.gross_pay, 5000)
+		self.assertEqual(salary_slip.earnings[0].amount, 5000)
+		self.assertEqual(salary_slip.deductions[1].amount, 1000)
+
 
 class TestSalarySlipSafeEval(FrappeTestCase):
 	def test_safe_eval_for_salary_slip(self):
@@ -1675,7 +1762,13 @@ def get_no_of_days():
 	return [no_of_days_in_month[1], no_of_holidays_in_month]
 
 
-def make_employee_salary_slip(emp_id, payroll_frequency, salary_structure=None, posting_date=None):
+def make_employee_salary_slip(
+	emp_id: str,
+	payroll_frequency: str,
+	salary_structure: str | None = None,
+	posting_date: str | None = None,
+	payroll_period: dict | None = None,
+) -> dict:
 	from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 	if not salary_structure:
@@ -1689,6 +1782,7 @@ def make_employee_salary_slip(emp_id, payroll_frequency, salary_structure=None, 
 		employee=employee.name,
 		company=employee.company,
 		from_date=posting_date,
+		payroll_period=payroll_period,
 	)
 	salary_slip_name = frappe.db.get_value("Salary Slip", {"employee": emp_id})
 
