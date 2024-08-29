@@ -470,18 +470,23 @@ class PayrollEntry(Document):
 		if not self.employee_cost_centers.get(employee):
 			SalaryStructureAssignment = frappe.qb.DocType("Salary Structure Assignment")
 			EmployeeCostCenter = frappe.qb.DocType("Employee Cost Center")
-
+			assignment_subquery = (
+				frappe.qb.from_(SalaryStructureAssignment)
+				.select(SalaryStructureAssignment.name)
+				.where(
+					(SalaryStructureAssignment.employee == employee)
+					& (SalaryStructureAssignment.salary_structure == salary_structure)
+					& (SalaryStructureAssignment.docstatus == 1)
+					& (SalaryStructureAssignment.from_date <= self.end_date)
+				)
+				.orderby(SalaryStructureAssignment.from_date, order=frappe.qb.desc)
+				.limit(1)
+			)
 			cost_centers = dict(
 				(
-					frappe.qb.from_(SalaryStructureAssignment)
-					.join(EmployeeCostCenter)
-					.on(SalaryStructureAssignment.name == EmployeeCostCenter.parent)
+					frappe.qb.from_(EmployeeCostCenter)
 					.select(EmployeeCostCenter.cost_center, EmployeeCostCenter.percentage)
-					.where(
-						(SalaryStructureAssignment.employee == employee)
-						& (SalaryStructureAssignment.docstatus == 1)
-						& (SalaryStructureAssignment.salary_structure == salary_structure)
-					)
+					.where(EmployeeCostCenter.parent == assignment_subquery)
 				).run(as_list=True)
 			)
 
