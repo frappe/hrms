@@ -12,7 +12,7 @@
   "bugs": {
     "url": "https://github.com/frappe/hrms/issues"
   },
-  "workspaces": ["frappe-ui", "frontend"],
+  "workspaces": ["frontend", "roster", "frappe-ui"],
   "scripts": {
     "postinstall": "yarn install-pwa-deps && yarn install-roster-deps",
     "install-pwa-deps": "cd frontend && yarn install --check-files",
