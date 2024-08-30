@@ -12,11 +12,16 @@
   "bugs": {
     "url": "https://github.com/frappe/hrms/issues"
   },
-  "workspaces": ["frappe-ui", "frontend"],
+  "workspaces": ["frontend", "roster", "frappe-ui"],
   "scripts": {
-    "postinstall": "cd frontend && yarn install --check-files",
-    "dev": "cd frontend && yarn dev",
-    "build": "cd frontend && yarn build"
+    "postinstall": "yarn install-pwa-deps && yarn install-roster-deps",
+    "install-pwa-deps": "cd frontend && yarn install --check-files",
+    "install-roster-deps": "cd roster && yarn install --check-files",
+    "dev-pwa": "cd frontend && yarn dev",
+    "dev-roster": "cd roster && yarn dev",
+    "build": "yarn build-pwa && yarn build-roster",
+    "build-pwa": "cd frontend && yarn build",
+    "build-roster": "cd roster && yarn build"
   },
   "dependencies": {
     "html2canvas": "^1.4.1"

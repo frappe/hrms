@@ -10,6 +10,7 @@
   "end_time",
   "column_break_3",
   "holiday_list",
+  "color",
   "enable_auto_attendance",
   "auto_attendance_settings_section",
   "determine_check_in_and_check_out",
@@ -165,10 +166,17 @@
    "fieldname": "enable_early_exit_marking",
    "fieldtype": "Check",
    "label": "Enable Early Exit Marking"
+  },
+  {
+   "default": "Blue",
+   "fieldname": "color",
+   "fieldtype": "Select",
+   "label": "Roster Color",
+   "options": "Blue\nCyan\nFuchsia\nGreen\nLime\nOrange\nPink\nRed\nViolet\nYellow"
   }
  ],
  "links": [],
- "modified": "2023-08-22 11:31:24.381593",
+ "modified": "2024-05-17 15:48:27.191003",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Type",
