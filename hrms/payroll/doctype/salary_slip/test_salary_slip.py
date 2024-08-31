@@ -1663,7 +1663,7 @@ class TestSalarySlip(FrappeTestCase):
 				"abbr": "DD",
 				"type": "Deduction",
 				"amount_based_on_formula": 1,
-				"formula": "DE / 5",
+				"formula": "DE / 5\nif DE > 0\n else 0",
 			},
 		]
 		make_salary_component(deductions, False, company_list=[])
