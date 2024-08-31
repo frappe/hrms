@@ -1097,7 +1097,7 @@ class SalarySlip(TransactionBase):
 
 	def calculate_component_amounts(self, component_type):
 		if not getattr(self, "_salary_structure_doc", None):
-			self._salary_structure_doc = frappe.get_cached_doc("Salary Structure", self.salary_structure)
+			self.set_salary_structure_doc()
 
 		self.add_structure_components(component_type)
 		self.add_additional_salary_components(component_type)
@@ -1105,6 +1105,14 @@ class SalarySlip(TransactionBase):
 			self.add_employee_benefits()
 		else:
 			self.add_tax_components()
+
+	def set_salary_structure_doc(self) -> None:
+		self._salary_structure_doc = frappe.get_cached_doc("Salary Structure", self.salary_structure)
+		# sanitize condition and formula fields
+		for table in ("earnings", "deductions"):
+			for row in self._salary_structure_doc.get(table):
+				row.condition = sanitize_expression(row.condition)
+				row.formula = sanitize_expression(row.formula)
 
 	def add_structure_components(self, component_type):
 		self.data, self.default_data = self.get_data_for_eval()
@@ -1192,17 +1200,13 @@ class SalarySlip(TransactionBase):
 
 	def eval_condition_and_formula(self, struct_row, data):
 		try:
-			condition = sanitize_expression(struct_row.condition)
-			if condition:
-				if not _safe_eval(condition, self.whitelisted_globals, data):
-					return None
-			amount = struct_row.amount
-			if struct_row.amount_based_on_formula:
-				formula = sanitize_expression(struct_row.formula)
-				if formula:
-					amount = flt(
-						_safe_eval(formula, self.whitelisted_globals, data), struct_row.precision("amount")
-					)
+			condition, formula, amount = struct_row.condition, struct_row.formula, struct_row.amount
+			if condition and not _safe_eval(condition, self.whitelisted_globals, data):
+				return None
+			if struct_row.amount_based_on_formula and formula:
+				amount = flt(
+					_safe_eval(formula, self.whitelisted_globals, data), struct_row.precision("amount")
+				)
 			if amount:
 				data[struct_row.abbr] = amount
 
@@ -2346,4 +2350,4 @@ def email_salary_slips(names) -> None:
 
 
 def get_variables_from_formula(formula: str) -> list[str]:
-	return [node.id for node in ast.walk(ast.parse(formula)) if isinstance(node, ast.Name)]
+	return [node.id for node in ast.walk(ast.parse(formula, mode="eval")) if isinstance(node, ast.Name)]
