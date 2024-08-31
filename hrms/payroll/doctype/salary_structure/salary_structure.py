@@ -18,6 +18,9 @@ class SalaryStructure(Document):
 	def before_validate(self):
 		self.sanitize_condition_and_formula_fields()
 
+	def before_update_after_submit(self):
+		self.sanitize_condition_and_formula_fields()
+
 	def validate(self):
 		self.set_missing_values()
 		self.validate_amount()
@@ -28,6 +31,9 @@ class SalaryStructure(Document):
 		self.validate_formula_setup()
 
 	def on_update(self):
+		self.reset_condition_and_formula_fields()
+
+	def on_update_after_submit(self):
 		self.reset_condition_and_formula_fields()
 
 	def validate_formula_setup(self):
