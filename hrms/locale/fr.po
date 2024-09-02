@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-08-25 09:34+0000\n"
-"PO-Revision-Date: 2024-08-26 13:57\n"
+"POT-Creation-Date: 2024-09-01 09:34+0000\n"
+"PO-Revision-Date: 2024-09-02 10:45\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +46,7 @@ msgstr "% Utilization (B / T)"
 msgid "'employee_field_value' and 'timestamp' are required."
 msgstr "'employee_field_value' et 'timestamp' sont obligatoires."
 
-#: hr/utils.py:237 payroll/doctype/payroll_period/payroll_period.py:53
+#: hr/utils.py:241 payroll/doctype/payroll_period/payroll_period.py:53
 msgid ") for {0}"
 msgstr ") pour {0}"
 
@@ -349,7 +349,7 @@ msgstr "Une demande de tâche pour {0} demandée par {1} existe déjà : {2}"
 msgid "A friendly reminder of an important date for our team."
 msgstr "Un rappel amical d'une date importante pour notre équipe."
 
-#: hr/utils.py:233 payroll/doctype/payroll_period/payroll_period.py:49
+#: hr/utils.py:237 payroll/doctype/payroll_period/payroll_period.py:49
 msgid "A {0} exists between {1} and {2} ("
 msgstr "Un {0} existe entre {1} et {2} ("
 
@@ -522,7 +522,7 @@ msgstr "Paramètres de comptabilité"
 msgid "Accounts not set for Salary Component {0}"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:587
+#: payroll/doctype/payroll_entry/payroll_entry.py:592
 msgid "Accrual Journal Entry for salaries from {0} to {1}"
 msgstr "Ecritures de journal de provisions pour les salaires de {0} à {1}"
 
@@ -549,8 +549,11 @@ msgid "Actions"
 msgstr "Actions"
 
 #. Option for the 'Status' (Select) field in DocType 'Shift Assignment'
+#. Option for the 'Status' (Select) field in DocType 'Shift Assignment
+#. Schedule'
 #. Option for the 'Status' (Select) field in DocType 'Shift Assignment Tool'
 #: hr/doctype/shift_assignment/shift_assignment.json
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hr/report/employee_leave_balance/employee_leave_balance.js:46
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:40
@@ -645,7 +648,7 @@ msgstr "Ajouter les feuilles inutilisées de l'allocation de la période de cong
 msgid "Added On"
 msgstr "Ajouté le"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1282
+#: payroll/doctype/salary_slip/salary_slip.py:1317
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
 msgstr "Ajout de composantes fiscales provenant du maître de la composante salariale car la structure salariale n'avait aucune composante fiscale."
 
@@ -806,7 +809,7 @@ msgstr "Montant alloué"
 msgid "Allocated Leaves"
 msgstr "Congés alloués"
 
-#: hr/utils.py:406
+#: hr/utils.py:410
 msgid "Allocated {0} leave(s) via scheduler on {1} based on the 'Allocate on Day' option set to {2}"
 msgstr "Alloué {0} partie(s) via le planificateur sur {1} en fonction de l'option 'Allocation le jour' définie à {2}"
 
@@ -846,7 +849,7 @@ msgstr ""
 #. Label of the allow_multiple_shift_assignments (Check) field in DocType 'HR
 #. Settings'
 #: hr/doctype/hr_settings/hr_settings.json
-#: hr/doctype/shift_assignment/shift_assignment.py:60
+#: hr/doctype/shift_assignment/shift_assignment.py:105
 msgid "Allow Multiple Shift Assignments for Same Date"
 msgstr "Autoriser plusieurs affectations de décalage pour la même date"
 
@@ -1026,7 +1029,7 @@ msgstr "Modifié Depuis"
 msgid "Amount"
 msgstr ""
 
-#: payroll/doctype/salary_structure/salary_structure.py:43
+#: payroll/doctype/salary_structure/salary_structure.py:49
 msgid "Amount Based on Formula"
 msgstr "Montant basé sur la formule"
 
@@ -1036,7 +1039,7 @@ msgstr "Montant basé sur la formule"
 #. Detail'
 #: payroll/doctype/salary_component/salary_component.json
 #: payroll/doctype/salary_detail/salary_detail.json
-#: payroll/doctype/salary_structure/salary_structure.py:102
+#: payroll/doctype/salary_structure/salary_structure.py:108
 msgid "Amount based on formula"
 msgstr "Montant basé sur la formule"
 
@@ -1446,7 +1449,7 @@ msgstr ""
 msgid "Assigning Shift"
 msgstr ""
 
-#: hr/doctype/shift_assignment_tool/shift_assignment_tool.py:173
+#: hr/doctype/shift_assignment_tool/shift_assignment_tool.py:175
 msgid "Assigning Shift..."
 msgstr ""
 
@@ -1454,7 +1457,7 @@ msgstr ""
 msgid "Assigning Structure..."
 msgstr ""
 
-#: payroll/doctype/salary_structure/salary_structure.py:276
+#: payroll/doctype/salary_structure/salary_structure.py:282
 msgid "Assigning Structures..."
 msgstr "Assignation des structures..."
 
@@ -1871,6 +1874,11 @@ msgstr "Bloquer les Jours"
 msgid "Block Holidays on important days."
 msgstr ""
 
+#. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
+#: hr/doctype/shift_type/shift_type.json
+msgid "Blue"
+msgstr ""
+
 #. Label of the body_section (Section Break) field in DocType 'Appointment
 #. Letter'
 #: hr/doctype/appointment_letter/appointment_letter.json
@@ -2023,11 +2031,27 @@ msgstr "Annulation en file d'attente"
 msgid "Cancelled"
 msgstr "Annulé"
 
-#: payroll/doctype/salary_slip/salary_slip.py:267
+#: api/roster.py:111
+msgid "Cannot break shift after end date"
+msgstr ""
+
+#: api/roster.py:113
+msgid "Cannot break shift before start date"
+msgstr ""
+
+#: hr/doctype/shift_assignment/shift_assignment.py:70
+msgid "Cannot cancel Shift Assignment: {0} as it is linked to Attendance: {1}"
+msgstr ""
+
+#: hr/doctype/shift_assignment/shift_assignment.py:53
+msgid "Cannot cancel Shift Assignment: {0} as it is linked to Employee Checkin: {1}"
+msgstr ""
+
+#: payroll/doctype/salary_slip/salary_slip.py:268
 msgid "Cannot create Salary Slip for Employee joining after Payroll Period"
 msgstr "Impossible de créer un bulletin de salaire pour les employés qui se joignent après la période de paie"
 
-#: payroll/doctype/salary_slip/salary_slip.py:270
+#: payroll/doctype/salary_slip/salary_slip.py:271
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr "Impossible de créer un feuillet de salaire pour l'employé qui est parti avant la période de paie"
 
@@ -2105,7 +2129,7 @@ msgstr "Tableau des centres de coûts"
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1389
+#: payroll/doctype/payroll_entry/payroll_entry.py:1394
 msgid "Check Error Log {0} for more details."
 msgstr "Consultez le journal des erreurs {0} pour plus de détails."
 
@@ -2115,7 +2139,7 @@ msgid "Check Vacancies On Job Offer Creation"
 msgstr "Vérifier les offres d'emploi lors de la création d'une offre d'emploi"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:323
-#: hr/utils.py:818
+#: hr/utils.py:822
 msgid "Check {0} for more details"
 msgstr "Vérifiez {0} pour plus de détails"
 
@@ -2274,6 +2298,7 @@ msgstr ""
 #. Label of the company (Link) field in DocType 'Leave Period'
 #. Label of the company (Link) field in DocType 'Leave Policy Assignment'
 #. Label of the company (Link) field in DocType 'Shift Assignment'
+#. Label of the company (Link) field in DocType 'Shift Assignment Schedule'
 #. Label of the company (Link) field in DocType 'Shift Assignment Tool'
 #. Label of the company (Link) field in DocType 'Shift Request'
 #. Label of the company (Link) field in DocType 'Staffing Plan'
@@ -2335,6 +2360,7 @@ msgstr ""
 #: hr/doctype/leave_period/leave_period.json
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 #: hr/doctype/shift_assignment/shift_assignment.json
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hr/doctype/shift_request/shift_request.json
 #: hr/doctype/staffing_plan/staffing_plan.json
@@ -2599,7 +2625,7 @@ msgstr "Coût"
 msgid "Costing Details"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1452
+#: payroll/doctype/payroll_entry/payroll_entry.py:1457
 msgid "Could not submit some Salary Slips: {}"
 msgstr "Impossible de soumettre quelques fiches de salaire : {}"
 
@@ -2716,6 +2742,12 @@ msgstr "Créer les fiches de paie"
 msgid "Create Separate Payment Entry Against Benefit Claim"
 msgstr "Créer une écriture de paiement distincte pour chaque demande d'avantages sociaux"
 
+#. Label of the create_shifts_after (Date) field in DocType 'Shift Assignment
+#. Schedule'
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
+msgid "Create Shifts After"
+msgstr ""
+
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:191
 msgid "Creating Appraisals"
 msgstr "Créer des évaluations"
@@ -2724,7 +2756,7 @@ msgstr "Créer des évaluations"
 msgid "Creating Payment Entries......"
 msgstr "Créer des écritures de paiement..."
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1412
+#: payroll/doctype/payroll_entry/payroll_entry.py:1417
 msgid "Creating Salary Slips..."
 msgstr "Création des fiches de paie en cours..."
 
@@ -2732,7 +2764,7 @@ msgstr "Création des fiches de paie en cours..."
 msgid "Creation Date"
 msgstr ""
 
-#: hr/utils.py:827
+#: hr/utils.py:831
 msgid "Creation Failed"
 msgstr "Échec de la création"
 
@@ -2888,6 +2920,11 @@ msgstr "Plage personnalisée"
 #: hr/report/project_profitability/project_profitability.py:133
 msgid "Customer"
 msgstr "Client"
+
+#. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
+#: hr/doctype/shift_type/shift_type.json
+msgid "Cyan"
+msgstr ""
 
 #. Label of the cycle_name (Data) field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
@@ -3315,8 +3352,8 @@ msgstr "Service : {0}"
 msgid "Departure Datetime"
 msgstr "Date/Heure de départ"
 
-#: payroll/doctype/salary_structure/salary_structure.py:103
-#: payroll/doctype/salary_structure/salary_structure.py:107
+#: payroll/doctype/salary_structure/salary_structure.py:109
+#: payroll/doctype/salary_structure/salary_structure.py:113
 msgid "Depends On Payment Days"
 msgstr ""
 
@@ -3517,7 +3554,7 @@ msgstr "Désactiver"
 msgid "Disable Rounded Total"
 msgstr "Désactiver le Total Arrondi"
 
-#: payroll/doctype/salary_structure/salary_structure.py:105
+#: payroll/doctype/salary_structure/salary_structure.py:111
 msgid "Disable {0} for the {1} component, to prevent the amount from being deducted twice, as its formula already uses a payment-days-based component."
 msgstr "Désactiver {0} pour le composant {1} , pour éviter que le montant ne soit déduit deux fois, car sa formule utilise déjà un composant basé sur le paiement."
 
@@ -3809,6 +3846,7 @@ msgstr "Envoi des fiches de paie à l'employé par Email en fonction de l'email 
 #. Label of the employee (Link) field in DocType 'Leave Ledger Entry'
 #. Label of the employee (Link) field in DocType 'Leave Policy Assignment'
 #. Label of the employee (Link) field in DocType 'Shift Assignment'
+#. Label of the employee (Link) field in DocType 'Shift Assignment Schedule'
 #. Label of the employee (Link) field in DocType 'Shift Request'
 #. Label of the employee (Link) field in DocType 'Training Event Employee'
 #. Label of the employee (Link) field in DocType 'Training Feedback'
@@ -3877,6 +3915,7 @@ msgstr "Envoi des fiches de paie à l'employé par Email en fonction de l'email 
 #: hr/doctype/leave_type/leave_type.json
 #: hr/doctype/pwa_notification/pwa_notification.json
 #: hr/doctype/shift_assignment/shift_assignment.json
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.js:161
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.js:202
 #: hr/doctype/shift_request/shift_request.json
@@ -4225,6 +4264,8 @@ msgstr "Tableau de bord du cycle de vie des employés"
 #. Label of the employee_name (Data) field in DocType 'Leave Encashment'
 #. Label of the employee_name (Data) field in DocType 'Leave Ledger Entry'
 #. Label of the employee_name (Data) field in DocType 'Shift Assignment'
+#. Label of the employee_name (Data) field in DocType 'Shift Assignment
+#. Schedule'
 #. Label of the employee_name (Data) field in DocType 'Shift Request'
 #. Label of the employee_name (Read Only) field in DocType 'Training Event
 #. Employee'
@@ -4270,6 +4311,7 @@ msgstr "Tableau de bord du cycle de vie des employés"
 #: hr/doctype/leave_encashment/leave_encashment.json
 #: hr/doctype/leave_ledger_entry/leave_ledger_entry.json
 #: hr/doctype/shift_assignment/shift_assignment.json
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.js:166
 #: hr/doctype/shift_request/shift_request.json
 #: hr/doctype/training_event_employee/training_event_employee.json
@@ -4548,7 +4590,7 @@ msgstr "L'employé a été marqué Absent pour ne pas avoir atteint le seuil d'h
 msgid "Employee {0} already has an Attendance Request {1} that overlaps with this period"
 msgstr "L'employé {0} a déjà une demande de présence {1} qui se chevauche avec cette période"
 
-#: hr/doctype/shift_assignment/shift_assignment.py:95
+#: hr/doctype/shift_assignment/shift_assignment.py:140
 msgid "Employee {0} already has an active Shift {1}: {2} that overlaps within this period."
 msgstr "L'employé {0} a déjà un décalage d'activité {1}: {2} qui se chevauche pendant cette période."
 
@@ -4584,7 +4626,7 @@ msgstr "Employé {0} introuvable dans l'événement de formation."
 msgid "Employee {0} on Half day on {1}"
 msgstr "Employé {0} sur une demi-journée sur {1}"
 
-#: payroll/doctype/salary_slip/salary_slip.py:575
+#: payroll/doctype/salary_slip/salary_slip.py:576
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
 msgstr ""
 
@@ -4680,7 +4722,9 @@ msgid "Enable Late Entry Marking"
 msgstr "Activer le marquage des entrées en retard"
 
 #. Label of the enabled (Check) field in DocType 'Daily Work Summary Group'
+#. Label of the enabled (Check) field in DocType 'Shift Assignment Schedule'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 #: payroll/doctype/salary_slip/salary_slip.js:290
 msgid "Enabled"
 msgstr "Activé"
@@ -4801,7 +4845,7 @@ msgid "Error"
 msgstr "Erreur"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:325
-#: hr/utils.py:820
+#: hr/utils.py:824
 msgid "Error Log"
 msgstr "Journal des Erreurs"
 
@@ -4810,11 +4854,11 @@ msgstr "Journal des Erreurs"
 msgid "Error Message"
 msgstr "Message d&#39;erreur"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1198
+#: payroll/doctype/salary_slip/salary_slip.py:1233
 msgid "Error in formula or condition"
 msgstr "Erreur dans la formule ou la condition"
 
-#: payroll/doctype/salary_slip/salary_slip.py:2163
+#: payroll/doctype/salary_slip/salary_slip.py:2198
 msgid "Error in formula or condition: {0} in Income Tax Slab"
 msgstr "Erreur dans la formule ou la condition : {0} dans la dalle d'impôts sur le revenu"
 
@@ -4822,7 +4866,7 @@ msgstr "Erreur dans la formule ou la condition : {0} dans la dalle d'impôts sur
 msgid "Error in some rows"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:2242
+#: payroll/doctype/salary_slip/salary_slip.py:2277
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
 msgstr "Erreur lors de l'évaluation de l' {doctype} {doclink} à la ligne {row_id}. <br><br> <b>Erreur :</b> {error} <br><br> <b>Indice :</b> {description}"
 
@@ -4872,11 +4916,35 @@ msgstr "Nom de l'Événement"
 msgid "Event Status"
 msgstr "Statut de l'Événement"
 
+#. Option for the 'Frequency' (Select) field in DocType 'Shift Assignment
+#. Schedule'
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
+msgid "Every 2 Weeks"
+msgstr ""
+
+#. Option for the 'Frequency' (Select) field in DocType 'Shift Assignment
+#. Schedule'
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
+msgid "Every 3 Weeks"
+msgstr ""
+
+#. Option for the 'Frequency' (Select) field in DocType 'Shift Assignment
+#. Schedule'
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
+msgid "Every 4 Weeks"
+msgstr ""
+
 #. Option for the 'Working Hours Calculation Based On' (Select) field in
 #. DocType 'Shift Type'
 #: hr/doctype/shift_type/shift_type.json
 msgid "Every Valid Check-in and Check-out"
 msgstr "Chaque enregistrement valide et check-out"
+
+#. Option for the 'Frequency' (Select) field in DocType 'Shift Assignment
+#. Schedule'
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
+msgid "Every Week"
+msgstr ""
 
 #: controllers/employee_reminders.py:218
 msgid "Everyone, let’s congratulate them on their work anniversary!"
@@ -5219,7 +5287,7 @@ msgstr "Exportation en cours..."
 msgid "Failed"
 msgstr "Échoué"
 
-#: hr/utils.py:815
+#: hr/utils.py:819
 msgid "Failed to create/submit {0} for employees:"
 msgstr "Impossible de créer/soumettre {0} pour les employés:"
 
@@ -5251,7 +5319,7 @@ msgstr "Impossible de mettre à jour le statut du candidat"
 msgid "Failed to {0} {1} for employees:"
 msgstr ""
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1455
+#: payroll/doctype/payroll_entry/payroll_entry.py:1460
 #: public/js/utils/index.js:149
 msgid "Failure"
 msgstr "Échec"
@@ -5439,7 +5507,7 @@ msgstr "Prénom "
 msgid "Fiscal Year"
 msgstr "Exercice fiscal"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1372
+#: payroll/doctype/payroll_entry/payroll_entry.py:1377
 msgid "Fiscal Year {0} not found"
 msgstr "Exercice Fiscal {0} introuvable"
 
@@ -5538,7 +5606,9 @@ msgstr "Fraction de salaire quotidien par congé"
 msgid "Fractional Cost"
 msgstr "Coût fractionnaire"
 
+#. Label of the frequency (Select) field in DocType 'Shift Assignment Schedule'
 #. Label of the frequency (Select) field in DocType 'Vehicle Service'
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 #: hr/doctype/vehicle_service/vehicle_service.json
 msgid "Frequency"
 msgstr "Fréquence"
@@ -5633,7 +5703,7 @@ msgstr "Horaire de Début"
 msgid "From User"
 msgstr "De l&#39;utilisateur"
 
-#: hr/utils.py:182
+#: hr/utils.py:186
 msgid "From date can not be less than employee's joining date"
 msgstr "La date de départ ne peut être antérieure à la date d'arrivée de l'employé"
 
@@ -5649,6 +5719,11 @@ msgstr "A partir de là, vous pouvez activer le campement pour les feuilles d'é
 #: payroll/doctype/gratuity_rule_slab/gratuity_rule_slab.json
 msgid "From(Year)"
 msgstr "De(Année)"
+
+#. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
+#: hr/doctype/shift_type/shift_type.json
+msgid "Fuchsia"
+msgstr ""
 
 #: hr/report/vehicle_expenses/vehicle_expenses.py:45
 msgid "Fuel Expense"
@@ -5719,7 +5794,7 @@ msgstr "Montant financé"
 msgid "Future Income Tax"
 msgstr "Impôt sur le revenu futur"
 
-#: hr/utils.py:180
+#: hr/utils.py:184
 msgid "Future dates not allowed"
 msgstr "Dates futures non autorisées"
 
@@ -5876,6 +5951,11 @@ msgstr "Règle de Gratuité"
 msgid "Gratuity Rule Slab"
 msgstr "Dalle de Règles de Gratuité"
 
+#. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
+#: hr/doctype/shift_type/shift_type.json
+msgid "Green"
+msgstr ""
+
 #. Label of a Card Break in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Grievance"
@@ -6000,6 +6080,7 @@ msgstr "Tableau de bord HR"
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 #: hr/doctype/leave_type/leave_type.json
 #: hr/doctype/shift_assignment/shift_assignment.json
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 #: hr/doctype/shift_request/shift_request.json
 #: hr/doctype/shift_type/shift_type.json hr/doctype/skill/skill.json
 #: hr/doctype/staffing_plan/staffing_plan.json
@@ -6077,6 +6158,7 @@ msgstr "Paramètres RH"
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 #: hr/doctype/leave_type/leave_type.json hr/doctype/offer_term/offer_term.json
 #: hr/doctype/shift_assignment/shift_assignment.json
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hr/doctype/shift_request/shift_request.json
 #: hr/doctype/shift_type/shift_type.json
@@ -6445,8 +6527,11 @@ msgid "In case of any error during this background process, the system will add 
 msgstr "En cas d'erreur lors de ce processus en arrière-plan, le système va ajouter un commentaire sur l'erreur sur cette entrée de paie et revenir au statut Envoyé"
 
 #. Option for the 'Status' (Select) field in DocType 'Shift Assignment'
+#. Option for the 'Status' (Select) field in DocType 'Shift Assignment
+#. Schedule'
 #. Option for the 'Status' (Select) field in DocType 'Shift Assignment Tool'
 #: hr/doctype/shift_assignment/shift_assignment.json
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hr/report/employee_leave_balance/employee_leave_balance.js:47
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:41
@@ -6558,15 +6643,15 @@ msgstr "Dalle d'impôt sur le revenu Autres charges"
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1526
+#: payroll/doctype/salary_slip/salary_slip.py:1561
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "La dalle d'impôt sur le revenu doit entrer en vigueur à la date de début de la période de paie ou avant: {0}"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1514
+#: payroll/doctype/salary_slip/salary_slip.py:1549
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "Dalle d'impôt sur le revenu non définie dans l'affectation de la structure salariale: {0}"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1522
+#: payroll/doctype/salary_slip/salary_slip.py:1557
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "Dalle d'impôt sur le revenu: {0} est désactivée"
 
@@ -6797,7 +6882,7 @@ msgstr "Invalide"
 msgid "Invalid Additional Salary"
 msgstr ""
 
-#: payroll/doctype/salary_structure/salary_structure.py:313
+#: payroll/doctype/salary_structure/salary_structure.py:319
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
 msgstr "Compte de paie non valide. La devise du compte doit être {0} ou {1}"
 
@@ -7531,7 +7616,7 @@ msgstr "Le type de congé {0} n'est pas encaissable"
 msgid "Leave Without Pay"
 msgstr "Congé Sans Solde"
 
-#: payroll/doctype/salary_slip/salary_slip.py:466
+#: payroll/doctype/salary_slip/salary_slip.py:467
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr "Le congé sans solde ne correspond pas aux enregistrements {} approuvés"
 
@@ -7650,6 +7735,11 @@ msgstr "Plaque d'Immatriculation"
 msgid "Lifecycle"
 msgstr "Cycle de vie"
 
+#. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
+#: hr/doctype/shift_type/shift_type.json
+msgid "Lime"
+msgstr ""
+
 #. Description of the 'Appraisal Linking' (Section Break) field in DocType
 #. 'Goal'
 #: hr/doctype/goal/goal.json hr/doctype/goal/goal_tree.js:97
@@ -7684,7 +7774,7 @@ msgstr "Remboursement du prêt"
 msgid "Loan Repayment Entry"
 msgstr "Entrée de remboursement de prêt"
 
-#: hr/utils.py:708
+#: hr/utils.py:712
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr "Le prêt ne peut pas être remboursé à partir du salaire de l'employé {0} car le salaire est traité dans la devise {1}"
 
@@ -7894,7 +7984,7 @@ msgstr "Le montant maximal de l'exemption ne peut pas dépasser le montant maxim
 msgid "Max Taxable Income"
 msgstr "Revenu imposable maximum"
 
-#: payroll/doctype/salary_structure/salary_structure.py:161
+#: payroll/doctype/salary_structure/salary_structure.py:167
 msgid "Max benefits should be greater than zero to dispense benefits"
 msgstr "Les prestations sociales maximales doivent être supérieures à zéro pour être calculées"
 
@@ -7989,7 +8079,7 @@ msgstr "Médical"
 #. Label of the message (Text Editor) field in DocType 'PWA Notification'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hr/doctype/pwa_notification/pwa_notification.json
-#: payroll/doctype/payroll_entry/payroll_entry.py:1422
+#: payroll/doctype/payroll_entry/payroll_entry.py:1427
 msgid "Message"
 msgstr ""
 
@@ -8010,7 +8100,7 @@ msgstr "Revenu imposable minimum"
 msgid "Minimum Year for Gratuity"
 msgstr "Année minimale pour la Gratuité"
 
-#: hr/utils.py:799
+#: hr/utils.py:803
 msgid "Missing Field"
 msgstr ""
 
@@ -8027,7 +8117,7 @@ msgstr ""
 msgid "Missing Relieving Date"
 msgstr "Date de départ manquante"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1517
+#: payroll/doctype/salary_slip/salary_slip.py:1552
 msgid "Missing Tax Slab"
 msgstr ""
 
@@ -8126,7 +8216,7 @@ msgstr "Plus"
 msgid "More Info"
 msgstr "Plus d'infos"
 
-#: hr/utils.py:263
+#: hr/utils.py:267
 msgid "More than one selection for {0} not allowed"
 msgstr "Plus d'une sélection pour {0} non autorisée"
 
@@ -8134,7 +8224,7 @@ msgstr "Plus d'une sélection pour {0} non autorisée"
 msgid "Multiple Additional Salaries with overwrite property exist for Salary Component {0} between {1} and {2}."
 msgstr "De multiples traitements supplémentaires avec une propriété d'écrasement existent pour le composant salarial {0} entre {1} et {2}."
 
-#: hr/doctype/shift_assignment/shift_assignment.py:65
+#: hr/doctype/shift_assignment/shift_assignment.py:110
 msgid "Multiple Shift Assignments"
 msgstr "Affectations Maj Multiples"
 
@@ -8152,8 +8242,8 @@ msgstr "Mon Compte"
 msgid "Name"
 msgstr "Nom"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1184
-#: payroll/doctype/salary_slip/salary_slip.py:2158
+#: payroll/doctype/salary_slip/salary_slip.py:1219
+#: payroll/doctype/salary_slip/salary_slip.py:2193
 msgid "Name error"
 msgstr "Erreur de nom"
 
@@ -8190,7 +8280,7 @@ msgstr "Salaire net (devise de l'entreprise)"
 msgid "Net Pay Info"
 msgstr "Infos salariales nettes"
 
-#: payroll/doctype/salary_slip/salary_slip.py:191
+#: payroll/doctype/salary_slip/salary_slip.py:192
 msgid "Net Pay cannot be less than 0"
 msgstr "Salaire Net ne peut pas être inférieur à 0"
 
@@ -8198,7 +8288,7 @@ msgstr "Salaire Net ne peut pas être inférieur à 0"
 msgid "Net Salary Amount"
 msgstr "Montant net du salaire"
 
-#: payroll/doctype/salary_structure/salary_structure.py:87
+#: payroll/doctype/salary_structure/salary_structure.py:93
 msgid "Net pay cannot be negative"
 msgstr "Salaire Net ne peut pas être négatif"
 
@@ -8237,6 +8327,12 @@ msgstr "Nouvelle Allocation de Congés"
 msgid "New Leaves Allocated (In Days)"
 msgstr "Nouvelle Allocation de Congés (en jours)"
 
+#. Description of the 'Create Shifts After' (Date) field in DocType 'Shift
+#. Assignment Schedule'
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
+msgid "New shift assignments will be created after this date."
+msgstr ""
+
 #. Option for the 'Is Active' (Select) field in DocType 'Salary Structure'
 #. Option for the 'Is Default' (Select) field in DocType 'Salary Structure'
 #: payroll/doctype/salary_structure/salary_structure.json
@@ -8248,7 +8344,7 @@ msgstr "Non"
 msgid "No Data"
 msgstr "Aucune Donnée"
 
-#: payroll/doctype/salary_structure/salary_structure.py:237
+#: payroll/doctype/salary_structure/salary_structure.py:243
 msgid "No Employee Found"
 msgstr "Aucun employé trouvé"
 
@@ -8256,7 +8352,7 @@ msgstr "Aucun employé trouvé"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "Aucun employé trouvé pour la valeur de champ d'employé donnée. '{}': {}"
 
-#: hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hr/utils.py:805
+#: hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hr/utils.py:809
 msgid "No Employees Selected"
 msgstr "Aucun employé sélectionné"
 
@@ -8288,7 +8384,7 @@ msgstr "Aucune structure de salaire attribuée à l'employé {0} à la date {1}"
 msgid "No Salary Structures"
 msgstr ""
 
-#: hr/doctype/shift_assignment_tool/shift_assignment_tool.py:200
+#: hr/doctype/shift_assignment_tool/shift_assignment_tool.py:190
 msgid "No Shift Requests Selected"
 msgstr ""
 
@@ -8296,7 +8392,7 @@ msgstr ""
 msgid "No Staffing Plans found for this Designation"
 msgstr "Aucun plan de dotation trouvé pour cette désignation"
 
-#: payroll/doctype/salary_slip/salary_slip.py:392
+#: payroll/doctype/salary_slip/salary_slip.py:393
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
 msgstr "Aucune Structure de Salaire active ou par défaut trouvée pour employé {0} pour les dates données"
 
@@ -8377,7 +8473,7 @@ msgstr "Aucun Enregistrement Trouvé"
 msgid "No replies from"
 msgstr "Pas de réponse de"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1438
+#: payroll/doctype/payroll_entry/payroll_entry.py:1443
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "Aucune fiche de paie ne peut être soumise pour les critères sélectionnés ci-dessus OU la fiche de paie est déjà soumise"
 
@@ -8448,7 +8544,7 @@ msgstr "Remarque : Maj ne sera pas écrasé dans les dossiers de présence exist
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr "Remarque : Le total des feuilles allouées {0} ne devrait pas être inférieur à la quantité de feuilles déjà approuvées {1} pour la période"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1850
+#: payroll/doctype/salary_slip/salary_slip.py:1885
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr ""
 
@@ -8686,6 +8782,11 @@ msgstr "Une liste de vacances facultative n'est pas définie pour la période de
 msgid "Optional Leaves are holidays that Employees can choose to avail from a list of holidays published by the company."
 msgstr "Les congés facultatifs sont des congés que les Employés peuvent choisir d'utiliser à partir d'une liste de congés publiés par l'entreprise."
 
+#. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
+#: hr/doctype/shift_type/shift_type.json
+msgid "Orange"
+msgstr ""
+
 #: hr/page/organizational_chart/organizational_chart.js:4
 msgid "Organizational Chart"
 msgstr "Graphique organisationnel"
@@ -8761,7 +8862,7 @@ msgstr "Présence du chevauchement"
 msgid "Overlapping Shift Requests"
 msgstr "Requêtes de décalage superposées"
 
-#: hr/doctype/shift_assignment/shift_assignment.py:102
+#: hr/doctype/shift_assignment/shift_assignment.py:147
 msgid "Overlapping Shifts"
 msgstr "Changements de chevauchement"
 
@@ -8853,7 +8954,7 @@ msgstr "Objectif parent"
 msgid "Part-time"
 msgstr "Temps-Partiel"
 
-#: hr/utils.py:824 public/js/utils/index.js:154
+#: hr/utils.py:828 public/js/utils/index.js:154
 msgid "Partial Success"
 msgstr "Succès Partiel"
 
@@ -8954,7 +9055,7 @@ msgstr "Jours de paiement"
 msgid "Payment Days Calculation Help"
 msgstr "Aide au calcul des jours de paiement"
 
-#: payroll/doctype/salary_structure/salary_structure.py:108
+#: payroll/doctype/salary_structure/salary_structure.py:114
 msgid "Payment Days Dependency"
 msgstr "Dépendance des jours de paiement"
 
@@ -8976,7 +9077,7 @@ msgstr "Écriture de Paiement"
 msgid "Payment and Accounting"
 msgstr "Paiement et comptabilité"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1039
+#: payroll/doctype/payroll_entry/payroll_entry.py:1044
 msgid "Payment of {0} from {1} to {2}"
 msgstr "Paiement de {0} de {1} à {2}"
 
@@ -9195,6 +9296,11 @@ msgstr "Numéro de téléphone"
 msgid "Piecework"
 msgstr "Travail à la pièce"
 
+#. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
+#: hr/doctype/shift_type/shift_type.json
+msgid "Pink"
+msgstr ""
+
 #. Label of the planned_vacancies (Int) field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
 msgid "Planned number of Positions"
@@ -9216,7 +9322,7 @@ msgstr "Veuillez ajouter les prestations restantes {0} à l'un des composants ex
 msgid "Please add the remaining benefits {0} to the application as pro-rata component"
 msgstr "Veuillez ajouter les avantages {0} restants à l'application en tant que composant Prorata"
 
-#: payroll/doctype/salary_slip/salary_slip.py:759
+#: payroll/doctype/salary_slip/salary_slip.py:760
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr "Veuillez assigner une structure de salaire pour l'employé {0} applicable à partir ou avant {1} en premier"
 
@@ -9240,7 +9346,7 @@ msgstr "Veuillez activer un compte entrant par défaut avant de créer un groupe
 msgid "Please enter the designation"
 msgstr "S'il vous plaît entrer la désignation"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1839
+#: payroll/doctype/salary_slip/salary_slip.py:1874
 msgid "Please see attachment"
 msgstr ""
 
@@ -9269,7 +9375,7 @@ msgstr ""
 msgid "Please select Shift Type and assignment date(s)."
 msgstr ""
 
-#: hr/utils.py:702
+#: hr/utils.py:706
 msgid "Please select a Company"
 msgstr "Veuillez sélectionner une Société"
 
@@ -9290,15 +9396,15 @@ msgstr "Veuillez sélectionner un fichier csv"
 msgid "Please select a date."
 msgstr "Veuillez sélectionner une date."
 
-#: hr/utils.py:699
+#: hr/utils.py:703
 msgid "Please select an Applicant"
 msgstr "Veuillez sélectionner un candidat"
 
-#: hr/doctype/shift_assignment_tool/shift_assignment_tool.py:199
+#: hr/doctype/shift_assignment_tool/shift_assignment_tool.py:189
 msgid "Please select at least one Shift Request to perform this action."
 msgstr ""
 
-#: hr/utils.py:804
+#: hr/utils.py:808
 msgid "Please select at least one employee to perform this action."
 msgstr ""
 
@@ -9338,7 +9444,7 @@ msgstr "Veuillez sélectionner les fiches de salaire à envoyer par e-mail"
 msgid "Please select {0}"
 msgstr "Veuillez sélectionner {0}"
 
-#: payroll/doctype/salary_structure/salary_structure.py:305
+#: payroll/doctype/salary_structure/salary_structure.py:311
 msgid "Please set \"Default Payroll Payable Account\" in Company Defaults"
 msgstr "Veuillez définir \"Compte Payroll Payable par défaut\" dans les valeurs par défaut de la société"
 
@@ -9350,7 +9456,7 @@ msgstr "Veuillez définir le composant de base et HRA dans la société {0}"
 msgid "Please set Earning Component for Leave type: {0}."
 msgstr "Veuillez définir le composant de gain pour le type de congé : {0}."
 
-#: payroll/doctype/salary_slip/salary_slip.py:450
+#: payroll/doctype/salary_slip/salary_slip.py:451
 msgid "Please set Payroll based on in Payroll settings"
 msgstr "Veuillez définir la paie en fonction des paramètres de paie"
 
@@ -9383,7 +9489,7 @@ msgstr "Veuillez définir le modèle d'évaluation de l' {0} ou sélectionnez le
 msgid "Please set the Company"
 msgstr "Veuillez définir la Société"
 
-#: payroll/doctype/salary_slip/salary_slip.py:263
+#: payroll/doctype/salary_slip/salary_slip.py:264
 msgid "Please set the Date Of Joining for employee {0}"
 msgstr "Veuillez définir la Date d'Embauche pour l'employé {0}"
 
@@ -9559,11 +9665,11 @@ msgstr ""
 msgid "Processing Requests"
 msgstr ""
 
-#: hr/doctype/shift_assignment_tool/shift_assignment_tool.py:238
+#: hr/doctype/shift_assignment_tool/shift_assignment_tool.py:228
 msgid "Processing Requests..."
 msgstr ""
 
-#: hr/doctype/shift_assignment_tool/shift_assignment_tool.py:210
+#: hr/doctype/shift_assignment_tool/shift_assignment_tool.py:200
 msgid "Processing of Shift Requests has been queued. It may take a few minutes."
 msgstr ""
 
@@ -9821,6 +9927,11 @@ msgstr "Analyse de recrutement"
 msgid "Recruitment Dashboard"
 msgstr "Tableau de bord de recrutement"
 
+#. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
+#: hr/doctype/shift_type/shift_type.json
+msgid "Red"
+msgstr ""
+
 #. Label of the reference (Link) field in DocType 'Full and Final Asset'
 #: hr/doctype/expense_claim/expense_claim_dashboard.py:10
 #: hr/doctype/full_and_final_asset/full_and_final_asset.json
@@ -10028,7 +10139,7 @@ msgstr "Voiture de location"
 msgid "Reopen"
 msgstr "Ré-ouvrir"
 
-#: hr/utils.py:714
+#: hr/utils.py:718
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "Le remboursement à partir du salaire ne peut être sélectionné que pour les prêts à terme"
 
@@ -10037,6 +10148,12 @@ msgstr "Le remboursement à partir du salaire ne peut être sélectionné que po
 #: hr/doctype/employee_advance/employee_advance.json
 msgid "Repay Unclaimed Amount from Salary"
 msgstr "Rembourser le montant non réclamé du salaire"
+
+#. Label of the repeat_on_days (Table) field in DocType 'Shift Assignment
+#. Schedule'
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
+msgid "Repeat On Days"
+msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -10246,6 +10363,17 @@ msgstr "Rôle"
 msgid "Role Allowed to Create Backdated Leave Application"
 msgstr "Rôle autorisé à créer une demande de congé antidatée"
 
+#. Label of a shortcut in the Shift & Attendance Workspace
+#: hr/doctype/shift_assignment/shift_assignment_list.js:12
+#: hr/workspace/shift_&_attendance/shift_&_attendance.json
+msgid "Roster"
+msgstr ""
+
+#. Label of the color (Select) field in DocType 'Shift Type'
+#: hr/doctype/shift_type/shift_type.json
+msgid "Roster Color"
+msgstr ""
+
 #. Label of the round_name (Data) field in DocType 'Interview Round'
 #: hr/doctype/interview_round/interview_round.json
 msgid "Round Name"
@@ -10289,15 +10417,15 @@ msgstr ""
 msgid "Route to the custom Job Application Webform"
 msgstr "Itinéraire vers le formulaire de demande d'emploi personnalisé"
 
-#: payroll/doctype/salary_structure/salary_structure.py:80
+#: payroll/doctype/salary_structure/salary_structure.py:86
 msgid "Row #{0}: Cannot set amount or formula for Salary Component {1} with Variable Based On Taxable Salary"
 msgstr "Ligne n ° {0}: impossible de définir le montant ou la formule pour le composant de salaire {1} avec une variable basée sur le salaire imposable"
 
-#: payroll/doctype/salary_structure/salary_structure.py:99
+#: payroll/doctype/salary_structure/salary_structure.py:105
 msgid "Row #{0}: The {1} Component has the options {2} and {3} enabled."
 msgstr "Ligne #{0}: Le composant {1} a les options {2} et {3} activées."
 
-#: payroll/doctype/salary_structure/salary_structure.py:123
+#: payroll/doctype/salary_structure/salary_structure.py:129
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
 msgstr "Ligne #{0}: Le montant de la feuille de temps écrasera le montant du composant de gain pour le composant de salaire {1}"
 
@@ -10511,11 +10639,11 @@ msgstr ""
 msgid "Salary Slip creation is queued. It may take a few minutes"
 msgstr "La création de la feuille de salaire est en file d'attente. Cela peut prendre quelques minutes"
 
-#: payroll/doctype/salary_slip/salary_slip.py:297
+#: payroll/doctype/salary_slip/salary_slip.py:298
 msgid "Salary Slip of employee {0} already created for this period"
 msgstr "Fiche de Paie de l'employé {0} déjà créée pour cette période"
 
-#: payroll/doctype/salary_slip/salary_slip.py:303
+#: payroll/doctype/salary_slip/salary_slip.py:304
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr "Fiche de Paie de l'employé {0} déjà créée pour la feuille de temps {1}"
 
@@ -10523,7 +10651,7 @@ msgstr "Fiche de Paie de l'employé {0} déjà créée pour la feuille de temps 
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr "La soumission du bulletin de salaire est en file d'attente. Cela peut prendre quelques minutes"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1377
+#: payroll/doctype/payroll_entry/payroll_entry.py:1382
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr "Le bulletin de salaire {0} a échoué pour l'entrée de la paie {1}"
 
@@ -10541,11 +10669,11 @@ msgstr "Bon de salaire créé"
 msgid "Salary Slips Submitted"
 msgstr "Slips Slips Soumis"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1419
+#: payroll/doctype/payroll_entry/payroll_entry.py:1424
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr "Les bordereaux de salaire existent déjà pour les employés {}, et ne seront pas traités par cette paie."
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1444
+#: payroll/doctype/payroll_entry/payroll_entry.py:1449
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr "Billets de salaire soumis pour la période de {0} à {1}"
 
@@ -10581,7 +10709,7 @@ msgstr ""
 msgid "Salary Structure Assignment for Employee already exists"
 msgstr "La structure de la structure salariale pour l'employé existe déjà"
 
-#: payroll/doctype/salary_slip/salary_slip.py:395
+#: payroll/doctype/salary_slip/salary_slip.py:396
 msgid "Salary Structure Missing"
 msgstr "Grille des Salaires Manquante"
 
@@ -10593,7 +10721,7 @@ msgstr "La structure salariale doit être soumise avant la soumission de {0}"
 msgid "Salary Structure not found for employee {0} and date {1}"
 msgstr "Structure de salaire non trouvée pour l'employé {0} et la date {1}"
 
-#: payroll/doctype/salary_structure/salary_structure.py:170
+#: payroll/doctype/salary_structure/salary_structure.py:176
 msgid "Salary Structure should have flexible benefit component(s) to dispense benefit amount"
 msgstr "La structure salariale devrait comporter une ou plusieurs composantes de prestation sociales variables pour la distribution du montant de la prestation"
 
@@ -10641,7 +10769,7 @@ msgstr "Détails du Salaire basés sur les Revenus et les Prélèvements."
 msgid "Salary components should be part of the Salary Structure."
 msgstr "Les composantes salariales doivent faire partie de la structure salariale."
 
-#: payroll/doctype/salary_slip/salary_slip.py:2307
+#: payroll/doctype/salary_slip/salary_slip.py:2340
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "Les e-mails de bulletin de salaire ont été mis en file d'attente pour l'envoi. Vérifiez {0} pour le statut."
 
@@ -10667,6 +10795,11 @@ msgstr "Le Montant Approuvé ne peut pas être supérieur au Montant Réclamé �
 #: hr/doctype/leave_block_list/leave_block_list.js:62
 msgid "Saturday"
 msgstr "Samedi"
+
+#. Label of the schedule (Link) field in DocType 'Shift Assignment'
+#: hr/doctype/shift_assignment/shift_assignment.json
+msgid "Schedule"
+msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Exit Interview'
 #. Option for the 'Event Status' (Select) field in DocType 'Training Event'
@@ -10738,7 +10871,7 @@ msgstr "Sélectionnez d'abord l'entretien"
 msgid "Select Payment Account to make Bank Entry"
 msgstr "Sélectionner Compte de Crédit pour faire l'Écriture Bancaire"
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1582
+#: payroll/doctype/payroll_entry/payroll_entry.py:1587
 msgid "Select Payroll Frequency."
 msgstr "Sélectionnez la fréquence de la paie."
 
@@ -10792,6 +10925,12 @@ msgstr "Sélectionnez la date de fin de votre demande de congé."
 #: hr/doctype/leave_application/leave_application.js:276
 msgid "Select the start date for your Leave Application."
 msgstr "Sélectionnez la date de début de votre demande de congé."
+
+#. Description of the 'Enabled' (Check) field in DocType 'Shift Assignment
+#. Schedule'
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
+msgid "Select this if you want shift assignments to be automatically created indefinitely."
+msgstr ""
 
 #: hr/doctype/leave_application/leave_application.js:269
 msgid "Select type of leave the employee wants to apply for, like Sick Leave, Privilege Leave, Casual Leave, etc."
@@ -11047,7 +11186,7 @@ msgstr "Colonisé"
 msgid "Setup"
 msgstr "Configuration"
 
-#: hr/utils.py:663
+#: hr/utils.py:667
 msgid "Shared with the user {0} with 'submit' permisions"
 msgstr ""
 
@@ -11105,7 +11244,14 @@ msgstr ""
 
 #. Name of a DocType
 #. Label of a Link in the Shift & Attendance Workspace
-#: hr/doctype/shift_assignment/shift_assignment_list.js:3
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
+#: hr/workspace/shift_&_attendance/shift_&_attendance.json
+msgid "Shift Assignment Schedule"
+msgstr ""
+
+#. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
+#: hr/doctype/shift_assignment/shift_assignment_list.js:4
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hr/doctype/shift_request/shift_request_list.js:3
 #: hr/doctype/shift_type/shift_type_list.js:3
@@ -11123,6 +11269,12 @@ msgstr "Affectation d'équipe: {0} créée pour l'employé: {1}"
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Attendance"
 msgstr "Présence Maj"
+
+#. Label of the shift_details_section (Section Break) field in DocType 'Shift
+#. Assignment Schedule'
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
+msgid "Shift Details"
+msgstr ""
 
 #. Label of the shift_end (Datetime) field in DocType 'Employee Checkin'
 #: hr/doctype/employee_checkin/employee_checkin.json
@@ -11183,6 +11335,7 @@ msgid "Shift Timings"
 msgstr ""
 
 #. Label of the shift_type (Link) field in DocType 'Shift Assignment'
+#. Label of the shift_type (Link) field in DocType 'Shift Assignment Schedule'
 #. Label of the shift_type (Link) field in DocType 'Shift Assignment Tool'
 #. Label of the shift_type_filter (Link) field in DocType 'Shift Assignment
 #. Tool'
@@ -11190,6 +11343,7 @@ msgstr ""
 #. Name of a DocType
 #. Label of a Link in the Shift & Attendance Workspace
 #: hr/doctype/shift_assignment/shift_assignment.json
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.js:207
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hr/doctype/shift_request/shift_request.json
@@ -11279,7 +11433,7 @@ msgstr "Compétences"
 msgid "Skip Auto Attendance"
 msgstr "Ignorer l'assistance automatique"
 
-#: payroll/doctype/salary_structure/salary_structure.py:345
+#: payroll/doctype/salary_structure/salary_structure.py:351
 msgid "Skipping Salary Structure Assignment for the following employees, as Salary Structure Assignment records already exists against them. {0}"
 msgstr "Ignorer l'affectation de structure salariale pour les employés suivants, car des enregistrements d'affectation de structure salariale existent déjà pour eux. {0}"
 
@@ -11302,6 +11456,10 @@ msgstr "Nom de la Source"
 #: hr/doctype/job_applicant/job_applicant.json
 msgid "Source and Rating"
 msgstr "Source et notation"
+
+#: api/roster.py:79
+msgid "Source and target shifts cannot be the same"
+msgstr ""
 
 #. Label of the sponsored_amount (Currency) field in DocType 'Travel Request
 #. Costing'
@@ -11392,7 +11550,7 @@ msgstr "Heure de Début"
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}"
 msgstr "Les dates de début et de fin ne faisant pas partie d'une période de paie valide, impossible de calculer {0}"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1459
+#: payroll/doctype/salary_slip/salary_slip.py:1494
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr "Les dates de début et de fin ne figurant pas dans une période de paie valide, le système ne peut pas calculer {0}."
 
@@ -11432,6 +11590,8 @@ msgstr "Composante Statistique"
 #. Label of the status (Select) field in DocType 'Job Requisition'
 #. Label of the status (Select) field in DocType 'Leave Application'
 #. Label of the status (Select) field in DocType 'Shift Assignment'
+#. Label of the shift_status (Select) field in DocType 'Shift Assignment
+#. Schedule'
 #. Label of the status (Select) field in DocType 'Shift Assignment Tool'
 #. Label of the status (Select) field in DocType 'Shift Request'
 #. Label of the status (Select) field in DocType 'Training Event Employee'
@@ -11466,6 +11626,7 @@ msgstr "Composante Statistique"
 #: hr/doctype/job_requisition/job_requisition.json
 #: hr/doctype/leave_application/leave_application.json
 #: hr/doctype/shift_assignment/shift_assignment.json
+#: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hr/doctype/shift_request/shift_request.json
 #: hr/doctype/training_event_employee/training_event_employee.json
@@ -11497,7 +11658,7 @@ msgstr "Empêcher les utilisateurs de faire des Demandes de Congé les jours sui
 msgid "Strictly based on Log Type in Employee Checkin"
 msgstr "Strictement basé sur le type de journal dans l'enregistrement des employés"
 
-#: payroll/doctype/salary_structure/salary_structure.py:286
+#: payroll/doctype/salary_structure/salary_structure.py:292
 msgid "Structures have been assigned successfully"
 msgstr "Les structures ont été assignées avec succès"
 
@@ -11569,7 +11730,7 @@ msgstr "Validé"
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "Validation des fiches de salaire et créer une écriture au journal ..."
 
-#: payroll/doctype/payroll_entry/payroll_entry.py:1499
+#: payroll/doctype/payroll_entry/payroll_entry.py:1504
 msgid "Submitting Salary Slips..."
 msgstr "Validation des bulletins de salaire ..."
 
@@ -11577,13 +11738,13 @@ msgstr "Validation des bulletins de salaire ..."
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "Les entreprises subsidiaires ont déjà prévu des postes vacants à {1} pour un budget de {2}. Le plan de dotation pour {0} devrait allouer plus de postes vacants et de budget à {3} que prévu pour ses filiales"
 
-#: hr/doctype/employee_referral/employee_referral.py:54 hr/utils.py:829
-#: payroll/doctype/payroll_entry/payroll_entry.py:1447
+#: hr/doctype/employee_referral/employee_referral.py:54 hr/utils.py:833
+#: payroll/doctype/payroll_entry/payroll_entry.py:1452
 #: public/js/utils/index.js:139
 msgid "Success"
 msgstr "Succès"
 
-#: hr/utils.py:832
+#: hr/utils.py:836
 msgid "Successfully created {0} for employees:"
 msgstr ""
 
@@ -11624,11 +11785,11 @@ msgstr "Suspendu"
 msgid "Sync {0}"
 msgstr ""
 
-#: payroll/doctype/salary_slip/salary_slip.py:1191
+#: payroll/doctype/salary_slip/salary_slip.py:1226
 msgid "Syntax error"
 msgstr "Erreur de syntaxe"
 
-#: payroll/doctype/salary_slip/salary_slip.py:2161
+#: payroll/doctype/salary_slip/salary_slip.py:2196
 msgid "Syntax error in condition: {0} in Income Tax Slab"
 msgstr "Erreur de syntaxe dans la condition : {0} dans la dalle d'impôts sur le revenu"
 
@@ -11889,7 +12050,7 @@ msgstr "Heure avant l'heure de début du quart pendant laquelle l'enregistrement
 msgid "Theory"
 msgstr "Théorie"
 
-#: payroll/doctype/salary_slip/salary_slip.py:447
+#: payroll/doctype/salary_slip/salary_slip.py:448
 msgid "There are more holidays than working days this month."
 msgstr "Il y a plus de vacances que de jours travaillés ce mois-ci."
 
@@ -11903,7 +12064,7 @@ msgstr "Il n'y a pas de postes vacants dans le plan de dotation en personnel {0}
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Stucture."
 msgstr "Il n'y a pas de structure de salaire assignée à {0}. Assignez d'abord une étude de salaire."
 
-#: payroll/doctype/salary_structure/salary_structure.py:408
+#: payroll/doctype/salary_structure/salary_structure.py:414
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
 msgstr "Il n'y a pas d'employé avec la structure de salaire : {0}. Assignez {1} à un employé pour prévisualiser le bulletin de salaire"
 
@@ -11924,15 +12085,15 @@ msgstr "Ce congé compensatoire sera applicable à partir de {0}."
 msgid "This employee already has a log with the same timestamp.{0}"
 msgstr "Cet employé a déjà un journal avec le même horodatage. {0}"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1199
+#: payroll/doctype/salary_slip/salary_slip.py:1234
 msgid "This error can be due to invalid formula or condition."
 msgstr "Cette erreur peut être due à une formule ou une condition non valide."
 
-#: payroll/doctype/salary_slip/salary_slip.py:1192
+#: payroll/doctype/salary_slip/salary_slip.py:1227
 msgid "This error can be due to invalid syntax."
 msgstr "Cette erreur peut être due à une syntaxe invalide."
 
-#: payroll/doctype/salary_slip/salary_slip.py:1185
+#: payroll/doctype/salary_slip/salary_slip.py:1220
 msgid "This error can be due to missing or deleted field."
 msgstr "Cette erreur peut être due à un champ manquant ou supprimé."
 
@@ -12096,7 +12257,7 @@ msgstr "Horaire de Fin"
 msgid "To User"
 msgstr "À l&#39;utilisateur"
 
-#: hr/doctype/shift_assignment/shift_assignment.py:59
+#: hr/doctype/shift_assignment/shift_assignment.py:104
 msgid "To allow this, enable {0} under {1}."
 msgstr "Pour autoriser cela, activez {0} sous {1}."
 
@@ -12112,11 +12273,11 @@ msgstr "La date de fin ne peut être égale ou antérieure à la date de début"
 msgid "To date can not be greater than employee's relieving date."
 msgstr "À ce jour, ne peut pas être postérieure à la date de congé de l'employé."
 
-#: hr/utils.py:178
+#: hr/utils.py:182
 msgid "To date can not be less than from date"
 msgstr "La date de fin ne peut être antérieure à la date de début"
 
-#: hr/utils.py:184
+#: hr/utils.py:188
 msgid "To date can not greater than employee's relieving date"
 msgstr "La date de fin ne peut pas dépasser la date de libération de l'employé"
 
@@ -12146,9 +12307,13 @@ msgstr "L'année à (Année) ne peut pas être inférieure à depuis(Année)"
 msgid "Today is {0}'s birthday 🎉"
 msgstr "Aujourd'hui est l'anniversaire de {0}🎉"
 
-#: controllers/employee_reminders.py:258
+#: controllers/employee_reminders.py:259
 msgid "Today {0} at our Company! 🎉"
 msgstr "Aujourd'hui {0} dans notre entreprise ! 🎉"
+
+#: controllers/employee_reminders.py:241
+msgid "Today {0} completed {1} year(s) at our Company! 🎉"
+msgstr ""
 
 #. Label of the total (Currency) field in DocType 'Expense Taxes and Charges'
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
@@ -12403,7 +12568,7 @@ msgstr "Le total des congés alloués est supérieur à l'allocation maximale au
 msgid "Total allocated leaves {0} cannot be less than already approved leaves {1} for the period"
 msgstr "Le total des feuilles allouées {0} ne peut pas être inférieur aux feuilles déjà approuvées {1} pour la période"
 
-#: payroll/doctype/salary_structure/salary_structure.py:164
+#: payroll/doctype/salary_structure/salary_structure.py:170
 msgid "Total flexible benefit component amount {0} should not be less than max benefits {1}"
 msgstr "Le montant total de la composante de prestation flexible {0} ne doit pas être inférieur au nombre maximal de prestations {1}"
 
@@ -12451,7 +12616,7 @@ msgstr "Le poids total pour tout l' {0} doit s'élever à 100. Actuellement, il 
 msgid "Total working Days Per Year"
 msgstr "Nombre de jours de travail par année"
 
-#: payroll/doctype/salary_slip/salary_slip.py:164
+#: payroll/doctype/salary_slip/salary_slip.py:165
 msgid "Total working hours should not be greater than max working hours {0}"
 msgstr "Le nombre total d'heures travaillées ne doit pas être supérieur à la durée maximale du travail {0}"
 
@@ -12593,7 +12758,7 @@ msgstr "Type de transaction"
 msgid "Transactions"
 msgstr ""
 
-#: hr/utils.py:685
+#: hr/utils.py:689
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr "Les transactions ne peuvent pas être créées pour un employé inactif {0}."
 
@@ -12972,6 +13137,8 @@ msgstr "Objet d'entretien du véhicule"
 #: hr/doctype/expense_claim/expense_claim.js:125
 #: hr/doctype/expense_claim/expense_claim.js:156
 #: hr/doctype/job_applicant/job_applicant.js:42
+#: hr/doctype/shift_assignment/shift_assignment_list.js:8
+#: hr/doctype/shift_assignment/shift_assignment_list.js:16
 msgid "View"
 msgstr ""
 
@@ -12983,6 +13150,11 @@ msgstr "Voir les objectifs"
 #: public/js/utils/leave_utils.js:5
 msgid "View Ledger"
 msgstr "Voir le Journal"
+
+#. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
+#: hr/doctype/shift_type/shift_type.json
+msgid "Violet"
+msgstr ""
 
 #: patches/v15_0/notify_about_loan_app_separation.py:16
 msgid "WARNING: Loan Management module has been separated from ERPNext."
@@ -12996,8 +13168,8 @@ msgstr "Spontané"
 #: payroll/doctype/additional_salary/additional_salary.py:153
 #: payroll/doctype/salary_component/salary_component.py:56
 #: payroll/doctype/salary_structure/salary_structure.js:322
-#: payroll/doctype/salary_structure/salary_structure.py:46
-#: payroll/doctype/salary_structure/salary_structure.py:126
+#: payroll/doctype/salary_structure/salary_structure.py:52
+#: payroll/doctype/salary_structure/salary_structure.py:132
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:44
 msgid "Warning"
 msgstr "Avertissement"
@@ -13014,7 +13186,7 @@ msgstr "Avertissement: Le solde du congé est insuffisant pour quitter le type {
 msgid "Warning: Leave application contains following block dates"
 msgstr "Attention : la demande de congé contient les dates bloquées suivantes"
 
-#: hr/doctype/shift_assignment/shift_assignment.py:46
+#: hr/doctype/shift_assignment/shift_assignment.py:91
 msgid "Warning: {0} already has an active Shift Assignment {1} for some/all of these dates."
 msgstr "Attention : {0} a déjà un devoir Shift {1} actif pour certaines ou toutes ces dates."
 
@@ -13084,7 +13256,7 @@ msgstr ""
 msgid "Work Anniversaries "
 msgstr "Anniversaires de travail "
 
-#: controllers/employee_reminders.py:279 controllers/employee_reminders.py:286
+#: controllers/employee_reminders.py:272 controllers/employee_reminders.py:279
 msgid "Work Anniversary Reminder"
 msgstr "Rappel d'Anniversaire de Travail"
 
@@ -13212,6 +13384,11 @@ msgstr "Année à date(Devise de l'entreprise)"
 msgid "Yearly"
 msgstr "Annuel"
 
+#. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
+#: hr/doctype/shift_type/shift_type.json
+msgid "Yellow"
+msgstr ""
+
 #. Option for the 'Is Active' (Select) field in DocType 'Salary Structure'
 #. Option for the 'Is Default' (Select) field in DocType 'Salary Structure'
 #: payroll/doctype/salary_structure/salary_structure.json
@@ -13329,11 +13506,11 @@ msgid "via Salary Component sync"
 msgstr ""
 
 #: controllers/employee_reminders.py:120 controllers/employee_reminders.py:253
-#: controllers/employee_reminders.py:257
+#: controllers/employee_reminders.py:258
 msgid "{0} & {1}"
 msgstr "{0} & {1}"
 
-#: payroll/doctype/salary_slip/salary_slip.py:2157
+#: payroll/doctype/salary_slip/salary_slip.py:2192
 msgid "{0} <br> This error can be due to missing or deleted field."
 msgstr "{0} <br> Cette erreur peut être due à un champ manquant ou supprimé."
 
@@ -13349,7 +13526,7 @@ msgstr ""
 msgid "{0} Missing"
 msgstr "{0} manquant"
 
-#: payroll/doctype/salary_structure/salary_structure.py:38
+#: payroll/doctype/salary_structure/salary_structure.py:44
 msgid "{0} Row #{1}: Formula is set but {2} is disabled for the Salary Component {3}."
 msgstr "{0} Ligne #{1}: La formule est définie mais {2} est désactivée pour le composant de salaire {3}."
 
@@ -13361,17 +13538,21 @@ msgstr "{0} Ligne #{1}: {2} doit être activé pour que la formule soit considé
 msgid "{0} already allocated for Employee {1} for period {2} to {3}"
 msgstr "{0} déjà alloué pour l’Employé {1} pour la période {2} à {3}"
 
-#: hr/utils.py:254
+#: hr/utils.py:258
 msgid "{0} already exists for employee {1} and period {2}"
 msgstr "{0} existe déjà pour l'employé {1} et la période {2}"
 
-#: hr/doctype/shift_assignment/shift_assignment.py:54
+#: hr/doctype/shift_assignment/shift_assignment.py:99
 msgid "{0} already has an active Shift Assignment {1} for some/all of these dates."
 msgstr "{0} a déjà un devoir Shift {1} actif pour certaines ou toutes ces dates."
 
 #: hr/doctype/leave_application/leave_application.py:148
 msgid "{0} applicable after {1} working days"
 msgstr "{0} applicable après {1} jours ouvrés"
+
+#: controllers/employee_reminders.py:253
+msgid "{0} completed {1} year(s)"
+msgstr ""
 
 #: payroll/doctype/additional_salary/additional_salary.py:157
 msgid "{0} has {1} enabled"
@@ -13397,7 +13578,7 @@ msgstr "{0} n'est pas dans la liste des jours fériés facultatifs"
 msgid "{0} is not in a valid Payroll Period"
 msgstr "{0} n'est pas dans une période de paie valide"
 
-#: hr/utils.py:799
+#: hr/utils.py:803
 msgid "{0} is required"
 msgstr "{0} est nécessaire"
 
@@ -13422,7 +13603,7 @@ msgstr ""
 msgid "{0} {1} {2}?"
 msgstr "{0} {1} {2}?"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1871
+#: payroll/doctype/salary_slip/salary_slip.py:1906
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "{0} : Adresse email de l'employé introuvable : l’email n'a pas été envoyé"
 
