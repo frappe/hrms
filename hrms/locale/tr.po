@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-01 09:34+0000\n"
-"PO-Revision-Date: 2024-09-02 10:45\n"
+"PO-Revision-Date: 2024-09-03 11:47\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -293,22 +293,22 @@ msgstr "<h4>Koşul Örnekleri</h4>\n"
 #: hr/workspace/leaves/leaves.json hr/workspace/recruitment/recruitment.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "<span class=\"h4\"><b>Masters &amp; Reports</b></span>"
-msgstr ""
+msgstr "<span class=\"h4\"><b>Kayıtlar &amp; Raporlar</b></span>"
 
 #. Header text in the Performance Workspace
 #: hr/workspace/performance/performance.json
 msgid "<span class=\"h4\"><b>Masters &amp; Transactions</b></span>"
-msgstr ""
+msgstr "<span class=\"h4\"><b>Kayıtlar &amp; Raporlar</b></span>"
 
 #. Header text in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "<span class=\"h4\"><b>Reports &amp; Masters</b></span>"
-msgstr ""
+msgstr "<span class=\"h4\"><b>Raporlar &amp; Kayıtlar</b></span>"
 
 #. Header text in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "<span class=\"h4\"><b>Transactions &amp; Reports</b></span>"
-msgstr ""
+msgstr "<span class=\"h4\"><b>İşlemler &amp; Raporlar</b></span>"
 
 #. Header text in the Employee Lifecycle Workspace
 #. Header text in the Expense Claims Workspace
@@ -329,12 +329,12 @@ msgstr ""
 #: payroll/workspace/salary_payout/salary_payout.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "<span class=\"h4\"><b>Your Shortcuts</b></span>"
-msgstr ""
+msgstr "<span class=\"h4\"><b>Kısayollarınız</b></span>"
 
 #. Header text in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "<span style=\"font-size: 18px;\"><b>Masters &amp; Reports</b></span>"
-msgstr ""
+msgstr "<span style=\"font-size: 18px;\"><b>Kayıtlar &amp; Raporlar</b></span>"
 
 #: public/js/utils/index.js:166
 msgid "<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>"
@@ -777,7 +777,7 @@ msgstr "Tahsis edilen tüm varlıklar teslim edilmeden önce iade edilmelidir"
 
 #: hr/doctype/employee_onboarding/employee_onboarding.py:48
 msgid "All the mandatory tasks for employee creation are not completed yet."
-msgstr ""
+msgstr "Personel oluşturma için zorunlu olan tüm görevler henüz tamamlanmadı."
 
 #. Label of the allocate_based_on_leave_policy (Check) field in DocType 'Leave
 #. Control Panel'
@@ -2001,7 +2001,7 @@ msgstr "Kampanya"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:128
 msgid "Cancellation Queued"
-msgstr ""
+msgstr "İptal Sırada Bekliyor"
 
 #. Option for the 'Status' (Select) field in DocType 'Appraisal'
 #. Option for the 'Status' (Select) field in DocType 'Employee Advance'
@@ -2032,11 +2032,11 @@ msgstr "İptal edildi"
 
 #: api/roster.py:111
 msgid "Cannot break shift after end date"
-msgstr ""
+msgstr "Bitiş tarihinden sonra vardiyaya ara verilemez"
 
 #: api/roster.py:113
 msgid "Cannot break shift before start date"
-msgstr ""
+msgstr "Vardiya başlangıç tarihinden önce bölünemez"
 
 #: hr/doctype/shift_assignment/shift_assignment.py:70
 msgid "Cannot cancel Shift Assignment: {0} as it is linked to Attendance: {1}"
@@ -2761,7 +2761,7 @@ msgstr "Maaş Fişleri Oluşturuluyor..."
 
 #: hr/report/leave_ledger/leave_ledger.py:41
 msgid "Creation Date"
-msgstr ""
+msgstr "Oluşturma Tarihi"
 
 #: hr/utils.py:831
 msgid "Creation Failed"
@@ -2773,7 +2773,7 @@ msgstr "Maaş Yapısı Atamalarının oluşturulması sıraya alındı. Birkaç 
 
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.py:148
 msgid "Creation of Shift Assignments has been queued. It may take a few minutes."
-msgstr ""
+msgstr "Maaş Yapısı Atamalarının oluşturulması sıraya alındı. Birkaç dakika sürebilir."
 
 #. Label of the criteria (Data) field in DocType 'Employee Feedback Criteria'
 #. Label of the criteria (Link) field in DocType 'Employee Feedback Rating'
@@ -2928,12 +2928,12 @@ msgstr "Açık Mavi"
 #. Label of the cycle_name (Data) field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgid "Cycle Name"
-msgstr ""
+msgstr "Döngü Adı"
 
 #. Label of the cycles (Table) field in DocType 'Salary Withholding'
 #: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Cycles"
-msgstr ""
+msgstr "Döngüler"
 
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Payroll Entry'
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary Slip'
@@ -3069,7 +3069,7 @@ msgstr "Tarih & Gerekçe"
 #. Label of the dates_based_on (Select) field in DocType 'Leave Control Panel'
 #: hr/doctype/leave_control_panel/leave_control_panel.json
 msgid "Dates Based On"
-msgstr ""
+msgstr "Tarihe Göre"
 
 #: payroll/report/bank_remittance/bank_remittance.py:19
 msgid "Debit A/C Number"
@@ -3153,7 +3153,7 @@ msgstr "Kesintiler"
 #. 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgid "Deductions before tax calculation"
-msgstr ""
+msgstr "Vergi hesaplaması öncesi kesintiler"
 
 #. Label of the default_account (Link) field in DocType 'Expense Claim Account'
 #. Label of the default_account (Link) field in DocType 'Expense Claim Detail'
@@ -3180,7 +3180,7 @@ msgstr "Varsayılan Baz Ücret"
 
 #: overrides/company.py:133
 msgid "Default Payroll Payable Account"
-msgstr ""
+msgstr "Varsayılan Ödenecek Bordro Hesabı"
 
 #. Label of the default_salary_structure (Link) field in DocType 'Employee
 #. Grade'
@@ -6269,7 +6269,7 @@ msgstr "Merhaba {}! Bu e-posta size yaklaşan tatilleri hatırlatmak içindir g�
 
 #: hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:44
 msgid "Hiring Count"
-msgstr "İşe Alma Sayısı"
+msgstr "İşe Başlayan"
 
 #. Label of the hiring_settings_section (Section Break) field in DocType 'HR
 #. Settings'
@@ -10348,7 +10348,7 @@ msgstr ""
 #. Label of the rgt (Int) field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
 msgid "Right"
-msgstr ""
+msgstr "Sağ"
 
 #. Label of the role (Link) field in DocType 'Employee Boarding Activity'
 #: hr/doctype/employee_boarding_activity/employee_boarding_activity.json
@@ -13617,7 +13617,7 @@ msgstr ""
 #. Count format of shortcut in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "{} "
-msgstr ""
+msgstr "{} "
 
 #. Count format of shortcut in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
