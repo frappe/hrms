@@ -329,7 +329,7 @@ class SalarySlip(TransactionBase):
 			struct = self.check_sal_struct()
 
 			if struct:
-				self._salary_structure_doc = frappe.get_cached_doc("Salary Structure", struct)
+				self.set_salary_structure_doc()
 				self.salary_slip_based_on_timesheet = (
 					self._salary_structure_doc.salary_slip_based_on_timesheet or 0
 				)
