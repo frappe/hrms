@@ -19,23 +19,26 @@ class TestSalaryComponent(FrappeTestCase):
 		salary_structure3 = make_salary_structure("Salary Structure 3", "Monthly")
 		salary_structure3.cancel()  # Details should not update for cancelled Salary Structures
 
+		OLD_FORMULA = "BS\n*.5"
+		OLD_CONDITION = "H < 10000"
+
 		ss1_detail = next(
 			(d for d in salary_structure1.earnings if d.salary_component == "Special Allowance"), None
 		)
-		self.assertEqual(ss1_detail.condition, "H < 10000")
-		self.assertEqual(ss1_detail.formula, "BS*.5")
+		self.assertEqual(ss1_detail.condition, OLD_CONDITION)
+		self.assertEqual(ss1_detail.formula, OLD_FORMULA)
 
 		ss2_detail = next(
 			(d for d in salary_structure2.earnings if d.salary_component == "Special Allowance"), None
 		)
-		self.assertEqual(ss2_detail.condition, "H < 10000")
-		self.assertEqual(ss2_detail.formula, "BS*.5")
+		self.assertEqual(ss2_detail.condition, OLD_CONDITION)
+		self.assertEqual(ss2_detail.formula, OLD_FORMULA)
 
 		ss3_detail = next(
 			(d for d in salary_structure3.earnings if d.salary_component == "Special Allowance"), None
 		)
-		self.assertEqual(ss3_detail.condition, "H < 10000")
-		self.assertEqual(ss3_detail.formula, "BS*.5")
+		self.assertEqual(ss3_detail.condition, OLD_CONDITION)
+		self.assertEqual(ss3_detail.formula, OLD_FORMULA)
 
 		salary_component.update_salary_structures("condition", "H < 8000")
 		ss1_detail.reload()
@@ -43,7 +46,7 @@ class TestSalaryComponent(FrappeTestCase):
 		ss2_detail.reload()
 		self.assertEqual(ss2_detail.condition, "H < 8000")
 		ss3_detail.reload()
-		self.assertEqual(ss3_detail.condition, "H < 10000")
+		self.assertEqual(ss3_detail.condition, OLD_CONDITION)
 
 		salary_component.update_salary_structures("formula", "BS*.3")
 		ss1_detail.reload()
@@ -51,7 +54,7 @@ class TestSalaryComponent(FrappeTestCase):
 		ss2_detail.reload()
 		self.assertEqual(ss2_detail.formula, "BS*.3")
 		ss3_detail.reload()
-		self.assertEqual(ss3_detail.formula, "BS*.5")
+		self.assertEqual(ss3_detail.formula, OLD_FORMULA)
 
 
 def create_salary_component(component_name, **args):
