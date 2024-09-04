@@ -59,6 +59,7 @@ frappe.ui.form.on("Employee Checkin", {
 				frm.set_value("longitude", position.coords.longitude);
 
 				await frm.call("set_geolocation_from_coordinates");
+				frm.dirty();
 				frappe.dom.unfreeze();
 			},
 			(error) => {
