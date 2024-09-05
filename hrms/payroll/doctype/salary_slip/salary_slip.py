@@ -2,7 +2,6 @@
 # License: GNU General Public License v3. See license.txt
 
 
-import ast
 import unicodedata
 from datetime import date
 
@@ -792,32 +791,11 @@ class SalarySlip(TransactionBase):
 		if self.salary_structure:
 			self.calculate_component_amounts("deductions")
 
-			deduction_abbrs = [d.abbr for d in self.deductions]
-			self.update_dependent_components_recursively("earnings", deduction_abbrs)
-
-		set_gross_pay_and_base_gross_pay()
-		self.update_dependent_components_recursively("deductions", ["gross_pay", "base_gross_pay"])
-
 		set_loan_repayment(self)
 
 		self.set_precision_for_component_amounts()
 		self.set_net_pay()
 		self.compute_income_tax_breakup()
-
-	def update_dependent_components_recursively(
-		self, component_type: str, updated_var: str | list[str]
-	) -> None:
-		def is_var_updated(var: str | list[str]) -> bool:
-			return var == updated_var if isinstance(updated_var, str) else var in updated_var
-
-		other_component_type = "deductions" if component_type == "earnings" else "earnings"
-
-		for d in self._salary_structure_doc.get(component_type):
-			if d.amount_based_on_formula and d.formula:
-				for var in get_variables_from_formula(d.formula):
-					if is_var_updated(var):
-						self.add_structure_component(d, component_type)
-						self.update_dependent_components_recursively(other_component_type, d.abbr)
 
 	def set_net_pay(self):
 		self.total_deduction = self.get_component_totals("deductions")
@@ -2308,6 +2286,8 @@ def _safe_eval(code: str, eval_globals: dict | None = None, eval_locals: dict | 
 
 
 def _check_attributes(code: str) -> None:
+	import ast
+
 	from frappe.utils.safe_exec import UNSAFE_ATTRIBUTES
 
 	unsafe_attrs = set(UNSAFE_ATTRIBUTES).union(["__"]) - {"format"}
@@ -2346,9 +2326,3 @@ def email_salary_slips(names) -> None:
 	for name in names:
 		salary_slip = frappe.get_doc("Salary Slip", name)
 		salary_slip.email_salary_slip()
-
-
-def get_variables_from_formula(formula: str) -> list[str]:
-	# compile expects a string
-	formula = cstr(formula)
-	return [node.id for node in ast.walk(ast.parse(formula, mode="eval")) if isinstance(node, ast.Name)]
