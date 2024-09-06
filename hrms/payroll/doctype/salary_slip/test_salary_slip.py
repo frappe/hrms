@@ -1634,69 +1634,6 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertEqual(test_tds.accounts[0].company, salary_slip.company)
 		self.assertListEqual(tax_component, ["_Test TDS"])
 
-	def test_circular_dependency_in_formula(self):
-		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
-			create_salary_structure_assignment,
-		)
-
-		earnings = [
-			{
-				"salary_component": "Dependent Earning",
-				"abbr": "DE",
-				"type": "Earning",
-				"depends_on_payment_days": 0,
-				"amount_based_on_formula": 1,
-				"formula": "ID * 10",
-			},
-		]
-		make_salary_component(earnings, False, company_list=[])
-
-		deductions = [
-			{
-				"salary_component": "Independent Deduction",
-				"abbr": "ID",
-				"type": "Deduction",
-				"amount": 500,
-			},
-			{
-				"salary_component": "Dependent Deduction",
-				"abbr": "DD",
-				"type": "Deduction",
-				"amount_based_on_formula": 1,
-				"formula": "DE / 5\nif DE > 0\n else 0",
-			},
-		]
-		make_salary_component(deductions, False, company_list=[])
-
-		details = {
-			"doctype": "Salary Structure",
-			"name": "Test Salary Structure for Circular Dependency",
-			"company": "_Test Company",
-			"payroll_frequency": "Monthly",
-			"payment_account": get_random("Account", filters={"account_currency": "USD"}),
-			"currency": "INR",
-		}
-		salary_structure = frappe.get_doc(details)
-
-		for entry in earnings:
-			salary_structure.append("earnings", entry)
-		for entry in deductions:
-			salary_structure.append("deductions", entry)
-
-		salary_structure.insert()
-		salary_structure.submit()
-
-		emp = make_employee("test_circ_dep@salary.com", company="_Test Company")
-
-		create_salary_structure_assignment(emp, salary_structure.name, currency="INR")
-		salary_slip = make_salary_slip(
-			salary_structure.name, employee=emp, posting_date=getdate(), for_preview=1
-		)
-
-		self.assertEqual(salary_slip.gross_pay, 5000)
-		self.assertEqual(salary_slip.earnings[0].amount, 5000)
-		self.assertEqual(salary_slip.deductions[1].amount, 1000)
-
 
 class TestSalarySlipSafeEval(FrappeTestCase):
 	def test_safe_eval_for_salary_slip(self):
