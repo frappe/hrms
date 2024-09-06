@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-01 09:34+0000\n"
-"PO-Revision-Date: 2024-09-02 10:45\n"
+"PO-Revision-Date: 2024-09-05 12:29\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -275,22 +275,22 @@ msgstr "<h4>Bedingungsbeispiele</h4>\n"
 #: hr/workspace/leaves/leaves.json hr/workspace/recruitment/recruitment.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "<span class=\"h4\"><b>Masters &amp; Reports</b></span>"
-msgstr ""
+msgstr "<span class=\"h4\"><b>Stammdaten &amp; Berichte</b></span>"
 
 #. Header text in the Performance Workspace
 #: hr/workspace/performance/performance.json
 msgid "<span class=\"h4\"><b>Masters &amp; Transactions</b></span>"
-msgstr ""
+msgstr "<span class=\"h4\"><b>Stammdaten &amp; Transaktionen</b></span>"
 
 #. Header text in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "<span class=\"h4\"><b>Reports &amp; Masters</b></span>"
-msgstr ""
+msgstr "<span class=\"h4\"><b>Berichte &amp; Stammdaten</b></span>"
 
 #. Header text in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "<span class=\"h4\"><b>Transactions &amp; Reports</b></span>"
-msgstr ""
+msgstr "<span class=\"h4\"><b>Transaktionen &amp; Berichte</b></span>"
 
 #. Header text in the Employee Lifecycle Workspace
 #. Header text in the Expense Claims Workspace
@@ -311,16 +311,16 @@ msgstr ""
 #: payroll/workspace/salary_payout/salary_payout.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "<span class=\"h4\"><b>Your Shortcuts</b></span>"
-msgstr ""
+msgstr "<span class=\"h4\"><b>Ihre Verknüpfungen</b></span>"
 
 #. Header text in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "<span style=\"font-size: 18px;\"><b>Masters &amp; Reports</b></span>"
-msgstr ""
+msgstr "<span style=\"font-size: 18px;\"><b>Stammdaten &amp; Berichte</b></span>"
 
 #: public/js/utils/index.js:166
 msgid "<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>"
-msgstr ""
+msgstr "<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>"
 
 #: hr/doctype/job_requisition/job_requisition.py:30
 msgid "A Job Requisition for {0} requested by {1} already exists: {2}"
@@ -1920,7 +1920,7 @@ msgstr "Zweigstelle: {0}"
 
 #: hr/doctype/shift_type/shift_type.js:9
 msgid "Bulk Assign Shift"
-msgstr ""
+msgstr "Schicht stapelweise zuweisen"
 
 #: payroll/doctype/salary_structure/salary_structure.js:131
 msgid "Bulk Assignments"
@@ -2014,19 +2014,19 @@ msgstr "Abgesagt"
 
 #: api/roster.py:111
 msgid "Cannot break shift after end date"
-msgstr ""
+msgstr "Schicht kann nach Enddatum nicht unterbrochen werden"
 
 #: api/roster.py:113
 msgid "Cannot break shift before start date"
-msgstr ""
+msgstr "Schicht kann vor dem Startdatum nicht unterbrochen werden"
 
 #: hr/doctype/shift_assignment/shift_assignment.py:70
 msgid "Cannot cancel Shift Assignment: {0} as it is linked to Attendance: {1}"
-msgstr ""
+msgstr "Schichtzuweisung {0} kann nicht storniert werden, da sie mit Anwesenheit {1} verknüpft ist"
 
 #: hr/doctype/shift_assignment/shift_assignment.py:53
 msgid "Cannot cancel Shift Assignment: {0} as it is linked to Employee Checkin: {1}"
-msgstr ""
+msgstr "Schichtzuweisung {0} kann nicht storniert werden, da sie mit dem Mitarbeiter-Check-in {1} verknüpft ist"
 
 #: payroll/doctype/salary_slip/salary_slip.py:268
 msgid "Cannot create Salary Slip for Employee joining after Payroll Period"
@@ -2108,7 +2108,7 @@ msgstr "Kostenstellenplan"
 
 #: public/js/utils/index.js:147
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
-msgstr ""
+msgstr "Weitere Einzelheiten finden Sie unter <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a>"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:1394
 msgid "Check Error Log {0} for more details."
@@ -7719,7 +7719,7 @@ msgstr "Lebenszyklus"
 #. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
 #: hr/doctype/shift_type/shift_type.json
 msgid "Lime"
-msgstr ""
+msgstr "Limette"
 
 #. Description of the 'Appraisal Linking' (Section Break) field in DocType
 #. 'Goal'
@@ -11007,7 +11007,7 @@ msgstr "Gesendet"
 
 #: hr/doctype/exit_interview/exit_interview.py:132
 msgid "Sent Successfully: {0}"
-msgstr ""
+msgstr "Erfolgreich gesendet: {0}"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:20
 #: public/js/salary_slip_deductions_report_filters.js:27
@@ -11132,7 +11132,7 @@ msgstr "Legen Sie die Eigenschaften fest, die im Mitarbeiterstamm bei der Buchun
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:204
 msgid "Set the status to {0} if required."
-msgstr ""
+msgstr "Setzen Sie den Status bei Bedarf auf {0}."
 
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:200
 msgid "Set {0} for selected employees"
@@ -11169,7 +11169,7 @@ msgstr "Einrichtung"
 
 #: hr/utils.py:667
 msgid "Shared with the user {0} with 'submit' permisions"
-msgstr ""
+msgstr "Für Benutzer {0} mit „Buchen“-Berechtigung freigegeben"
 
 #. Label of the shift (Link) field in DocType 'Attendance'
 #. Label of the shift (Link) field in DocType 'Attendance Request'
@@ -11255,7 +11255,7 @@ msgstr "Anwesenheit in der Schicht"
 #. Assignment Schedule'
 #: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 msgid "Shift Details"
-msgstr ""
+msgstr "Shicht-Details"
 
 #. Label of the shift_end (Datetime) field in DocType 'Employee Checkin'
 #: hr/doctype/employee_checkin/employee_checkin.json
@@ -11440,7 +11440,7 @@ msgstr "Quelle und Bewertung"
 
 #: api/roster.py:79
 msgid "Source and target shifts cannot be the same"
-msgstr ""
+msgstr "Quell- und Zielschichten können nicht identisch sein"
 
 #. Label of the sponsored_amount (Currency) field in DocType 'Travel Request
 #. Costing'
@@ -11662,7 +11662,7 @@ msgstr "Buchung fehlgeschlagen"
 
 #: hr/doctype/interview_feedback/interview_feedback.py:39
 msgid "Submission of {0} before {1} is not allowed"
-msgstr ""
+msgstr "Die Buchung von {0} vor {1} ist nicht erlaubt"
 
 #: hr/doctype/job_requisition/job_requisition.js:75
 #: public/js/performance/performance_feedback.js:99
@@ -12294,7 +12294,7 @@ msgstr "Heute {0} in unserem Unternehmen! 🎉"
 
 #: controllers/employee_reminders.py:241
 msgid "Today {0} completed {1} year(s) at our Company! 🎉"
-msgstr ""
+msgstr "Heute hat {0} {1} Jahr(e) in unserem Unternehmen abgeschlossen! 🎉"
 
 #. Label of the total (Currency) field in DocType 'Expense Taxes and Charges'
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
@@ -12477,7 +12477,7 @@ msgstr "Ausbezahlte Abwesenheiten insgesamt"
 
 #: payroll/report/salary_payments_based_on_payment_mode/salary_payments_based_on_payment_mode.py:155
 msgid "Total Net Pay"
-msgstr ""
+msgstr "Gesamtnettolohn"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:228
 msgid "Total Non-Billed Hours"
