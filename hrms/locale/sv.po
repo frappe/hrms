@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-01 09:34+0000\n"
-"PO-Revision-Date: 2024-09-06 13:15\n"
+"PO-Revision-Date: 2024-09-07 13:17\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -4442,7 +4442,7 @@ msgstr "Referens"
 #. Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgid "Employee Responsible "
-msgstr "Personal Ansvarig "
+msgstr "Ansvarig Personal "
 
 #. Option for the 'Final Decision' (Select) field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
@@ -4831,7 +4831,7 @@ msgstr "Prestation Resultat"
 
 #: hr/doctype/hr_settings/hr_settings.js:34
 msgid "Enter the Standard Working Hours for a normal work day. These hours will be used in calculations of reports such as Employee Hours Utilization and Project Profitability analysis."
-msgstr "Ange Standard Arbetstid för arbetsdag. Dessa timmar kommer att användas i beräkningar av rapporter som t.ex. Personal Tid Användning och Projekt Lönsamhet Analys."
+msgstr "Ange Standard Arbetstid för arbetsdag. Dessa timmar kommer att användas i beräkningar av rapporter som t. ex. Personal Tid Användning och Projekt Resultat Analys."
 
 #: hr/doctype/leave_allocation/leave_allocation.js:155
 msgid "Enter the number of leaves you want to allocate for the period."
@@ -6108,7 +6108,7 @@ msgstr "Personal Översikt Panel"
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: payroll/doctype/salary_withholding/salary_withholding.json
 msgid "HR Manager"
-msgstr "Personal Huvudansvarig"
+msgstr "Personal Ansvarig"
 
 #. Name of a DocType
 #. Label of a Link in the HR Workspace
@@ -9018,7 +9018,7 @@ msgstr "Betalning Konto erfodras för att lämna in Uttlägg Anspråk"
 #. Final Statement'
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
 msgid "Payables"
-msgstr "Betalningar"
+msgstr "Skulder"
 
 #: hr/doctype/employee_advance/employee_advance.js:50
 #: hr/doctype/expense_claim/expense_claim.js:97
@@ -9719,7 +9719,7 @@ msgstr "Projekt"
 #: hr/report/project_profitability/project_profitability.json
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Project Profitability"
-msgstr "Projekt Lönsamhet"
+msgstr "Projekt Resultat"
 
 #. Label of a Card Break in the Performance Workspace
 #: hr/workspace/performance/performance.json
