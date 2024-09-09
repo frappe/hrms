@@ -28,27 +28,35 @@
 						listButtonRoute="ShiftRequestListView"
 					/>
 				</div>
-
-				<Shifts />
+				<div>
+					<div class="text-lg text-gray-800 font-bold">Upcoming Shifts</div>
+					<RequestList
+						:component="markRaw(ShiftAssignmentItem)"
+						:items="upcomingShifts"
+						:addListButton="true"
+						listButtonRoute="ShiftRequestListView"
+					/>
+				</div>
 			</div>
 		</template>
 	</BaseLayout>
 </template>
 
 <script setup>
-import { inject, markRaw } from "vue"
-import { createListResource } from "frappe-ui"
+import { computed, inject, markRaw } from "vue"
+import { createListResource, createResource } from "frappe-ui"
 
 import BaseLayout from "@/components/BaseLayout.vue"
 import AttendanceRequestItem from "@/components/AttendanceRequestItem.vue"
 import ShiftRequestItem from "@/components/ShiftRequestItem.vue"
+import ShiftAssignmentItem from "@/components/ShiftAssignmentItem.vue"
 import RequestList from "@/components/RequestList.vue"
 import AttendanceCalendar from "@/components/AttendanceCalendar.vue"
-import Shifts from "@/components/Shifts.vue"
 
 import { getDates, getTotalDays } from "@/data/attendance"
 
 const employee = inject("$employee")
+const dayjs = inject("$dayjs")
 
 const attendanceRequests = createListResource({
 	doctype: "Attendance Request",
@@ -89,4 +97,53 @@ const shiftRequests = createListResource({
 		})
 	},
 })
+
+const shifts = createResource({
+	url: "hrms.api.get_shifts",
+	auto: true,
+	cache: "hrms:shifts",
+	makeParams() {
+		return {
+			employee: employee.data?.name,
+		}
+	},
+	transform: (data) => {
+		return data.map((assignment) => {
+			assignment.doctype = "Shift Assignment"
+			assignment.is_upcoming = !assignment.end_date || dayjs(assignment.end_date).isAfter(dayjs())
+			assignment.shift_dates = getShiftDates(assignment)
+			assignment.total_shift_days = getTotalShiftDays(assignment)
+			assignment.shift_timing = getShiftTiming(assignment)
+			return assignment
+		})
+	},
+})
+
+const upcomingShifts = computed(() => {
+	const filteredShifts = shifts.data?.filter((shift) => shift.is_upcoming)
+
+	// show only 5 upcoming shifts
+	return filteredShifts?.slice(0, 5)
+})
+
+const getShiftDates = (shift) => {
+	const startDate = dayjs(shift.start_date).format("D MMM")
+	const endDate = shift.end_date ? dayjs(shift.end_date).format("D MMM") : "Ongoing"
+	return startDate == endDate ? startDate : `${startDate} - ${endDate}`
+}
+
+const getTotalShiftDays = (shift) => {
+	if (!shift.end_date) return null
+	const end_date = dayjs(shift.end_date)
+	const start_date = dayjs(shift.start_date)
+	return end_date.diff(start_date, "d") + 1
+}
+
+const getShiftTiming = (shift) => {
+	return (
+		shift.start_time.split(":").slice(0, 2).join(":") +
+		" - " +
+		shift.end_time.split(":").splice(0, 2).join(":")
+	)
+}
 </script>
