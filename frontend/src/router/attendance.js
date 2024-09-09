@@ -31,6 +31,22 @@ const routes = [
 		props: true,
 		component: () => import("@/views/attendance/ShiftRequestForm.vue"),
 	},
+	{
+		name: "ShiftAssignmentListView",
+		path: "/shift-assignments",
+		component: () => import("@/views/attendance/ShiftAssignmentList.vue"),
+	},
+	{
+		name: "ShiftAssignmentFormView",
+		path: "/shift-assignments/new",
+		component: () => import("@/views/attendance/ShiftAssignmentForm.vue"),
+	},
+	{
+		name: "ShiftAssignmentDetailView",
+		path: "/shift-assignments/:id",
+		props: true,
+		component: () => import("@/views/attendance/ShiftAssignmentForm.vue"),
+	},
 ]
 
 export default routes

@@ -34,7 +34,7 @@
 						:component="markRaw(ShiftAssignmentItem)"
 						:items="upcomingShifts"
 						:addListButton="true"
-						listButtonRoute="ShiftRequestListView"
+						listButtonRoute="ShiftAssignmentListView"
 					/>
 				</div>
 			</div>
@@ -53,7 +53,7 @@ import ShiftAssignmentItem from "@/components/ShiftAssignmentItem.vue"
 import RequestList from "@/components/RequestList.vue"
 import AttendanceCalendar from "@/components/AttendanceCalendar.vue"
 
-import { getDates, getTotalDays } from "@/data/attendance"
+import { getDates, getTotalDays, getShiftDates, getTotalShiftDays, getShiftTiming } from "@/data/attendance"
 
 const employee = inject("$employee")
 const dayjs = inject("$dayjs")
@@ -125,25 +125,4 @@ const upcomingShifts = computed(() => {
 	// show only 5 upcoming shifts
 	return filteredShifts?.slice(0, 5)
 })
-
-const getShiftDates = (shift) => {
-	const startDate = dayjs(shift.start_date).format("D MMM")
-	const endDate = shift.end_date ? dayjs(shift.end_date).format("D MMM") : "Ongoing"
-	return startDate == endDate ? startDate : `${startDate} - ${endDate}`
-}
-
-const getTotalShiftDays = (shift) => {
-	if (!shift.end_date) return null
-	const end_date = dayjs(shift.end_date)
-	const start_date = dayjs(shift.start_date)
-	return end_date.diff(start_date, "d") + 1
-}
-
-const getShiftTiming = (shift) => {
-	return (
-		shift.start_time.split(":").slice(0, 2).join(":") +
-		" - " +
-		shift.end_time.split(":").splice(0, 2).join(":")
-	)
-}
 </script>
