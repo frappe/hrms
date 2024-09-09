@@ -111,7 +111,8 @@
 		<div
 			v-else-if="
 				document?.doc?.docstatus === 0 &&
-				['Approved', 'Rejected'].includes(document?.doc?.[approvalField]) &&
+				(document?.doc?.doctype === 'Attendance Request' ||
+					['Approved', 'Rejected'].includes(document?.doc?.[approvalField])) &&
 				hasPermission('submit')
 			"
 			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
