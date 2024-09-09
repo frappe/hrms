@@ -128,6 +128,7 @@ import {
 import TabButtons from "@/components/TabButtons.vue"
 import AttendanceRequestItem from "@/components/AttendanceRequestItem.vue"
 import ShiftRequestItem from "@/components/ShiftRequestItem.vue"
+import ShiftAssignmentItem from "@/components/ShiftAssignmentItem.vue"
 import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
 import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 import EmployeeAdvanceItem from "@/components/EmployeeAdvanceItem.vue"
@@ -167,6 +168,7 @@ const props = defineProps({
 const listItemComponent = {
 	"Attendance Request": markRaw(AttendanceRequestItem),
 	"Shift Request": markRaw(ShiftRequestItem),
+	"Shift Assignment": markRaw(ShiftAssignmentItem),
 	"Leave Application": markRaw(LeaveRequestItem),
 	"Expense Claim": markRaw(ExpenseClaimItem),
 	"Employee Advance": markRaw(EmployeeAdvanceItem),
