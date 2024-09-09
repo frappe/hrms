@@ -6,7 +6,7 @@
 				v-if="shifts?.data?.length"
 				class="text-sm text-gray-800 font-semibold cursor-pointer underline underline-offset-2"
 			>
-				View All
+				View List
 			</div>
 		</div>
 
