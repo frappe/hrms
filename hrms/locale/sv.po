@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-09-01 09:34+0000\n"
-"PO-Revision-Date: 2024-09-07 13:17\n"
+"POT-Creation-Date: 2024-09-08 09:33+0000\n"
+"PO-Revision-Date: 2024-09-09 15:05\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -648,7 +648,7 @@ msgstr "Lägg till oanvänd lediget från tidigare ledighet period tilldelning t
 msgid "Added On"
 msgstr "Tillagd"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1317
+#: payroll/doctype/salary_slip/salary_slip.py:1294
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
 msgstr "La till skatt komponenter från löne komponenter eftersom löne struktur inte hade någon skatt komponent."
 
@@ -1657,7 +1657,7 @@ msgstr "Deltagare"
 
 #: hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:45
 msgid "Attrition Count"
-msgstr "Avgång Antal"
+msgstr "Avgångar"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:19
 #: public/js/salary_slip_deductions_report_filters.js:26
@@ -2047,11 +2047,11 @@ msgstr "Kan inte avbryta Skift Tilldelning: {0} eftersom det är kopplad till N�
 msgid "Cannot cancel Shift Assignment: {0} as it is linked to Employee Checkin: {1}"
 msgstr "Kan inte avbryta Skift Tilldelning: {0} eftersom det är kopplad till Personal Incheckning: {1}"
 
-#: payroll/doctype/salary_slip/salary_slip.py:268
+#: payroll/doctype/salary_slip/salary_slip.py:267
 msgid "Cannot create Salary Slip for Employee joining after Payroll Period"
 msgstr "Kan inte skapa Löne Besked för Personal som börjar efter Löne Period"
 
-#: payroll/doctype/salary_slip/salary_slip.py:271
+#: payroll/doctype/salary_slip/salary_slip.py:270
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr "Kan inte skapa Löne Besked för Personal som slutat före Löne Period"
 
@@ -3664,7 +3664,7 @@ msgstr "Dubbla Lön Kvarhållning"
 msgid "Duration (Days)"
 msgstr "Varaktighet (Dagar)"
 
-#: hr/doctype/employee_checkin/employee_checkin.js:69
+#: hr/doctype/employee_checkin/employee_checkin.js:70
 msgid "ERROR({0}): {1}"
 msgstr "FEL ({0}): {1}"
 
@@ -4403,7 +4403,7 @@ msgstr "Prestation Återkoppling"
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 #: hr/workspace/performance/performance.json
 msgid "Employee Promotion"
-msgstr "Befodran"
+msgstr "Personal Befordran"
 
 #. Label of the details_section (Section Break) field in DocType 'Employee
 #. Promotion'
@@ -4546,7 +4546,7 @@ msgstr "Utbildning"
 #: hr/doctype/employee_transfer/employee_transfer.json
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Employee Transfer"
-msgstr "Överföring"
+msgstr "Personal Överföring"
 
 #. Label of the transfer_details (Table) field in DocType 'Employee Transfer'
 #: hr/doctype/employee_transfer/employee_transfer.json
@@ -4626,7 +4626,7 @@ msgstr "Personal {0} hittades inte i Utbildning Händelse Deltagare."
 msgid "Employee {0} on Half day on {1}"
 msgstr "Personal {0} halvdag {1}"
 
-#: payroll/doctype/salary_slip/salary_slip.py:576
+#: payroll/doctype/salary_slip/salary_slip.py:575
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
 msgstr "Personal {0} som avskedades {1} måste anges som 'Slutat'"
 
@@ -4854,11 +4854,11 @@ msgstr "Fel Logg"
 msgid "Error Message"
 msgstr "Fel Meddelande"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1233
+#: payroll/doctype/salary_slip/salary_slip.py:1210
 msgid "Error in formula or condition"
 msgstr "Fel i formel eller villkor"
 
-#: payroll/doctype/salary_slip/salary_slip.py:2198
+#: payroll/doctype/salary_slip/salary_slip.py:2175
 msgid "Error in formula or condition: {0} in Income Tax Slab"
 msgstr "Fel i formel eller villkor: {0} i Inkomst Skatt Tabell"
 
@@ -4866,7 +4866,7 @@ msgstr "Fel i formel eller villkor: {0} i Inkomst Skatt Tabell"
 msgid "Error in some rows"
 msgstr "Fel i vissa rader"
 
-#: payroll/doctype/salary_slip/salary_slip.py:2277
+#: payroll/doctype/salary_slip/salary_slip.py:2254
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
 msgstr "Fel vid utvärdering av {doctype} {doclink} på rad {row_id}. <br><br> <b>Fel:</b> {error} <br><br> <b>Tips:</b> {description}"
 
@@ -5816,7 +5816,7 @@ msgid "Geolocation"
 msgstr "Geolocation"
 
 #: hr/doctype/employee_checkin/employee_checkin.js:47
-#: hr/doctype/employee_checkin/employee_checkin.js:73
+#: hr/doctype/employee_checkin/employee_checkin.js:74
 msgid "Geolocation Error"
 msgstr "Geolokalisering Fel"
 
@@ -6270,7 +6270,7 @@ msgstr "Hej {}! Detta e-post meddelande är för att påminna dig om kommande he
 
 #: hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:44
 msgid "Hiring Count"
-msgstr "Anställning Antal"
+msgstr "Anställningar"
 
 #. Label of the hiring_settings_section (Section Break) field in DocType 'HR
 #. Settings'
@@ -6643,15 +6643,15 @@ msgstr "Inkomst Skatt Tabell Övriga Avgifter"
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr "Inkomst Skatt Tabell erfordras eftersom Lön Struktur {0} har skatt komponent {1}"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1561
+#: payroll/doctype/salary_slip/salary_slip.py:1538
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "Inkomst Skatt Tabell måste vara aktiv före eller före start datum för Lön Period Start Datum: {0}"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1549
+#: payroll/doctype/salary_slip/salary_slip.py:1526
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "Inkomst Skatt Tabell inte angiven i Lön Struktur Tilldelning: {0}"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1557
+#: payroll/doctype/salary_slip/salary_slip.py:1534
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "Inkomst Skatt Tabell: {0} är inaktiverad"
 
@@ -7616,7 +7616,7 @@ msgstr "Ledighet Typ {0} är inte uttagbar"
 msgid "Leave Without Pay"
 msgstr "Obetald Ledighet"
 
-#: payroll/doctype/salary_slip/salary_slip.py:467
+#: payroll/doctype/salary_slip/salary_slip.py:466
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr "Obetald Ledighet stämmer inte med godkända {} poster"
 
@@ -8117,7 +8117,7 @@ msgstr "Erfordrad fält saknas"
 msgid "Missing Relieving Date"
 msgstr "Saknar Avgång Datum"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1552
+#: payroll/doctype/salary_slip/salary_slip.py:1529
 msgid "Missing Tax Slab"
 msgstr "Inkomst Skatt Tabell saknas"
 
@@ -8242,8 +8242,8 @@ msgstr "Mitt Konto"
 msgid "Name"
 msgstr "Namn"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1219
-#: payroll/doctype/salary_slip/salary_slip.py:2193
+#: payroll/doctype/salary_slip/salary_slip.py:1196
+#: payroll/doctype/salary_slip/salary_slip.py:2170
 msgid "Name error"
 msgstr "Namn Fel"
 
@@ -8280,7 +8280,7 @@ msgstr "Netto Lön (Bolag Valuta)"
 msgid "Net Pay Info"
 msgstr "Netto Lön Info"
 
-#: payroll/doctype/salary_slip/salary_slip.py:192
+#: payroll/doctype/salary_slip/salary_slip.py:191
 msgid "Net Pay cannot be less than 0"
 msgstr "Netto Lön kan inte vara lägre än 0"
 
@@ -8356,7 +8356,7 @@ msgstr "Ingen Personal hittades för angiven Personal fält värde. '{}': {}"
 msgid "No Employees Selected"
 msgstr "Ingen Personal Vald"
 
-#: hr/doctype/job_applicant/job_applicant_dashboard.html:51
+#: hr/doctype/job_applicant/job_applicant_dashboard.html:53
 msgid "No Interview has been scheduled."
 msgstr "Ingen intervju är schemalagd."
 
@@ -8392,7 +8392,7 @@ msgstr "Inga Skift Begäran valda"
 msgid "No Staffing Plans found for this Designation"
 msgstr "Inga Bemanning Planer hittades för denna Befattning"
 
-#: payroll/doctype/salary_slip/salary_slip.py:393
+#: payroll/doctype/salary_slip/salary_slip.py:392
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
 msgstr "Ingen aktiv eller standard lönestruktur hittades för arbetstagare {0} för de givna datum"
 
@@ -8544,7 +8544,7 @@ msgstr "Obs! Skift kommer inte att skrivas över i befintliga närvaro poster"
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr "Obs! Totalt antal tilldelade ledigheter {0} ska inte vara lägre än redan godkänd antal ledigheter {1} för period"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1885
+#: payroll/doctype/salary_slip/salary_slip.py:1862
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr "Obs: Din lönebesked är lösenord skyddad, lösenord för att låsa upp PDF fil är {0} format."
 
@@ -9322,7 +9322,7 @@ msgstr "Lägg till återstående förmåner {0} till någon av befintliga kompon
 msgid "Please add the remaining benefits {0} to the application as pro-rata component"
 msgstr "Lägg till återstående förmåner {0} till applikation som proportionell komponent"
 
-#: payroll/doctype/salary_slip/salary_slip.py:760
+#: payroll/doctype/salary_slip/salary_slip.py:759
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr "Tilldela först Löne Struktur för Personal {0} som gäller från eller före {1} "
 
@@ -9346,7 +9346,7 @@ msgstr "Aktivera standard inkommande konto före skapande av Daglig Arbete Över
 msgid "Please enter the designation"
 msgstr "Ange Befattning"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1874
+#: payroll/doctype/salary_slip/salary_slip.py:1851
 msgid "Please see attachment"
 msgstr "Se Bilaga"
 
@@ -9456,7 +9456,7 @@ msgstr "Ange Grund och HRA Komponent i Bolag {0}"
 msgid "Please set Earning Component for Leave type: {0}."
 msgstr "Ange Inkomst Komponent för Ledighet Typ: {0}."
 
-#: payroll/doctype/salary_slip/salary_slip.py:451
+#: payroll/doctype/salary_slip/salary_slip.py:450
 msgid "Please set Payroll based on in Payroll settings"
 msgstr "Ange Lön baserad på Lön Inställningar"
 
@@ -9489,7 +9489,7 @@ msgstr "Ange Utvärdering Mall för alla {0} eller välj mall i Personal Instäl
 msgid "Please set the Company"
 msgstr "Ange Bolag"
 
-#: payroll/doctype/salary_slip/salary_slip.py:264
+#: payroll/doctype/salary_slip/salary_slip.py:263
 msgid "Please set the Date Of Joining for employee {0}"
 msgstr "Ange Anställning Datum för Personal {0}"
 
@@ -10453,7 +10453,7 @@ msgstr "Rad #{0}: Från (År) kan inte vara senare än Till (År)"
 msgid "Row {0}: Goal Score cannot be greater than 5"
 msgstr "Rad #{0}: Mål Resultat får inte vara högre än 5"
 
-#: payroll/doctype/salary_slip/salary_slip_loan_utils.py:56
+#: payroll/doctype/salary_slip/salary_slip_loan_utils.py:60
 msgid "Row {0}: Paid amount {1} is greater than pending accrued amount {2} against loan {3}"
 msgstr "Rad #{0}: Betalt belopp {1} är högre än förväntad upplupet belopp {2} mot lån {3}"
 
@@ -10639,11 +10639,11 @@ msgstr "Löne besked finns redan för {0} för de angivna datum"
 msgid "Salary Slip creation is queued. It may take a few minutes"
 msgstr "Löne besked skapande i kö. Det kan ta några minuter"
 
-#: payroll/doctype/salary_slip/salary_slip.py:298
+#: payroll/doctype/salary_slip/salary_slip.py:297
 msgid "Salary Slip of employee {0} already created for this period"
 msgstr "Löne besked för {0} redan skapad för denna period"
 
-#: payroll/doctype/salary_slip/salary_slip.py:304
+#: payroll/doctype/salary_slip/salary_slip.py:303
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr "Löne besked för {0} redan skapad för Tidrapport {1}"
 
@@ -10709,7 +10709,7 @@ msgstr "Lön Struktur Tilldelning fält"
 msgid "Salary Structure Assignment for Employee already exists"
 msgstr "Lön Struktur Tilldelning för Personal finns redan"
 
-#: payroll/doctype/salary_slip/salary_slip.py:396
+#: payroll/doctype/salary_slip/salary_slip.py:395
 msgid "Salary Structure Missing"
 msgstr "Lön Struktur Saknas"
 
@@ -10769,7 +10769,7 @@ msgstr "Lön Uppdelning baserat på Lön och Avdrag."
 msgid "Salary components should be part of the Salary Structure."
 msgstr "Lönekomponenter ska ingå i Lönestruktur."
 
-#: payroll/doctype/salary_slip/salary_slip.py:2340
+#: payroll/doctype/salary_slip/salary_slip.py:2319
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "Lönebesked e-post är i kö att skickas. Kontrollera {0} för status."
 
@@ -11550,7 +11550,7 @@ msgstr "Start Tid"
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}"
 msgstr "Start och Slut Datum inte i giltig Lön Period, kan inte beräkna {0}"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1494
+#: payroll/doctype/salary_slip/salary_slip.py:1471
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr "Start och Slut Datum inte i giltig Lön Period, kan inte beräkna {0}."
 
@@ -11785,11 +11785,11 @@ msgstr "Avstängd"
 msgid "Sync {0}"
 msgstr "Synkronisera {0}"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1226
+#: payroll/doctype/salary_slip/salary_slip.py:1203
 msgid "Syntax error"
 msgstr "Syntaxfel"
 
-#: payroll/doctype/salary_slip/salary_slip.py:2196
+#: payroll/doctype/salary_slip/salary_slip.py:2173
 msgid "Syntax error in condition: {0} in Income Tax Slab"
 msgstr "Syntaxfel i Tillstånd: {0} i Inkomst Skatt Tabell"
 
@@ -12050,7 +12050,7 @@ msgstr "Tiden före Skift Start tid under vilken Personal Incheckning anses vara
 msgid "Theory"
 msgstr "Teori"
 
-#: payroll/doctype/salary_slip/salary_slip.py:448
+#: payroll/doctype/salary_slip/salary_slip.py:447
 msgid "There are more holidays than working days this month."
 msgstr "Det finns mer helger än arbetsdagar denna månad."
 
@@ -12085,15 +12085,15 @@ msgstr "Denna kompensationsledighet gäller från och med {0}."
 msgid "This employee already has a log with the same timestamp.{0}"
 msgstr "Personal har redan logg med samma tidsstämpel. {0}"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1234
+#: payroll/doctype/salary_slip/salary_slip.py:1211
 msgid "This error can be due to invalid formula or condition."
 msgstr "Detta fel kan bero på ogiltig formel eller villkor."
 
-#: payroll/doctype/salary_slip/salary_slip.py:1227
+#: payroll/doctype/salary_slip/salary_slip.py:1204
 msgid "This error can be due to invalid syntax."
 msgstr "Det här felet kan bero på ogiltig syntax."
 
-#: payroll/doctype/salary_slip/salary_slip.py:1220
+#: payroll/doctype/salary_slip/salary_slip.py:1197
 msgid "This error can be due to missing or deleted field."
 msgstr "Detta fel kan bero på att fält saknas eller tagits bort."
 
@@ -12616,7 +12616,7 @@ msgstr "Total vikt för alla {0} måste uppgå till 100 %. För närvarande är 
 msgid "Total working Days Per Year"
 msgstr "Totalt antal Arbetsdagar per År"
 
-#: payroll/doctype/salary_slip/salary_slip.py:165
+#: payroll/doctype/salary_slip/salary_slip.py:164
 msgid "Total working hours should not be greater than max working hours {0}"
 msgstr "Totalt arbetstid ska inte vara högre än maximum arbetstid {0}"
 
@@ -12843,7 +12843,7 @@ msgstr "Typ av Verifikat"
 msgid "Unable to find Salary Component {0}"
 msgstr "Kunde inte att hitta Lön Komponent {0}"
 
-#: hr/doctype/employee_checkin/employee_checkin.js:67
+#: hr/doctype/employee_checkin/employee_checkin.js:68
 msgid "Unable to retrieve your location"
 msgstr "Kunde inte hämta din position"
 
@@ -13510,7 +13510,7 @@ msgstr "via Lön Komponent synk"
 msgid "{0} & {1}"
 msgstr "{0} & {1}"
 
-#: payroll/doctype/salary_slip/salary_slip.py:2192
+#: payroll/doctype/salary_slip/salary_slip.py:2169
 msgid "{0} <br> This error can be due to missing or deleted field."
 msgstr "{0} <br> Detta fel kan bero på att fält saknas eller tagits bort."
 
@@ -13603,7 +13603,7 @@ msgstr "{0} kommer att uppdateras för följande Lön Strukturer: {1}."
 msgid "{0} {1} {2}?"
 msgstr "{0} {1} {2}?"
 
-#: payroll/doctype/salary_slip/salary_slip.py:1906
+#: payroll/doctype/salary_slip/salary_slip.py:1883
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "{0}: Personal E-post hittades inte, därför skickades inte E-post"
 
