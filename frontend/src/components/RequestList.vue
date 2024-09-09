@@ -51,6 +51,7 @@ import {
 	EXPENSE_CLAIM_FIELDS,
 	ATTENDANCE_REQUEST_FIELDS,
 	SHIFT_REQUEST_FIELDS,
+	SHIFT_FIELDS,
 } from "@/data/config/requestSummaryFields"
 
 const props = defineProps({
@@ -79,6 +80,7 @@ const fieldsMap = {
 	"Expense Claim": EXPENSE_CLAIM_FIELDS,
 	"Attendance Request": ATTENDANCE_REQUEST_FIELDS,
 	"Shift Request": SHIFT_REQUEST_FIELDS,
+	"Shift Assignment": SHIFT_FIELDS,
 }
 
 const isRequestModalOpen = ref(false)
