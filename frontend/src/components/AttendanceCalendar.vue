@@ -60,9 +60,12 @@
 </template>
 
 <script setup>
-import { computed, watch } from "vue"
+import { computed, inject, ref, watch } from "vue"
+import { createResource } from "frappe-ui"
 
-import { calendarEvents, firstOfMonth } from "@/data/attendance"
+const dayjs = inject("$dayjs")
+const employee = inject("$employee")
+const firstOfMonth = ref(dayjs().date(1).startOf("D"))
 
 const colorMap = {
 	Present: "green-200",
@@ -102,4 +105,18 @@ const getEventOnDate = (date) => {
 }
 
 const DAYS = ["S", "M", "T", "W", "T", "F", "S"]
+
+//resources
+const calendarEvents = createResource({
+	url: "hrms.api.get_attendance_calendar_events",
+	auto: true,
+	cache: "hrms:attendance_calendar_events",
+	makeParams() {
+		return {
+			employee: employee.data.name,
+			from_date: firstOfMonth.value.format("YYYY-MM-DD"),
+			to_date: firstOfMonth.value.endOf("M").format("YYYY-MM-DD"),
+		}
+	},
+})
 </script>
