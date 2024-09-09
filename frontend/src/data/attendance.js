@@ -1,10 +1,4 @@
-import { createResource } from "frappe-ui"
-import { employeeResource } from "./employee"
-import { ref } from "vue"
-
 import dayjs from "@/utils/dayjs"
-
-export const firstOfMonth = ref(dayjs().date(1).startOf("D"))
 
 export const getDates = (shift) => {
 	const fromDate = dayjs(shift.from_date).format("D MMM")
@@ -19,15 +13,23 @@ export const getTotalDays = (shift) => {
 	return toDate.diff(fromDate, "d") + 1
 }
 
-export const calendarEvents = createResource({
-	url: "hrms.api.get_attendance_calendar_events",
-	auto: true,
-	cache: "hrms:attendance_calendar_events",
-	makeParams() {
-		return {
-			employee: employeeResource.data.name,
-			from_date: firstOfMonth.value.format("YYYY-MM-DD"),
-			to_date: firstOfMonth.value.endOf("M").format("YYYY-MM-DD"),
-		}
-	},
-})
+export const getShiftDates = (shift) => {
+	const startDate = dayjs(shift.start_date).format("D MMM")
+	const endDate = shift.end_date ? dayjs(shift.end_date).format("D MMM") : "Ongoing"
+	return startDate == endDate ? startDate : `${startDate} - ${endDate}`
+}
+
+export const getTotalShiftDays = (shift) => {
+	if (!shift.end_date) return null
+	const end_date = dayjs(shift.end_date)
+	const start_date = dayjs(shift.start_date)
+	return end_date.diff(start_date, "d") + 1
+}
+
+export const getShiftTiming = (shift) => {
+	return (
+		shift.start_time.split(":").slice(0, 2).join(":") +
+		" - " +
+		shift.end_time.split(":").splice(0, 2).join(":")
+	)
+}
