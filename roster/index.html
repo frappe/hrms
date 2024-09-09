@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" href="/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Roster</title>
+	</head>
+	<body class="text-gray-800">
+		<div id="app"></div>
+		<div id="modals"></div>
+		<div id="popovers"></div>
+
+		<script>
+			window.csrf_token = "{{ csrf_token }}";
+		</script>
+		<script type="module" src="/src/main.ts"></script>
+	</body>
+</html>

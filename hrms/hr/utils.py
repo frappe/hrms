@@ -1,6 +1,8 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
+import datetime
+
 import frappe
 from frappe import _, qb
 from frappe.model.document import Document
@@ -32,6 +34,8 @@ from erpnext.setup.doctype.employee.employee import (
 from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
 	calculate_pro_rated_leaves,
 )
+
+DateTimeLikeObject = str | datetime.date | datetime.datetime
 
 
 class DuplicateDeclarationError(frappe.ValidationError):
@@ -660,9 +664,7 @@ def share_doc_with_approver(doc, user):
 			doc.doctype, doc.name, user, submit=1, flags={"ignore_share_permission": True}
 		)
 
-		frappe.msgprint(
-			_("Shared with the user {0} with {1} access").format(user, frappe.bold("submit"), alert=True)
-		)
+		frappe.msgprint(_("Shared with the user {0} with 'submit' permisions").format(user, alert=True))
 
 	# remove shared doc if approver changes
 	doc_before_save = doc.get_doc_before_save()
@@ -845,3 +847,28 @@ def notify_bulk_action_status(doctype: str, failure: list, success: list) -> Non
 		title=title,
 		is_minimizable=True,
 	)
+
+
+def check_app_permission():
+	"""Check if user has permission to access the app (for showing the app on app screen)"""
+	if frappe.session.user == "Administrator":
+		return True
+
+	if frappe.has_permission("Employee", ptype="read"):
+		return True
+
+	return False
+
+
+def get_exact_month_diff(string_ed_date: DateTimeLikeObject, string_st_date: DateTimeLikeObject) -> int:
+	"""Return the difference between given two dates in months."""
+	ed_date = getdate(string_ed_date)
+	st_date = getdate(string_st_date)
+	diff = (ed_date.year - st_date.year) * 12 + ed_date.month - st_date.month
+
+	# count the last month only if end date's day > start date's day
+	# to handle cases like 16th Jul 2024 - 15th Jul 2025
+	# where framework's month_diff will calculate diff as 13 months
+	if ed_date.day > st_date.day:
+		diff += 1
+	return diff

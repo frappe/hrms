@@ -9,7 +9,6 @@ from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.installer import update_site_config
 
 from hrms.overrides.company import delete_company_fixtures
-from hrms.subscription_utils import update_erpnext_access
 
 
 def after_install():
@@ -20,7 +19,6 @@ def after_install():
 	update_hr_defaults()
 	add_non_standard_user_types()
 	set_single_defaults()
-	update_erpnext_access()
 	create_default_role_profiles()
 	run_post_install_patches()
 

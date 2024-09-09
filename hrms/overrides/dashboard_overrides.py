@@ -23,7 +23,12 @@ def get_dashboard_for_employee(data):
 			},
 			{
 				"label": _("Exit"),
-				"items": ["Employee Separation", "Exit Interview", "Full and Final Statement"],
+				"items": [
+					"Employee Separation",
+					"Exit Interview",
+					"Full and Final Statement",
+					"Salary Withholding",
+				],
 			},
 			{"label": _("Shift"), "items": ["Shift Request", "Shift Assignment"]},
 			{"label": _("Expense"), "items": ["Expense Claim", "Travel Request", "Employee Advance"]},

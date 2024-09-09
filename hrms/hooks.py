@@ -7,6 +7,15 @@ app_license = "GNU General Public License (v3)"
 required_apps = ["frappe/erpnext"]
 source_link = "http://github.com/frappe/hrms"
 
+add_to_apps_screen = [
+	{
+		"name": "hrms",
+		"logo": "/assets/hrms/images/frappe-hr-logo.svg",
+		"title": "Frappe HR",
+		"route": "/app/hr",
+		"has_permission": "hrms.hr.utils.check_app_permission",
+	}
+]
 
 # Includes in <head>
 # ------------------
@@ -70,6 +79,7 @@ website_generators = ["Job Opening"]
 
 website_route_rules = [
 	{"from_route": "/hrms/<path:app_path>", "to_route": "hrms"},
+	{"from_route": "/hr/<path:app_path>", "to_route": "roster"},
 ]
 # Jinja
 # ----------
@@ -87,6 +97,8 @@ jinja = {
 # before_install = "hrms.install.before_install"
 after_install = "hrms.install.after_install"
 after_migrate = "hrms.setup.update_select_perm_after_install"
+
+setup_wizard_complete = "hrms.subscription_utils.update_erpnext_access"
 
 # Uninstallation
 # ------------
@@ -172,12 +184,14 @@ doc_events = {
 		"on_submit": [
 			"hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
 			"hrms.hr.doctype.full_and_final_statement.full_and_final_statement.update_full_and_final_statement_status",
+			"hrms.payroll.doctype.salary_withholding.salary_withholding.update_salary_withholding_payment_status",
 		],
 		"on_update_after_submit": "hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
 		"on_cancel": [
 			"hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
 			"hrms.payroll.doctype.salary_slip.salary_slip.unlink_ref_doc_from_salary_slip",
 			"hrms.hr.doctype.full_and_final_statement.full_and_final_statement.update_full_and_final_statement_status",
+			"hrms.payroll.doctype.salary_withholding.salary_withholding.update_salary_withholding_payment_status",
 		],
 	},
 	"Loan": {"validate": "hrms.hr.utils.validate_loan_repay_from_salary"},
@@ -207,6 +221,7 @@ scheduler_events = {
 	],
 	"hourly_long": [
 		"hrms.hr.doctype.shift_type.shift_type.process_auto_attendance_for_all_shifts",
+		"hrms.hr.doctype.shift_assignment_schedule.shift_assignment_schedule.process_auto_shift_creation",
 	],
 	"daily": [
 		"hrms.controllers.employee_reminders.send_birthday_reminders",

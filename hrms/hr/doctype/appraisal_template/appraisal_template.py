@@ -7,23 +7,10 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt
 
+from hrms.mixins.appraisal import AppraisalMixin
 
-class AppraisalTemplate(Document):
+
+class AppraisalTemplate(Document, AppraisalMixin):
 	def validate(self):
-		self.validate_total_weightage("goals")
-		self.validate_total_weightage("rating_criteria")
-
-	def validate_total_weightage(self, table_name):
-		if not self.get(table_name):
-			return
-
-		total_weightage = sum(flt(d.per_weightage) for d in self.get(table_name))
-
-		if flt(total_weightage, 2) != 100.0:
-			table = _("KRAs") if table_name == "goals" else _("Criteria")
-			frappe.throw(
-				_("Total weightage for all {0} must add up to 100. Currently, it is {1}%").format(
-					frappe.bold(table), total_weightage
-				),
-				title=_("Incorrect Weightage Allocation"),
-			)
+		self.validate_total_weightage("goals", "KRAs")
+		self.validate_total_weightage("rating_criteria", "Criteria")

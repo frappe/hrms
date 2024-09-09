@@ -169,7 +169,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Accounts Receivable",
    "link_count": 0,
    "link_to": "Accounts Receivable",
@@ -179,7 +179,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Accounts Payable",
    "link_count": 0,
    "link_to": "Accounts Payable",
@@ -189,7 +189,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "General Ledger",
    "link_count": 0,
    "link_to": "General Ledger",
@@ -256,7 +256,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-02-05 09:10:45.636550",
+ "modified": "2024-08-11 11:40:45.636550",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claims",
