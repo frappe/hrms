@@ -35,6 +35,7 @@
 						:items="upcomingShifts"
 						:addListButton="true"
 						listButtonRoute="ShiftAssignmentListView"
+						emptyStateMessage="You have no upcoming shifts"
 					/>
 				</div>
 			</div>

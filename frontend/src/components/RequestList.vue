@@ -28,7 +28,7 @@
 			</Button>
 		</router-link>
 	</div>
-	<EmptyState message="You have no requests" v-else />
+	<EmptyState :message="emptyStateMessage" v-else />
 
 	<ion-modal
 		ref="modal"
@@ -72,6 +72,10 @@ const props = defineProps({
 	listButtonRoute: {
 		type: String,
 		default: "",
+	},
+	emptyStateMessage: {
+		type: String,
+		default: "You have no requests",
 	},
 })
 
