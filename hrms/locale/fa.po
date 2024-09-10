@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-08 09:33+0000\n"
-"PO-Revision-Date: 2024-09-09 15:05\n"
+"PO-Revision-Date: 2024-09-10 15:06\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -1174,7 +1174,7 @@ msgstr "اکنون درخواست دهید"
 #. Label of a Card Break in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
 msgid "Appointment"
-msgstr "وقت ملاقات"
+msgstr "انتصاب"
 
 #. Label of the appointment_date (Date) field in DocType 'Appointment Letter'
 #: hr/doctype/appointment_letter/appointment_letter.json
@@ -1186,7 +1186,7 @@ msgstr "تاریخ انتصاب"
 #: hr/doctype/appointment_letter/appointment_letter.json
 #: hr/workspace/recruitment/recruitment.json
 msgid "Appointment Letter"
-msgstr "انتصاب نامه"
+msgstr "حکم انتصاب"
 
 #. Label of the appointment_letter_template (Link) field in DocType
 #. 'Appointment Letter'
@@ -1196,12 +1196,12 @@ msgstr "انتصاب نامه"
 #: hr/doctype/appointment_letter_template/appointment_letter_template.json
 #: hr/workspace/recruitment/recruitment.json
 msgid "Appointment Letter Template"
-msgstr "الگوی نامه قرار ملاقات"
+msgstr "الگوی حکم انتصاب"
 
 #. Name of a DocType
 #: hr/doctype/appointment_letter_content/appointment_letter_content.json
 msgid "Appointment Letter content"
-msgstr "محتوای نامه قرار ملاقات"
+msgstr "محتوای حکم انتصاب"
 
 #. Name of a DocType
 #. Label of the appraisal (Link) field in DocType 'Employee Performance
@@ -1282,7 +1282,7 @@ msgstr "عنوان الگوی ارزیابی"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:135
 msgid "Appraisal Template not found for some designations."
-msgstr "الگوی ارزیابی برای برخی از نام‌گذاری‌ها یافت نشد."
+msgstr "الگوی ارزیابی برای برخی از نقش سازمانی ها یافت نشد."
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:125
 msgid "Appraisal creation is queued. It may take a few minutes."
@@ -1858,7 +1858,7 @@ msgstr "آبی"
 #. Letter'
 #: hr/doctype/appointment_letter/appointment_letter.json
 msgid "Body"
-msgstr "بدن"
+msgstr "بدنه"
 
 #. Label of the bonus_section (Section Break) field in DocType 'Retention
 #. Bonus'
@@ -5523,7 +5523,7 @@ msgstr "غذا"
 #. Label of the for_designation (Link) field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
 msgid "For Designation "
-msgstr " برای تعیین"
+msgstr "برای نقش سازمانی "
 
 #. Label of the employee (Link) field in DocType 'Employee Performance
 #. Feedback'
@@ -6773,7 +6773,7 @@ msgstr "دور مصاحبه"
 
 #: hr/doctype/job_applicant/job_applicant.py:72
 msgid "Interview Round {0} is only applicable for the Designation {1}"
-msgstr "دور مصاحبه {0} فقط برای تعیین {1} قابل اجرا است"
+msgstr "دور مصاحبه {0} فقط برای نقش سازمانی {1} قابل اجرا است"
 
 #: hr/doctype/interview/interview.py:52
 msgid "Interview Round {0} is only for Designation {1}. Job Applicant has applied for the role {2}"
@@ -7121,7 +7121,7 @@ msgstr "فرصت های شغلی"
 
 #: hr/doctype/job_opening/job_opening.py:83
 msgid "Job Openings for the designation {0} are already open or the hiring is complete as per the Staffing Plan {1}"
-msgstr "فرصت های شغلی برای تعیین {0} در حال حاضر باز است یا طبق طرح کارکنان {1} استخدام کامل شده است."
+msgstr "فرصت های شغلی برای نقش سازمانی {0} در حال حاضر باز است یا طبق طرح کارگزینی {1} استخدام کامل شده است"
 
 #. Label of the job_requisition (Link) field in DocType 'Job Opening'
 #. Name of a DocType
@@ -8365,7 +8365,7 @@ msgstr ""
 
 #: hr/doctype/job_opening/job_opening.js:32
 msgid "No Staffing Plans found for this Designation"
-msgstr "هیچ طرح کارمندی برای این تعیین یافت نشد"
+msgstr "هیچ طرح کارگزینی برای این نقش سازمانی یافت نشد"
 
 #: payroll/doctype/salary_slip/salary_slip.py:392
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
@@ -9319,7 +9319,7 @@ msgstr "لطفاً قبل از ایجاد گروه خلاصه کار روزان�
 
 #: hr/doctype/staffing_plan/staffing_plan.js:97
 msgid "Please enter the designation"
-msgstr "لطفا نام را وارد کنید"
+msgstr "لطفا نقش سازمانی را وارد کنید"
 
 #: payroll/doctype/salary_slip/salary_slip.py:1851
 msgid "Please see attachment"
@@ -9327,7 +9327,7 @@ msgstr ""
 
 #: hr/doctype/staffing_plan/staffing_plan.py:224
 msgid "Please select Company and Designation"
-msgstr "لطفاً شرکت و نامگذاری را انتخاب کنید"
+msgstr "لطفاً شرکت و نقش سازمانی را انتخاب کنید"
 
 #: payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.js:22
 msgid "Please select Employee"
@@ -10861,7 +10861,7 @@ msgstr ""
 #. Label of the select_terms (Link) field in DocType 'Job Offer'
 #: hr/doctype/job_offer/job_offer.json
 msgid "Select Terms and Conditions"
-msgstr "شرایط و ضوابط را انتخاب کنید"
+msgstr "انتخاب شرایط و ضوابط"
 
 #. Label of the select_users (Section Break) field in DocType 'Daily Work
 #. Summary Group'
@@ -11445,7 +11445,7 @@ msgstr "مبلغ حمایت شده"
 #. Label of the staffing_details (Table) field in DocType 'Staffing Plan'
 #: hr/doctype/staffing_plan/staffing_plan.json
 msgid "Staffing Details"
-msgstr "جزئیات پرسنل"
+msgstr "جزئیات کارگزینی"
 
 #. Label of the staffing_plan (Link) field in DocType 'Job Opening'
 #. Name of a DocType
@@ -11455,16 +11455,16 @@ msgstr "جزئیات پرسنل"
 #: hr/report/recruitment_analytics/recruitment_analytics.py:24
 #: hr/workspace/recruitment/recruitment.json
 msgid "Staffing Plan"
-msgstr "طرح کارکنان"
+msgstr "طرح کارگزینی"
 
 #. Name of a DocType
 #: hr/doctype/staffing_plan_detail/staffing_plan_detail.json
 msgid "Staffing Plan Detail"
-msgstr "جزئیات طرح کارکنان"
+msgstr "جزئیات طرح کارگزینی"
 
 #: hr/doctype/staffing_plan/staffing_plan.py:72
 msgid "Staffing Plan {0} already exist for designation {1}"
-msgstr "طرح کارکنان {0} از قبل برای تعیین {1} وجود دارد"
+msgstr "طرح کارگزینی {0} از قبل برای نقش سازمانی {1} وجود دارد"
 
 #. Label of the standard_tax_exemption_amount (Currency) field in DocType
 #. 'Income Tax Slab'
@@ -11711,7 +11711,7 @@ msgstr "ارسال فیش حقوقی..."
 
 #: hr/doctype/staffing_plan/staffing_plan.py:162
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
-msgstr "شرکت های تابعه قبلاً برای {1} جای خالی با بودجه {2} برنامه ریزی کرده اند. طرح کارکنان برای {0} باید تعداد بیشتری از مشاغل و بودجه برای {3} نسبت به شرکت های تابعه خود اختصاص دهد."
+msgstr "شرکت های تابعه قبلاً برای {1} جای خالی با بودجه {2} برنامه ریزی کرده اند. طرح کارکنان برای {0} باید تعداد بیشتری از مشاغل و بودجه برای {3} نسبت به شرکت های تابعه خود اختصاص دهد"
 
 #: hr/doctype/employee_referral/employee_referral.py:54 hr/utils.py:833
 #: payroll/doctype/payroll_entry/payroll_entry.py:1452
@@ -12031,7 +12031,7 @@ msgstr "تعداد روزهای تعطیل در این ماه بیشتر از ر
 
 #: hr/doctype/job_offer/job_offer.py:39
 msgid "There are no vacancies under staffing plan {0}"
-msgstr "هیچ جای خالی در طرح کارکنان وجود ندارد {0}"
+msgstr "هیچ جای خالی در طرح کارگزینی وجود ندارد {0}"
 
 #: payroll/doctype/additional_salary/additional_salary.py:37
 #: payroll/doctype/employee_incentive/employee_incentive.py:20
@@ -13396,7 +13396,7 @@ msgstr "شما نمی توانید برای شیفت پیش فرض خود درخ
 
 #: hr/doctype/staffing_plan/staffing_plan.py:95
 msgid "You can only plan for upto {0} vacancies and budget {1} for {2} as per staffing plan {3} for parent company {4}."
-msgstr "شما فقط می توانید برای حداکثر {0} موقعیت شغلی و بودجه {1} برای {2} طبق برنامه کارکنان {3} برای شرکت مادر {4} برنامه ریزی کنید."
+msgstr "شما فقط می توانید برای حداکثر {0} موقعیت شغلی و بودجه {1} برای {2} طبق برنامه کارگزینی {3} برای شرکت مادر {4} برنامه ریزی کنید."
 
 #: hr/doctype/leave_encashment/leave_encashment.py:37
 msgid "You can only submit Leave Encashment for a valid encashment amount"
@@ -13568,7 +13568,7 @@ msgstr "{0} از {1} تکمیل شد"
 
 #: hr/doctype/staffing_plan/staffing_plan.py:129
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
-msgstr "{0} جای خالی و {1} بودجه برای {2} که قبلاً برای شرکت های تابعه {3} برنامه ریزی شده است. شما فقط می توانید برای حداکثر {4} موقعیت شغلی و بودجه {5} طبق برنامه کارکنان {6} برای شرکت مادر {3} برنامه ریزی کنید."
+msgstr "{0} جای خالی و {1} بودجه برای {2} که قبلاً برای شرکت های تابعه {3} برنامه ریزی شده است. شما فقط می توانید برای حداکثر {4} موقعیت شغلی و بودجه {5} طبق برنامه کارگزینی {6} برای شرکت مادر {3} برنامه ریزی کنید."
 
 #: payroll/doctype/salary_component/salary_component.js:114
 msgid "{0} will be updated for the following Salary Structures: {1}."
