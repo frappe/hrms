@@ -20,13 +20,7 @@
 				<span v-if="props.doc.shift_timing" class="text-gray-700 font-normal rounded text-base">
 					{{ props.doc.shift_timing }}
 				</span>
-				<Badge
-					v-else-if="props.doc.docstatus"
-					variant="outline"
-					:theme="colorMap[status]"
-					:label="status"
-					size="md"
-				/>
+				<Badge v-else variant="outline" :theme="colorMap[status]" :label="status" size="md" />
 				<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
 			</div>
 		</div>
