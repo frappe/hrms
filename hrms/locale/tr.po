@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-08 09:33+0000\n"
-"PO-Revision-Date: 2024-09-09 15:05\n"
+"PO-Revision-Date: 2024-09-10 15:06\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -2647,7 +2647,7 @@ msgstr ""
 
 #: overrides/company.py:51
 msgid "Country Setup failed"
-msgstr ""
+msgstr "Ülke Kurulumu başarısız oldu"
 
 #. Label of the course (Data) field in DocType 'Training Event'
 #. Label of the course (Data) field in DocType 'Training Feedback'
@@ -2907,13 +2907,13 @@ msgstr "Mevcut İş Deneyimi"
 
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.py:97
 msgid "Currently, there is no {0} leave period for this date to create/update leave allocation."
-msgstr ""
+msgstr "İzin tahsisi oluşturmak/güncellemek için bu tarih adına {0} izin dönemi bulunmamaktadır."
 
 #. Option for the 'Dates Based On' (Select) field in DocType 'Leave Control
 #. Panel'
 #: hr/doctype/leave_control_panel/leave_control_panel.json
 msgid "Custom Range"
-msgstr ""
+msgstr "Özel Aralık"
 
 #: hr/report/project_profitability/project_profitability.js:31
 #: hr/report/project_profitability/project_profitability.py:133
@@ -3354,7 +3354,7 @@ msgstr "Kalkış Datetime"
 #: payroll/doctype/salary_structure/salary_structure.py:109
 #: payroll/doctype/salary_structure/salary_structure.py:113
 msgid "Depends On Payment Days"
-msgstr ""
+msgstr "Ödeme Günlerine Göre Değişir"
 
 #. Label of the depends_on_payment_days (Check) field in DocType 'Salary
 #. Component'
@@ -3591,7 +3591,7 @@ msgstr "Toplama Dahil Etme"
 
 #: hr/doctype/goal/goal.js:116
 msgid "Do you still want to proceed?"
-msgstr ""
+msgstr "Hala devam etmek istiyor musunuz?"
 
 #: hr/doctype/interview/interview.py:68
 msgid "Do you want to update the Job Applicant {0} as {1} based on this interview result?"
@@ -4029,7 +4029,7 @@ msgstr "Personel Devam Takip Aracı"
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Benefit Application"
-msgstr "çalışanlara Sağlanan Fayda"
+msgstr "Personel Yan Hakları Başvurusu"
 
 #. Name of a DocType
 #: payroll/doctype/employee_benefit_application_detail/employee_benefit_application_detail.json
@@ -4431,7 +4431,7 @@ msgstr "Personel başvurusu"
 
 #: payroll/doctype/additional_salary/additional_salary.py:103
 msgid "Employee Referral {0} is not applicable for referral bonus."
-msgstr ""
+msgstr "Personel Referansı {0} referans bonusu için geçerli değildir."
 
 #: hr/doctype/job_requisition/job_requisition.js:15
 msgid "Employee Referrals"
@@ -4855,15 +4855,15 @@ msgstr "Hata Mesajı"
 
 #: payroll/doctype/salary_slip/salary_slip.py:1210
 msgid "Error in formula or condition"
-msgstr ""
+msgstr "Formülde veya koşulda hata var"
 
 #: payroll/doctype/salary_slip/salary_slip.py:2175
 msgid "Error in formula or condition: {0} in Income Tax Slab"
-msgstr ""
+msgstr "Formül veya koşulda hata: Gelir Vergisi Diliminde {0}"
 
 #: hr/doctype/upload_attendance/upload_attendance.js:57
 msgid "Error in some rows"
-msgstr ""
+msgstr "Bazı satırlarda hata var"
 
 #: payroll/doctype/salary_slip/salary_slip.py:2254
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
@@ -5108,13 +5108,13 @@ msgstr "Beklenen Ortalama Derecelendirme"
 #. Label of the expected_by (Date) field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgid "Expected By"
-msgstr ""
+msgstr "Beklenen Zaman"
 
 #. Label of the expected_compensation (Currency) field in DocType 'Job
 #. Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgid "Expected Compensation"
-msgstr ""
+msgstr "Tahmini Maaş"
 
 #. Name of a DocType
 #: hr/doctype/expected_skill_set/expected_skill_set.json
@@ -5262,7 +5262,7 @@ msgstr "Süresi Doldu"
 #. Label of the expired_leaves (Float) field in DocType 'Salary Slip Leave'
 #: payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Expired Leave(s)"
-msgstr ""
+msgstr "Süresi Dolan İzinler"
 
 #: hr/doctype/leave_application/leave_application_dashboard.html:8
 msgid "Expired Leaves"
@@ -5271,7 +5271,7 @@ msgstr "Son kullanma tarihi geçmiş izinler"
 #. Label of the explanation (Small Text) field in DocType 'Attendance Request'
 #: hr/doctype/attendance_request/attendance_request.json
 msgid "Explanation"
-msgstr "açıklama"
+msgstr "Açıklamalar"
 
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:116
 msgid "Export"
@@ -5296,7 +5296,7 @@ msgstr "{0} ülkesinin varsayılanları silinemedi."
 
 #: api/__init__.py:609
 msgid "Failed to download Salary Slip PDF"
-msgstr ""
+msgstr "Maaş Bordrosu PDF olarak indirilemedi"
 
 #: hr/doctype/interview/interview.py:117
 msgid "Failed to send the Interview Reschedule notification. Please configure your email account."
@@ -5308,7 +5308,7 @@ msgstr "Ülke için varsayılanlar ayarlanamadı {0}."
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:320
 msgid "Failed to submit some leave policy assignments:"
-msgstr ""
+msgstr "Bazı izin politikası atamaları gönderilemedi:"
 
 #: hr/doctype/interview/interview.py:205
 msgid "Failed to update the Job Applicant status"
@@ -5394,12 +5394,12 @@ msgstr ""
 
 #: public/js/performance/performance_feedback.js:120
 msgid "Feedback {0} added successfully"
-msgstr ""
+msgstr "Geri bildirim {0} başarıyla eklendi"
 
 #. Label of the fetch_geolocation (Button) field in DocType 'Employee Checkin'
 #: hr/doctype/employee_checkin/employee_checkin.json
 msgid "Fetch Geolocation"
-msgstr ""
+msgstr "Coğrafi Konumu Getir"
 
 #: hr/doctype/employee_checkin/employee_checkin.js:21
 msgid "Fetch Shift"
@@ -5812,16 +5812,16 @@ msgstr "Genel Muhasebe"
 #. Label of the geolocation (Geolocation) field in DocType 'Employee Checkin'
 #: hr/doctype/employee_checkin/employee_checkin.json
 msgid "Geolocation"
-msgstr ""
+msgstr "Coğrafi Konum"
 
 #: hr/doctype/employee_checkin/employee_checkin.js:47
 #: hr/doctype/employee_checkin/employee_checkin.js:74
 msgid "Geolocation Error"
-msgstr ""
+msgstr "Coğrafi Konum Hatası"
 
 #: hr/doctype/employee_checkin/employee_checkin.js:46
 msgid "Geolocation is not supported by your current browser"
-msgstr ""
+msgstr "Coğrafi konum, mevcut tarayıcınız tarafından desteklenmiyor"
 
 #: payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.js:47
 msgid "Get Details From Declaration"
@@ -6017,7 +6017,7 @@ msgstr "Grup"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:57
 msgid "Group By"
-msgstr "Gruplama"
+msgstr "Grup"
 
 #: hr/doctype/goal/goal.js:13
 msgid "Group goal's progress is auto-calculated based on the child goals."
@@ -6879,16 +6879,16 @@ msgstr "Geçersiz"
 
 #: payroll/doctype/additional_salary/additional_salary.py:164
 msgid "Invalid Additional Salary"
-msgstr ""
+msgstr "Geçersiz Ek Maaş"
 
 #: payroll/doctype/salary_structure/salary_structure.py:319
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
-msgstr ""
+msgstr "Geçersiz Bordro Borç Hesabı. Hesap para birimi {0} veya {1} olmalıdır."
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgid "Investigated"
-msgstr ""
+msgstr "Araştırıldı"
 
 #. Label of the investigation_details_section (Section Break) field in DocType
 #. 'Employee Grievance'
@@ -6923,7 +6923,7 @@ msgstr "Aktif"
 #. 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
 msgid "Is Applicable for Referral Bonus"
-msgstr ""
+msgstr "Referans Bonusu Uygulanabilir"
 
 #. Label of the is_carry_forward (Check) field in DocType 'Leave Ledger Entry'
 #. Label of the is_carry_forward (Check) field in DocType 'Leave Type'
@@ -6940,7 +6940,7 @@ msgstr "Telafi"
 
 #: hr/doctype/leave_type/leave_type.py:40
 msgid "Is Compensatory Leave"
-msgstr ""
+msgstr "Telafi İzni"
 
 #. Label of the is_default (Select) field in DocType 'Salary Structure'
 #: payroll/doctype/salary_structure/salary_structure.json
@@ -7106,7 +7106,7 @@ msgstr "İş Teklifi Süresi"
 #: hr/doctype/job_offer/job_offer.json
 #: hr/doctype/job_offer_term_template/job_offer_term_template.json
 msgid "Job Offer Term Template"
-msgstr ""
+msgstr "İş Teklifi Şartları Şablonu"
 
 #. Label of the offer_terms (Table) field in DocType 'Job Offer'
 #: hr/doctype/job_offer/job_offer.json
@@ -7154,11 +7154,11 @@ msgstr "{0} pozisyonu için iş ilanları zaten açık ya da İstihdam Planı {1
 #: hr/doctype/job_requisition/job_requisition.json
 #: hr/workspace/recruitment/recruitment.json
 msgid "Job Requisition"
-msgstr ""
+msgstr "İşe Alım Talebi"
 
 #: hr/doctype/job_requisition/job_requisition.py:48
 msgid "Job Requisition {0} has been associated with Job Opening {1}"
-msgstr ""
+msgstr "İşe Alım Talebi {0} Pozisyon Açıklığı {1} ile ilişkilendirilmiştir"
 
 #. Label of the job_title (Data) field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
@@ -8097,7 +8097,7 @@ msgstr "Asgari Vergiye Tabi Gelir"
 #. Rule'
 #: payroll/doctype/gratuity_rule/gratuity_rule.json
 msgid "Minimum Year for Gratuity"
-msgstr ""
+msgstr "İkramiye için Minimum Yıl"
 
 #: hr/utils.py:803
 msgid "Missing Field"
@@ -8462,7 +8462,7 @@ msgstr "Başka güncelleme yok"
 #. Label of the no_of_positions (Int) field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgid "No of. Positions"
-msgstr ""
+msgstr "Pozisyon Sayısı"
 
 #: hr/report/employee_advance_summary/employee_advance_summary.py:17
 msgid "No record found"
@@ -8545,7 +8545,7 @@ msgstr "Not: Toplam tahsis edilen izinler {0} , dönem için onaylanan izinlerde
 
 #: payroll/doctype/salary_slip/salary_slip.py:1862
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
-msgstr ""
+msgstr "Not: Maaş bordronuz şifreyle korunmaktadır, PDF'i açmak için gereken şifre {0} formatındadır."
 
 #. Label of the notes (Data) field in DocType 'Job Applicant'
 #. Label of the notes (Section Break) field in DocType 'Leave Allocation'
@@ -8644,7 +8644,7 @@ msgstr "Teklif Dönemi"
 #. Label of the offer_terms (Table) field in DocType 'Job Offer Term Template'
 #: hr/doctype/job_offer_term_template/job_offer_term_template.json
 msgid "Offer Terms"
-msgstr ""
+msgstr "Teklif Şartları"
 
 #. Label of the old_parent (Link) field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
@@ -8658,7 +8658,7 @@ msgstr "Tarihinde"
 #. Option for the 'Reason' (Select) field in DocType 'Attendance Request'
 #: hr/doctype/attendance_request/attendance_request.json
 msgid "On Duty"
-msgstr "görevde"
+msgstr "Görevde"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
@@ -9885,7 +9885,7 @@ msgstr "Gerekçe"
 #. Label of the reason_for_requesting (Text) field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgid "Reason for Requesting"
-msgstr ""
+msgstr "Talep Nedeni"
 
 #. Label of the reason_for_withholding_salary (Small Text) field in DocType
 #. 'Salary Withholding'
@@ -9998,18 +9998,18 @@ msgstr ""
 #. Label of the referrer (Link) field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
 msgid "Referrer"
-msgstr ""
+msgstr "Referans Olan"
 
 #. Label of the referrer_details_section (Section Break) field in DocType
 #. 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
 msgid "Referrer Details"
-msgstr ""
+msgstr "Referans Detayları"
 
 #. Label of the referrer_name (Data) field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
 msgid "Referrer Name"
-msgstr ""
+msgstr "Referansın Adı"
 
 #. Label of the reflections_section (Section Break) field in DocType
 #. 'Appraisal'
@@ -10194,12 +10194,12 @@ msgstr "Raporlanan Kişi"
 #. Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgid "Requested By"
-msgstr ""
+msgstr "Talep Eden"
 
 #. Label of the requested_by_name (Data) field in DocType 'Job Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgid "Requested By (Name)"
-msgstr ""
+msgstr "Talep Eden (İsim)"
 
 #. Option for the 'Travel Funding' (Select) field in DocType 'Travel Request'
 #: hr/doctype/travel_request/travel_request.json
@@ -12161,7 +12161,7 @@ msgstr "Doldurma Zamanı"
 #. Requisition'
 #: hr/doctype/job_requisition/job_requisition.json
 msgid "Timelines"
-msgstr ""
+msgstr "Zaman"
 
 #. Label of a Link in the Shift & Attendance Workspace
 #: hr/report/project_profitability/project_profitability.py:155
