@@ -114,6 +114,7 @@ import {
 import { FeatherIcon, createResource, LoadingIndicator, debounce } from "frappe-ui"
 
 import TabButtons from "@/components/TabButtons.vue"
+import EmployeeCheckinItem from "@/components/EmployeeCheckinItem.vue"
 import AttendanceRequestItem from "@/components/AttendanceRequestItem.vue"
 import ShiftRequestItem from "@/components/ShiftRequestItem.vue"
 import ShiftAssignmentItem from "@/components/ShiftAssignmentItem.vue"
@@ -154,6 +155,7 @@ const props = defineProps({
 })
 
 const listItemComponent = {
+	"Employee Checkin": markRaw(EmployeeCheckinItem),
 	"Attendance Request": markRaw(AttendanceRequestItem),
 	"Shift Request": markRaw(ShiftRequestItem),
 	"Shift Assignment": markRaw(ShiftAssignmentItem),
