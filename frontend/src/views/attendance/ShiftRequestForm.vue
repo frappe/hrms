@@ -72,15 +72,6 @@ watch(
 )
 
 watch(
-	() => shiftRequest.value.from_date,
-	(from_date) => {
-		if (!shiftRequest.value.to_date) {
-			shiftRequest.value.to_date = from_date
-		}
-	}
-)
-
-watch(
 	() => [shiftRequest.value.from_date, shiftRequest.value.to_date],
 	([from_date, to_date]) => {
 		validateDates(from_date, to_date)
