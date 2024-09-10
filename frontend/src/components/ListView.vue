@@ -22,7 +22,11 @@
 								: '',
 						]"
 					/>
-					<router-link v-if="createPermission?.data?.has_permission" :to="{ name: formViewRoute }" v-slot="{ navigate }">
+					<router-link
+						v-if="createPermission?.data?.has_permission && props.doctype != 'Employee Checkin'"
+						:to="{ name: formViewRoute }"
+						v-slot="{ navigate }"
+					>
 						<Button variant="solid" class="mr-2" @click="navigate">
 							<template #prefix>
 								<FeatherIcon name="plus" class="w-4" />

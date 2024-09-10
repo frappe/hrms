@@ -56,7 +56,7 @@ const routes = [
 		name: "EmployeeCheckinDetailView",
 		path: "/employee-checkins/:id",
 		props: true,
-		component: () => import("@/views/attendance/ShiftAssignmentForm.vue"),
+		component: () => import("@/views/attendance/EmployeeCheckinForm.vue"),
 	},
 ]
 
