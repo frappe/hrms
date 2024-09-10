@@ -25,6 +25,16 @@ import SalaryIcon from "@/components/icons/SalaryIcon.vue"
 const quickLinks = [
 	{
 		icon: markRaw(LeaveIcon),
+		title: "Request Attendance",
+		route: "AttendanceRequestFormView",
+	},
+	{
+		icon: markRaw(LeaveIcon),
+		title: "Request a Shift",
+		route: "ShiftRequestFormView",
+	},
+	{
+		icon: markRaw(LeaveIcon),
 		title: "Request Leave",
 		route: "LeaveApplicationFormView",
 	},
