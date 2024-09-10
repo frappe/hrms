@@ -5,11 +5,7 @@
 				class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b"
 			>
 				<div class="flex flex-row items-center">
-					<Button
-						variant="ghost"
-						class="!px-1 mr-1 hover:bg-white"
-						@click="router.back()"
-					>
+					<Button variant="ghost" class="!px-1 mr-1 hover:bg-white" @click="router.back()">
 						<FeatherIcon name="chevron-left" class="h-5 w-5" />
 					</Button>
 					<h2 class="text-xl font-semibold text-gray-900">{{ pageTitle }}</h2>
@@ -26,7 +22,7 @@
 								: '',
 						]"
 					/>
-					<router-link :to="{ name: formViewRoute }" v-slot="{ navigate }">
+					<router-link v-if="createPermission?.data?.has_permission" :to="{ name: formViewRoute }" v-slot="{ navigate }">
 						<Button variant="solid" class="mr-2" @click="navigate">
 							<template #prefix>
 								<FeatherIcon name="plus" class="w-4" />
@@ -84,10 +80,7 @@
 				/>
 
 				<!-- Loading Indicator -->
-				<div
-					v-if="documents.loading"
-					class="flex mt-2 items-center justify-center"
-				>
+				<div v-if="documents.loading" class="flex mt-2 items-center justify-center">
 					<LoadingIndicator class="w-8 h-8 text-gray-800" />
 				</div>
 			</div>
@@ -118,12 +111,7 @@ import {
 	IonRefresherContent,
 } from "@ionic/vue"
 
-import {
-	FeatherIcon,
-	createResource,
-	LoadingIndicator,
-	debounce,
-} from "frappe-ui"
+import { FeatherIcon, createResource, LoadingIndicator, debounce } from "frappe-ui"
 
 import TabButtons from "@/components/TabButtons.vue"
 import AttendanceRequestItem from "@/components/AttendanceRequestItem.vue"
@@ -254,6 +242,12 @@ const documents = createResource({
 	},
 })
 
+const createPermission = createResource({
+	url: "frappe.client.has_permission",
+	params: { doctype: props.doctype, docname: null, perm_type: "create" },
+	auto: true,
+})
+
 // helper functions
 function initializeFilters() {
 	props.filterConfig.forEach((filter) => {
@@ -280,8 +274,7 @@ function prepareFilters() {
 		}
 
 		value = filterMap[fieldname].value
-		if (condition && value)
-			appliedFilters.value.push([props.doctype, fieldname, condition, value])
+		if (condition && value) appliedFilters.value.push([props.doctype, fieldname, condition, value])
 	}
 }
 
