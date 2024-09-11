@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-08 09:33+0000\n"
-"PO-Revision-Date: 2024-09-10 15:06\n"
+"PO-Revision-Date: 2024-09-11 15:01\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -1424,7 +1424,7 @@ msgstr "Tahsis Edilen Varlıklar"
 
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:283
 msgid "Assign Salary Structure to {0} employee(s)?"
-msgstr ""
+msgstr "Maaş Yapısınının {0} personellere atanmasını onaylıyor musunuz?"
 
 #. Option for the 'Action' (Select) field in DocType 'Shift Assignment Tool'
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.js:99
@@ -2064,7 +2064,7 @@ msgstr ""
 
 #: hr/doctype/leave_application/leave_application.py:561
 msgid "Cannot find active Leave Period"
-msgstr "Etkin İzin Süresi bulunamadı"
+msgstr "Etkin İzin Dönemi bulunamadı"
 
 #: hr/doctype/attendance/attendance.py:153
 msgid "Cannot mark attendance for an Inactive employee {0}"
@@ -13408,7 +13408,7 @@ msgstr "Telafi edici izin talebi gün arasında tüm gün (ler) mevcut değilsin
 
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.py:101
 msgid "You can claim only an amount of {0}, the rest amount {1} should be in the application as pro-rata component"
-msgstr ""
+msgstr "Sadece {0} tutarında bir talepte bulunabilirsiniz, kalan {1} tutarı orantılı bileşen olarak başvuruda bulunmalıdır"
 
 #: payroll/doctype/gratuity_rule/gratuity_rule.py:24
 msgid "You can not define multiple slabs if you have a slab with no lower and upper limits."
