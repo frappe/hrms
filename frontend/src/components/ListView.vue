@@ -64,7 +64,16 @@
 						v-for="link in documents.data"
 						:key="link.name"
 					>
+						<component
+							v-if="props.doctype === 'Employee Checkin'"
+							:is="listItemComponent[doctype]"
+							:doc="link"
+							:isTeamRequest="isTeamRequest"
+							:workflowStateField="workflowStateField"
+							@click="openRequestModal(link)"
+						/>
 						<router-link
+							v-else
 							:to="{ name: detailViewRoute, params: { id: link.name } }"
 							v-slot="{ navigate }"
 						>
@@ -102,6 +111,20 @@
 			</template>
 		</CustomIonModal>
 	</ion-content>
+
+	<ion-modal
+		ref="modal"
+		:is-open="isRequestModalOpen"
+		@didDismiss="closeRequestModal"
+		:initial-breakpoint="1"
+		:breakpoints="[0, 1]"
+	>
+		<RequestActionSheet
+			:fields="EMPLOYEE_CHECKIN_FIELDS"
+			:showOpenForm="false"
+			v-model="selectedRequest"
+		/>
+	</ion-modal>
 </template>
 
 <script setup>
@@ -111,6 +134,7 @@ import {
 	modalController,
 	IonHeader,
 	IonContent,
+	IonModal,
 	IonRefresher,
 	IonRefresherContent,
 } from "@ionic/vue"
@@ -127,6 +151,8 @@ import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 import EmployeeAdvanceItem from "@/components/EmployeeAdvanceItem.vue"
 import ListFiltersActionSheet from "@/components/ListFiltersActionSheet.vue"
 import CustomIonModal from "@/components/CustomIonModal.vue"
+import RequestActionSheet from "@/components/RequestActionSheet.vue"
+import { EMPLOYEE_CHECKIN_FIELDS } from "@/data/config/requestSummaryFields"
 
 import useWorkflow from "@/composables/workflow"
 import { useListUpdate } from "@/composables/realtime"
@@ -169,6 +195,7 @@ const listItemComponent = {
 }
 
 const router = useRouter()
+const dayjs = inject("$dayjs")
 const socket = inject("$socket")
 const employee = inject("$employee")
 const filterMap = reactive({})
@@ -176,6 +203,8 @@ const activeTab = ref(props.tabButtons[0])
 const areFiltersApplied = ref(false)
 const appliedFilters = ref([])
 const workflowStateField = ref(null)
+const isRequestModalOpen = ref(false)
+const selectedRequest = ref(null)
 
 // infinite scroll
 const scrollContainer = ref(null)
@@ -255,6 +284,21 @@ const createPermission = createResource({
 })
 
 // helper functions
+const openRequestModal = async (request) => {
+	selectedRequest.value = request
+	selectedRequest.value.doctype = "Employee Checkin"
+	selectedRequest.value.date = request.time
+	selectedRequest.value.formatted_time = dayjs(request.time).format("HH:mm a")
+	selectedRequest.value.formatted_latitude = `${Number(request.latitude).toFixed(5)}°`
+	selectedRequest.value.formatted_longitude = `${Number(request.longitude).toFixed(5)}°`
+	isRequestModalOpen.value = true
+}
+
+const closeRequestModal = async () => {
+	isRequestModalOpen.value = false
+	selectedRequest.value = null
+}
+
 function initializeFilters() {
 	props.filterConfig.forEach((filter) => {
 		filterMap[filter.fieldname] = {

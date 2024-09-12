@@ -216,3 +216,41 @@ export const SHIFT_REQUEST_FIELDS = [
 		fieldtype: "Select",
 	},
 ]
+
+export const EMPLOYEE_CHECKIN_FIELDS = [
+	{
+		fieldname: "name",
+		label: "ID",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "log_type",
+		label: "Log Type",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "date",
+		label: "Date",
+		fieldtype: "Date",
+	},
+	{
+		fieldname: "formatted_time",
+		label: "Time",
+		fieldtype: "Time",
+	},
+	{
+		fieldname: "formatted_latitude",
+		label: "Latitude",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "formatted_longitude",
+		label: "Longitude",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "geolocation",
+		label: "Geolocation",
+		fieldtype: "geolocation",
+	},
+]

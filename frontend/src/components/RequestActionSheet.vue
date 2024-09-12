@@ -11,6 +11,7 @@
 				{{ document?.doctype }}
 			</span>
 			<FeatherIcon
+				v-if="props.showOpenForm"
 				name="external-link"
 				class="h-4 w-4 text-gray-500 cursor-pointer"
 				@click="openFormView"
@@ -24,7 +25,7 @@
 					v-for="field in fieldsWithValues"
 					:key="field.fieldname"
 					:class="[
-						['Small Text', 'Text', 'Long Text', 'Table'].includes(
+						['Small Text', 'Text', 'Long Text', 'Table', 'geolocation'].includes(
 							field.fieldtype
 						)
 							? 'flex-col'
@@ -178,6 +179,10 @@ const props = defineProps({
 	fields: {
 		type: Array,
 		required: true,
+	},
+	showOpenForm: {
+		type: Boolean,
+		default: true,
 	},
 	modelValue: {
 		type: Object,
