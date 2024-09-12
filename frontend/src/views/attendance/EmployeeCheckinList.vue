@@ -15,7 +15,15 @@ import { IonPage } from "@ionic/vue"
 import ListView from "@/components/ListView.vue"
 
 const TAB_BUTTONS = ["My Checkins", "Team Checkins"]
-const EMPLOYEE_CHECKIN_FIELDS = ["name", "employee", "employee_name", "time", "log_type"]
+const EMPLOYEE_CHECKIN_FIELDS = [
+	"name",
+	"employee",
+	"employee_name",
+	"log_type",
+	"time",
+	"latitude",
+	"longitude",
+]
 
 const LOG_TYPE_FILTER_OPTIONS = ["", "IN", "OUT"]
 const FILTER_CONFIG = [
