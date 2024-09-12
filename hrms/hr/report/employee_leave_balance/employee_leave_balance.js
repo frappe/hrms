@@ -8,14 +8,14 @@ frappe.query_reports["Employee Leave Balance"] = {
 			label: __("From Date"),
 			fieldtype: "Date",
 			reqd: 1,
-			default: frappe.defaults.get_default("year_start_date"),
+			default: erpnext.utils.get_fiscal_year(frappe.datetime.get_today(), true)[1],
 		},
 		{
 			fieldname: "to_date",
 			label: __("To Date"),
 			fieldtype: "Date",
 			reqd: 1,
-			default: frappe.defaults.get_default("year_end_date"),
+			default: erpnext.utils.get_fiscal_year(frappe.datetime.get_today(), true)[2],
 		},
 		{
 			label: __("Company"),
