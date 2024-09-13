@@ -205,6 +205,11 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "On Leave")
 		mark_attendance(self.employee, previous_month_first + relativedelta(days=3), "Present")
 
+		departmentless_employee = make_employee(
+			"emp@departmentless.com", company=self.company, department=None
+		)
+		mark_attendance(departmentless_employee, previous_month_first + relativedelta(days=3), "Present")
+
 		filters = frappe._dict(
 			{
 				"month": previous_month_first.month,
