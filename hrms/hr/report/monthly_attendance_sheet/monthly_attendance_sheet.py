@@ -305,7 +305,7 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 	emp_map = {}
 
 	if group_by:
-		group_key = lambda d: d[group_by]  # noqa
+		group_key = lambda d: "" if d[group_by] is None else d[group_by]  # noqa
 		for parameter, employees in groupby(sorted(employee_details, key=group_key), key=group_key):
 			group_by_param_values.append(parameter)
 			emp_map.setdefault(parameter, frappe._dict())
