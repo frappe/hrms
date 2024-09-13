@@ -9,6 +9,7 @@ import frappe
 from frappe import _
 from frappe.query_builder.functions import Count, Extract, Sum
 from frappe.utils import cint, cstr, getdate
+from frappe.utils.nestedset import get_descendants_of
 
 Filters = frappe._dict
 
@@ -30,6 +31,11 @@ def execute(filters: Filters | None = None) -> tuple:
 
 	if not (filters.month and filters.year):
 		frappe.throw(_("Please select month and year."))
+
+	if filters.company:
+		filters.companies = [filters.company]
+		if filters.include_company_descendants:
+			filters.companies.extend(get_descendants_of("Company", filters.company))
 
 	attendance_map = get_attendance_map(filters)
 	if not attendance_map:
@@ -257,7 +263,7 @@ def get_attendance_records(filters: Filters) -> list[dict]:
 		)
 		.where(
 			(Attendance.docstatus == 1)
-			& (Attendance.company == filters.company)
+			& (Attendance.company.isin(filters.companies))
 			& (Extract("month", Attendance.attendance_date) == filters.month)
 			& (Extract("year", Attendance.attendance_date) == filters.year)
 		)
@@ -288,7 +294,7 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 			Employee.company,
 			Employee.holiday_list,
 		)
-		.where(Employee.company == filters.company)
+		.where(Employee.company.isin(filters.companies))
 	)
 
 	if filters.employee:
@@ -466,7 +472,7 @@ def get_attendance_summary_and_days(employee: str, filters: Filters) -> tuple[di
 		.where(
 			(Attendance.docstatus == 1)
 			& (Attendance.employee == employee)
-			& (Attendance.company == filters.company)
+			& (Attendance.company.isin(filters.companies))
 			& (Extract("month", Attendance.attendance_date) == filters.month)
 			& (Extract("year", Attendance.attendance_date) == filters.year)
 		)
@@ -479,7 +485,7 @@ def get_attendance_summary_and_days(employee: str, filters: Filters) -> tuple[di
 		.where(
 			(Attendance.docstatus == 1)
 			& (Attendance.employee == employee)
-			& (Attendance.company == filters.company)
+			& (Attendance.company.isin(filters.companies))
 			& (Extract("month", Attendance.attendance_date) == filters.month)
 			& (Extract("year", Attendance.attendance_date) == filters.year)
 		)
@@ -543,7 +549,7 @@ def get_leave_summary(employee: str, filters: Filters) -> dict[str, float]:
 		.where(
 			(Attendance.employee == employee)
 			& (Attendance.docstatus == 1)
-			& (Attendance.company == filters.company)
+			& (Attendance.company.isin(filters.companies))
 			& ((Attendance.leave_type.isnotnull()) | (Attendance.leave_type != ""))
 			& (Extract("month", Attendance.attendance_date) == filters.month)
 			& (Extract("year", Attendance.attendance_date) == filters.year)
@@ -577,7 +583,7 @@ def get_entry_exits_summary(employee: str, filters: Filters) -> dict[str, float]
 		.where(
 			(Attendance.docstatus == 1)
 			& (Attendance.employee == employee)
-			& (Attendance.company == filters.company)
+			& (Attendance.company.isin(filters.companies))
 			& (Extract("month", Attendance.attendance_date) == filters.month)
 			& (Extract("year", Attendance.attendance_date) == filters.year)
 		)
