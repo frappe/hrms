@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-08 09:33+0000\n"
-"PO-Revision-Date: 2024-09-10 15:06\n"
+"PO-Revision-Date: 2024-09-14 15:16\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -2525,7 +2525,7 @@ msgstr "حضور بدون علامت را به عنوان در نظر بگیری
 
 #: hr/report/employee_leave_balance/employee_leave_balance.js:55
 msgid "Consolidate Leave Types"
-msgstr "ادغام انواع مرخصی"
+msgstr "تلفیق انواع مرخصی"
 
 #. Label of the prefered_email (Data) field in DocType 'Travel Request'
 #: hr/doctype/travel_request/travel_request.json
