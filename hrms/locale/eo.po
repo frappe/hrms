@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-09-08 09:33+0000\n"
-"PO-Revision-Date: 2024-09-09 15:05\n"
+"POT-Creation-Date: 2024-09-15 09:34+0000\n"
+"PO-Revision-Date: 2024-09-15 15:26\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -3914,7 +3914,7 @@ msgstr "crwdns141362:0crwdne141362:0"
 #: hr/report/leave_ledger/leave_ledger.js:28
 #: hr/report/leave_ledger/leave_ledger.py:28
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:35
-#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:92
+#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:98
 #: hr/report/project_profitability/project_profitability.js:37
 #: hr/report/project_profitability/project_profitability.py:140
 #: hr/report/shift_attendance/shift_attendance.js:22
@@ -4294,7 +4294,7 @@ msgstr "crwdns106690:0crwdne106690:0"
 #: hr/report/employee_leave_balance/employee_leave_balance.py:47
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.py:23
 #: hr/report/leave_ledger/leave_ledger.py:35
-#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:98
+#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:104
 #: hr/report/project_profitability/project_profitability.py:145
 #: hr/report/shift_attendance/shift_attendance.py:31
 #: hr/report/unpaid_expense_claim/unpaid_expense_claim.py:19
@@ -6527,6 +6527,10 @@ msgstr "crwdns141676:0crwdne141676:0"
 msgid "Incentives"
 msgstr "crwdns107698:0crwdne107698:0"
 
+#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:63
+msgid "Include Company Descendants"
+msgstr "crwdns148752:0crwdne148752:0"
+
 #. Label of the include_holidays (Check) field in DocType 'Attendance Request'
 #: hr/doctype/attendance_request/attendance_request.json
 msgid "Include Holidays"
@@ -8383,11 +8387,11 @@ msgstr "crwdns141964:0{0}crwdne141964:0"
 msgid "No applicable slab found for the calculation of gratuity amount as per the Gratuity Rule: {0}"
 msgstr "crwdns141966:0{0}crwdne141966:0"
 
-#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:43
+#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:49
 msgid "No attendance records found for this criteria."
 msgstr "crwdns108540:0crwdne108540:0"
 
-#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:36
+#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:42
 msgid "No attendance records found."
 msgstr "crwdns108542:0crwdne108542:0"
 
@@ -9391,7 +9395,7 @@ msgstr "crwdns108976:0crwdne108976:0"
 msgid "Please select employees to create appraisals for"
 msgstr "crwdns108978:0crwdne108978:0"
 
-#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:32
+#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:33
 msgid "Please select month and year."
 msgstr "crwdns108980:0crwdne108980:0"
 
@@ -11169,7 +11173,7 @@ msgstr "crwdns148500:0{0}crwdne148500:0"
 #: hr/doctype/attendance_request/attendance_request.json
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hr/doctype/employee_checkin/employee_checkin.json
-#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:145
+#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:151
 #: hr/report/shift_attendance/shift_attendance.py:36
 #: hr/report/shift_attendance/shift_attendance.py:205
 #: overrides/dashboard_overrides.py:33
@@ -11729,7 +11733,7 @@ msgstr "crwdns142484:0{0}crwdnd142484:0{1}crwdne142484:0"
 msgid "Sum of all previous slabs"
 msgstr "crwdns142486:0crwdne142486:0"
 
-#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:63
+#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:69
 msgid "Summarized View"
 msgstr "crwdns109978:0crwdne109978:0"
 
@@ -12294,7 +12298,7 @@ msgstr "crwdns148562:0{0}crwdnd148562:0{1}crwdne148562:0"
 msgid "Total"
 msgstr "crwdns110206:0crwdne110206:0"
 
-#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:112
+#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:118
 msgid "Total Absent"
 msgstr "crwdns110210:0crwdne110210:0"
 
@@ -12378,7 +12382,7 @@ msgstr "crwdns110234:0crwdne110234:0"
 msgid "Total Deduction (Company Currency)"
 msgstr "crwdns142584:0crwdne142584:0"
 
-#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:137
+#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:143
 msgid "Total Early Exits"
 msgstr "crwdns110242:0crwdne110242:0"
 
@@ -12423,7 +12427,7 @@ msgstr "crwdns142596:0crwdne142596:0"
 msgid "Total Gross Pay"
 msgstr "crwdns110258:0crwdne110258:0"
 
-#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:114
+#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:120
 msgid "Total Holidays"
 msgstr "crwdns110260:0crwdne110260:0"
 
@@ -12436,7 +12440,7 @@ msgstr "crwdns110262:0crwdne110262:0"
 msgid "Total Income Tax"
 msgstr "crwdns142598:0crwdne142598:0"
 
-#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:131
+#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:137
 msgid "Total Late Entries"
 msgstr "crwdns110266:0crwdne110266:0"
 
@@ -12445,7 +12449,7 @@ msgstr "crwdns110266:0crwdne110266:0"
 msgid "Total Leave Days"
 msgstr "crwdns142600:0crwdne142600:0"
 
-#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:111
+#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:117
 msgid "Total Leaves"
 msgstr "crwdns110270:0crwdne110270:0"
 
@@ -12484,7 +12488,7 @@ msgstr "crwdns142608:0crwdne142608:0"
 msgid "Total Payment"
 msgstr "crwdns142610:0crwdne142610:0"
 
-#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:106
+#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:112
 msgid "Total Present"
 msgstr "crwdns110284:0crwdne110284:0"
 
@@ -12851,7 +12855,7 @@ msgstr "crwdns142672:0crwdne142672:0"
 msgid "Unmarked Attendance for days"
 msgstr "crwdns110450:0crwdne110450:0"
 
-#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:120
+#: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:126
 #: public/js/templates/employees_with_unmarked_attendance.html:19
 msgid "Unmarked Days"
 msgstr "crwdns110452:0crwdne110452:0"
