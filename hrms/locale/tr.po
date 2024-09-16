@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-15 09:34+0000\n"
-"PO-Revision-Date: 2024-09-15 15:25\n"
+"PO-Revision-Date: 2024-09-16 15:59\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -2459,7 +2459,7 @@ msgstr "Tamamlanma Tarihi"
 
 #: hr/doctype/employee_onboarding/employee_onboarding.js:118
 msgid "Completing onboarding"
-msgstr ""
+msgstr "Tanıtım Tamamlanıyor"
 
 #. Label of the component (Data) field in DocType 'Full and Final Outstanding
 #. Statement'
@@ -5603,7 +5603,7 @@ msgstr ""
 
 #: hr/report/project_profitability/project_profitability.py:191
 msgid "Fractional Cost"
-msgstr ""
+msgstr "Kesirli Maliyet"
 
 #. Label of the frequency (Select) field in DocType 'Shift Assignment Schedule'
 #. Label of the frequency (Select) field in DocType 'Vehicle Service'
@@ -6269,7 +6269,7 @@ msgstr "Merhaba {}! Bu e-posta size yaklaşan tatilleri hatırlatmak içindir g�
 
 #: hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:44
 msgid "Hiring Count"
-msgstr "İşe Başlayan"
+msgstr "Başlayan"
 
 #. Label of the hiring_settings_section (Section Break) field in DocType 'HR
 #. Settings'
@@ -7846,7 +7846,7 @@ msgstr "Zorunlu"
 
 #: public/js/utils/index.js:37
 msgid "Mandatory fields required for this action"
-msgstr ""
+msgstr "Bu eylem için gerekli zorunlu alanlar"
 
 #: payroll/doctype/payroll_entry/payroll_entry.js:192
 msgid "Mandatory fields required in {0}"
@@ -9658,7 +9658,7 @@ msgstr ""
 #. Option for the 'Action' (Select) field in DocType 'Shift Assignment Tool'
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 msgid "Process Shift Requests"
-msgstr ""
+msgstr "Vardiya Taleplerini İşle"
 
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.js:266
 msgid "Process {0} Shift Request(s) as <b>{1}</b>?"
@@ -9910,7 +9910,7 @@ msgstr "Alacaklar"
 #. Option for the 'Action' (Select) field in DocType 'Full and Final Asset'
 #: hr/doctype/full_and_final_asset/full_and_final_asset.json
 msgid "Recover Cost"
-msgstr ""
+msgstr "Maliyet Kurtarma"
 
 #. Name of a Workspace
 #: hr/workspace/recruitment/recruitment.json
