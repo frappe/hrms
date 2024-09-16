@@ -197,7 +197,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 				__(d),
 				function () {
 					const dialog = new frappe.ui.Dialog({
-						title: __("Set {0} for Selected Employees", [__(d)]),
+						title: __("Set {0} for selected employees", [__(d)]),
 						fields: [
 							{
 								label: __(d),

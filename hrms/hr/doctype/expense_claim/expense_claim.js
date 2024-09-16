@@ -274,17 +274,18 @@ frappe.ui.form.on("Expense Claim", {
 			}
 		});
 	},
+
 	get_taxes: function (frm) {
-		if (frm.doc.taxes) {
-			frappe.call({
-				method: "calculate_taxes",
-				doc: frm.doc,
-				callback: () => {
-					refresh_field("taxes");
-					frm.trigger("update_employee_advance_claimed_amount");
-				},
-			});
-		}
+		if (!frm.doc.taxes.length) return;
+
+		frappe.call({
+			method: "calculate_taxes",
+			doc: frm.doc,
+			callback: () => {
+				refresh_field("taxes");
+				frm.trigger("update_employee_advance_claimed_amount");
+			},
+		});
 	},
 
 	get_advances: function (frm) {

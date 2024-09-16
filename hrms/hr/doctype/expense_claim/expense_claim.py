@@ -261,7 +261,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			if not data.cost_center:
 				frappe.throw(
 					_("Row {0}: {1} is required in the expenses table to book an expense claim.").format(
-						data.idx, frappe.bold("Cost Center")
+						data.idx, frappe.bold(_("Cost Center"))
 					)
 				)
 
@@ -471,7 +471,8 @@ def get_expense_claim_account(expense_claim_type, company):
 	if not account:
 		frappe.throw(
 			_("Set the default account for the {0} {1}").format(
-				frappe.bold("Expense Claim Type"), get_link_to_form("Expense Claim Type", expense_claim_type)
+				frappe.bold(_("Expense Claim Type")),
+				get_link_to_form("Expense Claim Type", expense_claim_type),
 			)
 		)
 

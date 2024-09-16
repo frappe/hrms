@@ -2,6 +2,14 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Journal Entry", {
+	setup(frm) {
+		frm.ignore_doctypes_on_cancel_all.push("Salary Withholding");
+		if (frm.doc.voucher_type === "Bank Entry") {
+			// since salary withholding is linked to salary slip, nested links are also pulled for cancellation
+			frm.ignore_doctypes_on_cancel_all.push("Salary Slip");
+		}
+	},
+
 	refresh(frm) {
 		frm.set_query("reference_name", "accounts", function (frm, cdt, cdn) {
 			let jvd = frappe.get_doc(cdt, cdn);

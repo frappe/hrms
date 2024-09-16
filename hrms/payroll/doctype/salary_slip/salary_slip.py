@@ -41,7 +41,7 @@ from hrms.payroll.doctype.employee_benefit_claim.employee_benefit_claim import (
 	get_benefit_claim_amount,
 	get_last_payroll_period_benefits,
 )
-from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
+from hrms.payroll.doctype.payroll_entry.payroll_entry import get_salary_withholdings, get_start_end_dates
 from hrms.payroll.doctype.payroll_period.payroll_period import (
 	get_payroll_period,
 	get_period_factor,
@@ -132,6 +132,7 @@ class SalarySlip(TransactionBase):
 		return self.__actual_end_date
 
 	def validate(self):
+		self.check_salary_withholding()
 		self.status = self.get_status()
 		validate_active_employee(self.employee)
 		self.validate_dates()
@@ -165,6 +166,14 @@ class SalarySlip(TransactionBase):
 					),
 					alert=True,
 				)
+
+	def check_salary_withholding(self):
+		withholding = get_salary_withholdings(self.start_date, self.end_date, self.employee)
+		if withholding:
+			self.salary_withholding = withholding[0].salary_withholding
+			self.salary_withholding_cycle = withholding[0].salary_withholding_cycle
+		else:
+			self.salary_withholding = None
 
 	def set_net_total_in_words(self):
 		doc_currency = self.currency
@@ -236,13 +245,15 @@ class SalarySlip(TransactionBase):
 		revert_series_if_last(self.series, self.name)
 
 	def get_status(self):
-		if self.docstatus == 0:
-			status = "Draft"
-		elif self.docstatus == 1:
-			status = "Submitted"
-		elif self.docstatus == 2:
-			status = "Cancelled"
-		return status
+		if self.docstatus == 2:
+			return "Cancelled"
+		else:
+			if self.salary_withholding:
+				return "Withheld"
+			elif self.docstatus == 0:
+				return "Draft"
+			elif self.docstatus == 1:
+				return "Submitted"
 
 	def validate_dates(self):
 		self.validate_from_to_dates("start_date", "end_date")
@@ -317,7 +328,7 @@ class SalarySlip(TransactionBase):
 			struct = self.check_sal_struct()
 
 			if struct:
-				self._salary_structure_doc = frappe.get_cached_doc("Salary Structure", struct)
+				self.set_salary_structure_doc()
 				self.salary_slip_based_on_timesheet = (
 					self._salary_structure_doc.salary_slip_based_on_timesheet or 0
 				)
@@ -560,7 +571,11 @@ class SalarySlip(TransactionBase):
 		if self.relieving_date:
 			employee_status = frappe.db.get_value("Employee", self.employee, "status")
 			if self.relieving_date < getdate(self.start_date) and employee_status != "Left":
-				frappe.throw(_("Employee relieved on {0} must be set as 'Left'").format(self.relieving_date))
+				frappe.throw(
+					_("Employee {0} relieved on {1} must be set as 'Left'").format(
+						get_link_to_form("Employee", self.employee), formatdate(self.relieving_date)
+					)
+				)
 
 		payment_days = date_diff(self.actual_end_date, self.actual_start_date) + 1
 
@@ -750,6 +765,12 @@ class SalarySlip(TransactionBase):
 			)
 
 	def calculate_net_pay(self):
+		def set_gross_pay_and_base_gross_pay():
+			self.gross_pay = self.get_component_totals("earnings", depends_on_payment_days=1)
+			self.base_gross_pay = flt(
+				flt(self.gross_pay) * flt(self.exchange_rate), self.precision("base_gross_pay")
+			)
+
 		if self.salary_structure:
 			self.calculate_component_amounts("earnings")
 
@@ -765,10 +786,7 @@ class SalarySlip(TransactionBase):
 				relieving_date=self.relieving_date,
 			)[1]
 
-		self.gross_pay = self.get_component_totals("earnings", depends_on_payment_days=1)
-		self.base_gross_pay = flt(
-			flt(self.gross_pay) * flt(self.exchange_rate), self.precision("base_gross_pay")
-		)
+		set_gross_pay_and_base_gross_pay()
 
 		if self.salary_structure:
 			self.calculate_component_amounts("deductions")
@@ -1056,7 +1074,7 @@ class SalarySlip(TransactionBase):
 
 	def calculate_component_amounts(self, component_type):
 		if not getattr(self, "_salary_structure_doc", None):
-			self._salary_structure_doc = frappe.get_cached_doc("Salary Structure", self.salary_structure)
+			self.set_salary_structure_doc()
 
 		self.add_structure_components(component_type)
 		self.add_additional_salary_components(component_type)
@@ -1065,51 +1083,64 @@ class SalarySlip(TransactionBase):
 		else:
 			self.add_tax_components()
 
+	def set_salary_structure_doc(self) -> None:
+		self._salary_structure_doc = frappe.get_cached_doc("Salary Structure", self.salary_structure)
+		# sanitize condition and formula fields
+		for table in ("earnings", "deductions"):
+			for row in self._salary_structure_doc.get(table):
+				row.condition = sanitize_expression(row.condition)
+				row.formula = sanitize_expression(row.formula)
+
 	def add_structure_components(self, component_type):
 		self.data, self.default_data = self.get_data_for_eval()
-		timesheet_component = self._salary_structure_doc.salary_component
 
 		for struct_row in self._salary_structure_doc.get(component_type):
-			if self.salary_slip_based_on_timesheet and struct_row.salary_component == timesheet_component:
-				continue
+			self.add_structure_component(struct_row, component_type)
 
-			amount = self.eval_condition_and_formula(struct_row, self.data)
-			if struct_row.statistical_component:
-				# update statitical component amount in reference data based on payment days
-				# since row for statistical component is not added to salary slip
+	def add_structure_component(self, struct_row, component_type):
+		if (
+			self.salary_slip_based_on_timesheet
+			and struct_row.salary_component == self._salary_structure_doc.salary_component
+		):
+			return
 
-				self.default_data[struct_row.abbr] = flt(amount)
-				if struct_row.depends_on_payment_days:
-					payment_days_amount = (
-						flt(amount) * flt(self.payment_days) / cint(self.total_working_days)
-						if self.total_working_days
-						else 0
-					)
-					self.data[struct_row.abbr] = flt(payment_days_amount, struct_row.precision("amount"))
+		amount = self.eval_condition_and_formula(struct_row, self.data)
+		if struct_row.statistical_component:
+			# update statitical component amount in reference data based on payment days
+			# since row for statistical component is not added to salary slip
 
-			else:
-				# default behavior, the system does not add if component amount is zero
-				# if remove_if_zero_valued is unchecked, then ask system to add component row
-				remove_if_zero_valued = frappe.get_cached_value(
-					"Salary Component", struct_row.salary_component, "remove_if_zero_valued"
+			self.default_data[struct_row.abbr] = flt(amount)
+			if struct_row.depends_on_payment_days:
+				payment_days_amount = (
+					flt(amount) * flt(self.payment_days) / cint(self.total_working_days)
+					if self.total_working_days
+					else 0
 				)
+				self.data[struct_row.abbr] = flt(payment_days_amount, struct_row.precision("amount"))
 
-				default_amount = 0
+		else:
+			# default behavior, the system does not add if component amount is zero
+			# if remove_if_zero_valued is unchecked, then ask system to add component row
+			remove_if_zero_valued = frappe.get_cached_value(
+				"Salary Component", struct_row.salary_component, "remove_if_zero_valued"
+			)
 
-				if (
-					amount
-					or (struct_row.amount_based_on_formula and amount is not None)
-					or (not remove_if_zero_valued and amount is not None and not self.data[struct_row.abbr])
-				):
-					default_amount = self.eval_condition_and_formula(struct_row, self.default_data)
-					self.update_component_row(
-						struct_row,
-						amount,
-						component_type,
-						data=self.data,
-						default_amount=default_amount,
-						remove_if_zero_valued=remove_if_zero_valued,
-					)
+			default_amount = 0
+
+			if (
+				amount
+				or (struct_row.amount_based_on_formula and amount is not None)
+				or (not remove_if_zero_valued and amount is not None and not self.data[struct_row.abbr])
+			):
+				default_amount = self.eval_condition_and_formula(struct_row, self.default_data)
+				self.update_component_row(
+					struct_row,
+					amount,
+					component_type,
+					data=self.data,
+					default_amount=default_amount,
+					remove_if_zero_valued=remove_if_zero_valued,
+				)
 
 	def get_data_for_eval(self):
 		"""Returns data for evaluating formula"""
@@ -1146,17 +1177,13 @@ class SalarySlip(TransactionBase):
 
 	def eval_condition_and_formula(self, struct_row, data):
 		try:
-			condition = sanitize_expression(struct_row.condition)
-			if condition:
-				if not _safe_eval(condition, self.whitelisted_globals, data):
-					return None
-			amount = struct_row.amount
-			if struct_row.amount_based_on_formula:
-				formula = sanitize_expression(struct_row.formula)
-				if formula:
-					amount = flt(
-						_safe_eval(formula, self.whitelisted_globals, data), struct_row.precision("amount")
-					)
+			condition, formula, amount = struct_row.condition, struct_row.formula, struct_row.amount
+			if condition and not _safe_eval(condition, self.whitelisted_globals, data):
+				return None
+			if struct_row.amount_based_on_formula and formula:
+				amount = flt(
+					_safe_eval(formula, self.whitelisted_globals, data), struct_row.precision("amount")
+				)
 			if amount:
 				data[struct_row.abbr] = amount
 

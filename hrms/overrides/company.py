@@ -129,6 +129,6 @@ def validate_default_accounts(doc, method=None):
 		if get_account_currency(doc.default_payroll_payable_account) != doc.default_currency:
 			frappe.throw(
 				_(
-					"{0} currency must be same as company's default currency. Please select another account."
-				).format(frappe.bold("Default Payroll Payable Account"))
+					"The currency of {0} should be same as the company's default currency. Please select another account."
+				).format(frappe.bold(_("Default Payroll Payable Account")))
 			)

@@ -51,6 +51,7 @@ class TestPayrollEntry(FrappeTestCase):
 			"Payroll Entry",
 			"Salary Structure",
 			"Salary Structure Assignment",
+			"Employee Cost Center",
 			"Payroll Employee Detail",
 			"Additional Salary",
 		]:
@@ -180,6 +181,57 @@ class TestPayrollEntry(FrappeTestCase):
 		)
 
 		self.assertEqual(je_entries, expected_je)
+
+	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0})
+	def test_employee_cost_center_breakup(self):
+		"""Test only the latest salary structure assignment is considered for cost center breakup"""
+		COMPANY = "_Test Company"
+		COST_CENTERS = {"_Test Cost Center - _TC": 60, "_Test Cost Center 2 - _TC": 40}
+		department = create_department("Cost Center Test")
+		employee = make_employee("test_emp1@example.com", department=department, company=COMPANY)
+		salary_structure = make_salary_structure(
+			"_Test Salary Structure 2",
+			"Monthly",
+			employee,
+			company=COMPANY,
+		)
+
+		# update cost centers in salary structure assignment for employee
+		new_assignment = frappe.db.get_value(
+			"Salary Structure Assignment",
+			{"employee": employee, "salary_structure": salary_structure.name, "docstatus": 1},
+			"name",
+		)
+		new_assignment = frappe.get_doc("Salary Structure Assignment", new_assignment)
+		new_assignment.payroll_cost_centers = []
+		for cost_center, percentage in COST_CENTERS.items():
+			new_assignment.append(
+				"payroll_cost_centers", {"cost_center": cost_center, "percentage": percentage}
+			)
+		new_assignment.save()
+
+		# make an old salary structure assignment to test and ensure old cost center mapping is excluded
+		old_assignment = frappe.copy_doc(new_assignment)
+		old_assignment.from_date = add_months(new_assignment.from_date, -1)
+		old_assignment.payroll_cost_centers = []
+		old_assignment.append("payroll_cost_centers", {"cost_center": "Main - _TC", "percentage": 100})
+		old_assignment.submit()
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		pe = make_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account="_Test Payroll Payable - _TC",
+			currency="INR",
+			department=department,
+			company="_Test Company",
+			payment_account="Cash - _TC",
+			cost_center="Main - _TC",
+		)
+
+		# only new cost center breakup is considered
+		cost_centers = pe.get_payroll_cost_centers_for_employee(employee, "_Test Salary Structure 2")
+		self.assertEqual(cost_centers, COST_CENTERS)
 
 	def test_get_end_date(self):
 		self.assertEqual(get_end_date("2017-01-01", "monthly"), {"end_date": "2017-01-31"})
