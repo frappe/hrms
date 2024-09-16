@@ -26,7 +26,13 @@ frappe.ui.form.on("Leave Allocation", {
 	},
 
 	refresh: function (frm) {
+<<<<<<< HEAD
 		if (frm.doc.docstatus === 1 && frm.doc.expired) {
+=======
+		hrms.leave_utils.add_view_ledger_button(frm);
+
+		if (frm.doc.docstatus === 1 && !frm.doc.expired) {
+>>>>>>> 6ddfdac36 (fix: expire_allocation api endpoint by fetching allocation object (#1576))
 			var valid_expiry = moment(frappe.datetime.get_today()).isBetween(
 				frm.doc.from_date,
 				frm.doc.to_date,
