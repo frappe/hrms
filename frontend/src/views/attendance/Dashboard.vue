@@ -20,15 +20,6 @@
 					/>
 				</div>
 				<div>
-					<div class="text-lg text-gray-800 font-bold">Recent Shift Requests</div>
-					<RequestList
-						:component="markRaw(ShiftRequestItem)"
-						:items="shiftRequests?.data?.slice(0, 5)"
-						:addListButton="true"
-						listButtonRoute="ShiftRequestListView"
-					/>
-				</div>
-				<div>
 					<div class="text-lg text-gray-800 font-bold">Upcoming Shifts</div>
 					<RequestList
 						:component="markRaw(ShiftAssignmentItem)"
@@ -36,6 +27,22 @@
 						:addListButton="true"
 						listButtonRoute="ShiftAssignmentListView"
 						emptyStateMessage="You have no upcoming shifts"
+					/>
+				</div>
+				<div class="w-full">
+					<router-link :to="{ name: 'ShiftRequestFormView' }" v-slot="{ navigate }">
+						<Button @click="navigate" variant="solid" class="w-full py-5 text-base">
+							Request a Shift
+						</Button>
+					</router-link>
+				</div>
+				<div>
+					<div class="text-lg text-gray-800 font-bold">Recent Shift Requests</div>
+					<RequestList
+						:component="markRaw(ShiftRequestItem)"
+						:items="shiftRequests?.data?.slice(0, 5)"
+						:addListButton="true"
+						listButtonRoute="ShiftRequestListView"
 					/>
 				</div>
 			</div>
@@ -54,7 +61,13 @@ import ShiftAssignmentItem from "@/components/ShiftAssignmentItem.vue"
 import RequestList from "@/components/RequestList.vue"
 import AttendanceCalendar from "@/components/AttendanceCalendar.vue"
 
-import { getDates, getTotalDays, getShiftDates, getTotalShiftDays, getShiftTiming } from "@/data/attendance"
+import {
+	getDates,
+	getTotalDays,
+	getShiftDates,
+	getTotalShiftDays,
+	getShiftTiming,
+} from "@/data/attendance"
 
 const employee = inject("$employee")
 const dayjs = inject("$dayjs")
