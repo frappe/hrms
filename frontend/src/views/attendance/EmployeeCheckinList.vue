@@ -15,13 +15,12 @@ import ListView from "@/components/ListView.vue"
 
 const EMPLOYEE_CHECKIN_FIELDS = ["name", "log_type", "time", "latitude", "longitude"]
 
-const LOG_TYPE_FILTER_OPTIONS = ["", "IN", "OUT"]
 const FILTER_CONFIG = [
 	{
 		fieldname: "log_type",
 		fieldtype: "Select",
 		label: "Log Type",
-		options: LOG_TYPE_FILTER_OPTIONS,
+		options: "IN\nOUT",
 	},
 	{
 		fieldname: "shift",
