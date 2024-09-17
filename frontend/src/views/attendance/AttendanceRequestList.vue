@@ -3,7 +3,6 @@
 		<ListView
 			doctype="Attendance Request"
 			pageTitle="Attendance Request History"
-			:tabButtons="TAB_BUTTONS"
 			:fields="ATTENDANCE_REQUEST_FIELDS"
 			:filterConfig="FILTER_CONFIG"
 		/>
@@ -14,29 +13,8 @@
 import { IonPage } from "@ionic/vue"
 import ListView from "@/components/ListView.vue"
 
-const TAB_BUTTONS = ["My Requests", "Team Requests"]
-const ATTENDANCE_REQUEST_FIELDS = [
-	"name",
-	"employee",
-	"employee_name",
-	"reason",
-	"from_date",
-	"to_date",
-	"docstatus",
-]
+const ATTENDANCE_REQUEST_FIELDS = ["name", "reason", "from_date", "to_date", "docstatus"]
 const FILTER_CONFIG = [
-	{
-		fieldname: "employee",
-		fieldtype: "Link",
-		label: "Employee",
-		options: "Employee",
-	},
-	{
-		fieldname: "department",
-		fieldtype: "Link",
-		label: "Department",
-		options: "Department",
-	},
 	{
 		fieldname: "shift",
 		fieldtype: "Link",
@@ -47,4 +25,3 @@ const FILTER_CONFIG = [
 	{ fieldname: "to_date", fieldtype: "Date", label: "To Date" },
 ]
 </script>
-
