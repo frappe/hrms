@@ -236,6 +236,7 @@ def get_leave_applications(
 		"leave_balance",
 		"leave_approver",
 		"posting_date",
+		"creation",
 	]
 
 	if workflow_state_field := get_workflow_state_field("Leave Application"):
@@ -416,6 +417,7 @@ def get_expense_claims(
 		"`tabExpense Claim`.total_claimed_amount",
 		"`tabExpense Claim`.posting_date",
 		"`tabExpense Claim`.company",
+		"`tabExpense Claim`.creation",
 		"`tabExpense Claim Detail`.expense_type",
 		"count(`tabExpense Claim Detail`.expense_type) as total_expenses",
 	]

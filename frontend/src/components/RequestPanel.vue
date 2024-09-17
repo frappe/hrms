@@ -19,32 +19,42 @@ import { ref, inject, onMounted, computed, markRaw } from "vue"
 import TabButtons from "@/components/TabButtons.vue"
 import RequestList from "@/components/RequestList.vue"
 
-import { myLeaves, teamLeaves } from "@/data/leaves"
+import { myAttendanceRequests, myShiftRequests } from "@/data/attendance"
 import { myClaims, teamClaims } from "@/data/claims"
+import { myLeaves, teamLeaves } from "@/data/leaves"
 
-import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
+import AttendanceRequestItem from "@/components/AttendanceRequestItem.vue"
 import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
+import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
+import ShiftRequestItem from "@/components/ShiftRequestItem.vue"
 
 import { useListUpdate } from "@/composables/realtime"
 
 const activeTab = ref("My Requests")
 const socket = inject("$socket")
 
-const myRequests = computed(() => updateRequestDetails(myLeaves, myClaims))
-
-const teamRequests = computed(() =>
-	updateRequestDetails(teamLeaves, teamClaims)
+const myRequests = computed(() =>
+	updateRequestDetails(myLeaves, myClaims, myAttendanceRequests, myShiftRequests)
 )
 
-function updateRequestDetails(leaves, claims) {
-	const requests = [...(leaves.data || []), ...(claims.data || [])]
+const teamRequests = computed(() => updateRequestDetails(teamLeaves, teamClaims))
+
+function updateRequestDetails(leaves, claims, attendanceRequests, shiftRequests) {
+	const requests = [leaves, claims, attendanceRequests, shiftRequests].reduce(
+		(acc, resource) => acc.concat(resource.data || []),
+		[]
+	)
+
+	const componentMap = {
+		"Leave Application": LeaveRequestItem,
+		"Expense Claim": ExpenseClaimItem,
+		"Attendance Request": AttendanceRequestItem,
+		"Shift Request": ShiftRequestItem,
+	}
 	requests.forEach((request) => {
-		if (request.doctype === "Leave Application") {
-			request.component = markRaw(LeaveRequestItem)
-		} else if (request.doctype === "Expense Claim") {
-			request.component = markRaw(ExpenseClaimItem)
-		}
+		request.component = markRaw(componentMap[request.doctype])
 	})
+
 	return getSortedRequests(requests)
 }
 
@@ -52,7 +62,7 @@ function getSortedRequests(list) {
 	// return top 10 requests sorted by posting date
 	return list
 		.sort((a, b) => {
-			return new Date(b.posting_date) - new Date(a.posting_date)
+			return new Date(b.creation) - new Date(a.creation)
 		})
 		.splice(0, 10)
 }
