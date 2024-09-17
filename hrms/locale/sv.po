@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-15 09:34+0000\n"
-"PO-Revision-Date: 2024-09-15 15:25\n"
+"PO-Revision-Date: 2024-09-16 15:59\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -6558,7 +6558,7 @@ msgstr "Motivation"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:63
 msgid "Include Company Descendants"
-msgstr ""
+msgstr "Inkludera Dotterbolag"
 
 #. Label of the include_holidays (Check) field in DocType 'Attendance Request'
 #: hr/doctype/attendance_request/attendance_request.json
