@@ -17,6 +17,8 @@ import ListView from "@/components/ListView.vue"
 const TAB_BUTTONS = ["My Requests", "Team Requests"]
 const SHIFT_REQUEST_FIELDS = [
 	"name",
+	"employee",
+	"employee_name",
 	"shift_type",
 	"from_date",
 	"to_date",

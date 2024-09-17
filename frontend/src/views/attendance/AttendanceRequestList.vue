@@ -17,6 +17,8 @@ import ListView from "@/components/ListView.vue"
 const TAB_BUTTONS = ["My Requests", "Team Requests"]
 const ATTENDANCE_REQUEST_FIELDS = [
 	"name",
+	"employee",
+	"employee_name",
 	"reason",
 	"from_date",
 	"to_date",
