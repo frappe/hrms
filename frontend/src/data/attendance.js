@@ -1,3 +1,6 @@
+import { createListResource } from "frappe-ui"
+import { employeeResource } from "./employee"
+
 import dayjs from "@/utils/dayjs"
 
 export const getDates = (shift) => {
@@ -33,3 +36,52 @@ export const getShiftTiming = (shift) => {
 		shift.end_time.split(":").splice(0, 2).join(":")
 	)
 }
+
+export const myAttendanceRequests = createListResource({
+	doctype: "Attendance Request",
+	fields: [
+		"name",
+		"reason",
+		"from_date",
+		"to_date",
+		"include_holidays",
+		"shift",
+		"docstatus",
+		"creation",
+	],
+	filters: {
+		employee: employeeResource.data?.name,
+		docstatus: ["!=", 2],
+	},
+	orderBy: "modified desc",
+	auto: true,
+	cache: "hrms:attendance_requests",
+	transform: (data) => {
+		return data.map((request) => {
+			request.doctype = "Attendance Request"
+			request.attendance_dates = getDates(request)
+			request.total_attendance_days = getTotalDays(request)
+			return request
+		})
+	},
+})
+
+export const myShiftRequests = createListResource({
+	doctype: "Shift Request",
+	fields: ["name", "shift_type", "from_date", "to_date", "status", "docstatus", "creation"],
+	filters: {
+		employee: employeeResource.data?.name,
+		docstatus: ["!=", 2],
+	},
+	orderBy: "modified desc",
+	auto: true,
+	cache: "hrms:shift_requests",
+	transform: (data) => {
+		return data.map((request) => {
+			request.doctype = "Shift Request"
+			request.shift_dates = getDates(request)
+			request.total_shift_days = getTotalDays(request)
+			return request
+		})
+	},
+})
