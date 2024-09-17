@@ -49,8 +49,10 @@
 			ref="scrollContainer"
 			@scroll="() => handleScroll()"
 		>
-			<div class="w-full mt-5">
+			<div class="w-full">
 				<TabButtons
+					v-if="props.tabButtons"
+					class="mt-5"
 					:buttons="[{ label: tabButtons[0] }, { label: tabButtons[1] }]"
 					v-model="activeTab"
 				/>
@@ -176,7 +178,7 @@ const props = defineProps({
 	},
 	tabButtons: {
 		type: Array,
-		required: true,
+		required: false,
 	},
 	pageTitle: {
 		type: String,
@@ -199,7 +201,7 @@ const dayjs = inject("$dayjs")
 const socket = inject("$socket")
 const employee = inject("$employee")
 const filterMap = reactive({})
-const activeTab = ref(props.tabButtons[0])
+const activeTab = ref(props.tabButtons ? props.tabButtons[0] : undefined)
 const areFiltersApplied = ref(false)
 const appliedFilters = ref([])
 const workflowStateField = ref(null)
@@ -219,7 +221,7 @@ const listOptions = ref({
 
 // computed properties
 const isTeamRequest = computed(() => {
-	return activeTab.value === props.tabButtons[1]
+	return props.tabButtons && activeTab.value === props.tabButtons[1]
 })
 
 const formViewRoute = computed(() => {
