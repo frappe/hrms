@@ -14,12 +14,19 @@
 				<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
 			</div>
 		</div>
+		<div v-if="props.isTeamRequest" class="flex flex-row items-center gap-2 pl-8">
+			<EmployeeAvatar :employeeID="props.doc.employee" />
+			<div class="text-sm text-gray-600 grow">
+				{{ props.doc.employee_name }}
+			</div>
+		</div>
 	</div>
 </template>
 
 <script setup>
 import { FeatherIcon } from "frappe-ui"
 
+import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 import { formatTimestamp } from "@/utils/formatters"
 
 const props = defineProps({

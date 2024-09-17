@@ -15,7 +15,15 @@ import { IonPage } from "@ionic/vue"
 import ListView from "@/components/ListView.vue"
 
 const TAB_BUTTONS = ["My Shifts", "Team Shifts"]
-const SHIFT_ASSIGNMENT_FIELDS = ["name", "shift_type", "start_date", "end_date", "docstatus"]
+const SHIFT_ASSIGNMENT_FIELDS = [
+	"name",
+	"employee",
+	"employee_name",
+	"shift_type",
+	"start_date",
+	"end_date",
+	"docstatus",
+]
 const FILTER_CONFIG = [
 	{
 		fieldname: "shift_type",
