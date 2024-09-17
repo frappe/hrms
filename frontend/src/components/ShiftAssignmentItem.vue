@@ -46,7 +46,7 @@ const status = computed(() => {
 })
 
 const colorMap = {
-	Submitted: "blue",
 	Draft: "gray",
+	Submitted: "blue",
 }
 </script>

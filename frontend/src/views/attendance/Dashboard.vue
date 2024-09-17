@@ -14,7 +14,7 @@
 					<div class="text-lg text-gray-800 font-bold">Recent Attendance Requests</div>
 					<RequestList
 						:component="markRaw(AttendanceRequestItem)"
-						:items="attendanceRequests?.data?.slice(0, 5)"
+						:items="myAttendanceRequests?.data?.slice(0, 5)"
 						:addListButton="true"
 						listButtonRoute="AttendanceRequestListView"
 					/>
@@ -40,7 +40,7 @@
 					<div class="text-lg text-gray-800 font-bold">Recent Shift Requests</div>
 					<RequestList
 						:component="markRaw(ShiftRequestItem)"
-						:items="shiftRequests?.data?.slice(0, 5)"
+						:items="myShiftRequests?.data?.slice(0, 5)"
 						:addListButton="true"
 						listButtonRoute="ShiftRequestListView"
 					/>
@@ -52,7 +52,7 @@
 
 <script setup>
 import { computed, inject, markRaw } from "vue"
-import { createListResource, createResource } from "frappe-ui"
+import { createResource } from "frappe-ui"
 
 import BaseLayout from "@/components/BaseLayout.vue"
 import AttendanceRequestItem from "@/components/AttendanceRequestItem.vue"
@@ -62,55 +62,15 @@ import RequestList from "@/components/RequestList.vue"
 import AttendanceCalendar from "@/components/AttendanceCalendar.vue"
 
 import {
-	getDates,
-	getTotalDays,
 	getShiftDates,
 	getTotalShiftDays,
 	getShiftTiming,
+	myAttendanceRequests,
+	myShiftRequests,
 } from "@/data/attendance"
 
 const employee = inject("$employee")
 const dayjs = inject("$dayjs")
-
-const attendanceRequests = createListResource({
-	doctype: "Attendance Request",
-	fields: ["name", "reason", "from_date", "to_date", "include_holidays", "shift", "docstatus"],
-	filters: {
-		employee: employee.data?.name,
-		docstatus: ["!=", 2],
-	},
-	orderBy: "modified desc",
-	auto: true,
-	cache: "hrms:attendance_requests",
-	transform: (data) => {
-		return data.map((request) => {
-			request.doctype = "Attendance Request"
-			request.attendance_dates = getDates(request)
-			request.total_attendance_days = getTotalDays(request)
-			return request
-		})
-	},
-})
-
-const shiftRequests = createListResource({
-	doctype: "Shift Request",
-	fields: ["name", "shift_type", "from_date", "to_date", "status", "docstatus"],
-	filters: {
-		employee: employee.data?.name,
-		docstatus: ["!=", 2],
-	},
-	orderBy: "modified desc",
-	auto: true,
-	cache: "hrms:shift_requests",
-	transform: (data) => {
-		return data.map((request) => {
-			request.doctype = "Shift Request"
-			request.shift_dates = getDates(request)
-			request.total_shift_days = getTotalDays(request)
-			return request
-		})
-	},
-})
 
 const shifts = createResource({
 	url: "hrms.api.get_shifts",

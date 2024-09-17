@@ -37,10 +37,6 @@ const props = defineProps({
 	doc: {
 		type: Object,
 	},
-	isTeamRequest: {
-		type: Boolean,
-		default: false,
-	},
 	workflowStateField: {
 		type: String,
 		required: false,
