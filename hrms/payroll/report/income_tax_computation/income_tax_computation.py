@@ -442,7 +442,7 @@ class IncomeTaxComputationReport:
 			salary_slip = frappe.new_doc("Salary Slip")
 			salary_slip.employee = emp
 			salary_slip.salary_structure = emp_details.salary_structure
-			salary_slip.start_date = self.payroll_period_start_date
+			salary_slip.start_date = max(self.payroll_period_start_date, emp_details.date_of_joining)
 			salary_slip.payroll_frequency = frappe.db.get_value(
 				"Salary Structure", emp_details.salary_structure, "payroll_frequency"
 			)
