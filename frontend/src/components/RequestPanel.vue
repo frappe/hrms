@@ -19,7 +19,7 @@ import { ref, inject, onMounted, computed, markRaw } from "vue"
 import TabButtons from "@/components/TabButtons.vue"
 import RequestList from "@/components/RequestList.vue"
 
-import { myAttendanceRequests, myShiftRequests } from "@/data/attendance"
+import { myAttendanceRequests, myShiftRequests, teamShiftRequests } from "@/data/attendance"
 import { myClaims, teamClaims } from "@/data/claims"
 import { myLeaves, teamLeaves } from "@/data/leaves"
 
@@ -34,22 +34,24 @@ const activeTab = ref("My Requests")
 const socket = inject("$socket")
 
 const myRequests = computed(() =>
-	updateRequestDetails(myLeaves, myClaims, myAttendanceRequests, myShiftRequests)
+	updateRequestDetails(myLeaves, myClaims, myShiftRequests, myAttendanceRequests)
 )
 
-const teamRequests = computed(() => updateRequestDetails(teamLeaves, teamClaims))
+const teamRequests = computed(() =>
+	updateRequestDetails(teamLeaves, teamClaims, teamShiftRequests)
+)
 
-function updateRequestDetails(leaves, claims, attendanceRequests, shiftRequests) {
-	const requests = [leaves, claims, attendanceRequests, shiftRequests].reduce(
-		(acc, resource) => acc.concat(resource.data || []),
+function updateRequestDetails(leaves, claims, shiftRequests, attendanceRequests) {
+	const requests = [leaves, claims, shiftRequests, attendanceRequests].reduce(
+		(acc, resource) => acc.concat(resource?.data || []),
 		[]
 	)
 
 	const componentMap = {
 		"Leave Application": LeaveRequestItem,
 		"Expense Claim": ExpenseClaimItem,
-		"Attendance Request": AttendanceRequestItem,
 		"Shift Request": ShiftRequestItem,
+		"Attendance Request": AttendanceRequestItem,
 	}
 	requests.forEach((request) => {
 		request.component = markRaw(componentMap[request.doctype])
