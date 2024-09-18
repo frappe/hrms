@@ -2,7 +2,7 @@
 	<div class="flex flex-col w-full justify-center gap-2.5">
 		<div class="flex flex-row items-center justify-between">
 			<div class="flex flex-row items-start gap-3 grow">
-				<FeatherIcon name="clock" class="h-5 w-5 text-gray-500" />
+				<ShiftIcon class="h-5 w-5 text-gray-500" />
 				<div class="flex flex-col items-start gap-1.5">
 					<div class="text-base font-normal text-gray-800">
 						{{ props.doc.shift_type }}
@@ -37,6 +37,7 @@ import { computed } from "vue"
 import { Badge, FeatherIcon } from "frappe-ui"
 
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
+import ShiftIcon from "@/components/icons/ShiftIcon.vue"
 import { getDates, getTotalDays } from "@/data/attendance"
 
 const props = defineProps({
