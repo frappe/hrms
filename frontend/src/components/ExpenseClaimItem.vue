@@ -1,50 +1,38 @@
 <template>
-	<div class="flex flex-col w-full justify-center gap-2.5">
-		<div class="flex flex-row items-center justify-between">
-			<div class="flex flex-row items-start gap-3 grow">
-				<ExpenseIcon class="h-5 w-5 text-gray-500" />
-				<div class="flex flex-col items-start gap-1.5">
-					<div class="text-base font-normal text-gray-800">
-						{{ claimTitle }}
-					</div>
-					<div class="text-xs font-normal text-gray-500">
-						<span>
-							{{ formatCurrency(props.doc.total_claimed_amount, currency) }}
-						</span>
-						<span class="whitespace-pre"> &middot; </span>
-						<span class="whitespace-nowrap">
-							{{ claimDates }}
-						</span>
-					</div>
+	<ListItem
+		:isTeamRequest="props.isTeamRequest"
+		:employee="props.doc.employee"
+		:employeeName="props.doc.employee_name"
+	>
+		<template #left>
+			<ExpenseIcon class="h-5 w-5 text-gray-500" />
+			<div class="flex flex-col items-start gap-1.5">
+				<div class="text-base font-normal text-gray-800">
+					{{ claimTitle }}
+				</div>
+				<div class="text-xs font-normal text-gray-500">
+					<span>
+						{{ formatCurrency(props.doc.total_claimed_amount, currency) }}
+					</span>
+					<span class="whitespace-pre"> &middot; </span>
+					<span class="whitespace-nowrap">
+						{{ claimDates }}
+					</span>
 				</div>
 			</div>
-			<div class="flex flex-row justify-end items-center gap-2">
-				<Badge
-					variant="outline"
-					:theme="statusMap[status]"
-					:label="status"
-					size="md"
-				/>
-				<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
-			</div>
-		</div>
-		<div
-			v-if="props.isTeamRequest"
-			class="flex flex-row items-center gap-2 pl-8"
-		>
-			<EmployeeAvatar :employeeID="props.doc.employee" />
-			<div class="text-sm text-gray-600 grow">
-				{{ props.doc.employee_name }}
-			</div>
-		</div>
-	</div>
+		</template>
+		<template #right>
+			<Badge variant="outline" :theme="statusMap[status]" :label="status" size="md" />
+			<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
+		</template>
+	</ListItem>
 </template>
 
 <script setup>
 import { FeatherIcon, Badge } from "frappe-ui"
 import { computed, inject } from "vue"
 
-import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
+import ListItem from "@/components/ListItem.vue"
 import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
 
 import { getCompanyCurrency } from "@/data/currencies"
@@ -107,17 +95,15 @@ const claimDates = computed(() => {
 	if (props.doc.from_date === props.doc.to_date) {
 		return dayjs(props.doc.from_date).format("D MMM")
 	} else {
-		return `${dayjs(props.doc.from_date).format("D MMM")} - ${dayjs(
-			props.doc.to_date
-		).format("D MMM")}`
+		return `${dayjs(props.doc.from_date).format("D MMM")} - ${dayjs(props.doc.to_date).format(
+			"D MMM"
+		)}`
 	}
 })
 
 const currency = computed(() => getCompanyCurrency(props.doc.company))
 
 const approvalStatus = computed(() => {
-	return props.doc.approval_status === "Draft"
-		? "Pending"
-		: props.doc.approval_status
+	return props.doc.approval_status === "Draft" ? "Pending" : props.doc.approval_status
 })
 </script>

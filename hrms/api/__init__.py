@@ -210,7 +210,7 @@ def get_filters(
 			filters[workflow.workflow_state_field] = ("in", allowed_states)
 		else:
 			approver_field_map = {
-				"Shift Request": "shift_request_approver",
+				"Shift Request": "approver",
 				"Leave Application": "leave_approver",
 				"Expense Claim": "expense_approver",
 			}
