@@ -157,6 +157,73 @@ def get_holidays_for_calendar(employee: str, from_date: str, to_date: str) -> li
 
 
 @frappe.whitelist()
+def get_shift_requests(
+	employee: str,
+	approver_id: str | None = None,
+	for_approval: bool = False,
+	limit: int | None = None,
+) -> list[dict]:
+	filters = get_filters("Shift Request", employee, approver_id, for_approval)
+	fields = [
+		"name",
+		"employee",
+		"employee_name",
+		"shift_type",
+		"from_date",
+		"to_date",
+		"status",
+		"approver" "docstatus",
+		"creation",
+	]
+
+	if workflow_state_field := get_workflow_state_field("Shift Request"):
+		fields.append(workflow_state_field)
+
+	shift_requests = frappe.get_list(
+		"Shift Request",
+		fields=fields,
+		filters=filters,
+		order_by="creation desc",
+		limit=limit,
+	)
+
+	if workflow_state_field:
+		for application in shift_requests:
+			application["workflow_state_field"] = workflow_state_field
+
+	return shift_requests
+
+
+def get_filters(
+	doctype: str,
+	employee: str,
+	approver_id: str | None = None,
+	for_approval: bool = False,
+) -> dict:
+	filters = frappe._dict()
+	if for_approval:
+		filters.docstatus = 0
+		filters.employee = ("!=", employee)
+
+		if workflow := get_workflow(doctype):
+			allowed_states = get_allowed_states_for_workflow(workflow, approver_id)
+			filters[workflow.workflow_state_field] = ("in", allowed_states)
+		else:
+			approver_field_map = {
+				"Shift Request": "shift_request_approver",
+				"Leave Application": "leave_approver",
+				"Expense Claim": "expense_approver",
+			}
+			filters.status = "Open" if doctype == "Leave Application" else "Draft"
+			filters[approver_field_map[doctype]] = approver_id
+	else:
+		filters.docstatus = ("!=", 2)
+		filters.employee = employee
+
+	return filters
+
+
+@frappe.whitelist()
 def get_shift_request_approvers(employee: str) -> str | list[str]:
 	shift_request_approver, department = frappe.get_cached_value(
 		"Employee",
@@ -219,7 +286,7 @@ def get_leave_applications(
 	for_approval: bool = False,
 	limit: int | None = None,
 ) -> list[dict]:
-	filters = get_leave_application_filters(employee, approver_id, for_approval)
+	filters = get_filters("Leave Application", employee, approver_id, for_approval)
 	fields = [
 		"name",
 		"posting_date",
@@ -255,29 +322,6 @@ def get_leave_applications(
 			application["workflow_state_field"] = workflow_state_field
 
 	return applications
-
-
-def get_leave_application_filters(
-	employee: str,
-	approver_id: str | None = None,
-	for_approval: bool = False,
-) -> dict:
-	filters = frappe._dict()
-	if for_approval:
-		filters.docstatus = 0
-		filters.employee = ("!=", employee)
-
-		if workflow := get_workflow("Leave Application"):
-			allowed_states = get_allowed_states_for_workflow(workflow, approver_id)
-			filters[workflow.workflow_state_field] = ("in", allowed_states)
-		else:
-			filters.status = "Open"
-			filters.leave_approver = approver_id
-	else:
-		filters.docstatus = ("!=", 2)
-		filters.employee = employee
-
-	return filters
 
 
 @frappe.whitelist()
@@ -405,7 +449,7 @@ def get_expense_claims(
 	for_approval: bool = False,
 	limit: int | None = None,
 ) -> list[dict]:
-	filters = get_expense_claim_filters(employee, approver_id, for_approval)
+	filters = get_filters("Expense Claim", employee, approver_id, for_approval)
 	fields = [
 		"`tabExpense Claim`.name",
 		"`tabExpense Claim`.posting_date",
@@ -439,30 +483,6 @@ def get_expense_claims(
 			claim["workflow_state_field"] = workflow_state_field
 
 	return claims
-
-
-def get_expense_claim_filters(
-	employee: str,
-	approver_id: str | None = None,
-	for_approval: bool = False,
-) -> dict:
-	filters = frappe._dict()
-
-	if for_approval:
-		filters.docstatus = 0
-		filters.employee = ("!=", employee)
-
-		if workflow := get_workflow("Expense Claim"):
-			allowed_states = get_allowed_states_for_workflow(workflow, approver_id)
-			filters[workflow.workflow_state_field] = ("in", allowed_states)
-		else:
-			filters.status = "Draft"
-			filters.expense_approver = approver_id
-	else:
-		filters.docstatus = ("!=", 2)
-		filters.employee = employee
-
-	return filters
 
 
 @frappe.whitelist()
