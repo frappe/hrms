@@ -59,10 +59,16 @@ frappe.query_reports["Monthly Attendance Sheet"] = {
 			options: ["", "Branch", "Grade", "Department", "Designation"],
 		},
 		{
+			fieldname: "include_company_descendants",
+			label: __("Include Company Descendants"),
+			fieldtype: "Check",
+			default: 1,
+		},
+		{
 			fieldname: "summarized_view",
 			label: __("Summarized View"),
 			fieldtype: "Check",
-			Default: 0,
+			default: 0,
 		},
 	],
 	onload: function () {
