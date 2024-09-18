@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-15 09:34+0000\n"
-"PO-Revision-Date: 2024-09-17 16:17\n"
+"PO-Revision-Date: 2024-09-18 16:30\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -6523,7 +6523,7 @@ msgstr "Zamanında"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:122
 msgid "In case of any error during this background process, the system will add a comment about the error on this Payroll Entry and revert to the Submitted status"
-msgstr ""
+msgstr "Bu arka plan işlemi sırasında herhangi bir hata olması durumunda, sistem bu Bordro Girişine hata hakkında bir yorum ekleyecek ve Gönderildi durumuna geri dönecektir."
 
 #. Option for the 'Status' (Select) field in DocType 'Shift Assignment'
 #. Option for the 'Status' (Select) field in DocType 'Shift Assignment
@@ -8788,7 +8788,7 @@ msgstr "İsteğe Bağlı İzinler, Çalışanların şirket tarafından yayınla
 #. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
 #: hr/doctype/shift_type/shift_type.json
 msgid "Orange"
-msgstr "Portakal"
+msgstr "Turuncu"
 
 #: hr/page/organizational_chart/organizational_chart.js:4
 msgid "Organizational Chart"
@@ -11020,7 +11020,7 @@ msgstr "Gönderen E-postası"
 
 #: hr/doctype/exit_interview/exit_interview.py:136
 msgid "Sending Failed due to missing email information for employee(s): {1}"
-msgstr ""
+msgstr "Personeller için eksik e-posta bilgileri nedeniyle Gönderim Başarısız Oldu: {1}"
 
 #. Option for the 'Status' (Select) field in DocType 'Daily Work Summary'
 #: hr/doctype/daily_work_summary/daily_work_summary.json
@@ -12090,7 +12090,7 @@ msgstr "Bu çalışanın zaten aynı zaman damgasına sahip bir günlüğü var.
 
 #: payroll/doctype/salary_slip/salary_slip.py:1211
 msgid "This error can be due to invalid formula or condition."
-msgstr ""
+msgstr "Bu hata geçersiz formül veya koşuldan kaynaklanıyor olabilir."
 
 #: payroll/doctype/salary_slip/salary_slip.py:1204
 msgid "This error can be due to invalid syntax."
@@ -12098,7 +12098,7 @@ msgstr "Bu hata geçersiz söz diziminden kaynaklanıyor olabilir."
 
 #: payroll/doctype/salary_slip/salary_slip.py:1197
 msgid "This error can be due to missing or deleted field."
-msgstr ""
+msgstr "Bu hata eksik veya silinmiş bir alandan kaynaklanıyor olabilir."
 
 #: hr/doctype/leave_type/leave_type.js:16
 msgid "This field allows you to set the maximum number of consecutive leaves an Employee can apply for."
