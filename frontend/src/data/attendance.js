@@ -1,4 +1,4 @@
-import { createListResource } from "frappe-ui"
+import { createListResource, createResource } from "frappe-ui"
 import { employeeResource } from "./employee"
 
 import dayjs from "@/utils/dayjs"
@@ -37,6 +37,14 @@ export const getShiftTiming = (shift) => {
 	)
 }
 
+const transformShiftRequests = (data) =>
+	data.map((request) => {
+		request.doctype = "Shift Request"
+		request.shift_dates = getDates(request)
+		request.total_shift_days = getTotalDays(request)
+		return request
+	})
+
 export const myAttendanceRequests = createListResource({
 	doctype: "Attendance Request",
 	fields: [
@@ -53,7 +61,8 @@ export const myAttendanceRequests = createListResource({
 		employee: employeeResource.data?.name,
 		docstatus: ["!=", 2],
 	},
-	orderBy: "modified desc",
+	pageLength: 10,
+	orderBy: "creation desc",
 	auto: true,
 	cache: "hrms:attendance_requests",
 	transform: (data) => {
@@ -66,22 +75,30 @@ export const myAttendanceRequests = createListResource({
 	},
 })
 
-export const myShiftRequests = createListResource({
-	doctype: "Shift Request",
-	fields: ["name", "shift_type", "from_date", "to_date", "status", "docstatus", "creation"],
-	filters: {
-		employee: employeeResource.data?.name,
-		docstatus: ["!=", 2],
+export const myShiftRequests = createResource({
+	url: "hrms.api.get_shift_requests",
+	params: {
+		employee: employeeResource.data.name,
+		limit: 10,
 	},
-	orderBy: "modified desc",
 	auto: true,
-	cache: "hrms:shift_requests",
-	transform: (data) => {
-		return data.map((request) => {
-			request.doctype = "Shift Request"
-			request.shift_dates = getDates(request)
-			request.total_shift_days = getTotalDays(request)
-			return request
-		})
+	cache: "hrms:my_shift_requests",
+	transform(data) {
+		return transformShiftRequests(data)
+	},
+})
+
+export const teamShiftRequests = createResource({
+	url: "hrms.api.get_shift_requests",
+	params: {
+		employee: employeeResource.data.name,
+		approver_id: employeeResource.data.user_id,
+		for_approval: 1,
+		limit: 10,
+	},
+	auto: true,
+	cache: "hrms:team_shift_requests",
+	transform(data) {
+		return transformShiftRequests(data)
 	},
 })
