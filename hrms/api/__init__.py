@@ -172,7 +172,8 @@ def get_shift_requests(
 		"from_date",
 		"to_date",
 		"status",
-		"approver" "docstatus",
+		"approver",
+		"docstatus",
 		"creation",
 	]
 
