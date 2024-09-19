@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-15 09:34+0000\n"
-"PO-Revision-Date: 2024-09-18 16:30\n"
+"PO-Revision-Date: 2024-09-19 16:50\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -4235,7 +4235,7 @@ msgstr "Personel Döngüsü"
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Employee Lifecycle Dashboard"
-msgstr ""
+msgstr "Personel Döngüsü Panosu"
 
 #. Label of the employee_name (Data) field in DocType 'Appraisal'
 #. Label of the employee_name (Data) field in DocType 'Appraisee'
@@ -4454,7 +4454,7 @@ msgstr "Personel Detayları"
 #: hr/doctype/employee_separation/employee_separation.json
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Employee Separation"
-msgstr "Çalışan Ayrılığı"
+msgstr "Personel Ayrılığı"
 
 #. Label of the employee_separation_template (Link) field in DocType 'Employee
 #. Separation'
@@ -4619,7 +4619,7 @@ msgstr "Personel {0}, {1} tarihinde izinli"
 
 #: hr/doctype/training_feedback/training_feedback.py:25
 msgid "Employee {0} not found in Training Event Participants."
-msgstr "{0} isimli Personel Eğitim Etkinliği Katılımcılarında bulunamadı."
+msgstr "{0} isimli Personel Eğitim Katılımcılarında bulunamadı."
 
 #: hr/doctype/attendance/attendance.py:181
 msgid "Employee {0} on Half day on {1}"
@@ -4867,7 +4867,7 @@ msgstr "Bazı satırlarda hata var"
 
 #: payroll/doctype/salary_slip/salary_slip.py:2254
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
-msgstr ""
+msgstr "{row_id}satırında {doctype} {doclink} değerlendirilirken hata oluştu. <br><br> <b>Hata:</b> {error} <br><br> <b>İpucu:</b> {description}"
 
 #. Label of the estimated_cost_per_position (Currency) field in DocType
 #. 'Staffing Plan Detail'
@@ -4886,7 +4886,7 @@ msgstr "Değerlendirme Tarihi"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:25
 msgid "Evaluation Method cannot be changed as there are existing appraisals created for this cycle"
-msgstr ""
+msgstr "Değerlendirme Yöntemi değiştirilemez çünkü bu döngü için oluşturulmuş mevcut değerlendirmeler vardır"
 
 #. Label of the event_details (Section Break) field in DocType 'Travel Request'
 #: hr/doctype/travel_request/travel_request.json
@@ -5241,7 +5241,7 @@ msgstr "Harcamalar"
 #. Claim'
 #: hr/doctype/expense_claim/expense_claim.json
 msgid "Expenses & Advances"
-msgstr ""
+msgstr "Harcamalar & Avanslar"
 
 #: hr/doctype/leave_allocation/leave_allocation.js:38
 msgid "Expire Allocation"
@@ -5316,7 +5316,7 @@ msgstr "İş Başvurusu Durumu güncellenemedi"
 
 #: public/js/utils/index.js:143
 msgid "Failed to {0} {1} for employees:"
-msgstr ""
+msgstr "Personeller için {0} {1} başarısız oldu:"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:1460
 #: public/js/utils/index.js:149
@@ -5881,7 +5881,7 @@ msgstr ""
 
 #: hr/doctype/goal/goal.py:81
 msgid "Goal progress percentage cannot be more than 100."
-msgstr ""
+msgstr "Hedef ilerleme yüzdesi 100'den fazla olamaz."
 
 #: hr/doctype/goal/goal.py:71
 msgid "Goal should be aligned with the same KRA as its parent goal."
@@ -8834,7 +8834,7 @@ msgstr "Çıkış Süresi"
 #. Description of the 'Total Goal Score' (Float) field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
 msgid "Out of 5"
-msgstr ""
+msgstr "5 Üzerinden"
 
 #. Label of a chart in the Payroll Workspace
 #: payroll/workspace/payroll/payroll.json
@@ -9262,7 +9262,7 @@ msgstr ""
 
 #: hr/report/employee_exits/employee_exits.py:221
 msgid "Pending Interviews"
-msgstr ""
+msgstr "Bekleyen Mülakatlar"
 
 #: hr/report/employee_exits/employee_exits.py:233
 msgid "Pending Questionnaires"
@@ -9311,7 +9311,7 @@ msgstr "Planlanan Pozisyon Sayısı"
 
 #: hr/doctype/shift_type/shift_type.js:27
 msgid "Please Enable Auto Attendance and complete the setup first."
-msgstr ""
+msgstr "Lütfen önce Otomatik Devamlılığı etkinleştirin ve kurulumu tamamlayın."
 
 #: payroll/doctype/retention_bonus/retention_bonus.js:8
 msgid "Please Select Company First"
@@ -9335,7 +9335,7 @@ msgstr "Lütfen eğitiminizi tamamladığınızda onaylayın"
 
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.py:100
 msgid "Please create a new {0} for the date {1} first."
-msgstr ""
+msgstr "Lütfen öncelikle {1} tarihi için yeni bir {0} oluşturun."
 
 #: hr/doctype/employee_transfer/employee_transfer.py:55
 msgid "Please delete the Employee {0} to cancel this document"
@@ -9351,7 +9351,7 @@ msgstr "Lütfen belirti giriniz"
 
 #: payroll/doctype/salary_slip/salary_slip.py:1851
 msgid "Please see attachment"
-msgstr ""
+msgstr "Lütfen dosya ekini inceleyin"
 
 #: hr/doctype/staffing_plan/staffing_plan.py:224
 msgid "Please select Company and Designation"
@@ -9368,7 +9368,7 @@ msgstr "Lütfen önce çalıştır seçin."
 
 #: payroll/doctype/salary_withholding/salary_withholding.js:25
 msgid "Please select From Date and Payroll Frequency first"
-msgstr ""
+msgstr "Lütfen önce Başlangıç Tarihi ve Bordro Sıklığını seçin"
 
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:113
 msgid "Please select From Date."
@@ -9722,7 +9722,7 @@ msgstr "Proje"
 #: hr/report/project_profitability/project_profitability.json
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Project Profitability"
-msgstr ""
+msgstr "Proje Karlılığı"
 
 #. Label of a Card Break in the Performance Workspace
 #: hr/workspace/performance/performance.json
@@ -10150,7 +10150,7 @@ msgstr "Maaştan Geri Ödeme beklemek krediler için kullanmak"
 #. 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
 msgid "Repay Unclaimed Amount from Salary"
-msgstr ""
+msgstr "Maaştan Talep Edilmemiş Tutarı Geri Öde"
 
 #. Label of the repeat_on_days (Table) field in DocType 'Shift Assignment
 #. Schedule'
@@ -12683,7 +12683,7 @@ msgstr "Eğitim Tarihi"
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 #: templates/emails/training_event.html:1
 msgid "Training Event"
-msgstr "Eğitim Etkinliği"
+msgstr "Eğitim"
 
 #. Name of a DocType
 #: hr/doctype/training_event_employee/training_event_employee.json
@@ -12978,7 +12978,7 @@ msgstr ""
 
 #: hr/doctype/interview/interview.py:198
 msgid "Updated the Job Applicant status to {0}"
-msgstr ""
+msgstr "İş Başvurusu Durumu {0} olarak güncellendi"
 
 #: overrides/employee_master.py:77
 msgid "Updated the status of Job Offer {0} for the linked Job Applicant {1} to {2}"
@@ -13076,7 +13076,7 @@ msgstr "değer eksik"
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:185
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgid "Variable"
-msgstr "hareketli"
+msgstr "Değişken"
 
 #. Label of the variable_based_on_taxable_salary (Check) field in DocType
 #. 'Salary Component'
@@ -13129,7 +13129,7 @@ msgstr "Araç Servis"
 #: hr/doctype/vehicle_service_item/vehicle_service_item.json
 #: hr/workspace/expense_claims/expense_claims.json
 msgid "Vehicle Service Item"
-msgstr ""
+msgstr "Araç Servis Kalemi"
 
 #: hr/doctype/employee_onboarding/employee_onboarding.js:31
 #: hr/doctype/employee_onboarding/employee_onboarding.js:40
