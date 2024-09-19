@@ -20,4 +20,6 @@ def get_context_for_dev():
 
 
 def get_boot():
-	return frappe._dict({"push_relay_server_url": frappe.conf.get("push_relay_server_url")})
+	return frappe._dict(
+		{"site_name": frappe.local.site, "push_relay_server_url": frappe.conf.get("push_relay_server_url")}
+	)
