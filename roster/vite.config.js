@@ -16,7 +16,7 @@ export default defineConfig({
 		},
 	},
 	build: {
-		outDir: `../${path.basename(path.resolve(".."))}/public/roster`,
+		outDir: `../hrms/public/roster`,
 		emptyOutDir: true,
 		target: "es2015",
 		commonjsOptions: {
