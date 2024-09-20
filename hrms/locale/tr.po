@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-15 09:34+0000\n"
-"PO-Revision-Date: 2024-09-19 16:50\n"
+"PO-Revision-Date: 2024-09-20 16:46\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -1966,7 +1966,7 @@ msgstr "Varsayılan olarak, Son Puan Hedef Puanı, Geri Bildirim Puanı ve Öz D
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/report/income_tax_computation/income_tax_computation.py:536
 msgid "CTC"
-msgstr ""
+msgstr "Brüt Maaş"
 
 #. Label of the calculate_final_score_based_on_formula (Check) field in DocType
 #. 'Appraisal Cycle'
@@ -2844,7 +2844,7 @@ msgstr "Para Birimi"
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:111
 msgid "Currency of selected Income Tax Slab should be {0} instead of {1}"
-msgstr ""
+msgstr "Seçilen Gelir Vergisi Diliminin para birimi {1} yerine {0} olmalıdır"
 
 #. Label of the current (Data) field in DocType 'Employee Property History'
 #: hr/doctype/employee_property_history/employee_property_history.json
@@ -5079,18 +5079,18 @@ msgstr "Çıkış Görüşmesi Bildirimi"
 #. DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
 msgid "Exit Questionnaire Notification Template"
-msgstr "Çıkış Anketi Bildirim Şablonu"
+msgstr "Çıkış Mülakatı Bildirim Şablonu"
 
 #: hr/report/employee_exits/employee_exits.js:68
 msgid "Exit Questionnaire Pending"
-msgstr ""
+msgstr "Çıkış Mülakatı Bekleniyor"
 
 #. Label of the exit_questionnaire_web_form (Link) field in DocType 'HR
 #. Settings'
 #: hr/doctype/exit_interview/exit_interview.py:121
 #: hr/doctype/hr_settings/hr_settings.json
 msgid "Exit Questionnaire Web Form"
-msgstr "Çıkış Anketi Web Formu"
+msgstr "Çıkış Mülakatı Web Formu"
 
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:120
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:124
@@ -5770,7 +5770,7 @@ msgstr ""
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
 #: hr/report/employee_exits/employee_exits.py:58
 msgid "Full and Final Statement"
-msgstr ""
+msgstr "Tam ve Nihai Açıklama"
 
 #: setup.py:382
 msgid "Full-time"
@@ -8697,7 +8697,7 @@ msgstr "Bu İsteği Yalnızca Onaylayanlar Onaylayabilirim."
 
 #: hr/doctype/exit_interview/exit_interview.py:45
 msgid "Only Completed documents can be submitted"
-msgstr ""
+msgstr "Yalnızca Tamamlanmış belgeler gönderilebilir"
 
 #: hr/doctype/employee_grievance/employee_grievance.py:13
 msgid "Only Employee Grievance with status {0} or {1} can be submitted"
@@ -9266,7 +9266,7 @@ msgstr "Bekleyen Mülakatlar"
 
 #: hr/report/employee_exits/employee_exits.py:233
 msgid "Pending Questionnaires"
-msgstr ""
+msgstr "Bekleyen Mülakatlar"
 
 #. Label of the percent (Percent) field in DocType 'Income Tax Slab Other
 #. Charges'
@@ -9576,7 +9576,7 @@ msgstr "Tarih"
 #. Label of the posting_date (Date) field in DocType 'Gratuity'
 #: payroll/doctype/gratuity/gratuity.json
 msgid "Posting date"
-msgstr ""
+msgstr "Kayıt. Tarihi"
 
 #. Label of the preferred_area_for_lodging (Data) field in DocType 'Travel
 #. Itinerary'
@@ -12295,7 +12295,7 @@ msgstr "Bugüne kadar bu konuda daha önce olması gerekiyor"
 
 #: payroll/doctype/additional_salary/additional_salary.py:161
 msgid "To overwrite the salary component amount for a tax component, please enable {0}"
-msgstr ""
+msgstr "Bir vergi bileşeni için maaş bileşeni tutarını geçersiz kılmak için lütfen {0} öğesini etkinleştirin"
 
 #. Label of the to_year (Int) field in DocType 'Gratuity Rule Slab'
 #: payroll/doctype/gratuity_rule_slab/gratuity_rule_slab.json
@@ -12371,7 +12371,7 @@ msgstr "Toplam Tutar Geri Çekenler"
 
 #: payroll/doctype/gratuity/gratuity.py:105
 msgid "Total Amount cannot be zero"
-msgstr ""
+msgstr "Toplam Tutar sıfır olamaz"
 
 #. Label of the total_asset_recovery_cost (Currency) field in DocType 'Full and
 #. Final Statement'
@@ -12453,7 +12453,7 @@ msgstr "Toplam Hedef Puanı"
 
 #: payroll/report/salary_payments_based_on_payment_mode/salary_payments_based_on_payment_mode.py:141
 msgid "Total Gross Pay"
-msgstr ""
+msgstr "Toplam Brüt Ücret"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:120
 msgid "Total Holidays"
@@ -12466,7 +12466,7 @@ msgstr "Toplam Saat (T)"
 #. Label of the total_income_tax (Currency) field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
 msgid "Total Income Tax"
-msgstr ""
+msgstr "Toplam Gelir Vergisi"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:137
 msgid "Total Late Entries"
@@ -12528,7 +12528,7 @@ msgstr ""
 
 #: hr/report/employee_exits/employee_exits.py:215
 msgid "Total Resignations"
-msgstr ""
+msgstr "Toplam İstifalar"
 
 #. Label of the total_sanctioned_amount (Currency) field in DocType 'Expense
 #. Claim'
