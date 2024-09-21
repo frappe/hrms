@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-15 09:34+0000\n"
-"PO-Revision-Date: 2024-09-15 15:25\n"
+"PO-Revision-Date: 2024-09-19 16:50\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -3336,7 +3336,7 @@ msgstr "Abfahrt Datetime"
 #: payroll/doctype/salary_structure/salary_structure.py:109
 #: payroll/doctype/salary_structure/salary_structure.py:113
 msgid "Depends On Payment Days"
-msgstr ""
+msgstr "Hängt von den Zahlungstagen ab"
 
 #. Label of the depends_on_payment_days (Check) field in DocType 'Salary
 #. Component'
@@ -4901,19 +4901,19 @@ msgstr "Status der Veranstaltung"
 #. Schedule'
 #: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 msgid "Every 2 Weeks"
-msgstr ""
+msgstr "Alle 2 Wochen"
 
 #. Option for the 'Frequency' (Select) field in DocType 'Shift Assignment
 #. Schedule'
 #: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 msgid "Every 3 Weeks"
-msgstr ""
+msgstr "Alle 3 Wochen"
 
 #. Option for the 'Frequency' (Select) field in DocType 'Shift Assignment
 #. Schedule'
 #: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 msgid "Every 4 Weeks"
-msgstr ""
+msgstr "Alle 4 Wochen"
 
 #. Option for the 'Working Hours Calculation Based On' (Select) field in
 #. DocType 'Shift Type'
@@ -4925,7 +4925,7 @@ msgstr "Jeder gültige Check-in und Check-out"
 #. Schedule'
 #: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 msgid "Every Week"
-msgstr ""
+msgstr "Jede Woche"
 
 #: controllers/employee_reminders.py:218
 msgid "Everyone, let’s congratulate them on their work anniversary!"
@@ -5385,11 +5385,11 @@ msgstr "Standort abrufen"
 
 #: hr/doctype/employee_checkin/employee_checkin.js:21
 msgid "Fetch Shift"
-msgstr ""
+msgstr "Schicht abrufen"
 
 #: hr/doctype/employee_checkin/employee_checkin_list.js:3
 msgid "Fetch Shifts"
-msgstr ""
+msgstr "Schichten abrufen"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:109
 #: payroll/doctype/payroll_entry/payroll_entry.js:114
@@ -5398,7 +5398,7 @@ msgstr "Mitarbeiter abrufen"
 
 #: hr/doctype/employee_checkin/employee_checkin.js:27
 msgid "Fetching Shift"
-msgstr ""
+msgstr "Rufe Schicht ab"
 
 #: hr/doctype/employee_checkin/employee_checkin.js:54
 msgid "Fetching your geolocation"
@@ -5803,7 +5803,7 @@ msgstr "Geolokalisierungsfehler"
 
 #: hr/doctype/employee_checkin/employee_checkin.js:46
 msgid "Geolocation is not supported by your current browser"
-msgstr ""
+msgstr "Die Geolokalisierung wird von Ihrem aktuellen Browser nicht unterstützt"
 
 #: payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.js:47
 msgid "Get Details From Declaration"
@@ -8367,11 +8367,11 @@ msgstr "Dem Mitarbeiter {0} ist am angegebenen Datum keine Gehaltsstruktur zugeo
 
 #: payroll/doctype/salary_component/salary_component.js:99
 msgid "No Salary Structures"
-msgstr ""
+msgstr "Keine Gehaltsstrukturen"
 
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.py:190
 msgid "No Shift Requests Selected"
-msgstr ""
+msgstr "Keine Schichtanfragen ausgewählt"
 
 #: hr/doctype/job_opening/job_opening.js:32
 msgid "No Staffing Plans found for this Designation"
@@ -9601,7 +9601,7 @@ msgstr "Druck-Kopfzeile"
 
 #: payroll/report/salary_register/salary_register.html:40
 msgid "Printed On"
-msgstr ""
+msgstr "Gedruckt am"
 
 #. Label of the printing_details (Section Break) field in DocType 'Job Offer'
 #: hr/doctype/job_offer/job_offer.json
@@ -10138,7 +10138,7 @@ msgstr "Nicht in Anspruch genommene Beträge vom Gehalt zurückzahlen"
 #. Schedule'
 #: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 msgid "Repeat On Days"
-msgstr ""
+msgstr "An Tagen wiederholen"
 
 #. Option for the 'Status' (Select) field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -12298,7 +12298,7 @@ msgstr "Heute {0} in unserem Unternehmen! 🎉"
 
 #: controllers/employee_reminders.py:241
 msgid "Today {0} completed {1} year(s) at our Company! 🎉"
-msgstr "Heute hat {0} {1} Jahr(e) in unserem Unternehmen abgeschlossen! 🎉"
+msgstr "Heute ist {0} seit {1} Jahr(e) in unserem Unternehmen! 🎉"
 
 #. Label of the total (Currency) field in DocType 'Expense Taxes and Charges'
 #: hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
@@ -12849,11 +12849,11 @@ msgstr "Wird überprüft"
 
 #: hr/doctype/attendance/attendance.py:230
 msgid "Unlinked Attendance record from Employee Checkins: {}"
-msgstr ""
+msgstr "Verknüfung der Anwesenheit mit den folgenden Mitarbeiter-Check-ins wurde aufgehoben: {}"
 
 #: hr/doctype/attendance/attendance.py:233
 msgid "Unlinked logs"
-msgstr ""
+msgstr "Verknüpfung aufgehoben"
 
 #. Description of the 'Select Employees' (Section Break) field in DocType
 #. 'Employee Attendance Tool'
@@ -12900,11 +12900,11 @@ msgstr "Ungezahlte Auslagenabrechnung"
 #. Outstanding Statement'
 #: hr/doctype/full_and_final_outstanding_statement/full_and_final_outstanding_statement.json
 msgid "Unsettled"
-msgstr ""
+msgstr "Nicht abgewickelt"
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.py:43
 msgid "Unsettled Transactions"
-msgstr ""
+msgstr "Nicht abgewickelte Transaktionen"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:158
 msgid "Unsubmitted Appraisals"
@@ -13394,7 +13394,7 @@ msgstr "Sie sind nicht den ganzen Tag (oder mehreren Tagen) zwischen den Ausglei
 
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.py:101
 msgid "You can claim only an amount of {0}, the rest amount {1} should be in the application as pro-rata component"
-msgstr ""
+msgstr "Sie können nur einen Betrag von {0} geltend machen, der Restbetrag {1} sollte im Antrag als anteiliger Bestandteil aufgeführt werden"
 
 #: payroll/doctype/gratuity_rule/gratuity_rule.py:24
 msgid "You can not define multiple slabs if you have a slab with no lower and upper limits."
@@ -13434,7 +13434,7 @@ msgstr "aktiv"
 
 #: public/js/templates/feedback_summary.html:16
 msgid "based on"
-msgstr ""
+msgstr "basierend auf"
 
 #: hr/doctype/attendance_request/attendance_request.py:89
 msgid "changed the status from {0} to {1} via Attendance Request"
@@ -13537,7 +13537,7 @@ msgstr "{0} gilt nach {1} Werktagen"
 
 #: controllers/employee_reminders.py:253
 msgid "{0} completed {1} year(s)"
-msgstr ""
+msgstr "sind {0} seit {1} Jahr(en)"
 
 #: payroll/doctype/additional_salary/additional_salary.py:157
 msgid "{0} has {1} enabled"
