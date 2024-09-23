@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-22 09:34+0000\n"
-"PO-Revision-Date: 2024-09-22 17:05\n"
+"PO-Revision-Date: 2024-09-23 17:19\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -2189,7 +2189,7 @@ msgstr "Talep Edilen Tutar"
 #: hr/workspace/expense_claims/expense_claims.json
 #: overrides/dashboard_overrides.py:84
 msgid "Claims"
-msgstr ""
+msgstr "Talepler"
 
 #: www/jobs/index.html:20 www/jobs/index.html:351
 msgid "Clear All"
@@ -5227,7 +5227,7 @@ msgstr "Harcama Talepleri"
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Expense Claims Dashboard"
-msgstr ""
+msgstr "Harcama Talepleri Panosu"
 
 #. Label of the expense_date (Date) field in DocType 'Expense Claim Detail'
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
@@ -11542,7 +11542,7 @@ msgstr ""
 #: hr/report/recruitment_analytics/recruitment_analytics.py:24
 #: hr/workspace/recruitment/recruitment.json
 msgid "Staffing Plan"
-msgstr "Kişisel tesis"
+msgstr ""
 
 #. Name of a DocType
 #: hr/doctype/staffing_plan_detail/staffing_plan_detail.json
@@ -12514,7 +12514,7 @@ msgstr ""
 
 #: setup.py:283
 msgid "Total Expense Claim (via Expense Claims)"
-msgstr ""
+msgstr "Toplam Harcama Talepleri"
 
 #. Label of the total_score (Float) field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -13747,7 +13747,7 @@ msgstr "{} Bekliyor"
 #. Count format of shortcut in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
 msgid "{} Unclaimed"
-msgstr ""
+msgstr "{} Talep Edilmemiş"
 
 #: hr/doctype/employee_checkin/employee_checkin.py:208
 msgid "{} is an invalid Attendance Status."
