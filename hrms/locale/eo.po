@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-09-15 09:34+0000\n"
-"PO-Revision-Date: 2024-09-15 15:26\n"
+"POT-Creation-Date: 2024-09-22 09:34+0000\n"
+"PO-Revision-Date: 2024-09-22 17:05\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -526,7 +526,7 @@ msgstr "crwdns104890:0crwdne104890:0"
 #: hr/doctype/shift_assignment/shift_assignment.json
 #: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
-#: hr/report/employee_leave_balance/employee_leave_balance.js:46
+#: hr/report/employee_leave_balance/employee_leave_balance.js:44
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:40
 #: hr/report/leave_ledger/leave_ledger.js:38
 msgid "Active"
@@ -1258,7 +1258,7 @@ msgstr "crwdns105246:0crwdne105246:0"
 #: hr/doctype/appraisal/appraisal.json
 #: hr/doctype/appraisal_template/appraisal_template.json
 #: hr/doctype/appraisee/appraisee.json
-#: hr/workspace/performance/performance.json
+#: hr/workspace/performance/performance.json setup.py:162
 msgid "Appraisal Template"
 msgstr "crwdns105248:0crwdne105248:0"
 
@@ -1341,6 +1341,10 @@ msgstr "crwdns141000:0crwdne141000:0"
 #: hr/doctype/shift_request/shift_request.json
 msgid "Approver"
 msgstr "crwdns141002:0crwdne141002:0"
+
+#: setup.py:133 setup.py:235
+msgid "Approvers"
+msgstr "crwdns148888:0crwdne148888:0"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:15
 #: public/js/salary_slip_deductions_report_filters.js:22
@@ -2348,7 +2352,7 @@ msgstr "crwdns105658:0crwdne105658:0"
 #: hr/report/employee_birthday/employee_birthday.py:28
 #: hr/report/employee_exits/employee_exits.js:21
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.js:9
-#: hr/report/employee_leave_balance/employee_leave_balance.js:21
+#: hr/report/employee_leave_balance/employee_leave_balance.js:19
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:16
 #: hr/report/leave_ledger/leave_ledger.js:46
 #: hr/report/leave_ledger/leave_ledger.py:104
@@ -2519,7 +2523,7 @@ msgstr "crwdns105830:0crwdne105830:0"
 msgid "Consider Unmarked Attendance As"
 msgstr "crwdns141188:0crwdne141188:0"
 
-#: hr/report/employee_leave_balance/employee_leave_balance.js:55
+#: hr/report/employee_leave_balance/employee_leave_balance.js:53
 msgid "Consolidate Leave Types"
 msgstr "crwdns105834:0crwdne105834:0"
 
@@ -3043,6 +3047,10 @@ msgstr "crwdns141260:0crwdne141260:0"
 msgid "Dates Based On"
 msgstr "crwdns141262:0crwdne141262:0"
 
+#: setup.py:121
+msgid "Days for which Holidays are blocked for this department."
+msgstr "crwdns148890:0crwdne148890:0"
+
 #: payroll/report/bank_remittance/bank_remittance.py:19
 msgid "Debit A/C Number"
 msgstr "crwdns106090:0crwdne106090:0"
@@ -3150,7 +3158,15 @@ msgstr "crwdns141282:0crwdne141282:0"
 msgid "Default Base Pay"
 msgstr "crwdns141284:0crwdne141284:0"
 
-#: overrides/company.py:133
+#: setup.py:81
+msgid "Default Employee Advance Account"
+msgstr "crwdns148892:0crwdne148892:0"
+
+#: setup.py:73
+msgid "Default Expense Claim Payable Account"
+msgstr "crwdns148894:0crwdne148894:0"
+
+#: overrides/company.py:133 setup.py:96
 msgid "Default Payroll Payable Account"
 msgstr "crwdns148486:0crwdne148486:0"
 
@@ -3160,7 +3176,7 @@ msgstr "crwdns148486:0crwdne148486:0"
 msgid "Default Salary Structure"
 msgstr "crwdns141286:0crwdne141286:0"
 
-#: hr/doctype/shift_assignment_tool/shift_assignment_tool.js:181
+#: hr/doctype/shift_assignment_tool/shift_assignment_tool.js:181 setup.py:207
 msgid "Default Shift"
 msgstr "crwdns141288:0crwdne141288:0"
 
@@ -3277,7 +3293,7 @@ msgstr "crwdns141294:0crwdne141294:0"
 #: hr/report/employee_exits/employee_exits.py:65
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.js:37
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:60
-#: hr/report/employee_leave_balance/employee_leave_balance.js:30
+#: hr/report/employee_leave_balance/employee_leave_balance.js:28
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:30
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.py:24
 #: hr/report/leave_ledger/leave_ledger.js:54
@@ -3906,7 +3922,7 @@ msgstr "crwdns141362:0crwdne141362:0"
 #: hr/report/employee_exits/employee_exits.py:24
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.js:31
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:53
-#: hr/report/employee_leave_balance/employee_leave_balance.js:36
+#: hr/report/employee_leave_balance/employee_leave_balance.js:34
 #: hr/report/employee_leave_balance/employee_leave_balance.py:40
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:24
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.py:22
@@ -4209,6 +4225,10 @@ msgstr "crwdns106688:0crwdne106688:0"
 msgid "Employee Lifecycle Dashboard"
 msgstr "crwdns106690:0crwdne106690:0"
 
+#: setup.py:771
+msgid "Employee Loan"
+msgstr "crwdns148896:0crwdne148896:0"
+
 #. Label of the employee_name (Data) field in DocType 'Appraisal'
 #. Label of the employee_name (Data) field in DocType 'Appraisee'
 #. Label of the employee_name (Data) field in DocType 'Attendance'
@@ -4462,7 +4482,7 @@ msgid "Employee Skills"
 msgstr "crwdns141388:0crwdne141388:0"
 
 #: hr/report/employee_exits/employee_exits.py:194
-#: hr/report/employee_leave_balance/employee_leave_balance.js:42
+#: hr/report/employee_leave_balance/employee_leave_balance.js:40
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:36
 #: hr/report/leave_ledger/leave_ledger.js:34
 msgid "Employee Status"
@@ -4673,7 +4693,7 @@ msgstr "crwdns106934:0crwdne106934:0"
 #: hr/doctype/leave_control_panel/leave_control_panel.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
-#: templates/generators/job_opening.html:141
+#: setup.py:186 templates/generators/job_opening.html:141
 msgid "Employment Type"
 msgstr "crwdns106936:0crwdne106936:0"
 
@@ -5112,7 +5132,7 @@ msgstr "crwdns141462:0crwdne141462:0"
 #. Name of a role
 #. Label of the expense_approver (Link) field in DocType 'Expense Claim'
 #: hr/doctype/employee_advance/employee_advance.json
-#: hr/doctype/expense_claim/expense_claim.json
+#: hr/doctype/expense_claim/expense_claim.json setup.py:153 setup.py:241
 msgid "Expense Approver"
 msgstr "crwdns107124:0crwdne107124:0"
 
@@ -5887,6 +5907,7 @@ msgstr "crwdns107448:0crwdne107448:0"
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:173
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
+#: setup.py:200
 msgid "Grade"
 msgstr "crwdns141584:0crwdne141584:0"
 
@@ -6001,9 +6022,17 @@ msgid "Guest"
 msgstr "crwdns107502:0crwdne107502:0"
 
 #. Name of a Workspace
-#: hr/workspace/hr/hr.json
+#: hr/workspace/hr/hr.json setup.py:315
 msgid "HR"
 msgstr "crwdns107504:0crwdne107504:0"
+
+#: setup.py:59
+msgid "HR & Payroll"
+msgstr "crwdns148898:0crwdne148898:0"
+
+#: setup.py:65
+msgid "HR & Payroll Settings"
+msgstr "crwdns148900:0crwdne148900:0"
 
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
@@ -6220,11 +6249,23 @@ msgstr "crwdns141606:0crwdne141606:0"
 msgid "Has Certificate"
 msgstr "crwdns141608:0crwdne141608:0"
 
+#: setup.py:215
+msgid "Health Insurance"
+msgstr "crwdns148902:0crwdne148902:0"
+
 #. Label of the health_insurance_name (Data) field in DocType 'Employee Health
 #. Insurance'
 #: hr/doctype/employee_health_insurance/employee_health_insurance.json
 msgid "Health Insurance Name"
 msgstr "crwdns141610:0crwdne141610:0"
+
+#: setup.py:229
+msgid "Health Insurance No"
+msgstr "crwdns148904:0crwdne148904:0"
+
+#: setup.py:221
+msgid "Health Insurance Provider"
+msgstr "crwdns148906:0crwdne148906:0"
 
 #: hr/notification/training_feedback/training_feedback.html:1
 msgid "Hello"
@@ -6504,7 +6545,7 @@ msgstr "crwdns107688:0crwdne107688:0"
 #: hr/doctype/shift_assignment/shift_assignment.json
 #: hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
-#: hr/report/employee_leave_balance/employee_leave_balance.js:47
+#: hr/report/employee_leave_balance/employee_leave_balance.js:45
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:41
 #: hr/report/leave_ledger/leave_ledger.js:39
 msgid "Inactive"
@@ -7030,7 +7071,7 @@ msgstr "crwdns107906:0crwdne107906:0"
 #: hr/doctype/job_applicant/job_applicant.json
 #: hr/doctype/job_offer/job_offer.json
 #: hr/report/recruitment_analytics/recruitment_analytics.py:38
-#: hr/workspace/recruitment/recruitment.json
+#: hr/workspace/recruitment/recruitment.json setup.py:193
 msgid "Job Applicant"
 msgstr "crwdns107908:0crwdne107908:0"
 
@@ -7355,7 +7396,8 @@ msgstr "crwdns141800:0crwdne141800:0"
 
 #. Label of the leave_approver (Link) field in DocType 'Leave Application'
 #. Name of a role
-#: hr/doctype/leave_application/leave_application.json
+#: hr/doctype/leave_application/leave_application.json setup.py:146
+#: setup.py:248
 msgid "Leave Approver"
 msgstr "crwdns108076:0crwdne108076:0"
 
@@ -7383,7 +7425,7 @@ msgstr "crwdns141808:0crwdne141808:0"
 #. Name of a DocType
 #. Label of a Link in the Leaves Workspace
 #: hr/doctype/leave_block_list/leave_block_list.json
-#: hr/workspace/leaves/leaves.json
+#: hr/workspace/leaves/leaves.json setup.py:125
 msgid "Leave Block List"
 msgstr "crwdns108088:0crwdne108088:0"
 
@@ -7595,7 +7637,7 @@ msgstr "crwdns108196:0crwdne108196:0"
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr "crwdns108200:0crwdne108200:0"
 
-#: hr/doctype/leave_ledger_entry/leave_ledger_entry.py:42
+#: hr/doctype/leave_ledger_entry/leave_ledger_entry.py:41
 msgid "Leave allocation {0} is linked with the Leave Application {1}"
 msgstr "crwdns108202:0{0}crwdnd108202:0{1}crwdne108202:0"
 
@@ -7680,7 +7722,7 @@ msgstr "crwdns141836:0{0}crwdne141836:0"
 msgid "Left"
 msgstr "crwdns108236:0crwdne108236:0"
 
-#: hr/report/employee_leave_balance/employee_leave_balance.js:49
+#: hr/report/employee_leave_balance/employee_leave_balance.js:47
 msgctxt "Employee"
 msgid "Left"
 msgstr "crwdns141838:0crwdne141838:0"
@@ -7740,7 +7782,7 @@ msgstr "crwdns141848:0crwdne141848:0"
 msgid "Loan Product"
 msgstr "crwdns141850:0crwdne141850:0"
 
-#: payroll/report/salary_register/salary_register.py:221
+#: payroll/report/salary_register/salary_register.py:221 setup.py:764
 msgid "Loan Repayment"
 msgstr "crwdns108270:0crwdne108270:0"
 
@@ -8696,7 +8738,7 @@ msgstr "crwdns108662:0crwdne108662:0"
 msgid "Only Tax Impact (Cannot Claim But Part of Taxable Income)"
 msgstr "crwdns142022:0crwdne142022:0"
 
-#: hr/doctype/leave_ledger_entry/leave_ledger_entry.py:21
+#: hr/doctype/leave_ledger_entry/leave_ledger_entry.py:20
 msgid "Only expired allocation can be cancelled"
 msgstr "crwdns108666:0crwdne108666:0"
 
@@ -9070,6 +9112,10 @@ msgstr "crwdns108836:0crwdne108836:0"
 msgid "Payroll Based On"
 msgstr "crwdns142078:0crwdne142078:0"
 
+#: setup.py:111 setup.py:274
+msgid "Payroll Cost Center"
+msgstr "crwdns148908:0crwdne148908:0"
+
 #. Label of the section_break_17 (Section Break) field in DocType 'Salary
 #. Structure Assignment'
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
@@ -9143,6 +9189,7 @@ msgstr "crwdns108868:0crwdne108868:0"
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: payroll/doctype/payroll_entry/payroll_entry.json
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
+#: setup.py:837
 msgid "Payroll Payable Account"
 msgstr "crwdns108870:0crwdne108870:0"
 
@@ -9617,7 +9664,7 @@ msgstr "crwdns142136:0crwdne142136:0"
 
 #. Label of the process_payroll_accounting_entry_based_on_employee (Check)
 #. field in DocType 'Payroll Settings'
-#: payroll/doctype/payroll_settings/payroll_settings.json
+#: payroll/doctype/payroll_settings/payroll_settings.json setup.py:848
 msgid "Process Payroll Accounting Entry based on Employee"
 msgstr "crwdns142138:0crwdne142138:0"
 
@@ -10114,6 +10161,10 @@ msgstr "crwdns142242:0crwdne142242:0"
 msgid "Reopen"
 msgstr "crwdns109282:0crwdne109282:0"
 
+#: setup.py:821 setup.py:830
+msgid "Repay From Salary"
+msgstr "crwdns148910:0crwdne148910:0"
+
 #: hr/utils.py:718
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "crwdns109284:0crwdne109284:0"
@@ -10181,6 +10232,10 @@ msgstr "crwdns142250:0crwdne142250:0"
 #: hr/doctype/travel_request/travel_request.json
 msgid "Require Full Funding"
 msgstr "crwdns142252:0crwdne142252:0"
+
+#: setup.py:170
+msgid "Required Skills"
+msgstr "crwdns148912:0crwdne148912:0"
 
 #. Label of the required_for_employee_creation (Check) field in DocType
 #. 'Employee Boarding Activity'
@@ -10569,7 +10624,7 @@ msgstr "crwdns109454:0crwdne109454:0"
 #: payroll/doctype/payroll_settings/payroll_settings.json
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/workspace/payroll/payroll.json
-#: payroll/workspace/salary_payout/salary_payout.json
+#: payroll/workspace/salary_payout/salary_payout.json setup.py:302
 msgid "Salary Slip"
 msgstr "crwdns109456:0crwdne109456:0"
 
@@ -11271,6 +11326,10 @@ msgstr "crwdns109740:0crwdne109740:0"
 msgid "Shift Request"
 msgstr "crwdns109742:0crwdne109742:0"
 
+#: setup.py:139 setup.py:260
+msgid "Shift Request Approver"
+msgstr "crwdns148914:0crwdne148914:0"
+
 #. Label of the shift_request_filters_section (Section Break) field in DocType
 #. 'Shift Assignment Tool'
 #: hr/doctype/shift_assignment_tool/shift_assignment_tool.json
@@ -11398,7 +11457,7 @@ msgstr "crwdns142448:0crwdne142448:0"
 
 #. Label of the skills_section (Section Break) field in DocType 'Employee Skill
 #. Map'
-#: hr/doctype/employee_skill_map/employee_skill_map.json
+#: hr/doctype/employee_skill_map/employee_skill_map.json setup.py:176
 msgid "Skills"
 msgstr "crwdns142450:0crwdne142450:0"
 
@@ -11750,7 +11809,7 @@ msgstr "crwdns109980:0crwdne109980:0"
 msgid "Supplier"
 msgstr "crwdns142488:0crwdne142488:0"
 
-#: hr/report/employee_leave_balance/employee_leave_balance.js:48
+#: hr/report/employee_leave_balance/employee_leave_balance.js:46
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:42
 #: hr/report/leave_ledger/leave_ledger.js:40
 msgid "Suspended"
@@ -11977,6 +12036,10 @@ msgstr "crwdns110060:0crwdne110060:0"
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.py:63
 msgid "The days between {0} to {1} are not valid holidays."
 msgstr "crwdns110062:0{0}crwdnd110062:0{1}crwdne110062:0"
+
+#: setup.py:130
+msgid "The first Approver in the list will be set as the default Approver."
+msgstr "crwdns148916:0crwdne148916:0"
 
 #: hr/doctype/leave_type/leave_type.py:50
 msgid "The fraction of Daily Salary per Leave should be between 0 and 1"
@@ -12205,7 +12268,7 @@ msgstr "crwdns142554:0crwdne142554:0"
 #: hr/report/employee_advance_summary/employee_advance_summary.js:23
 #: hr/report/employee_exits/employee_exits.js:15
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.js:24
-#: hr/report/employee_leave_balance/employee_leave_balance.js:15
+#: hr/report/employee_leave_balance/employee_leave_balance.js:14
 #: hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.js:15
 #: hr/report/leave_ledger/leave_ledger.js:15
 #: hr/report/leave_ledger/leave_ledger.py:53
@@ -12261,7 +12324,7 @@ msgstr "crwdns110192:0crwdne110192:0"
 msgid "To date cannot be before from date"
 msgstr "crwdns110194:0crwdne110194:0"
 
-#: hr/doctype/leave_ledger_entry/leave_ledger_entry.py:14
+#: hr/doctype/leave_ledger_entry/leave_ledger_entry.py:13
 msgid "To date needs to be before from date"
 msgstr "crwdns110196:0crwdne110196:0"
 
@@ -12417,6 +12480,14 @@ msgstr "crwdns142592:0crwdne142592:0"
 msgid "Total Exemption Amount"
 msgstr "crwdns142594:0crwdne142594:0"
 
+#: setup.py:292
+msgid "Total Expense Claim (via Expense Claim)"
+msgstr "crwdns148918:0crwdne148918:0"
+
+#: setup.py:283
+msgid "Total Expense Claim (via Expense Claims)"
+msgstr "crwdns148920:0crwdne148920:0"
+
 #. Label of the total_score (Float) field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:79
@@ -12439,6 +12510,10 @@ msgstr "crwdns110262:0crwdne110262:0"
 #: payroll/doctype/salary_slip/salary_slip.json
 msgid "Total Income Tax"
 msgstr "crwdns142598:0crwdne142598:0"
+
+#: setup.py:794
+msgid "Total Interest Amount"
+msgstr "crwdns148922:0crwdne148922:0"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:137
 msgid "Total Late Entries"
@@ -12469,6 +12544,10 @@ msgstr "crwdns142604:0crwdne142604:0"
 msgid "Total Leaves Encashed"
 msgstr "crwdns142606:0crwdne142606:0"
 
+#: setup.py:808
+msgid "Total Loan Repayment"
+msgstr "crwdns148924:0crwdne148924:0"
+
 #: payroll/report/salary_payments_based_on_payment_mode/salary_payments_based_on_payment_mode.py:155
 msgid "Total Net Pay"
 msgstr "crwdns110276:0crwdne110276:0"
@@ -12491,6 +12570,10 @@ msgstr "crwdns142610:0crwdne142610:0"
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:112
 msgid "Total Present"
 msgstr "crwdns110284:0crwdne110284:0"
+
+#: setup.py:785
+msgid "Total Principal Amount"
+msgstr "crwdns148926:0crwdne148926:0"
 
 #. Label of the total_receivable_amount (Currency) field in DocType 'Full and
 #. Final Statement'
