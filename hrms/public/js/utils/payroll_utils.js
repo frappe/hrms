@@ -6,11 +6,7 @@ hrms.payroll_utils = {
 				(doctype) =>
 					frappe.model.with_doctype(doctype, () => {
 						autocompletions.push(
-							...frappe.get_meta(doctype).fields.map((f) => ({
-								value: f.fieldname,
-								score: 8,
-								meta: __("{0} Field", [doctype]),
-							})),
+							...hrms.get_doctype_fields_for_autocompletion(doctype),
 						);
 					}),
 			),

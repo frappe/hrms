@@ -197,11 +197,11 @@ def create_appraisals_for_cycle(appraisal_cycle: AppraisalCycle, publish_progres
 
 def validate_active_appraisal_cycle(appraisal_cycle: str) -> None:
 	if frappe.db.get_value("Appraisal Cycle", appraisal_cycle, "status") == "Completed":
-		msg = _("Cannot create or change transactions against a {0} Appraisal Cycle.").format(
-			frappe.bold("Completed")
+		msg = _("Cannot create or change transactions against an Appraisal Cycle with status {0}.").format(
+			frappe.bold(_("Completed"))
 		)
 		msg += "<br><br>"
-		msg += _("Mark the cycle as {0} if required.").format(frappe.bold("In Progress"))
+		msg += _("Set the status to {0} if required.").format(frappe.bold(_("In Progress")))
 
 		frappe.throw(msg, title=_("Not Allowed"))
 

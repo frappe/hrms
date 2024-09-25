@@ -69,10 +69,10 @@ def subscription_updated(app: str, plan: str):
 		update_erpnext_access()
 
 
-def update_erpnext_access():
+def update_erpnext_access(user_input: dict | None):
 	"""
-	ignores if user has no hrms subscription
-	enables erpnext workspaces and roles if user has subscribed to hrms and erpnext
+	Called from hooks after setup wizard completion, ignored if user has no hrms subscription
+	enables erpnext workspaces and roles if user has subscribed to both hrms and erpnext
 	disables erpnext workspaces and roles if user has subscribed to hrms but not erpnext
 	"""
 	if not frappe.utils.get_url().endswith(".frappehr.com"):
@@ -90,8 +90,6 @@ def update_erpnext_workspaces(disable: bool = True):
 		"Accounting",
 		"Buying",
 		"CRM",
-		"ERPNext Integrations",
-		"ERPNext Settings",
 		"Manufacturing",
 		"Quality",
 		"Selling",
@@ -107,7 +105,7 @@ def update_erpnext_workspaces(disable: bool = True):
 			workspace_doc.public = 0 if disable else 1
 			workspace_doc.save()
 		except Exception:
-			pass
+			frappe.clear_messages()
 
 
 def update_erpnext_roles(disable: bool = True):

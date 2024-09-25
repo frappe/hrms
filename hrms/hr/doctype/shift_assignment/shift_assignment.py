@@ -25,19 +25,64 @@ class MultipleShiftError(frappe.ValidationError):
 class ShiftAssignment(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
-		self.validate_overlapping_shifts()
-
 		if self.end_date:
 			self.validate_from_to_dates("start_date", "end_date")
+		self.validate_overlapping_shifts()
+
+	def on_update_after_submit(self):
+		if self.end_date:
+			self.validate_from_to_dates("start_date", "end_date")
+		self.validate_overlapping_shifts()
+
+	def on_cancel(self):
+		self.validate_employee_checkin()
+		self.validate_attendance()
+
+	def validate_employee_checkin(self):
+		checkins = frappe.get_all(
+			"Employee Checkin",
+			filters={
+				"employee": self.employee,
+				"shift": self.shift_type,
+				"time": ["between", [self.start_date, self.end_date]],
+			},
+			pluck="name",
+		)
+		if checkins:
+			frappe.throw(
+				_("Cannot cancel Shift Assignment: {0} as it is linked to Employee Checkin: {1}").format(
+					self.name, get_link_to_form("Employee Checkin", checkins[0])
+				)
+			)
+
+	def validate_attendance(self):
+		attendances = frappe.get_all(
+			"Attendance",
+			filters={
+				"employee": self.employee,
+				"shift": self.shift_type,
+				"attendance_date": ["between", [self.start_date, self.end_date]],
+			},
+			pluck="name",
+		)
+		if attendances:
+			frappe.throw(
+				_("Cannot cancel Shift Assignment: {0} as it is linked to Attendance: {1}").format(
+					self.name, get_link_to_form("Attendance", attendances[0])
+				)
+			)
 
 	def validate_overlapping_shifts(self):
+		if self.status == "Inactive":
+			return
+
 		overlapping_dates = self.get_overlapping_dates()
 		if len(overlapping_dates):
 			self.validate_same_date_multiple_shifts(overlapping_dates)
 			# if dates are overlapping, check if timings are overlapping, else allow
-			overlapping_timings = has_overlapping_timings(self.shift_type, overlapping_dates[0].shift_type)
-			if overlapping_timings:
-				self.throw_overlap_error(overlapping_dates[0])
+			for d in overlapping_dates:
+				if has_overlapping_timings(self.shift_type, d.shift_type):
+					self.throw_overlap_error(d)
 
 	def validate_same_date_multiple_shifts(self, overlapping_dates):
 		if cint(frappe.db.get_single_value("HR Settings", "allow_multiple_shift_assignments")):
@@ -106,25 +151,15 @@ def has_overlapping_timings(shift_1: str, shift_2: str) -> bool:
 	"""
 	Accepts two shift types and checks whether their timings are overlapping
 	"""
-	if shift_1 == shift_2:
-		return True
 
 	s1 = frappe.db.get_value("Shift Type", shift_1, ["start_time", "end_time"], as_dict=True)
 	s2 = frappe.db.get_value("Shift Type", shift_2, ["start_time", "end_time"], as_dict=True)
 
-	if (
-		# shift 1 spans across 2 days
-		(s1.start_time > s1.end_time and s1.start_time < s2.end_time)
-		or (s1.start_time > s1.end_time and s2.start_time < s1.end_time)
-		or (s1.start_time > s1.end_time and s2.start_time > s2.end_time)
-		# both shifts fall on the same day
-		or (s1.start_time < s2.end_time and s2.start_time < s1.end_time)
-		# shift 2 spans across 2 days
-		or (s1.start_time < s2.end_time and s2.start_time > s2.end_time)
-		or (s2.start_time < s1.end_time and s2.start_time > s2.end_time)
-	):
-		return True
-	return False
+	for d in [s1, s2]:
+		if d.end_time <= d.start_time:
+			d.end_time += timedelta(days=1)
+
+	return s1.end_time > s2.start_time and s1.start_time < s2.end_time
 
 
 @frappe.whitelist()
