@@ -35,9 +35,15 @@ frappe.ui.form.on("Leave Allocation", {
 			);
 			if (valid_expiry) {
 				// expire current allocation
-				frm.add_custom_button(__("Expire Allocation"), function () {
-					frm.trigger("expire_allocation");
-				});
+				frm.add_custom_button(
+					__("Expire Allocation"),
+					function () {
+						frappe.confirm("Are you sure you want to expire this allocation?", () => {
+							frm.trigger("expire_allocation");
+						});
+					},
+					__("Actions"),
+				);
 			}
 		}
 
@@ -56,32 +62,36 @@ frappe.ui.form.on("Leave Allocation", {
 			doc: frm.doc,
 		});
 
-		frm.add_custom_button(__("Allocate Leaves Manually"), function () {
-			const dialog = new frappe.ui.Dialog({
-				title: "Enter details",
-				fields: [
-					{
-						label: "New Leaves to be Allocated",
-						fieldname: "new_leaves",
-						fieldtype: "Float",
-					},
-				],
-				primary_action_label: "Allocate",
-				primary_action({ new_leaves }) {
-					frappe.call({
-						method: "allocate_leaves_manually",
-						doc: frm.doc,
-						args: { new_leaves },
-						callback: function () {
-							frm.reload_doc();
+		frm.add_custom_button(
+			__("Allocate Leaves"),
+			function () {
+				const dialog = new frappe.ui.Dialog({
+					title: "Manual Leave Allocation",
+					fields: [
+						{
+							label: "New Leaves to be Allocated",
+							fieldname: "new_leaves",
+							fieldtype: "Float",
 						},
-					});
-					dialog.hide();
-				},
-			});
-			dialog.fields_dict.new_leaves.set_value(monthly_earned_leave);
-			dialog.show();
-		});
+					],
+					primary_action_label: "Allocate",
+					primary_action({ new_leaves }) {
+						frappe.call({
+							method: "allocate_leaves_manually",
+							doc: frm.doc,
+							args: { new_leaves },
+							callback: function () {
+								frm.reload_doc();
+							},
+						});
+						dialog.hide();
+					},
+				});
+				dialog.fields_dict.new_leaves.set_value(monthly_earned_leave);
+				dialog.show();
+			},
+			__("Actions"),
+		);
 	},
 
 	expire_allocation: function (frm) {
