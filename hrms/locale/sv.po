@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-22 09:34+0000\n"
-"PO-Revision-Date: 2024-09-22 17:05\n"
+"PO-Revision-Date: 2024-09-25 18:06\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -330,7 +330,7 @@ msgstr "<span class=\"h4\"><b>Transaktioner &amp; Rapporter</b></span>"
 #: payroll/workspace/salary_payout/salary_payout.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "<span class=\"h4\"><b>Your Shortcuts</b></span>"
-msgstr "<span class=\"h4\"><b>Genvägar</b></span>"
+msgstr "<span class=\"h4\"><b>Dina genvägar</b></span>"
 
 #. Header text in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
@@ -587,7 +587,7 @@ msgstr "Aktivitet Namn"
 #. Label of a Link in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Activity Type"
-msgstr "Aktivitet Typ"
+msgstr "Aktivitetstyp"
 
 #. Label of the amount (Currency) field in DocType 'Employee Tax Exemption
 #. Proof Submission Detail'
@@ -1749,7 +1749,7 @@ msgstr "Bank"
 #. Label of the bank_account (Link) field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgid "Bank Account"
-msgstr "Bank Konto"
+msgstr "Bankkonto"
 
 #. Label of the bank_account_no (Data) field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -2414,7 +2414,7 @@ msgstr "Provision"
 #: payroll/report/salary_register/salary_register.py:154
 #: public/js/salary_slip_deductions_report_filters.js:7
 msgid "Company"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. Label of the section_break_nngy (Section Break) field in DocType 'Job
 #. Opening'
@@ -3627,7 +3627,7 @@ msgstr "Inrikes"
 #. Attendance'
 #: hr/doctype/upload_attendance/upload_attendance.json
 msgid "Download Template"
-msgstr "Ladda ner Mall"
+msgstr "Ladda ner mall"
 
 #. Option for the 'Status' (Select) field in DocType 'Appraisal'
 #. Option for the 'Status' (Select) field in DocType 'Employee Advance'
@@ -3803,7 +3803,7 @@ msgstr "E-post"
 #. Label of the email_id (Data) field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
 msgid "Email Address"
-msgstr "E-post"
+msgstr "E-postadress"
 
 #. Label of the email (Data) field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
@@ -4810,7 +4810,7 @@ msgstr "Slut"
 #: payroll/doctype/salary_slip/salary_slip.json
 #: payroll/report/salary_register/salary_register.py:167
 msgid "End Date"
-msgstr "Slut Datum"
+msgstr "Slutdatum"
 
 #. Label of the end_time (Time) field in DocType 'Shift Type'
 #. Label of the end_time (Datetime) field in DocType 'Training Event'
@@ -8276,7 +8276,7 @@ msgstr "Flera Skift Tilldelningar"
 
 #: www/jobs/index.py:12
 msgid "My Account"
-msgstr "Mitt Konto"
+msgstr "Mitt konto"
 
 #. Label of the salary_component (Data) field in DocType 'Salary Component'
 #: hr/doctype/leave_control_panel/leave_control_panel.js:137
@@ -8347,7 +8347,7 @@ msgstr "Ny"
 #. Label of the new_company (Link) field in DocType 'Employee Transfer'
 #: hr/doctype/employee_transfer/employee_transfer.json
 msgid "New Company"
-msgstr "Ny Bolag"
+msgstr "Nytt företag"
 
 #. Label of the new_employee_id (Link) field in DocType 'Employee Transfer'
 #: hr/doctype/employee_transfer/employee_transfer.json
@@ -9341,7 +9341,7 @@ msgstr "Prestation"
 #. Label of the phone_number (Data) field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
 msgid "Phone Number"
-msgstr "Telefon Nummer"
+msgstr "Telefonnummer"
 
 #: setup.py:387
 msgid "Piecework"
