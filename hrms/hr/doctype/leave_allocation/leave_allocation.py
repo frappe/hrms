@@ -347,6 +347,14 @@ class LeaveAllocation(Document):
 			)
 			self.add_comment(comment_type="Info", text=text)
 
+		else:
+			msg = _("Total leaves allocated cannot exceed annual allocation of {0}.").format(
+				frappe.bold(_(annual_allocation))
+			)
+			msg += "<br><br>"
+			msg += _("Reference: {0}").format(get_link_to_form("Leave Policy", self.leave_policy))
+			frappe.throw(msg, title=_("Annual Allocation Exceeded"))
+
 	@frappe.whitelist()
 	def get_monthly_earned_leave(self):
 		doj = frappe.db.get_value("Employee", self.employee, "date_of_joining")
