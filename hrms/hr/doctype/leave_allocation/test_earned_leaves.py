@@ -3,8 +3,6 @@ from frappe.tests.utils import FrappeTestCase
 from frappe.utils import (
 	add_days,
 	add_months,
-	date_diff,
-	flt,
 	get_first_day,
 	get_last_day,
 	get_year_ending,
@@ -476,6 +474,32 @@ class TestLeaveAllocation(FrappeTestCase):
 			"remaining_leaves": 4.0,
 		}
 		self.assertEqual(leave_allocation, expected)
+
+	def test_allocate_leaves_manually(self):
+		frappe.flags.current_date = get_year_start(getdate())
+		lpas = make_policy_assignment(
+			self.employee,
+			allocate_on_day="First Day",
+			start_date=frappe.flags.current_date,
+		)
+
+		leave_allocation = frappe.get_last_doc(
+			"Leave Allocation", filters={"leave_policy_assignment": lpas[0]}
+		)
+		leave_allocation.allocate_leaves_manually(1)
+		leave_allocation.allocate_leaves_manually(1)
+		leave_allocation.allocate_leaves_manually(1)
+		leave_allocation.allocate_leaves_manually(1)
+		leave_allocation.allocate_leaves_manually(1)
+		self.assertEqual(
+			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 6
+		)
+
+		leave_allocation.allocate_leaves_manually(6)
+		self.assertEqual(
+			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 12
+		)
+		self.assertRaises(frappe.ValidationError, leave_allocation.allocate_leaves_manually, 1)
 
 	def tearDown(self):
 		frappe.db.set_value("Employee", self.employee.name, "date_of_joining", self.original_doj)
