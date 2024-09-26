@@ -65,7 +65,10 @@ class EmployeePaymentEntry(PaymentEntry):
 						continue
 
 					if field == "exchange_rate" or not d.get(field) or force:
-						d.db_set(field, value)
+						if self.get("_action") in ("submit", "cancel"):
+							d.db_set(field, value)
+						else:
+							d.set(field, value)
 
 
 @frappe.whitelist()
