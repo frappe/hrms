@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-22 09:34+0000\n"
-"PO-Revision-Date: 2024-09-22 17:05\n"
+"PO-Revision-Date: 2024-09-28 18:32\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -857,7 +857,7 @@ msgstr "به کاربران اجازه دهید"
 #. 'Shift Type'
 #: hr/doctype/shift_type/shift_type.json
 msgid "Allow check-out after shift end time (in minutes)"
-msgstr "اجازه خروج پس از پایان نوبت (در دقیقه)"
+msgstr "اجازه خروج پس از پایان نوبت (به دقیقه)"
 
 #. Description of the 'Allow Users' (Section Break) field in DocType 'Leave
 #. Block List'
@@ -4560,7 +4560,7 @@ msgstr "انتقال کارمند را نمی توان قبل از تاریخ ا
 
 #: hr/doctype/hr_settings/hr_settings.js:27
 msgid "Employee can be named by Employee ID if you assign one, or via Naming Series. Select your preference here."
-msgstr "در صورت اختصاص دادن یک کارمند، یا از طریق نامگذاری سری، می توان کارمند را با شناسه کارمند نام برد. ترجیح خود را در اینجا انتخاب کنید."
+msgstr "در صورت اختصاص دادن یک کارمند، یا از طریق سری نامگذاری، می توان کارمند را با شناسه کارمند نام برد. ترجیح خود را در اینجا انتخاب کنید."
 
 #. Label of the employee_name (Data) field in DocType 'Leave Policy Assignment'
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.json
@@ -5918,7 +5918,7 @@ msgstr "مقطع تحصیلی"
 #. Label of the grand_total (Currency) field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
 msgid "Grand Total"
-msgstr "کل بزرگ"
+msgstr "جمع کل"
 
 #. Name of a DocType
 #. Label of the details_tab (Tab Break) field in DocType 'Gratuity'
@@ -8280,7 +8280,7 @@ msgstr "نام سازمان دهنده"
 #: hr/doctype/hr_settings/hr_settings.json
 #: hr/doctype/job_requisition/job_requisition.json
 msgid "Naming Series"
-msgstr "نامگذاری سری"
+msgstr "سری نامگذاری"
 
 #. Label of the net_pay (Currency) field in DocType 'Salary Slip'
 #. Label of the net_pay (Currency) field in DocType 'Salary Structure'
@@ -12694,7 +12694,7 @@ msgstr "مجموع ساعات کاری نباید از حداکثر ساعات �
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
 #: payroll/doctype/salary_slip/salary_slip.json
 msgid "Totals"
-msgstr "جمع کل"
+msgstr "جمع"
 
 #. Option for the 'Mode of Travel' (Select) field in DocType 'Travel Itinerary'
 #: hr/doctype/travel_itinerary/travel_itinerary.json
