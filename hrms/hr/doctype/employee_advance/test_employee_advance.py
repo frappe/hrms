@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests.utils import FrappeTestCase, change_settings
 from frappe.utils import flt, now_datetime, nowdate
 
 import erpnext
@@ -277,6 +277,7 @@ class TestEmployeeAdvance(FrappeTestCase):
 		# (1000 - 500) + (1000 - 700)
 		self.assertEqual(advance3.pending_amount, 800)
 
+	@change_settings("HR Settings", {"unlink_payment_on_cancellation_of_employee_advance": True})
 	def test_unlink_payment_entries(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
 		self.assertTrue(frappe.db.exists("Employee", employee_name))
