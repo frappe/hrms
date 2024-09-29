@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-22 09:34+0000\n"
-"PO-Revision-Date: 2024-09-28 18:32\n"
+"PO-Revision-Date: 2024-09-29 19:07\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -8247,7 +8247,7 @@ msgstr "حقوق اضافی چندگانه با ویژگی رونویسی برا
 
 #: hr/doctype/shift_assignment/shift_assignment.py:110
 msgid "Multiple Shift Assignments"
-msgstr "تکالیف شیفت چندگانه"
+msgstr "تخصیص شیفت چندگانه"
 
 #: www/jobs/index.py:12
 msgid "My Account"
@@ -10733,7 +10733,7 @@ msgstr "ساختار حقوق و دستمزد"
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Salary Structure Assignment"
-msgstr "تعیین ساختار حقوق و دستمزد"
+msgstr "تخصیص ساختار حقوق و دستمزد"
 
 #: public/js/utils/payroll_utils.js:31
 msgid "Salary Structure Assignment field"
