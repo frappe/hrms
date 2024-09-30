@@ -53,11 +53,13 @@
 					{{ `New ${doctype}` }}
 				</h2>
 			</header>
-
+			
 			<!-- Form -->
 			<div class="bg-white grow overflow-y-auto">
 				<!-- Tabs -->
+				 
 				<template v-if="tabbedView">
+					
 					<div
 						class="px-4 sticky top-0 z-[100] bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
 					>
@@ -83,13 +85,15 @@
 							v-show="tabName === activeTab"
 							class="flex flex-col space-y-4 p-4"
 						>
+					<!-- My custmize -->
+					<!-- <div class="flex flex-col gap-1.5"><span class="block text-sm leading-5 text-gray-700">Remarks</span><label class="block h-15"><div class="relative flex"><textarea class="h-15 placeholder-gray-500 form-textarea block w-full resize-none" placeholder="Enter Remarks" rows="3" value=""></textarea></div></label></div> -->
 							<template v-for="field in fieldList" :key="field.fieldname">
 								<slot
 									v-if="field.fieldtype == 'Table'"
 									:name="field.fieldname"
 									:isFormReadOnly="isFormReadOnly"
 								></slot>
-
+								
 								<FormField
 									v-else
 									:fieldtype="field.fieldtype"
@@ -100,7 +104,6 @@
 									:options="field.options"
 									:linkFilters="field.linkFilters"
 									:documentList="field.documentList"
-									:readOnly="isFieldReadOnly(field)"
 									:reqd="Boolean(field.reqd)"
 									:hidden="Boolean(field.hidden)"
 									:errorMessage="field.error_message"
@@ -108,8 +111,11 @@
 									:maxDate="field.maxDate"
 									:addSectionPadding="fieldList[0].name !== field.name"
 								/>
+								
 							</template>
 
+						
+						
 							<!-- Attachment upload -->
 							<div
 								class="flex flex-row gap-2 items-center justify-center p-5"

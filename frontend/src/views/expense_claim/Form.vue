@@ -92,7 +92,6 @@ const formFields = createResource({
 	params: { doctype: "Expense Claim" },
 	transform(data) {
 		let fields = getFilteredFields(data)
-
 		return fields.map((field) => {
 			if (field.fieldname === "posting_date") field.default = today
 			return applyFilters(field)
