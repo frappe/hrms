@@ -12,7 +12,8 @@ from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import (
 	create_leave_ledger_entry,
 	expire_allocation,
 )
-from hrms.hr.utils import get_leave_period, set_employee_name
+from hrms.hr.utils import create_additional_leave_ledger_entry, get_leave_period, set_employee_name
+from hrms.hr.utils import get_monthly_earned_leave as _get_monthly_earned_leave
 
 
 class OverlapError(frappe.ValidationError):
@@ -311,6 +312,72 @@ class LeaveAllocation(Document):
 			is_carry_forward=0,
 		)
 		create_leave_ledger_entry(self, args, submit)
+
+	@frappe.whitelist()
+	def allocate_leaves_manually(self, new_leaves):
+		new_allocation = flt(self.total_leaves_allocated) + flt(new_leaves)
+		new_allocation_without_cf = flt(
+			flt(self.get_existing_leave_count()) + flt(new_leaves),
+			self.precision("total_leaves_allocated"),
+		)
+
+		max_leaves_allowed = frappe.db.get_value("Leave Type", self.leave_type, "max_leaves_allowed")
+		if new_allocation > max_leaves_allowed and max_leaves_allowed > 0:
+			new_allocation = max_leaves_allowed
+
+		annual_allocation = frappe.db.get_value(
+			"Leave Policy Detail",
+			{"parent": self.leave_policy, "leave_type": self.leave_type},
+			"annual_allocation",
+		)
+		annual_allocation = flt(annual_allocation, self.precision("total_leaves_allocated"))
+
+		if (
+			new_allocation != self.total_leaves_allocated
+			# annual allocation as per policy should not be exceeded
+			and new_allocation_without_cf <= annual_allocation
+		):
+			self.db_set("total_leaves_allocated", new_allocation, update_modified=False)
+
+			date = frappe.flags.current_date or getdate()
+			create_additional_leave_ledger_entry(self, new_leaves, date)
+
+			text = _("{0} leaves were manually allocated by {1} on {2}").format(
+				frappe.bold(new_leaves), frappe.session.user, frappe.bold(formatdate(date))
+			)
+			self.add_comment(comment_type="Info", text=text)
+
+		else:
+			msg = _("Total leaves allocated cannot exceed annual allocation of {0}.").format(
+				frappe.bold(_(annual_allocation))
+			)
+			msg += "<br><br>"
+			msg += _("Reference: {0}").format(get_link_to_form("Leave Policy", self.leave_policy))
+			frappe.throw(msg, title=_("Annual Allocation Exceeded"))
+
+	@frappe.whitelist()
+	def get_monthly_earned_leave(self):
+		doj = frappe.db.get_value("Employee", self.employee, "date_of_joining")
+
+		annual_allocation = frappe.db.get_value(
+			"Leave Policy Detail",
+			{
+				"parent": self.leave_policy,
+				"leave_type": self.leave_type,
+			},
+			"annual_allocation",
+		)
+
+		frequency, rounding = frappe.db.get_value(
+			"Leave Type",
+			self.leave_type,
+			[
+				"earned_leave_frequency",
+				"rounding",
+			],
+		)
+
+		return _get_monthly_earned_leave(doj, annual_allocation, frequency, rounding)
 
 
 def get_previous_allocation(from_date, leave_type, employee):

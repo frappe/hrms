@@ -409,6 +409,7 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 		allocation.add_comment(comment_type="Info", text=text)
 
 
+@frappe.whitelist()
 def get_monthly_earned_leave(
 	date_of_joining,
 	annual_leaves,
