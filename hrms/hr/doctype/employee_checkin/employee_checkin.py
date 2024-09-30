@@ -241,8 +241,9 @@ def calculate_working_hours(logs, check_in_out_type, working_hours_calc_type):
 				if last_out_log_index or last_out_log_index == 0
 				else None
 			)
+			in_time = getattr(first_in_log, "time", None)
+			out_time = getattr(last_out_log, "time", None)
 			if first_in_log and last_out_log:
-				in_time, out_time = first_in_log.time, last_out_log.time
 				total_hours = time_diff_in_hours(in_time, out_time)
 		elif working_hours_calc_type == "Every Valid Check-in and Check-out":
 			in_log = out_log = None
