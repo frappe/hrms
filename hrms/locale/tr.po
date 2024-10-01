@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-22 09:34+0000\n"
-"PO-Revision-Date: 2024-09-23 17:19\n"
+"PO-Revision-Date: 2024-10-01 19:58\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -1442,7 +1442,7 @@ msgstr "Vardiya {0} Personele atansın mı?"
 
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:53
 msgid "Assign Structure"
-msgstr ""
+msgstr "Atama Yapısı"
 
 #: payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:298
 msgid "Assigning Salary Structure"
@@ -4831,22 +4831,22 @@ msgstr "Bitiş saati başlangıç saatinden önce olamaz"
 #. Label of a Link in the Performance Workspace
 #: hr/workspace/performance/performance.json
 msgid "Energy Point Log"
-msgstr "Personel Puanı Kayıtları"
+msgstr "Tecrübe Puanı Günlüğü"
 
 #. Label of a Link in the Performance Workspace
 #: hr/workspace/performance/performance.json
 msgid "Energy Point Rule"
-msgstr "Personel Puanı Kuralı"
+msgstr "Tecrübe Puanı Kuralı"
 
 #. Label of a Link in the Performance Workspace
 #: hr/workspace/performance/performance.json
 msgid "Energy Point Settings"
-msgstr ""
+msgstr "Tecrübe Puanı Ayarları"
 
 #. Label of a Card Break in the Performance Workspace
 #: hr/workspace/performance/performance.json
 msgid "Energy Points"
-msgstr "Personel Puanı"
+msgstr "Tecrübe Puanları"
 
 #: hr/doctype/hr_settings/hr_settings.js:34
 msgid "Enter the Standard Working Hours for a normal work day. These hours will be used in calculations of reports such as Employee Hours Utilization and Project Profitability analysis."
@@ -5304,7 +5304,7 @@ msgstr "Dışa Aktarılıyor..."
 #. Option for the 'Status' (Select) field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
 msgid "Failed"
-msgstr "Başarısız Oldu"
+msgstr "Başarısız"
 
 #: hr/utils.py:819
 msgid "Failed to create/submit {0} for employees:"
@@ -6060,7 +6060,7 @@ msgstr ""
 
 #: setup.py:65
 msgid "HR & Payroll Settings"
-msgstr ""
+msgstr "İnsan Kaynakları & Bordro Ayarları"
 
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
@@ -10166,7 +10166,7 @@ msgstr "hatırlatıldı"
 #. Summary Group'
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "Reminder"
-msgstr "hatırlama"
+msgstr "Hatırlatıcı"
 
 #. Label of the reminders_section (Section Break) field in DocType 'HR
 #. Settings'
