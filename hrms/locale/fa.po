@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-22 09:34+0000\n"
-"PO-Revision-Date: 2024-09-30 19:34\n"
+"PO-Revision-Date: 2024-10-01 19:58\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -222,7 +222,7 @@ msgstr "<b>مثال:</b> SAL-{first_name}-{date_of_birth.year} <br>این یک �
 #: hr/doctype/leave_allocation/leave_allocation.py:278
 #: hr/doctype/leave_allocation/leave_allocation.py:286
 msgid "<b>Total Leaves Allocated</b> are more than the number of days in the allocation period"
-msgstr "<b>کل برگهای تخصیص یافته</b> بیشتر از تعداد روزهای دوره تخصیص است"
+msgstr "<b>کل مرخصی‌های تخصیص یافته</b> بیشتر از تعداد روزهای دوره تخصیص است"
 
 #. Content of the 'Help' (HTML) field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -584,7 +584,7 @@ msgstr "روزهای واقعی قابل وصول"
 
 #: hr/doctype/leave_application/leave_application.py:396
 msgid "Actual balances aren't available because the leave application spans over different leave allocations. You can still apply for leaves which would be compensated during the next allocation."
-msgstr "موجودی واقعی در دسترس نیست زیرا برنامه مرخصی شامل تخصیص مرخصی های مختلف است. شما همچنان می توانید برای برگ هایی که در طول تخصیص بعدی جبران می شود، درخواست دهید."
+msgstr "ترازهای واقعی در دسترس نیست زیرا برنامه مرخصی شامل تخصیص مرخصی های مختلف است. شما همچنان می توانید برای مرخصی‌هایی که در طول تخصیص بعدی جبران می شود، درخواست دهید."
 
 #. Label of the add_day_wise_dates (Button) field in DocType 'Leave Block List'
 #: hr/doctype/leave_block_list/leave_block_list.json
@@ -609,13 +609,13 @@ msgstr "افزودن به جزئیات"
 #: hr/doctype/leave_allocation/leave_allocation.json
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 msgid "Add unused leaves from previous allocations"
-msgstr "برگ های استفاده نشده از تخصیص های قبلی را اضافه کنید"
+msgstr "افزودن مرخصی‌های استفاده نشده از تخصیص های قبلی"
 
 #. Description of the 'Carry Forward' (Check) field in DocType 'Leave Control
 #. Panel'
 #: hr/doctype/leave_control_panel/leave_control_panel.json
 msgid "Add unused leaves from previous leave period's allocation to this allocation"
-msgstr "برگهای استفاده نشده از تخصیص دوره مرخصی قبلی را به این تخصیص اضافه کنید"
+msgstr "مرخصی‌های استفاده نشده از تخصیص دوره مرخصی قبلی را به این تخصیص اضافه کنید"
 
 #. Label of the added_on (Datetime) field in DocType 'Employee Performance
 #. Feedback'
@@ -813,7 +813,7 @@ msgstr ""
 #. Label of the allow_encashment (Check) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
 msgid "Allow Encashment"
-msgstr "Encashment را مجاز کنید"
+msgstr "اجازه بازخرید"
 
 #. Label of the allow_geolocation_tracking (Check) field in DocType 'HR
 #. Settings'
@@ -831,7 +831,7 @@ msgstr "به تکالیف شیفت چندگانه برای همان تاریخ �
 #. Label of the allow_negative (Check) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
 msgid "Allow Negative Balance"
-msgstr "به تعادل منفی اجازه دهید"
+msgstr "اجازه تراز منفی"
 
 #. Label of the allow_over_allocation (Check) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
@@ -869,7 +869,7 @@ msgstr "به کاربران زیر اجازه دهید تا درخواست‌ه�
 #. Type'
 #: hr/doctype/leave_type/leave_type.json
 msgid "Allows allocating more leaves than the number of days in the allocation period."
-msgstr "امکان تخصیص برگهای بیشتر از تعداد روزهای دوره تخصیص را فراهم می کند."
+msgstr "امکان تخصیص مرخصی‌های بیشتر از تعداد روزهای دوره تخصیص را فراهم می کند."
 
 #. Option for the 'Determine Check-in and Check-out' (Select) field in DocType
 #. 'Shift Type'
@@ -1652,7 +1652,7 @@ msgstr "تنظیمات حضور و غیاب خودکار"
 #. Label of the auto_leave_encashment (Check) field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
 msgid "Auto Leave Encashment"
-msgstr "وصول خودکار مرخصی"
+msgstr "بازخرید خودکار مرخصی"
 
 #. Option for the 'KRA Evaluation Method' (Select) field in DocType 'Appraisal
 #. Cycle'
@@ -2068,13 +2068,13 @@ msgstr "نمی توان وضعیت گروه های هدف را به روز کر�
 #: hr/doctype/leave_control_panel/leave_control_panel.json
 #: hr/doctype/leave_type/leave_type.json
 msgid "Carry Forward"
-msgstr "حمل به جلو"
+msgstr "انتقال به دوره بعد"
 
 #. Label of the carry_forwarded_leaves_count (Float) field in DocType 'Leave
 #. Allocation'
 #: hr/doctype/leave_allocation/leave_allocation.json
 msgid "Carry Forwarded Leaves"
-msgstr "مرخصی های ارسال شده را حمل کنید"
+msgstr "مرخصی های منتقل شده به دوره بعد"
 
 #: setup.py:340 setup.py:341
 msgid "Casual Leave"
@@ -3696,11 +3696,11 @@ msgstr "مرخصی های به دست آمده"
 
 #: hr/doctype/leave_type/leave_type.py:34
 msgid "Earned Leaves are allocated as per the configured frequency via scheduler."
-msgstr "برگهای به دست آمده طبق فرکانس پیکربندی شده از طریق زمانبندی تخصیص داده می شوند."
+msgstr "مرخصی‌های به دست آمده طبق فرکانس پیکربندی شده از طریق زمانبندی تخصیص داده می شوند."
 
 #: hr/doctype/leave_allocation/leave_allocation.py:142
 msgid "Earned Leaves are auto-allocated via scheduler based on the annual allocation set in the Leave Policy: {0}"
-msgstr "برگه‌های کسب‌شده به‌طور خودکار از طریق زمان‌بندی بر اساس تخصیص سالانه تنظیم‌شده در خط‌مشی مرخصی تخصیص می‌یابند: {0}"
+msgstr "مرخصی‌های کسب‌شده به‌طور خودکار از طریق زمان‌بندی بر اساس تخصیص سالانه تنظیم‌شده در خط‌مشی مرخصی تخصیص می‌یابند: {0}"
 
 #: hr/doctype/leave_type/leave_type.js:47
 msgid "Earned Leaves are leaves earned by an Employee after working with the company for a certain amount of time. Enabling this will allocate leaves on pro-rata basis by automatically updating Leave Allocation for leaves of this type at intervals set by 'Earned Leave Frequency."
@@ -4727,31 +4727,31 @@ msgstr "فعال"
 #. Label of the encashment (Section Break) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
 msgid "Encashment"
-msgstr "نقدی"
+msgstr "بازخرید"
 
 #. Label of the encashment_amount (Currency) field in DocType 'Leave
 #. Encashment'
 #: hr/doctype/leave_encashment/leave_encashment.json
 msgid "Encashment Amount"
-msgstr "مبلغ نقدی"
+msgstr "مبلغ بازخرید"
 
 #. Label of the encashment_date (Date) field in DocType 'Leave Encashment'
 #: hr/doctype/leave_encashment/leave_encashment.json
 msgid "Encashment Date"
-msgstr "تاریخ وصول"
+msgstr "تاریخ بازخرید"
 
 #. Label of the encashment_days (Float) field in DocType 'Leave Encashment'
 #: hr/doctype/leave_encashment/leave_encashment.json
 msgid "Encashment Days"
-msgstr "روزهای وصول"
+msgstr "روزهای بازخرید"
 
 #: hr/doctype/leave_encashment/leave_encashment.py:135
 msgid "Encashment Days cannot exceed {0} {1} as per Leave Type settings"
-msgstr "طبق تنظیمات نوع مرخصی، روزهای وصول نمی‌توانند از {0} {1} تجاوز کنند"
+msgstr "طبق تنظیمات نوع مرخصی، روزهای بازخرید نمی‌توانند از {0} {1} تجاوز کنند"
 
 #: hr/doctype/leave_encashment/leave_encashment.py:125
 msgid "Encashment Limit Applied"
-msgstr "محدودیت نقدی اعمال شد"
+msgstr "محدودیت بازخرید اعمال شد"
 
 #. Label of the encrypt_salary_slips_in_emails (Check) field in DocType
 #. 'Payroll Settings'
@@ -4973,7 +4973,7 @@ msgstr "تعطیلات را حذف کنید"
 
 #: hr/doctype/leave_encashment/leave_encashment.py:111
 msgid "Excluded {0} Non-Encashable Leaves for {1}"
-msgstr "{0} برگهای غیرقابل نقد برای {1} مستثنی شد"
+msgstr "{0} مرخصی‌های غیرقابل نقد برای {1} مستثنی شد"
 
 #. Label of the exempted_from_income_tax (Check) field in DocType 'Salary
 #. Component'
@@ -5247,7 +5247,7 @@ msgstr "منقضی تخصیص"
 #. 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
 msgid "Expire Carry Forwarded Leaves (Days)"
-msgstr "برگهای منقضی حمل و نقل (روزها)"
+msgstr "انقضای مرخصی‌های منتقل شده به دوره بعد (روزها)"
 
 #. Label of the expired (Check) field in DocType 'Leave Allocation'
 #: hr/doctype/leave_allocation/leave_allocation.json
@@ -5708,7 +5708,7 @@ msgstr "از تاریخ نمی تواند کمتر از تاریخ عضویت ک
 
 #: hr/doctype/leave_type/leave_type.js:42
 msgid "From here, you can enable encashment for the balance leaves."
-msgstr "از اینجا می‌توانید وجه نقد را برای برگ‌های موجودی فعال کنید."
+msgstr "از اینجا می‌توانید بازخرید را برای تراز مرخصی‌ها فعال کنید."
 
 #. Label of the from_year (Int) field in DocType 'Gratuity Rule Slab'
 #: payroll/doctype/gratuity_rule_slab/gratuity_rule_slab.json
@@ -6590,7 +6590,7 @@ msgstr "شامل تعطیلات در تعداد کل. از روزهای کاری
 #. Label of the include_holiday (Check) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
 msgid "Include holidays within leaves as leaves"
-msgstr "تعطیلات درون برگ را به عنوان برگ در نظر بگیرید"
+msgstr "تعطیلات درون مرخصی را به عنوان مرخصی در نظر بگیرید"
 
 #. Label of the income_source_details_section (Section Break) field in DocType
 #. 'Employee Other Income'
@@ -6952,7 +6952,7 @@ msgstr "برای پاداش ارجاع قابل استفاده است"
 #: hr/doctype/leave_type/leave_type.json
 #: hr/report/leave_ledger/leave_ledger.py:86
 msgid "Is Carry Forward"
-msgstr "حمل به جلو است"
+msgstr "انتقال به دوره بعد است"
 
 #. Label of the is_compensatory (Check) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
@@ -7482,13 +7482,13 @@ msgstr "جزئیات مرخصی"
 #: hr/doctype/leave_encashment/leave_encashment.json
 #: hr/workspace/leaves/leaves.json
 msgid "Leave Encashment"
-msgstr "مرخصی وصول"
+msgstr "بازخرید مرخصی"
 
 #. Label of the leave_encashment_amount_per_day (Currency) field in DocType
 #. 'Salary Structure'
 #: payroll/doctype/salary_structure/salary_structure.json
 msgid "Leave Encashment Amount Per Day"
-msgstr "مبلغ نقدی مرخصی در روز"
+msgstr "مبلغ بازخرید مرخصی در روز"
 
 #. Name of a report
 #: hr/report/leave_ledger/leave_ledger.json
@@ -7624,7 +7624,7 @@ msgstr "نوع مرخصی {0} قابل تخصیص نیست زیرا مرخصی �
 
 #: hr/doctype/leave_allocation/leave_allocation.py:399
 msgid "Leave Type {0} cannot be carry-forwarded"
-msgstr "نوع مرخصی {0} قابل انتقال نیست"
+msgstr "نوع مرخصی {0} قابل انتقال به دوره بعد نیست"
 
 #: hr/doctype/leave_encashment/leave_encashment.py:101
 msgid "Leave Type {0} is not encashable"
@@ -7661,11 +7661,11 @@ msgstr "درخواست مرخصی با تخصیص مرخصی {0} پیوند دا
 
 #: hr/doctype/leave_allocation/leave_allocation.py:223
 msgid "Leave cannot be allocated before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}"
-msgstr "مرخصی را نمی توان قبل از {0} تخصیص داد، زیرا موجودی مرخصی قبلاً در سابقه تخصیص مرخصی آینده منتقل شده است {1}"
+msgstr "مرخصی را نمی توان قبل از {0} تخصیص داد، زیرا تراز مرخصی قبلاً در سابقه تخصیص مرخصی آینده منتقل به دوره بعد شده است {1}"
 
 #: hr/doctype/leave_application/leave_application.py:241
 msgid "Leave cannot be applied/cancelled before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}"
-msgstr "مرخصی قبل از {0} قابل اعمال/لغو نیست، زیرا موجودی مرخصی قبلاً در سابقه تخصیص مرخصی آینده منتقل شده است {1}"
+msgstr "مرخصی قبل از {0} قابل اعمال/لغو نیست، زیرا تراز مرخصی قبلاً در سابقه تخصیص مرخصی آینده منتقل به دوره بعد شده است {1}"
 
 #: hr/doctype/leave_application/leave_application.py:477
 msgid "Leave of type {0} cannot be longer than {1}."
@@ -7709,7 +7709,7 @@ msgstr ""
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:76
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
-msgstr "برگه‌های نوع مرخصی {0} منتقل نمی‌شوند زیرا حمل و نقل غیرفعال است."
+msgstr "مرخصی‌های نوع مرخصی {0} منتقل نمی‌شوند زیرا انتقال به دوره بعد غیرفعال است."
 
 #: setup.py:405
 msgid "Leaves per Year"
@@ -8019,7 +8019,7 @@ msgstr "حداکثر ساعت کاری در برابر Timesheet"
 #. Type'
 #: hr/doctype/leave_type/leave_type.json
 msgid "Maximum Carry Forwarded Leaves"
-msgstr "حداکثر بار حمل بار"
+msgstr "حداکثر مرخصی‌های منتقل شده به دوره بعد"
 
 #. Label of the max_continuous_days_allowed (Int) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
@@ -8075,7 +8075,7 @@ msgstr "حداکثر سود کارمند {0} از مجموع {2} مبلغ ادع
 
 #: hr/doctype/leave_encashment/leave_encashment.py:122
 msgid "Maximum encashable leaves for {0} are {1}"
-msgstr "حداکثر برگه های قابل نقد برای {0} {1} است"
+msgstr "حداکثر مرخصی‌های قابل نقد برای {0} {1} است"
 
 #: hr/doctype/leave_policy/leave_policy.py:19
 msgid "Maximum leave allowed in the leave type {0} is {1}"
@@ -8524,7 +8524,7 @@ msgstr "ساعات کاری بدون صورتحساب (NB)"
 #. Label of the non_encashable_leaves (Int) field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
 msgid "Non-Encashable Leaves"
-msgstr "برگهای غیرقابل جذب"
+msgstr "مرخصی‌های غیرقابل جذب"
 
 #. Option for the 'Meal Preference' (Select) field in DocType 'Travel
 #. Itinerary'
@@ -8563,7 +8563,7 @@ msgstr "توجه: شیفت در رکوردهای حضور و غیاب موجود
 
 #: hr/doctype/leave_allocation/leave_allocation.py:154
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
-msgstr "توجه: مجموع برگ‌های تخصیص‌یافته {0} نباید کمتر از برگ‌های تأیید شده قبلی {1} برای دوره باشد."
+msgstr "توجه: مجموع مرخصی‌های تخصیص‌یافته {0} نباید کمتر از مرخصی‌های تأیید شده قبلی {1} برای دوره باشد"
 
 #: payroll/doctype/salary_slip/salary_slip.py:1862
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
@@ -8623,7 +8623,7 @@ msgstr ""
 #. Encashment'
 #: hr/doctype/leave_encashment/leave_encashment.json
 msgid "Number of leaves eligible for encashment based on leave type settings"
-msgstr "تعداد برگهای واجد شرایط برای وصول بر اساس تنظیمات نوع مرخصی"
+msgstr "تعداد مرخصی‌های واجد شرایط برای بازخرید بر اساس تنظیمات نوع مرخصی"
 
 #. Option for the 'Log Type' (Select) field in DocType 'Employee Checkin'
 #: hr/doctype/employee_checkin/employee_checkin.json
@@ -9884,7 +9884,7 @@ msgstr "رتبه بندی ها"
 #. Label of the reallocate_leaves (Check) field in DocType 'Employee Transfer'
 #: hr/doctype/employee_transfer/employee_transfer.json
 msgid "Re-allocate Leaves"
-msgstr "برگها را دوباره تخصیص دهید"
+msgstr "تخصیص دوباره مرخصی‌ها"
 
 #. Label of the read (Check) field in DocType 'PWA Notification'
 #: hr/doctype/pwa_notification/pwa_notification.json
@@ -10972,7 +10972,7 @@ msgstr "نوع مرخصی مورد نظر کارمند را انتخاب کنی�
 
 #: hr/doctype/leave_application/leave_application.js:291
 msgid "Select your Leave Approver i.e. the person who approves or rejects your leaves."
-msgstr "تایید کننده مرخصی خود را انتخاب کنید، یعنی شخصی که برگه های شما را تایید یا رد می کند."
+msgstr "تایید کننده مرخصی خود را انتخاب کنید، یعنی شخصی که مرخصی‌های شما را تایید یا رد می کند."
 
 #. Label of the self_appraisal_tab (Tab Break) field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -11414,7 +11414,7 @@ msgstr "نمایش مانده مرخصی در فیش حقوقی"
 #. in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
 msgid "Show Leaves Of All Department Members In Calendar"
-msgstr "نمایش برگه های همه اعضای بخش در تقویم"
+msgstr "نمایش مرخصی‌های همه اعضای بخش در تقویم"
 
 #: payroll/doctype/salary_structure/salary_structure.js:205
 msgid "Show Salary Slip"
@@ -12530,7 +12530,7 @@ msgstr "مجموع روزهای مرخصی"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:117
 msgid "Total Leaves"
-msgstr "کل برگ"
+msgstr "کل مرخصی‌ها"
 
 #: hr/report/leave_ledger/leave_ledger.py:193
 msgid "Total Leaves ({0})"
@@ -12540,13 +12540,13 @@ msgstr ""
 #. Allocation'
 #: hr/doctype/leave_allocation/leave_allocation.json
 msgid "Total Leaves Allocated"
-msgstr "مجموع برگهای اختصاص داده شده"
+msgstr "مجموع مرخصی‌های اختصاص داده شده"
 
 #. Label of the total_leaves_encashed (Float) field in DocType 'Leave
 #. Allocation'
 #: hr/doctype/leave_allocation/leave_allocation.json
 msgid "Total Leaves Encashed"
-msgstr "مجموع برگهای انباشته شده"
+msgstr "مجموع مرخصی‌های انباشته شده"
 
 #: setup.py:808
 msgid "Total Loan Repayment"
@@ -12628,7 +12628,7 @@ msgstr "مجموع مرخصی های تخصیص یافته بیشتر از حد�
 
 #: hr/doctype/leave_allocation/leave_allocation.py:160
 msgid "Total allocated leaves {0} cannot be less than already approved leaves {1} for the period"
-msgstr "مجموع برگهای تخصیص یافته {0} نمی تواند کمتر از برگهای تأیید شده قبلی {1} برای دوره باشد"
+msgstr "مجموع مرخصی‌های تخصیص یافته {0} نمی تواند کمتر از مرخصی‌های تأیید شده قبلی {1} برای دوره باشد"
 
 #: payroll/doctype/salary_structure/salary_structure.py:170
 msgid "Total flexible benefit component amount {0} should not be less than max benefits {1}"
@@ -12646,7 +12646,7 @@ msgstr "مجموع در کلمات (ارز شرکت)"
 
 #: hr/doctype/leave_allocation/leave_allocation.py:251
 msgid "Total leaves allocated is mandatory for Leave Type {0}"
-msgstr "مجموع برگهای تخصیص یافته برای نوع مرخصی {0} اجباری است"
+msgstr "مجموع مرخصی‌های تخصیص یافته برای نوع مرخصی {0} اجباری است"
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:153
 msgid "Total percentage against cost centers should be 100"
@@ -13487,7 +13487,7 @@ msgstr "شما فقط می توانید برای حداکثر {0} موقعیت �
 
 #: hr/doctype/leave_encashment/leave_encashment.py:37
 msgid "You can only submit Leave Encashment for a valid encashment amount"
-msgstr "شما فقط می توانید مرخصی را برای مبلغ نقدی معتبر ارسال کنید"
+msgstr "شما فقط می توانید بازخرید مرخصی را برای مبلغ بازخرید معتبر ارسال کنید"
 
 #: api/__init__.py:566
 msgid "You can only upload JPG, PNG, PDF, TXT or Microsoft documents."
