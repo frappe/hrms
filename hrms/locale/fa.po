@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-09-22 09:34+0000\n"
-"PO-Revision-Date: 2024-09-29 19:07\n"
+"PO-Revision-Date: 2024-09-30 19:34\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -13680,7 +13680,7 @@ msgstr "{0}: {1}"
 #. Count format of shortcut in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "{} "
-msgstr ""
+msgstr "{} "
 
 #. Count format of shortcut in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
