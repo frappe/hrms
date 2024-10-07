@@ -20,10 +20,8 @@ class TestLeaveBlockList(FrappeTestCase):
 		frappe.db.set_value(
 			"Department", "_Test Department - _TC", "leave_block_list", "_Test Leave Block List"
 		)
-		self.assertTrue(
-			getdate("2013-01-02")
-			in [d.block_date for d in get_applicable_block_dates("2013-01-01", "2013-01-03")]
-		)
+		block_days = [d.block_date for d in get_applicable_block_dates("2013-01-01", "2013-01-03")]
+		self.assertIn(getdate("2013-01-02"), block_days)
 
 	def test_get_applicable_block_dates_for_allowed_user(self):
 		frappe.set_user("test1@example.com")
@@ -37,10 +35,10 @@ class TestLeaveBlockList(FrappeTestCase):
 		frappe.db.set_value(
 			"Department", "_Test Department 1 - _TC", "leave_block_list", "_Test Leave Block List"
 		)
-		self.assertTrue(
-			getdate("2013-01-02")
-			in [d.block_date for d in get_applicable_block_dates("2013-01-01", "2013-01-03", all_lists=True)]
-		)
+		block_days = [
+			d.block_date for d in get_applicable_block_dates("2013-01-01", "2013-01-03", all_lists=True)
+		]
+		self.assertIn(getdate("2013-01-02"), block_days)
 
 	def test_get_applicable_block_dates_all_lists_for_leave_type(self):
 		frappe.set_user("test1@example.com")
@@ -52,10 +50,10 @@ class TestLeaveBlockList(FrappeTestCase):
 				"2013-01-01", "2013-01-31", all_lists=True, leave_type="Casual Leave"
 			)
 		]
-		self.assertTrue(getdate("2013-01-16") in block_days)
-		self.assertTrue(getdate("2013-01-19") in block_days)
-		self.assertTrue(getdate("2013-01-02") in block_days)
-		self.assertFalse(getdate("2013-01-25") in block_days)
+		self.assertIn(getdate("2013-01-16"), block_days)
+		self.assertIn(getdate("2013-01-19"), block_days)
+		self.assertIn(getdate("2013-01-02"), block_days)
+		self.assertNotIn(getdate("2013-01-25"), block_days)
 
 	def test_get_applicable_block_dates_for_allowed_user_for_leave_type(self):
 		frappe.set_user("test1@example.com")
@@ -65,7 +63,7 @@ class TestLeaveBlockList(FrappeTestCase):
 			d.block_date
 			for d in get_applicable_block_dates("2013-01-01", "2013-01-31", leave_type="Casual Leave")
 		]
-		self.assertTrue(getdate("2013-01-19") in block_days)
-		self.assertFalse(getdate("2013-01-16") in block_days)
-		self.assertFalse(getdate("2013-01-02") in block_days)
-		self.assertFalse(getdate("2013-01-25") in block_days)
+		self.assertIn(getdate("2013-01-19"), block_days)
+		self.assertNotIn(getdate("2013-01-16"), block_days)
+		self.assertNotIn(getdate("2013-01-02"), block_days)
+		self.assertNotIn(getdate("2013-01-25"), block_days)
