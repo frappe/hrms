@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-09-29 09:34+0000\n"
-"PO-Revision-Date: 2024-10-02 20:14\n"
+"POT-Creation-Date: 2024-10-06 09:34+0000\n"
+"PO-Revision-Date: 2024-10-07 09:11\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -626,7 +626,7 @@ msgstr ""
 msgid "Added On"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1294
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1297
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
 msgstr ""
 
@@ -2039,11 +2039,11 @@ msgstr ""
 msgid "Cannot cancel Shift Assignment: {0} as it is linked to Employee Checkin: {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:267
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:270
 msgid "Cannot create Salary Slip for Employee joining after Payroll Period"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:270
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:273
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr ""
 
@@ -4650,7 +4650,7 @@ msgstr ""
 msgid "Employee {0} on Half day on {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:575
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:578
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
 msgstr ""
 
@@ -4878,11 +4878,11 @@ msgstr "Dnevnik grešaka"
 msgid "Error Message"
 msgstr "Poruka o grešci"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1210
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1213
 msgid "Error in formula or condition"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2175
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2180
 msgid "Error in formula or condition: {0} in Income Tax Slab"
 msgstr ""
 
@@ -4890,7 +4890,7 @@ msgstr ""
 msgid "Error in some rows"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2254
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2259
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
 msgstr ""
 
@@ -6705,15 +6705,15 @@ msgstr ""
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1538
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1541
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1526
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1529
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1534
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1537
 msgid "Income Tax Slab: {0} is disabled"
 msgstr ""
 
@@ -7682,7 +7682,7 @@ msgstr ""
 msgid "Leave Without Pay"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:466
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:469
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr ""
 
@@ -8184,7 +8184,7 @@ msgstr ""
 msgid "Missing Relieving Date"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1529
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1532
 msgid "Missing Tax Slab"
 msgstr ""
 
@@ -8309,8 +8309,8 @@ msgstr "Moj račun"
 msgid "Name"
 msgstr "Naziv"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1196
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2170
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1199
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2175
 msgid "Name error"
 msgstr ""
 
@@ -8347,7 +8347,7 @@ msgstr ""
 msgid "Net Pay Info"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:191
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:194
 msgid "Net Pay cannot be less than 0"
 msgstr ""
 
@@ -8460,7 +8460,7 @@ msgstr ""
 msgid "No Staffing Plans found for this Designation"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:392
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:395
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
 msgstr ""
 
@@ -8612,7 +8612,7 @@ msgstr ""
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1862
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1865
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr ""
 
@@ -9396,7 +9396,7 @@ msgstr ""
 msgid "Please add the remaining benefits {0} to the application as pro-rata component"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:759
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:762
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr ""
 
@@ -9420,7 +9420,7 @@ msgstr ""
 msgid "Please enter the designation"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1851
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1854
 msgid "Please see attachment"
 msgstr ""
 
@@ -9530,7 +9530,7 @@ msgstr ""
 msgid "Please set Earning Component for Leave type: {0}."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:450
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:453
 msgid "Please set Payroll based on in Payroll settings"
 msgstr ""
 
@@ -9563,7 +9563,7 @@ msgstr ""
 msgid "Please set the Company"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:263
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:266
 msgid "Please set the Date Of Joining for employee {0}"
 msgstr ""
 
@@ -9970,7 +9970,7 @@ msgstr ""
 msgid "Reason for Withholding Salary"
 msgstr ""
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:287
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:288
 msgid "Reason for skipping auto attendance:"
 msgstr ""
 
@@ -10725,11 +10725,11 @@ msgstr ""
 msgid "Salary Slip creation is queued. It may take a few minutes"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:297
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:300
 msgid "Salary Slip of employee {0} already created for this period"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:303
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:306
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr ""
 
@@ -10795,7 +10795,7 @@ msgstr ""
 msgid "Salary Structure Assignment for Employee already exists"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:395
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:398
 msgid "Salary Structure Missing"
 msgstr ""
 
@@ -10855,7 +10855,7 @@ msgstr ""
 msgid "Salary components should be part of the Salary Structure."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2319
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2324
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr ""
 
@@ -11641,7 +11641,7 @@ msgstr ""
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1471
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1474
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr ""
 
@@ -11879,11 +11879,11 @@ msgstr ""
 msgid "Sync {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1203
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1206
 msgid "Syntax error"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2173
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2178
 msgid "Syntax error in condition: {0} in Income Tax Slab"
 msgstr ""
 
@@ -12151,7 +12151,7 @@ msgstr ""
 msgid "Theory"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:447
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:450
 msgid "There are more holidays than working days this month."
 msgstr ""
 
@@ -12186,15 +12186,15 @@ msgstr ""
 msgid "This employee already has a log with the same timestamp.{0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1211
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1214
 msgid "This error can be due to invalid formula or condition."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1204
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1207
 msgid "This error can be due to invalid syntax."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1197
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1200
 msgid "This error can be due to missing or deleted field."
 msgstr ""
 
@@ -12741,7 +12741,7 @@ msgstr ""
 msgid "Total working Days Per Year"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:164
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:167
 msgid "Total working hours should not be greater than max working hours {0}"
 msgstr ""
 
@@ -13638,7 +13638,7 @@ msgstr ""
 msgid "{0} & {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2169
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2174
 msgid "{0} <br> This error can be due to missing or deleted field."
 msgstr ""
 
@@ -13735,7 +13735,7 @@ msgstr ""
 msgid "{0} {1} {2}?"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1883
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1886
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr ""
 
