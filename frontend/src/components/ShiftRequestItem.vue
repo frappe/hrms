@@ -5,15 +5,19 @@
 		:employeeName="props.doc.employee_name"
 	>
 		<template #left>
-			<LeaveIcon class="h-5 w-5 text-gray-500" />
+			<ShiftIcon class="h-5 w-5 text-gray-500" />
 			<div class="flex flex-col items-start gap-1.5">
 				<div class="text-base font-normal text-gray-800">
-					{{ props.doc.leave_type }}
+					{{ props.doc.shift_type }}
 				</div>
 				<div class="text-xs font-normal text-gray-500">
-					<span>{{ props.doc.leave_dates || getLeaveDates(props.doc) }}</span>
-					<span class="whitespace-pre"> &middot; </span>
-					<span class="whitespace-nowrap">{{ `${props.doc.total_leave_days}d` }}</span>
+					<span>{{ props.doc.shift_dates || getDates(props.doc) }}</span>
+					<span v-if="props.doc.to_date">
+						<span class="whitespace-pre"> &middot; </span>
+						<span class="whitespace-nowrap">{{
+							`${props.doc.total_shift_days || getTotalDays(props.doc)}d`
+						}}</span>
+					</span>
 				</div>
 			</div>
 		</template>
@@ -26,11 +30,11 @@
 
 <script setup>
 import { computed } from "vue"
-import { FeatherIcon, Badge } from "frappe-ui"
+import { Badge, FeatherIcon } from "frappe-ui"
 
 import ListItem from "@/components/ListItem.vue"
-import LeaveIcon from "@/components/icons/LeaveIcon.vue"
-import { getLeaveDates } from "@/data/leaves"
+import ShiftIcon from "@/components/icons/ShiftIcon.vue"
+import { getDates, getTotalDays } from "@/data/attendance"
 
 const props = defineProps({
 	doc: {
@@ -47,7 +51,8 @@ const props = defineProps({
 })
 
 const status = computed(() => {
-	return props.workflowStateField ? props.doc[props.workflowStateField] : props.doc.status
+	if (props.workflowStateField) return props.doc[props.workflowStateField]
+	return props.doc.docstatus ? props.doc.status : "Open"
 })
 
 const colorMap = {

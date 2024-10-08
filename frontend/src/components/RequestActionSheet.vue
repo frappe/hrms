@@ -11,6 +11,7 @@
 				{{ document?.doctype }}
 			</span>
 			<FeatherIcon
+				v-if="props.showOpenForm"
 				name="external-link"
 				class="h-4 w-4 text-gray-500 cursor-pointer"
 				@click="openFormView"
@@ -24,7 +25,7 @@
 					v-for="field in fieldsWithValues"
 					:key="field.fieldname"
 					:class="[
-						['Small Text', 'Text', 'Long Text', 'Table'].includes(
+						['Small Text', 'Text', 'Long Text', 'Table', 'geolocation'].includes(
 							field.fieldtype
 						)
 							? 'flex-col'
@@ -111,7 +112,8 @@
 		<div
 			v-else-if="
 				document?.doc?.docstatus === 0 &&
-				['Approved', 'Rejected'].includes(document?.doc?.[approvalField]) &&
+				(document?.doc?.doctype === 'Attendance Request' ||
+					['Approved', 'Rejected'].includes(document?.doc?.[approvalField])) &&
 				hasPermission('submit')
 			"
 			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
@@ -177,6 +179,10 @@ const props = defineProps({
 	fields: {
 		type: Array,
 		required: true,
+	},
+	showOpenForm: {
+		type: Boolean,
+		default: true,
 	},
 	modelValue: {
 		type: Object,

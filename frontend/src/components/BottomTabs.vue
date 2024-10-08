@@ -30,6 +30,7 @@ import HomeIcon from "@/components/icons/HomeIcon.vue"
 import LeaveIcon from "@/components/icons/LeaveIcon.vue"
 import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
 import SalaryIcon from "@/components/icons/SalaryIcon.vue"
+import AttendanceIcon from "@/components/icons/AttendanceIcon.vue"
 
 const route = useRoute()
 
@@ -38,6 +39,11 @@ const tabItems = [
 		icon: HomeIcon,
 		title: "Home",
 		route: "/home",
+	},
+	{
+		icon: AttendanceIcon,
+		title: "Attendance",
+		route: "/dashboard/attendance",
 	},
 	{
 		icon: LeaveIcon,
