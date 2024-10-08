@@ -17,12 +17,24 @@ import CheckInPanel from "@/components/CheckInPanel.vue"
 import QuickLinks from "@/components/QuickLinks.vue"
 import BaseLayout from "@/components/BaseLayout.vue"
 import RequestPanel from "@/components/RequestPanel.vue"
+import AttendanceIcon from "@/components/icons/AttendanceIcon.vue"
+import ShiftIcon from "@/components/icons/ShiftIcon.vue"
 import LeaveIcon from "@/components/icons/LeaveIcon.vue"
 import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
 import EmployeeAdvanceIcon from "@/components/icons/EmployeeAdvanceIcon.vue"
 import SalaryIcon from "@/components/icons/SalaryIcon.vue"
 
 const quickLinks = [
+	{
+		icon: markRaw(AttendanceIcon),
+		title: "Request Attendance",
+		route: "AttendanceRequestFormView",
+	},
+	{
+		icon: markRaw(ShiftIcon),
+		title: "Request a Shift",
+		route: "ShiftRequestFormView",
+	},
 	{
 		icon: markRaw(LeaveIcon),
 		title: "Request Leave",
