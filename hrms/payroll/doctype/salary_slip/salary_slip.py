@@ -2058,7 +2058,7 @@ class SalarySlip(TransactionBase):
 		if frappe.db.get_single_value("Payroll Settings", "show_leave_balances_in_salary_slip"):
 			from hrms.hr.doctype.leave_application.leave_application import get_leave_details
 
-			leave_details = get_leave_details(self.employee, self.end_date)
+			leave_details = get_leave_details(self.employee, self.end_date, True)
 
 			for leave_type, leave_values in leave_details["leave_allocation"].items():
 				self.append(
