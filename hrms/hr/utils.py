@@ -416,6 +416,7 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 		allocation.add_comment(comment_type="Info", text=text)
 
 
+@frappe.whitelist()
 def get_monthly_earned_leave(
 	date_of_joining,
 	annual_leaves,
@@ -762,21 +763,26 @@ def get_ec_matching_query(
 	filters.append(ec.docstatus == 1)
 	filters.append(ec.is_paid == 1)
 	filters.append(ec.clearance_date.isnull())
-	filters.append(ec.mode_of_payment.isin(mode_of_payments))
-	if exact_match:
-		filters.append(ec.total_sanctioned_amount == common_filters.amount)
+	if mode_of_payments:
+		filters.append(ec.mode_of_payment.isin(mode_of_payments))
+
+	if common_filters:
+		ref_rank = frappe.qb.terms.Case().when(ec.employee == common_filters.party, 1).else_(0) + 1
+
+		if exact_match:
+			filters.append(ec.total_sanctioned_amount == common_filters.amount)
+		else:
+			filters.append(ec.total_sanctioned_amount.gt(common_filters.amount))
 	else:
-		filters.append(ec.total_sanctioned_amount.gt(common_filters.amount))
+		ref_rank = ConstantColumn(1)
 
 	if from_date and to_date:
 		filters.append(ec.posting_date[from_date:to_date])
 
-	ref_rank = frappe.qb.terms.Case().when(ec.employee == common_filters.party, 1).else_(0)
-
 	ec_query = (
 		qb.from_(ec)
 		.select(
-			(ref_rank + 1).as_("rank"),
+			ref_rank.as_("rank"),
 			ec.name,
 			ec.total_sanctioned_amount.as_("paid_amount"),
 			ConstantColumn("").as_("reference_no"),

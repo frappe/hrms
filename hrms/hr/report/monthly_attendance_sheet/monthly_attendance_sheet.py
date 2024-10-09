@@ -229,7 +229,7 @@ def get_attendance_map(filters: Filters) -> dict:
 
 	for d in attendance_list:
 		if d.status == "On Leave":
-			leave_map.setdefault(d.employee, []).append(d.day_of_month)
+			leave_map.setdefault(d.employee, {}).setdefault(d.shift, []).append(d.day_of_month)
 			continue
 
 		if d.shift is None:
@@ -240,13 +240,14 @@ def get_attendance_map(filters: Filters) -> dict:
 
 	# leave is applicable for the entire day so all shifts should show the leave entry
 	for employee, leave_days in leave_map.items():
-		# no attendance records exist except leaves
-		if employee not in attendance_map:
-			attendance_map.setdefault(employee, {}).setdefault(None, {})
+		for assigned_shift, days in leave_days.items():
+			# no attendance records exist except leaves
+			if employee not in attendance_map:
+				attendance_map.setdefault(employee, {}).setdefault(assigned_shift, {})
 
-		for day in leave_days:
-			for shift in attendance_map[employee].keys():
-				attendance_map[employee][shift][day] = "On Leave"
+			for day in days:
+				for shift in attendance_map[employee].keys():
+					attendance_map[employee][shift][day] = "On Leave"
 
 	return attendance_map
 

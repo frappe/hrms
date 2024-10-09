@@ -41,6 +41,9 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present")
 		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "On Leave")
 
+		employee_on_leave_with_shift = make_employee("employee@leave.com", company=self.company)
+		mark_attendance(employee_on_leave_with_shift, previous_month_first, "On Leave", "Day Shift")
+
 		filters = frappe._dict(
 			{
 				"month": previous_month_first.month,
@@ -50,14 +53,14 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		)
 		report = execute(filters=filters)
 
-		record = report[1][0]
 		datasets = report[3]["data"]["datasets"]
 		absent = datasets[0]["values"]
 		present = datasets[1]["values"]
 		leaves = datasets[2]["values"]
 
 		# ensure correct attendance is reflected on the report
-		self.assertEqual(self.employee, record.get("employee"))
+		self.assertEqual(self.employee, report[1][0].get("employee"))
+		self.assertEqual("Day Shift", report[1][1].get("shift"))
 		self.assertEqual(absent[0], 1)
 		self.assertEqual(present[1], 1)
 		self.assertEqual(leaves[2], 1)
