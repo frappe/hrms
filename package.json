@@ -6,7 +6,7 @@
     "type": "git",
     "url": "git+https://github.com/frappe/hrms.git"
   },
-  "homepage": "https://frappehr.com",
+  "homepage": "https://frappe.io/hr",
   "author": "Frappe Technologies Pvt. Ltd.",
   "license": "GPL-3.0",
   "bugs": {
