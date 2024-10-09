@@ -57,3 +57,17 @@ section-order = [
     "first-party",
     "local-folder",
 ]
+<<<<<<< HEAD
+=======
+
+
+[project.urls]
+Homepage = "https://frappe.io/hr"
+Repository = "https://github.com/frappe/hrms.git"
+"Bug Reports" = "https://github.com/frappe/hrms/issues"
+
+
+[tool.bench.frappe-dependencies]
+frappe = ">=16.0.0-dev,<17.0.0"
+erpnext = ">=16.0.0-dev,<17.0.0"
+>>>>>>> 8b452a493 (chore: update site urls from frappehr.com to frappe.io/hr)
