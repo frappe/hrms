@@ -855,6 +855,39 @@ def notify_bulk_action_status(doctype: str, failure: list, success: list) -> Non
 	)
 
 
+@frappe.whitelist()
+def set_geolocation_from_coordinates(doc):
+	if not frappe.db.get_single_value("HR Settings", "allow_geolocation_tracking"):
+		return
+
+	if not (doc.latitude and doc.longitude):
+		return
+
+	doc.geolocation = frappe.json.dumps(
+		{
+			"type": "FeatureCollection",
+			"features": [
+				{
+					"type": "Feature",
+					"properties": {},
+					# geojson needs coordinates in reverse order: long, lat instead of lat, long
+					"geometry": {"type": "Point", "coordinates": [doc.longitude, doc.latitude]},
+				}
+			],
+		}
+	)
+
+
+def get_distance_between_coordinates(lat1, long1, lat2, long2):
+	from math import asin, cos, pi, sqrt
+
+	r = 6371
+	p = pi / 180
+
+	a = 0.5 - cos((lat2 - lat1) * p) / 2 + cos(lat1 * p) * cos(lat2 * p) * (1 - cos((long2 - long1) * p)) / 2
+	return 2 * r * asin(sqrt(a)) * 1000
+
+
 def check_app_permission():
 	"""Check if user has permission to access the app (for showing the app on app screen)"""
 	if frappe.session.user == "Administrator":

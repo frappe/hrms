@@ -7,10 +7,16 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cint, get_datetime
 
-from hrms.hr.doctype.shift_assignment.shift_assignment import (
-	get_actual_start_end_datetime_of_shift,
+from hrms.hr.doctype.shift_assignment.shift_assignment import get_actual_start_end_datetime_of_shift
+from hrms.hr.utils import (
+	get_distance_between_coordinates,
+	set_geolocation_from_coordinates,
+	validate_active_employee,
 )
-from hrms.hr.utils import validate_active_employee
+
+
+class CheckinRadiusExceededError(frappe.ValidationError):
+	pass
 
 
 class EmployeeCheckin(Document):
@@ -18,7 +24,8 @@ class EmployeeCheckin(Document):
 		validate_active_employee(self.employee)
 		self.validate_duplicate_log()
 		self.fetch_shift()
-		self.set_geolocation_from_coordinates()
+		set_geolocation_from_coordinates(self)
+		self.validate_distance_from_shift_location()
 
 	def validate_duplicate_log(self):
 		doc = frappe.db.exists(
@@ -64,27 +71,40 @@ class EmployeeCheckin(Document):
 			self.shift_start = shift_actual_timings.start_datetime
 			self.shift_end = shift_actual_timings.end_datetime
 
-	@frappe.whitelist()
-	def set_geolocation_from_coordinates(self):
+	def validate_distance_from_shift_location(self):
 		if not frappe.db.get_single_value("HR Settings", "allow_geolocation_tracking"):
 			return
 
-		if not (self.latitude and self.longitude):
+		if not (self.latitude or self.longitude):
+			frappe.throw(_("Latitude and longitude values are required for checking in."))
+
+		assignment_locations = frappe.get_all(
+			"Shift Assignment",
+			filters={
+				"employee": self.employee,
+				"shift_type": self.shift,
+				"start_date": ["<=", self.time],
+				"shift_location": ["is", "set"],
+				"docstatus": 1,
+			},
+			or_filters=[["end_date", ">=", self.time], ["end_date", "is", "not set"]],
+			pluck="shift_location",
+		)
+		if not assignment_locations:
 			return
 
-		self.geolocation = frappe.json.dumps(
-			{
-				"type": "FeatureCollection",
-				"features": [
-					{
-						"type": "Feature",
-						"properties": {},
-						# geojson needs coordinates in reverse order: long, lat instead of lat, long
-						"geometry": {"type": "Point", "coordinates": [self.longitude, self.latitude]},
-					}
-				],
-			}
+		checkin_radius, latitude, longitude = frappe.db.get_value(
+			"Shift Location", assignment_locations[0], ["checkin_radius", "latitude", "longitude"]
 		)
+		if checkin_radius <= 0:
+			return
+
+		distance = get_distance_between_coordinates(latitude, longitude, self.latitude, self.longitude)
+		if distance > checkin_radius:
+			frappe.throw(
+				_("You must be within {0} meters of your shift location to check in.").format(checkin_radius),
+				exc=CheckinRadiusExceededError,
+			)
 
 
 @frappe.whitelist()
