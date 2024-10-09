@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-10-06 09:34+0000\n"
-"PO-Revision-Date: 2024-10-07 09:11\n"
+"PO-Revision-Date: 2024-10-09 09:58\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -780,7 +780,7 @@ msgstr "Abwesenheit zuweisen"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.js:66
 msgid "Allocate Leaves"
-msgstr ""
+msgstr "Abwesenheiten zuteilen"
 
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:192
 msgid "Allocate leaves to {0} employee(s)?"
@@ -8409,7 +8409,7 @@ msgstr "Neue Urlaubszuordnung (in Tagen)"
 #. Assignment Schedule'
 #: hrms/hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 msgid "New shift assignments will be created after this date."
-msgstr ""
+msgstr "Neue Schichtzuweisungen werden nach diesem Datum erstellt."
 
 #. Option for the 'Is Active' (Select) field in DocType 'Salary Structure'
 #. Option for the 'Is Default' (Select) field in DocType 'Salary Structure'
@@ -8643,7 +8643,7 @@ msgstr "Mitteilungsfrist"
 
 #: hrms/hr/doctype/exit_interview/exit_interview.py:122
 msgid "Notification Template"
-msgstr ""
+msgstr "Benachrichtigungsvorlage"
 
 #. Label of the notify_users_by_email (Check) field in DocType 'Employee
 #. Onboarding'
@@ -10463,12 +10463,12 @@ msgstr "Berechtigte Rolle zum Erstellen eines zurückdatierten Urlaubsantrags"
 #: hrms/hr/doctype/shift_assignment/shift_assignment_list.js:12
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Roster"
-msgstr ""
+msgstr "Dienstplan"
 
 #. Label of the color (Select) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Roster Color"
-msgstr ""
+msgstr "Dienstplanfarbe"
 
 #. Label of the round_name (Data) field in DocType 'Interview Round'
 #: hrms/hr/doctype/interview_round/interview_round.json
@@ -11113,7 +11113,7 @@ msgstr "Absender E-Mail"
 
 #: hrms/hr/doctype/exit_interview/exit_interview.py:136
 msgid "Sending Failed due to missing email information for employee(s): {1}"
-msgstr ""
+msgstr "Senden fehlgeschlagen aufgrund fehlender E-Mail-Informationen für Mitarbeiter: {1}"
 
 #. Option for the 'Status' (Select) field in DocType 'Daily Work Summary'
 #: hrms/hr/doctype/daily_work_summary/daily_work_summary.json
