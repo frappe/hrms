@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, add_months, nowdate
 
 import erpnext
@@ -16,7 +16,7 @@ from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 )
 
 
-class TestAdditionalSalary(FrappeTestCase):
+class TestAdditionalSalary(IntegrationTestCase):
 	def setUp(self):
 		setup_test()
 

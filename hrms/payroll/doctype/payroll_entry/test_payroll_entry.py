@@ -4,7 +4,7 @@
 from dateutil.relativedelta import relativedelta
 
 import frappe
-from frappe.tests.utils import FrappeTestCase, change_settings
+from frappe.tests import IntegrationTestCase, change_settings
 from frappe.utils import add_days, add_months, cstr
 
 import erpnext
@@ -42,7 +42,7 @@ from hrms.utils import get_date_range
 test_dependencies = ["Holiday List"]
 
 
-class TestPayrollEntry(FrappeTestCase):
+class TestPayrollEntry(IntegrationTestCase):
 	def setUp(self):
 		for dt in [
 			"Salary Slip",
