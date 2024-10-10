@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-10-06 09:34+0000\n"
-"PO-Revision-Date: 2024-10-07 09:11\n"
+"PO-Revision-Date: 2024-10-10 09:59\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -271,7 +271,7 @@ msgstr ""
 #: hrms/hr/workspace/recruitment/recruitment.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "<span class=\"h4\"><b>Masters &amp; Reports</b></span>"
-msgstr ""
+msgstr "<span class=\"h4\"><b>مستندات و گزارش ها</b></span>"
 
 #. Header text in the Performance Workspace
 #: hrms/hr/workspace/performance/performance.json
@@ -281,12 +281,12 @@ msgstr ""
 #. Header text in the HR Workspace
 #: hrms/hr/workspace/hr/hr.json
 msgid "<span class=\"h4\"><b>Reports &amp; Masters</b></span>"
-msgstr ""
+msgstr "<span class=\"h4\"><b>گزارش ها و مستندات</b></span>"
 
 #. Header text in the Salary Payout Workspace
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "<span class=\"h4\"><b>Transactions &amp; Reports</b></span>"
-msgstr "<span class=\"h4\"><b>تراکنش‌ها &amp; گزارش‌ها</b></span>"
+msgstr "<span class=\"h4\"><b>تراکنش‌ها و گزارش‌ها</b></span>"
 
 #. Header text in the Employee Lifecycle Workspace
 #. Header text in the Expense Claims Workspace
@@ -313,7 +313,7 @@ msgstr "<span class=\"h4\"><b>میانبرهای شما</b></span>"
 #. Header text in the Shift & Attendance Workspace
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "<span style=\"font-size: 18px;\"><b>Masters &amp; Reports</b></span>"
-msgstr ""
+msgstr "<span style=\"font-size: 18px;\"><b>مستندات و گزارش ها</b></span>"
 
 #: hrms/public/js/utils/index.js:166
 msgid "<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>"
@@ -1112,7 +1112,7 @@ msgstr "قابل استفاده برای"
 #. 'Employee Boarding Activity'
 #: hrms/hr/doctype/employee_boarding_activity/employee_boarding_activity.json
 msgid "Applicable in the case of Employee Onboarding"
-msgstr "قابل اجرا در مورد حضور کارکنان"
+msgstr "قابل اجرا در مورد آشناسازی کارکنان"
 
 #. Label of the applicant_email (Data) field in DocType 'Job Offer'
 #: hrms/hr/doctype/job_offer/job_offer.json
@@ -1803,7 +1803,7 @@ msgstr "در زیر لیستی از تعطیلات آینده برای شما آ
 
 #: hrms/overrides/dashboard_overrides.py:35
 msgid "Benefit"
-msgstr "سود"
+msgstr "مزایا"
 
 #. Label of the section_break_4 (Section Break) field in DocType 'Employee
 #. Benefit Application'
@@ -1814,7 +1814,7 @@ msgstr "سود"
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Benefits"
-msgstr "فواید"
+msgstr "مزایا"
 
 #: hrms/hr/report/project_profitability/project_profitability.py:169
 msgid "Bill Amount"
@@ -2157,7 +2157,7 @@ msgstr "گره های فرزند را فقط می توان تحت گره های 
 #. Claim'
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgid "Claim Benefit For"
-msgstr "ادعای سود برای"
+msgstr "مطالبه مزایا برای"
 
 #. Label of the claim_date (Date) field in DocType 'Employee Benefit Claim'
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
@@ -2459,7 +2459,7 @@ msgstr "تکمیل شد"
 
 #: hrms/hr/doctype/employee_onboarding/employee_onboarding.js:118
 msgid "Completing onboarding"
-msgstr "در حال تکمیل ورود"
+msgstr "در حال تکمیل آشناسازی"
 
 #. Label of the component (Data) field in DocType 'Full and Final Outstanding
 #. Statement'
@@ -2739,7 +2739,7 @@ msgstr "ایجاد فیش حقوقی"
 #. field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Create Separate Payment Entry Against Benefit Claim"
-msgstr "ایجاد ثبت پرداخت جداگانه در برابر ادعای سود"
+msgstr "ایجاد ثبت پرداخت جداگانه در برابر مطالبه مزایا"
 
 #. Label of the create_shifts_after (Date) field in DocType 'Shift Assignment
 #. Schedule'
@@ -3119,7 +3119,7 @@ msgstr "کسر مالیات کامل در تاریخ انتخاب شده حقو�
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Deduct Tax For Unclaimed Employee Benefits"
-msgstr "کسر مالیات برای مزایای بی ادعای کارمندان"
+msgstr "کسر مالیات برای مزایای مطالبه نشده کارمندان"
 
 #. Label of the deduct_tax_for_unsubmitted_tax_exemption_proof (Check) field in
 #. DocType 'Payroll Entry'
@@ -4063,7 +4063,7 @@ msgstr "جزئیات درخواست مزایای کارکنان"
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Benefit Claim"
-msgstr "ادعای مزایای کارکنان"
+msgstr "مطالبه مزایای کارکنان"
 
 #. Label of the employee_benefits (Table) field in DocType 'Employee Benefit
 #. Application'
@@ -4094,7 +4094,7 @@ msgstr "فعالیت شبانه روزی کارکنان"
 #: hrms/hr/workspace/hr/hr.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Employee Checkin"
-msgstr "ثبت نام کارمند"
+msgstr "اعلام ورود کارمند"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_cost_center/employee_cost_center.json
@@ -4395,7 +4395,7 @@ msgstr "تعداد کارکنان"
 #: hrms/hr/doctype/employee_onboarding/employee_onboarding.json
 #: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Employee Onboarding"
-msgstr "ورود کارکنان"
+msgstr "آشناسازی کارکنان"
 
 #. Label of the employee_onboarding_template (Link) field in DocType 'Employee
 #. Onboarding'
@@ -4405,11 +4405,11 @@ msgstr "ورود کارکنان"
 #: hrms/hr/doctype/employee_onboarding_template/employee_onboarding_template.json
 #: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Employee Onboarding Template"
-msgstr "الگوی ورود کارکنان"
+msgstr "الگوی آشناسازی کارکنان"
 
 #: hrms/hr/doctype/employee_onboarding/employee_onboarding.py:32
 msgid "Employee Onboarding: {0} already exists for Job Applicant: {1}"
-msgstr "استخدام کارمند: {0} از قبل برای متقاضی شغل وجود دارد: {1}"
+msgstr "آشناسازی کارمند: {0} از قبل برای متقاضی شغل وجود دارد: {1}"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_other_income/employee_other_income.json
@@ -4636,7 +4636,7 @@ msgstr "کارمند {0} قبلاً برای {1} بین {2} و {3} درخواس�
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:25
 msgid "Employee {0} has no maximum benefit amount"
-msgstr "کارمند {0} حداکثر مقدار سود ندارد"
+msgstr "کارمند {0} حداکثر مقدار مزایا ندارد"
 
 #: hrms/hr/doctype/attendance/attendance.py:210
 msgid "Employee {0} is not active or does not exist"
@@ -5074,21 +5074,21 @@ msgstr ""
 #: hrms/hr/report/employee_exits/employee_exits.py:39
 #: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Exit Interview"
-msgstr "خروج از مصاحبه"
+msgstr "مصاحبه خروج"
 
 #: hrms/hr/report/employee_exits/employee_exits.js:63
 msgid "Exit Interview Pending"
-msgstr "خروج از مصاحبه در انتظار"
+msgstr "مصاحبه خروج در انتظار"
 
 #. Label of the exit_interview (Text Editor) field in DocType 'Employee
 #. Separation'
 #: hrms/hr/doctype/employee_separation/employee_separation.json
 msgid "Exit Interview Summary"
-msgstr "خروج از خلاصه مصاحبه"
+msgstr "خلاصه مصاحبه خروج"
 
 #: hrms/hr/doctype/exit_interview/exit_interview.py:33
 msgid "Exit Interview {0} already exists for Employee: {1}"
-msgstr "خروج از مصاحبه {0} از قبل برای کارمند وجود دارد: {1}"
+msgstr "مصاحبه خروج {0} از قبل برای کارمند وجود دارد: {1}"
 
 #. Label of the exit_questionnaire_section (Section Break) field in DocType
 #. 'Exit Interview'
@@ -5556,7 +5556,7 @@ msgstr "مدیر ناوگان"
 #. Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Flexible Benefits"
-msgstr "مزایای انعطاف پذیر"
+msgstr "مزایای انعطاف‌پذیر"
 
 #. Option for the 'Mode of Travel' (Select) field in DocType 'Travel Itinerary'
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json
@@ -5791,7 +5791,7 @@ msgstr "دارایی کامل و نهایی"
 #. Name of a DocType
 #: hrms/hr/doctype/full_and_final_outstanding_statement/full_and_final_outstanding_statement.json
 msgid "Full and Final Outstanding Statement"
-msgstr "بیانیه کامل و نهایی برجسته"
+msgstr "صورت‌حساب کامل و نهایی معوقات"
 
 #. Label of a Link in the Employee Lifecycle Workspace
 #: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
@@ -5802,7 +5802,7 @@ msgstr "تسویه حساب کامل و نهایی"
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json
 #: hrms/hr/report/employee_exits/employee_exits.py:58
 msgid "Full and Final Statement"
-msgstr "بیانیه کامل و نهایی"
+msgstr "صورت کامل و نهایی"
 
 #: hrms/setup.py:382
 msgid "Full-time"
@@ -6427,7 +6427,7 @@ msgstr "کد IFSC"
 #. Option for the 'Log Type' (Select) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 msgid "IN"
-msgstr "که در"
+msgstr "ورود"
 
 #. Label of the personal_id_number (Data) field in DocType 'Travel Request'
 #: hrms/hr/doctype/travel_request/travel_request.json
@@ -7031,7 +7031,7 @@ msgstr "باطل شده"
 #: hrms/payroll/doctype/salary_component/salary_component.json
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Is Flexible Benefit"
-msgstr "سود قابل انعطاف است"
+msgstr "مزایای قابل انعطاف است"
 
 #. Label of the is_group (Check) field in DocType 'Goal'
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:51
@@ -8017,13 +8017,13 @@ msgstr "حداکثر مقدار واجد شرایط"
 #. Benefit Application Detail'
 #: hrms/payroll/doctype/employee_benefit_application_detail/employee_benefit_application_detail.json
 msgid "Max Benefit Amount"
-msgstr "حداکثر مبلغ سود"
+msgstr "حداکثر مبلغ مزایا"
 
 #. Label of the max_benefit_amount (Currency) field in DocType 'Salary
 #. Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Max Benefit Amount (Yearly)"
-msgstr "حداکثر مبلغ سود (سالانه)"
+msgstr "حداکثر مبلغ مزایا (سالانه)"
 
 #. Label of the max_benefits (Currency) field in DocType 'Salary Structure'
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
@@ -8108,20 +8108,20 @@ msgstr "حداکثر مقدار واجد شرایط برای مؤلفه {0} از
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:140
 msgid "Maximum benefit amount of component {0} exceeds {1}"
-msgstr "حداکثر مقدار سود مؤلفه {0} از {1} بیشتر است"
+msgstr "حداکثر مقدار مزایای مؤلفه {0} از {1} بیشتر است"
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:120
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:54
 msgid "Maximum benefit amount of employee {0} exceeds {1}"
-msgstr "حداکثر میزان سود کارمند {0} از {1} بیشتر است"
+msgstr "حداکثر میزان مزایای کارمند {0} از {1} بیشتر است"
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:87
 msgid "Maximum benefit of employee {0} exceeds {1} by the sum {2} of benefit application pro-rata component amount and previous claimed amount"
-msgstr "حداکثر سود کارمند {0} از مجموع {2} مبلغ به نسبت مؤلفه درخواست سود و مبلغ ادعا شده قبلی از {1} بیشتر است"
+msgstr "حداکثر مزایای کارمند {0} از {1} بیشتر است به میزان {2} که شامل مبلغ جزء نسبتاً متناسب درخواست مزایا و مبلغ قبلی مطالبه شده است"
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:46
 msgid "Maximum benefit of employee {0} exceeds {1} by the sum {2} of previous claimed amount"
-msgstr "حداکثر سود کارمند {0} از مجموع {2} مبلغ ادعا شده قبلی بیشتر از {1} است"
+msgstr "حداکثر مزایای کارمند {0} از مجموع {2} مبلغ مطالبه شده قبلی بیشتر از {1} است"
 
 #: hrms/hr/doctype/leave_encashment/leave_encashment.py:122
 msgid "Maximum encashable leaves for {0} are {1}"
@@ -8679,7 +8679,7 @@ msgstr "تعداد مرخصی‌های واجد شرایط برای بازخری
 #. Option for the 'Log Type' (Select) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 msgid "OUT"
-msgstr "خارج"
+msgstr "خروج"
 
 #. Label of the average_rating (Rating) field in DocType 'Interview'
 #: hrms/hr/doctype/interview/interview.json
@@ -8752,13 +8752,13 @@ msgstr "آشناسازی"
 #. Onboarding'
 #: hrms/hr/doctype/employee_onboarding/employee_onboarding.json
 msgid "Onboarding Activities"
-msgstr "فعالیت‌های ورود"
+msgstr "فعالیت‌های آشناسازی"
 
 #. Label of the boarding_begins_on (Date) field in DocType 'Employee
 #. Onboarding'
 #: hrms/hr/doctype/employee_onboarding/employee_onboarding.json
 msgid "Onboarding Begins On"
-msgstr "Onboarding شروع می شود"
+msgstr "آشناسازی شروع می شود"
 
 #: hrms/hr/doctype/shift_request/shift_request.py:78
 msgid "Only Approvers can Approve this Request."
@@ -9068,7 +9068,7 @@ msgstr "خط مشی رمز عبور برای فیش حقوقی تنظیم نشد
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Pay Against Benefit Claim"
-msgstr "پرداخت در مقابل ادعای سود"
+msgstr "پرداخت در مقابل مطالبه مزایا"
 
 #. Label of the pay_via_salary_slip (Check) field in DocType 'Gratuity'
 #: hrms/payroll/doctype/gratuity/gratuity.json
@@ -9771,7 +9771,7 @@ msgstr "سود"
 #. Label of the progress (Percent) field in DocType 'Goal'
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:76
 msgid "Progress"
-msgstr "پیش رفتن"
+msgstr "پیشرفت"
 
 #. Label of the project (Link) field in DocType 'Employee Onboarding'
 #. Label of the project (Link) field in DocType 'Employee Separation'
@@ -10324,7 +10324,7 @@ msgstr "تاریخ حل و فصل"
 #. Grievance'
 #: hrms/hr/doctype/employee_grievance/employee_grievance.json
 msgid "Resolution Details"
-msgstr "جزئیات رزولوشن"
+msgstr "جزئیات حل و فصل"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Grievance'
 #: hrms/hr/doctype/employee_grievance/employee_grievance.json
@@ -10830,7 +10830,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Salary Withholding"
-msgstr ""
+msgstr "کسر حقوق"
 
 #. Label of the salary_withholding_cycle (Data) field in DocType 'Salary Slip'
 #. Name of a DocType
@@ -11294,7 +11294,7 @@ msgstr ""
 #: hrms/hr/report/shift_attendance/shift_attendance.py:205
 #: hrms/overrides/dashboard_overrides.py:33
 msgid "Shift"
-msgstr "تغییر مکان"
+msgstr "شیفت"
 
 #. Name of a Workspace
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
@@ -12016,7 +12016,7 @@ msgstr "مالیات بر حقوق اضافی"
 #. Detail'
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Tax on flexible benefit"
-msgstr "مالیات بر سود قابل انعطاف"
+msgstr "مالیات بر مزایای قابل انعطاف"
 
 #. Label of the taxable_earnings_till_date (Currency) field in DocType 'Salary
 #. Structure Assignment'
@@ -12695,7 +12695,7 @@ msgstr "مجموع مرخصی‌های تخصیص یافته {0} نمی توان
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:170
 msgid "Total flexible benefit component amount {0} should not be less than max benefits {1}"
-msgstr "مجموع مبلغ مؤلفه سود انعطاف پذیر {0} نباید کمتر از حداکثر مزایا باشد {1}"
+msgstr "مجموع مبلغ مؤلفه مزایای انعطاف‌پذیر {0} نباید کمتر از حداکثر مزایا باشد {1}"
 
 #. Label of the total_in_words (Data) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
