@@ -79,7 +79,7 @@ $.extend(hrms, {
 		employees,
 		no_data_message = __("No Data"),
 		get_editor = null,
-		events = {}
+		events = {},
 	) => {
 		// section automatically collapses on applying a single filter
 		frm.set_df_property("quick_filters_section", "collapsible", 0);
@@ -119,7 +119,7 @@ $.extend(hrms, {
 				doctype,
 				message.failure,
 				message.success,
-				message.for_processing
+				message.for_processing,
 			);
 
 			// refresh only on complete/partial success
@@ -144,7 +144,7 @@ $.extend(hrms, {
 			message += " " + frappe.utils.comma_and(failure) + "<hr>";
 			message += __(
 				"Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details",
-				[doctype, __("Error Log")]
+				[doctype, __("Error Log")],
 			);
 			title = __("Failure");
 			indicator = "red";
@@ -163,7 +163,7 @@ $.extend(hrms, {
 			]);
 			message += __(
 				"<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>",
-				[__("Employee"), doctype]
+				[__("Employee"), doctype],
 			);
 			for (const d of success) {
 				message += `<tr><td>${d.employee}</td><td>${d.doc}</td></tr>`;
@@ -212,7 +212,7 @@ $.extend(hrms, {
 					title: __("Geolocation Error"),
 					indicator: "red",
 				});
-			}
+			},
 		);
 	},
 

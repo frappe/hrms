@@ -7,7 +7,7 @@ frappe.ui.form.on("Employee Checkin", {
 
 		const allow_geolocation_tracking = await frappe.db.get_single_value(
 			"HR Settings",
-			"allow_geolocation_tracking"
+			"allow_geolocation_tracking",
 		);
 
 		if (!allow_geolocation_tracking) {
