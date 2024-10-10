@@ -57,3 +57,9 @@ section-order = [
     "first-party",
     "local-folder",
 ]
+
+
+[project.urls]
+Homepage = "https://frappe.io/hr"
+Repository = "https://github.com/frappe/hrms.git"
+"Bug Reports" = "https://github.com/frappe/hrms/issues"
