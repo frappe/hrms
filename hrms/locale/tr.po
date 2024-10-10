@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-10-06 09:34+0000\n"
-"PO-Revision-Date: 2024-10-07 09:11\n"
+"PO-Revision-Date: 2024-10-10 09:59\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -9893,7 +9893,7 @@ msgstr "Seyahat Amacı"
 #: hrms/hr/doctype/leave_type/leave_type.json
 #: hrms/hr/doctype/vehicle_service/vehicle_service.json
 msgid "Quarterly"
-msgstr "Üç Aylık"
+msgstr "3 Aylık"
 
 #. Label of the questionnaire_email_sent (Check) field in DocType 'Exit
 #. Interview'
