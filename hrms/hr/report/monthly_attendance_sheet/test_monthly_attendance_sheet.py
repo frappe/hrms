@@ -1,7 +1,7 @@
 from dateutil.relativedelta import relativedelta
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -18,7 +18,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 from hrms.tests.test_utils import create_company, get_first_day_for_prev_month
 
 
-class TestMonthlyAttendanceSheet(FrappeTestCase):
+class TestMonthlyAttendanceSheet(IntegrationTestCase):
 	def setUp(self):
 		self.company = "_Test Company"
 		self.employee = make_employee("test_employee@example.com", company=self.company)

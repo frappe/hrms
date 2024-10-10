@@ -1,10 +1,10 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 
 # test_records = frappe.get_test_records('Interest')
 
 
-class TestInterest(FrappeTestCase):
+class TestInterest(IntegrationTestCase):
 	pass
