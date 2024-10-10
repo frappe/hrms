@@ -59,8 +59,13 @@
    "label": "Fetch Geolocation"
   }
  ],
- "links": [],
- "modified": "2024-07-04 15:11:06.272970",
+ "links": [
+  {
+   "link_doctype": "Shift Assignment",
+   "link_fieldname": "shift_location"
+  }
+ ],
+ "modified": "2024-10-10 12:54:26.209170",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Location",
