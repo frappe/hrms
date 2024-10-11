@@ -22,6 +22,24 @@ frappe.ui.form.on("Leave Policy Assignment", {
 		});
 	},
 
+	before_submit: async function (frm) {
+		if (frm.doc.mid_period_change) {
+			const promise = new Promise((resolve, reject) => {
+				frappe.confirm(
+					__(
+						"Are you sure you want to apply the new leave policy <b style='color:red;'>in the middle of current policy assignment period</b>? This change will take effect immediately and cannot be undone.",
+					),
+					resolve,
+					reject,
+				);
+			});
+			await promise.catch(() => {
+				$(".primary-action").prop("disabled", false);
+				frappe.throw(__("Please untick <b>Allow Mid-Period Policy Change</b> checkbox."));
+			});
+		}
+	},
+
 	assignment_based_on: function (frm) {
 		if (frm.doc.assignment_based_on) {
 			frm.events.set_effective_date(frm);

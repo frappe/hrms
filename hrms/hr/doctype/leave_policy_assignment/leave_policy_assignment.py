@@ -8,6 +8,7 @@ import frappe
 from frappe import _, bold
 from frappe.model.document import Document
 from frappe.utils import (
+	add_days,
 	add_months,
 	cint,
 	comma_and,
@@ -20,6 +21,10 @@ from frappe.utils import (
 	getdate,
 	rounded,
 )
+
+
+class LeaveAcrossAllocationsMidPeriodError(frappe.ValidationError):
+	pass
 
 
 class LeavePolicyAssignment(Document):
@@ -40,6 +45,8 @@ class LeavePolicyAssignment(Document):
 			self.effective_from = frappe.db.get_value("Employee", self.employee, "date_of_joining")
 
 	def validate_policy_assignment_overlap(self):
+		if self.mid_period_change:
+			return
 		leave_policy_assignment = frappe.db.get_value(
 			"Leave Policy Assignment",
 			{
@@ -82,6 +89,9 @@ class LeavePolicyAssignment(Document):
 		if self.leaves_allocated:
 			frappe.throw(_("Leave already have been assigned for this Leave Policy Assignment"))
 		else:
+			if self.mid_period_change:
+				self.validate_leave_application_across_allocations()
+				self.end_existing_policy_assignment()
 			leave_allocations = {}
 			leave_type_details = get_leave_type_details()
 
@@ -104,6 +114,67 @@ class LeavePolicyAssignment(Document):
 			self.db_set("leaves_allocated", 1)
 			return leave_allocations
 
+	def end_existing_policy_assignment(self):
+		leave_policy_assignment_name = frappe.db.exists(
+			"Leave Policy Assignment",
+			{
+				"employee": self.employee,
+				"name": ("!=", self.name),
+				"docstatus": 1,
+				"effective_to": (">=", self.effective_from),
+				"effective_from": ("<=", self.effective_to),
+			},
+		)
+		if leave_policy_assignment_name:
+			end_date = add_days(self.effective_from, -1)
+			leave_allocations = frappe.get_all(
+				"Leave Allocation",
+				filters={
+					"leave_policy_assignment": leave_policy_assignment_name,
+					"docstatus": 1,
+				},
+				pluck="name",
+			)
+
+			frappe.db.set_value(
+				"Leave Policy Assignment", leave_policy_assignment_name, "effective_to", end_date
+			)
+			for allocation in leave_allocations:
+				frappe.db.set_value("Leave Allocation", allocation, "to_date", end_date)
+				frappe.db.set_value(
+					"Leave Ledger Entry",
+					{
+						"transaction_name": allocation,
+						"docstatus": 1,
+					},
+					"to_date",
+					end_date,
+				)
+
+	def validate_leave_application_across_allocations(self):
+		leave_applications = frappe.get_all(
+			"Leave Application",
+			filters={
+				"employee": self.employee,
+				"docstatus": 1,
+				"status": "Approved",
+				"from_date": ("<=", self.effective_from),
+				"to_date": (">=", self.effective_from),
+			},
+			pluck="name",
+		)
+		if leave_applications:
+			frappe.throw(
+				_(
+					"Leave Application period cannot be across two allocation records. Please cancel the following Leave Application records:<br/><b><ul><li>{0}</li></ul></b>"
+				).format(
+					"</li><li>".join(
+						[get_link_to_form("Leave Application", d, d) for d in leave_applications]
+					)
+				),
+				exc=LeaveAcrossAllocationsMidPeriodError,
+			)
+
 	def create_leave_allocation(self, annual_allocation, leave_details, date_of_joining):
 		# Creates leave allocation for the given employee in the provided leave period
 		carry_forward = self.carry_forward
@@ -113,18 +184,16 @@ class LeavePolicyAssignment(Document):
 		new_leaves_allocated = self.get_new_leaves(annual_allocation, leave_details, date_of_joining)
 
 		allocation = frappe.get_doc(
-			dict(
-				doctype="Leave Allocation",
-				employee=self.employee,
-				leave_type=leave_details.name,
-				from_date=self.effective_from,
-				to_date=self.effective_to,
-				new_leaves_allocated=new_leaves_allocated,
-				leave_period=self.leave_period if self.assignment_based_on == "Leave Policy" else "",
-				leave_policy_assignment=self.name,
-				leave_policy=self.leave_policy,
-				carry_forward=carry_forward,
-			)
+			doctype="Leave Allocation",
+			employee=self.employee,
+			leave_type=leave_details.name,
+			from_date=self.effective_from,
+			to_date=self.effective_to,
+			new_leaves_allocated=new_leaves_allocated,
+			leave_period=self.leave_period if self.assignment_based_on == "Leave Policy" else "",
+			leave_policy_assignment=self.name,
+			leave_policy=self.leave_policy,
+			carry_forward=carry_forward,
 		)
 		allocation.save(ignore_permissions=True)
 		allocation.submit()
