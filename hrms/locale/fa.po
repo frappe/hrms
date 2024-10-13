@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-10-06 09:34+0000\n"
-"PO-Revision-Date: 2024-10-10 09:59\n"
+"PO-Revision-Date: 2024-10-13 11:49\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -774,7 +774,7 @@ msgstr "اختصاص مرخصی"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.js:66
 msgid "Allocate Leaves"
-msgstr ""
+msgstr "تخصیص مرخصی"
 
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:192
 msgid "Allocate leaves to {0} employee(s)?"
@@ -1136,7 +1136,7 @@ msgstr "رتبه بندی متقاضی"
 #. Description of a DocType
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 msgid "Applicant for a Job"
-msgstr ""
+msgstr "متقاضی کار"
 
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.py:44
 msgid "Applicant name"
@@ -1175,7 +1175,7 @@ msgstr "برای شرکت اعمال می شود"
 
 #: hrms/www/jobs/index.html:352
 msgid "Apply"
-msgstr ""
+msgstr "درخواست دادن"
 
 #. Description of a DocType
 #: hrms/hr/doctype/leave_application/leave_application.json
@@ -1567,7 +1567,7 @@ msgstr "درخواست حضور و غیاب"
 #. 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Attendance Settings"
-msgstr ""
+msgstr "تنظیمات حضور و غیاب"
 
 #. Label of the att_to_date (Date) field in DocType 'Upload Attendance'
 #: hrms/hr/doctype/upload_attendance/upload_attendance.json
@@ -1689,7 +1689,7 @@ msgstr "مرخصی(های) موجود"
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:11
 msgid "Available Leaves"
-msgstr ""
+msgstr "مرخصی‌های موجود"
 
 #. Label of the avg_feedback_score (Float) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
@@ -2761,7 +2761,7 @@ msgstr "ایجاد فیش حقوقی ..."
 
 #: hrms/hr/report/leave_ledger/leave_ledger.py:41
 msgid "Creation Date"
-msgstr ""
+msgstr "تاریخ ایجاد"
 
 #: hrms/hr/utils.py:837
 msgid "Creation Failed"
@@ -4240,7 +4240,7 @@ msgstr "اطلاعات استخدامی"
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.json
 #: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance"
-msgstr "مانده مرخصی کارکنان"
+msgstr "تراز مرخصی کارکنان"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -4747,7 +4747,7 @@ msgstr "علامت گذاری خروج زود هنگام را فعال کنید"
 #. Label of the enable_late_entry_marking (Check) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Enable Late Entry Marking"
-msgstr ""
+msgstr "فعال کردن علامت گذاری ورود دیرهنگام"
 
 #. Label of the enabled (Check) field in DocType 'Daily Work Summary Group'
 #. Label of the enabled (Check) field in DocType 'Shift Assignment Schedule'
@@ -4892,7 +4892,7 @@ msgstr "خطا در فرمول یا شرایط: {0} در صفحه مالیات �
 
 #: hrms/hr/doctype/upload_attendance/upload_attendance.js:57
 msgid "Error in some rows"
-msgstr ""
+msgstr "خطا در برخی ردیف ها"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2259
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
@@ -6620,7 +6620,7 @@ msgstr "مشوق ها"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:63
 msgid "Include Company Descendants"
-msgstr ""
+msgstr "شامل فرزندان شرکت می شود"
 
 #. Label of the include_holidays (Check) field in DocType 'Attendance Request'
 #: hrms/hr/doctype/attendance_request/attendance_request.json
@@ -6744,7 +6744,7 @@ msgstr "بازرسی"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:409
 msgid "Insufficient Balance"
-msgstr "تعادل ناکافی"
+msgstr "تراز ناکافی"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:407
 msgid "Insufficient leave balance for Leave Type {0}"
@@ -7387,7 +7387,7 @@ msgstr "ورود دیرهنگام توسط"
 #. Label of the late_entry_grace_period (Int) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Late Entry Grace Period"
-msgstr ""
+msgstr "دوره مهلت ورود دیرهنگام"
 
 #. Label of the latitude (Float) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
@@ -7467,7 +7467,7 @@ msgstr "نام تأییدکننده را بگذارید"
 #. Label of the leave_balance (Float) field in DocType 'Leave Encashment'
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 msgid "Leave Balance"
-msgstr "برهم زدن تعادل"
+msgstr "تراز مرخصی"
 
 #. Label of the leave_balance (Float) field in DocType 'Leave Application'
 #: hrms/hr/doctype/leave_application/leave_application.json
@@ -7541,7 +7541,7 @@ msgstr "مبلغ بازخرید مرخصی در روز"
 #. Name of a report
 #: hrms/hr/report/leave_ledger/leave_ledger.json
 msgid "Leave Ledger"
-msgstr ""
+msgstr "دفتر مرخصی"
 
 #. Name of a DocType
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.json
@@ -7755,7 +7755,7 @@ msgstr "مرخصی اختصاص داده شده است"
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:10
 msgid "Leaves Pending Approval"
-msgstr ""
+msgstr "مرخصی‌های در انتظار تایید"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:76
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
@@ -8637,7 +8637,7 @@ msgstr "دوره اطلاعیه"
 
 #: hrms/hr/doctype/exit_interview/exit_interview.py:122
 msgid "Notification Template"
-msgstr ""
+msgstr "الگوی اعلان"
 
 #. Label of the notify_users_by_email (Check) field in DocType 'Employee
 #. Onboarding'
@@ -9166,7 +9166,7 @@ msgstr "حقوق و دستمزد"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.js:287
 msgid "Payroll Based On"
-msgstr ""
+msgstr "حقوق و دستمزد بر اساس"
 
 #: hrms/setup.py:111 hrms/setup.py:274
 msgid "Payroll Cost Center"
@@ -10549,7 +10549,7 @@ msgstr "ردیف {0}: مبلغ پرداخت شده {1} بیشتر از مبلغ 
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:52
 msgid "Row {0}: {1}"
-msgstr ""
+msgstr "ردیف {0}: {1}"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:263
 msgid "Row {0}: {1} is required in the expenses table to book an expense claim."
@@ -11465,7 +11465,7 @@ msgstr "نشان دادن کارمند"
 #. 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Show Leave Balances in Salary Slip"
-msgstr "نمایش مانده مرخصی در فیش حقوقی"
+msgstr "نمایش تراز مرخصی در فیش حقوقی"
 
 #. Label of the show_leaves_of_all_department_members_in_calendar (Check) field
 #. in DocType 'HR Settings'
@@ -11881,7 +11881,7 @@ msgstr "معلق"
 
 #: hrms/payroll/doctype/salary_component/salary_component.js:83
 msgid "Sync {0}"
-msgstr ""
+msgstr "همگام سازی {0}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1206
 msgid "Syntax error"
@@ -12597,7 +12597,7 @@ msgstr "کل مرخصی‌ها"
 
 #: hrms/hr/report/leave_ledger/leave_ledger.py:193
 msgid "Total Leaves ({0})"
-msgstr ""
+msgstr "کل مرخصی‌ها ({0})"
 
 #. Label of the total_leaves_allocated (Float) field in DocType 'Leave
 #. Allocation'
@@ -13141,7 +13141,7 @@ msgstr "مرخصی(های) استفاده شده"
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:9
 msgid "Used Leaves"
-msgstr ""
+msgstr "مرخصی‌های استفاده شده"
 
 #. Label of the user (Link) field in DocType 'Daily Work Summary Group User'
 #. Label of the user (Link) field in DocType 'Employee Boarding Activity'
@@ -13310,7 +13310,7 @@ msgstr "هشدار: موجودی مرخصی برای نوع مرخصی {0} در 
 
 #: hrms/hr/doctype/leave_application/leave_application.py:400
 msgid "Warning: Insufficient leave balance for Leave Type {0}."
-msgstr "هشدار: مانده مرخصی برای نوع مرخصی {0} کافی نیست."
+msgstr "هشدار: تراز مرخصی برای نوع مرخصی {0} کافی نیست."
 
 #: hrms/hr/doctype/leave_application/leave_application.py:340
 msgid "Warning: Leave application contains following block dates"
@@ -13580,7 +13580,7 @@ msgstr "فعال"
 
 #: hrms/public/js/templates/feedback_summary.html:16
 msgid "based on"
-msgstr ""
+msgstr "بر اساس"
 
 #: hrms/hr/doctype/attendance_request/attendance_request.py:89
 msgid "changed the status from {0} to {1} via Attendance Request"
