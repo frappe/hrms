@@ -24,22 +24,23 @@ def get_columns():
 			"fieldtype": "Link",
 			"fieldname": "employee",
 			"options": "Employee",
-			"width": 120,
+			"width": 300,
 		},
 		{
-			"label": _("Name"),
+			"label": _("Employee Name"),
 			"fieldtype": "Data",
-			"width": 200,
+			"width": 0,
+			"hidden": 1,
 		},
 		{
 			"label": _("Date"),
 			"fieldtype": "Date",
-			"width": 100,
+			"width": 120,
 		},
 		{
 			"label": _("Status"),
 			"fieldtype": "Data",
-			"width": 70,
+			"width": 100,
 		},
 		{
 			"label": _("Holiday"),
