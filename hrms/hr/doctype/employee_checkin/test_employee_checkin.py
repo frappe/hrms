@@ -16,14 +16,14 @@ from frappe.utils import (
 )
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
-from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 
 from hrms.hr.doctype.employee_checkin.employee_checkin import (
+	CheckinRadiusExceededError,
 	add_log_based_on_employee_field,
+	bulk_fetch_shift,
 	calculate_working_hours,
 	mark_attendance_and_link_log,
 )
-from hrms.hr.doctype.leave_application.test_leave_application import get_first_sunday
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 
@@ -37,6 +37,37 @@ class TestEmployeeCheckin(FrappeTestCase):
 		from_date = get_year_start(getdate())
 		to_date = get_year_ending(getdate())
 		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
+
+		frappe.db.set_single_value("HR Settings", "allow_geolocation_tracking", 0)
+
+	def test_geolocation_tracking(self):
+		employee = make_employee("test_add_log_based_on_employee_field@example.com")
+		checkin = make_checkin(employee)
+		checkin.latitude = 23.31773
+		checkin.longitude = 66.82876
+		checkin.save()
+
+		# geolocation tracking is disabled
+		self.assertIsNone(checkin.geolocation)
+
+		frappe.db.set_single_value("HR Settings", "allow_geolocation_tracking", 1)
+
+		checkin.save()
+		self.assertEqual(
+			checkin.geolocation,
+			frappe.json.dumps(
+				{
+					"type": "FeatureCollection",
+					"features": [
+						{
+							"type": "Feature",
+							"properties": {},
+							"geometry": {"type": "Point", "coordinates": [66.82876, 23.31773]},
+						}
+					],
+				}
+			),
+		)
 
 	def test_add_log_based_on_employee_field(self):
 		employee = make_employee("test_add_log_based_on_employee_field@example.com")
@@ -85,7 +116,7 @@ class TestEmployeeCheckin(FrappeTestCase):
 		attendance.cancel()
 
 		linked_logs = frappe.db.get_all("Employee Checkin", {"attendance": attendance.name})
-		self.assertEquals(len(linked_logs), 0)
+		self.assertEqual(len(linked_logs), 0)
 
 	def test_calculate_working_hours(self):
 		check_in_out_type = [
@@ -116,24 +147,16 @@ class TestEmployeeCheckin(FrappeTestCase):
 		logs_type_1 = [frappe._dict(x) for x in logs_type_1]
 		logs_type_2 = [frappe._dict(x) for x in logs_type_2]
 
-		working_hours = calculate_working_hours(
-			logs_type_1, check_in_out_type[0], working_hours_calc_type[0]
-		)
+		working_hours = calculate_working_hours(logs_type_1, check_in_out_type[0], working_hours_calc_type[0])
 		self.assertEqual(working_hours, (6.5, logs_type_1[0].time, logs_type_1[-1].time))
 
-		working_hours = calculate_working_hours(
-			logs_type_1, check_in_out_type[0], working_hours_calc_type[1]
-		)
+		working_hours = calculate_working_hours(logs_type_1, check_in_out_type[0], working_hours_calc_type[1])
 		self.assertEqual(working_hours, (4.5, logs_type_1[0].time, logs_type_1[-1].time))
 
-		working_hours = calculate_working_hours(
-			logs_type_2, check_in_out_type[1], working_hours_calc_type[0]
-		)
+		working_hours = calculate_working_hours(logs_type_2, check_in_out_type[1], working_hours_calc_type[0])
 		self.assertEqual(working_hours, (5, logs_type_2[1].time, logs_type_2[-1].time))
 
-		working_hours = calculate_working_hours(
-			logs_type_2, check_in_out_type[1], working_hours_calc_type[1]
-		)
+		working_hours = calculate_working_hours(logs_type_2, check_in_out_type[1], working_hours_calc_type[1])
 		self.assertEqual(working_hours, (4.5, logs_type_2[1].time, logs_type_2[-1].time))
 
 		working_hours = calculate_working_hours(
@@ -230,9 +253,7 @@ class TestEmployeeCheckin(FrappeTestCase):
 	def test_fetch_night_shift_for_assignment_without_end_date(self):
 		"""Tests if shift is correctly fetched in logs when assignment has no end date"""
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
-		shift_type = setup_shift_type(
-			shift_type="Midnight Shift", start_time="23:00:00", end_time="01:00:00"
-		)
+		shift_type = setup_shift_type(shift_type="Midnight Shift", start_time="23:00:00", end_time="01:00:00")
 		date = getdate()
 		next_day = add_days(date, 1)
 		make_shift_assignment(shift_type.name, employee, date)
@@ -257,9 +278,7 @@ class TestEmployeeCheckin(FrappeTestCase):
 		Tests if shift is correctly fetched in logs when assignment starts and ends on the same day
 		"""
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
-		shift_type = setup_shift_type(
-			shift_type="Midnight Shift", start_time="23:00:00", end_time="07:00:00"
-		)
+		shift_type = setup_shift_type(shift_type="Midnight Shift", start_time="23:00:00", end_time="07:00:00")
 		date = getdate()
 		next_day = add_days(date, 1)
 
@@ -281,9 +300,7 @@ class TestEmployeeCheckin(FrappeTestCase):
 
 	def test_night_shift_not_fetched_outside_assignment_boundary_for_diff_start_date(self):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
-		shift_type = setup_shift_type(
-			shift_type="Midnight Shift", start_time="23:00:00", end_time="07:00:00"
-		)
+		shift_type = setup_shift_type(shift_type="Midnight Shift", start_time="23:00:00", end_time="07:00:00")
 		date = getdate()
 		next_day = add_days(date, 1)
 		prev_day = add_days(date, -1)
@@ -305,9 +322,7 @@ class TestEmployeeCheckin(FrappeTestCase):
 
 	def test_night_shift_not_fetched_outside_assignment_boundary_for_diff_end_date(self):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
-		shift_type = setup_shift_type(
-			shift_type="Midnight Shift", start_time="19:00:00", end_time="00:30:00"
-		)
+		shift_type = setup_shift_type(shift_type="Midnight Shift", start_time="19:00:00", end_time="00:30:00")
 		date = getdate()
 		next_day = add_days(date, 1)
 		prev_day = add_days(date, -1)
@@ -329,9 +344,7 @@ class TestEmployeeCheckin(FrappeTestCase):
 
 	def test_night_shift_not_fetched_outside_before_shift_margin(self):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
-		shift_type = setup_shift_type(
-			shift_type="Midnight Shift", start_time="00:30:00", end_time="10:00:00"
-		)
+		shift_type = setup_shift_type(shift_type="Midnight Shift", start_time="00:30:00", end_time="10:00:00")
 		date = getdate()
 		next_day = add_days(date, 1)
 		prev_day = add_days(date, -1)
@@ -353,9 +366,7 @@ class TestEmployeeCheckin(FrappeTestCase):
 
 	def test_night_shift_not_fetched_outside_after_shift_margin(self):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
-		shift_type = setup_shift_type(
-			shift_type="Midnight Shift", start_time="15:00:00", end_time="23:30:00"
-		)
+		shift_type = setup_shift_type(shift_type="Midnight Shift", start_time="15:00:00", end_time="23:30:00")
 		date = getdate()
 		next_day = add_days(date, 1)
 		prev_day = add_days(date, -1)
@@ -453,9 +464,7 @@ class TestEmployeeCheckin(FrappeTestCase):
 		# 8 - 12
 		shift1 = setup_shift_type()
 		# 12:30 - 16:30
-		shift2 = setup_shift_type(
-			shift_type="Consecutive Shift", start_time="12:30:00", end_time="16:30:00"
-		)
+		shift2 = setup_shift_type(shift_type="Consecutive Shift", start_time="12:30:00", end_time="16:30:00")
 
 		# the actual start and end times (with grace) for these shifts are 7 - 13 and 11:30 - 17:30
 		date = getdate()
@@ -481,17 +490,111 @@ class TestEmployeeCheckin(FrappeTestCase):
 		log = make_checkin(employee, timestamp)
 		self.assertEqual(log.shift, shift2.name)
 
+	@change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
+	@change_settings("HR Settings", {"allow_geolocation_tracking": 1})
+	def test_geofencing(self):
+		employee = make_employee("test_shift@example.com", company="_Test Company")
+
+		# 8 - 12
+		shift1 = setup_shift_type()
+		# 15 - 19
+		shift2 = setup_shift_type(shift_type="Consecutive Shift", start_time="15:00:00", end_time="19:00:00")
+
+		date = getdate()
+		location1 = make_shift_location("Loc A", 24, 72)
+		location2 = make_shift_location("Loc B", 25, 75, checkin_radius=2000)
+		make_shift_assignment(shift1.name, employee, date, shift_location=location1.name)
+		make_shift_assignment(shift2.name, employee, date, shift_location=location2.name)
+
+		timestamp = datetime.combine(add_days(date, -1), get_time("11:00:00"))
+		# allowed as it is before the shift start date
+		make_checkin(employee, timestamp, 20, 65)
+
+		timestamp = datetime.combine(date, get_time("06:00:00"))
+		# allowed as it is before the shift start time
+		make_checkin(employee, timestamp, 20, 65)
+
+		timestamp = datetime.combine(date, get_time("10:00:00"))
+		# allowed as distance (150m) is within checkin radius (500m)
+		make_checkin(employee, timestamp, 24.001, 72.001)
+
+		timestamp = datetime.combine(date, get_time("10:30:00"))
+		log = frappe.get_doc(
+			{
+				"doctype": "Employee Checkin",
+				"employee": employee,
+				"time": timestamp,
+				"latitude": 24.01,
+				"longitude": 72.01,
+			}
+		)
+		# not allowed as distance (1506m) is not within checkin radius
+		self.assertRaises(CheckinRadiusExceededError, log.insert)
+
+		# to ensure that the correct shift assignment is considered
+		timestamp = datetime.combine(date, get_time("16:00:00"))
+		# allowed as distance (1506m) is within checkin radius (2000m)
+		make_checkin(employee, timestamp, 25.01, 75.01)
+
+		timestamp = datetime.combine(date, get_time("16:30:00"))
+		log = frappe.get_doc(
+			{
+				"doctype": "Employee Checkin",
+				"employee": employee,
+				"time": timestamp,
+				"latitude": 25.1,
+				"longitude": 75.1,
+			}
+		)
+		# not allowed as distance (15004m) is not within checkin radius
+		self.assertRaises(CheckinRadiusExceededError, log.insert)
+
+	def test_bulk_fetch_shift(self):
+		emp1 = make_employee("emp1@example.com", company="_Test Company")
+		emp2 = make_employee("emp2@example.com", company="_Test Company")
+
+		# 8 - 12
+		shift1 = setup_shift_type(shift_type="Shift 1")
+		# 12:30 - 16:30
+		shift2 = setup_shift_type(shift_type="Shift 2", start_time="12:30:00", end_time="16:30:00")
+
+		frappe.db.set_value("Employee", emp1, "default_shift", shift1.name)
+		frappe.db.set_value("Employee", emp2, "default_shift", shift1.name)
+
+		date = getdate()
+		timestamp = datetime.combine(date, get_time("12:30:00"))
+
+		log1 = make_checkin(emp1, timestamp)
+		self.assertEqual(log1.shift, shift1.name)
+		log2 = make_checkin(emp2, timestamp)
+		self.assertEqual(log2.shift, shift1.name)
+
+		mark_attendance_and_link_log([log2], "Present", date)
+
+		make_shift_assignment(shift2.name, emp1, date)
+		make_shift_assignment(shift2.name, emp2, date)
+
+		bulk_fetch_shift([log1.name, log2.name])
+
+		log1.reload()
+		# shift changes according to the new assignment
+		self.assertEqual(log1.shift, shift2.name)
+		log2.reload()
+		# shift does not change since attendance is already marked
+		self.assertEqual(log2.shift, shift1.name)
+
 
 def make_n_checkins(employee, n, hours_to_reverse=1):
 	logs = [make_checkin(employee, now_datetime() - timedelta(hours=hours_to_reverse, minutes=n + 1))]
 	for i in range(n - 1):
-		logs.append(
-			make_checkin(employee, now_datetime() - timedelta(hours=hours_to_reverse, minutes=n - i))
-		)
+		logs.append(make_checkin(employee, now_datetime() - timedelta(hours=hours_to_reverse, minutes=n - i)))
 	return logs
 
 
-def make_checkin(employee, time=now_datetime()):
+def make_checkin(employee, time=None, latitude=None, longitude=None):
+	if not time:
+		time = now_datetime()
+
 	log = frappe.get_doc(
 		{
 			"doctype": "Employee Checkin",
@@ -499,6 +602,22 @@ def make_checkin(employee, time=now_datetime()):
 			"time": time,
 			"device_id": "device1",
 			"log_type": "IN",
+			"latitude": latitude,
+			"longitude": longitude,
 		}
 	).insert()
 	return log
+
+
+def make_shift_location(location_name, latitude, longitude, checkin_radius=500):
+	shift_location = frappe.get_doc(
+		{
+			"doctype": "Shift Location",
+			"location_name": location_name,
+			"latitude": latitude,
+			"longitude": longitude,
+			"checkin_radius": checkin_radius,
+		}
+	).insert()
+
+	return shift_location

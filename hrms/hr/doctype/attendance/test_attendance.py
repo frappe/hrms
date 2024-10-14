@@ -147,9 +147,7 @@ class TestAttendance(FrappeTestCase):
 		self.assertEqual(attendance, fetch_attendance)
 
 	def test_unmarked_days(self):
-		first_sunday = get_first_sunday(
-			self.holiday_list, for_date=get_last_day(add_months(getdate(), -1))
-		)
+		first_sunday = get_first_sunday(self.holiday_list, for_date=get_last_day(add_months(getdate(), -1)))
 		attendance_date = add_days(first_sunday, 1)
 
 		employee = make_employee(
@@ -172,9 +170,7 @@ class TestAttendance(FrappeTestCase):
 		self.assertIn(first_sunday, unmarked_days)
 
 	def test_unmarked_days_excluding_holidays(self):
-		first_sunday = get_first_sunday(
-			self.holiday_list, for_date=get_last_day(add_months(getdate(), -1))
-		)
+		first_sunday = get_first_sunday(self.holiday_list, for_date=get_last_day(add_months(getdate(), -1)))
 		attendance_date = add_days(first_sunday, 1)
 
 		employee = make_employee(
@@ -197,9 +193,7 @@ class TestAttendance(FrappeTestCase):
 		self.assertNotIn(first_sunday, unmarked_days)
 
 	def test_unmarked_days_as_per_joining_and_relieving_dates(self):
-		first_sunday = get_first_sunday(
-			self.holiday_list, for_date=get_last_day(add_months(getdate(), -1))
-		)
+		first_sunday = get_first_sunday(self.holiday_list, for_date=get_last_day(add_months(getdate(), -1)))
 		date = add_days(first_sunday, 1)
 
 		doj = add_days(date, 1)

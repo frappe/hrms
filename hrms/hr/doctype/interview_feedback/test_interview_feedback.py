@@ -49,7 +49,7 @@ class TestInterviewFeedback(FrappeTestCase):
 		total_rating = 0
 		for d in feedback_1.skill_assessment:
 			if d.rating:
-				total_rating += d.rating
+				total_rating += flt(d.rating)
 
 		avg_rating = flt(
 			total_rating / len(feedback_1.skill_assessment) if len(feedback_1.skill_assessment) else 0
@@ -91,9 +91,7 @@ def create_interview_feedback(interview, interviewer, skills_ratings):
 def get_skills_rating(interview_round):
 	import random
 
-	skills = frappe.get_all(
-		"Expected Skill Set", filters={"parent": interview_round}, fields=["skill"]
-	)
+	skills = frappe.get_all("Expected Skill Set", filters={"parent": interview_round}, fields=["skill"])
 	for d in skills:
 		d["rating"] = random.random()
 	return skills

@@ -25,7 +25,7 @@
  "icon": "fa fa-flag",
  "idx": 1,
  "links": [],
- "modified": "2023-07-04 10:21:39.843357",
+ "modified": "2024-03-27 13:09:42.827070",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employment Type",
@@ -59,7 +59,7 @@
  ],
  "quick_entry": 1,
  "show_name_in_global_search": 1,
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "translated_doctype": 1

@@ -8,7 +8,7 @@ frappe.dashboards.chart_sources["Hiring vs Attrition Count"] = {
 			label: __("Company"),
 			fieldtype: "Link",
 			options: "Company",
-			default: frappe.defaults.get_user_default("Company")
+			default: frappe.defaults.get_user_default("Company"),
 		},
 		{
 			fieldname: "from_date",
@@ -21,15 +21,15 @@ frappe.dashboards.chart_sources["Hiring vs Attrition Count"] = {
 			fieldname: "to_date",
 			label: __("To Date"),
 			fieldtype: "Date",
-			default:  frappe.defaults.get_user_default("year_end_date"),
+			default: frappe.defaults.get_user_default("year_end_date"),
 		},
 		{
 			fieldname: "time_interval",
 			label: __("Time Interval"),
 			fieldtype: "Select",
 			options: ["Monthly", "Quarterly", "Yearly"],
-			default:  "Monthly",
-			reqd: 1
+			default: "Monthly",
+			reqd: 1,
 		},
-	]
+	],
 };

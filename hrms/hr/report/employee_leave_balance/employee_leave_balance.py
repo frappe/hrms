@@ -132,9 +132,7 @@ def get_data(filters: Filters) -> list:
 
 def get_leave_types() -> list[str]:
 	LeaveType = frappe.qb.DocType("Leave Type")
-	return (frappe.qb.from_(LeaveType).select(LeaveType.name).orderby(LeaveType.name)).run(
-		pluck="name"
-	)
+	return (frappe.qb.from_(LeaveType).select(LeaveType.name).orderby(LeaveType.name)).run(pluck="name")
 
 
 def get_employees(filters: Filters) -> list[dict]:
@@ -147,7 +145,7 @@ def get_employees(filters: Filters) -> list[dict]:
 
 	for field in ["company", "department"]:
 		if filters.get(field):
-			query = query.where((getattr(Employee, field) == filters.get(field)))
+			query = query.where(getattr(Employee, field) == filters.get(field))
 
 	if filters.get("employee"):
 		query = query.where(Employee.name == filters.get("employee"))
@@ -201,9 +199,7 @@ def get_allocated_and_expired_leaves(
 			# leave allocations ending before to_date, reduce leaves taken within that period
 			# since they are already used, they won't expire
 			expired_leaves += record.leaves
-			leaves_for_period = get_leaves_for_period(
-				employee, leave_type, record.from_date, record.to_date
-			)
+			leaves_for_period = get_leaves_for_period(employee, leave_type, record.from_date, record.to_date)
 			expired_leaves -= min(abs(leaves_for_period), record.leaves)
 
 		if record.from_date >= getdate(from_date):
@@ -215,9 +211,7 @@ def get_allocated_and_expired_leaves(
 	return new_allocation, expired_leaves, carry_forwarded_leaves
 
 
-def get_leave_ledger_entries(
-	from_date: str, to_date: str, employee: str, leave_type: str
-) -> list[dict]:
+def get_leave_ledger_entries(from_date: str, to_date: str, employee: str, leave_type: str) -> list[dict]:
 	ledger = frappe.qb.DocType("Leave Ledger Entry")
 	return (
 		frappe.qb.from_(ledger)

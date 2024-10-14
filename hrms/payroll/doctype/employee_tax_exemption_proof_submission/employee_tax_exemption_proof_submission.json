@@ -149,7 +149,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-01 13:13:06.714501",
+ "modified": "2024-03-27 13:09:42.112733",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Tax Exemption Proof Submission",
@@ -218,7 +218,7 @@
   }
  ],
  "search_fields": "employee_name",
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name",

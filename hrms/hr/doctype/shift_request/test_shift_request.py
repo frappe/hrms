@@ -237,18 +237,30 @@ def set_shift_approver(department):
 	department_doc.reload()
 
 
-def make_shift_request(approver, do_not_submit=0):
+def make_shift_request(
+	approver=None,
+	employee="_T-Employee-00001",
+	employee_name="_Test Employee",
+	status="Approved",
+	from_date=None,
+	to_date=None,
+	do_not_submit=0,
+):
+	from_date = from_date or nowdate()
+	to_date = to_date or add_days(nowdate(), 10)
+	approver = approver or frappe.db.get_value("Employee", employee, "shift_request_approver")
+
 	shift_request = frappe.get_doc(
 		{
 			"doctype": "Shift Request",
 			"shift_type": "Day Shift",
 			"company": "_Test Company",
-			"employee": "_T-Employee-00001",
-			"employee_name": "_Test Employee",
-			"from_date": nowdate(),
-			"to_date": add_days(nowdate(), 10),
+			"employee": employee,
+			"employee_name": employee_name,
+			"from_date": from_date,
+			"to_date": to_date,
 			"approver": approver,
-			"status": "Approved",
+			"status": status,
 		}
 	).insert()
 

@@ -8,6 +8,7 @@ from frappe.utils import pretty_date
 
 
 def get_context(context):
+	context.no_cache = 1
 	context.parents = [{"name": _("My Account"), "route": "/"}]
 	context.body_class = "jobs-page"
 	page_len = 20
@@ -31,6 +32,7 @@ def get_job_openings(filters=None, txt=None, sort=None, limit=20, offset=0):
 			jo.status,
 			jo.job_title,
 			jo.description,
+			jo.publish_applications_received,
 			jo.publish_salary_range,
 			jo.lower_range,
 			jo.upper_range,
@@ -90,7 +92,7 @@ def get_all_filters(filters=None):
 	job_openings = frappe.get_all(
 		"Job Opening",
 		filters={"publish": 1, "status": "Open"},
-		fields=["company", "department", "location", "employment_type"],
+		fields=["company", "department", "employment_type", "location"],
 	)
 
 	companies = filters.get("company", [])
@@ -110,7 +112,7 @@ def get_filters_txt_sort_offset(page_len=20):
 	txt = ""
 	sort = None
 	offset = 0
-	allowed_filters = ["company", "department", "location", "employment_type"]
+	allowed_filters = ["company", "department", "employment_type", "location"]
 
 	for d in args:
 		if d in allowed_filters:

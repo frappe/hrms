@@ -28,6 +28,8 @@ from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
 )
 from erpnext.accounts.utils import get_fiscal_year
 
+from hrms.payroll.doctype.salary_withholding.salary_withholding import link_bank_entry_in_salary_withholdings
+
 
 class PayrollEntry(Document):
 	def onload(self):
@@ -200,8 +202,16 @@ class PayrollEntry(Document):
 
 		self.set("employees", employees)
 		self.number_of_employees = len(self.employees)
+		self.update_employees_with_withheld_salaries()
 
 		return self.get_employees_with_unmarked_attendance()
+
+	def update_employees_with_withheld_salaries(self):
+		withheld_salaries = get_salary_withholdings(self.start_date, self.end_date, pluck="employee")
+
+		for employee in self.employees:
+			if employee.employee in withheld_salaries:
+				employee.is_salary_withheld = 1
 
 	@frappe.whitelist()
 	def create_salary_slips(self):
@@ -460,18 +470,23 @@ class PayrollEntry(Document):
 		if not self.employee_cost_centers.get(employee):
 			SalaryStructureAssignment = frappe.qb.DocType("Salary Structure Assignment")
 			EmployeeCostCenter = frappe.qb.DocType("Employee Cost Center")
-
+			assignment_subquery = (
+				frappe.qb.from_(SalaryStructureAssignment)
+				.select(SalaryStructureAssignment.name)
+				.where(
+					(SalaryStructureAssignment.employee == employee)
+					& (SalaryStructureAssignment.salary_structure == salary_structure)
+					& (SalaryStructureAssignment.docstatus == 1)
+					& (SalaryStructureAssignment.from_date <= self.end_date)
+				)
+				.orderby(SalaryStructureAssignment.from_date, order=frappe.qb.desc)
+				.limit(1)
+			)
 			cost_centers = dict(
 				(
-					frappe.qb.from_(SalaryStructureAssignment)
-					.join(EmployeeCostCenter)
-					.on(SalaryStructureAssignment.name == EmployeeCostCenter.parent)
+					frappe.qb.from_(EmployeeCostCenter)
 					.select(EmployeeCostCenter.cost_center, EmployeeCostCenter.percentage)
-					.where(
-						(SalaryStructureAssignment.employee == employee)
-						& (SalaryStructureAssignment.docstatus == 1)
-						& (SalaryStructureAssignment.salary_structure == salary_structure)
-					)
+					.where(EmployeeCostCenter.parent == assignment_subquery)
 				).run(as_list=True)
 			)
 
@@ -481,7 +496,9 @@ class PayrollEntry(Document):
 				)
 
 				if not default_cost_center and department:
-					default_cost_center = frappe.get_cached_value("Department", department, "payroll_cost_center")
+					default_cost_center = frappe.get_cached_value(
+						"Department", department, "payroll_cost_center"
+					)
 
 				if not default_cost_center:
 					default_cost_center = self.cost_center
@@ -586,9 +603,9 @@ class PayrollEntry(Document):
 		payroll_payable_account=None,
 		voucher_type="Journal Entry",
 		user_remark="",
-		submitted_salary_slips: list = None,
+		submitted_salary_slips: list | None = None,
 		submit_journal_entry=False,
-	):
+	) -> str:
 		multi_currency = 0
 		if len(currencies) > 1:
 			multi_currency = 1
@@ -612,7 +629,7 @@ class PayrollEntry(Document):
 				journal_entry.submit()
 
 			if submitted_salary_slips:
-				self.update_salary_slip_status(submitted_salary_slips, jv_name=journal_entry.name)
+				self.set_journal_entry_in_salary_slips(submitted_salary_slips, jv_name=journal_entry.name)
 
 		except Exception as e:
 			if type(e) in (str, list, tuple):
@@ -620,6 +637,8 @@ class PayrollEntry(Document):
 
 			self.log_error("Journal Entry creation against Salary Slip failed")
 			raise
+
+		return journal_entry
 
 	def get_payable_amount_for_earnings_and_deductions(
 		self,
@@ -803,9 +822,7 @@ class PayrollEntry(Document):
 
 		return row
 
-	def get_amount_and_exchange_rate_for_journal_entry(
-		self, account, amount, company_currency, currencies
-	):
+	def get_amount_and_exchange_rate_for_journal_entry(self, account, amount, company_currency, currencies):
 		conversion_rate = 1
 		exchange_rate = self.exchange_rate
 		account_currency = frappe.db.get_value("Account", account, "account_currency")
@@ -822,7 +839,31 @@ class PayrollEntry(Document):
 		return exchange_rate, amount
 
 	@frappe.whitelist()
-	def make_bank_entry(self):
+	def has_bank_entries(self) -> dict[str, bool]:
+		je = frappe.qb.DocType("Journal Entry")
+		jea = frappe.qb.DocType("Journal Entry Account")
+
+		bank_entries = (
+			frappe.qb.from_(je)
+			.inner_join(jea)
+			.on(je.name == jea.parent)
+			.select(je.name)
+			.where(
+				(je.voucher_type == "Bank Entry")
+				& (jea.reference_name == self.name)
+				& (jea.reference_type == "Payroll Entry")
+			)
+		).run(as_dict=True)
+
+		return {
+			"has_bank_entries": bool(bank_entries),
+			"has_bank_entries_for_withheld_salaries": not any(
+				employee.is_salary_withheld for employee in self.employees
+			),
+		}
+
+	@frappe.whitelist()
+	def make_bank_entry(self, for_withheld_salaries=False):
 		self.check_permission("write")
 		self.employee_based_payroll_payable_entries = {}
 		employee_wise_accounting_enabled = frappe.db.get_single_value(
@@ -830,7 +871,7 @@ class PayrollEntry(Document):
 		)
 
 		salary_slip_total = 0
-		salary_slips = self.get_salary_slip_details()
+		salary_slips = self.get_salary_slip_details(for_withheld_salaries)
 
 		for salary_detail in salary_slips:
 			if salary_detail.parentfield == "earnings":
@@ -882,14 +923,21 @@ class PayrollEntry(Document):
 
 					salary_slip_total -= salary_detail.amount
 
+		bank_entry = None
 		if salary_slip_total > 0:
-			self.set_accounting_entries_for_bank_entry(salary_slip_total, "salary")
+			remark = "withheld salaries" if for_withheld_salaries else "salaries"
+			bank_entry = self.set_accounting_entries_for_bank_entry(salary_slip_total, remark)
 
-	def get_salary_slip_details(self):
+			if for_withheld_salaries:
+				link_bank_entry_in_salary_withholdings(salary_slips, bank_entry.name)
+
+		return bank_entry
+
+	def get_salary_slip_details(self, for_withheld_salaries=False):
 		SalarySlip = frappe.qb.DocType("Salary Slip")
 		SalaryDetail = frappe.qb.DocType("Salary Detail")
 
-		return (
+		query = (
 			frappe.qb.from_(SalarySlip)
 			.join(SalaryDetail)
 			.on(SalarySlip.name == SalaryDetail.parent)
@@ -897,6 +945,7 @@ class PayrollEntry(Document):
 				SalarySlip.name,
 				SalarySlip.employee,
 				SalarySlip.salary_structure,
+				SalarySlip.salary_withholding_cycle,
 				SalaryDetail.salary_component,
 				SalaryDetail.amount,
 				SalaryDetail.parentfield,
@@ -907,7 +956,13 @@ class PayrollEntry(Document):
 				& (SalarySlip.end_date <= self.end_date)
 				& (SalarySlip.payroll_entry == self.name)
 			)
-		).run(as_dict=True)
+		)
+
+		if for_withheld_salaries:
+			query = query.where(SalarySlip.status == "Withheld")
+		else:
+			query = query.where(SalarySlip.status != "Withheld")
+		return query.run(as_dict=True)
 
 	def set_accounting_entries_for_bank_entry(self, je_payment_amount, user_remark):
 		payroll_payable_account = self.payroll_payable_account
@@ -982,16 +1037,16 @@ class PayrollEntry(Document):
 				)
 			)
 
-		self.make_journal_entry(
+		return self.make_journal_entry(
 			accounts,
 			currencies,
 			voucher_type="Bank Entry",
 			user_remark=_("Payment of {0} from {1} to {2}").format(
-				user_remark, self.start_date, self.end_date
+				_(user_remark), self.start_date, self.end_date
 			),
 		)
 
-	def update_salary_slip_status(self, submitted_salary_slips, jv_name=None):
+	def set_journal_entry_in_salary_slips(self, submitted_salary_slips, jv_name=None):
 		SalarySlip = frappe.qb.DocType("Salary Slip")
 		(
 			frappe.qb.update(SalarySlip)
@@ -1029,7 +1084,11 @@ class PayrollEntry(Document):
 
 			if unmarked_days > 0:
 				unmarked_attendance.append(
-					{"employee": emp.employee, "employee_name": emp.employee_name, "unmarked_days": unmarked_days}
+					{
+						"employee": emp.employee,
+						"employee_name": emp.employee_name,
+						"unmarked_days": unmarked_days,
+					}
 				)
 
 		return unmarked_attendance
@@ -1171,7 +1230,7 @@ def get_filtered_employees(
 	return query.run(as_dict=as_dict)
 
 
-def set_fields_to_select(query, fields: list[str] = None):
+def set_fields_to_select(query, fields: list[str] | None = None):
 	default_fields = ["employee", "employee_name", "department", "designation"]
 
 	if fields:
@@ -1279,9 +1338,7 @@ def get_frequency_kwargs(frequency_name):
 def get_end_date(start_date, frequency):
 	start_date = getdate(start_date)
 	frequency = frequency.lower() if frequency else "monthly"
-	kwargs = (
-		get_frequency_kwargs(frequency) if frequency != "bimonthly" else get_frequency_kwargs("monthly")
-	)
+	kwargs = get_frequency_kwargs(frequency) if frequency != "bimonthly" else get_frequency_kwargs("monthly")
 
 	# weekly, fortnightly and daily intervals have fixed days so no problems
 	end_date = add_to_date(start_date, **kwargs) - relativedelta(days=1)
@@ -1318,34 +1375,6 @@ def get_month_details(year, month):
 		)
 	else:
 		frappe.throw(_("Fiscal Year {0} not found").format(year))
-
-
-def get_payroll_entry_bank_entries(payroll_entry_name):
-	je = frappe.qb.DocType("Journal Entry")
-	jea = frappe.qb.DocType("Journal Entry Account")
-
-	journal_entries = (
-		frappe.qb.from_(je)
-		.from_(jea)
-		.select(je.name)
-		.where(
-			(je.name == jea.parent)
-			& (je.voucher_type == "Bank Entry")
-			& (jea.reference_name == payroll_entry_name)
-			& (jea.reference_type == "Payroll Entry")
-		)
-	).run(as_dict=True)
-
-	return journal_entries
-
-
-@frappe.whitelist()
-def payroll_entry_has_bank_entries(name: str):
-	response = {}
-	bank_entries = get_payroll_entry_bank_entries(name)
-	response["submitted"] = 1 if bank_entries else 0
-
-	return response
 
 
 def log_payroll_failure(process, payroll_entry, error):
@@ -1419,13 +1448,17 @@ def show_payroll_submission_status(submitted, unsubmitted, payroll_entry):
 		frappe.msgprint(
 			_("Salary Slips submitted for period from {0} to {1}").format(
 				payroll_entry.start_date, payroll_entry.end_date
-			)
+			),
+			title=_("Success"),
+			indicator="green",
 		)
 	elif unsubmitted:
 		frappe.msgprint(
 			_("Could not submit some Salary Slips: {}").format(
 				", ".join(get_link_to_form("Salary Slip", entry) for entry in unsubmitted)
-			)
+			),
+			title=_("Failure"),
+			indicator="red",
 		)
 
 
@@ -1467,7 +1500,9 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 
 			count += 1
 			if publish_progress:
-				frappe.publish_progress(count * 100 / len(salary_slips), title=_("Submitting Salary Slips..."))
+				frappe.publish_progress(
+					count * 100 / len(salary_slips), title=_("Submitting Salary Slips...")
+				)
 
 		if submitted:
 			payroll_entry.make_accrual_jv_entry(submitted)
@@ -1490,16 +1525,15 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def get_payroll_entries_for_jv(doctype, txt, searchfield, start, page_len, filters):
+	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 	return frappe.db.sql(
-		"""
+		f"""
 		select name from `tabPayroll Entry`
-		where `{key}` LIKE %(txt)s
+		where `{searchfield}` LIKE %(txt)s
 		and name not in
 			(select reference_name from `tabJournal Entry Account`
 				where reference_type="Payroll Entry")
-		order by name limit %(start)s, %(page_len)s""".format(
-			key=searchfield
-		),
+		order by name limit %(start)s, %(page_len)s""",
 		{"txt": "%%%s%%" % txt, "start": start, "page_len": page_len},
 	)
 
@@ -1508,7 +1542,7 @@ def get_employee_list(
 	filters: frappe._dict,
 	searchfield=None,
 	search_string=None,
-	fields: list[str] = None,
+	fields: list[str] | None = None,
 	as_dict=True,
 	limit=None,
 	offset=None,
@@ -1547,7 +1581,6 @@ def get_employee_list(
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def employee_query(doctype, txt, searchfield, start, page_len, filters):
-	doctype = "Employee"
 	filters = frappe._dict(filters)
 
 	if not filters.payroll_frequency:
@@ -1564,3 +1597,36 @@ def employee_query(doctype, txt, searchfield, start, page_len, filters):
 	)
 
 	return employee_list
+
+
+def get_salary_withholdings(
+	start_date: str,
+	end_date: str,
+	employee: str | None = None,
+	pluck: str | None = None,
+) -> list[str] | list[dict]:
+	Withholding = frappe.qb.DocType("Salary Withholding")
+	WithholdingCycle = frappe.qb.DocType("Salary Withholding Cycle")
+	withheld_salaries = (
+		frappe.qb.from_(Withholding)
+		.join(WithholdingCycle)
+		.on(WithholdingCycle.parent == Withholding.name)
+		.select(
+			Withholding.employee,
+			Withholding.name.as_("salary_withholding"),
+			WithholdingCycle.name.as_("salary_withholding_cycle"),
+		)
+		.where(
+			(WithholdingCycle.from_date == start_date)
+			& (WithholdingCycle.to_date == end_date)
+			& (WithholdingCycle.docstatus == 1)
+			& (WithholdingCycle.is_salary_released != 1)
+		)
+	)
+
+	if employee:
+		withheld_salaries = withheld_salaries.where(Withholding.employee == employee)
+
+	if pluck:
+		return withheld_salaries.run(pluck=pluck)
+	return withheld_salaries.run(as_dict=True)

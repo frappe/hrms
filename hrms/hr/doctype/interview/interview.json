@@ -184,11 +184,11 @@
    "fieldtype": "Section Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "interview_details",
    "fieldtype": "Table",
    "label": "Interviewers",
-   "options": "Interview Detail",
-   "allow_on_submit": 1
+   "options": "Interview Detail"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -199,7 +199,7 @@
    "link_fieldname": "interview"
   }
  ],
- "modified": "2023-12-30 12:13:59.157555",
+ "modified": "2024-03-27 13:09:51.655366",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview",
@@ -263,7 +263,7 @@
    "write": 1
   }
  ],
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "job_applicant",

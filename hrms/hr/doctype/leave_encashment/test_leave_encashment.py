@@ -62,11 +62,9 @@ class TestLeaveEncashment(FrappeTestCase):
 			"leave_period": self.leave_period.name,
 		}
 
-		leave_policy_assignments = create_assignment_for_multiple_employees(
-			[self.employee], frappe._dict(data)
-		)
+		create_assignment_for_multiple_employees([self.employee], frappe._dict(data))
 
-		salary_structure = make_salary_structure(
+		make_salary_structure(
 			"Salary Structure for Encashment",
 			"Monthly",
 			self.employee,
@@ -112,7 +110,7 @@ class TestLeaveEncashment(FrappeTestCase):
 
 		first_sunday = get_first_sunday(self.holiday_list, for_date=self.leave_period.from_date)
 		# 3 day leave application
-		leave_application = make_leave_application(
+		make_leave_application(
 			self.employee,
 			add_days(first_sunday, 1),
 			add_days(first_sunday, 3),
@@ -157,7 +155,7 @@ class TestLeaveEncashment(FrappeTestCase):
 
 		# 3 day leave application
 		first_sunday = get_first_sunday(self.holiday_list, for_date=self.leave_period.from_date)
-		leave_application = make_leave_application(
+		make_leave_application(
 			self.employee,
 			add_days(first_sunday, 1),
 			add_days(first_sunday, 3),
@@ -201,7 +199,7 @@ class TestLeaveEncashment(FrappeTestCase):
 
 		# 3 day leave application
 		first_sunday = get_first_sunday(self.holiday_list, for_date=self.leave_period.from_date)
-		leave_application = make_leave_application(
+		make_leave_application(
 			self.employee,
 			add_days(first_sunday, 1),
 			add_days(first_sunday, 3),
@@ -260,6 +258,4 @@ class TestLeaveEncashment(FrappeTestCase):
 		# check if leave ledger entry is deleted on cancellation
 		frappe.db.delete("Additional Salary", {"ref_docname": leave_encashment.name})
 		leave_encashment.cancel()
-		self.assertFalse(
-			frappe.db.exists("Leave Ledger Entry", {"transaction_name": leave_encashment.name})
-		)
+		self.assertFalse(frappe.db.exists("Leave Ledger Entry", {"transaction_name": leave_encashment.name}))

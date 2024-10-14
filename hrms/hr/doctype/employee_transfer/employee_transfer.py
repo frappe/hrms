@@ -41,9 +41,7 @@ class EmployeeTransfer(Document):
 			employee.db_set("relieving_date", self.transfer_date)
 			employee.db_set("status", "Left")
 		else:
-			employee = update_employee_work_history(
-				employee, self.transfer_details, date=self.transfer_date
-			)
+			employee = update_employee_work_history(employee, self.transfer_details, date=self.transfer_date)
 			if self.new_company and self.company != self.new_company:
 				employee.company = self.new_company
 				employee.date_of_joining = self.transfer_date
@@ -55,7 +53,7 @@ class EmployeeTransfer(Document):
 			if self.new_employee_id:
 				frappe.throw(
 					_("Please delete the Employee {0} to cancel this document").format(
-						"<a href='/app/Form/Employee/{0}'>{0}</a>".format(self.new_employee_id)
+						f"<a href='/app/Form/Employee/{self.new_employee_id}'>{self.new_employee_id}</a>"
 					)
 				)
 			# mark the employee as active

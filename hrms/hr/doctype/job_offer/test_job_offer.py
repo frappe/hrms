@@ -51,7 +51,7 @@ class TestJobOffer(FrappeTestCase):
 		job_offer.status = "Rejected"
 		job_offer.submit()
 		job_applicant.reload()
-		self.assertEquals(job_applicant.status, "Rejected")
+		self.assertEqual(job_applicant.status, "Rejected")
 		frappe.db.set_single_value("HR Settings", "check_vacancies", 1)
 
 	def test_recruitment_metrics(self):
@@ -76,7 +76,7 @@ def create_job_offer(**args):
 		job_applicant = create_job_applicant()
 
 	if not frappe.db.exists("Designation", args.designation):
-		designation = create_designation(designation_name=args.designation)
+		create_designation(designation_name=args.designation)
 
 	job_offer = frappe.get_doc(
 		{

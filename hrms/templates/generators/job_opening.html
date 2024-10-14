@@ -3,45 +3,50 @@
 
 <div class="py-12">
 	<!-- Header -->
-	<div class="flex">
-		<div class="mb-8 mr-40">
-			<h1 class="mt-0 mb-3" style="font-size: 3rem">{{ job_title }}</h1>
+	<div class="row">
+		<div class="col-md-9 mb-8">
+			<h1
+				class="mt-0 mb-2 mb-md-3 mx-auto mx-md-0 text-center text-md-left"
+				style="@include media-breakpoint-up(md) {font-size: 3rem}"
+			>
+				{{ job_title }}
+			</h1>
 			<div class="flex align-items-center">
-				<div>
+				<div class="mx-auto mx-md-0">
 					<span class="font-weight-bold">{{ company }}</span>
 					{{ " · " }}
 					{{ posted_on }}
 				</div>
 			</div>
 		</div>
-		<div class="ml-auto">
-			{%- if status == "Open" -%}
-				{%- if job_application_route -%}
-					<a class="btn btn-primary btn-lg" href="/{{ job_application_route }}/new?job_title={{ name }}">
+		<div class="col-md-3 flex">
+			<div class="ml-auto d-none d-md-block">
+				{%- if status == "Open" -%}
+					<a
+						class="btn btn-primary btn-lg"
+						href="/{{ job_application_route if job_application_route else 'job_application' }}/new?job_title={{ name }}"
+					>
 						{{ _("Apply Now") }}
 					</a>
-				{% else %}
-					<a class="btn btn-primary btn-lg" href="/job_application/new?job_title={{ name }}">
-						{{ _("Apply Now") }}
-					</a>
-				{% endif %}
-			{%- else -%}
-				<div class="py-4 px-10 font-weight-bold text-nowrap"
+				{%- else -%}
+					<div
+						class="py-4 px-10 font-weight-bold text-nowrap"
 						style="background: var(--bg-gray);
 							font-size: 1.1rem;
 							border-radius: var(--border-radius)"
-				>
-					{{ _("Opening closed.") }}
-				</div>
-			{% endif %}
+					>
+						{{ _("Opening closed.") }}
+					</div>
+				{% endif %}
+			</div>
 		</div>
 	</div>
 
 	<!-- Job Opening Details -->
-	<div class="mb-4 p-4">
+	<div class="mb-md-4 p-md-4">
 		<div class="row">
 			{%- if location -%}
-				<div class="col-4 mb-8">
+				<div class="col-12 col-md-4 mb-6 mb-md-8">
 					<div class="flex flex-row align-items-center">
 						<div class="rounded-circle p-4" style="background: var(--purple-50)">
 							<svg
@@ -58,7 +63,7 @@
 							</svg>
 						</div>
 						<div class="ml-5">
-							<div class="text-secondary" style="font-size: 14px">{{ _("Location") }}</div>
+							<div class="text-secondary text-uppercase" style="font-size: 11px">{{ _("Location") }}</div>
 							<div class="font-weight-bold">{{ location }}</div>
 						</div>
 					</div>
@@ -66,7 +71,7 @@
 			{% endif %}
 
 			{%- if department -%}
-				<div class="col-4 mb-8">
+				<div class="col-12 col-md-4 mb-6 mb-md-8">
 					<div class="flex flex-row align-items-center">
 						<div class="rounded-circle p-4" style="background: var(--blue-50)">
 							<svg
@@ -79,7 +84,7 @@
 							</svg>
 						</div>
 						<div class="ml-5">
-							<div class="text-secondary" style="font-size: 14px">{{ _("Department") }}</div>
+							<div class="text-secondary text-uppercase" style="font-size: 11px">{{ _("Department") }}</div>
 							<div class="font-weight-bold">{{ department }}</div>
 						</div>
 					</div>
@@ -87,7 +92,7 @@
 			{% endif %}
 
 			{%- if publish_salary_range -%}
-				<div class="col-4 mb-8">
+				<div class="col-12 col-md-4 mb-6 mb-md-8">
 					<div class="flex flex-row align-items-center">
 						<div class="rounded-circle p-4" style="background: var(--green-50)">
 							<svg
@@ -100,7 +105,7 @@
 							</svg>
 						</div>
 						<div class="ml-5">
-							<div class="text-secondary" style="font-size: 14px">{{ _("Salary Range") }}</div>
+							<div class="text-secondary text-uppercase" style="font-size: 11px">{{ _("Salary Range") }}</div>
 							<div class="font-weight-bold">
 								{%- if lower_range -%}
 									{{ frappe.format_value(frappe.utils.flt(lower_range) , currency=currency) }}
@@ -120,54 +125,67 @@
 			{% endif %}
 
 			{%- if employment_type -%}
-				<div class="col-4 mb-8">
+				<div class="col-12 col-md-4 mb-6 mb-md-8">
 					<div class="flex flex-row align-items-center">
 						<div class="rounded-circle p-4" style="background: var(--yellow-50)">
-							<svg class="icon"
-									style="height: 28px;
-										width: 28px;
-										--icon-stroke: var(--yellow-700)">
+							<svg
+								class="icon"
+								style="height: 28px;
+									width: 28px;
+									--icon-stroke: var(--yellow-700)"
+							>
 								<use href="#icon-hr"></use>
 							</svg>
 						</div>
 						<div class="ml-5">
-							<div class="text-secondary" style="font-size: 14px">{{ _("Employment Type") }}</div>
+							<div class="text-secondary text-uppercase" style="font-size: 11px">{{ _("Employment Type") }}</div>
 							<div class="font-weight-bold">{{ employment_type }}</div>
 						</div>
 					</div>
 				</div>
 			{% endif %}
 
-			<div class="col-4 mb-8">
-				<div class="flex flex-row align-items-center">
-					<div class="rounded-circle p-4" style="background: var(--orange-50)">
-						<svg class="icon"
+			{%- if publish_applications_received -%}
+				<div class="col-12 col-md-4 mb-6 mb-md-8">
+					<div class="flex flex-row align-items-center">
+						<div class="rounded-circle p-4" style="background: var(--orange-50)">
+							<svg
+								class="icon"
 								style="height: 28px;
 									width: 28px;
-									--icon-stroke: var(--orange-700)">
-							<use href="#icon-users"></use>
-						</svg>
-					</div>
-					<div class="ml-5">
-						<div class="text-secondary" style="font-size: 14px">{{ _("Applications Received") }}</div>
-						<div class="font-weight-bold">{{ no_of_applications }}</div>
+									--icon-stroke: var(--orange-700)"
+							>
+								<use href="#icon-users"></use>
+							</svg>
+						</div>
+						<div class="ml-5">
+							<div class="text-secondary text-uppercase" style="font-size: 11px">{{ _("Applications Received") }}</div>
+							<div class="font-weight-bold">{{ no_of_applications }}</div>
+						</div>
 					</div>
 				</div>
-			</div>
+			{%- endif -%}
 
 			{%- if (status == 'Open' and closes_on) or (status == 'Closed' and closed_on) -%}
-				<div class="col-4 mb-8">
+				<div class="col-12 col-md-4 mb-6 mb-md-8">
 					<div class="flex flex-row align-items-center">
 						<div class="rounded-circle p-4" style="background: var(--red-50)">
-							<svg class="icon"
-									style="height: 28px;
-										width: 28px;
-										--icon-stroke: var(--red-700)">
+							<svg
+								class="icon"
+								style="height: 28px;
+									width: 28px;
+									--icon-stroke: var(--red-700)"
+							>
 								<use href="#icon-calendar"></use>
 							</svg>
 						</div>
 						<div class="ml-5">
-							<div class="text-secondary" style="font-size: 14px">{{ _("Closes On") if status == "Open" else _("Closed On") }}</div>
+							<div
+								class="text-secondary text-uppercase"
+								style="font-size: 11px"
+							>
+								{{ _("Closes On") if status == "Open" else _("Closed On") }}
+							</div>
 							<div class="font-weight-bold">
 								{{ frappe.format_date(closes_on if status == "Open" else closed_on, "d MMM, YYYY") }}
 							</div>
@@ -179,6 +197,29 @@
 	</div>
 
 	{%- if description -%}<p>{{ description }}</p>{% endif %}
+
+	<!-- Mobile Apply Now Button -->
+	<div id="sticky-div" class="position-sticky d-md-none" style="bottom: 0; ">
+		<div class="w-100 bg-white py-8">
+			{%- if status == "Open" -%}
+				<a
+					class="btn btn-primary btn-lg w-100"
+					href="/{{ job_application_route if job_application_route else 'job_application' }}/new?job_title={{ name }}"
+				>
+					{{ _("Apply Now") }}
+				</a>
+			{%- else -%}
+				<div
+					class="py-4 px-10 text-center font-weight-bold text-nowrap"
+					style="background: var(--bg-gray);
+						font-size: 1.1rem;
+						border-radius: var(--border-radius)"
+				>
+					{{ _("Opening closed.") }}
+				</div>
+			{% endif %}
+		</div>
+	</div>
 </div>
 
 {% endblock page_content %}

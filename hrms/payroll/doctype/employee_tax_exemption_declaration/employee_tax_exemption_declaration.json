@@ -120,7 +120,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-11-08 17:03:56.224987",
+ "modified": "2024-03-27 13:09:41.797682",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Tax Exemption Declaration",
@@ -189,7 +189,7 @@
   }
  ],
  "search_fields": "employee_name",
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name",

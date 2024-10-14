@@ -5,10 +5,10 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import add_months, cint, date_diff, flt, formatdate, getdate, month_diff
+from frappe.utils import add_months, cint, date_diff, flt, formatdate, getdate
 from frappe.utils.caching import redis_cache
 
-from hrms.hr.utils import get_holiday_dates_for_employee
+from hrms.hr.utils import get_exact_month_diff, get_holiday_dates_for_employee
 
 
 class PayrollPeriod(Document):
@@ -49,7 +49,7 @@ class PayrollPeriod(Document):
 				_("A {0} exists between {1} and {2} (").format(
 					self.doctype, formatdate(self.start_date), formatdate(self.end_date)
 				)
-				+ """ <b><a href="/app/Form/{0}/{1}">{1}</a></b>""".format(self.doctype, overlap_doc[0].name)
+				+ f""" <b><a href="/app/Form/{self.doctype}/{overlap_doc[0].name}">{overlap_doc[0].name}</a></b>"""
 				+ _(") for {0}").format(self.company)
 			)
 			frappe.throw(msg)
@@ -73,9 +73,7 @@ def get_payroll_period_days(start_date, end_date, employee, company=None):
 	if len(payroll_period) > 0:
 		actual_no_of_days = date_diff(getdate(payroll_period[0][2]), getdate(payroll_period[0][1])) + 1
 		working_days = actual_no_of_days
-		if not cint(
-			frappe.db.get_value("Payroll Settings", None, "include_holidays_in_total_working_days")
-		):
+		if not cint(frappe.db.get_single_value("Payroll Settings", "include_holidays_in_total_working_days")):
 			holidays = get_holiday_dates_for_employee(
 				employee, getdate(payroll_period[0][1]), getdate(payroll_period[0][2])
 			)
@@ -124,14 +122,12 @@ def get_period_factor(
 
 	if relieving_date and getdate(relieving_date) < getdate(period_end):
 		period_end = relieving_date
-		if month_diff(period_end, start_date) > 1:
-			start_date = add_months(start_date, -(month_diff(period_end, start_date) + 1))
 
 	total_sub_periods, remaining_sub_periods = 0.0, 0.0
 
 	if payroll_frequency == "Monthly" and not depends_on_payment_days:
-		total_sub_periods = month_diff(payroll_period.end_date, payroll_period.start_date)
-		remaining_sub_periods = month_diff(period_end, start_date)
+		total_sub_periods = get_exact_month_diff(payroll_period.end_date, payroll_period.start_date)
+		remaining_sub_periods = get_exact_month_diff(period_end, start_date)
 	else:
 		salary_days = date_diff(end_date, start_date) + 1
 

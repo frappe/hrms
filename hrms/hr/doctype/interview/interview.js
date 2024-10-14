@@ -23,56 +23,62 @@ frappe.ui.form.on("Interview", {
 		]);
 	},
 
-	add_custom_buttons: function(frm) {
-		if (frm.doc.docstatus != 2 && !frm.doc.__islocal) {
-			if (frm.doc.status === "Pending") {
-				frm.add_custom_button(__("Reschedule Interview"), function () {
+	add_custom_buttons: async function (frm) {
+		if (frm.doc.docstatus === 2 || frm.doc.__islocal) return;
+
+		if (frm.doc.status === "Pending") {
+			frm.add_custom_button(
+				__("Reschedule Interview"),
+				function () {
 					frm.events.show_reschedule_dialog(frm);
 					frm.refresh();
-				}, __("Actions"));
-			}
-
-			const allow_feedback_submission = frm.doc.interview_details.some(
-				interviewer => interviewer.interviewer === frappe.session.user
-			);
-
-			frappe.db.get_value(
-				"Interview Feedback",
-				{
-					interviewer: frappe.session.user,
-					interview: frm.doc.name,
-					docstatus: 1,
 				},
-				"name",
-				(r) => {
-					if (Object.keys(r).length === 0) {
-						const button = frm
-							.add_custom_button(__("Submit Feedback"), function () {
-								frappe.call({
-									method:
-										"hrms.hr.doctype.interview.interview.get_expected_skill_set",
-									args: {
-										interview_round: frm.doc.interview_round,
-									},
-									callback: function (r) {
-										frm.events.show_feedback_dialog(frm, r.message);
-										frm.refresh();
-									},
-								});
-							})
-
-						if (allow_feedback_submission) {
-							button.addClass("btn-primary");
-						} else {
-							button
-								.prop("disabled", true)
-								.attr("title", __("Only interviewers can submit feedback"))
-								.tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
-						}
-					}
-				}
+				__("Actions"),
 			);
 		}
+
+		const has_submitted_feedback = await frappe.db.get_value(
+			"Interview Feedback",
+			{
+				interviewer: frappe.session.user,
+				interview: frm.doc.name,
+				docstatus: ("!=", 2),
+			},
+			"name",
+		)?.message?.name;
+
+		if (has_submitted_feedback) return;
+
+		const allow_feedback_submission = frm.doc.interview_details.some(
+			(interviewer) => interviewer.interviewer === frappe.session.user,
+		);
+
+		if (allow_feedback_submission) {
+			frm.page.set_primary_action(__("Submit Feedback"), () => {
+				frm.trigger("submit_feedback");
+			});
+		} else {
+			const button = frm.add_custom_button(__("Submit Feedback"), () => {
+				frm.trigger("submit_feedback");
+			});
+			button
+				.prop("disabled", true)
+				.attr("title", __("Only interviewers can submit feedback"))
+				.tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
+		}
+	},
+
+	submit_feedback: function (frm) {
+		frappe.call({
+			method: "hrms.hr.doctype.interview.interview.get_expected_skill_set",
+			args: {
+				interview_round: frm.doc.interview_round,
+			},
+			callback: function (r) {
+				frm.events.show_feedback_dialog(frm, r.message);
+				frm.refresh();
+			},
+		});
 	},
 
 	show_reschedule_dialog: function (frm) {
@@ -103,20 +109,18 @@ frappe.ui.form.on("Interview", {
 			],
 			primary_action_label: "Reschedule",
 			primary_action(values) {
-				frm
-					.call({
-						method: "reschedule_interview",
-						doc: frm.doc,
-						args: {
-							scheduled_on: values.scheduled_on,
-							from_time: values.from_time,
-							to_time: values.to_time,
-						},
-					})
-					.then(() => {
-						frm.refresh();
-						d.hide();
-					});
+				frm.call({
+					method: "reschedule_interview",
+					doc: frm.doc,
+					args: {
+						scheduled_on: values.scheduled_on,
+						from_time: values.from_time,
+						to_time: values.to_time,
+					},
+				}).then(() => {
+					frm.refresh();
+					d.hide();
+				});
 			},
 		});
 		d.show();
@@ -157,8 +161,7 @@ frappe.ui.form.on("Interview", {
 			primary_action: function (values) {
 				frappe
 					.call({
-						method:
-							"hrms.hr.doctype.interview.interview.create_interview_feedback",
+						method: "hrms.hr.doctype.interview.interview.create_interview_feedback",
 						args: {
 							data: values,
 							interview_name: frm.doc.name,
@@ -213,36 +216,41 @@ frappe.ui.form.on("Interview", {
 
 	set_applicable_interviewers(frm) {
 		frappe.call({
-			method:
-				"hrms.hr.doctype.interview.interview.get_interviewers",
+			method: "hrms.hr.doctype.interview.interview.get_interviewers",
 			args: {
 				interview_round: frm.doc.interview_round || "",
 			},
 			callback: function (r) {
-				r.message.forEach((interviewer) => frm.add_child("interview_details", interviewer));
+				r.message.forEach((interviewer) =>
+					frm.add_child("interview_details", interviewer),
+				);
 				refresh_field("interview_details");
 			},
 		});
 	},
 
 	load_skills_average_rating(frm) {
-		frappe.call({
-			method: "hrms.hr.doctype.interview.interview.get_skill_wise_average_rating",
-			args: { interview: frm.doc.name}
-		}).then((r) => {
-			frm.skills_average_rating = r.message;
-		});
+		frappe
+			.call({
+				method: "hrms.hr.doctype.interview.interview.get_skill_wise_average_rating",
+				args: { interview: frm.doc.name },
+			})
+			.then((r) => {
+				frm.skills_average_rating = r.message;
+			});
 	},
 
 	load_feedback(frm) {
-		frappe.call({
-			method: "hrms.hr.doctype.interview.interview.get_feedback",
-			args: { interview: frm.doc.name },
-		}).then((r) => {
-			frm.feedback = r.message;
-			frm.events.calculate_reviews_per_rating(frm);
-			frm.events.render_feedback(frm);
-		});
+		frappe
+			.call({
+				method: "hrms.hr.doctype.interview.interview.get_feedback",
+				args: { interview: frm.doc.name },
+			})
+			.then((r) => {
+				frm.feedback = r.message;
+				frm.events.calculate_reviews_per_rating(frm);
+				frm.events.render_feedback(frm);
+			});
 	},
 
 	render_feedback(frm) {
@@ -265,7 +273,7 @@ frappe.ui.form.on("Interview", {
 			reviews_per_rating[Math.floor(x.total_score - 1)] += 1;
 		});
 		frm.reviews_per_rating = reviews_per_rating.map((x) =>
-			flt((x * 100) / frm.feedback.length, 1)
+			flt((x * 100) / frm.feedback.length, 1),
 		);
 	},
 });

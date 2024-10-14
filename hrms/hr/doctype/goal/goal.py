@@ -94,7 +94,7 @@ class Goal(NestedSet):
 		"""Aligns children's KRA to parent goal's KRA if parent goal's KRA is changed"""
 		if doc_before_save.kra != self.kra and self.is_group:
 			Goal = frappe.qb.DocType("Goal")
-			(frappe.qb.update(Goal).set(Goal.kra, self.kra).where((Goal.parent_goal == self.name))).run()
+			(frappe.qb.update(Goal).set(Goal.kra, self.kra).where(Goal.parent_goal == self.name)).run()
 
 			frappe.msgprint(_("KRA updated for all child goals."), alert=True, indicator="green")
 

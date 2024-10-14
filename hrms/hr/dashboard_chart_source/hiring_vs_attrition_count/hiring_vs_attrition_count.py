@@ -47,9 +47,7 @@ def get_data(
 	}
 
 
-def get_records(
-	from_date: str, to_date: str, datefield: str, company: str
-) -> tuple[tuple[str, float, int]]:
+def get_records(from_date: str, to_date: str, datefield: str, company: str) -> tuple[tuple[str, float, int]]:
 	filters = [
 		["Employee", "company", "=", company],
 		["Employee", datefield, ">=", from_date, False],

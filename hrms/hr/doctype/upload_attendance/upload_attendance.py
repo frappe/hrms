@@ -46,9 +46,7 @@ def get_template():
 
 
 def add_header(w):
-	status = ", ".join(
-		(frappe.get_meta("Attendance").get_field("status").options or "").strip().split("\n")
-	)
+	status = ", ".join((frappe.get_meta("Attendance").get_field("status").options or "").strip().split("\n"))
 	w.writerow(["Notes:"])
 	w.writerow(["Please do not change the template headings"])
 	w.writerow(["Status should be one of these values: " + status])
@@ -198,7 +196,7 @@ def import_attendances(rows):
 		if not row:
 			continue
 		row_idx = i + 5
-		d = frappe._dict(zip(columns, row))
+		d = frappe._dict(zip(columns, row, strict=False))
 
 		d["doctype"] = "Attendance"
 		if d.name:

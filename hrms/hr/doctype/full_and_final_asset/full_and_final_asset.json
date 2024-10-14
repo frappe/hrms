@@ -8,11 +8,18 @@
   "reference",
   "asset_name",
   "date",
+  "actual_cost",
+  "cost",
+  "column_break_xezj",
+  "account",
+  "action",
   "status",
+  "section_break_hudu",
   "description"
  ],
  "fields": [
   {
+   "columns": 2,
    "fieldname": "reference",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -22,6 +29,7 @@
    "reqd": 1
   },
   {
+   "columns": 1,
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
@@ -35,6 +43,7 @@
    "label": "Description"
   },
   {
+   "columns": 2,
    "fieldname": "asset_name",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -44,21 +53,62 @@
   {
    "fieldname": "date",
    "fieldtype": "Datetime",
-   "in_list_view": 1,
    "label": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_xezj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "columns": 2,
+   "default": "Return",
+   "fieldname": "action",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Action",
+   "options": "Return\nRecover Cost",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_hudu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "columns": 2,
+   "fieldname": "cost",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Cost",
+   "mandatory_depends_on": "eval:doc.action == \"Recover Cost\"",
+   "read_only_depends_on": "eval:doc.action != \"Recover Cost\""
+  },
+  {
+   "columns": 1,
+   "fieldname": "account",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "actual_cost",
+   "fieldtype": "Currency",
+   "label": "Actual Cost",
    "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-07-15 15:17:31.309834",
+ "modified": "2024-04-19 13:20:41.123440",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Full and Final Asset",
  "owner": "Administrator",
  "permissions": [],
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }

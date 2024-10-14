@@ -50,14 +50,15 @@
  ],
  "istable": 1,
  "links": [],
- "modified": "2020-10-20 16:43:09.606265",
+ "modified": "2024-03-27 13:09:41.993560",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Tax Exemption Declaration Category",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }

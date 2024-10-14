@@ -123,7 +123,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-01 00:26:31.319454",
+ "modified": "2024-03-27 13:09:51.973613",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview Feedback",
@@ -164,7 +164,7 @@
   }
  ],
  "quick_entry": 1,
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "interviewer",

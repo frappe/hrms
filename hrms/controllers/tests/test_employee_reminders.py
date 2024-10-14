@@ -36,9 +36,7 @@ class TestEmployeeReminders(FrappeTestCase):
 			to_date=getdate() + timedelta(weeks=5),
 		)
 
-		test_employee = frappe.get_doc(
-			"Employee", make_employee("test@gopher.io", company="_Test Company")
-		)
+		test_employee = frappe.get_doc("Employee", make_employee("test@gopher.io", company="_Test Company"))
 
 		# Attach the holiday list to employee
 		test_employee.holiday_list = test_holiday_list.name
@@ -102,9 +100,7 @@ class TestEmployeeReminders(FrappeTestCase):
 		self.assertTrue("test holiday1" in descriptions)
 
 	def test_birthday_reminders(self):
-		employee = frappe.get_doc(
-			"Employee", frappe.db.sql_list("select name from tabEmployee limit 1")[0]
-		)
+		employee = frappe.get_doc("Employee", frappe.db.sql_list("select name from tabEmployee limit 1")[0])
 		employee.date_of_birth = "1992" + frappe.utils.nowdate()[4:]
 		employee.company_email = "test@example.com"
 		employee.company = "_Test Company"
@@ -133,7 +129,7 @@ class TestEmployeeReminders(FrappeTestCase):
 			send_work_anniversary_reminders,
 		)
 
-		emp = make_employee(
+		make_employee(
 			"test_emp_work_anniversary@gmail.com",
 			company="_Test Company",
 			date_of_joining=frappe.utils.add_years(getdate(), -2),

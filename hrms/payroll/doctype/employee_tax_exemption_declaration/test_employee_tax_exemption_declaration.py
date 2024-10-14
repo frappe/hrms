@@ -57,7 +57,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 		self.assertRaises(frappe.ValidationError, declaration.save)
 
 	def test_duplicate_entry_for_payroll_period(self):
-		declaration = frappe.get_doc(
+		frappe.get_doc(
 			{
 				"doctype": "Employee Tax Exemption Declaration",
 				"employee": frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name"),
@@ -132,7 +132,8 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 		frappe.flags.country = "India"
 
 		employee = frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name")
-		setup_hra_exemption_prerequisites("Monthly", employee)
+		# structure assigned before payroll period should still be considered as active
+		setup_hra_exemption_prerequisites("Monthly", employee, from_date=add_months(PAYROLL_PERIOD_START, -1))
 
 		declaration = frappe.get_doc(
 			{
@@ -321,7 +322,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 		# reset
 		frappe.flags.country = current_country
 
-	def test_india_hra_exemption_with_multiple_salary_structure_assignments(self):
+	def test_india_hra_exemption_with_multiple_assignments(self):
 		from hrms.payroll.doctype.salary_slip.test_salary_slip import create_tax_slab
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 			create_salary_structure_assignment,
@@ -441,7 +442,7 @@ def create_payroll_period(**args):
 
 def create_exemption_category():
 	if not frappe.db.exists("Employee Tax Exemption Category", "_Test Category"):
-		category = frappe.get_doc(
+		frappe.get_doc(
 			{
 				"doctype": "Employee Tax Exemption Category",
 				"name": "_Test Category",
@@ -471,7 +472,7 @@ def create_exemption_category():
 		).insert()
 
 
-def setup_hra_exemption_prerequisites(frequency, employee=None):
+def setup_hra_exemption_prerequisites(frequency, employee=None, from_date=None):
 	from hrms.payroll.doctype.salary_slip.test_salary_slip import create_tax_slab
 	from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
@@ -499,6 +500,7 @@ def setup_hra_exemption_prerequisites(frequency, employee=None):
 		company="_Test Company",
 		currency="INR",
 		payroll_period=payroll_period,
+		from_date=from_date,
 	)
 
 	frappe.db.set_value(

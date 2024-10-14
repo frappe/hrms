@@ -49,9 +49,7 @@ frappe.treeview_settings["Goal"] = {
 			fieldtype: "Check",
 			fieldname: "is_group",
 			label: __("Is Group"),
-			description: __(
-				"Child nodes can only be created under 'Group' type nodes"
-			),
+			description: __("Child nodes can only be created under 'Group' type nodes"),
 		},
 		{
 			fieldtype: "Section Break",
@@ -97,7 +95,7 @@ frappe.treeview_settings["Goal"] = {
 			fieldtype: "Section Break",
 			label: __("Appraisal Linking"),
 			description: __(
-				"Link the cycle and tag KRA to your goal to update the appraisal's goal score based on the goal progress"
+				"Link the cycle and tag KRA to your goal to update the appraisal's goal score based on the goal progress",
 			),
 			depends_on: "eval:doc.employee",
 		},
@@ -203,11 +201,9 @@ frappe.treeview_settings["Goal"] = {
 			$(`
 				<span
 					class="pill small pull-right"
-					style="background-color: var(--bg-${
+					style="background-color: var(--bg-${status_color[node.data.status]}); color: var(--text-on-${
 						status_color[node.data.status]
-					}); color: var(--text-on-${
-				status_color[node.data.status]
-			}); font-weight:500">
+					}); font-weight:500">
 					${node.data.status}
 				</span>
 			`).insertBefore(node.$ul);
@@ -225,8 +221,7 @@ frappe.treeview_settings["Goal"] = {
 	get_label(node) {
 		if (node.title && node.title !== node.label) {
 			return (
-				__(node.title) +
-				` <span class="text-muted">(${node.data.employee_name})</span>`
+				__(node.title) + ` <span class="text-muted">(${node.data.employee_name})</span>`
 			);
 		} else {
 			return __(node.title || node.label);
@@ -261,13 +256,11 @@ frappe.treeview_settings["Goal"] = {
 		{
 			label: __("Mark as Completed"),
 			condition: function (node) {
-				return (
-					!node.is_root && !node.expandable && node.data.status != "Completed"
-				);
+				return !node.is_root && !node.expandable && node.data.status != "Completed";
 			},
 			click: function (node) {
 				frappe.confirm(__("Mark {0} as Completed?", [node.label.bold()]), () =>
-					update_progress(node, 100)
+					update_progress(node, 100),
 				);
 			},
 		},
@@ -288,7 +281,7 @@ function update_progress(node, progress) {
 			if (!r.exc && r.message) {
 				frappe.treeview_settings["Goal"].treeview.tree.load_children(
 					frappe.treeview_settings["Goal"].treeview.tree.root_node,
-					true
+					true,
 				);
 
 				frappe.show_alert({

@@ -19,11 +19,19 @@
 					</header>
 
 					<div class="flex flex-col items-center mt-5 p-4">
+						<!-- Profile Image -->
 						<img
+							v-if="user.data.user_image"
 							class="h-24 w-24 rounded-full object-cover"
 							:src="user.data.user_image"
 							:alt="user.data.first_name"
 						/>
+						<div
+							v-else
+							class="flex items-center justify-center bg-gray-200 uppercase text-gray-600 h-24 w-24 rounded-full object-cover"
+						>
+							{{ user.data.first_name[0] }}
+						</div>
 
 						<div class="flex flex-col gap-1.5 items-center mt-2 mb-5">
 							<span v-if="employee" class="text-lg font-bold text-gray-900">{{
@@ -34,6 +42,7 @@
 							}}</span>
 						</div>
 
+						<!-- Profile Links -->
 						<div class="flex flex-col gap-5 my-4 w-full">
 							<div class="flex flex-col bg-white rounded">
 								<div
@@ -56,6 +65,33 @@
 										class="h-5 w-5 text-gray-500"
 									/>
 								</div>
+							</div>
+						</div>
+
+						<!-- Settings -->
+						<div
+							class="flex flex-col gap-5 my-4 w-full"
+							v-if="allowPushNotifications"
+						>
+							<div class="flex flex-col bg-white rounded">
+								<router-link
+									:to="{ name: 'Settings' }"
+									class="flex flex-row cursor-pointer flex-start p-4 items-center justify-between border-b"
+								>
+									<div class="flex flex-row items-center gap-3 grow">
+										<FeatherIcon
+											name="settings"
+											class="h-5 w-5 text-gray-500"
+										/>
+										<div class="text-base font-normal text-gray-800">
+											Settings
+										</div>
+									</div>
+									<FeatherIcon
+										name="chevron-right"
+										class="h-5 w-5 text-gray-500"
+									/>
+								</router-link>
 							</div>
 						</div>
 
@@ -101,15 +137,17 @@
 </template>
 
 <script setup>
-import { inject, ref, onMounted, onBeforeUnmount } from "vue"
+import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { useRouter } from "vue-router"
 import { IonModal, IonPage, IonContent } from "@ionic/vue"
+import { FeatherIcon, createDocumentResource, createResource } from "frappe-ui"
 
 import { showErrorAlert } from "@/utils/dialogs"
-import { FeatherIcon, createDocumentResource, createResource } from "frappe-ui"
 import { formatCurrency } from "@/utils/formatters"
 
 import ProfileInfoModal from "@/components/ProfileInfoModal.vue"
+
+import { arePushNotificationsEnabled } from "@/data/notifications"
 
 const DOCTYPE = "Employee"
 
@@ -176,6 +214,12 @@ const profileLinks = [
 
 const isInfoModalOpen = ref(false)
 const selectedItem = ref(null)
+
+const allowPushNotifications = computed(
+	() =>
+		window.frappe?.boot.push_relay_server_url &&
+		arePushNotificationsEnabled.data
+)
 
 const openInfoModal = async (request) => {
 	selectedItem.value = request

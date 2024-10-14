@@ -2,8 +2,8 @@
 # For license information, please see license.txt
 
 
-import itertools
 from datetime import datetime, timedelta
+from itertools import groupby
 
 import frappe
 from frappe.model.document import Document
@@ -36,7 +36,8 @@ class ShiftType(Document):
 
 		logs = self.get_employee_checkins()
 
-		for key, group in itertools.groupby(logs, key=lambda x: (x["employee"], x["shift_start"])):
+		group_key = lambda x: (x["employee"], x["shift_start"])  # noqa
+		for key, group in groupby(sorted(logs, key=group_key), key=group_key):
 			single_shift_logs = list(group)
 			attendance_date = key[1].date()
 			employee = key[0]
@@ -182,9 +183,7 @@ class ShiftType(Document):
 		holiday_list = self.get_holiday_list(employee)
 		holiday_dates = get_holiday_dates_between(holiday_list, start_date, end_date)
 		# skip dates with attendance
-		marked_attendance_dates = self.get_marked_attendance_dates_between(
-			employee, start_date, end_date
-		)
+		marked_attendance_dates = self.get_marked_attendance_dates_between(employee, start_date, end_date)
 
 		return sorted(set(date_range) - set(holiday_dates) - set(marked_attendance_dates))
 
@@ -222,9 +221,7 @@ class ShiftType(Document):
 			return None, None
 		return start_date, end_date
 
-	def get_marked_attendance_dates_between(
-		self, employee: str, start_date: str, end_date: str
-	) -> list[str]:
+	def get_marked_attendance_dates_between(self, employee: str, start_date: str, end_date: str) -> list[str]:
 		Attendance = frappe.qb.DocType("Attendance")
 		return (
 			frappe.qb.from_(Attendance)

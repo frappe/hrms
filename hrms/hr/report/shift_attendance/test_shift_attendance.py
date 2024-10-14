@@ -177,7 +177,7 @@ class TestShiftAttendance(FrappeTestCase):
 
 
 def make_checkin(employee, time, log_type):
-	log = frappe.get_doc(
+	frappe.get_doc(
 		{
 			"doctype": "Employee Checkin",
 			"employee": employee,

@@ -47,14 +47,15 @@
  ],
  "istable": 1,
  "links": [],
- "modified": "2020-09-29 16:22:15.783854",
+ "modified": "2024-03-27 13:09:37.787924",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Benefit Application Detail",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }

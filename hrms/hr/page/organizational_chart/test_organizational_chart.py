@@ -16,7 +16,7 @@ class TestOrganizationalChart(FrappeTestCase):
 		frappe.db.delete("Employee", {"company": self.company})
 
 	def test_get_children(self):
-		company = create_company("Test Org Chart").name
+		create_company("Test Org Chart").name
 		emp1 = make_employee("testemp1@mail.com", company=self.company)
 		emp2 = make_employee("testemp2@mail.com", company=self.company, reports_to=emp1)
 		emp3 = make_employee("testemp3@mail.com", company=self.company, reports_to=emp1)

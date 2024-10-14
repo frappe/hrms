@@ -16,7 +16,10 @@ class EmployeeAttendanceTool(Document):
 
 @frappe.whitelist()
 def get_employees(
-	date: str | datetime.date, department: str = None, branch: str = None, company: str = None
+	date: str | datetime.date,
+	department: str | None = None,
+	branch: str | None = None,
+	company: str | None = None,
 ) -> dict[str, list]:
 	filters = {"status": "Active", "date_of_joining": ["<=", date]}
 
@@ -58,11 +61,11 @@ def mark_employee_attendance(
 	employee_list: list | str,
 	status: str,
 	date: str | datetime.date,
-	leave_type: str = None,
-	company: str = None,
-	late_entry: int = None,
-	early_exit: int = None,
-	shift: str = None,
+	leave_type: str | None = None,
+	company: str | None = None,
+	late_entry: int | None = None,
+	early_exit: int | None = None,
+	shift: str | None = None,
 ) -> None:
 	if isinstance(employee_list, str):
 		employee_list = json.loads(employee_list)

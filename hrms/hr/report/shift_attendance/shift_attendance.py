@@ -288,13 +288,13 @@ def format_in_out_time(in_time, out_time, attendance_date):
 		in_time = in_time.time()
 	elif out_time and not in_time and out_time.date() == attendance_date:
 		out_time = out_time.time()
-	elif in_time and out_time:
+	else:
 		in_time, out_time = convert_datetime_to_time_for_same_date(in_time, out_time)
 	return in_time, out_time
 
 
 def convert_datetime_to_time_for_same_date(start, end):
-	if start.date() == end.date():
+	if start and end and start.date() == end.date():
 		start = start.time()
 		end = end.time()
 	else:

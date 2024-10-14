@@ -11,6 +11,7 @@
 				{{ document?.doctype }}
 			</span>
 			<FeatherIcon
+				v-if="props.showOpenForm"
 				name="external-link"
 				class="h-4 w-4 text-gray-500 cursor-pointer"
 				@click="openFormView"
@@ -24,7 +25,7 @@
 					v-for="field in fieldsWithValues"
 					:key="field.fieldname"
 					:class="[
-						['Small Text', 'Text', 'Long Text', 'Table'].includes(
+						['Small Text', 'Text', 'Long Text', 'Table', 'geolocation'].includes(
 							field.fieldtype
 						)
 							? 'flex-col'
@@ -80,7 +81,7 @@
 		/>
 
 		<div
-			v-else-if="['Open', 'Draft'].includes(document?.doc?.[approvalField])"
+			v-else-if="['Open', 'Draft'].includes(document?.doc?.[approvalField]) && hasPermission('approval')"
 			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
 		>
 			<Button
@@ -111,7 +112,9 @@
 		<div
 			v-else-if="
 				document?.doc?.docstatus === 0 &&
-				['Approved', 'Rejected'].includes(document?.doc?.[approvalField])
+				(document?.doc?.doctype === 'Attendance Request' ||
+					['Approved', 'Rejected'].includes(document?.doc?.[approvalField])) &&
+				hasPermission('submit')
 			"
 			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
 		>
@@ -125,7 +128,7 @@
 		</div>
 
 		<div
-			v-else-if="document?.doc?.docstatus === 1"
+			v-else-if="document?.doc?.docstatus === 1 && hasPermission('cancel')"
 			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
 		>
 			<Button
@@ -177,6 +180,10 @@ const props = defineProps({
 		type: Array,
 		required: true,
 	},
+	showOpenForm: {
+		type: Boolean,
+		default: true,
+	},
 	modelValue: {
 		type: Object,
 		required: true,
@@ -209,6 +216,24 @@ const attachedFiles = createResource({
 		dn: props.modelValue.name,
 	},
 })
+
+const docPermissions = createResource({
+	url: "frappe.client.get_doc_permissions",
+	params: { doctype: props.modelValue.doctype, docname: props.modelValue.name },
+	auto: true,
+})
+
+const permittedWriteFields = createResource({
+	url: "hrms.api.get_permitted_fields_for_write",
+	params: { doctype: props.modelValue.doctype },
+	auto: true,
+})
+
+function hasPermission(action) {
+	if (action === "approval")
+		return permittedWriteFields.data?.includes(approvalField.value)
+	return docPermissions.data?.permissions[action]
+}
 
 const currency = computed(() => {
 	let docCurrency = document?.doc?.currency

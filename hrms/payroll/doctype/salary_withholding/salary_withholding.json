@@ -1,0 +1,243 @@
+{
+ "actions": [],
+ "autoname": "format:SAL-WTH-{#####}",
+ "creation": "2024-07-01 07:28:05.514677",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_fwuv",
+  "employee",
+  "employee_name",
+  "company",
+  "column_break_hbju",
+  "posting_date",
+  "payroll_frequency",
+  "number_of_withholding_cycles",
+  "column_break_rhlv",
+  "status",
+  "from_date",
+  "to_date",
+  "exit_details_section",
+  "date_of_joining",
+  "column_break_qlwx",
+  "relieving_date",
+  "reason_section",
+  "reason_for_withholding_salary",
+  "section_break_xeyl",
+  "cycles",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_fwuv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_hbju",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "payroll_frequency",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Payroll Frequency",
+   "options": "\nMonthly\nFortnightly\nBimonthly\nWeekly\nDaily",
+   "read_only": 1
+  },
+  {
+   "fieldname": "number_of_withholding_cycles",
+   "fieldtype": "Int",
+   "label": "Number of Withholding Cycles",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_rhlv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "exit_details_section",
+   "fieldtype": "Section Break",
+   "label": "Exit Details"
+  },
+  {
+   "fetch_from": "employee.date_of_joining",
+   "fieldname": "date_of_joining",
+   "fieldtype": "Date",
+   "label": "Date of Joining",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_qlwx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.relieving_date",
+   "fieldname": "relieving_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Relieving Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reason_for_withholding_salary",
+   "fieldtype": "Small Text",
+   "label": "Reason for Withholding Salary"
+  },
+  {
+   "fieldname": "section_break_xeyl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "cycles",
+   "fieldtype": "Table",
+   "label": "Cycles",
+   "options": "Salary Withholding Cycle",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Salary Withholding",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "\nDraft\nWithheld\nReleased\nCancelled",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "reason_section",
+   "fieldtype": "Section Break",
+   "label": "Reason"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [
+  {
+   "link_doctype": "Salary Slip",
+   "link_fieldname": "salary_withholding"
+  }
+ ],
+ "modified": "2024-07-22 18:24:24.217371",
+ "modified_by": "Administrator",
+ "module": "Payroll",
+ "name": "Salary Withholding",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "share": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Red",
+   "title": "Draft"
+  },
+  {
+   "color": "Yellow",
+   "title": "Withheld"
+  },
+  {
+   "color": "Green",
+   "title": "Released"
+  },
+  {
+   "color": "Red",
+   "title": "Cancelled"
+  }
+ ],
+ "title_field": "employee_name"
+}

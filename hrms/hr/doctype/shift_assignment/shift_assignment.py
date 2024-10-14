@@ -3,7 +3,6 @@
 
 
 from datetime import datetime, timedelta
-from typing import Dict, List
 
 import frappe
 from frappe import _
@@ -26,19 +25,64 @@ class MultipleShiftError(frappe.ValidationError):
 class ShiftAssignment(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
-		self.validate_overlapping_shifts()
-
 		if self.end_date:
 			self.validate_from_to_dates("start_date", "end_date")
+		self.validate_overlapping_shifts()
+
+	def on_update_after_submit(self):
+		if self.end_date:
+			self.validate_from_to_dates("start_date", "end_date")
+		self.validate_overlapping_shifts()
+
+	def on_cancel(self):
+		self.validate_employee_checkin()
+		self.validate_attendance()
+
+	def validate_employee_checkin(self):
+		checkins = frappe.get_all(
+			"Employee Checkin",
+			filters={
+				"employee": self.employee,
+				"shift": self.shift_type,
+				"time": ["between", [self.start_date, self.end_date]],
+			},
+			pluck="name",
+		)
+		if checkins:
+			frappe.throw(
+				_("Cannot cancel Shift Assignment: {0} as it is linked to Employee Checkin: {1}").format(
+					self.name, get_link_to_form("Employee Checkin", checkins[0])
+				)
+			)
+
+	def validate_attendance(self):
+		attendances = frappe.get_all(
+			"Attendance",
+			filters={
+				"employee": self.employee,
+				"shift": self.shift_type,
+				"attendance_date": ["between", [self.start_date, self.end_date]],
+			},
+			pluck="name",
+		)
+		if attendances:
+			frappe.throw(
+				_("Cannot cancel Shift Assignment: {0} as it is linked to Attendance: {1}").format(
+					self.name, get_link_to_form("Attendance", attendances[0])
+				)
+			)
 
 	def validate_overlapping_shifts(self):
+		if self.status == "Inactive":
+			return
+
 		overlapping_dates = self.get_overlapping_dates()
 		if len(overlapping_dates):
 			self.validate_same_date_multiple_shifts(overlapping_dates)
 			# if dates are overlapping, check if timings are overlapping, else allow
-			overlapping_timings = has_overlapping_timings(self.shift_type, overlapping_dates[0].shift_type)
-			if overlapping_timings:
-				self.throw_overlap_error(overlapping_dates[0])
+			for d in overlapping_dates:
+				if has_overlapping_timings(self.shift_type, d.shift_type):
+					self.throw_overlap_error(d)
 
 	def validate_same_date_multiple_shifts(self, overlapping_dates):
 		if cint(frappe.db.get_single_value("HR Settings", "allow_multiple_shift_assignments")):
@@ -47,7 +91,8 @@ class ShiftAssignment(Document):
 					_(
 						"Warning: {0} already has an active Shift Assignment {1} for some/all of these dates."
 					).format(
-						frappe.bold(self.employee), get_link_to_form("Shift Assignment", overlapping_dates[0].name)
+						frappe.bold(self.employee),
+						get_link_to_form("Shift Assignment", overlapping_dates[0].name),
 					)
 				)
 		else:
@@ -80,33 +125,12 @@ class ShiftAssignment(Document):
 				& (shift.docstatus == 1)
 				& (shift.name != self.name)
 				& (shift.status == "Active")
+				& ((shift.end_date >= self.start_date) | (shift.end_date.isnull()))
 			)
 		)
 
 		if self.end_date:
-			query = query.where(
-				Criterion.any(
-					[
-						Criterion.any(
-							[
-								shift.end_date.isnull(),
-								((self.start_date >= shift.start_date) & (self.start_date <= shift.end_date)),
-							]
-						),
-						Criterion.any(
-							[
-								((self.end_date >= shift.start_date) & (self.end_date <= shift.end_date)),
-								shift.start_date.between(self.start_date, self.end_date),
-							]
-						),
-					]
-				)
-			)
-		else:
-			query = query.where(
-				shift.end_date.isnull()
-				| ((self.start_date >= shift.start_date) & (self.start_date <= shift.end_date))
-			)
+			query = query.where(shift.start_date <= self.end_date)
 
 		return query.run(as_dict=True)
 
@@ -127,25 +151,15 @@ def has_overlapping_timings(shift_1: str, shift_2: str) -> bool:
 	"""
 	Accepts two shift types and checks whether their timings are overlapping
 	"""
-	if shift_1 == shift_2:
-		return True
 
 	s1 = frappe.db.get_value("Shift Type", shift_1, ["start_time", "end_time"], as_dict=True)
 	s2 = frappe.db.get_value("Shift Type", shift_2, ["start_time", "end_time"], as_dict=True)
 
-	if (
-		# shift 1 spans across 2 days
-		(s1.start_time > s1.end_time and s1.start_time < s2.end_time)
-		or (s1.start_time > s1.end_time and s2.start_time < s1.end_time)
-		or (s1.start_time > s1.end_time and s2.start_time > s2.end_time)
-		# both shifts fall on the same day
-		or (s1.start_time < s2.end_time and s2.start_time < s1.end_time)
-		# shift 2 spans across 2 days
-		or (s1.start_time < s2.end_time and s2.start_time > s2.end_time)
-		or (s2.start_time < s1.end_time and s2.start_time > s2.end_time)
-	):
-		return True
-	return False
+	for d in [s1, s2]:
+		if d.end_time <= d.start_time:
+			d.end_time += timedelta(days=1)
+
+	return s1.end_time > s2.start_time and s1.start_time < s2.end_time
 
 
 @frappe.whitelist()
@@ -154,10 +168,9 @@ def get_events(start, end, filters=None):
 		"Employee", {"user_id": frappe.session.user}, ["name", "company"], as_dict=True
 	)
 	if employee:
-		employee, company = employee.name, employee.company
+		employee = employee.name
 	else:
 		employee = ""
-		company = frappe.db.get_value("Global Defaults", None, "default_company")
 
 	assignments = get_shift_assignments(start, end, filters)
 	return get_shift_events(assignments)
@@ -171,11 +184,14 @@ def get_shift_assignments(start: str, end: str, filters: str | list | None = Non
 	if not filters:
 		filters = []
 
-	filters.extend([["start_date", ">=", start], ["end_date", "<=", end], ["docstatus", "=", 1]])
+	filters.extend([["start_date", "<=", end], ["docstatus", "=", 1]])
+
+	or_filters = [["end_date", ">=", start], ["end_date", "is", "not set"]]
 
 	return frappe.get_list(
 		"Shift Assignment",
 		filters=filters,
+		or_filters=or_filters,
 		fields=[
 			"name",
 			"start_date",
@@ -240,7 +256,7 @@ def get_shift_type_timing(shift_types):
 	return shift_timing_map
 
 
-def get_shift_for_time(shifts: List[Dict], for_timestamp: datetime) -> Dict:
+def get_shift_for_time(shifts: list[dict], for_timestamp: datetime) -> dict:
 	"""Returns shift with details for given timestamp"""
 	valid_shifts = []
 
@@ -270,17 +286,13 @@ def _is_shift_outside_assignment_period(shift_details: dict, assignment: dict) -
 	if _is_shift_start_before_assignment(shift_details, assignment, is_midnight_shift):
 		return True
 
-	if assignment.end_date and _is_shift_end_after_assignment(
-		shift_details, assignment, is_midnight_shift
-	):
+	if assignment.end_date and _is_shift_end_after_assignment(shift_details, assignment, is_midnight_shift):
 		return True
 
 	return False
 
 
-def _is_shift_start_before_assignment(
-	shift_details: dict, assignment: dict, is_midnight_shift: bool
-) -> bool:
+def _is_shift_start_before_assignment(shift_details: dict, assignment: dict, is_midnight_shift: bool) -> bool:
 	if shift_details.actual_start.date() < assignment.start_date:
 		# log's start date can only precede assignment's start date if its a midnight shift
 		if not is_midnight_shift:
@@ -300,9 +312,7 @@ def _is_shift_start_before_assignment(
 	return False
 
 
-def _is_shift_end_after_assignment(
-	shift_details: dict, assignment: dict, is_midnight_shift: bool
-) -> bool:
+def _is_shift_end_after_assignment(shift_details: dict, assignment: dict, is_midnight_shift: bool) -> bool:
 	if shift_details.actual_start.date() > assignment.end_date:
 		return True
 
@@ -350,7 +360,7 @@ def _adjust_overlapping_shifts(shifts: dict):
 		shifts[i + 1] = next_shift
 
 
-def get_shifts_for_date(employee: str, for_timestamp: datetime) -> List[Dict[str, str]]:
+def get_shifts_for_date(employee: str, for_timestamp: datetime) -> list[dict[str, str]]:
 	"""Returns list of shifts with details for given date"""
 	for_date = for_timestamp.date()
 	prev_day = add_days(for_date, -1)
@@ -386,7 +396,7 @@ def get_shifts_for_date(employee: str, for_timestamp: datetime) -> List[Dict[str
 	).run(as_dict=True)
 
 
-def get_shift_for_timestamp(employee: str, for_timestamp: datetime) -> Dict:
+def get_shift_for_timestamp(employee: str, for_timestamp: datetime) -> dict:
 	shifts = get_shifts_for_date(employee, for_timestamp)
 	if shifts:
 		return get_shift_for_time(shifts, for_timestamp)
@@ -395,10 +405,10 @@ def get_shift_for_timestamp(employee: str, for_timestamp: datetime) -> Dict:
 
 def get_employee_shift(
 	employee: str,
-	for_timestamp: datetime = None,
+	for_timestamp: datetime | None = None,
 	consider_default_shift: bool = False,
-	next_shift_direction: str = None,
-) -> Dict:
+	next_shift_direction: str | None = None,
+) -> dict:
 	"""Returns a Shift Type for the given employee on the given date
 
 	:param employee: Employee for which shift is required.
@@ -431,7 +441,7 @@ def get_prev_or_next_shift(
 	consider_default_shift: bool,
 	default_shift: str,
 	next_shift_direction: str,
-) -> Dict:
+) -> dict:
 	"""Returns a dict of shift details for the next or prev shift based on the next_shift_direction"""
 	MAX_DAYS = 366
 	shift_details = {}
@@ -462,8 +472,12 @@ def get_prev_or_next_shift(
 
 		for date_range in shift_dates:
 			# midnight shifts will span more than a day
-			start_date, end_date = date_range[0], add_days(date_range[1], 1)
-			reverse = next_shift_direction == "reverse"
+			start_date, end_date = getdate(date_range[0]), getdate(add_days(date_range[1], 1))
+
+			if reverse := (next_shift_direction == "reverse"):
+				end_date = min(end_date, for_timestamp.date())
+			elif next_shift_direction == "forward":
+				start_date = max(start_date, for_timestamp.date())
 
 			for dt in generate_date_range(start_date, end_date, reverse=reverse):
 				shift_details = get_employee_shift(
@@ -476,8 +490,8 @@ def get_prev_or_next_shift(
 
 
 def get_employee_shift_timings(
-	employee: str, for_timestamp: datetime = None, consider_default_shift: bool = False
-) -> List[Dict]:
+	employee: str, for_timestamp: datetime | None = None, consider_default_shift: bool = False
+) -> list[dict]:
 	"""Returns previous shift, current/upcoming shift, next_shift for the given timestamp and employee"""
 	if for_timestamp is None:
 		for_timestamp = now_datetime()
@@ -529,7 +543,7 @@ def get_employee_shift_timings(
 
 def get_actual_start_end_datetime_of_shift(
 	employee: str, for_timestamp: datetime, consider_default_shift: bool = False
-) -> Dict:
+) -> dict:
 	"""Returns a Dict containing shift details with actual_start and actual_end datetime values
 	Here 'actual' means taking into account the "begin_check_in_before_shift_start_time" and "allow_check_out_after_shift_end_time".
 	Empty Dict is returned if the timestamp is outside any actual shift timings.
@@ -545,7 +559,7 @@ def get_actual_start_end_datetime_of_shift(
 	return get_exact_shift(shift_timings_as_per_timestamp, for_timestamp)
 
 
-def get_exact_shift(shifts: List, for_timestamp: datetime) -> Dict:
+def get_exact_shift(shifts: list, for_timestamp: datetime) -> dict:
 	"""Returns the shift details (dict) for the exact shift in which the 'for_timestamp' value falls among multiple shifts"""
 
 	return next(
@@ -558,7 +572,7 @@ def get_exact_shift(shifts: List, for_timestamp: datetime) -> Dict:
 	)
 
 
-def get_shift_details(shift_type_name: str, for_timestamp: datetime = None) -> Dict:
+def get_shift_details(shift_type_name: str, for_timestamp: datetime | None = None) -> dict:
 	"""Returns a Dict containing shift details with the following data:
 	'shift_type' - Object of DocType Shift Type,
 	'start_datetime' - datetime of shift start on given timestamp,
@@ -578,9 +592,7 @@ def get_shift_details(shift_type_name: str, for_timestamp: datetime = None) -> D
 	shift_type = get_shift_type(shift_type_name)
 	start_datetime, end_datetime = get_shift_timings(shift_type, for_timestamp)
 
-	actual_start = start_datetime - timedelta(
-		minutes=shift_type.begin_check_in_before_shift_start_time
-	)
+	actual_start = start_datetime - timedelta(minutes=shift_type.begin_check_in_before_shift_start_time)
 	actual_end = end_datetime + timedelta(minutes=shift_type.allow_check_out_after_shift_end_time)
 
 	return frappe._dict(
