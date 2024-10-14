@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-10-06 09:34+0000\n"
-"PO-Revision-Date: 2024-10-10 09:59\n"
+"PO-Revision-Date: 2024-10-14 12:24\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -1416,7 +1416,7 @@ msgstr "Devam etmek istediğinizden emin misiniz?"
 
 #: hrms/hr/doctype/employee_referral/employee_referral.js:9
 msgid "Are you sure you want to reject the Employee Referral?"
-msgstr ""
+msgstr "Personel Refransını reddetmek istediğinizden emin misiniz?"
 
 #. Label of the arrival_date (Datetime) field in DocType 'Travel Itinerary'
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json
@@ -1434,7 +1434,7 @@ msgstr "Varlık İsmi"
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:88
 msgid "Asset Recovery Cost for {0}: {1}"
-msgstr ""
+msgstr "{0} için Varlık Kurtarma Maliyeti: {1}"
 
 #. Label of the section_break_15 (Section Break) field in DocType 'Full and
 #. Final Statement'
@@ -1462,7 +1462,7 @@ msgstr "Atama Yapısı"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:298
 msgid "Assigning Salary Structure"
-msgstr ""
+msgstr "Maaş Yapısı Atanıyor"
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:249
 msgid "Assigning Shift"
@@ -1474,7 +1474,7 @@ msgstr "Vardiya Atanıyor..."
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.py:113
 msgid "Assigning Structure..."
-msgstr ""
+msgstr "Yapılar Atanıyor..."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:282
 msgid "Assigning Structures..."
@@ -1738,11 +1738,11 @@ msgstr "Gösterilen becerilerin ortalama değerlendirmesi"
 
 #: hrms/hr/report/appraisal_overview/appraisal_overview.py:52
 msgid "Avg Feedback Score"
-msgstr ""
+msgstr "Ortalama Geri Bildirim Puanı"
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:218
 msgid "Avg Utilization"
-msgstr ""
+msgstr "Ortalama Kullanım"
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:224
 msgid "Avg Utilization (Billed Only)"
@@ -4087,7 +4087,7 @@ msgstr "çalışanlara Sağlanan Fayda Uygulama Detayı"
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Benefit Claim"
-msgstr "çalışanlara Sağlanan Fayda Talebi"
+msgstr "Fayda Talebi"
 
 #. Label of the employee_benefits (Table) field in DocType 'Employee Benefit
 #. Application'
