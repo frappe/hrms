@@ -77,16 +77,16 @@ class EmployeeBenefitClaim(Document):
 			sal_struct_name = get_assigned_salary_structure(self.employee, self.claim_date)
 			if sal_struct_name:
 				sal_struct = frappe.get_doc("Salary Structure", sal_struct_name)
-				pro_rata_amount = get_benefit_pro_rata_ratio_amount(self.employee, self.claim_date, sal_struct)
+				pro_rata_amount = get_benefit_pro_rata_ratio_amount(
+					self.employee, self.claim_date, sal_struct
+				)
 
 		claimed_amount += get_previous_claimed_amount(self.employee, payroll_period, non_pro_rata=True)
 		if max_benefits < pro_rata_amount + claimed_amount:
 			frappe.throw(
 				_(
 					"Maximum benefit of employee {0} exceeds {1} by the sum {2} of benefit application pro-rata component amount and previous claimed amount"
-				).format(
-					self.employee, max_benefits, pro_rata_amount + claimed_amount - max_benefits
-				)
+				).format(self.employee, max_benefits, pro_rata_amount + claimed_amount - max_benefits)
 			)
 
 	def get_pro_rata_amount_in_application(self, payroll_period):
@@ -187,9 +187,7 @@ def get_total_benefit_dispensed(employee, sal_struct, sal_slip_start_date, payro
 	else:
 		pro_rata_amount = get_benefit_pro_rata_ratio_amount(employee, sal_slip_start_date, sal_struct)
 
-	claimed_amount += get_benefit_claim_amount(
-		employee, payroll_period.start_date, payroll_period.end_date
-	)
+	claimed_amount += get_benefit_claim_amount(employee, payroll_period.start_date, payroll_period.end_date)
 
 	return claimed_amount + pro_rata_amount
 
@@ -237,9 +235,9 @@ def get_last_payroll_period_benefits(
 						struct_row["do_not_include_in_total"] = salary_component.do_not_include_in_total
 						struct_row["is_tax_applicable"] = (salary_component.is_tax_applicable,)
 						struct_row["is_flexible_benefit"] = (salary_component.is_flexible_benefit,)
-						struct_row[
-							"variable_based_on_taxable_salary"
-						] = salary_component.variable_based_on_taxable_salary
+						struct_row["variable_based_on_taxable_salary"] = (
+							salary_component.variable_based_on_taxable_salary
+						)
 						salary_components_dict["amount"] = amount
 						salary_components_dict["struct_row"] = struct_row
 						salary_components_array.append(salary_components_dict)

@@ -1,8 +1,11 @@
 import frappe
 from frappe import _
+from frappe.model import get_permitted_fields
 from frappe.model.workflow import get_workflow_name
 from frappe.query_builder import Order
-from frappe.utils import getdate
+from frappe.utils import add_days, date_diff, getdate, strip_html
+
+from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 
 SUPPORTED_FIELD_TYPES = [
 	"Link",
@@ -75,6 +78,17 @@ def get_all_employees() -> list[dict]:
 	)
 
 
+# HR Settings
+@frappe.whitelist()
+def get_hr_settings() -> dict:
+	settings = frappe.db.get_singles_dict("HR Settings", cast=True)
+	return frappe._dict(
+		allow_employee_checkin_from_mobile_app=settings.allow_employee_checkin_from_mobile_app,
+		allow_geolocation_tracking=settings.allow_geolocation_tracking,
+	)
+
+
+# Notifications
 @frappe.whitelist()
 def get_unread_notifications_count() -> int:
 	return frappe.db.count(
@@ -94,17 +108,189 @@ def mark_all_notifications_as_read() -> None:
 	)
 
 
+@frappe.whitelist()
+def are_push_notifications_enabled() -> bool:
+	try:
+		return frappe.db.get_single_value("Push Notification Settings", "enable_push_notification_relay")
+	except frappe.DoesNotExistError:
+		# push notifications are not supported in the current framework version
+		return False
+
+
+# Attendance
+@frappe.whitelist()
+def get_attendance_calendar_events(employee: str, from_date: str, to_date: str) -> dict[str, str]:
+	holidays = get_holidays_for_calendar(employee, from_date, to_date)
+	attendance = get_attendance_for_calendar(employee, from_date, to_date)
+	events = {}
+
+	date = getdate(from_date)
+	while date_diff(to_date, date) >= 0:
+		date_str = date.strftime("%Y-%m-%d")
+		if date in holidays:
+			events[date_str] = "Holiday"
+		elif date in attendance:
+			events[date_str] = attendance[date]
+		date = add_days(date, 1)
+
+	return events
+
+
+def get_attendance_for_calendar(employee: str, from_date: str, to_date: str) -> list[dict[str, str]]:
+	attendance = frappe.get_all(
+		"Attendance",
+		{"employee": employee, "attendance_date": ["between", [from_date, to_date]]},
+		["attendance_date", "status"],
+	)
+	return {d["attendance_date"]: d["status"] for d in attendance}
+
+
+def get_holidays_for_calendar(employee: str, from_date: str, to_date: str) -> list[str]:
+	if holiday_list := get_holiday_list_for_employee(employee, raise_exception=False):
+		return frappe.get_all(
+			"Holiday",
+			filters={"parent": holiday_list, "holiday_date": ["between", [from_date, to_date]]},
+			pluck="holiday_date",
+		)
+
+	return []
+
+
+@frappe.whitelist()
+def get_shift_requests(
+	employee: str,
+	approver_id: str | None = None,
+	for_approval: bool = False,
+	limit: int | None = None,
+) -> list[dict]:
+	filters = get_filters("Shift Request", employee, approver_id, for_approval)
+	fields = [
+		"name",
+		"employee",
+		"employee_name",
+		"shift_type",
+		"from_date",
+		"to_date",
+		"status",
+		"approver",
+		"docstatus",
+		"creation",
+	]
+
+	if workflow_state_field := get_workflow_state_field("Shift Request"):
+		fields.append(workflow_state_field)
+
+	shift_requests = frappe.get_list(
+		"Shift Request",
+		fields=fields,
+		filters=filters,
+		order_by="creation desc",
+		limit=limit,
+	)
+
+	if workflow_state_field:
+		for application in shift_requests:
+			application["workflow_state_field"] = workflow_state_field
+
+	return shift_requests
+
+
+def get_filters(
+	doctype: str,
+	employee: str,
+	approver_id: str | None = None,
+	for_approval: bool = False,
+) -> dict:
+	filters = frappe._dict()
+	if for_approval:
+		filters.docstatus = 0
+		filters.employee = ("!=", employee)
+
+		if workflow := get_workflow(doctype):
+			allowed_states = get_allowed_states_for_workflow(workflow, approver_id)
+			filters[workflow.workflow_state_field] = ("in", allowed_states)
+		else:
+			approver_field_map = {
+				"Shift Request": "approver",
+				"Leave Application": "leave_approver",
+				"Expense Claim": "expense_approver",
+			}
+			filters.status = "Open" if doctype == "Leave Application" else "Draft"
+			filters[approver_field_map[doctype]] = approver_id
+	else:
+		filters.docstatus = ("!=", 2)
+		filters.employee = employee
+
+	return filters
+
+
+@frappe.whitelist()
+def get_shift_request_approvers(employee: str) -> str | list[str]:
+	shift_request_approver, department = frappe.get_cached_value(
+		"Employee",
+		employee,
+		["shift_request_approver", "department"],
+	)
+
+	department_approvers = []
+	if department:
+		department_approvers = get_department_approvers(department, "shift_request_approver")
+		if not shift_request_approver:
+			shift_request_approver = frappe.db.get_value(
+				"Department Approver",
+				{"parent": department, "parentfield": "shift_request_approver", "idx": 1},
+				"approver",
+			)
+
+	shift_request_approver_name = frappe.db.get_value("User", shift_request_approver, "full_name", cache=True)
+
+	if shift_request_approver and shift_request_approver not in [
+		approver.name for approver in department_approvers
+	]:
+		department_approvers.insert(
+			0, {"name": shift_request_approver, "full_name": shift_request_approver_name}
+		)
+
+	return department_approvers
+
+
+@frappe.whitelist()
+def get_shifts(employee: str) -> list[dict[str, str]]:
+	ShiftAssignment = frappe.qb.DocType("Shift Assignment")
+	ShiftType = frappe.qb.DocType("Shift Type")
+	return (
+		frappe.qb.from_(ShiftAssignment)
+		.join(ShiftType)
+		.on(ShiftAssignment.shift_type == ShiftType.name)
+		.select(
+			ShiftAssignment.name,
+			ShiftAssignment.shift_type,
+			ShiftAssignment.start_date,
+			ShiftAssignment.end_date,
+			ShiftType.start_time,
+			ShiftType.end_time,
+		)
+		.where(
+			(ShiftAssignment.employee == employee)
+			& (ShiftAssignment.status == "Active")
+			& (ShiftAssignment.docstatus == 1)
+		)
+		.orderby(ShiftAssignment.start_date, order=Order.asc)
+	).run(as_dict=True)
+
+
 # Leaves and Holidays
 @frappe.whitelist()
 def get_leave_applications(
 	employee: str,
-	approver_id: str = None,
+	approver_id: str | None = None,
 	for_approval: bool = False,
 	limit: int | None = None,
 ) -> list[dict]:
-	filters = get_leave_application_filters(employee, approver_id, for_approval)
+	filters = get_filters("Leave Application", employee, approver_id, for_approval)
 	fields = [
 		"name",
+		"posting_date",
 		"employee",
 		"employee_name",
 		"leave_type",
@@ -118,6 +304,7 @@ def get_leave_applications(
 		"leave_balance",
 		"leave_approver",
 		"posting_date",
+		"creation",
 	]
 
 	if workflow_state_field := get_workflow_state_field("Leave Application"):
@@ -136,29 +323,6 @@ def get_leave_applications(
 			application["workflow_state_field"] = workflow_state_field
 
 	return applications
-
-
-def get_leave_application_filters(
-	employee: str,
-	approver_id: str = None,
-	for_approval: bool = False,
-) -> dict:
-	filters = frappe._dict()
-	if for_approval:
-		filters.docstatus = 0
-		filters.employee = ("!=", employee)
-
-		if workflow := get_workflow("Leave Application"):
-			allowed_states = get_allowed_states_for_workflow(workflow, approver_id)
-			filters[workflow.workflow_state_field] = ("in", allowed_states)
-		else:
-			filters.status = "Open"
-			filters.leave_approver = approver_id
-	else:
-		filters.docstatus = ("!=", 2)
-		filters.employee = employee
-
-	return filters
 
 
 @frappe.whitelist()
@@ -189,19 +353,22 @@ def get_leave_balance_map(employee: str) -> dict[str, dict[str, float]]:
 
 @frappe.whitelist()
 def get_holidays_for_employee(employee: str) -> list[dict]:
-	from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
-
 	holiday_list = get_holiday_list_for_employee(employee, raise_exception=False)
 	if not holiday_list:
 		return []
 
 	Holiday = frappe.qb.DocType("Holiday")
-	return (
+	holidays = (
 		frappe.qb.from_(Holiday)
 		.select(Holiday.name, Holiday.holiday_date, Holiday.description)
 		.where((Holiday.parent == holiday_list) & (Holiday.weekly_off == 0))
 		.orderby(Holiday.holiday_date, order=Order.asc)
 	).run(as_dict=True)
+
+	for holiday in holidays:
+		holiday["description"] = strip_html(holiday["description"] or "").strip()
+
+	return holidays
 
 
 @frappe.whitelist()
@@ -279,13 +446,14 @@ def get_leave_types(employee: str, date: str) -> list:
 @frappe.whitelist()
 def get_expense_claims(
 	employee: str,
-	approver_id: str = None,
+	approver_id: str | None = None,
 	for_approval: bool = False,
 	limit: int | None = None,
 ) -> list[dict]:
-	filters = get_expense_claim_filters(employee, approver_id, for_approval)
+	filters = get_filters("Expense Claim", employee, approver_id, for_approval)
 	fields = [
 		"`tabExpense Claim`.name",
+		"`tabExpense Claim`.posting_date",
 		"`tabExpense Claim`.employee",
 		"`tabExpense Claim`.employee_name",
 		"`tabExpense Claim`.approval_status",
@@ -294,6 +462,7 @@ def get_expense_claims(
 		"`tabExpense Claim`.total_claimed_amount",
 		"`tabExpense Claim`.posting_date",
 		"`tabExpense Claim`.company",
+		"`tabExpense Claim`.creation",
 		"`tabExpense Claim Detail`.expense_type",
 		"count(`tabExpense Claim Detail`.expense_type) as total_expenses",
 	]
@@ -317,30 +486,6 @@ def get_expense_claims(
 	return claims
 
 
-def get_expense_claim_filters(
-	employee: str,
-	approver_id: str = None,
-	for_approval: bool = False,
-) -> dict:
-	filters = frappe._dict()
-
-	if for_approval:
-		filters.docstatus = 0
-		filters.employee = ("!=", employee)
-
-		if workflow := get_workflow("Expense Claim"):
-			allowed_states = get_allowed_states_for_workflow(workflow, approver_id)
-			filters[workflow.workflow_state_field] = ("in", allowed_states)
-		else:
-			filters.status = "Draft"
-			filters.expense_approver = approver_id
-	else:
-		filters.docstatus = ("!=", 2)
-		filters.employee = employee
-
-	return filters
-
-
 @frappe.whitelist()
 def get_expense_claim_summary(employee: str) -> dict:
 	from frappe.query_builder.functions import Sum
@@ -348,9 +493,7 @@ def get_expense_claim_summary(employee: str) -> dict:
 	Claim = frappe.qb.DocType("Expense Claim")
 
 	pending_claims_case = (
-		frappe.qb.terms.Case()
-		.when(Claim.approval_status == "Draft", Claim.total_claimed_amount)
-		.else_(0)
+		frappe.qb.terms.Case().when(Claim.approval_status == "Draft", Claim.total_claimed_amount).else_(0)
 	)
 	sum_pending_claims = Sum(pending_claims_case).as_("total_pending_amount")
 
@@ -394,9 +537,7 @@ def get_expense_type_description(expense_type: str) -> str:
 def get_expense_claim_types() -> list[dict]:
 	ClaimType = frappe.qb.DocType("Expense Claim Type")
 
-	return (frappe.qb.from_(ClaimType).select(ClaimType.name, ClaimType.description)).run(
-		as_dict=True
-	)
+	return (frappe.qb.from_(ClaimType).select(ClaimType.name, ClaimType.description)).run(as_dict=True)
 
 
 @frappe.whitelist()
@@ -417,18 +558,14 @@ def get_expense_approval_details(employee: str) -> dict:
 	expense_approver_name = frappe.db.get_value("User", expense_approver, "full_name", cache=True)
 	department_approvers = get_department_approvers(department, "expense_approvers")
 
-	if expense_approver and expense_approver not in [
-		approver.name for approver in department_approvers
-	]:
+	if expense_approver and expense_approver not in [approver.name for approver in department_approvers]:
 		department_approvers.append({"name": expense_approver, "full_name": expense_approver_name})
 
 	return dict(
 		expense_approver=expense_approver,
 		expense_approver_name=expense_approver_name,
 		department_approvers=department_approvers,
-		is_mandatory=frappe.db.get_single_value(
-			"HR Settings", "expense_approver_mandatory_in_expense_claim"
-		),
+		is_mandatory=frappe.db.get_single_value("HR Settings", "expense_approver_mandatory_in_expense_claim"),
 	)
 
 
@@ -621,6 +758,10 @@ def get_workflow_state_field(doctype: str) -> str | None:
 
 def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 	user_roles = frappe.get_roles(user_id)
-	return [
-		transition.state for transition in workflow.transitions if transition.allowed in user_roles
-	]
+	return [transition.state for transition in workflow.transitions if transition.allowed in user_roles]
+
+
+# Permissions
+@frappe.whitelist()
+def get_permitted_fields_for_write(doctype: str) -> list[str]:
+	return get_permitted_fields(doctype, permission_type="write")

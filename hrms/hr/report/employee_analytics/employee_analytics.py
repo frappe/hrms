@@ -48,6 +48,7 @@ def get_conditions(filters):
 
 def get_employees(filters):
 	conditions = get_conditions(filters)
+	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 	return frappe.db.sql(
 		"""select name, employee_name, date_of_birth,
 	branch, department, designation,

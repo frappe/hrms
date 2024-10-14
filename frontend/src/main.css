@@ -1,4 +1,3 @@
-@import "./assets/Inter/inter.css";
 @import "frappe-ui/src/style.css";
 
 ion-modal {
@@ -12,6 +11,14 @@ input:disabled {
 }
 
 /* For Webkit-based browsers (Chrome, Safari and Opera) */
+input::-webkit-date-and-time-value {
+	text-align: left;
+}
+
+body {
+	-webkit-tap-highlight-color: transparent;
+}
+
 .hide-scrollbar::-webkit-scrollbar {
 	display: none;
 }

@@ -27,26 +27,27 @@ frappe.ui.form.on("Employee Performance Feedback", {
 			return {
 				filters: {
 					employee: frm.doc.employee,
-				}
-			}
+				},
+			};
 		});
 
 		frm.set_query("reviewer", () => {
 			return {
 				filters: {
 					employee: ["!=", frm.doc.employee],
-				}
-			}
+				},
+			};
 		});
 	},
 
 	set_reviewer(frm) {
 		if (!frm.doc.reviewer) {
-			frappe.db.get_value("Employee", { user_id: frappe.session.user }, "name").then(employee_record => {
-				const session_employee = employee_record?.message?.name;
-				if (session_employee)
-					frm.set_value("reviewer", session_employee);
-			});
+			frappe.db
+				.get_value("Employee", { user_id: frappe.session.user }, "name")
+				.then((employee_record) => {
+					const session_employee = employee_record?.message?.name;
+					if (session_employee) frm.set_value("reviewer", session_employee);
+				});
 		}
-	}
+	},
 });

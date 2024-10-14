@@ -55,14 +55,15 @@
  ],
  "istable": 1,
  "links": [],
- "modified": "2020-10-19 13:44:39.549337",
+ "modified": "2024-03-27 13:10:52.825555",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Taxable Salary Slab",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }

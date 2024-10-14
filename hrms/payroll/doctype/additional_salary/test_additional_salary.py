@@ -119,6 +119,34 @@ class TestAdditionalSalary(FrappeTestCase):
 		salary_slip = make_salary_slip(salary_structure.name, employee=emp_id, posting_date=date)
 		self.assertEqual(salary_slip.earnings[1].amount, 5000)
 
+	def test_overwrite_tax_component(self):
+		def _get_tds_component(doc) -> dict:
+			return next(
+				(d for d in salary_slip.get("deductions") if d.salary_component == "TDS"), frappe._dict()
+			)
+
+		emp_id = make_employee("test_additional@salary.com")
+		salary_structure = make_salary_structure(
+			"Test Salary Structure Additional Salary", "Monthly", employee=emp_id, test_tax=True
+		)
+		date = nowdate()
+
+		# Overwrites TDS Salary Component amount as 5000
+		additional_salary = get_additional_salary(
+			emp_id, recurring=False, payroll_date=date, salary_component="TDS", overwrite_salary_structure=1
+		)
+		salary_slip = make_salary_slip(salary_structure.name, employee=emp_id, posting_date=date)
+		tds_component = _get_tds_component(salary_slip)
+		self.assertEqual(tds_component.additional_salary, additional_salary.name)
+		self.assertEqual(tds_component.amount, 5000)
+
+		# Calculates TDS as per tax slabs
+		additional_salary.cancel()
+		salary_slip = make_salary_slip(salary_structure.name, employee=emp_id, posting_date=date)
+		tds_component = _get_tds_component(salary_slip)
+		self.assertIsNone(tds_component.additional_salary)
+		self.assertNotEqual(tds_component.amount, 5000)
+
 
 def get_additional_salary(
 	emp_id, recurring=True, payroll_date=None, salary_component=None, overwrite_salary_structure=0

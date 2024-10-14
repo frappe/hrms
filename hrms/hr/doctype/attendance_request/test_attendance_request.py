@@ -12,7 +12,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
 )
-from hrms.tests.test_utils import get_first_sunday
+from hrms.tests.test_utils import add_date_to_holiday_list, get_first_sunday
 
 test_dependencies = ["Employee"]
 
@@ -107,15 +107,7 @@ class TestAttendanceRequest(FrappeTestCase):
 
 	def test_skip_attendance_on_holiday(self):
 		today = getdate()
-		holiday_list = frappe.get_doc("Holiday List", self.holiday_list)
-		holiday_list.append(
-			"holidays",
-			{
-				"holiday_date": today,
-				"description": "Test Holiday",
-			},
-		)
-		holiday_list.save()
+		add_date_to_holiday_list(today, self.holiday_list)
 
 		attendance_request = create_attendance_request(
 			employee=self.employee.name, reason="On Duty", company="_Test Company"
@@ -133,11 +125,9 @@ class TestAttendanceRequest(FrappeTestCase):
 			dict(leave_type_name="Test Skip Attendance", doctype="Leave Type")
 		).insert()
 
-		make_allocation_record(
-			leave_type=leave_type.name, from_date=self.from_date, to_date=self.to_date
-		)
+		make_allocation_record(leave_type=leave_type.name, from_date=self.from_date, to_date=self.to_date)
 		today = getdate()
-		make_leave_application(self.employee.name, today, add_days(today, 1), leave_type.name)
+		make_leave_application(self.employee.name, today, today, leave_type.name)
 
 		attendance_request = create_attendance_request(
 			employee=self.employee.name, reason="On Duty", company="_Test Company"
@@ -149,6 +139,25 @@ class TestAttendanceRequest(FrappeTestCase):
 		self.assertEqual(len(records), 1)
 		self.assertEqual(records[0].attendance_date, add_days(today, -1))
 		self.assertEqual(records[0].status, "Present")
+
+	def test_include_holidays_check(self):
+		# Create a holiday on today's date
+		today = getdate()
+		add_date_to_holiday_list(today, self.holiday_list)
+
+		# Create an Attendance Request with include_holidays checked
+		attendance_request = create_attendance_request(
+			employee=self.employee.name,
+			reason="On Duty",
+			company="_Test Company",
+			include_holidays=1,  # Set include_holidays to True
+		)
+
+		# Check if the attendance record is created on the holiday
+		records = self.get_attendance_records(attendance_request.name)
+		self.assertEqual(len(records), 2)
+		self.assertEqual(records[0].status, "Present")
+		self.assertEqual(records[0].attendance_date, today)
 
 	def get_attendance_records(self, attendance_request: str) -> list[dict]:
 		return frappe.db.get_all(

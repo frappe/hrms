@@ -122,7 +122,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-01-05 12:48:25.678478",
+ "modified": "2024-03-27 13:10:33.560494",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Retention Bonus",
@@ -182,7 +182,7 @@
   }
  ],
  "search_fields": "employee_name",
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name",

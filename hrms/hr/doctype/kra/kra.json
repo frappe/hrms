@@ -27,7 +27,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-03-17 20:53:40.000452",
+ "modified": "2024-03-27 13:09:59.100557",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "KRA",
@@ -49,7 +49,7 @@
  ],
  "quick_entry": 1,
  "search_fields": "description",
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "track_changes": 1

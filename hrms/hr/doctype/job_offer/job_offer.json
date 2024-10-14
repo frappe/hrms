@@ -16,6 +16,7 @@
   "designation",
   "company",
   "section_break_4",
+  "job_offer_term_template",
   "offer_terms",
   "section_break_14",
   "select_terms",
@@ -75,6 +76,8 @@
    "reqd": 1
   },
   {
+   "fetch_from": "job_applicant.designation",
+   "fetch_if_empty": 1,
    "fieldname": "designation",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -156,11 +159,17 @@
    "options": "Job Offer",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "job_offer_term_template",
+   "fieldtype": "Link",
+   "label": "Job Offer Term Template",
+   "options": "Job Offer Term Template"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-06-25 00:56:24.756395",
+ "modified": "2024-07-08 15:53:30.761581",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",
@@ -184,7 +193,8 @@
   }
  ],
  "show_name_in_global_search": 1,
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "applicant_name"
 }

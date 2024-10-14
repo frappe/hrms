@@ -202,7 +202,7 @@
    "link_fieldname": "job_requisition"
   }
  ],
- "modified": "2023-01-09 13:47:21.910622",
+ "modified": "2024-03-27 13:09:58.178411",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Requisition",
@@ -222,7 +222,7 @@
    "write": 1
   }
  ],
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "designation"

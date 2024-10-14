@@ -8,15 +8,16 @@ from frappe.utils import flt, get_link_to_form
 
 from hrms.hr.doctype.appraisal_cycle.appraisal_cycle import validate_active_appraisal_cycle
 from hrms.hr.utils import validate_active_employee
+from hrms.mixins.appraisal import AppraisalMixin
 
 
-class EmployeePerformanceFeedback(Document):
+class EmployeePerformanceFeedback(Document, AppraisalMixin):
 	def validate(self):
 		validate_active_appraisal_cycle(self.appraisal_cycle)
 
 		self.validate_employee()
 		self.validate_appraisal()
-		self.validate_total_weightage()
+		self.validate_total_weightage("feedback_ratings", "Feedback Ratings")
 		self.set_total_score()
 
 	def on_submit(self):
@@ -42,17 +43,6 @@ class EmployeePerformanceFeedback(Document):
 		if employee != self.employee:
 			frappe.throw(
 				_("Appraisal {0} does not belong to Employee {1}").format(self.appraisal, self.employee)
-			)
-
-	def validate_total_weightage(self):
-		total_weightage = sum(flt(d.per_weightage) for d in self.feedback_ratings)
-
-		if flt(total_weightage, 2) != 100.0:
-			frappe.throw(
-				_("Total weightage for all criteria must add up to 100. Currently, it is {0}%").format(
-					total_weightage
-				),
-				title=_("Incorrect Weightage Allocation"),
 			)
 
 	def set_total_score(self):

@@ -1,7 +1,7 @@
 <template>
 	<ion-tab-bar
 		slot="bottom"
-		class="bg-white shadow-md sm:w-96 py-2 standalone:pb-safe-bottom"
+		class="bg-white shadow-md sm:w-96 py-2 pb-2 standalone:pb-safe-bottom"
 	>
 		<ion-tab-button
 			v-for="item in tabItems"
@@ -30,6 +30,7 @@ import HomeIcon from "@/components/icons/HomeIcon.vue"
 import LeaveIcon from "@/components/icons/LeaveIcon.vue"
 import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
 import SalaryIcon from "@/components/icons/SalaryIcon.vue"
+import AttendanceIcon from "@/components/icons/AttendanceIcon.vue"
 
 const route = useRoute()
 
@@ -38,6 +39,11 @@ const tabItems = [
 		icon: HomeIcon,
 		title: "Home",
 		route: "/home",
+	},
+	{
+		icon: AttendanceIcon,
+		title: "Attendance",
+		route: "/dashboard/attendance",
 	},
 	{
 		icon: LeaveIcon,

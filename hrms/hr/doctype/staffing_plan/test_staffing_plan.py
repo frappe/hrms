@@ -77,7 +77,7 @@ class TestStaffingPlan(FrappeTestCase):
 
 def _set_up():
 	for doctype in ["Staffing Plan", "Staffing Plan Detail"]:
-		frappe.db.sql("delete from `tab{doctype}`".format(doctype=doctype))
+		frappe.db.sql(f"delete from `tab{doctype}`")
 	make_company()
 
 

@@ -14,7 +14,7 @@
 							variant="solid"
 							class="py-5 text-base w-full"
 						>
-							Request a Leave
+							Request Leave
 						</Button>
 					</router-link>
 					<div>

@@ -7,13 +7,13 @@ from hrms.controllers.employee_boarding_controller import EmployeeBoardingContro
 
 class EmployeeSeparation(EmployeeBoardingController):
 	def validate(self):
-		super(EmployeeSeparation, self).validate()
+		super().validate()
 
 	def on_submit(self):
-		super(EmployeeSeparation, self).on_submit()
+		super().on_submit()
 
 	def on_update_after_submit(self):
 		self.create_task_and_notify_user()
 
 	def on_cancel(self):
-		super(EmployeeSeparation, self).on_cancel()
+		super().on_cancel()

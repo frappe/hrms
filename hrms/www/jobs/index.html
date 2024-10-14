@@ -13,11 +13,11 @@
 />
 
 <div class="row">
-	<!-- Filters -->
-	<div class="col-3 text-15">
+	<!-- Desktop Filters -->
+	<div class="col-3 text-15 d-none d-lg-block">
 		<div class="flex align-items-center">
 			<p class="text-18 font-weight-bold mb-0">{{ _("Filters") }}</p>
-			<a id="clear-filters" class="ml-auto" role="button">{{ _("Clear All") }}</a>
+			<a name="clear-filters" class="ml-auto" role="button">{{ _("Clear All") }}</a>
 		</div>
 		<hr class="mb-6" />
 
@@ -30,16 +30,16 @@
 			{% for value in values %}
 			<div class="form-group form-check">
 				<input
-					type="checkbox"
+					id="{{ 'desktop-' ~ value }}"
 					name="{{ name }}"
-					class="form-check-input"
-					id="{{ value }}"
 					value="{{ value }}"
+					class="form-check-input desktop-filters"
+					type="checkbox"
 					role="button"
 				/>
 				<label
 					class="form-check-label align-top"
-					for="{{ value }}"
+					for="{{ 'desktop-' ~ value }}"
 					role="button"
 				>
 					{{ value }}
@@ -50,17 +50,17 @@
 		{% endfor %}
 	</div>
 
-	<div class="col-9">
+	<div class="col-lg-9">
 		<div class="row px-4 mb-10 align-items-center">
 			<!-- Search  -->
-			<div class="col-8 pl-0">
+			<div class="col-9 col-lg-8 px-0">
 				<div class="input-group search-bar flex text-muted">
 					<div class="search-box-container">
 						<input
 							type="search"
 							name="query"
 							id="search-box"
-							class="form-control border font-md h-100"
+							class="form-control border font-md h-100 desktop-filters mobile-filters"
 							placeholder="{{ _('Search for Jobs') }}"
 							aria-label="Jobs Search"
 						/>
@@ -71,11 +71,13 @@
 				</div>
 			</div>
 
-			<!-- Sort -->
-			{% set sort = frappe.form_dict.sort %}
-			<div class="col-4 flex pr-0">
+
+			<div class="col-3 col-lg-4 flex pr-0">
 				<div class="ml-auto flex align-items-center">
 					<div class="btn-group border h-100" style="border-radius: 8px">
+
+						<!-- Sort -->
+						{% set sort = frappe.form_dict.sort %}
 						<button id="sort" class="btn btn-default btn-order bg-white">
 							<span class="sort-order">
 								<svg class="icon icon-sm">
@@ -87,11 +89,27 @@
 							</span>
 						</button>
 						<div
-							class="border-left px-3 flex align-items-center bg-white"
+							class="border-left px-3 flex align-items-center bg-white d-none d-lg-block"
 							style="border-radius: 0px 8px 8px 0px"
 						>
 							<span class="text-14">{{ _("Posting Date") }}</span>
 						</div>
+
+						<!-- Mobile Filter Button -->
+						<button
+							id="filter"
+							class="btn btn-default btn-order bg-white border-left d-lg-none"
+						>
+							<span class="sort-order">
+								<svg class="icon icon-sm">
+									<use
+										class
+										href="#icon-filter"
+									></use>
+								</svg>
+							</span>
+						</button>
+
 					</div>
 				</div>
 			</div>
@@ -106,11 +124,16 @@
 
 		<div class="row">
 			{% for jo in job_openings %}
-			<div name="card" id="{{ jo.route }}" class="mb-8 col-6" role="button">
-				<div class="card border h-100 flex flex-col">
+			<div class="mb-8 col-sm-6">
+				<div
+					id="{{ jo.route }}"
+					name="card"
+					class="card border h-100 flex flex-col"
+					role="button"
+				>
 					<div class="p-6">
 						<div class="flex mb-5">
-							<div class="col-9 px-0">
+							<div class="col-12 {{ 'col-lg-9' if jo.employment_type }} px-0">
 								<h4
 									class="mt-0 mb-1 jobs-page text-truncate"
 									title="{{ jo.job_title }}"
@@ -126,7 +149,7 @@
 							</div>
 
 							{%- if jo.employment_type -%}
-							<div class="col-3 px-0 flex">
+							<div class="col-3 px-0 flex d-none d-lg-flex">
 								<div class="ml-auto font-weight-bold text-nowrap text-12">
 									{%- if jo.employment_type == "Full-time" -%}
 									<div class="py-1 px-2 full-time-badge">
@@ -207,9 +230,13 @@
 
 					<div class="px-4 py-2 job-card-footer mt-auto">
 						<div class="row text-12 text-secondary">
-							<p class="col-6 text-center border-right mb-0">
-								{{ _("Applications received:") + " " }}
-								<b>{{ jo.no_of_applications }}</b>
+							<p class="col-6 text-center mb-0 {{ 'border-right' if (jo.publish_applications_received or jo.closes_on) }}">
+								{%- if jo.publish_applications_received -%}
+									{{ _("Applications received:") + " " }}
+									<b>{{ jo.no_of_applications }}</b>
+								{% else %}
+									‎
+								{% endif %}
 							</p>
 							<p class="col-6 text-center mb-0">
 								{%- if jo.closes_on -%}
@@ -275,5 +302,58 @@
 		</div>
 		{% endif %}
 	</div>
+
+	<!-- Mobile Filters -->
+	<div
+		id="filters-drawer"
+		class="filters-drawer position-fixed bg-white w-100 d-lg-none"
+	>
+		<div class="flex align-items-center py-4 px-6 border-bottom">
+			<p class="text-18 font-weight-bold mb-0">{{ _("Filters") }}</p>
+			<div name="close-filters-drawer" class="ml-auto">
+				<svg class="icon icon-lg">
+					<use href="#icon-close"></use>
+				</svg>
+			</div>
+		</div>
+
+		<div class="px-6 pt-6 flex-grow-1 overflow-auto">
+			{% for name, values in all_filters.items() %}
+			<div class="mb-6">
+				<p class="font-weight-bold mb-4">
+					{{ name.title() | replace('_', ' ') }}
+				</p>
+
+				{% for value in values %}
+				<div class="form-group form-check">
+					<input
+						id="{{ 'mobile-' ~ value }}"
+						name="{{ name }}"
+						value="{{ value }}"
+						class="form-check-input mobile-filters"
+						type="checkbox"
+						role="button"
+					/>
+					<label
+						class="form-check-label align-top"
+						for="{{ 'mobile-' ~ value }}"
+						role="button"
+					>
+						{{ value }}
+					</label>
+				</div>
+				{% endfor %}
+			</div>
+			{% endfor %}
+		</div>
+
+		<div class="flex align-items-center py-4 border-top">
+			<a name="clear-filters" class="text-17 text-center w-50 mx-6" role="button">{{ _("Clear All") }}</a>
+			<a id="apply-filters" class="btn btn-primary btn-lg w-50 mx-6">{{ _("Apply") }}</a>
+		</div>
+	</div>
+
+	<div  id="overlay" name="close-filters-drawer" class="overlay d-lg-none"></div>
+
 </div>
 {% endblock page_content %}

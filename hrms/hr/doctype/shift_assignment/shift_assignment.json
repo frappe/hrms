@@ -7,22 +7,28 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "employee_details_section",
   "employee",
   "employee_name",
-  "shift_type",
-  "status",
   "column_break_3",
   "company",
+  "department",
+  "shift_details_section",
+  "shift_type",
+  "shift_location",
+  "status",
+  "column_break_brkq",
   "start_date",
   "end_date",
   "shift_request",
-  "department",
+  "schedule",
   "amended_from"
  ],
  "fields": [
   {
    "fieldname": "employee",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "Employee",
    "options": "Employee",
    "reqd": 1,
@@ -47,6 +53,7 @@
    "fieldname": "shift_type",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Shift Type",
    "options": "Shift Type",
    "reqd": 1,
@@ -57,6 +64,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "employee.company",
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
@@ -99,11 +107,38 @@
    "fieldtype": "Select",
    "label": "Status",
    "options": "Active\nInactive"
+  },
+  {
+   "fieldname": "employee_details_section",
+   "fieldtype": "Section Break",
+   "label": "Employee Details"
+  },
+  {
+   "fieldname": "shift_details_section",
+   "fieldtype": "Section Break",
+   "label": "Shift Details"
+  },
+  {
+   "fieldname": "shift_location",
+   "fieldtype": "Link",
+   "label": "Shift Location",
+   "options": "Shift Location"
+  },
+  {
+   "fieldname": "column_break_brkq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "schedule",
+   "fieldtype": "Link",
+   "label": "Schedule",
+   "options": "Shift Assignment Schedule",
+   "read_only": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-06-23 12:08:23.247882",
+ "modified": "2024-09-16 15:29:41.502080",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment",
@@ -147,7 +182,7 @@
    "write": 1
   }
  ],
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name",

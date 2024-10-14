@@ -1,0 +1,58 @@
+<div class="feedback-history mb-3">
+	{% if (feedback_history.length) { %}
+		{% for (let i=0, l=feedback_history.length; i<l; i++) { %}
+			<div class="feedback-content p-3 d-flex flex-row mt-3" data-name="{{ feedback_history[i].name }}">
+				<!-- Reviewer Info -->
+				<div class="reviewer-info mb-2 col-xs-3">
+					<div class="row">
+						<div class="col-xs-2">
+							{{ frappe.avatar(feedback_history[i].user, "avatar-medium") }}
+						</div>
+						<div class="col-xs-10">
+							<div class="ml-2">
+								<div class="title font-weight-bold">
+									{{ strip_html(feedback_history[i].reviewer_name || feedback_history[i].user) }}
+								</div>
+								{% if (feedback_history[i].reviewer_designation) { %}
+									<div class="small text-muted">
+										{{ strip_html(feedback_history[i].reviewer_designation) }}
+									</div>
+								{% } %}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Feedback -->
+				<div class="reviewer-feedback col-xs-6">
+					<div class="rating">
+						{%= frappe.render_template("rating",
+								{number_of_stars: 5, average_rating: feedback_history[i].total_score, for_summary: false}
+							)
+						%}
+					</div>
+					<div class="feedback my-3">
+						{{ feedback_history[i].feedback }}
+					</div>
+				</div>
+
+				<!-- Feedback Date & Link -->
+				<div class="feedback-info col-xs-3 d-flex flex-row justify-content-end align-items-baseline">
+					<div class="time small text-muted mr-2">
+						{{ frappe.datetime.comment_when(feedback_history[i].added_on) }}
+					</div>
+					<a href="{{ frappe.utils.get_form_link(feedback_doctype, feedback_history[i].name) }}" title="{{ __("Open Feedback") }}">
+						<svg class="icon icon-sm">
+							<use href="#icon-link-url"></use>
+						</svg>
+					</a>
+				</div>
+			</div>
+		{% } %}
+
+	{% } else { %}
+		<div class="no-feedback d-flex flex-col justify-content-center align-items-center text-muted">
+			<span>{{ __("No feedback has been received yet") }}</span>
+		</div>
+	{% } %}
+</div>

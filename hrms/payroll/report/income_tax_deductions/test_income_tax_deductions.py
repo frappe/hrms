@@ -35,9 +35,7 @@ class TestIncomeTaxDeductions(FrappeTestCase):
 			date_of_joining=getdate("01-10-2021"),
 		)
 
-		cls.payroll_period = create_payroll_period(
-			name="_Test Payroll Period 1", company="_Test Company"
-		)
+		cls.payroll_period = create_payroll_period(name="_Test Payroll Period 1", company="_Test Company")
 		salary_structure = make_salary_structure(
 			"Monthly Salary Structure Test Income Tax Deduction",
 			"Monthly",
@@ -48,9 +46,7 @@ class TestIncomeTaxDeductions(FrappeTestCase):
 			test_tax=True,
 		)
 
-		create_salary_slips_for_payroll_period(
-			cls.employee, salary_structure.name, cls.payroll_period, num=1
-		)
+		create_salary_slips_for_payroll_period(cls.employee, salary_structure.name, cls.payroll_period, num=1)
 
 	def test_report(self):
 		filters = frappe._dict({"company": "_Test Company"})

@@ -23,9 +23,7 @@ class TestAppraisalCycle(FrappeTestCase):
 		create_designation(designation_name="Consultant")
 
 		self.employee1 = make_employee("employee1@example.com", company=company, designation="Engineer")
-		self.employee2 = make_employee(
-			"employee2@example.com", company=company, designation="Consultant"
-		)
+		self.employee2 = make_employee("employee2@example.com", company=company, designation="Consultant")
 
 	def test_set_employees(self):
 		cycle = create_appraisal_cycle(designation="Engineer")

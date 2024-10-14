@@ -54,8 +54,7 @@ def make_job_requisition(**args):
 		{
 			"doctype": "Job Requisition",
 			"designation": args.designation or create_designation().name,
-			"department": args.department
-			or frappe.db.get_value("Employee", args.requested_by, "department"),
+			"department": args.department or frappe.db.get_value("Employee", args.requested_by, "department"),
 			"no_of_positions": args.no_of_positions or 1,
 			"expected_compensation": args.expected_compensation or 500000,
 			"company": "_Test Company",

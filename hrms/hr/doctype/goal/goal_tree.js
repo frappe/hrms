@@ -8,7 +8,7 @@ frappe.treeview_settings["Goal"] = {
 			fieldtype: "Select",
 			options: erpnext.utils.get_tree_options("company"),
 			label: __("Company"),
-			default: erpnext.utils.get_tree_default("company")
+			default: erpnext.utils.get_tree_default("company"),
 		},
 		{
 			fieldname: "appraisal_cycle",
@@ -16,12 +16,13 @@ frappe.treeview_settings["Goal"] = {
 			options: "Appraisal Cycle",
 			label: __("Appraisal Cycle"),
 			get_query() {
-				const company = frappe.treeview_settings["Goal"].page.fields_dict.company.get_value();
+				const company =
+					frappe.treeview_settings["Goal"].page.fields_dict.company.get_value();
 
 				return {
 					filters: {
-						company: company
-					}
+						company: company,
+					},
 				};
 			},
 		},
@@ -29,12 +30,12 @@ frappe.treeview_settings["Goal"] = {
 			fieldname: "employee",
 			fieldtype: "Link",
 			options: "Employee",
-			label: __("Employee")
+			label: __("Employee"),
 		},
 		{
 			fieldname: "date_range",
 			fieldtype: "DateRange",
-			label: __("Date Range")
+			label: __("Date Range"),
 		},
 	],
 	fields: [
@@ -61,10 +62,10 @@ frappe.treeview_settings["Goal"] = {
 			reqd: 1,
 			default() {
 				const treeview = frappe.treeview_settings["Goal"].treeview;
-				let employee = (
+				let employee =
 					treeview.tree.get_selected_node().data.employee ||
-					treeview.tree.session_employee || ""
-				);
+					treeview.tree.session_employee ||
+					"";
 
 				return employee;
 			},
@@ -93,7 +94,9 @@ frappe.treeview_settings["Goal"] = {
 		{
 			fieldtype: "Section Break",
 			label: __("Appraisal Linking"),
-			description: __("Link the cycle and tag KRA to your goal to update the appraisal's goal score based on the goal progress"),
+			description: __(
+				"Link the cycle and tag KRA to your goal to update the appraisal's goal score based on the goal progress",
+			),
 			depends_on: "eval:doc.employee",
 		},
 		{
@@ -102,21 +105,22 @@ frappe.treeview_settings["Goal"] = {
 			label: __("Appraisal Cycle"),
 			options: "Appraisal Cycle",
 			get_query() {
-				const company = frappe.treeview_settings["Goal"].page.fields_dict.company.get_value();
+				const company =
+					frappe.treeview_settings["Goal"].page.fields_dict.company.get_value();
 
 				return {
 					filters: {
 						company: company,
-						status: ["!=", "Completed"]
-					}
-				}
+						status: ["!=", "Completed"],
+					},
+				};
 			},
 			default() {
 				const treeview = frappe.treeview_settings["Goal"].treeview;
-				let appraisal_cycle = (
+				let appraisal_cycle =
 					treeview.page.fields_dict.appraisal_cycle.get_value() ||
-					treeview.tree.get_selected_node().data.appraisal_cycle || ""
-				);
+					treeview.tree.get_selected_node().data.appraisal_cycle ||
+					"";
 
 				return appraisal_cycle;
 			},
@@ -134,15 +138,15 @@ frappe.treeview_settings["Goal"] = {
 				return {
 					query: "hrms.hr.doctype.appraisal.appraisal.get_kras_for_employee",
 					filters: {
-						"employee": cur_dialog.get_value("employee"),
-						"appraisal_cycle": cur_dialog.get_value("appraisal_cycle"),
-					}
+						employee: cur_dialog.get_value("employee"),
+						appraisal_cycle: cur_dialog.get_value("appraisal_cycle"),
+					},
 				};
 			},
 			default() {
-				const treeview = frappe.treeview_settings["Goal"].treeview
-				return treeview.tree.get_selected_node().data.kra
-			}
+				const treeview = frappe.treeview_settings["Goal"].treeview;
+				return treeview.tree.get_selected_node().data.kra;
+			},
 		},
 		{
 			fieldtype: "Section Break",
@@ -162,9 +166,11 @@ frappe.treeview_settings["Goal"] = {
 		treeview.make_tree();
 
 		// set the current session employee
-		frappe.db.get_value("Employee", { user_id: frappe.session.user }, "name").then(employee_record => {
-			treeview.tree.session_employee = employee_record?.message?.name;
-		});
+		frappe.db
+			.get_value("Employee", { user_id: frappe.session.user }, "name")
+			.then((employee_record) => {
+				treeview.tree.session_employee = employee_record?.message?.name;
+			});
 	},
 	onrender(node) {
 		// show KRA against the goal
@@ -187,15 +193,17 @@ frappe.treeview_settings["Goal"] = {
 			`).insertBefore(node.$ul);
 		} else if (node.data && node.data.status !== undefined) {
 			const status_color = {
-				"Pending": "yellow",
+				Pending: "yellow",
 				"In Progress": "orange",
-				"Completed": "green",
-				"Archived": "gray",
+				Completed: "green",
+				Archived: "gray",
 			};
 			$(`
 				<span
 					class="pill small pull-right"
-					style="background-color: var(--bg-${status_color[node.data.status]}); color: var(--text-on-${status_color[node.data.status]}); font-weight:500">
+					style="background-color: var(--bg-${status_color[node.data.status]}); color: var(--text-on-${
+						status_color[node.data.status]
+					}); font-weight:500">
 					${node.data.status}
 				</span>
 			`).insertBefore(node.$ul);
@@ -212,7 +220,9 @@ frappe.treeview_settings["Goal"] = {
 	},
 	get_label(node) {
 		if (node.title && node.title !== node.label) {
-			return __(node.title) + ` <span class="text-muted">(${node.data.employee_name})</span>`;
+			return (
+				__(node.title) + ` <span class="text-muted">(${node.data.employee_name})</span>`
+			);
 		} else {
 			return __(node.title || node.label);
 		}
@@ -220,10 +230,10 @@ frappe.treeview_settings["Goal"] = {
 	toolbar: [
 		{
 			label: __("Update Progress"),
-			condition: function(node) {
+			condition: function (node) {
 				return !node.root && !node.expandable;
 			},
-			click: function(node) {
+			click: function (node) {
 				const dialog = new frappe.ui.Dialog({
 					title: __("Update Progress"),
 					fields: [
@@ -234,32 +244,52 @@ frappe.treeview_settings["Goal"] = {
 							default: node.data.progress,
 						},
 					],
-					primary_action: function() {
+					primary_action: function () {
 						dialog.hide();
-						return frappe.call({
-							method: "hrms.hr.doctype.goal.goal.update_progress",
-							args: {
-								progress: dialog.get_values()["progress"],
-								goal: node.data.value
-							},
-						}).then(r => {
-							if (!r.exc && r.message) {
-								frappe.treeview_settings["Goal"].treeview.tree.load_children(node.parent_node, true);
-
-								frappe.show_alert({
-									message: __("Progress Updated successfully"),
-									indicator: "green"
-								});
-							} else {
-								frappe.msgprint(__("Could not update progress"));
-							}
-						});
+						return update_progress(node, dialog.get_values()["progress"]);
 					},
-					primary_action_label: __("Update")
+					primary_action_label: __("Update"),
 				});
 				dialog.show();
-			}
-		}
+			},
+		},
+		{
+			label: __("Mark as Completed"),
+			condition: function (node) {
+				return !node.is_root && !node.expandable && node.data.status != "Completed";
+			},
+			click: function (node) {
+				frappe.confirm(__("Mark {0} as Completed?", [node.label.bold()]), () =>
+					update_progress(node, 100),
+				);
+			},
+		},
 	],
-	extend_toolbar: true
+	extend_toolbar: true,
 };
+
+function update_progress(node, progress) {
+	return frappe
+		.call({
+			method: "hrms.hr.doctype.goal.goal.update_progress",
+			args: {
+				goal: node.data.value,
+				progress: progress,
+			},
+		})
+		.then((r) => {
+			if (!r.exc && r.message) {
+				frappe.treeview_settings["Goal"].treeview.tree.load_children(
+					frappe.treeview_settings["Goal"].treeview.tree.root_node,
+					true,
+				);
+
+				frappe.show_alert({
+					message: __("Goal updated successfully"),
+					indicator: "green",
+				});
+			} else {
+				frappe.msgprint(__("Could not update Goal"));
+			}
+		});
+}

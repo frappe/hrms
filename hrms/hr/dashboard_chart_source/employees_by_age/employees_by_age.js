@@ -8,7 +8,7 @@ frappe.dashboards.chart_sources["Employees by Age"] = {
 			label: __("Company"),
 			fieldtype: "Link",
 			options: "Company",
-			default: frappe.defaults.get_user_default("Company")
+			default: frappe.defaults.get_user_default("Company"),
 		},
-	]
+	],
 };

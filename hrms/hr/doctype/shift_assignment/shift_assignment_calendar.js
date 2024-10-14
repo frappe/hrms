@@ -3,12 +3,12 @@
 
 frappe.views.calendar["Shift Assignment"] = {
 	field_map: {
-		"start": "start_date",
-		"end": "end_date",
-		"id": "name",
-		"docstatus": 1,
-		"allDay": "allDay",
-		"convertToUserTz": "convertToUserTz",
+		start: "start_date",
+		end: "end_date",
+		id: "name",
+		docstatus: 1,
+		allDay: "allDay",
+		convertToUserTz: "convertToUserTz",
 	},
-	get_events_method: "hrms.hr.doctype.shift_assignment.shift_assignment.get_events"
-}
+	get_events_method: "hrms.hr.doctype.shift_assignment.shift_assignment.get_events",
+};

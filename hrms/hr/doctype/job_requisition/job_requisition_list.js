@@ -1,23 +1,23 @@
 frappe.listview_settings["Job Requisition"] = {
-	get_indicator: function(doc) {
+	get_indicator: function (doc) {
 		const status_color = {
-			"Pending": "yellow",
+			Pending: "yellow",
 			"Open & Approved": "blue",
-			"Rejected": "red",
-			"Filled": "green",
-			"Cancelled": "gray",
-			"On Hold": "gray"
+			Rejected: "red",
+			Filled: "green",
+			Cancelled: "gray",
+			"On Hold": "gray",
 		};
 		return [__(doc.status), status_color[doc.status], "status,=," + doc.status];
 	},
 
 	formatters: {
 		expected_by(value, df, doc) {
-			if (!value || (["Filled", "Cancelled", "On Hold"].includes(doc.status))) return "";
+			if (!value || ["Filled", "Cancelled", "On Hold"].includes(doc.status)) return "";
 
 			const now = moment();
 			const expected_by = moment(value);
-			const color = (now > expected_by) ? "red" : "green";
+			const color = now > expected_by ? "red" : "green";
 
 			return `
 				<div
@@ -26,6 +26,6 @@ frappe.listview_settings["Job Requisition"] = {
 					${expected_by.fromNow()}
 				</div>
 			`;
-		}
-	}
-}
+		},
+	},
+};

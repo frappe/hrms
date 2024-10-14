@@ -112,6 +112,7 @@
    "label": "Approval Status",
    "no_copy": 1,
    "options": "Draft\nApproved\nRejected",
+   "permlevel": 1,
    "search_index": 1
   },
   {
@@ -176,6 +177,7 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "project",
    "fieldtype": "Link",
    "label": "Project",
@@ -239,12 +241,17 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "company.default_expense_claim_payable_account",
+   "fetch_if_empty": 1,
    "fieldname": "payable_account",
    "fieldtype": "Link",
    "label": "Payable Account",
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
+   "fetch_from": "company.cost_center",
+   "fetch_if_empty": 1,
    "fieldname": "cost_center",
    "fieldtype": "Link",
    "label": "Cost Center",
@@ -383,11 +390,10 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-01 10:08:47.862274",
+ "modified": "2024-10-09 14:16:06.715586",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim",
- "name_case": "Title Case",
  "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
@@ -443,11 +449,44 @@
    "share": 1,
    "submit": 1,
    "write": 1
+  },
+  {
+   "permlevel": 1,
+   "read": 1,
+   "role": "HR Manager",
+   "write": 1
+  },
+  {
+   "permlevel": 1,
+   "read": 1,
+   "role": "HR User",
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Expense Approver",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1
   }
  ],
  "search_fields": "employee,employee_name",
  "show_name_in_global_search": 1,
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [
   {

@@ -75,9 +75,7 @@ def send_exit_questionnaire(interviews):
 
 		context = interview.as_dict()
 		context.update(employee.as_dict())
-		template_name = frappe.db.get_single_value(
-			"HR Settings", "exit_questionnaire_notification_template"
-		)
+		template_name = frappe.db.get_single_value("HR Settings", "exit_questionnaire_notification_template")
 		template = frappe.get_doc("Email Template", template_name)
 
 		if email:
@@ -104,7 +102,7 @@ def get_interviews(interviews):
 		interviews = json.loads(interviews)
 
 	if not len(interviews):
-		frappe.throw(_("Atleast one interview has to be selected."))
+		frappe.throw(_("At least one interview has to be selected."))
 
 	return interviews
 
@@ -117,13 +115,11 @@ def validate_questionnaire_settings():
 		as_dict=True,
 	)
 
-	if (
-		not settings.exit_questionnaire_web_form or not settings.exit_questionnaire_notification_template
-	):
+	if not settings.exit_questionnaire_web_form or not settings.exit_questionnaire_notification_template:
 		frappe.throw(
 			_("Please set {0} and {1} in {2}.").format(
-				frappe.bold("Exit Questionnaire Web Form"),
-				frappe.bold("Notification Template"),
+				frappe.bold(_("Exit Questionnaire Web Form")),
+				frappe.bold(_("Notification Template")),
 				get_link_to_form("HR Settings", "HR Settings"),
 			),
 			title=_("Settings Missing"),
@@ -133,14 +129,12 @@ def validate_questionnaire_settings():
 def show_email_summary(email_success, email_failure):
 	message = ""
 	if email_success:
-		message += _("{0}: {1}").format(frappe.bold("Sent Successfully"), ", ".join(email_success))
+		message += _("Sent Successfully: {0}").format(", ".join(email_success))
 	if message and email_failure:
 		message += "<br><br>"
 	if email_failure:
-		message += _("{0} due to missing email information for employee(s): {1}").format(
-			frappe.bold("Sending Failed"), ", ".join(email_failure)
+		message += _("Sending Failed due to missing email information for employee(s): {1}").format(
+			", ".join(email_failure)
 		)
 
-	frappe.msgprint(
-		message, title=_("Exit Questionnaire"), indicator="blue", is_minimizable=True, wide=True
-	)
+	frappe.msgprint(message, title=_("Exit Questionnaire"), indicator="blue", is_minimizable=True, wide=True)

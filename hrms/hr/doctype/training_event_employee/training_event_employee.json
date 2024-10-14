@@ -69,13 +69,14 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-07-02 17:20:27.630176",
+ "modified": "2024-03-27 13:10:54.148593",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Training Event Employee",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,
- "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
 }

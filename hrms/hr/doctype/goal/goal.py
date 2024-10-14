@@ -94,7 +94,7 @@ class Goal(NestedSet):
 		"""Aligns children's KRA to parent goal's KRA if parent goal's KRA is changed"""
 		if doc_before_save.kra != self.kra and self.is_group:
 			Goal = frappe.qb.DocType("Goal")
-			(frappe.qb.update(Goal).set(Goal.kra, self.kra).where((Goal.parent_goal == self.name))).run()
+			(frappe.qb.update(Goal).set(Goal.kra, self.kra).where(Goal.parent_goal == self.name)).run()
 
 			frappe.msgprint(_("KRA updated for all child goals."), alert=True, indicator="green")
 
@@ -204,6 +204,24 @@ def update_progress(progress: float, goal: str) -> None:
 	goal.save()
 
 	return goal
+
+
+@frappe.whitelist()
+def update_status(status: str, goals: str | list) -> None:
+	if isinstance(goals, str):
+		import json
+
+		goals = json.loads(goals)
+
+	for goal in goals:
+		goal = frappe.get_doc("Goal", goal)
+		goal.status = status
+		if status == "Completed":
+			goal.progress = 100
+		goal.flags.ignore_mandatory = True
+		goal.save()
+
+	return goals
 
 
 @frappe.whitelist()

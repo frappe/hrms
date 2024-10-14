@@ -38,7 +38,7 @@
   }
  ],
  "links": [],
- "modified": "2020-06-22 23:18:08.254645",
+ "modified": "2024-03-27 13:09:42.420982",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Tax Exemption Sub Category",
@@ -81,6 +81,7 @@
    "write": 1
   }
  ],
- "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
 }

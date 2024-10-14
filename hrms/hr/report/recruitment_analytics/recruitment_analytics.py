@@ -7,7 +7,6 @@ from frappe import _
 
 
 def execute(filters=None):
-
 	if not filters:
 		filters = {}
 	filters = frappe._dict(filters)
@@ -118,9 +117,9 @@ def get_child_row(jo, jo_ja_map, ja_joff_map):
 
 
 def get_staffing_plan(filters):
-
+	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 	staffing_plan = frappe.db.sql(
-		"""
+		f"""
 	select
 		sp.name, sp.department, spd.designation, spd.vacancies, spd.current_count, spd.parent, sp.to_date
 	from
@@ -128,10 +127,8 @@ def get_staffing_plan(filters):
 	where
 			spd.parent = sp.name
 		And
-			sp.to_date > '{0}'
-		""".format(
-			filters.on_date
-		),
+			sp.to_date > '{filters.on_date}'
+		""",
 		as_dict=1,
 	)
 
@@ -139,7 +136,6 @@ def get_staffing_plan(filters):
 
 
 def get_job_opening(sp_list):
-
 	job_openings = frappe.get_all(
 		"Job Opening", filters=[["staffing_plan", "IN", sp_list]], fields=["name", "staffing_plan"]
 	)
@@ -159,7 +155,6 @@ def get_job_opening(sp_list):
 
 
 def get_job_applicant(jo_list):
-
 	jo_ja_map = {}
 	ja_list = []
 

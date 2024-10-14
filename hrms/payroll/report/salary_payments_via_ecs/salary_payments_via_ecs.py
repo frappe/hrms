@@ -45,6 +45,13 @@ def get_columns(filters):
 			"options": "currency",
 			"width": 140,
 		},
+		{
+			"label": _("Net Pay"),
+			"fieldname": "net_pay",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 140,
+		},
 		{"label": _("Bank"), "fieldname": "bank", "fieldtype": "Data", "width": 140},
 		{"label": _("Account No"), "fieldname": "account_no", "fieldtype": "Data", "width": 140},
 	]
@@ -79,7 +86,6 @@ def get_conditions(filters):
 
 
 def get_data(filters):
-
 	data = []
 
 	fields = ["employee", "branch", "bank_name", "bank_ac_no", "salary_mode"]
@@ -105,7 +111,7 @@ def get_data(filters):
 	conditions = get_conditions(filters)
 
 	entry = frappe.db.sql(
-		""" select employee, employee_name, gross_pay
+		""" select employee, employee_name, gross_pay, net_pay
 		from `tabSalary Slip`
 		where docstatus = 1 %s """
 		% (conditions),
@@ -113,12 +119,12 @@ def get_data(filters):
 	)
 
 	for d in entry:
-
 		employee = {
 			"branch": employee_data_dict.get(d.employee).get("branch"),
 			"employee_name": d.employee_name,
 			"employee": d.employee,
 			"gross_pay": d.gross_pay,
+			"net_pay": d.net_pay,
 		}
 
 		if employee_data_dict.get(d.employee).get("salary_mode") == "Bank":

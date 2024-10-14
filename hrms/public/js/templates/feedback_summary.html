@@ -1,0 +1,49 @@
+<div class="feedback-summary-section my-4 d-flex">
+	<!-- Ratings Summary -->
+	<div class="rating-summary-numbers col-3">
+		<div class="feedback-count mt-1 mb-2 text-secondary">
+			{{ __("Average Rating") }}
+		</div>
+		<h2 class="average-rating mb-2">{{ average_rating }}</h2>
+
+		{%=
+			frappe.render_template("rating",
+				{number_of_stars: 5, average_rating: average_rating, for_summary: true}
+			)
+		%}
+
+		<div class="feedback-count text-secondary mt-2">
+			{{ __("based on") }} {{ cstr(feedback_count) }} {{ feedback_count > 1 ? __("reviews") : __("review") }}
+		</div>
+	</div>
+
+	<!-- Rating Progress Bars -->
+	<div class="rating-progress-bar-section pb-0 col-4">
+		{% for(let i=5; i>0; i--) { %}
+		<div class="row {{ i!=1 && 'mb-3' }}">
+			<div class="col-sm-3 text-nowrap flex align-items-center">
+				<svg class="icon icon-sm mr-2">
+					<use href="#icon-star" class="like-icon"></use>
+				</svg>
+				<span>{{ i }}</span>
+			</div>
+			<div class="col-md-7">
+				<div
+					class="progress rating-progress-bar"
+					title="{{ reviews_per_rating[i-1] }} % of reviews are {{ i }} star"
+				>
+					<div
+						class="progress-bar progress-bar-cosmetic"
+						role="progressbar"
+						aria-valuenow="{{ reviews_per_rating[i-1] }}"
+						aria-valuemin="0"
+						aria-valuemax="100"
+						style="width: {{ reviews_per_rating[i-1] }}%;"
+					></div>
+				</div>
+			</div>
+			<div class="col-sm-1 small">{{ reviews_per_rating[i-1] }}%</div>
+		</div>
+		{% } %}
+	</div>
+</div>

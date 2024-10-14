@@ -28,10 +28,9 @@ def execute():
 			if frappe.db.table_exists(doctype):
 				frappe.reload_doc(module, "doctype", frappe.scrub(doctype))
 				frappe.db.sql(
-					"""
-					update `tab%s` dt
+					f"""
+					update `tab{doctype}` dt
 					set department=(select department from `tabEmployee` where name=dt.employee)
-					where coalesce(`tab%s`.`department`, '') = ''
-				"""
-					% doctype
+					where coalesce(`tab{doctype}`.`department`, '') = ''
+					"""
 				)

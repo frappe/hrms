@@ -28,9 +28,7 @@ class JobOpening(WebsiteGenerator):
 
 	def validate(self):
 		if not self.route:
-			self.route = (
-				f"jobs/{frappe.scrub(self.company)}/{frappe.scrub(self.job_title).replace('_', '-')}"
-			)
+			self.route = f"jobs/{frappe.scrub(self.company)}/{frappe.scrub(self.job_title).replace('_', '-')}"
 		self.update_closing_date()
 		self.validate_dates()
 		self.validate_current_vacancies()
@@ -71,8 +69,6 @@ class JobOpening(WebsiteGenerator):
 			)
 
 		if self.staffing_plan and self.planned_vacancies:
-			staffing_plan_company = frappe.db.get_value("Staffing Plan", self.staffing_plan, "company")
-
 			designation_counts = get_designation_counts(self.designation, self.company, self.name)
 			current_count = designation_counts["employee_count"] + designation_counts["job_openings"]
 
@@ -114,9 +110,7 @@ def close_expired_job_openings():
 	openings = (
 		frappe.qb.from_(Opening)
 		.select(Opening.name)
-		.where(
-			(Opening.status == "Open") & (Opening.closes_on.isnotnull()) & (Opening.closes_on < today)
-		)
+		.where((Opening.status == "Open") & (Opening.closes_on.isnotnull()) & (Opening.closes_on < today))
 	).run(pluck=True)
 
 	for d in openings:

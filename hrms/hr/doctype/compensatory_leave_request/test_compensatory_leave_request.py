@@ -8,6 +8,7 @@ from frappe.utils import add_days, add_months, today
 from hrms.hr.doctype.attendance_request.test_attendance_request import get_employee
 from hrms.hr.doctype.leave_application.leave_application import get_leave_balance_on
 from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
+from hrms.tests.test_utils import add_date_to_holiday_list
 
 test_dependencies = ["Employee"]
 
@@ -37,9 +38,7 @@ class TestCompensatoryLeaveRequest(FrappeTestCase):
 		compensatory_leave_request.submit()
 
 		self.assertEqual(
-			get_leave_balance_on(
-				employee.name, compensatory_leave_request.leave_type, add_days(today(), 1)
-			),
+			get_leave_balance_on(employee.name, compensatory_leave_request.leave_type, add_days(today(), 1)),
 			before + 1,
 		)
 
@@ -128,8 +127,39 @@ class TestCompensatoryLeaveRequest(FrappeTestCase):
 
 		self.assertEqual(leave_ledger_entry[0].leaves, 0.5)
 
+	def test_request_on_leave_period_boundary(self):
+		frappe.db.delete("Leave Period")
+		create_leave_period("2023-01-01", "2023-12-31", "_Test Company")
+		create_holiday_list("2023-01-01", "2023-12-31")
 
-def get_compensatory_leave_request(employee, leave_date=today()):
+		employee = get_employee()
+		boundary_date = "2023-12-31"
+		add_date_to_holiday_list(boundary_date, employee.holiday_list)
+		mark_attendance(employee, boundary_date, "Present")
+
+		# no leave period found of "2024-01-01"
+		compensatory_leave_request = frappe.new_doc("Compensatory Leave Request")
+		compensatory_leave_request.update(
+			dict(
+				employee=employee.name,
+				leave_type="Compensatory Off",
+				work_from_date=boundary_date,
+				work_end_date=boundary_date,
+				reason="test",
+			)
+		)
+		compensatory_leave_request.insert()
+		self.assertRaises(frappe.ValidationError, compensatory_leave_request.submit)
+
+		create_leave_period("2024-01-01", "2024-12-31", "_Test Company")
+		compensatory_leave_request.reload()
+		compensatory_leave_request.submit()
+
+
+def get_compensatory_leave_request(employee, leave_date=None):
+	if not leave_date:
+		leave_date = today()
+
 	prev_comp_leave_req = frappe.db.get_value(
 		"Compensatory Leave Request",
 		dict(
@@ -155,7 +185,10 @@ def get_compensatory_leave_request(employee, leave_date=today()):
 	).insert()
 
 
-def mark_attendance(employee, date=today(), status="Present"):
+def mark_attendance(employee, date=None, status="Present"):
+	if not date:
+		date = today()
+
 	if not frappe.db.exists(
 		dict(doctype="Attendance", employee=employee.name, attendance_date=date, status="Present")
 	):
@@ -166,20 +199,27 @@ def mark_attendance(employee, date=today(), status="Present"):
 		attendance.submit()
 
 
-def create_holiday_list():
-	if frappe.db.exists("Holiday List", "_Test Compensatory Leave"):
-		return
+def create_holiday_list(from_date=None, to_date=None):
+	list_name = "_Test Compensatory Leave"
+	if frappe.db.exists("Holiday List", list_name):
+		frappe.db.delete("Holiday List", list_name)
+		frappe.db.delete("Holiday", {"parent": list_name})
+
+	if from_date:
+		holiday_date = add_days(from_date, 1)
+	else:
+		holiday_date = today()
 
 	holiday_list = frappe.get_doc(
 		{
 			"doctype": "Holiday List",
-			"from_date": add_months(today(), -3),
-			"to_date": add_months(today(), 3),
+			"from_date": from_date or add_months(today(), -3),
+			"to_date": to_date or add_months(today(), 3),
 			"holidays": [
-				{"description": "Test Holiday", "holiday_date": today()},
-				{"description": "Test Holiday 1", "holiday_date": add_days(today(), -1)},
+				{"description": "Test Holiday", "holiday_date": holiday_date},
+				{"description": "Test Holiday 1", "holiday_date": add_days(holiday_date, -1)},
 			],
-			"holiday_list_name": "_Test Compensatory Leave",
+			"holiday_list_name": list_name,
 		}
 	)
 	holiday_list.save()

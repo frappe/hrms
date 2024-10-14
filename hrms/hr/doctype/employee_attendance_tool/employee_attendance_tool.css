@@ -1,21 +1,21 @@
-.top-toolbar{
+.top-toolbar {
 	padding-bottom: 30px;
 	margin-left: -17px;
 }
 
-.bottom-toolbar{
+.bottom-toolbar {
 	margin-left: -17px;
 	margin-top: 20px;
 }
 
-.btn{
+.btn {
 	margin-right: 5px;
 }
 
-.marked-employee-label{
+.marked-employee-label {
 	font-weight: normal;
 }
 
-.checkbox{
+.checkbox {
 	margin-top: -3px;
 }

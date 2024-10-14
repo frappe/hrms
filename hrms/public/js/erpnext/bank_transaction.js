@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Bank Transaction", {
-	get_payment_doctypes: function() {
+	get_payment_doctypes: function () {
 		return [
 			"Payment Entry",
 			"Journal Entry",
@@ -10,5 +10,5 @@ frappe.ui.form.on("Bank Transaction", {
 			"Purchase Invoice",
 			"Expense Claim",
 		];
-	}
-})
+	},
+});

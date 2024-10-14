@@ -17,6 +17,7 @@
   "employee_name",
   "cell_number",
   "prefered_email",
+  "company",
   "column_break_7",
   "date_of_birth",
   "personal_id_type",
@@ -212,11 +213,19 @@
   {
    "fieldname": "dimension_col_break",
    "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-18 19:19:33.678664",
+ "modified": "2024-05-24 17:09:09.480838",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Travel Request",
@@ -237,7 +246,7 @@
   }
  ],
  "search_fields": "employee_name",
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name",

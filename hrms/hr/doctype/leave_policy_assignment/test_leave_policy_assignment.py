@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from frappe.utils import add_months, get_first_day, getdate
+from frappe.utils import add_months, get_first_day, get_year_ending, getdate
 
 from hrms.hr.doctype.leave_application.test_leave_application import get_employee, get_leave_period
 from hrms.hr.doctype.leave_policy.test_leave_policy import create_leave_policy
@@ -116,6 +116,50 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 
 		# pro-rated leave allocation for 9 months
 		self.assertEqual(allocation, 9)
+
+	def test_pro_rated_leave_allocation_for_custom_date_range(self):
+		leave_type = frappe.get_doc(
+			{
+				"doctype": "Leave Type",
+				"leave_type_name": "_Test Leave Type_",
+				"include_holiday": 1,
+				"is_earned_leave": 1,
+				"allocate_on_day": "First Day",
+			}
+		).submit()
+
+		leave_policy = frappe.get_doc(
+			{
+				"doctype": "Leave Policy",
+				"title": "Test Leave Policy",
+				"leave_policy_details": [
+					{
+						"leave_type": leave_type.name,
+						"annual_allocation": 12,
+					}
+				],
+			}
+		).submit()
+
+		today_date = getdate()
+
+		leave_policy_assignment = frappe.new_doc("Leave Policy Assignment")
+		leave_policy_assignment.employee = self.employee
+		leave_policy_assignment.leave_policy = leave_policy.name
+		leave_policy_assignment.effective_from = getdate(get_first_day(today_date))
+		leave_policy_assignment.effective_to = getdate(get_year_ending(today_date))
+		leave_policy_assignment.submit()
+
+		new_leaves_allocated = frappe.db.get_value(
+			"Leave Allocation",
+			{
+				"employee": leave_policy_assignment.employee,
+				"leave_policy_assignment": leave_policy_assignment.name,
+			},
+			"new_leaves_allocated",
+		)
+
+		self.assertGreater(new_leaves_allocated, 0)
 
 	def tearDown(self):
 		frappe.db.set_value("Employee", self.employee.name, "date_of_joining", self.original_doj)

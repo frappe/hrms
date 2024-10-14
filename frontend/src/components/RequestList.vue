@@ -1,8 +1,5 @@
 <template>
-	<div
-		class="flex flex-col bg-white rounded mt-5 overflow-auto"
-		v-if="props.items?.length"
-	>
+	<div class="flex flex-col bg-white rounded mt-5 overflow-auto" v-if="props.items?.length">
 		<div
 			class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
 			v-for="link in props.items"
@@ -31,7 +28,7 @@
 			</Button>
 		</router-link>
 	</div>
-	<EmptyState message="You have no requests" v-else />
+	<EmptyState :message="emptyStateMessage" v-else />
 
 	<ion-modal
 		ref="modal"
@@ -40,14 +37,7 @@
 		:initial-breakpoint="1"
 		:breakpoints="[0, 1]"
 	>
-		<RequestActionSheet
-			:fields="
-				selectedRequest.doctype === 'Leave Application'
-					? LEAVE_FIELDS
-					: EXPENSE_CLAIM_FIELDS
-			"
-			v-model="selectedRequest"
-		/>
+		<RequestActionSheet :fields="fieldsMap[selectedRequest?.doctype]" v-model="selectedRequest" />
 	</ion-modal>
 </template>
 
@@ -59,6 +49,9 @@ import RequestActionSheet from "@/components/RequestActionSheet.vue"
 import {
 	LEAVE_FIELDS,
 	EXPENSE_CLAIM_FIELDS,
+	ATTENDANCE_REQUEST_FIELDS,
+	SHIFT_REQUEST_FIELDS,
+	SHIFT_FIELDS,
 } from "@/data/config/requestSummaryFields"
 
 const props = defineProps({
@@ -80,7 +73,19 @@ const props = defineProps({
 		type: String,
 		default: "",
 	},
+	emptyStateMessage: {
+		type: String,
+		default: "You have no requests",
+	},
 })
+
+const fieldsMap = {
+	"Leave Application": LEAVE_FIELDS,
+	"Expense Claim": EXPENSE_CLAIM_FIELDS,
+	"Attendance Request": ATTENDANCE_REQUEST_FIELDS,
+	"Shift Request": SHIFT_REQUEST_FIELDS,
+	"Shift Assignment": SHIFT_FIELDS,
+}
 
 const isRequestModalOpen = ref(false)
 const selectedRequest = ref(null)

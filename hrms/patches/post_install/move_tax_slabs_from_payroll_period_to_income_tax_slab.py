@@ -6,9 +6,7 @@ import frappe
 
 
 def execute():
-	if not (
-		frappe.db.table_exists("Payroll Period") and frappe.db.table_exists("Taxable Salary Slab")
-	):
+	if not (frappe.db.table_exists("Payroll Period") and frappe.db.table_exists("Taxable Salary Slab")):
 		return
 
 	if frappe.db.a_row_exists("Income Tax Slab"):
@@ -32,16 +30,14 @@ def execute():
 
 	for company in frappe.get_all("Company"):
 		payroll_periods = frappe.db.sql(
-			"""
+			f"""
 			SELECT
-				{0}
+				{select_fields}
 			FROM
 				`tabPayroll Period`
 			WHERE company=%s
 			ORDER BY start_date DESC
-		""".format(
-				select_fields
-			),
+		""",
 			company.name,
 			as_dict=1,
 		)
@@ -92,9 +88,7 @@ def execute():
 	if not frappe.db.table_exists("Employee Tax Exemption Proof Submission"):
 		return
 
-	if not frappe.db.has_column(
-		"Employee Tax Exemption Proof Submission", "income_from_other_sources"
-	):
+	if not frappe.db.has_column("Employee Tax Exemption Proof Submission", "income_from_other_sources"):
 		return
 
 	migrated = []

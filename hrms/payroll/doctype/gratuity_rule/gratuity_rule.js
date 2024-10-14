@@ -1,14 +1,12 @@
 // Copyright (c) 2020, Frappe Technologies Pvt. Ltd. and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('Gratuity Rule', {
+frappe.ui.form.on("Gratuity Rule", {
 	// refresh: function(frm) {
-
 	// }
 });
 
-frappe.ui.form.on('Gratuity Rule Slab', {
-
+frappe.ui.form.on("Gratuity Rule Slab", {
 	/*
 		Slabs should be in order like
 
@@ -36,5 +34,5 @@ frappe.ui.form.on('Gratuity Rule Slab', {
 		if (row.to_year <= row.from_year && row.to_year === 0) {
 			frappe.throw(__("To(Year) year can not be less than From(year)"));
 		}
-	}
+	},
 });

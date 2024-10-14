@@ -87,9 +87,7 @@ def get_earning_and_deduction_types(salary_slips):
 		component_type = get_salary_component_type(salary_compoent)
 		salary_component_and_type[_(component_type)].append(salary_compoent)
 
-	return sorted(salary_component_and_type[_("Earning")]), sorted(
-		salary_component_and_type[_("Deduction")]
-	)
+	return sorted(salary_component_and_type[_("Earning")]), sorted(salary_component_and_type[_("Deduction")])
 
 
 def update_column_width(ss, columns):

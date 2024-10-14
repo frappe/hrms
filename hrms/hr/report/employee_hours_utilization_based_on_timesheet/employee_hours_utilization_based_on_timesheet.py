@@ -32,10 +32,8 @@ class EmployeeHoursReport:
 	def validate_standard_working_hours(self):
 		self.standard_working_hours = frappe.db.get_single_value("HR Settings", "standard_working_hours")
 		if not self.standard_working_hours:
-			msg = _(
-				"The metrics for this report are calculated based on the Standard Working Hours. Please set {0} in {1}."
-			).format(
-				frappe.bold("Standard Working Hours"),
+			msg = _("The metrics for this report are calculated based on {0}. Please set {0} in {1}.").format(
+				frappe.bold(_("Standard Working Hours")),
 				frappe.utils.get_link_to_form("HR Settings", "HR Settings"),
 			)
 
@@ -140,25 +138,24 @@ class EmployeeHoursReport:
 				else:
 					additional_filters += f" AND tt.{field} = {self.filters.get(field)!r}"
 
+		# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 		self.filtered_time_logs = frappe.db.sql(
-			"""
+			f"""
 			SELECT tt.employee AS employee, ttd.hours AS hours, ttd.is_billable AS is_billable, ttd.project AS project
 			FROM `tabTimesheet Detail` AS ttd
 			JOIN `tabTimesheet` AS tt
 				ON ttd.parent = tt.name
 			WHERE tt.employee IS NOT NULL
-			AND tt.start_date BETWEEN '{0}' AND '{1}'
-			AND tt.end_date BETWEEN '{0}' AND '{1}'
-			{2}
-		""".format(
-				self.filters.from_date, self.filters.to_date, additional_filters
-			)
+			AND tt.start_date BETWEEN '{self.filters.from_date}' AND '{self.filters.to_date}'
+			AND tt.end_date BETWEEN '{self.filters.from_date}' AND '{self.filters.to_date}'
+			{additional_filters}
+		"""
 		)
 
 	def generate_stats_by_employee(self):
 		self.stats_by_employee = frappe._dict()
 
-		for emp, hours, is_billable, project in self.filtered_time_logs:
+		for emp, hours, is_billable, __ in self.filtered_time_logs:
 			self.stats_by_employee.setdefault(emp, frappe._dict()).setdefault("billed_hours", 0.0)
 
 			self.stats_by_employee[emp].setdefault("non_billed_hours", 0.0)
@@ -178,7 +175,7 @@ class EmployeeHoursReport:
 
 	def calculate_utilizations(self):
 		TOTAL_HOURS = flt(self.standard_working_hours * self.day_span, 2)
-		for emp, data in self.stats_by_employee.items():
+		for __, data in self.stats_by_employee.items():
 			data["total_hours"] = TOTAL_HOURS
 			data["untracked_hours"] = flt(TOTAL_HOURS - data["billed_hours"] - data["non_billed_hours"], 2)
 
@@ -186,9 +183,7 @@ class EmployeeHoursReport:
 			if data["untracked_hours"] < 0:
 				data["untracked_hours"] = 0.0
 
-			data["per_util"] = flt(
-				((data["billed_hours"] + data["non_billed_hours"]) / TOTAL_HOURS) * 100, 2
-			)
+			data["per_util"] = flt(((data["billed_hours"] + data["non_billed_hours"]) / TOTAL_HOURS) * 100, 2)
 			data["per_util_billed_only"] = flt((data["billed_hours"] / TOTAL_HOURS) * 100, 2)
 
 	def generate_report_summary(self):

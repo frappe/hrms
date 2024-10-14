@@ -3,7 +3,8 @@
 		<div class="text-lg font-medium text-gray-900">{{ title }}</div>
 		<div class="flex flex-col bg-white rounded">
 			<router-link
-				class="flex flex-row flex-start p-4 items-center justify-between border-b"
+				class="flex flex-row flex-start p-4 items-center justify-between"
+				:class="link !== props.items[props.items.length - 1] && 'border-b'"
 				v-for="link in props.items"
 				:key="link.title"
 				:to="{ name: link.route }"
