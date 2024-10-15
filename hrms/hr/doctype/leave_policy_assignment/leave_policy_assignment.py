@@ -182,7 +182,11 @@ class LeavePolicyAssignment(Document):
 					months_passed += 1
 
 			elif current_date.year > from_date.year:
-				months_passed = (12 - from_date.month) + current_date.month
+				months_passed = (
+					(12 - from_date.month)
+					+ (current_date.year - from_date.year - 1) * 12
+					+ current_date.month
+				)
 				if consider_current_month:
 					months_passed += 1
 
