@@ -33,7 +33,7 @@ class EmployeeAdvance(Document):
 
 	def on_cancel(self):
 		self.ignore_linked_doctypes = "GL Entry"
-		self.check_linked_payment_enry()
+		self.check_linked_payment_entry()
 		self.set_status(update=True)
 
 	def on_update(self):
@@ -176,7 +176,7 @@ class EmployeeAdvance(Document):
 			)
 		).run()[0][0] or 0.0
 
-	def check_linked_payment_enry(self):
+	def check_linked_payment_entry(self):
 		from erpnext.accounts.utils import (
 			remove_ref_doc_link_from_pe,
 			update_accounting_ledgers_after_reference_removal,
