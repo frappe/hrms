@@ -923,6 +923,8 @@ class PayrollEntry(Document):
 
 					salary_slip_total -= salary_detail.amount
 
+			salary_slip_total -= flt(salary_detail.get("total_loan_repayment"))
+
 		bank_entry = None
 		if salary_slip_total > 0:
 			remark = "withheld salaries" if for_withheld_salaries else "salaries"
@@ -946,6 +948,7 @@ class PayrollEntry(Document):
 				SalarySlip.employee,
 				SalarySlip.salary_structure,
 				SalarySlip.salary_withholding_cycle,
+				SalarySlip.total_loan_repayment,
 				SalaryDetail.salary_component,
 				SalaryDetail.amount,
 				SalaryDetail.parentfield,
