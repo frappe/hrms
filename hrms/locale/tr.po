@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-10-06 09:34+0000\n"
-"PO-Revision-Date: 2024-10-14 12:24\n"
+"PO-Revision-Date: 2024-10-15 12:37\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -833,7 +833,7 @@ msgstr "İzin Tahsisi"
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Allocation"
-msgstr "Ayrılan"
+msgstr "Tahsis"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.js:107
 msgid "Allocation Expired!"
@@ -1430,7 +1430,7 @@ msgstr "Atanan Maaş Yapınıza göre, faydalar için başvuruda bulunamazsını
 #. Label of the asset_name (Data) field in DocType 'Full and Final Asset'
 #: hrms/hr/doctype/full_and_final_asset/full_and_final_asset.json
 msgid "Asset Name"
-msgstr "Varlık İsmi"
+msgstr "Varlık Adı"
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:88
 msgid "Asset Recovery Cost for {0}: {1}"
@@ -8029,7 +8029,7 @@ msgstr "Devamlılık Kaydediliyor"
 #: hrms/hr/workspace/performance/performance.json
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Masters"
-msgstr "Ana Veriler"
+msgstr "Kayıtlar"
 
 #. Label of the max_amount_eligible (Currency) field in DocType 'Employee
 #. Benefit Claim'
@@ -9893,7 +9893,7 @@ msgstr "Seyahat Amacı"
 #: hrms/hr/doctype/leave_type/leave_type.json
 #: hrms/hr/doctype/vehicle_service/vehicle_service.json
 msgid "Quarterly"
-msgstr "3 Aylık"
+msgstr "Üç Aylık"
 
 #. Label of the questionnaire_email_sent (Check) field in DocType 'Exit
 #. Interview'
@@ -12144,11 +12144,11 @@ msgstr "Yarım Günlük çalışma için ödenecek ücretin oranı"
 
 #: hrms/hr/report/project_profitability/project_profitability.py:101
 msgid "The metrics for this report are calculated based on the {0}. Please set {0} in {1}."
-msgstr ""
+msgstr "Bu rapordaki metrikler {0} temel alınarak hesaplanır. Lütfen {1} sayfasında {0} alanını ayarlayın."
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:35
 msgid "The metrics for this report are calculated based on {0}. Please set {0} in {1}."
-msgstr ""
+msgstr "Bu rapordaki metrikler {0} temel alınarak hesaplanır. Lütfen {1} sayfasında {0} alanını ayarlayın."
 
 #. Description of the 'Encrypt Salary Slips in Emails' (Check) field in DocType
 #. 'Payroll Settings'
