@@ -174,7 +174,7 @@ def get_employee_field_property(employee, fieldname):
 	}
 
 
-def validate_dates(doc, from_date, to_date, restrict_future_dates = True):
+def validate_dates(doc, from_date, to_date, restrict_future_dates=True):
 	date_of_joining, relieving_date = frappe.db.get_value(
 		"Employee", doc.employee, ["date_of_joining", "relieving_date"]
 	)
