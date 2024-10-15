@@ -749,7 +749,7 @@ class TestPayrollEntry(IntegrationTestCase):
 			total_loan_repayment=loan.monthly_repayment_amount,
 		)
 
-		bank_entry = payroll_entry.make_bank_entry()
+		payroll_entry.make_bank_entry()
 		submit_bank_entry(payroll_entry.name)
 
 
