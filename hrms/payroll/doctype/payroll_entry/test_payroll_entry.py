@@ -685,7 +685,7 @@ class TestPayrollEntry(FrappeTestCase):
 			branch=branch,
 			cost_center="Main - _TC",
 			payment_account="Cash - _TC",
-			total_loan_repayment=loan.monthly_repayment_amount
+			total_loan_repayment=loan.monthly_repayment_amount,
 		)
 
 		bank_entry = payroll_entry.make_bank_entry()
