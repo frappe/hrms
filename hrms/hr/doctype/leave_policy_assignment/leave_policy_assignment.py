@@ -182,9 +182,7 @@ class LeavePolicyAssignment(Document):
 					months_passed += 1
 
 			elif current_date.year > from_date.year:
-				months_passed = (
-					(12 - from_date.month) + (current_date.year - from_date.year - 1) * 12 + current_date.month
-				)
+				months_passed = (12 - from_date.month) + current_date.month
 				if consider_current_month:
 					months_passed += 1
 
@@ -288,7 +286,16 @@ def create_assignment_for_multiple_employees(employees, data):
 	failed = []
 
 	for employee in employees:
-		assignment = create_assignment(employee, data)
+		assignment = frappe.new_doc("Leave Policy Assignment")
+		assignment.employee = employee
+		assignment.assignment_based_on = data.assignment_based_on or None
+		assignment.leave_policy = data.leave_policy
+		assignment.effective_from = getdate(data.effective_from) or None
+		assignment.effective_to = getdate(data.effective_to) or None
+		assignment.leave_period = data.leave_period or None
+		assignment.carry_forward = data.carry_forward
+		assignment.save()
+
 		savepoint = "before_assignment_submission"
 		try:
 			frappe.db.savepoint(savepoint)
@@ -304,20 +311,6 @@ def create_assignment_for_multiple_employees(employees, data):
 		show_assignment_submission_status(failed)
 
 	return docs_name
-
-
-@frappe.whitelist()
-def create_assignment(employee, data):
-	assignment = frappe.new_doc("Leave Policy Assignment")
-	assignment.employee = employee
-	assignment.assignment_based_on = data.assignment_based_on or None
-	assignment.leave_policy = data.leave_policy
-	assignment.effective_from = getdate(data.effective_from) or None
-	assignment.effective_to = getdate(data.effective_to) or None
-	assignment.leave_period = data.leave_period or None
-	assignment.carry_forward = data.carry_forward
-	assignment.save()
-	return assignment
 
 
 def show_assignment_submission_status(failed):
