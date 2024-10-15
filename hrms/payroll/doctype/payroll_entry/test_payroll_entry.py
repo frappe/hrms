@@ -752,6 +752,7 @@ class TestPayrollEntry(IntegrationTestCase):
 		bank_entry = payroll_entry.make_bank_entry()
 		submit_bank_entry(payroll_entry.name)
 
+
 def get_payroll_entry(**args):
 	args = frappe._dict(args)
 
