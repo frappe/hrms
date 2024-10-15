@@ -19,7 +19,7 @@ class OverlappingAttendanceRequestError(frappe.ValidationError):
 class AttendanceRequest(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
-		validate_dates(self, self.from_date, self.to_date)
+		validate_dates(self, self.from_date, self.to_date, False)
 		self.validate_half_day()
 		self.validate_request_overlap()
 
