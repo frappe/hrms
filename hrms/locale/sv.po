@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-10-06 09:34+0000\n"
-"PO-Revision-Date: 2024-10-07 09:11\n"
+"PO-Revision-Date: 2024-10-15 12:37\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -8761,7 +8761,7 @@ msgstr "Arbete"
 #. Option for the 'Status' (Select) field in DocType 'Job Requisition'
 #: hrms/hr/doctype/job_requisition/job_requisition.json
 msgid "On Hold"
-msgstr "Parkerad"
+msgstr "Spärrad"
 
 #. Option for the 'Status' (Select) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
@@ -9350,7 +9350,7 @@ msgstr "Väntande (obetald) belopp från tidigare förskott"
 #. Label of the pending_amount (Currency) field in DocType 'Employee Advance'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 msgid "Pending Amount"
-msgstr "Väntar på Kvantitet"
+msgstr "Utestående Belopp"
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:60
 msgid "Pending Asset Returns"
@@ -9932,7 +9932,7 @@ msgstr "Initierad Av"
 #. Label of the rate (Float) field in DocType 'Expense Taxes and Charges'
 #: hrms/hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
 msgid "Rate"
-msgstr "Pris"
+msgstr "Sats"
 
 #. Label of the rate_goals_manually (Check) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
