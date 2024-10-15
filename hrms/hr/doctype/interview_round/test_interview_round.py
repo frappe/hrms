@@ -1,10 +1,10 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 
 # import frappe
 
 
-class TestInterviewRound(FrappeTestCase):
+class TestInterviewRound(IntegrationTestCase):
 	pass

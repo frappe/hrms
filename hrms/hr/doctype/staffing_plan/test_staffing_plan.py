@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, nowdate
 
 from hrms.hr.doctype.staffing_plan.staffing_plan import ParentCompanyError, SubsidiaryCompanyError
@@ -10,7 +10,7 @@ from hrms.hr.doctype.staffing_plan.staffing_plan import ParentCompanyError, Subs
 test_dependencies = ["Designation"]
 
 
-class TestStaffingPlan(FrappeTestCase):
+class TestStaffingPlan(IntegrationTestCase):
 	def test_staffing_plan(self):
 		_set_up()
 		frappe.db.set_value("Company", "_Test Company 3", "is_group", 1)
