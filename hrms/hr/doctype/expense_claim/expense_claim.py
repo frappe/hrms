@@ -9,6 +9,9 @@ from frappe.query_builder.functions import Sum
 from frappe.utils import cstr, flt, get_link_to_form
 
 import erpnext
+from erpnext.accounts.doctype.repost_accounting_ledger.repost_accounting_ledger import (
+	validate_docs_for_voucher_types,
+)
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from erpnext.accounts.general_ledger import make_gl_entries
 from erpnext.controllers.accounts_controller import AccountsController
@@ -106,6 +109,11 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		update_reimbursed_amount(self)
 
 		self.update_claimed_amount_in_employee_advance()
+
+	def on_update_after_submit(self):
+		if self.check_if_fields_updated([], {"taxes": ("account_head")}):
+			validate_docs_for_voucher_types(["Expense Claim"])
+			self.repost_accounting_entries()
 
 	def on_cancel(self):
 		self.update_task_and_project()
