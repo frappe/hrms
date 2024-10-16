@@ -5,18 +5,18 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.query_builder import Criterion
 from frappe.utils import get_link_to_form
 
 from hrms.hr.doctype.shift_assignment.shift_assignment import has_overlapping_timings
 from hrms.hr.utils import share_doc_with_approver, validate_active_employee
+from hrms.mixins.pwa_notifications import PWANotificationsMixin
 
 
 class OverlappingShiftRequestError(frappe.ValidationError):
 	pass
 
 
-class ShiftRequest(Document):
+class ShiftRequest(Document, PWANotificationsMixin):
 	def validate(self):
 		validate_active_employee(self.employee)
 		self.validate_from_to_dates("from_date", "to_date")
@@ -26,6 +26,10 @@ class ShiftRequest(Document):
 
 	def on_update(self):
 		share_doc_with_approver(self, self.approver)
+		self.notify_approval_status()
+
+	def after_insert(self):
+		self.notify_approver()
 
 	def on_submit(self):
 		if self.status not in ["Approved", "Rejected"]:
