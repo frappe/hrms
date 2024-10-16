@@ -5,11 +5,7 @@
 				class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b"
 			>
 				<div class="flex flex-row items-center">
-					<Button
-						variant="ghost"
-						class="!pl-0 hover:bg-white"
-						@click="router.back()"
-					>
+					<Button variant="ghost" class="!px-1 mr-1 hover:bg-white" @click="router.back()">
 						<FeatherIcon name="chevron-left" class="h-5 w-5" />
 					</Button>
 					<h2 class="text-xl font-semibold text-gray-900">{{ pageTitle }}</h2>
@@ -26,7 +22,11 @@
 								: '',
 						]"
 					/>
-					<router-link :to="{ name: formViewRoute }" v-slot="{ navigate }">
+					<router-link
+						v-if="createPermission?.data?.has_permission && props.doctype != 'Employee Checkin'"
+						:to="{ name: formViewRoute }"
+						v-slot="{ navigate }"
+					>
 						<Button variant="solid" class="mr-2" @click="navigate">
 							<template #prefix>
 								<FeatherIcon name="plus" class="w-4" />
@@ -49,8 +49,10 @@
 			ref="scrollContainer"
 			@scroll="() => handleScroll()"
 		>
-			<div class="w-full mt-5">
+			<div class="w-full">
 				<TabButtons
+					v-if="props.tabButtons"
+					class="mt-5"
 					:buttons="[{ label: tabButtons[0] }, { label: tabButtons[1] }]"
 					v-model="activeTab"
 				/>
@@ -64,7 +66,16 @@
 						v-for="link in documents.data"
 						:key="link.name"
 					>
+						<component
+							v-if="props.doctype === 'Employee Checkin'"
+							:is="listItemComponent[doctype]"
+							:doc="link"
+							:isTeamRequest="isTeamRequest"
+							:workflowStateField="workflowStateField"
+							@click="openRequestModal(link)"
+						/>
 						<router-link
+							v-else
 							:to="{ name: detailViewRoute, params: { id: link.name } }"
 							v-slot="{ navigate }"
 						>
@@ -84,10 +95,7 @@
 				/>
 
 				<!-- Loading Indicator -->
-				<div
-					v-if="documents.loading"
-					class="flex mt-2 items-center justify-center"
-				>
+				<div v-if="documents.loading" class="flex mt-2 items-center justify-center">
 					<LoadingIndicator class="w-8 h-8 text-gray-800" />
 				</div>
 			</div>
@@ -105,6 +113,20 @@
 			</template>
 		</CustomIonModal>
 	</ion-content>
+
+	<ion-modal
+		ref="modal"
+		:is-open="isRequestModalOpen"
+		@didDismiss="closeRequestModal"
+		:initial-breakpoint="1"
+		:breakpoints="[0, 1]"
+	>
+		<RequestActionSheet
+			:fields="EMPLOYEE_CHECKIN_FIELDS"
+			:showOpenForm="false"
+			v-model="selectedRequest"
+		/>
+	</ion-modal>
 </template>
 
 <script setup>
@@ -114,23 +136,25 @@ import {
 	modalController,
 	IonHeader,
 	IonContent,
+	IonModal,
 	IonRefresher,
 	IonRefresherContent,
 } from "@ionic/vue"
 
-import {
-	FeatherIcon,
-	createResource,
-	LoadingIndicator,
-	debounce,
-} from "frappe-ui"
+import { FeatherIcon, createResource, LoadingIndicator, debounce } from "frappe-ui"
 
 import TabButtons from "@/components/TabButtons.vue"
+import EmployeeCheckinItem from "@/components/EmployeeCheckinItem.vue"
+import AttendanceRequestItem from "@/components/AttendanceRequestItem.vue"
+import ShiftRequestItem from "@/components/ShiftRequestItem.vue"
+import ShiftAssignmentItem from "@/components/ShiftAssignmentItem.vue"
 import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
 import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 import EmployeeAdvanceItem from "@/components/EmployeeAdvanceItem.vue"
 import ListFiltersActionSheet from "@/components/ListFiltersActionSheet.vue"
 import CustomIonModal from "@/components/CustomIonModal.vue"
+import RequestActionSheet from "@/components/RequestActionSheet.vue"
+import { EMPLOYEE_CHECKIN_FIELDS } from "@/data/config/requestSummaryFields"
 
 import useWorkflow from "@/composables/workflow"
 import { useListUpdate } from "@/composables/realtime"
@@ -154,7 +178,7 @@ const props = defineProps({
 	},
 	tabButtons: {
 		type: Array,
-		required: true,
+		required: false,
 	},
 	pageTitle: {
 		type: String,
@@ -163,19 +187,26 @@ const props = defineProps({
 })
 
 const listItemComponent = {
+	"Employee Checkin": markRaw(EmployeeCheckinItem),
+	"Attendance Request": markRaw(AttendanceRequestItem),
+	"Shift Request": markRaw(ShiftRequestItem),
+	"Shift Assignment": markRaw(ShiftAssignmentItem),
 	"Leave Application": markRaw(LeaveRequestItem),
 	"Expense Claim": markRaw(ExpenseClaimItem),
 	"Employee Advance": markRaw(EmployeeAdvanceItem),
 }
 
 const router = useRouter()
+const dayjs = inject("$dayjs")
 const socket = inject("$socket")
 const employee = inject("$employee")
 const filterMap = reactive({})
-const activeTab = ref(props.tabButtons[0])
+const activeTab = ref(props.tabButtons ? props.tabButtons[0] : undefined)
 const areFiltersApplied = ref(false)
 const appliedFilters = ref([])
 const workflowStateField = ref(null)
+const isRequestModalOpen = ref(false)
+const selectedRequest = ref(null)
 
 // infinite scroll
 const scrollContainer = ref(null)
@@ -190,7 +221,7 @@ const listOptions = ref({
 
 // computed properties
 const isTeamRequest = computed(() => {
-	return activeTab.value === props.tabButtons[1]
+	return props.tabButtons && activeTab.value === props.tabButtons[1]
 })
 
 const formViewRoute = computed(() => {
@@ -248,7 +279,28 @@ const documents = createResource({
 	},
 })
 
+const createPermission = createResource({
+	url: "frappe.client.has_permission",
+	params: { doctype: props.doctype, docname: null, perm_type: "create" },
+	auto: true,
+})
+
 // helper functions
+const openRequestModal = async (request) => {
+	selectedRequest.value = request
+	selectedRequest.value.doctype = "Employee Checkin"
+	selectedRequest.value.date = request.time
+	selectedRequest.value.formatted_time = dayjs(request.time).format("HH:mm a")
+	selectedRequest.value.formatted_latitude = `${Number(request.latitude).toFixed(5)}°`
+	selectedRequest.value.formatted_longitude = `${Number(request.longitude).toFixed(5)}°`
+	isRequestModalOpen.value = true
+}
+
+const closeRequestModal = async () => {
+	isRequestModalOpen.value = false
+	selectedRequest.value = null
+}
+
 function initializeFilters() {
 	props.filterConfig.forEach((filter) => {
 		filterMap[filter.fieldname] = {
@@ -274,8 +326,7 @@ function prepareFilters() {
 		}
 
 		value = filterMap[fieldname].value
-		if (condition && value)
-			appliedFilters.value.push([props.doctype, fieldname, condition, value])
+		if (condition && value) appliedFilters.value.push([props.doctype, fieldname, condition, value])
 	}
 }
 

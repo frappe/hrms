@@ -177,6 +177,7 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "project",
    "fieldtype": "Link",
    "label": "Project",
@@ -248,6 +249,7 @@
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
    "fetch_from": "company.cost_center",
    "fetch_if_empty": 1,
    "fieldname": "cost_center",
@@ -388,7 +390,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-06-12 15:56:45.609119",
+ "modified": "2024-10-09 14:16:06.715586",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim",

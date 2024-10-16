@@ -5,12 +5,12 @@ import os
 
 import frappe
 import frappe.utils
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 
 # test_records = frappe.get_test_records('Daily Work Summary')
 
 
-class TestDailyWorkSummary(FrappeTestCase):
+class TestDailyWorkSummary(IntegrationTestCase):
 	def test_email_trigger(self):
 		self.setup_and_prepare_test()
 		for d in self.users:

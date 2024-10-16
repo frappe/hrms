@@ -1,5 +1,5 @@
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import (
 	add_days,
 	add_months,
@@ -27,7 +27,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.tests.test_utils import get_first_sunday
 
 
-class TestLeaveAllocation(FrappeTestCase):
+class TestLeaveAllocation(IntegrationTestCase):
 	def setUp(self):
 		for doctype in [
 			"Leave Period",

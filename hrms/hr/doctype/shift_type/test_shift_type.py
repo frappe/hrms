@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, get_time, get_year_ending, get_year_start, getdate, now_datetime
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -14,7 +14,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.tests.test_utils import add_date_to_holiday_list
 
 
-class TestShiftType(FrappeTestCase):
+class TestShiftType(IntegrationTestCase):
 	def setUp(self):
 		frappe.db.delete("Shift Type")
 		frappe.db.delete("Shift Assignment")
@@ -653,7 +653,9 @@ def setup_shift_type(**args):
 	return shift_type
 
 
-def make_shift_assignment(shift_type, employee, start_date, end_date=None, do_not_submit=False):
+def make_shift_assignment(
+	shift_type, employee, start_date, end_date=None, do_not_submit=False, shift_location=None
+):
 	shift_assignment = frappe.get_doc(
 		{
 			"doctype": "Shift Assignment",
@@ -662,6 +664,7 @@ def make_shift_assignment(shift_type, employee, start_date, end_date=None, do_no
 			"employee": employee,
 			"start_date": start_date,
 			"end_date": end_date,
+			"shift_location": shift_location,
 		}
 	)
 	if not do_not_submit:

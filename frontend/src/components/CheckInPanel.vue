@@ -4,7 +4,11 @@
 
 		<template v-if="settings.data?.allow_employee_checkin_from_mobile_app">
 			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
-				Last {{ lastLogType }} was at {{ lastLogTime }}
+				<span>Last {{ lastLogType }} was at {{ formatTimestamp(lastLog.time) }}</span>
+				<span class="whitespace-pre"> &middot; </span>
+				<router-link :to="{ name: 'EmployeeCheckinListView' }" v-slot="{ navigate }">
+					<span @click="navigate" class="underline">View List</span>
+				</router-link>
 			</div>
 			<Button
 				class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
@@ -75,6 +79,8 @@ import { createResource, createListResource, toast, FeatherIcon } from "frappe-u
 import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
 
+import { formatTimestamp } from "@/utils/formatters"
+
 const DOCTYPE = "Employee Checkin"
 
 const socket = inject("$socket")
@@ -113,18 +119,6 @@ const nextAction = computed(() => {
 	return lastLog?.value?.log_type === "IN"
 		? { action: "OUT", label: "Check Out" }
 		: { action: "IN", label: "Check In" }
-})
-
-const lastLogTime = computed(() => {
-	const timestamp = lastLog?.value?.time
-	const formattedTime = dayjs(timestamp).format("hh:mm a")
-
-	if (dayjs(timestamp).isToday()) return formattedTime
-	else if (dayjs(timestamp).isYesterday()) return `${formattedTime} yesterday`
-	else if (dayjs(timestamp).isSame(dayjs(), "year"))
-		return `${formattedTime} on ${dayjs(timestamp).format("D MMM")}`
-
-	return `${formattedTime} on ${dayjs(timestamp).format("D MMM, YYYY")}`
 })
 
 function handleLocationSuccess(position) {

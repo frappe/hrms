@@ -8,7 +8,7 @@ class PWANotificationsMixin:
 	"""Mixin class for managing PWA updates"""
 
 	def notify_approval_status(self):
-		"""Send Leave Application & Expense Claim Approval status notification - to employees"""
+		"""Send Leave Application, Expense Claim & Shift Request Approval status notification - to employees"""
 		status_field = self._get_doc_status_field()
 		status = self.get(status_field)
 
@@ -31,7 +31,7 @@ class PWANotificationsMixin:
 			notification.insert(ignore_permissions=True)
 
 	def notify_approver(self):
-		"""Send new Leave Application & Expense Claim request notification - to approvers"""
+		"""Send new Leave Application, Expense Claim & Shift Request request notification - to approvers"""
 		from_user = self._get_employee_user()
 		to_user = self._get_doc_approver()
 
@@ -53,6 +53,7 @@ class PWANotificationsMixin:
 		APPROVAL_STATUS_FIELD = {
 			"Leave Application": "status",
 			"Expense Claim": "approval_status",
+			"Shift Request": "status",
 		}
 		return APPROVAL_STATUS_FIELD[self.doctype]
 
@@ -60,6 +61,7 @@ class PWANotificationsMixin:
 		APPROVER_FIELD = {
 			"Leave Application": "leave_approver",
 			"Expense Claim": "expense_approver",
+			"Shift Request": "approver",
 		}
 		approver_field = APPROVER_FIELD[self.doctype]
 		return self.get(approver_field)

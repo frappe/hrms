@@ -6,7 +6,7 @@ import random
 
 import frappe
 from frappe.model.document import Document
-from frappe.tests.utils import FrappeTestCase, change_settings
+from frappe.tests import IntegrationTestCase, change_settings
 from frappe.utils import (
 	add_days,
 	add_months,
@@ -48,7 +48,7 @@ from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_s
 from hrms.tests.test_utils import get_email_by_subject, get_first_sunday
 
 
-class TestSalarySlip(FrappeTestCase):
+class TestSalarySlip(IntegrationTestCase):
 	def setUp(self):
 		setup_test()
 		frappe.flags.pop("via_payroll_entry", None)
@@ -59,6 +59,35 @@ class TestSalarySlip(FrappeTestCase):
 		frappe.db.set_single_value("Payroll Settings", "include_holidays_in_total_working_days", 0)
 		frappe.set_user("Administrator")
 		clear_cache()
+
+	@change_settings("Payroll Settings", {"show_leave_balances_in_salary_slip": True})
+	def test_leave_details(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		emp_id = make_employee("test_leave_details@salary.com")
+
+		first_sunday = get_first_sunday()
+		alloc = create_leave_allocation(
+			employee=emp_id,
+			from_date=first_sunday,
+			to_date=add_months(first_sunday, 10),
+			new_leaves_allocated=10,
+			leave_type="_Test Leave Type",
+		)
+		alloc.save()
+		alloc.submit()
+
+		make_leave_application(emp_id, first_sunday, add_days(first_sunday, 3), "_Test Leave Type")
+		next_month = add_months(nowdate(), 1)
+		make_leave_application(emp_id, next_month, add_days(next_month, 3), "_Test Leave Type")
+		ss = make_employee_salary_slip(emp_id, "Monthly")
+
+		leave_detail = ss.leave_details[0]
+		self.assertEqual(leave_detail.leave_type, "_Test Leave Type")
+		self.assertEqual(leave_detail.total_allocated_leaves, 10)
+		self.assertEqual(leave_detail.expired_leaves, 0)
+		self.assertEqual(leave_detail.used_leaves, 4)
+		self.assertEqual(leave_detail.available_leaves, 6)
 
 	def test_employee_status_inactive(self):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
@@ -1635,7 +1664,7 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertListEqual(tax_component, ["_Test TDS"])
 
 
-class TestSalarySlipSafeEval(FrappeTestCase):
+class TestSalarySlipSafeEval(IntegrationTestCase):
 	def test_safe_eval_for_salary_slip(self):
 		TEST_CASES = {
 			"1+1": 2,
