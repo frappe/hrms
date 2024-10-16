@@ -131,11 +131,7 @@
  "idx": 1,
  "istable": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2024-01-08 11:47:28.315381",
-=======
  "modified": "2024-10-10 14:58:36.316268",
->>>>>>> 3d6d71637 (fix(Expense Claim): update ledger after updating cost center)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim Detail",
