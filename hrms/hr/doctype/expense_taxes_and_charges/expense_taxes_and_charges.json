@@ -11,6 +11,7 @@
   "rate",
   "tax_amount",
   "col_break1",
+  "net_amount",
   "total",
   "description_sb",
   "description",
@@ -103,11 +104,19 @@
   {
    "fieldname": "description_sb",
    "fieldtype": "Section Break"
+  },
+  {
+   "columns": 2,
+   "fieldname": "net_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Net Amount",
+   "options": "currency"
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2024-03-27 13:09:44.377350",
+ "modified": "2024-09-24 06:50:23.861229",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Taxes and Charges",
