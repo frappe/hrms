@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-09-29 09:34+0000\n"
-"PO-Revision-Date: 2024-10-02 20:14\n"
+"POT-Creation-Date: 2024-10-06 09:34+0000\n"
+"PO-Revision-Date: 2024-10-15 12:37\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -654,7 +654,7 @@ msgstr "Önceki izin döneminin atamasından kullanılmayan izinleri bu atamaya 
 msgid "Added On"
 msgstr "Eklenme Tarihi"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1294
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1297
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
 msgstr "Maaş yapısında vergi bileşeni olmadığı için, Maaş Bileşeni ana kaydından vergi bileşenleri eklendi."
 
@@ -833,7 +833,7 @@ msgstr "İzin Tahsisi"
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Allocation"
-msgstr "Ayrılan"
+msgstr "Tahsis"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.js:107
 msgid "Allocation Expired!"
@@ -1416,7 +1416,7 @@ msgstr "Devam etmek istediğinizden emin misiniz?"
 
 #: hrms/hr/doctype/employee_referral/employee_referral.js:9
 msgid "Are you sure you want to reject the Employee Referral?"
-msgstr ""
+msgstr "Personel Refransını reddetmek istediğinizden emin misiniz?"
 
 #. Label of the arrival_date (Datetime) field in DocType 'Travel Itinerary'
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json
@@ -1430,11 +1430,11 @@ msgstr "Atanan Maaş Yapınıza göre, faydalar için başvuruda bulunamazsını
 #. Label of the asset_name (Data) field in DocType 'Full and Final Asset'
 #: hrms/hr/doctype/full_and_final_asset/full_and_final_asset.json
 msgid "Asset Name"
-msgstr "Varlık İsmi"
+msgstr "Varlık Adı"
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:88
 msgid "Asset Recovery Cost for {0}: {1}"
-msgstr ""
+msgstr "{0} için Varlık Kurtarma Maliyeti: {1}"
 
 #. Label of the section_break_15 (Section Break) field in DocType 'Full and
 #. Final Statement'
@@ -1462,7 +1462,7 @@ msgstr "Atama Yapısı"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:298
 msgid "Assigning Salary Structure"
-msgstr ""
+msgstr "Maaş Yapısı Atanıyor"
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:249
 msgid "Assigning Shift"
@@ -1474,7 +1474,7 @@ msgstr "Vardiya Atanıyor..."
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.py:113
 msgid "Assigning Structure..."
-msgstr ""
+msgstr "Yapılar Atanıyor..."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:282
 msgid "Assigning Structures..."
@@ -1738,11 +1738,11 @@ msgstr "Gösterilen becerilerin ortalama değerlendirmesi"
 
 #: hrms/hr/report/appraisal_overview/appraisal_overview.py:52
 msgid "Avg Feedback Score"
-msgstr ""
+msgstr "Ortalama Geri Bildirim Puanı"
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:218
 msgid "Avg Utilization"
-msgstr ""
+msgstr "Ortalama Kullanım"
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:224
 msgid "Avg Utilization (Billed Only)"
@@ -2067,11 +2067,11 @@ msgstr "Vardiya Ataması: {0} Devamlılık: {1} ile bağlantılı olduğu için 
 msgid "Cannot cancel Shift Assignment: {0} as it is linked to Employee Checkin: {1}"
 msgstr "Vardiya Ataması {0}, Personel Giriş/Çıkışı {1} ile bağlantılı olduğu için iptal edilemez"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:267
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:270
 msgid "Cannot create Salary Slip for Employee joining after Payroll Period"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:270
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:273
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr "Maaş Bordrosu Döneminden Önce Ayrılan Çalışan için Maaş Bordrosu Oluşturulamaz"
 
@@ -4087,7 +4087,7 @@ msgstr "çalışanlara Sağlanan Fayda Uygulama Detayı"
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Benefit Claim"
-msgstr "çalışanlara Sağlanan Fayda Talebi"
+msgstr "Fayda Talebi"
 
 #. Label of the employee_benefits (Table) field in DocType 'Employee Benefit
 #. Application'
@@ -4678,7 +4678,7 @@ msgstr "{0} isimli Personel Eğitim Katılımcılarında bulunamadı."
 msgid "Employee {0} on Half day on {1}"
 msgstr "Personel {0}, {1} tarihinde yarım gün çalışacak"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:575
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:578
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
 msgstr ""
 
@@ -4906,11 +4906,11 @@ msgstr "Hata Günlüğü"
 msgid "Error Message"
 msgstr "Hata Mesajı"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1210
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1213
 msgid "Error in formula or condition"
 msgstr "Formülde veya koşulda hata var"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2175
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2180
 msgid "Error in formula or condition: {0} in Income Tax Slab"
 msgstr "Formül veya koşulda hata: Gelir Vergisi Diliminde {0}"
 
@@ -4918,7 +4918,7 @@ msgstr "Formül veya koşulda hata: Gelir Vergisi Diliminde {0}"
 msgid "Error in some rows"
 msgstr "Bazı satırlarda hata var"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2254
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2259
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
 msgstr "{row_id}satırında {doctype} {doclink} değerlendirilirken hata oluştu. <br><br> <b>Hata:</b> {error} <br><br> <b>İpucu:</b> {description}"
 
@@ -6733,15 +6733,15 @@ msgstr "Gelir Vergisi Levhası Diğer Masraflar"
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1538
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1541
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "Gelir Vergisi Levhası, Bordro Dönemi Başlangıç Tarihi: {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1526
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1529
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "Gelir Vergisi Levhası, Maaş Yapısı Atamasında belirlenmemiş: {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1534
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1537
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "Gelir Vergisi Levhası: {0} devre dışı bırakıldı"
 
@@ -7710,7 +7710,7 @@ msgstr "{0} Türü Ayrılma özelliği değiştirilemez"
 msgid "Leave Without Pay"
 msgstr "Ücretsiz izin"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:466
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:469
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr "Ödemesiz bırakma, mahremiyetler {} kayıtlarıyla eşleşmiyor"
 
@@ -8029,7 +8029,7 @@ msgstr "Devamlılık Kaydediliyor"
 #: hrms/hr/workspace/performance/performance.json
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Masters"
-msgstr "Ana Veriler"
+msgstr "Kayıtlar"
 
 #. Label of the max_amount_eligible (Currency) field in DocType 'Employee
 #. Benefit Claim'
@@ -8212,7 +8212,7 @@ msgstr "Zorunlu Alan Eksik"
 msgid "Missing Relieving Date"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1529
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1532
 msgid "Missing Tax Slab"
 msgstr ""
 
@@ -8337,8 +8337,8 @@ msgstr "Hesabım"
 msgid "Name"
 msgstr "Adı"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1196
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2170
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1199
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2175
 msgid "Name error"
 msgstr "İsim hatası"
 
@@ -8375,7 +8375,7 @@ msgstr ""
 msgid "Net Pay Info"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:191
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:194
 msgid "Net Pay cannot be less than 0"
 msgstr "Net Ücret az 0 olamaz"
 
@@ -8488,7 +8488,7 @@ msgstr "Seçili Vardiya Talebi Yok"
 msgid "No Staffing Plans found for this Designation"
 msgstr "Bu Unvan için Personel Planı Bulunamadı"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:392
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:395
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
 msgstr "veri tarihleri için çalışanlar {0} için bulunma aktif veya varsayılan Maaş Yapısı"
 
@@ -8640,7 +8640,7 @@ msgstr "Not: Vardiya mevcut devamlılık kayıtlarının üzerine yazılmayacakt
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr "Not: Toplam tahsis edilen izinler {0} , dönem için onaylanan izinlerden {1} daha az olmamalıdır"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1862
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1865
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr "Not: Maaş bordronuz şifreyle korunmaktadır, PDF'i açmak için gereken şifre {0} formatındadır."
 
@@ -9424,7 +9424,7 @@ msgstr "Lütfen mevcut bileşenlerden herhangi birine {0} kalan faydaları ekley
 msgid "Please add the remaining benefits {0} to the application as pro-rata component"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:759
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:762
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr ""
 
@@ -9448,7 +9448,7 @@ msgstr "Günlük İş Özet Grubunu oluşturmadan önce varsayılan gelen hesab�
 msgid "Please enter the designation"
 msgstr "Lütfen belirti giriniz"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1851
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1854
 msgid "Please see attachment"
 msgstr "Lütfen dosya ekini inceleyin"
 
@@ -9558,7 +9558,7 @@ msgstr ""
 msgid "Please set Earning Component for Leave type: {0}."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:450
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:453
 msgid "Please set Payroll based on in Payroll settings"
 msgstr "Lütfen Bordro ayarlarına göre Bordro ayarı"
 
@@ -9591,7 +9591,7 @@ msgstr "Lütfen tüm {0} için Değerlendirme Şablonunu ayarlayın veya aşağ�
 msgid "Please set the Company"
 msgstr "Lütfen şirketi ayarlayın."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:263
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:266
 msgid "Please set the Date Of Joining for employee {0}"
 msgstr "Lütfen çalışan {0} için Katılma Tarihi'ni ayarlayın."
 
@@ -9998,7 +9998,7 @@ msgstr "Talep Nedeni"
 msgid "Reason for Withholding Salary"
 msgstr ""
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:287
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:288
 msgid "Reason for skipping auto attendance:"
 msgstr ""
 
@@ -10753,11 +10753,11 @@ msgstr ""
 msgid "Salary Slip creation is queued. It may take a few minutes"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:297
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:300
 msgid "Salary Slip of employee {0} already created for this period"
 msgstr "çalışanın maaş Kuponu {0} zaten bu dönem için tahrik edilen"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:303
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:306
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr "çalışanın maaş Kuponu {0} zaten zaman ayırmak için çalışanlar {1}"
 
@@ -10823,7 +10823,7 @@ msgstr ""
 msgid "Salary Structure Assignment for Employee already exists"
 msgstr "Çalışan için Maaş Yapısı Ataması zaten var"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:395
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:398
 msgid "Salary Structure Missing"
 msgstr "Maaş Yapısı Eksik"
 
@@ -10883,7 +10883,7 @@ msgstr "Kazanç ve Kesintiye Dayalı Maaş Dağılımı"
 msgid "Salary components should be part of the Salary Structure."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2319
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2324
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "Maaş bordrosu e-postaları gönderilmek üzere sıraya alınmıştır. Durum için {0} adresini kontrol edin."
 
@@ -11669,7 +11669,7 @@ msgstr "Başlangıç Zamanı"
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}"
 msgstr "Başlangıç ve bitiş tarihleri geçerli bir Bordro Döneminde değil, {0} hesaplayamıyor"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1471
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1474
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr "Başlangıç ve bitiş süreleri geçerli bir Bordro Döneminde değil, {0} değeri hesaplayamaz."
 
@@ -11907,11 +11907,11 @@ msgstr "Beklemede"
 msgid "Sync {0}"
 msgstr "Senkronize Et {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1203
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1206
 msgid "Syntax error"
 msgstr "Söz dizimi hatası"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2173
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2178
 msgid "Syntax error in condition: {0} in Income Tax Slab"
 msgstr "Gelir Vergisi Diliminde {0} koşulu için söz dizimi hatası"
 
@@ -12144,11 +12144,11 @@ msgstr "Yarım Günlük çalışma için ödenecek ücretin oranı"
 
 #: hrms/hr/report/project_profitability/project_profitability.py:101
 msgid "The metrics for this report are calculated based on the {0}. Please set {0} in {1}."
-msgstr ""
+msgstr "Bu rapordaki metrikler {0} temel alınarak hesaplanır. Lütfen {1} sayfasında {0} alanını ayarlayın."
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:35
 msgid "The metrics for this report are calculated based on {0}. Please set {0} in {1}."
-msgstr ""
+msgstr "Bu rapordaki metrikler {0} temel alınarak hesaplanır. Lütfen {1} sayfasında {0} alanını ayarlayın."
 
 #. Description of the 'Encrypt Salary Slips in Emails' (Check) field in DocType
 #. 'Payroll Settings'
@@ -12179,7 +12179,7 @@ msgstr "Personel Girişinin devamlılık olarak kabul edildiği vardiya başlang
 msgid "Theory"
 msgstr "Teori"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:447
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:450
 msgid "There are more holidays than working days this month."
 msgstr "Bu aylık çalışma günlerinden daha fazla tatil vardır."
 
@@ -12214,15 +12214,15 @@ msgstr ""
 msgid "This employee already has a log with the same timestamp.{0}"
 msgstr "Bu çalışanın zaten aynı zaman damgasına sahip bir günlüğü var. {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1211
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1214
 msgid "This error can be due to invalid formula or condition."
 msgstr "Bu hata geçersiz formül veya koşuldan kaynaklanıyor olabilir."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1204
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1207
 msgid "This error can be due to invalid syntax."
 msgstr "Bu hata geçersiz söz diziminden kaynaklanıyor olabilir."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1197
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1200
 msgid "This error can be due to missing or deleted field."
 msgstr "Bu hata eksik veya silinmiş bir alandan kaynaklanıyor olabilir."
 
@@ -12769,7 +12769,7 @@ msgstr ""
 msgid "Total working Days Per Year"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:164
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:167
 msgid "Total working hours should not be greater than max working hours {0}"
 msgstr "Toplam çalışma süresi maksimum çalışma saatleri fazla harcama {0}"
 
@@ -13666,7 +13666,7 @@ msgstr "Maaş Bileşeni senkronizasyonu aracılığıyla"
 msgid "{0} & {1}"
 msgstr "{0} & {1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2169
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2174
 msgid "{0} <br> This error can be due to missing or deleted field."
 msgstr "{0} <br> Bu hata eksik veya silinmiş bir alandan kaynaklanıyor olabilir."
 
@@ -13763,7 +13763,7 @@ msgstr ""
 msgid "{0} {1} {2}?"
 msgstr "{0} {1} {2}?"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1883
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1886
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "{0}: Çalışanın e-posta adresi bulunamadığı için e-posta gönderilemedi"
 

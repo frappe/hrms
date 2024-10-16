@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-09-29 09:34+0000\n"
-"PO-Revision-Date: 2024-10-02 20:14\n"
+"POT-Creation-Date: 2024-10-06 09:34+0000\n"
+"PO-Revision-Date: 2024-10-09 09:58\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -636,7 +636,7 @@ msgstr "Ungenutzte Urlaubstage aus der Zuteilung des vorherigen Urlaubszeitraums
 msgid "Added On"
 msgstr "Hinzugefügt am"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1294
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1297
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
 msgstr "Steuerkomponenten aus dem Gehaltskomponentenstamm hinzugefügt, da die Gehaltsstruktur keine Steuerkomponente enthielt."
 
@@ -780,7 +780,7 @@ msgstr "Abwesenheit zuweisen"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.js:66
 msgid "Allocate Leaves"
-msgstr ""
+msgstr "Abwesenheiten zuteilen"
 
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:192
 msgid "Allocate leaves to {0} employee(s)?"
@@ -2049,11 +2049,11 @@ msgstr "Schichtzuweisung {0} kann nicht storniert werden, da sie mit Anwesenheit
 msgid "Cannot cancel Shift Assignment: {0} as it is linked to Employee Checkin: {1}"
 msgstr "Schichtzuweisung {0} kann nicht storniert werden, da sie mit dem Mitarbeiter-Check-in {1} verknüpft ist"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:267
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:270
 msgid "Cannot create Salary Slip for Employee joining after Payroll Period"
 msgstr "Für Mitarbeiter, die nach der Abrechnungsperiode eintreten, kann keine Gehaltsabrechnung erstellt werden"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:270
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:273
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr "Für einen Mitarbeiter, der vor dem Abrechnungszeitraum ausgeschieden ist, kann keine Gehaltsabrechnung erstellt werden"
 
@@ -4660,7 +4660,7 @@ msgstr "Mitarbeiter {0} nicht in den Teilnehmern der Schulungsveranstaltung gefu
 msgid "Employee {0} on Half day on {1}"
 msgstr "Mitarbeiter {0} am {1} nur halbtags anwesend"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:575
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:578
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
 msgstr "Am {1} freigestellter Mitarbeiter {0} muss als \"Ausgetreten\" gekennzeichnet werden"
 
@@ -4888,11 +4888,11 @@ msgstr "Fehlerprotokoll"
 msgid "Error Message"
 msgstr "Fehlermeldung"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1210
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1213
 msgid "Error in formula or condition"
 msgstr "Fehler in Formel oder Bedingung"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2175
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2180
 msgid "Error in formula or condition: {0} in Income Tax Slab"
 msgstr "Fehler in Formel oder Bedingung: {0} in der Einkommensteuertabelle"
 
@@ -4900,7 +4900,7 @@ msgstr "Fehler in Formel oder Bedingung: {0} in der Einkommensteuertabelle"
 msgid "Error in some rows"
 msgstr "Fehler in einigen Zeilen"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2254
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2259
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
 msgstr ""
 
@@ -6715,15 +6715,15 @@ msgstr "Einkommensteuerplatte Sonstige Gebühren"
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr "Die Einkommensteuerklasse ist obligatorisch, da die Gehaltsstruktur {0} eine Steuerkomponente {1} hat"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1538
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1541
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "Die Einkommensteuerplatte muss am oder vor dem Startdatum der Abrechnungsperiode wirksam sein: {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1526
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1529
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "Einkommensteuerplatte nicht in Gehaltsstrukturzuordnung festgelegt: {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1534
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1537
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "Einkommensteuerplatte: {0} ist deaktiviert"
 
@@ -7692,7 +7692,7 @@ msgstr "Abwesenheitsart {0} ist nicht umsetzbar"
 msgid "Leave Without Pay"
 msgstr "Unbezahlter Urlaub"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:466
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:469
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr "Urlaub ohne Bezahlung stimmt nicht mit genehmigten {} Datensätzen überein"
 
@@ -8194,7 +8194,7 @@ msgstr "Fehlendes Pflichtfeld"
 msgid "Missing Relieving Date"
 msgstr "Fehlendes Austrittsdatum"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1529
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1532
 msgid "Missing Tax Slab"
 msgstr ""
 
@@ -8319,8 +8319,8 @@ msgstr "Mein Konto"
 msgid "Name"
 msgstr "Name"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1196
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2170
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1199
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2175
 msgid "Name error"
 msgstr "Namensfehler"
 
@@ -8357,7 +8357,7 @@ msgstr "Nettogehalt (Währung des Unternehmens)"
 msgid "Net Pay Info"
 msgstr "Infos zum Nettogehalt"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:191
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:194
 msgid "Net Pay cannot be less than 0"
 msgstr "Net Pay kann nicht kleiner als 0"
 
@@ -8409,7 +8409,7 @@ msgstr "Neue Urlaubszuordnung (in Tagen)"
 #. Assignment Schedule'
 #: hrms/hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 msgid "New shift assignments will be created after this date."
-msgstr ""
+msgstr "Neue Schichtzuweisungen werden nach diesem Datum erstellt."
 
 #. Option for the 'Is Active' (Select) field in DocType 'Salary Structure'
 #. Option for the 'Is Default' (Select) field in DocType 'Salary Structure'
@@ -8470,7 +8470,7 @@ msgstr "Keine Schichtanfragen ausgewählt"
 msgid "No Staffing Plans found for this Designation"
 msgstr "Für diese Position wurden keine Stellenpläne gefunden"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:392
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:395
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
 msgstr "Keine aktive oder Standard-Gehaltsstruktur für Mitarbeiter gefunden {0} für die angegebenen Daten"
 
@@ -8622,7 +8622,7 @@ msgstr "Hinweis: Die Schicht wird in vorhandenen Anwesenheitsdatensätzen nicht 
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr "Hinweis: Die Summe der zugeteilten Abwesenheiten {0} sollte nicht geringer sein als die bereits genehmigten Abwesenheiten {1} für den Zeitraum"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1862
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1865
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr "Hinweis: Ihre Gehaltsabrechnung ist passwortgeschützt, das Passwort zum Entsperren der PDF hat das Format {0}."
 
@@ -8643,7 +8643,7 @@ msgstr "Mitteilungsfrist"
 
 #: hrms/hr/doctype/exit_interview/exit_interview.py:122
 msgid "Notification Template"
-msgstr ""
+msgstr "Benachrichtigungsvorlage"
 
 #. Label of the notify_users_by_email (Check) field in DocType 'Employee
 #. Onboarding'
@@ -9406,7 +9406,7 @@ msgstr "Fügen Sie die verbleibenden Vorteile {0} zu einer vorhandenen Komponent
 msgid "Please add the remaining benefits {0} to the application as pro-rata component"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:759
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:762
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr ""
 
@@ -9430,7 +9430,7 @@ msgstr "Bitte aktivieren Sie das standardmäßig eingehende Konto, bevor Sie die
 msgid "Please enter the designation"
 msgstr "Bitte geben Sie die Position ein"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1851
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1854
 msgid "Please see attachment"
 msgstr "Siehe Anhang"
 
@@ -9540,7 +9540,7 @@ msgstr ""
 msgid "Please set Earning Component for Leave type: {0}."
 msgstr "Bitte stellen Sie die Verdienstkomponente für die Abwesenheitsart ein: {0}."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:450
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:453
 msgid "Please set Payroll based on in Payroll settings"
 msgstr "Bitte stellen Sie die Personalabrechnung basierend auf den Einstellungen für die Personalabrechnung ein"
 
@@ -9573,7 +9573,7 @@ msgstr "Bitte stellen Sie die Beurteilungsvorlage für alle {0} ein oder wählen
 msgid "Please set the Company"
 msgstr "Bitte setzen Sie das Unternehmen"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:263
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:266
 msgid "Please set the Date Of Joining for employee {0}"
 msgstr "Bitte setzen Sie das Datum des Beitritts für Mitarbeiter {0}"
 
@@ -9980,7 +9980,7 @@ msgstr "Grund der Anfrage"
 msgid "Reason for Withholding Salary"
 msgstr "Grund für die Einbehaltung des Gehalts"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:287
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:288
 msgid "Reason for skipping auto attendance:"
 msgstr "Grund für das Überspringen der automatischen Anwesenheit:"
 
@@ -10463,12 +10463,12 @@ msgstr "Berechtigte Rolle zum Erstellen eines zurückdatierten Urlaubsantrags"
 #: hrms/hr/doctype/shift_assignment/shift_assignment_list.js:12
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Roster"
-msgstr ""
+msgstr "Dienstplan"
 
 #. Label of the color (Select) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Roster Color"
-msgstr ""
+msgstr "Dienstplanfarbe"
 
 #. Label of the round_name (Data) field in DocType 'Interview Round'
 #: hrms/hr/doctype/interview_round/interview_round.json
@@ -10735,11 +10735,11 @@ msgstr "Die Gehaltsabrechnung existiert bereits für {0} für die angegebenen Da
 msgid "Salary Slip creation is queued. It may take a few minutes"
 msgstr "Die Erstellung der Gehaltsabrechnung befindet sich in der Warteschlange. Es kann einige Minuten dauern"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:297
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:300
 msgid "Salary Slip of employee {0} already created for this period"
 msgstr "Gehaltsabrechnung der Mitarbeiter {0} für diesen Zeitraum bereits erstellt"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:303
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:306
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr "Gehaltsabrechnung der Mitarbeiter {0} bereits für Zeitblatt erstellt {1}"
 
@@ -10805,7 +10805,7 @@ msgstr ""
 msgid "Salary Structure Assignment for Employee already exists"
 msgstr "Die Gehaltsstrukturzuordnung für den Mitarbeiter ist bereits vorhanden"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:395
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:398
 msgid "Salary Structure Missing"
 msgstr "Gehaltsstruktur Fehlende"
 
@@ -10865,7 +10865,7 @@ msgstr "Gehaltsaufteilung nach Einkommen und Abzügen."
 msgid "Salary components should be part of the Salary Structure."
 msgstr "Gehaltskomponenten sollten Teil der Gehaltsstruktur sein."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2319
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2324
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "E-Mails mit Gehaltsabrechnungen wurden in die Warteschlange für den Versand gestellt. Prüfen Sie den Status unter {0}."
 
@@ -11113,7 +11113,7 @@ msgstr "Absender E-Mail"
 
 #: hrms/hr/doctype/exit_interview/exit_interview.py:136
 msgid "Sending Failed due to missing email information for employee(s): {1}"
-msgstr ""
+msgstr "Senden fehlgeschlagen aufgrund fehlender E-Mail-Informationen für Mitarbeiter: {1}"
 
 #. Option for the 'Status' (Select) field in DocType 'Daily Work Summary'
 #: hrms/hr/doctype/daily_work_summary/daily_work_summary.json
@@ -11651,7 +11651,7 @@ msgstr "Startzeit"
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}"
 msgstr "Start- und Enddatum liegen nicht in einer gültigen Abrechnungsperiode. {0} kann nicht berechnet werden."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1471
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1474
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr "Start- und Enddatum, die nicht in einer gültigen Abrechnungsperiode sind, können {0} nicht berechnen."
 
@@ -11889,11 +11889,11 @@ msgstr "Suspendiert"
 msgid "Sync {0}"
 msgstr "{0} synchronisieren"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1203
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1206
 msgid "Syntax error"
 msgstr "Syntaxfehler"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2173
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2178
 msgid "Syntax error in condition: {0} in Income Tax Slab"
 msgstr "Syntaxfehler in der Bedingung: {0} in der Einkommensteuertabelle"
 
@@ -12161,7 +12161,7 @@ msgstr "Die Zeit vor dem Schichtbeginn, in der der Mitarbeiter-Check-in für die
 msgid "Theory"
 msgstr "Theorie"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:447
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:450
 msgid "There are more holidays than working days this month."
 msgstr "Es gibt mehr Feiertage als Arbeitstage in diesem Monat."
 
@@ -12196,15 +12196,15 @@ msgstr "Dieser Ausgleichsurlaub gilt ab {0}."
 msgid "This employee already has a log with the same timestamp.{0}"
 msgstr "Dieser Mitarbeiter hat bereits ein Protokoll mit demselben Zeitstempel. {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1211
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1214
 msgid "This error can be due to invalid formula or condition."
 msgstr "Dieser Fehler kann auf eine ungültige Formel oder Bedingung zurückzuführen sein."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1204
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1207
 msgid "This error can be due to invalid syntax."
 msgstr "Dieser Fehler kann auf eine ungültige Syntax zurückzuführen sein."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1197
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1200
 msgid "This error can be due to missing or deleted field."
 msgstr "Dieser Fehler kann auf ein fehlendes oder gelöschtes Feld zurückzuführen sein."
 
@@ -12751,7 +12751,7 @@ msgstr "Die Gesamtgewichtung für alle {0} muss 100 ergeben. Derzeit beträgt si
 msgid "Total working Days Per Year"
 msgstr "Gesamtarbeitstage pro Jahr"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:164
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:167
 msgid "Total working hours should not be greater than max working hours {0}"
 msgstr "Insgesamt Arbeitszeit sollte nicht größer sein als die maximale Arbeitszeit {0}"
 
@@ -13648,7 +13648,7 @@ msgstr ""
 msgid "{0} & {1}"
 msgstr "{0} & {1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2169
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2174
 msgid "{0} <br> This error can be due to missing or deleted field."
 msgstr "{0} <br> Dieser Fehler kann auf ein fehlendes oder gelöschtes Feld zurückzuführen sein."
 
@@ -13745,7 +13745,7 @@ msgstr "{0} wird für die folgenden Gehaltsstrukturen aktualisiert: {1}."
 msgid "{0} {1} {2}?"
 msgstr "{0} {1} {2}?"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1883
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1886
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "{0}: Mitarbeiter E-Mail nicht gefunden, E-Mail daher nicht gesendet"
 
