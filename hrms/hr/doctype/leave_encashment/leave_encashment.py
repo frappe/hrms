@@ -163,13 +163,9 @@ class LeaveEncashment(Document):
 
 		per_day_encashment = frappe.db.get_value(
 			"Salary Structure Assignment",
-			{
-				"employee": self.employee,
-				"docstatus": 1,
-				"from_date": ("<=", self.encashment_date)
-			},
+			{"employee": self.employee, "docstatus": 1, "from_date": ("<=", self.encashment_date)},
 			"leave_encashment_amount_per_day",
-			order_by="from_date desc"
+			order_by="from_date desc",
 		)
 		if not per_day_encashment:
 			# for old records where leave encashment amount is defined in salary structure
