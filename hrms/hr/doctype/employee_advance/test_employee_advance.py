@@ -2,11 +2,7 @@
 # See license.txt
 
 import frappe
-<<<<<<< HEAD
-from frappe.tests.utils import FrappeTestCase
-=======
-from frappe.tests import IntegrationTestCase, change_settings
->>>>>>> 3bbe0ceb2 (test: add unit test to unlink employee advance from payment entry)
+from frappe.tests.utils import FrappeTestCase, change_settings
 from frappe.utils import flt, nowdate
 
 import erpnext
