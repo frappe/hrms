@@ -83,7 +83,7 @@ const status = computed(() => {
 const claimTitle = computed(() => {
 	let title = __(props.doc.expense_type)
 	if (props.doc.total_expenses > 1) {
-		title = __("{0} & {1} more", null, [title, props.doc.total_expenses - 1])
+		title = __("{0} & {1} more", [title, props.doc.total_expenses - 1])
 	}
 	return title
 })
