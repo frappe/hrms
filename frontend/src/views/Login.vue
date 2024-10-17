@@ -157,7 +157,7 @@ async function submit(e) {
 }
 
 const authProviders = createResource({
-	url: "hrms.www.hrms.oauth_providers",
+	url: "hrms.api.oauth.oauth_providers",
 	auto: true,
 });
 </script>
