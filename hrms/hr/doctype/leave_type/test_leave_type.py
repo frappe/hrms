@@ -27,6 +27,7 @@ def create_leave_type(**args):
 			"earning_component": "Leave Encashment",
 			"max_leaves_allowed": args.max_leaves_allowed,
 			"maximum_carry_forwarded_leaves": args.maximum_carry_forwarded_leaves,
+			"allocate_on_day": args.allocate_on_day or "Last Day",
 		}
 	)
 
