@@ -6,38 +6,38 @@
 				<div class="w-full">
 					<router-link :to="{ name: 'AttendanceRequestFormView' }" v-slot="{ navigate }">
 						<Button @click="navigate" variant="solid" class="w-full py-5 text-base">
-							Request Attendance
+							{{ __("Request Attendance") }}
 						</Button>
 					</router-link>
 				</div>
 				<div>
-					<div class="text-lg text-gray-800 font-bold">Recent Attendance Requests</div>
+					<div class="text-lg text-gray-800 font-bold">{{ __("Recent Attendance Requests") }}</div>
 					<RequestList
 						:component="markRaw(AttendanceRequestItem)"
 						:items="myAttendanceRequests?.data?.slice(0, 5)"
 						:addListButton="true"
-						listButtonRoute="AttendanceRequestListView"
+						:listButtonRoute="__('AttendanceRequestListView')"
 					/>
 				</div>
 				<div>
-					<div class="text-lg text-gray-800 font-bold">Upcoming Shifts</div>
+					<div class="text-lg text-gray-800 font-bold">{{ __("Upcoming Shifts") }}</div>
 					<RequestList
 						:component="markRaw(ShiftAssignmentItem)"
 						:items="upcomingShifts"
 						:addListButton="true"
 						listButtonRoute="ShiftAssignmentListView"
-						emptyStateMessage="You have no upcoming shifts"
+						:emptyStateMessage="__('You have no upcoming shifts')"
 					/>
 				</div>
 				<div class="w-full">
 					<router-link :to="{ name: 'ShiftRequestFormView' }" v-slot="{ navigate }">
 						<Button @click="navigate" variant="solid" class="w-full py-5 text-base">
-							Request a Shift
+							{{ __("Request a Shift") }}
 						</Button>
 					</router-link>
 				</div>
 				<div>
-					<div class="text-lg text-gray-800 font-bold">Recent Shift Requests</div>
+					<div class="text-lg text-gray-800 font-bold">{{ __("Recent Shift Requests") }}</div>
 					<RequestList
 						:component="markRaw(ShiftRequestItem)"
 						:items="myShiftRequests?.data?.slice(0, 5)"
