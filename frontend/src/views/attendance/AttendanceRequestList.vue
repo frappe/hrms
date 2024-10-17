@@ -2,7 +2,7 @@
 	<ion-page>
 		<ListView
 			doctype="Attendance Request"
-			pageTitle="Attendance Request History"
+			:pageTitle="__('Attendance Request History')"
 			:fields="ATTENDANCE_REQUEST_FIELDS"
 			:filterConfig="FILTER_CONFIG"
 		/>
@@ -18,10 +18,10 @@ const FILTER_CONFIG = [
 	{
 		fieldname: "shift",
 		fieldtype: "Link",
-		label: "Shift",
+		label: __("Shift"),
 		options: "Shift Type",
 	},
-	{ fieldname: "from_date", fieldtype: "Date", label: "From Date" },
-	{ fieldname: "to_date", fieldtype: "Date", label: "To Date" },
+	{ fieldname: "from_date", fieldtype: "Date", label: __("From Date") },
+	{ fieldname: "to_date", fieldtype: "Date", label: __("To Date") },
 ]
 </script>
