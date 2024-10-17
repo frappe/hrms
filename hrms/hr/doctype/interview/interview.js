@@ -199,13 +199,11 @@ frappe.ui.form.on("Interview", {
 	},
 
 	interview_round: function (frm) {
-		frm.set_value("job_applicant", "");
 		frm.trigger("set_applicable_interviewers");
 	},
 
 	job_applicant: function (frm) {
 		if (!frm.doc.interview_round) {
-			frm.set_value("job_applicant", "");
 			frappe.throw(__("Select Interview Round First"));
 		}
 
@@ -221,6 +219,7 @@ frappe.ui.form.on("Interview", {
 				interview_round: frm.doc.interview_round || "",
 			},
 			callback: function (r) {
+				frm.doc.interview_details = [];
 				r.message.forEach((interviewer) =>
 					frm.add_child("interview_details", interviewer),
 				);
