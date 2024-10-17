@@ -13,9 +13,7 @@
 				<div class="text-xs font-normal text-gray-500">
 					<span>{{ props.doc.leave_dates || getLeaveDates(props.doc) }}</span>
 					<span class="whitespace-pre"> &middot; </span>
-					<span class="whitespace-nowrap">{{
-						`${props.doc.total_leave_days}${__("d", null, "Leave Days")}`
-					}}</span>
+					<span class="whitespace-nowrap">{{ __("{0}d", [props.doc.total_leave_days]) }}</span>
 				</div>
 			</div>
 		</template>
