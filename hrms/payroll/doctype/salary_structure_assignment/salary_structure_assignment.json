@@ -22,6 +22,7 @@
   "currency",
   "section_break_7",
   "base",
+  "leave_encashment_amount_per_day",
   "column_break_9",
   "variable",
   "amended_from",
@@ -205,11 +206,18 @@
    "fieldtype": "Currency",
    "label": "Taxable Earnings Till Date",
    "options": "currency"
+  },
+  {
+   "fetch_from": "salary_structure.leave_encashment_amount_per_day",
+   "fetch_if_empty": 1,
+   "fieldname": "leave_encashment_amount_per_day",
+   "fieldtype": "Currency",
+   "label": "Leave Encashment Amount Per Day"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:10:35.183102",
+ "modified": "2024-10-06 11:33:38.418311",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",
