@@ -123,8 +123,11 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 
 	# tests no of leaves for passed months if assignment is based on Leave Period / Joining Date
 	def test_get_leaves_for_passed_months(self):
+		first_day = get_first_day(getdate())
 		annual_allocation = 10
-		leave_type = create_leave_type(leave_type_name="_Test Earned Leave", is_earned_leave=True)
+		leave_type = create_leave_type(
+			leave_type_name="_Test Earned Leave", is_earned_leave=True, allocate_on_day="First Day"
+		)
 		leave_policy = create_leave_policy(leave_type=leave_type, annual_allocation=annual_allocation)
 		leave_policy.submit()
 
@@ -133,7 +136,7 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 			"leave_policy": leave_policy.name,
 		}
 
-		self.employee.date_of_joining = add_months(getdate(), -6)
+		self.employee.date_of_joining = add_months(first_day, -5)
 		self.employee.save()
 		assignment = create_assignment(self.employee.name, frappe._dict(data))
 		new_leaves_allocated = assignment.get_leaves_for_passed_months(
@@ -141,7 +144,7 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 		)
 		self.assertEqual(new_leaves_allocated, 5)
 
-		self.employee.date_of_joining = add_months(getdate(), -36)
+		self.employee.date_of_joining = add_months(first_day, -35)
 		self.employee.save()
 		assignment = create_assignment(self.employee.name, frappe._dict(data))
 		new_leaves_allocated = assignment.get_leaves_for_passed_months(
@@ -149,7 +152,7 @@ class TestLeavePolicyAssignment(FrappeTestCase):
 		)
 		self.assertEqual(new_leaves_allocated, 30)
 
-		leave_period = create_leave_period(add_months(getdate(), -24), getdate())
+		leave_period = create_leave_period(add_months(first_day, -23), first_day)
 		data = {
 			"assignment_based_on": "Leave Period",
 			"leave_policy": leave_policy.name,
