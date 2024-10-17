@@ -241,7 +241,7 @@ def create_salary_structure_assignment(
 		frappe.db.sql("""delete from `tabSalary Structure Assignment` where employee=%s""", (employee))
 
 	if not payroll_period:
-		payroll_period = create_payroll_period()
+		payroll_period = create_payroll_period(company="_Test Company")
 
 	income_tax_slab = frappe.db.get_value("Income Tax Slab", {"currency": currency})
 
