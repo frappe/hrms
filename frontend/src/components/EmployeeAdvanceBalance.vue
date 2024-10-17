@@ -18,7 +18,7 @@
 		>
 			<div class="flex flex-col bg-white w-full py-5 px-3.5 mt-0 border-none">
 				<Button @click="navigate" variant="subtle" class="py-5 text-base">
-					Request an Advance
+					{{ __("Request an Advance") }}
 				</Button>
 			</div>
 		</router-link>

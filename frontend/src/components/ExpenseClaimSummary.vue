@@ -1,12 +1,12 @@
 <template>
 	<div class="flex flex-col w-full gap-5" v-if="summary.data">
-		<div class="text-lg text-gray-800 font-bold">Expense Claim Summary</div>
+		<div class="text-lg text-gray-800 font-bold">{{ __("Expense Claim Summary") }}</div>
 		<div
 			class="flex flex-col gap-4 bg-white py-3 px-3.5 rounded-lg border-none"
 		>
 			<div class="flex flex-col gap-1.5">
 				<span class="text-gray-600 text-base font-medium leading-5">
-					Total Expense Amount
+					{{ __("Total Expense Amount") }}
 				</span>
 				<span class="text-gray-800 text-lg font-bold leading-6">
 					{{ formatCurrency(total_claimed_amount, company_currency) }}
@@ -17,7 +17,7 @@
 				<div class="flex flex-col gap-1">
 					<div class="flex flex-row gap-1 items-center">
 						<span class="text-gray-600 text-sm font-medium leading-5">
-							Pending
+							{{ __("Pending") }}
 						</span>
 						<FeatherIcon name="alert-circle" class="text-yellow-500 h-3 w-3" />
 					</div>
@@ -33,7 +33,7 @@
 				<div class="flex flex-col gap-1">
 					<div class="flex flex-row gap-1 items-center">
 						<span class="text-gray-600 text-sm font-medium leading-5">
-							Approved
+							{{ __("Approved") }}
 						</span>
 						<FeatherIcon name="check-circle" class="text-green-500 h-3 w-3" />
 					</div>
@@ -50,7 +50,7 @@
 				<div class="flex flex-col gap-1">
 					<div class="flex flex-row gap-1 items-center">
 						<span class="text-gray-600 text-sm font-medium leading-5">
-							Rejected
+							{{ __("Rejected") }}
 						</span>
 						<FeatherIcon name="x-circle" class="text-red-500 h-3 w-3" />
 					</div>

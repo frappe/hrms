@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col w-full">
 		<div class="flex flex-row justify-between items-center px-4">
-			<div class="text-lg text-gray-800 font-bold">Leave Balance</div>
+			<div class="text-lg text-gray-800 font-bold">{{ __("Leave Balance") }} </div>
 			<router-link
 				:to="{ name: 'LeaveApplicationListView' }"
 				v-slot="{ navigate }"
@@ -11,7 +11,7 @@
 					@click="navigate"
 					class="text-sm text-gray-800 font-semibold cursor-pointer underline underline-offset-2"
 				>
-					View Leave History
+					{{ __("View Leave History") }}
 				</div>
 			</router-link>
 		</div>
@@ -34,7 +34,7 @@
 					{{ `${allocation.balance_leaves}/${allocation.allocated_leaves}` }}
 				</div>
 				<div class="text-gray-600 font-normal text-sm w-24 leading-4">
-					{{ `${leave_type} balance` }}
+					{{ __("{0} balance", [__(leave_type, null, "Leave Type")]) }}
 				</div>
 			</div>
 		</div>

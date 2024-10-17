@@ -48,7 +48,7 @@
 				<div v-for="status in summaryStatuses" class="flex flex-col gap-1">
 					<div class="flex flex-row gap-1 items-center">
 						<span class="rounded full h-3 w-3" :class="`bg-${colorMap[status]}`" />
-						<span class="text-gray-600 text-sm font-medium leading-5"> {{ status }} </span>
+						<span class="text-gray-600 text-sm font-medium leading-5"> {{ __(status) }} </span>
 					</div>
 					<span class="text-gray-800 text-base font-semibold leading-6 mx-auto">
 						{{ summary[status] || 0 }}
@@ -76,6 +76,7 @@ const colorMap = {
 	Holiday: "gray-100",
 }
 
+// __("Present"), __("Half Day"), __("Absent"), __("On Leave"), __("Work From Home")
 const summaryStatuses = ["Present", "Half Day", "Absent", "On Leave"]
 
 const summary = computed(() => {
@@ -104,7 +105,17 @@ const getEventOnDate = (date) => {
 	return calendarEvents.data[firstOfMonth.value.date(date).format("YYYY-MM-DD")]
 }
 
-const DAYS = ["S", "M", "T", "W", "T", "F", "S"]
+const getFirstLetter = (s) => Array.from(s.trim())[0] // Unicode
+
+const DAYS = [
+	getFirstLetter(__("Sunday")),
+	getFirstLetter(__("Monday")),
+	getFirstLetter(__("Tuesday")),
+	getFirstLetter(__("Wednesday")),
+	getFirstLetter(__("Thursday")),
+	getFirstLetter(__("Friday")),
+	getFirstLetter(__("Saturday")),
+]
 
 //resources
 const calendarEvents = createResource({

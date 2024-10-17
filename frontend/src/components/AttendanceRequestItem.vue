@@ -10,15 +10,13 @@
 					<span>{{ props.doc.attendance_dates || getDates(props.doc) }}</span>
 					<span v-if="props.doc.to_date">
 						<span class="whitespace-pre"> &middot; </span>
-						<span class="whitespace-nowrap">{{
-							`${props.doc.total_attendance_days || getTotalDays(props.doc)}d`
-						}}</span>
+						<span class="whitespace-nowrap">{{ __("{0}d", [props.doc.total_attendance_days]) }}</span>
 					</span>
 				</div>
 			</div>
 		</template>
 		<template #right>
-			<Badge variant="outline" :theme="colorMap[status]" :label="status" size="md" />
+			<Badge variant="outline" :theme="colorMap[status]" :label="__(status)" size="md" />
 			<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
 		</template>
 	</ListItem>

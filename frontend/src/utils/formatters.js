@@ -20,6 +20,7 @@ export const formatCurrency = (value, currency) => {
 		style: "currency",
 		currency: currency,
 		trailingZeroDisplay: "stripIfInteger",
+		currencyDisplay: "narrowSymbol",
 	})
 	return (
 		formatter

@@ -4,7 +4,7 @@
 		class="bg-white w-full flex flex-col items-center justify-center pb-5 max-h-[calc(100vh-5rem)]"
 	>
 		<div class="w-full pt-8 pb-5 border-b text-center sticky top-0 z-[100]">
-			<span class="text-gray-900 font-bold text-lg">Filters</span>
+			<span class="text-gray-900 font-bold text-lg">{{ __("Filters") }} </span>
 		</div>
 
 		<div class="w-full p-4 overflow-auto">
@@ -20,7 +20,7 @@
 						v-if="['status', 'approval_status'].includes(filter.fieldname)"
 					>
 						<div class="text-gray-800 font-semibold text-base">
-							{{ filter.label }}
+							{{ __(filter.label) }}
 						</div>
 						<div class="flex flex-row gap-2 mt-2 flex-wrap">
 							<Button
@@ -34,7 +34,7 @@
 										: '!font-normal',
 								]"
 							>
-								{{ option }}
+								{{ __(option) }}
 							</Button>
 						</div>
 					</div>
@@ -42,7 +42,7 @@
 					<!-- Field filters -->
 					<div v-else class="flex flex-col gap-2">
 						<div class="text-gray-800 font-semibold text-base">
-							{{ filter.label }}
+							{{ __(filter.label) }}
 						</div>
 						<div class="flex flex-row items-center gap-3">
 							<Autocomplete
@@ -73,14 +73,14 @@
 				variant="outline"
 				class="w-full py-5 text-sm"
 			>
-				Clear All
+				{{ __("Clear All") }}
 			</Button>
 			<Button
 				@click="emit('apply-filters')"
 				variant="solid"
 				class="w-full py-5 text-sm"
 			>
-				Apply Filters
+				{{ __("Apply Filters") }}
 			</Button>
 		</div>
 	</div>

@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-row justify-between items-center">
 		<h2 class="text-base font-semibold text-gray-800">
-			Settle against Advances
+			{{ __("Settle against Advances") }}
 		</h2>
 	</div>
 
@@ -32,8 +32,10 @@
 						</div>
 						<div class="flex flex-row items-center gap-3 justify-between">
 							<div class="text-xs font-normal text-gray-500">
-								Unclaimed Amount:
-								{{ formatCurrency(advance.unclaimed_amount, currency) }}
+								{{ __("{0}: {1}", [
+									__("Unclaimed Amount"),
+									formatCurrency(advance.unclaimed_amount, currency),
+								]) }}
 							</div>
 						</div>
 					</div>
@@ -58,7 +60,7 @@
 		</div>
 	</div>
 
-	<EmptyState v-else message="No advances found" :isTableField="true" />
+	<EmptyState v-else :message="__('No advances found')" :isTableField="true" />
 </template>
 
 <script setup>

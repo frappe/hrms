@@ -31,28 +31,28 @@ const FILTER_CONFIG = [
 	{
 		fieldname: "status",
 		fieldtype: "Select",
-		label: "Status",
+		label: __("Status"),
 		options: STATUS_FILTER_OPTIONS,
 	},
 	{
 		fieldname: "shift_type",
 		fieldtype: "Link",
-		label: "Shift Type",
+		label: __("Shift Type"),
 		options: "Shift Type",
 	},
 	{
 		fieldname: "employee",
 		fieldtype: "Link",
-		label: "Employee",
+		label: __("Employee"),
 		options: "Employee",
 	},
 	{
 		fieldname: "department",
 		fieldtype: "Link",
-		label: "Department",
+		label: __("Department"),
 		options: "Department",
 	},
-	{ fieldname: "from_date", fieldtype: "Date", label: "From Date" },
-	{ fieldname: "to_date", fieldtype: "Date", label: "To Date" },
+	{ fieldname: "from_date", fieldtype: "Date", label: __("From Date") },
+	{ fieldname: "to_date", fieldtype: "Date", label: __("To Date") },
 ]
 </script>
