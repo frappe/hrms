@@ -95,20 +95,47 @@ class Interview(Document):
 		self.db_set({"scheduled_on": scheduled_on, "from_time": from_time, "to_time": to_time})
 		self.notify_update()
 
+		reminder_settings = frappe.db.get_value(
+			"HR Settings",
+			"HR Settings",
+			[
+				"send_reminder_for_rescheduled_interview",
+				"rescheduled_interview_reminder_template",
+				"hiring_sender",
+			],
+			as_dict=True,
+		)
+
+		if not cint(reminder_settings.send_reminder_for_rescheduled_interview):
+			return
+
 		recipients = get_recipients(self.name)
 
+		subject = _("Interview: {0} Rescheduled").format(self.name)
+		message = _("Your Interview session is rescheduled from {0} {1} - {2} to {3} {4} - {5}").format(
+			original_date,
+			original_from_time,
+			original_to_time,
+			self.scheduled_on,
+			self.from_time,
+			self.to_time,
+		)
+
+		if reminder_settings.rescheduled_interview_reminder_template:
+			template = frappe.get_doc(
+				"Email Template", reminder_settings.rescheduled_interview_reminder_template
+			)
+			if template:
+				context = self.as_dict()
+				response = template.response if not template.use_html else template.response_html
+				message = frappe.render_template(response, context)
+				subject = frappe.render_template(template.subject, context)
 		try:
 			frappe.sendmail(
+				sender=reminder_settings.hiring_sender,
 				recipients=recipients,
-				subject=_("Interview: {0} Rescheduled").format(self.name),
-				message=_("Your Interview session is rescheduled from {0} {1} - {2} to {3} {4} - {5}").format(
-					original_date,
-					original_from_time,
-					original_to_time,
-					self.scheduled_on,
-					self.from_time,
-					self.to_time,
-				),
+				subject=subject,
+				message=message,
 				reference_doctype=self.doctype,
 				reference_name=self.name,
 			)
