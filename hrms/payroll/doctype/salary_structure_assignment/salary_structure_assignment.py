@@ -7,6 +7,8 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cint, flt, get_link_to_form, getdate
 
+from hrms.payroll.doctype.payroll_period.payroll_period import get_payroll_period
+
 
 class DuplicateAssignment(frappe.ValidationError):
 	pass
@@ -150,7 +152,7 @@ class SalaryStructureAssignment(Document):
 
 	@frappe.whitelist()
 	def are_opening_entries_required(self) -> bool:
-		if not self.emp_joined_in_the_same_month() and not self.has_existing_salary_slips():
+		if self.has_emp_joined_after_payroll_period_start() and not self.has_existing_salary_slips():
 			return True
 		else:
 			if not self.docstatus.is_draft() and (
@@ -167,16 +169,10 @@ class SalaryStructureAssignment(Document):
 			)
 		)
 
-	def emp_joined_in_the_same_month(self) -> bool:
-		date_of_joining = frappe.db.get_value("Employee", self.employee, "date_of_joining")
-		from_date = getdate(self.from_date)
-
-		if (
-			self.from_date
-			and date_of_joining
-			and date_of_joining.month == from_date.month
-			and date_of_joining.year == from_date.year
-		):
+	def has_emp_joined_after_payroll_period_start(self) -> bool:
+		date_of_joining = getdate(frappe.db.get_value("Employee", self.employee, "date_of_joining"))
+		payroll_period = get_payroll_period(self.from_date, self.from_date, self.company)
+		if not payroll_period or date_of_joining > getdate(payroll_period.start_date):
 			return True
 		return False
 
