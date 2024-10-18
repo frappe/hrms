@@ -139,24 +139,9 @@ frappe.ui.form.on("Salary Structure Assignment", {
 			});
 		}
 	},
-<<<<<<< HEAD
-	valiadte_joining_date_and_salary_slips: function (frm) {
-		frappe.call({
-			method: "earning_and_deduction_entries_does_not_exists",
-			doc: frm.doc,
-			callback: function (data) {
-				let earning_and_deduction_entries_does_not_exists = data.message;
-				frm.unhide_earnings_and_taxation_section =
-					earning_and_deduction_entries_does_not_exists;
-				frm.trigger("set_earnings_and_taxation_section_visibility");
-			},
-		});
-	},
-=======
 
 	toggle_opening_balances_section: function (frm) {
 		if (!frm.doc.from_date || !frm.doc.employee) return;
->>>>>>> 627e391b8 (refactor: simplify logic for toggling & warning about opening balances)
 
 		frm.call("are_opening_entries_required").then((data) => {
 			if (data.message) {
