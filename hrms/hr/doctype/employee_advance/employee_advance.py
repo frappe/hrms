@@ -33,6 +33,7 @@ class EmployeeAdvance(Document):
 
 	def on_cancel(self):
 		self.ignore_linked_doctypes = "GL Entry"
+		self.check_linked_payment_entry()
 		self.set_status(update=True)
 
 	def on_update(self):
@@ -174,6 +175,16 @@ class EmployeeAdvance(Document):
 				& (Advance.status == "Unpaid")
 			)
 		).run()[0][0] or 0.0
+
+	def check_linked_payment_entry(self):
+		from erpnext.accounts.utils import (
+			remove_ref_doc_link_from_pe,
+			update_accounting_ledgers_after_reference_removal,
+		)
+
+		if frappe.db.get_single_value("HR Settings", "unlink_payment_on_cancellation_of_employee_advance"):
+			remove_ref_doc_link_from_pe(self.doctype, self.name)
+			update_accounting_ledgers_after_reference_removal(self.doctype, self.name)
 
 
 @frappe.whitelist()
