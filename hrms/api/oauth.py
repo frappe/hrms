@@ -20,20 +20,13 @@ def oauth_providers():
 		if not client_secret:
 			continue
 
-		icon = None
-		if provider.icon:
-			if provider.provider_name == "Custom":
-				icon = get_icon_html(provider.icon, small=True)
-			else:
-				icon = f"<img src='{provider.icon}' alt='{provider.provider_name}'>"
-
 		if provider.client_id and provider.base_url and get_oauth_keys(provider.name):
 			out.append(
 				{
 					"name": provider.name,
 					"provider_name": provider.provider_name,
 					"auth_url": get_oauth2_authorize_url(provider.name, "/hrms"),
-					"icon": icon,
+					"icon": provider.icon,
 				}
 			)
 
