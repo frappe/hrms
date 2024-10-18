@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-10-06 09:34+0000\n"
-"PO-Revision-Date: 2024-10-15 12:37\n"
+"POT-Creation-Date: 2024-10-13 09:34+0000\n"
+"PO-Revision-Date: 2024-10-18 13:18\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgstr "% Kullanım (B + NB) / T"
 msgid "% Utilization (B / T)"
 msgstr "% Kullanım (B / T)"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:110
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:130
 msgid "'employee_field_value' and 'timestamp' are required."
 msgstr "'employee_field_value' ve 'timestamp' gereklidir."
 
@@ -2173,6 +2173,11 @@ msgstr "Giriş Tarihi"
 msgid "Check-out Date"
 msgstr "tarihi kontrol et"
 
+#. Label of the checkin_radius (Int) field in DocType 'Shift Location'
+#: hrms/hr/doctype/shift_location/shift_location.json
+msgid "Checkin Radius"
+msgstr ""
+
 #: hrms/hr/doctype/goal/goal_tree.js:52
 msgid "Child nodes can only be created under 'Group' type nodes"
 msgstr ""
@@ -3704,7 +3709,7 @@ msgstr ""
 msgid "Duration (Days)"
 msgstr "Süre (Gün)"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:70
+#: hrms/public/js/utils/index.js:208
 msgid "ERROR({0}): {1}"
 msgstr "HATA ({0}): {1}"
 
@@ -3960,6 +3965,7 @@ msgstr "Çalışan tarafından tercih edilen e-posta tabanlı çalışana e-post
 #: hrms/hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:161
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:202
+#: hrms/hr/doctype/shift_location/shift_location.json
 #: hrms/hr/doctype/shift_request/shift_request.json
 #: hrms/hr/doctype/shift_type/shift_type.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
@@ -4133,6 +4139,8 @@ msgstr "Personel Maliyet Merkezi"
 #. Interview'
 #. Label of the employee_details_section (Section Break) field in DocType 'Full
 #. and Final Statement'
+#. Label of the employee_details_section (Section Break) field in DocType
+#. 'Shift Assignment'
 #. Label of the employee_details (Section Break) field in DocType 'Travel
 #. Request'
 #. Label of the employee_section (Section Break) field in DocType 'Employee
@@ -4143,6 +4151,7 @@ msgstr "Personel Maliyet Merkezi"
 #: hrms/hr/doctype/employee_performance_feedback/employee_performance_feedback.json
 #: hrms/hr/doctype/exit_interview/exit_interview.json
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json
+#: hrms/hr/doctype/shift_assignment/shift_assignment.json
 #: hrms/hr/doctype/travel_request/travel_request.json
 #: hrms/payroll/doctype/employee_other_income/employee_other_income.json
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
@@ -4634,7 +4643,7 @@ msgstr "Personel kayıtları seçilen ayara göre oluşturulacaktır"
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr ""
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:198
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:218
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr ""
 
@@ -4650,7 +4659,7 @@ msgstr "Personel {0}, bu dönem içinde çakışan aktif bir Vardiyaya ({1}: {2}
 msgid "Employee {0} already submitted an application {1} for the payroll period {2}"
 msgstr ""
 
-#: hrms/hr/doctype/shift_request/shift_request.py:111
+#: hrms/hr/doctype/shift_request/shift_request.py:115
 msgid "Employee {0} has already applied for Shift {1}: {2} that overlaps within this period"
 msgstr "Personel {0} , bu dönem içinde çakışan {1}: {2} vardiyası için zaten başvuruda bulunmuştur"
 
@@ -5348,7 +5357,7 @@ msgstr "Personeller için {0} oluşturulamadı/gönderilemedi:"
 msgid "Failed to delete defaults for country {0}."
 msgstr "{0} ülkesinin varsayılanları silinemedi."
 
-#: hrms/api/__init__.py:609
+#: hrms/api/__init__.py:726
 msgid "Failed to download Salary Slip PDF"
 msgstr "Maaş Bordrosu PDF olarak indirilemedi"
 
@@ -5453,11 +5462,13 @@ msgid "Feedback {0} added successfully"
 msgstr "Geri bildirim {0} başarıyla eklendi"
 
 #. Label of the fetch_geolocation (Button) field in DocType 'Employee Checkin'
+#. Label of the fetch_geolocation (Button) field in DocType 'Shift Location'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
+#: hrms/hr/doctype/shift_location/shift_location.json
 msgid "Fetch Geolocation"
 msgstr "Coğrafi Konumu Getir"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:21
+#: hrms/hr/doctype/employee_checkin/employee_checkin.js:25
 msgid "Fetch Shift"
 msgstr "Vardiyayı Getir"
 
@@ -5470,11 +5481,11 @@ msgstr "Vardiyaları Getir"
 msgid "Fetching Employees"
 msgstr "Personelleri Getir"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:27
+#: hrms/hr/doctype/employee_checkin/employee_checkin.js:31
 msgid "Fetching Shift"
 msgstr "Vardiya Getiriliyor"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:54
+#: hrms/public/js/utils/index.js:193
 msgid "Fetching your geolocation"
 msgstr "Coğrafi konumunuz getiriliyor"
 
@@ -5866,16 +5877,17 @@ msgid "General Ledger"
 msgstr "Genel Muhasebe"
 
 #. Label of the geolocation (Geolocation) field in DocType 'Employee Checkin'
+#. Label of the geolocation (Geolocation) field in DocType 'Shift Location'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
+#: hrms/hr/doctype/shift_location/shift_location.json
 msgid "Geolocation"
 msgstr "Coğrafi Konum"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:47
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:74
+#: hrms/public/js/utils/index.js:186 hrms/public/js/utils/index.js:212
 msgid "Geolocation Error"
 msgstr "Coğrafi Konum Hatası"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:46
+#: hrms/public/js/utils/index.js:185
 msgid "Geolocation is not supported by your current browser"
 msgstr "Coğrafi konum, mevcut tarayıcınız tarafından desteklenmiyor"
 
@@ -6149,6 +6161,7 @@ msgstr "İK Gösterge Paneli"
 #: hrms/hr/doctype/leave_type/leave_type.json
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
 #: hrms/hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
+#: hrms/hr/doctype/shift_location/shift_location.json
 #: hrms/hr/doctype/shift_request/shift_request.json
 #: hrms/hr/doctype/shift_type/shift_type.json hrms/hr/doctype/skill/skill.json
 #: hrms/hr/doctype/staffing_plan/staffing_plan.json
@@ -6232,6 +6245,7 @@ msgstr "İnsan Kaynakları Ayarları"
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
 #: hrms/hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
+#: hrms/hr/doctype/shift_location/shift_location.json
 #: hrms/hr/doctype/shift_request/shift_request.json
 #: hrms/hr/doctype/shift_type/shift_type.json
 #: hrms/hr/doctype/staffing_plan/staffing_plan.json
@@ -6373,7 +6387,7 @@ msgid "Hold"
 msgstr "Beklemede"
 
 #: hrms/hr/doctype/attendance/attendance.py:291
-#: hrms/hr/doctype/leave_application/leave_application.py:1286
+#: hrms/hr/doctype/leave_application/leave_application.py:1290
 #: hrms/hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.py:24
 msgid "Holiday"
 msgstr "Tatil"
@@ -7414,9 +7428,15 @@ msgid "Late Entry Grace Period"
 msgstr "Geç Giriş Grace Dönemi"
 
 #. Label of the latitude (Float) field in DocType 'Employee Checkin'
+#. Label of the latitude (Float) field in DocType 'Shift Location'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
+#: hrms/hr/doctype/shift_location/shift_location.json
 msgid "Latitude"
 msgstr "Enlem"
+
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:79
+msgid "Latitude and longitude values are required for checking in."
+msgstr ""
 
 #. Option for the 'Calculate Payroll Working Days Based On' (Select) field in
 #. DocType 'Payroll Settings'
@@ -7533,7 +7553,7 @@ msgstr "izin engel listesi süreleri"
 msgid "Leave Block List Name"
 msgstr "izin engel listesi adı"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:1262
+#: hrms/hr/doctype/leave_application/leave_application.py:1266
 msgid "Leave Blocked"
 msgstr "İzin Engellendi"
 
@@ -7890,6 +7910,11 @@ msgstr "Konum"
 msgid "Location / Device ID"
 msgstr "Lokasyon / Cihaz"
 
+#. Label of the location_name (Data) field in DocType 'Shift Location'
+#: hrms/hr/doctype/shift_location/shift_location.json
+msgid "Location Name"
+msgstr "Lokasyon Adı"
+
 #. Label of the lodging_required (Check) field in DocType 'Travel Itinerary'
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json
 msgid "Lodging Required"
@@ -7900,12 +7925,14 @@ msgstr "Konaklama Gerekli"
 msgid "Log Type"
 msgstr "Giriş Türü"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:56
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:63
 msgid "Log Type is required for check-ins falling in the shift: {0}."
 msgstr "Vardiyaya giriş check-in işlemleri için Günlük Tipi gereklidir: {0}."
 
 #. Label of the longitude (Float) field in DocType 'Employee Checkin'
+#. Label of the longitude (Float) field in DocType 'Shift Location'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
+#: hrms/hr/doctype/shift_location/shift_location.json
 msgid "Longitude"
 msgstr "Boylam"
 
@@ -8444,7 +8471,7 @@ msgstr "Hiç Veri yok"
 msgid "No Employee Found"
 msgstr "Çalışan Bulunamadı"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:122
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:142
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "verilen çalışanın saha değeri için çalışan bulunamadı. &#39;{}&#39;: {}"
 
@@ -8784,7 +8811,7 @@ msgstr "Tanıtım Aktiviteleri"
 msgid "Onboarding Begins On"
 msgstr "Tanıtım Başlangıcı"
 
-#: hrms/hr/doctype/shift_request/shift_request.py:78
+#: hrms/hr/doctype/shift_request/shift_request.py:82
 msgid "Only Approvers can Approve this Request."
 msgstr "Bu İsteği Yalnızca Onaylayanlar Onaylayabilirim."
 
@@ -8808,7 +8835,7 @@ msgstr ""
 msgid "Only Leave Applications with status 'Approved' and 'Rejected' can be submitted"
 msgstr "Sadece sunulabilir &#39;Reddedildi&#39; &#39;Onaylandı&#39; ve statülü Uygulamaları bırakın"
 
-#: hrms/hr/doctype/shift_request/shift_request.py:32
+#: hrms/hr/doctype/shift_request/shift_request.py:36
 msgid "Only Shift Request with status 'Approved' and 'Rejected' can be submitted"
 msgstr "Yalnızca &#39;Onaylandı&#39; ve &#39;Reddedildi&#39; Durumunda Vardiya İsteği gönderilebilir"
 
@@ -8954,7 +8981,7 @@ msgstr ""
 msgid "Overlapping Shift Attendance"
 msgstr ""
 
-#: hrms/hr/doctype/shift_request/shift_request.py:119
+#: hrms/hr/doctype/shift_request/shift_request.py:123
 msgid "Overlapping Shift Requests"
 msgstr ""
 
@@ -9923,6 +9950,11 @@ msgstr "Hızlı Filtreler"
 msgid "Quick Links"
 msgstr "Hızlı Bağlantılar"
 
+#. Description of the 'Checkin Radius' (Int) field in DocType 'Shift Location'
+#: hrms/hr/doctype/shift_location/shift_location.json
+msgid "Radius within which check-in is allowed (in meters)"
+msgstr ""
+
 #. Label of the raised_by (Link) field in DocType 'Employee Grievance'
 #: hrms/hr/doctype/employee_grievance/employee_grievance.json
 msgid "Raised By"
@@ -9998,7 +10030,7 @@ msgstr "Talep Nedeni"
 msgid "Reason for Withholding Salary"
 msgstr ""
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:288
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:308
 msgid "Reason for skipping auto attendance:"
 msgstr ""
 
@@ -11374,7 +11406,7 @@ msgstr "Vardiya Atama Programı"
 msgid "Shift Assignment Tool"
 msgstr "Vardiya Atama Aracı"
 
-#: hrms/hr/doctype/shift_request/shift_request.py:47
+#: hrms/hr/doctype/shift_request/shift_request.py:51
 msgid "Shift Assignment: {0} created for Employee: {1}"
 msgstr "Vardiya Ataması: {0} Çalışan için yayınladı: {1}"
 
@@ -11386,7 +11418,10 @@ msgid "Shift Attendance"
 msgstr "Vardiya Devamlılığı"
 
 #. Label of the shift_details_section (Section Break) field in DocType 'Shift
+#. Assignment'
+#. Label of the shift_details_section (Section Break) field in DocType 'Shift
 #. Assignment Schedule'
+#: hrms/hr/doctype/shift_assignment/shift_assignment.json
 #: hrms/hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 msgid "Shift Details"
 msgstr "Vardiya Detayları"
@@ -11399,6 +11434,15 @@ msgstr "vardiya sonu"
 #: hrms/hr/report/shift_attendance/shift_attendance.py:61
 msgid "Shift End Time"
 msgstr "Vardiya Bitiş Saati"
+
+#. Label of the shift_location (Link) field in DocType 'Shift Assignment'
+#. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
+#: hrms/hr/doctype/shift_assignment/shift_assignment.json
+#: hrms/hr/doctype/shift_location/shift_location.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+msgid "Shift Location"
+msgstr ""
 
 #. Label of the shift_request (Link) field in DocType 'Shift Assignment'
 #. Name of a DocType
@@ -11472,7 +11516,7 @@ msgstr "Vardiya Zamanları"
 msgid "Shift Type"
 msgstr "Vardiya Türü"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:33
+#: hrms/hr/doctype/employee_checkin/employee_checkin.js:37
 msgid "Shift has been successfully updated to {0}."
 msgstr "Vardiya başarıyla {0} olarak güncellendi."
 
@@ -11952,6 +11996,7 @@ msgstr "Gelir Vergisi Diliminde {0} koşulu için söz dizimi hatası"
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 #: hrms/hr/doctype/purpose_of_travel/purpose_of_travel.json
 #: hrms/hr/doctype/pwa_notification/pwa_notification.json
+#: hrms/hr/doctype/shift_location/shift_location.json
 #: hrms/hr/doctype/skill/skill.json
 #: hrms/hr/doctype/travel_request/travel_request.json
 #: hrms/hr/doctype/vehicle_service_item/vehicle_service_item.json
@@ -12210,7 +12255,7 @@ msgstr "Bu eylem, bağlantılı değerlendirme geri bildirimlerinde/hedeflerinde
 msgid "This compensatory leave will be applicable from {0}."
 msgstr ""
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:36
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:43
 msgid "This employee already has a log with the same timestamp.{0}"
 msgstr "Bu çalışanın zaten aynı zaman damgasına sahip bir günlüğü var. {0}"
 
@@ -12997,7 +13042,7 @@ msgstr "Kanıt Türü"
 msgid "Unable to find Salary Component {0}"
 msgstr "{0} Maaş Bileşeni bulunamıyor"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:68
+#: hrms/public/js/utils/index.js:206
 msgid "Unable to retrieve your location"
 msgstr ""
 
@@ -13570,7 +13615,7 @@ msgstr "Sadece {0} tutarında bir talepte bulunabilirsiniz, kalan {1} tutarı or
 msgid "You can not define multiple slabs if you have a slab with no lower and upper limits."
 msgstr ""
 
-#: hrms/hr/doctype/shift_request/shift_request.py:65
+#: hrms/hr/doctype/shift_request/shift_request.py:69
 msgid "You can not request for your Default Shift: {0}"
 msgstr "Varsayılan Vardiyanızı talep edemezsiniz: {0}"
 
@@ -13582,13 +13627,17 @@ msgstr ""
 msgid "You can only submit Leave Encashment for a valid encashment amount"
 msgstr "İzin Depozitini geçerli bir nakit miktarı için gönderebilirsiniz."
 
-#: hrms/api/__init__.py:566
+#: hrms/api/__init__.py:683
 msgid "You can only upload JPG, PNG, PDF, TXT or Microsoft documents."
 msgstr "Sadece JPG, PNG, PDF, TXT veya Microsoft belgelerini yükleyebilirsiniz."
 
 #: hrms/overrides/employee_master.py:83
 msgid "You may add additional details, if any, and submit the offer."
 msgstr "Varsa ek bilgilerinizi ekleyip teklifinizi kaydedebilirsiniz."
+
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:105
+msgid "You must be within {0} meters of your shift location to check in."
+msgstr ""
 
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:51
 msgid "You were only present for Half Day on {}. Cannot apply for a full day compensatory leave"
@@ -13674,7 +13723,7 @@ msgstr "{0} <br> Bu hata eksik veya silinmiş bir alandan kaynaklanıyor olabili
 msgid "{0} Appraisal(s) are not submitted yet"
 msgstr "{0} Değerlendirme henüz gönderilmedi"
 
-#: hrms/public/js/utils/index.js:192
+#: hrms/public/js/utils/index.js:229
 msgid "{0} Field"
 msgstr "{0} Alanı"
 
@@ -13823,7 +13872,7 @@ msgstr "{} Bekliyor"
 msgid "{} Unclaimed"
 msgstr "{} Talep Edilmemiş"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:208
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:228
 msgid "{} is an invalid Attendance Status."
 msgstr "{} geçersiz bir Devamlılık Durumudur."
 
