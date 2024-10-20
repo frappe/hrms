@@ -588,13 +588,13 @@ class SalarySlip(TransactionBase):
 
 		return payment_days
 
-	def get_holidays_for_employee(self, start_date, end_date):
+	def get_holidays_for_employee(self, start_date, end_date, as_dict=False):
 		holiday_list = get_holiday_list_for_employee(self.employee)
 		key = f"{holiday_list}:{start_date}:{end_date}"
 		holiday_dates = frappe.cache().hget(HOLIDAYS_BETWEEN_DATES, key)
 
 		if not holiday_dates:
-			holiday_dates = get_holiday_dates_between(holiday_list, start_date, end_date)
+			holiday_dates = get_holiday_dates_between(holiday_list, start_date, end_date, as_dict=as_dict)
 			frappe.cache().hset(HOLIDAYS_BETWEEN_DATES, key, holiday_dates)
 
 		return holiday_dates
@@ -1081,6 +1081,9 @@ class SalarySlip(TransactionBase):
 
 		self.add_structure_components(component_type)
 		self.add_additional_salary_components(component_type)
+
+		self.process_overtime_slips()
+
 		if component_type == "earnings":
 			self.add_employee_benefits()
 		else:
@@ -1385,7 +1388,10 @@ class SalarySlip(TransactionBase):
 		data=None,
 		default_amount=None,
 		remove_if_zero_valued=None,
+		processed_overtime_slips=None,
 	):
+		if processed_overtime_slips is None:
+			processed_overtime_slips = []
 		component_row = None
 		for d in self.get(component_type):
 			if d.salary_component != component_data.salary_component:
@@ -1426,6 +1432,10 @@ class SalarySlip(TransactionBase):
 				"exempted_from_income_tax",
 			):
 				component_row.set(attr, component_data.get(attr))
+
+		processed_overtime_slips = ", ".join(processed_overtime_slips)
+		if processed_overtime_slips:
+			component_row.overtime_slips = processed_overtime_slips
 
 		if additional_salary:
 			if additional_salary.overwrite:
@@ -2073,6 +2083,176 @@ class SalarySlip(TransactionBase):
 					},
 				)
 
+	def process_overtime_slips(self):
+		overtime_slips = self.get_overtime_slips()
+		amounts, processed_overtime_slips, overtime_salary_component = (
+			self.get_overtime_type_details_and_amount(overtime_slips)
+		)
+		self.add_overtime_component(amounts, processed_overtime_slips, overtime_salary_component)
+
+	def get_overtime_slips(self):
+		return frappe.get_all(
+			"Overtime Slip",
+			filters={
+				"employee": self.employee,
+				"posting_date": ("between", [self.start_date, self.end_date]),
+				"salary_slip": "",
+				# 'docstatus': 1
+			},
+			fields=["name", "from_date", "to_date"],
+		)
+
+	def get_overtime_type_details_and_amount(self, overtime_slips):
+		standard_duration_amount, weekends_duration_amount = 0, 0
+		public_holidays_duration_amount, calculated_amount = 0, 0
+		processed_overtime_slips = []
+		overtime_types_details = {}
+		for slip in overtime_slips:
+			holiday_date_map = self.get_holiday_map(slip.from_date, slip.to_date)
+			details = self.get_overtime_details(slip.name)
+
+			for detail in details:
+				overtime_hours = convert_str_time_to_hours(detail.overtime_duration)
+				overtime_types_details, overtime_salary_component = self.set_overtime_types_details(
+					overtime_types_details, detail
+				)
+
+				standard_working_hours = convert_str_time_to_hours(detail.standard_working_hours)
+
+				applicable_hourly_wages = (
+					overtime_types_details[detail.overtime_type]["applicable_daily_amount"]
+					/ standard_working_hours
+				)
+				weekend_multiplier, public_holiday_multiplier = self.get_multipliers(
+					overtime_types_details, detail
+				)
+				overtime_date = cstr(detail.date)
+				if overtime_date in holiday_date_map.keys():
+					if holiday_date_map[overtime_date].weekly_off == 1:
+						calculated_amount = overtime_hours * applicable_hourly_wages * weekend_multiplier
+						weekends_duration_amount += calculated_amount
+					elif holiday_date_map[overtime_date].weekly_off == 0:
+						calculated_amount = (
+							overtime_hours * applicable_hourly_wages * public_holiday_multiplier
+						)
+						public_holidays_duration_amount += calculated_amount
+				else:
+					calculated_amount = (
+						overtime_hours
+						* applicable_hourly_wages
+						* overtime_types_details[detail.overtime_type]["standard_multiplier"]
+					)
+					standard_duration_amount += calculated_amount
+
+			processed_overtime_slips.append(slip.name)
+
+		return (
+			[weekends_duration_amount, public_holidays_duration_amount, standard_duration_amount],
+			processed_overtime_slips,
+			overtime_salary_component,
+		)
+
+	def get_multipliers(self, overtime_types_details, detail):
+		weekend_multiplier = overtime_types_details[detail.overtime_type]["standard_multiplier"]
+		public_holiday_multiplier = overtime_types_details[detail.overtime_type]["standard_multiplier"]
+
+		if overtime_types_details[detail.overtime_type]["applicable_for_weekend"]:
+			weekend_multiplier = overtime_types_details[detail.overtime_type]["weekend_multiplier"]
+		if overtime_types_details[detail.overtime_type]["applicable_for_public_holiday"]:
+			public_holiday_multiplier = overtime_types_details[detail.overtime_type][
+				"public_holiday_multiplier"
+			]
+
+		return weekend_multiplier, public_holiday_multiplier
+
+	def get_holiday_map(self, from_date, to_date):
+		holiday_date = self.get_holidays_for_employee(from_date, to_date, as_dict=True)
+
+		holiday_date_map = {}
+		try:
+			for date in holiday_date:
+				holiday_date_map[cstr(date.holiday_date)] = date
+		except Exception:
+			frappe.throw("Please try again after clearing your cache.")
+
+		return holiday_date_map
+
+	def set_overtime_types_details(self, overtime_types_details, detail):
+		if detail.overtime_type not in overtime_types_details:
+			details, applicable_components = self.get_overtime_type_detail(detail.overtime_type)
+			overtime_types_details[detail.overtime_type] = details
+
+			if len(applicable_components):
+				overtime_types_details[detail.overtime_type]["components"] = applicable_components
+			else:
+				frappe.throw(
+					_("Select applicable components in Overtime Type: {0}").format(
+						frappe.bold(detail.overtime_type)
+					)
+				)
+
+			if "applicable_amount" not in overtime_types_details[detail.overtime_type].keys():
+				component_amount = sum(
+					[
+						data.default_amount
+						for data in self.earnings
+						if data.salary_component in overtime_types_details[detail.overtime_type]["components"]
+						and not data.get("additional_salary", None)
+					]
+				)
+
+				overtime_types_details[detail.overtime_type]["applicable_daily_amount"] = (
+					component_amount / self.total_working_days
+				)
+
+		return overtime_types_details, overtime_types_details[detail.overtime_type].overtime_salary_component
+
+	def add_overtime_component(self, amounts, processed_overtime_slips, overtime_salary_component):
+		if not len(amounts):
+			return
+		if not overtime_salary_component:
+			frappe.throw(
+				_("Select {0} in {1}").format(
+					frappe.bold("Overtime Salary Component"), frappe.bold("Overtime Type")
+				)
+			)
+
+		component_data = frappe._dict(get_salary_component_data(overtime_salary_component) or {})
+		component_data.salary_component = overtime_salary_component
+		self.update_component_row(
+			component_data, sum(amounts), "earnings", processed_overtime_slips=processed_overtime_slips
+		)
+
+	def get_overtime_details(self, parent):
+		return frappe.get_all(
+			"Overtime Details",
+			filters={"parent": parent},
+			fields=["date", "overtime_type", "overtime_duration", "standard_working_hours"],
+		)
+
+	def get_overtime_type_detail(self, name):
+		detail = frappe.get_value(
+			"Overtime Type",
+			filters={"name": name},
+			fieldname=[
+				"name",
+				"standard_multiplier",
+				"weekend_multiplier",
+				"public_holiday_multiplier",
+				"applicable_for_weekend",
+				"applicable_for_public_holiday",
+				"overtime_salary_component",
+			],
+			as_dict=True,
+		)
+		components = frappe.get_all(
+			"Overtime Salary Component", filters={"parent": name}, fields=["salary_component"]
+		)
+
+		components = [data.salary_component for data in components]
+
+		return detail, components
+
 
 def unlink_ref_doc_from_salary_slip(doc, method=None):
 	"""Unlinks accrual Journal Entry from Salary Slips on cancellation"""
@@ -2331,3 +2511,11 @@ def email_salary_slips(names) -> None:
 	for name in names:
 		salary_slip = frappe.get_doc("Salary Slip", name)
 		salary_slip.email_salary_slip()
+
+
+def convert_str_time_to_hours(duration_str):
+	# Split the string into hours, minutes, and seconds
+	hours, minutes, seconds = map(int, duration_str.split(":"))
+	total_seconds = hours * 3600 + minutes * 60 + seconds
+
+	return total_seconds / 3600

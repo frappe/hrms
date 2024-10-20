@@ -1,0 +1,127 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "Prompt",
+ "creation": "2024-10-12 23:46:31.408000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_pai1",
+  "overtime_salary_component",
+  "applicable_salary_component",
+  "column_break_lttw",
+  "maximum_overtime_hours_allowed",
+  "pay_rate_multipliers_section",
+  "standard_multiplier",
+  "applicable_for_public_holiday",
+  "public_holiday_multiplier",
+  "column_break_titx",
+  "applicable_for_weekend",
+  "weekend_multiplier"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_pai1",
+   "fieldtype": "Section Break",
+   "label": "Basic"
+  },
+  {
+   "fieldname": "overtime_salary_component",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Overtime Salary Component",
+   "options": "Salary Component",
+   "reqd": 1
+  },
+  {
+   "fieldname": "applicable_salary_component",
+   "fieldtype": "Table MultiSelect",
+   "label": "Applicable Salary Component",
+   "options": "Overtime Salary Component",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_lttw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "maximum_overtime_hours_allowed",
+   "fieldtype": "Int",
+   "label": "Maximum Overtime Hours Allowed",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "pay_rate_multipliers_section",
+   "fieldtype": "Section Break",
+   "label": "Pay Rate Multipliers"
+  },
+  {
+   "fieldname": "standard_multiplier",
+   "fieldtype": "Float",
+   "label": "Standard Multiplier",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "description": "If unchecked, the standard multiplier will be taken as default for the weekend.",
+   "fieldname": "applicable_for_weekend",
+   "fieldtype": "Check",
+   "label": "Applicable for Weekend",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval: doc.applicable_for_weekend == 1",
+   "fieldname": "weekend_multiplier",
+   "fieldtype": "Float",
+   "label": "Weekend Multiplier",
+   "mandatory_depends_on": "eval: doc.applicable_for_weekend == 1",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "column_break_titx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "description": "If unchecked, the standard multiplier will be taken as default for Public Holiday.",
+   "fieldname": "applicable_for_public_holiday",
+   "fieldtype": "Check",
+   "label": "Applicable for Public Holiday"
+  },
+  {
+   "depends_on": "eval: doc.applicable_for_public_holiday == 1",
+   "fieldname": "public_holiday_multiplier",
+   "fieldtype": "Float",
+   "label": "Public Holiday Multiplier",
+   "mandatory_depends_on": "eval: doc.applicable_for_public_holiday == 1",
+   "non_negative": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-10-13 19:46:49.026344",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Overtime Type",
+ "naming_rule": "Set by user",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
