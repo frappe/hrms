@@ -4,7 +4,6 @@
 # import frappe
 from frappe.tests import IntegrationTestCase, UnitTestCase
 
-
 # On IntegrationTestCase, the doctype test records and all
 # link-field test record depdendencies are recursively loaded
 # Use these module variables to add/remove to/from that list
@@ -16,15 +15,6 @@ class TestOvertimeSlip(UnitTestCase):
 	"""
 	Unit tests for OvertimeSlip.
 	Use this class for testing individual functions and methods.
-	"""
-
-	pass
-
-
-class TestOvertimeSlip(IntegrationTestCase):
-	"""
-	Integration tests for OvertimeSlip.
-	Use this class for testing interactions between multiple components.
 	"""
 
 	pass

@@ -206,6 +206,30 @@ class SalarySlip(TransactionBase):
 					self.email_salary_slip()
 
 		self.update_payment_status_for_gratuity()
+		self.update_overtime_slip()
+
+	def update_overtime_slip(self):
+		overtime_slips = []
+		for data in self.earnings:
+			if data.overtime_slips:
+				overtime_slips.extend(data.overtime_slips.split(", "))
+
+		if self.docstatus == 1:
+			for slip in overtime_slips:
+				frappe.db.set_value("Overtime Slip", slip, "salary_slip", self.name)
+
+		if self.docstatus == 2:
+			for slip in overtime_slips:
+				frappe.db.set_value("Overtime Slip", slip, "salary_slip", None)
+				frappe.db.set_value("Overtime Slip", slip, "docstatus", 1)
+
+			frappe.msgprint(
+				msg=_("Unlinked Salary Slip from Overtime Slip"),
+				title=_("Unlinked Overtime Slips"),
+				indicator="blue",
+				is_minimizable=True,
+				wide=True,
+			)
 
 	def update_payment_status_for_gratuity(self):
 		additional_salary = frappe.db.get_all(
@@ -232,6 +256,9 @@ class SalarySlip(TransactionBase):
 
 		cancel_loan_repayment_entry(self)
 		self.publish_update()
+
+	def before_cancel(self):
+		self.update_overtime_slip()
 
 	def publish_update(self):
 		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
@@ -2085,10 +2112,11 @@ class SalarySlip(TransactionBase):
 
 	def process_overtime_slips(self):
 		overtime_slips = self.get_overtime_slips()
-		amounts, processed_overtime_slips, overtime_salary_component = (
-			self.get_overtime_type_details_and_amount(overtime_slips)
-		)
-		self.add_overtime_component(amounts, processed_overtime_slips, overtime_salary_component)
+		if overtime_slips:
+			amounts, processed_overtime_slips, overtime_salary_component = (
+				self.get_overtime_type_details_and_amount(overtime_slips)
+			)
+			self.add_overtime_component(amounts, processed_overtime_slips, overtime_salary_component)
 
 	def get_overtime_slips(self):
 		return frappe.get_all(
@@ -2097,7 +2125,8 @@ class SalarySlip(TransactionBase):
 				"employee": self.employee,
 				"posting_date": ("between", [self.start_date, self.end_date]),
 				"salary_slip": "",
-				# 'docstatus': 1
+				"docstatus": 1,
+				"status": "Approved",
 			},
 			fields=["name", "from_date", "to_date"],
 		)
@@ -2107,6 +2136,7 @@ class SalarySlip(TransactionBase):
 		public_holidays_duration_amount, calculated_amount = 0, 0
 		processed_overtime_slips = []
 		overtime_types_details = {}
+		overtime_salary_component = None
 		for slip in overtime_slips:
 			holiday_date_map = self.get_holiday_map(slip.from_date, slip.to_date)
 			details = self.get_overtime_details(slip.name)
