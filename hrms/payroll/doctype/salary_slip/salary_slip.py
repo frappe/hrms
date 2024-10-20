@@ -2203,7 +2203,7 @@ class SalarySlip(TransactionBase):
 			for date in holiday_date:
 				holiday_date_map[cstr(date.holiday_date)] = date
 		except Exception:
-			frappe.throw("Please try again after clearing your cache.")
+			frappe.throw(_("Please try again after clearing your cache."))
 
 		return holiday_date_map
 
@@ -2545,7 +2545,7 @@ def email_salary_slips(names) -> None:
 
 def convert_str_time_to_hours(duration_str):
 	# Split the string into hours, minutes, and seconds
-	hours, minutes, seconds = map(int, duration_str.split(":"))
+	hours, minutes, seconds = (int(part) for part in duration_str.split(":"))
 	total_seconds = hours * 3600 + minutes * 60 + seconds
 
 	return total_seconds / 3600
