@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, add_months, get_year_ending, get_year_start, getdate
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
@@ -17,7 +17,7 @@ from hrms.tests.test_utils import add_date_to_holiday_list, get_first_sunday
 test_dependencies = ["Employee"]
 
 
-class TestAttendanceRequest(FrappeTestCase):
+class TestAttendanceRequest(IntegrationTestCase):
 	def setUp(self):
 		for doctype in ["Attendance Request", "Attendance"]:
 			frappe.db.delete(doctype)
