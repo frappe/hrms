@@ -106,7 +106,9 @@ jobs:
         run: |
           bash ${GITHUB_WORKSPACE}/.github/helper/install.sh
         env:
-          BRANCH_TO_CLONE: ${{ env.HR_BRANCH }}
+          FRAPPE_USER: blaggacao
+          FRAPPE_BRANCH: feat/add-read-only-document-context-to-mapper
+          ERPNEXT_BRANCH: feat/incorporate-read-only-mode-mapper
 
       - name: Run Tests
         run: cd ~/frappe-bench/ && bench --site test_site run-parallel-tests --app hrms --total-builds ${{ strategy.job-total }} --build-number ${{ matrix.container }}
