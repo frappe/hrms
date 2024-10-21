@@ -28,7 +28,10 @@
   "late_entry_grace_period",
   "column_break_18",
   "enable_early_exit_marking",
-  "early_exit_grace_period"
+  "early_exit_grace_period",
+  "overtime_section",
+  "allow_overtime",
+  "overtime_type"
  ],
  "fields": [
   {
@@ -173,10 +176,29 @@
    "fieldtype": "Select",
    "label": "Roster Color",
    "options": "Blue\nCyan\nFuchsia\nGreen\nLime\nOrange\nPink\nRed\nViolet\nYellow"
+  },
+  {
+   "fieldname": "overtime_section",
+   "fieldtype": "Section Break",
+   "label": "Overtime"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_overtime",
+   "fieldtype": "Check",
+   "label": "Allow Overtime"
+  },
+  {
+   "depends_on": "eval:doc.allow_overtime == 1",
+   "fieldname": "overtime_type",
+   "fieldtype": "Link",
+   "label": "Overtime Type",
+   "mandatory_depends_on": "eval:doc.allow_overtime == 1",
+   "options": "Overtime Type"
   }
  ],
  "links": [],
- "modified": "2024-05-17 15:48:27.191003",
+ "modified": "2024-10-13 20:37:18.928843",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Type",
