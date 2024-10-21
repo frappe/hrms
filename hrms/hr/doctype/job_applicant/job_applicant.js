@@ -90,6 +90,7 @@ frappe.ui.form.on("Job Applicant", {
 					fieldname: "interview_round",
 					fieldtype: "Link",
 					options: "Interview Round",
+					read: 1,
 				},
 			],
 			primary_action_label: __("Create Interview"),
