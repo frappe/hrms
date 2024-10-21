@@ -2239,7 +2239,9 @@ def make_payroll_period():
 			create_payroll_period(company=company, name=company_based_payroll_period[company])
 
 
-def make_holiday_list(list_name=None, from_date=None, to_date=None, add_weekly_offs=True):
+def make_holiday_list(
+	list_name=None, from_date=None, to_date=None, add_weekly_offs=True, weekly_off_days=None
+):
 	fiscal_year = get_fiscal_year(nowdate(), company=erpnext.get_default_company())
 	name = list_name or "Salary Slip Test Holiday List"
 
@@ -2255,8 +2257,11 @@ def make_holiday_list(list_name=None, from_date=None, to_date=None, add_weekly_o
 	).insert()
 
 	if add_weekly_offs:
-		holiday_list.weekly_off = "Sunday"
-		holiday_list.get_weekly_off_dates()
+		if not weekly_off_days:
+			weekly_off_days = ["Sunday"]
+		for d in weekly_off_days:
+			holiday_list.weekly_off = d
+			holiday_list.get_weekly_off_dates()
 
 	holiday_list.save()
 	holiday_list = holiday_list.name
