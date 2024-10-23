@@ -948,7 +948,6 @@ class PayrollEntry(Document):
 				SalarySlip.employee,
 				SalarySlip.salary_structure,
 				SalarySlip.salary_withholding_cycle,
-				SalarySlip.total_loan_repayment,
 				SalaryDetail.salary_component,
 				SalaryDetail.amount,
 				SalaryDetail.parentfield,
@@ -960,6 +959,9 @@ class PayrollEntry(Document):
 				& (SalarySlip.payroll_entry == self.name)
 			)
 		)
+
+		if "lending" in frappe.get_installed_apps():
+			query = query.select(SalarySlip.total_loan_repayment)
 
 		if for_withheld_salaries:
 			query = query.where(SalarySlip.status == "Withheld")
