@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-10-20 09:34+0000\n"
-"PO-Revision-Date: 2024-10-21 13:11\n"
+"PO-Revision-Date: 2024-10-23 13:40\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -9396,7 +9396,7 @@ msgstr "تکه کاری"
 #. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Pink"
-msgstr "رنگ صورتی"
+msgstr "صورتی"
 
 #. Label of the planned_vacancies (Int) field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
@@ -13570,7 +13570,7 @@ msgstr "سالانه"
 #. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Yellow"
-msgstr "رنگ زرد"
+msgstr "زرد"
 
 #. Option for the 'Is Active' (Select) field in DocType 'Salary Structure'
 #. Option for the 'Is Default' (Select) field in DocType 'Salary Structure'
