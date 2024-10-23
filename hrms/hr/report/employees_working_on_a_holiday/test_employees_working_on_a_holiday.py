@@ -1,7 +1,7 @@
 from dateutil.relativedelta import relativedelta
 
 import frappe
-from frappe.tests import IntegrationTestCase
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -12,7 +12,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.tests.test_utils import get_first_sunday
 
 
-class TestEmployeesWorkingOnAHoliday(IntegrationTestCase):
+class TestEmployeesWorkingOnAHoliday(FrappeTestCase):
 	def setUp(self):
 		self.company = "_Test Company"
 		frappe.db.delete("Attendance")
