@@ -8,7 +8,10 @@
 				</div>
 				<div class="text-xs font-normal text-gray-500">
 					<span>
-						{{ `Gross Pay: ${formatCurrency(doc.gross_pay, doc.currency)}` }}
+						{{ __("{0}: {1}", null, [
+								__("Gross Pay"),
+								formatCurrency(doc.gross_pay, doc.currency),
+							]) }}
 					</span>
 					<span class="whitespace-pre"> &middot; </span>
 				</div>

@@ -1,9 +1,9 @@
 <template>
 	<ion-header>
 		<ion-toolbar>
-			<ion-title>{{ filename }} - File Preview</ion-title>
+			<ion-title>{{ filename }} - {{ __("File Preview") }}</ion-title>
 			<ion-buttons slot="end">
-				<ion-button @click="modalController.dismiss()">Close</ion-button>
+				<ion-button @click="modalController.dismiss()">{{ __("Close") }} </ion-button>
 			</ion-buttons>
 		</ion-toolbar>
 	</ion-header>

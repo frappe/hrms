@@ -16,7 +16,7 @@
 			<template #prefix>
 				<FeatherIcon name="chevron-up" class="w-4" />
 			</template>
-			Actions
+			{{ __("Actions") }}
 		</Button>
 
 		<template v-else>
@@ -30,7 +30,7 @@
 				<template #prefix v-if="action.featherIcon">
 					<FeatherIcon :name="action.featherIcon" class="w-4" />
 				</template>
-				{{ action.text }}
+				{{ __(action.text, null, props.doc?.doctype) }}
 			</Button>
 		</template>
 	</div>
@@ -47,7 +47,6 @@
 import { IonActionSheet, modalController } from "@ionic/vue"
 import { computed, ref, onMounted } from "vue"
 import { FeatherIcon } from "frappe-ui"
-
 const props = defineProps({
 	doc: {
 		type: Object,
@@ -90,7 +89,7 @@ const getTransitions = async () => {
 		}
 
 		return {
-			text: transition,
+			text: __(transition, null, props.doc?.doctype),
 			role: role,
 			theme: theme,
 			variant: variant,
@@ -106,7 +105,7 @@ const showTransitions = () => {
 	if (actions.value?.length > 0) {
 		// always add last action for dismissing the modal
 		actions.value.push({
-			text: "Dismiss",
+			text: __("Dismiss"),
 			role: "cancel",
 		})
 	}

@@ -14,9 +14,7 @@
 					<span>{{ props.doc.shift_dates || getDates(props.doc) }}</span>
 					<span v-if="props.doc.to_date">
 						<span class="whitespace-pre"> &middot; </span>
-						<span class="whitespace-nowrap">{{
-							`${props.doc.total_shift_days || getTotalDays(props.doc)}d`
-						}}</span>
+						<span class="whitespace-nowrap">{{ __("{0}d", [props.doc.total_shift_days || getTotalDays(props.doc)]) }}</span>
 					</span>
 				</div>
 			</div>
