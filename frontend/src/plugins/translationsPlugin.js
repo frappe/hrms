@@ -5,7 +5,6 @@ function makeTranslationFunction() {
 		load: () => Promise.allSettled([
 			setup(),
 			// TODO: load dayjs locales
-			setupDayjs(),
 		]),
 	}
 
