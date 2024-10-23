@@ -948,7 +948,6 @@ class PayrollEntry(Document):
 				SalarySlip.employee,
 				SalarySlip.salary_structure,
 				SalarySlip.salary_withholding_cycle,
-				SalarySlip.total_loan_repayment,
 				SalaryDetail.salary_component,
 				SalaryDetail.amount,
 				SalaryDetail.parentfield,
