@@ -1,7 +1,7 @@
 <template>
 	<template v-if="expenseClaim.expenses">
 		<div class="flex flex-row justify-between items-center pt-4">
-			<h2 class="text-base font-semibold text-gray-800">Taxes & Charges</h2>
+			<h2 class="text-base font-semibold text-gray-800">{{ __("Taxes & Charges") }} </h2>
 			<div class="flex flex-row gap-3 items-center">
 				<span class="text-base font-semibold text-gray-800">
 					{{ formatCurrency(expenseClaim.total_taxes_and_charges, currency) }}
@@ -74,7 +74,7 @@
 								v-for="field in taxesTableFields.data"
 								:key="field.fieldname"
 								class="w-full"
-								:label="field.label"
+								:label="__(field.label, null, 'Expense Claim Detail')"
 								:fieldtype="field.fieldtype"
 								:fieldname="field.fieldname"
 								:options="field.options"
@@ -101,7 +101,7 @@
 								<template #prefix>
 									<FeatherIcon name="trash" class="w-4" />
 								</template>
-								Delete
+								{{ __("Delete") }}
 							</Button>
 							<Button
 								variant="solid"
@@ -115,7 +115,7 @@
 										class="w-4"
 									/>
 								</template>
-								{{ editingIdx === null ? "Add Tax" : "Update Tax" }}
+								{{ editingIdx === null ? __("Add Tax") : __("Update Tax") }}
 							</Button>
 						</div>
 					</div>
@@ -215,9 +215,9 @@ const taxesTableFields = createResource({
 taxesTableFields.reload()
 
 const modalTitle = computed(() => {
-	if (props.isReadOnly) return "Expense Tax"
+	if (props.isReadOnly) return __("Expense Tax")
 
-	return editingIdx.value === null ? "New Expense Tax" : "Edit Expense Tax"
+	return editingIdx.value === null ? __("New Expense Tax") : __("Edit Expense Tax")
 })
 
 const addButtonDisabled = computed(() => {

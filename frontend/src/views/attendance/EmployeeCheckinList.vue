@@ -2,7 +2,7 @@
 	<ion-page>
 		<ListView
 			doctype="Employee Checkin"
-			pageTitle="Employee Checkin History"
+			:pageTitle="__('Employee Checkin History')"
 			:fields="EMPLOYEE_CHECKIN_FIELDS"
 			:filterConfig="FILTER_CONFIG"
 		/>
@@ -19,13 +19,13 @@ const FILTER_CONFIG = [
 	{
 		fieldname: "log_type",
 		fieldtype: "Select",
-		label: "Log Type",
+		label: __("Log Type"),
 		options: "IN\nOUT",
 	},
 	{
 		fieldname: "shift",
 		fieldtype: "Link",
-		label: "Shift",
+		label: __("Shift"),
 		options: "Shift Type",
 	},
 ]

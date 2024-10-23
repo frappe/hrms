@@ -4,20 +4,22 @@
 			<div class="flex h-screen w-screen flex-col justify-center bg-white">
 				<div class="flex flex-col mx-auto gap-3 items-center">
 					<FrappeHRLogo class="h-8 w-8" />
-					<div class="text-3xl font-semibold text-gray-900 text-center">Login to Frappe HR</div>
+					<div class="text-3xl font-semibold text-gray-900 text-center">
+						{{ __("Login to Frappe HR") }}
+					</div>
 				</div>
 
 				<div class="mx-auto mt-10 w-full px-8 sm:w-96">
 					<form class="flex flex-col space-y-4" @submit.prevent="submit">
 						<Input
-							label="Email"
+							:label="__('Email')"
 							placeholder="johndoe@mail.com"
 							v-model="email"
 							type="text"
 							autocomplete="username"
 						/>
 						<Input
-							label="Password"
+							:label="__('Password')"
 							type="password"
 							placeholder="••••••"
 							v-model="password"
@@ -29,7 +31,7 @@
 							variant="solid"
 							class="disabled:bg-gray-700 disabled:text-white !mt-6"
 						>
-							Login
+							{{ __("Login") }}
 						</Button>
 					</form>
 
@@ -52,10 +54,12 @@
 
 			<Dialog v-model="resetPassword.showDialog">
 				<template #body-title>
-					<h2 class="text-lg font-bold">Reset Password</h2>
+					<h2 class="text-lg font-bold">{{ __("Reset Password") }} </h2>
 				</template>
 				<template #body-content>
-					<p>Your password has expired. Please reset your password to continue</p>
+					<p>
+						{{ __("Your password has expired. Please reset your password to continue") }}
+					</p>
 				</template>
 				<template #actions>
 					<a
@@ -63,7 +67,7 @@
 						:href="resetPassword.link"
 						target="_blank"
 					>
-						Go to Reset Password page
+						{{ __("Go to Reset Password page") }}
 					</a>
 				</template>
 			</Dialog>
