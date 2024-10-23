@@ -1224,7 +1224,7 @@ def get_filtered_employees(
 	query = set_filter_conditions(query, filters, qb_object=Employee)
 
 	if not ignore_match_conditions:
-		query = set_match_conditions(query=query, qb_object=Employee)
+		query = set_match_conditions(query=query, qb_object=Employee, doctype="Employee")
 
 	if limit:
 		query = query.limit(limit)
@@ -1268,16 +1268,20 @@ def set_filter_conditions(query, filters, qb_object):
 	return query
 
 
-def set_match_conditions(query, qb_object):
+def set_match_conditions(query, qb_object, doctype):
 	match_conditions = get_match_cond("Employee", as_condition=False)
-
+	meta = frappe.get_meta(doctype)
 	for cond in match_conditions:
 		if isinstance(cond, dict):
 			for key, value in cond.items():
+				key_name = ""
+		                for field in meta.fields:
+		                    if key == field.label:
+		                        key_name = field.fieldname
 				if isinstance(value, list):
-					query = query.where(qb_object[key].isin(value))
+					query = query.where(qb_object[key_name].isin(value))
 				else:
-					query = query.where(qb_object[key] == value)
+					query = query.where(qb_object[key_name] == value)
 
 	return query
 
