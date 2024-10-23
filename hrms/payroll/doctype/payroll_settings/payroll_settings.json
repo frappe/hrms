@@ -27,9 +27,8 @@
   "encrypt_salary_slips_in_emails",
   "password_policy",
   "other_settings_section",
-  "define_opening_balance_for_earning_and_deductions",
-  "column_break_zi9y",
-  "process_payroll_accounting_entry_based_on_employee"
+  "process_payroll_accounting_entry_based_on_employee",
+  "column_break_zi9y"
  ],
  "fields": [
   {
@@ -113,13 +112,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "0",
-   "description": "If checked, then the system will enable the provision to set the opening balance for earnings and deductions till date while creating a Salary Structure Assignment (if any)",
-   "fieldname": "define_opening_balance_for_earning_and_deductions",
-   "fieldtype": "Check",
-   "label": "Define Opening Balance for Earning and Deductions"
-  },
-  {
    "fieldname": "column_break_rnoq",
    "fieldtype": "Section Break",
    "label": "Salary Slip"
@@ -186,7 +178,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-01-23 17:42:52.958013",
+ "modified": "2024-10-18 17:12:02.044020",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",

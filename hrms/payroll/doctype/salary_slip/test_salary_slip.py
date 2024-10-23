@@ -40,6 +40,7 @@ from hrms.payroll.doctype.salary_slip.salary_slip import (
 	LEAVE_TYPE_MAP,
 	SALARY_COMPONENT_VALUES,
 	TAX_COMPONENTS_BY_COMPANY,
+	SalarySlip,
 	_safe_eval,
 	make_salary_slip_from_timesheet,
 )
@@ -1428,17 +1429,14 @@ class TestSalarySlip(FrappeTestCase):
 	def test_income_tax_breakup_fields(self):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
-		frappe.db.sql("DELETE FROM `tabIncome Tax Slab` where currency = 'INR'")
-
+		frappe.db.delete("Income Tax Slab", {"currency": "INR"})
 		emp = make_employee(
 			"test_employee_ss_income_tax_breakup@salary.com",
 			company="_Test Company",
-			**{"date_of_joining": "2021-12-01"},
+			date_of_joining="2021-01-01",
 		)
-		employee_doc = frappe.get_cached_doc("Employee", emp)
 
-		payroll_period = frappe.get_all("Payroll Period", filters={"company": "_Test Company"}, limit=1)
-		payroll_period = frappe.get_cached_doc("Payroll Period", payroll_period[0].name)
+		payroll_period = frappe.get_last_doc("Payroll Period", filters={"company": "_Test Company"})
 		create_tax_slab(payroll_period, effective_date=payroll_period.start_date, allow_tax_exemption=True)
 
 		salary_structure_name = "Test Salary Structure to test Income Tax Breakup"
@@ -1462,7 +1460,7 @@ class TestSalarySlip(FrappeTestCase):
 
 		# Create Salary Slip
 		salary_slip = make_salary_slip(
-			salary_structure_doc.name, employee=employee_doc.name, posting_date=payroll_period.start_date
+			salary_structure_doc.name, employee=emp, posting_date=payroll_period.start_date
 		)
 
 		monthly_tax_amount = 11403.6
@@ -1479,6 +1477,28 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertEqual(flt(salary_slip.current_month_income_tax, 2), monthly_tax_amount)
 		self.assertEqual(flt(salary_slip.future_income_tax_deductions, 2), 125439.65)
 		self.assertEqual(flt(salary_slip.total_income_tax, 2), 136843.25)
+
+	def test_consistent_future_earnings_irrespective_of_payment_days(self):
+		"""
+		For CTC calculation, verifies that future non taxable earnings remain
+		consistent irrespective of the payment days of current month
+		"""
+		salary_slip = make_salary_slip_with_non_taxable_component()
+		salary_slip.save()
+		future_non_taxable_earnings_with_full_payment_days = (
+			salary_slip.get_future_period_non_taxable_earnings()
+		)
+
+		salary_slip.payment_days = 20
+		salary_slip.calculate_net_pay()
+		future_non_taxable_earnings_with_reduced_payment_days = (
+			salary_slip.get_future_period_non_taxable_earnings()
+		)
+
+		self.assertEqual(
+			future_non_taxable_earnings_with_full_payment_days,
+			future_non_taxable_earnings_with_reduced_payment_days,
+		)
 
 	def test_tax_period_for_mid_month_payroll_period(self):
 		from hrms.payroll.doctype.payroll_period.payroll_period import get_period_factor
@@ -1791,7 +1811,7 @@ def make_salary_component(salary_components, test_tax, company_list=None):
 def set_salary_component_account(sal_comp, company_list=None):
 	company = erpnext.get_default_company()
 
-	if company_list and company not in company_list:
+	if company_list and company and company not in company_list:
 		company_list.append(company)
 
 	if not isinstance(sal_comp, Document):
@@ -2522,6 +2542,93 @@ def make_salary_structure_for_statistical_component(company):
 	salary_structure_doc.submit()
 
 	return salary_structure_doc
+
+
+def make_salary_slip_with_non_taxable_component() -> SalarySlip:
+	from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+		create_salary_structure_assignment,
+		make_salary_structure,
+	)
+
+	frappe.db.delete("Income Tax Slab", {"currency": "INR"})
+	emp = make_employee(
+		"test_employee_ss_income_tax_breakup@salary.com",
+		company="_Test Company",
+		date_of_joining="2021-01-01",
+	)
+
+	payroll_period = frappe.get_last_doc("Payroll Period", filters={"company": "_Test Company"})
+	create_tax_slab(payroll_period, effective_date=payroll_period.start_date, allow_tax_exemption=True)
+
+	earnings = [
+		{
+			"salary_component": "Basic Salary",
+			"abbr": "P_BS",
+			"type": "Earning",
+			"formula": "base",
+			"amount_based_on_formula": 1,
+		},
+		# non taxable component
+		{
+			"salary_component": "Children Education Allowance",
+			"abbr": "CH_EDU",
+			"type": "Earning",
+			"depends_on_payment_days": 1,
+			"amount_based_on_formula": 1,
+			"formula": "base * 0.20",
+			"is_tax_applicable": 0,
+		},
+	]
+	make_salary_component(earnings, False, company_list=["_Test Company"])
+
+	deductions = [
+		{
+			"salary_component": "P - Professional Tax",
+			"abbr": "P_PT",
+			"type": "Deduction",
+			"depends_on_payment_days": 1,
+			"amount": 200.00,
+		},
+	]
+	make_salary_component(deductions, False, company_list=["_Test Company"])
+
+	salary_structure = "Salary Structure with Non Taxable Component"
+	if frappe.db.exists("Salary Structure", salary_structure):
+		frappe.db.delete("Salary Structure", salary_structure)
+
+	details = {
+		"doctype": "Salary Structure",
+		"name": salary_structure,
+		"company": "_Test Company",
+		"payroll_frequency": "Monthly",
+		"payment_account": get_random("Account", filters={"account_currency": "INR"}),
+		"currency": "INR",
+	}
+
+	salary_structure_doc = frappe.get_doc(details)
+
+	for entry in earnings:
+		salary_structure_doc.append("earnings", entry)
+
+	for entry in deductions:
+		salary_structure_doc.append("deductions", entry)
+
+	salary_structure_doc.insert().submit()
+	create_salary_structure_assignment(
+		emp,
+		salary_structure_doc.name,
+		from_date=payroll_period.start_date,
+		company="_Test Company",
+		currency="INR",
+		payroll_period=payroll_period,
+		base=65000,
+	)
+
+	# Create Salary Slip
+	salary_slip = make_salary_slip(
+		salary_structure_doc.name, employee=emp, posting_date=payroll_period.start_date
+	)
+	return salary_slip
 
 
 def mark_attendance(

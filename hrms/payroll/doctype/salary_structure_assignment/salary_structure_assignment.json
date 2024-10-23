@@ -25,7 +25,7 @@
   "column_break_9",
   "variable",
   "amended_from",
-  "earnings_and_taxation_section",
+  "opening_balances_section",
   "taxable_earnings_till_date",
   "column_break_20",
   "tax_deducted_till_date",
@@ -193,23 +193,24 @@
    "fieldtype": "Column Break"
   },
   {
-   "collapsible_depends_on": "eval:doc.taxable_earnings_till_date && doc.tax_deducted_till_date",
-   "fieldname": "earnings_and_taxation_section",
-   "fieldtype": "Section Break",
-   "hidden": 1,
-   "label": "Earnings and Taxation "
-  },
-  {
    "allow_on_submit": 1,
    "fieldname": "taxable_earnings_till_date",
    "fieldtype": "Currency",
    "label": "Taxable Earnings Till Date",
    "options": "currency"
+  },
+  {
+   "collapsible_depends_on": "eval:doc.taxable_earnings_till_date && doc.tax_deducted_till_date",
+   "description": "Set opening balances for earnings and taxes from the previous employer",
+   "fieldname": "opening_balances_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "label": "Opening Balances"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-09-12 20:54:02.758373",
+ "modified": "2024-10-18 18:06:42.013701",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",

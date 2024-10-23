@@ -49,7 +49,9 @@
   "exit_questionnaire_notification_template",
   "attendance_settings_section",
   "allow_employee_checkin_from_mobile_app",
-  "allow_geolocation_tracking"
+  "allow_geolocation_tracking",
+  "unlink_payment_section",
+  "unlink_payment_on_cancellation_of_employee_advance"
  ],
  "fields": [
   {
@@ -316,13 +318,24 @@
    "fieldname": "attendance_settings_section",
    "fieldtype": "Section Break",
    "label": "Attendance Settings"
+  },
+  {
+   "fieldname": "unlink_payment_section",
+   "fieldtype": "Section Break",
+   "label": "Unlink Payment"
+  },
+  {
+   "default": "0",
+   "fieldname": "unlink_payment_on_cancellation_of_employee_advance",
+   "fieldtype": "Check",
+   "label": " Unlink Payment on Cancellation of Employee Advance"
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-06-26 15:20:17.802079",
+ "modified": "2024-09-29 12:49:16.175079",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
