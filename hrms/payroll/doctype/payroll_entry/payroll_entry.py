@@ -961,7 +961,7 @@ class PayrollEntry(Document):
 		)
 
 		if "lending" in frappe.get_installed_apps():
-		    query = query.select(SalarySlip.total_loan_repayment)
+			query = query.select(SalarySlip.total_loan_repayment)
 
 		if for_withheld_salaries:
 			query = query.where(SalarySlip.status == "Withheld")
