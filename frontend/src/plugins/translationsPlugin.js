@@ -4,6 +4,7 @@ function makeTranslationFunction() {
 		translate,
 		load: () => Promise.allSettled([
 			setup(),
+			// TODO: load dayjs locales
 			setupDayjs(),
 		]),
 	}
@@ -25,10 +26,6 @@ function makeTranslationFunction() {
 		} catch (error) {
 			console.error("Failed to fetch translations:", error)
 		}
-	}
-
-	async function setupDayjs() {
-		// TODO
 	}
 
 	function translate(txt, replace, context = null) {
