@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-10-20 09:34+0000\n"
-"PO-Revision-Date: 2024-10-21 13:11\n"
+"PO-Revision-Date: 2024-10-24 14:58\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -519,7 +519,7 @@ msgstr "Bokföring Inställningar"
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:57
 msgid "Accounts not set for Salary Component {0}"
-msgstr "Konto inte angiven för Lön Komponent {0}"
+msgstr "Konto inte angiven för Lönekomponent {0}"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:592
 msgid "Accrual Journal Entry for salaries from {0} to {1}"
@@ -651,7 +651,7 @@ msgstr "Tillagd"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1308
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
-msgstr "La till skatt komponenter från löne komponenter eftersom löne struktur inte hade någon skatt komponent."
+msgstr "La till skattkomponenter från lönekomponenter eftersom löneart inte hade någon skattkomponent."
 
 #: hrms/hr/employee_property_update.js:193
 msgid "Added to details"
@@ -696,11 +696,11 @@ msgstr "Extra Lön för hänvisning kan endast skapas mot Personal Hänvisning m
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:133
 msgid "Additional Salary for this salary component with {0} enabled already exists for this date"
-msgstr "Extra Lön för denna löne komponent med {0} aktiverat finns redan för detta datum"
+msgstr "Extra Lön för denna lönekomponent med {0} aktiverat finns redan för detta datum"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:63
 msgid "Additional Salary: {0} already exist for Salary Component: {1} for period {2} and {3}"
-msgstr "Extra Lön: {0} finns redan för Löne Komponent: {1} för period {2} och {3}"
+msgstr "Extra Lön: {0} finns redan för Lönekomponent: {1} för period {2} och {3}"
 
 #. Label of the address_of_organizer (Data) field in DocType 'Travel Request'
 #: hrms/hr/doctype/travel_request/travel_request.json
@@ -871,7 +871,7 @@ msgstr "Tillåt Övertilldelning"
 #. Label of the allow_tax_exemption (Check) field in DocType 'Income Tax Slab'
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 msgid "Allow Tax Exemption"
-msgstr "Tillåt Skatt Undantag"
+msgstr "Tillåt Skattebefrielse"
 
 #. Label of the allow_user (Link) field in DocType 'Leave Block List Allow'
 #: hrms/hr/doctype/leave_block_list_allow/leave_block_list_allow.json
@@ -1420,7 +1420,7 @@ msgstr "Ankomst Datum och Tid"
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:41
 msgid "As per your assigned Salary Structure you cannot apply for benefits"
-msgstr "Enligt din tilldelade Lön Struktur kan man inte ansöka om förmåner"
+msgstr "Enligt din tilldelade Löneart kan man inte ansöka om förmåner"
 
 #. Label of the asset_name (Data) field in DocType 'Full and Final Asset'
 #: hrms/hr/doctype/full_and_final_asset/full_and_final_asset.json
@@ -1439,7 +1439,7 @@ msgstr "Tillgång Tilldelad"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:283
 msgid "Assign Salary Structure to {0} employee(s)?"
-msgstr "Tilldela Lön Struktur till {0}?"
+msgstr "Tilldela Löneart till {0} personal?"
 
 #. Option for the 'Action' (Select) field in DocType 'Shift Assignment Tool'
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:99
@@ -1457,7 +1457,7 @@ msgstr "Tilldela Struktur"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:298
 msgid "Assigning Salary Structure"
-msgstr "Tilldelar Lön Struktur"
+msgstr "Tilldelar Löneart"
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:249
 msgid "Assigning Shift"
@@ -1473,7 +1473,7 @@ msgstr "Tilldelar Struktur..."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:282
 msgid "Assigning Structures..."
-msgstr "Tilldelar Löne Strukturer..."
+msgstr "Tilldelar Lönearter..."
 
 #. Label of the assignment_based_on (Select) field in DocType 'Leave Policy
 #. Assignment'
@@ -1970,7 +1970,7 @@ msgstr "Mass Ledighet Princip Tilldelning"
 #: hrms/payroll/doctype/salary_structure/salary_structure_list.js:3
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Bulk Salary Structure Assignment"
-msgstr "Mass Löne Struktur Tilldelning"
+msgstr "Mass Löneart Tilldelning"
 
 #. Description of the 'Calculate Final Score based on Formula' (Check) field in
 #. DocType 'Appraisal Cycle'
@@ -2563,7 +2563,7 @@ msgstr "Inkludera Närvaro under Helger"
 
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.js:40
 msgid "Consider Tax Exemption Declaration"
-msgstr "Inkludera Skatt Undantag Deklaration"
+msgstr "Inkludera Skattebefrielse Deklaration"
 
 #. Label of the consider_unmarked_attendance_as (Select) field in DocType
 #. 'Payroll Settings'
@@ -2798,7 +2798,7 @@ msgstr "Skapande Misslyckades"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.py:73
 msgid "Creation of Salary Structure Assignments has been queued. It may take a few minutes."
-msgstr "Skapande av Lön Struktur Tilldelning är i kö. Det kan ta några minuter."
+msgstr "Skapande av Löneart Tilldelning är i kö. Det kan ta några minuter."
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:148
 msgid "Creation of Shift Assignments has been queued. It may take a few minutes."
@@ -3227,7 +3227,7 @@ msgstr "Standard Löneutbetalning Konto"
 #. Grade'
 #: hrms/hr/doctype/employee_grade/employee_grade.json
 msgid "Default Salary Structure"
-msgstr "Standard Lön Struktur"
+msgstr "Standard Löneart"
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:181
 #: hrms/setup.py:207
@@ -3768,11 +3768,11 @@ msgstr "Lön"
 #: hrms/hr/doctype/leave_type/leave_type.json
 #: hrms/payroll/doctype/employee_benefit_application_detail/employee_benefit_application_detail.json
 msgid "Earning Component"
-msgstr "Lön Komponent"
+msgstr "Lönekomponent"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:107
 msgid "Earning Salary Component is required for Employee Referral Bonus."
-msgstr "Löne Komponent erfodras för Personal Hänvisning Bonus."
+msgstr "Lönekomponent erfodras för Personal Hänvisning Bonus."
 
 #. Label of the earnings (Table) field in DocType 'Salary Slip'
 #. Label of the earnings (Table) field in DocType 'Salary Structure'
@@ -4551,7 +4551,7 @@ msgstr "Status"
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_tax_exemption_category/employee_tax_exemption_category.json
 msgid "Employee Tax Exemption Category"
-msgstr "Skatt Undantag Kategori"
+msgstr "Skattebefrielse Kategori"
 
 #. Name of a DocType
 #. Label of a Link in the Tax & Benefits Workspace
@@ -4559,33 +4559,33 @@ msgstr "Skatt Undantag Kategori"
 #: hrms/payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Tax Exemption Declaration"
-msgstr "Skatt Undantag Deklaration"
+msgstr "Skattbefrielse Deklaration"
 
 #. Name of a DocType
 #. Label of a Link in the Tax & Benefits Workspace
 #: hrms/payroll/doctype/employee_tax_exemption_declaration_category/employee_tax_exemption_declaration_category.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Tax Exemption Declaration Category"
-msgstr "Skatt Undantag Deklaration Kategori"
+msgstr "Skattebefrielse Deklaration Kategori"
 
 #. Name of a DocType
 #. Label of a Link in the Tax & Benefits Workspace
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Tax Exemption Proof Submission"
-msgstr "Skatt Undantag Verifikat Godkännande"
+msgstr "Skattebefrielse Verifikat Godkännande"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission_detail/employee_tax_exemption_proof_submission_detail.json
 msgid "Employee Tax Exemption Proof Submission Detail"
-msgstr "Skatt Undantag Verifikat Godkännande Detalj"
+msgstr "Skattebefrielse Verifikat Godkännande Detalj"
 
 #. Name of a DocType
 #. Label of a Link in the Tax & Benefits Workspace
 #: hrms/payroll/doctype/employee_tax_exemption_sub_category/employee_tax_exemption_sub_category.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Tax Exemption Sub Category"
-msgstr "Skatt Undantag Underkategori"
+msgstr "Skattebefrielse Underkategori"
 
 #. Name of a DocType
 #: hrms/hr/doctype/employee_training/employee_training.json
@@ -5038,7 +5038,7 @@ msgstr "Exkluderade {0} ej Uttagbar Ledighet för {1}"
 #: hrms/payroll/doctype/salary_component/salary_component.json
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Exempted from Income Tax"
-msgstr "Undantagen från Inkomst Skatt"
+msgstr "Befriad från Inkomstskatt"
 
 #. Label of a Card Break in the Tax & Benefits Workspace
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
@@ -6729,7 +6729,7 @@ msgstr "Inkomst Skatt Tabell Övriga Avgifter"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:74
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
-msgstr "Inkomst Skatt Tabell erfordras eftersom Lön Struktur {0} har skatt komponent {1}"
+msgstr "Inkomst Skatt Tabell erfordras eftersom Löneart {0} har skattkomponent {1}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1552
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
@@ -6737,7 +6737,7 @@ msgstr "Inkomst Skatt Tabell måste vara aktiv före eller före start datum fö
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1540
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
-msgstr "Inkomst Skatt Tabell inte angiven i Lön Struktur Tilldelning: {0}"
+msgstr "Inkomst Skatt Tabell inte angiven i Löneart Tilldelning: {0}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1548
 msgid "Income Tax Slab: {0} is disabled"
@@ -8488,11 +8488,11 @@ msgstr "Ingen Lön Struktur Tilldelning hittades för {0} på eller före {1}"
 
 #: hrms/hr/doctype/leave_encashment/leave_encashment.py:30
 msgid "No Salary Structure assigned to Employee {0} on the given date {1}"
-msgstr "Ingen löne struktur tilldelad {0} på angiven datum {1}"
+msgstr "Ingen Löneart tilldelad {0} på angiven datum {1}"
 
 #: hrms/payroll/doctype/salary_component/salary_component.js:99
 msgid "No Salary Structures"
-msgstr "Inga Lön Strukturer"
+msgstr "Inga Lönearter"
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:190
 msgid "No Shift Requests Selected"
@@ -8504,7 +8504,7 @@ msgstr "Inga Bemanning Planer hittades för denna Befattning"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:395
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
-msgstr "Ingen aktiv eller standard lönestruktur hittades för arbetstagare {0} för de givna datum"
+msgstr "Ingen aktiv eller standard löneart hittades för {0} för angivna datum"
 
 #: hrms/hr/doctype/vehicle_log/vehicle_log.py:43
 msgid "No additional expenses has been added"
@@ -8512,7 +8512,7 @@ msgstr "Inga extra kostnader har lagts till"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:285
 msgid "No applicable Earning component found in last salary slip for Gratuity Rule: {0}"
-msgstr "Ingen tillämplig inkomst komponent hittades i senaste lönebesked för Dricks Regel: {0}"
+msgstr "Ingen tillämplig lönekomponent hittades i senaste lönebesked för Dricks Regel: {0}"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:298
 msgid "No applicable Earning components found for Gratuity Rule: {0}"
@@ -8548,7 +8548,7 @@ msgstr "Ingen personal hittades för valda kriterier"
 
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.py:70
 msgid "No employees found with selected filters and active salary structure"
-msgstr "Ingen personal hittades med valda filter och aktiv löne struktur"
+msgstr "Ingen personal hittades med valda filter och aktiv löneart"
 
 #: hrms/public/js/templates/feedback_history.html:55
 msgid "No feedback has been received yet"
@@ -8952,7 +8952,7 @@ msgstr "av 5 möjliga"
 #. Label of a chart in the Payroll Workspace
 #: hrms/payroll/workspace/payroll/payroll.json
 msgid "Outgoing Salary"
-msgstr "Utgående Lön"
+msgstr "Utbetald Lön"
 
 #: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.py:23
 msgid "Outstanding Amount"
@@ -9000,7 +9000,7 @@ msgstr "Översikt"
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:135
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:163
 msgid "Overwrite Salary Structure Amount"
-msgstr "Skriv över Lön Struktur Belopp"
+msgstr "Skriv över Löneart Belopp"
 
 #. Option for the 'Status' (Select) field in DocType 'Full and Final Asset'
 #: hrms/hr/doctype/full_and_final_asset/full_and_final_asset.json
@@ -9446,7 +9446,7 @@ msgstr "Lägg till återstående förmåner {0} till applikation som proportione
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:762
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
-msgstr "Tilldela först Löne Struktur för Personal {0} som gäller från eller före {1} "
+msgstr "Tilldela först Löneart för {0} som gäller från eller före {1}"
 
 #: hrms/templates/emails/training_event.html:17
 msgid "Please confirm once you have completed your training"
@@ -9593,7 +9593,7 @@ msgstr "Ange Standard Kassa Konto i Bolag Inställningar"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:317
 msgid "Please set account in Salary Component {0}"
-msgstr "Ange konto i Lön Komponent {0}"
+msgstr "Ange konto i Lönekomponent {0}"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:622
 msgid "Please set default template for Leave Approval Notification in HR Settings."
@@ -10562,7 +10562,7 @@ msgstr "Sökväg till anpassad Jobb Erbjudande Webförmulär"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:86
 msgid "Row #{0}: Cannot set amount or formula for Salary Component {1} with Variable Based On Taxable Salary"
-msgstr "Rad #{0}: Kan inte ange belopp eller formel för Lön Komponent {1} med variabel baserat på Skattepliktig Lön"
+msgstr "Rad #{0}: Kan inte ange belopp eller formel för Lönekomponent {1} med variabel baserat på Skattepliktig Lön"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:105
 msgid "Row #{0}: The {1} Component has the options {2} and {3} enabled."
@@ -10636,33 +10636,33 @@ msgstr "Lön"
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 #: hrms/public/js/utils/payroll_utils.js:23
 msgid "Salary Component"
-msgstr "Lön Komponent"
+msgstr "Lönekomponent"
 
 #. Label of the salary_component (Link) field in DocType 'Gratuity Applicable
 #. Component'
 #: hrms/payroll/doctype/gratuity_applicable_component/gratuity_applicable_component.json
 msgid "Salary Component "
-msgstr "Lön Komponent"
+msgstr "Lönekomponent"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/salary_component_account/salary_component_account.json
 msgid "Salary Component Account"
-msgstr "Lön Komponent Konto"
+msgstr "Lönekomponent Konto"
 
 #. Label of the type (Data) field in DocType 'Additional Salary'
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
 msgid "Salary Component Type"
-msgstr "Lön Komponent Typ"
+msgstr "Lönekomponent Typ"
 
 #. Description of the 'Salary Component' (Link) field in DocType 'Salary
 #. Structure'
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 msgid "Salary Component for timesheet based payroll."
-msgstr "Lön Komponent för tidrapport baserad lön."
+msgstr "Lönekomponent för tidrapport baserad lön."
 
 #: hrms/payroll/doctype/salary_component/salary_component.js:97
 msgid "Salary Component {0} is currently not used in any Salary Structure."
-msgstr "Lön Komponent {0} används för närvarande inte i någon Lön Struktur."
+msgstr "Lönekomponent {0} används för närvarande inte i någon Löneart."
 
 #. Label of the salary_currency (Link) field in DocType 'Employee Promotion'
 #: hrms/hr/doctype/employee_promotion/employee_promotion.json
@@ -10805,12 +10805,12 @@ msgstr "Löne besked {0} misslyckades. Du kan lösa {1} och försöka igen {0}."
 #. Label of the salary_slips_created (Check) field in DocType 'Payroll Entry'
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 msgid "Salary Slips Created"
-msgstr "Löne besked Skapade"
+msgstr "Lönebesked Skapade"
 
 #. Label of the salary_slips_submitted (Check) field in DocType 'Payroll Entry'
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 msgid "Salary Slips Submitted"
-msgstr "Löne besked Godkända"
+msgstr "Lönebesked Godkända"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1427
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
@@ -10818,7 +10818,7 @@ msgstr "Löne besked finns redan för {} och kommer inte att behandlas av denna 
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1452
 msgid "Salary Slips submitted for period from {0} to {1}"
-msgstr "Löne besked inlämnade  för period från {0} till {1}"
+msgstr "Lönebesked godkända för period från {0} till {1}"
 
 #. Label of the salary_structure (Link) field in DocType 'Bulk Salary Structure
 #. Assignment'
@@ -10834,7 +10834,7 @@ msgstr "Löne besked inlämnade  för period från {0} till {1}"
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Salary Structure"
-msgstr "Lön Struktur"
+msgstr "Löneart"
 
 #. Name of a DocType
 #. Label of a Link in the Salary Payout Workspace
@@ -10842,39 +10842,39 @@ msgstr "Lön Struktur"
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Salary Structure Assignment"
-msgstr "Lön Struktur Tilldelning"
+msgstr "Löneart Tilldelning"
 
 #: hrms/public/js/utils/payroll_utils.js:31
 msgid "Salary Structure Assignment field"
-msgstr "Lön Struktur Tilldelning fält"
+msgstr "Löneart Tilldelning fält"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:41
 msgid "Salary Structure Assignment for Employee already exists"
-msgstr "Lön Struktur Tilldelning för Personal finns redan"
+msgstr "Löneart Tilldelning för Personal finns redan"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:398
 msgid "Salary Structure Missing"
-msgstr "Lön Struktur Saknas"
+msgstr "Löneart Saknas"
 
 #: hrms/regional/india/utils.py:29
 msgid "Salary Structure must be submitted before submission of {0}"
-msgstr "Lönestrukturen måste godkännas innan {0} godkänns"
+msgstr "Löneart måste godkännas innan {0} godkänns"
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:350
 msgid "Salary Structure not found for employee {0} and date {1}"
-msgstr "Lön Struktur hittades inte för Personal {0} och datum {1}"
+msgstr "Löneart hittades inte för {0} och datum {1}"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:176
 msgid "Salary Structure should have flexible benefit component(s) to dispense benefit amount"
-msgstr "Lön Struktur ska ha flexibla förmån komponenter för att fördela förmån belopp"
+msgstr "Löneart ska ha flexibla förmån komponenter för att fördela förmån belopp"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:65
 msgid "Salary Structure {0} does not belong to company {1}"
-msgstr "Lönestruktur {0} tillhör inte bolag {1}"
+msgstr "Löneart {0} tillhör inte bolag {1}"
 
 #: hrms/payroll/doctype/salary_component/salary_component.js:134
 msgid "Salary Structures updated successfully"
-msgstr "Lön Strukturer uppdaterades"
+msgstr "Lönearter uppdaterades"
 
 #. Label of the salary_withholding (Link) field in DocType 'Salary Slip'
 #. Name of a DocType
@@ -10910,7 +10910,7 @@ msgstr "Lön Uppdelning baserat på Lön och Avdrag."
 #. in DocType 'Gratuity Rule'
 #: hrms/payroll/doctype/gratuity_rule/gratuity_rule.json
 msgid "Salary components should be part of the Salary Structure."
-msgstr "Lönekomponenter ska ingå i Lönestruktur."
+msgstr "Lönekomponenter ska vara en del av Löneart."
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2335
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
@@ -11601,7 +11601,7 @@ msgstr "Hoppa över Automatisk Närvaro"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:351
 msgid "Skipping Salary Structure Assignment for the following employees, as Salary Structure Assignment records already exists against them. {0}"
-msgstr "Hoppar över Lön Struktur tilldelning för följande Personal, eftersom Lön Struktur tilldelning redan finns mot dem. {0}"
+msgstr "Hoppar över Löneart tilldelning för följande Personal, eftersom Löneart tilldelning redan finns mot dem. {0}"
 
 #. Label of the source (Link) field in DocType 'Job Applicant'
 #. Label of the source (Data) field in DocType 'Employee Other Income'
@@ -12056,7 +12056,7 @@ msgstr "Avdragen Skatt Till Datum"
 #. Exemption Sub Category'
 #: hrms/payroll/doctype/employee_tax_exemption_sub_category/employee_tax_exemption_sub_category.json
 msgid "Tax Exemption Category"
-msgstr "Skatt Undantag Kategori"
+msgstr "Skattebefrielse Kategori"
 
 #. Label of the section_break_8 (Tab Break) field in DocType 'Employee Tax
 #. Exemption Declaration'
@@ -12065,13 +12065,13 @@ msgstr "Skatt Undantag Kategori"
 #: hrms/payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Tax Exemption Declaration"
-msgstr "Skatt Undantag Deklaration"
+msgstr "Skattbefrielse Deklaration"
 
 #. Label of the tax_exemption_proofs (Table) field in DocType 'Employee Tax
 #. Exemption Proof Submission'
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.json
 msgid "Tax Exemption Proofs"
-msgstr "Skatt Undantag Verifikat"
+msgstr "Skattebefrielse Verifikat"
 
 #. Label of a Card Break in the Tax & Benefits Workspace
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
@@ -12161,7 +12161,7 @@ msgstr "Valuta för {0} ska vara samma som bolag standard valuta. Välj annan ko
 #. Salary'
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
 msgid "The date on which Salary Component with Amount will contribute for Earnings/Deduction in Salary Slip. "
-msgstr "Datum då Lön Komponent med Belopp kommer att bidra för Inkomst/Avdrag i Lön Besked."
+msgstr "Datum då Lönekomponent med Belopp kommer att bidra för Inkomst/Avdrag i Lönebesked. "
 
 #. Description of the 'Allocate on Day' (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -12239,11 +12239,11 @@ msgstr "Det finns inga lediga jobb inom bemanning plan {0}"
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:20
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:202
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Stucture."
-msgstr "Det finns ingen lönestruktur tilldelad till {0}. Tilldela först lönestruktur."
+msgstr "Det finns ingen löneart tilldelad till {0}. Tilldela löneart först."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:414
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
-msgstr "Det finns ingen personal med lön struktur: {0}. Tilldela {1} till personal för att förhandsgranska lönebesked"
+msgstr "Det finns ingen personal med löneart: {0}. Tilldela {1} till personal för att förhandsgranska lönebesked"
 
 #. Description of the 'Is Optional Leave' (Check) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -12292,7 +12292,7 @@ msgstr "Denna metod är endast avsedd för utvecklarläge"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:150
 msgid "This will overwrite the tax component {0} in the salary slip and tax won't be calculated based on the Income Tax Slabs"
-msgstr "Detta kommer att skriva över skatt komponent {0} på lönebesked och skatt kommer inte att beräknas baserat på inkomst skatt tabeller"
+msgstr "Detta kommer att skriva över skattkomponent {0} på lönebesked och skatt kommer inte att beräknas baserat på inkomst skatt tabeller"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:401
 msgid "This will submit Salary Slips and create accrual Journal Entry. Do you want to proceed?"
@@ -12469,7 +12469,7 @@ msgstr "Till Datum ska vara tidigare än Från Datum"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:161
 msgid "To overwrite the salary component amount for a tax component, please enable {0}"
-msgstr "För att skriva över lön komponent belopp för skatt komponent, aktivera {0}"
+msgstr "För att skriva över lönekomponent belopp för skattkomponent, aktivera {0}"
 
 #. Label of the to_year (Int) field in DocType 'Gratuity Rule Slab'
 #: hrms/payroll/doctype/gratuity_rule_slab/gratuity_rule_slab.json
@@ -13043,7 +13043,7 @@ msgstr "Typ av Verifikat"
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:116
 msgid "Unable to find Salary Component {0}"
-msgstr "Kunde inte att hitta Lön Komponent {0}"
+msgstr "Kunde inte att hitta Lönekomponent {0}"
 
 #: hrms/public/js/utils/index.js:206
 msgid "Unable to retrieve your location"
@@ -13171,7 +13171,7 @@ msgstr "Uppdatera Svar"
 
 #: hrms/payroll/doctype/salary_component/salary_component.js:104
 msgid "Update Salary Structures"
-msgstr "Uppdatera Lön Strukturer"
+msgstr "Uppdatera Lönearter"
 
 #: hrms/hr/doctype/goal/goal_list.js:35
 msgid "Update Status"
@@ -13715,7 +13715,7 @@ msgstr "till"
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:95
 msgid "via Salary Component sync"
-msgstr "via Lön Komponent synk"
+msgstr "via Lönekomponent synk"
 
 #: hrms/controllers/employee_reminders.py:120
 #: hrms/controllers/employee_reminders.py:253
@@ -13741,7 +13741,7 @@ msgstr "{0} Saknas"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:44
 msgid "{0} Row #{1}: Formula is set but {2} is disabled for the Salary Component {3}."
-msgstr "{0} Rad #{1}: Formel är angiven men {2} är inaktiverad för Lön Komponent {3}."
+msgstr "{0} Rad #{1}: Formel är angiven men {2} är inaktiverad för Lönekomponent {3}."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:320
 msgid "{0} Row #{1}: {2} needs to be enabled for the formula to be considered."
@@ -13814,7 +13814,7 @@ msgstr "{0} lediga platser och {1} budget för {2} redan planerade för dotterbo
 
 #: hrms/payroll/doctype/salary_component/salary_component.js:114
 msgid "{0} will be updated for the following Salary Structures: {1}."
-msgstr "{0} kommer att uppdateras för följande Lön Strukturer: {1}."
+msgstr "{0} kommer att uppdateras för följande Lönearter: {1}."
 
 #: hrms/hr/doctype/goal/goal_list.js:70
 msgid "{0} {1} {2}?"

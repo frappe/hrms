@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-10-20 09:34+0000\n"
-"PO-Revision-Date: 2024-10-21 13:11\n"
+"PO-Revision-Date: 2024-10-23 13:40\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -6096,7 +6096,7 @@ msgstr "İnsan Kaynakları"
 
 #: hrms/setup.py:59
 msgid "HR & Payroll"
-msgstr ""
+msgstr "Bordro"
 
 #: hrms/setup.py:65
 msgid "HR & Payroll Settings"
@@ -6327,7 +6327,7 @@ msgstr "Sertifikası Var"
 
 #: hrms/setup.py:215
 msgid "Health Insurance"
-msgstr ""
+msgstr "Sağlık Sigortası"
 
 #. Label of the health_insurance_name (Data) field in DocType 'Employee Health
 #. Insurance'
@@ -6337,11 +6337,11 @@ msgstr "Sağlık Sigortası İsmi"
 
 #: hrms/setup.py:229
 msgid "Health Insurance No"
-msgstr ""
+msgstr "Sağlık Sigortası No"
 
 #: hrms/setup.py:221
 msgid "Health Insurance Provider"
-msgstr ""
+msgstr "Sağlık Sigortası Sağlayıcısı"
 
 #: hrms/hr/notification/training_feedback/training_feedback.html:1
 msgid "Hello"
