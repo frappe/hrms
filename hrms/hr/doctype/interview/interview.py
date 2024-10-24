@@ -92,7 +92,14 @@ class Interview(Document):
 		original_from_time = self.from_time
 		original_to_time = self.to_time
 
-		self.db_set({"scheduled_on": scheduled_on, "from_time": from_time, "to_time": to_time})
+		self.db_set(
+			{
+				"scheduled_on": scheduled_on,
+				"from_time": from_time,
+				"to_time": to_time,
+				"status": "Rescheduled Interview",
+			}
+		)
 		self.notify_update()
 
 		recipients = get_recipients(self.name)
