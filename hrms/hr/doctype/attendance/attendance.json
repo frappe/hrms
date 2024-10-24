@@ -27,7 +27,12 @@
   "column_break_18",
   "late_entry",
   "early_exit",
-  "amended_from"
+  "amended_from",
+  "overtime_section",
+  "overtime_duration",
+  "overtime_type",
+  "column_break_idku",
+  "standard_working_hours"
  ],
  "fields": [
   {
@@ -201,13 +206,39 @@
   {
    "fieldname": "column_break_18",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "overtime_section",
+   "fieldtype": "Section Break",
+   "label": "Overtime"
+  },
+  {
+   "fieldname": "overtime_duration",
+   "fieldtype": "Time",
+   "hide_days": 1,
+   "label": "Overtime Duration"
+  },
+  {
+   "fieldname": "overtime_type",
+   "fieldtype": "Link",
+   "label": "Overtime Type",
+   "options": "Overtime Type"
+  },
+  {
+   "fieldname": "column_break_idku",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "standard_working_hours",
+   "fieldtype": "Time",
+   "label": "Standard Working Hours"
   }
  ],
  "icon": "fa fa-ok",
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-04-05 20:55:02.905452",
+ "modified": "2024-10-14 00:49:14.493086",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance",

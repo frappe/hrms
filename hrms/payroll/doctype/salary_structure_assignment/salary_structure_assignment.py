@@ -212,3 +212,14 @@ def get_tax_component(salary_structure: str) -> str | None:
 		if cint(d.variable_based_on_taxable_salary) and not d.formula and not flt(d.amount):
 			return d.salary_component
 	return None
+
+
+def get_assigned_salary_structure_assignment(employee, on_date):
+	if not employee or not on_date:
+		return None
+	return frappe.db.get_value(
+		"Salary Structure Assignment",
+		{"employee": employee, "docstatus": 1, "from_date": ("<=", on_date)},
+		"*",
+		order_by="from_date desc",
+	)

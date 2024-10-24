@@ -2,6 +2,9 @@
 # For license information, please see license.txt
 
 
+from datetime import datetime
+from typing import Union
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -202,6 +205,29 @@ def mark_attendance_and_link_log(
 		try:
 			frappe.db.savepoint("attendance_creation")
 			attendance = frappe.new_doc("Attendance")
+			if shift:
+				shift_type_overtime = frappe.db.get_value(
+					doctype="Shift Type",
+					filters={"name": shift},
+					fieldname=["overtime_type", "allow_overtime", "start_time", "end_time"],
+					as_dict=True,
+				)
+				if shift_type_overtime.allow_overtime:
+					standard_working_hours = calculate_time_difference(
+						shift_type_overtime.start_time, shift_type_overtime.end_time
+					)
+					total_working_duration = calculate_time_difference(in_time, out_time)
+					if total_working_duration > standard_working_hours:
+						overtime_duration = calculate_time_difference(
+							standard_working_hours, total_working_duration
+						)
+						attendance.update(
+							{
+								"overtime_type": shift_type_overtime.overtime_type,
+								"standard_working_hours": standard_working_hours,
+								"overtime_duration": overtime_duration,
+							}
+						)
 			attendance.update(
 				{
 					"doctype": "Attendance",
@@ -340,3 +366,38 @@ def update_attendance_in_checkins(log_names: list, attendance_id: str):
 		.set("attendance", attendance_id)
 		.where(EmployeeCheckin.name.isin(log_names))
 	).run()
+
+
+from datetime import timedelta
+
+
+def convert_to_timedelta(input_value: str | timedelta) -> timedelta:
+	"""
+	Converts a string in the format 'HH:MM:SS'
+	"""
+	if isinstance(input_value, str):
+		# If the input is a string, parse it into a datetime object
+		time_format = "%H:%M:%S"
+		time_obj = datetime.strptime(input_value, time_format)
+		# Convert datetime to timedelta (we only care about the time)
+		return timedelta(hours=time_obj.hour, minutes=time_obj.minute, seconds=time_obj.second)
+
+	return input_value
+
+
+def calculate_time_difference(start_time, end_time):
+	"""
+	Converts inputs to timedelta, finds the difference between start and end times.
+	"""
+	# Convert both start and end times to timedelta
+	start_time_delta = convert_to_timedelta(start_time)
+	end_time_delta = convert_to_timedelta(end_time)
+
+	# Calculate the time difference
+	time_difference = end_time_delta - start_time_delta
+
+	# Return the difference only if it's positive
+	if time_difference.total_seconds() > 0:
+		return time_difference
+	else:
+		return timedelta(0)
