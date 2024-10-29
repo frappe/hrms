@@ -25,6 +25,7 @@ def get_boot():
 		{
 			"site_name": frappe.local.site,
 			"push_relay_server_url": frappe.conf.get("push_relay_server_url") or "",
+			"default_route": get_default_route(),
 		}
 	)
 
@@ -32,3 +33,7 @@ def get_boot():
 	load_translations(bootinfo)
 
 	return bootinfo
+
+
+def get_default_route():
+	return "/hrms"
