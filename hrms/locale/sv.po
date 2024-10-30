@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-10-27 09:34+0000\n"
-"PO-Revision-Date: 2024-10-29 16:10\n"
+"PO-Revision-Date: 2024-10-30 16:24\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -535,7 +535,7 @@ msgstr "Åtgärd"
 
 #: hrms/hr/doctype/attendance_request/attendance_warnings.html:8
 msgid "Action on Submission"
-msgstr "Åtgärd vid godkännande"
+msgstr "Åtgärd vid Godkännande"
 
 #: frontend/src/components/WorkflowActionSheet.vue:19
 #: hrms/hr/doctype/interview/interview.js:36
