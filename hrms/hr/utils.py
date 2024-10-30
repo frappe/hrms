@@ -483,7 +483,7 @@ def get_leave_allocations(date, leave_type):
 			& (employee.status != "Left")
 		)
 	)
-	return query.run(as_dict=1)
+	return query.run(as_dict=1) or []
 
 
 def get_earned_leaves():
