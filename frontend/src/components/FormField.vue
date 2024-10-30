@@ -108,13 +108,15 @@
 		</div>
 
 		<!-- Date -->
-		<!-- FIXME: min date, max date doesn't work -->
-		<DatePicker
+		<!-- FIXME: default datepicker has poor UI -->
+		<Input
 			v-else-if="props.fieldtype === 'Date'"
+			type="date"
 			:value="modelValue"
 			:placeholder="__('Select {0}', [props.label])"
-			:formatter="(val) => dayjs(val).format('DD-MM-YYYY')"
-			@update:modelValue="(v) => emit('update:modelValue', v)"
+			:formatValue="(val) => dayjs(val).format('DD-MM-YYYY')"
+			@input="(v) => emit('update:modelValue', v)"
+			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
 			:min="props.minDate"
@@ -138,7 +140,7 @@
 </template>
 
 <script setup>
-import { Autocomplete, DatePicker, DateTimePicker, ErrorMessage } from "frappe-ui"
+import { Autocomplete, DateTimePicker, ErrorMessage, Input } from "frappe-ui"
 import { computed, onMounted, inject } from "vue"
 
 import Link from "@/components/Link.vue"
