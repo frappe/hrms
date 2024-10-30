@@ -345,35 +345,34 @@ def allocate_earned_leaves():
 
 	for e_leave_type in e_leave_types:
 		leave_allocations = get_leave_allocations(today, e_leave_type.name)
-		if leave_allocations:
-			for allocation in leave_allocations:
-				if not allocation.leave_policy_assignment and not allocation.leave_policy:
-					continue
+		for allocation in leave_allocations:
+			if not allocation.leave_policy_assignment and not allocation.leave_policy:
+				continue
 
-				leave_policy = (
-					allocation.leave_policy
-					if allocation.leave_policy
-					else frappe.db.get_value(
-						"Leave Policy Assignment", allocation.leave_policy_assignment, ["leave_policy"]
-					)
+			leave_policy = (
+				allocation.leave_policy
+				if allocation.leave_policy
+				else frappe.db.get_value(
+					"Leave Policy Assignment", allocation.leave_policy_assignment, ["leave_policy"]
 				)
+			)
 
-				annual_allocation = frappe.db.get_value(
-					"Leave Policy Detail",
-					filters={"parent": leave_policy, "leave_type": e_leave_type.name},
-					fieldname=["annual_allocation"],
-				)
-				date_of_joining = frappe.db.get_value("Employee", allocation.employee, "date_of_joining")
+			annual_allocation = frappe.db.get_value(
+				"Leave Policy Detail",
+				filters={"parent": leave_policy, "leave_type": e_leave_type.name},
+				fieldname=["annual_allocation"],
+			)
+			date_of_joining = frappe.db.get_value("Employee", allocation.employee, "date_of_joining")
 
-				from_date = allocation.from_date
+			from_date = allocation.from_date
 
-				if e_leave_type.allocate_on_day == "Date of Joining":
-					from_date = date_of_joining
+			if e_leave_type.allocate_on_day == "Date of Joining":
+				from_date = date_of_joining
 
-				if check_effective_date(
-					from_date, today, e_leave_type.earned_leave_frequency, e_leave_type.allocate_on_day
-				):
-					update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, date_of_joining)
+			if check_effective_date(
+				from_date, today, e_leave_type.earned_leave_frequency, e_leave_type.allocate_on_day
+			):
+				update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, date_of_joining)
 
 
 def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, date_of_joining):
