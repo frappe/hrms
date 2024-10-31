@@ -197,7 +197,7 @@ $.extend(hrms, {
 				frm.set_value("latitude", position.coords.latitude);
 				frm.set_value("longitude", position.coords.longitude);
 
-				await frm.call("hrms.hr.utils.set_geolocation_from_coordinates");
+				await frm.call("set_geolocation");
 				frappe.dom.unfreeze();
 			},
 			(error) => {

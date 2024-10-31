@@ -18,7 +18,7 @@
 					<h2
 						class="text-xl font-semibold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis"
 					>
-						{{ doctype }}
+						{{ __(props.doctype) }}
 					</h2>
 					<Badge
 						:label="id"
@@ -27,7 +27,7 @@
 					/>
 					<Badge
 						v-if="status"
-						:label="status"
+						:label="__(status, null, doctype)"
 						:theme="statusColor"
 						class="whitespace-nowrap text-[8px]"
 					/>
@@ -36,21 +36,21 @@
 						class="ml-auto"
 						:options="[
 							{
-								label: 'Delete',
+								label: __('Delete'),
 								condition: showDeleteButton,
 								onClick: () => (showDeleteDialog = true),
 							},
-							{ label: 'Reload', onClick: () => reloadDoc() },
+							{ label: __('Reload'), onClick: () => reloadDoc() },
 						]"
 						:button="{
-							label: 'Menu',
+							label: __('Menu'),
 							icon: 'more-horizontal',
 							variant: 'ghost',
 						}"
 					/>
 				</div>
 				<h2 v-else class="text-2xl font-semibold text-gray-900">
-					{{ `New ${doctype}` }}
+					{{ __('New {0}', [__(doctype)], props.doctype) }}
 				</h2>
 			</header>
 
@@ -72,7 +72,7 @@
 											: 'hover:text-gray-600 hover:border-gray-300',
 									]"
 								>
-									{{ tab.name }}
+									{{ __(tab.name, null, props.doctype) }}
 								</button>
 							</li>
 						</ul>
@@ -96,7 +96,7 @@
 									:fieldname="field.fieldname"
 									v-model="formModel[field.fieldname]"
 									:default="field.default"
-									:label="field.label"
+									:label="__(field.label, null, props.doctype)"
 									:options="field.options"
 									:linkFilters="field.linkFilters"
 									:documentList="field.documentList"
@@ -116,7 +116,7 @@
 								v-if="isFileUploading"
 							>
 								<LoadingIndicator class="w-3 h-3 text-gray-800" />
-								<span class="text-gray-900 text-sm">Uploading...</span>
+								<span class="text-gray-900 text-sm">{{ __("Uploading...") }} </span>
 							</div>
 
 							<FileUploaderView
@@ -137,7 +137,7 @@
 						:fieldname="field.fieldname"
 						v-model="formModel[field.fieldname]"
 						:default="field.default"
-						:label="field.label"
+						:label="__(field.label, null, props.doctype)"
 						:options="field.options"
 						:linkFilters="field.linkFilters"
 						:documentList="field.documentList"
@@ -155,7 +155,7 @@
 						v-if="isFileUploading"
 					>
 						<LoadingIndicator class="w-3 h-3 text-gray-800" />
-						<span class="text-gray-900 text-sm">Uploading...</span>
+						<span class="text-gray-900 text-sm">{{ __("Uploading...") }} </span>
 					</div>
 
 					<FileUploaderView
@@ -207,7 +207,7 @@
 						docList.insert.loading || documentResource?.setValue?.loading
 					"
 				>
-					{{ formButton }}
+					{{ __(formButton) }}
 				</Button>
 			</div>
 		</div>
@@ -216,11 +216,11 @@
 	<!-- Confirmation Dialogs -->
 	<Dialog v-model="showDeleteDialog">
 		<template #body-title>
-			<h2 class="text-xl font-bold">Delete {{ props.doctype }}</h2>
+			<h2 class="text-xl font-bold">{{ __("Delete {0}", [__(props.doctype)]) }}</h2>
 		</template>
 		<template #body-content>
 			<p>
-				Are you sure you want to delete the {{ props.doctype }}
+				{{ __("Are you sure you want to delete the {0}", [__(props.doctype)])  }}
 				<span class="font-bold">{{ formModel.name }}</span>
 				?
 			</p>
@@ -232,7 +232,7 @@
 					class="py-5 w-full"
 					@click="showDeleteDialog = false"
 				>
-					Cancel
+					{{ __("Cancel") }}
 				</Button>
 				<Button
 					variant="solid"
@@ -240,7 +240,7 @@
 					@click="handleDocDelete"
 					class="py-5 w-full"
 				>
-					Delete
+					{{__("Delete") }}
 				</Button>
 			</div>
 		</template>
@@ -248,11 +248,11 @@
 
 	<Dialog v-model="showSubmitDialog">
 		<template #body-title>
-			<h2 class="text-xl font-bold">Confirm</h2>
+			<h2 class="text-xl font-bold">{{ __("Confirm") }} </h2>
 		</template>
 		<template #body-content>
 			<p>
-				Permanently submit {{ props.doctype }}
+				{{ __("Permanently submit {0}", [__(props.doctype)]) }}
 				<span class="font-bold">{{ formModel.name }}</span>
 				?
 			</p>
@@ -264,14 +264,14 @@
 					class="py-5 w-full"
 					@click="showSubmitDialog = false"
 				>
-					No
+					{{ __("No") }}
 				</Button>
 				<Button
 					variant="solid"
 					@click="handleDocUpdate('submit')"
 					class="py-5 w-full"
 				>
-					Yes
+					{{ __("Yes") }}
 				</Button>
 			</div>
 		</template>
@@ -279,11 +279,11 @@
 
 	<Dialog v-model="showCancelDialog">
 		<template #body-title>
-			<h2 class="text-xl font-bold">Confirm</h2>
+			<h2 class="text-xl font-bold">{{ __("Confirm") }} </h2>
 		</template>
 		<template #body-content>
 			<p>
-				Permanently cancel {{ props.doctype }}
+				{{ __("Permanently cancel {0}", [__(props.doctype)]) }}
 				<span class="font-bold">{{ formModel.name }}</span
 				>?
 			</p>
@@ -295,14 +295,14 @@
 					class="py-5 w-full"
 					@click="showCancelDialog = false"
 				>
-					No
+					{{ __("No") }}
 				</Button>
 				<Button
 					variant="solid"
 					@click="handleDocUpdate('cancel')"
 					class="py-5 w-full"
 				>
-					Yes
+					{{ __("Yes") }}
 				</Button>
 			</div>
 		</template>
@@ -310,7 +310,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, ref, watch } from "vue"
+import { computed, inject, nextTick, onMounted, ref, watch } from "vue"
 import { useRouter } from "vue-router"
 import {
 	ErrorMessage,
@@ -377,6 +377,9 @@ const props = defineProps({
 })
 const emit = defineEmits(["validateForm", "update:modelValue"])
 const router = useRouter()
+
+const __ = inject("$translate")
+
 let activeTab = ref(props.tabs?.[0].name)
 let fileAttachments = ref([])
 let statusColor = ref("")
@@ -509,8 +512,8 @@ const docList = createListResource({
 	insert: {
 		async onSuccess(data) {
 			toast({
-				title: "Success",
-				text: `${props.doctype} created successfully!`,
+				title: __("Success"),
+				text: __("{0} created successfully!", [__(props.doctype)]),
 				icon: "check-circle",
 				position: "bottom-center",
 				iconClasses: "text-green-500",
@@ -524,8 +527,8 @@ const docList = createListResource({
 		},
 		onError() {
 			toast({
-				title: "Error",
-				text: `Error creating ${props.doctype}`,
+				title: __("Error"),
+				text: __("Error creating {0}", [__(props.doctype)]),
 				icon: "alert-circle",
 				position: "bottom-center",
 				iconClasses: "text-red-500",
@@ -542,8 +545,8 @@ const documentResource = createDocumentResource({
 	setValue: {
 		onSuccess() {
 			toast({
-				title: "Success",
-				text: `${props.doctype} updated successfully!`,
+				title: __("Success"),
+				text: __("{0} updated successfully!", [__(props.doctype)]),
 				icon: "check-circle",
 				position: "bottom-center",
 				iconClasses: "text-green-500",
@@ -551,8 +554,8 @@ const documentResource = createDocumentResource({
 		},
 		onError() {
 			toast({
-				title: "Error",
-				text: `Error updating ${props.doctype}`,
+				title: __("Error"),
+				text: __("Error updating {0}", [__(props.doctype)]),
 				icon: "alert-circle",
 				position: "bottom-center",
 				iconClasses: "text-red-500",
@@ -564,8 +567,8 @@ const documentResource = createDocumentResource({
 		onSuccess() {
 			router.back()
 			toast({
-				title: "Success",
-				text: `${props.doctype} deleted successfully!`,
+				title: __("Success"),
+				text: __("{0} deleted successfully!", [__(props.doctype)]),
 				icon: "check-circle",
 				position: "bottom-center",
 				iconClasses: "text-green-500",
@@ -573,8 +576,8 @@ const documentResource = createDocumentResource({
 		},
 		onError() {
 			toast({
-				title: "Error",
-				text: `Error deleting ${props.doctype}`,
+				title: __("Error"),
+				text: __("Error deleting {0}", [__(props.doctype)]),
 				icon: "alert-circle",
 				position: "bottom-center",
 				iconClasses: "text-red-500",

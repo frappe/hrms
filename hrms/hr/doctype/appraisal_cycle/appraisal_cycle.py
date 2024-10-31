@@ -173,6 +173,7 @@ def create_appraisals_for_cycle(appraisal_cycle: AppraisalCycle, publish_progres
 			appraisal = frappe.get_doc(
 				{
 					"doctype": "Appraisal",
+					"company": appraisal_cycle.company,
 					"appraisal_template": employee.appraisal_template,
 					"employee": employee.employee,
 					"appraisal_cycle": appraisal_cycle.name,

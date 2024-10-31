@@ -24,6 +24,7 @@ import FormView from "@/components/FormView.vue"
 
 const dayjs = inject("$dayjs")
 const employee = inject("$employee")
+const __ = inject("$translate")
 const today = dayjs().format("YYYY-MM-DD")
 
 const props = defineProps({
@@ -161,7 +162,7 @@ function validateDates(from_date, to_date) {
 	if (!(from_date && to_date)) return
 
 	const error_message =
-		from_date > to_date ? "To Date cannot be before From Date" : ""
+		from_date > to_date ? __("To Date cannot be before From Date") : ""
 
 	const from_date_field = formFields.data.find(
 		(field) => field.fieldname === "from_date"

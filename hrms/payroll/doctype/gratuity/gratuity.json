@@ -59,7 +59,7 @@
   {
    "default": "0",
    "fieldname": "current_work_experience",
-   "fieldtype": "Int",
+   "fieldtype": "Float",
    "label": "Current Work Experience"
   },
   {
@@ -199,7 +199,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:09:45.947818",
+ "modified": "2024-10-25 15:33:11.549493",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Gratuity",

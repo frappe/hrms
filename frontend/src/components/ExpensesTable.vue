@@ -1,7 +1,7 @@
 <template>
 	<!-- Header -->
 	<div class="flex flex-row justify-between items-center mt-2">
-		<h2 class="text-base font-semibold text-gray-800">Expenses</h2>
+		<h2 class="text-base font-semibold text-gray-800">{{ __("Expenses") }} </h2>
 		<div class="flex flex-row gap-3 items-center">
 			<span class="text-base font-semibold text-gray-800">
 				{{ formatCurrency(expenseClaim.total_claimed_amount, currency) }}
@@ -33,12 +33,16 @@
 					<div class="flex flex-row items-start gap-3 grow">
 						<div class="flex flex-col items-start gap-1.5">
 							<div class="text-base font-normal text-gray-800">
-								{{ item.expense_type }}
+								{{ __(item.expense_type) }}
 							</div>
 							<div class="text-xs font-normal text-gray-500">
 								<span>
-									Sanctioned:
-									{{ formatCurrency(item.sanctioned_amount, currency) }}
+									{{
+										__("{0}: {1}", [
+											__("Sanctioned"),
+											formatCurrency(item.sanctioned_amount || 0, currency),
+										])
+									}}
 								</span>
 								<span class="whitespace-pre"> &middot; </span>
 								<span class="whitespace-nowrap" v-if="item.expense_date">
@@ -76,7 +80,7 @@
 							v-for="field in expensesTableFields.data"
 							:key="field.fieldname"
 							class="w-full"
-							:label="field.label"
+							:label="__(field.label, null, 'Expense Claim Detail')"
 							:fieldtype="field.fieldtype"
 							:fieldname="field.fieldname"
 							:options="field.options"
@@ -102,7 +106,7 @@
 							<template #prefix>
 								<FeatherIcon name="trash" class="w-4" />
 							</template>
-							Delete
+							{{ __("Delete") }}
 						</Button>
 						<Button
 							variant="solid"
@@ -116,7 +120,7 @@
 									class="w-4"
 								/>
 							</template>
-							{{ editingIdx === null ? "Add Expense" : "Update Expense" }}
+							{{ editingIdx === null ? __("Add Expense") : __("Update Expense") }}
 						</Button>
 					</div>
 				</div>
@@ -156,6 +160,7 @@ const emit = defineEmits([
 	"delete-expense-item",
 ])
 const dayjs = inject("$dayjs")
+const __ = inject("$translate")
 const expenseItem = ref({})
 const editingIdx = ref(null)
 
@@ -203,9 +208,9 @@ const expensesTableFields = createResource({
 expensesTableFields.reload()
 
 const modalTitle = computed(() => {
-	if (props.isReadOnly) return "Expense Item"
+	if (props.isReadOnly) return __("Expense Item")
 
-	return editingIdx.value === null ? "New Expense Item" : "Edit Expense Item"
+	return editingIdx.value === null ? __("New Expense Item") : __("Edit Expense Item")
 })
 
 const addButtonDisabled = computed(() => {

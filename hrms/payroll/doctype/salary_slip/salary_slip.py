@@ -767,7 +767,7 @@ class SalarySlip(TransactionBase):
 				)
 			)
 
-	def calculate_net_pay(self):
+	def calculate_net_pay(self, skip_tax_breakup_computation: bool = False):
 		def set_gross_pay_and_base_gross_pay():
 			self.gross_pay = self.get_component_totals("earnings", depends_on_payment_days=1)
 			self.base_gross_pay = flt(
@@ -798,7 +798,8 @@ class SalarySlip(TransactionBase):
 
 		self.set_precision_for_component_amounts()
 		self.set_net_pay()
-		self.compute_income_tax_breakup()
+		if not skip_tax_breakup_computation:
+			self.compute_income_tax_breakup()
 
 	def set_net_pay(self):
 		self.total_deduction = self.get_component_totals("deductions")
@@ -966,10 +967,7 @@ class SalarySlip(TransactionBase):
 			non_taxable_additional_salary,
 		) = self.get_non_taxable_earnings_for_current_period()
 
-		# Future period non taxable earnings
-		future_period_non_taxable_earnings = current_period_non_taxable_earnings * (
-			ceil(self.remaining_sub_periods) - 1
-		)
+		future_period_non_taxable_earnings = self.get_future_period_non_taxable_earnings()
 
 		non_taxable_earnings = (
 			prev_period_non_taxable_earnings
@@ -979,6 +977,19 @@ class SalarySlip(TransactionBase):
 		)
 
 		return non_taxable_earnings
+
+	def get_future_period_non_taxable_earnings(self):
+		salary_slip = frappe.copy_doc(self)
+		# consider full payment days for future period
+		salary_slip.payment_days = salary_slip.total_working_days
+		salary_slip.calculate_net_pay(skip_tax_breakup_computation=True)
+
+		future_period_non_taxable_earnings = 0
+		for earning in salary_slip.earnings:
+			if not earning.is_tax_applicable and not earning.additional_salary:
+				future_period_non_taxable_earnings += earning.amount
+
+		return future_period_non_taxable_earnings * (ceil(self.remaining_sub_periods) - 1)
 
 	def get_non_taxable_earnings_for_current_period(self):
 		current_period_non_taxable_earnings = 0.0

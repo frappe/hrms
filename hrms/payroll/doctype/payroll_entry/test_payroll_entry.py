@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 import frappe
 from frappe.tests import IntegrationTestCase, change_settings
-from frappe.utils import add_days, add_months, cstr
+from frappe.utils import add_days, add_months, cstr, flt
 
 import erpnext
 from erpnext.accounts.utils import get_fiscal_year, getdate, nowdate
@@ -749,8 +749,33 @@ class TestPayrollEntry(IntegrationTestCase):
 			total_loan_repayment=loan.monthly_repayment_amount,
 		)
 
+		salary_slip_name = frappe.db.get_value("Salary Slip", {"payroll_entry": payroll_entry.name}, "name")
+		salary_slip = frappe.get_doc("Salary Slip", salary_slip_name)
+		payroll_entry.reload()
+
+		initial_gross_pay = flt(salary_slip.gross_pay) - flt(salary_slip.total_deduction)
+		loan_repayment_amount = flt(salary_slip.total_loan_repayment)
+		expected_bank_entry_amount = initial_gross_pay - loan_repayment_amount
+
 		payroll_entry.make_bank_entry()
 		submit_bank_entry(payroll_entry.name)
+
+		bank_entry = frappe.db.sql(
+			"""
+			SELECT je.total_debit, je.total_credit
+			FROM `tabJournal Entry` je
+			INNER JOIN `tabJournal Entry Account` jea ON je.name = jea.parent
+			WHERE je.voucher_type = 'Bank Entry' AND jea.reference_type = 'Payroll Entry' AND jea.reference_name = %s
+			LIMIT 1
+			""",
+			payroll_entry.name,
+			as_dict=True,
+		)
+
+		total_debit = bank_entry[0].get("total_debit", 0)
+		total_credit = bank_entry[0].get("total_credit", 0)
+		self.assertEqual(total_debit, expected_bank_entry_amount)
+		self.assertEqual(total_credit, expected_bank_entry_amount)
 
 
 def get_payroll_entry(**args):

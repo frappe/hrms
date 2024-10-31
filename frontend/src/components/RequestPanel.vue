@@ -1,7 +1,7 @@
 <template>
 	<div class="w-full">
 		<TabButtons
-			:buttons="[{ label: 'My Requests' }, { label: 'Team Requests' }]"
+			:buttons="TAB_BUTTONS"
 			v-model="activeTab"
 		/>
 		<RequestList v-if="activeTab == 'My Requests'" :items="myRequests" />
@@ -32,6 +32,8 @@ import { useListUpdate } from "@/composables/realtime"
 
 const activeTab = ref("My Requests")
 const socket = inject("$socket")
+
+const TAB_BUTTONS = ["My Requests", "Team Requests"] // __("My Requests"), __("Team Requests")
 
 const myRequests = computed(() =>
 	updateRequestDetails(myLeaves, myClaims, myShiftRequests, myAttendanceRequests)

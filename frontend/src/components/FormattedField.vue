@@ -5,7 +5,7 @@
 		v-else-if="props.fieldtype === 'Select'"
 		variant="outline"
 		:theme="colorMap[props.value]"
-		:label="props.value"
+		:label="__(props.value)"
 		size="md"
 	/>
 

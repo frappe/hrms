@@ -1,11 +1,11 @@
 <template>
-	<BaseLayout pageTitle="Salary Slips">
+	<BaseLayout :pageTitle="__('Salary Slips')">
 		<template #body>
 			<div class="flex flex-col items-center my-7 p-4">
 				<div class="flex flex-col w-full bg-white rounded py-5 px-3.5 gap-5">
 					<div v-if="lastSalarySlip" class="flex flex-col w-full gap-1.5">
 						<span class="text-gray-600 text-sm font-medium leading-5">
-							Year To Date
+							{{ __("Year To Date") }}
 						</span>
 						<span class="text-gray-800 text-xl font-bold leading-6">
 							{{
@@ -18,9 +18,9 @@
 					</div>
 
 					<Autocomplete
-						label="Payroll Period"
+						:label="__('Payroll Period')"
 						class="w-full"
-						placeholder="Select Payroll Period"
+						:placeholder="__('Select Payroll Period')"
 						v-model="selectedPeriod"
 						:options="payrollPeriods.data"
 					/>

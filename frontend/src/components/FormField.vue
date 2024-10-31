@@ -16,7 +16,7 @@
 		<Autocomplete
 			v-if="props.fieldtype === 'Select' || props.documentList"
 			:class="isReadOnly ? 'pointer-events-none' : ''"
-			:placeholder="`Select ${props.label}`"
+			:placeholder="__('Select {0}', [props.label])"
 			:options="selectionList"
 			:modelValue="modelValue"
 			v-bind="$attrs"
@@ -39,7 +39,7 @@
 			v-else-if="['Text Editor', 'Small Text', 'Text', 'Long Text'].includes(props.fieldtype)"
 			type="textarea"
 			:value="modelValue"
-			:placeholder="`Enter ${props.label}`"
+			:placeholder="__('Enter {0}', [props.label])"
 			@input="(v) => emit('update:modelValue', v)"
 			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
@@ -108,13 +108,15 @@
 		</div>
 
 		<!-- Date -->
-		<!-- FIXME: min date, max date doesn't work -->
-		<DatePicker
+		<!-- FIXME: default datepicker has poor UI -->
+		<Input
 			v-else-if="props.fieldtype === 'Date'"
+			type="date"
 			:value="modelValue"
-			:placeholder="`Select ${props.label}`"
-			:formatter="(val) => dayjs(val).format('DD-MM-YYYY')"
-			@update:modelValue="(v) => emit('update:modelValue', v)"
+			:placeholder="__('Select {0}', [props.label])"
+			:formatValue="(val) => dayjs(val).format('DD-MM-YYYY')"
+			@input="(v) => emit('update:modelValue', v)"
+			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
 			:min="props.minDate"
@@ -138,10 +140,12 @@
 </template>
 
 <script setup>
-import { Autocomplete, DatePicker, DateTimePicker, ErrorMessage } from "frappe-ui"
-import { ref, computed, onMounted, inject } from "vue"
+import { Autocomplete, DateTimePicker, ErrorMessage, Input } from "frappe-ui"
+import { computed, onMounted, inject } from "vue"
 
 import Link from "@/components/Link.vue"
+
+const __ = inject("$translate")
 
 const props = defineProps({
 	fieldtype: String,
@@ -194,7 +198,7 @@ const selectionList = computed(() => {
 	} else if (props.fieldtype == "Select" && props.options) {
 		const options = props.options.split("\n")
 		return options.map((option) => ({
-			label: option,
+			label: __(option),
 			value: option,
 		}))
 	}

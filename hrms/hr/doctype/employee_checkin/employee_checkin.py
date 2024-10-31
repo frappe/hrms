@@ -24,7 +24,7 @@ class EmployeeCheckin(Document):
 		validate_active_employee(self.employee)
 		self.validate_duplicate_log()
 		self.fetch_shift()
-		set_geolocation_from_coordinates(self)
+		self.set_geolocation()
 		self.validate_distance_from_shift_location()
 
 	def validate_duplicate_log(self):
@@ -42,6 +42,10 @@ class EmployeeCheckin(Document):
 			frappe.throw(
 				_("This employee already has a log with the same timestamp.{0}").format("<Br>" + doc_link)
 			)
+
+	@frappe.whitelist()
+	def set_geolocation(self):
+		set_geolocation_from_coordinates(self)
 
 	@frappe.whitelist()
 	def fetch_shift(self):

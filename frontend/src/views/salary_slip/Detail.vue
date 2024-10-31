@@ -36,7 +36,7 @@
 						variant="solid"
 						:loading="loading"
 					>
-						Download PDF
+						{{ __("Download PDF") }}
 					</Button>
 				</template>
 			</FormView>

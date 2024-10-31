@@ -31,7 +31,7 @@
 							<template #prefix>
 								<FeatherIcon name="plus" class="w-4" />
 							</template>
-							New
+							{{ __("New", null, props.doctype) }}
 						</Button>
 					</router-link>
 				</div>
@@ -53,7 +53,7 @@
 				<TabButtons
 					v-if="props.tabButtons"
 					class="mt-5"
-					:buttons="[{ label: tabButtons[0] }, { label: tabButtons[1] }]"
+					:buttons="props.tabButtons"
 					v-model="activeTab"
 				/>
 
@@ -186,6 +186,8 @@ const props = defineProps({
 	},
 })
 
+const getButtonKey = (tab) => tab?.key ?? tab
+
 const listItemComponent = {
 	"Employee Checkin": markRaw(EmployeeCheckinItem),
 	"Attendance Request": markRaw(AttendanceRequestItem),
@@ -201,7 +203,7 @@ const dayjs = inject("$dayjs")
 const socket = inject("$socket")
 const employee = inject("$employee")
 const filterMap = reactive({})
-const activeTab = ref(props.tabButtons ? props.tabButtons[0] : undefined)
+const activeTab = ref(props.tabButtons ? getButtonKey(props.tabButtons[0]) : undefined)
 const areFiltersApplied = ref(false)
 const appliedFilters = ref([])
 const workflowStateField = ref(null)
@@ -221,7 +223,7 @@ const listOptions = ref({
 
 // computed properties
 const isTeamRequest = computed(() => {
-	return props.tabButtons && activeTab.value === props.tabButtons[1]
+	return props.tabButtons && activeTab.value === getButtonKey(props.tabButtons[1])
 })
 
 const formViewRoute = computed(() => {

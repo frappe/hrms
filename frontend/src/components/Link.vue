@@ -3,7 +3,7 @@
 		ref="autocompleteRef"
 		size="sm"
 		v-model="value"
-		:placeholder="`Select ${doctype}`"
+		:placeholder="__('Select {0}', [__(doctype)])"
 		:options="options.data"
 		:class="disabled ? 'pointer-events-none' : ''"
 		:disabled="disabled"

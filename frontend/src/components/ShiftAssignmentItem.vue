@@ -9,9 +9,7 @@
 				<div class="text-xs font-normal text-gray-500">
 					<span>{{ props.doc.shift_dates || getShiftDates(props.doc) }}</span>
 					<span v-if="props.doc.end_date" class="whitespace-pre"> &middot; </span>
-					<span v-if="props.doc.end_date" class="whitespace-nowrap">{{
-						`${props.doc.total_shift_days || getTotalShiftDays(props.doc)}d`
-					}}</span>
+					<span v-if="props.doc.end_date" class="whitespace-nowrap">{{ __("{0}d", [props.doc.total_shift_days || getTotalShiftDays(props.doc)]) }}</span>
 				</div>
 			</div>
 		</template>

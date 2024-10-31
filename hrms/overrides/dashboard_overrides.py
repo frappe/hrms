@@ -85,3 +85,12 @@ def get_dashboard_for_project(data):
 	)
 
 	return data
+
+
+def get_dashboard_for_bank_account(data):
+	for section in data["transactions"]:
+		if section.get("label") == "Transactions":
+			section["items"].append("Payroll Entry")
+			break
+
+	return data

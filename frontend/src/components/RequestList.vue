@@ -24,11 +24,11 @@
 				@click="navigate"
 				class="w-full !text-gray-600 py-6 text-sm border-none bg-white hover:bg-white"
 			>
-				View List
+				{{ __("View List") }}
 			</Button>
 		</router-link>
 	</div>
-	<EmptyState :message="emptyStateMessage" v-else />
+	<EmptyState :message="emptyStateMessage || 'You have no requests'" v-else />
 
 	<ion-modal
 		ref="modal"
@@ -75,7 +75,7 @@ const props = defineProps({
 	},
 	emptyStateMessage: {
 		type: String,
-		default: "You have no requests",
+		default: "",
 	},
 })
 
