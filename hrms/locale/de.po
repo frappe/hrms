@@ -4228,7 +4228,7 @@ msgstr "Mitarbeiter einchecken"
 
 #: frontend/src/views/attendance/EmployeeCheckinList.vue:5
 msgid "Employee Checkin History"
-msgstr ""
+msgstr "Mitarbeiter Checkin Historie"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_cost_center/employee_cost_center.json
@@ -4295,7 +4295,7 @@ msgstr "Kriterien für Mitarbeiter-Feedback"
 #. Name of a DocType
 #: hrms/hr/doctype/employee_feedback_rating/employee_feedback_rating.json
 msgid "Employee Feedback Rating"
-msgstr ""
+msgstr "Mitarbeiter Feedback Rating"
 
 #. Name of a DocType
 #. Label of the employee_grade (Link) field in DocType 'Employee Onboarding'
@@ -6084,11 +6084,11 @@ msgstr "Vorlage aufrufen"
 
 #: frontend/src/components/InstallPrompt.vue:8
 msgid "Get the app on your device for easy access & a better experience!"
-msgstr ""
+msgstr "Hol dir die App auf dein Device für einfachen Zugriff & ein besseres Erlebnis"
 
 #: frontend/src/components/InstallPrompt.vue:41
 msgid "Get the app on your iPhone for easy access & a better experience"
-msgstr ""
+msgstr "Hol dir die App auf dein iPhone für einfachen Zugriff & ein besseres Erlebnis"
 
 #. Option for the 'Meal Preference' (Select) field in DocType 'Travel
 #. Itinerary'
@@ -6098,11 +6098,11 @@ msgstr "Gluten-frei"
 
 #: frontend/src/views/InvalidEmployee.vue:12
 msgid "Go to Login"
-msgstr ""
+msgstr "Zu Login gehen"
 
 #: frontend/src/views/Login.vue:70
 msgid "Go to Reset Password page"
-msgstr ""
+msgstr "Zur Passwort zurücksetzen Seite gehen"
 
 #. Label of the kra (Small Text) field in DocType 'Appraisal Goal'
 #. Name of a DocType
@@ -6557,7 +6557,7 @@ msgstr "Hallo {}! Diese E-Mail soll Sie an die bevorstehenden Feiertage erinnern
 
 #: frontend/src/components/CheckInPanel.vue:4
 msgid "Hey, {0} 👋"
-msgstr ""
+msgstr "Hallo, {0} 👋"
 
 #: hrms/hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:44
 msgid "Hiring Count"
@@ -11093,7 +11093,7 @@ msgstr "Gehaltserwartung"
 
 #: frontend/src/views/Profile.vue:200
 msgid "Salary Information"
-msgstr ""
+msgstr "Gehaltsinformationen"
 
 #. Label of the salary_per (Select) field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
