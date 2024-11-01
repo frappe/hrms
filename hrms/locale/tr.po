@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-10-27 09:34+0000\n"
-"PO-Revision-Date: 2024-10-31 16:38\n"
+"PO-Revision-Date: 2024-11-01 16:39\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -11519,7 +11519,7 @@ msgstr "Vardiya atamalarının süresiz olarak otomatik oluşturulmasını istiy
 
 #: hrms/hr/doctype/leave_application/leave_application.js:269
 msgid "Select type of leave the employee wants to apply for, like Sick Leave, Privilege Leave, Casual Leave, etc."
-msgstr ""
+msgstr "Personelin başvurmak istediği izin türünü seçin; örneğin Hastalık İzni, Özel İzin, Günlük İzin vb."
 
 #: hrms/hr/doctype/leave_application/leave_application.js:291
 msgid "Select your Leave Approver i.e. the person who approves or rejects your leaves."
@@ -12763,7 +12763,7 @@ msgstr "Bu hata eksik veya silinmiş bir alandan kaynaklanıyor olabilir."
 
 #: hrms/hr/doctype/leave_type/leave_type.js:16
 msgid "This field allows you to set the maximum number of consecutive leaves an Employee can apply for."
-msgstr ""
+msgstr "Bu alan, bir Personelin arka arkaya başvurabileceği maksimum izin sayısını ayarlamanıza olanak tanır."
 
 #: hrms/hr/doctype/leave_type/leave_type.js:9
 msgid "This field allows you to set the maximum number of leaves that can be allocated annually for this Leave Type while creating the Leave Policy"
@@ -12935,7 +12935,7 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_application/leave_application.js:286
 msgid "To apply for a Half Day check 'Half Day' and select the Half Day Date"
-msgstr ""
+msgstr "Yarım Gün başvurusunda bulunmak için 'Yarım Gün' seçeneğini işaretleyin ve Yarım Gün Tarihini seçin"
 
 #: hrms/hr/doctype/leave_period/leave_period.py:20
 msgid "To date can not be equal or less than from date"
@@ -14205,7 +14205,7 @@ msgstr ""
 
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:51
 msgid "You were only present for Half Day on {}. Cannot apply for a full day compensatory leave"
-msgstr ""
+msgstr "{} günü yalnızca Yarım Gün için hazır bulundunuz. Tam gün telafi izni için başvuruda bulunamazsınız"
 
 #: hrms/hr/doctype/interview/interview.py:104
 msgid "Your Interview session is rescheduled from {0} {1} - {2} to {3} {4} - {5}"
