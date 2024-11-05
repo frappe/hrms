@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-10-27 09:34+0000\n"
-"PO-Revision-Date: 2024-10-28 16:14\n"
+"POT-Creation-Date: 2024-11-03 09:34+0000\n"
+"PO-Revision-Date: 2024-11-03 17:48\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -341,7 +341,7 @@ msgstr "crwdns140858:0crwdne140858:0"
 #. Employee'
 #. Option for the 'Consider Unmarked Attendance As' (Select) field in DocType
 #. 'Payroll Settings'
-#: frontend/src/components/AttendanceCalendar.vue:79
+#: frontend/src/components/AttendanceCalendar.vue:80
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
@@ -598,7 +598,7 @@ msgstr "crwdns140890:0crwdne140890:0"
 msgid "Add Employee Property"
 msgstr "crwdns104918:0crwdne104918:0"
 
-#: frontend/src/components/ExpensesTable.vue:121
+#: frontend/src/components/ExpensesTable.vue:123
 msgid "Add Expense"
 msgstr "crwdns151150:0crwdne151150:0"
 
@@ -799,7 +799,7 @@ msgstr "crwdns140922:0crwdne140922:0"
 msgid "Allocated Leaves"
 msgstr "crwdns104998:0crwdne104998:0"
 
-#: hrms/hr/utils.py:410
+#: hrms/hr/utils.py:409
 msgid "Allocated {0} leave(s) via scheduler on {1} based on the 'Allocate on Day' option set to {2}"
 msgstr "crwdns105000:0{0}crwdnd105000:0{1}crwdnd105000:0{2}crwdne105000:0"
 
@@ -1335,7 +1335,7 @@ msgstr "crwdns105274:0crwdne105274:0"
 
 #. Label of the section_break_7 (Section Break) field in DocType 'Leave
 #. Application'
-#: frontend/src/components/RequestActionSheet.vue:288
+#: frontend/src/components/RequestActionSheet.vue:290
 #: hrms/hr/doctype/leave_application/leave_application.json
 msgid "Approval"
 msgstr "crwdns140994:0crwdne140994:0"
@@ -1358,7 +1358,6 @@ msgstr "crwdns140998:0crwdne140998:0"
 #. Option for the 'Status' (Select) field in DocType 'Leave Application'
 #. Option for the 'Status' (Select) field in DocType 'Shift Request'
 #: frontend/src/components/ExpenseClaimSummary.vue:36
-#: frontend/src/components/RequestActionSheet.vue:288
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 #: hrms/hr/doctype/leave_application/leave_application.json
 #: hrms/hr/doctype/shift_request/shift_request.json
@@ -1609,11 +1608,7 @@ msgstr "crwdns105366:0crwdne105366:0"
 msgid "Attendance Warnings"
 msgstr "crwdns105368:0crwdne105368:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:60
-msgid "Attendance can not be marked for future dates: {0}"
-msgstr "crwdns105370:0{0}crwdne105370:0"
-
-#: hrms/hr/doctype/attendance/attendance.py:66
+#: hrms/hr/doctype/attendance/attendance.py:55
 msgid "Attendance date {0} can not be less than employee {1}'s joining date: {2}"
 msgstr "crwdns105372:0{0}crwdnd105372:0{1}crwdnd105372:0{2}crwdne105372:0"
 
@@ -1621,11 +1616,11 @@ msgstr "crwdns105372:0{0}crwdnd105372:0{1}crwdnd105372:0{2}crwdne105372:0"
 msgid "Attendance for all the employees under this criteria has been marked already."
 msgstr "crwdns105374:0crwdne105374:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:119
+#: hrms/hr/doctype/attendance/attendance.py:108
 msgid "Attendance for employee {0} is already marked for an overlapping shift {1}: {2}"
 msgstr "crwdns105376:0{0}crwdnd105376:0{1}crwdnd105376:0{2}crwdne105376:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:78
+#: hrms/hr/doctype/attendance/attendance.py:67
 msgid "Attendance for employee {0} is already marked for the date {1}: {2}"
 msgstr "crwdns105378:0{0}crwdnd105378:0{1}crwdnd105378:0{2}crwdne105378:0"
 
@@ -2100,7 +2095,7 @@ msgstr "crwdns148484:0{0}crwdne148484:0"
 msgid "Cannot find active Leave Period"
 msgstr "crwdns105566:0crwdne105566:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:153
+#: hrms/hr/doctype/attendance/attendance.py:142
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr "crwdns105568:0{0}crwdne105568:0"
 
@@ -2162,7 +2157,7 @@ msgstr "crwdns143246:0crwdne143246:0"
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr "crwdns141134:0{0}crwdnd141134:0{1}crwdne141134:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1399
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1401
 msgid "Check Error Log {0} for more details."
 msgstr "crwdns105594:0{0}crwdne105594:0"
 
@@ -2180,7 +2175,7 @@ msgid "Check Vacancies On Job Offer Creation"
 msgstr "crwdns141136:0crwdne141136:0"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:332
-#: hrms/hr/utils.py:828
+#: hrms/hr/utils.py:841
 msgid "Check {0} for more details"
 msgstr "crwdns105598:0{0}crwdne105598:0"
 
@@ -2711,7 +2706,7 @@ msgstr "crwdns141206:0crwdne141206:0"
 msgid "Could not find any salary slip(s) for the employee {0}"
 msgstr "crwdns149170:0{0}crwdne149170:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1462
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1464
 msgid "Could not submit some Salary Slips: {}"
 msgstr "crwdns105872:0crwdne105872:0"
 
@@ -2842,7 +2837,7 @@ msgstr "crwdns105932:0crwdne105932:0"
 msgid "Creating Payment Entries......"
 msgstr "crwdns105934:0crwdne105934:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1422
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1424
 msgid "Creating Salary Slips..."
 msgstr "crwdns105936:0crwdne105936:0"
 
@@ -2850,7 +2845,7 @@ msgstr "crwdns105936:0crwdne105936:0"
 msgid "Creation Date"
 msgstr "crwdns141224:0crwdne141224:0"
 
-#: hrms/hr/utils.py:837
+#: hrms/hr/utils.py:850
 msgid "Creation Failed"
 msgstr "crwdns105938:0crwdne105938:0"
 
@@ -3299,7 +3294,7 @@ msgid "Deferred Expense Account"
 msgstr "crwdns141290:0crwdne141290:0"
 
 #: frontend/src/components/ExpenseTaxesTable.vue:104
-#: frontend/src/components/ExpensesTable.vue:107
+#: frontend/src/components/ExpensesTable.vue:109
 #: frontend/src/components/FileUploaderView.vue:73
 #: frontend/src/components/FormView.vue:39
 #: frontend/src/components/FormView.vue:243
@@ -3374,7 +3369,7 @@ msgstr "crwdns141294:0crwdne141294:0"
 #. Label of the department (Link) field in DocType 'Salary Slip'
 #. Label of the department (Link) field in DocType 'Salary Structure
 #. Assignment'
-#: frontend/src/views/attendance/ShiftRequestList.vue:52
+#: frontend/src/views/attendance/ShiftRequestList.vue:54
 #: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json
 #: hrms/hr/doctype/appraisee/appraisee.json
@@ -3691,7 +3686,7 @@ msgstr "crwdns141310:0crwdne141310:0"
 msgid "Disabling Push Notifications..."
 msgstr "crwdns151190:0crwdne151190:0"
 
-#: frontend/src/components/WorkflowActionSheet.vue:108
+#: frontend/src/components/WorkflowActionSheet.vue:111
 msgid "Dismiss"
 msgstr "crwdns151192:0crwdne151192:0"
 
@@ -3725,7 +3720,7 @@ msgstr "crwdns106394:0{0}crwdnd106394:0{1}crwdne106394:0"
 msgid "Document Status"
 msgstr "crwdns106396:0crwdne106396:0"
 
-#: frontend/src/components/RequestActionSheet.vue:290
+#: frontend/src/components/RequestActionSheet.vue:292
 msgid "Document {0} failed!"
 msgstr "crwdns151194:0{0}crwdne151194:0"
 
@@ -3769,7 +3764,7 @@ msgstr "crwdns141322:0crwdne141322:0"
 msgid "Driver"
 msgstr "crwdns143250:0crwdne143250:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:83
+#: hrms/hr/doctype/attendance/attendance.py:72
 msgid "Duplicate Attendance"
 msgstr "crwdns106418:0crwdne106418:0"
 
@@ -3885,11 +3880,11 @@ msgstr "crwdns141338:0crwdne141338:0"
 msgid "Edit"
 msgstr "crwdns141342:0crwdne141342:0"
 
-#: frontend/src/components/ExpensesTable.vue:211
+#: frontend/src/components/ExpensesTable.vue:213
 msgid "Edit Expense Item"
 msgstr "crwdns151198:0crwdne151198:0"
 
-#: frontend/src/components/ExpenseTaxesTable.vue:220
+#: frontend/src/components/ExpenseTaxesTable.vue:221
 msgid "Edit Expense Tax"
 msgstr "crwdns151200:0crwdne151200:0"
 
@@ -4011,7 +4006,7 @@ msgstr "crwdns141362:0crwdne141362:0"
 #. Label of the employee (Link) field in DocType 'Salary Slip'
 #. Label of the employee (Link) field in DocType 'Salary Structure Assignment'
 #. Label of the employee (Link) field in DocType 'Salary Withholding'
-#: frontend/src/views/attendance/ShiftRequestList.vue:46
+#: frontend/src/views/attendance/ShiftRequestList.vue:48
 #: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json
 #: hrms/hr/doctype/appraisal_template/appraisal_template.json
@@ -4771,11 +4766,11 @@ msgstr "crwdns106894:0{0}crwdnd106894:0{1}crwdnd106894:0{2}crwdnd106894:0{3}crwd
 msgid "Employee {0} has no maximum benefit amount"
 msgstr "crwdns106896:0{0}crwdne106896:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:210
+#: hrms/hr/doctype/attendance/attendance.py:199
 msgid "Employee {0} is not active or does not exist"
 msgstr "crwdns106898:0{0}crwdne106898:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:188
+#: hrms/hr/doctype/attendance/attendance.py:177
 msgid "Employee {0} is on Leave on {1}"
 msgstr "crwdns106900:0{0}crwdnd106900:0{1}crwdne106900:0"
 
@@ -4783,7 +4778,7 @@ msgstr "crwdns106900:0{0}crwdnd106900:0{1}crwdne106900:0"
 msgid "Employee {0} not found in Training Event Participants."
 msgstr "crwdns106902:0{0}crwdne106902:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:181
+#: hrms/hr/doctype/attendance/attendance.py:170
 msgid "Employee {0} on Half day on {1}"
 msgstr "crwdns106904:0{0}crwdnd106904:0{1}crwdne106904:0"
 
@@ -4946,7 +4941,7 @@ msgstr "crwdns106966:0crwdne106966:0"
 #. Label of the end_date (Date) field in DocType 'Payroll Period'
 #. Label of the end_date (Date) field in DocType 'Payroll Period Date'
 #. Label of the end_date (Date) field in DocType 'Salary Slip'
-#: frontend/src/views/attendance/ShiftAssignmentList.vue:25
+#: frontend/src/views/attendance/ShiftAssignmentList.vue:28
 #: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:91
@@ -5016,10 +5011,10 @@ msgid "Enter {0}"
 msgstr "crwdns151212:0{0}crwdne151212:0"
 
 #: frontend/src/components/CheckInPanel.vue:183
-#: frontend/src/components/FormView.vue:528
-#: frontend/src/components/FormView.vue:555
-#: frontend/src/components/FormView.vue:577
-#: frontend/src/components/RequestActionSheet.vue:315
+#: frontend/src/components/FormView.vue:530
+#: frontend/src/components/FormView.vue:557
+#: frontend/src/components/FormView.vue:579
+#: frontend/src/components/RequestActionSheet.vue:318
 #: frontend/src/views/AppSettings.vue:104
 #: frontend/src/views/AppSettings.vue:127
 #: frontend/src/views/AppSettings.vue:138 hrms/hr/doctype/goal/goal_list.js:100
@@ -5031,7 +5026,7 @@ msgid "Error"
 msgstr "crwdns107008:0crwdne107008:0"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:334
-#: hrms/hr/utils.py:830
+#: hrms/hr/utils.py:843
 msgid "Error Log"
 msgstr "crwdns107010:0crwdne107010:0"
 
@@ -5040,11 +5035,11 @@ msgstr "crwdns107010:0crwdne107010:0"
 msgid "Error Message"
 msgstr "crwdns141418:0crwdne141418:0"
 
-#: frontend/src/components/FormView.vue:529
+#: frontend/src/components/FormView.vue:531
 msgid "Error creating {0}"
 msgstr "crwdns151214:0{0}crwdne151214:0"
 
-#: frontend/src/components/FormView.vue:578
+#: frontend/src/components/FormView.vue:580
 msgid "Error deleting {0}"
 msgstr "crwdns151216:0{0}crwdne151216:0"
 
@@ -5060,7 +5055,7 @@ msgstr "crwdns107016:0{0}crwdne107016:0"
 msgid "Error in some rows"
 msgstr "crwdns141420:0crwdne141420:0"
 
-#: frontend/src/components/FormView.vue:556
+#: frontend/src/components/FormView.vue:558
 msgid "Error updating {0}"
 msgstr "crwdns151218:0{0}crwdne151218:0"
 
@@ -5419,7 +5414,7 @@ msgstr "crwdns107152:0crwdne107152:0"
 msgid "Expense Date"
 msgstr "crwdns141466:0crwdne141466:0"
 
-#: frontend/src/components/ExpensesTable.vue:209
+#: frontend/src/components/ExpensesTable.vue:211
 msgid "Expense Item"
 msgstr "crwdns151222:0crwdne151222:0"
 
@@ -5429,7 +5424,7 @@ msgstr "crwdns151222:0crwdne151222:0"
 msgid "Expense Proof"
 msgstr "crwdns141468:0crwdne141468:0"
 
-#: frontend/src/components/ExpenseTaxesTable.vue:218
+#: frontend/src/components/ExpenseTaxesTable.vue:219
 msgid "Expense Tax"
 msgstr "crwdns151224:0crwdne151224:0"
 
@@ -5501,7 +5496,7 @@ msgstr "crwdns107184:0crwdne107184:0"
 msgid "Failed"
 msgstr "crwdns141484:0crwdne141484:0"
 
-#: hrms/hr/utils.py:825
+#: hrms/hr/utils.py:838
 msgid "Failed to create/submit {0} for employees:"
 msgstr "crwdns107188:0{0}crwdne107188:0"
 
@@ -5533,7 +5528,7 @@ msgstr "crwdns107200:0crwdne107200:0"
 msgid "Failed to {0} {1} for employees:"
 msgstr "crwdns141490:0{0}crwdnd141490:0{1}crwdne141490:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1465
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1467
 #: hrms/public/js/utils/index.js:149
 msgid "Failure"
 msgstr "crwdns141492:0crwdne141492:0"
@@ -5730,7 +5725,7 @@ msgstr "crwdns141524:0crwdne141524:0"
 msgid "Fiscal Year"
 msgstr "crwdns107272:0crwdne107272:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1382
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1384
 msgid "Fiscal Year {0} not found"
 msgstr "crwdns107274:0{0}crwdne107274:0"
 
@@ -5840,7 +5835,7 @@ msgstr "crwdns151228:0crwdne151228:0"
 msgid "Frequency"
 msgstr "crwdns141546:0crwdne141546:0"
 
-#: frontend/src/components/AttendanceCalendar.vue:116
+#: frontend/src/components/AttendanceCalendar.vue:117
 #: hrms/hr/doctype/leave_block_list/leave_block_list.js:57
 msgid "Friday"
 msgstr "crwdns107318:0crwdne107318:0"
@@ -5871,7 +5866,7 @@ msgstr "crwdns141548:0crwdne141548:0"
 #. Label of the from_date (Date) field in DocType 'Salary Withholding'
 #. Label of the from_date (Date) field in DocType 'Salary Withholding Cycle'
 #: frontend/src/views/attendance/AttendanceRequestList.vue:24
-#: frontend/src/views/attendance/ShiftRequestList.vue:55
+#: frontend/src/views/attendance/ShiftRequestList.vue:57
 #: hrms/hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.js:15
 #: hrms/hr/doctype/attendance_request/attendance_request.json
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
@@ -6240,7 +6235,7 @@ msgid "Grievance Type"
 msgstr "crwdns107480:0crwdne107480:0"
 
 #. Label of the gross_pay (Currency) field in DocType 'Salary Slip'
-#: frontend/src/components/SalarySlipItem.vue:12
+#: frontend/src/components/SalarySlipItem.vue:13
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/report/income_tax_deductions/income_tax_deductions.py:54
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:42
@@ -6463,7 +6458,7 @@ msgstr "crwdns107536:0crwdne107536:0"
 #. Label of the half_day (Check) field in DocType 'Compensatory Leave Request'
 #. Option for the 'Status' (Select) field in DocType 'Employee Attendance Tool'
 #. Label of the half_day (Check) field in DocType 'Leave Application'
-#: frontend/src/components/AttendanceCalendar.vue:79
+#: frontend/src/components/AttendanceCalendar.vue:80
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/attendance_request/attendance_request.json
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.json
@@ -6573,7 +6568,7 @@ msgstr "crwdns107582:0crwdne107582:0"
 msgid "Hold"
 msgstr "crwdns141616:0crwdne141616:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:291
+#: hrms/hr/doctype/attendance/attendance.py:280
 #: hrms/hr/doctype/leave_application/leave_application.py:1290
 #: hrms/hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.py:46
 msgid "Holiday"
@@ -8102,7 +8097,7 @@ msgstr "crwdns108270:0crwdne108270:0"
 msgid "Loan Repayment Entry"
 msgstr "crwdns141852:0crwdne141852:0"
 
-#: hrms/hr/utils.py:713
+#: hrms/hr/utils.py:726
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr "crwdns108274:0{0}crwdnd108274:0{1}crwdne108274:0"
 
@@ -8447,7 +8442,7 @@ msgstr "crwdns151268:0crwdne151268:0"
 #. Label of the message (Text Editor) field in DocType 'PWA Notification'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hrms/hr/doctype/pwa_notification/pwa_notification.json
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1432
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1434
 msgid "Message"
 msgstr "crwdns108394:0crwdne108394:0"
 
@@ -8468,7 +8463,7 @@ msgstr "crwdns141910:0crwdne141910:0"
 msgid "Minimum Year for Gratuity"
 msgstr "crwdns141912:0crwdne141912:0"
 
-#: hrms/hr/utils.py:809
+#: hrms/hr/utils.py:822
 msgid "Missing Field"
 msgstr "crwdns141914:0crwdne141914:0"
 
@@ -8524,7 +8519,7 @@ msgstr "crwdns108422:0crwdne108422:0"
 msgid "Model"
 msgstr "crwdns108424:0crwdne108424:0"
 
-#: frontend/src/components/AttendanceCalendar.vue:112
+#: frontend/src/components/AttendanceCalendar.vue:113
 #: hrms/hr/doctype/leave_block_list/leave_block_list.js:37
 msgid "Monday"
 msgstr "crwdns108428:0crwdne108428:0"
@@ -8698,11 +8693,11 @@ msgstr "crwdns141942:0crwdne141942:0"
 msgid "New Employee ID"
 msgstr "crwdns141944:0crwdne141944:0"
 
-#: frontend/src/components/ExpensesTable.vue:211
+#: frontend/src/components/ExpensesTable.vue:213
 msgid "New Expense Item"
 msgstr "crwdns151278:0crwdne151278:0"
 
-#: frontend/src/components/ExpenseTaxesTable.vue:220
+#: frontend/src/components/ExpenseTaxesTable.vue:221
 msgid "New Expense Tax"
 msgstr "crwdns151280:0crwdne151280:0"
 
@@ -8756,7 +8751,7 @@ msgstr "crwdns108518:0crwdne108518:0"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "crwdns108520:0crwdne108520:0"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hrms/hr/utils.py:815
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hrms/hr/utils.py:828
 msgid "No Employees Selected"
 msgstr "crwdns108522:0crwdne108522:0"
 
@@ -8808,10 +8803,6 @@ msgstr "crwdns108536:0{0}crwdne108536:0"
 msgid "No additional expenses has been added"
 msgstr "crwdns108538:0crwdne108538:0"
 
-#: frontend/src/components/ExpenseAdvancesTable.vue:63
-msgid "No advances found"
-msgstr "crwdns151286:0crwdne151286:0"
-
 #: hrms/payroll/doctype/gratuity/gratuity.py:285
 msgid "No applicable Earning component found in last salary slip for Gratuity Rule: {0}"
 msgstr "crwdns141962:0{0}crwdne141962:0"
@@ -8860,7 +8851,7 @@ msgstr "crwdns141968:0crwdne141968:0"
 msgid "No items selected"
 msgstr "crwdns108556:0crwdne108556:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:196
+#: hrms/hr/doctype/attendance/attendance.py:185
 msgid "No leave record found for employee {0} on {1}"
 msgstr "crwdns108558:0{0}crwdnd108558:0{1}crwdne108558:0"
 
@@ -8885,21 +8876,13 @@ msgstr "crwdns108564:0crwdne108564:0"
 msgid "No replies from"
 msgstr "crwdns108566:0crwdne108566:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1448
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1450
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "crwdns108568:0crwdne108568:0"
-
-#: frontend/src/views/salary_slip/Dashboard.vue:50
-msgid "No salary slips found"
-msgstr "crwdns151288:0crwdne151288:0"
 
 #: hrms/public/js/utils/index.js:48
 msgid "No {0} Selected"
 msgstr "crwdns141974:0{0}crwdne141974:0"
-
-#: frontend/src/components/ListView.vue:93
-msgid "No {0} found"
-msgstr "crwdns151290:0{0}crwdne151290:0"
 
 #. Option for the 'Meal Preference' (Select) field in DocType 'Travel
 #. Itinerary'
@@ -9091,7 +9074,7 @@ msgid "On Hold"
 msgstr "crwdns142014:0crwdne142014:0"
 
 #. Option for the 'Status' (Select) field in DocType 'Attendance'
-#: frontend/src/components/AttendanceCalendar.vue:79
+#: frontend/src/components/AttendanceCalendar.vue:80
 #: hrms/hr/doctype/attendance/attendance.json
 msgid "On Leave"
 msgstr "crwdns142016:0crwdne142016:0"
@@ -9285,7 +9268,7 @@ msgstr "crwdns142038:0crwdne142038:0"
 msgid "Overlapping Attendance Request"
 msgstr "crwdns108726:0crwdne108726:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:124
+#: hrms/hr/doctype/attendance/attendance.py:113
 msgid "Overlapping Shift Attendance"
 msgstr "crwdns108728:0crwdne108728:0"
 
@@ -9385,7 +9368,7 @@ msgstr "crwdns142050:0crwdne142050:0"
 msgid "Part-time"
 msgstr "crwdns108778:0crwdne108778:0"
 
-#: hrms/hr/utils.py:834 hrms/public/js/utils/index.js:154
+#: hrms/hr/utils.py:847 hrms/public/js/utils/index.js:154
 msgid "Partial Success"
 msgstr "crwdns108780:0crwdne108780:0"
 
@@ -9512,7 +9495,7 @@ msgstr "crwdns142074:0crwdne142074:0"
 msgid "Payment and Accounting"
 msgstr "crwdns142076:0crwdne142076:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1049
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1051
 msgid "Payment of {0} from {1} to {2}"
 msgstr "crwdns108834:0{0}crwdnd108834:0{1}crwdnd108834:0{2}crwdne108834:0"
 
@@ -9826,7 +9809,7 @@ msgstr "crwdns142110:0crwdne142110:0"
 msgid "Please select Shift Type and assignment date(s)."
 msgstr "crwdns142112:0crwdne142112:0"
 
-#: hrms/hr/utils.py:707
+#: hrms/hr/utils.py:720
 msgid "Please select a Company"
 msgstr "crwdns108964:0crwdne108964:0"
 
@@ -9843,11 +9826,11 @@ msgstr "crwdns108968:0crwdne108968:0"
 msgid "Please select a csv file"
 msgstr "crwdns108970:0crwdne108970:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:341
+#: hrms/hr/doctype/attendance/attendance.py:330
 msgid "Please select a date."
 msgstr "crwdns108972:0crwdne108972:0"
 
-#: hrms/hr/utils.py:704
+#: hrms/hr/utils.py:717
 msgid "Please select an Applicant"
 msgstr "crwdns108974:0crwdne108974:0"
 
@@ -9855,7 +9838,7 @@ msgstr "crwdns108974:0crwdne108974:0"
 msgid "Please select at least one Shift Request to perform this action."
 msgstr "crwdns142114:0crwdne142114:0"
 
-#: hrms/hr/utils.py:814
+#: hrms/hr/utils.py:827
 msgid "Please select at least one employee to perform this action."
 msgstr "crwdns142116:0crwdne142116:0"
 
@@ -10042,7 +10025,7 @@ msgstr "crwdns142124:0crwdne142124:0"
 #. Employee'
 #. Option for the 'Consider Unmarked Attendance As' (Select) field in DocType
 #. 'Payroll Settings'
-#: frontend/src/components/AttendanceCalendar.vue:79
+#: frontend/src/components/AttendanceCalendar.vue:80
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
@@ -10553,7 +10536,7 @@ msgstr "crwdns109234:0crwdne109234:0"
 msgid "Rejected"
 msgstr "crwdns142222:0crwdne142222:0"
 
-#: frontend/src/components/RequestActionSheet.vue:288
+#: frontend/src/components/RequestActionSheet.vue:290
 msgid "Rejection"
 msgstr "crwdns151316:0crwdne151316:0"
 
@@ -10650,7 +10633,7 @@ msgstr "crwdns109282:0crwdne109282:0"
 msgid "Repay From Salary"
 msgstr "crwdns148910:0crwdne148910:0"
 
-#: hrms/hr/utils.py:719
+#: hrms/hr/utils.py:732
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "crwdns109284:0crwdne109284:0"
 
@@ -11197,7 +11180,7 @@ msgstr "crwdns109488:0{0}crwdnd109488:0{1}crwdne109488:0"
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr "crwdns109490:0crwdne109490:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1387
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1389
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr "crwdns109492:0{0}crwdnd109492:0{1}crwdne109492:0"
 
@@ -11219,11 +11202,11 @@ msgstr "crwdns142336:0crwdne142336:0"
 msgid "Salary Slips Submitted"
 msgstr "crwdns142338:0crwdne142338:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1429
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1431
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr "crwdns109500:0crwdne109500:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1454
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1456
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr "crwdns109502:0{0}crwdnd109502:0{1}crwdne109502:0"
 
@@ -11331,8 +11314,8 @@ msgstr "crwdns109538:0crwdne109538:0"
 msgid "Same Company is entered more than once"
 msgstr "crwdns109540:0crwdne109540:0"
 
-#: frontend/src/components/ExpenseItems.vue:22
-#: frontend/src/components/ExpensesTable.vue:41
+#: frontend/src/components/ExpenseItems.vue:23
+#: frontend/src/components/ExpensesTable.vue:42
 msgid "Sanctioned"
 msgstr "crwdns151336:0crwdne151336:0"
 
@@ -11347,7 +11330,7 @@ msgstr "crwdns109542:0crwdne109542:0"
 msgid "Sanctioned Amount cannot be greater than Claim Amount in Row {0}."
 msgstr "crwdns109546:0{0}crwdne109546:0"
 
-#: frontend/src/components/AttendanceCalendar.vue:117
+#: frontend/src/components/AttendanceCalendar.vue:118
 #: hrms/hr/doctype/leave_block_list/leave_block_list.js:62
 msgid "Saturday"
 msgstr "crwdns109548:0crwdne109548:0"
@@ -11427,7 +11410,7 @@ msgstr "crwdns109576:0crwdne109576:0"
 msgid "Select Payment Account to make Bank Entry"
 msgstr "crwdns142358:0crwdne142358:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1592
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1594
 msgid "Select Payroll Frequency."
 msgstr "crwdns109580:0crwdne109580:0"
 
@@ -11501,7 +11484,7 @@ msgid "Select your Leave Approver i.e. the person who approves or rejects your l
 msgstr "crwdns109606:0crwdne109606:0"
 
 #: frontend/src/components/FormField.vue:19
-#: frontend/src/components/FormField.vue:115 frontend/src/components/Link.vue:6
+#: frontend/src/components/FormField.vue:116 frontend/src/components/Link.vue:6
 msgid "Select {0}"
 msgstr "crwdns151340:0{0}crwdne151340:0"
 
@@ -11763,7 +11746,7 @@ msgstr "crwdns142418:0crwdne142418:0"
 msgid "Setup"
 msgstr "crwdns109706:0crwdne109706:0"
 
-#: hrms/hr/utils.py:668
+#: hrms/hr/utils.py:681
 msgid "Shared with the user {0} with 'submit' permisions"
 msgstr "crwdns148500:0{0}crwdne148500:0"
 
@@ -11941,8 +11924,8 @@ msgstr "crwdns142442:0crwdne142442:0"
 #. Label of the shift_type (Link) field in DocType 'Shift Request'
 #. Name of a DocType
 #. Label of a Link in the Shift & Attendance Workspace
-#: frontend/src/views/attendance/ShiftAssignmentList.vue:21
-#: frontend/src/views/attendance/ShiftRequestList.vue:40
+#: frontend/src/views/attendance/ShiftAssignmentList.vue:24
+#: frontend/src/views/attendance/ShiftRequestList.vue:42
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
 #: hrms/hr/doctype/shift_assignment_schedule/shift_assignment_schedule.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:207
@@ -12123,7 +12106,7 @@ msgstr "crwdns109832:0crwdne109832:0"
 #. Label of the start_date (Date) field in DocType 'Payroll Period'
 #. Label of the start_date (Date) field in DocType 'Payroll Period Date'
 #. Label of the start_date (Date) field in DocType 'Salary Slip'
-#: frontend/src/views/attendance/ShiftAssignmentList.vue:24
+#: frontend/src/views/attendance/ShiftAssignmentList.vue:27
 #: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:84
@@ -12202,7 +12185,7 @@ msgstr "crwdns142468:0crwdne142468:0"
 #. Label of the status (Select) field in DocType 'Payroll Entry'
 #. Label of the status (Select) field in DocType 'Salary Slip'
 #. Label of the status (Select) field in DocType 'Salary Withholding'
-#: frontend/src/views/attendance/ShiftRequestList.vue:34
+#: frontend/src/views/attendance/ShiftRequestList.vue:36
 #: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json
 #: hrms/hr/doctype/attendance/attendance.json
@@ -12336,7 +12319,7 @@ msgstr "crwdns142480:0crwdne142480:0"
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "crwdns109966:0crwdne109966:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1509
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1511
 msgid "Submitting Salary Slips..."
 msgstr "crwdns109968:0crwdne109968:0"
 
@@ -12345,19 +12328,19 @@ msgid "Subsidiary companies have already planned for {1} vacancies at a budget o
 msgstr "crwdns109970:0{1}crwdnd109970:0{2}crwdnd109970:0{0}crwdnd109970:0{3}crwdne109970:0"
 
 #: frontend/src/components/CheckInPanel.vue:174
-#: frontend/src/components/FormView.vue:513
-#: frontend/src/components/FormView.vue:546
-#: frontend/src/components/FormView.vue:568
-#: frontend/src/components/RequestActionSheet.vue:306
+#: frontend/src/components/FormView.vue:515
+#: frontend/src/components/FormView.vue:548
+#: frontend/src/components/FormView.vue:570
+#: frontend/src/components/RequestActionSheet.vue:309
 #: frontend/src/views/AppSettings.vue:95
 #: hrms/hr/doctype/employee_referral/employee_referral.py:54
-#: hrms/hr/utils.py:839
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1457
+#: hrms/hr/utils.py:852
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1459
 #: hrms/public/js/utils/index.js:139
 msgid "Success"
 msgstr "crwdns109972:0crwdne109972:0"
 
-#: hrms/hr/utils.py:842
+#: hrms/hr/utils.py:855
 msgid "Successfully created {0} for employees:"
 msgstr "crwdns142482:0{0}crwdne142482:0"
 
@@ -12375,7 +12358,7 @@ msgstr "crwdns142486:0crwdne142486:0"
 msgid "Summarized View"
 msgstr "crwdns109978:0crwdne109978:0"
 
-#: frontend/src/components/AttendanceCalendar.vue:111
+#: frontend/src/components/AttendanceCalendar.vue:112
 #: hrms/hr/doctype/leave_block_list/leave_block_list.js:67
 msgid "Sunday"
 msgstr "crwdns109980:0crwdne109980:0"
@@ -12760,7 +12743,7 @@ msgstr "crwdns142540:0{0}crwdne142540:0"
 msgid "This will submit Salary Slips and create accrual Journal Entry. Do you want to proceed?"
 msgstr "crwdns110108:0crwdne110108:0"
 
-#: frontend/src/components/AttendanceCalendar.vue:115
+#: frontend/src/components/AttendanceCalendar.vue:116
 #: hrms/hr/doctype/leave_block_list/leave_block_list.js:52
 msgid "Thursday"
 msgstr "crwdns110110:0crwdne110110:0"
@@ -12857,7 +12840,7 @@ msgstr "crwdns142554:0crwdne142554:0"
 #. Label of the to_date (Date) field in DocType 'Salary Withholding'
 #. Label of the to_date (Date) field in DocType 'Salary Withholding Cycle'
 #: frontend/src/views/attendance/AttendanceRequestList.vue:25
-#: frontend/src/views/attendance/ShiftRequestList.vue:56
+#: frontend/src/views/attendance/ShiftRequestList.vue:58
 #: hrms/hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.js:22
 #: hrms/hr/doctype/attendance_request/attendance_request.json
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
@@ -13433,7 +13416,7 @@ msgstr "crwdns142650:0crwdne142650:0"
 msgid "Transactions"
 msgstr "crwdns110396:0crwdne110396:0"
 
-#: hrms/hr/utils.py:690
+#: hrms/hr/utils.py:703
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr "crwdns110398:0{0}crwdne110398:0"
 
@@ -13495,7 +13478,7 @@ msgstr "crwdns142660:0crwdne142660:0"
 msgid "Travel Type"
 msgstr "crwdns142662:0crwdne142662:0"
 
-#: frontend/src/components/AttendanceCalendar.vue:113
+#: frontend/src/components/AttendanceCalendar.vue:114
 #: hrms/hr/doctype/leave_block_list/leave_block_list.js:42
 msgid "Tuesday"
 msgstr "crwdns110424:0crwdne110424:0"
@@ -13546,11 +13529,11 @@ msgstr "crwdns142670:0crwdne142670:0"
 msgid "Unlink Payment"
 msgstr "crwdns149180:0crwdne149180:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:230
+#: hrms/hr/doctype/attendance/attendance.py:219
 msgid "Unlinked Attendance record from Employee Checkins: {}"
 msgstr "crwdns110444:0crwdne110444:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:233
+#: hrms/hr/doctype/attendance/attendance.py:222
 msgid "Unlinked logs"
 msgstr "crwdns110446:0crwdne110446:0"
 
@@ -13641,7 +13624,7 @@ msgstr "crwdns151360:0crwdne151360:0"
 msgid "Update"
 msgstr "crwdns110480:0crwdne110480:0"
 
-#: frontend/src/components/ExpensesTable.vue:121
+#: frontend/src/components/ExpensesTable.vue:123
 msgid "Update Expense"
 msgstr "crwdns151362:0crwdne151362:0"
 
@@ -13919,7 +13902,7 @@ msgstr "crwdns110588:0{0}crwdnd110588:0{1}crwdne110588:0"
 msgid "Website Listing"
 msgstr "crwdns110590:0crwdne110590:0"
 
-#: frontend/src/components/AttendanceCalendar.vue:114
+#: frontend/src/components/AttendanceCalendar.vue:115
 #: hrms/hr/doctype/leave_block_list/leave_block_list.js:47
 msgid "Wednesday"
 msgstr "crwdns110592:0crwdne110592:0"
@@ -14008,7 +13991,7 @@ msgstr "crwdns142722:0crwdne142722:0"
 #. Option for the 'Status' (Select) field in DocType 'Attendance'
 #. Option for the 'Reason' (Select) field in DocType 'Attendance Request'
 #. Option for the 'Status' (Select) field in DocType 'Employee Attendance Tool'
-#: frontend/src/components/AttendanceCalendar.vue:79
+#: frontend/src/components/AttendanceCalendar.vue:80
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/attendance_request/attendance_request.json
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
@@ -14162,10 +14145,6 @@ msgstr "crwdns110688:0crwdne110688:0"
 msgid "You can only upload JPG, PNG, PDF, TXT or Microsoft documents."
 msgstr "crwdns110690:0crwdne110690:0"
 
-#: frontend/src/components/RequestList.vue:31
-msgid "You have no requests"
-msgstr "crwdns151378:0crwdne151378:0"
-
 #: frontend/src/views/attendance/Dashboard.vue:29
 msgid "You have no upcoming shifts"
 msgstr "crwdns151380:0crwdne151380:0"
@@ -14198,11 +14177,11 @@ msgstr "crwdns110698:0crwdne110698:0"
 msgid "based on"
 msgstr "crwdns142754:0crwdne142754:0"
 
-#: frontend/src/components/RequestActionSheet.vue:290
+#: frontend/src/components/RequestActionSheet.vue:292
 msgid "cancellation"
 msgstr "crwdns151384:0crwdne151384:0"
 
-#: frontend/src/components/RequestActionSheet.vue:282
+#: frontend/src/components/RequestActionSheet.vue:283
 msgid "cancelled"
 msgstr "crwdns151386:0crwdne151386:0"
 
@@ -14252,13 +14231,9 @@ msgstr "crwdns142768:0crwdne142768:0"
 msgid "reviews"
 msgstr "crwdns142770:0crwdne142770:0"
 
-#: frontend/src/components/RequestActionSheet.vue:282
+#: frontend/src/components/RequestActionSheet.vue:283
 msgid "submitted"
 msgstr "crwdns151388:0crwdne151388:0"
-
-#: frontend/src/components/RequestActionSheet.vue:283
-msgid "successfully!"
-msgstr "crwdns151390:0crwdne151390:0"
 
 #: hrms/payroll/report/salary_register/salary_register.html:8
 msgid "to"
@@ -14327,15 +14302,16 @@ msgstr "crwdns151394:0{0}crwdne151394:0"
 msgid "{0} completed {1} year(s)"
 msgstr "crwdns148568:0{0}crwdnd148568:0{1}crwdne148568:0"
 
-#: frontend/src/components/FormView.vue:514
+#: frontend/src/components/FormView.vue:516
 msgid "{0} created successfully!"
 msgstr "crwdns151396:0{0}crwdne151396:0"
 
-#: frontend/src/components/FormView.vue:569
+#: frontend/src/components/FormView.vue:571
 msgid "{0} deleted successfully!"
 msgstr "crwdns151398:0{0}crwdne151398:0"
 
 #: frontend/src/components/CheckInPanel.vue:184
+#: frontend/src/components/RequestActionSheet.vue:290
 msgid "{0} failed!"
 msgstr "crwdns151400:0{0}crwdne151400:0"
 
@@ -14363,7 +14339,7 @@ msgstr "crwdns110746:0{0}crwdne110746:0"
 msgid "{0} is not in a valid Payroll Period"
 msgstr "crwdns110748:0{0}crwdne110748:0"
 
-#: hrms/hr/utils.py:809
+#: hrms/hr/utils.py:822
 msgid "{0} is required"
 msgstr "crwdns110750:0{0}crwdne110750:0"
 
@@ -14384,11 +14360,11 @@ msgstr "crwdns110754:0{0}crwdnd110754:0{1}crwdne110754:0"
 msgid "{0} successful!"
 msgstr "crwdns151402:0{0}crwdne151402:0"
 
-#: frontend/src/components/RequestActionSheet.vue:279
+#: frontend/src/components/RequestActionSheet.vue:280
 msgid "{0} successfully!"
 msgstr "crwdns151404:0{0}crwdne151404:0"
 
-#: frontend/src/components/FormView.vue:547
+#: frontend/src/components/FormView.vue:549
 msgid "{0} updated successfully!"
 msgstr "crwdns151406:0{0}crwdne151406:0"
 
