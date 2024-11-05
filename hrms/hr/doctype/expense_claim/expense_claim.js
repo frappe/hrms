@@ -308,7 +308,8 @@ frappe.ui.form.on("Expense Claim", {
 							row.posting_date = d.posting_date;
 							row.advance_account = d.advance_account;
 							row.advance_paid = d.paid_amount;
-							row.unclaimed_amount = flt(d.paid_amount) - flt(d.claimed_amount);
+							row.unclaimed_amount =
+								flt(d.paid_amount) - flt(d.claimed_amount) - flt(d.return_amount);
 							row.allocated_amount = 0;
 						});
 						refresh_field("advances");
