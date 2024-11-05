@@ -490,6 +490,7 @@ def get_expense_claim_account(expense_claim_type, company):
 @frappe.whitelist()
 def get_advances(employee, advance_id=None):
 	advance = frappe.qb.DocType("Employee Advance")
+	additional_salary = frappe.qb.DocType("Additional Salary")
 
 	query = frappe.qb.from_(advance).select(
 		advance.name,
@@ -510,7 +511,24 @@ def get_advances(employee, advance_id=None):
 	else:
 		query = query.where(advance.name == advance_id)
 
-	return query.run(as_dict=True)
+	advances = query.run(as_dict=True)
+	for adv in advances:
+		# Query additional salary for deductions against this advance
+		deduction_query = (
+			frappe.qb.from_(additional_salary)
+			.select(
+				additional_salary.ref_docname,
+				(additional_salary.amount).as_("deducted_amount"),
+			)
+			.where(
+				(additional_salary.ref_docname == adv["name"])
+				& (additional_salary.type == "Deduction")
+				& (additional_salary.docstatus == 1)
+			)
+		)
+		deductions_result = deduction_query.run(as_dict=True)
+		adv["claimed_amount"] += sum(item["deducted_amount"] for item in deductions_result) or 0.0
+	return advances
 
 
 @frappe.whitelist()
