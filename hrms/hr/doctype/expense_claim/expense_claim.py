@@ -325,7 +325,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			ref_doc = frappe.db.get_value(
 				"Employee Advance",
 				d.employee_advance,
-				["posting_date", "paid_amount", "claimed_amount", "advance_account"],
+				["posting_date", "paid_amount", "claimed_amount", "return_amount", "advance_account"],
 				as_dict=1,
 			)
 			d.posting_date = ref_doc.posting_date
@@ -516,7 +516,7 @@ def get_advances(employee, advance_id=None):
 
 @frappe.whitelist()
 def get_expense_claim(
-	employee_name, company, employee_advance_name, posting_date, paid_amount, claimed_amount, returned_amount
+	employee_name, company, employee_advance_name, posting_date, paid_amount, claimed_amount, return_amount
 ):
 	default_payable_account = frappe.get_cached_value(
 		"Company", company, "default_expense_claim_payable_account"
@@ -535,8 +535,9 @@ def get_expense_claim(
 			"employee_advance": employee_advance_name,
 			"posting_date": posting_date,
 			"advance_paid": flt(paid_amount),
-			"unclaimed_amount": flt(paid_amount) - flt(claimed_amount) - flt(returned_amount),
-			"allocated_amount": flt(paid_amount) - flt(claimed_amount),
+			"unclaimed_amount": flt(paid_amount) - flt(claimed_amount),
+			"allocated_amount": flt(paid_amount) - (flt(claimed_amount) + flt(return_amount)),
+			"return_amount": flt(return_amount),
 		},
 	)
 
