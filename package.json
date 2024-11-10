@@ -24,6 +24,10 @@
     "build-roster": "cd roster && yarn build"
   },
   "dependencies": {
-    "html2canvas": "^1.4.1"
+  "html2canvas": "^1.4.1",
+  "workbox-build": "^7.0.0",
+  "workbox-window": "^7.0.0",
+  "@tiptap/pm": "^2.6.6",
+  "@tiptap/core": "^2.6.6"
   }
 }
