@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-11-03 09:34+0000\n"
-"PO-Revision-Date: 2024-11-03 17:48\n"
+"POT-Creation-Date: 2024-11-10 09:33+0000\n"
+"PO-Revision-Date: 2024-11-11 18:35\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Arabic\n"
 "MIME-Version: 1.0\n"
@@ -396,7 +396,7 @@ msgstr "رئيس حساب"
 msgid "Account No"
 msgstr "رقم الحساب"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:101
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:102
 msgid "Account type cannot be set for payroll payable account {0}, please remove and try again"
 msgstr ""
 
@@ -497,7 +497,7 @@ msgstr "إعدادات الحسابات"
 msgid "Accounts not set for Salary Component {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:592
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:593
 msgid "Accrual Journal Entry for salaries from {0} to {1}"
 msgstr "مدخل يومية تراكمية للرواتب من {0} إلى {1}"
 
@@ -1955,7 +1955,7 @@ msgstr "لا يمكن أن يكون تاريخ الدفع المكافأ تار�
 msgid "Branch"
 msgstr "فرع"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:192
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:193
 msgid "Branch: {0}"
 msgstr ""
 
@@ -2028,7 +2028,7 @@ msgstr ""
 msgid "Cancel"
 msgstr "إلغاء"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:128
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:129
 msgid "Cancellation Queued"
 msgstr ""
 
@@ -2059,11 +2059,11 @@ msgstr ""
 msgid "Cancelled"
 msgstr "ألغيت"
 
-#: hrms/api/roster.py:111
+#: hrms/api/roster.py:116
 msgid "Cannot break shift after end date"
 msgstr ""
 
-#: hrms/api/roster.py:113
+#: hrms/api/roster.py:118
 msgid "Cannot break shift before start date"
 msgstr ""
 
@@ -2099,7 +2099,7 @@ msgstr "لا يمكن ايجاد فترة الاجازة النشطة"
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:61
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:62
 msgid "Cannot submit. Attendance is not marked for some employees."
 msgstr ""
 
@@ -2157,7 +2157,7 @@ msgstr "دليل مراكز التكلفة"
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1401
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1421
 msgid "Check Error Log {0} for more details."
 msgstr ""
 
@@ -2706,7 +2706,7 @@ msgstr ""
 msgid "Could not find any salary slip(s) for the employee {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1464
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1484
 msgid "Could not submit some Salary Slips: {}"
 msgstr ""
 
@@ -2837,7 +2837,7 @@ msgstr ""
 msgid "Creating Payment Entries......"
 msgstr "إنشاء إدخالات الدفع ......"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1424
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1444
 msgid "Creating Salary Slips..."
 msgstr "إنشاء قسائم الرواتب ..."
 
@@ -3451,7 +3451,7 @@ msgstr "موافقة القسم"
 msgid "Department Wise Openings"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:194
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:195
 msgid "Department: {0}"
 msgstr ""
 
@@ -3615,7 +3615,7 @@ msgstr "تعيين"
 msgid "Designation Skill"
 msgstr "مهارة التعيين"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:196
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:197
 msgid "Designation: {0}"
 msgstr ""
 
@@ -3769,7 +3769,7 @@ msgid "Duplicate Attendance"
 msgstr ""
 
 #: hrms/hr/doctype/appraisal/appraisal.py:65
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:95
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:96
 msgid "Duplicate Entry"
 msgstr ""
 
@@ -4970,7 +4970,7 @@ msgstr "لا يمكن أن يكون تاريخ الانتهاء قبل تاري�
 msgid "End Time"
 msgstr "وقت الانتهاء"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:200
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:201
 msgid "End date: {0}"
 msgstr ""
 
@@ -5528,7 +5528,7 @@ msgstr ""
 msgid "Failed to {0} {1} for employees:"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1467
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1487
 #: hrms/public/js/utils/index.js:149
 msgid "Failure"
 msgstr "بالفشل"
@@ -5725,7 +5725,7 @@ msgstr "الاسم الأول "
 msgid "Fiscal Year"
 msgstr "السنة المالية"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1384
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1404
 msgid "Fiscal Year {0} not found"
 msgstr "السنة المالية {0} غير موجودة\\n<br>\\nFiscal Year {0} not found"
 
@@ -6803,7 +6803,7 @@ msgstr "في تَقَدم"
 msgid "In Time"
 msgstr "في الوقت المناسب"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:122
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:123
 msgid "In case of any error during this background process, the system will add a comment about the error on this Payroll Entry and revert to the Submitted status"
 msgstr ""
 
@@ -8442,7 +8442,7 @@ msgstr "الخيارات"
 #. Label of the message (Text Editor) field in DocType 'PWA Notification'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hrms/hr/doctype/pwa_notification/pwa_notification.json
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1434
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1454
 msgid "Message"
 msgstr "رسالة"
 
@@ -8827,11 +8827,11 @@ msgstr ""
 msgid "No changes found in timings."
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:201
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:202
 msgid "No employees found"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:184
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:185
 msgid "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
 msgstr ""
 
@@ -8876,7 +8876,7 @@ msgstr "لم يتم العثور على أي سجل"
 msgid "No replies from"
 msgstr "لا توجد ردود من"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1450
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1470
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "لم يتم العثور على أي زلة الراتب لتقديم المعايير المذكورة أعلاه أو زلة الراتب قدمت بالفعل"
 
@@ -9495,7 +9495,7 @@ msgstr "تدوينات المدفوعات"
 msgid "Payment and Accounting"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1051
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1071
 msgid "Payment of {0} from {1} to {2}"
 msgstr "دفع {0} من {1} إلى {2}"
 
@@ -9551,7 +9551,7 @@ msgstr "الرواتب الموظف التفاصيل"
 msgid "Payroll Entry"
 msgstr "دخول الرواتب"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:120
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:121
 msgid "Payroll Entry cancellation is queued. It may take a few minutes"
 msgstr ""
 
@@ -9903,7 +9903,7 @@ msgstr ""
 msgid "Please set a Default Cash Account in Company defaults"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:317
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:318
 msgid "Please set account in Salary Component {0}"
 msgstr ""
 
@@ -10451,7 +10451,7 @@ msgstr "مرجع نوع الوثيقة"
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:355
 #: hrms/hr/doctype/leave_application/leave_application.py:481
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:137
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:90
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:91
 msgid "Reference: {0}"
 msgstr ""
 
@@ -11160,11 +11160,11 @@ msgstr "قرض كشف الراتب"
 msgid "Salary Slip Timesheet"
 msgstr "كشف راتب معتمد علي سجل التوقيت"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:86
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:87
 msgid "Salary Slip already exists for {0} for the given dates"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:250
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:251
 msgid "Salary Slip creation is queued. It may take a few minutes"
 msgstr ""
 
@@ -11176,11 +11176,11 @@ msgstr "كشف الراتب للموظف {0} تم إنشاؤه لهذه الفت
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr "كشف الراتب للموظف {0} تم إنشاؤه لسجل التوقيت {1}"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:295
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:296
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1389
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1409
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr ""
 
@@ -11202,11 +11202,11 @@ msgstr "تم استحداث كشوف الرواتب"
 msgid "Salary Slips Submitted"
 msgstr "قسائم الرواتب المقدمة"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1431
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1451
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1456
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1476
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr ""
 
@@ -11410,7 +11410,7 @@ msgstr ""
 msgid "Select Payment Account to make Bank Entry"
 msgstr "اختار الحساب الذي سوف تدفع منه"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1594
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1614
 msgid "Select Payroll Frequency."
 msgstr ""
 
@@ -12041,7 +12041,7 @@ msgstr "اسم المصدر"
 msgid "Source and Rating"
 msgstr ""
 
-#: hrms/api/roster.py:79
+#: hrms/api/roster.py:84
 msgid "Source and target shifts cannot be the same"
 msgstr ""
 
@@ -12139,7 +12139,7 @@ msgstr "تواريخ البدء والانتهاء ليست في فترة كشو
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr "تواريخ البدء والانتهاء ليست في فترة كشوف المرتبات الصالحة ، ولا يمكن حساب {0}."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:198
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:199
 msgid "Start date: {0}"
 msgstr ""
 
@@ -12319,7 +12319,7 @@ msgstr "مسجلة"
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "تقديم قسائم الرواتب وإنشاء قيد دفتر اليومية ..."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1511
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1531
 msgid "Submitting Salary Slips..."
 msgstr "تقديم قسائم الرواتب ..."
 
@@ -12335,7 +12335,7 @@ msgstr ""
 #: frontend/src/views/AppSettings.vue:95
 #: hrms/hr/doctype/employee_referral/employee_referral.py:54
 #: hrms/hr/utils.py:852
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1459
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1479
 #: hrms/public/js/utils/index.js:139
 msgid "Success"
 msgstr "نجاح"

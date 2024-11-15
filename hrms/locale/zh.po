@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-11-03 09:34+0000\n"
-"PO-Revision-Date: 2024-11-03 17:48\n"
+"POT-Creation-Date: 2024-11-10 09:33+0000\n"
+"PO-Revision-Date: 2024-11-11 18:36\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Chinese Simplified\n"
 "MIME-Version: 1.0\n"
@@ -421,7 +421,7 @@ msgstr ""
 msgid "Account No"
 msgstr "户口号码"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:101
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:102
 msgid "Account type cannot be set for payroll payable account {0}, please remove and try again"
 msgstr ""
 
@@ -522,7 +522,7 @@ msgstr "会计设置"
 msgid "Accounts not set for Salary Component {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:592
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:593
 msgid "Accrual Journal Entry for salaries from {0} to {1}"
 msgstr "从{0}到{1}的薪金的应计手工凭证"
 
@@ -1980,7 +1980,7 @@ msgstr "奖金支付日期不能是过去的日期"
 msgid "Branch"
 msgstr "分支机构（分公司）"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:192
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:193
 msgid "Branch: {0}"
 msgstr ""
 
@@ -2053,7 +2053,7 @@ msgstr "促销活动"
 msgid "Cancel"
 msgstr "取消"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:128
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:129
 msgid "Cancellation Queued"
 msgstr ""
 
@@ -2084,11 +2084,11 @@ msgstr ""
 msgid "Cancelled"
 msgstr "取消"
 
-#: hrms/api/roster.py:111
+#: hrms/api/roster.py:116
 msgid "Cannot break shift after end date"
 msgstr ""
 
-#: hrms/api/roster.py:113
+#: hrms/api/roster.py:118
 msgid "Cannot break shift before start date"
 msgstr ""
 
@@ -2124,7 +2124,7 @@ msgstr "找不到有效的休假期间"
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:61
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:62
 msgid "Cannot submit. Attendance is not marked for some employees."
 msgstr ""
 
@@ -2182,7 +2182,7 @@ msgstr "成本中心表"
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1401
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1421
 msgid "Check Error Log {0} for more details."
 msgstr ""
 
@@ -2731,7 +2731,7 @@ msgstr ""
 msgid "Could not find any salary slip(s) for the employee {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1464
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1484
 msgid "Could not submit some Salary Slips: {}"
 msgstr ""
 
@@ -2862,7 +2862,7 @@ msgstr ""
 msgid "Creating Payment Entries......"
 msgstr "创建支付条目......"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1424
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1444
 msgid "Creating Salary Slips..."
 msgstr "创建工资单......"
 
@@ -3476,7 +3476,7 @@ msgstr "部门批准人"
 msgid "Department Wise Openings"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:194
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:195
 msgid "Department: {0}"
 msgstr ""
 
@@ -3640,7 +3640,7 @@ msgstr "职位"
 msgid "Designation Skill"
 msgstr "指定技巧"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:196
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:197
 msgid "Designation: {0}"
 msgstr ""
 
@@ -3794,7 +3794,7 @@ msgid "Duplicate Attendance"
 msgstr ""
 
 #: hrms/hr/doctype/appraisal/appraisal.py:65
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:95
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:96
 msgid "Duplicate Entry"
 msgstr "双重输入"
 
@@ -4995,7 +4995,7 @@ msgstr ""
 msgid "End Time"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:200
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:201
 msgid "End date: {0}"
 msgstr ""
 
@@ -5553,7 +5553,7 @@ msgstr ""
 msgid "Failed to {0} {1} for employees:"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1467
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1487
 #: hrms/public/js/utils/index.js:149
 msgid "Failure"
 msgstr ""
@@ -5750,7 +5750,7 @@ msgstr ""
 msgid "Fiscal Year"
 msgstr "财务年度"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1384
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1404
 msgid "Fiscal Year {0} not found"
 msgstr "会计年度{0}未找到"
 
@@ -6828,7 +6828,7 @@ msgstr "进行中"
 msgid "In Time"
 msgstr "及时"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:122
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:123
 msgid "In case of any error during this background process, the system will add a comment about the error on this Payroll Entry and revert to the Submitted status"
 msgstr ""
 
@@ -8467,7 +8467,7 @@ msgstr "菜单"
 #. Label of the message (Text Editor) field in DocType 'PWA Notification'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hrms/hr/doctype/pwa_notification/pwa_notification.json
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1434
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1454
 msgid "Message"
 msgstr "信息"
 
@@ -8852,11 +8852,11 @@ msgstr ""
 msgid "No changes found in timings."
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:201
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:202
 msgid "No employees found"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:184
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:185
 msgid "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
 msgstr ""
 
@@ -8901,7 +8901,7 @@ msgstr "未找到记录"
 msgid "No replies from"
 msgstr "从没有回复"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1450
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1470
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "按以上选择的条件没有发现需提交的工资单或工资单已提交"
 
@@ -9520,7 +9520,7 @@ msgstr "付款凭证"
 msgid "Payment and Accounting"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1051
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1071
 msgid "Payment of {0} from {1} to {2}"
 msgstr "从{1}到{2}的{0}付款"
 
@@ -9576,7 +9576,7 @@ msgstr "薪资员工详细信息"
 msgid "Payroll Entry"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:120
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:121
 msgid "Payroll Entry cancellation is queued. It may take a few minutes"
 msgstr ""
 
@@ -9928,7 +9928,7 @@ msgstr ""
 msgid "Please set a Default Cash Account in Company defaults"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:317
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:318
 msgid "Please set account in Salary Component {0}"
 msgstr ""
 
@@ -10476,7 +10476,7 @@ msgstr "参考文档类型"
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:355
 #: hrms/hr/doctype/leave_application/leave_application.py:481
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:137
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:90
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:91
 msgid "Reference: {0}"
 msgstr ""
 
@@ -11185,11 +11185,11 @@ msgstr "工资单贷款"
 msgid "Salary Slip Timesheet"
 msgstr "工资单工时单"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:86
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:87
 msgid "Salary Slip already exists for {0} for the given dates"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:250
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:251
 msgid "Salary Slip creation is queued. It may take a few minutes"
 msgstr ""
 
@@ -11201,11 +11201,11 @@ msgstr "这一时期员工的工资单{0}已创建"
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr "工时单{1}的员工{0}工资单已创建"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:295
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:296
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1389
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1409
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr ""
 
@@ -11227,11 +11227,11 @@ msgstr ""
 msgid "Salary Slips Submitted"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1431
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1451
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1456
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1476
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr ""
 
@@ -11435,7 +11435,7 @@ msgstr ""
 msgid "Select Payment Account to make Bank Entry"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1594
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1614
 msgid "Select Payroll Frequency."
 msgstr ""
 
@@ -12066,7 +12066,7 @@ msgstr ""
 msgid "Source and Rating"
 msgstr ""
 
-#: hrms/api/roster.py:79
+#: hrms/api/roster.py:84
 msgid "Source and target shifts cannot be the same"
 msgstr ""
 
@@ -12164,7 +12164,7 @@ msgstr "开始和结束日期不在有效的工资核算期内，无法计算{0}
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr "开始日期和结束日期不在有效的工资核算期间内，无法计算{0}。"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:198
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:199
 msgid "Start date: {0}"
 msgstr ""
 
@@ -12344,7 +12344,7 @@ msgstr "已提交"
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "提交工资单并创建日记帐分录..."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1511
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1531
 msgid "Submitting Salary Slips..."
 msgstr "提交工资单......"
 
@@ -12360,7 +12360,7 @@ msgstr ""
 #: frontend/src/views/AppSettings.vue:95
 #: hrms/hr/doctype/employee_referral/employee_referral.py:54
 #: hrms/hr/utils.py:852
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1459
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1479
 #: hrms/public/js/utils/index.js:139
 msgid "Success"
 msgstr "成功"

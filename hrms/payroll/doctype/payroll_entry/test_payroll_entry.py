@@ -4,7 +4,7 @@
 from dateutil.relativedelta import relativedelta
 
 import frappe
-from frappe.tests import IntegrationTestCase, change_settings
+from frappe.tests.utils import FrappeTestCase, change_settings
 from frappe.utils import add_days, add_months, cstr, flt
 
 import erpnext
@@ -42,10 +42,11 @@ from hrms.utils import get_date_range
 test_dependencies = ["Holiday List"]
 
 
-class TestPayrollEntry(IntegrationTestCase):
+class TestPayrollEntry(FrappeTestCase):
 	def setUp(self):
 		for dt in [
 			"Salary Slip",
+			"Salary Detail",
 			"Salary Component",
 			"Salary Component Account",
 			"Payroll Entry",
@@ -720,6 +721,14 @@ class TestPayrollEntry(IntegrationTestCase):
 	@if_lending_app_installed
 	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0})
 	def test_loan_repayment_from_salary(self):
+		self.run_test_for_loan_repayment_from_salary()
+
+	@if_lending_app_installed
+	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1})
+	def test_loan_repayment_from_salary_with_employee_tagging(self):
+		self.run_test_for_loan_repayment_from_salary()
+
+	def run_test_for_loan_repayment_from_salary(self):
 		from lending.loan_management.doctype.loan.test_loan import make_loan_disbursement_entry
 		from lending.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
 			process_loan_interest_accrual_for_term_loans,

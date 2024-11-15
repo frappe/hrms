@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-11-03 09:34+0000\n"
-"PO-Revision-Date: 2024-11-03 17:48\n"
+"POT-Creation-Date: 2024-11-10 09:33+0000\n"
+"PO-Revision-Date: 2024-11-12 19:06\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -396,7 +396,7 @@ msgstr "سرفصل حساب"
 msgid "Account No"
 msgstr "شماره حساب"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:101
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:102
 msgid "Account type cannot be set for payroll payable account {0}, please remove and try again"
 msgstr "نوع حساب را نمی توان برای حساب پرداختنی حقوق و دستمزد {0} تنظیم کرد، لطفاً حذف کنید و دوباره امتحان کنید"
 
@@ -497,7 +497,7 @@ msgstr "تنظیمات حساب ها"
 msgid "Accounts not set for Salary Component {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:592
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:593
 msgid "Accrual Journal Entry for salaries from {0} to {1}"
 msgstr "ثبت گزارش تعهدی برای حقوق از {0} تا {1}"
 
@@ -571,7 +571,7 @@ msgstr "نوع فعالیت"
 #. Proof Submission Detail'
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission_detail/employee_tax_exemption_proof_submission_detail.json
 msgid "Actual Amount"
-msgstr "مقدار واقعی"
+msgstr "مبلغ واقعی"
 
 #. Label of the actual_cost (Currency) field in DocType 'Full and Final Asset'
 #: hrms/hr/doctype/full_and_final_asset/full_and_final_asset.json
@@ -1018,7 +1018,7 @@ msgstr "اصلاح شده از"
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 #: hrms/payroll/report/professional_tax_deductions/professional_tax_deductions.py:32
 msgid "Amount"
-msgstr "میزان"
+msgstr "مبلغ"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:49
 msgid "Amount Based on Formula"
@@ -1064,7 +1064,7 @@ msgstr ""
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:58
 msgid "An amount of {0} already claimed for the component {1}, set the amount equal or greater than {2}"
-msgstr "مقدار {0} قبلاً برای مؤلفه {1} ادعا شده است، مقدار آن را برابر یا بیشتر از {2} قرار دهید"
+msgstr "مبلغ {0} قبلاً برای مؤلفه {1} ادعا شده است، مبلغ آن را برابر یا بیشتر از {2} قرار دهید"
 
 #. Label of the annual_allocation (Float) field in DocType 'Leave Policy
 #. Detail'
@@ -1955,7 +1955,7 @@ msgstr "تاریخ پرداخت پاداش نمی تواند تاریخ گذشت
 msgid "Branch"
 msgstr "شاخه"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:192
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:193
 msgid "Branch: {0}"
 msgstr "شعبه: {0}"
 
@@ -2028,7 +2028,7 @@ msgstr "کمپین"
 msgid "Cancel"
 msgstr "لغو"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:128
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:129
 msgid "Cancellation Queued"
 msgstr "در صف لغو"
 
@@ -2059,11 +2059,11 @@ msgstr "در صف لغو"
 msgid "Cancelled"
 msgstr "لغو شده"
 
-#: hrms/api/roster.py:111
+#: hrms/api/roster.py:116
 msgid "Cannot break shift after end date"
 msgstr ""
 
-#: hrms/api/roster.py:113
+#: hrms/api/roster.py:118
 msgid "Cannot break shift before start date"
 msgstr ""
 
@@ -2099,7 +2099,7 @@ msgstr "نمی توان دوره مرخصی فعال را پیدا کرد"
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr "نمی توان حضور برای یک کارمند غیرفعال را علامت گذاری کرد {0}"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:61
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:62
 msgid "Cannot submit. Attendance is not marked for some employees."
 msgstr "نمی توان ارسال کرد. حضور و غیاب برای برخی از کارمندان مشخص نشده است."
 
@@ -2157,7 +2157,7 @@ msgstr "نمودار مراکز هزینه"
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1401
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1421
 msgid "Check Error Log {0} for more details."
 msgstr "برای جزئیات بیشتر، Log خطا {0} را بررسی کنید."
 
@@ -2706,7 +2706,7 @@ msgstr "جزئیات هزینه"
 msgid "Could not find any salary slip(s) for the employee {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1464
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1484
 msgid "Could not submit some Salary Slips: {}"
 msgstr "برخی از فیش حقوقی ارسال نشد: {}"
 
@@ -2837,7 +2837,7 @@ msgstr "ایجاد ارزیابی ها"
 msgid "Creating Payment Entries......"
 msgstr "ایجاد ورودی های پرداخت......"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1424
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1444
 msgid "Creating Salary Slips..."
 msgstr "ایجاد فیش حقوقی ..."
 
@@ -3251,7 +3251,7 @@ msgstr "حساب پیش فرض"
 #. Label of the default_amount (Currency) field in DocType 'Salary Detail'
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Default Amount"
-msgstr "مقدار پیش فرض"
+msgstr "مبلغ پیش فرض"
 
 #. Description of the 'Account' (Link) field in DocType 'Salary Component
 #. Account'
@@ -3451,7 +3451,7 @@ msgstr "تایید کننده دپارتمان"
 msgid "Department Wise Openings"
 msgstr "افتتاحیه های مبتنی بر دپارتمان"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:194
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:195
 msgid "Department: {0}"
 msgstr "دپارتمان: {0}"
 
@@ -3615,7 +3615,7 @@ msgstr "نقش سازمانی"
 msgid "Designation Skill"
 msgstr "مهارت نقش سازمانی"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:196
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:197
 msgid "Designation: {0}"
 msgstr "نقش سازمانی: {0}"
 
@@ -3694,7 +3694,7 @@ msgstr "رد"
 #. Benefit Application'
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.json
 msgid "Dispensed Amount (Pro-rated)"
-msgstr "مقدار توزیع شده (مطابق با رتبه)"
+msgstr "مبلغ توزیع شده (مطابق با رتبه)"
 
 #. Label of the do_not_include_in_total (Check) field in DocType 'Salary
 #. Component'
@@ -3769,7 +3769,7 @@ msgid "Duplicate Attendance"
 msgstr "حضور و غیاب تکراری"
 
 #: hrms/hr/doctype/appraisal/appraisal.py:65
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:95
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:96
 msgid "Duplicate Entry"
 msgstr "ورود تکراری"
 
@@ -4764,7 +4764,7 @@ msgstr "کارمند {0} قبلاً برای {1} بین {2} و {3} درخواس�
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:25
 msgid "Employee {0} has no maximum benefit amount"
-msgstr "کارمند {0} حداکثر مقدار مزایا ندارد"
+msgstr "کارمند {0} حداکثر مبلغ مزایا ندارد"
 
 #: hrms/hr/doctype/attendance/attendance.py:199
 msgid "Employee {0} is not active or does not exist"
@@ -4970,7 +4970,7 @@ msgstr "تاریخ پایان نمی تواند قبل از تاریخ شروع 
 msgid "End Time"
 msgstr "زمان پایان"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:200
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:201
 msgid "End date: {0}"
 msgstr "تاریخ پایان: {0}"
 
@@ -5528,7 +5528,7 @@ msgstr "به روز رسانی وضعیت متقاضی شغل ناموفق بو�
 msgid "Failed to {0} {1} for employees:"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1467
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1487
 #: hrms/public/js/utils/index.js:149
 msgid "Failure"
 msgstr "شکست"
@@ -5725,7 +5725,7 @@ msgstr " نام کوچک"
 msgid "Fiscal Year"
 msgstr "سال مالی"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1384
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1404
 msgid "Fiscal Year {0} not found"
 msgstr "سال مالی {0} یافت نشد"
 
@@ -5848,7 +5848,7 @@ msgstr "از جانب"
 #. Label of the from_amount (Currency) field in DocType 'Taxable Salary Slab'
 #: hrms/payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
 msgid "From Amount"
-msgstr "از مقدار"
+msgstr "از مبلغ"
 
 #. Label of the from_date (Date) field in DocType 'Attendance Request'
 #. Label of the from_date (Date) field in DocType 'Leave Allocation'
@@ -6803,7 +6803,7 @@ msgstr "در حال پیش رفت"
 msgid "In Time"
 msgstr "به موقع"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:122
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:123
 msgid "In case of any error during this background process, the system will add a comment about the error on this Payroll Entry and revert to the Submitted status"
 msgstr "در صورت بروز هرگونه خطایی در طول این فرآیند پس زمینه، سیستم نظری در مورد خطا در این ثبت حقوق و دستمزد اضافه می کند و به وضعیت ارسال شده باز می گردد"
 
@@ -8299,7 +8299,7 @@ msgstr "کارشناسی ارشد"
 #. Benefit Claim'
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgid "Max Amount Eligible"
-msgstr "حداکثر مقدار واجد شرایط"
+msgstr "حداکثر مبلغ واجد شرایط"
 
 #. Label of the max_benefit_amount (Currency) field in DocType 'Employee
 #. Benefit Application Detail'
@@ -8316,7 +8316,7 @@ msgstr "حداکثر مبلغ مزایا (سالانه)"
 #. Label of the max_benefits (Currency) field in DocType 'Salary Structure'
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 msgid "Max Benefits (Amount)"
-msgstr "حداکثر مزایا (مقدار)"
+msgstr "حداکثر مزایا (مبلغ)"
 
 #. Label of the max_benefits (Currency) field in DocType 'Employee Benefit
 #. Application'
@@ -8331,7 +8331,7 @@ msgstr "حداکثر مزایا (سالانه)"
 #: hrms/payroll/doctype/employee_tax_exemption_category/employee_tax_exemption_category.json
 #: hrms/payroll/doctype/employee_tax_exemption_sub_category/employee_tax_exemption_sub_category.json
 msgid "Max Exemption Amount"
-msgstr "حداکثر میزان معافیت"
+msgstr "حداکثر مبلغ معافیت"
 
 #: hrms/payroll/doctype/employee_tax_exemption_sub_category/employee_tax_exemption_sub_category.py:18
 msgid "Max Exemption Amount cannot be greater than maximum exemption amount {0} of Tax Exemption Category {1}"
@@ -8377,13 +8377,13 @@ msgstr "حداکثر مرخصی های قابل بازخرید"
 #. Declaration Category'
 #: hrms/payroll/doctype/employee_tax_exemption_declaration_category/employee_tax_exemption_declaration_category.json
 msgid "Maximum Exempted Amount"
-msgstr "حداکثر میزان معافیت"
+msgstr "حداکثر مبلغ معافیت"
 
 #. Label of the max_amount (Currency) field in DocType 'Employee Tax Exemption
 #. Proof Submission Detail'
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission_detail/employee_tax_exemption_proof_submission_detail.json
 msgid "Maximum Exemption Amount"
-msgstr "حداکثر میزان معافیت"
+msgstr "حداکثر مبلغ معافیت"
 
 #. Label of the max_leaves_allowed (Float) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -8392,16 +8392,16 @@ msgstr "حداکثر تخصیص مرخصی مجاز است"
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:65
 msgid "Maximum amount eligible for the component {0} exceeds {1}"
-msgstr "حداکثر مقدار واجد شرایط برای مؤلفه {0} از {1} بیشتر است"
+msgstr "حداکثر مبلغ واجد شرایط برای مؤلفه {0} از {1} بیشتر است"
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:140
 msgid "Maximum benefit amount of component {0} exceeds {1}"
-msgstr "حداکثر مقدار مزایای مؤلفه {0} از {1} بیشتر است"
+msgstr "حداکثر مبلغ مزایای مؤلفه {0} از {1} بیشتر است"
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:120
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:54
 msgid "Maximum benefit amount of employee {0} exceeds {1}"
-msgstr "حداکثر میزان مزایای کارمند {0} از {1} بیشتر است"
+msgstr "حداکثر مبلغ مزایای کارمند {0} از {1} بیشتر است"
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:87
 msgid "Maximum benefit of employee {0} exceeds {1} by the sum {2} of benefit application pro-rata component amount and previous claimed amount"
@@ -8442,7 +8442,7 @@ msgstr "منو"
 #. Label of the message (Text Editor) field in DocType 'PWA Notification'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hrms/hr/doctype/pwa_notification/pwa_notification.json
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1434
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1454
 msgid "Message"
 msgstr "پیام"
 
@@ -8669,7 +8669,7 @@ msgstr "پرداخت خالص نمی تواند کمتر از 0 باشد"
 
 #: hrms/payroll/report/bank_remittance/bank_remittance.py:53
 msgid "Net Salary Amount"
-msgstr "مقدار خالص حقوق"
+msgstr "مبلغ خالص حقوق"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:93
 msgid "Net pay cannot be negative"
@@ -8827,11 +8827,11 @@ msgstr "هیچ سابقه حضور یافت نشد"
 msgid "No changes found in timings."
 msgstr "هیچ تغییری در زمان بندی یافت نشد."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:201
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:202
 msgid "No employees found"
 msgstr "هیچ کارمندی پیدا نشد"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:184
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:185
 msgid "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
 msgstr "هیچ کارمندی برای معیارهای ذکر شده یافت نشد:<br>شرکت: {0}<br> واحد پول: {1}<br>حساب پرداختنی حقوق و دستمزد: {2}"
 
@@ -8876,7 +8876,7 @@ msgstr "هیچ رکوردی پیدا نشد"
 msgid "No replies from"
 msgstr "هیچ پاسخی از طرف"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1450
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1470
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "هیچ فیش حقوقی برای ارائه برای معیارهای انتخابی بالا یا فیش حقوقی که قبلاً ارسال شده است یافت نشد"
 
@@ -9298,7 +9298,7 @@ msgstr "بررسی اجمالی"
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:135
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:163
 msgid "Overwrite Salary Structure Amount"
-msgstr "بازنویسی مقدار ساختار حقوق و دستمزد"
+msgstr "بازنویسی مبلغ ساختار حقوق و دستمزد"
 
 #. Option for the 'Status' (Select) field in DocType 'Full and Final Asset'
 #: hrms/hr/doctype/full_and_final_asset/full_and_final_asset.json
@@ -9315,7 +9315,7 @@ msgstr "حساب PF"
 
 #: hrms/payroll/report/provident_fund_deductions/provident_fund_deductions.py:32
 msgid "PF Amount"
-msgstr "مقدار PF"
+msgstr "مبلغ PF"
 
 #: hrms/payroll/report/provident_fund_deductions/provident_fund_deductions.py:39
 msgid "PF Loan"
@@ -9347,7 +9347,7 @@ msgstr "پرداخت شده"
 #: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.py:22
 #: hrms/payroll/doctype/gratuity/gratuity.json
 msgid "Paid Amount"
-msgstr "مقدار پرداخت شده"
+msgstr "مبلغ پرداخت شده"
 
 #. Label of the paid_via_salary_slip (Check) field in DocType 'Full and Final
 #. Outstanding Statement'
@@ -9495,7 +9495,7 @@ msgstr "ثبت پرداخت"
 msgid "Payment and Accounting"
 msgstr "پرداخت و حسابداری"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1051
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1071
 msgid "Payment of {0} from {1} to {2}"
 msgstr "پرداخت {0} از {1} به {2}"
 
@@ -9551,7 +9551,7 @@ msgstr "جزئیات حقوق و دستمزد کارکنان"
 msgid "Payroll Entry"
 msgstr "ثبت حقوق و دستمزد"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:120
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:121
 msgid "Payroll Entry cancellation is queued. It may take a few minutes"
 msgstr "لغو ورود حقوق و دستمزد در صف است. ممکن است چند دقیقه طول بکشد"
 
@@ -9903,7 +9903,7 @@ msgstr "لطفاً تاریخ تخفیف را برای کارمند تنظیم �
 msgid "Please set a Default Cash Account in Company defaults"
 msgstr "لطفاً یک حساب پیش‌فرض نقدی را در پیش‌فرض‌های شرکت تنظیم کنید"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:317
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:318
 msgid "Please set account in Salary Component {0}"
 msgstr "لطفاً حساب را در مؤلفه حقوق و دستمزد {0} تنظیم کنید"
 
@@ -10046,7 +10046,7 @@ msgstr "پیش نمایش فیش حقوقی"
 #. Label of the principal_amount (Currency) field in DocType 'Salary Slip Loan'
 #: hrms/payroll/doctype/salary_slip_loan/salary_slip_loan.json
 msgid "Principal Amount"
-msgstr "مقدار اصلی"
+msgstr "مبلغ اصلی"
 
 #. Label of the select_print_heading (Link) field in DocType 'Job Offer'
 #: hrms/hr/doctype/job_offer/job_offer.json
@@ -10216,7 +10216,7 @@ msgstr "هدف"
 #. Advance'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 msgid "Purpose & Amount"
-msgstr "هدف و مقدار"
+msgstr "هدف و مبلغ"
 
 #. Name of a DocType
 #. Label of the purpose_of_travel (Data) field in DocType 'Purpose of Travel'
@@ -10451,7 +10451,7 @@ msgstr "نوع سند مرجع"
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:355
 #: hrms/hr/doctype/leave_application/leave_application.py:481
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:137
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:90
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:91
 msgid "Reference: {0}"
 msgstr "مرجع: {0}"
 
@@ -10963,7 +10963,7 @@ msgstr "ردیف {0}# مبلغ تخصیص یافته {1} نمی تواند بی�
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:138
 msgid "Row {0}# Paid Amount cannot be greater than Total amount"
-msgstr "ردیف {0}# مبلغ پرداختی نمی‌تواند بیشتر از مقدار کل باشد"
+msgstr "ردیف {0}# مبلغ پرداختی نمی‌تواند بیشتر از مبلغ کل باشد"
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:130
 msgid "Row {0}# Paid Amount cannot be greater than requested advance amount"
@@ -11160,11 +11160,11 @@ msgstr "وام فیش حقوق"
 msgid "Salary Slip Timesheet"
 msgstr "جدول زمانی فیش حقوق"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:86
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:87
 msgid "Salary Slip already exists for {0} for the given dates"
 msgstr "فیش حقوق از قبل برای {0} برای تاریخ های داده شده وجود دارد"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:250
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:251
 msgid "Salary Slip creation is queued. It may take a few minutes"
 msgstr "ایجاد فیش حقوقی در صف است. ممکن است چند دقیقه طول بکشد"
 
@@ -11176,11 +11176,11 @@ msgstr "فیش حقوق کارمند {0} قبلاً برای این دوره ا�
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr "فیش حقوق کارمند {0} قبلاً برای برگه زمانی {1} ایجاد شده است"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:295
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:296
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr "ارسال فیش حقوقی در صف است. ممکن است چند دقیقه طول بکشد"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1389
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1409
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr "فیش حقوقی {0} برای ثبت حقوق و دستمزد {1} ناموفق بود"
 
@@ -11202,11 +11202,11 @@ msgstr "فیش حقوقی ایجاد شد"
 msgid "Salary Slips Submitted"
 msgstr "فیش حقوقی ارسال شد"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1431
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1451
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr "فیش حقوق از قبل برای کارمندان {} وجود دارد و توسط این لیست حقوق و دستمزد پردازش نخواهد شد."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1456
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1476
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr "فیش حقوقی ارسال شده برای دوره از {0} تا {1}"
 
@@ -11324,11 +11324,11 @@ msgstr "تحریم شد"
 #: hrms/hr/doctype/expense_claim_detail/expense_claim_detail.json
 #: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.py:21
 msgid "Sanctioned Amount"
-msgstr "مقدار تحریم شده"
+msgstr "مبلغ تحریم شده"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:360
 msgid "Sanctioned Amount cannot be greater than Claim Amount in Row {0}."
-msgstr "مقدار تحریم شده نمی تواند بیشتر از مقدار ادعا در ردیف {0} باشد."
+msgstr "مبلغ تحریم شده نمی تواند بیشتر از مبلغ ادعا در ردیف {0} باشد."
 
 #: frontend/src/components/AttendanceCalendar.vue:118
 #: hrms/hr/doctype/leave_block_list/leave_block_list.js:62
@@ -11410,7 +11410,7 @@ msgstr "ابتدا مصاحبه را انتخاب کنید"
 msgid "Select Payment Account to make Bank Entry"
 msgstr "برای ثبت بانکی، حساب پرداخت را انتخاب کنید"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1594
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1614
 msgid "Select Payroll Frequency."
 msgstr "فرکانس حقوق و دستمزد را انتخاب کنید."
 
@@ -12041,7 +12041,7 @@ msgstr "نام منبع"
 msgid "Source and Rating"
 msgstr "منبع و رتبه بندی"
 
-#: hrms/api/roster.py:79
+#: hrms/api/roster.py:84
 msgid "Source and target shifts cannot be the same"
 msgstr ""
 
@@ -12082,7 +12082,7 @@ msgstr "طرح کارگزینی {0} از قبل برای نقش سازمانی {
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Standard Tax Exemption Amount"
-msgstr "مقدار استاندارد معافیت مالیاتی"
+msgstr "مبلغ استاندارد معافیت مالیاتی"
 
 #. Label of the standard_working_hours (Float) field in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
@@ -12139,7 +12139,7 @@ msgstr "تاریخ شروع و پایان در یک دوره حقوق و دست�
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr "تاریخ شروع و پایان در یک دوره حقوق و دستمزد معتبر نیست، نمی تواند {0} را محاسبه کند."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:198
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:199
 msgid "Start date: {0}"
 msgstr "تاریخ شروع: {0}"
 
@@ -12319,7 +12319,7 @@ msgstr "ارسال شده"
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "ارسال فیش حقوقی و ایجاد دفترچه ..."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1511
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1531
 msgid "Submitting Salary Slips..."
 msgstr "ارسال فیش حقوقی..."
 
@@ -12335,7 +12335,7 @@ msgstr "شرکت های تابعه قبلاً برای {1} جای خالی با 
 #: frontend/src/views/AppSettings.vue:95
 #: hrms/hr/doctype/employee_referral/employee_referral.py:54
 #: hrms/hr/utils.py:852
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1459
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1479
 #: hrms/public/js/utils/index.js:139
 msgid "Success"
 msgstr "موفقیت"
@@ -12825,7 +12825,7 @@ msgstr "به"
 #. Label of the to_amount (Currency) field in DocType 'Taxable Salary Slab'
 #: hrms/payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
 msgid "To Amount"
-msgstr "به مقدار"
+msgstr "به مبلغ"
 
 #. Label of the to_date (Date) field in DocType 'Attendance Request'
 #. Label of the to_date (Date) field in DocType 'Leave Allocation'
@@ -12988,7 +12988,7 @@ msgstr ""
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.json
 #: hrms/payroll/doctype/gratuity/gratuity.json
 msgid "Total Amount"
-msgstr "مقدار کل"
+msgstr "مبلغ کل"
 
 #. Label of the total_amount_reimbursed (Currency) field in DocType 'Expense
 #. Claim'
@@ -12998,7 +12998,7 @@ msgstr "کل مبلغ بازپرداخت شده"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:105
 msgid "Total Amount cannot be zero"
-msgstr ""
+msgstr "مبلغ کل نمی تواند صفر باشد"
 
 #. Label of the total_asset_recovery_cost (Currency) field in DocType 'Full and
 #. Final Statement'
@@ -13229,12 +13229,12 @@ msgstr "مجموع مبلغ مؤلفه مزایای انعطاف‌پذیر {0} 
 #. Label of the total_in_words (Data) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Total in words"
-msgstr "مجموع در کلمات"
+msgstr "مجموع به حروف"
 
 #. Label of the base_total_in_words (Data) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Total in words (Company Currency)"
-msgstr "مجموع در کلمات (ارز شرکت)"
+msgstr "مجموع به حروف (ارز شرکت)"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:351
 msgid "Total leaves allocated cannot exceed annual allocation of {0}."

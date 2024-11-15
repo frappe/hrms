@@ -28,6 +28,7 @@ from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
 )
 from erpnext.accounts.utils import get_fiscal_year
 
+from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
 from hrms.payroll.doctype.salary_withholding.salary_withholding import link_bank_entry_in_salary_withholdings
 
 
@@ -871,9 +872,9 @@ class PayrollEntry(Document):
 		)
 
 		salary_slip_total = 0
-		salary_slips = self.get_salary_slip_details(for_withheld_salaries)
+		salary_details = self.get_salary_slip_details(for_withheld_salaries)
 
-		for salary_detail in salary_slips:
+		for salary_detail in salary_details:
 			if salary_detail.parentfield == "earnings":
 				(
 					is_flexible_benefit,
@@ -923,8 +924,7 @@ class PayrollEntry(Document):
 
 					salary_slip_total -= salary_detail.amount
 
-		unique_salary_slips = {slip["name"]: slip for slip in salary_slips}.values()
-		total_loan_repayment = sum(flt(slip.get("total_loan_repayment", 0)) for slip in unique_salary_slips)
+		total_loan_repayment = self.process_loan_repayments_for_bank_entry(salary_details) or 0
 		salary_slip_total -= total_loan_repayment
 
 		bank_entry = None
@@ -933,7 +933,7 @@ class PayrollEntry(Document):
 			bank_entry = self.set_accounting_entries_for_bank_entry(salary_slip_total, remark)
 
 			if for_withheld_salaries:
-				link_bank_entry_in_salary_withholdings(salary_slips, bank_entry.name)
+				link_bank_entry_in_salary_withholdings(salary_details, bank_entry.name)
 
 		return bank_entry
 
@@ -971,6 +971,23 @@ class PayrollEntry(Document):
 			query = query.where(SalarySlip.status != "Withheld")
 		return query.run(as_dict=True)
 
+	@if_lending_app_installed
+	def process_loan_repayments_for_bank_entry(self, salary_details: list[dict]) -> float:
+		unique_salary_slips = {row["employee"]: row for row in salary_details}.values()
+		total_loan_repayment = sum(flt(slip.get("total_loan_repayment", 0)) for slip in unique_salary_slips)
+
+		if self.employee_based_payroll_payable_entries:
+			for salary_slip in unique_salary_slips:
+				if salary_slip.get("total_loan_repayment"):
+					self.set_employee_based_payroll_payable_entries(
+						"total_loan_repayment",
+						salary_slip.employee,
+						salary_slip.total_loan_repayment,
+						salary_slip.salary_structure,
+					)
+
+		return total_loan_repayment
+
 	def set_accounting_entries_for_bank_entry(self, je_payment_amount, user_remark):
 		payroll_payable_account = self.payroll_payable_account
 		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
@@ -998,9 +1015,12 @@ class PayrollEntry(Document):
 
 		if self.employee_based_payroll_payable_entries:
 			for employee, employee_details in self.employee_based_payroll_payable_entries.items():
-				je_payment_amount = employee_details.get("earnings", 0) - (
-					employee_details.get("deductions", 0)
+				je_payment_amount = (
+					employee_details.get("earnings", 0)
+					- employee_details.get("deductions", 0)
+					- employee_details.get("total_loan_repayment", 0)
 				)
+
 				exchange_rate, amount = self.get_amount_and_exchange_rate_for_journal_entry(
 					self.payment_account, je_payment_amount, company_currency, currencies
 				)

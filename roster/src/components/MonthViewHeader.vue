@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, watch } from "vue";
-import { FormControl, createListResource } from "frappe-ui";
+import { FormControl, createResource, createListResource } from "frappe-ui";
 import { Dayjs } from "dayjs";
 
 import { raiseToast } from "../utils";
@@ -72,7 +72,7 @@ const filters: {
 watch(
 	() => filters.company.model,
 	(val) => {
-		if (val?.value) return getFilterOptions("department", { company: val.value });
+		if (val?.value) getFilterOptions("department", { company: val.value });
 		else {
 			filters.department.model = null;
 			filters.department.options = [];
@@ -99,14 +99,26 @@ const toTitleCase = (str: string) =>
 
 // RESOURCES
 
+const defaultCompany = createResource({
+	url: "hrms.api.roster.get_default_company",
+	auto: true,
+	onSuccess: () => {
+		["company", "branch", "designation", "shift_type"].forEach((field) =>
+			getFilterOptions(field as FilterField),
+		);
+	},
+});
+
 const getFilterOptions = (field: FilterField, listFilters: { company?: string } = {}) => {
 	createListResource({
 		doctype: toTitleCase(field),
 		fields: ["name"],
 		filters: listFilters,
+		pageLength: 100,
 		auto: true,
 		onSuccess: (data: { name: string }[]) => {
-			filters[field].model = { value: "" };
+			const value = field === "company" ? defaultCompany.data : "";
+			filters[field].model = { value };
 			filters[field].options = data.map((item) => item.name);
 		},
 		onError(error: { messages: string[] }) {
@@ -114,8 +126,4 @@ const getFilterOptions = (field: FilterField, listFilters: { company?: string } 
 		},
 	});
 };
-
-["company", "branch", "designation", "shift_type"].forEach((field) =>
-	getFilterOptions(field as FilterField),
-);
 </script>

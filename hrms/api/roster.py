@@ -9,6 +9,11 @@ from hrms.hr.doctype.shift_assignment_tool.shift_assignment_tool import create_s
 
 
 @frappe.whitelist()
+def get_default_company() -> str:
+	return frappe.defaults.get_user_default("Company")
+
+
+@frappe.whitelist()
 def get_values(doctype: str, name: str, fields: list) -> dict[str, str]:
 	return frappe.db.get_value(doctype, name, fields, as_dict=True)
 

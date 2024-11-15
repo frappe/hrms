@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-11-03 09:34+0000\n"
-"PO-Revision-Date: 2024-11-03 17:48\n"
+"POT-Creation-Date: 2024-11-10 09:33+0000\n"
+"PO-Revision-Date: 2024-11-11 18:36\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -396,7 +396,7 @@ msgstr "crwdns140866:0crwdne140866:0"
 msgid "Account No"
 msgstr "crwdns104844:0crwdne104844:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:101
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:102
 msgid "Account type cannot be set for payroll payable account {0}, please remove and try again"
 msgstr "crwdns104846:0{0}crwdne104846:0"
 
@@ -497,7 +497,7 @@ msgstr "crwdns143240:0crwdne143240:0"
 msgid "Accounts not set for Salary Component {0}"
 msgstr "crwdns140876:0{0}crwdne140876:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:592
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:593
 msgid "Accrual Journal Entry for salaries from {0} to {1}"
 msgstr "crwdns104888:0{0}crwdnd104888:0{1}crwdne104888:0"
 
@@ -1955,7 +1955,7 @@ msgstr "crwdns105494:0crwdne105494:0"
 msgid "Branch"
 msgstr "crwdns105496:0crwdne105496:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:192
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:193
 msgid "Branch: {0}"
 msgstr "crwdns105512:0{0}crwdne105512:0"
 
@@ -2028,7 +2028,7 @@ msgstr "crwdns105532:0crwdne105532:0"
 msgid "Cancel"
 msgstr "crwdns151164:0crwdne151164:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:128
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:129
 msgid "Cancellation Queued"
 msgstr "crwdns105534:0crwdne105534:0"
 
@@ -2059,11 +2059,11 @@ msgstr "crwdns105534:0crwdne105534:0"
 msgid "Cancelled"
 msgstr "crwdns141124:0crwdne141124:0"
 
-#: hrms/api/roster.py:111
+#: hrms/api/roster.py:116
 msgid "Cannot break shift after end date"
 msgstr "crwdns148512:0crwdne148512:0"
 
-#: hrms/api/roster.py:113
+#: hrms/api/roster.py:118
 msgid "Cannot break shift before start date"
 msgstr "crwdns148514:0crwdne148514:0"
 
@@ -2099,7 +2099,7 @@ msgstr "crwdns105566:0crwdne105566:0"
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr "crwdns105568:0{0}crwdne105568:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:61
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:62
 msgid "Cannot submit. Attendance is not marked for some employees."
 msgstr "crwdns105570:0crwdne105570:0"
 
@@ -2157,7 +2157,7 @@ msgstr "crwdns143246:0crwdne143246:0"
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr "crwdns141134:0{0}crwdnd141134:0{1}crwdne141134:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1401
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1421
 msgid "Check Error Log {0} for more details."
 msgstr "crwdns105594:0{0}crwdne105594:0"
 
@@ -2706,7 +2706,7 @@ msgstr "crwdns141206:0crwdne141206:0"
 msgid "Could not find any salary slip(s) for the employee {0}"
 msgstr "crwdns149170:0{0}crwdne149170:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1464
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1484
 msgid "Could not submit some Salary Slips: {}"
 msgstr "crwdns105872:0crwdne105872:0"
 
@@ -2837,7 +2837,7 @@ msgstr "crwdns105932:0crwdne105932:0"
 msgid "Creating Payment Entries......"
 msgstr "crwdns105934:0crwdne105934:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1424
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1444
 msgid "Creating Salary Slips..."
 msgstr "crwdns105936:0crwdne105936:0"
 
@@ -3451,7 +3451,7 @@ msgstr "crwdns106236:0crwdne106236:0"
 msgid "Department Wise Openings"
 msgstr "crwdns106238:0crwdne106238:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:194
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:195
 msgid "Department: {0}"
 msgstr "crwdns106240:0{0}crwdne106240:0"
 
@@ -3615,7 +3615,7 @@ msgstr "crwdns106292:0crwdne106292:0"
 msgid "Designation Skill"
 msgstr "crwdns106348:0crwdne106348:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:196
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:197
 msgid "Designation: {0}"
 msgstr "crwdns106350:0{0}crwdne106350:0"
 
@@ -3769,7 +3769,7 @@ msgid "Duplicate Attendance"
 msgstr "crwdns106418:0crwdne106418:0"
 
 #: hrms/hr/doctype/appraisal/appraisal.py:65
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:95
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:96
 msgid "Duplicate Entry"
 msgstr "crwdns106420:0crwdne106420:0"
 
@@ -4970,7 +4970,7 @@ msgstr "crwdns151210:0crwdne151210:0"
 msgid "End Time"
 msgstr "crwdns106986:0crwdne106986:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:200
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:201
 msgid "End date: {0}"
 msgstr "crwdns106992:0{0}crwdne106992:0"
 
@@ -5528,7 +5528,7 @@ msgstr "crwdns107200:0crwdne107200:0"
 msgid "Failed to {0} {1} for employees:"
 msgstr "crwdns141490:0{0}crwdnd141490:0{1}crwdne141490:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1467
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1487
 #: hrms/public/js/utils/index.js:149
 msgid "Failure"
 msgstr "crwdns141492:0crwdne141492:0"
@@ -5725,7 +5725,7 @@ msgstr "crwdns141524:0crwdne141524:0"
 msgid "Fiscal Year"
 msgstr "crwdns107272:0crwdne107272:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1384
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1404
 msgid "Fiscal Year {0} not found"
 msgstr "crwdns107274:0{0}crwdne107274:0"
 
@@ -6803,7 +6803,7 @@ msgstr "crwdns141672:0crwdne141672:0"
 msgid "In Time"
 msgstr "crwdns107684:0crwdne107684:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:122
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:123
 msgid "In case of any error during this background process, the system will add a comment about the error on this Payroll Entry and revert to the Submitted status"
 msgstr "crwdns107688:0crwdne107688:0"
 
@@ -8442,7 +8442,7 @@ msgstr "crwdns151268:0crwdne151268:0"
 #. Label of the message (Text Editor) field in DocType 'PWA Notification'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hrms/hr/doctype/pwa_notification/pwa_notification.json
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1434
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1454
 msgid "Message"
 msgstr "crwdns108394:0crwdne108394:0"
 
@@ -8827,11 +8827,11 @@ msgstr "crwdns108542:0crwdne108542:0"
 msgid "No changes found in timings."
 msgstr "crwdns108544:0crwdne108544:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:201
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:202
 msgid "No employees found"
 msgstr "crwdns108548:0crwdne108548:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:184
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:185
 msgid "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
 msgstr "crwdns108550:0{0}crwdnd108550:0{1}crwdnd108550:0{2}crwdne108550:0"
 
@@ -8876,7 +8876,7 @@ msgstr "crwdns108564:0crwdne108564:0"
 msgid "No replies from"
 msgstr "crwdns108566:0crwdne108566:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1450
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1470
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "crwdns108568:0crwdne108568:0"
 
@@ -9495,7 +9495,7 @@ msgstr "crwdns142074:0crwdne142074:0"
 msgid "Payment and Accounting"
 msgstr "crwdns142076:0crwdne142076:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1051
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1071
 msgid "Payment of {0} from {1} to {2}"
 msgstr "crwdns108834:0{0}crwdnd108834:0{1}crwdnd108834:0{2}crwdne108834:0"
 
@@ -9551,7 +9551,7 @@ msgstr "crwdns108848:0crwdne108848:0"
 msgid "Payroll Entry"
 msgstr "crwdns108850:0crwdne108850:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:120
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:121
 msgid "Payroll Entry cancellation is queued. It may take a few minutes"
 msgstr "crwdns108856:0crwdne108856:0"
 
@@ -9903,7 +9903,7 @@ msgstr "crwdns109000:0{0}crwdne109000:0"
 msgid "Please set a Default Cash Account in Company defaults"
 msgstr "crwdns109002:0crwdne109002:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:317
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:318
 msgid "Please set account in Salary Component {0}"
 msgstr "crwdns109004:0{0}crwdne109004:0"
 
@@ -10451,7 +10451,7 @@ msgstr "crwdns142202:0crwdne142202:0"
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:355
 #: hrms/hr/doctype/leave_application/leave_application.py:481
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:137
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:90
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:91
 msgid "Reference: {0}"
 msgstr "crwdns109214:0{0}crwdne109214:0"
 
@@ -11160,11 +11160,11 @@ msgstr "crwdns109476:0crwdne109476:0"
 msgid "Salary Slip Timesheet"
 msgstr "crwdns109478:0crwdne109478:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:86
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:87
 msgid "Salary Slip already exists for {0} for the given dates"
 msgstr "crwdns109482:0{0}crwdne109482:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:250
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:251
 msgid "Salary Slip creation is queued. It may take a few minutes"
 msgstr "crwdns109484:0crwdne109484:0"
 
@@ -11176,11 +11176,11 @@ msgstr "crwdns109486:0{0}crwdne109486:0"
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr "crwdns109488:0{0}crwdnd109488:0{1}crwdne109488:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:295
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:296
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr "crwdns109490:0crwdne109490:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1389
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1409
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr "crwdns109492:0{0}crwdnd109492:0{1}crwdne109492:0"
 
@@ -11202,11 +11202,11 @@ msgstr "crwdns142336:0crwdne142336:0"
 msgid "Salary Slips Submitted"
 msgstr "crwdns142338:0crwdne142338:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1431
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1451
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr "crwdns109500:0crwdne109500:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1456
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1476
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr "crwdns109502:0{0}crwdnd109502:0{1}crwdne109502:0"
 
@@ -11410,7 +11410,7 @@ msgstr "crwdns109576:0crwdne109576:0"
 msgid "Select Payment Account to make Bank Entry"
 msgstr "crwdns142358:0crwdne142358:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1594
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1614
 msgid "Select Payroll Frequency."
 msgstr "crwdns109580:0crwdne109580:0"
 
@@ -12041,7 +12041,7 @@ msgstr "crwdns142456:0crwdne142456:0"
 msgid "Source and Rating"
 msgstr "crwdns142458:0crwdne142458:0"
 
-#: hrms/api/roster.py:79
+#: hrms/api/roster.py:84
 msgid "Source and target shifts cannot be the same"
 msgstr "crwdns148560:0crwdne148560:0"
 
@@ -12139,7 +12139,7 @@ msgstr "crwdns109858:0{0}crwdne109858:0"
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr "crwdns109860:0{0}crwdne109860:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:198
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:199
 msgid "Start date: {0}"
 msgstr "crwdns109862:0{0}crwdne109862:0"
 
@@ -12319,7 +12319,7 @@ msgstr "crwdns142480:0crwdne142480:0"
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "crwdns109966:0crwdne109966:0"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1511
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1531
 msgid "Submitting Salary Slips..."
 msgstr "crwdns109968:0crwdne109968:0"
 
@@ -12335,7 +12335,7 @@ msgstr "crwdns109970:0{1}crwdnd109970:0{2}crwdnd109970:0{0}crwdnd109970:0{3}crwd
 #: frontend/src/views/AppSettings.vue:95
 #: hrms/hr/doctype/employee_referral/employee_referral.py:54
 #: hrms/hr/utils.py:852
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1459
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1479
 #: hrms/public/js/utils/index.js:139
 msgid "Success"
 msgstr "crwdns109972:0crwdne109972:0"

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-11-03 09:34+0000\n"
-"PO-Revision-Date: 2024-11-03 17:48\n"
+"POT-Creation-Date: 2024-11-10 09:33+0000\n"
+"PO-Revision-Date: 2024-11-12 19:07\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -421,7 +421,7 @@ msgstr "Konto"
 msgid "Account No"
 msgstr "Konto Nummer"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:101
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:102
 msgid "Account type cannot be set for payroll payable account {0}, please remove and try again"
 msgstr "Konto Typ kan inte anges för löneskuld konto {0}, ta bort och försök igen"
 
@@ -522,7 +522,7 @@ msgstr "Bokföring Inställningar"
 msgid "Accounts not set for Salary Component {0}"
 msgstr "Konto inte angiven för Lönekomponent {0}"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:592
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:593
 msgid "Accrual Journal Entry for salaries from {0} to {1}"
 msgstr "Periodisering Journal Post för Löner från {0} till {1}"
 
@@ -881,7 +881,7 @@ msgstr "Tillåt Övertilldelning"
 #. Label of the allow_tax_exemption (Check) field in DocType 'Income Tax Slab'
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 msgid "Allow Tax Exemption"
-msgstr "Tillåt Skattebefrielse"
+msgstr "Tillåt Skatt Undantag"
 
 #. Label of the allow_user (Link) field in DocType 'Leave Block List Allow'
 #: hrms/hr/doctype/leave_block_list_allow/leave_block_list_allow.json
@@ -1980,7 +1980,7 @@ msgstr "Bonus Betalning Datum kan inte vara tidigare datum"
 msgid "Branch"
 msgstr "Bransch"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:192
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:193
 msgid "Branch: {0}"
 msgstr "Branch: {0}"
 
@@ -2053,7 +2053,7 @@ msgstr "Kampanj"
 msgid "Cancel"
 msgstr "Annullera"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:128
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:129
 msgid "Cancellation Queued"
 msgstr "Annullering i Kö"
 
@@ -2084,11 +2084,11 @@ msgstr "Annullering i Kö"
 msgid "Cancelled"
 msgstr "Annullerad"
 
-#: hrms/api/roster.py:111
+#: hrms/api/roster.py:116
 msgid "Cannot break shift after end date"
 msgstr "Kan inte bryta skift efter slutdatum"
 
-#: hrms/api/roster.py:113
+#: hrms/api/roster.py:118
 msgid "Cannot break shift before start date"
 msgstr "Kan inte bryta skift före startdatum"
 
@@ -2124,7 +2124,7 @@ msgstr "Kan inte hitta aktiv Ledighet Period"
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr "Kan inte ange närvaro för inaktiv personal {0}"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:61
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:62
 msgid "Cannot submit. Attendance is not marked for some employees."
 msgstr "Kan inte godkänna. Närvaro är inte angiven för viss personal."
 
@@ -2182,7 +2182,7 @@ msgstr "Resultat Enheter"
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr "Se <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> för mer information"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1401
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1421
 msgid "Check Error Log {0} for more details."
 msgstr "Se Fel Logg {0} för mer detaljer."
 
@@ -2637,7 +2637,7 @@ msgstr "Inkludera Närvaro under Helger"
 
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.js:40
 msgid "Consider Tax Exemption Declaration"
-msgstr "Inkludera Skattebefrielse Deklaration"
+msgstr "Inkludera Skatt Undantag Deklaration"
 
 #. Label of the consider_unmarked_attendance_as (Select) field in DocType
 #. 'Payroll Settings'
@@ -2731,7 +2731,7 @@ msgstr "Kostnad Detaljer"
 msgid "Could not find any salary slip(s) for the employee {0}"
 msgstr "Kunde inte hitta någon lönespecifikation(er) för {0}"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1464
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1484
 msgid "Could not submit some Salary Slips: {}"
 msgstr "Kunde inte godkänna vissa Lönespecifikationer: {}"
 
@@ -2862,7 +2862,7 @@ msgstr "Skapa Utvärderingar"
 msgid "Creating Payment Entries......"
 msgstr "......Skapar Betalning Poster......"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1424
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1444
 msgid "Creating Salary Slips..."
 msgstr "Skapar Lönespecifikationer..."
 
@@ -3053,7 +3053,7 @@ msgstr "Cykler"
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Daily"
-msgstr "Varje Dag"
+msgstr "Dagsvis"
 
 #. Name of a DocType
 #. Label of a Card Break in the Employee Lifecycle Workspace
@@ -3324,7 +3324,7 @@ msgstr "Uppskjuten Kostnad Konto"
 #: frontend/src/components/FormView.vue:39
 #: frontend/src/components/FormView.vue:243
 msgid "Delete"
-msgstr "Ta Bort"
+msgstr "Ta bort"
 
 #: frontend/src/components/FileUploaderView.vue:49
 msgid "Delete Attachment"
@@ -3476,7 +3476,7 @@ msgstr "Avdelning Godkännare"
 msgid "Department Wise Openings"
 msgstr "Lediga Jobb per Avdelning"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:194
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:195
 msgid "Department: {0}"
 msgstr "Avdelning: {0}"
 
@@ -3640,7 +3640,7 @@ msgstr "Befattning"
 msgid "Designation Skill"
 msgstr "Befattning Färdighet"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:196
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:197
 msgid "Designation: {0}"
 msgstr "Befattning: {0}"
 
@@ -3794,7 +3794,7 @@ msgid "Duplicate Attendance"
 msgstr "Kopiera Närvaro"
 
 #: hrms/hr/doctype/appraisal/appraisal.py:65
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:95
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:96
 msgid "Duplicate Entry"
 msgstr "Kopiera Post"
 
@@ -4681,7 +4681,7 @@ msgstr "Status"
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_tax_exemption_category/employee_tax_exemption_category.json
 msgid "Employee Tax Exemption Category"
-msgstr "Skattebefrielse Kategori"
+msgstr "Skatt Undantag Kategori"
 
 #. Name of a DocType
 #. Label of a Link in the Tax & Benefits Workspace
@@ -4696,26 +4696,26 @@ msgstr "Skattbefrielse Deklaration"
 #: hrms/payroll/doctype/employee_tax_exemption_declaration_category/employee_tax_exemption_declaration_category.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Tax Exemption Declaration Category"
-msgstr "Skattebefrielse Deklaration Kategori"
+msgstr "Skatt Undantag Deklaration Kategori"
 
 #. Name of a DocType
 #. Label of a Link in the Tax & Benefits Workspace
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Tax Exemption Proof Submission"
-msgstr "Skattebefrielse Verifikat Godkännande"
+msgstr "Skatt Undantag Verifikat Godkännande"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission_detail/employee_tax_exemption_proof_submission_detail.json
 msgid "Employee Tax Exemption Proof Submission Detail"
-msgstr "Skattebefrielse Verifikat Godkännande Detalj"
+msgstr "Skatt Undantag Verifikat Godkännande Detalj"
 
 #. Name of a DocType
 #. Label of a Link in the Tax & Benefits Workspace
 #: hrms/payroll/doctype/employee_tax_exemption_sub_category/employee_tax_exemption_sub_category.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Tax Exemption Sub Category"
-msgstr "Skattebefrielse Underkategori"
+msgstr "Skatt Undantag Underkategori"
 
 #. Name of a DocType
 #: hrms/hr/doctype/employee_training/employee_training.json
@@ -4995,7 +4995,7 @@ msgstr "Slut Datum kan inte vara före Start Datum"
 msgid "End Time"
 msgstr "Slut Tid"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:200
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:201
 msgid "End date: {0}"
 msgstr "Slut Datum: {0}"
 
@@ -5553,7 +5553,7 @@ msgstr "Misslyckades med att uppdatera Jobb Sökande Status"
 msgid "Failed to {0} {1} for employees:"
 msgstr "Kunde inte {0} {1} för personal:"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1467
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1487
 #: hrms/public/js/utils/index.js:149
 msgid "Failure"
 msgstr "Fel"
@@ -5750,7 +5750,7 @@ msgstr "Förnamn"
 msgid "Fiscal Year"
 msgstr "Bokföringsår"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1384
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1404
 msgid "Fiscal Year {0} not found"
 msgstr "Bokföringsår {0} hittades inte"
 
@@ -6828,7 +6828,7 @@ msgstr "Pågående"
 msgid "In Time"
 msgstr "I Tid"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:122
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:123
 msgid "In case of any error during this background process, the system will add a comment about the error on this Payroll Entry and revert to the Submitted status"
 msgstr "I händelse av något fel under denna bakgrundsprocess kommer system att lägga till kommentar om fel på denna Lön Post och återgå till status Godkänd"
 
@@ -8467,7 +8467,7 @@ msgstr "Meny"
 #. Label of the message (Text Editor) field in DocType 'PWA Notification'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hrms/hr/doctype/pwa_notification/pwa_notification.json
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1434
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1454
 msgid "Message"
 msgstr "Meddelande"
 
@@ -8586,7 +8586,7 @@ msgstr "Månad Hitills (Bolag Valuta)"
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Monthly"
-msgstr "Varje Månad"
+msgstr "Månadsvis"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -8852,11 +8852,11 @@ msgstr "Inga närvaro poster funna."
 msgid "No changes found in timings."
 msgstr "Inga ändringar hittades i tider."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:201
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:202
 msgid "No employees found"
 msgstr "Ingen personal hittad"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:184
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:185
 msgid "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
 msgstr "Ingen personal hittades för angivna kriterier:<br>Bolag: {0}<br> Valuta: {1}<br>Löne Konto: {2}"
 
@@ -8901,7 +8901,7 @@ msgstr "Ingen post hittad"
 msgid "No replies from"
 msgstr "Inga svar från"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1450
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1470
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "Ingen Lönespecifikation hittad att godkänna för ovanstående valda kriterier eller Lönespecifikation är redan godkänd"
 
@@ -9520,7 +9520,7 @@ msgstr "Kontering Post"
 msgid "Payment and Accounting"
 msgstr "Betalning och Bokföring"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1051
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1071
 msgid "Payment of {0} from {1} to {2}"
 msgstr "Betalning av {0} från {1} till {2}"
 
@@ -9576,7 +9576,7 @@ msgstr "Lön Personal Detalj"
 msgid "Payroll Entry"
 msgstr "Lön Post"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:120
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:121
 msgid "Payroll Entry cancellation is queued. It may take a few minutes"
 msgstr "Löne Post Avbokning i kö. Det kan ta några minuter"
 
@@ -9928,7 +9928,7 @@ msgstr "Ange avgång datum för: {0}"
 msgid "Please set a Default Cash Account in Company defaults"
 msgstr "Ange Standard Kassa Konto i Bolag Inställningar"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:317
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:318
 msgid "Please set account in Salary Component {0}"
 msgstr "Ange konto i Lönekomponent {0}"
 
@@ -10271,7 +10271,7 @@ msgstr "Push Notiser är inaktiverade på din webbplats"
 #: hrms/hr/doctype/leave_type/leave_type.json
 #: hrms/hr/doctype/vehicle_service/vehicle_service.json
 msgid "Quarterly"
-msgstr "Varje Kvartal"
+msgstr "Kvartalsvis"
 
 #. Label of the questionnaire_email_sent (Check) field in DocType 'Exit
 #. Interview'
@@ -10476,7 +10476,7 @@ msgstr "Referens Dokument Typ"
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:355
 #: hrms/hr/doctype/leave_application/leave_application.py:481
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:137
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:90
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:91
 msgid "Reference: {0}"
 msgstr "Referens:{0}"
 
@@ -11185,11 +11185,11 @@ msgstr "Lönespecifikation Lån"
 msgid "Salary Slip Timesheet"
 msgstr "Lönespecifikation Tidrapport"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:86
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:87
 msgid "Salary Slip already exists for {0} for the given dates"
 msgstr "Lönespecifikation finns redan för {0} för angivna datum"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:250
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:251
 msgid "Salary Slip creation is queued. It may take a few minutes"
 msgstr "Lönespecifikation skapande i kö. Det kan ta några minuter"
 
@@ -11201,11 +11201,11 @@ msgstr "Lönespecifikation för {0} redan skapad för denna period"
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr "Lönespecifikation för {0} redan skapad för Tidrapport {1}"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:295
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:296
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr "Lönespecifikation godkännade i kö. Det kan ta några minuter"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1389
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1409
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr "Lönespecifikation {0} misslyckades för Lönepost {1}"
 
@@ -11227,11 +11227,11 @@ msgstr "Lönespecifikationer Skapade"
 msgid "Salary Slips Submitted"
 msgstr "Lönespecifikationer Godkända"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1431
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1451
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr "Lönespecifikation finns redan för {} och kommer inte att behandlas på denna lönelista."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1456
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1476
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr "Lönespecifikationer godkända för period från {0} till {1}"
 
@@ -11435,7 +11435,7 @@ msgstr "Välj Intervju"
 msgid "Select Payment Account to make Bank Entry"
 msgstr "Välj Betalning Konto att skapa Bank Post"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1594
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1614
 msgid "Select Payroll Frequency."
 msgstr "Välj Löne Intervall"
 
@@ -12066,7 +12066,7 @@ msgstr "Käll Namn"
 msgid "Source and Rating"
 msgstr "Källa och Bedömning"
 
-#: hrms/api/roster.py:79
+#: hrms/api/roster.py:84
 msgid "Source and target shifts cannot be the same"
 msgstr "Käll och Mål Skift kan inte vara desamma"
 
@@ -12164,7 +12164,7 @@ msgstr "Start och Slut Datum inte i giltig Lön Period, kan inte beräkna {0}"
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr "Start och Slut Datum inte i giltig Lön Period, kan inte beräkna {0}."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:198
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:199
 msgid "Start date: {0}"
 msgstr "Start Datum:{0}"
 
@@ -12344,7 +12344,7 @@ msgstr "Godkänd"
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "Godkänner Lönespecifikationer och skapar Journal Post..."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1511
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1531
 msgid "Submitting Salary Slips..."
 msgstr "Godkänner Lönespecifikationer..."
 
@@ -12360,7 +12360,7 @@ msgstr "Dotterbolag har redan planerat för {1} lediga tjänster till en budget 
 #: frontend/src/views/AppSettings.vue:95
 #: hrms/hr/doctype/employee_referral/employee_referral.py:54
 #: hrms/hr/utils.py:852
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1459
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1479
 #: hrms/public/js/utils/index.js:139
 msgid "Success"
 msgstr "Slutförd"
@@ -12509,7 +12509,7 @@ msgstr "Avdragen Skatt Till Datum"
 #. Exemption Sub Category'
 #: hrms/payroll/doctype/employee_tax_exemption_sub_category/employee_tax_exemption_sub_category.json
 msgid "Tax Exemption Category"
-msgstr "Skattebefrielse Kategori"
+msgstr "Skatt Undantag Kategori"
 
 #. Label of the section_break_8 (Tab Break) field in DocType 'Employee Tax
 #. Exemption Declaration'
@@ -12524,7 +12524,7 @@ msgstr "Skattbefrielse Deklaration"
 #. Exemption Proof Submission'
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.json
 msgid "Tax Exemption Proofs"
-msgstr "Skattebefrielse Verifikat"
+msgstr "Skatt Undantag Verifikat"
 
 #. Label of a Card Break in the Tax & Benefits Workspace
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
@@ -13946,7 +13946,7 @@ msgstr "Onsdag"
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Weekly"
-msgstr "Varje Vecka"
+msgstr "Veckovis"
 
 #. Label of the per_weightage (Float) field in DocType 'Appraisal Goal'
 #. Label of the per_weightage (Percent) field in DocType 'Appraisal KRA'
@@ -14119,7 +14119,7 @@ msgstr "I År Till Datum (Bolag Valuta)"
 #: hrms/hr/doctype/leave_type/leave_type.json
 #: hrms/hr/doctype/vehicle_service/vehicle_service.json
 msgid "Yearly"
-msgstr "Varje År"
+msgstr "Årsvis"
 
 #. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
