@@ -47,12 +47,7 @@ class SalaryStructureAssignment(Document):
 		if not self.get("payroll_cost_centers"):
 			self.set_payroll_cost_centers()
 
-<<<<<<< HEAD
-		self.validate_cost_center_distribution()
-=======
 		self.validate_cost_centers()
-		self.warn_about_missing_opening_entries()
->>>>>>> a3bc4e585 (fix(Salary Structure Assignment): validate cost center company on server-side (#2445))
 
 	def on_update_after_submit(self):
 		self.validate_cost_centers()
