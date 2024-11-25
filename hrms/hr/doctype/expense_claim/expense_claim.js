@@ -310,9 +310,11 @@ frappe.ui.form.on("Expense Claim", {
 							row.advance_paid = d.paid_amount;
 							row.unclaimed_amount = flt(d.paid_amount) - flt(d.claimed_amount);
 							row.return_amount = flt(d.return_amount);
-							row.allocated_amount =
-								flt(d.paid_amount) -
-								(flt(d.claimed_amount) + flt(d.return_amount));
+							row.allocated_amount = get_allocation_amount(
+								flt(d.paid_amount),
+								flt(d.claimed_amount),
+								flt(d.return_amount),
+							);
 						});
 						refresh_field("advances");
 					}
@@ -389,9 +391,11 @@ frappe.ui.form.on("Expense Claim Advance", {
 						child.unclaimed_amount =
 							flt(r.message[0].paid_amount) - flt(r.message[0].claimed_amount);
 						child.return_amount = flt(r.message[0].return_amount);
-						child.allocated_amount =
-							flt(r.message[0].paid_amount) -
-							(flt(r.message[0].claimed_amount) + flt(r.message[0].return_amount));
+						child.allocated_amount = get_allocation_amount(
+							flt(r.message[0].paid_amount),
+							flt(r.message[0].claimed_amount),
+							flt(r.message[0].return_amount),
+						);
 						frm.trigger("calculate_grand_total");
 						refresh_field("advances");
 					}
@@ -437,3 +441,7 @@ frappe.ui.form.on("Expense Taxes and Charges", {
 		frm.trigger("calculate_total_tax", cdt, cdn);
 	},
 });
+
+function get_allocation_amount(paid_amount, claimed_amount, return_amount) {
+	return paid_amount - (claimed_amount + return_amount);
+}

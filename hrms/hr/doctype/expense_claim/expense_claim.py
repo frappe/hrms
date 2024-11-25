@@ -536,7 +536,9 @@ def get_expense_claim(
 			"posting_date": posting_date,
 			"advance_paid": flt(paid_amount),
 			"unclaimed_amount": flt(paid_amount) - flt(claimed_amount),
-			"allocated_amount": flt(paid_amount) - (flt(claimed_amount) + flt(return_amount)),
+			"allocated_amount": get_allocation_amount(
+				flt(paid_amount), flt(claimed_amount), flt(return_amount)
+			),
 			"return_amount": flt(return_amount),
 		},
 	)
@@ -594,3 +596,8 @@ def make_expense_claim_for_delivery_trip(source_name, target_doc=None):
 	)
 
 	return doc
+
+
+@frappe.whitelist()
+def get_allocation_amount(paid_amount, claimed_amount, return_amount):
+	return paid_amount - (claimed_amount + return_amount)
