@@ -221,6 +221,7 @@ frappe.ui.form.on("Interview", {
 				interview_round: frm.doc.interview_round || "",
 			},
 			callback: function (r) {
+				frm.clear_table("interview_details");
 				r.message.forEach((interviewer) =>
 					frm.add_child("interview_details", interviewer),
 				);
