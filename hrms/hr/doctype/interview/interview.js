@@ -227,6 +227,7 @@ frappe.ui.form.on("Interview", {
 		}
 	},
 
+<<<<<<< HEAD
 	set_designation_and_job_opening: async function (frm) {
 		let round_data = (
 			await frappe.db.get_value("Interview Round", frm.doc.interview_round, "designation")
@@ -248,6 +249,22 @@ frappe.ui.form.on("Interview", {
 
 		frm.set_value("job_opening", job_applicant_data.job_title);
 		frm.set_value("resume_link", job_applicant_data.resume_link);
+=======
+	set_applicable_interviewers(frm) {
+		frappe.call({
+			method: "hrms.hr.doctype.interview.interview.get_interviewers",
+			args: {
+				interview_round: frm.doc.interview_round || "",
+			},
+			callback: function (r) {
+				frm.clear_table("interview_details");
+				r.message.forEach((interviewer) =>
+					frm.add_child("interview_details", interviewer),
+				);
+				refresh_field("interview_details");
+			},
+		});
+>>>>>>> 62cd63145 (fix: redundant fetching of Interviewers in Interview (#2441))
 	},
 
 	reset_values: function (frm) {
