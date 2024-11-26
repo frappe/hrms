@@ -333,7 +333,9 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			d.advance_paid = ref_doc.paid_amount
 			d.unclaimed_amount = flt(ref_doc.paid_amount) - flt(ref_doc.claimed_amount)
 
-			if d.allocated_amount and flt(d.allocated_amount) > flt(d.unclaimed_amount):
+			if d.allocated_amount and flt(d.allocated_amount) > (
+				flt(d.unclaimed_amount) - flt(d.return_amount)
+			):
 				frappe.throw(
 					_("Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}").format(
 						d.idx, d.allocated_amount, d.unclaimed_amount
@@ -537,7 +539,7 @@ def get_expense_claim(
 			"advance_paid": flt(paid_amount),
 			"unclaimed_amount": flt(paid_amount) - flt(claimed_amount),
 			"allocated_amount": get_allocation_amount(
-				flt(paid_amount), flt(claimed_amount), flt(return_amount)
+				paid_amount=(paid_amount), claimed_amount=(claimed_amount), return_amount=(return_amount)
 			),
 			"return_amount": flt(return_amount),
 		},
@@ -598,6 +600,17 @@ def make_expense_claim_for_delivery_trip(source_name, target_doc=None):
 	return doc
 
 
+# // amke below fucntion reusable basef on wht is passed, if only unclaimed and return_amt is pased, return unclaimed - returne_amt else paid_amount - (claimed_amount + return_amount)
+# @frappe.whitelist()
+# def get_allocation_amount(paid_amount, claimed_amount, return_amount):
+# 	return paid_amount - (claimed_amount + return_amount)
+
+
 @frappe.whitelist()
-def get_allocation_amount(paid_amount, claimed_amount, return_amount):
-	return paid_amount - (claimed_amount + return_amount)
+def get_allocation_amount(paid_amount=None, claimed_amount=None, return_amount=None, unclaimed_amount=None):
+	if unclaimed_amount is not None and return_amount is not None:
+		return flt(unclaimed_amount) - flt(return_amount)
+	elif paid_amount is not None and claimed_amount is not None and return_amount is not None:
+		return flt(paid_amount) - (flt(claimed_amount) + flt(return_amount))
+	else:
+		frappe.throw(_("Invalid parameters provided. Please pass the required arguments."))

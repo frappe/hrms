@@ -256,20 +256,23 @@ class TestExpenseClaim(IntegrationTestCase):
 	def test_expense_claim_with_deducted_returned_advance(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
 			create_return_through_additional_salary,
+			get_advances_for_claim,
 			make_employee_advance,
 			make_journal_entry_for_advance,
 		)
-		from hrms.hr.doctype.expense_claim.expense_claim import get_advances
+		from hrms.hr.doctype.expense_claim.expense_claim import get_allocation_amount
 		from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
+		# create employee and employee advance
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
 		advance = make_employee_advance(employee_name, {"repay_unclaimed_amount_from_salary": 1})
 		journal_entry = make_journal_entry_for_advance(advance)
 		journal_entry.submit()
+		advance.reload()
 
-		args = {"type": "Deduction"}
-		create_salary_component("Advance Salary - Deduction", **args)
+		# set up salary components and structure
+		create_salary_component("Advance Salary - Deduction", type="Deduction")
 		make_salary_structure(
 			"Test Additional Salary for Advance Return",
 			"Monthly",
@@ -277,29 +280,36 @@ class TestExpenseClaim(IntegrationTestCase):
 			company="_Test Company",
 		)
 
-		advance.reload()
+		# create additional salary for advance return
 		additional_salary = create_return_through_additional_salary(advance)
 		additional_salary.salary_component = "Advance Salary - Deduction"
 		additional_salary.payroll_date = nowdate()
 		additional_salary.amount = 400
 		additional_salary.insert()
 		additional_salary.submit()
-
 		advance.reload()
+
 		self.assertEqual(advance.return_amount, 400)
 
+		# create an expense claim
 		payable_account = get_payable_account("_Test Company")
 		claim = make_expense_claim(
 			payable_account, 200, 200, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
 		)
-		advances = get_advances(claim.employee)
-		for entry in advances:
-			if entry.name == advance.name:
-				self.assertTrue(entry.return_amount, 400)
-				self.assertTrue(
-					entry.allocated_amount,
-					advance.paid_amount - (advance.claimed_amount + advance.return_amount),
-				)
+
+		# link advance to the claim
+		claim = get_advances_for_claim(claim, advance.name, amount=200)
+		claim.save()
+		claim.submit()
+
+		# verify the allocation amount
+		advance = claim.advances[0]
+		self.assertEqual(
+			get_allocation_amount(
+				unclaimed_amount=advance.unclaimed_amount, return_amount=advance.return_amount
+			),
+			600,
+		)
 
 	def test_expense_claim_gl_entry(self):
 		payable_account = get_payable_account(company_name)
