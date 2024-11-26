@@ -32,7 +32,7 @@ class EmployeeAdvance(Document):
 		self.set_pending_amount()
 
 	def on_cancel(self):
-		self.ignore_linked_doctypes = "GL Entry"
+		self.ignore_linked_doctypes = ("GL Entry", "Payment Ledger Entry")
 		self.check_linked_payment_entry()
 		self.set_status(update=True)
 

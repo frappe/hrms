@@ -24,8 +24,11 @@ class SalaryStructureAssignment(Document):
 		if not self.get("payroll_cost_centers"):
 			self.set_payroll_cost_centers()
 
-		self.validate_cost_center_distribution()
+		self.validate_cost_centers()
 		self.warn_about_missing_opening_entries()
+
+	def on_update_after_submit(self):
+		self.validate_cost_centers()
 
 	def validate_dates(self):
 		joining_date, relieving_date = frappe.db.get_value(
@@ -124,11 +127,25 @@ class SalaryStructureAssignment(Document):
 
 		return payroll_cost_center
 
-	def validate_cost_center_distribution(self):
-		if self.get("payroll_cost_centers"):
-			total_percentage = sum([flt(d.percentage) for d in self.get("payroll_cost_centers", [])])
-			if total_percentage != 100:
-				frappe.throw(_("Total percentage against cost centers should be 100"))
+	def validate_cost_centers(self):
+		if not self.get("payroll_cost_centers"):
+			return
+
+		total_percentage = 0
+		for entry in self.payroll_cost_centers:
+			company = frappe.db.get_value("Cost Center", entry.cost_center, "company")
+			if company != self.company:
+				frappe.throw(
+					_("Row {0}: Cost Center {1} does not belong to Company {2}").format(
+						entry.idx, frappe.bold(entry.cost_center), frappe.bold(self.company)
+					),
+					title=_("Invalid Cost Center"),
+				)
+
+			total_percentage += flt(entry.percentage)
+
+		if total_percentage != 100:
+			frappe.throw(_("Total percentage against cost centers should be 100"))
 
 	def warn_about_missing_opening_entries(self):
 		if (

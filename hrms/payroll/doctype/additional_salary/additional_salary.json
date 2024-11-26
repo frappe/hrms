@@ -60,8 +60,6 @@
    "search_index": 1
   },
   {
-   "fetch_from": "salary_component.amount",
-   "fetch_if_empty": 1,
    "fieldname": "amount",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -205,7 +203,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:05:58.117102",
+ "modified": "2024-11-14 16:51:17.594568",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Additional Salary",
