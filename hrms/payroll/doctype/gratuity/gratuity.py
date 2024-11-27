@@ -159,7 +159,7 @@ class Gratuity(AccountsController):
 		if rule.method == "Round off Work Experience":
 			work_experience = round(work_experience)
 		else:
-			work_experience = floor(work_experience)
+			work_experience = flt(work_experience, precision=1)
 
 		if work_experience < rule.minimum_year_for_gratuity:
 			frappe.throw(
