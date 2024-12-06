@@ -187,7 +187,7 @@
 								{{ _("Closes On") if status == "Open" else _("Closed On") }}
 							</div>
 							<div class="font-weight-bold">
-								{{ frappe.format_date(closes_on if status == "Open" else closed_on, "d MMM, YYYY") }}
+								{{ frappe.utils.format_date(closes_on if status == "Open" else closed_on, "d MMM, YYYY") }}
 							</div>
 						</div>
 					</div>

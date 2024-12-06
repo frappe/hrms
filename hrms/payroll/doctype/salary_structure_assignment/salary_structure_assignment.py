@@ -169,6 +169,9 @@ class SalaryStructureAssignment(Document):
 
 	@frappe.whitelist()
 	def are_opening_entries_required(self) -> bool:
+		if not get_tax_component(self.salary_structure):
+			return False
+
 		if self.has_emp_joined_after_payroll_period_start() and not self.has_existing_salary_slips():
 			return True
 		else:

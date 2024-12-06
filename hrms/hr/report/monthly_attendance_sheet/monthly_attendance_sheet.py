@@ -32,6 +32,9 @@ def execute(filters: Filters | None = None) -> tuple:
 	if not (filters.month and filters.year):
 		frappe.throw(_("Please select month and year."))
 
+	if not filters.company:
+		frappe.throw(_("Please select company."))
+
 	if filters.company:
 		filters.companies = [filters.company]
 		if filters.include_company_descendants:

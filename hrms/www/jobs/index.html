@@ -241,7 +241,7 @@
 							<p class="col-6 text-center mb-0">
 								{%- if jo.closes_on -%}
 									{{ _("Closes on:") + " " }}
-									<b>{{ frappe.format_date(jo.closes_on, "d MMM, YYYY") }}</b>
+									<b>{{ frappe.utils.format_date(jo.closes_on, "d MMM, YYYY") }}</b>
 								{% endif %}
 							</p>
 						</div>

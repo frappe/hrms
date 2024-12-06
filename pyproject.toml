@@ -12,6 +12,9 @@ dynamic = ["version"]
 requires = ["flit_core >=3.4,<4"]
 build-backend = "flit_core.buildapi"
 
+[tool.frappe.testing.function_type_validation]
+max_module_depth = 0
+
 [tool.ruff]
 line-length = 110
 target-version = "py310"

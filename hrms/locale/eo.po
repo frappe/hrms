@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-11-24 09:35+0000\n"
-"PO-Revision-Date: 2024-11-25 22:09\n"
+"POT-Creation-Date: 2024-12-01 09:34+0000\n"
+"PO-Revision-Date: 2024-12-04 23:45\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -2702,7 +2702,7 @@ msgstr "crwdns141204:0crwdne141204:0"
 msgid "Costing Details"
 msgstr "crwdns141206:0crwdne141206:0"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:139
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:156
 msgid "Could not find any salary slip(s) for the employee {0}"
 msgstr "crwdns149170:0{0}crwdne149170:0"
 
@@ -2924,7 +2924,7 @@ msgstr "crwdns105948:0crwdne105948:0"
 msgid "Currency "
 msgstr "crwdns141232:0crwdne141232:0"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:89
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:92
 msgid "Currency of selected Income Tax Slab should be {0} instead of {1}"
 msgstr "crwdns105988:0{0}crwdnd105988:0{1}crwdne105988:0"
 
@@ -4083,7 +4083,7 @@ msgstr "crwdns141362:0crwdne141362:0"
 #: hrms/hr/report/shift_attendance/shift_attendance.py:22
 #: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.js:8
 #: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.py:18
-#: hrms/hr/report/vehicle_expenses/vehicle_expenses.js:46
+#: hrms/hr/report/vehicle_expenses/vehicle_expenses.js:57
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.py:55
 #: hrms/hr/workspace/hr/hr.json
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
@@ -5721,7 +5721,7 @@ msgstr "crwdns141522:0crwdne141522:0"
 msgid "First Name "
 msgstr "crwdns141524:0crwdne141524:0"
 
-#: hrms/hr/report/vehicle_expenses/vehicle_expenses.js:15
+#: hrms/hr/report/vehicle_expenses/vehicle_expenses.js:29
 msgid "Fiscal Year"
 msgstr "crwdns107272:0crwdne107272:0"
 
@@ -5886,7 +5886,7 @@ msgstr "crwdns141548:0crwdne141548:0"
 #: hrms/hr/report/leave_ledger/leave_ledger.js:8
 #: hrms/hr/report/leave_ledger/leave_ledger.py:47
 #: hrms/hr/report/shift_attendance/shift_attendance.js:8
-#: hrms/hr/report/vehicle_expenses/vehicle_expenses.js:24
+#: hrms/hr/report/vehicle_expenses/vehicle_expenses.js:37
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
@@ -5905,11 +5905,11 @@ msgstr "crwdns107346:0crwdne107346:0"
 msgid "From Date must come before To Date"
 msgstr "crwdns107348:0crwdne107348:0"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:54
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:57
 msgid "From Date {0} cannot be after employee's relieving Date {1}"
 msgstr "crwdns107350:0{0}crwdnd107350:0{1}crwdne107350:0"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:46
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:49
 msgid "From Date {0} cannot be before employee's joining Date {1}"
 msgstr "crwdns107352:0{0}crwdnd107352:0{1}crwdne107352:0"
 
@@ -6924,7 +6924,7 @@ msgstr "crwdns107718:0crwdne107718:0"
 msgid "Income Tax Slab Other Charges"
 msgstr "crwdns107724:0crwdne107724:0"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:74
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:77
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr "crwdns141690:0{0}crwdnd141690:0{1}crwdne141690:0"
 
@@ -7175,6 +7175,10 @@ msgstr "crwdns141716:0crwdne141716:0"
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:164
 msgid "Invalid Additional Salary"
 msgstr "crwdns141718:0crwdne141718:0"
+
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:142
+msgid "Invalid Cost Center"
+msgstr "crwdns151884:0crwdne151884:0"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:319
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
@@ -8472,11 +8476,11 @@ msgstr "crwdns141914:0crwdne141914:0"
 msgid "Missing Fields"
 msgstr "crwdns108406:0crwdne108406:0"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:80
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:83
 msgid "Missing Mandatory Field"
 msgstr "crwdns141916:0crwdne141916:0"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:150
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:167
 msgid "Missing Opening Entries"
 msgstr "crwdns149172:0crwdne149172:0"
 
@@ -9579,7 +9583,7 @@ msgstr "crwdns108866:0crwdne108866:0"
 
 #: hrms/overrides/company.py:106
 #: hrms/patches/post_install/updates_for_multi_currency_payroll.py:65
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:103
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:106
 msgid "Payroll Payable"
 msgstr "crwdns108868:0crwdne108868:0"
 
@@ -9969,7 +9973,7 @@ msgstr "crwdns109032:0crwdne109032:0"
 msgid "Please specify the job applicant to be updated."
 msgstr "crwdns109034:0crwdne109034:0"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:141
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:158
 msgid "Please specify {0} and {1} (if any), for the correct tax calculation in future salary slips."
 msgstr "crwdns149176:0{0}crwdnd149176:0{1}crwdne149176:0"
 
@@ -10969,6 +10973,10 @@ msgstr "crwdns109398:0{0}crwdne109398:0"
 msgid "Row {0}# Paid Amount cannot be greater than requested advance amount"
 msgstr "crwdns109400:0{0}crwdne109400:0"
 
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:139
+msgid "Row {0}: Cost Center {1} does not belong to Company {2}"
+msgstr "crwdns151886:0{0}crwdnd151886:0{1}crwdnd151886:0{2}crwdne151886:0"
+
 #: hrms/payroll/doctype/gratuity_rule/gratuity_rule.py:15
 msgid "Row {0}: From (Year) can not be greater than To (Year)"
 msgstr "crwdns109402:0{0}crwdne109402:0"
@@ -11238,7 +11246,7 @@ msgstr "crwdns109512:0crwdne109512:0"
 msgid "Salary Structure Assignment field"
 msgstr "crwdns142340:0crwdne142340:0"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:41
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:44
 msgid "Salary Structure Assignment for Employee already exists"
 msgstr "crwdns109516:0crwdne109516:0"
 
@@ -11258,7 +11266,7 @@ msgstr "crwdns109522:0{0}crwdnd109522:0{1}crwdne109522:0"
 msgid "Salary Structure should have flexible benefit component(s) to dispense benefit amount"
 msgstr "crwdns109524:0crwdne109524:0"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:65
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:68
 msgid "Salary Structure {0} does not belong to company {1}"
 msgstr "crwdns109526:0{0}crwdnd109526:0{1}crwdne109526:0"
 
@@ -12476,7 +12484,7 @@ msgstr "crwdns110006:0crwdne110006:0"
 #. Label of the tax_deducted_till_date (Currency) field in DocType 'Salary
 #. Structure Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:145
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:162
 msgid "Tax Deducted Till Date"
 msgstr "crwdns110008:0crwdne110008:0"
 
@@ -12521,7 +12529,7 @@ msgstr "crwdns142504:0crwdne142504:0"
 #. Label of the taxable_earnings_till_date (Currency) field in DocType 'Salary
 #. Structure Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:144
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:161
 msgid "Taxable Earnings Till Date"
 msgstr "crwdns110026:0crwdne110026:0"
 
@@ -12682,7 +12690,7 @@ msgstr "crwdns110082:0{0}crwdne110082:0"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:37
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:20
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:202
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:219
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Stucture."
 msgstr "crwdns110084:0{0}crwdne110084:0"
 
@@ -12860,7 +12868,7 @@ msgstr "crwdns142554:0crwdne142554:0"
 #: hrms/hr/report/leave_ledger/leave_ledger.js:15
 #: hrms/hr/report/leave_ledger/leave_ledger.py:53
 #: hrms/hr/report/shift_attendance/shift_attendance.js:15
-#: hrms/hr/report/vehicle_expenses/vehicle_expenses.js:32
+#: hrms/hr/report/vehicle_expenses/vehicle_expenses.js:44
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
 #: hrms/payroll/doctype/salary_withholding_cycle/salary_withholding_cycle.json
@@ -13244,7 +13252,7 @@ msgstr "crwdns149072:0{0}crwdne149072:0"
 msgid "Total leaves allocated is mandatory for Leave Type {0}"
 msgstr "crwdns110314:0{0}crwdne110314:0"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:131
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:148
 msgid "Total percentage against cost centers should be 100"
 msgstr "crwdns110316:0crwdne110316:0"
 
@@ -13784,7 +13792,7 @@ msgid "Vegetarian"
 msgstr "crwdns142704:0crwdne142704:0"
 
 #. Label of a Link in the Expense Claims Workspace
-#: hrms/hr/report/vehicle_expenses/vehicle_expenses.js:40
+#: hrms/hr/report/vehicle_expenses/vehicle_expenses.js:51
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.py:27
 #: hrms/hr/workspace/expense_claims/expense_claims.json
 msgid "Vehicle"
