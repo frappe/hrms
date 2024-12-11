@@ -14,7 +14,13 @@
 	<tbody>
 		{% for(const [key, value] of Object.entries(data)) { %}
 			<tr>
+<<<<<<< HEAD
 				<td class="text-left"> {%= key %} </td>
+=======
+				<td class="text-left">
+                    <a href="/app/interview/{%= key %}"  target="_blank">{%= key %}</a>
+                </td>
+>>>>>>> da17577dc (chore: remove unused import)
 				<td class="text-left"> {%= value["interview_round"] %} </td>
 				<td class="text-left"> {%= frappe.datetime.str_to_user(value["scheduled_on"]) %} </td>
 				<td class="text-left"> {%= value["status"] %} </td>

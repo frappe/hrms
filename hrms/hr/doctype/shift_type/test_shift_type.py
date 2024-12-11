@@ -3,7 +3,11 @@
 from datetime import datetime, timedelta
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, get_time, get_year_ending, get_year_start, getdate, now_datetime
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -14,7 +18,11 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.tests.test_utils import add_date_to_holiday_list
 
 
+<<<<<<< HEAD
 class TestShiftType(FrappeTestCase):
+=======
+class TestShiftType(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		frappe.db.delete("Shift Type")
 		frappe.db.delete("Shift Assignment")

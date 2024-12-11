@@ -237,7 +237,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2022-04-07 09:50:33.145825",
+=======
+ "modified": "2024-03-27 13:10:00.219099",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Allocation",
@@ -277,7 +281,11 @@
  ],
  "search_fields": "employee,employee_name,leave_type,total_leaves_allocated",
  "show_name_in_global_search": 1,
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "timeline_field": "employee",

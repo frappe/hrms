@@ -2,10 +2,17 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
 
 
 class TestLeavePolicy(FrappeTestCase):
+=======
+from frappe.tests import IntegrationTestCase
+
+
+class TestLeavePolicy(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def test_max_leave_allowed(self):
 		random_leave_type = frappe.get_all("Leave Type", fields=["name", "max_leaves_allowed"])
 		if random_leave_type:

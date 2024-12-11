@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
 	"branches": ["version-15"],
+=======
+	"branches": ["version-14"],
+>>>>>>> da17577dc (chore: remove unused import)
 	"plugins": [
 		"@semantic-release/commit-analyzer", {
 			"preset": "angular",
@@ -10,7 +14,11 @@
 		"@semantic-release/release-notes-generator",
 		[
 			"@semantic-release/exec", {
+<<<<<<< HEAD
 				"prepareCmd": 'sed -ir -E "s/\"[0-9]+\.[0-9]+\.[0-9]+\"/\"${nextRelease.version}\"/" hrms/__init__.py'
+=======
+				"prepareCmd": 'sed -ir "s/[0-9]*\.[0-9]*\.[0-9]*/${nextRelease.version}/" hrms/__init__.py'
+>>>>>>> da17577dc (chore: remove unused import)
 			}
 		],
 		[

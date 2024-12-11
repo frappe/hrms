@@ -89,7 +89,11 @@
  "icon": "fa fa-calendar",
  "idx": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2022-11-04 14:18:25.192917",
+=======
+ "modified": "2024-03-27 13:10:00.587073",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Block List",
@@ -106,7 +110,11 @@
    "write": 1
   }
  ],
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "ASC",
  "states": []
 }

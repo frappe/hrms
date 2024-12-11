@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, flt, getdate
 
 from hrms.hr.doctype.interview.test_interview import (
@@ -12,7 +16,11 @@ from hrms.hr.doctype.interview.test_interview import (
 from hrms.tests.test_utils import create_job_applicant
 
 
+<<<<<<< HEAD
 class TestInterviewFeedback(FrappeTestCase):
+=======
+class TestInterviewFeedback(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def test_validation_for_skill_set(self):
 		frappe.set_user("Administrator")
 		job_applicant = create_job_applicant()

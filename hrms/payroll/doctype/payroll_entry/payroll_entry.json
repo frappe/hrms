@@ -336,7 +336,11 @@
  "icon": "fa fa-cog",
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-10-10 14:21:24.517349",
+=======
+ "modified": "2024-03-27 13:10:12.205570",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",
@@ -355,7 +359,11 @@
    "write": 1
   }
  ],
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": []
 }

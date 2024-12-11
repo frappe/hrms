@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
  "allow_copy": 0, 
  "allow_guest_to_view": 0, 
  "allow_import": 0, 
@@ -101,4 +102,47 @@
  "sort_order": "DESC", 
  "track_changes": 1, 
  "track_seen": 0
+=======
+ "actions": [],
+ "creation": "2018-04-13 16:01:20.928853",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "leave_type",
+  "annual_allocation"
+ ],
+ "fields": [
+  {
+   "columns": 3,
+   "fieldname": "leave_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Leave Type",
+   "options": "Leave Type",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "annual_allocation",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Annual Allocation",
+   "reqd": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2024-03-27 13:10:01.896848",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Leave Policy Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+>>>>>>> da17577dc (chore: remove unused import)
 }

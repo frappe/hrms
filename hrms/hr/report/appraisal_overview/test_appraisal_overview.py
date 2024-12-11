@@ -1,5 +1,9 @@
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -13,7 +17,11 @@ from hrms.hr.report.appraisal_overview.appraisal_overview import execute
 from hrms.tests.test_utils import create_company
 
 
+<<<<<<< HEAD
 class TestAppraisalOverview(FrappeTestCase):
+=======
+class TestAppraisalOverview(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		frappe.db.delete("Goal")
 		frappe.db.delete("Appraisal")

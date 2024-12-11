@@ -4,7 +4,11 @@
 from datetime import datetime, timedelta
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase, change_settings
+=======
+from frappe.tests import IntegrationTestCase, change_settings
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import (
 	add_days,
 	get_time,
@@ -28,7 +32,11 @@ from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, se
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 
 
+<<<<<<< HEAD
 class TestEmployeeCheckin(FrappeTestCase):
+=======
+class TestEmployeeCheckin(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		frappe.db.delete("Shift Type")
 		frappe.db.delete("Shift Assignment")

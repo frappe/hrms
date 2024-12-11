@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import (
 	add_days,
 	add_months,
@@ -27,7 +31,11 @@ from hrms.tests.test_utils import get_first_sunday
 test_records = frappe.get_test_records("Attendance")
 
 
+<<<<<<< HEAD
 class TestAttendance(FrappeTestCase):
+=======
+class TestAttendance(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 

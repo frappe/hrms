@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
  "allow_copy": 0,
  "allow_guest_to_view": 0,
  "allow_import": 0,
@@ -7,10 +8,15 @@
  "creation": "2016-11-08 04:58:20.001780",
  "custom": 0,
  "docstatus": 0,
+=======
+ "actions": [],
+ "creation": "2016-11-08 04:58:20.001780",
+>>>>>>> da17577dc (chore: remove unused import)
  "doctype": "DocType",
  "document_type": "Document",
  "editable_grid": 1,
  "engine": "InnoDB",
+<<<<<<< HEAD
  "fields": [
   {
    "allow_bulk_edit": 0,
@@ -104,6 +110,35 @@
    "search_index": 0,
    "set_only_once": 0,
    "unique": 0
+=======
+ "field_order": [
+  "daily_work_summary_group",
+  "status",
+  "email_sent_to"
+ ],
+ "fields": [
+  {
+   "fieldname": "daily_work_summary_group",
+   "fieldtype": "Link",
+   "label": "Daily Work Summary Group",
+   "options": "Daily Work Summary Group",
+   "read_only": 1
+  },
+  {
+   "default": "Open",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Open\nSent",
+   "read_only": 1
+  },
+  {
+   "fieldname": "email_sent_to",
+   "fieldtype": "Code",
+   "label": "Email Sent To",
+   "read_only": 1
+>>>>>>> da17577dc (chore: remove unused import)
   }
  ],
  "in_create": 1,
@@ -115,6 +150,7 @@
  "owner": "Administrator",
  "permissions": [
   {
+<<<<<<< HEAD
    "amend": 0,
    "apply_user_permissions": 0,
    "cancel": 0,
@@ -145,14 +181,27 @@
    "if_owner": 0,
    "import": 0,
    "permlevel": 0,
+=======
+   "read": 1,
+   "role": "Employee"
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+>>>>>>> da17577dc (chore: remove unused import)
    "print": 1,
    "read": 1,
    "report": 1,
    "role": "HR User",
+<<<<<<< HEAD
    "set_user_permissions": 0,
    "share": 1,
    "submit": 0,
    "write": 0
+=======
+   "share": 1
+>>>>>>> da17577dc (chore: remove unused import)
   }
  ],
  "quick_entry": 1,

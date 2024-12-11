@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import getdate
 
 import erpnext
@@ -13,7 +17,11 @@ from hrms.hr.doctype.upload_attendance.upload_attendance import get_data
 test_dependencies = ["Holiday List"]
 
 
+<<<<<<< HEAD
 class TestUploadAttendance(FrappeTestCase):
+=======
+class TestUploadAttendance(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	@classmethod
 	def setUpClass(cls):
 		super().setUpClass()

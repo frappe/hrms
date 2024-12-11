@@ -3,7 +3,11 @@
 
 import frappe
 from frappe.permissions import clear_user_permissions_for_doctype
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import (
 	add_days,
 	add_months,
@@ -77,7 +81,11 @@ _test_records = [
 ]
 
 
+<<<<<<< HEAD
 class TestLeaveApplication(FrappeTestCase):
+=======
+class TestLeaveApplication(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		for dt in [
 			"Leave Application",

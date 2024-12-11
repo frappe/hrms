@@ -86,11 +86,18 @@
   }
  ],
  "links": [],
+<<<<<<< HEAD
  "modified": "2022-01-18 19:27:35.649424",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appointment Letter",
  "name_case": "Title Case",
+=======
+ "modified": "2024-03-27 13:06:30.680330",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Appointment Letter",
+>>>>>>> da17577dc (chore: remove unused import)
  "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
@@ -120,7 +127,11 @@
   }
  ],
  "search_fields": "applicant_name, company",
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "title_field": "applicant_name",

@@ -258,7 +258,11 @@
   }
  ],
  "search_fields": "employee_name, salary_structure",
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name",

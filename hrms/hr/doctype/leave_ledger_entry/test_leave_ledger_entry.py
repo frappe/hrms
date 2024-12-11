@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils.data import add_to_date, today
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -10,7 +14,11 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import expire_allocation
 
 
+<<<<<<< HEAD
 class TestLeaveLedgerEntry(FrappeTestCase):
+=======
+class TestLeaveLedgerEntry(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		emp_id = make_employee("test_leave_allocation@salary.com", company="_Test Company")
 		self.employee = frappe.get_doc("Employee", emp_id)

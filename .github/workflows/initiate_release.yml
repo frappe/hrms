@@ -15,7 +15,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+<<<<<<< HEAD
         version: ["14"]
+=======
+        version: ["14", "15"]
+>>>>>>> da17577dc (chore: remove unused import)
 
     steps:
       - uses: octokit/request-action@v2.x

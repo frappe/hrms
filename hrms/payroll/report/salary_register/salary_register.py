@@ -48,7 +48,10 @@ def execute(filters=None):
 			"start_date": ss.start_date,
 			"end_date": ss.end_date,
 			"leave_without_pay": ss.leave_without_pay,
+<<<<<<< HEAD
 			"absent_days": ss.absent_days,
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 			"payment_days": ss.payment_days,
 			"currency": currency or company_currency,
 			"total_loan_repayment": ss.total_loan_repayment,
@@ -177,12 +180,15 @@ def get_columns(earning_types, ded_types):
 			"width": 50,
 		},
 		{
+<<<<<<< HEAD
 			"label": _("Absent Days"),
 			"fieldname": "absent_days",
 			"fieldtype": "Float",
 			"width": 50,
 		},
 		{
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 			"label": _("Payment Days"),
 			"fieldname": "payment_days",
 			"fieldtype": "Float",

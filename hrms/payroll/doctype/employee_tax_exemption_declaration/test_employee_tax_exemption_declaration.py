@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_months, getdate
 
 import erpnext
@@ -15,7 +19,11 @@ PAYROLL_PERIOD_START = "2022-01-01"
 PAYROLL_PERIOD_END = "2022-12-31"
 
 
+<<<<<<< HEAD
 class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
+=======
+class TestEmployeeTaxExemptionDeclaration(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		frappe.db.delete("Employee Tax Exemption Declaration")
 		frappe.db.delete("Salary Structure Assignment")

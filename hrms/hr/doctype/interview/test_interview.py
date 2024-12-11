@@ -7,7 +7,11 @@ import os
 import frappe
 from frappe import _
 from frappe.core.doctype.user_permission.test_user_permission import create_user
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, get_datetime, get_time, getdate, nowtime
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
@@ -23,7 +27,11 @@ from hrms.hr.doctype.job_applicant.job_applicant import get_interview_details
 from hrms.tests.test_utils import create_job_applicant, get_email_by_subject
 
 
+<<<<<<< HEAD
 class TestInterview(FrappeTestCase):
+=======
+class TestInterview(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def test_validations_for_designation(self):
 		job_applicant = create_job_applicant()
 		interview = create_interview_and_dependencies(
@@ -188,7 +196,11 @@ class TestInterview(FrappeTestCase):
 		job_applicant = create_job_applicant()
 		create_interview_and_dependencies(job_applicant.name, status="Cleared")
 
+<<<<<<< HEAD
 		update_job_applicant_status({"job_applicant": job_applicant.name, "status": "Accepted"})
+=======
+		update_job_applicant_status(job_applicant=job_applicant.name, status="Accepted")
+>>>>>>> da17577dc (chore: remove unused import)
 		job_applicant.reload()
 
 		self.assertEqual(job_applicant.status, "Accepted")

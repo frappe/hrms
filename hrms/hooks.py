@@ -6,6 +6,11 @@ app_email = "contact@frappe.io"
 app_license = "GNU General Public License (v3)"
 required_apps = ["frappe/erpnext"]
 source_link = "http://github.com/frappe/hrms"
+<<<<<<< HEAD
+=======
+app_logo_url = "/assets/hrms/images/frappe-hr-logo.svg"
+app_home = "/app/hr"
+>>>>>>> da17577dc (chore: remove unused import)
 
 add_to_apps_screen = [
 	{
@@ -239,7 +244,11 @@ scheduler_events = {
 	"monthly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_monthly"],
 }
 
+<<<<<<< HEAD
 advance_payment_doctypes = ["Gratuity", "Employee Advance"]
+=======
+advance_payment_payable_doctypes = ["Gratuity", "Employee Advance"]
+>>>>>>> da17577dc (chore: remove unused import)
 
 invoice_doctypes = ["Expense Claim"]
 

@@ -268,7 +268,11 @@
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2024-02-02 13:55:55.989527",
+=======
+ "modified": "2024-03-27 13:10:33.871355",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",
@@ -292,7 +296,11 @@
    "role": "Employee"
   }
  ],
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": []
 }

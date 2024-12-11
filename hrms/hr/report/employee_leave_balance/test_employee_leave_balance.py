@@ -3,7 +3,11 @@
 
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, add_months, flt, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -22,7 +26,11 @@ from hrms.tests.test_utils import get_first_sunday
 test_records = frappe.get_test_records("Leave Type")
 
 
+<<<<<<< HEAD
 class TestEmployeeLeaveBalance(FrappeTestCase):
+=======
+class TestEmployeeLeaveBalance(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		for dt in [
 			"Leave Application",

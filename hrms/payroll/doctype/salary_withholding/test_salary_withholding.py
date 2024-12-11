@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import get_first_day, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -12,7 +16,11 @@ from hrms.payroll.doctype.payroll_entry.test_payroll_entry import make_payroll_e
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 
+<<<<<<< HEAD
 class TestSalaryWithholding(FrappeTestCase):
+=======
+class TestSalaryWithholding(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		for dt in [
 			"Salary Withholding",

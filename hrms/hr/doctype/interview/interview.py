@@ -162,7 +162,11 @@ def get_feedback(interview: str) -> list[dict]:
 		.left_join(employee)
 		.on(interview_feedback.interviewer == employee.user_id)
 		.where((interview_feedback.interview == interview) & (interview_feedback.docstatus == 1))
+<<<<<<< HEAD
 		.orderby(interview_feedback.modified)
+=======
+		.orderby(interview_feedback.creation)
+>>>>>>> da17577dc (chore: remove unused import)
 	).run(as_dict=True)
 
 
@@ -185,6 +189,7 @@ def get_skill_wise_average_rating(interview: str) -> list[dict]:
 
 
 @frappe.whitelist()
+<<<<<<< HEAD
 def update_job_applicant_status(args):
 	import json
 
@@ -197,6 +202,15 @@ def update_job_applicant_status(args):
 
 		job_applicant = frappe.get_doc("Job Applicant", args["job_applicant"])
 		job_applicant.status = args["status"]
+=======
+def update_job_applicant_status(status: str, job_applicant: str):
+	try:
+		if not job_applicant:
+			frappe.throw(_("Please specify the job applicant to be updated."))
+
+		job_applicant = frappe.get_doc("Job Applicant", job_applicant)
+		job_applicant.status = status
+>>>>>>> da17577dc (chore: remove unused import)
 		job_applicant.save()
 
 		frappe.msgprint(

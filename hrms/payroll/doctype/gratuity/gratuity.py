@@ -1,9 +1,12 @@
 # Copyright (c) 2020, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+<<<<<<< HEAD
 
 from math import floor
 
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 import frappe
 from frappe import _, bold
 from frappe.query_builder.functions import Sum

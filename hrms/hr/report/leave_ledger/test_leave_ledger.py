@@ -1,5 +1,9 @@
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, add_months, flt, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -17,7 +21,11 @@ from hrms.hr.report.leave_ledger.leave_ledger import execute
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 
 
+<<<<<<< HEAD
 class TestLeaveLedger(FrappeTestCase):
+=======
+class TestLeaveLedger(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		for dt in [
 			"Leave Application",

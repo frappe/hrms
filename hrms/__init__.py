@@ -1,6 +1,10 @@
 import frappe
 
+<<<<<<< HEAD
 __version__ = "15.33.2"
+=======
+__version__ = "16.0.0-dev"
+>>>>>>> da17577dc (chore: remove unused import)
 
 
 def refetch_resource(cache_key: str | list, user=None):

@@ -314,7 +314,11 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			select start_date, end_date from `tabSalary Slip`
 			where docstatus = 1 and employee = %s
 			and ((%s between start_date and end_date) or (%s between start_date and end_date))
+<<<<<<< HEAD
 			order by modified desc limit 1
+=======
+			order by creation desc limit 1
+>>>>>>> da17577dc (chore: remove unused import)
 		""",
 			(self.employee, self.to_date, self.from_date),
 		)
@@ -350,8 +354,11 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			frappe.throw(_("You are not authorized to approve leaves on Block Dates"), LeaveDayBlockedError)
 
 	def validate_balance_leaves(self):
+<<<<<<< HEAD
 		precision = cint(frappe.db.get_single_value("System Settings", "float_precision")) or 2
 
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 		if self.from_date and self.to_date:
 			self.total_leave_days = get_number_of_leave_days(
 				self.employee,
@@ -378,9 +385,15 @@ class LeaveApplication(Document, PWANotificationsMixin):
 					consider_all_leaves_in_the_allocation_period=True,
 					for_consumption=True,
 				)
+<<<<<<< HEAD
 				leave_balance_for_consumption = flt(
 					leave_balance.get("leave_balance_for_consumption"), precision
 				)
+=======
+				self.leave_balance = leave_balance.get("leave_balance")
+				leave_balance_for_consumption = leave_balance.get("leave_balance_for_consumption")
+
+>>>>>>> da17577dc (chore: remove unused import)
 				if self.status != "Rejected" and (
 					leave_balance_for_consumption < self.total_leave_days or not leave_balance_for_consumption
 				):
@@ -850,7 +863,11 @@ def get_number_of_leave_days(
 def get_leave_details(employee, date, for_salary_slip=False):
 	allocation_records = get_leave_allocation_records(employee, date)
 	leave_allocation = {}
+<<<<<<< HEAD
 	precision = cint(frappe.db.get_single_value("System Settings", "float_precision")) or 2
+=======
+	precision = cint(frappe.db.get_single_value("System Settings", "float_precision", cache=True))
+>>>>>>> da17577dc (chore: remove unused import)
 
 	for d in allocation_records:
 		allocation = allocation_records.get(d, frappe._dict())

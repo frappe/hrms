@@ -1,4 +1,8 @@
 {
+<<<<<<< HEAD
+=======
+ "app": "hrms",
+>>>>>>> da17577dc (chore: remove unused import)
  "charts": [
   {
    "chart_name": "Attendance Count",
@@ -165,7 +169,11 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Shifts",
+<<<<<<< HEAD
    "link_count": 5,
+=======
+   "link_count": 6,
+>>>>>>> da17577dc (chore: remove unused import)
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -183,6 +191,19 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+<<<<<<< HEAD
+=======
+   "label": "Shift Location",
+   "link_count": 0,
+   "link_to": "Shift Location",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+>>>>>>> da17577dc (chore: remove unused import)
    "label": "Shift Assignment",
    "link_count": 0,
    "link_to": "Shift Assignment",
@@ -221,7 +242,11 @@
    "type": "Link"
   }
  ],
+<<<<<<< HEAD
  "modified": "2024-08-07 14:42:16.893494",
+=======
+ "modified": "2024-10-09 15:40:48.672192",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift & Attendance",
@@ -272,5 +297,10 @@
    "type": "DocType"
   }
  ],
+<<<<<<< HEAD
  "title": "Shift & Attendance"
+=======
+ "title": "Shift & Attendance",
+ "type": "Workspace"
+>>>>>>> da17577dc (chore: remove unused import)
 }

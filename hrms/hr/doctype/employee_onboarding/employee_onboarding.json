@@ -174,7 +174,11 @@
  ],
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2024-02-12 19:33:57.120384",
+=======
+ "modified": "2024-03-27 13:09:39.939109",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Onboarding",
@@ -197,6 +201,7 @@
    "write": 1
   },
   {
+<<<<<<< HEAD
     "amend": 1,
     "cancel": 1,
     "create": 1,
@@ -210,6 +215,21 @@
    }
  ],
  "sort_field": "modified",
+=======
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name",

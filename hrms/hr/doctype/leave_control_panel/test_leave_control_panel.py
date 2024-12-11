@@ -4,7 +4,11 @@
 from datetime import date
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -15,7 +19,11 @@ from hrms.hr.doctype.leave_policy.test_leave_policy import create_leave_policy
 from hrms.tests.test_utils import create_company
 
 
+<<<<<<< HEAD
 class TestLeaveControlPanel(FrappeTestCase):
+=======
+class TestLeaveControlPanel(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	@classmethod
 	def setUpClass(self):
 		create_company()

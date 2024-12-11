@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase, change_settings
+=======
+from frappe.tests import IntegrationTestCase, change_settings
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, nowdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -13,7 +17,11 @@ from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 test_dependencies = ["Shift Type"]
 
 
+<<<<<<< HEAD
 class TestShiftRequest(FrappeTestCase):
+=======
+class TestShiftRequest(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		for doctype in ["Shift Request", "Shift Assignment", "Shift Type"]:
 			frappe.db.delete(doctype)

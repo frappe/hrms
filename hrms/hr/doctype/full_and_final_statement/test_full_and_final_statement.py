@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, today
 
 from erpnext.assets.doctype.asset.test_asset import create_asset_data
@@ -10,7 +14,11 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from erpnext.stock.doctype.purchase_receipt.test_purchase_receipt import make_purchase_receipt
 
 
+<<<<<<< HEAD
 class TestFullandFinalStatement(FrappeTestCase):
+=======
+class TestFullandFinalStatement(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		for dt in ["Full and Final Statement", "Asset", "Asset Movement", "Asset Movement Item"]:
 			frappe.db.delete(dt)

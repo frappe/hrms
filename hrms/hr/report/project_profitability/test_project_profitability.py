@@ -1,5 +1,9 @@
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, getdate
 
 from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
@@ -13,7 +17,11 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import make_salary_struct
 test_dependencies = ["Customer"]
 
 
+<<<<<<< HEAD
 class TestProjectProfitability(FrappeTestCase):
+=======
+class TestProjectProfitability(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		frappe.db.delete("Timesheet")
 		emp = make_employee("test_employee_9@salary.com", company="_Test Company")

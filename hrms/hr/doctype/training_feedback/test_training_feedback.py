@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 
 from hrms.hr.doctype.training_event.test_training_event import (
 	create_training_event,
@@ -11,7 +15,11 @@ from hrms.hr.doctype.training_event.test_training_event import (
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_employee
 
 
+<<<<<<< HEAD
 class TestTrainingFeedback(FrappeTestCase):
+=======
+class TestTrainingFeedback(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		create_training_program("Basic Training")
 		self.employee = make_employee("robert_loan@trainig.com")

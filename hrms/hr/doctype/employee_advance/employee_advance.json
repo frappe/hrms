@@ -241,7 +241,11 @@
  ],
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2024-04-12 13:53:55.442187",
+=======
+ "modified": "2024-04-12 12:53:55.442187",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Advance",
@@ -276,7 +280,11 @@
   }
  ],
  "search_fields": "employee,employee_name",
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [
   {

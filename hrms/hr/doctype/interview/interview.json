@@ -184,11 +184,19 @@
    "fieldtype": "Section Break"
   },
   {
+<<<<<<< HEAD
    "fieldname": "interview_details",
    "fieldtype": "Table",
    "label": "Interviewers",
    "options": "Interview Detail",
    "allow_on_submit": 1
+=======
+   "allow_on_submit": 1,
+   "fieldname": "interview_details",
+   "fieldtype": "Table",
+   "label": "Interviewers",
+   "options": "Interview Detail"
+>>>>>>> da17577dc (chore: remove unused import)
   }
  ],
  "index_web_pages_for_search": 1,
@@ -199,7 +207,11 @@
    "link_fieldname": "interview"
   }
  ],
+<<<<<<< HEAD
  "modified": "2023-12-30 12:13:59.157555",
+=======
+ "modified": "2024-03-27 13:09:51.655366",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview",
@@ -263,7 +275,11 @@
    "write": 1
   }
  ],
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "title_field": "job_applicant",

@@ -234,7 +234,11 @@
  "icon": "fa fa-flag",
  "idx": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-10-23 15:34:04.281308",
+=======
+ "modified": "2024-03-27 13:10:02.014828",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Type",
@@ -268,7 +272,11 @@
    "role": "Employee"
   }
  ],
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "track_changes": 1

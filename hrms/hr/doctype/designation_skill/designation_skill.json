@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
  "allow_copy": 0,
  "allow_events_in_timeline": 0,
  "allow_guest_to_view": 0,
@@ -71,4 +72,36 @@
  "track_changes": 1,
  "track_seen": 0,
  "track_views": 0
+=======
+ "actions": [],
+ "creation": "2019-04-16 10:01:05.259881",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "skill"
+ ],
+ "fields": [
+  {
+   "fieldname": "skill",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Skill",
+   "options": "Skill"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2024-03-27 13:06:51.497980",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Designation Skill",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "creation",
+ "sort_order": "ASC",
+ "states": [],
+ "track_changes": 1
+>>>>>>> da17577dc (chore: remove unused import)
 }

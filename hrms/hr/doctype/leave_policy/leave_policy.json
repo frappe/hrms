@@ -45,7 +45,11 @@
  ],
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2022-01-19 13:07:40.556500",
+=======
+ "modified": "2024-03-27 13:10:01.602911",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Policy",
@@ -99,7 +103,11 @@
   }
  ],
  "search_fields": "title",
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "title_field": "title",

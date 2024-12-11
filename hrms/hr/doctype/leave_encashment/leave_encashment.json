@@ -167,7 +167,11 @@
  ],
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-10-23 16:49:16.737157",
+=======
+ "modified": "2024-03-27 13:10:01.094420",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Encashment",
@@ -233,7 +237,11 @@
   }
  ],
  "search_fields": "employee,employee_name",
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name",

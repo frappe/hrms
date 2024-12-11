@@ -3,7 +3,11 @@ on:
   workflow_dispatch:
   push:
     branches:
+<<<<<<< HEAD
       - version-15
+=======
+      - version-14
+>>>>>>> da17577dc (chore: remove unused import)
 jobs:
   release:
     name: Release
