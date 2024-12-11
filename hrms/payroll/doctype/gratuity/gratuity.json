@@ -59,8 +59,14 @@
   {
    "default": "0",
    "fieldname": "current_work_experience",
+<<<<<<< HEAD
    "fieldtype": "Int",
    "label": "Current Work Experience"
+=======
+   "fieldtype": "Float",
+   "label": "Current Work Experience",
+   "precision": "1"
+>>>>>>> ce75e4e9a (fix: set field level precision for work experience field in gratuity)
   },
   {
    "default": "0",
@@ -199,7 +205,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2024-03-15 02:50:10.282517",
+=======
+ "modified": "2024-12-11 08:46:04.751908",
+>>>>>>> ce75e4e9a (fix: set field level precision for work experience field in gratuity)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Gratuity",
