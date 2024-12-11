@@ -221,7 +221,6 @@
    "oldfieldname": "company",
    "oldfieldtype": "Link",
    "options": "Company",
-   "read_only": 1,
    "reqd": 1
   },
   {
@@ -390,7 +389,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-10-09 14:16:06.715586",
+ "modified": "2024-12-11 13:04:36.076474",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim",
