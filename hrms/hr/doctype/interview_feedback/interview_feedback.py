@@ -5,6 +5,10 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+<<<<<<< HEAD
+=======
+from frappe.query_builder.functions import Avg
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import flt, get_link_to_form, getdate
 
 
@@ -16,10 +20,17 @@ class InterviewFeedback(Document):
 		self.calculate_average_rating()
 
 	def on_submit(self):
+<<<<<<< HEAD
 		self.update_interview_details()
 
 	def on_cancel(self):
 		self.update_interview_details()
+=======
+		self.update_interview_average_rating()
+
+	def on_cancel(self):
+		self.update_interview_average_rating()
+>>>>>>> da17577dc (chore: remove unused import)
 
 	def validate_interviewer(self):
 		applicable_interviewers = get_applicable_interviewers(self.interview)
@@ -35,8 +46,13 @@ class InterviewFeedback(Document):
 
 		if getdate() < getdate(scheduled_date) and self.docstatus == 1:
 			frappe.throw(
+<<<<<<< HEAD
 				_("{0} submission before {1} is not allowed").format(
 					frappe.bold("Interview Feedback"), frappe.bold("Interview Scheduled Date")
+=======
+				_("Submission of {0} before {1} is not allowed").format(
+					frappe.bold(_("Interview Feedback")), frappe.bold(_("Interview Scheduled Date"))
+>>>>>>> da17577dc (chore: remove unused import)
 				)
 			)
 
@@ -63,6 +79,7 @@ class InterviewFeedback(Document):
 			total_rating / len(self.skill_assessment) if len(self.skill_assessment) else 0
 		)
 
+<<<<<<< HEAD
 	def update_interview_details(self):
 		doc = frappe.get_doc("Interview", self.interview)
 
@@ -87,3 +104,23 @@ class InterviewFeedback(Document):
 def get_applicable_interviewers(interview):
 	data = frappe.get_all("Interview Detail", filters={"parent": interview}, fields=["interviewer"])
 	return [d.interviewer for d in data]
+=======
+	def update_interview_average_rating(self):
+		interview_feedback = frappe.qb.DocType("Interview Feedback")
+		query = (
+			frappe.qb.from_(interview_feedback)
+			.where((interview_feedback.interview == self.interview) & (interview_feedback.docstatus == 1))
+			.select(Avg(interview_feedback.average_rating).as_("average"))
+		)
+		data = query.run(as_dict=True)
+		average_rating = data[0].average
+
+		interview = frappe.get_doc("Interview", self.interview)
+		interview.db_set("average_rating", average_rating)
+		interview.notify_update()
+
+
+@frappe.whitelist()
+def get_applicable_interviewers(interview: str) -> list[str]:
+	return frappe.get_all("Interview Detail", filters={"parent": interview}, pluck="interviewer")
+>>>>>>> da17577dc (chore: remove unused import)

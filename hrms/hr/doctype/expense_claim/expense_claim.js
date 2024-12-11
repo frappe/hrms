@@ -255,6 +255,7 @@ frappe.ui.form.on("Expense Claim", {
 		frm.toggle_reqd("mode_of_payment", frm.doc.is_paid);
 	},
 
+<<<<<<< HEAD
 	employee_name: function (frm) {
 		erpnext.expense_claim.set_title(frm);
 	},
@@ -263,6 +264,8 @@ frappe.ui.form.on("Expense Claim", {
 		erpnext.expense_claim.set_title(frm);
 	},
 
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 	employee: function (frm) {
 		frm.events.get_advances(frm);
 	},

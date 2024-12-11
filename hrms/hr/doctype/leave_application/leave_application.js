@@ -90,6 +90,11 @@ frappe.ui.form.on("Leave Application", {
 	},
 
 	refresh: function (frm) {
+<<<<<<< HEAD
+=======
+		hrms.leave_utils.add_view_ledger_button(frm);
+
+>>>>>>> da17577dc (chore: remove unused import)
 		if (frm.is_new()) {
 			frm.trigger("calculate_total_days");
 		}
@@ -109,6 +114,12 @@ frappe.ui.form.on("Leave Application", {
 		}
 
 		frm.trigger("set_employee");
+<<<<<<< HEAD
+=======
+		if (frm.doc.docstatus === 0) {
+			frm.trigger("make_dashboard");
+		}
+>>>>>>> da17577dc (chore: remove unused import)
 	},
 
 	async set_employee(frm) {

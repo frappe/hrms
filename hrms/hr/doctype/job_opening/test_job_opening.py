@@ -2,15 +2,27 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
+<<<<<<< HEAD
 from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
 
 
 class TestJobOpening(FrappeTestCase):
+=======
+from hrms.hr.doctype.job_opening.job_opening import close_expired_job_openings
+from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
+
+
+class TestJobOpening(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		frappe.db.delete("Staffing Plan")
 		frappe.db.delete("Staffing Plan Detail")
@@ -53,6 +65,28 @@ class TestJobOpening(FrappeTestCase):
 		opening_1.status = "Closed"
 		opening_1.save()
 
+<<<<<<< HEAD
+=======
+	def test_close_expired_job_openings(self):
+		today = getdate()
+
+		opening_1 = get_job_opening()
+		opening_1.posted_on = add_days(today, -2)
+		opening_1.closes_on = add_days(today, -1)
+		opening_1.insert()
+
+		opening_2 = get_job_opening(job_title="Designer New")
+		opening_2.insert()
+
+		close_expired_job_openings()
+		opening_1.reload()
+		opening_2.reload()
+
+		self.assertEqual(opening_1.status, "Closed")
+		self.assertEqual(opening_1.closed_on, today)
+		self.assertEqual(opening_2.status, "Open")
+
+>>>>>>> da17577dc (chore: remove unused import)
 
 def get_job_opening(**args):
 	args = frappe._dict(args)

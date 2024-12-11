@@ -1,5 +1,8 @@
 include MANIFEST.in
+<<<<<<< HEAD
 include requirements.txt
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 include *.json
 include *.md
 include *.py
@@ -15,4 +18,8 @@ recursive-include hrms *.png
 recursive-include hrms *.py
 recursive-include hrms *.svg
 recursive-include hrms *.txt
+<<<<<<< HEAD
 recursive-exclude hrms *.pyc
+=======
+recursive-exclude hrms *.pyc
+>>>>>>> da17577dc (chore: remove unused import)

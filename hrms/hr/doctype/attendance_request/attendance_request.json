@@ -11,13 +11,22 @@
   "employee",
   "employee_name",
   "department",
+<<<<<<< HEAD
   "column_break_5",
   "company",
+=======
+  "company",
+  "column_break_5",
+>>>>>>> da17577dc (chore: remove unused import)
   "from_date",
   "to_date",
   "half_day",
   "half_day_date",
   "include_holidays",
+<<<<<<< HEAD
+=======
+  "shift",
+>>>>>>> da17577dc (chore: remove unused import)
   "reason_section",
   "reason",
   "column_break_4",
@@ -120,6 +129,16 @@
    "read_only": 1
   },
   {
+<<<<<<< HEAD
+=======
+   "description": "Note: Shift will not be overwritten in existing attendance records",
+   "fieldname": "shift",
+   "fieldtype": "Link",
+   "label": "Shift",
+   "options": "Shift Type"
+  },
+  {
+>>>>>>> da17577dc (chore: remove unused import)
    "default": "0",
    "fieldname": "include_holidays",
    "fieldtype": "Check",
@@ -128,7 +147,11 @@
  ],
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-12-20 16:18:31.864719",
+=======
+ "modified": "2024-03-27 13:06:36.343091",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance Request",
@@ -193,7 +216,11 @@
    "write": 1
   }
  ],
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name",

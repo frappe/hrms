@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -17,7 +21,11 @@ from hrms.hr.doctype.goal.test_goal import create_goal
 from hrms.tests.test_utils import create_company
 
 
+<<<<<<< HEAD
 class TestAppraisal(FrappeTestCase):
+=======
+class TestAppraisal(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		frappe.db.delete("Goal")
 		frappe.db.delete("Appraisal")
@@ -69,7 +77,30 @@ class TestAppraisal(FrappeTestCase):
 	def test_final_score(self):
 		cycle = create_appraisal_cycle(designation="Engineer", kra_evaluation_method="Manual Rating")
 		cycle.create_appraisals()
+<<<<<<< HEAD
 
+=======
+		appraisal = self.setup_appraisal(cycle)
+
+		self.assertEqual(appraisal.final_score, 3.767)
+
+	def test_final_score_using_formula(self):
+		cycle = create_appraisal_cycle(designation="Engineer", kra_evaluation_method="Manual Rating")
+		cycle.update(
+			{
+				"calculate_final_score_based_on_formula": 1,
+				"final_score_formula": "(goal_score + self_appraisal_score + average_feedback_score)/3 if self_appraisal_score else (goal_score + self_appraisal_score)/2",
+			}
+		)
+		cycle.save()
+		cycle.create_appraisals()
+
+		appraisal = self.setup_appraisal(cycle)
+
+		self.assertEqual(appraisal.final_score, 3.767)
+
+	def setup_appraisal(self, cycle):
+>>>>>>> da17577dc (chore: remove unused import)
 		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
 		appraisal = frappe.get_doc("Appraisal", appraisal)
 
@@ -97,7 +128,12 @@ class TestAppraisal(FrappeTestCase):
 		feedback.submit()
 
 		appraisal.reload()
+<<<<<<< HEAD
 		self.assertEqual(appraisal.final_score, 3.767)
+=======
+
+		return appraisal
+>>>>>>> da17577dc (chore: remove unused import)
 
 	def test_goal_score(self):
 		"""

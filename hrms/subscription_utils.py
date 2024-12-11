@@ -69,10 +69,17 @@ def subscription_updated(app: str, plan: str):
 		update_erpnext_access()
 
 
+<<<<<<< HEAD
 def update_erpnext_access():
 	"""
 	ignores if user has no hrms subscription
 	enables erpnext workspaces and roles if user has subscribed to hrms and erpnext
+=======
+def update_erpnext_access(user_input: dict | None):
+	"""
+	Called from hooks after setup wizard completion, ignored if user has no hrms subscription
+	enables erpnext workspaces and roles if user has subscribed to both hrms and erpnext
+>>>>>>> da17577dc (chore: remove unused import)
 	disables erpnext workspaces and roles if user has subscribed to hrms but not erpnext
 	"""
 	if not frappe.utils.get_url().endswith(".frappehr.com"):
@@ -80,6 +87,10 @@ def update_erpnext_access():
 
 	update_erpnext_workspaces(True)
 	update_erpnext_roles(True)
+<<<<<<< HEAD
+=======
+	set_app_logo()
+>>>>>>> da17577dc (chore: remove unused import)
 
 
 def update_erpnext_workspaces(disable: bool = True):
@@ -89,12 +100,17 @@ def update_erpnext_workspaces(disable: bool = True):
 		"Accounting",
 		"Buying",
 		"CRM",
+<<<<<<< HEAD
 		"ERPNext Integrations",
 		"ERPNext Settings",
 		"Loans",
 		"Manufacturing",
 		"Quality",
 		"Retail",
+=======
+		"Manufacturing",
+		"Quality",
+>>>>>>> da17577dc (chore: remove unused import)
 		"Selling",
 		"Stock",
 		"Support",
@@ -108,7 +124,11 @@ def update_erpnext_workspaces(disable: bool = True):
 			workspace_doc.public = 0 if disable else 1
 			workspace_doc.save()
 		except Exception:
+<<<<<<< HEAD
 			pass
+=======
+			frappe.clear_messages()
+>>>>>>> da17577dc (chore: remove unused import)
 
 
 def update_erpnext_roles(disable: bool = True):
@@ -123,6 +143,13 @@ def update_erpnext_roles(disable: bool = True):
 			pass
 
 
+<<<<<<< HEAD
+=======
+def set_app_logo():
+	frappe.db.set_single_value("Navbar Settings", "app_logo", "/assets/hrms/images/frappe-hr-logo.svg")
+
+
+>>>>>>> da17577dc (chore: remove unused import)
 def get_erpnext_roles() -> set:
 	erpnext_roles = get_roles_for_app("erpnext")
 	hrms_roles = get_roles_for_app("hrms")

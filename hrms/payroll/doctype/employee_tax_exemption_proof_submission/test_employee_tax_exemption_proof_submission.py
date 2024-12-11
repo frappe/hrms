@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -16,7 +20,11 @@ from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_e
 )
 
 
+<<<<<<< HEAD
 class TestEmployeeTaxExemptionProofSubmission(FrappeTestCase):
+=======
+class TestEmployeeTaxExemptionProofSubmission(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		frappe.db.delete("Employee Tax Exemption Proof Submission")
 		frappe.db.delete("Salary Structure Assignment")

@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase, change_settings
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import flt, nowdate
 
 import erpnext
@@ -23,12 +27,22 @@ from hrms.payroll.doctype.salary_component.test_salary_component import create_s
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 
+<<<<<<< HEAD
 class TestEmployeeAdvance(FrappeTestCase):
 	def setUp(self):
 		frappe.db.delete("Employee Advance")
 
 	def test_paid_amount_and_status(self):
 		employee_name = make_employee("_T@employe.advance")
+=======
+class TestEmployeeAdvance(IntegrationTestCase):
+	def setUp(self):
+		frappe.db.delete("Employee Advance")
+		self.update_company_in_fiscal_year()
+
+	def test_paid_amount_and_status(self):
+		employee_name = make_employee("_T@employee.advance", "_Test Company")
+>>>>>>> da17577dc (chore: remove unused import)
 		advance = make_employee_advance(employee_name)
 
 		journal_entry = make_journal_entry_for_advance(advance)
@@ -44,7 +58,11 @@ class TestEmployeeAdvance(FrappeTestCase):
 		self.assertRaises(EmployeeAdvanceOverPayment, journal_entry1.submit)
 
 	def test_paid_amount_on_pe_cancellation(self):
+<<<<<<< HEAD
 		employee_name = make_employee("_T@employe.advance")
+=======
+		employee_name = make_employee("_T@employee.advance", "_Test Company")
+>>>>>>> da17577dc (chore: remove unused import)
 		advance = make_employee_advance(employee_name)
 
 		journal_entry = make_journal_entry_for_advance(advance)
@@ -159,14 +177,27 @@ class TestEmployeeAdvance(FrappeTestCase):
 		self.assertTrue(advance.name in advances)
 
 	def test_repay_unclaimed_amount_from_salary(self):
+<<<<<<< HEAD
 		employee_name = make_employee("_T@employe.advance")
+=======
+		employee_name = make_employee("_T@employee.advance", "_Test Company")
+>>>>>>> da17577dc (chore: remove unused import)
 		advance = make_employee_advance(employee_name, {"repay_unclaimed_amount_from_salary": 1})
 		journal_entry = make_journal_entry_for_advance(advance)
 		journal_entry.submit()
 
 		args = {"type": "Deduction"}
 		create_salary_component("Advance Salary - Deduction", **args)
+<<<<<<< HEAD
 		make_salary_structure("Test Additional Salary for Advance Return", "Monthly", employee=employee_name)
+=======
+		make_salary_structure(
+			"Test Additional Salary for Advance Return",
+			"Monthly",
+			employee=employee_name,
+			company="_Test Company",
+		)
+>>>>>>> da17577dc (chore: remove unused import)
 
 		# additional salary for 700 first
 		advance.reload()
@@ -199,7 +230,11 @@ class TestEmployeeAdvance(FrappeTestCase):
 		self.assertEqual(advance.status, "Paid")
 
 	def test_payment_entry_against_advance(self):
+<<<<<<< HEAD
 		employee_name = make_employee("_T@employee.advance")
+=======
+		employee_name = make_employee("_T@employee.advance", "_Test Company")
+>>>>>>> da17577dc (chore: remove unused import)
 		advance = make_employee_advance(employee_name)
 
 		pe = make_payment_entry(advance, 700)
@@ -218,7 +253,11 @@ class TestEmployeeAdvance(FrappeTestCase):
 		self.assertEqual(advance.paid_amount, 700)
 
 	def test_precision(self):
+<<<<<<< HEAD
 		employee_name = make_employee("_T@employee.advance")
+=======
+		employee_name = make_employee("_T@employee.advance", "_Test Company")
+>>>>>>> da17577dc (chore: remove unused import)
 		advance = make_employee_advance(employee_name)
 		journal_entry = make_journal_entry_for_advance(advance)
 		journal_entry.submit()
@@ -257,7 +296,11 @@ class TestEmployeeAdvance(FrappeTestCase):
 		self.assertEqual(advance.status, "Partly Claimed and Returned")
 
 	def test_pending_amount(self):
+<<<<<<< HEAD
 		employee_name = make_employee("_T@employee.advance")
+=======
+		employee_name = make_employee("_T@employee.advance", "_Test Company")
+>>>>>>> da17577dc (chore: remove unused import)
 
 		advance1 = make_employee_advance(employee_name)
 		make_payment_entry(advance1, 500)
@@ -271,6 +314,36 @@ class TestEmployeeAdvance(FrappeTestCase):
 		# (1000 - 500) + (1000 - 700)
 		self.assertEqual(advance3.pending_amount, 800)
 
+<<<<<<< HEAD
+=======
+	@change_settings("HR Settings", {"unlink_payment_on_cancellation_of_employee_advance": True})
+	def test_unlink_payment_entries(self):
+		employee_name = make_employee("_T@employee.advance", "_Test Company")
+		self.assertTrue(frappe.db.exists("Employee", employee_name))
+
+		advance = make_employee_advance(employee_name)
+		self.assertTrue(advance)
+
+		advance_payment = make_payment_entry(advance, 1000)
+		self.assertTrue(advance_payment)
+		self.assertEqual(advance_payment.total_allocated_amount, 1000)
+
+		advance.reload()
+		advance.cancel()
+		advance_payment.reload()
+		self.assertEqual(advance_payment.unallocated_amount, 1000)
+		self.assertEqual(advance_payment.references, [])
+
+	def update_company_in_fiscal_year(self):
+		fy_entries = frappe.get_all("Fiscal Year")
+		for fy_entry in fy_entries:
+			fiscal_year = frappe.get_doc("Fiscal Year", fy_entry.name)
+			company_list = [fy_c.company for fy_c in fiscal_year.companies if fy_c.company]
+			if "_Test Company" not in company_list:
+				fiscal_year.append("companies", {"company": "_Test Company"})
+				fiscal_year.save()
+
+>>>>>>> da17577dc (chore: remove unused import)
 
 def make_journal_entry_for_advance(advance):
 	journal_entry = frappe.get_doc(make_bank_entry("Employee Advance", advance.name))

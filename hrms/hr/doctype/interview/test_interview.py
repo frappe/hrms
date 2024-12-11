@@ -7,6 +7,7 @@ import os
 import frappe
 from frappe import _
 from frappe.core.doctype.user_permission.test_user_permission import create_user
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, get_time, getdate, nowtime
 
@@ -21,6 +22,25 @@ from hrms.tests.test_utils import create_job_applicant
 
 
 class TestInterview(FrappeTestCase):
+=======
+from frappe.tests import IntegrationTestCase
+from frappe.utils import add_days, get_datetime, get_time, getdate, nowtime
+
+from erpnext.setup.doctype.designation.test_designation import create_designation
+from erpnext.setup.doctype.employee.test_employee import make_employee
+
+from hrms.hr.doctype.interview.interview import (
+	DuplicateInterviewRoundError,
+	get_feedback,
+	get_skill_wise_average_rating,
+	update_job_applicant_status,
+)
+from hrms.hr.doctype.job_applicant.job_applicant import get_interview_details
+from hrms.tests.test_utils import create_job_applicant, get_email_by_subject
+
+
+class TestInterview(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def test_validations_for_designation(self):
 		job_applicant = create_job_applicant()
 		interview = create_interview_and_dependencies(
@@ -112,11 +132,87 @@ class TestInterview(FrappeTestCase):
 			},
 		)
 
+<<<<<<< HEAD
+=======
+	def test_skill_wise_average_rating(self):
+		from hrms.hr.doctype.interview_feedback.test_interview_feedback import create_interview_feedback
+
+		job_applicant = create_job_applicant()
+		interview = create_interview_and_dependencies(job_applicant.name)
+
+		create_interview_feedback(
+			interview.name,
+			"test_interviewer1@example.com",
+			[{"skill": "Python", "rating": 0.9}, {"skill": "JS", "rating": 0.8}],
+		)
+		create_interview_feedback(
+			interview.name,
+			"test_interviewer2@example.com",
+			[{"skill": "Python", "rating": 0.6}, {"skill": "JS", "rating": 0.9}],
+		)
+
+		ratings = get_skill_wise_average_rating(interview.name)
+		self.assertEqual(ratings, [{"skill": "Python", "rating": 0.75}, {"skill": "JS", "rating": 0.85}])
+
+	def test_get_feedback(self):
+		from hrms.hr.doctype.interview_feedback.test_interview_feedback import create_interview_feedback
+
+		job_applicant = create_job_applicant()
+		interview = create_interview_and_dependencies(job_applicant.name)
+		make_employee(
+			"test_interviewer2@example.com",
+			company="_Test Company",
+			first_name="Test",
+			date_of_joining=frappe.utils.add_years(getdate(), -2),
+			designation="Engineer",
+			user_id="test_interviewer2@example.com",
+		)
+
+		feedback_1 = create_interview_feedback(
+			interview.name,
+			"test_interviewer1@example.com",
+			[{"skill": "Python", "rating": 0.9}, {"skill": "JS", "rating": 0.8}],
+		)
+		feedback_2 = create_interview_feedback(
+			interview.name,
+			"test_interviewer2@example.com",
+			[{"skill": "Python", "rating": 0.6}, {"skill": "JS", "rating": 0.9}],
+		)
+
+		feedback = get_feedback(interview.name)
+		expected_data = [
+			{
+				"name": feedback_1.name,
+				"added_on": get_datetime(feedback_1.modified),
+				"user": feedback_1.interviewer,
+				"feedback": feedback_1.feedback,
+				"total_score": feedback_1.average_rating * 5,
+				"reviewer_name": None,
+				"reviewer_designation": None,
+			},
+			{
+				"name": feedback_2.name,
+				"added_on": get_datetime(feedback_2.modified),
+				"user": feedback_2.interviewer,
+				"feedback": feedback_2.feedback,
+				"total_score": feedback_2.average_rating * 5,
+				"reviewer_name": "Test",
+				"reviewer_designation": "Engineer",
+			},
+		]
+
+		self.assertEqual(feedback, expected_data)
+
+>>>>>>> da17577dc (chore: remove unused import)
 	def test_job_applicant_status_update_on_interview_submit(self):
 		job_applicant = create_job_applicant()
 		create_interview_and_dependencies(job_applicant.name, status="Cleared")
 
+<<<<<<< HEAD
 		update_job_applicant_status({"job_applicant": job_applicant.name, "status": "Accepted"})
+=======
+		update_job_applicant_status(job_applicant=job_applicant.name, status="Accepted")
+>>>>>>> da17577dc (chore: remove unused import)
 		job_applicant.reload()
 
 		self.assertEqual(job_applicant.status, "Accepted")
@@ -137,11 +233,23 @@ def create_interview_and_dependencies(
 	if designation:
 		designation = create_designation(designation_name="_Test_Sales_manager").name
 
+<<<<<<< HEAD
 	interviewer_1 = create_user("test_interviewer1@example.com", "Interviewer")
 	interviewer_2 = create_user("test_interviewer2@example.com", "Interviewer")
 
 	interview_round = create_interview_round(
 		"Technical Round", ["Python", "JS"], designation=designation, save=True
+=======
+	create_user("test_interviewer1@example.com", "Interviewer")
+	create_user("test_interviewer2@example.com", "Interviewer")
+
+	interview_round = create_interview_round(
+		"Technical Round",
+		["Python", "JS"],
+		["test_interviewer1@example.com", "test_interviewer2@example.com"],
+		designation,
+		True,
+>>>>>>> da17577dc (chore: remove unused import)
 	)
 
 	interview = frappe.new_doc("Interview")
@@ -150,9 +258,14 @@ def create_interview_and_dependencies(
 	interview.scheduled_on = scheduled_on or getdate()
 	interview.from_time = from_time or nowtime()
 	interview.to_time = to_time or nowtime()
+<<<<<<< HEAD
 
 	interview.append("interview_details", {"interviewer": interviewer_1.name})
 	interview.append("interview_details", {"interviewer": interviewer_2.name})
+=======
+	interview.append("interview_details", {"interviewer": "test_interviewer1@example.com"})
+	interview.append("interview_details", {"interviewer": "test_interviewer2@example.com"})
+>>>>>>> da17577dc (chore: remove unused import)
 
 	if status:
 		interview.status = status
@@ -164,9 +277,12 @@ def create_interview_and_dependencies(
 
 
 def create_interview_round(name, skill_set, interviewers=None, designation=None, save=True):
+<<<<<<< HEAD
 	if not interviewers:
 		interviewers = []
 
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 	create_skill_set(skill_set)
 	interview_round = frappe.new_doc("Interview Round")
 	interview_round.round_name = name
@@ -180,7 +296,11 @@ def create_interview_round(name, skill_set, interviewers=None, designation=None,
 		interview_round.append("expected_skill_set", {"skill": skill})
 
 	for interviewer in interviewers:
+<<<<<<< HEAD
 		interview_round.append("interviewer", {"user": interviewer})
+=======
+		interview_round.append("interviewers", {"user": interviewer})
+>>>>>>> da17577dc (chore: remove unused import)
 
 	if save:
 		interview_round.save()
@@ -245,7 +365,10 @@ def setup_reminder_settings():
 	hr_settings.interview_reminder_template = _("Interview Reminder")
 	hr_settings.feedback_reminder_notification_template = _("Interview Feedback Reminder")
 	hr_settings.save()
+<<<<<<< HEAD
 
 
 def get_email_by_subject(subject: str) -> bool:
 	return frappe.db.exists("Email Queue", {"message": ("like", f"%{subject}%")})
+=======
+>>>>>>> da17577dc (chore: remove unused import)

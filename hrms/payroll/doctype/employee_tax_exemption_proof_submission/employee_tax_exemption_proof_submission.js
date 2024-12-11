@@ -33,6 +33,12 @@ frappe.ui.form.on("Employee Tax Exemption Proof Submission", {
 	},
 
 	refresh: function (frm) {
+<<<<<<< HEAD
+=======
+		// hide attachments section in new forms in favor of the Attach Proof button against each proof
+		frm.toggle_display("attachments", frm.doc.attachments ? 1 : 0);
+
+>>>>>>> da17577dc (chore: remove unused import)
 		if (frm.doc.docstatus === 0) {
 			let filters = {
 				docstatus: 1,

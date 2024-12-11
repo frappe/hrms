@@ -54,6 +54,13 @@ frappe.ui.form.on("Full and Final Statement", {
 		frm.events.get_outstanding_statements(frm);
 	},
 
+<<<<<<< HEAD
+=======
+	total_asset_recovery_cost: function (frm) {
+		frm.trigger("calculate_total_receivable_amt");
+	},
+
+>>>>>>> da17577dc (chore: remove unused import)
 	get_outstanding_statements: function (frm) {
 		if (frm.doc.employee) {
 			frappe.call({
@@ -66,6 +73,48 @@ frappe.ui.form.on("Full and Final Statement", {
 		}
 	},
 
+<<<<<<< HEAD
+=======
+	calculate_total_payable_amt: function (frm) {
+		let total_payable_amount = 0;
+
+		frm.doc.payables?.forEach(
+			(row) => (total_payable_amount += flt(row.amount, precision("amount", row))),
+		);
+		frm.set_value(
+			"total_payable_amount",
+			flt(total_payable_amount, precision("total_payable_amount")),
+		);
+	},
+
+	calculate_total_receivable_amt: function (frm) {
+		let total_asset_recovery_cost = 0;
+		let total_receivable_amount = 0;
+
+		frm.doc.assets_allocated?.forEach((row) => {
+			if (row.action === "Recover Cost") {
+				total_asset_recovery_cost += flt(row.cost, precision("cost", row));
+			}
+		});
+
+		frm.doc.receivables?.forEach(
+			(row) => (total_receivable_amount += flt(row.amount, precision("amount", row))),
+		);
+
+		frm.set_value(
+			"total_asset_recovery_cost",
+			flt(total_asset_recovery_cost, precision("total_asset_recovery_cost")),
+		);
+		frm.set_value(
+			"total_receivable_amount",
+			flt(
+				total_asset_recovery_cost + total_receivable_amount,
+				precision("total_receivable_amount"),
+			),
+		);
+	},
+
+>>>>>>> da17577dc (chore: remove unused import)
 	create_journal_entry: function (frm) {
 		frappe.call({
 			method: "create_journal_entry",
@@ -80,7 +129,11 @@ frappe.ui.form.on("Full and Final Statement", {
 
 frappe.ui.form.on("Full and Final Outstanding Statement", {
 	reference_document: function (frm, cdt, cdn) {
+<<<<<<< HEAD
 		var child = locals[cdt][cdn];
+=======
+		const child = locals[cdt][cdn];
+>>>>>>> da17577dc (chore: remove unused import)
 		if (child.reference_document_type && child.reference_document) {
 			frappe.call({
 				method: "hrms.hr.doctype.full_and_final_statement.full_and_final_statement.get_account_and_amount",
@@ -98,6 +151,7 @@ frappe.ui.form.on("Full and Final Outstanding Statement", {
 		}
 	},
 
+<<<<<<< HEAD
 	amount: function (frm) {
 		var total_payable_amount = 0;
 		var total_receivable_amount = 0;
@@ -111,5 +165,22 @@ frappe.ui.form.on("Full and Final Outstanding Statement", {
 		});
 		frm.set_value("total_payable_amount", flt(total_payable_amount));
 		frm.set_value("total_receivable_amount", flt(total_receivable_amount));
+=======
+	amount: function (frm, cdt, cdn) {
+		const child_row = locals[cdt][cdn];
+		const table = child_row.parentfield;
+
+		if (table === "payables") {
+			frm.trigger("calculate_total_payable_amt");
+		} else {
+			frm.trigger("calculate_total_receivable_amt");
+		}
+	},
+});
+
+frappe.ui.form.on("Full and Final Asset", {
+	cost: function (frm, _cdt, _cdn) {
+		frm.trigger("calculate_total_receivable_amt");
+>>>>>>> da17577dc (chore: remove unused import)
 	},
 });

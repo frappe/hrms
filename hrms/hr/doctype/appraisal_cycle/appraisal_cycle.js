@@ -13,6 +13,10 @@ frappe.ui.form.on("Appraisal Cycle", {
 
 		frm.trigger("show_custom_buttons");
 		frm.trigger("show_appraisal_summary");
+<<<<<<< HEAD
+=======
+		frm.trigger("set_autocompletions_for_final_score_formula");
+>>>>>>> da17577dc (chore: remove unused import)
 	},
 
 	show_custom_buttons(frm) {
@@ -26,6 +30,7 @@ frappe.ui.form.on("Appraisal Cycle", {
 			frappe.set_route("Tree", "Goal");
 		});
 
+<<<<<<< HEAD
 		let className = "";
 		let appraisals_created = frm.doc.__onload?.appraisals_created;
 
@@ -48,6 +53,44 @@ frappe.ui.form.on("Appraisal Cycle", {
 			frm.add_custom_button(__("Mark as Completed"), () => {
 				frm.trigger("complete_cycle");
 			}).addClass(className);
+=======
+		let appraisals_created = frm.doc.__onload?.appraisals_created;
+
+		if (frm.doc.status !== "Completed") {
+			if (appraisals_created) {
+				frm.add_custom_button(__("Create Appraisals"), () => {
+					frm.trigger("create_appraisals");
+				});
+			} else {
+				frm.page.set_primary_action(__("Create Appraisals"), () => {
+					frm.trigger("create_appraisals");
+				});
+			}
+		}
+
+		if (frm.doc.status === "Not Started") {
+			if (appraisals_created) {
+				frm.page.set_primary_action(__("Start"), () => {
+					frm.set_value("status", "In Progress");
+					frm.save();
+				});
+			} else {
+				frm.add_custom_button(__("Start"), () => {
+					frm.set_value("status", "In Progress");
+					frm.save();
+				});
+			}
+		} else if (frm.doc.status === "In Progress") {
+			if (appraisals_created) {
+				frm.page.set_primary_action(__("Mark as Completed"), () => {
+					frm.trigger("complete_cycle");
+				});
+			} else {
+				frm.add_custom_button(__("Mark as Completed"), () => {
+					frm.trigger("complete_cycle");
+				});
+			}
+>>>>>>> da17577dc (chore: remove unused import)
 		} else if (frm.doc.status === "Completed") {
 			frm.add_custom_button(__("Mark as In Progress"), () => {
 				frm.set_value("status", "In Progress");
@@ -56,6 +99,39 @@ frappe.ui.form.on("Appraisal Cycle", {
 		}
 	},
 
+<<<<<<< HEAD
+=======
+	set_autocompletions_for_final_score_formula: async (frm) => {
+		const autocompletions = [
+			{
+				value: "goal_score",
+				score: 10,
+				meta: __("Total Goal Score"),
+			},
+			{
+				value: "average_feedback_score",
+				score: 10,
+				meta: __("Average Feedback Score"),
+			},
+			{
+				value: "self_appraisal_score",
+				score: 10,
+				meta: __("Self Appraisal Score"),
+			},
+		];
+
+		await Promise.all(
+			["Employee", "Appraisal Cycle", "Appraisal"].map((doctype) =>
+				frappe.model.with_doctype(doctype, () => {
+					autocompletions.push(...hrms.get_doctype_fields_for_autocompletion(doctype));
+				}),
+			),
+		);
+
+		frm.set_df_property("final_score_formula", "autocompletions", autocompletions);
+	},
+
+>>>>>>> da17577dc (chore: remove unused import)
 	get_employees(frm) {
 		frappe.call({
 			method: "set_employees",

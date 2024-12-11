@@ -86,4 +86,31 @@ frappe.ui.form.on("Additional Salary", {
 			},
 		});
 	},
+<<<<<<< HEAD
+=======
+
+	salary_component: function (frm) {
+		if (!frm.doc.ref_doctype) {
+			frm.trigger("get_salary_component_amount");
+		}
+	},
+
+	get_salary_component_amount: function (frm) {
+		frappe.call({
+			method: "frappe.client.get_value",
+			args: {
+				doctype: "Salary Component",
+				fieldname: "amount",
+				filters: {
+					name: frm.doc.salary_component,
+				},
+			},
+			callback: function (data) {
+				if (data.message) {
+					frm.set_value("amount", data.message.amount);
+				}
+			},
+		});
+	},
+>>>>>>> da17577dc (chore: remove unused import)
 });

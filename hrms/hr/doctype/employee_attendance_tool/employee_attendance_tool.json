@@ -21,7 +21,12 @@
   "column_break_kecn",
   "shift",
   "marked_attendance_section",
+<<<<<<< HEAD
   "marked_attendance_html"
+=======
+  "marked_attendance_html",
+  "column_break_khjs"
+>>>>>>> da17577dc (chore: remove unused import)
  ],
  "fields": [
   {
@@ -124,12 +129,23 @@
    "fieldtype": "Link",
    "label": "Shift",
    "options": "Shift Type"
+<<<<<<< HEAD
+=======
+  },
+  {
+   "fieldname": "column_break_khjs",
+   "fieldtype": "Column Break"
+>>>>>>> da17577dc (chore: remove unused import)
   }
  ],
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-02-28 14:13:59.849205",
+=======
+ "modified": "2024-07-08 20:02:36.408240",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Attendance Tool",
@@ -142,7 +158,11 @@
    "write": 1
   }
  ],
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": []
 }

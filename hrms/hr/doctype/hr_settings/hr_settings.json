@@ -46,7 +46,16 @@
   "employee_exit_section",
   "exit_questionnaire_web_form",
   "column_break_34",
+<<<<<<< HEAD
   "exit_questionnaire_notification_template"
+=======
+  "exit_questionnaire_notification_template",
+  "attendance_settings_section",
+  "allow_employee_checkin_from_mobile_app",
+  "allow_geolocation_tracking",
+  "unlink_payment_section",
+  "unlink_payment_on_cancellation_of_employee_advance"
+>>>>>>> da17577dc (chore: remove unused import)
  ],
  "fields": [
   {
@@ -287,7 +296,11 @@
    "read_only": 1
   },
   {
+<<<<<<< HEAD
    "default": "1",
+=======
+   "default": "0",
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "allow_multiple_shift_assignments",
    "fieldtype": "Check",
    "label": "Allow Multiple Shift Assignments for Same Date"
@@ -296,13 +309,48 @@
    "fieldname": "shift_settings_section",
    "fieldtype": "Section Break",
    "label": "Shift Settings"
+<<<<<<< HEAD
+=======
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_employee_checkin_from_mobile_app",
+   "fieldtype": "Check",
+   "label": "Allow Employee Checkin from Mobile App"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_geolocation_tracking",
+   "fieldtype": "Check",
+   "label": "Allow Geolocation Tracking"
+  },
+  {
+   "fieldname": "attendance_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Attendance Settings"
+  },
+  {
+   "fieldname": "unlink_payment_section",
+   "fieldtype": "Section Break",
+   "label": "Unlink Payment"
+  },
+  {
+   "default": "0",
+   "fieldname": "unlink_payment_on_cancellation_of_employee_advance",
+   "fieldtype": "Check",
+   "label": " Unlink Payment on Cancellation of Employee Advance"
+>>>>>>> da17577dc (chore: remove unused import)
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2024-06-26 15:20:17.802079",
+=======
+ "modified": "2024-09-29 12:49:16.175079",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
@@ -337,8 +385,16 @@
    "role": "Employee"
   }
  ],
+<<<<<<< HEAD
  "sort_field": "modified",
  "sort_order": "ASC",
  "states": [],
  "track_changes": 1
 }
+=======
+ "sort_field": "creation",
+ "sort_order": "ASC",
+ "states": [],
+ "track_changes": 1
+}
+>>>>>>> da17577dc (chore: remove unused import)

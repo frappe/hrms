@@ -45,8 +45,12 @@
   {
    "fieldname": "expected_average_rating",
    "fieldtype": "Rating",
+<<<<<<< HEAD
    "label": "Expected Average Rating",
    "reqd": 1
+=======
+   "label": "Expected Average Rating"
+>>>>>>> da17577dc (chore: remove unused import)
   },
   {
    "fieldname": "column_break_3",
@@ -56,8 +60,12 @@
    "fieldname": "interview_type",
    "fieldtype": "Link",
    "label": "Interview Type",
+<<<<<<< HEAD
    "options": "Interview Type",
    "reqd": 1
+=======
+   "options": "Interview Type"
+>>>>>>> da17577dc (chore: remove unused import)
   },
   {
    "fieldname": "interviewers",
@@ -72,6 +80,10 @@
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview Round",
+<<<<<<< HEAD
+=======
+ "naming_rule": "By fieldname",
+>>>>>>> da17577dc (chore: remove unused import)
  "owner": "Administrator",
  "permissions": [
   {
@@ -112,7 +124,13 @@
    "write": 1
   }
  ],
+<<<<<<< HEAD
  "sort_field": "modified",
  "sort_order": "DESC",
+=======
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+>>>>>>> da17577dc (chore: remove unused import)
  "track_changes": 1
 }

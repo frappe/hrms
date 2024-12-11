@@ -20,17 +20,28 @@ repos:
     rev: v3.1.0
     hooks:
       - id: prettier
+<<<<<<< HEAD
         types_or: [javascript, vue, css, scss]
         # Ignore any files that might contain jinja / bundles
         exclude: |
             (?x)^(
+=======
+        types_or: [javascript, ts, vue, css, scss]
+        # Ignore frontend folder and any files that might contain jinja / bundles
+        exclude: |
+            (?x)^(
+                frontend/.*|
+>>>>>>> da17577dc (chore: remove unused import)
                 hrms/public/dist/.*|
                 .*node_modules.*|
                 .*boilerplate.*|
                 hrms/templates/includes/.*|
                 hrms/hr/doctype/employee_promotion/employee_promotion.js|
                 hrms/hr/doctype/employee_transfer/employee_transfer.js|
+<<<<<<< HEAD
                 hrms/payroll/doctype/salary_structure/salary_structure.js|
+=======
+>>>>>>> da17577dc (chore: remove unused import)
             )$
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
@@ -46,4 +57,8 @@ repos:
 ci:
     autoupdate_schedule: weekly
     skip: []
+<<<<<<< HEAD
     submodules: false
+=======
+    submodules: false
+>>>>>>> da17577dc (chore: remove unused import)

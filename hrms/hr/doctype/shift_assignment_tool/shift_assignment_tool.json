@@ -1,0 +1,215 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "allow_rename": 1,
+ "creation": "2024-03-19 15:07:00.469939",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "action",
+  "column_break_dnmy",
+  "company",
+  "shift_assignment_details_section",
+  "shift_type",
+  "status",
+  "column_break_ybmd",
+  "start_date",
+  "end_date",
+  "shift_request_filters_section",
+  "shift_type_filter",
+  "approver",
+  "column_break_gwjg",
+  "from_date",
+  "to_date",
+  "quick_filters_section",
+  "branch",
+  "department",
+  "designation",
+  "column_break_zius",
+  "grade",
+  "employment_type",
+  "advanced_filters_section",
+  "filter_list",
+  "select_rows_section",
+  "employees_html"
+ ],
+ "fields": [
+  {
+   "default": "Assign Shift",
+   "fieldname": "action",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Action",
+   "options": "Assign Shift\nProcess Shift Requests",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_dnmy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "shift_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Shift Type",
+   "mandatory_depends_on": "eval:doc.action === \"Assign Shift\"",
+   "options": "Shift Type"
+  },
+  {
+   "default": "Active",
+   "description": "When set to 'Inactive', employees with conflicting active shifts will not be excluded.",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Active\nInactive"
+  },
+  {
+   "fieldname": "column_break_ybmd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Start Date",
+   "mandatory_depends_on": "eval:doc.action === \"Assign Shift\""
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "quick_filters_section",
+   "fieldtype": "Section Break",
+   "label": "Quick Filters"
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "Branch"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "column_break_zius",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employment_type",
+   "fieldtype": "Link",
+   "label": "Employment Type",
+   "options": "Employment Type"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "advanced_filters_section",
+   "fieldtype": "Section Break",
+   "label": "Advanced Filters"
+  },
+  {
+   "fieldname": "filter_list",
+   "fieldtype": "HTML",
+   "label": "Filter List"
+  },
+  {
+   "fieldname": "employees_html",
+   "fieldtype": "HTML",
+   "label": "Employees HTML"
+  },
+  {
+   "fieldname": "shift_type_filter",
+   "fieldtype": "Link",
+   "label": "Shift Type",
+   "options": "Shift Type"
+  },
+  {
+   "fieldname": "approver",
+   "fieldtype": "Link",
+   "label": "Approver",
+   "options": "User"
+  },
+  {
+   "fieldname": "column_break_gwjg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Shift Requests ending before this date will be excluded.",
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date"
+  },
+  {
+   "description": "Shift Requests starting after this date will be excluded.",
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date"
+  },
+  {
+   "depends_on": "eval:doc.action === \"Process Shift Requests\"",
+   "fieldname": "shift_request_filters_section",
+   "fieldtype": "Section Break",
+   "label": "Shift Request Filters"
+  },
+  {
+   "depends_on": "eval:doc.action === \"Assign Shift\"",
+   "fieldname": "shift_assignment_details_section",
+   "fieldtype": "Section Break",
+   "label": "Shift Assignment Details"
+  },
+  {
+   "fieldname": "grade",
+   "fieldtype": "Link",
+   "label": "Employee Grade",
+   "options": "Employee Grade"
+  },
+  {
+   "fieldname": "select_rows_section",
+   "fieldtype": "Section Break",
+   "label": "Select Employees"
+  }
+ ],
+ "hide_toolbar": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-03-27 17:54:33.829320",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Shift Assignment Tool",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "HR User",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "read_only": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

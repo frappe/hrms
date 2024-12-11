@@ -66,7 +66,10 @@
    "reqd": 1
   },
   {
+<<<<<<< HEAD
    "allow_in_quick_entry": 1,
+=======
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "average_rating",
    "fieldtype": "Rating",
    "in_list_view": 1,
@@ -124,10 +127,18 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2021-09-30 13:30:49.955352",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview Feedback",
+=======
+ "modified": "2024-03-27 13:09:51.973613",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Interview Feedback",
+ "naming_rule": "Expression (old style)",
+>>>>>>> da17577dc (chore: remove unused import)
  "owner": "Administrator",
  "permissions": [
   {
@@ -164,8 +175,14 @@
   }
  ],
  "quick_entry": 1,
+<<<<<<< HEAD
  "sort_field": "modified",
  "sort_order": "DESC",
+=======
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+>>>>>>> da17577dc (chore: remove unused import)
  "title_field": "interviewer",
  "track_changes": 1
 }

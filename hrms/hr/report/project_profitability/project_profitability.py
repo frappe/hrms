@@ -98,10 +98,15 @@ def get_standard_working_hours() -> float | None:
 	standard_working_hours = frappe.db.get_single_value("HR Settings", "standard_working_hours")
 	if not standard_working_hours:
 		frappe.throw(
+<<<<<<< HEAD
 			_(
 				"The metrics for this report are calculated based on the Standard Working Hours. Please set {0} in {1}."
 			).format(
 				frappe.bold("Standard Working Hours"),
+=======
+			_("The metrics for this report are calculated based on the {0}. Please set {0} in {1}.").format(
+				frappe.bold(_("Standard Working Hours")),
+>>>>>>> da17577dc (chore: remove unused import)
 				frappe.utils.get_link_to_form("HR Settings", "HR Settings"),
 			)
 		)

@@ -60,8 +60,11 @@
    "search_index": 1
   },
   {
+<<<<<<< HEAD
    "fetch_from": "salary_component.amount",
    "fetch_if_empty": 1,
+=======
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "amount",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -205,7 +208,11 @@
  ],
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-03-14 10:31:03.071277",
+=======
+ "modified": "2024-11-14 16:51:17.594568",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Additional Salary",
@@ -242,7 +249,11 @@
   }
  ],
  "search_fields": "employee_name",
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name",

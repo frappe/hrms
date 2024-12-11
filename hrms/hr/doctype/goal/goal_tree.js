@@ -246,6 +246,7 @@ frappe.treeview_settings["Goal"] = {
 					],
 					primary_action: function () {
 						dialog.hide();
+<<<<<<< HEAD
 						return frappe
 							.call({
 								method: "hrms.hr.doctype.goal.goal.update_progress",
@@ -269,12 +270,58 @@ frappe.treeview_settings["Goal"] = {
 									frappe.msgprint(__("Could not update progress"));
 								}
 							});
+=======
+						return update_progress(node, dialog.get_values()["progress"]);
+>>>>>>> da17577dc (chore: remove unused import)
 					},
 					primary_action_label: __("Update"),
 				});
 				dialog.show();
 			},
 		},
+<<<<<<< HEAD
 	],
 	extend_toolbar: true,
 };
+=======
+		{
+			label: __("Mark as Completed"),
+			condition: function (node) {
+				return !node.is_root && !node.expandable && node.data.status != "Completed";
+			},
+			click: function (node) {
+				frappe.confirm(__("Mark {0} as Completed?", [node.label.bold()]), () =>
+					update_progress(node, 100),
+				);
+			},
+		},
+	],
+	extend_toolbar: true,
+};
+
+function update_progress(node, progress) {
+	return frappe
+		.call({
+			method: "hrms.hr.doctype.goal.goal.update_progress",
+			args: {
+				goal: node.data.value,
+				progress: progress,
+			},
+		})
+		.then((r) => {
+			if (!r.exc && r.message) {
+				frappe.treeview_settings["Goal"].treeview.tree.load_children(
+					frappe.treeview_settings["Goal"].treeview.tree.root_node,
+					true,
+				);
+
+				frappe.show_alert({
+					message: __("Goal updated successfully"),
+					indicator: "green",
+				});
+			} else {
+				frappe.msgprint(__("Could not update Goal"));
+			}
+		});
+}
+>>>>>>> da17577dc (chore: remove unused import)

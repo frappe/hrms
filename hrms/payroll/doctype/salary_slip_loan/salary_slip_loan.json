@@ -6,7 +6,11 @@
  "engine": "InnoDB",
  "field_order": [
   "loan",
+<<<<<<< HEAD
   "loan_type",
+=======
+  "loan_product",
+>>>>>>> da17577dc (chore: remove unused import)
   "loan_account",
   "interest_income_account",
   "column_break_4",
@@ -76,11 +80,19 @@
    "read_only": 1
   },
   {
+<<<<<<< HEAD
    "fetch_from": "loan.loan_type",
    "fieldname": "loan_type",
    "fieldtype": "Link",
    "label": "Loan Type",
    "options": "Loan Type",
+=======
+   "fetch_from": "loan.loan_product",
+   "fieldname": "loan_product",
+   "fieldtype": "Link",
+   "label": "Loan Product",
+   "options": "Loan Product",
+>>>>>>> da17577dc (chore: remove unused import)
    "read_only": 1
   }
  ],

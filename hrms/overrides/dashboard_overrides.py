@@ -23,7 +23,16 @@ def get_dashboard_for_employee(data):
 			},
 			{
 				"label": _("Exit"),
+<<<<<<< HEAD
 				"items": ["Employee Separation", "Exit Interview", "Full and Final Statement"],
+=======
+				"items": [
+					"Employee Separation",
+					"Exit Interview",
+					"Full and Final Statement",
+					"Salary Withholding",
+				],
+>>>>>>> da17577dc (chore: remove unused import)
 			},
 			{"label": _("Shift"), "items": ["Shift Request", "Shift Assignment"]},
 			{"label": _("Expense"), "items": ["Expense Claim", "Travel Request", "Employee Advance"]},

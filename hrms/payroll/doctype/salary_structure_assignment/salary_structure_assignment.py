@@ -7,12 +7,18 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cint, flt, get_link_to_form, getdate
 
+<<<<<<< HEAD
+=======
+from hrms.payroll.doctype.payroll_period.payroll_period import get_payroll_period
+
+>>>>>>> da17577dc (chore: remove unused import)
 
 class DuplicateAssignment(frappe.ValidationError):
 	pass
 
 
 class SalaryStructureAssignment(Document):
+<<<<<<< HEAD
 	def onload(self):
 		if self.employee:
 			self.set_onload(
@@ -20,12 +26,15 @@ class SalaryStructureAssignment(Document):
 				self.earning_and_deduction_entries_does_not_exists(),
 			)
 
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 	def validate(self):
 		self.validate_dates()
 		self.validate_company()
 		self.validate_income_tax_slab()
 		self.set_payroll_payable_account()
 
+<<<<<<< HEAD
 		if self.earning_and_deduction_entries_does_not_exists():
 			if not self.taxable_earnings_till_date and not self.tax_deducted_till_date:
 				frappe.msgprint(
@@ -44,10 +53,16 @@ class SalaryStructureAssignment(Document):
 					title=_("Warning"),
 				)
 
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 		if not self.get("payroll_cost_centers"):
 			self.set_payroll_cost_centers()
 
 		self.validate_cost_centers()
+<<<<<<< HEAD
+=======
+		self.warn_about_missing_opening_entries()
+>>>>>>> da17577dc (chore: remove unused import)
 
 	def on_update_after_submit(self):
 		self.validate_cost_centers()
@@ -169,6 +184,7 @@ class SalaryStructureAssignment(Document):
 		if total_percentage != 100:
 			frappe.throw(_("Total percentage against cost centers should be 100"))
 
+<<<<<<< HEAD
 	@frappe.whitelist()
 	def earning_and_deduction_entries_does_not_exists(self):
 		if self.enabled_settings_to_specify_earnings_and_deductions_till_date():
@@ -217,6 +233,57 @@ class SalaryStructureAssignment(Document):
 		else:
 			return False
 
+=======
+	def warn_about_missing_opening_entries(self):
+		if (
+			self.are_opening_entries_required()
+			and not self.taxable_earnings_till_date
+			and not self.tax_deducted_till_date
+		):
+			msg = _("Could not find any salary slip(s) for the employee {0}").format(self.employee)
+			msg += "<br><br>"
+			msg += _(
+				"Please specify {0} and {1} (if any), for the correct tax calculation in future salary slips."
+			).format(
+				frappe.bold(_("Taxable Earnings Till Date")),
+				frappe.bold(_("Tax Deducted Till Date")),
+			)
+			frappe.msgprint(
+				msg,
+				indicator="orange",
+				title=_("Missing Opening Entries"),
+			)
+
+	@frappe.whitelist()
+	def are_opening_entries_required(self) -> bool:
+		if not get_tax_component(self.salary_structure):
+			return False
+
+		if self.has_emp_joined_after_payroll_period_start() and not self.has_existing_salary_slips():
+			return True
+		else:
+			if not self.docstatus.is_draft() and (
+				self.taxable_earnings_till_date or self.tax_deducted_till_date
+			):
+				return True
+			return False
+
+	def has_existing_salary_slips(self) -> bool:
+		return bool(
+			frappe.db.exists(
+				"Salary Slip",
+				{"employee": self.employee, "docstatus": 1},
+			)
+		)
+
+	def has_emp_joined_after_payroll_period_start(self) -> bool:
+		date_of_joining = getdate(frappe.db.get_value("Employee", self.employee, "date_of_joining"))
+		payroll_period = get_payroll_period(self.from_date, self.from_date, self.company)
+		if not payroll_period or date_of_joining > getdate(payroll_period.start_date):
+			return True
+		return False
+
+>>>>>>> da17577dc (chore: remove unused import)
 
 def get_assigned_salary_structure(employee, on_date):
 	if not employee or not on_date:

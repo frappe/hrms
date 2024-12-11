@@ -1,5 +1,12 @@
 {
 	"js/hrms.min.js": [
 		"public/js/utils.js"
+<<<<<<< HEAD
+=======
+	],
+	"js/hierarchy-chart.min.js": [
+		"public/js/hierarchy_chart/hierarchy_chart_desktop.js",
+		"public/js/hierarchy_chart/hierarchy_chart_mobile.js"
+>>>>>>> da17577dc (chore: remove unused import)
 	]
 }

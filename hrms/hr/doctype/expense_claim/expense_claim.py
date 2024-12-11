@@ -9,11 +9,23 @@ from frappe.query_builder.functions import Sum
 from frappe.utils import cstr, flt, get_link_to_form
 
 import erpnext
+<<<<<<< HEAD
+=======
+from erpnext.accounts.doctype.repost_accounting_ledger.repost_accounting_ledger import (
+	validate_docs_for_voucher_types,
+)
+>>>>>>> da17577dc (chore: remove unused import)
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from erpnext.accounts.general_ledger import make_gl_entries
 from erpnext.controllers.accounts_controller import AccountsController
 
+<<<<<<< HEAD
 from hrms.hr.utils import set_employee_name, share_doc_with_approver, validate_active_employee
+=======
+import hrms
+from hrms.hr.utils import set_employee_name, share_doc_with_approver, validate_active_employee
+from hrms.mixins.pwa_notifications import PWANotificationsMixin
+>>>>>>> da17577dc (chore: remove unused import)
 
 
 class InvalidExpenseApproverError(frappe.ValidationError):
@@ -24,12 +36,22 @@ class ExpenseApproverIdentityError(frappe.ValidationError):
 	pass
 
 
+<<<<<<< HEAD
 class ExpenseClaim(AccountsController):
+=======
+class ExpenseClaim(AccountsController, PWANotificationsMixin):
+>>>>>>> da17577dc (chore: remove unused import)
 	def onload(self):
 		self.get("__onload").make_payment_via_journal_entry = frappe.db.get_single_value(
 			"Accounts Settings", "make_payment_via_journal_entry"
 		)
 
+<<<<<<< HEAD
+=======
+	def after_insert(self):
+		self.notify_approver()
+
+>>>>>>> da17577dc (chore: remove unused import)
 	def validate(self):
 		validate_active_employee(self.employee)
 		set_employee_name(self)
@@ -70,11 +92,32 @@ class ExpenseClaim(AccountsController):
 
 		if update:
 			self.db_set("status", status)
+<<<<<<< HEAD
+=======
+			self.publish_update()
+			self.notify_update()
+>>>>>>> da17577dc (chore: remove unused import)
 		else:
 			self.status = status
 
 	def on_update(self):
 		share_doc_with_approver(self, self.expense_approver)
+<<<<<<< HEAD
+=======
+		self.publish_update()
+		self.notify_approval_status()
+
+	def after_delete(self):
+		self.publish_update()
+
+	def before_submit(self):
+		if not self.payable_account and not self.is_paid:
+			frappe.throw(_("Payable Account is mandatory to submit an Expense Claim"))
+
+	def publish_update(self):
+		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
+		hrms.refetch_resource("hrms:my_claims", employee_user)
+>>>>>>> da17577dc (chore: remove unused import)
 
 	def on_submit(self):
 		if self.approval_status == "Draft":
@@ -87,6 +130,14 @@ class ExpenseClaim(AccountsController):
 
 		self.update_claimed_amount_in_employee_advance()
 
+<<<<<<< HEAD
+=======
+	def on_update_after_submit(self):
+		if self.check_if_fields_updated([], {"taxes": ("account_head")}):
+			validate_docs_for_voucher_types(["Expense Claim"])
+			self.repost_accounting_entries()
+
+>>>>>>> da17577dc (chore: remove unused import)
 	def on_cancel(self):
 		self.update_task_and_project()
 		self.ignore_linked_doctypes = ("GL Entry", "Stock Ledger Entry", "Payment Ledger Entry")
@@ -96,6 +147,10 @@ class ExpenseClaim(AccountsController):
 		update_reimbursed_amount(self)
 
 		self.update_claimed_amount_in_employee_advance()
+<<<<<<< HEAD
+=======
+		self.publish_update()
+>>>>>>> da17577dc (chore: remove unused import)
 
 	def update_claimed_amount_in_employee_advance(self):
 		for d in self.get("advances"):
@@ -240,7 +295,11 @@ class ExpenseClaim(AccountsController):
 			if not data.cost_center:
 				frappe.throw(
 					_("Row {0}: {1} is required in the expenses table to book an expense claim.").format(
+<<<<<<< HEAD
 						data.idx, frappe.bold("Cost Center")
+=======
+						data.idx, frappe.bold(_("Cost Center"))
+>>>>>>> da17577dc (chore: remove unused import)
 					)
 				)
 
@@ -271,7 +330,11 @@ class ExpenseClaim(AccountsController):
 
 			if tax.rate:
 				tax.tax_amount = flt(
+<<<<<<< HEAD
 					flt(self.total_sanctioned_amount) * flt(tax.rate / 100),
+=======
+					flt(self.total_sanctioned_amount) * flt(flt(tax.rate) / 100),
+>>>>>>> da17577dc (chore: remove unused import)
 					tax.precision("tax_amount"),
 				)
 
@@ -450,7 +513,12 @@ def get_expense_claim_account(expense_claim_type, company):
 	if not account:
 		frappe.throw(
 			_("Set the default account for the {0} {1}").format(
+<<<<<<< HEAD
 				frappe.bold("Expense Claim Type"), get_link_to_form("Expense Claim Type", expense_claim_type)
+=======
+				frappe.bold(_("Expense Claim Type")),
+				get_link_to_form("Expense Claim Type", expense_claim_type),
+>>>>>>> da17577dc (chore: remove unused import)
 			)
 		)
 
@@ -463,6 +531,10 @@ def get_advances(employee, advance_id=None):
 
 	query = frappe.qb.from_(advance).select(
 		advance.name,
+<<<<<<< HEAD
+=======
+		advance.purpose,
+>>>>>>> da17577dc (chore: remove unused import)
 		advance.posting_date,
 		advance.paid_amount,
 		advance.claimed_amount,

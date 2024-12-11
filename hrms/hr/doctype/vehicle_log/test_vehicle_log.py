@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import cstr, flt, nowdate, random_string
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -10,7 +14,11 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.vehicle_log.vehicle_log import make_expense_claim
 
 
+<<<<<<< HEAD
 class TestVehicleLog(FrappeTestCase):
+=======
+class TestVehicleLog(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		employee_id = frappe.db.sql("""select name from `tabEmployee` where name='testdriver@example.com'""")
 		self.employee_id = employee_id[0][0] if employee_id else None

@@ -22,6 +22,10 @@ from frappe.utils import (
 from erpnext.buying.doctype.supplier_scorecard.supplier_scorecard import daterange
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 
+<<<<<<< HEAD
+=======
+import hrms
+>>>>>>> da17577dc (chore: remove unused import)
 from hrms.hr.doctype.leave_block_list.leave_block_list import get_applicable_block_dates
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
 from hrms.hr.utils import (
@@ -31,6 +35,11 @@ from hrms.hr.utils import (
 	share_doc_with_approver,
 	validate_active_employee,
 )
+<<<<<<< HEAD
+=======
+from hrms.mixins.pwa_notifications import PWANotificationsMixin
+from hrms.utils import get_employee_email
+>>>>>>> da17577dc (chore: remove unused import)
 
 
 class LeaveDayBlockedError(frappe.ValidationError):
@@ -60,10 +69,20 @@ class LeaveAcrossAllocationsError(frappe.ValidationError):
 from frappe.model.document import Document
 
 
+<<<<<<< HEAD
 class LeaveApplication(Document):
 	def get_feed(self):
 		return _("{0}: From {0} of type {1}").format(self.employee_name, self.leave_type)
 
+=======
+class LeaveApplication(Document, PWANotificationsMixin):
+	def get_feed(self):
+		return _("{0}: From {0} of type {1}").format(self.employee_name, self.leave_type)
+
+	def after_insert(self):
+		self.notify_approver()
+
+>>>>>>> da17577dc (chore: remove unused import)
 	def validate(self):
 		validate_active_employee(self.employee)
 		set_employee_name(self)
@@ -87,6 +106,11 @@ class LeaveApplication(Document):
 				self.notify_leave_approver()
 
 		share_doc_with_approver(self, self.leave_approver)
+<<<<<<< HEAD
+=======
+		self.publish_update()
+		self.notify_approval_status()
+>>>>>>> da17577dc (chore: remove unused import)
 
 	def on_submit(self):
 		if self.status in ["Open", "Cancelled"]:
@@ -112,6 +136,18 @@ class LeaveApplication(Document):
 			self.notify_employee()
 		self.cancel_attendance()
 
+<<<<<<< HEAD
+=======
+		self.publish_update()
+
+	def after_delete(self):
+		self.publish_update()
+
+	def publish_update(self):
+		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
+		hrms.refetch_resource("hrms:my_leaves", employee_user)
+
+>>>>>>> da17577dc (chore: remove unused import)
 	def validate_applicable_after(self):
 		if self.leave_type:
 			leave_type = frappe.get_doc("Leave Type", self.leave_type)
@@ -297,7 +333,11 @@ class LeaveApplication(Document):
 			select start_date, end_date from `tabSalary Slip`
 			where docstatus = 1 and employee = %s
 			and ((%s between start_date and end_date) or (%s between start_date and end_date))
+<<<<<<< HEAD
 			order by modified desc limit 1
+=======
+			order by creation desc limit 1
+>>>>>>> da17577dc (chore: remove unused import)
 		""",
 			(self.employee, self.to_date, self.from_date),
 		)
@@ -333,8 +373,11 @@ class LeaveApplication(Document):
 			frappe.throw(_("You are not authorized to approve leaves on Block Dates"), LeaveDayBlockedError)
 
 	def validate_balance_leaves(self):
+<<<<<<< HEAD
 		precision = cint(frappe.db.get_single_value("System Settings", "float_precision")) or 2
 
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 		if self.from_date and self.to_date:
 			self.total_leave_days = get_number_of_leave_days(
 				self.employee,
@@ -361,9 +404,15 @@ class LeaveApplication(Document):
 					consider_all_leaves_in_the_allocation_period=True,
 					for_consumption=True,
 				)
+<<<<<<< HEAD
 				leave_balance_for_consumption = flt(
 					leave_balance.get("leave_balance_for_consumption"), precision
 				)
+=======
+				self.leave_balance = leave_balance.get("leave_balance")
+				leave_balance_for_consumption = leave_balance.get("leave_balance_for_consumption")
+
+>>>>>>> da17577dc (chore: remove unused import)
 				if self.status != "Rejected" and (
 					leave_balance_for_consumption < self.total_leave_days or not leave_balance_for_consumption
 				):
@@ -569,8 +618,14 @@ class LeaveApplication(Document):
 			self.half_day_date = None
 
 	def notify_employee(self):
+<<<<<<< HEAD
 		employee = frappe.get_doc("Employee", self.employee)
 		if not employee.user_id:
+=======
+		employee_email = get_employee_email(self.employee)
+
+		if not employee_email:
+>>>>>>> da17577dc (chore: remove unused import)
 			return
 
 		parent_doc = frappe.get_doc("Leave Application", self.name)
@@ -588,7 +643,11 @@ class LeaveApplication(Document):
 			{
 				# for post in messages
 				"message": message,
+<<<<<<< HEAD
 				"message_to": employee.user_id,
+=======
+				"message_to": employee_email,
+>>>>>>> da17577dc (chore: remove unused import)
 				# for email
 				"subject": subject,
 				"notify": "employee",
@@ -832,7 +891,11 @@ def get_number_of_leave_days(
 def get_leave_details(employee, date, for_salary_slip=False):
 	allocation_records = get_leave_allocation_records(employee, date)
 	leave_allocation = {}
+<<<<<<< HEAD
 	precision = cint(frappe.db.get_single_value("System Settings", "float_precision")) or 2
+=======
+	precision = cint(frappe.db.get_single_value("System Settings", "float_precision", cache=True))
+>>>>>>> da17577dc (chore: remove unused import)
 
 	for d in allocation_records:
 		allocation = allocation_records.get(d, frappe._dict())
@@ -1346,3 +1409,10 @@ def get_leave_approver(employee):
 		)
 
 	return leave_approver
+<<<<<<< HEAD
+=======
+
+
+def on_doctype_update():
+	frappe.db.add_index("Leave Application", ["employee", "from_date", "to_date"])
+>>>>>>> da17577dc (chore: remove unused import)

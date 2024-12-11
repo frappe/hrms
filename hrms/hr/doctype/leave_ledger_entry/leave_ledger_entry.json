@@ -126,7 +126,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-11-17 12:36:36.963697",
+=======
+ "modified": "2024-03-27 13:10:01.284398",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Ledger Entry",
@@ -187,7 +191,11 @@
    "write": 1
   }
  ],
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "ASC",
  "states": [],
  "title_field": "employee"

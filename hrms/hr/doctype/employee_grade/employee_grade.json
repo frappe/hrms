@@ -38,7 +38,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2022-05-06 15:42:10.395508",
+=======
+ "modified": "2024-03-27 13:09:38.976321",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Grade",
@@ -82,7 +86,11 @@
    "write": 1
   }
  ],
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "track_changes": 1

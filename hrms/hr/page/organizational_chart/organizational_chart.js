@@ -11,6 +11,7 @@ frappe.pages["organizational-chart"].on_page_load = function (wrapper) {
 			let method = "hrms.hr.page.organizational_chart.organizational_chart.get_children";
 
 			if (frappe.is_mobile()) {
+<<<<<<< HEAD
 				organizational_chart = new erpnext.HierarchyChartMobile(
 					"Employee",
 					wrapper,
@@ -18,6 +19,11 @@ frappe.pages["organizational-chart"].on_page_load = function (wrapper) {
 				);
 			} else {
 				organizational_chart = new erpnext.HierarchyChart("Employee", wrapper, method);
+=======
+				organizational_chart = new hrms.HierarchyChartMobile("Employee", wrapper, method);
+			} else {
+				organizational_chart = new hrms.HierarchyChart("Employee", wrapper, method);
+>>>>>>> da17577dc (chore: remove unused import)
 			}
 
 			frappe.breadcrumbs.add("HR");

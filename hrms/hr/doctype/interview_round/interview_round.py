@@ -24,6 +24,12 @@ def create_interview(doc):
 
 	if doc.interviewers:
 		interview.interview_details = []
+<<<<<<< HEAD
 		for data in doc.interviewers:
 			interview.append("interview_details", {"interviewer": data.user})
+=======
+		for d in doc.interviewers:
+			interview.append("interview_details", {"interviewer": d.user})
+
+>>>>>>> da17577dc (chore: remove unused import)
 	return interview

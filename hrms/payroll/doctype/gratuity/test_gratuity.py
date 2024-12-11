@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase, change_settings
+=======
+from frappe.tests import IntegrationTestCase, change_settings
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, add_months, floor, flt, get_datetime, get_first_day, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -22,7 +26,11 @@ from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_s
 test_dependencies = ["Salary Component", "Salary Slip", "Account"]
 
 
+<<<<<<< HEAD
 class TestGratuity(FrappeTestCase):
+=======
+class TestGratuity(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		for dt in ["Gratuity", "Salary Slip", "Additional Salary"]:
 			frappe.db.delete(dt)

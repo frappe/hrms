@@ -6,7 +6,12 @@
 
 import frappe
 from frappe import _
+<<<<<<< HEAD
 from frappe.utils import get_link_to_form, getdate
+=======
+from frappe.model.naming import set_name_from_naming_options
+from frappe.utils import get_link_to_form, getdate, pretty_date
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.website.website_generator import WebsiteGenerator
 
 from hrms.hr.doctype.staffing_plan.staffing_plan import (
@@ -22,12 +27,47 @@ class JobOpening(WebsiteGenerator):
 		page_title_field="job_title",
 	)
 
+<<<<<<< HEAD
 	def validate(self):
 		if not self.route:
 			self.route = frappe.scrub(self.job_title).replace("_", "-")
 		self.validate_current_vacancies()
 		self.update_job_requisition_status()
 
+=======
+	def autoname(self):
+		self.name = set_name_from_naming_options(frappe.get_meta(self.doctype).autoname, self)
+
+	def validate(self):
+		if not self.route:
+			self.route = f"jobs/{frappe.scrub(self.company)}/{frappe.scrub(self.job_title).replace('_', '-')}"
+		self.update_closing_date()
+		self.validate_dates()
+		self.validate_current_vacancies()
+
+	def on_update(self):
+		self.update_job_requisition_status()
+
+	def update_closing_date(self):
+		old_doc = self.get_doc_before_save()
+		if not old_doc:
+			return
+
+		if old_doc.status == "Open" and self.status == "Closed":
+			self.closes_on = None
+			if not self.closed_on:
+				self.closed_on = getdate()
+
+		elif old_doc.status == "Closed" and self.status == "Open":
+			self.closed_on = None
+
+	def validate_dates(self):
+		if self.status == "Open":
+			self.validate_from_to_dates("posted_on", "closes_on")
+		if self.status == "Closed":
+			self.validate_from_to_dates("posted_on", "closed_on")
+
+>>>>>>> da17577dc (chore: remove unused import)
 	def validate_current_vacancies(self):
 		if not self.staffing_plan:
 			staffing_plan = get_active_staffing_plan_details(self.company, self.designation)
@@ -71,6 +111,7 @@ class JobOpening(WebsiteGenerator):
 			job_requisition.save()
 
 	def get_context(self, context):
+<<<<<<< HEAD
 		context.parents = [{"route": "jobs", "title": _("All Jobs")}]
 
 
@@ -102,3 +143,26 @@ def get_job_openings(doctype, txt=None, filters=None, limit_start=0, limit_page_
 	return frappe.get_all(
 		doctype, filters, fields, start=limit_start, page_length=limit_page_length, order_by=order_by
 	)
+=======
+		context.no_of_applications = frappe.db.count("Job Applicant", {"job_title": self.name})
+		context.parents = [{"route": "jobs", "title": _("All Jobs")}]
+		context.posted_on = pretty_date(self.posted_on)
+
+
+def close_expired_job_openings():
+	today = getdate()
+
+	Opening = frappe.qb.DocType("Job Opening")
+	openings = (
+		frappe.qb.from_(Opening)
+		.select(Opening.name)
+		.where((Opening.status == "Open") & (Opening.closes_on.isnotnull()) & (Opening.closes_on < today))
+	).run(pluck=True)
+
+	for d in openings:
+		doc = frappe.get_doc("Job Opening", d)
+		doc.status = "Closed"
+		doc.flags.ignore_permissions = True
+		doc.flags.ignore_mandatory = True
+		doc.save()
+>>>>>>> da17577dc (chore: remove unused import)

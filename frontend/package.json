@@ -1,0 +1,36 @@
+{
+	"name": "frappe-hr-ui",
+	"private": true,
+	"version": "0.0.0",
+	"scripts": {
+		"dev": "vite",
+		"serve": "vite preview",
+		"build": "vite build --base=/assets/hrms/frontend/ && yarn copy-html-entry",
+		"ionic:build": "npm run build",
+		"ionic:serve": "vite dev --host",
+		"copy-html-entry": "cp ../hrms/public/frontend/index.html ../hrms/www/hrms.html"
+	},
+	"dependencies": {
+		"@ionic/vue": "^7.4.3",
+		"@ionic/vue-router": "^7.4.3",
+		"@vitejs/plugin-vue": "^4.4.0",
+		"autoprefixer": "^10.4.19",
+		"dayjs": "^1.11.11",
+		"feather-icons": "^4.29.1",
+		"firebase": "^10.8.0",
+		"frappe-ui": "^0.1.72",
+		"postcss": "^8.4.5",
+		"tailwindcss": "^3.4.3",
+		"vite": "^5.4.10",
+		"vite-plugin-pwa": "^0.20.5",
+		"vue": "^3.5.12",
+		"vue-router": "^4.3.2",
+		"workbox-core": "^7.0.0",
+		"workbox-precaching": "^7.0.0"
+	},
+	"devDependencies": {
+		"eslint": "^8.39.0",
+		"eslint-plugin-vue": "^9.11.0",
+		"prettier": "^2.8.8"
+	}
+}

@@ -1,13 +1,23 @@
 {
  "charts": [],
+<<<<<<< HEAD
  "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Salary Slip\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Payroll Entry\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Salary Register\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Transactions &amp; Reports</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Payroll\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Incentives\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Loans\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Accounting\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Accounting Reports\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Payroll Reports\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Deduction Reports\",\"col\":4}}]",
  "creation": "2022-08-20 16:43:32.769568",
+=======
+ "content": "[{\"id\":\"jvTZ8RvO42\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"hNVIisuaFR\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Salary Slip\",\"col\":3}},{\"id\":\"6XUIWHJ3jI\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Payroll Entry\",\"col\":3}},{\"id\":\"yjIBi3GMoo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Salary Register\",\"col\":3}},{\"id\":\"ORKhwX-uqw\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"gGURwviUAZ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Transactions &amp; Reports</b></span>\",\"col\":12}},{\"id\":\"m7ibJXxzpl\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"U-jv2v4nCv\",\"type\":\"card\",\"data\":{\"card_name\":\"Payroll\",\"col\":4}},{\"id\":\"LG69O3ku4y\",\"type\":\"card\",\"data\":{\"card_name\":\"Incentives\",\"col\":4}},{\"id\":\"kOuItimoNm\",\"type\":\"card\",\"data\":{\"card_name\":\"Accounting\",\"col\":4}},{\"id\":\"UJqBhPqNZd\",\"type\":\"card\",\"data\":{\"card_name\":\"Accounting Reports\",\"col\":4}},{\"id\":\"eNZuk6i-jy\",\"type\":\"card\",\"data\":{\"card_name\":\"Payroll Reports\",\"col\":4}},{\"id\":\"ll91Zs2cbx\",\"type\":\"card\",\"data\":{\"card_name\":\"Deduction Reports\",\"col\":4}}]",
+ "creation": "2022-08-20 16:43:32.769568",
+ "custom_blocks": [],
+>>>>>>> da17577dc (chore: remove unused import)
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
  "hide_custom": 0,
  "icon": "income",
  "idx": 0,
+<<<<<<< HEAD
+=======
+ "is_hidden": 0,
+>>>>>>> da17577dc (chore: remove unused import)
  "label": "Salary Payout",
  "links": [
   {
@@ -99,6 +109,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+<<<<<<< HEAD
    "label": "Loans",
    "link_count": 3,
    "onboard": 0,
@@ -137,6 +148,8 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+=======
+>>>>>>> da17577dc (chore: remove unused import)
    "label": "Payroll Reports",
    "link_count": 5,
    "onboard": 0,
@@ -350,7 +363,12 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Payroll",
+<<<<<<< HEAD
    "link_count": 3,
+=======
+   "link_count": 5,
+   "link_type": "DocType",
+>>>>>>> da17577dc (chore: remove unused import)
    "onboard": 0,
    "type": "Card Break"
   },
@@ -367,6 +385,19 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+<<<<<<< HEAD
+=======
+   "label": "Bulk Salary Structure Assignment",
+   "link_count": 0,
+   "link_to": "Bulk Salary Structure Assignment",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+>>>>>>> da17577dc (chore: remove unused import)
    "label": "Salary Slip",
    "link_count": 0,
    "link_to": "Salary Slip",
@@ -383,12 +414,29 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+<<<<<<< HEAD
+=======
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Salary Withholding",
+   "link_count": 0,
+   "link_to": "Salary Withholding",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+>>>>>>> da17577dc (chore: remove unused import)
   }
  ],
  "modified": "2024-08-11 11:45:37.351654",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Payout",
+<<<<<<< HEAD
+=======
+ "number_cards": [],
+>>>>>>> da17577dc (chore: remove unused import)
  "owner": "Administrator",
  "parent_page": "Payroll",
  "public": 1,

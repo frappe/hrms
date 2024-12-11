@@ -8,11 +8,25 @@
   "reference",
   "asset_name",
   "date",
+<<<<<<< HEAD
   "status",
+=======
+  "actual_cost",
+  "cost",
+  "column_break_xezj",
+  "account",
+  "action",
+  "status",
+  "section_break_hudu",
+>>>>>>> da17577dc (chore: remove unused import)
   "description"
  ],
  "fields": [
   {
+<<<<<<< HEAD
+=======
+   "columns": 2,
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "reference",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -22,6 +36,10 @@
    "reqd": 1
   },
   {
+<<<<<<< HEAD
+=======
+   "columns": 1,
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
@@ -35,6 +53,10 @@
    "label": "Description"
   },
   {
+<<<<<<< HEAD
+=======
+   "columns": 2,
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "asset_name",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -44,21 +66,77 @@
   {
    "fieldname": "date",
    "fieldtype": "Datetime",
+<<<<<<< HEAD
    "in_list_view": 1,
    "label": "Date",
    "read_only": 1
+=======
+   "label": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_xezj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "columns": 2,
+   "default": "Return",
+   "fieldname": "action",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Action",
+   "options": "Return\nRecover Cost",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_hudu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "columns": 2,
+   "fieldname": "cost",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Cost",
+   "mandatory_depends_on": "eval:doc.action == \"Recover Cost\"",
+   "read_only_depends_on": "eval:doc.action != \"Recover Cost\""
+  },
+  {
+   "columns": 1,
+   "fieldname": "account",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "actual_cost",
+   "fieldtype": "Currency",
+   "label": "Actual Cost",
+   "read_only": 1
+>>>>>>> da17577dc (chore: remove unused import)
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2021-07-15 15:17:31.309834",
+=======
+ "modified": "2024-04-19 13:20:41.123440",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Full and Final Asset",
  "owner": "Administrator",
  "permissions": [],
+<<<<<<< HEAD
  "sort_field": "modified",
  "sort_order": "DESC",
+=======
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+>>>>>>> da17577dc (chore: remove unused import)
  "track_changes": 1
 }

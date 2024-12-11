@@ -2,8 +2,13 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_years, date_diff, get_first_day, nowdate
+=======
+from frappe.tests import IntegrationTestCase
+from frappe.utils import add_years, cstr, date_diff, get_first_day, nowdate
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils.make_random import get_random
 
 import erpnext
@@ -19,11 +24,19 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_employee_salary_slip,
 )
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+<<<<<<< HEAD
+=======
+from hrms.tests.test_utils import create_employee_grade
+>>>>>>> da17577dc (chore: remove unused import)
 
 test_dependencies = ["Fiscal Year"]
 
 
+<<<<<<< HEAD
 class TestSalaryStructure(FrappeTestCase):
+=======
+class TestSalaryStructure(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		for dt in ["Salary Slip", "Salary Structure", "Salary Structure Assignment"]:
 			frappe.db.sql("delete from `tab%s`" % dt)
@@ -90,6 +103,7 @@ class TestSalaryStructure(FrappeTestCase):
 			self.assertEqual(salary_slip.get("net_pay"), 78000 - salary_slip.get("total_deduction"))
 
 	def test_whitespaces_in_formula_conditions_fields(self):
+<<<<<<< HEAD
 		salary_structure = make_salary_structure("Salary Structure Sample", "Monthly", dont_submit=True)
 
 		for row in salary_structure.earnings:
@@ -107,6 +121,25 @@ class TestSalaryStructure(FrappeTestCase):
 
 		for row in salary_structure.deductions:
 			self.assertFalse(("\n" in row.formula) or ("\n" in row.condition))
+=======
+		def add_whitespaces(row):
+			row.formula = "\n%s\n\n" % row.formula
+			row.condition = "\n%s\n\n" % row.condition
+
+		salary_structure = make_salary_structure("Salary Structure Sample", "Monthly", dont_submit=True)
+		for table in ("earnings", "deductions"):
+			for row in salary_structure.get(table):
+				add_whitespaces(row)
+
+		# sanitized before validate and reset to original state to maintain readability
+		salary_structure.sanitize_condition_and_formula_fields()
+
+		for row in salary_structure.earnings:
+			self.assertFalse("\n" in cstr(row.formula) or "\n" in cstr(row.condition))
+
+		for row in salary_structure.deductions:
+			self.assertFalse("\n" in cstr(row.formula) or "\n" in cstr(row.condition))
+>>>>>>> da17577dc (chore: remove unused import)
 
 	def test_salary_structures_assignment(self):
 		company_currency = erpnext.get_default_currency()
@@ -167,7 +200,10 @@ def make_salary_structure(
 	payroll_period=None,
 	include_flexi_benefits=False,
 	base=None,
+<<<<<<< HEAD
 	allow_duplicate=False,
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 ):
 	if not currency:
 		currency = erpnext.get_default_currency()
@@ -199,7 +235,11 @@ def make_salary_structure(
 	if not dont_submit:
 		salary_structure_doc.submit()
 
+<<<<<<< HEAD
 	filters = {"employee": employee, "docstatus": 1, "salary_structure": salary_structure}
+=======
+	filters = {"employee": employee, "docstatus": 1}
+>>>>>>> da17577dc (chore: remove unused import)
 	if not from_date and payroll_period:
 		from_date = payroll_period.start_date
 
@@ -219,7 +259,10 @@ def make_salary_structure(
 			currency=currency,
 			payroll_period=payroll_period,
 			base=base,
+<<<<<<< HEAD
 			allow_duplicate=allow_duplicate,
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 		)
 
 	return salary_structure_doc
@@ -242,7 +285,11 @@ def create_salary_structure_assignment(
 		frappe.db.sql("""delete from `tabSalary Structure Assignment` where employee=%s""", (employee))
 
 	if not payroll_period:
+<<<<<<< HEAD
 		payroll_period = create_payroll_period()
+=======
+		payroll_period = create_payroll_period(company="_Test Company")
+>>>>>>> da17577dc (chore: remove unused import)
 
 	income_tax_slab = frappe.db.get_value("Income Tax Slab", {"currency": currency})
 
@@ -275,6 +322,7 @@ def get_payable_account(company=None):
 	if not company:
 		company = erpnext.get_default_company()
 	return frappe.db.get_value("Company", company, "default_payroll_payable_account")
+<<<<<<< HEAD
 
 
 def create_employee_grade(grade, default_structure=None):
@@ -287,3 +335,5 @@ def create_employee_grade(grade, default_structure=None):
 				"default_base_pay": 50000,
 			}
 		).insert()
+=======
+>>>>>>> da17577dc (chore: remove unused import)

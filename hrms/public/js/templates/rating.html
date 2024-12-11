@@ -21,7 +21,11 @@
 	</div>
 	{% if (!for_summary) { %}
 		<p class="ml-3" style="line-height: 2;">
+<<<<<<< HEAD
 			({{ average_rating }})
+=======
+			({{ flt(average_rating, 2) }})
+>>>>>>> da17577dc (chore: remove unused import)
 		</p>
 	{% } %}
 </div>

@@ -45,6 +45,15 @@ def validate_onboarding_process(doc, method=None):
 		onboarding.db_set("employee", doc.name)
 
 
+<<<<<<< HEAD
+=======
+def publish_update(doc, method=None):
+	import hrms
+
+	hrms.refetch_resource("hrms:employee", doc.user_id)
+
+
+>>>>>>> da17577dc (chore: remove unused import)
 def update_job_applicant_and_offer(doc, method=None):
 	"""Updates Job Applicant and Job Offer status as 'Accepted' and submits them"""
 	if not doc.job_applicant:

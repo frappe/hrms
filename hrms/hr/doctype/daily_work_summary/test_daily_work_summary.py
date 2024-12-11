@@ -5,12 +5,20 @@ import os
 
 import frappe
 import frappe.utils
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 
 # test_records = frappe.get_test_records('Daily Work Summary')
 
 
+<<<<<<< HEAD
 class TestDailyWorkSummary(FrappeTestCase):
+=======
+class TestDailyWorkSummary(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def test_email_trigger(self):
 		self.setup_and_prepare_test()
 		for d in self.users:

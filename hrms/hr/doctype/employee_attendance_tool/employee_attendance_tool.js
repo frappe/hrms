@@ -118,7 +118,11 @@ frappe.ui.form.on("Employee Attendance Tool", {
 				data: data,
 				dynamicRowHeight: true,
 				inlineFilters: true,
+<<<<<<< HEAD
 				layout: "fixed",
+=======
+				layout: "fluid",
+>>>>>>> da17577dc (chore: remove unused import)
 				cellHeight: 35,
 				noDataMessage: __("No Data"),
 				disableReorderColumn: true,
@@ -137,7 +141,11 @@ frappe.ui.form.on("Employee Attendance Tool", {
 			{
 				name: "employee",
 				id: "employee",
+<<<<<<< HEAD
 				content: `${__("Employee")}`,
+=======
+				content: __("Employee"),
+>>>>>>> da17577dc (chore: remove unused import)
 				editable: false,
 				sortable: false,
 				focusable: false,
@@ -148,7 +156,11 @@ frappe.ui.form.on("Employee Attendance Tool", {
 			{
 				name: "status",
 				id: "status",
+<<<<<<< HEAD
 				content: `${__("Status")}`,
+=======
+				content: __("Status"),
+>>>>>>> da17577dc (chore: remove unused import)
 				editable: false,
 				sortable: false,
 				focusable: false,

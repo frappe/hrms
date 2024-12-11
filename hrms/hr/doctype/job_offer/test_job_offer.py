@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, nowdate
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
@@ -13,7 +17,11 @@ from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
 from hrms.tests.test_utils import create_job_applicant
 
 
+<<<<<<< HEAD
 class TestJobOffer(FrappeTestCase):
+=======
+class TestJobOffer(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		frappe.db.delete("Job Applicant")
 		frappe.db.delete("Job Offer")
@@ -21,7 +29,11 @@ class TestJobOffer(FrappeTestCase):
 		create_designation(designation_name="Researcher")
 
 	def test_job_offer_creation_against_vacancies(self):
+<<<<<<< HEAD
 		frappe.db.set_value("HR Settings", None, "check_vacancies", 1)
+=======
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 1)
+>>>>>>> da17577dc (chore: remove unused import)
 		job_applicant = create_job_applicant(email_id="test_job_offer@example.com")
 		job_offer = create_job_offer(job_applicant=job_applicant.name, designation="UX Designer")
 
@@ -34,12 +46,20 @@ class TestJobOffer(FrappeTestCase):
 		self.assertRaises(frappe.ValidationError, job_offer.submit)
 
 		# test creation of job offer when vacancies are not present
+<<<<<<< HEAD
 		frappe.db.set_value("HR Settings", None, "check_vacancies", 0)
+=======
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+>>>>>>> da17577dc (chore: remove unused import)
 		job_offer.submit()
 		self.assertTrue(frappe.db.exists("Job Offer", job_offer.name))
 
 	def test_job_applicant_update(self):
+<<<<<<< HEAD
 		frappe.db.set_value("HR Settings", None, "check_vacancies", 0)
+=======
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+>>>>>>> da17577dc (chore: remove unused import)
 		create_staffing_plan()
 		job_applicant = create_job_applicant(email_id="test_job_applicants@example.com")
 		job_offer = create_job_offer(job_applicant=job_applicant.name)
@@ -52,7 +72,11 @@ class TestJobOffer(FrappeTestCase):
 		job_offer.submit()
 		job_applicant.reload()
 		self.assertEqual(job_applicant.status, "Rejected")
+<<<<<<< HEAD
 		frappe.db.set_value("HR Settings", None, "check_vacancies", 1)
+=======
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 1)
+>>>>>>> da17577dc (chore: remove unused import)
 
 	def test_recruitment_metrics(self):
 		job_applicant1 = create_job_applicant(email_id="test_job_applicant1@example.com")

@@ -218,7 +218,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2021-12-07 23:39:22.645401",
+=======
+ "modified": "2024-03-27 13:09:43.272097",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Exit Interview",
@@ -239,8 +243,14 @@
   }
  ],
  "sender_field": "email",
+<<<<<<< HEAD
  "sort_field": "modified",
  "sort_order": "DESC",
+=======
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+>>>>>>> da17577dc (chore: remove unused import)
  "title_field": "employee_name",
  "track_changes": 1
 }

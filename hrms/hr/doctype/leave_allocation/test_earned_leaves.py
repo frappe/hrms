@@ -1,5 +1,9 @@
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import (
 	add_days,
 	add_months,
@@ -27,7 +31,11 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.tests.test_utils import get_first_sunday
 
 
+<<<<<<< HEAD
 class TestLeaveAllocation(FrappeTestCase):
+=======
+class TestLeaveAllocation(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		for doctype in [
 			"Leave Period",
@@ -526,13 +534,18 @@ def create_earned_leave_type(leave_type, allocate_on_day="Last Day", rounding=0.
 	).insert()
 
 
+<<<<<<< HEAD
 def create_leave_period(name, start_date=None):
+=======
+def create_leave_period(name, start_date=None, end_date=None):
+>>>>>>> da17577dc (chore: remove unused import)
 	frappe.delete_doc_if_exists("Leave Period", name, force=1)
 
 	if not start_date:
 		start_date = get_first_day(getdate())
 
 	return frappe.get_doc(
+<<<<<<< HEAD
 		dict(
 			name=name,
 			doctype="Leave Period",
@@ -541,6 +554,14 @@ def create_leave_period(name, start_date=None):
 			company="_Test Company",
 			is_active=1,
 		)
+=======
+		name=name,
+		doctype="Leave Period",
+		from_date=start_date,
+		to_date=end_date or add_months(start_date, 12),
+		company="_Test Company",
+		is_active=1,
+>>>>>>> da17577dc (chore: remove unused import)
 	).insert()
 
 
@@ -550,12 +571,20 @@ def make_policy_assignment(
 	rounding=0.5,
 	earned_leave_frequency="Monthly",
 	start_date=None,
+<<<<<<< HEAD
+=======
+	end_date=None,
+>>>>>>> da17577dc (chore: remove unused import)
 	annual_allocation=12,
 	carry_forward=0,
 	assignment_based_on="Leave Period",
 ):
 	leave_type = create_earned_leave_type("Test Earned Leave", allocate_on_day, rounding)
+<<<<<<< HEAD
 	leave_period = create_leave_period("Test Earned Leave Period", start_date=start_date)
+=======
+	leave_period = create_leave_period("Test Earned Leave Period", start_date=start_date, end_date=end_date)
+>>>>>>> da17577dc (chore: remove unused import)
 	leave_policy = frappe.get_doc(
 		{
 			"doctype": "Leave Policy",

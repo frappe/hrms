@@ -207,6 +207,27 @@ def update_progress(progress: float, goal: str) -> None:
 
 
 @frappe.whitelist()
+<<<<<<< HEAD
+=======
+def update_status(status: str, goals: str | list) -> None:
+	if isinstance(goals, str):
+		import json
+
+		goals = json.loads(goals)
+
+	for goal in goals:
+		goal = frappe.get_doc("Goal", goal)
+		goal.status = status
+		if status == "Completed":
+			goal.progress = 100
+		goal.flags.ignore_mandatory = True
+		goal.save()
+
+	return goals
+
+
+@frappe.whitelist()
+>>>>>>> da17577dc (chore: remove unused import)
 def add_tree_node():
 	from frappe.desk.treeview import make_tree_args
 

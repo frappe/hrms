@@ -10,6 +10,10 @@
   "end_time",
   "column_break_3",
   "holiday_list",
+<<<<<<< HEAD
+=======
+  "color",
+>>>>>>> da17577dc (chore: remove unused import)
   "enable_auto_attendance",
   "auto_attendance_settings_section",
   "determine_check_in_and_check_out",
@@ -23,10 +27,17 @@
   "process_attendance_after",
   "last_sync_of_checkin",
   "grace_period_settings_auto_attendance_section",
+<<<<<<< HEAD
   "enable_entry_grace_period",
   "late_entry_grace_period",
   "column_break_18",
   "enable_exit_grace_period",
+=======
+  "enable_late_entry_marking",
+  "late_entry_grace_period",
+  "column_break_18",
+  "enable_early_exit_marking",
+>>>>>>> da17577dc (chore: remove unused import)
   "early_exit_grace_period"
  ],
  "fields": [
@@ -92,6 +103,7 @@
    "label": "Begin check-in before shift start time (in minutes)"
   },
   {
+<<<<<<< HEAD
    "default": "0",
    "fieldname": "enable_entry_grace_period",
    "fieldtype": "Check",
@@ -99,6 +111,9 @@
   },
   {
    "depends_on": "enable_entry_grace_period",
+=======
+   "depends_on": "enable_late_entry_marking",
+>>>>>>> da17577dc (chore: remove unused import)
    "description": "The time after the shift start time when check-in is considered as late (in minutes).",
    "fieldname": "late_entry_grace_period",
    "fieldtype": "Int",
@@ -109,6 +124,7 @@
    "fieldtype": "Column Break"
   },
   {
+<<<<<<< HEAD
    "default": "0",
    "fieldname": "enable_exit_grace_period",
    "fieldtype": "Check",
@@ -116,6 +132,9 @@
   },
   {
    "depends_on": "eval:doc.enable_exit_grace_period",
+=======
+   "depends_on": "enable_early_exit_marking",
+>>>>>>> da17577dc (chore: remove unused import)
    "description": "The time before the shift end time when check-out is considered as early (in minutes).",
    "fieldname": "early_exit_grace_period",
    "fieldtype": "Int",
@@ -165,10 +184,36 @@
    "fieldname": "mark_auto_attendance_on_holidays",
    "fieldtype": "Check",
    "label": "Mark Auto Attendance on Holidays"
+<<<<<<< HEAD
   }
  ],
  "links": [],
  "modified": "2023-08-11 20:30:13.358549",
+=======
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_late_entry_marking",
+   "fieldtype": "Check",
+   "label": "Enable Late Entry Marking"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_early_exit_marking",
+   "fieldtype": "Check",
+   "label": "Enable Early Exit Marking"
+  },
+  {
+   "default": "Blue",
+   "fieldname": "color",
+   "fieldtype": "Select",
+   "label": "Roster Color",
+   "options": "Blue\nCyan\nFuchsia\nGreen\nLime\nOrange\nPink\nRed\nViolet\nYellow"
+  }
+ ],
+ "links": [],
+ "modified": "2024-05-17 15:48:27.191003",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Type",
@@ -209,7 +254,11 @@
   }
  ],
  "quick_entry": 1,
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "track_changes": 1

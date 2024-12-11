@@ -1,5 +1,9 @@
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase, change_settings
+=======
+from frappe.tests import IntegrationTestCase, change_settings
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, add_months, getdate, nowdate
 
 import erpnext
@@ -13,7 +17,11 @@ from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import process_expire
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 
 
+<<<<<<< HEAD
 class TestLeaveAllocation(FrappeTestCase):
+=======
+class TestLeaveAllocation(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		frappe.db.delete("Leave Period")
 		frappe.db.delete("Leave Allocation")

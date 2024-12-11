@@ -3,9 +3,12 @@
 
 frappe.ui.form.on("Employee Advance", {
 	setup: function (frm) {
+<<<<<<< HEAD
 		frm.add_fetch("employee", "company", "company");
 		frm.add_fetch("company", "default_employee_advance_account", "advance_account");
 
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 		frm.set_query("employee", function () {
 			return {
 				filters: {

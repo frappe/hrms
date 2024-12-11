@@ -25,7 +25,11 @@
   "column_break_9",
   "variable",
   "amended_from",
+<<<<<<< HEAD
   "earnings_and_taxation_section",
+=======
+  "opening_balances_section",
+>>>>>>> da17577dc (chore: remove unused import)
   "taxable_earnings_till_date",
   "column_break_20",
   "tax_deducted_till_date",
@@ -193,6 +197,7 @@
    "fieldtype": "Column Break"
   },
   {
+<<<<<<< HEAD
    "collapsible_depends_on": "eval:doc.taxable_earnings_till_date && doc.tax_deducted_till_date",
    "fieldname": "earnings_and_taxation_section",
    "fieldtype": "Section Break",
@@ -200,16 +205,33 @@
    "label": "Earnings and Taxation "
   },
   {
+=======
+>>>>>>> da17577dc (chore: remove unused import)
    "allow_on_submit": 1,
    "fieldname": "taxable_earnings_till_date",
    "fieldtype": "Currency",
    "label": "Taxable Earnings Till Date",
    "options": "currency"
+<<<<<<< HEAD
+=======
+  },
+  {
+   "collapsible_depends_on": "eval:doc.taxable_earnings_till_date && doc.tax_deducted_till_date",
+   "description": "Set opening balances for earnings and taxes from the previous employer",
+   "fieldname": "opening_balances_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "label": "Opening Balances"
+>>>>>>> da17577dc (chore: remove unused import)
   }
  ],
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-09-12 20:54:02.758373",
+=======
+ "modified": "2024-10-18 18:06:42.013701",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",
@@ -257,7 +279,11 @@
   }
  ],
  "search_fields": "employee_name, salary_structure",
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name",

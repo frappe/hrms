@@ -8,12 +8,16 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+<<<<<<< HEAD
   "leave_period",
+=======
+>>>>>>> da17577dc (chore: remove unused import)
   "employee",
   "employee_name",
   "department",
   "company",
   "column_break_4",
+<<<<<<< HEAD
   "leave_type",
   "leave_allocation",
   "leave_balance",
@@ -22,6 +26,19 @@
   "payroll",
   "encashment_date",
   "additional_salary",
+=======
+  "leave_period",
+  "leave_type",
+  "leave_allocation",
+  "leave_balance",
+  "column_break_cevy",
+  "actual_encashable_days",
+  "encashment_days",
+  "payroll",
+  "encashment_date",
+  "additional_salary",
+  "amended_from",
+>>>>>>> da17577dc (chore: remove unused import)
   "column_break_14",
   "currency",
   "encashment_amount"
@@ -86,6 +103,7 @@
    "read_only": 1
   },
   {
+<<<<<<< HEAD
    "fieldname": "encashable_days",
    "fieldtype": "Float",
    "label": "Encashable days",
@@ -93,6 +111,8 @@
    "read_only": 1
   },
   {
+=======
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -150,11 +170,36 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+<<<<<<< HEAD
+=======
+  },
+  {
+   "fieldname": "encashment_days",
+   "fieldtype": "Float",
+   "label": "Encashment Days",
+   "no_copy": 1
+  },
+  {
+   "description": "Number of leaves eligible for encashment based on leave type settings",
+   "fieldname": "actual_encashable_days",
+   "fieldtype": "Float",
+   "label": "Actual Encashable Days",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_cevy",
+   "fieldtype": "Column Break"
+>>>>>>> da17577dc (chore: remove unused import)
   }
  ],
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2022-01-18 19:16:52.414356",
+=======
+ "modified": "2024-03-27 13:10:01.094420",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Encashment",
@@ -220,7 +265,11 @@
   }
  ],
  "search_fields": "employee,employee_name",
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name",

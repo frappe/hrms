@@ -5,7 +5,23 @@ app_description = "Modern HR and Payroll Software"
 app_email = "contact@frappe.io"
 app_license = "GNU General Public License (v3)"
 required_apps = ["frappe/erpnext"]
+<<<<<<< HEAD
 
+=======
+source_link = "http://github.com/frappe/hrms"
+app_logo_url = "/assets/hrms/images/frappe-hr-logo.svg"
+app_home = "/app/hr"
+
+add_to_apps_screen = [
+	{
+		"name": "hrms",
+		"logo": "/assets/hrms/images/frappe-hr-logo.svg",
+		"title": "Frappe HR",
+		"route": "/app/hr",
+		"has_permission": "hrms.hr.utils.check_app_permission",
+	}
+]
+>>>>>>> da17577dc (chore: remove unused import)
 
 # Includes in <head>
 # ------------------
@@ -14,7 +30,10 @@ required_apps = ["frappe/erpnext"]
 # app_include_css = "/assets/hrms/css/hrms.css"
 app_include_js = [
 	"hrms.bundle.js",
+<<<<<<< HEAD
 	"performance.bundle.js",
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 ]
 app_include_css = "hrms.bundle.css"
 
@@ -60,6 +79,11 @@ doctype_js = {
 # 	"Role": "home_page"
 # }
 
+<<<<<<< HEAD
+=======
+calendars = ["Leave Application"]
+
+>>>>>>> da17577dc (chore: remove unused import)
 # Generators
 # ----------
 
@@ -67,7 +91,12 @@ doctype_js = {
 website_generators = ["Job Opening"]
 
 website_route_rules = [
+<<<<<<< HEAD
 	{"from_route": "/jobs", "to_route": "Job Opening"},
+=======
+	{"from_route": "/hrms/<path:app_path>", "to_route": "hrms"},
+	{"from_route": "/hr/<path:app_path>", "to_route": "roster"},
+>>>>>>> da17577dc (chore: remove unused import)
 ]
 # Jinja
 # ----------
@@ -86,12 +115,36 @@ jinja = {
 after_install = "hrms.install.after_install"
 after_migrate = "hrms.setup.update_select_perm_after_install"
 
+<<<<<<< HEAD
+=======
+setup_wizard_complete = "hrms.subscription_utils.update_erpnext_access"
+
+>>>>>>> da17577dc (chore: remove unused import)
 # Uninstallation
 # ------------
 
 before_uninstall = "hrms.uninstall.before_uninstall"
 # after_uninstall = "hrms.uninstall.after_uninstall"
 
+<<<<<<< HEAD
+=======
+# Integration Setup
+# ------------------
+# To set up dependencies/integrations with other apps
+# Name of the app being installed is passed as an argument
+
+# before_app_install = "hrms.utils.before_app_install"
+after_app_install = "hrms.setup.after_app_install"
+
+# Integration Cleanup
+# -------------------
+# To clean up dependencies/integrations with other apps
+# Name of the app being uninstalled is passed as an argument
+
+before_app_uninstall = "hrms.setup.before_app_uninstall"
+# after_app_uninstall = "hrms.utils.after_app_uninstall"
+
+>>>>>>> da17577dc (chore: remove unused import)
 # Desk Notifications
 # ------------------
 # See frappe.core.notifications.get_notification_config
@@ -139,6 +192,13 @@ doc_events = {
 			"hrms.overrides.company.set_default_hr_accounts",
 		],
 	},
+<<<<<<< HEAD
+=======
+	"Holiday List": {
+		"on_update": "hrms.utils.holiday_list.invalidate_cache",
+		"on_trash": "hrms.utils.holiday_list.invalidate_cache",
+	},
+>>>>>>> da17577dc (chore: remove unused import)
 	"Timesheet": {"validate": "hrms.hr.utils.validate_active_employee"},
 	"Payment Entry": {
 		"on_submit": "hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
@@ -150,20 +210,38 @@ doc_events = {
 		"on_submit": [
 			"hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
 			"hrms.hr.doctype.full_and_final_statement.full_and_final_statement.update_full_and_final_statement_status",
+<<<<<<< HEAD
+=======
+			"hrms.payroll.doctype.salary_withholding.salary_withholding.update_salary_withholding_payment_status",
+>>>>>>> da17577dc (chore: remove unused import)
 		],
 		"on_update_after_submit": "hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
 		"on_cancel": [
 			"hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
 			"hrms.payroll.doctype.salary_slip.salary_slip.unlink_ref_doc_from_salary_slip",
 			"hrms.hr.doctype.full_and_final_statement.full_and_final_statement.update_full_and_final_statement_status",
+<<<<<<< HEAD
+=======
+			"hrms.payroll.doctype.salary_withholding.salary_withholding.update_salary_withholding_payment_status",
+>>>>>>> da17577dc (chore: remove unused import)
 		],
 	},
 	"Loan": {"validate": "hrms.hr.utils.validate_loan_repay_from_salary"},
 	"Employee": {
 		"validate": "hrms.overrides.employee_master.validate_onboarding_process",
+<<<<<<< HEAD
 		"on_update": "hrms.overrides.employee_master.update_approver_role",
 		"after_insert": "hrms.overrides.employee_master.update_job_applicant_and_offer",
 		"on_trash": "hrms.overrides.employee_master.update_employee_transfer",
+=======
+		"on_update": [
+			"hrms.overrides.employee_master.update_approver_role",
+			"hrms.overrides.employee_master.publish_update",
+		],
+		"after_insert": "hrms.overrides.employee_master.update_job_applicant_and_offer",
+		"on_trash": "hrms.overrides.employee_master.update_employee_transfer",
+		"after_delete": "hrms.overrides.employee_master.publish_update",
+>>>>>>> da17577dc (chore: remove unused import)
 	},
 	"Project": {"validate": "hrms.controllers.employee_boarding_controller.update_employee_boarding_status"},
 	"Task": {"on_update": "hrms.controllers.employee_boarding_controller.update_task"},
@@ -181,12 +259,20 @@ scheduler_events = {
 	],
 	"hourly_long": [
 		"hrms.hr.doctype.shift_type.shift_type.process_auto_attendance_for_all_shifts",
+<<<<<<< HEAD
+=======
+		"hrms.hr.doctype.shift_assignment_schedule.shift_assignment_schedule.process_auto_shift_creation",
+>>>>>>> da17577dc (chore: remove unused import)
 	],
 	"daily": [
 		"hrms.controllers.employee_reminders.send_birthday_reminders",
 		"hrms.controllers.employee_reminders.send_work_anniversary_reminders",
 		"hrms.hr.doctype.daily_work_summary_group.daily_work_summary_group.send_summary",
 		"hrms.hr.doctype.interview.interview.send_daily_feedback_reminder",
+<<<<<<< HEAD
+=======
+		"hrms.hr.doctype.job_opening.job_opening.close_expired_job_openings",
+>>>>>>> da17577dc (chore: remove unused import)
 	],
 	"daily_long": [
 		"hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry.process_expired_allocation",
@@ -197,7 +283,11 @@ scheduler_events = {
 	"monthly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_monthly"],
 }
 
+<<<<<<< HEAD
 advance_payment_doctypes = ["Gratuity", "Employee Advance"]
+=======
+advance_payment_payable_doctypes = ["Gratuity", "Employee Advance"]
+>>>>>>> da17577dc (chore: remove unused import)
 
 invoice_doctypes = ["Expense Claim"]
 
@@ -265,6 +355,10 @@ override_doctype_dashboards = {
 #
 # auto_cancel_exempted_doctypes = ["Auto Repeat"]
 
+<<<<<<< HEAD
+=======
+ignore_links_on_delete = ["PWA Notification"]
+>>>>>>> da17577dc (chore: remove unused import)
 
 # User Data Protection
 # --------------------

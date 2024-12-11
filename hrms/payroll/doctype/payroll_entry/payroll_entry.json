@@ -29,6 +29,10 @@
   "department",
   "column_break_21",
   "designation",
+<<<<<<< HEAD
+=======
+  "grade",
+>>>>>>> da17577dc (chore: remove unused import)
   "number_of_employees",
   "section_break_24",
   "employees",
@@ -324,12 +328,25 @@
    "fieldtype": "Tab Break",
    "label": "Connections",
    "show_dashboard": 1
+<<<<<<< HEAD
+=======
+  },
+  {
+   "fieldname": "grade",
+   "fieldtype": "Link",
+   "label": "Grade",
+   "options": "Employee Grade"
+>>>>>>> da17577dc (chore: remove unused import)
   }
  ],
  "icon": "fa fa-cog",
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-07-13 12:27:33.418702",
+=======
+ "modified": "2024-03-27 13:10:12.205570",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",
@@ -348,7 +365,11 @@
    "write": 1
   }
  ],
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": []
 }

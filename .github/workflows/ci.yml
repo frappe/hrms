@@ -1,6 +1,7 @@
 name: CI
 
 on:
+<<<<<<< HEAD
   push:
     branches: [develop, version-14-hotfix, version-14]
     paths-ignore:
@@ -10,6 +11,8 @@ on:
       - "**.html"
       - "**.csv"
 
+=======
+>>>>>>> da17577dc (chore: remove unused import)
   pull_request:
     paths-ignore:
       - "**.css"
@@ -45,12 +48,21 @@ jobs:
 
     services:
       mysql:
+<<<<<<< HEAD
         image: mariadb:10.3
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: YES
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+=======
+        image: mariadb:10.6
+        env:
+          MARIADB_ROOT_PASSWORD: 'root'
+        ports:
+          - 3306:3306
+        options: --health-cmd="mariadb-admin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+>>>>>>> da17577dc (chore: remove unused import)
 
     steps:
       - name: Clone
@@ -72,7 +84,11 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
+<<<<<<< HEAD
           node-version: 14
+=======
+          node-version: 18
+>>>>>>> da17577dc (chore: remove unused import)
           check-latest: true
 
       - name: Add to Hosts
@@ -115,10 +131,18 @@ jobs:
         run: |
           bash ${GITHUB_WORKSPACE}/.github/helper/install.sh
         env:
+<<<<<<< HEAD
           BRANCH_TO_CLONE: ${{ env.HR_BRANCH }}
 
       - name: Run Tests
         run: cd ~/frappe-bench/ && bench --site test_site run-parallel-tests --app hrms --total-builds 2 --build-number ${{ matrix.container }}
+=======
+          FRAPPE_USER: ${{ github.event.inputs.user }}
+          FRAPPE_BRANCH: ${{ github.event.inputs.branch }}
+
+      - name: Run Tests
+        run: cd ~/frappe-bench/ && bench --site test_site run-parallel-tests --app hrms --total-builds ${{ strategy.job-total }} --build-number ${{ matrix.container }}
+>>>>>>> da17577dc (chore: remove unused import)
         env:
           TYPE: server
           CAPTURE_COVERAGE: ${{ github.event_name != 'pull_request' }}
@@ -137,13 +161,25 @@ jobs:
     if: ${{ github.event_name != 'pull_request' }}
     steps:
       - name: Clone
+<<<<<<< HEAD
         uses: actions/checkout@v2
+=======
+        uses: actions/checkout@v4
+>>>>>>> da17577dc (chore: remove unused import)
 
       - name: Download artifacts
         uses: actions/download-artifact@v3
 
       - name: Upload coverage data
+<<<<<<< HEAD
         uses: codecov/codecov-action@v2
         with:
           fail_ci_if_error: true
           verbose: true
+=======
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          verbose: true
+>>>>>>> da17577dc (chore: remove unused import)

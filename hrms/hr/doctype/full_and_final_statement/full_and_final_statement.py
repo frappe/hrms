@@ -14,10 +14,23 @@ class FullandFinalStatement(Document):
 	def validate(self):
 		self.validate_relieving_date()
 		self.get_assets_statements()
+<<<<<<< HEAD
 		if self.docstatus == 1:
 			self.validate_settlement("payables")
 			self.validate_settlement("receivables")
 			self.validate_asset()
+=======
+		self.set_total_asset_recovery_cost()
+		self.set_totals()
+
+	def before_submit(self):
+		self.validate_settlement("payables")
+		self.validate_settlement("receivables")
+		self.validate_assets()
+
+	def on_cancel(self):
+		self.ignore_linked_doctypes = ("GL Entry",)
+>>>>>>> da17577dc (chore: remove unused import)
 
 	def validate_relieving_date(self):
 		if not self.relieving_date:
@@ -32,6 +45,7 @@ class FullandFinalStatement(Document):
 	def validate_settlement(self, component_type):
 		for data in self.get(component_type, []):
 			if data.status == "Unsettled":
+<<<<<<< HEAD
 				frappe.throw(_("Settle all Payables and Receivables before submission"))
 
 	def validate_asset(self):
@@ -50,15 +64,102 @@ class FullandFinalStatement(Document):
 				self.create_component_row(components, "receivables")
 			self.get_assets_statements()
 		else:
+=======
+				frappe.throw(
+					_("Settle all Payables and Receivables before submission"),
+					title=_("Unsettled Transactions"),
+				)
+
+	def validate_assets(self):
+		pending_returns = []
+
+		for data in self.assets_allocated:
+			if data.action == "Return":
+				if data.status == "Owned":
+					pending_returns.append(_("Row {0}: {1}").format(data.idx, frappe.bold(data.asset_name)))
+			elif data.action == "Recover Cost":
+				data.status = "Owned"
+
+		if pending_returns:
+			msg = _("All allocated assets should be returned before submission")
+			msg += "<br><br>"
+			msg += ", ".join(d for d in pending_returns)
+			frappe.throw(msg, title=_("Pending Asset Returns"))
+
+	@frappe.whitelist()
+	def get_outstanding_statements(self):
+		if not self.relieving_date:
+>>>>>>> da17577dc (chore: remove unused import)
 			frappe.throw(
 				_("Set Relieving Date for Employee: {0}").format(get_link_to_form("Employee", self.employee))
 			)
 
+<<<<<<< HEAD
+=======
+		if not self.payables:
+			self.add_withheld_salary_slips()
+			components = self.get_payable_component()
+			self.create_component_row(components, "payables")
+		if not self.receivables:
+			components = self.get_receivable_component()
+			self.create_component_row(components, "receivables")
+		self.get_assets_statements()
+
+>>>>>>> da17577dc (chore: remove unused import)
 	def get_assets_statements(self):
 		if not len(self.get("assets_allocated", [])):
 			for data in self.get_assets_movement():
 				self.append("assets_allocated", data)
 
+<<<<<<< HEAD
+=======
+	def set_total_asset_recovery_cost(self):
+		total_cost = 0
+		for data in self.assets_allocated:
+			if data.action == "Recover Cost":
+				if not data.description:
+					data.description = _("Asset Recovery Cost for {0}: {1}").format(
+						data.reference, data.asset_name
+					)
+				total_cost += flt(data.cost)
+
+		self.total_asset_recovery_cost = flt(total_cost, self.precision("total_asset_recovery_cost"))
+
+	def set_totals(self):
+		total_payable = sum(flt(row.amount) for row in self.payables)
+		total_receivable = sum(flt(row.amount) for row in self.receivables)
+
+		self.total_payable_amount = flt(total_payable, self.precision("total_payable_amount"))
+		self.total_receivable_amount = flt(
+			total_receivable + flt(self.total_asset_recovery_cost),
+			self.precision("total_receivable_amount"),
+		)
+
+	def add_withheld_salary_slips(self):
+		salary_slips = frappe.get_all(
+			"Salary Slip",
+			filters={
+				"employee": self.employee,
+				"status": "Withheld",
+				"docstatus": ("!=", 2),
+			},
+			fields=["name", "net_pay"],
+		)
+
+		for slip in salary_slips:
+			self.append(
+				"payables",
+				{
+					"status": "Unsettled",
+					"component": "Salary Slip",
+					"reference_document_type": "Salary Slip",
+					"reference_document": slip.name,
+					"amount": slip.net_pay,
+					"paid_via_salary_slip": 1,
+				},
+			)
+
+>>>>>>> da17577dc (chore: remove unused import)
 	def create_component_row(self, components, component_type):
 		for component in components:
 			self.append(
@@ -72,7 +173,10 @@ class FullandFinalStatement(Document):
 
 	def get_payable_component(self):
 		return [
+<<<<<<< HEAD
 			"Salary Slip",
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 			"Gratuity",
 			"Expense Claim",
 			"Bonus",
@@ -80,10 +184,17 @@ class FullandFinalStatement(Document):
 		]
 
 	def get_receivable_component(self):
+<<<<<<< HEAD
 		return [
 			"Loan",
 			"Employee Advance",
 		]
+=======
+		receivables = ["Employee Advance"]
+		if "lending" in frappe.get_installed_apps():
+			receivables.append("Loan")
+		return receivables
+>>>>>>> da17577dc (chore: remove unused import)
 
 	def get_assets_movement(self):
 		asset_movements = frappe.get_all(
@@ -108,11 +219,21 @@ class FullandFinalStatement(Document):
 			inwards_counts = [movement.asset for movement in inward_movements].count(movement.asset)
 
 			if inwards_counts > outwards_count:
+<<<<<<< HEAD
+=======
+				cost = frappe.db.get_value("Asset", movement.asset, "total_asset_cost")
+>>>>>>> da17577dc (chore: remove unused import)
 				data.append(
 					{
 						"reference": movement.parent,
 						"asset_name": movement.asset_name,
 						"date": frappe.db.get_value("Asset Movement", movement.parent, "transaction_date"),
+<<<<<<< HEAD
+=======
+						"actual_cost": cost,
+						"cost": cost,
+						"action": "Return",
+>>>>>>> da17577dc (chore: remove unused import)
 						"status": "Owned",
 					}
 				)
@@ -129,10 +250,18 @@ class FullandFinalStatement(Document):
 		difference = self.total_payable_amount - self.total_receivable_amount
 
 		for data in self.payables:
+<<<<<<< HEAD
 			if data.amount > 0 and not data.paid_via_salary_slip:
 				account_dict = {
 					"account": data.account,
 					"debit_in_account_currency": flt(data.amount, precision),
+=======
+			if flt(data.amount) > 0 and not data.paid_via_salary_slip:
+				account_dict = {
+					"account": data.account,
+					"debit_in_account_currency": flt(data.amount, precision),
+					"user_remark": data.remark,
+>>>>>>> da17577dc (chore: remove unused import)
 				}
 				if data.reference_document_type == "Expense Claim":
 					account_dict["party_type"] = "Employee"
@@ -141,10 +270,18 @@ class FullandFinalStatement(Document):
 				jv.append("accounts", account_dict)
 
 		for data in self.receivables:
+<<<<<<< HEAD
 			if data.amount > 0:
 				account_dict = {
 					"account": data.account,
 					"credit_in_account_currency": flt(data.amount, precision),
+=======
+			if flt(data.amount) > 0:
+				account_dict = {
+					"account": data.account,
+					"credit_in_account_currency": flt(data.amount, precision),
+					"user_remark": data.remark,
+>>>>>>> da17577dc (chore: remove unused import)
 				}
 				if data.reference_document_type == "Employee Advance":
 					account_dict["party_type"] = "Employee"
@@ -152,6 +289,22 @@ class FullandFinalStatement(Document):
 
 				jv.append("accounts", account_dict)
 
+<<<<<<< HEAD
+=======
+		for data in self.assets_allocated:
+			if data.action == "Recover Cost":
+				jv.append(
+					"accounts",
+					{
+						"account": data.account,
+						"credit_in_account_currency": flt(data.cost, precision),
+						"party_type": "Employee",
+						"party": self.employee,
+						"user_remark": data.description,
+					},
+				)
+
+>>>>>>> da17577dc (chore: remove unused import)
 		jv.append(
 			"accounts",
 			{
@@ -222,4 +375,10 @@ def update_full_and_final_statement_status(doc, method=None):
 
 	for entry in doc.accounts:
 		if entry.reference_type == "Full and Final Statement":
+<<<<<<< HEAD
 			frappe.db.set_value("Full and Final Statement", entry.reference_name, "status", status)
+=======
+			fnf = frappe.get_doc("Full and Final Statement", entry.reference_name)
+			fnf.db_set("status", status)
+			fnf.notify_update()
+>>>>>>> da17577dc (chore: remove unused import)

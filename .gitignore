@@ -3,7 +3,26 @@
 *.egg-info
 *.swp
 tags
+<<<<<<< HEAD
+=======
+hrms/public/dist
+hrms/public/node_modules
+>>>>>>> da17577dc (chore: remove unused import)
 hrms/docs/current
 node_modules/
 dist/
 __pycache__/
+<<<<<<< HEAD
+=======
+
+# build/
+.vscode
+.vs
+node_modules
+*debug.log
+hrms/docs/current
+hrms/public/frontend
+hrms/www/hrms.html
+hrms/public/roster
+hrms/www/roster.html
+>>>>>>> da17577dc (chore: remove unused import)

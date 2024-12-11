@@ -9,10 +9,19 @@
   "employee_name",
   "column_break_3",
   "department",
+<<<<<<< HEAD
   "designation"
  ],
  "fields": [
   {
+=======
+  "designation",
+  "is_salary_withheld"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "employee",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -47,11 +56,26 @@
    "in_list_view": 1,
    "label": "Designation",
    "read_only": 1
+<<<<<<< HEAD
+=======
+  },
+  {
+   "columns": 2,
+   "default": "0",
+   "fieldname": "is_salary_withheld",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is Salary Withheld"
+>>>>>>> da17577dc (chore: remove unused import)
   }
  ],
  "istable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2020-12-17 15:43:29.542977",
+=======
+ "modified": "2024-07-22 13:28:40.573807",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Employee Detail",
@@ -59,7 +83,13 @@
  "permissions": [],
  "quick_entry": 1,
  "read_only": 1,
+<<<<<<< HEAD
  "sort_field": "modified",
  "sort_order": "DESC",
+=======
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+>>>>>>> da17577dc (chore: remove unused import)
  "track_changes": 1
 }

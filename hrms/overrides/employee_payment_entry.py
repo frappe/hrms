@@ -19,9 +19,15 @@ from hrms.hr.doctype.expense_claim.expense_claim import get_outstanding_amount_f
 class EmployeePaymentEntry(PaymentEntry):
 	def get_valid_reference_doctypes(self):
 		if self.party_type == "Customer":
+<<<<<<< HEAD
 			return ("Sales Order", "Sales Invoice", "Journal Entry", "Dunning")
 		elif self.party_type == "Supplier":
 			return ("Purchase Order", "Purchase Invoice", "Journal Entry")
+=======
+			return ("Sales Order", "Sales Invoice", "Journal Entry", "Dunning", "Payment Entry")
+		elif self.party_type == "Supplier":
+			return ("Purchase Order", "Purchase Invoice", "Journal Entry", "Payment Entry")
+>>>>>>> da17577dc (chore: remove unused import)
 		elif self.party_type == "Shareholder":
 			return ("Journal Entry",)
 		elif self.party_type == "Employee":
@@ -65,7 +71,14 @@ class EmployeePaymentEntry(PaymentEntry):
 						continue
 
 					if field == "exchange_rate" or not d.get(field) or force:
+<<<<<<< HEAD
 						d.db_set(field, value)
+=======
+						if self.get("_action") in ("submit", "cancel"):
+							d.db_set(field, value)
+						else:
+							d.set(field, value)
+>>>>>>> da17577dc (chore: remove unused import)
 
 
 @frappe.whitelist()

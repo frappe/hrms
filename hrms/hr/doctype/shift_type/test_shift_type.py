@@ -3,7 +3,11 @@
 from datetime import datetime, timedelta
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, get_time, get_year_ending, get_year_start, getdate, now_datetime
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -14,7 +18,11 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.tests.test_utils import add_date_to_holiday_list
 
 
+<<<<<<< HEAD
 class TestShiftType(FrappeTestCase):
+=======
+class TestShiftType(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		frappe.db.delete("Shift Type")
 		frappe.db.delete("Shift Assignment")
@@ -116,8 +124,13 @@ class TestShiftType(FrappeTestCase):
 		# doesn't mark late entry until 60 mins after shift start i.e. till 9
 		# doesn't mark late entry until 60 mins before shift end i.e. 11
 		shift_type = setup_shift_type(
+<<<<<<< HEAD
 			enable_entry_grace_period=1,
 			enable_exit_grace_period=1,
+=======
+			enable_late_entry_marking=1,
+			enable_early_exit_marking=1,
+>>>>>>> da17577dc (chore: remove unused import)
 			late_entry_grace_period=60,
 			early_exit_grace_period=60,
 		)
@@ -653,7 +666,13 @@ def setup_shift_type(**args):
 	return shift_type
 
 
+<<<<<<< HEAD
 def make_shift_assignment(shift_type, employee, start_date, end_date=None, do_not_submit=False):
+=======
+def make_shift_assignment(
+	shift_type, employee, start_date, end_date=None, do_not_submit=False, shift_location=None
+):
+>>>>>>> da17577dc (chore: remove unused import)
 	shift_assignment = frappe.get_doc(
 		{
 			"doctype": "Shift Assignment",
@@ -662,6 +681,10 @@ def make_shift_assignment(shift_type, employee, start_date, end_date=None, do_no
 			"employee": employee,
 			"start_date": start_date,
 			"end_date": end_date,
+<<<<<<< HEAD
+=======
+			"shift_location": shift_location,
+>>>>>>> da17577dc (chore: remove unused import)
 		}
 	)
 	if not do_not_submit:

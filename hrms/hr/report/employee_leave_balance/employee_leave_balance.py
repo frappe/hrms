@@ -207,7 +207,12 @@ def get_allocated_and_expired_leaves(
 				carry_forwarded_leaves += record.leaves
 			else:
 				new_allocation += record.leaves
+<<<<<<< HEAD
 
+=======
+	# carry forwarded leaves also get counted in expired, hence subtracting them
+	expired_leaves -= carry_forwarded_leaves
+>>>>>>> da17577dc (chore: remove unused import)
 	return new_allocation, expired_leaves, carry_forwarded_leaves
 
 

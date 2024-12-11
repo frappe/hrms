@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -11,7 +15,11 @@ from hrms.hr.doctype.appraisal_template.test_appraisal_template import create_ap
 from hrms.tests.test_utils import create_company
 
 
+<<<<<<< HEAD
 class TestAppraisalCycle(FrappeTestCase):
+=======
+class TestAppraisalCycle(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		company = create_company("_Test Appraisal").name
 		self.template = create_appraisal_template()

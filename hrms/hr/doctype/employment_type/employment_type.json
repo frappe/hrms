@@ -25,7 +25,11 @@
  "icon": "fa fa-flag",
  "idx": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-07-04 10:21:39.843357",
+=======
+ "modified": "2024-03-27 13:09:42.827070",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employment Type",
@@ -59,7 +63,11 @@
  ],
  "quick_entry": 1,
  "show_name_in_global_search": 1,
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "translated_doctype": 1

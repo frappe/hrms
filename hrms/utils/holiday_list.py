@@ -19,3 +19,12 @@ def get_holiday_dates_between(
 		query = query.where(Holiday.weekly_off == 0)
 
 	return query.run(pluck=True)
+<<<<<<< HEAD
+=======
+
+
+def invalidate_cache(doc, method=None):
+	from hrms.payroll.doctype.salary_slip.salary_slip import HOLIDAYS_BETWEEN_DATES
+
+	frappe.cache().delete_value(HOLIDAYS_BETWEEN_DATES)
+>>>>>>> da17577dc (chore: remove unused import)

@@ -53,6 +53,7 @@ frappe.ui.form.on("Salary Structure Assignment", {
 	},
 
 	refresh: function (frm) {
+<<<<<<< HEAD
 		if (frm.doc.__onload) {
 			frm.unhide_earnings_and_taxation_section =
 				frm.doc.__onload.earning_and_deduction_entries_does_not_exists;
@@ -67,12 +68,41 @@ frappe.ui.form.on("Salary Structure Assignment", {
 				},
 				__("Actions"),
 			);
+=======
+		frm.trigger("toggle_opening_balances_section");
+
+		if (frm.doc.docstatus != 1) return;
+
+		frm.add_custom_button(
+			__("Payroll Entry"),
+			() => {
+				frappe.model.with_doctype("Payroll Entry", () => {
+					const doc = frappe.model.get_new_doc("Payroll Entry");
+					frappe.set_route("Form", "Payroll Entry", doc.name);
+				});
+			},
+			__("Create"),
+		);
+		frm.page.set_inner_btn_group_as_primary(__("Create"));
+
+		frm.add_custom_button(
+			__("Preview Salary Slip"),
+			function () {
+				frm.trigger("preview_salary_slip");
+			},
+			__("Actions"),
+		);
+>>>>>>> da17577dc (chore: remove unused import)
 	},
 
 	employee: function (frm) {
 		if (frm.doc.employee) {
 			frm.trigger("set_payroll_cost_centers");
+<<<<<<< HEAD
 			frm.trigger("valiadte_joining_date_and_salary_slips");
+=======
+			frm.trigger("toggle_opening_balances_section");
+>>>>>>> da17577dc (chore: remove unused import)
 		} else {
 			frm.set_value("payroll_cost_centers", []);
 		}
@@ -131,6 +161,7 @@ frappe.ui.form.on("Salary Structure Assignment", {
 		}
 	},
 
+<<<<<<< HEAD
 	valiadte_joining_date_and_salary_slips: function (frm) {
 		frappe.call({
 			method: "earning_and_deduction_entries_does_not_exists",
@@ -150,11 +181,27 @@ frappe.ui.form.on("Salary Structure Assignment", {
 		} else {
 			frm.set_df_property("earnings_and_taxation_section", "hidden", 1);
 		}
+=======
+	toggle_opening_balances_section: function (frm) {
+		if (!frm.doc.from_date || !frm.doc.employee) return;
+
+		frm.call("are_opening_entries_required").then((data) => {
+			if (data.message) {
+				frm.set_df_property("opening_balances_section", "hidden", 0);
+			} else {
+				frm.set_df_property("opening_balances_section", "hidden", 1);
+			}
+		});
+>>>>>>> da17577dc (chore: remove unused import)
 	},
 
 	from_date: function (frm) {
 		if (frm.doc.from_date) {
+<<<<<<< HEAD
 			frm.trigger("valiadte_joining_date_and_salary_slips");
+=======
+			frm.trigger("toggle_opening_balances_section");
+>>>>>>> da17577dc (chore: remove unused import)
 		}
 	},
 });

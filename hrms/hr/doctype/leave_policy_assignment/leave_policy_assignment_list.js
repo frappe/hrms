@@ -1,5 +1,6 @@
 frappe.listview_settings["Leave Policy Assignment"] = {
 	onload: function (list_view) {
+<<<<<<< HEAD
 		let me = this;
 		list_view.page.add_inner_button(__("Bulk Leave Policy Assignment"), function () {
 			me.dialog = new frappe.ui.form.MultiSelectDialog({
@@ -142,4 +143,10 @@ frappe.listview_settings["Leave Policy Assignment"] = {
 			);
 		}
 	},
+=======
+		list_view.page.add_inner_button(__("Bulk Leave Policy Assignment"), function () {
+			frappe.set_route("Form", "Leave Control Panel");
+		});
+	},
+>>>>>>> da17577dc (chore: remove unused import)
 };

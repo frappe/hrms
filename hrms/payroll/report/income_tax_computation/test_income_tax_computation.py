@@ -1,5 +1,9 @@
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -16,7 +20,11 @@ from hrms.payroll.doctype.salary_structure.test_salary_structure import make_sal
 from hrms.payroll.report.income_tax_computation.income_tax_computation import execute
 
 
+<<<<<<< HEAD
 class TestIncomeTaxComputation(FrappeTestCase):
+=======
+class TestIncomeTaxComputation(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		self.cleanup_records()
 		self.create_records()

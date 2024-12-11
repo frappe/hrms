@@ -2,10 +2,17 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
 
 
 class TestAppraisalTemplate(FrappeTestCase):
+=======
+from frappe.tests import IntegrationTestCase
+
+
+class TestAppraisalTemplate(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def test_incorrect_weightage_allocation(self):
 		template = create_appraisal_template()
 		template.goals[1].per_weightage = 69.99

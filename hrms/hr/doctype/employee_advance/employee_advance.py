@@ -11,6 +11,10 @@ from frappe.utils import flt, nowdate
 import erpnext
 from erpnext.accounts.doctype.journal_entry.journal_entry import get_default_bank_cash_account
 
+<<<<<<< HEAD
+=======
+import hrms
+>>>>>>> da17577dc (chore: remove unused import)
 from hrms.hr.utils import validate_active_employee
 
 
@@ -26,13 +30,37 @@ class EmployeeAdvance(Document):
 
 	def validate(self):
 		validate_active_employee(self.employee)
+<<<<<<< HEAD
+=======
+		self.validate_exchange_rate()
+>>>>>>> da17577dc (chore: remove unused import)
 		self.set_status()
 		self.set_pending_amount()
 
 	def on_cancel(self):
 		self.ignore_linked_doctypes = ("GL Entry", "Payment Ledger Entry")
+<<<<<<< HEAD
 		self.set_status(update=True)
 
+=======
+		self.check_linked_payment_entry()
+		self.set_status(update=True)
+
+	def on_update(self):
+		self.publish_update()
+
+	def after_delete(self):
+		self.publish_update()
+
+	def publish_update(self):
+		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
+		hrms.refetch_resource("hrms:employee_advance_balance", employee_user)
+
+	def validate_exchange_rate(self):
+		if not self.exchange_rate:
+			frappe.throw(_("Exchange Rate cannot be zero."))
+
+>>>>>>> da17577dc (chore: remove unused import)
 	def set_status(self, update=False):
 		precision = self.precision("paid_amount")
 		total_amount = flt(flt(self.claimed_amount) + flt(self.return_amount), precision)
@@ -66,6 +94,11 @@ class EmployeeAdvance(Document):
 
 		if update:
 			self.db_set("status", status)
+<<<<<<< HEAD
+=======
+			self.publish_update()
+			self.notify_update()
+>>>>>>> da17577dc (chore: remove unused import)
 		else:
 			self.status = status
 
@@ -157,6 +190,19 @@ class EmployeeAdvance(Document):
 			)
 		).run()[0][0] or 0.0
 
+<<<<<<< HEAD
+=======
+	def check_linked_payment_entry(self):
+		from erpnext.accounts.utils import (
+			remove_ref_doc_link_from_pe,
+			update_accounting_ledgers_after_reference_removal,
+		)
+
+		if frappe.db.get_single_value("HR Settings", "unlink_payment_on_cancellation_of_employee_advance"):
+			remove_ref_doc_link_from_pe(self.doctype, self.name)
+			update_accounting_ledgers_after_reference_removal(self.doctype, self.name)
+
+>>>>>>> da17577dc (chore: remove unused import)
 
 @frappe.whitelist()
 def make_bank_entry(dt, dn):

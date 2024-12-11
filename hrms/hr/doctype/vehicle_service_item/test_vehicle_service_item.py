@@ -2,8 +2,15 @@
 # See license.txt
 
 # import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
 
 
 class TestVehicleServiceItem(FrappeTestCase):
+=======
+from frappe.tests import IntegrationTestCase
+
+
+class TestVehicleServiceItem(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	pass

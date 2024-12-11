@@ -7,10 +7,15 @@
  "document_type": "Setup",
  "engine": "InnoDB",
  "field_order": [
+<<<<<<< HEAD
+=======
+  "expenses_and_advances_tab",
+>>>>>>> da17577dc (chore: remove unused import)
   "naming_series",
   "employee",
   "employee_name",
   "department",
+<<<<<<< HEAD
   "column_break_5",
   "expense_approver",
   "approval_status",
@@ -20,6 +25,18 @@
   "expenses",
   "sb1",
   "taxes",
+=======
+  "company",
+  "column_break_5",
+  "expense_approver",
+  "approval_status",
+  "expense_details",
+  "expenses",
+  "taxes_and_charges_sb",
+  "taxes",
+  "advance_payments_sb",
+  "advances",
+>>>>>>> da17577dc (chore: remove unused import)
   "transactions_section",
   "total_sanctioned_amount",
   "total_taxes_and_charges",
@@ -28,6 +45,7 @@
   "grand_total",
   "total_claimed_amount",
   "total_amount_reimbursed",
+<<<<<<< HEAD
   "section_break_16",
   "posting_date",
   "vehicle_log",
@@ -42,15 +60,38 @@
   "clearance_date",
   "column_break_24",
   "payable_account",
+=======
+  "accounting_details_tab",
+  "accounting_details",
+  "posting_date",
+  "is_paid",
+  "mode_of_payment",
+  "payable_account",
+  "column_break_24",
+  "clearance_date",
+  "remark",
+>>>>>>> da17577dc (chore: remove unused import)
   "accounting_dimensions_section",
   "project",
   "dimension_col_break",
   "cost_center",
+<<<<<<< HEAD
   "more_details",
   "status",
   "amended_from",
   "advance_payments",
   "advances"
+=======
+  "more_info_tab",
+  "more_details",
+  "status",
+  "task",
+  "amended_from",
+  "column_break_xdzn",
+  "delivery_trip",
+  "vehicle_log",
+  "dashboard_tab"
+>>>>>>> da17577dc (chore: remove unused import)
  ],
  "fields": [
   {
@@ -111,6 +152,10 @@
    "label": "Approval Status",
    "no_copy": 1,
    "options": "Draft\nApproved\nRejected",
+<<<<<<< HEAD
+=======
+   "permlevel": 1,
+>>>>>>> da17577dc (chore: remove unused import)
    "search_index": 1
   },
   {
@@ -158,11 +203,14 @@
    "reqd": 1
   },
   {
+<<<<<<< HEAD
    "fieldname": "sb1",
    "fieldtype": "Section Break",
    "options": "Simple"
   },
   {
+=======
+>>>>>>> da17577dc (chore: remove unused import)
    "default": "Today",
    "fieldname": "posting_date",
    "fieldtype": "Date",
@@ -180,6 +228,10 @@
    "read_only": 1
   },
   {
+<<<<<<< HEAD
+=======
+   "allow_on_submit": 1,
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "project",
    "fieldtype": "Link",
    "label": "Project",
@@ -193,10 +245,13 @@
    "remember_last_selected_value": 1
   },
   {
+<<<<<<< HEAD
    "fieldname": "cb1",
    "fieldtype": "Column Break"
   },
   {
+=======
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "total_amount_reimbursed",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -214,6 +269,7 @@
    "oldfieldtype": "Small Text"
   },
   {
+<<<<<<< HEAD
    "allow_on_submit": 1,
    "default": "{employee_name}",
    "fieldname": "title",
@@ -232,11 +288,17 @@
    "print_hide": 1
   },
   {
+=======
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "accounting_details",
    "fieldtype": "Section Break",
    "label": "Accounting Details"
   },
   {
+<<<<<<< HEAD
+=======
+   "fetch_from": "employee.company",
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "company",
    "fieldtype": "Link",
    "in_standard_filter": 1,
@@ -244,7 +306,11 @@
    "oldfieldname": "company",
    "oldfieldtype": "Link",
    "options": "Company",
+<<<<<<< HEAD
    "remember_last_selected_value": 1,
+=======
+   "read_only": 1,
+>>>>>>> da17577dc (chore: remove unused import)
    "reqd": 1
   },
   {
@@ -269,10 +335,17 @@
    "fieldname": "payable_account",
    "fieldtype": "Link",
    "label": "Payable Account",
+<<<<<<< HEAD
    "options": "Account",
    "reqd": 1
   },
   {
+=======
+   "options": "Account"
+  },
+  {
+   "allow_on_submit": 1,
+>>>>>>> da17577dc (chore: remove unused import)
    "fetch_from": "company.cost_center",
    "fetch_if_empty": 1,
    "fieldname": "cost_center",
@@ -281,10 +354,15 @@
    "options": "Cost Center"
   },
   {
+<<<<<<< HEAD
    "collapsible": 1,
    "fieldname": "more_details",
    "fieldtype": "Section Break",
    "label": "More Details"
+=======
+   "fieldname": "more_details",
+   "fieldtype": "Section Break"
+>>>>>>> da17577dc (chore: remove unused import)
   },
   {
    "default": "Draft",
@@ -312,7 +390,13 @@
    "width": "160px"
   },
   {
+<<<<<<< HEAD
    "fieldname": "advance_payments",
+=======
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:doc.advances?.length",
+   "fieldname": "advance_payments_sb",
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldtype": "Section Break",
    "label": "Advance Payments"
   },
@@ -345,12 +429,18 @@
    "options": "Expense Taxes and Charges"
   },
   {
+<<<<<<< HEAD
    "fieldname": "section_break_16",
    "fieldtype": "Section Break"
   },
   {
    "fieldname": "transactions_section",
    "fieldtype": "Section Break"
+=======
+   "fieldname": "transactions_section",
+   "fieldtype": "Section Break",
+   "label": "Totals"
+>>>>>>> da17577dc (chore: remove unused import)
   },
   {
    "fieldname": "grand_total",
@@ -377,17 +467,60 @@
    "fieldtype": "Link",
    "label": "Delivery Trip",
    "options": "Delivery Trip"
+<<<<<<< HEAD
+=======
+  },
+  {
+   "fieldname": "column_break_xdzn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "accounting_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Accounting"
+  },
+  {
+   "fieldname": "more_info_tab",
+   "fieldtype": "Tab Break",
+   "label": "More Info"
+  },
+  {
+   "fieldname": "dashboard_tab",
+   "fieldtype": "Tab Break",
+   "label": "Dashboard",
+   "show_dashboard": 1
+  },
+  {
+   "fieldname": "expenses_and_advances_tab",
+   "fieldtype": "Tab Break",
+   "label": "Expenses & Advances"
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:doc.taxes?.length",
+   "fieldname": "taxes_and_charges_sb",
+   "fieldtype": "Section Break",
+   "label": "Taxes & Charges",
+   "options": "Simple"
+>>>>>>> da17577dc (chore: remove unused import)
   }
  ],
  "icon": "fa fa-money",
  "idx": 1,
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2024-04-17 19:38:30.373122",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim",
  "name_case": "Title Case",
+=======
+ "modified": "2024-10-09 14:16:06.715586",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Expense Claim",
+>>>>>>> da17577dc (chore: remove unused import)
  "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
@@ -443,12 +576,81 @@
    "share": 1,
    "submit": 1,
    "write": 1
+<<<<<<< HEAD
+=======
+  },
+  {
+   "permlevel": 1,
+   "read": 1,
+   "role": "HR Manager",
+   "write": 1
+  },
+  {
+   "permlevel": 1,
+   "read": 1,
+   "role": "HR User",
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Expense Approver",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1
+>>>>>>> da17577dc (chore: remove unused import)
   }
  ],
  "search_fields": "employee,employee_name",
  "show_name_in_global_search": 1,
+<<<<<<< HEAD
  "sort_field": "modified",
  "sort_order": "DESC",
  "timeline_field": "employee",
  "title_field": "title"
+=======
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Gray",
+   "title": "Draft"
+  },
+  {
+   "color": "Blue",
+   "title": "Submitted"
+  },
+  {
+   "color": "Red",
+   "title": "Cancelled"
+  },
+  {
+   "color": "Green",
+   "title": "Paid"
+  },
+  {
+   "color": "Yellow",
+   "title": "Unpaid"
+  },
+  {
+   "color": "Red",
+   "title": "Rejected"
+  }
+ ],
+ "timeline_field": "employee",
+ "title_field": "employee_name"
+>>>>>>> da17577dc (chore: remove unused import)
 }

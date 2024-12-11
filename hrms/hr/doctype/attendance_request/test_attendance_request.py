@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, add_months, get_year_ending, get_year_start, getdate
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
@@ -17,7 +21,11 @@ from hrms.tests.test_utils import add_date_to_holiday_list, get_first_sunday
 test_dependencies = ["Employee"]
 
 
+<<<<<<< HEAD
 class TestAttendanceRequest(FrappeTestCase):
+=======
+class TestAttendanceRequest(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		for doctype in ["Attendance Request", "Attendance"]:
 			frappe.db.delete(doctype)
@@ -127,7 +135,11 @@ class TestAttendanceRequest(FrappeTestCase):
 
 		make_allocation_record(leave_type=leave_type.name, from_date=self.from_date, to_date=self.to_date)
 		today = getdate()
+<<<<<<< HEAD
 		make_leave_application(self.employee.name, today, add_days(today, 1), leave_type.name)
+=======
+		make_leave_application(self.employee.name, today, today, leave_type.name)
+>>>>>>> da17577dc (chore: remove unused import)
 
 		attendance_request = create_attendance_request(
 			employee=self.employee.name, reason="On Duty", company="_Test Company"

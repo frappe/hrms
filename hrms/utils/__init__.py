@@ -44,3 +44,22 @@ def generate_date_range(start_date: str, end_date: str, reverse: bool = False) -
 
 	for n in range(no_of_days):
 		yield add_days(date_field, direction * n)
+<<<<<<< HEAD
+=======
+
+
+def get_employee_email(employee_id: str) -> str | None:
+	employee_emails = frappe.db.get_value(
+		"Employee",
+		employee_id,
+		["prefered_email", "user_id", "company_email", "personal_email"],
+		as_dict=True,
+	)
+
+	return (
+		employee_emails.prefered_email
+		or employee_emails.user_id
+		or employee_emails.company_email
+		or employee_emails.personal_email
+	)
+>>>>>>> da17577dc (chore: remove unused import)

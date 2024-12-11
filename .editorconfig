@@ -9,7 +9,14 @@ trim_trailing_whitespace = true
 charset = utf-8
 
 # js indentation settings
+<<<<<<< HEAD
 [{*.js,*.vue,*.css,*.scss,*.html}]
 indent_style = tab
 indent_size = 4
 max_line_length = 99
+=======
+[{*.js,*.ts,*.vue,*.css,*.scss,*.html}]
+indent_style = tab
+indent_size = 4
+max_line_length = 99
+>>>>>>> da17577dc (chore: remove unused import)

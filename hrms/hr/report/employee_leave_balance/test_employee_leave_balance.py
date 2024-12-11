@@ -3,7 +3,11 @@
 
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, add_months, flt, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -22,7 +26,11 @@ from hrms.tests.test_utils import get_first_sunday
 test_records = frappe.get_test_records("Leave Type")
 
 
+<<<<<<< HEAD
 class TestEmployeeLeaveBalance(FrappeTestCase):
+=======
+class TestEmployeeLeaveBalance(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		for dt in [
 			"Leave Application",
@@ -241,3 +249,50 @@ class TestEmployeeLeaveBalance(FrappeTestCase):
 		)
 		report = execute(filters)
 		self.assertEqual(len(report[1]), 1)
+<<<<<<< HEAD
+=======
+
+	@set_holiday_list("_Test Emp Balance Holiday List", "_Test Company")
+	def test_closing_balance_considers_carry_forwarded_leaves(self):
+		leave_type = create_leave_type(leave_type_name="_Test_CF_leave_expiry", is_carry_forward=1)
+		# 30 leaves allocated for first half of the year
+		allocation1 = make_allocation_record(
+			employee=self.employee_id,
+			from_date=self.year_start,
+			to_date=self.mid_year,
+			leave_type=leave_type.name,
+		)
+		# 4 days leave application in the first allocation
+		first_sunday = get_first_sunday(self.holiday_list, for_date=self.year_start)
+		leave_application = make_leave_application(
+			self.employee_id, first_sunday, add_days(first_sunday, 3), leave_type.name
+		)
+		leave_application.reload()
+		# expires 26 leaves
+		process_expired_allocation()
+		# carry forward 26 expired leaves + allocate 4 new leaves
+		allocation2 = make_allocation_record(
+			employee=self.employee_id,
+			from_date=add_days(self.mid_year, 1),
+			to_date=self.year_end,
+			leaves=4,
+			carry_forward=True,
+			leave_type=leave_type.name,
+		)
+
+		filters = frappe._dict(
+			{
+				"from_date": self.year_start,
+				"to_date": self.year_end,
+				"employee": self.employee_id,
+			}
+		)
+		report = execute(filters)
+
+		closing_balance = (
+			allocation1.new_leaves_allocated
+			- leave_application.total_leave_days
+			+ allocation2.new_leaves_allocated
+		)
+		self.assertEqual(report[1][0].closing_balance, closing_balance)
+>>>>>>> da17577dc (chore: remove unused import)

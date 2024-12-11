@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, flt, getdate
 
 from hrms.hr.doctype.interview.test_interview import (
@@ -12,7 +16,11 @@ from hrms.hr.doctype.interview.test_interview import (
 from hrms.tests.test_utils import create_job_applicant
 
 
+<<<<<<< HEAD
 class TestInterviewFeedback(FrappeTestCase):
+=======
+class TestInterviewFeedback(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def test_validation_for_skill_set(self):
 		frappe.set_user("Administrator")
 		job_applicant = create_job_applicant()
@@ -21,7 +29,11 @@ class TestInterviewFeedback(FrappeTestCase):
 		)
 		skill_ratings = get_skills_rating(interview.interview_round)
 
+<<<<<<< HEAD
 		interviewer = interview.interview_details[0].interviewer
+=======
+		interviewer = "test_interviewer1@example.com"
+>>>>>>> da17577dc (chore: remove unused import)
 		create_skill_set(["Leadership"])
 
 		interview_feedback = create_interview_feedback(interview.name, interviewer, skill_ratings)
@@ -40,7 +52,11 @@ class TestInterviewFeedback(FrappeTestCase):
 		skill_ratings = get_skills_rating(interview.interview_round)
 
 		# For First Interviewer Feedback
+<<<<<<< HEAD
 		interviewer = interview.interview_details[0].interviewer
+=======
+		interviewer = "test_interviewer1@example.com"
+>>>>>>> da17577dc (chore: remove unused import)
 		frappe.set_user(interviewer)
 
 		# calculating Average
@@ -57,6 +73,7 @@ class TestInterviewFeedback(FrappeTestCase):
 
 		self.assertEqual(flt(avg_rating, 2), flt(feedback_1.average_rating, 2))
 
+<<<<<<< HEAD
 		avg_on_interview_detail = frappe.db.get_value(
 			"Interview Detail",
 			{
@@ -72,6 +89,10 @@ class TestInterviewFeedback(FrappeTestCase):
 
 		"""For Second Interviewer Feedback"""
 		interviewer = interview.interview_details[1].interviewer
+=======
+		"""For Second Interviewer Feedback"""
+		interviewer = "test_interviewer2@example.com"
+>>>>>>> da17577dc (chore: remove unused import)
 		frappe.set_user(interviewer)
 
 		feedback_2 = create_interview_feedback(interview.name, interviewer, skill_ratings)

@@ -1,0 +1,163 @@
+{
+ "actions": [],
+ "autoname": "HR-SAS-.YY.-.MM.-.#####",
+ "creation": "2024-05-28 15:19:50.016396",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "schedule_settings_section",
+  "frequency",
+  "repeat_on_days",
+  "column_break_iprq",
+  "enabled",
+  "create_shifts_after",
+  "shift_details_section",
+  "employee",
+  "employee_name",
+  "shift_type",
+  "column_break_toss",
+  "company",
+  "shift_status"
+ ],
+ "fields": [
+  {
+   "fieldname": "column_break_iprq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "frequency",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Frequency",
+   "options": "Every Week\nEvery 2 Weeks\nEvery 3 Weeks\nEvery 4 Weeks",
+   "reqd": 1
+  },
+  {
+   "fieldname": "shift_details_section",
+   "fieldtype": "Section Break",
+   "label": "Shift Details"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_toss",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "shift_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Shift Type",
+   "options": "Shift Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "schedule_settings_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "default": "Today",
+   "depends_on": "eval:doc.enabled",
+   "description": "New shift assignments will be created after this date.",
+   "fieldname": "create_shifts_after",
+   "fieldtype": "Date",
+   "label": "Create Shifts After",
+   "mandatory_depends_on": "eval:doc.status === 'Active'"
+  },
+  {
+   "fieldname": "repeat_on_days",
+   "fieldtype": "Table",
+   "label": "Repeat On Days",
+   "options": "Assignment Rule Day",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "description": "Select this if you want shift assignments to be automatically created indefinitely.",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled"
+  },
+  {
+   "default": "Active",
+   "fieldname": "shift_status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Active\nInactive"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Shift Assignment",
+   "link_fieldname": "schedule"
+  }
+ ],
+ "modified": "2024-06-27 14:37:31.797684",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Shift Assignment Schedule",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "employee_name"
+}

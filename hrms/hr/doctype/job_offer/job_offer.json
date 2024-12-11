@@ -76,6 +76,11 @@
    "reqd": 1
   },
   {
+<<<<<<< HEAD
+=======
+   "fetch_from": "job_applicant.designation",
+   "fetch_if_empty": 1,
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "designation",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -167,7 +172,11 @@
  ],
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-11-21 13:41:22.022838",
+=======
+ "modified": "2024-07-08 15:53:30.761581",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",
@@ -191,7 +200,13 @@
   }
  ],
  "show_name_in_global_search": 1,
+<<<<<<< HEAD
  "sort_field": "modified",
  "sort_order": "DESC",
+=======
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+>>>>>>> da17577dc (chore: remove unused import)
  "title_field": "applicant_name"
 }

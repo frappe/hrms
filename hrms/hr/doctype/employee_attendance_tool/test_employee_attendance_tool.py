@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -15,7 +19,11 @@ from hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool import (
 from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 
 
+<<<<<<< HEAD
 class TestEmployeeAttendanceTool(FrappeTestCase):
+=======
+class TestEmployeeAttendanceTool(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		frappe.db.delete("Attendance")
 

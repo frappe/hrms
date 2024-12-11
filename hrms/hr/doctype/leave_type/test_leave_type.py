@@ -23,7 +23,11 @@ def create_leave_type(**args):
 			"is_ppl": args.is_ppl or 0,
 			"is_carry_forward": args.is_carry_forward or 0,
 			"expire_carry_forwarded_leaves_after_days": args.expire_carry_forwarded_leaves_after_days or 0,
+<<<<<<< HEAD
 			"encashment_threshold_days": args.encashment_threshold_days or 5,
+=======
+			"non_encashable_leaves": args.non_encashable_leaves or 5,
+>>>>>>> da17577dc (chore: remove unused import)
 			"earning_component": "Leave Encashment",
 			"max_leaves_allowed": args.max_leaves_allowed,
 			"maximum_carry_forwarded_leaves": args.maximum_carry_forwarded_leaves,

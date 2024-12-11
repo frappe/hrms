@@ -60,6 +60,7 @@
    "default": "0",
    "fieldname": "current_work_experience",
 <<<<<<< HEAD
+<<<<<<< HEAD
    "fieldtype": "Int",
    "label": "Current Work Experience"
 =======
@@ -67,6 +68,11 @@
    "label": "Current Work Experience",
    "precision": "1"
 >>>>>>> ce75e4e9a (fix: set field level precision for work experience field in gratuity)
+=======
+   "fieldtype": "Float",
+   "label": "Current Work Experience",
+   "precision": "1"
+>>>>>>> da17577dc (chore: remove unused import)
   },
   {
    "default": "0",
@@ -206,10 +212,14 @@
  "is_submittable": 1,
  "links": [],
 <<<<<<< HEAD
+<<<<<<< HEAD
  "modified": "2024-03-15 02:50:10.282517",
 =======
  "modified": "2024-12-11 08:46:04.751908",
 >>>>>>> ce75e4e9a (fix: set field level precision for work experience field in gratuity)
+=======
+ "modified": "2024-12-11 08:46:04.751908",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Gratuity",
@@ -242,7 +252,11 @@
   }
  ],
  "search_fields": "employee_name",
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "title_field": "employee_name"

@@ -5,19 +5,35 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+<<<<<<< HEAD
 from frappe.utils import add_months, cint, date_diff, flt, formatdate, getdate, month_diff
 
 from hrms.hr.utils import get_holiday_dates_for_employee
+=======
+from frappe.utils import add_months, cint, date_diff, flt, formatdate, getdate
+from frappe.utils.caching import redis_cache
+
+from hrms.hr.utils import get_exact_month_diff, get_holiday_dates_for_employee
+>>>>>>> da17577dc (chore: remove unused import)
 
 
 class PayrollPeriod(Document):
 	def validate(self):
+<<<<<<< HEAD
 		self.validate_dates()
 		self.validate_overlap()
 
 	def validate_dates(self):
 		if getdate(self.start_date) > getdate(self.end_date):
 			frappe.throw(_("End date can not be less than start date"))
+=======
+		self.validate_from_to_dates("start_date", "end_date")
+		self.validate_overlap()
+
+	def clear_cache(self):
+		get_payroll_period.clear_cache()
+		return super().clear_cache()
+>>>>>>> da17577dc (chore: remove unused import)
 
 	def validate_overlap(self):
 		query = """
@@ -81,6 +97,10 @@ def get_payroll_period_days(start_date, end_date, employee, company=None):
 	return False, False, False
 
 
+<<<<<<< HEAD
+=======
+@redis_cache()
+>>>>>>> da17577dc (chore: remove unused import)
 def get_payroll_period(from_date, to_date, company):
 	PayrollPeriod = frappe.qb.DocType("Payroll Period")
 
@@ -98,6 +118,7 @@ def get_payroll_period(from_date, to_date, company):
 
 
 def get_period_factor(
+<<<<<<< HEAD
 	employee, start_date, end_date, payroll_frequency, payroll_period, depends_on_payment_days=0
 ):
 	# TODO if both deduct checked update the factor to make tax consistent
@@ -108,14 +129,41 @@ def get_period_factor(
 
 	if getdate(joining_date) > getdate(period_start):
 		period_start = joining_date
+=======
+	employee,
+	start_date,
+	end_date,
+	payroll_frequency,
+	payroll_period,
+	depends_on_payment_days=0,
+	joining_date=None,
+	relieving_date=None,
+):
+	# TODO if both deduct checked update the factor to make tax consistent
+	period_start, period_end = payroll_period.start_date, payroll_period.end_date
+
+	if not joining_date and not relieving_date:
+		joining_date, relieving_date = frappe.get_cached_value(
+			"Employee", employee, ["date_of_joining", "relieving_date"]
+		)
+
+	if getdate(joining_date) > getdate(period_start):
+		period_start = joining_date
+
+>>>>>>> da17577dc (chore: remove unused import)
 	if relieving_date and getdate(relieving_date) < getdate(period_end):
 		period_end = relieving_date
 
 	total_sub_periods, remaining_sub_periods = 0.0, 0.0
 
 	if payroll_frequency == "Monthly" and not depends_on_payment_days:
+<<<<<<< HEAD
 		total_sub_periods = month_diff(payroll_period.end_date, payroll_period.start_date)
 		remaining_sub_periods = month_diff(period_end, start_date)
+=======
+		total_sub_periods = get_exact_month_diff(payroll_period.end_date, payroll_period.start_date)
+		remaining_sub_periods = get_exact_month_diff(period_end, start_date)
+>>>>>>> da17577dc (chore: remove unused import)
 	else:
 		salary_days = date_diff(end_date, start_date) + 1
 

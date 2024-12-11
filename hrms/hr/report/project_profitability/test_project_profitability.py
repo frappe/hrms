@@ -1,5 +1,9 @@
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_days, getdate
 
 from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
@@ -13,7 +17,11 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import make_salary_struct
 test_dependencies = ["Customer"]
 
 
+<<<<<<< HEAD
 class TestProjectProfitability(FrappeTestCase):
+=======
+class TestProjectProfitability(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		frappe.db.delete("Timesheet")
 		emp = make_employee("test_employee_9@salary.com", company="_Test Company")
@@ -33,24 +41,39 @@ class TestProjectProfitability(FrappeTestCase):
 
 		holidays = self.salary_slip.get_holidays_for_employee(date, date)
 		if holidays:
+<<<<<<< HEAD
 			frappe.db.set_value("Payroll Settings", None, "include_holidays_in_total_working_days", 1)
 
 		self.salary_slip.submit()
 
+=======
+			frappe.db.set_single_value("Payroll Settings", "include_holidays_in_total_working_days", 1)
+
+		self.salary_slip.submit()
+>>>>>>> da17577dc (chore: remove unused import)
 		self.sales_invoice = make_sales_invoice(
 			self.timesheet.name, "_Test Item", "_Test Customer", currency="INR"
 		)
 		self.sales_invoice.due_date = date
 		self.sales_invoice.submit()
 
+<<<<<<< HEAD
 		frappe.db.set_value("HR Settings", None, "standard_working_hours", 8)
 		frappe.db.set_value("Payroll Settings", None, "include_holidays_in_total_working_days", 0)
+=======
+		frappe.db.set_single_value("HR Settings", "standard_working_hours", 8)
+		frappe.db.set_single_value("Payroll Settings", "include_holidays_in_total_working_days", 0)
+>>>>>>> da17577dc (chore: remove unused import)
 
 	def test_project_profitability(self):
 		filters = {
 			"company": "_Test Company",
 			"start_date": add_days(self.timesheet.start_date, -3),
+<<<<<<< HEAD
 			"end_date": self.timesheet.end_date,
+=======
+			"end_date": self.timesheet.start_date,
+>>>>>>> da17577dc (chore: remove unused import)
 		}
 
 		report = execute(filters)

@@ -2,7 +2,11 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import add_months, get_first_day, get_year_ending, getdate
 
 from hrms.hr.doctype.leave_application.test_leave_application import get_employee, get_leave_period
@@ -17,7 +21,11 @@ from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 test_dependencies = ["Employee"]
 
 
+<<<<<<< HEAD
 class TestLeavePolicyAssignment(FrappeTestCase):
+=======
+class TestLeavePolicyAssignment(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		for doctype in [
 			"Leave Period",

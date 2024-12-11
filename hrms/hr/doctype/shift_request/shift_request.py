@@ -5,27 +5,49 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+<<<<<<< HEAD
 from frappe.query_builder import Criterion
 from frappe.utils import get_link_to_form, getdate
 
 from hrms.hr.doctype.shift_assignment.shift_assignment import has_overlapping_timings
 from hrms.hr.utils import share_doc_with_approver, validate_active_employee
+=======
+from frappe.utils import get_link_to_form
+
+from hrms.hr.doctype.shift_assignment.shift_assignment import has_overlapping_timings
+from hrms.hr.utils import share_doc_with_approver, validate_active_employee
+from hrms.mixins.pwa_notifications import PWANotificationsMixin
+>>>>>>> da17577dc (chore: remove unused import)
 
 
 class OverlappingShiftRequestError(frappe.ValidationError):
 	pass
 
 
+<<<<<<< HEAD
 class ShiftRequest(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
 		self.validate_dates()
+=======
+class ShiftRequest(Document, PWANotificationsMixin):
+	def validate(self):
+		validate_active_employee(self.employee)
+		self.validate_from_to_dates("from_date", "to_date")
+>>>>>>> da17577dc (chore: remove unused import)
 		self.validate_overlapping_shift_requests()
 		self.validate_approver()
 		self.validate_default_shift()
 
 	def on_update(self):
 		share_doc_with_approver(self, self.approver)
+<<<<<<< HEAD
+=======
+		self.notify_approval_status()
+
+	def after_insert(self):
+		self.notify_approver()
+>>>>>>> da17577dc (chore: remove unused import)
 
 	def on_submit(self):
 		if self.status not in ["Approved", "Rejected"]:
@@ -77,10 +99,13 @@ class ShiftRequest(Document):
 		if self.approver not in approvers:
 			frappe.throw(_("Only Approvers can Approve this Request."))
 
+<<<<<<< HEAD
 	def validate_dates(self):
 		if self.from_date and self.to_date and (getdate(self.to_date) < getdate(self.from_date)):
 			frappe.throw(_("To date cannot be before from date"))
 
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 	def validate_overlapping_shift_requests(self):
 		overlapping_dates = self.get_overlapping_dates()
 		if len(overlapping_dates):

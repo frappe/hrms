@@ -4,7 +4,11 @@
 from datetime import datetime, timedelta
 
 import frappe
+<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase, change_settings
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import (
 	add_days,
 	get_time,
@@ -16,20 +20,33 @@ from frappe.utils import (
 )
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
+<<<<<<< HEAD
 from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 
 from hrms.hr.doctype.employee_checkin.employee_checkin import (
+=======
+
+from hrms.hr.doctype.employee_checkin.employee_checkin import (
+	CheckinRadiusExceededError,
+>>>>>>> da17577dc (chore: remove unused import)
 	add_log_based_on_employee_field,
 	bulk_fetch_shift,
 	calculate_working_hours,
 	mark_attendance_and_link_log,
 )
+<<<<<<< HEAD
 from hrms.hr.doctype.leave_application.test_leave_application import get_first_sunday
+=======
+>>>>>>> da17577dc (chore: remove unused import)
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 
 
+<<<<<<< HEAD
 class TestEmployeeCheckin(FrappeTestCase):
+=======
+class TestEmployeeCheckin(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		frappe.db.delete("Shift Type")
 		frappe.db.delete("Shift Assignment")
@@ -39,6 +56,40 @@ class TestEmployeeCheckin(FrappeTestCase):
 		to_date = get_year_ending(getdate())
 		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
 
+<<<<<<< HEAD
+=======
+		frappe.db.set_single_value("HR Settings", "allow_geolocation_tracking", 0)
+
+	def test_geolocation_tracking(self):
+		employee = make_employee("test_add_log_based_on_employee_field@example.com")
+		checkin = make_checkin(employee)
+		checkin.latitude = 23.31773
+		checkin.longitude = 66.82876
+		checkin.save()
+
+		# geolocation tracking is disabled
+		self.assertIsNone(checkin.geolocation)
+
+		frappe.db.set_single_value("HR Settings", "allow_geolocation_tracking", 1)
+
+		checkin.save()
+		self.assertEqual(
+			checkin.geolocation,
+			frappe.json.dumps(
+				{
+					"type": "FeatureCollection",
+					"features": [
+						{
+							"type": "Feature",
+							"properties": {},
+							"geometry": {"type": "Point", "coordinates": [66.82876, 23.31773]},
+						}
+					],
+				}
+			),
+		)
+
+>>>>>>> da17577dc (chore: remove unused import)
 	def test_add_log_based_on_employee_field(self):
 		employee = make_employee("test_add_log_based_on_employee_field@example.com")
 		employee = frappe.get_doc("Employee", employee)
@@ -162,6 +213,10 @@ class TestEmployeeCheckin(FrappeTestCase):
 		log = make_checkin(employee, timestamp)
 		self.assertIsNone(log.shift)
 
+<<<<<<< HEAD
+=======
+	@change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
+>>>>>>> da17577dc (chore: remove unused import)
 	def test_fetch_shift_for_assignment_with_end_date(self):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 
@@ -424,6 +479,10 @@ class TestEmployeeCheckin(FrappeTestCase):
 			self.assertEqual(log.shift_actual_start, start_timestamp)
 			self.assertEqual(log.shift_actual_end, end_timestamp)
 
+<<<<<<< HEAD
+=======
+	@change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
+>>>>>>> da17577dc (chore: remove unused import)
 	def test_consecutive_shift_assignments_overlapping_within_grace_period(self):
 		# test adjustment for start and end times if they are overlapping
 		# within "begin_check_in_before_shift_start_time" and "allow_check_out_after_shift_end_time" periods
@@ -458,6 +517,68 @@ class TestEmployeeCheckin(FrappeTestCase):
 		log = make_checkin(employee, timestamp)
 		self.assertEqual(log.shift, shift2.name)
 
+<<<<<<< HEAD
+=======
+	@change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
+	@change_settings("HR Settings", {"allow_geolocation_tracking": 1})
+	def test_geofencing(self):
+		employee = make_employee("test_shift@example.com", company="_Test Company")
+
+		# 8 - 12
+		shift1 = setup_shift_type()
+		# 15 - 19
+		shift2 = setup_shift_type(shift_type="Consecutive Shift", start_time="15:00:00", end_time="19:00:00")
+
+		date = getdate()
+		location1 = make_shift_location("Loc A", 24, 72)
+		location2 = make_shift_location("Loc B", 25, 75, checkin_radius=2000)
+		make_shift_assignment(shift1.name, employee, date, shift_location=location1.name)
+		make_shift_assignment(shift2.name, employee, date, shift_location=location2.name)
+
+		timestamp = datetime.combine(add_days(date, -1), get_time("11:00:00"))
+		# allowed as it is before the shift start date
+		make_checkin(employee, timestamp, 20, 65)
+
+		timestamp = datetime.combine(date, get_time("06:00:00"))
+		# allowed as it is before the shift start time
+		make_checkin(employee, timestamp, 20, 65)
+
+		timestamp = datetime.combine(date, get_time("10:00:00"))
+		# allowed as distance (150m) is within checkin radius (500m)
+		make_checkin(employee, timestamp, 24.001, 72.001)
+
+		timestamp = datetime.combine(date, get_time("10:30:00"))
+		log = frappe.get_doc(
+			{
+				"doctype": "Employee Checkin",
+				"employee": employee,
+				"time": timestamp,
+				"latitude": 24.01,
+				"longitude": 72.01,
+			}
+		)
+		# not allowed as distance (1506m) is not within checkin radius
+		self.assertRaises(CheckinRadiusExceededError, log.insert)
+
+		# to ensure that the correct shift assignment is considered
+		timestamp = datetime.combine(date, get_time("16:00:00"))
+		# allowed as distance (1506m) is within checkin radius (2000m)
+		make_checkin(employee, timestamp, 25.01, 75.01)
+
+		timestamp = datetime.combine(date, get_time("16:30:00"))
+		log = frappe.get_doc(
+			{
+				"doctype": "Employee Checkin",
+				"employee": employee,
+				"time": timestamp,
+				"latitude": 25.1,
+				"longitude": 75.1,
+			}
+		)
+		# not allowed as distance (15004m) is not within checkin radius
+		self.assertRaises(CheckinRadiusExceededError, log.insert)
+
+>>>>>>> da17577dc (chore: remove unused import)
 	def test_bulk_fetch_shift(self):
 		emp1 = make_employee("emp1@example.com", company="_Test Company")
 		emp2 = make_employee("emp2@example.com", company="_Test Company")
@@ -500,7 +621,11 @@ def make_n_checkins(employee, n, hours_to_reverse=1):
 	return logs
 
 
+<<<<<<< HEAD
 def make_checkin(employee, time=None):
+=======
+def make_checkin(employee, time=None, latitude=None, longitude=None):
+>>>>>>> da17577dc (chore: remove unused import)
 	if not time:
 		time = now_datetime()
 
@@ -511,6 +636,28 @@ def make_checkin(employee, time=None):
 			"time": time,
 			"device_id": "device1",
 			"log_type": "IN",
+<<<<<<< HEAD
 		}
 	).insert()
 	return log
+=======
+			"latitude": latitude,
+			"longitude": longitude,
+		}
+	).insert()
+	return log
+
+
+def make_shift_location(location_name, latitude, longitude, checkin_radius=500):
+	shift_location = frappe.get_doc(
+		{
+			"doctype": "Shift Location",
+			"location_name": location_name,
+			"latitude": latitude,
+			"longitude": longitude,
+			"checkin_radius": checkin_radius,
+		}
+	).insert()
+
+	return shift_location
+>>>>>>> da17577dc (chore: remove unused import)

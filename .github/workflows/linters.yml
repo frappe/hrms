@@ -15,7 +15,11 @@ jobs:
           fetch-depth: 200
       - uses: actions/setup-node@v2
         with:
+<<<<<<< HEAD
           node-version: 16
+=======
+          node-version: 18
+>>>>>>> da17577dc (chore: remove unused import)
           check-latest: true
 
       - name: Check commit titles
@@ -37,7 +41,11 @@ jobs:
           python-version: '3.10'
 
       - name: Install and Run Pre-commit
+<<<<<<< HEAD
         uses: pre-commit/action@v2.0.3
+=======
+        uses: pre-commit/action@v3.0.0
+>>>>>>> da17577dc (chore: remove unused import)
 
       - name: Download Semgrep rules
         run: git clone --depth 1 https://github.com/frappe/semgrep-rules.git frappe-semgrep-rules

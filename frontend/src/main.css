@@ -1,0 +1,30 @@
+@import "frappe-ui/src/style.css";
+
+ion-modal {
+	--height: auto;
+}
+
+input:disabled {
+	--webkit-text-fill-color: var(--tw-text-color);
+	opacity: 0.9; /* required on iOS */
+	color: var(--tw-text-color);
+}
+
+/* For Webkit-based browsers (Chrome, Safari and Opera) */
+input::-webkit-date-and-time-value {
+	text-align: left;
+}
+
+body {
+	-webkit-tap-highlight-color: transparent;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+
+/* For IE, Edge and Firefox */
+.hide-scrollbar {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}

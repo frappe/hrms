@@ -17,7 +17,11 @@
   "scheduled_on",
   "from_time",
   "to_time",
+<<<<<<< HEAD
   "interview_feedback_section",
+=======
+  "section_break_hqvh",
+>>>>>>> da17577dc (chore: remove unused import)
   "interview_details",
   "ratings_section",
   "expected_average_rating",
@@ -26,7 +30,13 @@
   "section_break_13",
   "interview_summary",
   "reminded",
+<<<<<<< HEAD
   "amended_from"
+=======
+  "amended_from",
+  "feedback_tab",
+  "feedback_html"
+>>>>>>> da17577dc (chore: remove unused import)
  ],
  "fields": [
   {
@@ -39,6 +49,10 @@
    "reqd": 1
   },
   {
+<<<<<<< HEAD
+=======
+   "fetch_from": "job_applicant.job_title",
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "job_opening",
    "fieldtype": "Link",
    "label": "Job Opening",
@@ -87,6 +101,11 @@
    "fieldtype": "Column Break"
   },
   {
+<<<<<<< HEAD
+=======
+   "fetch_from": "job_applicant.resume_link",
+   "fetch_if_empty": 1,
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "resume_link",
    "fieldtype": "Data",
    "label": "Resume link"
@@ -149,6 +168,7 @@
    "label": "Reminded"
   },
   {
+<<<<<<< HEAD
    "allow_on_submit": 1,
    "fieldname": "interview_details",
    "fieldtype": "Table",
@@ -160,6 +180,8 @@
    "label": "Feedback"
   },
   {
+=======
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "from_time",
    "fieldtype": "Time",
    "in_list_view": 1,
@@ -174,6 +196,30 @@
    "label": "To Time",
    "reqd": 1,
    "set_only_once": 1
+<<<<<<< HEAD
+=======
+  },
+  {
+   "fieldname": "feedback_tab",
+   "fieldtype": "Tab Break",
+   "label": "Feedback"
+  },
+  {
+   "fieldname": "feedback_html",
+   "fieldtype": "HTML",
+   "label": "Feedback HTML"
+  },
+  {
+   "fieldname": "section_break_hqvh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "interview_details",
+   "fieldtype": "Table",
+   "label": "Interviewers",
+   "options": "Interview Detail"
+>>>>>>> da17577dc (chore: remove unused import)
   }
  ],
  "index_web_pages_for_search": 1,
@@ -184,10 +230,18 @@
    "link_fieldname": "interview"
   }
  ],
+<<<<<<< HEAD
  "modified": "2021-09-30 13:30:05.421035",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview",
+=======
+ "modified": "2024-03-27 13:09:51.655366",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Interview",
+ "naming_rule": "Expression (old style)",
+>>>>>>> da17577dc (chore: remove unused import)
  "owner": "Administrator",
  "permissions": [
   {
@@ -247,8 +301,14 @@
    "write": 1
   }
  ],
+<<<<<<< HEAD
  "sort_field": "modified",
  "sort_order": "DESC",
+=======
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+>>>>>>> da17577dc (chore: remove unused import)
  "title_field": "job_applicant",
  "track_changes": 1
 }

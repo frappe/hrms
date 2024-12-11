@@ -5,6 +5,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+<<<<<<< HEAD
   "select_employees_section",
   "company",
   "employment_type",
@@ -23,45 +24,92 @@
   "column_break_16",
   "leave_policy",
   "leave_type"
+=======
+  "allocate_leaves_section",
+  "dates_based_on",
+  "leave_period",
+  "from_date",
+  "to_date",
+  "carry_forward",
+  "column_break_16",
+  "allocate_based_on_leave_policy",
+  "leave_policy",
+  "leave_type",
+  "no_of_days",
+  "quick_filters_section",
+  "company",
+  "branch",
+  "department",
+  "column_break1",
+  "employment_type",
+  "designation",
+  "employee_grade",
+  "advanced_filters_section",
+  "filter_list",
+  "select_employees_section",
+  "employees_html"
+>>>>>>> da17577dc (chore: remove unused import)
  ],
  "fields": [
   {
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
+<<<<<<< HEAD
    "options": "Company"
+=======
+   "options": "Company",
+   "remember_last_selected_value": 1
+>>>>>>> da17577dc (chore: remove unused import)
   },
   {
    "fieldname": "employment_type",
    "fieldtype": "Link",
    "in_list_view": 1,
+<<<<<<< HEAD
    "label": "Employment Type (optional)",
+=======
+   "label": "Employment Type",
+>>>>>>> da17577dc (chore: remove unused import)
    "options": "Employment Type"
   },
   {
    "fieldname": "branch",
    "fieldtype": "Link",
    "in_list_view": 1,
+<<<<<<< HEAD
    "label": "Branch (optional)",
+=======
+   "label": "Branch",
+>>>>>>> da17577dc (chore: remove unused import)
    "options": "Branch"
   },
   {
    "fieldname": "department",
    "fieldtype": "Link",
    "in_list_view": 1,
+<<<<<<< HEAD
    "label": "Department (optional)",
+=======
+   "label": "Department",
+>>>>>>> da17577dc (chore: remove unused import)
    "options": "Department"
   },
   {
    "fieldname": "designation",
    "fieldtype": "Link",
    "in_list_view": 1,
+<<<<<<< HEAD
    "label": "Designation (optional)",
+=======
+   "label": "Designation",
+>>>>>>> da17577dc (chore: remove unused import)
    "options": "Designation"
   },
   {
    "fieldname": "employee_grade",
    "fieldtype": "Link",
+<<<<<<< HEAD
    "label": "Employee Grade (optional)",
    "options": "Employee Grade"
   },
@@ -72,20 +120,37 @@
    "options": "Employee"
   },
   {
+=======
+   "label": "Employee Grade",
+   "options": "Employee Grade"
+  },
+  {
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "column_break1",
    "fieldtype": "Column Break",
    "width": "50%"
   },
   {
+<<<<<<< HEAD
    "fieldname": "from_date",
    "fieldtype": "Date",
    "label": "From Date",
    "reqd": 1
+=======
+   "default": "Today",
+   "depends_on": "eval:doc.dates_based_on != 'Joining Date'",
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "mandatory_depends_on": "eval:doc.dates_based_on == 'Custom Range'",
+   "read_only_depends_on": "eval:doc.dates_based_on == 'Leave Period'"
+>>>>>>> da17577dc (chore: remove unused import)
   },
   {
    "fieldname": "to_date",
    "fieldtype": "Date",
    "label": "To Date",
+<<<<<<< HEAD
    "reqd": 1
   },
   {
@@ -103,11 +168,36 @@
   {
    "default": "0",
    "description": "Please select Carry Forward if you also want to include previous fiscal year's balance leaves to this fiscal year",
+=======
+   "mandatory_depends_on": "eval:doc.dates_based_on != 'Leave Period'",
+   "read_only_depends_on": "eval:doc.dates_based_on == 'Leave Period'"
+  },
+  {
+   "depends_on": "eval:doc.allocate_based_on_leave_policy ",
+   "fieldname": "leave_policy",
+   "fieldtype": "Link",
+   "label": "Leave Policy",
+   "mandatory_depends_on": "eval:doc.allocate_based_on_leave_policy ",
+   "options": "Leave Policy"
+  },
+  {
+   "depends_on": "eval:!doc.allocate_based_on_leave_policy",
+   "fieldname": "leave_type",
+   "fieldtype": "Link",
+   "label": "Leave Type",
+   "mandatory_depends_on": "eval:!doc.allocate_based_on_leave_policy",
+   "options": "Leave Type"
+  },
+  {
+   "default": "1",
+   "description": "Add unused leaves from previous leave period's allocation to this allocation",
+>>>>>>> da17577dc (chore: remove unused import)
    "fieldname": "carry_forward",
    "fieldtype": "Check",
    "label": "Carry Forward"
   },
   {
+<<<<<<< HEAD
    "fieldname": "no_of_days",
    "fieldtype": "Float",
    "label": "New Leaves Allocated (In Days)",
@@ -118,6 +208,13 @@
    "fieldtype": "Button",
    "label": "Allocate",
    "options": "allocate_leave"
+=======
+   "depends_on": "eval:!doc.allocate_based_on_leave_policy",
+   "fieldname": "no_of_days",
+   "fieldtype": "Float",
+   "label": "New Leaves Allocated (In Days)",
+   "mandatory_depends_on": "eval:!doc.allocate_based_on_leave_policy"
+>>>>>>> da17577dc (chore: remove unused import)
   },
   {
    "fieldname": "select_employees_section",
@@ -127,11 +224,62 @@
   {
    "fieldname": "allocate_leaves_section",
    "fieldtype": "Section Break",
+<<<<<<< HEAD
    "label": "Allocate Leaves"
+=======
+   "label": "Set Leave Details"
+>>>>>>> da17577dc (chore: remove unused import)
   },
   {
    "fieldname": "column_break_16",
    "fieldtype": "Column Break"
+<<<<<<< HEAD
+=======
+  },
+  {
+   "fieldname": "employees_html",
+   "fieldtype": "HTML",
+   "label": "Employees HTML",
+   "read_only": 1
+  },
+  {
+   "default": "Leave Period",
+   "fieldname": "dates_based_on",
+   "fieldtype": "Select",
+   "label": "Dates Based On",
+   "options": "Leave Period\nJoining Date\nCustom Range"
+  },
+  {
+   "depends_on": "eval:doc.dates_based_on == 'Leave Period'",
+   "fieldname": "leave_period",
+   "fieldtype": "Link",
+   "label": "Leave Period",
+   "mandatory_depends_on": "eval:doc.dates_based_on == 'Leave Period'",
+   "options": "Leave Period"
+  },
+  {
+   "default": "1",
+   "fieldname": "allocate_based_on_leave_policy",
+   "fieldtype": "Check",
+   "label": "Allocate Based On Leave Policy"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "advanced_filters_section",
+   "fieldtype": "Section Break",
+   "label": "Advanced Filters"
+  },
+  {
+   "fieldname": "filter_list",
+   "fieldtype": "HTML",
+   "label": "Filter List"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "quick_filters_section",
+   "fieldtype": "Section Break",
+   "label": "Quick Filters"
+>>>>>>> da17577dc (chore: remove unused import)
   }
  ],
  "hide_toolbar": 1,
@@ -139,7 +287,11 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2019-12-12 18:51:41.573349",
+=======
+ "modified": "2024-03-27 13:10:00.948216",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Control Panel",
@@ -153,6 +305,12 @@
   }
  ],
  "read_only": 1,
+<<<<<<< HEAD
  "sort_field": "modified",
  "sort_order": "DESC"
+=======
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+>>>>>>> da17577dc (chore: remove unused import)
 }

@@ -108,6 +108,10 @@
    "default": "0",
    "fieldname": "is_group",
    "fieldtype": "Check",
+<<<<<<< HEAD
+=======
+   "in_list_view": 1,
+>>>>>>> da17577dc (chore: remove unused import)
    "label": "Is Group",
    "set_only_once": 1
   },
@@ -213,7 +217,11 @@
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-09-29 12:38:53.405179",
+=======
+ "modified": "2024-03-27 13:09:45.520429",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Goal",
@@ -273,7 +281,11 @@
  "search_fields": "employee, goal_name",
  "show_preview_popup": 1,
  "show_title_field_in_link": 1,
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": [],
  "title_field": "goal_name",

@@ -186,7 +186,12 @@
   {
    "fieldname": "condition",
    "fieldtype": "Code",
+<<<<<<< HEAD
    "label": "Condition"
+=======
+   "label": "Condition",
+   "options": "PythonExpression"
+>>>>>>> da17577dc (chore: remove unused import)
   },
   {
    "default": "0",
@@ -198,7 +203,12 @@
    "depends_on": "amount_based_on_formula",
    "fieldname": "formula",
    "fieldtype": "Code",
+<<<<<<< HEAD
    "label": "Formula"
+=======
+   "label": "Formula",
+   "options": "PythonExpression"
+>>>>>>> da17577dc (chore: remove unused import)
   },
   {
    "depends_on": "eval:doc.amount_based_on_formula!==1",
@@ -266,7 +276,11 @@
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-08-25 13:35:37.413696",
+=======
+ "modified": "2024-03-27 13:10:33.871355",
+>>>>>>> da17577dc (chore: remove unused import)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",
@@ -290,7 +304,11 @@
    "role": "Employee"
   }
  ],
+<<<<<<< HEAD
  "sort_field": "modified",
+=======
+ "sort_field": "creation",
+>>>>>>> da17577dc (chore: remove unused import)
  "sort_order": "DESC",
  "states": []
 }

@@ -6,8 +6,13 @@ import os
 import frappe
 from frappe import _
 from frappe.core.doctype.user_permission.test_user_permission import create_user
+<<<<<<< HEAD
 from frappe.tests.test_webform import create_custom_doctype, create_webform
 from frappe.tests.utils import FrappeTestCase
+=======
+from frappe.tests import IntegrationTestCase
+from frappe.tests.test_webform import create_custom_doctype, create_webform
+>>>>>>> da17577dc (chore: remove unused import)
 from frappe.utils import getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -15,7 +20,11 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.exit_interview.exit_interview import send_exit_questionnaire
 
 
+<<<<<<< HEAD
 class TestExitInterview(FrappeTestCase):
+=======
+class TestExitInterview(IntegrationTestCase):
+>>>>>>> da17577dc (chore: remove unused import)
 	def setUp(self):
 		frappe.db.sql("delete from `tabExit Interview`")
 
@@ -63,8 +72,12 @@ class TestExitInterview(FrappeTestCase):
 		template = create_notification_template()
 
 		webform = frappe.db.get_all("Web Form", limit=1)
+<<<<<<< HEAD
 		frappe.db.set_value(
 			"HR Settings",
+=======
+		frappe.db.set_single_value(
+>>>>>>> da17577dc (chore: remove unused import)
 			"HR Settings",
 			{
 				"exit_questionnaire_web_form": webform[0].name,

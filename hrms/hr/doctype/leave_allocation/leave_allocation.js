@@ -26,6 +26,11 @@ frappe.ui.form.on("Leave Allocation", {
 	},
 
 	refresh: function (frm) {
+<<<<<<< HEAD
+=======
+		hrms.leave_utils.add_view_ledger_button(frm);
+
+>>>>>>> da17577dc (chore: remove unused import)
 		if (frm.doc.docstatus === 1 && !frm.doc.expired) {
 			var valid_expiry = moment(frappe.datetime.get_today()).isBetween(
 				frm.doc.from_date,
