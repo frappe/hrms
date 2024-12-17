@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-12-08 09:34+0000\n"
-"PO-Revision-Date: 2024-12-13 00:30\n"
+"PO-Revision-Date: 2024-12-14 00:58\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -3825,11 +3825,11 @@ msgstr "FEL ({0}): {1}"
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/report/shift_attendance/shift_attendance.js:53
 msgid "Early Exit"
-msgstr "Tidig Utcheckning"
+msgstr "Tidig Utstämpling"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:91
 msgid "Early Exit By"
-msgstr "Tidig Utcheckning Efter"
+msgstr "Tidig Utstämpling Efter"
 
 #. Label of the early_exit_grace_period (Int) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
@@ -3838,7 +3838,7 @@ msgstr "Tidig Utstämpling Anstånd Period"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:186
 msgid "Early Exits"
-msgstr "Tidiga Utcheckningar"
+msgstr "Tidiga Utstämplingar"
 
 #. Label of the earned_leave (Section Break) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -4238,7 +4238,7 @@ msgstr "Introduktion Aktivitet"
 #: hrms/hr/workspace/hr/hr.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Employee Checkin"
-msgstr "In/Utstämpling"
+msgstr "Personal Stämpling"
 
 #: frontend/src/views/attendance/EmployeeCheckinList.vue:5
 msgid "Employee Checkin History"
@@ -4895,7 +4895,7 @@ msgstr "Aktivera Automatisk Närvaro"
 #. Label of the enable_early_exit_marking (Check) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Enable Early Exit Marking"
-msgstr "Aktivera Tidig Utcheckning Val"
+msgstr "Aktivera Tidig Utstämpling Val"
 
 #. Label of the enable_late_entry_marking (Check) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
@@ -8173,7 +8173,7 @@ msgstr "Typ"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:67
 msgid "Log Type is required for check-ins falling in the shift: {0}."
-msgstr "Logg Typ erfodras för In/Utcheckningar som infaller under skift: {0}."
+msgstr "Logg Typ erfodras för Stämplingar som infaller under skift: {0}."
 
 #: frontend/src/views/Login.vue:34
 msgid "Login"
@@ -12696,7 +12696,7 @@ msgstr "Tid efter Skift Start Tid när Instämpling beaktas som sen (minuter)."
 #. Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "The time before the shift end time when check-out is considered as early (in minutes)."
-msgstr "Tid före Skift Slut Tid när Utcheckning betraktas som tidig (Minuter)."
+msgstr "Tid före Skift Slut Tid när Utstämpling betraktas som tidig (Minuter)."
 
 #. Description of the 'Begin check-in before shift start time (in minutes)'
 #. (Int) field in DocType 'Shift Type'
@@ -12805,7 +12805,7 @@ msgstr "Tidrapport"
 #. field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Time after the end of shift during which check-out is considered for attendance."
-msgstr "Tid efter Avslutad Skift under vilken Utcheckning anses vara Närvaro."
+msgstr "Tid efter Avslutad Skift under vilken Stämpling anses vara Närvaro."
 
 #. Description of the 'Time to Fill' (Duration) field in DocType 'Job
 #. Requisition'
