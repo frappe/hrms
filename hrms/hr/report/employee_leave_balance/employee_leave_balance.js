@@ -44,7 +44,7 @@ frappe.query_reports["Employee Leave Balance"] = {
 				{ value: "Active", label: __("Active") },
 				{ value: "Inactive", label: __("Inactive") },
 				{ value: "Suspended", label: __("Suspended") },
-				{ value: "Left", label: __("Left", null, "Employee") },
+				{ value: "Ended", label: __("Ended", null, "Employee") },
 			],
 			default: "Active",
 		},
