@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-12-29 09:34+0000\n"
-"PO-Revision-Date: 2025-01-02 04:39\n"
+"PO-Revision-Date: 2025-01-03 05:31\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -13049,11 +13049,11 @@ msgstr "مبلغ کل"
 #. Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Total Amount Reimbursed"
-msgstr "کل مبلغ بازپرداخت شده"
+msgstr ""
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:102
 msgid "Total Amount cannot be zero"
-msgstr "مبلغ کل نمی تواند صفر باشد"
+msgstr ""
 
 #. Label of the total_asset_recovery_cost (Currency) field in DocType 'Full and
 #. Final Statement'
@@ -13216,7 +13216,7 @@ msgstr "کل مبلغ قابل پرداخت"
 #. Label of the total_payment (Currency) field in DocType 'Salary Slip Loan'
 #: hrms/payroll/doctype/salary_slip_loan/salary_slip_loan.json
 msgid "Total Payment"
-msgstr "مبلغ کل قابل پرداخت"
+msgstr ""
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:115
 msgid "Total Present"
