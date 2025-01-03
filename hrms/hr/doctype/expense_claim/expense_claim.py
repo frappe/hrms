@@ -29,6 +29,10 @@ class ExpenseApproverIdentityError(frappe.ValidationError):
 	pass
 
 
+class CompanyDepartmentMismatchError(frappe.ValidationError):
+	pass
+
+
 class ExpenseClaim(AccountsController, PWANotificationsMixin):
 	def onload(self):
 		self.get("__onload").make_payment_via_journal_entry = frappe.db.get_single_value(
@@ -47,8 +51,17 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		self.set_expense_account(validate=True)
 		self.calculate_taxes()
 		self.set_status()
+		self.validate_company_and_department()
 		if self.task and not self.project:
 			self.project = frappe.db.get_value("Task", self.task, "project")
+
+	def validate_company_and_department(self):
+		if self.department:
+			if self.company != frappe.db.get_value("Department", self.department, "company"):
+				frappe.throw(
+					_("Department {0} does not belong to company: {1}").format(self.department, self.company),
+					exc=CompanyDepartmentMismatchError,
+				)
 
 	def set_status(self, update=False):
 		status = {"0": "Draft", "1": "Submitted", "2": "Cancelled"}[cstr(self.docstatus or 0)]
