@@ -117,16 +117,21 @@ class AdditionalSalary(Document):
 		if not self.overwrite_salary_structure_amount:
 			return
 
+		filters = {
+			"name": ["!=", self.name],
+			"salary_component": self.salary_component,
+			"payroll_date": self.payroll_date,
+			"overwrite_salary_structure_amount": 1,
+			"employee": self.employee,
+			"docstatus": 1,
+		}
+
+		if self.is_recurring:
+			filters["payroll_date"] = ["between", [self.from_date, self.to_date]]
+
 		existing_additional_salary = frappe.db.exists(
 			"Additional Salary",
-			{
-				"name": ["!=", self.name],
-				"salary_component": self.salary_component,
-				"payroll_date": self.payroll_date,
-				"overwrite_salary_structure_amount": 1,
-				"employee": self.employee,
-				"docstatus": 1,
-			},
+			filters,
 		)
 
 		if existing_additional_salary:
