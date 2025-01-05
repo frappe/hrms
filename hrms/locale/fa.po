@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2024-12-29 09:34+0000\n"
-"PO-Revision-Date: 2025-01-03 05:31\n"
+"PO-Revision-Date: 2025-01-05 05:46\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -13016,7 +13016,7 @@ msgstr "کل غایب"
 #. Exemption Proof Submission'
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.json
 msgid "Total Actual Amount"
-msgstr "کل مبلغ واقعی"
+msgstr "مبلغ کل واقعی"
 
 #. Label of the total_advance_amount (Currency) field in DocType 'Expense
 #. Claim'
@@ -13216,7 +13216,7 @@ msgstr "کل مبلغ قابل پرداخت"
 #. Label of the total_payment (Currency) field in DocType 'Salary Slip Loan'
 #: hrms/payroll/doctype/salary_slip_loan/salary_slip_loan.json
 msgid "Total Payment"
-msgstr ""
+msgstr "کل پرداخت"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:115
 msgid "Total Present"
