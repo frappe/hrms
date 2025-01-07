@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2024-12-29 09:34+0000\n"
-"PO-Revision-Date: 2024-12-30 04:19\n"
+"POT-Creation-Date: 2025-01-05 09:34+0000\n"
+"PO-Revision-Date: 2025-01-07 06:06\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -1328,7 +1328,7 @@ msgstr "Utvärdering Mall Saknas"
 #. Label of the template_title (Data) field in DocType 'Appraisal Template'
 #: hrms/hr/doctype/appraisal_template/appraisal_template.json
 msgid "Appraisal Template Title"
-msgstr "Utvärdering Mall Titel"
+msgstr "Utvärdering Mall Benämning"
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:135
 msgid "Appraisal Template not found for some designations."
@@ -7501,7 +7501,7 @@ msgstr "Jobb Annons {0} är kopplad till Jobb Erbjudande {1}"
 #. Label of the job_title (Data) field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
 msgid "Job Title"
-msgstr "Jobb Titel"
+msgstr "Jobb Benämning"
 
 #. Description of the 'Description' (Text Editor) field in DocType 'Job
 #. Opening'
@@ -12896,7 +12896,7 @@ msgstr "Tidpunkt"
 #: hrms/hr/doctype/kra/kra.json hrms/hr/doctype/leave_policy/leave_policy.json
 #: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:40
 msgid "Title"
-msgstr "Titel"
+msgstr "Benämning"
 
 #: hrms/payroll/report/salary_register/salary_register.js:16
 msgid "To"
