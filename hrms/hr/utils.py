@@ -796,6 +796,7 @@ def get_ec_matching_query(
 		qb.from_(ec)
 		.select(
 			ref_rank.as_("rank"),
+			ConstantColumn("Expense Claim").as_("doctype"),
 			ec.name,
 			ec.total_sanctioned_amount.as_("paid_amount"),
 			ConstantColumn("").as_("reference_no"),
