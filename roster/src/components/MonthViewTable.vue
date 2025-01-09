@@ -112,11 +112,13 @@
 							v-if="events.data?.[employee.name]?.[day.date]?.holiday"
 							class="blocked-cell"
 						>
-							{{
-								events.data[employee.name][day.date].weekly_off
-									? "WO"
-									: events.data[employee.name][day.date].description
-							}}
+							<div
+								v-html="
+									events.data[employee.name][day.date].weekly_off
+										? '<strong>WO</strong>'
+										: events.data[employee.name][day.date].description
+								"
+							></div>
 						</div>
 
 						<!-- Leave -->
