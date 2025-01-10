@@ -482,7 +482,7 @@ class SalarySlip(TransactionBase):
 				days = 0
 				end_date = getdate(end_date)
 				for day in range(no_of_days):
-					date = add_days(self.end_date, -day)
+					date = add_days(end_date, -day)
 					if cstr(date) not in holidays:
 						days += 1
 				return days
