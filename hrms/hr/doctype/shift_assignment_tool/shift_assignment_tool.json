@@ -209,7 +209,7 @@
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-12-13 17:38:45.675004",
+ "modified": "2025-01-13 13:48:33.710186",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment Tool",
@@ -225,7 +225,6 @@
    "write": 1
   }
  ],
- "read_only": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
