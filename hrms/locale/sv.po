@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-01-12 09:34+0000\n"
-"PO-Revision-Date: 2025-01-14 07:11\n"
+"PO-Revision-Date: 2025-01-16 07:11\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -3043,7 +3043,7 @@ msgstr "Utvärdering Cykel Namn"
 #. Label of the cycles (Table) field in DocType 'Salary Withholding'
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Cycles"
-msgstr "Perioder"
+msgstr "Cykler"
 
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Payroll Entry'
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary Slip'
@@ -9059,7 +9059,7 @@ msgstr "Antal Positioner"
 #. Withholding'
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Number of Withholding Cycles"
-msgstr "Antal Innehållna Perioder"
+msgstr "Antal Kvarhållna Cykler"
 
 #. Description of the 'Actual Encashable Days' (Float) field in DocType 'Leave
 #. Encashment'
@@ -9637,7 +9637,7 @@ msgstr "Lön Nummer"
 #: hrms/patches/post_install/updates_for_multi_currency_payroll.py:65
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:106
 msgid "Payroll Payable"
-msgstr "Lön Skuld"
+msgstr "Löneutbetalning"
 
 #. Label of the payroll_payable_account (Link) field in DocType 'Bulk Salary
 #. Structure Assignment'
@@ -9649,7 +9649,7 @@ msgstr "Lön Skuld"
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/setup.py:837
 msgid "Payroll Payable Account"
-msgstr "Lön Skuld Konto"
+msgstr "Löneutbetalning Konto"
 
 #. Label of the payroll_period (Link) field in DocType 'Employee Benefit
 #. Application'
@@ -9944,7 +9944,7 @@ msgstr "Välj {0}"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:311
 msgid "Please set \"Default Payroll Payable Account\" in Company Defaults"
-msgstr "Ange \"Löneutbetalning Konto\" i Bolag Inställningar"
+msgstr "Ange \"Standard Löneutbetalning Konto\" i Bolag Inställningar"
 
 #: hrms/regional/india/utils.py:18
 msgid "Please set Basic and HRA component in Company {0}"
