@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-01-12 09:34+0000\n"
-"PO-Revision-Date: 2025-01-13 07:10\n"
+"PO-Revision-Date: 2025-01-16 07:11\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -1477,7 +1477,7 @@ msgstr ""
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:114
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 msgid "Assign Shift Schedule"
-msgstr ""
+msgstr "Attribuer des plannings de quarts"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:53
 msgid "Assign Structure"
@@ -1989,7 +1989,7 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment_list.js:3
 msgid "Bulk Leave Policy Assignment"
-msgstr "Affectation de la politique de congés en bloc"
+msgstr "Affectation de la politique de congés en masse"
 
 #. Name of a DocType
 #. Label of a Link in the Salary Payout Workspace
@@ -5504,7 +5504,7 @@ msgstr "Départ expirée (s)"
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:8
 msgid "Expired Leaves"
-msgstr ""
+msgstr "Demandes de congés expirées"
 
 #. Label of the explanation (Small Text) field in DocType 'Attendance Request'
 #: hrms/hr/doctype/attendance_request/attendance_request.json
@@ -7807,7 +7807,7 @@ msgstr "Laisser Verrouillé"
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Leave Control Panel"
-msgstr "Quitter le Panneau de Configuration"
+msgstr "Assistant de politique de congés en masse"
 
 #. Label of the leave_details (Table) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
@@ -7886,7 +7886,7 @@ msgstr "Politique de congé"
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Leave Policy Assignment"
-msgstr "Quitter la politique d'affectation"
+msgstr "Affectation de politique de congés"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:63
 msgid "Leave Policy Assignment Overlap"
@@ -8057,7 +8057,7 @@ msgstr "Feuilles allouées"
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:10
 msgid "Leaves Pending Approval"
-msgstr ""
+msgstr "Congés en attente d'approbation"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:76
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
@@ -8769,12 +8769,12 @@ msgstr "Nouveau(x) partie(s) alloué(s)"
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "New Leaves Allocated"
-msgstr "Nouvelle Allocation de Congés"
+msgstr "Nb Jours de congés à attribuer"
 
 #. Label of the no_of_days (Float) field in DocType 'Leave Control Panel'
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 msgid "New Leaves Allocated (In Days)"
-msgstr "Nouvelle Allocation de Congés (en jours)"
+msgstr "Nouvelle attribution de jours de Congés"
 
 #. Description of the 'Create Shifts After' (Date) field in DocType 'Shift
 #. Schedule Assignment'
@@ -9863,7 +9863,7 @@ msgstr ""
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:167
 msgid "Please select Shift Schedule and assignment date(s)."
-msgstr ""
+msgstr "Veuillez sélectionner de planning de quarts et des date(s) d'affectation(s)."
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:160
 msgid "Please select Shift Type and assignment date(s)."
@@ -11832,7 +11832,7 @@ msgstr ""
 #. Name of a Workspace
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift & Attendance"
-msgstr "Maj & Présence"
+msgstr "Quart et présence"
 
 #. Label of the shift_actual_end (Datetime) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
@@ -11876,7 +11876,7 @@ msgstr ""
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 #: hrms/public/js/utils/index.js:238 hrms/public/js/utils/index.js:260
 msgid "Shift Assignment Tool"
-msgstr ""
+msgstr "Affectation de planning des quarts en blocs"
 
 #: hrms/hr/doctype/shift_request/shift_request.py:51
 msgid "Shift Assignment: {0} created for Employee: {1}"
@@ -11963,7 +11963,7 @@ msgstr ""
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Schedule"
-msgstr ""
+msgstr "Planification des quarts"
 
 #. Label of the shift_schedule_assignment (Link) field in DocType 'Shift
 #. Assignment'
@@ -11973,7 +11973,7 @@ msgstr ""
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Schedule Assignment"
-msgstr ""
+msgstr "Affectation planning des quarts"
 
 #. Label of the shift_settings_section (Section Break) field in DocType 'HR
 #. Settings'
