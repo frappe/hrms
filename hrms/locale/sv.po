@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-01-19 09:34+0000\n"
-"PO-Revision-Date: 2025-01-20 08:04\n"
+"PO-Revision-Date: 2025-01-21 08:05\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -3481,7 +3481,7 @@ msgstr "Lediga Jobb per Avdelning"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:96
 msgid "Department {0} does not belong to company: {1}"
-msgstr ""
+msgstr "Avdelning {0} tillhör inte bolag: {1}"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:195
 msgid "Department: {0}"
