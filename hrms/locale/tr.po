@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-01-19 09:34+0000\n"
-"PO-Revision-Date: 2025-01-20 08:03\n"
+"PO-Revision-Date: 2025-01-21 08:04\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -863,7 +863,7 @@ msgstr "Coğrafi Konum İzlemeye İzin Ver"
 #. Label of the applicable_after (Int) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Allow Leave Application After (Working Days)"
-msgstr ""
+msgstr "Personel İzin Talebine İzin Ver (İş Günü)"
 
 #. Label of the allow_multiple_shift_assignments (Check) field in DocType 'HR
 #. Settings'
@@ -1291,7 +1291,7 @@ msgstr "Değerlendirme Hedefi"
 #. Name of a DocType
 #: hrms/hr/doctype/appraisal_kra/appraisal_kra.json
 msgid "Appraisal KRA"
-msgstr ""
+msgstr "Performans Değerlendirme"
 
 #. Label of the section_break_cycle (Section Break) field in DocType 'Goal'
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:96
@@ -1349,11 +1349,11 @@ msgstr "{0} Değerlendirmesi {1} Personeline ait değildir"
 #. Name of a DocType
 #: hrms/hr/doctype/appraisee/appraisee.json
 msgid "Appraisee"
-msgstr ""
+msgstr "Değerlendirilen"
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:159
 msgid "Appraisees: {0}"
-msgstr ""
+msgstr "Değerlendirilenler: {0}"
 
 #: hrms/setup.py:389
 msgid "Apprentice"
@@ -1477,7 +1477,7 @@ msgstr "Vardiya Ata"
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:114
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 msgid "Assign Shift Schedule"
-msgstr ""
+msgstr "Vardiya Programını Ata"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:53
 msgid "Assign Structure"
@@ -1503,12 +1503,12 @@ msgstr "Atanıyor..."
 #. Assignment'
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 msgid "Assignment based on"
-msgstr ""
+msgstr "Atamanın Temeli"
 
 #: hrms/hr/doctype/job_requisition/job_requisition.js:50
 #: hrms/hr/doctype/job_requisition/job_requisition.js:74
 msgid "Associate Job Opening"
-msgstr ""
+msgstr "İş İlanı İlişkilendir"
 
 #. Label of the associated_document (Dynamic Link) field in DocType 'Employee
 #. Grievance'
@@ -1611,7 +1611,7 @@ msgstr "Devamlılık Talebi"
 
 #: frontend/src/views/attendance/AttendanceRequestList.vue:5
 msgid "Attendance Request History"
-msgstr ""
+msgstr "Giriş-Çıkıi Talebi Geçmişi"
 
 #. Label of the attendance_settings_section (Section Break) field in DocType
 #. 'HR Settings'
@@ -1872,11 +1872,11 @@ msgstr "Fatura Tutarı"
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:249
 msgid "Billed Hours"
-msgstr ""
+msgstr "Faturalandırılan Saatler"
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:68
 msgid "Billed Hours (B)"
-msgstr ""
+msgstr "Faturalandırılan Saatler (B)"
 
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Payroll Entry'
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary Slip'
@@ -1917,7 +1917,7 @@ msgstr "Engellenen Günler"
 #. Description of a DocType
 #: hrms/hr/doctype/leave_block_list/leave_block_list.json
 msgid "Block Holidays on important days."
-msgstr ""
+msgstr "Önemli günlerdeki tatilleri engelleyin."
 
 #. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
@@ -1981,7 +1981,7 @@ msgstr "Görev Bölümü"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:193
 msgid "Branch: {0}"
-msgstr ""
+msgstr "Bölüm: {0}"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:131
 msgid "Bulk Assignments"
@@ -2015,7 +2015,7 @@ msgstr "Brüt Maaş"
 #. 'Appraisal Cycle'
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgid "Calculate Final Score based on Formula"
-msgstr ""
+msgstr "Nihai Puanı Formüle Göre Hesapla"
 
 #. Label of the calculate_gratuity_amount_based_on (Select) field in DocType
 #. 'Gratuity Rule'
@@ -3006,7 +3006,7 @@ msgstr "Mevcut Açıklıklar"
 #. DocType 'Gratuity Rule'
 #: hrms/payroll/doctype/gratuity_rule/gratuity_rule.json
 msgid "Current Slab"
-msgstr ""
+msgstr "Mevcut Durum"
 
 #. Label of the current_work_experience (Float) field in DocType 'Gratuity'
 #. Label of the gratuity_rule_slabs (Table) field in DocType 'Gratuity Rule'
@@ -3183,7 +3183,7 @@ msgstr "Tarihe Göre"
 
 #: hrms/setup.py:121
 msgid "Days for which Holidays are blocked for this department."
-msgstr ""
+msgstr "Bu departman için Tatillerin bloke edildiği günler."
 
 #: hrms/payroll/report/bank_remittance/bank_remittance.py:19
 msgid "Debit A/C Number"
@@ -3294,11 +3294,11 @@ msgstr "Varsayılan Baz Ücret"
 
 #: hrms/setup.py:81
 msgid "Default Employee Advance Account"
-msgstr ""
+msgstr "Varsayılan Personel Avans Hesabı"
 
 #: hrms/setup.py:73
 msgid "Default Expense Claim Payable Account"
-msgstr ""
+msgstr "Varsayılan Gider Alacak Hesabı"
 
 #: hrms/overrides/company.py:133 hrms/setup.py:96
 msgid "Default Payroll Payable Account"
@@ -3481,7 +3481,7 @@ msgstr "Departman Bazında Açık Pozisyonlar"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:96
 msgid "Department {0} does not belong to company: {1}"
-msgstr ""
+msgstr "Departman {0} şu şirkete ait değil: {1}"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:195
 msgid "Department: {0}"
@@ -3702,7 +3702,7 @@ msgstr "Tutarın iki kez düşülmesini önlemek için {1} bileşeni için {0} �
 
 #: hrms/hr/doctype/leave_type/leave_type.py:39
 msgid "Disable {0} or {1} to proceed."
-msgstr ""
+msgstr "Devam etmek için {0} veya {1} öğesini devre dışı bırakın."
 
 #. Label of the disabled (Check) field in DocType 'Additional Salary'
 #. Label of the disabled (Check) field in DocType 'Income Tax Slab'
@@ -5675,7 +5675,7 @@ msgstr "Alan Adı"
 
 #: frontend/src/components/FilePreviewModal.vue:4
 msgid "File Preview"
-msgstr ""
+msgstr "Dosya Önizlemesi"
 
 #: hrms/hr/doctype/leave_application/leave_application.js:101
 #: hrms/hr/doctype/leave_encashment/leave_encashment.js:28
@@ -5858,7 +5858,7 @@ msgstr "Kesirli Maliyet"
 
 #: frontend/src/components/BaseLayout.vue:9
 msgid "Frappe HR"
-msgstr ""
+msgstr "Frappe HR"
 
 #. Label of the frequency (Select) field in DocType 'Shift Schedule'
 #. Label of the frequency (Select) field in DocType 'Vehicle Service'
@@ -5935,7 +5935,7 @@ msgstr "Başlangıç Tarihi Bitiş Tarihinden büyük olamaz"
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:30
 msgid "From Date must come before To Date"
-msgstr ""
+msgstr "Başlangıç Tarihi Bitiş Tarihinden önce olmalıdır"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:57
 msgid "From Date {0} cannot be after employee's relieving Date {1}"
@@ -6144,17 +6144,17 @@ msgstr "Hedef Tamamlama (%)"
 #: hrms/hr/report/appraisal_overview/appraisal_overview.py:55
 #: hrms/hr/report/appraisal_overview/appraisal_overview.py:122
 msgid "Goal Score"
-msgstr ""
+msgstr "Hedef Puanı"
 
 #. Label of the goal_score_percentage (Float) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
 msgid "Goal Score (%)"
-msgstr ""
+msgstr "Hedef Puanı (%)"
 
 #. Label of the goal_score (Float) field in DocType 'Appraisal KRA'
 #: hrms/hr/doctype/appraisal_kra/appraisal_kra.json
 msgid "Goal Score (weighted)"
-msgstr ""
+msgstr "Hedef Puanı (Ağırlıklı)"
 
 #: hrms/hr/doctype/goal/goal.py:81
 msgid "Goal progress percentage cannot be more than 100."
@@ -8051,7 +8051,7 @@ msgstr "İzinler"
 
 #: frontend/src/views/leave/Dashboard.vue:2
 msgid "Leaves & Holidays"
-msgstr ""
+msgstr "İzinler & Tatiller"
 
 #. Label of the leaves_allocated (Check) field in DocType 'Leave Policy
 #. Assignment'
@@ -8157,7 +8157,7 @@ msgstr ""
 
 #: frontend/src/components/CheckInPanel.vue:146
 msgid "Locating..."
-msgstr ""
+msgstr "Bulunuyor..."
 
 #. Label of the location_section (Section Break) field in DocType 'Employee
 #. Checkin'
@@ -8210,7 +8210,7 @@ msgstr "Giriş Başarısız"
 
 #: frontend/src/views/Login.vue:8
 msgid "Login to Frappe HR"
-msgstr ""
+msgstr "Frappe HR'ye giriş yapın"
 
 #. Label of the longitude (Float) field in DocType 'Employee Checkin'
 #. Label of the longitude (Float) field in DocType 'Shift Location'
@@ -8221,7 +8221,7 @@ msgstr "Boylam"
 
 #: frontend/src/components/CheckInPanel.vue:133
 msgid "Longitude: {0}°"
-msgstr ""
+msgstr "Boylam: {0}°"
 
 #. Label of the lower_range (Currency) field in DocType 'Job Applicant'
 #. Label of the lower_range (Currency) field in DocType 'Job Opening'
@@ -8268,7 +8268,7 @@ msgstr "Elle"
 #. Cycle'
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgid "Manual Rating"
-msgstr ""
+msgstr "Manuel Derecelendirme"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:14
 #: hrms/public/js/salary_slip_deductions_report_filters.js:21
@@ -9430,7 +9430,7 @@ msgstr "Yarı zamanlı"
 
 #: hrms/hr/utils.py:847 hrms/public/js/utils/index.js:154
 msgid "Partial Success"
-msgstr ""
+msgstr "Kısmen Başarılı"
 
 #. Option for the 'Travel Funding' (Select) field in DocType 'Travel Request'
 #: hrms/hr/doctype/travel_request/travel_request.json
@@ -9440,7 +9440,7 @@ msgstr "Kısmen Sponsorlu, Kısmi Finansman Gerektirir"
 #. Option for the 'Status' (Select) field in DocType 'Employee Advance'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 msgid "Partly Claimed and Returned"
-msgstr ""
+msgstr "Kısmen Talep Edildi ve İade Edildi"
 
 #. Label of the passport_number (Data) field in DocType 'Travel Request'
 #: hrms/hr/doctype/travel_request/travel_request.json
@@ -9479,7 +9479,7 @@ msgstr "Fayda Talebine Karşı Ödeme"
 #. Label of the pay_via_salary_slip (Check) field in DocType 'Gratuity'
 #: hrms/payroll/doctype/gratuity/gratuity.json
 msgid "Pay via Salary Slip"
-msgstr ""
+msgstr "Maaş Bordrosu ile Ödeme"
 
 #. Label of the payable_account (Link) field in DocType 'Expense Claim'
 #. Label of the payable_account (Link) field in DocType 'Gratuity'
@@ -9490,7 +9490,7 @@ msgstr "Borç Hesabı"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:110
 msgid "Payable Account is mandatory to submit an Expense Claim"
-msgstr ""
+msgstr "Gider Talebi göndermek için Borç Hesabı zorunludur"
 
 #. Label of the section_break_8 (Section Break) field in DocType 'Full and
 #. Final Statement'
@@ -9814,7 +9814,7 @@ msgstr "Lütfen mevcut bileşenlerden herhangi birine {0} kalan faydaları ekley
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:107
 msgid "Please add the remaining benefits {0} to the application as pro-rata component"
-msgstr ""
+msgstr "Lütfen kalan faydaları {0} orantılı bileşen olarak uygulamaya ekleyin"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:762
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
@@ -9867,7 +9867,7 @@ msgstr "Lütfen Başlangıç Tarihini seçin."
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:167
 msgid "Please select Shift Schedule and assignment date(s)."
-msgstr ""
+msgstr "Lütfen Vardiya Programını ve görevlendirme tarihlerini seçiniz."
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:160
 msgid "Please select Shift Type and assignment date(s)."
@@ -9912,7 +9912,7 @@ msgstr "Bu işlemi gerçekleştirmek için lütfen en az bir satır seçin."
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:36
 msgid "Please select company."
-msgstr ""
+msgstr "Lütfen şirket seçiniz."
 
 #: hrms/hr/doctype/employee_advance/employee_advance.js:16
 msgid "Please select employee first"
@@ -10171,11 +10171,11 @@ msgstr ""
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:305
 msgid "Processing Requests"
-msgstr ""
+msgstr "Devam Eden Talepler"
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:293
 msgid "Processing Requests..."
-msgstr ""
+msgstr "Talepler İşleniyor..."
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:265
 msgid "Processing of Shift Requests has been queued. It may take a few minutes."
@@ -10199,7 +10199,7 @@ msgstr "Profil"
 
 #: hrms/hr/report/project_profitability/project_profitability.py:183
 msgid "Profit"
-msgstr ""
+msgstr "Kâr"
 
 #. Label of the progress (Percent) field in DocType 'Goal'
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:76
@@ -10263,7 +10263,7 @@ msgstr "Yardım Sandığı Kesintileri"
 #. Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
 msgid "Publish Applications Received"
-msgstr ""
+msgstr "Alınan Başvuruları Yayınla"
 
 #. Label of the publish_salary_range (Check) field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
@@ -10298,15 +10298,15 @@ msgstr "Seyahat Amacı"
 
 #: frontend/src/views/AppSettings.vue:128
 msgid "Push Notification permission denied"
-msgstr ""
+msgstr "Anında Bildirim izni reddedildi"
 
 #: frontend/src/views/AppSettings.vue:96
 msgid "Push notifications disabled"
-msgstr ""
+msgstr "Anlık bildirimler devre dışı bırakıldı"
 
 #: frontend/src/views/AppSettings.vue:80
 msgid "Push notifications have been disabled on your site"
-msgstr ""
+msgstr "Sitenizde anlık bildirimler devre dışı bırakıldı"
 
 #. Option for the 'Earned Leave Frequency' (Select) field in DocType 'Leave
 #. Type'
@@ -10441,15 +10441,15 @@ msgstr ""
 
 #: frontend/src/views/expense_claim/Dashboard.vue:23
 msgid "Recent Expenses"
-msgstr ""
+msgstr "Son Harcamalar"
 
 #: frontend/src/views/leave/Dashboard.vue:21
 msgid "Recent Leaves"
-msgstr ""
+msgstr "Son İzinler"
 
 #: frontend/src/views/attendance/Dashboard.vue:40
 msgid "Recent Shift Requests"
-msgstr ""
+msgstr "Son Vardiya Talepleri"
 
 #. Option for the 'Action' (Select) field in DocType 'Full and Final Asset'
 #: hrms/hr/doctype/full_and_final_asset/full_and_final_asset.json
@@ -10536,7 +10536,7 @@ msgstr "Referanslar"
 #. Referral'
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 msgid "Referral Bonus Payment Status"
-msgstr ""
+msgstr "Referans Bonusu Ödeme Durumu"
 
 #. Label of the referral_details_section (Section Break) field in DocType
 #. 'Employee Referral'
@@ -10579,7 +10579,7 @@ msgstr "Reddet"
 
 #: hrms/hr/doctype/employee_referral/employee_referral.js:7
 msgid "Reject Employee Referral"
-msgstr ""
+msgstr "Çalışan Referansını Reddet"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Referral'
 #. Option for the 'Approval Status' (Select) field in DocType 'Expense Claim'
@@ -10606,7 +10606,7 @@ msgstr "Reddedildi"
 
 #: frontend/src/components/RequestActionSheet.vue:290
 msgid "Rejection"
-msgstr ""
+msgstr "Reddetme"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:167
 msgid "Release Withheld Salaries"
@@ -10758,7 +10758,7 @@ msgstr ""
 
 #: frontend/src/views/Home.vue:42
 msgid "Request Leave"
-msgstr ""
+msgstr "İzin Talebi"
 
 #: frontend/src/views/leave/Dashboard.vue:17
 msgid "Request a Leave"
@@ -10792,7 +10792,7 @@ msgstr "Tam Finansman Gerektir"
 
 #: hrms/setup.py:170
 msgid "Required Skills"
-msgstr ""
+msgstr "Gerekli Beceriler"
 
 #. Label of the required_for_employee_creation (Check) field in DocType
 #. 'Employee Boarding Activity'
@@ -11261,7 +11261,7 @@ msgstr ""
 
 #: frontend/src/views/salary_slip/Dashboard.vue:2
 msgid "Salary Slips"
-msgstr ""
+msgstr "Maaş Bordroları"
 
 #. Label of the salary_slips_created (Check) field in DocType 'Payroll Entry'
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
@@ -11275,7 +11275,7 @@ msgstr "Maaş Balıkları Gönderildi"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1451
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
-msgstr ""
+msgstr "Maaş Bordroları {} personeller için zaten mevcuttur ve bu bordro tarafından işlenmeyecektir."
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1476
 msgid "Salary Slips submitted for period from {0} to {1}"
@@ -11440,7 +11440,7 @@ msgstr ""
 
 #: hrms/www/jobs/index.html:64
 msgid "Search for Jobs"
-msgstr ""
+msgstr "İş Ara"
 
 #: hrms/public/js/hierarchy_chart/hierarchy_chart_desktop.js:86
 #: hrms/public/js/hierarchy_chart/hierarchy_chart_mobile.js:77
@@ -11478,11 +11478,11 @@ msgstr "Banka Girişi Yapmak İçin Ödeme Hesabını Seçin"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1614
 msgid "Select Payroll Frequency."
-msgstr ""
+msgstr "Maaş Sıklığını Seçin."
 
 #: frontend/src/views/salary_slip/Dashboard.vue:23
 msgid "Select Payroll Period"
-msgstr ""
+msgstr "Maaş Dönemini Seçin"
 
 #: hrms/hr/employee_property_update.js:109
 msgid "Select Property"
@@ -11872,7 +11872,7 @@ msgstr "Vardiya Atama Detayları"
 
 #: frontend/src/views/attendance/ShiftAssignmentList.vue:5
 msgid "Shift Assignment History"
-msgstr ""
+msgstr "Vardiya Atama Geçmişi"
 
 #. Name of a DocType
 #. Label of a Link in the Shift & Attendance Workspace
@@ -11938,7 +11938,7 @@ msgstr "Vardiya Talebi"
 
 #: hrms/setup.py:139 hrms/setup.py:260
 msgid "Shift Request Approver"
-msgstr ""
+msgstr "Vardiya Talebi Onaylayıcısı"
 
 #. Label of the shift_request_filters_section (Section Break) field in DocType
 #. 'Shift Assignment Tool'
@@ -11967,7 +11967,7 @@ msgstr "Bu tarihten sonra başlayan Vardiya Talepleri dikkate alınmayacaktır."
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Schedule"
-msgstr ""
+msgstr "Vardiya Programı"
 
 #. Label of the shift_schedule_assignment (Link) field in DocType 'Shift
 #. Assignment'
@@ -11977,7 +11977,7 @@ msgstr ""
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Schedule Assignment"
-msgstr ""
+msgstr "Vardiya Programı Ataması"
 
 #. Label of the shift_settings_section (Section Break) field in DocType 'HR
 #. Settings'
@@ -11998,7 +11998,7 @@ msgstr "Vardiya Başlangıç Saati"
 #. Assignment'
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.json
 msgid "Shift Status"
-msgstr ""
+msgstr "Vardiya Durumu"
 
 #. Label of the shift_timings_section (Section Break) field in DocType
 #. 'Employee Checkin'
@@ -12009,7 +12009,7 @@ msgstr "Vardiya Zamanları"
 #: hrms/public/js/utils/index.js:246 hrms/public/js/utils/index.js:254
 #: hrms/public/js/utils/index.js:268 hrms/public/js/utils/index.js:275
 msgid "Shift Tools"
-msgstr ""
+msgstr "Vardiya Araçları"
 
 #. Label of the shift_type (Link) field in DocType 'Shift Assignment'
 #. Label of the shift_type (Link) field in DocType 'Shift Assignment Tool'
@@ -12829,7 +12829,7 @@ msgstr ""
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:150
 msgid "This will overwrite the tax component {0} in the salary slip and tax won't be calculated based on the Income Tax Slabs"
-msgstr ""
+msgstr "Bu, maaş bordrosundaki vergi bileşenini {0} üzerine yazacak ve vergi Gelir Vergisi Dilimlerine göre hesaplanmayacaktır"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:401
 msgid "This will submit Salary Slips and create accrual Journal Entry. Do you want to proceed?"
@@ -13354,7 +13354,7 @@ msgstr ""
 
 #: hrms/hr/doctype/appraisal/appraisal.py:156 hrms/mixins/appraisal.py:17
 msgid "Total weightage for all {0} must add up to 100. Currently, it is {1}%"
-msgstr ""
+msgstr "Tüm {0} için toplam ağırlık 100'e kadar eklenmelidir. Şu anda %{1}'dir"
 
 #. Label of the total_working_days_per_year (Int) field in DocType 'Gratuity
 #. Rule'
@@ -13931,7 +13931,7 @@ msgstr "Hedefleri Göster"
 
 #: frontend/src/components/LeaveBalance.vue:14
 msgid "View Leave History"
-msgstr ""
+msgstr "İzin Geçmişini Görüntüle"
 
 #: hrms/public/js/utils/leave_utils.js:5
 msgid "View Ledger"
@@ -13944,7 +13944,7 @@ msgstr "Liste Görünümü"
 
 #: frontend/src/views/Home.vue:57
 msgid "View Salary Slips"
-msgstr ""
+msgstr "Maaş Bordrolarını Görüntüle"
 
 #. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
@@ -14307,7 +14307,7 @@ msgstr "sonuç"
 
 #: hrms/www/jobs/index.html:122
 msgid "results"
-msgstr ""
+msgstr "sonuçlar"
 
 #: hrms/public/js/templates/feedback_summary.html:16
 msgid "review"
@@ -14403,7 +14403,7 @@ msgstr "{0} başarısız oldu!"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:157
 msgid "{0} has {1} enabled"
-msgstr ""
+msgstr "{0} {1} etkinleştirildi"
 
 #: hrms/hr/report/employee_analytics/employee_analytics.py:14
 msgid "{0} is mandatory"
@@ -14491,7 +14491,7 @@ msgstr "{0}: {1}"
 #: frontend/src/components/ShiftAssignmentItem.vue:12
 #: frontend/src/components/ShiftRequestItem.vue:17
 msgid "{0}d"
-msgstr ""
+msgstr "{0}g"
 
 #. Count format of shortcut in the Shift & Attendance Workspace
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
