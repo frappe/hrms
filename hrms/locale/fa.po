@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-01-19 09:34+0000\n"
-"PO-Revision-Date: 2025-01-20 08:03\n"
+"PO-Revision-Date: 2025-01-21 08:04\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -3456,7 +3456,7 @@ msgstr "افتتاحیه های مبتنی بر دپارتمان"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:96
 msgid "Department {0} does not belong to company: {1}"
-msgstr ""
+msgstr "دپارتمان {0} متعلق به شرکت: {1} نیست"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:195
 msgid "Department: {0}"
