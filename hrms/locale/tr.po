@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-01-19 09:34+0000\n"
-"PO-Revision-Date: 2025-01-21 08:04\n"
+"PO-Revision-Date: 2025-01-22 08:10\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -2503,7 +2503,7 @@ msgstr "Şirket Detayları"
 
 #: frontend/src/views/Profile.vue:177
 msgid "Company Information"
-msgstr ""
+msgstr "Şirket Bilgileri"
 
 #. Name of a DocType
 #. Label of the compensatory_request (Link) field in DocType 'Leave Allocation'
@@ -2798,7 +2798,7 @@ msgstr "Ek Maaş Oluştur"
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:34
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:38
 msgid "Create Appraisals"
-msgstr ""
+msgstr "Değerlendirmeler Oluşturun"
 
 #: hrms/hr/doctype/job_offer/job_offer.js:45
 msgid "Create Employee"
@@ -2855,7 +2855,7 @@ msgstr "Vardiyaları Şu Tarihten Sonra Oluştur"
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:192
 msgid "Creating Appraisals"
-msgstr ""
+msgstr "Değerlendirmeler Oluşturuluyor"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:438
 msgid "Creating Payment Entries......"
@@ -3914,22 +3914,22 @@ msgstr "Düzenle"
 
 #: frontend/src/components/ExpensesTable.vue:213
 msgid "Edit Expense Item"
-msgstr ""
+msgstr "Gider Kalemini Düzenle"
 
 #: frontend/src/components/ExpenseTaxesTable.vue:221
 msgid "Edit Expense Tax"
-msgstr ""
+msgstr "Gider Kalemi Vergisini Düzenle"
 
 #. Label of the effective_from (Date) field in DocType 'Leave Policy
 #. Assignment'
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 msgid "Effective From"
-msgstr ""
+msgstr "Başlangıç Tarihi"
 
 #. Label of the effective_to (Date) field in DocType 'Leave Policy Assignment'
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 msgid "Effective To"
-msgstr ""
+msgstr "Geçerlilik Tarihi"
 
 #. Label of the effective_from (Date) field in DocType 'Income Tax Slab'
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
@@ -4167,7 +4167,7 @@ msgstr "Personel Avansı"
 
 #: frontend/src/views/expense_claim/Dashboard.vue:35
 msgid "Employee Advance Balance"
-msgstr ""
+msgstr "Personel Avans Bakiyesi"
 
 #. Name of a report
 #. Label of a Link in the Expense Claims Workspace
@@ -4250,7 +4250,7 @@ msgstr "Personel Giriş/Çıkış"
 
 #: frontend/src/views/attendance/EmployeeCheckinList.vue:5
 msgid "Employee Checkin History"
-msgstr ""
+msgstr "Personel Puantaj Geçmişi"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_cost_center/employee_cost_center.json
@@ -4595,7 +4595,7 @@ msgstr "Personel Performans Geri Bildirimi"
 #: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
 #: hrms/hr/workspace/performance/performance.json
 msgid "Employee Promotion"
-msgstr "Çalışan Tanıtımı"
+msgstr "Personel Terfisi"
 
 #. Label of the details_section (Section Break) field in DocType 'Employee
 #. Promotion'
@@ -5073,11 +5073,11 @@ msgstr "Hata Mesajı"
 
 #: frontend/src/components/FormView.vue:531
 msgid "Error creating {0}"
-msgstr ""
+msgstr "{0} oluşturulurken hata oluştu"
 
 #: frontend/src/components/FormView.vue:580
 msgid "Error deleting {0}"
-msgstr ""
+msgstr "{0} silinirken hata oluştu"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1224
 msgid "Error in formula or condition"
@@ -6096,7 +6096,7 @@ msgstr "Çalışanları Al"
 #. Label of the get_job_requisitions (Button) field in DocType 'Staffing Plan'
 #: hrms/hr/doctype/staffing_plan/staffing_plan.json
 msgid "Get Job Requisitions"
-msgstr ""
+msgstr "İş Talep Formlarını Getir"
 
 #. Label of the get_template (Button) field in DocType 'Upload Attendance'
 #: hrms/hr/doctype/upload_attendance/upload_attendance.json
@@ -6123,7 +6123,7 @@ msgstr ""
 
 #: frontend/src/views/Login.vue:70
 msgid "Go to Reset Password page"
-msgstr ""
+msgstr "Şifre Sıfırlama sayfasına git"
 
 #. Label of the kra (Small Text) field in DocType 'Appraisal Goal'
 #. Name of a DocType
@@ -8721,7 +8721,7 @@ msgstr ""
 #. Label of the net_pay_info (Tab Break) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Net Pay Info"
-msgstr ""
+msgstr "Net Ödeme Bilgisi"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:194
 msgid "Net Pay cannot be less than 0"
@@ -10052,7 +10052,7 @@ msgstr "Lütfen bu eğitim olayına ilişkin açıklamayı güncelleyin"
 #. Label of the posted_on (Datetime) field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
 msgid "Posted On"
-msgstr ""
+msgstr "Yayınlama Tarihi"
 
 #. Label of the posting_date (Date) field in DocType 'Employee Advance'
 #. Label of the posting_date (Date) field in DocType 'Expense Claim'
@@ -11141,7 +11141,7 @@ msgstr "Maaş Beklentisi"
 
 #: frontend/src/views/Profile.vue:200
 msgid "Salary Information"
-msgstr ""
+msgstr "Maaş Bilgisi"
 
 #. Label of the salary_per (Select) field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
@@ -12149,7 +12149,7 @@ msgstr "Sponsorlu Tutar"
 #. Label of the staffing_details (Table) field in DocType 'Staffing Plan'
 #: hrms/hr/doctype/staffing_plan/staffing_plan.json
 msgid "Staffing Details"
-msgstr ""
+msgstr "Personel Kadrosu Detayları"
 
 #. Label of the staffing_plan (Link) field in DocType 'Job Opening'
 #. Name of a DocType
@@ -12159,7 +12159,7 @@ msgstr ""
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.py:24
 #: hrms/hr/workspace/recruitment/recruitment.json
 msgid "Staffing Plan"
-msgstr ""
+msgstr "Personel Kadrosu Planı"
 
 #. Name of a DocType
 #: hrms/hr/doctype/staffing_plan_detail/staffing_plan_detail.json
@@ -13027,7 +13027,7 @@ msgstr "Bugün {0} isimli Personelin Doğum Günü 🎉"
 
 #: hrms/controllers/employee_reminders.py:259
 msgid "Today {0} at our Company! 🎉"
-msgstr ""
+msgstr "Bugün Şirketimizde {0}! 🎉"
 
 #: hrms/controllers/employee_reminders.py:241
 msgid "Today {0} completed {1} year(s) at our Company! 🎉"
@@ -13092,7 +13092,7 @@ msgstr "Toplam Tutar sıfır olamaz"
 #. Final Statement'
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json
 msgid "Total Asset Recovery Cost"
-msgstr ""
+msgstr "Toplam Varlık Geri Kazanım Maliyeti"
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:227
 #: hrms/hr/report/project_profitability/project_profitability.py:197
@@ -14221,7 +14221,7 @@ msgstr "Varsayılan Vardiyanızı talep edemezsiniz: {0}"
 
 #: hrms/hr/doctype/staffing_plan/staffing_plan.py:95
 msgid "You can only plan for upto {0} vacancies and budget {1} for {2} as per staffing plan {3} for parent company {4}."
-msgstr ""
+msgstr "Personel planına göre, ana şirket {4} için {3} personel planında yalnızca {0} açık pozisyon ve {1} bütçe ile {2} planlaması yapabilirsiniz."
 
 #: hrms/hr/doctype/leave_encashment/leave_encashment.py:37
 msgid "You can only submit Leave Encashment for a valid encashment amount"
@@ -14464,7 +14464,7 @@ msgstr "{0} başarıyla güncellendi!"
 
 #: hrms/hr/doctype/staffing_plan/staffing_plan.py:129
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
-msgstr ""
+msgstr "{3} bağlı şirketler için {0} açık pozisyon ve {1} bütçe zaten planlanmış. Ana şirket {3} için {6} personel planına göre yalnızca {4} açık pozisyon ve {5} bütçe planlayabilirsiniz."
 
 #: hrms/payroll/doctype/salary_component/salary_component.js:114
 msgid "{0} will be updated for the following Salary Structures: {1}."
