@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-01-19 09:34+0000\n"
-"PO-Revision-Date: 2025-01-22 08:10\n"
+"PO-Revision-Date: 2025-01-23 08:40\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -6289,7 +6289,7 @@ msgstr ""
 #. Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Gross Year To Date(Company Currency)"
-msgstr ""
+msgstr "Yılbaşından Bugüne Brüt (Şirket Para Birimi)"
 
 #: hrms/hr/report/daily_work_summary_replies/daily_work_summary_replies.js:9
 msgid "Group"
@@ -8600,7 +8600,7 @@ msgstr ""
 #. Label of the base_month_to_date (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Month To Date(Company Currency)"
-msgstr ""
+msgstr "Ay Başından Bugüne (Şirket Para Birimi)"
 
 #. Option for the 'Set the frequency for holiday reminders' (Select) field in
 #. DocType 'HR Settings'
@@ -8716,7 +8716,7 @@ msgstr "Net Ödeme"
 #. Label of the base_net_pay (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Net Pay (Company Currency)"
-msgstr ""
+msgstr "Net Ücret (Şirket Para Birimi)"
 
 #. Label of the net_pay_info (Tab Break) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
@@ -8893,7 +8893,7 @@ msgstr "Personel bulunamadı"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:185
 msgid "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
-msgstr ""
+msgstr "Belirtilen kriterler için personel bulunamadı:<br>Şirket: {0}<br> Para Birimi: {1}<br>Bordro Ödeme Hesabı: {2}"
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:67
 msgid "No employees found for the selected criteria"
@@ -13123,7 +13123,7 @@ msgstr "Toplam Kesinti"
 #. Label of the base_total_deduction (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Total Deduction (Company Currency)"
-msgstr ""
+msgstr "Toplam Kesinti (Şirket Para Birimi)"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:146
 msgid "Total Early Exits"
@@ -14172,7 +14172,7 @@ msgstr ""
 #. Label of the base_year_to_date (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Year To Date(Company Currency)"
-msgstr ""
+msgstr "Yıl Başından Bugüne (Şirket Para Birimi)"
 
 #. Option for the 'Earned Leave Frequency' (Select) field in DocType 'Leave
 #. Type'
