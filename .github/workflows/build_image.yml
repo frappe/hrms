@@ -58,8 +58,8 @@ jobs:
           context: builds
           file: builds/images/layered/Containerfile
           tags: >
-            ghcr.io/${{ github.repository }}:${{ github.ref_name }},
             ghcr.io/${{ github.repository }}:${{ env.IMAGE_TAG }}
+            # ghcr.io/${{ github.repository }}:${{ github.ref_name }},
           build-args: |
             "FRAPPE_BRANCH=${{ env.FRAPPE_BRANCH }}"
             "APPS_JSON_BASE64=${{ env.APPS_JSON_BASE64 }}"
