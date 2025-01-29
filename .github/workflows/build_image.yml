@@ -39,7 +39,7 @@ jobs:
           
       - name: Set Branch
         run: |
-          export APPS_JSON_PATH='${GITHUB_WORKSPACE}/.github/helper/apps.json'
+          export APPS_JSON_PATH='${{ github.workspace }}/.github/helper/apps.json'
           echo "APPS_JSON_BASE64=$(cat $APPS_JSON_PATH | base64 -w 0)" >> $GITHUB_ENV
           echo "FRAPPE_BRANCH=version-15" >> $GITHUB_ENV
 
