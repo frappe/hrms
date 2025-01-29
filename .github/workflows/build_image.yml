@@ -1,6 +1,7 @@
 name: Build Container Image
 on:
-  pull_request:
+  release:
+    types: [published]
   workflow_dispatch:
   push:
     branches:
@@ -58,6 +59,7 @@ jobs:
           context: builds
           file: builds/images/layered/Containerfile
           tags: >
+            ghcr.io/${{ github.repository }}:${{ github.ref_name }},
             ghcr.io/${{ github.repository }}:${{ env.IMAGE_TAG }}
           build-args: |
             "FRAPPE_BRANCH=${{ env.FRAPPE_BRANCH }}"
