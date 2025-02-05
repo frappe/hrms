@@ -1331,7 +1331,9 @@ class TestSalarySlip(IntegrationTestCase):
 				precision = entry.precision("amount")
 				break
 
-		self.assertEqual(amount, flt((1000 * ss.payment_days / ss.total_working_days) * 0.5, precision))
+		self.assertEqual(
+			amount, flt(flt((1000 * ss.payment_days / ss.total_working_days), precision) * 0.5, precision)
+		)
 
 	def make_activity_for_employee(self):
 		activity_type = frappe.get_doc("Activity Type", "_Test Activity Type")
@@ -1474,14 +1476,14 @@ class TestSalarySlip(IntegrationTestCase):
 
 		monthly_tax_amount = 11403.6
 
-		self.assertEqual(salary_slip.ctc, 1226000.0)
+		self.assertEqual(salary_slip.ctc, 1216000.0)
 		self.assertEqual(salary_slip.income_from_other_sources, 10000.0)
 		self.assertEqual(salary_slip.non_taxable_earnings, 10000.0)
-		self.assertEqual(salary_slip.total_earnings, 1236000.0)
+		self.assertEqual(salary_slip.total_earnings, 1226000.0)
 		self.assertEqual(salary_slip.standard_tax_exemption_amount, 50000.0)
 		self.assertEqual(salary_slip.tax_exemption_declaration, 100000.0)
 		self.assertEqual(salary_slip.deductions_before_tax_calculation, 2400.0)
-		self.assertEqual(salary_slip.annual_taxable_amount, 1073600.0)
+		self.assertEqual(salary_slip.annual_taxable_amount, 1063600.0)
 		self.assertEqual(flt(salary_slip.income_tax_deducted_till_date, 2), monthly_tax_amount)
 		self.assertEqual(flt(salary_slip.current_month_income_tax, 2), monthly_tax_amount)
 		self.assertEqual(flt(salary_slip.future_income_tax_deductions, 2), 125439.65)

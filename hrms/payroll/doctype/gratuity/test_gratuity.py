@@ -90,19 +90,41 @@ class TestGratuity(IntegrationTestCase):
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_gratuity_based_on_all_previous_slabs_via_payment_entry(self):
 		"""
-		Range	|	Fraction
-		0-1		|	0
-		1-5		|	0.7
-		5-0		|	1
+		Range   |   Fraction
+		0-3     |   0.5
+		3-6     |   1.0
+		6-9		|	1.5
 		"""
 		from hrms.overrides.employee_payment_entry import get_payment_entry_for_employee
 
 		sal_slip = create_salary_slip(self.employee)
+
 		rule = setup_gratuity_rule("Rule Under Limited Contract (UAE)")
+		rule.gratuity_rule_slabs = []
+		for slab in [
+			{"from_year": 0, "to_year": 3, "fraction_of_applicable_earnings": 0.5},
+			{"from_year": 3, "to_year": 6, "fraction_of_applicable_earnings": 1.0},
+			{"from_year": 6, "to_year": 9, "fraction_of_applicable_earnings": 1.5},
+		]:
+			new_slab = frappe.get_doc(
+				{
+					"doctype": "Gratuity Rule Slab",
+					"from_year": slab["from_year"],
+					"to_year": slab["to_year"],
+					"fraction_of_applicable_earnings": slab["fraction_of_applicable_earnings"],
+					"parent": rule.name,
+					"parentfield": "gratuity_rule_slabs",
+					"parenttype": "Gratuity Rule",
+				}
+			)
+			rule.append("gratuity_rule_slabs", new_slab)
+		rule.save()
+		rule.reload()
+
 		set_mode_of_payment_account()
 
 		gratuity = create_gratuity(
-			expense_account="Payment Account - _TC", mode_of_payment="Cash", employee=self.employee
+			expense_account="Payment Account - _TC", mode_of_payment="Cash", employee=self.employee, rule=rule
 		)
 
 		# work experience calculation
@@ -125,7 +147,7 @@ class TestGratuity(IntegrationTestCase):
 			limit=1,
 		)
 
-		gratuity_amount = ((0 * 1) + (4 * 0.7) + (1 * 1)) * component_amount[0].amount
+		gratuity_amount = ((3 * 0.5) + (3 * 1.0)) * component_amount[0].amount
 		self.assertEqual(flt(gratuity_amount, 2), flt(gratuity.amount, 2))
 		self.assertEqual(gratuity.status, "Unpaid")
 

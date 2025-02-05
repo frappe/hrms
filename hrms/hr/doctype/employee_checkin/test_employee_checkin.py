@@ -583,6 +583,34 @@ class TestEmployeeCheckin(IntegrationTestCase):
 		# shift does not change since attendance is already marked
 		self.assertEqual(log2.shift, shift1.name)
 
+	def test_bulk_fetch_shift_if_shift_settings_change_for_the_same_shift(self):
+		emp1 = make_employee("bulkemp1@example.com", company="_Test Company")
+		emp2 = make_employee("bulkemp2@example.com", company="_Test Company")
+
+		# 8 - 12,
+		shift = setup_shift_type(shift_type="Test Bulk Shift")
+		date = getdate()
+		make_shift_assignment(shift.name, emp1, date)
+		make_shift_assignment(shift.name, emp2, date)
+
+		timestamp = datetime.combine(date, get_time("08:00:00"))
+		# shift actual start is `current date 07:00:00`
+		log1 = make_checkin(emp1, timestamp)
+		self.assertEqual(log1.shift_actual_start, datetime.combine(date, get_time("07:00:00")))
+		log2 = make_checkin(emp2, timestamp)
+		self.assertEqual(log2.shift_actual_start, datetime.combine(date, get_time("07:00:00")))
+
+		# change shift settings like check in buffer from 60 minutes to 120 minutes
+		# so now shift actual start is `current date 06:00:00`
+		shift.begin_check_in_before_shift_start_time = 120
+		shift.save()
+		bulk_fetch_shift([log1.name, log2.name])
+		# shift changes according to the new assignment
+		log1.reload()
+		self.assertEqual(log1.shift_actual_start, datetime.combine(date, get_time("06:00:00")))
+		log2.reload()
+		self.assertEqual(log2.shift_actual_start, datetime.combine(date, get_time("06:00:00")))
+
 
 def make_n_checkins(employee, n, hours_to_reverse=1):
 	logs = [make_checkin(employee, now_datetime() - timedelta(hours=hours_to_reverse, minutes=n + 1))]

@@ -23,22 +23,27 @@ frappe.ui.form.on("Employee Checkin", {
 	add_fetch_shift_button(frm) {
 		if (frm.doc.attendace) return;
 		frm.add_custom_button(__("Fetch Shift"), function () {
-			const previous_shift = frm.doc.shift;
 			frappe.call({
 				method: "fetch_shift",
 				doc: frm.doc,
 				freeze: true,
 				freeze_message: __("Fetching Shift"),
 				callback: function () {
-					if (previous_shift === frm.doc.shift) return;
-					frm.dirty();
-					frm.save();
-					frappe.show_alert({
-						message: __("Shift has been successfully updated to {0}.", [
-							frm.doc.shift,
-						]),
-						indicator: "green",
-					});
+					if (frm.doc.shift) {
+						frappe.show_alert({
+							message: __("Shift has been successfully updated to {0}.", [
+								frm.doc.shift,
+							]),
+							indicator: "green",
+						});
+						frm.dirty();
+						frm.save();
+					} else {
+						frappe.show_alert({
+							message: __("No valid shift found for log time"),
+							indicator: "orange",
+						});
+					}
 				},
 			});
 		});

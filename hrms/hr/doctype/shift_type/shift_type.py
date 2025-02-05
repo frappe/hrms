@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from itertools import groupby
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cint, create_batch, get_datetime, get_time, getdate
 
@@ -25,6 +26,22 @@ EMPLOYEE_CHUNK_SIZE = 50
 
 
 class ShiftType(Document):
+	def validate(self):
+		if self.is_field_modified("start_time") and self.unlinked_checkins_exist():
+			frappe.throw(
+				title=_("Unmarked Check-in Logs Found"),
+				msg=_("Mark attendance for existing check-in/out logs before changing shift settings"),
+			)
+
+	def is_field_modified(self, fieldname):
+		return not self.is_new() and self.has_value_changed(fieldname)
+
+	def unlinked_checkins_exist(self):
+		return frappe.db.exists(
+			"Employee Checkin",
+			{"shift": self.name, "attendance": ["is", "not set"], "skip_auto_attendance": 0},
+		)
+
 	@frappe.whitelist()
 	def process_auto_attendance(self):
 		if (
@@ -70,7 +87,6 @@ class ShiftType(Document):
 		frappe.db.commit()  # nosemgrep
 
 		assigned_employees = self.get_assigned_employees(self.process_attendance_after, True)
-
 		# mark absent in batches & commit to avoid losing progress since this tries to process remaining attendance
 		# right from "Process Attendance After" to "Last Sync of Checkin"
 		for batch in create_batch(assigned_employees, EMPLOYEE_CHUNK_SIZE):
@@ -234,41 +250,28 @@ class ShiftType(Document):
 			)
 		).run(pluck=True)
 
-	def get_assigned_employees(self, from_date=None, consider_default_shift=False) -> list[str]:
+	def get_assigned_employees(self, from_date: datetime.date, consider_default_shift=False) -> list[str]:
+		"""Get all such employees who either have this shift assigned that hasn't ended or have this shift as default shift.
+		This may fetch some redundant employees who have another shift assigned that may have started or ended before or after the
+		attendance processing date. But this is done to avoid missing any employee who may have this shift as active shift."""
 		filters = {"shift_type": self.name, "docstatus": "1", "status": "Active"}
-		if from_date:
-			filters["start_date"] = (">=", from_date)
 
-		assigned_employees = frappe.get_all("Shift Assignment", filters=filters, pluck="employee")
+		or_filters = [["end_date", ">=", from_date], ["end_date", "is", "not set"]]
+
+		assigned_employees = frappe.get_all(
+			"Shift Assignment", filters=filters, or_filters=or_filters, pluck="employee"
+		)
 
 		if consider_default_shift:
-			default_shift_employees = self.get_employees_with_default_shift(filters)
+			default_shift_employees = frappe.get_all(
+				"Employee", filters={"default_shift": self.name, "status": "Active"}, pluck="name"
+			)
 			assigned_employees = set(assigned_employees + default_shift_employees)
 
 		# exclude inactive employees
 		inactive_employees = frappe.db.get_all("Employee", {"status": "Inactive"}, pluck="name")
 
 		return list(set(assigned_employees) - set(inactive_employees))
-
-	def get_employees_with_default_shift(self, filters: dict) -> list:
-		default_shift_employees = frappe.get_all(
-			"Employee", filters={"default_shift": self.name, "status": "Active"}, pluck="name"
-		)
-
-		if not default_shift_employees:
-			return []
-
-		# exclude employees from default shift list if any other valid shift assignment exists
-		del filters["shift_type"]
-		filters["employee"] = ("in", default_shift_employees)
-
-		active_shift_assignments = frappe.get_all(
-			"Shift Assignment",
-			filters=filters,
-			pluck="employee",
-		)
-
-		return list(set(default_shift_employees) - set(active_shift_assignments))
 
 	def get_holiday_list(self, employee: str) -> str:
 		holiday_list_name = self.holiday_list or get_holiday_list_for_employee(employee, False)

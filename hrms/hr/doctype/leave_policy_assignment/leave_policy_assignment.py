@@ -38,6 +38,8 @@ class LeavePolicyAssignment(Document):
 			)
 		elif self.assignment_based_on == "Joining Date":
 			self.effective_from = frappe.db.get_value("Employee", self.employee, "date_of_joining")
+			if not self.effective_to:
+				self.effective_to = get_last_day(add_months(self.effective_from, 12))
 
 	def validate_policy_assignment_overlap(self):
 		leave_policy_assignment = frappe.db.get_value(
@@ -134,12 +136,13 @@ class LeavePolicyAssignment(Document):
 		from frappe.model.meta import get_field_precision
 
 		precision = get_field_precision(frappe.get_meta("Leave Allocation").get_field("new_leaves_allocated"))
-
+		current_date = getdate(frappe.flags.current_date) or getdate()
 		# Earned Leaves and Compensatory Leaves are allocated by scheduler, initially allocate 0
 		if leave_details.is_compensatory:
 			new_leaves_allocated = 0
+		# if earned leave is being allcated after the effective period, then let them be calculated pro-rata
 
-		elif leave_details.is_earned_leave:
+		elif leave_details.is_earned_leave and current_date < getdate(self.effective_to):
 			new_leaves_allocated = self.get_leaves_for_passed_months(
 				annual_allocation, leave_details, date_of_joining
 			)

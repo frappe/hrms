@@ -173,7 +173,7 @@
   },
   {
    "allow_on_submit": 1,
-   "description": "Amount returned by the employee after the advance is paid",
+   "description": "Amount scheduled for deduction via salary",
    "fieldname": "return_amount",
    "fieldtype": "Currency",
    "label": "Returned Amount",
@@ -241,7 +241,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-04-12 12:53:55.442187",
+ "modified": "2025-01-29 12:05:13.623633",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Advance",

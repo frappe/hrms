@@ -242,17 +242,17 @@
    "type": "Link"
   }
  ],
- "modified": "2024-12-10 17:51:08.275060",
+ "modified": "2025-01-15 16:43:18.393364",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift & Attendance",
  "number_cards": [],
  "owner": "Administrator",
- "parent_page": "HR",
+ "parent_page": "",
  "public": 1,
  "quick_lists": [],
  "roles": [],
- "sequence_id": 7.0,
+ "sequence_id": 4.0,
  "shortcuts": [
   {
    "color": "Grey",

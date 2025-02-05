@@ -349,6 +349,7 @@ class TestLeaveEncashment(IntegrationTestCase):
 			"Salary Structure for Encashment",
 			"Monthly",
 			employee,
+			from_date=start_date,
 			other_details={"leave_encashment_amount_per_day": 50},
 		)
 

@@ -595,6 +595,7 @@ def remove_lending_docperms_from_ess():
 		if row.document_type in loan_docperms:
 			doc.user_doctypes.remove(row)
 
+	doc.flags.ignore_links = True
 	doc.save(ignore_permissions=True)
 
 

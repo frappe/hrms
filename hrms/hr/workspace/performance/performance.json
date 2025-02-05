@@ -1,7 +1,9 @@
 {
+ "app": "hrms",
  "charts": [],
  "content": "[{\"id\":\"nZ9MUieUjy\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"ETYoHfg2k0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Appraisal\",\"col\":3}},{\"id\":\"VRnsImMEoD\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Performance Feedback\",\"col\":5}},{\"id\":\"vXBMJGJ98C\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Goal\",\"col\":3}},{\"id\":\"Vtre-LDhRc\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"NmUDJB28UL\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Transactions</b></span>\",\"col\":12}},{\"id\":\"vNnUr6yHsH\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"v8mC6C_9V-\",\"type\":\"card\",\"data\":{\"card_name\":\"Appraisal\",\"col\":4}},{\"id\":\"8X_kx16fax\",\"type\":\"card\",\"data\":{\"card_name\":\"Energy Points\",\"col\":4}},{\"id\":\"x_fx5yusAz\",\"type\":\"card\",\"data\":{\"card_name\":\"Promotion\",\"col\":4}},{\"id\":\"ofPrShxelC\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2022-08-20 16:17:20.159886",
+ "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
@@ -172,13 +174,13 @@
    "type": "Link"
   }
  ],
- "modified": "2023-03-30 22:51:21.593682",
+ "modified": "2025-01-15 16:42:54.629038",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Performance",
  "number_cards": [],
  "owner": "Administrator",
- "parent_page": "HR",
+ "parent_page": "",
  "public": 1,
  "quick_lists": [],
  "roles": [],
@@ -208,5 +210,6 @@
    "type": "DocType"
   }
  ],
- "title": "Performance"
+ "title": "Performance",
+ "type": "Workspace"
 }

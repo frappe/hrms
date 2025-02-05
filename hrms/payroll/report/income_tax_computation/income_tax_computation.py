@@ -378,14 +378,12 @@ class IncomeTaxComputationReport:
 			)
 		)
 
-		for emp, emp_details in self.employees.items():
-			if not self.employees[emp]["allow_tax_exemption"]:
-				continue
-
+		for emp_details in self.employees.values():
 			income_tax_slab = emp_details.get("income_tax_slab")
 			standard_exemption = standard_exemptions_per_slab.get(income_tax_slab, 0)
 			emp_details["standard_tax_exemption"] = standard_exemption
-			self.employees[emp]["total_exemption"] += standard_exemption
+			emp_details.setdefault("total_exemption", 0)
+			emp_details["total_exemption"] += standard_exemption
 
 		self.add_column("Total Exemption")
 

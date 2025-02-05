@@ -153,9 +153,7 @@ class SalaryStructureAssignment(Document):
 			and not self.taxable_earnings_till_date
 			and not self.tax_deducted_till_date
 		):
-			msg = _("Could not find any salary slip(s) for the employee {0}").format(self.employee)
-			msg += "<br><br>"
-			msg += _(
+			msg = _(
 				"Please specify {0} and {1} (if any), for the correct tax calculation in future salary slips."
 			).format(
 				frappe.bold(_("Taxable Earnings Till Date")),
@@ -170,6 +168,10 @@ class SalaryStructureAssignment(Document):
 	@frappe.whitelist()
 	def are_opening_entries_required(self) -> bool:
 		if not get_tax_component(self.salary_structure):
+			return False
+
+		payroll_period = get_payroll_period(self.from_date, self.from_date, self.company)
+		if payroll_period and getdate(self.from_date) <= getdate(payroll_period.start_date):
 			return False
 
 		return True
