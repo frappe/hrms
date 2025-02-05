@@ -20,13 +20,18 @@
   "column_break_cevy",
   "actual_encashable_days",
   "encashment_days",
+  "encashment_amount",
   "payroll",
   "encashment_date",
   "additional_salary",
-  "amended_from",
   "column_break_14",
   "currency",
-  "encashment_amount"
+  "accounting_section",
+  "pay_via_payment_entry",
+  "column_break_vdnb",
+  "payable_account",
+  "section_break_svbb",
+  "amended_from"
  ],
  "fields": [
   {
@@ -97,6 +102,8 @@
    "read_only": 1
   },
   {
+   "default": "1",
+   "depends_on": "eval:doc.pay_via_payment_entry==0;",
    "fieldname": "payroll",
    "fieldtype": "Section Break",
    "label": "Payroll"
@@ -163,11 +170,42 @@
   {
    "fieldname": "column_break_cevy",
    "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "pay_via_payment_entry",
+   "fieldname": "payable_account",
+   "fieldtype": "Link",
+   "label": "Payable Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "section_break_svbb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "description": "Process leave encashment via a separate Payment Entry instead of Salary Slip",
+   "fieldname": "pay_via_payment_entry",
+   "fieldtype": "Check",
+   "label": "Pay Via Payment Entry"
+  },
+  {
+   "fieldname": "accounting_section",
+   "fieldtype": "Section Break",
+   "label": "Accounting"
+  },
+  {
+   "fieldname": "column_break_vdnb",
+   "fieldtype": "Column Break"
   }
  ],
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2023-10-23 16:49:16.737157",
+=======
+ "modified": "2025-02-05 16:16:58.692651",
+>>>>>>> 7166782e (feat: edit Leave Encashment doctype to add Pay Via Payment Entry field and other changes)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Encashment",
