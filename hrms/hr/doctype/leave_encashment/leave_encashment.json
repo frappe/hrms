@@ -21,17 +21,19 @@
   "actual_encashable_days",
   "encashment_days",
   "encashment_amount",
+  "accounting_section",
+  "pay_via_payment_entry",
+  "paid_amount",
+  "column_break_vdnb",
+  "payable_account",
   "payroll",
   "encashment_date",
   "additional_salary",
   "column_break_14",
   "currency",
-  "accounting_section",
-  "pay_via_payment_entry",
-  "column_break_vdnb",
-  "payable_account",
   "section_break_svbb",
-  "amended_from"
+  "amended_from",
+  "status"
  ],
  "fields": [
   {
@@ -176,11 +178,13 @@
    "fieldname": "payable_account",
    "fieldtype": "Link",
    "label": "Payable Account",
+   "mandatory_depends_on": "pay_via_payment_entry",
    "options": "Account"
   },
   {
    "fieldname": "section_break_svbb",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "More Info"
   },
   {
    "default": "0",
@@ -197,15 +201,36 @@
   {
    "fieldname": "column_break_vdnb",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "0.0",
+   "depends_on": "pay_via_payment_entry",
+   "description": "Amount  paid against this encashment",
+   "fieldname": "paid_amount",
+   "fieldtype": "Currency",
+   "label": "Paid Amount",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nUnpaid\nPaid",
+   "read_only": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
 <<<<<<< HEAD
+<<<<<<< HEAD
  "modified": "2023-10-23 16:49:16.737157",
 =======
  "modified": "2025-02-05 16:16:58.692651",
 >>>>>>> 7166782e (feat: edit Leave Encashment doctype to add Pay Via Payment Entry field and other changes)
+=======
+ "modified": "2025-02-07 13:02:41.291814",
+>>>>>>> 9af2020d (feat: update encashment doctyp)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Encashment",

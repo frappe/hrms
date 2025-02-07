@@ -21,6 +21,26 @@ frappe.ui.form.on("Leave Encashment", {
 				},
 			};
 		});
+
+		frm.set_query("payable_account", function () {
+			if (!frm.doc.employee) {
+				frappe.msgprint(__("Please select employee first"));
+			}
+			let company_currency = erpnext.get_currency(frm.doc.company);
+			let currencies = [company_currency];
+			if (frm.doc.currency && frm.doc.currency != company_currency) {
+				currencies.push(frm.doc.currency);
+			}
+
+			return {
+				filters: {
+					root_type: "Asset",
+					is_group: 0,
+					company: frm.doc.company,
+					account_currency: ["in", currencies],
+				},
+			};
+		});
 	},
 	refresh: function (frm) {
 		cur_frm.set_intro("");
