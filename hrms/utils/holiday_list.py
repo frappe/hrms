@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 
 
 def get_holiday_dates_between(
@@ -25,3 +26,29 @@ def invalidate_cache(doc, method=None):
 	from hrms.payroll.doctype.salary_slip.salary_slip import HOLIDAYS_BETWEEN_DATES
 
 	frappe.cache().delete_value(HOLIDAYS_BETWEEN_DATES)
+
+
+def get_holiday_list_for_employee(
+	employee: str,
+	raise_exception: bool = True,
+	as_on=None
+) -> str:
+	as_on = frappe.utils.getdate(as_on)
+	HolidayList = frappe.qb.DocType("Holiday Assignment")
+	query = (
+		frappe.qb.from_(HolidayList)
+		.select(HolidayList.holiday_list)
+		.where(HolidayList.employee == employee)
+		.where(HolidayList.from_date <= as_on)
+		.where(HolidayList.to_date >= as_on)
+		.where(HolidayList.docstatus == 1)
+		.run()
+	)
+	holiday_list = query[0][0] if query else None
+
+	if not holiday_list and raise_exception:
+		frappe.throw(
+			_("Please assign Holiday List for Employee {0}").format(employee)
+		)
+
+	return holiday_list
