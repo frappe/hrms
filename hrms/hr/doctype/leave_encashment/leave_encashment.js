@@ -48,6 +48,20 @@ frappe.ui.form.on("Leave Encashment", {
 			frm.set_intro(__("Fill the form and save it"));
 		}
 
+		if (
+			frm.doc.docstatus === 1 &&
+			frm.doc.pay_via_payment_entry == 1 &&
+			frm.doc.status !== "Paid"
+		) {
+			frm.add_custom_button(
+				__("Payment"),
+				function () {
+					frm.events.make_payment_entry(frm);
+				},
+				__("Create"),
+			);
+		}
+
 		hrms.leave_utils.add_view_ledger_button(frm);
 	},
 	employee: function (frm) {
@@ -90,6 +104,23 @@ frappe.ui.form.on("Leave Encashment", {
 					frm.set_value("currency", r.message);
 					frm.refresh_fields();
 				}
+			},
+		});
+	},
+	make_payment_entry: function (frm) {
+		let method = "hrms.overrides.employee_payment_entry.get_payment_entry_for_employee";
+		// if (frm.doc.__onload && frm.doc.__onload.make_payment_via_journal_entry) {
+		// 	method = "hrms.hr.doctype.expense_claim.expense_claim.make_bank_entry";
+		// }
+		return frappe.call({
+			method: method,
+			args: {
+				dt: frm.doc.doctype,
+				dn: frm.doc.name,
+			},
+			callback: function (r) {
+				var doclist = frappe.model.sync(r.message);
+				frappe.set_route("Form", doclist[0].doctype, doclist[0].name);
 			},
 		});
 	},
