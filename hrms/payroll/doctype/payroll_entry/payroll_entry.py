@@ -1437,7 +1437,9 @@ def create_salary_slips_for_employees(employees, args, publish_progress=True):
 		employees = list(set(employees) - set(salary_slips_exist_for))
 		for emp in employees:
 			args.update({"doctype": "Salary Slip", "employee": emp})
-			frappe.get_doc(args).insert()
+			doc = frappe.get_doc(args).insert()
+			doc.process_salary_structure()
+			doc.save()
 
 			count += 1
 			if publish_progress:
