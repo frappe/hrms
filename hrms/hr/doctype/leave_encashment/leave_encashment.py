@@ -20,8 +20,10 @@ class LeaveEncashment(Document):
 		set_employee_name(self)
 		validate_active_employee(self.employee)
 		self.encashment_date = self.encashment_date or getdate()
-		self.set_salary_structure()
 		self.get_leave_details_for_encashment()
+
+		if not self.pay_via_payment_entry:
+			self.set_salary_structure()
 
 	def set_salary_structure(self):
 		self._salary_structure = get_assigned_salary_structure(self.employee, self.encashment_date)
@@ -40,28 +42,29 @@ class LeaveEncashment(Document):
 		if not self.leave_allocation:
 			self.db_set("leave_allocation", self.get_leave_allocation().get("name"))
 
-		additional_salary = frappe.new_doc("Additional Salary")
-		additional_salary.company = frappe.get_value("Employee", self.employee, "company")
-		additional_salary.employee = self.employee
-		additional_salary.currency = self.currency
-		earning_component = frappe.get_value("Leave Type", self.leave_type, "earning_component")
-		if not earning_component:
-			frappe.throw(_("Please set Earning Component for Leave type: {0}.").format(self.leave_type))
-		additional_salary.salary_component = earning_component
-		additional_salary.payroll_date = self.encashment_date
-		additional_salary.amount = self.encashment_amount
-		additional_salary.ref_doctype = self.doctype
-		additional_salary.ref_docname = self.name
-		additional_salary.submit()
+		if not self.pay_via_payment_entry:
+			additional_salary = frappe.new_doc("Additional Salary")
+			additional_salary.company = frappe.get_value("Employee", self.employee, "company")
+			additional_salary.employee = self.employee
+			additional_salary.currency = self.currency
+			earning_component = frappe.get_value("Leave Type", self.leave_type, "earning_component")
+			if not earning_component:
+				frappe.throw(_("Please set Earning Component for Leave type: {0}.").format(self.leave_type))
+			additional_salary.salary_component = earning_component
+			additional_salary.payroll_date = self.encashment_date
+			additional_salary.amount = self.encashment_amount
+			additional_salary.ref_doctype = self.doctype
+			additional_salary.ref_docname = self.name
+			additional_salary.submit()
 
-		# Set encashed leaves in Allocation
-		frappe.db.set_value(
-			"Leave Allocation",
-			self.leave_allocation,
-			"total_leaves_encashed",
-			frappe.db.get_value("Leave Allocation", self.leave_allocation, "total_leaves_encashed")
-			+ self.encashment_days,
-		)
+			# Set encashed leaves in Allocation
+			frappe.db.set_value(
+				"Leave Allocation",
+				self.leave_allocation,
+				"total_leaves_encashed",
+				frappe.db.get_value("Leave Allocation", self.leave_allocation, "total_leaves_encashed")
+				+ self.encashment_days,
+			)
 
 		self.create_leave_ledger_entry()
 
