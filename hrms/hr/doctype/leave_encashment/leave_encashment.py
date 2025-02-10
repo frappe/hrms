@@ -5,7 +5,7 @@
 import frappe
 from frappe import _, bold
 from frappe.model.document import Document
-from frappe.utils import format_date, get_link_to_form, getdate
+from frappe.utils import flt, format_date, get_link_to_form, getdate
 
 from hrms.hr.doctype.leave_application.leave_application import get_leaves_for_period
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
@@ -21,6 +21,7 @@ class LeaveEncashment(Document):
 		validate_active_employee(self.employee)
 		self.encashment_date = self.encashment_date or getdate()
 		self.get_leave_details_for_encashment()
+		self.set_status()
 
 		if not self.pay_via_payment_entry:
 			self.set_salary_structure()
@@ -81,7 +82,10 @@ class LeaveEncashment(Document):
 				frappe.db.get_value("Leave Allocation", self.leave_allocation, "total_leaves_encashed")
 				- self.encashment_days,
 			)
+
 		self.create_leave_ledger_entry(submit=False)
+		self.ignore_linked_doctypes = ["GL Entry"]
+		self.set_status(update=True)
 
 	@frappe.whitelist()
 	def get_leave_details_for_encashment(self):
@@ -169,6 +173,26 @@ class LeaveEncashment(Document):
 		)
 		self.encashment_amount = self.encashment_days * per_day_encashment if per_day_encashment > 0 else 0
 
+	def set_status(self, update=False):
+		precision = self.precision("paid_amount")
+		status = None
+
+		if self.docstatus == 0:
+			status = "Draft"
+		elif self.docstatus == 1:
+			if flt(self.encashment_amount) > flt(self.paid_amount, precision):
+				status = "Unpaid"
+			else:
+				status = "Paid"
+		elif self.docstatus == 2:
+			status = "Cancelled"
+
+		if update:
+			self.db_set("status", status)
+			self.notify_update()
+		else:
+			self.status = status
+
 	def get_leave_allocation(self):
 		date = self.encashment_date or getdate()
 
@@ -214,6 +238,29 @@ class LeaveEncashment(Document):
 				leaves=self.encashment_days, from_date=to_date, to_date=to_date, is_carry_forward=0
 			)
 			create_leave_ledger_entry(self, args, submit)
+
+	def set_total_advance_paid(self):
+		from frappe.query_builder.functions import Sum
+
+		gle = frappe.qb.DocType("GL Entry")
+		paid_amount = (
+			frappe.qb.from_(gle)
+			.select(Sum(gle.debit_in_account_currency).as_("paid_amount"))
+			.where(
+				(gle.against_voucher_type == "Leave Encashment")
+				& (gle.against_voucher == self.name)
+				& (gle.party_type == "Employee")
+				& (gle.party == self.employee)
+				& (gle.docstatus == 1)
+				& (gle.is_cancelled == 0)
+			)
+		).run(as_dict=True)[0].paid_amount or 0
+
+		if flt(paid_amount) > self.encashment_amount:
+			frappe.throw(_("Row {0}# Paid Amount cannot be greater than Encashment amount"))
+
+		self.db_set("paid_amount", paid_amount)
+		self.set_status(update=True)
 
 
 def create_leave_encashment(leave_allocation):
