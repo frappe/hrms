@@ -205,30 +205,36 @@ class SalarySlip(TransactionBase):
 				if email_salary_slip:
 					self.email_salary_slip()
 
-		self.update_payment_status_for_gratuity()
+		self.update_payment_status_for_gratuity_and_leave_encashment()
 
-	def update_payment_status_for_gratuity(self):
-		additional_salary = frappe.db.get_all(
+	def update_payment_status_for_gratuity_and_leave_encashment(self):
+		additional_salary_docs = frappe.db.get_all(
 			"Additional Salary",
 			filters={
 				"payroll_date": ("between", [self.start_date, self.end_date]),
 				"employee": self.employee,
-				"ref_doctype": "Gratuity",
+				"ref_doctype": ["in", ["Gratuity", "Leave Encashment"]],
 				"docstatus": 1,
 			},
-			fields=["ref_docname", "name"],
-			limit=1,
+			fields=["ref_doctype", "ref_docname", "name"],
 		)
 
-		if additional_salary:
-			status = "Paid" if self.docstatus == 1 else "Unpaid"
-			if additional_salary[0].name in [entry.additional_salary for entry in self.earnings]:
-				frappe.db.set_value("Gratuity", additional_salary[0].ref_docname, "status", status)
+		if not additional_salary_docs:
+			return
+
+		status = "Paid" if self.docstatus == 1 else "Unpaid"
+		earnings = {entry.additional_salary for entry in self.earnings}
+
+		for additional_salary in additional_salary_docs:
+			if additional_salary.name in earnings:
+				frappe.db.set_value(
+					additional_salary.ref_doctype, additional_salary.ref_docname, "status", status
+				)
 
 	def on_cancel(self):
 		self.set_status()
 		self.update_status()
-		self.update_payment_status_for_gratuity()
+		self.update_payment_status_for_gratuity_and_leave_encashment()
 
 		cancel_loan_repayment_entry(self)
 		self.publish_update()
