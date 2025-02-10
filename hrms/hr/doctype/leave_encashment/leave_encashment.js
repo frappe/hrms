@@ -108,12 +108,8 @@ frappe.ui.form.on("Leave Encashment", {
 		});
 	},
 	make_payment_entry: function (frm) {
-		let method = "hrms.overrides.employee_payment_entry.get_payment_entry_for_employee";
-		// if (frm.doc.__onload && frm.doc.__onload.make_payment_via_journal_entry) {
-		// 	method = "hrms.hr.doctype.expense_claim.expense_claim.make_bank_entry";
-		// }
 		return frappe.call({
-			method: method,
+			method: "hrms.overrides.employee_payment_entry.get_payment_entry_for_employee",
 			args: {
 				dt: frm.doc.doctype,
 				dn: frm.doc.name,
