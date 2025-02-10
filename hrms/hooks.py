@@ -241,7 +241,11 @@ scheduler_events = {
 	"monthly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_monthly"],
 }
 
+<<<<<<< HEAD
 advance_payment_doctypes = ["Gratuity", "Employee Advance"]
+=======
+advance_payment_payable_doctypes = ["Leave Encashment", "Gratuity", "Employee Advance"]
+>>>>>>> 989bdafc (feat: payment entry for leave encashment)
 
 invoice_doctypes = ["Expense Claim"]
 
