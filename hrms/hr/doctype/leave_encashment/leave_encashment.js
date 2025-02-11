@@ -34,8 +34,6 @@ frappe.ui.form.on("Leave Encashment", {
 
 			return {
 				filters: {
-					root_type: "Asset",
-					is_group: 0,
 					company: frm.doc.company,
 					account_currency: ["in", currencies],
 				},
