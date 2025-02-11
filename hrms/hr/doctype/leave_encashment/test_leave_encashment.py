@@ -2,6 +2,10 @@
 # See license.txt
 
 import frappe
+<<<<<<< HEAD
+=======
+from frappe.tests import IntegrationTestCase
+>>>>>>> b4b76c4b (chore: add test)
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 
@@ -366,3 +370,46 @@ class TestLeaveEncashment(FrappeTestCase):
 		).insert()
 		leave_encashment.submit()
 		return leave_encashment
+
+	@set_holiday_list("_Test Leave Encashment", "_Test Company")
+	def test_status_of_leave_encashment_after_payment_via_salary_slip(self):
+		from hrms.payroll.doctype.salary_slip.test_salary_slip import make_employee_salary_slip
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+			create_salary_structure_assignment,
+		)
+
+		salary_structure = make_salary_structure(
+			"Salary Structure for Encashment",
+			"Monthly",
+			self.employee,
+			other_details={"leave_encashment_amount_per_day": 50},
+		)
+
+		create_salary_structure_assignment(
+			employee=self.employee,
+			salary_structure=salary_structure.name,
+			company="_Test Company",
+			currency="INR",
+		)
+
+		leave_encashment = frappe.get_doc(
+			dict(
+				doctype="Leave Encashment",
+				employee=self.employee,
+				leave_type="_Test Leave Type Encashment",
+				leave_period=self.leave_period.name,
+				encashment_date=getdate(),
+				currency="INR",
+			)
+		).insert()
+		leave_encashment.submit()
+
+		ss = make_employee_salary_slip(self.employee, "Monthly", salary_structure=salary_structure.name)
+
+		ss.submit()
+		leave_encashment.reload()
+		self.assertEqual(leave_encashment.status, "Paid")
+
+		ss.cancel()
+		leave_encashment.reload()
+		self.assertEqual(leave_encashment.status, "Unpaid")
