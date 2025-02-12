@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-01-26 09:33+0000\n"
-"PO-Revision-Date: 2025-02-11 13:21\n"
+"POT-Creation-Date: 2025-02-09 09:33+0000\n"
+"PO-Revision-Date: 2025-02-12 13:37\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -36,7 +36,7 @@ msgstr "% Kullanım (B + NB) / T"
 msgid "% Utilization (B / T)"
 msgstr "% Kullanım (B / T)"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:134
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:135
 msgid "'employee_field_value' and 'timestamp' are required."
 msgstr "'employee_field_value' ve 'timestamp' gereklidir."
 
@@ -608,7 +608,7 @@ msgstr "Gerçek Maliyet"
 msgid "Actual Encashable Days"
 msgstr "Paraya Çevrilebilir Günler"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:398
+#: hrms/hr/doctype/leave_application/leave_application.py:401
 msgid "Actual balances aren't available because the leave application spans over different leave allocations. You can still apply for leaves which would be compensated during the next allocation."
 msgstr "Gerçek bakiyeler mevcut değil çünkü izin başvurusu farklı izin atamalarını kapsıyor. Yine de, bir sonraki atamada telafi edilecek izinler için başvuruda bulunabilirsiniz."
 
@@ -657,7 +657,7 @@ msgstr "Önceki izin döneminin atamasından kullanılmayan izinleri bu atamaya 
 msgid "Added On"
 msgstr "Eklenme Tarihi"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1308
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1311
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
 msgstr "Maaş yapısında vergi bileşeni olmadığı için, Maaş Bileşeni ana kaydından vergi bileşenleri eklendi."
 
@@ -781,7 +781,7 @@ msgstr "Tüm Hedefler"
 msgid "All Jobs"
 msgstr "Tüm işler"
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:57
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:66
 msgid "All allocated assets should be returned before submission"
 msgstr "Tahsis edilen tüm varlıklar teslim edilmeden önce iade edilmelidir"
 
@@ -818,7 +818,7 @@ msgstr "Güne Göre Tahsis Et"
 msgid "Allocated Amount"
 msgstr "Ayrılan Tutar"
 
-#: hrms/hr/doctype/leave_application/leave_application.js:76
+#: hrms/hr/doctype/leave_application/leave_application.js:75
 msgid "Allocated Leaves"
 msgstr "Ayrılmış İzinler"
 
@@ -1079,8 +1079,8 @@ msgstr "Harcama tutarı"
 #. Description of the 'Returned Amount' (Currency) field in DocType 'Employee
 #. Advance'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
-msgid "Amount returned by the employee after the advance is paid"
-msgstr "Avans ödendikten sonra personel tarafından iade edilen tutar"
+msgid "Amount scheduled for deduction via salary"
+msgstr ""
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:32
 msgid "Amount should not be less than zero"
@@ -1180,11 +1180,11 @@ msgstr "Başvuru"
 msgid "Application Status"
 msgstr "Başvuru Durumu"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:203
+#: hrms/hr/doctype/leave_application/leave_application.py:206
 msgid "Application period cannot be across two allocation records"
 msgstr "Başvuru süresi iki ödenek boyunca kaydırılamaz"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:200
+#: hrms/hr/doctype/leave_application/leave_application.py:203
 msgid "Application period cannot be outside leave allocation period"
 msgstr "Uygulama süresi dışında izin tahsisi dönemi olamaz"
 
@@ -1452,7 +1452,7 @@ msgstr "Atanan Maaş Yapınıza göre, faydalar için başvuruda bulunamazsını
 msgid "Asset Name"
 msgstr "Varlık Adı"
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:88
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:97
 msgid "Asset Recovery Cost for {0}: {1}"
 msgstr "{0} için Varlık Kurtarma Maliyeti: {1}"
 
@@ -1642,7 +1642,7 @@ msgstr ""
 msgid "Attendance for employee {0} is already marked for the date {1}: {2}"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:556
+#: hrms/hr/doctype/leave_application/leave_application.py:559
 msgid "Attendance for employee {0} is already marked for this day"
 msgstr "Personel {0} için bu günün devamlılığı zaten işaretlendi"
 
@@ -1773,7 +1773,7 @@ msgstr ""
 msgid "Awaiting Response"
 msgstr "Cevap Bekleniyor"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:163
+#: hrms/hr/doctype/leave_application/leave_application.py:166
 msgid "Backdated Leave Application is restricted. Please set the {} in {}"
 msgstr ""
 
@@ -2109,7 +2109,7 @@ msgstr "Kapalı bir İş İlanı için İş Başvurusu oluşturulamaz"
 msgid "Cannot create or change transactions against an Appraisal Cycle with status {0}."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:563
+#: hrms/hr/doctype/leave_application/leave_application.py:566
 msgid "Cannot find active Leave Period"
 msgstr "Etkin İzin Dönemi bulunamadı"
 
@@ -2175,7 +2175,7 @@ msgstr "Maliyet Merkezleri Grafiği"
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr "Daha fazla ayrıntı için <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> adresini kontrol edin"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1421
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1423
 msgid "Check Error Log {0} for more details."
 msgstr "Daha fazla ayrıntı için Hata Günlüğü {0} adresini kontrol edin."
 
@@ -2192,7 +2192,7 @@ msgstr "Çıkış"
 msgid "Check Vacancies On Job Offer Creation"
 msgstr "İş Teklifi Oluşturmada Açık Pozisyonları Kontrol Et"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:332
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:335
 #: hrms/hr/utils.py:846
 msgid "Check {0} for more details"
 msgstr "Daha fazla ayrıntı için {0} adresini kontrol edin"
@@ -2721,7 +2721,7 @@ msgstr "Maliyet"
 msgid "Costing Details"
 msgstr "Maliyet Detayları"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1484
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1486
 msgid "Could not submit some Salary Slips: {}"
 msgstr "Bazı Maaş Bordroları gönderilemedi: {}"
 
@@ -2852,7 +2852,7 @@ msgstr "Değerlendirmeler Oluşturuluyor"
 msgid "Creating Payment Entries......"
 msgstr "Ödeme Girişleri Oluşturuluyor..."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1444
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1446
 msgid "Creating Salary Slips..."
 msgstr "Maaş Fişleri Oluşturuluyor..."
 
@@ -3964,7 +3964,7 @@ msgstr "E-posta Gönderildi"
 msgid "Email Template"
 msgstr "E-Posta Şablonu"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:661
+#: hrms/hr/doctype/leave_application/leave_application.py:664
 msgid "Email sent to {0}"
 msgstr "E-posta {0} adresine gönderildi"
 
@@ -4409,7 +4409,7 @@ msgstr "Personel İzin Bakiyesi Özeti"
 msgid "Employee Lifecycle"
 msgstr "Personel Döngüsü"
 
-#: hrms/setup.py:771
+#: hrms/setup.py:772
 msgid "Employee Loan"
 msgstr ""
 
@@ -4756,11 +4756,11 @@ msgstr "Personel Adı"
 msgid "Employee records are created using the selected option"
 msgstr "Personel kayıtları seçilen ayara göre oluşturulacaktır"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:168
+#: hrms/hr/doctype/shift_type/shift_type.py:185
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr ""
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:222
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:223
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr ""
 
@@ -4780,7 +4780,7 @@ msgstr ""
 msgid "Employee {0} has already applied for Shift {1}: {2} that overlaps within this period"
 msgstr "Personel {0} , bu dönem içinde çakışan {1}: {2} vardiyası için zaten başvuruda bulunmuştur"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:452
+#: hrms/hr/doctype/leave_application/leave_application.py:455
 msgid "Employee {0} has already applied for {1} between {2} and {3} : {4}"
 msgstr ""
 
@@ -5047,7 +5047,7 @@ msgstr ""
 msgid "Error"
 msgstr "Hata"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:334
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:337
 #: hrms/hr/utils.py:848
 msgid "Error Log"
 msgstr "Hata Günlüğü"
@@ -5065,11 +5065,11 @@ msgstr "{0} oluşturulurken hata oluştu"
 msgid "Error deleting {0}"
 msgstr "{0} silinirken hata oluştu"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1224
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1227
 msgid "Error in formula or condition"
 msgstr "Formülde veya koşulda hata var"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2191
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2194
 msgid "Error in formula or condition: {0} in Income Tax Slab"
 msgstr "Formül veya koşulda hata: Gelir Vergisi Diliminde {0}"
 
@@ -5081,7 +5081,7 @@ msgstr "Bazı satırlarda hata var"
 msgid "Error updating {0}"
 msgstr "{0} Güncellenirken hata oluştu"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2270
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2273
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
 msgstr "{row_id}satırında {doctype} {doclink} değerlendirilirken hata oluştu. <br><br> <b>Hata:</b> {error} <br><br> <b>İpucu:</b> {description}"
 
@@ -5401,7 +5401,7 @@ msgstr ""
 #. Name of a DocType
 #. Label of the expense_type (Data) field in DocType 'Expense Claim Type'
 #. Label of a Link in the Expense Claims Workspace
-#: hrms/hr/doctype/expense_claim/expense_claim.py:496
+#: hrms/hr/doctype/expense_claim/expense_claim.py:498
 #: hrms/hr/doctype/expense_claim_detail/expense_claim_detail.json
 #: hrms/hr/doctype/expense_claim_type/expense_claim_type.json
 #: hrms/hr/workspace/expense_claims/expense_claims.json
@@ -5530,7 +5530,7 @@ msgstr "Mülakat Yeniden Planlama bildirimi gönderilemedi. Lütfen e-posta hesa
 msgid "Failed to setup defaults for country {0}."
 msgstr "Ülke için varsayılanlar ayarlanamadı {0}."
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:329
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:332
 msgid "Failed to submit some leave policy assignments:"
 msgstr "Bazı izin politikası atamaları gönderilemedi:"
 
@@ -5542,7 +5542,7 @@ msgstr "İş Başvurusu Durumu güncellenemedi"
 msgid "Failed to {0} {1} for employees:"
 msgstr "Personeller için {0} {1} başarısız oldu:"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1487
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1489
 #: hrms/public/js/utils/index.js:149
 msgid "Failure"
 msgstr "Başarısız"
@@ -5642,7 +5642,7 @@ msgstr "Vardiyaları Getir"
 msgid "Fetching Employees"
 msgstr "Personelleri Getir"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:31
+#: hrms/hr/doctype/employee_checkin/employee_checkin.js:30
 msgid "Fetching Shift"
 msgstr "Vardiya Getiriliyor"
 
@@ -5659,7 +5659,7 @@ msgstr "Alan Adı"
 msgid "File Preview"
 msgstr "Dosya Önizlemesi"
 
-#: hrms/hr/doctype/leave_application/leave_application.js:101
+#: hrms/hr/doctype/leave_application/leave_application.js:99
 #: hrms/hr/doctype/leave_encashment/leave_encashment.js:28
 msgid "Fill the form and save it"
 msgstr "Form doldurucu ve denetleyicileri"
@@ -5739,7 +5739,7 @@ msgstr "Adı "
 msgid "Fiscal Year"
 msgstr "Mali Yıl"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1404
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1406
 msgid "Fiscal Year {0} not found"
 msgstr "bulunamadı Mali Yılı {0}"
 
@@ -6385,7 +6385,7 @@ msgstr "İnsan Kaynakları Müdürü"
 #. Name of a DocType
 #. Label of a Link in the Overview Workspace
 #: hrms/hr/doctype/hr_settings/hr_settings.json
-#: hrms/hr/doctype/leave_application/leave_application.py:165
+#: hrms/hr/doctype/leave_application/leave_application.py:168
 #: hrms/hr/workspace/overview/overview.json
 msgid "HR Settings"
 msgstr "İnsan Kaynakları Ayarları"
@@ -6496,7 +6496,7 @@ msgstr "Yarım Gün Tarih"
 msgid "Half Day Date is mandatory"
 msgstr "Yarım Gün Tarih cezaları"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:187
+#: hrms/hr/doctype/leave_application/leave_application.py:190
 msgid "Half Day Date should be between From Date and To Date"
 msgstr "Yarım Gün Tarih Tarihinden ve Tarihi arasında olmalıdır"
 
@@ -6578,8 +6578,8 @@ msgstr "İşe Alma Ayarları"
 msgid "Hold"
 msgstr "Beklemede"
 
-#: hrms/hr/doctype/attendance/attendance.py:280
-#: hrms/hr/doctype/leave_application/leave_application.py:1292
+#: hrms/hr/doctype/attendance/attendance.py:276
+#: hrms/hr/doctype/leave_application/leave_application.py:1313
 #: hrms/hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.py:46
 msgid "Holiday"
 msgstr "Tatil"
@@ -6938,15 +6938,15 @@ msgstr "Gelir Vergisi Levhası Diğer Masraflar"
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1552
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1555
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "Gelir Vergisi Levhası, Bordro Dönemi Başlangıç Tarihi: {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1540
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1543
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "Gelir Vergisi Levhası, Maaş Yapısı Atamasında belirlenmemiş: {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1548
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1551
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "Gelir Vergisi Levhası: {0} devre dışı bırakıldı"
 
@@ -6980,11 +6980,11 @@ msgstr ""
 msgid "Install Frappe HR"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:411
+#: hrms/hr/doctype/leave_application/leave_application.py:414
 msgid "Insufficient Balance"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:409
+#: hrms/hr/doctype/leave_application/leave_application.py:412
 msgid "Insufficient leave balance for Leave Type {0}"
 msgstr ""
 
@@ -7205,6 +7205,10 @@ msgstr ""
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:319
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
 msgstr "Geçersiz Bordro Borç Hesabı. Hesap para birimi {0} veya {1} olmalıdır."
+
+#: hrms/hr/doctype/expense_claim/expense_claim.py:624
+msgid "Invalid parameters provided. Please pass the required arguments."
+msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Grievance'
 #: hrms/hr/doctype/employee_grievance/employee_grievance.json
@@ -7700,7 +7704,7 @@ msgstr "Tahsisleri Bırak"
 msgid "Leave Application"
 msgstr "İzin Formu"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:716
+#: hrms/hr/doctype/leave_application/leave_application.py:719
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 msgstr "İzin başvuru süresi, ardışık olmayan iki farklı izin tahsisi {0} ve {1} arasında olamaz."
 
@@ -7778,7 +7782,7 @@ msgstr "izin engel listesi süreleri"
 msgid "Leave Block List Name"
 msgstr "izin engel listesi adı"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:1268
+#: hrms/hr/doctype/leave_application/leave_application.py:1289
 msgid "Leave Blocked"
 msgstr "İzin Engellendi"
 
@@ -7868,7 +7872,7 @@ msgstr "İzin Politikası"
 msgid "Leave Policy Assignment"
 msgstr "İzin Politikası Ataması"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:63
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:65
 msgid "Leave Policy Assignment Overlap"
 msgstr "İzin Politikası Atama Çakışması"
 
@@ -7882,7 +7886,7 @@ msgstr "İzin Politika Ayrıntısı"
 msgid "Leave Policy Details"
 msgstr "İzin Politikası Ayrıntıları"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:57
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:59
 msgid "Leave Policy: {0} already assigned for Employee {1} for period {2} to {3}"
 msgstr "İzin Politikası: {0} zaten {1} Personeli için {2} ile {3} dönemi için atanmış"
 
@@ -7971,7 +7975,7 @@ msgstr "Ödemesiz bırakma, mahremiyetler {} kayıtlarıyla eşleşmiyor"
 msgid "Leave allocation {0} is linked with the Leave Application {1}"
 msgstr "İzin tahsisi {0} İzin Talebi {1} ile bağlantılıdır"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:83
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:85
 msgid "Leave already have been assigned for this Leave Policy Assignment"
 msgstr "Bu İzin Politikası Ataması için zaten izin atanmış"
 
@@ -7989,11 +7993,11 @@ msgstr "İzin projesi, {0} izin tahsisleri ile bağlantılı. İzinsiz yapılmas
 msgid "Leave cannot be allocated before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}"
 msgstr "Öncelik tahsis edememek izin {0}, izin özellikleri zaten devredilen gelecek izin tahsisi kayıtlarında olduğu gibi {1}"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:241
+#: hrms/hr/doctype/leave_application/leave_application.py:244
 msgid "Leave cannot be applied/cancelled before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}"
 msgstr "İzin yapısı zaten devredilen gelecek izin tahsisi kayıtlarında olduğu gibi, daha önce {0} iptal / tatbik etmek anlamsız bırakın {1}"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:479
+#: hrms/hr/doctype/leave_application/leave_application.py:482
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr "{0} türündeki izin {1} değerinden daha uzun olamaz."
 
@@ -8040,7 +8044,7 @@ msgstr "Ayrılan İzinler"
 msgid "Leaves Pending Approval"
 msgstr "Onay Bekleyen İzinler"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:76
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:78
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
 msgstr "{0} İzin Türü için izinler devre dışı bırakıldığından devredilemez."
 
@@ -8119,7 +8123,7 @@ msgstr "Avans Hesabı"
 msgid "Loan Product"
 msgstr ""
 
-#: hrms/payroll/report/salary_register/salary_register.py:228 hrms/setup.py:764
+#: hrms/payroll/report/salary_register/salary_register.py:228 hrms/setup.py:765
 msgid "Loan Repayment"
 msgstr ""
 
@@ -8295,6 +8299,10 @@ msgstr ""
 msgid "Mark attendance based on 'Employee Checkin' for Employees assigned to this shift."
 msgstr "Bu vardiyaya atanan personel için ‘Personel Giriş/Çıkış’a göre devamlılığı işaretle."
 
+#: hrms/hr/doctype/shift_type/shift_type.py:33
+msgid "Mark attendance for existing check-in/out logs before changing shift settings"
+msgstr ""
+
 #: hrms/hr/doctype/goal/goal_tree.js:262
 msgid "Mark {0} as Completed?"
 msgstr "{0} Tamamlandı olarak işaretlensin mi?"
@@ -8395,7 +8403,7 @@ msgstr "Maksimum Devredilen İzin"
 msgid "Maximum Consecutive Leaves Allowed"
 msgstr "İzin Verilen Maksimum Ardışık İzinler"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:489
+#: hrms/hr/doctype/leave_application/leave_application.py:492
 msgid "Maximum Consecutive Leaves Exceeded"
 msgstr "Maksimum Ardışık İzin Sayısı Aşıldı"
 
@@ -8473,7 +8481,7 @@ msgstr "Menü"
 #. Label of the message (Text Editor) field in DocType 'PWA Notification'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hrms/hr/doctype/pwa_notification/pwa_notification.json
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1454
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1456
 msgid "Message"
 msgstr "Mesaj"
 
@@ -8517,11 +8525,11 @@ msgstr "Zorunlu Alan Eksik"
 msgid "Missing Opening Entries"
 msgstr ""
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:35
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:44
 msgid "Missing Relieving Date"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1543
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1546
 msgid "Missing Tax Slab"
 msgstr ""
 
@@ -8662,8 +8670,8 @@ msgstr "Taleplerim"
 msgid "Name"
 msgstr "Adı"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1210
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2186
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1213
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2189
 msgid "Name error"
 msgstr "İsim hatası"
 
@@ -8784,7 +8792,7 @@ msgstr "Hiç Veri yok"
 msgid "No Employee Found"
 msgstr "Çalışan Bulunamadı"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:146
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:147
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "verilen çalışanın saha değeri için çalışan bulunamadı. &#39;{}&#39;: {}"
 
@@ -8913,9 +8921,13 @@ msgstr "Kayıt Bulunamadı"
 msgid "No replies from"
 msgstr "Şundan yanıt yok"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1470
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1472
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "Yukarıdaki özelliklere göre maaş fişi bulunmayan VEYA maaş fişi zaten gönderildi"
+
+#: hrms/hr/doctype/employee_checkin/employee_checkin.js:43
+msgid "No valid shift found for log time"
+msgstr ""
 
 #: hrms/public/js/utils/index.js:48
 msgid "No {0} Selected"
@@ -8984,7 +8996,7 @@ msgstr "Not: Vardiya mevcut devamlılık kayıtlarının üzerine yazılmayacakt
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr "Not: Toplam tahsis edilen izinler {0} , dönem için onaylanan izinlerden {1} daha az olmamalıdır"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1876
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1879
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr "Not: Maaş bordronuz şifreyle korunmaktadır, PDF'i açmak için gereken şifre {0} formatındadır."
 
@@ -9153,7 +9165,7 @@ msgstr ""
 msgid "Only Interviews with Cleared or Rejected status can be submitted."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:101
+#: hrms/hr/doctype/leave_application/leave_application.py:103
 msgid "Only Leave Applications with status 'Approved' and 'Rejected' can be submitted"
 msgstr "Sadece sunulabilir &#39;Reddedildi&#39; &#39;Onaylandı&#39; ve statülü Uygulamaları bırakın"
 
@@ -9174,7 +9186,7 @@ msgstr "Yalnızca süresi dolmuş tahsisler iptal edilebilir"
 msgid "Only interviewers can submit feedback"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:171
+#: hrms/hr/doctype/leave_application/leave_application.py:174
 msgid "Only users with the {0} role can create backdated leave applications"
 msgstr "Yalnızca {0} rolüne sahip kullanıcılar, geriye dönük uygulamalara izin vermek"
 
@@ -9225,7 +9237,7 @@ msgstr ""
 msgid "Opening closed."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:569
+#: hrms/hr/doctype/leave_application/leave_application.py:572
 msgid "Optional Holiday List not set for leave period {0}"
 msgstr "İsteğe bağlı Tatil Listesi, {0} dönem izin için ayarlanmamış"
 
@@ -9534,7 +9546,7 @@ msgstr "Ödeme Girişi"
 msgid "Payment and Accounting"
 msgstr "Ödeme ve Muhasebe"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1071
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1073
 msgid "Payment of {0} from {1} to {2}"
 msgstr "{1} ile {2} arasındaki {0} ödemesi"
 
@@ -9631,7 +9643,7 @@ msgstr "Ödenecek Bordro"
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/setup.py:837
+#: hrms/setup.py:838
 msgid "Payroll Payable Account"
 msgstr "Bordro Borç Hesabı"
 
@@ -9715,7 +9727,7 @@ msgstr ""
 msgid "Pending Amount"
 msgstr "Bekleyen Tutar"
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:60
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:69
 msgid "Pending Asset Returns"
 msgstr ""
 
@@ -9820,7 +9832,7 @@ msgstr "Günlük İş Özet Grubunu oluşturmadan önce varsayılan gelen hesab�
 msgid "Please enter the designation"
 msgstr "Lütfen belirti giriniz"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1865
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1868
 msgid "Please see attachment"
 msgstr "Lütfen dosya ekini inceleyin"
 
@@ -9870,7 +9882,7 @@ msgstr "Lütfen önce bir şirket seçin."
 msgid "Please select a csv file"
 msgstr "Lütfen bir csv dosyası seçin"
 
-#: hrms/hr/doctype/attendance/attendance.py:330
+#: hrms/hr/doctype/attendance/attendance.py:326
 msgid "Please select a date."
 msgstr "Lütfen bir tarih seçin."
 
@@ -9955,11 +9967,11 @@ msgstr "Lütfen Şirket Varsayılanlarında Varsayılan Nakit Hesabı ayarlayın
 msgid "Please set account in Salary Component {0}"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:624
+#: hrms/hr/doctype/leave_application/leave_application.py:627
 msgid "Please set default template for Leave Approval Notification in HR Settings."
 msgstr "Lütfen İK Ayarları&#39;nda Onay Onay Bildirimi için varsayılan şablonu ayarı."
 
-#: hrms/hr/doctype/leave_application/leave_application.py:599
+#: hrms/hr/doctype/leave_application/leave_application.py:602
 msgid "Please set default template for Leave Status Notification in HR Settings."
 msgstr "Lütfen İK Ayarları&#39;nda Durum Bildirimi Bırakma için varsayılan şablonu ayarlayın."
 
@@ -9967,7 +9979,7 @@ msgstr "Lütfen İK Ayarları&#39;nda Durum Bildirimi Bırakma için varsayılan
 msgid "Please set the Appraisal Template for all the {0} or select the template in the Employees table below."
 msgstr "Lütfen tüm {0} için Değerlendirme Şablonunu ayarlayın veya aşağıdaki Personeller tablosundan şablonu seçin."
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:335
+#: hrms/hr/doctype/expense_claim/expense_claim.js:340
 msgid "Please set the Company"
 msgstr "Lütfen şirketi ayarlayın."
 
@@ -9988,7 +10000,7 @@ msgstr ""
 msgid "Please set {0} and {1} in {2}."
 msgstr ""
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:31
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:40
 msgid "Please set {0} for Employee {1}"
 msgstr ""
 
@@ -10085,6 +10097,12 @@ msgstr "Geldi"
 msgid "Present Records"
 msgstr ""
 
+#. Label of the prevent_self_leave_approval (Check) field in DocType 'HR
+#. Settings'
+#: hrms/hr/doctype/hr_settings/hr_settings.json
+msgid "Prevent self approval for leaves even if user has permissions"
+msgstr ""
+
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:155
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:193
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.js:73
@@ -10130,7 +10148,7 @@ msgstr "İşlem Sonrasına Devam Etme"
 #. Label of the process_payroll_accounting_entry_based_on_employee (Check)
 #. field in DocType 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
-#: hrms/setup.py:848
+#: hrms/setup.py:849
 msgid "Process Payroll Accounting Entry based on Employee"
 msgstr ""
 
@@ -10403,7 +10421,7 @@ msgstr "Talep Nedeni"
 msgid "Reason for Withholding Salary"
 msgstr ""
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:312
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:313
 msgid "Reason for skipping auto attendance:"
 msgstr ""
 
@@ -10491,7 +10509,7 @@ msgid "Reference Document Type"
 msgstr "Referans Belge Türü"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:368
-#: hrms/hr/doctype/leave_application/leave_application.py:483
+#: hrms/hr/doctype/leave_application/leave_application.py:486
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:137
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:91
 msgid "Reference: {0}"
@@ -10594,7 +10612,7 @@ msgstr "Yayınlandı"
 #. Label of the relieving_date (Date) field in DocType 'Exit Interview'
 #. Label of the relieving_date (Date) field in DocType 'Salary Withholding'
 #: hrms/hr/doctype/exit_interview/exit_interview.json
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:32
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:41
 #: hrms/hr/report/employee_exits/employee_exits.py:37
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Relieving Date"
@@ -10671,7 +10689,7 @@ msgstr "kiralanmış araba"
 msgid "Reopen"
 msgstr "Yeniden Aç"
 
-#: hrms/setup.py:821 hrms/setup.py:830
+#: hrms/setup.py:822 hrms/setup.py:831
 msgid "Repay From Salary"
 msgstr ""
 
@@ -10886,7 +10904,10 @@ msgid "Returned"
 msgstr "İade Edildi"
 
 #. Label of the return_amount (Currency) field in DocType 'Employee Advance'
+#. Label of the return_amount (Currency) field in DocType 'Expense Claim
+#. Advance'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
+#: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgid "Returned Amount"
 msgstr "İade Edilen Tutar"
 
@@ -10924,7 +10945,7 @@ msgstr "Rol"
 #. Label of the role_allowed_to_create_backdated_leave_application (Link) field
 #. in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
-#: hrms/hr/doctype/leave_application/leave_application.py:164
+#: hrms/hr/doctype/leave_application/leave_application.py:167
 msgid "Role Allowed to Create Backdated Leave Application"
 msgstr "Gecikmeli İzin Başvurusu Oluşturma Rolüne İzin Verildi"
 
@@ -10994,11 +11015,11 @@ msgstr ""
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:593
+#: hrms/hr/doctype/expense_claim/expense_claim.py:599
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:352
+#: hrms/hr/doctype/expense_claim/expense_claim.py:354
 msgid "Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}"
 msgstr "Satır {0} # Tahsis edilen tutarlar {1}, talep edilmeyen tutarlardan {2} daha büyük olamaz"
 
@@ -11026,7 +11047,7 @@ msgstr ""
 msgid "Row {0}: Paid amount {1} is greater than pending accrued amount {2} against loan {3}"
 msgstr ""
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:52
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:61
 msgid "Row {0}: {1}"
 msgstr "Satır {0}: {1}"
 
@@ -11221,7 +11242,7 @@ msgstr "çalışanın maaş Kuponu {0} zaten zaman ayırmak için çalışanlar 
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1409
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1411
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr ""
 
@@ -11243,11 +11264,11 @@ msgstr "Maaş Balıkları Oluşturuldu"
 msgid "Salary Slips Submitted"
 msgstr "Maaş Balıkları Gönderildi"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1451
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1453
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr "Maaş Bordroları {} personeller için zaten mevcuttur ve bu bordro tarafından işlenmeyecektir."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1476
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1478
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr ""
 
@@ -11327,7 +11348,7 @@ msgstr ""
 msgid "Salary Withholding {0} already exists for employee {1} for the selected period"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:324
+#: hrms/hr/doctype/leave_application/leave_application.py:327
 msgid "Salary already processed for period between {0} and {1}, Leave application period cannot be between this date range."
 msgstr "Maaş zaten {0} ve {1}, bu tarih aralığında başvuru yapılamaz süreler arası dönem için işlenmiş."
 
@@ -11343,7 +11364,7 @@ msgstr "Kazanç ve Kesintiye Dayalı Maaş Dağılımı"
 msgid "Salary components should be part of the Salary Structure."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2335
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2338
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "Maaş bordrosu e-postaları gönderilmek üzere sıraya alınmıştır. Durum için {0} adresini kontrol edin."
 
@@ -11367,7 +11388,7 @@ msgstr "Yaptırım Uygulandı"
 msgid "Sanctioned Amount"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:374
+#: hrms/hr/doctype/expense_claim/expense_claim.py:376
 msgid "Sanctioned Amount cannot be greater than Claim Amount in Row {0}."
 msgstr "Yaptırıma Tutar Satır talep miktarı daha büyük olamaz {0}."
 
@@ -11446,7 +11467,7 @@ msgstr "Önce Mülakatı Seçin"
 msgid "Select Payment Account to make Bank Entry"
 msgstr "Banka Girişi Yapmak İçin Ödeme Hesabını Seçin"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1614
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1616
 msgid "Select Payroll Frequency."
 msgstr "Maaş Sıklığını Seçin."
 
@@ -11473,7 +11494,7 @@ msgstr "Şartlar ve Koşulları Seçin"
 msgid "Select Users"
 msgstr "Kullanıcıları Seç"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:378
+#: hrms/hr/doctype/expense_claim/expense_claim.js:383
 msgid "Select an employee to get the employee advance."
 msgstr "Çalışan avansını elde etmek için bir çalışan seçin."
 
@@ -11481,7 +11502,7 @@ msgstr "Çalışan avansını elde etmek için bir çalışan seçin."
 msgid "Select the Employee for which you want to allocate leaves."
 msgstr "İzin tahsis etmek istediğiniz Personeli seçin."
 
-#: hrms/hr/doctype/leave_application/leave_application.js:264
+#: hrms/hr/doctype/leave_application/leave_application.js:286
 msgid "Select the Employee."
 msgstr "Personel Seçin"
 
@@ -11497,11 +11518,11 @@ msgstr "Bu İzin Tahsisinin sona ereceği tarihi seçin."
 msgid "Select the date from which this Leave Allocation will be valid."
 msgstr "Bu İzin Tahsisinin hangi tarihten itibaren geçerli olacağını seçin."
 
-#: hrms/hr/doctype/leave_application/leave_application.js:281
+#: hrms/hr/doctype/leave_application/leave_application.js:303
 msgid "Select the end date for your Leave Application."
 msgstr "İzin Talebiniz için bitiş tarihini seçin."
 
-#: hrms/hr/doctype/leave_application/leave_application.js:276
+#: hrms/hr/doctype/leave_application/leave_application.js:298
 msgid "Select the start date for your Leave Application."
 msgstr "İzin Talebiniz için başlangıç tarihini seçin."
 
@@ -11511,11 +11532,11 @@ msgstr "İzin Talebiniz için başlangıç tarihini seçin."
 msgid "Select this if you want shift assignments to be automatically created indefinitely."
 msgstr "Vardiya atamalarının süresiz olarak otomatik oluşturulmasını istiyorsanız bunu seçin."
 
-#: hrms/hr/doctype/leave_application/leave_application.js:269
+#: hrms/hr/doctype/leave_application/leave_application.js:291
 msgid "Select type of leave the employee wants to apply for, like Sick Leave, Privilege Leave, Casual Leave, etc."
 msgstr "Personelin başvurmak istediği izin türünü seçin; örneğin Hastalık İzni, Özel İzin, Günlük İzin vb."
 
-#: hrms/hr/doctype/leave_application/leave_application.js:291
+#: hrms/hr/doctype/leave_application/leave_application.js:313
 msgid "Select your Leave Approver i.e. the person who approves or rejects your leaves."
 msgstr "İzin Onaylayıcınızı, yani izinlerinizi onaylayan veya reddeden kişiyi seçin."
 
@@ -11547,6 +11568,10 @@ msgstr ""
 #: hrms/hr/doctype/training_event/training_event.json
 msgid "Self-Study"
 msgstr "Bireysel Çalışma"
+
+#: hrms/hr/doctype/leave_application/leave_application.py:809
+msgid "Self-approval for leaves is not allowed"
+msgstr ""
 
 #. Option for the 'Type' (Select) field in DocType 'Training Event'
 #: hrms/hr/doctype/training_event/training_event.json
@@ -11697,7 +11722,7 @@ msgstr "Devamlılık Ayrıntılarını Ayarla"
 msgid "Set Leave Details"
 msgstr "İzin Ayrıntılarını"
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:66
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:75
 msgid "Set Relieving Date for Employee: {0}"
 msgstr ""
 
@@ -11725,7 +11750,7 @@ msgstr ""
 msgid "Set optional filters to fetch employees in the appraisee list"
 msgstr "Değerlendirilenler listesindeki personelleri getirmek için isteğe bağlı filtreler ayarlayın"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:495
+#: hrms/hr/doctype/expense_claim/expense_claim.py:497
 msgid "Set the default account for the {0} {1}"
 msgstr "{0} {1} için varsayılan hesap ayarı"
 
@@ -11765,7 +11790,7 @@ msgstr "Eksik Ayarlar"
 msgid "Settle against Advances"
 msgstr ""
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:42
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:51
 msgid "Settle all Payables and Receivables before submission"
 msgstr ""
 
@@ -12002,7 +12027,7 @@ msgstr "Vardiya Araçları"
 msgid "Shift Type"
 msgstr "Vardiya Türü"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:37
+#: hrms/hr/doctype/employee_checkin/employee_checkin.js:34
 msgid "Shift has been successfully updated to {0}."
 msgstr "Vardiya başarıyla {0} olarak güncellendi."
 
@@ -12200,7 +12225,7 @@ msgstr "Başlangıç Zamanı"
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}"
 msgstr "Başlangıç ve bitiş tarihleri geçerli bir Bordro Döneminde değil, {0} hesaplayamıyor"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1485
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1488
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr "Başlangıç ve bitiş süreleri geçerli bir Bordro Döneminde değil, {0} değeri hesaplayamaz."
 
@@ -12324,7 +12349,7 @@ msgstr "Konu"
 msgid "Submission Date"
 msgstr "teslim tarihi"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:340
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:343
 msgid "Submission Failed"
 msgstr "Gönderim Başarısız"
 
@@ -12356,7 +12381,7 @@ msgstr "Kanıt Gönder"
 msgid "Submit Salary Slip"
 msgstr "Bordro Gönder"
 
-#: hrms/hr/doctype/leave_application/leave_application.js:110
+#: hrms/hr/doctype/leave_application/leave_application.js:108
 msgid "Submit this Leave Application to confirm."
 msgstr ""
 
@@ -12381,7 +12406,7 @@ msgstr "Kaydedildi"
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "Maaş Fişleri Gönderme ve Yevmiye Kaydı Oluşturma ..."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1531
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1533
 msgid "Submitting Salary Slips..."
 msgstr "Maaş Fişleri Gönderiliyor ..."
 
@@ -12397,7 +12422,7 @@ msgstr "Bağlı şirketler zaten {1} pozisyon için {2} bütçesiyle planlama ya
 #: frontend/src/views/AppSettings.vue:95
 #: hrms/hr/doctype/employee_referral/employee_referral.py:54
 #: hrms/hr/utils.py:857
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1479
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1481
 #: hrms/public/js/utils/index.js:139
 msgid "Success"
 msgstr "Başarılı"
@@ -12444,11 +12469,11 @@ msgstr "Beklemede"
 msgid "Sync {0}"
 msgstr "Senkronize Et {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1217
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1220
 msgid "Syntax error"
 msgstr "Söz dizimi hatası"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2189
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2192
 msgid "Syntax error in condition: {0} in Income Tax Slab"
 msgstr "Gelir Vergisi Diliminde {0} koşulu için söz dizimi hatası"
 
@@ -12674,7 +12699,7 @@ msgstr "Maaş Bordrosunda Maaş Bileşeninin Tutar ile Kazanç/Kesintiye katkı 
 msgid "The day of the month when leaves should be allocated"
 msgstr "İzinlerin tahsis edileceği ayın günü"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:367
+#: hrms/hr/doctype/leave_application/leave_application.py:370
 msgid "The day(s) on which you are applying for leave are holidays. You need not apply for leave."
 msgstr "Eğer izin için başvuruda bulunulduğu gün (ler) tatildir. İstemenize izin gerekmez."
 
@@ -12768,15 +12793,15 @@ msgstr ""
 msgid "This employee already has a log with the same timestamp.{0}"
 msgstr "Bu çalışanın zaten aynı zaman damgasına sahip bir günlüğü var. {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1225
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1228
 msgid "This error can be due to invalid formula or condition."
 msgstr "Bu hata geçersiz formül veya koşuldan kaynaklanıyor olabilir."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1218
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1221
 msgid "This error can be due to invalid syntax."
 msgstr "Bu hata geçersiz söz diziminden kaynaklanıyor olabilir."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1211
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1214
 msgid "This error can be due to missing or deleted field."
 msgstr "Bu hata eksik veya silinmiş bir alandan kaynaklanıyor olabilir."
 
@@ -12952,7 +12977,7 @@ msgstr ""
 msgid "To allow this, enable {0} under {1}."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.js:286
+#: hrms/hr/doctype/leave_application/leave_application.js:308
 msgid "To apply for a Half Day check 'Half Day' and select the Half Day Date"
 msgstr "Yarım Gün başvurusunda bulunmak için 'Yarım Gün' seçeneğini işaretleyin ve Yarım Gün Tarihini seçin"
 
@@ -12973,7 +12998,7 @@ msgid "To date can not greater than employee's relieving date"
 msgstr "Bugüne kadar çalışanın sevkıyatı daha büyük olamaz"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:179
-#: hrms/hr/doctype/leave_application/leave_application.py:177
+#: hrms/hr/doctype/leave_application/leave_application.py:180
 msgid "To date cannot be before from date"
 msgstr "Bitiş tarihi başlangıç tarihinden önce olamaz"
 
@@ -13164,7 +13189,7 @@ msgstr "Toplam Saat (T)"
 msgid "Total Income Tax"
 msgstr "Toplam Gelir Vergisi"
 
-#: hrms/setup.py:794
+#: hrms/setup.py:795
 msgid "Total Interest Amount"
 msgstr ""
 
@@ -13197,7 +13222,7 @@ msgstr "Ayrılan Toplam İzinler"
 msgid "Total Leaves Encashed"
 msgstr "Toplam İzin Paraya çevrilen"
 
-#: hrms/setup.py:808
+#: hrms/setup.py:809
 msgid "Total Loan Repayment"
 msgstr ""
 
@@ -13224,7 +13249,7 @@ msgstr "Toplam Ödeme"
 msgid "Total Present"
 msgstr "Toplam Mevcut"
 
-#: hrms/setup.py:785
+#: hrms/setup.py:786
 msgid "Total Principal Amount"
 msgstr ""
 
@@ -13267,7 +13292,7 @@ msgstr "Toplam Vergi"
 msgid "Total Working Hours"
 msgstr "Toplam Çalışma Saati"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:368
+#: hrms/hr/doctype/expense_claim/expense_claim.py:370
 msgid "Total advance amount cannot be greater than total sanctioned amount"
 msgstr "Toplam avans miktarı, toplam onaylanan tutarlardan fazla olamaz"
 
@@ -13604,6 +13629,10 @@ msgstr "İşaretlenmemiş Devamlılıklar"
 msgid "Unmarked Attendance for days"
 msgstr ""
 
+#: hrms/hr/doctype/shift_type/shift_type.py:32
+msgid "Unmarked Check-in Logs Found"
+msgstr ""
+
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:129
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:19
 msgid "Unmarked Days"
@@ -13641,7 +13670,7 @@ msgstr "Ödenmemiş Gider Talebi"
 msgid "Unsettled"
 msgstr ""
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:43
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:52
 msgid "Unsettled Transactions"
 msgstr "Etkilenen İşlemler"
 
@@ -13928,7 +13957,7 @@ msgstr ""
 msgid "Walk In"
 msgstr "Rezervasyonsuz Müşteri"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:406
+#: hrms/hr/doctype/leave_application/leave_application.py:409
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:153
 #: hrms/payroll/doctype/salary_component/salary_component.py:56
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:321
@@ -13937,15 +13966,15 @@ msgstr "Rezervasyonsuz Müşteri"
 msgid "Warning"
 msgstr "Uyarı"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:394
+#: hrms/hr/doctype/leave_application/leave_application.py:397
 msgid "Warning: Insufficient leave balance for Leave Type {0} in this allocation."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:402
+#: hrms/hr/doctype/leave_application/leave_application.py:405
 msgid "Warning: Insufficient leave balance for Leave Type {0}."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:340
+#: hrms/hr/doctype/leave_application/leave_application.py:343
 msgid "Warning: Leave application contains following block dates"
 msgstr "Uyarı: İzin yazılımı aşağıdaki engel bölümleri bulunmaktadır"
 
@@ -14168,7 +14197,7 @@ msgstr "Evet"
 msgid "Yes, Proceed"
 msgstr "Evet, Devam et"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:350
+#: hrms/hr/doctype/leave_application/leave_application.py:353
 msgid "You are not authorized to approve leaves on Block Dates"
 msgstr "Blok Tarihlerindeki çıkışları onaylama yetkiniz yok"
 
@@ -14208,7 +14237,7 @@ msgstr ""
 msgid "You may add additional details, if any, and submit the offer."
 msgstr "Varsa ek bilgilerinizi ekleyip teklifinizi kaydedebilirsiniz."
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:109
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:110
 msgid "You must be within {0} meters of your shift location to check in."
 msgstr ""
 
@@ -14308,7 +14337,7 @@ msgstr "{0} & {1}"
 msgid "{0} & {1} more"
 msgstr "{0} ve {1} daha fazlası"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2185
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2188
 msgid "{0} <br> This error can be due to missing or deleted field."
 msgstr "{0} <br> Bu hata eksik veya silinmiş bir alandan kaynaklanıyor olabilir."
 
@@ -14344,7 +14373,7 @@ msgstr "{0}, {1} çalışanı ve {2} dönemi için zaten mevcut"
 msgid "{0} already has an active Shift Assignment {1} for some/all of these dates."
 msgstr "{0} bu tarihlerin bazıları/hepsi için {1} adresinde zaten aktif bir Vardiya Ataması bulunmaktadır."
 
-#: hrms/hr/doctype/leave_application/leave_application.py:148
+#: hrms/hr/doctype/leave_application/leave_application.py:151
 msgid "{0} applicable after {1} working days"
 msgstr "{1} iş gününden sonra {0} uygulanabilir"
 
@@ -14386,7 +14415,7 @@ msgstr "{0} tatil değil."
 msgid "{0} is not allowed to submit Interview Feedback for the Interview: {1}"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:577
+#: hrms/hr/doctype/leave_application/leave_application.py:580
 msgid "{0} is not in Optional Holiday List"
 msgstr "{0} İsteğe Bağlı Tatil Listesinde değil"
 
@@ -14443,11 +14472,11 @@ msgstr ""
 msgid "{0} {1} {2}?"
 msgstr "{0} {1} {2}?"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1897
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1900
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "{0}: Çalışanın e-posta adresi bulunamadığı için e-posta gönderilemedi"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:68
+#: hrms/hr/doctype/leave_application/leave_application.py:70
 msgid "{0}: From {0} of type {1}"
 msgstr "{0}: gönderen {0} çeşidi {1}"
 
@@ -14511,7 +14540,7 @@ msgstr "{} Bekliyor"
 msgid "{} Unclaimed"
 msgstr "{} Talep Edilmemiş"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:232
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:233
 msgid "{} is an invalid Attendance Status."
 msgstr "{} geçersiz bir Devamlılık Durumudur."
 
