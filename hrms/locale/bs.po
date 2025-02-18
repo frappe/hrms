@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-02-16 09:33+0000\n"
-"PO-Revision-Date: 2025-02-17 14:16\n"
+"PO-Revision-Date: 2025-02-18 14:34\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -524,7 +524,7 @@ msgstr "Računi nisu postavljeni za Komponentu Plate {0}"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:593
 msgid "Accrual Journal Entry for salaries from {0} to {1}"
-msgstr "Unos u Dnevnik Obračuna za plate od {0} do {1}"
+msgstr "Obračunski Nalog Knjiženja za plate od {0} do {1}"
 
 #. Label of the action (Select) field in DocType 'Full and Final Asset'
 #. Label of the action (Select) field in DocType 'Shift Assignment Tool'
@@ -718,14 +718,14 @@ msgstr "Adresa Organizatora"
 #. Option for the 'Level' (Select) field in DocType 'Training Event'
 #: hrms/hr/doctype/training_event/training_event.json
 msgid "Advance"
-msgstr "Avans"
+msgstr "Predujam"
 
 #. Label of the advance_account (Link) field in DocType 'Employee Advance'
 #. Label of the advance_account (Link) field in DocType 'Expense Claim Advance'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 #: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgid "Advance Account"
-msgstr "Avansni račun"
+msgstr "Račun Predujma"
 
 #. Label of the advance_amount (Currency) field in DocType 'Employee Advance'
 #. Label of the advance_amount (Data) field in DocType 'Travel Itinerary'
@@ -733,19 +733,19 @@ msgstr "Avansni račun"
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json
 #: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:62
 msgid "Advance Amount"
-msgstr "Iznos avansa"
+msgstr "Iznos Predujma"
 
 #. Label of the advance_paid (Currency) field in DocType 'Expense Claim
 #. Advance'
 #: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgid "Advance Paid"
-msgstr "Avansno plaćeno"
+msgstr "Predujam Plaćen"
 
 #. Label of the advance_payments_sb (Section Break) field in DocType 'Expense
 #. Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Advance Payments"
-msgstr "Avansna Plaćanja"
+msgstr "Predujamska Plaćanja"
 
 #. Label of the advanced_filters_section (Section Break) field in DocType
 #. 'Leave Control Panel'
@@ -1971,7 +1971,7 @@ msgstr "Datum Uplate Bonusa ne može biti prošli datum"
 #: hrms/payroll/report/salary_register/salary_register.py:134
 #: hrms/public/js/salary_slip_deductions_report_filters.js:48
 msgid "Branch"
-msgstr "Podružnica"
+msgstr "Filijala"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:193
 msgid "Branch: {0}"
@@ -2169,7 +2169,7 @@ msgstr "Kontni Plan"
 #. Label of a Link in the Salary Payout Workspace
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Chart of Cost Centers"
-msgstr "Kontni Plan Centara Troškova"
+msgstr "Stablo Centara Troškova"
 
 #: hrms/public/js/utils/index.js:147
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
@@ -2268,7 +2268,7 @@ msgstr "Obriši Sve"
 #. Label of the clearance_date (Date) field in DocType 'Expense Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Clearance Date"
-msgstr "Datum Poravnanja"
+msgstr "Datum Odobrenja"
 
 #. Option for the 'Status' (Select) field in DocType 'Interview'
 #. Option for the 'Result' (Select) field in DocType 'Interview Feedback'
@@ -2810,7 +2810,7 @@ msgstr "Kreiraj Ponudu Posla"
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.js:10
 msgid "Create Journal Entry"
-msgstr "Kreiraj Unos u Dnevnik"
+msgstr "Kreiraj Naloga Knjiženja"
 
 #. Label of the create_new_employee_id (Check) field in DocType 'Employee
 #. Transfer'
@@ -3283,7 +3283,7 @@ msgstr "Standard Osnovna Plata"
 
 #: hrms/setup.py:81
 msgid "Default Employee Advance Account"
-msgstr "Standard Predujmni Račun Personala"
+msgstr "Standard Račun Predujma"
 
 #: hrms/setup.py:73
 msgid "Default Expense Claim Payable Account"
@@ -3629,7 +3629,7 @@ msgstr "Opis Otvorenog Radnog Mjesta"
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.py:534
 #: hrms/payroll/report/salary_register/salary_register.py:148
 msgid "Designation"
-msgstr "Oznaka"
+msgstr "Pozicija"
 
 #. Name of a DocType
 #: hrms/hr/doctype/designation_skill/designation_skill.json
@@ -5376,7 +5376,7 @@ msgstr "Odobravatelj Troškova je obavezan za Potraživanju Troškova"
 #: hrms/hr/workspace/overview/overview.json
 #: hrms/public/js/erpnext/delivery_trip.js:8
 msgid "Expense Claim"
-msgstr "Potraživanje Troškova"
+msgstr "Potraživanje"
 
 #. Name of a DocType
 #: hrms/hr/doctype/expense_claim_account/expense_claim_account.json
@@ -5421,7 +5421,7 @@ msgstr "Potraživanje Troškova {0} već postoji za Zapisnik Vozila"
 #: frontend/src/views/expense_claim/Dashboard.vue:2
 #: hrms/hr/workspace/expense_claims/expense_claims.json
 msgid "Expense Claims"
-msgstr "Potraživanje Troškova"
+msgstr "Potraživanja"
 
 #. Label of the expense_date (Date) field in DocType 'Expense Claim Detail'
 #: hrms/hr/doctype/expense_claim_detail/expense_claim_detail.json
@@ -7522,7 +7522,7 @@ msgstr "Datum Pridruživanja"
 #: hrms/payroll/doctype/salary_withholding_cycle/salary_withholding_cycle.json
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Journal Entry"
-msgstr "Unos Dnevnika"
+msgstr "Nalog Knjiženja"
 
 #. Label of a Card Break in the Employee Lifecycle Workspace
 #: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
@@ -7635,7 +7635,7 @@ msgstr "Kasne Prijave"
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/report/shift_attendance/shift_attendance.js:48
 msgid "Late Entry"
-msgstr "Kasna Prijava"
+msgstr "Kasni Ulaz"
 
 #. Label of the grace_period_settings_auto_attendance_section (Section Break)
 #. field in DocType 'Shift Type'
@@ -7645,7 +7645,7 @@ msgstr "Postavke Kasne Prijave i Rane Odjave za Automatsko Prisustvo"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:85
 msgid "Late Entry By"
-msgstr "Kasna Prijava"
+msgstr "Kasni Ulaz od"
 
 #. Label of the late_entry_grace_period (Int) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
@@ -9248,7 +9248,7 @@ msgstr "Izborna Lista Praznika nije postavljena za period odsustva {0}"
 
 #: hrms/hr/doctype/leave_type/leave_type.js:23
 msgid "Optional Leaves are holidays that Employees can choose to avail from a list of holidays published by the company."
-msgstr "Opciono odsustvo su praznici koje personal može izabrati sa liste praznika koju objavljuje kompanija."
+msgstr "Neobavezno odsustvo su praznici koje personal može izabrati sa liste praznika koju objavljuje kompanija."
 
 #. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
@@ -9544,7 +9544,7 @@ msgstr "Obračun Plaćenih Dana su zasnovani na ovim Postavkama Obračuna Plata"
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Payment Entry"
-msgstr "Unos Plaćanja"
+msgstr "Nalog Plaćanja"
 
 #. Label of the section_break_5 (Tab Break) field in DocType 'Gratuity'
 #: hrms/payroll/doctype/gratuity/gratuity.json
@@ -10096,7 +10096,7 @@ msgstr "Preferirano područje za smještaj"
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Present"
-msgstr "Prisutan(na)"
+msgstr "Prisutan"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:162
 msgid "Present Records"
@@ -12409,7 +12409,7 @@ msgstr "Podnešeno"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:409
 msgid "Submitting Salary Slips and creating Journal Entry..."
-msgstr "Podnose se Platni Listovi i kreiraju Unosi Dnevnika..."
+msgstr "Podnose se Platni Listovi i kreiraju Nalozi Knjiženja..."
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1533
 msgid "Submitting Salary Slips..."
@@ -12832,7 +12832,7 @@ msgstr "Ovo će prepisati poresku komponentu {0} u platnoj listi i porez se neć
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:400
 msgid "This will submit Salary Slips and create accrual Journal Entry. Do you want to proceed?"
-msgstr "Ovo će podnijeti Platne Liste i kreirati obračunski Unos Dnevnika. Da li želite da nastavite?"
+msgstr "Ovo će podnijeti Platne Liste i kreirati obračunski Nalog Knjiženja. Da li želite da nastavite?"
 
 #: frontend/src/components/AttendanceCalendar.vue:116
 #: hrms/hr/doctype/leave_block_list/leave_block_list.js:52
