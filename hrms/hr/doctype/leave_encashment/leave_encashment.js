@@ -1,10 +1,13 @@
 // Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and contributors
 // For license information, please see license.txt
 
+frappe.provide("erpnext.accounts.dimensions");
+
 frappe.ui.form.on("Leave Encashment", {
 	onload: function (frm) {
 		// Ignore cancellation of doctype on cancel all.
 		frm.ignore_doctypes_on_cancel_all = ["Leave Ledger Entry"];
+		erpnext.accounts.dimensions.setup_dimension_filters(frm, frm.doctype);
 	},
 	setup: function (frm) {
 		frm.set_query("leave_type", function () {
@@ -69,6 +72,9 @@ frappe.ui.form.on("Leave Encashment", {
 				() => frm.trigger("get_leave_details_for_encashment"),
 			]);
 		}
+	},
+	company: function (frm) {
+		erpnext.accounts.dimensions.update_dimension(frm, frm.doctype);
 	},
 	leave_type: function (frm) {
 		frm.trigger("get_leave_details_for_encashment");

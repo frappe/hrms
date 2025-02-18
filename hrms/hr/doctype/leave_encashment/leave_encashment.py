@@ -7,6 +7,9 @@ from frappe import _, bold
 from frappe.model.document import Document
 from frappe.utils import flt, format_date, get_link_to_form, getdate
 
+from erpnext.accounts.general_ledger import make_gl_entries
+from erpnext.controllers.accounts_controller import AccountsController
+
 from hrms.hr.doctype.leave_application.leave_application import get_leaves_for_period
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
 from hrms.hr.utils import set_employee_name, validate_active_employee
@@ -15,7 +18,7 @@ from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignmen
 )
 
 
-class LeaveEncashment(Document):
+class LeaveEncashment(AccountsController):
 	def validate(self):
 		set_employee_name(self)
 		validate_active_employee(self.employee)
@@ -43,7 +46,9 @@ class LeaveEncashment(Document):
 		if not self.leave_allocation:
 			self.db_set("leave_allocation", self.get_leave_allocation().get("name"))
 
-		if not self.pay_via_payment_entry:
+		if self.pay_via_payment_entry:
+			self.create_gl_entries()
+		else:
 			additional_salary = frappe.new_doc("Additional Salary")
 			additional_salary.company = frappe.get_value("Employee", self.employee, "company")
 			additional_salary.employee = self.employee
@@ -82,6 +87,9 @@ class LeaveEncashment(Document):
 				frappe.db.get_value("Leave Allocation", self.leave_allocation, "total_leaves_encashed")
 				- self.encashment_days,
 			)
+
+		if self.pay_via_payment_entry:
+			self.create_gl_entries(cancel=True)
 
 		self.create_leave_ledger_entry(submit=False)
 		self.ignore_linked_doctypes = ["GL Entry"]
@@ -261,6 +269,50 @@ class LeaveEncashment(Document):
 
 		self.db_set("paid_amount", paid_amount)
 		self.set_status(update=True)
+
+	def create_gl_entries(self, cancel=False):
+		gl_entries = self.get_gl_entries()
+		make_gl_entries(gl_entries, cancel)
+
+	def get_gl_entries(self):
+		gl_entry = []
+
+		# payable entry
+		if self.encashment_amount:
+			gl_entry.append(
+				self.get_gl_dict(
+					{
+						"account": self.payable_account,
+						"credit": self.encashment_amount,
+						"credit_in_account_currency": self.encashment_amount,
+						"against": self.expense_account,
+						"party_type": "Employee",
+						"party": self.employee,
+						"against_voucher_type": self.doctype,
+						"against_voucher": self.name,
+						"cost_center": self.cost_center,
+					},
+					item=self,
+				)
+			)
+
+			# expense entry
+			gl_entry.append(
+				self.get_gl_dict(
+					{
+						"account": self.expense_account,
+						"debit": self.encashment_amount,
+						"debit_in_account_currency": self.encashment_amount,
+						"against": self.payable_account,
+						"cost_center": self.cost_center,
+					},
+					item=self,
+				)
+			)
+		else:
+			frappe.throw(_("Encashment Amount cannot be zero"))
+
+		return gl_entry
 
 
 def create_leave_encashment(leave_allocation):

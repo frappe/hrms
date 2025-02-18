@@ -23,15 +23,19 @@
   "encashment_amount",
   "accounting_section",
   "pay_via_payment_entry",
+  "expense_account",
   "payable_account",
   "column_break_vdnb",
   "posting_date",
+  "currency",
   "paid_amount",
+  "accounting_dimensions_section",
+  "cost_center",
+  "dimension_col_break",
   "payroll",
   "encashment_date",
-  "additional_salary",
   "column_break_14",
-  "currency",
+  "additional_salary",
   "section_break_svbb",
   "amended_from",
   "status"
@@ -226,10 +230,36 @@
    "fieldname": "posting_date",
    "fieldtype": "Date",
    "label": "Posting Date"
+  },
+  {
+   "depends_on": "pay_via_payment_entry",
+   "fieldname": "expense_account",
+   "fieldtype": "Link",
+   "label": "Expense Account",
+   "mandatory_depends_on": "pay_via_payment_entry",
+   "options": "Account"
+  },
+  {
+   "depends_on": "pay_via_payment_entry",
+   "fieldname": "accounting_dimensions_section",
+   "fieldtype": "Section Break",
+   "label": "Accounting Dimensions"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "mandatory_depends_on": "pay_via_payment_entry",
+   "options": "Cost Center"
+  },
+  {
+   "fieldname": "dimension_col_break",
+   "fieldtype": "Column Break"
   }
  ],
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -247,6 +277,9 @@
 =======
  "modified": "2025-02-10 13:04:29.229330",
 >>>>>>> 882b1d1f (chore: document states)
+=======
+ "modified": "2025-02-18 12:04:03.460640",
+>>>>>>> 411d1e1c (chore: add accrual entries, accounting dimensions)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Encashment",
