@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-02-16 09:33+0000\n"
-"PO-Revision-Date: 2025-02-17 14:16\n"
+"PO-Revision-Date: 2025-02-18 14:34\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -1903,7 +1903,7 @@ msgstr "Blau"
 #. Letter'
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json
 msgid "Body"
-msgstr "Körper"
+msgstr ""
 
 #. Label of the bonus_section (Section Break) field in DocType 'Retention
 #. Bonus'
