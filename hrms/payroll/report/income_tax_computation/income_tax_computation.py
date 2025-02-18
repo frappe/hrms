@@ -36,6 +36,7 @@ class IncomeTaxComputationReport:
 		self.get_employee_details()
 		self.get_future_salary_slips()
 		self.get_ctc()
+		self.get_income_from_other_sources()
 		self.get_tax_exempted_earnings_and_deductions()
 		self.get_employee_tax_exemptions()
 		self.get_hra()
@@ -397,11 +398,33 @@ class IncomeTaxComputationReport:
 
 		self.add_column("Total Exemption")
 
+	def get_income_from_other_sources(self):
+		self.add_column("Other Income")
+
+		for employee in list(self.employees.keys()):
+			other_income = (
+				frappe.get_all(
+					"Employee Other Income",
+					filters={
+						"employee": employee,
+						"payroll_period": self.filters.payroll_period,
+						"company": self.filters.company,
+						"docstatus": 1,
+					},
+					fields="SUM(amount) as total_amount",
+				)[0].total_amount
+				or 0.0
+			)
+
+			self.employees[employee].setdefault("other_income", other_income)
+
 	def get_total_taxable_amount(self):
 		self.add_column("Total Taxable Amount")
 		for __, emp_details in self.employees.items():
-			emp_details["total_taxable_amount"] = flt(emp_details.get("ctc")) - flt(
-				emp_details.get("total_exemption")
+			emp_details["total_taxable_amount"] = (
+				flt(emp_details.get("ctc"))
+				+ flt(emp_details.get("other_income"))
+				- flt(emp_details.get("total_exemption"))
 			)
 
 	def get_applicable_tax(self):
