@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-02-16 09:33+0000\n"
-"PO-Revision-Date: 2025-02-17 14:16\n"
+"PO-Revision-Date: 2025-02-18 14:34\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -1055,7 +1055,7 @@ msgstr ""
 #. Advance'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 msgid "Amount scheduled for deduction via salary"
-msgstr ""
+msgstr "مبلغ زمان‌بندی شده برای کسر از طریق حقوق"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:32
 msgid "Amount should not be less than zero"
@@ -7276,7 +7276,7 @@ msgstr "جزء مالیات بر درآمد است"
 #. Label of the is_invalid (Check) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 msgid "Is Invalid"
-msgstr ""
+msgstr "نامعتبر است"
 
 #. Label of the is_lwp (Check) field in DocType 'Leave Ledger Entry'
 #. Label of the is_lwp (Check) field in DocType 'Leave Type'
@@ -8907,7 +8907,7 @@ msgstr ""
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.js:8
 msgid "No valid shift found for this log time. If shift is assigned to the employee, adjust time window of the shift and fetch shift again."
-msgstr ""
+msgstr "هیچ شیفت معتبری برای این زمان لاگ یافت نشد. اگر شیفت به کارمند اختصاص داده شده است، پنجره زمانی شیفت را تنظیم کنید و دوباره شیفت را واکشی کنید."
 
 #: hrms/public/js/utils/index.js:48
 msgid "No {0} Selected"
