@@ -413,3 +413,30 @@ class TestLeaveEncashment(FrappeTestCase):
 		ss.cancel()
 		leave_encashment.reload()
 		self.assertEqual(leave_encashment.status, "Unpaid")
+
+	def test_status_of_leave_encashment_after_payment_via_payment_entry(self):
+		from hrms.overrides.employee_payment_entry import get_payment_entry_for_employee
+
+		leave_encashment = frappe.get_doc(
+			dict(
+				doctype="Leave Encashment",
+				employee=self.employee,
+				leave_type="_Test Leave Type Encashment",
+				leave_period=self.leave_period.name,
+				pay_via_payment_entry=1,
+				payable_account="_Test Payroll Payable - _TC",
+				expense_account="Administrative Expenses - _TC",
+				cost_center="Main - _TC",
+			)
+		).save()
+		leave_encashment.submit()
+
+		pe = get_payment_entry_for_employee(leave_encashment.doctype, leave_encashment.name)
+		pe.reference_no = "1"
+		pe.reference_date = getdate()
+		pe.save()
+		pe.submit()
+
+		leave_encashment.reload()
+
+		self.assertEqual(leave_encashment.status, "Paid")
