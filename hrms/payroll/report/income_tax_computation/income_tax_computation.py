@@ -110,6 +110,7 @@ class IncomeTaxComputationReport:
 							"salary_structure": d.salary_structure,
 							"income_tax_slab": d.income_tax_slab,
 							"allow_tax_exemption": tax_slab.allow_tax_exemption,
+							"tax_deducted_till_date": d.tax_deducted_till_date or 0.0,
 						},
 					)
 		return employee_ss_assignments
@@ -511,7 +512,8 @@ class IncomeTaxComputationReport:
 		).run(as_dict=True)
 
 		for d in records:
-			self.employees[d.employee].setdefault("total_tax_deducted", d.amount)
+			total_tax_deducted = flt(self.employees[d.employee].get("tax_deducted_till_date", 0)) + d.amount
+			self.employees[d.employee].setdefault("total_tax_deducted", total_tax_deducted)
 
 	def get_payable_tax(self):
 		self.add_column("Payable Tax")
