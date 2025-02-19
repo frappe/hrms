@@ -349,6 +349,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 		)
 
 		# salary structure with base 50000, HRA 3000
+		# effective from 3 months before payroll period
 		make_salary_structure(
 			"Monthly Structure for HRA Exemption 1",
 			"Monthly",
@@ -356,7 +357,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 			company="_Test Company",
 			currency="INR",
 			payroll_period=payroll_period.name,
-			from_date=payroll_period.start_date,
+			from_date=add_months(payroll_period.start_date, -3),
 		)
 
 		# salary structure with base 70000, HRA = base * 0.2 = 14000
@@ -379,6 +380,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 
 		salary_structure.submit()
 
+		# effective from 6 months after payroll period
 		create_salary_structure_assignment(
 			employee,
 			salary_structure.name,

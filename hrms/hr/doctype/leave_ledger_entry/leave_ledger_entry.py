@@ -4,13 +4,26 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import DATE_FORMAT, flt, get_link_to_form, getdate, today
+from frappe.utils import DATE_FORMAT, flt, formatdate, get_link_to_form, getdate, today
+
+
+class InvalidLeaveLedgerEntry(frappe.ValidationError):
+	pass
 
 
 class LeaveLedgerEntry(Document):
 	def validate(self):
 		if getdate(self.from_date) > getdate(self.to_date):
-			frappe.throw(_("To date needs to be before from date"))
+			frappe.throw(
+				_(
+					"Leave Ledger Entry's To date needs to be after From date. Currently, From Date is {0} and To Date is {1}"
+				).format(
+					frappe.bold(formatdate(self.from_date)),
+					frappe.bold(formatdate(self.to_date)),
+				),
+				exc=InvalidLeaveLedgerEntry,
+				title=_("Invalid Leave Ledger Entry"),
+			)
 
 	def on_cancel(self):
 		# allow cancellation of expiry leaves

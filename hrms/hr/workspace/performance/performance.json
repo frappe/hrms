@@ -172,7 +172,7 @@
    "type": "Link"
   }
  ],
- "modified": "2023-03-30 22:51:21.593682",
+ "modified": "2025-02-18 15:55:42.734793",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Performance",
@@ -190,7 +190,7 @@
    "format": "{} Pending",
    "label": "Appraisal",
    "link_to": "Appraisal",
-   "stats_filter": "{\"status\":[\"=\",\"Draft\"]}",
+   "stats_filter": "[[\"Appraisal\",\"docstatus\",\"=\",\"0\",false]]",
    "type": "DocType"
   },
   {

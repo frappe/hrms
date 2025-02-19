@@ -15,7 +15,6 @@
   "employee_image",
   "column_break0",
   "company",
-  "status",
   "appraisal_cycle",
   "start_date",
   "end_date",
@@ -82,20 +81,6 @@
    "fieldtype": "Column Break",
    "oldfieldtype": "Column Break",
    "width": "50%"
-  },
-  {
-   "default": "Draft",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_standard_filter": 1,
-   "label": "Status",
-   "no_copy": 1,
-   "oldfieldname": "status",
-   "oldfieldtype": "Select",
-   "options": "\nDraft\nSubmitted\nCompleted\nCancelled",
-   "read_only": 1,
-   "reqd": 1,
-   "search_index": 1
   },
   {
    "fetch_from": "employee.department",
@@ -314,7 +299,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-10-21 10:22:26.270161",
+ "modified": "2025-02-18 15:03:49.932773",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",
@@ -373,8 +358,8 @@
    "write": 1
   }
  ],
- "search_fields": "status, employee, employee_name, appraisal_cycle",
- "sort_field": "modified",
+ "search_fields": "employee, employee_name, appraisal_cycle",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "timeline_field": "employee",

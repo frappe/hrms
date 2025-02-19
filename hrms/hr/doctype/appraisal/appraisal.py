@@ -15,9 +15,6 @@ from hrms.payroll.utils import sanitize_expression
 
 class Appraisal(Document, AppraisalMixin):
 	def validate(self):
-		if not self.status:
-			self.status = "Draft"
-
 		self.set_kra_evaluation_method()
 
 		validate_active_employee(self.employee)

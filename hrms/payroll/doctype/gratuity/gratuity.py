@@ -44,7 +44,7 @@ class Gratuity(AccountsController):
 			else:
 				status = "Unpaid"
 
-		if update:
+		if update and self.status != status:
 			self.db_set("status", status)
 		else:
 			self.status = status
@@ -249,6 +249,7 @@ class Gratuity(AccountsController):
 						years_left * total_component_amount * slab.fraction_of_applicable_earnings
 					)
 					slab_found = True
+					break
 
 		if not slab_found:
 			frappe.throw(
@@ -308,7 +309,7 @@ class Gratuity(AccountsController):
 		)
 
 	def _is_experience_within_slab(self, slab: dict, experience: float) -> bool:
-		return bool(slab.from_year <= experience and (experience < slab.to_year or slab.to_year == 0))
+		return bool(slab.from_year <= experience and (experience <= slab.to_year or slab.to_year == 0))
 
 	def _is_experience_beyond_slab(self, slab: dict, experience: float) -> bool:
 		return bool(slab.from_year < experience and (slab.to_year < experience and slab.to_year != 0))

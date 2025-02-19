@@ -64,6 +64,14 @@ frappe.ui.form.on("Expense Claim", {
 				query: "erpnext.controllers.queries.employee_query",
 			};
 		});
+
+		frm.set_query("department", function () {
+			return {
+				filters: {
+					company: frm.doc.company,
+				},
+			};
+		});
 	},
 
 	onload: function (frm) {
@@ -194,8 +202,9 @@ frappe.ui.form.on("Expense Claim", {
 	update_employee_advance_claimed_amount: function (frm) {
 		let amount_to_be_allocated = frm.doc.grand_total;
 		$.each(frm.doc.advances || [], function (i, advance) {
-			if (amount_to_be_allocated >= advance.unclaimed_amount) {
-				advance.allocated_amount = frm.doc.advances[i].unclaimed_amount;
+			if (amount_to_be_allocated >= advance.unclaimed_amount - advance.return_amount) {
+				advance.allocated_amount =
+					frm.doc.advances[i].unclaimed_amount - frm.doc.advances[i].return_amount;
 				amount_to_be_allocated -= advance.allocated_amount;
 			} else {
 				advance.allocated_amount = amount_to_be_allocated;
@@ -204,7 +213,6 @@ frappe.ui.form.on("Expense Claim", {
 			frm.refresh_field("advances");
 		});
 	},
-
 	make_payment_entry: function (frm) {
 		let method = "hrms.overrides.employee_payment_entry.get_payment_entry_for_employee";
 		if (frm.doc.__onload && frm.doc.__onload.make_payment_via_journal_entry) {
@@ -309,7 +317,12 @@ frappe.ui.form.on("Expense Claim", {
 							row.advance_account = d.advance_account;
 							row.advance_paid = d.paid_amount;
 							row.unclaimed_amount = flt(d.paid_amount) - flt(d.claimed_amount);
-							row.allocated_amount = 0;
+							row.return_amount = flt(d.return_amount);
+							row.allocated_amount = get_allocation_amount(
+								flt(d.paid_amount),
+								flt(d.claimed_amount),
+								flt(d.return_amount),
+							);
 						});
 						refresh_field("advances");
 					}
@@ -385,8 +398,12 @@ frappe.ui.form.on("Expense Claim Advance", {
 						child.advance_paid = r.message[0].paid_amount;
 						child.unclaimed_amount =
 							flt(r.message[0].paid_amount) - flt(r.message[0].claimed_amount);
-						child.allocated_amount =
-							flt(r.message[0].paid_amount) - flt(r.message[0].claimed_amount);
+						child.return_amount = flt(r.message[0].return_amount);
+						child.allocated_amount = get_allocation_amount(
+							flt(r.message[0].paid_amount),
+							flt(r.message[0].claimed_amount),
+							flt(r.message[0].return_amount),
+						);
 						frm.trigger("calculate_grand_total");
 						refresh_field("advances");
 					}
@@ -432,3 +449,7 @@ frappe.ui.form.on("Expense Taxes and Charges", {
 		frm.trigger("calculate_total_tax", cdt, cdn);
 	},
 });
+
+function get_allocation_amount(paid_amount, claimed_amount, return_amount) {
+	return paid_amount - (claimed_amount + return_amount);
+}

@@ -84,9 +84,9 @@ def execute(filters=None):
 def get_earning_and_deduction_types(salary_slips):
 	salary_component_and_type = {_("Earning"): [], _("Deduction"): []}
 
-	for salary_compoent in get_salary_components(salary_slips):
-		component_type = get_salary_component_type(salary_compoent)
-		salary_component_and_type[_(component_type)].append(salary_compoent)
+	for salary_component in get_salary_components(salary_slips):
+		component_type = get_salary_component_type(salary_component)
+		salary_component_and_type[_(component_type)].append(salary_component)
 
 	return sorted(salary_component_and_type[_("Earning")]), sorted(salary_component_and_type[_("Deduction")])
 

@@ -204,7 +204,9 @@ class LeaveEncashment(Document):
 			return
 
 		to_date = leave_allocation.get("to_date")
-		if to_date < getdate():
+
+		can_expire = not frappe.db.get_value("Leave Type", self.leave_type, "is_carry_forward")
+		if to_date < getdate() and can_expire:
 			args = frappe._dict(
 				leaves=self.encashment_days, from_date=to_date, to_date=to_date, is_carry_forward=0
 			)

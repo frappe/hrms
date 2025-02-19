@@ -3,14 +3,13 @@
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from frappe.utils import add_days, add_months, today
+from frappe.utils import add_days, add_months, getdate, today
 
 from hrms.hr.doctype.attendance_request.test_attendance_request import get_employee
+from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
 from hrms.hr.doctype.leave_application.leave_application import get_leave_balance_on
 from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
 from hrms.tests.test_utils import add_date_to_holiday_list
-
-test_dependencies = ["Employee"]
 
 
 class TestCompensatoryLeaveRequest(FrappeTestCase):
@@ -42,7 +41,7 @@ class TestCompensatoryLeaveRequest(FrappeTestCase):
 			before + 1,
 		)
 
-	def test_leave_allocation_update_on_submit(self):
+	def test_allocation_update_on_submit(self):
 		employee = get_employee()
 		mark_attendance(employee, date=add_days(today(), -1))
 		compensatory_leave_request = get_compensatory_leave_request(
@@ -69,6 +68,54 @@ class TestCompensatoryLeaveRequest(FrappeTestCase):
 			["total_leaves_allocated"],
 		)
 		self.assertEqual(leaves_allocated, 2)
+
+	def test_allocation_update_on_submit_on_multiple_allocations(self):
+		"""Tests whether the correct allocation is updated when there are multiple allocations in the same leave period"""
+		employee = get_employee()
+		today = getdate()
+
+		first_alloc_start = add_months(today, -3)
+		first_alloc_end = add_days(today, -1)
+		second_alloc_start = today
+		second_alloc_end = add_months(today, 1)
+
+		add_date_to_holiday_list(first_alloc_start, employee.holiday_list)
+		allocation_1 = create_leave_allocation(
+			leave_type="Compensatory Off",
+			employee=employee.name,
+			from_date=first_alloc_start,
+			to_date=first_alloc_end,
+		)
+		allocation_1.new_leaves_allocated = 0
+		allocation_1.submit()
+
+		add_date_to_holiday_list(second_alloc_start, employee.holiday_list)
+		allocation_2 = create_leave_allocation(
+			leave_type="Compensatory Off",
+			employee=employee.name,
+			from_date=second_alloc_start,
+			to_date=second_alloc_end,
+		)
+		allocation_2.new_leaves_allocated = 0
+		allocation_2.submit()
+
+		# adds leave balance in first allocation
+		mark_attendance(employee, date=first_alloc_start)
+		compensatory_leave_request = get_compensatory_leave_request(
+			employee.name, leave_date=first_alloc_start
+		)
+		compensatory_leave_request.submit()
+		allocation_1.reload()
+		self.assertEqual(allocation_1.total_leaves_allocated, 1)
+
+		# adds leave balance in second allocation
+		mark_attendance(employee, date=second_alloc_start)
+		compensatory_leave_request = get_compensatory_leave_request(
+			employee.name, leave_date=second_alloc_start
+		)
+		compensatory_leave_request.submit()
+		allocation_2.reload()
+		self.assertEqual(allocation_2.total_leaves_allocated, 1)
 
 	def test_creation_of_leave_ledger_entry_on_submit(self):
 		"""check creation of leave ledger entry on submission of leave request"""

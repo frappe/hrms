@@ -84,7 +84,7 @@ def get_custom_fields():
 				"fieldname": "hra_section",
 				"label": "HRA Settings",
 				"fieldtype": "Section Break",
-				"insert_after": "asset_received_but_not_billed",
+				"insert_after": "default_payroll_payable_account",
 				"collapsible": 1,
 			},
 			{
