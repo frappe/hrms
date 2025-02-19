@@ -33,7 +33,11 @@ class ShiftType(Document):
 			hours = 24 + hours
 		self.effective_hours = float(hours) - self.lunch_time
 
-		self.shift_suffix = self.name.split(" ")[1][0]
+		split = self.name.split(" ")
+		if len(split) == 1:
+			self.shift_suffix = self.name[0]
+		else:
+			self.shift_suffix = self.name.split(" ")[1][0]
 
 
 	@frappe.whitelist()
