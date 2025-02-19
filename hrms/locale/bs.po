@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-02-16 09:33+0000\n"
-"PO-Revision-Date: 2025-02-18 14:34\n"
+"PO-Revision-Date: 2025-02-19 15:03\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -244,20 +244,20 @@ msgid "<h3>Help</h3>\n\n"
 msgstr "<h3>Pomoć</h3>\n\n"
 "<p>Napomene:</p>\n\n"
 "<ol>\n"
-"<li>Koristite polje <code>base</code> za korištenje osnovne plate personala</li>\n"
-"<li>Koristite kratice komponente plate u uslovima i formulama. <code>BS = Basic Salary</code></li>\n"
-"<li>Koristite naziv polja za detalje o personalu u uslovima i formulama. <code>Employment Type = employment_type</code><code>Branch = branch</code></li>\n"
-"<li>Koristite naziv polja iz Plate u uvjetima i formulama. <code>Payment Days = payment_days</code><code>Leave without pay = leave_without_pay</code></li>\n"
+"<li>Koristi polje <code>base</code> za korištenje osnovne plate personala</li>\n"
+"<li>Koristi kratice komponente plate u uslovima i formulama. <code>BS = Basic Salary</code></li>\n"
+"<li>Koristi naziv polja za detalje o personalu u uslovima i formulama. <code>Employment Type = employment_type</code><code>Branch = branch</code></li>\n"
+"<li>Koristi naziv polja iz Plate u uvjetima i formulama. <code>Payment Days = payment_days</code><code>Leave without pay = leave_without_pay</code></li>\n"
 "<li>Direktan iznos se također može unijeti na osnovu stanja. Vidi primjer 3</li></ol>\n\n"
 "<h4>Primjeri</h4>\n"
 "<ol>\n"
 "<li>Obračun osnovne plate na osnovu <code>base</code>\n"
 "<pre><code>Condition: base &lt; 10000</code></pre>\n"
 "<pre><code>Formula: base * .2</code></pre></li>\n"
-"<li>Izračunavanje HRA na osnovu osnovne plate<code>BS</code>\n"
+"<li>HRA Obračun na osnovu osnovne plate<code>BS</code>\n"
 "<pre><code>Condition: BS &gt; 2000</code></pre>\n"
 "<pre><code>Formula: BS * .1</code></pre></li>\n"
-"<li>Izračunavanje TDS-a na osnovu vrste zaposlenja<code>employment_type</code>\n"
+"<li>TDS Obračun na osnovu tipa zaposlenja<code>employment_type</code>\n"
 "<pre><code>Condition: employment_type==\"Intern\"</code></pre>\n"
 "<pre><code>Amount: 1000</code></pre></li>\n"
 "</ol>"
@@ -1718,7 +1718,7 @@ msgstr "Automatska Naplata Odsustva"
 #. Cycle'
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgid "Automated Based on Goal Progress"
-msgstr "Automatizirano na osnovu napretka cilja"
+msgstr "Automatizirano na osnovu Napretka Cilja"
 
 #. Description of the 'Assets Allocated' (Section Break) field in DocType 'Full
 #. and Final Statement'
@@ -2887,7 +2887,7 @@ msgstr "Kriterijumi"
 #. Template'
 #: hrms/hr/doctype/appraisal_template/appraisal_template.json
 msgid "Criteria based on which employee should be rated in Performance Feedback and Self Appraisal"
-msgstr "Kriterijum na osnovu kojeg personal treba ocijeniti u Povratnim informacijama o Učinku i Samoprocjeni"
+msgstr "Kriterijum na osnovu kojeg personal treba procijeniti u Povratnim Informacijama Efektivitetai Samoprocjene"
 
 #. Label of the currency (Link) field in DocType 'Employee Advance'
 #. Label of the currency (Link) field in DocType 'Employee Grade'
@@ -3821,11 +3821,11 @@ msgstr "GREŠKA({0}): {1}"
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/report/shift_attendance/shift_attendance.js:53
 msgid "Early Exit"
-msgstr "Rani Izlaz"
+msgstr "Rana Odjava"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:91
 msgid "Early Exit By"
-msgstr "Rani Izlaz do"
+msgstr "Rana Odjava do"
 
 #. Label of the early_exit_grace_period (Int) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
@@ -3834,7 +3834,7 @@ msgstr "Period Odgode Ranog Izlaza"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:186
 msgid "Early Exits"
-msgstr "Rani Izlazi"
+msgstr "Rane Odjave"
 
 #. Label of the earned_leave (Section Break) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -4572,7 +4572,7 @@ msgstr "Ostali Prihodi"
 #: hrms/hr/doctype/employee_performance_feedback/employee_performance_feedback.json
 #: hrms/hr/workspace/performance/performance.json
 msgid "Employee Performance Feedback"
-msgstr "Povratne informacije o Učinku"
+msgstr "Povratne informacije Efektiviteta"
 
 #. Name of a DocType
 #. Label of a Link in the Employee Lifecycle Workspace
@@ -5003,22 +5003,22 @@ msgstr "Vrijeme završetka ne može biti prije vremena početka"
 #. Label of a Link in the Performance Workspace
 #: hrms/hr/workspace/performance/performance.json
 msgid "Energy Point Log"
-msgstr "Dnevnik Rezultata Učinkovitosti"
+msgstr "Zapisnik Rezultata Efektiviteta"
 
 #. Label of a Link in the Performance Workspace
 #: hrms/hr/workspace/performance/performance.json
 msgid "Energy Point Rule"
-msgstr "Pravilo Rezultata Učinkovitosti"
+msgstr "Pravilo Rezultata Efektovnosti"
 
 #. Label of a Link in the Performance Workspace
 #: hrms/hr/workspace/performance/performance.json
 msgid "Energy Point Settings"
-msgstr "Postavke Rezultata Učinkovitosti"
+msgstr "Postavke Rezultata Efektiviteta"
 
 #. Label of a Card Break in the Performance Workspace
 #: hrms/hr/workspace/performance/performance.json
 msgid "Energy Points"
-msgstr "Učinkovitost"
+msgstr "Efektivitet"
 
 #: hrms/hr/doctype/hr_settings/hr_settings.js:34
 msgid "Enter the Standard Working Hours for a normal work day. These hours will be used in calculations of reports such as Employee Hours Utilization and Project Profitability analysis."
@@ -5908,7 +5908,7 @@ msgstr "Od Iznosa"
 #: hrms/payroll/doctype/salary_withholding_cycle/salary_withholding_cycle.json
 #: hrms/payroll/report/bank_remittance/bank_remittance.js:17
 msgid "From Date"
-msgstr "Od datuma"
+msgstr "Od Datuma"
 
 #: hrms/hr/doctype/staffing_plan/staffing_plan.py:29
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:258
@@ -7550,22 +7550,22 @@ msgstr "Juni"
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:134
 #: hrms/hr/doctype/kra/kra.json hrms/hr/workspace/performance/performance.json
 msgid "KRA"
-msgstr "Ključna Oblast Performansi"
+msgstr "Ključno Polje Efektiviteta"
 
 #. Label of the kra_evaluation_method (Select) field in DocType 'Appraisal
 #. Cycle'
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgid "KRA Evaluation Method"
-msgstr "Metoda Vrijednovanja Ključne Oblasti Performansi"
+msgstr "Metoda Vrijednovanja Ključnog Polja Efektiviteta"
 
 #: hrms/hr/doctype/goal/goal.py:99
 msgid "KRA updated for all child goals."
-msgstr "Ključna Oblast Performansi ažuriran za sve podređene ciljeve."
+msgstr "Ključno Polje Efektiviteta ažurirano za sve podređene ciljeve."
 
 #. Label of the appraisal_kra (Table) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
 msgid "KRA vs Goals"
-msgstr "Ključna Oblast Performansi naspram Ciljeva"
+msgstr "Ključno Polje Efektiviteta naspram Ciljeva"
 
 #. Label of the kra_tab (Tab Break) field in DocType 'Appraisal'
 #. Label of the goals (Table) field in DocType 'Appraisal Template'
@@ -7573,12 +7573,12 @@ msgstr "Ključna Oblast Performansi naspram Ciljeva"
 #: hrms/hr/doctype/appraisal/appraisal.py:145
 #: hrms/hr/doctype/appraisal_template/appraisal_template.json
 msgid "KRAs"
-msgstr "Ključne Oblasti Performansi"
+msgstr "Ključno Polje Efektiviteta"
 
 #. Description of the 'KRA' (Link) field in DocType 'Appraisal KRA'
 #: hrms/hr/doctype/appraisal_kra/appraisal_kra.json
 msgid "Key Performance Area"
-msgstr "Ključna Oblast Performansi"
+msgstr "Ključno Polje Efektiviteta"
 
 #. Label of a Card Break in the Overview Workspace
 #: hrms/hr/workspace/overview/overview.json
@@ -7588,12 +7588,12 @@ msgstr "Ključni Izvještaji"
 #. Description of the 'Goal' (Small Text) field in DocType 'Appraisal Goal'
 #: hrms/hr/doctype/appraisal_goal/appraisal_goal.json
 msgid "Key Responsibility Area"
-msgstr "Ključna Oblast Odgovornosti"
+msgstr "Ključno Polje Odgovornosti"
 
 #. Description of the 'KRA' (Link) field in DocType 'Appraisal Template Goal'
 #: hrms/hr/doctype/appraisal_template_goal/appraisal_template_goal.json
 msgid "Key Result Area"
-msgstr "Ključna Oblast Rezultata"
+msgstr "Ključno Polje Rezultata"
 
 #. Option for the 'Allocate on Day' (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -7635,7 +7635,7 @@ msgstr "Kasne Prijave"
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/report/shift_attendance/shift_attendance.js:48
 msgid "Late Entry"
-msgstr "Kasni Ulaz"
+msgstr "Kasna Prijava"
 
 #. Label of the grace_period_settings_auto_attendance_section (Section Break)
 #. field in DocType 'Shift Type'
@@ -7645,7 +7645,7 @@ msgstr "Postavke Kasne Prijave i Rane Odjave za Automatsko Prisustvo"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:85
 msgid "Late Entry By"
-msgstr "Kasni Ulaz od"
+msgstr "Kasna Prijava od"
 
 #. Label of the late_entry_grace_period (Int) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
@@ -7703,7 +7703,7 @@ msgstr "Dodjela Odsustva"
 #: hrms/hr/workspace/leaves/leaves.json
 #: hrms/hr/workspace/overview/overview.json
 msgid "Leave Application"
-msgstr "Prijava Odsustva"
+msgstr "Zahtjev Odsustva"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:719
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
@@ -9768,7 +9768,7 @@ msgstr "Postotak (%)"
 #. Name of a Workspace
 #: hrms/hr/workspace/performance/performance.json
 msgid "Performance"
-msgstr "Učinkovitost"
+msgstr "Efektivitet"
 
 #: frontend/src/components/FormView.vue:286
 msgid "Permanently cancel {0}"
