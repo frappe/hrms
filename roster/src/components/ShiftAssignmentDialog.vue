@@ -319,7 +319,7 @@ watch(
 			form.start_date = props.selectedCell.date;
 			form.end_date = props.selectedCell.date;
 		}
-	},
+	}
 );
 
 watch(
@@ -333,7 +333,7 @@ watch(
 			form.company = "";
 			form.department = "";
 		}
-	},
+	}
 );
 
 watch(
@@ -344,7 +344,7 @@ watch(
 		const day = dayjs(form.start_date).format("dddd");
 		repeatOnDays[day as keyof typeof repeatOnDays] = true;
 	},
-	{ immediate: true },
+	{ immediate: true }
 );
 
 const updateShiftAssigment = () => {
@@ -426,6 +426,7 @@ const shiftTypes = createListResource({
 	doctype: "Shift Type",
 	fields: ["name"],
 	auto: true,
+	pageLength: 100,
 	transform: (data: { name: string }[]) => data.map((shiftType) => shiftType.name),
 });
 
@@ -509,7 +510,7 @@ const createShiftAssignmentSchedule = createResource({
 			end_date: form.end_date,
 			shift_location: (form.shift_location as { value: string }).value,
 			repeat_on_days: Object.keys(repeatOnDays).filter(
-				(day) => repeatOnDays[day as keyof typeof repeatOnDays],
+				(day) => repeatOnDays[day as keyof typeof repeatOnDays]
 			),
 			frequency: frequency.value,
 		};
