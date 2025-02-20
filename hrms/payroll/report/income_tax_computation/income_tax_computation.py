@@ -92,7 +92,13 @@ class IncomeTaxComputationReport:
 				"salary_structure": ["is", "set"],
 				"income_tax_slab": ["is", "set"],
 			},
-			fields=["employee", "income_tax_slab", "salary_structure"],
+			fields=[
+				"employee",
+				"income_tax_slab",
+				"salary_structure",
+				"taxable_earnings_till_date",
+				"tax_deducted_till_date",
+			],
 			order_by="from_date desc",
 		)
 
@@ -110,6 +116,7 @@ class IncomeTaxComputationReport:
 							"salary_structure": d.salary_structure,
 							"income_tax_slab": d.income_tax_slab,
 							"allow_tax_exemption": tax_slab.allow_tax_exemption,
+							"taxable_earnings_till_date": d.taxable_earnings_till_date or 0.0,
 							"tax_deducted_till_date": d.tax_deducted_till_date or 0.0,
 						},
 					)
@@ -184,9 +191,10 @@ class IncomeTaxComputationReport:
 			).run()
 		)
 
-		for employee in list(self.employees.keys()):
+		for employee, employee_details in self.employees.items():
+			opening_taxable_earnings = employee_details["taxable_earnings_till_date"]
 			future_ss_earnings = self.get_future_earnings(employee)
-			ctc = flt(existing_ss.get(employee)) + future_ss_earnings
+			ctc = flt(opening_taxable_earnings) + flt(existing_ss.get(employee)) + future_ss_earnings
 
 			self.employees[employee].setdefault("ctc", ctc)
 
