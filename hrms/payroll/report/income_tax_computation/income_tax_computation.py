@@ -222,6 +222,7 @@ class IncomeTaxComputationReport:
 			.select(ss.name, ss.employee, ss_comps.salary_component, Sum(ss_comps.amount).as_("amount"))
 			.where(ss.docstatus == 1)
 			.where(ss.employee.isin(list(self.employees.keys())))
+			.where(ss_comps.do_not_include_in_total == 0)
 			.where(ss_comps.salary_component.isin(tax_exempted_components))
 			.where(ss.start_date >= self.payroll_period_start_date)
 			.where(ss.end_date <= self.payroll_period_end_date)
