@@ -421,7 +421,7 @@ class TestLeaveEncashment(FrappeTestCase):
 			leave_type="_Test Leave Type Encashment",
 			leave_period=self.leave_period.name,
 			pay_via_payment_entry=1,
-			payable_account="_Test Payroll Payable - _TC",
+			payable_account=frappe.get_cached_value("Company", "_Test Company", "default_payable_account"),
 			expense_account="Administrative Expenses - _TC",
 			cost_center="Main - _TC",
 		).save()
