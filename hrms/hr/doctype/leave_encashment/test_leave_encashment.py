@@ -2,10 +2,6 @@
 # See license.txt
 
 import frappe
-<<<<<<< HEAD
-=======
-from frappe.tests import IntegrationTestCase
->>>>>>> b4b76c4b (chore: add test)
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 
