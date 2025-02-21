@@ -258,31 +258,7 @@
  ],
  "is_submittable": 1,
  "links": [],
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
- "modified": "2023-10-23 16:49:16.737157",
-=======
- "modified": "2025-02-05 16:16:58.692651",
->>>>>>> 7166782e (feat: edit Leave Encashment doctype to add Pay Via Payment Entry field and other changes)
-=======
- "modified": "2025-02-07 13:02:41.291814",
->>>>>>> 9af2020d (feat: update encashment doctyp)
-=======
- "modified": "2025-02-08 23:25:03.645978",
->>>>>>> e4386af6 (feat: add posting_date field, add create payment entry button)
-=======
- "modified": "2025-02-10 13:04:29.229330",
->>>>>>> 882b1d1f (chore: document states)
-=======
- "modified": "2025-02-18 12:04:03.460640",
->>>>>>> 411d1e1c (chore: add accrual entries, accounting dimensions)
-=======
- "modified": "2025-02-21 13:11:01.939992",
->>>>>>> fa496584 (fix: delete duplicate patch file, add validation, refactor functions)
+"modified": "2025-02-21 13:11:01.939992",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Encashment",
