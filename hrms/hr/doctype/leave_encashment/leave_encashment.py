@@ -39,7 +39,7 @@ class LeaveEncashment(AccountsController):
 			)
 
 	def before_submit(self):
-		if self.encashment_amount <= 0:
+		if not self.encashment_amount or self.encashment_amount <= 0:
 			frappe.throw(_("You can only submit Leave Encashment for a valid encashment amount"))
 
 	def on_submit(self):
@@ -49,29 +49,9 @@ class LeaveEncashment(AccountsController):
 		if self.pay_via_payment_entry:
 			self.create_gl_entries()
 		else:
-			additional_salary = frappe.new_doc("Additional Salary")
-			additional_salary.company = frappe.get_value("Employee", self.employee, "company")
-			additional_salary.employee = self.employee
-			additional_salary.currency = self.currency
-			earning_component = frappe.get_value("Leave Type", self.leave_type, "earning_component")
-			if not earning_component:
-				frappe.throw(_("Please set Earning Component for Leave type: {0}.").format(self.leave_type))
-			additional_salary.salary_component = earning_component
-			additional_salary.payroll_date = self.encashment_date
-			additional_salary.amount = self.encashment_amount
-			additional_salary.ref_doctype = self.doctype
-			additional_salary.ref_docname = self.name
-			additional_salary.submit()
+			self.create_additional_salary()
 
-			# Set encashed leaves in Allocation
-			frappe.db.set_value(
-				"Leave Allocation",
-				self.leave_allocation,
-				"total_leaves_encashed",
-				frappe.db.get_value("Leave Allocation", self.leave_allocation, "total_leaves_encashed")
-				+ self.encashment_days,
-			)
-
+		self.set_encashed_leaves_in_allocation()
 		self.create_leave_ledger_entry()
 
 	def on_cancel(self):
@@ -171,6 +151,30 @@ class LeaveEncashment(AccountsController):
 			)
 		)
 		self.leave_allocation = allocation.name
+
+	def create_additional_salary(self):
+		additional_salary = frappe.new_doc("Additional Salary")
+		additional_salary.company = frappe.get_value("Employee", self.employee, "company")
+		additional_salary.employee = self.employee
+		additional_salary.currency = self.currency
+		earning_component = frappe.get_value("Leave Type", self.leave_type, "earning_component")
+		if not earning_component:
+			frappe.throw(_("Please set Earning Component for Leave type: {0}.").format(self.leave_type))
+		additional_salary.salary_component = earning_component
+		additional_salary.payroll_date = self.encashment_date
+		additional_salary.amount = self.encashment_amount
+		additional_salary.ref_doctype = self.doctype
+		additional_salary.ref_docname = self.name
+		additional_salary.submit()
+
+	def set_encashed_leaves_in_allocation(self):
+		frappe.db.set_value(
+			"Leave Allocation",
+			self.leave_allocation,
+			"total_leaves_encashed",
+			frappe.db.get_value("Leave Allocation", self.leave_allocation, "total_leaves_encashed")
+			+ self.encashment_days,
+		)
 
 	def set_encashment_amount(self):
 		if not hasattr(self, "_salary_structure"):
@@ -278,39 +282,36 @@ class LeaveEncashment(AccountsController):
 		gl_entry = []
 
 		# payable entry
-		if self.encashment_amount:
-			gl_entry.append(
-				self.get_gl_dict(
-					{
-						"account": self.payable_account,
-						"credit": self.encashment_amount,
-						"credit_in_account_currency": self.encashment_amount,
-						"against": self.expense_account,
-						"party_type": "Employee",
-						"party": self.employee,
-						"against_voucher_type": self.doctype,
-						"against_voucher": self.name,
-						"cost_center": self.cost_center,
-					},
-					item=self,
-				)
+		gl_entry.append(
+			self.get_gl_dict(
+				{
+					"account": self.payable_account,
+					"credit": self.encashment_amount,
+					"credit_in_account_currency": self.encashment_amount,
+					"against": self.expense_account,
+					"party_type": "Employee",
+					"party": self.employee,
+					"against_voucher_type": self.doctype,
+					"against_voucher": self.name,
+					"cost_center": self.cost_center,
+				},
+				item=self,
 			)
+		)
 
-			# expense entry
-			gl_entry.append(
-				self.get_gl_dict(
-					{
-						"account": self.expense_account,
-						"debit": self.encashment_amount,
-						"debit_in_account_currency": self.encashment_amount,
-						"against": self.payable_account,
-						"cost_center": self.cost_center,
-					},
-					item=self,
-				)
+		# expense entry
+		gl_entry.append(
+			self.get_gl_dict(
+				{
+					"account": self.expense_account,
+					"debit": self.encashment_amount,
+					"debit_in_account_currency": self.encashment_amount,
+					"against": self.payable_account,
+					"cost_center": self.cost_center,
+				},
+				item=self,
 			)
-		else:
-			frappe.throw(_("Encashment Amount cannot be zero"))
+		)
 
 		return gl_entry
 
