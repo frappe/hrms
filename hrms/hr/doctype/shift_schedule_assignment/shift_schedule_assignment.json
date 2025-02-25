@@ -1,0 +1,154 @@
+{
+ "actions": [],
+ "autoname": "HR-SHSA-.YY.-.MM.-.#####",
+ "creation": "2024-11-11 17:33:00.330488",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "shift_details_section",
+  "employee",
+  "employee_name",
+  "column_break_toss",
+  "company",
+  "schedule_settings_section",
+  "shift_schedule",
+  "shift_location",
+  "shift_status",
+  "column_break_iprq",
+  "enabled",
+  "create_shifts_after"
+ ],
+ "fields": [
+  {
+   "fieldname": "schedule_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Shift Details"
+  },
+  {
+   "fieldname": "column_break_iprq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "description": "Select this if you want shift assignments to be automatically created indefinitely.",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled"
+  },
+  {
+   "default": "Today",
+   "depends_on": "eval:doc.enabled",
+   "description": "New shift assignments will be created after this date.",
+   "fieldname": "create_shifts_after",
+   "fieldtype": "Date",
+   "label": "Create Shifts After",
+   "mandatory_depends_on": "eval:doc.status === 'Active'"
+  },
+  {
+   "fieldname": "shift_details_section",
+   "fieldtype": "Section Break",
+   "label": "Employee Details"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_toss",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "default": "Active",
+   "fieldname": "shift_status",
+   "fieldtype": "Select",
+   "label": "Shift Status",
+   "options": "Active\nInactive"
+  },
+  {
+   "fieldname": "shift_schedule",
+   "fieldtype": "Link",
+   "label": "Shift Schedule",
+   "options": "Shift Schedule",
+   "reqd": 1
+  },
+  {
+   "fieldname": "shift_location",
+   "fieldtype": "Link",
+   "label": "Shift Location",
+   "options": "Shift Location"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Shift Assignment",
+   "link_fieldname": "shift_schedule_assignment"
+  }
+ ],
+ "modified": "2024-12-10 15:44:00.063685",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Shift Schedule Assignment",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "employee_name"
+}

@@ -314,7 +314,15 @@ class LeaveAllocation(Document):
 		create_leave_ledger_entry(self, args, submit)
 
 	@frappe.whitelist()
-	def allocate_leaves_manually(self, new_leaves):
+	def allocate_leaves_manually(self, new_leaves, from_date=None):
+		if from_date and not (getdate(self.from_date) <= getdate(from_date) <= getdate(self.to_date)):
+			frappe.throw(
+				_("Cannot allocate leaves outside the allocation period {0} - {1}").format(
+					frappe.bold(formatdate(self.from_date)), frappe.bold(formatdate(self.to_date))
+				),
+				title=_("Invalid Dates"),
+			)
+
 		new_allocation = flt(self.total_leaves_allocated) + flt(new_leaves)
 		new_allocation_without_cf = flt(
 			flt(self.get_existing_leave_count()) + flt(new_leaves),
@@ -339,13 +347,18 @@ class LeaveAllocation(Document):
 		):
 			self.db_set("total_leaves_allocated", new_allocation, update_modified=False)
 
-			date = frappe.flags.current_date or getdate()
+			date = from_date or frappe.flags.current_date or getdate()
 			create_additional_leave_ledger_entry(self, new_leaves, date)
 
 			text = _("{0} leaves were manually allocated by {1} on {2}").format(
 				frappe.bold(new_leaves), frappe.session.user, frappe.bold(formatdate(date))
 			)
 			self.add_comment(comment_type="Info", text=text)
+			frappe.msgprint(
+				_("{0} leaves allocated successfully").format(frappe.bold(new_leaves)),
+				indicator="green",
+				alert=True,
+			)
 
 		else:
 			msg = _("Total leaves allocated cannot exceed annual allocation of {0}.").format(

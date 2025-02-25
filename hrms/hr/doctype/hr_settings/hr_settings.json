@@ -26,6 +26,7 @@
   "leave_status_notification_template",
   "leave_approver_mandatory_in_leave_application",
   "restrict_backdated_leave_application",
+  "prevent_self_leave_approval",
   "role_allowed_to_create_backdated_leave_application",
   "column_break_29",
   "expense_approver_mandatory_in_expense_claim",
@@ -329,13 +330,19 @@
    "fieldname": "unlink_payment_on_cancellation_of_employee_advance",
    "fieldtype": "Check",
    "label": " Unlink Payment on Cancellation of Employee Advance"
+  },
+  {
+   "default": "0",
+   "fieldname": "prevent_self_leave_approval",
+   "fieldtype": "Check",
+   "label": "Prevent self approval for leaves even if user has permissions"
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-09-29 12:49:16.175079",
+ "modified": "2025-01-30 12:41:22.594071",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",

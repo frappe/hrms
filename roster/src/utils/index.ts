@@ -26,3 +26,7 @@ export const raiseToast = (type: "success" | "error", message: string) => {
 		timeout: 7,
 	});
 };
+
+export const goTo = (path: string) => {
+	window.location.href = path;
+};

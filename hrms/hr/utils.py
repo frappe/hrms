@@ -542,16 +542,20 @@ def get_salary_assignments(employee, payroll_period):
 		order_by="from_date",
 	)
 
-	if not assignments:
+	if not assignments or getdate(assignments[0].from_date) > getdate(start_date):
 		# if no assignments found for the given period
-		# get the last one assigned before the period that is still active
-		assignments = frappe.get_all(
+		# or the latest assignment hast started in the middle of the period
+		# get the last one assigned before the period start date
+		past_assignment = frappe.get_all(
 			"Salary Structure Assignment",
-			filters={"employee": employee, "docstatus": 1, "from_date": ["<=", start_date]},
+			filters={"employee": employee, "docstatus": 1, "from_date": ["<", start_date]},
 			fields=["*"],
 			order_by="from_date desc",
 			limit=1,
 		)
+
+		if past_assignment:
+			assignments = past_assignment + assignments
 
 	return assignments
 
@@ -783,9 +787,9 @@ def get_ec_matching_query(
 		ref_rank = frappe.qb.terms.Case().when(ec.employee == common_filters.party, 1).else_(0) + 1
 
 		if exact_match:
-			filters.append(ec.total_sanctioned_amount == common_filters.amount)
+			filters.append(ec.total_amount_reimbursed == common_filters.amount)
 		else:
-			filters.append(ec.total_sanctioned_amount.gt(common_filters.amount))
+			filters.append(ec.total_amount_reimbursed.gt(common_filters.amount))
 	else:
 		ref_rank = ConstantColumn(1)
 
@@ -796,6 +800,7 @@ def get_ec_matching_query(
 		qb.from_(ec)
 		.select(
 			ref_rank.as_("rank"),
+			ConstantColumn("Expense Claim").as_("doctype"),
 			ec.name,
 			ec.total_sanctioned_amount.as_("paid_amount"),
 			ConstantColumn("").as_("reference_no"),

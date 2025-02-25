@@ -1,4 +1,5 @@
 {
+ "app": "hrms",
  "charts": [
   {
    "chart_name": "Expense Claims",
@@ -256,17 +257,17 @@
    "type": "Link"
   }
  ],
- "modified": "2024-08-11 11:40:45.636550",
+ "modified": "2025-01-15 16:41:35.604928",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claims",
  "number_cards": [],
  "owner": "Administrator",
- "parent_page": "HR",
+ "parent_page": "",
  "public": 1,
  "quick_lists": [],
  "roles": [],
- "sequence_id": 8.0,
+ "sequence_id": 6.0,
  "shortcuts": [
   {
    "color": "Grey",
@@ -294,5 +295,6 @@
    "type": "DocType"
   }
  ],
- "title": "Expense Claims"
+ "title": "Expense Claims",
+ "type": "Workspace"
 }

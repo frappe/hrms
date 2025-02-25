@@ -1,42 +1,51 @@
 <template>
-	<div class="px-12 py-6 space-y-6">
+	<div class="px-12 py-8 space-y-8">
 		<div class="flex items-center">
-			<FeatherIcon name="calendar" class="h-7 w-7 text-gray-500 mr-3" />
-			<span class="font-semibold text-2xl mr-1">Month View</span>
-			<Dropdown
-				:options="[
-					{
-						label: 'Shift Assignment',
-						onClick: () => {
-							showShiftAssignmentDialog = true;
+			<FeatherIcon name="calendar" class="h-7 w-7 text-gray-500 mr-2.5" />
+			<span class="font-semibold text-2xl text-gray-500 mr-2">Roster:</span>
+			<span class="font-semibold text-2xl">Month View</span>
+			<div class="ml-auto space-x-2.5">
+				<Dropdown
+					:options="VIEW_OPTIONS"
+					:button="{
+						label: 'View',
+						iconRight: 'chevron-down',
+						size: 'md',
+					}"
+				>
+				</Dropdown>
+				<Dropdown
+					:options="[
+						{
+							label: 'Shift Assignment',
+							onClick: () => {
+								showShiftAssignmentDialog = true;
+							},
 						},
-					},
-				]"
-				:button="{
-					label: 'Create',
-					variant: 'solid',
-					iconRight: 'chevron-down',
-					size: 'md',
-				}"
-				class="ml-auto"
-			/>
+					]"
+					:button="{
+						label: 'Create',
+						variant: 'solid',
+						iconRight: 'chevron-down',
+						size: 'md',
+					}"
+				/>
+			</div>
 		</div>
-		<div class="bg-white rounded-lg border p-4">
-			<MonthViewHeader
-				:firstOfMonth="firstOfMonth"
-				@updateFilters="updateFilters"
-				@addToMonth="addToMonth"
-			/>
-			<MonthViewTable
-				v-if="isCompanySelected"
-				ref="monthViewTable"
-				:firstOfMonth="firstOfMonth"
-				:employees="employees.data || []"
-				:employeeFilters="employeeFilters"
-				:shiftTypeFilter="shiftTypeFilter"
-			/>
-			<div v-else class="my-40 text-center">Please select a company.</div>
-		</div>
+		<MonthViewHeader
+			:firstOfMonth="firstOfMonth"
+			@updateFilters="updateFilters"
+			@addToMonth="addToMonth"
+		/>
+		<MonthViewTable
+			v-if="isCompanySelected"
+			ref="monthViewTable"
+			:firstOfMonth="firstOfMonth"
+			:employees="employees.data || []"
+			:employeeFilters="employeeFilters"
+			:shiftFilters="shiftFilters"
+		/>
+		<div v-else class="py-40 text-center">Please select a company.</div>
 	</div>
 	<ShiftAssignmentDialog
 		v-model="showShiftAssignmentDialog"
@@ -53,7 +62,7 @@
 import { ref, reactive } from "vue";
 import { Dropdown, FeatherIcon, createListResource } from "frappe-ui";
 
-import { dayjs, raiseToast } from "../utils";
+import { dayjs, goTo, raiseToast } from "../utils";
 import MonthViewTable from "../components/MonthViewTable.vue";
 import MonthViewHeader from "../components/MonthViewHeader.vue";
 import ShiftAssignmentDialog from "../components/ShiftAssignmentDialog.vue";
@@ -61,28 +70,43 @@ import ShiftAssignmentDialog from "../components/ShiftAssignmentDialog.vue";
 export type EmployeeFilters = {
 	[K in "status" | "company" | "department" | "branch" | "designation"]?: string;
 };
+export type ShiftFilters = {
+	[K in "shift_type" | "shift_location"]?: string;
+};
 
 const monthViewTable = ref<InstanceType<typeof MonthViewTable>>();
 const isCompanySelected = ref(false);
 const showShiftAssignmentDialog = ref(false);
 const firstOfMonth = ref(dayjs().date(1).startOf("D"));
-const shiftTypeFilter = ref("");
 const employeeFilters = reactive<EmployeeFilters>({
 	status: "Active",
 });
+const shiftFilters = reactive<ShiftFilters>({});
+
+const VIEW_OPTIONS = [
+	"Shift Type",
+	"Shift Location",
+	"Shift Assignment",
+	"Shift Schedule",
+	"Shift Schedule Assignment",
+].map((label) => ({
+	label,
+	onClick: () => goTo(`/app/${label.toLowerCase().split(" ").join("-")}`),
+}));
 
 const addToMonth = (change: number) => {
 	firstOfMonth.value = firstOfMonth.value.add(change, "M");
 };
 
-const updateFilters = (newFilters: EmployeeFilters & { shift_type: string }) => {
+const updateFilters = (newFilters: EmployeeFilters & ShiftFilters) => {
 	isCompanySelected.value = !!newFilters.company;
 	if (!isCompanySelected.value) return;
 	let employeeUpdated = false;
-	(Object.entries(newFilters) as [keyof EmployeeFilters | "shift_type", string][]).forEach(
+	(Object.entries(newFilters) as [keyof EmployeeFilters | keyof ShiftFilters, string][]).forEach(
 		([key, value]) => {
-			if (key === "shift_type") {
-				shiftTypeFilter.value = value;
+			if (["shift_type", "shift_location"].includes(key)) {
+				if (value) shiftFilters[key] = value;
+				else delete shiftFilters[key];
 				return;
 			}
 

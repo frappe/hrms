@@ -967,6 +967,84 @@ class TestLeaveApplication(IntegrationTestCase):
 		employee.leave_approver = ""
 		employee.save()
 
+	def test_self_leave_approval_allowed(self):
+		frappe.db.set_single_value("HR Settings", "prevent_self_leave_approval", 0)
+
+		leave_approver = "test_leave_approver@example.com"
+		make_employee(leave_approver, "_Test Company")
+
+		employee = get_employee()
+		if not employee.user_id:
+			employee.user_id = "test_employee@example.com"
+		employee.leave_approver = leave_approver
+		employee.save()
+
+		from frappe.utils.user import add_role
+
+		add_role(employee.user_id, "Leave Approver")
+
+		make_allocation_record(employee.name)
+		application = frappe.get_doc(
+			doctype="Leave Application",
+			employee=employee.name,
+			leave_type="_Test Leave Type",
+			from_date="2014-06-01",
+			to_date="2014-06-02",
+			posting_date="2014-05-30",
+			description="_Test Reason",
+			company="_Test Company",
+			leave_approver=leave_approver,
+		)
+		application.insert()
+		application.status = "Approved"
+
+		frappe.set_user(employee.user_id)
+		application.submit()
+
+		self.assertEqual(1, application.docstatus)
+
+		frappe.set_user("Administrator")
+
+	def test_self_leave_approval_not_allowed(self):
+		frappe.db.set_single_value("HR Settings", "prevent_self_leave_approval", 1)
+
+		leave_approver = "test_leave_approver@example.com"
+		make_employee(leave_approver, "_Test Company")
+
+		employee = get_employee()
+		employee.leave_approver = leave_approver
+		if not employee.user_id:
+			employee.user_id = "test_employee@example.com"
+		employee.save()
+
+		from frappe.utils.user import add_role
+
+		add_role(employee.user_id, "Leave Approver")
+
+		make_allocation_record(employee.name)
+		application = application = frappe.get_doc(
+			doctype="Leave Application",
+			employee=employee.name,
+			leave_type="_Test Leave Type",
+			from_date="2014-06-03",
+			to_date="2014-06-04",
+			posting_date="2014-05-30",
+			description="_Test Reason",
+			company="_Test Company",
+			leave_approver=leave_approver,
+		)
+		application.insert()
+		application.status = "Approved"
+
+		frappe.set_user(employee.user_id)
+		self.assertRaises(frappe.ValidationError, application.submit)
+
+		add_role(leave_approver, "Leave Approver")
+		frappe.set_user(leave_approver)
+		application.reload()
+		application.submit()
+		self.assertEqual(1, application.docstatus)
+
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_get_leave_details_for_dashboard(self):
 		employee = get_employee()

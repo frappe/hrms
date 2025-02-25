@@ -25,6 +25,7 @@
   "shift_timings_section",
   "shift_start",
   "shift_end",
+  "offshift",
   "column_break_vyyt",
   "shift_actual_start",
   "shift_actual_end"
@@ -164,10 +165,17 @@
    "fieldname": "fetch_geolocation",
    "fieldtype": "Button",
    "label": "Fetch Geolocation"
+  },
+  {
+   "default": "0",
+   "fieldname": "offshift",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Off-shift"
   }
  ],
  "links": [],
- "modified": "2024-05-29 21:19:11.550766",
+ "modified": "2025-02-14 18:44:30.726103",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Checkin",

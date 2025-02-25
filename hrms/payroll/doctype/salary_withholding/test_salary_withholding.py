@@ -3,13 +3,19 @@
 
 import frappe
 from frappe.tests import IntegrationTestCase
-from frappe.utils import get_first_day, get_year_start, getdate
+from frappe.utils import getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
 from hrms.payroll.doctype.payroll_entry.test_payroll_entry import make_payroll_entry
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+COMPANY_NAME = "_Test Company"
+MONTH_1_START = getdate("2024-01-01")
+MONTH_1_END = getdate("2024-01-31")
+MONTH_2_START = getdate("2024-02-01")
+MONTH_2_END = getdate("2024-02-29")
 
 
 class TestSalaryWithholding(IntegrationTestCase):
@@ -26,28 +32,36 @@ class TestSalaryWithholding(IntegrationTestCase):
 		]:
 			frappe.db.delete(dt)
 
-		self.company = frappe.get_doc("Company", "_Test Company")
-		self.employee1 = make_employee("employee1@example.com", company=self.company, designation="Engineer")
-		self.employee2 = make_employee("employee2@example.com", company=self.company, designation="Engineer")
+		self.company = frappe.get_doc("Company", COMPANY_NAME)
+		self.employee1 = make_employee("employee1@example.com", company=COMPANY_NAME, designation="Engineer")
+		self.employee2 = make_employee("employee2@example.com", company=COMPANY_NAME, designation="Engineer")
 
-		self.today = getdate()
-		year_start = get_year_start(self.today)
-		make_salary_structure("Test Withholding", "Monthly", employee=self.employee1, from_date=year_start)
-		make_salary_structure("Test Withholding", "Monthly", employee=self.employee2, from_date=year_start)
+		make_salary_structure(
+			"Test Withholding",
+			"Monthly",
+			company=COMPANY_NAME,
+			employee=self.employee1,
+			from_date=MONTH_1_START,
+		)
+		make_salary_structure(
+			"Test Withholding",
+			"Monthly",
+			company=COMPANY_NAME,
+			employee=self.employee2,
+			from_date=MONTH_1_START,
+		)
 
 	def test_set_withholding_cycles_and_to_date(self):
-		from_date = getdate("2024-06-01")
-		to_date = getdate("2024-07-31")
-		withholding = create_salary_withholding(self.employee1, from_date, 2)
+		withholding = create_salary_withholding(self.employee1, MONTH_1_START, 2)
 
-		self.assertEqual(withholding.to_date, to_date)
-		self.assertEqual(withholding.cycles[0].from_date, from_date)
-		self.assertEqual(withholding.cycles[0].to_date, getdate("2024-06-30"))
-		self.assertEqual(withholding.cycles[1].from_date, getdate("2024-07-01"))
-		self.assertEqual(withholding.cycles[1].to_date, to_date)
+		self.assertEqual(withholding.to_date, MONTH_2_END)
+		self.assertEqual(withholding.cycles[0].from_date, MONTH_1_START)
+		self.assertEqual(withholding.cycles[0].to_date, MONTH_1_END)
+		self.assertEqual(withholding.cycles[1].from_date, MONTH_2_START)
+		self.assertEqual(withholding.cycles[1].to_date, MONTH_2_END)
 
 	def test_salary_withholding(self):
-		withholding = create_salary_withholding(self.employee1, get_first_day(self.today), 2)
+		withholding = create_salary_withholding(self.employee1, MONTH_1_START, 2)
 		withholding.submit()
 		payroll_entry = self._make_payroll_entry()
 
@@ -61,7 +75,7 @@ class TestSalaryWithholding(IntegrationTestCase):
 		self.assertEqual(withholding.status, "Withheld")
 
 	def test_release_withheld_salaries(self):
-		withholding = create_salary_withholding(self.employee1, get_first_day(self.today), 2)
+		withholding = create_salary_withholding(self.employee1, MONTH_1_START, 2)
 		withholding.submit()
 
 		def test_run_payroll_for_cycle(withholding_cycle):
@@ -106,7 +120,7 @@ class TestSalaryWithholding(IntegrationTestCase):
 		self.assertEqual(payroll_employee.is_salary_withheld, 1)
 
 	def _make_payroll_entry(self, date: str | None = None):
-		dates = get_start_end_dates("Monthly", date or self.today)
+		dates = get_start_end_dates("Monthly", date or MONTH_1_START)
 		return make_payroll_entry(
 			start_date=dates.start_date,
 			end_date=dates.end_date,
@@ -117,7 +131,7 @@ class TestSalaryWithholding(IntegrationTestCase):
 
 	def _submit_bank_entry(self, bank_entry: dict):
 		bank_entry.cheque_no = "123456"
-		bank_entry.cheque_date = self.today
+		bank_entry.cheque_date = MONTH_1_START
 		bank_entry.submit()
 
 	def _get_payroll_employee_row(self, payroll_entry: dict) -> dict | None:

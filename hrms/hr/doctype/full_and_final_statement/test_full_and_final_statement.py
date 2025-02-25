@@ -34,7 +34,7 @@ class TestFullandFinalStatement(IntegrationTestCase):
 			"Leave Encashment",
 		]
 
-		receivable_bootstraped_component = ["Employee Advance", "Loan"]
+		receivable_bootstraped_component = self.fnf.get_receivable_component()
 
 		# checking payables and receivables bootstraped value
 		self.assertEqual([payable.component for payable in self.fnf.payables], payables_bootstraped_component)

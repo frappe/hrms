@@ -1,49 +1,44 @@
 <template>
-	<div class="flex mb-4">
+	<div class="flex items-center">
 		<!-- Month Change -->
-		<Button icon="chevron-left" variant="ghost" @click="emit('addToMonth', -1)" />
-		<span class="px-1 w-24 text-center my-auto font-medium">
-			{{ props.firstOfMonth.format("MMM") }} {{ firstOfMonth.format("YYYY") }}
-		</span>
-		<Button icon="chevron-right" variant="ghost" @click="emit('addToMonth', 1)" />
+		<div class="flex items-center bg-gray-50 rounded-md space-x-0.5">
+			<Button icon="chevron-left" variant="ghost" @click="emit('addToMonth', -1)" />
+			<span class="w-32 text-center font-medium text-base">
+				{{ props.firstOfMonth.format("MMMM") }}, {{ firstOfMonth.format("YYYY") }}
+			</span>
+			<Button icon="chevron-right" variant="ghost" @click="emit('addToMonth', 1)" />
+		</div>
 
 		<!-- Filters -->
-		<div class="ml-auto px-2 overflow-x-clip">
-			<div
-				class="ml-auto space-x-2 flex transition-all"
-				:class="showFilters ? 'w-full' : 'w-0 overflow-hidden'"
-			>
-				<div v-for="[key, value] of Object.entries(filters)" :key="key" class="w-40">
-					<FormControl
-						type="autocomplete"
-						:placeholder="toTitleCase(key)"
-						:options="value.options"
-						v-model="value.model"
-						:disabled="!value.options.length"
-					/>
-				</div>
-				<Button
-					icon="x"
-					@click="Object.values(filters).forEach((d) => (d.model = null))"
+		<div class="ml-auto space-x-2.5 flex">
+			<div v-for="[key, value] of Object.entries(filters)" :key="key" class="w-40">
+				<FormControl
+					type="autocomplete"
+					:placeholder="toTitleCase(key)"
+					:options="value.options"
+					v-model="value.model"
+					:disabled="!value.options.length"
 				/>
 			</div>
+			<Button icon="x" @click="Object.values(filters).forEach((d) => (d.model = null))" />
 		</div>
-		<Button
-			:icon="showFilters ? 'chevrons-right' : 'chevrons-left'"
-			variant="ghost"
-			@click="showFilters = !showFilters"
-		/>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch } from "vue";
+import { reactive, watch } from "vue";
 import { FormControl, createResource, createListResource } from "frappe-ui";
 import { Dayjs } from "dayjs";
 
 import { raiseToast } from "../utils";
 
-export type FilterField = "company" | "department" | "branch" | "designation" | "shift_type";
+export type FilterField =
+	| "company"
+	| "department"
+	| "branch"
+	| "designation"
+	| "shift_type"
+	| "shift_location";
 
 const props = defineProps<{
 	firstOfMonth: Dayjs;
@@ -53,8 +48,6 @@ const emit = defineEmits<{
 	(e: "addToMonth", change: number): void;
 	(e: "updateFilters", newFilters: { [K in FilterField]: string }): void;
 }>();
-
-const showFilters = ref(true);
 
 const filters: {
 	[K in FilterField]: {
@@ -67,6 +60,7 @@ const filters: {
 	branch: { options: [], model: null },
 	designation: { options: [], model: null },
 	shift_type: { options: [], model: null },
+	shift_location: { options: [], model: null },
 });
 
 watch(
@@ -87,6 +81,7 @@ watch(filters, (val) => {
 		branch: val.branch.model?.value || "",
 		designation: val.designation.model?.value || "",
 		shift_type: val.shift_type.model?.value || "",
+		shift_location: val.shift_location.model?.value || "",
 	};
 	emit("updateFilters", newFilters);
 });
@@ -103,7 +98,7 @@ const defaultCompany = createResource({
 	url: "hrms.api.roster.get_default_company",
 	auto: true,
 	onSuccess: () => {
-		["company", "branch", "designation", "shift_type"].forEach((field) =>
+		["company", "branch", "designation", "shift_type", "shift_location"].forEach((field) =>
 			getFilterOptions(field as FilterField),
 		);
 	},

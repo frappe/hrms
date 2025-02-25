@@ -45,7 +45,7 @@
 								size="2xl"
 							/>
 							<div class="flex flex-col ml-2 my-0.5 truncate">
-								<div class="truncate text-base">
+								<div class="truncate text-base font-medium">
 									{{ employee.employee_name }}
 								</div>
 								<div class="mt-auto text-xs text-gray-500 truncate">
@@ -112,11 +112,13 @@
 							v-if="events.data?.[employee.name]?.[day.date]?.holiday"
 							class="blocked-cell"
 						>
-							{{
-								events.data[employee.name][day.date].weekly_off
-									? "WO"
-									: events.data[employee.name][day.date].description
-							}}
+							<div
+								v-html="
+									events.data[employee.name][day.date].weekly_off
+										? '<strong>WO</strong>'
+										: events.data[employee.name][day.date].description
+								"
+							></div>
 						</div>
 
 						<!-- Leave -->
@@ -134,11 +136,13 @@
 								@mouseenter="
 									hoveredCell.shift = shift.name;
 									hoveredCell.shift_type = shift.shift_type;
+									hoveredCell.shift_location = shift.shift_location;
 									hoveredCell.shift_status = shift.status;
 								"
 								@mouseleave="
 									hoveredCell.shift = '';
 									hoveredCell.shift_type = '';
+									hoveredCell.shift_location = '';
 									hoveredCell.shift_status = '';
 								"
 								@dragenter="dropCell.shift = shift.name"
@@ -154,7 +158,7 @@
 								@dragend="
 									if (!loading) dropCell = { employee: '', date: '', shift: '' };
 								"
-								class="rounded border-2 px-2 py-1 cursor-pointer"
+								class="rounded border-2 p-2 cursor-pointer"
 								:class="[
 									shift.status === 'Inactive' && 'border-dashed',
 									dropCell.employee === employee.name &&
@@ -184,11 +188,43 @@
 									showShiftAssignmentDialog = true;
 								"
 							>
-								<div class="truncate mb-1 pointer-events-none">
+								<div
+									class="truncate mb-1.5 pointer-events-none text-base font-medium"
+								>
 									{{ shift["shift_type"] }}
 								</div>
-								<div class="text-xs text-gray-500 pointer-events-none">
-									{{ shift["start_time"] }} - {{ shift["end_time"] }}
+								<div class="text-xs text-gray-500 pointer-events-none space-y-1.5">
+									<div class="flex items-center space-x-1">
+										<FeatherIcon
+											name="clock"
+											class="stroke-gray-400"
+											style="
+												 {
+													height: 0.82rem;
+													width: 0.82rem;
+												}
+											"
+										/>
+										<span>
+											{{ shift["start_time"] }} - {{ shift["end_time"] }}
+										</span>
+									</div>
+									<div
+										v-if="shift['shift_location']"
+										class="flex items-center space-x-1"
+									>
+										<FeatherIcon
+											name="map-pin"
+											class="stroke-gray-400"
+											style="
+												 {
+													height: 0.82rem;
+													width: 0.82rem;
+												}
+											"
+										/>
+										<span>{{ shift["shift_location"] }}</span>
+									</div>
 								</div>
 							</div>
 
@@ -232,11 +268,11 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 import colors from "tailwindcss/colors";
-import { Avatar, Autocomplete, createResource } from "frappe-ui";
+import { Avatar, Autocomplete, FeatherIcon, createResource } from "frappe-ui";
 import { Dayjs } from "dayjs";
 
 import { dayjs, raiseToast } from "../utils";
-import { EmployeeFilters } from "../views/MonthView.vue";
+import { EmployeeFilters, ShiftFilters } from "../views/MonthView.vue";
 import ShiftAssignmentDialog from "./ShiftAssignmentDialog.vue";
 
 interface Holiday {
@@ -272,7 +308,7 @@ type Color =
 	| "yellow";
 
 type Shift = {
-	[K in "name" | "shift_type" | "status" | "start_time" | "end_time"]: string;
+	[K in "name" | "shift_type" | "status" | "start_time" | "end_time" | "shift_location"]: string;
 } & {
 	color: Color;
 };
@@ -291,14 +327,21 @@ const props = defineProps<{
 		[K in "name" | "employee_name" | "designation" | "image"]: string;
 	}[];
 	employeeFilters: { [K in keyof EmployeeFilters]?: string };
-	shiftTypeFilter: string;
+	shiftFilters: { [K in keyof ShiftFilters]?: string };
 }>();
 
 const loading = ref(true);
 const employeeSearch = ref<{ value: string; label: string }[]>();
 const shiftAssignment = ref<string>();
 const showShiftAssignmentDialog = ref(false);
-const hoveredCell = ref({ employee: "", date: "", shift: "", shift_type: "", shift_status: "" });
+const hoveredCell = ref({
+	employee: "",
+	date: "",
+	shift: "",
+	shift_type: "",
+	shift_location: "",
+	shift_status: "",
+});
 const dropCell = ref({ employee: "", date: "", shift: "" });
 
 const daysOfMonth = computed(() => {
@@ -321,7 +364,7 @@ const employeeSearchOptions = computed(() => {
 });
 
 watch(
-	() => [props.firstOfMonth, props.employeeFilters, props.shiftTypeFilter],
+	() => [props.firstOfMonth, props.employeeFilters, props.shiftFilters],
 	() => {
 		loading.value = true;
 		events.fetch();
@@ -341,6 +384,7 @@ const hasSameShift = (employee: string, day: string) =>
 	events.data?.[employee]?.[day].some(
 		(shift: Shift) =>
 			shift.shift_type === hoveredCell.value.shift_type &&
+			shift.shift_location === hoveredCell.value.shift_location &&
 			shift.status === hoveredCell.value.shift_status,
 	);
 
@@ -354,7 +398,7 @@ const events = createResource({
 			month_start: props.firstOfMonth.format("YYYY-MM-DD"),
 			month_end: props.firstOfMonth.endOf("month").format("YYYY-MM-DD"),
 			employee_filters: props.employeeFilters,
-			shift_filters: props.shiftTypeFilter ? { shift_type: props.shiftTypeFilter } : {},
+			shift_filters: props.shiftFilters,
 		};
 	},
 	onSuccess() {
@@ -453,9 +497,10 @@ const handleShifts = (
 		mappedEvents[employee][key].push({
 			name: event.name,
 			shift_type: event.shift_type,
+			shift_location: event.shift_location,
 			status: event.status,
-			start_time: event.start_time.split(":").slice(0, 2).join(":"),
-			end_time: event.end_time.split(":").slice(0, 2).join(":"),
+			start_time: dayjs(event.start_time, "hh:mm:ss").format("HH:mm"),
+			end_time: dayjs(event.end_time, "hh:mm:ss").format("HH:mm"),
 			color: event.color.toLowerCase() as Color,
 		});
 	}
@@ -472,7 +517,7 @@ const sortShiftsByStartTime = (mappedEvents: MappedEvents, employee: string, key
 <style>
 th,
 td {
-	@apply max-w-32 min-w-32;
+	@apply max-w-36 min-w-36;
 	font-size: 0.875rem;
 }
 

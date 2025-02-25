@@ -1,9 +1,6 @@
 # Copyright (c) 2020, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
-
-from math import floor
-
 import frappe
 from frappe import _, bold
 from frappe.query_builder.functions import Sum
@@ -47,7 +44,7 @@ class Gratuity(AccountsController):
 			else:
 				status = "Unpaid"
 
-		if update:
+		if update and self.status != status:
 			self.db_set("status", status)
 		else:
 			self.status = status
@@ -159,7 +156,7 @@ class Gratuity(AccountsController):
 		if rule.method == "Round off Work Experience":
 			work_experience = round(work_experience)
 		else:
-			work_experience = floor(work_experience)
+			work_experience = flt(work_experience, self.precision("current_work_experience"))
 
 		if work_experience < rule.minimum_year_for_gratuity:
 			frappe.throw(
@@ -252,6 +249,7 @@ class Gratuity(AccountsController):
 						years_left * total_component_amount * slab.fraction_of_applicable_earnings
 					)
 					slab_found = True
+					break
 
 		if not slab_found:
 			frappe.throw(
@@ -311,7 +309,7 @@ class Gratuity(AccountsController):
 		)
 
 	def _is_experience_within_slab(self, slab: dict, experience: float) -> bool:
-		return bool(slab.from_year <= experience and (experience < slab.to_year or slab.to_year == 0))
+		return bool(slab.from_year <= experience and (experience <= slab.to_year or slab.to_year == 0))
 
 	def _is_experience_beyond_slab(self, slab: dict, experience: float) -> bool:
 		return bool(slab.from_year < experience and (slab.to_year < experience and slab.to_year != 0))

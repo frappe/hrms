@@ -20,6 +20,9 @@ class CheckinRadiusExceededError(frappe.ValidationError):
 
 
 class EmployeeCheckin(Document):
+	def before_validate(self):
+		self.time = get_datetime(self.time).replace(microsecond=0)
+
 	def validate(self):
 		validate_active_employee(self.employee)
 		self.validate_duplicate_log()
@@ -55,6 +58,7 @@ class EmployeeCheckin(Document):
 			)
 		):
 			self.shift = None
+			self.offshift = 1
 			return
 
 		if (
@@ -69,6 +73,7 @@ class EmployeeCheckin(Document):
 				)
 			)
 		if not self.attendance:
+			self.offshift = 0
 			self.shift = shift_actual_timings.shift_type.name
 			self.shift_actual_start = shift_actual_timings.actual_start
 			self.shift_actual_end = shift_actual_timings.actual_end
@@ -90,6 +95,7 @@ class EmployeeCheckin(Document):
 				"start_date": ["<=", self.time],
 				"shift_location": ["is", "set"],
 				"docstatus": 1,
+				"status": "Active",
 			},
 			or_filters=[["end_date", ">=", self.time], ["end_date", "is", "not set"]],
 			pluck="shift_location",

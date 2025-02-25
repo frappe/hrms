@@ -204,9 +204,19 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Shift Assignment Schedule",
+   "label": "Shift Schedule",
    "link_count": 0,
-   "link_to": "Shift Assignment Schedule",
+   "link_to": "Shift Schedule",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Shift Schedule Assignment",
+   "link_count": 0,
+   "link_to": "Shift Schedule Assignment",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -232,17 +242,17 @@
    "type": "Link"
   }
  ],
- "modified": "2024-10-09 15:40:48.672192",
+ "modified": "2025-01-15 16:43:18.393364",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift & Attendance",
  "number_cards": [],
  "owner": "Administrator",
- "parent_page": "HR",
+ "parent_page": "",
  "public": 1,
  "quick_lists": [],
  "roles": [],
- "sequence_id": 7.0,
+ "sequence_id": 4.0,
  "shortcuts": [
   {
    "color": "Grey",

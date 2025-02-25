@@ -75,7 +75,7 @@ class TestEmployeeCheckin(IntegrationTestCase):
 		employee.attendance_device_id = "3344"
 		employee.save()
 
-		time_now = now_datetime().__str__()[:-7]
+		time_now = now_datetime().replace(microsecond=0)
 		employee_checkin = add_log_based_on_employee_field("3344", time_now, "mumbai_first_floor", "IN")
 		self.assertEqual(employee_checkin.employee, employee.name)
 		self.assertEqual(employee_checkin.time, time_now)
@@ -582,6 +582,65 @@ class TestEmployeeCheckin(IntegrationTestCase):
 		log2.reload()
 		# shift does not change since attendance is already marked
 		self.assertEqual(log2.shift, shift1.name)
+
+	def test_bulk_fetch_shift_if_shift_settings_change_for_the_same_shift(self):
+		emp1 = make_employee("bulkemp1@example.com", company="_Test Company")
+		emp2 = make_employee("bulkemp2@example.com", company="_Test Company")
+
+		# 8 - 12,
+		shift = setup_shift_type(shift_type="Test Bulk Shift")
+		date = getdate()
+		make_shift_assignment(shift.name, emp1, date)
+		make_shift_assignment(shift.name, emp2, date)
+
+		timestamp = datetime.combine(date, get_time("08:00:00"))
+		# shift actual start is `current date 07:00:00`
+		log1 = make_checkin(emp1, timestamp)
+		self.assertEqual(log1.shift_actual_start, datetime.combine(date, get_time("07:00:00")))
+		log2 = make_checkin(emp2, timestamp)
+		self.assertEqual(log2.shift_actual_start, datetime.combine(date, get_time("07:00:00")))
+
+		# change shift settings like check in buffer from 60 minutes to 120 minutes
+		# so now shift actual start is `current date 06:00:00`
+		shift.begin_check_in_before_shift_start_time = 120
+		shift.save()
+		bulk_fetch_shift([log1.name, log2.name])
+		# shift changes according to the new assignment
+		log1.reload()
+		self.assertEqual(log1.shift_actual_start, datetime.combine(date, get_time("06:00:00")))
+		log2.reload()
+		self.assertEqual(log2.shift_actual_start, datetime.combine(date, get_time("06:00:00")))
+
+	def test_if_logs_are_marked_invalid(self):
+		# time window is 7 to 13
+		shift = setup_shift_type()
+		emp = make_employee("emp_invalid_log@example.com", company="_Test Company", default_shift=shift.name)
+
+		# checkin log outside shift time window
+		timestamp1 = datetime.combine(getdate(), get_time("06:00:00"))
+		log1 = make_checkin(emp, timestamp1)
+		self.assertTrue(log1.offshift)
+
+		# checkin log within shift time window
+		timestamp2 = datetime.combine(getdate(), get_time("07:30:00"))
+		log2 = make_checkin(emp, timestamp2)
+		self.assertFalse(log2.offshift)
+
+	def test_if_logs_are_marked_valid_again(self):
+		# time window is 7 to 13
+		shift = setup_shift_type()
+		emp = make_employee("emp_invalid_log1@example.com", company="_Test Company", default_shift=shift.name)
+
+		# checkin log outside shift time window
+		timestamp = datetime.combine(getdate(), get_time("06:30:00"))
+		log = make_checkin(emp, timestamp)
+		self.assertTrue(log.offshift)
+
+		# time window chnaged to 6 to 13, checkin log within shift time window
+		shift.begin_check_in_before_shift_start_time = 120
+		shift.save()
+		log.fetch_shift()
+		self.assertFalse(log.offshift)
 
 
 def make_n_checkins(employee, n, hours_to_reverse=1):

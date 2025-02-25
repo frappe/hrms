@@ -21,7 +21,7 @@
   "start_date",
   "end_date",
   "shift_request",
-  "schedule",
+  "shift_schedule_assignment",
   "amended_from"
  ],
  "fields": [
@@ -129,16 +129,16 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "schedule",
+   "fieldname": "shift_schedule_assignment",
    "fieldtype": "Link",
-   "label": "Schedule",
-   "options": "Shift Assignment Schedule",
+   "label": "Shift Schedule Assignment",
+   "options": "Shift Schedule Assignment",
    "read_only": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-09-16 15:29:41.502080",
+ "modified": "2024-11-13 12:59:50.928962",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment",

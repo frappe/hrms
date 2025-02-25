@@ -11,7 +11,12 @@ frappe.ui.form.on("Payment Entry", {
 			} else if (frm.doc.party_type == "Supplier") {
 				doctypes = ["Purchase Order", "Purchase Invoice", "Journal Entry"];
 			} else if (frm.doc.party_type == "Employee") {
-				doctypes = ["Expense Claim", "Employee Advance", "Journal Entry"];
+				doctypes = [
+					"Expense Claim",
+					"Employee Advance",
+					"Leave Encashment",
+					"Journal Entry",
+				];
 			} else {
 				doctypes = ["Journal Entry"];
 			}
@@ -30,6 +35,7 @@ frappe.ui.form.on("Payment Entry", {
 				"Purchase Invoice",
 				"Purchase Order",
 				"Expense Claim",
+				"Leave Encashment",
 				"Dunning",
 			];
 
@@ -41,7 +47,10 @@ frappe.ui.form.on("Payment Entry", {
 				filters["is_paid"] = 0;
 			}
 
-			if (child.reference_doctype == "Employee Advance") {
+			if (
+				child.reference_doctype == "Employee Advance" ||
+				child.reference_doctype == "Leave Encashment"
+			) {
 				filters["status"] = "Unpaid";
 			}
 
