@@ -39,6 +39,7 @@ class IncomeTaxComputationReport:
 		self.get_income_from_other_sources()
 		self.get_tax_exempted_earnings_and_deductions()
 		self.get_employee_tax_exemptions()
+		self.get_non_tax_exempted_amount()
 		self.get_hra()
 		self.get_standard_tax_exemption()
 		self.get_total_taxable_amount()
@@ -245,6 +246,59 @@ class IncomeTaxComputationReport:
 			self.employees[employee]["total_exemption"] = 0
 			self.employees[employee]["total_exemption"] += total_exemptions
 
+	def get_non_taxable_amount(self):
+		non_taxable_components = frappe.get_all(
+			"Salary Component", {"type": "Earnings", "is_tax_applicable": 0, "disabled": 0}, as_list=True
+		)
+
+		# Get component totals from existing salary slip
+		ss = frappe.qb.DocType("Salary Slip")
+		ss_comps = frappe.qb.DocType("Salary Detail")
+
+		records = (
+			frappe.qb.from_(ss)
+			.inner_join(ss_comps)
+			.on(ss.name == ss_comps.parent)
+			.select(ss.name, ss.employee, ss_comps.salary_component, Sum(ss_comps.amount).as_("amount"))
+			.where(
+				(ss.docstatus == 1)
+				& (ss.employee.isin(list(self.employees.keys())))
+				& (ss_comps.do_not_include_in_total == 0)
+				& (ss_comps.salary_component.isin(non_taxable_components))
+				& (ss.start_date >= self.payroll_period_start_date)
+				& (ss.end_date <= self.payroll_period_end_date)
+			)
+			.groupby(ss.employee, ss_comps.salary_component)
+		).run(as_dict=True)
+
+		existing_ss_non_taxable_amount = frappe._dict()
+		for d in records:
+			existing_ss_non_taxable_amount.setdefault(d.employee, {}).setdefault(
+				scrub(d.salary_component), d.amount
+			)
+
+		for employee in list(self.employees.keys()):
+			if not self.employees[employee]["allow_tax_exemption"]:
+				continue
+
+			non_taxable_amount = existing_ss_non_taxable_amount.get(employee, {})
+			self.add_non_taxable_amount_from_future_salary_slips(employee, non_taxable_amount)
+			self.employees[employee].update(non_taxable_amount)
+
+			total_non_taxable_amount = sum(list(non_taxable_amount.values()))
+			self.employees[employee]["total_non_taxable_amount"] = 0
+			self.employees[employee]["total_non_taxable_amount"] += total_non_taxable_amount
+
+		self.add_column("Total Non Taxable Amount")
+
+	def add_non_taxable_amount_from_future_salary_slips(self, employee, non_taxable_amount):
+		for ss in self.future_salary_slips.get(employee, []):
+			for e in ss.earnings:
+				if not e.is_tax_applicable:
+					non_taxable_amount.setdefault(scrub(e.salary_component), 0)
+					non_taxable_amount[scrub(e.salary_component)] += flt(e.amount)
+		return non_taxable_amount
+
 	def add_exemptions_from_future_salary_slips(self, employee, exemptions):
 		for ss in self.future_salary_slips.get(employee, []):
 			for e in ss.earnings:
@@ -425,6 +479,7 @@ class IncomeTaxComputationReport:
 				flt(emp_details.get("ctc"))
 				+ flt(emp_details.get("other_income"))
 				- flt(emp_details.get("total_exemption"))
+				- flt(emp_details.get("total_non_taxable_amount"))
 			)
 
 	def get_applicable_tax(self):
