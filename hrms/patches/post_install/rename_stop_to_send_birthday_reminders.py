@@ -7,7 +7,8 @@ def execute():
 
 	try:
 		# Rename the field
-		rename_field("HR Settings", "stop_birthday_reminders", "send_birthday_reminders")
+		if frappe.get_meta("HR Settings").has_field("stop_birthday_reminders"):
+			rename_field("HR Settings", "stop_birthday_reminders", "send_birthday_reminders")
 
 		# Reverse the value
 		old_value = frappe.db.get_single_value("HR Settings", "send_birthday_reminders")

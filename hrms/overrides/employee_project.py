@@ -5,7 +5,7 @@ import frappe
 from frappe.query_builder.functions import Max, Min, Sum
 from frappe.utils import flt
 
-from erpnext.projects.doctype.project.project import Project
+from projects.projects.doctype.project.project import Project
 
 
 class EmployeeProject(Project):

@@ -387,7 +387,7 @@ class TestSalarySlip(FrappeTestCase):
 
 	@change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
 	def test_payment_days_in_salary_slip_based_on_timesheet(self):
-		from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
+		from projects.projects.doctype.timesheet.test_timesheet import make_timesheet
 
 		emp = make_employee(
 			"test_employee_timesheet@salary.com",
@@ -1256,7 +1256,7 @@ class TestSalarySlip(FrappeTestCase):
 		frappe.db.rollback()
 
 	def test_salary_slip_from_timesheet(self):
-		from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
+		from projects.projects.doctype.timesheet.test_timesheet import make_timesheet
 
 		emp = make_employee("test_employee_6@salary.com", company="_Test Company")
 		make_salary_structure_for_timesheet(emp)

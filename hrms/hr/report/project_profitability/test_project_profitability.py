@@ -2,8 +2,8 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, getdate
 
-from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
-from erpnext.projects.doctype.timesheet.timesheet import make_sales_invoice
+from projects.projects.doctype.timesheet.test_timesheet import make_timesheet
+from projects.projects.doctype.timesheet.timesheet import make_sales_invoice
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.report.project_profitability.project_profitability import execute

@@ -2,7 +2,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils.make_random import get_random
 
-from erpnext.projects.doctype.project.test_project import make_project
+from projects.projects.doctype.project.test_project import make_project
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.report.employee_hours_utilization_based_on_timesheet.employee_hours_utilization_based_on_timesheet import (

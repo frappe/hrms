@@ -1,7 +1,7 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
-from erpnext.projects.doctype.timesheet.timesheet import Timesheet
+from projects.projects.doctype.timesheet.timesheet import Timesheet
 
 
 class EmployeeTimesheet(Timesheet):

@@ -5,6 +5,9 @@ def execute():
 	frappe.reload_doc("payroll", "doctype", "employee_cost_center")
 	frappe.reload_doc("payroll", "doctype", "salary_structure_assignment")
 
+	if not frappe.db.has_column("Employee", "payroll_cost_center"):
+		return
+	
 	employees = frappe.get_all("Employee", fields=["department", "payroll_cost_center", "name"])
 
 	employee_cost_center = {}

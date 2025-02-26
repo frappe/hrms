@@ -2,22 +2,25 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests.utils import FrappeTestCase, if_app_installed
 from frappe.utils import add_days, today
 
-from erpnext.assets.doctype.asset.test_asset import create_asset_data
 from erpnext.setup.doctype.employee.test_employee import make_employee
 from erpnext.stock.doctype.purchase_receipt.test_purchase_receipt import make_purchase_receipt
 
 
 class TestFullandFinalStatement(FrappeTestCase):
+	@if_app_installed("assets")
 	def setUp(self):
 		for dt in ["Full and Final Statement", "Asset", "Asset Movement", "Asset Movement Item"]:
 			frappe.db.delete(dt)
 
 		self.setup_fnf()
 
+	@if_app_installed("assets")
 	def setup_fnf(self):
+		from assets.assets.doctype.asset.test_asset import create_asset_data
+
 		create_asset_data()
 
 		self.employee = make_employee(
