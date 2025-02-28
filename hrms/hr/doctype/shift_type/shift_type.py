@@ -8,7 +8,7 @@ from itertools import groupby
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cint, create_batch, get_datetime, get_time, getdate
+from frappe.utils import add_days, cint, create_batch, get_datetime, get_time, getdate, time_diff
 
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
@@ -27,6 +27,61 @@ EMPLOYEE_CHUNK_SIZE = 50
 
 class ShiftType(Document):
 	def validate(self):
+		start = get_time(self.start_time)
+		end = get_time(self.end_time)
+		self.validate_same_start_and_end(start, end)
+		self.validate_circular_shift(start, end)
+		self.validate_unlinked_logs()
+
+	def validate_same_start_and_end(self, start_time: datetime.time, end_time: datetime.time):
+		if start_time == end_time:
+			frappe.throw(
+				title=_("Invalid Shift Times"),
+				msg=_("Start time and end time cannot be same."),
+			)
+
+	def validate_circular_shift(self, start_time: datetime.time, end_time: datetime.time):
+		shift_start, shift_end = self.get_shift_start_and_shift_end(start_time, end_time)
+		if self.get_total_shift_duration_in_minutes(shift_start, shift_end) >= 1440:
+			max_label = self.get_max_shift_buffer_label()
+			frappe.throw(
+				title=_("Invalid Shift Times"),
+				msg=_("Please reduce {0} to avoid shift time overlapping with itself").format(
+					frappe.bold(max_label)
+				),
+			)
+
+	def get_shift_start_and_shift_end(
+		self, start_time: datetime.time, end_time: datetime.time
+	) -> tuple[datetime]:
+		shift_start = datetime.combine(getdate(), start_time)
+		if start_time < end_time:
+			shift_end = datetime.combine(getdate(), end_time)
+		elif start_time > end_time:
+			shift_end = datetime.combine(add_days(getdate(), 1), end_time)
+		return shift_start, shift_end
+
+	def get_total_shift_duration_in_minutes(
+		self, shift_start: datetime.time, shift_end: datetime.time
+	) -> int:
+		return (
+			(round(time_diff(shift_end, shift_start).total_seconds() / 60))
+			+ self.allow_check_out_after_shift_end_time
+			+ self.begin_check_in_before_shift_start_time
+		)
+
+	def get_max_shift_buffer_label(self) -> str:
+		labels = {
+			self.meta.get_label(
+				"allow_check_out_after_shift_end_time"
+			): self.allow_check_out_after_shift_end_time,
+			self.meta.get_label(
+				"begin_check_in_before_shift_start_time"
+			): self.begin_check_in_before_shift_start_time,
+		}
+		return max(labels, key=labels.get)
+
+	def validate_unlinked_logs(self):
 		if self.is_field_modified("start_time") and self.unlinked_checkins_exist():
 			frappe.throw(
 				title=_("Unmarked Check-in Logs Found"),
@@ -291,7 +346,26 @@ class ShiftType(Document):
 		return True
 
 
+def update_last_sync_of_checkin():
+	"""Called from hooks"""
+	shifts = frappe.get_all(
+		"Shift Type",
+		filters={"enable_auto_attendance": 1, "auto_update_last_sync": 1},
+		fields=["name", "last_sync_of_checkin"],
+	)
+
+	for shift in shifts:
+		last_shift_sync = frappe.db.get_value(
+			"Employee Checkin", {"shift": shift.name}, "time", order_by="time desc"
+		)
+		if not shift.last_sync_of_checkin or get_datetime(last_shift_sync) > get_datetime(
+			shift.last_sync_of_checkin
+		):
+			frappe.db.set_value("Shift Type", shift.name, "last_sync_of_checkin", last_shift_sync)
+
+
 def process_auto_attendance_for_all_shifts():
+	"""Called from hooks"""
 	shift_list = frappe.get_all("Shift Type", filters={"enable_auto_attendance": "1"}, pluck="name")
 	for shift in shift_list:
 		doc = frappe.get_cached_doc("Shift Type", shift)

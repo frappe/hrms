@@ -36,4 +36,10 @@ frappe.ui.form.on("Shift Type", {
 			});
 		});
 	},
+
+	auto_update_last_sync: function (frm) {
+		if (frm.doc.auto_update_last_sync) {
+			frm.set_value("last_sync_of_checkin", "");
+		}
+	},
 });
