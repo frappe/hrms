@@ -76,14 +76,14 @@
   {
    "description": "Working hours below which Half Day is marked. (Zero to disable)",
    "fieldname": "working_hours_threshold_for_half_day",
-   "fieldtype": "Float",
+   "fieldtype": "Duration",
    "label": "Working Hours Threshold for Half Day",
    "precision": "1"
   },
   {
    "description": "Working hours below which Absent is marked. (Zero to disable)",
    "fieldname": "working_hours_threshold_for_absent",
-   "fieldtype": "Float",
+   "fieldtype": "Duration",
    "label": "Working Hours Threshold for Absent",
    "precision": "1"
   },
@@ -188,7 +188,7 @@
   }
  ],
  "links": [],
- "modified": "2024-12-18 19:03:38.278336",
+ "modified": "2025-03-02 09:35:57.009656",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Type",
