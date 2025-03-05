@@ -174,7 +174,7 @@ def get_skill_wise_average_rating(interview: str) -> list[dict]:
         frappe.qb.select(
             skill_assessment.skill,
             Avg(skill_assessment.rating).as_("average_rating"),
-            Min(skill_assessment.idx).as_("min_idx")  # Aggregate idx for ordering
+            Min(skill_assessment.idx).as_("min_idx")
         )
         .from_(skill_assessment)
         .join(interview_feedback)
