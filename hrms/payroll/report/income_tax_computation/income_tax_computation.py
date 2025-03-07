@@ -215,7 +215,7 @@ class IncomeTaxComputationReport:
 			.where(ss_comps.salary_component.isin(tax_exempted_components))
 			.where(ss.start_date >= self.payroll_period_start_date)
 			.where(ss.end_date <= self.payroll_period_end_date)
-			.groupby(ss.employee, ss_comps.salary_component)
+			.groupby(ss.name ,ss.employee, ss_comps.salary_component)
 		).run(as_dict=True)
 
 		existing_ss_exemptions = frappe._dict()
