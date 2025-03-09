@@ -403,7 +403,6 @@ class TestLeaveEncashment(FrappeTestCase):
 		leave_encashment.reload()
 		self.assertEqual(leave_encashment.status, "Unpaid")
 
-
 	def create_test_leave_encashment(self, **kwargs):
 		"""Helper method to create leave encashment with default values"""
 		args = {
