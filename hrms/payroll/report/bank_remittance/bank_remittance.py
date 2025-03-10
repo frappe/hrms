@@ -99,7 +99,7 @@ def get_payroll_entries(accounts, filters):
 	payroll_filter = [
 		("payment_account", "IN", accounts),
 		("number_of_employees", ">", 0),
-		("Company", "=", filters.company),
+		("company", "=", filters.company),
 	]
 	if filters.to_date:
 		payroll_filter.append(("posting_date", "<", filters.to_date))
