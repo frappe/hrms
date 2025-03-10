@@ -624,14 +624,13 @@ def get_shift_type(shift_type_name: str) -> dict:
 def get_shift_timings(shift_type: dict, for_timestamp: datetime) -> tuple:
 	start_time = shift_type.start_time
 	end_time = shift_type.end_time
-
 	shift_actual_start = get_time(
-		datetime.combine(for_timestamp, datetime.min.time())
+		datetime.combine(for_timestamp.date(), datetime.min.time())
 		+ start_time
 		- timedelta(minutes=shift_type.begin_check_in_before_shift_start_time)
 	)
 	shift_actual_end = get_time(
-		datetime.combine(for_timestamp, datetime.min.time())
+		datetime.combine(for_timestamp.date(), datetime.min.time())
 		+ end_time
 		+ timedelta(minutes=shift_type.allow_check_out_after_shift_end_time)
 	)
