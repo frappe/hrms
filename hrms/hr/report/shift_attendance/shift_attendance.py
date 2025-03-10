@@ -244,7 +244,29 @@ def get_query(filters):
 			shift_type.early_exit_grace_period,
 		)
 		.where(attendance.docstatus == 1)
-		.groupby(attendance.name)
+		.groupby(
+            attendance.name,
+            attendance.employee,
+            attendance.employee_name,
+            attendance.shift,
+            attendance.attendance_date,
+            attendance.status,
+            attendance.in_time,
+            attendance.out_time,
+            attendance.working_hours,
+            attendance.late_entry,
+            attendance.early_exit,
+            attendance.department,
+            attendance.company,
+            checkin.shift_start,
+            checkin.shift_end,
+            checkin.shift_actual_start,
+            checkin.shift_actual_end,
+            shift_type.enable_late_entry_marking,
+            shift_type.late_entry_grace_period,
+            shift_type.enable_early_exit_marking,
+            shift_type.early_exit_grace_period,
+        )
 	)
 
 	for filter in filters:
