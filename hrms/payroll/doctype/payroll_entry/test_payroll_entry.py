@@ -60,6 +60,7 @@ class TestPayrollEntry(FrappeTestCase):
 
 		make_earning_salary_component(setup=True, company_list=["_Test Company"])
 		make_deduction_salary_component(setup=True, test_tax=False, company_list=["_Test Company"])
+		set_loan_demand_offset_type("_Test Company")
 
 		frappe.db.set_value("Company", "_Test Company", "default_holiday_list", "_Test Holiday List")
 		frappe.db.set_single_value("Payroll Settings", "email_salary_slip_to_employee", 0)
@@ -935,6 +936,18 @@ def create_loan_for_employee(applicant):
 	loan.submit()
 
 	return loan
+
+
+def set_loan_demand_offset_type(company):
+	if not frappe.db.exists("Loan Demand Offset Order", "Test Loan Demand Offset Order"):
+		order = frappe.new_doc("Loan Demand Offset Order")
+		order.title = "Test Loan Demand Offset Order"
+		order.append("components", {"demand_type": "EMI (Principal + Interest)"})
+		order.insert()
+
+	frappe.db.set_value(
+		"Company", company, "collection_offset_sequence_for_standard_asset", "Test Loan Demand Offset Order"
+	)
 
 
 def get_repayment_party_type(loan):
