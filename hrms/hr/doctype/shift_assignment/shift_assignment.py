@@ -2,7 +2,7 @@
 # For license information, please see license.txt
 
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 
 import frappe
 from frappe import _
@@ -620,20 +620,21 @@ def get_shift_type(shift_type_name: str) -> dict:
 		as_dict=1,
 	)
 
+def time_to_timedelta(t: time) -> timedelta:
+    """Convert a datetime.time object to timedelta."""
+    return timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
 
 def get_shift_timings(shift_type: dict, for_timestamp: datetime) -> tuple:
-	start_time = shift_type.start_time
-	end_time = shift_type.end_time
-	shift_actual_start = get_time(
-		datetime.combine(for_timestamp.date(), datetime.min.time())
-		+ start_time
-		- timedelta(minutes=shift_type.begin_check_in_before_shift_start_time)
-	)
-	shift_actual_end = get_time(
-		datetime.combine(for_timestamp.date(), datetime.min.time())
-		+ end_time
-		+ timedelta(minutes=shift_type.allow_check_out_after_shift_end_time)
-	)
+	start_time = time_to_timedelta(shift_type["start_time"])
+	end_time = time_to_timedelta(shift_type["end_time"])
+
+	shift_actual_start = (
+        datetime.combine(for_timestamp.date(), time.min)  # Midnight of given date
+        + start_time
+        - timedelta(minutes=shift_type["begin_check_in_before_shift_start_time"])
+    )
+
+	shift_actual_end = datetime.combine(for_timestamp.date(), time.min) + end_time
 	for_time = get_time(for_timestamp.time())
 	start_datetime = end_datetime = None
 
