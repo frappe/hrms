@@ -76,6 +76,7 @@ def get_staffing_plan_detail(designation, company, offer_date):
 			AND sp.company=%s
 			AND spd.parent = sp.name
 			AND %s between sp.from_date and sp.to_date
+		GROUP BY spd.parent, sp.from_date, sp.to_date, sp.name, spd.designation
 	""",
 		(designation, company, offer_date),
 		as_dict=1,

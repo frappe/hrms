@@ -56,7 +56,7 @@ def get_conditions(filters):
 		conditions.append("sal.company = '%s' " % (filters["company"]))
 
 	if filters.get("month"):
-		conditions.append("month(sal.start_date) = '%s' " % (filters["month"]))
+		conditions.append("EXTRACT(MONTH FROM sal.start_date) = %s" % (filters["month"]))
 
 	if filters.get("year"):
 		conditions.append("year(start_date) = '%s' " % (filters["year"]))
