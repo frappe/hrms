@@ -59,7 +59,7 @@ def get_conditions(filters):
 		conditions.append("EXTRACT(MONTH FROM sal.start_date) = %s" % (filters["month"]))
 
 	if filters.get("year"):
-		conditions.append("year(start_date) = '%s' " % (filters["year"]))
+		conditions.append("EXTRACT(YEAR FROM start_date) = %s" % filters["year"])
 
 	if filters.get("mode_of_payment"):
 		conditions.append("sal.mode_of_payment = '%s' " % (filters["mode_of_payment"]))
