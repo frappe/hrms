@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-03-09 09:33+0000\n"
-"PO-Revision-Date: 2025-03-12 05:09\n"
+"POT-Creation-Date: 2025-03-16 09:33+0000\n"
+"PO-Revision-Date: 2025-03-17 06:01\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -1634,7 +1634,7 @@ msgstr "Devamlılık Ayarları"
 msgid "Attendance To Date"
 msgstr "Son Tarih"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:101
+#: hrms/hr/doctype/attendance_request/attendance_request.py:114
 msgid "Attendance Updated"
 msgstr "Devamlılık Güncellendi"
 
@@ -1686,11 +1686,11 @@ msgstr ""
 msgid "Attendance marked successfully"
 msgstr "Devamlılık Başarıyla Kaydedildi"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:119
+#: hrms/hr/doctype/attendance_request/attendance_request.py:132
 msgid "Attendance not submitted for {0} as it is a Holiday."
 msgstr "Bugün tatil olduğundan Personel {0} için devamlılık kaydedilemedi."
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:128
+#: hrms/hr/doctype/attendance_request/attendance_request.py:141
 msgid "Attendance not submitted for {0} as {1} is on leave."
 msgstr "Personel {0} için devamlılık kaydedilmedi çünkü {1} izinli."
 
@@ -4790,7 +4790,7 @@ msgstr ""
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr ""
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:52
+#: hrms/hr/doctype/attendance_request/attendance_request.py:66
 msgid "Employee {0} already has an Attendance Request {1} that overlaps with this period"
 msgstr ""
 
@@ -6536,7 +6536,7 @@ msgstr "Yarım Gün Kayıtları"
 msgid "Half Yearly"
 msgstr "Yarım Yıllık"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:29
+#: hrms/hr/doctype/attendance_request/attendance_request.py:30
 msgid "Half day date should be in between from date and to date"
 msgstr "Yarım günlük tarih, başlangıç ile bitiş tarihi arasında olmalıdır"
 
@@ -8899,6 +8899,10 @@ msgstr "Bu kriter için herhangi bir giriş-çıkış kaydı bulunamadı."
 msgid "No attendance records found."
 msgstr "Giriş Çıkış kaydı bulunamadı."
 
+#: hrms/hr/doctype/attendance_request/attendance_request.py:39
+msgid "No attendance records to create"
+msgstr ""
+
 #: hrms/hr/doctype/interview/interview.py:87
 msgid "No changes found in timings."
 msgstr "Zamanlamalarda herhangi bir değişiklik bulunamadı."
@@ -9353,7 +9357,7 @@ msgstr ""
 msgid "Overall Average Rating"
 msgstr "Genel Ortalama Puan"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:57
+#: hrms/hr/doctype/attendance_request/attendance_request.py:71
 msgid "Overlapping Attendance Request"
 msgstr ""
 
@@ -9863,6 +9867,10 @@ msgstr "Lütfen kalan faydaları {0} orantılı bileşen olarak uygulamaya ekley
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:770
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
+msgstr ""
+
+#: hrms/hr/doctype/attendance_request/attendance_request.py:40
+msgid "Please check if employee is on leave or attendance with the same status exists for selected day(s)."
 msgstr ""
 
 #: hrms/templates/emails/training_event.html:17
@@ -13824,7 +13832,7 @@ msgstr "Durumu Güncelle"
 msgid "Update Tax"
 msgstr "Vergiyi Güncelle"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:95
+#: hrms/hr/doctype/attendance_request/attendance_request.py:108
 msgid "Updated status from {0} to {1} for date {2} in the attendance record {3}"
 msgstr ""
 
@@ -14355,7 +14363,7 @@ msgstr ""
 msgid "cancelled"
 msgstr "i̇ptal Edildi"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:89
+#: hrms/hr/doctype/attendance_request/attendance_request.py:102
 msgid "changed the status from {0} to {1} via Attendance Request"
 msgstr ""
 
