@@ -6,6 +6,9 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "roster_tab",
+  "roster_wrapper",
+  "details_tab",
   "title",
   "start_date",
   "month",
@@ -19,14 +22,17 @@
   "section_break_ehsd",
   "employees",
   "shifts",
+  "shift_department",
   "section_break_zgxb",
-  "real_shift_assigned"
+  "real_shift_assigned",
+  "connections_tab"
  ],
  "fields": [
   {
    "fieldname": "title",
    "fieldtype": "Data",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Title",
    "reqd": 1
   },
@@ -67,6 +73,8 @@
   {
    "fieldname": "department",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Department",
    "options": "Department"
   },
@@ -89,12 +97,16 @@
   {
    "fieldname": "month",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Month",
    "read_only": 1
   },
   {
    "fieldname": "year",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Year",
    "read_only": 1
   },
@@ -108,11 +120,37 @@
    "fieldtype": "Check",
    "label": "Real shift assigned",
    "read_only": 1
+  },
+  {
+   "fieldname": "roster_tab",
+   "fieldtype": "Tab Break",
+   "label": "Roster"
+  },
+  {
+   "fieldname": "details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "roster_wrapper",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "shift_department",
+   "fieldtype": "Link",
+   "label": "shift Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-26 08:18:52.133666",
+ "modified": "2025-03-17 13:54:06.269906",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Provisional Plan",

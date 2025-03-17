@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { ref, computed, defineProps, onMounted } from "vue";
 import moment from "moment";
-
+import { inject } from "vue";
+const frm = inject("frm");
 const props = defineProps([
   "shifts",
   "employees",
   "startDate",
   "reals",
   "department",
+  "showProvisionalShifts",
 ]);
 const startDateIndex = computed(() => {
   const d = new Date(
@@ -44,11 +46,14 @@ const getShift = (i, ei) => {
     return uShifts.value[uShifts.value.length + value];
   }
 };
-
+const update = ref(0);
 const computedShifts = computed(() => {
+  update.value;
   return Array(numberOfEmployees.value)
     .fill(0)
     .map((_, i) => {
+      return JSON.parse(frm.doc.employees[i].shift);
+
       return Array(numberOfDaysInMonth.value)
         .fill(0)
         .map((_, j) => {
@@ -85,15 +90,8 @@ const computedReals = computed(() => {
 const hoursWorked = (arr) => {
   let result = 0;
   for (let a of arr) {
-    switch (a) {
-      case "D":
-        result += 9;
-        break;
-      case "N":
-        result += 14;
-        break;
-      default:
-        break;
+    if (shiftsMap.value && shiftsMap.value[a]) {
+      result += shiftsMap.value[a].effective_hours;
     }
   }
   return result;
@@ -111,21 +109,10 @@ const computedRealMonthlyHours = computed(() => {
       .map((r) => {
         return r
           .map((s) => {
-            switch (s.type) {
-              case "D":
-                return 9;
-              case "N":
-                return 14;
-              case "L":
-                if (s.shift_type === "D") {
-                  return -9;
-                } else if (s.shift_type === "N") {
-                  return -14;
-                } else {
-                  return 0;
-                }
-              default:
-                return 0;
+            if (shiftsMap.value && shiftsMap.value[s.type]) {
+              return shiftsMap.value[s.type].effective_hours;
+            } else {
+              return 0;
             }
           })
           .reduce((a, b) => a + b, 0);
@@ -135,22 +122,23 @@ const computedRealMonthlyHours = computed(() => {
 });
 
 const activeWorking = (index, shift) => {
-  let d = 0;
-  let n = 0;
+  const res = {};
+  let total = 0;
   for (const element of shift) {
     const s = element;
-    switch (s[index - 1]) {
-      case "D":
-        d++;
-        break;
-      case "N":
-        n++;
-        break;
-      default:
-        break;
+    if (s[index - 1] !== "R") {
+      total += 1;
+      if (res[s[index - 1]]) {
+        res[s[index - 1]] += 1;
+      } else {
+        res[s[index - 1]] = 1;
+      }
     }
   }
-  return `${d}D ${n}N T:${d + n}`;
+  res.t = total;
+  return Object.entries(res)
+    .map(([key, value]) => `${key.toUpperCase()}: ${value}`)
+    .join("\n");
 };
 
 const activeRealWorking = (index, shift) => {
@@ -188,26 +176,69 @@ const depShifts = ref([]);
 const shiftsMap = ref({});
 const fetchShifts = () => {
   depShifts.value = [];
-  console.log("fetching .....");
-  console.log(props.department);
-
   //fetch shifts
-  //   frappe.db
-  //     .get_list("Shift Type", {
-  //       filters: { department: props.shiftDeparment },
-  //       fields: ["*"],
-  //       limit: 0,
-  //     })
-  //     .then((res) => {
-  //       depShifts.value = res;
-  //       shiftsMap.value = res.reduce((acc, shift) => {
-  //         acc[shift.shift_suffix] = shift;
-  //         return acc;
-  //       }, {});
-  //     });
+  frappe.db
+    .get_list("Shift Type", {
+      filters: { department: frm.doc.shift_department },
+      fields: ["*"],
+      limit: 0,
+    })
+    .then((res) => {
+      depShifts.value = res;
+      shiftsMap.value = res.reduce((acc, shift) => {
+        acc[shift.shift_suffix] = shift;
+        return acc;
+      }, {});
+    });
+};
+
+const validate = (event) => {
+  let valids = [];
+  if (depShifts.value) valids = depShifts.value.map((s) => s.shift_suffix);
+  valids.push("R");
+
+  valids = [...valids, ...valids.map((v) => v.toLowerCase())];
+  if (valids.indexOf(event.key) === -1) {
+    event.preventDefault();
+  } else {
+    event.target.innerText = "";
+  }
+};
+
+const input = (event, row, col) => {
+  event.target.innerText = event.target.innerText.toUpperCase();
+  console.log(row, col);
+  // frm.doc.employees[row].shift[col] = event.target.innerText;
+  // frm.doc.save();
+  const shifts = JSON.parse(frm.doc.employees[row].shift);
+  shifts[col] = event.target.innerText;
+  const c = [...shifts];
+  console.log(frm.doc.employees[row].name);
+  console.log(c);
+  frappe.model.set_value(
+    "Provisional Plan Employee",
+    frm.doc.employees[row].name,
+    "shift",
+    JSON.stringify(c)
+  );
+  // computedShifts.value[row][col] = event.target.innerText;
+  frm.doc.employees[row].shift = JSON.stringify(c);
+  update.value++;
+  // frappe.db.commit();
+
+  // const c = [...props.shift];
+  // c[row][col] = event.target.innerText;
+  // emits("update:shift", c);
 };
 </script>
 <template>
+  <div class="shifts mb-4">
+    <h3>Shift Suffix</h3>
+    <div v-for="shift in depShifts" class="shift flex">
+      <div class="font-bold pl-2">{{ shift.shift_suffix }}</div>
+      <div class="px-2">{{ shift.start_time }} - {{ shift.end_time }}</div>
+    </div>
+  </div>
   <h2 class="mx-auto text-center py-4">
     {{ moment(startOfMonth).format("MMM YYYY") }}
   </h2>
@@ -216,7 +247,7 @@ const fetchShifts = () => {
       <thead>
         <tr class="border">
           <th scope="col" class="text-nowrap">Employee Name</th>
-          <th scope="col" class="text-nowrap">Monthly hrs</th>
+          <th scope="col" class="text-nowrap">Hrs</th>
           <th
             v-for="i in numberOfDaysInMonth"
             scope="col"
@@ -234,7 +265,7 @@ const fetchShifts = () => {
           <th
             v-for="i in numberOfDaysInMonth"
             scope="col"
-            class="px-4"
+            class="text-center"
             :class="{
               'bg-danger text-white': startDateIndex === i,
             }"
@@ -264,11 +295,15 @@ const fetchShifts = () => {
                 'bg-green-100': computedShifts[ei][i - 1] === 'D',
                 'bg-green-300': computedShifts[ei][i - 1] === 'N',
               }"
+              contenteditable="true"
+              @keypress="validate"
+              @paste.prevent=""
+              @input="(event) => input(event, ei, i - 1)"
             >
               {{ computedShifts[ei][i - 1] }}
             </td>
           </tr>
-          <tr>
+          <tr v-if="!props.showProvisionalShifts">
             <td class="text-nowrap border-left">
               {{ props.employees[ei].name }}
             </td>
@@ -298,11 +333,6 @@ const fetchShifts = () => {
               {{ computedReals[ei][i - 1] }}
             </td>
           </tr>
-          <tr>
-            <th scope="row" class="text-nowrap border-left"></th>
-            <td scope="row" class="text-center"></td>
-            <td v-for="i in numberOfDaysInMonth" class="text-center"></td>
-          </tr>
         </template>
 
         <tr class="bg-orange-100">
@@ -323,7 +353,7 @@ const fetchShifts = () => {
 
           <td class="whitespace-nowrap text-end text-sm font-medium"></td>
         </tr>
-        <tr class="bg-orange-100">
+        <tr v-if="!props.showProvisionalShifts" class="bg-orange-100">
           <td
             class="text-center border whitespace-nowrap text-sm font-medium text-gray-800"
           ></td>
@@ -374,4 +404,8 @@ const fetchShifts = () => {
   left: 0;
   background-color: white;
 }
+/* .table-sticky td:nth-child(2) {
+  position: sticky;
+  background-color: #dbeafe;
+} */
 </style>
