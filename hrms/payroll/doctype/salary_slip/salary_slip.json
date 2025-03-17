@@ -46,7 +46,9 @@
   "overrides_tab",
   "earnings_override_column",
   "bs_override",
-  "ovt_override",
+  "ovt_override_15x",
+  "ovt_override_2x",
+  "night_shift_override",
   "disable_car_allowance",
   "car_allowance_override",
   "disable_coordinator_allowance",
@@ -745,9 +747,9 @@
    "label": "Basic"
   },
   {
-   "fieldname": "ovt_override",
-   "fieldtype": "Currency",
-   "label": "Overtime"
+   "fieldname": "night_shift_override",
+   "fieldtype": "Int",
+   "label": "Night Shift Override"
   },
   {
    "depends_on": "eval: !doc.disable_car_allowance",
@@ -830,13 +832,23 @@
    "fieldname": "disable_busfare",
    "fieldtype": "Check",
    "label": "Disable Busfare"
+  },
+  {
+   "fieldname": "ovt_override_15x",
+   "fieldtype": "Currency",
+   "label": "Overtime Hours 1.5x"
+  },
+  {
+   "fieldname": "ovt_override_2x",
+   "fieldtype": "Currency",
+   "label": "Overtime Hours 2x"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-12-18 09:42:31.377324",
+ "modified": "2025-03-17 21:50:18.018219",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

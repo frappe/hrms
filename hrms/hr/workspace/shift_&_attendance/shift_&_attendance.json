@@ -5,7 +5,7 @@
    "label": "Attendance Count"
   }
  ],
- "content": "[{\"id\":\"r0a57m9-Yx\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Attendance Count\",\"col\":12}},{\"id\":\"9_DQbkhJgn\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"NWHR4zbbZW\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"JS3JgWQp49\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Checkin\",\"col\":3}},{\"id\":\"S0DZ1mFw9f\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Attendance\",\"col\":3}},{\"id\":\"pYPZOYG0py\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Shift Request\",\"col\":3}},{\"id\":\"Llf2uaX7x4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dashboard\",\"col\":3}},{\"id\":\"FwqPdfwjlv\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Roster\",\"col\":3}},{\"id\":\"4Bj9IYIT3W\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Provisional Plan\",\"col\":3}},{\"id\":\"fNKKY2A-ON\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"mYz7o2zWVf\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 18px;\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"id\":\"iBvYqY6Ul6\",\"type\":\"card\",\"data\":{\"card_name\":\"Shifts\",\"col\":4}},{\"id\":\"aCKU8VAUu8\",\"type\":\"card\",\"data\":{\"card_name\":\"Attendance\",\"col\":4}},{\"id\":\"CMPmxSUFjB\",\"type\":\"card\",\"data\":{\"card_name\":\"Time\",\"col\":4}},{\"id\":\"WAO9X_IrfP\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"r0a57m9-Yx\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Attendance Count\",\"col\":12}},{\"id\":\"9_DQbkhJgn\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"NWHR4zbbZW\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"JS3JgWQp49\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Checkin\",\"col\":3}},{\"id\":\"S0DZ1mFw9f\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Attendance\",\"col\":3}},{\"id\":\"pYPZOYG0py\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Shift Request\",\"col\":3}},{\"id\":\"Llf2uaX7x4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dashboard\",\"col\":3}},{\"id\":\"FwqPdfwjlv\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Roster\",\"col\":3}},{\"id\":\"4Bj9IYIT3W\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Provisional Plan\",\"col\":3}},{\"id\":\"NNrT8OLGfz\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Overtime\",\"col\":3}},{\"id\":\"fNKKY2A-ON\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"mYz7o2zWVf\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 18px;\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"id\":\"iBvYqY6Ul6\",\"type\":\"card\",\"data\":{\"card_name\":\"Shifts\",\"col\":4}},{\"id\":\"aCKU8VAUu8\",\"type\":\"card\",\"data\":{\"card_name\":\"Attendance\",\"col\":4}},{\"id\":\"CMPmxSUFjB\",\"type\":\"card\",\"data\":{\"card_name\":\"Time\",\"col\":4}},{\"id\":\"WAO9X_IrfP\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2022-08-20 15:50:06.598086",
  "custom_blocks": [],
  "docstatus": 0,
@@ -241,7 +241,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-02-20 07:10:08.250180",
+ "modified": "2025-03-17 21:19:44.476548",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift & Attendance",
@@ -259,6 +259,14 @@
    "label": "Provisional Plan",
    "link_to": "roster",
    "type": "Page"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Employee Overtime",
+   "link_to": "Employee Overtime",
+   "stats_filter": "[[\"Employee Overtime\",\"workflow_state\",\"=\",\"Pending\",false]]",
+   "type": "DocType"
   },
   {
    "color": "Grey",

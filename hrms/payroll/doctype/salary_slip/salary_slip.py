@@ -60,6 +60,8 @@ LEAVE_TYPE_MAP = "leave_type_map"
 SALARY_COMPONENT_VALUES = "salary_component_values"
 TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 
+NIGHT_SHIFT_CODES = ['A&B N', "NSG 2", "NSG 1", "NSG N", "SEC N"]
+
 
 class SalarySlip(TransactionBase):
 
@@ -77,16 +79,22 @@ class SalarySlip(TransactionBase):
 			"floor": floor,
 			"eround": self.eround,
 			"calc_working_days": self.calc_working_days,
+			"night_shift_count": self.night_shift_count,
+			"get_approved_15xovertime_count": self.get_approved_15xovertime_count,
+			"get_approved_2xovertime_count": self.get_approved_2xovertime_count,
 		}
 		
 
 	def eround(self, value, decimals=0):
+		"""
 		value = flt(value)
 		
 		if value % 1 >= 0.5:
 			return math.ceil(value)
 		else :
 			return math.floor(value)
+		"""
+		return round(flt(value))
 	
 	def calc_working_days(self, join_date, scheme):
 		scheme = int(scheme)
@@ -107,6 +115,44 @@ class SalarySlip(TransactionBase):
 					working_days += 1
 			current_date += timedelta(days=1)		    
 		return working_days
+	
+	def night_shift_count(self):
+		filters = {
+			'employee': self.employee,
+			'status': "Present",
+			'attendance_date': ['between', [self.start_date, self.end_date]],
+			'shift': ['in', NIGHT_SHIFT_CODES]
+		}
+
+		return frappe.db.count('Attendance', filters)
+	
+	@frappe.whitelist()
+	def get_approved_15xovertime_count(self):
+		"""Returns the count of approved employee overtime requests in a given date range."""
+		count = frappe.db.count(
+			"Employee Overtime",
+			filters={
+				"employee": self.employee,
+				"rate": 1.5,
+				"date": ["between", [self.start_date, self.end_date]],
+			}
+		)
+		
+		return count
+
+	@frappe.whitelist()
+	def get_approved_2xovertime_count(self):
+		"""Returns the count of approved employee overtime requests in a given date range."""
+		count = frappe.db.count(
+			"Employee Overtime",
+			filters={
+				"employee": self.employee,
+				"rate": 2.0,
+				"date": ["between", [self.start_date, self.end_date]],
+			}
+		)
+		
+		return count
 
 	def autoname(self):
 		self.name = make_autoname(self.series)
