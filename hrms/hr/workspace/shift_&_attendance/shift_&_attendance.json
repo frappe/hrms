@@ -241,7 +241,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-02-20 07:10:08.250180",
+ "modified": "2025-03-17 19:16:10.423698",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift & Attendance",
@@ -257,8 +257,9 @@
    "color": "Grey",
    "doc_view": "List",
    "label": "Provisional Plan",
-   "link_to": "roster",
-   "type": "Page"
+   "link_to": "Provisional Plan",
+   "stats_filter": "[]",
+   "type": "DocType"
   },
   {
    "color": "Grey",
