@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-03-09 09:33+0000\n"
-"PO-Revision-Date: 2025-03-12 05:09\n"
+"POT-Creation-Date: 2025-03-16 09:33+0000\n"
+"PO-Revision-Date: 2025-03-17 06:01\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -1609,7 +1609,7 @@ msgstr "crwdns141042:0crwdne141042:0"
 msgid "Attendance To Date"
 msgstr "crwdns141044:0crwdne141044:0"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:101
+#: hrms/hr/doctype/attendance_request/attendance_request.py:114
 msgid "Attendance Updated"
 msgstr "crwdns105366:0crwdne105366:0"
 
@@ -1661,11 +1661,11 @@ msgstr "crwdns141050:0{0}crwdne141050:0"
 msgid "Attendance marked successfully"
 msgstr "crwdns105386:0crwdne105386:0"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:119
+#: hrms/hr/doctype/attendance_request/attendance_request.py:132
 msgid "Attendance not submitted for {0} as it is a Holiday."
 msgstr "crwdns105388:0{0}crwdne105388:0"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:128
+#: hrms/hr/doctype/attendance_request/attendance_request.py:141
 msgid "Attendance not submitted for {0} as {1} is on leave."
 msgstr "crwdns105390:0{0}crwdnd105390:0{1}crwdne105390:0"
 
@@ -4765,7 +4765,7 @@ msgstr "crwdns106882:0crwdne106882:0"
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr "crwdns106884:0crwdne106884:0"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:52
+#: hrms/hr/doctype/attendance_request/attendance_request.py:66
 msgid "Employee {0} already has an Attendance Request {1} that overlaps with this period"
 msgstr "crwdns106886:0{0}crwdnd106886:0{1}crwdne106886:0"
 
@@ -6511,7 +6511,7 @@ msgstr "crwdns107560:0crwdne107560:0"
 msgid "Half Yearly"
 msgstr "crwdns141604:0crwdne141604:0"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:29
+#: hrms/hr/doctype/attendance_request/attendance_request.py:30
 msgid "Half day date should be in between from date and to date"
 msgstr "crwdns107564:0crwdne107564:0"
 
@@ -8874,6 +8874,10 @@ msgstr "crwdns108540:0crwdne108540:0"
 msgid "No attendance records found."
 msgstr "crwdns108542:0crwdne108542:0"
 
+#: hrms/hr/doctype/attendance_request/attendance_request.py:39
+msgid "No attendance records to create"
+msgstr "crwdns154286:0crwdne154286:0"
+
 #: hrms/hr/doctype/interview/interview.py:87
 msgid "No changes found in timings."
 msgstr "crwdns108544:0crwdne108544:0"
@@ -9328,7 +9332,7 @@ msgstr "crwdns108724:0crwdne108724:0"
 msgid "Overall Average Rating"
 msgstr "crwdns142038:0crwdne142038:0"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:57
+#: hrms/hr/doctype/attendance_request/attendance_request.py:71
 msgid "Overlapping Attendance Request"
 msgstr "crwdns108726:0crwdne108726:0"
 
@@ -9839,6 +9843,10 @@ msgstr "crwdns108944:0{0}crwdne108944:0"
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:770
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr "crwdns108946:0{0}crwdnd108946:0{1}crwdne108946:0"
+
+#: hrms/hr/doctype/attendance_request/attendance_request.py:40
+msgid "Please check if employee is on leave or attendance with the same status exists for selected day(s)."
+msgstr "crwdns154288:0crwdne154288:0"
 
 #: hrms/templates/emails/training_event.html:17
 msgid "Please confirm once you have completed your training"
@@ -13799,7 +13807,7 @@ msgstr "crwdns110488:0crwdne110488:0"
 msgid "Update Tax"
 msgstr "crwdns151364:0crwdne151364:0"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:95
+#: hrms/hr/doctype/attendance_request/attendance_request.py:108
 msgid "Updated status from {0} to {1} for date {2} in the attendance record {3}"
 msgstr "crwdns110490:0{0}crwdnd110490:0{1}crwdnd110490:0{2}crwdnd110490:0{3}crwdne110490:0"
 
@@ -14330,7 +14338,7 @@ msgstr "crwdns151384:0crwdne151384:0"
 msgid "cancelled"
 msgstr "crwdns151386:0crwdne151386:0"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:89
+#: hrms/hr/doctype/attendance_request/attendance_request.py:102
 msgid "changed the status from {0} to {1} via Attendance Request"
 msgstr "crwdns110700:0{0}crwdnd110700:0{1}crwdne110700:0"
 
