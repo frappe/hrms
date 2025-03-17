@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-03-09 09:33+0000\n"
-"PO-Revision-Date: 2025-03-12 05:09\n"
+"POT-Creation-Date: 2025-03-16 09:33+0000\n"
+"PO-Revision-Date: 2025-03-17 06:01\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Chinese Simplified\n"
 "MIME-Version: 1.0\n"
@@ -409,7 +409,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_component_account/salary_component_account.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 msgid "Account"
-msgstr "科目"
+msgstr "帐户"
 
 #. Label of the account_head (Link) field in DocType 'Expense Taxes and
 #. Charges'
@@ -427,7 +427,7 @@ msgstr ""
 
 #: hrms/overrides/company.py:124
 msgid "Account {0} does not belong to company: {1}"
-msgstr "科目{0}不属于公司：{1}"
+msgstr "账户{0}不属于公司：{1}"
 
 #: hrms/hr/doctype/expense_claim_type/expense_claim_type.py:29
 msgid "Account {0} does not match with Company {1}"
@@ -462,7 +462,7 @@ msgstr ""
 #. Label of a Link in the Salary Payout Workspace
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Accounting Dimension"
-msgstr "会计维度"
+msgstr "核算维度"
 
 #. Label of the accounting_dimensions_section (Section Break) field in DocType
 #. 'Expense Claim'
@@ -483,7 +483,7 @@ msgstr "会计维度"
 #: hrms/hr/doctype/travel_request/travel_request.json
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 msgid "Accounting Dimensions"
-msgstr "会计维度"
+msgstr "核算维度"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.js:121
 msgid "Accounting Ledger"
@@ -522,7 +522,7 @@ msgstr "应收帐款"
 #. Label of a Link in the Salary Payout Workspace
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Accounts Settings"
-msgstr "会计设置"
+msgstr "账户设置"
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:57
 msgid "Accounts not set for Salary Component {0}"
@@ -537,7 +537,7 @@ msgstr "从{0}到{1}的薪金的应计手工凭证"
 #: hrms/hr/doctype/full_and_final_asset/full_and_final_asset.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 msgid "Action"
-msgstr "行动"
+msgstr "操作"
 
 #: hrms/hr/doctype/attendance_request/attendance_warnings.html:8
 msgid "Action on Submission"
@@ -553,7 +553,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:159
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.js:77
 msgid "Actions"
-msgstr "操作"
+msgstr "操作列表"
 
 #. Option for the 'Status' (Select) field in DocType 'Shift Assignment'
 #. Option for the 'Status' (Select) field in DocType 'Shift Assignment Tool'
@@ -566,7 +566,7 @@ msgstr "操作"
 #: hrms/hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:40
 #: hrms/hr/report/leave_ledger/leave_ledger.js:38
 msgid "Active"
-msgstr "活动"
+msgstr "启用"
 
 #. Label of the activities (Table) field in DocType 'Employee Onboarding'
 #. Label of the section_break_7 (Section Break) field in DocType 'Employee
@@ -739,7 +739,7 @@ msgstr ""
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json
 #: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:62
 msgid "Advance Amount"
-msgstr "预付款总额"
+msgstr "预付款金额"
 
 #. Label of the advance_paid (Currency) field in DocType 'Expense Claim
 #. Advance'
@@ -751,7 +751,7 @@ msgstr ""
 #. Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Advance Payments"
-msgstr "预付款"
+msgstr "预付款项"
 
 #. Label of the advanced_filters_section (Section Break) field in DocType
 #. 'Leave Control Panel'
@@ -1239,7 +1239,7 @@ msgstr "现在申请"
 #. Label of a Card Break in the Recruitment Workspace
 #: hrms/hr/workspace/recruitment/recruitment.json
 msgid "Appointment"
-msgstr "约定"
+msgstr "预约"
 
 #. Label of the appointment_date (Date) field in DocType 'Appointment Letter'
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json
@@ -1634,7 +1634,7 @@ msgstr ""
 msgid "Attendance To Date"
 msgstr ""
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:101
+#: hrms/hr/doctype/attendance_request/attendance_request.py:114
 msgid "Attendance Updated"
 msgstr ""
 
@@ -1686,11 +1686,11 @@ msgstr ""
 msgid "Attendance marked successfully"
 msgstr ""
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:119
+#: hrms/hr/doctype/attendance_request/attendance_request.py:132
 msgid "Attendance not submitted for {0} as it is a Holiday."
 msgstr "由于是假期，{0}的考勤未提交。"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:128
+#: hrms/hr/doctype/attendance_request/attendance_request.py:141
 msgid "Attendance not submitted for {0} as {1} is on leave."
 msgstr ""
 
@@ -4790,7 +4790,7 @@ msgstr ""
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr ""
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:52
+#: hrms/hr/doctype/attendance_request/attendance_request.py:66
 msgid "Employee {0} already has an Attendance Request {1} that overlaps with this period"
 msgstr ""
 
@@ -6536,7 +6536,7 @@ msgstr ""
 msgid "Half Yearly"
 msgstr ""
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:29
+#: hrms/hr/doctype/attendance_request/attendance_request.py:30
 msgid "Half day date should be in between from date and to date"
 msgstr "半天的日期应该在从日期到日期之间"
 
@@ -8899,6 +8899,10 @@ msgstr ""
 msgid "No attendance records found."
 msgstr ""
 
+#: hrms/hr/doctype/attendance_request/attendance_request.py:39
+msgid "No attendance records to create"
+msgstr ""
+
 #: hrms/hr/doctype/interview/interview.py:87
 msgid "No changes found in timings."
 msgstr ""
@@ -9353,7 +9357,7 @@ msgstr ""
 msgid "Overall Average Rating"
 msgstr ""
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:57
+#: hrms/hr/doctype/attendance_request/attendance_request.py:71
 msgid "Overlapping Attendance Request"
 msgstr ""
 
@@ -9863,6 +9867,10 @@ msgstr ""
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:770
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
+msgstr ""
+
+#: hrms/hr/doctype/attendance_request/attendance_request.py:40
+msgid "Please check if employee is on leave or attendance with the same status exists for selected day(s)."
 msgstr ""
 
 #: hrms/templates/emails/training_event.html:17
@@ -13824,7 +13832,7 @@ msgstr ""
 msgid "Update Tax"
 msgstr ""
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:95
+#: hrms/hr/doctype/attendance_request/attendance_request.py:108
 msgid "Updated status from {0} to {1} for date {2} in the attendance record {3}"
 msgstr ""
 
@@ -14355,7 +14363,7 @@ msgstr ""
 msgid "cancelled"
 msgstr "取消"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:89
+#: hrms/hr/doctype/attendance_request/attendance_request.py:102
 msgid "changed the status from {0} to {1} via Attendance Request"
 msgstr ""
 
