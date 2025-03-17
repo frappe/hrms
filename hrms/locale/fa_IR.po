@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-03-09 09:33+0000\n"
-"PO-Revision-Date: 2025-03-16 06:05\n"
+"POT-Creation-Date: 2025-03-16 09:33+0000\n"
+"PO-Revision-Date: 2025-03-17 06:01\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -1609,7 +1609,7 @@ msgstr "تنظیمات حضور و غیاب"
 msgid "Attendance To Date"
 msgstr "حضور تا به امروز"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:101
+#: hrms/hr/doctype/attendance_request/attendance_request.py:114
 msgid "Attendance Updated"
 msgstr "حضور و غیاب به روز شد"
 
@@ -1661,11 +1661,11 @@ msgstr ""
 msgid "Attendance marked successfully"
 msgstr "حضور با موفقیت علامت گذاری شد"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:119
+#: hrms/hr/doctype/attendance_request/attendance_request.py:132
 msgid "Attendance not submitted for {0} as it is a Holiday."
 msgstr "حضور برای {0} ارسال نشده است زیرا تعطیلات است."
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:128
+#: hrms/hr/doctype/attendance_request/attendance_request.py:141
 msgid "Attendance not submitted for {0} as {1} is on leave."
 msgstr "حضور برای {0} ارسال نشد زیرا {1} در مرخصی است."
 
@@ -4765,7 +4765,7 @@ msgstr "کارمند به دلیل عدم حضور کارمند، غایب عل�
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr "کارمند به دلیل عدم رعایت آستانه ساعات کاری، غایب علامت‌گذاری شد."
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:52
+#: hrms/hr/doctype/attendance_request/attendance_request.py:66
 msgid "Employee {0} already has an Attendance Request {1} that overlaps with this period"
 msgstr "کارمند {0} قبلاً یک درخواست حضور {1} دارد که با این دوره همپوشانی دارد"
 
@@ -6511,7 +6511,7 @@ msgstr "رکوردهای نیم روز"
 msgid "Half Yearly"
 msgstr "نیم سال"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:29
+#: hrms/hr/doctype/attendance_request/attendance_request.py:30
 msgid "Half day date should be in between from date and to date"
 msgstr "تاریخ نیم روز باید بین تاریخ و تا تاریخ باشد"
 
@@ -8874,6 +8874,10 @@ msgstr "هیچ سابقه حضوری برای این معیار یافت نشد.
 msgid "No attendance records found."
 msgstr "هیچ سابقه حضور یافت نشد"
 
+#: hrms/hr/doctype/attendance_request/attendance_request.py:39
+msgid "No attendance records to create"
+msgstr ""
+
 #: hrms/hr/doctype/interview/interview.py:87
 msgid "No changes found in timings."
 msgstr "هیچ تغییری در زمان‌بندی یافت نشد."
@@ -9328,7 +9332,7 @@ msgstr "بیش از تخصیص"
 msgid "Overall Average Rating"
 msgstr ""
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:57
+#: hrms/hr/doctype/attendance_request/attendance_request.py:71
 msgid "Overlapping Attendance Request"
 msgstr "درخواست حضور و غیاب همپوشانی"
 
@@ -9839,6 +9843,10 @@ msgstr "لطفاً مزایای باقیمانده {0} را به عنوان جز
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:770
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr "لطفاً ابتدا یک ساختار حقوق و دستمزد برای کارمند {0} اختصاص دهید که از {1} یا قبل از آن اعمال می‌شود."
+
+#: hrms/hr/doctype/attendance_request/attendance_request.py:40
+msgid "Please check if employee is on leave or attendance with the same status exists for selected day(s)."
+msgstr ""
 
 #: hrms/templates/emails/training_event.html:17
 msgid "Please confirm once you have completed your training"
@@ -13799,7 +13807,7 @@ msgstr "وضعیت به روز رسانی"
 msgid "Update Tax"
 msgstr "به روز رسانی مالیات"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:95
+#: hrms/hr/doctype/attendance_request/attendance_request.py:108
 msgid "Updated status from {0} to {1} for date {2} in the attendance record {3}"
 msgstr "وضعیت به روز شده از {0} به {1} برای تاریخ {2} در سابقه حضور {3}"
 
@@ -14330,7 +14338,7 @@ msgstr ""
 msgid "cancelled"
 msgstr "لغو شد"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:89
+#: hrms/hr/doctype/attendance_request/attendance_request.py:102
 msgid "changed the status from {0} to {1} via Attendance Request"
 msgstr "از طریق درخواست حضور، وضعیت را از {0} به {1} تغییر داد"
 
