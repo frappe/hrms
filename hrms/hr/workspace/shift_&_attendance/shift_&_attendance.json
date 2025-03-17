@@ -257,8 +257,9 @@
    "color": "Grey",
    "doc_view": "List",
    "label": "Provisional Plan",
-   "link_to": "roster",
-   "type": "Page"
+   "link_to": "Provisional Plan",
+   "stats_filter": "[]",
+   "type": "DocType"
   },
   {
    "color": "Grey",
