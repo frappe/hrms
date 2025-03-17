@@ -74,6 +74,7 @@
    "in_list_view": 1,
    "label": "Time",
    "permlevel": 1,
+   "read_only_depends_on": "eval:doc.attendance;",
    "reqd": 1
   },
   {
@@ -171,11 +172,12 @@
    "fieldname": "offshift",
    "fieldtype": "Check",
    "hidden": 1,
-   "label": "Off-shift"
+   "label": "Off-shift",
+   "read_only": 1
   }
  ],
  "links": [],
- "modified": "2025-02-14 18:44:30.726103",
+ "modified": "2025-03-05 15:36:10.014354",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Checkin",

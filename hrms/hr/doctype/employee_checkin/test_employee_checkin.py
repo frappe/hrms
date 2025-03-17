@@ -642,6 +642,27 @@ class TestEmployeeCheckin(IntegrationTestCase):
 		log.fetch_shift()
 		self.assertFalse(log.offshift)
 
+	def test_validate_time_change(self):
+		# 8-12 shift
+		shift = setup_shift_type()
+		emp = make_employee(
+			"emp_test_shift_start@example.com", company="_Test Company", default_shift=shift.name
+		)
+		timestamp = datetime.combine(getdate(), get_time("10:00:00"))
+		shift_start = datetime.combine(getdate(), get_time("08:00:00"))
+		log = make_checkin(emp, timestamp)
+		# when attendance is not linked, shift start changes with time
+		log.time = add_days(timestamp, 1)
+		log.save()
+		log.reload()
+		self.assertEqual(log.shift_start, add_days(shift_start, 1))
+
+		# when attendance is linked, don't allow to modify either time or shift parameters
+		mark_attendance_and_link_log([log], "Absent", add_days(timestamp, 1))
+		log.reload()
+		log.time = timestamp
+		self.assertRaises(frappe.ValidationError, log.save)
+
 
 def make_n_checkins(employee, n, hours_to_reverse=1):
 	logs = [make_checkin(employee, now_datetime() - timedelta(hours=hours_to_reverse, minutes=n + 1))]

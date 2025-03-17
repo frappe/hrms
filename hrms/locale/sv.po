@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-02-16 09:33+0000\n"
-"PO-Revision-Date: 2025-02-17 14:16\n"
+"POT-Creation-Date: 2025-03-09 09:33+0000\n"
+"PO-Revision-Date: 2025-03-10 18:49\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -36,7 +36,7 @@ msgstr "% Användning (B + NB) / T"
 msgid "% Utilization (B / T)"
 msgstr "% Användning (B / T)"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:140
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:150
 msgid "'employee_field_value' and 'timestamp' are required."
 msgstr "Personal och tidstämpel erfordras."
 
@@ -437,9 +437,12 @@ msgstr "Konto {0} stämmer inte överens med bolag {1}"
 #. Advance'
 #. Label of the accounting_details_tab (Tab Break) field in DocType 'Expense
 #. Claim'
+#. Label of the accounting_section (Section Break) field in DocType 'Leave
+#. Encashment'
 #. Label of a Card Break in the Salary Payout Workspace
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 #: hrms/hr/doctype/expense_claim/expense_claim.json
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Accounting"
 msgstr "Bokföring"
@@ -468,12 +471,15 @@ msgstr "Bokföring Dimension"
 #. Label of the accounting_dimensions_section (Section Break) field in DocType
 #. 'Expense Taxes and Charges'
 #. Label of the accounting_dimensions_section (Section Break) field in DocType
+#. 'Leave Encashment'
+#. Label of the accounting_dimensions_section (Section Break) field in DocType
 #. 'Travel Request'
 #. Label of the accounting_dimensions_section (Section Break) field in DocType
 #. 'Payroll Entry'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 #: hrms/hr/doctype/expense_claim_detail/expense_claim_detail.json
 #: hrms/hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/hr/doctype/travel_request/travel_request.json
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 msgid "Accounting Dimensions"
@@ -604,7 +610,7 @@ msgstr "Faktisk Kostnad"
 #. Label of the actual_encashable_days (Float) field in DocType 'Leave
 #. Encashment'
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
-#: hrms/hr/doctype/leave_encashment/leave_encashment.py:136
+#: hrms/hr/doctype/leave_encashment/leave_encashment.py:131
 msgid "Actual Encashable Days"
 msgstr "Faktiska Uttagbara Dagar"
 
@@ -657,7 +663,7 @@ msgstr "Lägg till oanvänd frånvaro från tidigare frånvaro period tilldelnin
 msgid "Added On"
 msgstr "Tillagd"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1311
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1319
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
 msgstr "La till skattkomponenter från lönekomponenter eftersom löneart inte hade någon skattkomponent."
 
@@ -1076,6 +1082,12 @@ msgstr "Belopp som begärts via Utlägg"
 msgid "Amount of expense"
 msgstr "Förskott Belopp"
 
+#. Description of the 'Paid Amount' (Currency) field in DocType 'Leave
+#. Encashment'
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
+msgid "Amount paid against this encashment"
+msgstr "Belopp betald mot denna uttag"
+
 #. Description of the 'Returned Amount' (Currency) field in DocType 'Employee
 #. Advance'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
@@ -1095,6 +1107,10 @@ msgstr "Utbetald Belopp"
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:58
 msgid "An amount of {0} already claimed for the component {1}, set the amount equal or greater than {2}"
 msgstr "elopp på {0} som redan tilldelad för komponent {1}, ange belopp lika med eller högre än {2}"
+
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:54
+msgid "An attendance record is linked to this checkin. Please cancel the attendance before modifying time."
+msgstr "Närvaro post är kopplad till denna stämpling. Avbryt närvaro innan du ändrar tid."
 
 #. Label of the annual_allocation (Float) field in DocType 'Leave Policy
 #. Detail'
@@ -1337,7 +1353,7 @@ msgstr "Utvärdering Mall hittades inte för vissa beteckningar."
 msgid "Appraisal creation is queued. It may take a few minutes."
 msgstr "Utvärdering skapande i kö. Det kan ta några minuter."
 
-#: hrms/hr/doctype/appraisal/appraisal.py:61
+#: hrms/hr/doctype/appraisal/appraisal.py:58
 msgid "Appraisal {0} already exists for Employee {1} for this Appraisal Cycle or overlapping period"
 msgstr "Utvärdering {0} finns redan för Personal {1} för denna Utvärdering Cykel eller överlappande period"
 
@@ -1726,6 +1742,11 @@ msgstr "Automatiskt Baserad på Mål Framsteg"
 msgid "Automatically fetches all assets allocated to the employee, if any"
 msgstr "Automatiskt hämtar alla tillgångar som tilldelats till vald personal, om några"
 
+#. Label of the auto_update_last_sync (Check) field in DocType 'Shift Type'
+#: hrms/hr/doctype/shift_type/shift_type.json
+msgid "Automatically update Last Sync of Checkin"
+msgstr "Uppdatera automatiskt senaste synkronisering av Stämpling"
+
 #. Label of the available_leaves (Float) field in DocType 'Salary Slip Leave'
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Available Leave(s)"
@@ -2001,7 +2022,7 @@ msgstr "Som standard beräknas slut resultat som genomsnitt av mål resultat, å
 
 #. Label of the ctc (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:548
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:582
 msgid "CTC"
 msgstr "Årslön"
 
@@ -2046,24 +2067,24 @@ msgstr "Annullera"
 msgid "Cancellation Queued"
 msgstr "Annullering i Kö"
 
-#. Option for the 'Status' (Select) field in DocType 'Appraisal'
 #. Option for the 'Status' (Select) field in DocType 'Employee Advance'
 #. Option for the 'Status' (Select) field in DocType 'Exit Interview'
 #. Option for the 'Status' (Select) field in DocType 'Expense Claim'
 #. Option for the 'Status' (Select) field in DocType 'Job Requisition'
 #. Option for the 'Status' (Select) field in DocType 'Leave Application'
+#. Option for the 'Status' (Select) field in DocType 'Leave Encashment'
 #. Option for the 'Event Status' (Select) field in DocType 'Training Event'
 #. Option for the 'Status' (Select) field in DocType 'Training Program'
 #. Option for the 'Status' (Select) field in DocType 'Gratuity'
 #. Option for the 'Status' (Select) field in DocType 'Payroll Entry'
 #. Option for the 'Status' (Select) field in DocType 'Salary Slip'
 #. Option for the 'Status' (Select) field in DocType 'Salary Withholding'
-#: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 #: hrms/hr/doctype/exit_interview/exit_interview.json
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 #: hrms/hr/doctype/job_requisition/job_requisition.json
 #: hrms/hr/doctype/leave_application/leave_application.json
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/hr/doctype/training_event/training_event.json
 #: hrms/hr/doctype/training_program/training_program.json
 #: hrms/payroll/doctype/gratuity/gratuity.json
@@ -2072,6 +2093,10 @@ msgstr "Annullering i Kö"
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Cancelled"
 msgstr "Annullerad"
+
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:53
+msgid "Cannot Modify Time"
+msgstr "Kan inte ändra tid"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:320
 msgid "Cannot allocate leaves outside the allocation period {0} - {1}"
@@ -2093,11 +2118,11 @@ msgstr "Kan inte avbryta Skift Tilldelning: {0} eftersom det är kopplad till N�
 msgid "Cannot cancel Shift Assignment: {0} as it is linked to Employee Checkin: {1}"
 msgstr "Kan inte avbryta Skift Tilldelning: {0} eftersom det är kopplad till Personal Stämpling: {1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:270
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:276
 msgid "Cannot create Salary Slip for Employee joining after Payroll Period"
 msgstr "Kan inte skapa Lönespecifikation för Personal som börjar efter Löneperiod"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:273
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:279
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr "Kan inte skapa Lönespecifikation för Personal som slutat före Löneperiod"
 
@@ -2514,7 +2539,6 @@ msgstr "Kompensation Frånvaro Begäran"
 msgid "Compensatory Off"
 msgstr "Kompensation Av"
 
-#. Option for the 'Status' (Select) field in DocType 'Appraisal'
 #. Option for the 'Status' (Select) field in DocType 'Appraisal Cycle'
 #. Option for the 'Status' (Select) field in DocType 'Employee Onboarding'
 #. Option for the 'Status' (Select) field in DocType 'Employee Separation'
@@ -2523,7 +2547,6 @@ msgstr "Kompensation Av"
 #. Option for the 'Event Status' (Select) field in DocType 'Training Event'
 #. Option for the 'Status' (Select) field in DocType 'Training Event Employee'
 #. Option for the 'Status' (Select) field in DocType 'Training Program'
-#: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:202
 #: hrms/hr/doctype/employee_onboarding/employee_onboarding.json
@@ -2689,6 +2712,7 @@ msgstr "Kostnad"
 #. Label of the cost_center (Link) field in DocType 'Expense Claim'
 #. Label of the cost_center (Link) field in DocType 'Expense Claim Detail'
 #. Label of the cost_center (Link) field in DocType 'Expense Taxes and Charges'
+#. Label of the cost_center (Link) field in DocType 'Leave Encashment'
 #. Label of the cost_center (Link) field in DocType 'Travel Request'
 #. Label of the cost_center (Link) field in DocType 'Employee Cost Center'
 #. Label of the cost_center (Link) field in DocType 'Gratuity'
@@ -2697,6 +2721,7 @@ msgstr "Kostnad"
 #: hrms/hr/doctype/expense_claim/expense_claim.py:286
 #: hrms/hr/doctype/expense_claim_detail/expense_claim_detail.json
 #: hrms/hr/doctype/expense_taxes_and_charges/expense_taxes_and_charges.json
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/hr/doctype/travel_request/travel_request.json
 #: hrms/payroll/doctype/employee_cost_center/employee_cost_center.json
 #: hrms/payroll/doctype/gratuity/gratuity.json
@@ -2767,6 +2792,7 @@ msgstr "Personlig Brev"
 #: hrms/hr/doctype/expense_claim/expense_claim.js:109
 #: hrms/hr/doctype/job_applicant/job_applicant.js:29
 #: hrms/hr/doctype/job_applicant/job_applicant.js:57
+#: hrms/hr/doctype/leave_encashment/leave_encashment.js:62
 #: hrms/hr/doctype/vehicle_log/vehicle_log.js:21
 #: hrms/hr/doctype/vehicle_log/vehicle_log.js:23
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.js:16
@@ -3154,7 +3180,7 @@ msgstr "Födelsedag Datum"
 #: hrms/hr/report/employee_exits/employee_exits.py:32
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.json
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:540
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:574
 #: hrms/payroll/report/salary_register/salary_register.py:128 hrms/setup.py:396
 msgid "Date of Joining"
 msgstr "Anställning Datum"
@@ -3451,7 +3477,7 @@ msgstr "Leverans Rutt"
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.js:33
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:527
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:561
 #: hrms/payroll/report/salary_register/salary_register.py:141
 #: hrms/public/js/salary_slip_deductions_report_filters.js:42 hrms/setup.py:402
 #: hrms/templates/generators/job_opening.html:87
@@ -3626,7 +3652,7 @@ msgstr "Beskrivning av ett Jobb Erbjudande"
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:534
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:568
 #: hrms/payroll/report/salary_register/salary_register.py:148
 msgid "Designation"
 msgstr "Befattning"
@@ -3760,18 +3786,18 @@ msgstr "Ladda ner PDF"
 msgid "Download Template"
 msgstr "Ladda ner Mall"
 
-#. Option for the 'Status' (Select) field in DocType 'Appraisal'
 #. Option for the 'Status' (Select) field in DocType 'Employee Advance'
 #. Option for the 'Approval Status' (Select) field in DocType 'Expense Claim'
 #. Option for the 'Status' (Select) field in DocType 'Expense Claim'
+#. Option for the 'Status' (Select) field in DocType 'Leave Encashment'
 #. Option for the 'Status' (Select) field in DocType 'Shift Request'
 #. Option for the 'Status' (Select) field in DocType 'Gratuity'
 #. Option for the 'Status' (Select) field in DocType 'Payroll Entry'
 #. Option for the 'Status' (Select) field in DocType 'Salary Slip'
 #. Option for the 'Status' (Select) field in DocType 'Salary Withholding'
-#: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 #: hrms/hr/doctype/expense_claim/expense_claim.json
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/hr/doctype/shift_request/shift_request.json
 #: hrms/payroll/doctype/gratuity/gratuity.json
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
@@ -3789,7 +3815,7 @@ msgstr "Förare"
 msgid "Duplicate Attendance"
 msgstr "Kopiera Närvaro"
 
-#: hrms/hr/doctype/appraisal/appraisal.py:65
+#: hrms/hr/doctype/appraisal/appraisal.py:62
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:96
 msgid "Duplicate Entry"
 msgstr "Kopiera Post"
@@ -4126,7 +4152,7 @@ msgstr "Skickar Lönespecifikation baserat på angiven e-post adress i Personal 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.js:26
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:514
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:548
 #: hrms/payroll/report/income_tax_deductions/income_tax_deductions.py:25
 #: hrms/payroll/report/professional_tax_deductions/professional_tax_deductions.py:21
 #: hrms/payroll/report/provident_fund_deductions/provident_fund_deductions.py:20
@@ -4407,7 +4433,7 @@ msgstr "Frånvaro Saldo Översikt"
 #. Name of a Workspace
 #: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Employee Lifecycle"
-msgstr "Livscykel"
+msgstr "Arbetsliv"
 
 #: hrms/setup.py:772
 msgid "Employee Loan"
@@ -4519,7 +4545,7 @@ msgstr "Personal Lån"
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
 #: hrms/payroll/report/bank_remittance/bank_remittance.py:32
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:521
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:555
 #: hrms/payroll/report/income_tax_deductions/income_tax_deductions.py:32
 #: hrms/payroll/report/professional_tax_deductions/professional_tax_deductions.py:28
 #: hrms/payroll/report/provident_fund_deductions/provident_fund_deductions.py:27
@@ -4756,11 +4782,11 @@ msgstr "Personal Namn"
 msgid "Employee records are created using the selected option"
 msgstr "Personal poster skapas med valda alternativ"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:186
+#: hrms/hr/doctype/shift_type/shift_type.py:241
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr "Personal angavs som Frånvarande på grund av saknade stämplingar."
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:228
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:238
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr "Personal angavs Frånvarande för att inte ha uppfyllt arbetstid tröskel."
 
@@ -4804,7 +4830,7 @@ msgstr "Personal {0} hittades inte i Utbildning Händelse Deltagare."
 msgid "Employee {0} on Half day on {1}"
 msgstr "Personal {0} halvdag {1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:578
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:586
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
 msgstr "Personal {0} som avskedades {1} måste anges som 'Slutat'"
 
@@ -4936,11 +4962,11 @@ msgstr "Uttag Datum"
 msgid "Encashment Days"
 msgstr "Uttag Dagar"
 
-#: hrms/hr/doctype/leave_encashment/leave_encashment.py:135
+#: hrms/hr/doctype/leave_encashment/leave_encashment.py:130
 msgid "Encashment Days cannot exceed {0} {1} as per Leave Type settings"
 msgstr "Uttag Dagar får inte överstiga {0} {1} enligt Frånvaro Typ Inställningar"
 
-#: hrms/hr/doctype/leave_encashment/leave_encashment.py:125
+#: hrms/hr/doctype/leave_encashment/leave_encashment.py:120
 msgid "Encashment Limit Applied"
 msgstr "Uttag Gräns Tillämpad"
 
@@ -5065,11 +5091,11 @@ msgstr "Fel vid skapandet av {0}"
 msgid "Error deleting {0}"
 msgstr "Fel vid borttagning av {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1227
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1235
 msgid "Error in formula or condition"
 msgstr "Fel i formel eller villkor"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2194
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2202
 msgid "Error in formula or condition: {0} in Income Tax Slab"
 msgstr "Fel i formel eller villkor: {0} i Inkomst Skatt Tabell"
 
@@ -5081,7 +5107,7 @@ msgstr "Fel i vissa rader"
 msgid "Error updating {0}"
 msgstr "Fel vid uppdatering av {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2273
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2281
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
 msgstr "Fel vid utvärdering av {doctype} {doclink} på rad {row_id}. <br><br> <b>Fel:</b> {error} <br><br> <b>Tips:</b> {description}"
 
@@ -5187,7 +5213,7 @@ msgstr "Växelkurs kan inte vara noll."
 msgid "Exclude Holidays"
 msgstr "Exkludera Helgdagar"
 
-#: hrms/hr/doctype/leave_encashment/leave_encashment.py:111
+#: hrms/hr/doctype/leave_encashment/leave_encashment.py:106
 msgid "Excluded {0} Non-Encashable Leaves for {1}"
 msgstr "Exkluderade {0} ej Uttagbar Frånvaro för {1}"
 
@@ -5344,7 +5370,9 @@ msgstr "Förväntad Färdighet"
 msgid "Expense"
 msgstr "Kostnad"
 
+#. Label of the expense_account (Link) field in DocType 'Leave Encashment'
 #. Label of the expense_account (Link) field in DocType 'Gratuity'
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/payroll/doctype/gratuity/gratuity.json
 msgid "Expense Account"
 msgstr "Kostnad Konto"
@@ -5660,7 +5688,7 @@ msgid "File Preview"
 msgstr "Filförhandsvisning"
 
 #: hrms/hr/doctype/leave_application/leave_application.js:99
-#: hrms/hr/doctype/leave_encashment/leave_encashment.js:28
+#: hrms/hr/doctype/leave_encashment/leave_encashment.js:49
 msgid "Fill the form and save it"
 msgstr "Fyll i Formulär och Spara"
 
@@ -6160,7 +6188,7 @@ msgstr "Mål är uppdaterad"
 
 #. Label of the goals (Table) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
-#: hrms/hr/doctype/appraisal/appraisal.py:135
+#: hrms/hr/doctype/appraisal/appraisal.py:132
 msgid "Goals"
 msgstr "Mål"
 
@@ -6918,7 +6946,7 @@ msgstr "Inkomst Skatt Avdrag"
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:142
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:542
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:576
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Income Tax Slab"
@@ -6933,15 +6961,15 @@ msgstr "Inkomst Skatt Tabell Övriga Avgifter"
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr "Inkomst Skatt Tabell erfordras eftersom Löneart {0} har skattkomponent {1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1555
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1563
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "Inkomst Skatt Tabell måste vara aktiv före eller före start datum för Löneperiod Start Datum: {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1543
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1551
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "Inkomst Skatt Tabell inte angiven i Löneart Tilldelning: {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1551
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1559
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "Inkomst Skatt Tabell: {0} är inaktiverad"
 
@@ -6951,7 +6979,7 @@ msgstr "Inkomst Skatt Tabell: {0} är inaktiverad"
 msgid "Income from Other Sources"
 msgstr "Inkomst från Andra Källor"
 
-#: hrms/hr/doctype/appraisal/appraisal.py:159 hrms/mixins/appraisal.py:20
+#: hrms/hr/doctype/appraisal/appraisal.py:156 hrms/mixins/appraisal.py:20
 msgid "Incorrect Weightage Allocation"
 msgstr "Felaktig Vikt Fördelning"
 
@@ -7173,7 +7201,6 @@ msgid "Introduction"
 msgstr "Introduktion"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Grievance'
-#: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:5
 #: hrms/hr/doctype/employee_grievance/employee_grievance.json
 msgid "Invalid"
 msgstr "Ogiltig"
@@ -7201,6 +7228,11 @@ msgstr "Ogiltig Frånvaro Register Post"
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:319
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
 msgstr "Ogiltig Löne Konto. Konto valuta måste vara {0} eller {1}"
+
+#: hrms/hr/doctype/shift_type/shift_type.py:39
+#: hrms/hr/doctype/shift_type/shift_type.py:48
+msgid "Invalid Shift Times"
+msgstr "Ogiltiga Skifttider"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:624
 msgid "Invalid parameters provided. Please pass the required arguments."
@@ -7297,11 +7329,6 @@ msgstr "Är Grupp"
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Is Income Tax Component"
 msgstr "Är Inkomst Skatt Komponent"
-
-#. Label of the is_invalid (Check) field in DocType 'Employee Checkin'
-#: hrms/hr/doctype/employee_checkin/employee_checkin.json
-msgid "Is Invalid"
-msgstr "Ogiltig"
 
 #. Label of the is_lwp (Check) field in DocType 'Leave Ledger Entry'
 #. Label of the is_lwp (Check) field in DocType 'Leave Type'
@@ -7570,7 +7597,7 @@ msgstr "Nyckel Prestation Område mot Mål"
 #. Label of the kra_tab (Tab Break) field in DocType 'Appraisal'
 #. Label of the goals (Table) field in DocType 'Appraisal Template'
 #: hrms/hr/doctype/appraisal/appraisal.json
-#: hrms/hr/doctype/appraisal/appraisal.py:145
+#: hrms/hr/doctype/appraisal/appraisal.py:142
 #: hrms/hr/doctype/appraisal_template/appraisal_template.json
 msgid "KRAs"
 msgstr "Nyckel Prestation Områden"
@@ -7659,7 +7686,7 @@ msgstr "Sen Instämpling Anstånd Period"
 msgid "Latitude"
 msgstr "Latitud"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:88
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:98
 msgid "Latitude and longitude values are required for checking in."
 msgstr "Latitud och longitud värde erfordras för att stämpla."
 
@@ -7957,7 +7984,7 @@ msgstr "Frånvaro Typ {0} kan inte tilldelas eftersom det är obetald ledighet"
 msgid "Leave Type {0} cannot be carry-forwarded"
 msgstr "Frånvaro Typ {0} kan inte vidarebefordras"
 
-#: hrms/hr/doctype/leave_encashment/leave_encashment.py:101
+#: hrms/hr/doctype/leave_encashment/leave_encashment.py:96
 msgid "Leave Type {0} is not encashable"
 msgstr "Frånvaro Typ {0} är inte uttagbar"
 
@@ -7968,7 +7995,7 @@ msgstr "Frånvaro Typ {0} är inte uttagbar"
 msgid "Leave Without Pay"
 msgstr "Obetald Frånvaro"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:469
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:477
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr "Obetald Frånvaro stämmer inte med godkända {} poster"
 
@@ -8092,7 +8119,7 @@ msgstr "Registrering Nummer"
 
 #: hrms/overrides/dashboard_overrides.py:16
 msgid "Lifecycle"
-msgstr "Livscykel"
+msgstr "Arbetsliv"
 
 #. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
@@ -8178,7 +8205,7 @@ msgstr "Logga ut"
 msgid "Log Type"
 msgstr "Typ"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:71
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:81
 msgid "Log Type is required for check-ins falling in the shift: {0}."
 msgstr "Logg Typ erfodras för Stämplingar som infaller under skift: {0}."
 
@@ -8300,7 +8327,7 @@ msgstr "Ange närvaro som {0} för {1} på valda datum?"
 msgid "Mark attendance based on 'Employee Checkin' for Employees assigned to this shift."
 msgstr "Ange närvaro baserat på 'Personal Stämplingar' för Personal som tilldelats detta skift."
 
-#: hrms/hr/doctype/shift_type/shift_type.py:33
+#: hrms/hr/doctype/shift_type/shift_type.py:88
 msgid "Mark attendance for existing check-in/out logs before changing shift settings"
 msgstr "Markera närvaro för befintliga instämpling/utstämpling loggar innan skiftbytet"
 
@@ -8451,7 +8478,7 @@ msgstr "Maximum förmån för personal {0} överstiger {1} med summa {2} av för
 msgid "Maximum benefit of employee {0} exceeds {1} by the sum {2} of previous claimed amount"
 msgstr "Maximum förmån för personal {0} överstiger {1} med summa {2} av tidigare anspråk belopp"
 
-#: hrms/hr/doctype/leave_encashment/leave_encashment.py:122
+#: hrms/hr/doctype/leave_encashment/leave_encashment.py:117
 msgid "Maximum encashable leaves for {0} are {1}"
 msgstr "Maximum antal uttagbar frånvaro för {0} är {1}"
 
@@ -8530,7 +8557,7 @@ msgstr "Öppning poster saknas"
 msgid "Missing Relieving Date"
 msgstr "Saknar Avgång Datum"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1546
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1554
 msgid "Missing Tax Slab"
 msgstr "Inkomst Skatt Tabell saknas"
 
@@ -8625,8 +8652,11 @@ msgstr "Mer"
 #. Label of the more_info_section (Section Break) field in DocType 'Employee
 #. Advance'
 #. Label of the more_info_tab (Tab Break) field in DocType 'Expense Claim'
+#. Label of the section_break_svbb (Section Break) field in DocType 'Leave
+#. Encashment'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 #: hrms/hr/doctype/expense_claim/expense_claim.json
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
 msgid "More Info"
 msgstr "Extra Information"
 
@@ -8671,8 +8701,8 @@ msgstr "Mina Begäran"
 msgid "Name"
 msgstr "Namn"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1213
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2189
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1221
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2197
 msgid "Name error"
 msgstr "Namn Fel"
 
@@ -8793,7 +8823,7 @@ msgstr "Ingen Data"
 msgid "No Employee Found"
 msgstr "Ingen Personal hittades"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:152
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:162
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "Ingen Personal hittades för angiven Personal fält värde. '{}': {}"
 
@@ -8809,7 +8839,7 @@ msgstr "Ingen intervju är schemalagd."
 msgid "No Leave Period Found"
 msgstr "Ingen Frånvaro Period Hittades"
 
-#: hrms/hr/doctype/leave_encashment/leave_encashment.py:145
+#: hrms/hr/doctype/leave_encashment/leave_encashment.py:140
 msgid "No Leaves Allocated to Employee: {0} for Leave Type: {1}"
 msgstr "Ingen Frånvaro tilldelad Personal: {0} för Frånvaro Typ: {1}"
 
@@ -8821,7 +8851,7 @@ msgstr "Ingen Lönespecifikation hittades för: {0}"
 msgid "No Salary Structure Assignment found for employee {0} on or before {1}"
 msgstr "Ingen Lön Struktur Tilldelning hittades för {0} på eller före {1}"
 
-#: hrms/hr/doctype/leave_encashment/leave_encashment.py:30
+#: hrms/hr/doctype/leave_encashment/leave_encashment.py:36
 msgid "No Salary Structure assigned to Employee {0} on the given date {1}"
 msgstr "Ingen Löneart tilldelad {0} på angiven datum {1}"
 
@@ -8841,7 +8871,7 @@ msgstr "Inga Bemanning Planer hittades för denna Befattning"
 msgid "No active employee found associated with the email ID {0}. Try logging in with your employee email ID or contact your HR manager for access."
 msgstr "Ingen aktiv personal hittades kopplad till e-post {0}. Försök att logga in med personal e-post eller kontakta Personal ansvarig för åtkomst."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:395
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:403
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
 msgstr "Ingen aktiv eller standard löneart hittades för {0} för angivna datum"
 
@@ -8885,7 +8915,7 @@ msgstr "Ingen personal hittades för angivna kriterier:<br>Bolag: {0}<br> Valuta
 msgid "No employees found for the selected criteria"
 msgstr "Ingen personal hittades för valda kriterier"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:70
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:71
 msgid "No employees found with selected filters and active salary structure"
 msgstr "Ingen personal hittades med valda filter och aktiv löneart"
 
@@ -8929,10 +8959,6 @@ msgstr "Ingen Lönespecifikation hittad att godkänna för ovanstående valda kr
 #: hrms/hr/doctype/employee_checkin/employee_checkin.js:50
 msgid "No valid shift found for log time"
 msgstr "Inget giltigt skift hittades för loggtid"
-
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:8
-msgid "No valid shift found for this log time. If shift is assigned to the employee, adjust time window of the shift and fetch shift again."
-msgstr "Inget giltigt skift hittades för denna loggtid. Om skift tilldelas personal, justera tidsfönster för skift och hämta skift igen."
 
 #: hrms/public/js/utils/index.js:48
 msgid "No {0} Selected"
@@ -9001,7 +9027,7 @@ msgstr "Obs! Skift kommer inte att skrivas över i befintliga närvaro poster"
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr "Obs! Totalt antal tilldelad frånvaro {0} ska inte vara lägre än redan godkänd frånvaro {1} för period"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1879
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1887
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr "Obs: Lönespecifikation är lösenord skyddad, lösenord för att låsa upp PDF fil är {0} format."
 
@@ -9088,6 +9114,15 @@ msgstr "Vägmätare Avläsning"
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.py:41
 msgid "Odometer Value"
 msgstr "Vägmätare Värde"
+
+#: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:5
+msgid "Off-Shift"
+msgstr "Utanför Skift"
+
+#. Label of the offshift (Check) field in DocType 'Employee Checkin'
+#: hrms/hr/doctype/employee_checkin/employee_checkin.json
+msgid "Off-shift"
+msgstr "Utanför Skift"
 
 #. Label of the offer_date (Date) field in DocType 'Job Offer'
 #: hrms/hr/doctype/job_offer/job_offer.json
@@ -9387,18 +9422,22 @@ msgstr "Progressiv Webbapplikation Meddelande"
 #. 'Employee Referral'
 #. Option for the 'Status' (Select) field in DocType 'Expense Claim'
 #. Option for the 'Status' (Select) field in DocType 'Full and Final Statement'
+#. Option for the 'Status' (Select) field in DocType 'Leave Encashment'
 #. Option for the 'Status' (Select) field in DocType 'Gratuity'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/payroll/doctype/gratuity/gratuity.json
 msgid "Paid"
 msgstr "Betald"
 
 #. Label of the paid_amount (Currency) field in DocType 'Employee Advance'
+#. Label of the paid_amount (Currency) field in DocType 'Leave Encashment'
 #. Label of the paid_amount (Currency) field in DocType 'Gratuity'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:67
 #: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.py:22
 #: hrms/payroll/doctype/gratuity/gratuity.json
@@ -9472,14 +9511,22 @@ msgstr "Lösenord Regel för Lönespecifikation är inte angiven"
 msgid "Pay Against Benefit Claim"
 msgstr "Betala mot Förmån Krav"
 
+#. Label of the pay_via_payment_entry (Check) field in DocType 'Leave
+#. Encashment'
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
+msgid "Pay Via Payment Entry"
+msgstr "Betala via Betalning Post"
+
 #. Label of the pay_via_salary_slip (Check) field in DocType 'Gratuity'
 #: hrms/payroll/doctype/gratuity/gratuity.json
 msgid "Pay via Salary Slip"
 msgstr "Betala via Lönespecifikation"
 
 #. Label of the payable_account (Link) field in DocType 'Expense Claim'
+#. Label of the payable_account (Link) field in DocType 'Leave Encashment'
 #. Label of the payable_account (Link) field in DocType 'Gratuity'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/payroll/doctype/gratuity/gratuity.json
 msgid "Payable Account"
 msgstr "Betalning Konto"
@@ -9497,6 +9544,7 @@ msgstr "Skulder"
 #: hrms/hr/doctype/employee_advance/employee_advance.js:50
 #: hrms/hr/doctype/expense_claim/expense_claim.js:105
 #: hrms/hr/doctype/expense_claim/expense_claim_dashboard.py:9
+#: hrms/hr/doctype/leave_encashment/leave_encashment.js:58
 #: hrms/payroll/doctype/gratuity/gratuity_dashboard.py:10
 msgid "Payment"
 msgstr "Betalning"
@@ -9813,7 +9861,7 @@ msgstr "Lägg till återstående förmåner {0} till någon av befintliga kompon
 msgid "Please add the remaining benefits {0} to the application as pro-rata component"
 msgstr "Lägg till återstående förmåner {0} till ansökan som proportionell komponent"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:762
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:770
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr "Tilldela först Löneart för {0} som gäller från eller före {1}"
 
@@ -9837,7 +9885,11 @@ msgstr "Aktivera standard inkommande konto före skapande av Daglig Arbete Över
 msgid "Please enter the designation"
 msgstr "Ange Befattning"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1868
+#: hrms/hr/doctype/shift_type/shift_type.py:49
+msgid "Please reduce {0} to avoid shift time overlapping with itself"
+msgstr "Minska {0} för att undvika att skifttid överlappar sig själv"
+
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1876
 msgid "Please see attachment"
 msgstr "Se Bilaga"
 
@@ -9912,6 +9964,7 @@ msgid "Please select company."
 msgstr "Välj Bolag."
 
 #: hrms/hr/doctype/employee_advance/employee_advance.js:16
+#: hrms/hr/doctype/leave_encashment/leave_encashment.js:30
 msgid "Please select employee first"
 msgstr "Välj Personal"
 
@@ -9951,11 +10004,11 @@ msgstr "Ange \"Standard Löneutbetalning Konto\" i Bolag Inställningar"
 msgid "Please set Basic and HRA component in Company {0}"
 msgstr "Ange Grund och HRA Komponent i Bolag {0}"
 
-#: hrms/hr/doctype/leave_encashment/leave_encashment.py:49
+#: hrms/hr/doctype/leave_encashment/leave_encashment.py:162
 msgid "Please set Earning Component for Leave type: {0}."
 msgstr "Ange Inkomst Komponent för Frånvaro Typ: {0}."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:453
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:461
 msgid "Please set Payroll based on in Payroll settings"
 msgstr "Ange Lön baserad på Löneinställningar"
 
@@ -9988,7 +10041,7 @@ msgstr "Ange Utvärdering Mall för alla {0} eller välj mall i Personal Instäl
 msgid "Please set the Company"
 msgstr "Ange Bolag"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:266
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:272
 msgid "Please set the Date Of Joining for employee {0}"
 msgstr "Ange Anställning Datum för Personal {0}"
 
@@ -10056,6 +10109,7 @@ msgstr "Datum"
 #. Label of the posting_date (Date) field in DocType 'Expense Claim Advance'
 #. Label of the posting_date (Date) field in DocType 'Job Requisition'
 #. Label of the posting_date (Date) field in DocType 'Leave Application'
+#. Label of the posting_date (Date) field in DocType 'Leave Encashment'
 #. Label of the posting_date (Date) field in DocType 'Payroll Entry'
 #. Label of the posting_date (Date) field in DocType 'Salary Slip'
 #. Label of the posting_date (Date) field in DocType 'Salary Withholding'
@@ -10064,6 +10118,7 @@ msgstr "Datum"
 #: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
 #: hrms/hr/doctype/job_requisition/job_requisition.json
 #: hrms/hr/doctype/leave_application/leave_application.json
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:60
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
@@ -10167,6 +10222,12 @@ msgstr "Behandla Begäran"
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 msgid "Process Shift Requests"
 msgstr "Behandla Skift Begäran"
+
+#. Description of the 'Pay Via Payment Entry' (Check) field in DocType 'Leave
+#. Encashment'
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
+msgid "Process leave encashment via a separate Payment Entry instead of Salary Slip"
+msgstr "Behandla frånvaro uttag via separat Betalning Post istället för Lönespecifikation"
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:289
 msgid "Process {0} Shift Request(s) as <b>{1}</b>?"
@@ -10426,7 +10487,7 @@ msgstr "Anledning till Förfråga"
 msgid "Reason for Withholding Salary"
 msgstr "Anledning till Kvarhållande av Lön"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:318
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:328
 msgid "Reason for skipping auto attendance:"
 msgstr "Anledning att hoppa över Automatisk Närvaro:"
 
@@ -10451,6 +10512,12 @@ msgstr "Senaste Frånvaro"
 #: frontend/src/views/attendance/Dashboard.vue:40
 msgid "Recent Shift Requests"
 msgstr "Senaste Skift Begäran"
+
+#. Description of the 'Automatically update Last Sync of Checkin' (Check) field
+#. in DocType 'Shift Type'
+#: hrms/hr/doctype/shift_type/shift_type.json
+msgid "Recommended for a single biometric device / checkins via mobile app"
+msgstr "Rekommenderas för en biometrisk enhet / stämplingar via mobilapp"
 
 #. Option for the 'Action' (Select) field in DocType 'Full and Final Asset'
 #: hrms/hr/doctype/full_and_final_asset/full_and_final_asset.json
@@ -11028,6 +11095,10 @@ msgstr "Rad #{0}: Belopp kan inte vara högre än Utestående Belopp mot Utlägg
 msgid "Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}"
 msgstr "Rad #{0}: Tilldelad Belopp {1} kan inte vara högre än ofodrad belopp {2}"
 
+#: hrms/hr/doctype/leave_encashment/leave_encashment.py:272
+msgid "Row {0}# Paid Amount cannot be greater than Encashment amount"
+msgstr "Rad {0}# Betald Belopp kan inte vara högre än Uttag Belopp"
+
 #: hrms/payroll/doctype/gratuity/gratuity.py:135
 msgid "Row {0}# Paid Amount cannot be greater than Total amount"
 msgstr "Rad #{0}: Betald belopp får inte vara högre än Totalt Belopp"
@@ -11044,7 +11115,7 @@ msgstr "Rad # {0}: Resultat Enhet {1} tillhör inte Bolag {2}"
 msgid "Row {0}: From (Year) can not be greater than To (Year)"
 msgstr "Rad #{0}: Från (År) kan inte vara senare än Till (År)"
 
-#: hrms/hr/doctype/appraisal/appraisal.py:138
+#: hrms/hr/doctype/appraisal/appraisal.py:135
 msgid "Row {0}: Goal Score cannot be greater than 5"
 msgstr "Rad #{0}: Mål Resultat får inte vara högre än 5"
 
@@ -11235,11 +11306,11 @@ msgstr "Lönespecifikation finns redan för {0} för angivna datum"
 msgid "Salary Slip creation is queued. It may take a few minutes"
 msgstr "Lönespecifikation skapande i kö. Det kan ta några minuter"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:300
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:306
 msgid "Salary Slip of employee {0} already created for this period"
 msgstr "Lönespecifikation för {0} redan skapad för denna period"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:306
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:312
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr "Lönespecifikation för {0} redan skapad för Tidrapport {1}"
 
@@ -11309,7 +11380,7 @@ msgstr "Löneart Tilldelning fält"
 msgid "Salary Structure Assignment for Employee already exists"
 msgstr "Löneart Tilldelning för Personal finns redan"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:398
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:406
 msgid "Salary Structure Missing"
 msgstr "Löneart Saknas"
 
@@ -11369,7 +11440,7 @@ msgstr "Lön Uppdelning baserat på Lön och Avdrag."
 msgid "Salary components should be part of the Salary Structure."
 msgstr "Lönekomponenter ska vara en del av Löneart."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2338
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2346
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "Lönespecifikationer är i e-post kö att skickas. Kontrollera {0} för status."
 
@@ -12230,13 +12301,17 @@ msgstr "Start Tid"
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}"
 msgstr "Start och Slut Datum inte i giltig Löneperiod, kan inte beräkna {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1488
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1496
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr "Start och Slut Datum inte i giltig Löneeriod, kan inte beräkna {0}."
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:199
 msgid "Start date: {0}"
 msgstr "Start Datum:{0}"
+
+#: hrms/hr/doctype/shift_type/shift_type.py:40
+msgid "Start time and end time cannot be same."
+msgstr "Starttid och sluttid kan inte vara samma."
 
 #. Label of the statistical_component (Check) field in DocType 'Salary
 #. Component'
@@ -12246,7 +12321,6 @@ msgstr "Start Datum:{0}"
 msgid "Statistical Component"
 msgstr "Statistisk Komponent"
 
-#. Label of the status (Select) field in DocType 'Appraisal'
 #. Label of the status (Select) field in DocType 'Appraisal Cycle'
 #. Label of the status (Select) field in DocType 'Attendance'
 #. Label of the status (Select) field in DocType 'Daily Work Summary'
@@ -12269,6 +12343,7 @@ msgstr "Statistisk Komponent"
 #. Label of the status (Select) field in DocType 'Job Opening'
 #. Label of the status (Select) field in DocType 'Job Requisition'
 #. Label of the status (Select) field in DocType 'Leave Application'
+#. Label of the status (Select) field in DocType 'Leave Encashment'
 #. Label of the status (Select) field in DocType 'Shift Assignment'
 #. Label of the status (Select) field in DocType 'Shift Assignment Tool'
 #. Label of the status (Select) field in DocType 'Shift Request'
@@ -12279,7 +12354,6 @@ msgstr "Statistisk Komponent"
 #. Label of the status (Select) field in DocType 'Salary Slip'
 #. Label of the status (Select) field in DocType 'Salary Withholding'
 #: frontend/src/views/attendance/ShiftRequestList.vue:36
-#: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/attendance/attendance_list.js:71
@@ -12305,6 +12379,7 @@ msgstr "Statistisk Komponent"
 #: hrms/hr/doctype/job_opening/job_opening.json
 #: hrms/hr/doctype/job_requisition/job_requisition.json
 #: hrms/hr/doctype/leave_application/leave_application.json
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hrms/hr/doctype/shift_request/shift_request.json
@@ -12394,13 +12469,13 @@ msgstr "Godkänn denna ledighet ansökan för att bekräfta."
 msgid "Submit this to create the Employee record"
 msgstr "Godkänn detta för att skapa Anställning Post"
 
-#. Option for the 'Status' (Select) field in DocType 'Appraisal'
 #. Option for the 'Status' (Select) field in DocType 'Expense Claim'
+#. Option for the 'Status' (Select) field in DocType 'Leave Encashment'
 #. Option for the 'Status' (Select) field in DocType 'Gratuity'
 #. Option for the 'Status' (Select) field in DocType 'Payroll Entry'
 #. Option for the 'Status' (Select) field in DocType 'Salary Slip'
-#: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/expense_claim/expense_claim.json
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/payroll/doctype/gratuity/gratuity.json
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
@@ -12474,11 +12549,11 @@ msgstr "Avstängd"
 msgid "Sync {0}"
 msgstr "Synkronisera {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1220
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1228
 msgid "Syntax error"
 msgstr "Syntaxfel"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2192
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2200
 msgid "Syntax error in condition: {0} in Income Tax Slab"
 msgstr "Syntaxfel i Tillstånd: {0} i Inkomst Skatt Tabell"
 
@@ -12763,7 +12838,7 @@ msgstr "Tiden före Skift Start tid under vilken Personal Stämpling anses vara 
 msgid "Theory"
 msgstr "Teori"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:450
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:458
 msgid "There are more holidays than working days this month."
 msgstr "Det finns mer helger än arbetsdagar denna månad."
 
@@ -12790,23 +12865,27 @@ msgstr "Dessa Frånvaro är helgdagar som är tillåtna av Bolaget, men att anv�
 msgid "This action will prevent making changes to the linked appraisal feedback/goals."
 msgstr "Denna åtgärd förhindrar att ändringar görs i länkad återkoppling/mål för bedömning."
 
+#: hrms/hr/doctype/employee_checkin/employee_checkin.js:8
+msgid "This check-in is outside assigned shift hours and will not be considered for attendance. If a shift is assigned, adjust its time window and Fetch Shift again."
+msgstr "Denna stämpling sker utanför tilldelade skifttider och kommer inte att beaktas för närvaro. Om ett skift är tilldelat, justera dess tidsfönster och hämta skift igen."
+
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:97
 msgid "This compensatory leave will be applicable from {0}."
 msgstr "Denna kompensation frånvaro gäller från och med {0}."
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:46
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:47
 msgid "This employee already has a log with the same timestamp.{0}"
 msgstr "Personal har redan logg med samma tidstämpel. {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1228
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1236
 msgid "This error can be due to invalid formula or condition."
 msgstr "Detta fel kan bero på ogiltig formel eller villkor."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1221
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1229
 msgid "This error can be due to invalid syntax."
 msgstr "Det här felet kan bero på ogiltig syntax."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1214
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1222
 msgid "This error can be due to missing or deleted field."
 msgstr "Detta fel kan bero på att fält saknas eller tagits bort."
 
@@ -13351,7 +13430,7 @@ msgstr "Totalt lön bokförd för personal från början av månaden fram till a
 msgid "Total salary booked for this employee from the beginning of the year (payroll period or fiscal year) up to the current salary slip's end date."
 msgstr "Totalt lön bokförd för denna personal från början av året (löneperiod eller bokföringsår) fram till aktuell lönespecifikation slutdatum."
 
-#: hrms/hr/doctype/appraisal/appraisal.py:156 hrms/mixins/appraisal.py:17
+#: hrms/hr/doctype/appraisal/appraisal.py:153 hrms/mixins/appraisal.py:17
 msgid "Total weightage for all {0} must add up to 100. Currently, it is {1}%"
 msgstr "Total vikt för alla {0} måste uppgå till 100 %. För närvarande är det {1} %"
 
@@ -13634,7 +13713,7 @@ msgstr "Oanmäld Närvaro"
 msgid "Unmarked Attendance for days"
 msgstr "Oregistrerad Närvaro för dagar"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:32
+#: hrms/hr/doctype/shift_type/shift_type.py:87
 msgid "Unmarked Check-in Logs Found"
 msgstr "Omärkta stämplingsloggar hittade"
 
@@ -13653,11 +13732,13 @@ msgstr "Oanmälda Dagar"
 #. 'Employee Referral'
 #. Option for the 'Status' (Select) field in DocType 'Expense Claim'
 #. Option for the 'Status' (Select) field in DocType 'Full and Final Statement'
+#. Option for the 'Status' (Select) field in DocType 'Leave Encashment'
 #. Option for the 'Status' (Select) field in DocType 'Gratuity'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json
+#: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/payroll/doctype/gratuity/gratuity.json
 msgid "Unpaid"
 msgstr "Obetald"
@@ -14226,7 +14307,7 @@ msgstr "Man kan inte begära din Standard Skift: {0}"
 msgid "You can only plan for upto {0} vacancies and budget {1} for {2} as per staffing plan {3} for parent company {4}."
 msgstr "Du kan bara planera för upp till {0} lediga platser och budget {1} för {2} enligt bemanning plan {3} för moderbolag {4}."
 
-#: hrms/hr/doctype/leave_encashment/leave_encashment.py:37
+#: hrms/hr/doctype/leave_encashment/leave_encashment.py:43
 msgid "You can only submit Leave Encashment for a valid encashment amount"
 msgstr "Du kan bara ansöka om Frånvaro Uttag för giltig Uttag Belopp"
 
@@ -14242,7 +14323,7 @@ msgstr "Du har inga kommande skift"
 msgid "You may add additional details, if any, and submit the offer."
 msgstr "Du kan lägga till ytterligare detaljer, om någon, och skicka erbjudande."
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:115
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:125
 msgid "You must be within {0} meters of your shift location to check in."
 msgstr "Du måste befinna dig inom {0} meter från din arbetsplats för att stämpla."
 
@@ -14342,7 +14423,7 @@ msgstr "{0} & {1}"
 msgid "{0} & {1} more"
 msgstr "{0} & {1} mer"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2188
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2196
 msgid "{0} <br> This error can be due to missing or deleted field."
 msgstr "{0} <br> Detta fel kan bero på att fält saknas eller tagits bort."
 
@@ -14477,7 +14558,7 @@ msgstr "{0} kommer att uppdateras för följande Lönearter: {1}."
 msgid "{0} {1} {2}?"
 msgstr "{0} {1} {2}?"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1900
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1908
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "{0}: Personal E-post hittades inte, därför skickades inte E-post"
 
@@ -14545,7 +14626,7 @@ msgstr "{} Pågående"
 msgid "{} Unclaimed"
 msgstr "{} Ej Uttagna"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:238
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:248
 msgid "{} is an invalid Attendance Status."
 msgstr "{} är ogiltig Närvaro status."
 

@@ -326,6 +326,8 @@ class SalarySlip(TransactionBase):
 		if self.employee:
 			self.set("earnings", [])
 			self.set("deductions", [])
+			if hasattr(self, "loans"):
+				self.set("loans", [])
 
 			if self.payroll_frequency:
 				self.get_date_details()
