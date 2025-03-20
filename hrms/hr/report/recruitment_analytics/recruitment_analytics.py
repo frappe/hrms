@@ -119,7 +119,7 @@ def get_child_row(jo, jo_ja_map, ja_joff_map):
 def get_staffing_plan(filters):
 	conditions = f"sp.to_date > '{filters.on_date}'"
 
-	if filters.get("company"):
+	if filters.company:
 		conditions += f" AND sp.company = '{filters.company}'"
 
 	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
