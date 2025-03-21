@@ -330,6 +330,8 @@ def get_kras_for_employee(doctype, txt, searchfield, start, page_len, filters):
 		},
 		"name",
 	)
+	if not appraisal:
+		return []
 
 	return frappe.get_all(
 		"Appraisal KRA",
