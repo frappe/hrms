@@ -1694,6 +1694,61 @@ class TestSalarySlip(IntegrationTestCase):
 		self.assertEqual(test_tds.accounts[0].company, salary_slip.company)
 		self.assertListEqual(tax_component, ["_Test TDS"])
 
+	def test_opening_balances_excluded_from_tax_calculation(self):
+		"""tests if opening balances in salary structure assignment are excluded from tax when assignment date is before payroll period"""
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		frappe.db.delete("Income Tax Slab", {"currency": "INR"})
+		emp = make_employee(
+			"test_opening_balances@salary.com",
+			company="_Test Company",
+			date_of_joining="2022-04-01",
+		)
+
+		payroll_period = create_payroll_period(
+			name="_Test Opening Balance Payroll Period",
+			company="_Test Company",
+			start_date="2023-04-01",
+			end_date="2024-03-31",
+		)
+
+		# create salary structure and assignment with from_date before payroll period
+		salary_structure = make_salary_structure(
+			"Test Opening Balance Structure",
+			"Monthly",
+			company="_Test Company",
+			employee=emp,
+			from_date="2022-04-01",
+			payroll_period=payroll_period,
+			test_tax=True,
+			base=50000,
+		)
+
+		ssa = frappe.get_value(
+			"Salary Structure Assignment",
+			{"employee": emp, "salary_structure": salary_structure.name},
+			"name",
+		)
+		ssa_doc = frappe.get_doc("Salary Structure Assignment", ssa)
+		# Set opening tax balances in assignment
+		ssa_doc.db_set("taxable_earnings_till_date", 600000)
+		ssa_doc.db_set("tax_deducted_till_date", 45500)
+
+		# Create salary slip
+		salary_slip = make_salary_slip(salary_structure.name, employee=emp, posting_date="2023-04-01")
+
+		# calculate expected taxable amount without opening balance
+		# 50000 (base) + 28000 (other earnings from structure)
+		monthly_taxable_earnings = 78000
+		expected_annual_taxable_amount = monthly_taxable_earnings * 12
+
+		# Verify that opening balance is not included in tax calculation
+		self.assertNotEqual(
+			salary_slip.annual_taxable_amount,
+			expected_annual_taxable_amount + ssa_doc.taxable_earnings_till_date,
+		)
+		self.assertEqual(salary_slip.income_tax_deducted_till_date, salary_slip.current_month_income_tax)
+
 
 class TestSalarySlipSafeEval(IntegrationTestCase):
 	def test_safe_eval_for_salary_slip(self):

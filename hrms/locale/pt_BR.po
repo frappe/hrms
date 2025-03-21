@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-03-09 09:33+0000\n"
-"PO-Revision-Date: 2025-03-12 05:10\n"
+"POT-Creation-Date: 2025-03-16 09:33+0000\n"
+"PO-Revision-Date: 2025-03-18 06:01\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -1609,7 +1609,7 @@ msgstr ""
 msgid "Attendance To Date"
 msgstr ""
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:101
+#: hrms/hr/doctype/attendance_request/attendance_request.py:114
 msgid "Attendance Updated"
 msgstr ""
 
@@ -1661,11 +1661,11 @@ msgstr ""
 msgid "Attendance marked successfully"
 msgstr ""
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:119
+#: hrms/hr/doctype/attendance_request/attendance_request.py:132
 msgid "Attendance not submitted for {0} as it is a Holiday."
 msgstr ""
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:128
+#: hrms/hr/doctype/attendance_request/attendance_request.py:141
 msgid "Attendance not submitted for {0} as {1} is on leave."
 msgstr ""
 
@@ -4765,7 +4765,7 @@ msgstr ""
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr ""
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:52
+#: hrms/hr/doctype/attendance_request/attendance_request.py:66
 msgid "Employee {0} already has an Attendance Request {1} that overlaps with this period"
 msgstr ""
 
@@ -6511,7 +6511,7 @@ msgstr ""
 msgid "Half Yearly"
 msgstr ""
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:29
+#: hrms/hr/doctype/attendance_request/attendance_request.py:30
 msgid "Half day date should be in between from date and to date"
 msgstr ""
 
@@ -8874,6 +8874,10 @@ msgstr ""
 msgid "No attendance records found."
 msgstr ""
 
+#: hrms/hr/doctype/attendance_request/attendance_request.py:39
+msgid "No attendance records to create"
+msgstr ""
+
 #: hrms/hr/doctype/interview/interview.py:87
 msgid "No changes found in timings."
 msgstr ""
@@ -9328,7 +9332,7 @@ msgstr ""
 msgid "Overall Average Rating"
 msgstr ""
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:57
+#: hrms/hr/doctype/attendance_request/attendance_request.py:71
 msgid "Overlapping Attendance Request"
 msgstr ""
 
@@ -9838,6 +9842,10 @@ msgstr ""
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:770
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
+msgstr ""
+
+#: hrms/hr/doctype/attendance_request/attendance_request.py:40
+msgid "Please check if employee is on leave or attendance with the same status exists for selected day(s)."
 msgstr ""
 
 #: hrms/templates/emails/training_event.html:17
@@ -13799,7 +13807,7 @@ msgstr ""
 msgid "Update Tax"
 msgstr ""
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:95
+#: hrms/hr/doctype/attendance_request/attendance_request.py:108
 msgid "Updated status from {0} to {1} for date {2} in the attendance record {3}"
 msgstr ""
 
@@ -14330,7 +14338,7 @@ msgstr ""
 msgid "cancelled"
 msgstr ""
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:89
+#: hrms/hr/doctype/attendance_request/attendance_request.py:102
 msgid "changed the status from {0} to {1} via Attendance Request"
 msgstr ""
 

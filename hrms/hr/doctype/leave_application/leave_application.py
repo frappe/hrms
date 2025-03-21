@@ -549,14 +549,30 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		)
 
 	def validate_attendance(self):
-		attendance = frappe.db.sql(
-			"""select name from `tabAttendance` where employee = %s and (attendance_date between %s and %s)
-					and status = 'Present' and docstatus = 1""",
-			(self.employee, self.from_date, self.to_date),
+		attendance_dates = frappe.get_all(
+			"Attendance",
+			filters={
+				"employee": self.employee,
+				"attendance_date": ("between", [self.from_date, self.to_date]),
+				"status": ("in", ["Present", "Half Day", "Work From Home"]),
+				"docstatus": 1,
+			},
+			fields=["name", "attendance_date"],
+			order_by="attendance_date",
 		)
-		if attendance:
+		if attendance_dates:
 			frappe.throw(
-				_("Attendance for employee {0} is already marked for this day").format(self.employee),
+				_("Attendance for employee {0} is already marked for the following dates: {1}").format(
+					self.employee,
+					(
+						"<br><ul><li>"
+						+ "</li><li>".join(
+							get_link_to_form("Attendance", a.name, label=formatdate(a.attendance_date))
+							for a in attendance_dates
+						)
+						+ "</li></ul>"
+					),
+				),
 				AttendanceAlreadyMarkedError,
 			)
 

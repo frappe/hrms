@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-03-09 09:33+0000\n"
-"PO-Revision-Date: 2025-03-13 05:38\n"
+"POT-Creation-Date: 2025-03-16 09:33+0000\n"
+"PO-Revision-Date: 2025-03-19 06:25\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -649,13 +649,13 @@ msgstr "Dodaj u Detalje"
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 msgid "Add unused leaves from previous allocations"
-msgstr "Dodajte neiskorištene praznike iz prethodnih dodjela"
+msgstr "Dodaj neiskorištene praznike iz prethodnih dodjela"
 
 #. Description of the 'Carry Forward' (Check) field in DocType 'Leave Control
 #. Panel'
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 msgid "Add unused leaves from previous leave period's allocation to this allocation"
-msgstr "Dodajte neiskorištene praznike iz dodjela prethodnog perioda praznika u ovu dodjelu"
+msgstr "Dodaj neiskorištene praznike iz dodjela prethodnog perioda praznika u ovu dodjelu"
 
 #. Label of the added_on (Datetime) field in DocType 'Employee Performance
 #. Feedback'
@@ -1634,7 +1634,7 @@ msgstr "Postavke Prisustva"
 msgid "Attendance To Date"
 msgstr "Prisustvo do Datuma"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:101
+#: hrms/hr/doctype/attendance_request/attendance_request.py:114
 msgid "Attendance Updated"
 msgstr "Prisustvo Ažurirano"
 
@@ -1686,11 +1686,11 @@ msgstr "Prisustvo je na čekanju za ovaj personal između odabranih datuma obra�
 msgid "Attendance marked successfully"
 msgstr "Prisustvo je uspješno navedeno"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:119
+#: hrms/hr/doctype/attendance_request/attendance_request.py:132
 msgid "Attendance not submitted for {0} as it is a Holiday."
 msgstr "Prisustvo nije prijavljeno za {0} jer je praznik."
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:128
+#: hrms/hr/doctype/attendance_request/attendance_request.py:141
 msgid "Attendance not submitted for {0} as {1} is on leave."
 msgstr "Prisustvo nije prijavljeno za {0} jer je {1} na odsustvu."
 
@@ -4790,7 +4790,7 @@ msgstr "Personal je naveden kao Odsutan zbog nedostajućih prijava."
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr "Personal je naveden kao Odsutan zbog neispunjavanja praga radnih sati radnog vremena."
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:52
+#: hrms/hr/doctype/attendance_request/attendance_request.py:66
 msgid "Employee {0} already has an Attendance Request {1} that overlaps with this period"
 msgstr "{0} već ima Zahtjev za prisustvo {1} koji se preklapa s ovim periodom"
 
@@ -6536,7 +6536,7 @@ msgstr "Poludnevni Zapisi"
 msgid "Half Yearly"
 msgstr "Polugodišnje"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:29
+#: hrms/hr/doctype/attendance_request/attendance_request.py:30
 msgid "Half day date should be in between from date and to date"
 msgstr "Poludnevni Datum bi trebao biti između Od Datuma i Do Datuma"
 
@@ -8899,6 +8899,10 @@ msgstr "Nije pronađen zapisnik o Prisutnosti za ovaj kriterij."
 msgid "No attendance records found."
 msgstr "Nije pronađen zapis Prisutnosti."
 
+#: hrms/hr/doctype/attendance_request/attendance_request.py:39
+msgid "No attendance records to create"
+msgstr "Nema zapisa o prisutnosti za kreiranje"
+
 #: hrms/hr/doctype/interview/interview.py:87
 msgid "No changes found in timings."
 msgstr "Nisu pronađene promjene u terminima."
@@ -9353,7 +9357,7 @@ msgstr "Prekomjerna Dodjela"
 msgid "Overall Average Rating"
 msgstr "Ukupna Prosječna Ocjena"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:57
+#: hrms/hr/doctype/attendance_request/attendance_request.py:71
 msgid "Overlapping Attendance Request"
 msgstr "Preklapajući Zahtjev za Prisustvo"
 
@@ -9859,11 +9863,15 @@ msgstr "Dodaj preostale beneficije {0} bilo kojoj od postojećih komponenti"
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:107
 msgid "Please add the remaining benefits {0} to the application as pro-rata component"
-msgstr "Dodajte preostale beneficije {0} aplikaciji kao proporcionalnu komponentu"
+msgstr "Dodaj preostale beneficije {0} aplikaciji kao proporcionalnu komponentu"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:770
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr "Dodijeli Strukturu Plata za {0} primjenjivu od ili prije {1}"
+
+#: hrms/hr/doctype/attendance_request/attendance_request.py:40
+msgid "Please check if employee is on leave or attendance with the same status exists for selected day(s)."
+msgstr "Provjeri da li je personal na odsustvu ili postoji li prisustvo sa istim statusom za odabrane dan(e)."
 
 #: hrms/templates/emails/training_event.html:17
 msgid "Please confirm once you have completed your training"
@@ -13824,7 +13832,7 @@ msgstr "Ažuriraj Status"
 msgid "Update Tax"
 msgstr "Ažuriraj Porez"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:95
+#: hrms/hr/doctype/attendance_request/attendance_request.py:108
 msgid "Updated status from {0} to {1} for date {2} in the attendance record {3}"
 msgstr "Ažuriran status sa {0} na {1} za datum {2} u zapisniku prisutnosti {3}"
 
@@ -14355,7 +14363,7 @@ msgstr "otkazivanje"
 msgid "cancelled"
 msgstr "otkazano"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:89
+#: hrms/hr/doctype/attendance_request/attendance_request.py:102
 msgid "changed the status from {0} to {1} via Attendance Request"
 msgstr "promijenjen status iz {0} u {1} putem Zahtjeva Prisustva"
 

@@ -1583,6 +1583,8 @@ class SalarySlip(TransactionBase):
 		return (taxable_earnings + opening_taxable_earning) - exempted_amount, exempted_amount
 
 	def get_opening_for(self, field_to_select, start_date, end_date):
+		if self._salary_structure_assignment.from_date < self.payroll_period.start_date:
+			return 0
 		return self._salary_structure_assignment.get(field_to_select) or 0
 
 	def get_salary_slip_details(
