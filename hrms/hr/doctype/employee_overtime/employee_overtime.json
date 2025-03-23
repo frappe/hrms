@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "format:OT-{employee}-{date}",
  "creation": "2024-12-16 10:21:20.203361",
@@ -9,8 +10,13 @@
   "section_break_hs6z",
   "employee",
   "date",
+  "from",
+  "to",
   "number_of_hours",
   "rate",
+  "column_break_svcv",
+  "company",
+  "overtime_approver",
   "amended_from"
  ],
  "fields": [
@@ -50,12 +56,39 @@
    "fieldtype": "Select",
    "label": "Rate",
    "options": "1.5\n2.0\n3.0"
+  },
+  {
+   "fieldname": "column_break_svcv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Data",
+   "label": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "from",
+   "fieldtype": "Time",
+   "label": "From"
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Time",
+   "label": "To"
+  },
+  {
+   "fieldname": "overtime_approver",
+   "fieldtype": "Link",
+   "label": "Overtime Approver",
+   "options": "Employee"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-12-16 10:30:56.807050",
+ "modified": "2025-03-20 23:20:01.934333",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Overtime",
@@ -67,6 +100,7 @@
    "delete": 1,
    "email": 1,
    "export": 1,
+   "import": 1,
    "print": 1,
    "read": 1,
    "report": 1,

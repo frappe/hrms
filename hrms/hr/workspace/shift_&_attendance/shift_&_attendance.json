@@ -266,7 +266,6 @@
    "doc_view": "List",
    "label": "Employee Overtime",
    "link_to": "Employee Overtime",
-   "stats_filter": "[[\"Employee Overtime\",\"workflow_state\",\"=\",\"Pending\",false]]",
    "type": "DocType"
   },
   {

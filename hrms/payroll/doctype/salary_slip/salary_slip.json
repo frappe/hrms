@@ -48,6 +48,7 @@
   "bs_override",
   "ovt_override_15x",
   "ovt_override_2x",
+  "ovt_override_3x",
   "night_shift_override",
   "disable_car_allowance",
   "car_allowance_override",
@@ -55,6 +56,7 @@
   "coord_allowance_override",
   "disable_busfare",
   "bus_fare_override",
+  "miles_travelled",
   "o_tax_allowance_override",
   "o_non_tax_allowance_override",
   "deductions_overrides_column",
@@ -62,6 +64,7 @@
   "leave_without_pay_override",
   "other_deductions_override",
   "other_deduction_reason",
+  "days_on_call",
   "earnings_and_deductions_tab",
   "timesheets_section",
   "timesheets",
@@ -842,13 +845,28 @@
    "fieldname": "ovt_override_2x",
    "fieldtype": "Currency",
    "label": "Overtime Hours 2x"
+  },
+  {
+   "fieldname": "miles_travelled",
+   "fieldtype": "Currency",
+   "label": "Miles travelled"
+  },
+  {
+   "fieldname": "days_on_call",
+   "fieldtype": "Data",
+   "label": "Days on Call"
+  },
+  {
+   "fieldname": "ovt_override_3x",
+   "fieldtype": "Currency",
+   "label": "Overtime Hours 3x"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-17 21:50:18.018219",
+ "modified": "2025-03-21 06:15:42.840992",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

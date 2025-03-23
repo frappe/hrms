@@ -61,7 +61,6 @@ class Attendance(Document):
 
 	def validate_duplicate_record(self):
 		duplicate = self.get_duplicate_attendance_record()
-
 		if duplicate:
 			frappe.throw(
 				_("Attendance for employee {0} is already marked for the date {1}: {2}").format(

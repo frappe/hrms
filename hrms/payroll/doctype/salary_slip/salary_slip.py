@@ -82,6 +82,7 @@ class SalarySlip(TransactionBase):
 			"night_shift_count": self.night_shift_count,
 			"get_approved_15xovertime_count": self.get_approved_15xovertime_count,
 			"get_approved_2xovertime_count": self.get_approved_2xovertime_count,
+			"get_approved_3xovertime_count": self.get_approved_3xovertime_count,
 		}
 		
 
@@ -117,13 +118,17 @@ class SalarySlip(TransactionBase):
 		return working_days
 	
 	def night_shift_count(self):
+		print("night shift")
+		print(self.employee)
+		print(self.start_date)
+		print(self.end_date)
 		filters = {
 			'employee': self.employee,
 			'status': "Present",
 			'attendance_date': ['between', [self.start_date, self.end_date]],
 			'shift': ['in', NIGHT_SHIFT_CODES]
 		}
-
+		print(frappe.db.count('Attendance', filters))
 		return frappe.db.count('Attendance', filters)
 	
 	@frappe.whitelist()
@@ -154,6 +159,20 @@ class SalarySlip(TransactionBase):
 		
 		return count
 
+	@frappe.whitelist()
+	def get_approved_3xovertime_count(self):
+		"""Returns the count of approved employee overtime requests in a given date range."""
+		count = frappe.db.count(
+			"Employee Overtime",
+			filters={
+				"employee": self.employee,
+				"rate": 3.0,
+				"date": ["between", [self.start_date, self.end_date]],
+			}
+		)
+		
+		return count
+	
 	def autoname(self):
 		self.name = make_autoname(self.series)
 
