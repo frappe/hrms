@@ -256,10 +256,17 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 		for dt in daterange(getdate(self.from_date), getdate(self.to_date)):
 			date = dt.strftime("%Y-%m-%d")
+			# check for existing attenadnce absent or if half day with half day status absent,
 			attendance_name = frappe.db.exists(
-				"Attendance", dict(employee=self.employee, attendance_date=date, docstatus=("!=", 2))
+				"Attendance",
+				dict(
+					employee=self.employee,
+					attendance_date=date,
+					docstatus=("!=", 2),
+					status=("in", ["Absent", "Half Day"]),
+					half_day_status=("in", ["Absent", "None"]),
+				),
 			)
-
 			# don't mark attendance for holidays
 			# if leave type does not include holidays within leaves as leaves
 			if date in holiday_dates:
@@ -280,9 +287,19 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		)
 
 		if attendance_name:
-			# update existing attendance, change absent to on leave
+			# update existing attendance, change absent to on leave or half day
 			doc = frappe.get_doc("Attendance", attendance_name)
-			doc.db_set({"status": status, "leave_type": self.leave_type, "leave_application": self.name})
+			half_day_status = (
+				None if status == "On Leave" else "Absent" if doc.status == "Absent" else "On Leave"
+			)
+			doc.db_set(
+				{
+					"status": status,
+					"leave_type": self.leave_type,
+					"leave_application": self.name,
+					"half_day_status": half_day_status,
+				}
+			)
 		else:
 			# make new attendance and submit it
 			doc = frappe.new_doc("Attendance")
@@ -293,6 +310,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			doc.leave_type = self.leave_type
 			doc.leave_application = self.name
 			doc.status = status
+			doc.half_day_status = "Absent" if status == "Half Day" else None
 			doc.flags.ignore_validate = True
 			doc.insert(ignore_permissions=True)
 			doc.submit()
