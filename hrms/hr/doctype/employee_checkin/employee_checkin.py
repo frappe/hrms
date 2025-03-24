@@ -273,7 +273,7 @@ def mark_attendance_and_link_log(
 def get_existing_half_day_attendance(employee, attendance_date):
 	attendance_name = frappe.db.exists(
 		"Attendance",
-		filters={
+		{
 			"employee": employee,
 			"attendance_date": attendance_date,
 			"status": "Half Day",
