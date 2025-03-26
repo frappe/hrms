@@ -17,7 +17,9 @@
   "column_break_svcv",
   "company",
   "overtime_approver",
-  "amended_from"
+  "amended_from",
+  "department",
+  "reason"
  ],
  "fields": [
   {
@@ -83,12 +85,25 @@
    "fieldtype": "Link",
    "label": "Overtime Approver",
    "options": "Employee"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "Reason"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-20 23:20:01.934333",
+ "modified": "2025-03-25 11:22:04.214934",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Overtime",

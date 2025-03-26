@@ -61,7 +61,7 @@ SALARY_COMPONENT_VALUES = "salary_component_values"
 TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 
 NIGHT_SHIFT_CODES = ['A&B N', "NSG 2", "NSG 1", "NSG N", "SEC N"]
-
+ON_CALL_CODE = 'CALL C'
 
 class SalarySlip(TransactionBase):
 
@@ -83,6 +83,8 @@ class SalarySlip(TransactionBase):
 			"get_approved_15xovertime_count": self.get_approved_15xovertime_count,
 			"get_approved_2xovertime_count": self.get_approved_2xovertime_count,
 			"get_approved_3xovertime_count": self.get_approved_3xovertime_count,
+			"get_attendance_count": self.get_attendance_count,
+			"on_call_count": self.on_call_count
 		}
 		
 
@@ -117,11 +119,9 @@ class SalarySlip(TransactionBase):
 			current_date += timedelta(days=1)		    
 		return working_days
 	
+	# Calculate number of days on night shifts during payroll period
+	@frappe.whitelist()
 	def night_shift_count(self):
-		print("night shift")
-		print(self.employee)
-		print(self.start_date)
-		print(self.end_date)
 		filters = {
 			'employee': self.employee,
 			'status': "Present",
@@ -129,6 +129,39 @@ class SalarySlip(TransactionBase):
 			'shift': ['in', NIGHT_SHIFT_CODES]
 		}
 		print(frappe.db.count('Attendance', filters))
+		return frappe.db.count('Attendance', filters)
+
+	# Calculate number of days on call during payroll period
+	@frappe.whitelist()
+	def on_call_count(self):
+		filters = {
+			'employee': self.employee,
+			'start_date': ['>=', self.start_date],
+			'end_date': ['<=', self.end_date],
+			'shift_type': ON_CALL_CODE
+		}
+		shift_assignments = frappe.get_all(
+			'Shift Assignment',
+			filters=filters,
+			fields=['start_date', 'end_date']
+		)
+		
+		print(shift_assignments)
+		total_days = 0
+		for shift in shift_assignments:
+			start_date = frappe.utils.getdate(shift['start_date'])
+			end_date = frappe.utils.getdate(shift['end_date'])
+			total_days += (end_date - start_date).days + 1 
+	
+		return total_days
+	
+	@frappe.whitelist()
+	def get_attendance_count(self):
+		filters = {
+			'employee': self.employee,
+			'status': "Present",
+			'attendance_date': ['between', [self.start_date, self.end_date]],
+		}
 		return frappe.db.count('Attendance', filters)
 	
 	@frappe.whitelist()
