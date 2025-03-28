@@ -438,7 +438,9 @@ class IncomeTaxComputationReport:
 			)
 
 	def get_applicable_tax(self):
-		self.add_column("Applicable Tax")
+		self.add_column("Income Tax (Slab Based)", "income_tax_slab_based")
+		self.add_column("Other Taxes and Charges")
+		self.add_column("Total Applicable Tax", "applicable_tax")
 
 		is_tax_rounded = frappe.db.get_value(
 			"Salary Component",
@@ -451,7 +453,7 @@ class IncomeTaxComputationReport:
 			if tax_slab:
 				tax_slab = frappe.get_cached_doc("Income Tax Slab", tax_slab)
 				eval_globals, eval_locals = self.get_data_for_eval(emp, emp_details)
-				tax_amount = calculate_tax_by_tax_slab(
+				tax_amount, other_taxes_and_charges = calculate_tax_by_tax_slab(
 					emp_details["total_taxable_amount"],
 					tax_slab,
 					eval_globals=eval_globals,
@@ -459,9 +461,14 @@ class IncomeTaxComputationReport:
 				)
 			else:
 				tax_amount = 0.0
+				other_taxes_and_charges = 0.0
 
 			if is_tax_rounded:
 				tax_amount = rounded(tax_amount)
+				other_taxes_and_charges = rounded(other_taxes_and_charges)
+
+			emp_details["income_tax_slab_based"] = tax_amount - other_taxes_and_charges
+			emp_details["other_taxes_and_charges"] = other_taxes_and_charges
 			emp_details["applicable_tax"] = tax_amount
 
 	def get_data_for_eval(self, emp: str, emp_details: dict) -> tuple:
