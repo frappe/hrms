@@ -42,12 +42,12 @@ frappe.ui.form.on("Interview", {
 			{
 				interviewer: frappe.session.user,
 				interview: frm.doc.name,
-				docstatus: ("!=", 2),
+				docstatus: ["!=", 2],
 			},
 			"name",
-		)?.message?.name;
+		);
 
-		if (has_submitted_feedback) return;
+		if (has_submitted_feedback?.message?.name) return;
 
 		const allow_feedback_submission = frm.doc.interview_details.some(
 			(interviewer) => interviewer.interviewer === frappe.session.user,
