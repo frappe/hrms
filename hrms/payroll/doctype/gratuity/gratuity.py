@@ -275,7 +275,7 @@ class Gratuity(AccountsController):
 		component_found = False
 		for row in salary_slip.earnings:
 			if row.salary_component in applicable_earning_components:
-				total_amount += flt(row.amount)
+				total_amount += flt(row.default_amount)
 				component_found = True
 
 		if not component_found:
