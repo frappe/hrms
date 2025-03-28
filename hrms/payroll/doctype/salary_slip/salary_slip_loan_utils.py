@@ -85,6 +85,7 @@ def _get_loan_details(doc: "SalarySlip") -> dict[str, Any]:
 	return loan_details
 
 
+@if_lending_app_installed
 def process_loan_interest_accruals(doc: "SalarySlip"):
 	from lending.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
 		process_loan_interest_accrual_for_term_loans,
