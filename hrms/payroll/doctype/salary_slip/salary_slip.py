@@ -80,9 +80,7 @@ class SalarySlip(TransactionBase):
 			"eround": self.eround,
 			"calc_working_days": self.calc_working_days,
 			"night_shift_count": self.night_shift_count,
-			"get_approved_15xovertime_count": self.get_approved_15xovertime_count,
-			"get_approved_2xovertime_count": self.get_approved_2xovertime_count,
-			"get_approved_3xovertime_count": self.get_approved_3xovertime_count,
+			"get_approved_overtime_count": self.get_approved_overtime_count,
 			"get_attendance_count": self.get_attendance_count,
 			"on_call_count": self.on_call_count
 		}
@@ -146,7 +144,6 @@ class SalarySlip(TransactionBase):
 			fields=['start_date', 'end_date']
 		)
 		
-		print(shift_assignments)
 		total_days = 0
 		for shift in shift_assignments:
 			start_date = frappe.utils.getdate(shift['start_date'])
@@ -165,45 +162,17 @@ class SalarySlip(TransactionBase):
 		return frappe.db.count('Attendance', filters)
 	
 	@frappe.whitelist()
-	def get_approved_15xovertime_count(self):
+	def get_approved_overtime_count(self, rate=None):
 		"""Returns the count of approved employee overtime requests in a given date range."""
 		count = frappe.db.count(
 			"Employee Overtime",
 			filters={
 				"employee": self.employee,
-				"rate": 1.5,
+				"rate": rate,
 				"date": ["between", [self.start_date, self.end_date]],
+				"workflow_state": "Approved"
 			}
 		)
-		
-		return count
-
-	@frappe.whitelist()
-	def get_approved_2xovertime_count(self):
-		"""Returns the count of approved employee overtime requests in a given date range."""
-		count = frappe.db.count(
-			"Employee Overtime",
-			filters={
-				"employee": self.employee,
-				"rate": 2.0,
-				"date": ["between", [self.start_date, self.end_date]],
-			}
-		)
-		
-		return count
-
-	@frappe.whitelist()
-	def get_approved_3xovertime_count(self):
-		"""Returns the count of approved employee overtime requests in a given date range."""
-		count = frappe.db.count(
-			"Employee Overtime",
-			filters={
-				"employee": self.employee,
-				"rate": 3.0,
-				"date": ["between", [self.start_date, self.end_date]],
-			}
-		)
-		
 		return count
 	
 	def autoname(self):
