@@ -25,7 +25,7 @@ class EmployeePaymentEntry(PaymentEntry):
 		elif self.party_type == "Shareholder":
 			return ("Journal Entry",)
 		elif self.party_type == "Employee":
-			return ("Expense Claim", "Journal Entry", "Employee Advance", "Gratuity")
+			return ("Expense Claim", "Journal Entry", "Employee Advance", "Leave Encashment", "Gratuity")
 
 	def set_missing_ref_details(
 		self,
@@ -73,7 +73,7 @@ class EmployeePaymentEntry(PaymentEntry):
 
 @frappe.whitelist()
 def get_payment_entry_for_employee(dt, dn, party_amount=None, bank_account=None, bank_amount=None):
-	"""Function to make Payment Entry for Employee Advance, Gratuity, Expense Claim"""
+	"""Function to make Payment Entry for Employee Advance, Gratuity, Expense Claim, Leave Encashment"""
 	doc = frappe.get_doc(dt, dn)
 
 	party_account = get_party_account(doc)
@@ -140,7 +140,7 @@ def get_party_account(doc):
 
 	if doc.doctype == "Employee Advance":
 		party_account = doc.advance_account
-	elif doc.doctype in ("Expense Claim", "Gratuity"):
+	elif doc.doctype in ("Expense Claim", "Gratuity", "Leave Encashment"):
 		party_account = doc.payable_account
 
 	return party_account
@@ -166,6 +166,10 @@ def get_grand_total_and_outstanding_amount(doc, party_amount, party_account_curr
 	elif doc.doctype == "Gratuity":
 		grand_total = doc.amount
 		outstanding_amount = flt(doc.amount) - flt(doc.paid_amount)
+
+	elif doc.doctype == "Leave Encashment":
+		grand_total = doc.encashment_amount
+		outstanding_amount = flt(doc.encashment_amount) - flt(doc.paid_amount)
 
 	else:
 		if party_account_currency == doc.company_currency:
@@ -211,7 +215,7 @@ def get_paid_amount_and_received_amount(
 def get_payment_reference_details(
 	reference_doctype, reference_name, party_account_currency, party_type=None, party=None
 ):
-	if reference_doctype in ("Expense Claim", "Employee Advance", "Gratuity"):
+	if reference_doctype in ("Expense Claim", "Employee Advance", "Gratuity", "Leave Encashment"):
 		return get_reference_details_for_employee(reference_doctype, reference_name, party_account_currency)
 	else:
 		return get_reference_details(
@@ -223,7 +227,7 @@ def get_payment_reference_details(
 def get_reference_details_for_employee(reference_doctype, reference_name, party_account_currency):
 	"""
 	Returns payment reference details for employee related doctypes:
-	Employee Advance, Expense Claim, Gratuity
+	Employee Advance, Expense Claim, Gratuity, Leave Encashment
 	"""
 	total_amount = outstanding_amount = exchange_rate = None
 
@@ -242,6 +246,8 @@ def get_reference_details_for_employee(reference_doctype, reference_name, party_
 			outstanding_amount = flt(outstanding_amount) * flt(exchange_rate)
 	elif reference_doctype == "Gratuity":
 		outstanding_amount = ref_doc.amount - flt(ref_doc.paid_amount)
+	elif reference_doctype == "Leave Encashment":
+		outstanding_amount = ref_doc.encashment_amount - flt(ref_doc.paid_amount)
 	else:
 		outstanding_amount = flt(total_amount) - flt(ref_doc.advance_paid)
 
@@ -267,7 +273,8 @@ def get_total_amount_and_exchange_rate(ref_doc, party_account_currency, company_
 			total_amount = flt(total_amount) * flt(exchange_rate)
 		if party_account_currency == company_currency:
 			exchange_rate = 1
-
+	elif ref_doc.doctype == "Leave Encashment":
+		total_amount = ref_doc.encashment_amount
 	elif ref_doc.doctype == "Gratuity":
 		total_amount = ref_doc.amount
 

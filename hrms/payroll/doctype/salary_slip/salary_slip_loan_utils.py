@@ -1,7 +1,7 @@
 # Copyright (c) 2023, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import frappe
 from frappe import _
@@ -31,8 +31,6 @@ def set_loan_repayment(doc: "SalarySlip"):
 
 	if not doc.get("loans", []):
 		loan_details = _get_loan_details(doc)
-		if loan_details:
-			process_loan_interest_accruals(loan_details, doc.end_date)
 
 		for loan in loan_details:
 			amounts = calculate_amounts(loan.name, doc.end_date, "Regular Payment")
@@ -72,7 +70,7 @@ def set_loan_repayment(doc: "SalarySlip"):
 		doc.total_loan_repayment += payment.total_payment
 
 
-def _get_loan_details(doc: "SalarySlip") -> dict[str, str | bool]:
+def _get_loan_details(doc: "SalarySlip") -> dict[str, Any]:
 	loan_details = frappe.get_all(
 		"Loan",
 		fields=["name", "interest_income_account", "loan_account", "loan_product", "is_term_loan"],
@@ -87,15 +85,20 @@ def _get_loan_details(doc: "SalarySlip") -> dict[str, str | bool]:
 	return loan_details
 
 
-def process_loan_interest_accruals(loan_details: dict[str, str | bool], posting_date: str):
+@if_lending_app_installed
+def process_loan_interest_accruals(doc: "SalarySlip"):
 	from lending.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
 		process_loan_interest_accrual_for_term_loans,
 	)
 
-	for loan in loan_details:
-		if loan.is_term_loan:
+	loans = _get_loan_details(doc)
+	if not loans:
+		return
+
+	for loan in loans:
+		if loan.get("is_term_loan"):
 			process_loan_interest_accrual_for_term_loans(
-				posting_date=posting_date, loan_product=loan.loan_product, loan=loan.name
+				posting_date=doc.end_date, loan_product=loan.loan_product, loan=loan.name
 			)
 
 

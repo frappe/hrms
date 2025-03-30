@@ -26,6 +26,7 @@ class EmployeeCheckin(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
 		self.validate_duplicate_log()
+		self.validate_time_change()
 		self.fetch_shift()
 		self.set_geolocation()
 		self.validate_distance_from_shift_location()
@@ -44,6 +45,15 @@ class EmployeeCheckin(Document):
 			doc_link = frappe.get_desk_link("Employee Checkin", doc)
 			frappe.throw(
 				_("This employee already has a log with the same timestamp.{0}").format("<Br>" + doc_link)
+			)
+
+	def validate_time_change(self):
+		if self.attendance and self.has_value_changed("time"):
+			frappe.throw(
+				title=_("Cannot Modify Time"),
+				msg=_(
+					"An attendance record is linked to this checkin. Please cancel the attendance before modifying time."
+				),
 			)
 
 	@frappe.whitelist()
@@ -125,6 +135,8 @@ def add_log_based_on_employee_field(
 	log_type=None,
 	skip_auto_attendance=0,
 	employee_fieldname="attendance_device_id",
+	latitude=None,
+	longitude=None,
 ):
 	"""Finds the relevant Employee using the employee field value and creates a Employee Checkin.
 
@@ -134,6 +146,8 @@ def add_log_based_on_employee_field(
 	:param log_type: (optional)Direction of the Punch if available (IN/OUT).
 	:param skip_auto_attendance: (optional)Skip auto attendance field will be set for this log(0/1).
 	:param employee_fieldname: (Default: attendance_device_id)Name of the field in Employee DocType based on which employee lookup will happen.
+	:latitude: (optional) Latitude of the shift location.
+	:longitude: (optional) Longitude of the shift location.
 	"""
 
 	if not employee_field_value or not timestamp:
@@ -160,6 +174,8 @@ def add_log_based_on_employee_field(
 	doc.time = timestamp
 	doc.device_id = device_id
 	doc.log_type = log_type
+	doc.latitude = latitude
+	doc.longitude = longitude
 	if cint(skip_auto_attendance) == 1:
 		doc.skip_auto_attendance = "1"
 	doc.insert()
