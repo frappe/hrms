@@ -170,6 +170,7 @@ class SalarySlip(TransactionBase):
 					),
 					alert=True,
 				)
+		frappe.msgprint(str(self.payroll_period.name))
 
 	def check_salary_withholding(self):
 		withholding = get_salary_withholdings(self.start_date, self.end_date, self.employee)

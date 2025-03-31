@@ -1,0 +1,191 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{employee}-{payroll_period}-{#####}",
+ "creation": "2025-03-31 15:33:41.882106",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_vvay",
+  "amended_from",
+  "select_arrear_type",
+  "employee",
+  "employee_name",
+  "column_break_uuzk",
+  "company",
+  "payroll_period",
+  "additional_salary_date",
+  "section_break_xdag",
+  "lwp_month_reversal",
+  "salary_slip_id",
+  "working_days",
+  "absent_days",
+  "lwp_days",
+  "column_break_uyjn",
+  "total_lwp_days",
+  "number_of_days_planning_to_reverse",
+  "section_break_giud",
+  "earning_arrear_component",
+  "section_break_tezq",
+  "deduction_arrear_component"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_vvay",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Payroll Correction and  Arrears",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "default": "LWP Adjustments",
+   "fieldname": "select_arrear_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Select Arrear Type",
+   "options": "LWP Adjustments\nArrear Calculation",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_uuzk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "payroll_period",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Payroll Period",
+   "options": "Payroll Period",
+   "reqd": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name"
+  },
+  {
+   "description": "Choose the date on which you want to create these components as arrears.",
+   "fieldname": "additional_salary_date",
+   "fieldtype": "Date",
+   "label": "Additional Salary Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_xdag",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "salary_slip_id",
+   "fieldtype": "Link",
+   "label": "Salary Slip ID",
+   "options": "Salary Slip"
+  },
+  {
+   "fieldname": "working_days",
+   "fieldtype": "Float",
+   "label": "Working Days"
+  },
+  {
+   "fieldname": "absent_days",
+   "fieldtype": "Float",
+   "label": "Absent Days"
+  },
+  {
+   "fieldname": "lwp_days",
+   "fieldtype": "Float",
+   "label": "LWP Days"
+  },
+  {
+   "fieldname": "column_break_uyjn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_lwp_days",
+   "fieldtype": "Float",
+   "label": "Total LWP Days"
+  },
+  {
+   "fieldname": "number_of_days_planning_to_reverse",
+   "fieldtype": "Float",
+   "label": "Number of days planning to reverse"
+  },
+  {
+   "fieldname": "section_break_giud",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "earning_arrear_component",
+   "fieldtype": "Table",
+   "label": "Earning Arrear Component",
+   "options": "Salary Adjustment Child"
+  },
+  {
+   "fieldname": "section_break_tezq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "deduction_arrear_component",
+   "fieldtype": "Table",
+   "label": "Deduction Arrear Component",
+   "options": "Salary Adjustment Child"
+  },
+  {
+   "depends_on": "payroll_period",
+   "fieldname": "lwp_month_reversal",
+   "fieldtype": "Select",
+   "label": "LWP Month Reversal"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-03-31 17:02:57.050428",
+ "modified_by": "Administrator",
+ "module": "Payroll",
+ "name": "Payroll Correction and  Arrears",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
