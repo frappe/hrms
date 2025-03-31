@@ -11,6 +11,17 @@ frappe.ui.form.on("Attendance", {
 			return {
 				query: "erpnext.controllers.queries.employee_query",
 			};
-		});
+		}),
+			(frm.fields_dict["leave_details"].grid.get_field("leave_application").get_query =
+				function (doc) {
+					return {
+						filters: {
+							company: doc.company,
+							employee: doc.employee,
+							from_date: ["<=", doc.attendance_date],
+							to_date: [">=", doc.attendance_date],
+						},
+					};
+				});
 	},
 });

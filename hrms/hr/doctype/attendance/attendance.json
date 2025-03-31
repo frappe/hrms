@@ -11,24 +11,24 @@
   "naming_series",
   "employee",
   "employee_name",
-  "working_hours",
   "status",
-  "leave_type",
-  "leave_application",
+  "half_day_status",
   "column_break0",
   "attendance_date",
   "company",
   "department",
   "attendance_request",
-  "half_day_status",
   "details_section",
   "shift",
   "in_time",
   "out_time",
   "column_break_18",
-  "late_entry",
+  "working_hours",
   "early_exit",
-  "amended_from"
+  "late_entry",
+  "amended_from",
+  "section_break_vxxb",
+  "leave_details"
  ],
  "fields": [
   {
@@ -92,25 +92,6 @@
    "search_index": 1
   },
   {
-   "depends_on": "eval:in_list([\"On Leave\", \"Half Day\"], doc.status)",
-   "fieldname": "leave_type",
-   "fieldtype": "Link",
-   "in_standard_filter": 1,
-   "label": "Leave Type",
-   "mandatory_depends_on": "eval:in_list([\"On Leave\", \"Half Day\"], doc.status)",
-   "oldfieldname": "leave_type",
-   "oldfieldtype": "Link",
-   "options": "Leave Type"
-  },
-  {
-   "fieldname": "leave_application",
-   "fieldtype": "Link",
-   "label": "Leave Application",
-   "no_copy": 1,
-   "options": "Leave Application",
-   "read_only": 1
-  },
-  {
    "fieldname": "column_break0",
    "fieldtype": "Column Break",
    "oldfieldtype": "Column Break",
@@ -147,6 +128,7 @@
    "read_only": 1
   },
   {
+   "depends_on": "eval:in_list([\"Present\",\"Absent\"],doc.status)",
    "fieldname": "shift",
    "fieldtype": "Link",
    "label": "Shift",
@@ -171,12 +153,14 @@
   },
   {
    "default": "0",
+   "depends_on": "shift",
    "fieldname": "late_entry",
    "fieldtype": "Check",
    "label": "Late Entry"
   },
   {
    "default": "0",
+   "depends_on": "shift",
    "fieldname": "early_exit",
    "fieldtype": "Check",
    "label": "Early Exit"
@@ -211,13 +195,27 @@
    "label": "Status for Other Half",
    "no_copy": 1,
    "options": "\nPresent\nAbsent"
+  },
+  {
+   "depends_on": "eval:in_list([\"On Leave\", \"Half Day\"], doc.status)",
+   "fieldname": "leave_details",
+   "fieldtype": "Table",
+   "label": "Leave Details",
+   "mandatory_depends_on": "eval:in_list([\"On Leave\", \"Half Day\"], doc.status)",
+   "no_copy": 1,
+   "options": "Leave Application Detail"
+  },
+  {
+   "fieldname": "section_break_vxxb",
+   "fieldtype": "Section Break"
   }
  ],
+ "grid_page_length": 50,
  "icon": "fa fa-ok",
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-06 15:15:13.866304",
+ "modified": "2025-03-25 12:32:35.042983",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance",
@@ -276,6 +274,7 @@
    "share": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "employee,employee_name,attendance_date,status",
  "sort_field": "creation",
  "sort_order": "DESC",

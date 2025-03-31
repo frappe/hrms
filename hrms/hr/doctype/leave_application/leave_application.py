@@ -278,42 +278,44 @@ class LeaveApplication(Document, PWANotificationsMixin):
 						attendance.cancel()
 					frappe.delete_doc("Attendance", attendance_name, force=1)
 				continue
+			status = self.get_new_attendance_status(date)
+			if attendance_name:
+				self.update_existing_attendance(attendance_name, status)
+			else:
+				self.create_new_attendance(date, status)
 
-			self.create_or_update_attendance(attendance_name, date)
-
-	def create_or_update_attendance(self, attendance_name, date):
-		status = (
+	def get_new_attendance_status(self, date):
+		return (
 			"Half Day" if self.half_day_date and getdate(date) == getdate(self.half_day_date) else "On Leave"
 		)
 
-		if attendance_name:
-			# update existing attendance, change absent to on leave or half day
-			doc = frappe.get_doc("Attendance", attendance_name)
-			half_day_status = (
-				None if status == "On Leave" else "Absent" if doc.status == "Absent" else "On Leave"
-			)
-			doc.db_set(
-				{
-					"status": status,
-					"leave_type": self.leave_type,
-					"leave_application": self.name,
-					"half_day_status": half_day_status,
-				}
-			)
-		else:
-			# make new attendance and submit it
-			doc = frappe.new_doc("Attendance")
-			doc.employee = self.employee
-			doc.employee_name = self.employee_name
-			doc.attendance_date = date
-			doc.company = self.company
-			doc.leave_type = self.leave_type
-			doc.leave_application = self.name
-			doc.status = status
-			doc.half_day_status = "Absent" if status == "Half Day" else None
-			doc.flags.ignore_validate = True
-			doc.insert(ignore_permissions=True)
-			doc.submit()
+	def update_existing_attendance(self, attendance_name, status):
+		# update existing attendance, change absent to on leave or half day
+		doc = frappe.get_doc("Attendance", attendance_name)
+
+		if doc.status == "Half Day" and doc.leave_details:
+			status = "On Leave"
+
+		doc.status = status
+		doc.half_day_status = (
+			None if status == "On Leave" else "Absent" if doc.status == "Absent" else "On Leave"
+		)
+		doc.append("leave_details", dict(leave_type=self.leave_type, leave_application=self.name))
+		doc.flags.ignore_validate = True
+		doc.insert(ignore_permissions=True)
+
+	def create_new_attendance(self, date, status):
+		doc = frappe.new_doc("Attendance")
+		doc.employee = self.employee
+		doc.employee_name = self.employee_name
+		doc.attendance_date = date
+		doc.company = self.company
+		doc.append("leave_details", dict(leave_type=self.leave_type, leave_application=self.name))
+		doc.status = status
+		doc.half_day_status = "Absent" if status == "Half Day" else None
+		doc.flags.ignore_validate = True
+		doc.insert(ignore_permissions=True)
+		doc.submit()
 
 	def cancel_attendance(self):
 		if self.docstatus == 2:

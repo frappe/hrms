@@ -161,36 +161,21 @@ class Attendance(Document):
 			)
 		).run(as_dict=True)
 
-		if leave_record:
-			for d in leave_record:
-				self.leave_type = d.leave_type
-				self.leave_application = d.name
-				if d.half_day_date == getdate(self.attendance_date):
-					self.status = "Half Day"
-					frappe.msgprint(
-						_("Employee {0} on Half day on {1}").format(
-							self.employee, format_date(self.attendance_date)
-						)
-					)
-				else:
-					self.status = "On Leave"
-					frappe.msgprint(
-						_("Employee {0} is on Leave on {1}").format(
-							self.employee, format_date(self.attendance_date)
-						)
-					)
-
-		if self.status in ("On Leave", "Half Day"):
-			if not leave_record:
-				frappe.msgprint(
-					_("No leave record found for employee {0} on {1}").format(
-						self.employee, format_date(self.attendance_date)
-					),
-					alert=1,
-				)
-		elif self.leave_type:
-			self.leave_type = None
-			self.leave_application = None
+		if len(leave_record) > 1:
+			self.status = "On Leave"
+		elif leave_record[0].half_day_date == getdate(self.attendance_date):
+			self.status = "Half Day"
+			self.half_day_status = "Absent"
+		self.set("leave_details", [])
+		for record in leave_record:
+			self.append(
+				"leave_details",
+				{
+					"leave_application": record["name"],
+					"leave_type": record["leave_type"],
+					"half_day": record["half_day"],
+				},
+			)
 
 	def validate_employee(self):
 		emp = frappe.db.sql(
