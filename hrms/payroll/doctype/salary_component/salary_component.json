@@ -25,6 +25,8 @@
   "statistical_component",
   "do_not_include_in_total",
   "remove_if_zero_valued",
+  "is_arrear",
+  "mapping_component",
   "disabled",
   "section_break_5",
   "accounts",
@@ -263,12 +265,28 @@
    "fieldname": "remove_if_zero_valued",
    "fieldtype": "Check",
    "label": "Remove if Zero Valued"
+  },
+  {
+   "default": "0",
+   "description": "If the arrear checkbox is checked, this component is treated as an arrear component.",
+   "fieldname": "is_arrear",
+   "fieldtype": "Check",
+   "label": "Is Arrear"
+  },
+  {
+   "depends_on": "is_arrear",
+   "description": "The arrear for each individual component is calculated based on its corresponding component, such as Basic Arrear mapping to the Basic component.",
+   "fieldname": "mapping_component",
+   "fieldtype": "Link",
+   "label": "Mapping Component",
+   "mandatory_depends_on": "is_arrear",
+   "options": "Salary Component"
   }
  ],
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-27 13:10:33.871355",
+ "modified": "2025-03-31 14:58:45.979468",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",
