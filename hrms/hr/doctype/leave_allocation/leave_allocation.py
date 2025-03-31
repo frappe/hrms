@@ -11,6 +11,7 @@ from hrms.hr.doctype.leave_application.leave_application import get_approved_lea
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import (
 	create_leave_ledger_entry,
 	expire_allocation,
+	process_expired_allocation,
 )
 from hrms.hr.utils import create_additional_leave_ledger_entry, get_leave_period, set_employee_name
 from hrms.hr.utils import get_monthly_earned_leave as _get_monthly_earned_leave
@@ -304,6 +305,8 @@ class LeaveAllocation(Document):
 				is_carry_forward=1,
 			)
 			create_leave_ledger_entry(self, args, submit)
+			if submit and getdate(end_date) < getdate():
+				show_expire_leave_dialog(self.unused_leaves, self.leave_type)
 
 		args = dict(
 			leaves=self.new_leaves_allocated,
@@ -477,3 +480,26 @@ def get_unused_leaves(employee, leave_type, from_date, to_date):
 def validate_carry_forward(leave_type):
 	if not frappe.db.get_value("Leave Type", leave_type, "is_carry_forward"):
 		frappe.throw(_("Leave Type {0} cannot be carry-forwarded").format(leave_type))
+
+
+def show_expire_leave_dialog(expired_leaves, leave_type):
+	frappe.msgprint(
+		title=_("Leaves Expired"),
+		msg=_(
+			"{0} leaves from allocation for {1} leave type have expired and will be processed during the next scheduled job. It is recommended to expire them now before creating new leave policy assignments."
+		).format(frappe.bold(expired_leaves), frappe.bold(leave_type)),
+		indicator="orange",
+		primary_action={
+			"label": _("Expire Leaves"),
+			"server_action": "hrms.hr.doctype.leave_allocation.leave_allocation.expire_carried_forward_allocation",
+			"hide_on_success": True,
+		},
+	)
+
+
+@frappe.whitelist()
+def expire_carried_forward_allocation():
+	if frappe.has_permission(doctype="Leave Allocation", ptype="submit", user=frappe.session.user):
+		process_expired_allocation()
+	else:
+		frappe.throw(_("You do not have permission to complete this action"), frappe.PermissionError)

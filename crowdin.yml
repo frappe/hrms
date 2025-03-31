@@ -1,24 +1,11 @@
 files:
   - source: /hrms/locale/main.pot
-    translation: /hrms/locale/%locale_with_underscore%.po
+    translation: /hrms/locale/%two_letters_code%.po
 pull_request_title: "fix: sync translations from crowdin"
 pull_request_labels:
   - translation
 commit_message: "fix: %language% translations"
 append_commit_message: false
 languages_mapping:
-  locale_with_underscore:
-    ar_SA: ar
-    bs_BA: bs
-    de_DE: de
-    eo_UY: eo
-    es_ES: es
-    fa_IR: fa
-    fr_FR: fr
-    hr_HR: hr
-    hu_HU: hu
-    pl_PL: pl
-    ru_RU: ru
-    sv_SE: sv
-    th_TH: th
-    tr_TR: tr
+  two_letters_code:
+    pt-BR: pt_BR
