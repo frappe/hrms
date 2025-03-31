@@ -69,15 +69,9 @@ frappe.ui.form.on("Interview", {
 	},
 
 	submit_feedback: function (frm) {
-		frappe.call({
-			method: "hrms.hr.doctype.interview.interview.get_expected_skill_set",
-			args: {
-				interview_round: frm.doc.interview_round,
-			},
-			callback: function (r) {
-				frm.events.show_feedback_dialog(frm, r.message);
-				frm.refresh();
-			},
+		frappe.model.open_mapped_doc({
+			method: "hrms.hr.doctype.interview.interview.set_interview_feedback",
+			frm: frm,
 		});
 	},
 
@@ -124,78 +118,6 @@ frappe.ui.form.on("Interview", {
 			},
 		});
 		d.show();
-	},
-
-	show_feedback_dialog: function (frm, data) {
-		let fields = frm.events.get_fields_for_feedback();
-
-		let d = new frappe.ui.Dialog({
-			title: __("Submit Feedback"),
-			fields: [
-				{
-					fieldname: "skill_set",
-					fieldtype: "Table",
-					label: __("Skill Assessment"),
-					cannot_add_rows: false,
-					in_editable_grid: true,
-					reqd: 1,
-					fields: fields,
-					data: data,
-				},
-				{
-					fieldname: "result",
-					fieldtype: "Select",
-					options: ["", "Cleared", "Rejected"],
-					label: __("Result"),
-					reqd: 1,
-				},
-				{
-					fieldname: "feedback",
-					fieldtype: "Small Text",
-					label: __("Feedback"),
-				},
-			],
-			size: "large",
-			minimizable: true,
-			static: true,
-			primary_action: function (values) {
-				frappe
-					.call({
-						method: "hrms.hr.doctype.interview.interview.create_interview_feedback",
-						args: {
-							data: values,
-							interview_name: frm.doc.name,
-							interviewer: frappe.session.user,
-							job_applicant: frm.doc.job_applicant,
-						},
-					})
-					.then(() => {
-						frm.refresh();
-					});
-				d.hide();
-			},
-		});
-		d.show();
-		d.get_close_btn().show();
-	},
-
-	get_fields_for_feedback: function () {
-		return [
-			{
-				fieldtype: "Link",
-				fieldname: "skill",
-				options: "Skill",
-				in_list_view: 1,
-				label: __("Skill"),
-			},
-			{
-				fieldtype: "Rating",
-				fieldname: "rating",
-				label: __("Rating"),
-				in_list_view: 1,
-				reqd: 1,
-			},
-		];
 	},
 
 	interview_round: function (frm) {

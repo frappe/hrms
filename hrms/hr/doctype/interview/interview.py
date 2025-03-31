@@ -7,6 +7,7 @@ import datetime
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.model.mapper import get_mapped_doc
 from frappe.query_builder.functions import Avg
 from frappe.utils import cint, cstr, get_datetime, get_link_to_form, getdate, nowtime
 
@@ -341,6 +342,33 @@ def create_interview_feedback(data, interview_name, interviewer, job_applicant):
 			get_link_to_form("Interview Feedback", interview_feedback.name)
 		)
 	)
+
+
+@frappe.whitelist()
+def set_interview_feedback(source, target=None):
+	def set_missing_values(source, target):
+		target.interviewer = frappe.session.user
+		skill_set = get_expected_skill_set(frappe.get_value("Interview", source, ["interview_round"]))
+		for skill in skill_set:
+			target.append("skill_assessment", skill)
+
+	interview_feedback = get_mapped_doc(
+		from_doctype="Interview",
+		from_docname=source,
+		table_maps={
+			"Interview": {
+				"doctype": "Interview Feedback",
+				"field_map": {
+					"interview": "name",
+					"interview_round": "interview_round",
+					"job_applicant": "job_applicant",
+				},
+			}
+		},
+		postprocess=set_missing_values,
+	)
+
+	return interview_feedback
 
 
 @frappe.whitelist()
