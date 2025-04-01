@@ -544,21 +544,23 @@ def get_leave_summary(employee: str, filters: Filters) -> dict[str, float]:
 	{'leave_without_pay': 1.0, 'sick_leave': 2.0}
 	"""
 	Attendance = frappe.qb.DocType("Attendance")
+	LeaveDetail = frappe.qb.DocType("Leave Application Detail")
 	day_case = frappe.qb.terms.Case().when(Attendance.status == "Half Day", 0.5).else_(1)
 	sum_leave_days = Sum(day_case).as_("leave_days")
 
 	leave_details = (
 		frappe.qb.from_(Attendance)
-		.select(Attendance.leave_type, sum_leave_days)
+		.inner_join(LeaveDetail)
+		.on(LeaveDetail.parent == Attendance.name)
+		.select(LeaveDetail.leave_type, sum_leave_days)
 		.where(
 			(Attendance.employee == employee)
 			& (Attendance.docstatus == 1)
 			& (Attendance.company.isin(filters.companies))
-			& ((Attendance.leave_type.isnotnull()) | (Attendance.leave_type != ""))
 			& (Extract("month", Attendance.attendance_date) == filters.month)
 			& (Extract("year", Attendance.attendance_date) == filters.year)
 		)
-		.groupby(Attendance.leave_type)
+		.groupby(LeaveDetail.leave_type)
 	).run(as_dict=True)
 
 	leaves = {}
