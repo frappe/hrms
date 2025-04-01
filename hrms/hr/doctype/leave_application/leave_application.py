@@ -259,13 +259,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			# check for existing attenadnce absent or if half day with half day status absent,
 			attendance_name = frappe.db.exists(
 				"Attendance",
-				dict(
-					employee=self.employee,
-					attendance_date=date,
-					docstatus=("!=", 2),
-					status=("in", ["Absent", "Half Day"]),
-					half_day_status=("in", ["Absent", "None"]),
-				),
+				dict(employee=self.employee, attendance_date=date, docstatus=("!=", 2)),
 			)
 			# don't mark attendance for holidays
 			# if leave type does not include holidays within leaves as leaves
@@ -326,7 +320,8 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				as_dict=1,
 			)
 			for name in attendance:
-				frappe.db.set_value("Attendance", name, "docstatus", 2)
+				doc = frappe.get_doc("Attendance", name)
+				doc.cancel()
 
 	def validate_salary_processed_days(self):
 		if not frappe.db.get_value("Leave Type", self.leave_type, "is_lwp"):
