@@ -195,7 +195,7 @@
    "fieldtype": "Select",
    "label": "Status for Other Half",
    "no_copy": 1,
-   "options": "\nPresent\nAbsent\nOn Leave"
+   "options": "\nPresent\nAbsent"
   },
   {
    "depends_on": "eval:in_list([\"On Leave\", \"Half Day\"], doc.status)",
