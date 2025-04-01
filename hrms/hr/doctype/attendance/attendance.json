@@ -194,7 +194,7 @@
    "fieldtype": "Select",
    "label": "Status for Other Half",
    "no_copy": 1,
-   "options": "\nPresent\nAbsent"
+   "options": "\nPresent\nAbsent\nOn Leave"
   },
   {
    "depends_on": "eval:in_list([\"On Leave\", \"Half Day\"], doc.status)",
@@ -215,7 +215,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-25 12:32:35.042983",
+ "modified": "2025-04-01 10:51:10.228981",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance",
