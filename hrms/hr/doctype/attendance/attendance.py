@@ -33,6 +33,10 @@ class OverlappingShiftAttendanceError(frappe.ValidationError):
 
 
 class Attendance(Document):
+	
+	def before_validate(self):
+		self.half_day_status = None
+
 	def validate(self):
 		from erpnext.controllers.status_updater import validate_status
 
@@ -160,22 +164,22 @@ class Attendance(Document):
 				& (LeaveApplication.docstatus == 1)
 			)
 		).run(as_dict=True)
-
-		if len(leave_record) > 1:
-			self.status = "On Leave"
-		elif leave_record[0].half_day_date == getdate(self.attendance_date):
-			self.status = "Half Day"
-			self.half_day_status = "Absent"
-		self.set("leave_details", [])
-		for record in leave_record:
-			self.append(
-				"leave_details",
-				{
-					"leave_application": record["name"],
-					"leave_type": record["leave_type"],
-					"half_day": record["half_day"],
-				},
-			)
+		if leave_record:
+			if len(leave_record) > 1:
+				self.status = "On Leave"
+			elif leave_record[0].half_day_date == getdate(self.attendance_date):
+				self.status = "Half Day"
+				self.half_day_status = "Absent"
+			self.set("leave_details", [])
+			for record in leave_record:
+				self.append(
+					"leave_details",
+					{
+						"leave_application": record["name"],
+						"leave_type": record["leave_type"],
+						"half_day": record["half_day"],
+					},
+				)
 
 	def validate_employee(self):
 		emp = frappe.db.sql(
