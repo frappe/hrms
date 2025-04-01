@@ -290,13 +290,14 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		if doc.status == "Half Day" and doc.leave_details:
 			status = "On Leave"
 
-		doc.status = status
-		doc.half_day_status = (
-			None if status == "On Leave" else "Absent" if doc.status == "Absent" else "On Leave"
+		half_day_status = None if status == "On Leave" else "Absent" if doc.status == "Absent" else "On Leave"
+		leave_details = frappe.new_doc(
+			"Leave Application Detail", parent_doc=doc, parentfield="leave_details"
 		)
-		doc.append("leave_details", dict(leave_type=self.leave_type, leave_application=self.name))
-		doc.flags.ignore_validate = True
-		doc.save(ignore_permissions=True)
+		leave_details.update({"leave_application": self.name, "leave_type": self.leave_type})
+		leave_details.save()
+		doc.db_set("status", status)
+		doc.db_set("half_day_status", half_day_status)
 
 	def create_new_attendance(self, date, status):
 		doc = frappe.new_doc("Attendance")
