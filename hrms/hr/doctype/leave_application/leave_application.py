@@ -286,12 +286,11 @@ class LeaveApplication(Document, PWANotificationsMixin):
 	def update_existing_attendance(self, attendance_name, new_status):
 		# half day status can either be absent or none
 		doc = frappe.get_doc("Attendance", attendance_name)
-
+		new_half_day_status = doc.half_day_status
 		if doc.status == "Half Day":
 			# half day came from leave turn attendance into full leave
 			if doc.leave_details:
 				new_status = "On Leave"
-				new_half_day_status = None
 			# half day came from checkins
 			elif doc.shift:
 				if new_status == "Half Day":
