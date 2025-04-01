@@ -323,13 +323,18 @@ class TestLeaveApplication(IntegrationTestCase):
 		attendance = frappe.db.get_value(
 			"Attendance",
 			{"attendance_date": "2023-01-02"},
-			["status", "leave_type", "leave_application"],
+			["name", "status"],
 			as_dict=True,
 		)
-
+		linked_leave_applications = frappe.get_value(
+			"Leave Application Detail",
+			{"parent": attendance.name},
+			["leave_application", "leave_type"],
+			as_dict=True,
+		)
 		self.assertEqual(attendance.status, "Half Day")
-		self.assertEqual(attendance.leave_type, "_Test Leave Type")
-		self.assertEqual(attendance.leave_application, application.name)
+		self.assertEqual(linked_leave_applications.leave_type, "_Test Leave Type")
+		self.assertEqual(linked_leave_applications.leave_application, application.name)
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_attendance_for_include_holidays(self):
@@ -352,7 +357,9 @@ class TestLeaveApplication(IntegrationTestCase):
 		)
 		leave_application.reload()
 		self.assertEqual(leave_application.total_leave_days, 4)
-		self.assertEqual(frappe.db.count("Attendance", {"leave_application": leave_application.name}), 4)
+		self.assertEqual(
+			frappe.db.count("Leave Application Detail", {"leave_application": leave_application.name}), 4
+		)
 
 		leave_application.cancel()
 
@@ -382,7 +389,6 @@ class TestLeaveApplication(IntegrationTestCase):
 		attendance_on_holiday.attendance_date = first_sunday
 		attendance_on_holiday.flags.ignore_validate = True
 		attendance_on_holiday.save()
-
 		# already marked attendance on a non-holiday should be updated
 		attendance = frappe.get_doc(config)
 		attendance.attendance_date = add_days(first_sunday, 3)
@@ -393,10 +399,11 @@ class TestLeaveApplication(IntegrationTestCase):
 			employee.name, first_sunday, add_days(first_sunday, 3), leave_type.name, employee.company
 		)
 		leave_application.reload()
-
 		# holiday should be excluded while marking attendance
 		self.assertEqual(leave_application.total_leave_days, 3)
-		self.assertEqual(frappe.db.count("Attendance", {"leave_application": leave_application.name}), 3)
+		self.assertEqual(
+			frappe.db.count("Leave Application Detail", {"leave_application": leave_application.name}), 3
+		)
 
 		# attendance on holiday deleted
 		self.assertFalse(frappe.db.exists("Attendance", attendance_on_holiday.name))
