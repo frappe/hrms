@@ -289,6 +289,17 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 		if doc.status == "Half Day" and doc.leave_details:
 			status = "On Leave"
+		if doc.status == "Half Day" and doc.shift and status == "On Leave":
+			frappe.throw(
+				_(
+					"{0} attendance for employee {1} is already marked for date: {2}. Consider applying for half day leave on this date."
+				).format(
+					doc.status,
+					self.employee,
+					get_link_to_form("Attendance", doc.name, label=formatdate(doc.attendance_date)),
+				),
+				AttendanceAlreadyMarkedError,
+			)
 
 		half_day_status = None if status == "On Leave" else "Absent" if doc.status == "Absent" else "On Leave"
 		leave_details = frappe.new_doc(
