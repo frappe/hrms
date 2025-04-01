@@ -272,43 +272,49 @@ class LeaveApplication(Document, PWANotificationsMixin):
 						attendance.cancel()
 					frappe.delete_doc("Attendance", attendance_name, force=1)
 				continue
-			status = self.get_new_attendance_status(date)
+			new_status = self.get_new_attendance_status(date)
 			if attendance_name:
-				self.update_existing_attendance(attendance_name, status)
+				self.update_existing_attendance(attendance_name, new_status)
 			else:
-				self.create_new_attendance(date, status)
+				self.create_new_attendance(date, new_status)
 
 	def get_new_attendance_status(self, date):
 		return (
 			"Half Day" if self.half_day_date and getdate(date) == getdate(self.half_day_date) else "On Leave"
 		)
 
-	def update_existing_attendance(self, attendance_name, status):
-		# update existing attendance, change absent to on leave or half day
+	def update_existing_attendance(self, attendance_name, new_status):
+		# half day status can either be absent or none
 		doc = frappe.get_doc("Attendance", attendance_name)
 
-		if doc.status == "Half Day" and doc.leave_details:
-			status = "On Leave"
-		if doc.status == "Half Day" and doc.shift and status == "On Leave":
-			frappe.throw(
-				_(
-					"{0} attendance for employee {1} is already marked for date: {2}. Consider applying for half day leave on this date."
-				).format(
-					doc.status,
-					self.employee,
-					get_link_to_form("Attendance", doc.name, label=formatdate(doc.attendance_date)),
-				),
-				AttendanceAlreadyMarkedError,
-			)
-
-		half_day_status = None if status == "On Leave" else "Absent" if doc.status == "Absent" else "On Leave"
+		if doc.status == "Half Day":
+			# half day came from leave turn attendance into full leave
+			if doc.leave_details:
+				new_status = "On Leave"
+				new_half_day_status = None
+			# half day came from checkins
+			elif doc.shift:
+				if new_status == "Half Day":
+					new_half_day_status = "Present"
+				# throw validation if half day attendance exists from checkins and leave application is full day
+				else:
+					frappe.throw(
+						_(
+							"{0} attendance for employee {1} is already marked for date: {2}. Consider applying for half day leave on this date."
+						).format(
+							doc.status,
+							self.employee,
+							get_link_to_form("Attendance", doc.name, label=formatdate(doc.attendance_date)),
+						),
+						AttendanceAlreadyMarkedError,
+					)
 		leave_details = frappe.new_doc(
 			"Leave Application Detail", parent_doc=doc, parentfield="leave_details"
 		)
 		leave_details.update({"leave_application": self.name, "leave_type": self.leave_type})
 		leave_details.save()
-		doc.db_set("status", status)
-		doc.db_set("half_day_status", half_day_status)
+		doc.db_set("status", new_status)
+		doc.db_set("half_day_status", new_half_day_status)
 
 	def create_new_attendance(self, date, status):
 		doc = frappe.new_doc("Attendance")
