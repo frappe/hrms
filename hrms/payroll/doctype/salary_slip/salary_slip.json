@@ -65,6 +65,7 @@
   "other_deductions_override",
   "other_deduction_reason",
   "days_on_call",
+  "adj_feb",
   "earnings_and_deductions_tab",
   "timesheets_section",
   "timesheets",
@@ -752,30 +753,30 @@
   {
    "fieldname": "night_shift_override",
    "fieldtype": "Int",
-   "label": "Night Shift Override"
+   "label": "Night Shift Override (no. of nights)"
   },
   {
    "depends_on": "eval: !doc.disable_car_allowance",
    "fieldname": "car_allowance_override",
    "fieldtype": "Currency",
-   "label": "Car Allowance"
+   "label": "Car Allowance (Rs)"
   },
   {
    "depends_on": "eval: !doc.disable_coordinator_allowance",
    "fieldname": "coord_allowance_override",
    "fieldtype": "Currency",
-   "label": "Coordinator Allowance"
+   "label": "Coordinator Allowance (Rs)"
   },
   {
    "depends_on": "eval: !doc.disable_busfare",
    "fieldname": "bus_fare_override",
    "fieldtype": "Currency",
-   "label": "Busfare"
+   "label": "Busfare (no. of days)"
   },
   {
    "fieldname": "paye_override",
    "fieldtype": "Currency",
-   "label": "Paye"
+   "label": "Paye (Rs)"
   },
   {
    "fieldname": "earnings_override_column",
@@ -789,13 +790,13 @@
   },
   {
    "fieldname": "leave_without_pay_override",
-   "fieldtype": "Currency",
-   "label": "Leave Without Pay"
+   "fieldtype": "Data",
+   "label": "Leave Without Pay (no. of days)"
   },
   {
    "fieldname": "other_deductions_override",
    "fieldtype": "Currency",
-   "label": "Other Deductions"
+   "label": "Other Deductions (Rs)"
   },
   {
    "depends_on": "eval: doc.other_deductions_override > 0;",
@@ -806,12 +807,12 @@
   {
    "fieldname": "o_tax_allowance_override",
    "fieldtype": "Currency",
-   "label": "Other Taxable Allowance"
+   "label": "Other Taxable Allowance (Rs)"
   },
   {
    "fieldname": "o_non_tax_allowance_override",
    "fieldtype": "Currency",
-   "label": "Other Non Taxable Allowance"
+   "label": "Other Non Taxable Allowance (Rs)"
   },
   {
    "fieldname": "net_pay_section",
@@ -839,34 +840,39 @@
   {
    "fieldname": "ovt_override_15x",
    "fieldtype": "Currency",
-   "label": "Overtime Hours 1.5x"
+   "label": "Overtime 1.5x (Hours)"
   },
   {
    "fieldname": "ovt_override_2x",
    "fieldtype": "Currency",
-   "label": "Overtime Hours 2x"
+   "label": "Overtime 2x (Hours)"
   },
   {
    "fieldname": "miles_travelled",
    "fieldtype": "Currency",
-   "label": "Miles travelled"
+   "label": "Miles travelled (no. of miles)"
   },
   {
    "fieldname": "days_on_call",
    "fieldtype": "Data",
-   "label": "Days on Call"
+   "label": "Days on Call (no. of days)"
   },
   {
    "fieldname": "ovt_override_3x",
    "fieldtype": "Currency",
-   "label": "Overtime Hours 3x"
+   "label": "Overtime 3x (Hours)"
+  },
+  {
+   "fieldname": "adj_feb",
+   "fieldtype": "Currency",
+   "label": "Salary Adj Feb. (Rs)"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-21 06:15:42.840992",
+ "modified": "2025-04-01 09:46:41.821277",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

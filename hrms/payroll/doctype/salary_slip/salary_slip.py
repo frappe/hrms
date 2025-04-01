@@ -83,8 +83,7 @@ class SalarySlip(TransactionBase):
 			"get_approved_overtime_count": self.get_approved_overtime_count,
 			"get_attendance_count": self.get_attendance_count,
 			"on_call_count": self.on_call_count
-		}
-		
+		}		
 
 	def eround(self, value, decimals=0):
 		"""
@@ -2140,7 +2139,6 @@ class SalarySlip(TransactionBase):
 						"available_leaves": flt(leave_values.get("remaining_leaves")),
 					},
 				)
-
 
 def unlink_ref_doc_from_salary_slip(doc, method=None):
 	"""Unlinks accrual Journal Entry from Salary Slips on cancellation"""
