@@ -33,8 +33,7 @@ class OverlappingShiftAttendanceError(frappe.ValidationError):
 
 
 class Attendance(Document):
-	
-	def before_validate(self):
+	def before_insert(self):
 		self.half_day_status = None
 
 	def validate(self):
@@ -87,7 +86,7 @@ class Attendance(Document):
 				& (Attendance.docstatus < 2)
 				& (Attendance.attendance_date == self.attendance_date)
 				& (Attendance.name != self.name)
-				& (Attendance.status == "Half Day" and Attendance.half_day_status != "Absent")
+				& (Attendance.half_day_status.isnull())
 			)
 			.for_update()
 		)
