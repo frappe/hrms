@@ -296,7 +296,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		)
 		doc.append("leave_details", dict(leave_type=self.leave_type, leave_application=self.name))
 		doc.flags.ignore_validate = True
-		doc.insert(ignore_permissions=True)
+		doc.save(ignore_permissions=True)
 
 	def create_new_attendance(self, date, status):
 		doc = frappe.new_doc("Attendance")
