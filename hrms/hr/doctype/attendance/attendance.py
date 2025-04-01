@@ -34,7 +34,7 @@ class OverlappingShiftAttendanceError(frappe.ValidationError):
 
 class Attendance(Document):
 	def before_insert(self):
-		self.half_day_status = None
+		self.half_day_status = None if self.half_day_status == "" else self.half_day_status
 
 	def validate(self):
 		from erpnext.controllers.status_updater import validate_status
