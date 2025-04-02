@@ -30,6 +30,7 @@
   "column_break_ptcc",
   "salary_structure",
   "payroll_entry",
+  "current_payroll_period",
   "mode_of_payment",
   "column_break_wyhp",
   "salary_slip_based_on_timesheet",
@@ -186,6 +187,7 @@
    "fieldtype": "Link",
    "label": "Payroll Entry",
    "options": "Payroll Entry",
+   "read_only": 1,
    "search_index": 1
   },
   {
@@ -739,13 +741,20 @@
    "no_copy": 1,
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "current_payroll_period",
+   "fieldtype": "Link",
+   "label": "Current Payroll Period",
+   "options": "Payroll Period",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-31 17:41:04.877742",
+ "modified": "2025-04-01 10:18:23.919469",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

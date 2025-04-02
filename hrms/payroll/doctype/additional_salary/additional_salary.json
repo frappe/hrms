@@ -24,6 +24,7 @@
   "type",
   "currency",
   "amount",
+  "payroll_correction",
   "column_break_8",
   "deduct_full_tax_on_selected_payroll_date",
   "overwrite_salary_structure_amount",
@@ -199,11 +200,18 @@
    "fieldtype": "Check",
    "label": "Disabled",
    "no_copy": 1
+  },
+  {
+   "fieldname": "payroll_correction",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Payroll Correction",
+   "options": "Payroll Correction"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-14 16:51:17.594568",
+ "modified": "2025-04-02 17:14:08.610527",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Additional Salary",

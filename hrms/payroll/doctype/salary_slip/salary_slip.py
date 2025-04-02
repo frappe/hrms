@@ -171,7 +171,7 @@ class SalarySlip(TransactionBase):
 					alert=True,
 				)
 
-		self.payroll_entry=self.payroll_period.name
+		self.current_payroll_period=self.payroll_period.name
 		
 
 	def check_salary_withholding(self):

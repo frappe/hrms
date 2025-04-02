@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestPayrollCorrectionandArrears(FrappeTestCase):
+class TestPayrollCorrection(FrappeTestCase):
 	pass

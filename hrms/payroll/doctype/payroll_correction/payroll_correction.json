@@ -8,11 +8,11 @@
  "field_order": [
   "section_break_vvay",
   "amended_from",
-  "select_arrear_type",
   "employee",
   "employee_name",
   "column_break_uuzk",
   "company",
+  "currency",
   "payroll_period",
   "additional_salary_date",
   "section_break_xdag",
@@ -39,19 +39,25 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Payroll Correction and  Arrears",
+   "options": "Payroll Correction",
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
   },
   {
-   "default": "LWP Adjustments",
-   "fieldname": "select_arrear_type",
-   "fieldtype": "Select",
+   "fieldname": "employee",
+   "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Select Arrear Type",
-   "options": "LWP Adjustments\nArrear Calculation",
+   "label": "Employee",
+   "options": "Employee",
    "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_uuzk",
@@ -74,20 +80,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "employee",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Employee",
-   "options": "Employee",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "employee.employee_name",
-   "fieldname": "employee_name",
-   "fieldtype": "Data",
-   "label": "Employee Name"
-  },
-  {
    "description": "Choose the date on which you want to create these components as arrears.",
    "fieldname": "additional_salary_date",
    "fieldtype": "Date",
@@ -99,25 +91,37 @@
    "fieldtype": "Section Break"
   },
   {
+   "depends_on": "payroll_period",
+   "fieldname": "lwp_month_reversal",
+   "fieldtype": "Select",
+   "label": "LWP Month Reversal",
+   "options": "\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
+   "reqd": 1
+  },
+  {
    "fieldname": "salary_slip_id",
    "fieldtype": "Link",
    "label": "Salary Slip ID",
-   "options": "Salary Slip"
+   "options": "Salary Slip",
+   "read_only": 1
   },
   {
    "fieldname": "working_days",
    "fieldtype": "Float",
-   "label": "Working Days"
+   "label": "Working Days",
+   "read_only": 1
   },
   {
    "fieldname": "absent_days",
    "fieldtype": "Float",
-   "label": "Absent Days"
+   "label": "Absent Days",
+   "read_only": 1
   },
   {
    "fieldname": "lwp_days",
    "fieldtype": "Float",
-   "label": "LWP Days"
+   "label": "LWP Days",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_uyjn",
@@ -126,12 +130,14 @@
   {
    "fieldname": "total_lwp_days",
    "fieldtype": "Float",
-   "label": "Total LWP Days"
+   "label": "Total LWP Days",
+   "read_only": 1
   },
   {
    "fieldname": "number_of_days_planning_to_reverse",
    "fieldtype": "Float",
-   "label": "Number of days planning to reverse"
+   "label": "Number of days planning to reverse",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_giud",
@@ -154,24 +160,32 @@
    "options": "Salary Adjustment Child"
   },
   {
-   "depends_on": "payroll_period",
-   "fieldname": "lwp_month_reversal",
-   "fieldtype": "Select",
-   "label": "LWP Month Reversal"
+   "fetch_from": "company.default_currency",
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Currency",
+   "options": "Currency"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2025-03-31 17:02:57.050428",
+ "links": [
+  {
+   "link_doctype": "Additional Salary",
+   "link_fieldname": "payroll_correction"
+  }
+ ],
+ "modified": "2025-04-02 20:52:43.863555",
  "modified_by": "Administrator",
  "module": "Payroll",
- "name": "Payroll Correction and  Arrears",
+ "name": "Payroll Correction",
  "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -180,6 +194,36 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "select": 1,
    "share": 1,
    "submit": 1,
    "write": 1
