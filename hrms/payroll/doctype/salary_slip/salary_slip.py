@@ -82,7 +82,8 @@ class SalarySlip(TransactionBase):
 			"night_shift_count": self.night_shift_count,
 			"get_approved_overtime_count": self.get_approved_overtime_count,
 			"get_attendance_count": self.get_attendance_count,
-			"on_call_count": self.on_call_count
+			"on_call_count": self.on_call_count,
+			"get_unpaid_leaves": self.get_unpaid_leaves
 		}		
 
 	def eround(self, value, decimals=0):
@@ -125,8 +126,34 @@ class SalarySlip(TransactionBase):
 			'attendance_date': ['between', [self.start_date, self.end_date]],
 			'shift': ['in', NIGHT_SHIFT_CODES]
 		}
-		print(frappe.db.count('Attendance', filters))
 		return frappe.db.count('Attendance', filters)
+
+	@frappe.whitelist()
+	def get_unpaid_leaves(self):
+		"""
+		Get the count of approved unpaid leaves for the employee during the payroll period
+		"""
+		LeaveApplication = frappe.qb.DocType("Leave Application")
+		LeaveType = frappe.qb.DocType("Leave Type")
+
+		# Build the query
+		query = (
+			frappe.qb.from_(LeaveApplication)
+			.inner_join(LeaveType)
+			.on(LeaveApplication.leave_type == LeaveType.name)
+			.select(Count("*"))
+			.where(
+				(LeaveApplication.employee == self.employee)
+				& (LeaveApplication.from_date >= self.start_date)
+				& (LeaveApplication.to_date <= self.end_date)
+				& (LeaveApplication.status == "Approved") 
+				& (LeaveType.is_lwp == 1)
+			)
+		)
+
+		# Execute the query and get the count
+		unpaid_leaves = query.run()[0][0]
+		return unpaid_leaves
 
 	# Calculate number of days on call during payroll period
 	@frappe.whitelist()
@@ -2373,8 +2400,7 @@ def _check_attributes(code: str) -> None:
 			raise SyntaxError(f"Operation not allowed: line {node.lineno} column {node.col_offset}")
 		if isinstance(node, ast.Attribute) and isinstance(node.attr, str) and node.attr in UNSAFE_ATTRIBUTES:
 			raise SyntaxError(f'Illegal rule {frappe.bold(code)}. Cannot use "{node.attr}"')
-
-
+		
 @frappe.whitelist()
 def enqueue_email_salary_slips(names) -> None:
 	"""enqueue bulk emailing salary slips"""
