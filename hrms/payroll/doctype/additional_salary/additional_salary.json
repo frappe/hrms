@@ -69,7 +69,7 @@
    "reqd": 1
   },
   {
-   "default": "1",
+   "default": "0",
    "fieldname": "overwrite_salary_structure_amount",
    "fieldtype": "Check",
    "label": "Overwrite Salary Structure Amount"
@@ -211,7 +211,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-02 17:14:08.610527",
+ "modified": "2025-04-04 10:44:39.723500",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Additional Salary",

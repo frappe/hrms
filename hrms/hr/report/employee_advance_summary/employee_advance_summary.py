@@ -57,21 +57,36 @@ def get_columns():
 			"options": "Company",
 			"width": 120,
 		},
-		{"label": _("Posting Date"), "fieldname": "posting_date", "fieldtype": "Date", "width": 120},
+		{
+			"label": _("Posting Date"),
+			"fieldname": "posting_date",
+			"fieldtype": "Date",
+			"width": 120,
+		},
 		{
 			"label": _("Advance Amount"),
 			"fieldname": "advance_amount",
 			"fieldtype": "Currency",
 			"width": 120,
 		},
-		{"label": _("Paid Amount"), "fieldname": "paid_amount", "fieldtype": "Currency", "width": 120},
+		{
+			"label": _("Paid Amount"),
+			"fieldname": "paid_amount",
+			"fieldtype": "Currency",
+			"width": 120,
+		},
 		{
 			"label": _("Claimed Amount"),
 			"fieldname": "claimed_amount",
 			"fieldtype": "Currency",
 			"width": 120,
 		},
-		{"label": _("Status"), "fieldname": "status", "fieldtype": "Data", "width": 120},
+		{
+			"label": _("Status"),
+			"fieldname": "status",
+			"fieldtype": "Data",
+			"width": 120,
+		},
 	]
 
 

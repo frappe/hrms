@@ -7,7 +7,15 @@ def execute():
 	if not frappe.db.has_table("Shift Assignment Schedule"):
 		return
 
-	fields = ["name", "shift_type", "frequency", "employee", "shift_status", "enabled", "create_shifts_after"]
+	fields = [
+		"name",
+		"shift_type",
+		"frequency",
+		"employee",
+		"shift_status",
+		"enabled",
+		"create_shifts_after",
+	]
 	for doc in frappe.get_all("Shift Assignment Schedule", fields=fields):
 		repeat_on_days = frappe.get_all(
 			"Assignment Rule Day", {"parent": doc.name}, pluck="day", distinct=True
@@ -26,4 +34,9 @@ def execute():
 		).insert()
 
 		for d in frappe.get_all("Shift Assignment", filters={"schedule": doc.name}, pluck="name"):
-			frappe.db.set_value("Shift Assignment", d, "shift_schedule_assignment", schedule_assignment.name)
+			frappe.db.set_value(
+				"Shift Assignment",
+				d,
+				"shift_schedule_assignment",
+				schedule_assignment.name,
+			)

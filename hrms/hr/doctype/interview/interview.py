@@ -31,7 +31,11 @@ class Interview(Document):
 	def validate_duplicate_interview(self):
 		duplicate_interview = frappe.db.exists(
 			"Interview",
-			{"job_applicant": self.job_applicant, "interview_round": self.interview_round, "docstatus": 1},
+			{
+				"job_applicant": self.job_applicant,
+				"interview_round": self.interview_round,
+				"docstatus": 1,
+			},
 		)
 
 		if duplicate_interview:
@@ -51,7 +55,11 @@ class Interview(Document):
 				frappe.throw(
 					_(
 						"Interview Round {0} is only for Designation {1}. Job Applicant has applied for the role {2}"
-					).format(self.interview_round, frappe.bold(self.designation), applicant_designation),
+					).format(
+						self.interview_round,
+						frappe.bold(self.designation),
+						applicant_designation,
+					),
 					exc=DuplicateInterviewRoundError,
 				)
 		else:
@@ -72,7 +80,10 @@ class Interview(Document):
 			primary_action={
 				"label": _("Mark as {0}").format(job_applicant_status),
 				"server_action": "hrms.hr.doctype.interview.interview.update_job_applicant_status",
-				"args": {"job_applicant": self.job_applicant, "status": job_applicant_status},
+				"args": {
+					"job_applicant": self.job_applicant,
+					"status": job_applicant_status,
+				},
 			},
 		)
 
@@ -84,7 +95,9 @@ class Interview(Document):
 	def reschedule_interview(self, scheduled_on, from_time, to_time):
 		if scheduled_on == self.scheduled_on and from_time == self.from_time and to_time == self.to_time:
 			frappe.msgprint(
-				_("No changes found in timings."), indicator="orange", title=_("Interview Not Rescheduled")
+				_("No changes found in timings."),
+				indicator="orange",
+				title=_("Interview Not Rescheduled"),
 			)
 			return
 
@@ -124,7 +137,11 @@ class Interview(Document):
 
 @frappe.whitelist()
 def get_interviewers(interview_round: str) -> list[str]:
-	return frappe.get_all("Interviewer", filters={"parent": interview_round}, fields=["user as interviewer"])
+	return frappe.get_all(
+		"Interviewer",
+		filters={"parent": interview_round},
+		fields=["user as interviewer"],
+	)
 
 
 def get_recipients(name, for_feedback=0):
@@ -133,7 +150,9 @@ def get_recipients(name, for_feedback=0):
 
 	if for_feedback:
 		feedback_given_interviewers = frappe.get_all(
-			"Interview Feedback", filters={"interview": name, "docstatus": 1}, pluck="interviewer"
+			"Interview Feedback",
+			filters={"interview": name, "docstatus": 1},
+			pluck="interviewer",
 		)
 		recipients = [d for d in interviewers if d not in feedback_given_interviewers]
 	else:
@@ -212,7 +231,11 @@ def send_interview_reminder():
 	reminder_settings = frappe.db.get_value(
 		"HR Settings",
 		"HR Settings",
-		["send_interview_reminder", "interview_reminder_template", "hiring_sender_email"],
+		[
+			"send_interview_reminder",
+			"interview_reminder_template",
+			"hiring_sender_email",
+		],
 		as_dict=True,
 	)
 
@@ -222,7 +245,9 @@ def send_interview_reminder():
 	remind_before = cstr(frappe.db.get_single_value("HR Settings", "remind_before")) or "01:00:00"
 	remind_before = datetime.datetime.strptime(remind_before, "%H:%M:%S")
 	reminder_date_time = datetime.datetime.now() + datetime.timedelta(
-		hours=remind_before.hour, minutes=remind_before.minute, seconds=remind_before.second
+		hours=remind_before.hour,
+		minutes=remind_before.minute,
+		seconds=remind_before.second,
 	)
 
 	interviews = frappe.get_all(
@@ -307,7 +332,10 @@ def send_daily_feedback_reminder():
 @frappe.whitelist()
 def get_expected_skill_set(interview_round):
 	return frappe.get_all(
-		"Expected Skill Set", filters={"parent": interview_round}, fields=["skill"], order_by="idx"
+		"Expected Skill Set",
+		filters={"parent": interview_round},
+		fields=["skill"],
+		order_by="idx",
 	)
 
 

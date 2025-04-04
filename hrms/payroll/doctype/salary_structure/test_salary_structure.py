@@ -126,7 +126,8 @@ class TestSalaryStructure(IntegrationTestCase):
 			employee=employee_doc_name, from_date="2013-01-01", base=5000, variable=200
 		)
 		salary_structure_assignment = frappe.get_doc(
-			"Salary Structure Assignment", {"employee": employee_doc_name, "from_date": "2013-01-01"}
+			"Salary Structure Assignment",
+			{"employee": employee_doc_name, "from_date": "2013-01-01"},
 		)
 		self.assertEqual(salary_structure_assignment.docstatus, 1)
 		self.assertEqual(salary_structure_assignment.base, 5000)
@@ -134,7 +135,10 @@ class TestSalaryStructure(IntegrationTestCase):
 
 	def test_employee_grade_defaults(self):
 		salary_structure = make_salary_structure(
-			"Salary Structure - Lead", "Monthly", currency="INR", company="_Test Company"
+			"Salary Structure - Lead",
+			"Monthly",
+			currency="INR",
+			company="_Test Company",
 		)
 		create_employee_grade("Lead", salary_structure.name)
 		employee = make_employee("test_employee_grade@salary.com", company="_Test Company", grade="Lead")
@@ -143,7 +147,11 @@ class TestSalaryStructure(IntegrationTestCase):
 		salary_structure.assign_salary_structure(employee=employee, from_date=nowdate())
 		structure, base = frappe.db.get_value(
 			"Salary Structure Assignment",
-			{"employee": employee, "salary_structure": salary_structure.name, "from_date": nowdate()},
+			{
+				"employee": employee,
+				"salary_structure": salary_structure.name,
+				"from_date": nowdate(),
+			},
 			["salary_structure", "base"],
 		)
 		self.assertEqual(structure, salary_structure.name)
@@ -238,7 +246,10 @@ def create_salary_structure_assignment(
 		currency = erpnext.get_default_currency()
 
 	if not allow_duplicate and frappe.db.exists("Salary Structure Assignment", {"employee": employee}):
-		frappe.db.sql("""delete from `tabSalary Structure Assignment` where employee=%s""", (employee))
+		frappe.db.sql(
+			"""delete from `tabSalary Structure Assignment` where employee=%s""",
+			(employee),
+		)
 
 	if not payroll_period:
 		payroll_period = create_payroll_period(company="_Test Company")

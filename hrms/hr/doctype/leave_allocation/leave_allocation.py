@@ -168,11 +168,17 @@ class LeaveAllocation(Document):
 	def update_leave_policy_assignments_when_no_allocations_left(self):
 		allocations = frappe.db.get_list(
 			"Leave Allocation",
-			filters={"docstatus": 1, "leave_policy_assignment": self.leave_policy_assignment},
+			filters={
+				"docstatus": 1,
+				"leave_policy_assignment": self.leave_policy_assignment,
+			},
 		)
 		if len(allocations) == 0:
 			frappe.db.set_value(
-				"Leave Policy Assignment", self.leave_policy_assignment, "leaves_allocated", 0
+				"Leave Policy Assignment",
+				self.leave_policy_assignment,
+				"leaves_allocated",
+				0,
 			)
 
 	def validate_period(self):
@@ -201,7 +207,10 @@ class LeaveAllocation(Document):
 		if leave_allocation:
 			frappe.msgprint(
 				_("{0} already allocated for Employee {1} for period {2} to {3}").format(
-					self.leave_type, self.employee, formatdate(self.from_date), formatdate(self.to_date)
+					self.leave_type,
+					self.employee,
+					formatdate(self.from_date),
+					formatdate(self.to_date),
 				)
 			)
 
@@ -224,7 +233,10 @@ class LeaveAllocation(Document):
 			frappe.throw(
 				_(
 					"Leave cannot be allocated before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}"
-				).format(formatdate(future_allocation[0].from_date), future_allocation[0].name),
+				).format(
+					formatdate(future_allocation[0].from_date),
+					future_allocation[0].name,
+				),
 				BackDatedAllocationError,
 			)
 
@@ -295,7 +307,9 @@ class LeaveAllocation(Document):
 	def create_leave_ledger_entry(self, submit=True):
 		if self.unused_leaves:
 			expiry_days = frappe.db.get_value(
-				"Leave Type", self.leave_type, "expire_carry_forwarded_leaves_after_days"
+				"Leave Type",
+				self.leave_type,
+				"expire_carry_forwarded_leaves_after_days",
 			)
 			end_date = add_days(self.from_date, expiry_days - 1) if expiry_days else self.to_date
 			args = dict(
@@ -321,7 +335,8 @@ class LeaveAllocation(Document):
 		if from_date and not (getdate(self.from_date) <= getdate(from_date) <= getdate(self.to_date)):
 			frappe.throw(
 				_("Cannot allocate leaves outside the allocation period {0} - {1}").format(
-					frappe.bold(formatdate(self.from_date)), frappe.bold(formatdate(self.to_date))
+					frappe.bold(formatdate(self.from_date)),
+					frappe.bold(formatdate(self.to_date)),
 				),
 				title=_("Invalid Dates"),
 			)
@@ -354,7 +369,9 @@ class LeaveAllocation(Document):
 			create_additional_leave_ledger_entry(self, new_leaves, date)
 
 			text = _("{0} leaves were manually allocated by {1} on {2}").format(
-				frappe.bold(new_leaves), frappe.session.user, frappe.bold(formatdate(date))
+				frappe.bold(new_leaves),
+				frappe.session.user,
+				frappe.bold(formatdate(date)),
 			)
 			self.add_comment(comment_type="Info", text=text)
 			frappe.msgprint(
@@ -449,7 +466,10 @@ def get_carry_forwarded_leaves(employee, leave_type, date, carry_forward=None):
 	if carry_forward and previous_allocation:
 		validate_carry_forward(leave_type)
 		unused_leaves = get_unused_leaves(
-			employee, leave_type, previous_allocation.from_date, previous_allocation.to_date
+			employee,
+			leave_type,
+			previous_allocation.from_date,
+			previous_allocation.to_date,
 		)
 		if unused_leaves:
 			max_carry_forwarded_leaves = frappe.db.get_value(
@@ -502,4 +522,7 @@ def expire_carried_forward_allocation():
 	if frappe.has_permission(doctype="Leave Allocation", ptype="submit", user=frappe.session.user):
 		process_expired_allocation()
 	else:
-		frappe.throw(_("You do not have permission to complete this action"), frappe.PermissionError)
+		frappe.throw(
+			_("You do not have permission to complete this action"),
+			frappe.PermissionError,
+		)

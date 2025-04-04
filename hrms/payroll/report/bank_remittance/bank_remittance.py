@@ -35,7 +35,12 @@ def execute(filters=None):
 			"options": "Employee",
 			"width": 200,
 		},
-		{"label": _("Bank Name"), "fieldtype": "Data", "fieldname": "bank_name", "width": 50},
+		{
+			"label": _("Bank Name"),
+			"fieldtype": "Data",
+			"fieldname": "bank_name",
+			"width": 50,
+		},
 		{
 			"label": _("Employee A/C Number"),
 			"fieldtype": "Int",
@@ -45,10 +50,22 @@ def execute(filters=None):
 	]
 
 	if frappe.db.has_column("Employee", "ifsc_code"):
-		columns.append({"label": _("IFSC Code"), "fieldtype": "Data", "fieldname": "bank_code", "width": 100})
+		columns.append(
+			{
+				"label": _("IFSC Code"),
+				"fieldtype": "Data",
+				"fieldname": "bank_code",
+				"width": 100,
+			}
+		)
 
 	columns += [
-		{"label": _("Currency"), "fieldtype": "Data", "fieldname": "currency", "width": 50},
+		{
+			"label": _("Currency"),
+			"fieldtype": "Data",
+			"fieldname": "currency",
+			"width": 50,
+		},
 		{
 			"label": _("Net Salary Amount"),
 			"fieldtype": "Currency",
@@ -159,7 +176,9 @@ def get_emp_bank_ifsc_code(salary_slips):
 
 def set_company_account(payment_accounts, payroll_entries):
 	company_accounts = get_all(
-		"Bank Account", [("account", "in", payment_accounts)], ["account", "bank_account_no"]
+		"Bank Account",
+		[("account", "in", payment_accounts)],
+		["account", "bank_account_no"],
 	)
 	company_accounts_map = {}
 	for acc in company_accounts:

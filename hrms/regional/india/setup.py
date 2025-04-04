@@ -244,7 +244,11 @@ def add_custom_roles_for_reports():
 			doc.update(
 				dict(
 					report=report_name,
-					roles=[dict(role="HR User"), dict(role="HR Manager"), dict(role="Employee")],
+					roles=[
+						dict(role="HR User"),
+						dict(role="HR Manager"),
+						dict(role="Employee"),
+					],
 				)
 			).insert(ignore_permissions=True)
 

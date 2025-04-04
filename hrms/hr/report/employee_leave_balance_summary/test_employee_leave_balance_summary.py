@@ -12,10 +12,7 @@ from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_lis
 from hrms.hr.doctype.leave_application.test_leave_application import make_allocation_record
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import process_expired_allocation
 from hrms.hr.report.employee_leave_balance_summary.employee_leave_balance_summary import execute
-from hrms.payroll.doctype.salary_slip.test_salary_slip import (
-	make_holiday_list,
-	make_leave_application,
-)
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list, make_leave_application
 from hrms.tests.test_utils import get_first_sunday
 
 test_records = frappe.get_test_records("Leave Type")
@@ -78,7 +75,10 @@ class TestEmployeeLeaveBalance(IntegrationTestCase):
 		# 4 days leave within the second allocation
 		first_sunday = get_first_sunday(self.holiday_list, for_date=self.year_start)
 		leave_application2 = make_leave_application(
-			self.employee_id, add_days(first_sunday, 1), add_days(first_sunday, 4), "_Test Leave Type"
+			self.employee_id,
+			add_days(first_sunday, 1),
+			add_days(first_sunday, 4),
+			"_Test Leave Type",
 		)
 		leave_application2.reload()
 
@@ -122,14 +122,21 @@ class TestEmployeeLeaveBalance(IntegrationTestCase):
 		# 4 days leave application in the first allocation
 		first_sunday = get_first_sunday(self.holiday_list, for_date=self.year_start)
 		leave_application = make_leave_application(
-			self.employee_id, add_days(first_sunday, 1), add_days(first_sunday, 4), "_Test Leave Type"
+			self.employee_id,
+			add_days(first_sunday, 1),
+			add_days(first_sunday, 4),
+			"_Test Leave Type",
 		)
 		leave_application.reload()
 
 		# Leave balance should show actual balance, and not "consumption balance as per remaining days", near alloc end date
 		# eg: 3 days left for alloc to end, leave balance should still be 26 and not 3
 		filters = frappe._dict(
-			{"date": add_days(self.year_end, -3), "company": "_Test Company", "employee": self.employee_id}
+			{
+				"date": add_days(self.year_end, -3),
+				"company": "_Test Company",
+				"employee": self.employee_id,
+			}
 		)
 		report = execute(filters)
 

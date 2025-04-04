@@ -15,7 +15,8 @@ class TestLeavePolicy(IntegrationTestCase):
 			leave_type.save()
 
 		leave_policy = create_leave_policy(
-			leave_type=leave_type.name, annual_allocation=leave_type.max_leaves_allowed + 1
+			leave_type=leave_type.name,
+			annual_allocation=leave_type.max_leaves_allowed + 1,
 		)
 
 		self.assertRaises(frappe.ValidationError, leave_policy.insert)

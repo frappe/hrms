@@ -4,10 +4,7 @@
 import frappe
 from frappe.tests import IntegrationTestCase
 
-from hrms.hr.doctype.training_event.test_training_event import (
-	create_training_event,
-	create_training_program,
-)
+from hrms.hr.doctype.training_event.test_training_event import create_training_event, create_training_program
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_employee
 
 
@@ -32,7 +29,9 @@ class TestTrainingFeedback(IntegrationTestCase):
 
 		# cannot record feedback for absent employee
 		employee = frappe.db.get_value(
-			"Training Event Employee", {"parent": training_event.name, "employee": self.employee}, "name"
+			"Training Event Employee",
+			{"parent": training_event.name, "employee": self.employee},
+			"name",
 		)
 
 		frappe.db.set_value("Training Event Employee", employee, "attendance", "Absent")
@@ -51,7 +50,9 @@ class TestTrainingFeedback(IntegrationTestCase):
 		feedback.submit()
 
 		status = frappe.db.get_value(
-			"Training Event Employee", {"parent": training_event.name, "employee": self.employee}, "status"
+			"Training Event Employee",
+			{"parent": training_event.name, "employee": self.employee},
+			"status",
 		)
 
 		self.assertEqual(status, "Feedback Submitted")

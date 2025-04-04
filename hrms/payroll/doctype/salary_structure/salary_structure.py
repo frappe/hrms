@@ -110,7 +110,10 @@ class SalaryStructure(Document):
 					)
 					message += "<br><br>" + _(
 						"Disable {0} for the {1} component, to prevent the amount from being deducted twice, as its formula already uses a payment-days-based component."
-					).format(frappe.bold(_("Depends On Payment Days")), frappe.bold(row.salary_component))
+					).format(
+						frappe.bold(_("Depends On Payment Days")),
+						frappe.bold(row.salary_component),
+					)
 					frappe.throw(message, title=_("Payment Days Dependency"))
 
 	def get_component_abbreviations(self):
@@ -159,7 +162,9 @@ class SalaryStructure(Document):
 				if earning_component.is_flexible_benefit == 1:
 					have_a_flexi = True
 					max_of_component = frappe.db.get_value(
-						"Salary Component", earning_component.salary_component, "max_benefit_amount"
+						"Salary Component",
+						earning_component.salary_component,
+						"max_benefit_amount",
 					)
 					flexi_amount += max_of_component
 

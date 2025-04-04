@@ -65,7 +65,12 @@ class StaffingPlan(Document):
 			where spd.designation=%s and sp.docstatus=1
 			and sp.to_date >= %s and sp.from_date <= %s and sp.company = %s
 		""",
-			(staffing_plan_detail.designation, self.from_date, self.to_date, self.company),
+			(
+				staffing_plan_detail.designation,
+				self.from_date,
+				self.to_date,
+				self.company,
+			),
 		)
 		if overlap and overlap[0][0]:
 			frappe.throw(
@@ -149,7 +154,12 @@ class StaffingPlan(Document):
 			and sp.to_date >= %s and sp.from_date <=%s
 			and sp.company in (select name from tabCompany where parent_company = %s)
 		""",
-			(staffing_plan_detail.designation, self.from_date, self.to_date, self.company),
+			(
+				staffing_plan_detail.designation,
+				self.from_date,
+				self.to_date,
+				self.company,
+			),
 			as_dict=1,
 		)[0]
 
@@ -202,10 +212,19 @@ def get_designation_counts(designation, company, job_opening=None):
 	company_set.append(company)
 
 	employee_count = frappe.db.count(
-		"Employee", {"designation": designation, "status": "Active", "company": ("in", company_set)}
+		"Employee",
+		{
+			"designation": designation,
+			"status": "Active",
+			"company": ("in", company_set),
+		},
 	)
 
-	filters = {"designation": designation, "status": "Open", "company": ("in", company_set)}
+	filters = {
+		"designation": designation,
+		"status": "Open",
+		"company": ("in", company_set),
+	}
 	if job_opening:
 		filters["name"] = ("!=", job_opening)
 

@@ -23,7 +23,11 @@ class TestStaffingPlan(IntegrationTestCase):
 		staffing_plan.to_date = add_days(nowdate(), 10)
 		staffing_plan.append(
 			"staffing_details",
-			{"designation": "Designer", "vacancies": 6, "estimated_cost_per_position": 50000},
+			{
+				"designation": "Designer",
+				"vacancies": 6,
+				"estimated_cost_per_position": 50000,
+			},
 		)
 		staffing_plan.insert()
 		staffing_plan.submit()
@@ -40,7 +44,11 @@ class TestStaffingPlan(IntegrationTestCase):
 		staffing_plan.to_date = add_days(nowdate(), 10)
 		staffing_plan.append(
 			"staffing_details",
-			{"designation": "Designer", "vacancies": 3, "estimated_cost_per_position": 45000},
+			{
+				"designation": "Designer",
+				"vacancies": 3,
+				"estimated_cost_per_position": 45000,
+			},
 		)
 		self.assertRaises(SubsidiaryCompanyError, staffing_plan.insert)
 
@@ -55,7 +63,11 @@ class TestStaffingPlan(IntegrationTestCase):
 		staffing_plan.to_date = add_days(nowdate(), 10)
 		staffing_plan.append(
 			"staffing_details",
-			{"designation": "Designer", "vacancies": 7, "estimated_cost_per_position": 50000},
+			{
+				"designation": "Designer",
+				"vacancies": 7,
+				"estimated_cost_per_position": 50000,
+			},
 		)
 		staffing_plan.insert()
 		staffing_plan.submit()
@@ -69,7 +81,11 @@ class TestStaffingPlan(IntegrationTestCase):
 		staffing_plan.to_date = add_days(nowdate(), 10)
 		staffing_plan.append(
 			"staffing_details",
-			{"designation": "Designer", "vacancies": 7, "estimated_cost_per_position": 60000},
+			{
+				"designation": "Designer",
+				"vacancies": 7,
+				"estimated_cost_per_position": 60000,
+			},
 		)
 		staffing_plan.insert()
 		self.assertRaises(ParentCompanyError, staffing_plan.submit)

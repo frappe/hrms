@@ -88,7 +88,8 @@ def calculate_cost_and_profit(data):
 		row.fractional_cost = flt(flt(row.base_gross_pay) * flt(row.utilization), precision)
 
 		row.profit = flt(
-			flt(row.base_grand_total) - flt(row.base_gross_pay) * flt(row.utilization), precision
+			flt(row.base_grand_total) - flt(row.base_gross_pay) * flt(row.utilization),
+			precision,
 		)
 
 	return data
@@ -119,7 +120,10 @@ def get_chart_data(data):
 		utilization.append(entry.get("utilization"))
 
 	charts = {
-		"data": {"labels": labels, "datasets": [{"name": "Utilization", "values": utilization}]},
+		"data": {
+			"labels": labels,
+			"datasets": [{"name": "Utilization", "values": utilization}],
+		},
 		"type": "bar",
 		"colors": ["#84BDD5"],
 	}
@@ -142,7 +146,12 @@ def get_columns():
 			"options": "Employee",
 			"width": 130,
 		},
-		{"fieldname": "employee_name", "label": _("Employee Name"), "fieldtype": "Data", "width": 120},
+		{
+			"fieldname": "employee_name",
+			"label": _("Employee Name"),
+			"fieldtype": "Data",
+			"width": 120,
+		},
 		{
 			"fieldname": "voucher_no",
 			"label": _("Sales Invoice"),
@@ -185,7 +194,12 @@ def get_columns():
 			"options": "currency",
 			"width": 100,
 		},
-		{"fieldname": "utilization", "label": _("Utilization"), "fieldtype": "Percentage", "width": 100},
+		{
+			"fieldname": "utilization",
+			"label": _("Utilization"),
+			"fieldtype": "Percentage",
+			"width": 100,
+		},
 		{
 			"fieldname": "fractional_cost",
 			"label": _("Fractional Cost"),
@@ -198,8 +212,18 @@ def get_columns():
 			"fieldtype": "Int",
 			"width": 150,
 		},
-		{"fieldname": "start_date", "label": _("Start Date"), "fieldtype": "Date", "width": 100},
-		{"fieldname": "end_date", "label": _("End Date"), "fieldtype": "Date", "width": 100},
+		{
+			"fieldname": "start_date",
+			"label": _("Start Date"),
+			"fieldtype": "Date",
+			"width": 100,
+		},
+		{
+			"fieldname": "end_date",
+			"label": _("End Date"),
+			"fieldtype": "Date",
+			"width": 100,
+		},
 		{
 			"label": _("Currency"),
 			"fieldname": "currency",

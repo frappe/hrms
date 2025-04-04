@@ -37,7 +37,10 @@ class TestGratuity(IntegrationTestCase):
 		)
 
 		make_earning_salary_component(
-			setup=True, test_tax=True, company_list=["_Test Company"], include_flexi_benefits=True
+			setup=True,
+			test_tax=True,
+			company_list=["_Test Company"],
+			include_flexi_benefits=True,
 		)
 		make_deduction_salary_component(setup=True, test_tax=True, company_list=["_Test Company"])
 		make_holiday_list()
@@ -124,7 +127,10 @@ class TestGratuity(IntegrationTestCase):
 		set_mode_of_payment_account()
 
 		gratuity = create_gratuity(
-			expense_account="Payment Account - _TC", mode_of_payment="Cash", employee=self.employee, rule=rule
+			expense_account="Payment Account - _TC",
+			mode_of_payment="Cash",
+			employee=self.employee,
+			rule=rule,
 		)
 
 		# work experience calculation
@@ -181,7 +187,9 @@ class TestGratuity(IntegrationTestCase):
 		set_mode_of_payment_account()
 
 		gratuity = create_gratuity(
-			expense_account="Payment Account - _TC", mode_of_payment="Cash", employee=self.employee
+			expense_account="Payment Account - _TC",
+			mode_of_payment="Cash",
+			employee=self.employee,
 		)
 		self.assertEqual(gratuity.amount, 190000.0)
 
@@ -189,7 +197,9 @@ class TestGratuity(IntegrationTestCase):
 		frappe.db.delete("Gratuity", gratuity.name)
 		mark_attendance(self.employee, date, "Absent")
 		gratuity = create_gratuity(
-			expense_account="Payment Account - _TC", mode_of_payment="Cash", employee=self.employee
+			expense_account="Payment Account - _TC",
+			mode_of_payment="Cash",
+			employee=self.employee,
 		)
 		self.assertEqual(gratuity.amount, 190000.0)
 
@@ -205,7 +215,9 @@ class TestGratuity(IntegrationTestCase):
 
 		# create gratuity
 		gratuity = create_gratuity(
-			expense_account="Payment Account - _TC", mode_of_payment="Cash", employee=self.employee
+			expense_account="Payment Account - _TC",
+			mode_of_payment="Cash",
+			employee=self.employee,
 		)
 		gratuity.reload()
 

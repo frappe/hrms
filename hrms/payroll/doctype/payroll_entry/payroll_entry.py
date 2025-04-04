@@ -23,9 +23,7 @@ from frappe.utils import (
 )
 
 import erpnext
-from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
-	get_accounting_dimensions,
-)
+from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import get_accounting_dimensions
 from erpnext.accounts.utils import get_fiscal_year
 
 from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
@@ -144,7 +142,11 @@ class PayrollEntry(Document):
 	def cancel_linked_journal_entries(self):
 		journal_entries = frappe.get_all(
 			"Journal Entry Account",
-			{"reference_type": self.doctype, "reference_name": self.name, "docstatus": 1},
+			{
+				"reference_type": self.doctype,
+				"reference_name": self.name,
+				"docstatus": 1,
+			},
 			pluck="parent",
 			distinct=True,
 		)
@@ -368,7 +370,10 @@ class PayrollEntry(Document):
 
 					if employee_advance:
 						self.add_advance_deduction_entry(
-							item, amount_against_cost_center, cost_center, employee_advance
+							item,
+							amount_against_cost_center,
+							cost_center,
+							employee_advance,
 						)
 					else:
 						key = (item.salary_component, cost_center)
@@ -387,7 +392,9 @@ class PayrollEntry(Document):
 		add_component_to_accrual_jv = True
 		if component_type == "earnings":
 			is_flexible_benefit, only_tax_impact = frappe.get_cached_value(
-				"Salary Component", item["salary_component"], ["is_flexible_benefit", "only_tax_impact"]
+				"Salary Component",
+				item["salary_component"],
+				["is_flexible_benefit", "only_tax_impact"],
 			)
 			if cint(is_flexible_benefit) and cint(only_tax_impact):
 				add_component_to_accrual_jv = False
@@ -698,18 +705,21 @@ class PayrollEntry(Document):
 		# Payable amount
 		if employee_wise_accounting_enabled:
 			"""
-			employee_based_payroll_payable_entries = {
-			                'HREMP00004': {
-			                                'earnings': 83332.0,
-			                                'deductions': 2000.0
-			                },
-			                'HREMP00005': {
-			                                'earnings': 50000.0,
-			                                'deductions': 2000.0
-			                }
-			}
-			"""
-			for employee, employee_details in self.employee_based_payroll_payable_entries.items():
+            employee_based_payroll_payable_entries = {
+                            'HREMP00004': {
+                                            'earnings': 83332.0,
+                                            'deductions': 2000.0
+                            },
+                            'HREMP00005': {
+                                            'earnings': 50000.0,
+                                            'deductions': 2000.0
+                            }
+            }
+            """
+			for (
+				employee,
+				employee_details,
+			) in self.employee_based_payroll_payable_entries.items():
 				payable_amount = (employee_details.get("earnings", 0) or 0) - (
 					employee_details.get("deductions", 0) or 0
 				)
@@ -912,7 +922,10 @@ class PayrollEntry(Document):
 
 			if salary_detail.parentfield == "deductions":
 				statistical_component = frappe.db.get_value(
-					"Salary Component", salary_detail.salary_component, "statistical_component", cache=True
+					"Salary Component",
+					salary_detail.salary_component,
+					"statistical_component",
+					cache=True,
 				)
 
 				if not statistical_component:
@@ -1016,7 +1029,10 @@ class PayrollEntry(Document):
 		)
 
 		if self.employee_based_payroll_payable_entries:
-			for employee, employee_details in self.employee_based_payroll_payable_entries.items():
+			for (
+				employee,
+				employee_details,
+			) in self.employee_based_payroll_payable_entries.items():
 				je_payment_amount = (
 					(employee_details.get("earnings", 0) or 0)
 					- (employee_details.get("deductions", 0) or 0)
@@ -1024,7 +1040,10 @@ class PayrollEntry(Document):
 				)
 
 				exchange_rate, amount = self.get_amount_and_exchange_rate_for_journal_entry(
-					self.payment_account, je_payment_amount, company_currency, currencies
+					self.payment_account,
+					je_payment_amount,
+					company_currency,
+					currencies,
 				)
 
 				cost_centers = self.get_payroll_cost_centers_for_employee(
@@ -1085,7 +1104,11 @@ class PayrollEntry(Document):
 
 	def set_start_end_dates(self):
 		self.update(
-			get_start_end_dates(self.payroll_frequency, self.start_date or self.posting_date, self.company)
+			get_start_end_dates(
+				self.payroll_frequency,
+				self.start_date or self.posting_date,
+				self.company,
+			)
 		)
 
 	@frappe.whitelist()
@@ -1100,7 +1123,10 @@ class PayrollEntry(Document):
 		)
 
 		for emp in self.employees:
-			details = next((record for record in employee_details if record.name == emp.employee), None)
+			details = next(
+				(record for record in employee_details if record.name == emp.employee),
+				None,
+			)
 			if not details:
 				continue
 
@@ -1180,7 +1206,10 @@ class PayrollEntry(Document):
 
 		holidays = frappe.db.get_all(
 			"Holiday",
-			filters={"parent": holiday_list, "holiday_date": ("between", [start_date, end_date])},
+			filters={
+				"parent": holiday_list,
+				"holiday_date": ("between", [start_date, end_date]),
+			},
 			fields=["COUNT(*) as holidays_count"],
 		)[0]
 
@@ -1191,7 +1220,10 @@ class PayrollEntry(Document):
 
 
 def get_salary_structure(
-	company: str, currency: str, salary_slip_based_on_timesheet: int, payroll_frequency: str
+	company: str,
+	currency: str,
+	salary_slip_based_on_timesheet: int,
+	payroll_frequency: str,
 ) -> list[str]:
 	SalaryStructure = frappe.qb.DocType("Salary Structure")
 
@@ -1530,13 +1562,20 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 			count += 1
 			if publish_progress:
 				frappe.publish_progress(
-					count * 100 / len(salary_slips), title=_("Submitting Salary Slips...")
+					count * 100 / len(salary_slips),
+					title=_("Submitting Salary Slips..."),
 				)
 
 		if submitted:
 			payroll_entry.make_accrual_jv_entry(submitted)
 			payroll_entry.email_salary_slip(submitted)
-			payroll_entry.db_set({"salary_slips_submitted": 1, "status": "Submitted", "error_message": ""})
+			payroll_entry.db_set(
+				{
+					"salary_slips_submitted": 1,
+					"status": "Submitted",
+					"error_message": "",
+				}
+			)
 
 		show_payroll_submission_status(submitted, unsubmitted, payroll_entry)
 

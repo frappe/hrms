@@ -9,16 +9,11 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 
 from hrms.hr.utils import get_holiday_dates_for_employee
-from hrms.payroll.doctype.employee_benefit_application.employee_benefit_application import (
-	calculate_lwp,
-)
+from hrms.payroll.doctype.employee_benefit_application.employee_benefit_application import calculate_lwp
 from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
 	create_payroll_period,
 )
-from hrms.payroll.doctype.salary_slip.test_salary_slip import (
-	make_holiday_list,
-	make_leave_application,
-)
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list, make_leave_application
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 from hrms.tests.test_utils import get_first_sunday

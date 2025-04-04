@@ -25,7 +25,11 @@ def get_gratuity_rules():
 			"minimum_year_for_gratuity": 1,
 			"gratuity_rule_slabs": [
 				{"from_year": 0, "to_year": 1, "fraction_of_applicable_earnings": 0},
-				{"from_year": 1, "to_year": 5, "fraction_of_applicable_earnings": 21 / 30},
+				{
+					"from_year": 1,
+					"to_year": 5,
+					"fraction_of_applicable_earnings": 21 / 30,
+				},
 				{"from_year": 5, "to_year": 0, "fraction_of_applicable_earnings": 1},
 			],
 		},
@@ -37,7 +41,11 @@ def get_gratuity_rules():
 			"minimum_year_for_gratuity": 1,
 			"gratuity_rule_slabs": [
 				{"from_year": 0, "to_year": 1, "fraction_of_applicable_earnings": 0},
-				{"from_year": 1, "to_year": 5, "fraction_of_applicable_earnings": 21 / 30},
+				{
+					"from_year": 1,
+					"to_year": 5,
+					"fraction_of_applicable_earnings": 21 / 30,
+				},
 				{"from_year": 5, "to_year": 0, "fraction_of_applicable_earnings": 1},
 			],
 		},
@@ -49,9 +57,21 @@ def get_gratuity_rules():
 			"minimum_year_for_gratuity": 1,
 			"gratuity_rule_slabs": [
 				{"from_year": 0, "to_year": 1, "fraction_of_applicable_earnings": 0},
-				{"from_year": 1, "to_year": 3, "fraction_of_applicable_earnings": 1 / 3 * 21 / 30},
-				{"from_year": 3, "to_year": 5, "fraction_of_applicable_earnings": 2 / 3 * 21 / 30},
-				{"from_year": 5, "to_year": 0, "fraction_of_applicable_earnings": 21 / 30},
+				{
+					"from_year": 1,
+					"to_year": 3,
+					"fraction_of_applicable_earnings": 1 / 3 * 21 / 30,
+				},
+				{
+					"from_year": 3,
+					"to_year": 5,
+					"fraction_of_applicable_earnings": 2 / 3 * 21 / 30,
+				},
+				{
+					"from_year": 5,
+					"to_year": 0,
+					"fraction_of_applicable_earnings": 21 / 30,
+				},
 			],
 		},
 	]

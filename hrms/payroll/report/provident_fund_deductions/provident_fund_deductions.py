@@ -28,16 +28,36 @@ def get_columns(filters):
 			"fieldname": "employee_name",
 			"width": 160,
 		},
-		{"label": _("PF Account"), "fieldname": "pf_account", "fieldtype": "Data", "width": 140},
-		{"label": _("PF Amount"), "fieldname": "pf_amount", "fieldtype": "Currency", "width": 140},
+		{
+			"label": _("PF Account"),
+			"fieldname": "pf_account",
+			"fieldtype": "Data",
+			"width": 140,
+		},
+		{
+			"label": _("PF Amount"),
+			"fieldname": "pf_amount",
+			"fieldtype": "Currency",
+			"width": 140,
+		},
 		{
 			"label": _("Additional PF"),
 			"fieldname": "additional_pf",
 			"fieldtype": "Currency",
 			"width": 140,
 		},
-		{"label": _("PF Loan"), "fieldname": "pf_loan", "fieldtype": "Currency", "width": 140},
-		{"label": _("Total"), "fieldname": "total", "fieldtype": "Currency", "width": 140},
+		{
+			"label": _("PF Loan"),
+			"fieldname": "pf_loan",
+			"fieldtype": "Currency",
+			"width": 140,
+		},
+		{
+			"label": _("Total"),
+			"fieldname": "total",
+			"fieldtype": "Currency",
+			"width": 140,
+		},
 	]
 
 	return columns

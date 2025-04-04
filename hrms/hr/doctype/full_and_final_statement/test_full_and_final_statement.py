@@ -12,7 +12,12 @@ from erpnext.stock.doctype.purchase_receipt.test_purchase_receipt import make_pu
 
 class TestFullandFinalStatement(IntegrationTestCase):
 	def setUp(self):
-		for dt in ["Full and Final Statement", "Asset", "Asset Movement", "Asset Movement Item"]:
+		for dt in [
+			"Full and Final Statement",
+			"Asset",
+			"Asset Movement",
+			"Asset Movement Item",
+		]:
 			frappe.db.delete(dt)
 
 		self.setup_fnf()
@@ -21,7 +26,9 @@ class TestFullandFinalStatement(IntegrationTestCase):
 		create_asset_data()
 
 		self.employee = make_employee(
-			"test_fnf@example.com", company="_Test Company", relieving_date=add_days(today(), 30)
+			"test_fnf@example.com",
+			company="_Test Company",
+			relieving_date=add_days(today(), 30),
 		)
 		self.movement = create_asset_movement(self.employee)
 		self.fnf = create_full_and_final_statement(self.employee)
@@ -37,9 +44,13 @@ class TestFullandFinalStatement(IntegrationTestCase):
 		receivable_bootstraped_component = self.fnf.get_receivable_component()
 
 		# checking payables and receivables bootstraped value
-		self.assertEqual([payable.component for payable in self.fnf.payables], payables_bootstraped_component)
 		self.assertEqual(
-			[receivable.component for receivable in self.fnf.receivables], receivable_bootstraped_component
+			[payable.component for payable in self.fnf.payables],
+			payables_bootstraped_component,
+		)
+		self.assertEqual(
+			[receivable.component for receivable in self.fnf.receivables],
+			receivable_bootstraped_component,
 		)
 
 		# checking allocated asset

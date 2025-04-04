@@ -70,7 +70,9 @@ class TestLeavePolicyAssignment(IntegrationTestCase):
 		self.assertEqual(leave_alloc_doc.leave_policy, leave_policy.name)
 		self.assertEqual(leave_alloc_doc.leave_policy_assignment, assignments[0])
 
-	def test_allow_to_grant_all_leave_after_cancellation_of_every_leave_allocation(self):
+	def test_allow_to_grant_all_leave_after_cancellation_of_every_leave_allocation(
+		self,
+	):
 		leave_period = get_leave_period()
 		leave_policy = create_leave_policy(annual_allocation=10)
 		leave_policy.submit()
@@ -118,7 +120,9 @@ class TestLeavePolicyAssignment(IntegrationTestCase):
 		assignments = create_assignment_for_multiple_employees([self.employee.name], frappe._dict(data))
 
 		allocation = frappe.db.get_value(
-			"Leave Allocation", {"leave_policy_assignment": assignments[0]}, "new_leaves_allocated"
+			"Leave Allocation",
+			{"leave_policy_assignment": assignments[0]},
+			"new_leaves_allocated",
 		)
 
 		# pro-rated leave allocation for 9 months
@@ -129,7 +133,9 @@ class TestLeavePolicyAssignment(IntegrationTestCase):
 		first_day = get_first_day(getdate())
 		annual_allocation = 10
 		leave_type = create_leave_type(
-			leave_type_name="_Test Earned Leave", is_earned_leave=True, allocate_on_day="First Day"
+			leave_type_name="_Test Earned Leave",
+			is_earned_leave=True,
+			allocate_on_day="First Day",
 		)
 		leave_policy = create_leave_policy(leave_type=leave_type, annual_allocation=annual_allocation)
 		leave_policy.submit()
@@ -211,7 +217,9 @@ class TestLeavePolicyAssignment(IntegrationTestCase):
 
 		self.assertGreater(new_leaves_allocated, 0)
 
-	def test_earned_leave_allocation_if_leave_policy_assignment_submitted_after_period(self):
+	def test_earned_leave_allocation_if_leave_policy_assignment_submitted_after_period(
+		self,
+	):
 		year_start_date = get_year_start(getdate())
 		year_end_date = get_year_ending(getdate())
 		leave_period = create_leave_period(year_start_date, year_end_date)
@@ -219,7 +227,9 @@ class TestLeavePolicyAssignment(IntegrationTestCase):
 		# assignment 10 days after the leave period
 		frappe.flags.current_date = add_days(year_end_date, 10)
 		leave_type = create_leave_type(
-			leave_type_name="_Test Earned Leave", is_earned_leave=True, allocate_on_day="Last Day"
+			leave_type_name="_Test Earned Leave",
+			is_earned_leave=True,
+			allocate_on_day="Last Day",
 		)
 		annual_earned_leaves = 10
 		leave_policy = create_leave_policy(leave_type=leave_type, annual_allocation=annual_earned_leaves)
@@ -234,7 +244,9 @@ class TestLeavePolicyAssignment(IntegrationTestCase):
 		assignment.submit()
 
 		earned_leave_allocation = frappe.get_value(
-			"Leave Allocation", {"leave_policy_assignment": assignment.name}, "new_leaves_allocated"
+			"Leave Allocation",
+			{"leave_policy_assignment": assignment.name},
+			"new_leaves_allocated",
 		)
 		self.assertEqual(earned_leave_allocation, annual_earned_leaves)
 
@@ -246,7 +258,9 @@ class TestLeavePolicyAssignment(IntegrationTestCase):
 		# assignment during mid second year
 		frappe.flags.current_date = add_months(second_year_end_date, -6)
 		leave_type = create_leave_type(
-			leave_type_name="_Test Earned Leave", is_earned_leave=True, allocate_on_day="Last Day"
+			leave_type_name="_Test Earned Leave",
+			is_earned_leave=True,
+			allocate_on_day="Last Day",
 		)
 		annual_earned_leaves = 24
 		leave_policy = create_leave_policy(leave_type=leave_type, annual_allocation=annual_earned_leaves)
@@ -261,7 +275,9 @@ class TestLeavePolicyAssignment(IntegrationTestCase):
 		assignment.submit()
 
 		earned_leave_allocation = frappe.get_value(
-			"Leave Allocation", {"leave_policy_assignment": assignment.name}, "new_leaves_allocated"
+			"Leave Allocation",
+			{"leave_policy_assignment": assignment.name},
+			"new_leaves_allocated",
 		)
 		# months passed (18) are calculated correctly but total allocation of 36 exceeds 24 hence 24
 		# this upper cap is intentional, without that 36 leaves would be allocated correctly

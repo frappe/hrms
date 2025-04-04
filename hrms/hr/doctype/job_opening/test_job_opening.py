@@ -21,7 +21,11 @@ class TestJobOpening(IntegrationTestCase):
 		frappe.db.delete("Employee", {"company": "_Test Opening Company"})
 
 	def test_vacancies_fulfilled(self):
-		make_employee("test_job_opening@example.com", company="_Test Opening Company", designation="Designer")
+		make_employee(
+			"test_job_opening@example.com",
+			company="_Test Opening Company",
+			designation="Designer",
+		)
 
 		staffing_plan = frappe.get_doc(
 			{
@@ -35,7 +39,11 @@ class TestJobOpening(IntegrationTestCase):
 
 		staffing_plan.append(
 			"staffing_details",
-			{"designation": "Designer", "vacancies": 1, "estimated_cost_per_position": 50000},
+			{
+				"designation": "Designer",
+				"vacancies": 1,
+				"estimated_cost_per_position": 50000,
+			},
 		)
 		staffing_plan.insert()
 		staffing_plan.submit()

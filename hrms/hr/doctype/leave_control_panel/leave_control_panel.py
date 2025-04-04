@@ -55,7 +55,10 @@ class LeaveControlPanel(Document):
 				allocation.insert()
 				allocation.submit()
 				success.append(
-					{"doc": get_link_to_form("Leave Allocation", allocation.name), "employee": employee}
+					{
+						"doc": get_link_to_form("Leave Allocation", allocation.name),
+						"employee": employee,
+					}
 				)
 			except Exception:
 				frappe.db.rollback(save_point=savepoint)
@@ -127,7 +130,14 @@ class LeaveControlPanel(Document):
 			if all_employees := frappe.get_list(
 				"Employee",
 				filters=self.get_filters() + advanced_filters,
-				fields=["name", "employee", "employee_name", "company", "department", "date_of_joining"],
+				fields=[
+					"name",
+					"employee",
+					"employee_name",
+					"company",
+					"department",
+					"date_of_joining",
+				],
 			):
 				return self.get_employees_without_allocations(all_employees, from_date, to_date)
 

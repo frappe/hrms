@@ -41,11 +41,19 @@ class TestLeaveLedger(IntegrationTestCase):
 		)
 		self.employee_1 = frappe.get_doc(
 			"Employee",
-			make_employee("test_emp_1@example.com", company="_Test Company", holiday_list=holiday_list),
+			make_employee(
+				"test_emp_1@example.com",
+				company="_Test Company",
+				holiday_list=holiday_list,
+			),
 		)
 		self.employee_2 = frappe.get_doc(
 			"Employee",
-			make_employee("test_emp_2@example.com", company="_Test Company", holiday_list=holiday_list),
+			make_employee(
+				"test_emp_2@example.com",
+				company="_Test Company",
+				holiday_list=holiday_list,
+			),
 		)
 
 		# create leave type

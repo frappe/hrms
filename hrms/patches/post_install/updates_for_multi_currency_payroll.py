@@ -51,7 +51,8 @@ def execute():
 
 	# get all companies and it's currency
 	all_companies = frappe.db.get_all(
-		"Company", fields=["name", "default_currency", "default_payroll_payable_account"]
+		"Company",
+		fields=["name", "default_currency", "default_payroll_payable_account"],
 	)
 	for d in all_companies:
 		company = d.name

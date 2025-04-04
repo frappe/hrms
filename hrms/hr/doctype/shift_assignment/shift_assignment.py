@@ -369,7 +369,12 @@ def get_shifts_for_date(employee: str, for_timestamp: datetime) -> list[dict[str
 	assignment = frappe.qb.DocType("Shift Assignment")
 	return (
 		frappe.qb.from_(assignment)
-		.select(assignment.name, assignment.shift_type, assignment.start_date, assignment.end_date)
+		.select(
+			assignment.name,
+			assignment.shift_type,
+			assignment.start_date,
+			assignment.end_date,
+		)
 		.where(
 			(assignment.employee == employee)
 			& (assignment.docstatus == 1)
@@ -429,7 +434,11 @@ def get_employee_shift(
 	# if no shift is found, find next or prev shift assignment based on direction
 	if not shift_details and next_shift_direction:
 		shift_details = get_prev_or_next_shift(
-			employee, for_timestamp, consider_default_shift, default_shift, next_shift_direction
+			employee,
+			for_timestamp,
+			consider_default_shift,
+			default_shift,
+			next_shift_direction,
 		)
 
 	return shift_details or {}
@@ -481,7 +490,10 @@ def get_prev_or_next_shift(
 
 			for dt in generate_date_range(start_date, end_date, reverse=reverse):
 				shift_details = get_employee_shift(
-					employee, datetime.combine(dt, for_timestamp.time()), consider_default_shift, None
+					employee,
+					datetime.combine(dt, for_timestamp.time()),
+					consider_default_shift,
+					None,
 				)
 				if shift_details:
 					return shift_details
@@ -490,7 +502,9 @@ def get_prev_or_next_shift(
 
 
 def get_employee_shift_timings(
-	employee: str, for_timestamp: datetime | None = None, consider_default_shift: bool = False
+	employee: str,
+	for_timestamp: datetime | None = None,
+	consider_default_shift: bool = False,
 ) -> list[dict]:
 	"""Returns previous shift, current/upcoming shift, next_shift for the given timestamp and employee"""
 	if for_timestamp is None:

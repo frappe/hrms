@@ -48,7 +48,10 @@ def get_applicable_block_dates(
 	return frappe.db.get_all(
 		"Leave Block List Date",
 		filters={
-			"parent": ["IN", get_applicable_block_lists(employee, company, all_lists, leave_type)],
+			"parent": [
+				"IN",
+				get_applicable_block_lists(employee, company, all_lists, leave_type),
+			],
 			"block_date": ["BETWEEN", [getdate(from_date), getdate(to_date)]],
 		},
 		fields=["block_date", "reason"],

@@ -68,14 +68,23 @@ class AttendanceRequest(Document):
 			get_link_to_form("Attendance Request", overlapping_request),
 		)
 
-		frappe.throw(msg, title=_("Overlapping Attendance Request"), exc=OverlappingAttendanceRequestError)
+		frappe.throw(
+			msg,
+			title=_("Overlapping Attendance Request"),
+			exc=OverlappingAttendanceRequestError,
+		)
 
 	def on_submit(self):
 		self.create_attendance_records()
 
 	def on_cancel(self):
 		attendance_list = frappe.get_all(
-			"Attendance", {"employee": self.employee, "attendance_request": self.name, "docstatus": 1}
+			"Attendance",
+			{
+				"employee": self.employee,
+				"attendance_request": self.name,
+				"docstatus": 1,
+			},
 		)
 		if attendance_list:
 			for attendance in attendance_list:
@@ -139,7 +148,8 @@ class AttendanceRequest(Document):
 		if self.has_leave_record(attendance_date):
 			frappe.msgprint(
 				_("Attendance not submitted for {0} as {1} is on leave.").format(
-					frappe.bold(format_date(attendance_date)), frappe.bold(self.employee)
+					frappe.bold(format_date(attendance_date)),
+					frappe.bold(self.employee),
 				)
 			)
 			return False
@@ -198,7 +208,11 @@ class AttendanceRequest(Document):
 				attendance_warnings.append({"date": attendance_date, "reason": "On Leave", "action": "Skip"})
 			elif self.status_unchanged(attendance_date):
 				attendance_warnings.append(
-					{"date": attendance_date, "reason": "Attendance status unchanged", "action": "Skip"}
+					{
+						"date": attendance_date,
+						"reason": "Attendance status unchanged",
+						"action": "Skip",
+					}
 				)
 			else:
 				attendance = self.get_attendance_doc(attendance_date)

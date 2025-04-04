@@ -35,9 +35,11 @@ class EmployeeBoardingController(Document):
 			{
 				"doctype": "Project",
 				"project_name": project_name,
-				"expected_start_date": self.date_of_joining
-				if self.doctype == "Employee Onboarding"
-				else self.resignation_letter_date,
+				"expected_start_date": (
+					self.date_of_joining
+					if self.doctype == "Employee Onboarding"
+					else self.resignation_letter_date
+				),
 				"department": self.department,
 				"company": self.company,
 			}
@@ -151,7 +153,9 @@ class EmployeeBoardingController(Document):
 			activity.db_set("task", "")
 
 		frappe.msgprint(
-			_("Linked Project {} and Tasks deleted.").format(project), alert=True, indicator="blue"
+			_("Linked Project {} and Tasks deleted.").format(project),
+			alert=True,
+			indicator="blue",
 		)
 
 

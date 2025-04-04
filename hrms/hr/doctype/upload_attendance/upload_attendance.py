@@ -52,7 +52,16 @@ def add_header(w):
 	w.writerow(["Status should be one of these values: " + status])
 	w.writerow(["If you are overwriting existing attendance records, 'ID' column mandatory"])
 	w.writerow(
-		["ID", "Employee", "Employee Name", "Date", "Status", "Leave Type", "Company", "Naming Series"]
+		[
+			"ID",
+			"Employee",
+			"Employee Name",
+			"Date",
+			"Status",
+			"Leave Type",
+			"Company",
+			"Naming Series",
+		]
 	)
 	return w
 
@@ -132,7 +141,13 @@ def get_dates(args):
 def get_active_employees():
 	employees = frappe.db.get_all(
 		"Employee",
-		fields=["name", "employee_name", "date_of_joining", "company", "relieving_date"],
+		fields=[
+			"name",
+			"employee_name",
+			"date_of_joining",
+			"company",
+			"relieving_date",
+		],
 		filters={"docstatus": ["<", 2], "status": "Active"},
 	)
 	return employees

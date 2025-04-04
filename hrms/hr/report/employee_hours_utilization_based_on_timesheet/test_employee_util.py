@@ -83,7 +83,11 @@ class TestEmployeeUtilization(IntegrationTestCase):
 		frappe.db.sql(f"DELETE FROM `tabProject` WHERE name='{cls.test_project.name}'")
 
 	def test_utilization_report_with_required_filters_only(self):
-		filters = {"company": "_Test Company", "from_date": "2021-04-01", "to_date": "2021-04-03"}
+		filters = {
+			"company": "_Test Company",
+			"from_date": "2021-04-01",
+			"to_date": "2021-04-03",
+		}
 
 		report = execute(filters)
 
@@ -159,7 +163,11 @@ class TestEmployeeUtilization(IntegrationTestCase):
 		self.assertEqual(report[1], expected_data)
 
 	def test_report_summary_data(self):
-		filters = {"company": "_Test Company", "from_date": "2021-04-01", "to_date": "2021-04-03"}
+		filters = {
+			"company": "_Test Company",
+			"from_date": "2021-04-01",
+			"to_date": "2021-04-03",
+		}
 
 		report = execute(filters)
 		summary = report[4]

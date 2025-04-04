@@ -131,7 +131,11 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 
 	def on_cancel(self):
 		self.update_task_and_project()
-		self.ignore_linked_doctypes = ("GL Entry", "Stock Ledger Entry", "Payment Ledger Entry")
+		self.ignore_linked_doctypes = (
+			"GL Entry",
+			"Stock Ledger Entry",
+			"Payment Ledger Entry",
+		)
 		if self.payable_account:
 			self.make_gl_entries(cancel=True)
 
@@ -339,7 +343,13 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			ref_doc = frappe.db.get_value(
 				"Employee Advance",
 				d.employee_advance,
-				["posting_date", "paid_amount", "claimed_amount", "return_amount", "advance_account"],
+				[
+					"posting_date",
+					"paid_amount",
+					"claimed_amount",
+					"return_amount",
+					"advance_account",
+				],
 				as_dict=1,
 			)
 			d.posting_date = ref_doc.posting_date
@@ -405,7 +415,9 @@ def get_total_reimbursed_amount(doc):
 		)
 
 		amount_via_payment_entry = frappe.db.get_value(
-			"Payment Entry Reference", {"reference_name": doc.name, "docstatus": 1}, "sum(allocated_amount)"
+			"Payment Entry Reference",
+			{"reference_name": doc.name, "docstatus": 1},
+			"sum(allocated_amount)",
 		)
 
 		return flt(amount_via_jv) + flt(amount_via_payment_entry)
@@ -490,7 +502,9 @@ def get_expense_claim_account_and_cost_center(expense_claim_type, company):
 @frappe.whitelist()
 def get_expense_claim_account(expense_claim_type, company):
 	account = frappe.db.get_value(
-		"Expense Claim Account", {"parent": expense_claim_type, "company": company}, "default_account"
+		"Expense Claim Account",
+		{"parent": expense_claim_type, "company": company},
+		"default_account",
 	)
 	if not account:
 		frappe.throw(
@@ -532,7 +546,13 @@ def get_advances(employee, advance_id=None):
 
 @frappe.whitelist()
 def get_expense_claim(
-	employee_name, company, employee_advance_name, posting_date, paid_amount, claimed_amount, return_amount
+	employee_name,
+	company,
+	employee_advance_name,
+	posting_date,
+	paid_amount,
+	claimed_amount,
+	return_amount,
 ):
 	default_payable_account = frappe.get_cached_value(
 		"Company", company, "default_expense_claim_payable_account"
@@ -553,7 +573,9 @@ def get_expense_claim(
 			"advance_paid": flt(paid_amount),
 			"unclaimed_amount": flt(paid_amount) - flt(claimed_amount),
 			"allocated_amount": get_allocation_amount(
-				paid_amount=(paid_amount), claimed_amount=(claimed_amount), return_amount=(return_amount)
+				paid_amount=(paid_amount),
+				claimed_amount=(claimed_amount),
+				return_amount=(return_amount),
 			),
 			"return_amount": flt(return_amount),
 		},
@@ -586,7 +608,12 @@ def update_outstanding_amount_in_payment_entry(expense_claim: dict, pe_reference
 	"""updates outstanding amount back in Payment Entry reference"""
 	# TODO: refactor convoluted code after erpnext payment entry becomes extensible
 	outstanding_amount = get_outstanding_amount_for_claim(expense_claim)
-	frappe.db.set_value("Payment Entry Reference", pe_reference, "outstanding_amount", outstanding_amount)
+	frappe.db.set_value(
+		"Payment Entry Reference",
+		pe_reference,
+		"outstanding_amount",
+		outstanding_amount,
+	)
 
 
 def validate_expense_claim_in_jv(doc, method=None):
@@ -607,7 +634,12 @@ def make_expense_claim_for_delivery_trip(source_name, target_doc=None):
 	doc = get_mapped_doc(
 		"Delivery Trip",
 		source_name,
-		{"Delivery Trip": {"doctype": "Expense Claim", "field_map": {"name": "delivery_trip"}}},
+		{
+			"Delivery Trip": {
+				"doctype": "Expense Claim",
+				"field_map": {"name": "delivery_trip"},
+			}
+		},
 		target_doc,
 	)
 

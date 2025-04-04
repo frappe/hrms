@@ -94,7 +94,12 @@ class ShiftType(Document):
 	def unlinked_checkins_exist(self):
 		return frappe.db.exists(
 			"Employee Checkin",
-			{"shift": self.name, "attendance": ["is", "not set"], "skip_auto_attendance": 0, "offshift": 0},
+			{
+				"shift": self.name,
+				"attendance": ["is", "not set"],
+				"skip_auto_attendance": 0,
+				"offshift": 0,
+			},
 		)
 
 	@frappe.whitelist()
@@ -185,7 +190,9 @@ class ShiftType(Document):
 		"""
 		late_entry = early_exit = False
 		total_working_hours, in_time, out_time = calculate_working_hours(
-			logs, self.determine_check_in_and_check_out, self.working_hours_calculation_based_on
+			logs,
+			self.determine_check_in_and_check_out,
+			self.working_hours_calculation_based_on,
 		)
 		if (
 			cint(self.enable_late_entry_marking)
@@ -205,13 +212,27 @@ class ShiftType(Document):
 			self.working_hours_threshold_for_absent
 			and total_working_hours < self.working_hours_threshold_for_absent
 		):
-			return "Absent", total_working_hours, late_entry, early_exit, in_time, out_time
+			return (
+				"Absent",
+				total_working_hours,
+				late_entry,
+				early_exit,
+				in_time,
+				out_time,
+			)
 
 		if (
 			self.working_hours_threshold_for_half_day
 			and total_working_hours < self.working_hours_threshold_for_half_day
 		):
-			return "Half Day", total_working_hours, late_entry, early_exit, in_time, out_time
+			return (
+				"Half Day",
+				total_working_hours,
+				late_entry,
+				early_exit,
+				in_time,
+				out_time,
+			)
 
 		return "Present", total_working_hours, late_entry, early_exit, in_time, out_time
 
@@ -309,7 +330,8 @@ class ShiftType(Document):
 	def get_assigned_employees(self, from_date: datetime.date, consider_default_shift=False) -> list[str]:
 		"""Get all such employees who either have this shift assigned that hasn't ended or have this shift as default shift.
 		This may fetch some redundant employees who have another shift assigned that may have started or ended before or after the
-		attendance processing date. But this is done to avoid missing any employee who may have this shift as active shift."""
+		attendance processing date. But this is done to avoid missing any employee who may have this shift as active shift.
+		"""
 		filters = {"shift_type": self.name, "docstatus": "1", "status": "Active"}
 
 		or_filters = [["end_date", ">=", from_date], ["end_date", "is", "not set"]]
@@ -320,7 +342,9 @@ class ShiftType(Document):
 
 		if consider_default_shift:
 			default_shift_employees = frappe.get_all(
-				"Employee", filters={"default_shift": self.name, "status": "Active"}, pluck="name"
+				"Employee",
+				filters={"default_shift": self.name, "status": "Active"},
+				pluck="name",
 			)
 			assigned_employees = set(assigned_employees + default_shift_employees)
 

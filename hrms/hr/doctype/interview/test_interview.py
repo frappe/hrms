@@ -44,7 +44,9 @@ class TestInterview(IntegrationTestCase):
 		frappe.db.sql("DELETE FROM `tabEmail Queue`")
 
 		interview.reschedule_interview(
-			add_days(getdate(previous_scheduled_date), 2), from_time="11:00:00", to_time="12:00:00"
+			add_days(getdate(previous_scheduled_date), 2),
+			from_time="11:00:00",
+			to_time="12:00:00",
 		)
 		interview.reload()
 
@@ -53,7 +55,8 @@ class TestInterview(IntegrationTestCase):
 		self.assertEqual(get_time(interview.to_time), get_time("12:00:00"))
 
 		notification = frappe.get_all(
-			"Email Queue", filters={"message": ("like", "%Your Interview session is rescheduled from%")}
+			"Email Queue",
+			filters={"message": ("like", "%Your Interview session is rescheduled from%")},
 		)
 		self.assertIsNotNone(notification)
 
@@ -133,7 +136,10 @@ class TestInterview(IntegrationTestCase):
 		)
 
 		ratings = get_skill_wise_average_rating(interview.name)
-		self.assertEqual(ratings, [{"skill": "Python", "rating": 0.75}, {"skill": "JS", "rating": 0.85}])
+		self.assertEqual(
+			ratings,
+			[{"skill": "Python", "rating": 0.75}, {"skill": "JS", "rating": 0.85}],
+		)
 
 	def test_get_feedback(self):
 		from hrms.hr.doctype.interview_feedback.test_interview_feedback import create_interview_feedback

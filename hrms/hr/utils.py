@@ -26,14 +26,9 @@ from frappe.utils import (
 
 import erpnext
 from erpnext import get_company_currency
-from erpnext.setup.doctype.employee.employee import (
-	InactiveEmployeeStatusError,
-	get_holiday_list_for_employee,
-)
+from erpnext.setup.doctype.employee.employee import InactiveEmployeeStatusError, get_holiday_list_for_employee
 
-from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
-	calculate_pro_rated_leaves,
-)
+from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import calculate_pro_rated_leaves
 
 DateTimeLikeObject = str | datetime.date | datetime.datetime
 
@@ -324,7 +319,10 @@ def generate_leave_encashment():
 
 		leave_allocation = frappe.get_all(
 			"Leave Allocation",
-			filters={"to_date": add_days(getdate(), -1), "leave_type": ("in", leave_type)},
+			filters={
+				"to_date": add_days(getdate(), -1),
+				"leave_type": ("in", leave_type),
+			},
 			fields=[
 				"employee",
 				"leave_period",
@@ -353,7 +351,9 @@ def allocate_earned_leaves():
 				allocation.leave_policy
 				if allocation.leave_policy
 				else frappe.db.get_value(
-					"Leave Policy Assignment", allocation.leave_policy_assignment, ["leave_policy"]
+					"Leave Policy Assignment",
+					allocation.leave_policy_assignment,
+					["leave_policy"],
 				)
 			)
 
@@ -370,7 +370,10 @@ def allocate_earned_leaves():
 				from_date = date_of_joining
 
 			if check_effective_date(
-				from_date, today, e_leave_type.earned_leave_frequency, e_leave_type.allocate_on_day
+				from_date,
+				today,
+				e_leave_type.earned_leave_frequency,
+				e_leave_type.allocate_on_day,
 			):
 				update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, date_of_joining)
 
@@ -409,7 +412,9 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 			text = _(
 				"Allocated {0} leave(s) via scheduler on {1} based on the 'Allocate on Day' option set to {2}"
 			).format(
-				frappe.bold(earned_leaves), frappe.bold(formatdate(today_date)), e_leave_type.allocate_on_day
+				frappe.bold(earned_leaves),
+				frappe.bold(formatdate(today_date)),
+				e_leave_type.allocate_on_day,
 			)
 
 		allocation.add_comment(comment_type="Info", text=text)
@@ -437,7 +442,11 @@ def get_monthly_earned_leave(
 				period_start_date = get_first_day(today_date)
 
 			earned_leaves = calculate_pro_rated_leaves(
-				earned_leaves, date_of_joining, period_start_date, period_end_date, is_earned_leave=True
+				earned_leaves,
+				date_of_joining,
+				period_start_date,
+				period_end_date,
+				is_earned_leave=True,
 			)
 
 		earned_leaves = round_earned_leaves(earned_leaves, rounding)
@@ -537,7 +546,11 @@ def get_salary_assignments(employee, payroll_period):
 	start_date, end_date = frappe.db.get_value("Payroll Period", payroll_period, ["start_date", "end_date"])
 	assignments = frappe.get_all(
 		"Salary Structure Assignment",
-		filters={"employee": employee, "docstatus": 1, "from_date": ["between", (start_date, end_date)]},
+		filters={
+			"employee": employee,
+			"docstatus": 1,
+			"from_date": ["between", (start_date, end_date)],
+		},
 		fields=["*"],
 		order_by="from_date",
 	)
@@ -548,7 +561,11 @@ def get_salary_assignments(employee, payroll_period):
 		# get the last one assigned before the period start date
 		past_assignment = frappe.get_all(
 			"Salary Structure Assignment",
-			filters={"employee": employee, "docstatus": 1, "from_date": ["<", start_date]},
+			filters={
+				"employee": employee,
+				"docstatus": 1,
+				"from_date": ["<", start_date],
+			},
 			fields=["*"],
 			order_by="from_date desc",
 			limit=1,
@@ -617,13 +634,19 @@ def get_holidays_for_employee(employee, start_date, end_date, raise_exception=Tr
 	if not holiday_list:
 		return []
 
-	filters = {"parent": holiday_list, "holiday_date": ("between", [start_date, end_date])}
+	filters = {
+		"parent": holiday_list,
+		"holiday_date": ("between", [start_date, end_date]),
+	}
 
 	if only_non_weekly:
 		filters["weekly_off"] = False
 
 	holidays = frappe.get_all(
-		"Holiday", fields=["description", "holiday_date"], filters=filters, order_by="holiday_date"
+		"Holiday",
+		fields=["description", "holiday_date"],
+		filters=filters,
+		order_by="holiday_date",
 	)
 
 	return holidays
@@ -679,7 +702,11 @@ def share_doc_with_approver(doc, user):
 	# if approver does not have permissions, share
 	if not frappe.has_permission(doc=doc, ptype="submit", user=user):
 		frappe.share.add_docshare(
-			doc.doctype, doc.name, user, submit=1, flags={"ignore_share_permission": True}
+			doc.doctype,
+			doc.name,
+			user,
+			submit=1,
+			flags={"ignore_share_permission": True},
 		)
 
 		frappe.msgprint(_("Shared with the user {0} with 'submit' permisions").format(user, alert=True))
@@ -763,7 +790,12 @@ def get_matching_queries(
 
 
 def get_ec_matching_query(
-	bank_account, company, exact_match, from_date=None, to_date=None, common_filters=None
+	bank_account,
+	company,
+	exact_match,
+	from_date=None,
+	to_date=None,
+	common_filters=None,
 ):
 	# get matching Expense Claim query
 	filters = []
@@ -772,7 +804,9 @@ def get_ec_matching_query(
 	mode_of_payments = [
 		x["parent"]
 		for x in frappe.db.get_all(
-			"Mode of Payment Account", filters={"default_account": bank_account}, fields=["parent"]
+			"Mode of Payment Account",
+			filters={"default_account": bank_account},
+			fields=["parent"],
 		)
 	]
 	company_currency = get_company_currency(company)
@@ -820,11 +854,18 @@ def get_ec_matching_query(
 
 
 def validate_bulk_tool_fields(
-	self, fields: list, employees: list, from_date: str | None = None, to_date: str | None = None
+	self,
+	fields: list,
+	employees: list,
+	from_date: str | None = None,
+	to_date: str | None = None,
 ) -> None:
 	for d in fields:
 		if not self.get(d):
-			frappe.throw(_("{0} is required").format(self.meta.get_label(d)), title=_("Missing Field"))
+			frappe.throw(
+				_("{0} is required").format(self.meta.get_label(d)),
+				title=_("Missing Field"),
+			)
 	if self.get(from_date) and self.get(to_date):
 		self.validate_from_to_dates(from_date, to_date)
 	if not employees:
@@ -889,7 +930,10 @@ def set_geolocation_from_coordinates(doc):
 					"type": "Feature",
 					"properties": {},
 					# geojson needs coordinates in reverse order: long, lat instead of lat, long
-					"geometry": {"type": "Point", "coordinates": [doc.longitude, doc.latitude]},
+					"geometry": {
+						"type": "Point",
+						"coordinates": [doc.longitude, doc.latitude],
+					},
 				}
 			],
 		}

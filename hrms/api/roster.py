@@ -21,7 +21,10 @@ def get_values(doctype: str, name: str, fields: list) -> dict[str, str]:
 
 @frappe.whitelist()
 def get_events(
-	month_start: str, month_end: str, employee_filters: dict[str, str], shift_filters: dict[str, str]
+	month_start: str,
+	month_end: str,
+	employee_filters: dict[str, str],
+	shift_filters: dict[str, str],
 ) -> dict[str, list[dict]]:
 	holidays = get_holidays(month_start, month_end, employee_filters)
 	leaves = get_leaves(month_start, month_end, employee_filters)
@@ -76,14 +79,19 @@ def create_shift_schedule_assignment(
 		return shift_schedule_assignment.create_shifts(start_date, end_date)
 
 	frappe.enqueue(
-		shift_schedule_assignment.create_shifts, timeout=4500, start_date=start_date, end_date=end_date
+		shift_schedule_assignment.create_shifts,
+		timeout=4500,
+		start_date=start_date,
+		end_date=end_date,
 	)
 
 
 @frappe.whitelist()
 def delete_shift_schedule_assignment(shift_schedule_assignment: str) -> None:
 	for shift_assignment in frappe.get_all(
-		"Shift Assignment", {"shift_schedule_assignment": shift_schedule_assignment}, pluck="name"
+		"Shift Assignment",
+		{"shift_schedule_assignment": shift_schedule_assignment},
+		pluck="name",
 	):
 		doc = frappe.get_doc("Shift Assignment", shift_assignment)
 		if doc.docstatus == 1:
@@ -94,7 +102,11 @@ def delete_shift_schedule_assignment(shift_schedule_assignment: str) -> None:
 
 @frappe.whitelist()
 def swap_shift(
-	src_shift: str, src_date: str, tgt_employee: str, tgt_date: str, tgt_shift: str | None
+	src_shift: str,
+	src_date: str,
+	tgt_employee: str,
+	tgt_date: str,
+	tgt_shift: str | None,
 ) -> None:
 	if src_shift == tgt_shift:
 		frappe.throw(_("Source and target shifts cannot be the same"))
@@ -156,7 +168,13 @@ def break_shift(assignment: str | ShiftAssignment, date: str) -> None:
 
 	if not end_date or date_diff(end_date, date) > 0:
 		create_shift_assignment(
-			employee, company, shift_type, add_days(date, 1), end_date, status, shift_location
+			employee,
+			company,
+			shift_type,
+			add_days(date, 1),
+			end_date,
+			status,
+			shift_location,
 		)
 
 
@@ -207,7 +225,10 @@ def get_holidays(month_start: str, month_end: str, employee_filters: dict[str, s
 		if holiday_list not in holiday_lists:
 			holiday_lists[holiday_list] = frappe.get_all(
 				"Holiday",
-				filters={"parent": holiday_list, "holiday_date": ["between", [month_start, month_end]]},
+				filters={
+					"parent": holiday_list,
+					"holiday_date": ["between", [month_start, month_end]],
+				},
 				fields=["name as holiday", "holiday_date", "description", "weekly_off"],
 			)
 		holidays[employee] = holiday_lists[holiday_list].copy()
@@ -245,7 +266,10 @@ def get_leaves(month_start: str, month_end: str, employee_filters: dict[str, str
 
 
 def get_shifts(
-	month_start: str, month_end: str, employee_filters: dict[str, str], shift_filters: dict[str, str]
+	month_start: str,
+	month_end: str,
+	employee_filters: dict[str, str],
+	shift_filters: dict[str, str],
 ) -> dict[str, list[dict]]:
 	ShiftAssignment = frappe.qb.DocType("Shift Assignment")
 	ShiftType = frappe.qb.DocType("Shift Type")

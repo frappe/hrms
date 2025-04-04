@@ -322,11 +322,27 @@ def get_custom_fields():
 def make_fixtures():
 	records = [
 		# expense claim type
-		{"doctype": "Expense Claim Type", "name": _("Calls"), "expense_type": _("Calls")},
+		{
+			"doctype": "Expense Claim Type",
+			"name": _("Calls"),
+			"expense_type": _("Calls"),
+		},
 		{"doctype": "Expense Claim Type", "name": _("Food"), "expense_type": _("Food")},
-		{"doctype": "Expense Claim Type", "name": _("Medical"), "expense_type": _("Medical")},
-		{"doctype": "Expense Claim Type", "name": _("Others"), "expense_type": _("Others")},
-		{"doctype": "Expense Claim Type", "name": _("Travel"), "expense_type": _("Travel")},
+		{
+			"doctype": "Expense Claim Type",
+			"name": _("Medical"),
+			"expense_type": _("Medical"),
+		},
+		{
+			"doctype": "Expense Claim Type",
+			"name": _("Others"),
+			"expense_type": _("Others"),
+		},
+		{
+			"doctype": "Expense Claim Type",
+			"name": _("Travel"),
+			"expense_type": _("Travel"),
+		},
 		# vehicle service item
 		{"doctype": "Vehicle Service Item", "service_item": "Brake Oil"},
 		{"doctype": "Vehicle Service Item", "service_item": "Brake Pad"},
@@ -406,7 +422,11 @@ def make_fixtures():
 		{"doctype": "Offer Term", "offer_term": _("Notice Period")},
 		{"doctype": "Offer Term", "offer_term": _("Incentives")},
 		# Email Account
-		{"doctype": "Email Account", "email_id": "jobs@example.com", "append_to": "Job Applicant"},
+		{
+			"doctype": "Email Account",
+			"email_id": "jobs@example.com",
+			"append_to": "Job Applicant",
+		},
 	]
 
 	make_records(records)
@@ -643,16 +663,50 @@ def get_user_types_data():
 				"Attendance Request": ["read", "write", "create", "delete"],
 				"Compensatory Leave Request": ["read", "write", "create", "delete"],
 				# tax
-				"Employee Tax Exemption Declaration": ["read", "write", "create", "delete"],
-				"Employee Tax Exemption Proof Submission": ["read", "write", "create", "delete"],
+				"Employee Tax Exemption Declaration": [
+					"read",
+					"write",
+					"create",
+					"delete",
+				],
+				"Employee Tax Exemption Proof Submission": [
+					"read",
+					"write",
+					"create",
+					"delete",
+				],
 				# projects
-				"Timesheet": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+				"Timesheet": [
+					"read",
+					"write",
+					"create",
+					"delete",
+					"submit",
+					"cancel",
+					"amend",
+				],
 				# trainings
 				"Training Program": ["read"],
-				"Training Feedback": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+				"Training Feedback": [
+					"read",
+					"write",
+					"create",
+					"delete",
+					"submit",
+					"cancel",
+					"amend",
+				],
 				# shifts
 				"Employee Checkin": ["read"],
-				"Shift Request": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
+				"Shift Request": [
+					"read",
+					"write",
+					"create",
+					"delete",
+					"submit",
+					"cancel",
+					"amend",
+				],
 				# misc
 				"Employee Grievance": ["read", "write", "create", "delete"],
 				"Employee Referral": ["read", "write", "create", "delete"],
@@ -673,7 +727,12 @@ def get_lending_docperms_for_ess():
 def create_custom_role(data):
 	if data.get("role") and not frappe.db.exists("Role", data.get("role")):
 		frappe.get_doc(
-			{"doctype": "Role", "role_name": data.get("role"), "desk_access": 1, "is_custom": 1}
+			{
+				"doctype": "Role",
+				"role_name": data.get("role"),
+				"desk_access": 1,
+				"is_custom": 1,
+			}
 		).insert(ignore_permissions=True)
 
 

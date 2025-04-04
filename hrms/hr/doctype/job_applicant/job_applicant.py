@@ -46,7 +46,8 @@ class JobApplicant(Document):
 			job_opening_status = frappe.db.get_value("Job Opening", self.job_title, "status")
 			if job_opening_status == "Closed":
 				frappe.throw(
-					_("Cannot create a Job Applicant against a closed Job Opening"), title=_("Not Allowed")
+					_("Cannot create a Job Applicant against a closed Job Opening"),
+					title=_("Not Allowed"),
 				)
 
 	def set_status_for_employee_referral(self):
@@ -113,6 +114,6 @@ def get_applicant_to_hire_percentage():
 	total_hired = frappe.db.count("Job Applicant", filters={"status": "Accepted"})
 
 	return {
-		"value": flt(total_hired) / flt(total_applicants) * 100 if total_applicants else 0,
+		"value": (flt(total_hired) / flt(total_applicants) * 100 if total_applicants else 0),
 		"fieldtype": "Percent",
 	}

@@ -11,18 +11,12 @@ import erpnext
 from erpnext.accounts.utils import get_fiscal_year, getdate, nowdate
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
-from hrms.hr.doctype.employee_advance.employee_advance import (
-	create_return_through_additional_salary,
-)
+from hrms.hr.doctype.employee_advance.employee_advance import create_return_through_additional_salary
 from hrms.hr.doctype.employee_advance.test_employee_advance import (
 	make_employee_advance,
 	make_journal_entry_for_advance,
 )
-from hrms.payroll.doctype.payroll_entry.payroll_entry import (
-	PayrollEntry,
-	get_end_date,
-	get_start_end_dates,
-)
+from hrms.payroll.doctype.payroll_entry.payroll_entry import PayrollEntry, get_end_date, get_start_end_dates
 from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
 from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
@@ -74,7 +68,10 @@ class TestPayrollEntry(FrappeTestCase):
 				account_type="Payable",
 			)
 			frappe.db.set_value(
-				"Company", "_Test Company", "default_payroll_payable_account", "_Test Payroll Payable - _TC"
+				"Company",
+				"_Test Company",
+				"default_payroll_payable_account",
+				"_Test Payroll Payable - _TC",
 			)
 
 	def test_payroll_entry(self):
@@ -95,7 +92,9 @@ class TestPayrollEntry(FrappeTestCase):
 		company = frappe.get_doc("Company", "_Test Company")
 		create_department("Accounts")
 		employee = make_employee(
-			"test_muti_currency_employee@payroll.com", company=company.name, department="Accounts - _TC"
+			"test_muti_currency_employee@payroll.com",
+			company=company.name,
+			department="Accounts - _TC",
 		)
 		salary_structure = "_Test Multi Currency Salary Structure"
 		setup_salary_structure(employee, company, "USD", salary_structure)
@@ -200,14 +199,19 @@ class TestPayrollEntry(FrappeTestCase):
 		# update cost centers in salary structure assignment for employee
 		new_assignment = frappe.db.get_value(
 			"Salary Structure Assignment",
-			{"employee": employee, "salary_structure": salary_structure.name, "docstatus": 1},
+			{
+				"employee": employee,
+				"salary_structure": salary_structure.name,
+				"docstatus": 1,
+			},
 			"name",
 		)
 		new_assignment = frappe.get_doc("Salary Structure Assignment", new_assignment)
 		new_assignment.payroll_cost_centers = []
 		for cost_center, percentage in COST_CENTERS.items():
 			new_assignment.append(
-				"payroll_cost_centers", {"cost_center": cost_center, "percentage": percentage}
+				"payroll_cost_centers",
+				{"cost_center": cost_center, "percentage": percentage},
 			)
 		new_assignment.save()
 
@@ -497,7 +501,8 @@ class TestPayrollEntry(FrappeTestCase):
 	def test_payroll_accrual_journal_entry_with_employee_tagging(self):
 		company_doc = frappe.get_doc("Company", "_Test Company")
 		employee = make_employee(
-			"test_payroll_accrual_journal_entry_with_employee_tagging@payroll.com", company=company_doc.name
+			"test_payroll_accrual_journal_entry_with_employee_tagging@payroll.com",
+			company=company_doc.name,
 		)
 
 		setup_salary_structure(employee, company_doc)
@@ -831,7 +836,11 @@ def make_payroll_entry(**args):
 def get_payment_account():
 	return frappe.get_value(
 		"Account",
-		{"account_type": "Cash", "company": erpnext.get_default_company(), "is_group": 0},
+		{
+			"account_type": "Cash",
+			"company": erpnext.get_default_company(),
+			"is_group": 0,
+		},
 		"name",
 	)
 
@@ -839,7 +848,9 @@ def get_payment_account():
 def setup_salary_structure(employee, company_doc, currency=None, salary_structure=None):
 	for data in frappe.get_all("Salary Component", pluck="name"):
 		if not frappe.db.get_value(
-			"Salary Component Account", {"parent": data, "company": company_doc.name}, "name"
+			"Salary Component Account",
+			{"parent": data, "company": company_doc.name},
+			"name",
 		):
 			set_salary_component_account(data)
 
@@ -866,8 +877,14 @@ def create_assignments_with_cost_centers(employee1, employee2):
 
 	ssa_doc = frappe.get_doc("Salary Structure Assignment", ssa)
 	ssa_doc.payroll_cost_centers = []
-	ssa_doc.append("payroll_cost_centers", {"cost_center": "_Test Cost Center - _TC", "percentage": 60})
-	ssa_doc.append("payroll_cost_centers", {"cost_center": "_Test Cost Center 2 - _TC", "percentage": 40})
+	ssa_doc.append(
+		"payroll_cost_centers",
+		{"cost_center": "_Test Cost Center - _TC", "percentage": 60},
+	)
+	ssa_doc.append(
+		"payroll_cost_centers",
+		{"cost_center": "_Test Cost Center 2 - _TC", "percentage": 40},
+	)
 	ssa_doc.save()
 
 
@@ -944,7 +961,11 @@ def get_repayment_party_type(loan):
 
 	party_type, party = frappe.db.get_value(
 		"GL Entry",
-		{"voucher_no": loan_repayment_entry, "account": payroll_payable_account, "is_cancelled": 0},
+		{
+			"voucher_no": loan_repayment_entry,
+			"account": payroll_payable_account,
+			"is_cancelled": 0,
+		},
 		["party_type", "party"],
 	)
 

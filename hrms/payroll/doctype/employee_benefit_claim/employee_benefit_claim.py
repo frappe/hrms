@@ -8,9 +8,7 @@ from frappe.model.document import Document
 from frappe.utils import flt
 
 from hrms.hr.utils import get_previous_claimed_amount, validate_active_employee
-from hrms.payroll.doctype.employee_benefit_application.employee_benefit_application import (
-	get_max_benefits,
-)
+from hrms.payroll.doctype.employee_benefit_application.employee_benefit_application import get_max_benefits
 from hrms.payroll.doctype.payroll_period.payroll_period import get_payroll_period
 from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
 	get_assigned_salary_structure,
@@ -24,7 +22,9 @@ class EmployeeBenefitClaim(Document):
 		if not max_benefits or max_benefits <= 0:
 			frappe.throw(_("Employee {0} has no maximum benefit amount").format(self.employee))
 		payroll_period = get_payroll_period(
-			self.claim_date, self.claim_date, frappe.db.get_value("Employee", self.employee, "company")
+			self.claim_date,
+			self.claim_date,
+			frappe.db.get_value("Employee", self.employee, "company"),
 		)
 		if not payroll_period:
 			frappe.throw(
@@ -86,13 +86,21 @@ class EmployeeBenefitClaim(Document):
 			frappe.throw(
 				_(
 					"Maximum benefit of employee {0} exceeds {1} by the sum {2} of benefit application pro-rata component amount and previous claimed amount"
-				).format(self.employee, max_benefits, pro_rata_amount + claimed_amount - max_benefits)
+				).format(
+					self.employee,
+					max_benefits,
+					pro_rata_amount + claimed_amount - max_benefits,
+				)
 			)
 
 	def get_pro_rata_amount_in_application(self, payroll_period):
 		application = frappe.db.exists(
 			"Employee Benefit Application",
-			{"employee": self.employee, "payroll_period": payroll_period, "docstatus": 1},
+			{
+				"employee": self.employee,
+				"payroll_period": payroll_period,
+				"docstatus": 1,
+			},
 		)
 		if application:
 			return frappe.db.get_value(
@@ -213,7 +221,10 @@ def get_last_payroll_period_benefits(
 				salary_component = frappe.get_cached_doc("Salary Component", d.salary_component)
 				if salary_component.pay_against_benefit_claim == 1:
 					claimed_amount = get_benefit_claim_amount(
-						employee, payroll_period.start_date, sal_slip_end_date, d.salary_component
+						employee,
+						payroll_period.start_date,
+						sal_slip_end_date,
+						d.salary_component,
 					)
 					amount_fit_to_component = salary_component.max_benefit_amount - claimed_amount
 					if amount_fit_to_component > 0:
@@ -224,7 +235,10 @@ def get_last_payroll_period_benefits(
 							amount = remaining_benefit
 							have_remaining = False
 						current_claimed_amount = get_benefit_claim_amount(
-							employee, sal_slip_start_date, sal_slip_end_date, d.salary_component
+							employee,
+							sal_slip_start_date,
+							sal_slip_end_date,
+							d.salary_component,
 						)
 						amount += current_claimed_amount
 						struct_row = {}

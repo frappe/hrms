@@ -37,7 +37,14 @@ def get_columns(filters, mode_of_payments):
 	for mode in mode_of_payments:
 		columns.append({"label": _(mode), "fieldname": mode, "fieldtype": "Currency", "width": 160})
 
-	columns.append({"label": _("Total"), "fieldname": "total", "fieldtype": "Currency", "width": 140})
+	columns.append(
+		{
+			"label": _("Total"),
+			"fieldname": "total",
+			"fieldtype": "Currency",
+			"width": 140,
+		}
+	)
 
 	return columns
 
@@ -169,6 +176,11 @@ def get_chart(mode_of_payments, data):
 			values.append(data[mode])
 			labels.append([mode])
 
-		chart = {"data": {"labels": labels, "datasets": [{"name": "Mode Of Payments", "values": values}]}}
+		chart = {
+			"data": {
+				"labels": labels,
+				"datasets": [{"name": "Mode Of Payments", "values": values}],
+			}
+		}
 		chart["type"] = "bar"
 		return chart

@@ -13,10 +13,7 @@ from hrms.hr.doctype.leave_application.test_leave_application import make_alloca
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import process_expired_allocation
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.hr.report.employee_leave_balance.employee_leave_balance import execute
-from hrms.payroll.doctype.salary_slip.test_salary_slip import (
-	make_holiday_list,
-	make_leave_application,
-)
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list, make_leave_application
 from hrms.tests.test_utils import get_first_sunday
 
 test_records = frappe.get_test_records("Leave Type")
@@ -70,7 +67,10 @@ class TestEmployeeLeaveBalance(IntegrationTestCase):
 		# 4 days leave
 		first_sunday = get_first_sunday(self.holiday_list, for_date=self.year_start)
 		leave_application = make_leave_application(
-			self.employee_id, add_days(first_sunday, 1), add_days(first_sunday, 4), "_Test Leave Type"
+			self.employee_id,
+			add_days(first_sunday, 1),
+			add_days(first_sunday, 4),
+			"_Test Leave Type",
 		)
 		leave_application.reload()
 
@@ -111,13 +111,20 @@ class TestEmployeeLeaveBalance(IntegrationTestCase):
 		# 4 days leave application in the first allocation
 		first_sunday = get_first_sunday(self.holiday_list, for_date=self.year_start)
 		leave_application = make_leave_application(
-			self.employee_id, add_days(first_sunday, 1), add_days(first_sunday, 4), "_Test Leave Type"
+			self.employee_id,
+			add_days(first_sunday, 1),
+			add_days(first_sunday, 4),
+			"_Test Leave Type",
 		)
 		leave_application.reload()
 
 		# Case 1: opening balance for first alloc boundary
 		filters = frappe._dict(
-			{"from_date": self.year_start, "to_date": self.year_end, "employee": self.employee_id}
+			{
+				"from_date": self.year_start,
+				"to_date": self.year_end,
+				"employee": self.employee_id,
+			}
 		)
 		report = execute(filters)
 		self.assertEqual(report[1][0].opening_balance, 0)

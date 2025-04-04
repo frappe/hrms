@@ -5,10 +5,7 @@ import frappe
 from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, flt, getdate
 
-from hrms.hr.doctype.interview.test_interview import (
-	create_interview_and_dependencies,
-	create_skill_set,
-)
+from hrms.hr.doctype.interview.test_interview import create_interview_and_dependencies, create_skill_set
 from hrms.tests.test_utils import create_job_applicant
 
 

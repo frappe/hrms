@@ -97,7 +97,10 @@ def make_employee(source_name, target_doc=None):
 		{
 			"Job Offer": {
 				"doctype": "Employee",
-				"field_map": {"applicant_name": "employee_name", "offer_date": "scheduled_confirmation_date"},
+				"field_map": {
+					"applicant_name": "employee_name",
+					"offer_date": "scheduled_confirmation_date",
+				},
 			}
 		},
 		target_doc,

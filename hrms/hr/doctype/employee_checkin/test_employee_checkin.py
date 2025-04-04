@@ -5,15 +5,7 @@ from datetime import datetime, timedelta
 
 import frappe
 from frappe.tests import IntegrationTestCase, change_settings
-from frappe.utils import (
-	add_days,
-	get_time,
-	get_year_ending,
-	get_year_start,
-	getdate,
-	now_datetime,
-	nowdate,
-)
+from frappe.utils import add_days, get_time, get_year_ending, get_year_start, getdate, now_datetime, nowdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -62,7 +54,10 @@ class TestEmployeeCheckin(IntegrationTestCase):
 						{
 							"type": "Feature",
 							"properties": {},
-							"geometry": {"type": "Point", "coordinates": [66.82876, 23.31773]},
+							"geometry": {
+								"type": "Point",
+								"coordinates": [66.82876, 23.31773],
+							},
 						}
 					],
 				}
@@ -98,12 +93,18 @@ class TestEmployeeCheckin(IntegrationTestCase):
 		attendance = mark_attendance_and_link_log(logs, "Present", now_date, 8.2)
 		log_names = [log.name for log in logs]
 		logs_count = frappe.db.count(
-			"Employee Checkin", {"name": ["in", log_names], "attendance": attendance.name}
+			"Employee Checkin",
+			{"name": ["in", log_names], "attendance": attendance.name},
 		)
 		self.assertEqual(logs_count, 4)
 		attendance_count = frappe.db.count(
 			"Attendance",
-			{"status": "Present", "working_hours": 8.2, "employee": employee, "attendance_date": now_date},
+			{
+				"status": "Present",
+				"working_hours": 8.2,
+				"employee": employee,
+				"attendance_date": now_date,
+			},
 		)
 		self.assertEqual(attendance_count, 1)
 
@@ -160,7 +161,9 @@ class TestEmployeeCheckin(IntegrationTestCase):
 		self.assertEqual(working_hours, (4.5, logs_type_2[1].time, logs_type_2[-1].time))
 
 		working_hours = calculate_working_hours(
-			[logs_type_2[1], logs_type_2[-1]], check_in_out_type[1], working_hours_calc_type[1]
+			[logs_type_2[1], logs_type_2[-1]],
+			check_in_out_type[1],
+			working_hours_calc_type[1],
 		)
 		self.assertEqual(working_hours, (5.0, logs_type_2[1].time, logs_type_2[-1].time))
 
@@ -298,7 +301,9 @@ class TestEmployeeCheckin(IntegrationTestCase):
 			self.assertEqual(log.shift_start, start_timestamp)
 			self.assertEqual(log.shift_end, end_timestamp)
 
-	def test_night_shift_not_fetched_outside_assignment_boundary_for_diff_start_date(self):
+	def test_night_shift_not_fetched_outside_assignment_boundary_for_diff_start_date(
+		self,
+	):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 		shift_type = setup_shift_type(shift_type="Midnight Shift", start_time="23:00:00", end_time="07:00:00")
 		date = getdate()
@@ -320,7 +325,9 @@ class TestEmployeeCheckin(IntegrationTestCase):
 		log = make_checkin(employee, datetime.combine(prev_day, get_time("23:00:00")))
 		self.assertIsNone(log.shift)
 
-	def test_night_shift_not_fetched_outside_assignment_boundary_for_diff_end_date(self):
+	def test_night_shift_not_fetched_outside_assignment_boundary_for_diff_end_date(
+		self,
+	):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 		shift_type = setup_shift_type(shift_type="Midnight Shift", start_time="19:00:00", end_time="00:30:00")
 		date = getdate()
@@ -614,7 +621,11 @@ class TestEmployeeCheckin(IntegrationTestCase):
 	def test_if_logs_are_marked_invalid(self):
 		# time window is 7 to 13
 		shift = setup_shift_type()
-		emp = make_employee("emp_invalid_log@example.com", company="_Test Company", default_shift=shift.name)
+		emp = make_employee(
+			"emp_invalid_log@example.com",
+			company="_Test Company",
+			default_shift=shift.name,
+		)
 
 		# checkin log outside shift time window
 		timestamp1 = datetime.combine(getdate(), get_time("06:00:00"))
@@ -629,7 +640,11 @@ class TestEmployeeCheckin(IntegrationTestCase):
 	def test_if_logs_are_marked_valid_again(self):
 		# time window is 7 to 13
 		shift = setup_shift_type()
-		emp = make_employee("emp_invalid_log1@example.com", company="_Test Company", default_shift=shift.name)
+		emp = make_employee(
+			"emp_invalid_log1@example.com",
+			company="_Test Company",
+			default_shift=shift.name,
+		)
 
 		# checkin log outside shift time window
 		timestamp = datetime.combine(getdate(), get_time("06:30:00"))
@@ -646,7 +661,9 @@ class TestEmployeeCheckin(IntegrationTestCase):
 		# 8-12 shift
 		shift = setup_shift_type()
 		emp = make_employee(
-			"emp_test_shift_start@example.com", company="_Test Company", default_shift=shift.name
+			"emp_test_shift_start@example.com",
+			company="_Test Company",
+			default_shift=shift.name,
 		)
 		timestamp = datetime.combine(getdate(), get_time("10:00:00"))
 		shift_start = datetime.combine(getdate(), get_time("08:00:00"))
@@ -667,7 +684,12 @@ class TestEmployeeCheckin(IntegrationTestCase):
 def make_n_checkins(employee, n, hours_to_reverse=1):
 	logs = [make_checkin(employee, now_datetime() - timedelta(hours=hours_to_reverse, minutes=n + 1))]
 	for i in range(n - 1):
-		logs.append(make_checkin(employee, now_datetime() - timedelta(hours=hours_to_reverse, minutes=n - i)))
+		logs.append(
+			make_checkin(
+				employee,
+				now_datetime() - timedelta(hours=hours_to_reverse, minutes=n - i),
+			)
+		)
 	return logs
 
 

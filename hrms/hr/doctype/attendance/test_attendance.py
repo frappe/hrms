@@ -142,7 +142,8 @@ class TestAttendance(IntegrationTestCase):
 
 		attendance = mark_attendance(employee, date, "Absent")
 		fetch_attendance = frappe.get_value(
-			"Attendance", {"employee": employee, "attendance_date": date, "status": "Absent"}
+			"Attendance",
+			{"employee": employee, "attendance_date": date, "status": "Absent"},
 		)
 		self.assertEqual(attendance, fetch_attendance)
 
@@ -151,7 +152,8 @@ class TestAttendance(IntegrationTestCase):
 		attendance_date = add_days(first_sunday, 1)
 
 		employee = make_employee(
-			"test_unmarked_days@example.com", date_of_joining=add_days(attendance_date, -1)
+			"test_unmarked_days@example.com",
+			date_of_joining=add_days(attendance_date, -1),
 		)
 		frappe.db.set_value("Employee", employee, "holiday_list", self.holiday_list)
 
@@ -174,14 +176,18 @@ class TestAttendance(IntegrationTestCase):
 		attendance_date = add_days(first_sunday, 1)
 
 		employee = make_employee(
-			"test_unmarked_days@example.com", date_of_joining=add_days(attendance_date, -1)
+			"test_unmarked_days@example.com",
+			date_of_joining=add_days(attendance_date, -1),
 		)
 		frappe.db.set_value("Employee", employee, "holiday_list", self.holiday_list)
 
 		mark_attendance(employee, attendance_date, "Present")
 
 		unmarked_days = get_unmarked_days(
-			employee, get_first_day(attendance_date), get_last_day(attendance_date), exclude_holidays=True
+			employee,
+			get_first_day(attendance_date),
+			get_last_day(attendance_date),
+			exclude_holidays=True,
 		)
 		unmarked_days = [getdate(date) for date in unmarked_days]
 
@@ -199,7 +205,9 @@ class TestAttendance(IntegrationTestCase):
 		doj = add_days(date, 1)
 		relieving_date = add_days(date, 5)
 		employee = make_employee(
-			"test_unmarked_days_as_per_doj@example.com", date_of_joining=doj, relieving_date=relieving_date
+			"test_unmarked_days_as_per_doj@example.com",
+			date_of_joining=doj,
+			relieving_date=relieving_date,
 		)
 
 		frappe.db.set_value("Employee", employee, "holiday_list", self.holiday_list)

@@ -49,7 +49,11 @@ def execute(filters: Filters | None = None) -> tuple:
 	data = get_data(filters, attendance_map)
 
 	if not data:
-		frappe.msgprint(_("No attendance records found for this criteria."), alert=True, indicator="orange")
+		frappe.msgprint(
+			_("No attendance records found for this criteria."),
+			alert=True,
+			indicator="orange",
+		)
 		return columns, [], None, None
 
 	message = get_message() if not filters.summarized_view else ""
@@ -104,7 +108,12 @@ def get_columns(filters: Filters) -> list[dict]:
 				"options": "Employee",
 				"width": 135,
 			},
-			{"label": _("Employee Name"), "fieldname": "employee_name", "fieldtype": "Data", "width": 120},
+			{
+				"label": _("Employee Name"),
+				"fieldname": "employee_name",
+				"fieldtype": "Data",
+				"width": 120,
+			},
 		]
 	)
 
@@ -117,8 +126,18 @@ def get_columns(filters: Filters) -> list[dict]:
 					"fieldtype": "Float",
 					"width": 110,
 				},
-				{"label": _("Total Leaves"), "fieldname": "total_leaves", "fieldtype": "Float", "width": 110},
-				{"label": _("Total Absent"), "fieldname": "total_absent", "fieldtype": "Float", "width": 110},
+				{
+					"label": _("Total Leaves"),
+					"fieldname": "total_leaves",
+					"fieldtype": "Float",
+					"width": 110,
+				},
+				{
+					"label": _("Total Absent"),
+					"fieldname": "total_absent",
+					"fieldtype": "Float",
+					"width": 110,
+				},
 				{
 					"label": _("Total Holidays"),
 					"fieldname": "total_holidays",
@@ -151,7 +170,14 @@ def get_columns(filters: Filters) -> list[dict]:
 			]
 		)
 	else:
-		columns.append({"label": _("Shift"), "fieldname": "shift", "fieldtype": "Data", "width": 120})
+		columns.append(
+			{
+				"label": _("Shift"),
+				"fieldname": "shift",
+				"fieldtype": "Data",
+				"width": 120,
+			}
+		)
 		columns.extend(get_columns_for_days(filters))
 
 	return columns
@@ -161,7 +187,14 @@ def get_columns_for_leave_types() -> list[dict]:
 	leave_types = frappe.db.get_all("Leave Type", pluck="name")
 	types = []
 	for entry in leave_types:
-		types.append({"label": entry, "fieldname": frappe.scrub(entry), "fieldtype": "Float", "width": 120})
+		types.append(
+			{
+				"label": entry,
+				"fieldname": frappe.scrub(entry),
+				"fieldtype": "Float",
+				"width": 120,
+			}
+		)
 
 	return types
 
@@ -358,7 +391,10 @@ def get_holiday_map(filters: Filters) -> dict[str, list[dict]]:
 
 		holidays = (
 			frappe.qb.from_(Holiday)
-			.select(Extract("day", Holiday.holiday_date).as_("day_of_month"), Holiday.weekly_off)
+			.select(
+				Extract("day", Holiday.holiday_date).as_("day_of_month"),
+				Holiday.weekly_off,
+			)
 			.where(
 				(Holiday.parent == d)
 				& (Extract("month", Holiday.holiday_date) == filters.month)
@@ -451,7 +487,10 @@ def get_attendance_summary_and_days(employee: str, filters: Filters) -> tuple[di
 
 	present_case = (
 		frappe.qb.terms.Case()
-		.when(((Attendance.status == "Present") | (Attendance.status == "Work From Home")), 1)
+		.when(
+			((Attendance.status == "Present") | (Attendance.status == "Work From Home")),
+			1,
+		)
 		.else_(0)
 	)
 	sum_present = Sum(present_case).as_("total_present")

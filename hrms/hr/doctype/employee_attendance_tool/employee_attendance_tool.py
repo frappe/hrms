@@ -23,12 +23,19 @@ def get_employees(
 ) -> dict[str, list]:
 	filters = {"status": "Active", "date_of_joining": ["<=", date]}
 
-	for field, value in {"department": department, "branch": branch, "company": company}.items():
+	for field, value in {
+		"department": department,
+		"branch": branch,
+		"company": company,
+	}.items():
 		if value:
 			filters[field] = value
 
 	employee_list = frappe.get_list(
-		"Employee", fields=["employee", "employee_name"], filters=filters, order_by="employee_name"
+		"Employee",
+		fields=["employee", "employee_name"],
+		filters=filters,
+		order_by="employee_name",
 	)
 	attendance_list = frappe.get_list(
 		"Attendance",

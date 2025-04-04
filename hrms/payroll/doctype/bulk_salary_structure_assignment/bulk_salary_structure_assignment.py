@@ -10,9 +10,7 @@ from frappe.query_builder.terms import SubQuery
 from frappe.utils import get_link_to_form
 
 from hrms.hr.utils import validate_bulk_tool_fields
-from hrms.payroll.doctype.salary_structure.salary_structure import (
-	create_salary_structure_assignment,
-)
+from hrms.payroll.doctype.salary_structure.salary_structure import create_salary_structure_assignment
 
 
 class BulkSalaryStructureAssignment(Document):

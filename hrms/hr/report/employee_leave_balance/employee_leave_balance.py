@@ -9,10 +9,7 @@ from frappe import _
 from frappe.utils import add_days, cint, flt, getdate
 
 from hrms.hr.doctype.leave_allocation.leave_allocation import get_previous_allocation
-from hrms.hr.doctype.leave_application.leave_application import (
-	get_leave_balance_on,
-	get_leaves_for_period,
-)
+from hrms.hr.doctype.leave_application.leave_application import get_leave_balance_on, get_leaves_for_period
 
 Filters = frappe._dict
 
@@ -268,7 +265,12 @@ def get_dataset_for_chart(employee_data: list, datasets: list, labels: list) -> 
 		for grp in group:
 			if grp.closing_balance:
 				leaves.append(
-					frappe._dict({"leave_type": grp.leave_type, "closing_balance": grp.closing_balance})
+					frappe._dict(
+						{
+							"leave_type": grp.leave_type,
+							"closing_balance": grp.closing_balance,
+						}
+					)
 				)
 
 		if leaves:

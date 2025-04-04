@@ -345,7 +345,9 @@ class TestEmployeeTaxExemptionDeclaration(IntegrationTestCase):
 		)
 
 		frappe.db.set_value(
-			"Company", "_Test Company", {"basic_component": "Basic Salary", "hra_component": "HRA"}
+			"Company",
+			"_Test Company",
+			{"basic_component": "Basic Salary", "hra_component": "HRA"},
 		)
 
 		# salary structure with base 50000, HRA 3000
@@ -506,5 +508,7 @@ def setup_hra_exemption_prerequisites(frequency, employee=None, from_date=None):
 	)
 
 	frappe.db.set_value(
-		"Company", "_Test Company", {"basic_component": "Basic Salary", "hra_component": "HRA"}
+		"Company",
+		"_Test Company",
+		{"basic_component": "Basic Salary", "hra_component": "HRA"},
 	)

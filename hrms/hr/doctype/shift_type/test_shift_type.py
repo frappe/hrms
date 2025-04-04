@@ -187,7 +187,10 @@ class TestShiftType(IntegrationTestCase):
 		shift_type.process_auto_attendance()
 
 		attendance = frappe.db.get_value(
-			"Attendance", {"shift": shift_type.name}, ["status", "working_hours"], as_dict=True
+			"Attendance",
+			{"shift": shift_type.name},
+			["status", "working_hours"],
+			as_dict=True,
 		)
 		self.assertEqual(attendance.status, "Half Day")
 		self.assertEqual(attendance.working_hours, 1.5)
@@ -211,7 +214,10 @@ class TestShiftType(IntegrationTestCase):
 		shift_type.process_auto_attendance()
 
 		attendance = frappe.db.get_value(
-			"Attendance", {"shift": shift_type.name}, ["status", "working_hours"], as_dict=True
+			"Attendance",
+			{"shift": shift_type.name},
+			["status", "working_hours"],
+			as_dict=True,
 		)
 		self.assertEqual(attendance.status, "Absent")
 		self.assertEqual(attendance.working_hours, 1.5)
@@ -240,7 +246,10 @@ class TestShiftType(IntegrationTestCase):
 		shift_type.process_auto_attendance()
 
 		attendance = frappe.db.get_value(
-			"Attendance", {"shift": shift_type.name}, ["status", "working_hours"], as_dict=True
+			"Attendance",
+			{"shift": shift_type.name},
+			["status", "working_hours"],
+			as_dict=True,
 		)
 		self.assertEqual(attendance.status, "Half Day")
 		self.assertEqual(attendance.working_hours, 1.5)
@@ -284,7 +293,9 @@ class TestShiftType(IntegrationTestCase):
 		shift_type.save()
 
 		employee = make_employee(
-			"test_shift_with_holiday@example.com", default_shift=shift_type.name, company="_Test Company"
+			"test_shift_with_holiday@example.com",
+			default_shift=shift_type.name,
+			company="_Test Company",
 		)
 
 		# make logs
@@ -313,7 +324,9 @@ class TestShiftType(IntegrationTestCase):
 		shift_type.save()
 
 		employee = make_employee(
-			"test_shift_with_holiday@example.com", default_shift=shift_type.name, company="_Test Company"
+			"test_shift_with_holiday@example.com",
+			default_shift=shift_type.name,
+			company="_Test Company",
 		)
 
 		# make logs
@@ -403,7 +416,11 @@ class TestShiftType(IntegrationTestCase):
 		self.assertEqual(
 			frappe.db.get_value(
 				"Attendance",
-				{"attendance_date": date1, "shift": shift_type.name, "employee": employee},
+				{
+					"attendance_date": date1,
+					"shift": shift_type.name,
+					"employee": employee,
+				},
 				"status",
 			),
 			"Absent",
@@ -412,14 +429,22 @@ class TestShiftType(IntegrationTestCase):
 		self.assertIsNone(
 			frappe.db.get_value(
 				"Attendance",
-				{"attendance_date": add_days(date1, 1), "shift": shift_type.name, "employee": employee},
+				{
+					"attendance_date": add_days(date1, 1),
+					"shift": shift_type.name,
+					"employee": employee,
+				},
 			)
 		)
 		# absent for second assignment
 		self.assertEqual(
 			frappe.db.get_value(
 				"Attendance",
-				{"attendance_date": date2, "shift": shift_type.name, "employee": employee},
+				{
+					"attendance_date": date2,
+					"shift": shift_type.name,
+					"employee": employee,
+				},
 				"status",
 			),
 			"Absent",
@@ -428,14 +453,22 @@ class TestShiftType(IntegrationTestCase):
 		self.assertIsNone(
 			frappe.db.get_value(
 				"Attendance",
-				{"attendance_date": add_days(date2, 1), "shift": shift_type.name, "employee": employee},
+				{
+					"attendance_date": add_days(date2, 1),
+					"shift": shift_type.name,
+					"employee": employee,
+				},
 			)
 		)
 		# absent for third assignment
 		self.assertEqual(
 			frappe.db.get_value(
 				"Attendance",
-				{"attendance_date": date3, "shift": shift_type.name, "employee": employee},
+				{
+					"attendance_date": date3,
+					"shift": shift_type.name,
+					"employee": employee,
+				},
 				"status",
 			),
 			"Absent",
@@ -443,7 +476,11 @@ class TestShiftType(IntegrationTestCase):
 		self.assertEqual(
 			frappe.db.get_value(
 				"Attendance",
-				{"attendance_date": add_days(date3, 1), "shift": shift_type.name, "employee": employee},
+				{
+					"attendance_date": add_days(date3, 1),
+					"shift": shift_type.name,
+					"employee": employee,
+				},
 				"status",
 			),
 			"Absent",
@@ -604,7 +641,8 @@ class TestShiftType(IntegrationTestCase):
 			relieving_date=relieving_date,
 		)
 		shift_type = setup_shift_type(
-			shift_type="Test Absent with no Attendance", process_attendance_after=add_days(doj, 2)
+			shift_type="Test Absent with no Attendance",
+			process_attendance_after=add_days(doj, 2),
 		)
 
 		make_shift_assignment(shift_type.name, employee, add_days(date, -25))
@@ -617,13 +655,17 @@ class TestShiftType(IntegrationTestCase):
 
 		# mark absent on Relieving Date
 		attendance = frappe.db.get_value(
-			"Attendance", {"attendance_date": relieving_date, "employee": employee}, "status"
+			"Attendance",
+			{"attendance_date": relieving_date, "employee": employee},
+			"status",
 		)
 		self.assertEqual(attendance, "Absent")
 
 		# should not mark absent after Relieving Date
 		attendance = frappe.db.get_value(
-			"Attendance", {"attendance_date": add_days(relieving_date, 1), "employee": employee}, "name"
+			"Attendance",
+			{"attendance_date": add_days(relieving_date, 1), "employee": employee},
+			"name",
 		)
 		self.assertIsNone(attendance)
 
@@ -691,11 +733,15 @@ class TestShiftType(IntegrationTestCase):
 		self.assertEqual(log_in.skip_auto_attendance, 1)
 		self.assertEqual(log_out.skip_auto_attendance, 1)
 
-	def test_mark_attendance_for_default_shift_when_shift_assignment_is_not_overlapping(self):
+	def test_mark_attendance_for_default_shift_when_shift_assignment_is_not_overlapping(
+		self,
+	):
 		shift_1 = setup_shift_type(shift_type="Deafult Shift", start_time="08:00:00", end_time="12:00:00")
 		shift_2 = setup_shift_type(shift_type="Not Default Shift", start_time="10:00:00", end_time="18:00:00")
 		employee = make_employee(
-			"test_employee_attendance@example.com", company="_Test Company", default_shift=shift_1.name
+			"test_employee_attendance@example.com",
+			company="_Test Company",
+			default_shift=shift_1.name,
 		)
 		shift_assigned_date = add_days(getdate(), +1)
 		make_shift_assignment(shift_2.name, employee, shift_assigned_date)
@@ -706,17 +752,25 @@ class TestShiftType(IntegrationTestCase):
 		self.assertEqual(
 			frappe.db.get_value(
 				"Attendance",
-				{"employee": employee, "attendance_date": getdate(), "shift": shift_1.name},
+				{
+					"employee": employee,
+					"attendance_date": getdate(),
+					"shift": shift_1.name,
+				},
 				"status",
 			),
 			"Absent",
 		)
 
-	def test_validation_for_unlinked_logs_before_changing_important_shift_configuration(self):
+	def test_validation_for_unlinked_logs_before_changing_important_shift_configuration(
+		self,
+	):
 		# the important shift configuration is start time, it is used to sort logs chronologically
 		shift = setup_shift_type(shift_type="Test Shift", start_time="10:00:00", end_time="18:00:00")
 		employee = make_employee(
-			"test_employee4_attendance@example.com", company="_Test Company", default_shift=shift.name
+			"test_employee4_attendance@example.com",
+			company="_Test Company",
+			default_shift=shift.name,
 		)
 
 		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
@@ -734,7 +788,8 @@ class TestShiftType(IntegrationTestCase):
 		shift.begin_check_in_before_shift_start_time = 120
 		shift.save()
 		self.assertEqual(
-			frappe.get_value("Shift Type", shift.name, "begin_check_in_before_shift_start_time"), 120
+			frappe.get_value("Shift Type", shift.name, "begin_check_in_before_shift_start_time"),
+			120,
 		)
 		out_time = datetime.combine(getdate(), get_time("18:00:00"))
 		check_out = make_checkin(employee, out_time)
@@ -745,7 +800,8 @@ class TestShiftType(IntegrationTestCase):
 		shift.start_time = get_time("10:15:00")
 		shift.save()
 		self.assertEqual(
-			get_time(frappe.get_value("Shift Type", shift.name, "start_time")), get_time("10:15:00")
+			get_time(frappe.get_value("Shift Type", shift.name, "start_time")),
+			get_time("10:15:00"),
 		)
 
 	def test_circular_shift_times(self):
@@ -828,7 +884,12 @@ def setup_shift_type(**args):
 
 
 def make_shift_assignment(
-	shift_type, employee, start_date, end_date=None, do_not_submit=False, shift_location=None
+	shift_type,
+	employee,
+	start_date,
+	end_date=None,
+	do_not_submit=False,
+	shift_location=None,
 ):
 	shift_assignment = frappe.get_doc(
 		{

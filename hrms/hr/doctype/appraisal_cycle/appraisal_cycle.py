@@ -108,7 +108,8 @@ class AppraisalCycle(Document):
 		self.check_permission("write")
 		if not self.appraisees:
 			frappe.throw(
-				_("Please select employees to create appraisals for"), title=_("No Employees Selected")
+				_("Please select employees to create appraisals for"),
+				title=_("No Employees Selected"),
 			)
 
 		if not all(appraisee.appraisal_template for appraisee in self.appraisees):
@@ -139,7 +140,10 @@ class AppraisalCycle(Document):
 		).format(f"""<a href='{frappe.utils.get_url_to_list("Designation")}'>Designations</a>""")
 
 		frappe.msgprint(
-			msg, title=_("Appraisal Template Missing"), indicator="yellow", raise_exception=raise_exception
+			msg,
+			title=_("Appraisal Template Missing"),
+			indicator="yellow",
+			raise_exception=raise_exception,
 		)
 
 	@frappe.whitelist()
@@ -189,7 +193,8 @@ def create_appraisals_for_cycle(appraisal_cycle: AppraisalCycle, publish_progres
 			if publish_progress:
 				count += 1
 				frappe.publish_progress(
-					count * 100 / len(appraisal_cycle.appraisees), title=_("Creating Appraisals") + "..."
+					count * 100 / len(appraisal_cycle.appraisees),
+					title=_("Creating Appraisals") + "...",
 				)
 		except frappe.DuplicateEntryError:
 			# already exists

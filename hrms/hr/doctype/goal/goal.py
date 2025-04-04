@@ -57,18 +57,23 @@ class Goal(NestedSet):
 			return
 
 		parent_details = frappe.db.get_value(
-			"Goal", self.parent_goal, ["employee", "kra", "appraisal_cycle"], as_dict=True
+			"Goal",
+			self.parent_goal,
+			["employee", "kra", "appraisal_cycle"],
+			as_dict=True,
 		)
 		if not parent_details:
 			return
 
 		if self.employee != parent_details.employee:
 			frappe.throw(
-				_("Goal should be owned by the same employee as its parent goal."), title=_("Not Allowed")
+				_("Goal should be owned by the same employee as its parent goal."),
+				title=_("Not Allowed"),
 			)
 		if self.kra != parent_details.kra:
 			frappe.throw(
-				_("Goal should be aligned with the same KRA as its parent goal."), title=_("Not Allowed")
+				_("Goal should be aligned with the same KRA as its parent goal."),
+				title=_("Not Allowed"),
 			)
 		if self.appraisal_cycle != parent_details.appraisal_cycle:
 			frappe.throw(
@@ -127,7 +132,8 @@ class Goal(NestedSet):
 			return
 
 		appraisal = frappe.db.get_value(
-			"Appraisal", {"employee": self.employee, "appraisal_cycle": self.appraisal_cycle}
+			"Appraisal",
+			{"employee": self.employee, "appraisal_cycle": self.appraisal_cycle},
 		)
 		if appraisal:
 			appraisal = frappe.get_doc("Appraisal", appraisal)

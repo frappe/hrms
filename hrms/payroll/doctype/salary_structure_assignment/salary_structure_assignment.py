@@ -38,10 +38,15 @@ class SalaryStructureAssignment(Document):
 		if self.from_date:
 			if frappe.db.exists(
 				"Salary Structure Assignment",
-				{"employee": self.employee, "from_date": self.from_date, "docstatus": 1},
+				{
+					"employee": self.employee,
+					"from_date": self.from_date,
+					"docstatus": 1,
+				},
 			):
 				frappe.throw(
-					_("Salary Structure Assignment for Employee already exists"), DuplicateAssignment
+					_("Salary Structure Assignment for Employee already exists"),
+					DuplicateAssignment,
 				)
 
 			if joining_date and getdate(self.from_date) < joining_date:
@@ -77,7 +82,8 @@ class SalaryStructureAssignment(Document):
 				_(
 					"Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 				).format(
-					get_link_to_form("Salary Structure", self.salary_structure), frappe.bold(tax_component)
+					get_link_to_form("Salary Structure", self.salary_structure),
+					frappe.bold(tax_component),
 				),
 				exc=frappe.MandatoryError,
 				title=_("Missing Mandatory Field"),
@@ -117,7 +123,8 @@ class SalaryStructureAssignment(Document):
 		default_payroll_cost_center = self.get_payroll_cost_center()
 		if default_payroll_cost_center:
 			self.append(
-				"payroll_cost_centers", {"cost_center": default_payroll_cost_center, "percentage": 100}
+				"payroll_cost_centers",
+				{"cost_center": default_payroll_cost_center, "percentage": 100},
 			)
 
 	def get_payroll_cost_center(self):
@@ -137,7 +144,9 @@ class SalaryStructureAssignment(Document):
 			if company != self.company:
 				frappe.throw(
 					_("Row {0}: Cost Center {1} does not belong to Company {2}").format(
-						entry.idx, frappe.bold(entry.cost_center), frappe.bold(self.company)
+						entry.idx,
+						frappe.bold(entry.cost_center),
+						frappe.bold(self.company),
 					),
 					title=_("Invalid Cost Center"),
 				)

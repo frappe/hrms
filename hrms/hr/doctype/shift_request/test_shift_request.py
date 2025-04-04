@@ -43,7 +43,9 @@ class TestShiftRequest(IntegrationTestCase):
 		shift_request.cancel()
 
 		shift_assignment_docstatus = frappe.db.get_value(
-			"Shift Assignment", filters={"shift_request": shift_request.name}, fieldname="docstatus"
+			"Shift Assignment",
+			filters={"shift_request": shift_request.name},
+			fieldname="docstatus",
 		)
 		self.assertEqual(shift_assignment_docstatus, 2)
 		self.assertEqual(shift_request.docstatus, 2)

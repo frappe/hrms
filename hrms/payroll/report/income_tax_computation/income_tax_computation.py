@@ -24,7 +24,9 @@ class IncomeTaxComputationReport:
 		self.payroll_period_end_date = None
 		if self.filters.payroll_period:
 			self.payroll_period_start_date, self.payroll_period_end_date = frappe.db.get_value(
-				"Payroll Period", self.filters.payroll_period, ["start_date", "end_date"]
+				"Payroll Period",
+				self.filters.payroll_period,
+				["start_date", "end_date"],
 			)
 
 	def run(self):
@@ -74,7 +76,10 @@ class IncomeTaxComputationReport:
 		filters = {"company": self.filters.company}
 		or_filters = {
 			"status": "Active",
-			"relieving_date": ["between", [self.payroll_period_start_date, self.payroll_period_end_date]],
+			"relieving_date": [
+				"between",
+				[self.payroll_period_start_date, self.payroll_period_end_date],
+			],
 		}
 		if self.filters.employee:
 			filters = {"name": self.filters.employee}
@@ -106,7 +111,10 @@ class IncomeTaxComputationReport:
 		for d in ss_assignments:
 			if d.employee not in list(employee_ss_assignments.keys()):
 				tax_slab = frappe.get_cached_value(
-					"Income Tax Slab", d.income_tax_slab, ["allow_tax_exemption", "disabled"], as_dict=1
+					"Income Tax Slab",
+					d.income_tax_slab,
+					["allow_tax_exemption", "disabled"],
+					as_dict=1,
 				)
 
 				if tax_slab and not tax_slab.disabled:
@@ -167,7 +175,10 @@ class IncomeTaxComputationReport:
 			{
 				"employee": employee,
 				"docstatus": 1,
-				"start_date": ["between", [self.payroll_period_start_date, self.payroll_period_end_date]],
+				"start_date": [
+					"between",
+					[self.payroll_period_start_date, self.payroll_period_end_date],
+				],
 			},
 			["name", "start_date", "end_date", "salary_structure", "payroll_frequency"],
 			order_by="start_date desc",
@@ -219,7 +230,12 @@ class IncomeTaxComputationReport:
 			frappe.qb.from_(ss)
 			.inner_join(ss_comps)
 			.on(ss.name == ss_comps.parent)
-			.select(ss.name, ss.employee, ss_comps.salary_component, Sum(ss_comps.amount).as_("amount"))
+			.select(
+				ss.name,
+				ss.employee,
+				ss_comps.salary_component,
+				Sum(ss_comps.amount).as_("amount"),
+			)
 			.where(ss.docstatus == 1)
 			.where(ss.employee.isin(list(self.employees.keys())))
 			.where(ss_comps.do_not_include_in_total == 0)
@@ -264,7 +280,8 @@ class IncomeTaxComputationReport:
 		nontaxable_earning_components = [
 			d.name
 			for d in frappe.get_all(
-				"Salary Component", {"type": "Earning", "is_tax_applicable": 0, "disabled": 0}
+				"Salary Component",
+				{"type": "Earning", "is_tax_applicable": 0, "disabled": 0},
 			)
 		]
 
@@ -272,7 +289,8 @@ class IncomeTaxComputationReport:
 		tax_exempted_deduction_components = [
 			d.name
 			for d in frappe.get_all(
-				"Salary Component", {"type": "Deduction", "exempted_from_income_tax": 1, "disabled": 0}
+				"Salary Component",
+				{"type": "Deduction", "exempted_from_income_tax": 1, "disabled": 0},
 			)
 		]
 
@@ -393,7 +411,11 @@ class IncomeTaxComputationReport:
 		standard_exemptions_per_slab = dict(
 			frappe.get_all(
 				"Income Tax Slab",
-				filters={"company": self.filters.company, "docstatus": 1, "disabled": 0},
+				filters={
+					"company": self.filters.company,
+					"docstatus": 1,
+					"disabled": 0,
+				},
 				fields=["name", "standard_tax_exemption_amount"],
 				as_list=1,
 			)
@@ -578,7 +600,11 @@ class IncomeTaxComputationReport:
 				"options": "Designation",
 				"width": "140px",
 			},
-			{"label": _("Date of Joining"), "fieldname": "date_of_joining", "fieldtype": "Date"},
+			{
+				"label": _("Date of Joining"),
+				"fieldname": "date_of_joining",
+				"fieldtype": "Date",
+			},
 			{
 				"label": _("Income Tax Slab"),
 				"fieldname": "income_tax_slab",
@@ -586,5 +612,10 @@ class IncomeTaxComputationReport:
 				"options": "Income Tax Slab",
 				"width": "140px",
 			},
-			{"label": _("CTC"), "fieldname": "ctc", "fieldtype": "Currency", "width": "140px"},
+			{
+				"label": _("CTC"),
+				"fieldname": "ctc",
+				"fieldtype": "Currency",
+				"width": "140px",
+			},
 		]

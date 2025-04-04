@@ -30,7 +30,12 @@ def get_columns():
 		},
 		{"fieldname": "make", "fieldtype": "Data", "label": _("Make"), "width": 100},
 		{"fieldname": "model", "fieldtype": "Data", "label": _("Model"), "width": 80},
-		{"fieldname": "location", "fieldtype": "Data", "label": _("Location"), "width": 100},
+		{
+			"fieldname": "location",
+			"fieldtype": "Data",
+			"label": _("Location"),
+			"width": 100,
+		},
 		{
 			"fieldname": "log_name",
 			"fieldtype": "Link",
@@ -38,11 +43,31 @@ def get_columns():
 			"options": "Vehicle Log",
 			"width": 100,
 		},
-		{"fieldname": "odometer", "fieldtype": "Int", "label": _("Odometer Value"), "width": 120},
+		{
+			"fieldname": "odometer",
+			"fieldtype": "Int",
+			"label": _("Odometer Value"),
+			"width": 120,
+		},
 		{"fieldname": "date", "fieldtype": "Date", "label": _("Date"), "width": 100},
-		{"fieldname": "fuel_qty", "fieldtype": "Float", "label": _("Fuel Qty"), "width": 80},
-		{"fieldname": "fuel_price", "fieldtype": "Float", "label": _("Fuel Price"), "width": 100},
-		{"fieldname": "fuel_expense", "fieldtype": "Currency", "label": _("Fuel Expense"), "width": 150},
+		{
+			"fieldname": "fuel_qty",
+			"fieldtype": "Float",
+			"label": _("Fuel Qty"),
+			"width": 80,
+		},
+		{
+			"fieldname": "fuel_price",
+			"fieldtype": "Float",
+			"label": _("Fuel Price"),
+			"width": 100,
+		},
+		{
+			"fieldname": "fuel_expense",
+			"fieldtype": "Currency",
+			"label": _("Fuel Expense"),
+			"width": 150,
+		},
 		{
 			"fieldname": "service_expense",
 			"fieldtype": "Currency",
@@ -110,7 +135,10 @@ def get_conditions(filters):
 def get_period_dates(filters):
 	if filters.filter_based_on == "Fiscal Year" and filters.fiscal_year:
 		fy = frappe.db.get_value(
-			"Fiscal Year", filters.fiscal_year, ["year_start_date", "year_end_date"], as_dict=True
+			"Fiscal Year",
+			filters.fiscal_year,
+			["year_start_date", "year_end_date"],
+			as_dict=True,
 		)
 		return fy.year_start_date, fy.year_end_date
 	else:

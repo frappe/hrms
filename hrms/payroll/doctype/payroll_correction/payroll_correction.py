@@ -1,112 +1,90 @@
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
+
 class PayrollCorrection(Document):
+	def validate(self):
+		self.validate_days()
+		self.insert_breakup_table()
 
-    def validate(self):
-        self.validate_days()
-        self.insert_breakup_table()
+	def on_submit(self):
+		self.insert_additional_salary()
 
-        
+	def validate_days(self):
+		if self.days_to_reverse and self.salary_slip_reference:
+			salary_slip = frappe.get_doc("Salary Slip", self.salary_slip_reference)
+			self.working_days = salary_slip.total_working_days
+			self.absent_days = salary_slip.absent_days or 0
+			self.lwp_days = salary_slip.leave_without_pay or 0
+			self.total_lwp_applied = self.absent_days + self.lwp_days
+			payroll_corrections = frappe.get_all(
+				"Payroll Correction",
+				filters={
+					"docstatus": 1,
+					"payroll_period": self.payroll_period,
+					"salary_slip_reference": self.salary_slip_reference,
+					"employee": self.employee,
+				},
+				fields=["days_to_reverse"],
+			)
+			total_days_reversed = sum(entry["days_to_reverse"] for entry in payroll_corrections) or 0
+			if total_days_reversed + self.days_to_reverse > self.total_lwp_applied:
+				frappe.throw(
+					_(
+						"You cannot reverse more than the total LWP days {0}. You have already reversed {1} days for this employee."
+					).format(self.total_lwp_applied, total_days_reversed)
+				)
 
-    def on_submit(self):
-        self.insert_additional_salary()
+	def insert_breakup_table(self):
+		salary_slip = frappe.get_doc("Salary Slip", self.salary_slip_reference)
+		if not salary_slip:
+			frappe.throw(_("Salary Slip not found."))
 
-    def validate_days(self):
-        if self.number_of_days_planning_to_reverse and self.salary_slip_id:
-            salary_slip = frappe.get_doc("Salary Slip", self.salary_slip_id)
-            self.working_days=salary_slip.total_working_days
-            self.absent_days=salary_slip.absent_days
-            self.lwp_days=salary_slip.leave_without_pay
-            self.total_lwp_days=salary_slip.absent_days+salary_slip.leave_without_pay
-            
-            total_days_reversed = 0
+		self.set("earning_arrear_details", [])
+		self.set("deductions_arrear_details", [])
 
-            get_total_days_reversed = frappe.get_list(
-                "Payroll Correction",
-                filters={
-                    "docstatus": 1,
-                    "payroll_period": self.payroll_period,
-                    "salary_slip_id": self.salary_slip_id,
-                    "employee": self.employee,
-                },
-                fields=["number_of_days_planning_to_reverse"]  
-            )
+		total_working_days = max(salary_slip.total_working_days, 1)
+		for section, fieldname in [
+			("earnings", "earning_arrear_details"),
+			("deductions", "deductions_arrear_details"),
+		]:
+			for item in getattr(salary_slip, section, []):
+				components = frappe.get_all(
+					"Salary Component",
+					filters={
+						"is_arrear": 1,
+						"mapping_component": item.salary_component,
+						"disabled": 0,
+						"type": "Earning" if section == "earnings" else "Deduction",
+					},
+					fields=["name"],
+				)
+				if not components:
+					continue
 
-            for days in get_total_days_reversed:
-                total_days_reversed += days.number_of_days_planning_to_reverse
+				one_day_amount = (item.default_amount or 0) / total_working_days
+				arrear_amount = one_day_amount * self.days_to_reverse
 
-            total_lwp_days = self.total_lwp_days or 0
-            number_of_days_to_reverse = self.number_of_days_planning_to_reverse or 0
+				for component in components:
+					self.append(
+						fieldname,
+						{"salary_component": component.name, "amount": arrear_amount},
+					)
 
-            if total_days_reversed + number_of_days_to_reverse > total_lwp_days:
-                frappe.throw(f"You cannot reverse more than the total LWP days ({total_lwp_days}). "
-                             f"You have already reversed {total_days_reversed} days for this employee.")
-
-    def insert_breakup_table(self):
-        salary_slip = frappe.get_doc("Salary Slip", self.salary_slip_id)
-        if not salary_slip:
-            frappe.throw("Salary Slip not found.")
-        self.set("earning_arrear_component", [])
-        self.set("deduction_arrear_component", [])
-        total_working_days = salary_slip.total_working_days or 1
-        for earning in salary_slip.earnings or []:
-            salary_components = frappe.get_all(
-                "Salary Component",
-                filters={
-                    "is_arrear": 1,
-                    "mapping_component": earning.salary_component,
-                    "disabled": 0,
-                    "type": "Earning",
-                },
-                fields=["name"]
-            )
-            if not salary_components:
-                continue
-            one_day_amount = earning.default_amount / total_working_days
-            arrear_amount = one_day_amount * self.number_of_days_planning_to_reverse
-            for component in salary_components:
-                self.append("earning_arrear_component", {
-                    "salary_component": component["name"],
-                    "amount": arrear_amount
-                })
-        for deduction in salary_slip.deductions or []:
-            salary_components = frappe.get_all(
-                "Salary Component",
-                filters={
-                    "is_arrear": 1,
-                    "mapping_component": deduction.salary_component,
-                    "disabled": 0,
-                    "type": "Deduction",
-                },
-                fields=["name"]
-            )
-            if not salary_components:
-                continue
-            one_day_amount = deduction.default_amount / total_working_days
-            arrear_amount = one_day_amount * self.number_of_days_planning_to_reverse
-            for component in salary_components:
-                self.append("deduction_arrear_component", {
-                    "salary_component": component["name"],
-                    "amount": arrear_amount
-                })
-
-    def insert_additional_salary(self):
-        additional_salary_entries = [
-            {
-                "doctype": "Additional Salary",
-                "employee": self.employee,
-                "company": self.company,
-                "payroll_date": self.additional_salary_date,
-                "salary_component": component.salary_component,
-                "currency": self.currency,
-                "amount": component.amount,
-                "payroll_correction": self.name
-            }
-            for component in (self.earning_arrear_component or []) + (self.deduction_arrear_component or [])
-        ]
-
-        for entry in additional_salary_entries:
-            doc = frappe.get_doc(entry)
-            doc.insert()
-            doc.submit()
+	def insert_additional_salary(self):
+		for comp in (self.earning_arrear_details or []) + (self.deductions_arrear_details or []):
+			additional_salary = frappe.get_doc(
+				{
+					"doctype": "Additional Salary",
+					"employee": self.employee,
+					"company": self.company,
+					"payroll_date": self.additional_salary_date,
+					"salary_component": comp.salary_component,
+					"currency": self.currency,
+					"amount": comp.amount,
+					"payroll_correction": self.name,
+				}
+			)
+			additional_salary.insert()
+			additional_salary.submit()

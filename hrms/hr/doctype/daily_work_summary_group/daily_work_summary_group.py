@@ -36,7 +36,10 @@ def trigger_emails():
 			# find emails relating to a company
 			if emails:
 				daily_work_summary = frappe.get_doc(
-					dict(doctype="Daily Work Summary", daily_work_summary_group=group_doc.name)
+					dict(
+						doctype="Daily Work Summary",
+						daily_work_summary_group=group_doc.name,
+					)
 				).insert()
 				daily_work_summary.send_mails(group_doc, emails)
 

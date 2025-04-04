@@ -61,11 +61,14 @@ def update_job_applicant_and_offer(doc, method=None):
 		frappe.db.set_value("Job Applicant", doc.job_applicant, "status", "Accepted")
 		frappe.msgprint(
 			_("Updated the status of linked Job Applicant {0} to {1}").format(
-				get_link_to_form("Job Applicant", doc.job_applicant), frappe.bold(_("Accepted"))
+				get_link_to_form("Job Applicant", doc.job_applicant),
+				frappe.bold(_("Accepted")),
 			)
 		)
 	offer_status_before_change = frappe.db.get_value(
-		"Job Offer", {"job_applicant": doc.job_applicant, "docstatus": ["!=", 2]}, "status"
+		"Job Offer",
+		{"job_applicant": doc.job_applicant, "docstatus": ["!=", 2]},
+		"status",
 	)
 	if offer_status_before_change and offer_status_before_change != "Accepted":
 		job_offer = frappe.get_last_doc("Job Offer", filters={"job_applicant": doc.job_applicant})

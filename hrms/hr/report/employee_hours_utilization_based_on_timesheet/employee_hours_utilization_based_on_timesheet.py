@@ -63,7 +63,12 @@ class EmployeeHoursReport:
 				"fieldtype": "Link",
 				"width": 120,
 			},
-			{"label": _("Total Hours (T)"), "fieldname": "total_hours", "fieldtype": "Float", "width": 120},
+			{
+				"label": _("Total Hours (T)"),
+				"fieldname": "total_hours",
+				"fieldtype": "Float",
+				"width": 120,
+			},
 			{
 				"label": _("Billed Hours (B)"),
 				"fieldname": "billed_hours",
@@ -183,7 +188,10 @@ class EmployeeHoursReport:
 			if data["untracked_hours"] < 0:
 				data["untracked_hours"] = 0.0
 
-			data["per_util"] = flt(((data["billed_hours"] + data["non_billed_hours"]) / TOTAL_HOURS) * 100, 2)
+			data["per_util"] = flt(
+				((data["billed_hours"] + data["non_billed_hours"]) / TOTAL_HOURS) * 100,
+				2,
+			)
 			data["per_util_billed_only"] = flt((data["billed_hours"] / TOTAL_HOURS) * 100, 2)
 
 	def generate_report_summary(self):
@@ -214,18 +222,26 @@ class EmployeeHoursReport:
 		self.report_summary = [
 			{
 				"value": f"{avg_utilization}%",
-				"indicator": "Red" if avg_utilization < THRESHOLD_PERCENTAGE else "Green",
+				"indicator": ("Red" if avg_utilization < THRESHOLD_PERCENTAGE else "Green"),
 				"label": _("Avg Utilization"),
 				"datatype": "Percentage",
 			},
 			{
 				"value": f"{avg_utilization_billed_only}%",
-				"indicator": "Red" if avg_utilization_billed_only < THRESHOLD_PERCENTAGE else "Green",
+				"indicator": ("Red" if avg_utilization_billed_only < THRESHOLD_PERCENTAGE else "Green"),
 				"label": _("Avg Utilization (Billed Only)"),
 				"datatype": "Percentage",
 			},
-			{"value": total_billed, "label": _("Total Billed Hours"), "datatype": "Float"},
-			{"value": total_non_billed, "label": _("Total Non-Billed Hours"), "datatype": "Float"},
+			{
+				"value": total_billed,
+				"label": _("Total Billed Hours"),
+				"datatype": "Float",
+			},
+			{
+				"value": total_non_billed,
+				"label": _("Total Non-Billed Hours"),
+				"datatype": "Float",
+			},
 		]
 
 	def generate_chart_data(self):

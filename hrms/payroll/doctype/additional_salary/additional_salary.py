@@ -141,7 +141,9 @@ class AdditionalSalary(Document):
 
 	def validate_tax_component_overwrite(self):
 		if not frappe.db.get_value(
-			"Salary Component", self.salary_component, "variable_based_on_taxable_salary"
+			"Salary Component",
+			self.salary_component,
+			"variable_based_on_taxable_salary",
 		):
 			return
 

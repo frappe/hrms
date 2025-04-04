@@ -147,7 +147,10 @@ class LeaveEncashment(AccountsController):
 			- allocation.carry_forwarded_leaves_count
 			# adding this because the function returns a -ve number
 			+ get_leaves_for_period(
-				self.employee, self.leave_type, allocation.from_date, self.encashment_date
+				self.employee,
+				self.leave_type,
+				allocation.from_date,
+				self.encashment_date,
 			)
 		)
 		self.leave_allocation = allocation.name
@@ -182,7 +185,9 @@ class LeaveEncashment(AccountsController):
 			self.set_salary_structure()
 
 		per_day_encashment = frappe.db.get_value(
-			"Salary Structure", self._salary_structure, "leave_encashment_amount_per_day"
+			"Salary Structure",
+			self._salary_structure,
+			"leave_encashment_amount_per_day",
 		)
 		self.encashment_amount = self.encashment_days * per_day_encashment if per_day_encashment > 0 else 0
 
@@ -248,7 +253,10 @@ class LeaveEncashment(AccountsController):
 		can_expire = not frappe.db.get_value("Leave Type", self.leave_type, "is_carry_forward")
 		if to_date < getdate() and can_expire:
 			args = frappe._dict(
-				leaves=self.encashment_days, from_date=to_date, to_date=to_date, is_carry_forward=0
+				leaves=self.encashment_days,
+				from_date=to_date,
+				to_date=to_date,
+				is_carry_forward=0,
 			)
 			create_leave_ledger_entry(self, args, submit)
 

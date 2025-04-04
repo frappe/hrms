@@ -27,7 +27,11 @@ class TestEmployeeReminders(IntegrationTestCase):
 			holiday_dates=[
 				{"holiday_date": test_holiday_dates[0], "description": "test holiday1"},
 				{"holiday_date": test_holiday_dates[1], "description": "test holiday2"},
-				{"holiday_date": test_holiday_dates[2], "description": "test holiday3", "weekly_off": 1},
+				{
+					"holiday_date": test_holiday_dates[2],
+					"description": "test holiday3",
+					"weekly_off": 1,
+				},
 				{"holiday_date": test_holiday_dates[3], "description": "test holiday4"},
 				{"holiday_date": test_holiday_dates[4], "description": "test holiday5"},
 				{"holiday_date": test_holiday_dates[5], "description": "test holiday6"},
@@ -53,7 +57,10 @@ class TestEmployeeReminders(IntegrationTestCase):
 		test_holiday_list = make_holiday_list(
 			"TestHolidayRemindersList2",
 			holiday_dates=[
-				{"holiday_date": add_months(getdate(), 1), "description": "test holiday1"},
+				{
+					"holiday_date": add_months(getdate(), 1),
+					"description": "test holiday1",
+				},
 			],
 			from_date=add_months(getdate(), -2),
 			to_date=add_months(getdate(), 2),
@@ -91,7 +98,11 @@ class TestEmployeeReminders(IntegrationTestCase):
 		# Test weekly_off holidays
 		self.assertTrue(is_holiday(self.test_employee.name, date=self.test_holiday_dates[2]))
 		self.assertFalse(
-			is_holiday(self.test_employee.name, date=self.test_holiday_dates[2], only_non_weekly=True)
+			is_holiday(
+				self.test_employee.name,
+				date=self.test_holiday_dates[2],
+				only_non_weekly=True,
+			)
 		)
 
 		# Test with descriptions

@@ -7,10 +7,17 @@ from frappe import _
 def get_dashboard_for_employee(data):
 	data["transactions"].extend(
 		[
-			{"label": _("Attendance"), "items": ["Attendance", "Attendance Request", "Employee Checkin"]},
+			{
+				"label": _("Attendance"),
+				"items": ["Attendance", "Attendance Request", "Employee Checkin"],
+			},
 			{
 				"label": _("Leave"),
-				"items": ["Leave Application", "Leave Allocation", "Leave Policy Assignment"],
+				"items": [
+					"Leave Application",
+					"Leave Allocation",
+					"Leave Policy Assignment",
+				],
 			},
 			{
 				"label": _("Lifecycle"),
@@ -31,8 +38,14 @@ def get_dashboard_for_employee(data):
 				],
 			},
 			{"label": _("Shift"), "items": ["Shift Request", "Shift Assignment"]},
-			{"label": _("Expense"), "items": ["Expense Claim", "Travel Request", "Employee Advance"]},
-			{"label": _("Benefit"), "items": ["Employee Benefit Application", "Employee Benefit Claim"]},
+			{
+				"label": _("Expense"),
+				"items": ["Expense Claim", "Travel Request", "Employee Advance"],
+			},
+			{
+				"label": _("Benefit"),
+				"items": ["Employee Benefit Application", "Employee Benefit Claim"],
+			},
 			{
 				"label": _("Payroll"),
 				"items": [
@@ -47,7 +60,12 @@ def get_dashboard_for_employee(data):
 			},
 			{
 				"label": _("Training"),
-				"items": ["Training Event", "Training Result", "Training Feedback", "Employee Skill Map"],
+				"items": [
+					"Training Event",
+					"Training Result",
+					"Training Feedback",
+					"Employee Skill Map",
+				],
 			},
 			{"label": _("Evaluation"), "items": ["Appraisal"]},
 		]

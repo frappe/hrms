@@ -5,6 +5,9 @@ def get_data():
 	return {
 		"fieldname": "leave_policy",
 		"transactions": [
-			{"label": _("Leaves"), "items": ["Leave Policy Assignment", "Leave Allocation"]},
+			{
+				"label": _("Leaves"),
+				"items": ["Leave Policy Assignment", "Leave Allocation"],
+			},
 		],
 	}

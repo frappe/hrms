@@ -15,10 +15,7 @@ from hrms.hr.doctype.employee_advance.employee_advance import (
 	make_return_entry,
 )
 from hrms.hr.doctype.expense_claim.expense_claim import get_advances, get_allocation_amount
-from hrms.hr.doctype.expense_claim.test_expense_claim import (
-	get_payable_account,
-	make_expense_claim,
-)
+from hrms.hr.doctype.expense_claim.test_expense_claim import get_payable_account, make_expense_claim
 from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
@@ -70,7 +67,12 @@ class TestEmployeeAdvance(IntegrationTestCase):
 		# CLAIMED Status check, full amount claimed
 		payable_account = get_payable_account("_Test Company")
 		claim = make_expense_claim(
-			payable_account, 1000, 1000, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+			payable_account,
+			1000,
+			1000,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
 		)
 
 		advance = make_employee_advance(claim.employee)
@@ -99,7 +101,12 @@ class TestEmployeeAdvance(IntegrationTestCase):
 	def test_partly_claimed_and_returned_status(self):
 		payable_account = get_payable_account("_Test Company")
 		claim = make_expense_claim(
-			payable_account, 1000, 1000, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+			payable_account,
+			1000,
+			1000,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
 		)
 
 		advance = make_employee_advance(claim.employee)
@@ -109,7 +116,12 @@ class TestEmployeeAdvance(IntegrationTestCase):
 		# PARTLY CLAIMED AND RETURNED status check
 		# 500 Claimed, 500 Returned
 		claim = make_expense_claim(
-			payable_account, 500, 500, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+			payable_account,
+			500,
+			500,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
 		)
 
 		advance = make_employee_advance(claim.employee)
@@ -232,7 +244,12 @@ class TestEmployeeAdvance(IntegrationTestCase):
 		# PARTLY CLAIMED AND RETURNED
 		payable_account = get_payable_account("_Test Company")
 		claim = make_expense_claim(
-			payable_account, 650.35, 619.34, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+			payable_account,
+			650.35,
+			619.34,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
 		)
 
 		claim = get_advances_for_claim(claim, advance.name, amount=619.34)

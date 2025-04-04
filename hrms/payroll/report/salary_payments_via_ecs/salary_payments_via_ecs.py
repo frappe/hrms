@@ -53,12 +53,27 @@ def get_columns(filters):
 			"width": 140,
 		},
 		{"label": _("Bank"), "fieldname": "bank", "fieldtype": "Data", "width": 140},
-		{"label": _("Account No"), "fieldname": "account_no", "fieldtype": "Data", "width": 140},
+		{
+			"label": _("Account No"),
+			"fieldname": "account_no",
+			"fieldtype": "Data",
+			"width": 140,
+		},
 	]
 	if erpnext.get_region() == "India":
 		columns += [
-			{"label": _("IFSC"), "fieldname": "ifsc", "fieldtype": "Data", "width": 140},
-			{"label": _("MICR"), "fieldname": "micr", "fieldtype": "Data", "width": 140},
+			{
+				"label": _("IFSC"),
+				"fieldname": "ifsc",
+				"fieldtype": "Data",
+				"width": 140,
+			},
+			{
+				"label": _("MICR"),
+				"fieldname": "micr",
+				"fieldtype": "Data",
+				"width": 140,
+			},
 		]
 
 	return columns

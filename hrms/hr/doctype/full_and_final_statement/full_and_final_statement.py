@@ -141,7 +141,7 @@ class FullandFinalStatement(Document):
 				component_type,
 				{
 					"status": "Unsettled",
-					"reference_document_type": component if component != "Bonus" else "Additional Salary",
+					"reference_document_type": (component if component != "Bonus" else "Additional Salary"),
 					"component": component,
 				},
 			)
@@ -295,7 +295,12 @@ def get_account_and_amount(ref_doctype, ref_document, company):
 		details = frappe.db.get_value(
 			"Expense Claim",
 			ref_document,
-			["payable_account", "grand_total", "total_amount_reimbursed", "total_advance_amount"],
+			[
+				"payable_account",
+				"grand_total",
+				"total_amount_reimbursed",
+				"total_advance_amount",
+			],
 			as_dict=True,
 		)
 		payable_account = details.payable_account
@@ -304,7 +309,10 @@ def get_account_and_amount(ref_doctype, ref_document, company):
 
 	if ref_doctype == "Loan":
 		details = frappe.db.get_value(
-			"Loan", ref_document, ["payment_account", "total_payment", "total_amount_paid"], as_dict=1
+			"Loan",
+			ref_document,
+			["payment_account", "total_payment", "total_amount_paid"],
+			as_dict=1,
 		)
 		payment_account = details.payment_account
 		amount = details.total_payment - details.total_amount_paid

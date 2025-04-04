@@ -321,7 +321,7 @@ def make_return_entry(
 			"account": advance_account,
 			"credit_in_account_currency": advance_account_amount,
 			"account_currency": advance_account_currency,
-			"exchange_rate": flt(exchange_rate) if advance_account_currency == currency else 1,
+			"exchange_rate": (flt(exchange_rate) if advance_account_currency == currency else 1),
 			"reference_type": "Employee Advance",
 			"reference_name": employee_advance_name,
 			"party_type": "Employee",
@@ -344,7 +344,7 @@ def make_return_entry(
 			"debit_in_account_currency": bank_amount,
 			"account_currency": bank_cash_account.account_currency,
 			"account_type": bank_cash_account.account_type,
-			"exchange_rate": flt(exchange_rate) if bank_cash_account.account_currency == currency else 1,
+			"exchange_rate": (flt(exchange_rate) if bank_cash_account.account_currency == currency else 1),
 			"cost_center": erpnext.get_default_cost_center(company),
 		},
 	)

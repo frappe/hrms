@@ -5,10 +5,7 @@ import frappe
 from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, getdate
 
-from hrms.hr.doctype.employee_onboarding.employee_onboarding import (
-	IncompleteTaskError,
-	make_employee,
-)
+from hrms.hr.doctype.employee_onboarding.employee_onboarding import IncompleteTaskError, make_employee
 from hrms.hr.doctype.job_offer.test_job_offer import create_job_offer
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.tests.test_utils import create_company
@@ -18,7 +15,10 @@ class TestEmployeeOnboarding(IntegrationTestCase):
 	def setUp(self):
 		create_company()
 		if frappe.db.exists("Employee Onboarding", {"employee_name": "Test Researcher"}):
-			frappe.db.sql("delete from `tabEmployee Onboarding` where employee_name=%s", "Test Researcher")
+			frappe.db.sql(
+				"delete from `tabEmployee Onboarding` where employee_name=%s",
+				"Test Researcher",
+			)
 
 		project = "Employee Onboarding : test@researcher.com"
 		frappe.db.sql("delete from tabProject where project_name=%s", project)
@@ -43,7 +43,8 @@ class TestEmployeeOnboarding(IntegrationTestCase):
 
 		start_date, end_date = get_task_dates(onboarding.activities[1].task)
 		self.assertEqual(
-			start_date, add_days(onboarding.boarding_begins_on, onboarding.activities[0].duration)
+			start_date,
+			add_days(onboarding.boarding_begins_on, onboarding.activities[0].duration),
 		)
 		self.assertEqual(end_date, add_days(start_date, onboarding.activities[1].duration))
 
@@ -143,7 +144,12 @@ def create_employee_onboarding():
 	)
 	onboarding.append(
 		"activities",
-		{"activity_name": "Assign a laptop", "role": "HR User", "begin_on": 1, "duration": 1},
+		{
+			"activity_name": "Assign a laptop",
+			"role": "HR User",
+			"begin_on": 1,
+			"duration": 1,
+		},
 	)
 	onboarding.status = "Pending"
 	onboarding.insert()

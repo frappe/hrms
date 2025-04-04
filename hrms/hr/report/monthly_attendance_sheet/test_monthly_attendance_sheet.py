@@ -11,10 +11,7 @@ from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.leave_application.test_leave_application import make_allocation_record
 from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 from hrms.hr.report.monthly_attendance_sheet.monthly_attendance_sheet import execute
-from hrms.payroll.doctype.salary_slip.test_salary_slip import (
-	make_holiday_list,
-	make_leave_application,
-)
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list, make_leave_application
 from hrms.tests.test_utils import create_company, get_first_day_for_prev_month
 
 
@@ -71,7 +68,12 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 
 		# attendance with shift
 		mark_attendance(self.employee, previous_month_first, "Absent", "Day Shift")
-		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift")
+		mark_attendance(
+			self.employee,
+			previous_month_first + relativedelta(days=1),
+			"Present",
+			"Day Shift",
+		)
 
 		# attendance without shift
 		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "On Leave")
@@ -105,7 +107,12 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 
 		# attendance with shift
 		mark_attendance(self.employee, previous_month_first, "Absent", "Day Shift")
-		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift")
+		mark_attendance(
+			self.employee,
+			previous_month_first + relativedelta(days=1),
+			"Present",
+			"Day Shift",
+		)
 
 		# attendance without shift
 		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "On Leave")
@@ -157,17 +164,28 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 
 		# attendance with shift
 		mark_attendance(self.employee, previous_month_first, "Absent", "Day Shift")
-		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift")
+		mark_attendance(
+			self.employee,
+			previous_month_first + relativedelta(days=1),
+			"Present",
+			"Day Shift",
+		)
 		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "Half Day")  # half day
 
 		mark_attendance(
 			self.employee, previous_month_first + relativedelta(days=3), "Present"
 		)  # attendance without shift
 		mark_attendance(
-			self.employee, previous_month_first + relativedelta(days=4), "Present", late_entry=1
+			self.employee,
+			previous_month_first + relativedelta(days=4),
+			"Present",
+			late_entry=1,
 		)  # late entry
 		mark_attendance(
-			self.employee, previous_month_first + relativedelta(days=5), "Present", early_exit=1
+			self.employee,
+			previous_month_first + relativedelta(days=5),
+			"Present",
+			early_exit=1,
 		)  # early exit
 
 		leave_application = get_leave_application(self.employee)
@@ -202,7 +220,12 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 
 		# attendance with shift
 		mark_attendance(self.employee, previous_month_first, "Absent", "Day Shift")
-		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift")
+		mark_attendance(
+			self.employee,
+			previous_month_first + relativedelta(days=1),
+			"Present",
+			"Day Shift",
+		)
 
 		# attendance without shift
 		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "On Leave")
@@ -211,7 +234,11 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 		departmentless_employee = make_employee(
 			"emp@departmentless.com", company=self.company, department=None
 		)
-		mark_attendance(departmentless_employee, previous_month_first + relativedelta(days=3), "Present")
+		mark_attendance(
+			departmentless_employee,
+			previous_month_first + relativedelta(days=3),
+			"Present",
+		)
 
 		filters = frappe._dict(
 			{

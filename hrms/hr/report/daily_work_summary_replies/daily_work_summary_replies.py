@@ -38,7 +38,9 @@ def get_columns(filters=None):
 
 def get_data(filters):
 	daily_summary_emails = frappe.get_all(
-		"Daily Work Summary", fields=["name"], filters=[["creation", "Between", filters.range]]
+		"Daily Work Summary",
+		fields=["name"],
+		filters=[["creation", "Between", filters.range]],
 	)
 	daily_summary_emails = [d.get("name") for d in daily_summary_emails]
 	replies = frappe.get_all(

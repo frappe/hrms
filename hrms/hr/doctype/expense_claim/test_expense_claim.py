@@ -45,19 +45,38 @@ class TestExpenseClaim(IntegrationTestCase):
 
 		task = frappe.new_doc("Task")
 		task.update(
-			dict(doctype="Task", subject="_Test Project Task 1", status="Open", project=project)
+			dict(
+				doctype="Task",
+				subject="_Test Project Task 1",
+				status="Open",
+				project=project,
+			)
 		).insert()
 		task = task.name
 
 		payable_account = get_payable_account(company_name)
 
-		make_expense_claim(payable_account, 300, 200, company_name, "Travel Expenses - _TC3", project, task)
+		make_expense_claim(
+			payable_account,
+			300,
+			200,
+			company_name,
+			"Travel Expenses - _TC3",
+			project,
+			task,
+		)
 
 		self.assertEqual(frappe.db.get_value("Task", task, "total_expense_claim"), 200)
 		self.assertEqual(frappe.db.get_value("Project", project, "total_expense_claim"), 200)
 
 		expense_claim2 = make_expense_claim(
-			payable_account, 600, 500, company_name, "Travel Expenses - _TC3", project, task
+			payable_account,
+			600,
+			500,
+			company_name,
+			"Travel Expenses - _TC3",
+			project,
+			task,
 		)
 
 		self.assertEqual(frappe.db.get_value("Task", task, "total_expense_claim"), 700)
@@ -112,7 +131,11 @@ class TestExpenseClaim(IntegrationTestCase):
 		# Make employee
 		employee = frappe.db.get_value(
 			"Employee",
-			{"status": "Active", "company": company_name, "first_name": "test_employee1@expenseclaim.com"},
+			{
+				"status": "Active",
+				"company": company_name,
+				"first_name": "test_employee1@expenseclaim.com",
+			},
 			"name",
 		)
 		if not employee:
@@ -121,7 +144,12 @@ class TestExpenseClaim(IntegrationTestCase):
 		expense_claim1 = make_expense_claim(payable_account, 300, 200, company_name, "Travel Expenses - _TC3")
 
 		expense_claim2 = make_expense_claim(
-			payable_account, 300, 200, company_name, "Travel Expenses - _TC3", employee=employee
+			payable_account,
+			300,
+			200,
+			company_name,
+			"Travel Expenses - _TC3",
+			employee=employee,
 		)
 
 		je = make_journal_entry(expense_claim1, do_not_submit=True)
@@ -172,7 +200,12 @@ class TestExpenseClaim(IntegrationTestCase):
 
 		payable_account = get_payable_account("_Test Company")
 		claim = make_expense_claim(
-			payable_account, 1000, 1000, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+			payable_account,
+			1000,
+			1000,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
 		)
 
 		advance = make_employee_advance(claim.employee)
@@ -232,7 +265,12 @@ class TestExpenseClaim(IntegrationTestCase):
 
 		payable_account = get_payable_account("_Test Company")
 		claim = make_expense_claim(
-			payable_account, 1000, 1000, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+			payable_account,
+			1000,
+			1000,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
 		)
 
 		# link advance for partial amount
@@ -295,7 +333,12 @@ class TestExpenseClaim(IntegrationTestCase):
 		# create an expense claim
 		payable_account = get_payable_account("_Test Company")
 		claim = make_expense_claim(
-			payable_account, 200, 200, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+			payable_account,
+			200,
+			200,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
 		)
 
 		# link advance to the claim
@@ -307,7 +350,8 @@ class TestExpenseClaim(IntegrationTestCase):
 		advance = claim.advances[0]
 		self.assertEqual(
 			get_allocation_amount(
-				unclaimed_amount=advance.unclaimed_amount, return_amount=advance.return_amount
+				unclaimed_amount=advance.unclaimed_amount,
+				return_amount=advance.return_amount,
 			),
 			600,
 		)
@@ -409,7 +453,8 @@ class TestExpenseClaim(IntegrationTestCase):
 		self.assertEqual(expense_claim.total_sanctioned_amount, 0.0)
 
 		gl_entry = frappe.get_all(
-			"GL Entry", {"voucher_type": "Expense Claim", "voucher_no": expense_claim.name}
+			"GL Entry",
+			{"voucher_type": "Expense Claim", "voucher_no": expense_claim.name},
 		)
 		self.assertEqual(len(gl_entry), 0)
 
@@ -420,7 +465,12 @@ class TestExpenseClaim(IntegrationTestCase):
 		# check doc shared
 		payable_account = get_payable_account("_Test Company")
 		expense_claim = make_expense_claim(
-			payable_account, 300, 200, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+			payable_account,
+			300,
+			200,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
 		)
 		expense_claim.expense_approver = user
 		expense_claim.save()
@@ -601,7 +651,11 @@ class TestExpenseClaim(IntegrationTestCase):
 		self.assertEqual(ledger_balance, expected_data)
 
 		gl_entries = frappe.db.get_all(
-			"GL Entry", filters={"account": expense_claim.payable_account, "voucher_no": expense_claim.name}
+			"GL Entry",
+			filters={
+				"account": expense_claim.payable_account,
+				"voucher_no": expense_claim.name,
+			},
 		)
 		self.assertEqual(len(gl_entries), 1)
 		frappe.db.set_value("GL Entry", gl_entries[0].name, "credit", 0)
@@ -617,7 +671,8 @@ class TestExpenseClaim(IntegrationTestCase):
 		repost_doc = frappe.new_doc("Repost Accounting Ledger")
 		repost_doc.company = expense_claim.company
 		repost_doc.append(
-			"vouchers", {"voucher_type": expense_claim.doctype, "voucher_no": expense_claim.name}
+			"vouchers",
+			{"voucher_type": expense_claim.doctype, "voucher_no": expense_claim.name},
 		)
 		repost_doc.save().submit()
 		ledger_balance = frappe.db.get_all(

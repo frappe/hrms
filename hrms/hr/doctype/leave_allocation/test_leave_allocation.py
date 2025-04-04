@@ -5,10 +5,7 @@ from frappe.utils import add_days, add_months, getdate, nowdate
 import erpnext
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
-from hrms.hr.doctype.leave_allocation.leave_allocation import (
-	BackDatedAllocationError,
-	OverAllocationError,
-)
+from hrms.hr.doctype.leave_allocation.leave_allocation import BackDatedAllocationError, OverAllocationError
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import process_expired_allocation
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 
@@ -138,7 +135,9 @@ class TestLeaveAllocation(IntegrationTestCase):
 		).insert()
 
 		leave_type = create_leave_type(
-			leave_type_name="_Test Allocation Validation", is_carry_forward=1, max_leaves_allowed=25
+			leave_type_name="_Test Allocation Validation",
+			is_carry_forward=1,
+			max_leaves_allowed=25,
 		)
 
 		# 15 leaves allocated in this period
@@ -175,7 +174,9 @@ class TestLeaveAllocation(IntegrationTestCase):
 		).insert()
 
 		leave_type = create_leave_type(
-			leave_type_name="_Test Allocation Validation", is_carry_forward=1, max_leaves_allowed=30
+			leave_type_name="_Test Allocation Validation",
+			is_carry_forward=1,
+			max_leaves_allowed=30,
 		)
 
 		# 15 leaves allocated
@@ -465,7 +466,9 @@ class TestLeaveAllocation(IntegrationTestCase):
 		leave_allocation.submit()
 
 		leave_ledger_entry = frappe.get_all(
-			"Leave Ledger Entry", fields="*", filters=dict(transaction_name=leave_allocation.name)
+			"Leave Ledger Entry",
+			fields="*",
+			filters=dict(transaction_name=leave_allocation.name),
 		)
 
 		self.assertEqual(len(leave_ledger_entry), 1)
@@ -501,9 +504,7 @@ class TestLeaveAllocation(IntegrationTestCase):
 		self.assertEqual(leave_allocation.total_leaves_allocated, 40)
 
 	def test_leave_addition_after_submit_with_carry_forward(self):
-		from hrms.hr.doctype.leave_application.test_leave_application import (
-			create_carry_forwarded_allocation,
-		)
+		from hrms.hr.doctype.leave_application.test_leave_application import create_carry_forwarded_allocation
 
 		leave_type = create_leave_type(
 			leave_type_name="_Test_CF_leave_expiry",
@@ -553,9 +554,7 @@ class TestLeaveAllocation(IntegrationTestCase):
 		self.assertEqual(leave_allocation.total_leaves_allocated, 10)
 
 	def test_leave_subtraction_after_submit_with_carry_forward(self):
-		from hrms.hr.doctype.leave_application.test_leave_application import (
-			create_carry_forwarded_allocation,
-		)
+		from hrms.hr.doctype.leave_application.test_leave_application import create_carry_forwarded_allocation
 
 		leave_type = create_leave_type(
 			leave_type_name="_Test_CF_leave_expiry",
@@ -584,7 +583,10 @@ class TestLeaveAllocation(IntegrationTestCase):
 
 		make_holiday_list()
 		frappe.db.set_value(
-			"Company", self.employee.company, "default_holiday_list", "Salary Slip Test Holiday List"
+			"Company",
+			self.employee.company,
+			"default_holiday_list",
+			"Salary Slip Test Holiday List",
 		)
 
 		leave_allocation = create_leave_allocation(

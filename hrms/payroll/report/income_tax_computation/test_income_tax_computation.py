@@ -62,7 +62,11 @@ class TestIncomeTaxComputation(IntegrationTestCase):
 		create_exemption_declaration(self.employee, self.payroll_period.name)
 
 		create_salary_slips_for_payroll_period(
-			self.employee, salary_structure.name, self.payroll_period, deduct_random=False, num=3
+			self.employee,
+			salary_structure.name,
+			self.payroll_period,
+			deduct_random=False,
+			num=3,
 		)
 
 	def test_report(self):

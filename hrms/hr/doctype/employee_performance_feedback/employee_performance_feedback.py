@@ -30,7 +30,8 @@ class EmployeePerformanceFeedback(Document, AppraisalMixin):
 		if self.employee == self.reviewer:
 			frappe.throw(
 				_("Employees cannot give feedback to themselves. Use {0} instead: {1}").format(
-					frappe.bold(_("Self Appraisal")), get_link_to_form("Appraisal", self.appraisal)
+					frappe.bold(_("Self Appraisal")),
+					get_link_to_form("Appraisal", self.appraisal),
 				)
 			)
 

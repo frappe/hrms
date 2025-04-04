@@ -73,7 +73,13 @@ def set_loan_repayment(doc: "SalarySlip"):
 def _get_loan_details(doc: "SalarySlip") -> dict[str, Any]:
 	loan_details = frappe.get_all(
 		"Loan",
-		fields=["name", "interest_income_account", "loan_account", "loan_product", "is_term_loan"],
+		fields=[
+			"name",
+			"interest_income_account",
+			"loan_account",
+			"loan_product",
+			"is_term_loan",
+		],
 		filters={
 			"applicant": doc.employee,
 			"docstatus": 1,
@@ -98,7 +104,9 @@ def process_loan_interest_accruals(doc: "SalarySlip"):
 	for loan in loans:
 		if loan.get("is_term_loan"):
 			process_loan_interest_accrual_for_term_loans(
-				posting_date=doc.end_date, loan_product=loan.loan_product, loan=loan.name
+				posting_date=doc.end_date,
+				loan_product=loan.loan_product,
+				loan=loan.name,
 			)
 
 

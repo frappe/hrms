@@ -35,10 +35,7 @@ from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
 	create_assignment_for_multiple_employees,
 )
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
-from hrms.payroll.doctype.salary_slip.test_salary_slip import (
-	make_holiday_list,
-	make_leave_application,
-)
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list, make_leave_application
 from hrms.tests.test_utils import get_first_sunday
 
 test_dependencies = ["Leave Type", "Leave Allocation", "Leave Block List", "Employee"]
@@ -100,12 +97,19 @@ class TestLeaveApplication(IntegrationTestCase):
 		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
 		# list_without_weekly_offs
 		make_holiday_list(
-			"Holiday List w/o Weekly Offs", from_date=from_date, to_date=to_date, add_weekly_offs=False
+			"Holiday List w/o Weekly Offs",
+			from_date=from_date,
+			to_date=to_date,
+			add_weekly_offs=False,
 		)
 
 		if not frappe.db.exists("Leave Type", "_Test Leave Type"):
 			frappe.get_doc(
-				dict(leave_type_name="_Test Leave Type", doctype="Leave Type", include_holiday=True)
+				dict(
+					leave_type_name="_Test Leave Type",
+					doctype="Leave Type",
+					include_holiday=True,
+				)
 			).insert()
 
 	def tearDown(self):
@@ -132,7 +136,11 @@ class TestLeaveApplication(IntegrationTestCase):
 		# Test validation for application dates when negative balance is disabled
 		frappe.delete_doc_if_exists("Leave Type", "Test Leave Validation", force=1)
 		leave_type = frappe.get_doc(
-			dict(leave_type_name="Test Leave Validation", doctype="Leave Type", allow_negative=False)
+			dict(
+				leave_type_name="Test Leave Validation",
+				doctype="Leave Type",
+				allow_negative=False,
+			)
 		).insert()
 
 		employee = get_employee()
@@ -155,7 +163,9 @@ class TestLeaveApplication(IntegrationTestCase):
 		self.assertRaises(frappe.ValidationError, leave_application.insert)
 
 		make_allocation_record(
-			leave_type=leave_type.name, from_date=get_year_start(date), to_date=get_year_ending(date)
+			leave_type=leave_type.name,
+			from_date=get_year_start(date),
+			to_date=get_year_ending(date),
 		)
 
 		leave_application = frappe.get_doc(
@@ -179,7 +189,11 @@ class TestLeaveApplication(IntegrationTestCase):
 		# CASE 1: Validation when allow negative is disabled
 		frappe.delete_doc_if_exists("Leave Type", "Test Leave Validation", force=1)
 		leave_type = frappe.get_doc(
-			dict(leave_type_name="Test Leave Validation", doctype="Leave Type", allow_negative=False)
+			dict(
+				leave_type_name="Test Leave Validation",
+				doctype="Leave Type",
+				allow_negative=False,
+			)
 		).insert()
 
 		employee = get_employee()
@@ -210,7 +224,10 @@ class TestLeaveApplication(IntegrationTestCase):
 		# CASE 2: Allows creating application with a warning message when allow negative is enabled
 		frappe.db.set_value("Leave Type", "Test Leave Validation", "allow_negative", True)
 		make_leave_application(
-			employee.name, add_days(first_sunday, 1), add_days(first_sunday, 3), leave_type.name
+			employee.name,
+			add_days(first_sunday, 1),
+			add_days(first_sunday, 3),
+			leave_type.name,
 		)
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
@@ -249,7 +266,10 @@ class TestLeaveApplication(IntegrationTestCase):
 		# 2 separate leave ledger entries
 		ledgers = frappe.db.get_all(
 			"Leave Ledger Entry",
-			{"transaction_type": "Leave Application", "transaction_name": application.name},
+			{
+				"transaction_type": "Leave Application",
+				"transaction_name": application.name,
+			},
 			["leaves", "from_date", "to_date"],
 			order_by="from_date",
 		)
@@ -263,13 +283,19 @@ class TestLeaveApplication(IntegrationTestCase):
 
 		# CASE 2: from date has an allocation, to date has no allocation
 		application = make_leave_application(
-			employee.name, add_days(year_end, -3), add_days(year_end, 5), leave_type.name
+			employee.name,
+			add_days(year_end, -3),
+			add_days(year_end, 5),
+			leave_type.name,
 		)
 
 		# 2 separate leave ledger entries
 		ledgers = frappe.db.get_all(
 			"Leave Ledger Entry",
-			{"transaction_type": "Leave Application", "transaction_name": application.name},
+			{
+				"transaction_type": "Leave Application",
+				"transaction_name": application.name,
+			},
 			["leaves", "from_date", "to_date"],
 			order_by="from_date",
 		)
@@ -294,7 +320,10 @@ class TestLeaveApplication(IntegrationTestCase):
 		attendance = frappe.get_all(
 			"Attendance",
 			["name", "status", "attendance_date"],
-			dict(attendance_date=("between", ["2018-01-01", "2018-01-03"]), docstatus=("!=", 2)),
+			dict(
+				attendance_date=("between", ["2018-01-01", "2018-01-03"]),
+				docstatus=("!=", 2),
+			),
 		)
 
 		# attendance created for all 3 days
@@ -336,12 +365,18 @@ class TestLeaveApplication(IntegrationTestCase):
 		# Case 1: leave type with 'Include holidays within leaves as leaves' enabled
 		frappe.delete_doc_if_exists("Leave Type", "Test Include Holidays", force=1)
 		leave_type = frappe.get_doc(
-			dict(leave_type_name="Test Include Holidays", doctype="Leave Type", include_holiday=True)
+			dict(
+				leave_type_name="Test Include Holidays",
+				doctype="Leave Type",
+				include_holiday=True,
+			)
 		).insert()
 
 		date = getdate()
 		make_allocation_record(
-			leave_type=leave_type.name, from_date=get_year_start(date), to_date=get_year_ending(date)
+			leave_type=leave_type.name,
+			from_date=get_year_start(date),
+			to_date=get_year_ending(date),
 		)
 
 		employee = get_employee()
@@ -352,7 +387,10 @@ class TestLeaveApplication(IntegrationTestCase):
 		)
 		leave_application.reload()
 		self.assertEqual(leave_application.total_leave_days, 4)
-		self.assertEqual(frappe.db.count("Attendance", {"leave_application": leave_application.name}), 4)
+		self.assertEqual(
+			frappe.db.count("Attendance", {"leave_application": leave_application.name}),
+			4,
+		)
 
 		leave_application.cancel()
 
@@ -370,14 +408,20 @@ class TestLeaveApplication(IntegrationTestCase):
 
 		date = getdate()
 		make_allocation_record(
-			leave_type=leave_type.name, from_date=get_year_start(date), to_date=get_year_ending(date)
+			leave_type=leave_type.name,
+			from_date=get_year_start(date),
+			to_date=get_year_ending(date),
 		)
 
 		employee = get_employee()
 		first_sunday = get_first_sunday(self.holiday_list)
 
 		# already marked attendance on a holiday should be deleted in this case
-		config = {"doctype": "Attendance", "employee": employee.name, "status": "Present"}
+		config = {
+			"doctype": "Attendance",
+			"employee": employee.name,
+			"status": "Present",
+		}
 		attendance_on_holiday = frappe.get_doc(config)
 		attendance_on_holiday.attendance_date = first_sunday
 		attendance_on_holiday.flags.ignore_validate = True
@@ -390,13 +434,20 @@ class TestLeaveApplication(IntegrationTestCase):
 		attendance.save()
 
 		leave_application = make_leave_application(
-			employee.name, first_sunday, add_days(first_sunday, 3), leave_type.name, employee.company
+			employee.name,
+			first_sunday,
+			add_days(first_sunday, 3),
+			leave_type.name,
+			employee.company,
 		)
 		leave_application.reload()
 
 		# holiday should be excluded while marking attendance
 		self.assertEqual(leave_application.total_leave_days, 3)
-		self.assertEqual(frappe.db.count("Attendance", {"leave_application": leave_application.name}), 3)
+		self.assertEqual(
+			frappe.db.count("Attendance", {"leave_application": leave_application.name}),
+			3,
+		)
 
 		# attendance on holiday deleted
 		self.assertFalse(frappe.db.exists("Attendance", attendance_on_holiday.name))
@@ -413,7 +464,10 @@ class TestLeaveApplication(IntegrationTestCase):
 		clear_user_permissions_for_doctype("Employee")
 
 		frappe.db.set_value(
-			"Department", "_Test Department - _TC", "leave_block_list", "_Test Leave Block List"
+			"Department",
+			"_Test Department - _TC",
+			"leave_block_list",
+			"_Test Leave Block List",
 		)
 
 		make_allocation_record()
@@ -566,7 +620,11 @@ class TestLeaveApplication(IntegrationTestCase):
 		leave_type = "Test Optional Type"
 		if not frappe.db.exists("Leave Type", leave_type):
 			frappe.get_doc(
-				dict(leave_type_name=leave_type, doctype="Leave Type", is_optional_leave=1)
+				dict(
+					leave_type_name=leave_type,
+					doctype="Leave Type",
+					is_optional_leave=1,
+				)
 			).insert()
 
 		allocate_leaves(employee, leave_period, leave_type, 10)
@@ -602,7 +660,11 @@ class TestLeaveApplication(IntegrationTestCase):
 		leave_period = get_leave_period()
 		frappe.delete_doc_if_exists("Leave Type", "Test Leave Type", force=1)
 		leave_type = frappe.get_doc(
-			dict(leave_type_name="Test Leave Type", doctype="Leave Type", max_leaves_allowed=5)
+			dict(
+				leave_type_name="Test Leave Type",
+				doctype="Leave Type",
+				max_leaves_allowed=5,
+			)
 		).insert()
 
 		date = add_days(nowdate(), -7)
@@ -644,7 +706,11 @@ class TestLeaveApplication(IntegrationTestCase):
 		leave_period = get_leave_period()
 		frappe.delete_doc_if_exists("Leave Type", "Test Leave Type", force=1)
 		leave_type = frappe.get_doc(
-			dict(leave_type_name="Test Leave Type", doctype="Leave Type", applicable_after=15)
+			dict(
+				leave_type_name="Test Leave Type",
+				doctype="Leave Type",
+				applicable_after=15,
+			)
 		).insert()
 		date = add_days(nowdate(), -7)
 		frappe.db.set_value("Employee", employee.name, "date_of_joining", date)
@@ -734,7 +800,10 @@ class TestLeaveApplication(IntegrationTestCase):
 			)
 		).insert()
 		make_allocation_record(
-			employee=employee.name, leave_type=leave_type.name, from_date="2013-01-01", to_date="2013-12-31"
+			employee=employee.name,
+			leave_type=leave_type.name,
+			from_date="2013-01-01",
+			to_date="2013-12-31",
 		)
 
 		# before
@@ -791,7 +860,11 @@ class TestLeaveApplication(IntegrationTestCase):
 
 		create_carry_forwarded_allocation(employee, leave_type)
 		details = get_leave_balance_on(
-			employee.name, leave_type.name, nowdate(), add_days(nowdate(), 8), for_consumption=True
+			employee.name,
+			leave_type.name,
+			nowdate(),
+			add_days(nowdate(), 8),
+			for_consumption=True,
 		)
 
 		self.assertEqual(details.leave_balance_for_consumption, 21)
@@ -840,7 +913,9 @@ class TestLeaveApplication(IntegrationTestCase):
 		leave_type = create_leave_type(leave_type_name="Test Leave Type 1")
 
 		leave_allocation = create_leave_allocation(
-			employee=employee.name, employee_name=employee.employee_name, leave_type=leave_type.name
+			employee=employee.name,
+			employee_name=employee.employee_name,
+			leave_type=leave_type.name,
 		)
 		leave_allocation.submit()
 
@@ -859,7 +934,9 @@ class TestLeaveApplication(IntegrationTestCase):
 		)
 		leave_application.submit()
 		leave_ledger_entry = frappe.get_all(
-			"Leave Ledger Entry", fields="*", filters=dict(transaction_name=leave_application.name)
+			"Leave Ledger Entry",
+			fields="*",
+			filters=dict(transaction_name=leave_application.name),
 		)
 
 		self.assertEqual(leave_ledger_entry[0].employee, leave_application.employee)
@@ -899,7 +976,9 @@ class TestLeaveApplication(IntegrationTestCase):
 		leave_application.submit()
 
 		leave_ledger_entry = frappe.get_all(
-			"Leave Ledger Entry", "*", filters=dict(transaction_name=leave_application.name)
+			"Leave Ledger Entry",
+			"*",
+			filters=dict(transaction_name=leave_application.name),
 		)
 
 		self.assertEqual(len(leave_ledger_entry), 2)
@@ -921,7 +1000,10 @@ class TestLeaveApplication(IntegrationTestCase):
 
 		self.assertEqual(
 			get_leave_balance_on(
-				employee.name, leave_type.name, add_days(nowdate(), -85), add_days(nowdate(), -84)
+				employee.name,
+				leave_type.name,
+				add_days(nowdate(), -85),
+				add_days(nowdate(), -84),
 			),
 			0,
 		)
@@ -1058,7 +1140,10 @@ class TestLeaveApplication(IntegrationTestCase):
 		# USED LEAVES = 4
 		first_sunday = get_first_sunday(self.holiday_list)
 		leave_application = make_leave_application(
-			employee.name, add_days(first_sunday, 1), add_days(first_sunday, 4), "_Test Leave Type"
+			employee.name,
+			add_days(first_sunday, 1),
+			add_days(first_sunday, 4),
+			"_Test Leave Type",
 		)
 		leave_application.reload()
 
@@ -1096,7 +1181,9 @@ class TestLeaveApplication(IntegrationTestCase):
 
 		leave_alloc = create_carry_forwarded_allocation(employee, leave_type)
 		cf_expiry = frappe.db.get_value(
-			"Leave Ledger Entry", {"transaction_name": leave_alloc.name, "is_carry_forward": 1}, "to_date"
+			"Leave Ledger Entry",
+			{"transaction_name": leave_alloc.name, "is_carry_forward": 1},
+			"to_date",
 		)
 
 		# case 1: all leaves available before cf leave expiry
@@ -1129,7 +1216,9 @@ class TestLeaveApplication(IntegrationTestCase):
 
 		leave_alloc = create_carry_forwarded_allocation(employee, leave_type)
 		cf_expiry = frappe.db.get_value(
-			"Leave Ledger Entry", {"transaction_name": leave_alloc.name, "is_carry_forward": 1}, "to_date"
+			"Leave Ledger Entry",
+			{"transaction_name": leave_alloc.name, "is_carry_forward": 1},
+			"to_date",
 		)
 
 		# leave application across cf expiry
@@ -1163,7 +1252,9 @@ class TestLeaveApplication(IntegrationTestCase):
 
 		leave_alloc = create_carry_forwarded_allocation(employee, leave_type)
 		cf_expiry = frappe.db.get_value(
-			"Leave Ledger Entry", {"transaction_name": leave_alloc.name, "is_carry_forward": 1}, "to_date"
+			"Leave Ledger Entry",
+			{"transaction_name": leave_alloc.name, "is_carry_forward": 1},
+			"to_date",
 		)
 
 		# leave application across cf expiry, 20 days leave
@@ -1205,7 +1296,9 @@ class TestLeaveApplication(IntegrationTestCase):
 
 		leave_alloc = create_carry_forwarded_allocation(employee, leave_type)
 		cf_expiry = frappe.db.get_value(
-			"Leave Ledger Entry", {"transaction_name": leave_alloc.name, "is_carry_forward": 1}, "to_date"
+			"Leave Ledger Entry",
+			{"transaction_name": leave_alloc.name, "is_carry_forward": 1},
+			"to_date",
 		)
 
 		# leave application after cf expiry
@@ -1239,7 +1332,9 @@ class TestLeaveApplication(IntegrationTestCase):
 
 		leave_alloc = create_carry_forwarded_allocation(employee, leave_type)
 		cf_expiry = frappe.db.get_value(
-			"Leave Ledger Entry", {"transaction_name": leave_alloc.name, "is_carry_forward": 1}, "to_date"
+			"Leave Ledger Entry",
+			{"transaction_name": leave_alloc.name, "is_carry_forward": 1},
+			"to_date",
 		)
 
 		# test total leaves allocated before cf leave expiry
@@ -1275,7 +1370,9 @@ class TestLeaveApplication(IntegrationTestCase):
 		# new allocation with cf leaves
 		leave_alloc = create_carry_forwarded_allocation(employee, leave_type)
 		cf_expiry = frappe.db.get_value(
-			"Leave Ledger Entry", {"transaction_name": leave_alloc.name, "is_carry_forward": 1}, "to_date"
+			"Leave Ledger Entry",
+			{"transaction_name": leave_alloc.name, "is_carry_forward": 1},
+			"to_date",
 		)
 
 		# test total leaves allocated before cf leave expiry
@@ -1313,7 +1410,12 @@ def create_carry_forwarded_allocation(employee, leave_type, date=None):
 
 
 def make_allocation_record(
-	employee=None, leave_type=None, from_date=None, to_date=None, carry_forward=False, leaves=None
+	employee=None,
+	leave_type=None,
+	from_date=None,
+	to_date=None,
+	carry_forward=False,
+	leaves=None,
 ):
 	allocation = frappe.get_doc(
 		{

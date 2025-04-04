@@ -109,7 +109,10 @@ def create_notification_template():
 	if not template:
 		base_path = frappe.get_app_path("erpnext", "hr", "doctype")
 		response = frappe.read_file(
-			os.path.join(base_path, "exit_interview/exit_questionnaire_notification_template.html")
+			os.path.join(
+				base_path,
+				"exit_interview/exit_questionnaire_notification_template.html",
+			)
 		)
 
 		template = frappe.get_doc(

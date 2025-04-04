@@ -55,7 +55,8 @@ class ShiftRequest(Document, PWANotificationsMixin):
 
 	def on_cancel(self):
 		shift_assignment_list = frappe.db.get_all(
-			"Shift Assignment", {"employee": self.employee, "shift_request": self.name, "docstatus": 1}
+			"Shift Assignment",
+			{"employee": self.employee, "shift_request": self.name, "docstatus": 1},
 		)
 		if shift_assignment_list:
 			for shift in shift_assignment_list:

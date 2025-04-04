@@ -27,14 +27,24 @@ def get_columns():
 			"options": "Employee",
 			"width": 150,
 		},
-		{"label": _("Employee Name"), "fieldname": "employee_name", "fieldtype": "Data", "width": 150},
+		{
+			"label": _("Employee Name"),
+			"fieldname": "employee_name",
+			"fieldtype": "Data",
+			"width": 150,
+		},
 		{
 			"label": _("Date of Joining"),
 			"fieldname": "date_of_joining",
 			"fieldtype": "Date",
 			"width": 120,
 		},
-		{"label": _("Relieving Date"), "fieldname": "relieving_date", "fieldtype": "Date", "width": 120},
+		{
+			"label": _("Relieving Date"),
+			"fieldname": "relieving_date",
+			"fieldtype": "Date",
+			"width": 120,
+		},
 		{
 			"label": _("Exit Interview"),
 			"fieldname": "exit_interview",
@@ -191,7 +201,12 @@ def get_chart_data(data):
 	chart = {
 		"data": {
 			"labels": [_("Retained"), _("Exit Confirmed"), _("Decision Pending")],
-			"datasets": [{"name": _("Employee Status"), "values": [retained, exit_confirmed, pending]}],
+			"datasets": [
+				{
+					"name": _("Employee Status"),
+					"values": [retained, exit_confirmed, pending],
+				}
+			],
 		},
 		"type": "donut",
 		"colors": ["green", "red", "blue"],

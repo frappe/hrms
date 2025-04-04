@@ -29,7 +29,12 @@ def get_columns(filters):
 			"fieldname": "employee_name",
 			"width": 160,
 		},
-		{"label": _("Amount"), "fieldname": "amount", "fieldtype": "Currency", "width": 140},
+		{
+			"label": _("Amount"),
+			"fieldname": "amount",
+			"fieldtype": "Currency",
+			"width": 140,
+		},
 	]
 
 	return columns
@@ -65,7 +70,11 @@ def get_data(filters):
 	)
 
 	for d in entry:
-		employee = {"employee": d.employee, "employee_name": d.employee_name, "amount": d.amount}
+		employee = {
+			"employee": d.employee,
+			"employee_name": d.employee_name,
+			"amount": d.amount,
+		}
 
 		data.append(employee)
 

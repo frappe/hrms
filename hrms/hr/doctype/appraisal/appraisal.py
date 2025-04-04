@@ -57,7 +57,10 @@ class Appraisal(Document, AppraisalMixin):
 			frappe.throw(
 				_(
 					"Appraisal {0} already exists for Employee {1} for this Appraisal Cycle or overlapping period"
-				).format(get_link_to_form("Appraisal", duplicate), frappe.bold(self.employee_name)),
+				).format(
+					get_link_to_form("Appraisal", duplicate),
+					frappe.bold(self.employee_name),
+				),
 				exc=frappe.DuplicateEntryError,
 				title=_("Duplicate Entry"),
 			)
@@ -249,7 +252,10 @@ class Appraisal(Document, AppraisalMixin):
 			).run()[0][0]
 
 			kra.goal_completion = flt(avg_goal_completion, kra.precision("goal_completion"))
-			kra.goal_score = flt(kra.goal_completion * kra.per_weightage / 100, kra.precision("goal_score"))
+			kra.goal_score = flt(
+				kra.goal_completion * kra.per_weightage / 100,
+				kra.precision("goal_score"),
+			)
 
 			if update:
 				kra.db_update()

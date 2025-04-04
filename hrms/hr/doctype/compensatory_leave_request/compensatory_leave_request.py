@@ -37,7 +37,10 @@ class CompensatoryLeaveRequest(Document):
 		attendance_records = frappe.get_all(
 			"Attendance",
 			filters={
-				"attendance_date": ["between", (self.work_from_date, self.work_end_date)],
+				"attendance_date": [
+					"between",
+					(self.work_from_date, self.work_end_date),
+				],
 				"status": ("in", ["Present", "Work From Home", "Half Day"]),
 				"docstatus": 1,
 				"employee": self.employee,
@@ -120,7 +123,9 @@ class CompensatoryLeaveRequest(Document):
 
 				# create reverse entry on cancelation
 				create_additional_leave_ledger_entry(
-					leave_allocation, date_difference * -1, add_days(self.work_end_date, 1)
+					leave_allocation,
+					date_difference * -1,
+					add_days(self.work_end_date, 1),
 				)
 
 	def get_existing_allocation(self, comp_leave_valid_from: datetime.date) -> dict | None:

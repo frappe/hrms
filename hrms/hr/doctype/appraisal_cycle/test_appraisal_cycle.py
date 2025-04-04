@@ -43,12 +43,19 @@ class TestAppraisalCycle(IntegrationTestCase):
 		for i in range(2):
 			# check if KRAs are set
 			self.assertEqual(appraisal.appraisal_kra[i].kra, self.template.goals[i].key_result_area)
-			self.assertEqual(appraisal.appraisal_kra[i].per_weightage, self.template.goals[i].per_weightage)
+			self.assertEqual(
+				appraisal.appraisal_kra[i].per_weightage,
+				self.template.goals[i].per_weightage,
+			)
 
 			# check if rating criteria is set
-			self.assertEqual(appraisal.self_ratings[i].criteria, self.template.rating_criteria[i].criteria)
 			self.assertEqual(
-				appraisal.self_ratings[i].per_weightage, self.template.rating_criteria[i].per_weightage
+				appraisal.self_ratings[i].criteria,
+				self.template.rating_criteria[i].criteria,
+			)
+			self.assertEqual(
+				appraisal.self_ratings[i].per_weightage,
+				self.template.rating_criteria[i].per_weightage,
 			)
 
 

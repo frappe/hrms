@@ -17,7 +17,11 @@ class LeaveType(Document):
 		if self.is_lwp:
 			leave_allocation = frappe.get_all(
 				"Leave Allocation",
-				filters={"leave_type": self.name, "from_date": ("<=", today()), "to_date": (">=", today())},
+				filters={
+					"leave_type": self.name,
+					"from_date": ("<=", today()),
+					"to_date": (">=", today()),
+				},
 				fields=["name"],
 			)
 			leave_allocation = [l["name"] for l in leave_allocation]
@@ -42,7 +46,10 @@ class LeaveType(Document):
 			frappe.throw(msg, title=_("Not Allowed"))
 
 		if self.is_lwp and self.is_ppl:
-			frappe.throw(_("Leave Type can either be without pay or partial pay"), title=_("Not Allowed"))
+			frappe.throw(
+				_("Leave Type can either be without pay or partial pay"),
+				title=_("Not Allowed"),
+			)
 
 		if self.is_ppl and (
 			self.fraction_of_daily_salary_per_leave < 0 or self.fraction_of_daily_salary_per_leave > 1

@@ -114,7 +114,11 @@ class TestAdditionalSalary(IntegrationTestCase):
 
 		# this will overwrite HRA Salary Component amount as 5000
 		get_additional_salary(
-			emp_id, recurring=False, payroll_date=date, salary_component="HRA", overwrite_salary_structure=1
+			emp_id,
+			recurring=False,
+			payroll_date=date,
+			salary_component="HRA",
+			overwrite_salary_structure=1,
 		)
 		salary_slip = make_salary_slip(salary_structure.name, employee=emp_id, posting_date=date)
 		self.assertEqual(salary_slip.earnings[1].amount, 5000)
@@ -122,18 +126,26 @@ class TestAdditionalSalary(IntegrationTestCase):
 	def test_overwrite_tax_component(self):
 		def _get_tds_component(doc) -> dict:
 			return next(
-				(d for d in salary_slip.get("deductions") if d.salary_component == "TDS"), frappe._dict()
+				(d for d in salary_slip.get("deductions") if d.salary_component == "TDS"),
+				frappe._dict(),
 			)
 
 		emp_id = make_employee("test_additional@salary.com")
 		salary_structure = make_salary_structure(
-			"Test Salary Structure Additional Salary", "Monthly", employee=emp_id, test_tax=True
+			"Test Salary Structure Additional Salary",
+			"Monthly",
+			employee=emp_id,
+			test_tax=True,
 		)
 		date = nowdate()
 
 		# Overwrites TDS Salary Component amount as 5000
 		additional_salary = get_additional_salary(
-			emp_id, recurring=False, payroll_date=date, salary_component="TDS", overwrite_salary_structure=1
+			emp_id,
+			recurring=False,
+			payroll_date=date,
+			salary_component="TDS",
+			overwrite_salary_structure=1,
 		)
 		salary_slip = make_salary_slip(salary_structure.name, employee=emp_id, posting_date=date)
 		tds_component = _get_tds_component(salary_slip)
@@ -149,7 +161,11 @@ class TestAdditionalSalary(IntegrationTestCase):
 
 
 def get_additional_salary(
-	emp_id, recurring=True, payroll_date=None, salary_component=None, overwrite_salary_structure=0
+	emp_id,
+	recurring=True,
+	payroll_date=None,
+	salary_component=None,
+	overwrite_salary_structure=0,
 ):
 	create_salary_component("Recurring Salary Component")
 	add_sal = frappe.new_doc("Additional Salary")

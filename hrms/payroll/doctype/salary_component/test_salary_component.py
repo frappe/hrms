@@ -23,19 +23,22 @@ class TestSalaryComponent(IntegrationTestCase):
 		OLD_CONDITION = "H < 10000"
 
 		ss1_detail = next(
-			(d for d in salary_structure1.earnings if d.salary_component == "Special Allowance"), None
+			(d for d in salary_structure1.earnings if d.salary_component == "Special Allowance"),
+			None,
 		)
 		self.assertEqual(ss1_detail.condition, OLD_CONDITION)
 		self.assertEqual(ss1_detail.formula, OLD_FORMULA)
 
 		ss2_detail = next(
-			(d for d in salary_structure2.earnings if d.salary_component == "Special Allowance"), None
+			(d for d in salary_structure2.earnings if d.salary_component == "Special Allowance"),
+			None,
 		)
 		self.assertEqual(ss2_detail.condition, OLD_CONDITION)
 		self.assertEqual(ss2_detail.formula, OLD_FORMULA)
 
 		ss3_detail = next(
-			(d for d in salary_structure3.earnings if d.salary_component == "Special Allowance"), None
+			(d for d in salary_structure3.earnings if d.salary_component == "Special Allowance"),
+			None,
 		)
 		self.assertEqual(ss3_detail.condition, OLD_CONDITION)
 		self.assertEqual(ss3_detail.formula, OLD_FORMULA)

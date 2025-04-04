@@ -22,7 +22,10 @@ class TestBulkSalaryStructureAssignment(IntegrationTestCase):
 
 		# employee grade with default base pay 50000
 		self.emp1 = make_employee(
-			"employee1@bssa.com", company="_Test Company", department="Accounts", grade="Test Grade"
+			"employee1@bssa.com",
+			company="_Test Company",
+			department="Accounts",
+			grade="Test Grade",
 		)
 		self.emp2 = make_employee("employee2@bssa.com", company="_Test Company", department="Accounts")
 		self.emp3 = make_employee("employee3@bssa.com", company="_Test Company", department="Accounts")

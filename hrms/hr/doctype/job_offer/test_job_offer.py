@@ -28,7 +28,11 @@ class TestJobOffer(IntegrationTestCase):
 		create_staffing_plan(
 			name="Test No Vacancies",
 			staffing_details=[
-				{"designation": "UX Designer", "vacancies": 0, "estimated_cost_per_position": 5000}
+				{
+					"designation": "UX Designer",
+					"vacancies": 0,
+					"estimated_cost_per_position": 5000,
+				}
 			],
 		)
 		self.assertRaises(frappe.ValidationError, job_offer.submit)
@@ -103,7 +107,13 @@ def create_staffing_plan(**args):
 			"from_date": args.from_date or nowdate(),
 			"to_date": args.to_date or add_days(nowdate(), 10),
 			"staffing_details": args.staffing_details
-			or [{"designation": "Researcher", "vacancies": 1, "estimated_cost_per_position": 50000}],
+			or [
+				{
+					"designation": "Researcher",
+					"vacancies": 1,
+					"estimated_cost_per_position": 50000,
+				}
+			],
 		}
 	)
 	staffing_plan.insert()

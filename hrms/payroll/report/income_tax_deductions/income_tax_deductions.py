@@ -38,11 +38,21 @@ def get_columns(is_indian_company: bool) -> list[dict]:
 
 	if is_indian_company:
 		columns.append(
-			{"label": _("PAN Number"), "fieldname": "pan_number", "fieldtype": "Data", "width": 140}
+			{
+				"label": _("PAN Number"),
+				"fieldname": "pan_number",
+				"fieldtype": "Data",
+				"width": 140,
+			}
 		)
 
 	columns += [
-		{"label": _("Income Tax Component"), "fieldname": "it_comp", "fieldtype": "Data", "width": 170},
+		{
+			"label": _("Income Tax Component"),
+			"fieldname": "it_comp",
+			"fieldtype": "Data",
+			"width": 170,
+		},
 		{
 			"label": _("Income Tax Amount"),
 			"fieldname": "it_amount",
@@ -57,7 +67,12 @@ def get_columns(is_indian_company: bool) -> list[dict]:
 			"options": "currency",
 			"width": 140,
 		},
-		{"label": _("Posting Date"), "fieldname": "posting_date", "fieldtype": "Date", "width": 140},
+		{
+			"label": _("Posting Date"),
+			"fieldname": "posting_date",
+			"fieldtype": "Date",
+			"width": 140,
+		},
 	]
 
 	return columns

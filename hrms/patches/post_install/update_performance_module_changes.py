@@ -20,7 +20,10 @@ def create_kras():
 
 	template_goals = frappe.get_all(
 		"Appraisal Template Goal",
-		filters={"parenttype": "Appraisal Template", "key_result_area": ("is", "not set")},
+		filters={
+			"parenttype": "Appraisal Template",
+			"key_result_area": ("is", "not set"),
+		},
 		fields=["name", "kra"],
 		as_list=True,
 	)
@@ -48,7 +51,11 @@ def create_kras():
 
 		# set 140 char kra in the `key_result_area` field
 		frappe.db.set_value(
-			"Appraisal Template Goal", name, "key_result_area", kra_title, update_modified=False
+			"Appraisal Template Goal",
+			name,
+			"key_result_area",
+			kra_title,
+			update_modified=False,
 		)
 
 	if frappe.db.auto_commit_on_many_writes:

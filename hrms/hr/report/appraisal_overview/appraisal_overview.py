@@ -23,7 +23,12 @@ def get_columns() -> list[dict]:
 			"options": "Employee",
 			"width": 100,
 		},
-		{"fieldname": "employee_name", "fieldtype": "Data", "label": _("Employee Name"), "width": 0},
+		{
+			"fieldname": "employee_name",
+			"fieldtype": "Data",
+			"label": _("Employee Name"),
+			"width": 0,
+		},
 		{
 			"fieldname": "designation",
 			"fieldtype": "Link",
@@ -45,16 +50,36 @@ def get_columns() -> list[dict]:
 			"options": "Appraisal",
 			"width": 0,
 		},
-		{"fieldname": "feedback_count", "fieldtype": "Int", "label": _("Feedback Count"), "width": 0},
+		{
+			"fieldname": "feedback_count",
+			"fieldtype": "Int",
+			"label": _("Feedback Count"),
+			"width": 0,
+		},
 		{
 			"fieldname": "avg_feedback_score",
 			"fieldtype": "Float",
 			"label": _("Avg Feedback Score"),
 			"width": 0,
 		},
-		{"fieldname": "goal_score", "fieldtype": "Float", "label": _("Goal Score"), "width": 0},
-		{"fieldname": "self_score", "fieldtype": "Float", "label": _("Self Score"), "width": 0},
-		{"fieldname": "final_score", "fieldtype": "Float", "label": _("Final Score"), "width": 0},
+		{
+			"fieldname": "goal_score",
+			"fieldtype": "Float",
+			"label": _("Goal Score"),
+			"width": 0,
+		},
+		{
+			"fieldname": "self_score",
+			"fieldtype": "Float",
+			"label": _("Self Score"),
+			"width": 0,
+		},
+		{
+			"fieldname": "final_score",
+			"fieldtype": "Float",
+			"label": _("Final Score"),
+			"width": 0,
+		},
 		{
 			"fieldname": "department",
 			"fieldtype": "Link",
@@ -84,7 +109,13 @@ def get_data(filters: dict | None = None) -> list[dict]:
 		.where(Appraisal.docstatus != 2)
 	)
 
-	for condition in ["appraisal_cycle", "employee", "department", "designation", "company"]:
+	for condition in [
+		"appraisal_cycle",
+		"employee",
+		"department",
+		"designation",
+		"company",
+	]:
 		if filters.get(condition):
 			query = query.where(Appraisal[condition] == filters.get(condition))
 
@@ -94,7 +125,8 @@ def get_data(filters: dict | None = None) -> list[dict]:
 
 	for row in appraisals:
 		row["feedback_count"] = frappe.db.count(
-			"Employee Performance Feedback", {"appraisal": row.appraisal, "docstatus": 1}
+			"Employee Performance Feedback",
+			{"appraisal": row.appraisal, "docstatus": 1},
 		)
 
 	return appraisals

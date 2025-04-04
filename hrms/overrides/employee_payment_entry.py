@@ -19,13 +19,30 @@ from hrms.hr.doctype.expense_claim.expense_claim import get_outstanding_amount_f
 class EmployeePaymentEntry(PaymentEntry):
 	def get_valid_reference_doctypes(self):
 		if self.party_type == "Customer":
-			return ("Sales Order", "Sales Invoice", "Journal Entry", "Dunning", "Payment Entry")
+			return (
+				"Sales Order",
+				"Sales Invoice",
+				"Journal Entry",
+				"Dunning",
+				"Payment Entry",
+			)
 		elif self.party_type == "Supplier":
-			return ("Purchase Order", "Purchase Invoice", "Journal Entry", "Payment Entry")
+			return (
+				"Purchase Order",
+				"Purchase Invoice",
+				"Journal Entry",
+				"Payment Entry",
+			)
 		elif self.party_type == "Shareholder":
 			return ("Journal Entry",)
 		elif self.party_type == "Employee":
-			return ("Expense Claim", "Journal Entry", "Employee Advance", "Leave Encashment", "Gratuity")
+			return (
+				"Expense Claim",
+				"Journal Entry",
+				"Employee Advance",
+				"Leave Encashment",
+				"Gratuity",
+			)
 
 	def set_missing_ref_details(
 		self,
@@ -213,9 +230,18 @@ def get_paid_amount_and_received_amount(
 
 @frappe.whitelist()
 def get_payment_reference_details(
-	reference_doctype, reference_name, party_account_currency, party_type=None, party=None
+	reference_doctype,
+	reference_name,
+	party_account_currency,
+	party_type=None,
+	party=None,
 ):
-	if reference_doctype in ("Expense Claim", "Employee Advance", "Gratuity", "Leave Encashment"):
+	if reference_doctype in (
+		"Expense Claim",
+		"Employee Advance",
+		"Gratuity",
+		"Leave Encashment",
+	):
 		return get_reference_details_for_employee(reference_doctype, reference_name, party_account_currency)
 	else:
 		return get_reference_details(

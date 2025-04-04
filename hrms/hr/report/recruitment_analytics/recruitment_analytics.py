@@ -41,7 +41,12 @@ def get_columns():
 			"options": "Job Applicant",
 			"width": 150,
 		},
-		{"label": _("Applicant name"), "fieldtype": "data", "fieldname": "applicant_name", "width": 130},
+		{
+			"label": _("Applicant name"),
+			"fieldtype": "data",
+			"fieldname": "applicant_name",
+			"width": 130,
+		},
 		{
 			"label": _("Application Status"),
 			"fieldtype": "Data",
@@ -55,8 +60,18 @@ def get_columns():
 			"options": "job Offer",
 			"width": 150,
 		},
-		{"label": _("Designation"), "fieldtype": "Data", "fieldname": "designation", "width": 100},
-		{"label": _("Offer Date"), "fieldtype": "date", "fieldname": "offer_date", "width": 100},
+		{
+			"label": _("Designation"),
+			"fieldtype": "Data",
+			"fieldname": "designation",
+			"width": 100,
+		},
+		{
+			"label": _("Offer Date"),
+			"fieldtype": "date",
+			"fieldname": "offer_date",
+			"width": 100,
+		},
 		{
 			"label": _("Job Offer status"),
 			"fieldtype": "Data",
@@ -137,7 +152,9 @@ def get_staffing_plan(filters):
 
 def get_job_opening(sp_list):
 	job_openings = frappe.get_all(
-		"Job Opening", filters=[["staffing_plan", "IN", sp_list]], fields=["name", "staffing_plan"]
+		"Job Opening",
+		filters=[["staffing_plan", "IN", sp_list]],
+		fields=["name", "staffing_plan"],
 	)
 
 	sp_jo_map = {}

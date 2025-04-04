@@ -122,7 +122,7 @@ class LeavePolicyAssignment(Document):
 				from_date=self.effective_from,
 				to_date=self.effective_to,
 				new_leaves_allocated=new_leaves_allocated,
-				leave_period=self.leave_period if self.assignment_based_on == "Leave Policy" else "",
+				leave_period=(self.leave_period if self.assignment_based_on == "Leave Policy" else ""),
 				leave_policy_assignment=self.name,
 				leave_policy=self.leave_policy,
 				carry_forward=carry_forward,

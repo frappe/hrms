@@ -38,7 +38,9 @@ class ShiftScheduleAssignment(Document):
 
 			elif individual_assignment_start:
 				self.create_individual_assignment(
-					shift_schedule.shift_type, individual_assignment_start, add_days(date, -1)
+					shift_schedule.shift_type,
+					individual_assignment_start,
+					add_days(date, -1),
 				)
 				individual_assignment_start = None
 

@@ -15,10 +15,7 @@ from hrms.hr.doctype.leave_policy.test_leave_policy import create_leave_policy
 from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
 	create_assignment_for_multiple_employees,
 )
-from hrms.payroll.doctype.salary_slip.test_salary_slip import (
-	make_holiday_list,
-	make_leave_application,
-)
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list, make_leave_application
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 from hrms.tests.test_utils import get_first_sunday
 
@@ -203,7 +200,9 @@ class TestLeaveEncashment(IntegrationTestCase):
 		leave_encashment.submit()
 
 		leave_ledger_entry = frappe.get_all(
-			"Leave Ledger Entry", fields="*", filters=dict(transaction_name=leave_encashment.name)
+			"Leave Ledger Entry",
+			fields="*",
+			filters=dict(transaction_name=leave_encashment.name),
 		)
 
 		self.assertEqual(len(leave_ledger_entry), 1)
@@ -225,14 +224,19 @@ class TestLeaveEncashment(IntegrationTestCase):
 		)
 		# check if unused leaves are 5 before processing expired allocation runs
 		unused_leaves = get_unused_leaves(
-			employee, self.leave_type, self.leave_period.from_date, self.leave_period.to_date
+			employee,
+			self.leave_type,
+			self.leave_period.from_date,
+			self.leave_period.to_date,
 		)
 		self.assertEqual(unused_leaves, 5)
 
 		# check if a single leave ledger entry is created
 		self.assertEqual(frappe.get_value("Leave Type", self.leave_type, "is_carry_forward"), 1)
 		leave_ledger_entry = frappe.get_all(
-			"Leave Ledger Entry", fields=["leaves"], filters={"transaction_name": leave_encashment.name}
+			"Leave Ledger Entry",
+			fields=["leaves"],
+			filters={"transaction_name": leave_encashment.name},
 		)
 		self.assertEqual(len(leave_ledger_entry), 1)
 		self.assertEqual(leave_ledger_entry[0].leaves, leave_encashment.encashment_days * -1)
@@ -240,12 +244,17 @@ class TestLeaveEncashment(IntegrationTestCase):
 		# check if unused leaves are 5 after processing expired allocation runs
 		process_expired_allocation()
 		unused_leaves = get_unused_leaves(
-			employee, self.leave_type, self.leave_period.from_date, self.leave_period.to_date
+			employee,
+			self.leave_type,
+			self.leave_period.from_date,
+			self.leave_period.to_date,
 		)
 		self.assertEqual(unused_leaves, 5)
 
 	@set_holiday_list("_Test Leave Encashment", "_Test Company")
-	def test_leave_expiry_after_leave_encashment_for_non_carry_forwarding_leave_type(self):
+	def test_leave_expiry_after_leave_encashment_for_non_carry_forwarding_leave_type(
+		self,
+	):
 		employee = make_employee("test_employee3_encashment@example.com", company="_Test Company")
 		# allocated 10 leaves, encashed 3
 
@@ -308,7 +317,9 @@ class TestLeaveEncashment(IntegrationTestCase):
 		)
 
 		leave_encashment = self.create_test_leave_encashment(
-			employee=employee, encashment_days=encashment_days, leave_type=self.leave_type
+			employee=employee,
+			encashment_days=encashment_days,
+			leave_type=self.leave_type,
 		)
 		leave_encashment.submit()
 		return leave_encashment

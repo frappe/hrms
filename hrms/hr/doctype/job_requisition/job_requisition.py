@@ -42,7 +42,9 @@ class JobRequisition(Document):
 	@frappe.whitelist()
 	def associate_job_opening(self, job_opening):
 		frappe.db.set_value(
-			"Job Opening", job_opening, {"job_requisition": self.name, "vacancies": self.no_of_positions}
+			"Job Opening",
+			job_opening,
+			{"job_requisition": self.name, "vacancies": self.no_of_positions},
 		)
 		frappe.msgprint(
 			_("Job Requisition {0} has been associated with Job Opening {1}").format(

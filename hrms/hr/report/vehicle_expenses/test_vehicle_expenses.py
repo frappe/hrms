@@ -32,7 +32,10 @@ class TestVehicleExpenses(IntegrationTestCase):
 		expense_claim = make_expense_claim(vehicle_log.name)
 
 		# Based on Fiscal Year
-		filters = {"filter_based_on": "Fiscal Year", "fiscal_year": get_fiscal_year(getdate())[0]}
+		filters = {
+			"filter_based_on": "Fiscal Year",
+			"fiscal_year": get_fiscal_year(getdate())[0],
+		}
 
 		report = execute(filters)
 

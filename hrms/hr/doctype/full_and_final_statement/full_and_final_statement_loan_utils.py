@@ -88,14 +88,16 @@ def cancel_loan_repayment(doc: "FullandFinalStatement"):
 	for loan in loan_receivables:
 		posting_date = frappe.utils.getdate(doc.transaction_date)
 		loan_repayment = frappe.get_doc(
-			"Loan Repayment", {"against_loan": loan, "docstatus": 1, "posting_date": posting_date}
+			"Loan Repayment",
+			{"against_loan": loan, "docstatus": 1, "posting_date": posting_date},
 		)
 
 		if loan_repayment:
 			loan_repayment.cancel()
 
 		loan_interest_accruals = frappe.get_all(
-			"Loan Interest Accrual", filters={"loan": loan, "docstatus": 1, "posting_date": posting_date}
+			"Loan Interest Accrual",
+			filters={"loan": loan, "docstatus": 1, "posting_date": posting_date},
 		)
 		for accrual in loan_interest_accruals:
 			frappe.get_doc("Loan Interest Accrual", accrual.name).cancel()

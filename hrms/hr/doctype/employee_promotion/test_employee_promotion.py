@@ -63,7 +63,12 @@ class TestEmployeePromotion(IntegrationTestCase):
 						"new": "Project Manager",
 						"fieldname": "designation",
 					},
-					{"property": "Grade", "current": "L1", "new": "L2", "fieldname": "grade"},
+					{
+						"property": "Grade",
+						"current": "L1",
+						"new": "L2",
+						"fieldname": "grade",
+					},
 				],
 			}
 		).submit()

@@ -5,23 +5,10 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import (
-	add_days,
-	cint,
-	cstr,
-	format_date,
-	get_datetime,
-	get_link_to_form,
-	getdate,
-	nowdate,
-)
+from frappe.utils import add_days, cint, cstr, format_date, get_datetime, get_link_to_form, getdate, nowdate
 
 from hrms.hr.doctype.shift_assignment.shift_assignment import has_overlapping_timings
-from hrms.hr.utils import (
-	get_holiday_dates_for_employee,
-	get_holidays_for_employee,
-	validate_active_employee,
-)
+from hrms.hr.utils import get_holiday_dates_for_employee, get_holidays_for_employee, validate_active_employee
 
 
 class DuplicateAttendanceError(frappe.ValidationError):
@@ -193,7 +180,8 @@ class Attendance(Document):
 
 	def validate_employee(self):
 		emp = frappe.db.sql(
-			"select name from `tabEmployee` where name = %s and status = 'Active'", self.employee
+			"select name from `tabEmployee` where name = %s and status = 'Active'",
+			self.employee,
 		)
 		if not emp:
 			frappe.throw(_("Employee {0} is not active or does not exist").format(self.employee))
@@ -237,7 +225,13 @@ def get_events(start, end, filters=None):
 		filters = json.loads(filters)
 	if not filters:
 		filters = []
-	filters.append(["attendance_date", "between", [get_datetime(start).date(), get_datetime(end).date()]])
+	filters.append(
+		[
+			"attendance_date",
+			"between",
+			[get_datetime(start).date(), get_datetime(end).date()],
+		]
+	)
 	attendance_records = add_attendance(filters)
 	add_holidays(attendance_records, start, end, employee)
 	return attendance_records

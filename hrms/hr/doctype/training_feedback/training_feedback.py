@@ -32,7 +32,8 @@ class TrainingFeedback(Document):
 
 	def on_submit(self):
 		employee = frappe.db.get_value(
-			"Training Event Employee", {"parent": self.training_event, "employee": self.employee}
+			"Training Event Employee",
+			{"parent": self.training_event, "employee": self.employee},
 		)
 
 		if employee:
@@ -40,7 +41,8 @@ class TrainingFeedback(Document):
 
 	def on_cancel(self):
 		employee = frappe.db.get_value(
-			"Training Event Employee", {"parent": self.training_event, "employee": self.employee}
+			"Training Event Employee",
+			{"parent": self.training_event, "employee": self.employee},
 		)
 
 		if employee:

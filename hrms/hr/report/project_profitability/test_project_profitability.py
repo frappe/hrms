@@ -20,7 +20,10 @@ class TestProjectProfitability(IntegrationTestCase):
 
 		if not frappe.db.exists("Salary Component", "Timesheet Component"):
 			frappe.get_doc(
-				{"doctype": "Salary Component", "salary_component": "Timesheet Component"}
+				{
+					"doctype": "Salary Component",
+					"salary_component": "Timesheet Component",
+				}
 			).insert()
 
 		make_salary_structure_for_timesheet(emp, company="_Test Company")

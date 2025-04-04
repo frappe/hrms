@@ -146,7 +146,10 @@ class Gratuity(AccountsController):
 
 		gratuity_amount = self.get_gratuity_amount(current_work_experience)
 
-		return {"current_work_experience": current_work_experience, "amount": gratuity_amount}
+		return {
+			"current_work_experience": current_work_experience,
+			"amount": gratuity_amount,
+		}
 
 	def get_work_experience(self) -> float:
 		total_working_days = self.get_total_working_days()
@@ -289,7 +292,9 @@ class Gratuity(AccountsController):
 
 	def get_applicable_components(self) -> list[str]:
 		applicable_earning_components = frappe.get_all(
-			"Gratuity Applicable Component", filters={"parent": self.gratuity_rule}, pluck="salary_component"
+			"Gratuity Applicable Component",
+			filters={"parent": self.gratuity_rule},
+			pluck="salary_component",
 		)
 		if not applicable_earning_components:
 			frappe.throw(
@@ -317,7 +322,9 @@ class Gratuity(AccountsController):
 
 def get_last_salary_slip(employee: str) -> dict | None:
 	salary_slip = frappe.db.get_value(
-		"Salary Slip", {"employee": employee, "docstatus": 1}, order_by="start_date desc"
+		"Salary Slip",
+		{"employee": employee, "docstatus": 1},
+		order_by="start_date desc",
 	)
 	if salary_slip:
 		return frappe.get_doc("Salary Slip", salary_slip)

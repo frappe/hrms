@@ -26,7 +26,12 @@ class ExitInterview(Document):
 
 	def validate_duplicate_interview(self):
 		doc = frappe.db.exists(
-			"Exit Interview", {"employee": self.employee, "name": ("!=", self.name), "docstatus": ("!=", 2)}
+			"Exit Interview",
+			{
+				"employee": self.employee,
+				"name": ("!=", self.name),
+				"docstatus": ("!=", 2),
+			},
 		)
 		if doc:
 			frappe.throw(
@@ -137,4 +142,10 @@ def show_email_summary(email_success, email_failure):
 			", ".join(email_failure)
 		)
 
-	frappe.msgprint(message, title=_("Exit Questionnaire"), indicator="blue", is_minimizable=True, wide=True)
+	frappe.msgprint(
+		message,
+		title=_("Exit Questionnaire"),
+		indicator="blue",
+		is_minimizable=True,
+		wide=True,
+	)

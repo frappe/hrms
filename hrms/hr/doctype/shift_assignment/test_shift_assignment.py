@@ -196,7 +196,9 @@ class TestShiftAssignment(IntegrationTestCase):
 
 		# night shift
 		shift_type = setup_shift_type(
-			shift_type="Test Security - Night", start_time="19:00:00", end_time="07:00:00"
+			shift_type="Test Security - Night",
+			start_time="19:00:00",
+			end_time="07:00:00",
 		)
 		make_shift_assignment(shift_type.name, employee, yesterday, yesterday)
 

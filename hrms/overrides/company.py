@@ -103,14 +103,20 @@ def set_default_hr_accounts(doc, method=None):
 
 	if not doc.default_payroll_payable_account:
 		payroll_payable_account = frappe.db.get_value(
-			"Account", {"account_name": _("Payroll Payable"), "company": doc.name, "is_group": 0}
+			"Account",
+			{"account_name": _("Payroll Payable"), "company": doc.name, "is_group": 0},
 		)
 
 		doc.db_set("default_payroll_payable_account", payroll_payable_account)
 
 	if not doc.default_employee_advance_account:
 		employe_advance_account = frappe.db.get_value(
-			"Account", {"account_name": _("Employee Advances"), "company": doc.name, "is_group": 0}
+			"Account",
+			{
+				"account_name": _("Employee Advances"),
+				"company": doc.name,
+				"is_group": 0,
+			},
 		)
 
 		doc.db_set("default_employee_advance_account", employe_advance_account)

@@ -83,7 +83,8 @@ class JobOpening(WebsiteGenerator):
 					_(
 						"Job Openings for the designation {0} are already open or the hiring is complete as per the Staffing Plan {1}"
 					).format(
-						frappe.bold(self.designation), get_link_to_form("Staffing Plan", self.staffing_plan)
+						frappe.bold(self.designation),
+						get_link_to_form("Staffing Plan", self.staffing_plan),
 					),
 					title=_("Vacancies fulfilled"),
 				)

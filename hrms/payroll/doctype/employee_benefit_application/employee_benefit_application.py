@@ -13,10 +13,7 @@ from hrms.hr.utils import (
 	get_sal_slip_total_benefit_given,
 	validate_active_employee,
 )
-from hrms.payroll.doctype.payroll_period.payroll_period import (
-	get_payroll_period_days,
-	get_period_factor,
-)
+from hrms.payroll.doctype.payroll_period.payroll_period import get_payroll_period_days, get_period_factor
 from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
 	get_assigned_salary_structure,
 )
@@ -47,17 +44,25 @@ class EmployeeBenefitApplication(Document):
 				if benefit.pay_against_benefit_claim == 1:
 					payroll_period = frappe.get_doc("Payroll Period", self.payroll_period)
 					benefit_claimed = get_previous_claimed_amount(
-						self.employee, payroll_period, component=benefit.earning_component
+						self.employee,
+						payroll_period,
+						component=benefit.earning_component,
 					)
 					benefit_given = get_sal_slip_total_benefit_given(
-						self.employee, payroll_period, component=benefit.earning_component
+						self.employee,
+						payroll_period,
+						component=benefit.earning_component,
 					)
 					benefit_claim_remining = benefit_claimed - benefit_given
 					if benefit_claimed > 0 and benefit_claim_remining > benefit.amount:
 						frappe.throw(
 							_(
 								"An amount of {0} already claimed for the component {1}, set the amount equal or greater than {2}"
-							).format(benefit_claimed, benefit.earning_component, benefit_claim_remining)
+							).format(
+								benefit_claimed,
+								benefit.earning_component,
+								benefit_claim_remining,
+							)
 						)
 
 	def validate_remaining_benefit_amount(self):
@@ -100,7 +105,10 @@ class EmployeeBenefitApplication(Document):
 				frappe.throw(
 					_(
 						"You can claim only an amount of {0}, the rest amount {1} should be in the application as pro-rata component"
-					).format(non_pro_rata_amount, self.remaining_benefit - non_pro_rata_amount)
+					).format(
+						non_pro_rata_amount,
+						self.remaining_benefit - non_pro_rata_amount,
+					)
 				)
 			elif non_pro_rata_amount == 0:
 				frappe.throw(
@@ -132,7 +140,9 @@ class EmployeeBenefitApplication(Document):
 				benefit_amount += flt(employee_benefit.amount)
 
 		prev_sal_slip_flexi_amount = get_sal_slip_total_benefit_given(
-			self.employee, frappe.get_doc("Payroll Period", self.payroll_period), earning_component_name
+			self.employee,
+			frappe.get_doc("Payroll Period", self.payroll_period),
+			earning_component_name,
 		)
 		benefit_amount += prev_sal_slip_flexi_amount
 		if rounded(benefit_amount, 2) > max_benefit_amount:
@@ -145,7 +155,11 @@ class EmployeeBenefitApplication(Document):
 	def validate_duplicate_on_payroll_period(self):
 		application = frappe.db.exists(
 			"Employee Benefit Application",
-			{"employee": self.employee, "payroll_period": self.payroll_period, "docstatus": 1},
+			{
+				"employee": self.employee,
+				"payroll_period": self.payroll_period,
+				"docstatus": 1,
+			},
 		)
 		if application:
 			frappe.throw(
@@ -257,7 +271,13 @@ def calculate_lwp(employee, start_date, holidays, working_days):
 
 
 def get_benefit_component_amount(
-	employee, start_date, end_date, salary_component, sal_struct, payroll_frequency, payroll_period
+	employee,
+	start_date,
+	end_date,
+	salary_component,
+	sal_struct,
+	payroll_frequency,
+	payroll_period,
 ):
 	if not payroll_period:
 		frappe.msgprint(
@@ -282,14 +302,19 @@ def get_benefit_component_amount(
 
 	current_benefit_amount = 0.0
 	component_max_benefit, depends_on_payment_days = frappe.db.get_value(
-		"Salary Component", salary_component, ["max_benefit_amount", "depends_on_payment_days"]
+		"Salary Component",
+		salary_component,
+		["max_benefit_amount", "depends_on_payment_days"],
 	)
 
 	benefit_amount = 0
 	if benefit_application:
 		benefit_amount = frappe.db.get_value(
 			"Employee Benefit Application Detail",
-			{"parent": benefit_application[0][0], "earning_component": salary_component},
+			{
+				"parent": benefit_application[0][0],
+				"earning_component": salary_component,
+			},
 			"amount",
 		)
 	elif component_max_benefit:
@@ -298,7 +323,12 @@ def get_benefit_component_amount(
 	current_benefit_amount = 0
 	if benefit_amount:
 		total_sub_periods = get_period_factor(
-			employee, start_date, end_date, payroll_frequency, payroll_period, depends_on_payment_days
+			employee,
+			start_date,
+			end_date,
+			payroll_frequency,
+			payroll_period,
+			depends_on_payment_days,
 		)[0]
 
 		current_benefit_amount = benefit_amount / total_sub_periods

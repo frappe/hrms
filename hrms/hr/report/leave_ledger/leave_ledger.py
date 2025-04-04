@@ -150,7 +150,13 @@ def get_data(filters: Filters) -> list[dict]:
 		)
 	)
 
-	for field in ("employee", "leave_type", "company", "transaction_type", "transaction_name"):
+	for field in (
+		"employee",
+		"leave_type",
+		"company",
+		"transaction_type",
+		"transaction_name",
+	):
 		if filters.get(field):
 			query = query.where(Ledger[field] == filters.get(field))
 

@@ -31,7 +31,10 @@ SUPPORTED_FIELD_TYPES = [
 def get_current_user_info() -> dict:
 	current_user = frappe.session.user
 	user = frappe.db.get_value(
-		"User", current_user, ["name", "first_name", "full_name", "user_image"], as_dict=True
+		"User",
+		current_user,
+		["name", "first_name", "full_name", "user_image"],
+		as_dict=True,
 	)
 	user["roles"] = frappe.get_roles(current_user)
 
@@ -149,7 +152,10 @@ def get_holidays_for_calendar(employee: str, from_date: str, to_date: str) -> li
 	if holiday_list := get_holiday_list_for_employee(employee, raise_exception=False):
 		return frappe.get_all(
 			"Holiday",
-			filters={"parent": holiday_list, "holiday_date": ["between", [from_date, to_date]]},
+			filters={
+				"parent": holiday_list,
+				"holiday_date": ["between", [from_date, to_date]],
+			},
 			pluck="holiday_date",
 		)
 
@@ -238,7 +244,11 @@ def get_shift_request_approvers(employee: str) -> str | list[str]:
 		if not shift_request_approver:
 			shift_request_approver = frappe.db.get_value(
 				"Department Approver",
-				{"parent": department, "parentfield": "shift_request_approver", "idx": 1},
+				{
+					"parent": department,
+					"parentfield": "shift_request_approver",
+					"idx": 1,
+				},
 				"approver",
 			)
 
@@ -248,7 +258,8 @@ def get_shift_request_approvers(employee: str) -> str | list[str]:
 		approver.name for approver in department_approvers
 	]:
 		department_approvers.insert(
-			0, {"name": shift_request_approver, "full_name": shift_request_approver_name}
+			0,
+			{"name": shift_request_approver, "full_name": shift_request_approver_name},
 		)
 
 	return department_approvers
@@ -638,7 +649,10 @@ def get_currency_symbols() -> dict:
 @frappe.whitelist()
 def get_company_cost_center_and_expense_account(company: str) -> dict:
 	return frappe.db.get_value(
-		"Company", company, ["cost_center", "default_expense_claim_payable_account"], as_dict=True
+		"Company",
+		company,
+		["cost_center", "default_expense_claim_payable_account"],
+		as_dict=True,
 	)
 
 

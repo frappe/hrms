@@ -159,7 +159,10 @@ class ShiftAssignmentTool(Document):
 		ShiftType = frappe.qb.DocType("Shift Type")
 		end_time_case = (
 			Case()
-			.when(ShiftType.end_time < ShiftType.start_time, ShiftType.end_time + Interval(hours=24))
+			.when(
+				ShiftType.end_time < ShiftType.start_time,
+				ShiftType.end_time + Interval(hours=24),
+			)
 			.else_(ShiftType.end_time)
 		)
 
@@ -259,7 +262,10 @@ class ShiftAssignmentTool(Document):
 			return self._bulk_process_shift_requests(shift_requests, status)
 
 		frappe.enqueue(
-			self._bulk_process_shift_requests, timeout=3000, shift_requests=shift_requests, status=status
+			self._bulk_process_shift_requests,
+			timeout=3000,
+			shift_requests=shift_requests,
+			status=status,
 		)
 		frappe.msgprint(
 			_("Processing of Shift Requests has been queued. It may take a few minutes."),
@@ -286,7 +292,10 @@ class ShiftAssignmentTool(Document):
 				failure.append(d["employee"])
 			else:
 				success.append(
-					{"doc": get_link_to_form("Shift Request", shift_request.name), "employee": d["employee"]}
+					{
+						"doc": get_link_to_form("Shift Request", shift_request.name),
+						"employee": d["employee"],
+					}
 				)
 
 			count += 1

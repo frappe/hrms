@@ -114,7 +114,9 @@ class EmployeeCheckin(Document):
 			return
 
 		checkin_radius, latitude, longitude = frappe.db.get_value(
-			"Shift Location", assignment_locations[0], ["checkin_radius", "latitude", "longitude"]
+			"Shift Location",
+			assignment_locations[0],
+			["checkin_radius", "latitude", "longitude"],
 		)
 		if checkin_radius <= 0:
 			return
@@ -331,7 +333,8 @@ def handle_attendance_exception(log_names: list, error_message: str):
 
 def add_comment_in_checkins(log_names: list, error_message: str):
 	text = "{prefix}<br>{error_message}".format(
-		prefix=frappe.bold(_("Reason for skipping auto attendance:")), error_message=error_message
+		prefix=frappe.bold(_("Reason for skipping auto attendance:")),
+		error_message=error_message,
 	)
 
 	for name in log_names:
