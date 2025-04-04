@@ -25,13 +25,11 @@ frappe.ui.form.on("Salary Component", {
 	refresh: function (frm) {
 		hrms.payroll_utils.set_autocompletions_for_condition_and_formula(frm);
 
-
-		//----------------FILTER APPLIED IN Arrear component-------------------
-
         frm.fields_dict['mapping_component'].get_query = function(doc) {
             return {
                 filters: {
-                    'is_arrear': 0
+                    'is_arrear': 0,
+					'disabled': 0,
                 }
             };
         };
@@ -48,7 +46,6 @@ frappe.ui.form.on("Salary Component", {
 		}
 	},
 
-//is Arrear check box is not depending on depends on payment days
 	is_arrear: function (frm) {
 		if (frm.doc.is_arrear) {
 			frm.set_value("depends_on_payment_days", 0);

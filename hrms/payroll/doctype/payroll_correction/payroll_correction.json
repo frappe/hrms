@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{employee}-{payroll_period}-{#####}",
+ "autoname": "format:PAYCORR-{payroll_period}-{#####}",
  "creation": "2025-03-31 15:33:41.882106",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -16,18 +16,18 @@
   "payroll_period",
   "additional_salary_date",
   "section_break_xdag",
-  "lwp_month_reversal",
-  "salary_slip_id",
+  "select_month_for_lwp_reversal",
+  "salary_slip_reference",
   "working_days",
   "absent_days",
   "lwp_days",
   "column_break_uyjn",
-  "total_lwp_days",
-  "number_of_days_planning_to_reverse",
+  "total_lwp_applied",
+  "days_to_reverse",
   "section_break_giud",
-  "earning_arrear_component",
+  "earning_arrear_details",
   "section_break_tezq",
-  "deduction_arrear_component"
+  "deductions_arrear_details"
  ],
  "fields": [
   {
@@ -48,6 +48,7 @@
    "fieldname": "employee",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Employee",
    "options": "Employee",
    "reqd": 1
@@ -56,6 +57,8 @@
    "fetch_from": "employee.employee_name",
    "fieldname": "employee_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Employee Name",
    "read_only": 1
   },
@@ -75,6 +78,7 @@
    "fieldname": "payroll_period",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Payroll Period",
    "options": "Payroll Period",
    "reqd": 1
@@ -89,21 +93,6 @@
   {
    "fieldname": "section_break_xdag",
    "fieldtype": "Section Break"
-  },
-  {
-   "depends_on": "payroll_period",
-   "fieldname": "lwp_month_reversal",
-   "fieldtype": "Select",
-   "label": "LWP Month Reversal",
-   "options": "\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
-   "reqd": 1
-  },
-  {
-   "fieldname": "salary_slip_id",
-   "fieldtype": "Link",
-   "label": "Salary Slip ID",
-   "options": "Salary Slip",
-   "read_only": 1
   },
   {
    "fieldname": "working_days",
@@ -128,36 +117,12 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "total_lwp_days",
-   "fieldtype": "Float",
-   "label": "Total LWP Days",
-   "read_only": 1
-  },
-  {
-   "fieldname": "number_of_days_planning_to_reverse",
-   "fieldtype": "Float",
-   "label": "Number of days planning to reverse",
-   "reqd": 1
-  },
-  {
    "fieldname": "section_break_giud",
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "earning_arrear_component",
-   "fieldtype": "Table",
-   "label": "Earning Arrear Component",
-   "options": "Salary Adjustment Child"
-  },
-  {
    "fieldname": "section_break_tezq",
    "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "deduction_arrear_component",
-   "fieldtype": "Table",
-   "label": "Deduction Arrear Component",
-   "options": "Salary Adjustment Child"
   },
   {
    "fetch_from": "company.default_currency",
@@ -166,6 +131,51 @@
    "hidden": 1,
    "label": "Currency",
    "options": "Currency"
+  },
+  {
+   "depends_on": "payroll_period",
+   "fieldname": "select_month_for_lwp_reversal",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Select Month for LWP Reversal",
+   "options": "\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
+   "reqd": 1
+  },
+  {
+   "fieldname": "salary_slip_reference",
+   "fieldtype": "Link",
+   "label": "Salary Slip Reference",
+   "options": "Salary Slip",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "total_lwp_applied",
+   "fieldtype": "Float",
+   "label": "Total LWP Applied",
+   "read_only": 1
+  },
+  {
+   "description": "Enter the number of Leave Without Pay (LWP) days you want to reverse. This value cannot exceed the total LWP days recorded for the selected month",
+   "fieldname": "days_to_reverse",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Days to Reverse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "earning_arrear_details",
+   "fieldtype": "Table",
+   "label": "Earnings Arrear Details",
+   "options": "Salary Adjustment Child",
+   "read_only": 1
+  },
+  {
+   "fieldname": "deductions_arrear_details",
+   "fieldtype": "Table",
+   "label": "Deductions Arrear Details",
+   "options": "Salary Adjustment Child",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
@@ -177,7 +187,7 @@
    "link_fieldname": "payroll_correction"
   }
  ],
- "modified": "2025-04-02 20:52:43.863555",
+ "modified": "2025-04-04 13:06:13.036741",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Correction",
@@ -185,7 +195,6 @@
  "owner": "Administrator",
  "permissions": [
   {
-   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -199,7 +208,6 @@
    "write": 1
   },
   {
-   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -214,7 +222,6 @@
    "write": 1
   },
   {
-   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
