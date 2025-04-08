@@ -30,7 +30,9 @@
   "column_break_20",
   "tax_deducted_till_date",
   "section_break_17",
-  "payroll_cost_centers"
+  "payroll_cost_centers",
+  "ctc_preview_tab",
+  "ctc_breakup"
  ],
  "fields": [
   {
@@ -206,11 +208,21 @@
    "fieldtype": "Section Break",
    "hidden": 1,
    "label": "Opening Balances"
+  },
+  {
+   "fieldname": "ctc_preview_tab",
+   "fieldtype": "Tab Break",
+   "label": "CTC Preview"
+  },
+  {
+   "fieldname": "ctc_breakup",
+   "fieldtype": "HTML",
+   "label": "ctc breakup"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-10-18 18:06:42.013701",
+ "modified": "2025-04-08 10:42:42.933710",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",
@@ -257,6 +269,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "employee_name, salary_structure",
  "sort_field": "creation",
  "sort_order": "DESC",

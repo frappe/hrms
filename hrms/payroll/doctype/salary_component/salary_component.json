@@ -25,6 +25,7 @@
   "statistical_component",
   "do_not_include_in_total",
   "remove_if_zero_valued",
+  "is_part_of_ctc",
   "disabled",
   "section_break_5",
   "accounts",
@@ -263,12 +264,19 @@
    "fieldname": "remove_if_zero_valued",
    "fieldtype": "Check",
    "label": "Remove if Zero Valued"
+  },
+  {
+   "default": "0",
+   "description": "If enabled, the components that are part of the CTC are displayed in the CTC preview of the salary structure assignment.",
+   "fieldname": "is_part_of_ctc",
+   "fieldtype": "Check",
+   "label": "Is part of CTC"
   }
  ],
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-27 13:10:33.871355",
+ "modified": "2025-04-08 14:40:37.836444",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",
@@ -292,6 +300,7 @@
    "role": "Employee"
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": []

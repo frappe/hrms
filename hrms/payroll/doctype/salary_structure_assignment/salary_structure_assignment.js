@@ -53,6 +53,7 @@ frappe.ui.form.on("Salary Structure Assignment", {
 	},
 
 	refresh: function (frm) {
+		frm.trigger("ctc_preview");
 		frm.trigger("toggle_opening_balances_section");
 
 		if (frm.doc.docstatus != 1) return;
@@ -76,7 +77,118 @@ frappe.ui.form.on("Salary Structure Assignment", {
 			},
 			__("Actions"),
 		);
+
+		
+
+		
 	},
+
+	ctc_preview: function (frm) {
+		if (frm.doc.docstatus !== 1) return;
+	
+		let total_monthly = 0;
+		let total_annual = 0;
+	
+		const formatRow = (component, monthly) => {
+			const annual = monthly * 12;
+			total_monthly += monthly;
+			total_annual += annual;
+			return `
+				<tr>
+					<td>${component}</td>
+					<td>${format_currency(monthly)}</td>
+					<td>${format_currency(annual)}</td>
+				</tr>
+			`;
+		};
+	
+		const fetchCTCRows = (components) => {
+			return Promise.all(components.map(item => {
+				return new Promise(resolve => {
+					frappe.call({
+						method: "frappe.client.get",
+						args: {
+							doctype: "Salary Component",
+							name: item.salary_component
+						},
+						callback: function (res) {
+							if (res.message && res.message.is_part_of_ctc === 1) {
+								resolve(formatRow(item.salary_component, item.amount));
+							} else {
+								resolve('');
+							}
+						}
+					});
+				});
+			}));
+		};
+	
+		frappe.call({
+			method: "hrms.payroll.doctype.salary_structure.salary_structure.make_salary_slip",
+			args: {
+				source_name: frm.doc.salary_structure,
+				employee: frm.doc.employee,
+				print_format: 'Salary Slip Standard',
+				posting_date: frm.doc.from_date,
+				for_preview: 1,
+			},
+			callback: async function (response) {
+				if (!response.message) return;
+	
+				const earnings = response.message.earnings || [];
+				const deductions = response.message.deductions || [];
+	
+				const [earnings_rows, deductions_rows] = await Promise.all([
+					fetchCTCRows(earnings),
+					fetchCTCRows(deductions)
+				]);
+	
+				const earnings_html = earnings_rows.join('');
+				const deductions_html = deductions_rows.join('');
+	
+				const final_html = `
+					<table style="width:100%; border-collapse: collapse; margin-bottom: 20px;" border="1">
+					  <thead>
+						<tr>
+						  <th style="width:50%;">Salary Component (Earnings)</th>
+						  <th style="width:25%;">Monthly Amount</th>
+						  <th style="width:25%;">Annual Amount</th>
+						</tr>
+					  </thead>
+					  <tbody>
+						${earnings_html}
+					  </tbody>
+					</table>
+	
+					<table style="width:100%; border-collapse: collapse; margin-bottom: 20px;" border="1">
+					  <thead>
+						<tr>
+						  <th style="width:50%;">Salary Component (Deductions)</th>
+						  <th style="width:25%;">Monthly Amount</th>
+						  <th style="width:25%;">Annual Amount</th>
+						</tr>
+					  </thead>
+					  <tbody>
+						${deductions_html}
+					  </tbody>
+					</table>
+	
+					<table style="width:100%; border-collapse: collapse;" border="1">
+					  <tbody>
+						<tr>
+							<td style="width:50%;"><b>Total CTC</b></td>
+							<td style="width:25%;"><b>${format_currency(total_monthly)}</b></td>
+							<td style="width:25%;"><b>${format_currency(total_annual)}</b></td>
+						</tr>
+					  </tbody>
+					</table>
+				`;
+	
+				frm.fields_dict.ctc_breakup.$wrapper.html(final_html);
+			}
+		});
+	},
+	
 
 	employee: function (frm) {
 		if (frm.doc.employee) {
