@@ -45,9 +45,11 @@ frappe.ui.form.on("Employee Referral", {
 		}
 	},
 	create_job_applicant: function (frm) {
-		frappe.model.open_mapped_doc({
+		frappe.call({
 			method: "hrms.hr.doctype.employee_referral.employee_referral.create_job_applicant",
-			frm: frm,
+			args: {
+				source_name: frm.docname,
+			},
 		});
 	},
 
