@@ -115,7 +115,7 @@ frappe.ui.form.on("Salary Structure Assignment", {
 							if (res.message && res.message.is_part_of_ctc === 1) {
 								resolve(formatRow(item.salary_component, item.amount));
 							} else {
-								resolve('');
+								resolve("");
 							}
 						}
 					});
@@ -128,7 +128,7 @@ frappe.ui.form.on("Salary Structure Assignment", {
 			args: {
 				source_name: frm.doc.salary_structure,
 				employee: frm.doc.employee,
-				print_format: 'Salary Slip Standard',
+				print_format: "Salary Slip Standard",
 				posting_date: frm.doc.from_date,
 				for_preview: 1,
 			},
@@ -140,11 +140,11 @@ frappe.ui.form.on("Salary Structure Assignment", {
 	
 				const [earnings_rows, deductions_rows] = await Promise.all([
 					fetchCTCRows(earnings),
-					fetchCTCRows(deductions)
+					fetchCTCRows(deductions),
 				]);
 	
-				const earnings_html = earnings_rows.join('');
-				const deductions_html = deductions_rows.join('');
+				const earnings_html = earnings_rows.join("");
+				const deductions_html = deductions_rows.join("");
 	
 				const final_html = `
 					<table style="width:100%; border-collapse: collapse; margin-bottom: 20px;" border="1">
