@@ -353,7 +353,11 @@ def update_last_sync_of_checkin():
 		filters={"enable_auto_attendance": 1, "auto_update_last_sync": 1},
 		fields=["name", "last_sync_of_checkin"],
 	)
+<<<<<<< HEAD
 
+=======
+	now = frappe.flags.current_datetime or get_datetime()
+>>>>>>> a9c93526 (fix: fix flag value added for the test)
 	for shift in shifts:
 		last_shift_sync = frappe.db.get_value(
 			"Employee Checkin", {"shift": shift.name}, "time", order_by="time desc"

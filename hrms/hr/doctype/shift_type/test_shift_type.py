@@ -27,8 +27,6 @@ class TestShiftType(FrappeTestCase):
 		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
 
 	def test_auto_update_last_sync_of_checkin(self):
-		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
-
 		shift_type = setup_shift_type()
 		shift_type.last_sync_of_checkin = None
 		shift_type.auto_update_last_sync = 1
