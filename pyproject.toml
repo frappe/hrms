@@ -9,8 +9,13 @@ readme = "README.md"
 dynamic = ["version"]
 
 [build-system]
-requires = ["flit_core >=3.4,<4"]
-build-backend = "flit_core.buildapi"
+requires = ["setuptools >= 64","wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["hrms*", "roster*", "frontend*"]
+exclude = ["docker*"]
 
 [tool.ruff]
 line-length = 110
