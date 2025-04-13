@@ -14,6 +14,7 @@
 import { IonPage } from "@ionic/vue"
 import ListView from "@/components/ListView.vue"
 
+const __ = inject("$translate")
 const TAB_BUTTONS = ["My Advances", "Team Advances"] // __("My Advances"), __("Team Advances")
 const EMPLOYEE_ADVANCE_FIELDS = [
 	"name",
@@ -37,32 +38,32 @@ const STATUS_FILTER_OPTIONS = [
 	"Returned",
 	"Partly Claimed and Returned",
 	"Cancelled",
-]
+] // __("Draft"), __("Paid"), __("Unpaid"), __("Claimed"), __("Returned"), __("Partly Claimed and Returned"), __("Cancelled")
 const FILTER_CONFIG = [
 	{
 		fieldname: "status",
 		fieldtype: "Select",
-		label: "Status",
+		label: __("Status"),
 		options: STATUS_FILTER_OPTIONS,
 	},
 	{
 		fieldname: "employee",
 		fieldtype: "Link",
-		label: "Employee",
+		label: __("Employee"),
 		options: "Employee",
 	},
 	{
 		fieldname: "department",
 		fieldtype: "Link",
-		label: "Department",
+		label: __("Department"),
 		options: "Department",
 	},
-	{ fieldname: "posting_date", fieldtype: "Date", label: "Posting Date" },
+	{ fieldname: "posting_date", fieldtype: "Date", label: __("Posting Date") },
 	{
 		fieldname: "advance_amount",
 		fieldtype: "Currency",
-		label: "Advance Amount",
+		label: __("Advance Amount"),
 	},
-	{ fieldname: "paid_amount", fieldtype: "Currency", label: "Paid Amount" },
+	{ fieldname: "paid_amount", fieldtype: "Currency", label: __("Paid Amount") },
 ]
 </script>

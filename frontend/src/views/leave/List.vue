@@ -14,6 +14,7 @@
 import { IonPage } from "@ionic/vue"
 import ListView from "@/components/ListView.vue"
 
+const __ = inject("$translate")
 const TAB_BUTTONS = ["My Leaves", "Team Leaves"] // __("My Leaves"), __("Team Leaves")
 const LEAVE_FIELDS = [
 	"name",
@@ -25,33 +26,33 @@ const LEAVE_FIELDS = [
 	"total_leave_days",
 	"status",
 ]
-const STATUS_FILTER_OPTIONS = ["Open", "Approved", "Rejected"]
+const STATUS_FILTER_OPTIONS = ["Open", "Approved", "Rejected"] // __("Open"), __("Approved"), __("Rejected")
 const FILTER_CONFIG = [
 	{
 		fieldname: "status",
 		fieldtype: "Select",
-		label: "Status",
+		label: __("Status"),
 		options: STATUS_FILTER_OPTIONS,
 	},
 	{
 		fieldname: "leave_type",
 		fieldtype: "Link",
-		label: "Leave Type",
+		label: __("Leave Type"),
 		options: "Leave Type",
 	},
 	{
 		fieldname: "employee",
 		fieldtype: "Link",
-		label: "Employee",
+		label: __("Employee"),
 		options: "Employee",
 	},
 	{
 		fieldname: "department",
 		fieldtype: "Link",
-		label: "Department",
+		label: __("Department"),
 		options: "Department",
 	},
-	{ fieldname: "from_date", fieldtype: "Date", label: "From Date" },
-	{ fieldname: "to_date", fieldtype: "Date", label: "To Date" },
+	{ fieldname: "from_date", fieldtype: "Date", label: __("From Date") },
+	{ fieldname: "to_date", fieldtype: "Date", label: __("To Date") },
 ]
 </script>
