@@ -139,6 +139,7 @@ class TestSalarySlip(IntegrationTestCase):
 			"Half Day",
 			leave_type="Leave Without Pay",
 			ignore_validate=True,
+			half_day_status="Present",
 		)  # valid 0.75 lwp
 		mark_attendance(
 			emp_id,
@@ -177,6 +178,134 @@ class TestSalarySlip(IntegrationTestCase):
 			(78000 / (days_in_month - no_of_holidays)) * flt(ss.leave_without_pay + ss.absent_days)
 		)
 
+		self.assertEqual(rounded(ss.gross_pay), rounded(gross_pay))
+
+	@change_settings(
+		"Payroll Settings",
+		{
+			"payroll_based_on": "Attendance",
+			"consider_unmarked_attendance_as": "Absent",
+			"daily_wages_fraction_for_half_day": 0.5,
+		},
+	)
+	def test_payment_days_considering_half_days_unmarked_as_absent(self):
+		no_of_days = get_no_of_days()
+
+		emp_id = make_employee("test_payment_days_based_on_attendance1@salary.com")
+
+		first_sunday = get_first_sunday()
+		mark_attendance(
+			emp_id, add_days(first_sunday, 1), "Present", ignore_validate=True
+		)  # counted as Present
+		mark_attendance(
+			emp_id,
+			add_days(first_sunday, 2),
+			"Half Day",
+			leave_type="Casual Leave",
+			ignore_validate=True,
+			half_day_status="Absent",
+		)  # count as half absent in absent days
+		mark_attendance(
+			emp_id, add_days(first_sunday, 3), "Half Day", ignore_validate=True, half_day_status="Absent"
+		)  # count as half absent in absent days
+		mark_attendance(
+			emp_id, add_days(first_sunday, 4), "Half Day", ignore_validate=True, half_day_status="Present"
+		)  # count as full present
+		mark_attendance(
+			emp_id, add_days(first_sunday, 5), "On Leave", leave_type="Casual Leave", ignore_validate=True
+		)  # invalid lwp, full present
+		mark_attendance(
+			emp_id,
+			add_days(first_sunday, 6),
+			"Half Day",
+			leave_type="Leave Without Pay",
+			ignore_validate=True,
+			half_day_status="Absent",
+		)  # count as 0.5 lwp and 0.5 in absent days
+
+		ss = make_employee_salary_slip(
+			emp_id,
+			"Monthly",
+			"Test Payment Based On Attendence",
+		)
+		days_in_month = no_of_days[0]
+		no_of_holidays = no_of_days[1]
+		# from half lwp
+		self.assertEqual(ss.leave_without_pay, 0.5)
+		# 1 + 0.5 + 0.5 + 1 + 1 + 0.5
+		self.assertEqual(ss.absent_days, (days_in_month - no_of_holidays - 4.5))
+
+		self.assertEqual(ss.payment_days, 4)
+
+		# Gross pay calculation based on attendances
+		gross_pay = 78000 - (
+			(78000 / (days_in_month - no_of_holidays)) * flt(ss.leave_without_pay + ss.absent_days)
+		)
+		# half day (when absent) from checkins is considered as 0.5 lwp but half day (absent) from leave application is considered as absent
+		self.assertEqual(rounded(ss.gross_pay), rounded(gross_pay))
+
+	@change_settings(
+		"Payroll Settings",
+		{
+			"payroll_based_on": "Attendance",
+			"consider_unmarked_attendance_as": "Present",
+			"daily_wages_fraction_for_half_day": 0.5,
+		},
+	)
+	def test_payment_days_considering_half_days_unmarked_as_present(self):
+		no_of_days = get_no_of_days()
+
+		emp_id = make_employee("test_payment_days_based_on_attendance2@salary.com")
+
+		first_sunday = get_first_sunday()
+		mark_attendance(
+			emp_id, add_days(first_sunday, 1), "Absent", ignore_validate=True
+		)  # counted as absent
+		mark_attendance(
+			emp_id,
+			add_days(first_sunday, 2),
+			"Half Day",
+			leave_type="Casual Leave",
+			ignore_validate=True,
+			half_day_status="Absent",
+		)  # count as full present
+		mark_attendance(
+			emp_id, add_days(first_sunday, 3), "Half Day", ignore_validate=True, half_day_status="Absent"
+		)  # count as full present
+		mark_attendance(
+			emp_id, add_days(first_sunday, 4), "Half Day", ignore_validate=True, half_day_status="Present"
+		)  # count as full present
+		mark_attendance(
+			emp_id, add_days(first_sunday, 5), "On Leave", leave_type="Casual Leave", ignore_validate=True
+		)  # invalid lwp, full present
+		mark_attendance(
+			emp_id,
+			add_days(first_sunday, 6),
+			"Half Day",
+			leave_type="Leave Without Pay",
+			ignore_validate=True,
+			half_day_status="Absent",
+		)  # count as 0.5 lwp and 0.5 as present
+
+		ss = make_employee_salary_slip(
+			emp_id,
+			"Monthly",
+			"Test Payment Based On Attendence",
+		)
+		days_in_month = no_of_days[0]
+		no_of_holidays = no_of_days[1]
+		# from half lwp
+		self.assertEqual(ss.leave_without_pay, 0.5)
+
+		self.assertEqual(ss.absent_days, 1)
+
+		self.assertEqual(ss.payment_days, days_in_month - no_of_holidays - 1.5)
+
+		# Gross pay calculation based on attendances
+		gross_pay = 78000 - (
+			(78000 / (days_in_month - no_of_holidays)) * flt(ss.leave_without_pay + ss.absent_days)
+		)
+		# half day (when absent) from checkins is considered as 0.5 lwp but half day (absent) from leave application is considered as absent
 		self.assertEqual(rounded(ss.gross_pay), rounded(gross_pay))
 
 	@change_settings(
@@ -646,7 +775,14 @@ class TestSalarySlip(IntegrationTestCase):
 
 		# mark half day on holiday
 		first_sunday = get_first_sunday(for_date=joining_date, find_after_for_date=True)
-		mark_attendance(emp_id, first_sunday, "Half Day", ignore_validate=True)
+		mark_attendance(
+			emp_id,
+			first_sunday,
+			"Half Day",
+			leave_type="Leave Without Pay",
+			half_day_status="Absent",
+			ignore_validate=True,
+		)
 
 		ss = make_employee_salary_slip(
 			emp_id,
@@ -2713,6 +2849,7 @@ def mark_attendance(
 	leave_type=None,
 	late_entry=False,
 	early_exit=False,
+	half_day_status=None,
 ):
 	attendance = frappe.new_doc("Attendance")
 	attendance.update(
@@ -2725,6 +2862,7 @@ def mark_attendance(
 			"leave_type": leave_type,
 			"late_entry": late_entry,
 			"early_exit": early_exit,
+			"half_day_status": half_day_status,
 		}
 	)
 	attendance.flags.ignore_validate = ignore_validate
