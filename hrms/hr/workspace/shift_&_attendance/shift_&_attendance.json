@@ -242,7 +242,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-01-15 16:43:18.393364",
+ "modified": "2025-04-11 16:43:18.393364",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift & Attendance",
@@ -259,7 +259,7 @@
    "doc_view": "List",
    "label": "Roster",
    "type": "URL",
-   "url": "/hr/roster/"
+   "url": "/hr/roster"
   },
   {
    "color": "Grey",

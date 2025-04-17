@@ -17,6 +17,7 @@ from frappe.utils import (
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
+from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.employee_checkin.employee_checkin import (
 	CheckinRadiusExceededError,
 	add_log_based_on_employee_field,
@@ -662,6 +663,32 @@ class TestEmployeeCheckin(IntegrationTestCase):
 		log.reload()
 		log.time = timestamp
 		self.assertRaises(frappe.ValidationError, log.save)
+
+	def test_modifying_half_attendance_created_from_leave(self):
+		shift = setup_shift_type()
+		emp = make_employee("testhalfday@example.com", company="_Test Company", default_shift=shift.name)
+		in_time = datetime.combine(getdate(), get_time("08:00:00"))
+		out_time = datetime.combine(getdate(), get_time("10:00:00"))
+		in_log = make_checkin(emp, in_time)
+		out_log = make_checkin(emp, out_time)
+		attendance_name = mark_attendance(
+			employee=emp, attendance_date=nowdate(), status="Half Day", half_day_status="Absent"
+		)
+		mark_attendance_and_link_log(
+			[in_log, out_log], "Half Day", nowdate(), 4, in_time=in_time, out_time=out_time, shift=shift.name
+		)
+		attendance = frappe.get_value(
+			"Attendance",
+			attendance_name,
+			["name", "status", "half_day_status", "shift", "working_hours", "in_time", "out_time"],
+			as_dict=True,
+		)
+		self.assertEqual(attendance.status, "Half Day")
+		self.assertEqual(attendance.half_day_status, "Present")
+		self.assertEqual(attendance.shift, shift.name)
+		self.assertEqual(attendance.working_hours, 4)
+		self.assertEqual(attendance.in_time, in_log.time)
+		self.assertEqual(attendance.out_time, out_log.time)
 
 
 def make_n_checkins(employee, n, hours_to_reverse=1):

@@ -223,21 +223,39 @@ def mark_attendance_and_link_log(
 	elif attendance_status in ("Present", "Absent", "Half Day"):
 		try:
 			frappe.db.savepoint("attendance_creation")
-			attendance = frappe.new_doc("Attendance")
-			attendance.update(
-				{
-					"doctype": "Attendance",
-					"employee": employee,
-					"attendance_date": attendance_date,
-					"status": attendance_status,
-					"working_hours": working_hours,
-					"shift": shift,
-					"late_entry": late_entry,
-					"early_exit": early_exit,
-					"in_time": in_time,
-					"out_time": out_time,
-				}
-			).submit()
+			if attendance_status == "Half Day" and (
+				attendance := get_existing_half_day_attendance(employee, attendance_date)
+			):
+				frappe.db.set_value(
+					"Attendance",
+					attendance.name,
+					{
+						"half_day_status": "Present",
+						"working_hours": working_hours,
+						"shift": shift,
+						"late_entry": late_entry,
+						"early_exit": early_exit,
+						"in_time": in_time,
+						"out_time": out_time,
+					},
+				)
+			else:
+				attendance = frappe.new_doc("Attendance")
+				attendance.update(
+					{
+						"doctype": "Attendance",
+						"employee": employee,
+						"attendance_date": attendance_date,
+						"status": attendance_status,
+						"working_hours": working_hours,
+						"shift": shift,
+						"late_entry": late_entry,
+						"early_exit": early_exit,
+						"in_time": in_time,
+						"out_time": out_time,
+						"half_day_status": "Absent" if attendance_status == "Half Day" else None,
+					}
+				).submit()
 
 			if attendance_status == "Absent":
 				attendance.add_comment(
@@ -252,6 +270,23 @@ def mark_attendance_and_link_log(
 
 	else:
 		frappe.throw(_("{} is an invalid Attendance Status.").format(attendance_status))
+
+
+def get_existing_half_day_attendance(employee, attendance_date):
+	attendance_name = frappe.db.exists(
+		"Attendance",
+		{
+			"employee": employee,
+			"attendance_date": attendance_date,
+			"status": "Half Day",
+			"half_day_status": "Absent",
+		},
+	)
+
+	if attendance_name:
+		attendance_doc = frappe.get_doc("Attendance", attendance_name)
+		return attendance_doc
+	return None
 
 
 def calculate_working_hours(logs, check_in_out_type, working_hours_calc_type):

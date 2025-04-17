@@ -162,7 +162,6 @@ override_doctype_class = {
 doc_events = {
 	"User": {
 		"validate": "erpnext.setup.doctype.employee.employee.validate_employee_role",
-		"on_update": "erpnext.setup.doctype.employee.employee.update_user_permissions",
 	},
 	"Company": {
 		"validate": "hrms.overrides.company.validate_default_accounts",

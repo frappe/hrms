@@ -154,7 +154,7 @@ def get_grand_total_and_outstanding_amount(doc, party_amount, party_account_curr
 
 	elif doc.doctype == "Expense Claim":
 		grand_total = flt(doc.total_sanctioned_amount) + flt(doc.total_taxes_and_charges)
-		outstanding_amount = flt(doc.grand_total) - flt(doc.total_amount_reimbursed)
+		outstanding_amount = get_outstanding_amount_for_claim(doc.name)
 
 	elif doc.doctype == "Employee Advance":
 		grand_total = flt(doc.advance_amount)
