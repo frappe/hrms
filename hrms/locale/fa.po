@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-04-13 09:36+0000\n"
-"PO-Revision-Date: 2025-04-14 11:05\n"
+"PO-Revision-Date: 2025-04-17 11:15\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -5964,7 +5964,7 @@ msgstr "از اینجا می‌توانید بازخرید را برای ترا�
 
 #: hrms/payroll/report/salary_register/salary_register.html:8
 msgid "From {0} to {1}"
-msgstr ""
+msgstr "از {0} تا {1}"
 
 #. Label of the from_year (Int) field in DocType 'Gratuity Rule Slab'
 #: hrms/payroll/doctype/gratuity_rule_slab/gratuity_rule_slab.json
@@ -10179,7 +10179,7 @@ msgstr "عنوان چاپ"
 
 #: hrms/payroll/report/salary_register/salary_register.html:40
 msgid "Printed On {0}"
-msgstr ""
+msgstr "چاپ شده در {0}"
 
 #. Label of the printing_details (Section Break) field in DocType 'Job Offer'
 #: hrms/hr/doctype/job_offer/job_offer.json
@@ -12396,7 +12396,7 @@ msgstr "وضعیت"
 #. Label of the half_day_status (Select) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
 msgid "Status for Other Half"
-msgstr ""
+msgstr "وضعیت برای نیمه دیگر"
 
 #: hrms/setup.py:401
 msgid "Stock Options"
