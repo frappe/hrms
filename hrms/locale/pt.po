@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-04-13 09:36+0000\n"
-"PO-Revision-Date: 2025-04-16 11:19\n"
+"PO-Revision-Date: 2025-04-18 11:34\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Portuguese\n"
 "MIME-Version: 1.0\n"
@@ -14245,7 +14245,7 @@ msgstr ""
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:29
 #: hrms/public/js/salary_slip_deductions_report_filters.js:36
 msgid "Year"
-msgstr ""
+msgstr "Ano"
 
 #. Label of the year_to_date (Currency) field in DocType 'Salary Detail'
 #. Label of the year_to_date (Currency) field in DocType 'Salary Slip'
@@ -14279,7 +14279,7 @@ msgstr ""
 #: frontend/src/components/FormView.vue:305
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 msgid "Yes"
-msgstr ""
+msgstr "Sim"
 
 #: hrms/hr/doctype/hr_settings/hr_settings.py:84
 msgid "Yes, Proceed"
