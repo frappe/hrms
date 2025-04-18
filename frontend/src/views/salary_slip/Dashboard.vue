@@ -47,7 +47,7 @@
 							</router-link>
 						</div>
 					</div>
-					<EmptyState message="No salary slips found" v-else />
+					<EmptyState :message="__('No salary slips found')" v-else />
 				</div>
 			</div>
 		</template>
@@ -70,6 +70,7 @@ let periodsByName = ref({})
 const employee = inject("$employee")
 const dayjs = inject("$dayjs")
 const socket = inject("$socket")
+const __ = inject("$translate")
 
 const payrollPeriods = createListResource({
 	doctype: "Payroll Period",

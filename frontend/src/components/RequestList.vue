@@ -28,7 +28,7 @@
 			</Button>
 		</router-link>
 	</div>
-	<EmptyState :message="emptyStateMessage || 'You have no requests'" v-else />
+	<EmptyState :message="emptyStateMessage || __('You have no requests')" v-else />
 
 	<ion-modal
 		ref="modal"
@@ -54,6 +54,7 @@ import {
 	SHIFT_FIELDS,
 } from "@/data/config/requestSummaryFields"
 
+const __ = inject("$translate")
 const props = defineProps({
 	component: {
 		type: Object,

@@ -20,7 +20,7 @@
 				<div class="flex flex-row items-center gap-3 grow">
 					<FeatherIcon name="calendar" class="h-5 w-5 text-gray-500" />
 					<div class="text-base font-normal text-gray-800">
-						{{ holiday.description }}
+						{{ __(holiday.description) }}
 					</div>
 				</div>
 				<div class="text-base font-bold text-gray-800">
@@ -29,7 +29,7 @@
 			</div>
 		</div>
 
-		<EmptyState message="You have no upcoming holidays" v-else />
+		<EmptyState :message="__('You have no upcoming holidays')" v-else />
 	</div>
 
 	<ion-modal
@@ -76,6 +76,7 @@ import { FeatherIcon, createResource } from "frappe-ui"
 
 const employee = inject("$employee")
 const dayjs = inject("$dayjs")
+const __ = inject("$translate")
 
 const holidays = createResource({
 	url: "hrms.api.get_holidays_for_employee",
