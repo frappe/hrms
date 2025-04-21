@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-04-18 18:19+0000\n"
-"PO-Revision-Date: 2025-04-20 12:07\n"
+"POT-Creation-Date: 2025-04-20 09:34+0000\n"
+"PO-Revision-Date: 2025-04-21 12:48\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -4329,6 +4329,12 @@ msgstr "Detaljer"
 msgid "Employee Emails"
 msgstr "E-post"
 
+#. Label of a Card Break in the Employee Lifecycle Workspace
+#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/overrides/dashboard_overrides.py:25
+msgid "Employee Exit"
+msgstr "Avgång"
+
 #. Label of the employee_exit_section (Section Break) field in DocType 'HR
 #. Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
@@ -4430,6 +4436,11 @@ msgstr "Information"
 #: hrms/hr/workspace/overview/overview.json
 msgid "Employee Information"
 msgstr "Information"
+
+#. Label of a Card Break in the Employee Lifecycle Workspace
+#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+msgid "Employee Journey"
+msgstr "Arbetsliv"
 
 #. Name of a report
 #. Label of a Link in the Leaves Workspace
@@ -5278,12 +5289,6 @@ msgstr "Undantag Underkategori"
 msgid "Existing Record"
 msgstr "Befintlig Post"
 
-#. Label of a Card Break in the Employee Lifecycle Workspace
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
-#: hrms/overrides/dashboard_overrides.py:25
-msgid "Exit"
-msgstr "Avgång"
-
 #. Option for the 'Final Decision' (Select) field in DocType 'Exit Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json
 #: hrms/hr/report/employee_exits/employee_exits.py:193
@@ -6056,14 +6061,11 @@ msgstr "Slutlig Tillgång"
 msgid "Full and Final Outstanding Statement"
 msgstr "Utestående Avgång Avtal"
 
-#. Label of a Link in the Employee Lifecycle Workspace
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgid "Full and Final Settlement"
-msgstr "Avgång Avtal"
-
 #. Name of a DocType
+#. Label of a Link in the Employee Lifecycle Workspace
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json
 #: hrms/hr/report/employee_exits/employee_exits.py:58
+#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Full and Final Statement"
 msgstr "Avgång Avtal"
 
@@ -7577,11 +7579,6 @@ msgstr "Anställning Datum"
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Journal Entry"
 msgstr "Journal Post"
-
-#. Label of a Card Break in the Employee Lifecycle Workspace
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgid "Journey"
-msgstr "Personal Resa"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:18
 #: hrms/public/js/salary_slip_deductions_report_filters.js:25
@@ -9361,7 +9358,7 @@ msgstr "Orange"
 
 #: hrms/hr/page/organizational_chart/organizational_chart.js:4
 msgid "Organizational Chart"
-msgstr "Organisatorisk Diagram"
+msgstr "Organisatoriskt Diagram"
 
 #. Label of the sb_other_details (Section Break) field in DocType 'Leave
 #. Application'
@@ -9552,7 +9549,7 @@ msgstr "Delvis Begärd och Returnerad"
 #. Label of the passport_number (Data) field in DocType 'Travel Request'
 #: hrms/hr/doctype/travel_request/travel_request.json
 msgid "Passport Number"
-msgstr "Pass Nummer"
+msgstr "Id Handling Nummer"
 
 #: frontend/src/views/Login.vue:22
 msgid "Password"
@@ -12208,7 +12205,7 @@ msgstr "Visa Frånvaro Saldo på Lönespecifikation"
 #. in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Show Leaves Of All Department Members In Calendar"
-msgstr "Vis Frånvaro för alla Avdelning Medlemmar på Kalender"
+msgstr "Visa Frånvaro för alla Avdelning Medlemmar på Kalender"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:204
 msgid "Show Salary Slip"
