@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-04-18 18:19+0000\n"
-"PO-Revision-Date: 2025-04-20 12:07\n"
+"POT-Creation-Date: 2025-04-20 09:34+0000\n"
+"PO-Revision-Date: 2025-04-21 12:48\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -4304,6 +4304,12 @@ msgstr "جزئیات کارمند"
 msgid "Employee Emails"
 msgstr "ایمیل های کارکنان"
 
+#. Label of a Card Break in the Employee Lifecycle Workspace
+#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/overrides/dashboard_overrides.py:25
+msgid "Employee Exit"
+msgstr ""
+
 #. Label of the employee_exit_section (Section Break) field in DocType 'HR
 #. Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
@@ -4405,6 +4411,11 @@ msgstr "اطلاعات کارمند"
 #: hrms/hr/workspace/overview/overview.json
 msgid "Employee Information"
 msgstr "اطلاعات کارکنان"
+
+#. Label of a Card Break in the Employee Lifecycle Workspace
+#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+msgid "Employee Journey"
+msgstr ""
 
 #. Name of a report
 #. Label of a Link in the Leaves Workspace
@@ -5253,12 +5264,6 @@ msgstr "زیر مجموعه معافیت"
 msgid "Existing Record"
 msgstr ""
 
-#. Label of a Card Break in the Employee Lifecycle Workspace
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
-#: hrms/overrides/dashboard_overrides.py:25
-msgid "Exit"
-msgstr "خروج"
-
 #. Option for the 'Final Decision' (Select) field in DocType 'Exit Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json
 #: hrms/hr/report/employee_exits/employee_exits.py:193
@@ -6031,14 +6036,11 @@ msgstr "دارایی کامل و نهایی"
 msgid "Full and Final Outstanding Statement"
 msgstr "صورت‌حساب کامل و نهایی معوقات"
 
-#. Label of a Link in the Employee Lifecycle Workspace
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgid "Full and Final Settlement"
-msgstr "تسویه حساب کامل و نهایی"
-
 #. Name of a DocType
+#. Label of a Link in the Employee Lifecycle Workspace
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json
 #: hrms/hr/report/employee_exits/employee_exits.py:58
+#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Full and Final Statement"
 msgstr "صورت کامل و نهایی"
 
@@ -7552,11 +7554,6 @@ msgstr "تاریخ عضویت"
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Journal Entry"
 msgstr "ثبت در دفتر روزنامه"
-
-#. Label of a Card Break in the Employee Lifecycle Workspace
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgid "Journey"
-msgstr "سفر"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:18
 #: hrms/public/js/salary_slip_deductions_report_filters.js:25
