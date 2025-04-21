@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-04-18 18:19+0000\n"
-"PO-Revision-Date: 2025-04-20 12:07\n"
+"POT-Creation-Date: 2025-04-20 09:34+0000\n"
+"PO-Revision-Date: 2025-04-21 12:49\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -4304,6 +4304,12 @@ msgstr "crwdns141364:0crwdne141364:0"
 msgid "Employee Emails"
 msgstr "crwdns141366:0crwdne141366:0"
 
+#. Label of a Card Break in the Employee Lifecycle Workspace
+#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/overrides/dashboard_overrides.py:25
+msgid "Employee Exit"
+msgstr "crwdns154628:0crwdne154628:0"
+
 #. Label of the employee_exit_section (Section Break) field in DocType 'HR
 #. Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
@@ -4405,6 +4411,11 @@ msgstr "crwdns141372:0crwdne141372:0"
 #: hrms/hr/workspace/overview/overview.json
 msgid "Employee Information"
 msgstr "crwdns106682:0crwdne106682:0"
+
+#. Label of a Card Break in the Employee Lifecycle Workspace
+#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+msgid "Employee Journey"
+msgstr "crwdns154630:0crwdne154630:0"
 
 #. Name of a report
 #. Label of a Link in the Leaves Workspace
@@ -5253,12 +5264,6 @@ msgstr "crwdns141444:0crwdne141444:0"
 msgid "Existing Record"
 msgstr "crwdns141446:0crwdne141446:0"
 
-#. Label of a Card Break in the Employee Lifecycle Workspace
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
-#: hrms/overrides/dashboard_overrides.py:25
-msgid "Exit"
-msgstr "crwdns107076:0crwdne107076:0"
-
 #. Option for the 'Final Decision' (Select) field in DocType 'Exit Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json
 #: hrms/hr/report/employee_exits/employee_exits.py:193
@@ -6031,14 +6036,11 @@ msgstr "crwdns107384:0crwdne107384:0"
 msgid "Full and Final Outstanding Statement"
 msgstr "crwdns107386:0crwdne107386:0"
 
-#. Label of a Link in the Employee Lifecycle Workspace
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgid "Full and Final Settlement"
-msgstr "crwdns143264:0crwdne143264:0"
-
 #. Name of a DocType
+#. Label of a Link in the Employee Lifecycle Workspace
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json
 #: hrms/hr/report/employee_exits/employee_exits.py:58
+#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Full and Final Statement"
 msgstr "crwdns107390:0crwdne107390:0"
 
@@ -7552,11 +7554,6 @@ msgstr "crwdns141768:0crwdne141768:0"
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Journal Entry"
 msgstr "crwdns141770:0crwdne141770:0"
-
-#. Label of a Card Break in the Employee Lifecycle Workspace
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgid "Journey"
-msgstr "crwdns107990:0crwdne107990:0"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:18
 #: hrms/public/js/salary_slip_deductions_report_filters.js:25
