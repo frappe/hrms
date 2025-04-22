@@ -1518,10 +1518,11 @@ class SalarySlip(TransactionBase):
 			self.whitelisted_globals,
 			eval_locals,
 		)
-
-		self.current_structured_tax_amount = (
-			self.total_structured_tax_amount - self.previous_total_paid_taxes
-		) / self.remaining_sub_periods
+		self.current_structured_tax_amount=0
+		if self.remaining_sub_periods:
+			self.current_structured_tax_amount = (
+				self.total_structured_tax_amount - self.previous_total_paid_taxes
+			) / self.remaining_sub_periods
 
 		# Total taxable earnings with additional earnings with full tax
 		self.full_tax_on_additional_earnings = 0.0
