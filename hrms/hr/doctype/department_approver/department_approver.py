@@ -71,12 +71,12 @@ def get_approvers(doctype, txt, searchfield, start, page_len, filters):
 	if department_list:
 		for d in department_list:
 			approvers += frappe.db.sql(
-				"""select user.name, user.first_name, user.last_name from
-				tabUser user, `tabDepartment Approver` approver where
+				"""select u.name, u.first_name, u.last_name from
+				`tabUser` u, `tabDepartment Approver` approver where
 				approver.parent = %s
-				and user.name like %s
+				and u.name like %s
 				and approver.parentfield = %s
-				and approver.approver=user.name""",
+				and approver.approver=u.name""",
 				(d, "%" + txt + "%", parentfield),
 				as_list=True,
 			)
