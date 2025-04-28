@@ -32,6 +32,7 @@ def delete_company_fixtures():
 			# regional file or method does not exist
 			pass
 		except Exception as e:
+			frappe.log_error("Unable to delete country fixtures for Frappe HR Testing")
 			frappe.log_error("Unable to delete country fixtures for Frappe HR")
 			msg = _("Failed to delete defaults for country {0}.").format(frappe.bold(country))
 			msg += "<br><br>" + _("{0}: {1}").format(frappe.bold(_("Error")), get_error_message(e))
