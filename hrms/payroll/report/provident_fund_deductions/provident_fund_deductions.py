@@ -68,6 +68,7 @@ def get_conditions(filters):
 
 
 def prepare_data(entry, component_type_dict):
+	frappe.log_error("Hello")
 	data_list = {}
 
 	employee_account_dict = frappe._dict(

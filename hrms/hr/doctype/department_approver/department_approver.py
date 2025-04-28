@@ -16,6 +16,7 @@ class DepartmentApprover(Document):
 @frappe.validate_and_sanitize_search_inputs
 def get_approvers(doctype, txt, searchfield, start, page_len, filters):
 	if not filters.get("employee"):
+		frappe.log_error("Hello")
 		frappe.throw(_("Please select Employee first."))
 
 	approvers = []

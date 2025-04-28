@@ -90,6 +90,7 @@ def get_data(filters):
 
 	fields = ["employee", "branch", "bank_name", "bank_ac_no", "salary_mode"]
 	if erpnext.get_region() == "India":
+		frappe.log_error("Hello")
 		fields += ["ifsc_code", "micr_code"]
 
 	employee_details = frappe.get_list("Employee", fields=fields)

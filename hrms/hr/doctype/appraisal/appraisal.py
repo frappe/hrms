@@ -32,6 +32,7 @@ class Appraisal(Document, AppraisalMixin):
 		self.calculate_final_score()
 
 	def validate_duplicate(self):
+		frappe.log_error("Hello")
 		Appraisal = frappe.qb.DocType("Appraisal")
 		duplicate = (
 			frappe.qb.from_(Appraisal)
