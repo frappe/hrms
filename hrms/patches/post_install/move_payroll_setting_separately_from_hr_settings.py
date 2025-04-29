@@ -10,17 +10,17 @@ def execute():
 		"""SELECT *
         FROM `tabSingles`
         WHERE
-            doctype = "HR Settings"
+            doctype = 'HR Settings'
         AND
             field in (
-                "encrypt_salary_slips_in_emails",
-                "email_salary_slip_to_employee",
-                "daily_wages_fraction_for_half_day",
-                "disable_rounded_total",
-                "include_holidays_in_total_working_days",
-                "max_working_hours_against_timesheet",
-                "payroll_based_on",
-                "password_policy"
+                'encrypt_salary_slips_in_emails',
+                'email_salary_slip_to_employee',
+                'daily_wages_fraction_for_half_day',
+                'disable_rounded_total',
+                'include_holidays_in_total_working_days',
+                'max_working_hours_against_timesheet',
+                'payroll_based_on',
+                'password_policy'
             )
             """,
 		as_dict=1,
