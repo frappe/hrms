@@ -2176,7 +2176,7 @@ def calculate_tax_by_tax_slab(annual_taxable_earning, tax_slab, eval_globals=Non
 		if flt(d.max_taxable_income) and flt(d.max_taxable_income) < annual_taxable_earning:
 			continue
 
-		other_taxes_and_charges += tax_amount * flt(d.percent) / 100
+		other_taxes_and_charges = tax_amount * flt(d.percent) / 100
 		tax_amount += other_taxes_and_charges
 
 	return tax_amount, other_taxes_and_charges
