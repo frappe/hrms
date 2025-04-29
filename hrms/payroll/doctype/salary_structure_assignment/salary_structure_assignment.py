@@ -169,7 +169,7 @@ class SalaryStructureAssignment(Document):
 
 	@frappe.whitelist()
 	def are_opening_entries_required(self) -> bool:
-		if not get_tax_component(self.salary_structure):
+		if not (get_tax_component(self.salary_structure) or is_period_start(self.from_date, self.company)):
 			return False
 
 		return True
@@ -210,3 +210,10 @@ def get_tax_component(salary_structure: str) -> str | None:
 		if cint(d.variable_based_on_taxable_salary) and not d.formula and not flt(d.amount):
 			return d.salary_component
 	return None
+
+def is_period_start(from_date, company) -> bool:
+	payroll_period = get_payroll_period(from_date, from_date, company)
+	if payroll_period:
+		if payroll_period["start_date"] == getdate(from_date):
+			return True
+	return False
