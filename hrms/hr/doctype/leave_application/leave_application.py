@@ -292,6 +292,8 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				if status == "On Leave"
 				else "Absent"
 				if (doc.status == "Absent" and status == "Half Day")
+				else doc.half_day_status
+				if doc.leave_application
 				else "Present"
 			)
 			doc.db_set(

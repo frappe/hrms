@@ -1348,6 +1348,40 @@ class TestLeaveApplication(FrappeTestCase):
 		self.assertEqual(attendance.leave_type, leave_type.name)
 		self.assertEqual(attendance.leave_application, leave_application.name)
 
+	def test_half_day_status_for_two_half_leaves(self):
+		employee = get_employee()
+		leave_type = create_leave_type(
+			leave_type_name="_Test_CF_leave_expiry",
+			is_carry_forward=1,
+			expire_carry_forwarded_leaves_after_days=90,
+		)
+		create_carry_forwarded_allocation(employee, leave_type)
+		# attendance from one half leave
+		make_leave_application(
+			employee.name,
+			nowdate(),
+			nowdate(),
+			leave_type.name,
+			submit=True,
+			half_day=1,
+			half_day_date=nowdate(),
+		)
+		second_leave_application = make_leave_application(
+			employee.name,
+			nowdate(),
+			nowdate(),
+			leave_type.name,
+			submit=True,
+			half_day=1,
+			half_day_date=nowdate(),
+		)
+		half_day_status = frappe.get_value(
+			"Attendance",
+			filters={"attendance_date": nowdate(), "leave_application": second_leave_application.name},
+			fieldname="half_day_status",
+		)
+		self.assertEqual(half_day_status, "Absent")
+
 
 def create_carry_forwarded_allocation(employee, leave_type, date=None):
 	date = date or nowdate()

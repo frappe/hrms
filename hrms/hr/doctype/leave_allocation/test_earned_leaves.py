@@ -180,7 +180,10 @@ class TestLeaveAllocation(FrappeTestCase):
 		frappe.flags.current_date = get_first_day(getdate())
 
 		leave_policy_assignments = make_policy_assignment(
-			self.employee, allocate_on_day="Date of Joining", assignment_based_on="Joining Date"
+			self.employee,
+			allocate_on_day="Date of Joining",
+			assignment_based_on="Joining Date",
+			end_date=get_last_day(add_months(self.employee.date_of_joining, 12)),
 		)
 		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
 		effective_from = frappe.db.get_value(
