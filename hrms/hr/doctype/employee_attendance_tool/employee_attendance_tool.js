@@ -296,18 +296,19 @@ frappe.ui.form.on("Employee Attendance Tool", {
 				return;
 			}
 			const unmarked_employees_check_map = frm.get_field("unmarked_employees_table")
-				.rowmanager.checkMap;
+				?.rowmanager.checkMap;
 			const half_day_employees_check_map = frm.get_field("half_marked_employees_table")
-				.rowmanager.checkMap;
+				?.rowmanager.checkMap;
+
 			const selected_employees_to_mark_full_day = [];
 			const selected_employees_to_mark_half_day = [];
-			unmarked_employees_check_map.forEach((is_checked, idx) => {
+			unmarked_employees_check_map?.forEach((is_checked, idx) => {
 				if (is_checked)
 					selected_employees_to_mark_full_day.push(
 						frm.get_field("unmarked_employees_table").datamanager.data[idx][0],
 					);
 			});
-			half_day_employees_check_map.forEach((is_checked, idx) => {
+			half_day_employees_check_map?.forEach((is_checked, idx) => {
 				if (is_checked)
 					selected_employees_to_mark_half_day.push(
 						frm.get_field("half_marked_employees_table").datamanager.data[idx][0],
