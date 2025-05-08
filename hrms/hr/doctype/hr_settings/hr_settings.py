@@ -32,16 +32,19 @@ class HRSettings(Document):
 		)
 
 	def validate_frequency_change(self):
-		weekly_job, monthly_job = None, None
+		job_name_monthly, job_name_weekly, weekly_job, monthly_job = None, None, None, None
 
 		try:
-			weekly_job = frappe.get_doc(
-				"Scheduled Job Type", "employee_reminders.send_reminders_in_advance_weekly"
-			)
+			job_name_weekly = frappe.get_value("Scheduled Job Type",
+			{"method":"hrms.controllers.employee_reminders.send_reminders_in_advance_weekly"},
+                             "name")
+			job_name_monthly = frappe.get_value("Scheduled Job Type",
+			{"method":"hrms.controllers.employee_reminders.send_reminders_in_advance_monthly"},
+                             "name")
+			weekly_job = frappe.get_doc("Scheduled Job Type", job_name_weekly)
+			monthly_job = frappe.get_doc("Scheduled Job Type", job_name_monthly)
+                        
 
-			monthly_job = frappe.get_doc(
-				"Scheduled Job Type", "employee_reminders.send_reminders_in_advance_monthly"
-			)
 		except frappe.DoesNotExistError:
 			return
 
