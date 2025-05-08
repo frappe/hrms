@@ -14,6 +14,7 @@ from frappe.utils import (
 	getdate,
 	nowdate,
 )
+from frappe.utils.user import add_role
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
@@ -30,9 +31,6 @@ from hrms.hr.doctype.leave_application.leave_application import (
 	get_leave_balance_on,
 	get_leave_details,
 	get_new_and_cf_leaves_taken,
-)
-from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
-	create_assignment_for_multiple_employees,
 )
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
@@ -102,6 +100,8 @@ class TestLeaveApplication(IntegrationTestCase):
 		make_holiday_list(
 			"Holiday List w/o Weekly Offs", from_date=from_date, to_date=to_date, add_weekly_offs=False
 		)
+
+		make_employee("test@example.com", "_Test Company", department="Accounts")
 
 		if not frappe.db.exists("Leave Type", "_Test Leave Type"):
 			frappe.get_doc(
@@ -435,11 +435,9 @@ class TestLeaveApplication(IntegrationTestCase):
 	def test_overlap(self):
 		self._clear_roles()
 		self._clear_applications()
-
-		from frappe.utils.user import add_role
+		make_employee("test@example.com", "_Test Company", department="Accounts")
 
 		add_role("test@example.com", "Employee")
-		frappe.set_user("test@example.com")
 
 		make_allocation_record()
 
@@ -453,10 +451,8 @@ class TestLeaveApplication(IntegrationTestCase):
 		self._clear_roles()
 		self._clear_applications()
 
-		from frappe.utils.user import add_role
-
+		make_employee("test@example.com", "_Test Company", department="Accounts")
 		add_role("test@example.com", "Employee")
-		frappe.set_user("test@example.com")
 
 		make_allocation_record()
 
@@ -486,12 +482,9 @@ class TestLeaveApplication(IntegrationTestCase):
 	def test_overlap_with_half_day_2(self):
 		self._clear_roles()
 		self._clear_applications()
-
-		from frappe.utils.user import add_role
+		make_employee("test@example.com", "_Test Company", department="Accounts")
 
 		add_role("test@example.com", "Employee")
-
-		frappe.set_user("test@example.com")
 
 		make_allocation_record()
 
@@ -510,11 +503,8 @@ class TestLeaveApplication(IntegrationTestCase):
 		self._clear_roles()
 		self._clear_applications()
 
-		from frappe.utils.user import add_role
-
+		make_employee("test@example.com", "_Test Company", department="Accounts")
 		add_role("test@example.com", "Employee")
-
-		frappe.set_user("test@example.com")
 
 		make_allocation_record()
 
@@ -1017,12 +1007,10 @@ class TestLeaveApplication(IntegrationTestCase):
 			employee.user_id = "test_employee@example.com"
 		employee.save()
 
-		from frappe.utils.user import add_role
-
 		add_role(employee.user_id, "Leave Approver")
 
 		make_allocation_record(employee.name)
-		application = application = frappe.get_doc(
+		application = frappe.get_doc(
 			doctype="Leave Application",
 			employee=employee.name,
 			leave_type="_Test Leave Type",
@@ -1039,8 +1027,10 @@ class TestLeaveApplication(IntegrationTestCase):
 		frappe.set_user(employee.user_id)
 		self.assertRaises(frappe.ValidationError, application.submit)
 
+		frappe.set_user("Administrator")
 		add_role(leave_approver, "Leave Approver")
 		frappe.set_user(leave_approver)
+
 		application.reload()
 		application.submit()
 		self.assertEqual(1, application.docstatus)

@@ -1,21 +1,41 @@
 [
   {
+    "doctype": "User",
+    "email": "test_emp_00001@gmail.com",
+    "first_name": "_T-Employee-00001",
+    "new_password": "password",
+    "send_welcome_email": 0,
+    "roles": [{ "doctype": "Has Role", "role": "Employee" }]
+  },
+  {
+    "doctype": "User",
+    "email": "test_emp_00002@gmail.com",
+    "first_name": "_T-Employee-00002",
+    "new_password": "password",
+    "send_welcome_email": 0,
+    "roles": [{ "doctype": "Has Role", "role": "Employee" }]
+  },
+  {
     "doctype": "Employee",
     "gender": "Female",
     "first_name": "_T-Employee-00001",
-    "date_of_birth": "1990-01-01",
+    "date_of_birth": "1990-05-08",
     "date_of_joining": "2013-01-01",
     "status": "Active",
-    "company": "_Test Company"
+    "company": "_Test Company",
+    "department": "Accounts",
+    "user_id": "test_emp_00001@gmail.com"
   },
   {
     "doctype": "Employee",
     "gender": "Female",
     "first_name": "_T-Employee-00002",
-    "date_of_birth": "1990-01-01",
+    "date_of_birth": "1990-05-08",
     "date_of_joining": "2013-01-01",
     "status": "Active",
-    "company": "_Test Company"
+    "department": "Accounts",
+    "company": "_Test Company",
+    "user_id": "test_emp_00002@gmail.com"
   },
   {
     "docstatus": 1,
