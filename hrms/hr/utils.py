@@ -643,6 +643,13 @@ def calculate_hra_exemption_for_period(doc):
 	return {}
 
 
+@erpnext.allow_regional
+def calculate_tax_with_marginal_relief(tax_slab, tax_amount, annual_taxable_earning):
+	# Don't delete this method, used for localization
+	# Indian TDS Calculation
+	return None
+
+
 def get_previous_claimed_amount(employee, payroll_period, non_pro_rata=False, component=False):
 	total_claimed_amount = 0
 	query = """

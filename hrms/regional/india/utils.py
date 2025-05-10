@@ -203,3 +203,21 @@ def calculate_hra_exemption_for_period(doc):
 		exemptions["monthly_house_rent"] = monthly_rent
 		exemptions["total_eligible_hra_exemption"] = eligible_hra
 		return exemptions
+
+
+def calculate_tax_with_marginal_relief(tax_slab, tax_amount, annual_taxable_earning):
+	"""
+	Returns the tax payable after applying marginal relief (if applicable).
+	    If taxable income is between tax relief limit and marginal relief limit, and tax payable on income is more than income excess over tax relief, then tax payable is reduced to just the excess income.
+	"""
+	if tax_slab.get("marginal_relief_limit"):
+		tax_relief_limit = tax_slab.tax_relief_limit or 0
+		marginal_relief_limit = tax_slab.marginal_relief_limit or 0
+
+		if annual_taxable_earning > tax_relief_limit and annual_taxable_earning < marginal_relief_limit:
+			income_excess_over_tax_relief = annual_taxable_earning - tax_slab.tax_relief_limit
+
+			if income_excess_over_tax_relief < tax_amount:
+				tax_amount = income_excess_over_tax_relief  # marginal relief applies
+
+	return tax_amount

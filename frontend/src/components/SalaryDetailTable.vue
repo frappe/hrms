@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
+import { computed, inject } from "vue"
 
 import EmptyState from "@/components/EmptyState.vue"
 import { formatCurrency } from "@/utils/formatters"

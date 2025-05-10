@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
+import { computed, inject } from "vue"
 import { getCurrencySymbol } from "@/data/currencies"
 import { formatCurrency } from "@/utils/formatters"
 

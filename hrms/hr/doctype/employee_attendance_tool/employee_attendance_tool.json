@@ -8,21 +8,24 @@
   "date",
   "section_break_ackd",
   "company",
-  "column_break_bhny",
-  "department",
-  "column_break_3",
   "branch",
-  "unmarked_attendance_section",
-  "employees_html",
+  "department",
+  "column_break_bhny",
+  "employment_type",
+  "designation",
+  "employee_grade",
   "attendance_details_section",
-  "status",
+  "shift",
   "late_entry",
   "early_exit",
-  "column_break_kecn",
-  "shift",
+  "unmarked_attendance_section",
+  "status",
+  "unmarked_employees_html",
+  "half_day_attendance_section",
+  "half_day_status",
+  "half_marked_employees_html",
   "marked_attendance_section",
-  "marked_attendance_html",
-  "column_break_khjs"
+  "marked_attendance_html"
  ],
  "fields": [
   {
@@ -38,10 +41,6 @@
    "options": "Department"
   },
   {
-   "fieldname": "column_break_3",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "branch",
    "fieldtype": "Link",
    "label": "Branch",
@@ -54,19 +53,15 @@
    "options": "Company"
   },
   {
-   "depends_on": "date",
-   "description": "Unmarked Attendance",
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:false",
+   "description": "Select employees and attendance status",
    "fieldname": "unmarked_attendance_section",
    "fieldtype": "Section Break",
-   "label": "Select Employees"
+   "label": "Unmarked Employees"
   },
   {
-   "fieldname": "employees_html",
-   "fieldtype": "HTML",
-   "label": "Employees HTML",
-   "read_only": 1
-  },
-  {
+   "collapsible": 1,
    "depends_on": "date",
    "fieldname": "marked_attendance_section",
    "fieldtype": "Section Break",
@@ -94,10 +89,8 @@
   },
   {
    "depends_on": "date",
-   "description": "Set attendance details for the employees select above",
    "fieldname": "attendance_details_section",
    "fieldtype": "Section Break",
-   "hide_border": 1,
    "label": "Set Attendance Details"
   },
   {
@@ -117,24 +110,61 @@
    "label": "Early Exit"
   },
   {
-   "fieldname": "column_break_kecn",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "shift",
    "fieldtype": "Link",
    "label": "Shift",
    "options": "Shift Type"
   },
   {
-   "fieldname": "column_break_khjs",
-   "fieldtype": "Column Break"
+   "fieldname": "employment_type",
+   "fieldtype": "Link",
+   "label": "Employment Type",
+   "options": "Employment Type"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "employee_grade",
+   "fieldtype": "Link",
+   "label": "Employee Grade",
+   "options": "Employee Grade"
+  },
+  {
+   "fieldname": "unmarked_employees_html",
+   "fieldtype": "HTML",
+   "label": "Unmarked Employees HTML",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:false",
+   "description": "Select employees and status for other half (attendance status is \"Half Day\" as created from leave application)",
+   "fieldname": "half_day_attendance_section",
+   "fieldtype": "Section Break",
+   "label": "Employees on Half Day"
+  },
+  {
+   "fieldname": "half_marked_employees_html",
+   "fieldtype": "HTML",
+   "label": "Employees on Half Day HTML"
+  },
+  {
+   "fieldname": "half_day_status",
+   "fieldtype": "Select",
+   "label": "Status for Other Half",
+   "options": "Present\nAbsent",
+   "reqd": 1
   }
  ],
+ "grid_page_length": 50,
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-07-08 20:02:36.408240",
+ "modified": "2025-05-05 10:44:35.922422",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Attendance Tool",
@@ -147,7 +177,8 @@
    "write": 1
   }
  ],
- "sort_field": "modified",
+ "row_format": "Dynamic",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": []
 }

@@ -368,16 +368,15 @@ def update_last_sync_of_checkin():
 
 
 def get_actual_shift_end(shift, current_datetime):
-	start = get_time(shift.start_time)
-	end = get_time(shift.end_time)
-	if start < end:
-		time_within_shift = datetime.combine(current_datetime.date(), get_time(shift.start_time))
-	else:
-		time_within_shift = datetime.combine(
-			add_days(current_datetime.date(), -1), get_time(shift.start_time)
-		)
-	shift_end = get_shift_details(shift.name, time_within_shift)["actual_end"]
-	return shift_end
+	time_within_shift = datetime.combine(current_datetime.date(), get_time(shift.start_time))
+	shift_details = get_shift_details(shift.name, time_within_shift)
+	actual_shift_start = shift_details["actual_start"]
+	actual_shift_end = shift_details["actual_end"]
+
+	if actual_shift_start.date() < actual_shift_end.date():
+		# shift start and end are on different days
+		actual_shift_end = add_days(actual_shift_end, -1)
+	return actual_shift_end
 
 
 def process_auto_attendance_for_all_shifts():

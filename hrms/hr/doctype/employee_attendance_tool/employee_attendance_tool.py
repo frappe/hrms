@@ -20,29 +20,59 @@ def get_employees(
 	department: str | None = None,
 	branch: str | None = None,
 	company: str | None = None,
+	employment_type: str | None = None,
+	designation: str | None = None,
+	employee_grade: str | None = None,
 ) -> dict[str, list]:
 	filters = {"status": "Active", "date_of_joining": ["<=", date]}
 
-	for field, value in {"department": department, "branch": branch, "company": company}.items():
+	for field, value in {
+		"department": department,
+		"branch": branch,
+		"company": company,
+		"employement_type": employment_type,
+		"designation": designation,
+		"employee_grade": employee_grade,
+	}.items():
 		if value:
 			filters[field] = value
-
+	# list of all employees
 	employee_list = frappe.get_list(
-		"Employee", fields=["employee", "employee_name"], filters=filters, order_by="employee_name"
+		"Employee",
+		fields=["employee", "employee_name", "company", "department"],
+		filters=filters,
+		order_by="employee_name",
 	)
+	# marked attendance
 	attendance_list = frappe.get_list(
 		"Attendance",
 		fields=["employee", "employee_name", "status"],
 		filters={
 			"attendance_date": date,
 			"docstatus": 1,
+			"half_day_status": ("!=", "Absent"),
 		},
 		order_by="employee_name",
 	)
-
-	unmarked_attendance = _get_unmarked_attendance(employee_list, attendance_list)
-
-	return {"marked": attendance_list, "unmarked": unmarked_attendance}
+	half_day_attendance_list = frappe.get_list(
+		"Attendance",
+		fields=["employee", "employee_name", "status", "leave_type"],
+		filters={
+			"attendance_date": date,
+			"docstatus": 1,
+			"half_day_status": "Absent",
+			"leave_type": ("is", "set"),
+		},
+		order_by="employee_name",
+	)
+	unmarked_attendance = _get_unmarked_attendance(
+		employee_list, [*attendance_list, *half_day_attendance_list]
+	)
+	return {
+		"marked": attendance_list,
+		"half_day_marked": half_day_attendance_list,
+		"unmarked": unmarked_attendance,
+	}
 
 
 def _get_unmarked_attendance(employee_list: list[dict], attendance_list: list[dict]) -> list[dict]:
@@ -66,6 +96,9 @@ def mark_employee_attendance(
 	late_entry: int | None = None,
 	early_exit: int | None = None,
 	shift: str | None = None,
+	mark_half_day: bool | None = False,
+	half_day_status: str | None = None,
+	half_day_employee_list: list | str | None = None,
 ) -> None:
 	if isinstance(employee_list, str):
 		employee_list = json.loads(employee_list)
@@ -89,3 +122,21 @@ def mark_employee_attendance(
 		)
 		attendance.insert()
 		attendance.submit()
+	if mark_half_day:
+		if isinstance(half_day_employee_list, str):
+			half_day_employee_list = json.loads(half_day_employee_list)
+
+		for employee in half_day_employee_list:
+			frappe.db.set_value(
+				"Attendance",
+				{"employee": employee, "attendance_date": date},
+				"half_day_status",
+				half_day_status,
+			)
+			frappe.db.set_value(
+				"Attendance", {"employee": employee, "attendance_date": date}, "late_entry", late_entry
+			)
+			frappe.db.set_value(
+				"Attendance", {"employee": employee, "attendance_date": date}, "early_exit", early_exit
+			)
+			frappe.db.set_value("Attendance", {"employee": employee, "attendance_date": date}, "shift", shift)

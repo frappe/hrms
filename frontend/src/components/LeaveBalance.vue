@@ -47,6 +47,7 @@
 import SemicircleChart from "@/components/SemicircleChart.vue"
 
 import { leaveBalance } from "@/data/leaves"
+import { inject } from "vue"
 
 const __ = inject("$translate")
 const getChartColor = (index) => {

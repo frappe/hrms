@@ -230,6 +230,16 @@ def get_custom_fields():
 				"depends_on": "house_rent_payment_amount",
 			},
 		],
+		"Income Tax Slab": [
+			{
+				"fieldname": "marginal_relief_limit",
+				"label": "Marginal Relief Threshold Limit",
+				"fieldtype": "Currency",
+				"description": "Maximum taxable income for which marginal relief can be applied. Beyond this limit, normal tax slabs are used for tax calculation.",
+				"insert_after": "column_break_pdmy",
+				"depends_on": "eval:doc.tax_relief_limit > 0",
+			}
+		],
 	}
 
 

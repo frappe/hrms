@@ -13,6 +13,7 @@
 <script setup>
 import { IonPage } from "@ionic/vue"
 import ListView from "@/components/ListView.vue"
+import { inject } from "vue"
 
 const __ = inject("$translate")
 const TAB_BUTTONS = ["My Leaves", "Team Leaves"] // __("My Leaves"), __("Team Leaves")
