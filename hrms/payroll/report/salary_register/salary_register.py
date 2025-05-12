@@ -300,7 +300,7 @@ def get_salary_slips(filters, company_currency):
 		query = query.where(salary_slip.designation == filters["designation"])
 
 	if filters.get("branch"):
-		query = query.where(salary_slip.designation == filters["branch"])
+		query = query.where(salary_slip.branch == filters["branch"])
 
 	salary_slips = query.run(as_dict=1)
 
