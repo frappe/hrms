@@ -80,7 +80,7 @@ frappe.ui.form.on("Salary Component", {
 	add_update_structure_button: function (frm) {
 		for (const df of ["Condition", "Formula"]) {
 			frm.add_custom_button(
-				__("Sync {0}", [df]),
+				__("Sync {0}", [__(df)]),
 				function () {
 					frappe
 						.call({
