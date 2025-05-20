@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-05-04 09:34+0000\n"
-"PO-Revision-Date: 2025-05-18 21:15\n"
+"PO-Revision-Date: 2025-05-20 21:49\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -5821,7 +5821,7 @@ msgstr "Flyg"
 
 #: hrms/hr/report/employee_exits/employee_exits.js:73
 msgid "FnF Pending"
-msgstr "FnF Pågående"
+msgstr "Pågående Avtal"
 
 #. Label of the follow_via_email (Check) field in DocType 'Leave Application'
 #: hrms/hr/doctype/leave_application/leave_application.json
