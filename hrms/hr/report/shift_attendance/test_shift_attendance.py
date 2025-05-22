@@ -50,12 +50,12 @@ class TestShiftAttendance(IntegrationTestCase):
 		)
 
 		cls.emp1 = make_employee(
-			"employee1@example.com",
+			"test_shift_employee1@example.com",
 			company="_Test Company",
 			default_shift="Shift 1",
 		)
 		cls.emp2 = make_employee(
-			"employee2@example.com",
+			"test_shift_employee2@example.com",
 			company="_Test Company",
 			default_shift="Shift 2",
 		)
