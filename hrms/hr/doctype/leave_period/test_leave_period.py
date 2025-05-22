@@ -7,8 +7,6 @@ import erpnext
 
 from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Leave Policy"]
-
 
 class TestLeavePeriod(HRMSTestSuite):
 	@classmethod

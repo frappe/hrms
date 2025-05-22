@@ -11,8 +11,6 @@ from hrms.hr.doctype.shift_request.shift_request import OverlappingShiftRequestE
 from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Shift Type"]
-
 
 class TestShiftRequest(HRMSTestSuite):
 	@classmethod

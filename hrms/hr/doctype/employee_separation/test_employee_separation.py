@@ -6,8 +6,6 @@ from frappe.utils import getdate
 
 from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Employee Onboarding"]
-
 
 class TestEmployeeSeparation(HRMSTestSuite):
 	@classmethod

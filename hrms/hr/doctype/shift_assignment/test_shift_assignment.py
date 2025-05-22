@@ -15,8 +15,6 @@ from hrms.hr.doctype.shift_assignment.shift_assignment import (
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
 from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Shift Type"]
-
 
 class TestShiftAssignment(HRMSTestSuite):
 	@classmethod
@@ -172,7 +170,7 @@ class TestShiftAssignment(HRMSTestSuite):
 		events = get_events(
 			start=date,
 			end=add_days(date, 30),
-			filters=[["Shift Assignment", "employee", "!=", employee2, False]],
+			filters=[["Shift Assignment", "employee", "!=", employee2]],
 		)
 		self.assertEqual(len(events), 6)
 		for shift in events:
