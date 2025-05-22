@@ -36,10 +36,10 @@ class HRMSTestSuite(ERPNextTestSuite):
 		]
 		cls.departments = []
 		for x in records:
-			if not frappe.db.exists("Department", x.get("department_name")):
+			if not frappe.db.exists("Department", {x.get("department_name")}):
 				cls.departments.append(frappe.get_doc(x).insert())
 			else:
-				cls.departments.append(frappe.get_doc("Department", x.get("department_name")))
+				cls.departments.append(frappe.get_doc("Department", {x.get("department_name")}))
 
 	@classmethod
 	def make_leave_types(cls):
@@ -118,3 +118,89 @@ class HRMSTestSuite(ERPNextTestSuite):
 						},
 					)
 				)
+
+	@classmethod
+	def make_leave_block_list(cls):
+		cls.make_leave_types()
+		"""Create test leave block list"""
+		# Create test leave block list here
+		records = [
+			{
+				"company": "_Test Company",
+				"doctype": "Leave Block List",
+				"leave_block_list_allowed": [
+					{
+						"allow_user": "test1@example.com",
+						"doctype": "Leave Block List Allow",
+						"parent": "_Test Leave Block List",
+						"parentfield": "leave_block_list_allowed",
+						"parenttype": "Leave Block List",
+					}
+				],
+				"leave_block_list_dates": [
+					{
+						"block_date": "2013-01-02",
+						"doctype": "Leave Block List Date",
+						"parent": "_Test Leave Block List",
+						"parentfield": "leave_block_list_dates",
+						"parenttype": "Leave Block List",
+						"reason": "First work day",
+					}
+				],
+				"leave_block_list_name": "_Test Leave Block List",
+				"year": "_Test Fiscal Year 2013",
+				"applies_to_all_departments": 1,
+			}
+		]
+		cls.leave_block_list = []
+		for x in records:
+			if not frappe.db.exists("Leave Block List", x.get("leave_block_list_name")):
+				cls.leave_block_list.append(frappe.get_doc(x).insert())
+			else:
+				cls.leave_block_list.append(
+					frappe.get_doc("Leave Block List", x.get("leave_block_list_name"))
+				)
+
+	@classmethod
+	def make_salary_components(cls):
+		"""Create test salary components"""
+		# Create test salary components here
+		records = [
+			{
+				"doctype": "Salary Component",
+				"salary_component": "_Test Basic Salary",
+				"type": "Earning",
+				"is_tax_applicable": 1,
+			},
+			{
+				"doctype": "Salary Component",
+				"salary_component": "_Test Allowance",
+				"type": "Earning",
+				"is_tax_applicable": 1,
+			},
+			{
+				"doctype": "Salary Component",
+				"salary_component": "_Test Professional Tax",
+				"type": "Deduction",
+			},
+			{"doctype": "Salary Component", "salary_component": "_Test TDS", "type": "Deduction"},
+			{
+				"doctype": "Salary Component",
+				"salary_component": "Basic",
+				"type": "Earning",
+				"is_tax_applicable": 1,
+			},
+			{
+				"doctype": "Salary Component",
+				"salary_component": "Leave Encashment",
+				"type": "Earning",
+				"is_tax_applicable": 1,
+			},
+		]
+		cls.salary_components = []
+		for x in records:
+			if not frappe.db.exists("Salary Component", x.get("salary_component")):
+				frappe.get_doc(x).insert()
+				cls.salary_components.append(frappe.get_doc(x))
+			else:
+				cls.salary_components.append(frappe.get_doc("Salary Component", x.get("salary_component")))
