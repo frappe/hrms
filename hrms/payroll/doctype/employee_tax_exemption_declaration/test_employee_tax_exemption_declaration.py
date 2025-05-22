@@ -2,20 +2,25 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_months, getdate
 
 import erpnext
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.utils import DuplicateDeclarationError
+from hrms.tests.utils import HRMSTestSuite
 
 PAYROLL_PERIOD_NAME = "_Test Exemption Period"
 PAYROLL_PERIOD_START = "2022-01-01"
 PAYROLL_PERIOD_END = "2022-12-31"
 
 
-class TestEmployeeTaxExemptionDeclaration(IntegrationTestCase):
+class TestEmployeeTaxExemptionDeclaration(HRMSTestSuite):
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		cls.make_salary_components()
+
 	def setUp(self):
 		frappe.db.delete("Employee Tax Exemption Declaration")
 		frappe.db.delete("Salary Structure Assignment")

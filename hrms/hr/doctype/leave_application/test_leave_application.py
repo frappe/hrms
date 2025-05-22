@@ -41,15 +41,13 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 from hrms.tests.test_utils import get_first_sunday
 from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Leave Block List"]
-
 
 class TestLeaveApplication(HRMSTestSuite):
 	@classmethod
 	def setUpClass(cls):
 		super().setUpClass()
 		cls.make_employees()
-		cls.make_leave_types()
+		cls.make_leave_block_list()
 		cls.make_leave_allocations()
 		cls.make_leave_applications()
 

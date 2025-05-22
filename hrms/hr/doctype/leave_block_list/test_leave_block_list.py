@@ -14,6 +14,7 @@ class TestLeaveBlockList(HRMSTestSuite):
 		super().setUpClass()
 		cls.make_departments()
 		cls.make_employees()
+		cls.make_leave_block_list()
 
 	def tearDown(self):
 		frappe.set_user("Administrator")
