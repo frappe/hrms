@@ -63,7 +63,7 @@ frappe.query_reports["Salary Register"] = {
 						company: frappe.query_report.get_filter_value("company")
 					}
 				};
-			}
+			},
 		},
 		{
 			fieldname: "designation",
@@ -78,6 +78,6 @@ frappe.query_reports["Salary Register"] = {
 			fieldtype: "Link",
 			options: "Branch",
 			width: "100px",
-		}
+		},
 	],
 };
