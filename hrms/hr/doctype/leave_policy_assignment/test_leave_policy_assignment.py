@@ -20,6 +20,7 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 	def setUpClass(cls):
 		super().setUpClass()
 		cls.make_employees()
+		cls.make_leave_types()
 
 	def setUp(self):
 		for doctype in [

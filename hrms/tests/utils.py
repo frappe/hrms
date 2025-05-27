@@ -162,6 +162,19 @@ class HRMSTestSuite(ERPNextTestSuite):
 				)
 
 	@classmethod
+	def make_shift_types(cls):
+		"""Create test shift types"""
+		records = [
+			{"doctype": "Shift Type", "name": "Day Shift", "start_time": "9:00:00", "end_time": "18:00:00"}
+		]
+		cls.shift_types = []
+		for x in records:
+			if not frappe.db.exists("Shift Type", x.get("name")):
+				cls.shift_types.append(frappe.get_doc(x).insert())
+			else:
+				cls.shift_types.append(frappe.get_doc("Shift Type", x.get("name")))
+
+	@classmethod
 	def make_salary_components(cls):
 		"""Create test salary components"""
 		# Create test salary components here

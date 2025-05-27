@@ -55,6 +55,7 @@ class TestSalarySlip(HRMSTestSuite):
 	def setUpClass(cls):
 		super().setUpClass()
 		cls.make_salary_components()
+		cls.make_leave_types()
 
 	def setUp(self):
 		setup_test()
