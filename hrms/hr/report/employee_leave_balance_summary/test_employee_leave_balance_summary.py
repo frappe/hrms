@@ -3,7 +3,6 @@
 
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, flt, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -17,11 +16,15 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_leave_application,
 )
 from hrms.tests.test_utils import get_first_sunday
+from hrms.tests.utils import HRMSTestSuite
 
-test_records = frappe.get_test_records("Leave Type")
 
+class TestEmployeeLeaveBalance(HRMSTestSuite):
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		cls.make_leave_types()
 
-class TestEmployeeLeaveBalance(IntegrationTestCase):
 	def setUp(self):
 		for dt in [
 			"Leave Application",
@@ -49,7 +52,7 @@ class TestEmployeeLeaveBalance(IntegrationTestCase):
 
 	@set_holiday_list("_Test Emp Balance Holiday List", "_Test Company")
 	def test_employee_leave_balance_summary(self):
-		frappe.get_doc(test_records[0]).insert()
+		frappe.get_doc(self.leave_types[0]).insert()
 
 		# 5 leaves
 		allocation1 = make_allocation_record(
@@ -113,7 +116,7 @@ class TestEmployeeLeaveBalance(IntegrationTestCase):
 
 	@set_holiday_list("_Test Emp Balance Holiday List", "_Test Company")
 	def test_get_leave_balance_near_alloc_expiry(self):
-		frappe.get_doc(test_records[0]).insert()
+		frappe.get_doc(self.leave_types[0]).insert()
 
 		# 30 leaves allocated
 		allocation = make_allocation_record(
@@ -146,7 +149,7 @@ class TestEmployeeLeaveBalance(IntegrationTestCase):
 
 	@set_holiday_list("_Test Emp Balance Holiday List", "_Test Company")
 	def test_employee_status_filter(self):
-		frappe.get_doc(test_records[0]).insert()
+		frappe.get_doc(self.leave_types[0]).insert()
 
 		inactive_emp = make_employee("test_emp_status@example.com", company="_Test Company")
 		allocation = make_allocation_record(
