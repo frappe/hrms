@@ -11,5 +11,5 @@ def execute():
 	(
 		frappe.qb.update(Attendance)
 		.set(Attendance.half_day_status, "Present")
-		.where(Attendance.status == "Half Day" & Attendance.leave_application.isnotnull())
+		.where((Attendance.status == "Half Day") & (Attendance.leave_application.isnotnull()))
 	).run()
