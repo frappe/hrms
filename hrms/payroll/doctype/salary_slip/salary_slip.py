@@ -1220,6 +1220,7 @@ class SalarySlip(TransactionBase):
 				component_type,
 				additional_salary,
 				is_recurring=additional_salary.is_recurring,
+				data=self.data,
 			)
 
 	def add_tax_components(self):
