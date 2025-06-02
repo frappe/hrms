@@ -9,6 +9,7 @@ hrms/docs/current
 node_modules/
 dist/
 __pycache__/
+yarn.lock
 
 # build/
 .vscode
@@ -20,3 +21,4 @@ hrms/public/frontend
 hrms/www/hrms.html
 hrms/public/roster
 hrms/www/roster.html
+
