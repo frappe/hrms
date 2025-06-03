@@ -59,7 +59,7 @@ frappe.listview_settings["Attendance"] = {
 						fieldtype: "Date",
 						fieldname: "to_date",
 						reqd: 1,
-						default: moment().subtract(1, "days").toDate(),
+						default: moment().toDate(),
 						onchange: () => me.get_unmarked_days(dialog),
 					},
 					{
@@ -142,7 +142,7 @@ frappe.listview_settings["Attendance"] = {
 		fields.exclude_holidays.value = false;
 
 		fields.to_date.datepicker.update({
-			maxDate: moment().subtract(1, "days").toDate(),
+			maxDate: moment().toDate(),
 		});
 
 		this.get_unmarked_days(dialog);

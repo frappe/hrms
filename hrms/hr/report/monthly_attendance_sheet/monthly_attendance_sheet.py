@@ -647,9 +647,9 @@ def get_chart_data(attendance_map: dict, filters: Filters) -> dict:
 		"data": {
 			"labels": labels,
 			"datasets": [
-				{"name": "Absent", "values": absent},
-				{"name": "Present", "values": present},
-				{"name": "Leave", "values": leave},
+				{"name": _("Absent"), "values": absent},
+				{"name": _("Present"), "values": present},
+				{"name": _("Leave"), "values": leave},
 			],
 		},
 		"type": "line",

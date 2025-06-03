@@ -2,16 +2,8 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Training Result", {
-	onload: function (frm) {
-		frm.trigger("training_event");
-	},
-
 	training_event: function (frm) {
-		frm.trigger("training_event");
-	},
-
-	training_event: function (frm) {
-		if (frm.doc.training_event && !frm.doc.docstatus && !frm.doc.employees) {
+		if (frm.doc.training_event && !frm.doc.docstatus) {
 			frappe.call({
 				method: "hrms.hr.doctype.training_result.training_result.get_employees",
 				args: {

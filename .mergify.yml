@@ -18,6 +18,11 @@ pull_request_rules:
 
   - name: Automatic merge on CI success and review
     conditions:
+      - status-success=linters
+      - status-success=Sider
+      - status-success=Semantic Pull Request
+      - status-success=Python Unit Tests (1)
+      - status-success=Python Unit Tests (2)
       - label!=dont-merge
       - label!=squash
       - "#approved-reviews-by>=1"
@@ -27,6 +32,10 @@ pull_request_rules:
 
   - name: Automatic squash on CI success and review
     conditions:
+      - status-success=linters
+      - status-success=Sider
+      - status-success=Python Unit Tests (1)
+      - status-success=Python Unit Tests (2)
       - label!=dont-merge
       - label=squash
       - "#approved-reviews-by>=1"

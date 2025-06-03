@@ -718,6 +718,42 @@ class TestPayrollEntry(FrappeTestCase):
 		employees = payroll_entry.get_employees_with_unmarked_attendance()
 		self.assertFalse(employees)
 
+	@change_settings(
+		"Payroll Settings",
+		{
+			"payroll_based_on": "Attendance",
+			"consider_unmarked_attendance_as": "Absent",
+			"include_holidays_in_total_working_days": 1,
+			"consider_marked_attendance_on_holidays": 1,
+			"process_payroll_accounting_entry_based_on_employee": 1,
+		},
+	)
+	def test_skip_bank_entry_for_employees_with_zero_amount(self):
+		company_doc = frappe.get_doc("Company", "_Test Company")
+		employee1 = make_employee("test_employee11@payroll.com", company=company_doc.name)
+		employee2 = make_employee("test_employee12@payroll.com", company=company_doc.name)
+
+		setup_salary_structure(employee1, company_doc)
+		setup_salary_structure(employee2, company_doc)
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		for date in get_date_range(dates.start_date, dates.end_date):
+			mark_attendance(employee1, date, "Present", ignore_validate=True)
+
+		payroll_entry = get_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company_doc.default_payroll_payable_account,
+			currency=company_doc.default_currency,
+			company=company_doc.name,
+			cost_center="Main - _TC",
+		)
+		payroll_entry.submit()
+		payroll_entry.submit_salary_slips()
+		journal_entry = get_linked_journal_entries(payroll_entry.name, docstatus=1)
+
+		self.assertTrue(journal_entry)
+
 	@if_lending_app_installed
 	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0})
 	def test_loan_repayment_from_salary(self):

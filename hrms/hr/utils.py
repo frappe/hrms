@@ -643,6 +643,13 @@ def calculate_hra_exemption_for_period(doc):
 	return {}
 
 
+@erpnext.allow_regional
+def calculate_tax_with_marginal_relief(tax_slab, tax_amount, annual_taxable_earning):
+	# Don't delete this method, used for localization
+	# Indian TDS Calculation
+	return None
+
+
 def get_previous_claimed_amount(employee, payroll_period, non_pro_rata=False, component=False):
 	total_claimed_amount = 0
 	query = """
@@ -682,7 +689,9 @@ def share_doc_with_approver(doc, user):
 			doc.doctype, doc.name, user, submit=1, flags={"ignore_share_permission": True}
 		)
 
-		frappe.msgprint(_("Shared with the user {0} with 'submit' permisions").format(user, alert=True))
+		frappe.msgprint(
+			_("Shared document with the user {0} with 'Submit' permission").format(user), alert=True
+		)
 
 	# remove shared doc if approver changes
 	doc_before_save = doc.get_doc_before_save()
@@ -926,6 +935,6 @@ def get_exact_month_diff(string_ed_date: DateTimeLikeObject, string_st_date: Dat
 	# count the last month only if end date's day > start date's day
 	# to handle cases like 16th Jul 2024 - 15th Jul 2025
 	# where framework's month_diff will calculate diff as 13 months
-	if ed_date.day > st_date.day:
+	if ed_date.day >= st_date.day:
 		diff += 1
 	return diff

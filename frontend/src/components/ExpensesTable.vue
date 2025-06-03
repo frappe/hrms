@@ -61,7 +61,7 @@
 			</div>
 		</div>
 	</div>
-	<EmptyState v-else message="No expenses added" :isTableField="true" />
+	<EmptyState v-else :message="__('No expenses added')" :isTableField="true" />
 
 	<CustomIonModal :isOpen="isModalOpen" @didDismiss="resetSelectedItem()">
 		<template #actionSheet>
@@ -74,8 +74,8 @@
 						{{ modalTitle }}
 					</span>
 				</div>
-				<div class="w-full flex flex-col items-center justify-center gap-5 p-4">
-					<div class="flex flex-col w-full space-y-4">
+				<div class="w-full flex flex-col items-center justify-center gap-5 p-4 max-h-[80vh]">
+					<div class="flex flex-col w-full space-y-4 overflow-y-auto">
 						<FormField
 							v-for="field in expensesTableFields.data"
 							:key="field.fieldname"

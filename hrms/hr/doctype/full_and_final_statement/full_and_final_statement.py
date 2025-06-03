@@ -257,14 +257,17 @@ class FullandFinalStatement(Document):
 		)
 		return jv
 
-	def set_gratuity_status(self):
+	def update_reference_document_payment_status(self, payable):
+		doc = frappe.get_cached_doc(payable.reference_document_type, payable.reference_document)
+		amount = payable.amount if self.docstatus == 1 and self.status == "Paid" else 0
+		doc.db_set("paid_amount", amount)
+		doc.set_status(update=True)
+
+	def update_linked_payable_documents(self):
+		"""update payment status in linked payable documents"""
 		for payable in self.payables:
-			if payable.component != "Gratuity":
-				continue
-			gratuity = frappe.get_doc("Gratuity", payable.reference_document)
-			amount = payable.amount if self.docstatus == 1 and self.status == "Paid" else 0
-			gratuity.db_set("paid_amount", amount)
-			gratuity.set_status(update=True)
+			if payable.reference_document_type in ["Gratuity", "Leave Encashment"]:
+				self.update_reference_document_payment_status(payable)
 
 
 @frappe.whitelist()
@@ -333,4 +336,4 @@ def update_full_and_final_statement_status(doc, method=None):
 			fnf = frappe.get_doc("Full and Final Statement", entry.reference_name)
 			fnf.db_set("status", status)
 			fnf.notify_update()
-			fnf.set_gratuity_status()
+			fnf.update_linked_payable_documents()

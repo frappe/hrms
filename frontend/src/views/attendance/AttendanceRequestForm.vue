@@ -22,6 +22,7 @@ import { ref, watch, inject } from "vue"
 import FormView from "@/components/FormView.vue"
 
 const employee = inject("$employee")
+const __ = inject("$translate")
 
 const props = defineProps({
 	id: {
@@ -89,7 +90,7 @@ function setFormReadOnly() {
 function validateDates(from_date, to_date) {
 	if (!(from_date && to_date)) return
 
-	const error_message = from_date > to_date ? "To Date cannot be before From Date" : ""
+	const error_message = from_date > to_date ? __("To Date cannot be before From Date") : ""
 
 	const from_date_field = formFields.data.find((field) => field.fieldname === "from_date")
 	from_date_field.error_message = error_message

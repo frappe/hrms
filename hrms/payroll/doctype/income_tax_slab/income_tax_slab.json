@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "Prompt",
  "creation": "2020-03-17 16:50:35.564915",
  "doctype": "DocType",
@@ -17,6 +18,9 @@
   "amended_from",
   "taxable_salary_slabs_section",
   "slabs",
+  "section_break_cajo",
+  "tax_relief_limit",
+  "column_break_pdmy",
   "taxes_and_charges_on_income_tax_section",
   "other_taxes_and_charges"
  ],
@@ -104,11 +108,25 @@
   {
    "fieldname": "section_break_2",
    "fieldtype": "Section Break"
+  },
+  {
+   "description": "Maximum annual taxable income eligible for full tax relief. No tax is applied if income does not exceed this limit",
+   "fieldname": "tax_relief_limit",
+   "fieldtype": "Currency",
+   "label": "Taxable Income Relief Threshold Limit"
+  },
+  {
+   "fieldname": "section_break_cajo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_pdmy",
+   "fieldtype": "Column Break"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-30 15:01:22.706198",
+ "modified": "2025-05-05 22:16:48.257971",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Income Tax Slab",
@@ -161,7 +179,8 @@
    "write": 1
   }
  ],
- "sort_field": "modified",
+ "row_format": "Dynamic",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
  "track_changes": 1

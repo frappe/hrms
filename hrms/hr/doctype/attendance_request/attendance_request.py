@@ -22,11 +22,25 @@ class AttendanceRequest(Document):
 		validate_dates(self, self.from_date, self.to_date, False)
 		self.validate_half_day()
 		self.validate_request_overlap()
+		self.validate_no_attendance_to_create()
 
 	def validate_half_day(self):
 		if self.half_day:
 			if not getdate(self.from_date) <= getdate(self.half_day_date) <= getdate(self.to_date):
 				frappe.throw(_("Half day date should be in between from date and to date"))
+
+	def validate_no_attendance_to_create(self):
+		attendance_warnings = self.get_attendance_warnings()
+		attendance_request_days = date_diff(self.to_date, self.from_date) + 1
+		if len(attendance_warnings) == attendance_request_days and not any(
+			warning["action"] == "Overwrite" for warning in attendance_warnings
+		):
+			frappe.throw(
+				title=_("No attendance records to create"),
+				msg=_(
+					"Please check if employee is on leave or attendance with the same status exists for selected day(s)."
+				),
+			)
 
 	def validate_request_overlap(self):
 		if not self.name:
@@ -76,12 +90,11 @@ class AttendanceRequest(Document):
 				self.create_or_update_attendance(attendance_date)
 
 	def create_or_update_attendance(self, date: str):
-		attendance_name = self.get_attendance_record(date)
+		doc = self.get_attendance_doc(date)
 		status = self.get_attendance_status(date)
 
-		if attendance_name:
+		if doc:
 			# update existing attendance, change the status
-			doc = frappe.get_doc("Attendance", attendance_name)
 			old_status = doc.status
 
 			if old_status != status:
@@ -145,8 +158,8 @@ class AttendanceRequest(Document):
 			},
 		)
 
-	def get_attendance_record(self, attendance_date: str) -> str | None:
-		return frappe.db.exists(
+	def get_attendance_doc(self, attendance_date: str) -> str | None:
+		attendance = frappe.db.exists(
 			"Attendance",
 			{
 				"employee": self.employee,
@@ -154,6 +167,7 @@ class AttendanceRequest(Document):
 				"docstatus": ("!=", 2),
 			},
 		)
+		return frappe.get_doc("Attendance", attendance) if attendance else None
 
 	def get_attendance_status(self, attendance_date: str) -> str:
 		if self.half_day and date_diff(getdate(self.half_day_date), getdate(attendance_date)) == 0:
@@ -162,6 +176,13 @@ class AttendanceRequest(Document):
 			return "Work From Home"
 		else:
 			return "Present"
+
+	def status_unchanged(self, attendance_date):
+		new_status = self.get_attendance_status(attendance_date)
+		attendance_doc = self.get_attendance_doc(attendance_date)
+		if attendance_doc and attendance_doc.status == new_status:
+			return True
+		return False
 
 	@frappe.whitelist()
 	def get_attendance_warnings(self) -> list:
@@ -175,14 +196,18 @@ class AttendanceRequest(Document):
 				attendance_warnings.append({"date": attendance_date, "reason": "Holiday", "action": "Skip"})
 			elif self.has_leave_record(attendance_date):
 				attendance_warnings.append({"date": attendance_date, "reason": "On Leave", "action": "Skip"})
+			elif self.status_unchanged(attendance_date):
+				attendance_warnings.append(
+					{"date": attendance_date, "reason": "Attendance status unchanged", "action": "Skip"}
+				)
 			else:
-				attendance = self.get_attendance_record(attendance_date)
+				attendance = self.get_attendance_doc(attendance_date)
 				if attendance:
 					attendance_warnings.append(
 						{
 							"date": attendance_date,
 							"reason": "Attendance already marked",
-							"record": attendance,
+							"record": attendance.name,
 							"action": "Overwrite",
 						}
 					)

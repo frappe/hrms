@@ -412,6 +412,8 @@ def get_total_reimbursed_amount(doc):
 
 
 def get_outstanding_amount_for_claim(claim):
+	precision = frappe.get_precision("Expense Claim", "grand_total")
+
 	if isinstance(claim, str):
 		claim = frappe.db.get_value(
 			"Expense Claim",
@@ -432,7 +434,7 @@ def get_outstanding_amount_for_claim(claim):
 		- flt(claim.total_advance_amount)
 	)
 
-	return outstanding_amt
+	return flt(outstanding_amt, precision)
 
 
 @frappe.whitelist()

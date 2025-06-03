@@ -33,6 +33,10 @@ class OverlappingShiftAttendanceError(frappe.ValidationError):
 
 
 class Attendance(Document):
+	def before_insert(self):
+		if self.half_day_status == "":
+			self.half_day_status = None
+
 	def validate(self):
 		from erpnext.controllers.status_updater import validate_status
 
@@ -83,6 +87,11 @@ class Attendance(Document):
 				& (Attendance.docstatus < 2)
 				& (Attendance.attendance_date == self.attendance_date)
 				& (Attendance.name != self.name)
+				& (
+					Attendance.half_day_status.isnull()
+					| (Attendance.half_day_status == "")
+					| (Attendance.modify_half_day_status == 0)
+				)
 			)
 			.for_update()
 		)
@@ -181,6 +190,8 @@ class Attendance(Document):
 
 		if self.status in ("On Leave", "Half Day"):
 			if not leave_record:
+				self.modify_half_day_status = 0
+				self.haf_day_status = "Absent"
 				frappe.msgprint(
 					_("No leave record found for employee {0} on {1}").format(
 						self.employee, format_date(self.attendance_date)
@@ -249,8 +260,7 @@ def add_attendance(filters):
 		fields=[
 			"name",
 			"'Attendance' as doctype",
-			"attendance_date as start",
-			"attendance_date as end",
+			"attendance_date",
 			"employee_name",
 			"status",
 			"docstatus",
@@ -271,8 +281,7 @@ def add_holidays(events, start, end, employee=None):
 		events.append(
 			{
 				"doctype": "Holiday",
-				"start": holiday.holiday_date,
-				"end": holiday.holiday_date,
+				"attendance_date": holiday.holiday_date,
 				"title": _("Holiday") + ": " + cstr(holiday.description),
 				"name": holiday.name,
 				"allDay": 1,
@@ -288,6 +297,7 @@ def mark_attendance(
 	leave_type=None,
 	late_entry=False,
 	early_exit=False,
+	half_day_status=None,
 ):
 	savepoint = "attendance_creation"
 
@@ -304,6 +314,7 @@ def mark_attendance(
 				"leave_type": leave_type,
 				"late_entry": late_entry,
 				"early_exit": early_exit,
+				"half_day_status": half_day_status,
 			}
 		)
 		attendance.insert()
@@ -332,6 +343,7 @@ def mark_bulk_attendance(data):
 			"employee": data.employee,
 			"attendance_date": get_datetime(date),
 			"status": data.status,
+			"half_day_status": "Absent" if data.status == "Half Day" else None,
 		}
 		attendance = frappe.get_doc(doc_dict).insert()
 		attendance.submit()

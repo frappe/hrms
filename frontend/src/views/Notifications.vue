@@ -24,7 +24,7 @@
 								class="text-lg text-gray-800 font-semibold"
 								v-if="unreadNotificationsCount.data"
 							>
-								{{ unreadNotificationsCount.data }} Unread
+								{{ __("{0} Unread", [unreadNotificationsCount.data]) }}
 							</div>
 							<div class="flex ml-auto gap-1">
 								<Button
@@ -35,7 +35,7 @@
 									<template #prefix>
 										<FeatherIcon name="settings" class="w-4" />
 									</template>
-									Settings
+									{{ __("Settings") }}
 								</Button>
 								<Button
 									v-if="unreadNotificationsCount.data"
@@ -46,7 +46,7 @@
 									<template #prefix>
 										<FeatherIcon name="check-circle" class="w-4" />
 									</template>
-									{{ __('Mark all as read') }}
+									{{ __("Mark all as read") }}
 								</Button>
 							</div>
 						</div>
@@ -79,7 +79,7 @@
 							</router-link>
 						</div>
 
-						<EmptyState v-else message="You have no notifications" />
+						<EmptyState v-else :message="__('You have no notifications')" />
 					</div>
 				</div>
 			</div>
@@ -104,6 +104,7 @@ import {
 
 const dayjs = inject("$dayjs")
 const router = useRouter()
+const __ = inject("$translate")
 
 const allowPushNotifications = computed(
 	() =>

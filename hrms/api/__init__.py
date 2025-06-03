@@ -195,6 +195,44 @@ def get_shift_requests(
 	return shift_requests
 
 
+@frappe.whitelist()
+def get_attendance_requests(
+	employee: str,
+	for_approval: bool = False,
+	limit: int | None = None,
+) -> list[dict]:
+	filters = get_filters("Attendance Request", employee, None, for_approval)
+	fields = [
+		"name",
+		"reason",
+		"employee",
+		"employee_name",
+		"from_date",
+		"to_date",
+		"include_holidays",
+		"shift",
+		"docstatus",
+		"creation",
+	]
+
+	if workflow_state_field := get_workflow_state_field("Attendance Request"):
+		fields.append(workflow_state_field)
+
+	attendance_requests = frappe.get_list(
+		"Attendance Request",
+		fields=fields,
+		filters=filters,
+		order_by="creation desc",
+		limit=limit,
+	)
+
+	if workflow_state_field:
+		for application in attendance_requests:
+			application["workflow_state_field"] = workflow_state_field
+
+	return attendance_requests
+
+
 def get_filters(
 	doctype: str,
 	employee: str,
@@ -216,7 +254,8 @@ def get_filters(
 				"Expense Claim": "expense_approver",
 			}
 			filters.status = "Open" if doctype == "Leave Application" else "Draft"
-			filters[approver_field_map[doctype]] = approver_id
+			if approver_id:
+				filters[approver_field_map[doctype]] = approver_id
 	else:
 		filters.docstatus = ("!=", 2)
 		filters.employee = employee

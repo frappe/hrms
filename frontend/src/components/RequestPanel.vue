@@ -19,7 +19,7 @@ import { ref, inject, onMounted, computed, markRaw } from "vue"
 import TabButtons from "@/components/TabButtons.vue"
 import RequestList from "@/components/RequestList.vue"
 
-import { myAttendanceRequests, myShiftRequests, teamShiftRequests } from "@/data/attendance"
+import { myAttendanceRequests, myShiftRequests, teamShiftRequests, teamAttendanceRequests } from "@/data/attendance"
 import { myClaims, teamClaims } from "@/data/claims"
 import { myLeaves, teamLeaves } from "@/data/leaves"
 
@@ -40,7 +40,7 @@ const myRequests = computed(() =>
 )
 
 const teamRequests = computed(() =>
-	updateRequestDetails(teamLeaves, teamClaims, teamShiftRequests)
+	updateRequestDetails(teamLeaves, teamClaims, teamShiftRequests, teamAttendanceRequests)
 )
 
 function updateRequestDetails(leaves, claims, shiftRequests, attendanceRequests) {
@@ -74,5 +74,7 @@ function getSortedRequests(list) {
 onMounted(() => {
 	useListUpdate(socket, "Leave Application", () => teamLeaves.reload())
 	useListUpdate(socket, "Expense Claim", () => teamClaims.reload())
+	useListUpdate(socket, "Shift Request", () => teamShiftRequests.reload())
+	useListUpdate(socket, "Attendance Request", () => teamAttendanceRequests.reload())
 })
 </script>

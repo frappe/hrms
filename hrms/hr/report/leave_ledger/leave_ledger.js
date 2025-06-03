@@ -38,7 +38,7 @@ frappe.query_reports["Leave Ledger"] = {
 				{ value: "Active", label: __("Active") },
 				{ value: "Inactive", label: __("Inactive") },
 				{ value: "Suspended", label: __("Suspended") },
-				{ value: "Left", label: __("Left") },
+				{ value: "Left", label: __("Left", null, "Employee") },
 			],
 			default: "Active",
 		},

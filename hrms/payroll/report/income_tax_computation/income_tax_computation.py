@@ -35,7 +35,7 @@ class IncomeTaxComputationReport:
 	def get_data(self):
 		self.get_employee_details()
 		self.get_future_salary_slips()
-		self.get_ctc()
+		self.get_gross_earnings()
 		self.get_income_from_other_sources()
 		self.get_tax_exempted_earnings_and_deductions()
 		self.get_employee_tax_exemptions()
@@ -49,7 +49,7 @@ class IncomeTaxComputationReport:
 		self.data = list(self.employees.values())
 
 	def get_employee_details(self):
-		filters, or_filters = self.get_employee_filters()
+		filters = self.get_employee_filters()
 		fields = [
 			"name as employee",
 			"employee_name",
@@ -59,7 +59,7 @@ class IncomeTaxComputationReport:
 			"relieving_date",
 		]
 
-		employees = frappe.get_all("Employee", filters=filters, or_filters=or_filters, fields=fields)
+		employees = frappe.get_all("Employee", filters=filters, fields=fields)
 		ss_assignments = self.get_ss_assignments([d.employee for d in employees])
 
 		for d in employees:
@@ -72,16 +72,14 @@ class IncomeTaxComputationReport:
 
 	def get_employee_filters(self):
 		filters = {"company": self.filters.company}
-		or_filters = {
-			"status": "Active",
-			"relieving_date": ["between", [self.payroll_period_start_date, self.payroll_period_end_date]],
-		}
 		if self.filters.employee:
 			filters = {"name": self.filters.employee}
 		elif self.filters.department:
 			filters.update({"department": self.filters.department})
+		elif self.filters.employee_status:
+			filters["status"] = self.filters.employee_status
 
-		return filters, or_filters
+		return filters
 
 	def get_ss_assignments(self, employees):
 		ss_assignments = frappe.get_all(
@@ -176,7 +174,7 @@ class IncomeTaxComputationReport:
 
 		return last_salary_slip
 
-	def get_ctc(self):
+	def get_gross_earnings(self):
 		# Get total earnings from existing salary slip
 		ss = frappe.qb.DocType("Salary Slip")
 		existing_ss = frappe._dict(
@@ -194,9 +192,11 @@ class IncomeTaxComputationReport:
 		for employee, employee_details in self.employees.items():
 			opening_taxable_earnings = employee_details["taxable_earnings_till_date"]
 			future_ss_earnings = self.get_future_earnings(employee)
-			ctc = flt(opening_taxable_earnings) + flt(existing_ss.get(employee)) + future_ss_earnings
+			gross_earnings = (
+				flt(opening_taxable_earnings) + flt(existing_ss.get(employee)) + future_ss_earnings
+			)
 
-			self.employees[employee].setdefault("ctc", ctc)
+			self.employees[employee].setdefault("gross_earnings", gross_earnings)
 
 	def get_future_earnings(self, employee):
 		future_earnings = 0.0
@@ -430,15 +430,48 @@ class IncomeTaxComputationReport:
 
 	def get_total_taxable_amount(self):
 		self.add_column("Total Taxable Amount")
-		for __, emp_details in self.employees.items():
-			emp_details["total_taxable_amount"] = (
-				flt(emp_details.get("ctc"))
-				+ flt(emp_details.get("other_income"))
-				- flt(emp_details.get("total_exemption"))
-			)
+
+		for employee, emp_details in self.employees.items():
+			total_taxable_amount = 0.0
+			annual_taxable_amount = tax_exemption_declaration = standard_tax_exemption_amount = 0.0
+
+			last_ss = self.get_last_salary_slip(employee)
+
+			if last_ss and last_ss.end_date == self.payroll_period_end_date:
+				annual_taxable_amount, tax_exemption_declaration, standard_tax_exemption_amount = (
+					frappe.db.get_value(
+						"Salary Slip",
+						last_ss.name,
+						[
+							"annual_taxable_amount",
+							"tax_exemption_declaration",
+							"standard_tax_exemption_amount",
+						],
+					)
+				)
+			else:
+				future_salary_slips = self.future_salary_slips.get(employee, [])
+				if future_salary_slips:
+					last_ss = future_salary_slips[0]
+					annual_taxable_amount = last_ss.get("annual_taxable_amount", 0.0)
+					tax_exemption_declaration = last_ss.get("tax_exemption_declaration", 0.0)
+					standard_tax_exemption_amount = last_ss.get("standard_tax_exemption_amount", 0.0)
+
+			if annual_taxable_amount:
+				# Remove exemptions already factored into salary slip so that report can apply its own logic (declaration vs proof)
+				total_taxable_amount = (
+					flt(annual_taxable_amount)
+					+ flt(tax_exemption_declaration)
+					+ flt(standard_tax_exemption_amount)
+					- emp_details["total_exemption"]
+				)
+
+			emp_details["total_taxable_amount"] = total_taxable_amount
 
 	def get_applicable_tax(self):
-		self.add_column("Applicable Tax")
+		self.add_column("Income Tax (Slab Based)", "income_tax_slab_based")
+		self.add_column("Other Taxes and Charges")
+		self.add_column("Total Applicable Tax", "applicable_tax")
 
 		is_tax_rounded = frappe.db.get_value(
 			"Salary Component",
@@ -451,7 +484,7 @@ class IncomeTaxComputationReport:
 			if tax_slab:
 				tax_slab = frappe.get_cached_doc("Income Tax Slab", tax_slab)
 				eval_globals, eval_locals = self.get_data_for_eval(emp, emp_details)
-				tax_amount = calculate_tax_by_tax_slab(
+				tax_amount, other_taxes_and_charges = calculate_tax_by_tax_slab(
 					emp_details["total_taxable_amount"],
 					tax_slab,
 					eval_globals=eval_globals,
@@ -459,9 +492,14 @@ class IncomeTaxComputationReport:
 				)
 			else:
 				tax_amount = 0.0
+				other_taxes_and_charges = 0.0
 
 			if is_tax_rounded:
 				tax_amount = rounded(tax_amount)
+				other_taxes_and_charges = rounded(other_taxes_and_charges)
+
+			emp_details["income_tax_slab_based"] = tax_amount - other_taxes_and_charges
+			emp_details["other_taxes_and_charges"] = other_taxes_and_charges
 			emp_details["applicable_tax"] = tax_amount
 
 	def get_data_for_eval(self, emp: str, emp_details: dict) -> tuple:
@@ -528,9 +566,10 @@ class IncomeTaxComputationReport:
 		self.add_column("Payable Tax")
 
 		for __, emp_details in self.employees.items():
-			emp_details["payable_tax"] = flt(emp_details.get("applicable_tax")) - flt(
-				emp_details.get("total_tax_deducted")
-			)
+			payable_tax = flt(emp_details.get("applicable_tax")) - flt(emp_details.get("total_tax_deducted"))
+			if payable_tax < 0:
+				payable_tax = 0.0
+			emp_details["payable_tax"] = payable_tax
 
 	def add_column(self, label, fieldname=None, fieldtype=None, options=None, width=None):
 		col = {
@@ -579,5 +618,10 @@ class IncomeTaxComputationReport:
 				"options": "Income Tax Slab",
 				"width": "140px",
 			},
-			{"label": _("CTC"), "fieldname": "ctc", "fieldtype": "Currency", "width": "140px"},
+			{
+				"label": _("Gross Earnings"),
+				"fieldname": "gross_earnings",
+				"fieldtype": "Currency",
+				"width": "140px",
+			},
 		]

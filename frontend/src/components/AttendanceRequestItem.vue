@@ -1,5 +1,9 @@
 <template>
-	<ListItem>
+	<ListItem
+		:isTeamRequest="props.isTeamRequest"
+		:employee="props.doc.employee"
+		:employeeName="props.doc.employee_name"
+		>
 		<template #left>
 			<AttendanceIcon class="h-5 w-5 text-gray-500" />
 			<div class="flex flex-col items-start gap-1.5">

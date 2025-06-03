@@ -51,7 +51,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Journey",
+   "label": "Employee Journey",
    "link_count": 2,
    "onboard": 0,
    "type": "Card Break"
@@ -107,7 +107,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Exit",
+   "label": "Employee Exit",
    "link_count": 4,
    "onboard": 0,
    "type": "Card Break"
@@ -135,7 +135,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Full and Final Settlement",
+   "label": "Full and Final Statement",
    "link_count": 0,
    "link_to": "Full and Final Statement",
    "link_type": "DocType",
@@ -287,7 +287,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-08-11 11:35:33.462001",
+ "modified": "2025-04-19 17:45:02.430487",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Lifecycle",

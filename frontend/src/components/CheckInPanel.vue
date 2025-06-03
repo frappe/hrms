@@ -177,14 +177,18 @@ const submitLog = (logType) => {
 					iconClasses: "text-green-500",
 				})
 			},
-			onError() {
-				toast({
-					title: __("Error"),
-					text: __("{0} failed!", [actionLabel]),
-					icon: "alert-circle",
-					position: "bottom-center",
-					iconClasses: "text-red-500",
-				})
+			onError(error) {
+				let messages = error.messages || []
+
+				for (const message of messages) {
+					toast({
+						title: __("Error"),
+						text: message || __("{0} failed!", [actionLabel]),
+						icon: "alert-circle",
+						position: "bottom-center",
+						iconClasses: "text-red-500",
+					})
+				}
 			},
 		}
 	)
