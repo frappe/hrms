@@ -142,10 +142,12 @@ class TestLeaveControlPanel(FrappeTestCase):
 		}
 		advanced_filters = [["Employee", "date_of_joining", "<", date(2030, 1, 5)]]
 		lcp = LeaveControlPanel(args)
+		lpd = frappe.get_all("Leave Policy Detail", pluck="leave_type")
 		employees = lcp.get_employees(advanced_filters)
 		employee_names = [d.name for d in employees]
 
 		# employee already having an allocation
+		self.assertTrue(lpd)
 		self.assertNotIn(self.emp1, employee_names)
 		# advanced filter applied
 		self.assertNotIn(self.emp4, employee_names)
