@@ -142,7 +142,7 @@ class TestLeaveControlPanel(FrappeTestCase):
 		}
 		advanced_filters = [["Employee", "date_of_joining", "<", date(2030, 1, 5)]]
 		lcp = LeaveControlPanel(args)
-		lpd = frappe.get_all("Leave Policy Detail", pluck="leave_type")
+		lpd = frappe.get_all("Leave Policy Detail", fields=["*"])
 		employees = lcp.get_employees(advanced_filters)
 		employee_names = [d.name for d in employees]
 
