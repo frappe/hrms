@@ -804,3 +804,14 @@ def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 @frappe.whitelist()
 def get_permitted_fields_for_write(doctype: str) -> list[str]:
 	return get_permitted_fields(doctype, permission_type="write")
+
+
+# func to get max_leaves_allowed for lwp for lwp leave type
+@frappe.whitelist()
+def get_max_leaves_allowed_for_lwp() -> int:
+	lwps = frappe.get_list("Leave Type", filters={"is_lwp": 1}, pluck="name")
+
+	if not lwps:
+		return 0
+
+	return frappe.get_value("Leave Type", lwps[0], "max_leaves_allowed")

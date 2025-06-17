@@ -69,3 +69,12 @@ export const leaveBalance = createResource({
 		)
 	},
 })
+
+export const maxLeaveWithoutPayAllowed = createResource({
+	url: "hrms.api.get_max_leaves_allowed_for_lwp",
+	auto: true,
+	cache: "hrms:max_leave_without_pay",
+	transform(data) {
+		return data || 0
+	},
+})

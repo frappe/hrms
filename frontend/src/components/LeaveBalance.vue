@@ -38,14 +38,27 @@
 				</div>
 			</div>
 		</div>
-
 		<EmptyState :message="__('You have no leaves allocated')" v-else />
+
+		<!-- Max LWP Allowed -->
+		<div>
+			<div
+				class="text-sm text-gray-600 font-normal px-4 mt-2"
+				v-if="maxLeaveWithoutPayAllowed.data "
+			>
+				{{ __(
+					"You can take up to {0} days of leave without pay.",
+					[maxLeaveWithoutPayAllowed.data]
+				) }}
+			</div>
+		</div>
 	</div>
 </template>
 
 <script setup>
 import SemicircleChart from "@/components/SemicircleChart.vue"
-import { leaveBalance } from "@/data/leaves"
+
+import { leaveBalance, maxLeaveWithoutPayAllowed } from "@/data/leaves"
 import { inject } from "vue"
 
 const __ = inject("$translate")
