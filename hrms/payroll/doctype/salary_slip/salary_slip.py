@@ -821,6 +821,8 @@ class SalarySlip(TransactionBase):
 				flt(self.gross_pay) * flt(self.exchange_rate), self.precision("base_gross_pay")
 			)
 
+		self.data, self.default_data = self.get_data_for_eval()
+
 		if self.salary_structure:
 			self.calculate_component_amounts("earnings")
 
@@ -1157,8 +1159,6 @@ class SalarySlip(TransactionBase):
 				row.formula = sanitize_expression(row.formula)
 
 	def add_structure_components(self, component_type):
-		self.data, self.default_data = self.get_data_for_eval()
-
 		for struct_row in self._salary_structure_doc.get(component_type):
 			self.add_structure_component(struct_row, component_type)
 
