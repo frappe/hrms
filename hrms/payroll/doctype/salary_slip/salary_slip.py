@@ -1547,12 +1547,11 @@ class SalarySlip(TransactionBase):
 		)
 
 		# Structured tax amount
-		eval_locals, default_data = self.get_data_for_eval()
 		self.total_structured_tax_amount, __ = calculate_tax_by_tax_slab(
 			self.total_taxable_earnings_without_full_tax_addl_components,
 			self.tax_slab,
 			self.whitelisted_globals,
-			eval_locals,
+			self.data,
 		)
 
 		self.current_structured_tax_amount = (
@@ -1563,7 +1562,7 @@ class SalarySlip(TransactionBase):
 		self.full_tax_on_additional_earnings = 0.0
 		if self.current_additional_earnings_with_full_tax:
 			self.total_tax_amount, __ = calculate_tax_by_tax_slab(
-				self.total_taxable_earnings, self.tax_slab, self.whitelisted_globals, eval_locals
+				self.total_taxable_earnings, self.tax_slab, self.whitelisted_globals, self.data
 			)
 			self.full_tax_on_additional_earnings = self.total_tax_amount - self.total_structured_tax_amount
 
