@@ -1,6 +1,12 @@
 <template>
 	<div class="h-12 bg-white border-b px-12 flex items-center">
-		<a class="text-xl" href="/">Home</a>
+		<div class="flex items-center space-x-1.5">
+			<a href="/app/home" class="text-gray-600 hover:text-gray-700">Home</a>
+			<FeatherIcon name="chevron-right" class="h-4 w-4" />
+			<a href="/app/hr" class="text-gray-600 hover:text-gray-700">HR</a>
+			<FeatherIcon name="chevron-right" class="h-4 w-4" />
+			<span class="font-medium">Roster</span>
+		</div>
 		<Dropdown
 			class="ml-auto"
 			:options="[
@@ -29,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { Dropdown, Avatar, createResource } from "frappe-ui";
+import { FeatherIcon, Dropdown, Avatar, createResource } from "frappe-ui";
 import router from "../router";
 
 import User from "../views/Home.vue";

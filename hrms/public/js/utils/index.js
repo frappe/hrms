@@ -34,7 +34,7 @@ $.extend(hrms, {
 		}
 
 		if (missing_fields.length) {
-			let message = __("Mandatory fields required for this action");
+			let message = __("Mandatory fields required for this action:");
 			message += "<br><br><ul><li>" + missing_fields.join("</li><li>") + "</ul>";
 			frappe.throw({
 				message: message,
@@ -231,5 +231,25 @@ $.extend(hrms, {
 			});
 
 		return autocompletions;
+	},
+
+	add_shift_tools_button: (list_view, action = "Assign Shift") => {
+		list_view.page.add_inner_button(
+			__("Shift Assignment Tool"),
+			function () {
+				const doc = frappe.model.get_new_doc("Shift Assignment Tool");
+				doc.action = action;
+				frappe.set_route("Form", "Shift Assignment Tool", doc.name);
+			},
+			__("Shift Tools"),
+		);
+
+		list_view.page.add_inner_button(
+			__("Roster"),
+			function () {
+				window.location.href = "/hr/roster";
+			},
+			__("Shift Tools"),
+		);
 	},
 });

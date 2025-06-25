@@ -19,6 +19,11 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		);
 		hrms.handle_realtime_bulk_action_notification(
 			frm,
+			"completed_bulk_shift_schedule_assignment",
+			"Shift Schedule Assignment",
+		);
+		hrms.handle_realtime_bulk_action_notification(
+			frm,
 			"completed_bulk_shift_request_processing",
 			"Shift Request",
 		);
@@ -52,6 +57,10 @@ frappe.ui.form.on("Shift Assignment Tool", {
 	},
 
 	shift_type_filter(frm) {
+		frm.trigger("get_employees");
+	},
+
+	shift_schedule(frm) {
 		frm.trigger("get_employees");
 	},
 
@@ -93,38 +102,45 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		const select_rows_section_head = document
 			.querySelector('[data-fieldname="select_rows_section"]')
 			.querySelector(".section-head");
-
-		if (frm.doc.action === "Assign Shift") {
-			frm.clear_custom_buttons();
-			frm.page.set_primary_action(__("Assign Shift"), () => {
-				frm.trigger("assign_shift");
-			});
-			select_rows_section_head.textContent = __("Select Employees");
-			return;
-		}
-
+		select_rows_section_head.textContent = __("Select Employees");
+		frm.clear_custom_buttons();
 		frm.page.clear_primary_action();
-		frm.page.add_inner_button(
-			__("Approve"),
-			() => {
-				frm.events.process_shift_requests(frm, "Approved");
-			},
-			__("Process Requests"),
-		);
-		frm.page.add_inner_button(
-			__("Reject"),
-			() => {
-				frm.events.process_shift_requests(frm, "Rejected");
-			},
-			__("Process Requests"),
-		);
-		frm.page.set_inner_btn_group_as_primary(__("Process Requests"));
-		frm.page.clear_menu();
-		select_rows_section_head.textContent = __("Select Shift Requests");
+
+		if (frm.doc.action === "Assign Shift")
+			frm.page.set_primary_action(__("Assign Shift"), () => {
+				frm.trigger("bulk_assign");
+			});
+		else if (frm.doc.action === "Assign Shift Schedule")
+			frm.page.set_primary_action(__("Assign Shift Schedule"), () => {
+				frm.trigger("bulk_assign");
+			});
+		else {
+			frm.page.add_inner_button(
+				__("Approve"),
+				() => {
+					frm.events.process_shift_requests(frm, "Approved");
+				},
+				__("Process Requests"),
+			);
+			frm.page.add_inner_button(
+				__("Reject"),
+				() => {
+					frm.events.process_shift_requests(frm, "Rejected");
+				},
+				__("Process Requests"),
+			);
+			frm.page.set_inner_btn_group_as_primary(__("Process Requests"));
+			frm.page.clear_menu();
+			select_rows_section_head.textContent = __("Select Shift Requests");
+		}
 	},
 
 	get_employees(frm) {
-		if (frm.doc.action === "Assign Shift" && !(frm.doc.shift_type && frm.doc.start_date))
+		if (
+			(frm.doc.action === "Assign Shift" && !(frm.doc.shift_type && frm.doc.start_date)) ||
+			(frm.doc.action === "Assign Shift Schedule" &&
+				!(frm.doc.shift_schedule && frm.doc.start_date))
+		)
 			return frm.events.render_employees_datatable(frm, []);
 
 		frm.call({
@@ -145,6 +161,13 @@ frappe.ui.form.on("Shift Assignment Tool", {
 				frm.doc.shift_type && frm.doc.start_date
 					? "There are no employees without Shift Assignments for these dates based on the given filters."
 					: "Please select Shift Type and assignment date(s).",
+			);
+		} else if (frm.doc.action === "Assign Shift Schedule") {
+			columns = frm.events.get_assign_shift_datatable_columns();
+			no_data_message = __(
+				frm.doc.shift_schedule && frm.doc.start_date
+					? "There are no employees without active overlapping Shift Schedule Assignments based on the given filters."
+					: "Please select Shift Schedule and assignment date(s).",
 			);
 		} else {
 			columns = frm.events.get_process_shift_requests_datatable_columns();
@@ -224,7 +247,8 @@ frappe.ui.form.on("Shift Assignment Tool", {
 			align: "left",
 		}));
 	},
-	assign_shift(frm) {
+
+	bulk_assign(frm, employees) {
 		const rows = frm.employees_datatable.datamanager.data;
 		const selected_employees = [];
 		const checked_row_indexes = frm.employees_datatable.rowmanager.getCheckedRows();
@@ -233,21 +257,20 @@ frappe.ui.form.on("Shift Assignment Tool", {
 		});
 
 		hrms.validate_mandatory_fields(frm, selected_employees);
-		frappe.confirm(__("Assign Shift to {0} employee(s)?", [selected_employees.length]), () => {
-			frm.events.bulk_assign_shift(frm, selected_employees);
-		});
-	},
-
-	bulk_assign_shift(frm, employees) {
-		frm.call({
-			method: "bulk_assign_shift",
-			doc: frm.doc,
-			args: {
-				employees: employees,
+		frappe.confirm(
+			__("{0} to {1} employee(s)?", [__(frm.doc.action), selected_employees.length]),
+			() => {
+				frm.call({
+					method: "bulk_assign",
+					doc: frm.doc,
+					args: {
+						employees: selected_employees,
+					},
+					freeze: true,
+					freeze_message: __("Assigning..."),
+				});
 			},
-			freeze: true,
-			freeze_message: __("Assigning Shift"),
-		});
+		);
 	},
 
 	process_shift_requests(frm, status) {

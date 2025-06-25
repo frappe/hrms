@@ -43,7 +43,13 @@ import { Dayjs } from "dayjs";
 
 import { raiseToast } from "../utils";
 
-export type FilterField = "company" | "department" | "branch" | "designation" | "shift_type";
+export type FilterField =
+	| "company"
+	| "department"
+	| "branch"
+	| "designation"
+	| "shift_type"
+	| "shift_location";
 
 const props = defineProps<{
 	firstOfMonth: Dayjs;
@@ -67,6 +73,7 @@ const filters: {
 	branch: { options: [], model: null },
 	designation: { options: [], model: null },
 	shift_type: { options: [], model: null },
+	shift_location: { options: [], model: null },
 });
 
 watch(
@@ -87,6 +94,7 @@ watch(filters, (val) => {
 		branch: val.branch.model?.value || "",
 		designation: val.designation.model?.value || "",
 		shift_type: val.shift_type.model?.value || "",
+		shift_location: val.shift_location.model?.value || "",
 	};
 	emit("updateFilters", newFilters);
 });
@@ -103,7 +111,7 @@ const defaultCompany = createResource({
 	url: "hrms.api.roster.get_default_company",
 	auto: true,
 	onSuccess: () => {
-		["company", "branch", "designation", "shift_type"].forEach((field) =>
+		["company", "branch", "designation", "shift_type", "shift_location"].forEach((field) =>
 			getFilterOptions(field as FilterField),
 		);
 	},

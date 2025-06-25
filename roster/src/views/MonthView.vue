@@ -33,7 +33,7 @@
 				:firstOfMonth="firstOfMonth"
 				:employees="employees.data || []"
 				:employeeFilters="employeeFilters"
-				:shiftTypeFilter="shiftTypeFilter"
+				:shiftFilters="shiftFilters"
 			/>
 			<div v-else class="my-40 text-center">Please select a company.</div>
 		</div>
@@ -61,28 +61,32 @@ import ShiftAssignmentDialog from "../components/ShiftAssignmentDialog.vue";
 export type EmployeeFilters = {
 	[K in "status" | "company" | "department" | "branch" | "designation"]?: string;
 };
+export type ShiftFilters = {
+	[K in "shift_type" | "shift_location"]?: string;
+};
 
 const monthViewTable = ref<InstanceType<typeof MonthViewTable>>();
 const isCompanySelected = ref(false);
 const showShiftAssignmentDialog = ref(false);
 const firstOfMonth = ref(dayjs().date(1).startOf("D"));
-const shiftTypeFilter = ref("");
 const employeeFilters = reactive<EmployeeFilters>({
 	status: "Active",
 });
+const shiftFilters = reactive<ShiftFilters>({});
 
 const addToMonth = (change: number) => {
 	firstOfMonth.value = firstOfMonth.value.add(change, "M");
 };
 
-const updateFilters = (newFilters: EmployeeFilters & { shift_type: string }) => {
+const updateFilters = (newFilters: EmployeeFilters & ShiftFilters) => {
 	isCompanySelected.value = !!newFilters.company;
 	if (!isCompanySelected.value) return;
 	let employeeUpdated = false;
-	(Object.entries(newFilters) as [keyof EmployeeFilters | "shift_type", string][]).forEach(
+	(Object.entries(newFilters) as [keyof EmployeeFilters | keyof ShiftFilters, string][]).forEach(
 		([key, value]) => {
-			if (key === "shift_type") {
-				shiftTypeFilter.value = value;
+			if (["shift_type", "shift_location"].includes(key)) {
+				if (value) shiftFilters[key] = value;
+				else delete shiftFilters[key];
 				return;
 			}
 

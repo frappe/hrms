@@ -16,10 +16,11 @@
 					v-model="form.employee_name"
 					:disabled="true"
 				/>
-				<DatePicker
-					label="Start Date"
-					v-model="form.start_date"
-					:disabled="!!props.shiftAssignmentName"
+				<FormControl
+					type="text"
+					label="Department"
+					v-model="form.department"
+					:disabled="true"
 				/>
 				<FormControl
 					type="autocomplete"
@@ -28,6 +29,18 @@
 					:disabled="!!props.shiftAssignmentName"
 					:options="shiftTypes.data"
 				/>
+				<DatePicker
+					label="Start Date"
+					v-model="form.start_date"
+					:disabled="!!props.shiftAssignmentName"
+				/>
+				<FormControl
+					type="autocomplete"
+					label="Shift Location"
+					v-model="form.shift_location"
+					:disabled="!!props.shiftAssignmentName"
+					:options="shiftLocations.data"
+				/>
 				<DatePicker label="End Date" v-model="form.end_date" />
 				<FormControl
 					type="select"
@@ -35,17 +48,14 @@
 					label="Status"
 					v-model="form.status"
 				/>
-				<FormControl
-					type="text"
-					label="Department"
-					v-model="form.department"
-					:disabled="true"
-				/>
 			</div>
 
 			<!-- Schedule Settings -->
 			<div
-				v-if="(!props.shiftAssignmentName && showShiftScheduleSettings) || form.schedule"
+				v-if="
+					(!props.shiftAssignmentName && showShiftScheduleSettings) ||
+					form.shift_schedule_assignment
+				"
 				class="mt-6 space-y-6"
 			>
 				<hr />
@@ -141,9 +151,13 @@ import { dayjs, raiseToast } from "../utils";
 type Status = "Active" | "Inactive";
 
 type Form = {
-	[K in "company" | "employee_name" | "department" | "employee" | "shift_type"]:
-		| string
-		| { value: string; label?: string };
+	[K in
+		| "company"
+		| "employee_name"
+		| "department"
+		| "employee"
+		| "shift_type"
+		| "shift_location"]: string | { value: string; label?: string };
 } & {
 	start_date: string;
 	end_date: string;
@@ -176,12 +190,13 @@ const formObject: Form = {
 	employee: "",
 	company: "",
 	employee_name: "",
-	start_date: "",
+	department: "",
 	shift_type: "",
+	start_date: "",
+	shift_location: "",
 	end_date: "",
 	status: "Active",
-	department: "",
-	schedule: "",
+	shift_schedule_assignment: "",
 };
 
 const repeatOnDaysObject = {
@@ -255,14 +270,14 @@ const actions = computed(() => {
 			},
 		},
 	];
-	if (form.schedule)
+	if (form.shift_schedule_assignment)
 		options.push({
-			label: "Shift Assignment Schedule",
+			label: "Shift Schedule Assignment",
 			onClick: () => {
 				deleteDialogOptions.value = {
-					title: "Delete Shift Assignment Schedule?",
-					message: `This will delete Shift Assignment Schedule: <a href='/app/shift-assignment-schedule/${form.schedule}' target='_blank'><u>${form.schedule}</u></a> and all the shifts associated with it.`,
-					action: () => deleteShiftAssignmentSchedule.submit(),
+					title: "Delete Shift Schedule Assignment?",
+					message: `This will delete Shift Schedule Assignment: <a href='/app/shift-schedule-assignment/${form.shift_schedule_assignment}' target='_blank'><u>${form.shift_schedule_assignment}</u></a> and all the shifts associated with it.`,
+					action: () => deleteShiftScheduleAssignment.submit(),
 				};
 				showDeleteDialog.value = true;
 			},
@@ -355,7 +370,7 @@ const getShiftAssignment = (name: string) =>
 			Object.keys(form).forEach((key) => {
 				form[key as keyof Form] = data[key];
 			});
-			if (form.schedule) getShiftAssignmentSchedule(form.schedule);
+			if (form.shift_schedule_assignment) shiftSchedule.fetch();
 		},
 		onError(error: { messages: string[] }) {
 			raiseToast("error", error.messages[0]);
@@ -368,24 +383,6 @@ const getShiftAssignment = (name: string) =>
 			onError(error: { messages: string[] }) {
 				raiseToast("error", error.messages[0]);
 			},
-		},
-	});
-
-const getShiftAssignmentSchedule = (name: string) =>
-	createDocumentResource({
-		doctype: "Shift Assignment Schedule",
-		name: name,
-		onSuccess: (data: Record<string, any>) => {
-			frequency.value = data.frequency;
-			const days = data.repeat_on_days.map(
-				(day: { day: keyof typeof repeatOnDays }) => day.day,
-			);
-			for (const day in repeatOnDays) {
-				repeatOnDays[day as keyof typeof repeatOnDays] = days.includes(day);
-			}
-		},
-		onError(error: { messages: string[] }) {
-			raiseToast("error", error.messages[0]);
 		},
 	});
 
@@ -409,11 +406,34 @@ const employee = createResource({
 	},
 });
 
+const shiftSchedule = createResource({
+	url: "hrms.api.roster.get_schedule_from_assignment",
+	makeParams() {
+		return { shift_schedule_assignment: form.shift_schedule_assignment };
+	},
+	onSuccess: (data: { frequency: string; repeat_on_days: string[] }) => {
+		frequency.value = data.frequency;
+		for (const day in repeatOnDays) {
+			repeatOnDays[day as keyof typeof repeatOnDays] = data.repeat_on_days.includes(day);
+		}
+	},
+	onError(error: { messages: string[] }) {
+		raiseToast("error", error.messages[0]);
+	},
+});
+
 const shiftTypes = createListResource({
 	doctype: "Shift Type",
 	fields: ["name"],
 	auto: true,
 	transform: (data: { name: string }[]) => data.map((shiftType) => shiftType.name),
+});
+
+const shiftLocations = createListResource({
+	doctype: "Shift Location",
+	fields: ["name"],
+	auto: true,
+	transform: (data: { name: string }[]) => data.map((shiftLocation) => shiftLocation.name),
 });
 
 const shiftAssignments = createListResource({
@@ -444,6 +464,7 @@ const insertShift = createResource({
 		return {
 			employee: (form.employee as { value: string }).value,
 			shift_type: (form.shift_type as { value: string }).value,
+			shift_location: (form.shift_location as { value: string }).value,
 			company: form.company,
 			status: form.status,
 			start_date: form.start_date,
@@ -477,7 +498,7 @@ const deleteCurrentShift = createResource({
 });
 
 const createShiftAssignmentSchedule = createResource({
-	url: "hrms.api.roster.create_shift_assignment_schedule",
+	url: "hrms.api.roster.create_shift_schedule_assignment",
 	makeParams() {
 		return {
 			employee: (form.employee as { value: string }).value,
@@ -486,6 +507,7 @@ const createShiftAssignmentSchedule = createResource({
 			status: form.status,
 			start_date: form.start_date,
 			end_date: form.end_date,
+			shift_location: (form.shift_location as { value: string }).value,
 			repeat_on_days: Object.keys(repeatOnDays).filter(
 				(day) => repeatOnDays[day as keyof typeof repeatOnDays],
 			),
@@ -493,7 +515,7 @@ const createShiftAssignmentSchedule = createResource({
 		};
 	},
 	onSuccess: () => {
-		raiseToast("success", "Shift Assignment Schedule created successfully!");
+		raiseToast("success", "Shift Schedule Assignment created successfully!");
 		emit("fetchEvents");
 	},
 	onError(error: { messages: string[] }) {
@@ -501,13 +523,13 @@ const createShiftAssignmentSchedule = createResource({
 	},
 });
 
-const deleteShiftAssignmentSchedule = createResource({
-	url: "hrms.api.roster.delete_shift_assignment_schedule",
+const deleteShiftScheduleAssignment = createResource({
+	url: "hrms.api.roster.delete_shift_schedule_assignment",
 	makeParams() {
-		return { schedule: form.schedule };
+		return { shift_schedule_assignment: form.shift_schedule_assignment };
 	},
 	onSuccess: () => {
-		raiseToast("success", "Shift Assignment Schedule deleted successfully!");
+		raiseToast("success", "Shift Schedule Assignment deleted successfully!");
 		emit("fetchEvents");
 	},
 	onError(error: { messages: string[] }) {
