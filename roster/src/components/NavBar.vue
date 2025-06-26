@@ -1,9 +1,10 @@
 <template>
 	<div class="h-12 bg-white border-b px-12 flex items-center">
 		<div class="flex items-center space-x-1.5">
-			<a href="/app/home" class="text-gray-600 hover:text-gray-700">Home</a>
-			<FeatherIcon name="chevron-right" class="h-4 w-4" />
-			<a href="/app/hr" class="text-gray-600 hover:text-gray-700">HR</a>
+			<a href="/app/hr" class="text-gray-600 hover:text-gray-700 flex items-center">
+				<FrappeHRLogo class="h-6 w-6 mr-2.5" />
+				Frappe HR
+			</a>
 			<FeatherIcon name="chevron-right" class="h-4 w-4" />
 			<span class="font-medium">Roster</span>
 		</div>
@@ -36,17 +37,14 @@
 
 <script setup lang="ts">
 import { FeatherIcon, Dropdown, Avatar, createResource } from "frappe-ui";
-import router from "../router";
+import FrappeHRLogo from "../icons/FrappeHRLogo.vue";
 
-import User from "../views/Home.vue";
+import { User } from "../views/Home.vue";
+import { goTo, raiseToast } from "../utils";
 
 const props = defineProps<{
 	user: User;
 }>();
-
-const goTo = (path: string) => {
-	window.location.href = path;
-};
 
 // RESOURCES
 

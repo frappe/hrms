@@ -306,7 +306,7 @@ type Color =
 	| "yellow";
 
 type Shift = {
-	[K in "name" | "shift_type" | "status" | "start_time" | "end_time"]: string;
+	[K in "name" | "shift_type" | "status" | "start_time" | "end_time" | "shift_location"]: string;
 } & {
 	color: Color;
 };

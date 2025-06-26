@@ -4,10 +4,8 @@ from hrms.hr.doctype.shift_schedule.shift_schedule import get_or_insert_shift_sc
 
 
 def execute():
-	frappe.reload_doc("HR", "doctype", "Shift Assignment")
-
 	fields = ["name", "shift_type", "frequency", "employee", "shift_status", "enabled", "create_shifts_after"]
-	for doc in frappe.get_all("Shift Assignment Schedule", fields=fields, as_dict=True):
+	for doc in frappe.get_all("Shift Assignment Schedule", fields=fields):
 		repeat_on_days = frappe.get_all(
 			"Assignment Rule Day", {"parent": doc.name}, pluck="day", distinct=True
 		)

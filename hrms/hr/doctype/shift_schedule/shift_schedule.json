@@ -65,7 +65,7 @@
    "link_fieldname": "shift_schedule"
   }
  ],
- "modified": "2024-12-13 15:09:55.957625",
+ "modified": "2024-12-19 13:34:43.731635",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Schedule",
@@ -93,6 +93,8 @@
    "write": 1
   },
   {
+   "amend": 1,
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -102,6 +104,7 @@
    "report": 1,
    "role": "HR Manager",
    "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],

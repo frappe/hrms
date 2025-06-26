@@ -186,7 +186,7 @@ class ShiftAssignmentTool(Document):
 
 		validate_bulk_tool_fields(self, mandatory_fields, employees, "start_date", "end_date")
 
-		if len(employees) <= 30:
+		if self.action == "Assign Shift" and len(employees) <= 30:
 			return self._bulk_assign(employees)
 
 		frappe.enqueue(self._bulk_assign, timeout=3000, employees=employees)
@@ -223,6 +223,9 @@ class ShiftAssignmentTool(Document):
 						self.shift_location,
 					)
 				)
+				if self.action == "Assign Shift Schedule":
+					assignment.create_shifts(self.start_date, self.end_date)
+
 			except Exception:
 				frappe.db.rollback(save_point=savepoint)
 				frappe.log_error(
@@ -231,7 +234,7 @@ class ShiftAssignmentTool(Document):
 				)
 				failure.append(d)
 			else:
-				success.append({"doc": get_link_to_form(doctype, assignment), "employee": d})
+				success.append({"doc": get_link_to_form(doctype, assignment.name), "employee": d})
 
 			count += 1
 			frappe.publish_progress(count * 100 / len(employees), title=_("Creating {0}...").format(doctype))
@@ -307,7 +310,7 @@ class ShiftAssignmentTool(Document):
 		assignment.enabled = 0 if self.end_date else 1
 		assignment.create_shifts_after = self.start_date
 		assignment.save()
-		return assignment.name
+		return assignment
 
 
 def create_shift_assignment(
@@ -331,4 +334,4 @@ def create_shift_assignment(
 	assignment.shift_schedule_assignment = shift_schedule_assignment
 	assignment.save()
 	assignment.submit()
-	return assignment.name
+	return assignment
