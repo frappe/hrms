@@ -495,10 +495,23 @@ class TestLeaveAllocation(FrappeTestCase):
 			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 6
 		)
 
-		leave_allocation.allocate_leaves_manually(6)
+		leave_allocation.allocate_leaves_manually(5)
 		self.assertEqual(
-			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 12
+			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 11
 		)
+
+		# manually set from_date - applicable from the next day
+		leave_allocation.allocate_leaves_manually(1, add_days(frappe.flags.current_date, 1))
+		# balance should be 11 on the current date
+		self.assertEqual(
+			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 11
+		)
+		# allocated leave should be applicable from the next day
+		self.assertEqual(
+			get_leave_balance_on(self.employee.name, self.leave_type, add_days(frappe.flags.current_date, 1)),
+			12,
+		)
+
 		self.assertRaises(frappe.ValidationError, leave_allocation.allocate_leaves_manually, 1)
 
 	def tearDown(self):

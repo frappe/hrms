@@ -221,7 +221,7 @@ scheduler_events = {
 	],
 	"hourly_long": [
 		"hrms.hr.doctype.shift_type.shift_type.process_auto_attendance_for_all_shifts",
-		"hrms.hr.doctype.shift_assignment_schedule.shift_assignment_schedule.process_auto_shift_creation",
+		"hrms.hr.doctype.shift_schedule_assignment.shift_schedule_assignment.process_auto_shift_creation",
 	],
 	"daily": [
 		"hrms.controllers.employee_reminders.send_birthday_reminders",

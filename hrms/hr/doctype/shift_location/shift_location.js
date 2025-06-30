@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Shift Location", {
-	refresh: async () => {
+	refresh: async (frm) => {
 		const allow_geolocation_tracking = await frappe.db.get_single_value(
 			"HR Settings",
 			"allow_geolocation_tracking",
@@ -16,6 +16,12 @@ frappe.ui.form.on("Shift Location", {
 				"longitude",
 				"geolocation",
 			]);
+
+		if (!frm.doc.__islocal)
+			hrms.add_shift_tools_button_to_form(frm, {
+				action: "Assign Shift",
+				shift_location: frm.doc.name,
+			});
 	},
 
 	fetch_geolocation: (frm) => {

@@ -34,7 +34,7 @@ $.extend(hrms, {
 		}
 
 		if (missing_fields.length) {
-			let message = __("Mandatory fields required for this action");
+			let message = __("Mandatory fields required for this action:");
 			message += "<br><br><ul><li>" + missing_fields.join("</li><li>") + "</ul>";
 			frappe.throw({
 				message: message,
@@ -231,5 +231,48 @@ $.extend(hrms, {
 			});
 
 		return autocompletions;
+	},
+
+	add_shift_tools_button_to_list: (list_view, action = "Assign Shift") => {
+		list_view.page.add_inner_button(
+			__("Shift Assignment Tool"),
+			() => {
+				const doc = frappe.model.get_new_doc("Shift Assignment Tool");
+				doc.action = action;
+				doc.company = frappe.defaults.get_default("company");
+				doc.status = "Active";
+				frappe.set_route("Form", "Shift Assignment Tool", doc.name);
+			},
+			__("Shift Tools"),
+		);
+
+		list_view.page.add_inner_button(
+			__("Roster"),
+			() => {
+				window.location.href = "/hr/roster";
+			},
+			__("Shift Tools"),
+		);
+	},
+
+	add_shift_tools_button_to_form: (frm, fields) => {
+		frm.add_custom_button(
+			__("Shift Assignment Tool"),
+			() => {
+				const doc = frappe.model.get_new_doc("Shift Assignment Tool");
+				Object.assign(doc, fields);
+				doc.company = frappe.defaults.get_default("company");
+				doc.status = "Active";
+				frappe.set_route("Form", "Shift Assignment Tool", doc.name);
+			},
+			__("Shift Tools"),
+		);
+		frm.add_custom_button(
+			__("Roster"),
+			() => {
+				window.location.href = "/hr/roster";
+			},
+			__("Shift Tools"),
+		);
 	},
 });
