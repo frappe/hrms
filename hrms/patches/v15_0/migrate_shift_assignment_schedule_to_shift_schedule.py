@@ -4,6 +4,9 @@ from hrms.hr.doctype.shift_schedule.shift_schedule import get_or_insert_shift_sc
 
 
 def execute():
+	if not frappe.db.has_table("Shift Assignment Schedule"):
+		return
+
 	fields = ["name", "shift_type", "frequency", "employee", "shift_status", "enabled", "create_shifts_after"]
 	for doc in frappe.get_all("Shift Assignment Schedule", fields=fields):
 		repeat_on_days = frappe.get_all(

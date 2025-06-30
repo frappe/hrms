@@ -5,6 +5,7 @@ import calendar
 import random
 
 import frappe
+from frappe.core.doctype.user_permission.test_user_permission import create_user
 from frappe.model.document import Document
 from frappe.tests.utils import FrappeTestCase, change_settings
 from frappe.utils import (
@@ -371,8 +372,16 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertEqual(ss.payment_days, days_in_month - no_of_holidays - 3.75)
 
 	@change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
-	def test_payment_days_calculation_for_varying_leave_ranges(self):
-		emp_id = make_employee("test_payment_days_based_on_leave_application@salary.com")
+	def test_payment_days_calculation_for_lwp_on_month_boundaries(self):
+		"""Tests LWP calculation leave applications created on month boundaries"""
+		holiday_list = make_holiday_list(
+			"Test Holiday List",
+			"2024-01-01",
+			"2024-12-31",
+		)
+		emp_id = make_employee(
+			"test_payment_days_based_on_leave_application@salary.com", holiday_list=holiday_list
+		)
 
 		make_leave_application(emp_id, "2024-06-28", "2024-07-03", "Leave Without Pay")  # 3 days in July
 		make_leave_application(emp_id, "2024-07-10", "2024-07-13", "Leave Without Pay")  # 4 days in July
@@ -2168,6 +2177,8 @@ def make_leave_application(
 	half_day_date=None,
 	submit=True,
 ):
+	create_user("test@example.com")
+
 	leave_application = frappe.get_doc(
 		dict(
 			doctype="Leave Application",

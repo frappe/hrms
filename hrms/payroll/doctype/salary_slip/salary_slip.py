@@ -1678,7 +1678,7 @@ class SalarySlip(TransactionBase):
 
 					taxable_earnings -= flt(amount - additional_amount)
 					additional_income -= additional_amount
-					amount_exempted_from_income_tax = flt(amount - additional_amount)
+					amount_exempted_from_income_tax += flt(amount - additional_amount)
 
 					if additional_amount and ded.is_recurring_additional_salary:
 						additional_income -= self.get_future_recurring_additional_amount(

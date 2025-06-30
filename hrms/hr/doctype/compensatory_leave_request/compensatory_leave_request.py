@@ -1,6 +1,7 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+import datetime
 
 import frappe
 from frappe import _
@@ -78,7 +79,7 @@ class CompensatoryLeaveRequest(Document):
 		comp_leave_valid_from = add_days(self.work_end_date, 1)
 		leave_period = get_leave_period(comp_leave_valid_from, comp_leave_valid_from, company)
 		if leave_period:
-			leave_allocation = self.get_existing_allocation_for_period(leave_period)
+			leave_allocation = self.get_existing_allocation(comp_leave_valid_from)
 			if leave_allocation:
 				leave_allocation.new_leaves_allocated += date_difference
 				leave_allocation.validate()
@@ -122,30 +123,21 @@ class CompensatoryLeaveRequest(Document):
 					leave_allocation, date_difference * -1, add_days(self.work_end_date, 1)
 				)
 
-	def get_existing_allocation_for_period(self, leave_period):
-		leave_allocation = frappe.db.sql(
-			"""
-			select name
-			from `tabLeave Allocation`
-			where employee=%(employee)s and leave_type=%(leave_type)s
-				and docstatus=1
-				and (from_date between %(from_date)s and %(to_date)s
-					or to_date between %(from_date)s and %(to_date)s
-					or (from_date < %(from_date)s and to_date > %(to_date)s))
-		""",
-			{
-				"from_date": leave_period[0].from_date,
-				"to_date": leave_period[0].to_date,
+	def get_existing_allocation(self, comp_leave_valid_from: datetime.date) -> dict | None:
+		leave_allocation = frappe.db.get_all(
+			"Leave Allocation",
+			filters={
 				"employee": self.employee,
 				"leave_type": self.leave_type,
+				"from_date": ("<=", comp_leave_valid_from),
+				"to_date": (">=", comp_leave_valid_from),
+				"docstatus": 1,
 			},
-			as_dict=1,
+			limit=1,
 		)
 
 		if leave_allocation:
 			return frappe.get_doc("Leave Allocation", leave_allocation[0].name)
-		else:
-			return False
 
 	def create_leave_allocation(self, leave_period, date_difference):
 		is_carry_forward = frappe.db.get_value("Leave Type", self.leave_type, "is_carry_forward")

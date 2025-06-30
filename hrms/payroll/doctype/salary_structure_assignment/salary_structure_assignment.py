@@ -172,29 +172,7 @@ class SalaryStructureAssignment(Document):
 		if not get_tax_component(self.salary_structure):
 			return False
 
-		if self.has_emp_joined_after_payroll_period_start() and not self.has_existing_salary_slips():
-			return True
-		else:
-			if not self.docstatus.is_draft() and (
-				self.taxable_earnings_till_date or self.tax_deducted_till_date
-			):
-				return True
-			return False
-
-	def has_existing_salary_slips(self) -> bool:
-		return bool(
-			frappe.db.exists(
-				"Salary Slip",
-				{"employee": self.employee, "docstatus": 1},
-			)
-		)
-
-	def has_emp_joined_after_payroll_period_start(self) -> bool:
-		date_of_joining = getdate(frappe.db.get_value("Employee", self.employee, "date_of_joining"))
-		payroll_period = get_payroll_period(self.from_date, self.from_date, self.company)
-		if not payroll_period or date_of_joining > getdate(payroll_period.start_date):
-			return True
-		return False
+		return True
 
 
 def get_assigned_salary_structure(employee, on_date):

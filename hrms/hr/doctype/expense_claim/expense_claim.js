@@ -64,6 +64,14 @@ frappe.ui.form.on("Expense Claim", {
 				query: "erpnext.controllers.queries.employee_query",
 			};
 		});
+
+		frm.set_query("department", function () {
+			return {
+				filters: {
+					company: frm.doc.company,
+				},
+			};
+		});
 	},
 
 	onload: function (frm) {

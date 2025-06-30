@@ -204,12 +204,13 @@ class LeaveEncashment(Document):
 			return
 
 		to_date = leave_allocation.get("to_date")
-		if to_date < getdate():
+
+		can_expire = not frappe.db.get_value("Leave Type", self.leave_type, "is_carry_forward")
+		if to_date < getdate() and can_expire:
 			args = frappe._dict(
 				leaves=self.encashment_days, from_date=to_date, to_date=to_date, is_carry_forward=0
 			)
 			create_leave_ledger_entry(self, args, submit)
-
 
 def create_leave_encashment(leave_allocation):
 	"""Creates leave encashment for the given allocations"""

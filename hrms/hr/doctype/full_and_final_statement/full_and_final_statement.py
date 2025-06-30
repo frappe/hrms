@@ -205,7 +205,7 @@ class FullandFinalStatement(Document):
 					"debit_in_account_currency": flt(data.amount, precision),
 					"user_remark": data.remark,
 				}
-				if data.reference_document_type == "Expense Claim":
+				if data.reference_document_type in ["Expense Claim", "Gratuity"]:
 					account_dict["party_type"] = "Employee"
 					account_dict["party"] = self.employee
 
@@ -248,9 +248,18 @@ class FullandFinalStatement(Document):
 		)
 		return jv
 
+	def set_gratuity_status(self):
+		for payable in self.payables:
+			if payable.component != "Gratuity":
+				continue
+			gratuity = frappe.get_doc("Gratuity", payable.reference_document)
+			amount = payable.amount if self.docstatus == 1 and self.status == "Paid" else 0
+			gratuity.db_set("paid_amount", amount)
+			gratuity.set_status(update=True)
+
 
 @frappe.whitelist()
-def get_account_and_amount(ref_doctype, ref_document):
+def get_account_and_amount(ref_doctype, ref_document, company):
 	if not ref_doctype or not ref_document:
 		return None
 
@@ -299,6 +308,11 @@ def get_account_and_amount(ref_doctype, ref_document):
 		payment_account = details.advance_account
 		amount = details.paid_amount - (details.claimed_amount + details.return_amount)
 		return [payment_account, amount]
+	
+	if ref_doctype == "Leave Encashment":
+		amount = frappe.db.get_value("Leave Encashment", ref_document, "encashment_amount")
+		payable_account = frappe.get_cached_value("Company", company, "default_payroll_payable_account")
+		return [payable_account, amount]
 
 
 def update_full_and_final_statement_status(doc, method=None):
@@ -310,3 +324,4 @@ def update_full_and_final_statement_status(doc, method=None):
 			fnf = frappe.get_doc("Full and Final Statement", entry.reference_name)
 			fnf.db_set("status", status)
 			fnf.notify_update()
+			fnf.set_gratuity_status()

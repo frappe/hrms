@@ -388,14 +388,12 @@ class IncomeTaxComputationReport:
 			)
 		)
 
-		for emp, emp_details in self.employees.items():
-			if not self.employees[emp]["allow_tax_exemption"]:
-				continue
-
+		for emp_details in self.employees.values():
 			income_tax_slab = emp_details.get("income_tax_slab")
 			standard_exemption = standard_exemptions_per_slab.get(income_tax_slab, 0)
 			emp_details["standard_tax_exemption"] = standard_exemption
-			self.employees[emp]["total_exemption"] += standard_exemption
+			emp_details.setdefault("total_exemption", 0)
+			emp_details["total_exemption"] += standard_exemption
 
 		self.add_column("Total Exemption")
 
@@ -456,6 +454,20 @@ class IncomeTaxComputationReport:
 		return salary_slip.whitelisted_globals, eval_locals
 
 	def get_total_deducted_tax(self):
+		SalaryComponent = frappe.qb.DocType("Salary Component")
+		tax_components = (
+			frappe.qb.from_(SalaryComponent)
+			.select(SalaryComponent.name)
+			.where(
+				(SalaryComponent.is_income_tax_component == 1)
+				| (SalaryComponent.variable_based_on_taxable_salary == 1)
+			)
+			.where(SalaryComponent.type == "Deduction")
+			.where(SalaryComponent.disabled == 0)
+		).run(pluck="name")
+		if not tax_components:
+			return []
+
 		self.add_column("Total Tax Deducted")
 
 		ss = frappe.qb.DocType("Salary Slip")
@@ -468,8 +480,8 @@ class IncomeTaxComputationReport:
 			.select(ss.employee, Sum(ss_ded.amount).as_("amount"))
 			.where(ss.docstatus == 1)
 			.where(ss.employee.isin(list(self.employees.keys())))
+			.where(ss_ded.salary_component.isin(tax_components))
 			.where(ss_ded.parentfield == "deductions")
-			.where(ss_ded.variable_based_on_taxable_salary == 1)
 			.where(ss.start_date >= self.payroll_period_start_date)
 			.where(ss.end_date <= self.payroll_period_end_date)
 			.groupby(ss.employee)

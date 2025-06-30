@@ -287,8 +287,8 @@ frappe.ui.form.on("Salary Slip", {
 			const message = `
 				<div class="small text-muted pb-3">
 					${__("Note").bold()}: ${__("Payment Days calculations are based on these Payroll Settings")}:
-					<br><br>${__("Payroll Based On")}: ${payroll_based_on.bold()}
-					<br>${__("Consider Unmarked Attendance As")}: ${consider_unmarked_attendance_as.bold()}
+					<br><br>${__("Payroll Based On")}: ${__(payroll_based_on).bold()}
+					<br>${__("Consider Unmarked Attendance As")}: ${__(consider_unmarked_attendance_as).bold()}
 					<br>${__("Consider Marked Attendance on Holidays")}:
 					${
 						cint(include_holidays_in_total_working_days) &&

@@ -69,7 +69,7 @@
 				</div>
 			</template>
 
-			<Button variant="solid" class="w-full py-5 text-sm" @click="submitLog(nextAction.action)">
+			<Button variant="solid" class="w-full py-5 text-sm" @click.once="submitLog(nextAction.action)">
 				{{ __("Confirm {0}", [nextAction.label]) }}
 			</Button>
 		</div>

@@ -783,9 +783,9 @@ def get_ec_matching_query(
 		ref_rank = frappe.qb.terms.Case().when(ec.employee == common_filters.party, 1).else_(0) + 1
 
 		if exact_match:
-			filters.append(ec.total_sanctioned_amount == common_filters.amount)
+			filters.append(ec.total_amount_reimbursed == common_filters.amount)
 		else:
-			filters.append(ec.total_sanctioned_amount.gt(common_filters.amount))
+			filters.append(ec.total_amount_reimbursed.gt(common_filters.amount))
 	else:
 		ref_rank = ConstantColumn(1)
 
@@ -796,6 +796,7 @@ def get_ec_matching_query(
 		qb.from_(ec)
 		.select(
 			ref_rank.as_("rank"),
+			ConstantColumn("Expense Claim").as_("doctype"),
 			ec.name,
 			ec.total_sanctioned_amount.as_("paid_amount"),
 			ConstantColumn("").as_("reference_no"),
