@@ -811,9 +811,14 @@ def get_permitted_fields_for_write(doctype: str) -> list[str]:
 
 
 @frappe.whitelist()
-def get_lwp_details(employee: str) -> int:
+def get_lwp_details(employee: str) -> dict:
 	result = frappe._dict(
-		{"leave_type": None, "max_lwps_allowed": 0.0, "lwps_consumed": 0.0, "balance_percentage": 0.0}
+		{
+			"leave_type": "Leave Without Pay",
+			"max_lwps_allowed": frappe.get_value("Leave Type", "Leave Without Pay", "max_leaves_allowed"),
+			"lwps_consumed": 0.0,
+			"balance_percentage": 0.0,
+		}
 	)
 
 	company = frappe.get_value("Employee", employee, "company", cache=True)
@@ -826,7 +831,7 @@ def get_lwp_details(employee: str) -> int:
 		cache=True,
 	)
 
-	count_lwps = frappe.db.count(
+	lwps_consumed = frappe.db.count(
 		"Leave Application",
 		filters={
 			"employee": employee,
@@ -836,14 +841,8 @@ def get_lwp_details(employee: str) -> int:
 			"docstatus": 1,
 		},
 	)
-	if count_lwps:
-		result.lwps_consumed = count_lwps
-
-	lwps = frappe.get_list("Leave Type", filters={"is_lwp": 1}, pluck="name")
-
-	if lwps:
-		result.leave_type = lwps[0]
-		result.max_lwps_allowed = frappe.get_value("Leave Type", lwps[0], "max_leaves_allowed")
+	if lwps_consumed:
+		result.lwps_consumed = lwps_consumed
 
 	# calculate balance
 	if result.max_lwps_allowed > 0:
