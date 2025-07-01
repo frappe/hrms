@@ -808,3 +808,49 @@ def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 @frappe.whitelist()
 def get_permitted_fields_for_write(doctype: str) -> list[str]:
 	return get_permitted_fields(doctype, permission_type="write")
+
+
+@frappe.whitelist()
+def get_lwps_details(employee: str) -> int:
+	result = frappe._dict(
+		{"leave_type": None, "max_lwps_allowed": 0.0, "lwps_consumed": 0.0, "balance_percentage": 0.0}
+	)
+
+	company = frappe.get_value("Employee", employee, "company", cache=True)
+
+	leave_period = frappe.get_value(
+		"Leave Period",
+		{"company": company, "is_active": True},
+		["name", "from_date", "to_date"],
+		as_dict=True,
+		cache=True,
+	)
+
+	count_lwps = frappe.db.count(
+		"Leave Application",
+		filters={
+			"employee": employee,
+			"leave_type": ("=", "Leave Without Pay"),
+			"from_date": [">=", leave_period.from_date],
+			"to_date": ["<=", leave_period.to_date],
+			"docstatus": 1,
+		},
+	)
+	if count_lwps:
+		result.lwps_consumed = count_lwps
+
+	lwps = frappe.get_list("Leave Type", filters={"is_lwp": 1}, pluck="name")
+
+	if lwps:
+		result.leave_type = lwps[0]
+		result.max_lwps_allowed = frappe.get_value("Leave Type", lwps[0], "max_leaves_allowed")
+
+	# calculate balance
+	if result.max_lwps_allowed > 0:
+		result.balance_percentage = round(
+			max(0, 100 - (result.lwps_consumed / result.max_lwps_allowed * 100)), 2
+		)
+	else:
+		result.balance_percentage = 100.0
+
+	return result

@@ -69,3 +69,15 @@ export const leaveBalance = createResource({
 		)
 	},
 })
+
+export const LeaveWithoutPayDetails = createResource({
+	url: "hrms.api.get_lwps_details",
+	params: {
+		employee: employeeResource.data.name,
+	},
+	auto: true,
+	cache: "hrms:lwps_details",
+	transform(data) {
+		return data || 0
+	},
+})

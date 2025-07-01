@@ -37,15 +37,27 @@
 					{{ __("{0} balance", [__(leave_type, null, "Leave Type")]) }}
 				</div>
 			</div>
+			<div class="flex flex-col bg-white border-none rounded-lg drop-shadow-md gap-2 p-4 items-start first:ml-4">
+			<SemicircleChart
+					:percentage="LeaveWithoutPayDetails.data.balance_percentage"
+					:colorClass="getChartColor(1)"
+			/>
+			<div class="text-gray-800 font-bold text-base">	
+					{{ `${LeaveWithoutPayDetails.data.lwps_consumed}/${LeaveWithoutPayDetails.data.max_lwps_allowed}` }}
+			</div>
+			<div class="text-gray-600 font-normal text-sm w-24 leading-4">
+					{{ __("{0} balance", [__(LeaveWithoutPayDetails.data.leave_type, null, "Leave Type")]) }}
+			</div>
+		 </div>
 		</div>
-
 		<EmptyState :message="__('You have no leaves allocated')" v-else />
 	</div>
 </template>
 
 <script setup>
 import SemicircleChart from "@/components/SemicircleChart.vue"
-import { leaveBalance } from "@/data/leaves"
+
+import { leaveBalance, LeaveWithoutPayDetails } from "@/data/leaves"
 import { inject } from "vue"
 
 const __ = inject("$translate")
