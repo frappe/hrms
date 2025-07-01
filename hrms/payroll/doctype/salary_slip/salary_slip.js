@@ -251,11 +251,6 @@ frappe.ui.form.on("Salary Slip", {
 			["hourly_wages", "timesheets"],
 			cint(frm.doc.salary_slip_based_on_timesheet) === 1,
 		);
-
-		frm.toggle_display(
-			["payment_days", "total_working_days", "leave_without_pay"],
-			frm.doc.payroll_frequency != "",
-		);
 	},
 
 	get_emp_and_working_day_details: function (frm) {

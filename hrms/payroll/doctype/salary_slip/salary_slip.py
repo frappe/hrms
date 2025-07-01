@@ -141,7 +141,7 @@ class SalarySlip(TransactionBase):
 		self.validate_dates()
 		self.check_existing()
 
-		if not self.salary_slip_based_on_timesheet:
+		if self.payroll_frequency:
 			self.get_date_details()
 
 		if not (len(self.get("earnings")) or len(self.get("deductions"))):
@@ -321,7 +321,7 @@ class SalarySlip(TransactionBase):
 			self.set("earnings", [])
 			self.set("deductions", [])
 
-			if not self.salary_slip_based_on_timesheet:
+			if self.payroll_frequency:
 				self.get_date_details()
 
 			self.validate_dates()
@@ -1913,7 +1913,7 @@ class SalarySlip(TransactionBase):
 
 	def process_salary_structure(self, for_preview=0):
 		"""Calculate salary after salary structure details have been updated"""
-		if not self.salary_slip_based_on_timesheet:
+		if self.payroll_frequency:
 			self.get_date_details()
 		self.pull_emp_details()
 		self.get_working_days_details(for_preview=for_preview)

@@ -542,17 +542,20 @@ def get_salary_assignments(employee, payroll_period):
 		order_by="from_date",
 	)
 
-	if not assignments:
+	if not assignments or getdate(assignments[0].from_date) > getdate(start_date):
 		# if no assignments found for the given period
-		# get the last one assigned before the period that is still active
-		assignments = frappe.get_all(
+		# or the latest assignment hast started in the middle of the period
+		# get the last one assigned before the period start date
+		past_assignment = frappe.get_all(
 			"Salary Structure Assignment",
-			filters={"employee": employee, "docstatus": 1, "from_date": ["<=", start_date]},
+			filters={"employee": employee, "docstatus": 1, "from_date": ["<", start_date]},
 			fields=["*"],
 			order_by="from_date desc",
 			limit=1,
 		)
 
+		if past_assignment:
+			assignments = past_assignment + assignments
 	return assignments
 
 
