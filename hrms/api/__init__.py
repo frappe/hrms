@@ -811,7 +811,7 @@ def get_permitted_fields_for_write(doctype: str) -> list[str]:
 
 
 @frappe.whitelist()
-def get_lwps_details(employee: str) -> int:
+def get_lwp_details(employee: str) -> int:
 	result = frappe._dict(
 		{"leave_type": None, "max_lwps_allowed": 0.0, "lwps_consumed": 0.0, "balance_percentage": 0.0}
 	)
