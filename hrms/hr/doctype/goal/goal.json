@@ -91,7 +91,7 @@
    "fieldname": "lft",
    "fieldtype": "Int",
    "hidden": 1,
-   "label": "Left",
+   "label": "Left Side",
    "no_copy": 1,
    "read_only": 1
   },
@@ -99,7 +99,7 @@
    "fieldname": "rgt",
    "fieldtype": "Int",
    "hidden": 1,
-   "label": "Right",
+   "label": "Right Side",
    "no_copy": 1,
    "read_only": 1
   },
@@ -214,7 +214,7 @@
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2024-03-27 13:09:45.520429",
+ "modified": "2025-07-03 20:06:32.2365721",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Goal",
