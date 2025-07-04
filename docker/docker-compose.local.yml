@@ -1,4 +1,4 @@
-version: "3.8" # Updated version
+version: "3.8"
 services:
   mariadb:
     image: mariadb:10.8
@@ -6,27 +6,37 @@ services:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
       - --skip-character-set-client-handshake
-      - --skip-innodb-read-only-compressed # Temporary fix for MariaDB 10.6
+      - --skip-innodb-read-only-compressed
     environment:
       MYSQL_ROOT_PASSWORD: 123
     volumes:
       - mariadb-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
 
   redis:
     image: redis:alpine
+    ports:
+      - "6379:6379"
 
   frappe:
     image: frappe/bench:latest
-    command: bash /workspace/init.sh
+    command: bash /workspace/docker/init-local.sh
     environment:
       - SHELL=/bin/bash
     working_dir: /home/frappe
     volumes:
-      - .:/workspace
       - ../:/workspace
+      - ../hrms:/workspace/hrms
+      - ../frontend:/workspace/frontend
+      - ../roster:/workspace/roster
+      - ../frappe-ui:/workspace/frappe-ui
     ports:
       - 8000:8000
       - 9000:9000
+    depends_on:
+      - mariadb
+      - redis
 
 volumes:
   mariadb-data:

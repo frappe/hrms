@@ -1,11 +1,11 @@
-#!bin/bash
+#!/bin/bash
 
 if [ -d "/home/frappe/frappe-bench/apps/frappe" ]; then
     echo "Bench already exists, skipping init"
     cd frappe-bench
     bench start
 else
-    echo "Creating new bench..."
+    echo "Creating new bench for local development..."
 fi
 
 export PATH="${NVM_DIR}/versions/node/v${NODE_VERSION_DEVELOP}/bin/:${PATH}"
@@ -24,8 +24,17 @@ bench set-redis-socketio-host redis://redis:6379
 sed -i '/redis/d' ./Procfile
 sed -i '/watch/d' ./Procfile
 
-# Use local repositories instead of GitHub
-bench get-app /workspace/erpnext --skip-assets
+# Use local repositories (assume erpnext is a sibling directory)
+if [ -d "/workspace/erpnext" ]; then
+    echo "Installing ERPNext from local repository..."
+    bench get-app /workspace/erpnext --skip-assets
+else
+    echo "ERPNext directory not found at /workspace/erpnext, installing from GitHub..."
+    bench get-app erpnext
+fi
+
+# Install HRMS from local repository
+echo "Installing HRMS from local repository..."
 bench get-app /workspace --skip-assets
 
 bench new-site hrms.localhost \
