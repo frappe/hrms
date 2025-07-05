@@ -910,8 +910,12 @@ class SalarySlip(TransactionBase):
 	def compute_current_and_future_taxable_earnings(self):
 		# get taxable_earnings for current period (all days)
 		self.current_taxable_earnings = self.get_taxable_earnings(self.tax_slab.allow_tax_exemption)
-		self.future_structured_taxable_earnings = self.current_taxable_earnings.taxable_earnings * (
-			ceil(self.remaining_sub_periods) - 1
+
+		# To get the number of days based on the relieving date of the employee or Payroll Period end date.
+		remaining_days, salary_days = get_remaining_days(self.start_date, self.end_date, self.payroll_period, self.relieving_date)
+		
+		self.future_structured_taxable_earnings = (
+			(self.current_taxable_earnings.taxable_earnings / salary_days) * (ceil(remaining_days))
 		)
 
 		current_taxable_earnings_before_exemption = (
@@ -919,7 +923,7 @@ class SalarySlip(TransactionBase):
 			+ self.current_taxable_earnings.amount_exempted_from_income_tax
 		)
 		self.future_structured_taxable_earnings_before_exemption = (
-			current_taxable_earnings_before_exemption * (ceil(self.remaining_sub_periods) - 1)
+			(current_taxable_earnings_before_exemption / salary_days) * (ceil(remaining_days))
 		)
 
 		# get taxable_earnings, addition_earnings for current actual payment days
@@ -2410,3 +2414,18 @@ def email_salary_slips(names) -> None:
 	for name in names:
 		salary_slip = frappe.get_doc("Salary Slip", name)
 		salary_slip.email_salary_slip()
+
+
+def get_remaining_days(start_date, end_date, payroll_period, relieving_date):
+	"""
+	Get the number of days based on the relieving date of the employee or Payroll Period end date.
+	"""
+	
+	period_start, period_end = payroll_period.start_date, payroll_period.end_date
+	
+	if getdate(relieving_date) < getdate(period_end):
+		period_end = relieving_date
+	
+	salary_days = date_diff(end_date, start_date) + 1
+	remaining_days = (date_diff(period_end, period_start) + 1) - salary_days
+	return remaining_days if remaining_days > 0 else 0, salary_days
