@@ -14,6 +14,10 @@
   "date",
   "status",
   "reports_to",
+  "references_section",
+  "against_employee_grievance",
+  "column_break_jyjr",
+  "reopen_reason",
   "grievance_details_section",
   "grievance_against_party",
   "grievance_against",
@@ -198,12 +202,40 @@
    "fieldtype": "Data",
    "label": "Subject",
    "reqd": 1
+  },
+  {
+   "depends_on": "eval: doc.against_employee_grievance",
+   "fieldname": "references_section",
+   "fieldtype": "Section Break",
+   "label": "References"
+  },
+  {
+   "fieldname": "against_employee_grievance",
+   "fieldtype": "Link",
+   "label": "Against Employee Grievance ",
+   "options": "Employee Grievance",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_jyjr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reopen_reason",
+   "fieldtype": "Small Text",
+   "label": "Reason for Re-open"
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2024-08-21 15:46:21.711485",
+ "links": [
+  {
+   "link_doctype": "Employee Grievance",
+   "link_fieldname": "against_employee_grievance"
+  }
+ ],
+ "modified": "2025-07-06 13:59:56.142193",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Grievance",
