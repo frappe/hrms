@@ -259,9 +259,11 @@ function setLeaveApprovers(data) {
 			: approver.name,
 		value: approver.name,
 	}))
-
-	leaveApplication.value.leave_approver = data?.leave_approver
-	leaveApplication.value.leave_approver_name = data?.leave_approver_name
+	if (!leaveApplication.value.leave_approver){
+		leaveApplication.value.leave_approver = data?.leave_approver
+		leaveApplication.value.leave_approver_name = data?.leave_approver_name
+	}
+	
 }
 
 function setLeaveTypes(data) {
