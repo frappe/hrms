@@ -421,7 +421,9 @@ class SalarySlip(TransactionBase):
 
 			self.add_earning_for_hourly_wages(self, self._salary_structure_doc.salary_component, wages_amount)
 
-		make_salary_slip(self._salary_structure_doc.name, self)
+		make_salary_slip(
+			self._salary_structure_doc.name, self, ignore_permissions=self.flags.ignore_permissions
+		)
 
 	def get_working_days_details(self, lwp=None, for_preview=0):
 		payroll_settings = frappe.get_cached_value(
