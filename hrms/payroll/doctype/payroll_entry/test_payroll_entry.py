@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 import frappe
 from frappe.tests.utils import FrappeTestCase, change_settings
-from frappe.utils import add_days, add_months, cstr, flt
+from frappe.utils import add_days, add_months, cstr, date_diff, flt
 
 import erpnext
 from erpnext.accounts.utils import get_fiscal_year, getdate, nowdate
@@ -248,19 +248,19 @@ class TestPayrollEntry(FrappeTestCase):
 	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1})
 	def test_loan_with_settings_enabled(self):
 		from lending.loan_management.doctype.loan.test_loan import make_loan_disbursement_entry
-		from lending.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
-			process_loan_interest_accrual_for_term_loans,
-		)
 
 		frappe.db.delete("Loan")
 
 		[applicant, branch, currency, payroll_payable_account] = setup_lending()
 		loan = create_loan_for_employee(applicant)
+		dates = frappe._dict({"start_date": add_months(getdate(), -1), "end_date": getdate()})
 
-		make_loan_disbursement_entry(loan.name, loan.loan_amount, disbursement_date=add_months(nowdate(), -1))
-		process_loan_interest_accrual_for_term_loans(posting_date=nowdate())
-
-		dates = get_start_end_dates("Monthly", nowdate())
+		make_loan_disbursement_entry(
+			loan.name,
+			loan.loan_amount,
+			disbursement_date=dates.start_date,
+			repayment_start_date=dates.end_date,
+		)
 		make_payroll_entry(
 			company="_Test Company",
 			start_date=dates.start_date,
@@ -272,16 +272,18 @@ class TestPayrollEntry(FrappeTestCase):
 			payment_account="Cash - _TC",
 		)
 
-		name = frappe.db.get_value("Salary Slip", {"posting_date": nowdate(), "employee": applicant}, "name")
+		name = frappe.db.get_value(
+			"Salary Slip", {"posting_date": dates.end_date, "employee": applicant}, "name"
+		)
 
 		salary_slip = frappe.get_doc("Salary Slip", name)
 		for row in salary_slip.loans:
 			if row.loan == loan.name:
-				interest_amount = (280000 * 8.4) / (12 * 100)
-				principal_amount = loan.monthly_repayment_amount - interest_amount
+				interest_amount = flt(
+					(280000) * 8.4 / 100 * (date_diff(dates.end_date, dates.start_date)) / 365, 2
+				)
 				self.assertEqual(row.interest_amount, interest_amount)
-				self.assertEqual(row.principal_amount, principal_amount)
-				self.assertEqual(row.total_payment, interest_amount + principal_amount)
+				self.assertEqual(row.total_payment, interest_amount + row.principal_amount)
 
 		[party_type, party] = get_repayment_party_type(loan.name)
 
@@ -292,19 +294,19 @@ class TestPayrollEntry(FrappeTestCase):
 	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0})
 	def test_loan_with_settings_disabled(self):
 		from lending.loan_management.doctype.loan.test_loan import make_loan_disbursement_entry
-		from lending.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
-			process_loan_interest_accrual_for_term_loans,
-		)
 
 		frappe.db.delete("Loan")
 
 		[applicant, branch, currency, payroll_payable_account] = setup_lending()
 		loan = create_loan_for_employee(applicant)
+		dates = frappe._dict({"start_date": add_months(getdate(), -1), "end_date": getdate()})
 
-		make_loan_disbursement_entry(loan.name, loan.loan_amount, disbursement_date=add_months(nowdate(), -1))
-		process_loan_interest_accrual_for_term_loans(posting_date=nowdate())
-
-		dates = get_start_end_dates("Monthly", nowdate())
+		make_loan_disbursement_entry(
+			loan.name,
+			loan.loan_amount,
+			disbursement_date=dates.start_date,
+			repayment_start_date=dates.end_date,
+		)
 		make_payroll_entry(
 			company="_Test Company",
 			start_date=dates.start_date,
@@ -766,9 +768,6 @@ class TestPayrollEntry(FrappeTestCase):
 
 	def run_test_for_loan_repayment_from_salary(self):
 		from lending.loan_management.doctype.loan.test_loan import make_loan_disbursement_entry
-		from lending.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
-			process_loan_interest_accrual_for_term_loans,
-		)
 
 		frappe.db.delete("Loan")
 		applicant, branch, currency, payroll_payable_account = setup_lending()
@@ -778,10 +777,14 @@ class TestPayrollEntry(FrappeTestCase):
 		loan_doc.repay_from_salary = 1
 		loan_doc.save()
 
-		make_loan_disbursement_entry(loan.name, loan.loan_amount, disbursement_date=add_months(nowdate(), -1))
-		process_loan_interest_accrual_for_term_loans(posting_date=nowdate())
+		dates = frappe._dict({"start_date": add_months(getdate(), -1), "end_date": getdate()})
+		make_loan_disbursement_entry(
+			loan.name,
+			loan.loan_amount,
+			disbursement_date=dates.start_date,
+			repayment_start_date=dates.end_date,
+		)
 
-		dates = get_start_end_dates("Monthly", nowdate())
 		payroll_entry = make_payroll_entry(
 			company="_Test Company",
 			start_date=dates.start_date,
@@ -791,7 +794,6 @@ class TestPayrollEntry(FrappeTestCase):
 			branch=branch,
 			cost_center="Main - _TC",
 			payment_account="Cash - _TC",
-			total_loan_repayment=loan.monthly_repayment_amount,
 		)
 
 		salary_slip_name = frappe.db.get_value("Salary Slip", {"payroll_entry": payroll_entry.name}, "name")
@@ -913,6 +915,12 @@ def setup_lending():
 		create_loan_product,
 		set_loan_settings_in_company,
 	)
+	from lending.tests.test_utils import create_demand_offset_order
+
+	create_demand_offset_order(
+		"Test EMI Based Standard Loan Demand Offset Order",
+		["EMI (Principal + Interest)", "Penalty", "Charges"],
+	)
 
 	company = "_Test Company"
 	branch = "Test Employee Branch"
@@ -928,6 +936,7 @@ def setup_lending():
 		"Test Salary Structure for Loan",
 		"Monthly",
 		employee=applicant,
+		from_date=add_months(getdate(), -1),
 		company="_Test Company",
 		currency=company_doc.default_currency,
 	)
@@ -946,6 +955,7 @@ def setup_lending():
 			interest_income_account="Interest Income Account - _TC",
 			penalty_income_account="Penalty Income Account - _TC",
 			repayment_schedule_type="Monthly as per repayment start date",
+			collection_offset_sequence_for_standard_asset="Test EMI Based Standard Loan Demand Offset Order",
 		)
 
 	return (
@@ -957,7 +967,9 @@ def setup_lending():
 
 
 def create_loan_for_employee(applicant):
-	from lending.loan_management.doctype.loan.test_loan import create_loan
+	from lending.tests.test_utils import create_loan
+
+	dates = frappe._dict({"start_date": add_months(getdate(), -1), "end_date": getdate()})
 
 	loan = create_loan(
 		applicant,
@@ -965,7 +977,9 @@ def create_loan_for_employee(applicant):
 		280000,
 		"Repay Over Number of Periods",
 		20,
-		posting_date=add_months(nowdate(), -1),
+		applicant_type="Employee",
+		posting_date=dates.start_date,
+		repayment_start_date=dates.end_date,
 	)
 	loan.repay_from_salary = 1
 	loan.submit()

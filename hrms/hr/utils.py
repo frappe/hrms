@@ -833,7 +833,7 @@ def validate_bulk_tool_fields(
 ) -> None:
 	for d in fields:
 		if not self.get(d):
-			frappe.throw(_("{0} is required").format(self.meta.get_label(d)), title=_("Missing Field"))
+			frappe.throw(_("{0} is required").format(_(self.meta.get_label(d))), title=_("Missing Field"))
 	if self.get(from_date) and self.get(to_date):
 		self.validate_from_to_dates(from_date, to_date)
 	if not employees:

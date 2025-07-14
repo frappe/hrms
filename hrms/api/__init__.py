@@ -127,10 +127,10 @@ def get_attendance_calendar_events(employee: str, from_date: str, to_date: str) 
 	date = getdate(from_date)
 	while date_diff(to_date, date) >= 0:
 		date_str = date.strftime("%Y-%m-%d")
-		if date in holidays:
-			events[date_str] = "Holiday"
-		elif date in attendance:
+		if date in attendance:
 			events[date_str] = attendance[date]
+		elif date in holidays:
+			events[date_str] = "Holiday"
 		date = add_days(date, 1)
 
 	return events
@@ -139,7 +139,7 @@ def get_attendance_calendar_events(employee: str, from_date: str, to_date: str) 
 def get_attendance_for_calendar(employee: str, from_date: str, to_date: str) -> list[dict[str, str]]:
 	attendance = frappe.get_all(
 		"Attendance",
-		{"employee": employee, "attendance_date": ["between", [from_date, to_date]]},
+		{"employee": employee, "attendance_date": ["between", [from_date, to_date]], "docstatus": 1},
 		["attendance_date", "status"],
 	)
 	return {d["attendance_date"]: d["status"] for d in attendance}
@@ -247,7 +247,7 @@ def get_filters(
 		if workflow := get_workflow(doctype):
 			allowed_states = get_allowed_states_for_workflow(workflow, approver_id)
 			filters[workflow.workflow_state_field] = ("in", allowed_states)
-		else:
+		elif doctype != "Attendance Request":
 			approver_field_map = {
 				"Shift Request": "approver",
 				"Leave Application": "leave_approver",

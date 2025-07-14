@@ -9,6 +9,7 @@ from frappe.utils import add_days, date_diff, format_date, get_link_to_form, get
 
 from erpnext.setup.doctype.employee.employee import is_holiday
 
+import hrms
 from hrms.hr.utils import validate_active_employee, validate_dates
 
 
@@ -183,6 +184,17 @@ class AttendanceRequest(Document):
 		if attendance_doc and attendance_doc.status == new_status:
 			return True
 		return False
+
+	def on_update(self):
+		self.publish_update()
+
+	def after_delete(self):
+		self.publish_update()
+
+	def publish_update(self):
+		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
+		hrms.refetch_resource("hrms:my_attendance_requests", employee_user)
+		hrms.refetch_resource("hrms:team_attendance_requests")
 
 	@frappe.whitelist()
 	def get_attendance_warnings(self) -> list:

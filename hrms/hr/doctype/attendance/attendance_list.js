@@ -51,6 +51,13 @@ frappe.listview_settings["Attendance"] = {
 						onchange: () => me.get_unmarked_days(dialog),
 					},
 					{
+						label: __("Status"),
+						fieldtype: "Select",
+						fieldname: "status",
+						options: ["Present", "Absent", "Half Day", "Work From Home"],
+						reqd: 1,
+					},
+					{
 						fieldtype: "Column Break",
 						fieldname: "time_period_column",
 					},
@@ -63,16 +70,16 @@ frappe.listview_settings["Attendance"] = {
 						onchange: () => me.get_unmarked_days(dialog),
 					},
 					{
+						label: __("Shift"),
+						fieldtype: "Link",
+						fieldname: "shift",
+						options: "Shift Type",
+					},
+
+					{
 						fieldtype: "Section Break",
 						fieldname: "days_section",
 						hidden: 1,
-					},
-					{
-						label: __("Status"),
-						fieldtype: "Select",
-						fieldname: "status",
-						options: ["Present", "Absent", "Half Day", "Work From Home"],
-						reqd: 1,
 					},
 					{
 						label: __("Exclude Holidays"),
@@ -135,7 +142,6 @@ frappe.listview_settings["Attendance"] = {
 		let fields = dialog.fields_dict;
 
 		dialog.set_df_property("time_period_section", "hidden", fields.employee.value ? 0 : 1);
-
 		dialog.set_df_property("days_section", "hidden", 1);
 		dialog.set_df_property("unmarked_days", "options", []);
 		dialog.no_unmarked_days_left = false;

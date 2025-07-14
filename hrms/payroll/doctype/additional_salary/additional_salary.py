@@ -121,16 +121,29 @@ class AdditionalSalary(Document):
 		if not self.overwrite_salary_structure_amount:
 			return
 
-		existing_additional_salary = frappe.db.exists(
-			"Additional Salary",
-			{
-				"name": ["!=", self.name],
-				"salary_component": self.salary_component,
-				"payroll_date": self.payroll_date,
-				"overwrite_salary_structure_amount": 1,
-				"employee": self.employee,
-				"docstatus": 1,
-			},
+		AdditionalSalary = frappe.qb.DocType("Additional Salary")
+		existing_additional_salary = (
+			(
+				frappe.qb.from_(AdditionalSalary)
+				.select(AdditionalSalary.name)
+				.where(
+					(AdditionalSalary.name != self.name)
+					& (AdditionalSalary.salary_component == self.salary_component)
+					& (AdditionalSalary.employee == self.employee)
+					& (AdditionalSalary.overwrite_salary_structure_amount == 1)
+					& (AdditionalSalary.docstatus == 1)
+					& (AdditionalSalary.disabled == 0)
+					& (
+						(AdditionalSalary.payroll_date == self.payroll_date)
+						| (
+							(AdditionalSalary.from_date <= self.payroll_date)
+							& (AdditionalSalary.to_date >= self.payroll_date)
+						)
+					)
+				)
+			)
+			.limit(1)
+			.run(pluck=True)
 		)
 
 		if existing_additional_salary:

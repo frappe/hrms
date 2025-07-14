@@ -110,6 +110,20 @@ class TestShiftType(IntegrationTestCase):
 		shift_type.reload()
 		self.assertEqual(shift_type.last_sync_of_checkin, datetime.combine(getdate(), get_time("07:01:00")))
 
+	def test_auto_update_last_sync_of_checkin_when_when_job_runs_on_the_next_day(self):
+		shift_type = setup_shift_type(shift_type="Test Long Shift", start_time="9:00:00", end_time="18:00:00")
+		shift_type.allow_check_out_after_shift_end_time = 330
+		shift_type.last_sync_of_checkin = None
+		shift_type.auto_update_last_sync = 1
+		shift_type.save()
+
+		frappe.flags.current_datetime = datetime.combine(add_days(getdate(), 1), get_time("00:01:00"))
+		update_last_sync_of_checkin()
+
+		shift_type.reload()
+
+		self.assertEqual(shift_type.last_sync_of_checkin, datetime.combine(getdate(), get_time("23:31:00")))
+
 	def test_mark_attendance(self):
 		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 

@@ -70,9 +70,9 @@ def get_data(filters):
 	data = []
 	staffing_plan_details = get_staffing_plan(filters)
 	staffing_plan_list = list(set([details["name"] for details in staffing_plan_details]))
-	sp_jo_map, jo_list = get_job_opening(staffing_plan_list)
+	sp_jo_map, jo_list = get_job_opening(staffing_plan_list, filters)
 	jo_ja_map, ja_list = get_job_applicant(jo_list)
-	ja_joff_map = get_job_offer(ja_list)
+	ja_joff_map = get_job_offer(ja_list, filters)
 
 	for sp in sp_jo_map.keys():
 		parent_row = get_parent_row(sp_jo_map, sp, jo_ja_map, ja_joff_map)
@@ -118,26 +118,36 @@ def get_child_row(jo, jo_ja_map, ja_joff_map):
 
 def get_staffing_plan(filters):
 	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
-	staffing_plan = frappe.db.sql(
-		f"""
-	select
-		sp.name, sp.department, spd.designation, spd.vacancies, spd.current_count, spd.parent, sp.to_date
-	from
-		`tabStaffing Plan Detail` spd , `tabStaffing Plan` sp
-	where
-			spd.parent = sp.name
-		And
-			sp.to_date > '{filters.on_date}'
-		""",
-		as_dict=1,
+	StaffingPlan = frappe.qb.DocType("Staffing Plan")
+	StaffingPlanDetail = frappe.qb.DocType("Staffing Plan Detail")
+
+	query = (
+		frappe.qb.from_(StaffingPlanDetail)
+		.join(StaffingPlan)
+		.on(StaffingPlanDetail.parent == StaffingPlan.name)
+		.where(StaffingPlan.to_date > filters.on_date)
+		.where(StaffingPlan.company == filters.company)
+		.select(
+			StaffingPlan.name,
+			StaffingPlan.department,
+			StaffingPlanDetail.designation,
+			StaffingPlanDetail.vacancies,
+			StaffingPlanDetail.current_count,
+			StaffingPlanDetail.parent,
+			StaffingPlan.to_date,
+		)
 	)
+
+	staffing_plan = query.run(as_dict=True)
 
 	return staffing_plan
 
 
-def get_job_opening(sp_list):
+def get_job_opening(sp_list, filters):
+	job_opening_filters = [["staffing_plan", "IN", sp_list], ["company", "=", filters.company]]
+
 	job_openings = frappe.get_all(
-		"Job Opening", filters=[["staffing_plan", "IN", sp_list]], fields=["name", "staffing_plan"]
+		"Job Opening", filters=job_opening_filters, fields=["name", "staffing_plan"]
 	)
 
 	sp_jo_map = {}
@@ -175,12 +185,13 @@ def get_job_applicant(jo_list):
 	return jo_ja_map, ja_list
 
 
-def get_job_offer(ja_list):
+def get_job_offer(ja_list, filters=None):
 	ja_joff_map = {}
+	job_offer_filters = [["job_applicant", "IN", ja_list], ["company", "=", filters.company]]
 
 	offers = frappe.get_all(
 		"Job Offer",
-		filters=[["job_applicant", "IN", ja_list]],
+		filters=job_offer_filters,
 		fields=["name", "job_applicant", "status", "offer_date", "designation"],
 	)
 

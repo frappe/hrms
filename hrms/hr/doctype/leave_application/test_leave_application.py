@@ -1312,7 +1312,7 @@ class TestLeaveApplication(HRMSTestSuite):
 		create_carry_forwarded_allocation(employee, leave_type)
 		# when existing attendance is half day
 		attendance_name = mark_attendance(
-			employee=employee, attendance_date=nowdate(), status="Half Day", half_day_status="Absent"
+			employee=employee.name, attendance_date=nowdate(), status="Half Day", half_day_status="Absent"
 		)
 		leave_application = make_leave_application(
 			employee.name,
@@ -1344,7 +1344,7 @@ class TestLeaveApplication(HRMSTestSuite):
 
 		create_carry_forwarded_allocation(employee, leave_type)
 		# when existing attendance is absent
-		attendance_name = mark_attendance(employee=employee, attendance_date=nowdate(), status="Absent")
+		attendance_name = mark_attendance(employee=employee.name, attendance_date=nowdate(), status="Absent")
 
 		leave_application = make_leave_application(
 			employee.name,

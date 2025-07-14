@@ -69,7 +69,7 @@ class TestBulkSalaryStructureAssignment(IntegrationTestCase):
 
 		args = {
 			"doctype": "Bulk Salary Structure Assignment",
-			"salary_structure": salary_structure,
+			"salary_structure": salary_structure.name,
 			"from_date": today,
 			"company": "_Test Company",
 		}

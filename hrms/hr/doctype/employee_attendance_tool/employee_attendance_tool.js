@@ -1,40 +1,29 @@
 frappe.ui.form.on("Employee Attendance Tool", {
 	refresh(frm) {
 		frm.trigger("reset_attendance_fields");
-		frm.trigger("load_employees");
-		frm.trigger("set_primary_action");
+		frm.trigger("reset_tool_actions");
+		hide_field("select_employees_section");
+		hide_field("marked_attendance_section");
 	},
 
 	onload(frm) {
 		frm.set_value("date", frappe.datetime.get_today());
 	},
 
-	date(frm) {
-		frm.trigger("load_employees");
+	date: function (frm) {
+		hide_field("select_employees_section");
+		hide_field("marked_attendance_section");
+		frm.trigger("reset_tool_actions");
 	},
 
-	department(frm) {
-		frm.trigger("load_employees");
+	reset_tool_actions(frm) {
+		frm.disable_save();
+		get_employees_button = this.cur_frm.fields_dict.get_employees.$input;
+		get_employees_button.removeClass("btn-default").addClass("btn-primary");
 	},
 
-	branch(frm) {
+	get_employees: function (frm) {
 		frm.trigger("load_employees");
-	},
-
-	company(frm) {
-		frm.trigger("load_employees");
-	},
-	employment_type(frm) {
-		frm.trigger("load_employees");
-	},
-	designation(frm) {
-		frm.trigger("load_employees");
-	},
-	employee_grade(frm) {
-		frm.trigger("load_employees");
-	},
-	status(frm) {
-		frm.trigger("set_primary_action");
 	},
 
 	reset_attendance_fields(frm) {
@@ -63,112 +52,85 @@ frappe.ui.form.on("Employee Attendance Tool", {
 				freeze_message: __("...Fetching Employees"),
 			})
 			.then((r) => {
-				frm.no_employees_to_mark =
-					r.message["unmarked"].length > 0 || r.message["half_day_marked"].length > 0
-						? false
-						: true;
-				if (r.message["unmarked"].length > 0) {
-					unhide_field("unmarked_attendance_section");
-					unhide_field("attendance_details_section");
-					frm.events.show_unmarked_employees(frm, r.message["unmarked"]);
-				} else {
-					hide_field("unmarked_attendance_section");
-					hide_field("attendance_details_section");
-				}
-				if (r.message["half_day_marked"].length > 0) {
-					unhide_field("half_day_attendance_section");
-					unhide_field("attendance_details_section");
-					frm.events.show_half_marked_employees(frm, r.message["half_day_marked"]);
-				} else {
-					hide_field("half_day_attendance_section");
-				}
+				unmarked_employees = r.message["unmarked"].length;
+				half_day_marked_employees = r.message["half_day_marked"].length;
 				if (r.message["marked"].length > 0) {
-					unhide_field("marked_attendance_html");
+					unhide_field("marked_attendance_section");
 					frm.events.show_marked_employees(frm, r.message["marked"]);
 				} else {
-					hide_field("marked_attendance_html");
+					hide_field("marked_attendance_section");
+				}
+				if (unmarked_employees > 0 || half_day_marked_employees > 0) {
+					if (unmarked_employees) {
+						unhide_field("status");
+						unhide_field("unmarked_employee_header");
+					} else {
+						hide_field("status");
+						hide_field("unmarked_employee_header");
+					}
+					frm.events.show_employees_to_mark(
+						frm,
+						"unmarked_employees_html",
+						"unmarked_employees_multicheck",
+						r.message["unmarked"],
+					);
+					if (half_day_marked_employees) {
+						unhide_field("half_day_status");
+						unhide_field("half_day_marked_employee_header");
+					} else {
+						hide_field("half_day_status");
+						hide_field("half_day_marked_employee_header");
+					}
+					frm.events.show_employees_to_mark(
+						frm,
+						"half_marked_employees_html",
+						"half_marked_employees_multicheck",
+						r.message["half_day_marked"],
+					);
+					unmarked_employees && half_day_marked_employees
+						? unhide_field("horizontal_break")
+						: hide_field("horizontal_break");
+					unhide_field("select_employees_section");
+					frm.trigger("set_primary_action");
+				} else {
+					frappe.msgprint({
+						message: __(
+							"Attendance for all the employees under this criteria has been marked already.",
+						),
+						title: __("Attendance Marked"),
+						indicator: "green",
+					});
 				}
 			});
 	},
-
-	show_unmarked_employees(frm, unmarked_employees) {
-		no_data_message = __(
-			"Attendance for all the employees under this criteria has been marked already.",
-		);
-		frm.events.render_employees_datatable(
-			frm,
-			unmarked_employees,
-			"unmarked_employees_html",
-			"unmarked_employees_table",
-			no_data_message,
-			frm.events.get_columns_for_unmarked_employees_table,
-		);
-	},
-	show_half_marked_employees(frm, half_marked_employees) {
-		no_data_message = __(
-			"Half Day Status for all the employees under this criteria has been marked already.",
-		);
-		frm.events.render_employees_datatable(
-			frm,
-			half_marked_employees,
-			"half_marked_employees_html",
-			"half_marked_employees_table",
-			no_data_message,
-			frm.events.get_columns_for_half_marked_employees_table,
-		);
-	},
-	render_employees_datatable(
-		frm,
-		employees,
-		html_field_name,
-		datatable_name,
-		no_data_message,
-		get_columns_callback,
-	) {
-		const $wrapper = frm.get_field(html_field_name).$wrapper;
+	show_employees_to_mark(frm, html_fieldname, multicheck_fieldname, employee_list) {
+		if (!employee_list.length) return;
+		const $wrapper = frm.get_field(html_fieldname).$wrapper;
+		$wrapper.empty();
 		const employee_wrapper = $(`<div class="employee_wrapper">`).appendTo($wrapper);
-		const columns = get_columns_callback();
-		const data = employees.map((entry) => {
-			return Object.values(entry);
-		});
-		if (!frm.get_field(datatable_name)) {
-			const datatable_options = {
-				name: datatable_name,
-				columns: columns,
-				data: data,
-				checkboxColumn: true,
-				serialNoColumn: false,
-				checkedRowStatus: false,
-				dynamicRowHeight: true,
-				inlineFilters: true,
-				layout: "fixed",
-				cellHeight: 35,
-				noDataMessage: __(no_data_message),
-				disableReorderColumn: true,
-				events: {
-					onCheckRow: function (row) {
-						let datatable = this.options.name;
-						let check_map = this.rowmanager.checkMap.find(
-							(is_checked) => is_checked === 1,
-						);
-						if (datatable === "unmarked_employees_table") {
-							frm.set_df_property("status", "reqd", check_map);
-						}
-						if (datatable === "half_marked_employees_table") {
-							frm.set_df_property("half_day_status", "reqd", check_map);
-						}
-					},
+		frm.fields_dict[multicheck_fieldname] = frappe.ui.form.make_control({
+			parent: employee_wrapper,
+			df: {
+				fieldname: multicheck_fieldname,
+				fieldtype: "MultiCheck",
+				select_all: true,
+				columns: 3,
+				get_data: () => {
+					return employee_list.map((employee) => {
+						return {
+							label: `${employee.employee} : ${employee.employee_name}`,
+							value: employee.employee,
+							checked: 0,
+						};
+					});
 				},
-			};
-			frm.fields_dict[datatable_name] = new frappe.DataTable(
-				employee_wrapper.get(0),
-				datatable_options,
-			);
-		} else {
-			frm.get_field(datatable_name).rowmanager.checkMap = [];
-			frm.get_field(datatable_name).refresh(data, columns);
-		}
+			},
+			render_input: true,
+		});
+
+		frm.get_field(multicheck_fieldname).refresh_input();
 	},
+
 	show_marked_employees(frm, marked_employees) {
 		const $wrapper = frm.get_field("marked_attendance_html").$wrapper;
 		const summary_wrapper = $(`<div class="summary_wrapper">`).appendTo($wrapper);
@@ -179,72 +141,70 @@ frappe.ui.form.on("Employee Attendance Tool", {
 		frm.events.render_marked_employee_datatable(frm, data, summary_wrapper, columns);
 	},
 
-	get_columns_for_unmarked_employees_table() {
+	get_columns_for_marked_attendance_table() {
 		return [
 			{
 				name: "employee",
 				id: "employee",
 				content: __("Employee"),
-			},
-			{
-				name: "employee_name",
-				id: "employee_name",
-				content: __("Employee Name"),
-			},
-			{
-				name: "company",
-				id: "company",
-				content: __("Company"),
-			},
-			{
-				name: "department",
-				id: "department",
-				content: __("Department"),
-			},
-		].map((x) => ({
-			...x,
-			editable: false,
-			focusable: false,
-			dropdown: false,
-			align: "left",
-			width: 200,
-		}));
-	},
-	get_columns_for_half_marked_employees_table() {
-		return [
-			{
-				name: "employee",
-				id: "employee",
-				content: __("Employee"),
-			},
-			{
-				name: "employee_name",
-				id: "employee_name",
-				content: __("Name"),
+				width: 300,
 			},
 			{
 				name: "status",
 				id: "status",
 				content: __("Status"),
+				width: 100,
 				format: (value) => {
-					return `<span style="color:orange">${__(value)}</span>`;
+					if (value == "Present" || value == "Work From Home")
+						return `<span style="color:green">${__(value)}</span>`;
+					else if (value == "Absent")
+						return `<span style="color:red">${__(value)}</span>`;
+					else if (value == "Half Day")
+						return `<span style="color:orange">${__(value)}</span>`;
+					else if (value == "On Leave")
+						return `<span style="color:#318AD8">${__(value)}</span>`;
 				},
+			},
+			{
+				name: "shift",
+				id: "shift",
+				content: __("Shift"),
+				width: 200,
 			},
 			{
 				name: "leave_type",
 				id: "leave_type",
 				content: __("Leave Type"),
+				width: 200,
 			},
 		].map((x) => ({
 			...x,
 			editable: false,
+			sortable: false,
 			focusable: false,
 			dropdown: false,
 			align: "left",
-			width: 200,
 		}));
 	},
-	render_marked_employee_datatable(frm, data, summary_wrapper, columns) {
+	show_marked_employees(frm, marked_employees) {
+		const $wrapper = frm.get_field("marked_attendance_html").$wrapper;
+		const summary_wrapper = $(`<div class="summary_wrapper">`).appendTo($wrapper);
+
+		const data = marked_employees.map((entry) => {
+			return [
+				`${entry.employee} : ${entry.employee_name}`,
+				entry.status,
+				entry.shift,
+				entry.leave_type,
+			];
+		});
+
+		frm.events.render_datatable(frm, data, summary_wrapper);
+	},
+
+	render_datatable(frm, data, summary_wrapper) {
+		const columns = frm.events.get_columns_for_marked_attendance_table(frm);
+
 		if (!frm.marked_emp_datatable) {
 			const datatable_options = {
 				columns: columns,
@@ -264,76 +224,18 @@ frappe.ui.form.on("Employee Attendance Tool", {
 			frm.marked_emp_datatable.refresh(data, columns);
 		}
 	},
-	get_columns_for_marked_attendance_table() {
-		return [
-			{
-				name: "employee",
-				id: "employee",
-				content: __("Employee"),
-				width: 350,
-			},
-			{
-				name: "status",
-				id: "status",
-				content: __("Status"),
-				width: 150,
-				format: (value) => {
-					if (value == "Present" || value == "Work From Home")
-						return `<span style="color:green">${__(value)}</span>`;
-					else if (value == "Absent")
-						return `<span style="color:red">${__(value)}</span>`;
-					else if (value == "Half Day")
-						return `<span style="color:orange">${__(value)}</span>`;
-					else if (value == "On Leave")
-						return `<span style="color:#318AD8">${__(value)}</span>`;
-				},
-			},
-		].map((x) => ({
-			...x,
-			editable: false,
-			sortable: false,
-			focusable: false,
-			dropdown: false,
-			align: "left",
-		}));
-	},
-
 	set_primary_action(frm) {
-		frm.disable_save();
+		get_employees_button = this.cur_frm.fields_dict.get_employees.$input;
+		get_employees_button.removeClass("btn-primary").addClass("btn-default");
 		frm.page.set_primary_action(__("Mark Attendance"), () => {
-			if (frm.no_employees_to_mark) {
-				frappe.msgprint({
-					message: __(
-						"Attendance for all the employees under this criteria has been marked already.",
-					),
-					title: __("Attendance Marked"),
-					indicator: "green",
-				});
-				return;
-			}
-			const unmarked_employees_check_map = frm.get_field("unmarked_employees_table")
-				?.rowmanager.checkMap;
-			const half_day_employees_check_map = frm.get_field("half_marked_employees_table")
-				?.rowmanager.checkMap;
-
-			const selected_employees_to_mark_full_day = [];
-			const selected_employees_to_mark_half_day = [];
-			unmarked_employees_check_map?.forEach((is_checked, idx) => {
-				if (is_checked)
-					selected_employees_to_mark_full_day.push(
-						frm.get_field("unmarked_employees_table").datamanager.data[idx][0],
-					);
-			});
-			half_day_employees_check_map?.forEach((is_checked, idx) => {
-				if (is_checked)
-					selected_employees_to_mark_half_day.push(
-						frm.get_field("half_marked_employees_table").datamanager.data[idx][0],
-					);
-			});
+			const employees_to_mark_full_day =
+				frm.get_field("unmarked_employees_multicheck")?.get_checked_options() || [];
+			const employees_to_mark_half_day =
+				frm.get_field("half_marked_employees_multicheck")?.get_checked_options() || [];
 
 			if (
-				selected_employees_to_mark_full_day.length === 0 &&
-				selected_employees_to_mark_half_day.length === 0
+				employees_to_mark_full_day.length === 0 &&
+				employees_to_mark_half_day.length === 0
 			) {
 				frappe.throw({
 					message: __("Please select the employees you want to mark attendance for."),
@@ -341,26 +243,23 @@ frappe.ui.form.on("Employee Attendance Tool", {
 				});
 			}
 
-			if (selected_employees_to_mark_full_day.length > 0 && !frm.doc.status) {
+			if (employees_to_mark_full_day.length > 0 && !frm.doc.status) {
 				frappe.throw({
 					message: __("Please select the attendance status."),
 					title: __("Mandatory"),
 				});
 			}
-			if (selected_employees_to_mark_half_day.length > 0 && !frm.doc.half_day_status) {
+			if (employees_to_mark_half_day.length > 0 && !frm.doc.half_day_status) {
 				frappe.throw({
 					message: __("Please select half day attendance status."),
 					title: __("Mandatory"),
 				});
 			}
-			if (
-				selected_employees_to_mark_full_day.length > 0 ||
-				selected_employees_to_mark_half_day.length > 0
-			) {
+			if (employees_to_mark_full_day.length > 0 || employees_to_mark_half_day.length > 0) {
 				frm.events.mark_full_day_attendance(
 					frm,
-					selected_employees_to_mark_full_day,
-					selected_employees_to_mark_half_day,
+					employees_to_mark_full_day,
+					employees_to_mark_half_day,
 				);
 			}
 		});

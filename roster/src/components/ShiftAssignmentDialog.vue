@@ -22,26 +22,30 @@
 					v-model="form.department"
 					:disabled="true"
 				/>
-				<FormControl
-					type="autocomplete"
+				<Link
+					doctype="Shift Type"
 					label="Shift Type"
 					v-model="form.shift_type"
 					:disabled="!!props.shiftAssignmentName"
-					:options="shiftTypes.data"
 				/>
-				<DatePicker
+				<FormControl
+					type="date"
 					label="Start Date"
 					v-model="form.start_date"
 					:disabled="!!props.shiftAssignmentName"
 				/>
-				<FormControl
-					type="autocomplete"
+				<Link
+					doctype="Shift Location"
 					label="Shift Location"
 					v-model="form.shift_location"
 					:disabled="!!props.shiftAssignmentName"
-					:options="shiftLocations.data"
 				/>
-				<DatePicker label="End Date" v-model="form.end_date" />
+				<FormControl
+					type="date"
+					label="End Date"
+					v-model="form.end_date"
+					:disabled="!!props.shiftAssignmentName"
+				/>
 				<FormControl
 					type="select"
 					:options="['Active', 'Inactive']"
@@ -145,7 +149,7 @@ import {
 	createResource,
 	createListResource,
 } from "frappe-ui";
-
+import Link from "./Link.vue";
 import { dayjs, raiseToast } from "../utils";
 
 type Status = "Active" | "Inactive";
@@ -422,20 +426,6 @@ const shiftSchedule = createResource({
 	},
 });
 
-const shiftTypes = createListResource({
-	doctype: "Shift Type",
-	fields: ["name"],
-	auto: true,
-	transform: (data: { name: string }[]) => data.map((shiftType) => shiftType.name),
-});
-
-const shiftLocations = createListResource({
-	doctype: "Shift Location",
-	fields: ["name"],
-	auto: true,
-	transform: (data: { name: string }[]) => data.map((shiftLocation) => shiftLocation.name),
-});
-
 const shiftAssignments = createListResource({
 	doctype: "Shift Assignment",
 	insert: {
@@ -463,8 +453,8 @@ const insertShift = createResource({
 	makeParams() {
 		return {
 			employee: (form.employee as { value: string }).value,
-			shift_type: (form.shift_type as { value: string }).value,
-			shift_location: (form.shift_location as { value: string }).value,
+			shift_type: form.shift_type,
+			shift_location: form.shift_location,
 			company: form.company,
 			status: form.status,
 			start_date: form.start_date,

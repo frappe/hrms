@@ -293,6 +293,15 @@ def get_salary_slips(filters, company_currency):
 	if filters.get("currency") and filters.get("currency") != company_currency:
 		query = query.where(salary_slip.currency == filters.get("currency"))
 
+	if filters.get("department"):
+		query = query.where(salary_slip.department == filters["department"])
+
+	if filters.get("designation"):
+		query = query.where(salary_slip.designation == filters["designation"])
+
+	if filters.get("branch"):
+		query = query.where(salary_slip.branch == filters["branch"])
+
 	salary_slips = query.run(as_dict=1)
 
 	return salary_slips or []

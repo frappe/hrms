@@ -39,24 +39,24 @@ def get_employees(
 	# list of all employees
 	employee_list = frappe.get_list(
 		"Employee",
-		fields=["employee", "employee_name", "company", "department"],
+		fields=["employee", "employee_name"],
 		filters=filters,
 		order_by="employee_name",
 	)
 	# marked attendance
 	attendance_list = frappe.get_list(
 		"Attendance",
-		fields=["employee", "employee_name", "status"],
+		fields=["employee", "employee_name", "status", "shift", "leave_type"],
 		filters={
 			"attendance_date": date,
 			"docstatus": 1,
-			"half_day_status": ("!=", "Absent"),
+			"modify_half_day_status": 0,
 		},
 		order_by="employee_name",
 	)
 	half_day_attendance_list = frappe.get_list(
 		"Attendance",
-		fields=["employee", "employee_name", "status", "leave_type"],
+		fields=["employee", "employee_name"],
 		filters={
 			"attendance_date": date,
 			"docstatus": 1,

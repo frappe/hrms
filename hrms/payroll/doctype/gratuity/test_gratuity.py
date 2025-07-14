@@ -124,7 +124,10 @@ class TestGratuity(IntegrationTestCase):
 		set_mode_of_payment_account()
 
 		gratuity = create_gratuity(
-			expense_account="Payment Account - _TC", mode_of_payment="Cash", employee=self.employee, rule=rule
+			expense_account="Payment Account - _TC",
+			mode_of_payment="Cash",
+			employee=self.employee,
+			rule=rule.name,
 		)
 
 		# work experience calculation

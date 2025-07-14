@@ -86,7 +86,7 @@ class TestEmployeeAttendanceTool(IntegrationTestCase):
 			}
 		).submit()
 		make_leave_application(
-			employee=employee,
+			employee=employee.name,
 			from_date=getdate(),
 			to_date=getdate(),
 			leave_type=leave_type.name,
@@ -112,7 +112,7 @@ class TestEmployeeAttendanceTool(IntegrationTestCase):
 		create_leave_allocation(employee2, leave_type)
 		create_leave_allocation(employee4, leave_type)
 		make_leave_application(
-			employee=employee2,
+			employee=employee2.name,
 			from_date=date,
 			to_date=date,
 			leave_type=leave_type.name,
@@ -120,7 +120,7 @@ class TestEmployeeAttendanceTool(IntegrationTestCase):
 			half_day_date=date,
 		)
 		make_leave_application(
-			employee=employee4,
+			employee=employee4.name,
 			from_date=date,
 			to_date=date,
 			leave_type=leave_type.name,

@@ -60,10 +60,15 @@ import ExpenseAdvancesTable from "@/components/ExpenseAdvancesTable.vue"
 
 import { getCompanyCurrency } from "@/data/currencies"
 
+
 const dayjs = inject("$dayjs")
-const employee = inject("$employee")
+
 const today = dayjs().format("YYYY-MM-DD")
 const isReadOnly = ref(false)
+
+const sessionEmployee = inject("$employee")
+const currEmployee = ref(sessionEmployee.data.name)
+const employeeCompany = ref(sessionEmployee.data.company)
 
 const props = defineProps({
 	id: {
@@ -80,8 +85,8 @@ const tabs = [
 
 // object to store form data
 const expenseClaim = ref({
-	employee: employee.data.name,
-	company: employee.data.company,
+	employee: currEmployee,
+	company: employeeCompany,
 })
 
 const currency = computed(() => getCompanyCurrency(expenseClaim.value.company))
@@ -108,7 +113,7 @@ formFields.reload()
 // resources
 const advances = createResource({
 	url: "hrms.hr.doctype.expense_claim.expense_claim.get_advances",
-	params: { employee: employee.data.name },
+	params: { employee: currEmployee.value },
 	auto: true,
 	onSuccess(data) {
 		// set advances
@@ -142,7 +147,7 @@ const advances = createResource({
 
 const expenseApproverDetails = createResource({
 	url: "hrms.api.get_expense_approval_details",
-	params: { employee: employee.data.name },
+	params: { employee: currEmployee.value },
 	onSuccess(data) {
 		setExpenseApprover(data)
 	},
@@ -162,13 +167,21 @@ const companyDetails = createResource({
 watch(
 	() => expenseClaim.value.employee,
 	(employee_id) => {
-		if (props.id && employee_id !== employee.data.name) {
+		if (props.id && employee_id !== currEmployee.value) {
 			// if employee is not the current user, set form as read only
 			setFormReadOnly()
 		}
+		currEmployee.value = employee_id
+		expenseApproverDetails.fetch({ employee: currEmployee.value })
 	}
 )
-
+watch(
+	() => expenseClaim.value.company,
+	(company) => {
+		employeeCompany.value = company
+		companyDetails.fetch({ company: employeeCompany.value })
+	}
+)
 watch(
 	() => props.id && expenseClaim.value.expenses,
 	(_) => {
@@ -380,7 +393,7 @@ function calculateTotalAdvance() {
 }
 
 function setFormReadOnly() {
-	if (expenseClaim.value.expense_approver === employee.data.user_id) return
+	if (props.id && expenseClaim.value.expense_approver !== currEmployee.value) return
 	formFields.data.map((field) => (field.read_only = true))
 	isReadOnly.value = true
 }

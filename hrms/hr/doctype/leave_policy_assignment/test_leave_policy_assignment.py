@@ -134,7 +134,7 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 		leave_type = create_leave_type(
 			leave_type_name="_Test Earned Leave", is_earned_leave=True, allocate_on_day="First Day"
 		)
-		leave_policy = create_leave_policy(leave_type=leave_type, annual_allocation=annual_allocation)
+		leave_policy = create_leave_policy(leave_type=leave_type.name, annual_allocation=annual_allocation)
 		leave_policy.submit()
 
 		data = {
@@ -197,7 +197,7 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 		today_date = getdate()
 
 		leave_policy_assignment = frappe.new_doc("Leave Policy Assignment")
-		leave_policy_assignment.employee = self.employee
+		leave_policy_assignment.employee = self.employee.name
 		leave_policy_assignment.leave_policy = leave_policy.name
 		leave_policy_assignment.effective_from = getdate(get_first_day(today_date))
 		leave_policy_assignment.effective_to = getdate(get_year_ending(today_date))
@@ -225,7 +225,7 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 			leave_type_name="_Test Earned Leave", is_earned_leave=True, allocate_on_day="Last Day"
 		)
 		annual_earned_leaves = 10
-		leave_policy = create_leave_policy(leave_type=leave_type, annual_allocation=annual_earned_leaves)
+		leave_policy = create_leave_policy(leave_type=leave_type.name, annual_allocation=annual_earned_leaves)
 		leave_policy.submit()
 
 		data = {
@@ -252,7 +252,7 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 			leave_type_name="_Test Earned Leave", is_earned_leave=True, allocate_on_day="Last Day"
 		)
 		annual_earned_leaves = 24
-		leave_policy = create_leave_policy(leave_type=leave_type, annual_allocation=annual_earned_leaves)
+		leave_policy = create_leave_policy(leave_type=leave_type.name, annual_allocation=annual_earned_leaves)
 		leave_policy.submit()
 
 		data = {

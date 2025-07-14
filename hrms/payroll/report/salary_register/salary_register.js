@@ -51,5 +51,33 @@ frappe.query_reports["Salary Register"] = {
 			default: "Submitted",
 			width: "100px",
 		},
+		{
+			fieldname: "department",
+			label: __("Department"),
+			fieldtype: "Link",
+			options: "Department",
+			width: "100px",
+			get_query: function () {
+				return {
+					filters: {
+						company: frappe.query_report.get_filter_value("company"),
+					},
+				};
+			},
+		},
+		{
+			fieldname: "designation",
+			label: __("Designation"),
+			fieldtype: "Link",
+			options: "Designation",
+			width: "100px",
+		},
+		{
+			fieldname: "branch",
+			label: __("Branch"),
+			fieldtype: "Link",
+			options: "Branch",
+			width: "100px",
+		},
 	],
 };

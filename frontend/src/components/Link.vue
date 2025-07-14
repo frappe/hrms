@@ -4,7 +4,7 @@
 		size="sm"
 		v-model="value"
 		:placeholder="__('Select {0}', [__(doctype)])"
-		:options="options.data"
+		:options="options.data || []"
 		:class="disabled ? 'pointer-events-none' : ''"
 		:disabled="disabled"
 		@update:query="handleQueryUpdate"

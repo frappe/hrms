@@ -73,6 +73,8 @@ class SalaryComponent(Document):
 
 	@frappe.whitelist()
 	def update_salary_structures(self, field, value, structures=None):
+		is_formula_related = field == "formula"
+
 		if not structures:
 			structures = self.get_structures_to_be_updated()
 
@@ -87,6 +89,10 @@ class SalaryComponent(Document):
 				(d for d in salary_structure.get(f"{self.type.lower()}s") if d.salary_component == self.name),
 				None,
 			)
+			if is_formula_related:
+				value = value if self.amount_based_on_formula else None
+				salary_detail_row.set("amount_based_on_formula", self.amount_based_on_formula)
+
 			salary_detail_row.set(field, value)
 			salary_structure.db_update_all()
 			salary_structure.flags.updater_reference = {

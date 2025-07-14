@@ -131,6 +131,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 	def publish_update(self):
 		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
 		hrms.refetch_resource("hrms:my_leaves", employee_user)
+		hrms.refetch_resource("hrms:team_leaves")
 
 	def validate_applicable_after(self):
 		if self.leave_type:
@@ -1248,7 +1249,7 @@ def get_events(start, end, filters=None):
 		employee, company = employee.name, employee.company
 	else:
 		employee = ""
-		company = frappe.db.get_value("Global Defaults", None, "default_company")
+		company = frappe.db.get_single_value("Global Defaults", "default_company")
 
 	# show department leaves for employee
 	if "Employee" in frappe.get_roles():
