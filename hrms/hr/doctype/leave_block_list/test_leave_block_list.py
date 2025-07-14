@@ -12,6 +12,7 @@ class TestLeaveBlockList(HRMSTestSuite):
 	@classmethod
 	def setUpClass(cls):
 		super().setUpClass()
+		cls.make_departments()
 		cls.make_employees()
 		cls.make_leave_block_list()
 
