@@ -36,10 +36,12 @@ class HRMSTestSuite(ERPNextTestSuite):
 		]
 		cls.departments = []
 		for x in records:
-			if not frappe.db.exists("Department", {x.get("department_name")}):
+			if not frappe.db.exists("Department", {"department_name": x.get("department_name")}):
 				cls.departments.append(frappe.get_doc(x).insert())
 			else:
-				cls.departments.append(frappe.get_doc("Department", {x.get("department_name")}))
+				cls.departments.append(
+					frappe.get_doc("Department", {"department_name": x.get("department_name")})
+				)
 
 	@classmethod
 	def make_leave_types(cls):
