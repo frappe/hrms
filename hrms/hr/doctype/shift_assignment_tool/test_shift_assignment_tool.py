@@ -27,6 +27,7 @@ class TestShiftAssignmentTool(HRMSTestSuite):
 		self.shift1 = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="12:00:00")
 		self.shift2 = setup_shift_type(shift_type="Shift 2", start_time="11:00:00", end_time="15:00:00")
 		self.shift3 = setup_shift_type(shift_type="Shift 3", start_time="14:00:00", end_time="18:00:00")
+		self.shift = setup_shift_type(shift_type="Day Shift", start_time="09:00:00", end_time="18:00:00")
 		self.schedule1 = get_or_insert_shift_schedule(self.shift1.name, "Every Week", ["Monday"])
 		self.schedule2 = get_or_insert_shift_schedule(self.shift2.name, "Every Week", ["Monday"])
 		self.schedule3 = get_or_insert_shift_schedule(self.shift3.name, "Every Week", ["Monday"])
