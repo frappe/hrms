@@ -1,0 +1,142 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: frappe\n"
+"Report-Msgid-Bugs-To: contact@frappe.io\n"
+"POT-Creation-Date: 2025-06-08 09:35+0000\n"
+"PO-Revision-Date: 2025-06-16 15:50\n"
+"Last-Translator: contact@frappe.io\n"
+"Language-Team: Ukrainian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.13.1\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 == 0 || (n % 10 >= 5 && n % 10 <= 9) || (n % 100 >= 11 && n % 100 <= 14)) ? 2: 3);\n"
+"X-Crowdin-Project: frappe\n"
+"X-Crowdin-Project-ID: 639578\n"
+"X-Crowdin-Language: uk\n"
+"X-Crowdin-File: /[frappe.hrms] develop/hrms/locale/main.pot\n"
+"X-Crowdin-File-ID: 58\n"
+"Language: uk_UA\n"
+
+# Add your translations below this line
+
+# Common UI strings
+msgid "Submit"
+msgstr "Надіслати"
+
+msgid "Save"
+msgstr "Зберегти"
+
+msgid "Cancel"
+msgstr "Скасувати"
+
+msgid "Edit"
+msgstr "Редагувати"
+
+msgid "Delete"
+msgstr "Видалити"
+
+msgid "View"
+msgstr "Переглянути"
+
+msgid "Print"
+msgstr "Друкувати"
+
+msgid "Download"
+msgstr "Завантажити"
+
+msgid "Search"
+msgstr "Пошук"
+
+msgid "Filter"
+msgstr "Фільтр"
+
+# Navigation
+msgid "Dashboard"
+msgstr "Панель керування"
+
+msgid "HR"
+msgstr "Кадри"
+
+msgid "Employee"
+msgstr "Співробітник"
+
+msgid "Attendance"
+msgstr "Відвідуваність"
+
+msgid "Leave"
+msgstr "Відпустка"
+
+msgid "Payroll"
+msgstr "Зарплата"
+
+msgid "Recruitment"
+msgstr "Найм"
+
+# Common form labels
+msgid "Name"
+msgstr "Ім'я"
+
+msgid "Email"
+msgstr "Ел. пошта"
+
+msgid "Phone"
+msgstr "Телефон"
+
+msgid "Address"
+msgstr "Адреса"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Date"
+msgstr "Дата"
+
+msgid "From Date"
+msgstr "З дати"
+
+msgid "To Date"
+msgstr "До дати"
+
+msgid "Description"
+msgstr "Опис"
+
+msgid "Created On"
+msgstr "Створено"
+
+msgid "Modified On"
+msgstr "Змінено"
+
+# Messages
+msgid "Record saved successfully"
+msgstr "Запис успішно збережено"
+
+msgid "Error saving record"
+msgstr "Помилка збереження запису"
+
+msgid "Record deleted successfully"
+msgstr "Запис успішно видалено"
+
+msgid "Error deleting record"
+msgstr "Помилка видалення запису"
+
+# Authentication
+msgid "Login"
+msgstr "Увійти"
+
+msgid "Logout"
+msgstr "Вийти"
+
+msgid "Username"
+msgstr "Ім'я користувача"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Forgot Password?"
+msgstr "Забули пароль?"
+
+msgid "Reset Password"
+msgstr "Скинути пароль"
+
+# Add more translations as needed
