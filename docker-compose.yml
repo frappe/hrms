@@ -16,10 +16,13 @@ services:
     image: redis:alpine
 
   frappe:
-    image: frappe/bench:latest
-    command: bash /workspace/docker/init.sh
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
     environment:
       - SHELL=/bin/bash
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
     working_dir: /home/frappe
     volumes:
       - .:/workspace
