@@ -27,16 +27,16 @@ sed -i '/watch/d' ./Procfile
 bench get-app erpnext
 bench get-app hrms
 
-bench new-site hrms.localhost \
+bench new-site ${SITE_NAME} \
 --force \
 --mariadb-root-password ${MYSQL_ROOT_PASSWORD} \
 --admin-password ${ADMIN_PASSWORD} \
 --no-mariadb-socket
 
-bench --site hrms.localhost install-app hrms
-bench --site hrms.localhost set-config developer_mode 1
-bench --site hrms.localhost enable-scheduler
-bench --site hrms.localhost clear-cache
-bench use hrms.localhost
+bench --site ${SITE_NAME} install-app hrms
+bench --site ${SITE_NAME} set-config developer_mode 1
+bench --site ${SITE_NAME} enable-scheduler
+bench --site ${SITE_NAME} clear-cache
+bench use ${SITE_NAME}
 
 bench start

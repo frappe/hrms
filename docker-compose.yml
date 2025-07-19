@@ -23,6 +23,7 @@ services:
       - SHELL=/bin/bash
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - SITE_NAME=${SITE_NAME:-hrms.localhost}
     working_dir: /home/frappe
     volumes:
       - .:/workspace
