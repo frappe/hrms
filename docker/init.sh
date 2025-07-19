@@ -29,8 +29,8 @@ bench get-app hrms
 
 bench new-site hrms.localhost \
 --force \
---mariadb-root-password 123 \
---admin-password admin \
+--mariadb-root-password ${MYSQL_ROOT_PASSWORD} \
+--admin-password ${ADMIN_PASSWORD} \
 --no-mariadb-socket
 
 bench --site hrms.localhost install-app hrms
