@@ -190,6 +190,28 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		):
 			frappe.throw(_("Half Day Date should be between From Date and To Date"))
 
+		# Check if the leave application is for a half day and a date is specified
+		if self.half_day and self.half_day_date:
+			half_day_date = getdate(self.half_day_date)
+			leave_type = frappe.get_doc("Leave Type", self.leave_type)
+
+			# Proceed only if holidays are not supposed to be included in leave
+			if not leave_type.include_holiday:
+				holiday_list_name = get_holiday_list_for_employee(self.employee)
+				if not holiday_list_name:
+					frappe.throw("No Holiday List assigned to the Employee.")
+
+				holiday_dates = frappe.get_all(
+					"Holiday",
+					filters={"parent": holiday_list_name},
+					fields=["holiday_date"],
+					pluck="holiday_date"
+				)
+
+				# If the selected half day date is a holiday, do not allow half day leave
+				if half_day_date in holiday_dates:
+					frappe.throw("Half-day leave cannot be applied on a holiday. Please choose a working day.")
+
 		if not is_lwp(self.leave_type):
 			self.validate_dates_across_allocation()
 			self.validate_back_dated_application()
