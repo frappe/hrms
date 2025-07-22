@@ -41,7 +41,7 @@ class LeaveAllocation(Document):
 	def validate(self):
 		self.validate_period()
 		self.validate_allocation_overlap()
-		self.validate_lwp()
+		# self.validate_lwp()
 		set_employee_name(self)
 		self.set_total_leaves_allocated()
 		self.validate_leave_days_and_dates()
@@ -179,11 +179,11 @@ class LeaveAllocation(Document):
 		if date_diff(self.to_date, self.from_date) <= 0:
 			frappe.throw(_("To date cannot be before from date"))
 
-	def validate_lwp(self):
-		if frappe.db.get_value("Leave Type", self.leave_type, "is_lwp"):
-			frappe.throw(
-				_("Leave Type {0} cannot be allocated since it is leave without pay").format(self.leave_type)
-			)
+	# def validate_lwp(self):
+	# 	if frappe.db.get_value("Leave Type", self.leave_type, "is_lwp"):
+	# 		frappe.throw(
+	# 			_("Leave Type {0} cannot be allocated since it is leave without pay").format(self.leave_type)
+	# 		)
 
 	def validate_allocation_overlap(self):
 		leave_allocation = frappe.db.sql(

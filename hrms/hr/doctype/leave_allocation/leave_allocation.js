@@ -17,11 +17,11 @@ frappe.ui.form.on("Leave Allocation", {
 			};
 		});
 		frm.set_query("leave_type", function () {
-			return {
-				filters: {
-					is_lwp: 0,
-				},
-			};
+			// return {
+			// 	filters: {
+			// 		is_lwp: 1,
+			// 	},
+			// };
 		});
 	},
 
