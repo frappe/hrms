@@ -178,7 +178,7 @@ def add_log_based_on_employee_field(
 	doc.longitude = longitude
 	if cint(skip_auto_attendance) == 1:
 		doc.skip_auto_attendance = "1"
-	doc.insert()
+	doc.insert(ignore_permissions=True)
 
 	return doc
 
