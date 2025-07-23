@@ -32,8 +32,19 @@ def get_data(
 	if not to_date:
 		to_date = getdate()
 
-	hiring = get_records(from_date, to_date, "date_of_joining", filters.get("company"))
-	attrition = get_records(from_date, to_date, "relieving_date", filters.get("company"))
+	permitted_fields = frappe.model.get_permitted_fields("Employee", user=frappe.session.user)
+
+	hiring = (
+		get_records(from_date, to_date, "date_of_joining", filters.get("company"))
+		if "date_of_joinig" in permitted_fields
+		else []
+	)
+
+	attrition = (
+		get_records(from_date, to_date, "relieving_date", filters.get("company"))
+		if "relieving_date" in permitted_fields
+		else []
+	)
 
 	hiring_data = get_result(hiring, filters.get("time_interval"), from_date, to_date, "Count")
 	attrition_data = get_result(attrition, filters.get("time_interval"), from_date, to_date, "Count")

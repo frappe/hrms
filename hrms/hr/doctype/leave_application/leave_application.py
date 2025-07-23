@@ -1249,7 +1249,7 @@ def get_events(start, end, filters=None):
 		employee, company = employee.name, employee.company
 	else:
 		employee = ""
-		company = frappe.db.get_value("Global Defaults", None, "default_company")
+		company = frappe.db.get_single_value("Global Defaults", "default_company")
 
 	# show department leaves for employee
 	if "Employee" in frappe.get_roles():

@@ -66,7 +66,7 @@ def get_message() -> str:
 	for status, abbr in status_map.items():
 		message += f"""
 			<span style='border-left: 2px solid {colors[count]}; padding-right: 12px; padding-left: 5px; margin-right: 3px;'>
-				{status} - {abbr}
+				{_(status)} - {abbr}
 			</span>
 		"""
 		count += 1

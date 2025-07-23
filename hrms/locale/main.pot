@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frappe HR VERSION\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-07-06 09:35+0000\n"
-"PO-Revision-Date: 2025-07-06 09:35+0000\n"
+"POT-Creation-Date: 2025-07-13 09:37+0000\n"
+"PO-Revision-Date: 2025-07-13 09:37+0000\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: contact@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -1725,7 +1725,7 @@ msgstr ""
 msgid "Attendees"
 msgstr ""
 
-#: hrms/hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:45
+#: hrms/hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:56
 msgid "Attrition Count"
 msgstr ""
 
@@ -5710,7 +5710,7 @@ msgstr ""
 msgid "Fetch Geolocation"
 msgstr ""
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:32
+#: hrms/hr/doctype/employee_checkin/employee_checkin.js:33
 msgid "Fetch Shift"
 msgstr ""
 
@@ -5723,7 +5723,7 @@ msgstr ""
 msgid "Fetching Employees"
 msgstr ""
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:37
+#: hrms/hr/doctype/employee_checkin/employee_checkin.js:38
 msgid "Fetching Shift"
 msgstr ""
 
@@ -6652,7 +6652,7 @@ msgstr ""
 msgid "Hey, {0} 👋"
 msgstr ""
 
-#: hrms/hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:44
+#: hrms/hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:55
 msgid "Hiring Count"
 msgstr ""
 
@@ -9069,7 +9069,7 @@ msgstr ""
 msgid "No taxes added"
 msgstr ""
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:50
+#: hrms/hr/doctype/employee_checkin/employee_checkin.js:51
 msgid "No valid shift found for log time"
 msgstr ""
 
@@ -12247,7 +12247,7 @@ msgstr ""
 msgid "Shift Type"
 msgstr ""
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:41
+#: hrms/hr/doctype/employee_checkin/employee_checkin.js:42
 msgid "Shift has been successfully updated to {0}."
 msgstr ""
 
@@ -12603,7 +12603,7 @@ msgstr ""
 msgid "Submit Feedback"
 msgstr ""
 
-#: hrms/hr/doctype/exit_interview/exit_questionnaire_notification_template.html:15
+#: hrms/hr/doctype/exit_interview/exit_questionnaire_notification_template.html:14
 msgid "Submit Now"
 msgstr ""
 
@@ -13024,7 +13024,7 @@ msgstr ""
 msgid "This action will prevent making changes to the linked appraisal feedback/goals."
 msgstr ""
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.js:8
+#: hrms/hr/doctype/employee_checkin/employee_checkin.js:9
 msgid "This check-in is outside assigned shift hours and will not be considered for attendance. If a shift is assigned, adjust its time window and Fetch Shift again."
 msgstr ""
 
