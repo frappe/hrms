@@ -30,7 +30,7 @@ def get_employees(
 		"department": department,
 		"branch": branch,
 		"company": company,
-		"employement_type": employment_type,
+		"employment_type": employment_type,
 		"designation": designation,
 		"employee_grade": employee_grade,
 	}.items():
