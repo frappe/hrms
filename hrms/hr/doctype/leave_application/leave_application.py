@@ -281,39 +281,85 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			self.create_or_update_attendance(attendance_name, date)
 
 	def create_or_update_attendance(self, attendance_name, date):
-		status = (
-			"Half Day" if self.half_day_date and getdate(date) == getdate(self.half_day_date) else "On Leave"
-		)
-
-		if attendance_name:
-			# update existing attendance, change absent to on leave or half day
-			doc = frappe.get_doc("Attendance", attendance_name)
-			half_day_status = None if status == "On Leave" else "Present"
-			modify_half_day_status = 1 if doc.status == "Absent" and status == "Half Day" else 0
-			doc.db_set(
-				{
-					"status": status,
-					"leave_type": self.leave_type,
-					"leave_application": self.name,
-					"half_day_status": half_day_status,
-					"modify_half_day_status": modify_half_day_status,
-				}
-			)
+		# Determine correct status
+		if self.half_day_date and getdate(date) == getdate(self.half_day_date):
+			half_day_count = self.get_total_leaves_on_half_day()
+			status = "On Leave" if half_day_count >= 1.0 else "Half Day"
 		else:
-			# make new attendance and submit it
-			doc = frappe.new_doc("Attendance")
-			doc.employee = self.employee
-			doc.employee_name = self.employee_name
-			doc.attendance_date = date
-			doc.company = self.company
-			doc.leave_type = self.leave_type
-			doc.leave_application = self.name
-			doc.status = status
-			doc.half_day_status = "Present" if status == "Half Day" else None
-			doc.modify_half_day_status = 1 if status == "Half Day" else 0
-			doc.flags.ignore_validate = True  # ignores check leave record validation in attendance
-			doc.insert(ignore_permissions=True)
-			doc.submit()
+			status = "On Leave"
+
+		# If Attendance exists
+		if attendance_name:
+			attendance = frappe.get_doc("Attendance", attendance_name)
+
+			# Update fields
+			attendance.db_set({
+				"status": status,
+				"leave_type": self.leave_type,
+				"half_day_status": "Present" if status == "Half Day" else None,
+				"modify_half_day_status": 1 if status == "Half Day" else 0,
+			})
+
+			# Attach this Leave Application to the Attendance as comment or log
+			if self.name != attendance.leave_application:
+				attendance.add_comment("Info", f"Also linked to Leave Application: {self.name}")
+
+			# NEW: Set attendance link in this Leave Application
+			self.db_set("linked_attendance", attendance.name)
+
+		else:
+			# Create new attendance
+			attendance = frappe.new_doc("Attendance")
+			attendance.employee = self.employee
+			attendance.employee_name = self.employee_name
+			attendance.attendance_date = date
+			attendance.company = self.company
+			attendance.leave_type = self.leave_type
+			attendance.leave_application = self.name  # First leave is primary
+			attendance.status = status
+			attendance.half_day_status = "Present" if status == "Half Day" else None
+			attendance.modify_half_day_status = 1 if status == "Half Day" else 0
+			attendance.flags.ignore_validate = True
+			attendance.insert(ignore_permissions=True)
+			attendance.submit()
+
+			# NEW: Link attendance to this Leave Application
+			self.db_set("linked_attendance", attendance.name)
+
+	# def create_or_update_attendance(self, attendance_name, date):
+	# 	status = (
+	# 		"Half Day" if self.half_day_date and getdate(date) == getdate(self.half_day_date) else "On Leave"
+	# 	)
+
+	# 	if attendance_name:
+	# 		# update existing attendance, change absent to on leave or half day
+	# 		doc = frappe.get_doc("Attendance", attendance_name)
+	# 		half_day_status = None if status == "On Leave" else "Present"
+	# 		modify_half_day_status = 1 if doc.status == "Absent" and status == "Half Day" else 0
+	# 		doc.db_set(
+	# 			{
+	# 				"status": status,
+	# 				"leave_type": self.leave_type,
+	# 				"leave_application": self.name,
+	# 				"half_day_status": half_day_status,
+	# 				"modify_half_day_status": modify_half_day_status,
+	# 			}
+	# 		)
+	# 	else:
+	# 		# make new attendance and submit it
+	# 		doc = frappe.new_doc("Attendance")
+	# 		doc.employee = self.employee
+	# 		doc.employee_name = self.employee_name
+	# 		doc.attendance_date = date
+	# 		doc.company = self.company
+	# 		doc.leave_type = self.leave_type
+	# 		doc.leave_application = self.name
+	# 		doc.status = status
+	# 		doc.half_day_status = "Present" if status == "Half Day" else None
+	# 		doc.modify_half_day_status = 1 if status == "Half Day" else 0
+	# 		doc.flags.ignore_validate = True  # ignores check leave record validation in attendance
+	# 		doc.insert(ignore_permissions=True)
+	# 		doc.submit()
 
 	def cancel_attendance(self):
 		if self.docstatus == 2:
@@ -456,17 +502,26 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			if (
 				cint(self.half_day) == 1
 				and getdate(self.half_day_date) == getdate(d.half_day_date)
-				and (
-					flt(self.total_leave_days) == 0.5
-					or getdate(self.from_date) == getdate(d.to_date)
-					or getdate(self.to_date) == getdate(d.from_date)
-				)
 			):
 				total_leaves_on_half_day = self.get_total_leaves_on_half_day()
-				if total_leaves_on_half_day >= 1:
+				# Allow 2 half-day leaves (0.5 + 0.5 = 1.0)
+				if total_leaves_on_half_day >= 1.0:
 					self.throw_overlap_error(d)
-			else:
-				self.throw_overlap_error(d)
+
+			# if (
+			# 	cint(self.half_day) == 1
+			# 	and getdate(self.half_day_date) == getdate(d.half_day_date)
+			# 	and (
+			# 		flt(self.total_leave_days) == 0.5
+			# 		or getdate(self.from_date) == getdate(d.to_date)
+			# 		or getdate(self.to_date) == getdate(d.from_date)
+			# 	)
+			# ):
+			# 	total_leaves_on_half_day = self.get_total_leaves_on_half_day()
+			# 	if total_leaves_on_half_day >= 1:
+			# 		self.throw_overlap_error(d)
+			# else:
+			# 	self.throw_overlap_error(d)
 
 	def throw_overlap_error(self, d):
 		form_link = get_link_to_form("Leave Application", d.name)
