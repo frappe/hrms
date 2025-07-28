@@ -18,6 +18,10 @@ app_include_js = [
 ]
 app_include_css = "hrms.bundle.css"
 
+
+app_include_css = "/assets/hrms/css/hrms.css"
+
+
 # website
 
 # include js, css files in header of web template
