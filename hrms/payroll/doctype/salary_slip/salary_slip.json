@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_import": 1,
+ "autoname": "format:Sal Slip/{employee}/{#####}",
  "creation": "2013-01-10 16:34:15",
  "doctype": "DocType",
  "document_type": "Setup",
@@ -746,10 +747,11 @@
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-01 21:25:36.651583",
+ "modified": "2025-07-13 17:58:15.095251",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
@@ -783,6 +785,7 @@
    "role": "Employee"
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "employee_name",
  "show_name_in_global_search": 1,
  "sort_field": "creation",

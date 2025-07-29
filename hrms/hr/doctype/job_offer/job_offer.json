@@ -32,6 +32,7 @@
    "fieldname": "job_applicant",
    "fieldtype": "Link",
    "label": "Job Applicant",
+   "link_filters": "[[\"Job Applicant\",\"status\",\"!=\",\"Rejected\"]]",
    "options": "Job Applicant",
    "print_hide": 1,
    "reqd": 1
@@ -169,7 +170,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-08 15:53:30.761581",
+ "modified": "2025-07-28 16:29:10.149418",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",

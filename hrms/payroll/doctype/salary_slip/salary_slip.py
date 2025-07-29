@@ -66,7 +66,6 @@ TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 class SalarySlip(TransactionBase):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		self.series = f"Sal Slip/{self.employee}/.#####"
 		self.whitelisted_globals = {
 			"int": int,
 			"float": float,
@@ -80,9 +79,6 @@ class SalarySlip(TransactionBase):
 			"ceil": ceil,
 			"floor": floor,
 		}
-
-	def autoname(self):
-		self.name = make_autoname(self.series)
 
 	@property
 	def joining_date(self):
@@ -248,11 +244,6 @@ class SalarySlip(TransactionBase):
 			user=employee_user,
 			after_commit=True,
 		)
-
-	def on_trash(self):
-		from frappe.model.naming import revert_series_if_last
-
-		revert_series_if_last(self.series, self.name)
 
 	def get_status(self):
 		if self.docstatus == 2:
