@@ -400,9 +400,20 @@ def update_attendance_in_checkins(log_names: list, attendance_id: str):
 
 
 def auto_checkout_missing_checkouts():
-    # Get yesterday's date
+    """Create auto-checkouts for employees who forgot to check out.
+    Uses the following logic:
+    1. If shift is assigned and auto-checkout enabled for that shift:
+       - Uses actual shift end time from shift assignment
+       - Limits to max shift duration if configured
+    2. If no shift or shift auto-checkout disabled:
+       - Uses max shift duration from check-in time
+    """
+    if not frappe.db.get_single_value("HR Settings", "enable_auto_checkout"):
+        return
+
     from datetime import timedelta, datetime
     yesterday = (datetime.now() - timedelta(days=1)).date()
+    max_shift_duration = frappe.db.get_single_value("HR Settings", "max_shift_duration") or 8
 
     # Find all check-ins from yesterday without a corresponding check-out
     checkins = frappe.get_all(
@@ -411,7 +422,7 @@ def auto_checkout_missing_checkouts():
             "log_type": "IN",
             "time": ["between", [str(yesterday) + " 00:00:00", str(yesterday) + " 23:59:59"]],
         },
-        fields=["name", "employee", "time"]
+        fields=["name", "employee", "time", "shift"]
     )
 
     for checkin in checkins:
@@ -424,10 +435,58 @@ def auto_checkout_missing_checkouts():
                 "time": ["between", [str(yesterday) + " 00:00:00", str(yesterday) + " 23:59:59"]],
             }
         )
+        
         if not out_exists:
-            # Create a check-out at 23:59:59
-            doc = frappe.new_doc("Employee Checkin")
-            doc.employee = checkin.employee
-            doc.log_type = "OUT"
-            doc.time = str(yesterday) + " 23:59:59"
-            doc.save(ignore_permissions=True)
+            checkout_time = None
+            checkin_time = get_datetime(checkin.time)
+            
+            # If shift is assigned, use shift end time from shift assignment
+            if checkin.shift:
+                # Get actual shift timings including any shift assignments
+                shift_timings = get_actual_start_end_datetime_of_shift(
+                    checkin.employee,
+                    checkin_time,
+                    True
+                )
+                
+                # Check if shift has auto-checkout enabled and shift timings exist
+                if (shift_timings and 
+                    hasattr(shift_timings.shift_type, 'enable_auto_checkout') and 
+                    shift_timings.shift_type.enable_auto_checkout):
+                    # Use shift end time (not actual_end which includes grace period)
+                    shift_end = shift_timings.end_datetime
+                    max_time = checkin_time + timedelta(hours=max_shift_duration)
+                    checkout_time = min(shift_end, max_time)
+                else:
+                    # Fallback to max duration if shift auto-checkout disabled
+                    checkout_time = checkin_time + timedelta(hours=max_shift_duration)
+            else:
+                # If no shift, use max duration from check-in time
+                checkout_time = checkin_time + timedelta(hours=max_shift_duration)
+            
+            try:
+                # Create checkout record
+                doc = frappe.new_doc("Employee Checkin")
+                doc.employee = checkin.employee
+                doc.log_type = "OUT"
+                doc.time = checkout_time
+                doc.shift = checkin.shift
+                doc.skip_auto_attendance = 1  # Skip auto attendance for system generated checkouts
+                doc.save(ignore_permissions=True)
+                
+                # Add a comment to indicate this was auto-generated
+                frappe.get_doc({
+                    "doctype": "Comment",
+                    "comment_type": "Comment",
+                    "reference_doctype": "Employee Checkin",
+                    "reference_name": doc.name,
+                    "content": "Auto-generated checkout based on " + (
+                        "shift end time" if checkin.shift else "maximum shift duration"
+                    )
+                }).insert(ignore_permissions=True)
+                
+            except Exception as e:
+                frappe.log_error(
+                    f"Auto Checkout failed for Employee {checkin.employee} on {checkin.time}",
+                    f"Error: {str(e)}"
+                )

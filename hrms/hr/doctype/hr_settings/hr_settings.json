@@ -9,6 +9,7 @@
   "employee_settings",
   "emp_created_by",
   "standard_working_hours",
+    "enable_auto_checkout",
   "column_break_9",
   "retirement_age",
   "reminders_section",
@@ -345,6 +346,19 @@
    "fieldname": "prevent_self_expense_approval",
    "fieldtype": "Check",
    "label": "Prevent self approval for expense claims even if user has permissions"
+  },
+  {
+   "fieldname": "enable_auto_checkout",
+   "fieldtype": "Check",
+   "label": "Enable Auto Checkout",
+   "description": "Enable automatic checkout for employees who forget to check out"
+  },
+  {
+   "fieldname": "max_shift_duration",
+   "fieldtype": "Float",
+   "label": "Maximum Shift Duration (Hours)",
+   "description": "Maximum allowed shift duration in hours for auto checkout",
+   "default": 8
   }
  ],
  "icon": "fa fa-cog",

@@ -9,6 +9,7 @@
  "field_order": [
   "start_time",
   "end_time",
+  "enable_auto_checkout",
   "column_break_3",
   "holiday_list",
   "color",
@@ -46,6 +47,13 @@
    "in_list_view": 1,
    "label": "End Time",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_auto_checkout",
+   "fieldtype": "Check",
+   "label": "Enable Auto Checkout",
+   "description": "Enable automatic checkout at shift end time for employees who forget to check out"
   },
   {
    "fieldname": "holiday_list",
