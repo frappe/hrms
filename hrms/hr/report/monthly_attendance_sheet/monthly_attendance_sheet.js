@@ -94,11 +94,14 @@ frappe.query_reports["Monthly Attendance Sheet"] = {
 
 		if (!summarized_view) {
 			if ((group_by && column.colIndex > 3) || (!group_by && column.colIndex > 2)) {
-				if (value == "P" || value == "WFH")
+				if (value == "HD/P") value = "<span style='color:#914EE3'>" + value + "</span>";
+				else if (value == "HD/A")
+					value = "<span style='color:orange'>" + value + "</span>";
+				else if (value == "P" || value == "WFH")
 					value = "<span style='color:green'>" + value + "</span>";
 				else if (value == "A") value = "<span style='color:red'>" + value + "</span>";
-				else if (value == "HD") value = "<span style='color:orange'>" + value + "</span>";
 				else if (value == "L") value = "<span style='color:#318AD8'>" + value + "</span>";
+				else value = "<span style='color:#878787'>" + value + "</span>";
 			}
 		}
 

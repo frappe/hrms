@@ -5,6 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
+from frappe.model.workflow import get_workflow_name
 from frappe.query_builder.functions import Sum
 from frappe.utils import cstr, flt, get_link_to_form
 
@@ -37,6 +38,10 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 	def onload(self):
 		self.get("__onload").make_payment_via_journal_entry = frappe.db.get_single_value(
 			"Accounts Settings", "make_payment_via_journal_entry"
+		)
+		self.set_onload(
+			"self_expense_approval_not_allowed",
+			frappe.db.get_single_value("HR Settings", "prevent_self_expense_approval"),
 		)
 
 	def after_insert(self):
@@ -97,6 +102,18 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 					exc=MismatchError,
 				)
 
+	def validate_for_self_approval(self):
+		self_expense_approval_not_allowed = frappe.db.get_single_value(
+			"HR Settings", "prevent_self_expense_approval"
+		)
+		employee_user = frappe.db.get_value("Employee", self.employee, "user_id")
+		if (
+			self_expense_approval_not_allowed
+			and employee_user == frappe.session.user
+			and not get_workflow_name("Expense Claim")
+		):
+			frappe.throw(_("Self-approval for Expense Claims is not allowed"))
+
 	def on_update(self):
 		share_doc_with_approver(self, self.expense_approver)
 		self.publish_update()
@@ -108,6 +125,8 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 	def before_submit(self):
 		if not self.payable_account and not self.is_paid:
 			frappe.throw(_("Payable Account is mandatory to submit an Expense Claim"))
+
+		self.validate_for_self_approval()
 
 	def publish_update(self):
 		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)

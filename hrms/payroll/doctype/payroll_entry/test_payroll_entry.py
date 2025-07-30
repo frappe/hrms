@@ -824,6 +824,70 @@ class TestPayrollEntry(FrappeTestCase):
 		self.assertEqual(total_debit, expected_bank_entry_amount)
 		self.assertEqual(total_credit, expected_bank_entry_amount)
 
+	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0})
+	def test_component_exclusion_from_accounting_entries(self):
+		company = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("exclude_component_test@payroll.com", company=company.name)
+
+		# Create Salary Components
+		basic = create_salary_component("Basic", **{"type": "Earning"})
+		basic.append("accounts", {"company": company.name, "account": "Salary - _TC"})
+		basic.save()
+
+		esi = create_salary_component(
+			"ESI", **{"type": "Deduction", "do_not_include_in_total": 1, "do_not_include_in_accounts": 1}
+		)
+		esi.append("accounts", {"company": company.name, "account": "Salary - _TC"})
+		esi.save()
+
+		# Create Salary structure with both components
+		make_salary_structure(
+			"Test Salary Structure",
+			"Monthly",
+			employee,
+			company=company.name,
+			other_details={
+				"earnings": [{"salary_component": basic.name, "amount": 20000}],
+				"deductions": [
+					{
+						"salary_component": esi.name,
+						"amount": 200,
+						"do_not_include_in_total": 1,
+						"do_not_include_in_accounts": 1,
+					}
+				],
+			},
+		)
+
+		# Create Payroll entry
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = make_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+			cost_center="Main - _TC",
+		)
+
+		# Get and verify salary slip & jv
+		salary_slip = frappe.get_doc("Salary Slip", {"payroll_entry": payroll_entry.name})
+
+		self.assertAlmostEqual(salary_slip.gross_pay, 20000.0, places=2)
+
+		# Deductions table should include ESI
+		self.assertTrue(any(row.salary_component == esi.name for row in salary_slip.deductions))
+
+		# verify jv & accounts
+		journal_entry = frappe.get_doc("Journal Entry", salary_slip.journal_entry)
+		self.assertTrue(journal_entry, "Journal Entry not created")
+		self.assertEqual(salary_slip.gross_pay, journal_entry.total_debit)
+
+		accounts = [d.account for d in journal_entry.accounts]
+		self.assertIn("Salary - _TC", accounts)
+		self.assertIn(company.default_payroll_payable_account, accounts)
+		self.assertNotIn("ESIC Payable - _TC", accounts, "ESIC component wrongly included in JE")
+
 
 def get_payroll_entry(**args):
 	args = frappe._dict(args)

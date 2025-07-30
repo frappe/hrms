@@ -16,7 +16,8 @@ Filters = frappe._dict
 status_map = {
 	"Present": "P",
 	"Absent": "A",
-	"Half Day": "HD",
+	"Half Day/Other Half Absent": "HD/A",
+	"Half Day/Other Half Present": "HD/P",
 	"Work From Home": "WFH",
 	"On Leave": "L",
 	"Holiday": "H",
@@ -60,7 +61,16 @@ def execute(filters: Filters | None = None) -> tuple:
 
 def get_message() -> str:
 	message = ""
-	colors = ["green", "red", "orange", "green", "#318AD8", "", ""]
+	colors = [
+		"green",
+		"red",
+		"orange",
+		"#914EE3",
+		"green",
+		"#3187D8",
+		"#878787",
+		"#878787",
+	]
 
 	count = 0
 	for status, abbr in status_map.items():
@@ -257,12 +267,24 @@ def get_attendance_map(filters: Filters) -> dict:
 
 def get_attendance_records(filters: Filters) -> list[dict]:
 	Attendance = frappe.qb.DocType("Attendance")
+	status = (
+		frappe.qb.terms.Case()
+		.when(
+			(Attendance.status == "Half Day" and (Attendance.half_day_status == "Present")),
+			"Half Day/Other Half Present",
+		)
+		.when(
+			(Attendance.status == "Half Day" and (Attendance.half_day_status == "Absent")),
+			"Half Day/Other Half Absent",
+		)
+		.else_(Attendance.status)
+	)
 	query = (
 		frappe.qb.from_(Attendance)
 		.select(
 			Attendance.employee,
 			Extract("day", Attendance.attendance_date).as_("day_of_month"),
-			Attendance.status,
+			(status).as_("status"),
 			Attendance.shift,
 		)
 		.where(
