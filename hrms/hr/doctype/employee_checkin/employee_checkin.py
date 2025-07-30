@@ -397,3 +397,37 @@ def update_attendance_in_checkins(log_names: list, attendance_id: str):
 		.set("attendance", attendance_id)
 		.where(EmployeeCheckin.name.isin(log_names))
 	).run()
+
+
+def auto_checkout_missing_checkouts():
+    # Get yesterday's date
+    from datetime import timedelta, datetime
+    yesterday = (datetime.now() - timedelta(days=1)).date()
+
+    # Find all check-ins from yesterday without a corresponding check-out
+    checkins = frappe.get_all(
+        "Employee Checkin",
+        filters={
+            "log_type": "IN",
+            "time": ["between", [str(yesterday) + " 00:00:00", str(yesterday) + " 23:59:59"]],
+        },
+        fields=["name", "employee", "time"]
+    )
+
+    for checkin in checkins:
+        # Check if there is a corresponding OUT for this employee on the same day
+        out_exists = frappe.get_all(
+            "Employee Checkin",
+            filters={
+                "employee": checkin.employee,
+                "log_type": "OUT",
+                "time": ["between", [str(yesterday) + " 00:00:00", str(yesterday) + " 23:59:59"]],
+            }
+        )
+        if not out_exists:
+            # Create a check-out at 23:59:59
+            doc = frappe.new_doc("Employee Checkin")
+            doc.employee = checkin.employee
+            doc.log_type = "OUT"
+            doc.time = str(yesterday) + " 23:59:59"
+            doc.save(ignore_permissions=True)
