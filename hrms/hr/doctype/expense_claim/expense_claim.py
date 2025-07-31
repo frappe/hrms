@@ -644,3 +644,18 @@ def get_allocation_amount(paid_amount=None, claimed_amount=None, return_amount=N
 		return flt(paid_amount) - (flt(claimed_amount) + flt(return_amount))
 	else:
 		frappe.throw(_("Invalid parameters provided. Please pass the required arguments."))
+
+
+def update_expense_claim_on_unreconcile_payment(doc, method=None):
+	"""
+		Updates Expense Claim when unreconcile payment is submitted
+		We need to Check if allocations have reference to Expense Claim
+		and then update the total amount reimbursed in Expense Claim.
+	"""
+
+	# Loop through allocations in the unreconcile payment
+	for alloc in doc.allocations:
+		# Check if the allocation reference is an Expense Claim
+		if alloc.reference_doctype == "Expense Claim" and alloc.reference_name:
+			expense_claim = frappe.get_doc("Expense Claim", alloc.reference_name)
+			update_reimbursed_amount(expense_claim)

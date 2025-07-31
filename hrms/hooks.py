@@ -208,6 +208,9 @@ doc_events = {
 	},
 	"Project": {"validate": "hrms.controllers.employee_boarding_controller.update_employee_boarding_status"},
 	"Task": {"on_update": "hrms.controllers.employee_boarding_controller.update_task"},
+	"Unreconcile Payment": {
+		"on_submit": "hrms.hr.doctype.expense_claim.expense_claim.update_expense_claim_on_unreconcile_payment"
+	}
 }
 
 # Scheduled Tasks
