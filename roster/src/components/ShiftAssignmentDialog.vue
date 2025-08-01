@@ -492,7 +492,7 @@ const createShiftAssignmentSchedule = createResource({
 	makeParams() {
 		return {
 			employee: (form.employee as { value: string }).value,
-			shift_type: (form.shift_type as { value: string }).value,
+			shift_type: form.shift_type,
 			company: form.company,
 			status: form.status,
 			start_date: form.start_date,
