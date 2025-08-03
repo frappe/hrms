@@ -145,7 +145,6 @@
   },
   {
    "default": "0",
-   "depends_on": "include_holidays_in_total_working_days",
    "description": "Depends on whether holidays are included in total working days. If holidays are included: Deducts pay for 'Absent' attendance on a holiday. If holidays are not included: Credits 'Present' attendance on a holiday against an absent day.",
    "fieldname": "consider_marked_attendance_on_holidays",
    "fieldtype": "Check",
