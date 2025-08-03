@@ -715,7 +715,7 @@ class SalarySlip(TransactionBase):
 		for d in attendance_details:
 			if d.leave_type and d.leave_type not in leave_type_map.keys():
 				continue
-
+			
 			# Check if attendance date is a holiday
 			if getdate(d.attendance_date) in holidays:
 				if credit_present_on_holidays:
@@ -724,7 +724,7 @@ class SalarySlip(TransactionBase):
 					elif d.status == "Half Day":
 						absent -= (1 - daily_wages_fraction_for_half_day)
 					continue
-
+				
 				elif not consider_absent_on_holidays:
 					if d.status in ["Absent", "Half Day"] or (
 						d.leave_type and not leave_type_map[d.leave_type]["include_holiday"]
