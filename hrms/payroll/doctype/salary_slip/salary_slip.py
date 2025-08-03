@@ -428,8 +428,13 @@ class SalarySlip(TransactionBase):
 			as_dict=1,
 		)
 
-		consider_marked_attendance_on_holidays = (
+		consider_absent_on_holidays = (
 			payroll_settings.include_holidays_in_total_working_days
+			and payroll_settings.consider_marked_attendance_on_holidays
+		)
+
+		credit_present_on_holidays = (
+			not payroll_settings.include_holidays_in_total_working_days
 			and payroll_settings.consider_marked_attendance_on_holidays
 		)
 
@@ -456,7 +461,7 @@ class SalarySlip(TransactionBase):
 
 		if payroll_settings.payroll_based_on == "Attendance":
 			actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(
-				holidays, daily_wages_fraction_for_half_day, consider_marked_attendance_on_holidays
+				holidays, daily_wages_fraction_for_half_day, consider_absent_on_holidays, credit_present_on_holidays
 			)
 			self.absent_days = absent
 		else:
@@ -491,10 +496,10 @@ class SalarySlip(TransactionBase):
 					unmarked_days = self.get_unmarked_days(
 						payroll_settings.include_holidays_in_total_working_days, holidays
 					)
-					self.absent_days += unmarked_days  # will be treated as absent
+					self.absent_days += unmarked_days
 					self.payment_days -= unmarked_days
 				half_absent_days = self.get_half_absent_days(
-					consider_marked_attendance_on_holidays,
+					consider_absent_on_holidays
 					holidays,
 				)
 				self.absent_days += half_absent_days * daily_wages_fraction_for_half_day
@@ -517,7 +522,7 @@ class SalarySlip(TransactionBase):
 
 		return unmarked_days
 
-	def get_half_absent_days(self, consider_marked_attendance_on_holidays, holidays):
+	def get_half_absent_days(self, include_holidays_in_total_working_days, consider_absent_on_holidays, holidays):
 		"""Calculates the number of half absent days for an employee within a date range"""
 		Attendance = frappe.qb.DocType("Attendance")
 		query = (
@@ -531,7 +536,7 @@ class SalarySlip(TransactionBase):
 				& (Attendance.half_day_status == "Absent")
 			)
 		)
-		if (not consider_marked_attendance_on_holidays) and holidays:
+		if (not consider_absent_on_holidays) and holidays:
 			query = query.where(Attendance.attendance_date.notin(holidays))
 		return query.run()[0][0]
 
@@ -688,8 +693,7 @@ class SalarySlip(TransactionBase):
 				attendance.half_day_status,
 			)
 			.where(
-				(attendance.status.isin(["Absent", "Half Day", "On Leave"]))
-				& (attendance.employee == self.employee)
+				(attendance.employee == self.employee)
 				& (attendance.docstatus == 1)
 				& (attendance.attendance_date.between(start_date, end_date))
 			)
@@ -698,7 +702,7 @@ class SalarySlip(TransactionBase):
 		return attendance_details
 
 	def calculate_lwp_ppl_and_absent_days_based_on_attendance(
-		self, holidays, daily_wages_fraction_for_half_day, consider_marked_attendance_on_holidays
+		self, holidays, daily_wages_fraction_for_half_day, consider_absent_on_holidays, credit_present_on_holidays
 	):
 		lwp = 0
 		absent = 0
@@ -716,14 +720,22 @@ class SalarySlip(TransactionBase):
 			):
 				continue
 
-			# skip counting absent on holidays
-			if not consider_marked_attendance_on_holidays and getdate(d.attendance_date) in holidays:
-				if d.status in ["Absent", "Half Day"] or (
-					d.leave_type
-					and d.leave_type in leave_type_map.keys()
-					and not leave_type_map[d.leave_type]["include_holiday"]
-				):
+			# Check if attendance date is a holiday
+			if getdate(d.attendance_date) in holidays:
+				if credit_present_on_holidays:
+					if d.status == "Present":
+						absent -= 1
+					elif d.status == "Half Day":
+						absent -= (1 - daily_wages_fraction_for_half_day)
 					continue
+
+				elif not consider_absent_on_holidays:
+					if d.status in ["Absent", "Half Day"] or (
+						d.leave_type
+						and d.leave_type in leave_type_map.keys()
+						and not leave_type_map[d.leave_type]["include_holiday"]
+					):
+						continue
 
 			if d.leave_type:
 				fraction_of_daily_salary_per_leave = leave_type_map[d.leave_type][
