@@ -713,11 +713,7 @@ class SalarySlip(TransactionBase):
 		)
 
 		for d in attendance_details:
-			if (
-				d.status in ("Half Day", "On Leave")
-				and d.leave_type
-				and d.leave_type not in leave_type_map.keys()
-			):
+			if d.leave_type and d.leave_type not in leave_type_map.keys():
 				continue
 
 			# Check if attendance date is a holiday
@@ -731,9 +727,7 @@ class SalarySlip(TransactionBase):
 
 				elif not consider_absent_on_holidays:
 					if d.status in ["Absent", "Half Day"] or (
-						d.leave_type
-						and d.leave_type in leave_type_map.keys()
-						and not leave_type_map[d.leave_type]["include_holiday"]
+						d.leave_type and not leave_type_map[d.leave_type]["include_holiday"]
 					):
 						continue
 
@@ -742,22 +736,22 @@ class SalarySlip(TransactionBase):
 					"fraction_of_daily_salary_per_leave"
 				]
 
-			if d.status == "Half Day" and d.leave_type and d.leave_type in leave_type_map.keys():
-				equivalent_lwp = 1 - daily_wages_fraction_for_half_day
+				if d.status == "Half Day":
+					equivalent_lwp = 1 - daily_wages_fraction_for_half_day
 
-				if leave_type_map[d.leave_type]["is_ppl"]:
-					equivalent_lwp *= (
-						fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
-					)
-				lwp += equivalent_lwp
+					if leave_type_map[d.leave_type]["is_ppl"]:
+						equivalent_lwp *= (
+							fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
+						)
+					lwp += equivalent_lwp
 
-			elif d.status == "On Leave" and d.leave_type and d.leave_type in leave_type_map.keys():
-				equivalent_lwp = 1
-				if leave_type_map[d.leave_type]["is_ppl"]:
-					equivalent_lwp *= (
-						fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
-					)
-				lwp += equivalent_lwp
+				elif d.status == "On Leave":
+					equivalent_lwp = 1
+					if leave_type_map[d.leave_type]["is_ppl"]:
+						equivalent_lwp *= (
+							fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
+						)
+					lwp += equivalent_lwp
 
 			elif d.status == "Absent":
 				absent += 1
