@@ -28,6 +28,7 @@ def execute(filters=None):
 			advance.paid_amount,
 			advance.claimed_amount,
 			advance.status,
+			advance.currency,
 		]
 		data.append(row)
 
@@ -62,16 +63,32 @@ def get_columns():
 			"label": _("Advance Amount"),
 			"fieldname": "advance_amount",
 			"fieldtype": "Currency",
+			"options": "currency",
 			"width": 120,
 		},
-		{"label": _("Paid Amount"), "fieldname": "paid_amount", "fieldtype": "Currency", "width": 120},
+		{
+			"label": _("Paid Amount"),
+			"fieldname": "paid_amount",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 120,
+		},
 		{
 			"label": _("Claimed Amount"),
 			"fieldname": "claimed_amount",
 			"fieldtype": "Currency",
+			"options": "currency",
 			"width": 120,
 		},
 		{"label": _("Status"), "fieldname": "status", "fieldtype": "Data", "width": 120},
+		{
+			"label": _("Currency"),
+			"fieldtype": "Link",
+			"fieldname": "currency",
+			"options": "Currency",
+			"hidden": 1,
+			"width": 120,
+		},
 	]
 
 
@@ -96,7 +113,7 @@ def get_advances(filters):
 	conditions = get_conditions(filters)
 	return frappe.db.sql(
 		"""select name, employee, paid_amount, status, advance_amount, claimed_amount, company,
-		posting_date, purpose
+		posting_date, purpose, currency
 		from `tabEmployee Advance`
 		where docstatus<2 %s order by posting_date, name desc"""
 		% conditions,

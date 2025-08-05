@@ -24,6 +24,7 @@
   "round_to_the_nearest_integer",
   "statistical_component",
   "do_not_include_in_total",
+  "do_not_include_in_accounts",
   "remove_if_zero_valued",
   "disabled",
   "section_break_5",
@@ -263,12 +264,20 @@
    "fieldname": "remove_if_zero_valued",
    "fieldtype": "Check",
    "label": "Remove if Zero Valued"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.do_not_include_in_total",
+   "description": "If enabled, the amount will be excluded from accounting entries during Journal Entry creation.",
+   "fieldname": "do_not_include_in_accounts",
+   "fieldtype": "Check",
+   "label": "Do Not Include in Accounting Entries"
   }
  ],
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-27 13:10:33.871355",
+ "modified": "2025-07-14 15:31:15.303099",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",
@@ -292,6 +301,7 @@
    "role": "Employee"
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": []

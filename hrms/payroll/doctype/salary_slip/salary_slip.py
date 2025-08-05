@@ -1464,6 +1464,7 @@ class SalarySlip(TransactionBase):
 				"salary_component",
 				"abbr",
 				"do_not_include_in_total",
+				"do_not_include_in_accounts",
 				"is_tax_applicable",
 				"is_flexible_benefit",
 				"variable_based_on_taxable_salary",
