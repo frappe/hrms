@@ -153,10 +153,13 @@ frappe.ui.form.on("Salary Component", {
 });
 
 var set_value_for_condition_and_formula = function (frm) {
-	frm.set_value("formula", null);
-	frm.set_value("condition", null);
-	frm.set_value("amount_based_on_formula", 0);
-	frm.set_value("statistical_component", 0);
-	frm.set_value("do_not_include_in_total", 0);
-	frm.set_value("depends_on_payment_days", 0);
+	frm.set_value({
+		formula: null,
+		condition: null,
+		amount_based_on_formula: 0,
+		statistical_component: 0,
+		do_not_include_in_total: 0,
+		do_not_include_in_accounts: 0,
+		depends_on_payment_days: 0,
+	});
 };

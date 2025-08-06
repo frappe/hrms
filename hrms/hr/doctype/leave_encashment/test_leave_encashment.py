@@ -8,6 +8,7 @@ from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 from erpnext.setup.doctype.employee.test_employee import make_employee
 from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 
+from hrms.hr.doctype.expense_claim.test_expense_claim import get_payable_account
 from hrms.hr.doctype.leave_allocation.leave_allocation import get_unused_leaves
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import process_expired_allocation
 from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
@@ -353,8 +354,10 @@ class TestLeaveEncashment(IntegrationTestCase):
 		)
 		from hrms.overrides.employee_payment_entry import get_payment_entry_for_employee
 
+		payable_account = get_payable_account("_Test Company")
+
 		leave_encashment = self.create_test_leave_encashment(
-			pay_via_payment_entry=1, payable_account="Payroll Payable - _TC"
+			pay_via_payment_entry=1, payable_account=payable_account
 		)
 		leave_encashment.submit()
 
@@ -388,7 +391,6 @@ class TestLeaveEncashment(IntegrationTestCase):
 			},
 		)
 		fnf.submit()
-
 		jv = fnf.create_journal_entry()
 		jv.accounts[1].account = frappe.get_cached_value("Company", "_Test Company", "default_bank_account")
 		jv.cheque_no = "123456"

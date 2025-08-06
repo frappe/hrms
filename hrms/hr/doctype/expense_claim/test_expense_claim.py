@@ -40,6 +40,9 @@ class TestExpenseClaim(HRMSTestSuite):
 
 			frappe.db.set_value("Company", company_name, "default_cost_center", cost_center)
 
+	def tearDown(self):
+		frappe.set_user("Administrator")
+
 	def test_total_expense_claim_for_project(self):
 		frappe.db.delete("Task")
 		frappe.db.delete("Project")
@@ -637,6 +640,78 @@ class TestExpenseClaim(HRMSTestSuite):
 		expense_claim.company = "_Test Company 3"
 		expense_claim.department = "Accounts - _TC2"
 		self.assertRaises(MismatchError, expense_claim.save)
+
+	def test_self_expense_approval(self):
+		frappe.db.set_single_value("HR Settings", "prevent_self_expense_approval", 0)
+
+		employee = frappe.get_doc(
+			"Employee",
+			make_employee("test_self_expense_approval@example.com", "_Test Company"),
+		)
+
+		from frappe.utils.user import add_role
+
+		add_role(employee.user_id, "Expense Approver")
+
+		payable_account = get_payable_account("_Test Company")
+		expense_claim = make_expense_claim(
+			payable_account,
+			300,
+			200,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
+			employee=employee.name,
+		)
+
+		frappe.set_user(employee.user_id)
+		expense_claim.submit()
+
+		self.assertEqual(1, expense_claim.docstatus)
+
+	def test_self_expense_approval_not_allowed(self):
+		frappe.db.set_single_value("HR Settings", "prevent_self_expense_approval", 1)
+
+		expense_approver = "test_expense_approver@example.com"
+		make_employee(expense_approver, company="_Test Company")
+
+		employee = frappe.get_doc(
+			"Employee",
+			make_employee(
+				"test_self_expense_approval@example.com",
+				company="_Test Company",
+				expense_approver=expense_approver,
+			),
+		)
+
+		from frappe.utils.user import add_role
+
+		add_role(employee.user_id, "Expense Approver")
+		add_role(expense_approver, "Expense Approver")
+
+		payable_account = get_payable_account("_Test Company")
+		expense_claim = make_expense_claim(
+			payable_account,
+			300,
+			200,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
+			employee=employee.name,
+		)
+
+		expense_claim.expense_approver = expense_approver
+		expense_claim.save()
+
+		frappe.set_user(employee.user_id)
+
+		self.assertRaises(frappe.ValidationError, expense_claim.submit)
+		expense_claim.reload()
+
+		frappe.set_user(expense_approver)
+		expense_claim.submit()
+
+		self.assertEqual(1, expense_claim.docstatus)
 
 
 def get_payable_account(company):

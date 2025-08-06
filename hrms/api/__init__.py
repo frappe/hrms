@@ -543,10 +543,13 @@ def get_expense_claim_summary(employee: str) -> dict:
 	)
 	sum_approved_claims = Sum(approved_claims_case).as_("total_approved_amount")
 
+	approved_total_claimed_case = (
+		frappe.qb.terms.Case().when(Claim.approval_status == "Approved", Claim.total_claimed_amount).else_(0)
+	)
+	sum_approved_total_claimed = Sum(approved_total_claimed_case).as_("total_claimed_in_approved")
+
 	rejected_claims_case = (
-		frappe.qb.terms.Case()
-		.when(Claim.approval_status == "Rejected", Claim.total_sanctioned_amount)
-		.else_(0)
+		frappe.qb.terms.Case().when(Claim.approval_status == "Rejected", Claim.total_claimed_amount).else_(0)
 	)
 	sum_rejected_claims = Sum(rejected_claims_case).as_("total_rejected_amount")
 
@@ -556,6 +559,7 @@ def get_expense_claim_summary(employee: str) -> dict:
 			sum_pending_claims,
 			sum_approved_claims,
 			sum_rejected_claims,
+			sum_approved_total_claimed,
 			Claim.company,
 		)
 		.where((Claim.docstatus != 2) & (Claim.employee == employee))
