@@ -31,6 +31,12 @@ Frappe HR has everything you need to drive excellence within the company. It's a
 When Frappe team started growing in terms of size, we needed an open-source HR and Payroll software. We didn't find any "true" open-source HR software out there and so decided to build one ourselves.
 Initially, it was a set of modules within ERPNext but version 14 onwards, as the modules became more mature, Frappe HR was created as a separate product.
 
+### 🧰 Prerequisites
+-  Python 3.10+
+-  Node.js 18 LTS & Yarn
+-  Frappe v15+
+-  Redis, MariaDB
+
 ## Key Features
 
 - **Employee Lifecycle**: From onboarding employees, managing promotions and transfers, all the way to documenting feedback with exit interviews, make life easier for employees throughout their life cycle.
