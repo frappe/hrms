@@ -1564,8 +1564,6 @@ class SalarySlip(TransactionBase):
 			self.full_tax_on_additional_earnings = self.total_tax_amount - self.total_structured_tax_amount
 
 		current_tax_amount = self.current_structured_tax_amount + self.full_tax_on_additional_earnings
-		# if flt(current_tax_amount) < 0:
-		# 	current_tax_amount = 0
 
 		current_tax_amount = max(0, flt(current_tax_amount))
 
