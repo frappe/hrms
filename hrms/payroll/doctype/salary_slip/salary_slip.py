@@ -1325,17 +1325,6 @@ class SalarySlip(TransactionBase):
 			else:
 				self.other_deduction_components.append(d.salary_component)
 
-		self._component_based_variable_tax = {}
-
-		if tax_components and self.payroll_period and self.salary_structure:
-			self.tax_slab = self.get_income_tax_slabs()
-			self.compute_taxable_earnings_for_year()
-
-		if self.handle_additional_salary_tax_component():
-			self._component_based_variable_tax.setdefault(self.additional_salary_component, {})
-			self.calculate_variable_tax(self.additional_salary_component, True)
-			return
-
 		# consider manually added tax component
 		if not tax_components:
 			tax_components = [
@@ -1351,6 +1340,16 @@ class SalarySlip(TransactionBase):
 				indicator="blue",
 				alert=True,
 			)
+
+		self._component_based_variable_tax = {}
+		if tax_components and self.payroll_period and self.salary_structure:
+			self.tax_slab = self.get_income_tax_slabs()
+			self.compute_taxable_earnings_for_year()
+
+		if self.handle_additional_salary_tax_component():
+			self._component_based_variable_tax.setdefault(self.additional_salary_component, {})
+			self.calculate_variable_tax(self.additional_salary_component, True)
+			return
 
 		for tax_component in tax_components:
 			self._component_based_variable_tax.setdefault(tax_component, {})
