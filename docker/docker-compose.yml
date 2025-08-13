@@ -1,4 +1,3 @@
-version: "3.8" # Updated version
 services:
   mariadb:
     image: mariadb:10.8
@@ -6,26 +5,63 @@ services:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
       - --skip-character-set-client-handshake
-      - --skip-innodb-read-only-compressed # Temporary fix for MariaDB 10.6
+      - --skip-innodb-read-only-compressed
     environment:
       MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: frappe
+      MYSQL_USER: frappe
+      MYSQL_PASSWORD: frappe
     volumes:
       - mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-p123"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
 
   redis:
     image: redis:alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
 
   frappe:
-    image: frappe/bench:latest
-    command: bash /workspace/init.sh
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    working_dir: /home/frappe/frappe-bench
+    command: ["bash","-lc","bench start"]
     environment:
       - SHELL=/bin/bash
-    working_dir: /home/frappe
-    volumes:
-      - .:/workspace
+      - HOST=0.0.0.0
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_ROOT_PASS=123
+      - REDIS_URL=redis://redis:6379
     ports:
-      - 8000:8000
-      - 9000:9000
+      - "8100:8000"
+      - "9100:9000"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      # Mount the entire repository for live development
+      - ..:/workspace:rw
+      # Mount specific app directories if they exist
+      - ../hrms:/home/frappe/frappe-bench/apps/hrms:rw
+      - ../frappe-ui:/home/frappe/frappe-bench/apps/frappe-ui:rw
+      - ../frontend:/home/frappe/frappe-bench/apps/frontend:rw
+      - ../roster:/home/frappe/frappe-bench/apps/roster:rw
+      # Persist sites and logs
+      - frappe-sites:/home/frappe/frappe-bench/sites
+      - frappe-logs:/home/frappe/frappe-bench/logs
 
 volumes:
   mariadb-data:
+  frappe-sites:
+  frappe-logs:
+
