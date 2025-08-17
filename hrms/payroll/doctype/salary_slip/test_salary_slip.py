@@ -1480,7 +1480,7 @@ class TestSalarySlip(IntegrationTestCase):
 		payroll_period = frappe.get_last_doc("Payroll Period", filters={"company": "_Test Company"})
 		create_tax_slab(payroll_period, effective_date=payroll_period.start_date, allow_tax_exemption=True)
 
-		salary_structure_name = "Test Salary Structure to test Income Tax Breakup"
+		salary_structure_name = "Test Salary Structure to test Income Tax Breakup added via addnl salary"
 		if not frappe.db.exists("Salary Structure", salary_structure_name):
 			salary_structure_doc = make_salary_structure(
 				salary_structure_name,
@@ -2645,7 +2645,7 @@ def create_additional_salary_for_income_tax(employee, payroll_period, company):
 			"doctype": "Additional Salary",
 			"employee": employee,
 			"company": company,
-			"salary_component": "Income Tax",
+			"salary_component": "TDS",
 			"overwrite_salary_structure_amount": 1,
 			"amount": 12000,
 			"currency": "INR",
