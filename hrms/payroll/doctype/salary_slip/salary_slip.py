@@ -7,7 +7,6 @@ from datetime import date
 
 import frappe
 from frappe import _, msgprint
-from frappe.model.naming import make_autoname
 from frappe.query_builder import Order
 from frappe.query_builder.functions import Count, Sum
 from frappe.utils import (
