@@ -166,6 +166,7 @@ def create_appraisals_for_cycle(appraisal_cycle: AppraisalCycle, publish_progres
 	Creates appraisals for employees in the appraisee list of appraisal cycle,
 	if not already created
 	"""
+	total = len(appraisal_cycle.appraisees)
 	count = 0
 
 	for employee in appraisal_cycle.appraisees:
@@ -185,15 +186,13 @@ def create_appraisals_for_cycle(appraisal_cycle: AppraisalCycle, publish_progres
 			)
 			appraisal.set_kras_and_rating_criteria()
 			appraisal.insert()
-
+		except frappe.DuplicateEntryError:
+			# already exists, skip
+			pass
+		finally:
 			if publish_progress:
 				count += 1
-				frappe.publish_progress(
-					count * 100 / len(appraisal_cycle.appraisees), title=_("Creating Appraisals") + "..."
-				)
-		except frappe.DuplicateEntryError:
-			# already exists
-			pass
+				frappe.publish_progress(count * 100 / total, title=_("Creating Appraisals") + "...")
 
 
 def validate_active_appraisal_cycle(appraisal_cycle: str) -> None:
