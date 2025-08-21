@@ -108,7 +108,7 @@ frappe.ui.form.on("Salary Component", {
 
 	update_salary_structures: function (frm, df, structures) {
 		let msg = __("{0} will be updated for the following Salary Structures: {1}.", [
-			df,
+			__(df),
 			frappe.utils.comma_and(
 				structures.map((d) =>
 					frappe.utils.get_form_link("Salary Structure", d, true).bold(),
