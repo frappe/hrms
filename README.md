@@ -76,11 +76,11 @@ It takes care of installation, setup, upgrades, monitoring, maintenance and supp
 
 ## Development setup
 ### Docker
-You need Docker, docker-compose and git setup on your machine. Refer [Docker documentation](https://docs.docker.com/). After that, run the following commands:
+You need Docker and git setup on your machine. Refer [Docker documentation](https://docs.docker.com/). After that, run the following commands:
 ```
 git clone https://github.com/frappe/hrms
 cd hrms/docker
-docker-compose up
+docker compose up
 ```
 
 Wait for some time until the setup script creates a site. After that you can access `http://localhost:8000` in your browser and the login screen for HR should show up.
