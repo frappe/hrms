@@ -1,5 +1,5 @@
 app_name = "hrms"
-app_title = "Frappe HR"
+app_title = "Ajira HR"
 app_publisher = "Frappe Technologies Pvt. Ltd."
 app_description = "Modern HR and Payroll Software"
 app_email = "contact@frappe.io"
@@ -11,7 +11,7 @@ add_to_apps_screen = [
 	{
 		"name": "hrms",
 		"logo": "/assets/hrms/images/frappe-hr-logo.svg",
-		"title": "Frappe HR",
+		"title": "Ajira HR",
 		"route": "/app/hr",
 		"has_permission": "hrms.hr.utils.check_app_permission",
 	}

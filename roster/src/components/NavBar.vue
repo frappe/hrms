@@ -3,7 +3,7 @@
 		<div class="flex items-center space-x-1.5">
 			<a href="/app/hr" class="text-gray-600 hover:text-gray-700 flex items-center">
 				<FrappeHRLogo class="h-6 w-6 mr-2.5" />
-				Frappe HR
+				Ajira HR
 			</a>
 			<FeatherIcon name="chevron-right" class="h-4 w-4" />
 			<span class="font-medium">Roster</span>

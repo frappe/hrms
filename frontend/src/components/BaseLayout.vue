@@ -6,7 +6,7 @@
 					<div class="flex flex-row justify-between items-center">
 						<div class="flex flex-row items-center gap-2">
 							<h2 class="text-xl font-bold text-gray-900">
-								{{ props.pageTitle || __("Frappe HR") }}
+								{{ props.pageTitle || __("Ajira HR") }}
 							</h2>
 						</div>
 						<div class="flex flex-row items-center gap-3 ml-auto">

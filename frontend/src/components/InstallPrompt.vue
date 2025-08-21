@@ -2,7 +2,7 @@
 	<!-- Install PWA dialog -->
 	<Dialog v-model="showDialog">
 		<template #body-title>
-			<h2 class="text-lg font-bold">{{ __("Install Frappe HR") }} </h2>
+			<h2 class="text-lg font-bold">{{ __("Install Ajira HR") }} </h2>
 		</template>
 		<template #body-content>
 			<p>{{ __("Get the app on your device for easy access & a better experience!") }} </p>
@@ -25,7 +25,7 @@
 					class="flex flex-row text-center items-center justify-between mb-1 px-3"
 				>
 					<span class="text-base text-gray-900 font-bold">
-						{{ __("Install Frappe HR") }}
+						{{ __("Install Ajira HR") }}
 					</span>
 					<span class="inline-flex items-baseline">
 						<FeatherIcon
