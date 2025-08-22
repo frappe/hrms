@@ -16,7 +16,6 @@ from frappe.utils import (
 	nowdate,
 )
 
-import hrms
 from hrms.hr.doctype.shift_assignment.shift_assignment import has_overlapping_timings
 from hrms.hr.utils import (
 	get_holiday_dates_for_employee,
@@ -71,7 +70,7 @@ class Attendance(Document):
 	def validate_duplicate_record(self):
 		self.validate_conflicting_leave()
 		if self.leave_application:
-	        return
+			return
 		duplicate = self.get_duplicate_attendance_record()
 
 		if duplicate:
@@ -86,64 +85,64 @@ class Attendance(Document):
 			)
 
 	def get_duplicate_attendance_record(self) -> str | None:
-	    Attendance = frappe.qb.DocType("Attendance")
-	    query = (
-	        frappe.qb.from_(Attendance)
-	        .select(Attendance.name)
-	        .where(
-	            (Attendance.employee == self.employee)
-	            & (Attendance.docstatus < 2)
-	            & (Attendance.attendance_date == self.attendance_date)
-	            & (Attendance.name != self.name)
-	            & (Attendance.leave_application.isnull() | (Attendance.leave_application == ""))
-	            & (Attendance.half_day_status.isnull() | (Attendance.half_day_status == ""))
-	        )
-	        .for_update()
-	    )
+		Attendance = frappe.qb.DocType("Attendance")
+		query = (
+			frappe.qb.from_(Attendance)
+			.select(Attendance.name)
+			.where(
+				(Attendance.employee == self.employee)
+				& (Attendance.docstatus < 2)
+				& (Attendance.attendance_date == self.attendance_date)
+				& (Attendance.name != self.name)
+				& (Attendance.leave_application.isnull() | (Attendance.leave_application == ""))
+				& (Attendance.half_day_status.isnull() | (Attendance.half_day_status == ""))
+			)
+			.for_update()
+		)
 
 		query = query.limit(1)
 
-	    if self.shift:
-	        query = query.where(
-	            ((Attendance.shift.isnull()) | (Attendance.shift == ""))
-	            | (Attendance.shift == self.shift)
-	        )
+		if self.shift:
+			query = query.where(
+				((Attendance.shift.isnull()) | (Attendance.shift == ""))
+				| (Attendance.shift == self.shift)
+			)
 
-	    duplicate = query.run(pluck=True)
+		duplicate = query.run(pluck=True)
 
-	    return duplicate[0] if duplicate else None
+		return duplicate[0] if duplicate else None
 
 	def validate_conflicting_leave(self):
-	    if self.leave_application:
-	        return
+		if self.leave_application:
+			return
 
-	    leave_app = frappe.qb.DocType("Leave Application")
+		leave_app = frappe.qb.DocType("Leave Application")
 
-	    query = (
-	        frappe.qb.from_(leave_app)
-	        .select(leave_app.name)
-	        .where(
-	            (leave_app.employee == self.employee)
-	            & (leave_app.docstatus == 1)
-	            & (leave_app.status == "Approved")
-	            & (leave_app.half_day == 0)
-	            & (self.attendance_date >= leave_app.from_date)
-	            & (self.attendance_date <= leave_app.to_date)
-	        )
-	    )
+		query = (
+			frappe.qb.from_(leave_app)
+			.select(leave_app.name)
+			.where(
+				(leave_app.employee == self.employee)
+				& (leave_app.docstatus == 1)
+				& (leave_app.status == "Approved")
+				& (leave_app.half_day == 0)
+				& (self.attendance_date >= leave_app.from_date)
+				& (self.attendance_date <= leave_app.to_date)
+			)
+		)
 
-	    conflicting_leaves = query.run(pluck=True)
+		conflicting_leaves = query.run(pluck=True)
 
-	    if conflicting_leaves:
-	        leave_name = conflicting_leaves[0]
-	        leave_link = get_link_to_form("Leave Application", leave_name)
-	        frappe.throw(
-             _("Cannot create attendance. A full-day Leave Application ({0}) exists for {1} on {2}. Please cancel or amend the leave first.").format(
-                 leave_link, frappe.bold(self.employee), frappe.bold(format_date(self.attendance_date))
-             ),
-             title=_("Conflict with Full-Day Leave"),
-             exc=FullDayLeaveConflictError,
-         )
+		if conflicting_leaves:
+			leave_name = conflicting_leaves[0]
+			leave_link = get_link_to_form("Leave Application", leave_name)
+			frappe.throw(
+				_("Cannot create attendance. A full-day Leave Application ({0}) exists for {1} on {2}. Please cancel or amend the leave first.").format(
+					leave_link, frappe.bold(self.employee), frappe.bold(format_date(self.attendance_date))
+				),
+				title=_("Conflict with Full-Day Leave"),
+				exc=FullDayLeaveConflictError,
+			)
 
 	def validate_overlapping_shift_attendance(self):
 		attendance = self.get_overlapping_shift_attendance()
@@ -173,7 +172,6 @@ class Attendance(Document):
 				& (Attendance.attendance_date == self.attendance_date)
 				& (Attendance.shift != self.shift)
 				& (Attendance.name != self.name)
-				& (Attendance.leave_application.isnull() | (Attendance.leave_application == ""))
 			)
 		).run(as_dict=True)
 
@@ -227,8 +225,6 @@ class Attendance(Document):
 
 		if self.status in ("On Leave", "Half Day"):
 			if not leave_record:
-				self.modify_half_day_status = 0
-				self.haf_day_status = "Absent"
 				frappe.msgprint(
 					_("No leave record found for employee {0} on {1}").format(
 						self.employee, format_date(self.attendance_date)
@@ -273,16 +269,6 @@ class Attendance(Document):
 				wide=True,
 			)
 
-	def on_update(self):
-		self.publish_update()
-
-	def after_delete(self):
-		self.publish_update()
-
-	def publish_update(self):
-		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
-		hrms.refetch_resource("hrms:attendance_calendar_events", employee_user)
-
 
 @frappe.whitelist()
 def get_events(start, end, filters=None):
@@ -307,7 +293,8 @@ def add_attendance(filters):
 		fields=[
 			"name",
 			"'Attendance' as doctype",
-			"attendance_date",
+			"attendance_date as start",
+			"attendance_date as end",
 			"employee_name",
 			"status",
 			"docstatus",
@@ -328,7 +315,8 @@ def add_holidays(events, start, end, employee=None):
 		events.append(
 			{
 				"doctype": "Holiday",
-				"attendance_date": holiday.holiday_date,
+				"start": holiday.holiday_date,
+				"end": holiday.holiday_date,
 				"title": _("Holiday") + ": " + cstr(holiday.description),
 				"name": holiday.name,
 				"allDay": 1,
@@ -367,8 +355,8 @@ def mark_attendance(
 		attendance.insert()
 		attendance.submit()
 	except (DuplicateAttendanceError, OverlappingShiftAttendanceError, FullDayLeaveConflictError):
-	    frappe.db.rollback(save_point=savepoint)
-	    return
+		frappe.db.rollback(save_point=savepoint)
+		return
 
 	return attendance.name
 
@@ -391,7 +379,6 @@ def mark_bulk_attendance(data):
 			"attendance_date": get_datetime(date),
 			"status": data.status,
 			"half_day_status": "Absent" if data.status == "Half Day" else None,
-			"shift": data.shift,
 		}
 		attendance = frappe.get_doc(doc_dict).insert()
 		attendance.submit()
