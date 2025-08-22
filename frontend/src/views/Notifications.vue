@@ -14,7 +14,7 @@
 							>
 								<FeatherIcon name="chevron-left" class="h-5 w-5" />
 							</Button>
-							<h2 class="text-xl font-semibold text-gray-900">Notifications</h2>
+							<h2 class="text-xl font-semibold text-gray-900">{{ __("Notifications") }} </h2>
 						</div>
 					</header>
 
@@ -24,7 +24,7 @@
 								class="text-lg text-gray-800 font-semibold"
 								v-if="unreadNotificationsCount.data"
 							>
-								{{ unreadNotificationsCount.data }} Unread
+								{{ __("{0} Unread", [unreadNotificationsCount.data]) }}
 							</div>
 							<div class="flex ml-auto gap-1">
 								<Button
@@ -35,7 +35,7 @@
 									<template #prefix>
 										<FeatherIcon name="settings" class="w-4" />
 									</template>
-									Settings
+									{{ __("Settings") }}
 								</Button>
 								<Button
 									v-if="unreadNotificationsCount.data"
@@ -46,7 +46,7 @@
 									<template #prefix>
 										<FeatherIcon name="check-circle" class="w-4" />
 									</template>
-									Mark all as read
+									{{ __("Mark all as read") }}
 								</Button>
 							</div>
 						</div>
@@ -77,9 +77,18 @@
 									</div>
 								</div>
 							</router-link>
+							
 						</div>
-
-						<EmptyState v-else message="You have no notifications" />
+						<div v-if="notifications.data?.length && notifications.hasNextPage" class="flex">
+							<Button
+								variant="outline"
+								class="ml-auto"
+								@click="loadMore"
+							>
+								{{ __('Load more') }}
+							</Button>
+						</div>
+						<EmptyState v-else-if="!notifications.data" :message="__('You have no notifications')" />
 					</div>
 				</div>
 			</div>
@@ -92,7 +101,7 @@ import { IonContent, IonPage } from "@ionic/vue"
 import { useRouter } from "vue-router"
 import { createResource, FeatherIcon } from "frappe-ui"
 
-import { computed, inject } from "vue"
+import { computed, inject, onMounted, ref } from "vue"
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 import EmptyState from "@/components/EmptyState.vue"
 
@@ -102,9 +111,12 @@ import {
 	arePushNotificationsEnabled,
 } from "@/data/notifications"
 
-const user = inject("$user")
 const dayjs = inject("$dayjs")
 const router = useRouter()
+const __ = inject("$translate")
+const currentStart = ref(0)
+const pageLength = 10
+
 
 const allowPushNotifications = computed(
 	() =>
@@ -135,5 +147,18 @@ function getItemRoute(item) {
 		name: `${item.reference_document_type.replace(/\s+/g, "")}DetailView`,
 		params: { id: item.reference_document_name },
 	}
+}
+
+onMounted(() => {
+	notifications.start = 0,
+	notifications.pageLength = 10,
+	notifications.fetch()
+})
+
+function loadMore() {
+	currentStart.value += pageLength
+	notifications.start = currentStart.value
+	notifications.pageLength = pageLength
+	notifications.list.fetch()
 }
 </script>

@@ -27,6 +27,7 @@ frappe.ui.form.on("Employee Advance", {
 					is_group: 0,
 					company: frm.doc.company,
 					account_currency: ["in", currencies],
+					account_type: "Receivable",
 				},
 			};
 		});
@@ -138,6 +139,7 @@ frappe.ui.form.on("Employee Advance", {
 				posting_date: frm.doc.posting_date,
 				paid_amount: frm.doc.paid_amount,
 				claimed_amount: frm.doc.claimed_amount,
+				return_amount: frm.doc.return_amount,
 			},
 			callback: function (r) {
 				const doclist = frappe.model.sync(r.message);

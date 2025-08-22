@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, add_months, get_year_ending, get_year_start, getdate
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
@@ -13,11 +12,15 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_leave_application,
 )
 from hrms.tests.test_utils import add_date_to_holiday_list, get_first_sunday
+from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Employee"]
 
+class TestAttendanceRequest(HRMSTestSuite):
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		cls.make_employees()
 
-class TestAttendanceRequest(FrappeTestCase):
 	def setUp(self):
 		for doctype in ["Attendance Request", "Attendance"]:
 			frappe.db.delete(doctype)
@@ -167,6 +170,85 @@ class TestAttendanceRequest(FrappeTestCase):
 			},
 			["status", "docstatus", "attendance_date"],
 		)
+
+	def test_validate_no_attendance_to_create(self):
+		today = getdate()
+		yesterday = add_days(today, -1)
+		# marking absent for two days
+		for day in [yesterday, today]:
+			mark_attendance(self.employee.name, day, "Present")
+		# attendance request with the same status for the same days
+		attendance_request = frappe.get_doc(
+			{
+				"doctype": "Attendance Request",
+				"employee": self.employee.name,
+				"from_date": yesterday,
+				"to_date": today,
+				"reason": "On Duty",
+				"company": "_Test Company",
+			}
+		)
+		self.assertRaises(frappe.ValidationError, attendance_request.save)
+
+		# adding an extra day to the attendance request
+		attendance_request.to_date = add_days(today, 1)
+		attendance_request.save()
+		attendance_request.submit()
+		# attendance created for the third day
+		records = self.get_attendance_records(attendance_request.name)
+		self.assertEqual(records[0].status, "Present")
+
+	def test_half_day_status_change(self):
+		# when new attendance is created via attendance request
+		attendance_request = frappe.get_doc(
+			{
+				"doctype": "Attendance Request",
+				"employee": self.employee.name,
+				"from_date": getdate(),
+				"to_date": getdate(),
+				"reason": "On Duty",
+				"half_day": 1,
+				"half_day_date": getdate(),
+				"company": "_Test Company",
+			}
+		).save()
+		attendance_request.submit()
+
+		half_day_status = frappe.get_value(
+			"Attendance", {"attendance_request": attendance_request.name}, "half_day_status"
+		)
+		self.assertEqual(half_day_status, "Absent")
+
+	def test_half_day_status_change_when_existing_attendance_is_updated(self):
+		# when existing attendance is updated via attendance request
+		frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": self.employee.name,
+				"attendance_date": getdate(),
+				"status": "Absent",
+				"company": "_Test Company",
+			}
+		).insert()
+
+		attendance_request = frappe.get_doc(
+			{
+				"doctype": "Attendance Request",
+				"employee": self.employee.name,
+				"from_date": getdate(),
+				"to_date": getdate(),
+				"reason": "On Duty",
+				"half_day": 1,
+				"half_day_date": getdate(),
+				"company": "_Test Company",
+			}
+		).save()
+		attendance_request.submit()
+
+		half_day_status = frappe.get_value(
+			"Attendance", {"attendance_request": attendance_request.name}, "half_day_status"
+		)
+		self.assertEqual(half_day_status, "Absent")
 
 
 def get_employee():

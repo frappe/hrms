@@ -328,7 +328,7 @@ def create_interview_feedback(data, interview_name, interviewer, job_applicant):
 
 	for d in data.skill_set:
 		d = frappe._dict(d)
-		interview_feedback.append("skill_assessment", {"skill": d.skill, "rating": d.rating})
+		interview_feedback.append("skill_assessment", d)
 
 	interview_feedback.feedback = data.feedback
 	interview_feedback.result = data.result

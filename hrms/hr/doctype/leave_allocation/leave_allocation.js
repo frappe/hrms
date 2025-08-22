@@ -28,25 +28,91 @@ frappe.ui.form.on("Leave Allocation", {
 	refresh: function (frm) {
 		hrms.leave_utils.add_view_ledger_button(frm);
 
-		if (frm.doc.docstatus === 1 && frm.doc.expired) {
+		if (frm.doc.docstatus === 1 && !frm.doc.expired) {
 			var valid_expiry = moment(frappe.datetime.get_today()).isBetween(
 				frm.doc.from_date,
 				frm.doc.to_date,
 			);
 			if (valid_expiry) {
 				// expire current allocation
-				frm.add_custom_button(__("Expire Allocation"), function () {
-					frm.trigger("expire_allocation");
-				});
+				frm.add_custom_button(
+					__("Expire Allocation"),
+					function () {
+						frappe.confirm("Are you sure you want to expire this allocation?", () => {
+							frm.trigger("expire_allocation");
+						});
+					},
+					__("Actions"),
+				);
 			}
 		}
 
 		if (!frm.doc.__islocal && frm.doc.leave_policy_assignment) {
 			frappe.db.get_value("Leave Type", frm.doc.leave_type, "is_earned_leave", (r) => {
-				if (cint(r?.is_earned_leave))
-					frm.set_df_property("new_leaves_allocated", "read_only", 1);
+				if (!r?.is_earned_leave) return;
+				frm.set_df_property("new_leaves_allocated", "read_only", 1);
+				frm.trigger("add_allocate_leaves_button");
 			});
 		}
+	},
+
+	add_allocate_leaves_button: async function (frm) {
+		const { message: monthly_earned_leave } = await frappe.call({
+			method: "get_monthly_earned_leave",
+			doc: frm.doc,
+		});
+
+		frm.add_custom_button(
+			__("Allocate Leaves"),
+			function () {
+				const dialog = new frappe.ui.Dialog({
+					title: "Manual Leave Allocation",
+					fields: [
+						{
+							label: "New Leaves to be Allocated",
+							fieldname: "new_leaves",
+							fieldtype: "Float",
+							reqd: 1,
+						},
+						{
+							label: "From Date",
+							fieldname: "from_date",
+							fieldtype: "Date",
+							default: frappe.datetime.get_today(),
+						},
+						{
+							label: "To Date",
+							fieldname: "to_date",
+							fieldtype: "Date",
+							read_only: 1,
+							default: frm.doc.to_date,
+						},
+					],
+					primary_action_label: "Allocate",
+					primary_action({ new_leaves, from_date }) {
+						frappe.call({
+							method: "allocate_leaves_manually",
+							doc: frm.doc,
+							args: { new_leaves, from_date },
+							callback: function (r) {
+								if (!r.exc) {
+									dialog.hide();
+									frm.reload_doc();
+								}
+							},
+						});
+					},
+				});
+				dialog.fields_dict.new_leaves.set_value(monthly_earned_leave);
+				dialog.fields_dict.from_date.datepicker?.update({
+					minDate: frappe.datetime.str_to_obj(frm.doc.from_date),
+					maxDate: frappe.datetime.str_to_obj(frm.doc.to_date),
+				});
+
+				dialog.show();
+			},
+			__("Actions"),
+		);
 	},
 
 	expire_allocation: function (frm) {
@@ -110,6 +176,7 @@ frappe.ui.form.on("Leave Allocation", {
 			);
 		}
 	},
+
 	calculate_total_leaves_allocated: function (frm) {
 		if (cint(frm.doc.carry_forward) == 1 && frm.doc.leave_type && frm.doc.employee) {
 			return frappe.call({

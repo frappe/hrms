@@ -1,5 +1,17 @@
 frappe.ui.form.on("Leave Type", {
 	refresh: function (frm) {},
+
+	earned_leave_frequency: function (frm) {
+		if (frm.doc.earned_leave_frequency != "Monthly") {
+			frm.set_df_property("allocate_on_day", "options", "First Day\nLast Day");
+		} else {
+			frm.set_df_property(
+				"allocate_on_day",
+				"options",
+				"First Day\nDate of Joining\nLast Day",
+			);
+		}
+	},
 });
 
 frappe.tour["Leave Type"] = [
@@ -30,7 +42,7 @@ frappe.tour["Leave Type"] = [
 		description: __(
 			"Leaves you can avail against a holiday you worked on. You can claim Compensatory Off Leave using Compensatory Leave Request. Click {0} to know more",
 			[
-				`<a href='https://frappehr.com/docs/v14/en/compensatory-leave-request' target='_blank'>${__(
+				`<a href='https://docs.frappe.io/hr/compensatory-leave-request' target='_blank'>${__(
 					"here",
 				)}</a>`,
 			],

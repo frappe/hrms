@@ -5,7 +5,7 @@
 			props.isTableField ? 'border-2 border-dashed border-gray-300 mt-5' : '',
 		]"
 	>
-		{{ props.message }}
+		{{ __(props.message) }}
 	</div>
 </template>
 

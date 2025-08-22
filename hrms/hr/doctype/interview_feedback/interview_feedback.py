@@ -36,8 +36,8 @@ class InterviewFeedback(Document):
 
 		if getdate() < getdate(scheduled_date) and self.docstatus == 1:
 			frappe.throw(
-				_("{0} submission before {1} is not allowed").format(
-					frappe.bold("Interview Feedback"), frappe.bold("Interview Scheduled Date")
+				_("Submission of {0} before {1} is not allowed").format(
+					frappe.bold(_("Interview Feedback")), frappe.bold(_("Interview Scheduled Date"))
 				)
 			)
 

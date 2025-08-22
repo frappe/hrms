@@ -48,6 +48,7 @@ def execute(filters=None):
 			"start_date": ss.start_date,
 			"end_date": ss.end_date,
 			"leave_without_pay": ss.leave_without_pay,
+			"absent_days": ss.absent_days,
 			"payment_days": ss.payment_days,
 			"currency": currency or company_currency,
 			"total_loan_repayment": ss.total_loan_repayment,
@@ -83,9 +84,9 @@ def execute(filters=None):
 def get_earning_and_deduction_types(salary_slips):
 	salary_component_and_type = {_("Earning"): [], _("Deduction"): []}
 
-	for salary_compoent in get_salary_components(salary_slips):
-		component_type = get_salary_component_type(salary_compoent)
-		salary_component_and_type[_(component_type)].append(salary_compoent)
+	for salary_component in get_salary_components(salary_slips):
+		component_type = get_salary_component_type(salary_component)
+		salary_component_and_type[_(component_type)].append(salary_component)
 
 	return sorted(salary_component_and_type[_("Earning")]), sorted(salary_component_and_type[_("Deduction")])
 
@@ -172,6 +173,12 @@ def get_columns(earning_types, ded_types):
 		{
 			"label": _("Leave Without Pay"),
 			"fieldname": "leave_without_pay",
+			"fieldtype": "Float",
+			"width": 50,
+		},
+		{
+			"label": _("Absent Days"),
+			"fieldname": "absent_days",
 			"fieldtype": "Float",
 			"width": 50,
 		},
@@ -285,6 +292,15 @@ def get_salary_slips(filters, company_currency):
 
 	if filters.get("currency") and filters.get("currency") != company_currency:
 		query = query.where(salary_slip.currency == filters.get("currency"))
+
+	if filters.get("department"):
+		query = query.where(salary_slip.department == filters["department"])
+
+	if filters.get("designation"):
+		query = query.where(salary_slip.designation == filters["designation"])
+
+	if filters.get("branch"):
+		query = query.where(salary_slip.branch == filters["branch"])
 
 	salary_slips = query.run(as_dict=1)
 

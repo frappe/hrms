@@ -14,11 +14,16 @@
 					<div class="flex flex-row items-start gap-3 grow">
 						<div class="flex flex-col items-start gap-1.5">
 							<div class="text-base font-normal text-gray-800">
-								{{ item.expense_type }}
+								{{ __(item.expense_type) }}
 							</div>
 							<div class="text-xs font-normal text-gray-500">
 								<span>
-									{{ `Sanctioned: ${currency} ${item.sanctioned_amount || 0}` }}
+									{{
+										__("{0}: {1}", [
+											__("Sanctioned"),
+											formatCurrency(item.sanctioned_amount || 0, currency),
+										])
+									}}
 								</span>
 								<span class="whitespace-pre"> &middot; </span>
 								<span class="whitespace-nowrap" v-if="item.expense_date">
@@ -28,7 +33,7 @@
 						</div>
 					</div>
 					<span class="text-gray-700 font-normal rounded text-base">
-						{{ `${currency} ${item.amount}` }}
+						{{ formatCurrency(item.amount, currency) }}
 					</span>
 				</div>
 			</div>
@@ -39,7 +44,8 @@
 <script setup>
 import { computed, inject } from "vue"
 
-import { getCompanyCurrencySymbol } from "@/data/currencies"
+import { getCompanyCurrency } from "@/data/currencies"
+import { formatCurrency } from "@/utils/formatters"
 
 const props = defineProps({
 	doc: {
@@ -49,5 +55,5 @@ const props = defineProps({
 })
 
 const dayjs = inject("$dayjs")
-const currency = computed(() => getCompanyCurrencySymbol(props.doc.company))
+const currency = computed(() => getCompanyCurrency(props.doc.company))
 </script>

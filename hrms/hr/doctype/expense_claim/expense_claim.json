@@ -89,11 +89,11 @@
   },
   {
    "fetch_from": "employee.department",
+   "fetch_if_empty": 1,
    "fieldname": "department",
    "fieldtype": "Link",
    "label": "Department",
-   "options": "Department",
-   "read_only": 1
+   "options": "Department"
   },
   {
    "fieldname": "column_break_5",
@@ -177,6 +177,7 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "project",
    "fieldtype": "Link",
    "label": "Project",
@@ -213,6 +214,7 @@
   },
   {
    "fetch_from": "employee.company",
+   "fetch_if_empty": 1,
    "fieldname": "company",
    "fieldtype": "Link",
    "in_standard_filter": 1,
@@ -220,7 +222,6 @@
    "oldfieldname": "company",
    "oldfieldtype": "Link",
    "options": "Company",
-   "read_only": 1,
    "reqd": 1
   },
   {
@@ -248,6 +249,7 @@
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
    "fetch_from": "company.cost_center",
    "fetch_if_empty": 1,
    "fieldname": "cost_center",
@@ -388,7 +390,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-06-12 15:56:45.609119",
+ "modified": "2024-12-16 16:16:47.975814",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim",

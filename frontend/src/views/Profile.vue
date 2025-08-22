@@ -14,7 +14,7 @@
 							>
 								<FeatherIcon name="chevron-left" class="h-5 w-5" />
 							</Button>
-							<h2 class="text-xl font-semibold text-gray-900">Profile</h2>
+							<h2 class="text-xl font-semibold text-gray-900">{{ __("Profile") }}</h2>
 						</div>
 					</header>
 
@@ -84,7 +84,7 @@
 											class="h-5 w-5 text-gray-500"
 										/>
 										<div class="text-base font-normal text-gray-800">
-											Settings
+											{{ __("Settings") }}
 										</div>
 									</div>
 									<FeatherIcon
@@ -104,7 +104,7 @@
 							<template #prefix>
 								<FeatherIcon name="log-out" class="w-4" />
 							</template>
-							Log Out
+							{{ __("Log Out") }}
 						</Button>
 					</div>
 				</div>
@@ -155,13 +155,14 @@ const socket = inject("$socket")
 const session = inject("$session")
 const user = inject("$user")
 const employee = inject("$employee")
+const __ = inject("$translate")
 
 const router = useRouter()
 
 const profileLinks = [
 	{
 		icon: "user",
-		title: "Employee Details",
+		title: __("Employee Details"),
 		fields: [
 			"employee_name",
 			"employee_number",
@@ -173,7 +174,7 @@ const profileLinks = [
 	},
 	{
 		icon: "file",
-		title: "Company Information",
+		title: __("Company Information"),
 		fields: [
 			"company",
 			"department",
@@ -186,7 +187,7 @@ const profileLinks = [
 	},
 	{
 		icon: "book",
-		title: "Contact Information",
+		title: __("Contact Information"),
 		fields: [
 			"cell_number",
 			"personal_email",
@@ -196,7 +197,7 @@ const profileLinks = [
 	},
 	{
 		icon: "dollar-sign",
-		title: "Salary Information",
+		title: __("Salary Information"),
 		fields: [
 			"ctc",
 			"payroll_cost_center",
@@ -252,7 +253,7 @@ const getFieldInfo = (fieldname) => {
 	const field = employeeDocType.data.find(
 		(field) => field.fieldname === fieldname
 	)
-	return [field?.label, field?.fieldtype]
+	return [__(field?.label, null, "Employee"), field?.fieldtype]
 }
 
 const logout = async () => {

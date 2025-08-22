@@ -251,11 +251,6 @@ frappe.ui.form.on("Salary Slip", {
 			["hourly_wages", "timesheets"],
 			cint(frm.doc.salary_slip_based_on_timesheet) === 1,
 		);
-
-		frm.toggle_display(
-			["payment_days", "total_working_days", "leave_without_pay"],
-			frm.doc.payroll_frequency != "",
-		);
 	},
 
 	get_emp_and_working_day_details: function (frm) {
@@ -287,8 +282,8 @@ frappe.ui.form.on("Salary Slip", {
 			const message = `
 				<div class="small text-muted pb-3">
 					${__("Note").bold()}: ${__("Payment Days calculations are based on these Payroll Settings")}:
-					<br><br>${__("Payroll Based On")}: ${payroll_based_on.bold()}
-					<br>${__("Consider Unmarked Attendance As")}: ${consider_unmarked_attendance_as.bold()}
+					<br><br>${__("Payroll Based On")}: ${__(payroll_based_on).bold()}
+					<br>${__("Consider Unmarked Attendance As")}: ${__(consider_unmarked_attendance_as).bold()}
 					<br>${__("Consider Marked Attendance on Holidays")}:
 					${
 						cint(include_holidays_in_total_working_days) &&
@@ -361,54 +356,21 @@ frappe.ui.form.on("Salary Detail", {
 				callback: function (data) {
 					if (data.message) {
 						var result = data.message;
-						frappe.model.set_value(cdt, cdn, "condition", result.condition);
-						frappe.model.set_value(
-							cdt,
-							cdn,
-							"amount_based_on_formula",
-							result.amount_based_on_formula,
-						);
-						if (result.amount_based_on_formula === 1) {
-							frappe.model.set_value(cdt, cdn, "formula", result.formula);
-						} else {
-							frappe.model.set_value(cdt, cdn, "amount", result.amount);
-						}
-						frappe.model.set_value(
-							cdt,
-							cdn,
-							"statistical_component",
-							result.statistical_component,
-						);
-						frappe.model.set_value(
-							cdt,
-							cdn,
-							"depends_on_payment_days",
-							result.depends_on_payment_days,
-						);
-						frappe.model.set_value(
-							cdt,
-							cdn,
-							"do_not_include_in_total",
-							result.do_not_include_in_total,
-						);
-						frappe.model.set_value(
-							cdt,
-							cdn,
-							"variable_based_on_taxable_salary",
-							result.variable_based_on_taxable_salary,
-						);
-						frappe.model.set_value(
-							cdt,
-							cdn,
-							"is_tax_applicable",
-							result.is_tax_applicable,
-						);
-						frappe.model.set_value(
-							cdt,
-							cdn,
-							"is_flexible_benefit",
-							result.is_flexible_benefit,
-						);
+						frappe.model.set_value(cdt, cdn, {
+							condition: result.condition,
+							amount_based_on_formula: result.amount_based_on_formula,
+							statistical_component: result.statistical_component,
+							depends_on_payment_days: result.depends_on_payment_days,
+							do_not_include_in_total: result.do_not_include_in_total,
+							do_not_include_in_accounts: result.do_not_include_in_accounts,
+							variable_based_on_taxable_salary:
+								result.variable_based_on_taxable_salary,
+							is_tax_applicable: result.is_tax_applicable,
+							is_flexible_benefit: result.is_flexible_benefit,
+							...(result.amount_based_on_formula == 1
+								? { formula: result.formula }
+								: { amount: result.amount }),
+						});
 						refresh_field("earnings");
 						refresh_field("deductions");
 					}

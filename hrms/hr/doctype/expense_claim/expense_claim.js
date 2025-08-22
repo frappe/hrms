@@ -64,6 +64,14 @@ frappe.ui.form.on("Expense Claim", {
 				query: "erpnext.controllers.queries.employee_query",
 			};
 		});
+
+		frm.set_query("department", function () {
+			return {
+				filters: {
+					company: frm.doc.company,
+				},
+			};
+		});
 	},
 
 	onload: function (frm) {
@@ -101,6 +109,7 @@ frappe.ui.form.on("Expense Claim", {
 				__("Create"),
 			);
 		}
+		frm.trigger("set_form_buttons");
 	},
 
 	validate: function (frm) {
@@ -192,10 +201,11 @@ frappe.ui.form.on("Expense Claim", {
 	},
 
 	update_employee_advance_claimed_amount: function (frm) {
-		let amount_to_be_allocated = frm.doc.grand_total;
+		let amount_to_be_allocated = frm.doc.total_sanctioned_amount;
 		$.each(frm.doc.advances || [], function (i, advance) {
-			if (amount_to_be_allocated >= advance.unclaimed_amount) {
-				advance.allocated_amount = frm.doc.advances[i].unclaimed_amount;
+			if (amount_to_be_allocated >= advance.unclaimed_amount - advance.return_amount) {
+				advance.allocated_amount =
+					frm.doc.advances[i].unclaimed_amount - frm.doc.advances[i].return_amount;
 				amount_to_be_allocated -= advance.allocated_amount;
 			} else {
 				advance.allocated_amount = amount_to_be_allocated;
@@ -204,7 +214,6 @@ frappe.ui.form.on("Expense Claim", {
 			frm.refresh_field("advances");
 		});
 	},
-
 	make_payment_entry: function (frm) {
 		let method = "hrms.overrides.employee_payment_entry.get_payment_entry_for_employee";
 		if (frm.doc.__onload && frm.doc.__onload.make_payment_via_journal_entry) {
@@ -274,17 +283,18 @@ frappe.ui.form.on("Expense Claim", {
 			}
 		});
 	},
+
 	get_taxes: function (frm) {
-		if (frm.doc.taxes) {
-			frappe.call({
-				method: "calculate_taxes",
-				doc: frm.doc,
-				callback: () => {
-					refresh_field("taxes");
-					frm.trigger("update_employee_advance_claimed_amount");
-				},
-			});
-		}
+		if (!frm.doc.taxes.length) return;
+
+		frappe.call({
+			method: "calculate_taxes",
+			doc: frm.doc,
+			callback: () => {
+				refresh_field("taxes");
+				frm.trigger("update_employee_advance_claimed_amount");
+			},
+		});
 	},
 
 	get_advances: function (frm) {
@@ -308,13 +318,40 @@ frappe.ui.form.on("Expense Claim", {
 							row.advance_account = d.advance_account;
 							row.advance_paid = d.paid_amount;
 							row.unclaimed_amount = flt(d.paid_amount) - flt(d.claimed_amount);
-							row.allocated_amount = 0;
+							row.return_amount = flt(d.return_amount);
+							row.allocated_amount = get_allocation_amount(
+								flt(d.paid_amount),
+								flt(d.claimed_amount),
+								flt(d.return_amount),
+							);
 						});
 						refresh_field("advances");
 					}
 				},
 			});
 		}
+	},
+	set_form_buttons: async function (frm) {
+		let self_approval_not_allowed = frm.doc.__onload
+			? frm.doc.__onload.self_expense_approval_not_allowed
+			: 0;
+		let current_employee = await hrms.get_current_employee();
+		if (
+			frm.doc.docstatus === 0 &&
+			!frm.is_dirty() &&
+			!frappe.model.has_workflow(frm.doctype)
+		) {
+			if (self_approval_not_allowed && current_employee == frm.doc.employee) {
+				frm.set_df_property("status", "read_only", 1);
+				frm.trigger("show_save_button");
+			}
+		}
+	},
+	show_save_button: function (frm) {
+		frm.page.set_primary_action("Save", () => {
+			frm.save();
+		});
+		$(".form-message").prop("hidden", true);
 	},
 });
 
@@ -384,8 +421,12 @@ frappe.ui.form.on("Expense Claim Advance", {
 						child.advance_paid = r.message[0].paid_amount;
 						child.unclaimed_amount =
 							flt(r.message[0].paid_amount) - flt(r.message[0].claimed_amount);
-						child.allocated_amount =
-							flt(r.message[0].paid_amount) - flt(r.message[0].claimed_amount);
+						child.return_amount = flt(r.message[0].return_amount);
+						child.allocated_amount = get_allocation_amount(
+							flt(r.message[0].paid_amount),
+							flt(r.message[0].claimed_amount),
+							flt(r.message[0].return_amount),
+						);
 						frm.trigger("calculate_grand_total");
 						refresh_field("advances");
 					}
@@ -431,3 +472,7 @@ frappe.ui.form.on("Expense Taxes and Charges", {
 		frm.trigger("calculate_total_tax", cdt, cdn);
 	},
 });
+
+function get_allocation_amount(paid_amount, claimed_amount, return_amount) {
+	return paid_amount - (claimed_amount + return_amount);
+}

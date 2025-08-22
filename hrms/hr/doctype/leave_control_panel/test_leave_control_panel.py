@@ -4,7 +4,7 @@
 from datetime import date
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -15,7 +15,7 @@ from hrms.hr.doctype.leave_policy.test_leave_policy import create_leave_policy
 from hrms.tests.test_utils import create_company
 
 
-class TestLeaveControlPanel(FrappeTestCase):
+class TestLeaveControlPanel(IntegrationTestCase):
 	@classmethod
 	def setUpClass(self):
 		create_company()
@@ -82,7 +82,7 @@ class TestLeaveControlPanel(FrappeTestCase):
 			"dates_based_on": "Leave Period",
 			"leave_period": self.leave_period.name,
 			"allocate_based_on_leave_policy": 1,
-			"leave_policy": self.leave_policy,
+			"leave_policy": self.leave_policy.name,
 		}
 		lcp = LeaveControlPanel(args)
 		lcp.allocate_leave([self.emp3])
@@ -107,7 +107,7 @@ class TestLeaveControlPanel(FrappeTestCase):
 			"dates_based_on": "Joining Date",
 			"to_date": to_date,
 			"allocate_based_on_leave_policy": 1,
-			"leave_policy": self.leave_policy,
+			"leave_policy": self.leave_policy.name,
 		}
 
 		lcp = LeaveControlPanel(arg)
@@ -138,7 +138,7 @@ class TestLeaveControlPanel(FrappeTestCase):
 			"dates_based_on": "Leave Period",
 			"leave_period": self.leave_period.name,
 			"allocate_based_on_leave_policy": 1,
-			"leave_policy": self.leave_policy,
+			"leave_policy": self.leave_policy.name,
 		}
 		advanced_filters = [["Employee", "date_of_joining", "<", date(2030, 1, 5)]]
 		lcp = LeaveControlPanel(args)

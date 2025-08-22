@@ -237,33 +237,26 @@ def send_work_anniversary_reminders():
 def get_work_anniversary_reminder_text(anniversary_persons: list) -> str:
 	if len(anniversary_persons) == 1:
 		anniversary_person = anniversary_persons[0]["name"]
-		# Number of years completed at the company
 		completed_years = getdate().year - anniversary_persons[0]["date_of_joining"].year
-		anniversary_person += f" completed {get_pluralized_years(completed_years)}"
-	else:
-		person_names_with_years = []
-		names_grouped_by_years = {}
+		return _("Today {0} completed {1} year(s) at our Company! 🎉").format(
+			_(anniversary_person), completed_years
+		)
 
-		for person in anniversary_persons:
-			# Number of years completed at the company
-			completed_years = getdate().year - person["date_of_joining"].year
-			names_grouped_by_years.setdefault(completed_years, []).append(person["name"])
+	names_grouped_by_years = {}
 
-		for key, value in names_grouped_by_years.items():
-			person_names = comma_sep(value, frappe._("{0} & {1}"), False)
-			person_names_with_years.append(f"{person_names} completed {get_pluralized_years(key)}")
+	for person in anniversary_persons:
+		# Number of years completed at the company
+		completed_years = getdate().year - person["date_of_joining"].year
+		names_grouped_by_years.setdefault(completed_years, []).append(person["name"])
 
-		# converts ["Jim", "Rim", "Dim"] to Jim, Rim & Dim
-		anniversary_person = comma_sep(person_names_with_years, frappe._("{0} & {1}"), False)
-	reminder_text = _("Today {0} at our Company! 🎉").format(_(anniversary_person))
+	person_names_with_years = [
+		_("{0} completed {1} year(s)").format(comma_sep(person_names, _("{0} & {1}"), False), years)
+		for years, person_names in names_grouped_by_years.items()
+	]
 
-	return reminder_text
-
-
-def get_pluralized_years(years):
-	if years == 1:
-		return "1 year"
-	return f"{years} years"
+	# converts ["Jim", "Rim", "Dim"] to Jim, Rim & Dim
+	anniversary_person = comma_sep(person_names_with_years, _("{0} & {1}"), False)
+	return _("Today {0} at our Company! 🎉").format(_(anniversary_person))
 
 
 def send_work_anniversary_reminder(

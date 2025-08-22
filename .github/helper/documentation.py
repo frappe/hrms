@@ -17,7 +17,7 @@ def docs_link_exists(body):
 					parts = parsed_url.path.split("/")
 					if len(parts) == 5 and parts[1] == "frappe" and parts[2] == "hrms":
 						return True
-				elif parsed_url.netloc == "frappehr.com":
+				elif parsed_url.netloc == "docs.frappe.io":
 					return True
 
 

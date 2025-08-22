@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, add_months, nowdate
 
 import erpnext
@@ -16,7 +16,7 @@ from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 )
 
 
-class TestAdditionalSalary(FrappeTestCase):
+class TestAdditionalSalary(IntegrationTestCase):
 	def setUp(self):
 		setup_test()
 
@@ -146,6 +146,24 @@ class TestAdditionalSalary(FrappeTestCase):
 		tds_component = _get_tds_component(salary_slip)
 		self.assertIsNone(tds_component.additional_salary)
 		self.assertNotEqual(tds_component.amount, 5000)
+
+	def test_validate_duplicate_or_overlapping_additional_salary(self):
+		emp_id = make_employee("test_additional@salary.com")
+		make_salary_structure("Test Salary Structure Additional Salary", "Monthly", employee=emp_id)
+		date = nowdate()
+		get_additional_salary(emp_id, overwrite_salary_structure=1)
+		additional_salary_doc = frappe.get_doc(
+			{
+				"doctype": "Additional Salary",
+				"employee": emp_id,
+				"salary_component": "Recurring Salary Component",
+				"payroll_date": date,
+				"amount": 5000,
+				"overwrite_salary_structure_amount": 1,
+			}
+		)
+		with self.assertRaises(frappe.ValidationError):
+			additional_salary_doc.save()
 
 
 def get_additional_salary(

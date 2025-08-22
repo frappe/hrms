@@ -93,13 +93,7 @@ frappe.ui.form.on("Appraisal Cycle", {
 		await Promise.all(
 			["Employee", "Appraisal Cycle", "Appraisal"].map((doctype) =>
 				frappe.model.with_doctype(doctype, () => {
-					autocompletions.push(
-						...frappe.get_meta(doctype).fields.map((f) => ({
-							value: f.fieldname,
-							score: 8,
-							meta: __("{0} Field", [doctype]),
-						})),
-					);
+					autocompletions.push(...hrms.get_doctype_fields_for_autocompletion(doctype));
 				}),
 			),
 		);

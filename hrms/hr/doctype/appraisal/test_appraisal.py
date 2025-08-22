@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -17,7 +17,7 @@ from hrms.hr.doctype.goal.test_goal import create_goal
 from hrms.tests.test_utils import create_company
 
 
-class TestAppraisal(FrappeTestCase):
+class TestAppraisal(IntegrationTestCase):
 	def setUp(self):
 		frappe.db.delete("Goal")
 		frappe.db.delete("Appraisal")
@@ -30,7 +30,9 @@ class TestAppraisal(FrappeTestCase):
 		engineer.appraisal_template = self.template.name
 		engineer.save()
 
-		self.employee1 = make_employee("employee1@example.com", company=self.company, designation="Engineer")
+		self.employee1 = make_employee(
+			"test_appraisal1@example.com", company=self.company, designation="Engineer"
+		)
 
 	def test_validate_duplicate(self):
 		cycle = create_appraisal_cycle(designation="Engineer")
@@ -298,7 +300,7 @@ class TestAppraisal(FrappeTestCase):
 		self.assertRaises(frappe.ValidationError, appraisal.insert)
 
 	def test_cycle_summary(self):
-		employee2 = make_employee("employee2@example.com", company=self.company, designation="Engineer")
+		employee2 = make_employee("test_appraisal2@example.com", company=self.company, designation="Engineer")
 
 		cycle = create_appraisal_cycle(designation="Engineer")
 		cycle.create_appraisals()

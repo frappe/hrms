@@ -18,6 +18,16 @@ frappe.ui.form.on("Payroll Entry", {
 		frm.events.department_filters(frm);
 		frm.events.payroll_payable_account_filters(frm);
 
+		frappe.realtime.off("completed_overtime_slip_creation");
+		frappe.realtime.on("completed_overtime_slip_creation", function () {
+			frm.reload_doc();
+		});
+
+		frappe.realtime.off("completed_overtime_slip_submission");
+		frappe.realtime.on("completed_overtime_slip_submission", function () {
+			frm.reload_doc();
+		});
+
 		frappe.realtime.off("completed_salary_slip_creation");
 		frappe.realtime.on("completed_salary_slip_creation", function () {
 			frm.reload_doc();
@@ -51,7 +61,7 @@ frappe.ui.form.on("Payroll Entry", {
 		});
 	},
 
-	refresh: function (frm) {
+	refresh: (frm) => {
 		if (frm.doc.status === "Queued") frm.page.btn_secondary.hide();
 
 		if (frm.doc.docstatus === 0 && !frm.is_new()) {
@@ -69,12 +79,25 @@ frappe.ui.form.on("Payroll Entry", {
 		) {
 			if (frm.doc.docstatus == 0 && !frm.is_new()) {
 				frm.page.clear_primary_action();
-				frm.page.set_primary_action(__("Create Salary Slips"), () => {
-					frm.save("Submit").then(() => {
-						frm.page.clear_primary_action();
-						frm.refresh();
+				if (frm.doc.overtime_step === "Create") {
+					frm.add_custom_button(__("Create Overtime Slips"), () => {
+						frm.call({
+							doc: frm.doc,
+							method: "create_overtime_slips",
+						});
 					});
-				});
+				} else if (frm.doc.overtime_step === "Submit") {
+					frm.add_custom_button(__("Submit Overtime Slips"), () => {
+						frm.call({
+							doc: frm.doc,
+							method: "submit_overtime_slips",
+						});
+					});
+				} else {
+					frm.add_custom_button(__("Create Salary Slips"), function () {
+						frm.call("create_salary_slips");
+					}).addClass("btn-primary");
+				}
 			} else if (frm.doc.docstatus == 1 && frm.doc.status == "Failed") {
 				frm.add_custom_button(__("Create Salary Slips"), function () {
 					frm.call("create_salary_slips");
@@ -128,7 +151,7 @@ frappe.ui.form.on("Payroll Entry", {
 			});
 	},
 
-	create_salary_slips: function (frm) {
+	create_salary_slip: function (frm) {
 		frm.call({
 			doc: frm.doc,
 			method: "run_doc_method",
@@ -158,19 +181,16 @@ frappe.ui.form.on("Payroll Entry", {
 	},
 
 	add_bank_entry_button: function (frm) {
-		frappe.call({
-			method: "hrms.payroll.doctype.payroll_entry.payroll_entry.payroll_entry_has_bank_entries",
-			args: {
-				name: frm.doc.name,
-				payroll_payable_account: frm.doc.payroll_payable_account,
-			},
-			callback: function (r) {
-				if (r.message && !r.message.submitted) {
-					frm.add_custom_button(__("Make Bank Entry"), function () {
-						make_bank_entry(frm);
-					}).addClass("btn-primary");
-				}
-			},
+		frm.call("has_bank_entries").then((r) => {
+			if (!r.message.has_bank_entries) {
+				frm.add_custom_button(__("Make Bank Entry"), function () {
+					make_bank_entry(frm);
+				}).addClass("btn-primary");
+			} else if (!r.message.has_bank_entries_for_withheld_salaries) {
+				frm.add_custom_button(__("Release Withheld Salaries"), function () {
+					make_bank_entry(frm, (for_withheld_salaries = 1));
+				}).addClass("btn-primary");
+			}
 		});
 	},
 
@@ -337,11 +357,10 @@ frappe.ui.form.on("Payroll Entry", {
 
 	salary_slip_based_on_timesheet: function (frm) {
 		frm.toggle_reqd(["payroll_frequency"], !frm.doc.salary_slip_based_on_timesheet);
-		hrms.set_payroll_frequency_to_null(frm);
 	},
 
 	set_start_end_dates: function (frm) {
-		if (!frm.doc.salary_slip_based_on_timesheet) {
+		if (frm.doc.payroll_frequency) {
 			frappe.call({
 				method: "hrms.payroll.doctype.payroll_entry.payroll_entry.get_start_end_dates",
 				args: {
@@ -421,8 +440,8 @@ const submit_salary_slip = function (frm) {
 	);
 };
 
-let make_bank_entry = function (frm) {
-	var doc = frm.doc;
+let make_bank_entry = function (frm, for_withheld_salaries = 0) {
+	const doc = frm.doc;
 	if (doc.payment_account) {
 		return frappe.call({
 			method: "run_doc_method",
@@ -430,6 +449,7 @@ let make_bank_entry = function (frm) {
 				method: "make_bank_entry",
 				dt: "Payroll Entry",
 				dn: frm.doc.name,
+				args: { for_withheld_salaries: for_withheld_salaries },
 			},
 			callback: function () {
 				frappe.set_route("List", "Journal Entry", {

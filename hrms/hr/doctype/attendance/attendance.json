@@ -20,6 +20,7 @@
   "company",
   "department",
   "attendance_request",
+  "half_day_status",
   "details_section",
   "shift",
   "in_time",
@@ -27,7 +28,13 @@
   "column_break_18",
   "late_entry",
   "early_exit",
-  "amended_from"
+  "amended_from",
+  "modify_half_day_status",
+  "overtime_section",
+  "overtime_type",
+  "actual_overtime_duration",
+  "column_break_idku",
+  "standard_working_hours"
  ],
  "fields": [
   {
@@ -122,7 +129,8 @@
    "label": "Attendance Date",
    "oldfieldname": "attendance_date",
    "oldfieldtype": "Date",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fetch_from": "employee.company",
@@ -201,13 +209,57 @@
   {
    "fieldname": "column_break_18",
    "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.status==\"Half Day\";",
+   "fieldname": "half_day_status",
+   "fieldtype": "Select",
+   "label": "Status for Other Half",
+   "no_copy": 1,
+   "options": "\nPresent\nAbsent"
+  },
+  {
+   "default": "0",
+   "fieldname": "modify_half_day_status",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "modify_half_day_status"
+  },
+  {
+   "depends_on": "overtime_type",
+   "fieldname": "overtime_section",
+   "fieldtype": "Section Break",
+   "label": "Overtime"
+  },
+  {
+   "fieldname": "overtime_type",
+   "fieldtype": "Link",
+   "label": "Overtime Type",
+   "options": "Overtime Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_idku",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "standard_working_hours",
+   "fieldtype": "Float",
+   "label": "Standard Working Hours",
+   "read_only": 1
+  },
+  {
+   "fieldname": "actual_overtime_duration",
+   "fieldtype": "Float",
+   "label": "Actual Overtime Duration",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-ok",
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-04-05 20:55:02.905452",
+ "modified": "2025-07-10 11:39:04.327505",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance",
@@ -266,6 +318,7 @@
    "share": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "employee,employee_name,attendance_date,status",
  "sort_field": "creation",
  "sort_order": "DESC",

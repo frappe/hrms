@@ -23,7 +23,7 @@ import { ref, watch, inject } from "vue"
 import FormView from "@/components/FormView.vue"
 
 const dayjs = inject("$dayjs")
-const employee = inject("$employee")
+const __ = inject("$translate")
 const today = dayjs().format("YYYY-MM-DD")
 
 const props = defineProps({
@@ -32,6 +32,9 @@ const props = defineProps({
 		required: false,
 	},
 })
+
+const sessionEmployee = inject("$employee")
+const currEmployee = ref(sessionEmployee.data.name)
 
 // reactive object to store form data
 const leaveApplication = ref({})
@@ -60,7 +63,7 @@ formFields.reload()
 
 const leaveApprovalDetails = createResource({
 	url: "hrms.api.get_leave_approval_details",
-	params: { employee: employee.data.name },
+	params: { employee: currEmployee.value },
 	onSuccess(data) {
 		setLeaveApprovers(data)
 	},
@@ -69,7 +72,7 @@ const leaveApprovalDetails = createResource({
 const leaveTypes = createResource({
 	url: "hrms.api.get_leave_types",
 	params: {
-		employee: employee.data.name,
+		employee: currEmployee.value,
 		date: today,
 	},
 	onSuccess(data) {
@@ -81,10 +84,13 @@ const leaveTypes = createResource({
 watch(
 	() => leaveApplication.value.employee,
 	(employee_id) => {
-		if (props.id && employee_id !== employee.data.name) {
+		if (props.id && employee_id !== currEmployee.value) {
 			// if employee is not the current user, set form as read only
 			setFormReadOnly()
 		}
+		currEmployee.value = employee_id
+		leaveTypes.fetch({ employee: currEmployee.value, date: today })
+		leaveApprovalDetails.fetch({ employee: currEmployee.value })		
 	}
 )
 watch(
@@ -111,7 +117,7 @@ watch(
 
 		// fetch leave types for the selected date
 		leaveTypes.fetch({
-			employee: employee.data.name,
+			employee: currEmployee.value,
 			date: from_date,
 		})
 	}
@@ -124,6 +130,15 @@ watch(
 		setHalfDayDateRange()
 		setTotalLeaveDays()
 	}
+)
+
+watch(
+	() => leaveApplication.value.leave_approver,
+  	(newApprover) => {
+			const approverField = formFields.data.find(f => f.fieldname === "leave_approver")
+			const selected = approverField?.documentList?.find(opt => opt.value === newApprover)
+			leaveApplication.value.leave_approver_name = selected?.label?.split(" : ")[1] || ""
+  }
 )
 
 // helper functions
@@ -153,7 +168,7 @@ function getFilteredFields(fields) {
 }
 
 function setFormReadOnly() {
-	if (leaveApplication.value.leave_approver === employee.data.user_id) return
+	if (leaveApplication.value.leave_approver === sessionEmployee.data.user_id) return
 	formFields.data.map((field) => (field.read_only = true))
 }
 
@@ -161,7 +176,7 @@ function validateDates(from_date, to_date) {
 	if (!(from_date && to_date)) return
 
 	const error_message =
-		from_date > to_date ? "To Date cannot be before From Date" : ""
+		from_date > to_date ? __("To Date cannot be before From Date") : ""
 
 	const from_date_field = formFields.data.find(
 		(field) => field.fieldname === "from_date"
@@ -175,7 +190,7 @@ function setTotalLeaveDays() {
 	const leaveDays = createResource({
 		url: "hrms.hr.doctype.leave_application.leave_application.get_number_of_leave_days",
 		params: {
-			employee: employee.data.name,
+			employee: currEmployee.value,
 			leave_type: leaveApplication.value.leave_type,
 			from_date: leaveApplication.value.from_date,
 			to_date: leaveApplication.value.to_date,
@@ -196,7 +211,7 @@ function setLeaveBalance() {
 	const leaveBalance = createResource({
 		url: "hrms.hr.doctype.leave_application.leave_application.get_leave_balance_on",
 		params: {
-			employee: employee.data.name,
+			employee: currEmployee.value,
 			date: leaveApplication.value.from_date,
 			to_date: leaveApplication.value.to_date,
 			leave_type: leaveApplication.value.leave_type,
@@ -244,9 +259,11 @@ function setLeaveApprovers(data) {
 			: approver.name,
 		value: approver.name,
 	}))
-
-	leaveApplication.value.leave_approver = data?.leave_approver
-	leaveApplication.value.leave_approver_name = data?.leave_approver_name
+	if (!leaveApplication.value.leave_approver){
+		leaveApplication.value.leave_approver = data?.leave_approver
+		leaveApplication.value.leave_approver_name = data?.leave_approver_name
+	}
+	
 }
 
 function setLeaveTypes(data) {
@@ -269,6 +286,6 @@ function areValuesSet() {
 
 function validateForm() {
 	setHalfDayDate(leaveApplication.value.half_day)
-	leaveApplication.value.employee = employee.data.name
+	leaveApplication.value.employee = currEmployee.value
 }
 </script>

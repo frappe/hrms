@@ -5,7 +5,7 @@
 		v-else-if="props.fieldtype === 'Select'"
 		variant="outline"
 		:theme="colorMap[props.value]"
-		:label="props.value"
+		:label="__(props.value)"
 		size="md"
 	/>
 
@@ -30,13 +30,29 @@
 	</div>
 
 	<EmployeeAvatar
-		v-else-if="
-			props.fieldtype === 'Link' &&
-			['employee', 'reports_to'].includes(props.fieldname)
-		"
+		v-else-if="props.fieldtype === 'Link' && ['employee', 'reports_to'].includes(props.fieldname)"
 		:employeeID="props.value"
 		:showLabel="true"
 	/>
+
+	<div
+		v-else-if="props.fieldtype === 'geolocation'"
+		class="rounded border-4 translate-z-0 block overflow-hidden w-full h-170 mt-2"
+	>
+		<iframe
+			width="100%"
+			height="170"
+			frameborder="0"
+			scrolling="no"
+			marginheight="0"
+			marginwidth="0"
+			style="border: 0"
+			:src="`https://maps.google.com/maps?q=${getCoordinates(props.value).latitude},${
+				getCoordinates(props.value).longitude
+			}&hl=en&z=15&amp;output=embed`"
+		>
+		</iframe>
+	</div>
 
 	<div v-else class="text-gray-900 text-base">{{ props.value }}</div>
 </template>
@@ -59,5 +75,10 @@ const colorMap = {
 	Approved: "green",
 	Rejected: "red",
 	Open: "orange",
+}
+
+const getCoordinates = (value) => {
+	const [longitude, latitude] = JSON.parse(value).features[0].geometry.coordinates
+	return { longitude, latitude }
 }
 </script>

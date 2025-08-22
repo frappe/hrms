@@ -11,6 +11,8 @@
   "company",
   "shift_assignment_details_section",
   "shift_type",
+  "shift_schedule",
+  "shift_location",
   "status",
   "column_break_ybmd",
   "start_date",
@@ -40,7 +42,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Action",
-   "options": "Assign Shift\nProcess Shift Requests",
+   "options": "Assign Shift\nAssign Shift Schedule\nProcess Shift Requests",
    "reqd": 1
   },
   {
@@ -56,6 +58,7 @@
    "reqd": 1
   },
   {
+   "depends_on": "eval:doc.action === \"Assign Shift\"",
    "fieldname": "shift_type",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -80,7 +83,7 @@
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Start Date",
-   "mandatory_depends_on": "eval:doc.action === \"Assign Shift\""
+   "mandatory_depends_on": "eval:doc.action === \"Assign Shift\" || doc.action === \"Assign Shift Schedule\""
   },
   {
    "fieldname": "end_date",
@@ -172,7 +175,7 @@
    "label": "Shift Request Filters"
   },
   {
-   "depends_on": "eval:doc.action === \"Assign Shift\"",
+   "depends_on": "eval:doc.action === \"Assign Shift\" || doc.action === \"Assign Shift Schedule\"",
    "fieldname": "shift_assignment_details_section",
    "fieldtype": "Section Break",
    "label": "Shift Assignment Details"
@@ -187,12 +190,26 @@
    "fieldname": "select_rows_section",
    "fieldtype": "Section Break",
    "label": "Select Employees"
+  },
+  {
+   "fieldname": "shift_location",
+   "fieldtype": "Link",
+   "label": "Shift Location",
+   "options": "Shift Location"
+  },
+  {
+   "depends_on": "eval:doc.action === \"Assign Shift Schedule\"",
+   "fieldname": "shift_schedule",
+   "fieldtype": "Link",
+   "label": "Shift Schedule",
+   "mandatory_depends_on": "eval:doc.action === \"Assign Shift Schedule\"",
+   "options": "Shift Schedule"
   }
  ],
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-03-27 17:54:33.829320",
+ "modified": "2025-01-13 13:48:33.710186",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment Tool",
@@ -208,7 +225,6 @@
    "write": 1
   }
  ],
- "read_only": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

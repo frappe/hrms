@@ -1,4 +1,5 @@
 import frappe
+from frappe.boot import load_translations
 
 no_cache = 1
 
@@ -20,4 +21,19 @@ def get_context_for_dev():
 
 
 def get_boot():
-	return frappe._dict({"push_relay_server_url": frappe.conf.get("push_relay_server_url")})
+	bootinfo = frappe._dict(
+		{
+			"site_name": frappe.local.site,
+			"push_relay_server_url": frappe.conf.get("push_relay_server_url") or "",
+			"default_route": get_default_route(),
+		}
+	)
+
+	bootinfo.lang = frappe.local.lang
+	load_translations(bootinfo)
+
+	return bootinfo
+
+
+def get_default_route():
+	return "/hrms"

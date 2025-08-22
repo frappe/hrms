@@ -11,6 +11,7 @@ import {
 	resourcesPlugin,
 	FormControl,
 } from "frappe-ui"
+import { translationsPlugin } from "./plugins/translationsPlugin.js"
 import EmptyState from "@/components/EmptyState.vue"
 
 import { IonicVue } from "@ionic/vue"
@@ -37,6 +38,7 @@ const socket = initSocket()
 
 setConfig("resourceFetcher", frappeRequest)
 app.use(resourcesPlugin)
+app.use(translationsPlugin)
 
 app.component("Button", Button)
 app.component("Input", Input)
@@ -91,20 +93,19 @@ const registerServiceWorker = async () => {
 	}
 }
 
-router.isReady().then(() => {
+router.isReady().then(async () => {
 	if (import.meta.env.DEV) {
-		frappeRequest({
+		await frappeRequest({
 			url: "/api/method/hrms.www.hrms.get_context_for_dev",
-		}).then((values) => {
+		}).then(async (values) => {
 			if (!window.frappe) window.frappe = {}
 			window.frappe.boot = values
-			registerServiceWorker()
-			app.mount("#app")
 		})
-	} else {
-		registerServiceWorker()
-		app.mount("#app")
 	}
+
+	await translationsPlugin.isReady();
+	registerServiceWorker()
+	app.mount("#app")
 })
 
 router.beforeEach(async (to, _, next) => {

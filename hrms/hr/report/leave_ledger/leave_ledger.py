@@ -71,8 +71,7 @@ def get_columns() -> list[dict]:
 		{
 			"label": _("Transaction Type"),
 			"fieldname": "transaction_type",
-			"fieldtype": "Link",
-			"options": "DocType",
+			"fieldtype": "Data",
 			"width": 130,
 		},
 		{

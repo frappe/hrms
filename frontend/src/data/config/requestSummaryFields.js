@@ -15,7 +15,7 @@ export const LEAVE_FIELDS = [
 	{
 		fieldname: "leave_dates",
 		label: "Leave Dates",
-		fieldtype: "DateRange",
+		fieldtype: "Data",
 	},
 	{
 		fieldname: "half_day",
@@ -110,5 +110,147 @@ export const EXPENSE_CLAIM_FIELDS = [
 		fieldname: "approval_status",
 		label: "Approval Status",
 		fieldtype: "Select",
+	},
+]
+
+export const ATTENDANCE_REQUEST_FIELDS = [
+	{
+		fieldname: "name",
+		label: "ID",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "attendance_dates",
+		label: "Attendance Dates",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "total_attendance_days",
+		label: "Total Attendance Days",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "include_holidays",
+		label: "Include Holidays",
+		fieldtype: "Check",
+	},
+	{
+		fieldname: "shift",
+		label: "Shift",
+		fieldtype: "Link",
+	},
+	{
+		fieldname: "reason",
+		label: "Reason",
+		fieldtype: "Select",
+	},
+	{
+		fieldname: "employee",
+		label: "Employee",
+		fieldtype: "Link",
+	},
+]
+
+export const SHIFT_FIELDS = [
+	{
+		fieldname: "name",
+		label: "ID",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "shift_type",
+		label: "Shift Type",
+		fieldtype: "Link",
+	},
+	{
+		fieldname: "shift_timing",
+		label: "Shift Timing",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "shift_dates",
+		label: "Shift Dates",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "total_shift_days",
+		label: "Total Shift Days",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "employee",
+		label: "Employee",
+		fieldtype: "Link",
+	},
+]
+
+export const SHIFT_REQUEST_FIELDS = [
+	{
+		fieldname: "name",
+		label: "ID",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "shift_type",
+		label: "Shift Type",
+		fieldtype: "Link",
+	},
+	{
+		fieldname: "shift_dates",
+		label: "Shift Dates",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "total_shift_days",
+		label: "Total Shift Days",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "employee",
+		label: "Employee",
+		fieldtype: "Link",
+	},
+	{
+		fieldname: "status",
+		label: "Status",
+		fieldtype: "Select",
+	},
+]
+
+export const EMPLOYEE_CHECKIN_FIELDS = [
+	{
+		fieldname: "name",
+		label: "ID",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "log_type",
+		label: "Log Type",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "date",
+		label: "Date",
+		fieldtype: "Date",
+	},
+	{
+		fieldname: "formatted_time",
+		label: "Time",
+		fieldtype: "Time",
+	},
+	{
+		fieldname: "formatted_latitude",
+		label: "Latitude",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "formatted_longitude",
+		label: "Longitude",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "geolocation",
+		label: "Geolocation",
+		fieldtype: "geolocation",
 	},
 ]

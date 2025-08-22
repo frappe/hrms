@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -11,7 +11,7 @@ from hrms.hr.doctype.job_opening.test_job_opening import get_job_opening
 from hrms.hr.doctype.job_requisition.job_requisition import make_job_opening
 
 
-class TestJobRequisition(FrappeTestCase):
+class TestJobRequisition(IntegrationTestCase):
 	def setUp(self):
 		self.employee = make_employee("test_employee_1@company.com", company="_Test Company")
 

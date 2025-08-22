@@ -3,26 +3,29 @@
 
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, add_months, flt, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 
 from hrms.hr.doctype.leave_application.test_leave_application import make_allocation_record
-from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import process_expired_allocation
+from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import (
+	expire_allocation,
+	process_expired_allocation,
+)
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.hr.report.employee_leave_balance.employee_leave_balance import execute
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
 )
-from hrms.tests.test_utils import get_first_sunday
+from hrms.tests.test_utils import get_first_day, get_first_sunday, get_last_day
 
 test_records = frappe.get_test_records("Leave Type")
 
 
-class TestEmployeeLeaveBalance(FrappeTestCase):
+class TestEmployeeLeaveBalance(IntegrationTestCase):
 	def setUp(self):
 		for dt in [
 			"Leave Application",
@@ -241,3 +244,41 @@ class TestEmployeeLeaveBalance(FrappeTestCase):
 		)
 		report = execute(filters)
 		self.assertEqual(len(report[1]), 1)
+
+	def test_manually_expired_leaves(self):
+		leave_type = create_leave_type(leave_type_name="Compensatory off")
+		employee = make_employee("test_expired_leaves@example.com", company="_Test Company")
+		leave_allocation = make_allocation_record(
+			employee=employee,
+			leave_type=leave_type.name,
+			leaves=5,
+			from_date=get_first_day(getdate()),
+			to_date=get_last_day(getdate()),
+		)
+
+		expire_allocation(leave_allocation, expiry_date=add_days(get_first_day(getdate()), 15))
+
+		# closing balance should be 5 before allocation expiry date
+		filters = frappe._dict(
+			{
+				"from_date": get_first_day(getdate()),
+				"to_date": add_days(get_first_day(getdate()), 10),
+				"employee": employee,
+			}
+		)
+		report = execute(filters)
+		self.assertEqual(report[1][0].closing_balance, 5)
+		self.assertEqual(report[1][0].leaves_expired, 0)
+
+		# closing balance should be 0 after allocation expiry date
+		filters = frappe._dict(
+			{
+				"from_date": get_first_day(getdate()),
+				"to_date": get_last_day(getdate()),
+				"employee": employee,
+			}
+		)
+		report = execute(filters)
+
+		self.assertEqual(report[1][0].closing_balance, 0)
+		self.assertEqual(report[1][0].leaves_expired, 5)

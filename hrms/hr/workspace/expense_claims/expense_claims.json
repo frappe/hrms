@@ -1,4 +1,5 @@
 {
+ "app": "hrms",
  "charts": [
   {
    "chart_name": "Expense Claims",
@@ -169,7 +170,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Accounts Receivable",
    "link_count": 0,
    "link_to": "Accounts Receivable",
@@ -179,7 +180,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Accounts Payable",
    "link_count": 0,
    "link_to": "Accounts Payable",
@@ -189,7 +190,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "General Ledger",
    "link_count": 0,
    "link_to": "General Ledger",
@@ -256,17 +257,17 @@
    "type": "Link"
   }
  ],
- "modified": "2024-02-05 09:10:45.636550",
+ "modified": "2025-01-15 16:41:35.604928",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claims",
  "number_cards": [],
  "owner": "Administrator",
- "parent_page": "HR",
+ "parent_page": "",
  "public": 1,
  "quick_lists": [],
  "roles": [],
- "sequence_id": 8.0,
+ "sequence_id": 6.0,
  "shortcuts": [
   {
    "color": "Grey",
@@ -294,5 +295,6 @@
    "type": "DocType"
   }
  ],
- "title": "Expense Claims"
+ "title": "Expense Claims",
+ "type": "Workspace"
 }

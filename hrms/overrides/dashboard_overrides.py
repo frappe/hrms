@@ -22,8 +22,13 @@ def get_dashboard_for_employee(data):
 				],
 			},
 			{
-				"label": _("Exit"),
-				"items": ["Employee Separation", "Exit Interview", "Full and Final Statement"],
+				"label": _("Employee Exit"),
+				"items": [
+					"Employee Separation",
+					"Exit Interview",
+					"Full and Final Statement",
+					"Salary Withholding",
+				],
 			},
 			{"label": _("Shift"), "items": ["Shift Request", "Shift Assignment"]},
 			{"label": _("Expense"), "items": ["Expense Claim", "Travel Request", "Employee Advance"]},
@@ -78,5 +83,14 @@ def get_dashboard_for_project(data):
 	data["transactions"].append(
 		{"label": _("Claims"), "items": ["Expense Claim"]},
 	)
+
+	return data
+
+
+def get_dashboard_for_bank_account(data):
+	for section in data["transactions"]:
+		if section.get("label") == "Transactions":
+			section["items"].append("Payroll Entry")
+			break
 
 	return data

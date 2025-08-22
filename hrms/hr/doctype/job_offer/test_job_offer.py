@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, nowdate
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
@@ -13,7 +13,7 @@ from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
 from hrms.tests.test_utils import create_job_applicant
 
 
-class TestJobOffer(FrappeTestCase):
+class TestJobOffer(IntegrationTestCase):
 	def setUp(self):
 		frappe.db.delete("Job Applicant")
 		frappe.db.delete("Job Offer")

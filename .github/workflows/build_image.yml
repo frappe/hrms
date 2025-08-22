@@ -1,0 +1,66 @@
+name: Build Container Image
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+  push:
+    branches:
+      - version-15
+    tags:
+      - "*"
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        arch: [amd64, arm64]
+
+    permissions:
+      packages: write
+
+    steps:
+      - name: Checkout Entire Repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          platforms: linux/${{ matrix.arch }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Set Branch
+        run: |
+          export APPS_JSON_PATH='${{ github.workspace }}/.github/helper/apps.json'
+          echo "APPS_JSON_BASE64=$(cat $APPS_JSON_PATH | base64 -w 0)" >> $GITHUB_ENV
+          echo "FRAPPE_BRANCH=version-15" >> $GITHUB_ENV
+
+      - name: Set Image Tag
+        run: |
+          echo "IMAGE_TAG=stable" >> $GITHUB_ENV
+      - uses: actions/checkout@v4
+        with:
+          repository: frappe/frappe_docker
+          path: builds
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          context: builds
+          file: builds/images/layered/Containerfile
+          tags: >
+            ghcr.io/${{ github.repository }}:${{ github.ref_name }},
+            ghcr.io/${{ github.repository }}:${{ env.IMAGE_TAG }}
+          build-args: |
+            "FRAPPE_BRANCH=${{ env.FRAPPE_BRANCH }}"
+            "APPS_JSON_BASE64=${{ env.APPS_JSON_BASE64 }}"

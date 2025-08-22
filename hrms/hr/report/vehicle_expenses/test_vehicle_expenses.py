@@ -3,7 +3,7 @@
 
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import getdate
 
 from erpnext.accounts.utils import get_fiscal_year
@@ -14,7 +14,7 @@ from hrms.hr.doctype.vehicle_log.vehicle_log import make_expense_claim
 from hrms.hr.report.vehicle_expenses.vehicle_expenses import execute
 
 
-class TestVehicleExpenses(FrappeTestCase):
+class TestVehicleExpenses(IntegrationTestCase):
 	@classmethod
 	def setUpClass(self):
 		super().setUpClass()

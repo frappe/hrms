@@ -129,6 +129,58 @@ def validate_default_accounts(doc, method=None):
 		if get_account_currency(doc.default_payroll_payable_account) != doc.default_currency:
 			frappe.throw(
 				_(
-					"{0} currency must be same as company's default currency. Please select another account."
-				).format(frappe.bold("Default Payroll Payable Account"))
+					"The currency of {0} should be same as the company's default currency. Please select another account."
+				).format(frappe.bold(_("Default Payroll Payable Account")))
 			)
+
+
+def handle_linked_docs(doc, method=None):
+	delete_docs_with_company_field(doc)
+	clear_company_field_for_single_doctypes(doc)
+
+
+def delete_docs_with_company_field(doc, method=None):
+	"""
+	Deletes records from linked doctypes where the 'company' field matches the company's name
+	"""
+	company_data_to_be_ignored = frappe.get_hooks("company_data_to_be_ignored") or []
+	for doctype in company_data_to_be_ignored:
+		records_to_delete = frappe.get_all(doctype, filters={"company": doc.name}, pluck="name")
+		if records_to_delete:
+			frappe.db.delete(doctype, {"name": ["in", records_to_delete]})
+
+
+def clear_company_field_for_single_doctypes(doc):
+	"""
+	Clears the 'company' value in Single doctypes where applicable
+	"""
+	single_docs = get_single_doctypes_with_company_field()
+	singles = frappe.qb.DocType("Singles")
+	(
+		frappe.qb.update(singles)
+		.set(singles.value, "")
+		.where(singles.doctype.isin(single_docs))
+		.where(singles.field == "company")
+		.where(singles.value == doc.name)
+	).run()
+
+
+def get_single_doctypes_with_company_field():
+	DocType = frappe.qb.DocType("DocType")
+	DocField = frappe.qb.DocType("DocField")
+
+	return (
+		frappe.qb.from_(DocField)
+		.select(DocField.parent)
+		.where(
+			(DocField.fieldtype == "Link")
+			& (DocField.options == "Company")
+			& (
+				DocField.parent.isin(
+					frappe.qb.from_(DocType)
+					.select(DocType.name)
+					.where((DocType.issingle == 1) & (DocType.module.isin(["HR", "Payroll"])))
+				)
+			)
+		)
+	).run(pluck=True)

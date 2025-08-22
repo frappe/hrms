@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import getdate
 
 import erpnext
@@ -13,7 +13,7 @@ from hrms.hr.doctype.upload_attendance.upload_attendance import get_data
 test_dependencies = ["Holiday List"]
 
 
-class TestUploadAttendance(FrappeTestCase):
+class TestUploadAttendance(IntegrationTestCase):
 	@classmethod
 	def setUpClass(cls):
 		super().setUpClass()

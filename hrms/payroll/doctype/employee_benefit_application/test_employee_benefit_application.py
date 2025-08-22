@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, date_diff, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -24,13 +24,14 @@ from hrms.payroll.doctype.salary_structure.test_salary_structure import make_sal
 from hrms.tests.test_utils import get_first_sunday
 
 
-class TestEmployeeBenefitApplication(FrappeTestCase):
+class TestEmployeeBenefitApplication(IntegrationTestCase):
 	def setUp(self):
 		date = getdate()
 		make_holiday_list(from_date=get_year_start(date), to_date=get_year_ending(date))
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_employee_benefit_application(self):
+		frappe.db.delete("Payroll Period")
 		payroll_period = create_payroll_period(name="_Test Payroll Period 1", company="_Test Company")
 		employee = make_employee("test_employee_benefits@salary.com", company="_Test Company")
 		first_sunday = get_first_sunday("Salary Slip Test Holiday List")

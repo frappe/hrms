@@ -84,7 +84,7 @@ def get_custom_fields():
 				"fieldname": "hra_section",
 				"label": "HRA Settings",
 				"fieldtype": "Section Break",
-				"insert_after": "asset_received_but_not_billed",
+				"insert_after": "default_payroll_payable_account",
 				"collapsible": 1,
 			},
 			{
@@ -229,6 +229,16 @@ def get_custom_fields():
 				"read_only": 1,
 				"depends_on": "house_rent_payment_amount",
 			},
+		],
+		"Income Tax Slab": [
+			{
+				"fieldname": "marginal_relief_limit",
+				"label": "Marginal Relief Threshold Limit",
+				"fieldtype": "Currency",
+				"description": "Maximum taxable income for which marginal relief can be applied. Beyond this limit, normal tax slabs are used for tax calculation.",
+				"insert_after": "column_break_pdmy",
+				"depends_on": "eval:doc.tax_relief_limit > 0 && doc.currency == 'INR'",
+			}
 		],
 	}
 

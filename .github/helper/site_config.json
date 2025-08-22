@@ -3,6 +3,7 @@
     "db_port": 3306,
     "db_name": "test_frappe",
     "db_password": "test_frappe",
+    "use_mysqlclient": 1,
     "auto_email_id": "test@example.com",
     "mail_server": "smtp.example.com",
     "mail_login": "test@example.com",

@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import add_months, getdate
 
 import erpnext
@@ -15,7 +15,7 @@ PAYROLL_PERIOD_START = "2022-01-01"
 PAYROLL_PERIOD_END = "2022-12-31"
 
 
-class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
+class TestEmployeeTaxExemptionDeclaration(IntegrationTestCase):
 	def setUp(self):
 		frappe.db.delete("Employee Tax Exemption Declaration")
 		frappe.db.delete("Salary Structure Assignment")
@@ -349,6 +349,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 		)
 
 		# salary structure with base 50000, HRA 3000
+		# effective from 3 months before payroll period
 		make_salary_structure(
 			"Monthly Structure for HRA Exemption 1",
 			"Monthly",
@@ -356,7 +357,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 			company="_Test Company",
 			currency="INR",
 			payroll_period=payroll_period.name,
-			from_date=payroll_period.start_date,
+			from_date=add_months(payroll_period.start_date, -3),
 		)
 
 		# salary structure with base 70000, HRA = base * 0.2 = 14000
@@ -379,6 +380,7 @@ class TestEmployeeTaxExemptionDeclaration(FrappeTestCase):
 
 		salary_structure.submit()
 
+		# effective from 6 months after payroll period
 		create_salary_structure_assignment(
 			employee,
 			salary_structure.name,

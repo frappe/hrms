@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
 from frappe.utils import flt, nowdate, random_string
 
 from erpnext.accounts.doctype.account.test_account import create_account
@@ -10,16 +9,22 @@ from erpnext.accounts.doctype.payment_entry.test_payment_entry import get_paymen
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.expense_claim.expense_claim import (
+	MismatchError,
 	get_outstanding_amount_for_claim,
 	make_bank_entry,
 	make_expense_claim_for_delivery_trip,
 )
+from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Employee"]
 company_name = "_Test Company 3"
 
 
-class TestExpenseClaim(FrappeTestCase):
+class TestExpenseClaim(HRMSTestSuite):
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		cls.make_employees()
+
 	def setUp(self):
 		if not frappe.db.get_value("Cost Center", {"company": company_name}):
 			cost_center = frappe.new_doc("Cost Center")
@@ -34,6 +39,10 @@ class TestExpenseClaim(FrappeTestCase):
 			).insert()
 
 			frappe.db.set_value("Company", company_name, "default_cost_center", cost_center)
+		frappe.db.set_value("Account", "Employee Advances - _TC", "account_type", "Receivable")
+
+	def tearDown(self):
+		frappe.set_user("Administrator")
 
 	def test_total_expense_claim_for_project(self):
 		frappe.db.delete("Task")
@@ -252,6 +261,64 @@ class TestExpenseClaim(FrappeTestCase):
 
 		self.assertEqual(claim.total_amount_reimbursed, 500)
 		self.assertEqual(claim.status, "Paid")
+
+	def test_expense_claim_with_deducted_returned_advance(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			create_return_through_additional_salary,
+			get_advances_for_claim,
+			make_employee_advance,
+			make_journal_entry_for_advance,
+		)
+		from hrms.hr.doctype.expense_claim.expense_claim import get_allocation_amount
+		from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		# create employee and employee advance
+		employee_name = make_employee("_T@employee.advance", "_Test Company")
+		advance = make_employee_advance(employee_name, {"repay_unclaimed_amount_from_salary": 1})
+		journal_entry = make_journal_entry_for_advance(advance)
+		journal_entry.submit()
+		advance.reload()
+
+		# set up salary components and structure
+		create_salary_component("Advance Salary - Deduction", type="Deduction")
+		make_salary_structure(
+			"Test Additional Salary for Advance Return",
+			"Monthly",
+			employee=employee_name,
+			company="_Test Company",
+		)
+
+		# create additional salary for advance return
+		additional_salary = create_return_through_additional_salary(advance)
+		additional_salary.salary_component = "Advance Salary - Deduction"
+		additional_salary.payroll_date = nowdate()
+		additional_salary.amount = 400
+		additional_salary.insert()
+		additional_salary.submit()
+		advance.reload()
+
+		self.assertEqual(advance.return_amount, 400)
+
+		# create an expense claim
+		payable_account = get_payable_account("_Test Company")
+		claim = make_expense_claim(
+			payable_account, 200, 200, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+		)
+
+		# link advance to the claim
+		claim = get_advances_for_claim(claim, advance.name, amount=200)
+		claim.save()
+		claim.submit()
+
+		# verify the allocation amount
+		advance = claim.advances[0]
+		self.assertEqual(
+			get_allocation_amount(
+				unclaimed_amount=advance.unclaimed_amount, return_amount=advance.return_amount
+			),
+			600,
+		)
 
 	def test_expense_claim_gl_entry(self):
 		payable_account = get_payable_account(company_name)
@@ -567,6 +634,85 @@ class TestExpenseClaim(FrappeTestCase):
 			fields=["sum(debit) as total_debit", "sum(credit) as total_credit"],
 		)
 		self.assertEqual(ledger_balance, expected_data)
+
+	def test_company_department_validation(self):
+		# validate company and department
+		expense_claim = frappe.new_doc("Expense Claim")
+		expense_claim.company = "_Test Company 3"
+		expense_claim.department = "Accounts - _TC2"
+		self.assertRaises(MismatchError, expense_claim.save)
+
+	def test_self_expense_approval(self):
+		frappe.db.set_single_value("HR Settings", "prevent_self_expense_approval", 0)
+
+		employee = frappe.get_doc(
+			"Employee",
+			make_employee("test_self_expense_approval@example.com", "_Test Company"),
+		)
+
+		from frappe.utils.user import add_role
+
+		add_role(employee.user_id, "Expense Approver")
+
+		payable_account = get_payable_account("_Test Company")
+		expense_claim = make_expense_claim(
+			payable_account,
+			300,
+			200,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
+			employee=employee.name,
+		)
+
+		frappe.set_user(employee.user_id)
+		expense_claim.submit()
+
+		self.assertEqual(1, expense_claim.docstatus)
+
+	def test_self_expense_approval_not_allowed(self):
+		frappe.db.set_single_value("HR Settings", "prevent_self_expense_approval", 1)
+
+		expense_approver = "test_expense_approver@example.com"
+		make_employee(expense_approver, company="_Test Company")
+
+		employee = frappe.get_doc(
+			"Employee",
+			make_employee(
+				"test_self_expense_approval@example.com",
+				company="_Test Company",
+				expense_approver=expense_approver,
+			),
+		)
+
+		from frappe.utils.user import add_role
+
+		add_role(employee.user_id, "Expense Approver")
+		add_role(expense_approver, "Expense Approver")
+
+		payable_account = get_payable_account("_Test Company")
+		expense_claim = make_expense_claim(
+			payable_account,
+			300,
+			200,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
+			employee=employee.name,
+		)
+
+		expense_claim.expense_approver = expense_approver
+		expense_claim.save()
+
+		frappe.set_user(employee.user_id)
+
+		self.assertRaises(frappe.ValidationError, expense_claim.submit)
+		expense_claim.reload()
+
+		frappe.set_user(expense_approver)
+		expense_claim.submit()
+
+		self.assertEqual(1, expense_claim.docstatus)
 
 
 def get_payable_account(company):

@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import nowdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -11,7 +11,7 @@ from hrms.hr.doctype.job_offer.test_job_offer import create_job_offer
 from hrms.tests.test_utils import create_job_applicant
 
 
-class TestJobApplicant(FrappeTestCase):
+class TestJobApplicant(IntegrationTestCase):
 	def test_job_applicant_naming(self):
 		applicant = frappe.get_doc(
 			{

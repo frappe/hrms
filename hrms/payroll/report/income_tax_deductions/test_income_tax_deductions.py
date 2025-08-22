@@ -1,5 +1,5 @@
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -14,7 +14,7 @@ from hrms.payroll.doctype.salary_structure.test_salary_structure import make_sal
 from hrms.payroll.report.income_tax_deductions.income_tax_deductions import execute
 
 
-class TestIncomeTaxDeductions(FrappeTestCase):
+class TestIncomeTaxDeductions(IntegrationTestCase):
 	@classmethod
 	def setUpClass(cls):
 		super().setUpClass()
@@ -36,6 +36,7 @@ class TestIncomeTaxDeductions(FrappeTestCase):
 		)
 
 		cls.payroll_period = create_payroll_period(name="_Test Payroll Period 1", company="_Test Company")
+		frappe.db.set_single_value("Payroll Settings", "consider_unmarked_attendance_as", "Present")
 		salary_structure = make_salary_structure(
 			"Monthly Salary Structure Test Income Tax Deduction",
 			"Monthly",

@@ -4,7 +4,7 @@
 from datetime import timedelta
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import add_months, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -14,7 +14,7 @@ from hrms.hr.doctype.hr_settings.hr_settings import set_proceed_with_frequency_c
 from hrms.hr.utils import get_holidays_for_employee
 
 
-class TestEmployeeReminders(FrappeTestCase):
+class TestEmployeeReminders(IntegrationTestCase):
 	@classmethod
 	def setUpClass(cls):
 		super().setUpClass()

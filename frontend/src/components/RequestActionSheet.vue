@@ -8,9 +8,10 @@
 			class="w-full flex flex-row gap-2 pt-8 pb-5 border-b justify-center items-center sticky top-0 z-[100]"
 		>
 			<span class="text-gray-900 font-bold text-lg text-center">
-				{{ document?.doctype }}
+				{{ __(document?.doctype) }}
 			</span>
 			<FeatherIcon
+				v-if="props.showOpenForm"
 				name="external-link"
 				class="h-4 w-4 text-gray-500 cursor-pointer"
 				@click="openFormView"
@@ -24,7 +25,7 @@
 					v-for="field in fieldsWithValues"
 					:key="field.fieldname"
 					:class="[
-						['Small Text', 'Text', 'Long Text', 'Table'].includes(
+						['Small Text', 'Text', 'Long Text', 'Table', 'geolocation'].includes(
 							field.fieldtype
 						)
 							? 'flex-col'
@@ -32,7 +33,7 @@
 						'flex w-full',
 					]"
 				>
-					<div class="text-gray-600 text-base">{{ field.label }}</div>
+					<div class="text-gray-600 text-base">{{ __(field.label, null, props.modelValue?.doctype) }}</div>
 					<component
 						v-if="field.fieldtype === 'Table'"
 						:is="field.component"
@@ -51,7 +52,7 @@
 					class="flex flex-col gap-2 w-full"
 					v-if="attachedFiles?.data?.length"
 				>
-					<div class="text-gray-600 text-base">Attachments</div>
+					<div class="text-gray-600 text-base">{{ __('Attachments') }}</div>
 					<ul class="w-full flex flex-col items-center gap-2">
 						<li
 							class="bg-gray-100 rounded p-2 w-full"
@@ -92,7 +93,7 @@
 				<template #prefix>
 					<FeatherIcon name="x" class="w-4" />
 				</template>
-				Reject
+				{{ __("Reject") }}
 			</Button>
 
 			<Button
@@ -104,14 +105,15 @@
 				<template #prefix>
 					<FeatherIcon name="check" class="w-4" />
 				</template>
-				Approve
+				{{ __("Approve") }}
 			</Button>
 		</div>
 
 		<div
 			v-else-if="
 				document?.doc?.docstatus === 0 &&
-				['Approved', 'Rejected'].includes(document?.doc?.[approvalField]) &&
+				(document?.doc?.doctype === 'Attendance Request' ||
+					['Approved', 'Rejected'].includes(document?.doc?.[approvalField])) &&
 				hasPermission('submit')
 			"
 			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
@@ -121,7 +123,7 @@
 				class="w-full py-5"
 				variant="solid"
 			>
-				Submit
+				{{ __("Submit") }}
 			</Button>
 		</div>
 
@@ -138,7 +140,7 @@
 				<template #prefix>
 					<FeatherIcon name="x" class="w-4" />
 				</template>
-				Cancel
+				{{ __("Cancel") }}
 			</Button>
 		</div>
 
@@ -154,7 +156,7 @@
 </template>
 
 <script setup>
-import { computed, ref, defineAsyncComponent, onMounted } from "vue"
+import { computed, inject, ref, defineAsyncComponent, onMounted } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
 import { useRouter } from "vue-router"
 import {
@@ -173,10 +175,16 @@ import { formatCurrency } from "@/utils/formatters"
 
 import useWorkflow from "@/composables/workflow"
 
+const __ = inject("$translate")
+
 const props = defineProps({
 	fields: {
 		type: Array,
 		required: true,
+	},
+	showOpenForm: {
+		type: Boolean,
+		default: true,
 	},
 	modelValue: {
 		type: Object,
@@ -268,18 +276,21 @@ const approvalField = computed(() => {
 })
 
 const getSuccessMessage = ({ status = "", docstatus = 0 }) => {
-	if (status) return `${status} successfully!`
-	else if (docstatus)
-		return `Document ${
-			docstatus === 1 ? "submitted" : "cancelled"
-		} successfully!`
+	if (status) {
+		return __("{0} successfully!", [__(status)])
+	} else if (docstatus) {
+		return __("Document {0} successfully!", [
+			docstatus === 1 ? __("submitted") : __("cancelled")]
+		)
+	}
 }
 
 const getFailureMessage = ({ status = "", docstatus = 0 }) => {
-	if (status)
-		return `${status === "Approved" ? "Approval" : "Rejection"} failed!`
-	else if (docstatus)
-		return `Document ${docstatus === 1 ? "submission" : "cancellation"} failed!`
+	if (status) {
+		return __("{0} failed!", [status === __("Approved") ? __("Approval") : __("Rejection")])
+	} else if (docstatus) {
+		return __('Document {0} failed!', [docstatus === 1 ? __("submission") : __("cancellation")])
+	}
 }
 
 const updateDocumentStatus = ({ status = "", docstatus = 0 }) => {
@@ -295,7 +306,7 @@ const updateDocumentStatus = ({ status = "", docstatus = 0 }) => {
 				if (docstatus !== 0) modalController.dismiss()
 
 				toast({
-					title: "Success",
+					title: __("Success"),
 					text: getSuccessMessage({ status, docstatus }),
 					icon: "check-circle",
 					position: "bottom-center",
@@ -304,7 +315,7 @@ const updateDocumentStatus = ({ status = "", docstatus = 0 }) => {
 			},
 			onError() {
 				toast({
-					title: "Error",
+					title: __("Error"),
 					text: getFailureMessage({ status, docstatus }),
 					icon: "alert-circle",
 					position: "bottom-center",

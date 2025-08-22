@@ -8,6 +8,8 @@ on:
       - "**.md"
       - "**.html"
       - "**.csv"
+      - "**.po"
+      - "**.pot"
   schedule:
     # Run everday at midnight UTC / 5:30 IST
     - cron: "0 0 * * *"
@@ -70,7 +72,7 @@ jobs:
         run: echo "127.0.0.1 test_site" | sudo tee -a /etc/hosts
 
       - name: Cache pip
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/*requirements.txt', '**/pyproject.toml') }}
@@ -79,7 +81,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: Cache node modules
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         env:
           cache-name: cache-node-modules
         with:
@@ -94,7 +96,7 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -106,16 +108,17 @@ jobs:
         run: |
           bash ${GITHUB_WORKSPACE}/.github/helper/install.sh
         env:
-          BRANCH_TO_CLONE: ${{ env.HR_BRANCH }}
+          FRAPPE_USER: ${{ github.event.inputs.user }}
+          FRAPPE_BRANCH: ${{ github.event.inputs.branch }}
 
       - name: Run Tests
-        run: cd ~/frappe-bench/ && bench --site test_site run-parallel-tests --app hrms --total-builds 2 --build-number ${{ matrix.container }}
+        run: cd ~/frappe-bench/ && bench --site test_site run-parallel-tests --app hrms --total-builds ${{ strategy.job-total }} --build-number ${{ matrix.container }}
         env:
           TYPE: server
           CAPTURE_COVERAGE: ${{ github.event_name != 'pull_request' }}
 
       - name: Upload coverage data
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: github.event_name != 'pull_request'
         with:
           name: coverage-${{ matrix.container }}
@@ -131,7 +134,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
 
       - name: Upload coverage data
         uses: codecov/codecov-action@v4

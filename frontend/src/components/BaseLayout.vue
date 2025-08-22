@@ -6,7 +6,7 @@
 					<div class="flex flex-row justify-between items-center">
 						<div class="flex flex-row items-center gap-2">
 							<h2 class="text-xl font-bold text-gray-900">
-								{{ props.pageTitle }}
+								{{ props.pageTitle || __("Frappe HR") }}
 							</h2>
 						</div>
 						<div class="flex flex-row items-center gap-3 ml-auto">
@@ -62,7 +62,7 @@ const props = defineProps({
 	pageTitle: {
 		type: String,
 		required: false,
-		default: "Frappe HR",
+		default: "",
 	},
 })
 </script>

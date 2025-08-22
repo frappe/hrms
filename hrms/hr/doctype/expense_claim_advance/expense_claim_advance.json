@@ -11,6 +11,7 @@
   "advance_paid",
   "column_break_4",
   "unclaimed_amount",
+  "return_amount",
   "allocated_amount",
   "advance_account"
  ],
@@ -84,11 +85,19 @@
   {
    "fieldname": "column_break_4",
    "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "return_amount",
+   "fieldname": "return_amount",
+   "fieldtype": "Currency",
+   "label": "Returned Amount",
+   "options": "Company:company:default_currency",
+   "read_only": 1
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2024-03-27 13:09:43.954706",
+ "modified": "2025-01-29 15:22:37.971097",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim Advance",

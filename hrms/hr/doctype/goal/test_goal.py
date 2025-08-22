@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -10,7 +10,7 @@ from hrms.hr.doctype.appraisal_template.test_appraisal_template import create_kr
 from hrms.hr.doctype.goal.goal import get_children, update_status
 
 
-class TestGoal(FrappeTestCase):
+class TestGoal(IntegrationTestCase):
 	def setUp(self):
 		frappe.db.delete("Goal")
 		create_kras(["Development", "Quality"])

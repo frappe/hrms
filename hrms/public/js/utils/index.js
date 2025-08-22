@@ -34,7 +34,7 @@ $.extend(hrms, {
 		}
 
 		if (missing_fields.length) {
-			let message = __("Mandatory fields required for this action");
+			let message = __("Mandatory fields required for this action:");
 			message += "<br><br><ul><li>" + missing_fields.join("</li><li>") + "</ul>";
 			frappe.throw({
 				message: message,
@@ -177,5 +177,102 @@ $.extend(hrms, {
 			indicator,
 			is_minimizable: true,
 		});
+	},
+
+	fetch_geolocation: async (frm) => {
+		if (!navigator.geolocation) {
+			frappe.msgprint({
+				message: __("Geolocation is not supported by your current browser"),
+				title: __("Geolocation Error"),
+				indicator: "red",
+			});
+			hide_field(["geolocation"]);
+			return;
+		}
+
+		frappe.dom.freeze(__("Fetching your geolocation") + "...");
+
+		navigator.geolocation.getCurrentPosition(
+			async (position) => {
+				frm.set_value("latitude", position.coords.latitude);
+				frm.set_value("longitude", position.coords.longitude);
+
+				await frm.call("set_geolocation");
+				frappe.dom.unfreeze();
+			},
+			(error) => {
+				frappe.dom.unfreeze();
+
+				let msg = __("Unable to retrieve your location") + "<br><br>";
+				if (error) {
+					msg += __("ERROR({0}): {1}", [error.code, error.message]);
+				}
+				frappe.msgprint({
+					message: msg,
+					title: __("Geolocation Error"),
+					indicator: "red",
+				});
+			},
+		);
+	},
+
+	get_doctype_fields_for_autocompletion: (doctype) => {
+		const fields = frappe.get_meta(doctype).fields;
+		const autocompletions = [];
+
+		fields
+			.filter((df) => !frappe.model.no_value_type.includes(df.fieldtype))
+			.map((df) => {
+				autocompletions.push({
+					value: df.fieldname,
+					score: 8,
+					meta: __("{0} Field", [doctype]),
+				});
+			});
+
+		return autocompletions;
+	},
+
+	add_shift_tools_button_to_list: (list_view, action = "Assign Shift") => {
+		list_view.page.add_inner_button(
+			__("Shift Assignment Tool"),
+			() => {
+				const doc = frappe.model.get_new_doc("Shift Assignment Tool");
+				doc.action = action;
+				doc.company = frappe.defaults.get_default("company");
+				doc.status = "Active";
+				frappe.set_route("Form", "Shift Assignment Tool", doc.name);
+			},
+			__("Shift Tools"),
+		);
+
+		list_view.page.add_inner_button(
+			__("Roster"),
+			() => {
+				window.location.href = "/hr/roster";
+			},
+			__("Shift Tools"),
+		);
+	},
+
+	add_shift_tools_button_to_form: (frm, fields) => {
+		frm.add_custom_button(
+			__("Shift Assignment Tool"),
+			() => {
+				const doc = frappe.model.get_new_doc("Shift Assignment Tool");
+				Object.assign(doc, fields);
+				doc.company = frappe.defaults.get_default("company");
+				doc.status = "Active";
+				frappe.set_route("Form", "Shift Assignment Tool", doc.name);
+			},
+			__("Shift Tools"),
+		);
+		frm.add_custom_button(
+			__("Roster"),
+			() => {
+				window.location.href = "/hr/roster";
+			},
+			__("Shift Tools"),
+		);
 	},
 });

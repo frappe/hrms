@@ -1,0 +1,114 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "prompt",
+ "creation": "2024-11-11 16:56:33.536882",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "schedule_settings_section",
+  "shift_type",
+  "column_break_iprq",
+  "frequency",
+  "repeat_on_days",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "schedule_settings_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "frequency",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Frequency",
+   "options": "Every Week\nEvery 2 Weeks\nEvery 3 Weeks\nEvery 4 Weeks",
+   "reqd": 1
+  },
+  {
+   "fieldname": "repeat_on_days",
+   "fieldtype": "Table",
+   "label": "Repeat On Days",
+   "options": "Assignment Rule Day",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_iprq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "shift_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Shift Type",
+   "options": "Shift Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Shift Schedule",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [
+  {
+   "link_doctype": "Shift Schedule Assignment",
+   "link_fieldname": "shift_schedule"
+  }
+ ],
+ "modified": "2024-12-19 13:34:43.731635",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Shift Schedule",
+ "naming_rule": "Set by user",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

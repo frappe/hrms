@@ -1,17 +1,29 @@
 # Copyright (c) 2019, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
-
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import DATE_FORMAT, flt, get_link_to_form, getdate, today
+from frappe.utils import DATE_FORMAT, flt, formatdate, get_link_to_form, getdate, today
+
+
+class InvalidLeaveLedgerEntry(frappe.ValidationError):
+	pass
 
 
 class LeaveLedgerEntry(Document):
 	def validate(self):
 		if getdate(self.from_date) > getdate(self.to_date):
-			frappe.throw(_("To date needs to be before from date"))
+			frappe.throw(
+				_(
+					"Leave Ledger Entry's To date needs to be after From date. Currently, From Date is {0} and To Date is {1}"
+				).format(
+					frappe.bold(formatdate(self.from_date)),
+					frappe.bold(formatdate(self.to_date)),
+				),
+				exc=InvalidLeaveLedgerEntry,
+				title=_("Invalid Leave Ledger Entry"),
+			)
 
 	def on_cancel(self):
 		# allow cancellation of expiry leaves
@@ -178,13 +190,19 @@ def get_remaining_leaves(allocation):
 			"to_date": ("<=", allocation.to_date),
 			"docstatus": 1,
 		},
-		fieldname=["SUM(leaves)"],
+		fieldname=[{"SUM": "leaves"}],
 	)
 
 
 @frappe.whitelist()
 def expire_allocation(allocation, expiry_date=None):
 	"""expires non-carry forwarded allocation"""
+	import json
+
+	if isinstance(allocation, str):
+		allocation = json.loads(allocation)
+		allocation = frappe.get_doc("Leave Allocation", allocation["name"])
+
 	leaves = get_remaining_leaves(allocation)
 	expiry_date = expiry_date if expiry_date else allocation.to_date
 

@@ -35,12 +35,21 @@ frappe.ui.form.on("Full and Final Statement", {
 					filters["is_group"] = 0;
 				}
 
+				if (frappe.model.is_submittable(fnf_doc.reference_document_type)) {
+					filters["docstatus"] = ["!=", 2];
+				}
+
 				if (frappe.meta.has_field(fnf_doc.reference_document_type, "company")) {
 					filters["company"] = frm.doc.company;
 				}
 
 				if (frappe.meta.has_field(fnf_doc.reference_document_type, "employee")) {
 					filters["employee"] = frm.doc.employee;
+				}
+
+				if (fnf_doc.reference_document_type === "Leave Encashment") {
+					filters["status"] = "Unpaid";
+					filters["pay_via_payment_entry"] = 1;
 				}
 			});
 
@@ -130,6 +139,7 @@ frappe.ui.form.on("Full and Final Outstanding Statement", {
 				args: {
 					ref_doctype: child.reference_document_type,
 					ref_document: child.reference_document,
+					company: frm.doc.company,
 				},
 				callback: function (r) {
 					if (r.message) {

@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, today
 
 from erpnext.assets.doctype.asset.test_asset import create_asset_data
@@ -10,7 +10,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from erpnext.stock.doctype.purchase_receipt.test_purchase_receipt import make_purchase_receipt
 
 
-class TestFullandFinalStatement(FrappeTestCase):
+class TestFullandFinalStatement(IntegrationTestCase):
 	def setUp(self):
 		for dt in ["Full and Final Statement", "Asset", "Asset Movement", "Asset Movement Item"]:
 			frappe.db.delete(dt)
@@ -28,14 +28,13 @@ class TestFullandFinalStatement(FrappeTestCase):
 
 	def test_check_bootstraped_data_asset_movement_and_jv_creation(self):
 		payables_bootstraped_component = [
-			"Salary Slip",
 			"Gratuity",
 			"Expense Claim",
 			"Bonus",
 			"Leave Encashment",
 		]
 
-		receivable_bootstraped_component = ["Loan", "Employee Advance"]
+		receivable_bootstraped_component = self.fnf.get_receivable_component()
 
 		# checking payables and receivables bootstraped value
 		self.assertEqual([payable.component for payable in self.fnf.payables], payables_bootstraped_component)

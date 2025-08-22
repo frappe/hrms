@@ -1,13 +1,16 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors and Contributors
 # See license.txt
 
+from datetime import datetime
+
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import IntegrationTestCase
 from frappe.utils import (
 	add_days,
 	add_months,
 	get_first_day,
 	get_last_day,
+	get_time,
 	get_year_ending,
 	get_year_start,
 	getdate,
@@ -24,10 +27,8 @@ from hrms.hr.doctype.attendance.attendance import (
 )
 from hrms.tests.test_utils import get_first_sunday
 
-test_records = frappe.get_test_records("Attendance")
 
-
-class TestAttendance(FrappeTestCase):
+class TestAttendance(IntegrationTestCase):
 	def setUp(self):
 		from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 
@@ -218,6 +219,27 @@ class TestAttendance(FrappeTestCase):
 		self.assertNotIn(add_days(doj, -1), unmarked_days)
 		# date after relieving not in unmarked days
 		self.assertNotIn(add_days(relieving_date, 1), unmarked_days)
+
+	def test_duplicate_attendance_when_created_from_checkins_and_tool(self):
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+		from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
+
+		shift = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="17:00:00")
+		employee = make_employee(
+			"test_duplicate@attendance.com", company="_Test Company", default_shift=shift.name
+		)
+		mark_attendance(employee, getdate(), "Half Day", shift=shift.name, half_day_status="Absent")
+		make_checkin(employee, datetime.combine(getdate(), get_time("14:00:00")))
+		shift.process_auto_attendance()
+
+		attendances = frappe.get_all(
+			"Attendance",
+			filters={
+				"employee": employee,
+				"attendance_date": getdate(),
+			},
+		)
+		self.assertEqual(len(attendances), 1)
 
 	def tearDown(self):
 		frappe.db.rollback()
