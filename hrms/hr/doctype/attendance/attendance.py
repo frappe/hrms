@@ -97,8 +97,8 @@ class Attendance(Document):
 				& (Attendance.half_day_status.isnull() | (Attendance.half_day_status == ""))
 			)
 			.for_update()
+			.limit(1)
 		)
-		query = query.limit(1)
 		if self.shift:
 			query = query.where(
 				((Attendance.shift.isnull()) | (Attendance.shift == ""))
