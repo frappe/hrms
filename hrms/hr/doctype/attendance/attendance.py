@@ -29,6 +29,10 @@ class DuplicateAttendanceError(frappe.ValidationError):
 	pass
 
 
+class FullDayLeaveConflictError(frappe.ValidationError):
+    pass
+
+
 class OverlappingShiftAttendanceError(frappe.ValidationError):
 	pass
 
@@ -65,6 +69,9 @@ class Attendance(Document):
 			)
 
 	def validate_duplicate_record(self):
+		self.validate_conflicting_leave()
+		if self.leave_application:
+	        return
 		duplicate = self.get_duplicate_attendance_record()
 
 		if duplicate:
@@ -77,7 +84,6 @@ class Attendance(Document):
 				title=_("Duplicate Attendance"),
 				exc=DuplicateAttendanceError,
 			)
-		self.validate_conflicting_leave()
 
 	def get_duplicate_attendance_record(self) -> str | None:
 	    Attendance = frappe.qb.DocType("Attendance")
@@ -94,22 +100,25 @@ class Attendance(Document):
 	        )
 	        .for_update()
 	    )
-	
+
+		query = query.limit(1)
+
 	    if self.shift:
 	        query = query.where(
 	            ((Attendance.shift.isnull()) | (Attendance.shift == ""))
 	            | (Attendance.shift == self.shift)
 	        )
-	
+
 	    duplicate = query.run(pluck=True)
+
 	    return duplicate[0] if duplicate else None
 
 	def validate_conflicting_leave(self):
 	    if self.leave_application:
 	        return
-	
+
 	    leave_app = frappe.qb.DocType("Leave Application")
-	    
+
 	    query = (
 	        frappe.qb.from_(leave_app)
 	        .select(leave_app.name)
@@ -122,18 +131,19 @@ class Attendance(Document):
 	            & (self.attendance_date <= leave_app.to_date)
 	        )
 	    )
-	
+
 	    conflicting_leaves = query.run(pluck=True)
-	    
+
 	    if conflicting_leaves:
 	        leave_name = conflicting_leaves[0]
-	        leave_link = frappe.utils.get_link_to_form("Leave Application", leave_name)
+	        leave_link = get_link_to_form("Leave Application", leave_name)
 	        frappe.throw(
-	            _("Cannot create attendance. A full-day Leave Application ({0}) exists for {1} covering the date {2}. Please cancel the leave first.").format(
-	                leave_link, self.employee, self.attendance_date
-	            ),
-	            title=_("Conflict with Full-Day Leave")
-	        )
+             _("Cannot create attendance. A full-day Leave Application ({0}) exists for {1} on {2}. Please cancel or amend the leave first.").format(
+                 leave_link, frappe.bold(self.employee), frappe.bold(format_date(self.attendance_date))
+             ),
+             title=_("Conflict with Full-Day Leave"),
+             exc=FullDayLeaveConflictError,
+         )
 
 	def validate_overlapping_shift_attendance(self):
 		attendance = self.get_overlapping_shift_attendance()
@@ -356,9 +366,9 @@ def mark_attendance(
 		)
 		attendance.insert()
 		attendance.submit()
-	except (DuplicateAttendanceError, OverlappingShiftAttendanceError):
-		frappe.db.rollback(save_point=savepoint)
-		return
+	except (DuplicateAttendanceError, OverlappingShiftAttendanceError, FullDayLeaveConflictError):
+	    frappe.db.rollback(save_point=savepoint)
+	    return
 
 	return attendance.name
 
