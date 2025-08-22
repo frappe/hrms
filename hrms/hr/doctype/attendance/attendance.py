@@ -83,32 +83,63 @@ class Attendance(Document):
 				title=_("Duplicate Attendance"),
 				exc=DuplicateAttendanceError,
 			)
+		self.validate_conflicting_leave()
 
 	def get_duplicate_attendance_record(self) -> str | None:
-		Attendance = frappe.qb.DocType("Attendance")
-		query = (
-			frappe.qb.from_(Attendance)
-			.select(Attendance.name)
-			.where(
-				(Attendance.employee == self.employee)
-				& (Attendance.docstatus < 2)
-				& (Attendance.attendance_date == self.attendance_date)
-				& (Attendance.name != self.name)
-			)
-		)
+	    Attendance = frappe.qb.DocType("Attendance")
+	    query = (
+	        frappe.qb.from_(Attendance)
+	        .select(Attendance.name)
+	        .where(
+	            (Attendance.employee == self.employee)
+	            & (Attendance.docstatus < 2)
+	            & (Attendance.attendance_date == self.attendance_date)
+	            & (Attendance.name != self.name)
+	            & (Attendance.leave_application.isnull() | (Attendance.leave_application == ""))
+	            & (Attendance.half_day_status.isnull() | (Attendance.half_day_status == ""))
+	        )
+	        .for_update()
+	    )
+	
+	    if self.shift:
+	        query = query.where(
+	            ((Attendance.shift.isnull()) | (Attendance.shift == ""))
+	            | (Attendance.shift == self.shift)
+	        )
+	
+	    duplicate = query.run(pluck=True)
+	    return duplicate[0] if duplicate else None
 
-		if self.shift:
-			query = query.where(
-				((Attendance.shift.isnull()) | (Attendance.shift == ""))
-				| (
-					((Attendance.shift.isnotnull()) | (Attendance.shift != ""))
-					& (Attendance.shift == self.shift)
-				)
-			)
-
-		duplicate = query.run(pluck=True)
-
-		return duplicate[0] if duplicate else None
+	def validate_conflicting_leave(self):
+	    if self.leave_application:
+	        return
+	
+	    leave_app = frappe.qb.DocType("Leave Application")
+	    
+	    query = (
+	        frappe.qb.from_(leave_app)
+	        .select(leave_app.name)
+	        .where(
+	            (leave_app.employee == self.employee)
+	            & (leave_app.docstatus == 1)
+	            & (leave_app.status == "Approved")
+	            & (leave_app.half_day == 0)
+	            & (self.attendance_date >= leave_app.from_date)
+	            & (self.attendance_date <= leave_app.to_date)
+	        )
+	    )
+	
+	    conflicting_leaves = query.run(pluck=True)
+	    
+	    if conflicting_leaves:
+	        leave_name = conflicting_leaves[0]
+	        leave_link = frappe.utils.get_link_to_form("Leave Application", leave_name)
+	        frappe.throw(
+	            _("Cannot create attendance. A full-day Leave Application ({0}) exists for {1} covering the date {2}. Please cancel the leave first.").format(
+	                leave_link, self.employee, self.attendance_date
+	            ),
+	            title=_("Conflict with Full-Day Leave")
+	        )
 
 	def validate_overlapping_shift_attendance(self):
 		attendance = self.get_overlapping_shift_attendance()
@@ -138,6 +169,7 @@ class Attendance(Document):
 				& (Attendance.attendance_date == self.attendance_date)
 				& (Attendance.shift != self.shift)
 				& (Attendance.name != self.name)
+				& (Attendance.leave_application.isnull() | (Attendance.leave_application == ""))
 			)
 		).run(as_dict=True)
 
