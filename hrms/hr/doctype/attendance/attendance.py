@@ -68,11 +68,10 @@ class Attendance(Document):
 			)
 
 	def validate_duplicate_record(self):
-		self.validate_conflicting_leave()
 		if self.leave_application:
 			return
+		self.validate_conflicting_leave()
 		duplicate = self.get_duplicate_attendance_record()
-
 		if duplicate:
 			frappe.throw(
 				_("Attendance for employee {0} is already marked for the date {1}: {2}").format(
@@ -99,17 +98,13 @@ class Attendance(Document):
 			)
 			.for_update()
 		)
-
 		query = query.limit(1)
-
 		if self.shift:
 			query = query.where(
 				((Attendance.shift.isnull()) | (Attendance.shift == ""))
 				| (Attendance.shift == self.shift)
 			)
-
 		duplicate = query.run(pluck=True)
-
 		return duplicate[0] if duplicate else None
 
 	def validate_conflicting_leave(self):
@@ -117,7 +112,6 @@ class Attendance(Document):
 			return
 
 		leave_app = frappe.qb.DocType("Leave Application")
-
 		query = (
 			frappe.qb.from_(leave_app)
 			.select(leave_app.name)
@@ -129,10 +123,9 @@ class Attendance(Document):
 				& (self.attendance_date >= leave_app.from_date)
 				& (self.attendance_date <= leave_app.to_date)
 			)
+			.limit(1)
 		)
-
 		conflicting_leaves = query.run(pluck=True)
-
 		if conflicting_leaves:
 			leave_name = conflicting_leaves[0]
 			leave_link = get_link_to_form("Leave Application", leave_name)
