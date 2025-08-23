@@ -71,7 +71,7 @@ class EmployeeAdvance(Document):
 		if account_type != "Receivable":
 			frappe.throw(
 				_("Employee advance account {0} should be of type {1}.").format(
-					get_link_to_form("Account", self.advance_account), frappe.bold("Receivable")
+					get_link_to_form("Account", self.advance_account), frappe.bold(_("Receivable"))
 				)
 			)
 
@@ -130,8 +130,9 @@ class EmployeeAdvance(Document):
 			returned_amount_condition = aple.amount > 0
 		else:
 			frappe.throw(
-				_("Employee advance account {0} should be of type {1}").format(
-					frappe.bold(self.advance_account), frappe.bold("Receivable")
+				_("Employee advance account {0} should be of type {1}.").format(
+					get_link_to_form("Account", self.advance_account),
+					frappe.bold(_("Receivable")),
 				)
 			)
 
