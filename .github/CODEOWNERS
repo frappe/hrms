@@ -4,4 +4,10 @@
 # These owners will be the default owners for everything in
 # the repo. Unless a later match takes precedence.
 
-* @ruchamahabal
+hrms/hr/ @ruchamahabal @asmitahase
+hrms/payroll/ @ruchamahabal @nabinhait
+
+frontend/ @ruchamahabal @asmitahase
+roster/ @ruchamahabal @asmitahase
+
+.github/ @asmitahase

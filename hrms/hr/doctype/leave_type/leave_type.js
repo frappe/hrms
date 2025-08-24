@@ -1,5 +1,17 @@
 frappe.ui.form.on("Leave Type", {
 	refresh: function (frm) {},
+
+	earned_leave_frequency: function (frm) {
+		if (frm.doc.earned_leave_frequency != "Monthly") {
+			frm.set_df_property("allocate_on_day", "options", "First Day\nLast Day");
+		} else {
+			frm.set_df_property(
+				"allocate_on_day",
+				"options",
+				"First Day\nDate of Joining\nLast Day",
+			);
+		}
+	},
 });
 
 frappe.tour["Leave Type"] = [

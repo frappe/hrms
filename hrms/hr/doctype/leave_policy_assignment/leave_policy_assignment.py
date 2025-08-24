@@ -9,6 +9,7 @@ from frappe import _, bold
 from frappe.model.document import Document
 from frappe.utils import (
 	add_months,
+	add_to_date,
 	cint,
 	comma_and,
 	date_diff,
@@ -17,7 +18,10 @@ from frappe.utils import (
 	get_first_day,
 	get_last_day,
 	get_link_to_form,
+	get_quarter_ending,
+	get_quarter_start,
 	getdate,
+	month_diff,
 	rounded,
 )
 
@@ -143,9 +147,14 @@ class LeavePolicyAssignment(Document):
 		# if earned leave is being allcated after the effective period, then let them be calculated pro-rata
 
 		elif leave_details.is_earned_leave and current_date < getdate(self.effective_to):
-			new_leaves_allocated = self.get_leaves_for_passed_months(
-				annual_allocation, leave_details, date_of_joining
-			)
+			if leave_details.earned_leave_frequency == "Quarterly":
+				new_leaves_allocated = self.get_leaves_for_passed_quarters(
+					annual_allocation, leave_details, date_of_joining
+				)
+			else:
+				new_leaves_allocated = self.get_leaves_for_passed_months(
+					annual_allocation, leave_details, date_of_joining
+				)
 
 		else:
 			# calculate pro-rated leaves for other leave types
@@ -165,17 +174,6 @@ class LeavePolicyAssignment(Document):
 
 	def get_leaves_for_passed_months(self, annual_allocation, leave_details, date_of_joining):
 		from hrms.hr.utils import get_monthly_earned_leave
-
-		def _get_current_and_from_date():
-			current_date = frappe.flags.current_date or getdate()
-			if current_date > getdate(self.effective_to):
-				current_date = getdate(self.effective_to)
-
-			from_date = getdate(self.effective_from)
-			if getdate(date_of_joining) > from_date:
-				from_date = getdate(date_of_joining)
-
-			return current_date, from_date
 
 		def _get_months_passed(current_date, from_date, consider_current_month):
 			months_passed = 0
@@ -238,7 +236,7 @@ class LeavePolicyAssignment(Document):
 		consider_current_month = is_earned_leave_applicable_for_current_month(
 			date_of_joining, leave_details.allocate_on_day
 		)
-		current_date, from_date = _get_current_and_from_date()
+		current_date, from_date = self.get_current_and_from_date(date_of_joining)
 		months_passed = _get_months_passed(current_date, from_date, consider_current_month)
 
 		if months_passed > 0:
@@ -247,6 +245,54 @@ class LeavePolicyAssignment(Document):
 			new_leaves_allocated = 0
 
 		return new_leaves_allocated
+
+	def get_current_and_from_date(self, date_of_joining):
+		current_date = frappe.flags.current_date or getdate()
+		if current_date > getdate(self.effective_to):
+			current_date = getdate(self.effective_to)
+
+		from_date = getdate(self.effective_from)
+		if getdate(date_of_joining) > from_date:
+			from_date = getdate(date_of_joining)
+
+		return current_date, from_date
+
+	def get_leaves_for_passed_quarters(self, annual_allocation, leave_details, date_of_joining):
+		from hrms.hr.utils import get_monthly_earned_leave
+
+		def _get_passed_quarters(current_date, from_date, consider_current_quarter):
+			quarters_passed = 0
+			current_date = getdate(frappe.flags.current_date)
+			from_date = getdate(from_date)
+
+			from_quarter = (from_date.year * 4) + ((from_date.month - 1) // 3)
+			current_quarter = (current_date.year * 4) + ((current_date.month - 1) // 3)
+
+			quarters_passed = current_quarter - from_quarter
+
+			if consider_current_quarter:
+				quarters_passed += 1
+
+			return quarters_passed
+
+		current_date, from_date = self.get_current_and_from_date(date_of_joining)
+		consider_current_quarter = is_earned_leave_applicable_for_current_quarter(
+			leave_details.allocate_on_day
+		)
+		number_of_passed_quarters = _get_passed_quarters(current_date, from_date, consider_current_quarter)
+
+		quarterly_earned_leave = get_monthly_earned_leave(
+			date_of_joining,
+			annual_allocation,
+			leave_details.earned_leave_frequency,
+			leave_details.rounding,
+			pro_rated=False,
+		)
+
+		if number_of_passed_quarters > 0:
+			return number_of_passed_quarters * quarterly_earned_leave
+		else:
+			return 0
 
 
 def calculate_pro_rated_leaves(
@@ -278,6 +324,17 @@ def is_earned_leave_applicable_for_current_month(date_of_joining, allocate_on_da
 		or (allocate_on_day == "Last Day" and date == get_last_day(date))
 	):
 		return True
+	return False
+
+
+def is_earned_leave_applicable_for_current_quarter(allocate_on_day):
+	date = getdate(frappe.flags.current_date)
+
+	if (allocate_on_day == "First Day" and date >= get_quarter_start(date)) or (
+		allocate_on_day == "Last Day" and date == get_quarter_ending(date)
+	):
+		return True
+
 	return False
 
 

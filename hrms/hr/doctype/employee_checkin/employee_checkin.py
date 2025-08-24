@@ -2,6 +2,8 @@
 # For license information, please see license.txt
 
 
+from datetime import datetime, timedelta
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -89,6 +91,7 @@ class EmployeeCheckin(Document):
 			self.shift_actual_end = shift_actual_timings.actual_end
 			self.shift_start = shift_actual_timings.start_datetime
 			self.shift_end = shift_actual_timings.end_datetime
+			self.overtime_type = shift_actual_timings.overtime_type or None
 
 	def validate_distance_from_shift_location(self):
 		if not frappe.db.get_single_value("HR Settings", "allow_geolocation_tracking"):
@@ -204,6 +207,7 @@ def mark_attendance_and_link_log(
 	in_time=None,
 	out_time=None,
 	shift=None,
+	overtime_type=None,
 ):
 	"""Creates an attendance and links the attendance to the Employee Checkin.
 	Note: If attendance is already present for the given date, the logs are marked as skipped and no exception is thrown.
@@ -220,55 +224,126 @@ def mark_attendance_and_link_log(
 		skip_attendance_in_checkins(log_names)
 		return None
 
-	elif attendance_status in ("Present", "Absent", "Half Day"):
-		try:
-			frappe.db.savepoint("attendance_creation")
-			if attendance := get_existing_half_day_attendance(employee, attendance_date):
-				frappe.db.set_value(
-					"Attendance",
-					attendance.name,
-					{
-						"working_hours": working_hours,
-						"shift": shift,
-						"late_entry": late_entry,
-						"early_exit": early_exit,
-						"in_time": in_time,
-						"out_time": out_time,
-						"half_day_status": "Absent" if attendance_status == "Absent" else "Present",
-						"modify_half_day_status": 0,
-					},
-				)
-			else:
-				attendance = frappe.new_doc("Attendance")
+	if attendance_status not in ("Present", "Absent", "Half Day"):
+		frappe.throw(_("{0} is an invalid Attendance Status.").format(attendance_status))
+
+	try:
+		frappe.db.savepoint("attendance_creation")
+
+		attendance = create_or_update_attendance(
+			employee=employee,
+			attendance_date=attendance_date,
+			attendance_status=attendance_status,
+			working_hours=working_hours,
+			shift=shift,
+			late_entry=late_entry,
+			early_exit=early_exit,
+			in_time=in_time,
+			out_time=out_time,
+			overtime_type=overtime_type,
+		)
+
+		if attendance_status == "Absent":
+			attendance.add_comment(
+				text=_("Employee was marked Absent for not meeting the working hours threshold.")
+			)
+
+		update_attendance_in_checkins(log_names, attendance.name)
+		return attendance
+
+	except frappe.ValidationError as e:
+		handle_attendance_exception(log_names, e)
+		return None
+
+
+def create_or_update_attendance(
+	employee,
+	attendance_date,
+	attendance_status,
+	working_hours=None,
+	shift=None,
+	late_entry=False,
+	early_exit=False,
+	in_time=None,
+	out_time=None,
+	overtime_type=None,
+):
+	"""Creates a new attendance or updates an existing half-day attendance."""
+	if attendance := get_existing_half_day_attendance(employee, attendance_date):
+		frappe.db.set_value(
+			"Attendance",
+			attendance.name,
+			{
+				"working_hours": working_hours,
+				"shift": shift,
+				"late_entry": late_entry,
+				"early_exit": early_exit,
+				"in_time": in_time,
+				"out_time": out_time,
+				"half_day_status": "Absent" if attendance_status == "Absent" else "Present",
+				"modify_half_day_status": 0,
+			},
+		)
+		return frappe.get_doc("Attendance", attendance.name)
+	else:
+		attendance = frappe.new_doc("Attendance")
+		attendance.update(
+			{
+				"doctype": "Attendance",
+				"employee": employee,
+				"attendance_date": attendance_date,
+				"status": attendance_status,
+				"working_hours": working_hours,
+				"shift": shift,
+				"late_entry": late_entry,
+				"early_exit": early_exit,
+				"in_time": in_time,
+				"out_time": out_time,
+			}
+		)
+
+		# Set overtime data if applicable
+		if overtime_type and attendance_status == "Present":
+			overtime_data = get_overtime_data(shift, working_hours)
+			if overtime_data:
 				attendance.update(
 					{
-						"doctype": "Attendance",
-						"employee": employee,
-						"attendance_date": attendance_date,
-						"status": attendance_status,
-						"working_hours": working_hours,
-						"shift": shift,
-						"late_entry": late_entry,
-						"early_exit": early_exit,
-						"in_time": in_time,
-						"out_time": out_time,
-						"half_day_status": "Absent" if attendance_status == "Half Day" else None,
+						"overtime_type": overtime_type,
+						"standard_working_hours": overtime_data.get("standard_working_hours"),
+						"actual_overtime_duration": overtime_data.get("actual_overtime_duration"),
 					}
-				).submit()
-
-			if attendance_status == "Absent":
-				attendance.add_comment(
-					text=_("Employee was marked Absent for not meeting the working hours threshold.")
 				)
+		attendance.save()
+		attendance.submit()
 
-			update_attendance_in_checkins(log_names, attendance.name)
-			return attendance
+	return attendance
 
-		except frappe.ValidationError as e:
-			handle_attendance_exception(log_names, e)
 
-	else:
-		frappe.throw(_("{} is an invalid Attendance Status.").format(attendance_status))
+def get_overtime_data(shift_name, working_hours):
+	overtime_data = {}
+
+	shift_type_details = frappe.db.get_value(
+		doctype="Shift Type",
+		filters={"name": shift_name},
+		fieldname=["allow_overtime", "start_time", "end_time"],
+		as_dict=True,
+	)
+
+	if not shift_type_details or not shift_type_details.allow_overtime:
+		return overtime_data
+
+	standard_working_hours = calculate_time_difference(
+		shift_type_details.start_time, shift_type_details.end_time
+	)
+
+	if working_hours > standard_working_hours:
+		actual_overtime_duration = working_hours - standard_working_hours
+		overtime_data = {
+			"standard_working_hours": standard_working_hours,
+			"actual_overtime_duration": actual_overtime_duration,
+		}
+
+	return overtime_data
 
 
 def get_existing_half_day_attendance(employee, attendance_date):
@@ -397,3 +472,11 @@ def update_attendance_in_checkins(log_names: list, attendance_id: str):
 		.set("attendance", attendance_id)
 		.where(EmployeeCheckin.name.isin(log_names))
 	).run()
+
+
+def calculate_time_difference(start_time, end_time):
+	if end_time < start_time:
+		end_time += timedelta(days=1)
+	time_difference = abs(start_time - end_time)
+
+	return round(time_difference.total_seconds() / 3600, 2)

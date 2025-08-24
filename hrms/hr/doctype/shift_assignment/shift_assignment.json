@@ -17,6 +17,7 @@
   "shift_type",
   "shift_location",
   "status",
+  "overtime_type",
   "column_break_brkq",
   "start_date",
   "end_date",
@@ -134,11 +135,19 @@
    "label": "Shift Schedule Assignment",
    "options": "Shift Schedule Assignment",
    "read_only": 1
+  },
+  {
+   "fetch_from": "shift_type.overtime_type",
+   "fetch_if_empty": 1,
+   "fieldname": "overtime_type",
+   "fieldtype": "Link",
+   "label": "Overtime Type",
+   "options": "Overtime Type"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-13 12:59:50.928962",
+ "modified": "2025-06-24 14:28:55.135261",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment",
@@ -182,6 +191,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],

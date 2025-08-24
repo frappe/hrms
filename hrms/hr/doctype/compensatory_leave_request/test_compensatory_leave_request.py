@@ -150,7 +150,7 @@ class TestCompensatoryLeaveRequest(HRMSTestSuite):
 
 	def test_half_day_compensatory_leave(self):
 		employee = get_employee()
-		mark_attendance(employee, status="Half Day")
+		mark_attendance(employee, status="Half Day", half_day_status="Absent")
 		date = today()
 		compensatory_leave_request = frappe.new_doc("Compensatory Leave Request")
 		compensatory_leave_request.update(
@@ -237,7 +237,7 @@ def get_compensatory_leave_request(employee, leave_date=None):
 	).insert()
 
 
-def mark_attendance(employee, date=None, status="Present"):
+def mark_attendance(employee, date=None, status="Present", half_day_status=None):
 	if not date:
 		date = today()
 
@@ -245,7 +245,13 @@ def mark_attendance(employee, date=None, status="Present"):
 		dict(doctype="Attendance", employee=employee.name, attendance_date=date, status="Present")
 	):
 		attendance = frappe.get_doc(
-			{"doctype": "Attendance", "employee": employee.name, "attendance_date": date, "status": status}
+			{
+				"doctype": "Attendance",
+				"employee": employee.name,
+				"attendance_date": date,
+				"status": status,
+				"half_day_status": half_day_status,
+			}
 		)
 		attendance.save()
 		attendance.submit()

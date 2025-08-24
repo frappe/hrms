@@ -492,12 +492,12 @@ const createShiftAssignmentSchedule = createResource({
 	makeParams() {
 		return {
 			employee: (form.employee as { value: string }).value,
-			shift_type: (form.shift_type as { value: string }).value,
+			shift_type: form.shift_type,
 			company: form.company,
 			status: form.status,
 			start_date: form.start_date,
 			end_date: form.end_date,
-			shift_location: (form.shift_location as { value: string }).value,
+			shift_location: form.shift_location,
 			repeat_on_days: Object.keys(repeatOnDays).filter(
 				(day) => repeatOnDays[day as keyof typeof repeatOnDays],
 			),

@@ -30,7 +30,10 @@
   "late_entry_grace_period",
   "column_break_18",
   "enable_early_exit_marking",
-  "early_exit_grace_period"
+  "early_exit_grace_period",
+  "overtime_section",
+  "allow_overtime",
+  "overtime_type"
  ],
  "fields": [
   {
@@ -185,6 +188,25 @@
    "fieldname": "auto_update_last_sync",
    "fieldtype": "Check",
    "label": "Automatically update Last Sync of Checkin"
+  },
+  {
+   "fieldname": "overtime_section",
+   "fieldtype": "Section Break",
+   "label": "Overtime"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_overtime",
+   "fieldtype": "Check",
+   "label": "Allow Overtime"
+  },
+  {
+   "depends_on": "eval:doc.allow_overtime == 1",
+   "fieldname": "overtime_type",
+   "fieldtype": "Link",
+   "label": "Overtime Type",
+   "mandatory_depends_on": "eval:doc.allow_overtime == 1",
+   "options": "Overtime Type"
   }
  ],
  "links": [],

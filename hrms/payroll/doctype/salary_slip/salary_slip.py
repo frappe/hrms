@@ -66,7 +66,6 @@ TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 class SalarySlip(TransactionBase):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		self.series = f"Sal Slip/{self.employee}/.#####"
 		self.whitelisted_globals = {
 			"int": int,
 			"float": float,
@@ -80,9 +79,6 @@ class SalarySlip(TransactionBase):
 			"ceil": ceil,
 			"floor": floor,
 		}
-
-	def autoname(self):
-		self.name = make_autoname(self.series)
 
 	@property
 	def joining_date(self):
@@ -248,11 +244,6 @@ class SalarySlip(TransactionBase):
 			user=employee_user,
 			after_commit=True,
 		)
-
-	def on_trash(self):
-		from frappe.model.naming import revert_series_if_last
-
-		revert_series_if_last(self.series, self.name)
 
 	def get_status(self):
 		if self.docstatus == 2:
@@ -497,22 +488,19 @@ class SalarySlip(TransactionBase):
 
 			consider_unmarked_attendance_as = payroll_settings.consider_unmarked_attendance_as or "Present"
 
-			if (
-				payroll_settings.payroll_based_on == "Attendance"
-				and consider_unmarked_attendance_as == "Absent"
-			):
-				unmarked_days = self.get_unmarked_days(
-					payroll_settings.include_holidays_in_total_working_days, holidays
-				)
+			if payroll_settings.payroll_based_on == "Attendance":
+				if consider_unmarked_attendance_as == "Absent":
+					unmarked_days = self.get_unmarked_days(
+						payroll_settings.include_holidays_in_total_working_days, holidays
+					)
+					self.absent_days += unmarked_days  # will be treated as absent
+					self.payment_days -= unmarked_days
 				half_absent_days = self.get_half_absent_days(
-					payroll_settings.include_holidays_in_total_working_days,
 					consider_marked_attendance_on_holidays,
 					holidays,
 				)
-				self.absent_days += (
-					unmarked_days + half_absent_days * daily_wages_fraction_for_half_day
-				)  # will be treated as absent
-				self.payment_days -= unmarked_days + half_absent_days * daily_wages_fraction_for_half_day
+				self.absent_days += half_absent_days * daily_wages_fraction_for_half_day
+				self.payment_days -= half_absent_days * daily_wages_fraction_for_half_day
 		else:
 			self.payment_days = 0
 
@@ -531,9 +519,7 @@ class SalarySlip(TransactionBase):
 
 		return unmarked_days
 
-	def get_half_absent_days(
-		self, include_holidays_in_total_working_days, consider_marked_attendance_on_holidays, holidays
-	):
+	def get_half_absent_days(self, consider_marked_attendance_on_holidays, holidays):
 		"""Calculates the number of half absent days for an employee within a date range"""
 		Attendance = frappe.qb.DocType("Attendance")
 		query = (
@@ -547,11 +533,7 @@ class SalarySlip(TransactionBase):
 				& (Attendance.half_day_status == "Absent")
 			)
 		)
-		if (
-			(not include_holidays_in_total_working_days)
-			and (not consider_marked_attendance_on_holidays)
-			and holidays
-		):
+		if (not consider_marked_attendance_on_holidays) and holidays:
 			query = query.where(Attendance.attendance_date.notin(holidays))
 		return query.run()[0][0]
 
@@ -1484,6 +1466,7 @@ class SalarySlip(TransactionBase):
 				"salary_component",
 				"abbr",
 				"do_not_include_in_total",
+				"do_not_include_in_accounts",
 				"is_tax_applicable",
 				"is_flexible_benefit",
 				"variable_based_on_taxable_salary",

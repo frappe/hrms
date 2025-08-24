@@ -21,6 +21,7 @@
   "email_section",
   "email_salary_slip_to_employee",
   "sender",
+  "sender_copy",
   "sender_email",
   "email_template",
   "column_break_iewr",
@@ -28,7 +29,8 @@
   "password_policy",
   "other_settings_section",
   "process_payroll_accounting_entry_based_on_employee",
-  "column_break_zi9y"
+  "column_break_zi9y",
+  "create_overtime_slip"
  ],
  "fields": [
   {
@@ -172,13 +174,27 @@
    "fieldtype": "Link",
    "label": "Email Template",
    "options": "Email Template"
+  },
+  {
+   "default": "0",
+   "description": "If checked, overtime slip creation can be handled as part of payroll processing",
+   "fieldname": "create_overtime_slip",
+   "fieldtype": "Check",
+   "label": "Create Overtime Slip For Eligible Employee(s)"
+  },
+  {
+   "depends_on": "eval:doc.email_salary_slip_to_employee",
+   "fieldname": "sender_copy",
+   "fieldtype": "Link",
+   "label": "Sender Copy",
+   "options": "Email Account"
   }
  ],
  "icon": "fa fa-cog",
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-10-18 17:12:02.044020",
+ "modified": "2025-06-24 11:46:55.338986",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",
@@ -194,6 +210,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "ASC",
  "states": [],

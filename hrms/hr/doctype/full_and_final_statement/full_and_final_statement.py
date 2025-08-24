@@ -214,7 +214,7 @@ class FullandFinalStatement(Document):
 					"debit_in_account_currency": flt(data.amount, precision),
 					"user_remark": data.remark,
 				}
-				if data.reference_document_type in ["Expense Claim", "Gratuity"]:
+				if data.reference_document_type in ["Expense Claim", "Gratuity", "Leave Encashment"]:
 					account_dict["party_type"] = "Employee"
 					account_dict["party"] = self.employee
 

@@ -100,9 +100,15 @@ class AttendanceRequest(Document):
 
 			if old_status != status:
 				doc.db_set({"status": status, "attendance_request": self.name})
-				text = _("changed the status from {0} to {1} via Attendance Request").format(
-					frappe.bold(old_status), frappe.bold(status)
-				)
+				if status == "Half Day":
+					doc.db_set("half_day_status", "Absent")
+					text = _(
+						"Changed the status from {0} to {1} and Status for Other Half to {2} via Attendance Request"
+					).format(frappe.bold(old_status), frappe.bold(status), frappe.bold("Absent"))
+				else:
+					text = _("Changed the status from {0} to {1} via Attendance Request").format(
+						frappe.bold(old_status), frappe.bold(status)
+					)
 				doc.add_comment(comment_type="Info", text=text)
 
 				frappe.msgprint(
@@ -123,6 +129,7 @@ class AttendanceRequest(Document):
 			doc.company = self.company
 			doc.attendance_request = self.name
 			doc.status = status
+			doc.half_day_status = "Absent" if status == "Half Day" else None
 			doc.insert(ignore_permissions=True)
 			doc.submit()
 
