@@ -5545,7 +5545,7 @@ msgstr "Caducar la asignación"
 #. 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Expire Carry Forwarded Leaves (Days)"
-msgstr "Caducar Llevar hojas reenviadas (días)"
+msgstr "Vencimiento de las ausencias acarreadas (días)"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:493
 msgid "Expire Leaves"
@@ -8129,19 +8129,19 @@ msgstr ""
 #. Assignment'
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 msgid "Leaves Allocated"
-msgstr "Hojas asignadas"
+msgstr "Ausencias asignadas"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:487
 msgid "Leaves Expired"
-msgstr ""
+msgstr "Ausencias expiradas"
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:10
 msgid "Leaves Pending Approval"
-msgstr ""
+msgstr "Ausencias pendientes de aprobación"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:78
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
-msgstr ""
+msgstr "Ausencias para el tipo {0} no serán accareadas ya que el acarreo está deshabilitado"
 
 #: hrms/setup.py:405
 msgid "Leaves per Year"
@@ -8496,7 +8496,7 @@ msgstr "Máximo las horas de trabajo contra la parte de horas"
 #. Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Maximum Carry Forwarded Leaves"
-msgstr "Máximo transporte de hojas enviadas"
+msgstr "Máximo número de ausencias para acarrear"
 
 #. Label of the max_continuous_days_allowed (Int) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -12250,7 +12250,7 @@ msgstr ""
 #. in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Show Leaves Of All Department Members In Calendar"
-msgstr "Mostrar hojas de todos los miembros del departamento en el calendario"
+msgstr "Mostrar ausencias de todos los miembros del departamento en el calendario"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:204
 msgid "Show Salary Slip"
@@ -13429,7 +13429,7 @@ msgstr "Días totales de ausencia"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:120
 msgid "Total Leaves"
-msgstr "Hojas Totales"
+msgstr "Ausencias Totales"
 
 #: hrms/hr/report/leave_ledger/leave_ledger.py:192
 msgid "Total Leaves ({0})"
