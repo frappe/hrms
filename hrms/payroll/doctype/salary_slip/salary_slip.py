@@ -1414,11 +1414,11 @@ class SalarySlip(TransactionBase):
 		additional_salary = frappe.db.get_value(
 			"Additional Salary",
 			component.additional_salary,
-			["amount", "salary_component", "overwrite_salary_structure_amount"],
+			["amount", "overwrite_salary_structure_amount"],
 			as_dict=1,
 		)
 		self.additional_salary_amount = additional_salary.amount
-		self.additional_salary_component = additional_salary.salary_component
+		self.additional_salary_component = component.salary_component
 
 		if additional_salary.overwrite_salary_structure_amount:
 			return True
