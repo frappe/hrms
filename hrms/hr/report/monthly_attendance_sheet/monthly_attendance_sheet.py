@@ -7,6 +7,7 @@ from itertools import groupby
 
 import frappe
 from frappe import _
+from frappe.query_builder import Case
 from frappe.query_builder.functions import Count, Extract, Sum
 from frappe.utils import cint, cstr, getdate
 from frappe.utils.nestedset import get_descendants_of
@@ -270,11 +271,11 @@ def get_attendance_records(filters: Filters) -> list[dict]:
 	status = (
 		frappe.qb.terms.Case()
 		.when(
-			(Attendance.status == "Half Day" and (Attendance.half_day_status == "Present")),
+			((Attendance.status == "Half Day") & (Attendance.half_day_status == "Present")),
 			"Half Day/Other Half Present",
 		)
 		.when(
-			(Attendance.status == "Half Day" and (Attendance.half_day_status == "Absent")),
+			((Attendance.status == "Half Day") & (Attendance.half_day_status == "Absent")),
 			"Half Day/Other Half Absent",
 		)
 		.else_(Attendance.status)
@@ -319,6 +320,15 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 			Employee.branch,
 			Employee.company,
 			Employee.holiday_list,
+			Extract("day", Employee.date_of_joining).as_("joined_date"),
+			Case()
+			.when(
+				(Extract("month", Employee.date_of_joining) == filters.month)
+				& (Extract("year", Employee.date_of_joining) == filters.year),
+				1,
+			)
+			.else_(0)
+			.as_("joined_in_current_period"),
 		)
 		.where(Employee.company.isin(filters.companies))
 	)
@@ -402,7 +412,9 @@ def get_rows(employee_details: dict, filters: Filters, holiday_map: dict, attend
 		holidays = holiday_map.get(emp_holiday_list)
 
 		if filters.summarized_view:
-			attendance = get_attendance_status_for_summarized_view(employee, filters, holidays)
+			attendance = get_attendance_status_for_summarized_view(
+				employee, filters, holidays, details.joined_in_current_period, details.joined_date
+			)
 			if not attendance:
 				continue
 
@@ -439,7 +451,9 @@ def set_defaults_for_summarized_view(filters, row):
 			row[entry.get("fieldname")] = 0.0
 
 
-def get_attendance_status_for_summarized_view(employee: str, filters: Filters, holidays: list) -> dict:
+def get_attendance_status_for_summarized_view(
+	employee: str, filters: Filters, holidays: list, joined_in_current_period: int, joined_date: int
+) -> dict:
 	"""Returns dict of attendance status for employee like
 	{'total_present': 1.5, 'total_leaves': 0.5, 'total_absent': 13.5, 'total_holidays': 8, 'unmarked_days': 5}
 	"""
@@ -451,7 +465,7 @@ def get_attendance_status_for_summarized_view(employee: str, filters: Filters, h
 	total_holidays = total_unmarked_days = 0
 
 	for day in range(1, total_days + 1):
-		if day in attendance_days:
+		if day in attendance_days or (joined_in_current_period and day < joined_date):
 			continue
 
 		status = get_holiday_status(day, holidays)

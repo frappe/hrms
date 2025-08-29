@@ -760,16 +760,15 @@ class SalarySlip(TransactionBase):
 				break
 
 		if not row_exists:
-			wages_row = {
-				"salary_component": salary_component,
-				"abbr": frappe.db.get_value(
-					"Salary Component", salary_component, "salary_component_abbr", cache=True
-				),
-				"amount": self.hour_rate * self.total_working_hours,
-				"default_amount": 0.0,
-				"additional_amount": 0.0,
-			}
-			doc.append("earnings", wages_row)
+			wages_row = get_salary_component_data(salary_component)
+			wages_amount = self.hour_rate * self.total_working_hours
+
+			self.update_component_row(
+				wages_row,
+				wages_amount,
+				"earnings",
+				default_amount=wages_amount,
+			)
 
 	def set_salary_structure_assignment(self):
 		self._salary_structure_assignment = frappe.db.get_value(
@@ -965,9 +964,7 @@ class SalarySlip(TransactionBase):
 				- self.income_tax_deducted_till_date
 			)
 
-			self.current_month_income_tax = self.current_structured_tax_amount + self.get(
-				"full_tax_on_additional_earnings", 0
-			)
+			self.current_month_income_tax = self.get("current_tax_amount", 0)
 
 			# non included current_month_income_tax separately as its already considered
 			# while calculating income_tax_deducted_till_date
@@ -1325,9 +1322,6 @@ class SalarySlip(TransactionBase):
 			else:
 				self.other_deduction_components.append(d.salary_component)
 
-		if self.handle_additional_salary_tax_component():
-			return
-
 		# consider manually added tax component
 		if not tax_components:
 			tax_components = [
@@ -1344,16 +1338,23 @@ class SalarySlip(TransactionBase):
 				alert=True,
 			)
 
+		self._component_based_variable_tax = {}
 		if tax_components and self.payroll_period and self.salary_structure:
 			self.tax_slab = self.get_income_tax_slabs()
 			self.compute_taxable_earnings_for_year()
 
-		self._component_based_variable_tax = {}
-		for d in tax_components:
-			self._component_based_variable_tax.setdefault(d, {})
-			tax_amount = self.calculate_variable_based_on_taxable_salary(d)
-			tax_row = get_salary_component_data(d)
-			self.update_component_row(tax_row, tax_amount, "deductions")
+		if self.handle_additional_salary_tax_component():
+			self._component_based_variable_tax.setdefault(self.additional_salary_component, {})
+			self.calculate_variable_tax(self.additional_salary_component, True)
+			return
+
+		for tax_component in tax_components:
+			self._component_based_variable_tax.setdefault(tax_component, {})
+			self.calculate_variable_based_on_taxable_salary(tax_component)
+			if self._component_based_variable_tax[tax_component]:
+				tax_amount = self._component_based_variable_tax[tax_component]["current_tax_amount"]
+				tax_row = get_salary_component_data(tax_component)
+				self.update_component_row(tax_row, tax_amount, "deductions")
 
 	def get_tax_components(self) -> list:
 		"""
@@ -1409,9 +1410,16 @@ class SalarySlip(TransactionBase):
 		if not component:
 			return False
 
-		if frappe.db.get_value(
-			"Additional Salary", component.additional_salary, "overwrite_salary_structure_amount"
-		):
+		additional_salary = frappe.db.get_value(
+			"Additional Salary",
+			component.additional_salary,
+			["amount", "overwrite_salary_structure_amount"],
+			as_dict=1,
+		)
+		self.additional_salary_amount = additional_salary.amount
+		self.additional_salary_component = component.salary_component
+
+		if additional_salary.overwrite_salary_structure_amount:
 			return True
 		else:
 			# overwriting disabled, remove addtional salary tax component
@@ -1523,7 +1531,7 @@ class SalarySlip(TransactionBase):
 
 		return self.calculate_variable_tax(tax_component)
 
-	def calculate_variable_tax(self, tax_component):
+	def calculate_variable_tax(self, tax_component, has_additional_salary_tax_component=False):
 		self.previous_total_paid_taxes = self.get_tax_paid_in_period(
 			self.payroll_period.start_date, self.start_date, tax_component
 		)
@@ -1537,9 +1545,12 @@ class SalarySlip(TransactionBase):
 			eval_locals,
 		)
 
-		self.current_structured_tax_amount = (
-			self.total_structured_tax_amount - self.previous_total_paid_taxes
-		) / self.remaining_sub_periods
+		if has_additional_salary_tax_component:
+			self.current_structured_tax_amount = self.additional_salary_amount
+		else:
+			self.current_structured_tax_amount = (
+				self.total_structured_tax_amount - self.previous_total_paid_taxes
+			) / self.remaining_sub_periods
 
 		# Total taxable earnings with additional earnings with full tax
 		self.full_tax_on_additional_earnings = 0.0
@@ -1549,9 +1560,14 @@ class SalarySlip(TransactionBase):
 			)
 			self.full_tax_on_additional_earnings = self.total_tax_amount - self.total_structured_tax_amount
 
-		current_tax_amount = self.current_structured_tax_amount + self.full_tax_on_additional_earnings
-		if flt(current_tax_amount) < 0:
-			current_tax_amount = 0
+		self.current_tax_amount = max(
+			0,
+			flt(
+				self.current_structured_tax_amount
+				if has_additional_salary_tax_component
+				else (self.current_structured_tax_amount + self.full_tax_on_additional_earnings)
+			),
+		)
 
 		self._component_based_variable_tax[tax_component].update(
 			{
@@ -1559,11 +1575,9 @@ class SalarySlip(TransactionBase):
 				"total_structured_tax_amount": self.total_structured_tax_amount,
 				"current_structured_tax_amount": self.current_structured_tax_amount,
 				"full_tax_on_additional_earnings": self.full_tax_on_additional_earnings,
-				"current_tax_amount": current_tax_amount,
+				"current_tax_amount": self.current_tax_amount,
 			}
 		)
-
-		return current_tax_amount
 
 	def get_income_tax_slabs(self):
 		income_tax_slab = self._salary_structure_assignment.income_tax_slab
