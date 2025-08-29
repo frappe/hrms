@@ -15,8 +15,10 @@ jobs:
           days-before-pr-stale: 15
           days-before-pr-close: 3
           stale-pr-label: 'Inactive' 
-          stale-pr-message: 'This pull request is being marked as inactive because it has not had any recent activity.
-                             It will be closed within 3 days if no further activity occurs.
-                             It only takes a comment to keep the contribution alive. And even if it is closed, you can always reopen the PR when you are ready.
-                             Thank you for contributing!'
+          days-before-stale: -1
+          days-before-close: -1
+          stale-pr-message: |
+            This pull request is being marked as inactive because it has not had any recent activity. It will be closed within 3 days if no further activity occurs.
+            It only takes a comment to keep the contribution alive. And even if it is closed, you can always reopen the PR when you are ready.
+            Thank you for contributing!'
           
