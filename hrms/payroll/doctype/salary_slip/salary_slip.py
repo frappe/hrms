@@ -66,7 +66,7 @@ TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 class SalarySlip(TransactionBase):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		self.series = f"Sal Slip/{self.employee}/.#####"
+		self.default_series = f"Sal Slip/{self.employee}/.#####"
 		self.whitelisted_globals = {
 			"int": int,
 			"float": float,
@@ -82,7 +82,21 @@ class SalarySlip(TransactionBase):
 		}
 
 	def autoname(self):
-		self.name = make_autoname(self.series)
+		if not self.has_custom_naming_series:
+			self.name = make_autoname(self.default_series)
+
+	@property
+	def has_custom_naming_series(self):
+		if not hasattr(self, "__has_custom_naming_series"):
+			self.__has_custom_naming_series = frappe.db.exists(
+				"Property Setter",
+				{
+					"doc_type": "Salary Slip",
+					"property": "autoname",
+				},
+			)
+
+		return self.__has_custom_naming_series
 
 	@property
 	def joining_date(self):
@@ -252,7 +266,8 @@ class SalarySlip(TransactionBase):
 	def on_trash(self):
 		from frappe.model.naming import revert_series_if_last
 
-		revert_series_if_last(self.series, self.name)
+		if not self.has_custom_naming_series:
+			revert_series_if_last(self.default_series, self.name)
 
 	def get_status(self):
 		if self.docstatus == 2:
