@@ -1,6 +1,6 @@
 # https://github.com/actions/stale
 
-name: "Close Stale Issues and PRs"
+name: "Close Stale PRs"
 on:
   schedule:
     - cron: 0 0 * * *
