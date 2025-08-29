@@ -338,7 +338,7 @@ frappe.ui.form.on("Payroll Entry", {
 	},
 
 	set_start_end_dates: function (frm) {
-		if (!frm.doc.salary_slip_based_on_timesheet) {
+		if (frm.doc.payroll_frequency) {
 			frappe.call({
 				method: "hrms.payroll.doctype.payroll_entry.payroll_entry.get_start_end_dates",
 				args: {

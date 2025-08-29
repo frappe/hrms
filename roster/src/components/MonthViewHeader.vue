@@ -5,7 +5,7 @@
 			<Button icon="chevron-left" variant="ghost" @click="emit('addToMonth', -1)" />
 			<span class="w-32 text-center font-medium text-base">
 				{{ props.firstOfMonth.format("MMMM") }}, {{ firstOfMonth.format("YYYY") }}
-			</span>Add commentMore actions
+			</span>
 			<Button icon="chevron-right" variant="ghost" @click="emit('addToMonth', 1)" />
 		</div>
 

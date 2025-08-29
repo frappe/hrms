@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import add_days, get_weekday, nowdate
+from frappe.utils import add_days, get_weekday,getdate, nowdate
 
 from hrms.hr.doctype.shift_assignment_tool.shift_assignment_tool import create_shift_assignment
 
@@ -20,14 +20,14 @@ class ShiftScheduleAssignment(Document):
 
 		date = start_date
 		individual_assignment_start = None
-		week_end_day = get_weekday(add_days(start_date, -1))
+		week_end_day = get_weekday(getdate(add_days(start_date, -1)))
 		repeat_on_days = [day.day for day in shift_schedule.repeat_on_days]
 
 		if not end_date:
 			end_date = add_days(start_date, 90)
 
 		while date <= end_date:
-			weekday = get_weekday(date)
+			weekday = get_weekday(getdate(date))
 			if weekday in repeat_on_days:
 				if not individual_assignment_start:
 					individual_assignment_start = date

@@ -102,7 +102,6 @@ import {
 	arePushNotificationsEnabled,
 } from "@/data/notifications"
 
-const user = inject("$user")
 const dayjs = inject("$dayjs")
 const router = useRouter()
 
