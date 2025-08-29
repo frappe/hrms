@@ -5545,7 +5545,7 @@ msgstr "Caducar la asignación"
 #. 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Expire Carry Forwarded Leaves (Days)"
-msgstr "Vencimiento de las ausencias acarreadas (días)"
+msgstr "Vencimiento de las ausencias trasladadas (días)"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:493
 msgid "Expire Leaves"
@@ -6574,7 +6574,7 @@ msgstr "La fecha de medio día es obligatoria"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:191
 msgid "Half Day Date should be between From Date and To Date"
-msgstr "Fecha de medio día debe estar entre la fecha desde y fecha hasta"
+msgstr "La fecha de medio día debe estar entre la fecha desde y fecha hasta"
 
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:29
 msgid "Half Day Date should be in between Work From Date and Work End Date"
@@ -6588,7 +6588,7 @@ msgstr ""
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:168
 msgid "Half Day Records"
-msgstr ""
+msgstr "Registros de medio día"
 
 #. Option for the 'Frequency' (Select) field in DocType 'Vehicle Service'
 #: hrms/hr/doctype/vehicle_service/vehicle_service.json
@@ -6612,21 +6612,21 @@ msgstr "Tiene Certificado"
 
 #: hrms/setup.py:215
 msgid "Health Insurance"
-msgstr ""
+msgstr "Seguro Médico"
 
 #. Label of the health_insurance_name (Data) field in DocType 'Employee Health
 #. Insurance'
 #: hrms/hr/doctype/employee_health_insurance/employee_health_insurance.json
 msgid "Health Insurance Name"
-msgstr "Nombre del Seguro de Salud"
+msgstr "Nombre del Seguro Médico"
 
 #: hrms/setup.py:229
 msgid "Health Insurance No"
-msgstr ""
+msgstr "Número de Seguro Médico"
 
 #: hrms/setup.py:221
 msgid "Health Insurance Provider"
-msgstr ""
+msgstr "Proveedor de Seguro Médico"
 
 #: hrms/hr/notification/training_feedback/training_feedback.html:1
 msgid "Hello"
@@ -6639,7 +6639,7 @@ msgstr "Ayuda"
 
 #: hrms/controllers/employee_reminders.py:72
 msgid "Hey {}! This email is to remind you about the upcoming holidays."
-msgstr ""
+msgstr "Hey {}! Este correo es para recordarte acerca de tus próximas vacaciones."
 
 #: frontend/src/components/CheckInPanel.vue:4
 msgid "Hey, {0} 👋"
@@ -6647,7 +6647,7 @@ msgstr ""
 
 #: hrms/hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:44
 msgid "Hiring Count"
-msgstr ""
+msgstr "Cantidad de contrataciones"
 
 #. Label of the hiring_settings_section (Section Break) field in DocType 'HR
 #. Settings'
@@ -6658,7 +6658,7 @@ msgstr "Configuraciones de contratación"
 #. Option for the 'Status' (Select) field in DocType 'Job Applicant'
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 msgid "Hold"
-msgstr "Mantener"
+msgstr "En espera"
 
 #: hrms/hr/doctype/attendance/attendance.py:285
 #: hrms/hr/doctype/leave_application/leave_application.py:1348
@@ -6680,7 +6680,7 @@ msgstr "Vacaciones"
 #: hrms/hr/report/leave_ledger/leave_ledger.py:110
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Holiday List"
-msgstr "Lista de festividades"
+msgstr "Lista de feriados"
 
 #. Label of the optional_holiday_list (Link) field in DocType 'Leave Period'
 #: hrms/hr/doctype/leave_period/leave_period.json
@@ -6694,11 +6694,11 @@ msgstr "Vacaciones"
 
 #: hrms/controllers/employee_reminders.py:65
 msgid "Holidays this Month."
-msgstr ""
+msgstr "Vacaciones éste Mes"
 
 #: hrms/controllers/employee_reminders.py:65
 msgid "Holidays this Week."
-msgstr ""
+msgstr "Vacaciones esta Semana"
 
 #: frontend/src/components/BottomTabs.vue:43 hrms/www/jobs/index.py:13
 msgid "Home"
@@ -6942,7 +6942,7 @@ msgstr ""
 #. Label of the include_holidays (Check) field in DocType 'Attendance Request'
 #: hrms/hr/doctype/attendance_request/attendance_request.json
 msgid "Include Holidays"
-msgstr ""
+msgstr "Incluir Vacaciones"
 
 #. Label of the include_holidays_in_total_working_days (Check) field in DocType
 #. 'Payroll Settings'
@@ -6959,7 +6959,7 @@ msgstr "Incluir las vacaciones y ausencias únicamente como ausencias"
 #. 'Employee Other Income'
 #: hrms/payroll/doctype/employee_other_income/employee_other_income.json
 msgid "Income Source"
-msgstr ""
+msgstr "Fuente de Ingresos"
 
 #: hrms/payroll/report/income_tax_deductions/income_tax_deductions.py:47
 msgid "Income Tax Amount"
@@ -8141,7 +8141,7 @@ msgstr "Ausencias pendientes de aprobación"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:78
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
-msgstr "Ausencias para el tipo {0} no serán accareadas ya que el acarreo está deshabilitado"
+msgstr "Ausencias para el tipo {0} no serán trasladadas ya que el traslado está deshabilitado"
 
 #: hrms/setup.py:405
 msgid "Leaves per Year"
