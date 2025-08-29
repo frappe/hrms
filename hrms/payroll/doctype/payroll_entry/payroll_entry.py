@@ -625,7 +625,7 @@ class PayrollEntry(Document):
 		submit_journal_entry=False,
 	) -> str:
 		multi_currency = 0
-		if len(currencies) > 1:
+		if len(currencies) > 1 or currencies[0] != erpnext.get_company_currency(self.company):
 			multi_currency = 1
 
 		journal_entry = frappe.new_doc("Journal Entry")

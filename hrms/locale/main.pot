@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frappe HR VERSION\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-08-17 09:36+0000\n"
-"PO-Revision-Date: 2025-08-17 09:36+0000\n"
+"POT-Creation-Date: 2025-08-24 09:35+0000\n"
+"PO-Revision-Date: 2025-08-24 09:35+0000\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: contact@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -373,7 +373,7 @@ msgstr ""
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:673
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:687
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Absent"
 msgstr ""
@@ -4244,7 +4244,7 @@ msgstr ""
 #: hrms/hr/report/leave_ledger/leave_ledger.js:28
 #: hrms/hr/report/leave_ledger/leave_ledger.py:28
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:35
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:111
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:112
 #: hrms/hr/report/project_profitability/project_profitability.js:37
 #: hrms/hr/report/project_profitability/project_profitability.py:140
 #: hrms/hr/report/shift_attendance/shift_attendance.js:22
@@ -4663,7 +4663,7 @@ msgstr ""
 #: hrms/hr/report/employee_leave_balance_summary/employee_leave_balance_summary.py:23
 #: hrms/hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.py:30
 #: hrms/hr/report/leave_ledger/leave_ledger.py:35
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:117
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:118
 #: hrms/hr/report/project_profitability/project_profitability.py:145
 #: hrms/hr/report/shift_attendance/shift_attendance.py:31
 #: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.py:19
@@ -4839,7 +4839,9 @@ msgid "Employee Status"
 msgstr ""
 
 #. Name of a DocType
+#. Label of a Link in the Tax & Benefits Workspace
 #: hrms/payroll/doctype/employee_tax_exemption_category/employee_tax_exemption_category.json
+#: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Tax Exemption Category"
 msgstr ""
 
@@ -4852,9 +4854,7 @@ msgid "Employee Tax Exemption Declaration"
 msgstr ""
 
 #. Name of a DocType
-#. Label of a Link in the Tax & Benefits Workspace
 #: hrms/payroll/doctype/employee_tax_exemption_declaration_category/employee_tax_exemption_declaration_category.json
-#: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Tax Exemption Declaration Category"
 msgstr ""
 
@@ -7447,6 +7447,7 @@ msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Grievance'
 #: hrms/hr/doctype/employee_grievance/employee_grievance.json
+#: hrms/hr/doctype/employee_grievance/employee_grievance.py:14
 msgid "Invalid"
 msgstr ""
 
@@ -7936,7 +7937,7 @@ msgstr ""
 
 #. Option for the 'Calculate Payroll Working Days Based On' (Select) field in
 #. DocType 'Payroll Settings'
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:675
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:689
 #: hrms/overrides/dashboard_overrides.py:12
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Leave"
@@ -9196,11 +9197,11 @@ msgstr ""
 msgid "No attendance records found for employee {0} between {1} and {2}"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:53
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:54
 msgid "No attendance records found for this criteria."
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:46
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:47
 msgid "No attendance records found."
 msgstr ""
 
@@ -10434,7 +10435,7 @@ msgstr ""
 msgid "Please select at least one row to perform this action."
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:37
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:38
 msgid "Please select company."
 msgstr ""
 
@@ -10451,7 +10452,7 @@ msgstr ""
 msgid "Please select half day attendance status."
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:34
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:35
 msgid "Please select month and year."
 msgstr ""
 
@@ -10635,7 +10636,7 @@ msgstr ""
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:674
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:688
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Present"
 msgstr ""
@@ -11399,6 +11400,7 @@ msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Grievance'
 #: hrms/hr/doctype/employee_grievance/employee_grievance.json
+#: hrms/hr/doctype/employee_grievance/employee_grievance.py:14
 msgid "Resolved"
 msgstr ""
 
@@ -11598,7 +11600,7 @@ msgstr ""
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:374
+#: hrms/hr/doctype/expense_claim/expense_claim.py:375
 msgid "Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}"
 msgstr ""
 
@@ -12433,7 +12435,7 @@ msgstr ""
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.js:173
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:164
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:165
 #: hrms/hr/report/shift_attendance/shift_attendance.py:36
 #: hrms/hr/report/shift_attendance/shift_attendance.py:205
 #: hrms/overrides/dashboard_overrides.py:33
@@ -13711,7 +13713,7 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:131
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:132
 msgid "Total Absent"
 msgstr ""
 
@@ -13796,7 +13798,7 @@ msgstr ""
 msgid "Total Deduction (Company Currency)"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:156
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:157
 msgid "Total Early Exits"
 msgstr ""
 
@@ -13849,7 +13851,7 @@ msgstr ""
 msgid "Total Gross Pay"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:133
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:134
 msgid "Total Holidays"
 msgstr ""
 
@@ -13866,7 +13868,7 @@ msgstr ""
 msgid "Total Interest Amount"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:150
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:151
 msgid "Total Late Entries"
 msgstr ""
 
@@ -13875,7 +13877,7 @@ msgstr ""
 msgid "Total Leave Days"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:130
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:131
 msgid "Total Leaves"
 msgstr ""
 
@@ -13924,7 +13926,7 @@ msgstr ""
 msgid "Total Payment"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:125
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:126
 msgid "Total Present"
 msgstr ""
 
@@ -14311,7 +14313,7 @@ msgstr ""
 msgid "Unmarked Check-in Logs Found"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:139
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:140
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:19
 msgid "Unmarked Days"
 msgstr ""

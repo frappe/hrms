@@ -1,0 +1,24 @@
+# https://github.com/actions/stale
+
+name: "Close Stale PRs"
+on:
+  schedule:
+    - cron: 0 0 * * *
+  workflow_dispatch:
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-pr-stale: 15
+          days-before-pr-close: 3
+          stale-pr-label: 'Inactive'
+          exempt-draft-pr: true
+          days-before-issue-stale: -1
+          days-before-issue-close: -1
+          stale-pr-message: |
+            This pull request is marked as inactive due to no recent activity. It will be closed in 3 days if no further activity occurs.
+            Comment to keep the contribution alive. You can reopen the PR when ready.
+            Thank you for contributing!
