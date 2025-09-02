@@ -173,6 +173,10 @@ def cancel_loan_repayment_entry(doc: "SalarySlip"):
 			repayment_entry = frappe.get_doc("Loan Repayment", loan.loan_repayment_entry)
 			repayment_entry.cancel()
 
+			loan_status = frappe.db.get_value("Loan", loan.loan, "status")
+			if loan_status == "Closed":
+				frappe.db.set_value("Loan", loan.loan, "status", "Disbursed")
+
 
 def get_payroll_payable_account(company, payroll_entry):
 	if payroll_entry:
