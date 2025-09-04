@@ -1336,6 +1336,7 @@ def add_leaves(events, start, end, filters=None):
 		leave_applications = frappe.get_list("Leave Application", filters=filters, fields=fields)
 
 	for d in leave_applications:
+		d.to_date = add_days(d.to_date, 1)
 		d["title"] = f"{d['employee_name']} ({d['leave_type']})"
 		del d["employee_name"]
 		del d["leave_type"]
