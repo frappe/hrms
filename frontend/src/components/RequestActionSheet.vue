@@ -132,7 +132,7 @@
 			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
 		>
 			<Button
-				@click="updateDocumentStatus({ docstatus: 2 })"
+				@click="showCancelConfirm = true"
 				class="w-full py-5"
 				variant="subtle"
 				theme="red"
@@ -143,6 +143,38 @@
 				{{ __("Cancel") }}
 			</Button>
 		</div>
+
+		<!-- Cancel confirmation modal -->
+		<Dialog v-model="showCancelConfirm">
+			<template #body-title>
+				<h2 class="text-xl font-bold">{{ __("Confirm") }}</h2>
+			</template>
+			<template #body-content>
+				<p class="text-gray-700">
+					{{ __('Are you sure you want to cancel {0} ?', [document?.name]) }}
+				</p>
+			</template>
+			<template #actions>
+				<div class="flex flex-row gap-4">
+					<Button
+					variant="outline"
+						class="py-5 w-full"
+						@click="showCancelConfirm = false"
+					>
+						{{ __("No") }}
+					</Button>
+					<Button
+						variant="solid"
+						class="py-5 w-full"
+						theme="red"
+						@click="updateDocumentStatus({ docstatus: 2 }); showCancelConfirm = false"
+					>
+						{{ __("Yes") }}
+					</Button>
+				</div>
+			</template>
+
+		</Dialog>
 
 		<!-- File Preview Modal -->
 		<ion-modal
@@ -164,6 +196,7 @@ import {
 	createDocumentResource,
 	createResource,
 	FeatherIcon,
+	Dialog
 } from "frappe-ui"
 
 import FormattedField from "@/components/FormattedField.vue"
@@ -196,6 +229,7 @@ const router = useRouter()
 let showPreviewModal = ref(false)
 let selectedFile = ref({})
 let workflow = ref(null)
+let showCancelConfirm = ref(false)
 
 function showFilePreview(fileObj) {
 	selectedFile.value = fileObj
