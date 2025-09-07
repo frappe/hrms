@@ -151,7 +151,7 @@
 			</template>
 			<template #body-content>
 				<p class="text-gray-700">
-					{{ __('Are you sure you want to cancel {0} ?', [document?.name]) }}
+					{{ __('Are you sure you want to cancel {0}?', [document?.name]) }}
 				</p>
 			</template>
 			<template #actions>
@@ -167,7 +167,7 @@
 						variant="solid"
 						class="py-5 w-full"
 						theme="red"
-						@click="updateDocumentStatus({ docstatus: 2 }); showCancelConfirm = false"
+						@click="updateDocumentStatus({ docstatus: 2 })"
 					>
 						{{ __("Yes") }}
 					</Button>
@@ -337,7 +337,9 @@ const updateDocumentStatus = ({ status = "", docstatus = 0 }) => {
 		{ ...updateValues },
 		{
 			onSuccess() {
-				if (docstatus !== 0) modalController.dismiss()
+				if (docstatus !== 0)
+				    if (docstatus === 2) showCancelConfirm.value = false
+					modalController.dismiss()
 
 				toast({
 					title: __("Success"),
