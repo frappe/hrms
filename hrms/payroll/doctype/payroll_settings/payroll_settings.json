@@ -16,6 +16,7 @@
   "daily_wages_fraction_for_half_day",
   "column_break_rnoq",
   "disable_rounded_total",
+  "use_fixed_30_days",
   "column_break_gzpl",
   "show_leave_balances_in_salary_slip",
   "email_section",
@@ -188,13 +189,19 @@
    "fieldtype": "Link",
    "label": "Sender Copy",
    "options": "Email Account"
+  },
+  {
+   "default": "0",
+   "fieldname": "use_fixed_30_days",
+   "fieldtype": "Check",
+   "label": "Use Fixed 30 Days"
   }
  ],
  "icon": "fa fa-cog",
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-06-24 11:46:55.338986",
+ "modified": "2025-09-12 16:04:54.805362",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",
