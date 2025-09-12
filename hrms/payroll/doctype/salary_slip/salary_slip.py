@@ -628,7 +628,18 @@ class SalarySlip(TransactionBase):
 					)
 				)
 
-		payment_days = date_diff(self.actual_end_date, self.actual_start_date) + 1
+		worked_days_in_period = date_diff(self.actual_end_date, self.actual_start_date) + 1
+		calender_days_in_period = date_diff(self.end_date, self.start_date) + 1
+
+		use_fixed_30_days = frappe.db.get_single_value("Payroll Settings", "use_fixed_30_days")
+		if use_fixed_30_days and self.payroll_frequency == "Monthly":
+			month_days = 30
+			payment_days = worked_days_in_period
+			# If employee worked the whole month so normalize to 30
+			if worked_days_in_period == calender_days_in_period:
+				payment_days = month_days
+		else:
+			payment_days = worked_days_in_period
 
 		if not cint(include_holidays_in_total_working_days):
 			holidays = self.get_holidays_for_employee(self.actual_start_date, self.actual_end_date)
