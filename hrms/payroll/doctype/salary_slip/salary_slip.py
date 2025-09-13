@@ -629,15 +629,11 @@ class SalarySlip(TransactionBase):
 				)
 
 		worked_days_in_period = date_diff(self.actual_end_date, self.actual_start_date) + 1
-		calender_days_in_period = date_diff(self.end_date, self.start_date) + 1
+		calendar_days_in_period = date_diff(self.end_date, self.start_date) + 1
 
 		use_fixed_30_days = frappe.db.get_single_value("Payroll Settings", "use_fixed_30_days")
 		if use_fixed_30_days and self.payroll_frequency == "Monthly":
-			month_days = 30
-			payment_days = worked_days_in_period
-			# If employee worked the whole month so normalize to 30
-			if worked_days_in_period == calender_days_in_period:
-				payment_days = month_days
+			payment_days = self.calculate_fixed_30_day_month(worked_days_in_period, calendar_days_in_period)
 		else:
 			payment_days = worked_days_in_period
 
@@ -646,6 +642,41 @@ class SalarySlip(TransactionBase):
 			payment_days -= len(holidays)
 
 		return payment_days
+
+	def calculate_fixed_30_day_month(self, worked_days_in_period, calendar_days_in_period):
+		month_days = 30
+
+		# Case 1: Full month normalize to 30
+		if worked_days_in_period == calendar_days_in_period:
+			payment_days = month_days
+			return payment_days
+
+		# Case 2: Joined and relieved in the same month
+		if (
+			self.joining_date
+			and self.relieving_date
+			and getdate(self.start_date) <= self.joining_date <= getdate(self.end_date)
+			and getdate(self.start_date) <= self.relieving_date <= getdate(self.end_date)
+		):
+			return self.relieving_date.day - self.joining_date.day + 1
+
+		# Case 3: Joined mid-month
+		if (
+			self.joining_date
+			and getdate(self.start_date) < self.joining_date <= getdate(self.end_date)
+			and (not self.relieving_date or self.relieving_date > getdate(self.end_date))
+		):
+			return month_days - (self.joining_date.day - 1)
+
+		# Case 4: Relieved mid-month (joined before start)
+		if (
+			self.relieving_date
+			and getdate(self.start_date) <= self.relieving_date < getdate(self.end_date)
+			and (not self.joining_date or self.joining_date <= getdate(self.start_date))
+		):
+			return self.relieving_date.day
+
+		return worked_days_in_period
 
 	def get_holidays_for_employee(self, start_date, end_date):
 		holiday_list = get_holiday_list_for_employee(self.employee)
