@@ -993,6 +993,7 @@ def get_leave_allocation_records(employee, date, leave_type=None):
 	"""Returns the total allocated leaves and carry forwarded leaves based on ledger entries"""
 	Ledger = frappe.qb.DocType("Leave Ledger Entry")
 	LeaveAllocation = frappe.qb.DocType("Leave Allocation")
+	LeaveAdjustment = frappe.qb.DocType("Leave Adjustment")
 
 	cf_leave_case = frappe.qb.terms.Case().when(Ledger.is_carry_forward == "1", Ledger.leaves).else_(0)
 	sum_cf_leaves = Sum(cf_leave_case).as_("cf_leaves")
@@ -1002,8 +1003,10 @@ def get_leave_allocation_records(employee, date, leave_type=None):
 
 	query = (
 		frappe.qb.from_(Ledger)
-		.inner_join(LeaveAllocation)
+		.left_join(LeaveAllocation)
 		.on(Ledger.transaction_name == LeaveAllocation.name)
+		.left_join(LeaveAdjustment)
+		.on(Ledger.transaction_name == LeaveAdjustment.name)
 		.select(
 			sum_cf_leaves,
 			sum_new_leaves,
@@ -1015,7 +1018,10 @@ def get_leave_allocation_records(employee, date, leave_type=None):
 		.where(
 			(Ledger.from_date <= date)
 			& (Ledger.docstatus == 1)
-			& (Ledger.transaction_type == "Leave Allocation")
+			& (
+				(Ledger.transaction_type == "Leave Allocation")
+				| (Ledger.transaction_type == "Leave Adjustment")
+			)
 			& (Ledger.employee == employee)
 			& (Ledger.is_expired == 0)
 			& (Ledger.is_lwp == 0)
@@ -1026,10 +1032,13 @@ def get_leave_allocation_records(employee, date, leave_type=None):
 				# it's between the leave allocation's from and to date
 				| (
 					(Ledger.is_carry_forward == 1)
-					& (Ledger.to_date.between(LeaveAllocation.from_date, LeaveAllocation.to_date))
+					& (
+						Ledger.to_date.between(LeaveAllocation.from_date, LeaveAllocation.to_date)
+						| (Ledger.to_date.between(LeaveAdjustment.from_date, LeaveAdjustment.to_date))
+					)
 					# only consider cf leaves from current allocation
-					& (LeaveAllocation.from_date <= date)
-					& (date <= LeaveAllocation.to_date)
+					& ((LeaveAllocation.from_date <= date) | (LeaveAdjustment.from_date <= date))
+					& ((date <= LeaveAllocation.to_date) | (date <= LeaveAdjustment.to_date))
 				)
 			)
 		)
@@ -1040,7 +1049,6 @@ def get_leave_allocation_records(employee, date, leave_type=None):
 	query = query.groupby(Ledger.employee, Ledger.leave_type)
 
 	allocation_details = query.run(as_dict=True)
-
 	allocated_leaves = frappe._dict()
 	for d in allocation_details:
 		allocated_leaves.setdefault(
