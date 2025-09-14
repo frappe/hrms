@@ -395,6 +395,22 @@ class LeaveAllocation(Document):
 
 		return _get_monthly_earned_leave(doj, annual_allocation, frequency, rounding)
 
+	@frappe.whitelist()
+	def create_leave_adjustment(self, adjustment_type, leaves_to_adjust, posting_date, reason_for_adjustment):
+		leave_adjustment = frappe.new_doc(
+			"Leave Adjustment",
+			employee=self.employee,
+			leave_type=self.leave_type,
+			adjustment_type=adjustment_type,
+			leaves_to_adjust=leaves_to_adjust,
+			posting_date=posting_date,
+			leave_allocation=self.name,
+			reason_for_adjustment=reason_for_adjustment,
+		)
+		leave_adjustment.save()
+		leave_adjustment.submit()
+		frappe.msgprint(_("Adjustment Created Successfully"), indicator="green", alert=True)
+
 
 def get_previous_allocation(from_date, leave_type, employee):
 	"""Returns document properties of previous allocation"""

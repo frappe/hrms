@@ -19,6 +19,8 @@ jobs:
           days-before-issue-stale: -1
           days-before-issue-close: -1
           stale-pr-message: |
-            This pull request is marked as inactive due to no recent activity. It will be closed in 3 days if no further activity occurs.
-            Comment to keep the contribution alive. You can reopen the PR when ready.
+            This pull request is being marked as inactive because of no recent activity. 
+            If your PR hasn't been reviewed, it's likely because it doesn't fullfill the [contribution guidelines](https://github.com/frappe/erpnext/wiki/Contribution-Guidelines). Please read them carefully and fix the pull request. When you are sure all items are checked, please ping relevant codeowner in the comment. Be nice, they have a lot on their plate too.
+            
+            It will be closed in 3 days if no further activity occurs.
             Thank you for contributing!
