@@ -5,6 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
+from frappe.model.workflow import get_workflow_name
 from frappe.query_builder.functions import Sum
 from frappe.utils import cstr, flt, get_link_to_form
 
@@ -37,6 +38,10 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 	def onload(self):
 		self.get("__onload").make_payment_via_journal_entry = frappe.db.get_single_value(
 			"Accounts Settings", "make_payment_via_journal_entry"
+		)
+		self.set_onload(
+			"self_expense_approval_not_allowed",
+			frappe.db.get_single_value("HR Settings", "prevent_self_expense_approval"),
 		)
 
 	def after_insert(self):
@@ -97,6 +102,18 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 					exc=MismatchError,
 				)
 
+	def validate_for_self_approval(self):
+		self_expense_approval_not_allowed = frappe.db.get_single_value(
+			"HR Settings", "prevent_self_expense_approval"
+		)
+		employee_user = frappe.db.get_value("Employee", self.employee, "user_id")
+		if (
+			self_expense_approval_not_allowed
+			and employee_user == frappe.session.user
+			and not get_workflow_name("Expense Claim")
+		):
+			frappe.throw(_("Self-approval for Expense Claims is not allowed"))
+
 	def on_update(self):
 		share_doc_with_approver(self, self.expense_approver)
 		self.publish_update()
@@ -109,9 +126,12 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		if not self.payable_account and not self.is_paid:
 			frappe.throw(_("Payable Account is mandatory to submit an Expense Claim"))
 
+		self.validate_for_self_approval()
+
 	def publish_update(self):
 		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
 		hrms.refetch_resource("hrms:my_claims", employee_user)
+		hrms.refetch_resource("hrms:team_claims")
 
 	def on_submit(self):
 		if self.approval_status == "Draft":
@@ -125,7 +145,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		self.update_claimed_amount_in_employee_advance()
 
 	def on_update_after_submit(self):
-		if self.check_if_fields_updated([], {"taxes": ("account_head")}):
+		if self.check_if_fields_updated([], {"taxes": ("account_head",), "expenses": ()}):
 			validate_docs_for_voucher_types(["Expense Claim"])
 			self.repost_accounting_entries()
 
@@ -332,6 +352,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 
 	def validate_advances(self):
 		self.total_advance_amount = 0
+		precision = self.precision("total_advance_amount")
 
 		for d in self.get("advances"):
 			self.round_floats_in(d)
@@ -347,8 +368,8 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			d.advance_paid = ref_doc.paid_amount
 			d.unclaimed_amount = flt(ref_doc.paid_amount) - flt(ref_doc.claimed_amount)
 
-			if d.allocated_amount and flt(d.allocated_amount) > (
-				flt(d.unclaimed_amount) - flt(d.return_amount)
+			if d.allocated_amount and flt(d.allocated_amount) > flt(
+				flt(d.unclaimed_amount) - flt(d.return_amount), precision
 			):
 				frappe.throw(
 					_("Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}").format(
@@ -360,7 +381,6 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 
 		if self.total_advance_amount:
 			self.round_floats_in(self, ["total_advance_amount"])
-			precision = self.precision("total_advance_amount")
 			amount_with_taxes = flt(
 				(flt(self.total_sanctioned_amount, precision) + flt(self.total_taxes_and_charges, precision)),
 				precision,
@@ -398,20 +418,27 @@ def get_total_reimbursed_amount(doc):
 		# No need to check for cancelled state here as it will anyways update status as cancelled
 		return doc.grand_total
 	else:
+		JournalEntryAccount = frappe.qb.DocType("Journal Entry Account")
 		amount_via_jv = frappe.db.get_value(
 			"Journal Entry Account",
 			{"reference_name": doc.name, "docstatus": 1},
-			"sum(debit_in_account_currency - credit_in_account_currency)",
+			Sum(
+				JournalEntryAccount.debit_in_account_currency - JournalEntryAccount.credit_in_account_currency
+			),
 		)
 
 		amount_via_payment_entry = frappe.db.get_value(
-			"Payment Entry Reference", {"reference_name": doc.name, "docstatus": 1}, "sum(allocated_amount)"
+			"Payment Entry Reference",
+			{"reference_name": doc.name, "docstatus": 1},
+			[{"SUM": "allocated_amount"}],
 		)
 
 		return flt(amount_via_jv) + flt(amount_via_payment_entry)
 
 
 def get_outstanding_amount_for_claim(claim):
+	precision = frappe.get_precision("Expense Claim", "grand_total")
+
 	if isinstance(claim, str):
 		claim = frappe.db.get_value(
 			"Expense Claim",
@@ -432,7 +459,7 @@ def get_outstanding_amount_for_claim(claim):
 		- flt(claim.total_advance_amount)
 	)
 
-	return outstanding_amt
+	return flt(outstanding_amt, precision)
 
 
 @frappe.whitelist()

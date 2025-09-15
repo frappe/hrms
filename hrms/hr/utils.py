@@ -10,6 +10,7 @@ from frappe.query_builder import Criterion
 from frappe.query_builder.custom import ConstantColumn
 from frappe.utils import (
 	add_days,
+	add_months,
 	comma_and,
 	cstr,
 	flt,
@@ -20,6 +21,10 @@ from frappe.utils import (
 	get_last_day,
 	get_link_to_form,
 	get_number_format_info,
+	get_quarter_ending,
+	get_quarter_start,
+	get_year_ending,
+	get_year_start,
 	getdate,
 	nowdate,
 )
@@ -397,8 +402,10 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 
 	if (
 		new_allocation != allocation.total_leaves_allocated
-		# annual allocation as per policy should not be exceeded
-		and new_allocation_without_cf <= annual_allocation
+		# annual allocation as per policy should not be exceeded except for yearly leaves
+		and (
+			new_allocation_without_cf <= annual_allocation or e_leave_type.earned_leave_frequency == "Yearly"
+		)
 	):
 		today_date = frappe.flags.current_date or getdate()
 
@@ -433,8 +440,13 @@ def get_monthly_earned_leave(
 		if pro_rated:
 			if not (period_start_date or period_end_date):
 				today_date = frappe.flags.current_date or getdate()
-				period_end_date = get_last_day(today_date)
-				period_start_date = get_first_day(today_date)
+
+				period_start_date, period_end_date = {
+					"Monthly": (get_first_day(today_date), get_last_day(today_date)),
+					"Quarterly": (get_quarter_start(today_date), get_quarter_ending(today_date)),
+					"Half-Yearly": (get_semester_start(today_date), get_semester_end(today_date)),
+					"Yearly": (get_year_start(today_date), get_year_ending(today_date)),
+				}.get(frequency)
 
 			earned_leaves = calculate_pro_rated_leaves(
 				earned_leaves, date_of_joining, period_start_date, period_end_date, is_earned_leave=True
@@ -508,29 +520,27 @@ def create_additional_leave_ledger_entry(allocation, leaves, date):
 
 
 def check_effective_date(from_date, today, frequency, allocate_on_day):
-	from dateutil import relativedelta
-
 	from_date = get_datetime(from_date)
 	today = frappe.flags.current_date or get_datetime(today)
-	rd = relativedelta.relativedelta(today, from_date)
 
 	expected_date = {
-		"First Day": get_first_day(today),
-		"Last Day": get_last_day(today),
-		"Date of Joining": from_date,
-	}[allocate_on_day]
+		"Monthly": {
+			"First Day": get_first_day(today),
+			"Last Day": get_last_day(today),
+			"Date of Joining": from_date,
+		},
+		"Quarterly": {
+			"First Day": get_quarter_start(today),
+			"Last Day": get_quarter_ending(today),
+		},
+		"Half-Yearly": {"First Day": get_semester_start(today), "Last Day": get_semester_end(today)},
+		"Yearly": {"First Day": get_year_start(today), "Last Day": get_year_ending(today)},
+	}[frequency][allocate_on_day]
 
-	if expected_date.day == today.day:
-		if frequency == "Monthly":
-			return True
-		elif frequency == "Quarterly" and rd.months % 3:
-			return True
-		elif frequency == "Half-Yearly" and rd.months % 6:
-			return True
-		elif frequency == "Yearly" and rd.months % 12:
-			return True
-
-	return False
+	if allocate_on_day == "Date of Joining":
+		return expected_date.day == today.day
+	else:
+		return expected_date == today
 
 
 def get_salary_assignments(employee, payroll_period):
@@ -643,6 +653,13 @@ def calculate_hra_exemption_for_period(doc):
 	return {}
 
 
+@erpnext.allow_regional
+def calculate_tax_with_marginal_relief(tax_slab, tax_amount, annual_taxable_earning):
+	# Don't delete this method, used for localization
+	# Indian TDS Calculation
+	return None
+
+
 def get_previous_claimed_amount(employee, payroll_period, non_pro_rata=False, component=False):
 	total_claimed_amount = 0
 	query = """
@@ -682,7 +699,9 @@ def share_doc_with_approver(doc, user):
 			doc.doctype, doc.name, user, submit=1, flags={"ignore_share_permission": True}
 		)
 
-		frappe.msgprint(_("Shared with the user {0} with 'submit' permisions").format(user, alert=True))
+		frappe.msgprint(
+			_("Shared document with the user {0} with 'Submit' permission").format(user), alert=True
+		)
 
 	# remove shared doc if approver changes
 	doc_before_save = doc.get_doc_before_save()
@@ -824,7 +843,7 @@ def validate_bulk_tool_fields(
 ) -> None:
 	for d in fields:
 		if not self.get(d):
-			frappe.throw(_("{0} is required").format(self.meta.get_label(d)), title=_("Missing Field"))
+			frappe.throw(_("{0} is required").format(_(self.meta.get_label(d))), title=_("Missing Field"))
 	if self.get(from_date) and self.get(to_date):
 		self.validate_from_to_dates(from_date, to_date)
 	if not employees:
@@ -926,6 +945,20 @@ def get_exact_month_diff(string_ed_date: DateTimeLikeObject, string_st_date: Dat
 	# count the last month only if end date's day > start date's day
 	# to handle cases like 16th Jul 2024 - 15th Jul 2025
 	# where framework's month_diff will calculate diff as 13 months
-	if ed_date.day > st_date.day:
+	if ed_date.day >= st_date.day:
 		diff += 1
 	return diff
+
+
+def get_semester_start(date):
+	if date.month <= 6:
+		return get_year_start(date)
+	else:
+		return add_months(get_year_start(date), 6)
+
+
+def get_semester_end(date):
+	if date.month > 6:
+		return get_year_ending(date)
+	else:
+		return add_months(get_year_ending(date), -6)

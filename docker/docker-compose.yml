@@ -1,5 +1,4 @@
-version: "15.37"
-name: hrms
+version: "3.8" # Updated version
 services:
   mariadb:
     image: mariadb:10.8

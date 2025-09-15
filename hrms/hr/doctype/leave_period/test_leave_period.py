@@ -2,15 +2,19 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 
 import erpnext
 
-test_dependencies = ["Employee", "Leave Type", "Leave Policy"]
+from hrms.tests.utils import HRMSTestSuite
+
+test_dependencies = ["Leave Policy"]
 
 
-class TestLeavePeriod(IntegrationTestCase):
-	pass
+class TestLeavePeriod(HRMSTestSuite):
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		cls.make_employees()
 
 
 def create_leave_period(from_date, to_date, company=None):

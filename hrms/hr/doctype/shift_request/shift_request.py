@@ -7,6 +7,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import get_link_to_form
 
+import hrms
 from hrms.hr.doctype.shift_assignment.shift_assignment import has_overlapping_timings
 from hrms.hr.utils import share_doc_with_approver, validate_active_employee
 from hrms.mixins.pwa_notifications import PWANotificationsMixin
@@ -27,6 +28,15 @@ class ShiftRequest(Document, PWANotificationsMixin):
 	def on_update(self):
 		share_doc_with_approver(self, self.approver)
 		self.notify_approval_status()
+		self.publish_update()
+
+	def after_delete(self):
+		self.publish_update()
+
+	def publish_update(self):
+		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
+		hrms.refetch_resource("hrms:my_shift_requests", employee_user)
+		hrms.refetch_resource("hrms:team_shift_requests")
 
 	def after_insert(self):
 		self.notify_approver()

@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, get_datetime, getdate, nowdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -14,11 +13,17 @@ from hrms.hr.doctype.shift_assignment.shift_assignment import (
 	get_events,
 )
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
+from hrms.tests.utils import HRMSTestSuite
 
 test_dependencies = ["Shift Type"]
 
 
-class TestShiftAssignment(IntegrationTestCase):
+class TestShiftAssignment(HRMSTestSuite):
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		cls.make_employees()
+
 	def setUp(self):
 		frappe.db.delete("Shift Assignment")
 		frappe.db.delete("Shift Type")

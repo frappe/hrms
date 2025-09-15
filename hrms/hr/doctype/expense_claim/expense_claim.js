@@ -109,6 +109,7 @@ frappe.ui.form.on("Expense Claim", {
 				__("Create"),
 			);
 		}
+		frm.trigger("set_form_buttons");
 	},
 
 	validate: function (frm) {
@@ -200,7 +201,7 @@ frappe.ui.form.on("Expense Claim", {
 	},
 
 	update_employee_advance_claimed_amount: function (frm) {
-		let amount_to_be_allocated = frm.doc.grand_total;
+		let amount_to_be_allocated = frm.doc.total_sanctioned_amount;
 		$.each(frm.doc.advances || [], function (i, advance) {
 			if (amount_to_be_allocated >= advance.unclaimed_amount - advance.return_amount) {
 				advance.allocated_amount =
@@ -329,6 +330,28 @@ frappe.ui.form.on("Expense Claim", {
 				},
 			});
 		}
+	},
+	set_form_buttons: async function (frm) {
+		let self_approval_not_allowed = frm.doc.__onload
+			? frm.doc.__onload.self_expense_approval_not_allowed
+			: 0;
+		let current_employee = await hrms.get_current_employee();
+		if (
+			frm.doc.docstatus === 0 &&
+			!frm.is_dirty() &&
+			!frappe.model.has_workflow(frm.doctype)
+		) {
+			if (self_approval_not_allowed && current_employee == frm.doc.employee) {
+				frm.set_df_property("status", "read_only", 1);
+				frm.trigger("show_save_button");
+			}
+		}
+	},
+	show_save_button: function (frm) {
+		frm.page.set_primary_action("Save", () => {
+			frm.save();
+		});
+		$(".form-message").prop("hidden", true);
 	},
 });
 

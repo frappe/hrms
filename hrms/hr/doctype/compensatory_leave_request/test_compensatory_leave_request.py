@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, add_months, getdate, today
 
 from hrms.hr.doctype.attendance_request.test_attendance_request import get_employee
@@ -10,9 +9,15 @@ from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_
 from hrms.hr.doctype.leave_application.leave_application import get_leave_balance_on
 from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
 from hrms.tests.test_utils import add_date_to_holiday_list
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestCompensatoryLeaveRequest(FrappeTestCase):
+class TestCompensatoryLeaveRequest(HRMSTestSuite):
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		cls.make_employees()
+
 	def setUp(self):
 		frappe.db.delete("Compensatory Leave Request")
 		frappe.db.delete("Leave Ledger Entry")
@@ -145,7 +150,7 @@ class TestCompensatoryLeaveRequest(FrappeTestCase):
 
 	def test_half_day_compensatory_leave(self):
 		employee = get_employee()
-		mark_attendance(employee, status="Half Day")
+		mark_attendance(employee, status="Half Day", half_day_status="Absent")
 		date = today()
 		compensatory_leave_request = frappe.new_doc("Compensatory Leave Request")
 		compensatory_leave_request.update(
@@ -232,7 +237,7 @@ def get_compensatory_leave_request(employee, leave_date=None):
 	).insert()
 
 
-def mark_attendance(employee, date=None, status="Present"):
+def mark_attendance(employee, date=None, status="Present", half_day_status=None):
 	if not date:
 		date = today()
 
@@ -240,7 +245,13 @@ def mark_attendance(employee, date=None, status="Present"):
 		dict(doctype="Attendance", employee=employee.name, attendance_date=date, status="Present")
 	):
 		attendance = frappe.get_doc(
-			{"doctype": "Attendance", "employee": employee.name, "attendance_date": date, "status": status}
+			{
+				"doctype": "Attendance",
+				"employee": employee.name,
+				"attendance_date": date,
+				"status": status,
+				"half_day_status": half_day_status,
+			}
 		)
 		attendance.save()
 		attendance.submit()

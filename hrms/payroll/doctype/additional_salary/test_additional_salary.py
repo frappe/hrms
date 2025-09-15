@@ -147,6 +147,24 @@ class TestAdditionalSalary(IntegrationTestCase):
 		self.assertIsNone(tds_component.additional_salary)
 		self.assertNotEqual(tds_component.amount, 5000)
 
+	def test_validate_duplicate_or_overlapping_additional_salary(self):
+		emp_id = make_employee("test_additional@salary.com")
+		make_salary_structure("Test Salary Structure Additional Salary", "Monthly", employee=emp_id)
+		date = nowdate()
+		get_additional_salary(emp_id, overwrite_salary_structure=1)
+		additional_salary_doc = frappe.get_doc(
+			{
+				"doctype": "Additional Salary",
+				"employee": emp_id,
+				"salary_component": "Recurring Salary Component",
+				"payroll_date": date,
+				"amount": 5000,
+				"overwrite_salary_structure_amount": 1,
+			}
+		)
+		with self.assertRaises(frappe.ValidationError):
+			additional_salary_doc.save()
+
 
 def get_additional_salary(
 	emp_id, recurring=True, payroll_date=None, salary_component=None, overwrite_salary_structure=0

@@ -60,8 +60,7 @@
    "default": "0",
    "fieldname": "current_work_experience",
    "fieldtype": "Float",
-   "label": "Current Work Experience",
-   "precision": "1"
+   "label": "Current Work Experience"
   },
   {
    "default": "0",
@@ -200,7 +199,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-12-11 08:46:04.751908",
+ "modified": "2025-07-18 12:41:32.537878",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Gratuity",
@@ -232,6 +231,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "employee_name",
  "sort_field": "creation",
  "sort_order": "DESC",

@@ -53,7 +53,7 @@
 				</div>
 			</div>
 		</div>
-		<EmptyState v-else message="No taxes added" :isTableField="true" />
+		<EmptyState v-else :message="__('No taxes added')" :isTableField="true" />
 
 		<CustomIonModal :isOpen="isModalOpen" @didDismiss="resetSelectedItem()">
 			<template #actionSheet>

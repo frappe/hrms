@@ -6,6 +6,7 @@ from itertools import groupby
 
 import frappe
 from frappe import _
+from frappe.query_builder.functions import Abs, Sum
 from frappe.utils import add_days, cint, flt, getdate
 
 from hrms.hr.doctype.leave_allocation.leave_allocation import get_previous_allocation
@@ -187,57 +188,62 @@ def get_allocated_and_expired_leaves(
 	expired_leaves = 0
 	carry_forwarded_leaves = 0
 
-	records = get_leave_ledger_entries(from_date, to_date, employee, leave_type)
-
-	for record in records:
-		# new allocation records with `is_expired=1` are created when leave expires
-		# these new records should not be considered, else it leads to negative leave balance
-		if record.is_expired:
-			continue
-
-		if record.to_date < getdate(to_date):
-			# leave allocations ending before to_date, reduce leaves taken within that period
-			# since they are already used, they won't expire
-			expired_leaves += record.leaves
-			leaves_for_period = get_leaves_for_period(employee, leave_type, record.from_date, record.to_date)
-			expired_leaves -= min(abs(leaves_for_period), record.leaves)
-
-		if record.from_date >= getdate(from_date):
-			if record.is_carry_forward:
-				carry_forwarded_leaves += record.leaves
-			else:
-				new_allocation += record.leaves
+	new_allocation = get_allocated_leaves(from_date, to_date, employee, leave_type)
+	expired_leaves = get_expired_leaves(from_date, to_date, employee, leave_type)
+	carry_forwarded_leaves = get_cf_leaves(from_date, to_date, employee, leave_type)
 
 	return new_allocation, expired_leaves, carry_forwarded_leaves
 
 
-def get_leave_ledger_entries(from_date: str, to_date: str, employee: str, leave_type: str) -> list[dict]:
+def get_allocated_leaves(from_date, to_date, employee, leave_type):
 	ledger = frappe.qb.DocType("Leave Ledger Entry")
-	return (
+	allocated_leaves = (
 		frappe.qb.from_(ledger)
-		.select(
-			ledger.employee,
-			ledger.leave_type,
-			ledger.from_date,
-			ledger.to_date,
-			ledger.leaves,
-			ledger.transaction_name,
-			ledger.transaction_type,
-			ledger.is_carry_forward,
-			ledger.is_expired,
-		)
+		.select(Sum(ledger.leaves))
 		.where(
 			(ledger.docstatus == 1)
 			& (ledger.transaction_type == "Leave Allocation")
 			& (ledger.employee == employee)
 			& (ledger.leave_type == leave_type)
-			& (
-				(ledger.from_date[from_date:to_date])
-				| (ledger.to_date[from_date:to_date])
-				| ((ledger.from_date < from_date) & (ledger.to_date > to_date))
-			)
+			& ((ledger.from_date[from_date:to_date]) | (ledger.to_date[from_date:to_date]))
+			& ((ledger.is_expired == 0) & (ledger.is_carry_forward == 0))
 		)
-	).run(as_dict=True)
+	).run()[0][0]
+	return allocated_leaves if allocated_leaves else 0.0
+
+
+def get_expired_leaves(from_date, to_date, employee, leave_type):
+	ledger = frappe.qb.DocType("Leave Ledger Entry")
+	expired_leaves = (
+		frappe.qb.from_(ledger)
+		.select(Abs(Sum(ledger.leaves)))
+		.where(
+			(ledger.docstatus == 1)
+			& (ledger.transaction_type == "Leave Allocation")
+			& (ledger.employee == employee)
+			& (ledger.leave_type == leave_type)
+			& ((ledger.from_date[from_date:to_date]) | (ledger.to_date[from_date:to_date]))
+			& (ledger.is_expired == 1)
+		)
+	).run()[0][0]
+	return expired_leaves if expired_leaves else 0.0
+
+
+def get_cf_leaves(from_date, to_date, employee, leave_type):
+	ledger = frappe.qb.DocType("Leave Ledger Entry")
+	cf_leaves = (
+		frappe.qb.from_(ledger)
+		.select(Sum(ledger.leaves))
+		.where(
+			(ledger.docstatus == 1)
+			& (ledger.transaction_type == "Leave Allocation")
+			& (ledger.employee == employee)
+			& (ledger.leave_type == leave_type)
+			& ((ledger.from_date[from_date:to_date]) | (ledger.to_date[from_date:to_date]))
+			& ((ledger.is_expired == 0) & (ledger.is_carry_forward == 1))
+		)
+	).run()[0][0]
+	return cf_leaves if cf_leaves else 0.0
 
 
 def get_chart_data(data: list, filters: Filters) -> dict:

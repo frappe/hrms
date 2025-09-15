@@ -18,6 +18,9 @@ class TestProjectProfitability(IntegrationTestCase):
 		frappe.db.delete("Timesheet")
 		emp = make_employee("test_employee_9@salary.com", company="_Test Company")
 
+		frappe.db.set_single_value("HR Settings", "standard_working_hours", 8)
+		frappe.db.set_single_value("Payroll Settings", "include_holidays_in_total_working_days", 0)
+
 		if not frappe.db.exists("Salary Component", "Timesheet Component"):
 			frappe.get_doc(
 				{"doctype": "Salary Component", "salary_component": "Timesheet Component"}
@@ -29,27 +32,19 @@ class TestProjectProfitability(IntegrationTestCase):
 		activity_type = create_activity_type("_Test Employee Timesheet")
 		self.timesheet = make_timesheet(emp, is_billable=1, activity_type=activity_type)
 		self.salary_slip = make_salary_slip_from_timesheet(self.timesheet.name)
-		self.salary_slip.start_date = self.timesheet.start_date
-
-		holidays = self.salary_slip.get_holidays_for_employee(date, date)
-		if holidays:
-			frappe.db.set_single_value("Payroll Settings", "include_holidays_in_total_working_days", 1)
-
 		self.salary_slip.submit()
+
 		self.sales_invoice = make_sales_invoice(
 			self.timesheet.name, "_Test Item", "_Test Customer", currency="INR"
 		)
 		self.sales_invoice.due_date = date
 		self.sales_invoice.submit()
 
-		frappe.db.set_single_value("HR Settings", "standard_working_hours", 8)
-		frappe.db.set_single_value("Payroll Settings", "include_holidays_in_total_working_days", 0)
-
 	def test_project_profitability(self):
 		filters = {
 			"company": "_Test Company",
 			"start_date": add_days(self.timesheet.start_date, -3),
-			"end_date": self.timesheet.start_date,
+			"end_date": add_days(self.timesheet.end_date, 1),
 		}
 
 		report = execute(filters)

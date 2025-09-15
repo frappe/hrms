@@ -3,7 +3,7 @@
 
 import frappe
 
-test_records = frappe.get_test_records("Leave Type")
+# test_records = frappe.get_test_records("Leave Type")
 
 
 def create_leave_type(**args):

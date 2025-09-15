@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, add_months, get_first_day, get_year_ending, get_year_start, getdate
 
 from hrms.hr.doctype.leave_application.test_leave_application import get_employee, get_leave_period
@@ -13,11 +12,15 @@ from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
 	create_assignment_for_multiple_employees,
 )
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
+from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Employee"]
 
+class TestLeavePolicyAssignment(HRMSTestSuite):
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		cls.make_employees()
 
-class TestLeavePolicyAssignment(IntegrationTestCase):
 	def setUp(self):
 		for doctype in [
 			"Leave Period",
@@ -131,7 +134,7 @@ class TestLeavePolicyAssignment(IntegrationTestCase):
 		leave_type = create_leave_type(
 			leave_type_name="_Test Earned Leave", is_earned_leave=True, allocate_on_day="First Day"
 		)
-		leave_policy = create_leave_policy(leave_type=leave_type, annual_allocation=annual_allocation)
+		leave_policy = create_leave_policy(leave_type=leave_type.name, annual_allocation=annual_allocation)
 		leave_policy.submit()
 
 		data = {
@@ -142,7 +145,7 @@ class TestLeavePolicyAssignment(IntegrationTestCase):
 		self.employee.date_of_joining = add_months(first_day, -5)
 		self.employee.save()
 		assignment = create_assignment(self.employee.name, frappe._dict(data))
-		new_leaves_allocated = assignment.get_leaves_for_passed_months(
+		new_leaves_allocated = assignment.get_leaves_for_passed_period(
 			annual_allocation, leave_type, self.employee.date_of_joining
 		)
 		self.assertEqual(new_leaves_allocated, 5)
@@ -150,7 +153,7 @@ class TestLeavePolicyAssignment(IntegrationTestCase):
 		self.employee.date_of_joining = add_months(first_day, -35)
 		self.employee.save()
 		assignment = create_assignment(self.employee.name, frappe._dict(data))
-		new_leaves_allocated = assignment.get_leaves_for_passed_months(
+		new_leaves_allocated = assignment.get_leaves_for_passed_period(
 			annual_allocation, leave_type, self.employee.date_of_joining
 		)
 		self.assertEqual(new_leaves_allocated, 30)
@@ -162,7 +165,7 @@ class TestLeavePolicyAssignment(IntegrationTestCase):
 			"leave_period": leave_period.name,
 		}
 		assignment = create_assignment(self.employee.name, frappe._dict(data))
-		new_leaves_allocated = assignment.get_leaves_for_passed_months(
+		new_leaves_allocated = assignment.get_leaves_for_passed_period(
 			annual_allocation, leave_type, self.employee.date_of_joining
 		)
 		self.assertEqual(new_leaves_allocated, 20)
@@ -194,7 +197,7 @@ class TestLeavePolicyAssignment(IntegrationTestCase):
 		today_date = getdate()
 
 		leave_policy_assignment = frappe.new_doc("Leave Policy Assignment")
-		leave_policy_assignment.employee = self.employee
+		leave_policy_assignment.employee = self.employee.name
 		leave_policy_assignment.leave_policy = leave_policy.name
 		leave_policy_assignment.effective_from = getdate(get_first_day(today_date))
 		leave_policy_assignment.effective_to = getdate(get_year_ending(today_date))
@@ -222,7 +225,7 @@ class TestLeavePolicyAssignment(IntegrationTestCase):
 			leave_type_name="_Test Earned Leave", is_earned_leave=True, allocate_on_day="Last Day"
 		)
 		annual_earned_leaves = 10
-		leave_policy = create_leave_policy(leave_type=leave_type, annual_allocation=annual_earned_leaves)
+		leave_policy = create_leave_policy(leave_type=leave_type.name, annual_allocation=annual_earned_leaves)
 		leave_policy.submit()
 
 		data = {
@@ -249,7 +252,7 @@ class TestLeavePolicyAssignment(IntegrationTestCase):
 			leave_type_name="_Test Earned Leave", is_earned_leave=True, allocate_on_day="Last Day"
 		)
 		annual_earned_leaves = 24
-		leave_policy = create_leave_policy(leave_type=leave_type, annual_allocation=annual_earned_leaves)
+		leave_policy = create_leave_policy(leave_type=leave_type.name, annual_allocation=annual_earned_leaves)
 		leave_policy.submit()
 
 		data = {

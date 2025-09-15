@@ -162,7 +162,6 @@ override_doctype_class = {
 doc_events = {
 	"User": {
 		"validate": "erpnext.setup.doctype.employee.employee.validate_employee_role",
-		"on_update": "erpnext.setup.doctype.employee.employee.update_user_permissions",
 	},
 	"Company": {
 		"validate": "hrms.overrides.company.validate_default_accounts",
@@ -223,6 +222,7 @@ scheduler_events = {
 		"hrms.hr.doctype.daily_work_summary_group.daily_work_summary_group.trigger_emails",
 	],
 	"hourly_long": [
+		"hrms.hr.doctype.shift_type.shift_type.update_last_sync_of_checkin",
 		"hrms.hr.doctype.shift_type.shift_type.process_auto_attendance_for_all_shifts",
 		"hrms.hr.doctype.shift_schedule_assignment.shift_schedule_assignment.process_auto_shift_creation",
 	],
@@ -242,7 +242,7 @@ scheduler_events = {
 	"monthly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_monthly"],
 }
 
-advance_payment_payable_doctypes = ["Gratuity", "Employee Advance"]
+advance_payment_payable_doctypes = ["Leave Encashment", "Gratuity", "Employee Advance"]
 
 invoice_doctypes = ["Expense Claim"]
 
@@ -253,6 +253,7 @@ accounting_dimension_doctypes = [
 	"Expense Claim Detail",
 	"Expense Taxes and Charges",
 	"Payroll Entry",
+	"Leave Encashment",
 ]
 
 bank_reconciliation_doctypes = ["Expense Claim"]
@@ -272,6 +273,7 @@ regional_overrides = {
 	"India": {
 		"hrms.hr.utils.calculate_annual_eligible_hra_exemption": "hrms.regional.india.utils.calculate_annual_eligible_hra_exemption",
 		"hrms.hr.utils.calculate_hra_exemption_for_period": "hrms.regional.india.utils.calculate_hra_exemption_for_period",
+		"hrms.hr.utils.calculate_tax_with_marginal_relief": "hrms.regional.india.utils.calculate_tax_with_marginal_relief",
 	},
 }
 

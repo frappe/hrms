@@ -22,7 +22,7 @@ def get_dashboard_for_employee(data):
 				],
 			},
 			{
-				"label": _("Exit"),
+				"label": _("Employee Exit"),
 				"items": [
 					"Employee Separation",
 					"Exit Interview",

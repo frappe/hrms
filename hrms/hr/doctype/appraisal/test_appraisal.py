@@ -30,7 +30,9 @@ class TestAppraisal(IntegrationTestCase):
 		engineer.appraisal_template = self.template.name
 		engineer.save()
 
-		self.employee1 = make_employee("employee1@example.com", company=self.company, designation="Engineer")
+		self.employee1 = make_employee(
+			"test_appraisal1@example.com", company=self.company, designation="Engineer"
+		)
 
 	def test_validate_duplicate(self):
 		cycle = create_appraisal_cycle(designation="Engineer")
@@ -298,7 +300,7 @@ class TestAppraisal(IntegrationTestCase):
 		self.assertRaises(frappe.ValidationError, appraisal.insert)
 
 	def test_cycle_summary(self):
-		employee2 = make_employee("employee2@example.com", company=self.company, designation="Engineer")
+		employee2 = make_employee("test_appraisal2@example.com", company=self.company, designation="Engineer")
 
 		cycle = create_appraisal_cycle(designation="Engineer")
 		cycle.create_appraisals()

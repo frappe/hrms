@@ -162,8 +162,7 @@
    "fieldtype": "Link",
    "ignore_user_permissions": 1,
    "label": "Advance Account",
-   "options": "Account",
-   "reqd": 1
+   "options": "Account"
   },
   {
    "fieldname": "mode_of_payment",
@@ -239,9 +238,10 @@
    "fieldtype": "Column Break"
   }
  ],
+ "grid_page_length": 50,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-29 12:05:13.623633",
+ "modified": "2025-06-16 12:09:38.685483",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Advance",

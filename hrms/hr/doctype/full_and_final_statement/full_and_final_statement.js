@@ -46,6 +46,11 @@ frappe.ui.form.on("Full and Final Statement", {
 				if (frappe.meta.has_field(fnf_doc.reference_document_type, "employee")) {
 					filters["employee"] = frm.doc.employee;
 				}
+
+				if (fnf_doc.reference_document_type === "Leave Encashment") {
+					filters["status"] = "Unpaid";
+					filters["pay_via_payment_entry"] = 1;
+				}
 			});
 
 			return {

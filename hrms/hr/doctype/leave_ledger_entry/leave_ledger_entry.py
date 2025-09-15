@@ -29,7 +29,7 @@ class LeaveLedgerEntry(Document):
 		# allow cancellation of expiry leaves
 		if self.is_expired:
 			frappe.db.set_value("Leave Allocation", self.transaction_name, "expired", 0)
-		else:
+		elif self.transaction_type != "Leave Adjustment":
 			frappe.throw(_("Only expired allocation can be cancelled"))
 
 
@@ -190,7 +190,7 @@ def get_remaining_leaves(allocation):
 			"to_date": ("<=", allocation.to_date),
 			"docstatus": 1,
 		},
-		fieldname=["SUM(leaves)"],
+		fieldname=[{"SUM": "leaves"}],
 	)
 
 

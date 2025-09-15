@@ -90,7 +90,7 @@
 					</div>
 				</div>
 				<EmptyState
-					:message="`No ${props.doctype?.toLowerCase()}s found`"
+					:message="__('No {0} found', [props.doctype?.toLowerCase()])"
 					v-else-if="!documents.loading"
 				/>
 
@@ -159,6 +159,7 @@ import { EMPLOYEE_CHECKIN_FIELDS } from "@/data/config/requestSummaryFields"
 import useWorkflow from "@/composables/workflow"
 import { useListUpdate } from "@/composables/realtime"
 
+const __ = inject("$translate")
 const props = defineProps({
 	doctype: {
 		type: String,

@@ -1,8 +1,7 @@
 import frappe
-from frappe.tests import IntegrationTestCase, change_settings
+from frappe.tests import change_settings
 from frappe.utils import add_days, add_months, getdate, nowdate
 
-import erpnext
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.leave_allocation.leave_allocation import (
@@ -11,9 +10,16 @@ from hrms.hr.doctype.leave_allocation.leave_allocation import (
 )
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import process_expired_allocation
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestLeaveAllocation(IntegrationTestCase):
+class TestLeaveAllocation(HRMSTestSuite):
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		cls.make_employees()
+		cls.make_leave_types()
+
 	def setUp(self):
 		frappe.db.delete("Leave Period")
 		frappe.db.delete("Leave Allocation")
@@ -634,6 +640,3 @@ def create_leave_allocation(**args):
 			"to_date": args.to_date or add_months(nowdate(), 12),
 		}
 	)
-
-
-test_dependencies = ["Employee", "Leave Type"]

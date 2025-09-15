@@ -23,12 +23,14 @@
 			</div>
 		</router-link>
 	</div>
-	<EmptyState message="You have no advances" v-else />
+	<EmptyState :message="__('You have no advances')" v-else />
 </template>
 
 <script setup>
 import EmployeeAdvanceItem from "@/components/EmployeeAdvanceItem.vue"
+import { inject } from "vue"
 
+const __ = inject("$translate")
 const props = defineProps({
 	items: {
 		type: Array,

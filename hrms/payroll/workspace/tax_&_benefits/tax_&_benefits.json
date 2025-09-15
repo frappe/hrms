@@ -62,9 +62,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Employee Tax Exemption Declaration Category",
+   "label": "Employee Tax Exemption Category",
    "link_count": 0,
-   "link_to": "Employee Tax Exemption Declaration Category",
+   "link_to": "Employee Tax Exemption Category",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -136,7 +136,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-01-15 17:16:28.335505",
+ "modified": "2025-08-18 14:57:19.891513",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Tax & Benefits",

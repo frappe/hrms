@@ -11,6 +11,10 @@ from hrms.hr.utils import validate_active_employee
 
 
 class AdditionalSalary(Document):
+	def before_validate(self):
+		if self.payroll_date and self.is_recurring:
+			self.payroll_date = None
+
 	def on_submit(self):
 		self.update_return_amount_in_employee_advance()
 		self.update_employee_referral()
@@ -117,16 +121,29 @@ class AdditionalSalary(Document):
 		if not self.overwrite_salary_structure_amount:
 			return
 
-		existing_additional_salary = frappe.db.exists(
-			"Additional Salary",
-			{
-				"name": ["!=", self.name],
-				"salary_component": self.salary_component,
-				"payroll_date": self.payroll_date,
-				"overwrite_salary_structure_amount": 1,
-				"employee": self.employee,
-				"docstatus": 1,
-			},
+		AdditionalSalary = frappe.qb.DocType("Additional Salary")
+		existing_additional_salary = (
+			(
+				frappe.qb.from_(AdditionalSalary)
+				.select(AdditionalSalary.name)
+				.where(
+					(AdditionalSalary.name != self.name)
+					& (AdditionalSalary.salary_component == self.salary_component)
+					& (AdditionalSalary.employee == self.employee)
+					& (AdditionalSalary.overwrite_salary_structure_amount == 1)
+					& (AdditionalSalary.docstatus == 1)
+					& (AdditionalSalary.disabled == 0)
+					& (
+						(AdditionalSalary.payroll_date == self.payroll_date)
+						| (
+							(AdditionalSalary.from_date <= self.payroll_date)
+							& (AdditionalSalary.to_date >= self.payroll_date)
+						)
+					)
+				)
+			)
+			.limit(1)
+			.run(pluck=True)
 		)
 
 		if existing_additional_salary:

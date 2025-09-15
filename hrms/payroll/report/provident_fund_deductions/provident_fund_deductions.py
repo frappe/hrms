@@ -8,7 +8,19 @@ from frappe.utils import getdate
 
 
 def execute(filters=None):
-	data = get_data(filters)
+	data = []
+	provident_fund_components = ["Provident Fund", "Additional Provident Fund", "Provident Fund Loan"]
+	if not frappe.db.exists("Salary Component", {"component_type": ["in", provident_fund_components]}):
+		frappe.msgprint(
+			_(
+				"Salary components of type Provident Fund, Additional Provident Fund or Provident Fund Loan are not set up."
+			),
+			title=_("Missing Salary Components"),
+			indicator="red",
+		)
+	else:
+		data = get_data(filters)
+
 	columns = get_columns(filters) if len(data) else []
 
 	return columns, data

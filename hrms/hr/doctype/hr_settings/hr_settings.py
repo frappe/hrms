@@ -36,11 +36,13 @@ class HRSettings(Document):
 
 		try:
 			weekly_job = frappe.get_doc(
-				"Scheduled Job Type", "employee_reminders.send_reminders_in_advance_weekly"
+				"Scheduled Job Type",
+				{"method": "hrms.controllers.employee_reminders.send_reminders_in_advance_weekly"},
 			)
 
 			monthly_job = frappe.get_doc(
-				"Scheduled Job Type", "employee_reminders.send_reminders_in_advance_monthly"
+				"Scheduled Job Type",
+				{"method": "hrms.controllers.employee_reminders.send_reminders_in_advance_monthly"},
 			)
 		except frappe.DoesNotExistError:
 			return

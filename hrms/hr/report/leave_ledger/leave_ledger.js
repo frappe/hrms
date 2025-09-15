@@ -38,7 +38,7 @@ frappe.query_reports["Leave Ledger"] = {
 				{ value: "Active", label: __("Active") },
 				{ value: "Inactive", label: __("Inactive") },
 				{ value: "Suspended", label: __("Suspended") },
-				{ value: "Left", label: __("Left") },
+				{ value: "Left", label: __("Left", null, "Employee") },
 			],
 			default: "Active",
 		},
@@ -59,7 +59,13 @@ frappe.query_reports["Leave Ledger"] = {
 			fieldname: "transaction_type",
 			label: __("Transaction Type"),
 			fieldtype: "Select",
-			options: ["", "Leave Allocation", "Leave Application", "Leave Encashment"],
+			options: [
+				"",
+				"Leave Allocation",
+				"Leave Application",
+				"Leave Encashment",
+				"Leave Adjustment",
+			],
 		},
 		{
 			fieldname: "transaction_name",
