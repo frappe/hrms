@@ -602,6 +602,7 @@ class PayrollEntry(Document):
 				employee_wise_accounting_enabled,
 			)
 
+			frappe.flags.skip_receivable_payable_account_validation = True
 			self.make_journal_entry(
 				accounts,
 				currencies,
