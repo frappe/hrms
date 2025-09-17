@@ -615,6 +615,7 @@ class PayrollEntry(Document):
 				submit_journal_entry=True,
 				submitted_salary_slips=submitted_salary_slips,
 			)
+			frappe.flags.party_not_required_for_receivable_payable = False
 
 	def make_journal_entry(
 		self,
