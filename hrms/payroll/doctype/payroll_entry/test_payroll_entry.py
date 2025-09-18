@@ -77,6 +77,8 @@ class TestPayrollEntry(FrappeTestCase):
 			frappe.db.set_value(
 				"Company", "_Test Company", "default_payroll_payable_account", "_Test Payroll Payable - _TC"
 			)
+		else:
+			frappe.db.set_value("Account", "_Test Payroll Payable - _TC", "account_type", "Payable")
 
 	def test_payroll_entry(self):
 		company = frappe.get_doc("Company", "_Test Company")
