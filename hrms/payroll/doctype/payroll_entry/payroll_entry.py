@@ -107,11 +107,17 @@ class PayrollEntry(Document):
 			)
 
 	def validate_payroll_payable_account(self):
-		if frappe.db.get_value("Account", self.payroll_payable_account, "account_type"):
+		payroll_payable_account_type = frappe.db.get_value(
+			"Account", self.payroll_payable_account, "account_type"
+		)
+		if payroll_payable_account_type != "Payable":
 			frappe.throw(
 				_(
-					"Account type cannot be set for payroll payable account {0}, please remove and try again"
-				).format(frappe.bold(get_link_to_form("Account", self.payroll_payable_account)))
+					"Account type should be set {0} for payroll payable account {1}, please set and try again"
+				).format(
+					frappe.bold("Payable"),
+					frappe.bold(get_link_to_form("Account", self.payroll_payable_account)),
+				)
 			)
 
 	def on_cancel(self):
