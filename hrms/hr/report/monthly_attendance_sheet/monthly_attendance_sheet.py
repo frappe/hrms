@@ -271,11 +271,11 @@ def get_attendance_records(filters: Filters) -> list[dict]:
 	status = (
 		frappe.qb.terms.Case()
 		.when(
-			(Attendance.status == "Half Day" and (Attendance.half_day_status == "Present")),
+			((Attendance.status == "Half Day") & (Attendance.half_day_status == "Present")),
 			"Half Day/Other Half Present",
 		)
 		.when(
-			(Attendance.status == "Half Day" and (Attendance.half_day_status == "Absent")),
+			((Attendance.status == "Half Day") & (Attendance.half_day_status == "Absent")),
 			"Half Day/Other Half Absent",
 		)
 		.else_(Attendance.status)

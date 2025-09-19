@@ -75,10 +75,6 @@ frappe.ui.form.on("Payroll Entry", {
 						frm.refresh();
 					});
 				});
-			} else if (frm.doc.docstatus == 1 && frm.doc.status == "Failed") {
-				frm.add_custom_button(__("Create Salary Slips"), function () {
-					frm.call("create_salary_slips");
-				}).addClass("btn-primary");
 			}
 		}
 
@@ -128,9 +124,8 @@ frappe.ui.form.on("Payroll Entry", {
 			});
 	},
 
-	create_salary_slips: function (frm) {
-		frm.call({
-			doc: frm.doc,
+	create_salary_slip: function (frm) {
+		frappe.call({
 			method: "run_doc_method",
 			args: {
 				method: "create_salary_slips",
@@ -152,7 +147,7 @@ frappe.ui.form.on("Payroll Entry", {
 			}).addClass("btn-primary");
 		} else if (!frm.doc.salary_slips_created && frm.doc.status === "Failed") {
 			frm.add_custom_button(__("Create Salary Slips"), function () {
-				frm.trigger("create_salary_slips");
+				frm.trigger("create_salary_slip");
 			}).addClass("btn-primary");
 		}
 	},

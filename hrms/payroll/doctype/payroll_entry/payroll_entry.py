@@ -840,6 +840,9 @@ class PayrollEntry(Document):
 		if account_currency not in currencies:
 			currencies.append(account_currency)
 
+		if company_currency not in currencies:
+			currencies.append(company_currency)
+
 		if account_currency == company_currency:
 			conversion_rate = self.exchange_rate
 			exchange_rate = 1

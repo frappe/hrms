@@ -91,7 +91,7 @@ watch(
 	() => props.doctype,
 	() => {
 		if (!props.doctype || props.doctype === options.doctype) return
-		reloadOptions("")
+		reloadOptions(props.modelValue)
 	},
 	{ immediate: true }
 )

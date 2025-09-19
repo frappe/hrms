@@ -227,7 +227,9 @@ class TestGratuity(FrappeTestCase):
 		fnf.submit()
 
 		jv = fnf.create_journal_entry()
-		jv.accounts[1].account = frappe.get_cached_value("Company", "_Test Company", "default_bank_account")
+		jv.accounts[1].account = (
+			frappe.get_cached_value("Company", "_Test Company", "default_bank_account") or "_Test Bank - _TC"
+		)
 		jv.cheque_no = "123456"
 		jv.cheque_date = getdate()
 		jv.save()

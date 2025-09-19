@@ -1625,6 +1625,61 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertEqual(flt(salary_slip.future_income_tax_deductions, 2), 125439.65)
 		self.assertEqual(flt(salary_slip.total_income_tax, 2), 136843.25)
 
+	def test_income_tax_breakup_when_tax_added_via_additional_salary(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		# frappe.db.delete("Income Tax Slab", {"currency": "INR"})
+		emp = make_employee(
+			"test_employee_ss_income_tax_breakup_added_via_addnl_salary@salary.com",
+			company="_Test Company",
+			date_of_joining="2021-01-01",
+		)
+
+		payroll_period = frappe.get_last_doc("Payroll Period", filters={"company": "_Test Company"})
+		create_tax_slab(payroll_period, effective_date=payroll_period.start_date, allow_tax_exemption=True)
+
+		salary_structure_name = "Test Salary Structure to test Income Tax Breakup added via addnl salary"
+		if not frappe.db.exists("Salary Structure", salary_structure_name):
+			salary_structure_doc = make_salary_structure(
+				salary_structure_name,
+				"Monthly",
+				company="_Test Company",
+				employee=emp,
+				from_date=payroll_period.start_date,
+				payroll_period=payroll_period,
+				test_tax=True,
+				base=65000,
+			)
+
+		create_exemption_declaration(emp, payroll_period.name)
+
+		create_additional_salary_for_non_taxable_component(emp, payroll_period, company="_Test Company")
+
+		# create TDS of 12000 via addnl salary doctype
+		create_additional_salary_for_income_tax(emp, payroll_period, company="_Test Company")
+
+		create_employee_other_income(emp, payroll_period.name, company="_Test Company")
+
+		# Create Salary Slip
+		salary_slip = make_salary_slip(
+			salary_structure_doc.name, employee=emp, posting_date=payroll_period.start_date
+		)
+
+		monthly_tax_amount = 12000  # as 12000 is passed in addnl salary creation
+
+		self.assertEqual(salary_slip.ctc, 1216000.0)
+		self.assertEqual(salary_slip.income_from_other_sources, 10000.0)
+		self.assertEqual(salary_slip.non_taxable_earnings, 10000.0)
+		self.assertEqual(salary_slip.total_earnings, 1226000.0)
+		self.assertEqual(salary_slip.standard_tax_exemption_amount, 50000.0)
+		self.assertEqual(salary_slip.tax_exemption_declaration, 100000.0)
+		self.assertEqual(salary_slip.deductions_before_tax_calculation, 2400.0)
+		self.assertEqual(salary_slip.annual_taxable_amount, 1063600.0)
+		self.assertEqual(flt(salary_slip.income_tax_deducted_till_date, 2), monthly_tax_amount)
+		self.assertEqual(flt(salary_slip.current_month_income_tax, 2), monthly_tax_amount)
+		self.assertEqual(flt(salary_slip.future_income_tax_deductions, 2), 124843.25)  # as 136843.25 - 12000
+		self.assertEqual(flt(salary_slip.total_income_tax, 2), 136843.25)
+
 	def test_consistent_future_earnings_irrespective_of_payment_days(self):
 		"""
 		For CTC calculation, verifies that future non taxable earnings remain
@@ -2328,7 +2383,7 @@ def create_tax_slab(
 		{"from_amount": 1000001, "percent_deduction": 30},
 	]
 
-	income_tax_slab_name = frappe.db.get_value("Income Tax Slab", {"currency": currency})
+	income_tax_slab_name = frappe.db.get_value("Income Tax Slab", {"currency": currency, "docstatus": 1})
 
 	if not income_tax_slab_name:
 		income_tax_slab = frappe.new_doc("Income Tax Slab")
@@ -2729,6 +2784,32 @@ def create_additional_salary_for_non_taxable_component(employee, payroll_period,
 		}
 	).insert()
 
+	add_sal.submit()
+
+
+def create_additional_salary_for_income_tax(employee, payroll_period, company):
+	data = [
+		{
+			"salary_component": "TDS",
+			"abbr": "T",
+			"type": "Deduction",
+			"is_income_tax_component": 1,
+		},
+	]
+	make_salary_component(data, True, company_list=[company])
+
+	add_sal = frappe.get_doc(
+		{
+			"doctype": "Additional Salary",
+			"employee": employee,
+			"company": company,
+			"salary_component": "TDS",
+			"overwrite_salary_structure_amount": 1,
+			"amount": 12000,
+			"currency": "INR",
+			"payroll_date": payroll_period.start_date,
+		}
+	).insert()
 	add_sal.submit()
 
 
