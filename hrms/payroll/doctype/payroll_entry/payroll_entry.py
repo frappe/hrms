@@ -176,7 +176,7 @@ class PayrollEntry(Document):
 			# cancel linked payment ledger entry
 			for pl in journal_entry_payment_ledgers:
 				frappe.get_doc("Payment Ledger Entry", pl).cancel()
-			
+
 			frappe.get_doc("Journal Entry", je).cancel()
 
 	def cancel_linked_payment_ledger_entries(self):
@@ -215,7 +215,6 @@ class PayrollEntry(Document):
 	@frappe.whitelist()
 	def fill_employee_details(self):
 		filters = self.make_filters()
-		print(filters, 'filterss')
 		employees = get_employee_list(filters=filters, as_dict=True, ignore_match_conditions=True)
 		self.set("employees", [])
 
