@@ -125,6 +125,7 @@ class PayrollEntry(Document):
 
 		self.delete_linked_salary_slips()
 		self.cancel_linked_journal_entries()
+		self.cancel_linked_payment_ledger_entries()
 
 		# reset flags & update status
 		self.db_set("salary_slips_created", 0)
@@ -167,7 +168,27 @@ class PayrollEntry(Document):
 
 		# cancel Journal Entries
 		for je in journal_entries:
+			journal_entry_payment_ledgers = frappe.get_all(
+				"Payment Ledger Entry",
+				{"voucher_type": "Journal Entry", "voucher_no": je, "docstatus": 1},
+				distinct=True,
+			)
+			# cancel linked payment ledger entry
+			for pl in journal_entry_payment_ledgers:
+				frappe.get_doc("Payment Ledger Entry", pl).cancel()
+			
 			frappe.get_doc("Journal Entry", je).cancel()
+
+	def cancel_linked_payment_ledger_entries(self):
+		payment_ledgers = frappe.get_all(
+			"Payment Ledger Entry",
+			{"against_voucher_type": self.doctype, "against_voucher_no": self.name, "docstatus": 1},
+			distinct=True,
+		)
+
+		# cancel payment ledger entry
+		for pl in payment_ledgers:
+			frappe.get_doc("Payment Ledger Entry", pl).cancel()
 
 	def get_linked_salary_slips(self):
 		return frappe.get_all("Salary Slip", {"payroll_entry": self.name}, ["name", "docstatus"])
@@ -194,6 +215,7 @@ class PayrollEntry(Document):
 	@frappe.whitelist()
 	def fill_employee_details(self):
 		filters = self.make_filters()
+		print(filters, 'filterss')
 		employees = get_employee_list(filters=filters, as_dict=True, ignore_match_conditions=True)
 		self.set("employees", [])
 
@@ -594,7 +616,6 @@ class PayrollEntry(Document):
 			)
 
 			# when party is not required, skip the validation in journal & gl entry
-			frappe.flags.party_not_required_for_receivable_payable = True
 			self.make_journal_entry(
 				accounts,
 				currencies,
@@ -606,7 +627,6 @@ class PayrollEntry(Document):
 				submit_journal_entry=True,
 				submitted_salary_slips=submitted_salary_slips,
 			)
-			frappe.flags.party_not_required_for_receivable_payable = False
 
 	def make_journal_entry(
 		self,
@@ -638,7 +658,9 @@ class PayrollEntry(Document):
 
 		try:
 			if submit_journal_entry:
+				frappe.flags.party_not_required_for_receivable_payable = True
 				journal_entry.submit()
+				frappe.flags.party_not_required_for_receivable_payable = False
 
 			if submitted_salary_slips:
 				self.set_journal_entry_in_salary_slips(submitted_salary_slips, jv_name=journal_entry.name)
