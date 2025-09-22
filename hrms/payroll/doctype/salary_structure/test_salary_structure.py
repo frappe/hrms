@@ -164,6 +164,7 @@ def make_salary_structure(
 	dont_submit=False,
 	other_details=None,
 	test_tax=False,
+	test_arrear=False,
 	company=None,
 	currency=None,
 	payroll_period=None,
@@ -180,7 +181,9 @@ def make_salary_structure(
 	employee_benefits = []
 	if include_flexi_benefits:
 		employee_benefits = make_employee_benefit_earning_components(
-			setup=True, company_list=["_Test Company"]
+			setup=True,
+			company_list=["_Test Company"],
+			test_arrear=test_arrear,
 		)
 
 	details = {
@@ -192,6 +195,7 @@ def make_salary_structure(
 			test_tax=test_tax,
 			company_list=["_Test Company"],
 			test_accrual_component=test_accrual_component,
+			test_arrear=test_arrear,
 		),
 		"deductions": make_deduction_salary_component(
 			setup=True, test_tax=test_tax, company_list=["_Test Company"]

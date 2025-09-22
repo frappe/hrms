@@ -182,6 +182,9 @@ class SalarySlip(TransactionBase):
 					alert=True,
 				)
 
+		if self.payroll_period and not self.current_payroll_period:
+			self.current_payroll_period = self.payroll_period.name
+
 	def check_salary_withholding(self):
 		withholding = get_salary_withholdings(self.start_date, self.end_date, self.employee)
 		if withholding:
@@ -258,7 +261,7 @@ class SalarySlip(TransactionBase):
 		self.set_status()
 		self.update_status()
 		self.update_payment_status_for_gratuity_and_leave_encashment()
-		delete_employee_benefit_ledger_entry(self.name)
+		delete_employee_benefit_ledger_entry("salary_slip", self.name)
 
 		cancel_loan_repayment_entry(self)
 		self.publish_update()
@@ -278,7 +281,7 @@ class SalarySlip(TransactionBase):
 		if not self.has_custom_naming_series:
 			revert_series_if_last(self.default_series, self.name)
 
-		delete_employee_benefit_ledger_entry(self.name)
+		delete_employee_benefit_ledger_entry("salary_slip", self.name)
 
 	def get_status(self):
 		if self.docstatus == 2:

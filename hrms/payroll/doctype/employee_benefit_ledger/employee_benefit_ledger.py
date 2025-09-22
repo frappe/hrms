@@ -73,12 +73,10 @@ def create_employee_benefit_ledger_entry(ref_doc, args=None, delete=False):
 		frappe.get_doc(entry).insert()
 
 
-def delete_employee_benefit_ledger_entry(ref_doc_name):
+def delete_employee_benefit_ledger_entry(ref_field, ref_value):
 	EmployeeBenefitLedger = frappe.qb.DocType("Employee Benefit Ledger")
 	(
-		frappe.qb.from_(EmployeeBenefitLedger)
-		.delete()
-		.where(EmployeeBenefitLedger.salary_slip == ref_doc_name)
+		frappe.qb.from_(EmployeeBenefitLedger).delete().where(EmployeeBenefitLedger[ref_field] == ref_value)
 	).run()
 	return
 

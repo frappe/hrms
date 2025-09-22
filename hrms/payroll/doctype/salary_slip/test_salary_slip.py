@@ -1939,6 +1939,8 @@ def make_salary_component(salary_components, test_tax, company_list=None):
 				salary_component["condition"] = ""
 
 		salary_component["salary_component_abbr"] = salary_component["abbr"]
+		if salary_component.get("arrear_component"):
+			salary_component["arrear_component"] = 1
 		doc = frappe.new_doc("Salary Component")
 		doc.update(salary_component)
 		doc.insert()
@@ -1992,6 +1994,7 @@ def make_earning_salary_component(
 	test_tax=False,
 	company_list=None,
 	test_accrual_component=False,
+	test_arrear=False,
 	test_statistical_comp=False,
 ):
 	data = [
@@ -2002,6 +2005,7 @@ def make_earning_salary_component(
 			"formula": "base",
 			"type": "Earning",
 			"amount_based_on_formula": 1,
+			"arrear_component": 1 if test_arrear else 0,
 		},
 		{"salary_component": "HRA", "abbr": "H", "amount": 3000, "type": "Earning"},
 		{
@@ -2114,7 +2118,9 @@ def make_deduction_salary_component(setup=False, test_tax=False, company_list=No
 	return data
 
 
-def make_employee_benefit_earning_components(setup=False, test_tax=False, company_list=None):
+def make_employee_benefit_earning_components(
+	setup=False, test_tax=False, company_list=None, test_arrear=False
+):
 	if setup:
 		data = [
 			{
@@ -2144,6 +2150,14 @@ def make_employee_benefit_earning_components(setup=False, test_tax=False, compan
 				"accrual_component": 1,
 			},
 		]
+
+		if test_arrear:
+			data[1].update(
+				{
+					"arrear_component": 1,
+					"depends_on_payment_days": 1,
+				}
+			)
 
 		make_salary_component(data, test_tax, company_list)
 

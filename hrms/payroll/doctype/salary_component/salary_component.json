@@ -27,6 +27,7 @@
   "do_not_include_in_total",
   "do_not_include_in_accounts",
   "remove_if_zero_valued",
+  "arrear_component",
   "disabled",
   "section_break_5",
   "accounts",
@@ -83,7 +84,8 @@
    "fieldname": "depends_on_payment_days",
    "fieldtype": "Check",
    "label": "Depends on Payment Days",
-   "print_hide": 1
+   "print_hide": 1,
+   "read_only_depends_on": "eval:doc.arrear_component==1"
   },
   {
    "default": "0",
@@ -255,6 +257,14 @@
   },
   {
    "default": "0",
+   "description": "If enabled, this component will be included in arrear calculations",
+   "fieldname": "arrear_component",
+   "fieldtype": "Check",
+   "label": "Arrear Component",
+   "read_only_depends_on": "variable_based_on_taxable_salary"
+  },
+  {
+   "default": "0",
    "depends_on": "eval:doc.type==\"Earning\"",
    "description": "If enabled, this component allows to accrue amounts without adding them to earnings. The accrued balance is tracked in the Employee Benefit Ledger and can be paid out later as needed.",
    "fieldname": "accrual_component",
@@ -281,7 +291,7 @@
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-16 20:25:58.853822",
+ "modified": "2025-09-19 21:36:05.950099",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",
