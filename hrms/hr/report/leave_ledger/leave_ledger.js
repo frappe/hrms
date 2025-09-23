@@ -59,7 +59,13 @@ frappe.query_reports["Leave Ledger"] = {
 			fieldname: "transaction_type",
 			label: __("Transaction Type"),
 			fieldtype: "Select",
-			options: ["", "Leave Allocation", "Leave Application", "Leave Encashment"],
+			options: [
+				"",
+				"Leave Allocation",
+				"Leave Application",
+				"Leave Encashment",
+				"Leave Adjustment",
+			],
 		},
 		{
 			fieldname: "transaction_name",

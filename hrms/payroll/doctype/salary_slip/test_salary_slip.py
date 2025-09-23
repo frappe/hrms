@@ -1070,7 +1070,6 @@ class TestSalarySlip(IntegrationTestCase):
 			"Monthly",
 			other_details={"max_benefits": 100000},
 			test_tax=True,
-			include_flexi_benefits=True,
 			employee=employee,
 			payroll_period=payroll_period,
 		)
@@ -1082,7 +1081,7 @@ class TestSalarySlip(IntegrationTestCase):
 		)
 		tax_paid = get_tax_paid_in_period(employee)
 
-		annual_tax = 113589.0
+		annual_tax = 92789.0
 		try:
 			self.assertEqual(tax_paid, annual_tax)
 		except AssertionError:
@@ -1099,7 +1098,7 @@ class TestSalarySlip(IntegrationTestCase):
 		)
 		tax_paid = get_tax_paid_in_period(employee)
 
-		# No proof, benefit claim sumitted, total tax paid, should not change
+		# No proof, total tax paid, should not change
 		try:
 			self.assertEqual(tax_paid, annual_tax)
 		except AssertionError:
@@ -1109,10 +1108,6 @@ class TestSalarySlip(IntegrationTestCase):
 		# Submit proof for total 120000
 		data["proof"] = create_proof_submission(employee, payroll_period, 120000)
 
-		# Submit benefit claim for total 50000
-		data["benefit-1"] = create_benefit_claim(employee, payroll_period, 15000, "Medical Allowance")
-		data["benefit-2"] = create_benefit_claim(employee, payroll_period, 35000, "Leave Travel Allowance")
-
 		frappe.db.sql("""delete from `tabSalary Slip` where employee=%s""", (employee))
 		data["deducted_dates"] = create_salary_slips_for_payroll_period(
 			employee, salary_structure.name, payroll_period
@@ -1121,7 +1116,7 @@ class TestSalarySlip(IntegrationTestCase):
 
 		# total taxable income 416000, 166000 @ 5% ie. 8300
 		try:
-			self.assertEqual(tax_paid, 82389.0)
+			self.assertEqual(tax_paid, 71989.0)
 		except AssertionError:
 			print("\nSalary Slip - Tax calculation failed on following case\n", data, "\n")
 			raise
@@ -1133,6 +1128,7 @@ class TestSalarySlip(IntegrationTestCase):
 			employee, salary_structure.name, payroll_period
 		)
 
+		annual_tax = 103189.0
 		# total taxable income 566000, 250000 @ 5%, 66000 @ 20%, 12500 + 13200
 		tax_paid = get_tax_paid_in_period(employee)
 		try:
@@ -1207,7 +1203,6 @@ class TestSalarySlip(IntegrationTestCase):
 			"Monthly",
 			other_details={"max_benefits": 100000},
 			test_tax=True,
-			include_flexi_benefits=True,
 			employee=employee,
 			payroll_period=payroll_period,
 		)
@@ -1944,6 +1939,8 @@ def make_salary_component(salary_components, test_tax, company_list=None):
 				salary_component["condition"] = ""
 
 		salary_component["salary_component_abbr"] = salary_component["abbr"]
+		if salary_component.get("arrear_component"):
+			salary_component["arrear_component"] = 1
 		doc = frappe.new_doc("Salary Component")
 		doc.update(salary_component)
 		doc.insert()
@@ -1996,7 +1993,8 @@ def make_earning_salary_component(
 	setup=False,
 	test_tax=False,
 	company_list=None,
-	include_flexi_benefits=False,
+	test_accrual_component=False,
+	test_arrear=False,
 	test_statistical_comp=False,
 ):
 	data = [
@@ -2007,6 +2005,7 @@ def make_earning_salary_component(
 			"formula": "base",
 			"type": "Earning",
 			"amount_based_on_formula": 1,
+			"arrear_component": 1 if test_arrear else 0,
 		},
 		{"salary_component": "HRA", "abbr": "H", "amount": 3000, "type": "Earning"},
 		{
@@ -2018,6 +2017,7 @@ def make_earning_salary_component(
 			"type": "Earning",
 			"amount_based_on_formula": 1,
 			"depends_on_payment_days": 0,
+			"arrear_component": 1 if test_arrear else 0,
 		},
 		{"salary_component": "Leave Encashment", "abbr": "LE", "type": "Earning"},
 		{
@@ -2044,29 +2044,21 @@ def make_earning_salary_component(
 			"remove_if_zero_valued": 1,
 		},
 	]
-	if include_flexi_benefits:
+
+	if test_accrual_component:
 		data.extend(
 			[
 				{
-					"salary_component": "Leave Travel Allowance",
-					"abbr": "B",
-					"is_flexible_benefit": 1,
+					"salary_component": "Accrued Earnings",
+					"abbr": "AC",
 					"type": "Earning",
-					"pay_against_benefit_claim": 1,
-					"max_benefit_amount": 100000,
-					"depends_on_payment_days": 0,
-				},
-				{
-					"salary_component": "Medical Allowance",
-					"abbr": "B",
-					"is_flexible_benefit": 1,
-					"pay_against_benefit_claim": 0,
-					"type": "Earning",
-					"max_benefit_amount": 15000,
-					"depends_on_payment_days": 1,
-				},
+					"accrual_component": 1,
+					"amount": 1000,
+					"arrear_component": 1,
+				}
 			]
 		)
+
 	if test_tax:
 		data.extend(
 			[
@@ -2090,14 +2082,19 @@ def make_earning_salary_component(
 	return data
 
 
-def make_deduction_salary_component(setup=False, test_tax=False, company_list=None):
+def make_deduction_salary_component(
+	setup=False, test_tax=False, company_list=None, test_salary_structure_arrear=False
+):
 	data = [
 		{
 			"salary_component": "Professional Tax",
 			"abbr": "PT",
 			"type": "Deduction",
-			"amount": 200,
+			"amount": 300
+			if test_salary_structure_arrear
+			else 200,  # setting a different amount to test salary structure arrear calculation
 			"exempted_from_income_tax": 1,
+			"arrear_component": 1,
 		}
 	]
 	if not test_tax:
@@ -2124,6 +2121,67 @@ def make_deduction_salary_component(setup=False, test_tax=False, company_list=No
 		)
 	if setup or test_tax:
 		make_salary_component(data, test_tax, company_list)
+
+	return data
+
+
+def make_employee_benefit_earning_components(
+	setup=False, test_tax=False, company_list=None, test_arrear=False
+):
+	if setup:
+		data = [
+			{
+				"salary_component": "Leave Travel Allowance",
+				"abbr": "LTA",
+				"is_flexible_benefit": 1,
+				"type": "Earning",
+				"payout_method": "Allow claim for full benefit amount",
+				"max_benefit_amount": 50000,
+				"accrual_component": 0,
+			},
+			{
+				"salary_component": "Mediclaim Allowance",
+				"abbr": "MA",
+				"is_flexible_benefit": 1,
+				"type": "Earning",
+				"payout_method": "Accrue per cycle, pay only on claim",
+				"final_cycle_accrual_payout": 1,
+				"accrual_component": 1,
+			},
+			{
+				"salary_component": "Internet Reimbursement",
+				"abbr": "IR",
+				"is_flexible_benefit": 1,
+				"type": "Earning",
+				"payout_method": "Accrue and payout at end of payroll period",
+				"accrual_component": 1,
+			},
+		]
+
+		if test_arrear:
+			data[1].update(
+				{
+					"arrear_component": 1,
+					"depends_on_payment_days": 1,
+				}
+			)
+
+		make_salary_component(data, test_tax, company_list)
+
+	data = [
+		{
+			"salary_component": "Leave Travel Allowance",
+			"amount": 50000,
+		},
+		{
+			"salary_component": "Mediclaim Allowance",
+			"amount": 24000,
+		},
+		{
+			"salary_component": "Internet Reimbursement",
+			"amount": 12000,
+		},
+	]
 
 	return data
 
@@ -2182,21 +2240,6 @@ def create_proof_submission(employee, payroll_period, amount):
 	)
 	proof_submission.submit()
 	return submission_date
-
-
-def create_benefit_claim(employee, payroll_period, amount, component):
-	claim_date = add_months(payroll_period.start_date, random.randint(0, 11))
-	frappe.get_doc(
-		{
-			"doctype": "Employee Benefit Claim",
-			"employee": employee,
-			"claimed_amount": amount,
-			"claim_date": claim_date,
-			"earning_component": component,
-			"currency": erpnext.get_default_currency(),
-		}
-	).submit()
-	return claim_date
 
 
 def create_tax_slab(
@@ -2276,7 +2319,6 @@ def create_salary_slips_for_payroll_period(
 			posting_date = add_months(posting_date, 1)
 		if i == 11:
 			slip.deduct_tax_for_unsubmitted_tax_exemption_proof = 1
-			slip.deduct_tax_for_unclaimed_employee_benefits = 1
 		if deduct_random and not random.randint(0, 2):
 			slip.deduct_tax_for_unsubmitted_tax_exemption_proof = 1
 			deducted_dates.append(posting_date)

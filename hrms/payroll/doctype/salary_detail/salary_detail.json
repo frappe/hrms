@@ -22,6 +22,7 @@
   "variable_based_on_taxable_salary",
   "do_not_include_in_total",
   "do_not_include_in_accounts",
+  "accrual_component",
   "deduct_full_tax_on_selected_payroll_date",
   "section_break_2",
   "condition",
@@ -162,6 +163,7 @@
   },
   {
    "default": "0",
+   "fetch_from": "salary_component.do_not_include_in_total",
    "fieldname": "do_not_include_in_total",
    "fieldtype": "Check",
    "label": "Do not include in total"
@@ -259,14 +261,24 @@
    "default": "0",
    "depends_on": "eval:doc.do_not_include_in_total",
    "description": "If enabled, the amount will be excluded from accounting entries during Journal Entry creation.",
+   "fetch_from": "salary_component.do_not_include_in_accounts",
    "fieldname": "do_not_include_in_accounts",
    "fieldtype": "Check",
    "label": "Do Not Include in Accounting Entries"
+  },
+  {
+   "default": "0",
+   "fetch_from": "salary_component.accrual_component",
+   "fieldname": "accrual_component",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Accrual Component",
+   "read_only": 1
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2025-03-22 06:18:40.384653",
+ "modified": "2025-09-01 14:32:39.449384",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Detail",
