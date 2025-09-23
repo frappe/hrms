@@ -592,6 +592,7 @@ class PayrollEntry(Document):
 				accounting_dimensions,
 				precision,
 				payable_amount,
+				employee_wise_accounting_enabled,
 			)
 
 			payable_amount = self.set_accounting_entries_for_advance_deductions(
@@ -657,9 +658,7 @@ class PayrollEntry(Document):
 
 		try:
 			if submit_journal_entry:
-				frappe.flags.party_not_required_for_receivable_payable = True
 				journal_entry.submit()
-				frappe.flags.party_not_required_for_receivable_payable = False
 
 			if submitted_salary_slips:
 				self.set_journal_entry_in_salary_slips(submitted_salary_slips, jv_name=journal_entry.name)
@@ -683,7 +682,10 @@ class PayrollEntry(Document):
 		accounting_dimensions,
 		precision,
 		payable_amount,
+		employee_wise_accounting_enabled,
 	):
+		party_not_required = True if not employee_wise_accounting_enabled else False
+
 		# Earnings
 		for acc_cc, amount in earnings.items():
 			payable_amount = self.get_accounting_entries_and_payable_amount(
@@ -697,6 +699,7 @@ class PayrollEntry(Document):
 				precision,
 				entry_type="debit",
 				accounts=accounts,
+				party_not_required=party_not_required,
 			)
 
 		# Deductions
@@ -712,6 +715,7 @@ class PayrollEntry(Document):
 				precision,
 				entry_type="credit",
 				accounts=accounts,
+				party_not_required=party_not_required,
 			)
 
 		return payable_amount
@@ -771,6 +775,7 @@ class PayrollEntry(Document):
 				precision,
 				entry_type="payable",
 				accounts=accounts,
+				party_not_required=True,
 			)
 
 	def get_accounting_entries_and_payable_amount(
@@ -789,6 +794,7 @@ class PayrollEntry(Document):
 		reference_type=None,
 		reference_name=None,
 		is_advance=None,
+		party_not_required=None,
 	):
 		exchange_rate, amt = self.get_amount_and_exchange_rate_for_journal_entry(
 			account, amount, company_currency, currencies
@@ -799,6 +805,7 @@ class PayrollEntry(Document):
 			"exchange_rate": flt(exchange_rate),
 			"cost_center": cost_center,
 			"project": self.project,
+			"party_not_required": party_not_required,
 		}
 
 		if entry_type == "debit":
@@ -1075,6 +1082,7 @@ class PayrollEntry(Document):
 						"reference_type": self.doctype,
 						"reference_name": self.name,
 						"cost_center": self.cost_center,
+						"party_not_required": True,
 					},
 					accounting_dimensions,
 				)
