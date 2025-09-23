@@ -100,6 +100,21 @@ frappe.ui.form.on("Salary Structure Assignment", {
 		}
 	},
 
+	salary_structure: (frm) => {
+		if (frm.doc.salary_structure) {
+			frappe.db.get_doc("Salary Structure", frm.doc.salary_structure).then((doc) => {
+				frm.clear_table("employee_benefits");
+				doc.employee_benefits.forEach((benefit) => {
+					const row = frm.add_child("employee_benefits");
+					row.salary_component = benefit.salary_component;
+					row.amount = benefit.amount;
+				});
+				refresh_field("employee_benefits");
+				calculate_max_benefit_amount(frm.doc);
+			});
+		}
+	},
+
 	preview_salary_slip: function (frm) {
 		frappe.db.get_value(
 			"Salary Structure",
@@ -158,3 +173,19 @@ frappe.ui.form.on("Salary Structure Assignment", {
 		}
 	},
 });
+
+frappe.ui.form.on("Employee Benefit Detail", {
+	amount: (frm) => calculate_max_benefit_amount(frm.doc),
+});
+
+let calculate_max_benefit_amount = (doc) => {
+	let employee_benefits = doc.employee_benefits || [];
+	let max_benefits = 0;
+	if (employee_benefits.length > 0) {
+		for (let i = 0; i < employee_benefits.length; i++) {
+			max_benefits += flt(employee_benefits[i].amount) || 0;
+		}
+	}
+	doc.max_benefits = max_benefits;
+	refresh_field("max_benefits");
+};

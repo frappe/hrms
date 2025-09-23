@@ -29,6 +29,9 @@
   "taxable_earnings_till_date",
   "column_break_20",
   "tax_deducted_till_date",
+  "employee_benefits_section",
+  "max_benefits",
+  "employee_benefits",
   "section_break_17",
   "payroll_cost_centers"
  ],
@@ -206,11 +209,29 @@
    "fieldtype": "Section Break",
    "hidden": 1,
    "label": "Opening Balances"
+  },
+  {
+   "fieldname": "employee_benefits_section",
+   "fieldtype": "Section Break",
+   "label": "Employee Benefits"
+  },
+  {
+   "fieldname": "employee_benefits",
+   "fieldtype": "Table",
+   "label": "Flexible Benefits",
+   "options": "Employee Benefit Detail"
+  },
+  {
+   "fetch_from": "salary_structure.max_benefits",
+   "fetch_if_empty": 1,
+   "fieldname": "max_benefits",
+   "fieldtype": "Currency",
+   "label": "Maximum Benefit Amount"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-10-18 18:06:42.013701",
+ "modified": "2025-09-03 17:06:42.296943",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",
@@ -257,6 +278,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "employee_name, salary_structure",
  "sort_field": "creation",
  "sort_order": "DESC",
