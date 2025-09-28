@@ -123,47 +123,54 @@ def _get_unmarked_attendance_with_shift(unmarked_attendance, shift, date):
 
 @frappe.whitelist()
 def mark_employee_attendance(
-	employee_list: list | str,
-	status: str,
-	date: str | datetime.date,
-	leave_type: str | None = None,
-	company: str | None = None,
-	late_entry: int | None = None,
-	early_exit: int | None = None,
-	shift: str | None = None,
-	mark_half_day: bool | None = False,
-	half_day_status: str | None = None,
-	half_day_employee_list: list | str | None = None,
+    employee_list: list | str,
+    status: str,
+    date: str | datetime.date,
+    leave_type: str | None = None,
+    company: str | None = None,
+    late_entry: int | None = None,
+    early_exit: int | None = None,
+    shift: str | None = None,
+    mark_half_day: bool | None = False,
+    half_day_status: str | None = None,
+    half_day_employee_list: list | str | None = None,
 ) -> None:
-	if isinstance(employee_list, str):
-		employee_list = json.loads(employee_list)
+    if isinstance(employee_list, str):
+        employee_list = json.loads(employee_list)
 
-	for employee in employee_list:
-		leave_type = None
-		if status == "On Leave" and leave_type:
-			leave_type = leave_type
+    for employee in employee_list:
+        # Pass leave_type to Attendance only when marking "On Leave"
+        selected_leave_type = leave_type if (status == "On Leave" and leave_type) else None
 
-		attendance = frappe.get_doc(
-			dict(
-				doctype="Attendance",
-				employee=employee,
-				attendance_date=getdate(date),
-				status=status,
-				leave_type=leave_type,
-				late_entry=late_entry,
-				early_exit=early_exit,
-				shift=shift,
-			)
-		)
-		attendance.insert()
-		attendance.submit()
-	if mark_half_day:
-		if isinstance(half_day_employee_list, str):
-			half_day_employee_list = json.loads(half_day_employee_list)
-		Attendance = frappe.qb.DocType("Attendance")
-		for employee in half_day_employee_list:
-			frappe.qb.update(Attendance).where(
-				(Attendance.employee == employee) & (Attendance.attendance_date == date)
-			).set(Attendance.half_day_status, half_day_status).set(Attendance.shift, shift).set(
-				Attendance.late_entry, late_entry
-			).set(Attendance.early_exit, early_exit).set(Attendance.modify_half_day_status, 0).run()
+        attendance = frappe.get_doc(
+            dict(
+                doctype="Attendance",
+                employee=employee,
+                attendance_date=getdate(date),
+                status=status,
+                leave_type=selected_leave_type,
+                late_entry=late_entry,
+                early_exit=early_exit,
+                shift=shift,
+            )
+        )
+        attendance.insert()
+        attendance.submit()
+    if mark_half_day:
+        if isinstance(half_day_employee_list, str):
+            half_day_employee_list = json.loads(half_day_employee_list)
+        Attendance = frappe.qb.DocType("Attendance")
+        for employee in half_day_employee_list:
+            (
+                frappe.qb.update(Attendance)
+                .where(
+                    (Attendance.employee == employee)
+                    & (Attendance.attendance_date == getdate(date))
+                )
+                .set(Attendance.status, "Half Day")
+                .set(Attendance.half_day_status, half_day_status)
+                .set(Attendance.shift, shift)
+                .set(Attendance.late_entry, late_entry)
+                .set(Attendance.early_exit, early_exit)
+                .set(Attendance.modify_half_day_status, 0)
+            ).run()
