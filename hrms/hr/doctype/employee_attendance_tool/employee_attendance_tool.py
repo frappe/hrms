@@ -139,8 +139,8 @@ def mark_employee_attendance(
         employee_list = json.loads(employee_list)
 
     for employee in employee_list:
-        # Pass leave_type to Attendance only when marking "On Leave"
-        selected_leave_type = leave_type if (status == "On Leave" and leave_type) else None
+        # Preserve caller-supplied leave_type even if status != "On Leave"
+        selected_leave_type = leave_type if leave_type else None
 
         attendance = frappe.get_doc(
             dict(
@@ -161,7 +161,7 @@ def mark_employee_attendance(
             half_day_employee_list = json.loads(half_day_employee_list)
         Attendance = frappe.qb.DocType("Attendance")
         for employee in half_day_employee_list:
-            (
+            query = (
                 frappe.qb.update(Attendance)
                 .where(
                     (Attendance.employee == employee)
@@ -173,4 +173,9 @@ def mark_employee_attendance(
                 .set(Attendance.late_entry, late_entry)
                 .set(Attendance.early_exit, early_exit)
                 .set(Attendance.modify_half_day_status, 0)
-            ).run()
+            )
+            # Persist leave_type if provided; otherwise keep existing value
+            if leave_type:
+                query = query.set(Attendance.leave_type, leave_type)
+
+            query.run()
