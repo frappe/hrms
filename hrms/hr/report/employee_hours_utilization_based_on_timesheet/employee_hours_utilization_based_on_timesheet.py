@@ -24,20 +24,19 @@ class EmployeeHoursReport:
 		self.validate_standard_working_hours()
 
 	def validate_dates(self):
-		self.day_span = (self.to_date - self.from_date).days
-
-		if self.day_span <= 0:
-			frappe.throw(_("From Date must come before To Date"))
+		if self.to_date < self.from_date:
+			frappe.throw(_("To Date must be on/after From Date"))
+		self.day_span = (self.to_date - self.from_date).days + 1
 
 	def validate_standard_working_hours(self):
-		self.standard_working_hours = frappe.db.get_single_value("HR Settings", "standard_working_hours")
-		if not self.standard_working_hours:
+		val = flt(frappe.db.get_single_value("HR Settings", "standard_working_hours"))
+		if val <= 0:
 			msg = _("The metrics for this report are calculated based on {0}. Please set {0} in {1}.").format(
-				frappe.bold(_("Standard Working Hours")),
-				frappe.utils.get_link_to_form("HR Settings", "HR Settings"),
-			)
-
+                frappe.bold(_("Standard Working Hours")),
+                frappe.utils.get_link_to_form("HR Settings", "HR Settings"),
+            )
 			frappe.throw(msg)
+		self.standard_working_hours = val
 
 	def run(self):
 		self.generate_columns()
