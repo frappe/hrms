@@ -226,6 +226,7 @@ class ShiftAssignmentTool(Document):
 						self.start_date,
 						self.end_date,
 						self.status,
+						self.custom_project,
 						self.shift_location,
 					)
 				)
@@ -319,26 +320,28 @@ class ShiftAssignmentTool(Document):
 		assignment.save()
 		return assignment
 
-
+@frappe.whitelist()
 def create_shift_assignment(
-	employee: str,
-	company: str,
-	shift_type: str,
-	start_date: str,
-	end_date: str,
-	status: str,
-	shift_location: str | None = None,
-	shift_schedule_assignment: str | None = None,
+    employee: str,
+    company: str,
+    shift_type: str,
+    start_date: str,
+    end_date: str | None,
+    status: str,
+    custom_project: str | None = None,
+    shift_location: str | None = None,
+    shift_schedule_assignment: str | None = None,
 ) -> str:
-	assignment = frappe.new_doc("Shift Assignment")
-	assignment.employee = employee
-	assignment.company = company
-	assignment.shift_type = shift_type
-	assignment.start_date = start_date
-	assignment.end_date = end_date
-	assignment.status = status
-	assignment.shift_location = shift_location
-	assignment.shift_schedule_assignment = shift_schedule_assignment
-	assignment.save()
-	assignment.submit()
-	return assignment
+    assignment = frappe.new_doc("Shift Assignment")
+    assignment.employee = employee
+    assignment.company = company
+    assignment.shift_type = shift_type
+    assignment.start_date = start_date
+    assignment.end_date = end_date
+    assignment.status = status
+    assignment.custom_project = custom_project 
+    assignment.shift_location = shift_location
+    assignment.shift_schedule_assignment = shift_schedule_assignment
+    assignment.save()
+    assignment.submit()
+    return assignment

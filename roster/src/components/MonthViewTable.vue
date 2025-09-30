@@ -198,15 +198,10 @@
 										<FeatherIcon
 											name="clock"
 											class="stroke-gray-400"
-											style="
-												 {
-													height: 0.82rem;
-													width: 0.82rem;
-												}
-											"
+											style="height: 0.82rem; width: 0.82rem;"
 										/>
 										<span>
-											{{ shift["start_time"] }} - {{ shift["end_time"] }}
+											{{ shift["custom_project_name"] }}
 										</span>
 									</div>
 									<div
@@ -216,12 +211,7 @@
 										<FeatherIcon
 											name="map-pin"
 											class="stroke-gray-400"
-											style="
-												 {
-													height: 0.82rem;
-													width: 0.82rem;
-												}
-											"
+											style="height: 0.82rem; width: 0.82rem;"
 										/>
 										<span>{{ shift["shift_location"] }}</span>
 									</div>
@@ -308,7 +298,7 @@ type Color =
 	| "yellow";
 
 type Shift = {
-	[K in "name" | "shift_type" | "status" | "start_time" | "end_time" | "shift_location"]: string;
+	[K in "name" | "shift_type" | "status" | "start_time" | "end_time" | "shift_location" | "custom_project_name"]: string;
 } & {
 	color: Color;
 };
@@ -502,6 +492,7 @@ const handleShifts = (
 			start_time: dayjs(event.start_time, "hh:mm:ss").format("HH:mm"),
 			end_time: dayjs(event.end_time, "hh:mm:ss").format("HH:mm"),
 			color: event.color.toLowerCase() as Color,
+			custom_project_name: event.custom_project_name,
 		});
 	}
 };

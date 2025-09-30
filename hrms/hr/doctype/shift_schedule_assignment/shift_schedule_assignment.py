@@ -106,16 +106,18 @@ class ShiftScheduleAssignment(Document):
 
 	def create_individual_assignment(self, shift_type, start_date, end_date):
 		create_shift_assignment(
-			self.employee,
-			self.company,
-			shift_type,
-			start_date,
-			end_date,
-			self.shift_status,
-			self.shift_location,
-			self.name,
+			employee=self.employee,
+			company=self.company,
+			shift_type=shift_type,
+			start_date=start_date,
+			end_date=end_date,
+			status=self.shift_status,
+			custom_project=getattr(self, "custom_project", None),
+			shift_location=self.shift_location,
+			shift_schedule_assignment=self.name,
 		)
 		self.db_set("create_shifts_after", end_date, update_modified=False)
+
 
 
 def process_auto_shift_creation():
