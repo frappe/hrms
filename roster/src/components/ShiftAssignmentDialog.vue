@@ -10,6 +10,7 @@
 					:options="employees"
 				/>
 				<FormControl type="text" label="Company" v-model="form.company" :disabled="true" />
+
 				<FormControl
 					type="text"
 					label="Employee Name"
@@ -22,30 +23,47 @@
 					v-model="form.department"
 					:disabled="true"
 				/>
-				<Link
-					doctype="Shift Type"
+
+				<!-- Project (Open only) -->
+				<FormControl
+					type="autocomplete"
+					label="Project"
+					placeholder="Select Project"
+					v-model="form.custom_project"
+					:options="projectOptions"
+				/>
+
+				<FormControl
+					type="autocomplete"
 					label="Shift Type"
 					v-model="form.shift_type"
 					:disabled="!!props.shiftAssignmentName"
+					:options="shiftTypes.data"
 				/>
+
+				<!-- Start / End Dates -->
 				<FormControl
 					type="date"
 					label="Start Date"
 					v-model="form.start_date"
 					:disabled="!!props.shiftAssignmentName"
-				/>
-				<Link
-					doctype="Shift Location"
-					label="Shift Location"
-					v-model="form.shift_location"
-					:disabled="!!props.shiftAssignmentName"
-				/>
+				/>				
 				<FormControl
 					type="date"
 					label="End Date"
 					v-model="form.end_date"
+				/>	
+				
+				<!-- Shift Location -->
+				<FormControl
+					type="autocomplete"
+					label="Shift Location"
+					v-model="form.shift_location"
 					:disabled="!!props.shiftAssignmentName"
+					:options="shiftLocations.data"
 				/>
+
+				<!-- Status -->
 				<FormControl
 					type="select"
 					:options="['Active', 'Inactive']"
@@ -56,10 +74,7 @@
 
 			<!-- Schedule Settings -->
 			<div
-				v-if="
-					(!props.shiftAssignmentName && showShiftScheduleSettings) ||
-					form.shift_schedule_assignment
-				"
+				v-if="(!props.shiftAssignmentName && showShiftScheduleSettings) || form.shift_schedule_assignment"
 				class="mt-6 space-y-6"
 			>
 				<hr />
@@ -67,11 +82,10 @@
 				<div class="grid grid-cols-2 gap-6">
 					<div class="space-y-1.5">
 						<div class="text-xs text-gray-600">Repeat On Days</div>
-						<div
-							class="border rounded grid grid-flow-col h-7 justify-stretch overflow-clip"
-						>
+						<div class="border rounded grid grid-flow-col h-7 justify-stretch overflow-clip">
 							<div
 								v-for="(isSelected, day) of repeatOnDays"
+								:key="day"
 								class="cursor-pointer flex flex-col"
 								:class="{
 									'border-r': day !== 'Sunday',
@@ -86,14 +100,10 @@
 							</div>
 						</div>
 					</div>
+
 					<FormControl
 						type="select"
-						:options="[
-							'Every Week',
-							'Every 2 Weeks',
-							'Every 3 Weeks',
-							'Every 4 Weeks',
-						]"
+						:options="['Every Week', 'Every 2 Weeks', 'Every 3 Weeks', 'Every 4 Weeks']"
 						label="Frequency"
 						v-model="frequency"
 						:disabled="!!props.shiftAssignmentName"
@@ -106,11 +116,7 @@
 				:options="{
 					title: deleteDialogOptions.title,
 					actions: [
-						{
-							label: 'Confirm',
-							variant: 'solid',
-							onClick: deleteDialogOptions.action,
-						},
+						{ label: 'Confirm', variant: 'solid', onClick: deleteDialogOptions.action },
 					],
 				}"
 			>
@@ -119,6 +125,7 @@
 				</template>
 			</Dialog>
 		</template>
+
 		<template #actions>
 			<div class="flex space-x-3 justify-end">
 				<Dropdown v-if="props.shiftAssignmentName" :options="actions">
@@ -145,15 +152,16 @@ import {
 	Dialog,
 	FormControl,
 	Dropdown,
+	Button,
 	createDocumentResource,
 	createResource,
 	createListResource,
 } from "frappe-ui";
-import Link from "./Link.vue";
 import { dayjs, raiseToast } from "../utils";
 
 type Status = "Active" | "Inactive";
 
+type Selectish = string | { value: string; label?: string };
 type Form = {
 	[K in
 		| "company"
@@ -161,34 +169,24 @@ type Form = {
 		| "department"
 		| "employee"
 		| "shift_type"
-		| "shift_location"]: string | { value: string; label?: string };
+		| "shift_location"
+		| "custom_project"]: Selectish;
 } & {
 	start_date: string;
 	end_date: string;
 	status: Status | { value: Status; label?: Status };
-	schedule?: string;
+	shift_schedule_assignment?: string;
 };
 
 interface Props {
 	isDialogOpen: boolean;
 	shiftAssignmentName?: string;
-	selectedCell?: {
-		employee: string;
-		date: string;
-	};
-	employees?: {
-		name: string;
-		employee_name: string;
-	}[];
+	selectedCell?: { employee: string; date: string };
+	employees?: { name: string; employee_name: string }[];
 }
 
-const props = withDefaults(defineProps<Props>(), {
-	employees: () => [],
-});
-
-const emit = defineEmits<{
-	(e: "fetchEvents"): void;
-}>();
+const props = withDefaults(defineProps<Props>(), { employees: () => [] });
+const emit = defineEmits<{ (e: "fetchEvents"): void }>();
 
 const formObject: Form = {
 	employee: "",
@@ -201,47 +199,47 @@ const formObject: Form = {
 	end_date: "",
 	status: "Active",
 	shift_schedule_assignment: "",
+	custom_project: "",
 };
 
 const repeatOnDaysObject = {
-	Monday: false,
-	Tuesday: false,
-	Wednesday: false,
-	Thursday: false,
-	Friday: false,
-	Saturday: false,
-	Sunday: false,
+	Monday: false, Tuesday: false, Wednesday: false, Thursday: false,
+	Friday: false, Saturday: false, Sunday: false,
 };
 
 const form = reactive({ ...formObject });
 const repeatOnDays = reactive({ ...repeatOnDaysObject });
 
-const shiftAssignment = ref();
-const selectedDate = ref();
+const shiftAssignment = ref<any>();
+const selectedDate = ref<string>();
 const frequency = ref("Every Week");
 const showDeleteDialog = ref(false);
-const deleteDialogOptions = ref({ title: "", message: "", action: () => {} });
+const deleteDialogOptions = ref<{ title: string; message: string; action: () => void }>({
+	title: "",
+	message: "",
+	action: () => {},
+});
 
 const dialog = computed(() => {
-	if (props.shiftAssignmentName)
+	if (props.shiftAssignmentName) {
+		// compare fields to enable Update if project or end_date/status change
+		const unchanged =
+			form.status === shiftAssignment.value?.doc?.status &&
+			form.end_date === shiftAssignment.value?.doc?.end_date &&
+			getId(form.custom_project) === shiftAssignment.value?.doc?.custom_project;
+
 		return {
 			title: `[${selectedDate.value}] Shift Assignment ${props.shiftAssignmentName}`,
 			button: "Update",
 			action: updateShiftAssigment,
-			actionDisabled:
-				form.status === shiftAssignment.value?.doc?.status &&
-				form.end_date === shiftAssignment.value?.doc?.end_date,
+			actionDisabled: Boolean(unchanged),
 		};
-	return {
-		title: "New Shift Assignment",
-		button: "Submit",
-		action: createShiftAssigment,
-		actionDisabled: false,
-	};
+	}
+	return { title: "New Shift Assignment", button: "Submit", action: createShiftAssigment, actionDisabled: false };
 });
 
 const actions = computed(() => {
-	const options = [
+	const options: any[] = [
 		{
 			label: `Shift for ${selectedDate.value}`,
 			onClick: () => {
@@ -258,16 +256,10 @@ const actions = computed(() => {
 			onClick: () => {
 				deleteDialogOptions.value = {
 					title: "Delete Shift Assignment?",
-					message: `This will delete Shift Assignment: <a href='/app/shift-assignment/${
-						props.shiftAssignmentName
-					}' target='_blank'><u>${
-						props.shiftAssignmentName
-					}</u></a> (scheduled from <b>${form.start_date}</b>${
-						form.end_date ? ` to <b>${form.end_date}</b>` : ""
-					}).`,
+					message: `This will delete Shift Assignment: <a href='/app/shift-assignment/${props.shiftAssignmentName}' target='_blank'><u>${props.shiftAssignmentName}</u></a> (scheduled from <b>${form.start_date}</b>${form.end_date ? ` to <b>${form.end_date}</b>` : ""}).`,
 					action: async () => {
 						await shiftAssignment.value.setValue.submit({ docstatus: 2 });
-						shiftAssignments.delete.submit(props.shiftAssignmentName);
+						shiftAssignments.delete.submit(props.shiftAssignmentName as string);
 					},
 				};
 				showDeleteDialog.value = true;
@@ -297,19 +289,18 @@ const showShiftScheduleSettings = computed(() => {
 	return true;
 });
 
-const employees = computed(() => {
-	return props.employees.map((employee) => ({
-		label: `${employee.name}: ${employee.employee_name}`,
-		value: employee.name,
-		employee_name: employee.employee_name,
-	}));
-});
+const employees = computed(() =>
+	props.employees.map((e) => ({ label: `${e.name}: ${e.employee_name}`, value: e.name, employee_name: e.employee_name })),
+);
 
+// --- Utils
+const getId = (val: Selectish) => (val && typeof val === "object" ? (val as any).value : (val as string) || "");
+
+// --- Watchers
 watch(
 	() => props.isDialogOpen,
 	(val) => {
 		if (!val) return;
-
 		showDeleteDialog.value = false;
 
 		if (props.shiftAssignmentName) {
@@ -318,7 +309,6 @@ watch(
 		} else {
 			Object.assign(form, formObject);
 			if (!props.selectedCell) return;
-
 			form.employee = { value: props.selectedCell.employee };
 			form.start_date = props.selectedCell.date;
 			form.end_date = props.selectedCell.date;
@@ -330,9 +320,8 @@ watch(
 	() => form.employee,
 	(val) => {
 		if (props.shiftAssignmentName) return;
-		if (val) {
-			employee.fetch();
-		} else {
+		if (val) employee.fetch();
+		else {
 			form.employee_name = "";
 			form.company = "";
 			form.department = "";
@@ -351,29 +340,38 @@ watch(
 	{ immediate: true },
 );
 
+// --- Actions
 const updateShiftAssigment = () => {
-	shiftAssignment.value.setValue.submit({ status: form.status, end_date: form.end_date });
+	shiftAssignment.value.setValue.submit({
+		status: form.status,
+		end_date: form.end_date,
+		custom_project: getId(form.custom_project),
+	});
 };
 
 const createShiftAssigment = () => {
 	if (
 		showShiftScheduleSettings.value &&
 		(Object.values(repeatOnDays).some((day) => !day) || frequency.value !== "Every Week")
-	)
+	) {
 		createShiftAssignmentSchedule.submit();
-	else insertShift.submit();
+	} else {
+		insertShift.submit();
+	}
 };
 
-// RESOURCES
-
+// --- Resources
 const getShiftAssignment = (name: string) =>
 	createDocumentResource({
 		doctype: "Shift Assignment",
-		name: name,
+		name,
 		onSuccess: (data: Record<string, any>) => {
-			Object.keys(form).forEach((key) => {
-				form[key as keyof Form] = data[key];
+			Object.keys(form).forEach((k) => {
+				// copy known fields if present on doc
+				if (k in data) (form as any)[k] = data[k];
 			});
+			// coerce custom_project to { value } model if present
+			if (data.custom_project) form.custom_project = { value: data.custom_project, label: data.custom_project_name || data.custom_project };
 			if (form.shift_schedule_assignment) shiftSchedule.fetch();
 		},
 		onError(error: { messages: string[] }) {
@@ -393,17 +391,13 @@ const getShiftAssignment = (name: string) =>
 const employee = createResource({
 	url: "hrms.api.roster.get_values",
 	makeParams() {
-		const employee = (form.employee as { value: string }).value;
-		return {
-			doctype: "Employee",
-			name: employee,
-			fields: ["employee_name", "company", "department"],
-		};
+		const employee = getId(form.employee);
+		return { doctype: "Employee", name: employee, fields: ["employee_name", "company", "department"] };
 	},
-	onSuccess: (data: { [K in "employee_name" | "company" | "department"]: string }) => {
-		form.employee_name = data.employee_name;
-		form.company = data.company;
-		form.department = data.department;
+	onSuccess: (d: { employee_name: string; company: string; department: string }) => {
+		form.employee_name = d.employee_name;
+		form.company = d.company;
+		form.department = d.department;
 	},
 	onError(error: { messages: string[] }) {
 		raiseToast("error", error.messages[0]);
@@ -412,19 +406,46 @@ const employee = createResource({
 
 const shiftSchedule = createResource({
 	url: "hrms.api.roster.get_schedule_from_assignment",
-	makeParams() {
-		return { shift_schedule_assignment: form.shift_schedule_assignment };
-	},
-	onSuccess: (data: { frequency: string; repeat_on_days: string[] }) => {
-		frequency.value = data.frequency;
+	makeParams: () => ({ shift_schedule_assignment: form.shift_schedule_assignment }),
+	onSuccess: (d: { frequency: string; repeat_on_days: string[] }) => {
+		frequency.value = d.frequency;
 		for (const day in repeatOnDays) {
-			repeatOnDays[day as keyof typeof repeatOnDays] = data.repeat_on_days.includes(day);
+			repeatOnDays[day as keyof typeof repeatOnDays] = d.repeat_on_days.includes(day);
 		}
 	},
 	onError(error: { messages: string[] }) {
 		raiseToast("error", error.messages[0]);
 	},
 });
+
+const shiftTypes = createListResource({
+	doctype: "Shift Type",
+	fields: ["name"],
+	auto: true,
+	transform: (rows: { name: string }[]) => rows.map((r) => r.name),
+});
+
+const shiftLocations = createListResource({
+	doctype: "Shift Location",
+	fields: ["name"],
+	auto: true,
+	transform: (rows: { name: string }[]) => rows.map((r) => r.name),
+});
+
+// Projects: Open only, show more than 20
+const projects = createListResource({
+	doctype: "Project",
+	fields: ["name", "project_name"],
+	filters: [["status", "=", "Open"]],
+	limit: 200, // ask for more than default
+	auto: true,
+});
+const projectOptions = computed(() =>
+	(projects.data || []).map((p: any) => ({
+		label: p.project_name || p.name,
+		value: p.name, // send ID
+	})),
+);
 
 const shiftAssignments = createListResource({
 	doctype: "Shift Assignment",
@@ -452,13 +473,14 @@ const insertShift = createResource({
 	url: "hrms.api.roster.insert_shift",
 	makeParams() {
 		return {
-			employee: (form.employee as { value: string }).value,
-			shift_type: form.shift_type,
-			shift_location: form.shift_location,
+			employee: getId(form.employee),
+			shift_type: getId(form.shift_type),
+			shift_location: getId(form.shift_location),
 			company: form.company,
 			status: form.status,
 			start_date: form.start_date,
 			end_date: form.end_date,
+			custom_project: getId(form.custom_project),
 		};
 	},
 	onSuccess: () => {
@@ -472,12 +494,7 @@ const insertShift = createResource({
 
 const deleteCurrentShift = createResource({
 	url: "hrms.api.roster.break_shift",
-	makeParams() {
-		return {
-			assignment: props.shiftAssignmentName,
-			date: selectedDate.value,
-		};
-	},
+	makeParams: () => ({ assignment: props.shiftAssignmentName, date: selectedDate.value }),
 	onSuccess: () => {
 		raiseToast("success", "Shift deleted successfully!");
 		emit("fetchEvents");
@@ -491,17 +508,16 @@ const createShiftAssignmentSchedule = createResource({
 	url: "hrms.api.roster.create_shift_schedule_assignment",
 	makeParams() {
 		return {
-			employee: (form.employee as { value: string }).value,
-			shift_type: form.shift_type,
+			employee: getId(form.employee),
+			shift_type: getId(form.shift_type),
 			company: form.company,
 			status: form.status,
 			start_date: form.start_date,
 			end_date: form.end_date,
-			shift_location: form.shift_location,
-			repeat_on_days: Object.keys(repeatOnDays).filter(
-				(day) => repeatOnDays[day as keyof typeof repeatOnDays],
-			),
+			shift_location: getId(form.shift_location),
+			repeat_on_days: Object.keys(repeatOnDays).filter((d) => repeatOnDays[d as keyof typeof repeatOnDays]),
 			frequency: frequency.value,
+			custom_project: getId(form.custom_project),
 		};
 	},
 	onSuccess: () => {
@@ -515,9 +531,7 @@ const createShiftAssignmentSchedule = createResource({
 
 const deleteShiftScheduleAssignment = createResource({
 	url: "hrms.api.roster.delete_shift_schedule_assignment",
-	makeParams() {
-		return { shift_schedule_assignment: form.shift_schedule_assignment };
-	},
+	makeParams: () => ({ shift_schedule_assignment: form.shift_schedule_assignment }),
 	onSuccess: () => {
 		raiseToast("success", "Shift Schedule Assignment deleted successfully!");
 		emit("fetchEvents");
