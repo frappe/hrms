@@ -24,6 +24,23 @@ def if_lending_app_installed(function):
 
 @if_lending_app_installed
 def set_loan_repayment(doc: "SalarySlip"):
+	"""
+    Update loan repayment amounts on Salary Slip.
+
+    This function ensures that loan amounts included in a Salary Slip are
+    calculated based only on the period between `start_date` and `end_date`.
+    It prevents duplication by:
+      - Calculating cumulative amounts at `end_date`.
+      - Subtracting cumulative amounts at (`start_date - 1`).
+      - Using the difference as the period-specific payable values.
+
+    Args:
+        doc (SalarySlip): The Salary Slip document containing loans and period dates.
+
+    Raises:
+        frappe.ValidationError: If repayment amounts entered in the Salary Slip
+            exceed the period-specific accrued amounts.
+    """
 	from lending.loan_management.doctype.loan_repayment.loan_repayment import calculate_amounts
 
 	doc.total_loan_repayment = 0
