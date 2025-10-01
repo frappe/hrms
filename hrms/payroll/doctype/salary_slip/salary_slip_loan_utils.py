@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any
 
 import frappe
 from frappe import _
+from frappe.utils import add_days, flt
 
 if TYPE_CHECKING:
 	from hrms.payroll.doctype.salary_slip.salary_slip import SalarySlip
@@ -33,42 +34,61 @@ def set_loan_repayment(doc: "SalarySlip"):
 		loan_details = _get_loan_details(doc)
 
 		for loan in loan_details:
-			amounts = calculate_amounts(loan.name, doc.end_date)
+			amounts_end = calculate_amounts(loan.name, doc.end_date)
 
-			if amounts["payable_amount"]:
+			start_prev_date = add_days(doc.start_date, -1)
+			amounts_start = calculate_amounts(loan.name, start_prev_date)
+
+			payable_end = flt(amounts_end.get("payable_amount", 0))
+			payable_start = flt(amounts_start.get("payable_amount", 0))
+
+			interest_end = flt(amounts_end.get("interest_amount", 0))
+			interest_start = flt(amounts_start.get("interest_amount", 0))
+
+			principal_end = flt(amounts_end.get("payable_principal_amount", 0))
+			principal_start = flt(amounts_start.get("payable_principal_amount", 0))
+
+			period_payable = max(0.0, payable_end - payable_start)
+			period_interest = max(0.0, interest_end - interest_start)
+			period_principal = max(0.0, principal_end - principal_start)
+
+			if period_payable:
 				doc.append(
-					"loans",
-					{
-						"loan": loan.name,
-						"total_payment": amounts["payable_amount"],
-						"interest_amount": amounts["interest_amount"],
-						"principal_amount": amounts["payable_principal_amount"],
-						"loan_account": loan.loan_account,
-						"interest_income_account": loan.interest_income_account,
-					},
-				)
+                    "loans",
+                    {
+                        "loan": loan.name,
+                        "total_payment": period_payable,
+                        "interest_amount": period_interest,
+                        "principal_amount": period_principal,
+                        "loan_account": loan.loan_account,
+                        "interest_income_account": loan.interest_income_account,
+                    },
+                )
+
 	if not doc.get("loans"):
 		doc.set("loans", [])
 
 	for payment in doc.get("loans", []):
-		amounts = calculate_amounts(payment.loan, doc.end_date)
-		total_amount = amounts["payable_amount"]
+		amounts_end = calculate_amounts(payment.loan, doc.end_date)
+		amounts_start = calculate_amounts(payment.loan, add_days(doc.start_date, -1))
 
-		if payment.total_payment > total_amount:
+		total_period_amount = max(0.0, flt(amounts_end.get("payable_amount", 0)) - flt(amounts_start.get("payable_amount", 0)))
+
+		if payment.total_payment > total_period_amount:
 			frappe.throw(
-				_(
-					"""Row {0}: Paid amount {1} is greater than pending accrued amount {2} against loan {3}"""
-				).format(
-					payment.idx,
-					frappe.bold(payment.total_payment),
-					frappe.bold(total_amount),
-					frappe.bold(payment.loan),
-				)
-			)
+                _(
+                    """Row {0}: Paid amount {1} is greater than pending accrued amount {2} against loan {3}"""
+                ).format(
+                    payment.idx,
+                    frappe.bold(payment.total_payment),
+                    frappe.bold(total_period_amount),
+                    frappe.bold(payment.loan),
+                )
+            )
 
-		doc.total_interest_amount += payment.interest_amount
-		doc.total_principal_amount += payment.principal_amount
-		doc.total_loan_repayment += payment.total_payment
+		doc.total_interest_amount += flt(payment.interest_amount)
+		doc.total_principal_amount += flt(payment.principal_amount)
+		doc.total_loan_repayment += flt(payment.total_payment)
 
 
 def _get_loan_details(doc: "SalarySlip") -> dict[str, Any]:
