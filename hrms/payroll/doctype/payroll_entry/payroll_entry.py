@@ -241,7 +241,6 @@ class PayrollEntry(Document):
 					"end_date": self.end_date,
 					"company": self.company,
 					"posting_date": self.posting_date,
-					"deduct_tax_for_unclaimed_employee_benefits": self.deduct_tax_for_unclaimed_employee_benefits,
 					"deduct_tax_for_unsubmitted_tax_exemption_proof": self.deduct_tax_for_unsubmitted_tax_exemption_proof,
 					"payroll_entry": self.name,
 					"exchange_rate": self.exchange_rate,
@@ -372,9 +371,6 @@ class PayrollEntry(Document):
 			component_dict = {}
 
 			for item in salary_components:
-				if not self.should_add_component_to_accrual_jv(component_type, item):
-					continue
-
 				employee_cost_centers = self.get_payroll_cost_centers_for_employee(
 					item.employee, item.salary_structure
 				)
@@ -399,17 +395,6 @@ class PayrollEntry(Document):
 			account_details = self.get_account(component_dict=component_dict)
 
 			return account_details
-
-	def should_add_component_to_accrual_jv(self, component_type: str, item: dict) -> bool:
-		add_component_to_accrual_jv = True
-		if component_type == "earnings":
-			is_flexible_benefit, only_tax_impact = frappe.get_cached_value(
-				"Salary Component", item["salary_component"], ["is_flexible_benefit", "only_tax_impact"]
-			)
-			if cint(is_flexible_benefit) and cint(only_tax_impact):
-				add_component_to_accrual_jv = False
-
-		return add_component_to_accrual_jv
 
 	def get_advance_deduction(self, component_type: str, item: dict) -> str | None:
 		if component_type == "deductions" and item.additional_salary:
@@ -602,6 +587,8 @@ class PayrollEntry(Document):
 				employee_wise_accounting_enabled,
 			)
 
+			# when party is not required, skip the validation in journal & gl entry
+			frappe.flags.party_not_required_for_receivable_payable = True
 			self.make_journal_entry(
 				accounts,
 				currencies,
@@ -613,6 +600,7 @@ class PayrollEntry(Document):
 				submit_journal_entry=True,
 				submitted_salary_slips=submitted_salary_slips,
 			)
+			frappe.flags.party_not_required_for_receivable_payable = False
 
 	def make_journal_entry(
 		self,
@@ -897,54 +885,23 @@ class PayrollEntry(Document):
 		salary_details = self.get_salary_slip_details(for_withheld_salaries)
 
 		for salary_detail in salary_details:
-			if salary_detail.parentfield == "earnings":
-				(
-					is_flexible_benefit,
-					only_tax_impact,
-					create_separate_je,
-					statistical_component,
-				) = frappe.db.get_value(
-					"Salary Component",
-					salary_detail.salary_component,
-					(
-						"is_flexible_benefit",
-						"only_tax_impact",
-						"create_separate_payment_entry_against_benefit_claim",
-						"statistical_component",
-					),
-					cache=True,
-				)
-
-				if only_tax_impact != 1 and statistical_component != 1:
-					if is_flexible_benefit == 1 and create_separate_je == 1:
-						self.set_accounting_entries_for_bank_entry(
-							salary_detail.amount, salary_detail.salary_component
-						)
-					else:
-						if employee_wise_accounting_enabled:
-							self.set_employee_based_payroll_payable_entries(
-								"earnings",
-								salary_detail.employee,
-								salary_detail.amount,
-								salary_detail.salary_structure,
-							)
-						salary_slip_total += salary_detail.amount
-
-			if salary_detail.parentfield == "deductions":
-				statistical_component = frappe.db.get_value(
-					"Salary Component", salary_detail.salary_component, "statistical_component", cache=True
-				)
-
-				if not statistical_component:
+			statistical_component = frappe.db.get_value(
+				"Salary Component", salary_detail.salary_component, "statistical_component", cache=True
+			)
+			if not statistical_component:
+				parent_field = salary_detail.parentfield
+				if parent_field in ("earnings", "deductions"):
 					if employee_wise_accounting_enabled:
 						self.set_employee_based_payroll_payable_entries(
-							"deductions",
+							salary_detail.parentfield,
 							salary_detail.employee,
 							salary_detail.amount,
 							salary_detail.salary_structure,
 						)
-
-					salary_slip_total -= salary_detail.amount
+					if parent_field == "earnings":
+						salary_slip_total += salary_detail.amount
+					elif parent_field == "deductions":
+						salary_slip_total -= salary_detail.amount
 
 		total_loan_repayment = self.process_loan_repayments_for_bank_entry(salary_details) or 0
 		salary_slip_total -= total_loan_repayment

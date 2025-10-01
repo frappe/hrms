@@ -29,6 +29,7 @@
   "password_policy",
   "other_settings_section",
   "process_payroll_accounting_entry_based_on_employee",
+  "mandatory_benefit_application",
   "column_break_zi9y",
   "create_overtime_slip"
  ],
@@ -188,13 +189,20 @@
    "fieldtype": "Link",
    "label": "Sender Copy",
    "options": "Email Account"
+  },
+  {
+   "default": "0",
+   "description": "If checked, flexible benefits are considered only if benefit application exists",
+   "fieldname": "mandatory_benefit_application",
+   "fieldtype": "Check",
+   "label": "Mandatory Benefit Application"
   }
  ],
  "icon": "fa fa-cog",
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-06-24 11:46:55.338986",
+ "modified": "2025-09-02 13:28:45.007397",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",
