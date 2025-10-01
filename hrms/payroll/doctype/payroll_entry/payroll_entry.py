@@ -215,6 +215,134 @@ class PayrollEntry(Document):
 				employee.is_salary_withheld = 1
 
 	@frappe.whitelist()
+	def get_employees_with_salary_preview(self):
+		"""
+		Get list of eligible employees with salary preview calculation
+		Returns employee details with salary components for display in selection dialog
+		"""
+		from hrms.payroll.doctype.salary_slip.salary_slip import SalarySlip
+		from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
+			get_assigned_salary_structure,
+		)
+
+		filters = self.make_filters()
+		employees = get_employee_list(filters=filters, as_dict=True, ignore_match_conditions=True)
+
+		if not employees:
+			return []
+
+		employee_salary_data = []
+
+		for emp in employees:
+			try:
+				# Get assigned salary structure
+				salary_structure = get_assigned_salary_structure(
+					emp.get("employee"),
+					self.end_date or self.posting_date
+				)
+
+				if not salary_structure:
+					continue
+
+				# Create preview salary slip
+				salary_slip = SalarySlip(
+					doctype="Salary Slip",
+					employee=emp.get("employee"),
+					salary_structure=salary_structure,
+					company=self.company,
+					start_date=self.start_date,
+					end_date=self.end_date,
+					posting_date=self.posting_date,
+					payroll_frequency=self.payroll_frequency,
+					payroll_entry=self.name,
+					exchange_rate=self.exchange_rate,
+					currency=self.currency
+				)
+
+				# Process salary structure for preview
+				salary_slip.process_salary_structure(for_preview=1)
+
+				# Get salary component details
+				earnings = []
+				deductions = []
+
+				for earning in salary_slip.earnings:
+					if not earning.do_not_include_in_total:
+						earnings.append({
+							"salary_component": earning.salary_component,
+							"amount": earning.amount
+						})
+
+				for deduction in salary_slip.deductions:
+					if not deduction.do_not_include_in_total:
+						deductions.append({
+							"salary_component": deduction.salary_component,
+							"amount": deduction.amount
+						})
+
+				employee_salary_data.append({
+					"employee": emp.get("employee"),
+					"employee_name": emp.get("employee_name"),
+					"designation": emp.get("designation"),
+					"department": emp.get("department"),
+					"gross_pay": salary_slip.gross_pay or 0,
+					"total_deduction": salary_slip.total_deduction or 0,
+					"net_pay": salary_slip.net_pay or 0,
+					"earnings": earnings,
+					"deductions": deductions,
+					"payment_days": salary_slip.payment_days,
+					"working_days": salary_slip.total_working_days
+				})
+
+			except Exception as e:
+				# Log error but continue with other employees
+				frappe.log_error(f"Error calculating salary preview for {emp.get('employee')}", f"{e!s}")
+				# Add employee with zero salary if calculation fails
+				employee_salary_data.append({
+					"employee": emp.get("employee"),
+					"employee_name": emp.get("employee_name"),
+					"designation": emp.get("designation"),
+					"department": emp.get("department"),
+					"gross_pay": 0,
+					"total_deduction": 0,
+					"net_pay": 0,
+					"earnings": [],
+					"deductions": [],
+					"payment_days": 0,
+					"working_days": 0,
+					"error": True
+				})
+
+		return employee_salary_data
+
+	@frappe.whitelist()
+	def fill_employee_details_selective(self, selected_employees=None):
+		"""
+		Fill employee details with only selected employees from the preview dialog
+		"""
+		if not selected_employees:
+			return self.fill_employee_details()
+
+		if isinstance(selected_employees, str):
+			import json
+			selected_employees = json.loads(selected_employees)
+
+		filters = self.make_filters()
+		all_employees = get_employee_list(filters=filters, as_dict=True, ignore_match_conditions=True)
+
+		# Filter to only selected employees
+		employees = [emp for emp in all_employees if emp.get("employee") in selected_employees]
+
+		if not employees:
+			frappe.throw(_("No valid employees selected"))
+
+		self.set("employees", employees)
+		self.number_of_employees = len(self.employees)
+		self.update_employees_with_withheld_salaries()
+
+		return self.get_employees_with_unmarked_attendance()
+
+	@frappe.whitelist()
 	def create_salary_slips(self):
 		"""
 		Creates salary slip for selected employees if already not created

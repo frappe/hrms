@@ -57,7 +57,7 @@ frappe.ui.form.on("Payroll Entry", {
 		if (frm.doc.docstatus === 0 && !frm.is_new()) {
 			frm.page.clear_primary_action();
 			frm.add_custom_button(__("Get Employees"), function () {
-				frm.events.get_employee_details(frm);
+				frm.events.show_employee_selection_dialog(frm);
 			}).toggleClass("btn-primary", !(frm.doc.employees || []).length);
 		}
 
@@ -122,6 +122,356 @@ frappe.ui.form.on("Payroll Entry", {
 				}
 				frm.scroll_to_field("employees");
 			});
+	},
+
+	show_employee_selection_dialog: function (frm) {
+		// First fetch employees with salary preview
+		frappe.call({
+			doc: frm.doc,
+			method: "get_employees_with_salary_preview",
+			freeze: true,
+			freeze_message: __("Calculating Salary Preview..."),
+			callback: function (r) {
+				if (r.message && r.message.length > 0) {
+					frm.events.render_employee_selection_dialog(frm, r.message);
+				} else {
+					frappe.msgprint(__("No employees found for the selected criteria"));
+				}
+			},
+		});
+	},
+
+	render_employee_selection_dialog: function (frm, employees) {
+		// Create HTML table for employee selection
+		let html = `
+			<div class="employee-selection-wrapper">
+				<div class="row mb-3">
+					<div class="col-md-6">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="select-all-employees" checked>
+								<span class="label-area">${__("Select All")}</span>
+							</label>
+						</div>
+					</div>
+					<div class="col-md-6 text-right">
+						<strong>${__("Total")}: <span id="total-salary-amount">0</span></strong>
+					</div>
+				</div>
+				<div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th width="5%">${__("Select")}</th>
+								<th width="25%">${__("Employee")}</th>
+								<th width="15%">${__("Designation")}</th>
+								<th width="20%" class="text-right">${__("Gross Pay")}</th>
+								<th width="15%" class="text-right">${__("Deductions")}</th>
+								<th width="20%" class="text-right">${__("Net Pay")}</th>
+							</tr>
+						</thead>
+						<tbody>
+		`;
+
+		let total_net_pay = 0;
+		employees.forEach((emp, idx) => {
+			let tooltip_content = frm.events.get_salary_component_tooltip(emp);
+			let row_class = emp.error ? "text-danger" : "";
+			let net_pay_value = emp.error
+				? __("Error")
+				: frappe.format(emp.net_pay, { fieldtype: "Currency" });
+
+			html += `
+				<tr class="employee-row ${row_class}"
+					data-employee="${emp.employee}"
+					data-tooltip-content='${JSON.stringify(tooltip_content)}'>
+					<td>
+						<input type="checkbox" class="employee-checkbox"
+							value="${emp.employee}"
+							${emp.error ? "disabled" : "checked"}
+							data-net-pay="${emp.net_pay || 0}">
+					</td>
+					<td>
+						<div>${emp.employee_name || ""}</div>
+						<div class="text-muted small">${emp.employee}</div>
+					</td>
+					<td>${emp.designation || ""}</td>
+					<td class="text-right salary-column" data-column="gross_pay">
+						${frappe.format(emp.gross_pay, { fieldtype: "Currency" })}
+					</td>
+					<td class="text-right salary-column" data-column="deductions">
+						${frappe.format(emp.total_deduction, { fieldtype: "Currency" })}
+					</td>
+					<td class="text-right salary-column" data-column="net_pay">
+						<strong>${net_pay_value}</strong>
+					</td>
+				</tr>
+			`;
+
+			if (!emp.error) {
+				total_net_pay += emp.net_pay || 0;
+			}
+		});
+
+		html += `
+						</tbody>
+					</table>
+				</div>
+			</div>
+		`;
+
+		let dialog = new frappe.ui.Dialog({
+			title: __("Select Employees for Payroll"),
+			size: "extra-large",
+			fields: [
+				{
+					fieldname: "employee_selection_html",
+					fieldtype: "HTML",
+					options: html,
+				},
+			],
+			primary_action_label: __("Add Selected Employees"),
+			primary_action: function () {
+				let selected_employees = [];
+				dialog.$wrapper.find(".employee-checkbox:checked").each(function () {
+					selected_employees.push($(this).val());
+				});
+
+				if (selected_employees.length === 0) {
+					frappe.msgprint(__("Please select at least one employee"));
+					return;
+				}
+
+				dialog.hide();
+
+				// Call the method to add selected employees
+				frappe.call({
+					doc: frm.doc,
+					method: "fill_employee_details_selective",
+					args: {
+						selected_employees: selected_employees,
+					},
+					freeze: true,
+					freeze_message: __("Adding Selected Employees..."),
+					callback: function (r) {
+						if (r.docs?.[0]?.employees) {
+							frm.dirty();
+							frm.save();
+						}
+
+						frm.refresh();
+
+						if (r.docs?.[0]?.validate_attendance) {
+							render_employee_attendance(frm, r.message);
+						}
+						frm.scroll_to_field("employees");
+
+						frappe.show_alert({
+							message: __("{0} employees added", [selected_employees.length]),
+							indicator: "green",
+						});
+					},
+				});
+			},
+		});
+
+		dialog.show();
+
+		// Initialize tooltips and event handlers
+		frm.events.setup_employee_selection_handlers(frm, dialog, total_net_pay);
+	},
+
+	setup_employee_selection_handlers: function (frm, dialog, initial_total) {
+		let $wrapper = dialog.$wrapper;
+
+		// Update total salary display
+		$wrapper
+			.find("#total-salary-amount")
+			.html($(frappe.format(initial_total, { fieldtype: "Currency" })).text());
+
+		// Handle select all checkbox
+		$wrapper.find("#select-all-employees").on("change", function () {
+			let checked = $(this).prop("checked");
+			$wrapper.find(".employee-checkbox:not(:disabled)").prop("checked", checked);
+			frm.events.update_total_salary(frm, dialog);
+		});
+
+		// Handle individual checkbox changes
+		$wrapper.find(".employee-checkbox").on("change", function () {
+			frm.events.update_total_salary(frm, dialog);
+
+			// Update select all checkbox state
+			let all_checked =
+				$wrapper.find(".employee-checkbox:not(:disabled)").length ===
+				$wrapper.find(".employee-checkbox:not(:disabled):checked").length;
+			$wrapper.find("#select-all-employees").prop("checked", all_checked);
+		});
+
+		// Setup tooltips on salary columns hover
+		$wrapper.find(".salary-column").on("mouseenter", function (e) {
+			let $row = $(this).closest(".employee-row");
+			let tooltip_content = $row.data("tooltip-content");
+			if (!tooltip_content || tooltip_content.error) return;
+
+			let tooltip_html = frm.events.format_tooltip_content(tooltip_content);
+
+			// Create tooltip element
+			let $tooltip = $(`
+				<div class="salary-tooltip" style="
+					position: absolute;
+					z-index: 10000;
+					background: white;
+					border: 1px solid #d1d8dd;
+					border-radius: 4px;
+					padding: 10px;
+					box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+					max-width: 400px;
+				">
+					${tooltip_html}
+				</div>
+			`);
+
+			// Position and show tooltip
+			$("body").append($tooltip);
+			$tooltip.css({
+				top: e.pageY + 10,
+				left: e.pageX + 10,
+			});
+
+			// Store tooltip reference on the cell
+			$(this).data("tooltip", $tooltip);
+		});
+
+		$wrapper.find(".salary-column").on("mouseleave", function () {
+			let $tooltip = $(this).data("tooltip");
+			if ($tooltip) {
+				$tooltip.remove();
+				$(this).removeData("tooltip");
+			}
+		});
+
+		// Update tooltip position on mouse move within salary columns
+		$wrapper.find(".salary-column").on("mousemove", function (e) {
+			let $tooltip = $(this).data("tooltip");
+			if ($tooltip) {
+				$tooltip.css({
+					top: e.pageY + 10,
+					left: e.pageX + 10,
+				});
+			}
+		});
+	},
+
+	update_total_salary: function (frm, dialog) {
+		let total = 0;
+		dialog.$wrapper.find(".employee-checkbox:checked").each(function () {
+			total += parseFloat($(this).data("net-pay") || 0);
+		});
+		dialog.$wrapper
+			.find("#total-salary-amount")
+			.html(frappe.format(total, { fieldtype: "Currency" }));
+	},
+
+	get_salary_component_tooltip: function (emp) {
+		if (emp.error) {
+			return { error: true };
+		}
+
+		return {
+			employee: emp.employee,
+			employee_name: emp.employee_name,
+			payment_days: emp.payment_days,
+			working_days: emp.working_days,
+			earnings: emp.earnings || [],
+			deductions: emp.deductions || [],
+			gross_pay: emp.gross_pay,
+			total_deduction: emp.total_deduction,
+			net_pay: emp.net_pay,
+		};
+	},
+
+	format_tooltip_content: function (data) {
+		let html = `
+			<div style="font-size: 12px;">
+				<h6 style="margin-bottom: 10px; font-weight: bold;">
+					${data.employee} - ${data.employee_name}
+				</h6>
+				<div style="margin-bottom: 8px;">
+					<small class="text-muted">${__("Payment Days")}: ${data.payment_days} / ${data.working_days}</small>
+				</div>
+		`;
+
+		if (data.earnings && data.earnings.length > 0) {
+			html += `
+				<div style="margin-bottom: 8px;">
+					<strong style="color: #5e64ff;">${__("Earnings")}:</strong>
+					<table style="width: 100%; margin-top: 5px;">
+			`;
+			data.earnings.forEach((earning) => {
+				html += `
+					<tr>
+						<td style="padding: 2px 0;">${earning.salary_component}</td>
+						<td style="text-align: right; padding: 2px 0;">
+							${frappe.format(earning.amount, { fieldtype: "Currency" })}
+						</td>
+					</tr>
+				`;
+			});
+			html += `
+					</table>
+				</div>
+			`;
+		}
+
+		if (data.deductions && data.deductions.length > 0) {
+			html += `
+				<div style="margin-bottom: 8px;">
+					<strong style="color: #ff5858;">${__("Deductions")}:</strong>
+					<table style="width: 100%; margin-top: 5px;">
+			`;
+			data.deductions.forEach((deduction) => {
+				html += `
+					<tr>
+						<td style="padding: 2px 0;">${deduction.salary_component}</td>
+						<td style="text-align: right; padding: 2px 0;">
+							${frappe.format(deduction.amount, { fieldtype: "Currency" })}
+						</td>
+					</tr>
+				`;
+			});
+			html += `
+					</table>
+				</div>
+			`;
+		}
+
+		html += `
+			<div style="border-top: 1px solid #d1d8dd; padding-top: 8px; margin-top: 8px;">
+				<table style="width: 100%;">
+					<tr>
+						<td><strong>${__("Gross Pay")}:</strong></td>
+						<td style="text-align: right;">
+							${frappe.format(data.gross_pay, { fieldtype: "Currency" })}
+						</td>
+					</tr>
+					<tr>
+						<td><strong>${__("Total Deductions")}:</strong></td>
+						<td style="text-align: right;">
+							${frappe.format(data.total_deduction, { fieldtype: "Currency" })}
+						</td>
+					</tr>
+					<tr style="font-size: 13px;">
+						<td><strong>${__("Net Pay")}:</strong></td>
+						<td style="text-align: right;">
+							<strong>${frappe.format(data.net_pay, { fieldtype: "Currency" })}</strong>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		`;
+
+		return html;
 	},
 
 	create_salary_slip: function (frm) {
