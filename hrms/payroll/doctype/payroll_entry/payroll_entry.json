@@ -21,7 +21,6 @@
   "start_date",
   "end_date",
   "column_break_13",
-  "deduct_tax_for_unclaimed_employee_benefits",
   "deduct_tax_for_unsubmitted_tax_exemption_proof",
   "employees_tab",
   "section_break_17",
@@ -140,12 +139,6 @@
    "fieldtype": "Date",
    "label": "End Date",
    "reqd": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "deduct_tax_for_unclaimed_employee_benefits",
-   "fieldtype": "Check",
-   "label": "Deduct Tax For Unclaimed Employee Benefits"
   },
   {
    "default": "0",
@@ -347,7 +340,7 @@
    "link_fieldname": "payroll_entry"
   }
  ],
- "modified": "2025-07-30 14:15:18.826081",
+ "modified": "2025-08-25 20:05:37.733324",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",

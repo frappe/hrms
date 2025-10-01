@@ -92,6 +92,9 @@ class TestOvertimeSlip(IntegrationTestCase):
 		from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
 		from hrms.payroll.doctype.payroll_entry.test_payroll_entry import get_payroll_entry
 
+		date = getdate()
+		month_start_date = get_first_day(date)
+
 		company = frappe.get_doc("Company", TEST_COMPANY)
 		employee = make_employee("test_overtime_slip_01@example.com")
 		overtime_type = create_overtime_type(overtime_calculation_method="Fixed Hourly Rate")
@@ -100,13 +103,16 @@ class TestOvertimeSlip(IntegrationTestCase):
 			shift_type="_Test Overtime Shift",
 			allow_overtime=1,
 			overtime_type=overtime_type.name,
-			last_sync_of_checkin=f"{add_days(getdate(), 1)} 15:00:00",
+			last_sync_of_checkin=f"{add_days(date, 10)} 15:00:00",
+			process_attendance_after=add_days(month_start_date, -1),
 			mark_auto_attendance_on_holidays=1,
 		)
 		frappe.db.set_single_value("Payroll Settings", "create_overtime_slip", 1)
 
 		make_salary_structure("Test Overtime Salary Slip", "Monthly", employee=employee, company=TEST_COMPANY)
-		make_shift_assignment(shift_type=shift_type.name, employee=employee, start_date=add_days(today(), -5))
+		make_shift_assignment(
+			shift_type=shift_type.name, employee=employee, start_date=add_days(month_start_date, -1)
+		)
 		create_checkin_records_for_overtime(employee)
 		shift_type.process_auto_attendance()
 
@@ -122,18 +128,16 @@ class TestOvertimeSlip(IntegrationTestCase):
 		payroll_entry.create_overtime_slips()
 		payroll_entry.submit_overtime_slips()
 
-		overtime_slip = frappe.db.get_value(
+		overtime_slip = frappe.db.exists(
 			"Overtime Slip",
 			{
 				"employee": employee,
 				"payroll_entry": payroll_entry.name,
+				"docstatus": 1,
 			},
-			["docstatus"],
-			as_dict=1,
 		)
 
 		self.assertTrue(overtime_slip)
-		self.assertEqual(overtime_slip.docstatus, 1)
 
 	def tearDown(self):
 		frappe.db.rollback()
@@ -168,16 +172,20 @@ def setup_overtime(employee, overtime_calculation_method="Salary Component Based
 	overtime_type = create_overtime_type(overtime_calculation_method=overtime_calculation_method)
 
 	date = getdate()
+	month_start_date = get_first_day(date)
 	shift_type = setup_shift_type(
 		company=TEST_COMPANY,
 		shift_type="_Test Overtime Shift",
 		allow_overtime=1,
 		overtime_type=overtime_type.name,
-		last_sync_of_checkin=f"{add_days(date, 3)} 15:00:00",
+		last_sync_of_checkin=f"{add_days(date, 10)} 15:00:00",
+		process_attendance_after=add_days(month_start_date, -1),
 		mark_auto_attendance_on_holidays=1,
 	)
 
-	make_shift_assignment(shift_type=shift_type.name, employee=employee, start_date=add_days(today(), -5))
+	make_shift_assignment(
+		shift_type=shift_type.name, employee=employee, start_date=add_days(month_start_date, -1)
+	)
 	create_checkin_records_for_overtime(employee)
 	shift_type.process_auto_attendance()
 
