@@ -50,8 +50,8 @@
             <div class="ml-4">
               <FormControl
                 type="checkbox"
-                label="Show All Projects"
-                v-model="showFilledProjects"
+                label="Show All"
+                v-model="showAllProjects"
               />
             </div>
               <!-- Legend -->
@@ -144,10 +144,11 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, onMounted, onBeforeUnmount } from 'vue'
-import { FeatherIcon, FormControl, createListResource } from 'frappe-ui'
+import { FeatherIcon, FormControl, Popover, createListResource } from 'frappe-ui'
 import { Dayjs } from 'dayjs'
 import { dayjs, raiseToast } from '../utils'
 
+const showAllProjects = ref(false)
 /**
  * Props:
  * - firstOfMonth: Dayjs for the month to render
@@ -280,10 +281,12 @@ const projectList = createListResource({
     const base: any[] = [
       ['Project', 'status', '!=', 'Completed'],
     ]
-    // Drive from internal toggle (0 = unfilled default, 1 = filled)
-    base.push(['Project', 'shifts_filled', '=', shiftsFilled.value])
+    // Only filter by unfilled when NOT showing all
+    if (!showAllProjects.value) {
+      base.push(['Project', 'shifts_filled', '=', 0])
+    }
 
-    // Merge the rest of projectFilters, but skip shifts_filled (already added)
+    // Merge the rest of projectFilters (skip shifts_filled)
     if (props.projectFilters) {
       for (const [k, v] of Object.entries(props.projectFilters)) {
         if (k === 'shifts_filled' || v == null || v === '') continue
@@ -305,7 +308,7 @@ const projectList = createListResource({
 })
 
 // Refetch when the toggle changes
-watch(shiftsFilled, () => {
+watch(showAllProjects, () => {
   loading.value = true
   projectList.fetch()
 })
