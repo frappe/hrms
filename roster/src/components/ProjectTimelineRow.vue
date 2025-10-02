@@ -51,22 +51,26 @@
               <div class="text-xs font-medium text-gray-600 mb-1"><b>Legend</b></div>
               <div class="flex items-center gap-3 text-xs text-gray-600">
                 <span class="inline-flex items-center gap-1.5">
-                  <FeatherIcon
-                    name="check-circle"
-                    class="h-3.5 w-3.5 text-green-500"
-                    aria-hidden="true"
-                  />
+                  <FeatherIcon name="check-circle" class="h-3.5 w-3.5 text-green-500" aria-hidden="true" />
                   PO Entered
                 </span>
               </div>
               <div class="flex items-center gap-3 text-xs text-gray-600">
                 <span class="inline-flex items-center gap-1.5">
-                  <FeatherIcon
-                    name="x-circle"
-                    class="h-3.5 w-3.5 text-red-500"
-                    aria-hidden="true"
-                  />
+                  <FeatherIcon name="x-circle" class="h-3.5 w-3.5 text-red-500" aria-hidden="true" />
                   PO Missing
+                </span>
+              </div>
+              <div class="flex items-center gap-3 text-xs text-gray-600">
+                <span class="inline-flex items-center gap-1.5">
+                  <FeatherIcon name="sun" class="h-3.5 w-3.5 text-orange-500" aria-hidden="true" />
+                  # DS Requested
+                </span>
+              </div>
+              <div class="flex items-center gap-3 text-xs text-gray-600">
+                <span class="inline-flex items-center gap-1.5">
+                  <FeatherIcon name="moon" class="h-3.5 w-3.5 text-blue-500" aria-hidden="true" />
+                  # NS Requested
                 </span>
               </div>
             </div>
@@ -110,6 +114,10 @@
                     <span class="text-gray-500">
                       {{ dayjs(bar.start).format('D MMM') }} – {{ dayjs(bar.end).format('D MMM') }}
                     </span>
+                    <FeatherIcon name="sun" class="h-3.5 w-3.5 flex-shrink-0 text-orange-500" aria-hidden="true" />
+                    <span class="font-medium truncate">{{ bar.day_shift }}</span>
+                    <FeatherIcon name="moon" class="h-3.5 w-3.5 flex-shrink-0 text-blue-500" aria-hidden="true" />
+                    <span class="font-medium truncate">{{ bar.night_shift }}</span>
                   </div>
                 </div>
 
@@ -201,8 +209,8 @@ const dayThStyle = computed(() => ({
 }))
 
 type ProjectRow = {
-  name: string               // Project ID (e.g. P-0024)
-  project_name: string       // Subject/Title
+  name: string
+  project_name: string
   status: string
   expected_start_date?: string | null
   expected_end_date?: string | null
@@ -210,6 +218,8 @@ type ProjectRow = {
   customer?: string | null
   custom_project_location?: string | null
   purchase_order_number?: string | null
+  ds_number?: string | null
+  ns_number?: string | null
 }
 
 const loading = ref(true)
@@ -240,6 +250,8 @@ const projectList = createListResource({
     'customer',
     'custom_project_location',
     'purchase_order_number',
+    'ds_number',
+    'ns_number',
   ],
   // Use array filters to express '!=' reliably in Frappe
   filters: computed(() => {
@@ -347,6 +359,9 @@ const bars = computed(() => {
     color: string | null
     poNumber?: string | null
     hasPO: boolean
+    shiftLabel: string
+    day_shift: string
+    night_shift: string
   }[] = []
 
   for (const r of rows) {
@@ -354,11 +369,14 @@ const bars = computed(() => {
     if (!clamped.start || !clamped.end) continue
     const customer = r.customer ?? "Pending"
     const location = r.custom_project_location ?? "Not Specified"
-    const projectLabel = `${r.project_name} - ${customer}`
+    const day_shift = r.ds_number ?? "Not Specified"
+    const night_shift = r.ns_number ?? "Not Specified"
+    const projectLabel = `${r.project_name} - ${customer} | DS: ${day_shift} | NS: ${night_shift}`
     const startCol = idxOf(clamped.start)
     const endCol   = idxOf(clamped.end)
     const poNumber = r.purchase_order_number ? ` | PO: ${r.purchase_order_number}` : ' | PO: Pending'
     const hasPO = !!r.purchase_order_number
+    const shiftLabel = `DS: ${day_shift} | NS: ${night_shift}`
 
     out.push({
       key: `${r.name}:${clamped.start}-${clamped.end}`,
@@ -367,10 +385,13 @@ const bars = computed(() => {
       end: clamped.end,
       startCol,
       endCol,
-      tooltip: `${projectLabel}: ${location} | ${dayjs(clamped.start).format('D MMM')} – ${dayjs(clamped.end).format('D MMM')} ${poNumber}`,
+      tooltip: `${projectLabel}: ${location} | ${dayjs(clamped.start).format('D MMM')} – ${dayjs(clamped.end).format('D MMM')} | ${shiftLabel} ${poNumber}`,
       color: r.color ?? null,
       poNumber,
       hasPO,
+      shiftLabel,
+      day_shift,
+      night_shift,
     })
   }
 
