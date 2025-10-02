@@ -46,6 +46,14 @@
               class="border-t sticky left-0 bg-white border-r align-top z-[5]"
               :style="leftColStyle"
             >
+            <!-- Show all projects toggle -->
+            <div class="ml-4">
+              <FormControl
+                type="checkbox"
+                label="Show All Projects"
+                v-model="showFilledProjects"
+              />
+            </div>
               <!-- Legend -->
             <div class="px-2 py-1.5">
               <div class="text-xs font-medium text-gray-600 mb-1"><b>Legend</b></div>
@@ -112,7 +120,7 @@
                       {{ bar.projectLabel }}
                     </span>
                     <span class="text-gray-500">
-                      {{ dayjs(bar.start).format('D MMM') }} – {{ dayjs(bar.end).format('D MMM') }}
+                      {{ dayjs(bar.projectStart).format('D MMM') }} – {{ dayjs(bar.projectEnd).format('D MMM') }}
                     </span>
                     <FeatherIcon name="sun" class="h-3.5 w-3.5 flex-shrink-0 text-orange-500" aria-hidden="true" />
                     <span class="font-medium truncate">{{ bar.day_shift }}</span>
@@ -136,7 +144,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, onMounted, onBeforeUnmount } from 'vue'
-import { FeatherIcon, createListResource } from 'frappe-ui'
+import { FeatherIcon, FormControl, createListResource } from 'frappe-ui'
 import { Dayjs } from 'dayjs'
 import { dayjs, raiseToast } from '../utils'
 
@@ -148,7 +156,7 @@ import { dayjs, raiseToast } from '../utils'
  */
 const props = defineProps<{
   firstOfMonth: Dayjs
-  projectFilters?: Record<string, any>
+  projectFilters?: { company?: string; shifts_filled?: 0 | 1 }
   dayColWidthPx?: number
   leftColWidthPx?: number
   scrollLeft?: number
@@ -159,6 +167,18 @@ const emit = defineEmits<{
   (e: 'update:collapsed', v: boolean): void
   (e: 'height', px: number): void
 }>()
+
+// Internal shifts_filled flag (0=unfilled default, 1=filled)
+const shiftsFilled = ref<number>(props.projectFilters?.shifts_filled ?? 0)
+// Checkbox boolean ↔ 0/1 mapper
+const showFilledProjects = computed<boolean>({
+  get: () => shiftsFilled.value === 1,
+  set: (checked) => { shiftsFilled.value = checked ? 1 : 0 }
+})
+// If the parent ever sends a new value, sync it (optional)
+watch(() => props.projectFilters?.shifts_filled, (v) => {
+  if (v === 0 || v === 1) shiftsFilled.value = v
+})
 
 // local collapsible state (controlled or uncontrolled)
 const internalCollapsed = ref(!!props.collapsed)
@@ -220,6 +240,7 @@ type ProjectRow = {
   purchase_order_number?: string | null
   ds_number?: string | null
   ns_number?: string | null
+  customer_abbreviation?: string | null
 }
 
 const loading = ref(true)
@@ -252,17 +273,21 @@ const projectList = createListResource({
     'purchase_order_number',
     'ds_number',
     'ns_number',
+    'customer_abbreviation',
   ],
   // Use array filters to express '!=' reliably in Frappe
   filters: computed(() => {
     const base: any[] = [
       ['Project', 'status', '!=', 'Completed'],
-      ['Project', 'shifts_filled', '=', 0],
     ]
-    // merge simple equality filters from projectFilters (object -> array)
+    // Drive from internal toggle (0 = unfilled default, 1 = filled)
+    base.push(['Project', 'shifts_filled', '=', shiftsFilled.value])
+
+    // Merge the rest of projectFilters, but skip shifts_filled (already added)
     if (props.projectFilters) {
-      for (const k of Object.keys(props.projectFilters)) {
-        base.push(['Project', k, '=', props.projectFilters[k]])
+      for (const [k, v] of Object.entries(props.projectFilters)) {
+        if (k === 'shifts_filled' || v == null || v === '') continue
+        base.push(['Project', k, '=', v])
       }
     }
     return base
@@ -279,6 +304,12 @@ const projectList = createListResource({
   },
 })
 
+// Refetch when the toggle changes
+watch(shiftsFilled, () => {
+  loading.value = true
+  projectList.fetch()
+})
+
 watch(
   () => props.scrollLeft,
   (x) => {
@@ -288,13 +319,14 @@ watch(
   }
 )
 
+// Fetch when month or external filters change
 watch(
   () => [props.firstOfMonth, props.projectFilters],
   () => {
     loading.value = true
     projectList.fetch()
   },
-  { deep: true }
+  { deep: true, immediate: true } // immediate to load on mount
 )
 
 /** Helper: get start/end with fallbacks and clamp to month window */
@@ -351,6 +383,8 @@ const bars = computed(() => {
   const out: {
     key: string
     projectLabel: string
+    projectStart: string
+    projectEnd: string
     start: string
     end: string
     startCol: number
@@ -362,16 +396,18 @@ const bars = computed(() => {
     shiftLabel: string
     day_shift: string
     night_shift: string
+    customer_abbr: string
   }[] = []
 
   for (const r of rows) {
     const clamped = clampToMonth(r)
     if (!clamped.start || !clamped.end) continue
     const customer = r.customer ?? "Pending"
+    const customer_abbr = r.customer_abbreviation ?? "N/A"
     const location = r.custom_project_location ?? "Not Specified"
     const day_shift = r.ds_number ?? "Not Specified"
     const night_shift = r.ns_number ?? "Not Specified"
-    const projectLabel = `${r.project_name} - ${customer} | DS: ${day_shift} | NS: ${night_shift}`
+    const projectLabel = `${r.project_name} - ${customer_abbr}`
     const startCol = idxOf(clamped.start)
     const endCol   = idxOf(clamped.end)
     const poNumber = r.purchase_order_number ? ` | PO: ${r.purchase_order_number}` : ' | PO: Pending'
@@ -381,17 +417,26 @@ const bars = computed(() => {
     out.push({
       key: `${r.name}:${clamped.start}-${clamped.end}`,
       projectLabel,
+      projectStart: r.expected_start_date ?? 'N/A',
+      projectEnd: r.expected_end_date ?? 'N/A',
       start: clamped.start,
       end: clamped.end,
       startCol,
       endCol,
-      tooltip: `${projectLabel}: ${location} | ${dayjs(clamped.start).format('D MMM')} – ${dayjs(clamped.end).format('D MMM')} | ${shiftLabel} ${poNumber}`,
+      tooltip: [
+        `Customer: ${customer}`,
+        `Location: ${location}`,
+        `Duration: ${dayjs(clamped.start).format('D MMM')} – ${dayjs(clamped.end).format('D MMM')}`,
+        `Shifts Req: ${shiftLabel}`,
+        [poNumber].filter(Boolean).join(' ')
+      ].filter(Boolean).join('\n'),
       color: r.color ?? null,
       poNumber,
       hasPO,
       shiftLabel,
       day_shift,
       night_shift,
+      customer_abbr,
     })
   }
 

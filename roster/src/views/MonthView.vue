@@ -31,6 +31,7 @@
         @updateFilters="updateFilters"
         @addToMonth="addToMonth"
         @updateDateRange="onUpdateDateRange"
+        @updateProjectShiftsFilled="onUpdateProjectShiftsFilled"
       />
     </div>
 
@@ -77,7 +78,6 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, onBeforeUnmount, toRaw, watch } from 'vue'
 import { Dropdown, FeatherIcon, createListResource, createResource } from 'frappe-ui'
-
 import { dayjs, goTo, raiseToast } from '../utils'
 import MonthViewTable from '../components/MonthViewTable.vue'
 import ProjectTimelineRow from '../components/ProjectTimelineRow.vue'
@@ -109,7 +109,7 @@ const toolbarHeight = ref(0)
 const filtersHeight = ref(0)
 const timelineHeight = ref(0)
 const vh = ref(window.innerHeight)
-const projectFilters = reactive<{ company?: string }>({})
+const projectFilters = reactive<{ company?: string; shifts_filled?: 0 | 1 }>({})
 let roToolbar: ResizeObserver | null = null
 let roFilters: ResizeObserver | null = null
 let roTimeline: ResizeObserver | null = null
@@ -284,4 +284,8 @@ watch(
   },
   { immediate: true }
 )
+
+function onUpdateProjectShiftsFilled(value: 0 | 1) {
+  projectFilters.shifts_filled = value   // 0 = unfilled (default), 1 = filled
+}
 </script>

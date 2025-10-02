@@ -18,7 +18,6 @@
         placeholder="View Availability"
       />
     </div>
-
     <!-- Filters -->
     <div class="ml-auto space-x-2.5 flex">
       <div v-for="[key, value] of Object.entries(filters)" :key="key" class="w-40">
@@ -54,6 +53,7 @@ const emit = defineEmits<{
   (e: 'addToMonth', change: number): void
   (e: 'updateFilters', newFilters: { [K in FilterField]: string }): void
   (e: 'updateDateRange', payload: { from: string | null; to: string | null }): void
+  (e: 'updateProjectShiftsFilled', value: 0 | 1): void
 }>()
 
 /** Date range model (support string/object/array from different frappe-ui builds) */
