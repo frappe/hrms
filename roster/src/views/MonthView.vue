@@ -30,6 +30,7 @@
         :firstOfMonth="firstOfMonth"
         @updateFilters="updateFilters"
         @addToMonth="addToMonth"
+        @updateDateRange="onUpdateDateRange"
       />
     </div>
 
@@ -38,7 +39,7 @@
       <ProjectTimelineRow
         v-model:collapsed="projectsCollapsed"
         :firstOfMonth="firstOfMonth"
-        :projectFilters="{ company: employeeFilters.company }"
+        :projectFilters="projectFilters"
         :dayColWidthPx="144"
         :leftColWidthPx="256"
         :scrollLeft="hScroll"
@@ -52,7 +53,7 @@
         v-if="isCompanySelected"
         ref="monthViewTable"
         :firstOfMonth="firstOfMonth"
-        :employees="employees.data || []"
+        :employees="availableEmployees"
         :employeeFilters="employeeFilters"
         :shiftFilters="shiftFilters"
         :maxHeightPx="tableHeight"
@@ -74,8 +75,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue'
-import { Dropdown, FeatherIcon, createListResource } from 'frappe-ui'
+import { ref, reactive, computed, onMounted, onBeforeUnmount, toRaw, watch } from 'vue'
+import { Dropdown, FeatherIcon, createListResource, createResource } from 'frappe-ui'
 
 import { dayjs, goTo, raiseToast } from '../utils'
 import MonthViewTable from '../components/MonthViewTable.vue'
@@ -90,19 +91,17 @@ export type ShiftFilters = {
   [K in 'shift_type' | 'shift_location']?: string;
 };
 
+type AvailabilityResponse = { employees: { name: string }[] }
+
 const monthViewTable = ref<InstanceType<typeof MonthViewTable>>()
 const isCompanySelected = ref(false)
 const showShiftAssignmentDialog = ref(false)
 const firstOfMonth = ref(dayjs().date(1).startOf('D'))
 const employeeFilters = reactive<EmployeeFilters>({ status: 'Active' })
 const shiftFilters = reactive<ShiftFilters>({})
-
-// horizontal scroll sync
+const dateRange = reactive<{ from: string | null; to: string | null }>({ from: null, to: null })
 const hScroll = ref(0)
-// projects section collapsed state (two-way bound with ProjectTimelineRow)
 const projectsCollapsed = ref(false)
-
-// dynamic height measurement
 const toolbarRef = ref<HTMLElement | null>(null)
 const filtersRef = ref<HTMLElement | null>(null)
 const timelineRef = ref<HTMLElement | null>(null)
@@ -110,7 +109,7 @@ const toolbarHeight = ref(0)
 const filtersHeight = ref(0)
 const timelineHeight = ref(0)
 const vh = ref(window.innerHeight)
-
+const projectFilters = reactive<{ company?: string }>({})
 let roToolbar: ResizeObserver | null = null
 let roFilters: ResizeObserver | null = null
 let roTimeline: ResizeObserver | null = null
@@ -128,6 +127,10 @@ const VIEW_OPTIONS = [
 
 function addToMonth(change: number) {
   firstOfMonth.value = firstOfMonth.value.add(change, 'M')
+  // If you want the dateRange to snap with month navigation, uncomment:
+  // dateRange.from = firstOfMonth.value.startOf('month').format('YYYY-MM-DD')
+  // dateRange.to   = firstOfMonth.value.endOf('month').format('YYYY-MM-DD')
+  // fetchAvailability()
 }
 
 function updateFilters(newFilters: EmployeeFilters & ShiftFilters) {
@@ -148,12 +151,13 @@ function updateFilters(newFilters: EmployeeFilters & ShiftFilters) {
     })
 
   if (employeeUpdated) employees.fetch()
+  fetchAvailability()
 }
 
 // calculate remaining height for the table scroller
 const tableHeight = computed(() => {
-  const innerBottomPadding = 32 /* pb-8 */
-  const extraShave = 50       /* reduce overall height by 50px */
+  const innerBottomPadding = 32
+  const extraShave = 50
   const used = toolbarHeight.value + filtersHeight.value + timelineHeight.value
   const remaining = vh.value - used - innerBottomPadding - extraShave
   return Math.max(200, remaining)
@@ -204,14 +208,80 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', onWindowResize)
 })
 
-// RESOURCES
 const employees = createListResource({
   doctype: 'Employee',
   fields: ['name', 'employee_name', 'designation', 'image'],
   filters: employeeFilters,
   pageLength: 99999,
+  onSuccess() {
+    fetchAvailability()
+  },
   onError(error: { messages: string[] }) {
     raiseToast('error', error.messages[0])
   },
 })
+
+const availableNameSet = ref<Set<string>>(new Set())
+const availableEmployees = computed(() => {
+  const base = employees.data || []
+  if (!availableNameSet.value.size) return base
+  return base.filter((e: any) => availableNameSet.value.has(e.name))
+})
+
+function cleaned<T extends Record<string, any>>(obj: T): Partial<T> {
+  const raw = { ...toRaw(obj) }
+  Object.keys(raw).forEach((k) => {
+    if (raw[k] === '' || raw[k] == null) delete raw[k]
+  })
+  return raw
+}
+
+const availability = createResource({
+  url: 'hrms.api.roster.get_available_employees',
+  auto: false,
+  makeParams() {
+    return {
+      from_date: dateRange.from,
+      to_date: dateRange.to,
+      ...cleaned(employeeFilters), // company/department/branch/designation
+    }
+  },
+  onSuccess: (data: AvailabilityResponse | undefined) => {
+    const names = (data?.employees || []).map((e: { name: string }) => e.name)
+    availableNameSet.value = new Set(names)
+  },
+  onError(error: { messages?: string[]; message?: string }) {
+    raiseToast('error', error?.messages?.[0] || error?.message || 'Failed to fetch availability')
+    availableNameSet.value = new Set()
+  },
+})
+
+function fetchAvailability() {
+  if (!isCompanySelected.value || !dateRange.from || !dateRange.to) {
+    availableNameSet.value = new Set() // show base list
+    return
+  }
+  availability.fetch()
+}
+
+function onUpdateDateRange(payload: { from: string | null; to: string | null } | string) {
+  if (typeof payload === 'string') {
+    const [from, to] = payload.split(',').map(s => s?.trim() || '')
+    dateRange.from = from || null
+    dateRange.to = to || null
+  } else {
+    dateRange.from = payload.from
+    dateRange.to = payload.to
+  }
+  fetchAvailability()
+}
+
+watch(
+  () => employeeFilters.company,
+  (company) => {
+    if (company) projectFilters.company = company
+    else delete projectFilters.company
+  },
+  { immediate: true }
+)
 </script>

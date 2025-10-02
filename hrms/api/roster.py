@@ -319,3 +319,27 @@ def group_by_employee(events: list[dict]) -> dict[str, list[dict]]:
 			{k: v for k, v in event.items() if k != "employee"}
 		)
 	return grouped_events
+
+@frappe.whitelist()
+def get_available_employees(from_date: str, to_date: str, **employee_filters) -> dict:
+    ALLOWED = {"company", "department", "branch", "designation", "status"}
+    ef = {k: v for k, v in (employee_filters or {}).items() if k in ALLOWED and v}
+    all_emp_names = set(frappe.get_all("Employee", filters=ef, pluck="name"))
+    if not all_emp_names:
+        return {"employees": []}
+    ShiftAssignment = frappe.qb.DocType("Shift Assignment")
+    busy_rows = (
+        frappe.qb.select(ShiftAssignment.employee)
+        .from_(ShiftAssignment)
+        .where(
+            (ShiftAssignment.docstatus == 1)
+            & (ShiftAssignment.start_date <= to_date)
+            & ((ShiftAssignment.end_date >= from_date) | (ShiftAssignment.end_date.isnull()))
+            & (ShiftAssignment.employee.isin(list(all_emp_names)))
+        )
+        .distinct()
+    ).run(pluck="employee")
+
+    busy = set(busy_rows or [])
+    available = sorted(all_emp_names - busy)
+    return {"employees": [{"name": e} for e in available]}

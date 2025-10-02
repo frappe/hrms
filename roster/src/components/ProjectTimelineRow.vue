@@ -43,10 +43,33 @@
           <tr>
             <!-- Left title cell -->
             <td
-              class="border-t sticky left-0 bg-white border-r align-top"
+              class="border-t sticky left-0 bg-white border-r align-top z-[5]"
               :style="leftColStyle"
             >
-              <div class="text-xs text-gray-500">&nbsp;</div>
+              <!-- Legend -->
+            <div class="px-2 py-1.5">
+              <div class="text-xs font-medium text-gray-600 mb-1"><b>Legend</b></div>
+              <div class="flex items-center gap-3 text-xs text-gray-600">
+                <span class="inline-flex items-center gap-1.5">
+                  <FeatherIcon
+                    name="check-circle"
+                    class="h-3.5 w-3.5 text-green-500"
+                    aria-hidden="true"
+                  />
+                  PO Entered
+                </span>
+              </div>
+              <div class="flex items-center gap-3 text-xs text-gray-600">
+                <span class="inline-flex items-center gap-1.5">
+                  <FeatherIcon
+                    name="x-circle"
+                    class="h-3.5 w-3.5 text-red-500"
+                    aria-hidden="true"
+                  />
+                  PO Missing
+                </span>
+              </div>
+            </div>
             </td>
 
             <!-- One-row grid for bars -->
@@ -75,7 +98,15 @@
                   :title="bar.tooltip"
                 >
                   <div class="flex items-center gap-2">
-                    <span class="font-medium truncate">{{ bar.projectLabel }}</span>
+                    <FeatherIcon
+                      :name="bar.hasPO ? 'check-circle' : 'x-circle'"
+                      class="h-3.5 w-3.5 flex-shrink-0"
+                      :class="bar.hasPO ? 'text-green-500' : 'text-red-500'"
+                      aria-hidden="true"
+                    />
+                    <span class="font-medium truncate">
+                      {{ bar.projectLabel }}
+                    </span>
                     <span class="text-gray-500">
                       {{ dayjs(bar.start).format('D MMM') }} – {{ dayjs(bar.end).format('D MMM') }}
                     </span>
@@ -178,6 +209,7 @@ type ProjectRow = {
   color?: string | null
   customer?: string | null
   custom_project_location?: string | null
+  purchase_order_number?: string | null
 }
 
 const loading = ref(true)
@@ -207,6 +239,7 @@ const projectList = createListResource({
     'color',
     'customer',
     'custom_project_location',
+    'purchase_order_number',
   ],
   // Use array filters to express '!=' reliably in Frappe
   filters: computed(() => {
@@ -224,7 +257,7 @@ const projectList = createListResource({
   }),
   order_by: 'expected_start_date asc',
   page_length: 1000,
-  auto: true,
+  auto: false,
   onSuccess() {
     loading.value = false
   },
@@ -312,15 +345,20 @@ const bars = computed(() => {
     endCol: number
     tooltip: string
     color: string | null
+    poNumber?: string | null
+    hasPO: boolean
   }[] = []
 
   for (const r of rows) {
     const clamped = clampToMonth(r)
     if (!clamped.start || !clamped.end) continue
-
-    const projectLabel = `${r.project_name} - ${r.customer}`
+    const customer = r.customer ?? "Pending"
+    const location = r.custom_project_location ?? "Not Specified"
+    const projectLabel = `${r.project_name} - ${customer}`
     const startCol = idxOf(clamped.start)
     const endCol   = idxOf(clamped.end)
+    const poNumber = r.purchase_order_number ? ` | PO: ${r.purchase_order_number}` : ' | PO: Pending'
+    const hasPO = !!r.purchase_order_number
 
     out.push({
       key: `${r.name}:${clamped.start}-${clamped.end}`,
@@ -329,8 +367,10 @@ const bars = computed(() => {
       end: clamped.end,
       startCol,
       endCol,
-      tooltip: `${projectLabel}: ${r.custom_project_location} | ${dayjs(clamped.start).format('D MMM')} – ${dayjs(clamped.end).format('D MMM')}`,
+      tooltip: `${projectLabel}: ${location} | ${dayjs(clamped.start).format('D MMM')} – ${dayjs(clamped.end).format('D MMM')} ${poNumber}`,
       color: r.color ?? null,
+      poNumber,
+      hasPO,
     })
   }
 
