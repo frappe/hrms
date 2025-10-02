@@ -1,7 +1,10 @@
 <template>
 	<div
-		class="rounded-lg border overflow-auto max-h-[45rem]"
+		ref="scroller"
+		class="rounded-lg border overflow-auto"
 		:class="loading && 'animate-pulse pointer-events-none'"
+		@scroll="onHScroll"
+		:style="maxHeightPx ? { maxHeight: maxHeightPx + 'px' } : {}"
 	>
 		<table class="border-separate border-spacing-0">
 			<thead>
@@ -311,6 +314,13 @@ interface ShiftAssignment extends Shift {
 type Events = Record<string, (HolidayWithDate | LeaveApplication | ShiftAssignment)[]>;
 type MappedEvents = Record<string, Record<string, Holiday | Leave | Shift[]>>;
 
+const emit = defineEmits<{ (e: 'hscroll', left: number): void }>()
+const scroller = ref<HTMLDivElement | null>(null)
+
+function onHScroll() {
+  if (scroller.value) emit('hscroll', scroller.value.scrollLeft)
+}
+
 const props = defineProps<{
 	firstOfMonth: Dayjs;
 	employees: {
@@ -318,6 +328,7 @@ const props = defineProps<{
 	}[];
 	employeeFilters: { [K in keyof EmployeeFilters]?: string };
 	shiftFilters: { [K in keyof ShiftFilters]?: string };
+	maxHeightPx?: number;
 }>();
 
 const loading = ref(true);

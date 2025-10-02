@@ -420,7 +420,8 @@ const shiftSchedule = createResource({
 
 const shiftTypes = createListResource({
 	doctype: "Shift Type",
-	fields: ["name"],
+	fields: ["name"],	
+	orderBy: 'name desc',
 	auto: true,
 	transform: (rows: { name: string }[]) => rows.map((r) => r.name),
 });
@@ -428,6 +429,7 @@ const shiftTypes = createListResource({
 const shiftLocations = createListResource({
 	doctype: "Shift Location",
 	fields: ["name"],
+	orderBy: 'name desc',
 	auto: true,
 	transform: (rows: { name: string }[]) => rows.map((r) => r.name),
 });
@@ -437,6 +439,7 @@ const projects = createListResource({
 	doctype: "Project",
 	fields: ["name", "project_name"],
 	filters: [["status", "=", "Open"]],
+	orderBy: 'name desc',
 	limit: 200, // ask for more than default
 	auto: true,
 });
