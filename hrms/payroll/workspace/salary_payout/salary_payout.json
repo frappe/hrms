@@ -1,5 +1,4 @@
 {
- "app": "hrms",
  "charts": [
   {
    "chart_name": "Outgoing Salary",
@@ -376,7 +375,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-01-15 17:26:05.803755",
+ "modified": "2025-08-15 16:30:30.903194",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Payout",
@@ -386,7 +385,7 @@
  "public": 1,
  "quick_lists": [],
  "roles": [],
- "sequence_id": 9.0,
+ "sequence_id": 15.0,
  "shortcuts": [
   {
    "color": "Red",
@@ -402,6 +401,7 @@
    "doc_view": "List",
    "label": "Salary Register",
    "link_to": "Salary Register",
+   "report_ref_doctype": "Salary Slip",
    "type": "Report"
   },
   {
@@ -414,6 +414,5 @@
    "type": "DocType"
   }
  ],
- "title": "Salary Payout",
- "type": "Workspace"
+ "title": "Salary Payout"
 }

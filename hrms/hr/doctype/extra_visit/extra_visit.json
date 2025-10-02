@@ -1,0 +1,93 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-01 11:03:51.919289",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "travel_request",
+  "from",
+  "to",
+  "date",
+  "kms",
+  "party_name",
+  "contact_no",
+  "purpose"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "travel_request",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Travel Request",
+   "options": "Travel Request"
+  },
+  {
+   "columns": 1,
+   "fieldname": "from",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "From"
+  },
+  {
+   "columns": 1,
+   "fieldname": "to",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "To"
+  },
+  {
+   "columns": 1,
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date"
+  },
+  {
+   "columns": 1,
+   "fieldname": "kms",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Kms",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "party_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Party Name"
+  },
+  {
+   "columns": 1,
+   "fieldname": "contact_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Contact No"
+  },
+  {
+   "columns": 1,
+   "fieldname": "purpose",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Purpose"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-10-01 11:03:51.919289",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Extra Visit",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

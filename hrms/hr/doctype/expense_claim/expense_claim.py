@@ -8,6 +8,8 @@ from frappe.model.mapper import get_mapped_doc
 from frappe.model.workflow import get_workflow_name
 from frappe.query_builder.functions import Sum
 from frappe.utils import cstr, flt, get_link_to_form
+from frappe.query_builder import DocType
+from pypika.functions import Sum
 
 import erpnext
 from erpnext.accounts.doctype.repost_accounting_ledger.repost_accounting_ledger import (
@@ -414,6 +416,7 @@ def update_reimbursed_amount(doc):
 
 
 def get_total_reimbursed_amount(doc):
+	per = DocType("Payment Entry Reference")
 	if doc.is_paid:
 		# No need to check for cancelled state here as it will anyways update status as cancelled
 		return doc.grand_total
@@ -427,13 +430,17 @@ def get_total_reimbursed_amount(doc):
 			),
 		)
 
-		amount_via_payment_entry = frappe.db.get_value(
-			"Payment Entry Reference",
-			{"reference_name": doc.name, "docstatus": 1},
-			[{"SUM": "allocated_amount"}],
-		)
+		amount_via_payment_entry = (
+        frappe.qb.from_(per)
+        .select(Sum(per.allocated_amount))
+        .where(
+            (per.reference_doctype == doc.doctype)
+            & (per.reference_name == doc.name)
+        )
+		).run()[0][0] or 0
 
-		return flt(amount_via_jv) + flt(amount_via_payment_entry)
+
+		return flt(amount_via_payment_entry) + flt(doc.total_advance_amount)
 
 
 def get_outstanding_amount_for_claim(claim):

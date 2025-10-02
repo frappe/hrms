@@ -1,7 +1,8 @@
 {
  "actions": [],
  "autoname": "naming_series:",
- "creation": "2016-09-03 14:14:51.788550",
+ "creation": "2025-09-19 16:13:43.892071",
+ "default_view": "List",
  "doctype": "DocType",
  "document_type": "Document",
  "editable_grid": 1,
@@ -9,25 +10,55 @@
  "field_order": [
   "vehicle_section",
   "naming_series",
+  "column_break_7",
+  "log_type",
+  "section_break_rxnw",
   "license_plate",
   "employee",
-  "column_break_7",
+  "column_break_xfln",
+  "department",
   "model",
   "make",
   "odometer_reading",
   "date",
+  "odometer_image",
+  "column_break_cqld",
   "odometer",
-  "column_break_12",
   "last_odometer",
-  "refuelling_details",
-  "fuel_qty",
-  "price",
-  "column_break_15",
-  "supplier",
-  "invoice",
+  "total_kms",
+  "section_break_ktoe",
+  "refuling_details",
+  "section_break_hnux",
+  "fuel_card_entitled_quantity",
+  "column_break_vmqh",
+  "fuel_card_entitle_amount",
+  "mileage_kml",
+  "section_break_iftu",
+  "total_fuel_qty_l",
+  "average_fuel_price",
+  "column_break_jiti",
+  "total_amount",
+  "column_break_erdb",
+  "fuel_card_price",
+  "column_break_nvvn",
+  "amount_to_be_claimed",
+  "official_vists_section",
+  "table_fygn",
+  "section_break_szuz",
+  "total_km",
+  "column_break_ncks",
+  "litre_consumed",
   "service_details",
   "service_detail",
-  "amended_from"
+  "amended_from",
+  "section_break_wfzz",
+  "service_total",
+  "column_break_robz",
+  "total_expense_amount",
+  "column_break_buqi",
+  "grand_total_inc_fuel_card",
+  "column_break_gtsq",
+  "claimable_grand_total"
  ],
  "fields": [
   {
@@ -38,6 +69,7 @@
   {
    "fieldname": "naming_series",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Series",
    "no_copy": 1,
    "options": "HR-VLOG-.YYYY.-",
@@ -99,38 +131,6 @@
    "reqd": 1
   },
   {
-   "collapsible": 1,
-   "fieldname": "refuelling_details",
-   "fieldtype": "Section Break",
-   "label": "Refuelling Details"
-  },
-  {
-   "fieldname": "fuel_qty",
-   "fieldtype": "Float",
-   "label": "Fuel Qty"
-  },
-  {
-   "fieldname": "price",
-   "fieldtype": "Currency",
-   "label": "Fuel Price"
-  },
-  {
-   "fieldname": "column_break_15",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "supplier",
-   "fieldtype": "Link",
-   "label": "Supplier",
-   "options": "Supplier"
-  },
-  {
-   "fieldname": "invoice",
-   "fieldtype": "Data",
-   "label": "Invoice Ref"
-  },
-  {
-   "collapsible": 1,
    "fieldname": "service_details",
    "fieldtype": "Section Break",
    "label": "Service Details"
@@ -141,15 +141,6 @@
    "options": "Vehicle Service"
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Vehicle Log",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
    "fetch_from": "license_plate.last_odometer",
    "fieldname": "last_odometer",
    "fieldtype": "Int",
@@ -158,16 +149,197 @@
    "reqd": 1
   },
   {
-   "fieldname": "column_break_12",
+   "fieldname": "odometer_image",
+   "fieldtype": "Attach Image",
+   "label": "Odometer Image"
+  },
+  {
+   "fieldname": "column_break_cqld",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_ktoe",
+   "fieldtype": "Section Break",
+   "label": "Refuling Details"
+  },
+  {
+   "fieldname": "refuling_details",
+   "fieldtype": "Table",
+   "options": "Refuling Details"
+  },
+  {
+   "fetch_from": "employee.department",
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "section_break_hnux",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "fuel_card_entitled_quantity",
+   "fieldtype": "Currency",
+   "label": "Fuel Card Entitled Quantity"
+  },
+  {
+   "fieldname": "fuel_card_entitle_amount",
+   "fieldtype": "Currency",
+   "label": "Fuel Card Entitle Amount"
+  },
+  {
+   "fieldname": "column_break_vmqh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mileage_kml",
+   "fieldtype": "Float",
+   "label": "Mileage (kmL)"
+  },
+  {
+   "fieldname": "section_break_iftu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_fuel_qty_l",
+   "fieldtype": "Float",
+   "label": "Total Fuel Qty (L)"
+  },
+  {
+   "fieldname": "average_fuel_price",
+   "fieldtype": "Currency",
+   "label": "Average Fuel Price"
+  },
+  {
+   "fieldname": "fuel_card_price",
+   "fieldtype": "Currency",
+   "label": "Fuel Card Price"
+  },
+  {
+   "fieldname": "column_break_jiti",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_erdb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_nvvn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amount_to_be_claimed",
+   "fieldtype": "Currency",
+   "label": "Amount To be Claimed"
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "label": "Total Amount"
+  },
+  {
+   "fieldname": "log_type",
+   "fieldtype": "Select",
+   "label": "Log Type",
+   "options": "\nRunning Expense\nSpecial Approval"
+  },
+  {
+   "fieldname": "section_break_rxnw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_xfln",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_expense_amount",
+   "fieldtype": "Currency",
+   "label": "Total Expense Amount"
+  },
+  {
+   "fieldname": "service_total",
+   "fieldtype": "Currency",
+   "label": "Service Total"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vehicle Log",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "section_break_wfzz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "grand_total_inc_fuel_card",
+   "fieldtype": "Currency",
+   "label": "Grand Total (Inc Fuel Card)"
+  },
+  {
+   "fieldname": "column_break_robz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_buqi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_gtsq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "claimable_grand_total",
+   "fieldtype": "Currency",
+   "label": "Claimable Grand Total"
+  },
+  {
+   "fieldname": "total_kms",
+   "fieldtype": "Int",
+   "label": "Total KMs"
+  },
+  {
+   "fieldname": "official_vists_section",
+   "fieldtype": "Section Break",
+   "label": "Official Vists"
+  },
+  {
+   "fieldname": "table_fygn",
+   "fieldtype": "Table",
+   "options": "Extra Visit"
+  },
+  {
+   "fieldname": "section_break_szuz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_km",
+   "fieldtype": "Float",
+   "label": "Total KM"
+  },
+  {
+   "fieldname": "column_break_ncks",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "litre_consumed",
+   "fieldtype": "Float",
+   "label": "Litre Consumed"
   }
  ],
+ "grid_page_length": 50,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:10:58.330593",
+ "modified": "2025-10-02 09:52:30.661857",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Vehicle Log",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
@@ -185,7 +357,8 @@
    "write": 1
   }
  ],
- "sort_field": "creation",
+ "row_format": "Dynamic",
+ "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
  "track_changes": 1

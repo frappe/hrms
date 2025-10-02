@@ -1,5 +1,4 @@
 {
- "app": "hrms",
  "charts": [
   {
    "chart_name": "Department Wise Openings",
@@ -184,7 +183,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-01-15 16:43:55.517031",
+ "modified": "2025-08-15 16:30:29.745965",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Recruitment",
@@ -200,7 +199,7 @@
   }
  ],
  "roles": [],
- "sequence_id": 3.0,
+ "sequence_id": 6.0,
  "shortcuts": [
   {
    "color": "Grey",
@@ -237,6 +236,5 @@
    "type": "DocType"
   }
  ],
- "title": "Recruitment",
- "type": "Workspace"
+ "title": "Recruitment"
 }

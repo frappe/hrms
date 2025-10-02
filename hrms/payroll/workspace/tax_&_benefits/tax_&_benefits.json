@@ -1,5 +1,4 @@
 {
- "app": "hrms",
  "charts": [],
  "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Tax Exemption Declaration\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Additional Salary\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Income Tax Computation\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Tax Setup\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Exemption\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Benefits\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2022-08-20 17:04:52.350699",
@@ -136,7 +135,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-01-15 17:16:28.335505",
+ "modified": "2025-08-15 16:30:31.050682",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Tax & Benefits",
@@ -146,7 +145,7 @@
  "public": 1,
  "quick_lists": [],
  "roles": [],
- "sequence_id": 10.0,
+ "sequence_id": 16.0,
  "shortcuts": [
   {
    "color": "Red",
@@ -169,9 +168,9 @@
    "doc_view": "List",
    "label": "Income Tax Computation",
    "link_to": "Income Tax Computation",
+   "report_ref_doctype": "Salary Slip",
    "type": "Report"
   }
  ],
- "title": "Tax & Benefits",
- "type": "Workspace"
+ "title": "Tax & Benefits"
 }
