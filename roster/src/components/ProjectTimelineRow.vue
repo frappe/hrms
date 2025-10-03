@@ -101,31 +101,33 @@
                 <div
                   v-for="bar in bars"
                   :key="bar.key"
-                  class="rounded border text-xs px-2 py-1 overflow-hidden whitespace-nowrap"
+                  class=" bar tooltip rounded border text-xs px-2 py-1 whitespace-nowrap"
+                  :data-tooltip="bar.tooltip"
                   :style="{
                     gridColumn: `${bar.startCol} / ${bar.endCol + 1}`,
                     borderColor: hexToRgba(bar.color || '', 0.5),
                     backgroundColor: hexToRgba(bar.color || '', 0.12),
                   }"
-                  :title="bar.tooltip"
                 >
-                  <div class="flex items-center gap-2">
-                    <FeatherIcon
-                      :name="bar.hasPO ? 'check-circle' : 'x-circle'"
-                      class="h-3.5 w-3.5 flex-shrink-0"
-                      :class="bar.hasPO ? 'text-green-500' : 'text-red-500'"
-                      aria-hidden="true"
-                    />
-                    <span class="font-medium truncate">
-                      {{ bar.projectLabel }}
-                    </span>
-                    <span class="text-gray-500">
-                      {{ dayjs(bar.projectStart).format('D MMM') }} – {{ dayjs(bar.projectEnd).format('D MMM') }}
-                    </span>
-                    <FeatherIcon name="sun" class="h-3.5 w-3.5 flex-shrink-0 text-orange-500" aria-hidden="true" />
-                    <span class="font-medium truncate">{{ bar.day_shift }}</span>
-                    <FeatherIcon name="moon" class="h-3.5 w-3.5 flex-shrink-0 text-blue-500" aria-hidden="true" />
-                    <span class="font-medium truncate">{{ bar.night_shift }}</span>
+                  <div class="bar-content overflow-hidden">
+                    <div class="flex items-center gap-2">
+                      <FeatherIcon
+                        :name="bar.hasPO ? 'check-circle' : 'x-circle'"
+                        class="h-3.5 w-3.5 flex-shrink-0"
+                        :class="bar.hasPO ? 'text-green-500' : 'text-red-500'"
+                        aria-hidden="true"
+                      />
+                      <span class="font-medium truncate">
+                        {{ bar.projectLabel }}
+                      </span>
+                      <span class="text-gray-500">
+                        {{ dayjs(bar.projectStart).format('D MMM') }} – {{ dayjs(bar.projectEnd).format('D MMM') }}
+                      </span>
+                      <FeatherIcon name="sun" class="h-3.5 w-3.5 flex-shrink-0 text-orange-500" aria-hidden="true" />
+                      <span class="font-medium truncate">{{ bar.day_shift }}</span>
+                      <FeatherIcon name="moon" class="h-3.5 w-3.5 flex-shrink-0 text-blue-500" aria-hidden="true" />
+                      <span class="font-medium truncate">{{ bar.night_shift }}</span>
+                    </div>
                   </div>
                 </div>
 
@@ -413,7 +415,7 @@ const bars = computed(() => {
     const projectLabel = `${r.project_name} - ${customer_abbr}`
     const startCol = idxOf(clamped.start)
     const endCol   = idxOf(clamped.end)
-    const poNumber = r.purchase_order_number ? ` | PO: ${r.purchase_order_number}` : ' | PO: Pending'
+    const poNumber = r.purchase_order_number ? `${r.purchase_order_number}` : 'Pending'
     const hasPO = !!r.purchase_order_number
     const shiftLabel = `DS: ${day_shift} | NS: ${night_shift}`
 
@@ -427,11 +429,7 @@ const bars = computed(() => {
       startCol,
       endCol,
       tooltip: [
-        `Customer: ${customer}`,
         `Location: ${location}`,
-        `Duration: ${dayjs(clamped.start).format('D MMM')} – ${dayjs(clamped.end).format('D MMM')}`,
-        `Shifts Req: ${shiftLabel}`,
-        [poNumber].filter(Boolean).join(' ')
       ].filter(Boolean).join('\n'),
       color: r.color ?? null,
       poNumber,
@@ -467,4 +465,58 @@ th, td {
   height: 0;
   display: none;
 }
+
+/* Grid child must allow the tooltip to escape */
+.bar.tooltip {
+  position: relative;
+  overflow: visible; /* important: don't clip the pseudo-element */
+}
+
+/* Bubble */
+.bar.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  top: -8px;                    /* sit just above the bar */
+  transform: translate(-50%, -100%);
+  max-width: 22rem;
+
+  background: rgba(17, 24, 39, 0.92); /* gray-900/90 */
+  color: #fff;
+  border-radius: 0.375rem;      /* rounded-md */
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);
+
+  padding: 0.5rem 0.75rem;      /* px-3 py-2 */
+  font-size: 0.75rem;           /* text-xs */
+  line-height: 1.25rem;         /* leading-5 */
+
+  white-space: pre-line;        /* render \n as line breaks */
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease-in-out;
+  z-index: 1000;
+}
+
+/* Arrow */
+.bar.tooltip::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -8px;
+  transform: translate(-50%, -2px);
+  border-width: 6px 6px 0 6px;
+  border-style: solid;
+  border-color: rgba(17, 24, 39, 0.92) transparent transparent transparent;
+  opacity: 0;
+  transition: opacity 120ms ease-in-out;
+  z-index: 1001;
+}
+
+/* Show on hover */
+.bar.tooltip:hover::after,
+.bar.tooltip:hover::before {
+  opacity: 1;
+}
+
 </style>
