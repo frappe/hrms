@@ -14,4 +14,5 @@ recursive-include hrms *.png
 recursive-include hrms *.py
 recursive-include hrms *.svg
 recursive-include hrms *.txt
+recursive-include hrms *.po
 recursive-exclude hrms *.pyc

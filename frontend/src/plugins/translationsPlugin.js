@@ -15,7 +15,8 @@ function makeTranslationFunction() {
 		}
 
 		const url = new URL("/api/method/frappe.translate.load_all_translations", location.origin);
-		url.searchParams.append("lang", window.frappe?.boot?.lang ?? navigator.language);
+		const lang = normalizeLang(window.frappe?.boot?.lang ?? navigator.language);
+		url.searchParams.append("lang", lang);
 		url.searchParams.append("hash", window.frappe?.boot?.translations_hash || window._version_number || Math.random()); // for cache busting
 		// url.searchParams.append("app", "hrms");
 
@@ -77,3 +78,24 @@ export const translationsPlugin = {
 		app.provide("$translate", __);
 	},
 }
+
+function normalizeLang(input) {
+	if (!input) return "en";
+	let s = String(input);
+	// unify separators first
+	s = s.replace("-", "_");
+	const lower = s.toLowerCase();
+	// Region-specific codes that Frappe expects with underscore
+	const special = {
+		"pt_br": "pt_BR",
+		"zh_tw": "zh_TW",
+		"sr_cs": "sr_CS",
+		"zh_cn": "zh_CN",
+	};
+	if (special[lower]) return special[lower];
+	// default to two-letter base (e.g., vi, de, fr)
+	return lower.slice(0, 2);
+}
+
+// Exported for testing/diagnostics
+export { normalizeLang };
