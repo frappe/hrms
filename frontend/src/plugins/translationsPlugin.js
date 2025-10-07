@@ -83,7 +83,8 @@ function normalizeLang(input) {
 	if (!input) return "en";
 	let s = String(input);
 	// unify separators first
-	s = s.replace("-", "_");
+	// replace all hyphens with underscores to support multi-part tags
+	s = s.replaceAll("-", "_");
 	const lower = s.toLowerCase();
 	// Region-specific codes that Frappe expects with underscore
 	const special = {
@@ -94,7 +95,7 @@ function normalizeLang(input) {
 	};
 	if (special[lower]) return special[lower];
 	// default to two-letter base (e.g., vi, de, fr)
-	return lower.slice(0, 2);
+	return lower.length >= 2 ? lower.slice(0, 2) : lower;
 }
 
 // Exported for testing/diagnostics
