@@ -83,7 +83,7 @@ frappe.ui.form.on("Job Applicant", {
 
 	create_dialog: function (frm) {
 		let d = new frappe.ui.Dialog({
-			title: "Enter Interview Round",
+			title: __("Enter Interview Round"),
 			fields: [
 				{
 					label: "Interview Round",
