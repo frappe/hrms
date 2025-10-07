@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-09-28 09:33+0000\n"
-"PO-Revision-Date: 2025-10-01 15:03\n"
+"POT-Creation-Date: 2025-10-05 09:33+0000\n"
+"PO-Revision-Date: 2025-10-06 15:59\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -1306,9 +1306,11 @@ msgstr "crwdns140976:0crwdne140976:0"
 #. Label of the applicant_name (Data) field in DocType 'Appointment Letter'
 #. Label of the applicant_name (Data) field in DocType 'Job Applicant'
 #. Label of the applicant_name (Data) field in DocType 'Job Offer'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/doctype/job_offer/job_offer.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Applicant Name"
 msgstr "crwdns140978:0crwdne140978:0"
 
@@ -3021,6 +3023,11 @@ msgstr "crwdns141210:0crwdne141210:0"
 msgid "Country Setup failed"
 msgstr "crwdns141212:0crwdne141212:0"
 
+#. Label of a field in the job-application Web Form
+#: hrms/hr/web_form/job_application/job_application.json
+msgid "Country of Residence"
+msgstr "crwdns160126:0crwdne160126:0"
+
 #. Label of the course (Data) field in DocType 'Training Event'
 #. Label of the course (Data) field in DocType 'Training Feedback'
 #: hrms/hr/doctype/training_event/training_event.json
@@ -3029,7 +3036,9 @@ msgid "Course"
 msgstr "crwdns141214:0crwdne141214:0"
 
 #. Label of the cover_letter (Text) field in DocType 'Job Applicant'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Cover Letter"
 msgstr "crwdns141216:0crwdne141216:0"
 
@@ -3176,6 +3185,7 @@ msgstr "crwdns141230:0crwdne141230:0"
 #. Label of the currency (Link) field in DocType 'Job Applicant'
 #. Label of the currency (Link) field in DocType 'Job Opening'
 #. Label of the currency (Link) field in DocType 'Leave Encashment'
+#. Label of a field in the job-application Web Form
 #. Label of the currency (Link) field in DocType 'Additional Salary'
 #. Label of the currency (Link) field in DocType 'Arrear'
 #. Label of the currency (Link) field in DocType 'Bulk Salary Structure
@@ -3202,6 +3212,7 @@ msgstr "crwdns141230:0crwdne141230:0"
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:85
 #: hrms/hr/report/project_profitability/project_profitability.py:204
+#: hrms/hr/web_form/job_application/job_application.json
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
 #: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
@@ -4272,7 +4283,9 @@ msgid "Email"
 msgstr "crwdns141350:0crwdne141350:0"
 
 #. Label of the email_id (Data) field in DocType 'Job Applicant'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Email Address"
 msgstr "crwdns141352:0crwdne141352:0"
 
@@ -5128,11 +5141,8 @@ msgstr "crwdns141392:0crwdne141392:0"
 msgid "Employee Transfer cannot be submitted before Transfer Date"
 msgstr "crwdns106872:0crwdne106872:0"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:133
-msgid "Employee advance account {0} should be of type {1}"
-msgstr "crwdns159512:0{0}crwdnd159512:0{1}crwdne159512:0"
-
 #: hrms/hr/doctype/employee_advance/employee_advance.py:73
+#: hrms/hr/doctype/employee_advance/employee_advance.py:133
 msgid "Employee advance account {0} should be of type {1}."
 msgstr "crwdns159514:0{0}crwdnd159514:0{1}crwdne159514:0"
 
@@ -5448,6 +5458,10 @@ msgstr "crwdns143260:0crwdne143260:0"
 #: hrms/hr/workspace/performance/performance.json
 msgid "Energy Points"
 msgstr "crwdns107002:0crwdne107002:0"
+
+#: hrms/hr/doctype/job_applicant/job_applicant.js:86
+msgid "Enter Interview Round"
+msgstr "crwdns160128:0crwdne160128:0"
 
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.py:48
 msgid "Enter a non-zero value to adjust."
@@ -5779,6 +5793,11 @@ msgstr "crwdns141456:0crwdne141456:0"
 #: hrms/hr/doctype/job_requisition/job_requisition.json
 msgid "Expected Compensation"
 msgstr "crwdns141458:0crwdne141458:0"
+
+#. Label of a field in the job-application Web Form
+#: hrms/hr/web_form/job_application/job_application.json
+msgid "Expected Salary Range per month"
+msgstr "crwdns160130:0crwdne160130:0"
 
 #. Name of a DocType
 #: hrms/hr/doctype/expected_skill_set/expected_skill_set.json
@@ -7990,6 +8009,11 @@ msgstr "crwdns107924:0{0}crwdne107924:0"
 msgid "Job Applicants are not allowed to appear twice for the same Interview round. Interview {0} already scheduled for Job Applicant {1}"
 msgstr "crwdns107926:0{0}crwdnd107926:0{1}crwdne107926:0"
 
+#. Title of the job-application Web Form
+#: hrms/hr/web_form/job_application/job_application.json
+msgid "Job Application"
+msgstr "crwdns160132:0crwdne160132:0"
+
 #. Label of the job_application_route (Data) field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
 msgid "Job Application Route"
@@ -8043,6 +8067,7 @@ msgstr "crwdns107950:0{0}crwdnd107950:0{1}crwdne107950:0"
 #. Label of the job_opening (Link) field in DocType 'Interview'
 #. Label of the job_title (Link) field in DocType 'Job Applicant'
 #. Name of a DocType
+#. Label of a field in the job-application Web Form
 #. Label of a Link in the Recruitment Workspace
 #. Label of a shortcut in the Recruitment Workspace
 #: hrms/hr/doctype/interview/interview.json
@@ -8050,6 +8075,7 @@ msgstr "crwdns107950:0{0}crwdnd107950:0{1}crwdne107950:0"
 #: hrms/hr/doctype/job_opening/job_opening.json
 #: hrms/hr/doctype/job_requisition/job_requisition.js:54
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.py:31
+#: hrms/hr/web_form/job_application/job_application.json
 #: hrms/hr/workspace/recruitment/recruitment.json
 msgid "Job Opening"
 msgstr "crwdns107952:0crwdne107952:0"
@@ -8832,8 +8858,10 @@ msgstr "crwdns151264:0{0}crwdne151264:0"
 
 #. Label of the lower_range (Currency) field in DocType 'Job Applicant'
 #. Label of the lower_range (Currency) field in DocType 'Job Opening'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/doctype/job_opening/job_opening.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Lower Range"
 msgstr "crwdns141862:0crwdne141862:0"
 
@@ -10679,7 +10707,9 @@ msgid "Permanently submit {0}"
 msgstr "crwdns151298:0{0}crwdne151298:0"
 
 #. Label of the phone_number (Data) field in DocType 'Job Applicant'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Phone Number"
 msgstr "crwdns142104:0crwdne142104:0"
 
@@ -10872,8 +10902,8 @@ msgstr "crwdns108998:0crwdne108998:0"
 msgid "Please set Relieving Date for employee: {0}"
 msgstr "crwdns109000:0{0}crwdne109000:0"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:236
-#: hrms/hr/doctype/employee_advance/employee_advance.py:340
+#: hrms/hr/doctype/employee_advance/employee_advance.py:237
+#: hrms/hr/doctype/employee_advance/employee_advance.py:341
 msgid "Please set a Default Cash Account in Company defaults"
 msgstr "crwdns109002:0crwdne109002:0"
 
@@ -11376,6 +11406,11 @@ msgstr "crwdns143276:0crwdne143276:0"
 msgid "Reason for skipping auto attendance:"
 msgstr "crwdns109184:0crwdne109184:0"
 
+#: hrms/hr/doctype/employee_advance/employee_advance.py:74
+#: hrms/hr/doctype/employee_advance/employee_advance.py:135
+msgid "Receivable"
+msgstr "crwdns160134:0crwdne160134:0"
+
 #. Label of the section_break_10 (Section Break) field in DocType 'Full and
 #. Final Statement'
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json
@@ -11847,8 +11882,10 @@ msgstr "crwdns142270:0crwdne142270:0"
 
 #. Label of the resume_link (Data) field in DocType 'Employee Referral'
 #. Label of the resume_link (Data) field in DocType 'Job Applicant'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 #: hrms/hr/doctype/job_applicant/job_applicant.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Resume Link"
 msgstr "crwdns142272:0crwdne142272:0"
 
@@ -11879,7 +11916,7 @@ msgstr "crwdns142276:0crwdne142276:0"
 msgid "Return"
 msgstr "crwdns109348:0crwdne109348:0"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:177
+#: hrms/hr/doctype/employee_advance/employee_advance.py:178
 msgid "Return amount cannot be greater than unclaimed amount"
 msgstr "crwdns109350:0crwdne109350:0"
 
@@ -12019,7 +12056,7 @@ msgstr "crwdns152565:0{0}crwdne152565:0"
 msgid "Row {0}# Paid Amount cannot be greater than Total amount"
 msgstr "crwdns109398:0{0}crwdne109398:0"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:169
+#: hrms/hr/doctype/employee_advance/employee_advance.py:170
 msgid "Row {0}# Paid Amount cannot be greater than requested advance amount"
 msgstr "crwdns109400:0{0}crwdne109400:0"
 
@@ -13798,6 +13835,11 @@ msgstr "crwdns142518:0crwdne142518:0"
 msgid "Thank you"
 msgstr "crwdns110050:0crwdne110050:0"
 
+#. Success message of the job-application Web Form
+#: hrms/hr/web_form/job_application/job_application.json
+msgid "Thank you for applying."
+msgstr "crwdns160136:0crwdne160136:0"
+
 #: hrms/overrides/company.py:131
 msgid "The currency of {0} should be same as the company's default currency. Please select another account."
 msgstr "crwdns148504:0{0}crwdne148504:0"
@@ -14936,8 +14978,10 @@ msgstr "crwdns151368:0crwdne151368:0"
 
 #. Label of the upper_range (Currency) field in DocType 'Job Applicant'
 #. Label of the upper_range (Currency) field in DocType 'Job Opening'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/doctype/job_opening/job_opening.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Upper Range"
 msgstr "crwdns142688:0crwdne142688:0"
 

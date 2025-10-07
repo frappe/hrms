@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-09-28 09:33+0000\n"
-"PO-Revision-Date: 2025-10-01 15:03\n"
+"POT-Creation-Date: 2025-10-05 09:33+0000\n"
+"PO-Revision-Date: 2025-10-06 15:59\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -1331,9 +1331,11 @@ msgstr "Adresa e-pošte podnosioca zahtjeva"
 #. Label of the applicant_name (Data) field in DocType 'Appointment Letter'
 #. Label of the applicant_name (Data) field in DocType 'Job Applicant'
 #. Label of the applicant_name (Data) field in DocType 'Job Offer'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/doctype/job_offer/job_offer.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Applicant Name"
 msgstr "Ime Kandidata"
 
@@ -3049,6 +3051,11 @@ msgstr "Neuspješno brisanje rasporeda za zemlju"
 msgid "Country Setup failed"
 msgstr "Postavljanje zemlje nije uspjelo"
 
+#. Label of a field in the job-application Web Form
+#: hrms/hr/web_form/job_application/job_application.json
+msgid "Country of Residence"
+msgstr "Zemlja Prebivališta"
+
 #. Label of the course (Data) field in DocType 'Training Event'
 #. Label of the course (Data) field in DocType 'Training Feedback'
 #: hrms/hr/doctype/training_event/training_event.json
@@ -3057,7 +3064,9 @@ msgid "Course"
 msgstr "Kurs"
 
 #. Label of the cover_letter (Text) field in DocType 'Job Applicant'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Cover Letter"
 msgstr "Propratno Pismo"
 
@@ -3204,6 +3213,7 @@ msgstr "Kriterijum na osnovu kojeg personal treba procijeniti u Povratnim Inform
 #. Label of the currency (Link) field in DocType 'Job Applicant'
 #. Label of the currency (Link) field in DocType 'Job Opening'
 #. Label of the currency (Link) field in DocType 'Leave Encashment'
+#. Label of a field in the job-application Web Form
 #. Label of the currency (Link) field in DocType 'Additional Salary'
 #. Label of the currency (Link) field in DocType 'Arrear'
 #. Label of the currency (Link) field in DocType 'Bulk Salary Structure
@@ -3230,6 +3240,7 @@ msgstr "Kriterijum na osnovu kojeg personal treba procijeniti u Povratnim Inform
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:85
 #: hrms/hr/report/project_profitability/project_profitability.py:204
+#: hrms/hr/web_form/job_application/job_application.json
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
 #: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
@@ -4300,7 +4311,9 @@ msgid "Email"
 msgstr "E-pošta"
 
 #. Label of the email_id (Data) field in DocType 'Job Applicant'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Email Address"
 msgstr "Adresa e-pošte"
 
@@ -5156,11 +5169,8 @@ msgstr "Detalji Premještaja"
 msgid "Employee Transfer cannot be submitted before Transfer Date"
 msgstr "Premještaj se ne može podnijeti prije datuma premještaja"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:133
-msgid "Employee advance account {0} should be of type {1}"
-msgstr "Predujamni račun {0} treba biti tipa {1}"
-
 #: hrms/hr/doctype/employee_advance/employee_advance.py:73
+#: hrms/hr/doctype/employee_advance/employee_advance.py:133
 msgid "Employee advance account {0} should be of type {1}."
 msgstr "Predujamni račun {0} treba biti tipa {1}."
 
@@ -5476,6 +5486,10 @@ msgstr "Postavke Rezultata Efektiviteta"
 #: hrms/hr/workspace/performance/performance.json
 msgid "Energy Points"
 msgstr "Efektivitet"
+
+#: hrms/hr/doctype/job_applicant/job_applicant.js:86
+msgid "Enter Interview Round"
+msgstr "Unesi Intervju Rundu"
 
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.py:48
 msgid "Enter a non-zero value to adjust."
@@ -5807,6 +5821,11 @@ msgstr "Očekuje se"
 #: hrms/hr/doctype/job_requisition/job_requisition.json
 msgid "Expected Compensation"
 msgstr "Očekivana Kompenzacija"
+
+#. Label of a field in the job-application Web Form
+#: hrms/hr/web_form/job_application/job_application.json
+msgid "Expected Salary Range per month"
+msgstr "Očekivani raspon mjesečnih plata"
 
 #. Name of a DocType
 #: hrms/hr/doctype/expected_skill_set/expected_skill_set.json
@@ -8018,6 +8037,11 @@ msgstr "Kandidat za posao {0} je uspješno kreiran."
 msgid "Job Applicants are not allowed to appear twice for the same Interview round. Interview {0} already scheduled for Job Applicant {1}"
 msgstr "Kandidatima za posao nije dozvoljeno da se pojave dva puta na istom krugu intervjua. Intervju {0} već zakazan za kandidata za posao {1}"
 
+#. Title of the job-application Web Form
+#: hrms/hr/web_form/job_application/job_application.json
+msgid "Job Application"
+msgstr "Prijava za Posao"
+
 #. Label of the job_application_route (Data) field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
 msgid "Job Application Route"
@@ -8071,6 +8095,7 @@ msgstr "Ponuda za Posao: {0} je već za kandidata za posao: {1}"
 #. Label of the job_opening (Link) field in DocType 'Interview'
 #. Label of the job_title (Link) field in DocType 'Job Applicant'
 #. Name of a DocType
+#. Label of a field in the job-application Web Form
 #. Label of a Link in the Recruitment Workspace
 #. Label of a shortcut in the Recruitment Workspace
 #: hrms/hr/doctype/interview/interview.json
@@ -8078,6 +8103,7 @@ msgstr "Ponuda za Posao: {0} je već za kandidata za posao: {1}"
 #: hrms/hr/doctype/job_opening/job_opening.json
 #: hrms/hr/doctype/job_requisition/job_requisition.js:54
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.py:31
+#: hrms/hr/web_form/job_application/job_application.json
 #: hrms/hr/workspace/recruitment/recruitment.json
 msgid "Job Opening"
 msgstr "Otvoreno Radno Mjesto"
@@ -8860,8 +8886,10 @@ msgstr "Dužina: {0}°"
 
 #. Label of the lower_range (Currency) field in DocType 'Job Applicant'
 #. Label of the lower_range (Currency) field in DocType 'Job Opening'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/doctype/job_opening/job_opening.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Lower Range"
 msgstr "Niži Raspon"
 
@@ -10707,7 +10735,9 @@ msgid "Permanently submit {0}"
 msgstr "Trajno potvrdi {0}"
 
 #. Label of the phone_number (Data) field in DocType 'Job Applicant'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Phone Number"
 msgstr "Broj Telefona"
 
@@ -10900,8 +10930,8 @@ msgstr "Postavi Obračun Plata na osnovu Postavki Obračuna Plata"
 msgid "Please set Relieving Date for employee: {0}"
 msgstr "Postavi Datum Otkaza za: {0}"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:236
-#: hrms/hr/doctype/employee_advance/employee_advance.py:340
+#: hrms/hr/doctype/employee_advance/employee_advance.py:237
+#: hrms/hr/doctype/employee_advance/employee_advance.py:341
 msgid "Please set a Default Cash Account in Company defaults"
 msgstr "Postavi Standard Gotovinski Račun u Standard Postavkama Kompanije"
 
@@ -11404,6 +11434,11 @@ msgstr "Razlog za Zadržavanje Plate"
 msgid "Reason for skipping auto attendance:"
 msgstr "Razlog za preskakanje Automatskog Prisustva:"
 
+#: hrms/hr/doctype/employee_advance/employee_advance.py:74
+#: hrms/hr/doctype/employee_advance/employee_advance.py:135
+msgid "Receivable"
+msgstr "Potraživanje"
+
 #. Label of the section_break_10 (Section Break) field in DocType 'Full and
 #. Final Statement'
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json
@@ -11875,8 +11910,10 @@ msgstr "Rezume Prilog"
 
 #. Label of the resume_link (Data) field in DocType 'Employee Referral'
 #. Label of the resume_link (Data) field in DocType 'Job Applicant'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 #: hrms/hr/doctype/job_applicant/job_applicant.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Resume Link"
 msgstr "Rezume Veza"
 
@@ -11907,7 +11944,7 @@ msgstr "Dob za Penzionisanje (u Godinama)"
 msgid "Return"
 msgstr "Povrat"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:177
+#: hrms/hr/doctype/employee_advance/employee_advance.py:178
 msgid "Return amount cannot be greater than unclaimed amount"
 msgstr "Iznos povrata ne može biti veći od nezatraženog iznosa"
 
@@ -12047,7 +12084,7 @@ msgstr "Red {0}# Plaćeni Iznos ne može biti veći od Iznosa Naplate"
 msgid "Row {0}# Paid Amount cannot be greater than Total amount"
 msgstr "Red {0}# Uplaćeni iznos ne može biti veći od Ukupnog Iznosa"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:169
+#: hrms/hr/doctype/employee_advance/employee_advance.py:170
 msgid "Row {0}# Paid Amount cannot be greater than requested advance amount"
 msgstr "Red {0}# Uplaćeni iznos ne može biti veći od traženog iznosa predujma"
 
@@ -13826,6 +13863,11 @@ msgstr "Odredbe i Uslovi"
 msgid "Thank you"
 msgstr "Hvala vam"
 
+#. Success message of the job-application Web Form
+#: hrms/hr/web_form/job_application/job_application.json
+msgid "Thank you for applying."
+msgstr "Hvala na prijavi."
+
 #: hrms/overrides/company.py:131
 msgid "The currency of {0} should be same as the company's default currency. Please select another account."
 msgstr "Valuta {0} treba da bude ista kao i standard valuta kompanije. Odaberi drugi račun."
@@ -14964,8 +15006,10 @@ msgstr "Otpremanje u toku..."
 
 #. Label of the upper_range (Currency) field in DocType 'Job Applicant'
 #. Label of the upper_range (Currency) field in DocType 'Job Opening'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/doctype/job_opening/job_opening.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Upper Range"
 msgstr "Viši Raspon"
 

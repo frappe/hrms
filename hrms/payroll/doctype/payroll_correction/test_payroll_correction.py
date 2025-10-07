@@ -55,7 +55,7 @@ class TestPayrollCorrection(IntegrationTestCase):
 		salary_slip.save()
 		salary_slip.submit()
 
-		arrear_doc = frappe.get_doc(
+		payroll_correction_doc = frappe.get_doc(
 			{
 				"doctype": "Payroll Correction",
 				"employee": emp,
@@ -70,10 +70,10 @@ class TestPayrollCorrection(IntegrationTestCase):
 				"lwp_days": salary_slip.leave_without_pay,
 			}
 		).save()
-		arrear_doc.submit()
+		payroll_correction_doc.submit()
 
-		earning_arrears = {row.salary_component: row.amount for row in arrear_doc.earning_arrears}
-		accrual_arrears = {row.salary_component: row.amount for row in arrear_doc.accrual_arrears}
+		earning_arrears = {row.salary_component: row.amount for row in payroll_correction_doc.earning_arrears}
+		accrual_arrears = {row.salary_component: row.amount for row in payroll_correction_doc.accrual_arrears}
 
 		basic_salary_arrear = flt((65000 / 27) * 1, 2)
 		self.assertIn("Basic Salary", earning_arrears)
@@ -87,7 +87,7 @@ class TestPayrollCorrection(IntegrationTestCase):
 			frappe.db.exists(
 				"Additional Salary",
 				{
-					"ref_docname": arrear_doc.name,
+					"ref_docname": payroll_correction_doc.name,
 				},
 			)
 		)
@@ -95,7 +95,7 @@ class TestPayrollCorrection(IntegrationTestCase):
 			frappe.db.exists(
 				"Employee Benefit Ledger",
 				{
-					"reference_document": arrear_doc.name,
+					"reference_document": payroll_correction_doc.name,
 				},
 			)
 		)

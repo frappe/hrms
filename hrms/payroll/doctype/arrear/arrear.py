@@ -4,6 +4,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.query_builder.functions import Sum
 from frappe.utils import getdate
 
 from hrms.payroll.doctype.employee_benefit_ledger.employee_benefit_ledger import (
@@ -176,6 +177,19 @@ class Arrear(Document):
 
 		accrual_totals = self.fetch_existing_accrual_components(salary_slips)
 
+		# Fetch and include existing Payroll Correction amounts for these salary slips
+		payroll_correction_totals = self.fetch_existing_payroll_corrections(salary_slips)
+
+		# Add payroll correction amounts to existing component totals
+		for component, amount in payroll_correction_totals.get("earnings", {}).items():
+			earnings_totals[component] = earnings_totals.get(component, 0.0) + amount
+
+		for component, amount in payroll_correction_totals.get("deductions", {}).items():
+			deductions_totals[component] = deductions_totals.get(component, 0.0) + amount
+
+		for component, amount in payroll_correction_totals.get("accruals", {}).items():
+			accrual_totals[component] = accrual_totals.get(component, 0.0) + amount
+
 		if not (earnings_totals or deductions_totals or accrual_totals):
 			frappe.throw(_("No arrear components found in the existing salary slips."))
 
@@ -208,6 +222,52 @@ class Arrear(Document):
 
 		return accrual_totals
 
+	def fetch_existing_payroll_corrections(self, salary_slips: list):
+		# fetch payroll correction amounts for existing salary slips with arrear_component enabled.
+		if not salary_slips:
+			return {"earnings": {}, "deductions": {}, "accruals": {}}
+
+		PayrollCorrection = frappe.qb.DocType("Payroll Correction")
+		PCChild = frappe.qb.DocType("Payroll Correction Child")
+		SalaryComponent = frappe.qb.DocType("Salary Component")
+
+		corrections = (
+			frappe.qb.from_(PayrollCorrection)
+			.join(PCChild)
+			.on(PayrollCorrection.name == PCChild.parent)
+			.join(SalaryComponent)
+			.on(PCChild.salary_component == SalaryComponent.name)
+			.select(
+				PCChild.parentfield,
+				PCChild.salary_component,
+				PCChild.amount,
+			)
+			.where(
+				(PayrollCorrection.salary_slip_reference.isin(salary_slips))
+				& (PayrollCorrection.docstatus == 1)
+				& (SalaryComponent.arrear_component == 1)
+			)
+		).run(as_dict=True)
+
+		earnings_totals = {}
+		deductions_totals = {}
+		accrual_totals = {}
+
+		# Sum corrections per component grouped by parentfield
+		for detail in corrections:
+			comp = detail.salary_component
+			amt = detail.amount or 0.0
+			parentfield = detail.parentfield
+
+			if parentfield == "earning_arrears":
+				earnings_totals[comp] = earnings_totals.get(comp, 0.0) + amt
+			elif parentfield == "deduction_arrears":
+				deductions_totals[comp] = deductions_totals.get(comp, 0.0) + amt
+			elif parentfield == "accrual_arrears":
+				accrual_totals[comp] = accrual_totals.get(comp, 0.0) + amt
+
+		return {"earnings": earnings_totals, "deductions": deductions_totals, "accruals": accrual_totals}
+
 	def generate_preview_components(self, salary_slips: list):
 		# Generate preview salary slip with new salary structure and return component and amounts.
 		if not salary_slips:
@@ -221,7 +281,7 @@ class Arrear(Document):
 			return frappe.get_cached_value("Salary Component", component, "arrear_component")
 
 		for slip in salary_slips:
-			# Build a preview salary slip doc (do not save)
+			# Build a preview salary slip doc
 			salary_slip_doc = frappe.get_doc(
 				{
 					"doctype": "Salary Slip",
@@ -233,8 +293,24 @@ class Arrear(Document):
 				}
 			)
 
-			# make_salary_slip usually expects (salary_structure, salary_slip_doc, employee)
-			preview_slip = make_salary_slip(self.salary_structure, salary_slip_doc, self.employee)
+			# check if any Payroll Corrections exist for this slip and sum days_to_reverse to get actual payment days for when previewing salary slip for new structure
+			PayrollCorrection = frappe.qb.DocType("Payroll Correction")
+			total_days_to_reverse = (
+				frappe.qb.from_(PayrollCorrection)
+				.select(Sum(PayrollCorrection.days_to_reverse).as_("total_days"))
+				.where(
+					(PayrollCorrection.salary_slip_reference == slip.name)
+					& (PayrollCorrection.docstatus == 1)
+				)
+			).run(pluck=True)
+			total_days_to_reverse = total_days_to_reverse[0] or 0.0
+
+			preview_slip = make_salary_slip(
+				self.salary_structure,
+				salary_slip_doc,
+				self.employee,
+				lwp_days_corrected=total_days_to_reverse,
+			)
 
 			# earnings
 			for row in preview_slip.get("earnings", []) or []:
