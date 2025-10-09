@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-09-21 09:34+0000\n"
-"PO-Revision-Date: 2025-09-29 13:45\n"
+"POT-Creation-Date: 2025-10-05 09:33+0000\n"
+"PO-Revision-Date: 2025-10-06 15:59\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Serbian (Cyrillic)\n"
 "MIME-Version: 1.0\n"
@@ -17,6 +17,11 @@ msgstr ""
 "X-Crowdin-File: /[frappe.hrms] develop/hrms/locale/main.pot\n"
 "X-Crowdin-File-ID: 58\n"
 "Language: sr_SP\n"
+
+#. Description of the 'Arrear Start Date' (Date) field in DocType 'Arrear'
+#: hrms/payroll/doctype/arrear/arrear.json
+msgid " Salary slips starting on or after this date will be considered for arrear calculations"
+msgstr " Обрачунски листићи почев од овог датума биће узети у обзир за обрачун заостатака"
 
 #. Label of the unlink_payment_on_cancellation_of_employee_advance (Check)
 #. field in DocType 'HR Settings'
@@ -551,7 +556,7 @@ msgstr "Потраживања од купаца"
 msgid "Accounts Settings"
 msgstr "Подешавање рачуна"
 
-#: hrms/payroll/doctype/salary_component/salary_component.py:58
+#: hrms/payroll/doctype/salary_component/salary_component.py:59
 msgid "Accounts not set for Salary Component {0}"
 msgstr "Рачуни нису постављени за компоненту зараде {0}"
 
@@ -561,7 +566,9 @@ msgstr "Рачуни нису постављени за компоненту з�
 msgid "Accrual"
 msgstr "Обрачун"
 
+#. Label of the accrual_arrears (Table) field in DocType 'Arrear'
 #. Label of the accrual_arrears (Table) field in DocType 'Payroll Correction'
+#: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 msgid "Accrual Arrears"
 msgstr "Заостатак обрачуна"
@@ -573,15 +580,15 @@ msgstr "Заостатак обрачуна"
 msgid "Accrual Component"
 msgstr "Обрачунска компонента"
 
-#: hrms/payroll/doctype/salary_component/salary_component.py:65
+#: hrms/payroll/doctype/salary_component/salary_component.py:66
 msgid "Accrual Component can only be set for Earning Salary Components."
 msgstr "Обрачунска компонента може се подесити само за компоненте зараде врсте приход."
 
-#: hrms/payroll/doctype/salary_component/salary_component.py:85
+#: hrms/payroll/doctype/salary_component/salary_component.py:86
 msgid "Accrual Component can only be set for Flexible Benefit Salary Components with accrual payout methods."
 msgstr "Обрачунска компонента може се подесити само за флексибилне бенефиције са методом обрачунске исплате."
 
-#: hrms/payroll/doctype/salary_component/salary_component.py:77
+#: hrms/payroll/doctype/salary_component/salary_component.py:78
 msgid "Accrual Component must be set for Flexible Benefit Salary Components with accrual payout methods."
 msgstr "Обрачунска компонента мора бити подешена за флексибилне бенефиције са методом обрачунске исплате."
 
@@ -1104,6 +1111,7 @@ msgstr "Наизменични уноси као ДОЛАЗАК и ОДЛАЗА�
 #. Label of the amended_from (Link) field in DocType 'Travel Request'
 #. Label of the amended_from (Link) field in DocType 'Vehicle Log'
 #. Label of the amended_from (Link) field in DocType 'Additional Salary'
+#. Label of the amended_from (Link) field in DocType 'Arrear'
 #. Label of the amended_from (Link) field in DocType 'Employee Benefit
 #. Application'
 #. Label of the amended_from (Link) field in DocType 'Employee Benefit Claim'
@@ -1160,6 +1168,7 @@ msgstr "Наизменични уноси као ДОЛАЗАК и ОДЛАЗА�
 #: hrms/hr/doctype/travel_request/travel_request.json
 #: hrms/hr/doctype/vehicle_log/vehicle_log.json
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
+#: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.json
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.json
@@ -1253,6 +1262,10 @@ msgstr "Износ не сме бити мањи од нуле"
 msgid "Amount that has been paid against this advance"
 msgstr "Износ који је плаћен по овој аконтацији"
 
+#: hrms/payroll/doctype/arrear/arrear.py:91
+msgid "An Arrear document already exists for employee {0} with salary structure {1} in payroll period {2}"
+msgstr "Документ заостатка већ постоји за запослено лице {0} са структуром зараде {1} у обрачунском периоду {2}"
+
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:56
 msgid "An attendance record is linked to this checkin. Please cancel the attendance before modifying time."
 msgstr "Евиденција присуства је повезана са овом записом присуства. Молимо Вас да откажете присуство пре него што измените време."
@@ -1318,9 +1331,11 @@ msgstr "Имејл адреса кандидата"
 #. Label of the applicant_name (Data) field in DocType 'Appointment Letter'
 #. Label of the applicant_name (Data) field in DocType 'Job Applicant'
 #. Label of the applicant_name (Data) field in DocType 'Job Offer'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/doctype/job_offer/job_offer.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Applicant Name"
 msgstr "Име кандидата"
 
@@ -1617,10 +1632,29 @@ msgstr "Да ли сте сигурни да желите да наставит�
 msgid "Are you sure you want to reject the Employee Referral?"
 msgstr "Да ли сте сигурни да желите да одбијете препоруку запосленог лица?"
 
+#. Name of a DocType
+#: hrms/payroll/doctype/arrear/arrear.json
+msgid "Arrear"
+msgstr "Заостатак"
+
 #. Label of the arrear_component (Check) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Arrear Component"
 msgstr "Компонента заостатка"
+
+#: hrms/payroll/doctype/salary_component/salary_component.py:95
+msgid "Arrear Component cannot be set for Salary Components based on taxable salary."
+msgstr "Компонента заостатка не може се поставити за компоненте зараде које се заснивају на опорезивој заради."
+
+#. Label of the arrear_start_date (Date) field in DocType 'Arrear'
+#: hrms/payroll/doctype/arrear/arrear.json
+msgid "Arrear Start Date"
+msgstr "Датум почетка заостатка"
+
+#. Label of the arrears_tab (Tab Break) field in DocType 'Arrear'
+#: hrms/payroll/doctype/arrear/arrear.json
+msgid "Arrears"
+msgstr "Заостаци"
 
 #. Label of the arrival_date (Datetime) field in DocType 'Travel Itinerary'
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json
@@ -1942,8 +1976,8 @@ msgstr "Просечна оцена"
 
 #. Description of the 'Final Score' (Float) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
-msgid "Average of Goal Score, Feedback Score, and Self Appraisal Score (out of 5)"
-msgstr "Просек оцене циља, оцене повратних информација и оцене самопроцене (од 5)"
+msgid "Average of Goal Score, Feedback Score, and Self Appraisal Score"
+msgstr "Просек оцене циља, оцене повратних информација и оцене самопроцене"
 
 #: hrms/public/js/templates/interview_feedback.html:16
 msgid "Average rating of demonstrated skills"
@@ -2642,6 +2676,7 @@ msgstr "Провизија"
 #. Label of the company (Link) field in DocType 'Travel Request'
 #. Label of a Link in the Overview Workspace
 #. Label of the company (Link) field in DocType 'Additional Salary'
+#. Label of the company (Link) field in DocType 'Arrear'
 #. Label of the company (Link) field in DocType 'Bulk Salary Structure
 #. Assignment'
 #. Label of the company (Link) field in DocType 'Employee Benefit Application'
@@ -2728,6 +2763,7 @@ msgstr "Провизија"
 #: hrms/hr/report/shift_attendance/shift_attendance.py:104
 #: hrms/hr/workspace/overview/overview.json
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
+#: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.json
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
@@ -3013,6 +3049,11 @@ msgstr "Брисање подешавања за државу није успе�
 msgid "Country Setup failed"
 msgstr "Поставке државе нису успеле"
 
+#. Label of a field in the job-application Web Form
+#: hrms/hr/web_form/job_application/job_application.json
+msgid "Country of Residence"
+msgstr "Држава пребивалишта"
+
 #. Label of the course (Data) field in DocType 'Training Event'
 #. Label of the course (Data) field in DocType 'Training Feedback'
 #: hrms/hr/doctype/training_event/training_event.json
@@ -3021,7 +3062,9 @@ msgid "Course"
 msgstr "Курс"
 
 #. Label of the cover_letter (Text) field in DocType 'Job Applicant'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Cover Letter"
 msgstr "Пропратно писмо"
 
@@ -3130,7 +3173,7 @@ msgstr "Креирање уноса уплате......"
 msgid "Creating Salary Slips..."
 msgstr "Креирање обрачунских листића..."
 
-#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:240
+#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:246
 msgid "Creating {0}..."
 msgstr "Креирање {0}..."
 
@@ -3146,7 +3189,7 @@ msgstr "Креирање је неуспешно"
 msgid "Creation of Salary Structure Assignments has been queued. It may take a few minutes."
 msgstr "Креирање доделе структуре зараде је стављено у ред. Може потрајати неколико минута."
 
-#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:194
+#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:200
 msgid "Creation of {0} has been queued. It may take a few minutes."
 msgstr "Креирање {0} је у реду чекања. Може потрајати неколико минута."
 
@@ -3168,7 +3211,9 @@ msgstr "Критеријуми на основу којих запослена �
 #. Label of the currency (Link) field in DocType 'Job Applicant'
 #. Label of the currency (Link) field in DocType 'Job Opening'
 #. Label of the currency (Link) field in DocType 'Leave Encashment'
+#. Label of a field in the job-application Web Form
 #. Label of the currency (Link) field in DocType 'Additional Salary'
+#. Label of the currency (Link) field in DocType 'Arrear'
 #. Label of the currency (Link) field in DocType 'Bulk Salary Structure
 #. Assignment'
 #. Label of the currency (Link) field in DocType 'Employee Benefit Application'
@@ -3193,7 +3238,9 @@ msgstr "Критеријуми на основу којих запослена �
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:85
 #: hrms/hr/report/project_profitability/project_profitability.py:204
+#: hrms/hr/web_form/job_application/job_application.json
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
+#: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.json
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
@@ -3438,7 +3485,7 @@ msgstr "Датум рођења"
 #: hrms/hr/report/employee_exits/employee_exits.py:32
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.json
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:613
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:621
 #: hrms/payroll/report/salary_register/salary_register.py:128 hrms/setup.py:396
 msgid "Date of Joining"
 msgstr "Датум запослења"
@@ -3524,7 +3571,9 @@ msgstr "Одбити порез уколико доказ о пореском о
 msgid "Deduction"
 msgstr "Одбитак"
 
+#. Label of the deduction_arrears (Table) field in DocType 'Arrear'
 #. Label of the deduction_arrears (Table) field in DocType 'Payroll Correction'
+#: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 msgid "Deduction Arrears"
 msgstr "Заостатак одбитака"
@@ -3749,7 +3798,7 @@ msgstr "Рута испоруке"
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.js:42
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.js:33
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:600
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:608
 #: hrms/payroll/report/salary_register/salary_register.js:56
 #: hrms/payroll/report/salary_register/salary_register.py:141
 #: hrms/public/js/salary_slip_deductions_report_filters.js:42 hrms/setup.py:402
@@ -3927,7 +3976,7 @@ msgstr "Опис отвореног радног места"
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:607
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:615
 #: hrms/payroll/report/salary_register/salary_register.js:70
 #: hrms/payroll/report/salary_register/salary_register.py:148
 msgid "Designation"
@@ -4184,7 +4233,9 @@ msgstr "Стечена одсуства представљају право за
 msgid "Earning"
 msgstr "Приход"
 
+#. Label of the earning_arrears (Table) field in DocType 'Arrear'
 #. Label of the earning_arrears (Table) field in DocType 'Payroll Correction'
+#: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 msgid "Earning Arrears"
 msgstr "Заостатак прихода"
@@ -4258,7 +4309,9 @@ msgid "Email"
 msgstr "Имејл"
 
 #. Label of the email_id (Data) field in DocType 'Job Applicant'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Email Address"
 msgstr "Имејл адреса"
 
@@ -4332,6 +4385,7 @@ msgstr "Обрачунски листић запосленом лицу на о�
 #. Label of a Link in the Overview Workspace
 #. Label of a shortcut in the Overview Workspace
 #. Label of the employee (Link) field in DocType 'Additional Salary'
+#. Label of the employee (Link) field in DocType 'Arrear'
 #. Label of the employee (Link) field in DocType 'Employee Benefit Application'
 #. Label of the employee (Link) field in DocType 'Employee Benefit Claim'
 #. Label of the employee (Link) field in DocType 'Employee Benefit Ledger'
@@ -4440,6 +4494,7 @@ msgstr "Обрачунски листић запосленом лицу на о�
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.py:55
 #: hrms/hr/workspace/overview/overview.json
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
+#: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:159
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.json
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
@@ -4461,7 +4516,7 @@ msgstr "Обрачунски листић запосленом лицу на о�
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.js:16
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.py:20
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.js:26
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:587
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:595
 #: hrms/payroll/report/income_tax_deductions/income_tax_deductions.py:25
 #: hrms/payroll/report/professional_tax_deductions/professional_tax_deductions.py:21
 #: hrms/payroll/report/provident_fund_deductions/provident_fund_deductions.py:32
@@ -4810,6 +4865,7 @@ msgstr "Зајам запосленог лица"
 #. Employee'
 #. Label of the employee_name (Data) field in DocType 'Travel Request'
 #. Label of the employee_name (Data) field in DocType 'Additional Salary'
+#. Label of the employee_name (Data) field in DocType 'Arrear'
 #. Label of the employee_name (Data) field in DocType 'Employee Benefit
 #. Application'
 #. Label of the employee_name (Data) field in DocType 'Employee Benefit Claim'
@@ -4871,6 +4927,7 @@ msgstr "Зајам запосленог лица"
 #: hrms/hr/report/shift_attendance/shift_attendance.py:31
 #: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.py:19
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
+#: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.json
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
@@ -4887,7 +4944,7 @@ msgstr "Зајам запосленог лица"
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.py:27
 #: hrms/payroll/report/bank_remittance/bank_remittance.py:32
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:594
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:602
 #: hrms/payroll/report/income_tax_deductions/income_tax_deductions.py:32
 #: hrms/payroll/report/professional_tax_deductions/professional_tax_deductions.py:28
 #: hrms/payroll/report/provident_fund_deductions/provident_fund_deductions.py:39
@@ -5110,11 +5167,8 @@ msgstr "Детаљи о премештају запосленог лица"
 msgid "Employee Transfer cannot be submitted before Transfer Date"
 msgstr "Премештај запосленог лица не може бити поднет пре датума премештаја"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:133
-msgid "Employee advance account {0} should be of type {1}"
-msgstr "Аконтациони рачун запосленог лица {0} треба да буде врсте {1}"
-
 #: hrms/hr/doctype/employee_advance/employee_advance.py:73
+#: hrms/hr/doctype/employee_advance/employee_advance.py:133
 msgid "Employee advance account {0} should be of type {1}."
 msgstr "Аконтациони рачун запосленог лица {0} треба да буде врсте {1}."
 
@@ -5430,6 +5484,10 @@ msgstr "Подешавање енергетских поена"
 #: hrms/hr/workspace/performance/performance.json
 msgid "Energy Points"
 msgstr "Енергетски поени"
+
+#: hrms/hr/doctype/job_applicant/job_applicant.js:86
+msgid "Enter Interview Round"
+msgstr "Унесите круг интервјуа"
 
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.py:48
 msgid "Enter a non-zero value to adjust."
@@ -5761,6 +5819,11 @@ msgstr "Очекивано до"
 #: hrms/hr/doctype/job_requisition/job_requisition.json
 msgid "Expected Compensation"
 msgstr "Очекивана накнада"
+
+#. Label of a field in the job-application Web Form
+#: hrms/hr/web_form/job_application/job_application.json
+msgid "Expected Salary Range per month"
+msgstr "Очекивани месечни распон зараде"
 
 #. Name of a DocType
 #: hrms/hr/doctype/expected_skill_set/expected_skill_set.json
@@ -6393,9 +6456,17 @@ msgstr "Датум почетка не може бити већи од дату�
 msgid "From Date must come before To Date"
 msgstr "Датум почетка мора бити испред датума завршетка"
 
+#: hrms/payroll/doctype/arrear/arrear.py:46
+msgid "From Date {0} cannot be after Payroll Period end date {1}"
+msgstr "Датум почетка {0} не може бити након датума завршетка обрачунског периода {1}"
+
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:59
 msgid "From Date {0} cannot be after employee's relieving Date {1}"
 msgstr "Датум почетка {0} не може бити после датума престанка радног односа {1}"
+
+#: hrms/payroll/doctype/arrear/arrear.py:40
+msgid "From Date {0} cannot be before Payroll Period start date {1}"
+msgstr "Датум почетка {0} не може бити пре датума почетка обрачунског периода {1}"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:51
 msgid "From Date {0} cannot be before employee's joining Date {1}"
@@ -6640,7 +6711,7 @@ msgstr "Циљ је успешно ажуриран"
 
 #. Label of the goals (Table) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
-#: hrms/hr/doctype/appraisal/appraisal.py:132
+#: hrms/hr/doctype/appraisal/appraisal.py:133
 msgid "Goals"
 msgstr "Циљеви"
 
@@ -6728,7 +6799,7 @@ msgstr "Детаљи притужбе"
 msgid "Grievance Type"
 msgstr "Врста притужбе"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:622
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
 msgid "Gross Earnings"
 msgstr "Бруто приходи"
 
@@ -6841,6 +6912,7 @@ msgstr "HR контролна табла"
 #: hrms/hr/doctype/training_program/training_program.json
 #: hrms/hr/doctype/training_result/training_result.json
 #: hrms/hr/doctype/upload_attendance/upload_attendance.json
+#: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.json
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
@@ -7070,7 +7142,7 @@ msgid "Hold"
 msgstr "На чекању"
 
 #: hrms/hr/doctype/attendance/attendance.py:296
-#: hrms/hr/doctype/leave_application/leave_application.py:1388
+#: hrms/hr/doctype/leave_application/leave_application.py:1389
 #: hrms/hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.py:46
 msgid "Holiday"
 msgstr "Празник"
@@ -7464,7 +7536,7 @@ msgstr "Одбици пореза на доходак"
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:142
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:615
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:623
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Income Tax Slab"
@@ -7497,7 +7569,7 @@ msgstr "Порески разред пореза на доходак: {0} је �
 msgid "Income from Other Sources"
 msgstr "Приходи из осталих извора"
 
-#: hrms/hr/doctype/appraisal/appraisal.py:156 hrms/mixins/appraisal.py:20
+#: hrms/hr/doctype/appraisal/appraisal.py:159 hrms/mixins/appraisal.py:20
 msgid "Incorrect Weightage Allocation"
 msgstr "Неисправна расподела пондера"
 
@@ -7729,19 +7801,23 @@ msgstr "Увод"
 msgid "Invalid"
 msgstr "Неважеће"
 
-#: hrms/payroll/doctype/salary_component/salary_component.py:66
-#: hrms/payroll/doctype/salary_component/salary_component.py:80
-#: hrms/payroll/doctype/salary_component/salary_component.py:88
+#: hrms/payroll/doctype/salary_component/salary_component.py:67
+#: hrms/payroll/doctype/salary_component/salary_component.py:81
+#: hrms/payroll/doctype/salary_component/salary_component.py:89
 msgid "Invalid Accrual Component"
 msgstr "Неважећа обрачунска компонента"
 
-#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:183
+#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:189
 msgid "Invalid Action"
 msgstr "Неважећа радња"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:182
 msgid "Invalid Additional Salary"
 msgstr "Неважећа додатна зарада"
+
+#: hrms/payroll/doctype/salary_component/salary_component.py:96
+msgid "Invalid Arrear Component"
+msgstr "Неважећа компонента заостатка"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:464
 msgid "Invalid Benefit Amounts"
@@ -7959,6 +8035,11 @@ msgstr "Кандидат за посао {0} је успешно креиран.
 msgid "Job Applicants are not allowed to appear twice for the same Interview round. Interview {0} already scheduled for Job Applicant {1}"
 msgstr "Кандидати за посао не смеју два пута учествовати у истом кругу интервјуа. Интервју {0} је већ заказан за кандидата за посао {1}"
 
+#. Title of the job-application Web Form
+#: hrms/hr/web_form/job_application/job_application.json
+msgid "Job Application"
+msgstr "Пријава за посао"
+
 #. Label of the job_application_route (Data) field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
 msgid "Job Application Route"
@@ -8012,6 +8093,7 @@ msgstr "Понуда за посао: {0} већ постоји за канди�
 #. Label of the job_opening (Link) field in DocType 'Interview'
 #. Label of the job_title (Link) field in DocType 'Job Applicant'
 #. Name of a DocType
+#. Label of a field in the job-application Web Form
 #. Label of a Link in the Recruitment Workspace
 #. Label of a shortcut in the Recruitment Workspace
 #: hrms/hr/doctype/interview/interview.json
@@ -8019,6 +8101,7 @@ msgstr "Понуда за посао: {0} већ постоји за канди�
 #: hrms/hr/doctype/job_opening/job_opening.json
 #: hrms/hr/doctype/job_requisition/job_requisition.js:54
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.py:31
+#: hrms/hr/web_form/job_application/job_application.json
 #: hrms/hr/workspace/recruitment/recruitment.json
 msgid "Job Opening"
 msgstr "Отворено радно место"
@@ -8126,7 +8209,7 @@ msgstr "KRA наспрам циљева"
 #. Label of the kra_tab (Tab Break) field in DocType 'Appraisal'
 #. Label of the goals (Table) field in DocType 'Appraisal Template'
 #: hrms/hr/doctype/appraisal/appraisal.json
-#: hrms/hr/doctype/appraisal/appraisal.py:142
+#: hrms/hr/doctype/appraisal/appraisal.py:145
 #: hrms/hr/doctype/appraisal_template/appraisal_template.json
 msgid "KRAs"
 msgstr "KRA"
@@ -8354,7 +8437,7 @@ msgstr "Датуми листе блокираних одсуства"
 msgid "Leave Block List Name"
 msgstr "Назив листе блокираних одсуства"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:1364
+#: hrms/hr/doctype/leave_application/leave_application.py:1365
 msgid "Leave Blocked"
 msgstr "Одсуство је блокирано"
 
@@ -8801,8 +8884,10 @@ msgstr "Географска дужина: {0}°"
 
 #. Label of the lower_range (Currency) field in DocType 'Job Applicant'
 #. Label of the lower_range (Currency) field in DocType 'Job Opening'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/doctype/job_opening/job_opening.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Lower Range"
 msgstr "Доња граница"
 
@@ -9460,13 +9545,17 @@ msgstr "За запослено лице {0} није додељена стру�
 msgid "No Salary Structures"
 msgstr "Нема структура зараде"
 
-#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:255
+#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:261
 msgid "No Shift Requests Selected"
 msgstr "Није изабран захтев за радну смену"
 
 #: hrms/hr/doctype/job_opening/job_opening.js:32
 msgid "No Staffing Plans found for this Designation"
 msgstr "Није пронађен план особља за ову позицију"
+
+#: hrms/payroll/doctype/arrear/arrear.py:70
+msgid "No active Salary Structure Assignment found for employee {0} with salary structure {1} on or after arrear start date {2}"
+msgstr "Није пронађена активна додела структуре зараде за запослено лице {0} са структуром зараде {1} на или након датума почетка заостатка {2}"
 
 #: frontend/src/views/InvalidEmployee.vue:8
 msgid "No active employee found associated with the email ID {0}. Try logging in with your employee email ID or contact your HR manager for access."
@@ -9496,11 +9585,16 @@ msgstr "Није пронађена одговарајућа компонент�
 msgid "No applicable slab found for the calculation of gratuity amount as per the Gratuity Rule: {0}"
 msgstr "Није пронађен одговарајући разред за обрачун износа отпремнине према правилу отпремнине: {0}"
 
-#: hrms/payroll/doctype/payroll_correction/payroll_correction.py:154
+#: hrms/payroll/doctype/arrear/arrear.py:180
+msgid "No arrear components found in the existing salary slips."
+msgstr "У постојећим обрачунским листићима нису пронађене компоненте заостатка."
+
+#: hrms/payroll/doctype/payroll_correction/payroll_correction.py:160
 msgid "No arrear components found in the salary slip. Ensure Arrear Component is checked in the Salary Component master."
 msgstr "Нису пронађене компоненте заостатка у обрачунском листићу. Проверите да ли је означена компонента заостатка у мастер подацима компоненте зараде."
 
-#: hrms/payroll/doctype/payroll_correction/payroll_correction.py:181
+#: hrms/payroll/doctype/arrear/arrear.py:331
+#: hrms/payroll/doctype/payroll_correction/payroll_correction.py:187
 msgid "No arrear details found"
 msgstr "Нису пронађени детаљи заостатка"
 
@@ -9588,6 +9682,10 @@ msgstr "Није пронађен обрачунски листић за под�
 #: frontend/src/views/salary_slip/Dashboard.vue:50
 msgid "No salary slips found"
 msgstr "Нису пронађени обрачунски листићи"
+
+#: hrms/payroll/doctype/arrear/arrear.py:135
+msgid "No salary slips found for the selected employee from {0}"
+msgstr "Нису пронађени обрачунски листићи за изабрано запослено лице од {0}"
 
 #: frontend/src/components/ExpenseTaxesTable.vue:56
 msgid "No taxes added"
@@ -9979,11 +10077,6 @@ msgstr "Остало"
 #: hrms/hr/report/shift_attendance/shift_attendance.py:73
 msgid "Out Time"
 msgstr "Време изласка"
-
-#. Description of the 'Total Goal Score' (Float) field in DocType 'Appraisal'
-#: hrms/hr/doctype/appraisal/appraisal.json
-msgid "Out of 5"
-msgstr "Од укупно 5"
 
 #. Label of a chart in the Salary Payout Workspace
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
@@ -10425,11 +10518,13 @@ msgid "Payroll Dashboard"
 msgstr "Контролна табла обрачуна зараде"
 
 #. Label of the payroll_date (Date) field in DocType 'Additional Salary'
+#. Label of the payroll_date (Date) field in DocType 'Arrear'
 #. Label of the payroll_date (Date) field in DocType 'Employee Benefit Claim'
 #. Label of the payroll_date (Date) field in DocType 'Employee Incentive'
 #. Label of the payroll_date (Date) field in DocType 'Gratuity'
 #. Label of the payroll_date (Date) field in DocType 'Payroll Correction'
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
+#: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.json
 #: hrms/payroll/doctype/gratuity/gratuity.json
@@ -10499,6 +10594,7 @@ msgstr "Обавезе за зараде"
 msgid "Payroll Payable Account"
 msgstr "Рачун обавеза за зараде"
 
+#. Label of the payroll_period (Link) field in DocType 'Arrear'
 #. Label of the payroll_period (Link) field in DocType 'Employee Benefit
 #. Application'
 #. Label of the payroll_period (Link) field in DocType 'Employee Benefit
@@ -10512,6 +10608,7 @@ msgstr "Рачун обавеза за зараде"
 #. Name of a DocType
 #. Label of a Link in the Salary Payout Workspace
 #: frontend/src/views/salary_slip/Dashboard.vue:21
+#: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.json
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 #: hrms/payroll/doctype/employee_other_income/employee_other_income.json
@@ -10636,7 +10733,9 @@ msgid "Permanently submit {0}"
 msgstr "Трајно подношење {0}"
 
 #. Label of the phone_number (Data) field in DocType 'Job Applicant'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Phone Number"
 msgstr "Број телефона"
 
@@ -10756,7 +10855,7 @@ msgstr "Молимо Вас да изаберете датум."
 msgid "Please select an Applicant"
 msgstr "Молимо Вас да изаберете кандидата"
 
-#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:254
+#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:260
 msgid "Please select at least one Shift Request to perform this action."
 msgstr "Молимо Вас да изаберете барем један захтев за радну смену да бисте извршили ову радњу."
 
@@ -10829,8 +10928,8 @@ msgstr "Молимо Вас да подесите основу за обрачу
 msgid "Please set Relieving Date for employee: {0}"
 msgstr "Молимо Вас да поставите датум престанка радног односа за запослено лице: {0}"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:236
-#: hrms/hr/doctype/employee_advance/employee_advance.py:340
+#: hrms/hr/doctype/employee_advance/employee_advance.py:237
+#: hrms/hr/doctype/employee_advance/employee_advance.py:341
 msgid "Please set a Default Cash Account in Company defaults"
 msgstr "Молимо Вас да поставите подразумевани рачун благајне у подразумеваним подешавањима компаније"
 
@@ -11068,11 +11167,11 @@ msgstr "Обрада {0} захтева за радну смену као <b>{1}
 msgid "Processing Requests"
 msgstr "Обрада захтева"
 
-#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:293
+#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:299
 msgid "Processing Requests..."
 msgstr "Захтеви се обрађују..."
 
-#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:265
+#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:271
 msgid "Processing of Shift Requests has been queued. It may take a few minutes."
 msgstr "Обрада захтева за радну смену је стављена у ред чекања. Може потрајати неколико минута."
 
@@ -11332,6 +11431,11 @@ msgstr "Разлог за задржану зараду"
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:444
 msgid "Reason for skipping auto attendance:"
 msgstr "Разлог за прескакање аутоматског евидентирања присуства:"
+
+#: hrms/hr/doctype/employee_advance/employee_advance.py:74
+#: hrms/hr/doctype/employee_advance/employee_advance.py:135
+msgid "Receivable"
+msgstr "Потраживање"
 
 #. Label of the section_break_10 (Section Break) field in DocType 'Full and
 #. Final Statement'
@@ -11804,8 +11908,10 @@ msgstr "Прилог CV"
 
 #. Label of the resume_link (Data) field in DocType 'Employee Referral'
 #. Label of the resume_link (Data) field in DocType 'Job Applicant'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 #: hrms/hr/doctype/job_applicant/job_applicant.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Resume Link"
 msgstr "CV линк"
 
@@ -11836,7 +11942,7 @@ msgstr "Старосна граница за пензију (у годинама
 msgid "Return"
 msgstr "Повраћај"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:177
+#: hrms/hr/doctype/employee_advance/employee_advance.py:178
 msgid "Return amount cannot be greater than unclaimed amount"
 msgstr "Износ за повраћај не може бити већи од неискоришћеног износа"
 
@@ -11908,7 +12014,7 @@ msgstr "Боја распореда"
 #. Label of the round_name (Data) field in DocType 'Interview Round'
 #: hrms/hr/doctype/interview_round/interview_round.json
 msgid "Round Name"
-msgstr "Назив заокруживања"
+msgstr "Назив круга"
 
 #. Option for the 'Work Experience Calculation Method' (Select) field in
 #. DocType 'Gratuity Rule'
@@ -11976,7 +12082,7 @@ msgstr "Ред {0}# исплаћени износ не може бити већ�
 msgid "Row {0}# Paid Amount cannot be greater than Total amount"
 msgstr "Ред {0}# исплаћени износ не може бити већи од укупног износа"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:169
+#: hrms/hr/doctype/employee_advance/employee_advance.py:170
 msgid "Row {0}# Paid Amount cannot be greater than requested advance amount"
 msgstr "Ред {0}# исплаћени износ не може бити већи од захтеваног износа аконтације"
 
@@ -11988,9 +12094,9 @@ msgstr "Ред {0}: Трошковни центар {1} не припада ко
 msgid "Row {0}: From (Year) can not be greater than To (Year)"
 msgstr "Ред {0}: Почетна година не може бити већа од завршне године"
 
-#: hrms/hr/doctype/appraisal/appraisal.py:135
-msgid "Row {0}: Goal Score cannot be greater than 5"
-msgstr "Ред {0}: Оцена циља не може бити већа од 5"
+#: hrms/hr/doctype/appraisal/appraisal.py:137
+msgid "Row {0}: Goal Score cannot be greater than {1}"
+msgstr "Ред {0}: Оцена циља не може бити већа од {1}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip_loan_utils.py:59
 msgid "Row {0}: Paid amount {1} is greater than pending accrued amount {2} against loan {3}"
@@ -12212,7 +12318,7 @@ msgstr "Обрачунски листић за {0} већ постоји за з
 msgid "Salary Slip creation is queued. It may take a few minutes"
 msgstr "Креирање обрачунског листића је у реду чекања. Може потрајати неколико минута"
 
-#: hrms/payroll/doctype/payroll_correction/payroll_correction.py:115
+#: hrms/payroll/doctype/payroll_correction/payroll_correction.py:121
 msgid "Salary Slip not found."
 msgstr "Обрачунски листић није пронађен."
 
@@ -12258,6 +12364,7 @@ msgstr "Обрачунски листићи за запослена лица {} 
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr "Обрачунски листићи су поднети за период од {0} до {1}"
 
+#. Label of the salary_structure (Link) field in DocType 'Arrear'
 #. Label of the salary_structure (Link) field in DocType 'Bulk Salary Structure
 #. Assignment'
 #. Label of the salary_structure (Link) field in DocType 'Salary Slip'
@@ -12265,6 +12372,7 @@ msgstr "Обрачунски листићи су поднети за перио�
 #. Label of the salary_structure (Link) field in DocType 'Salary Structure
 #. Assignment'
 #. Label of a Link in the Salary Payout Workspace
+#: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: hrms/payroll/doctype/salary_component/salary_component.js:31
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
@@ -12403,8 +12511,8 @@ msgstr "Заказано на"
 
 #. Label of the score (Float) field in DocType 'Appraisal Goal'
 #: hrms/hr/doctype/appraisal_goal/appraisal_goal.json
-msgid "Score (0-5)"
-msgstr "Поени (0-5)"
+msgid "Score"
+msgstr "Оцена"
 
 #. Label of the score_earned (Float) field in DocType 'Appraisal Goal'
 #: hrms/hr/doctype/appraisal_goal/appraisal_goal.json
@@ -13580,6 +13688,7 @@ msgstr "Грешка синтаксе у услову: {0} у пореском �
 #: hrms/hr/doctype/travel_request/travel_request.json
 #: hrms/hr/doctype/vehicle_service_item/vehicle_service_item.json
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
+#: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.json
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
@@ -13752,6 +13861,11 @@ msgstr "Услови и одредбе"
 msgid "Thank you"
 msgstr "Хвала Вам"
 
+#. Success message of the job-application Web Form
+#: hrms/hr/web_form/job_application/job_application.json
+msgid "Thank you for applying."
+msgstr "Хвала Вам на пријављивању."
+
 #: hrms/overrides/company.py:131
 msgid "The currency of {0} should be same as the company's default currency. Please select another account."
 msgstr "Валута за {0} мора бити иста као подразумевана валута компаније. Молимо Вас да изаберете други рачун."
@@ -13829,6 +13943,10 @@ msgstr "Теорија"
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:490
 msgid "There are more holidays than working days this month."
 msgstr "Овај месец има више празника него радних дана."
+
+#: hrms/payroll/doctype/arrear/arrear.py:308
+msgid "There are no arrear differences between existing and new salary structure components."
+msgstr "Нема разлика у заостатку између постојећих и нових компонената структуре зараде."
 
 #: hrms/hr/doctype/job_offer/job_offer.py:39
 msgid "There are no vacancies under staffing plan {0}"
@@ -14438,7 +14556,7 @@ msgstr "Укупан износ зараде за ово запослено ли
 msgid "Total salary booked for this employee from the beginning of the year (payroll period or fiscal year) up to the current salary slip's end date."
 msgstr "Укупан износ зараде за ово запослено лице, обрачуната од почетка године (обрачунског периода или фискалне године) до датума завршетка текућег обрачунског листића."
 
-#: hrms/hr/doctype/appraisal/appraisal.py:153 hrms/mixins/appraisal.py:17
+#: hrms/hr/doctype/appraisal/appraisal.py:156 hrms/mixins/appraisal.py:17
 msgid "Total weightage for all {0} must add up to 100. Currently, it is {1}%"
 msgstr "Укупан пондер за све {0} мора износити 100. Тренутно је {1}%"
 
@@ -14886,8 +15004,10 @@ msgstr "Отпремање..."
 
 #. Label of the upper_range (Currency) field in DocType 'Job Applicant'
 #. Label of the upper_range (Currency) field in DocType 'Job Opening'
+#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/doctype/job_opening/job_opening.json
+#: hrms/hr/web_form/job_application/job_application.json
 msgid "Upper Range"
 msgstr "Горњи распон"
 
@@ -15073,7 +15193,7 @@ msgstr "Долазак без најаве"
 #: hrms/hr/doctype/leave_application/leave_application.py:427
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:171
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:190
-#: hrms/payroll/doctype/salary_component/salary_component.py:57
+#: hrms/payroll/doctype/salary_component/salary_component.py:58
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:321
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:52
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:132
@@ -15482,7 +15602,7 @@ msgstr "прегледи"
 msgid "submitted"
 msgstr "поднето"
 
-#: hrms/payroll/doctype/salary_component/salary_component.py:131
+#: hrms/payroll/doctype/salary_component/salary_component.py:139
 msgid "via Salary Component sync"
 msgstr "путем синхронизације компоненте зараде"
 

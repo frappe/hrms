@@ -72,7 +72,7 @@ class LeaveEncashment(AccountsController):
 			self.create_gl_entries(cancel=True)
 
 		self.create_leave_ledger_entry(submit=False)
-		self.ignore_linked_doctypes = ["GL Entry", "Advance Payment Ledger Entry"]
+		self.ignore_linked_doctypes = ["GL Entry", "Payment Ledger Entry", "Advance Payment Ledger Entry"]
 		self.set_status(update=True)
 
 	@frappe.whitelist()

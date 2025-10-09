@@ -452,7 +452,7 @@ class SalarySlip(TransactionBase):
 
 		make_salary_slip(self._salary_structure_doc.name, self)
 
-	def get_working_days_details(self, lwp=None, for_preview=0):
+	def get_working_days_details(self, lwp=None, for_preview=0, lwp_days_corrected=None):
 		payroll_settings = frappe.get_cached_value(
 			"Payroll Settings",
 			None,
@@ -539,6 +539,10 @@ class SalarySlip(TransactionBase):
 				self.payment_days -= half_absent_days * daily_wages_fraction_for_half_day
 		else:
 			self.payment_days = 0
+
+		if lwp_days_corrected and lwp_days_corrected > 0:
+			if verify_lwp_days_corrected(self.employee, self.start_date, self.end_date, lwp_days_corrected):
+				self.payment_days += lwp_days_corrected
 
 	def get_unmarked_days(
 		self, include_holidays_in_total_working_days: bool, holidays: list | None = None
@@ -1482,7 +1486,7 @@ class SalarySlip(TransactionBase):
 			for row in self.earnings
 			if row.salary_component == benefit.salary_component and getattr(row, "additional_salary", None)
 		]  # Any claims for this benefit component to be paid via additional salary in this payroll cycle
-		claimed_amount = sum(row.additional_amount for row in benefit_claims) if benefit_claims else 0
+		claimed_amount = sum(row.amount for row in benefit_claims) if benefit_claims else 0
 		total_paid += claimed_amount
 
 		if 0 < (benefit.yearly_amount - total_accrued) < current_period_benefit:
@@ -1510,8 +1514,12 @@ class SalarySlip(TransactionBase):
 			for row in self.earnings
 			if row.salary_component == benefit.salary_component and getattr(row, "additional_salary", None)
 		]
-		claimed_amount = sum(row.additional_amount for row in benefit_claims) if benefit_claims else 0
+		claimed_amount = sum(row.amount for row in benefit_claims) if benefit_claims else 0
 		total_paid += claimed_amount
+
+		# if more was paid than accrued, reduce current period accrual accordingly
+		if total_paid > total_accrued:
+			current_period_benefit -= total_paid - total_accrued
 
 		if 0 < (benefit.yearly_amount - total_accrued) < current_period_benefit:
 			current_period_benefit = (
@@ -1755,7 +1763,17 @@ class SalarySlip(TransactionBase):
 
 		component_row.amount = amount
 
-		self.update_component_amount_based_on_payment_days(component_row, remove_if_zero_valued)
+		# Skip payment days adjustment for:
+		# 1. Arrear/Payroll Correction additional salary - already calculated based on LWP days in previous cycles
+		# 2. Employee Benefit Claim - payout often includes amount for previous cycles
+		# 2. Accrual components - paid based on accrual amounts from previous cycles
+		skip_payment_days_adjustment = (
+			additional_salary
+			and additional_salary.get("ref_doctype")
+			in ["Arrear", "Payroll Correction", "Employee Benefit Claim"]
+		) or component_row.accrual_component
+		if not skip_payment_days_adjustment:
+			self.update_component_amount_based_on_payment_days(component_row, remove_if_zero_valued)
 
 		if data:
 			data[component_row.abbr] = component_row.amount
@@ -2184,12 +2202,12 @@ class SalarySlip(TransactionBase):
 			status = self.get_status()
 		self.db_set("status", status)
 
-	def process_salary_structure(self, for_preview=0):
+	def process_salary_structure(self, for_preview=0, lwp_days_corrected=None):
 		"""Calculate salary after salary structure details have been updated"""
 		if self.payroll_frequency:
 			self.get_date_details()
 		self.pull_emp_details()
-		self.get_working_days_details(for_preview=for_preview)
+		self.get_working_days_details(for_preview=for_preview, lwp_days_corrected=lwp_days_corrected)
 		self.calculate_net_pay()
 
 	def pull_emp_details(self):
@@ -2593,6 +2611,37 @@ def throw_error_message(row, error, title, description=None):
 	).format(**data)
 
 	frappe.throw(message, title=title)
+
+
+def verify_lwp_days_corrected(employee, start_date, end_date, lwp_days_corrected):
+	#  Verify that the provided lwp_days_corrected matches actual payroll corrections.
+	PayrollCorrection = frappe.qb.DocType("Payroll Correction")
+	SalarySlip = frappe.qb.DocType("Salary Slip")
+
+	actual_days_reversed = (
+		frappe.qb.from_(PayrollCorrection)
+		.join(SalarySlip)
+		.on(PayrollCorrection.salary_slip_reference == SalarySlip.name)
+		.select(Sum(PayrollCorrection.days_to_reverse).as_("total_days"))
+		.where(
+			(PayrollCorrection.employee == employee)
+			& (PayrollCorrection.docstatus == 1)
+			& (SalarySlip.start_date == start_date)
+			& (SalarySlip.end_date == end_date)
+		)
+	).run(pluck=True)
+
+	actual_total = actual_days_reversed[0] or 0.0
+
+	if lwp_days_corrected != actual_total:
+		frappe.throw(
+			_(
+				"LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
+			).format(lwp_days_corrected, actual_total, employee, start_date, end_date),
+			title=_("Invalid LWP Days Reversed"),
+		)
+
+	return True
 
 
 def on_doctype_update():

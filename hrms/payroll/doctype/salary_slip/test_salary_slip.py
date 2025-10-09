@@ -2006,6 +2006,7 @@ def make_earning_salary_component(
 			"type": "Earning",
 			"amount_based_on_formula": 1,
 			"arrear_component": 1 if test_arrear else 0,
+			"depends_on_payment_days": 1,
 		},
 		{"salary_component": "HRA", "abbr": "H", "amount": 3000, "type": "Earning"},
 		{

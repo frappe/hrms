@@ -71,7 +71,7 @@ class EmployeeAdvance(Document):
 		if account_type != "Receivable":
 			frappe.throw(
 				_("Employee advance account {0} should be of type {1}.").format(
-					get_link_to_form("Account", self.advance_account), frappe.bold("Receivable")
+					get_link_to_form("Account", self.advance_account), frappe.bold(_("Receivable"))
 				)
 			)
 
@@ -130,8 +130,9 @@ class EmployeeAdvance(Document):
 			returned_amount_condition = aple.amount > 0
 		else:
 			frappe.throw(
-				_("Employee advance account {0} should be of type {1}").format(
-					frappe.bold(self.advance_account), frappe.bold("Receivable")
+				_("Employee advance account {0} should be of type {1}.").format(
+					get_link_to_form("Account", self.advance_account),
+					frappe.bold(_("Receivable")),
 				)
 			)
 
@@ -173,7 +174,7 @@ class EmployeeAdvance(Document):
 		precision = self.precision("return_amount")
 		return_amount = flt(return_amount, precision)
 
-		if return_amount > 0 and return_amount > flt(self.paid_amount - self.claimed_amount, precision):
+		if return_amount > 0 and return_amount > flt(paid_amount - self.claimed_amount, precision):
 			frappe.throw(_("Return amount cannot be greater than unclaimed amount"))
 
 		self.db_set("paid_amount", paid_amount)
