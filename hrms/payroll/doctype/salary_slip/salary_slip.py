@@ -164,6 +164,7 @@ class SalarySlip(TransactionBase):
 
 		self.set_salary_structure_assignment()
 		self.calculate_net_pay()
+		self.set_totals()
 		self.compute_year_to_date()
 		self.compute_month_to_date()
 		self.compute_component_wise_year_to_date()
