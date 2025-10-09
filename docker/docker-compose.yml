@@ -22,7 +22,7 @@ services:
       - SHELL=/bin/bash
     working_dir: /home/frappe
     volumes:
-      - .:/workspace
+      - ..:/workspace
     ports:
       - 8000:8000
       - 9000:9000
