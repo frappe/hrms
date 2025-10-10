@@ -164,7 +164,6 @@ class SalarySlip(TransactionBase):
 
 		self.set_salary_structure_assignment()
 		self.calculate_net_pay()
-		self.set_totals()
 		self.compute_year_to_date()
 		self.compute_month_to_date()
 		self.compute_component_wise_year_to_date()
@@ -2048,7 +2047,9 @@ class SalarySlip(TransactionBase):
 		amount, additional_amount = row.amount, row.additional_amount
 		timesheet_component = self._salary_structure_doc.salary_component
 
-		if (
+		if not row.additional_salary and not row.default_amount:
+			amount, additional_amount = amount, additional_amount
+		elif (
 			self.salary_structure
 			and cint(row.depends_on_payment_days)
 			and cint(self.total_working_days)
