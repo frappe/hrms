@@ -592,8 +592,6 @@ class PayrollEntry(Document):
 				employee_wise_accounting_enabled,
 			)
 
-			# when party is not required, skip the validation in journal & gl entry
-			frappe.flags.party_not_required_for_receivable_payable = True
 			self.make_journal_entry(
 				accounts,
 				currencies,
@@ -604,8 +602,8 @@ class PayrollEntry(Document):
 				),
 				submit_journal_entry=True,
 				submitted_salary_slips=submitted_salary_slips,
+				employee_wise_accounting_enabled=employee_wise_accounting_enabled,
 			)
-			frappe.flags.party_not_required_for_receivable_payable = False
 
 	def make_journal_entry(
 		self,
@@ -616,6 +614,7 @@ class PayrollEntry(Document):
 		user_remark="",
 		submitted_salary_slips: list | None = None,
 		submit_journal_entry=False,
+		employee_wise_accounting_enabled=False,
 	) -> str:
 		multi_currency = 0
 		if len(currencies) > 1:
@@ -626,6 +625,7 @@ class PayrollEntry(Document):
 		journal_entry.user_remark = user_remark
 		journal_entry.company = self.company
 		journal_entry.posting_date = self.posting_date
+		journal_entry.party_not_required = True if not employee_wise_accounting_enabled else False
 
 		journal_entry.set("accounts", accounts)
 		journal_entry.multi_currency = multi_currency
@@ -945,7 +945,9 @@ class PayrollEntry(Document):
 		bank_entry = None
 		if salary_slip_total > 0:
 			remark = "withheld salaries" if for_withheld_salaries else "salaries"
-			bank_entry = self.set_accounting_entries_for_bank_entry(salary_slip_total, remark)
+			bank_entry = self.set_accounting_entries_for_bank_entry(
+				salary_slip_total, remark, employee_wise_accounting_enabled
+			)
 
 			if for_withheld_salaries:
 				link_bank_entry_in_salary_withholdings(salary_details, bank_entry.name)
@@ -1010,7 +1012,9 @@ class PayrollEntry(Document):
 
 		return total_loan_repayment
 
-	def set_accounting_entries_for_bank_entry(self, je_payment_amount, user_remark):
+	def set_accounting_entries_for_bank_entry(
+		self, je_payment_amount, user_remark, employee_wise_accounting_enabled
+	):
 		payroll_payable_account = self.payroll_payable_account
 		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
 
@@ -1096,6 +1100,7 @@ class PayrollEntry(Document):
 			user_remark=_("Payment of {0} from {1} to {2}").format(
 				_(user_remark), self.start_date, self.end_date
 			),
+			employee_wise_accounting_enabled=employee_wise_accounting_enabled,
 		)
 
 	def set_journal_entry_in_salary_slips(self, submitted_salary_slips, jv_name=None):
