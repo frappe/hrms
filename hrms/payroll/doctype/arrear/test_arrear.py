@@ -201,7 +201,12 @@ class TestArrear(IntegrationTestCase):
 			company="_Test Company",
 			date_of_joining="2021-01-01",
 		)
-		payroll_period = make_payroll_period()
+		// Create the payroll period (make_payroll_period doesn’t return the doc)
+		make_payroll_period()
+		payroll_period = frappe.get_last_doc(
+			"Payroll Period",
+			filters={"company": "_Test Company"}
+		)
 
 		# Create a salary structure but do not assign it to the employee
 		salary_structure = make_salary_structure(
