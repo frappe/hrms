@@ -201,7 +201,7 @@ class TestArrear(IntegrationTestCase):
 			company="_Test Company",
 			date_of_joining="2021-01-01",
 		)
-		// Create the payroll period (make_payroll_period doesn’t return the doc)
+		# Create the payroll period (make_payroll_period doesn't return the doc)
 		make_payroll_period()
 		payroll_period = frappe.get_last_doc(
 			"Payroll Period",
