@@ -69,7 +69,7 @@ class Arrear(Document):
 		if not assignment:
 			frappe.throw(
 				_(
-					"No active Salary Structure Assignment found for employee {0} with salary structure {1} on or after arrear start date {2}"  # TODO: make error message better
+					"Salary Structure Assignment not found for Employee: {0}. An active assignment for Salary Structure '{1}' must exist on or after {2}.
 				).format(
 					frappe.bold(self.employee),
 					frappe.bold(self.salary_structure),

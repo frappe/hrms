@@ -193,3 +193,37 @@ class TestArrear(IntegrationTestCase):
 			self.assertIn("Accrued Earnings", accrual_components)
 
 		frappe.db.rollback()
+
+	def test_validate_missing_salary_structure_assignment(self):
+		# Test that arrear creation fails if no salary structure assignment exists
+		emp = make_employee(
+			"test_missing_ssa@salary.com",
+			company="_Test Company",
+			date_of_joining="2021-01-01",
+		)
+		payroll_period = make_payroll_period()
+
+		# Create a salary structure but do not assign it to the employee
+		salary_structure = make_salary_structure(
+			"Test Structure For Missing SSA",
+			"Monthly",
+			company="_Test Company",
+		)
+
+		arrear_doc = frappe.get_doc(
+			{
+				"doctype": "Arrear",
+				"employee": emp,
+				"payroll_period": payroll_period.name,
+				"salary_structure": salary_structure.name,
+				"arrear_start_date": payroll_period.start_date,
+				"company": "_Test Company",
+			}
+		)
+
+		with self.assertRaises(frappe.ValidationError) as e:
+			arrear_doc.save()
+
+		self.assertIn("Salary Structure Assignment not found for Employee", str(e.exception))
+
+		frappe.db.rollback()
