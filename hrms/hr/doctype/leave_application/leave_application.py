@@ -1134,7 +1134,8 @@ def get_manually_expired_leaves(
 		frappe.qb.from_(ledger)
 		.select(ledger.leaves)
 		.where(
-			(ledger.employee == employee)
+			(ledger.docstatus == 1)
+			& (ledger.employee == employee)
 			& (ledger.leave_type == leave_type)
 			& (ledger.from_date >= from_date)
 			& (ledger.to_date <= end_date)

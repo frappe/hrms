@@ -173,7 +173,7 @@ class EmployeeAdvance(Document):
 		precision = self.precision("return_amount")
 		return_amount = flt(return_amount, precision)
 
-		if return_amount > 0 and return_amount > flt(self.paid_amount - self.claimed_amount, precision):
+		if return_amount > 0 and return_amount > flt(paid_amount - self.claimed_amount, precision):
 			frappe.throw(_("Return amount cannot be greater than unclaimed amount"))
 
 		self.db_set("paid_amount", paid_amount)

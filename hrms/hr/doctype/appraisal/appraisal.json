@@ -131,7 +131,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "description": "Out of 5",
    "fieldname": "total_score",
    "fieldtype": "Float",
    "in_list_view": 1,
@@ -286,7 +285,7 @@
   },
   {
    "depends_on": "appraisal_cycle",
-   "description": "Average of Goal Score, Feedback Score, and Self Appraisal Score (out of 5)",
+   "description": "Average of Goal Score, Feedback Score, and Self Appraisal Score",
    "fieldname": "final_score",
    "fieldtype": "Float",
    "in_list_view": 1,
@@ -299,7 +298,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-18 15:03:49.932773",
+ "modified": "2025-09-24 15:40:29.669135",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",
@@ -358,6 +357,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "employee, employee_name, appraisal_cycle",
  "sort_field": "creation",
  "sort_order": "DESC",

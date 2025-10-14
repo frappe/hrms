@@ -39,6 +39,7 @@ frappe.ui.form.on("Leave Encashment", {
 				filters: {
 					company: frm.doc.company,
 					account_currency: ["in", currencies],
+					account_type: "Payable",
 				},
 			};
 		});

@@ -55,11 +55,11 @@ def update_journal_entry(advance_doctypes):
 			advance_ledger.amount,
 			Case()
 			.when(
-				(jea.debit_in_account_currency > 0) & (advance_ledger.amount < 0),
+				(jea.debit_in_account_currency > 0) & (advance_ledger.amount <= 0),
 				jea.debit_in_account_currency,
 			)
 			.when(
-				(jea.credit_in_account_currency > 0) & (advance_ledger.amount > 0),
+				(jea.credit_in_account_currency > 0) & (advance_ledger.amount >= 0),
 				jea.credit_in_account_currency * -1,
 			)
 			.else_(advance_ledger.amount),
@@ -68,8 +68,8 @@ def update_journal_entry(advance_doctypes):
 			jea.reference_type.isin(advance_doctypes)
 			& jea.docstatus.eq(1)
 			& (
-				((jea.debit_in_account_currency > 0) & (advance_ledger.amount < 0))
-				| ((jea.credit_in_account_currency > 0) & (advance_ledger.amount > 0))
+				((jea.debit_in_account_currency > 0) & (advance_ledger.amount <= 0))
+				| ((jea.credit_in_account_currency > 0) & (advance_ledger.amount >= 0))
 			)
 		)
 	).run()

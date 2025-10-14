@@ -81,7 +81,9 @@ def make_job_opening(source_name, target_doc=None):
 
 
 @frappe.whitelist()
-def get_avg_time_to_fill(company=None, department=None, designation=None):
+def get_avg_time_to_fill(
+	company: str | None = None, department: str | None = None, designation: str | None = None
+):
 	filters = {"status": "Filled"}
 	if company:
 		filters["company"] = company
@@ -90,7 +92,7 @@ def get_avg_time_to_fill(company=None, department=None, designation=None):
 	if designation:
 		filters["designation"] = designation
 
-	avg_time_to_fill = frappe.db.get_all(
+	avg_time_to_fill = frappe.db.get_list(
 		"Job Requisition",
 		filters=filters,
 		fields=["avg(time_to_fill) as average_time"],

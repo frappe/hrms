@@ -433,21 +433,27 @@ class IncomeTaxComputationReport:
 
 		for employee, emp_details in self.employees.items():
 			total_taxable_amount = 0.0
-			annual_taxable_amount = tax_exemption_declaration = standard_tax_exemption_amount = 0.0
+			annual_taxable_amount = tax_exemption_declaration = standard_tax_exemption_amount = (
+				deductions_before_tax_calculation
+			) = 0.0
 
 			last_ss = self.get_last_salary_slip(employee)
 
 			if last_ss and last_ss.end_date == self.payroll_period_end_date:
-				annual_taxable_amount, tax_exemption_declaration, standard_tax_exemption_amount = (
-					frappe.db.get_value(
-						"Salary Slip",
-						last_ss.name,
-						[
-							"annual_taxable_amount",
-							"tax_exemption_declaration",
-							"standard_tax_exemption_amount",
-						],
-					)
+				(
+					annual_taxable_amount,
+					tax_exemption_declaration,
+					deductions_before_tax_calculation,
+					standard_tax_exemption_amount,
+				) = frappe.db.get_value(
+					"Salary Slip",
+					last_ss.name,
+					[
+						"annual_taxable_amount",
+						"tax_exemption_declaration",
+						"deductions_before_tax_calculation",
+						"standard_tax_exemption_amount",
+					],
 				)
 			else:
 				future_salary_slips = self.future_salary_slips.get(employee, [])
@@ -456,6 +462,7 @@ class IncomeTaxComputationReport:
 					annual_taxable_amount = last_ss.get("annual_taxable_amount", 0.0)
 					tax_exemption_declaration = last_ss.get("tax_exemption_declaration", 0.0)
 					standard_tax_exemption_amount = last_ss.get("standard_tax_exemption_amount", 0.0)
+					deductions_before_tax_calculation = last_ss.get("deductions_before_tax_calculation", 0.0)
 
 			if annual_taxable_amount:
 				# Remove exemptions already factored into salary slip so that report can apply its own logic (declaration vs proof)
@@ -463,6 +470,7 @@ class IncomeTaxComputationReport:
 					flt(annual_taxable_amount)
 					+ flt(tax_exemption_declaration)
 					+ flt(standard_tax_exemption_amount)
+					+ flt(deductions_before_tax_calculation)
 					- emp_details["total_exemption"]
 				)
 
