@@ -78,6 +78,13 @@ class TestPayrollEntry(FrappeTestCase):
 				"Company", "_Test Company", "default_payroll_payable_account", "_Test Payroll Payable - _TC"
 			)
 
+		payroll_account = frappe.get_doc("Account", "_Test Payroll Payable - _TC")
+		if payroll_account and payroll_account.account_type != "Payable":
+			frappe.db.set_value("Account", "_Test Payroll Payable - _TC", "account_type", "Payable")
+
+		if "lending" in frappe.get_installed_apps():
+			frappe.db.set_value("Company", "_Test Company", "loan_accrual_frequency", "Monthly")
+
 	def test_payroll_entry(self):
 		company = frappe.get_doc("Company", "_Test Company")
 		employee = frappe.db.get_value("Employee", {"company": "_Test Company"})
@@ -1200,17 +1207,21 @@ def create_loan_for_employee(applicant):
 
 
 def get_repayment_party_type(loan):
-	loan_repayment_entry, payroll_payable_account = frappe.db.get_value(
-		"Loan Repayment", {"against_loan": loan}, ["name", "payroll_payable_account"]
+	loan_repayment = frappe.db.get_value(
+		"Loan Repayment", {"against_loan": loan}, ["name", "payroll_payable_account"], as_dict=True
 	)
+	if not loan_repayment:
+		return "", ""
 
-	party_type, party = frappe.db.get_value(
+	return frappe.db.get_value(
 		"GL Entry",
-		{"voucher_no": loan_repayment_entry, "account": payroll_payable_account, "is_cancelled": 0},
+		{
+			"voucher_no": loan_repayment.name,
+			"account": loan_repayment.payroll_payable_account,
+			"is_cancelled": 0,
+		},
 		["party_type", "party"],
-	)
-
-	return party_type, party
+	) or ("", "")
 
 
 def submit_bank_entry(payroll_entry_id):

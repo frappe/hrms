@@ -1,5 +1,6 @@
 # Copyright (c) 2025, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
+import calendar
 
 import frappe
 from frappe.tests import IntegrationTestCase
@@ -7,6 +8,9 @@ from frappe.utils import add_days, add_months, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
+from hrms.payroll.doctype.salary_slip.test_salary_slip import (
+	make_payroll_period,
+)
 from hrms.payroll.doctype.salary_structure.salary_structure import (
 	make_salary_slip,
 )
@@ -16,11 +20,14 @@ from hrms.payroll.doctype.salary_structure.test_salary_structure import make_sal
 class TestArrear(IntegrationTestCase):
 	def test_arrear_calculation(self):
 		# Test arrear calculation when new salary structure is applied retroactively later in the payroll period after salary slip creation
+		# Include the case where payroll correction exists for LWP reversal for already processed salary slip
+
 		emp = make_employee(
 			"test_salary_structure_arrear@salary.com",
 			company="_Test Company",
 			date_of_joining="2021-01-01",
 		)
+		make_payroll_period()
 		current_payroll_period = frappe.get_last_doc("Payroll Period", filters={"company": "_Test Company"})
 
 		# Create initial salary structure with lower salary
@@ -49,12 +56,45 @@ class TestArrear(IntegrationTestCase):
 		)
 		new_payroll_period.insert()
 
+		frappe.db.set_single_value("Payroll Settings", "payroll_based_on", "Leave")
+		leave_application = frappe.get_doc(
+			{
+				"doctype": "Leave Application",
+				"employee": emp,
+				"leave_type": "Leave Without Pay",
+				"from_date": new_payroll_period.start_date,
+				"to_date": new_payroll_period.start_date,
+				"company": "_Test Company",
+				"status": "Approved",
+				"leave_approver": "test@example.com",
+			}
+		).insert()
+		leave_application.submit()
+
 		# Create and submit salary slip for first month of new payroll period with old structure
 		first_month_slip = make_salary_slip(
 			old_salary_structure.name, employee=emp, posting_date=next_year_start
 		)
 		first_month_slip.save()
 		first_month_slip.submit()
+
+		# payroll correction to reverse LWP for the month
+		payroll_correction_doc = frappe.get_doc(
+			{
+				"doctype": "Payroll Correction",
+				"employee": emp,
+				"payroll_period": new_payroll_period.name,
+				"payroll_date": add_days(new_payroll_period.start_date, 32),  # next month
+				"company": "_Test Company",
+				"days_to_reverse": 1,
+				"month_for_lwp_reversal": calendar.month_name[new_payroll_period.start_date.month],
+				"salary_slip_reference": first_month_slip.name,
+				"working_days": first_month_slip.total_working_days,
+				"payment_days": first_month_slip.payment_days,
+				"lwp_days": first_month_slip.total_working_days - first_month_slip.payment_days,
+			}
+		).save()
+		payroll_correction_doc.submit()
 
 		# Create new salary structure with higher salary for same employee
 		new_salary_structure = make_salary_structure(
