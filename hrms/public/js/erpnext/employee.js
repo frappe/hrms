@@ -26,8 +26,35 @@ frappe.ui.form.on("Employee", {
 						risk_html = `<span style="color: ${risk_color}; font-weight: bold;">
 							${r.message.attrition_risk}</span> (Confidence: ${r.message.confidence_score})`;
 
+						// Add a button to suggest actions if risk is high
+						if (r.message.attrition_risk === "High") {
+							risk_html += ` <button class="btn btn-xs btn-default" id="suggest-retention-actions">Suggest Actions</button>`;
+						}
+
 						// The field was created as 'custom_attrition_risk'
 						frm.fields_dict.custom_attrition_risk.$wrapper.html(risk_html);
+
+						// Add click handler for the new button
+						$('#suggest-retention-actions').on('click', function() {
+							frappe.call({
+								method: "hrms.api.get_retention_suggestions",
+								args: {
+									employee: frm.doc.name
+								},
+								callback: function(res) {
+									if (res.message && res.message.length > 0) {
+										let suggestions_html = res.message.map(suggestion => `<li>${suggestion}</li>`).join('');
+										frappe.msgprint({
+											title: __('Retention Suggestions for ' + frm.doc.employee_name),
+											message: `<ul>${suggestions_html}</ul>`,
+											indicator: 'blue'
+										});
+									} else {
+										frappe.msgprint(__('No specific suggestions were generated.'));
+									}
+								}
+							});
+						});
 					}
 				}
 			});

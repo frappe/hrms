@@ -815,6 +815,48 @@ def get_permitted_fields_for_write(doctype: str) -> list[str]:
 
 
 @frappe.whitelist()
+def get_retention_suggestions(employee):
+    """
+    Analyzes an employee's data and suggests retention actions based on a set of rules.
+    """
+    suggestions = []
+    now = getdate(frappe.utils.nowdate())
+
+    # Fetch employee data
+    emp_data = frappe.get_doc("Employee", employee)
+
+    # Rule 1: Check for low performance
+    avg_score_data = frappe.get_all("Appraisal", filters={"employee": employee}, fields=["total_score"])
+    if avg_score_data:
+        avg_score = sum(d['total_score'] for d in avg_score_data) / len(avg_score_data)
+        if avg_score < 2.5:
+            suggestions.append(f"<b>Low Performance:</b> The employee's average performance score is {avg_score:.2f}. Consider initiating a Performance Improvement Plan (PIP) or discussing additional training opportunities.")
+
+    # Rule 2: Check for career stagnation
+    last_promotion = frappe.get_all("Employee Promotion", filters={"employee": employee}, fields=["promotion_date"], order_by="promotion_date desc", limit=1)
+    if last_promotion:
+        days_since_promotion = date_diff(now, getdate(last_promotion[0]['promotion_date']))
+        if days_since_promotion > 730: # 2 years
+            suggestions.append(f"<b>Career Stagnation:</b> It has been over {int(days_since_promotion / 365)} years since the last promotion. Schedule a career development discussion to understand their goals and aspirations.")
+    else:
+        # If no promotion history, check tenure
+        days_since_joining = date_diff(now, getdate(emp_data.date_of_joining))
+        if days_since_joining > 730:
+             suggestions.append(f"<b>Career Growth Opportunity:</b> The employee has been with the company for over {int(days_since_joining / 365)} years without a promotion. A career pathing discussion is highly recommended.")
+
+
+    # Rule 3: Check for new hire integration
+    days_since_joining = date_diff(now, getdate(emp_data.date_of_joining))
+    if days_since_joining < 180: # 6 months
+        suggestions.append(f"<b>New Hire Check-in:</b> The employee joined recently. It's a good time to check in on their onboarding experience, team integration, and overall satisfaction.")
+
+    if not suggestions:
+        suggestions.append("<b>General Check-in:</b> No specific red flags were automatically detected. A general check-in to discuss job satisfaction, workload, and future goals is always a valuable retention tool.")
+
+    return suggestions
+
+
+@frappe.whitelist()
 def predict_attrition(employee):
     """
     Predicts the attrition risk for a single employee.

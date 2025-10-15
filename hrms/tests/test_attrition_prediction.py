@@ -41,7 +41,111 @@ sys.modules['erpnext.setup.doctype.employee'] = mock_erpnext_setup_doctype_emplo
 sys.modules['erpnext.setup.doctype.employee.employee'] = mock_erpnext_setup_doctype_employee_employee
 
 # Now that all dependencies are mocked, we can safely import the module
-from hrms.api import predict_attrition
+from hrms.api import predict_attrition, get_retention_suggestions
+from datetime import date, timedelta
+
+# --- Helper functions to simulate frappe.utils date functions ---
+def simple_getdate(d_str):
+    if isinstance(d_str, date):
+        return d_str
+    # Handles both date strings and datetime objects that get mocked
+    return date.fromisoformat(str(d_str).split(" ")[0])
+
+def simple_date_diff(d1, d2):
+    # This check is needed because mocks might still be passed in some scenarios
+    if not isinstance(d1, date) or not isinstance(d2, date):
+        return 0
+    return (d1 - d2).days
+
+# Configure the mock for frappe.utils to use our simple date functions
+mock_frappe_utils.nowdate.return_value = date.today().isoformat()
+mock_frappe_utils.getdate.side_effect = simple_getdate
+mock_frappe_utils.date_diff.side_effect = simple_date_diff
+# Point frappe.utils to the same configured mock for consistency
+mock_frappe.utils = mock_frappe_utils
+
+class TestRetentionSuggestions(unittest.TestCase):
+    def setUp(self):
+        # Reset mocks before each test to ensure test isolation
+        mock_frappe.reset_mock()
+        # IMPORTANT: reset_mock() does not clear side_effect, so it must be done manually
+        mock_frappe.get_all.side_effect = None
+        mock_frappe.get_all.return_value = None
+        mock_frappe.get_doc.return_value = None
+
+
+    def test_low_performance_suggestion(self):
+        # Mock data for an employee with low performance
+        mock_employee_doc = MagicMock()
+        mock_employee_doc.date_of_joining = date.today() - timedelta(days=500)
+        mock_frappe.get_doc.return_value = mock_employee_doc
+
+        def get_all_side_effect(doctype, *args, **kwargs):
+            if doctype == "Appraisal":
+                return [{"total_score": 1.5}, {"total_score": 2.0}]
+            if doctype == "Employee Promotion":
+                return [] # No promotion history
+            return []
+        mock_frappe.get_all.side_effect = get_all_side_effect
+
+        # Call the function
+        suggestions = get_retention_suggestions("EMP-001")
+
+        # Assert
+        self.assertEqual(len(suggestions), 1)
+        self.assertIn("<b>Low Performance:</b>", suggestions[0])
+
+    def test_career_stagnation_suggestion(self):
+        # Mock data for an employee with no promotion for over 2 years
+        mock_employee_doc = MagicMock()
+        mock_employee_doc.date_of_joining = date.today() - timedelta(days=800)
+        mock_frappe.get_doc.return_value = mock_employee_doc
+
+        two_years_ago = date.today() - timedelta(days=800)
+
+        def get_all_side_effect(doctype, *args, **kwargs):
+            if doctype == "Appraisal":
+                return [{"total_score": 4.0}] # Good performance
+            if doctype == "Employee Promotion":
+                return [{"promotion_date": two_years_ago}]
+            return []
+        mock_frappe.get_all.side_effect = get_all_side_effect
+
+        # Call the function
+        suggestions = get_retention_suggestions("EMP-001")
+
+        # Assert
+        self.assertEqual(len(suggestions), 1)
+        self.assertIn("<b>Career Stagnation:</b>", suggestions[0])
+
+    def test_new_hire_suggestion(self):
+        # Mock data for a new hire
+        mock_employee_doc = MagicMock()
+        mock_employee_doc.date_of_joining = date.today() - timedelta(days=90)
+        mock_frappe.get_doc.return_value = mock_employee_doc
+        mock_frappe.get_all.return_value = [] # No other data (no appraisals or promotions)
+
+        # Call the function
+        suggestions = get_retention_suggestions("EMP-001")
+
+        # Assert
+        self.assertEqual(len(suggestions), 1)
+        self.assertIn("<b>New Hire Check-in:</b>", suggestions[0])
+
+    def test_general_check_in_suggestion(self):
+        # Mock data for an employee with no specific flags
+        mock_employee_doc = MagicMock()
+        mock_employee_doc.date_of_joining = date.today() - timedelta(days=400)
+        mock_frappe.get_doc.return_value = mock_employee_doc
+        mock_frappe.get_all.return_value = [] # No other data
+
+        # Call the function
+        suggestions = get_retention_suggestions("EMP-001")
+
+        # Assert
+        self.assertEqual(len(suggestions), 1)
+        self.assertIn("<b>General Check-in:</b>", suggestions[0])
+
 
 class TestAttritionPrediction(unittest.TestCase):
 
