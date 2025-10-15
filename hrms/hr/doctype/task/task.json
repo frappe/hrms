@@ -87,6 +87,12 @@
  "autoname": "TASK-.#####",
  "fields": [
   {
+   "fieldname": "completion_date",
+   "fieldtype": "Date",
+   "label": "Completion Date",
+   "read_only": 1
+  },
+  {
    "fieldname": "time_logs",
    "fieldtype": "Table",
    "label": "Time Logs",

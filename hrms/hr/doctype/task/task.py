@@ -9,7 +9,13 @@ class Task(Document):
         self.update_actual_time()
 
     def on_update(self):
+        self.set_completion_date()
         self.send_approval_notification()
+
+    def set_completion_date(self):
+        """Set the completion date when the task is moved to 'Done'."""
+        if self.status == "Done" and not self.completion_date:
+            self.completion_date = frappe.utils.nowdate()
 
     def update_actual_time(self):
         """Calculates the total actual time from the child `Time Log` table."""

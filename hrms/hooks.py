@@ -242,7 +242,10 @@ scheduler_events = {
 		"hrms.hr.utils.allocate_earned_leaves",
 	],
 	"weekly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_weekly"],
-	"monthly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_monthly"],
+	"monthly": [
+		"hrms.controllers.employee_reminders.send_reminders_in_advance_monthly",
+		"hrms.utils.kpi_engine.calculate_kpis_for_previous_month"
+	],
 }
 
 advance_payment_payable_doctypes = ["Leave Encashment", "Gratuity", "Employee Advance"]
