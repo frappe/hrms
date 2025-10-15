@@ -4,6 +4,10 @@ from frappe.model import get_permitted_fields
 from frappe.model.workflow import get_workflow_name
 from frappe.query_builder import Order
 from frappe.utils import add_days, date_diff, getdate, strip_html
+import pandas as pd
+import joblib
+import os
+from datetime import datetime
 
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 
@@ -808,3 +812,81 @@ def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 @frappe.whitelist()
 def get_permitted_fields_for_write(doctype: str) -> list[str]:
 	return get_permitted_fields(doctype, permission_type="write")
+
+
+@frappe.whitelist()
+def predict_attrition(employee):
+    """
+    Predicts the attrition risk for a single employee.
+    API endpoint: /api/method/hrms.api.predict_attrition?employee=<employee_id>
+    """
+    # --- 1. Load the Model and Feature Names ---
+    model_path = os.path.join('hrms', 'ml_models', 'attrition_model.joblib')
+    try:
+        model_payload = joblib.load(model_path)
+        model = model_payload['model']
+        feature_names = model_payload['feature_names']
+        median_performance_score = model_payload.get('median_performance_score', 3.0) # Fallback for old models
+    except FileNotFoundError:
+        frappe.throw(f"Model file not found at {model_path}. Please train the model first.")
+        return
+
+    # --- 2. Fetch Data for the Single Employee ---
+    try:
+        emp_data = frappe.get_all("Employee", filters={'name': employee}, fields=["name", "date_of_joining", "department", "designation"])
+        if not emp_data:
+            frappe.throw(f"Employee {employee} not found.")
+            return
+
+        emp_df = pd.DataFrame(emp_data)
+        emp_df.rename(columns={"name": "employee"}, inplace=True)
+        emp_df['date_of_joining'] = pd.to_datetime(emp_df['date_of_joining'])
+        emp_df['tenure_days'] = (datetime.now() - emp_df['date_of_joining']).dt.days
+
+        perf_data = frappe.get_all("Appraisal", filters={'employee': employee}, fields=["total_score"])
+        emp_df['avg_performance_score'] = pd.DataFrame(perf_data)['total_score'].mean() if perf_data else None
+
+        leave_data = frappe.get_all("Leave Application", filters={'employee': employee}, fields=["total_leave_days"])
+        emp_df['total_leave_days_taken'] = pd.DataFrame(leave_data)['total_leave_days'].sum() if leave_data else 0
+
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), "Attrition Prediction Data Fetch Error")
+        frappe.throw(f"An error occurred while fetching data for employee {employee}.")
+        return
+
+    # --- 3. Preprocess the data to match training format ---
+    input_df = emp_df.drop(columns=['employee', 'date_of_joining'])
+
+    # One-hot encode and align columns with the model's feature list
+    processed_df = pd.get_dummies(input_df, columns=['department', 'designation'])
+    model_columns = pd.DataFrame(columns=feature_names)
+    final_df = pd.concat([model_columns, processed_df], ignore_index=True, sort=False).fillna(0)
+
+    # Ensure all columns from training are present, even if not in this employee's data
+    final_df = final_df.reindex(columns=feature_names, fill_value=0)
+
+    # Impute missing values using the median calculated during training
+    if 'avg_performance_score' in final_df.columns:
+        final_df['avg_performance_score'].fillna(median_performance_score, inplace=True)
+
+    # --- 4. Make Prediction ---
+    try:
+        # Select only the columns the model was trained on, in the correct order
+        prediction_input = final_df[feature_names]
+
+        prediction = model.predict(prediction_input)
+        prediction_proba = model.predict_proba(prediction_input)
+
+        risk = "High" if prediction[0] == 1 else "Low"
+        confidence_score = prediction_proba[0][1] # Probability of attrition
+
+        return {
+            "employee": employee,
+            "attrition_risk": risk,
+            "confidence_score": f"{confidence_score:.2f}",
+            "prediction": int(prediction[0])
+        }
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), "Attrition Prediction Error")
+        frappe.throw(f"An error occurred during the prediction process for employee {employee}.")
+        return
