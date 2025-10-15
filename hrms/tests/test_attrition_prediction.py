@@ -41,7 +41,7 @@ sys.modules['erpnext.setup.doctype.employee'] = mock_erpnext_setup_doctype_emplo
 sys.modules['erpnext.setup.doctype.employee.employee'] = mock_erpnext_setup_doctype_employee_employee
 
 # Now that all dependencies are mocked, we can safely import the module
-from hrms.api import predict_attrition, get_retention_suggestions
+from hrms.api import predict_attrition, get_retention_suggestions, suggest_career_path
 from datetime import date, timedelta
 
 # --- Helper functions to simulate frappe.utils date functions ---
@@ -145,6 +145,57 @@ class TestRetentionSuggestions(unittest.TestCase):
         # Assert
         self.assertEqual(len(suggestions), 1)
         self.assertIn("<b>General Check-in:</b>", suggestions[0])
+
+
+class TestCareerPathSuggester(unittest.TestCase):
+    def setUp(self):
+        mock_frappe.reset_mock()
+        mock_frappe.get_all.side_effect = None
+        mock_frappe.get_value.side_effect = None
+
+    def test_suggest_career_path_scenario(self):
+        # --- Mock Data ---
+        employee_id = "EMP-001"
+        current_designation = "Software Developer"
+
+        employee_skills = [{"skill": "Python"}, {"skill": "JavaScript"}]
+        designation_skills = [
+            {"parent": "Software Developer", "skill": "Python"},
+            {"parent": "Software Developer", "skill": "JavaScript"},
+            {"parent": "Senior Developer", "skill": "Python"},
+            {"parent": "Senior Developer", "skill": "JavaScript"},
+            {"parent": "Senior Developer", "skill": "Mentoring"},
+            {"parent": "Project Manager", "skill": "Project Management"},
+        ]
+        training_skills = [
+            {"parent": "Mentoring Workshop", "skill": "Mentoring"},
+            {"parent": "PMP Certification", "skill": "Project Management"},
+        ]
+
+        # --- Configure Mocks ---
+        mock_frappe.get_value.return_value = current_designation
+
+        def get_all_side_effect(doctype, *args, **kwargs):
+            if doctype == "Employee Skill":
+                return employee_skills
+            if doctype == "Designation Skill":
+                return designation_skills
+            if doctype == "Training Program Skill":
+                return training_skills
+            return []
+        mock_frappe.get_all.side_effect = get_all_side_effect
+
+        # --- Call the function ---
+        suggestions = suggest_career_path(employee_id)
+
+        # --- Assertions ---
+        self.assertEqual(len(suggestions), 1)
+        suggestion = suggestions[0]
+        self.assertEqual(suggestion['designation'], "Senior Developer")
+        self.assertIn("Python", suggestion['matched_skills'])
+        self.assertIn("JavaScript", suggestion['matched_skills'])
+        self.assertEqual(suggestion['skill_gap'], ["Mentoring"])
+        self.assertIn("Mentoring Workshop", suggestion['training_recommendations'])
 
 
 class TestAttritionPrediction(unittest.TestCase):

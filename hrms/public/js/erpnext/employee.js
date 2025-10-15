@@ -59,6 +59,39 @@ frappe.ui.form.on("Employee", {
 				}
 			});
 		}
+
+		// Add Career Path Suggester UI
+		let career_path_wrapper = frm.fields_dict.custom_career_path_suggestions.$wrapper;
+		career_path_wrapper.html(`<button class="btn btn-default btn-sm" id="suggest-career-path">Suggest Next Career Steps</button>`);
+
+		$('#suggest-career-path').on('click', function() {
+			career_path_wrapper.html('<i>Loading suggestions...</i>');
+			frappe.call({
+				method: "hrms.api.suggest_career_path",
+				args: {
+					employee: frm.doc.name
+				},
+				callback: function(r) {
+					if (r.message && r.message.length > 0) {
+						let html = r.message.map(path => {
+							let matched_skills = path.matched_skills.map(s => `<span class="label label-success">${s}</span>`).join(' ');
+							let gap_skills = path.skill_gap.map(s => `<span class="label label-danger">${s}</span>`).join(' ');
+							let training = path.training_recommendations.map(t => `<li><a href="/app/training-program/${t}">${t}</a></li>`).join('');
+
+							return `<div class="career-path-suggestion">
+								<h4>Next Step: <a href="/app/designation/${path.designation}">${path.designation}</a></h4>
+								<p><b>Skills You Have:</b> ${matched_skills || 'None'}</p>
+								<p><b>Skills to Develop:</b> ${gap_skills || 'None'}</p>
+								${training ? `<b>Recommended Training:</b><ul>${training}</ul>` : ''}
+							</div>`;
+						}).join('');
+						career_path_wrapper.html(html);
+					} else {
+						career_path_wrapper.html('<i>No immediate career path suggestions found.</i>');
+					}
+				}
+			});
+		});
 	},
 
 	date_of_birth(frm) {

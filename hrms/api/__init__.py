@@ -815,6 +815,70 @@ def get_permitted_fields_for_write(doctype: str) -> list[str]:
 
 
 @frappe.whitelist()
+def suggest_career_path(employee):
+    """
+    Analyzes an employee's skills and suggests potential next career steps.
+    """
+    # 1. Get current employee's skills and designation
+    current_designation = frappe.get_value("Employee", employee, "designation")
+    employee_skills = frappe.get_all("Employee Skill", filters={"parent": employee}, fields=["skill"])
+    current_skills = {s['skill'] for s in employee_skills}
+
+    if not current_designation:
+        return []
+
+    # 2. Get all other designations and their required skills
+    all_designations_skills = frappe.get_all("Designation Skill", fields=["parent", "skill"])
+
+    designation_skill_map = {}
+    for ds in all_designations_skills:
+        designation_skill_map.setdefault(ds['parent'], set()).add(ds['skill'])
+
+    # 3. Analyze potential career paths
+    potential_paths = []
+    for designation, required_skills in designation_skill_map.items():
+        if designation == current_designation:
+            continue
+
+        matched_skills = current_skills.intersection(required_skills)
+        skill_gap = required_skills.difference(current_skills)
+
+        # Simple heuristic: consider it a potential path if there's some overlap
+        # and the skill gap isn't enormous.
+        if len(matched_skills) > 0 and len(skill_gap) < 5:
+            path = {
+                "designation": designation,
+                "matched_skills": list(matched_skills),
+                "skill_gap": list(skill_gap),
+                "training_recommendations": []
+            }
+            potential_paths.append(path)
+
+    # 4. Find training recommendations for skill gaps
+    if potential_paths:
+        all_skills_needed = {skill for path in potential_paths for skill in path['skill_gap']}
+
+        # Find training programs that teach the needed skills
+        training_courses = frappe.get_all("Training Program Skill", fields=["parent", "skill"])
+        skill_to_training_map = {}
+        for course in training_courses:
+            skill_to_training_map.setdefault(course['skill'], []).append(course['parent'])
+
+        # Add recommendations to the paths
+        for path in potential_paths:
+            for skill in path['skill_gap']:
+                if skill in skill_to_training_map:
+                    path['training_recommendations'].extend(skill_to_training_map[skill])
+            # Deduplicate recommendations
+            path['training_recommendations'] = list(set(path['training_recommendations']))
+
+    # 5. Sort paths by relevance (e.g., smallest skill gap first)
+    potential_paths.sort(key=lambda x: len(x['skill_gap']))
+
+    return potential_paths[:3] # Return top 3 suggestions
+
+
+@frappe.whitelist()
 def get_retention_suggestions(employee):
     """
     Analyzes an employee's data and suggests retention actions based on a set of rules.
