@@ -1,0 +1,24 @@
+{
+ "name": "Time Log",
+ "module": "HR",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "owner": "Administrator",
+ "permissions": [],
+ "fields": [
+  {
+   "fieldname": "hours",
+   "fieldtype": "Float",
+   "label": "Hours",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Description"
+  }
+ ],
+ "issingle": 0,
+ "istable": 1,
+ "autoname": "hash"
+}

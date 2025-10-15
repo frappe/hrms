@@ -43,6 +43,34 @@
    "reqd": 1
   },
   {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "due_date",
+   "fieldtype": "Date",
+   "label": "Due Date"
+  },
+  {
+   "fieldname": "estimated_time",
+   "fieldtype": "Float",
+   "label": "Estimated Time (hours)"
+  },
+  {
+   "fieldname": "actual_time",
+   "fieldtype": "Float",
+   "label": "Actual Time (hours)",
+   "read_only": 1,
+   "default": "0"
+  },
+  {
+   "fieldname": "approver",
+   "fieldtype": "Link",
+   "label": "Approver",
+   "options": "User"
+  },
+  {
    "fieldname": "owner",
    "fieldtype": "Link",
    "label": "Owner",
@@ -56,5 +84,13 @@
  "issingle": 0,
  "istable": 0,
  "quick_entry": 1,
- "autoname": "TASK-.#####"
+ "autoname": "TASK-.#####",
+ "fields": [
+  {
+   "fieldname": "time_logs",
+   "fieldtype": "Table",
+   "label": "Time Logs",
+   "options": "Time Log"
+  }
+ ]
 }
