@@ -398,6 +398,13 @@
  "sequence_id": 1.0,
  "shortcuts": [
   {
+   "label": "Quick Note",
+   "type": "DocType",
+   "link_to": "Quick Note",
+   "color": "Blue",
+   "icon": "fa fa-sticky-note"
+  },
+  {
    "color": "Grey",
    "doc_view": "List",
    "label": "Payroll Dashboard",

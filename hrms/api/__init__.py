@@ -815,6 +815,34 @@ def get_permitted_fields_for_write(doctype: str) -> list[str]:
 
 
 @frappe.whitelist()
+def promote_note_to_task(note_name):
+    """
+    Converts a Quick Note document into a new Task document.
+    """
+    try:
+        note = frappe.get_doc("Quick Note", note_name)
+
+        # Create a new Task
+        new_task = frappe.new_doc("Task")
+        new_task.title = note.description
+        # The owner is automatically set to the current user, which is correct
+        new_task.insert()
+
+        # Delete the old note
+        frappe.delete_doc("Quick Note", note_name)
+
+        frappe.msgprint(f"Task '{new_task.name}' created successfully.", title="Success", indicator="green")
+
+        return {"task_name": new_task.name}
+
+    except frappe.DoesNotExistError:
+        frappe.throw(f"Quick Note {note_name} not found.")
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), "Promote Note to Task Error")
+        frappe.throw("An error occurred while promoting the note to a task.")
+
+
+@frappe.whitelist()
 def suggest_career_path(employee):
     """
     Analyzes an employee's skills and suggests potential next career steps.

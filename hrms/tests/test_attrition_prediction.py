@@ -41,7 +41,7 @@ sys.modules['erpnext.setup.doctype.employee'] = mock_erpnext_setup_doctype_emplo
 sys.modules['erpnext.setup.doctype.employee.employee'] = mock_erpnext_setup_doctype_employee_employee
 
 # Now that all dependencies are mocked, we can safely import the module
-from hrms.api import predict_attrition, get_retention_suggestions, suggest_career_path
+from hrms.api import predict_attrition, get_retention_suggestions, suggest_career_path, promote_note_to_task
 from datetime import date, timedelta
 
 # --- Helper functions to simulate frappe.utils date functions ---
@@ -197,6 +197,35 @@ class TestCareerPathSuggester(unittest.TestCase):
         self.assertEqual(suggestion['skill_gap'], ["Mentoring"])
         self.assertIn("Mentoring Workshop", suggestion['training_recommendations'])
 
+
+class TestQuickNotePromotion(unittest.TestCase):
+    def setUp(self):
+        mock_frappe.reset_mock()
+        mock_frappe.get_doc.return_value = None
+        mock_frappe.new_doc.return_value = MagicMock()
+        mock_frappe.delete_doc.return_value = None
+
+    def test_promote_note_to_task_success(self):
+        # --- Mock Data ---
+        note_name = "QN-00001"
+        mock_note = MagicMock()
+        mock_note.description = "This is a test note"
+        mock_frappe.get_doc.return_value = mock_note
+
+        mock_task = MagicMock()
+        mock_task.name = "TASK-00001"
+        mock_frappe.new_doc.return_value = mock_task
+
+        # --- Call the function ---
+        result = promote_note_to_task(note_name)
+
+        # --- Assertions ---
+        mock_frappe.get_doc.assert_called_with("Quick Note", note_name)
+        mock_frappe.new_doc.assert_called_with("Task")
+        self.assertEqual(mock_task.title, "This is a test note")
+        mock_task.insert.assert_called_once()
+        mock_frappe.delete_doc.assert_called_with("Quick Note", note_name)
+        self.assertEqual(result, {"task_name": "TASK-00001"})
 
 class TestAttritionPrediction(unittest.TestCase):
 

@@ -1,0 +1,60 @@
+{
+ "name": "Task",
+ "module": "HR",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  },
+  {
+   "role": "Employee",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "share": 1,
+   "apply_user_permissions": 1
+  }
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Description"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Open\nCompleted",
+   "default": "Open",
+   "reqd": 1
+  },
+  {
+   "fieldname": "owner",
+   "fieldtype": "Link",
+   "label": "Owner",
+   "options": "User",
+   "default": "__user",
+   "reqd": 1
+  }
+ ],
+ "title_field": "title",
+ "track_changes": 1,
+ "issingle": 0,
+ "istable": 0,
+ "quick_entry": 1,
+ "autoname": "TASK-.#####"
+}

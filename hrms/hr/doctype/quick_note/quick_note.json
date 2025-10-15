@@ -1,0 +1,33 @@
+{
+ "name": "Quick Note",
+ "module": "HR",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "role": "Employee",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "share": 1,
+   "apply_user_permissions": 1
+  }
+ ],
+ "fields": [
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Description",
+   "reqd": 1
+  }
+ ],
+ "owner_only": 1,
+ "title_field": "description",
+ "track_changes": 0,
+ "issingle": 0,
+ "istable": 0,
+ "quick_entry": 1,
+ "autoname": "QN-.#####"
+}
