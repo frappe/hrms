@@ -1,0 +1,14 @@
+{
+ "creation": "2025-10-14 21:58:30.000000",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart Source",
+ "idx": 0,
+ "is_public": 1,
+ "modified": "2025-10-14 21:58:30.000000",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Attrition by Designation",
+ "owner": "Administrator",
+ "source_name": "Attrition by Designation",
+ "timeseries": 0
+}

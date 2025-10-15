@@ -1,0 +1,23 @@
+{
+ "chart_name": "Attrition by Designation",
+ "chart_type": "Report",
+ "creation": "2025-10-14 22:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart",
+ "dynamic_filters_json": "{}",
+ "filters_json": "{}",
+ "group_by_type": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "modified": "2025-10-14 22:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Attrition by Designation",
+ "number_of_groups": 0,
+ "owner": "Administrator",
+ "report_name": "Attrition by Designation",
+ "time_interval": "Yearly",
+ "timeseries": 0,
+ "type": "Bar"
+}

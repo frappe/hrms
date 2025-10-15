@@ -1,0 +1,26 @@
+{
+ "charts": [
+  {
+   "chart": "Attrition Rate Over Time",
+   "width": "Full"
+  },
+  {
+   "chart": "Attrition by Department",
+   "width": "Half"
+  },
+  {
+   "chart": "Attrition by Designation",
+   "width": "Half"
+  }
+ ],
+ "creation": "2025-10-14 21:55:00.000000",
+ "dashboard_name": "HR Analytics",
+ "doctype": "Dashboard",
+ "is_default": 0,
+ "is_standard": 1,
+ "modified": "2025-10-14 21:55:00.000000",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "HR Analytics",
+ "owner": "Administrator"
+}
