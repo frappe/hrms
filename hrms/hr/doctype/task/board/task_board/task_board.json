@@ -1,0 +1,34 @@
+{
+ "board_name": "Task Board",
+ "doctype": "Board",
+ "docstatus": 0,
+ "owner": "Administrator",
+ "creation": "2025-10-15 05:40:00.000000",
+ "modified": "2025-10-15 05:40:00.000000",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Task Board",
+ "reference_doctype": "Task",
+ "field_name": "status",
+ "columns": [
+  {
+   "column_name": "To Do"
+  },
+  {
+   "column_name": "In Progress"
+  },
+  {
+   "column_name": "In Review"
+  },
+  {
+   "column_name": "Done"
+  }
+ ],
+ "filters": [
+  {
+   "field": "owner",
+   "condition": "=",
+   "value": "frappe.session.user"
+  }
+ ]
+}

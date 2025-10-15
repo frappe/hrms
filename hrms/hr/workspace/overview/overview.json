@@ -398,6 +398,13 @@
  "sequence_id": 1.0,
  "shortcuts": [
   {
+   "label": "Task Board",
+   "type": "Board",
+   "link_to": "Task Board",
+   "color": "Green",
+   "icon": "fa fa-th-large"
+  },
+  {
    "label": "Quick Note",
    "type": "DocType",
    "link_to": "Quick Note",

@@ -38,8 +38,8 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Open\nCompleted",
-   "default": "Open",
+   "options": "To Do\nIn Progress\nIn Review\nDone",
+   "default": "To Do",
    "reqd": 1
   },
   {
