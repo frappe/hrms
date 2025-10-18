@@ -30,11 +30,11 @@
   "column_break_ptcc",
   "salary_structure",
   "payroll_entry",
+  "current_payroll_period",
   "mode_of_payment",
   "column_break_wyhp",
   "salary_slip_based_on_timesheet",
   "section_break_gerh",
-  "deduct_tax_for_unclaimed_employee_benefits",
   "deduct_tax_for_unsubmitted_tax_exemption_proof",
   "payment_days_tab",
   "total_working_days",
@@ -56,6 +56,8 @@
   "earnings",
   "column_break_k1jz",
   "deductions",
+  "section_break_jgfy",
+  "accrued_benefits",
   "totals",
   "gross_pay",
   "base_gross_pay",
@@ -297,12 +299,6 @@
    "fieldname": "bank_account_no",
    "fieldtype": "Data",
    "label": "Bank Account No"
-  },
-  {
-   "default": "0",
-   "fieldname": "deduct_tax_for_unclaimed_employee_benefits",
-   "fieldtype": "Check",
-   "label": "Deduct Tax For Unclaimed Employee Benefits"
   },
   {
    "default": "0",
@@ -740,13 +736,34 @@
    "no_copy": 1,
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "current_payroll_period",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Current Payroll Period",
+   "options": "Payroll Period",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "section_break_jgfy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "accrued_benefits",
+   "fieldtype": "Table",
+   "label": "Accrued Benefits",
+   "options": "Employee Benefit Detail",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-01 21:25:36.651583",
+ "modified": "2025-09-19 21:25:42.584589",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
@@ -783,6 +800,7 @@
    "role": "Employee"
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "employee_name",
  "show_name_in_global_search": 1,
  "sort_field": "creation",

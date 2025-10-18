@@ -1,17 +1,13 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
-
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import flt
+from frappe.utils import get_link_to_form, getdate
 
-from hrms.hr.utils import get_previous_claimed_amount, validate_active_employee
-from hrms.payroll.doctype.employee_benefit_application.employee_benefit_application import (
-	get_max_benefits,
-)
 from hrms.payroll.doctype.payroll_period.payroll_period import get_payroll_period
+from hrms.payroll.doctype.salary_slip.salary_slip import get_benefits_details_parent
 from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
 	get_assigned_salary_structure,
 )
@@ -19,232 +15,212 @@ from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignmen
 
 class EmployeeBenefitClaim(Document):
 	def validate(self):
-		validate_active_employee(self.employee)
-		max_benefits = get_max_benefits(self.employee, self.claim_date)
-		if not max_benefits or max_benefits <= 0:
-			frappe.throw(_("Employee {0} has no maximum benefit amount").format(self.employee))
-		payroll_period = get_payroll_period(
-			self.claim_date, self.claim_date, frappe.db.get_value("Employee", self.employee, "company")
-		)
-		if not payroll_period:
-			frappe.throw(
-				_("{0} is not in a valid Payroll Period").format(
-					frappe.format(self.claim_date, dict(fieldtype="Date"))
-				)
-			)
-		self.validate_max_benefit_for_component(payroll_period)
-		self.validate_max_benefit_for_sal_struct(max_benefits)
-		self.validate_benefit_claim_amount(max_benefits, payroll_period)
-		if self.pay_against_benefit_claim:
-			self.validate_non_pro_rata_benefit_claim(max_benefits, payroll_period)
+		self.validate_date_and_benefit_claim_amount()
+		self.validate_duplicate_claim()
 
-	def validate_benefit_claim_amount(self, max_benefits, payroll_period):
-		claimed_amount = self.claimed_amount
-		claimed_amount += get_previous_claimed_amount(self.employee, payroll_period)
-		if max_benefits < claimed_amount:
+	def validate_date_and_benefit_claim_amount(self):
+		if getdate(self.payroll_date) < getdate():
 			frappe.throw(
 				_(
-					"Maximum benefit of employee {0} exceeds {1} by the sum {2} of previous claimed amount"
-				).format(self.employee, max_benefits, claimed_amount - max_benefits)
-			)
-
-	def validate_max_benefit_for_sal_struct(self, max_benefits):
-		if self.claimed_amount > max_benefits:
-			frappe.throw(
-				_("Maximum benefit amount of employee {0} exceeds {1}").format(self.employee, max_benefits)
-			)
-
-	def validate_max_benefit_for_component(self, payroll_period):
-		if self.max_amount_eligible:
-			claimed_amount = self.claimed_amount
-			claimed_amount += get_previous_claimed_amount(
-				self.employee, payroll_period, component=self.earning_component
-			)
-			if claimed_amount > self.max_amount_eligible:
-				frappe.throw(
-					_("Maximum amount eligible for the component {0} exceeds {1}").format(
-						self.earning_component, self.max_amount_eligible
-					)
+					"Payroll date cannot be in the past. This is to ensure that claims are made for the current or future payroll cycles."
 				)
+			)
 
-	def validate_non_pro_rata_benefit_claim(self, max_benefits, payroll_period):
-		claimed_amount = self.claimed_amount
-		pro_rata_amount = self.get_pro_rata_amount_in_application(payroll_period.name)
-		if not pro_rata_amount:
-			pro_rata_amount = 0
-			# Get pro_rata_amount if there is no application,
-			# get salary structure for the date and calculate pro-rata amount
-			sal_struct_name = get_assigned_salary_structure(self.employee, self.claim_date)
-			if sal_struct_name:
-				sal_struct = frappe.get_doc("Salary Structure", sal_struct_name)
-				pro_rata_amount = get_benefit_pro_rata_ratio_amount(
-					self.employee, self.claim_date, sal_struct
-				)
+		if self.claimed_amount <= 0:
+			frappe.throw(_("Claimed amount of employee {0} should be greater than 0").format(self.employee))
 
-		claimed_amount += get_previous_claimed_amount(self.employee, payroll_period, non_pro_rata=True)
-		if max_benefits < pro_rata_amount + claimed_amount:
+		if self.claimed_amount > self.max_amount_eligible:
 			frappe.throw(
-				_(
-					"Maximum benefit of employee {0} exceeds {1} by the sum {2} of benefit application pro-rata component amount and previous claimed amount"
-				).format(self.employee, max_benefits, pro_rata_amount + claimed_amount - max_benefits)
+				_("Claimed amount of employee {0} exceeds maximum amount eligible for claim {1}").format(
+					self.employee, self.max_amount_eligible
+				)
 			)
 
-	def get_pro_rata_amount_in_application(self, payroll_period):
-		application = frappe.db.exists(
-			"Employee Benefit Application",
-			{"employee": self.employee, "payroll_period": payroll_period, "docstatus": 1},
-		)
-		if application:
-			return frappe.db.get_value(
-				"Employee Benefit Application", application, "pro_rata_dispensed_amount"
+	def validate_duplicate_claim(self):
+		"""
+		Since Employee Benefit Ledger entries are only created upon Salary Slip submission,
+		there is a risk of multiple claims being created for the same benefit component within
+		one payroll cycle, and combined claim amount exceeding the maximum eligible amount.
+		So limit the claim to one per month.
+		"""
+		existing_claim = self.get_existing_claim_for_month()
+		if existing_claim:
+			msg = _(
+				"Employee {0} has already claimed the benefit '{1}' for {2} ({3}).<br>"
+				"To prevent overpayments, only one claim per benefit type is allowed in each payroll cycle."
+			).format(
+				frappe.bold(self.employee),
+				frappe.bold(self.earning_component),
+				frappe.bold(frappe.utils.formatdate(self.payroll_date, "MMMM yyyy")),
+				frappe.bold(get_link_to_form("Employee Benefit Claim", existing_claim)),
 			)
-		return False
+			frappe.throw(msg, title=_("Duplicate Claim Detected"))
 
+	def on_submit(self):
+		self.create_additional_salary()
 
-def get_benefit_pro_rata_ratio_amount(employee, on_date, sal_struct):
-	total_pro_rata_max = 0
-	benefit_amount_total = 0
-	for sal_struct_row in sal_struct.get("earnings"):
-		try:
-			pay_against_benefit_claim, max_benefit_amount = frappe.get_cached_value(
-				"Salary Component",
-				sal_struct_row.salary_component,
-				["pay_against_benefit_claim", "max_benefit_amount"],
-			)
-		except TypeError:
-			# show the error in tests?
-			frappe.throw(_("Unable to find Salary Component {0}").format(sal_struct_row.salary_component))
+	def get_existing_claim_for_month(self):
+		month_start_date = frappe.utils.get_first_day(self.payroll_date)
+		month_end_date = frappe.utils.get_last_day(self.payroll_date)
 
-		if sal_struct_row.is_flexible_benefit == 1 and pay_against_benefit_claim != 1:
-			total_pro_rata_max += max_benefit_amount
-
-	if total_pro_rata_max > 0:
-		for sal_struct_row in sal_struct.get("earnings"):
-			pay_against_benefit_claim, max_benefit_amount = frappe.get_cached_value(
-				"Salary Component",
-				sal_struct_row.salary_component,
-				["pay_against_benefit_claim", "max_benefit_amount"],
-			)
-
-			if sal_struct_row.is_flexible_benefit == 1 and pay_against_benefit_claim != 1:
-				component_max = max_benefit_amount
-				benefit_amount = component_max * sal_struct.max_benefits / total_pro_rata_max
-				if benefit_amount > component_max:
-					benefit_amount = component_max
-				benefit_amount_total += benefit_amount
-	return benefit_amount_total
-
-
-def get_benefit_claim_amount(employee, start_date, end_date, salary_component=None):
-	query = """
-		select sum(claimed_amount)
-		from `tabEmployee Benefit Claim`
-		where
-			employee=%(employee)s
-			and docstatus = 1
-			and pay_against_benefit_claim = 1
-			and claim_date between %(start_date)s and %(end_date)s
-	"""
-
-	if salary_component:
-		query += " and earning_component = %(earning_component)s"
-
-	claimed_amount = flt(
-		frappe.db.sql(
-			query,
+		return frappe.db.get_value(
+			"Employee Benefit Claim",
 			{
-				"employee": employee,
-				"start_date": start_date,
-				"end_date": end_date,
-				"earning_component": salary_component,
+				"employee": self.employee,
+				"earning_component": self.earning_component,
+				"payroll_date": ["between", [month_start_date, month_end_date]],
+				"docstatus": 1,
+				"name": ["!=", self.name],
 			},
-		)[0][0]
-	)
-
-	return claimed_amount
-
-
-def get_total_benefit_dispensed(employee, sal_struct, sal_slip_start_date, payroll_period):
-	pro_rata_amount = 0
-	claimed_amount = 0
-	application = frappe.db.exists(
-		"Employee Benefit Application",
-		{"employee": employee, "payroll_period": payroll_period.name, "docstatus": 1},
-	)
-	if application:
-		application_obj = frappe.get_cached_value(
-			"Employee Benefit Application",
-			application,
-			["pro_rata_dispensed_amount", "max_benefits", "remaining_benefit"],
-			as_dict=True,
+			"name",
 		)
 
-		pro_rata_amount = (
-			application_obj.pro_rata_dispensed_amount
-			+ application_obj.max_benefits
-			- application_obj.remaining_benefit
+	def create_additional_salary(self):
+		frappe.get_doc(
+			{
+				"doctype": "Additional Salary",
+				"company": self.company,
+				"employee": self.employee,
+				"currency": self.currency,
+				"salary_component": self.earning_component,
+				"payroll_date": self.payroll_date,
+				"amount": self.claimed_amount,
+				"overwrite_salary_structure_amount": 0,
+				"ref_doctype": self.doctype,
+				"ref_docname": self.name,
+			}
+		).submit()
+
+	@frappe.whitelist()
+	def get_benefit_details(self):
+		# Fetch max benefit amount and claimable amount for the employee based on the earning component chosen
+		from hrms.payroll.doctype.employee_benefit_ledger.employee_benefit_ledger import (
+			get_max_claim_eligible,
 		)
-	else:
-		pro_rata_amount = get_benefit_pro_rata_ratio_amount(employee, sal_slip_start_date, sal_struct)
 
-	claimed_amount += get_benefit_claim_amount(employee, payroll_period.start_date, payroll_period.end_date)
+		payroll_period = get_payroll_period(self.payroll_date, self.payroll_date, self.company).get("name")
+		salary_structure_assignment = get_salary_structure_assignment(self.employee, self.payroll_date)
+		component_details = self.get_component_details(payroll_period, salary_structure_assignment)
 
-	return claimed_amount + pro_rata_amount
+		yearly_benefit = 0
+		claimable_benefit = 0
+
+		if component_details:
+			current_month_amount = self._get_current_month_benefit_amount(component_details)
+			yearly_benefit = component_details.get("amount", 0)
+			claimable_benefit = get_max_claim_eligible(
+				self.employee, payroll_period, component_details, current_month_amount
+			)
+
+		self.yearly_benefit = yearly_benefit
+		self.max_amount_eligible = claimable_benefit
+
+	def get_component_details(self, payroll_period, salary_structure_assignment):
+		# Get component details from benefit parent document
+		benefit_details_parent, benefit_details_doctype = get_benefits_details_parent(
+			self.employee, payroll_period, salary_structure_assignment
+		)
+
+		if not benefit_details_parent:
+			return None
+
+		EmployeeBenefitDetail = frappe.qb.DocType(benefit_details_doctype)
+		SalaryComponent = frappe.qb.DocType("Salary Component")
+
+		component_details = (
+			frappe.qb.from_(EmployeeBenefitDetail)
+			.join(SalaryComponent)
+			.on(SalaryComponent.name == EmployeeBenefitDetail.salary_component)
+			.select(
+				SalaryComponent.name,
+				SalaryComponent.payout_method,
+				SalaryComponent.depends_on_payment_days,
+				EmployeeBenefitDetail.amount,
+			)
+			.where(SalaryComponent.name == self.earning_component)
+			.where(EmployeeBenefitDetail.parent == benefit_details_parent)
+		).run(as_dict=True)
+
+		return component_details[0] if component_details else None
+
+	def _get_current_month_benefit_amount(self, component_details: dict) -> float:
+		# Get current month benefit amount if payout method requires it
+		payout_method = component_details.get("payout_method")
+		if payout_method == "Accrue per cycle, pay only on claim":
+			return self.preview_salary_slip_and_fetch_current_month_benefit_amount()
+		return 0.0
+
+	def preview_salary_slip_and_fetch_current_month_benefit_amount(self):
+		"""Preview salary slip and fetch current month benefit amount for accrual components."""
+		from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+
+		salary_structure = get_assigned_salary_structure(self.employee, self.payroll_date)
+		salary_slip = make_salary_slip(
+			salary_structure, employee=self.employee, posting_date=self.payroll_date, for_preview=1
+		)
+		accrued_benefits = salary_slip.get("accrued_benefits", [])
+		for benefit in accrued_benefits:
+			if benefit.get("salary_component") == self.earning_component:
+				return benefit.get("amount", 0)
+		return 0
 
 
-def get_last_payroll_period_benefits(
-	employee, sal_slip_start_date, sal_slip_end_date, payroll_period, sal_struct
-):
-	if sal_struct:
-		max_benefits = sal_struct.max_benefits
-	else:
-		max_benefits = get_max_benefits(employee, payroll_period.end_date)
+@frappe.whitelist()
+def get_benefit_components(doctype, txt, searchfield, start, page_len, filters):
+	"""Fetch benefit components to choose from based on employee and date filters."""
+	employee = filters.get("employee")
+	date = filters.get("date")
+	company = filters.get("company")
 
-	remaining_benefit = max_benefits - get_total_benefit_dispensed(
-		employee, sal_struct, sal_slip_start_date, payroll_period
-	)
+	if not employee or not date:
+		return []
 
-	if remaining_benefit > 0:
-		have_remaining = True
-		# Set the remaining benefits to flexi non pro-rata component in the salary structure
-		salary_components_array = []
-		for d in sal_struct.get("earnings"):
-			if d.is_flexible_benefit == 1:
-				salary_component = frappe.get_cached_doc("Salary Component", d.salary_component)
-				if salary_component.pay_against_benefit_claim == 1:
-					claimed_amount = get_benefit_claim_amount(
-						employee, payroll_period.start_date, sal_slip_end_date, d.salary_component
-					)
-					amount_fit_to_component = salary_component.max_benefit_amount - claimed_amount
-					if amount_fit_to_component > 0:
-						if remaining_benefit > amount_fit_to_component:
-							amount = amount_fit_to_component
-							remaining_benefit -= amount_fit_to_component
-						else:
-							amount = remaining_benefit
-							have_remaining = False
-						current_claimed_amount = get_benefit_claim_amount(
-							employee, sal_slip_start_date, sal_slip_end_date, d.salary_component
-						)
-						amount += current_claimed_amount
-						struct_row = {}
-						salary_components_dict = {}
-						struct_row["depends_on_payment_days"] = salary_component.depends_on_payment_days
-						struct_row["salary_component"] = salary_component.name
-						struct_row["abbr"] = salary_component.salary_component_abbr
-						struct_row["do_not_include_in_total"] = salary_component.do_not_include_in_total
-						struct_row["is_tax_applicable"] = (salary_component.is_tax_applicable,)
-						struct_row["is_flexible_benefit"] = (salary_component.is_flexible_benefit,)
-						struct_row["variable_based_on_taxable_salary"] = (
-							salary_component.variable_based_on_taxable_salary
-						)
-						salary_components_dict["amount"] = amount
-						salary_components_dict["struct_row"] = struct_row
-						salary_components_array.append(salary_components_dict)
-			if not have_remaining:
-				break
+	try:
+		salary_structure_assignment = get_salary_structure_assignment(employee, date)
+		payroll_period = get_payroll_period(date, date, company).get("name")
 
-		if len(salary_components_array) > 0:
-			return salary_components_array
+		benefit_details_parent, benefit_details_doctype = get_benefits_details_parent(
+			employee, payroll_period, salary_structure_assignment
+		)
 
-	return False
+		if not benefit_details_parent:
+			return []
+
+		SalaryComponent = frappe.qb.DocType("Salary Component")
+		EmployeeBenefitDetail = frappe.qb.DocType(benefit_details_doctype)
+		return (
+			frappe.qb.from_(EmployeeBenefitDetail)
+			.join(SalaryComponent)
+			.on(SalaryComponent.name == EmployeeBenefitDetail.salary_component)
+			.select(EmployeeBenefitDetail.salary_component)
+			.where(EmployeeBenefitDetail.parent == benefit_details_parent)
+			.where(
+				SalaryComponent.payout_method.isin(
+					["Accrue per cycle, pay only on claim", "Allow claim for full benefit amount"]
+				)
+			)
+		).run()
+
+	except Exception as e:
+		frappe.log_error("Error fetching benefit components", e)
+		return []
+
+
+def get_salary_structure_assignment(employee, date):
+	SalaryStructureAssignment = frappe.qb.DocType("Salary Structure Assignment")
+	result = (
+		frappe.qb.from_(SalaryStructureAssignment)
+		.select(SalaryStructureAssignment.name)
+		.where(SalaryStructureAssignment.employee == employee)
+		.where(SalaryStructureAssignment.docstatus == 1)
+		.where(SalaryStructureAssignment.from_date <= date)
+		.orderby(SalaryStructureAssignment.from_date, order=frappe.qb.desc)
+		.limit(1)
+	).run(pluck="name")
+
+	if not result:
+		frappe.throw(
+			_("Salary Structure Assignment not found for employee {0} on date {1}").format(employee, date)
+		)
+
+	return result[0]

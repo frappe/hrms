@@ -14,6 +14,7 @@
   "company",
   "branch",
   "department",
+  "filter_by_shift",
   "column_break_bhny",
   "employment_type",
   "designation",
@@ -102,6 +103,7 @@
    "fieldname": "shift",
    "fieldtype": "Link",
    "label": "Shift",
+   "mandatory_depends_on": "filter_by_shift",
    "options": "Shift Type"
   },
   {
@@ -172,13 +174,19 @@
    "fieldtype": "HTML",
    "label": "Horizontal Break",
    "options": "<hr>"
+  },
+  {
+   "default": "0",
+   "fieldname": "filter_by_shift",
+   "fieldtype": "Check",
+   "label": "Filter by Shift"
   }
  ],
  "grid_page_length": 50,
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-05-26 09:42:36.888216",
+ "modified": "2025-08-07 09:26:38.614559",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Attendance Tool",

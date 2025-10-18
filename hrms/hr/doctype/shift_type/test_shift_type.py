@@ -878,8 +878,10 @@ def setup_shift_type(**args):
 				"begin_check_in_before_shift_start_time": args.begin_check_in_before_shift_start_time or 60,
 				"allow_check_out_after_shift_end_time": args.allow_check_out_after_shift_end_time or 60,
 				"process_attendance_after": add_days(date, -2),
-				"last_sync_of_checkin": now_datetime() + timedelta(days=1),
-				"mark_auto_attendance_on_holidays": args.mark_auto_attendance_on_holidays or False,
+				"last_sync_of_checkin": args.last_sync_of_checkin or now_datetime() + timedelta(days=1),
+				"mark_auto_attendance_on_holidays": args.mark_auto_attendance_on_holidays or 0,
+				"allow_overtime": args.allow_overtime or 0,
+				"overtime_type": args.overtime_type or None,
 			}
 		)
 	else:

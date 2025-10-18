@@ -225,15 +225,15 @@ def get_columns(earning_types, ded_types):
 	columns.extend(
 		[
 			{
-				"label": _("Loan Repayment"),
-				"fieldname": "total_loan_repayment",
+				"label": _("Total Deduction"),
+				"fieldname": "total_deduction",
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 120,
 			},
 			{
-				"label": _("Total Deduction"),
-				"fieldname": "total_deduction",
+				"label": _("Loan Repayment"),
+				"fieldname": "total_loan_repayment",
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 120,

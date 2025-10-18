@@ -262,6 +262,7 @@ def get_shift_for_time(shifts: list[dict], for_timestamp: datetime) -> dict:
 
 	for assignment in shifts:
 		shift_details = get_shift_details(assignment.shift_type, for_timestamp=for_timestamp)
+		shift_details.overtime_type = assignment.overtime_type or None
 
 		if _is_shift_outside_assignment_period(shift_details, assignment):
 			continue
@@ -369,7 +370,13 @@ def get_shifts_for_date(employee: str, for_timestamp: datetime) -> list[dict[str
 	assignment = frappe.qb.DocType("Shift Assignment")
 	return (
 		frappe.qb.from_(assignment)
-		.select(assignment.name, assignment.shift_type, assignment.start_date, assignment.end_date)
+		.select(
+			assignment.name,
+			assignment.shift_type,
+			assignment.start_date,
+			assignment.end_date,
+			assignment.overtime_type,
+		)
 		.where(
 			(assignment.employee == employee)
 			& (assignment.docstatus == 1)

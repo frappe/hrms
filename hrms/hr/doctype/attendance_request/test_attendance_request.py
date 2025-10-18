@@ -198,6 +198,58 @@ class TestAttendanceRequest(HRMSTestSuite):
 		records = self.get_attendance_records(attendance_request.name)
 		self.assertEqual(records[0].status, "Present")
 
+	def test_half_day_status_change(self):
+		# when new attendance is created via attendance request
+		attendance_request = frappe.get_doc(
+			{
+				"doctype": "Attendance Request",
+				"employee": self.employee.name,
+				"from_date": getdate(),
+				"to_date": getdate(),
+				"reason": "On Duty",
+				"half_day": 1,
+				"half_day_date": getdate(),
+				"company": "_Test Company",
+			}
+		).save()
+		attendance_request.submit()
+
+		half_day_status = frappe.get_value(
+			"Attendance", {"attendance_request": attendance_request.name}, "half_day_status"
+		)
+		self.assertEqual(half_day_status, "Absent")
+
+	def test_half_day_status_change_when_existing_attendance_is_updated(self):
+		# when existing attendance is updated via attendance request
+		frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": self.employee.name,
+				"attendance_date": getdate(),
+				"status": "Absent",
+				"company": "_Test Company",
+			}
+		).insert()
+
+		attendance_request = frappe.get_doc(
+			{
+				"doctype": "Attendance Request",
+				"employee": self.employee.name,
+				"from_date": getdate(),
+				"to_date": getdate(),
+				"reason": "On Duty",
+				"half_day": 1,
+				"half_day_date": getdate(),
+				"company": "_Test Company",
+			}
+		).save()
+		attendance_request.submit()
+
+		half_day_status = frappe.get_value(
+			"Attendance", {"attendance_request": attendance_request.name}, "half_day_status"
+		)
+		self.assertEqual(half_day_status, "Absent")
+
 
 def get_employee():
 	return frappe.get_doc("Employee", "_T-Employee-00001")

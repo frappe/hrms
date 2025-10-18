@@ -17,13 +17,16 @@ from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 
 class TestShiftScheduleAssignment(IntegrationTestCase):
 	def setUp(self):
-		frappe.db.delete("Shift Type", "Shift Schedule" "Shift Schedule Assignment")
+		for dt in ["Shift Type", "Shift Schedule", "Shift Schedule Assignment", "Shift Assignment"]:
+			frappe.db.delete(dt)
 
 		self.employee = make_employee("test@scheduleassignment.com", company="_Test Company")
 		self.shift_type = setup_shift_type(
 			shift_type="Test Schedule Assignment", start_time="08:00:00", end_time="12:00:00"
 		)
-		self.shift_schedule = get_or_insert_shift_schedule(self.shift_type.name, "Every Week", ["Monday"])
+		self.shift_schedule = get_or_insert_shift_schedule(
+			self.shift_type.name, "Every Week", ["Monday", "Tuesday", "Wednesday"]
+		)
 
 	def tearDown(self):
 		frappe.db.rollback()

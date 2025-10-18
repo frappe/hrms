@@ -6,7 +6,7 @@
 				<div class="text-base font-normal text-gray-800">
 					{{ title }}
 				</div>
-				<div class="text-xs font-normal text-gray-500">
+				<div v-if="doc?.gross_pay" class="text-xs font-normal text-gray-500">
 					<span>
 						{{
 							__("{0}: {1}", [
@@ -20,7 +20,7 @@
 			</div>
 		</template>
 		<template #right>
-			<span class="text-gray-700 font-normal rounded text-base">
+			<span v-if="doc?.net_pay" class="text-gray-700 font-normal rounded text-base">
 				{{ formatCurrency(doc.net_pay, doc.currency) }}
 			</span>
 			<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />

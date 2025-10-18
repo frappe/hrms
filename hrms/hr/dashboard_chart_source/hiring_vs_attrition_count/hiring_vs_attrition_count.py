@@ -36,7 +36,7 @@ def get_data(
 
 	hiring = (
 		get_records(from_date, to_date, "date_of_joining", filters.get("company"))
-		if "date_of_joinig" in permitted_fields
+		if "date_of_joining" in permitted_fields
 		else []
 	)
 

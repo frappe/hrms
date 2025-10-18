@@ -27,6 +27,7 @@
   "leave_approver_mandatory_in_leave_application",
   "restrict_backdated_leave_application",
   "prevent_self_leave_approval",
+  "prevent_self_expense_approval",
   "role_allowed_to_create_backdated_leave_application",
   "column_break_29",
   "expense_approver_mandatory_in_expense_claim",
@@ -269,6 +270,7 @@
   {
    "depends_on": "eval:doc.sender",
    "fetch_from": "sender.email_id",
+   "fetch_if_empty": 1,
    "fieldname": "sender_email",
    "fieldtype": "Data",
    "label": "Sender Email",
@@ -287,6 +289,7 @@
   {
    "depends_on": "eval:doc.hiring_sender",
    "fetch_from": "hiring_sender.email_id",
+   "fetch_if_empty": 1,
    "fieldname": "hiring_sender_email",
    "fieldtype": "Data",
    "label": "Sender Email",
@@ -336,13 +339,19 @@
    "fieldname": "prevent_self_leave_approval",
    "fieldtype": "Check",
    "label": "Prevent self approval for leaves even if user has permissions"
+  },
+  {
+   "default": "0",
+   "fieldname": "prevent_self_expense_approval",
+   "fieldtype": "Check",
+   "label": "Prevent self approval for expense claims even if user has permissions"
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-01-30 12:41:22.594071",
+ "modified": "2025-07-28 10:37:35.977951",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
@@ -377,6 +386,7 @@
    "role": "Employee"
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "ASC",
  "states": [],

@@ -36,9 +36,7 @@ class TestGratuity(IntegrationTestCase):
 			relieving_date=self.relieving_date,
 		)
 
-		make_earning_salary_component(
-			setup=True, test_tax=True, company_list=["_Test Company"], include_flexi_benefits=True
-		)
+		make_earning_salary_component(setup=True, test_tax=True, company_list=["_Test Company"])
 		make_deduction_salary_component(setup=True, test_tax=True, company_list=["_Test Company"])
 		make_holiday_list()
 
@@ -230,7 +228,9 @@ class TestGratuity(IntegrationTestCase):
 		fnf.submit()
 
 		jv = fnf.create_journal_entry()
-		jv.accounts[1].account = frappe.get_cached_value("Company", "_Test Company", "default_bank_account")
+		jv.accounts[1].account = (
+			frappe.get_cached_value("Company", "_Test Company", "default_bank_account") or "_Test Bank - _TC"
+		)
 		jv.cheque_no = "123456"
 		jv.cheque_date = getdate()
 		jv.save()

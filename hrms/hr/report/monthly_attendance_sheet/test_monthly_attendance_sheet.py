@@ -2,12 +2,13 @@ from dateutil.relativedelta import relativedelta
 
 import frappe
 from frappe.tests import IntegrationTestCase
-from frappe.utils import get_year_ending, get_year_start, getdate
+from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
+from hrms.hr.doctype.leave_allocation.leave_allocation import OverlapError
 from hrms.hr.doctype.leave_application.test_leave_application import make_allocation_record
 from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 from hrms.hr.report.monthly_attendance_sheet.monthly_attendance_sheet import execute
@@ -22,6 +23,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 	def setUp(self):
 		self.company = "_Test Company"
 		self.employee = make_employee("test_employee@example.com", company=self.company)
+		self.filter_based_on = "Month"
 		frappe.db.delete("Attendance")
 
 		if not frappe.db.exists("Shift Type", "Day Shift"):
@@ -49,11 +51,13 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 				"month": previous_month_first.month,
 				"year": previous_month_first.year,
 				"company": self.company,
+				"filter_based_on": self.filter_based_on,
 			}
 		)
 		report = execute(filters=filters)
 
 		datasets = report[3]["data"]["datasets"]
+
 		absent = datasets[0]["values"]
 		present = datasets[1]["values"]
 		leaves = datasets[2]["values"]
@@ -82,6 +86,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 				"month": previous_month_first.month,
 				"year": previous_month_first.year,
 				"company": self.company,
+				"filter_based_on": self.filter_based_on,
 			}
 		)
 		report = execute(filters=filters)
@@ -90,14 +95,24 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 		row_without_shift = report[1][1]
 
 		self.assertEqual(day_shift_row["shift"], "Day Shift")
-		self.assertEqual(day_shift_row["1"], "A")  # absent on the 1st day of the month
-		self.assertEqual(day_shift_row["2"], "P")  # present on the 2nd day
+		self.assertEqual(
+			day_shift_row[date_key(previous_month_first)], "A"
+		)  # absent on the 1st day of the month
+		self.assertEqual(
+			day_shift_row[date_key(add_days(previous_month_first, 1))], "P"
+		)  # present on the 2nd day
 
 		self.assertEqual(row_without_shift["shift"], "")
-		self.assertEqual(row_without_shift["4"], "P")  # present on the 4th day
+		self.assertEqual(
+			row_without_shift[date_key(add_days(previous_month_first, 3))], "P"
+		)  # present on the 4th day
 
 		# leave should be shown against every shift
-		self.assertTrue(day_shift_row["3"] == row_without_shift["3"] == "L")
+		self.assertTrue(
+			day_shift_row[date_key(add_days(previous_month_first, 2))]
+			== row_without_shift[date_key(add_days(previous_month_first, 2))]
+			== "L"
+		)
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_single_shift_with_leaves_in_detailed_view(self):
@@ -115,6 +130,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 				"month": previous_month_first.month,
 				"year": previous_month_first.year,
 				"company": self.company,
+				"filter_based_on": self.filter_based_on,
 			}
 		)
 		report = execute(filters=filters)
@@ -124,9 +140,15 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 		day_shift_row = report[1][0]
 
 		self.assertEqual(day_shift_row["shift"], "Day Shift")
-		self.assertEqual(day_shift_row["1"], "A")  # absent on the 1st day of the month
-		self.assertEqual(day_shift_row["2"], "P")  # present on the 2nd day
-		self.assertEqual(day_shift_row["3"], "L")  # leave on the 3rd day
+		self.assertEqual(
+			day_shift_row[date_key(previous_month_first)], "A"
+		)  # absent on the 1st day of the month
+		self.assertEqual(
+			day_shift_row[date_key(add_days(previous_month_first, 1))], "P"
+		)  # present on the 2nd day
+		self.assertEqual(
+			day_shift_row[date_key(add_days(previous_month_first, 2))], "L"
+		)  # leave on the 3rd day
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_single_leave_record(self):
@@ -140,6 +162,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 				"month": previous_month_first.month,
 				"year": previous_month_first.year,
 				"company": self.company,
+				"filter_based_on": self.filter_based_on,
 			}
 		)
 		report = execute(filters=filters)
@@ -149,7 +172,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 		row = report[1][0]
 
 		self.assertIsNone(row["shift"])
-		self.assertEqual(row["1"], "L")
+		self.assertEqual(row[date_key(previous_month_first)], "L")
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_summarized_view(self):
@@ -178,6 +201,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 				"year": previous_month_first.year,
 				"company": self.company,
 				"summarized_view": 1,
+				"filter_based_on": self.filter_based_on,
 			}
 		)
 		report = execute(filters=filters)
@@ -219,6 +243,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 				"year": previous_month_first.year,
 				"company": self.company,
 				"group_by": "Department",
+				"filter_based_on": self.filter_based_on,
 			}
 		)
 		report = execute(filters=filters)
@@ -231,12 +256,20 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 		row_without_shift = report[1][2]
 
 		self.assertEqual(day_shift_row["shift"], "Day Shift")
-		self.assertEqual(day_shift_row["1"], "A")  # absent on the 1st day of the month
-		self.assertEqual(day_shift_row["2"], "P")  # present on the 2nd day
+		self.assertEqual(
+			day_shift_row[date_key(previous_month_first)], "A"
+		)  # absent on the 1st day of the month
+		self.assertEqual(
+			day_shift_row[date_key(add_days(previous_month_first, 1))], "P"
+		)  # present on the 2nd day
 
 		self.assertEqual(row_without_shift["shift"], "")
-		self.assertEqual(row_without_shift["3"], "L")  # on leave on the 3rd day
-		self.assertEqual(row_without_shift["4"], "P")  # present on the 4th day
+		self.assertEqual(
+			row_without_shift[date_key(add_days(previous_month_first, 2))], "L"
+		)  # on leave on the 3rd day
+		self.assertEqual(
+			row_without_shift[date_key(add_days(previous_month_first, 3))], "P"
+		)  # present on the 4th day
 
 	def test_attendance_with_employee_filter(self):
 		previous_month_first = get_first_day_for_prev_month()
@@ -265,6 +298,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 				"year": previous_month_first.year,
 				"company": self.company,
 				"employee": self.employee,
+				"filter_based_on": self.filter_based_on,
 			}
 		)
 		report = execute(filters=filters)
@@ -304,6 +338,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 				"year": previous_month_first.year,
 				"company": "Test Parent Company",
 				"include_company_descendants": 1,
+				"filter_based_on": self.filter_based_on,
 			}
 		)
 		report = execute(filters=filters)
@@ -341,6 +376,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 				"company": self.company,
 				"employee": self.employee,
 				"summarized_view": 1,
+				"filter_based_on": self.filter_based_on,
 			}
 		)
 		report = execute(filters=filters)
@@ -362,9 +398,32 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_validations(self):
-		# validation error for filters without month and year
-		self.assertRaises(frappe.ValidationError, execute_report_with_invalid_filters)
+		# validation error for filters without filter based on
+		self.assertRaises(
+			frappe.ValidationError, execute_report_with_invalid_filters, invalid_filter_name="filter_based_on"
+		)
 
+		# validation error for filters without month and year
+		self.assertRaises(
+			frappe.ValidationError, execute_report_with_invalid_filters, invalid_filter_name="month"
+		)
+
+		# validation error for filters without start date
+		self.assertRaises(
+			frappe.ValidationError, execute_report_with_invalid_filters, invalid_filter_name="start_date"
+		)
+
+		# validation error for date range greater than 90 days
+		filters = frappe._dict(
+			{
+				"start_date": getdate(),
+				"end_date": add_days(getdate(), 100),
+				"company": self.company,
+				"group_by": "Department",
+				"filter_based_on": "Date Range",
+			}
+		)
+		self.assertRaises(frappe.ValidationError, execute, filters=filters)
 		# execute report without attendance record
 		previous_month_first = get_first_day_for_prev_month()
 
@@ -374,26 +433,152 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 				"year": previous_month_first.year,
 				"company": self.company,
 				"group_by": "Department",
+				"filter_based_on": self.filter_based_on,
 			}
 		)
 		report = execute(filters=filters)
 		self.assertEqual(report, ([], [], None, None))
 
+	def test_summarised_view_with_date_range_filter(self):
+		today = getdate()
 
-def get_leave_application(employee):
-	previous_month_first = get_first_day_for_prev_month()
+		# attendance with shift
+		mark_attendance(self.employee, today, "Absent", "Day Shift")
+		mark_attendance(self.employee, today + relativedelta(days=1), "Present", "Day Shift")
+		mark_attendance(self.employee, today + relativedelta(days=2), "Half Day")  # half day
 
-	year_start = getdate(get_year_start(previous_month_first))
-	year_end = getdate(get_year_ending(previous_month_first))
+		mark_attendance(self.employee, today + relativedelta(days=3), "Present")  # attendance without shift
+		mark_attendance(self.employee, today + relativedelta(days=4), "Present", late_entry=1)  # late entry
+		mark_attendance(self.employee, today + relativedelta(days=5), "Present", early_exit=1)  # early exit
 
-	make_allocation_record(employee=employee, from_date=year_start, to_date=year_end)
+		leave_application = get_leave_application(self.employee, today)
 
-	from_date = previous_month_first.replace(day=7)
-	to_date = previous_month_first.replace(day=8)
+		filters = frappe._dict(
+			{
+				"start_date": add_days(today, -1),
+				"end_date": add_days(today, 30),
+				"company": self.company,
+				"summarized_view": 1,
+				"filter_based_on": "Date Range",
+			}
+		)
+		report = execute(filters=filters)
+
+		row = report[1][0]
+		self.assertEqual(row["employee"], self.employee)
+
+		# 4 present + half day absent 0.5
+		self.assertEqual(row["total_present"], 4.5)
+		# 1 present
+		self.assertEqual(row["total_absent"], 1)
+		# leave days + half day leave 0.5
+		self.assertEqual(row["total_leaves"], leave_application.total_leave_days + 0.5)
+
+		self.assertEqual(row["_test_leave_type"], leave_application.total_leave_days)
+		self.assertEqual(row["total_late_entries"], 1)
+		self.assertEqual(row["total_early_exits"], 1)
+
+	def test_detailed_view_with_date_range_filter(self):
+		today = getdate()
+		mark_attendance(self.employee, today, "Absent", "Day Shift")
+		mark_attendance(self.employee, today + relativedelta(days=1), "Present", "Day Shift")
+
+		# attendance without shift
+		mark_attendance(self.employee, today + relativedelta(days=2), "On Leave")
+		mark_attendance(self.employee, today + relativedelta(days=3), "Present")
+		filters = frappe._dict(
+			{
+				"filter_based_on": "Date Range",
+				"start_date": add_days(today, -1),
+				"end_date": add_days(today, 30),
+				"company": self.company,
+			}
+		)
+		report = execute(filters=filters)
+		day_shift_row = report[1][0]
+		row_without_shift = report[1][1]
+
+		self.assertEqual(day_shift_row["shift"], "Day Shift")
+		self.assertEqual(day_shift_row[date_key(today)], "A")  # absent on the 1st day of the month
+		self.assertEqual(day_shift_row[date_key(add_days(today, 1))], "P")  # present on the 2nd day
+
+		self.assertEqual(row_without_shift["shift"], "")
+		self.assertEqual(row_without_shift[date_key(add_days(today, 3))], "P")  # present on the 4th day
+
+		# leave should be shown against every shift
+		self.assertTrue(
+			day_shift_row[date_key(add_days(today, 2))]
+			== row_without_shift[date_key(add_days(today, 2))]
+			== "L"
+		)
+
+	def test_detailed_view_with_date_range_and_group_by_filter(self):
+		today = getdate()
+		mark_attendance(self.employee, today, "Absent", "Day Shift")
+		mark_attendance(self.employee, today + relativedelta(days=1), "Present", "Day Shift")
+
+		# attendance without shift
+		mark_attendance(self.employee, today + relativedelta(days=2), "On Leave")
+		mark_attendance(self.employee, today + relativedelta(days=3), "Present")
+		filters = frappe._dict(
+			{
+				"filter_based_on": "Date Range",
+				"start_date": add_days(today, -1),
+				"end_date": add_days(today, 30),
+				"company": self.company,
+				"group_by": "Department",
+			}
+		)
+		report = execute(filters=filters)
+		day_shift_row = report[1][1]
+		row_without_shift = report[1][2]
+
+		self.assertEqual(day_shift_row["shift"], "Day Shift")
+		self.assertEqual(day_shift_row[date_key(today)], "A")  # absent on the 1st day of the month
+		self.assertEqual(day_shift_row[date_key(add_days(today, 1))], "P")  # present on the 2nd day
+
+		self.assertEqual(row_without_shift["shift"], "")
+		self.assertEqual(row_without_shift[date_key(add_days(today, 3))], "P")  # present on the 4th day
+
+		# leave should be shown against every shift
+		self.assertTrue(
+			day_shift_row[date_key(add_days(today, 2))]
+			== row_without_shift[date_key(add_days(today, 2))]
+			== "L"
+		)
+
+
+def get_leave_application(employee, date=None):
+	if not date:
+		date = get_first_day_for_prev_month()
+
+	year_start = getdate(get_year_start(date))
+	year_end = getdate(get_year_ending(date))
+	try:
+		make_allocation_record(employee=employee, from_date=year_start, to_date=year_end)
+	except OverlapError:
+		pass
+	from_date = date + relativedelta(days=7)
+	to_date = date + relativedelta(days=8)
 
 	return make_leave_application(employee, from_date, to_date, "_Test Leave Type")
 
 
-def execute_report_with_invalid_filters():
-	filters = frappe._dict({"company": "_Test Company", "group_by": "Department"})
+def execute_report_with_invalid_filters(invalid_filter_name):
+	match invalid_filter_name:
+		case "filter_based_on":
+			filters = frappe._dict({"company": "_Test Company", "group_by": "Department"})
+		case "month":
+			filters = frappe._dict(
+				{"filter_based_on": "Month", "company": "_Test Company", "group_by": "Department"}
+			)
+		case "start_date":
+			filters = frappe._dict(
+				{"filter_based_on": "Date Range", "company": "_Test Company", "group_by": "Department"}
+			)
+
 	execute(filters=filters)
+
+
+def date_key(date_obj):
+	return date_obj.strftime("%d-%m-%Y")

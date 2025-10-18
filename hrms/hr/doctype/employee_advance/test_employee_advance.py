@@ -6,6 +6,7 @@ from frappe.tests import IntegrationTestCase, change_settings
 from frappe.utils import flt, nowdate
 
 import erpnext
+from erpnext.accounts.doctype.account.test_account import create_account
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.employee_advance.employee_advance import (
@@ -27,6 +28,13 @@ class TestEmployeeAdvance(IntegrationTestCase):
 	def setUp(self):
 		frappe.db.delete("Employee Advance")
 		self.update_company_in_fiscal_year()
+		frappe.db.set_value("Account", "Employee Advances - _TC", "account_type", "Receivable")
+		frappe.db.set_value("Account", "_Test Employee Advance - _TC", "account_type", "Receivable")
+
+	def tearDown(self):
+		frappe.set_value(
+			"Company", "_Test Company", "default_employee_advance_account", "Employee Advances - _TC"
+		)
 
 	def test_paid_amount_and_status(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
@@ -295,6 +303,58 @@ class TestEmployeeAdvance(IntegrationTestCase):
 		self.assertEqual(advance_payment.unallocated_amount, 1000)
 		self.assertEqual(advance_payment.references, [])
 
+	def test_employee_advance_when_different_company_currency(self):
+		employee = make_employee("test_adv_in_company_currency@example.com", "_Test Company")
+
+		account = create_account(
+			account_name="Employee Advance (USD)",
+			parent_account="Accounts Receivable - _TC",
+			company="_Test Company",
+			account_currency="USD",
+			account_type="Receivable",
+		)
+
+		frappe.db.set_value("Company", "_Test Company", "default_employee_advance_account", account)
+
+		advance = make_employee_advance(employee, {"currency": "USD", "exchange_rate": 80})
+		make_payment_entry(advance, 1000)
+		advance.reload()
+
+		self.assertEqual(advance.status, "Paid")
+		self.assertEqual(advance.paid_amount, 1000)
+
+	def test_employee_advance_when_different_account_currency(self):
+		employee = make_employee("test_adv_in_account_currency@example.com", "_Test Company")
+		account = create_account(
+			account_name="Employee Advance (USD)",
+			parent_account="Accounts Receivable - _TC",
+			company="_Test Company",
+			account_currency="USD",
+			account_type="Receivable",
+		)
+
+		frappe.db.set_value("Company", "_Test Company", "default_employee_advance_account", account)
+		advance = make_employee_advance(employee, {"currency": "INR", "exchange_rate": 1})
+		make_payment_entry(advance, 1000)
+		advance.reload()
+
+		self.assertEqual(advance.status, "Paid")
+		self.assertEqual(advance.paid_amount, 1000)
+
+	def test_employee_advance_when_different_advance_currency(self):
+		employee = make_employee("test_adv_in_advance_currency@example.com", "_Test Company")
+
+		advance = make_employee_advance(employee, {"currency": "USD", "exchange_rate": 80})
+		frappe.db.set_value(
+			"Company", "_Test Company", "default_employee_advance_account", "_Test Employee Advance - _TC"
+		)
+		make_payment_entry(advance)
+
+		advance.reload()
+
+		self.assertEqual(advance.status, "Paid")
+		self.assertEqual(advance.paid_amount, 1000)
+
 	def update_company_in_fiscal_year(self):
 		fy_entries = frappe.get_all("Fiscal Year")
 		for fy_entry in fy_entries:
@@ -314,15 +374,16 @@ def make_journal_entry_for_advance(advance):
 	return journal_entry
 
 
-def make_payment_entry(advance, amount):
+def make_payment_entry(advance, amount=None):
 	from hrms.overrides.employee_payment_entry import get_payment_entry_for_employee
 
 	payment_entry = get_payment_entry_for_employee(advance.doctype, advance.name)
+
 	payment_entry.reference_no = "1"
 	payment_entry.reference_date = nowdate()
-	payment_entry.references[0].allocated_amount = amount
+	if amount:
+		payment_entry.references[0].allocated_amount = amount
 	payment_entry.submit()
-
 	return payment_entry
 
 

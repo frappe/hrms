@@ -69,7 +69,7 @@
   {
    "default": "365",
    "fieldname": "total_working_days_per_year",
-   "fieldtype": "Int",
+   "fieldtype": "Float",
    "label": "Total working Days Per Year"
   },
   {
@@ -93,7 +93,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-27 13:09:46.228999",
+ "modified": "2025-07-21 13:59:20.212312",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Gratuity Rule",
@@ -125,6 +125,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],

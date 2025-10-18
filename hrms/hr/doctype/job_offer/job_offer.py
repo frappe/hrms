@@ -107,7 +107,9 @@ def make_employee(source_name, target_doc=None):
 
 
 @frappe.whitelist()
-def get_offer_acceptance_rate(company=None, department=None):
+def get_offer_acceptance_rate(company: str | None = None, department: str | None = None):
+	frappe.has_permission("Job Offer", throw=True)
+
 	filters = {"docstatus": 1}
 	if company:
 		filters["company"] = company
