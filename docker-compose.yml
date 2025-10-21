@@ -27,8 +27,10 @@ services:
     working_dir: /home/frappe
     volumes:
       - .:/workspace
+      - frappe-sites:/home/frappe/frappe-bench/sites
     expose:
       - "8000"
 
 volumes:
   mariadb-data:
+  frappe-sites:
