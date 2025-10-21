@@ -10,12 +10,19 @@ echo "MariaDB is up and ready!"
 
 cd /home/frappe/frappe-bench
 
+# Configure Procfile to use Gunicorn instead of development server
+echo "Configuring production web server (Gunicorn)..."
+
+# Ensure logs directory exists
+mkdir -p /home/frappe/frappe-bench/logs
+
+# Update Procfile to use Gunicorn with proper working directory
+sed -i 's|web: bench serve.*|web: sh -c "cd /home/frappe/frappe-bench/sites \&\& /home/frappe/frappe-bench/env/bin/gunicorn -b 0.0.0.0:8000 -w 4 --max-requests 5000 --max-requests-jitter 500 -t 120 --graceful-timeout 30 frappe.app:application"|' Procfile
+
 # Check if site already exists
 if [ -d "sites/${SITE_NAME}" ]; then
     echo "Site ${SITE_NAME} already exists, starting bench..."
-    bench start
-    exit 0
-fi
+else
 
 echo "Creating new site: ${SITE_NAME}..."
 
@@ -33,5 +40,9 @@ bench --site ${SITE_NAME} enable-scheduler
 bench --site ${SITE_NAME} clear-cache
 bench use ${SITE_NAME}
 
-echo "Site created successfully, starting bench..."
+echo "Site created successfully!"
+fi
+
+# Start bench with the updated configuration
+echo "Starting bench..."
 bench start
