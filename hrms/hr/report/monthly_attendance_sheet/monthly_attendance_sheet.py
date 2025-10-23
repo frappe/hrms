@@ -38,7 +38,8 @@ def execute(filters: Filters | None = None) -> tuple:
 	filters = frappe._dict(filters or {})
 
 	if not filters.filter_based_on:
-		frappe.throw(_("Please select Filter Based On"))
+		# set default filter
+		filters.filter_based_on = "Month"
 
 	if filters.filter_based_on == "Month" and not (filters.month and filters.year):
 		frappe.throw(_("Please select month and year."))
