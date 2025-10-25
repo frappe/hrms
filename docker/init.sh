@@ -43,6 +43,11 @@ bench use ${SITE_NAME}
 echo "Site created successfully!"
 fi
 
+# Build production assets with hard links for nginx access
+echo "Building production assets..."
+bench build --production --hard-link
+echo "Assets built successfully!"
+
 # Start bench with the updated configuration
 echo "Starting bench..."
 bench start
