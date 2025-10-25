@@ -30,13 +30,20 @@ services:
       - frappe-sites:/home/frappe/frappe-bench/sites
     expose:
       - "8000"
+    healthcheck:
+      test: ["CMD-SHELL", "test -d /home/frappe/frappe-bench/sites/assets/frappe/dist/css && ls /home/frappe/frappe-bench/sites/assets/frappe/dist/css/*.css >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
 
   nginx:
     build:
       context: ./docker/nginx
       dockerfile: Dockerfile
     depends_on:
-      - frappe
+      frappe:
+        condition: service_healthy
     ports:
       - "8000:80"
     volumes:

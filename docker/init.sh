@@ -48,6 +48,31 @@ echo "Building production assets..."
 bench build --production --hard-link --force
 echo "Assets built successfully!"
 
+# Ensure assets are readable by nginx (fix permissions)
+echo "Setting asset permissions for nginx access..."
+chmod -R 755 sites/assets
+find sites/assets -type f -exec chmod 644 {} \;
+echo "Permissions set!"
+
+# Verify assets were created
+echo "========================================="
+echo "ASSET VERIFICATION"
+echo "========================================="
+if [ -d "sites/assets/frappe/dist" ]; then
+    echo "✓ Assets verified: frappe/dist directory exists"
+    echo "Sample CSS files:"
+    ls -lh sites/assets/frappe/dist/css/*.css 2>/dev/null | head -2
+    echo ""
+    echo "Sample JS files:"
+    ls -lh sites/assets/frappe/dist/js/*.js 2>/dev/null | head -2
+    echo ""
+    echo "Assets path: $(pwd)/sites/assets"
+else
+    echo "✗ WARNING: Assets directory not found!"
+    echo "Expected location: $(pwd)/sites/assets/frappe/dist"
+fi
+echo "========================================="
+
 # Start bench with the updated configuration
 echo "Starting bench..."
 bench start
