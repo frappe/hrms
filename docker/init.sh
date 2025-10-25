@@ -45,7 +45,7 @@ fi
 
 # Build production assets with hard links for nginx access
 echo "Building production assets..."
-bench build --production --hard-link
+bench build --production --hard-link --force
 echo "Assets built successfully!"
 
 # Start bench with the updated configuration

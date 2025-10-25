@@ -32,13 +32,14 @@ services:
       - "8000"
 
   nginx:
-    image: nginx:alpine
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
     depends_on:
       - frappe
     ports:
       - "8000:80"
     volumes:
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - frappe-sites:/home/frappe/frappe-bench/sites:ro
 
 volumes:
