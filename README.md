@@ -284,7 +284,7 @@ Both apps use Vue 3, Vite, and Tailwind CSS. Frontend code is located in `fronte
 
 This project follows [Conventional Commits](http://karma-runner.github.io/4.0/dev/git-commit-msg.html). Your commit messages should be structured as:
 
-```
+```text
 <type>: <description>
 
 [optional body]
