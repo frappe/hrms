@@ -30,6 +30,7 @@ services:
       - frappe-sites:/home/frappe/frappe-bench/sites
     expose:
       - "8000"
+      - "9000"
     healthcheck:
       test: ["CMD-SHELL", "test -d /home/frappe/frappe-bench/sites/assets/frappe/dist/css && ls /home/frappe/frappe-bench/sites/assets/frappe/dist/css/*.css >/dev/null 2>&1 || exit 1"]
       interval: 10s
@@ -47,7 +48,7 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - frappe-sites:/home/frappe/frappe-bench/sites:ro
+      - frappe-sites:/home/frappe/frappe-bench/sites
 
 volumes:
   mariadb-data:

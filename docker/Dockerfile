@@ -14,6 +14,14 @@ RUN bench init --skip-redis-config-generation frappe-bench && \
     bench get-app erpnext && \
     bench get-app hrms
 
+# Build production assets and bake them into the image
+RUN cd frappe-bench && \
+    echo "Building production assets..." && \
+    bench build --production --hard-link --force && \
+    chmod -R 755 sites/assets && \
+    find sites/assets -type f -exec chmod 644 {} \; && \
+    echo "Assets built and permissions set!"
+
 # Copy init script with executable permissions
 COPY --chmod=755 init.sh /home/frappe/init.sh
 

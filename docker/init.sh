@@ -43,34 +43,35 @@ bench use ${SITE_NAME}
 echo "Site created successfully!"
 fi
 
-# Build production assets with hard links for nginx access
-echo "Building production assets..."
-bench build --production --hard-link --force
-echo "Assets built successfully!"
-
-# Ensure assets are readable by nginx (fix permissions)
-echo "Setting asset permissions for nginx access..."
-chmod -R 755 sites/assets
-find sites/assets -type f -exec chmod 644 {} \;
-echo "Permissions set!"
-
-# Verify assets were created
+# Check if assets need to be built (they should already exist from Docker image)
 echo "========================================="
-echo "ASSET VERIFICATION"
+echo "ASSET CHECK"
 echo "========================================="
-if [ -d "sites/assets/frappe/dist" ]; then
-    echo "✓ Assets verified: frappe/dist directory exists"
+
+if [ -d "sites/assets/frappe/dist" ] && [ "$(ls -A sites/assets/frappe/dist/css 2>/dev/null)" ]; then
+    echo "✓ Assets already exist from Docker image (pre-built)"
+    echo "Skipping asset build for faster startup..."
+    echo ""
     echo "Sample CSS files:"
     ls -lh sites/assets/frappe/dist/css/*.css 2>/dev/null | head -2
     echo ""
     echo "Sample JS files:"
     ls -lh sites/assets/frappe/dist/js/*.js 2>/dev/null | head -2
-    echo ""
-    echo "Assets path: $(pwd)/sites/assets"
 else
-    echo "✗ WARNING: Assets directory not found!"
-    echo "Expected location: $(pwd)/sites/assets/frappe/dist"
+    echo "⚠ Assets not found in image, building now..."
+    echo "Building production assets..."
+    bench build --production --hard-link --force
+    echo "Assets built successfully!"
+
+    # Ensure assets are readable by nginx
+    echo "Setting asset permissions..."
+    chmod -R 755 sites/assets
+    find sites/assets -type f -exec chmod 644 {} \;
+    echo "Permissions set!"
 fi
+
+echo ""
+echo "Assets path: $(pwd)/sites/assets"
 echo "========================================="
 
 # Start bench with the updated configuration
