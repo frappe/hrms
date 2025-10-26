@@ -79,7 +79,7 @@ else
     bench build --production --hard-link --force
     echo "Assets built successfully!"
 
-    # Ensure assets are readable by nginx
+    # Ensure assets have proper permissions
     echo "Setting asset permissions..."
     chmod -R 755 sites/assets
     find sites/assets -type f -exec chmod 644 {} \;

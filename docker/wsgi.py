@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Custom WSGI application for serving Frappe with static files in production.
-This is needed for environments like Coolify where nginx can't access shared volumes.
+This is needed for environments like Coolify where containers can't share volumes.
+Serves both the application and static assets directly from the Frappe container.
 """
 
 import os
