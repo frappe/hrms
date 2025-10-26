@@ -16,8 +16,8 @@ echo "Configuring production web server (Gunicorn)..."
 # Ensure logs directory exists
 mkdir -p /home/frappe/frappe-bench/logs
 
-# Update Procfile to use Gunicorn with proper working directory
-sed -i 's|web: bench serve.*|web: sh -c "cd /home/frappe/frappe-bench/sites \&\& /home/frappe/frappe-bench/env/bin/gunicorn -b 0.0.0.0:8000 -w 4 --max-requests 5000 --max-requests-jitter 500 -t 120 --graceful-timeout 30 frappe.app:application"|' Procfile
+# Update Procfile to use Gunicorn with custom WSGI that serves static files
+sed -i 's|web: bench serve.*|web: sh -c "cd /home/frappe/frappe-bench/sites \&\& /home/frappe/frappe-bench/env/bin/gunicorn -b 0.0.0.0:8000 -w 4 --max-requests 5000 --max-requests-jitter 500 -t 120 --graceful-timeout 30 wsgi:application --pythonpath /home/frappe"|' Procfile
 
 # Check if site already exists
 if [ -d "sites/${SITE_NAME}" ]; then

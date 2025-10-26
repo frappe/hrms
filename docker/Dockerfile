@@ -33,7 +33,8 @@ RUN cd frappe-bench && \
     find sites/assets -type f -exec chmod 644 {} \; && \
     echo "Assets built and permissions set!"
 
-# Copy init script with executable permissions
+# Copy custom WSGI and init scripts
+COPY wsgi.py /home/frappe/wsgi.py
 COPY --chmod=755 init.sh /home/frappe/init.sh
 
 # Set default command

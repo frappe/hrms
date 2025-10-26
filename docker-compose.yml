@@ -47,8 +47,7 @@ services:
         condition: service_healthy
     ports:
       - "8000:80"
-    volumes:
-      - frappe-sites:/home/frappe/frappe-bench/sites
+    # No volume mount - nginx will serve built-in assets and proxy dynamic files to frappe
 
 volumes:
   mariadb-data:
