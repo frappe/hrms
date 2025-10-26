@@ -106,6 +106,137 @@ Use the following credentials to log in:
 	```
 3. You can access the site at `http://hrms.local:8080`
 
+## Testing
+
+Frappe HR has a comprehensive test suite to ensure code quality and prevent regressions. Before submitting a pull request, please make sure all tests pass locally.
+
+### Setting Up Tests
+
+**For Docker setup:**
+```bash
+# Enable testing on the site (one-time)
+docker exec docker-frappe-1 bash -c "cd /home/frappe/frappe-bench && bench --site hrms.localhost set-config allow_tests true"
+```
+
+**For local bench setup:**
+```bash
+# Enable testing on your site (one-time)
+bench --site hrms.local set-config allow_tests true
+```
+
+### Running Tests
+
+**For Docker setup:**
+```bash
+# Run all HRMS tests
+docker exec docker-frappe-1 bash -c "cd /home/frappe/frappe-bench && bench --site hrms.localhost run-tests --app hrms"
+
+# Run tests for a specific doctype
+docker exec docker-frappe-1 bash -c "cd /home/frappe/frappe-bench && bench --site hrms.localhost run-tests --doctype 'Leave Application'"
+
+# Run tests for a specific module
+docker exec docker-frappe-1 bash -c "cd /home/frappe/frappe-bench && bench --site hrms.localhost run-tests --module 'hrms.hr.doctype.attendance'"
+```
+
+**For local bench setup:**
+```bash
+# Run all HRMS tests
+bench --site hrms.local run-tests --app hrms
+
+# Run tests for a specific doctype
+bench --site hrms.local run-tests --doctype "Leave Application"
+
+# Run tests for a specific module
+bench --site hrms.local run-tests --module "hrms.hr.doctype.attendance"
+
+# Run parallel tests (faster, same as CI)
+bench --site hrms.local run-parallel-tests --app hrms
+```
+
+### Writing Tests
+
+HRMS uses Frappe's testing framework. Test files are located alongside the code in `test_<doctype>.py` files. For example:
+- `hrms/hr/doctype/leave_application/test_leave_application.py`
+- `hrms/payroll/doctype/salary_slip/test_salary_slip.py`
+
+Tests inherit from `IntegrationTestCase` or `HRMSTestSuite` (which provides HRMS-specific test utilities).
+
+For more details on writing tests, refer to the [Frappe Testing Documentation](https://frappeframework.com/docs/user/en/testing).
+
+## Code Quality
+
+Frappe HR uses [Ruff](https://github.com/astral-sh/ruff) for linting and code formatting. Before submitting code, please ensure it passes linting and is properly formatted.
+
+### Setting Up Ruff
+
+**For Docker setup:**
+```bash
+# Install Ruff in the container (one-time)
+docker exec docker-frappe-1 pip3 install ruff
+```
+
+**For local bench setup:**
+```bash
+# Activate bench environment and install Ruff
+cd ~/frappe-bench
+source env/bin/activate
+pip install ruff
+```
+
+### Running Ruff
+
+**For Docker setup:**
+```bash
+# Check code quality
+docker exec docker-frappe-1 bash -c "cd /home/frappe/frappe-bench/apps/hrms && ruff check ."
+
+# Auto-format code
+docker exec docker-frappe-1 bash -c "cd /home/frappe/frappe-bench/apps/hrms && ruff format ."
+
+# Check specific files or directories
+docker exec docker-frappe-1 bash -c "cd /home/frappe/frappe-bench/apps/hrms && ruff check hrms/hr/doctype/leave_application/"
+```
+
+**For local bench setup:**
+```bash
+# Navigate to HRMS app directory
+cd ~/frappe-bench/apps/hrms
+
+# Check code quality
+ruff check .
+
+# Auto-format code
+ruff format .
+
+# Check specific files or directories
+ruff check hrms/hr/doctype/leave_application/
+```
+
+### Code Style Guidelines
+
+**Important:** HRMS uses **tabs for indentation** (not spaces). This is configured in `pyproject.toml` and enforced by Ruff.
+
+**Key style rules:**
+- **Indentation:** Tabs (not spaces)
+- **Line length:** 110 characters maximum
+- **Import ordering:** Imports should be organized in this order:
+  1. Standard library
+  2. Third-party packages
+  3. `frappe`
+  4. `erpnext`
+  5. `hrms`
+  6. Local imports
+
+Ruff will automatically organize imports when you run `ruff format .`
+
+### Pre-commit Checks
+
+Before committing, ensure:
+1. **All tests pass** - Run the test commands for your setup (see [Testing](#testing) section above)
+2. **Code is formatted** - Run `ruff format .` (see [Running Ruff](#running-ruff) section above)
+3. **No linting errors** - Run `ruff check .` (see [Running Ruff](#running-ruff) section above)
+4. **Commit messages follow conventions** - Use [conventional commits](http://karma-runner.github.io/4.0/dev/git-commit-msg.html) format (enforced by commitlint)
+
 ## Learning and Community
 
 1. [Frappe School](https://frappe.school) - Learn Frappe Framework and ERPNext from the various courses by the maintainers or from the community.
@@ -116,9 +247,52 @@ Use the following credentials to log in:
 
 ## Contributing
 
-1. [Issue Guidelines](https://github.com/frappe/erpnext/wiki/Issue-Guidelines)
-1. [Report Security Vulnerabilities](https://erpnext.com/security)
-1. [Pull Request Requirements](https://github.com/frappe/erpnext/wiki/Contribution-Guidelines)
+We welcome contributions to Frappe HR! Before you start, please review the guidelines below.
+
+### Getting Started
+
+1. Read the [Testing](#testing) and [Code Quality](#code-quality) sections above
+2. Follow the [ERPNext Issue Guidelines](https://github.com/frappe/erpnext/wiki/Issue-Guidelines) when reporting bugs
+3. Review the [Pull Request Requirements](https://github.com/frappe/erpnext/wiki/Contribution-Guidelines) before submitting code
+4. For security vulnerabilities, please [report them responsibly](https://erpnext.com/security)
+
+### Frontend Development
+
+Frappe HR includes two Vue.js frontend applications:
+
+**PWA (Progressive Web App)** - Mobile-friendly employee self-service app
+```bash
+# Development
+yarn dev-pwa
+
+# Build for production
+yarn build-pwa
+```
+
+**Roster App** - Shift scheduling and roster management
+```bash
+# Development
+yarn dev-roster
+
+# Build for production
+yarn build-roster
+```
+
+Both apps use Vue 3, Vite, and Tailwind CSS. Frontend code is located in `frontend/` and `roster/` directories.
+
+### Commit Message Convention
+
+This project follows [Conventional Commits](http://karma-runner.github.io/4.0/dev/git-commit-msg.html). Your commit messages should be structured as:
+
+```
+<type>: <description>
+
+[optional body]
+```
+
+**Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+
+**Example:** `docs: add testing and code quality guidelines to README`
 
 
 ## Logo and Trademark Policy
