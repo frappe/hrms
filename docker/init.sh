@@ -22,6 +22,10 @@ sed -i 's|web: bench serve.*|web: sh -c "cd /home/frappe/frappe-bench/sites \&\&
 # Check if site already exists
 if [ -d "sites/${SITE_NAME}" ]; then
     echo "Site ${SITE_NAME} already exists, starting bench..."
+
+    # Ensure the site is set as current site
+    echo "${SITE_NAME}" > sites/currentsite.txt
+    bench use ${SITE_NAME}
 else
 
 echo "Creating new site: ${SITE_NAME}..."
@@ -48,18 +52,30 @@ echo "========================================="
 echo "ASSET CHECK"
 echo "========================================="
 
-if [ -d "sites/assets/frappe/dist" ] && [ "$(ls -A sites/assets/frappe/dist/css 2>/dev/null)" ]; then
-    echo "✓ Assets already exist from Docker image (pre-built)"
+if [ -d "sites/assets/frappe/dist" ] && [ "$(ls -A sites/assets/frappe/dist/css 2>/dev/null)" ] && [ -f "sites/assets/frappe/icons/timeless/icons.svg" ]; then
+    echo "✓ Assets already exist and are complete (including icons)"
     echo "Skipping asset build for faster startup..."
     echo ""
     echo "Sample CSS files:"
     ls -lh sites/assets/frappe/dist/css/*.css 2>/dev/null | head -2
     echo ""
-    echo "Sample JS files:"
-    ls -lh sites/assets/frappe/dist/js/*.js 2>/dev/null | head -2
+    echo "Icons verified:"
+    ls sites/assets/frappe/icons/ 2>/dev/null | head -3
 else
-    echo "⚠ Assets not found in image, building now..."
-    echo "Building production assets..."
+    echo "⚠ Assets incomplete or missing, building now..."
+
+    # CRITICAL: First copy all static assets from app public folders
+    echo "Copying static assets (icons, fonts, images)..."
+    mkdir -p sites/assets
+    for app in frappe erpnext hrms; do
+        if [ -d "apps/$app/$app/public" ]; then
+            echo "  - Copying $app static assets..."
+            cp -r apps/$app/$app/public sites/assets/$app
+        fi
+    done
+
+    # Then build the JS/CSS bundles
+    echo "Building production JS/CSS bundles..."
     bench build --production --hard-link --force
     echo "Assets built successfully!"
 

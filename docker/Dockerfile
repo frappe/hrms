@@ -16,7 +16,18 @@ RUN bench init --skip-redis-config-generation frappe-bench && \
 
 # Build production assets and bake them into the image
 RUN cd frappe-bench && \
-    echo "Building production assets..." && \
+    echo "Building comprehensive production assets..." && \
+    # Remove any existing symlinks first
+    rm -rf sites/assets && \
+    mkdir -p sites/assets && \
+    # Copy static assets from each app's public folder
+    for app in frappe erpnext hrms; do \
+        if [ -d "apps/$app/$app/public" ]; then \
+            echo "Copying $app static assets..." && \
+            cp -r apps/$app/$app/public sites/assets/$app; \
+        fi; \
+    done && \
+    # Build JS/CSS bundles
     bench build --production --hard-link --force && \
     chmod -R 755 sites/assets && \
     find sites/assets -type f -exec chmod 644 {} \; && \
