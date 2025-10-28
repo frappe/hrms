@@ -78,7 +78,7 @@ class JobOpening(WebsiteGenerator):
 				"number_of_positions",
 			)
 
-			if number_of_positions <= current_count:
+			if number_of_positions and current_count and number_of_positions <= current_count:
 				frappe.throw(
 					_(
 						"Job Openings for the designation {0} are already open or the hiring is complete as per the Staffing Plan {1}"
