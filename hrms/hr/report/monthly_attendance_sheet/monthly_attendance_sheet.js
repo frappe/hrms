@@ -8,7 +8,7 @@ frappe.query_reports["Monthly Attendance Sheet"] = {
 			label: __("Filter Based On"),
 			fieldtype: "Select",
 			options: ["Month", "Date Range"],
-			default: ["Month"],
+			default: "Month",
 			reqd: 1,
 			on_change: (report) => {
 				let filter_based_on = frappe.query_report.get_filter_value("filter_based_on");

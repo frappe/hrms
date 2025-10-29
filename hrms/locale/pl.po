@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-10-19 09:34+0000\n"
-"PO-Revision-Date: 2025-10-23 19:46\n"
+"PO-Revision-Date: 2025-10-26 20:45\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -3894,7 +3894,7 @@ msgstr ""
 #: hrms/payroll/doctype/income_tax_slab_other_charges/income_tax_slab_other_charges.json
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #. Description of a DocType
 #: hrms/hr/doctype/job_opening/job_opening.json
@@ -4272,7 +4272,7 @@ msgstr ""
 
 #: hrms/public/js/templates/node_card.html:17
 msgid "Edit"
-msgstr ""
+msgstr "Edytuj"
 
 #: frontend/src/components/ExpensesTable.vue:213
 msgid "Edit Expense Item"
@@ -8793,7 +8793,7 @@ msgstr ""
 
 #: frontend/src/views/Notifications.vue:88
 msgid "Load more"
-msgstr ""
+msgstr "Załaduj więcej"
 
 #. Label of the loan (Link) field in DocType 'Salary Slip Loan'
 #: hrms/payroll/doctype/salary_slip_loan/salary_slip_loan.json
@@ -12008,7 +12008,7 @@ msgstr ""
 #. Label of the rgt (Int) field in DocType 'Goal'
 #: hrms/hr/doctype/goal/goal.json
 msgid "Right"
-msgstr ""
+msgstr "Prawo"
 
 #. Label of the role (Link) field in DocType 'Employee Boarding Activity'
 #: hrms/hr/doctype/employee_boarding_activity/employee_boarding_activity.json

@@ -101,5 +101,6 @@ def create_asset():
 	asset = frappe.get_doc("Asset", asset_name)
 	asset.calculate_depreciation = 0
 	asset.available_for_use_date = today()
+	asset.save()
 	asset.submit()
 	return asset_name
