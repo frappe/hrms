@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frappe HR VERSION\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-10-12 09:33+0000\n"
-"PO-Revision-Date: 2025-10-12 09:33+0000\n"
+"POT-Creation-Date: 2025-10-26 09:34+0000\n"
+"PO-Revision-Date: 2025-10-26 09:34+0000\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: contact@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -378,7 +378,7 @@ msgstr ""
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:687
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:732
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Absent"
 msgstr ""
@@ -1574,7 +1574,7 @@ msgstr ""
 msgid "Approvers"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:15
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:39
 #: hrms/public/js/salary_slip_deductions_report_filters.js:22
 msgid "Apr"
 msgstr ""
@@ -1796,6 +1796,7 @@ msgstr ""
 #. Name of a DocType
 #. Label of a Link in the Overview Workspace
 #. Label of a Link in the Shift & Attendance Workspace
+#: hrms/hr/doctype/attendance/attendance.js:18
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/attendance_request/attendance_request.json
 #: hrms/hr/workspace/overview/overview.json
@@ -1898,7 +1899,7 @@ msgstr ""
 msgid "Attrition Count"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:19
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:43
 #: hrms/public/js/salary_slip_deductions_report_filters.js:26
 msgid "Aug"
 msgstr ""
@@ -2735,7 +2736,7 @@ msgstr ""
 #: hrms/hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.js:34
 #: hrms/hr/report/leave_ledger/leave_ledger.js:46
 #: hrms/hr/report/leave_ledger/leave_ledger.py:103
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:49
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:88
 #: hrms/hr/report/project_profitability/project_profitability.js:9
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.js:9
 #: hrms/hr/report/shift_attendance/shift_attendance.js:40
@@ -3049,6 +3050,7 @@ msgstr ""
 
 #. Option for the 'Overtime Slip Step' (Select) field in DocType 'Payroll
 #. Entry'
+#: hrms/hr/doctype/attendance/attendance.js:26
 #: hrms/hr/doctype/employee_advance/employee_advance.js:55
 #: hrms/hr/doctype/employee_advance/employee_advance.js:67
 #: hrms/hr/doctype/employee_advance/employee_advance.js:84
@@ -3439,6 +3441,10 @@ msgstr ""
 msgid "Date Range"
 msgstr ""
 
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:167
+msgid "Date Range Exceeded"
+msgstr ""
+
 #: hrms/hr/doctype/leave_block_list/leave_block_list.py:19
 msgid "Date is repeated"
 msgstr ""
@@ -3501,7 +3507,7 @@ msgstr ""
 msgid "Debit A/C Number"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:23
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:47
 #: hrms/public/js/salary_slip_deductions_report_filters.js:30
 msgid "Dec"
 msgstr ""
@@ -4461,8 +4467,8 @@ msgstr ""
 #: hrms/hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.py:23
 #: hrms/hr/report/leave_ledger/leave_ledger.js:28
 #: hrms/hr/report/leave_ledger/leave_ledger.py:28
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:35
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:112
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:74
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:129
 #: hrms/hr/report/project_profitability/project_profitability.js:37
 #: hrms/hr/report/project_profitability/project_profitability.py:140
 #: hrms/hr/report/shift_attendance/shift_attendance.js:22
@@ -4901,7 +4907,7 @@ msgstr ""
 #: hrms/hr/report/employee_leave_balance_summary/employee_leave_balance_summary.py:23
 #: hrms/hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.py:30
 #: hrms/hr/report/leave_ledger/leave_ledger.py:35
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:118
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:135
 #: hrms/hr/report/project_profitability/project_profitability.py:145
 #: hrms/hr/report/shift_attendance/shift_attendance.py:31
 #: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.py:19
@@ -5413,6 +5419,7 @@ msgstr ""
 #: hrms/hr/doctype/overtime_slip/overtime_slip.json
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:61
 #: hrms/hr/report/project_profitability/project_profitability.js:24
 #: hrms/hr/report/project_profitability/project_profitability.py:202
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
@@ -5537,7 +5544,7 @@ msgstr ""
 msgid "Error in formula or condition"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2530
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2532
 msgid "Error in formula or condition: {0} in Income Tax Slab"
 msgstr ""
 
@@ -5549,7 +5556,7 @@ msgstr ""
 msgid "Error updating {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2609
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2611
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
 msgstr ""
 
@@ -6035,7 +6042,7 @@ msgstr ""
 msgid "Failure Details"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:13
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:37
 #: hrms/public/js/salary_slip_deductions_report_filters.js:20
 msgid "Feb"
 msgstr ""
@@ -6155,6 +6162,7 @@ msgstr ""
 msgid "Filled"
 msgstr ""
 
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:8
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.js:7
 msgid "Filter Based On"
 msgstr ""
@@ -6811,7 +6819,7 @@ msgstr ""
 msgid "Group"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:57
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:96
 msgid "Group By"
 msgstr ""
 
@@ -7439,7 +7447,7 @@ msgstr ""
 msgid "Incentives"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:63
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:102
 msgid "Include Company Descendants"
 msgstr ""
 
@@ -7810,7 +7818,7 @@ msgstr ""
 msgid "Invalid Dates"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2641
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2643
 msgid "Invalid LWP Days Reversed"
 msgstr ""
 
@@ -7981,7 +7989,7 @@ msgstr ""
 msgid "Is Tax Applicable"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:12
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:36
 #: hrms/public/js/salary_slip_deductions_report_filters.js:19
 msgid "Jan"
 msgstr ""
@@ -8151,12 +8159,12 @@ msgstr ""
 msgid "Journal Entry"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:18
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:42
 #: hrms/public/js/salary_slip_deductions_report_filters.js:25
 msgid "July"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:17
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:41
 #: hrms/public/js/salary_slip_deductions_report_filters.js:24
 msgid "June"
 msgstr ""
@@ -8217,7 +8225,7 @@ msgstr ""
 msgid "Key Result Area"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2638
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2640
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr ""
 
@@ -8295,7 +8303,7 @@ msgstr ""
 
 #. Option for the 'Calculate Payroll Working Days Based On' (Select) field in
 #. DocType 'Payroll Settings'
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:689
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:734
 #: hrms/overrides/dashboard_overrides.py:12
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Leave"
@@ -8925,7 +8933,7 @@ msgstr ""
 msgid "Manual Rating"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:14
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:38
 #: hrms/public/js/salary_slip_deductions_report_filters.js:21
 msgid "Mar"
 msgstr ""
@@ -9131,7 +9139,7 @@ msgstr ""
 msgid "Maximum leave allowed in the leave type {0} is {1}"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:16
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:40
 #: hrms/public/js/salary_slip_deductions_report_filters.js:23
 msgid "May"
 msgstr ""
@@ -9254,7 +9262,7 @@ msgstr ""
 #. Option for the 'Salary Paid Per' (Select) field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
 #: hrms/hr/report/employee_birthday/employee_birthday.js:8
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:8
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:33
 #: hrms/public/js/salary_slip_deductions_report_filters.js:15
 msgid "Month"
 msgstr ""
@@ -9364,7 +9372,7 @@ msgid "Name"
 msgstr ""
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1306
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2525
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2527
 msgid "Name error"
 msgstr ""
 
@@ -9591,11 +9599,11 @@ msgstr ""
 msgid "No attendance records found for employee {0} between {1} and {2}"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:54
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:71
 msgid "No attendance records found for this criteria."
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:47
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:64
 msgid "No attendance records found."
 msgstr ""
 
@@ -9759,7 +9767,7 @@ msgstr ""
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2167
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2169
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr ""
 
@@ -9795,7 +9803,7 @@ msgstr ""
 msgid "Notify users by email"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:22
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:46
 #: hrms/public/js/salary_slip_deductions_report_filters.js:29
 msgid "Nov"
 msgstr ""
@@ -9841,7 +9849,7 @@ msgstr ""
 msgid "Obtained Average Rating"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:21
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:45
 #: hrms/public/js/salary_slip_deductions_report_filters.js:28
 msgid "Oct"
 msgstr ""
@@ -10786,7 +10794,7 @@ msgstr ""
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2156
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2158
 msgid "Please see attachment"
 msgstr ""
 
@@ -10801,6 +10809,10 @@ msgstr ""
 #: hrms/hr/doctype/department_approver/department_approver.py:19
 #: hrms/hr/employee_property_update.js:45
 msgid "Please select Employee first."
+msgstr ""
+
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:41
+msgid "Please select Filter Based On"
 msgstr ""
 
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.js:25
@@ -10856,7 +10868,7 @@ msgstr ""
 msgid "Please select at least one row to perform this action."
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:38
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:55
 msgid "Please select company."
 msgstr ""
 
@@ -10873,7 +10885,7 @@ msgstr ""
 msgid "Please select half day attendance status."
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:35
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:44
 msgid "Please select month and year."
 msgstr ""
 
@@ -10922,6 +10934,11 @@ msgstr ""
 msgid "Please set a Default Cash Account in Company defaults"
 msgstr ""
 
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:166
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:52
+msgid "Please set a date range less than 90 days."
+msgstr ""
+
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:354
 msgid "Please set account in Salary Component {0}"
 msgstr ""
@@ -10948,6 +10965,10 @@ msgstr ""
 
 #: hrms/controllers/employee_boarding_controller.py:110
 msgid "Please set the Holiday List."
+msgstr ""
+
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:48
+msgid "Please set the date range."
 msgstr ""
 
 #: hrms/hr/doctype/exit_interview/exit_interview.js:21
@@ -11061,7 +11082,7 @@ msgstr ""
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:688
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:733
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Present"
 msgstr ""
@@ -12451,7 +12472,7 @@ msgstr ""
 msgid "Salary components should be part of the Salary Structure."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2705
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2707
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr ""
 
@@ -12749,7 +12770,7 @@ msgstr ""
 msgid "Sent Successfully: {0}"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:20
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:44
 #: hrms/public/js/salary_slip_deductions_report_filters.js:27
 msgid "Sep"
 msgstr ""
@@ -12926,7 +12947,7 @@ msgstr ""
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.js:173
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:165
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:182
 #: hrms/hr/report/shift_attendance/shift_attendance.py:36
 #: hrms/hr/report/shift_attendance/shift_attendance.py:205
 #: hrms/overrides/dashboard_overrides.py:33
@@ -13327,6 +13348,7 @@ msgstr ""
 #: hrms/hr/doctype/overtime_slip/overtime_slip.json
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:54
 #: hrms/hr/report/project_profitability/project_profitability.js:17
 #: hrms/hr/report/project_profitability/project_profitability.py:201
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
@@ -13352,6 +13374,10 @@ msgstr ""
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:27
 msgid "Start date cannot be greater than end date"
+msgstr ""
+
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:50
+msgid "Start date cannot be greater than end date."
 msgstr ""
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:236
@@ -13597,7 +13623,7 @@ msgstr ""
 msgid "Sum of benefit amounts {0} exceeds maximum limit of {1}"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:69
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:108
 msgid "Summarized View"
 msgstr ""
 
@@ -13629,7 +13655,7 @@ msgstr ""
 msgid "Syntax error"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2528
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2530
 msgid "Syntax error in condition: {0} in Income Tax Slab"
 msgstr ""
 
@@ -14218,7 +14244,7 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:132
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:149
 msgid "Total Absent"
 msgstr ""
 
@@ -14312,7 +14338,7 @@ msgstr ""
 msgid "Total Deduction (Company Currency)"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:157
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:174
 msgid "Total Early Exits"
 msgstr ""
 
@@ -14365,7 +14391,7 @@ msgstr ""
 msgid "Total Gross Pay"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:134
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:151
 msgid "Total Holidays"
 msgstr ""
 
@@ -14382,7 +14408,7 @@ msgstr ""
 msgid "Total Interest Amount"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:151
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:168
 msgid "Total Late Entries"
 msgstr ""
 
@@ -14391,7 +14417,7 @@ msgstr ""
 msgid "Total Leave Days"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:131
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:148
 msgid "Total Leaves"
 msgstr ""
 
@@ -14444,7 +14470,7 @@ msgstr ""
 msgid "Total Payout"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:126
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:143
 msgid "Total Present"
 msgstr ""
 
@@ -14830,7 +14856,7 @@ msgstr ""
 msgid "Unmarked Check-in Logs Found"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:140
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:157
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:19
 msgid "Unmarked Days"
 msgstr ""
@@ -15384,7 +15410,7 @@ msgstr ""
 
 #. Option for the 'Salary Paid Per' (Select) field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:29
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:68
 #: hrms/public/js/salary_slip_deductions_report_filters.js:36
 msgid "Year"
 msgstr ""
@@ -15609,7 +15635,7 @@ msgstr ""
 msgid "{0} : {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2524
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2526
 msgid "{0} <br> This error can be due to missing or deleted field."
 msgstr ""
 
@@ -15756,7 +15782,7 @@ msgstr ""
 msgid "{0} {1} {2}?"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2188
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2190
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr ""
 
