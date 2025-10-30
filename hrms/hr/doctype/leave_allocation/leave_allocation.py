@@ -55,9 +55,9 @@ class LeaveAllocation(Document):
 	def validate_leave_allocation_days(self):
 		company = frappe.db.get_value("Employee", self.employee, "company")
 		leave_period = get_leave_period(self.from_date, self.to_date, company)
-		max_leaves_allowed = frappe.db.get_value("Leave Type", self.leave_type, "max_leaves_allowed")
-		allow_over_allocation = frappe.db.get_value("Leave Type", self.leave_type, "allow_over_allocation")
-
+		max_leaves_allowed, allow_over_allocation = frappe.db.get_value(
+			"Leave Type", self.leave_type, ["max_leaves_allowed", "allow_over_allocation"]
+		)
 		if max_leaves_allowed > 0:
 			leave_allocated = 0
 			if leave_period:
