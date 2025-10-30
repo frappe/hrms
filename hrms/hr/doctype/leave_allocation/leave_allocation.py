@@ -56,6 +56,7 @@ class LeaveAllocation(Document):
 		company = frappe.db.get_value("Employee", self.employee, "company")
 		leave_period = get_leave_period(self.from_date, self.to_date, company)
 		max_leaves_allowed = frappe.db.get_value("Leave Type", self.leave_type, "max_leaves_allowed")
+		allow_over_allocation = frappe.db.get_value("Leave Type", self.leave_type, "allow_over_allocation")
 
 		if max_leaves_allowed > 0:
 			leave_allocated = 0
@@ -68,7 +69,7 @@ class LeaveAllocation(Document):
 					exclude_allocation=self.name,
 				)
 			leave_allocated += flt(self.new_leaves_allocated)
-			if leave_allocated > max_leaves_allowed:
+			if leave_allocated > max_leaves_allowed and not allow_over_allocation:
 				frappe.throw(
 					_(
 						"Total allocated leaves are more than maximum allocation allowed for {0} leave type for employee {1} in the period"
