@@ -1,0 +1,32 @@
+{
+ "custom_fields": [],
+ "custom_perms": [],
+ "doctype": "Vehicle Log",
+ "links": [],
+ "property_setters": [
+  {
+   "_assign": null,
+   "_comments": null,
+   "_liked_by": null,
+   "_user_tags": null,
+   "creation": "2025-09-30 09:20:56.122686",
+   "default_value": null,
+   "doc_type": "Vehicle Log",
+   "docstatus": 0,
+   "doctype_or_field": "DocField",
+   "field_name": "naming_series",
+   "idx": 0,
+   "is_system_generated": 1,
+   "modified": "2025-09-30 09:20:56.122686",
+   "modified_by": "Administrator",
+   "module": null,
+   "name": "Vehicle Log-naming_series-options",
+   "owner": "Administrator",
+   "property": "options",
+   "property_type": "Text",
+   "row_name": null,
+   "value": "HR-VLOG-.YYYY.-"
+  }
+ ],
+ "sync_on_migrate": 1
+}

@@ -15,6 +15,7 @@
   "section_break_rxnw",
   "license_plate",
   "employee",
+  "designation",
   "column_break_xfln",
   "department",
   "model",
@@ -330,12 +331,19 @@
    "fieldname": "litre_consumed",
    "fieldtype": "Float",
    "label": "Litre Consumed"
+  },
+  {
+   "fetch_from": "employee.designation",
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
   }
  ],
  "grid_page_length": 50,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-02 09:52:30.661857",
+ "modified": "2025-10-30 15:23:23.816055",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Vehicle Log",
@@ -343,7 +351,6 @@
  "owner": "Administrator",
  "permissions": [
   {
-   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -352,6 +359,19 @@
    "read": 1,
    "report": 1,
    "role": "Fleet Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
    "share": 1,
    "submit": 1,
    "write": 1
