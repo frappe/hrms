@@ -157,6 +157,22 @@ class LeaveEncashment(Document):
 		)
 		self.leave_allocation = allocation.name
 
+	def create_additional_salary(self):
+		additional_salary = frappe.new_doc("Additional Salary")
+		additional_salary.company = frappe.get_value("Employee", self.employee, "company")
+		additional_salary.employee = self.employee
+		additional_salary.currency = self.currency
+		earning_component = frappe.get_value("Leave Type", self.leave_type, "earning_component")
+		if not earning_component:
+			frappe.throw(_("Please set Earning Component for Leave type: {0}.").format(self.leave_type))
+		additional_salary.salary_component = earning_component
+		additional_salary.payroll_date = self.encashment_date
+		additional_salary.amount = self.encashment_amount
+		additional_salary.overwrite_salary_structure_amount = 0
+		additional_salary.ref_doctype = self.doctype
+		additional_salary.ref_docname = self.name
+		additional_salary.submit()	
+
 	def set_encashment_amount(self):
 		if not hasattr(self, "_salary_structure"):
 			self.set_salary_structure()

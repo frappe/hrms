@@ -50,6 +50,7 @@ from hrms.payroll.doctype.payroll_period.payroll_period import (
 from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import (
 	cancel_loan_repayment_entry,
 	make_loan_repayment_entry,
+	process_loan_interest_accruals,
 	set_loan_repayment,
 )
 from hrms.payroll.utils import sanitize_expression
@@ -337,6 +338,7 @@ class SalarySlip(TransactionBase):
 				)
 				self.set_time_sheet()
 				self.pull_sal_struct()
+			process_loan_interest_accruals(self)	
 
 	def set_time_sheet(self):
 		if self.salary_slip_based_on_timesheet:
@@ -1497,7 +1499,7 @@ class SalarySlip(TransactionBase):
 
 		# Structured tax amount
 		eval_locals, default_data = self.get_data_for_eval()
-		self.total_structured_tax_amount = calculate_tax_by_tax_slab(
+		self.total_structured_tax_amount, __ = calculate_tax_by_tax_slab(
 			self.total_taxable_earnings_without_full_tax_addl_components,
 			self.tax_slab,
 			self.whitelisted_globals,
@@ -1572,6 +1574,8 @@ class SalarySlip(TransactionBase):
 		return (taxable_earnings + opening_taxable_earning) - exempted_amount, exempted_amount
 
 	def get_opening_for(self, field_to_select, start_date, end_date):
+		if self._salary_structure_assignment.from_date < self.payroll_period.start_date:
+			return 0
 		return self._salary_structure_assignment.get(field_to_select) or 0
 
 	def get_salary_slip_details(
@@ -2137,6 +2141,7 @@ def get_payroll_payable_account(company, payroll_entry):
 def calculate_tax_by_tax_slab(annual_taxable_earning, tax_slab, eval_globals=None, eval_locals=None):
 	eval_locals.update({"annual_taxable_earning": annual_taxable_earning})
 	tax_amount = 0
+	other_taxes_and_charges = 0
 	for slab in tax_slab.slabs:
 		cond = cstr(slab.condition).strip()
 		if cond and not eval_tax_slab_condition(cond, eval_globals, eval_locals):
@@ -2159,9 +2164,10 @@ def calculate_tax_by_tax_slab(annual_taxable_earning, tax_slab, eval_globals=Non
 			continue
 
 		tax_amount += tax_amount * flt(d.percent) / 100
+		other_taxes_and_charges += tax_amount * flt(d.percent) / 100
+		tax_amount += other_taxes_and_charges
 
-	return tax_amount
-
+	return tax_amount, other_taxes_and_charges
 
 def eval_tax_slab_condition(condition, eval_globals=None, eval_locals=None):
 	if not eval_globals:

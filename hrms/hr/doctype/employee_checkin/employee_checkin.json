@@ -73,6 +73,7 @@
    "in_list_view": 1,
    "label": "Time",
    "permlevel": 1,
+   "read_only_depends_on": "eval:doc.attendance;",
    "reqd": 1
   },
   {
@@ -164,6 +165,14 @@
    "fieldname": "fetch_geolocation",
    "fieldtype": "Button",
    "label": "Fetch Geolocation"
+  },
+  {
+   "default": "0",
+   "fieldname": "offshift",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Off-shift",
+   "read_only": 1
   }
  ],
  "links": [],
