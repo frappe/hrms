@@ -21,13 +21,42 @@ frappe.ui.form.on("Leave Encashment", {
 				},
 			};
 		});
+		frm.set_query("payable_account", function () {
+			if (!frm.doc.employee) {
+				frappe.msgprint(__("Please select employee first"));
+			}
+			let company_currency = erpnext.get_currency(frm.doc.company);
+			let currencies = [company_currency];
+			if (frm.doc.currency && frm.doc.currency != company_currency) {
+				currencies.push(frm.doc.currency);
+			}
+
+			return {
+				filters: {
+					company: frm.doc.company,
+					account_currency: ["in", currencies],
+				},
+			};
+		});
 	},
 	refresh: function (frm) {
 		cur_frm.set_intro("");
 		if (frm.doc.__islocal && !frappe.user_roles.includes("Employee")) {
 			frm.set_intro(__("Fill the form and save it"));
 		}
-
+		if (
+			frm.doc.docstatus === 1 &&
+			frm.doc.pay_via_payment_entry == 1 &&
+			frm.doc.status !== "Paid"
+		) {
+			frm.add_custom_button(
+				__("Payment"),
+				function () {
+					frm.events.make_payment_entry(frm);
+				},
+				__("Create"),
+			);
+		}
 		hrms.leave_utils.add_view_ledger_button(frm);
 	},
 	employee: function (frm) {
@@ -70,6 +99,19 @@ frappe.ui.form.on("Leave Encashment", {
 					frm.set_value("currency", r.message);
 					frm.refresh_fields();
 				}
+			},
+		});
+	},
+	make_payment_entry: function (frm) {
+		return frappe.call({
+			method:"hrms.overrides.employee_payment_entry.get_payment_entry_for_employee",
+			args: {
+				dt: frm.doc.doctype,
+				dn: frm.doc.name,
+			},
+			callback: function (r) {
+				var doclist = frappe.model.sync(r.message);
+				frappe.set_route("Form", doclist[0].doctype, doclist[0].name);
 			},
 		});
 	},

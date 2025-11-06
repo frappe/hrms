@@ -20,6 +20,9 @@ class CheckinRadiusExceededError(frappe.ValidationError):
 
 
 class EmployeeCheckin(Document):
+	def before_validate(self):
+		self.time = get_datetime(self.time).replace(microsecond=0)
+
 	def validate(self):
 		validate_active_employee(self.employee)
 		self.validate_duplicate_log()
@@ -51,7 +54,7 @@ class EmployeeCheckin(Document):
 				msg=_(
 					"An attendance record is linked to this checkin. Please cancel the attendance before modifying time."
 				),
-			)		
+			)
 
 	@frappe.whitelist()
 	def set_geolocation(self):
@@ -65,6 +68,7 @@ class EmployeeCheckin(Document):
 			)
 		):
 			self.shift = None
+			self.offshift = 1
 			return
 
 		if (
@@ -79,6 +83,7 @@ class EmployeeCheckin(Document):
 				)
 			)
 		if not self.attendance:
+			self.offshift = 0
 			self.shift = shift_actual_timings.shift_type.name
 			self.shift_actual_start = shift_actual_timings.actual_start
 			self.shift_actual_end = shift_actual_timings.actual_end
@@ -100,6 +105,7 @@ class EmployeeCheckin(Document):
 				"start_date": ["<=", self.time],
 				"shift_location": ["is", "set"],
 				"docstatus": 1,
+				"status": "Active",
 			},
 			or_filters=[["end_date", ">=", self.time], ["end_date", "is", "not set"]],
 			pluck="shift_location",
@@ -217,21 +223,38 @@ def mark_attendance_and_link_log(
 	elif attendance_status in ("Present", "Absent", "Half Day"):
 		try:
 			frappe.db.savepoint("attendance_creation")
-			attendance = frappe.new_doc("Attendance")
-			attendance.update(
-				{
-					"doctype": "Attendance",
-					"employee": employee,
-					"attendance_date": attendance_date,
-					"status": attendance_status,
-					"working_hours": working_hours,
-					"shift": shift,
-					"late_entry": late_entry,
-					"early_exit": early_exit,
-					"in_time": in_time,
-					"out_time": out_time,
-				}
-			).submit()
+			if attendance := get_existing_half_day_attendance(employee, attendance_date):
+				frappe.db.set_value(
+					"Attendance",
+					attendance.name,
+					{
+						"working_hours": working_hours,
+						"shift": shift,
+						"late_entry": late_entry,
+						"early_exit": early_exit,
+						"in_time": in_time,
+						"out_time": out_time,
+						"half_day_status": "Absent" if attendance_status == "Absent" else "Present",
+						"modify_half_day_status": 0,
+					},
+				)
+			else:
+				attendance = frappe.new_doc("Attendance")
+				attendance.update(
+					{
+						"doctype": "Attendance",
+						"employee": employee,
+						"attendance_date": attendance_date,
+						"status": attendance_status,
+						"working_hours": working_hours,
+						"shift": shift,
+						"late_entry": late_entry,
+						"early_exit": early_exit,
+						"in_time": in_time,
+						"out_time": out_time,
+						"half_day_status": "Absent" if attendance_status == "Half Day" else None,
+					}
+				).submit()
 
 			if attendance_status == "Absent":
 				attendance.add_comment(
@@ -246,6 +269,24 @@ def mark_attendance_and_link_log(
 
 	else:
 		frappe.throw(_("{} is an invalid Attendance Status.").format(attendance_status))
+
+
+def get_existing_half_day_attendance(employee, attendance_date):
+	attendance_name = frappe.db.exists(
+		"Attendance",
+		{
+			"employee": employee,
+			"attendance_date": attendance_date,
+			"status": "Half Day",
+			"modify_half_day_status": 1,
+			"leave_type": ("is", "set"),
+		},
+	)
+
+	if attendance_name:
+		attendance_doc = frappe.get_doc("Attendance", attendance_name)
+		return attendance_doc
+	return None
 
 
 def calculate_working_hours(logs, check_in_out_type, working_hours_calc_type):

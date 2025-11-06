@@ -25,6 +25,7 @@
   "shift_timings_section",
   "shift_start",
   "shift_end",
+  "offshift",
   "column_break_vyyt",
   "shift_actual_start",
   "shift_actual_end"

@@ -9,17 +9,21 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 
 from hrms.hr.doctype.leave_allocation.leave_allocation import get_unused_leaves
-from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import process_expired_allocation
+from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import (
+    process_expired_allocation,
+)
 from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
 from hrms.hr.doctype.leave_policy.test_leave_policy import create_leave_policy
 from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
-	create_assignment_for_multiple_employees,
+    create_assignment_for_multiple_employees,
 )
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
-	make_holiday_list,
-	make_leave_application,
+    make_holiday_list,
+    make_leave_application,
 )
-from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+    make_salary_structure,
+)
 from hrms.tests.test_utils import get_first_sunday
 
 test_records = frappe.get_test_records("Leave Type")
