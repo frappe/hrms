@@ -122,7 +122,8 @@
    "label": "Attendance Date",
    "oldfieldname": "attendance_date",
    "oldfieldtype": "Date",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fetch_from": "employee.company",
