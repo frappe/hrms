@@ -520,8 +520,7 @@ def create_additional_leave_ledger_entry(allocation, leaves, date):
 
 
 def check_effective_date(from_date, today, frequency, allocate_on_day):
-	from_date = get_datetime(from_date)
-	today = frappe.flags.current_date or get_datetime(today)
+	from_date = getdate(from_date)
 
 	expected_date = {
 		"Monthly": {
