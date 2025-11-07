@@ -115,7 +115,7 @@ class TestExpenseClaim(HRMSTestSuite):
 		self.assertEqual(expense_claim.status, "Unpaid")
 
 	def test_expense_claim_status_as_payment_allocation_using_pr(self):
-		# Allocation via Payment Reconciliation Tool for mutiple employees using journal entry
+		# Allocation via Payment Reconciliation Tool for multiple employees using journal entry
 		payable_account = get_payable_account(company_name)
 		# Make employee
 		employee = frappe.db.get_value(

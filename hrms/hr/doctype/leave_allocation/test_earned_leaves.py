@@ -605,7 +605,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		employee = frappe.get_doc("Employee", "_T-Employee-00002")
 
-		# created policy assignment at the begining of the year so allocated leaces should be 0
+		# created policy assignment at the beginning of the year so allocated leaces should be 0
 		assignment = make_policy_assignment(
 			employee,
 			allocate_on_day="First Day",
