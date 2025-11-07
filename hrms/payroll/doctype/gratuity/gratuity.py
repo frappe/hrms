@@ -57,6 +57,7 @@ class Gratuity(AccountsController):
 
 	def on_cancel(self):
 		self.ignore_linked_doctypes = ["GL Entry"]
+		self.ignore_linked_doctypes = ["GL Entry", "Payment Ledger Entry"]
 		self.create_gl_entries(cancel=True)
 		self.set_status(update=True)
 

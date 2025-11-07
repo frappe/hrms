@@ -79,7 +79,7 @@ const reloadOptions = (searchTextVal) => {
 const handleQueryUpdate = debounce((newQuery) => {
 	const val = newQuery || ""
 	if (searchText.value === val) return
-	searchText.val = val
+	searchText.value = val
 	reloadOptions(val)
 }, 300)
 
