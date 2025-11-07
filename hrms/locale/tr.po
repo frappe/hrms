@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-10-19 09:34+0000\n"
-"PO-Revision-Date: 2025-10-23 19:46\n"
+"POT-Creation-Date: 2025-11-02 09:33+0000\n"
+"PO-Revision-Date: 2025-11-03 22:17\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -407,7 +407,7 @@ msgstr "Gelmedi"
 
 #. Label of the absent_days (Float) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:180
+#: hrms/payroll/report/salary_register/salary_register.py:185
 msgid "Absent Days"
 msgstr "Devamsızlık Günleri"
 
@@ -2227,7 +2227,7 @@ msgstr "Bonus Ödeme Tarihi bir tarih olamaz"
 #: hrms/payroll/report/salary_payments_based_on_payment_mode/salary_payments_based_on_payment_mode.py:29
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:21
 #: hrms/payroll/report/salary_register/salary_register.js:77
-#: hrms/payroll/report/salary_register/salary_register.py:134
+#: hrms/payroll/report/salary_register/salary_register.py:139
 #: hrms/public/js/salary_slip_deductions_report_filters.js:48
 msgid "Branch"
 msgstr "Görev Bölümü"
@@ -2787,7 +2787,7 @@ msgstr "Komisyon"
 #: hrms/payroll/report/bank_remittance/bank_remittance.js:9
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.js:9
 #: hrms/payroll/report/salary_register/salary_register.js:39
-#: hrms/payroll/report/salary_register/salary_register.py:155
+#: hrms/payroll/report/salary_register/salary_register.py:160
 #: hrms/public/js/salary_slip_deductions_report_filters.js:7
 msgid "Company"
 msgstr "Şirket"
@@ -3257,7 +3257,7 @@ msgstr "Personelin Performans Geri Bildirimi ve Öz Değerlendirme sırasında d
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/payroll/report/bank_remittance/bank_remittance.py:51
 #: hrms/payroll/report/salary_register/salary_register.js:26
-#: hrms/payroll/report/salary_register/salary_register.py:249
+#: hrms/payroll/report/salary_register/salary_register.py:254
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Currency"
 msgstr "Para Birimi"
@@ -3491,7 +3491,7 @@ msgstr "Doğum Tarihi"
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.json
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.py:621
-#: hrms/payroll/report/salary_register/salary_register.py:128 hrms/setup.py:396
+#: hrms/payroll/report/salary_register/salary_register.py:133 hrms/setup.py:396
 msgid "Date of Joining"
 msgstr "İşe Başlama Tarihi"
 
@@ -3571,8 +3571,8 @@ msgstr "Gönderilmeyen Vergi Muafiyeti Kanıtı için Vergi İndirimi"
 
 #. Option for the 'Type' (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
-#: hrms/payroll/report/salary_register/salary_register.py:85
-#: hrms/payroll/report/salary_register/salary_register.py:91
+#: hrms/payroll/report/salary_register/salary_register.py:90
+#: hrms/payroll/report/salary_register/salary_register.py:96
 msgid "Deduction"
 msgstr "Kesinti"
 
@@ -3805,7 +3805,7 @@ msgstr "Teslimat Yolculuğu"
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.js:33
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.py:608
 #: hrms/payroll/report/salary_register/salary_register.js:56
-#: hrms/payroll/report/salary_register/salary_register.py:141
+#: hrms/payroll/report/salary_register/salary_register.py:146
 #: hrms/public/js/salary_slip_deductions_report_filters.js:42 hrms/setup.py:402
 #: hrms/templates/generators/job_opening.html:87
 msgid "Department"
@@ -3983,7 +3983,7 @@ msgstr "İş İlanının Açıklaması"
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.py:615
 #: hrms/payroll/report/salary_register/salary_register.js:70
-#: hrms/payroll/report/salary_register/salary_register.py:148
+#: hrms/payroll/report/salary_register/salary_register.py:153
 msgid "Designation"
 msgstr "Görev Tanımı"
 
@@ -4233,8 +4233,8 @@ msgstr "Kazanılmış İzinler, bir Personelin şirkette belirli bir süre çal�
 
 #. Option for the 'Type' (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
-#: hrms/payroll/report/salary_register/salary_register.py:85
-#: hrms/payroll/report/salary_register/salary_register.py:91
+#: hrms/payroll/report/salary_register/salary_register.py:90
+#: hrms/payroll/report/salary_register/salary_register.py:96
 msgid "Earning"
 msgstr "Kazanma"
 
@@ -4527,7 +4527,7 @@ msgstr "Çalışan tarafından tercih edilen e-posta tabanlı çalışana e-post
 #: hrms/payroll/report/provident_fund_deductions/provident_fund_deductions.py:32
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:35
 #: hrms/payroll/report/salary_register/salary_register.js:32
-#: hrms/payroll/report/salary_register/salary_register.py:115
+#: hrms/payroll/report/salary_register/salary_register.py:120
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:17
 msgid "Employee"
 msgstr "Personel"
@@ -4954,7 +4954,7 @@ msgstr ""
 #: hrms/payroll/report/professional_tax_deductions/professional_tax_deductions.py:28
 #: hrms/payroll/report/provident_fund_deductions/provident_fund_deductions.py:39
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:28
-#: hrms/payroll/report/salary_register/salary_register.py:122
+#: hrms/payroll/report/salary_register/salary_register.py:127
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:18
 msgid "Employee Name"
 msgstr "Personel Adı"
@@ -5446,7 +5446,7 @@ msgstr ""
 #: hrms/payroll/doctype/payroll_period/payroll_period.json
 #: hrms/payroll/doctype/payroll_period_date/payroll_period_date.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:168
+#: hrms/payroll/report/salary_register/salary_register.py:173
 msgid "End Date"
 msgstr "Bitiş Tarihi"
 
@@ -6815,7 +6815,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/report/income_tax_deductions/income_tax_deductions.py:54
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:42
-#: hrms/payroll/report/salary_register/salary_register.py:206
+#: hrms/payroll/report/salary_register/salary_register.py:211
 msgid "Gross Pay"
 msgstr "Brüt Ödeme"
 
@@ -8636,7 +8636,7 @@ msgstr "{0} Türü Ayrılma özelliği değiştirilemez"
 
 #. Label of the leave_without_pay (Float) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:174 hrms/setup.py:374
+#: hrms/payroll/report/salary_register/salary_register.py:179 hrms/setup.py:374
 #: hrms/setup.py:375
 msgid "Leave Without Pay"
 msgstr "Ücretsiz izin"
@@ -8816,7 +8816,7 @@ msgstr "Avans Hesabı"
 msgid "Loan Product"
 msgstr ""
 
-#: hrms/payroll/report/salary_register/salary_register.py:235 hrms/setup.py:765
+#: hrms/payroll/report/salary_register/salary_register.py:233 hrms/setup.py:765
 msgid "Loan Repayment"
 msgstr ""
 
@@ -9413,7 +9413,7 @@ msgstr "Adlandırma Serisi"
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:49
-#: hrms/payroll/report/salary_register/salary_register.py:242
+#: hrms/payroll/report/salary_register/salary_register.py:247
 msgid "Net Pay"
 msgstr "Net Ödeme"
 
@@ -10441,7 +10441,7 @@ msgstr "Ödeme Tarihi"
 #. Label of the payment_days_tab (Tab Break) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:186
+#: hrms/payroll/report/salary_register/salary_register.py:191
 msgid "Payment Days"
 msgstr "Ödeme Günleri"
 
@@ -12311,7 +12311,7 @@ msgstr "Maaş Bordrosu"
 msgid "Salary Slip Based on Timesheet"
 msgstr "Maaş Yapısını Devamlılık Tablosuna Göre Oluştur"
 
-#: hrms/payroll/report/salary_register/salary_register.py:108
+#: hrms/payroll/report/salary_register/salary_register.py:113
 msgid "Salary Slip ID"
 msgstr "Maaş kayma kimliği"
 
@@ -13373,7 +13373,7 @@ msgstr "Başlangıç"
 #: hrms/payroll/doctype/payroll_period/payroll_period.json
 #: hrms/payroll/doctype/payroll_period_date/payroll_period_date.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:162
+#: hrms/payroll/report/salary_register/salary_register.py:167
 msgid "Start Date"
 msgstr "Başlangıç Tarihi"
 
@@ -14347,7 +14347,7 @@ msgstr "Toplam Beyan Tutarı"
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 #: hrms/payroll/report/salary_payments_based_on_payment_mode/salary_payments_based_on_payment_mode.py:148
-#: hrms/payroll/report/salary_register/salary_register.py:228
+#: hrms/payroll/report/salary_register/salary_register.py:240
 msgid "Total Deduction"
 msgstr "Toplam Kesinti"
 

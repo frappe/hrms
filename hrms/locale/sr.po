@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-10-19 09:34+0000\n"
-"PO-Revision-Date: 2025-10-23 19:46\n"
+"POT-Creation-Date: 2025-11-02 09:33+0000\n"
+"PO-Revision-Date: 2025-11-03 22:17\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Serbian (Cyrillic)\n"
 "MIME-Version: 1.0\n"
@@ -407,7 +407,7 @@ msgstr "Изостанак"
 
 #. Label of the absent_days (Float) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:180
+#: hrms/payroll/report/salary_register/salary_register.py:185
 msgid "Absent Days"
 msgstr "Дани изостанака"
 
@@ -2227,7 +2227,7 @@ msgstr "Датум исплате бонуса не може бити у про�
 #: hrms/payroll/report/salary_payments_based_on_payment_mode/salary_payments_based_on_payment_mode.py:29
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:21
 #: hrms/payroll/report/salary_register/salary_register.js:77
-#: hrms/payroll/report/salary_register/salary_register.py:134
+#: hrms/payroll/report/salary_register/salary_register.py:139
 #: hrms/public/js/salary_slip_deductions_report_filters.js:48
 msgid "Branch"
 msgstr "Филијала"
@@ -2788,7 +2788,7 @@ msgstr "Провизија"
 #: hrms/payroll/report/bank_remittance/bank_remittance.js:9
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.js:9
 #: hrms/payroll/report/salary_register/salary_register.js:39
-#: hrms/payroll/report/salary_register/salary_register.py:155
+#: hrms/payroll/report/salary_register/salary_register.py:160
 #: hrms/public/js/salary_slip_deductions_report_filters.js:7
 msgid "Company"
 msgstr "Компанија"
@@ -3258,7 +3258,7 @@ msgstr "Критеријуми на основу којих запослена �
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/payroll/report/bank_remittance/bank_remittance.py:51
 #: hrms/payroll/report/salary_register/salary_register.js:26
-#: hrms/payroll/report/salary_register/salary_register.py:249
+#: hrms/payroll/report/salary_register/salary_register.py:254
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Currency"
 msgstr "Валута"
@@ -3492,7 +3492,7 @@ msgstr "Датум рођења"
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.json
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.py:621
-#: hrms/payroll/report/salary_register/salary_register.py:128 hrms/setup.py:396
+#: hrms/payroll/report/salary_register/salary_register.py:133 hrms/setup.py:396
 msgid "Date of Joining"
 msgstr "Датум запослења"
 
@@ -3572,8 +3572,8 @@ msgstr "Одбити порез уколико доказ о пореском о
 
 #. Option for the 'Type' (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
-#: hrms/payroll/report/salary_register/salary_register.py:85
-#: hrms/payroll/report/salary_register/salary_register.py:91
+#: hrms/payroll/report/salary_register/salary_register.py:90
+#: hrms/payroll/report/salary_register/salary_register.py:96
 msgid "Deduction"
 msgstr "Одбитак"
 
@@ -3806,7 +3806,7 @@ msgstr "Рута испоруке"
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.js:33
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.py:608
 #: hrms/payroll/report/salary_register/salary_register.js:56
-#: hrms/payroll/report/salary_register/salary_register.py:141
+#: hrms/payroll/report/salary_register/salary_register.py:146
 #: hrms/public/js/salary_slip_deductions_report_filters.js:42 hrms/setup.py:402
 #: hrms/templates/generators/job_opening.html:87
 msgid "Department"
@@ -3984,7 +3984,7 @@ msgstr "Опис отвореног радног места"
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.py:615
 #: hrms/payroll/report/salary_register/salary_register.js:70
-#: hrms/payroll/report/salary_register/salary_register.py:148
+#: hrms/payroll/report/salary_register/salary_register.py:153
 msgid "Designation"
 msgstr "Позиција"
 
@@ -4234,8 +4234,8 @@ msgstr "Стечена одсуства представљају право за
 
 #. Option for the 'Type' (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
-#: hrms/payroll/report/salary_register/salary_register.py:85
-#: hrms/payroll/report/salary_register/salary_register.py:91
+#: hrms/payroll/report/salary_register/salary_register.py:90
+#: hrms/payroll/report/salary_register/salary_register.py:96
 msgid "Earning"
 msgstr "Приход"
 
@@ -4528,7 +4528,7 @@ msgstr "Обрачунски листић запосленом лицу на о�
 #: hrms/payroll/report/provident_fund_deductions/provident_fund_deductions.py:32
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:35
 #: hrms/payroll/report/salary_register/salary_register.js:32
-#: hrms/payroll/report/salary_register/salary_register.py:115
+#: hrms/payroll/report/salary_register/salary_register.py:120
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:17
 msgid "Employee"
 msgstr "Запослено лице"
@@ -4955,7 +4955,7 @@ msgstr "Зајам запосленог лица"
 #: hrms/payroll/report/professional_tax_deductions/professional_tax_deductions.py:28
 #: hrms/payroll/report/provident_fund_deductions/provident_fund_deductions.py:39
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:28
-#: hrms/payroll/report/salary_register/salary_register.py:122
+#: hrms/payroll/report/salary_register/salary_register.py:127
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:18
 msgid "Employee Name"
 msgstr "Име запосленог лица"
@@ -5447,7 +5447,7 @@ msgstr "Завршетак"
 #: hrms/payroll/doctype/payroll_period/payroll_period.json
 #: hrms/payroll/doctype/payroll_period_date/payroll_period_date.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:168
+#: hrms/payroll/report/salary_register/salary_register.py:173
 msgid "End Date"
 msgstr "Датум завршетка"
 
@@ -6816,7 +6816,7 @@ msgstr "Бруто приходи"
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/report/income_tax_deductions/income_tax_deductions.py:54
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:42
-#: hrms/payroll/report/salary_register/salary_register.py:206
+#: hrms/payroll/report/salary_register/salary_register.py:211
 msgid "Gross Pay"
 msgstr "Бруто зарада"
 
@@ -8637,7 +8637,7 @@ msgstr "Врста одсуства {0} није предмет исплате"
 
 #. Label of the leave_without_pay (Float) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:174 hrms/setup.py:374
+#: hrms/payroll/report/salary_register/salary_register.py:179 hrms/setup.py:374
 #: hrms/setup.py:375
 msgid "Leave Without Pay"
 msgstr "Одсуство без накнаде"
@@ -8817,7 +8817,7 @@ msgstr "Рачун зајма"
 msgid "Loan Product"
 msgstr "Кредитни производ"
 
-#: hrms/payroll/report/salary_register/salary_register.py:235 hrms/setup.py:765
+#: hrms/payroll/report/salary_register/salary_register.py:233 hrms/setup.py:765
 msgid "Loan Repayment"
 msgstr "Отплата зајма"
 
@@ -9414,7 +9414,7 @@ msgstr "Серија именовања"
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:49
-#: hrms/payroll/report/salary_register/salary_register.py:242
+#: hrms/payroll/report/salary_register/salary_register.py:247
 msgid "Net Pay"
 msgstr "Нето зарада"
 
@@ -10442,7 +10442,7 @@ msgstr "Датум уплате"
 #. Label of the payment_days_tab (Tab Break) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:186
+#: hrms/payroll/report/salary_register/salary_register.py:191
 msgid "Payment Days"
 msgstr "Дани обрачуна"
 
@@ -12312,7 +12312,7 @@ msgstr "Обрачунски листић"
 msgid "Salary Slip Based on Timesheet"
 msgstr "Обрачунски листић заснован на евиденцији времена"
 
-#: hrms/payroll/report/salary_register/salary_register.py:108
+#: hrms/payroll/report/salary_register/salary_register.py:113
 msgid "Salary Slip ID"
 msgstr "ИД обрачунског листића"
 
@@ -13374,7 +13374,7 @@ msgstr "Почетак"
 #: hrms/payroll/doctype/payroll_period/payroll_period.json
 #: hrms/payroll/doctype/payroll_period_date/payroll_period_date.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:162
+#: hrms/payroll/report/salary_register/salary_register.py:167
 msgid "Start Date"
 msgstr "Датум почетка"
 
@@ -14348,7 +14348,7 @@ msgstr "Укупан пријављени износ"
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 #: hrms/payroll/report/salary_payments_based_on_payment_mode/salary_payments_based_on_payment_mode.py:148
-#: hrms/payroll/report/salary_register/salary_register.py:228
+#: hrms/payroll/report/salary_register/salary_register.py:240
 msgid "Total Deduction"
 msgstr "Укупан износ одбитка"
 
