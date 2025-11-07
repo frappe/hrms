@@ -20,6 +20,7 @@
   "company",
   "department",
   "attendance_request",
+  "half_day_status",
   "details_section",
   "shift",
   "in_time",
@@ -202,6 +203,14 @@
   {
    "fieldname": "column_break_18",
    "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.status==\"Half Day\";",
+   "fieldname": "half_day_status",
+   "fieldtype": "Select",
+   "label": "Status for Other Half",
+   "no_copy": 1,
+   "options": "\nPresent\nAbsent"
   }
  ],
  "icon": "fa fa-ok",

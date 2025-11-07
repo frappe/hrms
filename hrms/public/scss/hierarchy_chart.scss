@@ -308,3 +308,18 @@
 	flex-direction: column;
 	align-items: center;
 }
+
+[data-theme="dark"] {
+	.node-card {
+		background-color: var(--gray-800);
+		color: var(--text-on-gray);
+
+		.avatar-frame {
+			background-color: var(--gray-700);
+		}
+
+		.node-edit-icon > .icon {
+			fill: var(--gray-700);
+		}
+	}
+}

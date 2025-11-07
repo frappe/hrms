@@ -91,6 +91,7 @@ class Attendance(Document):
                 & (Attendance.docstatus < 2)
                 & (Attendance.attendance_date == self.attendance_date)
                 & (Attendance.name != self.name)
+                & (Attendance.half_day_status.isnull())
             )
             .for_update()
         )
