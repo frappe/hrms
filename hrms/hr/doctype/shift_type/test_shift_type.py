@@ -1038,6 +1038,45 @@ class TestShiftType(FrappeTestCase):
         self.assertRaises(frappe.ValidationError, shift_type.save)
 
 
+def test_circular_shift_times(self):
+    # single day shift
+    shift_type = frappe.get_doc(
+        {
+            "doctype": "Shift Type",
+            "__newname": "Test Shift Validation",
+            "start_time": "09:00:00",
+            "end_time": "18:00:00",
+            "enable_auto_attendance": 1,
+            "determine_check_in_and_check_out": "Alternating entries as IN and OUT during the same shift",
+            "working_hours_calculation_based_on": "First Check-in and Last Check-out",
+            "begin_check_in_before_shift_start_time": 500,
+            "allow_check_out_after_shift_end_time": 500,
+            "process_attendance_after": add_days(getdate(), -2),
+            "last_sync_of_checkin": now_datetime() + timedelta(days=1),
+        }
+    )
+
+    self.assertRaises(frappe.ValidationError, shift_type.save)
+
+    # two day shift
+    shift_type = frappe.get_doc(
+        {
+            "doctype": "Shift Type",
+            "__newname": "Test Shift Validation",
+            "start_time": "18:00:00",
+            "end_time": "03:00:00",
+            "enable_auto_attendance": 1,
+            "determine_check_in_and_check_out": "Alternating entries as IN and OUT during the same shift",
+            "working_hours_calculation_based_on": "First Check-in and Last Check-out",
+            "begin_check_in_before_shift_start_time": 500,
+            "allow_check_out_after_shift_end_time": 500,
+            "process_attendance_after": add_days(getdate(), -2),
+            "last_sync_of_checkin": now_datetime() + timedelta(days=1),
+        }
+    )
+    self.assertRaises(frappe.ValidationError, shift_type.save)
+
+
 def setup_shift_type(**args):
     args = frappe._dict(args)
     date = getdate()

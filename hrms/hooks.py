@@ -162,6 +162,7 @@ override_doctype_class = {
 doc_events = {
     "User": {
         "validate": "erpnext.setup.doctype.employee.employee.validate_employee_role",
+        "on_update": "erpnext.setup.doctype.employee.employee.update_user_permissions",
     },
     "Company": {
         "validate": "hrms.overrides.company.validate_default_accounts",
@@ -256,6 +257,7 @@ accounting_dimension_doctypes = [
     "Expense Claim Detail",
     "Expense Taxes and Charges",
     "Payroll Entry",
+    "Leave Encashment",
 ]
 
 bank_reconciliation_doctypes = ["Expense Claim"]

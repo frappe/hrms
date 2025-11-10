@@ -190,7 +190,7 @@
    "format": "{} Pending",
    "label": "Appraisal",
    "link_to": "Appraisal",
-   "stats_filter": "{\"status\":[\"=\",\"Draft\"]}",
+   "stats_filter": "[[\"Appraisal\",\"docstatus\",\"=\",\"0\",false]]",
    "type": "DocType"
   },
   {
