@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-11-02 09:33+0000\n"
-"PO-Revision-Date: 2025-11-03 22:17\n"
+"POT-Creation-Date: 2025-11-09 09:34+0000\n"
+"PO-Revision-Date: 2025-11-10 11:03\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Serbian (Latin)\n"
 "MIME-Version: 1.0\n"
@@ -2468,7 +2468,7 @@ msgid "Check Vacancies On Job Offer Creation"
 msgstr "Provera nepopunjenih radnih mesta prilikom kreiranje ponude za posao"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:370
-#: hrms/hr/utils.py:865
+#: hrms/hr/utils.py:864
 msgid "Check {0} for more details"
 msgstr "Proverite {0} za više detalja"
 
@@ -3183,7 +3183,7 @@ msgstr "Kreiranje {0}..."
 msgid "Creation Date"
 msgstr "Datum kreiranja"
 
-#: hrms/hr/utils.py:874
+#: hrms/hr/utils.py:873
 msgid "Creation Failed"
 msgstr "Kreiranje je neuspešno"
 
@@ -5540,7 +5540,7 @@ msgid "Error"
 msgstr "Greška"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:372
-#: hrms/hr/utils.py:867
+#: hrms/hr/utils.py:866
 msgid "Error Log"
 msgstr "Evidencija grešaka"
 
@@ -6020,7 +6020,7 @@ msgstr "Izvoz..."
 msgid "Failed"
 msgstr "Neuspešno"
 
-#: hrms/hr/utils.py:862
+#: hrms/hr/utils.py:861
 msgid "Failed to create/submit {0} for employees:"
 msgstr "Neuspešno kreiranje/podnošenje {0} za zaposlena lica:"
 
@@ -8826,7 +8826,7 @@ msgstr "Otplata zajma"
 msgid "Loan Repayment Entry"
 msgstr "Unos otplate zajma"
 
-#: hrms/hr/utils.py:749
+#: hrms/hr/utils.py:748
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr "Zajam ne može biti otplaćen od zarade zaposlenog lica {0} jer se zarada obračunava u valuti {1}"
 
@@ -9214,7 +9214,7 @@ msgstr "Minimalni broj radnih dana od datuma zaposlenja neophodan za podnošenje
 msgid "Missing Advance Account"
 msgstr "Nedostaje akontacioni račun"
 
-#: hrms/hr/utils.py:846
+#: hrms/hr/utils.py:845
 msgid "Missing Field"
 msgstr "Nedostaje polje"
 
@@ -9521,7 +9521,7 @@ msgstr "Nije pronađeno zaposleno lice"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "Nije pronađeno zaposleno lice za unetu vrednost polja. '{}': {}"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hrms/hr/utils.py:852
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hrms/hr/utils.py:851
 msgid "No Employees Selected"
 msgstr "Nije izabrano nijedno zaposleno lice"
 
@@ -10341,7 +10341,7 @@ msgstr "Matični cilj"
 msgid "Part-time"
 msgstr "Nepuno radno vreme"
 
-#: hrms/hr/utils.py:871 hrms/public/js/utils/index.js:154
+#: hrms/hr/utils.py:870 hrms/public/js/utils/index.js:154
 msgid "Partial Success"
 msgstr "Delimično uspešno"
 
@@ -10850,7 +10850,7 @@ msgstr "Molimo Vas da izaberete raspored smena i datume dodeljivanja."
 msgid "Please select Shift Type and assignment date(s)."
 msgstr "Molimo Vas da izaberete vrstu smene i datume dodeljivanja."
 
-#: hrms/hr/utils.py:743
+#: hrms/hr/utils.py:742
 msgid "Please select a Company"
 msgstr "Molimo Vas da izaberete kompaniju"
 
@@ -10871,7 +10871,7 @@ msgstr "Molimo Vas da izaberete CSV fajl"
 msgid "Please select a date."
 msgstr "Molimo Vas da izaberete datum."
 
-#: hrms/hr/utils.py:740
+#: hrms/hr/utils.py:739
 msgid "Please select an Applicant"
 msgstr "Molimo Vas da izaberete kandidata"
 
@@ -10879,7 +10879,7 @@ msgstr "Molimo Vas da izaberete kandidata"
 msgid "Please select at least one Shift Request to perform this action."
 msgstr "Molimo Vas da izaberete barem jedan zahtev za radnu smenu da biste izvršili ovu radnju."
 
-#: hrms/hr/utils.py:851
+#: hrms/hr/utils.py:850
 msgid "Please select at least one employee to perform this action."
 msgstr "Molimo Vas da izaberete najmanje jedno zaposleno lice za ovu radnju."
 
@@ -11768,7 +11768,7 @@ msgstr "Ponovo otvori"
 msgid "Repay From Salary"
 msgstr "Otplata iz zarade"
 
-#: hrms/hr/utils.py:755
+#: hrms/hr/utils.py:754
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "Otplata iz zarade može se izabrati samo za zajmove na određeni rok"
 
@@ -12950,7 +12950,7 @@ msgstr "Poravnato"
 msgid "Setup"
 msgstr "Postavke"
 
-#: hrms/hr/utils.py:703
+#: hrms/hr/utils.py:702
 msgid "Shared document with the user {0} with 'Submit' permission"
 msgstr "Dokument je sa korisnikom {0} sa dozvolom za 'Podnesi'"
 
@@ -13618,13 +13618,13 @@ msgstr "Podružnice su već planirale {1} nepopunjenih radnih mesta sa budžetom
 #: frontend/src/components/RequestActionSheet.vue:309
 #: frontend/src/views/AppSettings.vue:95
 #: hrms/hr/doctype/employee_referral/employee_referral.py:54
-#: hrms/hr/utils.py:876
+#: hrms/hr/utils.py:875
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1592
 #: hrms/public/js/utils/index.js:139
 msgid "Success"
 msgstr "Uspeh"
 
-#: hrms/hr/utils.py:879
+#: hrms/hr/utils.py:878
 msgid "Successfully created {0} for employees:"
 msgstr "Uspešno je kreiran {0} za zaposlena lica:"
 
@@ -14750,7 +14750,7 @@ msgstr "Vrsta transakcije"
 msgid "Transactions"
 msgstr "Transakcije"
 
-#: hrms/hr/utils.py:726
+#: hrms/hr/utils.py:725
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr "Transakcije ne mogu biti kreirane za neaktivno zaposleno lice {0}."
 
@@ -15748,7 +15748,7 @@ msgstr "{0} nema dozvolu da podnese povratnu informaciju za intervju: {1}"
 msgid "{0} is not in Optional Holiday List"
 msgstr "{0} se ne nalazi na listi opcionih praznika"
 
-#: hrms/hr/utils.py:846
+#: hrms/hr/utils.py:845
 msgid "{0} is required"
 msgstr "{0} je obavezan"
 
