@@ -13,6 +13,7 @@
 <script setup>
 import { IonPage } from "@ionic/vue"
 import ListView from "@/components/ListView.vue"
+import { inject } from "vue"
 
 const __ = inject("$translate")
 const TAB_BUTTONS = ["My Advances", "Team Advances"] // __("My Advances"), __("Team Advances")
@@ -38,8 +39,7 @@ const STATUS_FILTER_OPTIONS = [
 	"Returned",
 	"Partly Claimed and Returned",
 	"Cancelled",
-]
-// __("Draft"), __("Paid"), __("Unpaid"), __("Claimed"), __("Returned"), __("Partly Claimed and Returned"), __("Cancelled")
+] // __("Draft"), __("Paid"), __("Unpaid"), __("Claimed"), __("Returned"), __("Partly Claimed and Returned"), __("Cancelled")
 const FILTER_CONFIG = [
 	{
 		fieldname: "status",

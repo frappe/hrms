@@ -257,7 +257,6 @@ accounting_dimension_doctypes = [
     "Expense Claim Detail",
     "Expense Taxes and Charges",
     "Payroll Entry",
-    "Leave Encashment",
 ]
 
 bank_reconciliation_doctypes = ["Expense Claim"]
@@ -277,6 +276,7 @@ regional_overrides = {
     "India": {
         "hrms.hr.utils.calculate_annual_eligible_hra_exemption": "hrms.regional.india.utils.calculate_annual_eligible_hra_exemption",
         "hrms.hr.utils.calculate_hra_exemption_for_period": "hrms.regional.india.utils.calculate_hra_exemption_for_period",
+        "hrms.hr.utils.calculate_tax_with_marginal_relief": "hrms.regional.india.utils.calculate_tax_with_marginal_relief",
     },
 }
 

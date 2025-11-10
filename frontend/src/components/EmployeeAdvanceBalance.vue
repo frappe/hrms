@@ -28,6 +28,7 @@
 
 <script setup>
 import EmployeeAdvanceItem from "@/components/EmployeeAdvanceItem.vue"
+import { inject } from "vue"
 
 const __ = inject("$translate")
 const props = defineProps({
