@@ -22,7 +22,7 @@ hrms.HierarchyChart = class {
 	setup_page_style() {
 		this.page.main.css({
 			"min-height": "300px",
-			"max-height": "600px",
+			"max-height": "700px",
 			overflow: "auto",
 			position: "relative",
 		});

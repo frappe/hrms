@@ -3,7 +3,7 @@
 		<template #body>
 			<div class="flex flex-col items-center my-7 p-4">
 				<div class="flex flex-col w-full bg-white rounded py-5 px-3.5 gap-5">
-					<div v-if="lastSalarySlip" class="flex flex-col w-full gap-1.5">
+					<div v-if="lastSalarySlip && lastSalarySlip.year_to_date" class="flex flex-col w-full gap-1.5">
 						<span class="text-gray-600 text-sm font-medium leading-5">
 							{{ __("Year To Date") }}
 						</span>
@@ -47,7 +47,7 @@
 							</router-link>
 						</div>
 					</div>
-					<EmptyState message="No salary slips found" v-else />
+					<EmptyState :message="__('No salary slips found')" v-else />
 				</div>
 			</div>
 		</template>
@@ -70,6 +70,7 @@ let periodsByName = ref({})
 const employee = inject("$employee")
 const dayjs = inject("$dayjs")
 const socket = inject("$socket")
+const __ = inject("$translate")
 
 const payrollPeriods = createListResource({
 	doctype: "Payroll Period",
