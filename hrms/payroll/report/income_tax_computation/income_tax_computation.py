@@ -11,7 +11,7 @@ from hrms.payroll.doctype.salary_slip.salary_slip import calculate_tax_by_tax_sl
 
 
 def execute(filters=None):
-	return IncomeTaxComputationReport(filters).run()
+    return IncomeTaxComputationReport(filters).run()
 
 
 class IncomeTaxComputationReport:
