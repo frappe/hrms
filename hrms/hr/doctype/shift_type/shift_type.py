@@ -8,7 +8,15 @@ from itertools import groupby
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cint, create_batch, get_datetime, get_time, getdate
+from frappe.utils import (
+    add_days,
+    cint,
+    create_batch,
+    get_datetime,
+    get_time,
+    getdate,
+    time_diff,
+)
 
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
@@ -30,6 +38,67 @@ EMPLOYEE_CHUNK_SIZE = 50
 
 class ShiftType(Document):
     def validate(self):
+        start = get_time(self.start_time)
+        end = get_time(self.end_time)
+        self.validate_same_start_and_end(start, end)
+        self.validate_circular_shift(start, end)
+        self.validate_unlinked_logs()
+
+    def validate_same_start_and_end(
+        self, start_time: datetime.time, end_time: datetime.time
+    ):
+        if start_time == end_time:
+            frappe.throw(
+                title=_("Invalid Shift Times"),
+                msg=_("Start time and end time cannot be same."),
+            )
+
+    def validate_circular_shift(
+        self, start_time: datetime.time, end_time: datetime.time
+    ):
+        shift_start, shift_end = self.get_shift_start_and_shift_end(
+            start_time, end_time
+        )
+        if self.get_total_shift_duration_in_minutes(shift_start, shift_end) >= 1440:
+            max_label = self.get_max_shift_buffer_label()
+            frappe.throw(
+                title=_("Invalid Shift Times"),
+                msg=_(
+                    "Please reduce {0} to avoid shift time overlapping with itself"
+                ).format(frappe.bold(max_label)),
+            )
+
+    def get_shift_start_and_shift_end(
+        self, start_time: datetime.time, end_time: datetime.time
+    ) -> tuple[datetime]:
+        shift_start = datetime.combine(getdate(), start_time)
+        if start_time < end_time:
+            shift_end = datetime.combine(getdate(), end_time)
+        elif start_time > end_time:
+            shift_end = datetime.combine(add_days(getdate(), 1), end_time)
+        return shift_start, shift_end
+
+    def get_total_shift_duration_in_minutes(
+        self, shift_start: datetime.time, shift_end: datetime.time
+    ) -> int:
+        return (
+            (round(time_diff(shift_end, shift_start).total_seconds() / 60))
+            + (self.allow_check_out_after_shift_end_time or 0)
+            + (self.begin_check_in_before_shift_start_time or 0)
+        )
+
+    def get_max_shift_buffer_label(self) -> str:
+        labels = {
+            _(
+                self.meta.get_label("allow_check_out_after_shift_end_time")
+            ): self.allow_check_out_after_shift_end_time,
+            _(
+                self.meta.get_label("begin_check_in_before_shift_start_time")
+            ): self.begin_check_in_before_shift_start_time,
+        }
+        return max(labels, key=labels.get)
+
+    def validate_unlinked_logs(self):
         if self.is_field_modified("start_time") and self.unlinked_checkins_exist():
             frappe.throw(
                 title=_("Unmarked Check-in Logs Found"),
@@ -62,7 +131,6 @@ class ShiftType(Document):
             return
 
         logs = self.get_employee_checkins()
-
         group_key = lambda x: (x["employee"], x["shift_start"])  # noqa
         for key, group in groupby(sorted(logs, key=group_key), key=group_key):
             single_shift_logs = list(group)
@@ -104,6 +172,7 @@ class ShiftType(Document):
         for batch in create_batch(assigned_employees, EMPLOYEE_CHUNK_SIZE):
             for employee in batch:
                 self.mark_absent_for_dates_with_no_attendance(employee)
+                self.mark_absent_for_half_day_dates(employee)
 
             frappe.db.commit()  # nosemgrep
 
@@ -300,7 +369,7 @@ class ShiftType(Document):
         self, from_date: datetime.date, consider_default_shift=False
     ) -> list[str]:
         """Get all such employees who either have this shift assigned that hasn't ended or have this shift as default shift.
-        This may fetch some redundant employees who have another shift assigned that may have started or ended befor or after the
+        This may fetch some redundant employees who have another shift assigned that may have started or ended before or after the
         attendance processing date. But this is done to avoid missing any employee who may have this shift as active shift.
         """
         filters = {"shift_type": self.name, "docstatus": "1", "status": "Active"}
@@ -344,8 +413,86 @@ class ShiftType(Document):
             return False
         return True
 
+    def mark_absent_for_half_day_dates(self, employee):
+        half_day_attendances = frappe.get_all(
+            "Attendance",
+            filters={
+                "employee": employee,
+                "status": "Half Day",
+                "modify_half_day_status": 1,
+            },
+            fields=["name", "attendance_date"],
+        )
+        start_time = get_time(self.start_time)
+        for attendance in half_day_attendances:
+            timestamp = datetime.combine(attendance.attendance_date, start_time)
+            shift_details = get_employee_shift(employee, timestamp, True)
+            if shift_details and shift_details.shift_type.name == self.name:
+                frappe.db.set_value(
+                    "Attendance",
+                    attendance.name,
+                    {
+                        "shift": self.name,
+                        "half_day_status": "Absent",
+                        "modify_half_day_status": 0,
+                    },
+                )
+                frappe.get_doc(
+                    {
+                        "doctype": "Comment",
+                        "comment_type": "Comment",
+                        "reference_doctype": "Attendance",
+                        "reference_name": attendance.name,
+                        "content": frappe._(
+                            "Employee was marked Absent for other half due to missing Employee Checkins."
+                        ),
+                    }
+                ).insert(ignore_permissions=True)
+
+
+def update_last_sync_of_checkin():
+    """Called from hooks"""
+    shifts = frappe.get_all(
+        "Shift Type",
+        filters={"enable_auto_attendance": 1, "auto_update_last_sync": 1},
+        fields=["name", "last_sync_of_checkin", "start_time", "end_time"],
+    )
+    current_datetime = frappe.flags.current_datetime or get_datetime()
+    for shift in shifts:
+        shift_end = get_actual_shift_end(shift, current_datetime)
+        update_last_sync = None
+        if shift.last_sync_of_checkin:
+            if get_datetime(shift.last_sync_of_checkin) < shift_end < current_datetime:
+                update_last_sync = True
+        elif shift_end < current_datetime:
+            update_last_sync = True
+        if update_last_sync:
+            frappe.db.set_value(
+                "Shift Type",
+                shift.name,
+                "last_sync_of_checkin",
+                shift_end + timedelta(minutes=1),
+            )
+
+
+def get_actual_shift_end(shift, current_datetime):
+    time_within_shift = datetime.combine(
+        current_datetime.date(), get_time(shift.start_time)
+    )
+    shift_details = get_shift_details(shift.name, time_within_shift)
+    actual_shift_start = shift_details["actual_start"]
+    actual_shift_end = shift_details["actual_end"]
+
+    if (actual_shift_start.date() < actual_shift_end.date()) or (
+        current_datetime < actual_shift_start
+    ):
+        # shift start and end are on different days
+        actual_shift_end = add_days(actual_shift_end, -1)
+    return actual_shift_end
+
 
 def process_auto_attendance_for_all_shifts():
+    """Called from hooks"""
     shift_list = frappe.get_all(
         "Shift Type", filters={"enable_auto_attendance": "1"}, pluck="name"
     )

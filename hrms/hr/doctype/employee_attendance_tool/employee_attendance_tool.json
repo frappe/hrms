@@ -6,23 +6,29 @@
  "engine": "InnoDB",
  "field_order": [
   "date",
-  "section_break_ackd",
-  "company",
-  "column_break_bhny",
-  "department",
-  "column_break_3",
-  "branch",
-  "unmarked_attendance_section",
-  "employees_html",
-  "attendance_details_section",
-  "status",
+  "shift",
+  "column_break_gmhs",
   "late_entry",
   "early_exit",
-  "column_break_kecn",
-  "shift",
+  "section_break_ackd",
+  "company",
+  "branch",
+  "department",
+  "column_break_bhny",
+  "employment_type",
+  "designation",
+  "employee_grade",
+  "get_employees",
+  "select_employees_section",
+  "unmarked_employee_header",
+  "status",
+  "unmarked_employees_html",
+  "horizontal_break",
+  "half_day_marked_employee_header",
+  "half_day_status",
+  "half_marked_employees_html",
   "marked_attendance_section",
-  "marked_attendance_html",
-  "column_break_khjs"
+  "marked_attendance_html"
  ],
  "fields": [
   {
@@ -38,10 +44,6 @@
    "options": "Department"
   },
   {
-   "fieldname": "column_break_3",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "branch",
    "fieldtype": "Link",
    "label": "Branch",
@@ -54,19 +56,7 @@
    "options": "Company"
   },
   {
-   "depends_on": "date",
-   "description": "Unmarked Attendance",
-   "fieldname": "unmarked_attendance_section",
-   "fieldtype": "Section Break",
-   "label": "Select Employees"
-  },
-  {
-   "fieldname": "employees_html",
-   "fieldtype": "HTML",
-   "label": "Employees HTML",
-   "read_only": 1
-  },
-  {
+   "collapsible": 1,
    "depends_on": "date",
    "fieldname": "marked_attendance_section",
    "fieldtype": "Section Break",
@@ -82,23 +72,15 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "\nPresent\nAbsent\nHalf Day\nWork From Home",
-   "reqd": 1
+   "options": "\nPresent\nAbsent\nHalf Day\nWork From Home"
   },
   {
    "collapsible": 1,
+   "collapsible_depends_on": "eval:true",
    "description": "Set filters to fetch employees",
    "fieldname": "section_break_ackd",
    "fieldtype": "Section Break",
-   "label": "Filters"
-  },
-  {
-   "depends_on": "date",
-   "description": "Set attendance details for the employees select above",
-   "fieldname": "attendance_details_section",
-   "fieldtype": "Section Break",
-   "hide_border": 1,
-   "label": "Set Attendance Details"
+   "label": "Get Employees"
   },
   {
    "fieldname": "column_break_bhny",
@@ -117,24 +99,86 @@
    "label": "Early Exit"
   },
   {
-   "fieldname": "column_break_kecn",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "shift",
    "fieldtype": "Link",
    "label": "Shift",
    "options": "Shift Type"
   },
   {
-   "fieldname": "column_break_khjs",
+   "fieldname": "employment_type",
+   "fieldtype": "Link",
+   "label": "Employment Type",
+   "options": "Employment Type"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "employee_grade",
+   "fieldtype": "Link",
+   "label": "Employee Grade",
+   "options": "Employee Grade"
+  },
+  {
+   "fieldname": "unmarked_employees_html",
+   "fieldtype": "HTML",
+   "label": "Unmarked Employees HTML",
+   "read_only": 1
+  },
+  {
+   "fieldname": "half_marked_employees_html",
+   "fieldtype": "HTML",
+   "label": "Employees on Half Day HTML"
+  },
+  {
+   "fieldname": "half_day_status",
+   "fieldtype": "Select",
+   "label": "Status for Other Half",
+   "options": "Present\nAbsent"
+  },
+  {
+   "fieldname": "column_break_gmhs",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "get_employees",
+   "fieldtype": "Button",
+   "label": "Get Employees"
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:true",
+   "fieldname": "select_employees_section",
+   "fieldtype": "Section Break",
+   "label": "Select Employees"
+  },
+  {
+   "fieldname": "unmarked_employee_header",
+   "fieldtype": "HTML",
+   "label": "Unmarked Employee Header",
+   "options": "<h5>Unmarked Employees</h5>"
+  },
+  {
+   "fieldname": "half_day_marked_employee_header",
+   "fieldtype": "HTML",
+   "label": "Half Day Marked Employee Header",
+   "options": "<h5>Employees on Half Day</h5>"
+  },
+  {
+   "fieldname": "horizontal_break",
+   "fieldtype": "HTML",
+   "label": "Horizontal Break",
+   "options": "<hr>"
   }
  ],
+ "grid_page_length": 50,
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-07-08 20:02:36.408240",
+ "modified": "2025-05-26 09:42:36.888216",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Attendance Tool",
@@ -147,7 +191,8 @@
    "write": 1
   }
  ],
- "sort_field": "modified",
+ "row_format": "Dynamic",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": []
 }

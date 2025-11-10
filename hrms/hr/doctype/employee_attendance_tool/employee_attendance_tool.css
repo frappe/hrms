@@ -17,5 +17,17 @@
 }
 
 .checkbox {
-	margin-top: -3px;
+	margin-top: 0px;
+}
+.employee_wrapper {
+	margin-top: 25px;
+	margin-bottom: 20px;
+}
+hr {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+h5 {
+	margin-top: 20px;
+	margin-bottom: 15px;
 }

@@ -10,7 +10,7 @@ frappe.query_reports["Income Tax Computation"] = {
 			fieldtype: "Link",
 			options: "Company",
 			default: frappe.defaults.get_user_default("Company"),
-			width: "100px",
+			width: "90px",
 			reqd: 1,
 		},
 		{
@@ -18,7 +18,7 @@ frappe.query_reports["Income Tax Computation"] = {
 			label: __("Payroll Period"),
 			fieldtype: "Link",
 			options: "Payroll Period",
-			width: "100px",
+			width: "90px",
 			reqd: 1,
 		},
 		{
@@ -26,14 +26,23 @@ frappe.query_reports["Income Tax Computation"] = {
 			label: __("Employee"),
 			fieldtype: "Link",
 			options: "Employee",
-			width: "100px",
+			width: "90px",
 		},
 		{
 			fieldname: "department",
 			label: __("Department"),
 			fieldtype: "Link",
 			options: "Department",
-			width: "100px",
+			width: "90px",
+		},
+
+		{
+			fieldname: "employee_status",
+			label: __("Employee Status"),
+			fieldtype: "Select",
+			options: "Active\nInactive\nSuspended\nLeft",
+			default: "Active",
+			width: "90px",
 		},
 		{
 			fieldname: "consider_tax_exemption_declaration",

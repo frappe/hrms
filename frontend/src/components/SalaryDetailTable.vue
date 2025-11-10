@@ -29,16 +29,18 @@
 	</div>
 	<EmptyState
 		v-else
-		:message="`No ${props.type?.toLowerCase()}s added`"
+		:message="__('No {0} added', [props.type?.toLowerCase()])"
 		:isTableField="true"
 	/>
 </template>
 
 <script setup>
-import { computed } from "vue"
+import { computed,inject } from "vue"
 
 import EmptyState from "@/components/EmptyState.vue"
 import { formatCurrency } from "@/utils/formatters"
+
+const __ = inject("$translate")
 
 const props = defineProps({
 	salarySlip: {

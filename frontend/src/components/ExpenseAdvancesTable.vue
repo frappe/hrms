@@ -60,14 +60,15 @@
 		</div>
 	</div>
 
-	<EmptyState v-else message="No advances found" :isTableField="true" />
+	<EmptyState v-else :message="__('No advances found')" :isTableField="true" />
 </template>
 
 <script setup>
-import { computed } from "vue"
+import { computed, inject } from "vue"
 import { getCurrencySymbol } from "@/data/currencies"
 import { formatCurrency } from "@/utils/formatters"
 
+const __ = inject("$translate")
 const props = defineProps({
 	expenseClaim: {
 		type: Object,
