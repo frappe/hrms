@@ -1,6 +1,6 @@
 <template>
 	<div class="flex flex-col w-full gap-5" v-if="calendarEvents.data">
-		<div class="text-lg text-gray-800 font-bold">Attendance Calendar</div>
+		<div class="text-lg text-gray-800 font-bold">{{ __("Attendance Calendar") }}</div>
 
 		<div class="flex flex-col gap-6 bg-white py-6 px-3.5 rounded-lg border-none">
 			<!-- Month Change -->
