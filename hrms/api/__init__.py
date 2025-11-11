@@ -824,19 +824,17 @@ def delete_attachment(filename: str):
 
 
 @frappe.whitelist()
-def download_salary_slip(name: str):
+def _download_pdf(doctype: str, docname: str) -> str:
     import base64
 
     from frappe.utils.print_format import download_pdf
 
-    default_print_format = (
-        frappe.get_meta("Salary Slip").default_print_format or "Standard"
-    )
+    default_print_format = frappe.get_meta(doctype).default_print_format or "Standard"
 
     try:
-        download_pdf("Salary Slip", name, format=default_print_format)
-    except Exception:
-        frappe.throw(_("Failed to download Salary Slip PDF"))
+        download_pdf(doctype, docname, format=default_print_format)
+    except Exception as e:
+        frappe.throw(_("Failed to download PDF: {0}").format(str(e)))
 
     base64content = base64.b64encode(frappe.local.response.filecontent)
     content_type = frappe.local.response.type

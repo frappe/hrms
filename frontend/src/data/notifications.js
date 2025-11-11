@@ -20,7 +20,7 @@ export const notifications = createListResource({
 		"reference_document_type",
 		"reference_document_name",
 	],
-	auto: true,
+	auto: false,
 	cache: "hrms:notifications",
 	orderBy: "creation desc",
 	onSuccess() {
