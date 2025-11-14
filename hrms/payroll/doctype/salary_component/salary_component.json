@@ -25,6 +25,7 @@
   "statistical_component",
   "do_not_include_in_total",
   "remove_if_zero_valued",
+  "do_not_include_in_accounts",
   "disabled",
   "section_break_5",
   "accounts",
@@ -263,6 +264,14 @@
    "fieldname": "remove_if_zero_valued",
    "fieldtype": "Check",
    "label": "Remove if Zero Valued"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.do_not_include_in_total",
+   "description": "If enabled, the amount will be excluded from accounting entries during Journal Entry creation.",
+   "fieldname": "do_not_include_in_accounts",
+   "fieldtype": "Check",
+   "label": "Do Not Include in Accounting Entries"
   }
  ],
  "icon": "fa fa-flag",
@@ -292,6 +301,7 @@
    "role": "Employee"
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

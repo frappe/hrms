@@ -68,7 +68,6 @@ TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 class SalarySlip(TransactionBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.default_series = f"Sal Slip/{self.employee}/.#####"
         self.whitelisted_globals = {
             "int": int,
             "float": float,
@@ -83,9 +82,6 @@ class SalarySlip(TransactionBase):
             "floor": floor,
         }
 
-    def autoname(self):
-        if not self.has_custom_naming_series:
-            self.name = make_autoname(self.default_series)
 
     @property
     def has_custom_naming_series(self):
@@ -300,14 +296,6 @@ class SalarySlip(TransactionBase):
             user=employee_user,
             after_commit=True,
         )
-
-    def on_trash(self):
-        from frappe.model.naming import revert_series_if_last
-
-        if not self.has_custom_naming_series:
-            revert_series_if_last(self.default_series, self.name)
-
-        delete_employee_benefit_ledger_entry("salary_slip", self.name)
 
     def get_status(self):
         if self.docstatus == 2:
@@ -597,19 +585,16 @@ class SalarySlip(TransactionBase):
             if payroll_settings.payroll_based_on == "Attendance":
                 if consider_unmarked_attendance_as == "Absent":
                     unmarked_days = self.get_unmarked_days(
-                        payroll_settings.include_holidays_in_total_working_days,
-                        holidays,
-                    )
+						payroll_settings.include_holidays_in_total_working_days, holidays
+					)
                     self.absent_days += unmarked_days  # will be treated as absent
                     self.payment_days -= unmarked_days
                 half_absent_days = self.get_half_absent_days(
-                    consider_marked_attendance_on_holidays,
-                    holidays,
-                )
+					consider_marked_attendance_on_holidays,
+					holidays,
+				)
                 self.absent_days += half_absent_days * daily_wages_fraction_for_half_day
-                self.payment_days -= (
-                    half_absent_days * daily_wages_fraction_for_half_day
-                )
+                self.payment_days -= half_absent_days * daily_wages_fraction_for_half_day
         else:
             self.payment_days = 0
 

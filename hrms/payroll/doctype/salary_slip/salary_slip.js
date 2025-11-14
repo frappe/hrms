@@ -389,6 +389,12 @@ frappe.ui.form.on("Salary Detail", {
 						frappe.model.set_value(
 							cdt,
 							cdn,
+							"do_not_include_in_accounts",
+							result.do_not_include_in_accounts,
+						);
+						frappe.model.set_value(
+							cdt,
+							cdn,
 							"variable_based_on_taxable_salary",
 							result.variable_based_on_taxable_salary,
 						);

@@ -57,7 +57,6 @@ class CompensatoryLeaveRequest(Document):
                     (self.work_from_date, self.work_end_date),
                 ],
                 "status": ("in", ["Present", "Work From Home", "Half Day"]),
-                "half_day_status": ("!=", "Absent"),
                 "docstatus": 1,
                 "employee": self.employee,
             },

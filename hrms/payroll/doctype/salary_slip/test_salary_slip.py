@@ -196,12 +196,13 @@ class TestSalarySlip(FrappeTestCase):
         )
 
         self.assertEqual(ss.leave_without_pay, 1.25)
-        self.assertEqual(ss.absent_days, 1)
+        self.assertEqual(ss.absent_days, 2.5)
 
         days_in_month = no_of_days[0]
         no_of_holidays = no_of_days[1]
 
-        self.assertEqual(ss.payment_days, days_in_month - no_of_holidays - 2.25)
+        # total payment days = total working days - lwp - absent days
+        self.assertEqual(ss.payment_days, days_in_month - no_of_holidays - 0.5 - 2.5)
 
         # Gross pay calculation based on attendances
         gross_pay = 78000 - (

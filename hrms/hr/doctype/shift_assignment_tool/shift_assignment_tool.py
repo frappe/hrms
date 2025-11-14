@@ -309,6 +309,7 @@ class ShiftAssignmentTool(Document):
 		assignment.shift_location = self.shift_location
 		assignment.enabled = 0 if self.end_date else 1
 		assignment.create_shifts_after = self.start_date
+		assignment.flags.ingore_validate = True
 		assignment.save()
 		return assignment
 
