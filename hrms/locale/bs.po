@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-11-09 09:34+0000\n"
-"PO-Revision-Date: 2025-11-10 11:03\n"
+"PO-Revision-Date: 2025-11-11 11:43\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -13350,7 +13350,7 @@ msgstr "Standardno Radno Vrijeme"
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:51
 #: hrms/hr/doctype/attendance/attendance_list.js:46
 msgid "Start"
-msgstr "Start"
+msgstr "Počni"
 
 #. Label of the start_date (Date) field in DocType 'Appraisal'
 #. Label of the start_date (Date) field in DocType 'Appraisal Cycle'

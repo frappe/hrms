@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-11-09 09:34+0000\n"
-"PO-Revision-Date: 2025-11-10 11:02\n"
+"PO-Revision-Date: 2025-11-11 11:42\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
@@ -601,7 +601,7 @@ msgstr ""
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.py:70
 msgid "Action"
-msgstr ""
+msgstr "Actie"
 
 #: hrms/hr/doctype/attendance_request/attendance_warnings.html:8
 msgid "Action on Submission"
@@ -617,7 +617,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:159
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.js:77
 msgid "Actions"
-msgstr ""
+msgstr "Acties"
 
 #. Option for the 'Status' (Select) field in DocType 'Shift Assignment'
 #. Option for the 'Status' (Select) field in DocType 'Shift Assignment Tool'
@@ -630,7 +630,7 @@ msgstr ""
 #: hrms/hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:40
 #: hrms/hr/report/leave_ledger/leave_ledger.js:38
 msgid "Active"
-msgstr ""
+msgstr "Actief"
 
 #. Label of the activities (Table) field in DocType 'Employee Onboarding'
 #. Label of the section_break_7 (Section Break) field in DocType 'Employee
@@ -806,7 +806,7 @@ msgstr ""
 #. Name of a role
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 msgid "Administrator"
-msgstr ""
+msgstr "Beheerder"
 
 #. Option for the 'Level' (Select) field in DocType 'Training Event'
 #: hrms/hr/doctype/training_event/training_event.json

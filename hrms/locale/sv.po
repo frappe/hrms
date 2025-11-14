@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-11-09 09:34+0000\n"
-"PO-Revision-Date: 2025-11-10 11:03\n"
+"PO-Revision-Date: 2025-11-13 12:16\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -11211,7 +11211,7 @@ msgstr "Behandling av skift begäran är i kö. Det kan ta några minuter."
 #: hrms/payroll/report/professional_tax_deductions/professional_tax_deductions.json
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Professional Tax Deductions"
-msgstr "Professionell Moms Avdrag"
+msgstr "Professionell Skatt Avdrag"
 
 #. Label of the proficiency (Rating) field in DocType 'Employee Skill'
 #: hrms/hr/doctype/employee_skill/employee_skill.json

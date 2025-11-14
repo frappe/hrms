@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-11-09 09:34+0000\n"
-"PO-Revision-Date: 2025-11-10 11:02\n"
+"PO-Revision-Date: 2025-11-13 12:16\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -2598,7 +2598,7 @@ msgstr "Schlussbemerkungen"
 #: hrms/public/js/hierarchy_chart/hierarchy_chart_desktop.js:125
 #: hrms/public/js/hierarchy_chart/hierarchy_chart_desktop.js:130
 msgid "Collapse All"
-msgstr "Alles schließen"
+msgstr "Alle zuklappen"
 
 #. Label of the color (Color) field in DocType 'Leave Application'
 #: hrms/hr/doctype/leave_application/leave_application.json
@@ -2951,7 +2951,7 @@ msgstr "Kontaktnummer"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:277
 msgid "Continue"
-msgstr "Fortsetzen"
+msgstr "Weiter"
 
 #: hrms/setup.py:385
 msgid "Contract"
@@ -3790,7 +3790,7 @@ msgstr "Auslieferungsfahrt"
 #: hrms/public/js/salary_slip_deductions_report_filters.js:42 hrms/setup.py:402
 #: hrms/templates/generators/job_opening.html:87
 msgid "Department"
-msgstr "Abteilung"
+msgstr ""
 
 #. Name of a DocType
 #: hrms/hr/doctype/department_approver/department_approver.json
@@ -3966,7 +3966,7 @@ msgstr "Beschreibung einer Stellenausschreibung"
 #: hrms/payroll/report/salary_register/salary_register.js:70
 #: hrms/payroll/report/salary_register/salary_register.py:153
 msgid "Designation"
-msgstr "Position"
+msgstr ""
 
 #. Name of a DocType
 #: hrms/hr/doctype/designation_skill/designation_skill.json
@@ -4046,7 +4046,7 @@ msgstr "Push-Benachrichtigungen werden deaktiviert..."
 
 #: frontend/src/components/WorkflowActionSheet.vue:111
 msgid "Dismiss"
-msgstr "Entlassen"
+msgstr "Verwerfen"
 
 #. Label of the do_not_include_in_accounts (Check) field in DocType 'Salary
 #. Component'
@@ -6818,7 +6818,7 @@ msgstr "Bruttosumme laufendes Jahr (Unternehmenswährung)"
 
 #: hrms/hr/report/daily_work_summary_replies/daily_work_summary_replies.js:9
 msgid "Group"
-msgstr "Gruppe"
+msgstr ""
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:96
 msgid "Group By"
@@ -7171,7 +7171,7 @@ msgstr "Arbeitsfreie Tage diese Woche."
 
 #: frontend/src/components/BottomTabs.vue:43 hrms/www/jobs/index.py:13
 msgid "Home"
-msgstr "Startseite"
+msgstr "Start"
 
 #. Label of the horizontal_break (HTML) field in DocType 'Employee Attendance
 #. Tool'
@@ -7389,7 +7389,7 @@ msgstr "Import erfolgreich"
 
 #: hrms/hr/doctype/upload_attendance/upload_attendance.js:50
 msgid "Importing {0} of {1}"
-msgstr "{0} von {1} wird importiert"
+msgstr "Importiere {0} von {1}"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Onboarding'
 #. Option for the 'Status' (Select) field in DocType 'Employee Referral'
@@ -7872,7 +7872,7 @@ msgstr "Rechnung Ref"
 #: hrms/payroll/doctype/employee_tax_exemption_sub_category/employee_tax_exemption_sub_category.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 msgid "Is Active"
-msgstr "Ist aktiv(iert)"
+msgstr "Ist aktiv"
 
 #. Label of the is_applicable_for_referral_bonus (Check) field in DocType
 #. 'Employee Referral'
@@ -7924,7 +7924,7 @@ msgstr "Ist flexibler Nutzen"
 #. Label of the is_group (Check) field in DocType 'Goal'
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:51
 msgid "Is Group"
-msgstr "Ist Gruppe"
+msgstr ""
 
 #. Label of the is_income_tax_component (Check) field in DocType 'Salary
 #. Component'
@@ -8824,7 +8824,7 @@ msgstr ""
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.py:33
 #: hrms/templates/generators/job_opening.html:66
 msgid "Location"
-msgstr "Ort"
+msgstr ""
 
 #. Label of the device_id (Data) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
@@ -8906,7 +8906,7 @@ msgstr "Bankeintrag erstellen"
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.js:257
 #: hrms/hr/doctype/goal/goal.js:104
 msgid "Mandatory"
-msgstr "Zwingend notwendig"
+msgstr ""
 
 #. Label of the mandatory_benefit_application (Check) field in DocType 'Payroll
 #. Settings'
@@ -11400,7 +11400,7 @@ msgstr "Abwesenheiten neu zuteilen"
 #. Label of the read (Check) field in DocType 'PWA Notification'
 #: hrms/hr/doctype/pwa_notification/pwa_notification.json
 msgid "Read"
-msgstr "Lesen"
+msgstr "Lese-Zugriff"
 
 #. Label of the reason_section (Section Break) field in DocType 'Attendance
 #. Request'
@@ -11523,7 +11523,7 @@ msgstr "Referenz"
 #. Ledger'
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 msgid "Reference Doctype"
-msgstr "Referenztyp"
+msgstr "Referenz-DocType"
 
 #. Label of the reference_document (Dynamic Link) field in DocType 'Full and
 #. Final Outstanding Statement'
@@ -11591,7 +11591,7 @@ msgstr "Empfehlungsdetails"
 #. Label of the referrer (Link) field in DocType 'Employee Referral'
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 msgid "Referrer"
-msgstr "Referrer"
+msgstr "Verweiser"
 
 #. Label of the referrer_details_section (Section Break) field in DocType
 #. 'Employee Referral'

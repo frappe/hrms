@@ -8,6 +8,10 @@ pip install frappe-bench
 bench -v init frappe-bench --skip-assets --skip-redis-config-generation --python "$(which python)" --frappe-branch "${BASE_BRANCH}"
 cd ./frappe-bench || exit
 
+# We want to exclude strings from ERPNext from HRMS's translations.
+echo "Get ERPNext..."
+bench get-app --skip-assets --branch "${BASE_BRANCH}" erpnext
+
 echo "Get HRMS..."
 bench get-app --skip-assets hrms "${GITHUB_WORKSPACE}"
 
