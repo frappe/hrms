@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-11-02 09:33+0000\n"
-"PO-Revision-Date: 2025-11-03 22:17\n"
+"POT-Creation-Date: 2025-11-09 09:34+0000\n"
+"PO-Revision-Date: 2025-11-12 12:02\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -584,7 +584,7 @@ msgstr ""
 #. Label of the accrued_benefits (Table) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Accrued Benefits"
-msgstr ""
+msgstr "مزایای انباشته شده"
 
 #. Name of a report
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.json
@@ -806,7 +806,7 @@ msgstr "نوع تعدیل"
 #. Name of a role
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 msgid "Administrator"
-msgstr "مدیر"
+msgstr "ادمین"
 
 #. Option for the 'Level' (Select) field in DocType 'Training Event'
 #: hrms/hr/doctype/training_event/training_event.json
@@ -2443,7 +2443,7 @@ msgid "Check Vacancies On Job Offer Creation"
 msgstr "موقعیت های خالی را در ایجاد پیشنهاد شغلی بررسی کنید"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:370
-#: hrms/hr/utils.py:865
+#: hrms/hr/utils.py:864
 msgid "Check {0} for more details"
 msgstr "برای جزئیات بیشتر، {0} را بررسی کنید"
 
@@ -3157,7 +3157,7 @@ msgstr "ایجاد {0}..."
 msgid "Creation Date"
 msgstr "تاریخ ایجاد"
 
-#: hrms/hr/utils.py:874
+#: hrms/hr/utils.py:873
 msgid "Creation Failed"
 msgstr "ایجاد ناموفق بود"
 
@@ -5514,7 +5514,7 @@ msgid "Error"
 msgstr "خطا"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:372
-#: hrms/hr/utils.py:867
+#: hrms/hr/utils.py:866
 msgid "Error Log"
 msgstr "لاگ خطا"
 
@@ -5890,11 +5890,11 @@ msgstr "نوع مطالبه هزینه"
 
 #: hrms/hr/doctype/vehicle_log/vehicle_log.py:48
 msgid "Expense Claim for Vehicle Log {0}"
-msgstr "مطالبه هزینه برای لاگ خودرو {0}"
+msgstr "مطالبه هزینه برای لاگ وسیله نقلیه {0}"
 
 #: hrms/hr/doctype/vehicle_log/vehicle_log.py:36
 msgid "Expense Claim {0} already exists for the Vehicle Log"
-msgstr "مطالبه هزینه {0} از قبل برای لاگ خودرو وجود دارد"
+msgstr "مطالبه هزینه {0} از قبل برای لاگ وسیله نقلیه وجود دارد"
 
 #. Name of a Workspace
 #. Label of a chart in the Expense Claims Workspace
@@ -5994,7 +5994,7 @@ msgstr "در حال برون‌بُرد..."
 msgid "Failed"
 msgstr "ناموفق"
 
-#: hrms/hr/utils.py:862
+#: hrms/hr/utils.py:861
 msgid "Failed to create/submit {0} for employees:"
 msgstr "ایجاد/ارائه {0} برای کارمندان انجام نشد:"
 
@@ -8800,7 +8800,7 @@ msgstr "بازپرداخت وام"
 msgid "Loan Repayment Entry"
 msgstr "ثبت بازپرداخت وام"
 
-#: hrms/hr/utils.py:749
+#: hrms/hr/utils.py:748
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr "وام از حقوق کارمند {0} قابل بازپرداخت نیست زیرا حقوق به ارز {1} پردازش می‌شود"
 
@@ -9188,7 +9188,7 @@ msgstr "حداقل روزهای کاری مورد نیاز از تاریخ پی�
 msgid "Missing Advance Account"
 msgstr ""
 
-#: hrms/hr/utils.py:846
+#: hrms/hr/utils.py:845
 msgid "Missing Field"
 msgstr "فیلد جا افتاده"
 
@@ -9495,7 +9495,7 @@ msgstr "هیچ کارمندی پیدا نشد"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "هیچ کارمندی برای مقدار فیلد کارمند داده شده پیدا نشد. '{}': {}"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hrms/hr/utils.py:852
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hrms/hr/utils.py:851
 msgid "No Employees Selected"
 msgstr "هیچ کارمندی انتخاب نشد"
 
@@ -10315,7 +10315,7 @@ msgstr "هدف والد"
 msgid "Part-time"
 msgstr "پاره وقت"
 
-#: hrms/hr/utils.py:871 hrms/public/js/utils/index.js:154
+#: hrms/hr/utils.py:870 hrms/public/js/utils/index.js:154
 msgid "Partial Success"
 msgstr "موفقیت جزئی"
 
@@ -10824,7 +10824,7 @@ msgstr "لطفا زمان‌بندی شیفت و تاریخ(های) تخصیص �
 msgid "Please select Shift Type and assignment date(s)."
 msgstr "لطفا نوع شیفت و تاریخ(های) اختصاص را انتخاب کنید."
 
-#: hrms/hr/utils.py:743
+#: hrms/hr/utils.py:742
 msgid "Please select a Company"
 msgstr "لطفا یک شرکت را انتخاب کنید"
 
@@ -10845,7 +10845,7 @@ msgstr "لطفا یک فایل csv انتخاب کنید"
 msgid "Please select a date."
 msgstr "لطفا تاریخ را انتخاب کنید"
 
-#: hrms/hr/utils.py:740
+#: hrms/hr/utils.py:739
 msgid "Please select an Applicant"
 msgstr "لطفاً یک متقاضی را انتخاب کنید"
 
@@ -10853,7 +10853,7 @@ msgstr "لطفاً یک متقاضی را انتخاب کنید"
 msgid "Please select at least one Shift Request to perform this action."
 msgstr ""
 
-#: hrms/hr/utils.py:851
+#: hrms/hr/utils.py:850
 msgid "Please select at least one employee to perform this action."
 msgstr ""
 
@@ -11742,7 +11742,7 @@ msgstr "باز کردن دوباره"
 msgid "Repay From Salary"
 msgstr "بازپرداخت از حقوق"
 
-#: hrms/hr/utils.py:755
+#: hrms/hr/utils.py:754
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "بازپرداخت از حقوق فقط برای وام های مدت دار قابل انتخاب است"
 
@@ -12924,7 +12924,7 @@ msgstr "مستقر شده"
 msgid "Setup"
 msgstr "برپایی"
 
-#: hrms/hr/utils.py:703
+#: hrms/hr/utils.py:702
 msgid "Shared document with the user {0} with 'Submit' permission"
 msgstr ""
 
@@ -13592,13 +13592,13 @@ msgstr "شرکت های تابعه قبلاً برای {1} جای خالی با 
 #: frontend/src/components/RequestActionSheet.vue:309
 #: frontend/src/views/AppSettings.vue:95
 #: hrms/hr/doctype/employee_referral/employee_referral.py:54
-#: hrms/hr/utils.py:876
+#: hrms/hr/utils.py:875
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1592
 #: hrms/public/js/utils/index.js:139
 msgid "Success"
 msgstr "موفقیت"
 
-#: hrms/hr/utils.py:879
+#: hrms/hr/utils.py:878
 msgid "Successfully created {0} for employees:"
 msgstr ""
 
@@ -14724,7 +14724,7 @@ msgstr "نوع تراکنش"
 msgid "Transactions"
 msgstr "تراکنش‌ها"
 
-#: hrms/hr/utils.py:726
+#: hrms/hr/utils.py:725
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr "تراکنش‌ها را نمی‌توان برای یک کارمند غیرفعال {0} ایجاد کرد."
 
@@ -15119,7 +15119,7 @@ msgstr "وسیله نقلیه"
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.json
 #: hrms/hr/workspace/expense_claims/expense_claims.json
 msgid "Vehicle Expenses"
-msgstr "هزینه های خودرو"
+msgstr "هزینه های وسیله نقلیه"
 
 #. Label of the vehicle_log (Link) field in DocType 'Expense Claim'
 #. Name of a DocType
@@ -15129,19 +15129,19 @@ msgstr "هزینه های خودرو"
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.py:37
 #: hrms/hr/workspace/expense_claims/expense_claims.json
 msgid "Vehicle Log"
-msgstr "لاگ خودرو"
+msgstr "لاگ وسیله نقلیه"
 
 #. Name of a DocType
 #: hrms/hr/doctype/vehicle_service/vehicle_service.json
 msgid "Vehicle Service"
-msgstr "سرویس خودرو"
+msgstr "سرویس وسیله نقلیه"
 
 #. Name of a DocType
 #. Label of a Link in the Expense Claims Workspace
 #: hrms/hr/doctype/vehicle_service_item/vehicle_service_item.json
 #: hrms/hr/workspace/expense_claims/expense_claims.json
 msgid "Vehicle Service Item"
-msgstr "آیتم سرویس خودرو"
+msgstr "آیتم سرویس وسیله نقلیه"
 
 #: frontend/src/views/Login.vue:98
 msgid "Verify"
@@ -15722,7 +15722,7 @@ msgstr "{0} مجاز به ارسال بازخورد مصاحبه برای مصا
 msgid "{0} is not in Optional Holiday List"
 msgstr "{0} در فهرست تعطیلات اختیاری نیست"
 
-#: hrms/hr/utils.py:846
+#: hrms/hr/utils.py:845
 msgid "{0} is required"
 msgstr "{0} مورد نیاز است"
 

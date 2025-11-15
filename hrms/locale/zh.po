@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-11-02 09:33+0000\n"
-"PO-Revision-Date: 2025-11-03 22:17\n"
+"POT-Creation-Date: 2025-11-09 09:34+0000\n"
+"PO-Revision-Date: 2025-11-10 11:03\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Chinese Simplified\n"
 "MIME-Version: 1.0\n"
@@ -2468,7 +2468,7 @@ msgid "Check Vacancies On Job Offer Creation"
 msgstr "创建录用通知时检查空缺"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:370
-#: hrms/hr/utils.py:865
+#: hrms/hr/utils.py:864
 msgid "Check {0} for more details"
 msgstr "查看{0}获取详情"
 
@@ -3185,7 +3185,7 @@ msgstr "正在创建{0}..."
 msgid "Creation Date"
 msgstr "创建日期"
 
-#: hrms/hr/utils.py:874
+#: hrms/hr/utils.py:873
 msgid "Creation Failed"
 msgstr "创建失败"
 
@@ -5542,7 +5542,7 @@ msgid "Error"
 msgstr "错误"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:372
-#: hrms/hr/utils.py:867
+#: hrms/hr/utils.py:866
 msgid "Error Log"
 msgstr "错误日志"
 
@@ -6022,7 +6022,7 @@ msgstr "导出中..."
 msgid "Failed"
 msgstr "失败"
 
-#: hrms/hr/utils.py:862
+#: hrms/hr/utils.py:861
 msgid "Failed to create/submit {0} for employees:"
 msgstr "为员工创建/提交{0}失败："
 
@@ -8828,7 +8828,7 @@ msgstr "贷款还款"
 msgid "Loan Repayment Entry"
 msgstr "贷款还款分录"
 
-#: hrms/hr/utils.py:749
+#: hrms/hr/utils.py:748
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr "员工{0}薪资使用{1}币种处理，无法通过薪资扣款还贷"
 
@@ -9216,7 +9216,7 @@ msgstr "申请该假期需满足自入职日起的最低工作天数"
 msgid "Missing Advance Account"
 msgstr "缺少预支账户"
 
-#: hrms/hr/utils.py:846
+#: hrms/hr/utils.py:845
 msgid "Missing Field"
 msgstr "缺失字段"
 
@@ -9523,7 +9523,7 @@ msgstr "未找到员工"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "根据员工字段值'{}': {} 未找到对应员工"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hrms/hr/utils.py:852
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hrms/hr/utils.py:851
 msgid "No Employees Selected"
 msgstr "未选择员工"
 
@@ -10343,7 +10343,7 @@ msgstr "父级目标"
 msgid "Part-time"
 msgstr "兼职"
 
-#: hrms/hr/utils.py:871 hrms/public/js/utils/index.js:154
+#: hrms/hr/utils.py:870 hrms/public/js/utils/index.js:154
 msgid "Partial Success"
 msgstr "部分成功"
 
@@ -10852,7 +10852,7 @@ msgstr "请选择班次表和分配日期"
 msgid "Please select Shift Type and assignment date(s)."
 msgstr "请选择班次类型和分配日期"
 
-#: hrms/hr/utils.py:743
+#: hrms/hr/utils.py:742
 msgid "Please select a Company"
 msgstr "请选择公司"
 
@@ -10873,7 +10873,7 @@ msgstr "请选择CSV文件"
 msgid "Please select a date."
 msgstr "请选择日期"
 
-#: hrms/hr/utils.py:740
+#: hrms/hr/utils.py:739
 msgid "Please select an Applicant"
 msgstr "请选择申请人"
 
@@ -10881,7 +10881,7 @@ msgstr "请选择申请人"
 msgid "Please select at least one Shift Request to perform this action."
 msgstr "请至少选择一个班次申请执行此操作"
 
-#: hrms/hr/utils.py:851
+#: hrms/hr/utils.py:850
 msgid "Please select at least one employee to perform this action."
 msgstr "请至少选择一名员工执行此操作"
 
@@ -11770,7 +11770,7 @@ msgstr "重新打开"
 msgid "Repay From Salary"
 msgstr "从工资中偿还"
 
-#: hrms/hr/utils.py:755
+#: hrms/hr/utils.py:754
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "仅定期贷款可选择从工资中偿还"
 
@@ -12952,7 +12952,7 @@ msgstr "已结算"
 msgid "Setup"
 msgstr "设置"
 
-#: hrms/hr/utils.py:703
+#: hrms/hr/utils.py:702
 msgid "Shared document with the user {0} with 'Submit' permission"
 msgstr "已与用户{0}共享文档并授予“提交”权限"
 
@@ -13620,13 +13620,13 @@ msgstr "子公司已规划{1}个空缺岗位，预算{2}。{0}的人员配置计
 #: frontend/src/components/RequestActionSheet.vue:309
 #: frontend/src/views/AppSettings.vue:95
 #: hrms/hr/doctype/employee_referral/employee_referral.py:54
-#: hrms/hr/utils.py:876
+#: hrms/hr/utils.py:875
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1592
 #: hrms/public/js/utils/index.js:139
 msgid "Success"
 msgstr "成功"
 
-#: hrms/hr/utils.py:879
+#: hrms/hr/utils.py:878
 msgid "Successfully created {0} for employees:"
 msgstr "成功为员工创建{0}："
 
@@ -14752,7 +14752,7 @@ msgstr "交易类型"
 msgid "Transactions"
 msgstr "交易记录"
 
-#: hrms/hr/utils.py:726
+#: hrms/hr/utils.py:725
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr "无法为离职员工{0}创建交易记录"
 
@@ -15750,7 +15750,7 @@ msgstr "{0}无权提交面试{1}的反馈"
 msgid "{0} is not in Optional Holiday List"
 msgstr "{0}不在可选假期列表中"
 
-#: hrms/hr/utils.py:846
+#: hrms/hr/utils.py:845
 msgid "{0} is required"
 msgstr "需填写{0}"
 

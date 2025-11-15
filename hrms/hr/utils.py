@@ -1,6 +1,7 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
+import calendar
 import datetime
 
 import frappe
@@ -8,6 +9,7 @@ from frappe import _, qb
 from frappe.model.document import Document
 from frappe.query_builder import Criterion
 from frappe.query_builder.custom import ConstantColumn
+from frappe.query_builder.functions import Count
 from frappe.utils import (
 	add_days,
 	add_months,
@@ -44,6 +46,10 @@ DateTimeLikeObject = str | datetime.date | datetime.datetime
 
 
 class DuplicateDeclarationError(frappe.ValidationError):
+	pass
+
+
+class OverAllocationError(frappe.ValidationError):
 	pass
 
 
@@ -347,49 +353,66 @@ def allocate_earned_leaves():
 	"""Allocate earned leaves to Employees"""
 	e_leave_types = get_earned_leaves()
 	today = frappe.flags.current_date or getdate()
-
+	failed_allocations = []
 	for e_leave_type in e_leave_types:
 		leave_allocations = get_leave_allocations(today, e_leave_type.name)
 		for allocation in leave_allocations:
-			if not allocation.leave_policy_assignment and not allocation.leave_policy:
-				continue
-
-			leave_policy = (
-				allocation.leave_policy
-				if allocation.leave_policy
-				else frappe.db.get_value(
-					"Leave Policy Assignment", allocation.leave_policy_assignment, ["leave_policy"]
+			if allocation.earned_leave_schedule_exists:
+				allocation_date, earned_leaves = get_upcoming_earned_leave_from_schedule(
+					allocation.name, today
+				) or (None, None)
+				annual_allocation = get_annual_allocation_from_policy(allocation, e_leave_type)
+			else:
+				date_of_joining = frappe.db.get_value("Employee", allocation.employee, "date_of_joining")
+				allocation_date = get_expected_allocation_date_for_period(
+					e_leave_type.earned_leave_frequency, e_leave_type.allocate_on_day, today, date_of_joining
 				)
-			)
+				annual_allocation = get_annual_allocation_from_policy(allocation, e_leave_type)
+				earned_leaves = calculate_upcoming_earned_leave(allocation, e_leave_type, date_of_joining)
 
-			annual_allocation = frappe.db.get_value(
-				"Leave Policy Detail",
-				filters={"parent": leave_policy, "leave_type": e_leave_type.name},
-				fieldname=["annual_allocation"],
-			)
-			date_of_joining = frappe.db.get_value("Employee", allocation.employee, "date_of_joining")
-
-			from_date = allocation.from_date
-
-			if e_leave_type.allocate_on_day == "Date of Joining":
-				from_date = date_of_joining
-
-			if check_effective_date(
-				from_date, today, e_leave_type.earned_leave_frequency, e_leave_type.allocate_on_day
-			):
-				update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, date_of_joining)
+			if not allocation_date or allocation_date != today:
+				continue
+			try:
+				update_previous_leave_allocation(
+					allocation, annual_allocation, e_leave_type, earned_leaves, today
+				)
+			except Exception as e:
+				log_allocation_error(allocation.name, e)
+				failed_allocations.append(allocation.name)
+	if failed_allocations:
+		send_email_for_failed_allocations(failed_allocations)
 
 
-def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, date_of_joining):
-	allocation = frappe.get_doc("Leave Allocation", allocation.name)
-	annual_allocation = flt(annual_allocation, allocation.precision("total_leaves_allocated"))
+def get_upcoming_earned_leave_from_schedule(allocation_name, today):
+	return frappe.db.get_value(
+		"Earned Leave Schedule",
+		{"parent": allocation_name, "attempted": 0, "allocation_date": today},
+		["allocation_date", "number_of_leaves"],
+	)
 
-	earned_leaves = get_monthly_earned_leave(
+
+def get_annual_allocation_from_policy(allocation, e_leave_type):
+	return frappe.db.get_value(
+		"Leave Policy Detail",
+		filters={"parent": allocation.leave_policy, "leave_type": e_leave_type.name},
+		fieldname=["annual_allocation"],
+	)
+
+
+def calculate_upcoming_earned_leave(allocation, e_leave_type, date_of_joining):
+	annual_allocation = get_annual_allocation_from_policy(allocation, e_leave_type)
+	earned_leave = get_monthly_earned_leave(
 		date_of_joining,
 		annual_allocation,
 		e_leave_type.earned_leave_frequency,
 		e_leave_type.rounding,
 	)
+	return earned_leave
+
+
+def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, earned_leaves, today):
+	allocation = frappe.get_doc("Leave Allocation", allocation.name)
+	annual_allocation = flt(annual_allocation, allocation.precision("total_leaves_allocated"))
 
 	new_allocation = flt(allocation.total_leaves_allocated) + flt(earned_leaves)
 	new_allocation_without_cf = flt(
@@ -398,28 +421,65 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 	)
 
 	if new_allocation > e_leave_type.max_leaves_allowed and e_leave_type.max_leaves_allowed > 0:
-		new_allocation = e_leave_type.max_leaves_allowed
-
-	if (
-		new_allocation != allocation.total_leaves_allocated
-		# annual allocation as per policy should not be exceeded except for yearly leaves
-		and (
-			new_allocation_without_cf <= annual_allocation or e_leave_type.earned_leave_frequency == "Yearly"
+		frappe.throw(
+			_(
+				"Allocation was skipped due to maximum leave allocation limit set in leave type. Please increase the limit and retry failed allocation."
+			),
+			OverAllocationError,
 		)
+	if (
+		# annual allocation as per policy should not be exceeded except for yearly leaves
+		new_allocation_without_cf > annual_allocation and e_leave_type.earned_leave_frequency != "Yearly"
 	):
-		today_date = frappe.flags.current_date or getdate()
+		frappe.throw(
+			_("Allocation was skipped due to exceeding annual allocation set in leave policy"),
+			OverAllocationError,
+		)
 
-		allocation.db_set("total_leaves_allocated", new_allocation, update_modified=False)
-		create_additional_leave_ledger_entry(allocation, earned_leaves, today_date)
+	allocation.db_set("total_leaves_allocated", new_allocation, update_modified=False)
+	create_additional_leave_ledger_entry(allocation, earned_leaves, today)
+	earned_leave_schedule = qb.DocType("Earned Leave Schedule")
+	qb.update(earned_leave_schedule).where(
+		(earned_leave_schedule.parent == allocation.name) & (earned_leave_schedule.allocation_date == today)
+	).set(earned_leave_schedule.is_allocated, 1).set(earned_leave_schedule.attempted, 1).set(
+		earned_leave_schedule.allocated_via, "Scheduler"
+	).run()
 
-		if e_leave_type.allocate_on_day:
-			text = _(
-				"Allocated {0} leave(s) via scheduler on {1} based on the 'Allocate on Day' option set to {2}"
-			).format(
-				frappe.bold(earned_leaves), frappe.bold(formatdate(today_date)), e_leave_type.allocate_on_day
-			)
 
-		allocation.add_comment(comment_type="Info", text=text)
+def log_allocation_error(allocation_name, error):
+	error_log = frappe.log_error(error, reference_doctype="Leave Allocation")
+	text = _("{0}. Check error log for more details.").format(error_log.method)
+	earned_leave_schedule = qb.DocType("Earned Leave Schedule")
+	today = getdate(frappe.flags.current_date) or getdate()
+
+	qb.update(earned_leave_schedule).where(
+		(earned_leave_schedule.parent == allocation_name) & (earned_leave_schedule.allocation_date == today)
+	).set(earned_leave_schedule.attempted, 1).set(earned_leave_schedule.failed, 1).set(
+		earned_leave_schedule.failure_reason, text
+	).run()
+
+
+def send_email_for_failed_allocations(failed_allocations):
+	allocations = comma_and([get_link_to_form("Leave Allocation", x) for x in failed_allocations])
+	User = frappe.qb.DocType("User")
+	HasRole = frappe.qb.DocType("Has Role")
+	query = (
+		frappe.qb.from_(HasRole)
+		.left_join(User)
+		.on(HasRole.parent == User.name)
+		.select(HasRole.parent)
+		.distinct()
+		.where((HasRole.parenttype == "User") & (User.enabled == 1) & (HasRole.role == "HR Manager"))
+	)
+	hr_managers = query.run(pluck=True)
+
+	frappe.sendmail(
+		recipients=hr_managers,
+		subject=_("Failure of Automatic Allocation of Earned Leaves"),
+		message=_(
+			"Automatic Leave Allocation has failed for the following Earned Leaves: {0}. Please check {1} for more details."
+		).format(allocations, get_link_to_form("Error Log", label="Error Log List")),
+	)
 
 
 @frappe.whitelist()
@@ -440,13 +500,7 @@ def get_monthly_earned_leave(
 		if pro_rated:
 			if not (period_start_date or period_end_date):
 				today_date = frappe.flags.current_date or getdate()
-
-				period_start_date, period_end_date = {
-					"Monthly": (get_first_day(today_date), get_last_day(today_date)),
-					"Quarterly": (get_quarter_start(today_date), get_quarter_ending(today_date)),
-					"Half-Yearly": (get_semester_start(today_date), get_semester_end(today_date)),
-					"Yearly": (get_year_start(today_date), get_year_ending(today_date)),
-				}.get(frequency)
+				period_start_date, period_end_date = get_sub_period_start_and_end(today_date, frequency)
 
 			earned_leaves = calculate_pro_rated_leaves(
 				earned_leaves, date_of_joining, period_start_date, period_end_date, is_earned_leave=True
@@ -455,6 +509,15 @@ def get_monthly_earned_leave(
 		earned_leaves = round_earned_leaves(earned_leaves, rounding)
 
 	return earned_leaves
+
+
+def get_sub_period_start_and_end(date, frequency):
+	return {
+		"Monthly": (get_first_day(date), get_last_day(date)),
+		"Quarterly": (get_quarter_start(date), get_quarter_ending(date)),
+		"Half-Yearly": (get_semester_start(date), get_semester_end(date)),
+		"Yearly": (get_year_start(date), get_year_ending(date)),
+	}.get(frequency)
 
 
 def round_earned_leaves(earned_leaves, rounding):
@@ -474,10 +537,14 @@ def round_earned_leaves(earned_leaves, rounding):
 def get_leave_allocations(date, leave_type):
 	employee = frappe.qb.DocType("Employee")
 	leave_allocation = frappe.qb.DocType("Leave Allocation")
+	earned_leave_schedule = frappe.qb.DocType("Earned Leave Schedule")
+
 	query = (
 		frappe.qb.from_(leave_allocation)
 		.join(employee)
 		.on(leave_allocation.employee == employee.name)
+		.left_join(earned_leave_schedule)
+		.on(leave_allocation.name == earned_leave_schedule.parent)
 		.select(
 			leave_allocation.name,
 			leave_allocation.employee,
@@ -485,14 +552,18 @@ def get_leave_allocations(date, leave_type):
 			leave_allocation.to_date,
 			leave_allocation.leave_policy_assignment,
 			leave_allocation.leave_policy,
+			Count(earned_leave_schedule.parent).as_("earned_leave_schedule_exists"),
 		)
 		.where(
 			(date >= leave_allocation.from_date)
 			& (date <= leave_allocation.to_date)
 			& (leave_allocation.docstatus == 1)
 			& (leave_allocation.leave_type == leave_type)
+			& (leave_allocation.leave_policy_assignment.isnotnull())
+			& (leave_allocation.leave_policy.isnotnull())
 			& (employee.status != "Left")
 		)
+		.groupby(leave_allocation.name)
 	)
 	return query.run(as_dict=1) or []
 
@@ -519,27 +590,24 @@ def create_additional_leave_ledger_entry(allocation, leaves, date):
 	allocation.create_leave_ledger_entry()
 
 
-def check_effective_date(from_date, today, frequency, allocate_on_day):
-	from_date = getdate(from_date)
-
-	expected_date = {
+def get_expected_allocation_date_for_period(frequency, allocate_on_day, date, date_of_joining=None):
+	try:
+		doj = date_of_joining.replace(month=date.month, year=date.year)
+	except ValueError:
+		doj = datetime.date(date.year, date.month, calendar.monthrange(date.year, date.month)[1])
+	return {
 		"Monthly": {
-			"First Day": get_first_day(today),
-			"Last Day": get_last_day(today),
-			"Date of Joining": from_date,
+			"First Day": get_first_day(date),
+			"Last Day": get_last_day(date),
+			"Date of Joining": doj,
 		},
 		"Quarterly": {
-			"First Day": get_quarter_start(today),
-			"Last Day": get_quarter_ending(today),
+			"First Day": get_quarter_start(date),
+			"Last Day": get_quarter_ending(date),
 		},
-		"Half-Yearly": {"First Day": get_semester_start(today), "Last Day": get_semester_end(today)},
-		"Yearly": {"First Day": get_year_start(today), "Last Day": get_year_ending(today)},
+		"Half-Yearly": {"First Day": get_semester_start(date), "Last Day": get_semester_end(date)},
+		"Yearly": {"First Day": get_year_start(date), "Last Day": get_year_ending(date)},
 	}[frequency][allocate_on_day]
-
-	if allocate_on_day == "Date of Joining":
-		return expected_date.day == today.day
-	else:
-		return expected_date == today
 
 
 def get_salary_assignments(employee, payroll_period):
@@ -553,7 +621,7 @@ def get_salary_assignments(employee, payroll_period):
 
 	if not assignments or getdate(assignments[0].from_date) > getdate(start_date):
 		# if no assignments found for the given period
-		# or the latest assignment hast started in the middle of the period
+		# or the assignment has started in the middle of the period
 		# get the last one assigned before the period start date
 		past_assignment = frappe.get_all(
 			"Salary Structure Assignment",

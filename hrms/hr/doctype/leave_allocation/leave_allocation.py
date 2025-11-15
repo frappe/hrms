@@ -411,6 +411,65 @@ class LeaveAllocation(Document):
 		leave_adjustment.submit()
 		frappe.msgprint(_("Adjustment Created Successfully"), indicator="green", alert=True)
 
+	@frappe.whitelist()
+	def retry_failed_allocations(self, failed_allocations):
+		if not frappe.has_permission(doctype="Leave Allocation", ptype="write", user=frappe.session.user):
+			frappe.throw(_("You do not have permission to complete this action"), frappe.PermissionError)
+
+		max_leaves_allowed, frequency = frappe.db.get_values(
+			"Leave Type", self.leave_type, ["max_leaves_allowed", "earned_leave_frequency"]
+		)[0]
+
+		annual_allocation = frappe.get_value(
+			"Leave Policy Detail",
+			{"parent": self.leave_policy, "leave_type": self.leave_type},
+			"annual_allocation",
+		)
+
+		for allocation in failed_allocations:
+			new_allocation = flt(self.total_leaves_allocated) + flt(allocation["number_of_leaves"])
+
+			new_allocation_without_cf = flt(self.get_existing_leave_count()) + flt(
+				allocation["number_of_leaves"]
+			)
+
+			if new_allocation > max_leaves_allowed and max_leaves_allowed > 0:
+				frappe.throw(
+					msg=_(
+						"Cannot allocate more leaves due to maximum leaves allowed limit of {0} in {1} leave type."
+					).format(frappe.bold(max_leaves_allowed), frappe.bold(self.leave_type)),
+					title=_("Retry Failed"),
+				)
+
+			elif new_allocation_without_cf > annual_allocation and frequency != "Yearly":
+				frappe.throw(
+					msg=_(
+						"Cannot allocate more leaves due to maximum leave allocation limit of {0} in leave policy assignment"
+					).format(frappe.bold(annual_allocation)),
+					title=_("Retry Failed"),
+				)
+
+			else:
+				self.db_set("total_leaves_allocated", new_allocation, update_modified=False)
+				create_additional_leave_ledger_entry(
+					self, allocation["number_of_leaves"], allocation["allocation_date"]
+				)
+				earned_leave_schedule = frappe.qb.DocType("Earned Leave Schedule")
+				(
+					frappe.qb.update(earned_leave_schedule)
+					.where(
+						(earned_leave_schedule.parent == self.name)
+						& (earned_leave_schedule.allocation_date == allocation["allocation_date"])
+						& (earned_leave_schedule.attempted == 1)
+						& (earned_leave_schedule.failed == 1)
+					)
+					.set(earned_leave_schedule.is_allocated, 1)
+					.set(earned_leave_schedule.attempted, 1)
+					.set(earned_leave_schedule.allocated_via, "Manually")
+					.set(earned_leave_schedule.failed, 0)
+					.set(earned_leave_schedule.failure_reason, "")
+				).run()
+
 
 def get_previous_allocation(from_date, leave_type, employee):
 	"""Returns document properties of previous allocation"""

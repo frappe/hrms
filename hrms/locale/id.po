@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-11-02 09:33+0000\n"
-"PO-Revision-Date: 2025-11-05 09:41\n"
+"POT-Creation-Date: 2025-11-09 09:34+0000\n"
+"PO-Revision-Date: 2025-11-11 11:43\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Indonesian\n"
 "MIME-Version: 1.0\n"
@@ -416,7 +416,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_component_account/salary_component_account.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 msgid "Account"
-msgstr "Akun"
+msgstr ""
 
 #. Label of the account_head (Link) field in DocType 'Expense Taxes and
 #. Charges'
@@ -2148,7 +2148,7 @@ msgstr ""
 #. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Blue"
-msgstr "Biru"
+msgstr ""
 
 #. Label of the body_section (Section Break) field in DocType 'Appointment
 #. Letter'
@@ -2267,7 +2267,7 @@ msgstr "Panggilan"
 
 #: hrms/setup.py:394
 msgid "Campaign"
-msgstr "Kampanye"
+msgstr ""
 
 #: frontend/src/components/FileUploaderView.vue:65
 #: frontend/src/components/FormView.vue:240
@@ -2443,7 +2443,7 @@ msgid "Check Vacancies On Job Offer Creation"
 msgstr ""
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:370
-#: hrms/hr/utils.py:865
+#: hrms/hr/utils.py:864
 msgid "Check {0} for more details"
 msgstr ""
 
@@ -2559,7 +2559,7 @@ msgstr "Tutup"
 #. Option for the 'Status' (Select) field in DocType 'Job Opening'
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/job_opening/job_opening.json
 msgid "Closed"
-msgstr "Tertutup"
+msgstr ""
 
 #. Label of the closed_on (Date) field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
@@ -2592,7 +2592,7 @@ msgstr ""
 #: hrms/public/js/hierarchy_chart/hierarchy_chart_desktop.js:125
 #: hrms/public/js/hierarchy_chart/hierarchy_chart_desktop.js:130
 msgid "Collapse All"
-msgstr "Ciutkan Semua"
+msgstr "Perkecil Semua"
 
 #. Label of the color (Color) field in DocType 'Leave Application'
 #: hrms/hr/doctype/leave_application/leave_application.json
@@ -3157,7 +3157,7 @@ msgstr ""
 msgid "Creation Date"
 msgstr ""
 
-#: hrms/hr/utils.py:874
+#: hrms/hr/utils.py:873
 msgid "Creation Failed"
 msgstr ""
 
@@ -3235,7 +3235,7 @@ msgstr ""
 #: hrms/payroll/report/salary_register/salary_register.py:254
 #: hrms/payroll/workspace/salary_payout/salary_payout.json
 msgid "Currency"
-msgstr "Mata Uang"
+msgstr "Mata uang"
 
 #. Label of the currency_section (Section Break) field in DocType 'Employee
 #. Advance'
@@ -3352,7 +3352,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Daily"
-msgstr "Harian"
+msgstr "Sehari-hari"
 
 #. Name of a DocType
 #. Label of a Card Break in the Employee Lifecycle Workspace
@@ -3401,7 +3401,7 @@ msgstr "Ringkasan Ringkasan Pekerjaan Harian"
 #: hrms/hr/workspace/recruitment/recruitment.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Dashboard"
-msgstr ""
+msgstr "Dasbor"
 
 #. Label of the date (Date) field in DocType 'Employee Attendance Tool'
 #. Label of the date (Date) field in DocType 'Employee Referral'
@@ -3784,7 +3784,7 @@ msgstr "Perjalanan Pengiriman"
 #: hrms/public/js/salary_slip_deductions_report_filters.js:42 hrms/setup.py:402
 #: hrms/templates/generators/job_opening.html:87
 msgid "Department"
-msgstr "Departemen"
+msgstr ""
 
 #. Name of a DocType
 #: hrms/hr/doctype/department_approver/department_approver.json
@@ -3960,7 +3960,7 @@ msgstr ""
 #: hrms/payroll/report/salary_register/salary_register.js:70
 #: hrms/payroll/report/salary_register/salary_register.py:153
 msgid "Designation"
-msgstr "Jabatan"
+msgstr ""
 
 #. Name of a DocType
 #: hrms/hr/doctype/designation_skill/designation_skill.json
@@ -4087,13 +4087,13 @@ msgstr ""
 #: frontend/src/components/FormView.vue:45
 #: frontend/src/views/salary_slip/Detail.vue:39
 msgid "Download PDF"
-msgstr "Unduh PDF"
+msgstr ""
 
 #. Label of the download_template (Section Break) field in DocType 'Upload
 #. Attendance'
 #: hrms/hr/doctype/upload_attendance/upload_attendance.json
 msgid "Download Template"
-msgstr "Unduh Template"
+msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Advance'
 #. Option for the 'Approval Status' (Select) field in DocType 'Expense Claim'
@@ -5423,7 +5423,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/report/salary_register/salary_register.py:173
 msgid "End Date"
-msgstr "Tanggal Akhir"
+msgstr "Tanggal Berakhir"
 
 #: frontend/src/views/attendance/ShiftAssignmentForm.vue:75
 msgid "End Date cannot be before Start Date"
@@ -5514,7 +5514,7 @@ msgid "Error"
 msgstr "Kesalahan"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:372
-#: hrms/hr/utils.py:867
+#: hrms/hr/utils.py:866
 msgid "Error Log"
 msgstr "Catatan eror"
 
@@ -5780,7 +5780,7 @@ msgstr ""
 #: hrms/public/js/hierarchy_chart/hierarchy_chart_desktop.js:120
 #: hrms/public/js/hierarchy_chart/hierarchy_chart_desktop.js:124
 msgid "Expand All"
-msgstr "Perluas Semua"
+msgstr "Melebarkan semua"
 
 #. Label of the expected_average_rating (Rating) field in DocType 'Interview'
 #. Label of the expected_average_rating (Rating) field in DocType 'Interview
@@ -5992,9 +5992,9 @@ msgstr ""
 #. Option for the 'Status' (Select) field in DocType 'Payroll Entry'
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 msgid "Failed"
-msgstr "Gagal"
+msgstr ""
 
-#: hrms/hr/utils.py:862
+#: hrms/hr/utils.py:861
 msgid "Failed to create/submit {0} for employees:"
 msgstr ""
 
@@ -6029,7 +6029,7 @@ msgstr ""
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1600
 #: hrms/public/js/utils/index.js:149
 msgid "Failure"
-msgstr ""
+msgstr "Kegagalan"
 
 #. Label of the failure_details_section (Tab Break) field in DocType 'Payroll
 #. Entry'
@@ -6056,7 +6056,7 @@ msgstr ""
 #: hrms/hr/doctype/interview_feedback/interview_feedback.json
 #: hrms/hr/doctype/training_feedback/training_feedback.json
 msgid "Feedback"
-msgstr "Umpan balik"
+msgstr ""
 
 #: hrms/hr/report/appraisal_overview/appraisal_overview.py:48
 msgid "Feedback Count"
@@ -6190,7 +6190,7 @@ msgstr ""
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json
 #: hrms/www/jobs/index.html:19 hrms/www/jobs/index.html:312
 msgid "Filters"
-msgstr "Penyaring"
+msgstr ""
 
 #. Label of the employee_status (Select) field in DocType 'Exit Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json
@@ -6747,7 +6747,7 @@ msgstr ""
 #. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Green"
-msgstr "Hijau"
+msgstr ""
 
 #. Label of a Card Break in the Employee Lifecycle Workspace
 #: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
@@ -6812,7 +6812,7 @@ msgstr ""
 
 #: hrms/hr/report/daily_work_summary_replies/daily_work_summary_replies.js:9
 msgid "Group"
-msgstr "Grup"
+msgstr ""
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:96
 msgid "Group By"
@@ -7866,7 +7866,7 @@ msgstr ""
 #: hrms/payroll/doctype/employee_tax_exemption_sub_category/employee_tax_exemption_sub_category.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 msgid "Is Active"
-msgstr "Aktif"
+msgstr ""
 
 #. Label of the is_applicable_for_referral_bonus (Check) field in DocType
 #. 'Employee Referral'
@@ -7918,7 +7918,7 @@ msgstr ""
 #. Label of the is_group (Check) field in DocType 'Goal'
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:51
 msgid "Is Group"
-msgstr "Apakah Group?"
+msgstr ""
 
 #. Label of the is_income_tax_component (Check) field in DocType 'Salary
 #. Component'
@@ -8800,7 +8800,7 @@ msgstr ""
 msgid "Loan Repayment Entry"
 msgstr ""
 
-#: hrms/hr/utils.py:749
+#: hrms/hr/utils.py:748
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr ""
 
@@ -8818,7 +8818,7 @@ msgstr ""
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.py:33
 #: hrms/templates/generators/job_opening.html:66
 msgid "Location"
-msgstr "Lokasi"
+msgstr ""
 
 #. Label of the device_id (Data) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
@@ -8900,7 +8900,7 @@ msgstr ""
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.js:257
 #: hrms/hr/doctype/goal/goal.js:104
 msgid "Mandatory"
-msgstr "Wajib"
+msgstr ""
 
 #. Label of the mandatory_benefit_application (Check) field in DocType 'Payroll
 #. Settings'
@@ -9188,7 +9188,7 @@ msgstr ""
 msgid "Missing Advance Account"
 msgstr ""
 
-#: hrms/hr/utils.py:846
+#: hrms/hr/utils.py:845
 msgid "Missing Field"
 msgstr ""
 
@@ -9495,7 +9495,7 @@ msgstr "Tidak Ada Karyawan yang Ditemukan"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "Karyawan tidak ditemukan untuk nilai bidang karyawan yang diberikan. &#39;{}&#39;: {}"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hrms/hr/utils.py:852
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hrms/hr/utils.py:851
 msgid "No Employees Selected"
 msgstr ""
 
@@ -9901,7 +9901,7 @@ msgstr ""
 #. Option for the 'Status' (Select) field in DocType 'Job Requisition'
 #: hrms/hr/doctype/job_requisition/job_requisition.json
 msgid "On Hold"
-msgstr "Tertahan"
+msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Attendance'
 #: frontend/src/components/AttendanceCalendar.vue:80
@@ -10315,7 +10315,7 @@ msgstr ""
 msgid "Part-time"
 msgstr ""
 
-#: hrms/hr/utils.py:871 hrms/public/js/utils/index.js:154
+#: hrms/hr/utils.py:870 hrms/public/js/utils/index.js:154
 msgid "Partial Success"
 msgstr ""
 
@@ -10663,7 +10663,7 @@ msgstr ""
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/interview/interview.json
 #: hrms/hr/doctype/job_requisition/job_requisition.json
 msgid "Pending"
-msgstr "Menunggu"
+msgstr ""
 
 #. Description of the 'Pending Amount' (Currency) field in DocType 'Employee
 #. Advance'
@@ -10824,7 +10824,7 @@ msgstr ""
 msgid "Please select Shift Type and assignment date(s)."
 msgstr ""
 
-#: hrms/hr/utils.py:743
+#: hrms/hr/utils.py:742
 msgid "Please select a Company"
 msgstr "Silakan pilih sebuah Perusahaan"
 
@@ -10845,7 +10845,7 @@ msgstr "Silakan pilih file csv"
 msgid "Please select a date."
 msgstr ""
 
-#: hrms/hr/utils.py:740
+#: hrms/hr/utils.py:739
 msgid "Please select an Applicant"
 msgstr ""
 
@@ -10853,7 +10853,7 @@ msgstr ""
 msgid "Please select at least one Shift Request to perform this action."
 msgstr ""
 
-#: hrms/hr/utils.py:851
+#: hrms/hr/utils.py:850
 msgid "Please select at least one employee to perform this action."
 msgstr ""
 
@@ -11110,7 +11110,7 @@ msgstr ""
 #. Label of the select_print_heading (Link) field in DocType 'Job Offer'
 #: hrms/hr/doctype/job_offer/job_offer.json
 msgid "Print Heading"
-msgstr "Cetak Pos"
+msgstr ""
 
 #: hrms/payroll/report/salary_register/salary_register.html:40
 msgid "Printed On {0}"
@@ -11201,7 +11201,7 @@ msgstr ""
 #. Label of the progress (Percent) field in DocType 'Goal'
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:76
 msgid "Progress"
-msgstr ""
+msgstr "Kemajuan"
 
 #. Label of the project (Link) field in DocType 'Employee Onboarding'
 #. Label of the project (Link) field in DocType 'Employee Separation'
@@ -11490,7 +11490,7 @@ msgstr "Analitik Rekrutmen"
 #. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Red"
-msgstr "Merah"
+msgstr ""
 
 #. Option for the 'Adjustment Type' (Select) field in DocType 'Leave
 #. Adjustment'
@@ -11552,7 +11552,7 @@ msgstr ""
 #: hrms/hr/doctype/pwa_notification/pwa_notification.json
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
 msgid "Reference Document Type"
-msgstr "Tipe Dokumen Referensi"
+msgstr ""
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:371
 #: hrms/hr/doctype/leave_application/leave_application.py:504
@@ -11742,7 +11742,7 @@ msgstr "Membuka lagi"
 msgid "Repay From Salary"
 msgstr ""
 
-#: hrms/hr/utils.py:755
+#: hrms/hr/utils.py:754
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "Bayar Dari Gaji hanya dapat dipilih untuk pinjaman berjangka"
 
@@ -11760,7 +11760,7 @@ msgstr ""
 #. Option for the 'Status' (Select) field in DocType 'Job Applicant'
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 msgid "Replied"
-msgstr "Menjawab"
+msgstr ""
 
 #: hrms/hr/report/daily_work_summary_replies/daily_work_summary_replies.py:22
 msgid "Replies"
@@ -12804,7 +12804,7 @@ msgstr "Seri"
 #. Option for the 'Type' (Select) field in DocType 'Vehicle Service'
 #: hrms/hr/doctype/vehicle_service/vehicle_service.json
 msgid "Service"
-msgstr "Jasa"
+msgstr ""
 
 #. Label of the service_details (Section Break) field in DocType 'Vehicle Log'
 #: hrms/hr/doctype/vehicle_log/vehicle_log.json
@@ -12924,7 +12924,7 @@ msgstr "Diselesaikan"
 msgid "Setup"
 msgstr "Pengaturan"
 
-#: hrms/hr/utils.py:703
+#: hrms/hr/utils.py:702
 msgid "Shared document with the user {0} with 'Submit' permission"
 msgstr ""
 
@@ -13592,13 +13592,13 @@ msgstr ""
 #: frontend/src/components/RequestActionSheet.vue:309
 #: frontend/src/views/AppSettings.vue:95
 #: hrms/hr/doctype/employee_referral/employee_referral.py:54
-#: hrms/hr/utils.py:876
+#: hrms/hr/utils.py:875
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1592
 #: hrms/public/js/utils/index.js:139
 msgid "Success"
 msgstr "Keberhasilan"
 
-#: hrms/hr/utils.py:879
+#: hrms/hr/utils.py:878
 msgid "Successfully created {0} for employees:"
 msgstr ""
 
@@ -14724,7 +14724,7 @@ msgstr "tipe transaksi"
 msgid "Transactions"
 msgstr "Transaksi"
 
-#: hrms/hr/utils.py:726
+#: hrms/hr/utils.py:725
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr ""
 
@@ -14799,7 +14799,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_component/salary_component.json
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.js:12
 msgid "Type"
-msgstr "Jenis"
+msgstr ""
 
 #. Label of the type_of_proof (Data) field in DocType 'Employee Tax Exemption
 #. Proof Submission Detail'
@@ -15157,7 +15157,7 @@ msgstr "Memeriksa"
 #: hrms/hr/doctype/expense_claim/expense_claim.js:165
 #: hrms/hr/doctype/job_applicant/job_applicant.js:42
 msgid "View"
-msgstr "Melihat"
+msgstr ""
 
 #: frontend/src/components/Holidays.vue:10
 msgid "View All"
@@ -15206,7 +15206,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:52
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:132
 msgid "Warning"
-msgstr "Peringatan"
+msgstr ""
 
 #: hrms/hr/doctype/leave_application/leave_application.py:415
 msgid "Warning: Insufficient leave balance for Leave Type {0} in this allocation."
@@ -15406,7 +15406,7 @@ msgstr ""
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:68
 #: hrms/public/js/salary_slip_deductions_report_filters.js:36
 msgid "Year"
-msgstr "Tahun"
+msgstr ""
 
 #. Label of the year_to_date (Currency) field in DocType 'Salary Detail'
 #. Label of the year_to_date (Currency) field in DocType 'Salary Slip'
@@ -15722,7 +15722,7 @@ msgstr ""
 msgid "{0} is not in Optional Holiday List"
 msgstr "{0} tidak ada dalam Daftar Holiday Opsional"
 
-#: hrms/hr/utils.py:846
+#: hrms/hr/utils.py:845
 msgid "{0} is required"
 msgstr "{0} diperlukan"
 

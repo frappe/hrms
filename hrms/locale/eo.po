@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-11-02 09:33+0000\n"
-"PO-Revision-Date: 2025-11-03 22:17\n"
+"POT-Creation-Date: 2025-11-09 09:34+0000\n"
+"PO-Revision-Date: 2025-11-10 11:03\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -2443,7 +2443,7 @@ msgid "Check Vacancies On Job Offer Creation"
 msgstr "crwdns141136:0crwdne141136:0"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:370
-#: hrms/hr/utils.py:865
+#: hrms/hr/utils.py:864
 msgid "Check {0} for more details"
 msgstr "crwdns105598:0{0}crwdne105598:0"
 
@@ -3157,7 +3157,7 @@ msgstr "crwdns151976:0{0}crwdne151976:0"
 msgid "Creation Date"
 msgstr "crwdns141224:0crwdne141224:0"
 
-#: hrms/hr/utils.py:874
+#: hrms/hr/utils.py:873
 msgid "Creation Failed"
 msgstr "crwdns105938:0crwdne105938:0"
 
@@ -5514,7 +5514,7 @@ msgid "Error"
 msgstr "crwdns107008:0crwdne107008:0"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:372
-#: hrms/hr/utils.py:867
+#: hrms/hr/utils.py:866
 msgid "Error Log"
 msgstr "crwdns107010:0crwdne107010:0"
 
@@ -5994,7 +5994,7 @@ msgstr "crwdns107184:0crwdne107184:0"
 msgid "Failed"
 msgstr "crwdns141484:0crwdne141484:0"
 
-#: hrms/hr/utils.py:862
+#: hrms/hr/utils.py:861
 msgid "Failed to create/submit {0} for employees:"
 msgstr "crwdns107188:0{0}crwdne107188:0"
 
@@ -8800,7 +8800,7 @@ msgstr "crwdns108270:0crwdne108270:0"
 msgid "Loan Repayment Entry"
 msgstr "crwdns141852:0crwdne141852:0"
 
-#: hrms/hr/utils.py:749
+#: hrms/hr/utils.py:748
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr "crwdns108274:0{0}crwdnd108274:0{1}crwdne108274:0"
 
@@ -9188,7 +9188,7 @@ msgstr "crwdns151988:0crwdne151988:0"
 msgid "Missing Advance Account"
 msgstr "crwdns159590:0crwdne159590:0"
 
-#: hrms/hr/utils.py:846
+#: hrms/hr/utils.py:845
 msgid "Missing Field"
 msgstr "crwdns141914:0crwdne141914:0"
 
@@ -9495,7 +9495,7 @@ msgstr "crwdns108518:0crwdne108518:0"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "crwdns108520:0crwdne108520:0"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hrms/hr/utils.py:852
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hrms/hr/utils.py:851
 msgid "No Employees Selected"
 msgstr "crwdns108522:0crwdne108522:0"
 
@@ -10315,7 +10315,7 @@ msgstr "crwdns142050:0crwdne142050:0"
 msgid "Part-time"
 msgstr "crwdns108778:0crwdne108778:0"
 
-#: hrms/hr/utils.py:871 hrms/public/js/utils/index.js:154
+#: hrms/hr/utils.py:870 hrms/public/js/utils/index.js:154
 msgid "Partial Success"
 msgstr "crwdns108780:0crwdne108780:0"
 
@@ -10824,7 +10824,7 @@ msgstr "crwdns151990:0crwdne151990:0"
 msgid "Please select Shift Type and assignment date(s)."
 msgstr "crwdns142112:0crwdne142112:0"
 
-#: hrms/hr/utils.py:743
+#: hrms/hr/utils.py:742
 msgid "Please select a Company"
 msgstr "crwdns108964:0crwdne108964:0"
 
@@ -10845,7 +10845,7 @@ msgstr "crwdns108970:0crwdne108970:0"
 msgid "Please select a date."
 msgstr "crwdns108972:0crwdne108972:0"
 
-#: hrms/hr/utils.py:740
+#: hrms/hr/utils.py:739
 msgid "Please select an Applicant"
 msgstr "crwdns108974:0crwdne108974:0"
 
@@ -10853,7 +10853,7 @@ msgstr "crwdns108974:0crwdne108974:0"
 msgid "Please select at least one Shift Request to perform this action."
 msgstr "crwdns142114:0crwdne142114:0"
 
-#: hrms/hr/utils.py:851
+#: hrms/hr/utils.py:850
 msgid "Please select at least one employee to perform this action."
 msgstr "crwdns142116:0crwdne142116:0"
 
@@ -11742,7 +11742,7 @@ msgstr "crwdns109282:0crwdne109282:0"
 msgid "Repay From Salary"
 msgstr "crwdns148910:0crwdne148910:0"
 
-#: hrms/hr/utils.py:755
+#: hrms/hr/utils.py:754
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "crwdns109284:0crwdne109284:0"
 
@@ -12924,7 +12924,7 @@ msgstr "crwdns142418:0crwdne142418:0"
 msgid "Setup"
 msgstr "crwdns109706:0crwdne109706:0"
 
-#: hrms/hr/utils.py:703
+#: hrms/hr/utils.py:702
 msgid "Shared document with the user {0} with 'Submit' permission"
 msgstr "crwdns155426:0{0}crwdne155426:0"
 
@@ -13592,13 +13592,13 @@ msgstr "crwdns109970:0{1}crwdnd109970:0{2}crwdnd109970:0{0}crwdnd109970:0{3}crwd
 #: frontend/src/components/RequestActionSheet.vue:309
 #: frontend/src/views/AppSettings.vue:95
 #: hrms/hr/doctype/employee_referral/employee_referral.py:54
-#: hrms/hr/utils.py:876
+#: hrms/hr/utils.py:875
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1592
 #: hrms/public/js/utils/index.js:139
 msgid "Success"
 msgstr "crwdns109972:0crwdne109972:0"
 
-#: hrms/hr/utils.py:879
+#: hrms/hr/utils.py:878
 msgid "Successfully created {0} for employees:"
 msgstr "crwdns142482:0{0}crwdne142482:0"
 
@@ -14724,7 +14724,7 @@ msgstr "crwdns142650:0crwdne142650:0"
 msgid "Transactions"
 msgstr "crwdns110396:0crwdne110396:0"
 
-#: hrms/hr/utils.py:726
+#: hrms/hr/utils.py:725
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr "crwdns110398:0{0}crwdne110398:0"
 
@@ -15722,7 +15722,7 @@ msgstr "crwdns110744:0{0}crwdnd110744:0{1}crwdne110744:0"
 msgid "{0} is not in Optional Holiday List"
 msgstr "crwdns110746:0{0}crwdne110746:0"
 
-#: hrms/hr/utils.py:846
+#: hrms/hr/utils.py:845
 msgid "{0} is required"
 msgstr "crwdns110750:0{0}crwdne110750:0"
 
