@@ -1203,7 +1203,7 @@ class PayrollEntry(Document):
 		holidays = frappe.db.get_all(
 			"Holiday",
 			filters={"parent": holiday_list, "holiday_date": ("between", [start_date, end_date])},
-			fields=["COUNT(*) as holidays_count"],
+			fields=[{"COUNT": "*", "as": "holidays_count"}],
 		)[0]
 
 		if holidays:
