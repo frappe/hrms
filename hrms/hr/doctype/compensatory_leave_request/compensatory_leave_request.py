@@ -118,7 +118,7 @@ class CompensatoryLeaveRequest(Document):
 				leave_allocation.db_set("new_leaves_allocated", leave_allocation.total_leaves_allocated)
 				leave_allocation.db_set("total_leaves_allocated", leave_allocation.total_leaves_allocated)
 
-				# create reverse entry on cancelation
+				# create reverse entry on cancellation
 				create_additional_leave_ledger_entry(
 					leave_allocation, date_difference * -1, add_days(self.work_end_date, 1)
 				)
