@@ -1,0 +1,21 @@
+{
+ "app": "hrms",
+ "creation": "2025-11-17 20:33:43.199386",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon": "milestone",
+ "icon_type": "Link",
+ "idx": 0,
+ "label": "Attendance",
+ "link_to": "Attendance",
+ "link_type": "Workspace",
+ "logo_url": "/assets/hrms/icons/desktop_icons/shift-attendence.svg",
+ "modified": "2025-11-17 20:45:37.819948",
+ "modified_by": "Administrator",
+ "name": "Attendance",
+ "owner": "Administrator",
+ "parent_icon": "Frappe HR",
+ "roles": [],
+ "standard": 1
+}

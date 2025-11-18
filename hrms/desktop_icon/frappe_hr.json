@@ -1,0 +1,19 @@
+{
+ "app": "hrms",
+ "creation": "2025-11-17 20:33:43.167514",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon_type": "App",
+ "idx": 13,
+ "label": "Frappe HR",
+ "link": "/app/overview",
+ "link_type": "External",
+ "logo_url": "/assets/hrms/images/frappe-hr-logo.svg",
+ "modified": "2025-11-17 23:06:19.010255",
+ "modified_by": "Administrator",
+ "name": "Frappe HR",
+ "owner": "Administrator",
+ "roles": [],
+ "standard": 1
+}

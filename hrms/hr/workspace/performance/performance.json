@@ -1,7 +1,7 @@
 {
  "app": "hrms",
  "charts": [],
- "content": "[{\"id\":\"nZ9MUieUjy\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"ETYoHfg2k0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Appraisal\",\"col\":3}},{\"id\":\"VRnsImMEoD\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Performance Feedback\",\"col\":5}},{\"id\":\"vXBMJGJ98C\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Goal\",\"col\":3}},{\"id\":\"Vtre-LDhRc\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"NmUDJB28UL\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Transactions</b></span>\",\"col\":12}},{\"id\":\"vNnUr6yHsH\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"v8mC6C_9V-\",\"type\":\"card\",\"data\":{\"card_name\":\"Appraisal\",\"col\":4}},{\"id\":\"8X_kx16fax\",\"type\":\"card\",\"data\":{\"card_name\":\"Energy Points\",\"col\":4}},{\"id\":\"x_fx5yusAz\",\"type\":\"card\",\"data\":{\"card_name\":\"Promotion\",\"col\":4}},{\"id\":\"ofPrShxelC\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"nZ9MUieUjy\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"ETYoHfg2k0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Appraisal\",\"col\":3}},{\"id\":\"VRnsImMEoD\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Performance Feedback\",\"col\":5}},{\"id\":\"vXBMJGJ98C\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Goal\",\"col\":3}},{\"id\":\"Vtre-LDhRc\",\"type\":\"spacer\",\"data\":{\"col\":12}}]",
  "creation": "2022-08-20 16:17:20.159886",
  "custom_blocks": [],
  "docstatus": 0,
@@ -16,44 +16,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Energy Points",
-   "link_count": 3,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Energy Point Rule",
-   "link_count": 0,
-   "link_to": "Energy Point Rule",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Energy Point Settings",
-   "link_count": 0,
-   "link_to": "Energy Point Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Energy Point Log",
-   "link_count": 0,
-   "link_to": "Energy Point Log",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Promotion",
    "link_count": 1,
    "onboard": 0,
@@ -65,44 +27,6 @@
    "label": "Employee Promotion",
    "link_count": 0,
    "link_to": "Employee Promotion",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Masters",
-   "link_count": 3,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Appraisal Template",
-   "link_count": 0,
-   "link_to": "Appraisal Template",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "KRA",
-   "link_count": 0,
-   "link_to": "KRA",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Employee Feedback Criteria",
-   "link_count": 0,
-   "link_to": "Employee Feedback Criteria",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -154,27 +78,9 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Reports",
-   "link_count": 1,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Appraisal Overview",
-   "link_count": 0,
-   "link_to": "Appraisal Overview",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
   }
  ],
- "modified": "2025-02-18 15:55:42.734793",
+ "modified": "2025-11-17 22:23:43.187676",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Performance",

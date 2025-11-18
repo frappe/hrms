@@ -1,0 +1,21 @@
+{
+ "app": "hrms",
+ "creation": "2025-11-17 20:33:43.196211",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon": "star",
+ "icon_type": "Link",
+ "idx": 0,
+ "label": "Performance",
+ "link_to": "Performance",
+ "link_type": "Workspace",
+ "logo_url": "/assets/hrms/icons/desktop_icons/performance.svg",
+ "modified": "2025-11-17 20:47:01.054194",
+ "modified_by": "Administrator",
+ "name": "Performance",
+ "owner": "Administrator",
+ "parent_icon": "Frappe HR",
+ "roles": [],
+ "standard": 1
+}
