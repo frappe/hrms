@@ -155,8 +155,8 @@ const checkins = createListResource({
         employee: employee.data.name,
     },
     orderBy: "time desc",
+    auto: false, // Disable auto fetch to ensure it fetches with correct employee data
 })
-
 const allowedLocationsResource = createResource({
     url: "frappe.client.get",
     params: {
@@ -248,17 +248,26 @@ const shiftTypeResource = createResource({
     },
 })
 
-watch(selectedLocation, (newLocation) => {
-    console.log("Selected location changed:", newLocation);
-    if (newLocation) {
-        shiftTypeResource.fetch();
-        console.log("Refetched Shift Type for location:", newLocation);
+// Watch for employee data changes to refetch checkins
+watch(() => employee.data?.name, (newEmployeeName) => {
+    if (newEmployeeName) {
+        console.log("Employee changed, refetching checkins for:", newEmployeeName);
+        checkins.fetch();
+    }
+})
+
+// Watch for employee data changes to refetch checkins
+watch(() => employee.data?.name, (newEmployeeName) => {
+    if (newEmployeeName) {
+        console.log("Employee changed, refetching checkins for:", newEmployeeName);
+        checkins.fetch();
     }
 })
 
 onMounted(() => {
     console.log("Component mounted, employee:", employee.data);
     console.log("Fetching resources...");
+    checkins.fetch() // Fetch checkins data on mount
     allowedLocationsResource.fetch()
     shiftTypeResource.fetch()
     socket.emit("doctype_subscribe", DOCTYPE)
