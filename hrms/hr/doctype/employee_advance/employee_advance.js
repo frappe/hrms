@@ -15,18 +15,12 @@ frappe.ui.form.on("Employee Advance", {
 			if (!frm.doc.employee) {
 				frappe.msgprint(__("Please select employee first"));
 			}
-			let company_currency = erpnext.get_currency(frm.doc.company);
-			let currencies = [company_currency];
-			if (frm.doc.currency && frm.doc.currency != company_currency) {
-				currencies.push(frm.doc.currency);
-			}
-
 			return {
 				filters: {
 					root_type: "Asset",
 					is_group: 0,
 					company: frm.doc.company,
-					account_currency: ["in", currencies],
+					account_currency: frm.doc.currency,
 					account_type: "Receivable",
 				},
 			};
@@ -45,7 +39,13 @@ frappe.ui.form.on("Employee Advance", {
 		if (
 			frm.doc.docstatus === 1 &&
 			flt(frm.doc.paid_amount) < flt(frm.doc.advance_amount) &&
-			frappe.model.can_create("Payment Entry")
+			frappe.model.can_create("Payment Entry") &&
+			!(
+				(frm.doc.repay_unclaimed_amount_from_salary == 1 && frm.doc.paid_amount) ||
+				(frm.doc.__onload &&
+					frm.doc.__onload.make_payment_via_journal_entry == 1 &&
+					frm.doc.paid_amount)
+			)
 		) {
 			frm.add_custom_button(
 				__("Payment"),
@@ -67,6 +67,7 @@ frappe.ui.form.on("Employee Advance", {
 				__("Create"),
 			);
 		}
+		frm.trigger("update_fields_label");
 
 		if (
 			frm.doc.docstatus === 1 &&
@@ -133,13 +134,18 @@ frappe.ui.form.on("Employee Advance", {
 		return frappe.call({
 			method: "hrms.hr.doctype.expense_claim.expense_claim.get_expense_claim",
 			args: {
-				employee_name: frm.doc.employee,
-				company: frm.doc.company,
-				employee_advance_name: frm.doc.name,
-				posting_date: frm.doc.posting_date,
-				paid_amount: frm.doc.paid_amount,
-				claimed_amount: frm.doc.claimed_amount,
-				return_amount: frm.doc.return_amount,
+				advance_details: {
+					employee_name: frm.doc.employee,
+					company: frm.doc.company,
+					currency: frm.doc.currency,
+					employee_advance_name: frm.doc.name,
+					posting_date: frm.doc.posting_date,
+					paid_amount: frm.doc.paid_amount,
+					base_paid_amount: frm.doc.base_paid_amount,
+					claimed_amount: frm.doc.claimed_amount,
+					return_amount: frm.doc.return_amount,
+					payment_via_journal_entry: frm.doc.__onload.make_payment_via_journal_entry,
+				},
 			},
 			callback: function (r) {
 				const doclist = frappe.model.sync(r.message);
@@ -159,7 +165,6 @@ frappe.ui.form.on("Employee Advance", {
 				advance_account: frm.doc.advance_account,
 				mode_of_payment: frm.doc.mode_of_payment,
 				currency: frm.doc.currency,
-				exchange_rate: frm.doc.exchange_rate,
 			},
 			callback: function (r) {
 				const doclist = frappe.model.sync(r.message);
@@ -169,58 +174,14 @@ frappe.ui.form.on("Employee Advance", {
 	},
 
 	employee: function (frm) {
-		if (frm.doc.employee) frm.trigger("get_employee_currency");
-	},
-
-	get_employee_currency: function (frm) {
-		frappe.db.get_value(
-			"Salary Structure Assignment",
-			{ employee: frm.doc.employee, docstatus: 1 },
-			"currency",
-			(r) => {
-				if (r.currency) frm.set_value("currency", r.currency);
-				else frm.set_value("currency", erpnext.get_currency(frm.doc.company));
-				frm.refresh_fields();
-			},
-		);
-	},
-
-	currency: function (frm) {
-		if (frm.doc.currency) {
-			var from_currency = frm.doc.currency;
-			var company_currency;
-			if (!frm.doc.company) {
-				company_currency = erpnext.get_currency(frappe.defaults.get_default("Company"));
-			} else {
-				company_currency = erpnext.get_currency(frm.doc.company);
-			}
-			if (from_currency != company_currency) {
-				frm.events.set_exchange_rate(frm, from_currency, company_currency);
-			} else {
-				frm.set_value("exchange_rate", 1.0);
-				frm.set_df_property("exchange_rate", "hidden", 1);
-				frm.set_df_property("exchange_rate", "description", "");
-			}
-			frm.refresh_fields();
+		if (frm.doc.employee) {
+			frm.trigger("update_fields_label");
 		}
 	},
 
-	set_exchange_rate: function (frm, from_currency, company_currency) {
-		frappe.call({
-			method: "erpnext.setup.utils.get_exchange_rate",
-			args: {
-				from_currency: from_currency,
-				to_currency: company_currency,
-			},
-			callback: function (r) {
-				frm.set_value("exchange_rate", flt(r.message));
-				frm.set_df_property("exchange_rate", "hidden", 0);
-				frm.set_df_property(
-					"exchange_rate",
-					"description",
-					"1 " + frm.doc.currency + " = [?] " + company_currency,
-				);
-			},
-		});
+	update_fields_label: function (frm) {
+		frm.set_currency_labels(["paid_amount"], frm.doc.currency);
+		frm.set_currency_labels(["base_paid_amount"], erpnext.get_currency(frm.doc.company));
+		frm.refresh_fields();
 	},
 });

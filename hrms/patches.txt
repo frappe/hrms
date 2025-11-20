@@ -31,6 +31,7 @@ hrms.patches.v15_0.set_half_day_status_to_present_in_exisiting_half_day_attendan
 hrms.patches.v14_0.create_marginal_relief_field_for_india_localisation
 hrms.patches.v15_0.create_marginal_relief_field_for_india_localisation
 hrms.patches.v15_0.fix_timesheet_status
-hrms.patches.v15_0.update_advance_payment_ledger_amount #2025-09-23
+hrms.patches.v15_0.update_advance_payment_ledger_amount #2025-09-23 
 hrms.patches.v15_0.call_set_total_advance_paid_on_advance_documents #2025-09-23
 hrms.patches.v15_0.rename_claim_date_to_payroll_date_in_employee_benefit_claim
+hrms.patches.v16_0.create_custom_field_for_employee_advance_in_employee_master

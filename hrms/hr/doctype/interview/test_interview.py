@@ -75,6 +75,9 @@ class TestInterview(IntegrationTestCase):
 
 		frappe.db.set_single_value("HR Settings", "send_interview_reminder", 1)
 		send_interview_reminder()
+		import time
+
+		time.sleep(1)
 		self.assertTrue(get_email_by_subject("Subject: Interview Reminder"))
 
 	def test_notification_for_feedback_submission(self):

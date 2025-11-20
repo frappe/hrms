@@ -5,6 +5,9 @@
 cur_frm.add_fetch("employee", "employee_name", "employee_name");
 
 frappe.ui.form.on("Leave Allocation", {
+	setup: function (frm) {
+		frm.trigger("set_indicator");
+	},
 	onload: function (frm) {
 		// Ignore cancellation of doctype on cancel all.
 		frm.ignore_doctypes_on_cancel_all = ["Leave Ledger Entry"];
@@ -99,6 +102,8 @@ frappe.ui.form.on("Leave Allocation", {
 				);
 			}
 		}
+		frm.trigger("set_indicator");
+		frm.trigger("toggle_retry_button");
 	},
 
 	expire_allocation: function (frm) {
@@ -161,6 +166,52 @@ frappe.ui.form.on("Leave Allocation", {
 				"Leave Policy",
 			);
 		}
+	},
+
+	toggle_retry_button: function (frm) {
+		const earned_leave_schedule = frm.doc.earned_leave_schedule || [];
+		let toggle_button =
+			earned_leave_schedule.some((row) => row.attempted && row.failed) && frm.perm[0]?.write;
+		frm.toggle_display("retry_failed_allocations", toggle_button);
+	},
+
+	retry_failed_allocations: function (frm) {
+		let failed_allocations = (frm.doc.earned_leave_schedule || []).filter(
+			(row) => row.attempted && row.failed,
+		);
+
+		frappe.call({
+			method: "retry_failed_allocations",
+			doc: frm.doc,
+			args: { failed_allocations },
+			freeze: true,
+			freeze_message: __("Retrying allocations"),
+			callback: function (r) {
+				frappe.show_alert({
+					message: __("Retry Successful"),
+					indicator: "green",
+				});
+				frm.reload_doc();
+				frm.refresh_field("retry_failed_allocations");
+			},
+		});
+	},
+	set_indicator: function (frm) {
+		const df = frappe.meta.get_docfield(
+			"Earned Leave Schedule",
+			"allocation_date",
+			frm.doc.name,
+		);
+		df.formatter = function (value, df, options, row) {
+			if (row.attempted && row.failed) {
+				return `<span class="indicator red">${value}</span>`;
+			} else if (row.attempted && row.is_allocated) {
+				return `<span class="indicator green">${value}</span>`;
+			} else {
+				return value;
+			}
+		};
+		frm.refresh_field("earned_leave_schedule");
 	},
 
 	calculate_total_leaves_allocated: function (frm) {

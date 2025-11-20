@@ -246,7 +246,7 @@ def get_shift_type_timing(shift_types):
 	shift_timing_map = {}
 	data = frappe.get_all(
 		"Shift Type",
-		filters={"name": ("IN", shift_types)},
+		filters=[["name", "in", shift_types]],
 		fields=["name", "start_time", "end_time"],
 	)
 

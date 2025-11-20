@@ -1,0 +1,21 @@
+{
+ "app": "hrms",
+ "creation": "2025-11-17 20:33:43.197925",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon": "non-profit",
+ "icon_type": "Link",
+ "idx": 0,
+ "label": "Leaves",
+ "link_to": "Leaves",
+ "link_type": "Workspace",
+ "logo_url": "/assets/hrms/icons/desktop_icons/leaves.svg",
+ "modified": "2025-11-17 20:46:44.257193",
+ "modified_by": "Administrator",
+ "name": "Leaves",
+ "owner": "Administrator",
+ "parent_icon": "Frappe HR",
+ "roles": [],
+ "standard": 1
+}

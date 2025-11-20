@@ -11,7 +11,7 @@
  "icon": "customer",
  "idx": 0,
  "is_hidden": 0,
- "label": "Employee Lifecycle",
+ "label": "Tenure",
  "links": [
   {
    "hidden": 0,
@@ -290,10 +290,10 @@
    "type": "Link"
   }
  ],
- "modified": "2025-04-19 17:45:02.430487",
+ "modified": "2025-11-18 15:47:49.942943",
  "modified_by": "Administrator",
  "module": "HR",
- "name": "Employee Lifecycle",
+ "name": "Tenure",
  "number_cards": [],
  "owner": "Administrator",
  "parent_page": "",
@@ -353,6 +353,6 @@
    "type": "DocType"
   }
  ],
- "title": "Employee Lifecycle",
+ "title": "Tenure",
  "type": "Workspace"
 }

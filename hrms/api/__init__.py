@@ -503,7 +503,7 @@ def get_expense_claims(
 		"`tabExpense Claim`.company",
 		"`tabExpense Claim`.creation",
 		"`tabExpense Claim Detail`.expense_type",
-		"count(`tabExpense Claim Detail`.expense_type) as total_expenses",
+		{"COUNT": "`tabExpense Claim Detail`.expense_type", "as": "total_expenses"},
 	]
 
 	if workflow_state_field := get_workflow_state_field("Expense Claim"):

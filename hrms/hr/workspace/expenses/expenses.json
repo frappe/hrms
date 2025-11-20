@@ -16,7 +16,7 @@
  "icon": "expenses",
  "idx": 0,
  "is_hidden": 0,
- "label": "Expense Claims",
+ "label": "Expenses",
  "links": [
   {
    "hidden": 0,
@@ -257,10 +257,10 @@
    "type": "Link"
   }
  ],
- "modified": "2025-01-15 16:41:35.604928",
+ "modified": "2025-11-18 15:48:33.969360",
  "modified_by": "Administrator",
  "module": "HR",
- "name": "Expense Claims",
+ "name": "Expenses",
  "number_cards": [],
  "owner": "Administrator",
  "parent_page": "",
@@ -295,6 +295,6 @@
    "type": "DocType"
   }
  ],
- "title": "Expense Claims",
+ "title": "Expenses",
  "type": "Workspace"
 }

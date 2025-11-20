@@ -1,0 +1,21 @@
+{
+ "app": "hrms",
+ "creation": "2025-11-17 20:33:43.202873",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon": "users",
+ "icon_type": "Link",
+ "idx": 0,
+ "label": "Recruitment",
+ "link_to": "Recruitment",
+ "link_type": "Workspace",
+ "logo_url": "/assets/hrms/icons/desktop_icons/recruitment.svg",
+ "modified": "2025-11-17 20:46:06.864491",
+ "modified_by": "Administrator",
+ "name": "Recruitment",
+ "owner": "Administrator",
+ "parent_icon": "Frappe HR",
+ "roles": [],
+ "standard": 1
+}

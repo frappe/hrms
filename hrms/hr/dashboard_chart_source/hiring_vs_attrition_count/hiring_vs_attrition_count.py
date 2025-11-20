@@ -67,7 +67,7 @@ def get_records(from_date: str, to_date: str, datefield: str, company: str) -> t
 
 	data = frappe.db.get_list(
 		"Employee",
-		fields=[f"{datefield} as _unit", "SUM(1)", "COUNT(*)"],
+		fields=[f"{datefield} as _unit", {"SUM": 1}, {"COUNT": "*"}],
 		filters=filters,
 		group_by="_unit",
 		order_by="_unit asc",

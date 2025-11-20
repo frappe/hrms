@@ -46,6 +46,7 @@ frappe.ui.form.on("Expense Claim", {
 					report_type: "Balance Sheet",
 					account_type: "Payable",
 					company: frm.doc.company,
+					account_currency: frm.doc.currency,
 					is_group: 0,
 				},
 			};
@@ -90,6 +91,9 @@ frappe.ui.form.on("Expense Claim", {
 				},
 			});
 		}
+
+		frm.trigger("update_fields_label");
+		frm.trigger("update_child_fields_label");
 	},
 
 	refresh: function (frm) {
@@ -110,10 +114,135 @@ frappe.ui.form.on("Expense Claim", {
 			);
 		}
 		frm.trigger("set_form_buttons");
+		frm.trigger("update_fields_label");
+		frm.trigger("update_child_fields_label");
+		if (frm.is_new()) {
+			frm.trigger("set_exchange_rate");
+		}
+
+		if (frm.doc.advances && frm.doc.total_exchange_gain_loss != 0) {
+			frm.add_custom_button(
+				__("View Exchange Gain/Loss Journals"),
+				function () {
+					frappe.set_route("List", "Journal Entry", {
+						voucher_type: "Exchange Gain Or Loss",
+						reference_name: frm.doc.name,
+					});
+				},
+				__("View"),
+			);
+		}
 	},
 
 	validate: function (frm) {
 		frm.trigger("calculate_total");
+		frm.events.set_child_cost_center(frm);
+	},
+
+	currency: function (frm) {
+		frm.trigger("update_fields_label");
+		frm.trigger("update_child_fields_label");
+		frm.trigger("set_exchange_rate");
+	},
+
+	set_exchange_rate: function (frm) {
+		if (frm.doc.currency) {
+			var from_currency = frm.doc.currency;
+			var company_currency;
+			if (!frm.doc.company) {
+				company_currency = erpnext.get_currency(frappe.defaults.get_default("Company"));
+			} else {
+				company_currency = erpnext.get_currency(frm.doc.company);
+			}
+			if (from_currency != company_currency) {
+				frappe.call({
+					method: "erpnext.setup.utils.get_exchange_rate",
+					args: {
+						from_currency: from_currency,
+						to_currency: company_currency,
+					},
+					callback: function (r) {
+						frm.set_value("exchange_rate", flt(r.message));
+						frm.set_df_property("exchange_rate", "hidden", 0);
+						frm.set_df_property(
+							"exchange_rate",
+							"description",
+							"1 " + frm.doc.currency + " = [?] " + company_currency,
+						);
+					},
+				});
+			} else {
+				frm.set_value("exchange_rate", 1.0);
+				frm.set_df_property("exchange_rate", "hidden", 1);
+				frm.set_df_property("exchange_rate", "description", "");
+			}
+			frm.refresh_fields();
+		}
+	},
+
+	update_fields_label: function (frm) {
+		var company_currency = erpnext.get_currency(frm.doc.company);
+		frm.set_currency_labels(
+			[
+				"base_total_sanctioned_amount",
+				"base_total_taxes_and_charges",
+				"base_total_advance_amount",
+				"base_grand_total",
+				"base_total_claimed_amount",
+			],
+			company_currency,
+		);
+
+		frm.set_currency_labels(
+			[
+				"total_sanctioned_amount",
+				"total_taxes_and_charges",
+				"total_advance_amount",
+				"grand_total",
+				"total_claimed_amount",
+			],
+			frm.doc.currency,
+		);
+
+		// toggle fields
+		frm.toggle_display(
+			[
+				"base_total_sanctioned_amount",
+				"base_total_advance_amount",
+				"base_grand_total",
+				"base_total_claimed_amount",
+				"base_total_taxes_and_charges",
+			],
+			frm.doc.currency != company_currency,
+		);
+	},
+
+	update_child_fields_label: function (frm) {
+		var from_currency = frm.doc.currency;
+		var company_currency = erpnext.get_currency(frm.doc.company);
+		// expenses table
+		frm.set_currency_labels(["amount", "sanctioned_amount"], from_currency, "expenses");
+		frm.set_currency_labels(
+			["base_amount", "base_sanctioned_amount"],
+			company_currency,
+			"expenses",
+		);
+
+		// advances table
+		frm.set_currency_labels(
+			["advance_paid", "unclaimed_amount", "allocated_amount"],
+			from_currency,
+			"advances",
+		);
+		frm.set_currency_labels(
+			["base_advance_paid", "base_unclaimed_amount", "base_allocated_amount"],
+			company_currency,
+			"advances",
+		);
+
+		// taxes table
+		frm.set_currency_labels(["tax_amount", "total"], from_currency, "taxes");
+		frm.set_currency_labels(["base_tax_amount", "base_total"], company_currency, "taxes");
 	},
 
 	add_ledger_buttons: function (frm) {
@@ -185,6 +314,14 @@ frappe.ui.form.on("Expense Claim", {
 			"total_sanctioned_amount",
 			flt(total_sanctioned_amount, precision("total_sanctioned_amount")),
 		);
+
+		frm.doc.expenses.forEach((row) => {
+			set_in_company_currency(frm, row, ["amount", "sanctioned_amount"]);
+		});
+		frm.doc.advances.forEach((row) => {
+			set_in_company_currency(frm, row, ["allocated_amount"]);
+			set_in_company_currency(frm, row, ["unclaimed_amount"], row.exchange_rate);
+		});
 	},
 
 	calculate_grand_total: function (frm) {
@@ -193,6 +330,13 @@ frappe.ui.form.on("Expense Claim", {
 			flt(frm.doc.total_taxes_and_charges) -
 			flt(frm.doc.total_advance_amount);
 		frm.set_value("grand_total", grand_total);
+		set_in_company_currency(frm, frm.doc, [
+			"total_sanctioned_amount",
+			"total_advance_amount",
+			"grand_total",
+			"total_claimed_amount",
+			"total_taxes_and_charges",
+		]);
 		frm.refresh_fields();
 	},
 
@@ -211,6 +355,7 @@ frappe.ui.form.on("Expense Claim", {
 				advance.allocated_amount = amount_to_be_allocated;
 				amount_to_be_allocated = 0;
 			}
+			set_in_company_currency(frm, advance, ["allocated_amount"]);
 			frm.refresh_field("advances");
 		});
 	},
@@ -272,8 +417,22 @@ frappe.ui.form.on("Expense Claim", {
 		frm.events.set_child_cost_center(frm);
 	},
 
-	validate: function (frm) {
-		frm.events.set_child_cost_center(frm);
+	mode_of_payment: async function (frm) {
+		if (frm.doc.mode_of_payment) {
+			var mode_of_payment_type = (
+				await frappe.db.get_value("Mode of Payment", frm.doc.mode_of_payment, "type")
+			)?.message?.type;
+			frm.set_query("bank_or_cash_account", function () {
+				return {
+					filters: [
+						["account_type", "=", mode_of_payment_type],
+						["company", "=", frm.doc.company],
+						["is_group", "=", 0],
+						["account_currency", "=", frm.doc.currency],
+					],
+				};
+			});
+		}
 	},
 
 	set_child_cost_center: function (frm) {
@@ -303,7 +462,7 @@ frappe.ui.form.on("Expense Claim", {
 			return frappe.call({
 				method: "hrms.hr.doctype.expense_claim.expense_claim.get_advances",
 				args: {
-					employee: frm.doc.employee,
+					expense_claim: frm.doc,
 				},
 				callback: function (r, rt) {
 					if (r.message) {
@@ -313,17 +472,16 @@ frappe.ui.form.on("Expense Claim", {
 								"Expense Claim Advance",
 								"advances",
 							);
-							row.employee_advance = d.name;
+							row.employee_advance = d.employee_advance;
 							row.posting_date = d.posting_date;
 							row.advance_account = d.advance_account;
-							row.advance_paid = d.paid_amount;
-							row.unclaimed_amount = flt(d.paid_amount) - flt(d.claimed_amount);
+							row.advance_paid = d.advance_paid;
+							row.unclaimed_amount = d.unclaimed_amount;
 							row.return_amount = flt(d.return_amount);
-							row.allocated_amount = get_allocation_amount(
-								flt(d.paid_amount),
-								flt(d.claimed_amount),
-								flt(d.return_amount),
-							);
+							row.allocated_amount = d.allocated_amount;
+							row.exchange_rate = d.exchange_rate;
+							row.payment_entry = d.payment_entry;
+							row.payment_entry_reference = d.payment_entry_reference;
 						});
 						refresh_field("advances");
 					}
@@ -386,12 +544,14 @@ frappe.ui.form.on("Expense Claim Detail", {
 	amount: function (frm, cdt, cdn) {
 		var child = locals[cdt][cdn];
 		frappe.model.set_value(cdt, cdn, "sanctioned_amount", child.amount);
+		set_in_company_currency(frm, child, ["amount", "sanctioned_amount"]);
 	},
 
 	sanctioned_amount: function (frm, cdt, cdn) {
 		frm.trigger("calculate_total");
 		frm.trigger("get_taxes");
 		frm.trigger("calculate_grand_total");
+		set_in_company_currency(frm, locals[cdt][cdn], ["sanctioned_amount"]);
 	},
 
 	cost_center: function (frm, cdt, cdn) {
@@ -410,29 +570,34 @@ frappe.ui.form.on("Expense Claim Advance", {
 			return frappe.call({
 				method: "hrms.hr.doctype.expense_claim.expense_claim.get_advances",
 				args: {
-					employee: frm.doc.employee,
+					expense_claim: frm.doc,
 					advance_id: child.employee_advance,
 				},
 				callback: function (r, rt) {
 					if (r.message) {
-						child.employee_advance = r.message[0].name;
+						child.employee_advance = r.message[0].employee_advance;
 						child.posting_date = r.message[0].posting_date;
 						child.advance_account = r.message[0].advance_account;
-						child.advance_paid = r.message[0].paid_amount;
-						child.unclaimed_amount =
-							flt(r.message[0].paid_amount) - flt(r.message[0].claimed_amount);
+						child.advance_paid = r.message[0].advance_paid;
+						child.unclaimed_amount = r.message[0].unclaimed_amount;
 						child.return_amount = flt(r.message[0].return_amount);
-						child.allocated_amount = get_allocation_amount(
-							flt(r.message[0].paid_amount),
-							flt(r.message[0].claimed_amount),
-							flt(r.message[0].return_amount),
+						child.allocated_amount = flt(r.message[0].allocated_amount);
+						child.exchange_rate = r.message[0].exchange_rate;
+						child.payment_entry = r.message[0].payment_entry;
+						child.payment_entry_reference = r.message[0].payment_entry_reference;
+						set_in_company_currency(
+							frm,
+							child,
+							["advance_paid", "unclaimed_amount"],
+							r.message[0].exchange_rate,
 						);
-						frm.trigger("calculate_grand_total");
+						set_in_company_currency(frm, child, ["allocated_amount"]);
 						refresh_field("advances");
 					}
 				},
 			});
 		}
+		frm.trigger("calculate_grand_total");
 	},
 });
 
@@ -456,6 +621,7 @@ frappe.ui.form.on("Expense Taxes and Charges", {
 		frm.doc.total_taxes_and_charges = 0;
 		(frm.doc.taxes || []).forEach(function (d) {
 			frm.doc.total_taxes_and_charges += d.tax_amount;
+			set_in_company_currency(frm, d, ["tax_amount", "total"]);
 		});
 		frm.trigger("calculate_grand_total");
 	},
@@ -473,6 +639,11 @@ frappe.ui.form.on("Expense Taxes and Charges", {
 	},
 });
 
-function get_allocation_amount(paid_amount, claimed_amount, return_amount) {
-	return paid_amount - (claimed_amount + return_amount);
+async function set_in_company_currency(frm, doc, fields, exchange_rate = frm.doc.exchange_rate) {
+	await $.each(fields, function (i, f) {
+		doc["base_" + f] = flt(
+			flt(doc[f], precision(f, doc)) * exchange_rate,
+			precision("base_" + f, doc),
+		);
+	});
 }

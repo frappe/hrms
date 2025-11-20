@@ -143,7 +143,7 @@ def get_modules_by_app(app_name: str) -> list:
 
 
 def get_doctypes_by_modules(modules: list) -> list:
-	return frappe.db.get_all("DocType", filters={"module": ("in", modules)}, pluck="name")
+	return frappe.db.get_all("DocType", filters=[["module", "in", modules]], pluck="name")
 
 
 def roles_by_doctype(doctypes: list) -> set:

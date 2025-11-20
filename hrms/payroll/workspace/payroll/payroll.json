@@ -16,7 +16,7 @@
  "icon": "accounting",
  "idx": 0,
  "is_hidden": 0,
- "label": "Salary Payout",
+ "label": "Payroll",
  "links": [
   {
    "hidden": 0,
@@ -376,10 +376,10 @@
    "type": "Link"
   }
  ],
- "modified": "2025-01-15 17:26:05.803755",
+ "modified": "2025-11-18 17:58:42.344128",
  "modified_by": "Administrator",
  "module": "Payroll",
- "name": "Salary Payout",
+ "name": "Payroll",
  "number_cards": [],
  "owner": "Administrator",
  "parent_page": "",
@@ -402,6 +402,7 @@
    "doc_view": "List",
    "label": "Salary Register",
    "link_to": "Salary Register",
+   "report_ref_doctype": "Salary Slip",
    "type": "Report"
   },
   {
@@ -414,6 +415,6 @@
    "type": "DocType"
   }
  ],
- "title": "Salary Payout",
+ "title": "Payroll",
  "type": "Workspace"
 }
