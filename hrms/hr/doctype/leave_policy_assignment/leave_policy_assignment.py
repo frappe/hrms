@@ -119,8 +119,12 @@ class LeavePolicyAssignment(Document):
 
 		new_leaves_allocated = self.get_new_leaves(annual_allocation, leave_details, date_of_joining)
 
-		earned_leave_schedule = self.get_earned_leave_schedule(
-			annual_allocation, leave_details, date_of_joining, new_leaves_allocated
+		earned_leave_schedule = (
+			self.get_earned_leave_schedule(
+				annual_allocation, leave_details, date_of_joining, new_leaves_allocated
+			)
+			if leave_details.is_earned_leave
+			else []
 		)
 
 		allocation = frappe.get_doc(

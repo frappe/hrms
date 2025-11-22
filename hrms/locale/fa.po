@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-11-15 17:12+0000\n"
-"PO-Revision-Date: 2025-11-19 12:19\n"
+"PO-Revision-Date: 2025-11-20 12:16\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -806,7 +806,7 @@ msgstr "مبلغ نباید کمتر از صفر باشد"
 #. Advance'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 msgid "Amount that has been paid against this advance"
-msgstr ""
+msgstr "مبلغ پرداخت شده بابت این پیش‌پرداخت"
 
 #: hrms/payroll/doctype/arrear/arrear.py:92
 msgid "An Arrear document already exists for employee {0} with salary structure {1} in payroll period {2}"

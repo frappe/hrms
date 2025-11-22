@@ -57,7 +57,7 @@ def get_custom_fields():
 				"fieldname": "hr_and_payroll_tab",
 				"fieldtype": "Tab Break",
 				"label": _("HR & Payroll"),
-				"insert_after": "credit_limit",
+				"insert_after": "purchase_expense_contra_account",
 			},
 			{
 				"fieldname": "hr_settings_section",
