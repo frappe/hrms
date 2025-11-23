@@ -139,7 +139,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			if leave_type.applicable_after > 0:
 				date_of_joining = frappe.db.get_value("Employee", self.employee, "date_of_joining")
 				leave_days = get_approved_leaves_for_period(
-					self.employee, False, date_of_joining, self.from_date
+					self.employee, self.leave_type, date_of_joining, self.from_date
 				)
 				number_of_days = date_diff(getdate(self.from_date), date_of_joining)
 				if number_of_days >= 0:
