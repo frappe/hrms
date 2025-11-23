@@ -246,9 +246,6 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 				)
 			)
 
-		make_payment_via_je = frappe.db.get_single_value(
-			"Accounts Settings", "make_payment_via_journal_entry"
-		)
 		# gl entry against advance
 		for data in self.advances:
 			if data.allocated_amount:
@@ -266,13 +263,6 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 					"advance_voucher_no": data.employee_advance,
 					"transaction_exchange_rate": self.exchange_rate,
 				}
-				if not make_payment_via_je:
-					gl_dict.update(
-						{
-							"voucher_type": "Payment Entry",
-							"voucher_no": data.payment_entry,
-						}
-					)
 				gl_entry.append(self.get_gl_dict(gl_dict, account_currency=self.currency))
 
 		self.add_tax_gl_entries(gl_entry)
