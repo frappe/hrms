@@ -13,6 +13,12 @@ frappe.query_reports["Employee Analytics"] = {
 			reqd: 1,
 		},
 		{
+			fieldname: "include_company_descendants",
+			label: __("Include Company Descendants"),
+			fieldtype: "Check",
+			default: 1,
+		},
+		{
 			fieldname: "parameter",
 			label: __("Parameter"),
 			fieldtype: "Select",

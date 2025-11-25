@@ -6,6 +6,7 @@ import frappe
 from frappe import _
 from frappe.query_builder import Criterion
 from frappe.query_builder.functions import Count
+from frappe.utils.nestedset import get_descendants_of
 
 from erpnext.accounts.utils import build_qb_match_conditions
 
@@ -38,11 +39,29 @@ def get_columns():
 	]
 
 
+def get_companies(filters):
+	"""Get list of companies including descendants if filter is enabled."""
+	companies = [filters["company"]]
+	if filters.get("include_company_descendants"):
+		descendants = get_descendants_of("Company", filters["company"])
+		if descendants:
+			companies.extend(descendants)
+	return companies
+
+
 def get_employees(filters):
 	filters_for_employees = frappe._dict(deepcopy(filters) or {})
 	filters_for_employees["status"] = "Active"
 	filters_for_employees[filters.get("parameter").lower().replace(" ", "_")] = ["is", "set"]
 	filters_for_employees.pop("parameter")
+
+	# Handle company descendants
+	if filters.get("include_company_descendants"):
+		companies = get_companies(filters)
+		if len(companies) > 1:
+			filters_for_employees["company"] = ["in", companies]
+		filters_for_employees.pop("include_company_descendants", None)
+
 	return frappe.get_list(
 		"Employee",
 		filters=filters_for_employees,
@@ -74,24 +93,40 @@ def get_chart_data(parameters, filters):
 	datasets = []
 	parameter_field_name = filters.get("parameter").lower().replace(" ", "_")
 	label = []
+
+	# Get list of companies including descendants
+	companies = get_companies(filters)
+
 	employee = frappe.qb.DocType("Employee")
 	for parameter in parameters:
 		if parameter:
-			total_employee = (
+			query = (
 				frappe.qb.from_(employee)
 				.select(Count(employee.name).as_("count"))
-				.where(employee.company == filters.get("company"))
 				.where(employee.status == "Active")
 				.where(employee[parameter_field_name] == parameter)
 				.where(Criterion.all(build_qb_match_conditions("Employee")))
-			).run()
+			)
+
+			# Filter by companies (single or multiple)
+			if len(companies) == 1:
+				query = query.where(employee.company == companies[0])
+			else:
+				query = query.where(employee.company.isin(companies))
+
+			total_employee = query.run()
 			if total_employee[0][0]:
 				label.append(parameter)
 			datasets.append(total_employee[0][0])
 
 	values = [value for value in datasets if value != 0]
 
-	total_employee = frappe.db.count("Employee", {"status": "Active", "company": filters.get("company")})
+	# Get total active employees for selected companies
+	if len(companies) == 1:
+		total_employee = frappe.db.count("Employee", {"status": "Active", "company": companies[0]})
+	else:
+		total_employee = frappe.db.count("Employee", {"status": "Active", "company": ["in", companies]})
+
 	others = total_employee - sum(values)
 
 	label.append("Not Set")
