@@ -1,6 +1,7 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
 
+frappe.provide("erpnext.accounts");
 frappe.provide("hrms.hr");
 frappe.provide("erpnext.accounts.dimensions");
 
@@ -411,6 +412,7 @@ frappe.ui.form.on("Expense Claim", {
 
 	employee: function (frm) {
 		frm.events.get_advances(frm);
+		frm.trigger("set_expense_approver");
 	},
 
 	cost_center: function (frm) {
@@ -418,6 +420,13 @@ frappe.ui.form.on("Expense Claim", {
 	},
 
 	mode_of_payment: async function (frm) {
+		erpnext.accounts.pos.get_payment_mode_account(
+			frm,
+			frm.doc.mode_of_payment,
+			function (account) {
+				frm.set_value("bank_or_cash_account", account);
+			},
+		);
 		if (frm.doc.mode_of_payment) {
 			var mode_of_payment_type = (
 				await frappe.db.get_value("Mode of Payment", frm.doc.mode_of_payment, "type")
@@ -510,6 +519,21 @@ frappe.ui.form.on("Expense Claim", {
 			frm.save();
 		});
 		$(".form-message").prop("hidden", true);
+	},
+	set_expense_approver: function (frm) {
+		if (frm.doc.employee) {
+			return frappe.call({
+				method: "hrms.hr.doctype.expense_claim.expense_claim.get_expense_approver",
+				args: {
+					employee: frm.doc.employee,
+				},
+				callback: function (r) {
+					if (r && r.message) {
+						frm.set_value("expense_approver", r.message);
+					}
+				},
+			});
+		}
 	},
 });
 

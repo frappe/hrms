@@ -103,6 +103,12 @@ class EmployeeAdvance(Document):
 				and total_amount == flt(self.paid_amount, precision)
 			):
 				status = "Partly Claimed and Returned"
+			elif (
+				flt(self.claimed_amount) > 0
+				and flt(self.return_amount) == 0
+				and flt(self.claimed_amount, precision) < flt(self.paid_amount, precision)
+			):
+				status = "Partly Claimed"
 			elif flt(self.paid_amount) > 0 and (
 				flt(self.advance_amount, precision) == flt(self.paid_amount, precision)
 				or (self.paid_amount and self.repay_unclaimed_amount_from_salary)
@@ -187,6 +193,7 @@ class EmployeeAdvance(Document):
 
 		base_paid_amount = aple_paid_amount.get("base_paid_amount") or 0
 		self.db_set("base_paid_amount", base_paid_amount)
+		self.db_set("unclaimed_amount", paid_amount - return_amount)
 
 	def update_claimed_amount(self):
 		ec = frappe.qb.DocType("Expense Claim")
@@ -204,7 +211,16 @@ class EmployeeAdvance(Document):
 				& (ec.docstatus == 1)
 			)
 		).run()[0][0] or 0
+		paid_amount, return_amount = frappe.db.get_value(
+			"Employee Advance", self.name, ["paid_amount", "return_amount"]
+		)
 		frappe.db.set_value("Employee Advance", self.name, "claimed_amount", flt(claimed_amount))
+		frappe.db.set_value(
+			"Employee Advance",
+			self.name,
+			"unclaimed_amount",
+			flt(paid_amount) - flt(claimed_amount) - flt(return_amount),
+		)
 		self.reload()
 		self.set_status(update=True)
 

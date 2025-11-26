@@ -143,8 +143,10 @@ frappe.ui.form.on("Employee Advance", {
 					paid_amount: frm.doc.paid_amount,
 					base_paid_amount: frm.doc.base_paid_amount,
 					claimed_amount: frm.doc.claimed_amount,
+					unclaimed_amount: frm.doc.unclaimed_amount,
 					return_amount: frm.doc.return_amount,
 					payment_via_journal_entry: frm.doc.__onload.make_payment_via_journal_entry,
+					advance_account: frm.doc.advance_account,
 				},
 			},
 			callback: function (r) {
