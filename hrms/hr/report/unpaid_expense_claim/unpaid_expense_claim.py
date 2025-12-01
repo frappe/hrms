@@ -4,6 +4,7 @@
 
 import frappe
 from frappe import _
+from frappe.query_builder.functions import Sum
 
 
 def execute(filters=None):
@@ -25,24 +26,27 @@ def get_columns():
 
 
 def get_unclaimed_expese_claims(filters):
-	cond = "1=1"
-	if filters.get("employee"):
-		cond = "ec.employee = %(employee)s"
+	ec = frappe.qb.DocType("Expense Claim")
+	ple = frappe.qb.DocType("Payment Ledger Entry")
 
-	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
-	return frappe.db.sql(
-		f"""
-		select
-			ec.employee, ec.employee_name, ec.name, ec.total_sanctioned_amount, ec.total_amount_reimbursed,
-			sum(gle.credit_in_account_currency - gle.debit_in_account_currency) as outstanding_amt
-		from
-			`tabExpense Claim` ec, `tabGL Entry` gle
-		where
-			gle.against_voucher_type = "Expense Claim" and gle.against_voucher = ec.name
-			and gle.party is not null and ec.docstatus = 1 and ec.is_paid = 0 and {cond} group by ec.name
-		having
-			outstanding_amt > 0
-	""",
-		filters,
-		as_list=1,
+	query = (
+		frappe.qb.from_(ec)
+		.join(ple)
+		.on((ec.name == ple.against_voucher_no) & (ple.against_voucher_type == "Expense Claim"))
+		.select(
+			ec.employee,
+			ec.employee_name,
+			ec.name,
+			ec.total_sanctioned_amount,
+			ec.total_amount_reimbursed,
+			Sum(ple.amount).as_("outstanding_amt"),
+		)
+		.where((ec.docstatus == 1) & (ec.is_paid == 0) & (ple.delinked == 0))
+		.groupby(ec.name)
+		.having(Sum(ple.amount) != 0)
 	)
+
+	if filters.get("employee"):
+		query = query.where(ec.employee == filters.get("employee"))
+
+	return query.run()

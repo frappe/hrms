@@ -10,8 +10,10 @@
   "account_head",
   "rate",
   "tax_amount",
+  "base_tax_amount",
   "col_break1",
   "total",
+  "base_total",
   "description_sb",
   "description",
   "column_break_8",
@@ -106,17 +108,34 @@
   {
    "fieldname": "description_sb",
    "fieldtype": "Section Break"
+  },
+  {
+   "columns": 2,
+   "fieldname": "base_total",
+   "fieldtype": "Currency",
+   "label": "Total (Company Currency)",
+   "options": "Company:company:default_currency",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "base_tax_amount",
+   "fieldtype": "Currency",
+   "label": "Amount (Company Currency)",
+   "options": "Company:company:default_currency",
+   "read_only": 1
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2024-10-10 14:57:01.414550",
+ "modified": "2025-11-13 22:14:53.650756",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Taxes and Charges",
  "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "ASC",
  "states": [],

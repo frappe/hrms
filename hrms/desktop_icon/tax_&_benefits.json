@@ -1,0 +1,21 @@
+{
+ "app": "hrms",
+ "creation": "2025-11-17 20:33:43.190559",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon": "money-coins-1",
+ "icon_type": "Link",
+ "idx": 0,
+ "label": "Tax & Benefits",
+ "link_to": "Tax & Benefits",
+ "link_type": "Workspace",
+ "logo_url": "/assets/hrms/icons/desktop_icons/tax-benefits.svg",
+ "modified": "2025-11-17 20:49:18.845725",
+ "modified_by": "Administrator",
+ "name": "Tax & Benefits",
+ "owner": "Administrator",
+ "parent_icon": "Frappe HR",
+ "roles": [],
+ "standard": 1
+}

@@ -11,7 +11,7 @@
  "icon": "hr",
  "idx": 0,
  "is_hidden": 0,
- "label": "Overview",
+ "label": "HR",
  "links": [
   {
    "hidden": 0,
@@ -384,10 +384,10 @@
    "type": "Link"
   }
  ],
- "modified": "2025-01-16 11:34:44.156649",
+ "modified": "2025-11-19 13:05:34.519184",
  "modified_by": "Administrator",
  "module": "HR",
- "name": "Overview",
+ "name": "HR",
  "number_cards": [],
  "owner": "Administrator",
  "parent_page": "",
@@ -420,6 +420,6 @@
    "type": "DocType"
   }
  ],
- "title": "Overview",
+ "title": "HR",
  "type": "Workspace"
 }

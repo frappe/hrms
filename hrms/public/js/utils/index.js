@@ -194,12 +194,14 @@ $.extend(hrms, {
 
 		navigator.geolocation.getCurrentPosition(
 			async (position) => {
-				frm.set_value("latitude", position.coords.latitude);
-				frm.set_value("longitude", position.coords.longitude);
-
-				await frm.call("set_geolocation");
-				frappe.dom.unfreeze();
+				frappe.run_serially([
+					() => frm.set_value("latitude", position.coords.latitude),
+					() => frm.set_value("longitude", position.coords.longitude),
+					() => frm.call("set_geolocation"),
+					() => frappe.dom.unfreeze(),
+				]);
 			},
+
 			(error) => {
 				frappe.dom.unfreeze();
 

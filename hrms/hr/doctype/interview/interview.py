@@ -227,12 +227,12 @@ def send_interview_reminder():
 
 	interviews = frappe.get_all(
 		"Interview",
-		filters={
-			"scheduled_on": ["between", (datetime.datetime.now(), reminder_date_time)],
-			"status": "Pending",
-			"reminded": 0,
-			"docstatus": ["!=", 2],
-		},
+		filters=[
+			["scheduled_on", "between", [datetime.datetime.now(), reminder_date_time]],
+			["status", "=", "Pending"],
+			["reminded", "=", 0],
+			["docstatus", "!=", 2],
+		],
 	)
 
 	interview_template = frappe.get_doc("Email Template", reminder_settings.interview_reminder_template)

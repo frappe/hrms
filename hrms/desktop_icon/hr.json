@@ -1,0 +1,22 @@
+{
+ "app": "hrms",
+ "creation": "2025-11-19 13:17:44.832657",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon": "square-user-round",
+ "icon_type": "Link",
+ "idx": 0,
+ "label": "HR",
+ "link_to": "HR",
+ "link_type": "Workspace",
+ "logo_url": "/assets/hrms/icons/desktop_icons/hr.svg",
+ "modified": "2025-11-19 13:24:52.123619",
+ "modified_by": "Administrator",
+ "name": "HR",
+ "owner": "Administrator",
+ "parent_icon": "Frappe HR",
+ "roles": [],
+ "sidebar": "",
+ "standard": 1
+}

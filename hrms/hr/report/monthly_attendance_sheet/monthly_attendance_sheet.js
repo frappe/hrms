@@ -4,10 +4,34 @@
 frappe.query_reports["Monthly Attendance Sheet"] = {
 	filters: [
 		{
+			fieldname: "filter_based_on",
+			label: __("Filter Based On"),
+			fieldtype: "Select",
+			options: ["Month", "Date Range"],
+			default: "Month",
+			reqd: 1,
+			on_change: (report) => {
+				let filter_based_on = frappe.query_report.get_filter_value("filter_based_on");
+
+				if (filter_based_on == "Month") {
+					set_reqd_filter("month", true);
+					set_reqd_filter("year", true);
+					set_reqd_filter("start_date", false);
+					set_reqd_filter("end_date", false);
+				}
+				if (filter_based_on == "Date Range") {
+					set_reqd_filter("month", false);
+					set_reqd_filter("year", false);
+					set_reqd_filter("start_date", true);
+					set_reqd_filter("end_date", true);
+				}
+				report.refresh();
+			},
+		},
+		{
 			fieldname: "month",
 			label: __("Month"),
 			fieldtype: "Select",
-			reqd: 1,
 			options: [
 				{ value: 1, label: __("Jan") },
 				{ value: 2, label: __("Feb") },
@@ -23,12 +47,27 @@ frappe.query_reports["Monthly Attendance Sheet"] = {
 				{ value: 12, label: __("Dec") },
 			],
 			default: frappe.datetime.str_to_obj(frappe.datetime.get_today()).getMonth() + 1,
+			depends_on: "eval:doc.filter_based_on == 'Month'",
+		},
+		{
+			fieldname: "start_date",
+			label: __("Start Date"),
+			fieldtype: "Date",
+			depends_on: "eval:doc.filter_based_on == 'Date Range'",
+			on_change: validate_date_range,
+		},
+		{
+			fieldname: "end_date",
+			label: __("End Date"),
+			fieldtype: "Date",
+			depends_on: "eval:doc.filter_based_on == 'Date Range'",
+			on_change: validate_date_range,
 		},
 		{
 			fieldname: "year",
 			label: __("Year"),
 			fieldtype: "Select",
-			reqd: 1,
+			depends_on: "eval:doc.filter_based_on == 'Month'",
 		},
 		{
 			fieldname: "employee",
@@ -94,14 +133,39 @@ frappe.query_reports["Monthly Attendance Sheet"] = {
 
 		if (!summarized_view) {
 			if ((group_by && column.colIndex > 3) || (!group_by && column.colIndex > 2)) {
-				if (value == "P" || value == "WFH")
+				if (value == "HD/P") value = "<span style='color:#914EE3'>" + value + "</span>";
+				else if (value == "HD/A")
+					value = "<span style='color:orange'>" + value + "</span>";
+				else if (value == "P" || value == "WFH")
 					value = "<span style='color:green'>" + value + "</span>";
 				else if (value == "A") value = "<span style='color:red'>" + value + "</span>";
-				else if (value == "HD") value = "<span style='color:orange'>" + value + "</span>";
 				else if (value == "L") value = "<span style='color:#318AD8'>" + value + "</span>";
+				else value = "<span style='color:#878787'>" + value + "</span>";
 			}
 		}
 
 		return value;
 	},
 };
+function set_reqd_filter(fieldname, is_reqd) {
+	let filter = frappe.query_report.get_filter(fieldname);
+	filter.df.reqd = is_reqd;
+	filter.refresh();
+}
+function validate_date_range(report) {
+	let start_date = frappe.query_report.get_filter_value("start_date");
+	let end_date = frappe.query_report.get_filter_value("end_date");
+	if (!(start_date && end_date)) return;
+
+	let start = frappe.datetime.str_to_obj(start_date);
+	let end = frappe.datetime.str_to_obj(end_date);
+	let milli_seconds_in_a_day = 24 * 60 * 60 * 1000;
+	let day_diff = Math.floor((end - start) / milli_seconds_in_a_day);
+	if (day_diff > 90) {
+		frappe.throw({
+			message: __("Please set a date range less than 90 days."),
+			title: __("Date Range Exceeded"),
+		});
+	}
+	report.refresh();
+}

@@ -1,0 +1,26 @@
+# https://github.com/actions/stale
+
+name: "Close Stale PRs"
+on:
+  schedule:
+    - cron: 0 0 * * *
+  workflow_dispatch:
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-pr-stale: 15
+          days-before-pr-close: 3
+          stale-pr-label: 'Inactive'
+          exempt-draft-pr: true
+          days-before-issue-stale: -1
+          days-before-issue-close: -1
+          stale-pr-message: |
+            This pull request is being marked as inactive because of no recent activity. 
+            If your PR hasn't been reviewed, it's likely because it doesn't fullfill the [contribution guidelines](https://github.com/frappe/erpnext/wiki/Contribution-Guidelines). Please read them carefully and fix the pull request. When you are sure all items are checked, please ping relevant codeowner in the comment. Be nice, they have a lot on their plate too.
+            
+            It will be closed in 3 days if no further activity occurs.
+            Thank you for contributing!

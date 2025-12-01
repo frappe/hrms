@@ -1,0 +1,21 @@
+{
+ "app": "hrms",
+ "creation": "2025-11-17 20:33:43.194261",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon": "",
+ "icon_type": "Link",
+ "idx": 0,
+ "label": "Expenses",
+ "link_to": "Expenses",
+ "link_type": "Workspace",
+ "logo_url": "/assets/hrms/icons/desktop_icons/expense_claim.svg",
+ "modified": "2025-11-18 15:51:58.613460",
+ "modified_by": "Administrator",
+ "name": "Expenses",
+ "owner": "Administrator",
+ "parent_icon": "Frappe HR",
+ "roles": [],
+ "standard": 1
+}

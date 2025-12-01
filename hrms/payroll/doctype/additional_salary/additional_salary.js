@@ -20,9 +20,7 @@ frappe.ui.form.on("Additional Salary", {
 	},
 
 	onload: function (frm) {
-		if (frm.doc.type) {
-			frm.trigger("set_component_query");
-		}
+		frm.trigger("set_component_query");
 	},
 
 	employee: function (frm) {
@@ -55,16 +53,17 @@ frappe.ui.form.on("Additional Salary", {
 	},
 
 	company: function (frm) {
-		frm.set_value("type", "");
 		frm.trigger("set_component_query");
 	},
 
 	set_component_query: function (frm) {
 		if (!frm.doc.company) return;
-		let filters = { company: frm.doc.company };
-		if (frm.doc.type) {
-			filters.type = frm.doc.type;
-		}
+
+		let filters = {
+			company: frm.doc.company,
+			disabled: 0,
+		};
+
 		frm.set_query("salary_component", function () {
 			return {
 				filters: filters,

@@ -55,6 +55,7 @@ class TestPayrollEntry(FrappeTestCase):
 			"Employee Cost Center",
 			"Payroll Employee Detail",
 			"Additional Salary",
+			"Employee Benefit Ledger",
 		]:
 			frappe.db.delete(dt)
 
@@ -63,7 +64,7 @@ class TestPayrollEntry(FrappeTestCase):
 
 		frappe.db.set_value("Company", "_Test Company", "default_holiday_list", "_Test Holiday List")
 		frappe.db.set_single_value("Payroll Settings", "email_salary_slip_to_employee", 0)
-
+		frappe.db.set_value("Account", "Employee Advances - _TC", "account_type", "Receivable")
 		# set default payable account
 		default_account = frappe.db.get_value("Company", "_Test Company", "default_payroll_payable_account")
 		if not default_account or default_account != "_Test Payroll Payable - _TC":
@@ -76,6 +77,13 @@ class TestPayrollEntry(FrappeTestCase):
 			frappe.db.set_value(
 				"Company", "_Test Company", "default_payroll_payable_account", "_Test Payroll Payable - _TC"
 			)
+
+		payroll_account = frappe.get_doc("Account", "_Test Payroll Payable - _TC")
+		if payroll_account and payroll_account.account_type != "Payable":
+			frappe.db.set_value("Account", "_Test Payroll Payable - _TC", "account_type", "Payable")
+
+		if "lending" in frappe.get_installed_apps():
+			frappe.db.set_value("Company", "_Test Company", "loan_accrual_frequency", "Monthly")
 
 	def test_payroll_entry(self):
 		company = frappe.get_doc("Company", "_Test Company")
@@ -824,6 +832,217 @@ class TestPayrollEntry(FrappeTestCase):
 		self.assertEqual(total_debit, expected_bank_entry_amount)
 		self.assertEqual(total_credit, expected_bank_entry_amount)
 
+	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0})
+	def test_component_exclusion_from_accounting_entries(self):
+		company = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("exclude_component_test@payroll.com", company=company.name)
+
+		# Create Salary Components
+		basic = create_salary_component("Basic", **{"type": "Earning"})
+		basic.append("accounts", {"company": company.name, "account": "Salary - _TC"})
+		basic.save()
+
+		esi = create_salary_component(
+			"ESI", **{"type": "Deduction", "do_not_include_in_total": 1, "do_not_include_in_accounts": 1}
+		)
+		esi.append("accounts", {"company": company.name, "account": "Salary - _TC"})
+		esi.save()
+
+		# Create Salary structure with both components
+		make_salary_structure(
+			"Test Salary Structure",
+			"Monthly",
+			employee,
+			company=company.name,
+			other_details={
+				"earnings": [{"salary_component": basic.name, "amount": 20000}],
+				"deductions": [
+					{
+						"salary_component": esi.name,
+						"amount": 200,
+						"do_not_include_in_total": 1,
+						"do_not_include_in_accounts": 1,
+					}
+				],
+			},
+		)
+
+		# Create Payroll entry
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = make_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+			cost_center="Main - _TC",
+		)
+
+		# Get and verify salary slip & jv
+		salary_slip = frappe.get_doc("Salary Slip", {"payroll_entry": payroll_entry.name})
+
+		self.assertAlmostEqual(salary_slip.gross_pay, 20000.0, places=2)
+
+		# Deductions table should include ESI
+		self.assertTrue(any(row.salary_component == esi.name for row in salary_slip.deductions))
+
+		# verify jv & accounts
+		journal_entry = frappe.get_doc("Journal Entry", salary_slip.journal_entry)
+		self.assertTrue(journal_entry, "Journal Entry not created")
+		self.assertEqual(salary_slip.gross_pay, journal_entry.total_debit)
+
+		accounts = [d.account for d in journal_entry.accounts]
+		self.assertIn("Salary - _TC", accounts)
+		self.assertIn(company.default_payroll_payable_account, accounts)
+		self.assertNotIn("ESIC Payable - _TC", accounts, "ESIC component wrongly included in JE")
+
+	def test_employee_benefits_accruals_in_salary_slip(self):
+		"""Test to verify
+		- employee flexible benefits of accrual payout methods are fetched into salary slip
+		- employee benefit ledger entries are created for each component
+		- accrual earning components are excluded from earnings and added to accrued_benefts instead
+		- additional salary for accrual component is included in totals and benefit ledger entries are created
+		- unclaimed benefits and benefit type of "Accrue and Payout at end of Payroll Perod" are paid out in final month of payroll period
+		"""
+		from hrms.payroll.doctype.salary_slip.test_salary_slip import (
+			create_salary_slips_for_payroll_period,
+			make_payroll_period,
+		)
+
+		frappe.db.set_value("Company", "_Test Company", "default_holiday_list", "_Test Holiday List")
+
+		make_payroll_period()
+		emp = make_employee(
+			"test_employee_benefits@salary.com",
+			company="_Test Company",
+			date_of_joining="2021-01-01",
+		)
+		payroll_period = frappe.get_last_doc("Payroll Period", filters={"company": "_Test Company"})
+
+		make_salary_structure(
+			"Test Benefit Accrual",
+			"Monthly",
+			company="_Test Company",
+			employee=emp,
+			payroll_period=payroll_period,
+			base=65000,
+			include_flexi_benefits=True,
+			test_accrual_component=True,
+			test_tax=True,
+		)
+
+		# Create and submit payroll entry for first month of payroll period
+		first_month_start = payroll_period.start_date
+		first_month_end = add_months(first_month_start, 1)
+		company_doc = frappe.get_doc("Company", "_Test Company")
+
+		payroll_entry = make_payroll_entry(
+			start_date=first_month_start,
+			end_date=first_month_end,
+			payable_account=company_doc.default_payroll_payable_account,
+			currency=company_doc.default_currency,
+			company="_Test Company",
+			cost_center="Main - _TC",
+		)
+		salary_slip = frappe.get_doc("Salary Slip", {"payroll_entry": payroll_entry.name})
+
+		# Check if employee benefits have been fetched to accrued benefits table
+		self.assertTrue(salary_slip.accrued_benefits)
+		accrual_payout_methods = [
+			"Accrue and payout at end of payroll period",
+			"Accrue per cycle, pay only on claim",
+		]
+		for benefit in salary_slip.accrued_benefits:
+			if benefit.salary_component != "Accrued Earnings":
+				payout_method = frappe.db.get_value(
+					"Salary Component", benefit.salary_component, "payout_method"
+				)
+				self.assertIn(payout_method, accrual_payout_methods)
+			else:
+				self.assertEqual(benefit.amount, 1000)
+
+		# Check if employee benefit ledger entries have been created for each component
+		for benefit_row in salary_slip.accrued_benefits:
+			self.assertTrue(
+				frappe.db.exists(
+					"Employee Benefit Ledger",
+					{"salary_slip": salary_slip.name, "salary_component": benefit_row.salary_component},
+				)
+			)
+
+		earnings_list = [earning.salary_component for earning in salary_slip.earnings]
+		self.assertNotIn(
+			"Accrued Earnings", earnings_list
+		)  # "Accrued Earnings component should not be in earnings table but in accrued benefits")
+
+		# Check if Employee Benefit Ledger exists for Accrued Earnings Component
+		self.assertTrue(
+			frappe.db.exists(
+				"Employee Benefit Ledger",
+				{"salary_slip": salary_slip.name, "salary_component": "Accrued Earnings"},
+			)
+		)
+
+		# Create additional salary for accrual component for second month of payroll period
+		second_month_start = add_months(first_month_start, 1)
+		second_month_end = add_months(first_month_start, 2)
+
+		additional_salary = frappe.get_doc(
+			{
+				"doctype": "Additional Salary",
+				"employee": emp,
+				"salary_component": "Accrued Earnings",
+				"amount": 1000,
+				"payroll_date": second_month_end,
+				"company": "_Test Company",
+				"overwrite_salary_structure_amount": 0,
+			}
+		)
+		additional_salary.insert()
+		additional_salary.submit()
+
+		next_month_payroll_entry = make_payroll_entry(
+			start_date=second_month_start,
+			end_date=second_month_end,
+			payable_account=company_doc.default_payroll_payable_account,
+			currency=company_doc.default_currency,
+			company="_Test Company",
+		)
+		next_salary_slip = frappe.get_doc("Salary Slip", {"payroll_entry": next_month_payroll_entry.name})
+
+		# Payout against accrual component as additional salary is recorded in Employee Benefit Ledger
+		self.assertTrue(
+			frappe.db.exists(
+				"Employee Benefit Ledger",
+				{
+					"salary_slip": next_salary_slip.name,
+					"salary_component": "Accrued Earnings",
+					"transaction_type": "Payout",
+				},
+			)
+		)
+
+		frappe.db.delete("Salary Slip", {"employee": emp})
+		frappe.db.delete("Employee Benefit Ledger")
+
+		# check if unclaimed benefits and benefit type of "Accrue and Payout at end of Payroll Perod" are paid out in final month of payroll period
+		create_salary_slips_for_payroll_period(emp, "Test Benefit Accrual", payroll_period)
+
+		salary_slip = frappe.get_all(
+			"Salary Slip", filters={"employee": emp}, order_by="posting_date desc", limit=1, pluck="name"
+		)
+		salary_slip = frappe.get_doc("Salary Slip", salary_slip[0])
+		earnings_components = {earning.salary_component: earning.amount for earning in salary_slip.earnings}
+
+		self.assertEqual(
+			earnings_components.get("Internet Reimbursement"),
+			12000,
+		)
+		self.assertEqual(
+			earnings_components.get("Mediclaim Allowance"),
+			24000,
+		)
+
 
 def get_payroll_entry(**args):
 	args = frappe._dict(args)
@@ -988,17 +1207,21 @@ def create_loan_for_employee(applicant):
 
 
 def get_repayment_party_type(loan):
-	loan_repayment_entry, payroll_payable_account = frappe.db.get_value(
-		"Loan Repayment", {"against_loan": loan}, ["name", "payroll_payable_account"]
+	loan_repayment = frappe.db.get_value(
+		"Loan Repayment", {"against_loan": loan}, ["name", "payroll_payable_account"], as_dict=True
 	)
+	if not loan_repayment:
+		return "", ""
 
-	party_type, party = frappe.db.get_value(
+	return frappe.db.get_value(
 		"GL Entry",
-		{"voucher_no": loan_repayment_entry, "account": payroll_payable_account, "is_cancelled": 0},
+		{
+			"voucher_no": loan_repayment.name,
+			"account": loan_repayment.payroll_payable_account,
+			"is_cancelled": 0,
+		},
 		["party_type", "party"],
-	)
-
-	return party_type, party
+	) or ("", "")
 
 
 def submit_bank_entry(payroll_entry_id):

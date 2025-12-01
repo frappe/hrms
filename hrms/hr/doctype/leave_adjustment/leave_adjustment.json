@@ -1,0 +1,197 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-04-04 11:19:14.382103",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_wjxt",
+  "naming_series",
+  "employee",
+  "employee_name",
+  "amended_from",
+  "column_break_juxz",
+  "leave_type",
+  "adjustment_type",
+  "leaves_to_adjust",
+  "posting_date",
+  "section_break_etvg",
+  "leave_allocation",
+  "allocated_leaves",
+  "leaves_after_adjustment",
+  "column_break_ymxu",
+  "from_date",
+  "to_date",
+  "section_break_ukzy",
+  "reason_for_adjustment"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_wjxt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Leave Adjustment",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_juxz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "leave_type",
+   "fieldtype": "Link",
+   "label": "Leave Type",
+   "options": "Leave Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "leave_allocation",
+   "fieldtype": "Link",
+   "label": "Allocation to Adjust",
+   "options": "Leave Allocation",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "leave_allocation.from_date",
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Series",
+   "options": "HR-LAD-.YYYY.-",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "leave_allocation.to_date",
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "leave_allocation.total_leaves_allocated",
+   "fieldname": "allocated_leaves",
+   "fieldtype": "Float",
+   "label": "Allocated Leaves",
+   "read_only": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_etvg",
+   "fieldtype": "Section Break",
+   "label": "Allocation Details"
+  },
+  {
+   "fieldname": "leaves_to_adjust",
+   "fieldtype": "Float",
+   "label": "Leaves to Adjust",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "adjustment_type",
+   "fieldtype": "Select",
+   "label": "Adjustment Type",
+   "options": "\nAllocate\nReduce",
+   "reqd": 1
+  },
+  {
+   "fieldname": "leaves_after_adjustment",
+   "fieldtype": "Float",
+   "label": "Leaves After Adjustment",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ymxu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_ukzy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.leave_allocation;",
+   "fieldname": "reason_for_adjustment",
+   "fieldtype": "Small Text",
+   "label": "Reason for Adjustment"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-09-07 16:28:07.109228",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Leave Adjustment",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

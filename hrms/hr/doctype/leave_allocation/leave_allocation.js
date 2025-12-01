@@ -5,6 +5,9 @@
 cur_frm.add_fetch("employee", "employee_name", "employee_name");
 
 frappe.ui.form.on("Leave Allocation", {
+	setup: function (frm) {
+		frm.trigger("set_indicator");
+	},
 	onload: function (frm) {
 		// Ignore cancellation of doctype on cancel all.
 		frm.ignore_doctypes_on_cancel_all = ["Leave Ledger Entry"];
@@ -44,75 +47,63 @@ frappe.ui.form.on("Leave Allocation", {
 					},
 					__("Actions"),
 				);
-			}
-		}
-
-		if (!frm.doc.__islocal && frm.doc.leave_policy_assignment) {
-			frappe.db.get_value("Leave Type", frm.doc.leave_type, "is_earned_leave", (r) => {
-				if (!r?.is_earned_leave) return;
-				frm.set_df_property("new_leaves_allocated", "read_only", 1);
-				frm.trigger("add_allocate_leaves_button");
-			});
-		}
-	},
-
-	add_allocate_leaves_button: async function (frm) {
-		const { message: monthly_earned_leave } = await frappe.call({
-			method: "get_monthly_earned_leave",
-			doc: frm.doc,
-		});
-
-		frm.add_custom_button(
-			__("Allocate Leaves"),
-			function () {
-				const dialog = new frappe.ui.Dialog({
-					title: "Manual Leave Allocation",
-					fields: [
-						{
-							label: "New Leaves to be Allocated",
-							fieldname: "new_leaves",
-							fieldtype: "Float",
-							reqd: 1,
-						},
-						{
-							label: "From Date",
-							fieldname: "from_date",
-							fieldtype: "Date",
-							default: frappe.datetime.get_today(),
-						},
-						{
-							label: "To Date",
-							fieldname: "to_date",
-							fieldtype: "Date",
-							read_only: 1,
-							default: frm.doc.to_date,
-						},
-					],
-					primary_action_label: "Allocate",
-					primary_action({ new_leaves, from_date }) {
-						frappe.call({
-							method: "allocate_leaves_manually",
-							doc: frm.doc,
-							args: { new_leaves, from_date },
-							callback: function (r) {
-								if (!r.exc) {
-									dialog.hide();
-									frm.reload_doc();
-								}
+				frm.add_custom_button(
+					__("Adjust Allocation"),
+					function () {
+						const dialog = new frappe.ui.Dialog({
+							title: "Leave Adjustment",
+							fields: [
+								{
+									label: "Adjustment Type",
+									fieldname: "adjustment_type",
+									fieldtype: "Select",
+									options: "Allocate\nReduce",
+									reqd: 1,
+								},
+								{
+									label: "Leaves To Adjust",
+									fieldname: "leaves_to_adjust",
+									fieldtype: "Float",
+									reqd: 1,
+								},
+								{
+									label: "Posting Date",
+									fieldname: "posting_date",
+									fieldtype: "Date",
+									reqd: 1,
+									default: frappe.datetime.get_today(),
+								},
+								{
+									label: "Reason for Adjustment",
+									fieldname: "reason_for_adjustment",
+									fieldtype: "Small Text",
+								},
+							],
+							primary_action_label: "Adjust Leaves",
+							primary_action(values) {
+								frappe.call({
+									method: "create_leave_adjustment",
+									doc: frm.doc,
+									args: values,
+									callback: function (r) {
+										if (!r.exc) {
+											frm.reload_doc();
+										}
+									},
+									always: function (r) {
+										dialog.hide();
+									},
+								});
 							},
 						});
+						dialog.show();
 					},
-				});
-				dialog.fields_dict.new_leaves.set_value(monthly_earned_leave);
-				dialog.fields_dict.from_date.datepicker?.update({
-					minDate: frappe.datetime.str_to_obj(frm.doc.from_date),
-					maxDate: frappe.datetime.str_to_obj(frm.doc.to_date),
-				});
-
-				dialog.show();
-			},
-			__("Actions"),
-		);
+					__("Actions"),
+				);
+			}
+		}
+		frm.trigger("set_indicator");
+		frm.trigger("toggle_retry_button");
 	},
 
 	expire_allocation: function (frm) {
@@ -175,6 +166,52 @@ frappe.ui.form.on("Leave Allocation", {
 				"Leave Policy",
 			);
 		}
+	},
+
+	toggle_retry_button: function (frm) {
+		const earned_leave_schedule = frm.doc.earned_leave_schedule || [];
+		let toggle_button =
+			earned_leave_schedule.some((row) => row.attempted && row.failed) && frm.perm[0]?.write;
+		frm.toggle_display("retry_failed_allocations", toggle_button);
+	},
+
+	retry_failed_allocations: function (frm) {
+		let failed_allocations = (frm.doc.earned_leave_schedule || []).filter(
+			(row) => row.attempted && row.failed,
+		);
+
+		frappe.call({
+			method: "retry_failed_allocations",
+			doc: frm.doc,
+			args: { failed_allocations },
+			freeze: true,
+			freeze_message: __("Retrying allocations"),
+			callback: function (r) {
+				frappe.show_alert({
+					message: __("Retry Successful"),
+					indicator: "green",
+				});
+				frm.reload_doc();
+				frm.refresh_field("retry_failed_allocations");
+			},
+		});
+	},
+	set_indicator: function (frm) {
+		const df = frappe.meta.get_docfield(
+			"Earned Leave Schedule",
+			"allocation_date",
+			frm.doc.name,
+		);
+		df.formatter = function (value, df, options, row) {
+			if (row.attempted && row.failed) {
+				return `<span class="indicator red">${value}</span>`;
+			} else if (row.attempted && row.is_allocated) {
+				return `<span class="indicator green">${value}</span>`;
+			} else {
+				return value;
+			}
+		};
+		frm.refresh_field("earned_leave_schedule");
 	},
 
 	calculate_total_leaves_allocated: function (frm) {

@@ -1,0 +1,21 @@
+{
+ "app": "hrms",
+ "creation": "2025-11-17 20:33:43.192437",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon": "accounting",
+ "icon_type": "Link",
+ "idx": 0,
+ "label": "Payroll",
+ "link_to": "Payroll",
+ "link_type": "Workspace",
+ "logo_url": "/assets/hrms/icons/desktop_icons/salary_payout.svg",
+ "modified": "2025-11-18 18:00:08.120098",
+ "modified_by": "Administrator",
+ "name": "Payroll",
+ "owner": "Administrator",
+ "parent_icon": "Frappe HR",
+ "roles": [],
+ "standard": 1
+}

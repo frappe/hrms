@@ -9,6 +9,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool import (
+	_get_unmarked_attendance_with_shift,
 	get_employees,
 	mark_employee_attendance,
 )
@@ -153,6 +154,72 @@ class TestEmployeeAttendanceTool(IntegrationTestCase):
 				self.assertEqual(attendance.status, "Half Day")
 				self.assertEqual(attendance.half_day_status, "Present")
 			self.assertEqual(attendance.shift, shift.name)
+
+	def test_get_unmarked_attendance_with_shift(self):
+		self.shift = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="10:00:00")
+		self.employee1 = frappe.get_doc(
+			{
+				"doctype": "Employee",
+				"first_name": "Morning Shift Assigned",
+				"employee": "EMP001",
+				"date_of_birth": "1992-01-01",
+				"date_of_joining": "2023-01-01",
+				"default_shift": "",
+				"gender": "Male",
+			}
+		).insert()
+
+		self.employee2 = frappe.get_doc(
+			{
+				"doctype": "Employee",
+				"first_name": "Test Default Shift",
+				"employee": "EMP002",
+				"date_of_birth": "1992-01-01",
+				"date_of_joining": "2023-01-01",
+				"default_shift": self.shift.name,
+				"gender": "Male",
+			}
+		).insert()
+
+		self.employee3 = frappe.get_doc(
+			{
+				"doctype": "Employee",
+				"first_name": "Test Not Assigned",
+				"employee": "EMP003",
+				"date_of_birth": "1992-01-01",
+				"date_of_joining": "2023-01-01",
+				"default_shift": "",
+				"gender": "Male",
+			}
+		).insert()
+
+		# Assign a shift to employee1 via Shift Assignment
+		self.shift_assignment = frappe.get_doc(
+			{
+				"doctype": "Shift Assignment",
+				"employee": self.employee1.name,
+				"shift_type": self.shift.name,
+				"start_date": frappe.utils.getdate("2023-02-28"),
+				"end_date": frappe.utils.getdate("2023-03-10"),
+			}
+		).insert()
+		# Prepare the unmarked_attendance sample input
+		unmarked_attendance = [
+			{"employee": self.employee1.name},
+			{"employee": self.employee2.name},
+			{"employee": self.employee3.name},
+		]
+
+		shift = self.shift.name
+		date = "2023-03-01"
+
+		result = _get_unmarked_attendance_with_shift(unmarked_attendance, shift, date)
+
+		# Only employee1 and employee2 have the shift (assigned/default)
+		filtered = set([emp["employee"] for emp in result])
+		self.assertIn(self.employee1.name, filtered)
+		self.assertIn(self.employee2.name, filtered)
+		self.assertNotIn(self.employee3.name, filtered)
 
 
 def create_leave_allocation(employee, leave_type):

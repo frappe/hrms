@@ -3,7 +3,7 @@
 
 import frappe
 from frappe import _, bold
-from frappe.query_builder.functions import Sum
+from frappe.query_builder.functions import Abs, Sum
 from frappe.utils import cstr, flt, get_datetime, get_link_to_form
 
 from erpnext.accounts.general_ledger import make_gl_entries
@@ -56,7 +56,7 @@ class Gratuity(AccountsController):
 			self.create_gl_entries()
 
 	def on_cancel(self):
-		self.ignore_linked_doctypes = ["GL Entry", "Payment Ledger Entry"]
+		self.ignore_linked_doctypes = ["GL Entry", "Payment Ledger Entry", "Advance Payment Ledger Entry"]
 		self.create_gl_entries(cancel=True)
 		self.set_status(update=True)
 
@@ -117,17 +117,15 @@ class Gratuity(AccountsController):
 			additional_salary.submit()
 
 	def set_total_advance_paid(self):
-		gle = frappe.qb.DocType("GL Entry")
+		aple = frappe.qb.DocType("Advance Payment Ledger Entry")
 		paid_amount = (
-			frappe.qb.from_(gle)
-			.select(Sum(gle.debit_in_account_currency).as_("paid_amount"))
+			frappe.qb.from_(aple)
+			.select(Abs(Sum(aple.amount)).as_("paid_amount"))
 			.where(
-				(gle.against_voucher_type == "Gratuity")
-				& (gle.against_voucher == self.name)
-				& (gle.party_type == "Employee")
-				& (gle.party == self.employee)
-				& (gle.docstatus == 1)
-				& (gle.is_cancelled == 0)
+				(aple.company == self.company)
+				& (aple.against_voucher_type == self.doctype)
+				& (aple.against_voucher_no == self.name)
+				& (aple.delinked == 0)
 			)
 		).run(as_dict=True)[0].paid_amount or 0
 
@@ -201,7 +199,7 @@ class Gratuity(AccountsController):
 			lwp_leave_types = frappe.get_all("Leave Type", filters={"is_lwp": 1}, pluck="name")
 			filters["leave_type"] = ("IN", lwp_leave_types)
 
-		record = frappe.get_all("Attendance", filters=filters, fields=["COUNT(*) as total_lwp"])
+		record = frappe.get_all("Attendance", filters=filters, fields=[{"COUNT": "*", "as": "total_lwp"}])
 		return record[0].total_lwp if len(record) else 0
 
 	def get_gratuity_amount(self, experience: float) -> float:

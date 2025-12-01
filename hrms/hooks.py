@@ -161,7 +161,10 @@ override_doctype_class = {
 
 doc_events = {
 	"User": {
-		"validate": "erpnext.setup.doctype.employee.employee.validate_employee_role",
+		"validate": [
+			"erpnext.setup.doctype.employee.employee.validate_employee_role",
+			"hrms.overrides.employee_master.update_approver_user_roles",
+		],
 	},
 	"Company": {
 		"validate": "hrms.overrides.company.validate_default_accounts",
@@ -180,6 +183,9 @@ doc_events = {
 		"on_submit": "hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
 		"on_cancel": "hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
 		"on_update_after_submit": "hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
+	},
+	"Unreconcile Payment": {
+		"on_submit": "hrms.hr.doctype.expense_claim.expense_claim.update_payment_for_expense_claim",
 	},
 	"Journal Entry": {
 		"validate": "hrms.hr.doctype.expense_claim.expense_claim.validate_expense_claim_in_jv",
@@ -364,3 +370,6 @@ company_data_to_be_ignored = [
 	"Employee Onboarding Template",
 	"Employee Separation Template",
 ]
+
+# List of apps whose translatable strings should be excluded from this app's translations.
+ignore_translatable_strings_from = ["frappe", "erpnext"]

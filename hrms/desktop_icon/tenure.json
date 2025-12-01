@@ -1,0 +1,21 @@
+{
+ "app": "hrms",
+ "creation": "2025-11-17 20:33:43.201465",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon": "customer",
+ "icon_type": "Link",
+ "idx": 0,
+ "label": "Tenure",
+ "link_to": "Tenure",
+ "link_type": "Workspace",
+ "logo_url": "/assets/hrms/icons/desktop_icons/employee_lifecycle.svg",
+ "modified": "2025-11-18 15:52:59.993095",
+ "modified_by": "Administrator",
+ "name": "Tenure",
+ "owner": "Administrator",
+ "parent_icon": "Frappe HR",
+ "roles": [],
+ "standard": 1
+}

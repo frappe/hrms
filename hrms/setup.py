@@ -57,7 +57,7 @@ def get_custom_fields():
 				"fieldname": "hr_and_payroll_tab",
 				"fieldtype": "Tab Break",
 				"label": _("HR & Payroll"),
-				"insert_after": "credit_limit",
+				"insert_after": "purchase_expense_contra_account",
 			},
 			{
 				"fieldname": "hr_settings_section",
@@ -262,9 +262,16 @@ def get_custom_fields():
 				"insert_after": "column_break_45",
 			},
 			{
+				"fieldname": "employee_advance_account",
+				"fieldtype": "Link",
+				"label": _("Employee Advance Account"),
+				"options": "Account",
+				"insert_after": "salary_mode",
+			},
+			{
 				"fieldname": "salary_cb",
 				"fieldtype": "Column Break",
-				"insert_after": "salary_mode",
+				"insert_after": "employee_advance_account",
 			},
 			{
 				"fetch_from": "department.payroll_cost_center",

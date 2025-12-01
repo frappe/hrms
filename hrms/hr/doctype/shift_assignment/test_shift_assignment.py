@@ -172,7 +172,7 @@ class TestShiftAssignment(HRMSTestSuite):
 		events = get_events(
 			start=date,
 			end=add_days(date, 30),
-			filters=[["Shift Assignment", "employee", "!=", employee2, False]],
+			filters=[["Shift Assignment", "employee", "!=", employee2]],
 		)
 		self.assertEqual(len(events), 6)
 		for shift in events:

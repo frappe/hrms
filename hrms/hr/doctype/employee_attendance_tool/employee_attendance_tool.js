@@ -47,6 +47,8 @@ frappe.ui.form.on("Employee Attendance Tool", {
 					employment_type: frm.doc.employment_type,
 					designation: frm.doc.designation,
 					employee_grade: frm.doc.employee_grade,
+					shift: frm.doc.shift,
+					filter_by_shift: frm.doc.filter_by_shift,
 				},
 				freeze: true,
 				freeze_message: __("...Fetching Employees"),

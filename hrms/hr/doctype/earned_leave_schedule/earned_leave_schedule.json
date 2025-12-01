@@ -1,0 +1,104 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-08-25 18:22:43.626487",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "column_break_dmml",
+  "allocation_date",
+  "number_of_leaves",
+  "attempted",
+  "failed",
+  "column_break_pzdq",
+  "is_allocated",
+  "allocated_via",
+  "section_break_amtg",
+  "failure_reason"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "allocation_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Allocation Date",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "number_of_leaves",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Number of Leaves",
+   "read_only": 1
+  },
+  {
+   "columns": 3,
+   "default": "0",
+   "fieldname": "is_allocated",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is Allocated",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_dmml",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_pzdq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "failure_reason",
+   "fieldtype": "Small Text",
+   "label": "Failure Reason",
+   "read_only": 1
+  },
+  {
+   "columns": 3,
+   "fieldname": "allocated_via",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Allocated Via",
+   "options": "\nScheduler\nLeave Policy Assignment\nManually",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_amtg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "attempted",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Attempted",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "failed",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Failed",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-11-14 14:12:01.503330",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Earned Leave Schedule",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

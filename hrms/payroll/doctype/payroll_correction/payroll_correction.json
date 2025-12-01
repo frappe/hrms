@@ -1,0 +1,258 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:PAYCORR-{payroll_period}-{#####}",
+ "creation": "2025-03-31 15:33:41.882106",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_vvay",
+  "amended_from",
+  "employee",
+  "employee_name",
+  "payroll_date",
+  "column_break_uuzk",
+  "company",
+  "payroll_period",
+  "currency",
+  "section_break_xdag",
+  "month_for_lwp_reversal",
+  "working_days",
+  "payment_days",
+  "lwp_days",
+  "column_break_uyjn",
+  "salary_slip_reference",
+  "days_to_reverse",
+  "section_break_giud",
+  "earning_arrears",
+  "deduction_arrears",
+  "accrual_arrears"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_vvay",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Payroll Correction",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_uuzk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval: doc.company && doc.employee",
+   "fetch_from": "company.default_currency",
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "payroll_period",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Payroll Period",
+   "options": "Payroll Period",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_xdag",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "payroll_period",
+   "fieldname": "month_for_lwp_reversal",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Select Month for LWP Reversal",
+   "reqd": 1
+  },
+  {
+   "depends_on": "month_for_lwp_reversal",
+   "fieldname": "salary_slip_reference",
+   "fieldtype": "Link",
+   "label": "Salary Slip Reference",
+   "options": "Salary Slip",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "depends_on": "salary_slip_reference",
+   "fieldname": "working_days",
+   "fieldtype": "Float",
+   "label": "Working Days",
+   "read_only": 1
+  },
+  {
+   "depends_on": "salary_slip_reference",
+   "fieldname": "lwp_days",
+   "fieldtype": "Float",
+   "label": "Total Days Without Pay",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_uyjn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "salary_slip_reference",
+   "description": "Enter the number of Leave Without Pay (LWP) days you want to reverse. This value cannot exceed the total LWP days recorded for the selected month",
+   "fieldname": "days_to_reverse",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Days to Reverse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_giud",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "earning_arrears",
+   "fieldname": "earning_arrears",
+   "fieldtype": "Table",
+   "label": "Earning Arrears",
+   "options": "Payroll Correction Child",
+   "read_only": 1
+  },
+  {
+   "depends_on": "deduction_arrears",
+   "fieldname": "deduction_arrears",
+   "fieldtype": "Table",
+   "label": "Deduction Arrears",
+   "options": "Payroll Correction Child",
+   "read_only": 1
+  },
+  {
+   "description": "Choose the date on which you want to create these components as arrears.",
+   "fieldname": "payroll_date",
+   "fieldtype": "Date",
+   "label": "Payroll Date",
+   "reqd": 1
+  },
+  {
+   "depends_on": "accrual_arrears",
+   "fieldname": "accrual_arrears",
+   "fieldtype": "Table",
+   "label": "Accrual Arrears",
+   "options": "Payroll Correction Child",
+   "read_only": 1
+  },
+  {
+   "depends_on": "salary_slip_reference",
+   "fieldname": "payment_days",
+   "fieldtype": "Float",
+   "label": "Payment Days",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [
+  {
+   "link_doctype": "Additional Salary",
+   "link_fieldname": "ref_docname"
+  }
+ ],
+ "modified": "2025-09-20 17:12:38.862476",
+ "modified_by": "Administrator",
+ "module": "Payroll",
+ "name": "Payroll Correction",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "employee_name"
+}

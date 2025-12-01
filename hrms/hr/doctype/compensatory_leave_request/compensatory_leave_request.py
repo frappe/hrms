@@ -36,12 +36,12 @@ class CompensatoryLeaveRequest(Document):
 	def validate_attendance(self):
 		attendance_records = frappe.get_all(
 			"Attendance",
-			filters={
-				"attendance_date": ["between", (self.work_from_date, self.work_end_date)],
-				"status": ("in", ["Present", "Work From Home", "Half Day"]),
-				"docstatus": 1,
-				"employee": self.employee,
-			},
+			filters=[
+				["attendance_date", "between", [self.work_from_date, self.work_end_date]],
+				["status", "in", ["Present", "Work From Home", "Half Day"]],
+				["docstatus", "=", 1],
+				["employee", "=", self.employee],
+			],
 			fields=["attendance_date", "status"],
 		)
 

@@ -109,6 +109,8 @@ def get_interview_details(job_applicant):
 
 @frappe.whitelist()
 def get_applicant_to_hire_percentage():
+	frappe.has_permission("Job Applicant", throw=True)
+
 	total_applicants = frappe.db.count("Job Applicant")
 	total_hired = frappe.db.count("Job Applicant", filters={"status": "Accepted"})
 

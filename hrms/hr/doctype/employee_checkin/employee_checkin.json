@@ -10,6 +10,7 @@
   "employee_name",
   "log_type",
   "shift",
+  "overtime_type",
   "column_break_4",
   "time",
   "device_id",
@@ -174,10 +175,17 @@
    "hidden": 1,
    "label": "Off-shift",
    "read_only": 1
+  },
+  {
+   "fieldname": "overtime_type",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Overtime Type",
+   "options": "Overtime Type"
   }
  ],
  "links": [],
- "modified": "2025-03-05 15:36:10.014354",
+ "modified": "2025-07-09 10:47:34.591144",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Checkin",
@@ -272,6 +280,7 @@
    "role": "Employee"
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "ASC",
  "states": [],

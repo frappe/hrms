@@ -12,6 +12,7 @@ class LeaveType(Document):
 	def validate(self):
 		self.validate_lwp()
 		self.validate_leave_types()
+		self.validate_allocated_earned_leave()
 
 	def validate_lwp(self):
 		if self.is_lwp:
@@ -48,6 +49,27 @@ class LeaveType(Document):
 			self.fraction_of_daily_salary_per_leave < 0 or self.fraction_of_daily_salary_per_leave > 1
 		):
 			frappe.throw(_("The fraction of Daily Salary per Leave should be between 0 and 1"))
+
+	def validate_allocated_earned_leave(self):
+		old_configuration = self.get_doc_before_save()
+
+		if (
+			old_configuration
+			and old_configuration.is_earned_leave
+			and old_configuration.max_leaves_allowed > self.max_leaves_allowed
+		):
+			earned_leave_allocation_exists = frappe.db.exists(
+				"Leave Allocation",
+				{"leave_type": self.name, "from_date": ("<=", today()), "to_date": (">=", today())},
+				cache=True,
+			)
+			if earned_leave_allocation_exists:
+				frappe.msgprint(
+					title=_("Leave Allocation Exists"),
+					msg=_(
+						"Reducing maximum leaves allowed after allocation may cause scheduler to allocate incorrect number of earned leaves. Proceed with caution."
+					),
+				)
 
 	def clear_cache(self):
 		from hrms.payroll.doctype.salary_slip.salary_slip import LEAVE_TYPE_MAP
