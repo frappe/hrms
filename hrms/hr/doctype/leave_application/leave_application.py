@@ -190,27 +190,52 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		):
 			frappe.throw(_("Half Day Date should be between From Date and To Date"))
 
-		# Check if the leave application is for a half day and a date is specified
+		"""
+		This logic validates whether a half-day leave can be applied on the selected date.
+
+		Purpose:
+		--------
+		To prevent users from applying a half-day leave on holidays when the selected
+		Leave Type does not allow counting holidays. This maintains accurate leave
+		records and prevents incorrect half-day applications on non-working days.
+
+		How It Works:
+		-------------
+		1. The system checks whether the leave request is marked as half-day and 
+		whether a half-day date is provided.
+		2. It retrieves the 'Include Holiday' setting from the linked Leave Type.
+		3. If holidays are NOT allowed for this leave type:
+		- The system verifies if the selected half-day date falls on a holiday.
+		- If it is a holiday, the system blocks submission and shows an error message.
+
+		Result:
+		-------
+		- Allows half-day leave on working days.
+		- Prevents half-day leave on holidays when "Include Holiday" is disabled.
+
+		Validation Message:
+		-------------------
+		"Half-day leave cannot be applied on a holiday. Please choose a working day."
+		"""
+
+		# VALIDATE ONLY IF HALF DAY IS SELECTED AND A DATE IS PROVIDED
 		if self.half_day and self.half_day_date:
 			half_day_date = getdate(self.half_day_date)
-			leave_type = frappe.get_doc("Leave Type", self.leave_type)
 
-			# Proceed only if holidays are not supposed to be included in leave
-			if not leave_type.include_holiday:
-				holiday_list_name = get_holiday_list_for_employee(self.employee)
-				if not holiday_list_name:
-					frappe.throw("No Holiday List assigned to the Employee.")
+			# FETCH RULE: WHETHER HOLIDAYS ARE ALLOWED IN THE LEAVE TYPE
+			is_include_holiday = frappe.db.get_value(
+				"Leave Type",
+				self.leave_type,
+				"include_holiday"
+			)
 
-				holiday_dates = frappe.get_all(
-					"Holiday",
-					filters={"parent": holiday_list_name},
-					fields=["holiday_date"],
-					pluck="holiday_date"
-				)
+			# CONTINUE VALIDATION ONLY IF HOLIDAYS ARE NOT INCLUDED
+			if not is_include_holiday:
 
-				# If the selected half day date is a holiday, do not allow half day leave
-				if half_day_date in holiday_dates:
-					frappe.throw("Half-day leave cannot be applied on a holiday. Please choose a working day.")
+				# CHECK IF THE SELECTED DATE IS A HOLIDAY FOR THE EMPLOYEE
+				if get_holidays(self.employee, half_day_date, half_day_date):
+					frappe.throw(_("Half-day leave cannot be applied on a holiday. Please choose a working day."))
+
 
 		if not is_lwp(self.leave_type):
 			self.validate_dates_across_allocation()
