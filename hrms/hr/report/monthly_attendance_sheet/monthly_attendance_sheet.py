@@ -502,7 +502,7 @@ def get_attendance_status_for_summarized_view(
 
 	for d in total_days:
 		d = getdate(d)
-		if d in attendance_days or (joined_in_current_period and d < joined_date):
+		if d.day in attendance_days or (joined_in_current_period and d < joined_date):
 			continue
 
 		status = get_holiday_status(d, holidays)
