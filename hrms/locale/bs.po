@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-11-30 09:35+0000\n"
-"PO-Revision-Date: 2025-12-01 14:27\n"
+"PO-Revision-Date: 2025-12-03 12:50\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -373,7 +373,7 @@ msgstr "Vrsta računa treba biti postavljena na {0} za račun za isplatu plate {
 
 #: hrms/hr/doctype/expense_claim_type/expense_claim_type.py:29
 msgid "Account {0} does not match with Company {1}"
-msgstr "Račun {0} ne odgovara kompaniji {1}"
+msgstr "Račun {0} se ne podudara s {1}"
 
 #. Label of the accounting_dimensions_tab (Tab Break) field in DocType 'Payroll
 #. Entry'
@@ -601,7 +601,7 @@ msgstr "Predujam"
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:44
 msgid "Advance Account is mandatory. Please set the <a href=\"/app/company/{0}#default_employee_advance_account\" target=\"_blank\">Default Employee Advance Account</a> in the Company record {0} and submit this document."
-msgstr "Predujamni račun je obavezan. Molimo vas da postavite <a href=\"/app/company/{0}#default_employee_advance_account\" target=\"_blank\">Zadani avansni račun zaposlenika</a> u evidenciji kompanije {0} i podnesete ovaj dokument."
+msgstr "Račun Predujma je obavezan. Molimo vas da postavite <a href=\"/app/company/{0}#default_employee_advance_account\" target=\"_blank\">Standard Račun Predujma</a> u registar {0} i podnesete ovaj dokument."
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:79
 msgid "Advance Account {} currency should be same as Salary Currency of Employee {}. Please select same currency Advance Account"
@@ -611,7 +611,7 @@ msgstr "Valuta Računa Predujma {} treba biti ista kao valuta plaće {}. Odaberi
 #. Advance'
 #: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgid "Advance Paid (Company Currency)"
-msgstr "Plaćen Predujam (Valuta Kompanije)"
+msgstr "Plaćen Predujam (Valuta Poduzeća)"
 
 #. Label of the advanced_filters_section (Section Break) field in DocType
 #. 'Leave Control Panel'
@@ -964,7 +964,7 @@ msgstr "Prijave Primljene:"
 #. Block List'
 #: hrms/hr/doctype/leave_block_list/leave_block_list.json
 msgid "Applies to Company"
-msgstr "Odnosi se na Kompaniju"
+msgstr "Odnosi se na Poduzeće"
 
 #. Description of a DocType
 #: hrms/hr/doctype/leave_application/leave_application.json
@@ -2006,7 +2006,7 @@ msgstr "Završne Napomene"
 
 #: frontend/src/views/Profile.vue:177
 msgid "Company Information"
-msgstr "Informacije o Kompaniji"
+msgstr "Informacije o Poduzeću"
 
 #. Name of a DocType
 #. Label of the compensatory_request (Link) field in DocType 'Leave Allocation'
@@ -2533,7 +2533,7 @@ msgstr "Otvorena Radna Mjesta po Odjelu"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:106
 msgid "Department {0} does not belong to company: {1}"
-msgstr "Odjel {0} ne pripada kompaniji: {1}"
+msgstr "Odjel {0} ne pripada: {1}"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:232
 msgid "Department: {0}"
@@ -2710,7 +2710,7 @@ msgstr "Zarađena odsustva se automatski dodjeljuju putem planera na osnovu godi
 
 #: hrms/hr/doctype/leave_type/leave_type.js:59
 msgid "Earned Leaves are leaves earned by an Employee after working with the company for a certain amount of time. Enabling this will allocate leaves on pro-rata basis by automatically updating Leave Allocation for leaves of this type at intervals set by 'Earned Leave Frequency."
-msgstr "Zarađena odsustva su odsustva koje je personal zaradio nakon što je radio u kompaniji određeno vrijeme. Ako ovo omogućite, dodijelit će se odsustva na proporcionalnoj osnovi automatskim ažuriranjem dodjele odsustva za odsustvo ovog tipa u intervalima postavljenim od strane 'Učestalost Zarađenog Odsustva'."
+msgstr "Zarađena odsustva su odsustva koje je personal zaradio nakon što je radio u poduzeću određeno vrijeme. Ako ovo omogućite, dodijelit će se odsustva na proporcionalnoj osnovi automatskim ažuriranjem dodjele odsustva za odsustvo ovog tipa u intervalima postavljenim od strane 'Učestalost Zarađenog Odsustva'."
 
 #. Option for the 'Type' (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
@@ -4557,7 +4557,7 @@ msgstr "Bruto Do Danas u Godini"
 #. Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Gross Year To Date(Company Currency)"
-msgstr "Bruto Do Danas u Godini (Valuta Kompanije)"
+msgstr "Bruto Do Danas u Godini (Valuta Poduzeća)"
 
 #: hrms/hr/doctype/goal/goal.js:13
 msgid "Group goal's progress is auto-calculated based on the child goals."
@@ -4664,7 +4664,7 @@ msgstr "Broj Zdravstvenog Osiguranja"
 
 #: hrms/setup.py:221
 msgid "Health Insurance Provider"
-msgstr "Kompanija Zdravstvenog Osiguranja"
+msgstr "Poduzeće Zdravstvenog Osiguranja"
 
 #: hrms/controllers/employee_reminders.py:72
 msgid "Hey {}! This email is to remind you about the upcoming holidays."
@@ -4706,7 +4706,7 @@ msgstr "Horizontalni Prekid"
 #. Label of the base_hour_rate (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Hour Rate (Company Currency)"
-msgstr "Satnica (Valuta Kompanije)"
+msgstr "Satnica (Valuta Poduzeća)"
 
 #. Label of the hourly_rate (Currency) field in DocType 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
@@ -4914,7 +4914,7 @@ msgstr "Iznos Poticaja"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:102
 msgid "Include Company Descendants"
-msgstr "Uključuje Podređene Kompanije"
+msgstr "Uključuje Podređena Poduzeća"
 
 #. Label of the include_holidays (Check) field in DocType 'Attendance Request'
 #: hrms/hr/doctype/attendance_request/attendance_request.json
@@ -6494,7 +6494,7 @@ msgstr "Mjesec do Danas"
 #. Label of the base_month_to_date (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Month To Date(Company Currency)"
-msgstr "Mjesec do Danas (Valuta Kompanije)"
+msgstr "Mjesec do Danas (Valuta Poduzeća)"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -6561,7 +6561,7 @@ msgstr "Neto Plata"
 #. Label of the base_net_pay (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Net Pay (Company Currency)"
-msgstr "Neto Plata (Valuta Kompanije)"
+msgstr "Neto Plata (Valuta Poduzeća)"
 
 #. Label of the net_pay_info (Tab Break) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
@@ -6625,7 +6625,7 @@ msgstr "Nove dodjele smjene biti će kreirane nakon ovog datuma."
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:372
 msgid "No Bank/Cash Account found for currency {0}. Please create one under company {1}."
-msgstr "Nije pronađen Bankovni/Gotovinski račun za valutu {0}. Molimo vas da kreirate jedan pod kompanijom {1}."
+msgstr "Nije pronađen Bankovni/Gotovinski račun za valutu {0}. Molimo vas da kreirate jedan u {1}."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:218
 msgid "No Employee Found"
@@ -6754,7 +6754,7 @@ msgstr "Nije pronađen personal"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:222
 msgid "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
-msgstr "Nije pronađen personal za navedene kriterije:<br>Kompanija: {0}<br> Valuta: {1}<br>Račun Isplate Plate: {2}"
+msgstr "Nije pronađen personal za navedene kriterije:<br>Poduzeće: {0}<br> Valuta: {1}<br>Račun Isplate Plate: {2}"
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:67
 msgid "No employees found for the selected criteria"
@@ -7081,7 +7081,7 @@ msgstr "Izborna Lista Praznika nije postavljena za period odsustva {0}"
 
 #: hrms/hr/doctype/leave_type/leave_type.js:35
 msgid "Optional Leaves are holidays that Employees can choose to avail from a list of holidays published by the company."
-msgstr "Neobavezno odsustvo su praznici koje personal može izabrati sa liste praznika koju objavljuje kompanija."
+msgstr "Neobavezno odsustvo su praznici koje personal može izabrati sa liste praznika koju objavljuje poduzeće."
 
 #: hrms/hr/page/organizational_chart/organizational_chart.js:4
 msgid "Organizational Chart"
@@ -7613,7 +7613,7 @@ msgstr "Omogući Automatsko Prisustvo i prvo dovršite podešavanje."
 
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.js:8
 msgid "Please Select Company First"
-msgstr "Odaberi Kompaniju"
+msgstr "Odaberi Poduzeće"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:832
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
@@ -7645,7 +7645,7 @@ msgstr "Unesi Poziciju"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.js:11
 msgid "Please fill in Employee, Posting Date, and Company before fetching overtime details."
-msgstr "Popuni podatke za Personal, Datum Registracije i Kompaniju prije nego što preuzmete detalje o prekovremenom radu."
+msgstr "Popuni podatke za Personal, Datum Registracije i Poduzeće prije nego što preuzmete detalje o prekovremenom radu."
 
 #: hrms/hr/doctype/shift_type/shift_type.py:49
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
@@ -7657,7 +7657,7 @@ msgstr "Pogledaj Prilog"
 
 #: hrms/hr/doctype/staffing_plan/staffing_plan.py:224
 msgid "Please select Company and Designation"
-msgstr "Odaberi Kompaniju i Poziciju"
+msgstr "Odaberi Poduzeće i Poziciju"
 
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.js:22
 msgid "Please select Employee"
@@ -7690,12 +7690,12 @@ msgstr "Odaberi Tip Smjene i datum(e) dodjele."
 
 #: hrms/public/js/hierarchy_chart/hierarchy_chart_mobile.js:233
 msgid "Please select a company first"
-msgstr "Odaberi Kompaniju"
+msgstr "Odaberi Poduzeće"
 
 #: hrms/public/js/hierarchy_chart/hierarchy_chart_desktop.js:103
 #: hrms/public/js/hierarchy_chart/hierarchy_chart_desktop.js:299
 msgid "Please select a company first."
-msgstr "Odaberi Kompaniju."
+msgstr "Odaberi Poduzeće."
 
 #: hrms/hr/doctype/upload_attendance/upload_attendance.py:172
 msgid "Please select a csv file"
@@ -7723,7 +7723,7 @@ msgstr "Odaberi barem jedan red da izvršite ovu radnju."
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:55
 msgid "Please select company."
-msgstr "Odaberi Kompaniju."
+msgstr "Odaberi Poduzeće."
 
 #: hrms/hr/doctype/employee_advance/employee_advance.js:16
 #: hrms/hr/doctype/leave_encashment/leave_encashment.js:30
@@ -7760,11 +7760,11 @@ msgstr "Odaberi platne liste za slanje e-poštom"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:286
 msgid "Please set \"Default Payroll Payable Account\" in Company Defaults"
-msgstr "Postavi \"Standard račun za isplatu plata\" u Standard Postavkama Kompanije"
+msgstr "Postavi \"Standard Račun Isplate Plata\" u Standard Postavkama Poduzeća"
 
 #: hrms/regional/india/utils.py:18
 msgid "Please set Basic and HRA component in Company {0}"
-msgstr "Postavi Osnovnu i Najamnu komponentu u Kompaniji {0}"
+msgstr "Postavi Osnovnu i Najamnu komponentu u {0}"
 
 #: hrms/hr/doctype/leave_encashment/leave_encashment.py:162
 msgid "Please set Earning Component for Leave type: {0}."
@@ -7801,7 +7801,7 @@ msgstr "Postavi Šablon Ocjenjivanjaza sve {0} ili odaberi šablon u tabeli Pers
 
 #: hrms/hr/doctype/expense_claim/expense_claim.js:521
 msgid "Please set the Company"
-msgstr "Postavi Kompaniju"
+msgstr "Postavi Poduzeće"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:302
 msgid "Please set the Date Of Joining for employee {0}"
@@ -8869,7 +8869,7 @@ msgstr "Struktura Plate nije dodijeljena za {0} za datum {1}"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:70
 msgid "Salary Structure {0} does not belong to company {1}"
-msgstr "Struktura Plate {0} ne pripada kompaniji {1}"
+msgstr "Struktura Plate {0} ne pripada {1}"
 
 #: hrms/payroll/doctype/salary_component/salary_component.js:144
 msgid "Salary Structures updated successfully"
@@ -8930,7 +8930,7 @@ msgstr "Sankcionisani Iznos"
 #. Claim Detail'
 #: hrms/hr/doctype/expense_claim_detail/expense_claim_detail.json
 msgid "Sanctioned Amount (Company Currency)"
-msgstr "Sankcionisani Iznos (Valuta Kompanije)"
+msgstr "Sankcionisani Iznos (Valuta Poduzeća)"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:514
 msgid "Sanctioned Amount cannot be greater than Claim Amount in Row {0}."
@@ -9884,7 +9884,7 @@ msgstr "Hvala na prijavi."
 
 #: hrms/overrides/company.py:131
 msgid "The currency of {0} should be same as the company's default currency. Please select another account."
-msgstr "Valuta {0} treba da bude ista kao i standard valuta kompanije. Odaberi drugi račun."
+msgstr "Valuta {0} treba da bude ista kao i standard valuta poduzeća Odaberi drugi račun."
 
 #. Description of the 'Payroll Date' (Date) field in DocType 'Additional
 #. Salary'
@@ -9981,7 +9981,7 @@ msgstr "Nema personala sa Strukturom Plate: {0}. Dodijeli {1} da pregleda Platni
 #. Description of the 'Is Optional Leave' (Check) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "These leaves are holidays permitted by the company however, availing it is optional for an Employee."
-msgstr "Ova odsustva su praznici koje kompanija dozvoljava, ali njihovo korištenje je opcija za personal."
+msgstr "Ova odsustva su praznici koje poduzeće dozvoljava, ali njihovo korištenje je opcija za personal."
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:130
 msgid "This action will prevent making changes to the linked appraisal feedback/goals."
@@ -10130,11 +10130,11 @@ msgstr "Danas je {0} rođendan 🎉"
 
 #: hrms/controllers/employee_reminders.py:259
 msgid "Today {0} at our Company! 🎉"
-msgstr "Danas {0} u našoj Kompaniji! 🎉"
+msgstr "Danas je {0} u našem Poduzeću! 🎉"
 
 #: hrms/controllers/employee_reminders.py:241
 msgid "Today {0} completed {1} year(s) at our Company! 🎉"
-msgstr "Danas je {0} navršio(la) {1} godina(e) u našoj kompaniji! 🎉"
+msgstr "Danas je {0} navršio(la) {1} godina(e) u našem Poduzeću! 🎉"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:149
 msgid "Total Absent"
@@ -10160,7 +10160,7 @@ msgstr "Ukupan Iznos Predujma"
 #. Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Total Advance Amount (Company Currency)"
-msgstr "Ukupni Iznos Predujma (Valuta Kompanije)"
+msgstr "Ukupni Iznos Predujma (Valuta Poduzeća)"
 
 #. Label of the total_allocated_leaves (Float) field in DocType 'Salary Slip
 #. Leave'
@@ -10199,7 +10199,7 @@ msgstr "Ukupan Iznos potraživanja"
 #. Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Total Claimed Amount (Company Currency)"
-msgstr "Ukupni Zatraženi Iznos (Valuta Kompanije)"
+msgstr "Ukupni Zatraženi Iznos (Valuta Poduzeća)"
 
 #. Label of the lwp_days (Float) field in DocType 'Payroll Correction'
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
@@ -10224,7 +10224,7 @@ msgstr "Ukupni Odbitak"
 #. Label of the base_total_deduction (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Total Deduction (Company Currency)"
-msgstr "Ukupni Odbitak (Valuta Kompanije)"
+msgstr "Ukupni Odbitak (Valuta Poduzeća)"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:174
 msgid "Total Early Exits"
@@ -10388,7 +10388,7 @@ msgstr "Ukupni Sankcionisani Iznos"
 #. 'Expense Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Total Sanctioned Amount (Company Currency)"
-msgstr "Ukupni Sankcionirani Iznos (Valuta Kompanije)"
+msgstr "Ukupni Sankcionirani Iznos (Valuta Poduzeća)"
 
 #. Label of the total_score (Float) field in DocType 'Employee Performance
 #. Feedback'
@@ -10421,7 +10421,7 @@ msgstr "Ukupno Riječima"
 #. Label of the base_total_in_words (Data) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Total in words (Company Currency)"
-msgstr "Ukupno Riječima (Valuta Kompanije)"
+msgstr "Ukupno Riječima (Valuta Poduzeća)"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:367
 msgid "Total leaves allocated cannot exceed annual allocation of {0}."
@@ -10655,7 +10655,7 @@ msgstr "Nezatražen Iznos"
 #. Claim Advance'
 #: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgid "Unclaimed Amount (Company Currency)"
-msgstr "Nezatraženi Iznos (Valuta Kompanije)"
+msgstr "Nezatraženi Iznos (Valuta Poduzeća)"
 
 #. Option for the 'Status' (Select) field in DocType 'Interview'
 #: hrms/hr/doctype/interview/interview.json
@@ -11122,7 +11122,7 @@ msgstr "Godina do Danas"
 #. Label of the base_year_to_date (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Year To Date(Company Currency)"
-msgstr "Godina do Danas (Valuta Kompanije)"
+msgstr "Godina do Danas (Valuta Poduzeća)"
 
 #. Label of the yearly_benefit (Currency) field in DocType 'Employee Benefit
 #. Claim'
@@ -11159,7 +11159,7 @@ msgstr "Ne možete zatražiti svoju Standard Smjenu: {0}"
 
 #: hrms/hr/doctype/staffing_plan/staffing_plan.py:95
 msgid "You can only plan for upto {0} vacancies and budget {1} for {2} as per staffing plan {3} for parent company {4}."
-msgstr "Možete planirati samo do {0} slobodnih radnih mjesta i budžet {1} za {2} prema planu zapošljavanja {3} za matičnu kompaniju {4}."
+msgstr "Možete planirati samo do {0} slobodnih radnih mjesta i budžet {1} za {2} prema planu zapošljavanja {3} za matično poduzeće {4}."
 
 #: hrms/hr/doctype/leave_encashment/leave_encashment.py:43
 msgid "You can only submit Leave Encashment for a valid encashment amount"
@@ -11434,7 +11434,7 @@ msgstr "{0} uspješno ažurirano!"
 
 #: hrms/hr/doctype/staffing_plan/staffing_plan.py:129
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
-msgstr "{0} slobodnih radnih mjesta i {1} budžet za {2} već planirani za podružnice od {3}. Možete planirati samo do {4} slobodnih radnih mjesta i budžet {5} prema planu osoblja {6} za matičnu kompaniju {3}."
+msgstr "{0} slobodnih radnih mjesta i {1} budžet za {2} već su planirani za podružnice od {3}. Možete planirati samo do {4} slobodnih radnih mjesta i budžet {5} prema planu osoblja {6} za matično poduzeće {3}."
 
 #: hrms/payroll/doctype/salary_component/salary_component.js:124
 msgid "{0} will be updated for the following Salary Structures: {1}."

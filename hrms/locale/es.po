@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-11-30 09:35+0000\n"
-"PO-Revision-Date: 2025-12-01 14:26\n"
+"PO-Revision-Date: 2025-12-02 12:54\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -1732,7 +1732,7 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:323
 msgid "Cannot allocate leaves outside the allocation period {0} - {1}"
-msgstr ""
+msgstr "No se pueden asignar vacaciones fuera del período de asignación {0} - {1}"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:446
 msgid "Cannot allocate more leaves due to maximum leave allocation limit of {0} in leave policy assignment"
@@ -3893,7 +3893,7 @@ msgstr "Caducar la asignación"
 #. 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Expire Carry Forwarded Leaves (Days)"
-msgstr "Caducar Llevar hojas reenviadas (días)"
+msgstr "Vencimiento de permisos transferidos (días)"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:568
 msgid "Expire Leaves"
@@ -6022,7 +6022,7 @@ msgstr ""
 #: hrms/hr/workspace/leaves/leaves.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Leaves"
-msgstr "Licencias"
+msgstr "Vacaciones"
 
 #: frontend/src/views/leave/Dashboard.vue:2
 msgid "Leaves & Holidays"
@@ -6038,7 +6038,7 @@ msgstr ""
 #. Assignment'
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 msgid "Leaves Allocated"
-msgstr "Hojas asignadas"
+msgstr "Vacaciones asignadas"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:562
 msgid "Leaves Expired"
@@ -6329,7 +6329,7 @@ msgstr ""
 #. Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Maximum Carry Forwarded Leaves"
-msgstr "Máximo transporte de hojas enviadas"
+msgstr "Máximo de vacaciones arrastradas"
 
 #. Label of the max_continuous_days_allowed (Int) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -9447,7 +9447,7 @@ msgstr ""
 #. in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Show Leaves Of All Department Members In Calendar"
-msgstr "Mostrar hojas de todos los miembros del departamento en el calendario"
+msgstr "Mostrar vacaciones de todos los miembros del departamento en el calendario"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:204
 msgid "Show Salary Slip"
@@ -10281,7 +10281,7 @@ msgstr "Días totales de ausencia"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:148
 msgid "Total Leaves"
-msgstr "Hojas Totales"
+msgstr "Total vacaciones"
 
 #: hrms/hr/report/leave_ledger/leave_ledger.py:192
 msgid "Total Leaves ({0})"
