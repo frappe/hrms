@@ -201,7 +201,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 		How It Works:
 		-------------
-		1. The system checks whether the leave request is marked as half-day and 
+		1. The system checks whether the leave request is marked as half-day and
 		whether a half-day date is provided.
 		2. It retrieves the 'Include Holiday' setting from the linked Leave Type.
 		3. If holidays are NOT allowed for this leave type:
@@ -223,18 +223,16 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			half_day_date = getdate(self.half_day_date)
 
 			# FETCH RULE: WHETHER HOLIDAYS ARE ALLOWED IN THE LEAVE TYPE
-			is_include_holiday = frappe.db.get_value(
-				"Leave Type",
-				self.leave_type,
-				"include_holiday"
-			)
+			is_include_holiday = frappe.db.get_value("Leave Type", self.leave_type, "include_holiday")
 
 			# CONTINUE VALIDATION ONLY IF HOLIDAYS ARE NOT INCLUDED
 			if not is_include_holiday:
 
 				# CHECK IF THE SELECTED DATE IS A HOLIDAY FOR THE EMPLOYEE
 				if get_holidays(self.employee, half_day_date, half_day_date):
-					frappe.throw(_("Half-day leave cannot be applied on a holiday. Please choose a working day."))
+					frappe.throw(
+						_("Half-day leave cannot be applied on a holiday. Please choose a working day.")
+					)
 
 
 		if not is_lwp(self.leave_type):
