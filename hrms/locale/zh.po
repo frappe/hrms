@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-11-23 09:35+0000\n"
-"PO-Revision-Date: 2025-11-23 13:25\n"
+"POT-Creation-Date: 2025-11-30 09:35+0000\n"
+"PO-Revision-Date: 2025-12-01 14:27\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Chinese Simplified\n"
 "MIME-Version: 1.0\n"
@@ -310,6 +310,11 @@ msgstr "<hr>"
 #: hrms/payroll/workspace/payroll/payroll.json
 msgid "<span class=\"h4\"><b>Transactions &amp; Reports</b></span>"
 msgstr "<span class=\"h4\"><b>交易 &amp; 报告</b></span>"
+
+#. Header text in the Shift & Attendance Workspace
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+msgid "<span style=\"font-size: 18px;\"><b>Masters &amp; Reports</b></span>"
+msgstr "<span style=\"font-size: 18px;\"><b>雇主 &amp; 报告</b></span>"
 
 #: hrms/public/js/utils/index.js:166
 msgid "<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>"
@@ -1294,12 +1299,17 @@ msgstr ""
 #. Label of the attendance (Select) field in DocType 'Training Event Employee'
 #. Label of a Card Break in the HR Workspace
 #. Label of a Link in the HR Workspace
+#. Label of a Card Break in the Shift & Attendance Workspace
+#. Label of a Link in the Shift & Attendance Workspace
+#. Label of a shortcut in the Shift & Attendance Workspace
 #. Option for the 'Calculate Payroll Working Days Based On' (Select) field in
 #. DocType 'Payroll Settings'
 #: frontend/src/components/BottomTabs.vue:48
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
-#: hrms/hr/workspace/hr/hr.json hrms/overrides/dashboard_overrides.py:10
+#: hrms/hr/workspace/hr/hr.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+#: hrms/overrides/dashboard_overrides.py:10
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 #: hrms/templates/emails/training_event.html:9
 msgid "Attendance"
@@ -1308,6 +1318,11 @@ msgstr "考勤"
 #: frontend/src/components/AttendanceCalendar.vue:3
 msgid "Attendance Calendar"
 msgstr "考勤日历"
+
+#. Label of a chart in the Shift & Attendance Workspace
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+msgid "Attendance Count"
+msgstr "考勤次数"
 
 #. Label of the attendance_date (Date) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
@@ -1338,10 +1353,12 @@ msgstr "已记录考勤"
 #. Label of the attendance_request (Link) field in DocType 'Attendance'
 #. Name of a DocType
 #. Label of a Link in the HR Workspace
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/attendance/attendance.js:18
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/attendance_request/attendance_request.json
 #: hrms/hr/workspace/hr/hr.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Attendance Request"
 msgstr "考勤申请"
 
@@ -2636,7 +2653,7 @@ msgstr "重复覆盖薪资"
 msgid "Duplicate Salary Withholding"
 msgstr "重复薪资代扣"
 
-#: hrms/public/js/utils/index.js:208
+#: hrms/public/js/utils/index.js:210
 msgid "ERROR({0}): {1}"
 msgstr "错误({0})：{1}"
 
@@ -2815,7 +2832,9 @@ msgid "Employee Analytics"
 msgstr "员工分析"
 
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Employee Attendance Tool"
 msgstr "员工考勤工具"
 
@@ -2870,8 +2889,11 @@ msgstr "员工入职活动"
 
 #. Name of a DocType
 #. Label of a Link in the HR Workspace
+#. Label of a Link in the Shift & Attendance Workspace
+#. Label of a shortcut in the Shift & Attendance Workspace
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 #: hrms/hr/workspace/hr/hr.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Employee Checkin"
 msgstr "员工签到"
 
@@ -2987,7 +3009,9 @@ msgid "Employee Health Insurance"
 msgstr "员工健康保险"
 
 #. Name of a report
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Employee Hours Utilization Based On Timesheet"
 msgstr "基于工时表的员工工时利用率"
 
@@ -3372,8 +3396,10 @@ msgstr "未设置目标员工：{0}"
 
 #. Name of a report
 #. Label of a Link in the Leaves Workspace
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.json
 #: hrms/hr/workspace/leaves/leaves.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Employees working on a holiday"
 msgstr "节假日工作员工"
 
@@ -4334,7 +4360,7 @@ msgstr "不允许未来日期"
 msgid "Gain Loss Account"
 msgstr ""
 
-#: hrms/public/js/utils/index.js:186 hrms/public/js/utils/index.js:212
+#: hrms/public/js/utils/index.js:186 hrms/public/js/utils/index.js:214
 msgid "Geolocation Error"
 msgstr "地理位置错误"
 
@@ -6472,8 +6498,10 @@ msgstr "本月累计（公司币种）"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.json
 #: hrms/hr/workspace/hr/hr.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Monthly Attendance Sheet"
 msgstr "月度考勤表"
 
@@ -7106,8 +7134,10 @@ msgstr "重叠班次"
 
 #. Label of the overtime_section (Section Break) field in DocType 'Attendance'
 #. Label of the overtime_section (Section Break) field in DocType 'Shift Type'
+#. Label of a Card Break in the Shift & Attendance Workspace
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/shift_type/shift_type.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Overtime"
 msgstr "加班"
 
@@ -7142,7 +7172,9 @@ msgid "Overtime Salary Component"
 msgstr "加班工资组件"
 
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/overtime_slip/overtime_slip.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Overtime Slip"
 msgstr "加班单"
 
@@ -7201,12 +7233,14 @@ msgstr "已为{0}名员工提交加班单"
 #. Name of a DocType
 #. Label of the overtime_type (Link) field in DocType 'Shift Assignment'
 #. Label of the overtime_type (Link) field in DocType 'Shift Type'
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 #: hrms/hr/doctype/overtime_details/overtime_details.json
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
 #: hrms/hr/doctype/shift_type/shift_type.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Overtime Type"
 msgstr "加班类型"
 
@@ -7971,7 +8005,9 @@ msgid "Profit"
 msgstr "利润"
 
 #. Name of a report
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/report/project_profitability/project_profitability.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Project Profitability"
 msgstr "项目盈利能力"
 
@@ -8459,7 +8495,9 @@ msgstr "修订后人力总成本"
 msgid "Role Allowed to Create Backdated Leave Application"
 msgstr "允许创建补请假申请的角色"
 
-#: hrms/public/js/utils/index.js:250 hrms/public/js/utils/index.js:271
+#. Label of a shortcut in the Shift & Attendance Workspace
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+#: hrms/public/js/utils/index.js:252 hrms/public/js/utils/index.js:273
 msgid "Roster"
 msgstr "排班表"
 
@@ -9207,6 +9245,11 @@ msgstr "提交前需结清所有应收应付"
 msgid "Shared document with the user {0} with 'Submit' permission"
 msgstr "已与用户{0}共享文档并授予“提交”权限"
 
+#. Name of a Workspace
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+msgid "Shift & Attendance"
+msgstr "班次与考勤"
+
 #. Label of the shift_actual_end (Datetime) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 msgid "Shift Actual End"
@@ -9227,7 +9270,9 @@ msgid "Shift Actual Start Time"
 msgstr "班次实际开始时间"
 
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Assignment"
 msgstr "班次分配"
 
@@ -9242,8 +9287,10 @@ msgid "Shift Assignment History"
 msgstr "班次分配历史"
 
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
-#: hrms/public/js/utils/index.js:238 hrms/public/js/utils/index.js:260
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+#: hrms/public/js/utils/index.js:240 hrms/public/js/utils/index.js:262
 msgid "Shift Assignment Tool"
 msgstr "班次分配工具"
 
@@ -9256,7 +9303,9 @@ msgid "Shift Assignments created for the schedule between {0} and {1} via backgr
 msgstr "已通过后台任务为{0}至{1}期间的排班创建班次分配"
 
 #. Name of a report
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/report/shift_attendance/shift_attendance.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Attendance"
 msgstr "班次考勤"
 
@@ -9283,18 +9332,23 @@ msgstr "班次结束时间"
 #. Name of a DocType
 #. Label of the shift_location (Link) field in DocType 'Shift Schedule
 #. Assignment'
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hrms/hr/doctype/shift_location/shift_location.json
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Location"
 msgstr "班次地点"
 
 #. Label of the shift_request (Link) field in DocType 'Shift Assignment'
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
+#. Label of a shortcut in the Shift & Attendance Workspace
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:220
 #: hrms/hr/doctype/shift_request/shift_request.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Request"
 msgstr "班次申请"
 
@@ -9323,17 +9377,21 @@ msgstr "此日期后开始的班次申请将被排除"
 #. Name of a DocType
 #. Label of the shift_schedule (Link) field in DocType 'Shift Schedule
 #. Assignment'
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hrms/hr/doctype/shift_schedule/shift_schedule.json
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Schedule"
 msgstr "班次表"
 
 #. Label of the shift_schedule_assignment (Link) field in DocType 'Shift
 #. Assignment'
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Schedule Assignment"
 msgstr "班次表分配"
 
@@ -9364,8 +9422,8 @@ msgstr "班次状态"
 msgid "Shift Timings"
 msgstr "班次时间"
 
-#: hrms/public/js/utils/index.js:246 hrms/public/js/utils/index.js:254
-#: hrms/public/js/utils/index.js:268 hrms/public/js/utils/index.js:275
+#: hrms/public/js/utils/index.js:248 hrms/public/js/utils/index.js:256
+#: hrms/public/js/utils/index.js:270 hrms/public/js/utils/index.js:277
 msgid "Shift Tools"
 msgstr "班次工具"
 
@@ -9376,6 +9434,7 @@ msgstr "班次工具"
 #. Label of the shift_type (Link) field in DocType 'Shift Request'
 #. Label of the shift_type (Link) field in DocType 'Shift Schedule'
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
 #: frontend/src/views/attendance/ShiftAssignmentList.vue:24
 #: frontend/src/views/attendance/ShiftRequestList.vue:42
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
@@ -9385,6 +9444,7 @@ msgstr "班次工具"
 #: hrms/hr/doctype/shift_schedule/shift_schedule.json
 #: hrms/hr/doctype/shift_type/shift_type.json
 #: hrms/hr/report/shift_attendance/shift_attendance.js:28
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Type"
 msgstr "班次类型"
 
@@ -9395,6 +9455,11 @@ msgstr "{0}在{1}之后的班次分配已创建。请将{2}日期更改为晚于
 #: hrms/hr/doctype/employee_checkin/employee_checkin.js:42
 msgid "Shift has been successfully updated to {0}."
 msgstr "班次已成功更新为{0}"
+
+#. Label of a Card Break in the Shift & Attendance Workspace
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+msgid "Shifts"
+msgstr "班次列表"
 
 #: hrms/hr/doctype/job_offer/job_offer.js:51
 msgid "Show Employee"
@@ -10571,7 +10636,7 @@ msgstr "差旅类型"
 msgid "Type of Proof"
 msgstr "证明类型"
 
-#: hrms/public/js/utils/index.js:206
+#: hrms/public/js/utils/index.js:208
 msgid "Unable to retrieve your location"
 msgstr "无法获取您的位置"
 
@@ -10736,7 +10801,9 @@ msgid "Updated the status of linked Job Applicant {0} to {1}"
 msgstr "已更新关联职位申请人{0}的状态为{1}"
 
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/upload_attendance/upload_attendance.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Upload Attendance"
 msgstr "上传考勤"
 
@@ -11246,7 +11313,7 @@ msgstr "{0} <br> 此错误可能由字段缺失或删除导致"
 msgid "{0} Appraisal(s) are not submitted yet"
 msgstr "尚有{0}份考核未提交"
 
-#: hrms/public/js/utils/index.js:229
+#: hrms/public/js/utils/index.js:231
 msgid "{0} Field"
 msgstr "{0} 字段"
 
@@ -11395,6 +11462,11 @@ msgstr "{0}：类型为{1}的{0}"
 #: frontend/src/components/ShiftRequestItem.vue:17
 msgid "{0}d"
 msgstr "{0}天"
+
+#. Count format of shortcut in the Shift & Attendance Workspace
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+msgid "{} "
+msgstr ""
 
 #. Count format of shortcut in the Recruitment Workspace
 #: hrms/hr/workspace/recruitment/recruitment.json
