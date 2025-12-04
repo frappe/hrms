@@ -115,12 +115,12 @@ class TestSalaryStructure(IntegrationTestCase):
 		salary_structure = make_salary_structure(
 			"Salary Structure Sample", "Monthly", currency=company_currency
 		)
-		employee = "test_assign_stucture@salary.com"
+		employee = "test_assign_structure@salary.com"
 		employee_doc_name = make_employee(employee)
-		# clear the already assigned stuctures
+		# clear the already assigned structures
 		frappe.db.sql(
 			"""delete from `tabSalary Structure Assignment` where employee=%s and salary_structure=%s """,
-			("test_assign_stucture@salary.com", salary_structure.name),
+			("test_assign_structure@salary.com", salary_structure.name),
 		)
 		# test structure_assignment
 		salary_structure.assign_salary_structure(
