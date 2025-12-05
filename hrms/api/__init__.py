@@ -1,9 +1,11 @@
 import frappe
+import erpnext
 from frappe import _
 from frappe.model import get_permitted_fields
 from frappe.model.workflow import get_workflow_name
 from frappe.query_builder import Order
 from frappe.utils import add_days, date_diff, getdate, strip_html
+
 
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 
@@ -52,6 +54,7 @@ def get_current_employee_info() -> dict:
 			"department",
 			"company",
 			"reports_to",
+			"field_employee",
 			"user_id",
 		],
 		as_dict=True,
@@ -71,12 +74,155 @@ def get_all_employees() -> list[dict]:
 			"company",
 			"reports_to",
 			"user_id",
+			"field_employee",
 			"image",
 			"status",
 		],
 		limit=999999,
 	)
 
+@frappe.whitelist()
+def get_all_leads() -> list[dict]:
+	return frappe.get_all(
+		"Lead",
+		fields=["*"],
+		limit=999999,
+	)
+
+
+# whf api
+@frappe.whitelist()
+def get_all_wfh():
+    """
+    Return all Employee WFH records for the logged-in user,
+    including all fields from both child tables:
+    - Employee WFH Detail
+    - Employee WFH Date
+    """
+    user = frappe.session.user  # current logged-in user
+
+    # ✅ Fetch all fields from Employee WFH
+    wfh_records = frappe.get_all(
+        "Employee WFH",
+        fields="*",  # fetch all fields from parent
+        order_by="creation desc",
+        limit=999999,
+    )
+
+    result = []
+    for record in wfh_records:
+        # ✅ Fetch all fields from child table: Employee WFH Detail
+        details = frappe.get_all(
+            "Employee WFH Detail",
+            fields="*",
+            filters={"parent": record.name},
+        )
+
+        # ✅ Fetch all fields from child table: Employee WFH Date
+        dates = frappe.get_all(
+            "Employee WFH Date",
+            fields="*",
+            filters={"parent": record.name},
+        )
+
+        # Add both child tables under correct parentfield names
+        record["employee_wfh_details"] = details
+        record["choose_date"] = dates
+
+        result.append(record)
+
+    return result
+
+
+# geofence 
+@frappe.whitelist()
+def get_all_geofence():
+    """
+    Return all Geofence records for the logged-in user (linked via User field),
+    including location details from its child table Geofence Details.
+    """
+    user = frappe.session.user  # current logged-in user (email)
+
+    geofences = frappe.get_all(
+        "Geofence",
+        fields=["name", "user"],
+        filters={"user": user},
+        limit=999999,
+    )
+
+    result = []
+    for g in geofences:
+        details = frappe.get_all(
+            "Geofence Details",
+            fields=["location", "latitude", "longitude", "radius"],
+            filters={"parent": g.name},
+        )
+        g["fence"] = details
+        result.append(g)
+
+    return result
+
+
+#chek in journey list
+from frappe.utils import getdate
+
+@frappe.whitelist()
+def get_all_checkInJourney(from_date=None, to_date=None, employee=None):
+    """Return filtered CheckIn Journey records based on optional date and employee filters."""
+    filters = {}
+
+    # Apply date filter
+    if from_date and to_date:
+        from_date = getdate(from_date)
+        to_date = getdate(to_date)
+        filters["date"] = ["between", [from_date, to_date]]
+
+    # Apply employee filter
+    if employee:
+        filters["employee"] = employee
+
+    frappe.logger().info(f"🔍 Filters applied: {filters}")
+
+    data = frappe.get_all(
+        "CheckIn Journey",
+        filters=filters,
+        fields=[
+            "employee",
+            "reference_dt",
+            "description",
+            "naming_series",
+            "user",
+            "reference_name",
+            "date",
+            "location",
+            "distance",
+        ],
+        order_by="date asc",
+        limit=999999,
+    )
+
+    frappe.logger().info(f"✅ Found {len(data)} CheckIn Journeys after filtering.")
+    return data
+
+import frappe
+import erpnext
+
+@frappe.whitelist()
+def get_all_location():
+    return frappe.get_all(
+        "Location",
+        fields=[
+            "name",
+            "reference_dt",
+            "reference_name",
+            "latitude",
+            "longitude",
+            "radius",
+            "parent_location"
+        ],
+        limit=999999,
+		ignore_permissions=True
+    )
 
 # HR Settings
 @frappe.whitelist()
@@ -808,3 +954,4 @@ def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 @frappe.whitelist()
 def get_permitted_fields_for_write(doctype: str) -> list[str]:
 	return get_permitted_fields(doctype, permission_type="write")
+
