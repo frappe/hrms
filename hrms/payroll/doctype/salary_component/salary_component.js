@@ -37,6 +37,12 @@ frappe.ui.form.on("Salary Component", {
 		}
 	},
 
+	do_not_include_in_total: function (frm) {
+		if (!frm.doc.do_not_include_in_total) {
+			frm.set_value("do_not_include_in_accounts", 0);
+		}
+	},
+
 	arrear_component: function (frm) {
 		if (frm.doc.arrear_component) {
 			frm.set_value("depends_on_payment_days", 1);

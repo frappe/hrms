@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-11-30 09:35+0000\n"
-"PO-Revision-Date: 2025-12-04 13:08\n"
+"PO-Revision-Date: 2025-12-05 09:07\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -1501,7 +1501,7 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:11
 msgid "Available Leaves"
-msgstr ""
+msgstr "Razpoložljivi Dopust"
 
 #. Label of the avg_feedback_score (Float) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
@@ -1741,7 +1741,7 @@ msgstr ""
 #. DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Calculated in days"
-msgstr ""
+msgstr "Izračunano v dnevih"
 
 #: hrms/setup.py:332
 msgid "Calls"
@@ -3922,16 +3922,16 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:568
 msgid "Expire Leaves"
-msgstr ""
+msgstr "IztečI Dopust"
 
 #. Label of the expired_leaves (Float) field in DocType 'Salary Slip Leave'
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Expired Leave(s)"
-msgstr ""
+msgstr "Iztečeni Dopust"
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:8
 msgid "Expired Leaves"
-msgstr ""
+msgstr "Iztekel Dopust"
 
 #. Label of the explanation (Small Text) field in DocType 'Attendance Request'
 #: hrms/hr/doctype/attendance_request/attendance_request.json
@@ -3988,7 +3988,7 @@ msgstr ""
 
 #: hrms/hr/utils.py:481
 msgid "Failure of Automatic Allocation of Earned Leaves"
-msgstr ""
+msgstr "Neuspeh samodejne dodelitve zasluženega dopusta"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:37
 #: hrms/public/js/salary_slip_deductions_report_filters.js:20
@@ -4281,7 +4281,7 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_type/leave_type.js:54
 msgid "From here, you can enable encashment for the balance leaves."
-msgstr ""
+msgstr "Tukaj lahko omogočite unovčenje preostalo dopusta."
 
 #: hrms/payroll/report/salary_register/salary_register.html:8
 msgid "From {0} to {1}"
@@ -4927,7 +4927,7 @@ msgstr ""
 #. Label of the include_holiday (Check) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Include holidays within leaves as leaves"
-msgstr ""
+msgstr "Vključi praznike znotraj dopusta kot dopust"
 
 #. Label of the income_source_details_section (Section Break) field in DocType
 #. 'Employee Other Income'
@@ -5693,7 +5693,7 @@ msgstr ""
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Leave Allocation"
-msgstr ""
+msgstr "Dodelitev Dopusta"
 
 #: hrms/hr/doctype/leave_type/leave_type.py:68
 msgid "Leave Allocation Exists"
@@ -5714,7 +5714,7 @@ msgstr ""
 #: hrms/hr/doctype/leave_application/leave_application.json
 #: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/leaves/leaves.json
 msgid "Leave Application"
-msgstr ""
+msgstr "Zahtev Dopusta"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:754
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
@@ -5816,7 +5816,7 @@ msgstr ""
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Leave Encashment"
-msgstr ""
+msgstr "Unovčenje Dopusta"
 
 #. Label of the leave_encashment_amount_per_day (Currency) field in DocType
 #. 'Salary Structure'
@@ -5860,7 +5860,7 @@ msgstr ""
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Leave Period"
-msgstr ""
+msgstr "Obdobje Dopusta"
 
 #. Label of the leave_policy (Link) field in DocType 'Leave Allocation'
 #. Label of the leave_policy (Link) field in DocType 'Leave Control Panel'
@@ -5873,7 +5873,7 @@ msgstr ""
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Leave Policy"
-msgstr ""
+msgstr "Pravilo Dopusta"
 
 #. Option for the 'Allocated Via' (Select) field in DocType 'Earned Leave
 #. Schedule'
@@ -5886,7 +5886,7 @@ msgstr ""
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Leave Policy Assignment"
-msgstr ""
+msgstr "Dodelitev pravilnika Dopusta"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:70
 msgid "Leave Policy Assignment Overlap"
@@ -5949,7 +5949,7 @@ msgstr ""
 #: hrms/hr/workspace/leaves/leaves.json
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Leave Type"
-msgstr ""
+msgstr "Tip Dopusta"
 
 #. Label of the leave_type_name (Data) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -6028,7 +6028,7 @@ msgstr ""
 #. Label of the pending_leaves (Float) field in DocType 'Salary Slip Leave'
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Leave(s) Pending Approval"
-msgstr ""
+msgstr "Dopust(-i) v postopku odobritve"
 
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:67
 msgid "Leave(s) Taken"
@@ -6047,31 +6047,31 @@ msgstr ""
 #: hrms/hr/workspace/leaves/leaves.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Leaves"
-msgstr ""
+msgstr "Dopust"
 
 #: frontend/src/views/leave/Dashboard.vue:2
 msgid "Leaves & Holidays"
-msgstr ""
+msgstr "Dopust & Prazniki"
 
 #. Label of the leaves_after_adjustment (Float) field in DocType 'Leave
 #. Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 msgid "Leaves After Adjustment"
-msgstr ""
+msgstr "Dopust po Prilagoditvi"
 
 #. Label of the leaves_allocated (Check) field in DocType 'Leave Policy
 #. Assignment'
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 msgid "Leaves Allocated"
-msgstr ""
+msgstr "Dodeljeni Dopust"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:562
 msgid "Leaves Expired"
-msgstr ""
+msgstr "Potekli Dopust"
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:10
 msgid "Leaves Pending Approval"
-msgstr ""
+msgstr "Dopust v postopku odobritve"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:83
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
@@ -6084,7 +6084,7 @@ msgstr ""
 #. Label of the leaves_to_adjust (Float) field in DocType 'Leave Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 msgid "Leaves to Adjust"
-msgstr ""
+msgstr "Dopust za Prilagoditev"
 
 #: hrms/hr/doctype/leave_type/leave_type.js:42
 msgid "Leaves you can avail against a holiday you worked on. You can claim Compensatory Off Leave using Compensatory Leave Request. Click {0} to know more"
@@ -6530,7 +6530,7 @@ msgstr ""
 
 #: frontend/src/views/leave/List.vue:19
 msgid "My Leaves"
-msgstr ""
+msgstr "Moj Dopust"
 
 #: frontend/src/components/RequestPanel.vue:36
 msgid "My Requests"
@@ -6607,12 +6607,12 @@ msgstr ""
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "New Leaves Allocated"
-msgstr ""
+msgstr "Dodeljeni novi dopusti"
 
 #. Label of the no_of_days (Float) field in DocType 'Leave Control Panel'
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 msgid "New Leaves Allocated (In Days)"
-msgstr ""
+msgstr "Dodeljeni novi dopusti (v dnevih)"
 
 #. Description of the 'Create Shifts After' (Date) field in DocType 'Shift
 #. Schedule Assignment'
@@ -6646,7 +6646,7 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_encashment/leave_encashment.py:140
 msgid "No Leaves Allocated to Employee: {0} for Leave Type: {1}"
-msgstr ""
+msgstr "Ni dopusta dodeljeno: {0} za tip dopusta: {1}"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:265
 msgid "No Salary Slip found for Employee: {0}"
@@ -6783,7 +6783,7 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:29
 msgid "No leaves have been allocated."
-msgstr ""
+msgstr "Dodeljeni niso bili nobeni dopusti."
 
 #: hrms/hr/page/team_updates/team_updates.js:49
 msgid "No more updates"
@@ -6848,7 +6848,7 @@ msgstr ""
 #. Label of the non_encashable_leaves (Int) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Non-Encashable Leaves"
-msgstr ""
+msgstr "Ne unovčljivi Dopusti"
 
 #. Option for the 'Meal Preference' (Select) field in DocType 'Travel
 #. Itinerary'
@@ -6910,7 +6910,7 @@ msgstr ""
 #. Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Number of Leaves"
-msgstr ""
+msgstr "Število Dopusta"
 
 #. Label of the number_of_withholding_cycles (Int) field in DocType 'Salary
 #. Withholding'
@@ -8126,7 +8126,7 @@ msgstr ""
 #. Label of the reallocate_leaves (Check) field in DocType 'Employee Transfer'
 #: hrms/hr/doctype/employee_transfer/employee_transfer.json
 msgid "Re-allocate Leaves"
-msgstr ""
+msgstr "Prerazporeditev Dopusta"
 
 #. Label of the reason_for_adjustment (Small Text) field in DocType 'Leave
 #. Adjustment'
@@ -8159,7 +8159,7 @@ msgstr ""
 
 #: frontend/src/views/leave/Dashboard.vue:21
 msgid "Recent Leaves"
-msgstr ""
+msgstr "Nedavni Dopust"
 
 #: frontend/src/views/attendance/Dashboard.vue:40
 msgid "Recent Shift Requests"
@@ -9859,7 +9859,7 @@ msgstr ""
 
 #: frontend/src/views/leave/List.vue:19
 msgid "Team Leaves"
-msgstr ""
+msgstr "Dopusti Ekipe"
 
 #: frontend/src/components/RequestPanel.vue:36
 msgid "Team Requests"
@@ -10163,11 +10163,11 @@ msgstr ""
 #. Leave'
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Total Allocated Leave(s)"
-msgstr ""
+msgstr "Skupno dodeljenih dopustov"
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:7
 msgid "Total Allocated Leaves"
-msgstr ""
+msgstr "Skupaj Dodeljeni Dopust"
 
 #. Label of the total_amount_reimbursed (Currency) field in DocType 'Expense
 #. Claim'
@@ -10306,23 +10306,23 @@ msgstr ""
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:148
 msgid "Total Leaves"
-msgstr ""
+msgstr "Skupaj Dopust"
 
 #: hrms/hr/report/leave_ledger/leave_ledger.py:192
 msgid "Total Leaves ({0})"
-msgstr ""
+msgstr "Skupaj Dostup ({0})"
 
 #. Label of the total_leaves_allocated (Float) field in DocType 'Leave
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "Total Leaves Allocated"
-msgstr ""
+msgstr "Skupaj Dodeljeni Dopust"
 
 #. Label of the total_leaves_encashed (Float) field in DocType 'Leave
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "Total Leaves Encashed"
-msgstr ""
+msgstr "Skupaj Unovčenih Dopustov"
 
 #: hrms/setup.py:816
 msgid "Total Loan Repayment"
@@ -10739,7 +10739,7 @@ msgstr ""
 #. Label of the unused_leaves (Float) field in DocType 'Leave Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "Unused leaves"
-msgstr ""
+msgstr "Neuporabljeni Dopust"
 
 #: frontend/src/components/Holidays.vue:4
 msgid "Upcoming Holidays"
@@ -10830,11 +10830,11 @@ msgstr ""
 #. Label of the used_leaves (Float) field in DocType 'Salary Slip Leave'
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Used Leave(s)"
-msgstr ""
+msgstr "Izkoriščen(I) Dopust(I)"
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:9
 msgid "Used Leaves"
-msgstr ""
+msgstr "Izkoriščeni Dopust"
 
 #. Label of the vacancies (Int) field in DocType 'Job Opening'
 #. Label of the vacancies (Int) field in DocType 'Staffing Plan Detail'
@@ -11181,7 +11181,7 @@ msgstr ""
 
 #: frontend/src/components/LeaveBalance.vue:42
 msgid "You have no leaves allocated"
-msgstr ""
+msgstr "Nimate dodeljenih dopusta"
 
 #: frontend/src/views/Notifications.vue:91
 msgid "You have no notifications"
@@ -11394,15 +11394,15 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:361
 msgid "{0} leaves allocated successfully"
-msgstr ""
+msgstr "{0} dopustov je uspešno dodeljeno"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:563
 msgid "{0} leaves from allocation for {1} leave type have expired and will be processed during the next scheduled job. It is recommended to expire them now before creating new leave policy assignments."
-msgstr ""
+msgstr "{0} dopustov iz dodelitve za vrsto dopusta {1} je poteklo in bo obdelano med naslednjim načrtovanim opravilom. Priporočljivo je, da jih potečete zdaj, preden ustvarite nove dodelitve pravilnika o dopustu."
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:356
 msgid "{0} leaves were manually allocated by {1} on {2}"
-msgstr ""
+msgstr "{0} dopustov je ročno dodelil {1} dne {2}"
 
 #: hrms/hr/doctype/training_feedback/training_feedback.py:14
 #: hrms/hr/doctype/training_result/training_result.py:16

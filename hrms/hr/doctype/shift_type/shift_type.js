@@ -42,4 +42,10 @@ frappe.ui.form.on("Shift Type", {
 			frm.set_value("last_sync_of_checkin", "");
 		}
 	},
+
+	allow_overtime: function (frm) {
+		if (!frm.doc.allow_overtime) {
+			frm.set_value("overtime_type", "");
+		}
+	},
 });
