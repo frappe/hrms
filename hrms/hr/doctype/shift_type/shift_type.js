@@ -30,8 +30,11 @@ frappe.ui.form.on("Shift Type", {
 				doc: frm.doc,
 				method: "process_auto_attendance",
 				freeze: true,
-				callback: () => {
-					frappe.msgprint(__("Attendance has been marked as per employee check-ins"));
+				args: {
+					is_manually_triggered: true,
+				},
+				callback: (r) => {
+					frappe.msgprint(__(r.message));
 				},
 			});
 		});
@@ -40,6 +43,12 @@ frappe.ui.form.on("Shift Type", {
 	auto_update_last_sync: function (frm) {
 		if (frm.doc.auto_update_last_sync) {
 			frm.set_value("last_sync_of_checkin", "");
+		}
+	},
+
+	allow_overtime: function (frm) {
+		if (!frm.doc.allow_overtime) {
+			frm.set_value("overtime_type", "");
 		}
 	},
 });

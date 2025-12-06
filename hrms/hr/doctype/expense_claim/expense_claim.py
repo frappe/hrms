@@ -260,8 +260,8 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 					"against": ",".join([d.default_account for d in self.expenses]),
 					"party_type": "Employee",
 					"party": self.employee,
-					"against_voucher_type": self.doctype,
-					"against_voucher": self.name,
+					"voucher_type": self.doctype,
+					"voucher_no": self.name,
 					"advance_voucher_type": "Employee Advance",
 					"advance_voucher_no": data.employee_advance,
 					"transaction_exchange_rate": self.exchange_rate,
@@ -269,8 +269,8 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 				if not make_payment_via_je:
 					gl_dict.update(
 						{
-							"voucher_type": "Payment Entry",
-							"voucher_no": data.payment_entry,
+							"against_voucher_type": "Payment Entry",
+							"against_voucher": data.payment_entry,
 						}
 					)
 				gl_entry.append(self.get_gl_dict(gl_dict, account_currency=self.currency))
