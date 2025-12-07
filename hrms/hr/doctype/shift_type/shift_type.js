@@ -30,8 +30,11 @@ frappe.ui.form.on("Shift Type", {
 				doc: frm.doc,
 				method: "process_auto_attendance",
 				freeze: true,
-				callback: () => {
-					frappe.msgprint(__("Attendance has been marked as per employee check-ins"));
+				args: {
+					is_manually_triggered: true,
+				},
+				callback: (r) => {
+					frappe.msgprint(__(r.message));
 				},
 			});
 		});
