@@ -1,0 +1,15 @@
+Current version is 18
+To Check Node Version is : node -v
+required Node Version 22
+nvm install 22
+nvm use 22
+
+Path: apps/hrms/frontend
+Step1:
+npm uninstall @vitejs/plugin-vue
+npm install @vitejs/plugin-vue@latest
+
+Step2:
+npm i face-api.js
+npm install @fingerprintjs/fingerprintjs
+

@@ -119,7 +119,7 @@
 					Check Photo
 				</Button> -->
 			</div>
-<div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4" v-if="nextAction.action === 'IN'">
   <div v-if="field_employee==='Yes' && isCheckOut">
     <label class="form-label text-xs">Type</label>
     <FormControl
@@ -222,13 +222,22 @@
   />
   <!-- faceMatched === true &&  -->
 			<Button
-			v-if="field_employee==='Yes' && isSalesFaceMatched"
+			v-if="field_employee==='Yes' && isSalesFaceMatched && nextAction.action==='IN'"
 				:loading="checkins.insert.loading"
 				variant="solid"
 				class="w-full py-5 text-sm disabled:bg-gray-700"
 				@click="submitLog(nextAction.action)"
 			>
 				{{ __("Confirm {0}", [nextAction.label]) }}
+			</Button>
+      <Button
+			v-if="field_employee==='Yes' && isSalesFaceMatched && nextAction.action==='OUT' && forgetCheckOut"
+				:loading="checkins.insert.loading"
+				variant="solid"
+				class="w-full py-5 text-sm disabled:bg-gray-700"
+				@click="submitLog('IN')"
+			>
+				{{ __("Confirm Check-out") }}
 			</Button>
 		</div>
 	</ion-modal>
@@ -615,7 +624,7 @@ async function createLead() {
 
   if (result.message) {
 	const createdLead = result.message.data; 
-    // console.log(" Lead Created:", result.message);
+   
     // Optional: Clear form
     newLead.first_name = "";
     newLead.mobile_no = "";
@@ -632,7 +641,7 @@ async function createLead() {
   // Set selected Lead
   leadValue.value = newOption;
 
-  console.log("✅ New Lead Selected:", leadValue.value);
+  
 
   } else {
     console.error(" Error Creating Lead:", result);
@@ -669,7 +678,7 @@ async function createOpportunity() {
 
   if (result.message) {
 	const newOpportunityRes = result.message.data; 
-    // console.log(" Lead Created:", result.message);
+    
     // Optional: Clear form
 
 	
@@ -683,7 +692,7 @@ async function createOpportunity() {
   // Set selected Lead
   opportunityValue.value = newOption;
 
-  console.log("New opportunity Selected:", opportunityValue.value);
+
     newOpportunity.party_name = "";
     newOpportunity.opportunity_from = "Lead";
 	newOpportunity.opportunity_owner="";
@@ -704,7 +713,7 @@ async function createOpportunity() {
 
 async function createHospital() {
   // API Create call here
-  console.log("Create Hospital:", newHospital);
+
   showHospitalModal.value = false;
 }
 
@@ -772,10 +781,10 @@ const handleEmployeeCheckin = () => {
 // ✅ Start camera only when popup opens
 async function onModalOpen() {
 	await loadModels()
-	console.log("Empolyee",employee)
-	console.log("User",user)
-	console.log("Wfh",wfh)
-	console.log("Geofence",geofence)
+	// console.log("Empolyee",employee)
+	// console.log("User",user)
+	// console.log("Wfh",wfh)
+	// console.log("Geofence",geofence)
 	
 
 	
@@ -856,27 +865,6 @@ async function loadModels() {
 	modelsLoaded = true
 }
 
-// async function loadReferenceImage(event) {
-// 	const file = event.target.files[0]
-// 	if (!file) return
-// 	referenceImageSrc.value = URL.createObjectURL(file)
-
-// 	const img = await faceapi.bufferToImage(file)
-// 	const detection = await faceapi
-// 		.detectSingleFace(img, new faceapi.TinyFaceDetectorOptions())
-// 		.withFaceLandmarks()
-// 		.withFaceDescriptor()
-
-// 	if (!detection) {
-// 		statusMessage.value = "No face detected in reference image"
-// 		statusColor.value = "red"
-// 		referenceDescriptor.value = null
-// 	} else {
-// 		referenceDescriptor.value = detection.descriptor
-// 		statusMessage.value = "Reference face ready!"
-// 		statusColor.value = "blue"
-// 	}
-// }
 
 async function startComparison() {
 	if (!modelsLoaded) {
@@ -885,7 +873,7 @@ async function startComparison() {
 		return
 	}
 	if (!referenceDescriptor.value) {
-		statusMessage.value = "Employee Photo is Missing, Please Contact your HR or Update the Photo in Octa"
+		statusMessage.value = "Employee Photo is Missing, Please Contact your HR or Update the Photo in Octa to User"
 		statusColor.value = "red"
 		return
 	}
@@ -929,184 +917,15 @@ if (!blinkDetected) {
   }
 }
 
-// 2️⃣ Head Turn Check
-// const headTurn = getHeadTurn(detection.landmarks)
-// console.log(headTurn);
-
-// if (!turnLeftDetected) {
-//   if (headTurn < -1) { // Turn Left
-//     turnLeftDetected = true
-//     statusMessage.value = "Left turn detected ✅ Now turn head RIGHT"
-//     statusColor.value = "green"
-//   } else {
-//     statusMessage.value = "Turn your head LEFT ⬅️"
-//     statusColor.value = "orange"
-//     return
-//   }
-// }
-
-// if (!turnRightDetected) {
-//   if (headTurn > 1) { // Turn Right
-//     turnRightDetected = true
-//     statusMessage.value = "Right turn detected ✅ Verification in progress..."
-//     statusColor.value = "green"
-//   } else {
-//     statusMessage.value = "Turn your head RIGHT ➡️"
-//     statusColor.value = "orange"
-//     return
-//   }
-// }
 
 // 3️⃣ Only after real movement → Compare Face
 const distance = faceapi.euclideanDistance(referenceDescriptor.value, detection.descriptor)
 
-// if (distance < 0.45) {
-// //   faceMatched = true
-// //   statusMessage.value = `✅ Face Matched (distance: ${distance.toFixed(3)})`
-// //   statusColor.value = "green"
-//   console.log("User",user)
-    
-//     console.log("Geofence",geofence.data)
-//     const user_id=user.data.name
-//     console.log("User ID",user_id)
-//     const geofenceID=geofence.data[0].name
-//     console.log("geofenceID",geofenceID)
 
-// 	console.log("WFH", wfh);
-
-// const today = new Date().toISOString().split("T")[0]; // "YYYY-MM-DD"
-
-// const wfhRecordForToday = wfh.data.find(item => item.date === today);
-
-// if (wfhRecordForToday) {
-// 	const wfh_user_id = wfhRecordForToday.user;
-
-// 	if (user_id === wfh_user_id) {
-// 		faceMatched = true;
-// 		statusMessage.value = "Face Matched";
-// 		statusColor.value = "green"
-// 	}
-// }
-// else if (user_id === geofenceID) {
- 
-//     // 1) Face match was already confirmed before this block
-//     let insideAnyFence = false;
- 
-//     const allowedLocations = geofence.data[0].locations; // [{ location: "Main Office"}, { location: "Marathalli"}]
-//     const userLat = parseFloat(latitude.value);
-//     const userLon = parseFloat(longitude.value);
- 
-//     console.log("Allowed Locations:", allowedLocations);
-//     console.log("All Location Coordinates:", locations.value);
-//     console.log("User Lat:", userLat, "User Lon:", userLon);
- 
-//     for (const loc of allowedLocations) {
-//         const locationName = loc.location; // ✅ Correct extraction
-//         const center = locations.value.find(l => l.name === locationName);
-//             console.log("Center",center);
- 
-//         if (!center) {
-//             console.warn(`No coordinate data for location: ${locationName}`);
-//             continue;
-//         }
- 
-//         const centerLat = parseFloat(center.latitude);
-//         const centerLon = parseFloat(center.longitude);
-//         const radius = parseFloat(center.radius);
- 
-//         const distance = getDistanceFromLatLonInMeters(
-//             userLat,
-//             userLon,
-//             centerLat,
-//             centerLon
-//         );
-// 		loginlocation.value=center.name
-// 		console.log("Login Location",loginlocation.value)
-//         // console.log(`→ ${center.name}: Distance = ${distance.toFixed(2)}m | Radius = ${radius}m`);
- 
-//         if (distance <= radius) {
-//             insideAnyFence = true;
-//             break; // ✅ Stop after first match
-//         }
-//     }
- 
-//     // ✅ FINAL DECISION (DO NOT OVERWRITE)
-//     if (insideAnyFence) {
-//         faceMatched = true;
-//         statusMessage.value = "Face Matched & Inside Allowed Location";
-// 		statusColor.value = "green"
-		
-		
-		
-// 		// console.log("Checkin Log",lastLog.value);
-//     } else {
-//         faceMatched = false;
-//         statusMessage.value = "Face Matched But You Are Outside the Boundary";
-// 		statusColor.value = "red"
-//     }
- 
-// } else {
- 
-//     // Face not matched case
-//     faceMatched = false;
-//     statusMessage.value = "Face Not Matched";
-// 	statusColor.value = "red"
-// }
-// } else {
-//   faceMatched = false
-//   statusMessage.value = `Not Matched (distance: ${distance.toFixed(3)})`
-//   statusColor.value = "red"
-// }
 
 if (distance < 0.45) {
 	isSalesFaceMatched=true
-	// statusMessage.value = "Face Matched";
-	// 	statusColor.value = "green";
-
-	// console.log("User", user);
-	// const user_id = user.data.name;
-
-	// console.log("WFH", wfh);
-	// const today = new Date().toISOString().split("T")[0];
-
-	// const wfhRecordForToday = wfh.data.find(item => item.date === today);
-
-	// // ------------------ WFH CASE ------------------
-	// if (wfhRecordForToday && user_id === wfhRecordForToday.user && field_employee.value !='Yes') {
-
-	// 	faceMatched = true;
-	// 	statusMessage.value = "Face Matched (WFH)";
-	// 	statusColor.value = "green";
-
-	// 	// ✅ If IN - directly submit
-	// 	if (nextAction.value.action === "IN") {
-	// 		submitLog(nextAction.value.action);
-	// 	} 
-	// 	else {
-	// 		// ✅ OUT → verify boundary using last check-in coordinates
-	// 		const lastLat = parseFloat(lastLog.value.latitude);
-	// 		const lastLon = parseFloat(lastLog.value.longitude);
-	// 		const defaultRadius = 50;
-
-	// 		const dist = getDistanceFromLatLonInMeters(
-	// 			latitude.value, 
-	// 			longitude.value, 
-	// 			lastLat, 
-	// 			lastLon
-	// 		);
-
-	// 		if (dist <= defaultRadius) {
-	// 			submitLog(nextAction.value.action);
-	// 		} else {
-	// 			statusMessage.value = "You Are Outside The Work-From-Home Allowed Boundary";
-	// 			statusColor.value = "red";
-	// 		}
-	// 	}
-	// 	return; // ✅ Stop here (no geofence check needed)
-	// }
-
-	// console.log("WFH", wfh);
-
+	
 const today = new Date().toISOString().split("T")[0];
 
 // ✅ Find WFH record for the logged-in employee that includes today in choose_date
@@ -1159,69 +978,7 @@ if (wfhRecordForToday && field_employee.value !== "Yes") {
 }
 
 
-	// if(field_employee.value !='Yes'){
-	// 	// ------------------ OFFICE GEOFENCE CASE ------------------
-	// const allowedLocations = geofence.data[0].locations;
-	// let insideAnyFence = false;
 
-	// for (const loc of allowedLocations) {
-	// 	const center = locations.value.find(l => l.name === loc.location);
-	// 	if (!center) continue;
-
-	// 	const distanceToCenter = getDistanceFromLatLonInMeters(
-	// 		latitude.value,
-	// 		longitude.value,
-	// 		center.latitude,
-	// 		center.longitude
-	// 	);
-
-	// 	if (distanceToCenter <= center.radius) {
-	// 		insideAnyFence = true;
-	// 		loginlocation.value = center.name;
-	// 		break;
-	// 	}
-	// }
-
-	// if (insideAnyFence) {
-	// 	faceMatched = true;
-	// 	statusMessage.value = "Face Matched & Inside Allowed Location";
-	// 	statusColor.value = "green";
-
-	// 	if (nextAction.value.action === "IN") {
-	// 		locationDescription.value='';
-	// 		submitLog(nextAction.value.action);
-			
-	// 	} else {
-	// 		locationDescription.value='';
-	// 		// ✅ OUT → verify using last check-in location
-	// 		const checkinCenter = locations.value.find(l => l.name === lastLog.value.location);
-	// 		if (!checkinCenter) {
-	// 			statusMessage.value = "Previous check-in location not found";
-	// 			statusColor.value = "red";
-	// 			return;
-	// 		}
-
-	// 		const distanceToLastCenter = getDistanceFromLatLonInMeters(
-	// 			latitude.value,
-	// 			longitude.value,
-	// 			checkinCenter.latitude,
-	// 			checkinCenter.longitude
-	// 		);
-
-	// 		if (distanceToLastCenter <= checkinCenter.radius) {
-	// 			submitLog(nextAction.value.action);
-	// 		} else {
-	// 			statusMessage.value = "You Are Outside the Boundary";
-	// 			statusColor.value = "red";
-	// 		}
-	// 	}
-	// } else {
-	// 	faceMatched = false;
-	// 	statusMessage.value = "Matched but Outside Allowed Office Boundary";
-	// 	statusColor.value = "red";
-	// }
-	
-	// } 
 
 
 	if (field_employee.value !== 'Yes') {
@@ -1291,7 +1048,7 @@ if (wfhRecordForToday && field_employee.value !== "Yes") {
     		statusColor.value = "green"
 			faceMatched = true;
 			isCheckOut=true;
-			console.log("Last Log",lastLog.value);
+			// console.log("Last Log",lastLog.value);
 			lastLogRefDoctype.value=lastLog.value.reference_dt
 			lastLogRefName.value=lastLog.value.reference_dn
 			lastCheckOutID.value=lastLog.value.name;
@@ -1300,7 +1057,7 @@ if (wfhRecordForToday && field_employee.value !== "Yes") {
 			isCheckOut=false;
 			// faceMatched = true;
 			// ✅ OUT → verify boundary using last check-in coordinates
-			console.log("Last Log",lastLog.value);
+			// console.log("Last Log",lastLog.value);
 			lastLogRefDoctype.value=lastLog.value.reference_dt
 			lastLogRefName.value=lastLog.value.reference_dn
 			lastCheckOutID.value=lastLog.value.name;
@@ -1403,8 +1160,7 @@ function captureImage() {
 }
 
 async function getDistanceInMeters(currentLat, currentLon, expectedLat, expectedLon) {
-  const key = import.meta.env.VITE_AZURE_MAPS_KEY; // <-- Replace only this
-
+ const key = import.meta.env.VITE_AZURE_MAPS_KEY;
 //   expectedLat = 12.8742
 //   expectedLon= 77.5569
 
@@ -1430,10 +1186,7 @@ async function getDistanceInMeters(currentLat, currentLon, expectedLat, expected
 }
 
 async function getLocationAPI(currentLat, currentLon) {
-  const key = import.meta.env.VITE_AZURE_MAPS_KEY; // <-- Replace only this
-
-//   expectedLat = 12.8742
-//   expectedLon= 77.5569
+  const key = import.meta.env.VITE_AZURE_MAPS_KEY;
 
   const url = `https://atlas.microsoft.com/search/address/reverse/json?api-version=1.0&subscription-key=${key}&query=${currentLat},${currentLon}`;
 
@@ -1441,16 +1194,8 @@ async function getLocationAPI(currentLat, currentLon) {
     const response = await fetch(url);
     const data = await response.json();
 
-    // const distance = data?.routes?.[0]?.summary?.lengthInMeters;
-
-    // if (!distance && distance !== 0) {
-    //   console.error("Invalid Distance Response:", data);
-    //   return null;
-    // }
-
-    // console.log("Location Data :", data.addresses[0].address.freeformAddress);
 	locationDescription.value=data.addresses[0].address.freeformAddress;
-	console.log("Location Description",locationDescription.value);
+
     
   } catch (err) {
     console.error("Azure Distance API Error:", err);
@@ -1458,9 +1203,7 @@ async function getLocationAPI(currentLat, currentLon) {
   }
 }
 async function CreateCheckInJoureny(){
-	
-	console.log("Expected",lastLog.value.latitude,",",lastLog.value.longitude)
-	console.log("Current",latitude.value,",",longitude.value)
+
 	 
 	const distance = await getDistanceInMeters(
     latitude.value,
@@ -1475,25 +1218,17 @@ dis_km = Number((distance / 1000).toFixed(2));
 
    
 
-console.log("Distance",dis_km);
+// console.log("Distance",dis_km);
 
 
 // -----------------
-			console.log("last chek --",lastLogRefDoctype.value)
-			console.log("Current chek --",currentLogRefDoctype.value)
+			// console.log("last chek --",lastLogRefDoctype.value)
+			// console.log("Current chek --",currentLogRefDoctype.value)
 
 
-// const refDocDT = typeofCheckIn.value?.value || lastLogRefDoctype.value || "";
-// const refDocDN =
-//   hospitalValue.value?.value ||
-//   carValue.value?.value ||
-//   leadValue.value?.value ||
-//   opportunityValue.value?.value || lastLogRefName.value ||
-//   "";
-// console.log("Reference DocType:", refDocDT);
-// console.log("Reference DocName:", refDocDN);
+
 const lastLogID=lastLog.value.name
-console.log("Last Log ID :", lastLogID);
+
 
 const employeeData=employee.data
 const now = new Date();
@@ -1537,7 +1272,7 @@ const csrfToken =
   const result = await response.json();
 
   if (result.message) {
-	console.log("result",result.message.data);
+	// console.log("result",result.message.data);
 	
 
   } else {
@@ -1549,7 +1284,7 @@ const csrfToken =
 
 const submitLog = (logType) => {
 	const actionLabel = logType === "IN" ? __("Check-in") : __("Check-out")
-	console.log(actionLabel);
+
 	
 const refDocDT = typeofCheckIn.value?.value || lastLogRefDoctype.value || "";
 const refDocDN =
@@ -1558,8 +1293,7 @@ const refDocDN =
   leadValue.value?.value ||
   opportunityValue.value?.value || lastLogRefName.value ||
   "";
-console.log("Reference DocType:", refDocDT);
-console.log("Reference DocName:", refDocDN);
+
 
 currentLogRefDoctype.value=refDocDT
 currentLogRefName.value=refDocDN
@@ -1581,7 +1315,7 @@ currentLogRefName.value=refDocDN
 		{
 		async onSuccess(doc) {
 			const checkinId = doc.name
-			console.log("ID",checkinId);
+			
 			currentCheckINID.value=checkinId;
 				if (capturedImage) {
 					await uploadCapturedImage(doc.name, capturedImage)
@@ -1599,11 +1333,9 @@ currentLogRefName.value=refDocDN
 						
 
 
-						console.log("Current Date-Time:", formattedDateTime);
-			console.log("last --",lastLogRefDoctype.value)
 
 						const lastDate = lastLog.value.time.split(" ")[0];
-						console.log("Last Time", lastDate);
+						
 						if(lastDate===formattedDateTime){
 							CreateCheckInJoureny();
 						}
@@ -1687,7 +1419,7 @@ async function fetchLocationList() {
 		
 	if (result.message.data) {
 		 locations.value=result.message.data
-		 console.log("Location",locations.value);
+		
 	} else {
 		console.error("Error:", result.message)
 		return []
@@ -1726,7 +1458,7 @@ leadOptions.value = leadArray.map(i => {
     value: i.name
   };
 });
-// console.log("Lead",leadOptions.value);
+
 leadOptions.value = [
   ...leadOptions.value,
   { label: "+ Create New Lead", value: "create_new_lead" }

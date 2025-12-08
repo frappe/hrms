@@ -5,7 +5,7 @@ def get_all_locations():
     try:
         docs = frappe.get_all(
             "Location",
-            fields=["name", "reference_name", "latitude", "longitude", "radius", "parent_location"],
+            fields=["name", "latitude", "longitude", "radius", "parent_location"],
             ignore_permissions=True,   # ✅ optional: avoids "No Permission" error
         )
         return {"data": docs, "success": True}
