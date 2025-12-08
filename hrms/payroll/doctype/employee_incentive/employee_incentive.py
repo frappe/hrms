@@ -17,7 +17,7 @@ class EmployeeIncentive(Document):
 	def validate_salary_structure(self):
 		if not frappe.db.exists("Salary Structure Assignment", {"employee": self.employee}):
 			frappe.throw(
-				_("There is no Salary Structure assigned to {0}. First assign a Salary Stucture.").format(
+				_("There is no Salary Structure assigned to {0}. First assign a Salary Structure.").format(
 					self.employee
 				)
 			)

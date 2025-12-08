@@ -204,7 +204,7 @@ def get_employee_currency(employee):
 	employee_currency = frappe.db.get_value("Salary Structure Assignment", {"employee": employee}, "currency")
 	if not employee_currency:
 		frappe.throw(
-			_("There is no Salary Structure assigned to {0}. First assign a Salary Stucture.").format(
+			_("There is no Salary Structure assigned to {0}. First assign a Salary Structure.").format(
 				employee
 			)
 		)
