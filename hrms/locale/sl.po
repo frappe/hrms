@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-11-30 09:35+0000\n"
-"PO-Revision-Date: 2025-12-05 09:07\n"
+"PO-Revision-Date: 2025-12-07 09:18\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -6935,7 +6935,7 @@ msgstr ""
 #. Option for the 'Log Type' (Select) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 msgid "OUT"
-msgstr ""
+msgstr "IZHOD"
 
 #. Label of the average_rating (Rating) field in DocType 'Interview'
 #: hrms/hr/doctype/interview/interview.json
@@ -6945,7 +6945,7 @@ msgstr ""
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:45
 #: hrms/public/js/salary_slip_deductions_report_filters.js:28
 msgid "Oct"
-msgstr ""
+msgstr "Okt"
 
 #. Label of the odometer_reading (Section Break) field in DocType 'Vehicle Log'
 #: hrms/hr/doctype/vehicle_log/vehicle_log.json
