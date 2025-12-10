@@ -59,6 +59,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		self.calculate_total_amount()
 		self.validate_advances()
 		self.set_expense_account(validate=True)
+		self.set_default_accounting_dimension()
 		self.calculate_taxes()
 		self.set_status()
 		self.validate_company_and_department()
@@ -338,6 +339,26 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 				)
 			)
 
+	def set_default_accounting_dimension(self):
+		from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
+			get_checks_for_pl_and_bs_accounts,
+		)
+
+		for dim in get_checks_for_pl_and_bs_accounts():
+			if dim.company != self.company:
+				continue
+
+			field = frappe.scrub(dim.fieldname)
+
+			if self.meta.get_field(field):
+				if not self.get(field) and dim.mandatory_for_bs:
+					self.set(field, dim.default_dimension)
+
+			for row in self.get("expenses") or []:
+				if row.meta.get_field(field):
+					if not row.get(field) and dim.mandatory_for_pl:
+						row.set(field, dim.default_dimension)
+
 	def create_exchange_gain_loss_je(self):
 		if not self.advances:
 			return
@@ -429,7 +450,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			if doc.get(f):
 				val = flt(
 					flt(doc.get(f), doc.precision(f))
-					* (exchange_rate if exchange_rate else self.exchange_rate),
+					* flt(exchange_rate if exchange_rate else self.exchange_rate),
 					doc.precision("base_" + f),
 				)
 				doc.set("base_" + f, val)

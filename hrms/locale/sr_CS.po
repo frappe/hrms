@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-12-07 09:35+0000\n"
-"PO-Revision-Date: 2025-12-08 09:19\n"
+"PO-Revision-Date: 2025-12-10 10:16\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Serbian (Latin)\n"
 "MIME-Version: 1.0\n"
@@ -5990,7 +5990,7 @@ msgstr "Odsustvo bez naknade ne odgovara odobrenim {} zapisima"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:130
 msgid "Leave allocation is skipped for {0}, because number of leaves to be allocated is 0."
-msgstr ""
+msgstr "Dodela odsustva je preskočena za {0}, jer je broj dana odsustva za dodelu jednak 0."
 
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.py:54
 msgid "Leave allocation {0} is linked with the Leave Application {1}"
@@ -9970,7 +9970,7 @@ msgstr "Nema nepopunjenih radnih mesta prema planu osoblja {0}"
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:20
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:207
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
-msgstr ""
+msgstr "Struktura zarade nije dodeljena za {0}. Prvo morate dodeliti strukturu zarade."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:392
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
@@ -11464,7 +11464,7 @@ msgstr "{0}d"
 #. Count format of shortcut in the Shift & Attendance Workspace
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "{} "
-msgstr ""
+msgstr "{} "
 
 #. Count format of shortcut in the Recruitment Workspace
 #: hrms/hr/workspace/recruitment/recruitment.json
