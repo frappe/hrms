@@ -25,7 +25,6 @@ frappe.ui.form.on("Employee Advance", {
 				},
 			};
 		});
-
 	},
 
 	refresh: function (frm) {
