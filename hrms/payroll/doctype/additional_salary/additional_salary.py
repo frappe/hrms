@@ -221,7 +221,7 @@ class AdditionalSalary(Document):
 		no_of_days = date_diff(getdate(end_date), getdate(start_date)) + 1
 		return amount_per_day * no_of_days
 
-	def validate_update_after_submit(self):
+	def before_update_after_submit(self):
 		if not self.disabled:
 			self.validate_recurring_additional_salary_overlap()
 

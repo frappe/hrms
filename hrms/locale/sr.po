@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-11-30 09:35+0000\n"
-"PO-Revision-Date: 2025-12-01 14:27\n"
+"POT-Creation-Date: 2025-12-07 09:35+0000\n"
+"PO-Revision-Date: 2025-12-08 09:18\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Serbian (Cyrillic)\n"
 "MIME-Version: 1.0\n"
@@ -1413,10 +1413,6 @@ msgstr "Присуство за следеће датуме биће преск�
 msgid "Attendance from {0} to {1} has already been marked for the Employee {2}"
 msgstr "Присуство од {0} до {1} већ је евидентирано за запослено лице {2}"
 
-#: hrms/hr/doctype/shift_type/shift_type.js:34
-msgid "Attendance has been marked as per employee check-ins"
-msgstr "Присуство је евидентирано на основу записа о пријави запосленог лица"
-
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:36
 msgid "Attendance has been marked for all the employees between the selected payroll dates."
 msgstr "Присуство је евидентирано за сва запослена лица у периоду између изабраних датума обрачуна зараде."
@@ -1879,7 +1875,7 @@ msgstr "Одјава"
 msgid "Check Vacancies On Job Offer Creation"
 msgstr "Провера непопуњених радних места приликом креирање понуде за посао"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:452
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:467
 #: hrms/hr/utils.py:935
 msgid "Check {0} for more details"
 msgstr "Проверите {0} за више детаља"
@@ -3291,7 +3287,7 @@ msgstr "Име запосленог лица"
 msgid "Employee records are created using the selected option"
 msgstr "Записи о запосленим лицима креирају се према изабраној опцији"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:244
+#: hrms/hr/doctype/shift_type/shift_type.py:272
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr "Запосленом лицу је означен изостанак због недостајућих записа о присуству."
 
@@ -3299,7 +3295,7 @@ msgstr "Запосленом лицу је означен изостанак з�
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr "Запосленом лицу је означен изостанак због неиспуњавања минималног броја радних часова."
 
-#: hrms/hr/doctype/shift_type/shift_type.py:373
+#: hrms/hr/doctype/shift_type/shift_type.py:401
 msgid "Employee was marked Absent for other half due to missing Employee Checkins."
 msgstr "Запосленом лицу је означен изостанак за други део радног времена због недостајућих записа о присуству."
 
@@ -3963,7 +3959,7 @@ msgstr "Неуспешно слање обавештења о промени т�
 msgid "Failed to setup defaults for country {0}."
 msgstr "Неуспешне поставке подразумеваних вредности за државу {0}."
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:449
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:464
 msgid "Failed to submit some leave policy assignments:"
 msgstr "Неке доделе политике одсуства није било могуће поднети:"
 
@@ -5258,8 +5254,8 @@ msgstr "Неважећи унос у евиденцију одсуства"
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
 msgstr "Неважећи рачун за обрачун зараде. Валута рачуна мора бити {0} или {1}"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:39
 #: hrms/hr/doctype/shift_type/shift_type.py:48
+#: hrms/hr/doctype/shift_type/shift_type.py:57
 msgid "Invalid Shift Times"
 msgstr "Неважећи термини смене"
 
@@ -5992,6 +5988,10 @@ msgstr "Одсуство без накнаде"
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr "Одсуство без накнаде не одговара одобреним {} записима"
 
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:130
+msgid "Leave allocation is skipped for {0}, because number of leaves to be allocated is 0."
+msgstr ""
+
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.py:54
 msgid "Leave allocation {0} is linked with the Leave Application {1}"
 msgstr "Додела одсуства {0} је повезана са захтевом за одсуство {1}"
@@ -6263,7 +6263,7 @@ msgstr "Означи присуство као {0} за {1} на изабран�
 msgid "Mark attendance based on 'Employee Checkin' for Employees assigned to this shift."
 msgstr "Означи присуство на основу 'Запис о присуству' за запослена лица додељена овој смени."
 
-#: hrms/hr/doctype/shift_type/shift_type.py:88
+#: hrms/hr/doctype/shift_type/shift_type.py:97
 msgid "Mark attendance for existing check-in/out logs before changing shift settings"
 msgstr "Означи присуство за постојеће пријаве/одјаве пре промене подешавања смене"
 
@@ -6669,7 +6669,7 @@ msgstr "Није пронађена додела структуре зараде
 msgid "No Salary Structure assigned to Employee {0} on the given date {1}"
 msgstr "За запослено лице {0} није додељена структура зараде на датум {1}"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:109
+#: hrms/payroll/doctype/salary_component/salary_component.js:115
 msgid "No Salary Structures"
 msgstr "Нема структура зараде"
 
@@ -7645,7 +7645,7 @@ msgstr "Молимо Вас да унесете позицију"
 msgid "Please fill in Employee, Posting Date, and Company before fetching overtime details."
 msgstr "Молимо Вас да унесете запослено лице, датум књижења и компанију пре преузимања детаља о прековременом раду."
 
-#: hrms/hr/doctype/shift_type/shift_type.py:49
+#: hrms/hr/doctype/shift_type/shift_type.py:58
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr "Молимо Вас да смањите {0} да бисте избегли преклапање времена смене"
 
@@ -8645,7 +8645,7 @@ msgstr "Компонента зараде за евиденцију времен
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr "Компонента зараде {0} не може бити изабрана више од једном у бенефицијама запосленог лица"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:107
+#: hrms/payroll/doctype/salary_component/salary_component.js:113
 msgid "Salary Component {0} is currently not used in any Salary Structure."
 msgstr "Компонента зараде {0} тренутно није коришћена ни у једној структури зараде."
 
@@ -8869,7 +8869,7 @@ msgstr "Структура зараде није додељена запосле
 msgid "Salary Structure {0} does not belong to company {1}"
 msgstr "Структура зараде {0} не припада компанији {1}"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:144
+#: hrms/payroll/doctype/salary_component/salary_component.js:150
 msgid "Salary Structures updated successfully"
 msgstr "Структура зараде је успешно ажурирана"
 
@@ -9616,7 +9616,7 @@ msgstr "Датум почетка не може бити већи од дату�
 msgid "Start date: {0}"
 msgstr "Датум почетка: {0}"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:40
+#: hrms/hr/doctype/shift_type/shift_type.py:49
 msgid "Start time and end time cannot be same."
 msgstr "Време почетка и време завршетка не могу бити исти."
 
@@ -9662,7 +9662,7 @@ msgstr "Структуре су успешно додељене"
 msgid "Submission Date"
 msgstr "Датум подношења"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:460
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:475
 msgid "Submission Failed"
 msgstr "Подношење неуспешно"
 
@@ -9740,7 +9740,7 @@ msgstr "Збир износа бенефиција {0} прелази макси
 msgid "Summarized View"
 msgstr "Сажети приказ"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:93
+#: hrms/payroll/doctype/salary_component/salary_component.js:99
 msgid "Sync {0}"
 msgstr "Синхронизуј {0}"
 
@@ -9969,8 +9969,8 @@ msgstr "Нема непопуњених радних места према пл�
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:42
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:20
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:207
-msgid "There is no Salary Structure assigned to {0}. First assign a Salary Stucture."
-msgstr "Није додељена структура зараде за {0}. Прво доделите структуру зараде."
+msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
+msgstr ""
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:392
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
@@ -10678,7 +10678,7 @@ msgstr "Неповезани записи"
 msgid "Unmarked Attendance for days"
 msgstr "Неозначена присуства за дане"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:87
+#: hrms/hr/doctype/shift_type/shift_type.py:96
 msgid "Unmarked Check-in Logs Found"
 msgstr "Пронађене неозначене евиденције пријаве"
 
@@ -10770,7 +10770,7 @@ msgstr "Ажурирај напредак"
 msgid "Update Response"
 msgstr "Ажурирај одговор"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:114
+#: hrms/payroll/doctype/salary_component/salary_component.js:120
 msgid "Update Salary Structures"
 msgstr "Ажурирај структуре зараде"
 
@@ -11434,7 +11434,7 @@ msgstr "{0} успешно ажурирано!"
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
 msgstr "{0} непопуњених радних места и буџет од {1} за {2} су већ планирани за подружнице за {3}. Можете планирати највише {4} непопуњених радних места и буџет од {5} у складу са планом особља {6} за матичну компанију {3}."
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:124
+#: hrms/payroll/doctype/salary_component/salary_component.js:130
 msgid "{0} will be updated for the following Salary Structures: {1}."
 msgstr "{0} ће бити ажурирано за следеће структуре зараде: {1}."
 

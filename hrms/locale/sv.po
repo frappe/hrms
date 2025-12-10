@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-11-30 09:35+0000\n"
-"PO-Revision-Date: 2025-12-01 14:27\n"
+"POT-Creation-Date: 2025-12-07 09:35+0000\n"
+"PO-Revision-Date: 2025-12-09 09:28\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -1413,10 +1413,6 @@ msgstr "Närvaro för följande datum kommer att hoppas över/skrivas över vid 
 msgid "Attendance from {0} to {1} has already been marked for the Employee {2}"
 msgstr "Närvaro från {0} till {1} är redan angiven för personal {2}"
 
-#: hrms/hr/doctype/shift_type/shift_type.js:34
-msgid "Attendance has been marked as per employee check-ins"
-msgstr "Närvaro hämtas per Personal Stämpling"
-
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:36
 msgid "Attendance has been marked for all the employees between the selected payroll dates."
 msgstr "Närvaro angiven för all personal mellan valda lönedatum."
@@ -1879,7 +1875,7 @@ msgstr "Stämpla Ut"
 msgid "Check Vacancies On Job Offer Creation"
 msgstr "Kontrollera Lediga Jobb vid skapande av Jobb Erbjudande"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:452
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:467
 #: hrms/hr/utils.py:935
 msgid "Check {0} for more details"
 msgstr "Se {0} för mer detaljer."
@@ -3293,7 +3289,7 @@ msgstr "Personal Namn"
 msgid "Employee records are created using the selected option"
 msgstr "Personal poster skapas med valda alternativ"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:244
+#: hrms/hr/doctype/shift_type/shift_type.py:272
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr "Personal angavs som Frånvarande på grund av saknade stämplingar."
 
@@ -3301,7 +3297,7 @@ msgstr "Personal angavs som Frånvarande på grund av saknade stämplingar."
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr "Personal angavs Frånvarande för att inte ha uppfyllt arbetstid tröskel."
 
-#: hrms/hr/doctype/shift_type/shift_type.py:373
+#: hrms/hr/doctype/shift_type/shift_type.py:401
 msgid "Employee was marked Absent for other half due to missing Employee Checkins."
 msgstr "Personal angiven som Frånvarande för andra halvan på grund av uteblivna stämplingar."
 
@@ -3965,7 +3961,7 @@ msgstr "Misslyckades att skicka meddelande om ombokning av intervju. Konfigurera
 msgid "Failed to setup defaults for country {0}."
 msgstr "Kunde inte ange standard inställningarna för land {0}."
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:449
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:464
 msgid "Failed to submit some leave policy assignments:"
 msgstr "Misslyckades att godkänna några frånvaro princip tilldelningar:"
 
@@ -5260,8 +5256,8 @@ msgstr "Ogiltig Frånvaro Register Post"
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
 msgstr "Ogiltig Löne Konto. Konto valuta måste vara {0} eller {1}"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:39
 #: hrms/hr/doctype/shift_type/shift_type.py:48
+#: hrms/hr/doctype/shift_type/shift_type.py:57
 msgid "Invalid Shift Times"
 msgstr "Ogiltiga Skifttider"
 
@@ -5994,6 +5990,10 @@ msgstr "Obetald Frånvaro"
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr "Obetald Frånvaro stämmer inte med godkända {} poster"
 
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:130
+msgid "Leave allocation is skipped for {0}, because number of leaves to be allocated is 0."
+msgstr "Frånvaro hoppas över för {0}, eftersom antalet som ska tilldelas är 0."
+
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.py:54
 msgid "Leave allocation {0} is linked with the Leave Application {1}"
 msgstr "Frånvaro Tilldelning {0} är länkad till Frånvaro Ansökan {1}"
@@ -6265,7 +6265,7 @@ msgstr "Ange närvaro som {0} för {1} på valda datum?"
 msgid "Mark attendance based on 'Employee Checkin' for Employees assigned to this shift."
 msgstr "Ange närvaro baserat på 'Personal Stämplingar' för Personal som tilldelats detta skift."
 
-#: hrms/hr/doctype/shift_type/shift_type.py:88
+#: hrms/hr/doctype/shift_type/shift_type.py:97
 msgid "Mark attendance for existing check-in/out logs before changing shift settings"
 msgstr "Markera närvaro för befintliga instämpling/utstämpling loggar innan skiftbytet"
 
@@ -6671,7 +6671,7 @@ msgstr "Ingen Lön Struktur Tilldelning hittades för {0} på eller före {1}"
 msgid "No Salary Structure assigned to Employee {0} on the given date {1}"
 msgstr "Ingen Löneart tilldelad {0} på angiven datum {1}"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:109
+#: hrms/payroll/doctype/salary_component/salary_component.js:115
 msgid "No Salary Structures"
 msgstr "Inga Lönearter"
 
@@ -7647,7 +7647,7 @@ msgstr "Ange Befattning"
 msgid "Please fill in Employee, Posting Date, and Company before fetching overtime details."
 msgstr "Ange Personal, Bokföring Datum och Bolag innan du hämtar övertid detaljer."
 
-#: hrms/hr/doctype/shift_type/shift_type.py:49
+#: hrms/hr/doctype/shift_type/shift_type.py:58
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr "Minska {0} för att undvika att skifttid överlappar sig själv"
 
@@ -8647,7 +8647,7 @@ msgstr "Lönekomponent för tidrapport baserad lön."
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr "Lönekomponent {0} kan inte väljas mer än en gång i Personal Förmåner"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:107
+#: hrms/payroll/doctype/salary_component/salary_component.js:113
 msgid "Salary Component {0} is currently not used in any Salary Structure."
 msgstr "Lönekomponent {0} används för närvarande inte i någon Löneart."
 
@@ -8871,7 +8871,7 @@ msgstr "Löneart är inte tilldelad för {0} per den {1}"
 msgid "Salary Structure {0} does not belong to company {1}"
 msgstr "Löneart {0} tillhör inte bolag {1}"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:144
+#: hrms/payroll/doctype/salary_component/salary_component.js:150
 msgid "Salary Structures updated successfully"
 msgstr "Lönearter uppdaterades"
 
@@ -9618,7 +9618,7 @@ msgstr "Startdatum kan inte vara senare än slutdatum."
 msgid "Start date: {0}"
 msgstr "Start Datum:{0}"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:40
+#: hrms/hr/doctype/shift_type/shift_type.py:49
 msgid "Start time and end time cannot be same."
 msgstr "Starttid och sluttid kan inte vara samma."
 
@@ -9664,7 +9664,7 @@ msgstr "Lönearter är tilldelade"
 msgid "Submission Date"
 msgstr "Godkännande Datum"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:460
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:475
 msgid "Submission Failed"
 msgstr "Godkännade Misslyckad"
 
@@ -9742,7 +9742,7 @@ msgstr "Summan av förmånsbelopp {0} överskrider maxgräns för {1}"
 msgid "Summarized View"
 msgstr "Översikt Vy"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:93
+#: hrms/payroll/doctype/salary_component/salary_component.js:99
 msgid "Sync {0}"
 msgstr "Synkronisera {0}"
 
@@ -9971,7 +9971,7 @@ msgstr "Det finns inga lediga jobb inom bemanning plan {0}"
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:42
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:20
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:207
-msgid "There is no Salary Structure assigned to {0}. First assign a Salary Stucture."
+msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
 msgstr "Det finns ingen Löneart tilldelad till {0}. Tilldela Löneart först."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:392
@@ -10680,7 +10680,7 @@ msgstr "Olänkade Loggar"
 msgid "Unmarked Attendance for days"
 msgstr "Oregistrerad Närvaro för dagar"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:87
+#: hrms/hr/doctype/shift_type/shift_type.py:96
 msgid "Unmarked Check-in Logs Found"
 msgstr "Omärkta stämplingsloggar hittade"
 
@@ -10772,7 +10772,7 @@ msgstr "Uppdatera Framsteg"
 msgid "Update Response"
 msgstr "Uppdatera Svar"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:114
+#: hrms/payroll/doctype/salary_component/salary_component.js:120
 msgid "Update Salary Structures"
 msgstr "Uppdatera Lönearter"
 
@@ -11436,7 +11436,7 @@ msgstr "{0} uppdaterad!"
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
 msgstr "{0} lediga platser och {1} budget för {2} redan planerade för dotterbolagför {3}. Du kan bara planera för upp till {4} lediga platser och budget {5} enligt bemanningsplan {6} för moderbolag {3}."
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:124
+#: hrms/payroll/doctype/salary_component/salary_component.js:130
 msgid "{0} will be updated for the following Salary Structures: {1}."
 msgstr "{0} kommer att uppdateras för följande Lönearter: {1}."
 
@@ -11466,7 +11466,7 @@ msgstr "{0}d"
 #. Count format of shortcut in the Shift & Attendance Workspace
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "{} "
-msgstr ""
+msgstr "{} "
 
 #. Count format of shortcut in the Recruitment Workspace
 #: hrms/hr/workspace/recruitment/recruitment.json

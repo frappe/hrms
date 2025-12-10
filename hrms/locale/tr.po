@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-11-30 09:35+0000\n"
-"PO-Revision-Date: 2025-12-01 14:27\n"
+"POT-Creation-Date: 2025-12-07 09:35+0000\n"
+"PO-Revision-Date: 2025-12-08 09:19\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -1413,10 +1413,6 @@ msgstr ""
 msgid "Attendance from {0} to {1} has already been marked for the Employee {2}"
 msgstr ""
 
-#: hrms/hr/doctype/shift_type/shift_type.js:34
-msgid "Attendance has been marked as per employee check-ins"
-msgstr "Personel girişlerine göre devamlılık işaretlendi"
-
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:36
 msgid "Attendance has been marked for all the employees between the selected payroll dates."
 msgstr "Seçilen maaş dönemi tarihleri arasında tüm personelin devamlılığı işaretlendi."
@@ -1879,7 +1875,7 @@ msgstr "Çıkış"
 msgid "Check Vacancies On Job Offer Creation"
 msgstr "İş Teklifi Oluşturmada Açık Pozisyonları Kontrol Et"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:452
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:467
 #: hrms/hr/utils.py:935
 msgid "Check {0} for more details"
 msgstr "Daha fazla ayrıntı için {0} adresini kontrol edin"
@@ -3290,7 +3286,7 @@ msgstr "Personel Adı"
 msgid "Employee records are created using the selected option"
 msgstr "Personel kayıtları seçilen ayara göre oluşturulacaktır"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:244
+#: hrms/hr/doctype/shift_type/shift_type.py:272
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr ""
 
@@ -3298,7 +3294,7 @@ msgstr ""
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr ""
 
-#: hrms/hr/doctype/shift_type/shift_type.py:373
+#: hrms/hr/doctype/shift_type/shift_type.py:401
 msgid "Employee was marked Absent for other half due to missing Employee Checkins."
 msgstr ""
 
@@ -3962,7 +3958,7 @@ msgstr "Mülakat Yeniden Planlama bildirimi gönderilemedi. Lütfen e-posta hesa
 msgid "Failed to setup defaults for country {0}."
 msgstr "Ülke için varsayılanlar ayarlanamadı {0}."
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:449
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:464
 msgid "Failed to submit some leave policy assignments:"
 msgstr "Bazı izin politikası atamaları gönderilemedi:"
 
@@ -5257,8 +5253,8 @@ msgstr ""
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
 msgstr "Geçersiz Bordro Borç Hesabı. Hesap para birimi {0} veya {1} olmalıdır."
 
-#: hrms/hr/doctype/shift_type/shift_type.py:39
 #: hrms/hr/doctype/shift_type/shift_type.py:48
+#: hrms/hr/doctype/shift_type/shift_type.py:57
 msgid "Invalid Shift Times"
 msgstr ""
 
@@ -5991,6 +5987,10 @@ msgstr "Ücretsiz izin"
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr "Ödemesiz bırakma, mahremiyetler {} kayıtlarıyla eşleşmiyor"
 
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:130
+msgid "Leave allocation is skipped for {0}, because number of leaves to be allocated is 0."
+msgstr ""
+
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.py:54
 msgid "Leave allocation {0} is linked with the Leave Application {1}"
 msgstr "İzin tahsisi {0} İzin Talebi {1} ile bağlantılıdır"
@@ -6262,7 +6262,7 @@ msgstr ""
 msgid "Mark attendance based on 'Employee Checkin' for Employees assigned to this shift."
 msgstr "Bu vardiyaya atanan personel için Personel Hareketine göre devamlılığı işaretle."
 
-#: hrms/hr/doctype/shift_type/shift_type.py:88
+#: hrms/hr/doctype/shift_type/shift_type.py:97
 msgid "Mark attendance for existing check-in/out logs before changing shift settings"
 msgstr ""
 
@@ -6668,7 +6668,7 @@ msgstr ""
 msgid "No Salary Structure assigned to Employee {0} on the given date {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:109
+#: hrms/payroll/doctype/salary_component/salary_component.js:115
 msgid "No Salary Structures"
 msgstr ""
 
@@ -7644,7 +7644,7 @@ msgstr "Lütfen belirti giriniz"
 msgid "Please fill in Employee, Posting Date, and Company before fetching overtime details."
 msgstr ""
 
-#: hrms/hr/doctype/shift_type/shift_type.py:49
+#: hrms/hr/doctype/shift_type/shift_type.py:58
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr ""
 
@@ -8644,7 +8644,7 @@ msgstr "zaman girerken bina bordrosu için maaş Bileşeni."
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:107
+#: hrms/payroll/doctype/salary_component/salary_component.js:113
 msgid "Salary Component {0} is currently not used in any Salary Structure."
 msgstr ""
 
@@ -8868,7 +8868,7 @@ msgstr ""
 msgid "Salary Structure {0} does not belong to company {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:144
+#: hrms/payroll/doctype/salary_component/salary_component.js:150
 msgid "Salary Structures updated successfully"
 msgstr ""
 
@@ -9615,7 +9615,7 @@ msgstr ""
 msgid "Start date: {0}"
 msgstr "Başlangıç Tarihi: {0}"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:40
+#: hrms/hr/doctype/shift_type/shift_type.py:49
 msgid "Start time and end time cannot be same."
 msgstr ""
 
@@ -9661,7 +9661,7 @@ msgstr "Yapılar başarıyla atandı"
 msgid "Submission Date"
 msgstr "teslim tarihi"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:460
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:475
 msgid "Submission Failed"
 msgstr "Gönderim Başarısız"
 
@@ -9739,7 +9739,7 @@ msgstr ""
 msgid "Summarized View"
 msgstr "Özet Görünüm"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:93
+#: hrms/payroll/doctype/salary_component/salary_component.js:99
 msgid "Sync {0}"
 msgstr "Senkronize Et {0}"
 
@@ -9968,8 +9968,8 @@ msgstr "{0} kadro planında boş yer yok"
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:42
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:20
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:207
-msgid "There is no Salary Structure assigned to {0}. First assign a Salary Stucture."
-msgstr "{0} için Maaş belirlenmemiş. Öncelikle maaş ataması yapın."
+msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
+msgstr ""
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:392
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
@@ -10677,7 +10677,7 @@ msgstr "Bağlantısız kayıtlar"
 msgid "Unmarked Attendance for days"
 msgstr ""
 
-#: hrms/hr/doctype/shift_type/shift_type.py:87
+#: hrms/hr/doctype/shift_type/shift_type.py:96
 msgid "Unmarked Check-in Logs Found"
 msgstr ""
 
@@ -10769,7 +10769,7 @@ msgstr "İlerlemeyi Güncelle"
 msgid "Update Response"
 msgstr "yanıt güncelle"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:114
+#: hrms/payroll/doctype/salary_component/salary_component.js:120
 msgid "Update Salary Structures"
 msgstr "Maaş Yapılarını Güncelle"
 
@@ -11433,7 +11433,7 @@ msgstr "{0} başarıyla güncellendi!"
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
 msgstr "{3} bağlı şirketler için {0} açık pozisyon ve {1} bütçe zaten planlanmış. Ana şirket {3} için {6} personel planına göre yalnızca {4} açık pozisyon ve {5} bütçe planlayabilirsiniz."
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:124
+#: hrms/payroll/doctype/salary_component/salary_component.js:130
 msgid "{0} will be updated for the following Salary Structures: {1}."
 msgstr ""
 
