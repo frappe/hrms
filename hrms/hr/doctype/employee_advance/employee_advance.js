@@ -172,8 +172,10 @@ frappe.ui.form.on("Employee Advance", {
 	},
 
 	update_fields_label: function (frm) {
+		var company_currency = erpnext.get_currency(frm.doc.company);
 		frm.set_currency_labels(["paid_amount"], frm.doc.currency);
-		frm.set_currency_labels(["base_paid_amount"], erpnext.get_currency(frm.doc.company));
+		frm.set_currency_labels(["base_paid_amount"], company_currency);
+		frm.toggle_display("base_paid_amount", frm.doc.currency != company_currency);
 		frm.refresh_fields();
 	},
 });
