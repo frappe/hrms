@@ -6,6 +6,7 @@ from frappe.tests import IntegrationTestCase
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.report.employee_analytics.employee_analytics import execute
+from hrms.tests.test_utils import create_company
 
 
 class TestEmployeeAnalytics(IntegrationTestCase):
@@ -14,21 +15,10 @@ class TestEmployeeAnalytics(IntegrationTestCase):
 		super().setUpClass()
 		create_branches()
 		create_employee_grade()
-		frappe.db.delete("Employee", {"company": ["in", ["_Test Analytics Parent", "_Test Analytics Child"]]})
-
-	@classmethod
-	def tearDownClass(cls):
-		frappe.db.delete("Employee", {"company": ["in", ["_Test Analytics Parent", "_Test Analytics Child"]]})
-		frappe.db.delete("Department", {"company": "_Test Analytics Parent"})
-		for company in ["_Test Analytics Child", "_Test Analytics Parent"]:
-			if frappe.db.exists("Company", company):
-				frappe.db.set_value("Company", company, "parent_company", None)
-		frappe.db.delete("Company", {"name": ["in", ["_Test Analytics Parent", "_Test Analytics Child"]]})
-		super().tearDownClass()
 
 	def setUp(self):
 		self.company = "_Test Company"
-		self.company_2 = create_company("_Test Company 2")
+		self.company_2 = create_company("_Test Company 2").name
 
 	def test_branches(self):
 		make_employee("test_analytics1@example.com", company=self.company, branch="Test Branch 1")
@@ -64,36 +54,18 @@ class TestEmployeeAnalytics(IntegrationTestCase):
 
 	def test_company_descendants_filter(self):
 		"""Test that company descendants filter includes child company employees"""
-		create_company("_Test Analytics Parent", is_group=1)
-		create_company("_Test Analytics Child", parent_company="_Test Analytics Parent")
+		create_company("Test Parent Company", is_group=1)
+		create_company("Test Child Company", parent_company="Test Parent Company")
 
-		dept_name = frappe.db.get_value(
-			"Department",
-			{"department_name": "_Test Analytics Dept", "company": "_Test Analytics Parent"},
-			"name",
-		)
-		if not dept_name:
-			dept = frappe.get_doc({
-				"doctype": "Department",
-				"department_name": "_Test Analytics Dept",
-				"company": "_Test Analytics Parent",
-			}).insert()
-			dept_name = dept.name
+		frappe.db.delete("Employee", {"company": ["in", ["Test Parent Company", "Test Child Company"]]})
 
-		employee1 = make_employee(
-			"test_analytics_parent@example.com",
-			company="_Test Analytics Parent",
-			department=dept_name,
-		)
-		employee2 = make_employee(
-			"test_analytics_child@example.com",
-			company="_Test Analytics Child",
-			department=dept_name,
-		)
+		employee1 = make_employee("test_employee@parent.com", company="Test Parent Company")
+		employee2 = make_employee("test_employee@child.com", company="Test Child Company")
 
+		# Test with descendants enabled - use Branch parameter (no company constraint)
 		filters = frappe._dict({
-			"company": "_Test Analytics Parent",
-			"parameter": "Department",
+			"company": "Test Parent Company",
+			"parameter": "Branch",
 			"include_company_descendants": 1,
 		})
 		report = execute(filters=filters)
@@ -102,6 +74,7 @@ class TestEmployeeAnalytics(IntegrationTestCase):
 		self.assertIn(employee1, employees_in_report)
 		self.assertIn(employee2, employees_in_report)
 
+		# Test with descendants disabled
 		filters.include_company_descendants = 0
 		report = execute(filters=filters)
 		employees_in_report = [row[0] for row in report[1]]
@@ -137,29 +110,3 @@ def create_branches():
 
 def get_employees_without_set_parameter(parameter, company):
 	return frappe.db.count("Employee", {parameter: ("is", "not set"), "company": company, "status": "Active"})
-
-
-def create_company(company_name, is_group=0, parent_company=None):
-	if frappe.db.exists("Company", company_name):
-		company = frappe.get_doc("Company", company_name)
-		if is_group and not company.is_group:
-			company.is_group = 1
-			company.save()
-		if parent_company and company.parent_company != parent_company:
-			company.parent_company = parent_company
-			company.save()
-	else:
-		company = frappe.get_doc(
-			{
-				"doctype": "Company",
-				"company_name": company_name,
-				"country": "India",
-				"default_currency": "INR",
-				"create_chart_of_accounts_based_on": "Standard Template",
-				"chart_of_accounts": "Standard",
-				"is_group": is_group,
-				"parent_company": parent_company,
-			}
-		)
-		company = company.insert()
-	return company.name
