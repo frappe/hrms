@@ -54,13 +54,12 @@ def get_employees(filters):
 	filters_for_employees["status"] = "Active"
 	filters_for_employees[filters.get("parameter").lower().replace(" ", "_")] = ["is", "set"]
 	filters_for_employees.pop("parameter")
+	filters_for_employees.pop("include_company_descendants", None)
 
-	# Handle company descendants
 	if filters.get("include_company_descendants"):
 		companies = get_companies(filters)
 		if len(companies) > 1:
 			filters_for_employees["company"] = ["in", companies]
-		filters_for_employees.pop("include_company_descendants", None)
 
 	return frappe.get_list(
 		"Employee",
@@ -94,7 +93,6 @@ def get_chart_data(parameters, filters):
 	parameter_field_name = filters.get("parameter").lower().replace(" ", "_")
 	label = []
 
-	# Get list of companies including descendants
 	companies = get_companies(filters)
 
 	employee = frappe.qb.DocType("Employee")
@@ -108,7 +106,6 @@ def get_chart_data(parameters, filters):
 				.where(Criterion.all(build_qb_match_conditions("Employee")))
 			)
 
-			# Filter by companies (single or multiple)
 			if len(companies) == 1:
 				query = query.where(employee.company == companies[0])
 			else:
@@ -121,11 +118,17 @@ def get_chart_data(parameters, filters):
 
 	values = [value for value in datasets if value != 0]
 
-	# Get total active employees for selected companies
+	total_q = (
+		frappe.qb.from_(employee)
+		.select(Count(employee.name).as_("count"))
+		.where(employee.status == "Active")
+		.where(Criterion.all(build_qb_match_conditions("Employee")))
+	)
 	if len(companies) == 1:
-		total_employee = frappe.db.count("Employee", {"status": "Active", "company": companies[0]})
+		total_q = total_q.where(employee.company == companies[0])
 	else:
-		total_employee = frappe.db.count("Employee", {"status": "Active", "company": ["in", companies]})
+		total_q = total_q.where(employee.company.isin(companies))
+	total_employee = total_q.run()[0][0]
 
 	others = total_employee - sum(values)
 

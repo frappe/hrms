@@ -14,6 +14,17 @@ class TestEmployeeAnalytics(IntegrationTestCase):
 		super().setUpClass()
 		create_branches()
 		create_employee_grade()
+		frappe.db.delete("Employee", {"company": ["in", ["_Test Analytics Parent", "_Test Analytics Child"]]})
+
+	@classmethod
+	def tearDownClass(cls):
+		frappe.db.delete("Employee", {"company": ["in", ["_Test Analytics Parent", "_Test Analytics Child"]]})
+		frappe.db.delete("Department", {"company": "_Test Analytics Parent"})
+		for company in ["_Test Analytics Child", "_Test Analytics Parent"]:
+			if frappe.db.exists("Company", company):
+				frappe.db.set_value("Company", company, "parent_company", None)
+		frappe.db.delete("Company", {"name": ["in", ["_Test Analytics Parent", "_Test Analytics Child"]]})
+		super().tearDownClass()
 
 	def setUp(self):
 		self.company = "_Test Company"
@@ -53,29 +64,33 @@ class TestEmployeeAnalytics(IntegrationTestCase):
 
 	def test_company_descendants_filter(self):
 		"""Test that company descendants filter includes child company employees"""
-		parent_company = create_company("_Test Analytics Parent", is_group=1)
-		child_company = create_company("_Test Analytics Child", parent_company="_Test Analytics Parent")
+		create_company("_Test Analytics Parent", is_group=1)
+		create_company("_Test Analytics Child", parent_company="_Test Analytics Parent")
 
-		# Create department for the parameter filter
-		if not frappe.db.exists("Department", "_Test Analytics Dept - _TAP"):
-			frappe.get_doc({
+		dept_name = frappe.db.get_value(
+			"Department",
+			{"department_name": "_Test Analytics Dept", "company": "_Test Analytics Parent"},
+			"name",
+		)
+		if not dept_name:
+			dept = frappe.get_doc({
 				"doctype": "Department",
 				"department_name": "_Test Analytics Dept",
 				"company": "_Test Analytics Parent",
 			}).insert()
+			dept_name = dept.name
 
 		employee1 = make_employee(
 			"test_analytics_parent@example.com",
 			company="_Test Analytics Parent",
-			department="_Test Analytics Dept - _TAP",
+			department=dept_name,
 		)
 		employee2 = make_employee(
 			"test_analytics_child@example.com",
 			company="_Test Analytics Child",
-			department="_Test Analytics Dept - _TAP",
+			department=dept_name,
 		)
 
-		# Test with descendants enabled
 		filters = frappe._dict({
 			"company": "_Test Analytics Parent",
 			"parameter": "Department",
@@ -87,7 +102,6 @@ class TestEmployeeAnalytics(IntegrationTestCase):
 		self.assertIn(employee1, employees_in_report)
 		self.assertIn(employee2, employees_in_report)
 
-		# Test with descendants disabled
 		filters.include_company_descendants = 0
 		report = execute(filters=filters)
 		employees_in_report = [row[0] for row in report[1]]
