@@ -133,6 +133,9 @@ class PayrollEntry(Document):
 		self.set_status(update=True, status="Cancelled")
 		self.db_set("error_message", "")
 
+	def on_discard(self):
+		self.db_set("status", "Cancelled")
+
 	def cancel(self):
 		if len(self.get_linked_salary_slips()) > 50:
 			msg = _("Payroll Entry cancellation is queued. It may take a few minutes")

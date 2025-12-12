@@ -1066,7 +1066,7 @@ class TestSalarySlip(IntegrationTestCase):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 		salary_structure = make_salary_structure(
-			"Stucture to test tax",
+			"Structure to test tax",
 			"Monthly",
 			other_details={"max_benefits": 100000},
 			test_tax=True,
@@ -1161,7 +1161,7 @@ class TestSalarySlip(IntegrationTestCase):
 		employee = make_employee("test_tax_for_mid_joinee@salary.com", date_of_joining=joining_date)
 
 		salary_structure = make_salary_structure(
-			"Stucture to test tax",
+			"Structure to test tax",
 			"Monthly",
 			test_tax=True,
 			from_date=joining_date,
@@ -1199,7 +1199,7 @@ class TestSalarySlip(IntegrationTestCase):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 		salary_structure = make_salary_structure(
-			"Stucture to test tax",
+			"Structure to test tax",
 			"Monthly",
 			other_details={"max_benefits": 100000},
 			test_tax=True,
@@ -1820,6 +1820,13 @@ class TestSalarySlip(IntegrationTestCase):
 		total_income_tax += total_income_tax * 0.04  # add cess
 
 		self.assertEqual(salary_slip.total_income_tax, total_income_tax)
+
+	def test_status_on_discard(self):
+		salary_slip = make_salary_slip_with_non_taxable_component()
+		salary_slip.save()
+		salary_slip.discard()
+		salary_slip.reload()
+		self.assertEqual(salary_slip.status, "Cancelled")
 
 
 class TestSalarySlipSafeEval(IntegrationTestCase):

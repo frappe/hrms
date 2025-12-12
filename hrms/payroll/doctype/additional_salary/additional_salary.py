@@ -39,7 +39,7 @@ class AdditionalSalary(Document):
 	def validate_salary_structure(self):
 		if not frappe.db.exists("Salary Structure Assignment", {"employee": self.employee}):
 			frappe.throw(
-				_("There is no Salary Structure assigned to {0}. First assign a Salary Stucture.").format(
+				_("There is no Salary Structure assigned to {0}. First assign a Salary Structure.").format(
 					self.employee
 				)
 			)
@@ -221,7 +221,7 @@ class AdditionalSalary(Document):
 		no_of_days = date_diff(getdate(end_date), getdate(start_date)) + 1
 		return amount_per_day * no_of_days
 
-	def validate_update_after_submit(self):
+	def before_update_after_submit(self):
 		if not self.disabled:
 			self.validate_recurring_additional_salary_overlap()
 

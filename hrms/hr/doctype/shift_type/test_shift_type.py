@@ -861,6 +861,13 @@ class TestShiftType(IntegrationTestCase):
 		)
 		self.assertRaises(frappe.ValidationError, shift_type.save)
 
+	def test_bg_job_creation_for_large_checkins(self):
+		shift = setup_shift_type(shift_type="Test Shift", start_time="10:00:00", end_time="18:00:00")
+		frappe.flags.test_bg_job = True
+		shift.process_auto_attendance(is_manually_triggered=True)
+		job = frappe.get_all("RQ Job", {"job_id": f"process_auto_attendance_{shift.name}"})
+		self.assertTrue(job)
+
 
 def setup_shift_type(**args):
 	args = frappe._dict(args)

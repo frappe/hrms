@@ -138,6 +138,12 @@ class TestSalaryWithholding(IntegrationTestCase):
 		payroll_entry.reload()
 		return next(employee for employee in payroll_entry.employees if employee.employee == self.employee1)
 
+	def test_status_on_discard(self):
+		salary_withholding = create_salary_withholding(self.employee1, getdate())
+		salary_withholding.discard()
+		salary_withholding.reload()
+		self.assertEqual(salary_withholding.status, "Cancelled")
+
 
 def create_salary_withholding(employee: str, from_date: str, number_of_withholding_cycles: int = 0):
 	doc = frappe.new_doc("Salary Withholding")

@@ -2080,8 +2080,8 @@ class SalarySlip(TransactionBase):
 			and cint(row.depends_on_payment_days)
 		):
 			amount, additional_amount = 0, 0
-		elif not row.amount:
-			amount = flt(row.default_amount) + flt(row.additional_amount)
+		elif not row.amount and row.additional_amount:
+			amount = flt(row.additional_amount)
 
 		# apply rounding
 		if frappe.db.get_value(
@@ -2376,6 +2376,9 @@ class SalarySlip(TransactionBase):
 						"available_leaves": flt(leave_values.get("remaining_leaves")),
 					},
 				)
+
+	def on_discard(self):
+		self.db_set("status", "Cancelled")
 
 
 def get_benefits_details_parent(employee, payroll_period, salary_structure_assignment):

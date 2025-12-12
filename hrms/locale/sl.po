@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-11-23 09:35+0000\n"
-"PO-Revision-Date: 2025-11-23 13:26\n"
+"POT-Creation-Date: 2025-12-07 09:35+0000\n"
+"PO-Revision-Date: 2025-12-08 09:19\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Slovenian\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgstr " Plačne liste, izdane od tega datuma naprej, bodo upoštevane pri izra�
 #. field in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid " Unlink Payment on Cancellation of Employee Advance"
-msgstr ""
+msgstr " Prekinitev povezave plačila ob preklicu predplačila Osebja"
 
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:23
 msgid "\"From Date\" can not be greater than or equal to \"To Date\""
@@ -43,7 +43,7 @@ msgstr "% Izkoriščenost (B / T)"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:157
 msgid "'employee_field_value' and 'timestamp' are required."
-msgstr ""
+msgstr "'employee_field_value' in 'timestamp' sta obvezna."
 
 #: hrms/hr/utils.py:252
 #: hrms/payroll/doctype/payroll_period/payroll_period.py:53
@@ -52,7 +52,7 @@ msgstr ") za {0}"
 
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.js:54
 msgid "...Fetching Employees"
-msgstr ""
+msgstr "...Pridobivanje Osebja"
 
 #. Option for the 'Rounding' (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -215,18 +215,18 @@ msgstr "23:00"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:272
 msgid "<b>Base</b> amount has not been set for the following employee(s): {0}"
-msgstr ""
+msgstr "<b>Osnovni</b> znesek ni bil določen za naslednjega osebja: {0}"
 
 #. Description of the 'Password Policy' (Data) field in DocType 'Payroll
 #. Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "<b>Example:</b> SAL-{first_name}-{date_of_birth.year} <br>This will generate a password like SAL-Jane-1972"
-msgstr ""
+msgstr "<b>Primer:</b> SAL-{first_name}-{date_of_birth.year} <br>To bo ustvarilo geslo, kot je SAL-Jane-1972"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:280
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:288
 msgid "<b>Total Leaves Allocated</b> are more than the number of days in the allocation period"
-msgstr ""
+msgstr "<b>Skupno število dodeljenih dopustov</b> je večje od števila dni v obdobju dodelitve"
 
 #. Content of the 'Help' (HTML) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
@@ -250,7 +250,26 @@ msgid "<h3>Help</h3>\n\n"
 "<pre><code>Condition: employment_type==\"Intern\"</code></pre>\n"
 "<pre><code>Amount: 1000</code></pre></li>\n"
 "</ol>"
-msgstr ""
+msgstr "<h3>Pomoč</h3>\n\n"
+"<p>Opombe:</p>\n\n"
+"<ol>\n"
+"<li>Za uporabo osnovne plače zaposlenega uporabite polje <code>osnova</code></li>\n"
+"<li>V pogojih in formulah uporabite okrajšave za komponente plače. <code>BS = Osnovna plača</code></li>\n"
+"<li>Za podrobnosti o zaposlenem v pogojih in formulah uporabite ime polja. <code>Vrsta zaposlitve = vrsta_zaposlitve</code><code>Podružnica = podružnica</code></li>\n"
+"<li>V pogojih in formulah uporabite ime polja iz plačilne liste. <code>Plačilni dnevi = payment_days</code><code>Dopust brez plačila = leave_without_pay</code></li>\n"
+"<li>Neposredni znesek lahko vnesete tudi na podlagi pogoja. Glej primer 3</li></ol>\n\n"
+"<h4>Primeri</h4>\n"
+"<ol>\n"
+"<li>Izračun osnovne plače na podlagi <code>osnove</code>\n"
+"<pre><code>Pogoj: osnova &lt; 10000</code></pre>\n"
+"<pre><code>Formula: osnova * 0,2</code></pre></li>\n"
+"<li>Izračun HRA na podlagi osnovne plače<code>BS</code> \n"
+"<pre><code>Pogoj: BS &gt; 2000</code></pre>\n"
+"<pre><code>Formula: BS * .1</code></pre></li>\n"
+"<li>Izračun TDS na podlagi vrste zaposlitve<code>employment_type</code> \n"
+"<pre><code>Pogoj: employment_type==\"Intern\"</code></pre>\n"
+"<pre><code>Znesek: 1000</code></pre></li>\n"
+"</ol>"
 
 #. Content of the 'html_6' (HTML) field in DocType 'Taxable Salary Slab'
 #: hrms/payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
@@ -261,19 +280,25 @@ msgid "<h4>Condition Examples</h4>\n"
 "<code>Condition: gender==\"Male\"</code></li><br>\n"
 "<li>Applying tax by Salary Component<br>\n"
 "<code>Condition: base &gt; 10000</code></li></ol>"
-msgstr ""
+msgstr "<h4>Primeri pogojev</h4>\n"
+"<ol>\n"
+"<li>Uporaba davka za zaposlenega, rojenega med 31. 12. 1937 in 01. 01. 1958 (zaposleni, stari od 60 do 80 let)<br>\n"
+"<code>Pogoj: datum_rojstva&gt;datum(1937, 12, 31) in datum_rojstva&lt;date(1958, 01, 01)</code></li><br><li>Applying tax by employee gender<br>\n"
+"<code>Condition: gender==\"Male\"</code></li><br>\n"
+"<li>Applying tax by Salary Component<br>\n"
+"<code>Condition: base &gt; 10000</code></li></ol>"
 
 #. Content of the 'Half Day Marked Employee Header' (HTML) field in DocType
 #. 'Employee Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgid "<h5>Employees on Half Day</h5>"
-msgstr ""
+msgstr "<h5>Poldnevno Osebje</h5>"
 
 #. Content of the 'Unmarked Employee Header' (HTML) field in DocType 'Employee
 #. Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgid "<h5>Unmarked Employees</h5>"
-msgstr ""
+msgstr "<h5>Neoznačeno  Osebje</h5>"
 
 #. Content of the 'Horizontal Break' (HTML) field in DocType 'Employee
 #. Attendance Tool'
@@ -284,11 +309,16 @@ msgstr "<hr>"
 #. Header text in the Payroll Workspace
 #: hrms/payroll/workspace/payroll/payroll.json
 msgid "<span class=\"h4\"><b>Transactions &amp; Reports</b></span>"
-msgstr ""
+msgstr "<span class=\"h4\"><b>Transakcije &amp; Poročila</b></span>"
+
+#. Header text in the Shift & Attendance Workspace
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+msgid "<span style=\"font-size: 18px;\"><b>Masters &amp; Reports</b></span>"
+msgstr "<span style=\"font-size: 18px;\"><b>Nastavitve &amp; Poročila</b></span>"
 
 #: hrms/public/js/utils/index.js:166
 msgid "<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>"
-msgstr ""
+msgstr "<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>"
 
 #: hrms/hr/doctype/job_requisition/job_requisition.py:30
 msgid "A Job Requisition for {0} requested by {1} already exists: {2}"
@@ -443,7 +473,7 @@ msgstr "Dejanski Znesek"
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/hr/doctype/leave_encashment/leave_encashment.py:131
 msgid "Actual Encashable Days"
-msgstr ""
+msgstr "Dejanski Dnevi Unovčitve"
 
 #. Label of the actual_overtime_duration (Float) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
@@ -477,7 +507,7 @@ msgstr "Dodaj Davek"
 
 #: hrms/hr/employee_property_update.js:116
 msgid "Add to Details"
-msgstr ""
+msgstr "Dodaj v Podrobnosti"
 
 #. Label of the carry_forward (Check) field in DocType 'Leave Allocation'
 #. Label of the carry_forward (Check) field in DocType 'Leave Policy
@@ -495,11 +525,11 @@ msgstr ""
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1593
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
-msgstr ""
+msgstr "Dodane so bile davčne komponente iz glavnega menija Komponenta plače, ker struktura plač ni imela davčne komponente."
 
 #: hrms/hr/employee_property_update.js:193
 msgid "Added to details"
-msgstr ""
+msgstr "Dodano v podrobnosti"
 
 #. Label of the additional_amount (Currency) field in DocType 'Salary Detail'
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
@@ -562,7 +592,7 @@ msgstr ""
 #. Label of the adjustment_type (Select) field in DocType 'Leave Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 msgid "Adjustment Type"
-msgstr ""
+msgstr "Tip Prilagoditve"
 
 #. Option for the 'Level' (Select) field in DocType 'Training Event'
 #: hrms/hr/doctype/training_event/training_event.json
@@ -623,7 +653,7 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:176
 msgid "Allocate Leave"
-msgstr ""
+msgstr "Dodeli Dopust"
 
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:192
 msgid "Allocate leaves to {0} employee(s)?"
@@ -632,7 +662,7 @@ msgstr ""
 #. Label of the allocate_on_day (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Allocate on Day"
-msgstr ""
+msgstr "Dodeli na Dan"
 
 #. Label of the base_allocated_amount (Currency) field in DocType 'Expense
 #. Claim Advance'
@@ -644,7 +674,7 @@ msgstr ""
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 #: hrms/hr/doctype/leave_application/leave_application.js:75
 msgid "Allocated Leaves"
-msgstr ""
+msgstr "Dodeljeni Dopusti"
 
 #. Label of the allocated_via (Select) field in DocType 'Earned Leave Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
@@ -832,25 +862,25 @@ msgstr ""
 #. Detail'
 #: hrms/hr/doctype/leave_policy_detail/leave_policy_detail.json
 msgid "Annual Allocation"
-msgstr ""
+msgstr "Letna Dodelitev"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:372
 msgid "Annual Allocation Exceeded"
-msgstr ""
+msgstr "Presežena Letna Dodelitev"
 
 #: hrms/setup.py:404
 msgid "Annual Salary"
-msgstr ""
+msgstr "Letna Plača"
 
 #. Label of the annual_taxable_amount (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Annual Taxable Amount"
-msgstr ""
+msgstr "Letna Davčna Osnova"
 
 #. Label of the description (Small Text) field in DocType 'Travel Request'
 #: hrms/hr/doctype/travel_request/travel_request.json
 msgid "Any other details"
-msgstr ""
+msgstr "Vse druge podrobnosti"
 
 #. Description of the 'Remarks' (Text) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
@@ -878,7 +908,7 @@ msgstr ""
 #. Label of the applicant_email (Data) field in DocType 'Job Offer'
 #: hrms/hr/doctype/job_offer/job_offer.json
 msgid "Applicant Email Address"
-msgstr ""
+msgstr "E-poštni naslov prosilca"
 
 #. Label of the applicant_name (Data) field in DocType 'Appointment Letter'
 #. Label of the applicant_name (Data) field in DocType 'Job Applicant'
@@ -889,21 +919,21 @@ msgstr ""
 #: hrms/hr/doctype/job_offer/job_offer.json
 #: hrms/hr/web_form/job_application/job_application.json
 msgid "Applicant Name"
-msgstr ""
+msgstr "Ime prosilca"
 
 #. Label of the applicant_rating (Rating) field in DocType 'Job Applicant'
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 msgid "Applicant Rating"
-msgstr ""
+msgstr "Ocena prosilca"
 
 #. Description of a DocType
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 msgid "Applicant for a Job"
-msgstr ""
+msgstr "Prosilec za delovno mesto"
 
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.py:44
 msgid "Applicant name"
-msgstr ""
+msgstr "Ime prosilca"
 
 #. Label of a Card Break in the Leaves Workspace
 #: hrms/hr/workspace/leaves/leaves.json
@@ -939,35 +969,35 @@ msgstr "Velja za Podjetje"
 #. Description of a DocType
 #: hrms/hr/doctype/leave_application/leave_application.json
 msgid "Apply / Approve Leaves"
-msgstr ""
+msgstr "Uporabi / Odobri Dopuste"
 
 #: hrms/templates/generators/job_opening.html:29
 #: hrms/templates/generators/job_opening.html:209
 msgid "Apply Now"
-msgstr ""
+msgstr "Prijavi se zdaj"
 
 #. Label of the applicable_for_public_holiday (Check) field in DocType
 #. 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Apply for Public Holiday"
-msgstr ""
+msgstr "Prijavite se za državni praznik"
 
 #. Label of the applicable_for_weekend (Check) field in DocType 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Apply for Weekend"
-msgstr ""
+msgstr "Prijavite se za Vikend"
 
 #. Label of the appointment_date (Date) field in DocType 'Appointment Letter'
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json
 msgid "Appointment Date"
-msgstr ""
+msgstr "Datum Imenovanja"
 
 #. Name of a DocType
 #. Label of a Link in the Recruitment Workspace
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json
 #: hrms/hr/workspace/recruitment/recruitment.json
 msgid "Appointment Letter"
-msgstr ""
+msgstr "Pismo Imenovanja"
 
 #. Label of the appointment_letter_template (Link) field in DocType
 #. 'Appointment Letter'
@@ -977,12 +1007,12 @@ msgstr ""
 #: hrms/hr/doctype/appointment_letter_template/appointment_letter_template.json
 #: hrms/hr/workspace/recruitment/recruitment.json
 msgid "Appointment Letter Template"
-msgstr ""
+msgstr "Predloga Pisma Imenovanja"
 
 #. Name of a DocType
 #: hrms/hr/doctype/appointment_letter_content/appointment_letter_content.json
 msgid "Appointment Letter content"
-msgstr ""
+msgstr "Vsebina Pisma Imenovanja"
 
 #. Name of a DocType
 #. Label of the appraisal (Link) field in DocType 'Employee Performance
@@ -1022,17 +1052,17 @@ msgstr "Cilj Ocenjevanja"
 #. Name of a DocType
 #: hrms/hr/doctype/appraisal_kra/appraisal_kra.json
 msgid "Appraisal KRA"
-msgstr ""
+msgstr "Ocenjevanje Ključnih Področij Rezultatov"
 
 #. Label of the section_break_cycle (Section Break) field in DocType 'Goal'
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:96
 msgid "Appraisal Linking"
-msgstr ""
+msgstr "Povezovanje Ocenjevanja"
 
 #. Name of a report
 #: hrms/hr/report/appraisal_overview/appraisal_overview.json
 msgid "Appraisal Overview"
-msgstr ""
+msgstr "Pregled Ocenjevanja"
 
 #. Label of the appraisal_template (Link) field in DocType 'Appraisal'
 #. Name of a DocType
@@ -1041,21 +1071,21 @@ msgstr ""
 #: hrms/hr/doctype/appraisal_template/appraisal_template.json
 #: hrms/hr/doctype/appraisee/appraisee.json hrms/setup.py:162
 msgid "Appraisal Template"
-msgstr ""
+msgstr "Predloga Ocenjevanja"
 
 #. Name of a DocType
 #: hrms/hr/doctype/appraisal_template_goal/appraisal_template_goal.json
 msgid "Appraisal Template Goal"
-msgstr ""
+msgstr "Cilj Predloga Ocenjevanja"
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:142
 msgid "Appraisal Template Missing"
-msgstr ""
+msgstr "Manjka Predloga Ocenjevanja"
 
 #. Label of the template_title (Data) field in DocType 'Appraisal Template'
 #: hrms/hr/doctype/appraisal_template/appraisal_template.json
 msgid "Appraisal Template Title"
-msgstr ""
+msgstr "Ime Predloga Ocenjevanja"
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:135
 msgid "Appraisal Template not found for some designations."
@@ -1134,7 +1164,7 @@ msgstr "Odobritelji"
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:39
 #: hrms/public/js/salary_slip_deductions_report_filters.js:22
 msgid "Apr"
-msgstr ""
+msgstr "Apr"
 
 #: frontend/src/components/FileUploaderView.vue:53
 msgid "Are you sure you want to delete the attachment"
@@ -1160,16 +1190,16 @@ msgstr "Zaostanek"
 #. Label of the arrear_component (Check) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Arrear Component"
-msgstr ""
+msgstr "Komponenta Zaostalih Plačil"
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:95
 msgid "Arrear Component cannot be set for Salary Components based on taxable salary."
-msgstr ""
+msgstr "Za komponente plače, ki temeljijo na obdavčljivi plači, ni mogoče določiti zaostalega dela plače."
 
 #. Label of the arrear_start_date (Date) field in DocType 'Arrear'
 #: hrms/payroll/doctype/arrear/arrear.json
 msgid "Arrear Start Date"
-msgstr ""
+msgstr "Datum začetka zaostanka"
 
 #. Label of the arrears_tab (Tab Break) field in DocType 'Arrear'
 #: hrms/payroll/doctype/arrear/arrear.json
@@ -1193,7 +1223,7 @@ msgstr ""
 #. Final Statement'
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json
 msgid "Assets Allocated"
-msgstr ""
+msgstr "Dodeljena sredstva"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:283
 msgid "Assign Salary Structure to {0} employee(s)?"
@@ -1209,7 +1239,7 @@ msgstr "Dodeli Izmeno"
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:114
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 msgid "Assign Shift Schedule"
-msgstr ""
+msgstr "Dodeli urnik izmen"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:53
 msgid "Assign Structure"
@@ -1217,21 +1247,21 @@ msgstr "Dodeli Strukturo"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:298
 msgid "Assigning Salary Structure"
-msgstr ""
+msgstr "Dodelitev plačne strukture"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.py:113
 msgid "Assigning Structure..."
-msgstr ""
+msgstr "Dodeljevanje strukture..."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:257
 msgid "Assigning Structures..."
-msgstr ""
+msgstr "Dodeljevanje struktur..."
 
 #. Label of the assignment_based_on (Select) field in DocType 'Leave Policy
 #. Assignment'
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 msgid "Assignment based on"
-msgstr ""
+msgstr "Dodelitev na podlagi"
 
 #: hrms/hr/doctype/job_requisition/job_requisition.js:50
 #: hrms/hr/doctype/job_requisition/job_requisition.js:74
@@ -1258,110 +1288,122 @@ msgstr ""
 #. Proof Submission Detail'
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission_detail/employee_tax_exemption_proof_submission_detail.json
 msgid "Attach Proof"
-msgstr ""
+msgstr "Priložite dokazilo"
 
 #. Label of the attempted (Check) field in DocType 'Earned Leave Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Attempted"
-msgstr ""
+msgstr "Poskus"
 
 #. Name of a DocType
 #. Label of the attendance (Select) field in DocType 'Training Event Employee'
 #. Label of a Card Break in the HR Workspace
 #. Label of a Link in the HR Workspace
+#. Label of a Card Break in the Shift & Attendance Workspace
+#. Label of a Link in the Shift & Attendance Workspace
+#. Label of a shortcut in the Shift & Attendance Workspace
 #. Option for the 'Calculate Payroll Working Days Based On' (Select) field in
 #. DocType 'Payroll Settings'
 #: frontend/src/components/BottomTabs.vue:48
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
-#: hrms/hr/workspace/hr/hr.json hrms/overrides/dashboard_overrides.py:10
+#: hrms/hr/workspace/hr/hr.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+#: hrms/overrides/dashboard_overrides.py:10
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 #: hrms/templates/emails/training_event.html:9
 msgid "Attendance"
-msgstr ""
+msgstr "Prisotnost"
 
 #: frontend/src/components/AttendanceCalendar.vue:3
 msgid "Attendance Calendar"
-msgstr ""
+msgstr "Koledar Prisotnosti"
+
+#. Label of a chart in the Shift & Attendance Workspace
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+msgid "Attendance Count"
+msgstr "Število Udeležencev"
 
 #. Label of the attendance_date (Date) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/report/shift_attendance/shift_attendance.py:43
 msgid "Attendance Date"
-msgstr ""
+msgstr "Datum Udeležbe"
 
 #. Label of the att_fr_date (Date) field in DocType 'Upload Attendance'
 #: hrms/hr/doctype/upload_attendance/upload_attendance.json
 msgid "Attendance From Date"
-msgstr ""
+msgstr "Udeležba Od datuma"
 
 #: hrms/hr/doctype/upload_attendance/upload_attendance.js:20
 msgid "Attendance From Date and Attendance To Date is mandatory"
-msgstr ""
+msgstr "Udeležba od in do je obvezna"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:123
 msgid "Attendance ID"
-msgstr ""
+msgstr "ID Prisotnosti"
 
 #. Label of the attendance (Link) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/attendance/attendance_list.js:122
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.js:102
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 msgid "Attendance Marked"
-msgstr ""
+msgstr "Označena Prisotnost"
 
 #. Label of the attendance_request (Link) field in DocType 'Attendance'
 #. Name of a DocType
 #. Label of a Link in the HR Workspace
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/attendance/attendance.js:18
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/attendance_request/attendance_request.json
 #: hrms/hr/workspace/hr/hr.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Attendance Request"
-msgstr ""
+msgstr "Zahtev Prisotnost"
 
 #: frontend/src/views/attendance/AttendanceRequestList.vue:5
 msgid "Attendance Request History"
-msgstr ""
+msgstr "Zgodovina zahtevkov za udeležbo"
 
 #. Label of the attendance_settings_section (Section Break) field in DocType
 #. 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Attendance Settings"
-msgstr ""
+msgstr "Nastavitve Prisotnosti"
 
 #. Label of the att_to_date (Date) field in DocType 'Upload Attendance'
 #: hrms/hr/doctype/upload_attendance/upload_attendance.json
 msgid "Attendance To Date"
-msgstr ""
+msgstr "Udeležba do danes"
 
 #: hrms/hr/doctype/attendance_request/attendance_request.py:121
 msgid "Attendance Updated"
-msgstr ""
+msgstr "Udeležba posodobljena"
 
 #: hrms/hr/doctype/attendance_request/attendance_request.js:19
 msgid "Attendance Warnings"
-msgstr ""
+msgstr "Opozorila Prisotnosti"
 
 #: hrms/hr/doctype/attendance/attendance.py:60
 msgid "Attendance date {0} can not be less than employee {1}'s joining date: {2}"
-msgstr ""
+msgstr "Datum udeležbe {0} ne sme biti krajši od datuma zaposlitve zaposlenega {1}: {2}"
 
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.js:99
 msgid "Attendance for all the employees under this criteria has been marked already."
-msgstr ""
+msgstr "Udeležba vseh osebja po tem merilu je že zabeležena."
 
 #: hrms/hr/doctype/attendance/attendance.py:118
 msgid "Attendance for employee {0} is already marked for an overlapping shift {1}: {2}"
-msgstr ""
+msgstr "Udeležba osebja {0} je že označena za prekrivajočo se izmeno {1}: {2}"
 
 #: hrms/hr/doctype/attendance/attendance.py:72
 msgid "Attendance for employee {0} is already marked for the date {1}: {2}"
-msgstr ""
+msgstr "Udeležba osebja {0} je že označena za datum {1}: {2}"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:584
 msgid "Attendance for employee {0} is already marked for the following dates: {1}"
-msgstr ""
+msgstr "Udeležba osebja {0} je že označena za naslednje datume: {1}"
 
 #: hrms/hr/doctype/attendance_request/attendance_warnings.html:2
 msgid "Attendance for the following dates will be skipped/overwritten on submission"
@@ -1369,10 +1411,6 @@ msgstr ""
 
 #: hrms/hr/doctype/attendance/attendance_list.js:102
 msgid "Attendance from {0} to {1} has already been marked for the Employee {2}"
-msgstr ""
-
-#: hrms/hr/doctype/shift_type/shift_type.js:34
-msgid "Attendance has been marked as per employee check-ins"
 msgstr ""
 
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:36
@@ -1409,16 +1447,16 @@ msgstr ""
 #. Event'
 #: hrms/hr/doctype/training_event/training_event.json
 msgid "Attendees"
-msgstr ""
+msgstr "Udeleženci"
 
 #: hrms/hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:56
 msgid "Attrition Count"
-msgstr ""
+msgstr "Število Odhodkov"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:43
 #: hrms/public/js/salary_slip_deductions_report_filters.js:26
 msgid "Aug"
-msgstr ""
+msgstr "Avg"
 
 #. Label of the auto_attendance_settings_section (Section Break) field in
 #. DocType 'Shift Type'
@@ -1439,39 +1477,39 @@ msgstr ""
 
 #: hrms/hr/utils.py:482
 msgid "Automatic Leave Allocation has failed for the following Earned Leaves: {0}. Please check {1} for more details."
-msgstr ""
+msgstr "Samodejna dodelitev dopusta ni uspela za naslednje zaslužene dopuste: {0}. Za več podrobnosti preverite {1}."
 
 #. Description of the 'Assets Allocated' (Section Break) field in DocType 'Full
 #. and Final Statement'
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json
 msgid "Automatically fetches all assets allocated to the employee, if any"
-msgstr ""
+msgstr "Samodejno pridobi vsa sredstva, dodeljena osebju, če obstajajo"
 
 #. Label of the auto_update_last_sync (Check) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Automatically update Last Sync of Checkin"
-msgstr ""
+msgstr "Samodejno posodobi zadnjo sinhronizacijo prijave"
 
 #. Label of the available_leaves (Float) field in DocType 'Salary Slip Leave'
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Available Leave(s)"
-msgstr ""
+msgstr "Razpoložljivi dopust(i)"
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:11
 msgid "Available Leaves"
-msgstr ""
+msgstr "Razpoložljivi Dopust"
 
 #. Label of the avg_feedback_score (Float) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:84
 msgid "Average Feedback Score"
-msgstr ""
+msgstr "Povprečna ocena povratnih informacij"
 
 #. Label of the average_rating (Rating) field in DocType 'Interview Feedback'
 #: hrms/hr/doctype/interview_feedback/interview_feedback.json
 #: hrms/public/js/templates/feedback_summary.html:5
 msgid "Average Rating"
-msgstr ""
+msgstr "Povprečna ocena"
 
 #. Description of the 'Final Score' (Float) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
@@ -1505,26 +1543,26 @@ msgstr ""
 
 #: hrms/hr/doctype/expense_claim/expense_claim.js:285
 msgid "Bank Entries"
-msgstr ""
+msgstr "Bančni Vnosi"
 
 #. Name of a report
 #. Label of a Link in the Payroll Workspace
 #: hrms/payroll/report/bank_remittance/bank_remittance.json
 #: hrms/payroll/workspace/payroll/payroll.json
 msgid "Bank Remittance"
-msgstr ""
+msgstr "Bančno Nakazilo"
 
 #. Label of the base (Currency) field in DocType 'Salary Structure Assignment'
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:180
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgid "Base"
-msgstr ""
+msgstr "Osnova"
 
 #. Label of the section_break_7 (Section Break) field in DocType 'Salary
 #. Structure Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgid "Base & Variable"
-msgstr ""
+msgstr "Osnovno & Spremenljivo"
 
 #. Label of the begin_check_in_before_shift_start_time (Int) field in DocType
 #. 'Shift Type'
@@ -1538,18 +1576,18 @@ msgstr ""
 
 #: hrms/overrides/dashboard_overrides.py:35
 msgid "Benefit"
-msgstr ""
+msgstr "Ugodnosti"
 
 #. Label of the amount (Currency) field in DocType 'Employee Benefit Detail'
 #: hrms/payroll/doctype/employee_benefit_detail/employee_benefit_detail.json
 msgid "Benefit Amount"
-msgstr ""
+msgstr "Znesek Ugodnosti"
 
 #. Label of the employee_benefit_details_section (Section Break) field in
 #. DocType 'Employee Benefit Ledger'
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 msgid "Benefit Details"
-msgstr ""
+msgstr "Podrobnosti Ugodnosti"
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:36
 msgid "Benefit amount of component {0} exceeds {1}"
@@ -1572,19 +1610,19 @@ msgstr ""
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Benefits"
-msgstr ""
+msgstr "Ugodnosti"
 
 #: hrms/hr/report/project_profitability/project_profitability.py:169
 msgid "Bill Amount"
-msgstr ""
+msgstr "Znesek Fakture"
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:249
 msgid "Billed Hours"
-msgstr ""
+msgstr "Ure Fakture"
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:68
 msgid "Billed Hours (B)"
-msgstr ""
+msgstr "Ure Fakture (B)"
 
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Payroll Entry'
 #. Option for the 'Payroll Frequency' (Select) field in DocType 'Salary Slip'
@@ -1597,7 +1635,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
 msgid "Bimonthly"
-msgstr ""
+msgstr "Dvomesečno"
 
 #: hrms/controllers/employee_reminders.py:134
 msgid "Birthday Reminder"
@@ -1605,12 +1643,12 @@ msgstr ""
 
 #: hrms/controllers/employee_reminders.py:141
 msgid "Birthday Reminder 🎂"
-msgstr ""
+msgstr "Opomnik za rojstni dan 🎂"
 
 #. Label of the send_birthday_reminders (Check) field in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Birthdays"
-msgstr ""
+msgstr "Rojstni dnevi"
 
 #. Label of the block_date (Date) field in DocType 'Leave Block List Date'
 #: hrms/hr/doctype/leave_block_list_date/leave_block_list_date.json
@@ -1631,29 +1669,29 @@ msgstr ""
 #. Bonus'
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.json
 msgid "Bonus"
-msgstr ""
+msgstr "Bonus"
 
 #. Label of the bonus_amount (Currency) field in DocType 'Retention Bonus'
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.json
 msgid "Bonus Amount"
-msgstr ""
+msgstr "Znesek bonusa"
 
 #. Label of the bonus_payment_date (Date) field in DocType 'Retention Bonus'
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.json
 msgid "Bonus Payment Date"
-msgstr ""
+msgstr "Datum izplačila bonusa"
 
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.py:17
 msgid "Bonus Payment Date cannot be a past date"
-msgstr ""
+msgstr "Datum izplačila bonusa ne more biti pretekli datum"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:230
 msgid "Branch: {0}"
-msgstr ""
+msgstr "Podružnica: {0}"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:131
 msgid "Bulk Assignments"
-msgstr ""
+msgstr "Množične dodelitve"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment_list.js:3
 msgid "Bulk Leave Policy Assignment"
@@ -1676,7 +1714,7 @@ msgstr ""
 #. Label of the ctc (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "CTC"
-msgstr ""
+msgstr "Letna Plača"
 
 #. Label of the calculate_final_score_based_on_formula (Check) field in DocType
 #. 'Appraisal Cycle'
@@ -1699,11 +1737,11 @@ msgstr ""
 #. DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Calculated in days"
-msgstr ""
+msgstr "Izračunano v dnevih"
 
 #: hrms/setup.py:332
 msgid "Calls"
-msgstr ""
+msgstr "Klici"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:146
 msgid "Cancellation Queued"
@@ -1783,17 +1821,17 @@ msgstr ""
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Carry Forward"
-msgstr ""
+msgstr "Prenesi Naprej"
 
 #. Label of the carry_forwarded_leaves_count (Float) field in DocType 'Leave
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "Carry Forwarded Leaves"
-msgstr ""
+msgstr "Preneseni Dopusti"
 
 #: hrms/setup.py:347 hrms/setup.py:348
 msgid "Casual Leave"
-msgstr ""
+msgstr "Priložnostni Dopust"
 
 #. Label of the cause_of_grievance (Text) field in DocType 'Employee Grievance'
 #: hrms/hr/doctype/employee_grievance/employee_grievance.json
@@ -1826,44 +1864,44 @@ msgstr ""
 
 #: frontend/src/components/CheckInPanel.vue:123
 msgid "Check In"
-msgstr ""
+msgstr "Prijavi se"
 
 #: frontend/src/components/CheckInPanel.vue:122
 msgid "Check Out"
-msgstr ""
+msgstr "Odjavi se"
 
 #. Label of the check_vacancies (Check) field in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Check Vacancies On Job Offer Creation"
 msgstr ""
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:452
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:467
 #: hrms/hr/utils.py:935
 msgid "Check {0} for more details"
 msgstr ""
 
 #: frontend/src/components/CheckInPanel.vue:159
 msgid "Check-in"
-msgstr ""
+msgstr "Prijavi se"
 
 #. Label of the check_in_date (Date) field in DocType 'Travel Itinerary'
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json
 msgid "Check-in Date"
-msgstr ""
+msgstr "Datum Prijave"
 
 #: frontend/src/components/CheckInPanel.vue:159
 msgid "Check-out"
-msgstr ""
+msgstr "Odjavi se"
 
 #. Label of the check_out_date (Date) field in DocType 'Travel Itinerary'
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json
 msgid "Check-out Date"
-msgstr ""
+msgstr "Datum Odjave"
 
 #. Label of the checkin_radius (Int) field in DocType 'Shift Location'
 #: hrms/hr/doctype/shift_location/shift_location.json
 msgid "Checkin Radius"
-msgstr ""
+msgstr "Polmer Prijave"
 
 #: hrms/hr/doctype/goal/goal_tree.js:52
 msgid "Child nodes can only be created under 'Group' type nodes"
@@ -1893,13 +1931,13 @@ msgstr ""
 #: frontend/src/views/Home.vue:47
 #: frontend/src/views/expense_claim/Dashboard.vue:17
 msgid "Claim an Expense"
-msgstr ""
+msgstr "Zahtevek za strošek"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Advance'
 #: frontend/src/views/employee_advance/List.vue:42
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 msgid "Claimed"
-msgstr ""
+msgstr "Zahtevano"
 
 #. Label of the claimed_amount (Currency) field in DocType 'Employee Advance'
 #. Label of the claimed_amount (Currency) field in DocType 'Employee Benefit
@@ -1908,7 +1946,7 @@ msgstr ""
 #: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:77
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgid "Claimed Amount"
-msgstr ""
+msgstr "Zahtevani Znesek"
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:34
 msgid "Claimed amount of employee {0} exceeds maximum amount eligible for claim {1}"
@@ -1922,14 +1960,14 @@ msgstr ""
 #: hrms/hr/workspace/expenses/expenses.json
 #: hrms/overrides/dashboard_overrides.py:84
 msgid "Claims"
-msgstr ""
+msgstr "Zahtevki"
 
 #. Option for the 'Status' (Select) field in DocType 'Interview'
 #. Option for the 'Result' (Select) field in DocType 'Interview Feedback'
 #: hrms/hr/doctype/interview/interview.json
 #: hrms/hr/doctype/interview_feedback/interview_feedback.json
 msgid "Cleared"
-msgstr ""
+msgstr "Obdelano"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.js:292
 msgid "Click {0} to change the configuration and then resave salary slip"
@@ -1939,17 +1977,17 @@ msgstr ""
 #: hrms/hr/doctype/job_opening/job_opening.json
 #: hrms/templates/generators/job_opening.html:187
 msgid "Closed On"
-msgstr ""
+msgstr "Zaprto"
 
 #. Label of the closes_on (Date) field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
 #: hrms/templates/generators/job_opening.html:187
 msgid "Closes On"
-msgstr ""
+msgstr "Zapre se"
 
 #: hrms/www/jobs/index.html:243
 msgid "Closes on:"
-msgstr ""
+msgstr "Zapre se:"
 
 #. Label of the closing_notes (Text) field in DocType 'Appointment Letter'
 #. Label of the closing_notes (Text) field in DocType 'Appointment Letter
@@ -1957,11 +1995,11 @@ msgstr ""
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json
 #: hrms/hr/doctype/appointment_letter_template/appointment_letter_template.json
 msgid "Closing Notes"
-msgstr ""
+msgstr "Zaključne Opombe"
 
 #: frontend/src/views/Profile.vue:177
 msgid "Company Information"
-msgstr ""
+msgstr "Informacije o Podjetju"
 
 #. Name of a DocType
 #. Label of the compensatory_request (Link) field in DocType 'Leave Allocation'
@@ -2013,15 +2051,15 @@ msgstr ""
 #. Option for the 'Type' (Select) field in DocType 'Training Event'
 #: hrms/hr/doctype/training_event/training_event.json
 msgid "Conference"
-msgstr ""
+msgstr "Konferenca"
 
 #: frontend/src/components/CheckInPanel.vue:73
 msgid "Confirm {0}"
-msgstr ""
+msgstr "Potrdi {0}"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.js:58
 msgid "Consider Grace Period"
-msgstr ""
+msgstr "Upoštevaj Obdobje Mirovanja"
 
 #. Label of the consider_marked_attendance_on_holidays (Check) field in DocType
 #. 'Payroll Settings'
@@ -2089,14 +2127,14 @@ msgstr ""
 #: hrms/hr/doctype/training_event/training_event.json
 #: hrms/hr/doctype/training_feedback/training_feedback.json
 msgid "Course"
-msgstr ""
+msgstr "Tečaj"
 
 #. Label of the cover_letter (Text) field in DocType 'Job Applicant'
 #. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/web_form/job_application/job_application.json
 msgid "Cover Letter"
-msgstr ""
+msgstr "Spremno Pismo"
 
 #: hrms/hr/doctype/employee_referral/employee_referral.js:40
 msgid "Create Additional Salary"
@@ -2105,55 +2143,55 @@ msgstr ""
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:34
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:38
 msgid "Create Appraisals"
-msgstr ""
+msgstr "Ustvari cenitve"
 
 #: hrms/hr/doctype/interview_round/interview_round.js:7
 #: hrms/hr/doctype/job_applicant/job_applicant.js:95
 msgid "Create Interview"
-msgstr ""
+msgstr "Ustvari intervju"
 
 #: hrms/hr/doctype/employee_referral/employee_referral.js:21
 msgid "Create Job Applicant"
-msgstr ""
+msgstr "Ustvari prosilca za delovno mesto"
 
 #: hrms/hr/doctype/job_requisition/job_requisition.js:39
 msgid "Create Job Opening"
-msgstr ""
+msgstr "Ustvari prosto delovno mesto"
 
 #. Label of the create_new_employee_id (Check) field in DocType 'Employee
 #. Transfer'
 #: hrms/hr/doctype/employee_transfer/employee_transfer.json
 msgid "Create New Employee Id"
-msgstr ""
+msgstr "Ustvari nov Id Osebja"
 
 #. Label of the create_overtime_slip (Check) field in DocType 'Payroll
 #. Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Create Overtime Slip For Eligible Employee(s)"
-msgstr ""
+msgstr "Ustvarite listek za nadure za upravičeno osebje"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:83
 msgid "Create Overtime Slips"
-msgstr ""
+msgstr "Ustvari listke za nadure"
 
 #: hrms/public/js/erpnext/timesheet.js:8
 msgid "Create Salary Slip"
-msgstr ""
+msgstr "Ustvari plačilno listo"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:97
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:175
 msgid "Create Salary Slips"
-msgstr ""
+msgstr "Ustvari plačilne liste"
 
 #. Label of the create_shifts_after (Date) field in DocType 'Shift Schedule
 #. Assignment'
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.json
 msgid "Create Shifts After"
-msgstr ""
+msgstr "Ustvari izmene po"
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:192
 msgid "Creating Appraisals"
-msgstr ""
+msgstr "Izdelava cenitev"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:458
 msgid "Creating Payment Entries......"
@@ -2202,60 +2240,60 @@ msgstr ""
 #. Label of the current_ctc (Currency) field in DocType 'Employee Promotion'
 #: hrms/hr/doctype/employee_promotion/employee_promotion.json
 msgid "Current CTC"
-msgstr ""
+msgstr "Trenutna Letna Plača"
 
 #. Label of the current_count (Int) field in DocType 'Staffing Plan Detail'
 #: hrms/hr/doctype/staffing_plan_detail/staffing_plan_detail.json
 msgid "Current Count"
-msgstr ""
+msgstr "Trenutno Število"
 
 #. Label of the current_employer (Data) field in DocType 'Employee Referral'
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 msgid "Current Employer "
-msgstr ""
+msgstr "Trenutni Delodajalec "
 
 #. Label of the current_job_title (Data) field in DocType 'Employee Referral'
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 msgid "Current Job Title"
-msgstr ""
+msgstr "Trenutni Poklic"
 
 #. Label of the current_month_income_tax (Currency) field in DocType 'Salary
 #. Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Current Month Income Tax"
-msgstr ""
+msgstr "Dohodnina za Tekoči Mesec"
 
 #: hrms/hr/doctype/vehicle_log/vehicle_log.py:15
 msgid "Current Odometer Value should be greater than Last Odometer Value {0}"
-msgstr ""
+msgstr "Trenutna vrednost števca kilometrov mora biti večja od zadnje vrednosti števca kilometrov {0}"
 
 #. Label of the odometer (Int) field in DocType 'Vehicle Log'
 #: hrms/hr/doctype/vehicle_log/vehicle_log.json
 msgid "Current Odometer value "
-msgstr ""
+msgstr "Trenutna vrednost števca kilometrov "
 
 #. Label of the current_openings (Int) field in DocType 'Staffing Plan Detail'
 #: hrms/hr/doctype/staffing_plan_detail/staffing_plan_detail.json
 msgid "Current Openings"
-msgstr ""
+msgstr "Trenutne ponudbe za delo"
 
 #. Label of the current_payroll_period (Link) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Current Payroll Period"
-msgstr ""
+msgstr "Trenutno Plačilno Obdobje"
 
 #. Option for the 'Calculate Gratuity Amount Based On' (Select) field in
 #. DocType 'Gratuity Rule'
 #: hrms/payroll/doctype/gratuity_rule/gratuity_rule.json
 msgid "Current Slab"
-msgstr ""
+msgstr "Trenutna Tabela"
 
 #. Label of the current_work_experience (Float) field in DocType 'Gratuity'
 #. Label of the gratuity_rule_slabs (Table) field in DocType 'Gratuity Rule'
 #: hrms/payroll/doctype/gratuity/gratuity.json
 #: hrms/payroll/doctype/gratuity_rule/gratuity_rule.json
 msgid "Current Work Experience"
-msgstr ""
+msgstr "Trenutne delovne izkušnje"
 
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:98
 msgid "Currently, there is no {0} leave period for this date to create/update leave allocation."
@@ -2265,12 +2303,12 @@ msgstr ""
 #. Panel'
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 msgid "Custom Range"
-msgstr ""
+msgstr "Obseg po meri"
 
 #. Label of the cycle_name (Data) field in DocType 'Appraisal Cycle'
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgid "Cycle Name"
-msgstr ""
+msgstr "Ime Cikla"
 
 #. Label of the cycles (Table) field in DocType 'Salary Withholding'
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
@@ -2327,12 +2365,12 @@ msgstr ""
 #. Application'
 #: hrms/hr/doctype/leave_application/leave_application.json
 msgid "Dates & Reason"
-msgstr ""
+msgstr "Datumi & Razlog"
 
 #. Label of the dates_based_on (Select) field in DocType 'Leave Control Panel'
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 msgid "Dates Based On"
-msgstr ""
+msgstr "Datumi na podlagi"
 
 #: hrms/setup.py:121
 msgid "Days for which Holidays are blocked for this department."
@@ -2341,7 +2379,7 @@ msgstr ""
 #. Label of the days_to_reverse (Float) field in DocType 'Payroll Correction'
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 msgid "Days to Reverse"
-msgstr ""
+msgstr "Dni za Preobrat"
 
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.py:19
 msgid "Days to Reverse must be greater than zero."
@@ -2349,7 +2387,7 @@ msgstr ""
 
 #: hrms/payroll/report/bank_remittance/bank_remittance.py:19
 msgid "Debit A/C Number"
-msgstr ""
+msgstr "Številka Debetnega Računa"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:47
 #: hrms/public/js/salary_slip_deductions_report_filters.js:30
@@ -2358,7 +2396,7 @@ msgstr "Dec"
 
 #: hrms/hr/report/employee_exits/employee_exits.py:193
 msgid "Decision Pending"
-msgstr ""
+msgstr "Odločitev v teku"
 
 #. Label of the declarations (Table) field in DocType 'Employee Tax Exemption
 #. Declaration'
@@ -2466,7 +2504,7 @@ msgstr ""
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:204
 #: hrms/setup.py:207
 msgid "Default Shift"
-msgstr ""
+msgstr "Privzeta Izmena"
 
 #: frontend/src/components/FileUploaderView.vue:49
 msgid "Delete Attachment"
@@ -2525,7 +2563,7 @@ msgstr ""
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:234
 msgid "Designation: {0}"
-msgstr ""
+msgstr "Naziv: {0}"
 
 #. Label of the details_of_sponsor (Data) field in DocType 'Travel Request'
 #: hrms/hr/doctype/travel_request/travel_request.json
@@ -2608,7 +2646,7 @@ msgstr ""
 msgid "Duplicate Salary Withholding"
 msgstr ""
 
-#: hrms/public/js/utils/index.js:208
+#: hrms/public/js/utils/index.js:210
 msgid "ERROR({0}): {1}"
 msgstr "NAPAKA ({0}): {1}"
 
@@ -2618,30 +2656,30 @@ msgstr "NAPAKA ({0}): {1}"
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/report/shift_attendance/shift_attendance.js:53
 msgid "Early Exit"
-msgstr ""
+msgstr "Zgodnja Odjava"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:91
 msgid "Early Exit By"
-msgstr ""
+msgstr "Zgodnja Odjava do"
 
 #. Label of the early_exit_grace_period (Int) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Early Exit Grace Period"
-msgstr ""
+msgstr "Zgodnja Odjava Obdobje"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:186
 msgid "Early Exits"
-msgstr ""
+msgstr "Zgodnje Odjave"
 
 #. Label of the earned_leave (Section Break) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Earned Leave"
-msgstr ""
+msgstr "Zasluženi Dopust"
 
 #. Label of the earned_leave_frequency (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Earned Leave Frequency"
-msgstr ""
+msgstr "Pogostost Zasluženega Dopusta"
 
 #. Name of a DocType
 #. Label of the earned_leave_schedule_section (Section Break) field in DocType
@@ -2649,11 +2687,11 @@ msgstr ""
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "Earned Leave Schedule"
-msgstr ""
+msgstr "Razpored Zasluženega Dopusta"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:141
 msgid "Earned Leaves"
-msgstr ""
+msgstr "Zasluženi Dopusti"
 
 #: hrms/hr/doctype/leave_type/leave_type.py:35
 msgid "Earned Leaves are allocated as per the configured frequency via scheduler."
@@ -2710,15 +2748,15 @@ msgstr "Zaslužek"
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 msgid "Earnings & Deductions"
-msgstr ""
+msgstr "Zaslužki & Odbitki"
 
 #: frontend/src/components/ExpensesTable.vue:213
 msgid "Edit Expense Item"
-msgstr ""
+msgstr "Uredi Pastavku Stroškov"
 
 #: frontend/src/components/ExpenseTaxesTable.vue:221
 msgid "Edit Expense Tax"
-msgstr ""
+msgstr "Uredi Davek Stroškov"
 
 #. Label of the effective_from (Date) field in DocType 'Leave Policy
 #. Assignment'
@@ -2734,7 +2772,7 @@ msgstr ""
 #. Label of the effective_from (Date) field in DocType 'Income Tax Slab'
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 msgid "Effective from"
-msgstr ""
+msgstr "Velja od"
 
 #. Label of the email_salary_slip_to_employee (Check) field in DocType 'Payroll
 #. Settings'
@@ -2759,16 +2797,16 @@ msgstr ""
 
 #: hrms/payroll/report/bank_remittance/bank_remittance.py:40
 msgid "Employee A/C Number"
-msgstr ""
+msgstr "Bančni Račun"
 
 #: hrms/patches/v16_0/create_custom_field_for_employee_advance_in_employee_master.py:11
 #: hrms/setup.py:267
 msgid "Employee Advance Account"
-msgstr ""
+msgstr "Predplačilni Račun"
 
 #: frontend/src/views/expense_claim/Dashboard.vue:35
 msgid "Employee Advance Balance"
-msgstr ""
+msgstr "Stanje Predujma"
 
 #. Name of a report
 #. Label of a Link in the Expenses Workspace
@@ -2776,7 +2814,7 @@ msgstr ""
 #: hrms/hr/report/employee_advance_summary/employee_advance_summary.json
 #: hrms/hr/workspace/expenses/expenses.json hrms/hr/workspace/hr/hr.json
 msgid "Employee Advance Summary"
-msgstr ""
+msgstr "Povzetek Predujma"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -2784,48 +2822,50 @@ msgstr ""
 #: hrms/hr/report/employee_analytics/employee_analytics.json
 #: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Analytics"
-msgstr ""
+msgstr "Analitika"
 
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Employee Attendance Tool"
-msgstr ""
+msgstr "Orodje Prisotnosti"
 
 #. Name of a DocType
 #. Label of a Link in the Tax & Benefits Workspace
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Benefit Application"
-msgstr ""
+msgstr "Zahtev Ugodnosti"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_benefit_application_detail/employee_benefit_application_detail.json
 msgid "Employee Benefit Application Detail"
-msgstr ""
+msgstr "Podrobnosti Zahteva Ugodnosti"
 
 #. Name of a DocType
 #. Label of a Link in the Tax & Benefits Workspace
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Benefit Claim"
-msgstr ""
+msgstr "Zahtev Ugodnosti"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_benefit_detail/employee_benefit_detail.json
 msgid "Employee Benefit Detail"
-msgstr ""
+msgstr "Podrobnosti Ugodnosti"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 msgid "Employee Benefit Ledger"
-msgstr ""
+msgstr "Register Ugodnosti"
 
 #. Label of the employee_benefits_section (Section Break) field in DocType
 #. 'Salary Structure Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/setup.py:406
 msgid "Employee Benefits"
-msgstr ""
+msgstr "Ugodnosti"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -2833,28 +2873,31 @@ msgstr ""
 #: hrms/hr/report/employee_birthday/employee_birthday.json
 #: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Birthday"
-msgstr ""
+msgstr "Rojstni dan"
 
 #. Name of a DocType
 #: hrms/hr/doctype/employee_boarding_activity/employee_boarding_activity.json
 msgid "Employee Boarding Activity"
-msgstr ""
+msgstr "Uvodna Dejavnost"
 
 #. Name of a DocType
 #. Label of a Link in the HR Workspace
+#. Label of a Link in the Shift & Attendance Workspace
+#. Label of a shortcut in the Shift & Attendance Workspace
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 #: hrms/hr/workspace/hr/hr.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Employee Checkin"
-msgstr ""
+msgstr "Prijava"
 
 #: frontend/src/views/attendance/EmployeeCheckinList.vue:5
 msgid "Employee Checkin History"
-msgstr ""
+msgstr "Zgodovina Prijav"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_cost_center/employee_cost_center.json
 msgid "Employee Cost Center"
-msgstr ""
+msgstr "Stroškovni Centar"
 
 #. Label of the details_section (Section Break) field in DocType 'Employee
 #. Onboarding'
@@ -2885,20 +2928,20 @@ msgstr ""
 #: hrms/payroll/doctype/employee_other_income/employee_other_income.json
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 msgid "Employee Details"
-msgstr ""
+msgstr "Podrobnosti"
 
 #. Label of the employee_emails (Small Text) field in DocType 'Training Event'
 #. Label of the employee_emails (Small Text) field in DocType 'Training Result'
 #: hrms/hr/doctype/training_event/training_event.json
 #: hrms/hr/doctype/training_result/training_result.json
 msgid "Employee Emails"
-msgstr ""
+msgstr "E-pošta"
 
 #. Label of the employee_exit_section (Section Break) field in DocType 'HR
 #. Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Employee Exit Settings"
-msgstr ""
+msgstr "Nastavitve Izhoda"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -2906,17 +2949,17 @@ msgstr ""
 #: hrms/hr/report/employee_exits/employee_exits.json
 #: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Exits"
-msgstr ""
+msgstr "Izhodi"
 
 #. Name of a DocType
 #: hrms/hr/doctype/employee_feedback_criteria/employee_feedback_criteria.json
 msgid "Employee Feedback Criteria"
-msgstr ""
+msgstr "Merila za povratne informacije"
 
 #. Name of a DocType
 #: hrms/hr/doctype/employee_feedback_rating/employee_feedback_rating.json
 msgid "Employee Feedback Rating"
-msgstr ""
+msgstr "Ocena povratnih informacij"
 
 #. Label of the employee_grade (Link) field in DocType 'Employee Attendance
 #. Tool'
@@ -2943,7 +2986,7 @@ msgstr ""
 #: hrms/hr/workspace/hr/hr.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 msgid "Employee Grade"
-msgstr ""
+msgstr "Kvalifikacija"
 
 #. Name of a DocType
 #. Label of a Link in the Tenure Workspace
@@ -2951,34 +2994,36 @@ msgstr ""
 #: hrms/hr/doctype/employee_grievance/employee_grievance.json
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Grievance"
-msgstr ""
+msgstr "Pritožbe"
 
 #. Name of a DocType
 #: hrms/hr/doctype/employee_health_insurance/employee_health_insurance.json
 msgid "Employee Health Insurance"
-msgstr ""
+msgstr "Zdravstveno Zavarovanje"
 
 #. Name of a report
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Employee Hours Utilization Based On Timesheet"
-msgstr ""
+msgstr "Izkoriščenost ur na podlagi delovnega lista"
 
 #. Label of the employee_image (Attach Image) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
 msgid "Employee Image"
-msgstr ""
+msgstr "Slika"
 
 #. Name of a DocType
 #. Label of a Link in the Payroll Workspace
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.json
 #: hrms/payroll/workspace/payroll/payroll.json
 msgid "Employee Incentive"
-msgstr ""
+msgstr "Spodbuda"
 
 #. Label of the section_break_6 (Section Break) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Employee Info"
-msgstr ""
+msgstr "Informacije"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -2986,12 +3031,12 @@ msgstr ""
 #: hrms/hr/report/employee_information/employee_information.json
 #: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Information"
-msgstr ""
+msgstr "Informacije"
 
 #. Label of a Card Break in the Tenure Workspace
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Journey"
-msgstr ""
+msgstr "Potovanje"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -2999,7 +3044,7 @@ msgstr ""
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.json
 #: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance"
-msgstr ""
+msgstr "Stanje Dopusta"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -3007,16 +3052,16 @@ msgstr ""
 #: hrms/hr/report/employee_leave_balance_summary/employee_leave_balance_summary.json
 #: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance Summary"
-msgstr ""
+msgstr "Povzetek Stanja Dopusta"
 
 #: hrms/setup.py:779
 msgid "Employee Loan"
-msgstr ""
+msgstr "Posojilo"
 
 #. Label of the emp_created_by (Select) field in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Employee Naming By"
-msgstr ""
+msgstr "Imenovanje po"
 
 #. Name of a DocType
 #. Label of a Link in the Tenure Workspace
@@ -3024,7 +3069,7 @@ msgstr ""
 #: hrms/hr/doctype/employee_onboarding/employee_onboarding.json
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Onboarding"
-msgstr ""
+msgstr "Uvajanje"
 
 #. Label of the employee_onboarding_template (Link) field in DocType 'Employee
 #. Onboarding'
@@ -3034,16 +3079,16 @@ msgstr ""
 #: hrms/hr/doctype/employee_onboarding_template/employee_onboarding_template.json
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Onboarding Template"
-msgstr ""
+msgstr "Predloga Uvajanja"
 
 #: hrms/hr/doctype/employee_onboarding/employee_onboarding.py:32
 msgid "Employee Onboarding: {0} already exists for Job Applicant: {1}"
-msgstr ""
+msgstr "Uvajanje: {0} že obstaja za kandidata za delovno mesto: {1}"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_other_income/employee_other_income.json
 msgid "Employee Other Income"
-msgstr ""
+msgstr "Drugi dohodki"
 
 #. Name of a DocType
 #. Label of a Link in the Performance Workspace
@@ -3051,7 +3096,7 @@ msgstr ""
 #: hrms/hr/doctype/employee_performance_feedback/employee_performance_feedback.json
 #: hrms/hr/workspace/performance/performance.json
 msgid "Employee Performance Feedback"
-msgstr ""
+msgstr "Povratne informacije o uspešnosti"
 
 #. Name of a DocType
 #. Label of a Link in the Performance Workspace
@@ -3060,22 +3105,22 @@ msgstr ""
 #: hrms/hr/workspace/performance/performance.json
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Promotion"
-msgstr ""
+msgstr "Napredovanje"
 
 #. Label of the details_section (Section Break) field in DocType 'Employee
 #. Promotion'
 #: hrms/hr/doctype/employee_promotion/employee_promotion.json
 msgid "Employee Promotion Details"
-msgstr ""
+msgstr "Podrobnosti Napredovanja"
 
 #: hrms/hr/doctype/employee_promotion/employee_promotion.py:20
 msgid "Employee Promotion cannot be submitted before Promotion Date"
-msgstr ""
+msgstr "Napredovanja ni mogoče predložiti pred datumom napredovanja"
 
 #. Name of a DocType
 #: hrms/hr/doctype/employee_property_history/employee_property_history.json
 msgid "Employee Property History"
-msgstr ""
+msgstr "Zgodovina premoženja"
 
 #. Name of a DocType
 #. Label of the employee_referral (Link) field in DocType 'Job Applicant'
@@ -3085,26 +3130,26 @@ msgstr ""
 #: hrms/hr/doctype/job_requisition/job_requisition.js:18
 #: hrms/hr/workspace/recruitment/recruitment.json hrms/setup.py:400
 msgid "Employee Referral"
-msgstr ""
+msgstr "Priporočilo"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:108
 msgid "Employee Referral {0} is not applicable for referral bonus."
-msgstr ""
+msgstr "Priporočilo {0} se ne uporablja za bonus za priporočilo."
 
 #: hrms/hr/doctype/job_requisition/job_requisition.js:15
 msgid "Employee Referrals"
-msgstr ""
+msgstr "Priporočila"
 
 #. Label of the employee_responsible (Link) field in DocType 'Employee
 #. Grievance'
 #: hrms/hr/doctype/employee_grievance/employee_grievance.json
 msgid "Employee Responsible "
-msgstr ""
+msgstr "Odgovorni "
 
 #. Option for the 'Final Decision' (Select) field in DocType 'Exit Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json
 msgid "Employee Retained"
-msgstr ""
+msgstr "Obdržani"
 
 #. Name of a DocType
 #. Label of a Link in the Tenure Workspace
@@ -3112,7 +3157,7 @@ msgstr ""
 #: hrms/hr/doctype/employee_separation/employee_separation.json
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Separation"
-msgstr ""
+msgstr "Ločitev"
 
 #. Label of the employee_separation_template (Link) field in DocType 'Employee
 #. Separation'
@@ -3122,30 +3167,30 @@ msgstr ""
 #: hrms/hr/doctype/employee_separation_template/employee_separation_template.json
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Separation Template"
-msgstr ""
+msgstr "Predloga za ločitev"
 
 #. Label of the employee_settings (Section Break) field in DocType 'HR
 #. Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Employee Settings"
-msgstr ""
+msgstr "Nastavitve"
 
 #. Name of a DocType
 #: hrms/hr/doctype/employee_skill/employee_skill.json
 msgid "Employee Skill"
-msgstr ""
+msgstr "Spretnost"
 
 #. Name of a DocType
 #. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/employee_skill_map/employee_skill_map.json
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Skill Map"
-msgstr ""
+msgstr "Zemljevid Spretnosti"
 
 #. Label of the employee_skills (Table) field in DocType 'Employee Skill Map'
 #: hrms/hr/doctype/employee_skill_map/employee_skill_map.json
 msgid "Employee Skills"
-msgstr ""
+msgstr "Spretnosti"
 
 #: hrms/hr/report/employee_exits/employee_exits.py:194
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.js:40
@@ -3153,14 +3198,14 @@ msgstr ""
 #: hrms/hr/report/leave_ledger/leave_ledger.js:34
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.js:41
 msgid "Employee Status"
-msgstr ""
+msgstr "Status"
 
 #. Name of a DocType
 #. Label of a Link in the Tax & Benefits Workspace
 #: hrms/payroll/doctype/employee_tax_exemption_category/employee_tax_exemption_category.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Tax Exemption Category"
-msgstr ""
+msgstr "Kategorija davčne oprostitve"
 
 #. Name of a DocType
 #. Label of a Link in the Tax & Benefits Workspace
@@ -3168,142 +3213,142 @@ msgstr ""
 #: hrms/payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Tax Exemption Declaration"
-msgstr ""
+msgstr "Deklaracija o oprostitvi davka"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_tax_exemption_declaration_category/employee_tax_exemption_declaration_category.json
 msgid "Employee Tax Exemption Declaration Category"
-msgstr ""
+msgstr "Kategorija Deklaracija o oprostitvi davka"
 
 #. Name of a DocType
 #. Label of a Link in the Tax & Benefits Workspace
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Tax Exemption Proof Submission"
-msgstr ""
+msgstr "Predložitev dokazila o davčni oprostitvi"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission_detail/employee_tax_exemption_proof_submission_detail.json
 msgid "Employee Tax Exemption Proof Submission Detail"
-msgstr ""
+msgstr "Podrobnosti o predložitvi dokazila o davčni oprostitvi"
 
 #. Name of a DocType
 #. Label of a Link in the Tax & Benefits Workspace
 #: hrms/payroll/doctype/employee_tax_exemption_sub_category/employee_tax_exemption_sub_category.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Tax Exemption Sub Category"
-msgstr ""
+msgstr "Podkategorija davčne oprostitve"
 
 #. Name of a DocType
 #: hrms/hr/doctype/employee_training/employee_training.json
 msgid "Employee Training"
-msgstr ""
+msgstr "Usposabljanje"
 
 #. Name of a DocType
 #. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/employee_transfer/employee_transfer.json
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Transfer"
-msgstr ""
+msgstr "Premestitev"
 
 #. Label of the transfer_details (Table) field in DocType 'Employee Transfer'
 #: hrms/hr/doctype/employee_transfer/employee_transfer.json
 msgid "Employee Transfer Detail"
-msgstr ""
+msgstr "Podrobnosti Premestitve"
 
 #. Label of the details_section (Section Break) field in DocType 'Employee
 #. Transfer'
 #: hrms/hr/doctype/employee_transfer/employee_transfer.json
 msgid "Employee Transfer Details"
-msgstr ""
+msgstr "Podrobnosti Premestitve"
 
 #: hrms/hr/doctype/employee_transfer/employee_transfer.py:17
 msgid "Employee Transfer cannot be submitted before Transfer Date"
-msgstr ""
+msgstr "Premestitve ni mogoče oddati pred datumom prenosa"
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:69
 #: hrms/hr/doctype/employee_advance/employee_advance.py:136
 msgid "Employee advance account {0} should be of type {1}."
-msgstr ""
+msgstr "Predplačilni račun {0} mora biti tipa {1}."
 
 #: hrms/hr/doctype/hr_settings/hr_settings.js:27
 msgid "Employee can be named by Employee ID if you assign one, or via Naming Series. Select your preference here."
-msgstr ""
+msgstr "Osebje je mogoče poimenovati z ID osebja, če ga dodelite, ali prek serije poimenovanj. Tukaj izberite želeno ime."
 
 #. Label of the employee_name (Data) field in DocType 'Leave Policy Assignment'
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 msgid "Employee name"
-msgstr ""
+msgstr "Ime"
 
 #. Description of the 'Employee Naming By' (Select) field in DocType 'HR
 #. Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Employee records are created using the selected option"
-msgstr ""
+msgstr "Zapisi osebja so ustvarjeni z izbrano možnostjo"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:244
+#: hrms/hr/doctype/shift_type/shift_type.py:272
 msgid "Employee was marked Absent due to missing Employee Checkins."
-msgstr ""
+msgstr "Osebje je bil označen kot odsoten zaradi manjkajočih prijav zaposlenih."
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:248
 msgid "Employee was marked Absent for not meeting the working hours threshold."
-msgstr ""
+msgstr "Osebje je bil označen kot odsoten, ker ni dosegel praga delovnih ur."
 
-#: hrms/hr/doctype/shift_type/shift_type.py:373
+#: hrms/hr/doctype/shift_type/shift_type.py:401
 msgid "Employee was marked Absent for other half due to missing Employee Checkins."
-msgstr ""
+msgstr "Osebje je bil označen kot odsoten za drugo polovico zaradi manjkajočih prijav osebja."
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:456
 msgid "Employee {0} : {1}"
-msgstr ""
+msgstr "Osebje {0} : {1}"
 
 #: hrms/hr/doctype/attendance_request/attendance_request.py:67
 msgid "Employee {0} already has an Attendance Request {1} that overlaps with this period"
-msgstr ""
+msgstr "Osebje {0} že ima zahtevo za prisotnost {1}, ki se prekriva s tem obdobjem"
 
 #: hrms/hr/doctype/shift_assignment/shift_assignment.py:140
 msgid "Employee {0} already has an active Shift {1}: {2} that overlaps within this period."
-msgstr ""
+msgstr "Osebje {0} že ima aktivno izmeno {1}: {2}, ki se prekriva s tem obdobjem."
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:56
 msgid "Employee {0} already submitted an application {1} for the payroll period {2}"
-msgstr ""
+msgstr "Osebje {0} je že oddal vlogo {1} za obračunsko obdobje {2}"
 
 #: hrms/hr/doctype/shift_request/shift_request.py:125
 msgid "Employee {0} has already applied for Shift {1}: {2} that overlaps within this period"
-msgstr ""
+msgstr "Osebje {0} se je že prijavil za izmeno {1}: {2}, ki se prekriva s tem obdobjem"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:473
 msgid "Employee {0} has already applied for {1} between {2} and {3} : {4}"
-msgstr ""
+msgstr "Osebje{0} se je že prijavil za {1} med {2} in {3} : {4}"
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:48
 msgid "Employee {0} has already claimed the benefit '{1}' for {2} ({3}).<br>To prevent overpayments, only one claim per benefit type is allowed in each payroll cycle."
-msgstr ""
+msgstr "Osebje {0} je že uveljavljal ugodnost '{1}' za {2} ({3}).<br>Da bi preprečili preplačila, je v vsakem plačilnem ciklu dovoljen le en zahtevek za vsako vrsto ugodnosti."
 
 #: hrms/hr/doctype/attendance/attendance.py:211
 msgid "Employee {0} is not active or does not exist"
-msgstr ""
+msgstr "Osebje {0} ni aktiven ali ne obstaja"
 
 #: hrms/hr/doctype/attendance/attendance.py:187
 msgid "Employee {0} is on Leave on {1}"
-msgstr ""
+msgstr "Osebje {0} je na dopustu dne {1}"
 
 #: hrms/hr/doctype/training_feedback/training_feedback.py:25
 msgid "Employee {0} not found in Training Event Participants."
-msgstr ""
+msgstr "Osebje {0} ni mogoče najti med udeleženci usposabljanja."
 
 #: hrms/hr/doctype/attendance/attendance.py:180
 msgid "Employee {0} on Half day on {1}"
-msgstr ""
+msgstr "Osebje {0} na pol dneva na {1}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:644
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
-msgstr ""
+msgstr "Osebje {0}, ki je bil odpuščen dne {1}, mora biti nastavljen kot »Odšel«"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:161
 msgid "Employee: {0} have to complete minimum {1} years for gratuity"
-msgstr ""
+msgstr "Osebje: {0} mora imeti najmanj {1} let delovne dobe za odpravnino"
 
 #. Label of the employees_html (HTML) field in DocType 'Leave Control Panel'
 #. Label of the employees_html (HTML) field in DocType 'Shift Assignment Tool'
@@ -3313,41 +3358,43 @@ msgstr ""
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 msgid "Employees HTML"
-msgstr ""
+msgstr "HTML Osebja"
 
 #. Label of a Link in the HR Workspace
 #: hrms/hr/workspace/hr/hr.json
 msgid "Employees Working on a Holiday"
-msgstr ""
+msgstr "Osebje, ki delajo na praznik"
 
 #: hrms/hr/doctype/employee_performance_feedback/employee_performance_feedback.py:32
 msgid "Employees cannot give feedback to themselves. Use {0} instead: {1}"
-msgstr ""
+msgstr "Osebje si ne morejo sami dajati povratnih informacij. Namesto tega uporabite {0}: {1}"
 
 #. Label of the half_marked_employees_html (HTML) field in DocType 'Employee
 #. Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgid "Employees on Half Day HTML"
-msgstr ""
+msgstr "Osebje na pol dneva HTML"
 
 #: hrms/hr/doctype/hr_settings/hr_settings.py:81
 msgid "Employees will miss holiday reminders from {} until {}. <br> Do you want to proceed with this change?"
-msgstr ""
+msgstr "Osebje bodo zamudili opomnike za praznike od {} do {}. <br> Ali želite nadaljevati s to spremembo?"
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:167
 msgid "Employees without Feedback: {0}"
-msgstr ""
+msgstr "Osebje brez povratnih informacij: {0}"
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:171
 msgid "Employees without Goals: {0}"
-msgstr ""
+msgstr "Osebje brez ciljev: {0}"
 
 #. Name of a report
 #. Label of a Link in the Leaves Workspace
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/report/employees_working_on_a_holiday/employees_working_on_a_holiday.json
 #: hrms/hr/workspace/leaves/leaves.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Employees working on a holiday"
-msgstr ""
+msgstr "Zaposleni, ki delajo na praznik"
 
 #. Label of the employment_type (Link) field in DocType 'Employee Attendance
 #. Tool'
@@ -3366,22 +3413,22 @@ msgstr ""
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: hrms/setup.py:186 hrms/templates/generators/job_opening.html:141
 msgid "Employment Type"
-msgstr ""
+msgstr "Tip Zaposlitve"
 
 #. Label of the enable_auto_attendance (Check) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Enable Auto Attendance"
-msgstr ""
+msgstr "Omogoči samodejno udeleževanje"
 
 #. Label of the enable_early_exit_marking (Check) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Enable Early Exit Marking"
-msgstr ""
+msgstr "Omogoči označevanje zgodnjega izhoda"
 
 #. Label of the enable_late_entry_marking (Check) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Enable Late Entry Marking"
-msgstr ""
+msgstr "Omogoči označevanje poznih vnosov"
 
 #: frontend/src/views/AppSettings.vue:25
 msgid "Enable Push Notifications"
@@ -3412,18 +3459,18 @@ msgstr ""
 #. Label of the encashment (Section Break) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Encashment"
-msgstr ""
+msgstr "Unovčenje"
 
 #. Label of the encashment_amount (Currency) field in DocType 'Leave
 #. Encashment'
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 msgid "Encashment Amount"
-msgstr ""
+msgstr "Znesek Unovčenja"
 
 #. Label of the encashment_days (Float) field in DocType 'Leave Encashment'
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 msgid "Encashment Days"
-msgstr ""
+msgstr "Dnevi Unovčenja"
 
 #: hrms/hr/doctype/leave_encashment/leave_encashment.py:130
 msgid "Encashment Days cannot exceed {0} {1} as per Leave Type settings"
@@ -3431,7 +3478,7 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_encashment/leave_encashment.py:120
 msgid "Encashment Limit Applied"
-msgstr ""
+msgstr "Uporabljena omejitev unovčenja"
 
 #. Label of the encrypt_salary_slips_in_emails (Check) field in DocType
 #. 'Payroll Settings'
@@ -3445,7 +3492,7 @@ msgstr ""
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:238
 msgid "End date: {0}"
-msgstr ""
+msgstr "Končni datum: {0}"
 
 #: hrms/hr/doctype/training_event/training_event.py:26
 msgid "End time cannot be before start time"
@@ -3457,7 +3504,7 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.py:48
 msgid "Enter a non-zero value to adjust."
-msgstr ""
+msgstr "Vnesite vrednost, ki ni nič, za prilagoditev."
 
 #: hrms/hr/doctype/hr_settings/hr_settings.js:34
 msgid "Enter the Standard Working Hours for a normal work day. These hours will be used in calculations of reports such as Employee Hours Utilization and Project Profitability analysis."
@@ -3481,7 +3528,7 @@ msgstr ""
 
 #: frontend/src/components/FormField.vue:42
 msgid "Enter {0}"
-msgstr ""
+msgstr "Vnesi {0}"
 
 #: frontend/src/components/FormView.vue:543
 msgid "Error creating {0}"
@@ -3523,7 +3570,7 @@ msgstr ""
 
 #: hrms/overrides/dashboard_overrides.py:52
 msgid "Evaluation"
-msgstr ""
+msgstr "Vrednotenje"
 
 #. Label of the evaluation_date (Date) field in DocType 'Employee Skill'
 #: hrms/hr/doctype/employee_skill/employee_skill.json
@@ -3626,7 +3673,7 @@ msgstr ""
 #. Label of a Card Break in the Tax & Benefits Workspace
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Exemption"
-msgstr ""
+msgstr "Izjema"
 
 #. Label of the exemption_category (Link) field in DocType 'Employee Tax
 #. Exemption Declaration Category'
@@ -3635,13 +3682,13 @@ msgstr ""
 #: hrms/payroll/doctype/employee_tax_exemption_declaration_category/employee_tax_exemption_declaration_category.json
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission_detail/employee_tax_exemption_proof_submission_detail.json
 msgid "Exemption Category"
-msgstr ""
+msgstr "Kategorija Izjeme"
 
 #. Label of the exemption_proofs_details_tab (Tab Break) field in DocType
 #. 'Employee Tax Exemption Proof Submission'
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.json
 msgid "Exemption Proofs"
-msgstr ""
+msgstr "Dokazila Izjeme"
 
 #. Label of the exemption_sub_category (Link) field in DocType 'Employee Tax
 #. Exemption Declaration Category'
@@ -3650,7 +3697,7 @@ msgstr ""
 #: hrms/payroll/doctype/employee_tax_exemption_declaration_category/employee_tax_exemption_declaration_category.json
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission_detail/employee_tax_exemption_proof_submission_detail.json
 msgid "Exemption Sub Category"
-msgstr ""
+msgstr "Podkategorija Izjem"
 
 #: hrms/hr/doctype/attendance_request/attendance_warnings.html:10
 msgid "Existing Record"
@@ -3658,13 +3705,13 @@ msgstr ""
 
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.py:37
 msgid "Existing Shift Assignments"
-msgstr ""
+msgstr "Obstoječe Dodelitve Izmene"
 
 #. Option for the 'Final Decision' (Select) field in DocType 'Exit Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json
 #: hrms/hr/report/employee_exits/employee_exits.py:193
 msgid "Exit Confirmed"
-msgstr ""
+msgstr "Izhod Potrjen"
 
 #. Label of the exit_details_section (Section Break) field in DocType 'Salary
 #. Withholding'
@@ -3871,16 +3918,16 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:568
 msgid "Expire Leaves"
-msgstr ""
+msgstr "IztečI Dopust"
 
 #. Label of the expired_leaves (Float) field in DocType 'Salary Slip Leave'
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Expired Leave(s)"
-msgstr ""
+msgstr "Iztečeni Dopust"
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:8
 msgid "Expired Leaves"
-msgstr ""
+msgstr "Iztekel Dopust"
 
 #. Label of the explanation (Small Text) field in DocType 'Attendance Request'
 #: hrms/hr/doctype/attendance_request/attendance_request.json
@@ -3889,7 +3936,7 @@ msgstr ""
 
 #: hrms/public/js/hierarchy_chart/hierarchy_chart_desktop.js:137
 msgid "Exporting..."
-msgstr ""
+msgstr "Izvoz..."
 
 #: hrms/hr/utils.py:932
 msgid "Failed to create/submit {0} for employees:"
@@ -3911,7 +3958,7 @@ msgstr ""
 msgid "Failed to setup defaults for country {0}."
 msgstr ""
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:449
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:464
 msgid "Failed to submit some leave policy assignments:"
 msgstr ""
 
@@ -3937,7 +3984,7 @@ msgstr ""
 
 #: hrms/hr/utils.py:481
 msgid "Failure of Automatic Allocation of Earned Leaves"
-msgstr ""
+msgstr "Neuspeh samodejne dodelitve zasluženega dopusta"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:37
 #: hrms/public/js/salary_slip_deductions_report_filters.js:20
@@ -3946,20 +3993,20 @@ msgstr "Feb"
 
 #: hrms/hr/report/appraisal_overview/appraisal_overview.py:48
 msgid "Feedback Count"
-msgstr ""
+msgstr "Število povratnih informacij"
 
 #. Label of the feedback_html (HTML) field in DocType 'Appraisal'
 #. Label of the feedback_html (HTML) field in DocType 'Interview'
 #: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/interview/interview.json
 msgid "Feedback HTML"
-msgstr ""
+msgstr "HTML povratnih informacij"
 
 #. Label of the feedback_ratings (Table) field in DocType 'Employee Performance
 #. Feedback'
 #: hrms/hr/doctype/employee_performance_feedback/employee_performance_feedback.json
 msgid "Feedback Ratings"
-msgstr ""
+msgstr "Ocene povratnih informacij"
 
 #. Label of the feedback_reminder_notification_template (Link) field in DocType
 #. 'HR Settings'
@@ -3969,16 +4016,16 @@ msgstr ""
 
 #: hrms/hr/report/appraisal_overview/appraisal_overview.py:124
 msgid "Feedback Score"
-msgstr ""
+msgstr "Ocena povratnih informacij"
 
 #. Option for the 'Status' (Select) field in DocType 'Training Event Employee'
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
 msgid "Feedback Submitted"
-msgstr ""
+msgstr "Povratne informacije poslane"
 
 #: hrms/public/js/templates/interview_feedback.html:14
 msgid "Feedback Summary"
-msgstr ""
+msgstr "Povzetek povratnih informacij"
 
 #: hrms/hr/doctype/interview_feedback/interview_feedback.py:52
 msgid "Feedback already submitted for the Interview {0}. Please cancel the previous Interview Feedback {1} to continue."
@@ -3997,7 +4044,7 @@ msgstr ""
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 #: hrms/hr/doctype/shift_location/shift_location.json
 msgid "Fetch Geolocation"
-msgstr ""
+msgstr "Pridobi zemljepisne lokacije"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.js:7
 msgid "Fetch Overtime Details"
@@ -4018,7 +4065,7 @@ msgstr ""
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.js:38
 msgid "Fetching Shift"
-msgstr ""
+msgstr "Pridobivanje Izmene"
 
 #: hrms/public/js/utils/index.js:193
 msgid "Fetching your geolocation"
@@ -4042,48 +4089,48 @@ msgstr "Polnjeno"
 #. Entry'
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 msgid "Filter Employees"
-msgstr ""
+msgstr "Filtriraj Osebje"
 
 #. Label of the filter_by_shift (Check) field in DocType 'Employee Attendance
 #. Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgid "Filter by Shift"
-msgstr ""
+msgstr "Filtriraj po Izmeni"
 
 #. Label of the employee_status (Select) field in DocType 'Exit Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json
 #: hrms/hr/report/employee_exits/employee_exits.js:57
 #: hrms/hr/report/employee_exits/employee_exits.py:52
 msgid "Final Decision"
-msgstr ""
+msgstr "Končna Odločitev"
 
 #. Label of the final_score (Float) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/report/appraisal_overview/appraisal_overview.py:57
 #: hrms/hr/report/appraisal_overview/appraisal_overview.py:125
 msgid "Final Score"
-msgstr ""
+msgstr "Končni Rezultat"
 
 #. Label of the final_score_formula (Code) field in DocType 'Appraisal Cycle'
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgid "Final Score Formula"
-msgstr ""
+msgstr "Formula Končnega Rezultata"
 
 #. Option for the 'Working Hours Calculation Based On' (Select) field in
 #. DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "First Check-in and Last Check-out"
-msgstr ""
+msgstr "Prva Prijava in Zadnja Odjava"
 
 #. Option for the 'Allocate on Day' (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "First Day"
-msgstr ""
+msgstr "Prvi dan"
 
 #. Label of the first_name (Data) field in DocType 'Employee Referral'
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 msgid "First Name "
-msgstr ""
+msgstr "Ime "
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1517
 msgid "Fiscal Year {0} not found"
@@ -4153,7 +4200,7 @@ msgstr ""
 #: hrms/hr/doctype/attendance/attendance_list.js:29
 #: hrms/hr/doctype/employee_performance_feedback/employee_performance_feedback.json
 msgid "For Employee"
-msgstr ""
+msgstr "Za Osebje"
 
 #. Description of the 'Fraction of Daily Salary per Leave' (Float) field in
 #. DocType 'Leave Type'
@@ -4198,7 +4245,7 @@ msgstr ""
 #. Label of the from_amount (Currency) field in DocType 'Taxable Salary Slab'
 #: hrms/payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
 msgid "From Amount"
-msgstr ""
+msgstr "Od Zneska"
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:30
 msgid "From Date must come before To Date"
@@ -4230,66 +4277,66 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_type/leave_type.js:54
 msgid "From here, you can enable encashment for the balance leaves."
-msgstr ""
+msgstr "Tukaj lahko omogočite unovčenje preostalo dopusta."
 
 #: hrms/payroll/report/salary_register/salary_register.html:8
 msgid "From {0} to {1}"
-msgstr ""
+msgstr "Od {0} do {1}"
 
 #. Label of the from_year (Int) field in DocType 'Gratuity Rule Slab'
 #: hrms/payroll/doctype/gratuity_rule_slab/gratuity_rule_slab.json
 msgid "From(Year)"
-msgstr ""
+msgstr "Od (Leto)"
 
 #. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Fuchsia"
-msgstr ""
+msgstr "Fuksija"
 
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.py:45
 msgid "Fuel Expense"
-msgstr ""
+msgstr "Stroški Goriva"
 
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.py:165
 msgid "Fuel Expenses"
-msgstr ""
+msgstr "Stroški Goriva"
 
 #. Label of the price (Currency) field in DocType 'Vehicle Log'
 #: hrms/hr/doctype/vehicle_log/vehicle_log.json
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.py:44
 msgid "Fuel Price"
-msgstr ""
+msgstr "Cena Goriva"
 
 #. Label of the fuel_qty (Float) field in DocType 'Vehicle Log'
 #: hrms/hr/doctype/vehicle_log/vehicle_log.json
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.py:43
 msgid "Fuel Qty"
-msgstr ""
+msgstr "Količina Goriva"
 
 #. Name of a DocType
 #: hrms/hr/doctype/full_and_final_asset/full_and_final_asset.json
 msgid "Full and Final Asset"
-msgstr ""
+msgstr "Polno in končno sredstvo"
 
 #. Name of a DocType
 #: hrms/hr/doctype/full_and_final_outstanding_statement/full_and_final_outstanding_statement.json
 msgid "Full and Final Outstanding Statement"
-msgstr ""
+msgstr "Popolna in končna izjava o neporavnanih obveznostih"
 
 #: hrms/setup.py:389
 msgid "Full-time"
-msgstr ""
+msgstr "Polni delovni čas"
 
 #. Option for the 'Travel Funding' (Select) field in DocType 'Travel Request'
 #: hrms/hr/doctype/travel_request/travel_request.json
 msgid "Fully Sponsored"
-msgstr ""
+msgstr "Popolnoma sponzorirano"
 
 #. Label of the funded_amount (Currency) field in DocType 'Travel Request
 #. Costing'
 #: hrms/hr/doctype/travel_request_costing/travel_request_costing.json
 msgid "Funded Amount"
-msgstr ""
+msgstr "Financirani znesek"
 
 #. Label of the future_income_tax_deductions (Currency) field in DocType
 #. 'Salary Slip'
@@ -4306,7 +4353,7 @@ msgstr ""
 msgid "Gain Loss Account"
 msgstr ""
 
-#: hrms/public/js/utils/index.js:186 hrms/public/js/utils/index.js:212
+#: hrms/public/js/utils/index.js:186 hrms/public/js/utils/index.js:214
 msgid "Geolocation Error"
 msgstr ""
 
@@ -4328,17 +4375,17 @@ msgstr ""
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:69
 msgid "Get Employees"
-msgstr ""
+msgstr "Pridobite Osebje"
 
 #. Label of the get_job_requisitions (Button) field in DocType 'Staffing Plan'
 #: hrms/hr/doctype/staffing_plan/staffing_plan.json
 msgid "Get Job Requisitions"
-msgstr ""
+msgstr "Pridobite zahteve za delo"
 
 #. Label of the get_template (Button) field in DocType 'Upload Attendance'
 #: hrms/hr/doctype/upload_attendance/upload_attendance.json
 msgid "Get Template"
-msgstr ""
+msgstr "Pridobi predlogo"
 
 #: frontend/src/components/InstallPrompt.vue:8
 msgid "Get the app on your device for easy access & a better experience!"
@@ -4512,11 +4559,11 @@ msgstr ""
 #. Name of a Workspace
 #: hrms/hr/workspace/hr/hr.json hrms/setup.py:322
 msgid "HR"
-msgstr ""
+msgstr "Osebje"
 
 #: hrms/setup.py:59
 msgid "HR & Payroll"
-msgstr ""
+msgstr "Osebje & Plače"
 
 #: hrms/setup.py:65
 msgid "HR & Payroll Settings"
@@ -4551,7 +4598,7 @@ msgstr "Osebje"
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/doctype/leave_application/leave_application.json
 msgid "Half Day"
-msgstr ""
+msgstr "Pol Dneva"
 
 #. Label of the half_day_date (Date) field in DocType 'Attendance Request'
 #. Label of the half_day_date (Date) field in DocType 'Compensatory Leave
@@ -4561,11 +4608,11 @@ msgstr ""
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.json
 #: hrms/hr/doctype/leave_application/leave_application.json
 msgid "Half Day Date"
-msgstr ""
+msgstr "Poldnevni Datum"
 
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:27
 msgid "Half Day Date is mandatory"
-msgstr ""
+msgstr "Poldnevni Datum je obvezen"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:191
 msgid "Half Day Date should be between From Date and To Date"
@@ -4618,17 +4665,17 @@ msgstr ""
 
 #: frontend/src/components/CheckInPanel.vue:4
 msgid "Hey, {0} 👋"
-msgstr ""
+msgstr "Hej, {0}👋"
 
 #: hrms/hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:55
 msgid "Hiring Count"
-msgstr ""
+msgstr "Zaposlovanje"
 
 #. Label of the hiring_settings_section (Section Break) field in DocType 'HR
 #. Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Hiring Settings"
-msgstr ""
+msgstr "Nastavitve Zaposlovanja"
 
 #. Label of the optional_holiday_list (Link) field in DocType 'Leave Period'
 #: hrms/hr/doctype/leave_period/leave_period.json
@@ -4657,7 +4704,7 @@ msgstr ""
 #. Label of the hourly_rate (Currency) field in DocType 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Hourly Rate"
-msgstr ""
+msgstr "Urna Postavka"
 
 #: hrms/regional/india/utils.py:184
 msgid "House rent paid days overlapping with {0}"
@@ -4876,17 +4923,17 @@ msgstr ""
 #. Label of the include_holiday (Check) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Include holidays within leaves as leaves"
-msgstr ""
+msgstr "Vključi praznike znotraj dopusta kot dopust"
 
 #. Label of the income_source_details_section (Section Break) field in DocType
 #. 'Employee Other Income'
 #: hrms/payroll/doctype/employee_other_income/employee_other_income.json
 msgid "Income Source"
-msgstr ""
+msgstr "Vir Dohodka"
 
 #: hrms/payroll/report/income_tax_deductions/income_tax_deductions.py:47
 msgid "Income Tax Amount"
-msgstr ""
+msgstr "Znesek Davka na Plačo"
 
 #. Label of the income_tax_calculation_breakup_section (Tab Break) field in
 #. DocType 'Salary Slip'
@@ -4938,7 +4985,7 @@ msgstr ""
 #: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Income Tax Slab"
-msgstr ""
+msgstr "Tabela Davka od Plač"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/income_tax_slab_other_charges/income_tax_slab_other_charges.json
@@ -4984,7 +5031,7 @@ msgstr ""
 
 #: frontend/src/components/InstallPrompt.vue:13
 msgid "Install"
-msgstr ""
+msgstr "Namesti"
 
 #: frontend/src/components/InstallPrompt.vue:5
 #: frontend/src/components/InstallPrompt.vue:28
@@ -5012,17 +5059,17 @@ msgstr ""
 
 #: hrms/setup.py:395
 msgid "Intern"
-msgstr ""
+msgstr "Interni"
 
 #. Option for the 'Travel Type' (Select) field in DocType 'Travel Request'
 #: hrms/hr/doctype/travel_request/travel_request.json
 msgid "International"
-msgstr ""
+msgstr "Mednarodno"
 
 #. Option for the 'Type' (Select) field in DocType 'Training Event'
 #: hrms/hr/doctype/training_event/training_event.json
 msgid "Internet"
-msgstr ""
+msgstr "Internet"
 
 #. Name of a DocType
 #. Label of the interview (Link) field in DocType 'Interview Feedback'
@@ -5033,12 +5080,12 @@ msgstr ""
 #: hrms/hr/doctype/job_applicant/job_applicant_dashboard.html:7
 #: hrms/hr/workspace/recruitment/recruitment.json
 msgid "Interview"
-msgstr ""
+msgstr "Intervju"
 
 #. Name of a DocType
 #: hrms/hr/doctype/interview_detail/interview_detail.json
 msgid "Interview Detail"
-msgstr ""
+msgstr "Podrobnosti Intervjuja"
 
 #. Label of the interview_summary_section (Section Break) field in DocType
 #. 'Exit Interview'
@@ -5165,7 +5212,7 @@ msgstr ""
 #. Label of a Card Break in the Recruitment Workspace
 #: hrms/hr/workspace/recruitment/recruitment.json
 msgid "Interviews"
-msgstr ""
+msgstr "Intervjui"
 
 #. Label of a quick_list in the Recruitment Workspace
 #: hrms/hr/workspace/recruitment/recruitment.json
@@ -5206,10 +5253,10 @@ msgstr ""
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
 msgstr ""
 
-#: hrms/hr/doctype/shift_type/shift_type.py:39
 #: hrms/hr/doctype/shift_type/shift_type.py:48
+#: hrms/hr/doctype/shift_type/shift_type.py:57
 msgid "Invalid Shift Times"
-msgstr ""
+msgstr "Neveljavni časi izmene"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:902
 msgid "Invalid parameters provided. Please pass the required arguments."
@@ -5229,17 +5276,17 @@ msgstr ""
 #. Option for the 'Status' (Select) field in DocType 'Training Event Employee'
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
 msgid "Invited"
-msgstr ""
+msgstr "Povabljeni"
 
 #. Label of the invoice (Data) field in DocType 'Vehicle Log'
 #: hrms/hr/doctype/vehicle_log/vehicle_log.json
 msgid "Invoice Ref"
-msgstr ""
+msgstr "Referenca Fakture"
 
 #. Label of the is_allocated (Check) field in DocType 'Earned Leave Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Is Allocated"
-msgstr ""
+msgstr "Je Dodeljeno"
 
 #. Label of the is_applicable_for_referral_bonus (Check) field in DocType
 #. 'Employee Referral'
@@ -5274,14 +5321,14 @@ msgstr ""
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.json
 #: hrms/hr/report/leave_ledger/leave_ledger.py:91
 msgid "Is Expired"
-msgstr ""
+msgstr "Je Poteklo"
 
 #. Label of the is_flexible_benefit (Check) field in DocType 'Salary Component'
 #. Label of the is_flexible_benefit (Check) field in DocType 'Salary Detail'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Is Flexible Benefit"
-msgstr ""
+msgstr "Je Fleksibilna Ugodnost"
 
 #. Label of the is_income_tax_component (Check) field in DocType 'Salary
 #. Component'
@@ -5295,22 +5342,22 @@ msgstr ""
 #: hrms/hr/doctype/leave_type/leave_type.json
 #: hrms/hr/report/leave_ledger/leave_ledger.py:97
 msgid "Is Leave Without Pay"
-msgstr ""
+msgstr "Je Dopust Brez Plačila"
 
 #. Label of the is_optional_leave (Check) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Is Optional Leave"
-msgstr ""
+msgstr "Je Neobvezen Dopust"
 
 #. Label of the is_ppl (Check) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Is Partially Paid Leave"
-msgstr ""
+msgstr "Je Delno Plačan Dopust"
 
 #. Label of the is_recurring (Check) field in DocType 'Additional Salary'
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
 msgid "Is Recurring"
-msgstr ""
+msgstr "Je Ponavljajoče"
 
 #. Label of the is_recurring_additional_salary (Check) field in DocType 'Salary
 #. Detail'
@@ -5322,13 +5369,13 @@ msgstr ""
 #. Cycle'
 #: hrms/payroll/doctype/salary_withholding_cycle/salary_withholding_cycle.json
 msgid "Is Salary Released"
-msgstr ""
+msgstr "Je Plača Objavljena"
 
 #. Label of the is_salary_withheld (Check) field in DocType 'Payroll Employee
 #. Detail'
 #: hrms/payroll/doctype/payroll_employee_detail/payroll_employee_detail.json
 msgid "Is Salary Withheld"
-msgstr ""
+msgstr "Je Plača Zadržana"
 
 #. Label of the is_tax_applicable (Check) field in DocType 'Salary Component'
 #. Label of the is_tax_applicable (Check) field in DocType 'Salary Detail'
@@ -5340,7 +5387,7 @@ msgstr ""
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:36
 #: hrms/public/js/salary_slip_deductions_report_filters.js:19
 msgid "Jan"
-msgstr ""
+msgstr "Jan"
 
 #. Label of the job_applicant (Link) field in DocType 'Appointment Letter'
 #. Label of the job_applicant (Link) field in DocType 'Employee Onboarding'
@@ -5359,7 +5406,7 @@ msgstr ""
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.py:38
 #: hrms/hr/workspace/recruitment/recruitment.json hrms/setup.py:193
 msgid "Job Applicant"
-msgstr ""
+msgstr "Kandidat za delo"
 
 #. Name of a DocType
 #: hrms/hr/doctype/job_applicant_source/job_applicant_source.json
@@ -5510,17 +5557,17 @@ msgstr ""
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:134
 #: hrms/hr/doctype/kra/kra.json
 msgid "KRA"
-msgstr ""
+msgstr "Ključno Področje Učinkovitosti"
 
 #. Label of the kra_evaluation_method (Select) field in DocType 'Appraisal
 #. Cycle'
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgid "KRA Evaluation Method"
-msgstr ""
+msgstr "Metoda ocenjevanja Ključnog Področje Učinkovitosti"
 
 #: hrms/hr/doctype/goal/goal.py:99
 msgid "KRA updated for all child goals."
-msgstr ""
+msgstr "Ključno področje učinkovitosti posodobljen za vse podcilje."
 
 #. Label of the appraisal_kra (Table) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
@@ -5642,7 +5689,7 @@ msgstr ""
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Leave Allocation"
-msgstr ""
+msgstr "Dodelitev Dopusta"
 
 #: hrms/hr/doctype/leave_type/leave_type.py:68
 msgid "Leave Allocation Exists"
@@ -5663,7 +5710,7 @@ msgstr ""
 #: hrms/hr/doctype/leave_application/leave_application.json
 #: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/leaves/leaves.json
 msgid "Leave Application"
-msgstr ""
+msgstr "Zahtev Dopusta"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:754
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
@@ -5765,7 +5812,7 @@ msgstr ""
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Leave Encashment"
-msgstr ""
+msgstr "Unovčenje Dopusta"
 
 #. Label of the leave_encashment_amount_per_day (Currency) field in DocType
 #. 'Salary Structure'
@@ -5809,7 +5856,7 @@ msgstr ""
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Leave Period"
-msgstr ""
+msgstr "Obdobje Dopusta"
 
 #. Label of the leave_policy (Link) field in DocType 'Leave Allocation'
 #. Label of the leave_policy (Link) field in DocType 'Leave Control Panel'
@@ -5822,7 +5869,7 @@ msgstr ""
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Leave Policy"
-msgstr ""
+msgstr "Pravilo Dopusta"
 
 #. Option for the 'Allocated Via' (Select) field in DocType 'Earned Leave
 #. Schedule'
@@ -5835,7 +5882,7 @@ msgstr ""
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Leave Policy Assignment"
-msgstr ""
+msgstr "Dodelitev pravilnika Dopusta"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:70
 msgid "Leave Policy Assignment Overlap"
@@ -5898,7 +5945,7 @@ msgstr ""
 #: hrms/hr/workspace/leaves/leaves.json
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Leave Type"
-msgstr ""
+msgstr "Tip Dopusta"
 
 #. Label of the leave_type_name (Data) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -5940,6 +5987,10 @@ msgstr ""
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr ""
 
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:130
+msgid "Leave allocation is skipped for {0}, because number of leaves to be allocated is 0."
+msgstr ""
+
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.py:54
 msgid "Leave allocation {0} is linked with the Leave Application {1}"
 msgstr ""
@@ -5977,7 +6028,7 @@ msgstr ""
 #. Label of the pending_leaves (Float) field in DocType 'Salary Slip Leave'
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Leave(s) Pending Approval"
-msgstr ""
+msgstr "Dopust(-i) v postopku odobritve"
 
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:67
 msgid "Leave(s) Taken"
@@ -5996,31 +6047,31 @@ msgstr ""
 #: hrms/hr/workspace/leaves/leaves.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Leaves"
-msgstr ""
+msgstr "Dopust"
 
 #: frontend/src/views/leave/Dashboard.vue:2
 msgid "Leaves & Holidays"
-msgstr ""
+msgstr "Dopust & Prazniki"
 
 #. Label of the leaves_after_adjustment (Float) field in DocType 'Leave
 #. Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 msgid "Leaves After Adjustment"
-msgstr ""
+msgstr "Dopust po Prilagoditvi"
 
 #. Label of the leaves_allocated (Check) field in DocType 'Leave Policy
 #. Assignment'
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 msgid "Leaves Allocated"
-msgstr ""
+msgstr "Dodeljeni Dopust"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:562
 msgid "Leaves Expired"
-msgstr ""
+msgstr "Potekli Dopust"
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:10
 msgid "Leaves Pending Approval"
-msgstr ""
+msgstr "Dopust v postopku odobritve"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:83
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
@@ -6033,7 +6084,7 @@ msgstr ""
 #. Label of the leaves_to_adjust (Float) field in DocType 'Leave Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 msgid "Leaves to Adjust"
-msgstr ""
+msgstr "Dopust za Prilagoditev"
 
 #: hrms/hr/doctype/leave_type/leave_type.js:42
 msgid "Leaves you can avail against a holiday you worked on. You can claim Compensatory Off Leave using Compensatory Leave Request. Click {0} to know more"
@@ -6211,7 +6262,7 @@ msgstr ""
 msgid "Mark attendance based on 'Employee Checkin' for Employees assigned to this shift."
 msgstr ""
 
-#: hrms/hr/doctype/shift_type/shift_type.py:88
+#: hrms/hr/doctype/shift_type/shift_type.py:97
 msgid "Mark attendance for existing check-in/out logs before changing shift settings"
 msgstr ""
 
@@ -6444,8 +6495,10 @@ msgstr ""
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.json
 #: hrms/hr/workspace/hr/hr.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Monthly Attendance Sheet"
 msgstr ""
 
@@ -6477,7 +6530,7 @@ msgstr ""
 
 #: frontend/src/views/leave/List.vue:19
 msgid "My Leaves"
-msgstr ""
+msgstr "Moj Dopust"
 
 #: frontend/src/components/RequestPanel.vue:36
 msgid "My Requests"
@@ -6554,12 +6607,12 @@ msgstr ""
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "New Leaves Allocated"
-msgstr ""
+msgstr "Dodeljeni novi dopusti"
 
 #. Label of the no_of_days (Float) field in DocType 'Leave Control Panel'
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 msgid "New Leaves Allocated (In Days)"
-msgstr ""
+msgstr "Dodeljeni novi dopusti (v dnevih)"
 
 #. Description of the 'Create Shifts After' (Date) field in DocType 'Shift
 #. Schedule Assignment'
@@ -6593,7 +6646,7 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_encashment/leave_encashment.py:140
 msgid "No Leaves Allocated to Employee: {0} for Leave Type: {1}"
-msgstr ""
+msgstr "Ni dopusta dodeljeno: {0} za tip dopusta: {1}"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:265
 msgid "No Salary Slip found for Employee: {0}"
@@ -6615,7 +6668,7 @@ msgstr ""
 msgid "No Salary Structure assigned to Employee {0} on the given date {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:109
+#: hrms/payroll/doctype/salary_component/salary_component.js:115
 msgid "No Salary Structures"
 msgstr ""
 
@@ -6730,7 +6783,7 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:29
 msgid "No leaves have been allocated."
-msgstr ""
+msgstr "Dodeljeni niso bili nobeni dopusti."
 
 #: hrms/hr/page/team_updates/team_updates.js:49
 msgid "No more updates"
@@ -6795,7 +6848,7 @@ msgstr ""
 #. Label of the non_encashable_leaves (Int) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Non-Encashable Leaves"
-msgstr ""
+msgstr "Ne unovčljivi Dopusti"
 
 #. Option for the 'Meal Preference' (Select) field in DocType 'Travel
 #. Itinerary'
@@ -6857,7 +6910,7 @@ msgstr ""
 #. Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Number of Leaves"
-msgstr ""
+msgstr "Število Dopusta"
 
 #. Label of the number_of_withholding_cycles (Int) field in DocType 'Salary
 #. Withholding'
@@ -6882,7 +6935,7 @@ msgstr ""
 #. Option for the 'Log Type' (Select) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 msgid "OUT"
-msgstr ""
+msgstr "IZHOD"
 
 #. Label of the average_rating (Rating) field in DocType 'Interview'
 #: hrms/hr/doctype/interview/interview.json
@@ -6892,7 +6945,7 @@ msgstr ""
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:45
 #: hrms/public/js/salary_slip_deductions_report_filters.js:28
 msgid "Oct"
-msgstr ""
+msgstr "Okt"
 
 #. Label of the odometer_reading (Section Break) field in DocType 'Vehicle Log'
 #: hrms/hr/doctype/vehicle_log/vehicle_log.json
@@ -6905,12 +6958,12 @@ msgstr ""
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:5
 msgid "Off-Shift"
-msgstr ""
+msgstr "Izven Izmene"
 
 #. Label of the offshift (Check) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 msgid "Off-shift"
-msgstr ""
+msgstr "Izven Izmene"
 
 #. Label of the offer_term (Link) field in DocType 'Job Offer Term'
 #. Name of a DocType
@@ -7078,10 +7131,12 @@ msgstr ""
 
 #. Label of the overtime_section (Section Break) field in DocType 'Attendance'
 #. Label of the overtime_section (Section Break) field in DocType 'Shift Type'
+#. Label of a Card Break in the Shift & Attendance Workspace
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/shift_type/shift_type.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Overtime"
-msgstr ""
+msgstr "Nadurno Delo"
 
 #. Label of the overtime_calculation_method (Select) field in DocType 'Overtime
 #. Type'
@@ -7114,7 +7169,9 @@ msgid "Overtime Salary Component"
 msgstr ""
 
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/overtime_slip/overtime_slip.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Overtime Slip"
 msgstr ""
 
@@ -7173,14 +7230,16 @@ msgstr ""
 #. Name of a DocType
 #. Label of the overtime_type (Link) field in DocType 'Shift Assignment'
 #. Label of the overtime_type (Link) field in DocType 'Shift Type'
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 #: hrms/hr/doctype/overtime_details/overtime_details.json
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
 #: hrms/hr/doctype/shift_type/shift_type.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Overtime Type"
-msgstr ""
+msgstr "Tip Nadurnega Dela"
 
 #. Description of the 'Overtime Salary Component' (Link) field in DocType
 #. 'Overtime Type'
@@ -7360,13 +7419,13 @@ msgstr ""
 
 #: hrms/setup.py:111 hrms/setup.py:281
 msgid "Payroll Cost Center"
-msgstr ""
+msgstr "Stroškovni Centar  Plač"
 
 #. Label of the section_break_17 (Section Break) field in DocType 'Salary
 #. Structure Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgid "Payroll Cost Centers"
-msgstr ""
+msgstr "Stroškovni Centri Plač"
 
 #. Label of a shortcut in the HR Workspace
 #: hrms/hr/workspace/hr/hr.json
@@ -7585,7 +7644,7 @@ msgstr ""
 msgid "Please fill in Employee, Posting Date, and Company before fetching overtime details."
 msgstr ""
 
-#: hrms/hr/doctype/shift_type/shift_type.py:49
+#: hrms/hr/doctype/shift_type/shift_type.py:58
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr ""
 
@@ -7773,7 +7832,7 @@ msgstr ""
 #: hrms/hr/doctype/shift_type/shift_type.js:21
 #: hrms/hr/doctype/shift_type/shift_type.js:26
 msgid "Please set {0}."
-msgstr ""
+msgstr "Nastavi {0}."
 
 #: hrms/overrides/employee_master.py:16
 msgid "Please setup Employee Naming System in Human Resource > HR Settings"
@@ -7943,7 +8002,9 @@ msgid "Profit"
 msgstr ""
 
 #. Name of a report
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/report/project_profitability/project_profitability.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Project Profitability"
 msgstr ""
 
@@ -8065,7 +8126,7 @@ msgstr ""
 #. Label of the reallocate_leaves (Check) field in DocType 'Employee Transfer'
 #: hrms/hr/doctype/employee_transfer/employee_transfer.json
 msgid "Re-allocate Leaves"
-msgstr ""
+msgstr "Prerazporeditev Dopusta"
 
 #. Label of the reason_for_adjustment (Small Text) field in DocType 'Leave
 #. Adjustment'
@@ -8098,7 +8159,7 @@ msgstr ""
 
 #: frontend/src/views/leave/Dashboard.vue:21
 msgid "Recent Leaves"
-msgstr ""
+msgstr "Nedavni Dopust"
 
 #: frontend/src/views/attendance/Dashboard.vue:40
 msgid "Recent Shift Requests"
@@ -8187,7 +8248,7 @@ msgstr ""
 #: frontend/src/components/RequestActionSheet.vue:96
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:126
 msgid "Reject"
-msgstr ""
+msgstr "Zavrni"
 
 #: hrms/hr/doctype/employee_referral/employee_referral.js:7
 msgid "Reject Employee Referral"
@@ -8431,7 +8492,9 @@ msgstr ""
 msgid "Role Allowed to Create Backdated Leave Application"
 msgstr ""
 
-#: hrms/public/js/utils/index.js:250 hrms/public/js/utils/index.js:271
+#. Label of a shortcut in the Shift & Attendance Workspace
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+#: hrms/public/js/utils/index.js:252 hrms/public/js/utils/index.js:273
 msgid "Roster"
 msgstr ""
 
@@ -8581,7 +8644,7 @@ msgstr ""
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:107
+#: hrms/payroll/doctype/salary_component/salary_component.js:113
 msgid "Salary Component {0} is currently not used in any Salary Structure."
 msgstr ""
 
@@ -8805,7 +8868,7 @@ msgstr ""
 msgid "Salary Structure {0} does not belong to company {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:144
+#: hrms/payroll/doctype/salary_component/salary_component.js:150
 msgid "Salary Structures updated successfully"
 msgstr ""
 
@@ -9179,6 +9242,11 @@ msgstr ""
 msgid "Shared document with the user {0} with 'Submit' permission"
 msgstr ""
 
+#. Name of a Workspace
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+msgid "Shift & Attendance"
+msgstr ""
+
 #. Label of the shift_actual_end (Datetime) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 msgid "Shift Actual End"
@@ -9199,7 +9267,9 @@ msgid "Shift Actual Start Time"
 msgstr ""
 
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Assignment"
 msgstr ""
 
@@ -9214,8 +9284,10 @@ msgid "Shift Assignment History"
 msgstr ""
 
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
-#: hrms/public/js/utils/index.js:238 hrms/public/js/utils/index.js:260
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+#: hrms/public/js/utils/index.js:240 hrms/public/js/utils/index.js:262
 msgid "Shift Assignment Tool"
 msgstr ""
 
@@ -9228,7 +9300,9 @@ msgid "Shift Assignments created for the schedule between {0} and {1} via backgr
 msgstr ""
 
 #. Name of a report
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/report/shift_attendance/shift_attendance.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Attendance"
 msgstr ""
 
@@ -9244,7 +9318,7 @@ msgstr ""
 #. Label of the shift_end (Datetime) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 msgid "Shift End"
-msgstr ""
+msgstr "Konec Izmene"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:61
 msgid "Shift End Time"
@@ -9255,18 +9329,23 @@ msgstr ""
 #. Name of a DocType
 #. Label of the shift_location (Link) field in DocType 'Shift Schedule
 #. Assignment'
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hrms/hr/doctype/shift_location/shift_location.json
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Location"
 msgstr ""
 
 #. Label of the shift_request (Link) field in DocType 'Shift Assignment'
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
+#. Label of a shortcut in the Shift & Attendance Workspace
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:220
 #: hrms/hr/doctype/shift_request/shift_request.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Request"
 msgstr ""
 
@@ -9295,40 +9374,44 @@ msgstr ""
 #. Name of a DocType
 #. Label of the shift_schedule (Link) field in DocType 'Shift Schedule
 #. Assignment'
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hrms/hr/doctype/shift_schedule/shift_schedule.json
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Schedule"
-msgstr ""
+msgstr "Urnik Izmene"
 
 #. Label of the shift_schedule_assignment (Link) field in DocType 'Shift
 #. Assignment'
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Schedule Assignment"
-msgstr ""
+msgstr "Dodelitev Urnika Izmene"
 
 #. Label of the shift_settings_section (Section Break) field in DocType 'HR
 #. Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Shift Settings"
-msgstr ""
+msgstr "Nastavitve Izmene"
 
 #. Label of the shift_start (Datetime) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 msgid "Shift Start"
-msgstr ""
+msgstr "Začetek Izmene"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:55
 msgid "Shift Start Time"
-msgstr ""
+msgstr "Začetni Čas Izmene"
 
 #. Label of the shift_status (Select) field in DocType 'Shift Schedule
 #. Assignment'
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.json
 msgid "Shift Status"
-msgstr ""
+msgstr "Stanje Izmene"
 
 #. Label of the shift_timings_section (Section Break) field in DocType
 #. 'Employee Checkin'
@@ -9336,8 +9419,8 @@ msgstr ""
 msgid "Shift Timings"
 msgstr ""
 
-#: hrms/public/js/utils/index.js:246 hrms/public/js/utils/index.js:254
-#: hrms/public/js/utils/index.js:268 hrms/public/js/utils/index.js:275
+#: hrms/public/js/utils/index.js:248 hrms/public/js/utils/index.js:256
+#: hrms/public/js/utils/index.js:270 hrms/public/js/utils/index.js:277
 msgid "Shift Tools"
 msgstr ""
 
@@ -9348,6 +9431,7 @@ msgstr ""
 #. Label of the shift_type (Link) field in DocType 'Shift Request'
 #. Label of the shift_type (Link) field in DocType 'Shift Schedule'
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
 #: frontend/src/views/attendance/ShiftAssignmentList.vue:24
 #: frontend/src/views/attendance/ShiftRequestList.vue:42
 #: hrms/hr/doctype/shift_assignment/shift_assignment.json
@@ -9357,8 +9441,9 @@ msgstr ""
 #: hrms/hr/doctype/shift_schedule/shift_schedule.json
 #: hrms/hr/doctype/shift_type/shift_type.json
 #: hrms/hr/report/shift_attendance/shift_attendance.js:28
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Type"
-msgstr ""
+msgstr "Tip Izmene"
 
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.py:21
 msgid "Shift assignments for {0} after {1} are already created. Please change {2} date to a date later than {3} {4}"
@@ -9366,6 +9451,11 @@ msgstr ""
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.js:42
 msgid "Shift has been successfully updated to {0}."
+msgstr ""
+
+#. Label of a Card Break in the Shift & Attendance Workspace
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+msgid "Shifts"
 msgstr ""
 
 #: hrms/hr/doctype/job_offer/job_offer.js:51
@@ -9525,7 +9615,7 @@ msgstr ""
 msgid "Start date: {0}"
 msgstr ""
 
-#: hrms/hr/doctype/shift_type/shift_type.py:40
+#: hrms/hr/doctype/shift_type/shift_type.py:49
 msgid "Start time and end time cannot be same."
 msgstr ""
 
@@ -9571,7 +9661,7 @@ msgstr ""
 msgid "Submission Date"
 msgstr ""
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:460
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:475
 msgid "Submission Failed"
 msgstr ""
 
@@ -9649,7 +9739,7 @@ msgstr ""
 msgid "Summarized View"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:93
+#: hrms/payroll/doctype/salary_component/salary_component.js:99
 msgid "Sync {0}"
 msgstr ""
 
@@ -9769,7 +9859,7 @@ msgstr ""
 
 #: frontend/src/views/leave/List.vue:19
 msgid "Team Leaves"
-msgstr ""
+msgstr "Dopusti Ekipe"
 
 #: frontend/src/components/RequestPanel.vue:36
 msgid "Team Requests"
@@ -9782,7 +9872,7 @@ msgstr ""
 #. Name of a Workspace
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Tenure"
-msgstr ""
+msgstr "Mandat"
 
 #. Success message of the job-application Web Form
 #: hrms/hr/web_form/job_application/job_application.json
@@ -9878,7 +9968,7 @@ msgstr ""
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:42
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:20
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:207
-msgid "There is no Salary Structure assigned to {0}. First assign a Salary Stucture."
+msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
 msgstr ""
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:392
@@ -9978,7 +10068,7 @@ msgstr ""
 #. Label of the to_amount (Currency) field in DocType 'Taxable Salary Slab'
 #: hrms/payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
 msgid "To Amount"
-msgstr ""
+msgstr "Do Zneska"
 
 #: hrms/hr/doctype/upload_attendance/upload_attendance.py:30
 msgid "To Date should be greater than From Date"
@@ -10025,7 +10115,7 @@ msgstr ""
 #. Label of the to_year (Int) field in DocType 'Gratuity Rule Slab'
 #: hrms/payroll/doctype/gratuity_rule_slab/gratuity_rule_slab.json
 msgid "To(Year)"
-msgstr ""
+msgstr "Do (Leto)"
 
 #: hrms/payroll/doctype/gratuity_rule/gratuity_rule.js:35
 msgid "To(Year) year can not be less than From(year)"
@@ -10073,11 +10163,11 @@ msgstr ""
 #. Leave'
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Total Allocated Leave(s)"
-msgstr ""
+msgstr "Skupno dodeljenih dopustov"
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:7
 msgid "Total Allocated Leaves"
-msgstr ""
+msgstr "Skupaj Dodeljeni Dopust"
 
 #. Label of the total_amount_reimbursed (Currency) field in DocType 'Expense
 #. Claim'
@@ -10216,23 +10306,23 @@ msgstr ""
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:148
 msgid "Total Leaves"
-msgstr ""
+msgstr "Skupaj Dopust"
 
 #: hrms/hr/report/leave_ledger/leave_ledger.py:192
 msgid "Total Leaves ({0})"
-msgstr ""
+msgstr "Skupaj Dostup ({0})"
 
 #. Label of the total_leaves_allocated (Float) field in DocType 'Leave
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "Total Leaves Allocated"
-msgstr ""
+msgstr "Skupaj Dodeljeni Dopust"
 
 #. Label of the total_leaves_encashed (Float) field in DocType 'Leave
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "Total Leaves Encashed"
-msgstr ""
+msgstr "Skupaj Unovčenih Dopustov"
 
 #: hrms/setup.py:816
 msgid "Total Loan Repayment"
@@ -10543,7 +10633,7 @@ msgstr ""
 msgid "Type of Proof"
 msgstr ""
 
-#: hrms/public/js/utils/index.js:206
+#: hrms/public/js/utils/index.js:208
 msgid "Unable to retrieve your location"
 msgstr ""
 
@@ -10587,7 +10677,7 @@ msgstr ""
 msgid "Unmarked Attendance for days"
 msgstr ""
 
-#: hrms/hr/doctype/shift_type/shift_type.py:87
+#: hrms/hr/doctype/shift_type/shift_type.py:96
 msgid "Unmarked Check-in Logs Found"
 msgstr ""
 
@@ -10649,7 +10739,7 @@ msgstr ""
 #. Label of the unused_leaves (Float) field in DocType 'Leave Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "Unused leaves"
-msgstr ""
+msgstr "Neuporabljeni Dopust"
 
 #: frontend/src/components/Holidays.vue:4
 msgid "Upcoming Holidays"
@@ -10679,7 +10769,7 @@ msgstr ""
 msgid "Update Response"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:114
+#: hrms/payroll/doctype/salary_component/salary_component.js:120
 msgid "Update Salary Structures"
 msgstr ""
 
@@ -10701,14 +10791,16 @@ msgstr ""
 
 #: hrms/overrides/employee_master.py:77
 msgid "Updated the status of Job Offer {0} for the linked Job Applicant {1} to {2}"
-msgstr ""
+msgstr "Posodobljen status ponudbe za delo {0} za povezanega kandidata za delo {1} na {2}"
 
 #: hrms/overrides/employee_master.py:63
 msgid "Updated the status of linked Job Applicant {0} to {1}"
-msgstr ""
+msgstr "Posodobljen status povezanega kandidata za delovno mesto {0} na {1}"
 
 #. Name of a DocType
+#. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/upload_attendance/upload_attendance.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Upload Attendance"
 msgstr ""
 
@@ -10738,11 +10830,11 @@ msgstr ""
 #. Label of the used_leaves (Float) field in DocType 'Salary Slip Leave'
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Used Leave(s)"
-msgstr ""
+msgstr "Izkoriščen(I) Dopust(I)"
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:9
 msgid "Used Leaves"
-msgstr ""
+msgstr "Izkoriščeni Dopust"
 
 #. Label of the vacancies (Int) field in DocType 'Job Opening'
 #. Label of the vacancies (Int) field in DocType 'Staffing Plan Detail'
@@ -10846,7 +10938,7 @@ msgstr ""
 #. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Violet"
-msgstr ""
+msgstr "Vijolična"
 
 #: hrms/patches/v15_0/notify_about_loan_app_separation.py:16
 msgid "WARNING: Loan Management module has been separated from ERPNext."
@@ -11089,7 +11181,7 @@ msgstr ""
 
 #: frontend/src/components/LeaveBalance.vue:42
 msgid "You have no leaves allocated"
-msgstr ""
+msgstr "Nimate dodeljenih dopusta"
 
 #: frontend/src/views/Notifications.vue:91
 msgid "You have no notifications"
@@ -11109,7 +11201,7 @@ msgstr ""
 
 #: hrms/overrides/employee_master.py:83
 msgid "You may add additional details, if any, and submit the offer."
-msgstr ""
+msgstr "Dodate lahko dodatne podrobnosti, če obstajajo, in oddate ponudbo."
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:128
 msgid "You must be within {0} meters of your shift location to check in."
@@ -11218,7 +11310,7 @@ msgstr ""
 msgid "{0} Appraisal(s) are not submitted yet"
 msgstr ""
 
-#: hrms/public/js/utils/index.js:229
+#: hrms/public/js/utils/index.js:231
 msgid "{0} Field"
 msgstr ""
 
@@ -11302,15 +11394,15 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:361
 msgid "{0} leaves allocated successfully"
-msgstr ""
+msgstr "{0} dopustov je uspešno dodeljeno"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:563
 msgid "{0} leaves from allocation for {1} leave type have expired and will be processed during the next scheduled job. It is recommended to expire them now before creating new leave policy assignments."
-msgstr ""
+msgstr "{0} dopustov iz dodelitve za vrsto dopusta {1} je poteklo in bo obdelano med naslednjim načrtovanim opravilom. Priporočljivo je, da jih potečete zdaj, preden ustvarite nove dodelitve pravilnika o dopustu."
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:356
 msgid "{0} leaves were manually allocated by {1} on {2}"
-msgstr ""
+msgstr "{0} dopustov je ročno dodelil {1} dne {2}"
 
 #: hrms/hr/doctype/training_feedback/training_feedback.py:14
 #: hrms/hr/doctype/training_result/training_result.py:16
@@ -11341,7 +11433,7 @@ msgstr ""
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:124
+#: hrms/payroll/doctype/salary_component/salary_component.js:130
 msgid "{0} will be updated for the following Salary Structures: {1}."
 msgstr ""
 
@@ -11366,6 +11458,11 @@ msgstr ""
 #: frontend/src/components/ShiftAssignmentItem.vue:12
 #: frontend/src/components/ShiftRequestItem.vue:17
 msgid "{0}d"
+msgstr ""
+
+#. Count format of shortcut in the Shift & Attendance Workspace
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+msgid "{} "
 msgstr ""
 
 #. Count format of shortcut in the Recruitment Workspace

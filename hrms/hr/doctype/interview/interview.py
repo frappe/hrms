@@ -121,6 +121,9 @@ class Interview(Document):
 
 		frappe.msgprint(_("Interview Rescheduled successfully"), indicator="green")
 
+	def on_discard(self):
+		self.db_set("status", "Cancelled")
+
 
 @frappe.whitelist()
 def get_interviewers(interview_round: str) -> list[str]:

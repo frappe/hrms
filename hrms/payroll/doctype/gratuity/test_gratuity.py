@@ -243,6 +243,21 @@ class TestGratuity(IntegrationTestCase):
 		gratuity.reload()
 		self.assertEqual(gratuity.status, "Unpaid")
 
+	def test_status_on_discard(self):
+		create_salary_slip(self.employee)
+		setup_gratuity_rule("Rule Under Limited Contract (UAE)")
+		set_mode_of_payment_account()
+		# create gratuity
+		gratuity = create_gratuity(
+			do_not_submit=True,
+			expense_account="Payment Account - _TC",
+			mode_of_payment="Cash",
+			employee=self.employee,
+		)
+		gratuity.discard()
+		gratuity.reload()
+		self.assertEqual(gratuity.status, "Cancelled")
+
 
 def setup_gratuity_rule(name: str) -> dict:
 	from hrms.regional.united_arab_emirates.setup import setup
@@ -258,7 +273,7 @@ def setup_gratuity_rule(name: str) -> dict:
 	return rule
 
 
-def create_gratuity(**args):
+def create_gratuity(do_not_submit=False, **args):
 	if args:
 		args = frappe._dict(args)
 	gratuity = frappe.new_doc("Gratuity")
@@ -276,6 +291,8 @@ def create_gratuity(**args):
 		gratuity.cost_center = args.cost_center or "Main - _TC"
 
 	gratuity.save()
+	if do_not_submit:
+		return gratuity
 	gratuity.submit()
 
 	return gratuity

@@ -235,6 +235,22 @@ class TestShiftRequest(HRMSTestSuite):
 			}
 		).submit()
 
+	def test_status_on_discard(self):
+		setup_shift_type(shift_type="Day Shift")
+		employee = frappe.get_doc("Employee", "_T-Employee-00001")
+		user = "test_approver_emp@example.com"
+		make_employee(user, "_Test Company")
+
+		# set approver for employee
+		employee.reload()
+		employee.shift_request_approver = user
+		employee.save()
+
+		shift_request = make_shift_request(user, do_not_submit=True)
+		shift_request.discard()
+		shift_request.reload()
+		self.assertEqual(shift_request.status, "Cancelled")
+
 
 def set_shift_approver(department):
 	department_doc = frappe.get_doc("Department", department)

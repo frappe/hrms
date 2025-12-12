@@ -419,6 +419,13 @@ class TestLeaveEncashment(IntegrationTestCase):
 		args.update(kwargs)
 		return create_leave_encashment(**args)
 
+	def test_status_on_discard(self):
+		encashment = self.create_test_leave_encashment()
+		encashment.save()
+		encashment.discard()
+		encashment.reload()
+		self.assertEqual(encashment.status, "Cancelled")
+
 
 def create_leave_encashment(**args):
 	if args:
