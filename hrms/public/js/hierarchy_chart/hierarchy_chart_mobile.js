@@ -71,12 +71,11 @@ hrms.HierarchyChartMobile = class {
 		let me = this;
 
 		let company = this.page.add_field({
-			fieldtype: "Link",
-			options: "Company",
+			fieldtype: "Select",
+			options: [__("All Companies")].concat(erpnext.utils.get_tree_options("company")),
 			fieldname: "company",
 			placeholder: __("Select Company"),
-			default: frappe.defaults.get_default("company"),
-			only_select: true,
+			default: erpnext.utils.get_tree_default("company"),
 			reqd: 1,
 			change: () => {
 				me.company = "";
