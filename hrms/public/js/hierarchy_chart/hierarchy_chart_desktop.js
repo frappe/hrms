@@ -91,7 +91,7 @@ hrms.HierarchyChart = class {
 				$("#hierarchy-chart-wrapper").remove();
 
 				if (company.get_value()) {
-					me.company = company.get_value();
+					me.company = company.get_value() === __("All Companies") ? "All Companies" : company.get_value();
 
 					// svg for connectors
 					me.make_svg_markers();
