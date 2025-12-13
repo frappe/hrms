@@ -37,11 +37,13 @@
 	<ion-modal
 		v-if="settings.data?.allow_employee_checkin_from_mobile_app"
 		ref="modal"
-		trigger="open-checkin-modal"
 		
+		:is-open="isCheckinModalOpen"
 		@didPresent="onModalOpen"
 		@didDismiss="onModalClose"
 	>
+  <!-- trigger="open-checkin-modal" -->
+
 	<!-- <ion-modal
   v-if="settings.data?.allow_employee_checkin_from_mobile_app"
   ref="modal"
@@ -512,6 +514,9 @@ let faceMatched = false
 let isCheckOut = false
 let isSalesFaceMatched=false
 
+const isCheckinModalOpen = ref(false)
+
+
 const statusColor = ref("gray")
 let modelsLoaded = false
 let comparisonInterval = null
@@ -773,10 +778,40 @@ const fetchLocation = () => {
 	}
 }
 
+// const handleEmployeeCheckin = () => {
+
+//   const key = import.meta.env.VITE_AZURE_MAPS_KEY;
+//   if (!key) {
+//     alert("Key is Missing");
+//    onModalClose()
+//   return
+// }
+
+// 	checkinTimestamp.value = dayjs().format("YYYY-MM-DD HH:mm:ss")
+// 	if (settings.data?.allow_geolocation_tracking) fetchLocation()
+// }
+
 const handleEmployeeCheckin = () => {
-	checkinTimestamp.value = dayjs().format("YYYY-MM-DD HH:mm:ss")
-	if (settings.data?.allow_geolocation_tracking) fetchLocation()
+  const key = import.meta.env.VITE_AZURE_MAPS_KEY;
+
+  if (!key) {
+    alert("Key is Missing");
+    return; // ❌ modal never opens
+  }
+
+  checkinTimestamp.value = dayjs().format("YYYY-MM-DD HH:mm:ss");
+
+  if (settings.data?.allow_geolocation_tracking) {
+    fetchLocation();
+  }
+
+  isCheckinModalOpen.value = true; // ✅ open modal manually
+};
+
+function closeModalAndCamera() {
+  isCheckinModalOpen.value = false;
 }
+
 
 // ✅ Start camera only when popup opens
 async function onModalOpen() {
@@ -827,12 +862,18 @@ if (user?.data?.user_image) {
 	await startComparison();
 }
 
-// 🧹 Stop camera when popup closes
 function onModalClose() {
-	stopCamera()
-	statusMessage.value = "Camera stopped."
-	statusColor.value = "gray"
+  stopCamera();
+
+  if (comparisonInterval) {
+    clearInterval(comparisonInterval);
+    comparisonInterval = null;
+  }
+
+  statusMessage.value = "Camera stopped.";
+  statusColor.value = "gray";
 }
+
 
 async function startCamera() {
 	try {
