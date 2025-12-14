@@ -133,13 +133,11 @@ class OvertimeSlip(Document):
 			overtime_duration = record.actual_overtime_duration or 0.0
 
 			if maximum_overtime_hours_allowed > 0 and not overtime_type.accrue_compensatory_off:
-				overtime_duration = (
-					overtime_duration
-					if maximum_overtime_hours_allowed > overtime_duration
-					else maximum_overtime_hours_allowed
-				)
+				overtime_duration = min(overtime_duration, maximum_overtime_hours_allowed)
 
-			if overtime_duration > 0 and overtime_duration <= maximum_overtime_hours_allowed:
+			if overtime_duration > 0 and (
+				not maximum_overtime_hours_allowed or overtime_duration <= maximum_overtime_hours_allowed
+			):
 				self.append(
 					"overtime_details",
 					{
