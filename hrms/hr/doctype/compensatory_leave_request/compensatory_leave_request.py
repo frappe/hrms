@@ -58,6 +58,8 @@ class CompensatoryLeaveRequest(Document):
 			frappe.throw(_("You are not present all day(s) between compensatory leave request days"))
 
 	def validate_holidays(self):
+		if frappe.flags.for_overtime:
+			return
 		holidays = get_holiday_dates_for_employee(self.employee, self.work_from_date, self.work_end_date)
 		if len(holidays) < date_diff(self.work_end_date, self.work_from_date) + 1:
 			if date_diff(self.work_end_date, self.work_from_date):

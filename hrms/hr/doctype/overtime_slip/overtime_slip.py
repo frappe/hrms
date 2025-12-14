@@ -113,21 +113,33 @@ class OvertimeSlip(Document):
 
 		for record in records:
 			if record.overtime_type not in overtime_type_cache:
-				overtime_type_cache[record.overtime_type] = frappe.db.get_value(
-					"Overtime Type", record.overtime_type, "maximum_overtime_hours_allowed"
+				overtime_type_cache[record.overtime_type] = (
+					frappe.db.get_value(
+						"Overtime Type",
+						record.overtime_type,
+						[
+							"maximum_overtime_hours_allowed",
+							"accrue_compensatory_off",
+							"accrue_compensatory_off_on_workdays",
+							"compensatory_off_component",
+						],
+						as_dict=True,
+					)
+					or frappe._dict()
 				)
+			overtime_type = overtime_type_cache[record.overtime_type]
 
-			maximum_overtime_hours_allowed = overtime_type_cache[record.overtime_type]
+			maximum_overtime_hours_allowed = overtime_type.maximum_overtime_hours_allowed
 			overtime_duration = record.actual_overtime_duration or 0.0
 
-			if maximum_overtime_hours_allowed > 0:
+			if maximum_overtime_hours_allowed > 0 and not overtime_type.accrue_compensatory_off:
 				overtime_duration = (
 					overtime_duration
 					if maximum_overtime_hours_allowed > overtime_duration
 					else maximum_overtime_hours_allowed
 				)
 
-			if overtime_duration > 0:
+			if overtime_duration > 0 and overtime_duration <= maximum_overtime_hours_allowed:
 				self.append(
 					"overtime_details",
 					{
@@ -137,6 +149,13 @@ class OvertimeSlip(Document):
 						"overtime_duration": overtime_duration,
 						"standard_working_hours": record.standard_working_hours,
 					},
+				)
+
+			if overtime_type.accrue_compensatory_off and overtime_duration > maximum_overtime_hours_allowed:
+				self.create_comp_off_for_overtime(
+					record.attendance_date,
+					overtime_type.accrue_compensatory_off_on_workdays,
+					overtime_type.compensatory_off_component,
 				)
 
 	def get_attendance_records(self):
@@ -166,6 +185,31 @@ class OvertimeSlip(Document):
 					)
 				)
 		return records
+
+	def create_comp_off_for_overtime(self, attendance_date, accure_on_workday, leave_type):
+		if frappe.db.exists(
+			"Compensatory Leave Request",
+			{
+				"employee": self.employee,
+				"work_from_date": attendance_date,
+				"work_end_date": attendance_date,
+				"reason": "Overtime",
+				"docstatus": ["!=", 2],
+			},
+		):
+			return
+		comp_off = {
+			"doctype": "Compensatory Leave Request",
+			"employee": self.employee,
+			"leave_type": leave_type,
+			"work_from_date": attendance_date,
+			"work_end_date": attendance_date,
+			"reason": "Overtime",
+		}
+		clr = frappe.get_doc(comp_off)
+		frappe.flags.for_overtime = accure_on_workday
+		clr.save()
+		frappe.flags.for_overtime = False
 
 	def process_overtime_slip(self):
 		overtime_components = self.get_overtime_component_amounts()

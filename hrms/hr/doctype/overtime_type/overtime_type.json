@@ -8,6 +8,9 @@
  "field_order": [
   "section_break_pai1",
   "maximum_overtime_hours_allowed",
+  "accrue_compensatory_off",
+  "accrue_compensatory_off_on_workdays",
+  "compensatory_off_component",
   "column_break_meuk",
   "overtime_salary_component",
   "section_break_xxdv",
@@ -128,11 +131,32 @@
   {
    "fieldname": "column_break_cdtj",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "accrue_compensatory_off",
+   "fieldtype": "Check",
+   "label": "Accrue Compensatory Off"
+  },
+  {
+   "default": "0",
+   "depends_on": "accrue_compensatory_off",
+   "fieldname": "accrue_compensatory_off_on_workdays",
+   "fieldtype": "Check",
+   "label": "Accrue Compensatory Off On Workdays"
+  },
+  {
+   "depends_on": "accrue_compensatory_off",
+   "fieldname": "compensatory_off_component",
+   "fieldtype": "Link",
+   "label": "Compensatory Off Component",
+   "mandatory_depends_on": "accrue_compensatory_off",
+   "options": "Leave Type"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-11 12:05:23.356474",
+ "modified": "2025-12-14 16:05:04.686871",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Overtime Type",
