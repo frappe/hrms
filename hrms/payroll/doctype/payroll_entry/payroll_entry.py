@@ -26,7 +26,7 @@ import erpnext
 from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
 	get_accounting_dimensions,
 )
-from erpnext.accounts.utils import get_fiscal_year
+from erpnext.accounts.utils import get_advance_payment_doctypes, get_fiscal_year
 
 from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
 from hrms.payroll.doctype.salary_withholding.salary_withholding import link_bank_entry_in_salary_withholdings
@@ -404,15 +404,36 @@ class PayrollEntry(Document):
 				employee_cost_centers = self.get_payroll_cost_centers_for_employee(
 					item.employee, item.salary_structure
 				)
-				employee_advance = self.get_advance_deduction(component_type, item)
 
+				salary_component_account = self.get_salary_component_account(item.salary_component)
+				account_type = frappe.get_cached_value("Account", salary_component_account, "account_type")
+				is_receivable_payable = account_type in ["Receivable", "Payable"]
+				if is_receivable_payable:
+					ref_doctype = frappe.db.get_value(
+						"Additional Salary", item.additional_salary, "ref_doctype"
+					)
+					ref_docname = frappe.db.get_value(
+						"Additional Salary", item.additional_salary, "ref_docname"
+					)
+					_receivable_payable_entrie = {
+						"employee": item.employee,
+						"account": salary_component_account,
+						"entry_type": "credit" if component_type == "deductions" else "debit",
+						"reference_type": ref_doctype,
+						"reference_name": ref_docname,
+						"is_advance": "Yes" if ref_doctype in get_advance_payment_doctypes() else "No",
+					}
 				for cost_center, percentage in employee_cost_centers.items():
 					amount_against_cost_center = flt(item.amount) * percentage / 100
 
-					if employee_advance:
-						self.add_advance_deduction_entry(
-							item, amount_against_cost_center, cost_center, employee_advance
+					if is_receivable_payable:
+						_receivable_payable_entrie.update(
+							{
+								"amount": amount_against_cost_center,
+								"cost_center": cost_center,
+							}
 						)
+						self._receivable_payable_entries.append(_receivable_payable_entrie)
 					else:
 						key = (item.salary_component, cost_center)
 						component_dict[key] = component_dict.get(key, 0) + amount_against_cost_center
@@ -426,37 +447,7 @@ class PayrollEntry(Document):
 
 			return account_details
 
-	def get_advance_deduction(self, component_type: str, item: dict) -> str | None:
-		if component_type == "deductions" and item.additional_salary:
-			ref_doctype, ref_docname = frappe.db.get_value(
-				"Additional Salary",
-				item.additional_salary,
-				["ref_doctype", "ref_docname"],
-			)
-
-			if ref_doctype == "Employee Advance":
-				return ref_docname
-		return
-
-	def add_advance_deduction_entry(
-		self,
-		item: dict,
-		amount: float,
-		cost_center: str,
-		employee_advance: str,
-	) -> None:
-		self._advance_deduction_entries.append(
-			{
-				"employee": item.employee,
-				"account": self.get_salary_component_account(item.salary_component),
-				"amount": amount,
-				"cost_center": cost_center,
-				"reference_type": "Employee Advance",
-				"reference_name": employee_advance,
-			}
-		)
-
-	def set_accounting_entries_for_advance_deductions(
+	def set_accounting_entries_for_receivable_payable(
 		self,
 		accounts: list,
 		currencies: list,
@@ -465,7 +456,7 @@ class PayrollEntry(Document):
 		precision: int,
 		payable_amount: float,
 	):
-		for entry in self._advance_deduction_entries:
+		for entry in self._receivable_payable_entries:
 			payable_amount = self.get_accounting_entries_and_payable_amount(
 				entry.get("account"),
 				entry.get("cost_center"),
@@ -475,12 +466,12 @@ class PayrollEntry(Document):
 				payable_amount,
 				accounting_dimensions,
 				precision,
-				entry_type="credit",
+				entry_type=entry.get("entry_type"),
 				accounts=accounts,
 				party=entry.get("employee"),
-				reference_type="Employee Advance",
-				reference_name=entry.get("reference_name"),
-				is_advance="Yes",
+				reference_type=entry.get("ref_doctype"),
+				reference_name=entry.get("ref_docname"),
+				is_advance=entry.get("is_advance"),
 			)
 
 		return payable_amount
@@ -559,7 +550,7 @@ class PayrollEntry(Document):
 			"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
 		)
 		self.employee_based_payroll_payable_entries = {}
-		self._advance_deduction_entries = []
+		self._receivable_payable_entries = []
 
 		earnings = (
 			self.get_salary_component_total(
@@ -598,7 +589,7 @@ class PayrollEntry(Document):
 				employee_wise_accounting_enabled,
 			)
 
-			payable_amount = self.set_accounting_entries_for_advance_deductions(
+			payable_amount = self.set_accounting_entries_for_receivable_payable(
 				accounts,
 				currencies,
 				company_currency,
