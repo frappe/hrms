@@ -69,6 +69,13 @@ class TestJobOffer(IntegrationTestCase):
 
 		self.assertEqual(get_offer_acceptance_rate().get("value"), 50)
 
+	def test_status_on_save(self):
+		job_offer = create_job_offer()
+		job_offer.save()
+		job_offer.discard()
+		job_offer.reload()
+		self.assertEqual(job_offer.status, "Cancelled")
+
 
 def create_job_offer(**args):
 	args = frappe._dict(args)

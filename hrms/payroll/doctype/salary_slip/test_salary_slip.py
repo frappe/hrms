@@ -1821,6 +1821,13 @@ class TestSalarySlip(IntegrationTestCase):
 
 		self.assertEqual(salary_slip.total_income_tax, total_income_tax)
 
+	def test_status_on_discard(self):
+		salary_slip = make_salary_slip_with_non_taxable_component()
+		salary_slip.save()
+		salary_slip.discard()
+		salary_slip.reload()
+		self.assertEqual(salary_slip.status, "Cancelled")
+
 
 class TestSalarySlipSafeEval(IntegrationTestCase):
 	def test_safe_eval_for_salary_slip(self):

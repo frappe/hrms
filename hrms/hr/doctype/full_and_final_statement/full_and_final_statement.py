@@ -14,6 +14,7 @@ from hrms.hr.doctype.full_and_final_statement.full_and_final_statement_loan_util
 
 class FullandFinalStatement(Document):
 	def before_insert(self):
+		self.status = "Unpaid"
 		self.get_outstanding_statements()
 
 	def validate(self):
@@ -33,6 +34,9 @@ class FullandFinalStatement(Document):
 	def on_cancel(self):
 		self.ignore_linked_doctypes = ("GL Entry",)
 		cancel_loan_repayment(self)
+
+	def on_discard(self):
+		self.db_set("status", "Cancelled")
 
 	def validate_relieving_date(self):
 		if not self.relieving_date:

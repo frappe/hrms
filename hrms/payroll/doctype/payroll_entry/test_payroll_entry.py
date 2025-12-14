@@ -1043,6 +1043,23 @@ class TestPayrollEntry(FrappeTestCase):
 			24000,
 		)
 
+	def test_status_on_discard(self):
+		company = frappe.get_doc("Company", "_Test Company")
+		employee = frappe.db.get_value("Employee", {"company": "_Test Company"})
+		setup_salary_structure(employee, company)
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = get_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+		)
+		payroll_entry.discard()
+		payroll_entry.reload()
+		self.assertEqual(payroll_entry.status, "Cancelled")
+
 
 def get_payroll_entry(**args):
 	args = frappe._dict(args)

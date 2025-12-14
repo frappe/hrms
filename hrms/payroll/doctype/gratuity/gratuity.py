@@ -312,6 +312,9 @@ class Gratuity(AccountsController):
 	def _is_experience_beyond_slab(self, slab: dict, experience: float) -> bool:
 		return bool(slab.from_year < experience and (slab.to_year < experience and slab.to_year != 0))
 
+	def on_discard(self):
+		self.db_set("status", "Cancelled")
+
 
 def get_last_salary_slip(employee: str) -> dict | None:
 	salary_slip = frappe.db.get_value(

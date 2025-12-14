@@ -2377,6 +2377,9 @@ class SalarySlip(TransactionBase):
 					},
 				)
 
+	def on_discard(self):
+		self.db_set("status", "Cancelled")
+
 
 def get_benefits_details_parent(employee, payroll_period, salary_structure_assignment):
 	"""Returns the parent and doctype of benefit details based on the following logic:

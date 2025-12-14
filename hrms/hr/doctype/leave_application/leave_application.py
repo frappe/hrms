@@ -116,6 +116,9 @@ class LeaveApplication(Document, PWANotificationsMixin):
 	def before_cancel(self):
 		self.status = "Cancelled"
 
+	def on_discard(self):
+		self.db_set("status", "Cancelled")
+
 	def on_cancel(self):
 		self.create_leave_ledger_entry(submit=False)
 		# notify leave applier about cancellation

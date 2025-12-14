@@ -313,6 +313,9 @@ class LeaveEncashment(AccountsController):
 
 		return gl_entry
 
+	def on_discard(self):
+		self.db_set("status", "Cancelled")
+
 
 def create_leave_encashment(leave_allocation):
 	"""Creates leave encashment for the given allocations"""

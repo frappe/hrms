@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-11-30 09:35+0000\n"
-"PO-Revision-Date: 2025-12-01 14:27\n"
+"POT-Creation-Date: 2025-12-07 09:35+0000\n"
+"PO-Revision-Date: 2025-12-08 09:19\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -1388,10 +1388,6 @@ msgstr "crwdns141046:0crwdne141046:0"
 msgid "Attendance from {0} to {1} has already been marked for the Employee {2}"
 msgstr "crwdns105382:0{0}crwdnd105382:0{1}crwdnd105382:0{2}crwdne105382:0"
 
-#: hrms/hr/doctype/shift_type/shift_type.js:34
-msgid "Attendance has been marked as per employee check-ins"
-msgstr "crwdns105384:0crwdne105384:0"
-
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:36
 msgid "Attendance has been marked for all the employees between the selected payroll dates."
 msgstr "crwdns141048:0crwdne141048:0"
@@ -1854,7 +1850,7 @@ msgstr "crwdns151168:0crwdne151168:0"
 msgid "Check Vacancies On Job Offer Creation"
 msgstr "crwdns141136:0crwdne141136:0"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:452
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:467
 #: hrms/hr/utils.py:935
 msgid "Check {0} for more details"
 msgstr "crwdns105598:0{0}crwdne105598:0"
@@ -3265,7 +3261,7 @@ msgstr "crwdns141394:0crwdne141394:0"
 msgid "Employee records are created using the selected option"
 msgstr "crwdns141396:0crwdne141396:0"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:244
+#: hrms/hr/doctype/shift_type/shift_type.py:272
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr "crwdns106882:0crwdne106882:0"
 
@@ -3273,7 +3269,7 @@ msgstr "crwdns106882:0crwdne106882:0"
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr "crwdns106884:0crwdne106884:0"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:373
+#: hrms/hr/doctype/shift_type/shift_type.py:401
 msgid "Employee was marked Absent for other half due to missing Employee Checkins."
 msgstr "crwdns155412:0crwdne155412:0"
 
@@ -3937,7 +3933,7 @@ msgstr "crwdns107194:0crwdne107194:0"
 msgid "Failed to setup defaults for country {0}."
 msgstr "crwdns141488:0{0}crwdne141488:0"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:449
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:464
 msgid "Failed to submit some leave policy assignments:"
 msgstr "crwdns107198:0crwdne107198:0"
 
@@ -5232,8 +5228,8 @@ msgstr "crwdns152170:0crwdne152170:0"
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
 msgstr "crwdns107840:0{0}crwdnd107840:0{1}crwdne107840:0"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:39
 #: hrms/hr/doctype/shift_type/shift_type.py:48
+#: hrms/hr/doctype/shift_type/shift_type.py:57
 msgid "Invalid Shift Times"
 msgstr "crwdns152551:0crwdne152551:0"
 
@@ -5966,6 +5962,10 @@ msgstr "crwdns108196:0crwdne108196:0"
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr "crwdns108200:0crwdne108200:0"
 
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:130
+msgid "Leave allocation is skipped for {0}, because number of leaves to be allocated is 0."
+msgstr "crwdns162090:0{0}crwdne162090:0"
+
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.py:54
 msgid "Leave allocation {0} is linked with the Leave Application {1}"
 msgstr "crwdns108202:0{0}crwdnd108202:0{1}crwdne108202:0"
@@ -6237,7 +6237,7 @@ msgstr "crwdns108320:0{0}crwdnd108320:0{1}crwdne108320:0"
 msgid "Mark attendance based on 'Employee Checkin' for Employees assigned to this shift."
 msgstr "crwdns141872:0crwdne141872:0"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:88
+#: hrms/hr/doctype/shift_type/shift_type.py:97
 msgid "Mark attendance for existing check-in/out logs before changing shift settings"
 msgstr "crwdns152404:0crwdne152404:0"
 
@@ -6643,7 +6643,7 @@ msgstr "crwdns143270:0{0}crwdnd143270:0{1}crwdne143270:0"
 msgid "No Salary Structure assigned to Employee {0} on the given date {1}"
 msgstr "crwdns108530:0{0}crwdnd108530:0{1}crwdne108530:0"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:109
+#: hrms/payroll/doctype/salary_component/salary_component.js:115
 msgid "No Salary Structures"
 msgstr "crwdns141958:0crwdne141958:0"
 
@@ -7619,7 +7619,7 @@ msgstr "crwdns108956:0crwdne108956:0"
 msgid "Please fill in Employee, Posting Date, and Company before fetching overtime details."
 msgstr "crwdns159666:0crwdne159666:0"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:49
+#: hrms/hr/doctype/shift_type/shift_type.py:58
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr "crwdns152559:0{0}crwdne152559:0"
 
@@ -8619,7 +8619,7 @@ msgstr "crwdns142322:0crwdne142322:0"
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr "crwdns159684:0{0}crwdne159684:0"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:107
+#: hrms/payroll/doctype/salary_component/salary_component.js:113
 msgid "Salary Component {0} is currently not used in any Salary Structure."
 msgstr "crwdns142324:0{0}crwdne142324:0"
 
@@ -8843,7 +8843,7 @@ msgstr "crwdns159694:0{0}crwdnd159694:0{1}crwdne159694:0"
 msgid "Salary Structure {0} does not belong to company {1}"
 msgstr "crwdns109526:0{0}crwdnd109526:0{1}crwdne109526:0"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:144
+#: hrms/payroll/doctype/salary_component/salary_component.js:150
 msgid "Salary Structures updated successfully"
 msgstr "crwdns142342:0crwdne142342:0"
 
@@ -9590,7 +9590,7 @@ msgstr "crwdns160448:0crwdne160448:0"
 msgid "Start date: {0}"
 msgstr "crwdns109862:0{0}crwdne109862:0"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:40
+#: hrms/hr/doctype/shift_type/shift_type.py:49
 msgid "Start time and end time cannot be same."
 msgstr "crwdns152567:0crwdne152567:0"
 
@@ -9636,7 +9636,7 @@ msgstr "crwdns109934:0crwdne109934:0"
 msgid "Submission Date"
 msgstr "crwdns142476:0crwdne142476:0"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:460
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:475
 msgid "Submission Failed"
 msgstr "crwdns109942:0crwdne109942:0"
 
@@ -9714,7 +9714,7 @@ msgstr "crwdns159720:0{0}crwdnd159720:0{1}crwdne159720:0"
 msgid "Summarized View"
 msgstr "crwdns109978:0crwdne109978:0"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:93
+#: hrms/payroll/doctype/salary_component/salary_component.js:99
 msgid "Sync {0}"
 msgstr "crwdns142490:0{0}crwdne142490:0"
 
@@ -9943,8 +9943,8 @@ msgstr "crwdns110082:0{0}crwdne110082:0"
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:42
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:20
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:207
-msgid "There is no Salary Structure assigned to {0}. First assign a Salary Stucture."
-msgstr "crwdns110084:0{0}crwdne110084:0"
+msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
+msgstr "crwdns162092:0{0}crwdne162092:0"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:392
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
@@ -10652,7 +10652,7 @@ msgstr "crwdns110446:0crwdne110446:0"
 msgid "Unmarked Attendance for days"
 msgstr "crwdns110450:0crwdne110450:0"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:87
+#: hrms/hr/doctype/shift_type/shift_type.py:96
 msgid "Unmarked Check-in Logs Found"
 msgstr "crwdns152412:0crwdne152412:0"
 
@@ -10744,7 +10744,7 @@ msgstr "crwdns110484:0crwdne110484:0"
 msgid "Update Response"
 msgstr "crwdns110486:0crwdne110486:0"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:114
+#: hrms/payroll/doctype/salary_component/salary_component.js:120
 msgid "Update Salary Structures"
 msgstr "crwdns142684:0crwdne142684:0"
 
@@ -11408,7 +11408,7 @@ msgstr "crwdns151406:0{0}crwdne151406:0"
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
 msgstr "crwdns110758:0{0}crwdnd110758:0{1}crwdnd110758:0{2}crwdnd110758:0{3}crwdnd110758:0{4}crwdnd110758:0{5}crwdnd110758:0{6}crwdnd110758:0{3}crwdne110758:0"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:124
+#: hrms/payroll/doctype/salary_component/salary_component.js:130
 msgid "{0} will be updated for the following Salary Structures: {1}."
 msgstr "crwdns142780:0{0}crwdnd142780:0{1}crwdne142780:0"
 

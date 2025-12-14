@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-11-30 09:35+0000\n"
-"PO-Revision-Date: 2025-12-05 09:07\n"
+"POT-Creation-Date: 2025-12-07 09:35+0000\n"
+"PO-Revision-Date: 2025-12-09 09:28\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -1413,10 +1413,6 @@ msgstr "Посещение следующих дат будет пропущен
 msgid "Attendance from {0} to {1} has already been marked for the Employee {2}"
 msgstr "Посещаемость с {0} по {1} уже отмечена для сотрудника {2}"
 
-#: hrms/hr/doctype/shift_type/shift_type.js:34
-msgid "Attendance has been marked as per employee check-ins"
-msgstr "Посещаемость отмечена в соответствии с проверками сотрудников."
-
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:36
 msgid "Attendance has been marked for all the employees between the selected payroll dates."
 msgstr "Посещаемость отмечена для всех сотрудников в период между выбранными датами выплаты заработной платы."
@@ -1879,7 +1875,7 @@ msgstr "Выход"
 msgid "Check Vacancies On Job Offer Creation"
 msgstr "Проверить Вакансии при ее создании"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:452
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:467
 #: hrms/hr/utils.py:935
 msgid "Check {0} for more details"
 msgstr "Проверьте {0} для более подробной информации"
@@ -3293,7 +3289,7 @@ msgstr "Имя сотрудника"
 msgid "Employee records are created using the selected option"
 msgstr "Записи сотрудников создаются с помощью выбранного параметра"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:244
+#: hrms/hr/doctype/shift_type/shift_type.py:272
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr "Сотрудник был отмечен как отсутствующий из-за отсутствия отметок о входе."
 
@@ -3301,7 +3297,7 @@ msgstr "Сотрудник был отмечен как отсутствующи
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr "Сотрудник был отмечен как отсутствующий за неполное выполнение установленного рабочего времени."
 
-#: hrms/hr/doctype/shift_type/shift_type.py:373
+#: hrms/hr/doctype/shift_type/shift_type.py:401
 msgid "Employee was marked Absent for other half due to missing Employee Checkins."
 msgstr "Сотрудник был отмечен отсутствующим на второй половине дня из-за отсутствующих отметок о входе/выходе."
 
@@ -3965,7 +3961,7 @@ msgstr "Не удалось отправить уведомление о пер�
 msgid "Failed to setup defaults for country {0}."
 msgstr "Не удалось установить значения по умолчанию для страны {0}."
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:449
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:464
 msgid "Failed to submit some leave policy assignments:"
 msgstr "Не удалось отправить некоторые задания по политике отпусков:"
 
@@ -5260,8 +5256,8 @@ msgstr "Неверная запись в журнале отпусков"
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
 msgstr "Неверный счет для выплаты заработной платы. Валюта счета должна быть {0} или {1}"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:39
 #: hrms/hr/doctype/shift_type/shift_type.py:48
+#: hrms/hr/doctype/shift_type/shift_type.py:57
 msgid "Invalid Shift Times"
 msgstr "Недопустимое время смены"
 
@@ -5994,6 +5990,10 @@ msgstr "Отпуск без сохранения заработной платы
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr "Отпуск без сохранения заработной платы не соответствует утвержденным записям {}"
 
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:130
+msgid "Leave allocation is skipped for {0}, because number of leaves to be allocated is 0."
+msgstr "Выделение листы пропускается для {0}, поскольку количество выделяемых листов равно 0."
+
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.py:54
 msgid "Leave allocation {0} is linked with the Leave Application {1}"
 msgstr "Выделение отпуска {0} связано с заявлением на отпуск {1}"
@@ -6265,7 +6265,7 @@ msgstr "Отметить посещаемость как {0} для {1} в вы�
 msgid "Mark attendance based on 'Employee Checkin' for Employees assigned to this shift."
 msgstr "Отмечайте посещаемость на основе «Проверки сотрудников» для сотрудников, назначенных на эту смену."
 
-#: hrms/hr/doctype/shift_type/shift_type.py:88
+#: hrms/hr/doctype/shift_type/shift_type.py:97
 msgid "Mark attendance for existing check-in/out logs before changing shift settings"
 msgstr "Отмечайте посещаемость в существующих журналах регистрации прихода/ухода перед изменением настроек смены"
 
@@ -6671,7 +6671,7 @@ msgstr "Назначение структуры заработной платы 
 msgid "No Salary Structure assigned to Employee {0} on the given date {1}"
 msgstr "Структура заработной платы не назначена сотруднику {0} на указанную дату {1}"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:109
+#: hrms/payroll/doctype/salary_component/salary_component.js:115
 msgid "No Salary Structures"
 msgstr "Нет структуры заработной платы"
 
@@ -7647,7 +7647,7 @@ msgstr "Пожалуйста, введите обозначение"
 msgid "Please fill in Employee, Posting Date, and Company before fetching overtime details."
 msgstr "Прежде чем получать данные о сверхурочной работе, пожалуйста, укажите данные о сотруднике, дату размещения и компанию."
 
-#: hrms/hr/doctype/shift_type/shift_type.py:49
+#: hrms/hr/doctype/shift_type/shift_type.py:58
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr "Пожалуйста, уменьшите {0}, чтобы избежать наложения времени сдвига на себя."
 
@@ -8647,7 +8647,7 @@ msgstr "Компонент «зарплата» для расчета зараб
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr "Компонент зарплаты {0} не может быть выбран более одного раза в разделе «Льготы сотрудникам»"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:107
+#: hrms/payroll/doctype/salary_component/salary_component.js:113
 msgid "Salary Component {0} is currently not used in any Salary Structure."
 msgstr "Компонент зарплаты {0} в настоящее время не используется ни в одной структуре зарплаты."
 
@@ -8871,7 +8871,7 @@ msgstr "Структура заработной платы не назначен
 msgid "Salary Structure {0} does not belong to company {1}"
 msgstr "Структура заработной платы {0} не принадлежит компании {1}"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:144
+#: hrms/payroll/doctype/salary_component/salary_component.js:150
 msgid "Salary Structures updated successfully"
 msgstr "Структура заработной платы успешно обновлена"
 
@@ -9618,7 +9618,7 @@ msgstr "Дата начала не может быть позже даты ок�
 msgid "Start date: {0}"
 msgstr "Дата начала: {0}"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:40
+#: hrms/hr/doctype/shift_type/shift_type.py:49
 msgid "Start time and end time cannot be same."
 msgstr "Время начала и время окончания не могут совпадать."
 
@@ -9664,7 +9664,7 @@ msgstr "Структуры были успешно назначены"
 msgid "Submission Date"
 msgstr "Дата подачи"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:460
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:475
 msgid "Submission Failed"
 msgstr "Отправка не удалась"
 
@@ -9742,7 +9742,7 @@ msgstr "Сумма пособий {0} превышает максимальны�
 msgid "Summarized View"
 msgstr "Обобщенный вид"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:93
+#: hrms/payroll/doctype/salary_component/salary_component.js:99
 msgid "Sync {0}"
 msgstr "Синхронизация {0}"
 
@@ -9971,8 +9971,8 @@ msgstr "В штатном расписании вакансий нет {0}"
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:42
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:20
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:207
-msgid "There is no Salary Structure assigned to {0}. First assign a Salary Stucture."
-msgstr "Для {0}не назначена структура заработной платы. Сначала назначьте структуру заработной платы."
+msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
+msgstr "Для {0} не назначена структура заработной платы. Сначала назначьте структуру заработной платы."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:392
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
@@ -10680,7 +10680,7 @@ msgstr "Несвязанные журналы"
 msgid "Unmarked Attendance for days"
 msgstr "Неотмеченная посещаемость в течение дней"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:87
+#: hrms/hr/doctype/shift_type/shift_type.py:96
 msgid "Unmarked Check-in Logs Found"
 msgstr "Найдены неотмеченные журналы регистрации"
 
@@ -10772,7 +10772,7 @@ msgstr "Прогресс обновления"
 msgid "Update Response"
 msgstr "Обновление ответа"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:114
+#: hrms/payroll/doctype/salary_component/salary_component.js:120
 msgid "Update Salary Structures"
 msgstr "Обновление структуры заработной платы"
 
@@ -11436,7 +11436,7 @@ msgstr "{0} успешно обновлено!"
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
 msgstr "{0} вакансий и {1} бюджет для {2} уже запланированы для дочерних компаний {3}. Вы можете планировать только до {4} вакансий и бюджет {5} согласно кадровому плану {6} для материнской компании {3}."
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:124
+#: hrms/payroll/doctype/salary_component/salary_component.js:130
 msgid "{0} will be updated for the following Salary Structures: {1}."
 msgstr "{0} будет обновлено для следующих структур зарплаты: {1}."
 
