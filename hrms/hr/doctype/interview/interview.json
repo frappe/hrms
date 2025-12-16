@@ -64,7 +64,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Pending\nUnder Review\nCleared\nRejected",
+   "options": "Pending\nUnder Review\nCleared\nRejected\nCancelled",
    "reqd": 1
   },
   {
@@ -199,7 +199,7 @@
    "link_fieldname": "interview"
   }
  ],
- "modified": "2024-03-27 13:09:51.655366",
+ "modified": "2025-11-21 17:24:02.676395",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview",
@@ -263,6 +263,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],

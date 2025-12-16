@@ -42,4 +42,19 @@ frappe.ui.form.on("Job Opening", {
 	company: function (frm) {
 		frm.set_value("designation", "");
 	},
+
+	job_opening_template: function (frm) {
+		if (!frm.doc.job_opening_template) return;
+
+		frappe.db.get_doc("Job Opening Template", frm.doc.job_opening_template).then((doc) => {
+			frm.set_value({
+				department: doc.department,
+				employment_type: doc.employment_type,
+				location: doc.location,
+				description: doc.description,
+			});
+
+			frm.refresh_fields();
+		});
+	},
 });

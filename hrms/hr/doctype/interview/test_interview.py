@@ -196,6 +196,15 @@ class TestInterview(IntegrationTestCase):
 
 		self.assertEqual(job_applicant.status, "Accepted")
 
+	def test_status_on_discard(self):
+		job_applicant = create_job_applicant()
+		interview = create_interview_and_dependencies(job_applicant.name, status="Pending")
+
+		interview.discard()
+		interview.reload()
+
+		self.assertEqual(interview.status, "Cancelled")
+
 	def tearDown(self):
 		frappe.db.rollback()
 
