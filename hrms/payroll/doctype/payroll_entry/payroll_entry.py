@@ -787,9 +787,21 @@ class PayrollEntry(Document):
 
 		return payable_amount
 
-	def update_accounting_dimensions(self, row, accounting_dimensions):
+	def update_accounting_dimensions(self, row, accounting_dimensions, fetch_from_employee = False):
+		employee_meta = frappe.get_meta("Employee")
+
 		for dimension in accounting_dimensions:
-			row.update({dimension: self.get(dimension)})
+			accounting_dimension = None
+
+			if employee_meta.has_field(dimension):
+				accounting_dimension = (
+					frappe.db.get_value("Employee", row.get("party"), dimension)
+					or self.get(dimension)
+				)
+			else:
+				accounting_dimension = self.get(dimension)
+
+			row.update({dimension: accounting_dimension})
 
 		return row
 
