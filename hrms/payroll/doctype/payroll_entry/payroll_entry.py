@@ -911,7 +911,9 @@ class PayrollEntry(Document):
 				if only_tax_impact != 1 and statistical_component != 1:
 					if is_flexible_benefit == 1 and create_separate_je == 1:
 						self.set_accounting_entries_for_bank_entry(
-							salary_detail.amount, salary_detail.salary_component
+							salary_detail.amount,
+							salary_detail.salary_component,
+							employee_wise_accounting_enabled,
 						)
 					else:
 						if employee_wise_accounting_enabled:
