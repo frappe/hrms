@@ -16,11 +16,22 @@ jobs:
           days-before-pr-close: 3
           stale-pr-label: 'Inactive'
           exempt-draft-pr: true
-          days-before-issue-stale: -1
-          days-before-issue-close: -1
+          days-before-issue-stale: 5
+          days-before-issue-close: 2
+          stale-issue-label: 'Inactive'
+          any-of-issue-labels: "question,can't replicate"
+          remove-issue-stale-when-updated: true
+          labels-to-remove-when-unstale: 'Inactive'
           stale-pr-message: |
             This pull request is being marked as inactive because of no recent activity. 
             If your PR hasn't been reviewed, it's likely because it doesn't fullfill the [contribution guidelines](https://github.com/frappe/erpnext/wiki/Contribution-Guidelines). Please read them carefully and fix the pull request. When you are sure all items are checked, please ping relevant codeowner in the comment. Be nice, they have a lot on their plate too.
             
             It will be closed in 3 days if no further activity occurs.
             Thank you for contributing!
+          stale-issue-message: |
+            Hi, this is your friendly neighbourhood bot :)
+            
+            Thank you for taking time to report the issue, however your description of the issue is insufficient to understand the exact problem and/or to replicate and fix it. Please provide the information requested by the maintainers, so this can be fixed. More the steps/screenshots/videos the better.
+
+            It will be closed in 2 days if no further activity occurs.
+            Beep Boop!

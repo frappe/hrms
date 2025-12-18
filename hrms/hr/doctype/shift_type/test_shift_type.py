@@ -868,6 +868,52 @@ class TestShiftType(IntegrationTestCase):
 		job = frappe.get_all("RQ Job", {"job_id": f"process_auto_attendance_{shift.name}"})
 		self.assertTrue(job)
 
+	def test_precision_for_working_hours_threshold(self):
+		shift = setup_shift_type(
+			start_time="10:00:00",
+			end_time="18:00:00",
+			working_hours_threshold_for_half_day=4.75,
+			working_hours_threshold_for_absent=1.25,
+		)
+		employee = make_employee(
+			"test_working_hours@example.com", company="_Test Company", default_shift=shift.name
+		)
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+
+		in_time = datetime.combine(getdate(), get_time("10:00:00"))
+		make_checkin(employee, in_time)
+
+		# checked out before completing absent hours threshold
+		out_time = datetime.combine(getdate(), get_time("11:14:00"))
+		check_out = make_checkin(employee, out_time)
+		shift.process_auto_attendance()
+		attendance = frappe.get_doc(
+			"Attendance", {"employee": employee, "shift": shift.name, "attendance_date": getdate()}
+		)
+		self.assertEqual(attendance.status, "Absent")
+		attendance.cancel()
+
+		# barely passed absent hour threshold
+		check_out.time = datetime.combine(getdate(), get_time("11:15:00"))
+		check_out.save()
+		shift.process_auto_attendance()
+		attendance = frappe.get_doc(
+			"Attendance", {"employee": employee, "shift": shift.name, "attendance_date": getdate()}
+		)
+		self.assertEqual(attendance.status, "Half Day")
+		self.assertEqual(attendance.working_hours, 1.25)
+		attendance.cancel()
+
+		# barely passed half day hour threshold
+		check_out.time = datetime.combine(getdate(), get_time("14:45:00"))
+		check_out.save()
+		shift.process_auto_attendance()
+		attendance = frappe.get_doc(
+			"Attendance", {"employee": employee, "shift": shift.name, "attendance_date": getdate()}
+		)
+		self.assertEqual(attendance.status, "Present")
+		self.assertEqual(attendance.working_hours, 4.75)
+
 
 def setup_shift_type(**args):
 	args = frappe._dict(args)
