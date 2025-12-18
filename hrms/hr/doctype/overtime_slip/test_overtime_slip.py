@@ -11,6 +11,7 @@ from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 from hrms.hr.doctype.overtime_type.test_overtime_type import create_overtime_type
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.tests.test_utils import add_date_to_holiday_list
 
 TEST_COMPANY = "_Test Company"
 
@@ -138,6 +139,56 @@ class TestOvertimeSlip(IntegrationTestCase):
 		)
 
 		self.assertTrue(overtime_slip)
+
+	def test_overtime_comp_off(self):
+		date = getdate()
+		month_start_date = get_first_day(date)
+		overtime_type = create_overtime_type(maximum_overtime_hours_allowed=4, accrue_compensatory_off=1)
+
+		shift_type = setup_shift_type(
+			company=TEST_COMPANY,
+			shift_type="_Test Overtime Shift",
+			allow_overtime=1,
+			overtime_type=overtime_type.name,
+			last_sync_of_checkin=f"{add_days(date, 10)} 15:00:00",
+			process_attendance_after=add_days(month_start_date, -1),
+			mark_auto_attendance_on_holidays=1,
+			begin_check_in_before_shift_start_time=120,
+			allow_check_out_after_shift_end_time=240,
+		)
+
+		add_date_to_holiday_list(month_start_date, shift_type.holiday_list)
+		employee = make_employee("test_overtime_comp_off@example.com", holiday_list=shift_type.holiday_list)
+
+		make_shift_assignment(
+			shift_type=shift_type.name, employee=employee, start_date=add_days(month_start_date, -1)
+		)
+		make_salary_structure("Test Overtime Salary Slip", "Monthly", employee=employee, company=TEST_COMPANY)
+
+		# overtime on holiday to accrue comp off
+		checkin_times = [
+			(f"{month_start_date} 7:00:00", "IN"),
+			(f"{month_start_date} 16:00:00", "OUT"),
+			(f"{add_days(month_start_date, 1)} 7:00:00", "IN"),
+			(f"{add_days(month_start_date, 1)} 13:00:00", "OUT"),
+		]
+		for time, log_type in checkin_times:
+			make_checkin(employee, time=time, log_type=log_type)
+		shift_type.process_auto_attendance()
+
+		slip = create_overtime_slip(employee)
+		slip.submit()
+		comp_leave_request = frappe.db.exists(
+			"Compensatory Leave Request",
+			{
+				"employee": employee,
+				"work_from_date": month_start_date,
+				"work_end_date": month_start_date,
+				"leave_type": overtime_type.compensatory_off_component,
+				"docstatus": ["!=", 2],
+			},
+		)
+		self.assertTrue(comp_leave_request)
 
 	def tearDown(self):
 		frappe.db.rollback()

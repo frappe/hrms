@@ -28,6 +28,9 @@ def create_overtime_type(**args):
 	overtime_type.applicable_for_public_holiday = args.applicable_for_public_holiday or 0
 	overtime_type.maximum_overtime_hours_allowed = args.maximum_overtime_hours_allowed or 0
 	overtime_type.overtime_salary_component = args.overtime_salary_component or "Overtime"
+	overtime_type.accrue_compensatory_off = args.accrue_compensatory_off or 0
+	overtime_type.accrue_compensatory_off_on_workdays = args.accrue_compensatory_off_on_workdays or 0
+	overtime_type.compensatory_off_component = args.compensatory_off_component or "Compensatory Off"
 
 	if overtime_type.overtime_calculation_method == "Fixed Hourly Rate":
 		overtime_type.hourly_rate = 400
@@ -36,7 +39,7 @@ def create_overtime_type(**args):
 
 	if args.applicable_for_weekend:
 		overtime_type.weekend_multiplier = 1.5
-	if args.applicable_for_public_holidays:
+	if args.applicable_for_public_holiday:
 		overtime_type.public_holiday_multiplier = 2
 
 	overtime_type.save()
