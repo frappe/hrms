@@ -1,4 +1,5 @@
 # create accounting_dimension_section and dimension_col_break
+from frappe import _
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 
@@ -8,7 +9,7 @@ def create_accounting_dimension_section():
 			{
 				"fieldname": "accounting_dimensions_section",
 				"fieldtype": "Section Break",
-				"label": "Accounting Dimensions",
+				"label": _("Accounting Dimensions"),
 				"insert_after": "iban",
 			},
 			{
