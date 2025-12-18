@@ -596,7 +596,7 @@ class PayrollEntry(Document):
 
 		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
 
-		if earnings or deductions or (earnings_components and deductions_components):
+		if earnings or deductions or earnings_components or deductions_components:
 			accounts = []
 			currencies = []
 			payable_amount = 0
@@ -750,45 +750,6 @@ class PayrollEntry(Document):
 			"Salary Component Account", {"account": account, "company": self.company}, "parent", cache=True
 		)
 		return component
-
-	def track_employee_salary_entries(self, earnings, deductions, accounting_dimensions):
-		"""Track salary component entries by employee for employee-wise accounting"""
-		for (account, cost_center), amount in earnings.items():
-			# Get employee for this entry
-			employee = self.get_employee_for_salary_component(account, cost_center, "earnings", amount)
-			if employee:
-				key = (employee, account, cost_center)
-				self.employee_based_salary_entries[key] = (
-					self.employee_based_salary_entries.get(key, 0) + amount
-				)
-
-		for (account, cost_center), amount in deductions.items():
-			# Get employee for this entry
-			employee = self.get_employee_for_salary_component(account, cost_center, "deductions", amount)
-			if employee:
-				key = (employee, account, cost_center)
-				self.employee_based_salary_entries[key] = (
-					self.employee_based_salary_entries.get(key, 0) - amount
-				)
-
-	def get_employee_for_salary_component(self, account, cost_center, component_type, amount):
-		"""Find which employee this salary component belongs to"""
-		# You need to implement this method based on your data structure
-		# This might require querying salary slip details or maintaining a mapping
-		# For now, returning a simplified implementation
-		salary_components = self.get_salary_components(component_type)
-		for comp in salary_components:
-			if comp.get("salary_component") == self.get_component_from_account(account):
-				# Find employee based on amount and cost center
-				employee_cost_centers = self.get_payroll_cost_centers_for_employee(
-					comp.get("employee"), comp.get("salary_structure")
-				)
-				if cost_center in employee_cost_centers:
-					percentage = employee_cost_centers.get(cost_center, 0)
-					expected_amount = flt(comp.get("amount")) * percentage / 100
-					if abs(expected_amount - amount) < 0.01:  # Allow for floating point differences
-						return comp.get("employee")
-		return None
 
 	def make_journal_entry(
 		self,

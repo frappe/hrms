@@ -3,6 +3,7 @@
 
 
 import frappe
+from frappe import _
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 from hrms.setup import delete_custom_fields
@@ -77,6 +78,17 @@ def get_custom_fields():
 				"fieldtype": "Data",
 				"insert_after": "pan_number",
 				"translatable": 0,
+			},
+			{
+				"fieldname": "accounting_dimensions_section",
+				"fieldtype": "Section Break",
+				"label": _("Accounting Dimensions"),
+				"insert_after": "iban",
+			},
+			{
+				"fieldname": "dimension_col_break",
+				"fieldtype": _("Column Break"),
+				"insert_after": "accounting_dimensions_section",
 			},
 		],
 		"Company": [

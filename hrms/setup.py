@@ -278,12 +278,12 @@ def get_custom_fields():
 			{
 				"fieldname": "accounting_dimensions_section",
 				"fieldtype": "Section Break",
-				"label": "Accounting Dimensions",
+				"label": _("Accounting Dimensions"),
 				"insert_after": "iban",
 			},
 			{
 				"fieldname": "dimension_col_break",
-				"fieldtype": "Column Break",
+				"fieldtype": _("Column Break"),
 				"insert_after": "accounting_dimensions_section",
 			},
 		],
