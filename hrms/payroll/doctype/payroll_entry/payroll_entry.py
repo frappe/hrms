@@ -357,6 +357,14 @@ class PayrollEntry(Document):
 		component_type=None,
 		employee_wise_accounting_enabled=False,
 	):
+		"""Get salary component totals. When employee_wise_accounting_enabled is True,
+		this method returns an empty dict since entries are created directly in create_employee_wise_accounting_entries"""
+
+		if employee_wise_accounting_enabled:
+			# Return empty dict for employee-wise accounting
+			# The actual entries are created in create_employee_wise_accounting_entries
+			return {}
+
 		salary_components = self.get_salary_components(component_type)
 		if salary_components:
 			component_dict = {}
@@ -381,14 +389,10 @@ class PayrollEntry(Document):
 						key = (item.salary_component, cost_center)
 						component_dict[key] = component_dict.get(key, 0) + amount_against_cost_center
 
-					if employee_wise_accounting_enabled:
-						self.set_employee_based_payroll_payable_entries(
-							component_type, item.employee, amount_against_cost_center
-						)
-
 			account_details = self.get_account(component_dict=component_dict)
-
 			return account_details
+
+		return {}
 
 	def should_add_component_to_accrual_jv(self, component_type: str, item: dict) -> bool:
 		add_component_to_accrual_jv = True
@@ -528,6 +532,36 @@ class PayrollEntry(Document):
 
 		return account_dict
 
+	def get_employee_wise_salary_components(self, component_type):
+		"""Get salary components grouped by (employee, account, cost_center)"""
+		salary_components = self.get_salary_components(component_type)
+		component_dict = {}
+
+		for item in salary_components:
+			if not self.should_add_component_to_accrual_jv(component_type, item):
+				continue
+
+			employee_cost_centers = self.get_payroll_cost_centers_for_employee(
+				item.employee, item.salary_structure
+			)
+
+			# Get account for this salary component
+			account = self.get_salary_component_account(item.salary_component)
+
+			for cost_center, percentage in employee_cost_centers.items():
+				amount_against_cost_center = flt(item.amount) * percentage / 100
+
+				# Key: (employee, account, cost_center)
+				key = (item.employee, account, cost_center)
+				component_dict[key] = component_dict.get(key, 0) + amount_against_cost_center
+
+				# Track for payroll payable entries
+				self.set_employee_based_payroll_payable_entries(
+					component_type, item.employee, amount_against_cost_center, item.salary_structure
+				)
+
+		return component_dict
+
 	def make_accrual_jv_entry(self, submitted_salary_slips):
 		self.check_permission("write")
 		employee_wise_accounting_enabled = frappe.db.get_single_value(
@@ -535,6 +569,14 @@ class PayrollEntry(Document):
 		)
 		self.employee_based_payroll_payable_entries = {}
 		self._advance_deduction_entries = []
+
+		# Get salary components directly when employee-wise accounting is enabled
+		if employee_wise_accounting_enabled:
+			earnings_components = self.get_salary_components("earnings")
+			deductions_components = self.get_salary_components("deductions")
+		else:
+			earnings_components = None
+			deductions_components = None
 
 		earnings = (
 			self.get_salary_component_total(
@@ -554,23 +596,35 @@ class PayrollEntry(Document):
 
 		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
 
-		if earnings or deductions:
+		if earnings or deductions or (earnings_components and deductions_components):
 			accounts = []
 			currencies = []
 			payable_amount = 0
 			accounting_dimensions = get_accounting_dimensions() or []
 			company_currency = erpnext.get_company_currency(self.company)
 
-			payable_amount = self.get_payable_amount_for_earnings_and_deductions(
-				accounts,
-				earnings,
-				deductions,
-				currencies,
-				company_currency,
-				accounting_dimensions,
-				precision,
-				payable_amount,
-			)
+			if employee_wise_accounting_enabled:
+				payable_amount = self.create_employee_wise_accounting_entries(
+					accounts,
+					earnings_components,
+					deductions_components,
+					currencies,
+					company_currency,
+					accounting_dimensions,
+					precision,
+					payable_amount,
+				)
+			else:
+				payable_amount = self.get_payable_amount_for_earnings_and_deductions(
+					accounts,
+					earnings,
+					deductions,
+					currencies,
+					company_currency,
+					accounting_dimensions,
+					precision,
+					payable_amount,
+				)
 
 			payable_amount = self.set_accounting_entries_for_advance_deductions(
 				accounts,
@@ -604,6 +658,137 @@ class PayrollEntry(Document):
 				submitted_salary_slips=submitted_salary_slips,
 				employee_wise_accounting_enabled=employee_wise_accounting_enabled,
 			)
+
+	def create_employee_wise_accounting_entries(
+		self,
+		accounts,
+		earnings_components,
+		deductions_components,
+		currencies,
+		company_currency,
+		accounting_dimensions,
+		precision,
+		payable_amount,
+	):
+		"""Create accounting entries split by employee for employee-wise accounting"""
+
+		# Process earnings
+		if earnings_components:
+			for item in earnings_components:
+				if not self.should_add_component_to_accrual_jv("earnings", item):
+					continue
+
+				employee_cost_centers = self.get_payroll_cost_centers_for_employee(
+					item.employee, item.salary_structure
+				)
+
+				# Get account for this salary component
+				account = self.get_salary_component_account(item.salary_component)
+
+				for cost_center, percentage in employee_cost_centers.items():
+					amount_against_cost_center = flt(item.amount) * percentage / 100
+
+					# Create debit entry for salary component
+					payable_amount = self.get_accounting_entries_and_payable_amount(
+						account,
+						cost_center or self.cost_center,
+						amount_against_cost_center,
+						currencies,
+						company_currency,
+						payable_amount,
+						accounting_dimensions,
+						precision,
+						entry_type="debit",
+						party=item.employee,  # Add employee as party
+						accounts=accounts,
+					)
+
+					# Track for payroll payable entries
+					self.set_employee_based_payroll_payable_entries(
+						"earnings", item.employee, amount_against_cost_center, item.salary_structure
+					)
+
+		# Process deductions
+		if deductions_components:
+			for item in deductions_components:
+				employee_cost_centers = self.get_payroll_cost_centers_for_employee(
+					item.employee, item.salary_structure
+				)
+
+				# Get account for this salary component
+				account = self.get_salary_component_account(item.salary_component)
+
+				for cost_center, percentage in employee_cost_centers.items():
+					amount_against_cost_center = flt(item.amount) * percentage / 100
+
+					# Create credit entry for deduction component
+					payable_amount = self.get_accounting_entries_and_payable_amount(
+						account,
+						cost_center or self.cost_center,
+						amount_against_cost_center,
+						currencies,
+						company_currency,
+						payable_amount,
+						accounting_dimensions,
+						precision,
+						entry_type="credit",
+						party=item.employee,  # Add employee as party
+						accounts=accounts,
+					)
+
+					# Track for payroll payable entries
+					self.set_employee_based_payroll_payable_entries(
+						"deductions", item.employee, amount_against_cost_center, item.salary_structure
+					)
+
+		return payable_amount
+
+	def get_component_from_account(self, account):
+		"""Get salary component name from account"""
+		# Query to find which salary component uses this account
+		component = frappe.db.get_value(
+			"Salary Component Account", {"account": account, "company": self.company}, "parent", cache=True
+		)
+		return component
+
+	def track_employee_salary_entries(self, earnings, deductions, accounting_dimensions):
+		"""Track salary component entries by employee for employee-wise accounting"""
+		for (account, cost_center), amount in earnings.items():
+			# Get employee for this entry
+			employee = self.get_employee_for_salary_component(account, cost_center, "earnings", amount)
+			if employee:
+				key = (employee, account, cost_center)
+				self.employee_based_salary_entries[key] = (
+					self.employee_based_salary_entries.get(key, 0) + amount
+				)
+
+		for (account, cost_center), amount in deductions.items():
+			# Get employee for this entry
+			employee = self.get_employee_for_salary_component(account, cost_center, "deductions", amount)
+			if employee:
+				key = (employee, account, cost_center)
+				self.employee_based_salary_entries[key] = (
+					self.employee_based_salary_entries.get(key, 0) - amount
+				)
+
+	def get_employee_for_salary_component(self, account, cost_center, component_type, amount):
+		"""Find which employee this salary component belongs to"""
+		# You need to implement this method based on your data structure
+		# This might require querying salary slip details or maintaining a mapping
+		# For now, returning a simplified implementation
+		salary_components = self.get_salary_components(component_type)
+		for comp in salary_components:
+			if comp.get("salary_component") == self.get_component_from_account(account):
+				# Find employee based on amount and cost center
+				employee_cost_centers = self.get_payroll_cost_centers_for_employee(
+					comp.get("employee"), comp.get("salary_structure")
+				)
+				if cost_center in employee_cost_centers:
+					percentage = employee_cost_centers.get(cost_center, 0)
+					expected_amount = flt(comp.get("amount")) * percentage / 100
+					if abs(expected_amount - amount) < 0.01:  # Allow for floating point differences
+						return comp.get("employee")
+		return None
 
 	def make_journal_entry(
 		self,
@@ -709,14 +894,14 @@ class PayrollEntry(Document):
 		if employee_wise_accounting_enabled:
 			"""
 			employee_based_payroll_payable_entries = {
-			                'HREMP00004': {
-			                                'earnings': 83332.0,
-			                                'deductions': 2000.0
-			                },
-			                'HREMP00005': {
-			                                'earnings': 50000.0,
-			                                'deductions': 2000.0
-			                }
+							'HREMP00004': {
+											'earnings': 83332.0,
+											'deductions': 2000.0
+							},
+							'HREMP00005': {
+											'earnings': 50000.0,
+											'deductions': 2000.0
+							}
 			}
 			"""
 			for employee, employee_details in self.employee_based_payroll_payable_entries.items():
@@ -751,6 +936,7 @@ class PayrollEntry(Document):
 				accounts=accounts,
 			)
 
+	# Also update the get_accounting_entries_and_payable_amount method to handle party for salary entries:
 	def get_accounting_entries_and_payable_amount(
 		self,
 		account,
@@ -802,6 +988,7 @@ class PayrollEntry(Document):
 				}
 			)
 
+		# Add party for both debit and credit entries when employee-wise accounting is enabled
 		if party:
 			row.update(
 				{
@@ -829,9 +1016,20 @@ class PayrollEntry(Document):
 
 		return payable_amount
 
-	def update_accounting_dimensions(self, row, accounting_dimensions):
+	def update_accounting_dimensions(self, row, accounting_dimensions, fetch_from_employee=False):
+		employee_meta = frappe.get_meta("Employee")
+
 		for dimension in accounting_dimensions:
-			row.update({dimension: self.get(dimension)})
+			accounting_dimension = None
+
+			if row.get("party") and employee_meta.has_field(dimension):
+				accounting_dimension = frappe.db.get_value(
+					"Employee", row.get("party"), dimension
+				) or self.get(dimension)
+			else:
+				accounting_dimension = self.get(dimension)
+
+			row.update({dimension: accounting_dimension})
 
 		return row
 
@@ -911,7 +1109,9 @@ class PayrollEntry(Document):
 				if only_tax_impact != 1 and statistical_component != 1:
 					if is_flexible_benefit == 1 and create_separate_je == 1:
 						self.set_accounting_entries_for_bank_entry(
-							salary_detail.amount, salary_detail.salary_component
+							salary_detail.amount,
+							salary_detail.salary_component,
+							employee_wise_accounting_enabled,
 						)
 					else:
 						if employee_wise_accounting_enabled:
@@ -1023,22 +1223,6 @@ class PayrollEntry(Document):
 		company_currency = erpnext.get_company_currency(self.company)
 		accounting_dimensions = get_accounting_dimensions() or []
 
-		exchange_rate, amount = self.get_amount_and_exchange_rate_for_journal_entry(
-			self.payment_account, je_payment_amount, company_currency, currencies
-		)
-		accounts.append(
-			self.update_accounting_dimensions(
-				{
-					"account": self.payment_account,
-					"bank_account": self.bank_account,
-					"credit_in_account_currency": flt(amount, precision),
-					"exchange_rate": flt(exchange_rate),
-					"cost_center": self.cost_center,
-				},
-				accounting_dimensions,
-			)
-		)
-
 		if self.employee_based_payroll_payable_entries:
 			for employee, employee_details in self.employee_based_payroll_payable_entries.items():
 				je_payment_amount = (
@@ -1050,6 +1234,7 @@ class PayrollEntry(Document):
 				if not je_payment_amount:
 					continue
 
+				# Create debit entry for each employee
 				exchange_rate, amount = self.get_amount_and_exchange_rate_for_journal_entry(
 					self.payment_account, je_payment_amount, company_currency, currencies
 				)
@@ -1060,6 +1245,22 @@ class PayrollEntry(Document):
 
 				for cost_center, percentage in cost_centers.items():
 					amount_against_cost_center = flt(amount) * percentage / 100
+
+					# Credit entry for payment account (bank account)
+					accounts.append(
+						self.update_accounting_dimensions(
+							{
+								"account": self.payment_account,
+								"bank_account": self.bank_account,
+								"credit_in_account_currency": flt(amount_against_cost_center, precision),
+								"exchange_rate": flt(exchange_rate),
+								"cost_center": cost_center,
+							},
+							accounting_dimensions,
+						)
+					)
+
+					# Debit entry for payroll payable account
 					accounts.append(
 						self.update_accounting_dimensions(
 							{
@@ -1076,6 +1277,26 @@ class PayrollEntry(Document):
 						)
 					)
 		else:
+			# Original logic for non-employee-wise accounting
+			exchange_rate, amount = self.get_amount_and_exchange_rate_for_journal_entry(
+				self.payment_account, je_payment_amount, company_currency, currencies
+			)
+
+			# Credit entry for payment account
+			accounts.append(
+				self.update_accounting_dimensions(
+					{
+						"account": self.payment_account,
+						"bank_account": self.bank_account,
+						"credit_in_account_currency": flt(amount, precision),
+						"exchange_rate": flt(exchange_rate),
+						"cost_center": self.cost_center,
+					},
+					accounting_dimensions,
+				)
+			)
+
+			# Debit entry for payroll payable account
 			exchange_rate, amount = self.get_amount_and_exchange_rate_for_journal_entry(
 				payroll_payable_account, je_payment_amount, company_currency, currencies
 			)
