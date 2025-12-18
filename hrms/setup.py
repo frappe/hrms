@@ -283,7 +283,7 @@ def get_custom_fields():
 			},
 			{
 				"fieldname": "dimension_col_break",
-				"fieldtype": _("Column Break"),
+				"fieldtype": "Column Break",
 				"insert_after": "accounting_dimensions_section",
 			},
 		],
