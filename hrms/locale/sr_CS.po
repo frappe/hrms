@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-12-14 09:36+0000\n"
-"PO-Revision-Date: 2025-12-17 10:46\n"
+"PO-Revision-Date: 2025-12-18 11:04\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Serbian (Latin)\n"
 "MIME-Version: 1.0\n"
@@ -3135,7 +3135,7 @@ msgstr "Preporuka zaposlenog lica"
 
 #: hrms/hr/doctype/employee_referral/employee_referral.py:26
 msgid "Employee Referral {0} already exists for email: {1}"
-msgstr ""
+msgstr "Preporuka zaposlenog lica {0} već postoji za imejl: {1}"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:108
 msgid "Employee Referral {0} is not applicable for referral bonus."
@@ -5508,7 +5508,7 @@ msgstr "Povezano otvoreno radno mesto"
 #: hrms/hr/doctype/job_opening/job_opening.json
 #: hrms/hr/doctype/job_opening_template/job_opening_template.json
 msgid "Job Opening Template"
-msgstr ""
+msgstr "Šablon otvorenog radnog mesta"
 
 #: hrms/www/jobs/index.html:2 hrms/www/jobs/index.html:5
 msgid "Job Openings"
@@ -10145,7 +10145,7 @@ msgstr "Danas je {0} u našoj kompaniji! 🎉"
 
 #: hrms/controllers/employee_reminders.py:241
 msgid "Today {0} completed {1} {2} at our Company! 🎉"
-msgstr ""
+msgstr "Danas je ispunjeno {1} {2} od strane {0} u našoj kompaniji! 🎉"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:149
 msgid "Total Absent"
@@ -11308,7 +11308,7 @@ msgstr "godina"
 
 #: hrms/controllers/employee_reminders.py:265
 msgid "years"
-msgstr ""
+msgstr "godine"
 
 #: hrms/controllers/employee_reminders.py:120
 #: hrms/controllers/employee_reminders.py:254
@@ -11375,7 +11375,7 @@ msgstr "{0} stanje"
 
 #: hrms/controllers/employee_reminders.py:253
 msgid "{0} completed {1} {2}"
-msgstr ""
+msgstr "Ispunjeno je {1} {2} od strane {0}"
 
 #: frontend/src/components/FormView.vue:528
 msgid "{0} created successfully!"

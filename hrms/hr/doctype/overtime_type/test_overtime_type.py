@@ -21,7 +21,7 @@ def create_overtime_type(**args):
 	args = frappe._dict(args)
 
 	overtime_type = frappe.new_doc("Overtime Type")
-	overtime_type.name = "_Test Overtime"
+	overtime_type.name = args.get("name") or "_Test Overtime"
 	overtime_type.overtime_calculation_method = args.overtime_calculation_method or "Salary Component Based"
 	overtime_type.standard_multiplier = 1
 	overtime_type.applicable_for_weekend = args.applicable_for_weekend or 0
