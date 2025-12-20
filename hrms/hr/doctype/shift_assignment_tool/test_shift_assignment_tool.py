@@ -112,6 +112,7 @@ class TestShiftAssignmentTool(IntegrationTestCase):
 
 	def test_get_shift_requests(self):
 		today = getdate()
+		setup_shift_type(shift_type="Day Shift")
 
 		for emp in [self.emp1, self.emp2, self.emp3, self.emp4, self.emp5]:
 			employee = frappe.get_doc("Employee", emp)
@@ -251,6 +252,7 @@ class TestShiftAssignmentTool(IntegrationTestCase):
 			employee.shift_request_approver = "employee1@test.com"
 			employee.save()
 
+		setup_shift_type(shift_type="Day Shift")
 		request1 = make_shift_request(
 			employee=self.emp1,
 			employee_name="employee1@test.com",
