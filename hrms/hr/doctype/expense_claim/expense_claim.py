@@ -59,6 +59,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		self.calculate_total_amount()
 		self.validate_advances()
 		self.set_expense_account(validate=True)
+		self.set_default_accounting_dimension()
 		self.calculate_taxes()
 		self.set_status()
 		self.validate_company_and_department()
@@ -126,6 +127,10 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 
 	def after_delete(self):
 		self.publish_update()
+
+	def on_discard(self):
+		self.db_set("status", "Cancelled")
+		self.db_set("approval_status", "Cancelled")
 
 	def before_submit(self):
 		if not self.payable_account and not self.is_paid:
@@ -260,17 +265,19 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 					"against": ",".join([d.default_account for d in self.expenses]),
 					"party_type": "Employee",
 					"party": self.employee,
-					"against_voucher_type": self.doctype,
-					"against_voucher": self.name,
+					"voucher_type": self.doctype,
+					"voucher_no": self.name,
 					"advance_voucher_type": "Employee Advance",
 					"advance_voucher_no": data.employee_advance,
 					"transaction_exchange_rate": self.exchange_rate,
+					"cost_center": self.cost_center,
+					"project": self.project,
 				}
 				if not make_payment_via_je:
 					gl_dict.update(
 						{
-							"voucher_type": "Payment Entry",
-							"voucher_no": data.payment_entry,
+							"against_voucher_type": "Payment Entry",
+							"against_voucher": data.payment_entry,
 						}
 					)
 				gl_entry.append(self.get_gl_dict(gl_dict, account_currency=self.currency))
@@ -289,6 +296,8 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 						"credit_in_transaction_currency": self.grand_total,
 						"against": self.employee,
 						"transaction_exchange_rate": self.exchange_rate,
+						"cost_center": self.cost_center,
+						"project": self.project,
 					},
 					account_currency=self.currency,
 					item=self,
@@ -308,6 +317,8 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 						"against_voucher": self.name,
 						"against_voucher_type": self.doctype,
 						"transaction_exchange_rate": self.exchange_rate,
+						"cost_center": self.cost_center,
+						"project": self.project,
 					},
 					account_currency=self.currency,
 					item=self,
@@ -337,6 +348,26 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 					item=tax,
 				)
 			)
+
+	def set_default_accounting_dimension(self):
+		from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
+			get_checks_for_pl_and_bs_accounts,
+		)
+
+		for dim in get_checks_for_pl_and_bs_accounts():
+			if dim.company != self.company:
+				continue
+
+			field = frappe.scrub(dim.fieldname)
+
+			if self.meta.get_field(field):
+				if not self.get(field) and dim.mandatory_for_bs:
+					self.set(field, dim.default_dimension)
+
+			for row in self.get("expenses") or []:
+				if row.meta.get_field(field):
+					if not row.get(field) and dim.mandatory_for_pl:
+						row.set(field, dim.default_dimension)
 
 	def create_exchange_gain_loss_je(self):
 		if not self.advances:
@@ -429,7 +460,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			if doc.get(f):
 				val = flt(
 					flt(doc.get(f), doc.precision(f))
-					* (exchange_rate if exchange_rate else self.exchange_rate),
+					* flt(exchange_rate if exchange_rate else self.exchange_rate),
 					doc.precision("base_" + f),
 				)
 				doc.set("base_" + f, val)

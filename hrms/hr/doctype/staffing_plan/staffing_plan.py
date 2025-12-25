@@ -39,11 +39,10 @@ class StaffingPlan(Document):
 
 		for detail in self.get("staffing_details"):
 			# Set readonly fields
-			self.set_number_of_positions(detail)
 			designation_counts = get_designation_counts(detail.designation, self.company)
 			detail.current_count = designation_counts["employee_count"]
 			detail.current_openings = designation_counts["job_openings"]
-
+			self.set_number_of_positions(detail)
 			detail.total_estimated_cost = 0
 			if detail.number_of_positions > 0:
 				if detail.vacancies and detail.estimated_cost_per_position:
@@ -181,12 +180,14 @@ class StaffingPlan(Document):
 
 			self.staffing_details = []
 			for req in requisitions:
+				current_count = get_designation_counts(req.designation, self.company)["employee_count"]
 				self.append(
 					"staffing_details",
 					{
 						"designation": req.designation,
 						"vacancies": req.no_of_positions,
 						"estimated_cost_per_position": req.expected_compensation,
+						"number_of_positions": cint(current_count) + cint(req.no_of_positions),
 					},
 				)
 

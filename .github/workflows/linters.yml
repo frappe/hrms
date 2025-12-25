@@ -10,12 +10,12 @@ jobs:
     if: github.event_name == 'pull_request'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 200
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: 24
           check-latest: true
 
       - name: Check commit titles
@@ -29,12 +29,12 @@ jobs:
     if: github.event_name == 'pull_request'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
 
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v2
+      - name: Set up Python 3.14
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.10'
+          python-version: '3.14'
 
       - name: Install and Run Pre-commit
         uses: pre-commit/action@v3.0.0

@@ -269,3 +269,71 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 		# months passed (18) are calculated correctly but total allocation of 36 exceeds 24 hence 24
 		# this upper cap is intentional, without that 36 leaves would be allocated correctly
 		self.assertEqual(earned_leave_allocation, 24)
+
+	def test_skip_zero_allocation_leaves(self):
+		today = getdate()
+		leave_period = create_leave_period(get_year_start(today), get_year_ending(today))
+
+		sick = create_leave_type(
+			leave_type_name="_Test Sick Leave", non_encashable_leaves=0, max_leaves_allowed=2
+		)
+		casual = create_leave_type(
+			leave_type_name="_Test Casual Leave", non_encashable_leaves=0, max_leaves_allowed=12
+		)
+		annual = create_leave_type(
+			leave_type_name="_Test Annual Leave", non_encashable_leaves=0, max_leaves_allowed=27
+		)
+		compoff = create_leave_type(
+			leave_type_name="_Test Comp Off", non_encashable_leaves=0, max_leaves_allowed=26
+		)
+		leave_policy = frappe.get_doc(
+			{
+				"doctype": "Leave Policy",
+				"title": "Test Zero allocation Policy",
+				"leave_policy_details": [
+					{"leave_type": sick.name, "annual_allocation": 2},
+					{"leave_type": casual.name, "annual_allocation": 2},
+					{"leave_type": annual.name, "annual_allocation": 27},
+					{"leave_type": compoff.name, "annual_allocation": 26},
+				],
+			}
+		).submit()
+
+		self.employee.date_of_joining = add_days(leave_period.to_date, -45)
+		self.employee.save()
+
+		assignment = create_assignment(
+			self.employee.name,
+			frappe._dict(
+				{
+					"assignment_based_on": "Leave Period",
+					"leave_policy": leave_policy.name,
+					"leave_period": leave_period.name,
+				}
+			),
+		)
+		assignment.submit()
+
+		comments = frappe.get_all(
+			"Comment",
+			filters={
+				"reference_doctype": "Leave Policy Assignment",
+				"reference_name": assignment.name,
+			},
+			fields=["content"],
+		)
+
+		self.assertEqual(len(comments), 2)
+		self.assertIn(casual.name, comments[0]["content"])
+		self.assertIn(sick.name, comments[1]["content"])
+
+		allocations = frappe.get_all(
+			"Leave Allocation",
+			filters={"leave_policy_assignment": assignment.name},
+			fields=["leave_type", "new_leaves_allocated"],
+		)
+
+		self.assertEqual(allocations[0]["leave_type"], compoff.name)
+		self.assertEqual(allocations[0]["new_leaves_allocated"], 3)
+		self.assertEqual(allocations[1]["leave_type"], annual.name)
+		self.assertEqual(allocations[1]["new_leaves_allocated"], 3)

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-11-15 17:12+0000\n"
-"PO-Revision-Date: 2025-11-20 12:16\n"
+"POT-Creation-Date: 2025-12-21 09:37+0000\n"
+"PO-Revision-Date: 2025-12-22 11:22\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -281,13 +281,8 @@ msgstr ""
 msgid "<hr>"
 msgstr "<hr>"
 
-#. Header text in the Performance Workspace
-#: hrms/hr/workspace/performance/performance.json
-msgid "<span class=\"h4\"><b>Masters &amp; Transactions</b></span>"
-msgstr ""
-
-#. Header text in the Salary Payout Workspace
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#. Header text in the Payroll Workspace
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "<span class=\"h4\"><b>Transactions &amp; Reports</b></span>"
 msgstr "<span class=\"h4\"><b>تراکنش‌ها و گزارش‌ها</b></span>"
 
@@ -361,10 +356,10 @@ msgstr "حساب {0} با شرکت {1} مطابقت ندارد"
 msgid "Accounting & Payment"
 msgstr "حسابداری و پرداخت"
 
-#. Label of a Card Break in the Expense Claims Workspace
-#. Label of a Card Break in the Salary Payout Workspace
-#: hrms/hr/workspace/expense_claims/expense_claims.json
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#. Label of a Card Break in the Expenses Workspace
+#. Label of a Card Break in the Payroll Workspace
+#: hrms/hr/workspace/expenses/expenses.json
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Accounting Reports"
 msgstr "گزارش‌های حسابداری"
 
@@ -404,7 +399,7 @@ msgstr ""
 msgid "Accrual Component must be set for Flexible Benefit Salary Components with accrual payout methods."
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:624
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:627
 msgid "Accrual Journal Entry for salaries from {0} to {1}"
 msgstr "ثبت گزارش تعهدی برای حقوق از {0} تا {1}"
 
@@ -460,7 +455,7 @@ msgstr "روزهای واقعی قابل بازخرید"
 msgid "Actual Overtime Duration"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:419
+#: hrms/hr/doctype/leave_application/leave_application.py:422
 msgid "Actual balances aren't available because the leave application spans over different leave allocations. You can still apply for leaves which would be compensated during the next allocation."
 msgstr "ترازهای واقعی در دسترس نیست زیرا برنامه مرخصی شامل تخصیص مرخصی‌های مختلف است. شما همچنان می‌توانید برای مرخصی‌هایی که در طول تخصیص بعدی جبران می‌شود، درخواست دهید."
 
@@ -527,14 +522,14 @@ msgid "Additional PF"
 msgstr "PF اضافی"
 
 #. Label of the additional_salary (Link) field in DocType 'Leave Encashment'
-#. Label of a Link in the Expense Claims Workspace
+#. Label of a Link in the Expenses Workspace
 #. Name of a DocType
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #. Label of a shortcut in the Tax & Benefits Workspace
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
-#: hrms/hr/workspace/expense_claims/expense_claims.json
+#: hrms/hr/workspace/expenses/expenses.json
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Additional Salary"
 msgstr "حقوق اضافی"
@@ -583,6 +578,16 @@ msgstr "پیشرفت"
 msgid "Advance Account is mandatory. Please set the <a href=\"/app/company/{0}#default_employee_advance_account\" target=\"_blank\">Default Employee Advance Account</a> in the Company record {0} and submit this document."
 msgstr ""
 
+#: hrms/hr/doctype/employee_advance/employee_advance.py:79
+msgid "Advance Account {} currency should be same as Salary Currency of Employee {}. Please select same currency Advance Account"
+msgstr ""
+
+#. Label of the base_advance_paid (Currency) field in DocType 'Expense Claim
+#. Advance'
+#: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
+msgid "Advance Paid (Company Currency)"
+msgstr ""
+
 #. Label of the advanced_filters_section (Section Break) field in DocType
 #. 'Leave Control Panel'
 #. Label of the advanced_filters_section (Section Break) field in DocType
@@ -595,6 +600,10 @@ msgstr ""
 msgid "Advanced Filters"
 msgstr "فیلترهای پیشرفته"
 
+#: hrms/hr/doctype/expense_claim/expense_claim.py:422
+msgid "All Exchange Gain/Loss amount of {0} has been booked through {1}"
+msgstr ""
+
 #: hrms/hr/doctype/goal/goal_tree.js:215
 msgid "All Goals"
 msgstr "همه اهداف"
@@ -603,7 +612,7 @@ msgstr "همه اهداف"
 msgid "All Jobs"
 msgstr "همه مشاغل"
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:66
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:70
 msgid "All allocated assets should be returned before submission"
 msgstr "تمام دارایی های تخصیص یافته باید قبل از ارسال بازگردانده شود"
 
@@ -630,6 +639,12 @@ msgstr "مرخصی را به {0} کارمند(ها) اختصاص دهید؟"
 msgid "Allocate on Day"
 msgstr "اختصاص در روز"
 
+#. Label of the base_allocated_amount (Currency) field in DocType 'Expense
+#. Claim Advance'
+#: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
+msgid "Allocated Amount (Company Currency)"
+msgstr ""
+
 #. Label of the allocated_leaves (Float) field in DocType 'Leave Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 #: hrms/hr/doctype/leave_application/leave_application.js:75
@@ -648,7 +663,7 @@ msgstr "تخصیص مرخصی"
 #. Label of the allocation_date (Date) field in DocType 'Earned Leave Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Allocation Date"
-msgstr ""
+msgstr "تاریخ تخصیص"
 
 #. Label of the section_break_etvg (Section Break) field in DocType 'Leave
 #. Adjustment'
@@ -669,11 +684,11 @@ msgstr "تخصیص از حداکثر مجاز {0} برای نوع مرخصی {1}
 msgid "Allocation to Adjust"
 msgstr "تخصیص جهت تعدیل"
 
-#: hrms/hr/utils.py:435
+#: hrms/hr/utils.py:438
 msgid "Allocation was skipped due to exceeding annual allocation set in leave policy"
 msgstr ""
 
-#: hrms/hr/utils.py:425
+#: hrms/hr/utils.py:428
 msgid "Allocation was skipped due to maximum leave allocation limit set in leave type. Please increase the limit and retry failed allocation."
 msgstr ""
 
@@ -802,6 +817,8 @@ msgstr "مبلغ زمان‌بندی شده برای کسر از طریق حقو
 msgid "Amount should not be less than zero"
 msgstr "مبلغ نباید کمتر از صفر باشد"
 
+#. Description of the 'Paid Amount (Company Currency)' (Currency) field in
+#. DocType 'Employee Advance'
 #. Description of the 'Paid Amount' (Currency) field in DocType 'Employee
 #. Advance'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
@@ -826,7 +843,7 @@ msgstr "تخصیص سالانه"
 msgid "Annual Allocation Exceeded"
 msgstr ""
 
-#: hrms/setup.py:397
+#: hrms/setup.py:404
 msgid "Annual Salary"
 msgstr "حقوق سالانه"
 
@@ -902,11 +919,11 @@ msgstr "درخواست"
 msgid "Application Status"
 msgstr "وضعیت برنامه"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:207
+#: hrms/hr/doctype/leave_application/leave_application.py:210
 msgid "Application period cannot be across two allocation records"
 msgstr "دوره درخواست نمی‌تواند بین دو رکورد تخصیص باشد"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:204
+#: hrms/hr/doctype/leave_application/leave_application.py:207
 msgid "Application period cannot be outside leave allocation period"
 msgstr "دوره درخواست نمی‌تواند خارج از دوره تخصیص مرخصی باشد"
 
@@ -1018,20 +1035,16 @@ msgid "Appraisal Linking"
 msgstr "پیوند ارزیابی"
 
 #. Name of a report
-#. Label of a Link in the Performance Workspace
 #: hrms/hr/report/appraisal_overview/appraisal_overview.json
-#: hrms/hr/workspace/performance/performance.json
 msgid "Appraisal Overview"
 msgstr "بررسی اجمالی ارزیابی"
 
 #. Label of the appraisal_template (Link) field in DocType 'Appraisal'
 #. Name of a DocType
 #. Label of the appraisal_template (Link) field in DocType 'Appraisee'
-#. Label of a Link in the Performance Workspace
 #: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/appraisal_template/appraisal_template.json
-#: hrms/hr/doctype/appraisee/appraisee.json
-#: hrms/hr/workspace/performance/performance.json hrms/setup.py:162
+#: hrms/hr/doctype/appraisee/appraisee.json hrms/setup.py:162
 msgid "Appraisal Template"
 msgstr "الگوی ارزیابی"
 
@@ -1074,7 +1087,7 @@ msgstr "ارزیاب"
 msgid "Appraisees: {0}"
 msgstr "ارزیابان: {0}"
 
-#: hrms/setup.py:389
+#: hrms/setup.py:396
 msgid "Apprentice"
 msgstr "شاگرد کارآموز"
 
@@ -1090,7 +1103,7 @@ msgstr "تصویب"
 msgid "Approval Status"
 msgstr "وضعیت تأیید"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:138
+#: hrms/hr/doctype/expense_claim/expense_claim.py:148
 msgid "Approval Status must be 'Approved' or 'Rejected'"
 msgstr "وضعیت تأیید باید «تأیید» یا «رد شده» باشد"
 
@@ -1177,7 +1190,7 @@ msgstr "تاریخ ورود"
 msgid "As per your assigned Salary Structure you cannot apply for benefits"
 msgstr "طبق ساختار حقوق و دستمزد تعیین شده شما نمی‌توانید برای مزایا درخواست دهید"
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:97
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:101
 msgid "Asset Recovery Cost for {0}: {1}"
 msgstr ""
 
@@ -1242,7 +1255,7 @@ msgstr "سند مرتبط"
 msgid "Associated Document Type"
 msgstr "نوع سند مرتبط"
 
-#: hrms/hr/doctype/exit_interview/exit_interview.py:105
+#: hrms/hr/doctype/exit_interview/exit_interview.py:108
 msgid "At least one interview has to be selected."
 msgstr "حداقل یک مصاحبه باید انتخاب شود."
 
@@ -1259,8 +1272,8 @@ msgstr ""
 
 #. Name of a DocType
 #. Label of the attendance (Select) field in DocType 'Training Event Employee'
-#. Label of a Card Break in the Overview Workspace
-#. Label of a Link in the Overview Workspace
+#. Label of a Card Break in the HR Workspace
+#. Label of a Link in the HR Workspace
 #. Label of a Card Break in the Shift & Attendance Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #. Label of a shortcut in the Shift & Attendance Workspace
@@ -1269,7 +1282,7 @@ msgstr ""
 #: frontend/src/components/BottomTabs.vue:48
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/hr/hr.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 #: hrms/overrides/dashboard_overrides.py:10
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
@@ -1314,12 +1327,12 @@ msgstr "حضور و غیاب مشخص شده"
 
 #. Label of the attendance_request (Link) field in DocType 'Attendance'
 #. Name of a DocType
-#. Label of a Link in the Overview Workspace
+#. Label of a Link in the HR Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/attendance/attendance.js:18
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/attendance_request/attendance_request.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/hr/hr.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Attendance Request"
 msgstr "درخواست حضور و غیاب"
@@ -1363,7 +1376,7 @@ msgstr "حضور و غیاب کارمند {0} قبلاً برای یک شیفت 
 msgid "Attendance for employee {0} is already marked for the date {1}: {2}"
 msgstr "حضور کارمند {0} قبلاً برای تاریخ {1} مشخص شده است: {2}"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:584
+#: hrms/hr/doctype/leave_application/leave_application.py:587
 msgid "Attendance for employee {0} is already marked for the following dates: {1}"
 msgstr ""
 
@@ -1374,10 +1387,6 @@ msgstr ""
 #: hrms/hr/doctype/attendance/attendance_list.js:102
 msgid "Attendance from {0} to {1} has already been marked for the Employee {2}"
 msgstr "حضور و غیاب از {0} تا {1} قبلاً برای کارمند {2} مشخص شده است"
-
-#: hrms/hr/doctype/shift_type/shift_type.js:34
-msgid "Attendance has been marked as per employee check-ins"
-msgstr "حضور و غیاب بر اساس اعلام حضور کارکنان مشخص شده است"
 
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:36
 msgid "Attendance has been marked for all the employees between the selected payroll dates."
@@ -1441,7 +1450,7 @@ msgstr "بازخرید خودکار مرخصی"
 msgid "Automated Based on Goal Progress"
 msgstr "خودکار بر اساس پیشرفت هدف"
 
-#: hrms/hr/utils.py:479
+#: hrms/hr/utils.py:482
 msgid "Automatic Leave Allocation has failed for the following Earned Leaves: {0}. Please check {1} for more details."
 msgstr ""
 
@@ -1503,18 +1512,18 @@ msgstr "میانگین استفاده (فقط صورتحساب)"
 msgid "Awaiting Response"
 msgstr "در انتظار پاسخ"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:167
+#: hrms/hr/doctype/leave_application/leave_application.py:170
 msgid "Backdated Leave Application is restricted. Please set the {} in {}"
 msgstr "برنامه مرخصی قدیمی محدود شده است. لطفاً {} را در {} تنظیم کنید"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:156
+#: hrms/hr/doctype/expense_claim/expense_claim.js:285
 msgid "Bank Entries"
 msgstr "ورودی های بانکی"
 
 #. Name of a report
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #: hrms/payroll/report/bank_remittance/bank_remittance.json
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Bank Remittance"
 msgstr "حواله بانکی"
 
@@ -1651,7 +1660,7 @@ msgstr "تاریخ پرداخت پاداش"
 msgid "Bonus Payment Date cannot be a past date"
 msgstr "تاریخ پرداخت پاداش نمی‌تواند تاریخ گذشته باشد"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:230
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:233
 msgid "Branch: {0}"
 msgstr "شعبه: {0}"
 
@@ -1664,10 +1673,10 @@ msgid "Bulk Leave Policy Assignment"
 msgstr "تخصیص انبوه سیاست مرخصی"
 
 #. Name of a DocType
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: hrms/payroll/doctype/salary_structure/salary_structure_list.js:3
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Bulk Salary Structure Assignment"
 msgstr "تخصیص انبوه ساختار حقوق و دستمزد"
 
@@ -1705,11 +1714,11 @@ msgstr "محاسبه روزهای کاری حقوق و دستمزد بر اسا�
 msgid "Calculated in days"
 msgstr "بر حسب روز محاسبه می‌شود"
 
-#: hrms/setup.py:325
+#: hrms/setup.py:332
 msgid "Calls"
 msgstr "تماس می گیرد"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:146
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:149
 msgid "Cancellation Queued"
 msgstr "در صف لغو"
 
@@ -1761,7 +1770,7 @@ msgstr "نمی‌توان یک متقاضی شغل در برابر یک فرصت
 msgid "Cannot create or change transactions against an Appraisal Cycle with status {0}."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:601
+#: hrms/hr/doctype/leave_application/leave_application.py:604
 msgid "Cannot find active Leave Period"
 msgstr "نمی‌توان دوره مرخصی فعال را پیدا کرد"
 
@@ -1795,7 +1804,7 @@ msgstr "انتقال به دوره بعد"
 msgid "Carry Forwarded Leaves"
 msgstr "مرخصی‌های منتقل شده به دوره بعد"
 
-#: hrms/setup.py:340 hrms/setup.py:341
+#: hrms/setup.py:347 hrms/setup.py:348
 msgid "Casual Leave"
 msgstr "مرخصی اضطراری"
 
@@ -1824,7 +1833,7 @@ msgstr "تغییر KRA در این هدف والد، همه اهداف فرزن�
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1534
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1537
 msgid "Check Error Log {0} for more details."
 msgstr "برای جزئیات بیشتر، Log خطا {0} را بررسی کنید."
 
@@ -1841,8 +1850,8 @@ msgstr "ثبت خروج"
 msgid "Check Vacancies On Job Offer Creation"
 msgstr "موقعیت های خالی را در ایجاد پیشنهاد شغلی بررسی کنید"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:448
-#: hrms/hr/utils.py:932
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:467
+#: hrms/hr/utils.py:935
 msgid "Check {0} for more details"
 msgstr "برای جزئیات بیشتر، {0} را بررسی کنید"
 
@@ -1922,8 +1931,8 @@ msgstr ""
 msgid "Claimed amount of employee {0} should be greater than 0"
 msgstr ""
 
-#. Label of a Card Break in the Expense Claims Workspace
-#: hrms/hr/workspace/expense_claims/expense_claims.json
+#. Label of a Card Break in the Expenses Workspace
+#: hrms/hr/workspace/expenses/expenses.json
 #: hrms/overrides/dashboard_overrides.py:84
 msgid "Claims"
 msgstr "مطالبه‌ها"
@@ -1969,16 +1978,15 @@ msgstr "اطلاعات شرکت"
 
 #. Name of a DocType
 #. Label of the compensatory_request (Link) field in DocType 'Leave Allocation'
+#. Label of a Link in the HR Workspace
 #. Label of a Link in the Leaves Workspace
-#. Label of a Link in the Overview Workspace
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.json
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
-#: hrms/hr/workspace/leaves/leaves.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/leaves/leaves.json
 msgid "Compensatory Leave Request"
 msgstr "درخواست مرخصی جبرانی"
 
-#: hrms/setup.py:349 hrms/setup.py:350
+#: hrms/setup.py:356 hrms/setup.py:357
 msgid "Compensatory Off"
 msgstr "مرخصی جبرانی"
 
@@ -2064,7 +2072,7 @@ msgstr "شماره تماس"
 msgid "Copy of Invitation/Announcement"
 msgstr "کپی دعوتنامه/اطلاعیه"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1597
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1600
 msgid "Could not submit some Salary Slips: {}"
 msgstr "برخی از فیش حقوقی ارسال نشد: {}"
 
@@ -2164,7 +2172,7 @@ msgstr "ایجاد ارزیابی ها"
 msgid "Creating Payment Entries......"
 msgstr "ایجاد ثبت‌های پرداخت......"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1557
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1560
 msgid "Creating Salary Slips..."
 msgstr "ایجاد فیش حقوقی ..."
 
@@ -2176,7 +2184,7 @@ msgstr "ایجاد {0}..."
 msgid "Creation Date"
 msgstr "تاریخ ایجاد"
 
-#: hrms/hr/utils.py:941
+#: hrms/hr/utils.py:944
 msgid "Creation Failed"
 msgstr "ایجاد ناموفق بود"
 
@@ -2283,24 +2291,23 @@ msgid "Cycles"
 msgstr "چرخه ها"
 
 #. Name of a DocType
-#. Label of a Card Break in the Employee Lifecycle Workspace
-#. Label of a Link in the Employee Lifecycle Workspace
+#. Label of a Card Break in the Tenure Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/daily_work_summary/daily_work_summary.json
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.js:7
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Daily Work Summary"
 msgstr "خلاصه کار روزانه"
 
 #. Label of the daily_work_summary_group (Link) field in DocType 'Daily Work
 #. Summary'
 #. Name of a DocType
-#. Label of a Link in the Employee Lifecycle Workspace
-#. Label of a Link in the Overview Workspace
+#. Label of a Link in the HR Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/daily_work_summary/daily_work_summary.json
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
-#: hrms/hr/page/team_updates/team_updates.js:12
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/page/team_updates/team_updates.js:12 hrms/hr/workspace/hr/hr.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Daily Work Summary Group"
 msgstr "گروه خلاصه کار روزانه"
 
@@ -2310,11 +2317,10 @@ msgid "Daily Work Summary Group User"
 msgstr "کاربر گروه خلاصه کار روزانه"
 
 #. Name of a report
-#. Label of a Link in the Employee Lifecycle Workspace
-#. Label of a Link in the Overview Workspace
+#. Label of a Link in the HR Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/report/daily_work_summary_replies/daily_work_summary_replies.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/tenure/tenure.json
 msgid "Daily Work Summary Replies"
 msgstr "پاسخ های خلاصه کار روزانه"
 
@@ -2352,7 +2358,7 @@ msgstr "روزهایی که باید معکوس شوند"
 
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.py:19
 msgid "Days to Reverse must be greater than zero."
-msgstr ""
+msgstr "تعداد روزهایی که باید معکوس شوند باید بزرگتر از صفر باشد."
 
 #: hrms/payroll/report/bank_remittance/bank_remittance.py:19
 msgid "Debit A/C Number"
@@ -2414,12 +2420,12 @@ msgstr "کسر"
 msgid "Deduction Arrears"
 msgstr ""
 
-#. Label of a Card Break in the Salary Payout Workspace
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#. Label of a Card Break in the Payroll Workspace
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Deduction Reports"
 msgstr "گزارش های کسر"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.js:91
+#: hrms/hr/doctype/employee_advance/employee_advance.js:84
 msgid "Deduction from Salary"
 msgstr "کسر از حقوق"
 
@@ -2493,11 +2499,11 @@ msgstr "تأیید کننده دپارتمان"
 msgid "Department Wise Openings"
 msgstr "افتتاحیه های مبتنی بر دپارتمان"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:101
+#: hrms/hr/doctype/expense_claim/expense_claim.py:107
 msgid "Department {0} does not belong to company: {1}"
 msgstr "دپارتمان {0} متعلق به شرکت: {1} نیست"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:232
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:235
 msgid "Department: {0}"
 msgstr "دپارتمان: {0}"
 
@@ -2530,7 +2536,7 @@ msgstr "شرح یک فرصت شغلی"
 msgid "Designation Skill"
 msgstr "مهارت نقش سازمانی"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:234
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:237
 msgid "Designation: {0}"
 msgstr "نقش سازمانی: {0}"
 
@@ -2615,7 +2621,7 @@ msgstr "حقوق بازنویسی شده تکراری"
 msgid "Duplicate Salary Withholding"
 msgstr "تکرار کردن نگه‌داشت حقوق"
 
-#: hrms/public/js/utils/index.js:208
+#: hrms/public/js/utils/index.js:210
 msgid "ERROR({0}): {1}"
 msgstr ""
 
@@ -2768,25 +2774,28 @@ msgstr "ایمیل فیش حقوقی به کارمند ارسال می‌شود 
 msgid "Employee A/C Number"
 msgstr "شماره تهویه مطبوع کارمند"
 
+#: hrms/patches/v16_0/create_custom_field_for_employee_advance_in_employee_master.py:11
+#: hrms/setup.py:267
+msgid "Employee Advance Account"
+msgstr "حساب پیش‌پرداخت کارمند"
+
 #: frontend/src/views/expense_claim/Dashboard.vue:35
 msgid "Employee Advance Balance"
 msgstr "تراز پیش‌پرداخت کارمند"
 
 #. Name of a report
-#. Label of a Link in the Expense Claims Workspace
-#. Label of a Link in the Overview Workspace
+#. Label of a Link in the Expenses Workspace
+#. Label of a Link in the HR Workspace
 #: hrms/hr/report/employee_advance_summary/employee_advance_summary.json
-#: hrms/hr/workspace/expense_claims/expense_claims.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/expenses/expenses.json hrms/hr/workspace/hr/hr.json
 msgid "Employee Advance Summary"
 msgstr "خلاصه پیش‌پرداخت کارمند"
 
 #. Name of a report
-#. Label of a Link in the Employee Lifecycle Workspace
-#. Label of a Link in the Overview Workspace
+#. Label of a Link in the HR Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/report/employee_analytics/employee_analytics.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Analytics"
 msgstr "تجزیه و تحلیل کارکنان"
 
@@ -2819,26 +2828,25 @@ msgstr "مطالبه مزایای کارکنان"
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_benefit_detail/employee_benefit_detail.json
 msgid "Employee Benefit Detail"
-msgstr ""
+msgstr "جزئیات مزایای کارمندان"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 msgid "Employee Benefit Ledger"
-msgstr ""
+msgstr "دفتر مزایای کارکنان"
 
 #. Label of the employee_benefits_section (Section Break) field in DocType
 #. 'Salary Structure Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/setup.py:399
+#: hrms/setup.py:406
 msgid "Employee Benefits"
 msgstr "مزایای کارمندان"
 
 #. Name of a report
-#. Label of a Link in the Employee Lifecycle Workspace
-#. Label of a Link in the Overview Workspace
+#. Label of a Link in the HR Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/report/employee_birthday/employee_birthday.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Birthday"
 msgstr "تولد کارمند"
 
@@ -2848,11 +2856,11 @@ msgid "Employee Boarding Activity"
 msgstr "فعالیت شبانه روزی کارکنان"
 
 #. Name of a DocType
-#. Label of a Link in the Overview Workspace
+#. Label of a Link in the HR Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #. Label of a shortcut in the Shift & Attendance Workspace
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/hr/hr.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Employee Checkin"
 msgstr "ثبت ورود کارمند"
@@ -2911,18 +2919,15 @@ msgid "Employee Exit Settings"
 msgstr "تنظیمات خروج کارمند"
 
 #. Name of a report
-#. Label of a Link in the Employee Lifecycle Workspace
-#. Label of a Link in the Overview Workspace
+#. Label of a Link in the HR Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/report/employee_exits/employee_exits.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Exits"
 msgstr "کارمند خارج می‌شود"
 
 #. Name of a DocType
-#. Label of a Link in the Performance Workspace
 #: hrms/hr/doctype/employee_feedback_criteria/employee_feedback_criteria.json
-#: hrms/hr/workspace/performance/performance.json
 msgid "Employee Feedback Criteria"
 msgstr "معیارهای بازخورد کارکنان"
 
@@ -2942,7 +2947,7 @@ msgstr "رتبه بندی بازخورد کارکنان"
 #. Template'
 #. Label of the employee_grade (Link) field in DocType 'Leave Control Panel'
 #. Label of the grade (Link) field in DocType 'Shift Assignment Tool'
-#. Label of a Link in the Overview Workspace
+#. Label of a Link in the HR Workspace
 #. Label of the grade (Link) field in DocType 'Bulk Salary Structure
 #. Assignment'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
@@ -2953,16 +2958,16 @@ msgstr "رتبه بندی بازخورد کارکنان"
 #: hrms/hr/doctype/employee_separation_template/employee_separation_template.json
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/hr/hr.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 msgid "Employee Grade"
 msgstr "درجه کارمند"
 
 #. Name of a DocType
-#. Label of a Link in the Employee Lifecycle Workspace
-#. Label of a shortcut in the Employee Lifecycle Workspace
+#. Label of a Link in the Tenure Workspace
+#. Label of a shortcut in the Tenure Workspace
 #: hrms/hr/doctype/employee_grievance/employee_grievance.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Grievance"
 msgstr "شکایت کارکنان"
 
@@ -2984,9 +2989,9 @@ msgid "Employee Image"
 msgstr "تصویر کارمند"
 
 #. Name of a DocType
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.json
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Employee Incentive"
 msgstr "مشوق کارکنان"
 
@@ -2996,43 +3001,35 @@ msgid "Employee Info"
 msgstr "اطلاعات کارمند"
 
 #. Name of a report
-#. Label of a Link in the Employee Lifecycle Workspace
-#. Label of a Link in the Overview Workspace
+#. Label of a Link in the HR Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/report/employee_information/employee_information.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Information"
 msgstr "اطلاعات کارکنان"
 
-#. Label of a Card Break in the Employee Lifecycle Workspace
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#. Label of a Card Break in the Tenure Workspace
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Journey"
 msgstr "مسیر کارمند"
 
 #. Name of a report
+#. Label of a Link in the HR Workspace
 #. Label of a Link in the Leaves Workspace
-#. Label of a Link in the Overview Workspace
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.json
-#: hrms/hr/workspace/leaves/leaves.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance"
 msgstr "تراز مرخصی کارکنان"
 
 #. Name of a report
+#. Label of a Link in the HR Workspace
 #. Label of a Link in the Leaves Workspace
-#. Label of a Link in the Overview Workspace
 #: hrms/hr/report/employee_leave_balance_summary/employee_leave_balance_summary.json
-#: hrms/hr/workspace/leaves/leaves.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance Summary"
 msgstr "خلاصه تراز مرخصی کارکنان"
 
-#. Name of a Workspace
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
-msgid "Employee Lifecycle"
-msgstr "چرخه حیات کارمند"
-
-#: hrms/setup.py:772
+#: hrms/setup.py:779
 msgid "Employee Loan"
 msgstr "وام کارمند"
 
@@ -3042,20 +3039,20 @@ msgid "Employee Naming By"
 msgstr "نام‌گذاری کارکنان توسط"
 
 #. Name of a DocType
-#. Label of a Link in the Employee Lifecycle Workspace
-#. Label of a shortcut in the Employee Lifecycle Workspace
+#. Label of a Link in the Tenure Workspace
+#. Label of a shortcut in the Tenure Workspace
 #: hrms/hr/doctype/employee_onboarding/employee_onboarding.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Onboarding"
 msgstr "آشناسازی کارکنان"
 
 #. Label of the employee_onboarding_template (Link) field in DocType 'Employee
 #. Onboarding'
 #. Name of a DocType
-#. Label of a Link in the Employee Lifecycle Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/employee_onboarding/employee_onboarding.json
 #: hrms/hr/doctype/employee_onboarding_template/employee_onboarding_template.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Onboarding Template"
 msgstr "الگوی آشناسازی کارکنان"
 
@@ -3077,11 +3074,11 @@ msgid "Employee Performance Feedback"
 msgstr "بازخورد عملکرد کارکنان"
 
 #. Name of a DocType
-#. Label of a Link in the Employee Lifecycle Workspace
 #. Label of a Link in the Performance Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/employee_promotion/employee_promotion.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
 #: hrms/hr/workspace/performance/performance.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Promotion"
 msgstr "ارتقای کارمند"
 
@@ -3106,9 +3103,13 @@ msgstr "تاریخچه اموال کارکنان"
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/doctype/job_requisition/job_requisition.js:18
-#: hrms/hr/workspace/recruitment/recruitment.json hrms/setup.py:393
+#: hrms/hr/workspace/recruitment/recruitment.json hrms/setup.py:400
 msgid "Employee Referral"
 msgstr "ارجاع کارمند"
+
+#: hrms/hr/doctype/employee_referral/employee_referral.py:26
+msgid "Employee Referral {0} already exists for email: {1}"
+msgstr ""
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:108
 msgid "Employee Referral {0} is not applicable for referral bonus."
@@ -3130,20 +3131,20 @@ msgid "Employee Retained"
 msgstr "کارمند ابقا شد"
 
 #. Name of a DocType
-#. Label of a Link in the Employee Lifecycle Workspace
-#. Label of a shortcut in the Employee Lifecycle Workspace
+#. Label of a Link in the Tenure Workspace
+#. Label of a shortcut in the Tenure Workspace
 #: hrms/hr/doctype/employee_separation/employee_separation.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Separation"
 msgstr "جدایی کارکنان"
 
 #. Label of the employee_separation_template (Link) field in DocType 'Employee
 #. Separation'
 #. Name of a DocType
-#. Label of a Link in the Employee Lifecycle Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/employee_separation/employee_separation.json
 #: hrms/hr/doctype/employee_separation_template/employee_separation_template.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Separation Template"
 msgstr "الگوی جداسازی کارکنان"
 
@@ -3159,9 +3160,9 @@ msgid "Employee Skill"
 msgstr "مهارت کارمند"
 
 #. Name of a DocType
-#. Label of a Link in the Employee Lifecycle Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/employee_skill_map/employee_skill_map.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Skill Map"
 msgstr "نقشه مهارت کارکنان"
 
@@ -3223,9 +3224,9 @@ msgid "Employee Training"
 msgstr "آموزش کارکنان"
 
 #. Name of a DocType
-#. Label of a Link in the Employee Lifecycle Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/employee_transfer/employee_transfer.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Transfer"
 msgstr "انتقال کارمند"
 
@@ -3244,10 +3245,10 @@ msgstr "جزئیات انتقال کارکنان"
 msgid "Employee Transfer cannot be submitted before Transfer Date"
 msgstr "انتقال کارمند را نمی‌توان قبل از تاریخ انتقال ارسال کرد"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:73
-#: hrms/hr/doctype/employee_advance/employee_advance.py:133
+#: hrms/hr/doctype/employee_advance/employee_advance.py:69
+#: hrms/hr/doctype/employee_advance/employee_advance.py:139
 msgid "Employee advance account {0} should be of type {1}."
-msgstr ""
+msgstr "حساب پیش‌پرداخت کارمند {0} باید از نوع {1} باشد."
 
 #: hrms/hr/doctype/hr_settings/hr_settings.js:27
 msgid "Employee can be named by Employee ID if you assign one, or via Naming Series. Select your preference here."
@@ -3264,7 +3265,7 @@ msgstr "نام کارمند"
 msgid "Employee records are created using the selected option"
 msgstr "رکوردهای کارمندان با استفاده از گزینه انتخاب شده ایجاد می‌شود"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:244
+#: hrms/hr/doctype/shift_type/shift_type.py:272
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr "کارمند به دلیل عدم حضور کارمند، غایب علامت‌گذاری شد."
 
@@ -3272,13 +3273,13 @@ msgstr "کارمند به دلیل عدم حضور کارمند، غایب عل�
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr "کارمند به دلیل عدم رعایت آستانه ساعات کاری، غایب علامت‌گذاری شد."
 
-#: hrms/hr/doctype/shift_type/shift_type.py:373
+#: hrms/hr/doctype/shift_type/shift_type.py:401
 msgid "Employee was marked Absent for other half due to missing Employee Checkins."
 msgstr ""
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:456
 msgid "Employee {0} : {1}"
-msgstr ""
+msgstr "کارمند {0} : {1}"
 
 #: hrms/hr/doctype/attendance_request/attendance_request.py:67
 msgid "Employee {0} already has an Attendance Request {1} that overlaps with this period"
@@ -3292,11 +3293,11 @@ msgstr "کارمند {0} از قبل شیفت فعال {1}: {2} دارد که د
 msgid "Employee {0} already submitted an application {1} for the payroll period {2}"
 msgstr "کارمند {0} قبلاً یک درخواست {1} برای دوره حقوق و دستمزد {2} ارسال کرده است"
 
-#: hrms/hr/doctype/shift_request/shift_request.py:125
+#: hrms/hr/doctype/shift_request/shift_request.py:128
 msgid "Employee {0} has already applied for Shift {1}: {2} that overlaps within this period"
 msgstr "کارمند {0} قبلاً برای Shift {1}: {2} درخواست داده است که در این دوره همپوشانی دارد"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:473
+#: hrms/hr/doctype/leave_application/leave_application.py:476
 msgid "Employee {0} has already applied for {1} between {2} and {3} : {4}"
 msgstr "کارمند {0} قبلاً برای {1} بین {2} و {3} درخواست داده است: {4}"
 
@@ -3338,8 +3339,8 @@ msgstr "کارمند: {0} باید حداقل {1} سال را برای حق سن
 msgid "Employees HTML"
 msgstr "HTML کارکنان"
 
-#. Label of a Link in the Overview Workspace
-#: hrms/hr/workspace/overview/overview.json
+#. Label of a Link in the HR Workspace
+#: hrms/hr/workspace/hr/hr.json
 msgid "Employees Working on a Holiday"
 msgstr "کارمندانی که در تعطیلات کار می‌کنند"
 
@@ -3379,6 +3380,7 @@ msgstr "کارمندانی که در تعطیلات کار می‌کنند"
 #. Name of a DocType
 #. Label of the employee_type_name (Data) field in DocType 'Employment Type'
 #. Label of the employment_type (Link) field in DocType 'Job Opening'
+#. Label of the employment_type (Link) field in DocType 'Job Opening Template'
 #. Label of the employment_type (Link) field in DocType 'Leave Control Panel'
 #. Label of the employment_type (Link) field in DocType 'Shift Assignment Tool'
 #. Label of the employment_type (Link) field in DocType 'Bulk Salary Structure
@@ -3386,6 +3388,7 @@ msgstr "کارمندانی که در تعطیلات کار می‌کنند"
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/doctype/employment_type/employment_type.json
 #: hrms/hr/doctype/job_opening/job_opening.json
+#: hrms/hr/doctype/job_opening_template/job_opening_template.json
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
@@ -3396,7 +3399,7 @@ msgstr "نوع اشتغال"
 #. Label of the enable_auto_attendance (Check) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Enable Auto Attendance"
-msgstr "حضور خودکار را فعال کنید"
+msgstr "فعال کردن حضور و غیاب خودکار"
 
 #. Label of the enable_early_exit_marking (Check) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
@@ -3468,33 +3471,13 @@ msgstr "فیش های حقوق را در ایمیل ها رمزگذاری کنی
 msgid "End Date cannot be before Start Date"
 msgstr "تاریخ پایان نمی‌تواند قبل از تاریخ شروع باشد"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:238
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:241
 msgid "End date: {0}"
 msgstr "تاریخ پایان: {0}"
 
 #: hrms/hr/doctype/training_event/training_event.py:26
 msgid "End time cannot be before start time"
 msgstr "زمان پایان نمی‌تواند قبل از زمان شروع باشد"
-
-#. Label of a Link in the Performance Workspace
-#: hrms/hr/workspace/performance/performance.json
-msgid "Energy Point Log"
-msgstr "لاگ نقطه انرژی"
-
-#. Label of a Link in the Performance Workspace
-#: hrms/hr/workspace/performance/performance.json
-msgid "Energy Point Rule"
-msgstr "قانون نقطه انرژی"
-
-#. Label of a Link in the Performance Workspace
-#: hrms/hr/workspace/performance/performance.json
-msgid "Energy Point Settings"
-msgstr "تنظیمات نقطه انرژی"
-
-#. Label of a Card Break in the Performance Workspace
-#: hrms/hr/workspace/performance/performance.json
-msgid "Energy Points"
-msgstr "نقاط انرژی"
 
 #: hrms/hr/doctype/job_applicant/job_applicant.js:86
 msgid "Enter Interview Round"
@@ -3522,7 +3505,7 @@ msgstr "تعداد مرخصی‌هایی را که می‌خواهید برای 
 #. Structure'
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 msgid "Enter yearly benefit amounts"
-msgstr ""
+msgstr "مبالغ مزایای سالانه را وارد کنید"
 
 #: frontend/src/components/FormField.vue:42
 msgid "Enter {0}"
@@ -3538,13 +3521,13 @@ msgstr "خطا در حذف {0}"
 
 #: frontend/src/utils/commonUtils.js:46
 msgid "Error downloading PDF"
-msgstr ""
+msgstr "خطا در دانلود فایل PDF"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1320
 msgid "Error in formula or condition"
 msgstr "خطا در فرمول یا شرایط"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2532
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2535
 msgid "Error in formula or condition: {0} in Income Tax Slab"
 msgstr "خطا در فرمول یا شرایط: {0} در صفحه مالیات بر درآمد"
 
@@ -3556,7 +3539,7 @@ msgstr "خطا در برخی ردیف ها"
 msgid "Error updating {0}"
 msgstr "خطا در به‌روزرسانی {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2611
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2614
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
 msgstr "خطا هنگام ارزیابی {doctype} {doclink} در ردیف {row_id}. <br><br> <b>خطا:</b> {خطا} <br><br> <b>نکته:</b> {description}"
 
@@ -3645,8 +3628,10 @@ msgstr "همه، بیایید تولد {0} را تبریک بگوییم."
 msgid "Exam"
 msgstr "امتحان"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:67
-msgid "Exchange Rate cannot be zero."
+#. Description of the 'Exchange Rate' (Float) field in DocType 'Expense Claim
+#. Advance'
+#: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
+msgid "Exchange rate of Payment Entry against Employee Advance"
 msgstr ""
 
 #: hrms/hr/doctype/attendance/attendance_list.js:85
@@ -3716,10 +3701,10 @@ msgid "Exit Details"
 msgstr "جزئیات خروج"
 
 #. Name of a DocType
-#. Label of a Link in the Employee Lifecycle Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/exit_interview/exit_interview.json
 #: hrms/hr/report/employee_exits/employee_exits.py:39
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Exit Interview"
 msgstr "مصاحبه خروج"
 
@@ -3740,14 +3725,14 @@ msgstr "مصاحبه خروج {0} از قبل برای کارمند وجود د�
 #. Label of the exit_questionnaire_section (Section Break) field in DocType
 #. 'Exit Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json
-#: hrms/hr/doctype/exit_interview/exit_interview.py:140
+#: hrms/hr/doctype/exit_interview/exit_interview.py:143
 msgid "Exit Questionnaire"
 msgstr "پرسشنامه خروج"
 
-#: hrms/hr/doctype/exit_interview/test_exit_interview.py:108
-#: hrms/hr/doctype/exit_interview/test_exit_interview.py:118
-#: hrms/hr/doctype/exit_interview/test_exit_interview.py:120 hrms/setup.py:474
-#: hrms/setup.py:476 hrms/setup.py:497
+#: hrms/hr/doctype/exit_interview/test_exit_interview.py:116
+#: hrms/hr/doctype/exit_interview/test_exit_interview.py:126
+#: hrms/hr/doctype/exit_interview/test_exit_interview.py:128 hrms/setup.py:481
+#: hrms/setup.py:483 hrms/setup.py:504
 msgid "Exit Questionnaire Notification"
 msgstr "اعلان پرسشنامه خروج"
 
@@ -3763,13 +3748,13 @@ msgstr "پرسشنامه خروج در انتظار است"
 
 #. Label of the exit_questionnaire_web_form (Link) field in DocType 'HR
 #. Settings'
-#: hrms/hr/doctype/exit_interview/exit_interview.py:121
+#: hrms/hr/doctype/exit_interview/exit_interview.py:124
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Exit Questionnaire Web Form"
 msgstr "فرم وب پرسشنامه خروج"
 
-#. Label of a quick_list in the Employee Lifecycle Workspace
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#. Label of a quick_list in the Tenure Workspace
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Exits (This Month)"
 msgstr ""
 
@@ -3843,11 +3828,11 @@ msgstr "خلاصه مطالبه هزینه"
 #. Label of the expense_type (Link) field in DocType 'Expense Claim Detail'
 #. Name of a DocType
 #. Label of the expense_type (Data) field in DocType 'Expense Claim Type'
-#. Label of a Link in the Expense Claims Workspace
-#: hrms/hr/doctype/expense_claim/expense_claim.py:525
+#. Label of a Link in the Expenses Workspace
+#: hrms/hr/doctype/expense_claim/expense_claim.py:703
 #: hrms/hr/doctype/expense_claim_detail/expense_claim_detail.json
 #: hrms/hr/doctype/expense_claim_type/expense_claim_type.json
-#: hrms/hr/workspace/expense_claims/expense_claims.json
+#: hrms/hr/workspace/expenses/expenses.json
 msgid "Expense Claim Type"
 msgstr "نوع مطالبه هزینه"
 
@@ -3859,10 +3844,9 @@ msgstr "مطالبه هزینه برای لاگ وسیله نقلیه {0}"
 msgid "Expense Claim {0} already exists for the Vehicle Log"
 msgstr "مطالبه هزینه {0} از قبل برای لاگ وسیله نقلیه وجود دارد"
 
-#. Name of a Workspace
-#. Label of a chart in the Expense Claims Workspace
+#. Label of a chart in the Expenses Workspace
 #: frontend/src/views/expense_claim/Dashboard.vue:2
-#: hrms/hr/workspace/expense_claims/expense_claims.json
+#: hrms/hr/workspace/expenses/expenses.json
 msgid "Expense Claims"
 msgstr "مطالبات هزینه"
 
@@ -3935,7 +3919,7 @@ msgstr "توضیح"
 msgid "Exporting..."
 msgstr "در حال برون‌بُرد..."
 
-#: hrms/hr/utils.py:929
+#: hrms/hr/utils.py:932
 msgid "Failed to create/submit {0} for employees:"
 msgstr "ایجاد/ارائه {0} برای کارمندان انجام نشد:"
 
@@ -3955,11 +3939,11 @@ msgstr "اعلان زمان‌بندی مجدد مصاحبه ارسال نشد. 
 msgid "Failed to setup defaults for country {0}."
 msgstr "تنظیم پیش‌فرض‌ها برای کشور {0} ناموفق بود."
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:445
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:464
 msgid "Failed to submit some leave policy assignments:"
 msgstr "ناموفق در ارسال برخی از تخصیص‌های سیاست مرخصی:"
 
-#: hrms/hr/doctype/interview/interview.py:205
+#: hrms/hr/doctype/interview/interview.py:208
 msgid "Failed to update the Job Applicant status"
 msgstr "به‌روزرسانی وضعیت متقاضی شغل ناموفق بود"
 
@@ -3977,9 +3961,9 @@ msgstr "جزئیات شکست"
 #. Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Failure Reason"
-msgstr ""
+msgstr "دلیل شکست"
 
-#: hrms/hr/utils.py:478
+#: hrms/hr/utils.py:481
 msgid "Failure of Automatic Allocation of Earned Leaves"
 msgstr ""
 
@@ -4129,7 +4113,7 @@ msgstr "اولین روز"
 msgid "First Name "
 msgstr " نام کوچک"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1517
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1520
 msgid "Fiscal Year {0} not found"
 msgstr "سال مالی {0} یافت نشد"
 
@@ -4139,8 +4123,8 @@ msgstr "سال مالی {0} یافت نشد"
 msgid "Fixed Hourly Rate"
 msgstr ""
 
-#. Label of a Card Break in the Expense Claims Workspace
-#: hrms/hr/workspace/expense_claims/expense_claims.json
+#. Label of a Card Break in the Expenses Workspace
+#: hrms/hr/workspace/expenses/expenses.json
 msgid "Fleet Management"
 msgstr "مدیریت ناوگان"
 
@@ -4149,7 +4133,7 @@ msgstr "مدیریت ناوگان"
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.js:90
 msgid "Flexible Benefit"
-msgstr ""
+msgstr "مزایای انعطاف‌پذیر"
 
 #. Label of the employee_benefits (Table) field in DocType 'Employee Benefit
 #. Application'
@@ -4183,7 +4167,7 @@ msgstr "FnF در انتظار"
 msgid "Follow via Email"
 msgstr "دنبال کردن از طریق ایمیل"
 
-#: hrms/setup.py:326
+#: hrms/setup.py:333
 msgid "Food"
 msgstr "غذا"
 
@@ -4288,7 +4272,7 @@ msgstr "از (سال)"
 #. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Fuchsia"
-msgstr ""
+msgstr "سرخابی"
 
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.py:45
 msgid "Fuel Expense"
@@ -4320,7 +4304,7 @@ msgstr "دارایی کامل و نهایی"
 msgid "Full and Final Outstanding Statement"
 msgstr "صورت‌حساب کامل و نهایی معوقات"
 
-#: hrms/setup.py:382
+#: hrms/setup.py:389
 msgid "Full-time"
 msgstr "تمام وقت"
 
@@ -4345,7 +4329,12 @@ msgstr "مالیات بر درآمد آینده"
 msgid "Future dates not allowed"
 msgstr "تاریخ‌های آینده مجاز نیست"
 
-#: hrms/public/js/utils/index.js:186 hrms/public/js/utils/index.js:212
+#. Label of the gain_loss_account (Link) field in DocType 'Expense Claim'
+#: hrms/hr/doctype/expense_claim/expense_claim.json
+msgid "Gain Loss Account"
+msgstr ""
+
+#: hrms/public/js/utils/index.js:186 hrms/public/js/utils/index.js:214
 msgid "Geolocation Error"
 msgstr ""
 
@@ -4483,8 +4472,8 @@ msgstr "قانون حق سنوات"
 msgid "Gratuity Rule Slab"
 msgstr "طبقه قانون حق سنوات"
 
-#. Label of a Card Break in the Employee Lifecycle Workspace
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#. Label of a Card Break in the Tenure Workspace
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Grievance"
 msgstr "شکایت"
 
@@ -4508,10 +4497,10 @@ msgstr "جزئیات شکایت"
 
 #. Label of the grievance_type (Link) field in DocType 'Employee Grievance'
 #. Name of a DocType
-#. Label of a Link in the Employee Lifecycle Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/employee_grievance/employee_grievance.json
 #: hrms/hr/doctype/grievance_type/grievance_type.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Grievance Type"
 msgstr "نوع شکایت"
 
@@ -4548,7 +4537,8 @@ msgstr "سال ناخالص تا به امروز (ارز شرکت)"
 msgid "Group goal's progress is auto-calculated based on the child goals."
 msgstr "پیشرفت هدف گروه به صورت خودکار بر اساس اهداف فرزند محاسبه می‌شود."
 
-#: hrms/setup.py:315
+#. Name of a Workspace
+#: hrms/hr/workspace/hr/hr.json hrms/setup.py:322
 msgid "HR"
 msgstr "منابع انسانی"
 
@@ -4560,16 +4550,16 @@ msgstr "منابع انسانی و حقوق و دستمزد"
 msgid "HR & Payroll Settings"
 msgstr "تنظیمات منابع انسانی و حقوق و دستمزد"
 
-#. Label of a shortcut in the Overview Workspace
-#: hrms/hr/workspace/overview/overview.json
+#. Label of a shortcut in the HR Workspace
+#: hrms/hr/workspace/hr/hr.json
 msgid "HR Dashboard"
 msgstr "داشبورد منابع انسانی"
 
 #. Name of a DocType
-#. Label of a Link in the Overview Workspace
+#. Label of a Link in the HR Workspace
 #: hrms/hr/doctype/hr_settings/hr_settings.json
-#: hrms/hr/doctype/leave_application/leave_application.py:169
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/doctype/leave_application/leave_application.py:172
+#: hrms/hr/workspace/hr/hr.json
 msgid "HR Settings"
 msgstr "تنظیمات منابع انسانی"
 
@@ -4605,7 +4595,7 @@ msgstr "تاریخ نیم روز"
 msgid "Half Day Date is mandatory"
 msgstr "تاریخ نیم روز اجباری است"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:191
+#: hrms/hr/doctype/leave_application/leave_application.py:194
 msgid "Half Day Date should be between From Date and To Date"
 msgstr "تاریخ نیم روز باید بین از تاریخ و تا تاریخ باشد"
 
@@ -4880,7 +4870,7 @@ msgstr "درون‌بُرد حضور و غیاب"
 msgid "In Time"
 msgstr "به موقع"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:140
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:143
 msgid "In case of any error during this background process, the system will add a comment about the error on this Payroll Entry and revert to the Submitted status"
 msgstr "در صورت بروز هرگونه خطایی در طول این فرآیند پس‌زمینه، سیستم نظری در مورد خطا در این ثبت حقوق و دستمزد اضافه می‌کند و به وضعیت ارسال شده باز می گردد"
 
@@ -4937,11 +4927,11 @@ msgid "Income Tax Component"
 msgstr "مؤلفه مالیات بر درآمد"
 
 #. Name of a report
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #. Label of a Link in the Tax & Benefits Workspace
 #. Label of a shortcut in the Tax & Benefits Workspace
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.json
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Income Tax Computation"
 msgstr "محاسبه مالیات بر درآمد"
@@ -4953,10 +4943,10 @@ msgid "Income Tax Deducted Till Date"
 msgstr "مالیات بر درآمد تا تاریخ کسر شده است"
 
 #. Name of a report
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #. Label of a Link in the Tax & Benefits Workspace
 #: hrms/payroll/report/income_tax_deductions/income_tax_deductions.json
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Income Tax Deductions"
 msgstr "کسر مالیات بر درآمد"
@@ -4966,14 +4956,14 @@ msgstr "کسر مالیات بر درآمد"
 #. Name of a DocType
 #. Label of the income_tax_slab (Link) field in DocType 'Salary Structure
 #. Assignment'
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #. Label of a Link in the Tax & Benefits Workspace
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:142
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.py:623
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Income Tax Slab"
 msgstr "طبقه مالیات بر درآمد"
@@ -5013,7 +5003,7 @@ msgstr "تخصیص وزن نادرست"
 #. Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Indicates the number of leaves that cannot be encashed from the leave balance. E.g. with a leave balance of 10 and 4 Non-Encashable Leaves, you can encash 6, while the remaining 4 can be carried forward or expired"
-msgstr "تعداد مرخصی‌هایی را نشان می دهد که نمی‌توان از مانده مرخصی بازخرید کرد. به عنوان مثال، با مانده مرخصی 10 و 4 مرخصی غیرقابل بازخرید، می‌توانید 6 مرخصی را بازخرید کنید، در حالی که 4 مرخصی باقی مانده را می‌توان انتقال به دوره بعد یا منقضی کرد"
+msgstr "تعداد مرخصی‌هایی را نشان می‌دهد که نمی‌توان از مانده مرخصی بازخرید کرد. به عنوان مثال، با مانده مرخصی 10 و 4 مرخصی غیرقابل بازخرید، می‌توانید 6 مرخصی را بازخرید کنید، در حالی که 4 مرخصی باقی مانده را می‌توان انتقال به دوره بعد یا منقضی کرد"
 
 #. Option for the 'Type' (Select) field in DocType 'Vehicle Service'
 #: hrms/hr/doctype/vehicle_service/vehicle_service.json
@@ -5029,11 +5019,11 @@ msgstr "نصب"
 msgid "Install Frappe HR"
 msgstr "نصب Frappe HR"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:432
+#: hrms/hr/doctype/leave_application/leave_application.py:435
 msgid "Insufficient Balance"
 msgstr "تراز ناکافی"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:430
+#: hrms/hr/doctype/leave_application/leave_application.py:433
 msgid "Insufficient leave balance for Leave Type {0}"
 msgstr "موجودی مرخصی ناکافی برای نوع مرخصی {0}"
 
@@ -5048,7 +5038,7 @@ msgstr "مبلغ بهره"
 msgid "Interest Income Account"
 msgstr "حساب درآمد بهره"
 
-#: hrms/setup.py:388
+#: hrms/setup.py:395
 msgid "Intern"
 msgstr "کارآموز"
 
@@ -5092,15 +5082,15 @@ msgstr "جزئیات مصاحبه"
 msgid "Interview Feedback"
 msgstr "بازخورد مصاحبه"
 
-#: hrms/hr/doctype/interview/test_interview.py:300
-#: hrms/hr/doctype/interview/test_interview.py:309
-#: hrms/hr/doctype/interview/test_interview.py:311
-#: hrms/hr/doctype/interview/test_interview.py:318 hrms/setup.py:460
-#: hrms/setup.py:462 hrms/setup.py:495
+#: hrms/hr/doctype/interview/test_interview.py:312
+#: hrms/hr/doctype/interview/test_interview.py:321
+#: hrms/hr/doctype/interview/test_interview.py:323
+#: hrms/hr/doctype/interview/test_interview.py:330 hrms/setup.py:467
+#: hrms/setup.py:469 hrms/setup.py:502
 msgid "Interview Feedback Reminder"
 msgstr "یادآوری بازخورد مصاحبه"
 
-#: hrms/hr/doctype/interview/interview.py:340
+#: hrms/hr/doctype/interview/interview.py:343
 msgid "Interview Feedback {0} submitted successfully"
 msgstr "بازخورد مصاحبه {0} با موفقیت ارسال شد"
 
@@ -5108,11 +5098,11 @@ msgstr "بازخورد مصاحبه {0} با موفقیت ارسال شد"
 msgid "Interview Not Rescheduled"
 msgstr "زمان مصاحبه مجدد انجام نشد"
 
-#: hrms/hr/doctype/interview/test_interview.py:284
-#: hrms/hr/doctype/interview/test_interview.py:293
-#: hrms/hr/doctype/interview/test_interview.py:295
-#: hrms/hr/doctype/interview/test_interview.py:317 hrms/setup.py:448
-#: hrms/setup.py:450 hrms/setup.py:491
+#: hrms/hr/doctype/interview/test_interview.py:296
+#: hrms/hr/doctype/interview/test_interview.py:305
+#: hrms/hr/doctype/interview/test_interview.py:307
+#: hrms/hr/doctype/interview/test_interview.py:329 hrms/setup.py:455
+#: hrms/setup.py:457 hrms/setup.py:498
 msgid "Interview Reminder"
 msgstr "یادآوری مصاحبه"
 
@@ -5208,7 +5198,7 @@ msgstr "مصاحبه ها"
 #. Label of a quick_list in the Recruitment Workspace
 #: hrms/hr/workspace/recruitment/recruitment.json
 msgid "Interviews (This Week)"
-msgstr ""
+msgstr "مصاحبه‌ها (این هفته)"
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:67
 #: hrms/payroll/doctype/salary_component/salary_component.py:81
@@ -5232,7 +5222,7 @@ msgstr ""
 msgid "Invalid Dates"
 msgstr "تاریخ‌های نامعتبر"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2643
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2646
 msgid "Invalid LWP Days Reversed"
 msgstr ""
 
@@ -5244,12 +5234,12 @@ msgstr "ثبت دفتر مرخصی نامعتبر"
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
 msgstr "حساب پرداختی حقوق و دستمزد نامعتبر است. واحد پول حساب باید {0} یا {1} باشد"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:39
 #: hrms/hr/doctype/shift_type/shift_type.py:48
+#: hrms/hr/doctype/shift_type/shift_type.py:57
 msgid "Invalid Shift Times"
 msgstr "زمان‌های شیفت نامعتبر است"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:651
+#: hrms/hr/doctype/expense_claim/expense_claim.py:933
 msgid "Invalid parameters provided. Please pass the required arguments."
 msgstr "پارامترهای نامعتبر ارائه شده است. لطفا آرگومان های مورد نیاز را ارسال کنید."
 
@@ -5404,7 +5394,7 @@ msgstr "متقاضی کار"
 msgid "Job Applicant Source"
 msgstr "منبع متقاضی کار"
 
-#: hrms/hr/doctype/employee_referral/employee_referral.py:51
+#: hrms/hr/doctype/employee_referral/employee_referral.py:70
 msgid "Job Applicant {0} created successfully."
 msgstr "متقاضی کار {0} با موفقیت ایجاد شد."
 
@@ -5425,7 +5415,7 @@ msgstr "مسیر درخواست شغل"
 #. Label of the job_description_tab (Tab Break) field in DocType 'Job
 #. Requisition'
 #. Label of the description (Text Editor) field in DocType 'Job Requisition'
-#: hrms/hr/doctype/job_requisition/job_requisition.json hrms/setup.py:403
+#: hrms/hr/doctype/job_requisition/job_requisition.json hrms/setup.py:410
 msgid "Job Description"
 msgstr "شرح شغل"
 
@@ -5487,6 +5477,13 @@ msgstr "موقعیت شغلی"
 msgid "Job Opening Associated"
 msgstr "همکار افتتاحیه کار"
 
+#. Label of the job_opening_template (Link) field in DocType 'Job Opening'
+#. Name of a DocType
+#: hrms/hr/doctype/job_opening/job_opening.json
+#: hrms/hr/doctype/job_opening_template/job_opening_template.json
+msgid "Job Opening Template"
+msgstr ""
+
 #: hrms/www/jobs/index.html:2 hrms/www/jobs/index.html:5
 msgid "Job Openings"
 msgstr "فرصت های شغلی"
@@ -5543,11 +5540,10 @@ msgstr "ژوئن"
 #. Goal'
 #. Label of the kra (Link) field in DocType 'Goal'
 #. Name of a DocType
-#. Label of a Link in the Performance Workspace
 #: hrms/hr/doctype/appraisal_kra/appraisal_kra.json
 #: hrms/hr/doctype/appraisal_template_goal/appraisal_template_goal.json
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:134
-#: hrms/hr/doctype/kra/kra.json hrms/hr/workspace/performance/performance.json
+#: hrms/hr/doctype/kra/kra.json
 msgid "KRA"
 msgstr "KRA"
 
@@ -5589,7 +5585,7 @@ msgstr "حوزه مسئولیت کلیدی"
 msgid "Key Result Area"
 msgstr "منطقه نتیجه کلیدی"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2640
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2643
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr ""
 
@@ -5685,7 +5681,7 @@ msgstr "تخصیص مرخصی"
 
 #: hrms/hr/doctype/leave_type/leave_type.py:68
 msgid "Leave Allocation Exists"
-msgstr ""
+msgstr "تخصیص مرخصی وجود دارد"
 
 #. Label of the leave_allocations_section (Section Break) field in DocType
 #. 'Leave Policy'
@@ -5695,21 +5691,20 @@ msgstr "تخصیص‌های مرخصی"
 
 #. Label of the leave_application (Link) field in DocType 'Attendance'
 #. Name of a DocType
+#. Label of a Link in the HR Workspace
 #. Label of a Link in the Leaves Workspace
 #. Label of a shortcut in the Leaves Workspace
-#. Label of a Link in the Overview Workspace
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/leave_application/leave_application.json
-#: hrms/hr/workspace/leaves/leaves.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/leaves/leaves.json
 msgid "Leave Application"
 msgstr "درخواست مرخصی"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:754
+#: hrms/hr/doctype/leave_application/leave_application.py:757
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 msgstr "دوره درخواست مرخصی نمی‌تواند بین دو تخصیص مرخصی غیر متوالی {0} و {1} باشد."
 
-#: hrms/setup.py:425 hrms/setup.py:427 hrms/setup.py:487
+#: hrms/setup.py:432 hrms/setup.py:434 hrms/setup.py:494
 msgid "Leave Approval Notification"
 msgstr "اعلان تأیید مرخصی"
 
@@ -5784,7 +5779,7 @@ msgstr "تاریخ‌های لیست انسداد مرخصی"
 msgid "Leave Block List Name"
 msgstr "نام لیست انسداد مرخصی"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:1365
+#: hrms/hr/doctype/leave_application/leave_application.py:1368
 msgid "Leave Blocked"
 msgstr "مرخصی مسدود شده"
 
@@ -5895,7 +5890,7 @@ msgstr "جزئیات سیاست مرخصی"
 msgid "Leave Policy: {0} already assigned for Employee {1} for period {2} to {3}"
 msgstr "سیاست مرخصی: {0} قبلاً به کارمند {1} برای دوره {2} تا {3} اختصاص داده شده است"
 
-#: hrms/setup.py:434 hrms/setup.py:436 hrms/setup.py:488
+#: hrms/setup.py:441 hrms/setup.py:443 hrms/setup.py:495
 msgid "Leave Status Notification"
 msgstr "اعلان وضعیت مرخصی"
 
@@ -5971,14 +5966,18 @@ msgstr "نوع مرخصی {0} قابل بازخرید نیست"
 
 #. Label of the leave_without_pay (Float) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:179 hrms/setup.py:374
-#: hrms/setup.py:375
+#: hrms/payroll/report/salary_register/salary_register.py:179 hrms/setup.py:381
+#: hrms/setup.py:382
 msgid "Leave Without Pay"
 msgstr "مرخصی بدون حقوق"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:509
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr "مرخصی بدون حقوق با رکوردهای تأیید شده {} مطابقت ندارد"
+
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:130
+msgid "Leave allocation is skipped for {0}, because number of leaves to be allocated is 0."
+msgstr ""
 
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.py:54
 msgid "Leave allocation {0} is linked with the Leave Application {1}"
@@ -6002,11 +6001,11 @@ msgstr "درخواست مرخصی با تخصیص مرخصی {0} پیوند دا
 msgid "Leave cannot be allocated before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}"
 msgstr "مرخصی را نمی‌توان قبل از {0} تخصیص داد، زیرا تراز مرخصی قبلاً در سابقه تخصیص مرخصی آینده منتقل به دوره بعد شده است {1}"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:245
+#: hrms/hr/doctype/leave_application/leave_application.py:248
 msgid "Leave cannot be applied/cancelled before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}"
 msgstr "مرخصی قبل از {0} قابل اعمال/لغو نیست، زیرا تراز مرخصی قبلاً در سابقه تخصیص مرخصی آینده منتقل به دوره بعد شده است {1}"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:500
+#: hrms/hr/doctype/leave_application/leave_application.py:503
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr "خروج از نوع {0} نمی‌تواند بیشتر از {1} باشد."
 
@@ -6024,17 +6023,16 @@ msgid "Leave(s) Taken"
 msgstr "مرخصی (ها) گرفته شده است"
 
 #. Label of the leaves (Float) field in DocType 'Leave Ledger Entry'
+#. Label of a Card Break in the HR Workspace
 #. Name of a Workspace
-#. Label of a Card Break in the Overview Workspace
 #. Label of the leave_details_section (Tab Break) field in DocType 'Salary
 #. Slip'
 #: frontend/src/components/BottomTabs.vue:53
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.json
 #: hrms/hr/doctype/leave_policy/leave_policy_dashboard.py:8
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment_dashboard.py:8
-#: hrms/hr/report/leave_ledger/leave_ledger.py:59
+#: hrms/hr/report/leave_ledger/leave_ledger.py:59 hrms/hr/workspace/hr/hr.json
 #: hrms/hr/workspace/leaves/leaves.json
-#: hrms/hr/workspace/overview/overview.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Leaves"
 msgstr "مرخصی‌ها"
@@ -6067,7 +6065,7 @@ msgstr "مرخصی‌های در انتظار تأیید"
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
 msgstr "مرخصی‌های نوع مرخصی {0} منتقل نمی‌شوند زیرا انتقال به دوره بعد غیرفعال است."
 
-#: hrms/setup.py:405
+#: hrms/setup.py:412
 msgid "Leaves per Year"
 msgstr "مرخصی در سال"
 
@@ -6116,7 +6114,7 @@ msgstr "حساب وام"
 msgid "Loan Product"
 msgstr "محصول وام"
 
-#: hrms/payroll/report/salary_register/salary_register.py:233 hrms/setup.py:765
+#: hrms/payroll/report/salary_register/salary_register.py:233 hrms/setup.py:772
 msgid "Loan Repayment"
 msgstr "بازپرداخت وام"
 
@@ -6125,7 +6123,7 @@ msgstr "بازپرداخت وام"
 msgid "Loan Repayment Entry"
 msgstr "ثبت بازپرداخت وام"
 
-#: hrms/hr/utils.py:816
+#: hrms/hr/utils.py:819
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr "وام از حقوق کارمند {0} قابل بازپرداخت نیست زیرا حقوق به ارز {1} پردازش می‌شود"
 
@@ -6206,7 +6204,7 @@ msgstr "رتبه بندی دستی"
 #. Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Manually"
-msgstr ""
+msgstr "دستی"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:38
 #: hrms/public/js/salary_slip_deductions_report_filters.js:21
@@ -6252,7 +6250,7 @@ msgstr "حضور در تاریخ‌های انتخابی به‌عنوان {0} �
 msgid "Mark attendance based on 'Employee Checkin' for Employees assigned to this shift."
 msgstr "حضور و غیاب را بر اساس «اعلام حضور کارکنان» برای کارکنانی که به این شیفت اختصاص داده شده اند، علامت بزنید."
 
-#: hrms/hr/doctype/shift_type/shift_type.py:88
+#: hrms/hr/doctype/shift_type/shift_type.py:97
 msgid "Mark attendance for existing check-in/out logs before changing shift settings"
 msgstr ""
 
@@ -6351,7 +6349,7 @@ msgstr "حداکثر مرخصی‌های منتقل شده به دوره بعد"
 msgid "Maximum Consecutive Leaves Allowed"
 msgstr "حداکثر مرخصی‌های متوالی مجاز"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:510
+#: hrms/hr/doctype/leave_application/leave_application.py:513
 msgid "Maximum Consecutive Leaves Exceeded"
 msgstr "از حداکثر مرخصی‌های متوالی بیشتر شد"
 
@@ -6413,7 +6411,7 @@ msgstr "می"
 msgid "Meal Preference"
 msgstr "ترجیح غذا"
 
-#: hrms/setup.py:327
+#: hrms/setup.py:334
 msgid "Medical"
 msgstr "پزشکی"
 
@@ -6452,7 +6450,7 @@ msgstr ""
 msgid "Missing Opening Entries"
 msgstr ""
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:44
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:48
 msgid "Missing Relieving Date"
 msgstr "از دست رفته تاریخ برکناری"
 
@@ -6469,7 +6467,7 @@ msgstr "طبقه مالیاتی گم شده"
 msgid "Mode of Travel"
 msgstr "حالت سفر"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:312
+#: hrms/hr/doctype/expense_claim/expense_claim.py:439
 msgid "Mode of payment is required to make a payment"
 msgstr "نحوه پرداخت برای پرداخت الزامی است"
 
@@ -6484,10 +6482,10 @@ msgid "Month To Date(Company Currency)"
 msgstr "ماه تا به امروز (ارز شرکت)"
 
 #. Name of a report
-#. Label of a Link in the Overview Workspace
+#. Label of a Link in the HR Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/hr/hr.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Monthly Attendance Sheet"
 msgstr "برگه حضور و غیاب ماهانه"
@@ -6527,7 +6525,7 @@ msgid "My Requests"
 msgstr "درخواست‌های من"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1306
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2527
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2530
 msgid "Name error"
 msgstr "خطای نام"
 
@@ -6584,8 +6582,8 @@ msgstr ""
 msgid "New Feedback"
 msgstr "بازخورد جدید"
 
-#. Label of a quick_list in the Employee Lifecycle Workspace
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#. Label of a quick_list in the Tenure Workspace
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "New Hires (This Month)"
 msgstr "استخدام‌های جدید (این ماه)"
 
@@ -6610,6 +6608,10 @@ msgstr "مرخصی‌های جدید اختصاص داده شده (بر حسب �
 msgid "New shift assignments will be created after this date."
 msgstr "تخصیص‌های شیفت جدید پس از این تاریخ ایجاد خواهد شد."
 
+#: hrms/hr/doctype/employee_advance/employee_advance.py:375
+msgid "No Bank/Cash Account found for currency {0}. Please create one under company {1}."
+msgstr ""
+
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:218
 msgid "No Employee Found"
 msgstr "هیچ کارمندی پیدا نشد"
@@ -6618,7 +6620,7 @@ msgstr "هیچ کارمندی پیدا نشد"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "هیچ کارمندی برای مقدار فیلد کارمند داده شده پیدا نشد. '{}': {}"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hrms/hr/utils.py:919
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:111 hrms/hr/utils.py:922
 msgid "No Employees Selected"
 msgstr "هیچ کارمندی انتخاب نشد"
 
@@ -6646,7 +6648,7 @@ msgstr ""
 msgid "No Salary Structure Assignment found for employee {0} on date {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_withholding/salary_withholding.py:116
+#: hrms/payroll/doctype/salary_withholding/salary_withholding.py:119
 msgid "No Salary Structure Assignment found for employee {0} on or before {1}"
 msgstr ""
 
@@ -6654,7 +6656,7 @@ msgstr ""
 msgid "No Salary Structure assigned to Employee {0} on the given date {1}"
 msgstr "هیچ ساختار حقوقی به کارمند {0} در تاریخ معین {1} اختصاص داده نشده است"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:109
+#: hrms/payroll/doctype/salary_component/salary_component.js:115
 msgid "No Salary Structures"
 msgstr "بدون ساختار حقوق و دستمزد"
 
@@ -6731,11 +6733,11 @@ msgstr "هیچ سابقه حضور و غیابی برای ایجاد وجود ن
 msgid "No changes found in timings."
 msgstr "هیچ تغییری در زمان‌بندی یافت نشد."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:239
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:242
 msgid "No employees found"
 msgstr "هیچ کارمندی پیدا نشد"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:222
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:225
 msgid "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
 msgstr "هیچ کارمندی برای معیارهای ذکر شده یافت نشد:<br>شرکت: {0}<br> واحد پول: {1}<br>حساب پرداختنی حقوق و دستمزد: {2}"
 
@@ -6784,7 +6786,7 @@ msgstr "شماره از موقعیت ها"
 msgid "No replies from"
 msgstr "هیچ پاسخی از طرف"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1583
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1586
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "هیچ فیش حقوقی برای ارائه برای معیارهای انتخابی بالا یا فیش حقوقی که قبلاً ارسال شده است یافت نشد"
 
@@ -6859,11 +6861,11 @@ msgstr ""
 msgid "Nothing to change"
 msgstr "چیزی برای تغییر نیست"
 
-#: hrms/setup.py:406
+#: hrms/setup.py:413
 msgid "Notice Period"
 msgstr "دوره اطلاعیه"
 
-#: hrms/hr/doctype/exit_interview/exit_interview.py:122
+#: hrms/hr/doctype/exit_interview/exit_interview.py:125
 msgid "Notification Template"
 msgstr "الگوی اعلان"
 
@@ -6896,7 +6898,7 @@ msgstr "تعداد موقعیت ها"
 #. Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Number of Leaves"
-msgstr ""
+msgstr "تعداد مرخصی‌ها"
 
 #. Label of the number_of_withholding_cycles (Int) field in DocType 'Salary
 #. Withholding'
@@ -6979,8 +6981,8 @@ msgstr "در حال انجام وظیفه"
 msgid "On Leave"
 msgstr "در مرخصی"
 
-#. Label of a Card Break in the Employee Lifecycle Workspace
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#. Label of a Card Break in the Tenure Workspace
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Onboarding"
 msgstr "آشناسازی"
 
@@ -6996,7 +6998,7 @@ msgstr "فعالیت‌های آشناسازی"
 msgid "Onboarding Begins On"
 msgstr "آشناسازی شروع می‌شود"
 
-#: hrms/hr/doctype/shift_request/shift_request.py:92
+#: hrms/hr/doctype/shift_request/shift_request.py:95
 msgid "Only Approvers can Approve this Request."
 msgstr "فقط تأیید کنندگان می‌توانند این درخواست را تأیید کنند."
 
@@ -7008,7 +7010,7 @@ msgstr "فقط مدارک تکمیل شده قابل ارسال است"
 msgid "Only Employee Grievance with status {0} or {1} can be submitted"
 msgstr "فقط شکایت کارمند با وضعیت {0} یا {1} قابل ارسال است"
 
-#: hrms/hr/doctype/interview/interview.py:322
+#: hrms/hr/doctype/interview/interview.py:325
 msgid "Only Interviewer Are allowed to submit Interview Feedback"
 msgstr "فقط مصاحبه کننده مجاز به ارسال بازخورد مصاحبه است"
 
@@ -7032,7 +7034,7 @@ msgstr "فقط تخصیص منقضی شده قابل لغو است"
 msgid "Only interviewers can submit feedback"
 msgstr "فقط مصاحبه کنندگان می‌توانند بازخورد ارسال کنند"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:175
+#: hrms/hr/doctype/leave_application/leave_application.py:178
 msgid "Only users with the {0} role can create backdated leave applications"
 msgstr "فقط کاربران دارای نقش {0} می‌توانند برنامه‌های مرخصی دارای تاریخ را ایجاد کنند"
 
@@ -7058,7 +7060,7 @@ msgstr "اکنون باز کنید"
 msgid "Opening closed."
 msgstr "افتتاحیه بسته شده."
 
-#: hrms/hr/doctype/leave_application/leave_application.py:607
+#: hrms/hr/doctype/leave_application/leave_application.py:610
 msgid "Optional Holiday List not set for leave period {0}"
 msgstr "فهرست تعطیلات اختیاری برای دوره مرخصی {0} تنظیم نشده است"
 
@@ -7076,7 +7078,7 @@ msgstr "چارت سازمانی"
 msgid "Other Taxes and Charges"
 msgstr "سایر مالیات ها و هزینه ها"
 
-#: hrms/setup.py:328
+#: hrms/setup.py:335
 msgid "Others"
 msgstr "سایر"
 
@@ -7086,8 +7088,8 @@ msgstr "سایر"
 msgid "Out Time"
 msgstr "زمان خارج شدن"
 
-#. Label of a chart in the Salary Payout Workspace
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#. Label of a chart in the Payroll Workspace
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Outgoing Salary"
 msgstr "حقوق خروجی"
 
@@ -7107,7 +7109,7 @@ msgstr "درخواست حضور و غیاب همپوشانی"
 msgid "Overlapping Shift Attendance"
 msgstr "حضور و غیاب شیفت همپوشانی"
 
-#: hrms/hr/doctype/shift_request/shift_request.py:133
+#: hrms/hr/doctype/shift_request/shift_request.py:136
 msgid "Overlapping Shift Requests"
 msgstr "درخواست‌های شیفت همپوشانی"
 
@@ -7190,11 +7192,11 @@ msgstr ""
 msgid "Overtime Slip created for {0} employee(s)"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1244
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1247
 msgid "Overtime Slip creation is queued. It may take a few minutes"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1268
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1271
 msgid "Overtime Slip submission is queued. It may take a few minutes"
 msgstr ""
 
@@ -7273,7 +7275,7 @@ msgstr "از طریق فیش حقوقی پرداخت می‌شود"
 msgid "Parent Goal"
 msgstr "هدف والد"
 
-#: hrms/setup.py:383
+#: hrms/setup.py:390
 msgid "Part-time"
 msgstr "پاره وقت"
 
@@ -7318,7 +7320,7 @@ msgstr "پرداخت از طریق ثبت پرداخت"
 msgid "Pay via Salary Slip"
 msgstr "پرداخت از طریق فیش حقوقی"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:127
+#: hrms/hr/doctype/expense_claim/expense_claim.py:137
 msgid "Payable Account is mandatory to submit an Expense Claim"
 msgstr "حساب پرداختنی برای ارسال مطالبه هزینه الزامی است"
 
@@ -7358,7 +7360,7 @@ msgstr ""
 msgid "Payment and Accounting"
 msgstr "پرداخت و حسابداری"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1094
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1097
 msgid "Payment of {0} from {1} to {2}"
 msgstr "پرداخت {0} از {1} به {2}"
 
@@ -7380,11 +7382,12 @@ msgid "Payout Unclaimed Amount in Final Payroll Cycle"
 msgstr ""
 
 #. Label of the payroll (Section Break) field in DocType 'Leave Encashment'
-#. Label of a Card Break in the Salary Payout Workspace
+#. Name of a Workspace
+#. Label of a Card Break in the Payroll Workspace
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/overrides/dashboard_overrides.py:37
 #: hrms/overrides/dashboard_overrides.py:77
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Payroll"
 msgstr "حقوق و دستمزد"
 
@@ -7395,14 +7398,14 @@ msgstr "حقوق و دستمزد بر اساس"
 #. Name of a DocType
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 msgid "Payroll Correction"
-msgstr ""
+msgstr "اصلاح حقوق و دستمزد"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/payroll_correction_child/payroll_correction_child.json
 msgid "Payroll Correction Child"
 msgstr ""
 
-#: hrms/setup.py:111 hrms/setup.py:274
+#: hrms/setup.py:111 hrms/setup.py:281
 msgid "Payroll Cost Center"
 msgstr "مرکز هزینه حقوق و دستمزد"
 
@@ -7412,8 +7415,8 @@ msgstr "مرکز هزینه حقوق و دستمزد"
 msgid "Payroll Cost Centers"
 msgstr "مراکز هزینه حقوق و دستمزد"
 
-#. Label of a shortcut in the Overview Workspace
-#: hrms/hr/workspace/overview/overview.json
+#. Label of a shortcut in the HR Workspace
+#: hrms/hr/workspace/hr/hr.json
 msgid "Payroll Dashboard"
 msgstr "داشبورد حقوق و دستمزد"
 
@@ -7437,7 +7440,7 @@ msgstr "تاریخ حقوق و دستمزد"
 msgid "Payroll Employee Detail"
 msgstr "جزئیات حقوق و دستمزد کارکنان"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:138
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:141
 msgid "Payroll Entry cancellation is queued. It may take a few minutes"
 msgstr "لغو ورود حقوق و دستمزد در صف است. ممکن است چند دقیقه طول بکشد"
 
@@ -7471,7 +7474,7 @@ msgstr "شماره حقوق و دستمزد"
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/setup.py:838
+#: hrms/setup.py:845
 msgid "Payroll Payable Account"
 msgstr "حساب پرداختنی حقوق و دستمزد"
 
@@ -7487,7 +7490,7 @@ msgstr "حساب پرداختنی حقوق و دستمزد"
 #. Proof Submission'
 #. Label of the payroll_period (Link) field in DocType 'Payroll Correction'
 #. Name of a DocType
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #: frontend/src/views/salary_slip/Dashboard.vue:21
 #: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.json
@@ -7499,7 +7502,7 @@ msgstr "حساب پرداختنی حقوق و دستمزد"
 #: hrms/payroll/doctype/payroll_period/payroll_period.json
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.js:62
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.js:18
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Payroll Period"
 msgstr "دوره حقوق و دستمزد"
 
@@ -7515,14 +7518,14 @@ msgstr "تاریخ دوره حقوق و دستمزد"
 msgid "Payroll Periods"
 msgstr "دوره های حقوق و دستمزد"
 
-#. Label of a Card Break in the Salary Payout Workspace
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#. Label of a Card Break in the Payroll Workspace
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Payroll Reports"
 msgstr "گزارش حقوق و دستمزد"
 
-#. Label of a Link in the Overview Workspace
+#. Label of a Link in the HR Workspace
 #. Name of a DocType
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/hr/hr.json
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Payroll Settings"
 msgstr "تنظیمات حقوق و دستمزد"
@@ -7545,7 +7548,7 @@ msgstr ""
 msgid "Pending (unpaid) amount from previous advances"
 msgstr ""
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:69
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:73
 msgid "Pending Asset Returns"
 msgstr ""
 
@@ -7580,7 +7583,7 @@ msgstr "لغو {0} برای همیشه"
 msgid "Permanently submit {0}"
 msgstr "ارسال {0} برای همیشه"
 
-#: hrms/setup.py:387
+#: hrms/setup.py:394
 msgid "Piecework"
 msgstr "تکه کاری"
 
@@ -7629,7 +7632,7 @@ msgstr "لطفا نقش سازمانی را وارد کنید"
 msgid "Please fill in Employee, Posting Date, and Company before fetching overtime details."
 msgstr ""
 
-#: hrms/hr/doctype/shift_type/shift_type.py:49
+#: hrms/hr/doctype/shift_type/shift_type.py:58
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr ""
 
@@ -7637,7 +7640,7 @@ msgstr ""
 msgid "Please see attachment"
 msgstr "لطفا پیوست را ببینید"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:224
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:225
 msgid "Please select Company and Designation"
 msgstr "لطفاً شرکت و نقش سازمانی را انتخاب کنید"
 
@@ -7687,7 +7690,7 @@ msgstr "لطفا یک فایل csv انتخاب کنید"
 msgid "Please select a date."
 msgstr "لطفا تاریخ را انتخاب کنید"
 
-#: hrms/hr/utils.py:807
+#: hrms/hr/utils.py:810
 msgid "Please select an Applicant"
 msgstr "لطفاً یک متقاضی را انتخاب کنید"
 
@@ -7695,7 +7698,7 @@ msgstr "لطفاً یک متقاضی را انتخاب کنید"
 msgid "Please select at least one Shift Request to perform this action."
 msgstr "لطفا حداقل یک درخواست شیفت برای انجام این کار انتخاب کنید."
 
-#: hrms/hr/utils.py:918
+#: hrms/hr/utils.py:921
 msgid "Please select at least one employee to perform this action."
 msgstr "لطفا حداقل یک کارمند را برای انجام این کار انتخاب کنید."
 
@@ -7760,25 +7763,20 @@ msgstr "لطفاً حقوق و دستمزد را بر اساس تنظیمات ح
 msgid "Please set Relieving Date for employee: {0}"
 msgstr "لطفاً تاریخ تخفیف را برای کارمند تنظیم کنید: {0}"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:237
-#: hrms/hr/doctype/employee_advance/employee_advance.py:341
-msgid "Please set a Default Cash Account in Company defaults"
-msgstr "لطفاً یک حساب پیش‌فرض نقدی را در پیش‌فرض‌های شرکت تنظیم کنید"
-
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:166
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:52
 msgid "Please set a date range less than 90 days."
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:354
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:357
 msgid "Please set account in Salary Component {0}"
 msgstr "لطفاً حساب را در مؤلفه حقوق و دستمزد {0} تنظیم کنید"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:662
+#: hrms/hr/doctype/leave_application/leave_application.py:665
 msgid "Please set default template for Leave Approval Notification in HR Settings."
 msgstr "لطفاً الگوی پیش‌فرض را برای اعلان تأیید خروج در تنظیمات منابع انسانی تنظیم کنید."
 
-#: hrms/hr/doctype/leave_application/leave_application.py:637
+#: hrms/hr/doctype/leave_application/leave_application.py:640
 msgid "Please set default template for Leave Status Notification in HR Settings."
 msgstr "لطفاً الگوی پیش‌فرض را برای اعلان وضعیت مرخصی در تنظیمات HR تنظیم کنید."
 
@@ -7786,7 +7784,7 @@ msgstr "لطفاً الگوی پیش‌فرض را برای اعلان وضعی�
 msgid "Please set the Appraisal Template for all the {0} or select the template in the Employees table below."
 msgstr "لطفاً الگوی ارزیابی را برای همه {0} تنظیم کنید یا الگو را در جدول کارکنان زیر انتخاب کنید."
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:363
+#: hrms/hr/doctype/expense_claim/expense_claim.js:521
 msgid "Please set the Company"
 msgstr "لطفا شرکت را تنظیم کنید"
 
@@ -7800,18 +7798,18 @@ msgstr "لطفا لیست تعطیلات را تنظیم کنید."
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:48
 msgid "Please set the date range."
-msgstr ""
+msgstr "لطفا محدوده تاریخ را تعیین کنید."
 
 #: hrms/hr/doctype/exit_interview/exit_interview.js:21
 #: hrms/hr/doctype/exit_interview/exit_interview.py:21
 msgid "Please set the relieving date for employee {0}"
 msgstr "لطفاً تاریخ معافیت کارمند را تعیین کنید {0}"
 
-#: hrms/hr/doctype/exit_interview/exit_interview.py:120
+#: hrms/hr/doctype/exit_interview/exit_interview.py:123
 msgid "Please set {0} and {1} in {2}."
 msgstr "لطفاً {0} و {1} را در {2} تنظیم کنید."
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:40
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:44
 msgid "Please set {0} for Employee {1}"
 msgstr "لطفاً {0} را برای کارمند {1} تنظیم کنید"
 
@@ -7836,7 +7834,7 @@ msgstr "لطفاً سری شماره‌گذاری را برای حضور و غی
 msgid "Please share your feedback to the training by clicking on 'Training Feedback' and then 'New'"
 msgstr "لطفاً با کلیک بر روی \"بازخورد آموزشی\" و سپس \"جدید\" دیدگاه‌ها خود را در مورد آموزش به اشتراک بگذارید."
 
-#: hrms/hr/doctype/interview/interview.py:191
+#: hrms/hr/doctype/interview/interview.py:194
 msgid "Please specify the job applicant to be updated."
 msgstr "لطفا متقاضی کار را مشخص کنید تا به روز شود."
 
@@ -7918,15 +7916,15 @@ msgstr "مبلغ اصلی"
 msgid "Printed On {0}"
 msgstr "چاپ شده در {0}"
 
-#: hrms/setup.py:366 hrms/setup.py:367
+#: hrms/setup.py:373 hrms/setup.py:374
 msgid "Privilege Leave"
 msgstr "مرخصی استحقاقی"
 
-#: hrms/setup.py:384
+#: hrms/setup.py:391
 msgid "Probation"
 msgstr "تحت مراقبت"
 
-#: hrms/setup.py:398
+#: hrms/setup.py:405
 msgid "Probationary Period"
 msgstr "دوره آزمایشی"
 
@@ -7938,7 +7936,7 @@ msgstr "پردازش حضور و غیاب پس از"
 #. Label of the process_payroll_accounting_entry_based_on_employee (Check)
 #. field in DocType 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
-#: hrms/setup.py:849
+#: hrms/setup.py:856
 msgid "Process Payroll Accounting Entry based on Employee"
 msgstr "پردازش ثبت حسابداری حقوق و دستمزد بر اساس کارمند"
 
@@ -7976,9 +7974,9 @@ msgid "Processing of Shift Requests has been queued. It may take a few minutes."
 msgstr ""
 
 #. Name of a report
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #: hrms/payroll/report/professional_tax_deductions/professional_tax_deductions.json
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Professional Tax Deductions"
 msgstr "کسر مالیات حرفه ای"
 
@@ -8013,9 +8011,9 @@ msgid "Property already added"
 msgstr "دارایی قبلاً اضافه شده است"
 
 #. Name of a report
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #: hrms/payroll/report/provident_fund_deductions/provident_fund_deductions.json
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Provident Fund Deductions"
 msgstr "کسورات صندوق تامین"
 
@@ -8050,10 +8048,10 @@ msgstr "هدف و مبلغ"
 #. Name of a DocType
 #. Label of the purpose_of_travel (Data) field in DocType 'Purpose of Travel'
 #. Label of the purpose_of_travel (Link) field in DocType 'Travel Request'
-#. Label of a Link in the Expense Claims Workspace
+#. Label of a Link in the Expenses Workspace
 #: hrms/hr/doctype/purpose_of_travel/purpose_of_travel.json
 #: hrms/hr/doctype/travel_request/travel_request.json
-#: hrms/hr/workspace/expense_claims/expense_claims.json
+#: hrms/hr/workspace/expenses/expenses.json
 msgid "Purpose of Travel"
 msgstr "هدف از سفر"
 
@@ -8172,11 +8170,10 @@ msgid "Recruitment"
 msgstr "استخدام"
 
 #. Name of a report
-#. Label of a Link in the Overview Workspace
+#. Label of a Link in the HR Workspace
 #. Label of a Link in the Recruitment Workspace
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.json
-#: hrms/hr/workspace/overview/overview.json
-#: hrms/hr/workspace/recruitment/recruitment.json
+#: hrms/hr/workspace/hr/hr.json hrms/hr/workspace/recruitment/recruitment.json
 msgid "Recruitment Analytics"
 msgstr "تجزیه و تحلیل استخدام"
 
@@ -8195,7 +8192,7 @@ msgid "Reduction is more than {0}'s available leave balance {1} for leave type {
 msgstr ""
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:371
-#: hrms/hr/doctype/leave_application/leave_application.py:504
+#: hrms/hr/doctype/leave_application/leave_application.py:507
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:155
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:101
 msgid "Reference: {0}"
@@ -8302,11 +8299,11 @@ msgstr "در صورت داشتن ارزش صفر حذف کنید"
 msgid "Rented Car"
 msgstr "ماشین اجاره ای"
 
-#: hrms/setup.py:822 hrms/setup.py:831
+#: hrms/setup.py:829 hrms/setup.py:838
 msgid "Repay From Salary"
 msgstr "بازپرداخت از حقوق"
 
-#: hrms/hr/utils.py:822
+#: hrms/hr/utils.py:825
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "بازپرداخت از حقوق فقط برای وام های مدت دار قابل انتخاب است"
 
@@ -8323,7 +8320,7 @@ msgstr ""
 
 #: hrms/hr/report/daily_work_summary_replies/daily_work_summary_replies.py:22
 msgid "Replies"
-msgstr "پاسخ می دهد"
+msgstr "پاسخ می‌دهد"
 
 #. Label of the reports_to (Link) field in DocType 'Employee Grievance'
 #. Label of the reports_to (Link) field in DocType 'Exit Interview'
@@ -8387,7 +8384,7 @@ msgstr "برای ایجاد کارمند مورد نیاز است"
 msgid "Reschedule Interview"
 msgstr "زمان‌بندی مجدد مصاحبه"
 
-#: hrms/setup.py:404
+#: hrms/setup.py:411
 msgid "Responsibilities"
 msgstr "مسئولیت ها"
 
@@ -8421,9 +8418,9 @@ msgid "Retained"
 msgstr "حفظ شد"
 
 #. Name of a DocType
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.json
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Retention Bonus"
 msgstr "پاداش نگهداشت"
 
@@ -8451,7 +8448,7 @@ msgstr ""
 msgid "Retrying allocations"
 msgstr ""
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:178
+#: hrms/hr/doctype/employee_advance/employee_advance.py:185
 msgid "Return amount cannot be greater than unclaimed amount"
 msgstr "مبلغ برگشتی نمی‌تواند بیشتر از مبلغ مطالبه نشده باشد"
 
@@ -8479,13 +8476,13 @@ msgstr "CTC اصلاح شده"
 #. Label of the role_allowed_to_create_backdated_leave_application (Link) field
 #. in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
-#: hrms/hr/doctype/leave_application/leave_application.py:168
+#: hrms/hr/doctype/leave_application/leave_application.py:171
 msgid "Role Allowed to Create Backdated Leave Application"
 msgstr "نقش مجاز برای ایجاد برنامه مرخصی دارای تاریخ قبلی"
 
 #. Label of a shortcut in the Shift & Attendance Workspace
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
-#: hrms/public/js/utils/index.js:250 hrms/public/js/utils/index.js:271
+#: hrms/public/js/utils/index.js:252 hrms/public/js/utils/index.js:273
 msgid "Roster"
 msgstr "لیست شیفت کاری"
 
@@ -8534,11 +8531,11 @@ msgstr "ردیف #{0}: مؤلفه {1} دارای گزینه‌های {2} و {3} 
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
 msgstr "ردیف #{0}: مقدار برگه زمانی، مقدار مؤلفه درآمد را برای مؤلفه حقوق و دستمزد بازنویسی می‌کند {1}"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:626
+#: hrms/hr/doctype/expense_claim/expense_claim.py:908
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
 msgstr "ردیف شماره {0}: مبلغ نمی‌تواند بیشتر از مبلغ معوق در برابر مطالبه هزینه {1} باشد. مبلغ معوقه {2} است"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:375
+#: hrms/hr/doctype/expense_claim/expense_claim.py:521
 msgid "Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}"
 msgstr "ردیف {0}# مبلغ تخصیص یافته {1} نمی‌تواند بیشتر از مبلغ درخواست نشده {2} باشد."
 
@@ -8550,7 +8547,7 @@ msgstr ""
 msgid "Row {0}# Paid Amount cannot be greater than Total amount"
 msgstr "ردیف {0}# مبلغ پرداختی نمی‌تواند بیشتر از مبلغ کل باشد"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:170
+#: hrms/hr/doctype/employee_advance/employee_advance.py:177
 msgid "Row {0}# Paid Amount cannot be greater than requested advance amount"
 msgstr "ردیف {0}# مبلغ پرداختی نمی‌تواند بیشتر از مبلغ پیش‌پرداخت درخواستی باشد"
 
@@ -8566,11 +8563,11 @@ msgstr ""
 msgid "Row {0}: Paid amount {1} is greater than pending accrued amount {2} against loan {3}"
 msgstr "ردیف {0}: مبلغ پرداخت شده {1} بیشتر از مبلغ انباشته معلق {2} در مقابل وام {3} است."
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:61
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:65
 msgid "Row {0}: {1}"
 msgstr "ردیف {0}: {1}"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:305
+#: hrms/hr/doctype/expense_claim/expense_claim.py:432
 msgid "Row {0}: {1} is required in the expenses table to book an expense claim."
 msgstr "ردیف {0}: {1} در جدول هزینه‌ها برای رزرو مطالبه هزینه لازم است."
 
@@ -8586,7 +8583,7 @@ msgstr "ردیف {0}: {1} در جدول هزینه‌ها برای رزرو مط
 #. Label of the salary_component (Link) field in DocType 'Retention Bonus'
 #. Name of a DocType
 #. Label of the salary_component (Link) field in DocType 'Salary Structure'
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #: hrms/hr/doctype/overtime_salary_component/overtime_salary_component.json
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
@@ -8598,7 +8595,7 @@ msgstr "ردیف {0}: {1} در جدول هزینه‌ها برای رزرو مط
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.js:77
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.py:33
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/public/js/utils/payroll_utils.js:23
 msgid "Salary Component"
 msgstr "مؤلفه حقوق و دستمزد"
@@ -8635,7 +8632,7 @@ msgstr "مؤلفه حقوق و دستمزد برای لیست حقوق و دست
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:107
+#: hrms/payroll/doctype/salary_component/salary_component.js:113
 msgid "Salary Component {0} is currently not used in any Salary Structure."
 msgstr ""
 
@@ -8670,33 +8667,28 @@ msgid "Salary Paid Per"
 msgstr "حقوق پرداختی به ازای هر"
 
 #. Name of a report
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #: hrms/payroll/report/salary_payments_based_on_payment_mode/salary_payments_based_on_payment_mode.json
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Salary Payments Based On Payment Mode"
 msgstr "پرداخت حقوق بر اساس حالت پرداخت"
 
 #. Name of a report
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.json
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Salary Payments via ECS"
 msgstr "پرداخت حقوق از طریق ECS"
-
-#. Name of a Workspace
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
-msgid "Salary Payout"
-msgstr "پرداخت حقوق"
 
 #: hrms/templates/generators/job_opening.html:108
 msgid "Salary Range"
 msgstr "محدوده حقوق و دستمزد"
 
 #. Name of a report
-#. Label of a Link in the Salary Payout Workspace
-#. Label of a shortcut in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
+#. Label of a shortcut in the Payroll Workspace
 #: hrms/payroll/report/salary_register/salary_register.json
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Salary Register"
 msgstr "ثبت حقوق"
 
@@ -8706,14 +8698,14 @@ msgstr "ثبت حقوق"
 #. Label of the column_break_rnoq (Section Break) field in DocType 'Payroll
 #. Settings'
 #. Name of a DocType
-#. Label of a Link in the Salary Payout Workspace
-#. Label of a shortcut in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
+#. Label of a shortcut in the Payroll Workspace
 #: hrms/hr/doctype/leave_application/leave_application.json
 #: hrms/hr/doctype/overtime_slip/overtime_slip.json
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/workspace/salary_payout/salary_payout.json hrms/setup.py:302
+#: hrms/payroll/workspace/payroll/payroll.json hrms/setup.py:309
 msgid "Salary Slip"
 msgstr "فیش حقوق"
 
@@ -8760,7 +8752,7 @@ msgstr "جدول زمانی فیش حقوق"
 msgid "Salary Slip already exists for {0} for the given dates"
 msgstr "فیش حقوق از قبل برای {0} برای تاریخ‌های داده شده وجود دارد"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:287
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:290
 msgid "Salary Slip creation is queued. It may take a few minutes"
 msgstr "ایجاد فیش حقوقی در صف است. ممکن است چند دقیقه طول بکشد"
 
@@ -8776,11 +8768,11 @@ msgstr "فیش حقوق کارمند {0} قبلاً برای این دوره ا�
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr "فیش حقوق کارمند {0} قبلاً برای برگه زمانی {1} ایجاد شده است"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:332
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:335
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr "ارسال فیش حقوقی در صف است. ممکن است چند دقیقه طول بکشد"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1522
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1525
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr "فیش حقوقی {0} برای ثبت حقوق و دستمزد {1} ناموفق بود"
 
@@ -8802,11 +8794,11 @@ msgstr "فیش حقوقی ایجاد شد"
 msgid "Salary Slips Submitted"
 msgstr "فیش حقوقی ارسال شد"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1564
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1567
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr "فیش حقوق از قبل برای کارمندان {} وجود دارد و توسط این لیست حقوق و دستمزد پردازش نخواهد شد."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1589
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1592
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr "فیش حقوقی ارسال شده برای دوره از {0} تا {1}"
 
@@ -8817,22 +8809,22 @@ msgstr "فیش حقوقی ارسال شده برای دوره از {0} تا {1}"
 #. Name of a DocType
 #. Label of the salary_structure (Link) field in DocType 'Salary Structure
 #. Assignment'
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: hrms/payroll/doctype/salary_component/salary_component.js:31
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Salary Structure"
 msgstr "ساختار حقوق و دستمزد"
 
 #. Name of a DocType
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.js:8
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Salary Structure Assignment"
 msgstr "تخصیص ساختار حقوق و دستمزد"
 
@@ -8864,16 +8856,16 @@ msgstr ""
 msgid "Salary Structure {0} does not belong to company {1}"
 msgstr "ساختار حقوق و دستمزد {0} متعلق به شرکت {1} نیست"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:144
+#: hrms/payroll/doctype/salary_component/salary_component.js:150
 msgid "Salary Structures updated successfully"
 msgstr ""
 
 #. Label of the salary_withholding (Link) field in DocType 'Salary Slip'
 #. Name of a DocType
-#. Label of a Link in the Salary Payout Workspace
+#. Label of a Link in the Payroll Workspace
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 msgid "Salary Withholding"
 msgstr "نگه‌داشت حقوق"
 
@@ -8888,7 +8880,7 @@ msgstr "چرخه نگه‌داشت حقوق"
 msgid "Salary Withholding {0} already exists for employee {1} for the selected period"
 msgstr "نگه‌داشت حقوق {0} از قبل برای کارمند {1} برای دوره انتخاب شده وجود دارد"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:345
+#: hrms/hr/doctype/leave_application/leave_application.py:348
 msgid "Salary already processed for period between {0} and {1}, Leave application period cannot be between this date range."
 msgstr "حقوق قبلاً برای دوره بین {0} و {1} پردازش شده است، دوره درخواست مرخصی نمی‌تواند بین این محدوده تاریخ باشد."
 
@@ -8908,18 +8900,24 @@ msgstr ""
 msgid "Salary components should be part of the Salary Structure."
 msgstr "مؤلفه‌های حقوق باید بخشی از ساختار حقوق و دستمزد باشد."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2707
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2710
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "ایمیل های فیش حقوقی برای ارسال در نوبت قرار گرفته اند. وضعیت {0} را بررسی کنید."
 
 #. Label of the sanctioned_amount (Currency) field in DocType 'Expense Claim
 #. Detail'
 #: hrms/hr/doctype/expense_claim_detail/expense_claim_detail.json
-#: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.py:21
+#: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.py:22
 msgid "Sanctioned Amount"
 msgstr "مبلغ تصویب شده"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:396
+#. Label of the base_sanctioned_amount (Currency) field in DocType 'Expense
+#. Claim Detail'
+#: hrms/hr/doctype/expense_claim_detail/expense_claim_detail.json
+msgid "Sanctioned Amount (Company Currency)"
+msgstr ""
+
+#: hrms/hr/doctype/expense_claim/expense_claim.py:545
 msgid "Sanctioned Amount cannot be greater than Claim Amount in Row {0}."
 msgstr "مبلغ تصویب شده نمی‌تواند بیشتر از مبلغ مطالبه در ردیف {0} باشد."
 
@@ -8968,7 +8966,7 @@ msgstr ""
 msgid "Select Payment Account to make Bank Entry"
 msgstr "برای ثبت بانکی، حساب پرداخت را انتخاب کنید"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1727
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1730
 msgid "Select Payroll Frequency."
 msgstr "فرکانس حقوق و دستمزد را انتخاب کنید."
 
@@ -8995,7 +8993,7 @@ msgstr "انتخاب شرایط و ضوابط"
 msgid "Select Users"
 msgstr "کاربران را انتخاب کنید"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:406
+#: hrms/hr/doctype/expense_claim/expense_claim.js:566
 msgid "Select an employee to get the employee advance."
 msgstr "یک کارمند را برای پیش‌پرداخت کارمند انتخاب کنید."
 
@@ -9071,11 +9069,11 @@ msgstr "امتیاز خود"
 msgid "Self-Study"
 msgstr "خودخوان"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:115
+#: hrms/hr/doctype/expense_claim/expense_claim.py:121
 msgid "Self-approval for Expense Claims is not allowed"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:844
+#: hrms/hr/doctype/leave_application/leave_application.py:847
 msgid "Self-approval for leaves is not allowed"
 msgstr "خود تأییدی برای مرخصی مجاز نیست"
 
@@ -9119,11 +9117,11 @@ msgstr "ارسال اعلان مرخصی"
 msgid "Sender Copy"
 msgstr ""
 
-#: hrms/hr/doctype/exit_interview/exit_interview.py:136
+#: hrms/hr/doctype/exit_interview/exit_interview.py:139
 msgid "Sending Failed due to missing email information for employee(s): {1}"
 msgstr ""
 
-#: hrms/hr/doctype/exit_interview/exit_interview.py:132
+#: hrms/hr/doctype/exit_interview/exit_interview.py:135
 msgid "Sent Successfully: {0}"
 msgstr "با موفقیت ارسال شد: {0}"
 
@@ -9171,7 +9169,7 @@ msgstr "تنظیم جزئیات تخصیص"
 msgid "Set Leave Details"
 msgstr "تنظیم جزئیات مرخصی"
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:75
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:79
 msgid "Set Relieving Date for Employee: {0}"
 msgstr "تنظیم تاریخ تخفیف برای کارمند: {0}"
 
@@ -9193,7 +9191,7 @@ msgstr ""
 msgid "Set optional filters to fetch employees in the appraisee list"
 msgstr "فیلترهای اختیاری را برای واکشی کارکنان در لیست ارزیابی کنندگان تنظیم کنید"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:524
+#: hrms/hr/doctype/expense_claim/expense_claim.py:702
 msgid "Set the default account for the {0} {1}"
 msgstr "تنظیم حساب پیش‌فرض برای {0} {1}"
 
@@ -9206,7 +9204,7 @@ msgstr "فرکانس یادآوری تعطیلات را تنظیم کنید"
 #. DocType 'Employee Promotion'
 #: hrms/hr/doctype/employee_promotion/employee_promotion.json
 msgid "Set the properties that should be updated in the Employee master on promotion submission"
-msgstr "ویژگی هایی را که باید در Employee master در ارسال ارتقاء به روز شوند، تنظیم کنید"
+msgstr "ویژگی‌هایی را که باید در Employee master در ارسال ارتقاء به روز شوند، تنظیم کنید"
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:205
 msgid "Set the status to {0} if required."
@@ -9216,7 +9214,7 @@ msgstr "در صورت لزوم وضعیت را روی {0} تنظیم کنید."
 msgid "Set {0} for selected employees"
 msgstr "تنظیم {0} برای کارمندان انتخاب شده"
 
-#: hrms/hr/doctype/exit_interview/exit_interview.py:125
+#: hrms/hr/doctype/exit_interview/exit_interview.py:128
 msgid "Settings Missing"
 msgstr "تنظیمات از دست رفته است"
 
@@ -9224,11 +9222,11 @@ msgstr "تنظیمات از دست رفته است"
 msgid "Settle against Advances"
 msgstr ""
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:51
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:55
 msgid "Settle all Payables and Receivables before submission"
 msgstr "همه پرداختنی‌ها و دریافتنی‌ها را قبل از ارسال تسویه کنید"
 
-#: hrms/hr/utils.py:770
+#: hrms/hr/utils.py:773
 msgid "Shared document with the user {0} with 'Submit' permission"
 msgstr ""
 
@@ -9277,7 +9275,7 @@ msgstr "تاریخچه تخصیص شیفت"
 #. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
-#: hrms/public/js/utils/index.js:238 hrms/public/js/utils/index.js:260
+#: hrms/public/js/utils/index.js:240 hrms/public/js/utils/index.js:262
 msgid "Shift Assignment Tool"
 msgstr "ابزار تخصیص شیفت"
 
@@ -9409,8 +9407,8 @@ msgstr "وضعیت شیفت"
 msgid "Shift Timings"
 msgstr ""
 
-#: hrms/public/js/utils/index.js:246 hrms/public/js/utils/index.js:254
-#: hrms/public/js/utils/index.js:268 hrms/public/js/utils/index.js:275
+#: hrms/public/js/utils/index.js:248 hrms/public/js/utils/index.js:256
+#: hrms/public/js/utils/index.js:270 hrms/public/js/utils/index.js:277
 msgid "Shift Tools"
 msgstr "ابزارهای شیفت"
 
@@ -9472,7 +9470,7 @@ msgstr "نمایش فیش حقوقی"
 msgid "Showing"
 msgstr "در حال نمایش"
 
-#: hrms/setup.py:358 hrms/setup.py:359
+#: hrms/setup.py:365 hrms/setup.py:366
 msgid "Sick Leave"
 msgstr "مرخصی استعلاجی"
 
@@ -9559,7 +9557,7 @@ msgstr "طرح کارگزینی"
 msgid "Staffing Plan Detail"
 msgstr "جزئیات طرح کارگزینی"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:72
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:71
 msgid "Staffing Plan {0} already exist for designation {1}"
 msgstr "طرح کارگزینی {0} از قبل برای نقش سازمانی {1} وجود دارد"
 
@@ -9595,17 +9593,17 @@ msgstr "تاریخ شروع و پایان در یک دوره حقوق و دست�
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:27
 msgid "Start date cannot be greater than end date"
-msgstr ""
+msgstr "تاریخ شروع نمی‌تواند بزرگتر از تاریخ پایان باشد"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:50
 msgid "Start date cannot be greater than end date."
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:236
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:239
 msgid "Start date: {0}"
 msgstr "تاریخ شروع: {0}"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:40
+#: hrms/hr/doctype/shift_type/shift_type.py:49
 msgid "Start time and end time cannot be same."
 msgstr "زمان شروع و پایان نمی‌تواند یکسان باشد."
 
@@ -9625,7 +9623,7 @@ msgstr "مؤلفه آماری"
 msgid "Status for Other Half"
 msgstr "وضعیت برای نیمه دیگر"
 
-#: hrms/setup.py:401
+#: hrms/setup.py:408
 msgid "Stock Options"
 msgstr "گزینه‌های موجودی"
 
@@ -9651,7 +9649,7 @@ msgstr "ساختارها با موفقیت تخصیص یافتند"
 msgid "Submission Date"
 msgstr "تاریخ ارسال"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:456
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:475
 msgid "Submission Failed"
 msgstr "ارسال ناموفق بود"
 
@@ -9699,15 +9697,15 @@ msgstr ""
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "ارسال فیش حقوقی و ایجاد دفترچه ..."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1644
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1647
 msgid "Submitting Salary Slips..."
 msgstr "ارسال فیش حقوقی..."
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:162
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:161
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "شرکت های تابعه قبلاً برای {1} جای خالی با بودجه {2} برنامه‌ریزی کرده اند. طرح کارکنان برای {0} باید تعداد بیشتری از مشاغل و بودجه برای {3} نسبت به شرکت های تابعه خود اختصاص دهد"
 
-#: hrms/hr/utils.py:946
+#: hrms/hr/utils.py:949
 msgid "Successfully created {0} for employees:"
 msgstr ""
 
@@ -9729,7 +9727,7 @@ msgstr ""
 msgid "Summarized View"
 msgstr "نمای خلاصه شده"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:93
+#: hrms/payroll/doctype/salary_component/salary_component.js:99
 msgid "Sync {0}"
 msgstr "همگام سازی {0}"
 
@@ -9737,7 +9735,7 @@ msgstr "همگام سازی {0}"
 msgid "Syntax error"
 msgstr "اشتباه نوشتاری"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2530
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2533
 msgid "Syntax error in condition: {0} in Income Tax Slab"
 msgstr "خطای نحوی در شرایط: {0} در Income Tax Slab"
 
@@ -9859,6 +9857,11 @@ msgstr "درخواست‌های تیم"
 msgid "Team Updates"
 msgstr "به‌روزرسانی تیم"
 
+#. Name of a Workspace
+#: hrms/hr/workspace/tenure/tenure.json
+msgid "Tenure"
+msgstr ""
+
 #. Success message of the job-application Web Form
 #: hrms/hr/web_form/job_application/job_application.json
 msgid "Thank you for applying."
@@ -9879,7 +9882,7 @@ msgstr " تاریخی که در آن مؤلفه حقوق و دستمزد با م
 msgid "The day of the month when leaves should be allocated"
 msgstr "روزی از ماه که باید مرخصی‌ها اختصاص داده شود"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:388
+#: hrms/hr/doctype/leave_application/leave_application.py:391
 msgid "The day(s) on which you are applying for leave are holidays. You need not apply for leave."
 msgstr "روزهایی که در آن درخواست مرخصی می دهید، تعطیلات هستند. شما نیازی به درخواست مرخصی ندارید."
 
@@ -9953,8 +9956,8 @@ msgstr "هیچ جای خالی در طرح کارگزینی وجود ندارد 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:42
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:20
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:207
-msgid "There is no Salary Structure assigned to {0}. First assign a Salary Stucture."
-msgstr "هیچ ساختار حقوقی به {0} اختصاص داده نشده است. ابتدا یک ساختار حقوق تعیین کنید."
+msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
+msgstr ""
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:392
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
@@ -9999,7 +10002,7 @@ msgstr "این فیلد به شما امکان می‌دهد حداکثر تعد
 
 #: hrms/hr/doctype/leave_type/leave_type.js:21
 msgid "This field allows you to set the maximum number of leaves that can be allocated annually for this Leave Type while creating the Leave Policy"
-msgstr "این فیلد به شما امکان می دهد در هنگام ایجاد سیاست مرخصی، حداکثر تعداد مرخصی‌هایی را که می‌توان سالانه برای این نوع مرخصی اختصاص داد تنظیم کنید."
+msgstr "این فیلد به شما امکان می‌دهد در هنگام ایجاد سیاست مرخصی، حداکثر تعداد مرخصی‌هایی را که می‌توان سالانه برای این نوع مرخصی اختصاص داد تنظیم کنید."
 
 #: hrms/overrides/dashboard_overrides.py:60
 msgid "This is based on the attendance of this Employee"
@@ -10089,7 +10092,7 @@ msgid "To date can not greater than employee's relieving date"
 msgstr "تا به امروز نمی‌تواند بیشتر از تاریخ معافیت کارمند باشد"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:180
-#: hrms/hr/doctype/leave_application/leave_application.py:181
+#: hrms/hr/doctype/leave_application/leave_application.py:184
 msgid "To date cannot be before from date"
 msgstr "تا به امروز نمی‌تواند قبل از تاریخ باشد"
 
@@ -10110,13 +10113,13 @@ msgstr "تا (سال) سال نمی‌تواند کمتر از From (سال) ب�
 msgid "Today is {0}'s birthday 🎉"
 msgstr "امروز تولد {0} است 🎉"
 
-#: hrms/controllers/employee_reminders.py:259
+#: hrms/controllers/employee_reminders.py:261
 msgid "Today {0} at our Company! 🎉"
 msgstr "امروز {0} در شرکت ما! 🎉"
 
 #: hrms/controllers/employee_reminders.py:241
-msgid "Today {0} completed {1} year(s) at our Company! 🎉"
-msgstr "امروز {0} {1} سال(ها) را در شرکت ما تکمیل کرد! 🎉"
+msgid "Today {0} completed {1} {2} at our Company! 🎉"
+msgstr ""
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:149
 msgid "Total Absent"
@@ -10137,6 +10140,12 @@ msgstr "مبلغ کل واقعی"
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Total Advance Amount"
 msgstr "کل مبلغ پیش‌پرداخت"
+
+#. Label of the base_total_advance_amount (Currency) field in DocType 'Expense
+#. Claim'
+#: hrms/hr/doctype/expense_claim/expense_claim.json
+msgid "Total Advance Amount (Company Currency)"
+msgstr ""
 
 #. Label of the total_allocated_leaves (Float) field in DocType 'Salary Slip
 #. Leave'
@@ -10170,6 +10179,12 @@ msgstr ""
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Total Claimed Amount"
 msgstr "کل مبلغ مطالبه شده"
+
+#. Label of the base_total_claimed_amount (Currency) field in DocType 'Expense
+#. Claim'
+#: hrms/hr/doctype/expense_claim/expense_claim.json
+msgid "Total Claimed Amount (Company Currency)"
+msgstr ""
 
 #. Label of the lwp_days (Float) field in DocType 'Payroll Correction'
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
@@ -10222,6 +10237,12 @@ msgstr "کل بودجه تخمینی"
 msgid "Total Estimated Cost"
 msgstr "کل هزینه تخمینی"
 
+#. Label of the total_exchange_gain_loss (Currency) field in DocType 'Expense
+#. Claim'
+#: hrms/hr/doctype/expense_claim/expense_claim.json
+msgid "Total Exchange Gain/Loss"
+msgstr ""
+
 #. Label of the total_exemption_amount (Currency) field in DocType 'Employee
 #. Tax Exemption Declaration'
 #. Label of the exemption_amount (Currency) field in DocType 'Employee Tax
@@ -10231,11 +10252,11 @@ msgstr "کل هزینه تخمینی"
 msgid "Total Exemption Amount"
 msgstr "کل مبلغ معافیت"
 
-#: hrms/setup.py:292
+#: hrms/setup.py:299
 msgid "Total Expense Claim (via Expense Claim)"
 msgstr ""
 
-#: hrms/setup.py:283
+#: hrms/setup.py:290
 msgid "Total Expense Claim (via Expense Claims)"
 msgstr ""
 
@@ -10258,7 +10279,7 @@ msgstr "کل ساعت (T)"
 msgid "Total Income Tax"
 msgstr "مالیات بر درآمد کل"
 
-#: hrms/setup.py:795
+#: hrms/setup.py:802
 msgid "Total Interest Amount"
 msgstr ""
 
@@ -10291,7 +10312,7 @@ msgstr "مجموع مرخصی‌های اختصاص داده شده"
 msgid "Total Leaves Encashed"
 msgstr "مجموع مرخصی‌های انباشته شده"
 
-#: hrms/setup.py:809
+#: hrms/setup.py:816
 msgid "Total Loan Repayment"
 msgstr "کل بازپرداخت وام"
 
@@ -10328,7 +10349,7 @@ msgstr ""
 msgid "Total Present"
 msgstr "کل حال"
 
-#: hrms/setup.py:786
+#: hrms/setup.py:793
 msgid "Total Principal Amount"
 msgstr ""
 
@@ -10348,6 +10369,12 @@ msgstr "مجموع استعفاها"
 msgid "Total Sanctioned Amount"
 msgstr "کل مبلغ تصویب شده"
 
+#. Label of the base_total_sanctioned_amount (Currency) field in DocType
+#. 'Expense Claim'
+#: hrms/hr/doctype/expense_claim/expense_claim.json
+msgid "Total Sanctioned Amount (Company Currency)"
+msgstr ""
+
 #. Label of the total_score (Float) field in DocType 'Employee Performance
 #. Feedback'
 #: hrms/hr/doctype/employee_performance_feedback/employee_performance_feedback.json
@@ -10359,7 +10386,7 @@ msgstr "نمره کل"
 msgid "Total Self Score"
 msgstr "نمره کل خود"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:390
+#: hrms/hr/doctype/expense_claim/expense_claim.py:539
 msgid "Total advance amount cannot be greater than total sanctioned amount"
 msgstr "مبلغ کل پیش‌پرداخت نمی‌تواند بیشتر از کل مبلغ تصویب شده باشد"
 
@@ -10445,9 +10472,9 @@ msgid "Trainer Name"
 msgstr "نام مربی"
 
 #. Label of the training (Link) field in DocType 'Employee Training'
-#. Label of a Card Break in the Employee Lifecycle Workspace
+#. Label of a Card Break in the Tenure Workspace
 #: hrms/hr/doctype/employee_training/employee_training.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/hr/workspace/tenure/tenure.json
 #: hrms/overrides/dashboard_overrides.py:49
 msgid "Training"
 msgstr "آموزش"
@@ -10460,13 +10487,13 @@ msgstr "تاریخ آموزش"
 #. Name of a DocType
 #. Label of the training_event (Link) field in DocType 'Training Feedback'
 #. Label of the training_event (Link) field in DocType 'Training Result'
-#. Label of a Link in the Employee Lifecycle Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/training_event/training_event.json
 #: hrms/hr/doctype/training_feedback/training_feedback.json
 #: hrms/hr/doctype/training_feedback/training_feedback.py:14
 #: hrms/hr/doctype/training_result/training_result.json
 #: hrms/hr/doctype/training_result/training_result.py:16
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/hr/workspace/tenure/tenure.json
 #: hrms/templates/emails/training_event.html:1
 msgid "Training Event"
 msgstr "رویداد آموزشی"
@@ -10485,28 +10512,28 @@ msgid "Training Events"
 msgstr "رویدادهای آموزشی"
 
 #. Name of a DocType
-#. Label of a Link in the Employee Lifecycle Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/training_event/training_event.js:16
 #: hrms/hr/doctype/training_feedback/training_feedback.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Training Feedback"
 msgstr "بازخورد آموزشی"
 
 #. Label of the training_program (Link) field in DocType 'Training Event'
 #. Name of a DocType
 #. Label of the training_program (Data) field in DocType 'Training Program'
-#. Label of a Link in the Employee Lifecycle Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/training_event/training_event.json
 #: hrms/hr/doctype/training_program/training_program.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Training Program"
 msgstr "برنامه آموزشی"
 
 #. Name of a DocType
-#. Label of a Link in the Employee Lifecycle Workspace
+#. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/training_event/training_event.js:10
 #: hrms/hr/doctype/training_result/training_result.json
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Training Result"
 msgstr "نتیجه آموزش"
 
@@ -10522,12 +10549,12 @@ msgstr "کارمند نتیجه آموزش"
 msgid "Trainings"
 msgstr "آموزش ها"
 
-#. Label of a quick_list in the Employee Lifecycle Workspace
-#: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json
+#. Label of a quick_list in the Tenure Workspace
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Trainings (This Week)"
 msgstr ""
 
-#: hrms/hr/utils.py:793
+#: hrms/hr/utils.py:796
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr "تراکنش‌ها را نمی‌توان برای یک کارمند غیرفعال {0} ایجاد کرد."
 
@@ -10536,8 +10563,8 @@ msgstr "تراکنش‌ها را نمی‌توان برای یک کارمند غ
 msgid "Transfer Date"
 msgstr "تاریخ انتقال"
 
-#. Label of a Card Break in the Expense Claims Workspace
-#: hrms/hr/workspace/expense_claims/expense_claims.json hrms/setup.py:329
+#. Label of a Card Break in the Expenses Workspace
+#: hrms/hr/workspace/expenses/expenses.json hrms/setup.py:336
 msgid "Travel"
 msgstr "سفر"
 
@@ -10566,11 +10593,10 @@ msgid "Travel Itinerary"
 msgstr "برنامه سفر"
 
 #. Name of a DocType
-#. Label of a Link in the Expense Claims Workspace
-#. Label of a Link in the Overview Workspace
+#. Label of a Link in the Expenses Workspace
+#. Label of a Link in the HR Workspace
 #: hrms/hr/doctype/travel_request/travel_request.json
-#: hrms/hr/workspace/expense_claims/expense_claims.json
-#: hrms/hr/workspace/overview/overview.json
+#: hrms/hr/workspace/expenses/expenses.json hrms/hr/workspace/hr/hr.json
 msgid "Travel Request"
 msgstr "درخواست سفر"
 
@@ -10595,7 +10621,7 @@ msgstr "نوع سفر"
 msgid "Type of Proof"
 msgstr "نوع اثبات"
 
-#: hrms/public/js/utils/index.js:206
+#: hrms/public/js/utils/index.js:208
 msgid "Unable to retrieve your location"
 msgstr ""
 
@@ -10609,6 +10635,12 @@ msgstr "لغو بایگانی"
 #: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgid "Unclaimed Amount"
 msgstr "مبلغ مطالبه نشده"
+
+#. Label of the base_unclaimed_amount (Currency) field in DocType 'Expense
+#. Claim Advance'
+#: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
+msgid "Unclaimed Amount (Company Currency)"
+msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Interview'
 #: hrms/hr/doctype/interview/interview.json
@@ -10633,7 +10665,7 @@ msgstr "لاگ‌های بدون پیوند"
 msgid "Unmarked Attendance for days"
 msgstr "حضور و غیاب نامشخص برای روزهای"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:87
+#: hrms/hr/doctype/shift_type/shift_type.py:96
 msgid "Unmarked Check-in Logs Found"
 msgstr ""
 
@@ -10664,9 +10696,9 @@ msgid "Unpaid Accrual"
 msgstr ""
 
 #. Name of a report
-#. Label of a Link in the Expense Claims Workspace
+#. Label of a Link in the Expenses Workspace
 #: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.json
-#: hrms/hr/workspace/expense_claims/expense_claims.json
+#: hrms/hr/workspace/expenses/expenses.json
 msgid "Unpaid Expense Claim"
 msgstr "مطالبه هزینه پرداخت نشده"
 
@@ -10676,7 +10708,7 @@ msgstr "مطالبه هزینه پرداخت نشده"
 msgid "Unsettled"
 msgstr "بی قرار"
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:52
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:56
 msgid "Unsettled Transactions"
 msgstr ""
 
@@ -10725,7 +10757,7 @@ msgstr "به‌روزرسانی پیشرفت"
 msgid "Update Response"
 msgstr "به‌روزرسانی پاسخ"
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:114
+#: hrms/payroll/doctype/salary_component/salary_component.js:120
 msgid "Update Salary Structures"
 msgstr "به‌روزرسانی ساختارهای حقوق و دستمزد"
 
@@ -10741,7 +10773,7 @@ msgstr "به‌روزرسانی مالیات"
 msgid "Updated status from {0} to {1} for date {2} in the attendance record {3}"
 msgstr "وضعیت به روز شده از {0} به {1} برای تاریخ {2} در سابقه حضور و غیاب {3}"
 
-#: hrms/hr/doctype/interview/interview.py:198
+#: hrms/hr/doctype/interview/interview.py:201
 msgid "Updated the Job Applicant status to {0}"
 msgstr "وضعیت متقاضی شغل به {0} به روز شد"
 
@@ -10849,20 +10881,20 @@ msgid "Vegetarian"
 msgstr "گیاه خواری"
 
 #. Name of a report
-#. Label of a Link in the Expense Claims Workspace
+#. Label of a Link in the Expenses Workspace
 #: hrms/hr/doctype/vehicle_log/vehicle_log.py:51
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.json
-#: hrms/hr/workspace/expense_claims/expense_claims.json
+#: hrms/hr/workspace/expenses/expenses.json
 msgid "Vehicle Expenses"
 msgstr "هزینه های وسیله نقلیه"
 
 #. Label of the vehicle_log (Link) field in DocType 'Expense Claim'
 #. Name of a DocType
-#. Label of a Link in the Expense Claims Workspace
+#. Label of a Link in the Expenses Workspace
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 #: hrms/hr/doctype/vehicle_log/vehicle_log.json
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.py:37
-#: hrms/hr/workspace/expense_claims/expense_claims.json
+#: hrms/hr/workspace/expenses/expenses.json
 msgid "Vehicle Log"
 msgstr "لاگ وسیله نقلیه"
 
@@ -10872,9 +10904,9 @@ msgid "Vehicle Service"
 msgstr "سرویس وسیله نقلیه"
 
 #. Name of a DocType
-#. Label of a Link in the Expense Claims Workspace
+#. Label of a Link in the Expenses Workspace
 #: hrms/hr/doctype/vehicle_service_item/vehicle_service_item.json
-#: hrms/hr/workspace/expense_claims/expense_claims.json
+#: hrms/hr/workspace/expenses/expenses.json
 msgid "Vehicle Service Item"
 msgstr "آیتم سرویس وسیله نقلیه"
 
@@ -10900,15 +10932,15 @@ msgstr "بنفش"
 msgid "WARNING: Loan Management module has been separated from ERPNext."
 msgstr "هشدار: ماژول مدیریت وام از ERPNext جدا شده است."
 
-#: hrms/hr/doctype/leave_application/leave_application.py:415
+#: hrms/hr/doctype/leave_application/leave_application.py:418
 msgid "Warning: Insufficient leave balance for Leave Type {0} in this allocation."
 msgstr "هشدار: تراز مرخصی برای نوع مرخصی {0} در این تخصیص کافی نیست."
 
-#: hrms/hr/doctype/leave_application/leave_application.py:423
+#: hrms/hr/doctype/leave_application/leave_application.py:426
 msgid "Warning: Insufficient leave balance for Leave Type {0}."
 msgstr "هشدار: تراز مرخصی برای نوع مرخصی {0} کافی نیست."
 
-#: hrms/hr/doctype/leave_application/leave_application.py:361
+#: hrms/hr/doctype/leave_application/leave_application.py:364
 msgid "Warning: Leave application contains following block dates"
 msgstr "هشدار: درخواست مرخصی شامل تاریخ‌های مسدود زیر است"
 
@@ -10916,7 +10948,7 @@ msgstr "هشدار: درخواست مرخصی شامل تاریخ‌های مس�
 msgid "Warning: {0} already has an active Shift Assignment {1} for some/all of these dates."
 msgstr "اخطار: {0} در حال حاضر یک تخصیص شیفت فعال {1} برای برخی/همه این تاریخ‌ها دارد."
 
-#: hrms/setup.py:391
+#: hrms/setup.py:398
 msgid "Website Listing"
 msgstr "لیست وب سایت"
 
@@ -10967,8 +10999,8 @@ msgstr "نگه‌داشت"
 msgid "Work Anniversaries "
 msgstr " سالگردهای کاری"
 
-#: hrms/controllers/employee_reminders.py:272
-#: hrms/controllers/employee_reminders.py:279
+#: hrms/controllers/employee_reminders.py:278
+#: hrms/controllers/employee_reminders.py:285
 msgid "Work Anniversary Reminder"
 msgstr "یادآوری سالگرد کار"
 
@@ -11094,7 +11126,7 @@ msgstr ""
 msgid "Yes, Proceed"
 msgstr "بله، ادامه دهید"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:371
+#: hrms/hr/doctype/leave_application/leave_application.py:374
 msgid "You are not authorized to approve leaves on Block Dates"
 msgstr "شما مجاز به تأیید مرخصی در تاریخ‌های مسدود نیستید"
 
@@ -11106,11 +11138,11 @@ msgstr "شما در تمام روز(های) بین روزهای درخواست �
 msgid "You can not define multiple slabs if you have a slab with no lower and upper limits."
 msgstr "اگر طبقه بدون محدودیت های پایین و بالایی داشته باشید، نمی‌توانید چند طبقه را تعریف کنید."
 
-#: hrms/hr/doctype/shift_request/shift_request.py:79
+#: hrms/hr/doctype/shift_request/shift_request.py:82
 msgid "You can not request for your Default Shift: {0}"
 msgstr "شما نمی‌توانید برای شیفت پیش‌فرض خود درخواست دهید: {0}"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:95
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:94
 msgid "You can only plan for upto {0} vacancies and budget {1} for {2} as per staffing plan {3} for parent company {4}."
 msgstr "شما فقط می‌توانید برای حداکثر {0} موقعیت شغلی و بودجه {1} برای {2} طبق برنامه کارگزینی {3} برای شرکت مادر {4} برنامه‌ریزی کنید."
 
@@ -11244,9 +11276,17 @@ msgstr "ارسال شده"
 msgid "via Salary Component sync"
 msgstr ""
 
+#: hrms/controllers/employee_reminders.py:265
+msgid "year"
+msgstr "سال"
+
+#: hrms/controllers/employee_reminders.py:265
+msgid "years"
+msgstr ""
+
 #: hrms/controllers/employee_reminders.py:120
-#: hrms/controllers/employee_reminders.py:253
-#: hrms/controllers/employee_reminders.py:258
+#: hrms/controllers/employee_reminders.py:254
+#: hrms/controllers/employee_reminders.py:260
 msgid "{0} & {1}"
 msgstr "{0} و {1}"
 
@@ -11258,7 +11298,7 @@ msgstr ""
 msgid "{0} : {1}"
 msgstr "{0} : {1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2526
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2529
 msgid "{0} <br> This error can be due to missing or deleted field."
 msgstr "{0} <br> این خطا ممکن است به دلیل گم شدن یا حذف شدن فیلد باشد."
 
@@ -11266,7 +11306,7 @@ msgstr "{0} <br> این خطا ممکن است به دلیل گم شدن یا ح
 msgid "{0} Appraisal(s) are not submitted yet"
 msgstr "{0} ارزیابی(های) هنوز ارسال نشده است"
 
-#: hrms/public/js/utils/index.js:229
+#: hrms/public/js/utils/index.js:231
 msgid "{0} Field"
 msgstr ""
 
@@ -11298,7 +11338,7 @@ msgstr "{0} از قبل برای کارمند {1} و دوره {2} وجود دا�
 msgid "{0} already has an active Shift Assignment {1} for some/all of these dates."
 msgstr "{0} از قبل یک تخصیص شیفت فعال {1} برای برخی/همه این تاریخ‌ها دارد."
 
-#: hrms/hr/doctype/leave_application/leave_application.py:152
+#: hrms/hr/doctype/leave_application/leave_application.py:155
 msgid "{0} applicable after {1} working days"
 msgstr "{0} پس از {1} روز کاری قابل اعمال است"
 
@@ -11308,7 +11348,7 @@ msgid "{0} balance"
 msgstr "{0} تراز"
 
 #: hrms/controllers/employee_reminders.py:253
-msgid "{0} completed {1} year(s)"
+msgid "{0} completed {1} {2}"
 msgstr ""
 
 #: frontend/src/components/FormView.vue:528
@@ -11334,7 +11374,7 @@ msgstr ""
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:228
 msgid "{0} is an invalid Attendance Status."
-msgstr ""
+msgstr "{0} وضعیت حضور و غیاب نامعتبر است."
 
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:69
 msgid "{0} is not a holiday."
@@ -11344,7 +11384,7 @@ msgstr "{0} تعطیلات نیست."
 msgid "{0} is not allowed to submit Interview Feedback for the Interview: {1}"
 msgstr "{0} مجاز به ارسال بازخورد مصاحبه برای مصاحبه نیست: {1}"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:615
+#: hrms/hr/doctype/leave_application/leave_application.py:618
 msgid "{0} is not in Optional Holiday List"
 msgstr "{0} در فهرست تعطیلات اختیاری نیست"
 
@@ -11385,11 +11425,11 @@ msgstr ""
 msgid "{0} updated successfully!"
 msgstr "{0} با موفقیت به روز شد!"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:129
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:128
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
 msgstr "{0} جای خالی و {1} بودجه برای {2} که قبلاً برای شرکت های تابعه {3} برنامه‌ریزی شده است. شما فقط می‌توانید برای حداکثر {4} موقعیت شغلی و بودجه {5} طبق برنامه کارگزینی {6} برای شرکت مادر {3} برنامه‌ریزی کنید."
 
-#: hrms/payroll/doctype/salary_component/salary_component.js:124
+#: hrms/payroll/doctype/salary_component/salary_component.js:130
 msgid "{0} will be updated for the following Salary Structures: {1}."
 msgstr "{0} برای ساختارهای حقوق و دستمزد زیر به‌روزرسانی خواهد شد: {1}."
 
@@ -11397,9 +11437,9 @@ msgstr "{0} برای ساختارهای حقوق و دستمزد زیر به‌�
 msgid "{0} {1} {2}?"
 msgstr "{0} {1} {2}؟"
 
-#: hrms/hr/utils.py:451
+#: hrms/hr/utils.py:454
 msgid "{0}. Check error log for more details."
-msgstr ""
+msgstr "{0}. برای جزئیات بیشتر، لاگ خطا را بررسی کنید."
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2190
 msgid "{0}: Employee email not found, hence email not sent"
@@ -11426,20 +11466,20 @@ msgstr "{} "
 msgid "{} Accepted"
 msgstr "{} پذیرفته شده"
 
-#. Count format of shortcut in the Overview Workspace
-#: hrms/hr/workspace/overview/overview.json
+#. Count format of shortcut in the HR Workspace
+#: hrms/hr/workspace/hr/hr.json
 msgid "{} Active"
 msgstr "{} فعال"
 
-#. Count format of shortcut in the Salary Payout Workspace
+#. Count format of shortcut in the Payroll Workspace
 #. Count format of shortcut in the Tax & Benefits Workspace
-#: hrms/payroll/workspace/salary_payout/salary_payout.json
+#: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "{} Draft"
 msgstr "{} پیش‌نویس"
 
-#. Count format of shortcut in the Expense Claims Workspace
-#: hrms/hr/workspace/expense_claims/expense_claims.json
+#. Count format of shortcut in the Expenses Workspace
+#: hrms/hr/workspace/expenses/expenses.json
 msgid "{} Unclaimed"
 msgstr "{} مطالبه نشده"
 

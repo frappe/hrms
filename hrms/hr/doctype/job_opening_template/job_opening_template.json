@@ -1,0 +1,87 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:template_title",
+ "creation": "2025-12-11 18:04:50.413169",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "template_title",
+  "department",
+  "column_break_wkcr",
+  "employment_type",
+  "location",
+  "section_break_dwfh",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "employment_type",
+   "fieldtype": "Link",
+   "label": "Employment Type",
+   "options": "Employment Type"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Branch"
+  },
+  {
+   "fieldname": "template_title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Template Title",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_wkcr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_dwfh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Description"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-12-12 12:52:12.217926",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Job Opening Template",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

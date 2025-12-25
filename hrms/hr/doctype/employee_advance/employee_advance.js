@@ -25,14 +25,6 @@ frappe.ui.form.on("Employee Advance", {
 				},
 			};
 		});
-
-		frm.set_query("salary_component", function () {
-			return {
-				filters: {
-					type: "Deduction",
-				},
-			};
-		});
 	},
 
 	refresh: function (frm) {

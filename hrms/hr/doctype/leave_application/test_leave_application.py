@@ -1427,6 +1427,14 @@ class TestLeaveApplication(HRMSTestSuite):
 
 		self.assertEqual(leave_balance, 0)
 
+	def test_status_on_discard(self):
+		make_allocation_record()
+		application = self.get_application(self.leave_applications[0])
+		application.save()
+		application.discard()
+		application.reload()
+		self.assertEqual(application.status, "Cancelled")
+
 
 def create_carry_forwarded_allocation(employee, leave_type, date=None):
 	date = date or nowdate()

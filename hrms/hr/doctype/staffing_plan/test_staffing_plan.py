@@ -3,7 +3,9 @@
 
 import frappe
 from frappe.tests import IntegrationTestCase
-from frappe.utils import add_days, nowdate
+from frappe.utils import add_days, get_first_day, get_last_day, getdate, nowdate
+
+from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.staffing_plan.staffing_plan import ParentCompanyError, SubsidiaryCompanyError
 
@@ -11,8 +13,12 @@ test_dependencies = ["Designation"]
 
 
 class TestStaffingPlan(IntegrationTestCase):
+	def setUp(self):
+		for doctype in ["Staffing Plan", "Staffing Plan Detail"]:
+			frappe.db.delete(doctype)
+		make_company()
+
 	def test_staffing_plan(self):
-		_set_up()
 		frappe.db.set_value("Company", "_Test Company 3", "is_group", 1)
 		if frappe.db.exists("Staffing Plan", "Test"):
 			return
@@ -45,7 +51,6 @@ class TestStaffingPlan(IntegrationTestCase):
 		self.assertRaises(SubsidiaryCompanyError, staffing_plan.insert)
 
 	def test_staffing_plan_parent_company(self):
-		_set_up()
 		if frappe.db.exists("Staffing Plan", "Test"):
 			return
 		staffing_plan = frappe.new_doc("Staffing Plan")
@@ -74,11 +79,32 @@ class TestStaffingPlan(IntegrationTestCase):
 		staffing_plan.insert()
 		self.assertRaises(ParentCompanyError, staffing_plan.submit)
 
+	def test_staffing_details_from_job_requisition(self):
+		from hrms.hr.doctype.job_requisition.test_job_requisition import make_job_requisition
 
-def _set_up():
-	for doctype in ["Staffing Plan", "Staffing Plan Detail"]:
-		frappe.db.sql(f"delete from `tab{doctype}`")
-	make_company()
+		employee = make_employee("test_sp@example.com", company="_Test Company", designation="Accountant")
+		requisition = make_job_requisition(requested_by=employee, designation="Accountant", no_of_positions=4)
+		staffing_plan = frappe.get_doc(
+			{
+				"doctype": "Staffing Plan",
+				"__newname": "Test JR",
+				"company": "_Test Company",
+				"from_date": get_first_day(getdate()),
+				"to_date": get_last_day(getdate()),
+			}
+		)
+		staffing_plan.set_job_requisitions([requisition.name])
+		staffing_plan.save()
+		staffing_plan_detail = frappe.db.get_values(
+			"Staffing Plan Detail",
+			{"parent": staffing_plan.name},
+			["designation", "vacancies", "current_count", "number_of_positions"],
+			as_dict=True,
+		)[0]
+		self.assertEqual(staffing_plan_detail.designation, "Accountant")
+		self.assertEqual(staffing_plan_detail.vacancies, 4)
+		self.assertEqual(staffing_plan_detail.current_count, 1)
+		self.assertEqual(staffing_plan_detail.number_of_positions, 5)
 
 
 def make_company(name=None, abbr=None):

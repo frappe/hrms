@@ -367,6 +367,16 @@ class TestEmployeeAdvance(IntegrationTestCase):
 		self.assertEqual(advance.base_paid_amount, expected_base_paid)
 		self.assertEqual(payment_entry.paid_amount, expected_base_paid)
 
+	def test_status_on_discard(self):
+		employee_name = make_employee("Test_status@employee.advance", "_Test Company")
+		advance = make_employee_advance(employee_name, do_not_submit=True)
+		advance.insert()
+		advance.reload()
+		self.assertEqual(advance.status, "Draft")
+		advance.discard()
+		advance.reload()
+		self.assertEqual(advance.status, "Cancelled")
+
 
 def make_journal_entry_for_advance(advance):
 	frappe.db.set_single_value("Accounts Settings", "make_payment_via_journal_entry", True)

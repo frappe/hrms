@@ -71,6 +71,11 @@ class TestFullandFinalStatement(IntegrationTestCase):
 		self.assertEqual(debit_entry.reference_type, "Full and Final Statement")
 		self.assertEqual(debit_entry.reference_name, self.fnf.name)
 
+	def test_status_on_discard(self):
+		self.fnf.discard()
+		self.fnf.reload()
+		self.assertEqual(self.fnf.status, "Cancelled")
+
 
 def create_full_and_final_statement(employee):
 	fnf = frappe.new_doc("Full and Final Statement")

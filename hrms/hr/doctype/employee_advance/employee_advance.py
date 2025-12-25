@@ -120,6 +120,9 @@ class EmployeeAdvance(Document):
 		else:
 			self.status = status
 
+	def on_discard(self):
+		self.db_set("status", "Cancelled")
+
 	def set_total_advance_paid(self):
 		aple = frappe.qb.DocType("Advance Payment Ledger Entry")
 

@@ -925,6 +925,18 @@ class TestExpenseClaim(HRMSTestSuite):
 		expense_claim.reload()
 		self.assertEqual(expense_claim.status, "Unpaid")
 
+	def test_status_on_discard(self):
+		payable_account = get_payable_account(company_name)
+		expense_claim = make_expense_claim(
+			payable_account, 300, 200, company_name, "Travel Expenses - _TC3", do_not_submit=True
+		)
+		expense_claim.insert()
+		expense_claim.reload()
+		self.assertEqual(expense_claim.status, "Draft")
+		expense_claim.discard()
+		expense_claim.reload()
+		self.assertEqual(expense_claim.status, "Cancelled")
+
 
 def get_payable_account(company):
 	return frappe.get_cached_value("Company", company, "default_payable_account")

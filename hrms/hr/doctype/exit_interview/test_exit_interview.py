@@ -80,6 +80,14 @@ class TestExitInterview(IntegrationTestCase):
 		email_queue = frappe.db.get_all("Email Queue", ["name", "message"], limit=1)
 		self.assertTrue("Subject: Exit Questionnaire Notification" in email_queue[0].message)
 
+	def test_status_on_discard(self):
+		employee = make_employee("test_status@example.com")
+		frappe.db.set_value("Employee", employee, "relieving_date", getdate())
+		interview = create_exit_interview(employee)
+		interview.discard()
+		interview.reload()
+		self.assertEqual(interview.status, "Cancelled")
+
 	def tearDown(self):
 		frappe.db.rollback()
 

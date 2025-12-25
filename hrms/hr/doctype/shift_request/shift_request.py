@@ -72,6 +72,9 @@ class ShiftRequest(Document, PWANotificationsMixin):
 				shift_assignment_doc = frappe.get_doc("Shift Assignment", shift["name"])
 				shift_assignment_doc.cancel()
 
+	def on_discard(self):
+		self.db_set("status", "Cancelled")
+
 	def validate_default_shift(self):
 		default_shift = frappe.get_value("Employee", self.employee, "default_shift")
 		if self.shift_type == default_shift:

@@ -59,14 +59,11 @@ frappe.ui.form.on("Additional Salary", {
 	set_component_query: function (frm) {
 		if (!frm.doc.company) return;
 
-		let filters = {
-			company: frm.doc.company,
-			disabled: 0,
-		};
-
 		frm.set_query("salary_component", function () {
 			return {
-				filters: filters,
+				filters: {
+					disabled: 0,
+				},
 			};
 		});
 	},

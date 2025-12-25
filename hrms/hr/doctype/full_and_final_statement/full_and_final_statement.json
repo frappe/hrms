@@ -64,7 +64,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Paid\nUnpaid",
+   "options": "Paid\nUnpaid\nCancelled",
    "read_only": 1
   },
   {
@@ -196,7 +196,7 @@
    "table_fieldname": "accounts"
   }
  ],
- "modified": "2024-04-19 15:45:04.206575",
+ "modified": "2025-12-10 18:00:46.722706",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Full and Final Statement",
@@ -242,6 +242,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],

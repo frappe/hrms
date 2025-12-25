@@ -83,7 +83,7 @@
    "in_standard_filter": 1,
    "label": "Status",
    "no_copy": 1,
-   "options": "Pending\nIn Process\nAccepted\nRejected",
+   "options": "Pending\nIn Process\nAccepted\nRejected\nCancelled",
    "permlevel": 1,
    "read_only": 1,
    "reqd": 1
@@ -150,8 +150,7 @@
    "in_standard_filter": 1,
    "label": "Email",
    "options": "Email",
-   "reqd": 1,
-   "unique": 1
+   "reqd": 1
   },
   {
    "default": "1",
@@ -205,7 +204,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:09:40.914012",
+ "modified": "2025-12-06 14:32:15.005720",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Referral",
@@ -299,6 +298,7 @@
    "share": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],

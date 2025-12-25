@@ -14,3 +14,6 @@ class EmployeeGrievance(Document):
 					bold(_("Invalid")), bold(_("Resolved"))
 				)
 			)
+
+	def on_discard(self):
+		self.db_set("status", "Cancelled")
