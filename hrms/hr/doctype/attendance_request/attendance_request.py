@@ -97,6 +97,7 @@ class AttendanceRequest(Document):
 		if doc:
 			# update existing attendance, change the status
 			old_status = doc.status
+			text = None
 
 			if old_status != status:
 				doc.db_set({"status": status, "attendance_request": self.name})
@@ -109,17 +110,25 @@ class AttendanceRequest(Document):
 					text = _("Changed the status from {0} to {1} via Attendance Request").format(
 						frappe.bold(old_status), frappe.bold(status)
 					)
-				doc.add_comment(comment_type="Info", text=text)
 
-				frappe.msgprint(
-					_("Updated status from {0} to {1} for date {2} in the attendance record {3}").format(
-						frappe.bold(old_status),
-						frappe.bold(status),
-						frappe.bold(format_date(date)),
-						get_link_to_form("Attendance", doc.name),
-					),
-					title=_("Attendance Updated"),
-				)
+			elif old_status == "Half Day" and doc.half_day_status == "Absent":
+				status = "Present"
+				doc.db_set({"status": status, "half_day_status": None, "attendance_request": self.name})
+				text = _(
+					"Changed the status from {0} to {1} and Status for Other Half to {2} via Attendance Request"
+				).format(frappe.bold(old_status), frappe.bold(status), frappe.bold("None"))
+
+			frappe.msgprint(
+				_("Updated status from {0} to {1} for date {2} in the attendance record {3}").format(
+					frappe.bold(old_status),
+					frappe.bold(status),
+					frappe.bold(format_date(date)),
+					get_link_to_form("Attendance", doc.name),
+				),
+				title=_("Attendance Updated"),
+			)
+			if text:
+				doc.add_comment(comment_type="Info", text=text)
 		else:
 			# submit a new attendance record
 			doc = frappe.new_doc("Attendance")
@@ -188,7 +197,11 @@ class AttendanceRequest(Document):
 	def status_unchanged(self, attendance_date):
 		new_status = self.get_attendance_status(attendance_date)
 		attendance_doc = self.get_attendance_doc(attendance_date)
-		if attendance_doc and attendance_doc.status == new_status:
+		if (
+			attendance_doc
+			and attendance_doc.status == new_status
+			and not (new_status == "Half Day" and attendance_doc.half_day_status == "Absent")
+		):
 			return True
 		return False
 
