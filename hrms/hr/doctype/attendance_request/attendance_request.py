@@ -118,16 +118,16 @@ class AttendanceRequest(Document):
 					"Changed the status from {0} to {1} and Status for Other Half to {2} via Attendance Request"
 				).format(frappe.bold(old_status), frappe.bold(status), frappe.bold("None"))
 
-			frappe.msgprint(
-				_("Updated status from {0} to {1} for date {2} in the attendance record {3}").format(
-					frappe.bold(old_status),
-					frappe.bold(status),
-					frappe.bold(format_date(date)),
-					get_link_to_form("Attendance", doc.name),
-				),
-				title=_("Attendance Updated"),
-			)
 			if text:
+				frappe.msgprint(
+					_("Updated status from {0} to {1} for date {2} in the attendance record {3}").format(
+						frappe.bold(old_status),
+						frappe.bold(status),
+						frappe.bold(format_date(date)),
+						get_link_to_form("Attendance", doc.name),
+					),
+					title=_("Attendance Updated"),
+				)
 				doc.add_comment(comment_type="Info", text=text)
 		else:
 			# submit a new attendance record
