@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-12-21 09:37+0000\n"
-"PO-Revision-Date: 2025-12-22 11:22\n"
+"PO-Revision-Date: 2025-12-28 12:53\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -632,7 +632,7 @@ msgstr "تخصیص مرخصی"
 
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:192
 msgid "Allocate leaves to {0} employee(s)?"
-msgstr "مرخصی را به {0} کارمند(ها) اختصاص دهید؟"
+msgstr "تخصیص مرخصی به {0} کارمند(ها)؟"
 
 #. Label of the allocate_on_day (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -2137,7 +2137,7 @@ msgstr "ایجاد فرصت شغلی"
 #. Transfer'
 #: hrms/hr/doctype/employee_transfer/employee_transfer.json
 msgid "Create New Employee Id"
-msgstr "شناسه کارمند جدید ایجاد کنید"
+msgstr "ایجاد شناسه کارمند جدید"
 
 #. Label of the create_overtime_slip (Check) field in DocType 'Payroll
 #. Settings'

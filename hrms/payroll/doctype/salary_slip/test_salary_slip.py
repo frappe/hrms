@@ -2051,6 +2051,14 @@ def make_earning_salary_component(
 			"amount": 0,
 			"remove_if_zero_valued": 1,
 		},
+		{
+			"salary_component": "Recurring Salary Component",
+			"abbr": "RSC",
+			"type": "Earning",
+			"depends_on_payment_days": 0,
+			"amount": 0,
+			"remove_if_zero_valued": 1,
+		},
 	]
 
 	if test_accrual_component:
