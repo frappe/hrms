@@ -36,12 +36,41 @@ class AdditionalSalary(Document):
 			frappe.throw(_("Amount should not be less than zero"))
 
 	def validate_salary_structure(self):
-		if not frappe.db.exists("Salary Structure Assignment", {"employee": self.employee}):
+		salary_structure = frappe.db.get_value(
+			"Salary Structure Assignment",
+			{
+				"employee": self.employee,
+				"docstatus": 1,
+				"from_date": ["<=", self.payroll_date or self.from_date],
+			},
+			"salary_structure",
+			order_by="from_date desc",
+		)
+
+		if not salary_structure:
 			frappe.throw(
 				_("There is no Salary Structure assigned to {0}. First assign a Salary Structure.").format(
 					self.employee
 				)
 			)
+
+		if self.overwrite_salary_structure_amount:
+			is_structure_component = frappe.db.get_value(
+				"Salary Detail",
+				{
+					"parenttype": "Salary Structure",
+					"parent": salary_structure,
+					"salary_component": self.salary_component,
+				},
+			)
+
+			if not is_structure_component:
+				self.overwrite_salary_structure_amount = 0
+				frappe.msgprint(
+					_(
+						"Overwrite Salary Structure Amount is disabled as the Salary Component: {0} not part of the Salary Structure: {1}"
+					).format(self.salary_component, salary_structure)
+				)
 
 	def validate_recurring_additional_salary_overlap(self):
 		if self.is_recurring:
