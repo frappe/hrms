@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-12-14 09:36+0000\n"
-"PO-Revision-Date: 2025-12-17 10:46\n"
+"POT-Creation-Date: 2025-12-21 09:37+0000\n"
+"PO-Revision-Date: 2025-12-22 11:22\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -7640,7 +7640,7 @@ msgstr "crwdns152559:0{0}crwdne152559:0"
 msgid "Please see attachment"
 msgstr "crwdns142108:0crwdne142108:0"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:224
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:225
 msgid "Please select Company and Designation"
 msgstr "crwdns108958:0crwdne108958:0"
 
@@ -9557,7 +9557,7 @@ msgstr "crwdns109816:0crwdne109816:0"
 msgid "Staffing Plan Detail"
 msgstr "crwdns109822:0crwdne109822:0"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:72
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:71
 msgid "Staffing Plan {0} already exist for designation {1}"
 msgstr "crwdns109824:0{0}crwdnd109824:0{1}crwdne109824:0"
 
@@ -9701,7 +9701,7 @@ msgstr "crwdns109966:0crwdne109966:0"
 msgid "Submitting Salary Slips..."
 msgstr "crwdns109968:0crwdne109968:0"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:162
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:161
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "crwdns109970:0{1}crwdnd109970:0{2}crwdnd109970:0{0}crwdnd109970:0{3}crwdne109970:0"
 
@@ -11142,7 +11142,7 @@ msgstr "crwdns110682:0crwdne110682:0"
 msgid "You can not request for your Default Shift: {0}"
 msgstr "crwdns110684:0{0}crwdne110684:0"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:95
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:94
 msgid "You can only plan for upto {0} vacancies and budget {1} for {2} as per staffing plan {3} for parent company {4}."
 msgstr "crwdns110686:0{0}crwdnd110686:0{1}crwdnd110686:0{2}crwdnd110686:0{3}crwdnd110686:0{4}crwdne110686:0"
 
@@ -11425,7 +11425,7 @@ msgstr "crwdns152002:0{0}crwdnd152002:0{1}crwdne152002:0"
 msgid "{0} updated successfully!"
 msgstr "crwdns151406:0{0}crwdne151406:0"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:129
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:128
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
 msgstr "crwdns110758:0{0}crwdnd110758:0{1}crwdnd110758:0{2}crwdnd110758:0{3}crwdnd110758:0{4}crwdnd110758:0{5}crwdnd110758:0{6}crwdnd110758:0{3}crwdne110758:0"
 
