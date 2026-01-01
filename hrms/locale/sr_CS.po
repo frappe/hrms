@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-12-14 09:36+0000\n"
-"PO-Revision-Date: 2025-12-18 11:04\n"
+"POT-Creation-Date: 2025-12-21 09:37+0000\n"
+"PO-Revision-Date: 2025-12-22 11:22\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Serbian (Latin)\n"
 "MIME-Version: 1.0\n"
@@ -7666,7 +7666,7 @@ msgstr "Molimo Vas da smanjite {0} da biste izbegli preklapanje vremena smene"
 msgid "Please see attachment"
 msgstr "Molimo Vas da pogledate prilog"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:224
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:225
 msgid "Please select Company and Designation"
 msgstr "Molimo Vas da unesete kompaniju i poziciju"
 
@@ -9583,7 +9583,7 @@ msgstr "Plan osoblja"
 msgid "Staffing Plan Detail"
 msgstr "Detalji plana osoblja"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:72
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:71
 msgid "Staffing Plan {0} already exist for designation {1}"
 msgstr "Plan osoblja {0} već postoji za poziciju {1}"
 
@@ -9727,7 +9727,7 @@ msgstr "Podnošenje obračunskih listića i kreiranje naloga knjiženja..."
 msgid "Submitting Salary Slips..."
 msgstr "Podnošenje obračunskih listića..."
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:162
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:161
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "Podružnice su već planirale {1} nepopunjenih radnih mesta sa budžetom od {2}. Plan osoblja za {0} treba da raspodeli više nepopunjenih radnih mesta i veći budžet za {3} nego što je planirano za njihove podružnice"
 
@@ -11168,7 +11168,7 @@ msgstr "Ne možete definisati više razreda ukoliko već postoji razred bez donj
 msgid "You can not request for your Default Shift: {0}"
 msgstr "Ne možete tražiti svoju podrazumevanu smenu: {0}"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:95
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:94
 msgid "You can only plan for upto {0} vacancies and budget {1} for {2} as per staffing plan {3} for parent company {4}."
 msgstr "Možete planirati najviše do {0} nepopunjenih radnih mesta i budžet {1} za {2} u skladu sa planom osoblja {3} za matičnu kompaniju {4}."
 
@@ -11451,7 +11451,7 @@ msgstr "{0} za {1} zaposlena lica?"
 msgid "{0} updated successfully!"
 msgstr "{0} uspešno ažurirano!"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:129
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:128
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
 msgstr "{0} nepopunjenih radnih mesta i budžet od {1} za {2} su već planirani za podružnice za {3}. Možete planirati najviše {4} nepopunjenih radnih mesta i budžet od {5} u skladu sa planom osoblja {6} za matičnu kompaniju {3}."
 

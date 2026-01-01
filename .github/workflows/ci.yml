@@ -38,7 +38,7 @@ jobs:
 
     services:
       mysql:
-        image: mariadb:10.6
+        image: mariadb:11.8
         env:
           MARIADB_ROOT_PASSWORD: 'root'
         ports:
@@ -47,12 +47,12 @@ jobs:
 
     steps:
       - name: Clone
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.10'
+          python-version: '3.14'
 
       - name: Check for valid Python & Merge Conflicts
         run: |
@@ -63,9 +63,9 @@ jobs:
           fi
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: 24
           check-latest: true
 
       - name: Add to Hosts
@@ -131,7 +131,7 @@ jobs:
     if: ${{ github.event_name != 'pull_request' }}
     steps:
       - name: Clone
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download artifacts
         uses: actions/download-artifact@v4

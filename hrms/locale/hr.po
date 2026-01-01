@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-12-14 09:36+0000\n"
-"PO-Revision-Date: 2025-12-17 10:46\n"
+"POT-Creation-Date: 2025-12-21 09:37+0000\n"
+"PO-Revision-Date: 2025-12-24 12:05\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Croatian\n"
 "MIME-Version: 1.0\n"
@@ -7668,7 +7668,7 @@ msgstr "Smanji {0} kako biste izbjegli preklapanje vremena smjene sa samom sobom
 msgid "Please see attachment"
 msgstr "Pogledaj Prilog"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:224
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:225
 msgid "Please select Company and Designation"
 msgstr "Odaberi Tvrtku i Poziciju"
 
@@ -9585,7 +9585,7 @@ msgstr "Plan Zapošljavanja"
 msgid "Staffing Plan Detail"
 msgstr "Detalji Plana Zapošljavanja"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:72
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:71
 msgid "Staffing Plan {0} already exist for designation {1}"
 msgstr "Plan Zapošljavanja {0} već postoji za poziciju {1}"
 
@@ -9729,7 +9729,7 @@ msgstr "Podnose se Platni Listovi i kreiraju Nalozi Knjiženja..."
 msgid "Submitting Salary Slips..."
 msgstr "Podnošenje Platnih Listova u toku..."
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:162
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:161
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "Podružnice su već planirale {1} slobodnih radnih mjesta sa budžetom od {2}. Plan Zapošljavanja za {0} trebao bi izdvojiti više slobodnih radnih mjesta i budžeta za {3} nego što je planirano za podružnice"
 
@@ -9888,7 +9888,7 @@ msgstr "Timska Ažuriranja"
 #. Name of a Workspace
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Tenure"
-msgstr "Mandat"
+msgstr "Zapošljenje"
 
 #. Success message of the job-application Web Form
 #: hrms/hr/web_form/job_application/job_application.json
@@ -11170,7 +11170,7 @@ msgstr "Ne možete definirati više tabela ako imate tabelu bez donjih i gornjih
 msgid "You can not request for your Default Shift: {0}"
 msgstr "Ne možete zatražiti svoju Standard Smjenu: {0}"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:95
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:94
 msgid "You can only plan for upto {0} vacancies and budget {1} for {2} as per staffing plan {3} for parent company {4}."
 msgstr "Možete planirati samo do {0} slobodnih radnih mjesta i budžet {1} za {2} prema planu zapošljavanja {3} za matičnu tvrtku {4}."
 
@@ -11453,7 +11453,7 @@ msgstr "{0} {1} personal?"
 msgid "{0} updated successfully!"
 msgstr "{0} uspješno ažurirano!"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:129
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:128
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
 msgstr "{0} slobodnih radnih mjesta i {1} proračun za {2} već je planiran za podružnice tvrtke {3}. Možete planirati samo do {4} slobodnih radnih mjesta i proračun {5} prema planu osoblja {6} za matičnu tvrtku {3}."
 
