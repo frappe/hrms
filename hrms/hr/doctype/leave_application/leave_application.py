@@ -193,45 +193,12 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		):
 			frappe.throw(_("Half Day Date should be between From Date and To Date"))
 
-		"""
-		This logic validates whether a half-day leave can be applied on the selected date.
+		# prevent half-day leave on holidays when leave type excludes holidays
 
-		Purpose:
-		--------
-		To prevent users from applying a half-day leave on holidays when the selected
-		Leave Type does not allow counting holidays. This maintains accurate leave
-		records and prevents incorrect half-day applications on non-working days.
-
-		How It Works:
-		-------------
-		1. The system checks whether the leave request is marked as half-day and
-		whether a half-day date is provided.
-		2. It retrieves the 'Include Holiday' setting from the linked Leave Type.
-		3. If holidays are NOT allowed for this leave type:
-		- The system verifies if the selected half-day date falls on a holiday.
-		- If it is a holiday, the system blocks submission and shows an error message.
-
-		Result:
-		-------
-		- Allows half-day leave on working days.
-		- Prevents half-day leave on holidays when "Include Holiday" is disabled.
-
-		Validation Message:
-		-------------------
-		"Half-day leave cannot be applied on a holiday. Please choose a working day."
-		"""
-
-		# VALIDATE ONLY IF HALF DAY IS SELECTED AND A DATE IS PROVIDED
 		if self.half_day and self.half_day_date:
-			half_day_date = getdate(self.half_day_date)
-
-			# FETCH RULE: WHETHER HOLIDAYS ARE ALLOWED IN THE LEAVE TYPE
-			is_include_holiday = frappe.db.get_value("Leave Type", self.leave_type, "include_holiday")
-
-			# CONTINUE VALIDATION ONLY IF HOLIDAYS ARE NOT INCLUDED
-			if not is_include_holiday:
-
-				# CHECK IF THE SELECTED DATE IS A HOLIDAY FOR THE EMPLOYEE
+			include_holiday = frappe.db.get_value("Leave Type", self.leave_type, "include_holiday")
+			if not include_holiday:
+				half_day_date = getdate(self.half_day_date)
 				if get_holidays(self.employee, half_day_date, half_day_date):
 					frappe.throw(
 						_("Half-day leave cannot be applied on a holiday. Please choose a working day.")
