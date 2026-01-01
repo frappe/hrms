@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-12-14 09:36+0000\n"
-"PO-Revision-Date: 2025-12-17 10:46\n"
+"POT-Creation-Date: 2025-12-21 09:37+0000\n"
+"PO-Revision-Date: 2025-12-28 12:53\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -632,7 +632,7 @@ msgstr "تخصیص مرخصی"
 
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:192
 msgid "Allocate leaves to {0} employee(s)?"
-msgstr "مرخصی را به {0} کارمند(ها) اختصاص دهید؟"
+msgstr "تخصیص مرخصی به {0} کارمند(ها)؟"
 
 #. Label of the allocate_on_day (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -2137,7 +2137,7 @@ msgstr "ایجاد فرصت شغلی"
 #. Transfer'
 #: hrms/hr/doctype/employee_transfer/employee_transfer.json
 msgid "Create New Employee Id"
-msgstr "شناسه کارمند جدید ایجاد کنید"
+msgstr "ایجاد شناسه کارمند جدید"
 
 #. Label of the create_overtime_slip (Check) field in DocType 'Payroll
 #. Settings'
@@ -7640,7 +7640,7 @@ msgstr ""
 msgid "Please see attachment"
 msgstr "لطفا پیوست را ببینید"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:224
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:225
 msgid "Please select Company and Designation"
 msgstr "لطفاً شرکت و نقش سازمانی را انتخاب کنید"
 
@@ -9557,7 +9557,7 @@ msgstr "طرح کارگزینی"
 msgid "Staffing Plan Detail"
 msgstr "جزئیات طرح کارگزینی"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:72
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:71
 msgid "Staffing Plan {0} already exist for designation {1}"
 msgstr "طرح کارگزینی {0} از قبل برای نقش سازمانی {1} وجود دارد"
 
@@ -9701,7 +9701,7 @@ msgstr "ارسال فیش حقوقی و ایجاد دفترچه ..."
 msgid "Submitting Salary Slips..."
 msgstr "ارسال فیش حقوقی..."
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:162
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:161
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "شرکت های تابعه قبلاً برای {1} جای خالی با بودجه {2} برنامه‌ریزی کرده اند. طرح کارکنان برای {0} باید تعداد بیشتری از مشاغل و بودجه برای {3} نسبت به شرکت های تابعه خود اختصاص دهد"
 
@@ -11142,7 +11142,7 @@ msgstr "اگر طبقه بدون محدودیت های پایین و بالای�
 msgid "You can not request for your Default Shift: {0}"
 msgstr "شما نمی‌توانید برای شیفت پیش‌فرض خود درخواست دهید: {0}"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:95
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:94
 msgid "You can only plan for upto {0} vacancies and budget {1} for {2} as per staffing plan {3} for parent company {4}."
 msgstr "شما فقط می‌توانید برای حداکثر {0} موقعیت شغلی و بودجه {1} برای {2} طبق برنامه کارگزینی {3} برای شرکت مادر {4} برنامه‌ریزی کنید."
 
@@ -11425,7 +11425,7 @@ msgstr ""
 msgid "{0} updated successfully!"
 msgstr "{0} با موفقیت به روز شد!"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:129
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:128
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
 msgstr "{0} جای خالی و {1} بودجه برای {2} که قبلاً برای شرکت های تابعه {3} برنامه‌ریزی شده است. شما فقط می‌توانید برای حداکثر {4} موقعیت شغلی و بودجه {5} طبق برنامه کارگزینی {6} برای شرکت مادر {3} برنامه‌ریزی کنید."
 

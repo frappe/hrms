@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-12-14 09:36+0000\n"
-"PO-Revision-Date: 2025-12-17 10:45\n"
+"POT-Creation-Date: 2025-12-21 09:37+0000\n"
+"PO-Revision-Date: 2025-12-22 11:22\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -7646,7 +7646,7 @@ msgstr ""
 msgid "Please see attachment"
 msgstr "Siehe Anhang"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:224
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:225
 msgid "Please select Company and Designation"
 msgstr "Bitte wählen Sie Unternehmen und Position"
 
@@ -9563,7 +9563,7 @@ msgstr "Personalplanung"
 msgid "Staffing Plan Detail"
 msgstr "Personalplanung Detail"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:72
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:71
 msgid "Staffing Plan {0} already exist for designation {1}"
 msgstr "Personalplan {0} existiert bereits für Position {1}"
 
@@ -9707,7 +9707,7 @@ msgstr "Gehaltsabrechnungen werden gebucht und Buchungssätze erstellt..."
 msgid "Submitting Salary Slips..."
 msgstr "Lohnzettel einreichen ..."
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:162
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:161
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "Die Tochterunternehmen haben bereits {1} freie Stellen mit einem Budget von {2} eingeplant. Der Personalplan für {0} sollte mehr freie Stellen und mehr Budget für {3} vorsehen als für die Tochterunternehmen geplant"
 
@@ -11148,7 +11148,7 @@ msgstr ""
 msgid "You can not request for your Default Shift: {0}"
 msgstr "Sie können keine Standard-Schicht anfordern: {0}"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:95
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:94
 msgid "You can only plan for upto {0} vacancies and budget {1} for {2} as per staffing plan {3} for parent company {4}."
 msgstr "Sie können nur bis zu {0} freie Stellen einplanen und {1} für {2} gemäß dem Stellenplan {3} des Mutterunternehmens {4} budgetieren."
 
@@ -11431,7 +11431,7 @@ msgstr "{0} bis {1} Mitarbeiter?"
 msgid "{0} updated successfully!"
 msgstr "{0} erfolgreich aktualisiert!"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:129
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:128
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
 msgstr "{0} offene Stellen und {1} Budget für {2} sind bereits für Tochterunternehmen von {3} geplant. Sie können gemäß Personalplan {6} für Mutterunternehmen {3} nur bis zu {4} offene Stellen und ein Budget von {5} planen."
 

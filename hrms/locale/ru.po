@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-12-14 09:36+0000\n"
-"PO-Revision-Date: 2025-12-17 10:46\n"
+"POT-Creation-Date: 2025-12-21 09:37+0000\n"
+"PO-Revision-Date: 2025-12-22 11:22\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -7668,7 +7668,7 @@ msgstr "Пожалуйста, уменьшите {0}, чтобы избежат�
 msgid "Please see attachment"
 msgstr "Пожалуйста, смотрите приложение."
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:224
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:225
 msgid "Please select Company and Designation"
 msgstr "Выберите компанию и должность"
 
@@ -9585,7 +9585,7 @@ msgstr "План кадрового обеспечения"
 msgid "Staffing Plan Detail"
 msgstr "Детали плана кадрового обеспечения"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:72
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:71
 msgid "Staffing Plan {0} already exist for designation {1}"
 msgstr "План штатного расписания {0} уже существует для назначения {1}"
 
@@ -9729,7 +9729,7 @@ msgstr "Отправка расчетных листков и создание �
 msgid "Submitting Salary Slips..."
 msgstr "Отправка расчетных листков..."
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:162
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:161
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "Дочерние компании уже запланировали {1} вакансий при бюджете {2}. В штатном плане для {0} должно быть выделено больше вакансий и бюджета для {3}, чем запланировано для дочерних компаний"
 
@@ -11170,7 +11170,7 @@ msgstr "Вы не сможете определить несколько пли�
 msgid "You can not request for your Default Shift: {0}"
 msgstr "Вы не можете запросить смену по умолчанию: {0}"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:95
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:94
 msgid "You can only plan for upto {0} vacancies and budget {1} for {2} as per staffing plan {3} for parent company {4}."
 msgstr "Вы можете запланировать не более {0} вакансий и бюджет {1} для {2} в соответствии со штатным планом {3} для материнской компании {4}."
 
@@ -11453,7 +11453,7 @@ msgstr "{0} для {1} сотрудника(ов)?"
 msgid "{0} updated successfully!"
 msgstr "{0} успешно обновлено!"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:129
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:128
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
 msgstr "{0} вакансий и {1} бюджет для {2} уже запланированы для дочерних компаний {3}. Вы можете планировать только до {4} вакансий и бюджет {5} согласно кадровому плану {6} для материнской компании {3}."
 

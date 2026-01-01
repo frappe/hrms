@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-12-14 09:36+0000\n"
-"PO-Revision-Date: 2025-12-17 10:46\n"
+"POT-Creation-Date: 2025-12-21 09:37+0000\n"
+"PO-Revision-Date: 2025-12-22 11:22\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -7668,7 +7668,7 @@ msgstr "Minska {0} för att undvika att skifttid överlappar sig själv"
 msgid "Please see attachment"
 msgstr "Se Bilaga"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:224
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:225
 msgid "Please select Company and Designation"
 msgstr "Välj Bolag och Befattning"
 
@@ -9585,7 +9585,7 @@ msgstr "Bemanning Plan"
 msgid "Staffing Plan Detail"
 msgstr "Bemanning Plan Detalj"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:72
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:71
 msgid "Staffing Plan {0} already exist for designation {1}"
 msgstr "Bemanning Plan {0} finns redan för Befattning {1}"
 
@@ -9729,7 +9729,7 @@ msgstr "Godkänner Lönespecifikationer och skapar Journal Post..."
 msgid "Submitting Salary Slips..."
 msgstr "Godkänner Lönespecifikationer..."
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:162
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:161
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "Dotterbolag har redan planerat för {1} lediga tjänster till en budget på {2}. Bemanningsplan för {0} ska tilldela fler lediga tjänster och budget för {3} än planerat för dotterbolag"
 
@@ -11170,7 +11170,7 @@ msgstr "Du kan inte definiera flera tabeller om du har tabell utan nedre och öv
 msgid "You can not request for your Default Shift: {0}"
 msgstr "Man kan inte begära din Standard Skift: {0}"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:95
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:94
 msgid "You can only plan for upto {0} vacancies and budget {1} for {2} as per staffing plan {3} for parent company {4}."
 msgstr "Du kan bara planera för upp till {0} lediga platser och budget {1} för {2} enligt bemanning plan {3} för moderbolag {4}."
 
@@ -11453,7 +11453,7 @@ msgstr "{0} till {1} i personal?"
 msgid "{0} updated successfully!"
 msgstr "{0} uppdaterad!"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:129
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:128
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
 msgstr "{0} lediga platser och {1} budget för {2} redan planerade för dotterbolagför {3}. Du kan bara planera för upp till {4} lediga platser och budget {5} enligt bemanningsplan {6} för moderbolag {3}."
 

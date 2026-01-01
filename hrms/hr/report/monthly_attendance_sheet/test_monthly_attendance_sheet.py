@@ -24,7 +24,8 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 		self.company = "_Test Company"
 		self.employee = make_employee("test_employee@example.com", company=self.company)
 		self.filter_based_on = "Month"
-		frappe.db.delete("Attendance")
+		for dt in ("Attendance", "Leave Application"):
+			frappe.db.delete(dt)
 
 		if not frappe.db.exists("Shift Type", "Day Shift"):
 			setup_shift_type(shift_type="Day Shift")
@@ -440,23 +441,29 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 		self.assertEqual(report, ([], [], None, None))
 
 	def test_summarised_view_with_date_range_filter(self):
-		today = getdate()
+		previous_month_first = get_first_day_for_prev_month()
 
 		# attendance with shift
-		mark_attendance(self.employee, today, "Absent", "Day Shift")
-		mark_attendance(self.employee, today + relativedelta(days=1), "Present", "Day Shift")
-		mark_attendance(self.employee, today + relativedelta(days=2), "Half Day")  # half day
+		mark_attendance(self.employee, previous_month_first, "Absent", "Day Shift")
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present", "Day Shift")
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=2), "Half Day")  # half day
 
-		mark_attendance(self.employee, today + relativedelta(days=3), "Present")  # attendance without shift
-		mark_attendance(self.employee, today + relativedelta(days=4), "Present", late_entry=1)  # late entry
-		mark_attendance(self.employee, today + relativedelta(days=5), "Present", early_exit=1)  # early exit
+		mark_attendance(
+			self.employee, previous_month_first + relativedelta(days=3), "Present"
+		)  # attendance without shift
+		mark_attendance(
+			self.employee, previous_month_first + relativedelta(days=4), "Present", late_entry=1
+		)  # late entry
+		mark_attendance(
+			self.employee, previous_month_first + relativedelta(days=5), "Present", early_exit=1
+		)  # early exit
 
-		leave_application = get_leave_application(self.employee, today)
+		leave_application = get_leave_application(self.employee, previous_month_first)
 
 		filters = frappe._dict(
 			{
-				"start_date": add_days(today, -1),
-				"end_date": add_days(today, 30),
+				"start_date": add_days(previous_month_first, -1),
+				"end_date": add_days(previous_month_first, 30),
 				"company": self.company,
 				"summarized_view": 1,
 				"filter_based_on": "Date Range",
@@ -558,8 +565,8 @@ def get_leave_application(employee, date=None):
 		make_allocation_record(employee=employee, from_date=year_start, to_date=year_end)
 	except OverlapError:
 		pass
-	from_date = date + relativedelta(days=7)
-	to_date = date + relativedelta(days=8)
+	from_date = date.replace(day=7)
+	to_date = date.replace(day=8)
 
 	return make_leave_application(employee, from_date, to_date, "_Test Leave Type")
 

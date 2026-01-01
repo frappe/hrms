@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2025-12-14 09:36+0000\n"
-"PO-Revision-Date: 2025-12-17 10:46\n"
+"POT-Creation-Date: 2025-12-21 09:37+0000\n"
+"PO-Revision-Date: 2025-12-22 11:22\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -7665,7 +7665,7 @@ msgstr ""
 msgid "Please see attachment"
 msgstr "Lütfen dosya ekini inceleyin"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:224
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:225
 msgid "Please select Company and Designation"
 msgstr "Lütfen Şirket ve Atamayı seçiniz"
 
@@ -9582,7 +9582,7 @@ msgstr "Personel Kadrosu Planı"
 msgid "Staffing Plan Detail"
 msgstr "Kadro Planı Detayı"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:72
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:71
 msgid "Staffing Plan {0} already exist for designation {1}"
 msgstr "{1} atanması için {0} Kişisel Planı zaten mevcut"
 
@@ -9726,7 +9726,7 @@ msgstr "Maaş Fişleri Gönderme ve Yevmiye Kaydı Oluşturma ..."
 msgid "Submitting Salary Slips..."
 msgstr "Maaş Fişleri Gönderiliyor ..."
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:162
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:161
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "Bağlı şirketler zaten {1} pozisyon için {2} bütçesiyle planlama yapmış durumda. {0} için Personel Planı, bağlı şirketler için planlanan pozisyon ve bütçeden daha fazlasını {3} için tahsis etmelidir"
 
@@ -11167,7 +11167,7 @@ msgstr ""
 msgid "You can not request for your Default Shift: {0}"
 msgstr "Varsayılan Vardiyanızı talep edemezsiniz: {0}"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:95
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:94
 msgid "You can only plan for upto {0} vacancies and budget {1} for {2} as per staffing plan {3} for parent company {4}."
 msgstr "Personel planına göre, ana şirket {4} için {3} personel planında yalnızca {0} açık pozisyon ve {1} bütçe ile {2} planlaması yapabilirsiniz."
 
@@ -11450,7 +11450,7 @@ msgstr ""
 msgid "{0} updated successfully!"
 msgstr "{0} başarıyla güncellendi!"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:129
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:128
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
 msgstr "{3} bağlı şirketler için {0} açık pozisyon ve {1} bütçe zaten planlanmış. Ana şirket {3} için {6} personel planına göre yalnızca {4} açık pozisyon ve {5} bütçe planlayabilirsiniz."
 

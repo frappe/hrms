@@ -1335,8 +1335,6 @@ def add_leaves(events, start, end, filters=None):
 		"docstatus",
 		"employee_name",
 		"leave_type",
-		"(1) as allDay",
-		"'Leave Application' as doctype",
 	]
 
 	show_leaves_of_all_members = frappe.db.get_single_value(
@@ -1346,9 +1344,10 @@ def add_leaves(events, start, end, filters=None):
 		leave_applications = frappe.get_all("Leave Application", filters=filters, fields=fields)
 	else:
 		leave_applications = frappe.get_list("Leave Application", filters=filters, fields=fields)
-
 	for d in leave_applications:
 		d["title"] = f"{d['employee_name']} ({d['leave_type']})"
+		d["allDay"] = 1
+		d["doctype"] = "Leave Application"
 		del d["employee_name"]
 		del d["leave_type"]
 		if d not in events:
