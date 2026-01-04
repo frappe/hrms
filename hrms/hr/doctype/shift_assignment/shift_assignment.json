@@ -50,6 +50,7 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "shift_type",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -138,7 +139,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-13 12:59:50.928962",
+ "modified": "2025-12-08 12:19:54.435473",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment",
@@ -182,6 +183,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
