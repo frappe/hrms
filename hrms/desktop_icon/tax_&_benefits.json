@@ -9,13 +9,14 @@
  "idx": 0,
  "label": "Tax & Benefits",
  "link_to": "Tax & Benefits",
- "link_type": "Workspace",
+ "link_type": "Workspace Sidebar",
  "logo_url": "/assets/hrms/icons/desktop_icons/tax-benefits.svg",
- "modified": "2025-11-17 20:49:18.845725",
+ "modified": "2026-01-01 20:07:01.316510",
  "modified_by": "Administrator",
  "name": "Tax & Benefits",
  "owner": "Administrator",
  "parent_icon": "Frappe HR",
+ "restrict_removal": 0,
  "roles": [],
  "standard": 1
 }
