@@ -9,13 +9,14 @@
  "idx": 0,
  "label": "Performance",
  "link_to": "Performance",
- "link_type": "Workspace",
+ "link_type": "Workspace Sidebar",
  "logo_url": "/assets/hrms/icons/desktop_icons/performance.svg",
- "modified": "2025-11-17 20:47:01.054194",
+ "modified": "2026-01-01 20:07:01.295447",
  "modified_by": "Administrator",
  "name": "Performance",
  "owner": "Administrator",
  "parent_icon": "Frappe HR",
+ "restrict_removal": 0,
  "roles": [],
  "standard": 1
 }

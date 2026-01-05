@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-12-21 09:37+0000\n"
-"PO-Revision-Date: 2025-12-28 12:53\n"
+"PO-Revision-Date: 2026-01-04 14:08\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -614,7 +614,7 @@ msgstr "همه مشاغل"
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:70
 msgid "All allocated assets should be returned before submission"
-msgstr "تمام دارایی های تخصیص یافته باید قبل از ارسال بازگردانده شود"
+msgstr "تمام دارایی‌های تخصیص یافته باید قبل از ارسال بازگردانده شود"
 
 #: hrms/hr/doctype/employee_onboarding/employee_onboarding.py:48
 msgid "All the mandatory tasks for employee creation are not completed yet."
@@ -1198,7 +1198,7 @@ msgstr ""
 #. Final Statement'
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json
 msgid "Assets Allocated"
-msgstr "دارایی های تخصیص یافته"
+msgstr "دارایی‌های تخصیص یافته"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:283
 msgid "Assign Salary Structure to {0} employee(s)?"
@@ -1458,7 +1458,7 @@ msgstr ""
 #. and Final Statement'
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json
 msgid "Automatically fetches all assets allocated to the employee, if any"
-msgstr "به طور خودکار تمام دارایی های تخصیص یافته به کارمند را در صورت وجود، واکشی می‌کند"
+msgstr "به طور خودکار تمام دارایی‌های تخصیص یافته به کارمند را در صورت وجود، واکشی می‌کند"
 
 #. Label of the auto_update_last_sync (Check) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json

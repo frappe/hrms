@@ -59,7 +59,7 @@
    "collapsible": 1,
    "icon": "database",
    "indent": 1,
-   "keep_closed": 0,
+   "keep_closed": 1,
    "label": "Setup",
    "link_type": "DocType",
    "show_arrow": 0,
@@ -140,11 +140,14 @@
    "label": "Settings",
    "link_to": "HR Settings",
    "link_type": "DocType",
+   "navigate_to_tab": "employee_tab",
+   "route_options": "",
    "show_arrow": 0,
-   "type": "Link"
+   "type": "Link",
+   "url": "/desk/hr-settings#employee_tab"
   }
  ],
- "modified": "2025-12-04 14:54:28.167953",
+ "modified": "2025-12-29 17:56:02.562424",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR",

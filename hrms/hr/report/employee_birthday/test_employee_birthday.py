@@ -4,12 +4,14 @@ from frappe.utils import getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
+from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
 from hrms.hr.report.employee_birthday.employee_birthday import execute
 
 
 class TestEmployeeBirthday(IntegrationTestCase):
 	def setUp(self):
-		self.company = "_Test Company"
+		make_company(name="_New Test Company", abbr="_NTC")
+		self.company = "_New Test Company"
 		self.birthdate = getdate().replace(year=1990)
 
 	def test_employee_birth_day_report(self):

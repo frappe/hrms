@@ -9,13 +9,14 @@
  "idx": 0,
  "label": "Leaves",
  "link_to": "Leaves",
- "link_type": "Workspace",
+ "link_type": "Workspace Sidebar",
  "logo_url": "/assets/hrms/icons/desktop_icons/leaves.svg",
- "modified": "2025-11-17 20:46:44.257193",
+ "modified": "2026-01-01 20:07:01.290307",
  "modified_by": "Administrator",
  "name": "Leaves",
  "owner": "Administrator",
  "parent_icon": "Frappe HR",
+ "restrict_removal": 0,
  "roles": [],
  "standard": 1
 }
