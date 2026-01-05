@@ -1,7 +1,7 @@
 ## Overview
 This repository is a fork of [Frappe HR official codebase](https://github.com/frappe/hrms).
 
-Clone the branch `blue-develop` to set up the frappe HR and containers plus the demo database used for benchmark development. Follow the instructions below.
+Clone the branch `blue-develop` to set up Frappe HR containers plus the demo database used for benchmark development.
 
 ### Setting Up Local Containers with Podman
 Initialize and start the Podman virtual machine:
@@ -164,11 +164,15 @@ Log in using the `Administrator` user, and HR user, and another user to check ac
 ```
 git checkout blue-develop
 git pull origin blue-develop
-git checkout -b feature/my-feature
+git checkout -b feature/my-db-updates
 # ... make changes ...
 git add .
 git commit -m "feat: description"
-git push origin feature/my-feature
+git push origin feature/my-db-updates
 ```
 
 Then, create a PR on GitHub
+
+- base: blue-develop
+- compare: feature/my-db-updates
+- assign a reviewer to your PR
