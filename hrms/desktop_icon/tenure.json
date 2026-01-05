@@ -9,13 +9,14 @@
  "idx": 0,
  "label": "Tenure",
  "link_to": "Tenure",
- "link_type": "Workspace",
+ "link_type": "Workspace Sidebar",
  "logo_url": "/assets/hrms/icons/desktop_icons/employee_lifecycle.svg",
- "modified": "2025-11-18 15:52:59.993095",
+ "modified": "2026-01-01 20:07:01.267686",
  "modified_by": "Administrator",
  "name": "Tenure",
  "owner": "Administrator",
  "parent_icon": "Frappe HR",
+ "restrict_removal": 0,
  "roles": [],
  "standard": 1
 }
