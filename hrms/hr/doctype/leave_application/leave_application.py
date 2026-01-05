@@ -972,12 +972,12 @@ def get_leave_balance_on(
 
 	allocation_records = get_leave_allocation_records(employee, date, leave_type)
 	allocation = allocation_records.get(leave_type, frappe._dict())
-
-	end_date = allocation.to_date if cint(consider_all_leaves_in_the_allocation_period) else date
+	end_date = (
+		allocation.to_date if (allocation and cint(consider_all_leaves_in_the_allocation_period)) else date
+	)
 	cf_expiry = get_allocation_expiry_for_cf_leaves(employee, leave_type, to_date, allocation.from_date)
 
 	leaves_taken = get_leaves_for_period(employee, leave_type, allocation.from_date, end_date)
-
 	manually_expired_leaves = get_manually_expired_leaves(
 		employee, leave_type, allocation.from_date, end_date
 	)
@@ -1149,7 +1149,7 @@ def get_manually_expired_leaves(
 			& (ledger.employee == employee)
 			& (ledger.leave_type == leave_type)
 			& (ledger.from_date >= from_date)
-			& (ledger.to_date <= end_date)
+			& (ledger.to_date < end_date)
 			& (ledger.transaction_type == "Leave Allocation")
 			& ((ledger.is_expired == 1) & (ledger.is_carry_forward == 0))
 		)

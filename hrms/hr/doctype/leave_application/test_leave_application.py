@@ -1422,10 +1422,35 @@ class TestLeaveApplication(HRMSTestSuite):
 		expire_allocation(leave_allocation, expiry_date=getdate())
 
 		leave_balance = get_leave_balance_on(
-			employee=employee.name, leave_type=leave_type.name, date=getdate()
+			employee=employee.name,
+			leave_type=leave_type.name,
+			date=getdate(),
+			consider_all_leaves_in_the_allocation_period=True,
 		)
 
 		self.assertEqual(leave_balance, 0)
+
+	def test_backdated_application_after_expiry(self):
+		employee = get_employee().name
+		previous_month_start = get_first_day(add_months(getdate(), -1))
+		previous_month_end = get_last_day(previous_month_start)
+		leave_type = create_leave_type(leave_type_name="_Test_backdated_application").name
+		allocation = make_allocation_record(
+			employee, leave_type, previous_month_start, previous_month_end, leaves=10
+		)
+		expire_allocation(allocation, expiry_date=previous_month_end)
+		doc = frappe.new_doc(
+			"Leave Application",
+			employee=employee,
+			leave_type=leave_type,
+			from_date=previous_month_start,
+			to_date=previous_month_start,
+			posting_date=previous_month_end,
+			status="Approved",
+		)
+		doc.save()
+		doc.submit()
+		self.assertEqual(get_leave_balance_on(employee, leave_type, previous_month_end), 9)
 
 	def test_status_on_discard(self):
 		make_allocation_record()

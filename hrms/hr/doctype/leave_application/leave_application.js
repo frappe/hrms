@@ -291,6 +291,10 @@ frappe.ui.form.on("Leave Application", {
 		});
 		$(".form-message").prop("hidden", true);
 	},
+	posting_date: function (frm) {
+		frm.trigger("make_dashboard");
+		frm.trigger("get_leave_balance");
+	},
 });
 
 frappe.tour["Leave Application"] = [

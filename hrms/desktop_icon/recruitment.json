@@ -9,13 +9,14 @@
  "idx": 0,
  "label": "Recruitment",
  "link_to": "Recruitment",
- "link_type": "Workspace",
+ "link_type": "Workspace Sidebar",
  "logo_url": "/assets/hrms/icons/desktop_icons/recruitment.svg",
- "modified": "2025-11-17 20:46:06.864491",
+ "modified": "2026-01-01 20:07:01.259701",
  "modified_by": "Administrator",
  "name": "Recruitment",
  "owner": "Administrator",
  "parent_icon": "Frappe HR",
+ "restrict_removal": 0,
  "roles": [],
  "standard": 1
 }
