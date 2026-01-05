@@ -158,3 +158,17 @@ Log in using the `Administrator` user, and HR user, and another user to check ac
 
 * The UI displays the setup wizard and does not offer an option to skip it the first time you log in, go trhough it and create a new `test` company.
 * If you are not logged as Administrator, the impersonation feature might be active. Simploy log-off and log-in again.
+
+## DB Updates
+
+```
+git checkout blue-develop
+git pull origin blue-develop
+git checkout -b feature/my-feature
+# ... make changes ...
+git add .
+git commit -m "feat: description"
+git push origin feature/my-feature
+```
+
+Then, create a PR on GitHub
