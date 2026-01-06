@@ -1,0 +1,108 @@
+employee_name	department	designation
+Alice Marie Kim	Operations - NS	Chief Executive Officer (CEO)
+Ben Foster	Marketing - NS	Chief Operating Officer (COO)
+Carla Ruiz	Research & Development - NS	Chief Technology Officer (CTO)
+Eugene Sanders	Accounts - NS	Chief Financial Officer (CFO)
+Monica Priya Patel	Human Resources - NS	Chief People Officer (CPO)
+Jordan Blake	Sales - NS	Chief Revenue Officer (CRO)
+Laura Chen	Legal - NS	General Counsel (GC)
+Lily Chen	Research & Development - NS	Director of Product
+Mark Allen	Research & Development - NS	Director of Product
+Tanya Brooks	Research & Development - NS	Director of Product
+Robert Fields	Research & Development - NS	Director of Product
+Chloe Park	Research & Development - NS	Product Manager
+Ethan Spencer	Research & Development - NS	Product Manager
+Natalie Park	Research & Development - NS	Head of Design
+Grace Liu	Research & Development - NS	UX/UI Designer
+Peter Novak	Research & Development - NS	UX/UI Designer
+Sarah Collins	Research & Development - NS	UX/UI Designer
+Diego Herrera	Research & Development - NS	UX/UI Designer
+Amira Hassan	Research & Development - NS	Head of Data
+Wei Zhou	Research & Development - NS	Data Scientist
+Jonas Richter	Research & Development - NS	Data Scientist
+Carmen Rivera	Research & Development - NS	Data Analyst
+Helen Osbourne	Research & Development - NS	Technical Writer
+Victor James Lin	Research & Development - NS	VP Engineering
+David Wong	Research & Development - NS	Senior Backend Engineer
+Emily Zhang	Research & Development - NS	Senior Backend Engineer
+Hiroshi Tanaka	Research & Development - NS	Senior Backend Engineer
+Laura Martinez	Research & Development - NS	Senior Backend Engineer
+Frank Miller	Research & Development - NS	Backend Engineer
+Jared Hughes	Research & Development - NS	Backend Engineer
+Sofia Costa	Research & Development - NS	Backend Engineer
+Andre Johnson	Research & Development - NS	Backend Engineer
+Fatima Noor	Research & Development - NS	Backend Engineer
+Michael Torres	Research & Development - NS	Backend Engineer
+Kevin Shah	Research & Development - NS	Backend Engineer
+Irene Zhao	Research & Development - NS	Backend Engineer
+Kyle Brooks	Quality Management - NS	QA Engineer
+Rina Mehta	Quality Management - NS	QA Engineer
+Hannah Lee	Research & Development - NS	Senior Backend Engineer
+Ivan Petrov	Research & Development - NS	Senior Frontend Engineer
+Michelle Wang	Research & Development - NS	Senior Frontend Engineer
+Julia Mendes	Research & Development - NS	Frontend Engineer
+Aaron Rivers	Research & Development - NS	Frontend Engineer
+Nora Velasquez	Research & Development - NS	Frontend Engineer
+Daniel Cho	Research & Development - NS	Frontend Engineer
+Aisha Khan	Research & Development - NS	Frontend Engineer
+Brian Watkins	Research & Development - NS	Frontend Engineer
+Selena Park	Research & Development - NS	Frontend Engineer
+Olivia Stone	Quality Management - NS	Frontend QA Engineer
+Samuel Ortiz	Research & Development - NS	Senior Backend Engineer
+Leonardo Silva	Research & Development - NS	DevOps Engineer
+Rachel Kim	Research & Development - NS	DevOps Engineer
+Miguel Santos	Research & Development - NS	DevOps Engineer
+Priyanka Rao	Research & Development - NS	Security Engineer
+Wei Sun	Research & Development - NS	Site Reliability Engineer (SRE)
+Nora Singh	Research & Development - NS	Site Reliability Engineer (SRE)
+Ian Cooper	Operations - NS	IT Support Technician
+Yusuf Ali	Operations - NS	IT Support Technician
+Maria Torres	Accounts - NS	Senior Accountant
+Nathan Brooks	Accounts - NS	FP&A Analyst
+Taylor Kim	Accounts - NS	Accountant
+Helena Santos	Accounts - NS	Operations Coordinator
+Carson Bell	Operations - NS	Office Manager
+Wei Lam	Purchase - NS	Procurement / BizOps Analyst
+Rebecca Shaw	Human Resources - NS	Head of Talent Acquisition
+Alan Nguyen	Human Resources - NS	Technical Recruiter
+Marisol Perez	Human Resources - NS	GTM Recruiter
+Sophia Brown	Human Resources - NS	Recruiting Coordinator
+Samuel Lee	Human Resources - NS	HR Operations Manager
+Tina Morales	Human Resources - NS	HR Operations Specialist
+Daniela Alvarez	Human Resources - NS	Compensation & Benefits Analyst
+Lauren White	Human Resources - NS	Payroll Specialist
+Victorine Dubois	Human Resources - NS	HR Business Partner (HRBP)
+Marcus Green	Human Resources - NS	HR Business Partner (HRBP)
+Elena Petrova	Human Resources - NS	Employee Experience Manager
+Joanne Foster	Human Resources - NS	Learning & Development Specialist
+Oscar Reyes	Sales - NS	Head of Sales
+Priya Nair	Sales - NS	Account Executive
+Eric Dalton	Sales - NS	Account Executive
+Chloe Bennett	Sales - NS	Account Executive
+Samuel Wright	Sales - NS	Account Executive
+Adam Clarke	Sales - NS	Account Executive
+Rosa Mendes	Sales - NS	Account Executive
+Jamal Peters	Sales - NS	SDR (Sales Development Representative)
+Amy Flores	Sales - NS	SDR (Sales Development Representative)
+Ana Morales	Sales - NS	SDR (Sales Development Representative)
+Nina Kapoor	Sales - NS	Sales Operations Manager
+Jonah Patel	Sales - NS	Sales Analyst
+Vera Johansson	Marketing - NS	Marketing Director
+Liam Carter	Marketing - NS	Brand/Content Marketer
+Bianca Rossi	Marketing - NS	Brand/Content Marketer
+Tomas Ferreira	Marketing - NS	Growth Marketer
+Jade Simmons	Marketing - NS	Events/Field Marketer
+Olivia Romero	Marketing - NS	Paid Ads Specialist
+Noah Delgado	Marketing - NS	SEO Specialist
+Luz Ortega	Marketing - NS	SEO/Content Specialist
+Hannah Morris	Marketing - NS	Marketing Operations
+Patricia Huang	Customer Service - NS	Head of Customer Success
+Quentin Jones	Customer Service - NS	Customer Success Manager
+Lucia Romero	Customer Service - NS	Customer Success Manager
+Henry Walker	Customer Service - NS	Customer Success Manager
+Emily Santos	Customer Service - NS	Customer Success Manager
+Talia Morgan	Customer Service - NS	Customer Success Manager
+Rosa Alvarez	Customer Service - NS	Customer Support Specialist
+Derek Miles	Customer Service - NS	Customer Support Specialist
+Vivian Choi	Customer Service - NS	Customer Support Specialist
+Alan Brooks	Customer Service - NS	Customer Support Specialist

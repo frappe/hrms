@@ -1,0 +1,6 @@
+subject	grievance_type	status
+Excessive Workload in Q4	Workload Issues	Resolved
+Request for Career Development Discussion	Career Development	Investigated
+Office Temperature Concerns	Work Conditions	Open
+Delayed Expense Reimbursement	Compensation Issues	Resolved
+Unfair Performance Review	Management Conflict	Open

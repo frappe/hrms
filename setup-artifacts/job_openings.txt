@@ -1,0 +1,11 @@
+job_title	status	company
+Backend Engineer - NovaSoft	Open	NovaSoft
+Senior Backend Engineer - NovaSoft	Open	NovaSoft
+Frontend Engineer - NovaSoft	Open	NovaSoft
+DevOps Engineer - NovaSoft	Open	NovaSoft
+Data Scientist - NovaSoft	Open	NovaSoft
+Account Executive - NovaSoft	Open	NovaSoft
+Growth Marketer - NovaSoft	Open	NovaSoft
+UX/UI Designer - NovaSoft	Open	NovaSoft
+Customer Success Manager - NovaSoft	Open	NovaSoft
+SDR (Sales Development Representative) - NovaSoft	Open	NovaSoft

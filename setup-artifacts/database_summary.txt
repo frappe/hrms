@@ -1,0 +1,35 @@
+HRMS Demo Data Summary
+======================
+Generated: 2026-01-06
+
+Company: NovaSoft (NS)
+
+CORE DATA
+---------
+Employees:        107
+Users:            109
+Attendance:       33
+
+RECRUITMENT PIPELINE
+--------------------
+Job Openings:     10
+Job Applicants:   20
+Interviews:       12
+Job Offers:       4
+
+PERFORMANCE MANAGEMENT
+----------------------
+Appraisals:       30
+Employee Goals:   178
+Appraisal Cycles: 3
+
+EMPLOYEE LIFECYCLE
+------------------
+Training Events:     5
+Training Programs:   6
+Promotions:          6
+Transfers:           2
+Separations:         3
+Grievances:          5
+Skills:              45
+Employee Skill Maps: 20

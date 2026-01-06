@@ -1,0 +1,34 @@
+employee_name	attendance_date	status
+Eugene Sanders	2025-11-03	Present
+Maria Torres	2025-11-03	Present
+Nathan Brooks	2025-11-03	Present
+Taylor Kim	2025-11-03	Present
+Helena Santos	2025-11-03	Work From Home
+Eugene Sanders	2025-11-04	Present
+Maria Torres	2025-11-04	Present
+Nathan Brooks	2025-11-04	Present
+Taylor Kim	2025-11-04	Present
+Helena Santos	2025-11-04	Work From Home
+Eugene Sanders	2025-11-05	Present
+Maria Torres	2025-11-05	Present
+Nathan Brooks	2025-11-05	Present
+Taylor Kim	2025-11-05	Present
+Helena Santos	2025-11-05	Work From Home
+Eugene Sanders	2025-11-06	Present
+Maria Torres	2025-11-06	Present
+Nathan Brooks	2025-11-06	Absent
+Taylor Kim	2025-11-06	Present
+Helena Santos	2025-11-06	Work From Home
+Eugene Sanders	2025-11-07	Present
+Maria Torres	2025-11-07	Present
+Nathan Brooks	2025-11-07	Absent
+Taylor Kim	2025-11-07	Present
+Helena Santos	2025-11-07	Work From Home
+Nathan Brooks	2025-12-01	Present
+Nathan Brooks	2025-12-02	Present
+Nathan Brooks	2025-12-03	Present
+Nathan Brooks	2025-12-04	Present
+Nathan Brooks	2025-12-05	Present
+Nathan Brooks	2025-12-08	Present
+Nathan Brooks	2025-12-09	Present
+Nathan Brooks	2025-12-10	Present
