@@ -1010,9 +1010,13 @@ class SalarySlip(TransactionBase):
 		return 0.0
 
 	def compute_non_taxable_earnings(self):
-		# Previous period non taxable earnings
+		# Previous period non taxable earnings (exclude additional salary to avoid duplication)
 		prev_period_non_taxable_earnings = self.get_salary_slip_details(
-			self.payroll_period.start_date, self.start_date, parentfield="earnings", is_tax_applicable=0
+			self.payroll_period.start_date, 
+			self.start_date, 
+			parentfield="earnings", 
+			is_tax_applicable=0,
+			exclude_additional_salary=True  
 		)
 
 		(
@@ -1659,6 +1663,7 @@ class SalarySlip(TransactionBase):
 		exempted_from_income_tax=0,
 		variable_based_on_taxable_salary=0,
 		field_to_select="amount",
+		exclude_additional_salary=False, 
 	):
 		ss = frappe.qb.DocType("Salary Slip")
 		sd = frappe.qb.DocType("Salary Detail")
@@ -1692,6 +1697,9 @@ class SalarySlip(TransactionBase):
 
 		if salary_component:
 			query = query.where(sd.salary_component == salary_component)
+
+		if exclude_additional_salary:
+			query = query.where(sd.additional_salary.isnull())
 
 		result = query.run()
 

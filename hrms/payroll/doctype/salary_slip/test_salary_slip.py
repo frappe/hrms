@@ -2106,6 +2106,465 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertIn("Allowance", earnings)
 		self.assertEqual(earnings["Allowance"], 0.0)
 
+	def test_non_taxable_additional_salary_not_duplicated_in_subsequent_months(self):
+		emp_id = make_employee("test_non_taxable_additional_salary@salary.com", company="_Test Company")
+		frappe.db.set_value("Employee", emp_id, {"relieving_date": None, "status": "Active"})
+
+		exempt_component_data = [
+			{
+				"salary_component": "Exempt Bonus",
+				"abbr": "EB",
+				"type": "Earning",
+				"is_tax_applicable": 0,
+				"exempted_from_income_tax": 1,
+			}
+		]
+		make_salary_component(exempt_component_data, False, company_list=["_Test Company"])
+
+		payroll_period = frappe.get_last_doc("Payroll Period", filters={"company": "_Test Company"})
+
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		salary_structure = make_salary_structure(
+			"Test Non Taxable Additional Salary Structure",
+			"Monthly",
+			employee=emp_id,
+			company="_Test Company",
+			payroll_period=payroll_period,
+		)
+
+		# Create one-time additional salary for September
+		september_date = add_months(payroll_period.start_date, 5)  # mid-year
+		additional_salary = frappe.get_doc(
+			{
+				"doctype": "Additional Salary",
+				"employee": emp_id,
+				"company": "_Test Company",
+				"salary_component": "Exempt Bonus",
+				"amount": 200000,
+				"payroll_date": september_date,
+				"currency": erpnext.get_default_currency(),
+			}
+		).insert()
+		additional_salary.submit()
+
+		# Generate September salary slip
+		sep_slip = make_salary_slip(
+			salary_structure.name,
+			employee=emp_id,
+			posting_date=september_date,
+		)
+		sep_slip.insert()
+		sep_slip.submit()
+
+		# Verify non-taxable earnings in September
+		sep_non_taxable = sep_slip.compute_non_taxable_earnings()
+		self.assertEqual(sep_non_taxable, 200000, "September non-taxable earnings should be 200,000")
+
+		# Generate October salary slip
+		october_date = add_months(september_date, 1)
+		oct_slip = make_salary_slip(
+			salary_structure.name,
+			employee=emp_id,
+			posting_date=october_date,
+		)
+		oct_slip.insert()
+
+		# Verify non-taxable earnings in October (should NOT be duplicated)
+		oct_non_taxable = oct_slip.compute_non_taxable_earnings()
+		self.assertEqual(
+			oct_non_taxable,
+			200000,
+			"October non-taxable earnings should still be 200,000, not duplicated to 400,000",
+		)
+
+	def test_taxable_additional_salary_not_duplicated(self):
+		emp_id = make_employee("test_taxable_additional_salary@salary.com", company="_Test Company")
+		frappe.db.set_value("Employee", emp_id, {"relieving_date": None, "status": "Active"})
+
+		# Create taxable salary component
+		taxable_component_data = [
+			{
+				"salary_component": "Taxable Bonus",
+				"abbr": "TB",
+				"type": "Earning",
+				"is_tax_applicable": 1,
+			}
+		]
+		make_salary_component(taxable_component_data, False, company_list=["_Test Company"])
+
+		payroll_period = frappe.get_last_doc("Payroll Period", filters={"company": "_Test Company"})
+
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		salary_structure = make_salary_structure(
+			"Test Taxable Additional Salary Structure",
+			"Monthly",
+			employee=emp_id,
+			company="_Test Company",
+			payroll_period=payroll_period,
+			test_tax=True,
+		)
+
+		# Create one-time taxable additional salary
+		september_date = add_months(payroll_period.start_date, 5)
+		additional_salary = frappe.get_doc(
+			{
+				"doctype": "Additional Salary",
+				"employee": emp_id,
+				"company": "_Test Company",
+				"salary_component": "Taxable Bonus",
+				"amount": 150000,
+				"payroll_date": september_date,
+				"currency": erpnext.get_default_currency(),
+			}
+		).insert()
+		additional_salary.submit()
+
+		# Generate September salary slip
+		sep_slip = make_salary_slip(
+			salary_structure.name,
+			employee=emp_id,
+			posting_date=september_date,
+		)
+		sep_slip.insert()
+		sep_slip.submit()
+
+		sep_taxable = sep_slip.gross_pay
+
+		# Generate October salary slip
+		october_date = add_months(september_date, 1)
+		oct_slip = make_salary_slip(
+			salary_structure.name,
+			employee=emp_id,
+			posting_date=october_date,
+		)
+		oct_slip.insert()
+
+		oct_taxable = oct_slip.gross_pay
+
+		# October's gross pay should NOT include September's additional salary
+		# It should only have structural components
+		self.assertLess(
+			oct_taxable,
+			sep_taxable,
+			"October gross pay should not include September's additional salary",
+		)
+
+	def test_recurring_additional_salary_not_affected_by_fix(self):
+		emp_id = make_employee("test_recurring_additional_salary@salary.com", company="_Test Company")
+		frappe.db.set_value("Employee", emp_id, {"relieving_date": None, "status": "Active"})
+
+		# Create exempt salary component
+		exempt_component_data = [
+			{
+				"salary_component": "Recurring Allowance",
+				"abbr": "RA",
+				"type": "Earning",
+				"is_tax_applicable": 0,
+			}
+		]
+		make_salary_component(exempt_component_data, False, company_list=["_Test Company"])
+
+		payroll_period = frappe.get_last_doc("Payroll Period", filters={"company": "_Test Company"})
+
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		salary_structure = make_salary_structure(
+			"Test Recurring Additional Salary Structure",
+			"Monthly",
+			employee=emp_id,
+			company="_Test Company",
+			payroll_period=payroll_period,
+		)
+
+		# Create recurring additional salary for 3 months
+		start_date = add_months(payroll_period.start_date, 5)
+		end_date = add_months(start_date, 2)
+		monthly_amount = 50000
+
+		recurring_salary = frappe.get_doc(
+			{
+				"doctype": "Additional Salary",
+				"employee": emp_id,
+				"company": "_Test Company",
+				"salary_component": "Recurring Allowance",
+				"amount": monthly_amount,
+				"is_recurring": 1,
+				"from_date": start_date,
+				"to_date": end_date,
+				"currency": erpnext.get_default_currency(),
+			}
+		).insert()
+		recurring_salary.submit()
+
+		# Generate first month salary slip
+		first_month_slip = make_salary_slip(
+			salary_structure.name,
+			employee=emp_id,
+			posting_date=start_date,
+		)
+		first_month_slip.insert()
+		first_month_slip.submit()
+
+		first_month_non_taxable = first_month_slip.compute_non_taxable_earnings()
+
+		# Generate second month salary slip
+		second_month_date = add_months(start_date, 1)
+		second_month_slip = make_salary_slip(
+			salary_structure.name,
+			employee=emp_id,
+			posting_date=second_month_date,
+		)
+		second_month_slip.insert()
+
+		second_month_non_taxable = second_month_slip.compute_non_taxable_earnings()
+
+		# Second month should include all occurrences in the period
+		# Month 1 (50k) + Month 2 (50k) + Future Month 3 (50k) = 150k
+		expected_second_month_non_taxable = monthly_amount * 3
+
+		self.assertEqual(
+			second_month_non_taxable,
+			expected_second_month_non_taxable,
+			"Recurring additional salary should include all occurrences in the period",
+		)
+
+	def test_gratuity_via_additional_salary_not_duplicated(self):
+		emp_id = make_employee("test_gratuity_additional_salary@salary.com", company="_Test Company")
+		frappe.db.set_value("Employee", emp_id, {"relieving_date": None, "status": "Active"})
+
+		# Create gratuity component (usually non-taxable up to a limit)
+		gratuity_component_data = [
+			{
+				"salary_component": "Gratuity",
+				"abbr": "GR",
+				"type": "Earning",
+				"is_tax_applicable": 0,
+			}
+		]
+		make_salary_component(gratuity_component_data, False, company_list=["_Test Company"])
+
+		payroll_period = frappe.get_last_doc("Payroll Period", filters={"company": "_Test Company"})
+
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		salary_structure = make_salary_structure(
+			"Test Gratuity Additional Salary Structure",
+			"Monthly",
+			employee=emp_id,
+			company="_Test Company",
+			payroll_period=payroll_period,
+		)
+
+		# Create large one-time gratuity payment
+		gratuity_date = add_months(payroll_period.start_date, 6)
+		gratuity_amount = 500000
+
+		additional_salary = frappe.get_doc(
+			{
+				"doctype": "Additional Salary",
+				"employee": emp_id,
+				"company": "_Test Company",
+				"salary_component": "Gratuity",
+				"amount": gratuity_amount,
+				"payroll_date": gratuity_date,
+				"currency": erpnext.get_default_currency(),
+			}
+		).insert()
+		additional_salary.submit()
+
+		# Generate gratuity month salary slip
+		gratuity_slip = make_salary_slip(
+			salary_structure.name,
+			employee=emp_id,
+			posting_date=gratuity_date,
+		)
+		gratuity_slip.insert()
+		gratuity_slip.submit()
+
+		gratuity_month_non_taxable = gratuity_slip.compute_non_taxable_earnings()
+
+		# Generate next month salary slip
+		next_month_date = add_months(gratuity_date, 1)
+		next_month_slip = make_salary_slip(
+			salary_structure.name,
+			employee=emp_id,
+			posting_date=next_month_date,
+		)
+		next_month_slip.insert()
+
+		next_month_non_taxable = next_month_slip.compute_non_taxable_earnings()
+
+		# Gratuity should only be counted once
+		self.assertEqual(
+			next_month_non_taxable,
+			gratuity_month_non_taxable,
+			"Gratuity amount should not be duplicated in subsequent months",
+		)
+
+	def test_multiple_additional_salaries_same_month(self):
+		emp_id = make_employee("test_multiple_additional_salaries@salary.com", company="_Test Company")
+		frappe.db.set_value("Employee", emp_id, {"relieving_date": None, "status": "Active"})
+
+		# Create multiple exempt components
+		components_data = [
+			{
+				"salary_component": "Bonus 1",
+				"abbr": "B1",
+				"type": "Earning",
+				"is_tax_applicable": 0,
+			},
+			{
+				"salary_component": "Bonus 2",
+				"abbr": "B2",
+				"type": "Earning",
+				"is_tax_applicable": 0,
+			},
+		]
+		make_salary_component(components_data, False, company_list=["_Test Company"])
+
+		payroll_period = frappe.get_last_doc("Payroll Period", filters={"company": "_Test Company"})
+
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		salary_structure = make_salary_structure(
+			"Test Multiple Additional Salaries Structure",
+			"Monthly",
+			employee=emp_id,
+			company="_Test Company",
+			payroll_period=payroll_period,
+		)
+
+		# Create two additional salaries for the same month
+		bonus_date = add_months(payroll_period.start_date, 5)
+
+		frappe.get_doc(
+			{
+				"doctype": "Additional Salary",
+				"employee": emp_id,
+				"company": "_Test Company",
+				"salary_component": "Bonus 1",
+				"amount": 100000,
+				"payroll_date": bonus_date,
+				"currency": erpnext.get_default_currency(),
+			}
+		).insert().submit()
+
+		frappe.get_doc(
+			{
+				"doctype": "Additional Salary",
+				"employee": emp_id,
+				"company": "_Test Company",
+				"salary_component": "Bonus 2",
+				"amount": 200000,
+				"payroll_date": bonus_date,
+				"currency": erpnext.get_default_currency(),
+			}
+		).insert().submit()
+
+		# Generate bonus month salary slip
+		bonus_slip = make_salary_slip(
+			salary_structure.name,
+			employee=emp_id,
+			posting_date=bonus_date,
+		)
+		bonus_slip.insert()
+		bonus_slip.submit()
+
+		bonus_month_non_taxable = bonus_slip.compute_non_taxable_earnings()
+		expected_bonus_amount = 100000 + 200000  # Bonus 1 + Bonus 2
+
+		self.assertEqual(
+			bonus_month_non_taxable, expected_bonus_amount, "Bonus month should include both bonuses"
+		)
+
+		# Generate next month salary slip
+		next_month_date = add_months(bonus_date, 1)
+		next_month_slip = make_salary_slip(
+			salary_structure.name,
+			employee=emp_id,
+			posting_date=next_month_date,
+		)
+		next_month_slip.insert()
+
+		next_month_non_taxable = next_month_slip.compute_non_taxable_earnings()
+
+		# Next month should still show the same total, not doubled
+		self.assertEqual(
+			next_month_non_taxable,
+			expected_bonus_amount,
+			"Next month should not duplicate previous month's additional salaries",
+		)
+
+	def test_ytd_calculation_with_additional_salary_fix(self):
+		emp_id = make_employee("test_ytd_with_fix@salary.com", company="_Test Company")
+		frappe.db.set_value("Employee", emp_id, {"relieving_date": None, "status": "Active"})
+
+		# Create exempt component
+		exempt_component_data = [
+			{
+				"salary_component": "YTD Test Bonus",
+				"abbr": "YTB",
+				"type": "Earning",
+				"is_tax_applicable": 0,
+			}
+		]
+		make_salary_component(exempt_component_data, False, company_list=["_Test Company"])
+
+		payroll_period = frappe.get_last_doc("Payroll Period", filters={"company": "_Test Company"})
+
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		salary_structure = make_salary_structure(
+			"Test YTD with Additional Salary Structure",
+			"Monthly",
+			employee=emp_id,
+			company="_Test Company",
+			payroll_period=payroll_period,
+			test_tax=True,
+		)
+
+		# Create one-time additional salary in month 3
+		month_3_date = add_months(payroll_period.start_date, 2)
+		frappe.get_doc(
+			{
+				"doctype": "Additional Salary",
+				"employee": emp_id,
+				"company": "_Test Company",
+				"salary_component": "YTD Test Bonus",
+				"amount": 100000,
+				"payroll_date": month_3_date,
+				"currency": erpnext.get_default_currency(),
+			}
+		).insert().submit()
+
+		# Generate multiple salary slips
+		slips = []
+		for month_offset in range(4):
+			posting_date = add_months(payroll_period.start_date, month_offset)
+			slip = make_salary_slip(
+				salary_structure.name,
+				employee=emp_id,
+				posting_date=posting_date,
+			)
+			slip.insert()
+			slip.submit()
+			slips.append(slip)
+
+		# Verify YTD progression is correct (no duplication)
+		for idx, slip in enumerate(slips):
+			slip.reload()
+			if idx > 0:
+				ytd_diff = slip.year_to_date - slips[idx - 1].year_to_date
+				# The difference should be this month's net pay, not inflated by duplicate additional salary
+				self.assertAlmostEqual(
+					ytd_diff,
+					slip.net_pay,
+					places=2,
+					msg=f"YTD calculation incorrect for month {idx + 1} - possible additional salary duplication",
+				)
+
 
 class TestSalarySlipSafeEval(FrappeTestCase):
 	def test_safe_eval_for_salary_slip(self):
