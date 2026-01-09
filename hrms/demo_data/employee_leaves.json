@@ -1,0 +1,249 @@
+{
+    "metadata": {
+        "description": "Leave Management Configuration for NovaSoft",
+        "company": "NovaSoft",
+        "generated_date": "2025-01-06",
+        "notes": "Includes custom leave types configuration, default leave types for restore, leave applications, and types to remove"
+      },
+      "custom_leave_types": {
+        "sick_leave": {
+          "leave_type_name": "Sick Leave",
+          "max_leaves_allowed": 5,
+          "applicable_after": 1,
+          "max_continuous_days_allowed": 5,
+          "is_carry_forward": 1,
+          "maximum_carry_forwarded_leaves": 10,
+          "expire_carry_forwarded_leaves_after_days": 730,
+          "allow_encashment": 0,
+          "is_lwp": 0,
+          "is_compensatory": 0,
+          "include_holiday": 0,
+          "description": "Sick leave with carry forward up to 10 days",
+          "include_in_policy": true,
+          "annual_allocation": 5
+        },
+        "vacation_leave": {
+          "leave_type_name": "Vacation Leave",
+          "max_leaves_allowed": 15,
+          "applicable_after": 90,
+          "max_continuous_days_allowed": 15,
+          "is_carry_forward": 0,
+          "allow_encashment": 1,
+          "max_encashable_leaves": 15,
+          "non_encashable_leaves": 0,
+          "earning_component": "Vacation Encashment",
+          "is_lwp": 0,
+          "is_compensatory": 0,
+          "include_holiday": 0,
+          "description": "Annual vacation leave with encashment option",
+          "include_in_policy": true,
+          "annual_allocation": 15
+        },
+        "compensatory_off": {
+            "leave_type_name": "Compensatory Off",
+            "max_leaves_allowed": 0,
+            "applicable_after": 0,
+            "max_continuous_days_allowed": 2,
+            "is_carry_forward": 0,
+            "allow_encashment": 0,
+            "is_lwp": 0,
+            "is_compensatory": 1,
+            "include_holiday": 0,
+            "earning_component": null,
+            "description": "Earned by working on holidays/weekends",
+            "include_in_policy": false,
+            "annual_allocation": 0
+        },
+        "leave_without_pay": {
+          "leave_type_name": "Leave Without Pay",
+          "max_leaves_allowed": 0,
+          "applicable_after": 0,
+          "max_continuous_days_allowed": 30,
+          "is_carry_forward": 0,
+          "allow_encashment": 0,
+          "is_lwp": 1,
+          "is_compensatory": 0,
+          "include_holiday": 0,
+          "earning_component": null,
+          "description": "Unpaid leave, always available",
+          "include_in_policy": false,
+          "annual_allocation": 0
+        }
+      },
+      "default_leave_types": {
+        "Leave Without Pay": {
+          "is_carry_forward": 0,
+          "max_leaves_allowed": 0,
+          "applicable_after": 0,
+          "max_continuous_days_allowed": 0,
+          "is_lwp": 1,
+          "include_holiday": 1,
+          "allow_encashment": 0,
+          "is_compensatory": 0
+        },
+        "Privilege Leave": {
+          "is_carry_forward": 0,
+          "max_leaves_allowed": 0,
+          "applicable_after": 0,
+          "max_continuous_days_allowed": 0,
+          "is_lwp": 0,
+          "include_holiday": 1,
+          "allow_encashment": 0,
+          "is_compensatory": 0
+        },
+        "Sick Leave": {
+          "is_carry_forward": 0,
+          "max_leaves_allowed": 0,
+          "applicable_after": 0,
+          "max_continuous_days_allowed": 0,
+          "is_lwp": 0,
+          "include_holiday": 1,
+          "allow_encashment": 0,
+          "is_compensatory": 0
+        },
+        "Compensatory Off": {
+          "is_carry_forward": 0,
+          "max_leaves_allowed": 0,
+          "applicable_after": 0,
+          "max_continuous_days_allowed": 0,
+          "is_lwp": 0,
+          "include_holiday": 1,
+          "allow_encashment": 0,
+          "is_compensatory": 1
+        },
+        "Casual Leave": {
+          "is_carry_forward": 1,
+          "max_leaves_allowed": 0,
+          "applicable_after": 0,
+          "max_continuous_days_allowed": 3,
+          "is_lwp": 0,
+          "include_holiday": 1,
+          "allow_encashment": 0,
+          "is_compensatory": 0
+        }
+      },
+      "leave_types_to_remove": [
+        "Privilege Leave",
+        "Casual Leave"
+      ],
+      "leave_period": {
+        "from_date": "2025-01-01",
+        "to_date": "2025-12-31",
+        "holiday_list": "US Holidays 2025"
+      },
+      "leave_policy": {
+        "title": "Standard Leave Policy",
+        "sick_leave_allocation": 5,
+        "vacation_leave_allocation": 15
+      },
+    "leave_applications": [
+      {
+        "employee_id": "HR-EMP-00040",
+        "employee_name": "Liam Carter",
+        "leave_type": "Vacation Leave",
+        "from_date": "2025-11-24",
+        "to_date": "2025-11-26",
+        "total_leave_days": 3,
+        "half_day": false,
+        "status": "Approved",
+        "description": "Thanksgiving week (Thu-Fri are holidays)",
+        "leave_approver": "Vera Johansson"
+      },
+      {
+        "employee_id": "HR-EMP-00041",
+        "employee_name": "Bianca Rossi",
+        "leave_type": "Vacation Leave",
+        "from_date": "2025-11-24",
+        "to_date": "2025-11-26",
+        "total_leave_days": 3,
+        "half_day": false,
+        "status": "Approved",
+        "description": "Thanksgiving week (Thu-Fri are holidays)",
+        "leave_approver": "Vera Johansson"
+      },
+      {
+        "employee_id": "HR-EMP-00042",
+        "employee_name": "Tomas Ferreira",
+        "leave_type": "Vacation Leave",
+        "from_date": "2025-11-24",
+        "to_date": "2025-11-26",
+        "total_leave_days": 3,
+        "half_day": false,
+        "status": "Approved",
+        "description": "Thanksgiving week (Thu-Fri are holidays)",
+        "leave_approver": "Vera Johansson"
+      },
+      {
+        "employee_id": "HR-EMP-00043",
+        "employee_name": "Jade Simmons",
+        "leave_type": "Vacation Leave",
+        "from_date": "2025-11-24",
+        "to_date": "2025-11-26",
+        "total_leave_days": 3,
+        "half_day": false,
+        "status": "Approved",
+        "description": "Thanksgiving week (Thu-Fri are holidays)",
+        "leave_approver": "Vera Johansson"
+      },
+      {
+        "employee_id": "HR-EMP-00044",
+        "employee_name": "Olivia Romero",
+        "leave_type": "Vacation Leave",
+        "from_date": "2025-11-24",
+        "to_date": "2025-11-26",
+        "total_leave_days": 3,
+        "half_day": false,
+        "status": "Approved",
+        "description": "Thanksgiving week (Thu-Fri are holidays)",
+        "leave_approver": "Vera Johansson"
+      },
+      {
+        "employee_id": "HR-EMP-00045",
+        "employee_name": "Noah Delgado",
+        "leave_type": "Vacation Leave",
+        "from_date": "2025-11-24",
+        "to_date": "2025-11-26",
+        "total_leave_days": 3,
+        "half_day": false,
+        "status": "Approved",
+        "description": "Thanksgiving week (Thu-Fri are holidays)",
+        "leave_approver": "Vera Johansson"
+      },
+      {
+        "employee_id": "HR-EMP-00046",
+        "employee_name": "Luz Ortega",
+        "leave_type": "Vacation Leave",
+        "from_date": "2025-11-24",
+        "to_date": "2025-11-26",
+        "total_leave_days": 3,
+        "half_day": false,
+        "status": "Approved",
+        "description": "Thanksgiving week (Thu-Fri are holidays)",
+        "leave_approver": "Vera Johansson"
+      },
+      {
+        "employee_id": "HR-EMP-00047",
+        "employee_name": "Hannah Morris",
+        "leave_type": "Vacation Leave",
+        "from_date": "2025-11-24",
+        "to_date": "2025-11-26",
+        "total_leave_days": 3,
+        "half_day": false,
+        "status": "Approved",
+        "description": "Thanksgiving week (Thu-Fri are holidays)",
+        "leave_approver": "Vera Johansson"
+      },
+      {
+        "employee_id": "HR-EMP-00041",
+        "employee_name": "Bianca Rossi",
+        "leave_type": "Sick Leave",
+        "from_date": "2025-12-01",
+        "to_date": "2025-12-02",
+        "total_leave_days": 2,
+        "half_day": false,
+        "status": "Approved",
+        "description": "Illness - flu symptoms",
+        "leave_approver": "Vera Johansson"
+      }
+    ]
+  }

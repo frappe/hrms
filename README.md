@@ -20,7 +20,7 @@ podman login docker.io
 Start or stop the containers:
 ```
 podman-compose up
-podman compose down
+podman-compose down
 ```
 
 The default docker-compose.yml file launches the application at: `localhost:8000`
@@ -29,7 +29,7 @@ The default docker-compose.yml file launches the application at: `localhost:8000
 
 ### Adding Employee Data to an Existing Container Programmatically
 
-Follow the instructions to add a company called `NovaSoft` with 106 employees. For clean testing of task development or code updates we recommend a fresh start, including volumes pruning.
+Follow the instructions to add a company called `NovaSoft` with 107 employees. For clean testing of task development or code updates we recommend a fresh start, including volumes pruning.
 
 ```
 podman-compose down
@@ -68,7 +68,7 @@ SELECT COUNT(*) FROM tabUser;
 SELECT name FROM tabCompany;
 ```
 
-Assuming the container is already running, copy the script and data into the container. In the example below, the container name is `docker_frappe_1` (verify using `podman ps`). The command first creates a parent directory, to then copy a folder with scripts and employee roster file.
+Assuming the container is already running, copy the script and data into the container. In the example below, the container name is `docker_frappe_1` (verify using `podman ps`). Use the following commands to create a parent directory and to copy  scripts, employee roster, and other files.
 
 ```
 podman exec docker_frappe_1 mkdir -p /home/frappe/frappe-bench/apps/hrms/hrms/demo_data
@@ -152,12 +152,12 @@ podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.lo
 Assuming the script has been already copied to the containter, execute it (leave management records for certain employees will be added):
 
 ```
-podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.leaves_management_setup.configure_leave_management --kwargs "{\"company\": \"NovaSoft\", \"attendance_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_attendance.json\"}"'
+podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.leaves_setup.configure_leave_management --kwargs "{\"company\": \"NovaSoft\", \"leaves_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_leaves.json\"}"'
 ```
 
-If you need to clean the attendance data for development purposes use:
+If you need to clean the leaves data for development purposes use:
 ```
-podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.leaves_management_setup.clear_leave_configuration --kwargs "{\"company\": \"NovaSoft\"}"'
+podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.leaves_setup.clear_leave_configuration --kwargs "{\"company\": \"NovaSoft\", \"leaves_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_leaves.json\"}"'
 ```
 
 ## Verifying Data in the App
@@ -169,7 +169,7 @@ Log in using the `Administrator` user, and HR user, and another user to check ac
 ## UI troubleshooting
 
 * The UI displays the setup wizard and does not offer an option to skip it the first time you log in, go trhough it and create a new `test` company.
-* If you are not logged as Administrator, the impersonation feature might be active. Simploy log-off and log-in again.
+* The impersonation feature is usually active the first time you log-in as administrator. Simply log-off and log-in again to deactivate.
 
 ## DB Updates
 
@@ -177,8 +177,7 @@ Log in using the `Administrator` user, and HR user, and another user to check ac
 git checkout blue-develop
 git pull origin blue-develop
 git checkout -b feature/my-db-updates
-# ... make changes ...
-git stash pop # to recover uncommited updates (if needed)
+# ... make changes ... or git stash pop # to recover uncommited updates (if needed)
 git add .
 git commit -m "feat: description"
 git push origin feature/my-db-updates

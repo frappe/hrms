@@ -325,19 +325,17 @@ def clear_attendance_data(company="NovaSoft", attendance_path=None):
                 except Exception as e:
                     print(f"    ⚠ Error deleting attendance {att.name}: {str(e)[:50]}")
             
-            # Delete checkin records
-            checkin_list = frappe.get_all("Employee Checkin", filters={
-                "employee": emp_id,
-                "time": ["like", f"{date_str}%"]
-            })
-            for checkin in checkin_list:
-                try:
-                    frappe.delete_doc("Employee Checkin", checkin.name, force=True)
-                    deleted_checkins += 1
-                except Exception as e:
-                    print(f"    ⚠ Error deleting checkin {checkin.name}: {str(e)[:50]}")
-        
-        print()
+                # Delete checkin records
+                checkin_list = frappe.get_all("Employee Checkin", filters={
+                    "employee": emp_id,
+                    "time": ["between", [f"{date_str} 00:00:00", f"{date_str} 23:59:59"]]
+                })
+                for checkin in checkin_list:
+                    try:
+                        frappe.delete_doc("Employee Checkin", checkin.name, force=True)
+                        deleted_checkins += 1
+                    except Exception as e:
+                        print(f"    ⚠ Error deleting checkin {checkin.name}: {str(e)[:50]}")
     
     frappe.db.commit()
     
