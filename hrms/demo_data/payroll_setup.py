@@ -16,6 +16,33 @@ from frappe.utils import getdate, nowdate, add_days, get_first_day, get_last_day
 from hrms.demo_data.utils import load_data
 
 
+def ensure_fiscal_year(company):
+    """Ensure Fiscal Year 2025 exists for the company (required for salary slips)"""
+    fiscal_year = "2025"
+
+    if not frappe.db.exists("Fiscal Year", fiscal_year):
+        doc = frappe.get_doc({
+            "doctype": "Fiscal Year",
+            "year": fiscal_year,
+            "year_start_date": "2025-01-01",
+            "year_end_date": "2025-12-31",
+            "is_short_year": 0
+        })
+        doc.append("companies", {"company": company})
+        doc.insert(ignore_permissions=True)
+        print(f"  Created Fiscal Year: {fiscal_year}")
+    else:
+        # Check if company is associated
+        existing = frappe.get_doc("Fiscal Year", fiscal_year)
+        company_exists = any(c.company == company for c in existing.companies)
+        if not company_exists:
+            existing.append("companies", {"company": company})
+            existing.save(ignore_permissions=True)
+            print(f"  Associated {company} with Fiscal Year {fiscal_year}")
+        else:
+            print(f"  Fiscal Year {fiscal_year} already exists for {company}")
+
+
 def create_payroll_data(company="NovaSoft", payroll_path=None):
     """
     Create Payroll demo data from JSON file
@@ -50,30 +77,39 @@ def create_payroll_data(company="NovaSoft", payroll_path=None):
         "errors": []
     }
 
+    # Step 0: Ensure Fiscal Year exists for salary slip creation
+    print("\n" + "="*50)
+    print("Step 0: Ensuring Fiscal Year 2025 exists...")
+    print("="*50)
+    ensure_fiscal_year(company)
+    frappe.db.commit()
+
     # Step 1: Create Salary Components
     print("\n" + "="*50)
     print("Step 1: Creating Salary Components...")
     print("="*50)
     create_salary_components(data.get("salary_components", []), counts)
+    frappe.db.commit()
 
     # Step 2: Create Salary Structures
     print("\n" + "="*50)
     print("Step 2: Creating Salary Structures...")
     print("="*50)
     create_salary_structures(data.get("salary_structures", []), company, counts)
+    frappe.db.commit()
 
     # Step 3: Assign Salary Structures to Employees
     print("\n" + "="*50)
     print("Step 3: Assigning Salary Structures to Employees...")
     print("="*50)
     create_structure_assignments(data.get("employee_assignments", []), company, counts)
+    frappe.db.commit()
 
     # Step 4: Create Salary Slips
     print("\n" + "="*50)
     print("Step 4: Creating Salary Slips...")
     print("="*50)
     create_salary_slips(data.get("employee_assignments", []), company, counts)
-
     frappe.db.commit()
 
     # Print summary
@@ -160,6 +196,7 @@ def create_salary_structures(structures, company, counts):
                 })
 
             doc.insert(ignore_permissions=True)
+            doc.submit()  # Submit the structure to make it active
             counts["salary_structures"] += 1
             print(f"  Created: {name}")
 
@@ -326,6 +363,9 @@ def clear_payroll_data(company="NovaSoft", payroll_path=None):
         assignments = frappe.get_all("Salary Structure Assignment", filters={"employee": emp_id})
         for a in assignments:
             try:
+                doc = frappe.get_doc("Salary Structure Assignment", a.name)
+                if doc.docstatus == 1:
+                    doc.cancel()
                 frappe.delete_doc("Salary Structure Assignment", a.name, force=True)
                 deleted["assignments"] += 1
             except Exception as e:
@@ -337,6 +377,9 @@ def clear_payroll_data(company="NovaSoft", payroll_path=None):
         name = struct.get("name")
         if frappe.db.exists("Salary Structure", name):
             try:
+                doc = frappe.get_doc("Salary Structure", name)
+                if doc.docstatus == 1:
+                    doc.cancel()
                 frappe.delete_doc("Salary Structure", name, force=True)
                 deleted["structures"] += 1
             except Exception as e:

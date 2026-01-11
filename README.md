@@ -160,6 +160,25 @@ If you need to clean the attendance data for development purposes use:
 podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.leaves_management_setup.clear_leave_configuration --kwargs "{\"company\": \"NovaSoft\"}"'
 ```
 
+### Adding Payroll Data to Existing Company Programmatically
+
+Creates payroll demo data including: Salary Components (earnings and deductions), Salary Structures, Salary Structure Assignments, and Salary Slips for November 2025.
+
+Note: This script requires attendance data to be set up first, as it uses employees with attendance records.
+
+```
+podman cp hrms/demo_data/payroll_setup.py docker_frappe_1:/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/payroll_setup.py
+
+podman cp hrms/demo_data/employee_payroll.json docker_frappe_1:/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_payroll.json
+
+podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.payroll_setup.create_payroll_data --kwargs "{\"company\": \"NovaSoft\", \"payroll_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_payroll.json\"}"'
+```
+
+To clear payroll data for development purposes:
+```
+podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.payroll_setup.clear_payroll_data --kwargs "{\"company\": \"NovaSoft\", \"payroll_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_payroll.json\"}"'
+```
+
 ## Verifying Data in the App
 
 Navigate to `http://localhost:8000/app`, select the `NovaSoft` company, and confirm that the employees and related records have been created.
