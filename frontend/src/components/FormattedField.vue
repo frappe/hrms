@@ -1,5 +1,5 @@
 <template>
-	<div v-if="!props.value" class="text-gray-600 text-base">-</div>
+	<div v-if="!props.value" class="text-theme-content-box-text-secondary text-base">-</div>
 
 	<Badge
 		v-else-if="props.fieldtype === 'Select'"
@@ -19,7 +19,7 @@
 		label=""
 		v-model="props.value"
 		:disabled="true"
-		class="rounded-sm text-gray-800"
+		class="rounded-sm text-theme-input-text"
 	/>
 
 	<div

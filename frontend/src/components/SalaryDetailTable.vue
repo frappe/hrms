@@ -10,7 +10,7 @@
 	<!-- Table -->
 	<div
 		v-if="items"
-		class="flex flex-col bg-white mt-5 rounded border overflow-auto"
+		class="flex flex-col bg-theme-content-box-bg mt-5 rounded border overflow-auto"
 	>
 		<div
 			class="flex flex-row p-3.5 items-center justify-between border-b"

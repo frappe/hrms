@@ -35,7 +35,7 @@
 							<div class="text-base font-normal text-gray-800">
 								{{ __(item.expense_type) }}
 							</div>
-							<div class="text-xs font-normal text-gray-500">
+							<div class="text-xs font-normal text-theme-content-box-text-secondary">
 								<span>
 									{{
 										__("{0}: {1}", [
@@ -55,7 +55,7 @@
 						<span class="text-gray-700 font-normal rounded text-base">
 							{{ formatCurrency(item.amount, currency) }}
 						</span>
-						<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
+						<FeatherIcon name="chevron-right" class="h-5 w-5 text-theme-content-box-text" />
 					</div>
 				</div>
 			</div>
@@ -67,10 +67,10 @@
 		<template #actionSheet>
 			<!-- Add Expense Action Sheet -->
 			<div
-				class="bg-white w-full flex flex-col items-center justify-center pb-5"
+				class="bg-theme-content-box-bg w-full flex flex-col items-center justify-center pb-5"
 			>
 				<div class="w-full pt-8 pb-5 border-b text-center">
-					<span class="text-gray-900 font-bold text-lg">
+					<span class="text-theme-page-heading font-bold text-lg">
 						{{ modalTitle }}
 					</span>
 				</div>

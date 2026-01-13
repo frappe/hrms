@@ -5,12 +5,12 @@
 		:employeeName="props.doc.employee_name"
 		>
 		<template #left>
-			<AttendanceIcon class="h-5 w-5 text-gray-500" />
+			<AttendanceIcon class="h-5 w-5 text-theme-content-box-text" />
 			<div class="flex flex-col items-start gap-1.5">
-				<div class="text-base font-normal text-gray-800">
+				<div class="text-base font-normal text-theme-content-box-text">
 					{{ props.doc.reason }}
 				</div>
-				<div class="text-xs font-normal text-gray-500">
+				<div class="text-xs font-normal text-theme-content-box-text">
 					<span>{{ props.doc.attendance_dates || getDates(props.doc) }}</span>
 					<span v-if="props.doc.to_date">
 						<span class="whitespace-pre"> &middot; </span>
@@ -21,7 +21,7 @@
 		</template>
 		<template #right>
 			<Badge variant="outline" :theme="colorMap[status]" :label="__(status)" size="md" />
-			<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
+			<FeatherIcon name="chevron-right" class="h-5 w-5 text-theme-content-box-text" />
 		</template>
 	</ListItem>
 </template>

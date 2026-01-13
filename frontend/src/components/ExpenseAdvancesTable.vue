@@ -31,7 +31,7 @@
 							{{ advance.purpose || advance.employee_advance }}
 						</div>
 						<div class="flex flex-row items-center gap-3 justify-between">
-							<div class="text-xs font-normal text-gray-500">
+							<div class="text-xs font-normal text-theme-content-box-text-secondary">
 								{{ __("{0}: {1}", [
 									__("Unclaimed Amount"),
 									formatCurrency(advance.unclaimed_amount, currency),

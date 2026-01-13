@@ -1,12 +1,12 @@
 <template>
 	<div class="flex flex-col h-full w-full" v-if="isFormReady">
-		<div class="w-full h-full bg-white sm:w-96 flex flex-col">
+		<div class="w-full h-full bg-theme-body-bg sm:w-96 flex flex-col">
 			<header
-				class="flex flex-row bg-white shadow-sm py-4 px-3 items-center sticky top-0 z-[1000]"
+				class="flex flex-row bg-theme-content-box-bg shadow-sm py-4 px-3 items-center sticky top-0 z-[1000]"
 			>
 				<Button
 					variant="ghost"
-					class="!pl-0 hover:bg-white"
+					class="!pl-0 hover:bg-theme-primary-button-hover"
 					@click="router.back()"
 				>
 					<FeatherIcon name="chevron-left" class="h-5 w-5" />
@@ -16,7 +16,7 @@
 					class="flex flex-row items-center gap-2 overflow-hidden grow"
 				>
 					<h2
-						class="text-xl font-semibold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis"
+						class="text-xl font-semibold text-theme-page-heading whitespace-nowrap overflow-hidden text-ellipsis"
 					>
 						{{ __(props.doctype) }}
 					</h2>
@@ -54,17 +54,17 @@
 						}"
 					/>
 				</div>
-				<h2 v-else class="text-2xl font-semibold text-gray-900">
+				<h2 v-else class="text-2xl font-semibold text-theme-page-heading">
 					{{ __('New {0}', [__(doctype)], props.doctype) }}
 				</h2>
 			</header>
 
 			<!-- Form -->
-			<div class="bg-white grow overflow-y-auto">
+			<div class="bg-theme-body-bg grow overflow-y-auto">
 				<!-- Tabs -->
 				<template v-if="tabbedView">
 					<div
-						class="px-4 sticky top-0 z-[100] bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
+						class="px-4 sticky top-0 z-[100] bg-theme-body-bg text-sm font-medium text-center text-theme-content-box-text-secondary border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
 					>
 						<ul class="flex -mb-px overflow-auto hide-scrollbar">
 							<li class="mr-2 whitespace-nowrap" v-for="tab in tabs">
@@ -74,7 +74,7 @@
 									:class="[
 										activeTab === tab.name
 											? '!text-gray-800 !border-gray-800'
-											: 'hover:text-gray-600 hover:border-gray-300',
+											: 'hover:text-theme-content-box-text-secondary hover:border-gray-300',
 									]"
 								>
 									{{ __(tab.name, null, props.doctype) }}
@@ -176,7 +176,7 @@
 			<!-- custom form button eg: Download button in salary slips -->
 			<div
 				v-if="!showFormButton"
-				class="px-4 pt-4 pb-4 standalone:pb-safe-bottom sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg"
+				class="px-4 pt-4 pb-4 standalone:pb-safe-bottom sm:w-96 bg-theme-content-box-bg sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg"
 			>
 				<slot name="formButton"></slot>
 			</div>
@@ -192,7 +192,7 @@
 			<!-- save/submit/cancel -->
 			<div
 				v-else-if="isFormDirty || (!workflow?.hasWorkflow && formButton)"
-				class="px-4 pt-4 pb-4 standalone:pb-safe-bottom sm:w-96 bg-white sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg"
+				class="px-4 pt-4 pb-4 standalone:pb-safe-bottom sm:w-96 bg-theme-content-box-bg sticky bottom-0 w-full drop-shadow-xl z-40 border-t rounded-t-lg"
 			>
 				<ErrorMessage
 					class="mb-2"
@@ -221,7 +221,7 @@
 	<!-- Confirmation Dialogs -->
 	<Dialog v-model="showDeleteDialog">
 		<template #body-title>
-			<h2 class="text-xl font-bold">{{ __("Delete {0}", [__(props.doctype)]) }}</h2>
+			<h2 class="text-xl font-bold text-theme-page-heading">{{ __("Delete {0}", [__(props.doctype)]) }}</h2>
 		</template>
 		<template #body-content>
 			<p>
@@ -253,7 +253,7 @@
 
 	<Dialog v-model="showSubmitDialog">
 		<template #body-title>
-			<h2 class="text-xl font-bold">{{ __("Confirm") }} </h2>
+			<h2 class="text-xl font-bold text-gray-900">{{ __("Confirm") }} </h2>
 		</template>
 		<template #body-content>
 			<p>
@@ -284,7 +284,7 @@
 
 	<Dialog v-model="showCancelDialog">
 		<template #body-title>
-			<h2 class="text-xl font-bold">{{ __("Confirm") }} </h2>
+			<h2 class="text-xl font-bold text-gray-900">{{ __("Confirm") }} </h2>
 		</template>
 		<template #body-content>
 			<p>

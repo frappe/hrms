@@ -1,12 +1,86 @@
 @import "frappe-ui/src/style.css";
 
+/* Service Portal Theme Variables */
+:root {
+	--sp-primary: #000000;
+	--sp-secondary: #6c757d;
+	--sp-text: #212529;
+	--sp-header-bg: #f8f9fa;
+	--sp-button-bg: #000000;
+	--sp-link: #000000;
+}
+
+/* Apply theme variables to base elements and Frappe UI components */
+@layer base {
+	body {
+		color: var(--sp-content-box-text);
+		/* background-color: var(--sp-body-bg); */
+	}
+
+	a {
+		color: var(--sp-link);
+	}
+
+	a:hover {
+		color: var(--sp-primary);
+		opacity: 0.8;
+	}
+}
+
+/* Apply theme to component classes */
+@layer components {
+
+	/* Buttons */
+	.btn-primary,
+	.button-primary,
+	button[type="submit"],
+	.button--primary {
+		background-color: var(--sp-button-bg) !important;
+		border-color: var(--sp-button-bg) !important;
+	}
+
+	/* Headers and Navigation */
+	.navbar,
+	.header,
+	.app-header,
+	ion-header,
+	ion-toolbar {
+		background-color: var(--sp-header-bg) !important;
+	}
+
+	/* Ionic components */
+	ion-button[color="primary"] {
+		--background: var(--sp-button-bg);
+		--background-activated: var(--sp-primary);
+		--background-focused: var(--sp-primary);
+		--background-hover: var(--sp-primary);
+	}
+
+	/* Tabs and active states */
+	.tab-active,
+	.active,
+	[aria-selected="true"] {
+		color: var(--sp-primary) !important;
+		border-color: var(--sp-primary) !important;
+	}
+
+	/* Form controls with focus */
+	input:focus,
+	textarea:focus,
+	select:focus {
+		border-color: var(--sp-primary) !important;
+		outline-color: var(--sp-primary) !important;
+	}
+}
+
 ion-modal {
 	--height: auto;
 }
 
 input:disabled {
 	--webkit-text-fill-color: var(--tw-text-color);
-	opacity: 0.9; /* required on iOS */
+	opacity: 0.9;
+	/* required on iOS */
 	color: var(--tw-text-color);
 }
 
@@ -25,6 +99,8 @@ body {
 
 /* For IE, Edge and Firefox */
 .hide-scrollbar {
-	-ms-overflow-style: none; /* IE and Edge */
-	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none;
+	/* IE and Edge */
+	scrollbar-width: none;
+	/* Firefox */
 }

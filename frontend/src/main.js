@@ -3,15 +3,9 @@ import App from "./App.vue"
 import router from "./router"
 import { initSocket } from "./socket"
 
-import {
-	Button,
-	Input,
-	setConfig,
-	frappeRequest,
-	resourcesPlugin,
-	FormControl,
-} from "frappe-ui"
+import { Button, Input, setConfig, frappeRequest, resourcesPlugin, FormControl } from "frappe-ui"
 import { translationsPlugin } from "./plugins/translationsPlugin.js"
+import createThemePlugin from "./plugins/theme_plugin.js"
 import EmptyState from "@/components/EmptyState.vue"
 
 import { IonicVue } from "@ionic/vue"
@@ -39,6 +33,7 @@ const socket = initSocket()
 setConfig("resourceFetcher", frappeRequest)
 app.use(resourcesPlugin)
 app.use(translationsPlugin)
+app.use(createThemePlugin())
 
 app.component("Button", Button)
 app.component("Input", Input)
@@ -67,9 +62,7 @@ const registerServiceWorker = async () => {
 
 		try {
 			config = await window.frappePushNotification.fetchWebConfig()
-			serviceWorkerURL = `${serviceWorkerURL}?config=${encodeURIComponent(
-				JSON.stringify(config)
-			)}`
+			serviceWorkerURL = `${serviceWorkerURL}?config=${encodeURIComponent(JSON.stringify(config))}`
 		} catch (err) {
 			console.error("Failed to fetch FCM config", err)
 		}
@@ -103,7 +96,7 @@ router.isReady().then(async () => {
 		})
 	}
 
-	await translationsPlugin.isReady();
+	await translationsPlugin.isReady()
 	registerServiceWorker()
 	app.mount("#app")
 })
@@ -130,10 +123,7 @@ router.beforeEach(async (to, _, next) => {
 		await employeeResource.promise
 		// user should be an employee to access the app
 		// since all views are employee specific
-		if (
-			!employeeResource?.data ||
-			employeeResource?.data?.user_id !== userResource.data.name
-		) {
+		if (!employeeResource?.data || employeeResource?.data?.user_id !== userResource.data.name) {
 			next({ name: "InvalidEmployee" })
 		} else if (to.name === "Login") {
 			next({ name: "Home" })

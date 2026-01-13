@@ -6,8 +6,8 @@
 				<div
 					class="flex flex-col w-full border shadow-sm items-center rounded p-3 gap-2"
 				>
-					<FeatherIcon name="upload" class="h-6 w-6 text-gray-700" />
-					<span class="block text-sm font-normal leading-5 text-gray-700">
+					<FeatherIcon name="upload" class="h-6 w-6 text-theme-content-box-text" />
+					<span class="block text-sm font-normal leading-5 text-theme-content-box-text">
 						{{ __("Upload images or documents") }}
 					</span>
 				</div>
@@ -46,7 +46,7 @@
 
 			<Dialog v-model="showDialog">
 				<template #body-title>
-					<h2 class="text-lg font-bold">{{ __("Delete Attachment") }} </h2>
+					<h2 class="text-lg font-bold text-theme-page-heading">{{ __("Delete Attachment") }} </h2>
 				</template>
 				<template #body-content>
 					<p>

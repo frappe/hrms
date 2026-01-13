@@ -1,7 +1,7 @@
 <template>
 	<BaseLayout>
 		<template #body>
-			<div class="flex flex-col items-center my-7 p-4 gap-7">
+			<div class="flex flex-col bg-theme-body-bg items-center my-7 p-4 gap-7">
 				<CheckInPanel />
 				<QuickLinks :items="quickLinks" :title="__('Quick Links')" />
 				<RequestPanel />

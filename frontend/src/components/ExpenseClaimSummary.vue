@@ -1,14 +1,14 @@
 <template>
 	<div class="flex flex-col w-full gap-5" v-if="summary.data">
-		<div class="text-lg text-gray-800 font-bold">{{ __("Expense Claim Summary") }}</div>
+		<div class="text-lg text-theme-page-heading font-bold">{{ __("Expense Claim Summary") }}</div>
 		<div
 			class="flex flex-col gap-4 bg-white py-3 px-3.5 rounded-lg border-none"
 		>
 			<div class="flex flex-col gap-1.5">
-				<span class="text-gray-600 text-base font-medium leading-5">
+				<span class="text-theme-content-box-text-secondary text-base font-medium leading-5">
 					{{ __("Total Claimed Amount") }}
 				</span>
-				<span class="text-gray-800 text-lg font-bold leading-6">
+				<span class="text-theme-page-heading text-lg font-bold leading-6">
 					{{ formatCurrency(total_claimed_amount, company_currency) }}
 				</span>
 			</div>
@@ -16,7 +16,7 @@
 			<div class="flex flex-row justify-between">
 				<div class="flex flex-col gap-1">
 					<div class="flex flex-row gap-1 items-center">
-						<span class="text-gray-600 text-sm font-medium leading-5">
+						<span class="text-theme-content-box-text-secondary text-sm font-medium leading-5">
 							{{ __("Pending") }}
 						</span>
 						<FeatherIcon name="alert-circle" class="text-yellow-500 h-3 w-3" />
@@ -32,7 +32,7 @@
 				</div>
 				<div class="flex flex-col gap-1">
 					<div class="flex flex-row gap-1 items-center">
-						<span class="text-gray-600 text-sm font-medium leading-5">
+						<span class="text-theme-content-box-text-secondary text-sm font-medium leading-5">
 							{{ __("Approved") }}
 						</span>
 						<FeatherIcon name="check-circle" class="text-green-500 h-3 w-3" />
@@ -49,7 +49,7 @@
 
 				<div class="flex flex-col gap-1">
 					<div class="flex flex-row gap-1 items-center">
-						<span class="text-gray-600 text-sm font-medium leading-5">
+						<span class="text-theme-content-box-text-secondary text-sm font-medium leading-5">
 							{{ __("Rejected") }}
 						</span>
 						<FeatherIcon name="x-circle" class="text-red-500 h-3 w-3" />

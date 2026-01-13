@@ -2,9 +2,9 @@
 	<ion-page>
 		<ion-content class="ion-padding">
 			<div class="flex flex-col h-screen w-screen">
-				<div class="w-full sm:w-96">
+				<div class="w-full bg-theme-body-bg sm:w-96">
 					<header
-						class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b sticky top-0 z-10"
+						class="flex flex-row bg-theme-content-box-bg shadow-sm py-4 px-3 items-center justify-between sticky top-0 z-10"
 					>
 						<div class="flex flex-row items-center">
 							<Button
@@ -14,7 +14,7 @@
 							>
 								<FeatherIcon name="chevron-left" class="h-5 w-5" />
 							</Button>
-							<h2 class="text-xl font-semibold text-gray-900">{{ __("Profile") }}</h2>
+							<h2 class="text-xl font-semibold text-theme-page-heading">{{ __("Profile") }}</h2>
 						</div>
 					</header>
 
@@ -28,25 +28,25 @@
 						/>
 						<div
 							v-else
-							class="flex items-center justify-center bg-gray-200 uppercase text-gray-600 h-24 w-24 rounded-full object-cover"
+							class="flex items-center justify-center bg-gray-200 uppercase text-theme-content-box-text-secondary h-24 w-24 rounded-full object-cover"
 						>
 							{{ user.data.first_name[0] }}
 						</div>
 
 						<div class="flex flex-col gap-1.5 items-center mt-2 mb-5">
-							<span v-if="employee" class="text-lg font-bold text-gray-900">{{
+							<span v-if="employee" class="text-lg font-bold text-theme-page-heading">{{
 								employee?.data?.employee_name
 							}}</span>
-							<span v-if="employee" class="font-normal text-sm text-gray-500">{{
+							<span v-if="employee" class="font-normal text-sm text-theme-content-box-text-secondary">{{
 								employee?.data?.designation
 							}}</span>
 						</div>
 
 						<!-- Profile Links -->
 						<div class="flex flex-col gap-5 my-4 w-full">
-							<div class="flex flex-col bg-white rounded">
+							<div class="flex flex-col bg-theme-content-box-bg rounded">
 								<div
-									class="flex flex-row cursor-pointer flex-start p-4 items-center justify-between border-b"
+									class="flex flex-row cursor-pointer flex-start p-4 items-center justify-between"
 									v-for="link in profileLinks"
 									:key="link.title"
 									@click="openInfoModal(link)"
@@ -54,15 +54,15 @@
 									<div class="flex flex-row items-center gap-3 grow">
 										<FeatherIcon
 											:name="link.icon"
-											class="h-5 w-5 text-gray-500"
+											class="h-5 w-5 text-theme-content-box-text-secondary"
 										/>
-										<div class="text-base font-normal text-gray-800">
+										<div class="text-base font-normal text-theme-content-box-text">
 											{{ link.title }}
 										</div>
 									</div>
 									<FeatherIcon
 										name="chevron-right"
-										class="h-5 w-5 text-gray-500"
+										class="h-5 w-5 text-theme-content-box-text-secondary"
 									/>
 								</div>
 							</div>
@@ -73,7 +73,7 @@
 							class="flex flex-col gap-5 my-4 w-full"
 							v-if="allowPushNotifications"
 						>
-							<div class="flex flex-col bg-white rounded">
+							<div class="flex flex-col bg-theme-content-box-bg rounded">
 								<router-link
 									:to="{ name: 'Settings' }"
 									class="flex flex-row cursor-pointer flex-start p-4 items-center justify-between border-b"
@@ -81,15 +81,15 @@
 									<div class="flex flex-row items-center gap-3 grow">
 										<FeatherIcon
 											name="settings"
-											class="h-5 w-5 text-gray-500"
+											class="h-5 w-5 text-theme-content-box-text-secondary"
 										/>
-										<div class="text-base font-normal text-gray-800">
+										<div class="text-base font-normal text-theme-content-box-text">
 											{{ __("Settings") }}
 										</div>
 									</div>
 									<FeatherIcon
 										name="chevron-right"
-										class="h-5 w-5 text-gray-500"
+										class="h-5 w-5 text-theme-content-box-text-secondary"
 									/>
 								</router-link>
 							</div>

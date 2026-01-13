@@ -32,6 +32,7 @@
 			:filters="props.linkFilters"
 			:disabled="isReadOnly"
 			@update:modelValue="(v) => emit('update:modelValue', v)"
+			class="rounded-sm text-theme-input-text bg-theme-input-bg"
 		/>
 
 		<!-- Text -->
@@ -44,7 +45,7 @@
 			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
-			class="h-15"
+			class="h-15 bg-theme-input-bg text-theme-input-text"
 		/>
 
 		<!-- Check -->
@@ -57,7 +58,7 @@
 			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
-			class="rounded-sm text-gray-800"
+			class="rounded-sm"
 		/>
 
 		<!-- Data field -->
@@ -69,6 +70,7 @@
 			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
+			class="rounded-sm text-theme-input-text bg-theme-input-bg"
 		/>
 
 		<!-- Read only currency field -->
@@ -80,6 +82,7 @@
 			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
+			class="rounded-sm text-theme-input-text bg-theme-input-bg"
 		/>
 
 		<!-- Float/Int field -->
@@ -91,6 +94,7 @@
 			@change="(v) => emit('change', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
+			class="rounded-sm text-theme-input-text bg-theme-input-bg"
 		/>
 
 		<!-- Section Break -->
@@ -121,7 +125,8 @@
 			:disabled="isReadOnly"
 			:min="props.minDate"
 			:max="props.maxDate"
-		/>
+			class="rounded-sm text-theme-input-text bg-theme-input-bg"
+					/>
 
 		<!-- Time -->
 		<!-- Datetime -->
@@ -133,7 +138,8 @@
 			@update:modelValue="(v) => emit('update:modelValue', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
-		/>
+			class="rounded-sm text-theme-input-text bg-theme-input-bg"
+			/>
 
 		<ErrorMessage :message="props.errorMessage" />
 	</div>

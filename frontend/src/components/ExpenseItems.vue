@@ -2,7 +2,7 @@
 	<!-- Table -->
 	<div
 		v-if="doc?.expenses"
-		class="flex flex-col bg-white mt-5 rounded border overflow-auto"
+		class="flex flex-col bg-theme-content-box-bg mt-5 rounded border overflow-auto"
 	>
 		<div
 			class="flex flex-row p-3.5 items-center justify-between cursor-pointer"
@@ -13,10 +13,10 @@
 				<div class="flex flex-row items-center justify-between">
 					<div class="flex flex-row items-start gap-3 grow">
 						<div class="flex flex-col items-start gap-1.5">
-							<div class="text-base font-normal text-gray-800">
+							<div class="text-base font-normal text-theme-content-box-text">
 								{{ __(item.expense_type) }}
 							</div>
-							<div class="text-xs font-normal text-gray-500">
+							<div class="text-xs font-normal text-theme-content-box-text-secondary">
 								<span>
 									{{
 										__("{0}: {1}", [

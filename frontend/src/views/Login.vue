@@ -1,10 +1,10 @@
 <template>
 	<ion-page>
 		<ion-content class="ion-padding">
-			<div class="flex h-screen w-screen flex-col justify-center bg-white">
+			<div class="flex h-screen w-screen flex-col justify-center bg-theme-login-page-bg">
 				<div class="flex flex-col mx-auto gap-3 items-center">
 					<FrappeHRLogo class="h-8 w-8" />
-					<div class="text-3xl font-semibold text-gray-900 text-center">
+					<div class="text-3xl font-semibold text-theme-page-heading text-center">
 						{{ __("Login to Frappe HR") }}
 					</div>
 				</div>
@@ -36,7 +36,7 @@
 					</form>
 
 					<template v-if="authProviders.data?.length">
-						<div class="text-center text-sm text-gray-600 my-4">or</div>
+						<div class="text-center text-sm text-theme-content-box-text-secondary my-4">or</div>
 						<div class="space-y-4">
 							<a
 								v-for="provider in authProviders.data"
@@ -74,7 +74,7 @@
 
 			<Dialog v-model="otp.showDialog">
 				<template #body-title>
-					<h2 class="text-lg font-bold">{{ __("OTP Verification") }}</h2>
+					<h2 class="text-lg font-bold text-theme-page-heading">{{ __("OTP Verification") }}</h2>
 				</template>
 				<template #body-content>
 					<p class="mb-4" v-if="otp.verification.prompt">

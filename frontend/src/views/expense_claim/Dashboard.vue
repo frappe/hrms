@@ -1,7 +1,7 @@
 <template>
 	<BaseLayout :pageTitle="__('Expense Claims')">
 		<template #body>
-			<div class="flex flex-col mt-7 mb-7 p-4 gap-7">
+			<div class="flex flex-col bg-theme-body-bg mt-7 mb-7 p-4 gap-7">
 				<ExpenseClaimSummary />
 
 				<div class="w-full">
@@ -12,7 +12,7 @@
 						<Button
 							@click="navigate"
 							variant="solid"
-							class="w-full py-5 text-base"
+							class="w-full py-5 bg-theme-primary-button hover:bg-theme-primary-button-hover text-theme-primary-button-text hover:text-theme-primary-button-text-hover text-base"
 						>
 							{{ __("Claim an Expense") }}
 						</Button>
@@ -20,7 +20,7 @@
 				</div>
 
 				<div>
-					<div class="text-lg text-gray-800 font-bold">{{ __("Recent Expenses") }}</div>
+					<div class="text-lg text-theme-page-heading font-bold">{{ __("Recent Expenses") }}</div>
 					<RequestList
 						:component="markRaw(ExpenseClaimItem)"
 						:items="myClaims.data"
@@ -31,7 +31,7 @@
 
 				<div>
 					<div class="flex flex-row justify-between items-center">
-						<div class="text-lg text-gray-800 font-bold">
+						<div class="text-lg text-theme-page-heading font-bold">
 							{{ __("Employee Advance Balance") }}
 						</div>
 						<router-link

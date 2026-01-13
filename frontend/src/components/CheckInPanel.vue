@@ -1,11 +1,11 @@
 <template>
-	<div class="flex flex-col bg-white rounded w-full py-6 px-4 border-none">
-		<h2 class="text-lg font-bold text-gray-900">
+	<div class="flex flex-col bg-theme-content-box-bg rounded w-full py-6 px-4 border-none">
+		<h2 class="text-lg font-bold text-theme-page-heading">
 			{{ __("Hey, {0} 👋", [employee?.data?.first_name]) }}
 		</h2>
 
 		<template v-if="settings.data?.allow_employee_checkin_from_mobile_app">
-			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
+			<div class="font-medium text-sm text-theme-content-box-text-secondary mt-1.5" v-if="lastLog">
 				<span>{{ __("Last {0} was at {1}", [__(lastLogType), formatTimestamp(lastLog.time)]) }}</span>
 				<span class="whitespace-pre"> &middot; </span>
 				<router-link :to="{ name: 'EmployeeCheckinListView' }" v-slot="{ navigate }">
@@ -13,7 +13,7 @@
 				</router-link>
 			</div>
 			<Button
-				class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
+				class="mt-4 mb-1 drop-shadow-sm py-5 text-base bg-theme-secondary-button hover:bg-theme-secondary-button-hover text-theme-secondary-button-text hover:text-theme-secondary-button-text-hover"
 				id="open-checkin-modal"
 				@click="handleEmployeeCheckin"
 			>
@@ -27,7 +27,7 @@
 			</Button>
 		</template>
 
-		<div v-else class="font-medium text-sm text-gray-500 mt-1.5">
+		<div v-else class="font-medium text-sm text-theme-content-box-text-secondary mt-1.5">
 			{{ dayjs().format("ddd, D MMMM, YYYY") }}
 		</div>
 	</div>
@@ -41,16 +41,16 @@
 	>
 		<div class="h-120 w-full flex flex-col items-center justify-center gap-5 p-4 mb-5">
 			<div class="flex flex-col gap-1.5 mt-2 items-center justify-center">
-				<div class="font-bold text-xl">
+				<div class="font-bold text-xl text-theme-page-heading">
 					{{ dayjs(checkinTimestamp).format("hh:mm:ss a") }}
 				</div>
-				<div class="font-medium text-gray-500 text-sm">
+				<div class="font-medium text-theme-content-box-text-secondary text-sm">
 					{{ dayjs().format("D MMM, YYYY") }}
 				</div>
 			</div>
 
 			<template v-if="settings.data?.allow_geolocation_tracking">
-				<span v-if="locationStatus" class="font-medium text-gray-500 text-sm">
+				<span v-if="locationStatus" class="font-medium text-theme-content-box-text-secondary text-sm">
 					{{ locationStatus }}
 				</span>
 

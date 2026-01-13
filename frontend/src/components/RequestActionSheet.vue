@@ -1,19 +1,19 @@
 <template>
 	<div
 		v-if="document?.doc"
-		class="bg-white w-full flex flex-col items-center justify-center pb-5 max-h-[calc(100vh-5rem)]"
+		class="bg-theme-content-box-bg w-full flex flex-col items-center justify-center pb-5 max-h-[calc(100vh-5rem)]"
 	>
 		<!-- Header -->
 		<div
 			class="w-full flex flex-row gap-2 pt-8 pb-5 border-b justify-center items-center sticky top-0 z-[100]"
 		>
-			<span class="text-gray-900 font-bold text-lg text-center">
+			<span class="text-theme-page-heading font-bold text-lg text-center">
 				{{ __(document?.doctype) }}
 			</span>
 			<FeatherIcon
 				v-if="props.showOpenForm"
 				name="external-link"
-				class="h-4 w-4 text-gray-500 cursor-pointer"
+				class="h-4 w-4 text-theme-content-box-text-secondary cursor-pointer"
 				@click="openFormView"
 			/>
 		</div>
@@ -33,7 +33,7 @@
 						'flex w-full',
 					]"
 				>
-					<div class="text-gray-600 text-base">{{ __(field.label, null, props.modelValue?.doctype) }}</div>
+					<div class="text-theme-content-box-text-secondary text-base">{{ __(field.label, null, props.modelValue?.doctype) }}</div>
 					<component
 						v-if="field.fieldtype === 'Table'"
 						:is="field.component"
@@ -52,7 +52,7 @@
 					class="flex flex-col gap-2 w-full"
 					v-if="attachedFiles?.data?.length"
 				>
-					<div class="text-gray-600 text-base">{{ __('Attachments') }}</div>
+					<div class="text-theme-content-box-text-secondary text-base">{{ __('Attachments') }}</div>
 					<ul class="w-full flex flex-col items-center gap-2">
 						<li
 							class="bg-gray-100 rounded p-2 w-full"

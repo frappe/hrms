@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col bg-white rounded mt-5 overflow-auto" v-if="props.items?.length">
+	<div class="flex flex-col bg-theme-content-box-bg rounded mt-5 overflow-auto" v-if="props.items?.length">
 		<div
 			class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
 			v-for="link in props.items"
@@ -22,7 +22,7 @@
 			<Button
 				variant="ghost"
 				@click="navigate"
-				class="w-full !text-gray-600 py-6 text-sm border-none bg-white hover:bg-white"
+				class="w-full !text-theme-secondary-button-text !bg-theme-secondary-button hover:bg-theme-secondary-button-hover hover:text-theme-secondary-button-text-hover py-6 text-sm border-none"
 			>
 				{{ __("View List") }}
 			</Button>

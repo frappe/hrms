@@ -12,13 +12,13 @@
 						<Button
 							@click="navigate"
 							variant="solid"
-							class="py-5 text-base w-full"
+							class="py-5 text-base bg-theme-primary-button hover:bg-theme-primary-button-hover text-theme-primary-button-text hover:text-theme-primary-button-text-hover w-full"
 						>
 							{{ __("Request a Leave") }}
 						</Button>
 					</router-link>
 					<div>
-						<div class="text-lg text-gray-800 font-bold">{{ __('Recent Leaves') }} </div>
+						<div class="text-lg text-theme-page-heading font-bold">{{ __('Recent Leaves') }} </div>
 						<RequestList
 							:component="markRaw(LeaveRequestItem)"
 							:items="myLeaves.data"

@@ -2,10 +2,10 @@
 	<ion-page>
 		<ion-header class="ion-no-border">
 			<div class="w-full sm:w-96">
-				<div class="flex flex-col bg-white shadow-sm p-4">
+				<div class="flex flex-col bg-theme-content-box-bg shadow-sm p-4">
 					<div class="flex flex-row justify-between items-center">
 						<div class="flex flex-row items-center gap-2">
-							<h2 class="text-xl font-bold text-gray-900">
+							<h2 class="text-xl font-bold text-theme-page-heading">
 								{{ props.pageTitle || __("Frappe HR") }}
 							</h2>
 						</div>
@@ -41,7 +41,7 @@
 		</ion-header>
 
 		<ion-content class="ion-no-padding">
-			<div class="flex flex-col h-screen w-screen sm:w-96">
+			<div class="flex flex-col bg-theme-body-bg h-screen w-screen sm:w-96">
 				<slot name="body"></slot>
 			</div>
 		</ion-content>

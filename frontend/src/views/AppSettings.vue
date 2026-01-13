@@ -4,7 +4,7 @@
 			<div class="flex flex-col h-screen w-screen">
 				<div class="w-full sm:w-96">
 					<header
-						class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b sticky top-0 z-10"
+						class="flex flex-row bg-theme-header-bg shadow-sm py-4 px-3 items-center justify-between border-b sticky top-0 z-10"
 					>
 						<div class="flex flex-row items-center">
 							<Button
@@ -14,12 +14,12 @@
 							>
 								<FeatherIcon name="chevron-left" class="h-5 w-5" />
 							</Button>
-							<h2 class="text-xl font-semibold text-gray-900">{{ __("Settings") }} </h2>
+							<h2 class="text-xl font-semibold text-theme-page-heading">{{ __("Settings") }} </h2>
 						</div>
 					</header>
 
 					<div class="flex flex-col gap-5 my-4 w-full p-4">
-						<div class="flex flex-col bg-white rounded">
+						<div class="flex flex-col bg-theme-content-box-bg rounded">
 							<Switch
 								size="md"
 								:label="__('Enable Push Notifications')"
@@ -36,7 +36,7 @@
 							class="flex -mt-2 items-center justify-center gap-2"
 						>
 							<LoadingIndicator class="w-3 h-3 text-gray-800" />
-							<span class="text-gray-900 text-sm">
+							<span class="text-theme-content-box-text text-sm">
 								{{ pushNotificationState ? __("Disabling Push Notifications...") : __("Enabling Push Notifications...") }}
 							</span>
 						</div>

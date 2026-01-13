@@ -19,7 +19,7 @@
 
 		<div
 			v-if="expenseClaim.taxes?.length"
-			class="flex flex-col bg-white mt-5 rounded border overflow-auto"
+			class="flex flex-col bg-theme-content-box-bg mt-5 rounded border overflow-auto"
 		>
 			<div
 				class="flex flex-row p-3.5 items-center justify-between border-b cursor-pointer"
@@ -34,7 +34,7 @@
 								<div class="text-base font-normal text-gray-800">
 									{{ item.account_head }}
 								</div>
-								<div class="text-xs font-normal text-gray-500">
+								<div class="text-xs font-normal text-theme-content-box-text-secondary">
 									<span> Rate: {{ formatCurrency(item.rate, currency) }} </span>
 									<span class="whitespace-pre"> &middot; </span>
 									<span class="whitespace-nowrap">
@@ -44,10 +44,10 @@
 							</div>
 						</div>
 						<div class="flex flex-row justify-end items-center gap-2">
-							<span class="text-gray-700 font-normal rounded text-base">
+							<span class="text-theme-page-heading font-bold text-lg text-center">
 								{{ formatCurrency(item.total, currency) }}
 							</span>
-							<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
+							<FeatherIcon name="chevron-right" class="h-5 w-5 text-theme-content-box-text" />
 						</div>
 					</div>
 				</div>
@@ -59,10 +59,10 @@
 			<template #actionSheet>
 				<!-- Add Expense Tax Action Sheet -->
 				<div
-					class="bg-white w-full flex flex-col items-center justify-center pb-5"
+					class="bg-theme-content-box-bg w-full flex flex-col items-center justify-center pb-5"
 				>
 					<div class="w-full pt-8 pb-5 border-b text-center">
-						<span class="text-gray-900 font-bold text-xl">
+						<span class="text-theme-page-heading font-bold text-xl">
 							{{ modalTitle }}
 						</span>
 					</div>

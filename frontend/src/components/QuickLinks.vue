@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col gap-5 my-4 w-full">
-		<div class="text-lg font-medium text-gray-900">{{ title || __("Quick Links") }}</div>
-		<div class="flex flex-col bg-white rounded">
+		<div class="text-lg font-medium text-theme-page-heading">{{ title || __("Quick Links") }}</div>
+		<div class="flex flex-col bg-theme-content-box-bg rounded">
 			<router-link
 				class="flex flex-row flex-start p-4 items-center justify-between"
 				:class="link !== props.items[props.items.length - 1] && 'border-b'"
@@ -10,12 +10,12 @@
 				:to="{ name: link.route }"
 			>
 				<div class="flex flex-row items-center gap-3 grow">
-					<component :is="link.icon" class="h-5 w-5 text-gray-500" />
-					<div class="text-base font-normal text-gray-800">
+					<component :is="link.icon" class="h-5 w-5 text-theme-text" />
+					<div class="text-base font-normal text-theme-text">
 						{{ link.title }}
 					</div>
 				</div>
-				<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
+				<FeatherIcon name="chevron-right" class="h-5 w-5 text-theme-content-box-text" />
 			</router-link>
 		</div>
 	</div>

@@ -2,13 +2,13 @@
 	<ion-header class="ion-no-border">
 		<div class="w-full sm:w-96">
 			<div
-				class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b"
+				class="flex flex-row bg-theme-content-box-bg shadow-sm py-4 px-3 items-center justify-between border-b"
 			>
 				<div class="flex flex-row items-center">
 					<Button variant="ghost" class="!px-1 mr-1 hover:bg-white" @click="router.back()">
 						<FeatherIcon name="chevron-left" class="h-5 w-5" />
 					</Button>
-					<h2 class="text-xl font-semibold text-gray-900">{{ pageTitle }}</h2>
+					<h2 class="text-xl font-semibold text-theme-page-heading">{{ pageTitle }}</h2>
 				</div>
 
 				<div class="flex flex-row gap-2">
@@ -45,7 +45,7 @@
 		</ion-refresher>
 
 		<div
-			class="flex flex-col items-center mb-7 p-4 h-full w-full sm:w-96 overflow-y-auto"
+			class="flex flex-col items-center bg-theme-body-bg mb-7 p-4 h-full w-full sm:w-96 overflow-y-auto"
 			ref="scrollContainer"
 			@scroll="() => handleScroll()"
 		>
@@ -58,7 +58,7 @@
 				/>
 
 				<div
-					class="flex flex-col bg-white rounded mt-5"
+					class="flex flex-col bg-theme-content-box-bg rounded mt-5"
 					v-if="!documents.loading && documents.data?.length"
 				>
 					<div

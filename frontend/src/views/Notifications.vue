@@ -2,9 +2,9 @@
 	<ion-page>
 		<ion-content class="ion-padding">
 			<div class="flex flex-col h-screen w-screen">
-				<div class="w-full sm:w-96">
+				<div class="w-full bg-theme-body-bg sm:w-96">
 					<header
-						class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b sticky top-0 z-10"
+						class="flex flex-row bg-theme-content-box-bg shadow-sm py-4 px-3 items-center justify-between border-b sticky top-0 z-10"
 					>
 						<div class="flex flex-row items-center">
 							<Button
@@ -14,14 +14,14 @@
 							>
 								<FeatherIcon name="chevron-left" class="h-5 w-5" />
 							</Button>
-							<h2 class="text-xl font-semibold text-gray-900">{{ __("Notifications") }} </h2>
+							<h2 class="text-xl font-semibold text-theme-page-heading">{{ __("Notifications") }} </h2>
 						</div>
 					</header>
 
-					<div class="flex flex-col gap-4 mt-5 p-4">
+					<div class="flex flex-col bg-theme-content-box-bg gap-4 mt-5 p-4">
 						<div class="flex flex-row justify-between items-center">
 							<div
-								class="text-lg text-gray-800 font-semibold"
+								class="text-lg text-theme-page-heading font-semibold"
 								v-if="unreadNotificationsCount.data"
 							>
 								{{ __("{0} Unread", [unreadNotificationsCount.data]) }}
@@ -52,7 +52,7 @@
 						</div>
 
 						<div
-							class="flex flex-col bg-white rounded"
+							class="flex flex-col bg-theme-content-box-bg rounded"
 							v-if="notifications.data?.length"
 						>
 							<router-link
@@ -69,10 +69,10 @@
 								<EmployeeAvatar :userID="item.from_user" size="lg" />
 								<div class="flex flex-col gap-0.5 grow ml-3">
 									<div
-										class="text-sm leading-5 font-normal text-gray-800"
+										class="text-sm leading-5 font-normal text-theme-content-box-text"
 										v-html="item.message"
 									></div>
-									<div class="text-xs font-normal text-gray-500">
+									<div class="text-xs font-normal text-theme-content-box-text-secondary">
 										{{ dayjs(item.creation).fromNow() }}
 									</div>
 								</div>

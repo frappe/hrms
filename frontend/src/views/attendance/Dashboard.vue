@@ -1,17 +1,17 @@
 <template>
 	<BaseLayout pageTitle="Attendance">
 		<template #body>
-			<div class="flex flex-col mt-7 mb-7 p-4 gap-7">
+			<div class="flex flex-col mt-7 mb-7 p-4 gap-7 bg-theme-body-bg">
 				<AttendanceCalendar />
 				<div class="w-full">
 					<router-link :to="{ name: 'AttendanceRequestFormView' }" v-slot="{ navigate }">
-						<Button @click="navigate" variant="solid" class="w-full py-5 text-base">
+						<Button @click="navigate" variant="solid" class="w-full bg-theme-primary-button hover:bg-theme-primary-button-hover text-theme-primary-button-text hover:text-theme-primary-button-text-hover py-5 text-base">
 							{{ __("Request Attendance") }}
 						</Button>
 					</router-link>
 				</div>
 				<div>
-					<div class="text-lg text-gray-800 font-bold">{{ __("Recent Attendance Requests") }}</div>
+					<div class="text-lg text-theme-page-heading font-bold">{{ __("Recent Attendance Requests") }}</div>
 					<RequestList
 						:component="markRaw(AttendanceRequestItem)"
 						:items="myAttendanceRequests?.data?.slice(0, 5)"
@@ -20,7 +20,7 @@
 					/>
 				</div>
 				<div>
-					<div class="text-lg text-gray-800 font-bold">{{ __("Upcoming Shifts") }}</div>
+					<div class="text-lg text-theme-page-heading font-bold">{{ __("Upcoming Shifts") }}</div>
 					<RequestList
 						:component="markRaw(ShiftAssignmentItem)"
 						:items="upcomingShifts"
@@ -31,13 +31,13 @@
 				</div>
 				<div class="w-full">
 					<router-link :to="{ name: 'ShiftRequestFormView' }" v-slot="{ navigate }">
-						<Button @click="navigate" variant="solid" class="w-full py-5 text-base">
+						<Button @click="navigate" variant="solid" class="w-full py-5 text-base text-theme-primary-button-text hover:text-theme-primary-button-text-hover bg-theme-primary-button hover:bg-theme-primary-button-hover">
 							{{ __("Request a Shift") }}
 						</Button>
 					</router-link>
 				</div>
 				<div>
-					<div class="text-lg text-gray-800 font-bold">{{ __("Recent Shift Requests") }}</div>
+					<div class="text-lg text-theme-page-heading font-bold">{{ __("Recent Shift Requests") }}</div>
 					<RequestList
 						:component="markRaw(ShiftRequestItem)"
 						:items="myShiftRequests?.data?.slice(0, 5)"
