@@ -248,10 +248,15 @@ def get_employees_without_goals(cycle_name: str) -> int:
 	return goals_missing[0].count
 
 
-def get_employees_without_feedback(cycle_name: str) -> int:
+@frappe.whitelist()
+def get_employees_without_feedback(cycle_name: str | None = None) -> int:
 	Feedback = frappe.qb.DocType("Employee Performance Feedback")
 	Appraisal = frappe.qb.DocType("Appraisal")
 	count = Count("*").as_("count")
+	if not cycle_name:
+		cycle_name = frappe.get_value(
+			"Appraisal Cycle", {"status": "In Progress"}, order_by="start_date desc"
+		)
 
 	filtered_records = SubQuery(
 		frappe.qb.from_(Feedback)

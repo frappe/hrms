@@ -11,8 +11,7 @@ from frappe.utils import (
 )
 from frappe.utils.user import add_role
 
-from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
-
+from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import assign_holiday_list
 from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
 from hrms.hr.doctype.leave_application.leave_application import (
 	get_leave_balance_on,
@@ -448,7 +447,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 		)
 		self.assertEqual(leaves_allocated, pro_rated_leave)
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_get_earned_leave_details_for_dashboard(self):
 		frappe.flags.current_date = get_year_start(getdate())
 		first_sunday = get_first_sunday(self.holiday_list, for_date=frappe.flags.current_date)

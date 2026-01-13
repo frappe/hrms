@@ -13,6 +13,9 @@ class EmployeeTimesheet(Timesheet):
 		if flt(self.per_billed, self.precision("per_billed")) >= 100.0:
 			self.status = "Billed"
 
+		if 0.0 < flt(self.per_billed, self.precision("per_billed")) < 100.0:
+			self.status = "Partially Billed"
+
 		if self.salary_slip:
 			self.status = "Payslip"
 

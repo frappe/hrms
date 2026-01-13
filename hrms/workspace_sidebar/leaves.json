@@ -151,11 +151,10 @@
   {
    "child": 1,
    "collapsible": 1,
-   "icon": "",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Leave Type",
-   "link_to": "Leave Type",
+   "label": "Holiday List Assignment",
+   "link_to": "Holiday List Assignment",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -197,6 +196,18 @@
    "type": "Link"
   },
   {
+   "child": 1,
+   "collapsible": 1,
+   "icon": "",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Leave Type",
+   "link_to": "Leave Type",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
    "child": 0,
    "collapsible": 1,
    "icon": "settings",
@@ -210,10 +221,11 @@
    "type": "Link"
   }
  ],
- "modified": "2025-12-29 17:59:02.883145",
+ "modified": "2026-01-12 14:12:08.828397",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leaves",
  "owner": "Administrator",
+ "standard": 1,
  "title": "Leaves"
 }

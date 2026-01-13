@@ -1,7 +1,7 @@
 {
  "app": "hrms",
  "charts": [],
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Onboarding\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Separation\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Grievance\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dashboard\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"New Hires (This Month)\",\"col\":4}},{\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Exits (This Month)\",\"col\":4}},{\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Trainings (This Week)\",\"col\":4}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Onboarding\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Journey\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Grievance\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Training\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Exit\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Daily Work Summary\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"Do0km6oB3q\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"New Hires (This Month)\",\"col\":4}},{\"id\":\"90EyF0WfYs\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Exits (This Month)\",\"col\":4}},{\"id\":\"lWsQRmsSwR\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Trainings (This Week)\",\"col\":4}},{\"id\":\"TYoNVyW88z\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"_xgabKIxxZ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"id\":\"ZOaOHWAzNZ\",\"type\":\"card\",\"data\":{\"card_name\":\"Onboarding\",\"col\":4}},{\"id\":\"-9CR3Papyq\",\"type\":\"card\",\"data\":{\"card_name\":\"Grievance\",\"col\":4}},{\"id\":\"0s3iKnHDOj\",\"type\":\"card\",\"data\":{\"card_name\":\"Training\",\"col\":4}},{\"id\":\"TqvQSf8hTP\",\"type\":\"card\",\"data\":{\"card_name\":\"Daily Work Summary\",\"col\":4}},{\"id\":\"DBbEdPsl3o\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2022-08-20 14:06:34.309347",
  "custom_blocks": [],
  "docstatus": 0,
@@ -54,34 +54,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Employee Journey",
-   "link_count": 2,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Employee Promotion",
-   "link_count": 0,
-   "link_to": "Employee Promotion",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Employee Transfer",
-   "link_count": 0,
-   "link_to": "Employee Transfer",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Grievance",
    "link_count": 2,
    "onboard": 0,
@@ -103,54 +75,6 @@
    "label": "Employee Grievance",
    "link_count": 0,
    "link_to": "Employee Grievance",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Employee Exit",
-   "link_count": 4,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Employee Separation Template",
-   "link_count": 0,
-   "link_to": "Employee Separation Template",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Employee Separation",
-   "link_count": 0,
-   "link_to": "Employee Separation",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Full and Final Statement",
-   "link_count": 0,
-   "link_to": "Full and Final Statement",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Exit Interview",
-   "link_count": 0,
-   "link_to": "Exit Interview",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -290,7 +214,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-11-18 15:47:49.942943",
+ "modified": "2026-01-09 17:45:33.210388",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Tenure",
@@ -317,42 +241,7 @@
  ],
  "roles": [],
  "sequence_id": 2.0,
- "shortcuts": [
-  {
-   "color": "Grey",
-   "doc_view": "List",
-   "label": "Dashboard",
-   "link_to": "Employee Lifecycle",
-   "type": "Dashboard"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "List",
-   "format": "{} Pending",
-   "label": "Employee Onboarding",
-   "link_to": "Employee Onboarding",
-   "stats_filter": "{\"boarding_status\":[\"=\",\"Pending\"]}",
-   "type": "DocType"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "List",
-   "format": "{} Pending",
-   "label": "Employee Separation",
-   "link_to": "Employee Separation",
-   "stats_filter": "{\"boarding_status\":[\"=\",\"Pending\"]}",
-   "type": "DocType"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "List",
-   "format": "{} Open",
-   "label": "Employee Grievance",
-   "link_to": "Employee Grievance",
-   "stats_filter": "{\"status\":[\"=\",\"Open\"]}",
-   "type": "DocType"
-  }
- ],
+ "shortcuts": [],
  "title": "Tenure",
  "type": "Workspace"
 }

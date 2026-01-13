@@ -268,10 +268,11 @@
    "type": "Link"
   }
  ],
- "modified": "2025-12-29 17:54:51.558049",
+ "modified": "2026-01-08 14:16:38.878865",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expenses",
  "owner": "Administrator",
+ "standard": 1,
  "title": "Expenses"
 }

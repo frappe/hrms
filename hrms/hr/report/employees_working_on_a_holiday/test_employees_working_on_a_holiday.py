@@ -7,6 +7,9 @@ from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
+from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+	create_holiday_list_assignment,
+)
 from hrms.hr.report.employees_working_on_a_holiday.employees_working_on_a_holiday import execute
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.tests.test_utils import get_first_sunday
@@ -25,9 +28,12 @@ class TestEmployeesWorkingOnAHoliday(IntegrationTestCase):
 		monday_off = make_holiday_list("Monday Off", from_date, to_date, True, ["Monday"])
 		tuesday_off = make_holiday_list("Tuesday Off", from_date, to_date, True, ["Tuesday"])
 
-		emp1 = make_employee("testemp@sunday.com", company=self.company, holiday_list=sunday_off)
-		emp2 = make_employee("testemp2@monday.com", company=self.company, holiday_list=monday_off)
-		emp3 = make_employee("testemp3@tuesday.com", company=self.company, holiday_list=tuesday_off)
+		emp1 = make_employee("testemp@sunday.com", company=self.company)
+		create_holiday_list_assignment("Employee", emp1, sunday_off)
+		emp2 = make_employee("testemp2@monday.com", company=self.company)
+		create_holiday_list_assignment("Employee", emp2, monday_off)
+		emp3 = make_employee("testemp3@tuesday.com", company=self.company)
+		create_holiday_list_assignment("Employee", emp3, tuesday_off)
 
 		first_sunday = get_first_sunday()
 		# i realise this might not be the first monday and tuesday but doesn't matter for this test

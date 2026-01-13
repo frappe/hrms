@@ -3,6 +3,7 @@
  "creation": "2025-11-12 15:31:27.305365",
  "docstatus": 0,
  "doctype": "Workspace Sidebar",
+ "for_user": "",
  "header_icon": "hr",
  "idx": 0,
  "items": [
@@ -13,7 +14,7 @@
    "indent": 0,
    "keep_closed": 0,
    "label": "Home",
-   "link_to": "HR",
+   "link_to": "People",
    "link_type": "Workspace",
    "show_arrow": 0,
    "type": "Link"
@@ -147,10 +148,10 @@
    "url": "/desk/hr-settings#employee_tab"
   }
  ],
- "modified": "2025-12-29 17:56:02.562424",
+ "modified": "2026-01-09 17:22:08.890026",
  "modified_by": "Administrator",
  "module": "HR",
- "name": "HR",
+ "name": "People",
  "owner": "Administrator",
- "title": "HR"
+ "title": "People"
 }

@@ -21,11 +21,23 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "graduation-cap",
+   "icon": "goal",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Employee Promotion",
-   "link_to": "Employee Promotion",
+   "label": "Goal",
+   "link_to": "Goal",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "orbit",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Appraisal Cycle",
+   "link_to": "Appraisal Cycle",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -38,6 +50,30 @@
    "keep_closed": 0,
    "label": "Appraisal",
    "link_to": "Appraisal",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "criticize",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Employee Performance Feedback",
+   "link_to": "Employee Performance Feedback",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "graduation-cap",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Employee Promotion",
+   "link_to": "Employee Promotion",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -93,32 +129,8 @@
    "icon": "",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Goal",
-   "link_to": "Goal",
-   "link_type": "DocType",
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 1,
-   "collapsible": 1,
-   "icon": "",
-   "indent": 0,
-   "keep_closed": 0,
    "label": "KRA",
    "link_to": "KRA",
-   "link_type": "DocType",
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 1,
-   "collapsible": 1,
-   "icon": "",
-   "indent": 0,
-   "keep_closed": 0,
-   "label": "Appraisal Cycle",
-   "link_to": "Appraisal Cycle",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -134,24 +146,13 @@
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
-  },
-  {
-   "child": 1,
-   "collapsible": 1,
-   "icon": "",
-   "indent": 0,
-   "keep_closed": 0,
-   "label": "Employee Performance Feedback",
-   "link_to": "Employee Performance Feedback",
-   "link_type": "DocType",
-   "show_arrow": 0,
-   "type": "Link"
   }
  ],
- "modified": "2025-12-29 17:26:01.920381",
+ "modified": "2026-01-10 15:07:50.379158",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Performance",
  "owner": "Administrator",
+ "standard": 1,
  "title": "Performance"
 }

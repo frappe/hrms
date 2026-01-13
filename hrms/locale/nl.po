@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-12-21 09:37+0000\n"
-"PO-Revision-Date: 2025-12-22 11:22\n"
+"PO-Revision-Date: 2026-01-05 14:42\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
@@ -1716,7 +1716,7 @@ msgstr ""
 
 #: hrms/setup.py:332
 msgid "Calls"
-msgstr ""
+msgstr "Oproepen"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:149
 msgid "Cancellation Queued"
@@ -6083,7 +6083,7 @@ msgstr ""
 #: hrms/hr/report/leave_ledger/leave_ledger.js:41
 msgctxt "Employee"
 msgid "Left"
-msgstr ""
+msgstr "Links"
 
 #: hrms/overrides/dashboard_overrides.py:16
 msgid "Lifecycle"

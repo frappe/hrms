@@ -1,0 +1,32 @@
+{
+ "chart_name": "Appraisal Overview",
+ "chart_type": "Report",
+ "creation": "2026-01-10 14:50:41.278540",
+ "currency": "INR",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart",
+ "dynamic_filters_json": "{}",
+ "filters_json": "{\"company\":\"The Coffee Company\"}",
+ "group_by_type": "Count",
+ "idx": 0,
+ "is_public": 0,
+ "is_standard": 1,
+ "modified": "2026-01-10 15:16:33.659637",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Appraisal Overview",
+ "number_of_groups": 0,
+ "owner": "Administrator",
+ "report_name": "Appraisal Overview",
+ "roles": [
+  {}
+ ],
+ "show_values_over_chart": 0,
+ "time_interval": "Yearly",
+ "timeseries": 0,
+ "timespan": "Last Year",
+ "type": "Line",
+ "use_report_chart": 1,
+ "x_field": "",
+ "y_axis": []
+}

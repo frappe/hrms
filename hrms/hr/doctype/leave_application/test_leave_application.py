@@ -15,9 +15,12 @@ from frappe.utils import (
 )
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
-from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
+from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+	assign_holiday_list,
+	create_holiday_list_assignment,
+)
 from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
 from hrms.hr.doctype.leave_application.leave_application import (
 	InsufficientLeaveBalanceError,
@@ -39,7 +42,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
 )
-from hrms.tests.test_utils import get_first_sunday
+from hrms.tests.test_utils import add_date_to_holiday_list, get_first_sunday
 from hrms.tests.utils import HRMSTestSuite
 
 test_dependencies = ["Leave Block List"]
@@ -149,7 +152,7 @@ class TestLeaveApplication(HRMSTestSuite):
 		application.to_date = "2013-01-05"
 		return application
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_validate_application_across_allocations(self):
 		# Test validation for application dates when negative balance is disabled
 		frappe.delete_doc_if_exists("Leave Type", "Test Leave Validation", force=1)
@@ -196,7 +199,7 @@ class TestLeaveApplication(HRMSTestSuite):
 		# Application period cannot be across two allocation records
 		self.assertRaises(LeaveAcrossAllocationsError, leave_application.insert)
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_insufficient_leave_balance_validation(self):
 		# CASE 1: Validation when allow negative is disabled
 		frappe.delete_doc_if_exists("Leave Type", "Test Leave Validation", force=1)
@@ -235,7 +238,7 @@ class TestLeaveApplication(HRMSTestSuite):
 			employee.name, add_days(first_sunday, 1), add_days(first_sunday, 3), leave_type.name
 		)
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_separate_leave_ledger_entry_for_boundary_applications(self):
 		# When application falls in 2 different allocations and Allow Negative is enabled
 		# creates separate leave ledger entries
@@ -353,7 +356,7 @@ class TestLeaveApplication(HRMSTestSuite):
 		self.assertEqual(attendance.leave_type, "_Test Leave Type")
 		self.assertEqual(attendance.leave_application, application.name)
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_attendance_for_include_holidays(self):
 		# Case 1: leave type with 'Include holidays within leaves as leaves' enabled
 		frappe.delete_doc_if_exists("Leave Type", "Test Include Holidays", force=1)
@@ -378,7 +381,7 @@ class TestLeaveApplication(HRMSTestSuite):
 
 		leave_application.cancel()
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_attendance_update_for_exclude_holidays(self):
 		# Case 2: leave type with 'Include holidays within leaves as leaves' disabled
 		frappe.delete_doc_if_exists("Leave Type", "Test Do Not Include Holidays", force=1)
@@ -563,7 +566,7 @@ class TestLeaveApplication(HRMSTestSuite):
 		application.half_day_date = "2013-01-05"
 		application.insert()
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_optional_leave(self):
 		leave_period = get_leave_period()
 		today = nowdate()
@@ -745,7 +748,7 @@ class TestLeaveApplication(HRMSTestSuite):
 
 		self.assertRaises(frappe.ValidationError, leave_application.insert)
 
-	@set_holiday_list("_Test Holiday List", "_Test Company")
+	@assign_holiday_list("_Test Holiday List", "_Test Company")
 	def test_max_consecutive_leaves_across_leave_applications(self):
 		employee = get_employee()
 		leave_type = frappe.get_doc(
@@ -1064,7 +1067,7 @@ class TestLeaveApplication(HRMSTestSuite):
 		application.submit()
 		self.assertEqual(1, application.docstatus)
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_get_leave_details_for_dashboard(self):
 		employee = get_employee()
 		date = getdate()
@@ -1100,7 +1103,7 @@ class TestLeaveApplication(HRMSTestSuite):
 		self.assertEqual(leave_allocation["leaves_pending_approval"], 1)
 		self.assertEqual(leave_allocation["remaining_leaves"], 26)
 
-	@set_holiday_list("Holiday List w/o Weekly Offs", "_Test Company")
+	@assign_holiday_list("Holiday List w/o Weekly Offs", "_Test Company")
 	def test_leave_details_with_expired_cf_leaves(self):
 		"""Tests leave details:
 		Case 1: All leaves available before cf leave expiry
@@ -1134,7 +1137,7 @@ class TestLeaveApplication(HRMSTestSuite):
 
 		self.assertEqual(leave_details["leave_allocation"][leave_type.name], expected_data)
 
-	@set_holiday_list("Holiday List w/o Weekly Offs", "_Test Company")
+	@assign_holiday_list("Holiday List w/o Weekly Offs", "_Test Company")
 	def test_leave_details_with_application_across_cf_expiry(self):
 		"""Tests leave details with leave application across cf expiry, such that:
 		cf leaves are partially expired and partially consumed
@@ -1170,7 +1173,7 @@ class TestLeaveApplication(HRMSTestSuite):
 
 		self.assertEqual(leave_details["leave_allocation"][leave_type.name], expected_data)
 
-	@set_holiday_list("Holiday List w/o Weekly Offs", "_Test Company")
+	@assign_holiday_list("Holiday List w/o Weekly Offs", "_Test Company")
 	def test_leave_details_with_application_across_cf_expiry_2(self):
 		"""Tests the same case as above but with leave days greater than cf leaves allocated"""
 		employee = get_employee()
@@ -1210,7 +1213,7 @@ class TestLeaveApplication(HRMSTestSuite):
 
 		self.assertEqual(leave_details["leave_allocation"][leave_type.name], expected_data)
 
-	@set_holiday_list("Holiday List w/o Weekly Offs", "_Test Company")
+	@assign_holiday_list("Holiday List w/o Weekly Offs", "_Test Company")
 	def test_leave_details_with_application_after_cf_expiry(self):
 		"""Tests leave details with leave application after cf expiry, such that:
 		cf leaves are completely expired and only newly allocated leaves are consumed
@@ -1246,7 +1249,7 @@ class TestLeaveApplication(HRMSTestSuite):
 
 		self.assertEqual(leave_details["leave_allocation"][leave_type.name], expected_data)
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_get_leave_allocation_records(self):
 		"""Tests if total leaves allocated before and after carry forwarded leave expiry is same"""
 		employee = get_employee()
@@ -1279,7 +1282,7 @@ class TestLeaveApplication(HRMSTestSuite):
 		details = get_leave_allocation_records(employee.name, add_days(cf_expiry, 1), leave_type.name)
 		self.assertEqual(details.get(leave_type.name), expected_data)
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_filtered_old_cf_entries_in_get_leave_allocation_records(self):
 		"""Tests whether old cf entries are ignored while fetching current allocation records"""
 		employee = get_employee()
@@ -1451,6 +1454,49 @@ class TestLeaveApplication(HRMSTestSuite):
 		doc.save()
 		doc.submit()
 		self.assertEqual(get_leave_balance_on(employee, leave_type, previous_month_end), 9)
+		leave_ledger_entry = frappe.get_all(
+			"Leave Ledger Entry",
+			fields="*",
+			filters={"transaction_name": doc.name},
+			order_by="leaves",
+		)
+		self.assertEqual(len(leave_ledger_entry), 2)
+		self.assertEqual(leave_ledger_entry[0].leaves, doc.total_leave_days * -1)
+		self.assertEqual(leave_ledger_entry[1].leaves, doc.total_leave_days * 1)
+
+	def test_leave_days_across_two_holiday_lists(self):
+		make_holiday_list(
+			"_Test Application",
+			from_date=add_days(getdate(), -10),
+			to_date=add_days(getdate(), -1),
+			add_weekly_offs=False,
+		)
+		add_date_to_holiday_list(add_days(getdate(), -1), "_Test Application")
+		make_holiday_list(
+			"_Test Application 2", from_date=getdate(), to_date=add_days(getdate(), 10), add_weekly_offs=False
+		)
+		add_date_to_holiday_list(getdate(), "_Test Application 2")
+		employee = get_employee().name
+		create_holiday_list_assignment("Employee", employee, "_Test Application")
+		create_holiday_list_assignment("Employee", employee, "_Test Application 2")
+		leave_type = frappe.get_doc(
+			{
+				"leave_type_name": "_Test Application",
+				"doctype": "Leave Type",
+				"include_holiday": False,
+			}
+		).insert()
+		make_allocation_record(
+			employee,
+			leave_type=leave_type.name,
+			from_date=add_days(getdate(), -10),
+			to_date=add_days(getdate(), 10),
+			leaves=10,
+		)
+		application = make_leave_application(
+			employee, add_days(getdate(), -2), add_days(getdate(), 2), leave_type.name, submit=False
+		)
+		self.assertEqual(application.total_leave_days, 3)
 
 	def test_status_on_discard(self):
 		make_allocation_record()

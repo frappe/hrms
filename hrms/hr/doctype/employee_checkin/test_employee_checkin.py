@@ -35,11 +35,6 @@ class TestEmployeeCheckin(IntegrationTestCase):
 		frappe.db.delete("Shift Type")
 		frappe.db.delete("Shift Assignment")
 		frappe.db.delete("Employee Checkin")
-
-		from_date = get_year_start(getdate())
-		to_date = get_year_ending(getdate())
-		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
-
 		frappe.db.set_single_value("HR Settings", "allow_geolocation_tracking", 0)
 
 	def test_geolocation_tracking(self):

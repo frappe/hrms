@@ -389,7 +389,11 @@ class SalarySlip(TransactionBase):
 				.where(
 					(Timesheet.employee == self.employee)
 					& (Timesheet.start_date.between(self.start_date, self.end_date))
-					& ((Timesheet.status == "Submitted") | (Timesheet.status == "Billed"))
+					& (
+						(Timesheet.status == "Submitted")
+						| (Timesheet.status == "Billed")
+						| (Timesheet.status == "Partially Billed")
+					)
 				)
 			).run(as_dict=1)
 

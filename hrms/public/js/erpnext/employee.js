@@ -26,6 +26,7 @@ frappe.ui.form.on("Employee", {
 				};
 			});
 		}
+		frm.set_df_property("holiday_list", "hidden", 1);
 	},
 
 	date_of_birth(frm) {

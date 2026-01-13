@@ -1192,6 +1192,7 @@ def setup_lending():
 			penalty_income_account="Penalty Income Account - _TC",
 			repayment_schedule_type="Monthly as per repayment start date",
 			collection_offset_sequence_for_standard_asset="Test EMI Based Standard Loan Demand Offset Order",
+			collection_offset_sequence_for_sub_standard_asset="Test EMI Based Standard Loan Demand Offset Order",
 		)
 
 	return (
