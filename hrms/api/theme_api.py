@@ -389,7 +389,7 @@ def refresh_theme(theme_name: str) -> dict:
     """
     try:
         # Verify the document exists and user has permission
-        doc = frappe.get_doc("Employee Self Service Portal Theme", theme_name)
+        doc = frappe.get_single("Employee Self Service Portal Theme")
         
         # Trigger the realtime event
         frappe.publish_realtime("employee_self_service_portal_theme:update", {"modified": str(doc.modified)})
@@ -402,5 +402,5 @@ def refresh_theme(theme_name: str) -> dict:
         frappe.throw(_("You don't have permission to refresh the theme"))
     except Exception as e:
         frappe.log_error(title="Manual theme refresh failed")
-        frappe.throw(_("Failed to refresh theme: {0}").format(str(e)))
+        frappe.throw(_("Failed to refresh theme. Please check the error log for details."))
 
