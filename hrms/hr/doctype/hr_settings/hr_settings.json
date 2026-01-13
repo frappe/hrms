@@ -58,7 +58,13 @@
   "feedback_reminder_notification_template",
   "column_break_4",
   "hiring_sender",
-  "hiring_sender_email"
+  "hiring_sender_email",
+  "mobile_app_settings_section",
+  "allow_attendance_request_from_mobile_app",
+  "allow_shift_request_from_mobile_app",
+  "allow_leave_application_from_mobile_app",
+  "allow_expense_claim_from_mobile_app",
+  "allow_employee_advance_from_mobile_app",
  ],
  "fields": [
   {
@@ -374,6 +380,41 @@
    "fieldname": "employee_exit_settings_section",
    "fieldtype": "Section Break",
    "label": "Employee Exit Settings"
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_leave_application_from_mobile_app",
+   "fieldtype": "Check",
+   "label": "Allow Leave Application from Mobile App"
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_employee_advance_from_mobile_app",
+   "fieldtype": "Check",
+   "label": "Allow Employee Advance from Mobile App"
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_expense_claim_from_mobile_app",
+   "fieldtype": "Check",
+   "label": "Allow Expense Claim from Mobile App"
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_shift_request_from_mobile_app",
+   "fieldtype": "Check",
+   "label": "Allow Shift Request from Mobile App"
+  },
+  {
+   "fieldname": "mobile_app_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Mobile App Settings"
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_attendance_request_from_mobile_app",
+   "fieldtype": "Check",
+   "label": "Allow Attendance Request from Mobile App"
   }
  ],
  "icon": "fa fa-cog",

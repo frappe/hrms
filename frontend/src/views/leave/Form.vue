@@ -2,7 +2,7 @@
 	<ion-page>
 		<ion-content :fullscreen="true">
 			<FormView
-				v-if="formFields.data"
+				v-if="formFields.data && settings.data?.allow_leave_application_from_mobile_app"
 				doctype="Leave Application"
 				v-model="leaveApplication"
 				:isSubmittable="true"
@@ -17,13 +17,15 @@
 
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
-import { createResource } from "frappe-ui"
+import { createResource, toast } from "frappe-ui"
 import { ref, watch, inject } from "vue"
+import { useRouter } from "vue-router"
 
 import FormView from "@/components/FormView.vue"
 
 const dayjs = inject("$dayjs")
 const __ = inject("$translate")
+const router = useRouter()
 const today = dayjs().format("YYYY-MM-DD")
 
 const props = defineProps({
@@ -35,6 +37,26 @@ const props = defineProps({
 
 const sessionEmployee = inject("$employee")
 const currEmployee = ref(sessionEmployee.data.name)
+
+const settings = createResource({
+	url: "hrms.api.get_hr_settings",
+	auto: true,
+})
+
+watch(
+	() => settings.data,
+	(settingsData) => {
+		if (settingsData && !settingsData.allow_leave_application_from_mobile_app) {
+			toast({
+				title: __("Access Denied"),
+				text: __("Leave Applications are disabled from the mobile app"),
+				icon: "alert-circle",
+			})
+			router.replace("/") // go back to home
+		}
+	},
+	{ immediate: true }
+)
 
 // reactive object to store form data
 const leaveApplication = ref({})

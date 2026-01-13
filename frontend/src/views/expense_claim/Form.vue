@@ -2,7 +2,7 @@
 	<ion-page>
 		<ion-content :fullscreen="true">
 			<FormView
-				v-if="formFields.data"
+				v-if="formFields.data && settings.data?.allow_expense_claim_from_mobile_app"
 				doctype="Expense Claim"
 				v-model="expenseClaim"
 				:isSubmittable="true"
@@ -52,8 +52,9 @@
 
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
-import { createResource } from "frappe-ui"
+import { createResource, toast } from "frappe-ui"
 import { computed, ref, watch, inject } from "vue"
+import { useRouter } from "vue-router"
 
 import FormView from "@/components/FormView.vue"
 import ExpensesTable from "@/components/ExpensesTable.vue"
@@ -64,6 +65,8 @@ import { getCompanyCurrency } from "@/data/currencies"
 
 
 const dayjs = inject("$dayjs")
+const __ = inject("$translate")
+const router = useRouter()
 
 const today = dayjs().format("YYYY-MM-DD")
 const isReadOnly = ref(false)
@@ -86,7 +89,27 @@ const tabs = [
 	{ name: "Totals", lastField: "cost_center" },
 ]
 
-// object to store form data
+const settings = createResource({
+	url: "hrms.api.get_hr_settings",
+	auto: true,
+})
+
+watch(
+	() => settings.data,
+	(settingsData) => {
+		if (settingsData && !settingsData.allow_expense_claim_from_mobile_app) {
+			toast({
+				title: __("Access Denied"),
+				text: __("Expense Claim requests are disabled from the mobile app"),
+				icon: "alert-circle",
+			})
+			router.replace("/") // go back to home
+		}
+	},
+	{ immediate: true }
+)
+
+// reactive object to store form data
 const expenseClaim = ref({
 	employee: currEmployee,
 	company: employeeCompany,

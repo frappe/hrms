@@ -2,7 +2,7 @@
 	<ion-page>
 		<ion-content :fullscreen="true">
 			<FormView
-				v-if="formFields.data"
+				v-if="formFields.data && settings.data?.allow_attendance_request_from_mobile_app"
 				doctype="Attendance Request"
 				v-model="attendanceRequest"
 				:isSubmittable="true"
@@ -18,6 +18,8 @@
 import { IonPage, IonContent } from "@ionic/vue"
 import { createResource } from "frappe-ui"
 import { ref, watch, inject } from "vue"
+import { useRouter } from "vue-router"
+import { toast } from "frappe-ui"
 
 import FormView from "@/components/FormView.vue"
 
@@ -29,6 +31,14 @@ const props = defineProps({
 		type: String,
 		required: false,
 	},
+})
+
+const router = useRouter()
+
+// Fetch HR settings
+const settings = createResource({
+	url: "hrms.api.get_hr_settings",
+	auto: true,
 })
 
 // reactive object to store form data
@@ -48,6 +58,21 @@ const formFields = createResource({
 })
 
 // form scripts
+watch(
+	() => settings.data,
+	(settingsData) => {
+		if (settingsData && !settingsData.allow_attendance_request_from_mobile_app) {
+			toast({
+				title: __("Access Denied"),
+				text: __("Attendance requests are disabled from the mobile app"),
+				icon: "alert-circle",
+			})
+			router.replace("/") // go back to home
+		}
+	},
+	{ immediate: true }
+)
+
 watch(
 	() => attendanceRequest.value.employee,
 	(employee_id) => {

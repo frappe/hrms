@@ -2,7 +2,7 @@
 	<ion-page>
 		<ion-content :fullscreen="true">
 			<FormView
-				v-if="formFields.data"
+				v-if="formFields.data && settings.data?.allow_employee_advance_from_mobile_app"
 				doctype="Employee Advance"
 				v-model="employeeAdvance"
 				:isSubmittable="true"
@@ -19,18 +19,27 @@
 import { IonPage, IonContent } from "@ionic/vue"
 import { createResource } from "frappe-ui"
 import { ref, watch, inject, computed } from "vue"
+import { useRouter } from "vue-router"
+import { toast } from "frappe-ui"
 
 import FormView from "@/components/FormView.vue"
 
 import { getCompanyCurrency } from "@/data/currencies"
 
 const employee = inject("$employee")
+const __ = inject("$translate")
 
 const props = defineProps({
 	id: {
 		type: String,
 		required: false,
 	},
+})
+
+const router = useRouter()
+const settings = createResource({
+	url: "hrms.api.get_hr_settings",
+	auto: true,
 })
 
 // object to store form data
@@ -85,6 +94,21 @@ const advanceAccount = createResource({
 })
 
 // form scripts
+watch(
+	() => settings.data,
+	(settingsData) => {
+		if (settingsData && !settingsData.allow_employee_advance_from_mobile_app) {
+			toast({
+				title: __("Access Denied"),
+				text: __("Employee Advance requests are disabled from the mobile app"),
+				icon: "alert-circle",
+			})
+			router.replace("/") // go back to home
+		}
+	},
+	{ immediate: true }
+)
+
 watch(
 	() => employeeAdvance.value.currency,
 	() => setExchangeRate()

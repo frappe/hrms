@@ -2,7 +2,7 @@
 	<ion-page>
 		<ion-content :fullscreen="true">
 			<FormView
-				v-if="formFields.data"
+				v-if="formFields.data && settings.data?.allow_shift_request_from_mobile_app"
 				doctype="Shift Request"
 				v-model="shiftRequest"
 				:isSubmittable="true"
@@ -16,12 +16,15 @@
 
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
-import { createResource } from "frappe-ui"
+import { createResource, toast } from "frappe-ui"
 import { ref, watch, inject } from "vue"
+import { useRouter } from "vue-router"
 
 import FormView from "@/components/FormView.vue"
 
 const employee = inject("$employee")
+const __ = inject("$translate")
+const router = useRouter()
 
 const props = defineProps({
 	id: {
@@ -29,6 +32,26 @@ const props = defineProps({
 		required: false,
 	},
 })
+
+const settings = createResource({
+	url: "hrms.api.get_hr_settings",
+	auto: true,
+})
+
+watch(
+	() => settings.data,
+	(settingsData) => {
+		if (settingsData && !settingsData.allow_shift_request_from_mobile_app) {
+			toast({
+				title: __("Access Denied"),
+				text: __("Shift Requests are disabled from the mobile app"),
+				icon: "alert-circle",
+			})
+			router.replace("/") 
+		}
+	},
+	{ immediate: true }
+)
 
 // reactive object to store form data
 const shiftRequest = ref({})

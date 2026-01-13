@@ -23,39 +23,51 @@ import LeaveIcon from "@/components/icons/LeaveIcon.vue"
 import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
 import EmployeeAdvanceIcon from "@/components/icons/EmployeeAdvanceIcon.vue"
 import SalaryIcon from "@/components/icons/SalaryIcon.vue"
+import { createResource } from "frappe-ui"
+import { computed } from "vue"
 
 const __ = inject("$translate")
 
-const quickLinks = [
-	{
-		icon: markRaw(AttendanceIcon),
-		title: __("Request Attendance"),
-		route: "AttendanceRequestFormView",
-	},
-	{
-		icon: markRaw(ShiftIcon),
-		title: __("Request a Shift"),
-		route: "ShiftRequestFormView",
-	},
-	{
-		icon: markRaw(LeaveIcon),
-		title: __("Request Leave"),
-		route: "LeaveApplicationFormView",
-	},
-	{
-		icon: markRaw(ExpenseIcon),
-		title: __("Claim an Expense"),
-		route: "ExpenseClaimFormView",
-	},
-	{
-		icon: markRaw(EmployeeAdvanceIcon),
-		title: __("Request an Advance"),
-		route: "EmployeeAdvanceFormView",
-	},
-	{
-		icon: markRaw(SalaryIcon),
-		title: __("View Salary Slips"),
-		route: "SalarySlipsDashboard",
-	},
-]
+const settings = createResource({
+	url: "hrms.api.get_hr_settings",
+	auto: true,
+})
+
+const quickLinks = computed(() => {
+	if (!settings.data) return []
+
+	return [
+		settings.data.allow_attendance_request_from_mobile_app && {
+			icon: markRaw(AttendanceIcon),
+			title: __("Request Attendance"),
+			route: "AttendanceRequestFormView",
+		},
+		settings.data.allow_shift_request_from_mobile_app && {
+			icon: markRaw(ShiftIcon),
+			title: __("Request a Shift"),
+			route: "ShiftRequestFormView",
+		},
+		settings.data.allow_leave_application_from_mobile_app && {
+			icon: markRaw(LeaveIcon),
+			title: __("Request Leave"),
+			route: "LeaveApplicationFormView",
+		},
+		settings.data.allow_expense_claim_from_mobile_app && {
+			icon: markRaw(ExpenseIcon),
+			title: __("Claim an Expense"),
+			route: "ExpenseClaimFormView",
+		},
+		settings.data.allow_employee_advance_from_mobile_app && {
+			icon: markRaw(EmployeeAdvanceIcon),
+			title: __("Request an Advance"),
+			route: "EmployeeAdvanceFormView",
+		},
+		{
+			icon: markRaw(SalaryIcon),
+			title: __("View Salary Slips"),
+			route: "SalarySlipsDashboard",
+		},
+	].filter(Boolean)
+})
+
 </script>
