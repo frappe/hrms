@@ -5,15 +5,40 @@ from frappe import _
 
 
 def _sanitize_css(css: str) -> str:
-    """Basic sanitization: remove <script> blocks to avoid script injection.
-    We keep this intentionally small — if you need stricter sanitization, use
-    a proper CSS sanitizer or restrict who can edit `custom_css`.
+    """Sanitize custom CSS to prevent injection attacks.
+    
+    Removes:
+    - <script> tags and content
+    - @import statements (can load external malicious CSS)
+    - javascript: URLs
+    - expression() (IE-specific JS execution)
+    - Potentially dangerous CSS functions
+    
+    Note: This provides defense-in-depth. The DocType should restrict editing
+    to trusted roles (System Manager) as the primary security control.
     """
     if not css:
         return ""
-    # remove script tags (and their content)
+    
+    # Remove script tags and their content
     css = re.sub(r"<\s*script[^>]*>.*?<\s*/\s*script\s*>", "", css, flags=re.S | re.I)
-    return css
+    
+    # Remove @import statements (can load external malicious stylesheets)
+    css = re.sub(r"@import\s+[^;]+;", "", css, flags=re.I)
+    
+    # Remove javascript: protocol URLs
+    css = re.sub(r"javascript\s*:", "", css, flags=re.I)
+    
+    # Remove expression() (legacy IE JS execution in CSS)
+    css = re.sub(r"expression\s*\([^)]*\)", "", css, flags=re.I)
+    
+    # Remove behavior: property (IE-specific, can execute code)
+    css = re.sub(r"behavior\s*:[^;]+;", "", css, flags=re.I)
+    
+    # Remove -moz-binding (Firefox XBL bindings, deprecated but risky)
+    css = re.sub(r"-moz-binding\s*:[^;]+;", "", css, flags=re.I)
+    
+    return css.strip()
 
 
 def _validate_css_value(value: str, default: str = "") -> str:
@@ -103,6 +128,9 @@ def get_theme() -> dict:
         "input_border": getattr(doc, "input_border_color", None) or "",
         "input_text": getattr(doc, "input_text_color", None) or "",
         "input_label": getattr(doc, "input_label_color", None) or "",
+        
+        # Custom CSS (sanitized)
+        "custom_css": _sanitize_css(getattr(doc, "custom_css", None) or ""),
         
         "modified": str(getattr(doc, "modified", "")) if getattr(doc, "modified", None) else "",
     }
