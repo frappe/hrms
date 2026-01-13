@@ -126,18 +126,8 @@ frappe.ui.form.on("Employee Advance", {
 		return frappe.call({
 			method: "hrms.hr.doctype.expense_claim.expense_claim.get_expense_claim",
 			args: {
-				advance_details: {
-					employee_name: frm.doc.employee,
-					company: frm.doc.company,
-					currency: frm.doc.currency,
-					employee_advance_name: frm.doc.name,
-					posting_date: frm.doc.posting_date,
-					paid_amount: frm.doc.paid_amount,
-					base_paid_amount: frm.doc.base_paid_amount,
-					claimed_amount: frm.doc.claimed_amount,
-					return_amount: frm.doc.return_amount,
-					payment_via_journal_entry: frm.doc.__onload.make_payment_via_journal_entry,
-				},
+				employee_advance: frm.doc.name,
+				payment_via_journal_entry: frm.doc.__onload.make_payment_via_journal_entry,
 			},
 			callback: function (r) {
 				const doclist = frappe.model.sync(r.message);
@@ -173,8 +163,10 @@ frappe.ui.form.on("Employee Advance", {
 
 	update_fields_label: function (frm) {
 		var company_currency = erpnext.get_currency(frm.doc.company);
-		frm.set_currency_labels(["paid_amount"], frm.doc.currency);
-		frm.set_currency_labels(["base_paid_amount"], company_currency);
+		if (frm.doc.currency != company_currency) {
+			frm.set_currency_labels(["paid_amount"], frm.doc.currency);
+			frm.set_currency_labels(["base_paid_amount"], company_currency);
+		}
 		frm.toggle_display("base_paid_amount", frm.doc.currency != company_currency);
 		frm.refresh_fields();
 	},
