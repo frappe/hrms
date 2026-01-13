@@ -1,5 +1,5 @@
 <template>
-	<ion-app >
+	<ion-app>
 		<ion-router-outlet id="main-content" />
 		<Toasts />
 

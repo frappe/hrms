@@ -84,7 +84,7 @@
             "label": "Page Background Color"
         },
         {
-            "description": "Warning:This field accepts 30 characters only",
+            "description": "Warning: This field accepts 30 characters only",
             "fieldname": "login_page_title",
             "fieldtype": "Data",
             "label": "Login Page Title",

@@ -16,6 +16,44 @@ def _sanitize_css(css: str) -> str:
     return css
 
 
+def _validate_css_value(value: str, default: str = "") -> str:
+    """Validate CSS color/value to prevent injection attacks.
+    
+    Allows:
+    - Hex colors: #fff, #ffffff, #ffffff00
+    - RGB/RGBA: rgb(255, 255, 255), rgba(255, 255, 255, 0.5)
+    - HSL/HSLA: hsl(120, 100%, 50%), hsla(120, 100%, 50%, 0.5)
+    - Named colors: red, blue, transparent, inherit, etc.
+    - CSS keywords: inherit, transparent, currentColor, unset, initial
+    
+    Args:
+        value: The CSS value to validate
+        default: Default value to return if validation fails
+        
+    Returns:
+        Validated value or default if invalid
+    """
+    if not value or not isinstance(value, str):
+        return default
+    
+    value = value.strip()
+    if not value:
+        return default
+    
+    # Allow hex colors, rgb/rgba, hsl/hsla, named colors, CSS keywords
+    # Pattern explanation:
+    # - Hex: #[0-9a-fA-F]{3,8} (3, 4, 6, or 8 hex digits)
+    # - Functions: rgb(a|hsl(a with parentheses and content
+    # - Named/keywords: word characters
+    pattern = r'^(#[0-9a-fA-F]{3,8}|rgba?\([^)]+\)|hsla?\([^)]+\)|[a-zA-Z][\w-]*)$'
+    
+    # Additional check: ensure no semicolons, braces, or other CSS-breaking chars
+    if re.match(pattern, value) and not any(char in value for char in [';', '{', '}', '\n', '\r']):
+        return value
+    
+    return default
+
+
 @frappe.whitelist(allow_guest=True)
 def get_theme() -> dict:
     """Return theme JSON (dict) from the Single DocType `Employee Self Service Portal Theme`.
@@ -81,44 +119,44 @@ def get_css() -> dict:
     css = f"""
 /* Service Portal Theme - Dynamic CSS Variables */
 :root {{
-  --sp-primary: {data['primary_button_color']};
-  --sp-secondary: {data['secondary_button_color']};
-  --sp-text: {data['body_content_box_text_color']};
-  --sp-text-secondary: {data.get('body_content_box_text_secondary_color') or 'inherit'};
-  --sp-header-bg: {data.get('sidebar_bg') or '#f8f9fa'};
-  --sp-button-bg: {data['primary_button_color']};
-  --sp-link: {data['link_color']};
+  --sp-primary: {_validate_css_value(data['primary_button_color'], '#0d6efd')};
+  --sp-secondary: {_validate_css_value(data['secondary_button_color'], '#6c757d')};
+  --sp-text: {_validate_css_value(data['body_content_box_text_color'], '#212529')};
+  --sp-text-secondary: {_validate_css_value(data.get('body_content_box_text_secondary_color'), 'inherit')};
+  --sp-header-bg: {_validate_css_value(data.get('sidebar_bg'), '#f8f9fa')};
+  --sp-button-bg: {_validate_css_value(data['primary_button_color'], '#0d6efd')};
+  --sp-link: {_validate_css_value(data['link_color'], '#0d6efd')};
   
   /* Button hover colors */
-  --sp-primary-hover: {data.get('primary_button_hover') or data['primary_button_color']};
-  --sp-secondary-hover: {data.get('secondary_button_hover') or data['secondary_button_color']};
+  --sp-primary-hover: {_validate_css_value(data.get('primary_button_hover') or data['primary_button_color'], '#0b5ed7')};
+  --sp-secondary-hover: {_validate_css_value(data.get('secondary_button_hover') or data['secondary_button_color'], '#5c636a')};
   
   /* Text colors */
-  --sp-primary-text: {data.get('primary_button_text') or '#ffffff'};
-  --sp-secondary-text: {data.get('secondary_button_text') or '#ffffff'};
+  --sp-primary-text: {_validate_css_value(data.get('primary_button_text'), '#ffffff')};
+  --sp-secondary-text: {_validate_css_value(data.get('secondary_button_text'), '#ffffff')};
   
   /* Body colors */
-  --sp-body-bg: {data.get('body_bg') or 'transparent'};
-  --sp-content-box-bg: {data.get('body_content_box_bg') or 'transparent'};
+  --sp-body-bg: {_validate_css_value(data.get('body_bg'), '#f5f6f7')};
+  --sp-content-box-bg: {_validate_css_value(data.get('body_content_box_bg'), '#ffffff')};
   
   /* Sidebar colors */
-  --sp-sidebar-bg: {data.get('sidebar_bg') or 'transparent'};
-  --sp-sidebar-text: {data.get('sidebar_text') or 'inherit'};
+  --sp-sidebar-bg: {_validate_css_value(data.get('sidebar_bg'), '#f8f9fa')};
+  --sp-sidebar-text: {_validate_css_value(data.get('sidebar_text'), '#212529')};
   
   /* Login page colors */
-  --sp-login-button-bg: {data.get('login_button_bg') or data['primary_button_color']};
-  --sp-login-button-hover-bg: {data.get('login_button_hover_bg') or data['primary_button_color']};
-  --sp-login-button-text: {data.get('login_button_text') or '#ffffff'};
-  --sp-login-page-bg: {data.get('login_page_bg') or 'transparent'};
-  --sp-login-box-bg: {data.get('login_box_bg') or '#ffffff'};
-  --sp-login-heading-color: {data.get('login_heading_text_color') or 'inherit'};
-  --sp-page-heading-color: {data.get('page_heading_text_color') or 'inherit'};
+  --sp-login-button-bg: {_validate_css_value(data.get('login_button_bg') or data['primary_button_color'], '#0d6efd')};
+  --sp-login-button-hover-bg: {_validate_css_value(data.get('login_button_hover_bg') or data['primary_button_color'], '#0b5ed7')};
+  --sp-login-button-text: {_validate_css_value(data.get('login_button_text'), '#ffffff')};
+  --sp-login-page-bg: {_validate_css_value(data.get('login_page_bg'), '#ffffff')};
+  --sp-login-box-bg: {_validate_css_value(data.get('login_box_bg'), '#ffffff')};
+  --sp-login-heading-color: {_validate_css_value(data.get('login_heading_text_color'), '#212529')};
+  --sp-page-heading-color: {_validate_css_value(data.get('page_heading_text_color'), '#212529')};
   
   /* Input fields */
-  --sp-input-bg: {data.get('input_bg') or 'transparent'};
-  --sp-input-border: {data.get('input_border') or '#ced4da'};
-  --sp-input-text: {data.get('input_text') or 'inherit'};
-  --sp-input-label: {data.get('input_label') or 'inherit'};
+  --sp-input-bg: {_validate_css_value(data.get('input_bg'), '#ffffff')};
+  --sp-input-border: {_validate_css_value(data.get('input_border'), '#ced4da')};
+  --sp-input-text: {_validate_css_value(data.get('input_text'), '#212529')};
+  --sp-input-label: {_validate_css_value(data.get('input_label'), '#374151')};
 }}
 
 /* Primary Buttons */

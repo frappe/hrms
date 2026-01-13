@@ -126,7 +126,7 @@
 			:min="props.minDate"
 			:max="props.maxDate"
 			class="rounded-sm text-theme-input-text bg-theme-input-bg"
-					/>
+		/>
 
 		<!-- Time -->
 		<!-- Datetime -->
@@ -139,7 +139,7 @@
 			v-bind="$attrs"
 			:disabled="isReadOnly"
 			class="rounded-sm text-theme-input-text bg-theme-input-bg"
-			/>
+		/>
 
 		<ErrorMessage :message="props.errorMessage" />
 	</div>

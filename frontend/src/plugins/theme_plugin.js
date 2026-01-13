@@ -171,8 +171,10 @@ function applyTheme(theme) {
 /**
  * Set up real-time updates for theme changes
  */
+
 function setupRealtimeUpdates() {
-	// Wait for frappe.realtime to be available
+	let retryCount = 0
+	const MAX_RETRIES = 20 // ~10 seconds
 	const checkRealtime = () => {
 		if (window.frappe && window.frappe.realtime) {
 			window.frappe.realtime.on("employee_self_service_portal_theme:update", async (data) => {
@@ -180,9 +182,11 @@ function setupRealtimeUpdates() {
 				await initTheme()
 			})
 			console.log("[HRMS Theme] Real-time updates enabled")
-		} else {
-			// Retry after a short delay
+		} else if (retryCount < MAX_RETRIES) {
+			retryCount++
 			setTimeout(checkRealtime, 500)
+		} else {
+			console.warn("[HRMS Theme] Real-time updates not available after max retries")
 		}
 	}
 

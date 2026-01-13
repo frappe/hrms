@@ -253,7 +253,7 @@
 
 	<Dialog v-model="showSubmitDialog">
 		<template #body-title>
-			<h2 class="text-xl font-bold text-gray-900">{{ __("Confirm") }} </h2>
+			<h2 class="text-xl font-bold text-theme-page-heading">{{ __("Confirm") }} </h2>
 		</template>
 		<template #body-content>
 			<p>
