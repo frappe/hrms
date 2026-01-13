@@ -935,11 +935,10 @@ def get_allocation_amount(paid_amount=None, claimed_amount=None, return_amount=N
 
 def update_expense_claim_on_unreconcile_payment(doc, method=None):
 	"""
-		Updates Expense Claim when unreconcile payment is submitted
-		We need to Check if allocations have reference to Expense Claim
-		and then update the total amount reimbursed in Expense Claim.
+	Updates Expense Claim when unreconcile payment is submitted
+	We need to Check if allocations have reference to Expense Claim
+	and then update the total amount reimbursed in Expense Claim.
 	"""
-
 	# Loop through allocations in the unreconcile payment
 	for alloc in doc.allocations:
 		# Check if the allocation reference is an Expense Claim
