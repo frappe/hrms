@@ -3,8 +3,10 @@ from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, add_months, flt, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
-from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 
+from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+	create_holiday_list_assignment,
+)
 from hrms.hr.doctype.leave_allocation.test_earned_leaves import (
 	allocate_earned_leaves_for_months,
 	create_earned_leave_type,
@@ -40,13 +42,13 @@ class TestLeaveLedger(IntegrationTestCase):
 			add_weekly_offs=False,
 		)
 		self.employee_1 = frappe.get_doc(
-			"Employee",
-			make_employee("test_emp_1@example.com", company="_Test Company", holiday_list=holiday_list),
+			"Employee", make_employee("test_emp_1@example.com", company="_Test Company")
 		)
+		create_holiday_list_assignment("Employee", self.employee_1.name, holiday_list)
 		self.employee_2 = frappe.get_doc(
-			"Employee",
-			make_employee("test_emp_2@example.com", company="_Test Company", holiday_list=holiday_list),
+			"Employee", make_employee("test_emp_2@example.com", company="_Test Company")
 		)
+		create_holiday_list_assignment("Employee", self.employee_2.name, holiday_list)
 
 		# create leave type
 		self.earned_leave = "Test Earned Leave"

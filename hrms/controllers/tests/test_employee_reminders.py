@@ -10,6 +10,9 @@ from frappe.utils import add_months, getdate
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.controllers.employee_reminders import send_holidays_reminder_in_advance
+from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+	create_holiday_list_assignment,
+)
 from hrms.hr.doctype.hr_settings.hr_settings import set_proceed_with_frequency_change
 from hrms.hr.utils import get_holidays_for_employee
 
@@ -22,7 +25,7 @@ class TestEmployeeReminders(IntegrationTestCase):
 
 		# Create a test holiday list
 		test_holiday_dates = cls.get_test_holiday_dates()
-		test_holiday_list = make_holiday_list(
+		test_holiday_list1 = make_holiday_list(
 			"TestHolidayRemindersList",
 			holiday_dates=[
 				{"holiday_date": test_holiday_dates[0], "description": "test holiday1"},
@@ -39,8 +42,7 @@ class TestEmployeeReminders(IntegrationTestCase):
 		test_employee = frappe.get_doc("Employee", make_employee("test@gopher.io", company="_Test Company"))
 
 		# Attach the holiday list to employee
-		test_employee.holiday_list = test_holiday_list.name
-		test_employee.save()
+		create_holiday_list_assignment("Employee", test_employee.name, test_holiday_list1.name)
 
 		# Attach to class
 		cls.test_employee = test_employee
@@ -50,7 +52,7 @@ class TestEmployeeReminders(IntegrationTestCase):
 		test_employee_2 = make_employee("test@empwithoutholiday.io", company="_Test Company")
 		test_employee_2 = frappe.get_doc("Employee", test_employee_2)
 
-		test_holiday_list = make_holiday_list(
+		test_holiday_list2 = make_holiday_list(
 			"TestHolidayRemindersList2",
 			holiday_dates=[
 				{"holiday_date": add_months(getdate(), 1), "description": "test holiday1"},
@@ -58,11 +60,9 @@ class TestEmployeeReminders(IntegrationTestCase):
 			from_date=add_months(getdate(), -2),
 			to_date=add_months(getdate(), 2),
 		)
-		test_employee_2.holiday_list = test_holiday_list.name
-		test_employee_2.save()
-
+		create_holiday_list_assignment("Employee", test_employee_2.name, test_holiday_list2.name)
 		cls.test_employee_2 = test_employee_2
-		cls.holiday_list_2 = test_holiday_list
+		cls.holiday_list_2 = test_holiday_list2
 
 	@classmethod
 	def get_test_holiday_dates(cls):

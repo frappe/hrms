@@ -1,0 +1,153 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2025-08-28 12:59:25.390188",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_wnwa",
+  "naming_series",
+  "applicable_for",
+  "assigned_to",
+  "employee_name",
+  "employee_company",
+  "amended_from",
+  "column_break_lzvp",
+  "holiday_list",
+  "from_date",
+  "holiday_list_start",
+  "holiday_list_end"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_wnwa",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Holiday List Assignment",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "holiday_list",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Holiday List",
+   "options": "Holiday List",
+   "reqd": 1
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Naming Series",
+   "options": "HR-HLA-.YYYY.-",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_lzvp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "assigned_to",
+   "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "label": "Assigned To",
+   "options": "applicable_for",
+   "reqd": 1
+  },
+  {
+   "fieldname": "employee_company",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Employee Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "applicable_for",
+   "fieldtype": "Select",
+   "label": "Applicable For",
+   "options": "Employee\nCompany",
+   "reqd": 1
+  },
+  {
+   "fieldname": "holiday_list_start",
+   "fieldtype": "Date",
+   "is_virtual": 1,
+   "label": "Holiday List Start"
+  },
+  {
+   "fieldname": "holiday_list_end",
+   "fieldtype": "Date",
+   "is_virtual": 1,
+   "label": "Holiday List End"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "Assignment Starts From",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-01-07 16:11:21.856458",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Holiday List Assignment",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "select": 1,
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "assigned_to"
+}

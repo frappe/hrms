@@ -269,10 +269,11 @@
    "type": "Link"
   }
  ],
- "modified": "2025-12-29 17:56:30.068543",
+ "modified": "2026-01-08 14:16:38.373198",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift & Attendance",
  "owner": "Administrator",
+ "standard": 1,
  "title": "Shift & Attendance"
 }

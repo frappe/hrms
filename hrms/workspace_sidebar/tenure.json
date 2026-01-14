@@ -222,10 +222,11 @@
    "type": "Link"
   }
  ],
- "modified": "2025-12-29 17:54:13.400507",
+ "modified": "2026-01-08 14:16:38.897628",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Tenure",
  "owner": "Administrator",
+ "standard": 1,
  "title": "Tenure"
 }

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-12-21 09:37+0000\n"
-"PO-Revision-Date: 2026-01-04 14:08\n"
+"PO-Revision-Date: 2026-01-05 14:42\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. Description of the 'Arrear Start Date' (Date) field in DocType 'Arrear'
 #: hrms/payroll/doctype/arrear/arrear.json
 msgid " Salary slips starting on or after this date will be considered for arrear calculations"
-msgstr ""
+msgstr " فیش‌های حقوقی که از این تاریخ یا بعد از آن شروع می‌شوند، برای محاسبه معوقات در نظر گرفته می‌شوند"
 
 #. Label of the unlink_payment_on_cancellation_of_employee_advance (Check)
 #. field in DocType 'HR Settings'
@@ -289,7 +289,7 @@ msgstr "<span class=\"h4\"><b>تراکنش‌ها و گزارش‌ها</b></span
 #. Header text in the Shift & Attendance Workspace
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "<span style=\"font-size: 18px;\"><b>Masters &amp; Reports</b></span>"
-msgstr "<span style=\"font-size: 18px;\"><b>مستندات و گزارش ها</b></span>"
+msgstr "<span style=\"font-size: 18px;\"><b>مستندات و گزارش‌ها</b></span>"
 
 #: hrms/public/js/utils/index.js:166
 msgid "<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>"
@@ -2423,7 +2423,7 @@ msgstr ""
 #. Label of a Card Break in the Payroll Workspace
 #: hrms/payroll/workspace/payroll/payroll.json
 msgid "Deduction Reports"
-msgstr "گزارش های کسر"
+msgstr "گزارش‌های کسر"
 
 #: hrms/hr/doctype/employee_advance/employee_advance.js:84
 msgid "Deduction from Salary"
@@ -3489,7 +3489,7 @@ msgstr "برای تعدیل، مقداری غیر از صفر وارد کنید.
 
 #: hrms/hr/doctype/hr_settings/hr_settings.js:34
 msgid "Enter the Standard Working Hours for a normal work day. These hours will be used in calculations of reports such as Employee Hours Utilization and Project Profitability analysis."
-msgstr "ساعات کاری استاندارد را برای یک روز کاری عادی وارد کنید. این ساعات در محاسبات گزارش هایی مانند استفاده از ساعت کارمندان و تجزیه و تحلیل سودآوری پروژه استفاده خواهد شد."
+msgstr "ساعات کاری استاندارد را برای یک روز کاری عادی وارد کنید. این ساعات در محاسبات گزارش‌هایی مانند استفاده از ساعت کارمندان و تجزیه و تحلیل سودآوری پروژه استفاده خواهد شد."
 
 #. Description of the 'Days to Reverse' (Float) field in DocType 'Payroll
 #. Correction'
