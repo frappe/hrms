@@ -36,6 +36,7 @@ class TestAttendance(IntegrationTestCase):
 		to_date = get_year_ending(getdate())
 		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
 		frappe.db.delete("Attendance")
+		frappe.db.delete("Employee Checkin")
 
 	def test_duplicate_attendance(self):
 		employee = make_employee("test_duplicate_attendance@example.com", company="_Test Company")
@@ -177,7 +178,6 @@ class TestAttendance(IntegrationTestCase):
 		employee = make_employee(
 			"test_unmarked_days@example.com", date_of_joining=add_days(attendance_date, -1)
 		)
-		frappe.db.set_value("Employee", employee, "holiday_list", self.holiday_list)
 
 		mark_attendance(employee, attendance_date, "Present")
 

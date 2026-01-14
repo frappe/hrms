@@ -198,10 +198,11 @@
    "type": "Link"
   }
  ],
- "modified": "2025-12-29 18:24:39.782954",
+ "modified": "2026-01-08 14:16:38.419516",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Recruitment",
  "owner": "Administrator",
+ "standard": 1,
  "title": "Recruitment"
 }

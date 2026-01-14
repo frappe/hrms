@@ -502,6 +502,10 @@ class TestSalarySlip(IntegrationTestCase):
 
 	@change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
 	def test_payment_days_calculation_for_lwp_on_month_boundaries(self):
+		from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+			create_holiday_list_assignment,
+		)
+
 		"""Tests LWP calculation leave applications created on month boundaries"""
 		holiday_list = make_holiday_list(
 			"Test Holiday List",
@@ -511,7 +515,7 @@ class TestSalarySlip(IntegrationTestCase):
 		emp_id = make_employee(
 			"test_payment_days_based_on_leave_application@salary.com", holiday_list=holiday_list
 		)
-
+		create_holiday_list_assignment("Employee", emp_id, holiday_list)
 		make_leave_application(emp_id, "2024-06-28", "2024-07-03", "Leave Without Pay")  # 3 days in July
 		make_leave_application(emp_id, "2024-07-10", "2024-07-13", "Leave Without Pay")  # 4 days in July
 		make_leave_application(emp_id, "2024-07-28", "2024-08-05", "Leave Without Pay")  # 3 days in July
