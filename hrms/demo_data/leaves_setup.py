@@ -12,7 +12,7 @@ Author: amezasor
 Version: 1.0.0
 
 Usage: 
-    bench --site [sitename] execute hrms.demo_data.leaves_mgm_setup.configure_leave_management
+    bench --site [sitename] execute hrms.demo_data.leaves_setup.configure_leave_management
 """
 from operator import le
 import os
