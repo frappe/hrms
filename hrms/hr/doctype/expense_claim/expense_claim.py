@@ -457,13 +457,12 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 	def set_base_fields_amount(self, doc, fields, exchange_rate=None):
 		"""set values in base currency"""
 		for f in fields:
-			if doc.get(f):
-				val = flt(
-					flt(doc.get(f), doc.precision(f))
-					* flt(exchange_rate if exchange_rate else self.exchange_rate),
-					doc.precision("base_" + f),
-				)
-				doc.set("base_" + f, val)
+			val = flt(
+				flt(doc.get(f), doc.precision(f))
+				* flt(exchange_rate if exchange_rate else self.exchange_rate),
+				doc.precision("base_" + f),
+			)
+			doc.set("base_" + f, val)
 
 	@frappe.whitelist()
 	def calculate_taxes(self):
@@ -497,23 +496,6 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 
 		for d in self.get("advances"):
 			self.round_floats_in(d)
-
-			adv_doc = frappe.db.get_value(
-				"Employee Advance",
-				d.employee_advance,
-				["posting_date", "advance_account", "paid_amount"],
-				as_dict=1,
-			)
-			aple_amount = frappe.db.get_value(
-				"Advance Payment Ledger Entry",
-				{"voucher_no": d.payment_entry, "event": "Submit", "delinked": 0},
-				"amount",
-			)
-			d.posting_date = adv_doc.posting_date
-			d.advance_account = adv_doc.advance_account
-			d.advance_paid = aple_amount if aple_amount else adv_doc.paid_amount
-			# d.unclaimed_amount = flt(ref_doc.paid_amount) - flt(ref_doc.claimed_amount)
-
 			if d.allocated_amount and flt(d.allocated_amount) > flt(
 				flt(d.unclaimed_amount) - flt(d.return_amount), precision
 			):
@@ -768,7 +750,7 @@ def get_expense_claim(employee_advance, payment_via_journal_entry):
 	expense_claim = frappe.new_doc("Expense Claim")
 	expense_claim.company = company
 	expense_claim.currency = employee_advance.currency
-	expense_claim.employee = employee_advance.employee_name
+	expense_claim.employee = employee_advance.employee
 	expense_claim.payable_account = (
 		default_payable_account
 		if employee_advance.currency == erpnext.get_company_currency(company)
