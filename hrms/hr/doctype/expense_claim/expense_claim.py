@@ -792,6 +792,7 @@ def get_expense_claim_advances(expense_claim, employee_advance):
 		expense_claim.append(
 			"advances",
 			{
+				"advance_account": employee_advance.advance_account,
 				"employee_advance": employee_advance.name,
 				"posting_date": employee_advance.posting_date,
 				"advance_paid": paid_amount,
