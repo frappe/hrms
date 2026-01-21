@@ -270,6 +270,9 @@ def create_attendance_record(employee, attendance_date, status, company, shift=N
     attendance = frappe.get_doc(attendance_doc)
     attendance.flags.ignore_mandatory = True
     attendance.insert(ignore_permissions=True)
+    # Reload to get fresh document with correct modified timestamp
+    # This prevents "has been modified" errors in bulk operations
+    attendance.reload()    
     attendance.submit()
     
     return attendance
