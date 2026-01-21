@@ -3,8 +3,6 @@ from frappe.query_builder.functions import IfNull
 
 
 def execute():
-	frappe.reload_doc("HR", "doctype", "Employee Advance")
-
 	EmployeeAdvance = frappe.qb.DocType("Employee Advance")
 	Company = frappe.qb.DocType("Company")
 

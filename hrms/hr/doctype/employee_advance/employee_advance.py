@@ -45,15 +45,22 @@ class EmployeeAdvance(Document):
 
 			if not same_currency:
 				frappe.throw(
-					_("Please set the Advance Account manually or in {0}").format(
-						get_link_to_form("Employee", self.employee + "#salary_information", self.employee)
-					)
+					_("Please set the Advance Account {0} or in {1}").format(
+						get_link_to_form("Employee Advance", self.name + "#advance_account", "here"),
+						get_link_to_form("Employee", self.employee + "#salary_information", self.employee),
+					),
+					title=_("Advance Account Required"),
 				)
 
 			frappe.throw(
 				_(
-					'Advance Account is mandatory. Please set the <a href="/app/company/{0}#default_employee_advance_account" target="_blank">Default Employee Advance Account</a> in the Company record {0} and submit this document.'
-				).format(self.company),
+					"Advance Account is mandatory. Please set the {0} in the Company {1} and submit this document."
+				).format(
+					get_link_to_form(
+						"Company", self.company + "#hr_and_payroll_tab", "Default Employee Advance Account"
+					),
+					frappe.bold(self.company),
+				),
 				title=_("Missing Advance Account"),
 			)
 

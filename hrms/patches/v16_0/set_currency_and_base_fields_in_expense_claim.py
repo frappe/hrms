@@ -2,8 +2,6 @@ import frappe
 
 
 def execute():
-	frappe.reload_doc("HR", "doctype", "Expense Claim")
-
 	ExpenseClaim = frappe.qb.DocType("Expense Claim")
 	Company = frappe.qb.DocType("Company")
 
