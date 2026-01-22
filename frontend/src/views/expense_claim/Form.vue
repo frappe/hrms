@@ -90,7 +90,6 @@ const tabs = [
 const expenseClaim = ref({
 	employee: currEmployee,
 	company: employeeCompany,
-	doctype: "Expense Claim"
 })
 
 const currency = computed(() => getCompanyCurrency(expenseClaim.value.company))
@@ -110,7 +109,6 @@ const formFields = createResource({
 	onSuccess(_data) {
 		expenseApproverDetails.reload()
 		companyDetails.reload()
-		employeeCurrency.reload()
 	},
 })
 formFields.reload()
@@ -118,22 +116,35 @@ formFields.reload()
 // resources
 const advances = createResource({
 	url: "hrms.hr.doctype.expense_claim.expense_claim.get_advances",
-	params: { expense_claim: expenseClaim.value },
+	params: { employee: currEmployee.value },
 	auto: true,
 	onSuccess(data) {
 		// set advances
-		if (!data) {
+		if (props.id) {
+			expenseClaim.value.advances?.map((advance) => (advance.selected = true))
+		} else {
 			expenseClaim.value.advances = []
-			return
 		}
 
-		if (!props.id) {
-			data.forEach((advance) => {
-				advance.allocated_amount = 0
-				advance.selected = true
+		return data.forEach((advance) => {
+			if (
+				props.id &&
+				expenseClaim.value.advances?.some(
+					(entry) => entry.employee_advance === advance.name
+				)
+			)
+				return
+
+			expenseClaim.value.advances?.push({
+				employee_advance: advance.name,
+				purpose: advance.purpose,
+				posting_date: advance.posting_date,
+				advance_account: advance.advance_account,
+				advance_paid: advance.paid_amount,
+				unclaimed_amount: advance.paid_amount - advance.claimed_amount,
+				allocated_amount: 0,
 			})
-			expenseClaim.value.advances = data
-		}
+		})
 	},
 })
 
@@ -152,21 +163,6 @@ const companyDetails = createResource({
 		expenseClaim.value.cost_center = data?.cost_center
 		expenseClaim.value.payable_account =
 			data?.default_expense_claim_payable_account
-	},
-})
-
-const employeeCurrency = createResource({
-	url: "hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
-	params: { employee: currEmployee.value },
-	onSuccess(data) {
-		expenseClaim.value.currency = data
-	},
-})
-
-const exchangeRate = createResource({
-	url: "erpnext.setup.utils.get_exchange_rate",
-	onSuccess(data) {
-		expenseClaim.value.exchange_rate = data
 	},
 })
 
@@ -190,13 +186,9 @@ watch(
 	}
 )
 watch(
-	() => expenseClaim.value.currency,
-	() => setExchangeRate()
-)
-watch(
-	() => expenseClaim.value.expenses,
+	() => props.id && expenseClaim.value.expenses,
 	(_) => {
-		if (!props.id && expenseClaim.value.docstatus === 0) {
+		if (expenseClaim.value.docstatus === 0) {
 			advances.reload()
 		}
 	}
@@ -419,24 +411,6 @@ function validateForm() {
 	expenseClaim?.value?.expenses?.forEach((expense) => {
 		expense.cost_center = expenseClaim.value.cost_center
 	})
-}
-
-function setExchangeRate() {
-	if (!expenseClaim.value.currency) return
-	const exchange_rate_field = formFields.data?.find(
-		(field) => field.fieldname === "exchange_rate"
-	)
-
-	if (expenseClaim.value.currency === currency.value) {
-		expenseClaim.value.exchange_rate = 1
-		exchange_rate_field.hidden = 1
-	} else {
-		exchangeRate.fetch({
-			from_currency: expenseClaim.value.currency,
-			to_currency: currency.value,
-		})
-		exchange_rate_field.hidden = 0
-	}
 }
 
 </script>

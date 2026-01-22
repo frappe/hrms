@@ -69,6 +69,13 @@ const employeeCurrency = createResource({
 	},
 })
 
+const exchangeRate = createResource({
+	url: "erpnext.setup.utils.get_exchange_rate",
+	onSuccess(data) {
+		employeeAdvance.value.exchange_rate = data
+	},
+})
+
 const advanceAccount = createResource({
 	url: "hrms.api.get_advance_account",
 	params: { company: employeeAdvance.value.company },
@@ -76,6 +83,12 @@ const advanceAccount = createResource({
 		employeeAdvance.value.advance_account = data
 	},
 })
+
+// form scripts
+watch(
+	() => employeeAdvance.value.currency,
+	() => setExchangeRate()
+)
 
 // helper functions
 function getFilteredFields(fields) {
@@ -114,6 +127,24 @@ function applyFilters(fields) {
 
 		return field
 	})
+}
+
+function setExchangeRate() {
+	if (!employeeAdvance.value.currency) return
+	const exchange_rate_field = formFields.data?.find(
+		(field) => field.fieldname === "exchange_rate"
+	)
+
+	if (employeeAdvance.value.currency === companyCurrency.value) {
+		employeeAdvance.value.exchange_rate = 1
+		exchange_rate_field.hidden = 1
+	} else {
+		exchangeRate.fetch({
+			from_currency: employeeAdvance.value.currency,
+			to_currency: companyCurrency.value,
+		})
+		exchange_rate_field.hidden = 0
+	}
 }
 
 function validateForm() {}
