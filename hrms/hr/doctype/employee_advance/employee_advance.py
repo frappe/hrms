@@ -46,7 +46,7 @@ class EmployeeAdvance(Document):
 			if not same_currency:
 				frappe.throw(
 					_("Please set the Advance Account {0} or in {1}").format(
-						get_link_to_form("Employee Advance", self.name + "#advance_account", "here"),
+						get_link_to_form("Employee Advance", self.name + "#advance_account", _("here")),
 						get_link_to_form("Employee", self.employee + "#salary_information", self.employee),
 					),
 					title=_("Advance Account Required"),
