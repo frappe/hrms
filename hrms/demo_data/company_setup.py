@@ -61,10 +61,6 @@ def create_demo_data(company="NovaSoft", abbr="NS", roster_path=None):
 	# 7 Creating Employees
 	print("Creating Employees...")
 	create_users_and_employees(company_name, employees_data)
-
-	# 8 Create Holiday List Assignments (required in develop branch)
-	print("\nCreating Holiday List Assignments...")
-	create_holiday_list_assignments(company_name, "US Holidays 2025")
 	
 	# 8 Update reports_to relationships
 	print("\nSetting up reporting hierarchy...")
@@ -736,7 +732,7 @@ def create_users_and_employees(company_name, employees_data):
 				"unsubscribed": 1,
 				"person_to_be_contacted": emp_data.get("person_to_be_contacted"),
 				"emergency_phone_number": emp_data.get("emergency_phone_number"),
-				# "holiday_list": "US Holidays 2025",  # Legacy: develop branch requires Holiday List Assignment instead of direct field assignment
+				"holiday_list": "US Holidays 2025",
 				"default_shift": "Morning",
 				"salary_currency": "USD",
 				"salary_mode": "Bank",
@@ -793,55 +789,6 @@ def create_users_and_employees(company_name, employees_data):
 			print(f"    ... and {len(errors) - 5} more")
 	
 	return employee_count
-
-def create_holiday_list_assignments(company="NovaSoft", holiday_list_name="US Holidays 2025"):
-    """
-    Create Holiday List Assignments for all employees in the company.
-    Required in ERPNext develop branch - direct field assignment no longer works.
-    """
-    print(f"\n  Creating Holiday List Assignments...")
-    
-    # Get the holiday list date range
-    holiday_list_dates = frappe.db.get_value(
-        "Holiday List", 
-        holiday_list_name, 
-        ["from_date", "to_date"],
-        as_dict=True
-    )
-    
-    if not holiday_list_dates:
-        print(f"  ⚠ Holiday List '{holiday_list_name}' not found")
-        return 0
-    
-    employees = frappe.get_all(
-        "Employee",
-        filters={"company": company, "status": "Active"},
-        pluck="name"
-    )
-    
-    created = 0
-    for emp_id in employees:
-        existing = frappe.db.exists("Holiday List Assignment", {
-            "assigned_to": emp_id,
-            "holiday_list": holiday_list_name
-        })
-        
-        if not existing:
-            assignment = frappe.get_doc({
-                "doctype": "Holiday List Assignment",
-                "applicable_for": "Employee",
-                "assigned_to": emp_id,
-                "holiday_list": holiday_list_name,
-                "company": company,
-                "from_date": holiday_list_dates.from_date,
-                "to_date": holiday_list_dates.to_date
-            })
-            assignment.insert(ignore_permissions=True)
-            assignment.submit()
-            created += 1
-    
-    print(f"  ✓ Created {created} Holiday List Assignments")
-    return created
 
 def update_reports_to(company_name, employees_data):
 	"""
