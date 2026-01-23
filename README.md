@@ -15,12 +15,21 @@ Authenticate with Docker Hub to allow Podman to pull images from the Docker regi
 
 ```
 podman login docker.io
+podman pull frappe/bench:v5.22.8
 ```
 
 Start or stop the containers:
 ```
 podman-compose up
 podman compose down
+```
+
+The containers will be set up with the following software stack:
+```
+frappe/bench:v5.22.8 (base image)
+Frappe v15.95.0
+ERPNext v15.95.0
+HRMS v15.55.0
 ```
 
 The default docker-compose.yml file launches the application at: `localhost:8000`
