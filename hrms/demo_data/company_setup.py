@@ -235,8 +235,8 @@ def create_holiday_list_us():
 			{"holiday_date": "2025-05-26", "description": "Memorial Day", "is_half_day": 0},
 			{"holiday_date": "2025-07-04", "description": "Independence Day", "is_half_day": 0},
 			{"holiday_date": "2025-09-01", "description": "Labor Day", "is_half_day": 0},
-			{"holiday_date": "2025-11-24", "description": "Thanksgiving Day", "is_half_day": 0},
-			{"holiday_date": "2025-11-26", "description": "Day After Thanksgiving", "is_half_day": 0},
+			{"holiday_date": "2025-11-27", "description": "Thanksgiving Day", "is_half_day": 0},
+			{"holiday_date": "2025-11-28", "description": "Day After Thanksgiving", "is_half_day": 0},
 			{"holiday_date": "2025-12-24", "description": "Christmas Eve", "is_half_day": 1},
 			{"holiday_date": "2025-12-25", "description": "Christmas Day", "is_half_day": 0},
 		]
