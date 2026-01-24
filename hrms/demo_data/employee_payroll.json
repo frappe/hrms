@@ -1,0 +1,158 @@
+{
+  "salary_components": [
+    {
+      "name": "House Rent Allowance",
+      "abbr": "HRA",
+      "type": "Earning",
+      "description": "House Rent Allowance for employees",
+      "is_tax_applicable": 1,
+      "depends_on_payment_days": 1
+    },
+    {
+      "name": "Transport Allowance",
+      "abbr": "TA",
+      "type": "Earning",
+      "description": "Transport/Commute Allowance",
+      "is_tax_applicable": 1,
+      "depends_on_payment_days": 1
+    },
+    {
+      "name": "Special Allowance",
+      "abbr": "SA",
+      "type": "Earning",
+      "description": "Special Allowance",
+      "is_tax_applicable": 1,
+      "depends_on_payment_days": 1
+    },
+    {
+      "name": "Provident Fund",
+      "abbr": "PF",
+      "type": "Deduction",
+      "description": "Employee Provident Fund contribution",
+      "is_tax_applicable": 0,
+      "depends_on_payment_days": 0
+    },
+    {
+      "name": "Professional Tax",
+      "abbr": "PT",
+      "type": "Deduction",
+      "description": "Professional Tax deduction",
+      "is_tax_applicable": 0,
+      "depends_on_payment_days": 0
+    },
+    {
+      "name": "Health Insurance",
+      "abbr": "HI",
+      "type": "Deduction",
+      "description": "Health Insurance premium deduction",
+      "is_tax_applicable": 0,
+      "depends_on_payment_days": 0
+    }
+  ],
+  "salary_structures": [
+    {
+      "name": "Executive Level",
+      "company": "NovaSoft",
+      "payroll_frequency": "Monthly",
+      "is_active": "Yes",
+      "earnings": [
+        {"salary_component": "Basic", "amount": 15000},
+        {"salary_component": "House Rent Allowance", "amount": 6000},
+        {"salary_component": "Transport Allowance", "amount": 2000},
+        {"salary_component": "Special Allowance", "amount": 2000}
+      ],
+      "deductions": [
+        {"salary_component": "Provident Fund", "amount": 1800},
+        {"salary_component": "Professional Tax", "amount": 200},
+        {"salary_component": "Health Insurance", "amount": 500}
+      ]
+    },
+    {
+      "name": "Manager Level",
+      "company": "NovaSoft",
+      "payroll_frequency": "Monthly",
+      "is_active": "Yes",
+      "earnings": [
+        {"salary_component": "Basic", "amount": 10000},
+        {"salary_component": "House Rent Allowance", "amount": 4000},
+        {"salary_component": "Transport Allowance", "amount": 1500},
+        {"salary_component": "Special Allowance", "amount": 1500}
+      ],
+      "deductions": [
+        {"salary_component": "Provident Fund", "amount": 1200},
+        {"salary_component": "Professional Tax", "amount": 200},
+        {"salary_component": "Health Insurance", "amount": 400}
+      ]
+    },
+    {
+      "name": "Staff Level",
+      "company": "NovaSoft",
+      "payroll_frequency": "Monthly",
+      "is_active": "Yes",
+      "earnings": [
+        {"salary_component": "Basic", "amount": 6000},
+        {"salary_component": "House Rent Allowance", "amount": 2400},
+        {"salary_component": "Transport Allowance", "amount": 1000},
+        {"salary_component": "Special Allowance", "amount": 600}
+      ],
+      "deductions": [
+        {"salary_component": "Provident Fund", "amount": 720},
+        {"salary_component": "Professional Tax", "amount": 150},
+        {"salary_component": "Health Insurance", "amount": 300}
+      ]
+    }
+  ],
+  "employee_assignments": [
+    {
+      "employee_id": "HR-EMP-00004",
+      "employee_name": "Eugene Sanders",
+      "salary_structure": "Executive Level",
+      "from_date": "2025-01-03",
+      "base": 25000
+    },
+    {
+      "employee_id": "HR-EMP-00059",
+      "employee_name": "Maria Torres",
+      "salary_structure": "Manager Level",
+      "from_date": "2025-02-09",
+      "base": 17000
+    },
+    {
+      "employee_id": "HR-EMP-00060",
+      "employee_name": "Nathan Brooks",
+      "salary_structure": "Staff Level",
+      "from_date": "2025-02-17",
+      "base": 10000
+    },
+    {
+      "employee_id": "HR-EMP-00061",
+      "employee_name": "Taylor Kim",
+      "salary_structure": "Staff Level",
+      "from_date": "2025-02-18",
+      "base": 10000
+    },
+    {
+      "employee_id": "HR-EMP-00062",
+      "employee_name": "Helena Santos",
+      "salary_structure": "Staff Level",
+      "from_date": "2025-02-19",
+      "base": 10000
+    }
+  ],
+  "payroll_entries": [
+    {
+      "posting_date": "2025-11-30",
+      "company": "NovaSoft",
+      "payroll_frequency": "Monthly",
+      "start_date": "2025-11-01",
+      "end_date": "2025-11-30",
+      "department": "Accounts - NS"
+    }
+  ],
+  "metadata": {
+    "description": "Payroll data for Accounts department employees - November 2025",
+    "payroll_month": "November 2025",
+    "currency": "USD",
+    "notes": "Employees with attendance records from employee_attendance.json"
+  }
+}
