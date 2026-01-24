@@ -3,8 +3,11 @@ This repository is a fork of [Frappe HR official codebase](https://github.com/fr
 
 Clone the branch `blue-develop` to set up Frappe HR containers plus the demo database used for benchmark development.
 
+# Running local containers
+You need Podman ( open source altervative to Docker) on your machine to run local containers. Refer [Podman Installation](https://podman.io/docs/installation) documentation.
+
 ### Setting Up Local Containers with Podman
-Initialize and start the Podman virtual machine:
+Create and start the Podman virtual machine:
 
 ```
 podman machine init
@@ -15,17 +18,49 @@ Authenticate with Docker Hub to allow Podman to pull images from the Docker regi
 
 ```
 podman login docker.io
+podman pull frappe/bench:v5.22.8
 ```
 
-Start or stop the containers:
+### Development setup
+
+#### Cloning Repo
 ```
+git clone git@github.com:blue-enterprise/hrms.git
+```
+
+#### Start the hrms app
+```
+cd hrms/docker
 podman-compose up
-podman-compose down
+```
+Note: Start new terminal sessions for further work.
+
+This will download the required image and start 3 containers, which you can verify using command `podman ps`
+
+```
+docker_mariadb_1
+docker_redis_1
+docker_frappe_1
+```
+
+
+The containers will be set up with the following software stack:
+```
+frappe/bench:v5.22.8 (base image)
+Frappe v15.95.0
+ERPNext v15.95.0
+HRMS v15.55.0
 ```
 
 The default docker-compose.yml file launches the application at: `localhost:8000`
 
 > Note: If you prefer using Docker, refer to the original documentation.
+
+#### Stop the hrms app
+```
+podman compose down
+```
+
 
 ### Adding Employee Data to an Existing Container Programmatically
 
@@ -108,8 +143,6 @@ podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.lo
 Creates recruitment demo data including: Skills, Interview Types, Staffing Plans, Job Requisitions, Job Openings, Job Applicants, Interviews, Job Offers, and Appointment Letters.
 
 ```
-podman cp hrms/demo_data/recruitment_setup.py docker_frappe_1:/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/recruitment_setup.py
-
 podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.recruitment_setup.create_recruitment_data --kwargs "{\"company\": \"NovaSoft\"}"'
 ```
 
@@ -123,8 +156,6 @@ podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.lo
 Creates performance management demo data including: Feedback Criteria, KRAs, Appraisal Templates, Appraisal Cycles, Employee Goals (with sub-goals), Appraisals, and Performance Feedback.
 
 ```
-podman cp hrms/demo_data/performance_setup.py docker_frappe_1:/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/performance_setup.py
-
 podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.performance_setup.create_performance_data --kwargs "{\"company\": \"NovaSoft\"}"'
 ```
 
@@ -138,8 +169,6 @@ podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.lo
 Creates employee lifecycle demo data including: Onboarding Templates, Employee Onboardings, Training Programs, Training Events, Training Results, Training Feedback, Skills, Employee Skill Maps, Employee Promotions, Employee Transfers, Separation Templates, Employee Separations, Exit Interviews, Full & Final Statements, Grievance Types, Employee Grievances, Daily Work Summary Groups, and Daily Work Summaries.
 
 ```
-podman cp hrms/demo_data/tenure_setup.py docker_frappe_1:/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/tenure_setup.py
-
 podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.tenure_setup.create_tenure_data --kwargs "{\"company\": \"NovaSoft\"}"'
 ```
 
@@ -168,8 +197,8 @@ Log in using the `Administrator` user, and HR user, and another user to check ac
 
 ## UI troubleshooting
 
-* The UI displays the setup wizard and does not offer an option to skip it the first time you log in, go trhough it and create a new `test` company.
-* The impersonation feature is usually active the first time you log-in as administrator. Simply log-off and log-in again to deactivate.
+* The UI displays the setup wizard and does not offer an option to skip it the first time you log in, go through it and create a new `test` company.
+* If you are not logged as Administrator, the impersonation feature might be active. Simply log-off and log-in again.
 
 ## DB Updates
 
