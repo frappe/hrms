@@ -25,7 +25,7 @@ sed -i '/redis/d' ./Procfile
 sed -i '/watch/d' ./Procfile
 
 bench get-app erpnext
-bench get-app /workspace/hrms-local
+bench get-app file:///workspace/hrms-local
 
 bench new-site hrms.localhost \
 --force \
