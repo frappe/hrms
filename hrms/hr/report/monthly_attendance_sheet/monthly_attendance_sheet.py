@@ -35,6 +35,7 @@ day_abbr = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
 
 def execute(filters: Filters | None = None) -> tuple:
+	"""Main entry point for the Monthly Attendance Sheet report."""
 	filters = frappe._dict(filters or {})
 
 	if not filters.filter_based_on:
@@ -78,6 +79,7 @@ def execute(filters: Filters | None = None) -> tuple:
 
 
 def get_message() -> str:
+	"""Returns HTML legend showing attendance status codes and their colors."""
 	message = ""
 	colors = [
 		"green",
@@ -103,6 +105,7 @@ def get_message() -> str:
 
 
 def get_columns(filters: Filters) -> list[dict]:
+	"""Returns report columns based on filters (summarized vs detailed view)."""
 	columns = []
 
 	if filters.group_by:
@@ -186,6 +189,7 @@ def get_columns(filters: Filters) -> list[dict]:
 
 
 def get_columns_for_leave_types() -> list[dict]:
+	"""Returns column definitions for each leave type in the system."""
 	leave_types = frappe.db.get_all("Leave Type", pluck="name")
 	types = []
 	for entry in leave_types:
@@ -195,6 +199,7 @@ def get_columns_for_leave_types() -> list[dict]:
 
 
 def get_columns_for_days(filters: Filters) -> list[dict]:
+	"""Returns column definitions for each day in the selected period."""
 	days = []
 	dates_in_period = get_dates_in_period(filters)
 	for d in dates_in_period:
@@ -209,6 +214,7 @@ def get_columns_for_days(filters: Filters) -> list[dict]:
 
 
 def get_dates_in_period(filters: Filters) -> list[str]:
+	"""Returns list of date strings for the selected month or date range."""
 	dates_in_period = []
 	if filters.filter_based_on == "Month":
 		total_days = get_total_days_in_month(filters)
@@ -223,10 +229,12 @@ def get_dates_in_period(filters: Filters) -> list[str]:
 
 
 def get_total_days_in_month(filters: Filters) -> int:
+	"""Returns the number of days in the selected month."""
 	return monthrange(cint(filters.year), cint(filters.month))[1]
 
 
 def get_date_condition(docfield: Field, filters: Filters) -> Criterion:
+	"""Returns a PyPika criterion for filtering by month/year or date range."""
 	if filters.filter_based_on == "Month":
 		return (Extract("month", docfield) == filters.month) & (Extract("year", docfield) == filters.year)
 	if filters.filter_based_on == "Date Range":
@@ -234,6 +242,7 @@ def get_date_condition(docfield: Field, filters: Filters) -> Criterion:
 
 
 def get_data(filters: Filters, attendance_map: dict) -> list[dict]:
+	"""Returns report data rows, optionally grouped by branch/department/etc."""
 	employee_details, group_by_param_values = get_employee_related_details(filters)
 	holiday_map = get_holiday_map(filters)
 	data = []
@@ -304,6 +313,7 @@ def get_attendance_map(filters: Filters) -> dict:
 
 
 def get_attendance_records(filters: Filters) -> list[dict]:
+	"""Fetches attendance records filtered by company, department, branch, and date."""
 	Attendance = frappe.qb.DocType("Attendance")
 	Employee = frappe.qb.DocType("Employee")
 	attendance_date_condition = get_date_condition(Attendance.attendance_date, filters)
@@ -455,6 +465,7 @@ def get_holiday_map(filters: Filters) -> dict[str, list[dict]]:
 
 
 def get_rows(employee_details: dict, filters: Filters, holiday_map: dict, attendance_map: dict) -> list[dict]:
+	"""Builds attendance rows for each employee in summarized or detailed format."""
 	records = []
 	default_holiday_list = frappe.get_cached_value("Company", filters.company, "default_holiday_list")
 
@@ -497,6 +508,7 @@ def get_rows(employee_details: dict, filters: Filters, holiday_map: dict, attend
 
 
 def set_defaults_for_summarized_view(filters, row):
+	"""Initializes all Float columns to 0.0 for a summarized view row."""
 	for entry in get_columns(filters):
 		if entry.get("fieldtype") == "Float":
 			row[entry.get("fieldname")] = 0.0
@@ -536,6 +548,7 @@ def get_attendance_status_for_summarized_view(
 
 
 def get_attendance_summary_and_days(employee: str, filters: Filters) -> tuple[dict, list]:
+	"""Returns attendance totals (present, absent, leave, half-day) and list of marked days."""
 	Attendance = frappe.qb.DocType("Attendance")
 
 	present_case = (
@@ -622,6 +635,7 @@ def get_attendance_status_for_detailed_view(
 
 
 def get_holiday_status(holiday_date: date, holidays: list) -> str:
+	"""Returns 'Holiday' or 'Weekly Off' if the date is in the holiday list."""
 	status = None
 	if holidays:
 		for holiday in holidays:
@@ -710,6 +724,7 @@ def get_attendance_years() -> str:
 
 
 def get_chart_data(attendance_map: dict, filters: Filters) -> dict:
+	"""Returns chart configuration with daily absent/present/leave counts."""
 	days = get_columns_for_days(filters)
 	labels = []
 	absent = []
