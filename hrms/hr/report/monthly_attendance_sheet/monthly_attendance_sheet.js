@@ -70,10 +70,18 @@ frappe.query_reports["Monthly Attendance Sheet"] = {
 			depends_on: "eval:doc.filter_based_on == 'Month'",
 		},
 		{
-			fieldname: "employee",
-			label: __("Employee"),
+			fieldname: "company",
+			label: __("Company"),
 			fieldtype: "Link",
-			options: "Employee",
+			options: "Company",
+			default: frappe.defaults.get_user_default("Company"),
+			reqd: 1,
+		},
+		{
+			fieldname: "department",
+			label: __("Department"),
+			fieldtype: "Link",
+			options: "Department",
 			get_query: () => {
 				var company = frappe.query_report.get_filter_value("company");
 				return {
@@ -84,12 +92,33 @@ frappe.query_reports["Monthly Attendance Sheet"] = {
 			},
 		},
 		{
-			fieldname: "company",
-			label: __("Company"),
+			fieldname: "branch",
+			label: __("Branch"),
 			fieldtype: "Link",
-			options: "Company",
-			default: frappe.defaults.get_user_default("Company"),
-			reqd: 1,
+			options: "Branch",
+		},
+		{
+			fieldname: "employee",
+			label: __("Employee"),
+			fieldtype: "Link",
+			options: "Employee",
+			get_query: () => {
+				var company = frappe.query_report.get_filter_value("company");
+				var department = frappe.query_report.get_filter_value("department");
+				var branch = frappe.query_report.get_filter_value("branch");
+				var filters = {
+					company: company,
+				};
+				if (department) {
+					filters.department = department;
+				}
+				if (branch) {
+					filters.branch = branch;
+				}
+				return {
+					filters: filters,
+				};
+			},
 		},
 		{
 			fieldname: "group_by",

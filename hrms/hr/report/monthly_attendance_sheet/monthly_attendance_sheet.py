@@ -305,6 +305,7 @@ def get_attendance_map(filters: Filters) -> dict:
 
 def get_attendance_records(filters: Filters) -> list[dict]:
 	Attendance = frappe.qb.DocType("Attendance")
+	Employee = frappe.qb.DocType("Employee")
 	attendance_date_condition = get_date_condition(Attendance.attendance_date, filters)
 	status = (
 		frappe.qb.terms.Case()
@@ -335,6 +336,14 @@ def get_attendance_records(filters: Filters) -> list[dict]:
 
 	if filters.employee:
 		query = query.where(Attendance.employee == filters.employee)
+
+	if filters.department or filters.branch:
+		query = query.join(Employee).on(Attendance.employee == Employee.name)
+		if filters.department:
+			query = query.where(Employee.department == filters.department)
+		if filters.branch:
+			query = query.where(Employee.branch == filters.branch)
+
 	query = query.orderby(Attendance.employee, Attendance.attendance_date)
 
 	return query.run(as_dict=1)
@@ -374,6 +383,12 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 
 	if filters.employee:
 		query = query.where(Employee.name == filters.employee)
+
+	if filters.department:
+		query = query.where(Employee.department == filters.department)
+
+	if filters.branch:
+		query = query.where(Employee.branch == filters.branch)
 
 	group_by = filters.group_by
 	if group_by:
