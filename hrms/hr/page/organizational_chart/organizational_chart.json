@@ -4,7 +4,7 @@
  "docstatus": 0,
  "doctype": "Page",
  "idx": 0,
- "modified": "2021-05-25 10:53:18.201931",
+ "modified": "2026-01-24 18:44:07.197592",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "organizational-chart",
@@ -16,6 +16,9 @@
   },
   {
    "role": "HR Manager"
+  },
+  {
+   "role": "Employee"
   }
  ],
  "script": null,
