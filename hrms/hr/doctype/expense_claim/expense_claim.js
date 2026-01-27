@@ -346,7 +346,7 @@ frappe.ui.form.on("Expense Claim", {
 
 	update_employee_advance_claimed_amount: function (frm) {
 		let amount_to_be_allocated =
-			frm.doc.total_sanctioned_amount + flt(frm.doc.total_taxes_and_charges);
+			flt(frm.doc.total_sanctioned_amount) + flt(frm.doc.total_taxes_and_charges);
 		$.each(frm.doc.advances || [], function (i, advance) {
 			if (amount_to_be_allocated >= advance.unclaimed_amount - advance.return_amount) {
 				advance.allocated_amount =
