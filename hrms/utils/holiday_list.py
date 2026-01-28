@@ -1,6 +1,6 @@
 import frappe
 from frappe import _
-from frappe.utils import add_days, getdate
+from frappe.utils import add_days, get_link_to_form, getdate
 
 
 def get_holiday_dates_between(
@@ -90,7 +90,11 @@ def get_holiday_list_for_employee(
 
 	if not holiday_list and raise_exception:
 		frappe.throw(
-			_("Please assign Holiday List for Employee {0} or their company {1}").format(employee, company)
+			_("Please assign Holiday List for Employee {0} or their company {1} through {2}").format(
+				employee,
+				company,
+				get_link_to_form("Holiday List Assignment", label="Holiday List Assignment"),
+			)
 		)
 	return holiday_list
 

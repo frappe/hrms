@@ -171,7 +171,9 @@ def get_employee_field_property(employee, fieldname):
 	if not field:
 		return
 
-	value = frappe.db.get_value("Employee", employee, fieldname)
+	doc = frappe.get_doc("Employee", employee, check_permission=True)
+	value = doc.get(fieldname)
+
 	if field.fieldtype == "Date":
 		value = formatdate(value)
 	elif field.fieldtype == "Datetime":
