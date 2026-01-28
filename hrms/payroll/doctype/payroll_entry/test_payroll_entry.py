@@ -121,7 +121,7 @@ class TestPayrollEntry(HRMSTestSuite):
 				ifnull(sum(je.total_credit),0) as total_credit
 			from `tabJournal Entry` je, `tabJournal Entry Account` jea
 			where je.name = jea.parent
-				and je.voucher_type = 'Bank Entry'
+				and (je.voucher_type = 'Bank Entry' or je.voucher_type = 'Cash Entry')
 				and jea.reference_name = %s
 			""",
 			payroll_entry.name,
@@ -827,7 +827,7 @@ class TestPayrollEntry(HRMSTestSuite):
 			SELECT je.total_debit, je.total_credit
 			FROM `tabJournal Entry` je
 			INNER JOIN `tabJournal Entry Account` jea ON je.name = jea.parent
-			WHERE je.voucher_type = 'Bank Entry' AND jea.reference_type = 'Payroll Entry' AND jea.reference_name = %s
+			WHERE (je.voucher_type = 'Bank Entry' or je.voucher_type = 'Cash Entry') AND jea.reference_type = 'Payroll Entry' AND jea.reference_name = %s
 			LIMIT 1
 			""",
 			payroll_entry.name,
