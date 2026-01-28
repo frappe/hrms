@@ -10,7 +10,7 @@
 				</div>
 
 				<div class="mx-auto mt-10 w-full px-8 sm:w-96">
-					<form class="flex flex-col space-y-4" @submit.prevent="submit">
+					<form v-if="!user_pass_login_disabled.data" class="flex flex-col space-y-4" @submit.prevent="submit">
 						<Input
 							:label="__('Email')"
 							:placeholder="__('johndoe@mail.com')"
@@ -36,7 +36,7 @@
 					</form>
 
 					<template v-if="authProviders.data?.length">
-						<div class="text-center text-sm text-gray-600 my-4">or</div>
+						<div v-if="!user_pass_login_disabled.data" class="text-center text-sm text-gray-600 my-4">or</div>
 						<div class="space-y-4">
 							<a
 								v-for="provider in authProviders.data"
@@ -49,6 +49,8 @@
 							</a>
 						</div>
 					</template>
+
+					<div v-else-if="user_pass_login_disabled.data" class="text-center text-gray-600 py-8">{{ __("No login methods are available. Please contact your administrator.") }}</div>
 				</div>
 			</div>
 
@@ -161,6 +163,13 @@ async function submit(e) {
 		errorMessage.value = error.messages.join("\n")
 	}
 }
+
+const user_pass_login_disabled = createResource({
+	url: "hrms.api.system_settings.get_user_pass_login_disabled",
+	method: 'GET',
+	initialData: 1,
+	auto: true,
+})
 
 const authProviders = createResource({
 	url: "hrms.api.oauth.oauth_providers",
