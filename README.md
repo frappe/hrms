@@ -98,13 +98,13 @@ Use the following credentials to log in:
 	```
 2. In a separate terminal window, run the following commands
 	```sh
-	$ bench new-site hrms.local
+	$ bench new-site hrms.localhost
 	$ bench get-app erpnext
 	$ bench get-app hrms
-	$ bench --site hrms.local install-app hrms
-	$ bench --site hrms.local add-to-hosts
+	$ bench --site hrms.localhost install-app hrms
+	$ bench --site hrms.localhost add-to-hosts
 	```
-3. You can access the site at `http://hrms.local:8080`
+3. You can access the site at `http://hrms.localhost:8080`
 
 ## Learning and Community
 
