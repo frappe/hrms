@@ -23,6 +23,7 @@ Filters = frappe._dict
 status_map = {
 	"Present": "P",
 	"Absent": "A",
+	"Half Day": "HD",
 	"Half Day/Other Half Absent": "HD/A",
 	"Half Day/Other Half Present": "HD/P",
 	"Work From Home": "WFH",
@@ -82,6 +83,7 @@ def get_message() -> str:
 	colors = [
 		"green",
 		"red",
+		"orange",
 		"orange",
 		"#914EE3",
 		"green",
