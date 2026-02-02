@@ -189,6 +189,19 @@ If you need to clean the attendance data for development purposes use:
 podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.leaves_management_setup.clear_leave_configuration --kwargs "{\"company\": \"NovaSoft\"}"'
 ```
 
+### Adding Expense Claims Data to Existing Company Programmatically
+
+Creates expense claims demo data including: Expense Claim Types, Employee Advances, and Expense Claims across multiple employees with various statuses (Paid, Unpaid, Draft, Rejected).
+
+```
+podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.expense_claims_setup.create_expense_claims_data --kwargs "{\"company\": \"NovaSoft\"}"'
+```
+
+To clear expense claims data for development purposes:
+```
+podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.expense_claims_setup.clear_expense_claims_data --kwargs "{\"company\": \"NovaSoft\"}"'
+```
+
 ## Verifying Data in the App
 
 Navigate to `http://localhost:8000/app`, select the `NovaSoft` company, and confirm that the employees and related records have been created.

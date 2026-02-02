@@ -2,11 +2,9 @@
   "expense_claim_types": [
     {"name": "Travel", "description": "Air, train, car rental for business trips"},
     {"name": "Accommodation", "description": "Hotels and lodging during business travel"},
-    {"name": "Meals", "description": "Food expenses during work travel or meetings"},
     {"name": "Client Entertainment", "description": "Client dinners, events, and hospitality"},
     {"name": "Office Supplies", "description": "Stationery, printer supplies, small equipment"},
     {"name": "Training", "description": "Courses, certifications, professional development"},
-    {"name": "Communication", "description": "Phone, internet, communication expenses"},
     {"name": "Mileage", "description": "Personal vehicle usage reimbursement at $0.67/mile"}
   ],
   "employee_advances": [
@@ -41,7 +39,7 @@
       "expenses": [
         {"expense_type": "Travel", "expense_date": "2025-10-15", "amount": 450.00, "description": "Flight to Chicago - client visit"},
         {"expense_type": "Accommodation", "expense_date": "2025-10-15", "amount": 380.00, "description": "Hotel - 2 nights at Marriott Chicago"},
-        {"expense_type": "Meals", "expense_date": "2025-10-16", "amount": 120.00, "description": "Meals during client visit (3 days)"},
+        {"expense_type": "Food", "expense_date": "2025-10-16", "amount": 120.00, "description": "Meals during client visit (3 days)"},
         {"expense_type": "Travel", "expense_date": "2025-10-17", "amount": 85.00, "description": "Uber rides to/from airport and client site"}
       ]
     },
@@ -63,7 +61,7 @@
         {"expense_type": "Training", "expense_date": "2025-11-10", "amount": 600.00, "description": "SaaS Sales Summit 2025 - registration fee"},
         {"expense_type": "Travel", "expense_date": "2025-11-10", "amount": 320.00, "description": "Flight to San Francisco for conference"},
         {"expense_type": "Accommodation", "expense_date": "2025-11-10", "amount": 450.00, "description": "Hotel - 2 nights at Hilton Union Square"},
-        {"expense_type": "Meals", "expense_date": "2025-11-11", "amount": 95.00, "description": "Meals during conference"}
+        {"expense_type": "Food", "expense_date": "2025-11-11", "amount": 95.00, "description": "Meals during conference"}
       ]
     },
     {
@@ -72,7 +70,7 @@
       "approval_status": "Draft",
       "status": "Draft",
       "expenses": [
-        {"expense_type": "Meals", "expense_date": "2025-11-20", "amount": 180.00, "description": "Q4 sales team lunch meeting"},
+        {"expense_type": "Food", "expense_date": "2025-11-20", "amount": 180.00, "description": "Q4 sales team lunch meeting"},
         {"expense_type": "Office Supplies", "expense_date": "2025-11-20", "amount": 45.00, "description": "Presentation materials and supplies"}
       ]
     },
@@ -104,7 +102,7 @@
       "expenses": [
         {"expense_type": "Travel", "expense_date": "2025-10-22", "amount": 280.00, "description": "Flight to Las Vegas - trade show"},
         {"expense_type": "Accommodation", "expense_date": "2025-10-22", "amount": 340.00, "description": "Hotel - 2 nights at Venetian (trade show rate)"},
-        {"expense_type": "Meals", "expense_date": "2025-10-23", "amount": 90.00, "description": "Meals during trade show"},
+        {"expense_type": "Food", "expense_date": "2025-10-23", "amount": 90.00, "description": "Meals during trade show"},
         {"expense_type": "Office Supplies", "expense_date": "2025-10-24", "amount": 150.00, "description": "Booth materials and promotional items"}
       ]
     },
@@ -115,7 +113,7 @@
       "status": "Paid",
       "expenses": [
         {"expense_type": "Client Entertainment", "expense_date": "2025-11-05", "amount": 500.00, "description": "Product launch event venue deposit"},
-        {"expense_type": "Meals", "expense_date": "2025-11-05", "amount": 300.00, "description": "Catering advance for product launch"}
+        {"expense_type": "Food", "expense_date": "2025-11-05", "amount": 300.00, "description": "Catering advance for product launch"}
       ]
     },
     {
@@ -144,7 +142,7 @@
       "approval_status": "Approved",
       "status": "Paid",
       "expenses": [
-        {"expense_type": "Meals", "expense_date": "2025-11-08", "amount": 65.00, "description": "Team building event snacks and refreshments"},
+        {"expense_type": "Food", "expense_date": "2025-11-08", "amount": 65.00, "description": "Team building event snacks and refreshments"},
         {"expense_type": "Office Supplies", "expense_date": "2025-11-08", "amount": 40.00, "description": "Decorations for team celebration"}
       ]
     },
@@ -165,7 +163,7 @@
       "status": "Draft",
       "expenses": [
         {"expense_type": "Mileage", "expense_date": "2025-11-12", "amount": 160.80, "description": "Mileage - client site visit (240 miles @ $0.67)"},
-        {"expense_type": "Meals", "expense_date": "2025-11-12", "amount": 45.00, "description": "Lunch during client visit"}
+        {"expense_type": "Food", "expense_date": "2025-11-12", "amount": 45.00, "description": "Lunch during client visit"}
       ]
     }
   ],

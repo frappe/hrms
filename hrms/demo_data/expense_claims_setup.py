@@ -217,6 +217,7 @@ def get_advance_account(company):
                 "parent_account": parent_account,
                 "company": company,
                 "root_type": "Asset",
+                "account_type": "Receivable",
                 "is_group": 0
             })
             doc.insert(ignore_permissions=True)
