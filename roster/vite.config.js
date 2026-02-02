@@ -9,6 +9,7 @@ export default defineConfig({
 	server: {
 		port: 8081,
 		proxy: getProxyOptions(),
+		allowedHosts: true,
 	},
 	resolve: {
 		alias: {
