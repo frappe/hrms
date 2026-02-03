@@ -13,5 +13,6 @@ def execute():
 				"document_type": "Leave Type",
 				"read": 1,
 			},
-		)
+		)		
+		doc.flags.ignore_links = True
 		doc.save()
