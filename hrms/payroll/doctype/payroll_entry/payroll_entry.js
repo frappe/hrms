@@ -37,6 +37,11 @@ frappe.ui.form.on("Payroll Entry", {
 		frappe.realtime.on("completed_salary_slip_submission", function () {
 			frm.reload_doc();
 		});
+
+		frappe.realtime.off("completed_journal_creation");
+		frappe.realtime.on("completed_journal_creation", function () {
+			frm.reload_doc();
+		});
 	},
 
 	department_filters: function (frm) {
@@ -167,6 +172,7 @@ frappe.ui.form.on("Payroll Entry", {
 			(frm.doc.__onload && frm.doc.__onload.submitted_ss)
 		) {
 			frm.events.add_bank_entry_button(frm);
+			frm.events.add_journal_entry_button(frm);
 		} else if (frm.doc.salary_slips_created && frm.doc.status !== "Queued") {
 			frm.add_custom_button(__("Submit Salary Slip"), function () {
 				submit_salary_slip(frm);
@@ -187,6 +193,16 @@ frappe.ui.form.on("Payroll Entry", {
 			} else if (!r.message.has_bank_entries_for_withheld_salaries) {
 				frm.add_custom_button(__("Release Withheld Salaries"), function () {
 					make_bank_entry(frm, (for_withheld_salaries = 1));
+				}).addClass("btn-primary");
+			}
+		});
+	},
+
+	add_journal_entry_button: function (frm) {
+		frm.call("has_journal_entries").then((r) => {
+			if (!r.message.has_journal_entries) {
+				frm.add_custom_button(__("Make Journal Entry"), function () {
+					create_journal_entry(frm);
 				}).addClass("btn-primary");
 			}
 		});
@@ -428,6 +444,30 @@ const submit_salary_slip = function (frm) {
 				doc: frm.doc,
 				freeze: true,
 				freeze_message: __("Submitting Salary Slips and creating Journal Entry..."),
+			});
+		},
+		function () {
+			if (frappe.dom.freeze_count) {
+				frappe.dom.unfreeze();
+			}
+		},
+	);
+};
+
+// Submit salary slips
+
+const create_journal_entry = function (frm) {
+	frappe.confirm(
+		__(
+			"This will create accrual Journal Entry. Do you want to proceed?",
+		),
+		function () {
+			frappe.call({
+				method: "create_payroll_journal_entry",
+				args: {},
+				doc: frm.doc,
+				freeze: true,
+				freeze_message: __("Creating Journal Entry..."),
 			});
 		},
 		function () {

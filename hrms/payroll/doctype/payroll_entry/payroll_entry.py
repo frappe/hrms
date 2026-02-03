@@ -339,6 +339,32 @@ class PayrollEntry(Document):
 		else:
 			submit_salary_slips_for_employees(self, salary_slips, publish_progress=False)
 
+	@frappe.whitelist()
+	def create_payroll_journal_entry(self):
+		self.check_permission("write")
+		salary_slips = self.get_sal_slip_list(ss_status=1)
+		
+		try:
+			submitted = []
+			frappe.flags.via_payroll_entry = True
+			count = 0
+
+			for entry in salary_slips:
+				salary_slip = frappe.get_doc("Salary Slip", entry[0])
+				submitted.append(salary_slip)
+
+			self.make_accrual_jv_entry(submitted)
+
+		except Exception as e:
+			frappe.db.rollback()
+			log_payroll_failure("submission", payroll_entry, e)
+
+		finally:
+			frappe.db.commit()  # nosemgrep
+			frappe.publish_realtime("completed_journal_creation", user=frappe.session.user)
+
+		frappe.flags.via_payroll_entry = False
+
 	def email_salary_slip(self, submitted_ss):
 		if frappe.db.get_single_value("Payroll Settings", "email_salary_slip_to_employee"):
 			for ss in submitted_ss:
@@ -627,7 +653,7 @@ class PayrollEntry(Document):
 				user_remark=_("Accrual Journal Entry for salaries from {0} to {1}").format(
 					self.start_date, self.end_date
 				),
-				submit_journal_entry=True,
+				submit_journal_entry=False,
 				submitted_salary_slips=submitted_salary_slips,
 				employee_wise_accounting_enabled=employee_wise_accounting_enabled,
 			)
@@ -904,6 +930,27 @@ class PayrollEntry(Document):
 			"has_bank_entries_for_withheld_salaries": not any(
 				employee.is_salary_withheld for employee in self.employees
 			),
+		}
+
+	@frappe.whitelist()
+	def has_journal_entries(self) -> dict[str, bool]:
+		je = frappe.qb.DocType("Journal Entry")
+		jea = frappe.qb.DocType("Journal Entry Account")
+
+		journal_entries = (
+			frappe.qb.from_(je)
+			.inner_join(jea)
+			.on(je.name == jea.parent)
+			.select(je.name)
+			.where(
+				(je.voucher_type == "Journal Entry")
+				& (jea.reference_name == self.name)
+				& (jea.reference_type == "Payroll Entry")
+			)
+		).run(as_dict=True)
+
+		return {
+			"has_journal_entries": bool(journal_entries),
 		}
 
 	@frappe.whitelist()
