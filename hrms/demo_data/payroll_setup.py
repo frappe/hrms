@@ -3,122 +3,46 @@ Payroll Setup - Demo Data Generator for HRMS
 Creates Salary Components, Salary Structures, Structure Assignments, and Salary Slips
 
 Design based on US tech company payroll with weekly schedules.
-
-Salary Components:
-- Base Salary (Salaried): For executives, NOT prorated by attendance
-- Base Salary (Hourly): For staff, prorated by attendance
-- House Rent Allowance: 40% of base for executives only
-- 401K Contribution: 6% of base
-- Health Insurance: Fixed per employee (Individual: $69.28/wk, Family: $150.12/wk)
-- Income Tax Federal: Auto-calculated based on tax slabs
-- Income Tax State: 5% California tax
-
-Salary Structures:
-- Salaried: For executives (C-Suite + General Counsel)
-- Hourly: For all other staff
+All configuration is loaded from the JSON file (employee_payroll.json).
 
 Author: shi-kejian
-Version: 2.0.0
+Version: 3.0.0
 
 Usage:
-    bench --site [sitename] execute hrms.demo_data.payroll_setup.create_payroll_data
+    bench --site [sitename] execute hrms.demo_data.payroll_setup.create_payroll_data \
+        --kwargs '{"company": "NovaSoft", "payroll_path": "/path/to/employee_payroll.json"}'
 """
 
 import frappe
-from frappe.utils import getdate, nowdate, add_days, get_first_day, get_last_day
 import json
-import os
-
-# Executive designations (Salaried structure)
-EXECUTIVE_DESIGNATIONS = [
-    'Chief Executive Officer (CEO)',
-    'Chief Operating Officer (COO)',
-    'Chief Technology Officer (CTO)',
-    'Chief Financial Officer (CFO)',
-    'Chief People Officer (CPO)',
-    'Chief Revenue Officer (CRO)',
-    'General Counsel (GC)'
-]
-
-# Salary components configuration
-SALARY_COMPONENTS = [
-    {
-        "name": "Base Salary (Salaried)",
-        "abbr": "BASE-SAL",
-        "type": "Earning",
-        "description": "Base salary for salaried employees - not affected by attendance",
-        "is_tax_applicable": 1,
-        "depends_on_payment_days": 0  # Executives - NO proration
-    },
-    {
-        "name": "Base Salary (Hourly)",
-        "abbr": "BASE-HR",
-        "type": "Earning",
-        "description": "Base salary for hourly employees - prorated by attendance",
-        "is_tax_applicable": 1,
-        "depends_on_payment_days": 1  # Staff - YES proration
-    },
-    {
-        "name": "House Rent Allowance",
-        "abbr": "HRA",
-        "type": "Earning",
-        "description": "Housing allowance for C-level executives (40% of base)",
-        "is_tax_applicable": 1,
-        "depends_on_payment_days": 0,  # NOT prorated for executives
-        "amount_based_on_formula": 1,
-        "formula": "base * 0.40"
-    },
-    {
-        "name": "401K Contribution",
-        "abbr": "401K",
-        "type": "Deduction",
-        "description": "Employee 401K retirement contribution (6% of base)",
-        "is_tax_applicable": 0,  # Pre-tax deduction
-        "depends_on_payment_days": 0,  # Fixed amount
-        "amount_based_on_formula": 1,
-        "formula": "base * 0.06"
-    },
-    {
-        "name": "Health Insurance",
-        "abbr": "HI",
-        "type": "Deduction",
-        "description": "Employee health insurance premium",
-        "is_tax_applicable": 0,
-        "depends_on_payment_days": 0  # Fixed amount
-    },
-    {
-        "name": "Income Tax Federal",
-        "abbr": "FIT",
-        "type": "Deduction",
-        "description": "Federal income tax withholding based on IRS tax slabs",
-        "is_tax_applicable": 0,
-        "depends_on_payment_days": 0,
-        "is_income_tax_component": 1,
-        "variable_based_on_taxable_salary": 1
-    },
-    {
-        "name": "Income Tax State",
-        "abbr": "SIT",
-        "type": "Deduction",
-        "description": "California state income tax (5% of taxable income)",
-        "is_tax_applicable": 0,
-        "depends_on_payment_days": 0,
-        "amount_based_on_formula": 1,
-        "formula": "gross_pay * 0.05"  # 5% of gross pay
-    }
-]
 
 
-def ensure_fiscal_year(company):
-    """Ensure Fiscal Year 2025 exists for the company"""
-    fiscal_year = "2025"
+def load_payroll_data(payroll_path):
+    """Load all payroll configuration from JSON file"""
+    if not payroll_path:
+        frappe.throw("payroll_path is required. Provide the path to the payroll JSON file.")
+
+    print(f"  Loading payroll config from: {payroll_path}")
+    with open(payroll_path, 'r') as f:
+        data = json.load(f)
+    print(f"  Loaded {len(data.get('salary_components', []))} salary components, "
+          f"{len(data.get('salary_structures', []))} structures, "
+          f"{len(data.get('income_tax_slabs', []))} tax slabs")
+    return data
+
+
+def ensure_fiscal_year(company, config):
+    """Ensure Fiscal Year exists for the company"""
+    fiscal_year = config.get("fiscal_year", "2025")
+    year_start = config.get("fiscal_year_start", f"{fiscal_year}-01-01")
+    year_end = config.get("fiscal_year_end", f"{fiscal_year}-12-31")
 
     if not frappe.db.exists("Fiscal Year", fiscal_year):
         doc = frappe.get_doc({
             "doctype": "Fiscal Year",
             "year": fiscal_year,
-            "year_start_date": "2025-01-01",
-            "year_end_date": "2025-12-31",
+            "year_start_date": year_start,
+            "year_end_date": year_end,
             "is_short_year": 0
         })
         doc.append("companies", {"company": company})
@@ -135,46 +59,66 @@ def ensure_fiscal_year(company):
             print(f"  Fiscal Year {fiscal_year} already exists for {company}")
 
 
-def ensure_payroll_period(company):
-    """Ensure Payroll Period exists for 2025 with tax slabs"""
-    period_name = f"Payroll Period 2025 - {company}"
+def ensure_payroll_period(company, config):
+    """Ensure Payroll Period exists for the company"""
+    fiscal_year = config.get("fiscal_year", "2025")
+    period_name = f"Payroll Period {fiscal_year} - {company}"
+    start_date = config.get("payroll_period_start", f"{fiscal_year}-01-01")
+    end_date = config.get("payroll_period_end", f"{fiscal_year}-12-31")
 
     if frappe.db.exists("Payroll Period", period_name):
         print(f"  Payroll Period already exists: {period_name}")
         return period_name
 
-    # Create payroll period with federal tax slabs (2025 rates - simplified)
     doc = frappe.get_doc({
         "doctype": "Payroll Period",
         "name": period_name,
         "company": company,
-        "start_date": "2025-01-01",
-        "end_date": "2025-12-31"
+        "start_date": start_date,
+        "end_date": end_date
     })
-
-    # Add federal tax slabs (simplified progressive rates for single filer)
-    # These are approximate for demo purposes
-    tax_slabs = [
-        {"from_amount": 0, "to_amount": 11600, "percent_deduction": 10},
-        {"from_amount": 11600, "to_amount": 47150, "percent_deduction": 12},
-        {"from_amount": 47150, "to_amount": 100525, "percent_deduction": 22},
-        {"from_amount": 100525, "to_amount": 191950, "percent_deduction": 24},
-        {"from_amount": 191950, "to_amount": 243725, "percent_deduction": 32},
-        {"from_amount": 243725, "to_amount": 609350, "percent_deduction": 35},
-        {"from_amount": 609350, "to_amount": 0, "percent_deduction": 37},  # 0 = unlimited
-    ]
-
-    for slab in tax_slabs:
-        doc.append("taxable_salary_slabs", slab)
-
     doc.insert(ignore_permissions=True)
     print(f"  Created Payroll Period: {period_name}")
     return period_name
 
 
-def create_salary_components(counts):
-    """Create salary components (earnings and deductions)"""
-    for comp in SALARY_COMPONENTS:
+def ensure_income_tax_slab(company, config, tax_slabs):
+    """Create Income Tax Slab with federal tax brackets"""
+    fiscal_year = config.get("fiscal_year", "2025")
+    slab_name = f"Federal Tax {fiscal_year} - {company}"
+
+    if frappe.db.exists("Income Tax Slab", {"name": slab_name}):
+        print(f"  Income Tax Slab already exists: {slab_name}")
+        return slab_name
+
+    if not tax_slabs:
+        print("  No tax slabs defined, skipping Income Tax Slab creation")
+        return None
+
+    doc = frappe.get_doc({
+        "doctype": "Income Tax Slab",
+        "name": slab_name,
+        "company": company,
+        "effective_from": config.get("payroll_period_start", f"{fiscal_year}-01-01"),
+        "currency": frappe.db.get_value("Company", company, "default_currency") or "USD"
+    })
+
+    for slab in tax_slabs:
+        doc.append("slabs", {
+            "from_amount": slab.get("from_amount", 0),
+            "to_amount": slab.get("to_amount", 0),
+            "percent_deduction": slab.get("percent_deduction", 0)
+        })
+
+    doc.insert(ignore_permissions=True)
+    doc.submit()
+    print(f"  Created Income Tax Slab: {slab_name} ({len(tax_slabs)} brackets)")
+    return slab_name
+
+
+def create_salary_components(salary_components, counts):
+    """Create salary components (earnings and deductions) from JSON data"""
+    for comp in salary_components:
         name = comp.get("name")
 
         if frappe.db.exists("Salary Component", name):
@@ -192,12 +136,10 @@ def create_salary_components(counts):
                 "depends_on_payment_days": comp.get("depends_on_payment_days", 1)
             }
 
-            # Add formula-based fields if present
             if comp.get("amount_based_on_formula"):
                 doc_data["amount_based_on_formula"] = 1
                 doc_data["formula"] = comp.get("formula", "")
 
-            # Add tax component fields if present
             if comp.get("is_income_tax_component"):
                 doc_data["is_income_tax_component"] = 1
             if comp.get("variable_based_on_taxable_salary"):
@@ -212,39 +154,9 @@ def create_salary_components(counts):
             print(f"  Error creating {name}: {str(e)[:80]}")
 
 
-def create_salary_structures(company, counts):
-    """Create Salaried and Hourly salary structures"""
-    structures = [
-        {
-            "name": "Salaried",
-            "description": "For executives (C-Suite and General Counsel)",
-            "payroll_frequency": "Weekly",
-            "earnings": [
-                {"salary_component": "Base Salary (Salaried)"},
-                {"salary_component": "House Rent Allowance"}
-            ],
-            "deductions": [
-                {"salary_component": "401K Contribution"},
-                {"salary_component": "Health Insurance"},
-                {"salary_component": "Income Tax State"}
-            ]
-        },
-        {
-            "name": "Hourly",
-            "description": "For all non-executive staff",
-            "payroll_frequency": "Weekly",
-            "earnings": [
-                {"salary_component": "Base Salary (Hourly)"}
-            ],
-            "deductions": [
-                {"salary_component": "401K Contribution"},
-                {"salary_component": "Health Insurance"},
-                {"salary_component": "Income Tax State"}
-            ]
-        }
-    ]
-
-    for struct in structures:
+def create_salary_structures(company, salary_structures_data, counts):
+    """Create salary structures from JSON data"""
+    for struct in salary_structures_data:
         name = struct.get("name")
 
         if frappe.db.exists("Salary Structure", name):
@@ -261,18 +173,16 @@ def create_salary_structures(company, counts):
                 "currency": frappe.db.get_value("Company", company, "default_currency") or "USD"
             })
 
-            # Add earnings
             for earning in struct.get("earnings", []):
                 doc.append("earnings", {
                     "salary_component": earning.get("salary_component"),
-                    "amount_based_on_formula": 1 if earning.get("salary_component") == "House Rent Allowance" else 0
+                    "amount_based_on_formula": earning.get("amount_based_on_formula", 0)
                 })
 
-            # Add deductions
             for deduction in struct.get("deductions", []):
                 doc.append("deductions", {
                     "salary_component": deduction.get("salary_component"),
-                    "amount_based_on_formula": 1 if deduction.get("salary_component") in ["401K Contribution", "Income Tax State"] else 0
+                    "amount_based_on_formula": deduction.get("amount_based_on_formula", 0)
                 })
 
             doc.insert(ignore_permissions=True)
@@ -284,77 +194,35 @@ def create_salary_structures(company, counts):
             print(f"  Error creating {name}: {str(e)[:80]}")
 
 
-def get_employees_by_criteria(company, include_executives=True, department=None):
-    """Get employees based on criteria"""
-    filters = {"company": company, "status": "Active"}
-
-    employees = frappe.get_all(
-        "Employee",
-        filters=filters,
-        fields=["name", "employee_name", "designation", "department", "date_of_joining"]
-    )
-
-    result = []
-    for emp in employees:
-        is_executive = emp.designation in EXECUTIVE_DESIGNATIONS
-
-        # Filter based on criteria
-        if include_executives and is_executive:
-            result.append(emp)
-        elif department and emp.department and department in emp.department:
-            result.append(emp)
-
-    return result
-
-
-def load_employee_salaries():
-    """Load annual salaries from employees_roster.json"""
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    roster_path = os.path.join(current_dir, "employees_roster.json")
-
-    with open(roster_path, 'r') as f:
-        data = json.load(f)
-
-    # Create lookup by name
-    salary_lookup = {}
-    for emp in data.get("employees", []):
-        name = f"{emp['first_name']} {emp.get('middle_name', '')} {emp['last_name']}".replace('  ', ' ').strip()
-        salary_lookup[name] = emp.get("annual_salary", 75000)
-
-    return salary_lookup
-
-
-def create_structure_assignments(company, counts):
+def create_structure_assignments(company, payroll_data, counts):
     """Assign salary structures to executives and Accounts department employees"""
-    salary_lookup = load_employee_salaries()
+    config = payroll_data.get("config", {})
+    executive_designations = payroll_data.get("executive_designations", [])
+    employee_salaries = payroll_data.get("employee_salaries", {})
+    default_salary = config.get("default_salary", 75000)
 
     # Get executives
-    executives = get_employees_by_criteria(company, include_executives=True, department=None)
-
-    # Get Accounts department employees (includes non-executive staff)
-    accounts_employees = frappe.get_all(
+    all_employees = frappe.get_all(
         "Employee",
         filters={"company": company, "status": "Active"},
         fields=["name", "employee_name", "designation", "department", "date_of_joining"]
     )
-    accounts_employees = [e for e in accounts_employees if e.department and "Accounts" in e.department]
+
+    executives = [e for e in all_employees if e.designation in executive_designations]
+    accounts_staff = [e for e in all_employees if e.department and "Accounts" in e.department]
 
     # Combine and deduplicate
-    all_employees = {e.name: e for e in executives}
-    for e in accounts_employees:
-        all_employees[e.name] = e
+    target_employees = {e.name: e for e in executives}
+    for e in accounts_staff:
+        target_employees[e.name] = e
 
-    for emp_id, emp in all_employees.items():
-        is_executive = emp.designation in EXECUTIVE_DESIGNATIONS
+    for emp_id, emp in target_employees.items():
+        is_executive = emp.designation in executive_designations
         structure = "Salaried" if is_executive else "Hourly"
 
-        # Get annual salary
-        annual_salary = salary_lookup.get(emp.employee_name, 75000)
-
-        # Weekly base = annual / 52
+        annual_salary = employee_salaries.get(emp.employee_name, default_salary)
         weekly_base = round(annual_salary / 52, 2)
 
-        # Check if assignment already exists
         existing = frappe.db.exists("Salary Structure Assignment", {
             "employee": emp_id,
             "salary_structure": structure
@@ -365,10 +233,6 @@ def create_structure_assignments(company, counts):
             continue
 
         try:
-            # Health insurance: Individual $69.28/wk, Family $150.12/wk
-            # For demo, assign family plan to executives, individual to staff
-            health_insurance = 150.12 if is_executive else 69.28
-
             doc = frappe.get_doc({
                 "doctype": "Salary Structure Assignment",
                 "employee": emp_id,
@@ -386,13 +250,14 @@ def create_structure_assignments(company, counts):
             print(f"  Error assigning {emp.employee_name}: {str(e)[:80]}")
 
 
-def create_salary_slips(company, counts, week_start="2025-11-17", week_end="2025-11-23"):
-    """Create weekly salary slips for November 2025 (week of Nov 17-23)"""
+def create_salary_slips(company, config, counts):
+    """Create weekly salary slips"""
+    week_start = config.get("salary_slip_start", "2025-11-17")
+    week_end = config.get("salary_slip_end", "2025-11-23")
     posting_date = week_end
 
     print(f"\n  Payroll Period: {week_start} to {week_end} (Weekly)")
 
-    # Get all employees with structure assignments
     assignments = frappe.get_all(
         "Salary Structure Assignment",
         filters={"company": company, "docstatus": 1},
@@ -403,10 +268,8 @@ def create_salary_slips(company, counts, week_start="2025-11-17", week_end="2025
         emp_id = assign.employee
         structure = assign.salary_structure
 
-        # Get employee details
         emp = frappe.get_doc("Employee", emp_id)
 
-        # Check if salary slip already exists for this period
         existing = frappe.db.exists("Salary Slip", {
             "employee": emp_id,
             "start_date": week_start,
@@ -441,13 +304,24 @@ def create_salary_slips(company, counts, week_start="2025-11-17", week_end="2025
             print(f"  Error creating slip for {emp.employee_name}: {str(e)[:100]}")
 
 
-def create_payroll_data(company="NovaSoft"):
+def create_payroll_data(company="NovaSoft", payroll_path=None):
     """
-    Create Payroll demo data
+    Create Payroll demo data from JSON configuration file.
 
     :param company: Company name for payroll records
+    :param payroll_path: Path to the payroll JSON file (employee_payroll.json)
+
+    Usage:
+        bench --site [sitename] execute hrms.demo_data.payroll_setup.create_payroll_data \
+            --kwargs '{"company": "NovaSoft", "payroll_path": "/path/to/employee_payroll.json"}'
     """
     frappe.set_user("Administrator")
+
+    payroll_data = load_payroll_data(payroll_path)
+    config = payroll_data.get("config", {})
+    salary_components = payroll_data.get("salary_components", [])
+    salary_structures = payroll_data.get("salary_structures", [])
+    tax_slabs = payroll_data.get("income_tax_slabs", [])
 
     print(f"\n{'='*60}")
     print(f"Creating Payroll Data for Company: {company}")
@@ -459,6 +333,7 @@ def create_payroll_data(company="NovaSoft"):
         "salary_structures": 0,
         "structure_assignments": 0,
         "salary_slips": 0,
+        "income_tax_slabs": 0,
         "errors": []
     }
 
@@ -466,36 +341,39 @@ def create_payroll_data(company="NovaSoft"):
     print("\n" + "="*50)
     print("Step 0: Ensuring prerequisites...")
     print("="*50)
-    ensure_fiscal_year(company)
-    ensure_payroll_period(company)
+    ensure_fiscal_year(company, config)
+    ensure_payroll_period(company, config)
+    slab_name = ensure_income_tax_slab(company, config, tax_slabs)
+    if slab_name:
+        counts["income_tax_slabs"] = 1
     frappe.db.commit()
 
     # Step 1: Create Salary Components
     print("\n" + "="*50)
     print("Step 1: Creating Salary Components...")
     print("="*50)
-    create_salary_components(counts)
+    create_salary_components(salary_components, counts)
     frappe.db.commit()
 
     # Step 2: Create Salary Structures
     print("\n" + "="*50)
     print("Step 2: Creating Salary Structures...")
     print("="*50)
-    create_salary_structures(company, counts)
+    create_salary_structures(company, salary_structures, counts)
     frappe.db.commit()
 
     # Step 3: Assign Salary Structures
     print("\n" + "="*50)
     print("Step 3: Assigning Salary Structures...")
     print("="*50)
-    create_structure_assignments(company, counts)
+    create_structure_assignments(company, payroll_data, counts)
     frappe.db.commit()
 
-    # Step 4: Create Salary Slips (Week of Nov 17-23, 2025)
+    # Step 4: Create Salary Slips
     print("\n" + "="*50)
-    print("Step 4: Creating Salary Slips (Week of Nov 17-23, 2025)...")
+    print("Step 4: Creating Salary Slips...")
     print("="*50)
-    create_salary_slips(company, counts)
+    create_salary_slips(company, config, counts)
     frappe.db.commit()
 
     # Print summary
@@ -506,6 +384,7 @@ def create_payroll_data(company="NovaSoft"):
     print(f"  Salary Structures: {counts['salary_structures']}")
     print(f"  Structure Assignments: {counts['structure_assignments']}")
     print(f"  Salary Slips: {counts['salary_slips']}")
+    print(f"  Income Tax Slabs: {counts['income_tax_slabs']}")
 
     if counts["errors"]:
         print(f"\n  Errors: {len(counts['errors'])}")
@@ -517,20 +396,31 @@ def create_payroll_data(company="NovaSoft"):
     return counts
 
 
-def clear_payroll_data(company="NovaSoft"):
+def clear_payroll_data(company="NovaSoft", payroll_path=None):
     """
-    Clear existing payroll data
+    Clear existing payroll data.
     USE WITH CAUTION - This will delete data!
 
-    Usage: bench --site [sitename] execute hrms.demo_data.payroll_setup.clear_payroll_data
+    :param company: Company name for payroll records
+    :param payroll_path: Path to the payroll JSON file (employee_payroll.json)
+
+    Usage:
+        bench --site [sitename] execute hrms.demo_data.payroll_setup.clear_payroll_data \
+            --kwargs '{"company": "NovaSoft", "payroll_path": "/path/to/employee_payroll.json"}'
     """
     frappe.set_user("Administrator")
+
+    payroll_data = load_payroll_data(payroll_path)
+    salary_components = payroll_data.get("salary_components", [])
+    salary_structures = payroll_data.get("salary_structures", [])
+    config = payroll_data.get("config", {})
+    fiscal_year = config.get("fiscal_year", "2025")
 
     print(f"\n{'='*60}")
     print(f"Clearing Payroll Data for Company: {company}")
     print(f"{'='*60}\n")
 
-    deleted = {"slips": 0, "assignments": 0, "structures": 0, "components": 0}
+    deleted = {"slips": 0, "assignments": 0, "structures": 0, "components": 0, "tax_slabs": 0}
 
     # Delete salary slips
     print("Deleting Salary Slips...")
@@ -558,9 +448,10 @@ def clear_payroll_data(company="NovaSoft"):
         except Exception as e:
             print(f"  Error deleting assignment {a.name}: {str(e)[:50]}")
 
-    # Delete salary structures
+    # Delete salary structures (from JSON)
     print("Deleting Salary Structures...")
-    for name in ["Salaried", "Hourly"]:
+    for struct in salary_structures:
+        name = struct.get("name")
         if frappe.db.exists("Salary Structure", name):
             try:
                 doc = frappe.get_doc("Salary Structure", name)
@@ -571,9 +462,9 @@ def clear_payroll_data(company="NovaSoft"):
             except Exception as e:
                 print(f"  Error deleting structure {name}: {str(e)[:50]}")
 
-    # Delete custom salary components
+    # Delete custom salary components (from JSON)
     print("Deleting Custom Salary Components...")
-    for comp in SALARY_COMPONENTS:
+    for comp in salary_components:
         name = comp.get("name")
         if frappe.db.exists("Salary Component", name):
             try:
@@ -581,6 +472,19 @@ def clear_payroll_data(company="NovaSoft"):
                 deleted["components"] += 1
             except Exception as e:
                 print(f"  Error deleting component {name}: {str(e)[:50]}")
+
+    # Delete Income Tax Slab
+    print("Deleting Income Tax Slabs...")
+    slab_name = f"Federal Tax {fiscal_year} - {company}"
+    if frappe.db.exists("Income Tax Slab", slab_name):
+        try:
+            doc = frappe.get_doc("Income Tax Slab", slab_name)
+            if doc.docstatus == 1:
+                doc.cancel()
+            frappe.delete_doc("Income Tax Slab", slab_name, force=True)
+            deleted["tax_slabs"] += 1
+        except Exception as e:
+            print(f"  Error deleting tax slab {slab_name}: {str(e)[:50]}")
 
     frappe.db.commit()
 
@@ -591,6 +495,7 @@ def clear_payroll_data(company="NovaSoft"):
     print(f"  Deleted {deleted['assignments']} Structure Assignments")
     print(f"  Deleted {deleted['structures']} Salary Structures")
     print(f"  Deleted {deleted['components']} Salary Components")
+    print(f"  Deleted {deleted['tax_slabs']} Income Tax Slabs")
     print(f"{'='*60}\n")
 
     return deleted

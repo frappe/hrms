@@ -1,158 +1,147 @@
 {
+  "config": {
+    "payroll_frequency": "Weekly",
+    "fiscal_year": "2025",
+    "fiscal_year_start": "2025-01-01",
+    "fiscal_year_end": "2025-12-31",
+    "payroll_period_start": "2025-01-01",
+    "payroll_period_end": "2025-12-31",
+    "salary_slip_start": "2025-11-17",
+    "salary_slip_end": "2025-11-23",
+    "health_insurance_family": 150.12,
+    "health_insurance_individual": 69.28,
+    "default_salary": 75000
+  },
+  "executive_designations": [
+    "Chief Executive Officer (CEO)",
+    "Chief Operating Officer (COO)",
+    "Chief Technology Officer (CTO)",
+    "Chief Financial Officer (CFO)",
+    "Chief People Officer (CPO)",
+    "Chief Revenue Officer (CRO)",
+    "General Counsel (GC)"
+  ],
   "salary_components": [
+    {
+      "name": "Base Salary (Salaried)",
+      "abbr": "BASE-SAL",
+      "type": "Earning",
+      "description": "Base salary for salaried employees - not affected by attendance",
+      "is_tax_applicable": 1,
+      "depends_on_payment_days": 0
+    },
+    {
+      "name": "Base Salary (Hourly)",
+      "abbr": "BASE-HR",
+      "type": "Earning",
+      "description": "Base salary for hourly employees - prorated by attendance",
+      "is_tax_applicable": 1,
+      "depends_on_payment_days": 1
+    },
     {
       "name": "House Rent Allowance",
       "abbr": "HRA",
       "type": "Earning",
-      "description": "House Rent Allowance for employees",
+      "description": "Housing allowance for C-level executives (40% of base)",
       "is_tax_applicable": 1,
-      "depends_on_payment_days": 1
+      "depends_on_payment_days": 0,
+      "amount_based_on_formula": 1,
+      "formula": "base * 0.40"
     },
     {
-      "name": "Transport Allowance",
-      "abbr": "TA",
-      "type": "Earning",
-      "description": "Transport/Commute Allowance",
-      "is_tax_applicable": 1,
-      "depends_on_payment_days": 1
-    },
-    {
-      "name": "Special Allowance",
-      "abbr": "SA",
-      "type": "Earning",
-      "description": "Special Allowance",
-      "is_tax_applicable": 1,
-      "depends_on_payment_days": 1
-    },
-    {
-      "name": "Provident Fund",
-      "abbr": "PF",
+      "name": "401K Contribution",
+      "abbr": "401K",
       "type": "Deduction",
-      "description": "Employee Provident Fund contribution",
+      "description": "Employee 401K retirement contribution (6% of base)",
       "is_tax_applicable": 0,
-      "depends_on_payment_days": 0
-    },
-    {
-      "name": "Professional Tax",
-      "abbr": "PT",
-      "type": "Deduction",
-      "description": "Professional Tax deduction",
-      "is_tax_applicable": 0,
-      "depends_on_payment_days": 0
+      "depends_on_payment_days": 0,
+      "amount_based_on_formula": 1,
+      "formula": "base * 0.06"
     },
     {
       "name": "Health Insurance",
       "abbr": "HI",
       "type": "Deduction",
-      "description": "Health Insurance premium deduction",
+      "description": "Employee health insurance premium",
       "is_tax_applicable": 0,
       "depends_on_payment_days": 0
+    },
+    {
+      "name": "Income Tax Federal",
+      "abbr": "FIT",
+      "type": "Deduction",
+      "description": "Federal income tax withholding based on IRS tax slabs",
+      "is_tax_applicable": 0,
+      "depends_on_payment_days": 0,
+      "is_income_tax_component": 1,
+      "variable_based_on_taxable_salary": 1
+    },
+    {
+      "name": "Income Tax State",
+      "abbr": "SIT",
+      "type": "Deduction",
+      "description": "California state income tax (5% of taxable income)",
+      "is_tax_applicable": 0,
+      "depends_on_payment_days": 0,
+      "amount_based_on_formula": 1,
+      "formula": "gross_pay * 0.05"
     }
   ],
   "salary_structures": [
     {
-      "name": "Executive Level",
-      "company": "NovaSoft",
-      "payroll_frequency": "Monthly",
-      "is_active": "Yes",
+      "name": "Salaried",
+      "description": "For executives (C-Suite and General Counsel)",
+      "payroll_frequency": "Weekly",
       "earnings": [
-        {"salary_component": "Basic", "amount": 15000},
-        {"salary_component": "House Rent Allowance", "amount": 6000},
-        {"salary_component": "Transport Allowance", "amount": 2000},
-        {"salary_component": "Special Allowance", "amount": 2000}
+        {"salary_component": "Base Salary (Salaried)", "amount_based_on_formula": 0},
+        {"salary_component": "House Rent Allowance", "amount_based_on_formula": 1}
       ],
       "deductions": [
-        {"salary_component": "Provident Fund", "amount": 1800},
-        {"salary_component": "Professional Tax", "amount": 200},
-        {"salary_component": "Health Insurance", "amount": 500}
+        {"salary_component": "401K Contribution", "amount_based_on_formula": 1},
+        {"salary_component": "Health Insurance", "amount_based_on_formula": 0},
+        {"salary_component": "Income Tax State", "amount_based_on_formula": 1}
       ]
     },
     {
-      "name": "Manager Level",
-      "company": "NovaSoft",
-      "payroll_frequency": "Monthly",
-      "is_active": "Yes",
+      "name": "Hourly",
+      "description": "For all non-executive staff",
+      "payroll_frequency": "Weekly",
       "earnings": [
-        {"salary_component": "Basic", "amount": 10000},
-        {"salary_component": "House Rent Allowance", "amount": 4000},
-        {"salary_component": "Transport Allowance", "amount": 1500},
-        {"salary_component": "Special Allowance", "amount": 1500}
+        {"salary_component": "Base Salary (Hourly)", "amount_based_on_formula": 0}
       ],
       "deductions": [
-        {"salary_component": "Provident Fund", "amount": 1200},
-        {"salary_component": "Professional Tax", "amount": 200},
-        {"salary_component": "Health Insurance", "amount": 400}
-      ]
-    },
-    {
-      "name": "Staff Level",
-      "company": "NovaSoft",
-      "payroll_frequency": "Monthly",
-      "is_active": "Yes",
-      "earnings": [
-        {"salary_component": "Basic", "amount": 6000},
-        {"salary_component": "House Rent Allowance", "amount": 2400},
-        {"salary_component": "Transport Allowance", "amount": 1000},
-        {"salary_component": "Special Allowance", "amount": 600}
-      ],
-      "deductions": [
-        {"salary_component": "Provident Fund", "amount": 720},
-        {"salary_component": "Professional Tax", "amount": 150},
-        {"salary_component": "Health Insurance", "amount": 300}
+        {"salary_component": "401K Contribution", "amount_based_on_formula": 1},
+        {"salary_component": "Health Insurance", "amount_based_on_formula": 0},
+        {"salary_component": "Income Tax State", "amount_based_on_formula": 1}
       ]
     }
   ],
-  "employee_assignments": [
-    {
-      "employee_id": "HR-EMP-00004",
-      "employee_name": "Eugene Sanders",
-      "salary_structure": "Executive Level",
-      "from_date": "2025-01-03",
-      "base": 25000
-    },
-    {
-      "employee_id": "HR-EMP-00059",
-      "employee_name": "Maria Torres",
-      "salary_structure": "Manager Level",
-      "from_date": "2025-02-09",
-      "base": 17000
-    },
-    {
-      "employee_id": "HR-EMP-00060",
-      "employee_name": "Nathan Brooks",
-      "salary_structure": "Staff Level",
-      "from_date": "2025-02-17",
-      "base": 10000
-    },
-    {
-      "employee_id": "HR-EMP-00061",
-      "employee_name": "Taylor Kim",
-      "salary_structure": "Staff Level",
-      "from_date": "2025-02-18",
-      "base": 10000
-    },
-    {
-      "employee_id": "HR-EMP-00062",
-      "employee_name": "Helena Santos",
-      "salary_structure": "Staff Level",
-      "from_date": "2025-02-19",
-      "base": 10000
-    }
+  "income_tax_slabs": [
+    {"from_amount": 0, "to_amount": 11600, "percent_deduction": 10},
+    {"from_amount": 11600, "to_amount": 47150, "percent_deduction": 12},
+    {"from_amount": 47150, "to_amount": 100525, "percent_deduction": 22},
+    {"from_amount": 100525, "to_amount": 191950, "percent_deduction": 24},
+    {"from_amount": 191950, "to_amount": 243725, "percent_deduction": 32},
+    {"from_amount": 243725, "to_amount": 609350, "percent_deduction": 35},
+    {"from_amount": 609350, "to_amount": 0, "percent_deduction": 37}
   ],
-  "payroll_entries": [
-    {
-      "posting_date": "2025-11-30",
-      "company": "NovaSoft",
-      "payroll_frequency": "Monthly",
-      "start_date": "2025-11-01",
-      "end_date": "2025-11-30",
-      "department": "Accounts - NS"
-    }
-  ],
+  "employee_salaries": {
+    "Alice Marie Kim": 256000,
+    "Ben Foster": 199000,
+    "Carla Ruiz": 196000,
+    "Eugene Sanders": 219000,
+    "Monica Priya Patel": 204000,
+    "Jordan Blake": 203000,
+    "Laura Chen": 190000,
+    "Maria Torres": 84000,
+    "Nathan Brooks": 77000,
+    "Taylor Kim": 71000,
+    "Helena Santos": 56000
+  },
   "metadata": {
-    "description": "Payroll data for Accounts department employees - November 2025",
+    "description": "Payroll data for US tech company - weekly payroll cycle",
     "payroll_month": "November 2025",
     "currency": "USD",
-    "notes": "Employees with attendance records from employee_attendance.json"
+    "notes": "Salaried structure for C-suite executives, Hourly for Accounts staff. Federal tax slabs are simplified 2025 rates for single filers."
   }
 }
