@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 if [ -d "/home/frappe/frappe-bench/apps/frappe" ]; then
     echo "Bench already exists, skipping init"
@@ -10,22 +10,26 @@ fi
 
 export PATH="${NVM_DIR}/versions/node/v${NODE_VERSION_DEVELOP}/bin/:${PATH}"
 
-bench init --skip-redis-config-generation frappe-bench
+# bench init --skip-redis-config-generation frappe-bench
+bench init --skip-redis-config-generation --frappe-branch v15.95.0 frappe-bench
+
 
 cd frappe-bench
 
 # Use containers instead of localhost
 bench set-mariadb-host mariadb
-bench set-redis-cache-host redis://redis:6379
-bench set-redis-queue-host redis://redis:6379
-bench set-redis-socketio-host redis://redis:6379
+bench set-redis-cache-host redis:6379
+bench set-redis-queue-host redis:6379
+bench set-redis-socketio-host redis:6379
 
 # Remove redis, watch from Procfile
 sed -i '/redis/d' ./Procfile
 sed -i '/watch/d' ./Procfile
 
-bench get-app erpnext
-bench get-app hrms
+# bench get-app erpnext
+# bench get-app hrms
+bench get-app --branch v15.95.0 erpnext
+bench get-app --branch v15.55.0 hrms  # Use HRMS's latest v15 version
 
 bench new-site hrms.localhost \
 --force \

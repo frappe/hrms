@@ -5,8 +5,10 @@ Creates Salary Components, Salary Structures, Structure Assignments, and Salary 
 Design based on US tech company payroll with weekly schedules.
 All configuration is loaded from the JSON file (employee_payroll.json).
 
+Compatible with: Frappe v15.95.0, ERPNext v15.95.0, HRMS v15.55.0
+
 Author: shi-kejian
-Version: 3.0.0
+Version: 3.1.0
 
 Usage:
     bench --site [sitename] execute hrms.demo_data.payroll_setup.create_payroll_data \
@@ -82,41 +84,22 @@ def ensure_payroll_period(company, config):
     return period_name
 
 
-def ensure_holiday_list_assignment(company, config):
-    """Ensure a Holiday List Assignment exists for the company.
+def ensure_holiday_list(company):
+    """Ensure Company has a default Holiday List set.
 
-    HRMS v15+ uses Holiday List Assignment (not the Company.default_holiday_list field)
-    to resolve holiday lists for employees. Without this, salary slip creation fails.
+    In ERPNext/HRMS v15, holiday lists are resolved from:
+    1. Employee.holiday_list field (if set on employee)
+    2. Company.default_holiday_list field (fallback)
+
+    The company_setup.py script creates the Holiday List and sets it on the Company.
+    This function verifies that setup is complete.
     """
     holiday_list = frappe.db.get_value("Company", company, "default_holiday_list")
-    if not holiday_list:
-        print("  No default Holiday List on company, skipping assignment")
-        return
-
-    existing = frappe.get_all(
-        "Holiday List Assignment",
-        filters={
-            "assigned_to": company,
-            "holiday_list": holiday_list,
-            "docstatus": 1
-        },
-        limit=1
-    )
-    if existing:
-        print(f"  Holiday List Assignment already exists for {company}")
-        return
-
-    from_date = config.get("fiscal_year_start", "2025-01-01")
-    doc = frappe.get_doc({
-        "doctype": "Holiday List Assignment",
-        "holiday_list": holiday_list,
-        "applicable_for": "Company",
-        "assigned_to": company,
-        "from_date": from_date
-    })
-    doc.insert(ignore_permissions=True)
-    doc.submit()
-    print(f"  Created Holiday List Assignment: {holiday_list} -> {company}")
+    if holiday_list:
+        print(f"  Holiday List: {holiday_list} (set on Company)")
+    else:
+        print(f"  WARNING: No default Holiday List set on Company {company}")
+        print(f"           Salary slip creation may fail. Run company_setup.py first.")
 
 
 def ensure_income_tax_slab(company, config, tax_slabs):
@@ -389,7 +372,7 @@ def create_payroll_data(company="NovaSoft", payroll_path=None):
     print("="*50)
     ensure_fiscal_year(company, config)
     ensure_payroll_period(company, config)
-    ensure_holiday_list_assignment(company, config)
+    ensure_holiday_list(company)
     slab_name = ensure_income_tax_slab(company, config, tax_slabs)
     if slab_name:
         counts["income_tax_slabs"] = 1
@@ -467,7 +450,7 @@ def clear_payroll_data(company="NovaSoft", payroll_path=None):
     print(f"Clearing Payroll Data for Company: {company}")
     print(f"{'='*60}\n")
 
-    deleted = {"slips": 0, "assignments": 0, "structures": 0, "components": 0, "tax_slabs": 0, "holiday_assignments": 0}
+    deleted = {"slips": 0, "assignments": 0, "structures": 0, "components": 0, "tax_slabs": 0}
 
     # Delete salary slips
     print("Deleting Salary Slips...")
@@ -520,21 +503,6 @@ def clear_payroll_data(company="NovaSoft", payroll_path=None):
             except Exception as e:
                 print(f"  Error deleting component {name}: {str(e)[:50]}")
 
-    # Delete Holiday List Assignments created by payroll setup
-    print("Deleting Holiday List Assignments...")
-    hla_list = frappe.get_all(
-        "Holiday List Assignment",
-        filters={"assigned_to": company, "docstatus": 1},
-    )
-    for hla in hla_list:
-        try:
-            doc = frappe.get_doc("Holiday List Assignment", hla.name)
-            doc.cancel()
-            frappe.delete_doc("Holiday List Assignment", hla.name, force=True)
-            deleted["holiday_assignments"] += 1
-        except Exception as e:
-            print(f"  Error deleting holiday assignment {hla.name}: {str(e)[:50]}")
-
     # Delete Income Tax Slab
     print("Deleting Income Tax Slabs...")
     slab_name = f"Federal Tax {fiscal_year} - {company}"
@@ -558,7 +526,6 @@ def clear_payroll_data(company="NovaSoft", payroll_path=None):
     print(f"  Deleted {deleted['structures']} Salary Structures")
     print(f"  Deleted {deleted['components']} Salary Components")
     print(f"  Deleted {deleted['tax_slabs']} Income Tax Slabs")
-    print(f"  Deleted {deleted['holiday_assignments']} Holiday List Assignments")
     print(f"{'='*60}\n")
 
     return deleted
