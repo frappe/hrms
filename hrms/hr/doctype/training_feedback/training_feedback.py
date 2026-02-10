@@ -45,3 +45,27 @@ class TrainingFeedback(Document):
 
 		if employee:
 			frappe.db.set_value("Training Event Employee", employee, "status", "Completed")
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_training_event_employees(doctype, txt, searchfield, start, page_len, filters):
+	if not filters.get("training_event"):
+		return []
+
+	tee = frappe.qb.DocType("Training Event Employee")
+	emp = frappe.qb.DocType("Employee")
+
+	query = (
+		frappe.qb.from_(tee)
+		.join(emp)
+		.on(tee.employee == emp.name)
+		.select(tee.employee, emp.employee_name)
+		.where((tee.parent == filters.get("training_event")) & (tee.attendance != "Absent"))
+	)
+
+	if txt:
+		query = query.where(
+			(emp.name.like(f"%{txt}%")) | (emp.employee_name.like(f"%{txt}%"))
+		)
+
+	return query.orderby(emp.employee_name).limit(page_len).offset(start).run()

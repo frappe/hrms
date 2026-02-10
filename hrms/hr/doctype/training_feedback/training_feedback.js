@@ -3,8 +3,36 @@
 
 frappe.ui.form.on("Training Feedback", {
 	onload: function (frm) {
-		frm.add_fetch("training_event", "course", "course");
-		frm.add_fetch("training_event", "event_name", "event_name");
-		frm.add_fetch("training_event", "trainer_name", "trainer_name");
+		frm.set_query("employee", function () {
+			if (!frm.doc.training_event) {
+				return {
+					filters: {
+						name: ["in", []],
+					},
+				};
+			}
+
+			return {
+				query: "hrms.hr.doctype.training_feedback.training_feedback.get_training_event_employees",
+				filters: {
+					training_event: frm.doc.training_event,
+				},
+			};
+		});
 	},
+
+	refresh: function (frm) {
+		frm.trigger("toggle_employee_field");
+	},
+
+	training_event: function (frm) {
+		frm.set_value("employee", "");
+		frm.trigger("toggle_employee_field");
+	},
+
+	toggle_employee_field: function (frm) {
+		frm.set_df_property("employee", "read_only", !frm.doc.training_event);
+	},
+
+
 });
