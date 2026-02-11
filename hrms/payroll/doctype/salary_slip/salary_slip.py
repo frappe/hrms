@@ -350,33 +350,71 @@ class SalarySlip(TransactionBase):
 			self.start_date = date_details.start_date
 			self.end_date = date_details.end_date
 
-	@frappe.whitelist()
-	def get_emp_and_working_day_details(self):
-		"""First time, load all the components from salary structure"""
-		if self.employee:
-			self.set("earnings", [])
-			self.set("deductions", [])
-			if hasattr(self, "loans"):
-				self.set("loans", [])
 
-			if self.payroll_frequency:
-				self.get_date_details()
+@frappe.whitelist()
+def get_emp_and_working_day_details(self):
+	"""First time, load all the components from salary structure"""
+	if self.employee:
+		self.set("earnings", [])
+		self.set("deductions", [])
+		if hasattr(self, "loans"):
+			self.set("loans", [])
 
-			self.validate_dates()
+		if self.payroll_frequency:
+			self.get_date_details()
 
-			# getin leave details
-			self.get_working_days_details()
-			struct = self.check_sal_struct()
+		self.validate_dates()
 
-			if struct:
-				self.set_salary_structure_doc()
-				self.salary_slip_based_on_timesheet = (
-					self._salary_structure_doc.salary_slip_based_on_timesheet or 0
-				)
-				self.set_time_sheet()
-				self.pull_sal_struct()
+		# Updated working days calculation (supports multiple shifts)
+		from hrms.hr.doctype.shift_assignment.shift_assignment import get_shift
 
-			process_loan_interest_accrual_and_demand(self)
+		working_days = 0
+		payment_days = 0
+
+		attendance_records = frappe.get_all(
+			"Attendance",
+			filters={
+				"employee": self.employee,
+				"attendance_date": ["between", [self.start_date, self.end_date]],
+				"docstatus": 1
+			},
+			fields=["attendance_date", "status"]
+		)
+
+		for record in attendance_records:
+			shift = get_shift(self.employee, record.attendance_date)
+
+			if not shift:
+				continue
+
+			if record.status == "Present":
+				working_days += 1
+				payment_days += 1
+
+			elif record.status == "Half Day":
+				working_days += 0.5
+				payment_days += 0.5
+
+			elif record.status == "Work From Home":
+				working_days += 1
+				payment_days += 1
+
+		self.total_working_days = working_days
+		self.payment_days = payment_days - (self.leave_without_pay or 0)
+
+		struct = self.check_sal_struct()
+
+		if struct:
+			self.set_salary_structure_doc()
+			self.salary_slip_based_on_timesheet = (
+				self._salary_structure_doc.salary_slip_based_on_timesheet or 0
+			)
+			self.set_time_sheet()
+			self.pull_sal_struct()
+
+		process_loan_interest_accrual_and_demand(self)
+
+
 
 	def set_time_sheet(self):
 		if self.salary_slip_based_on_timesheet:
