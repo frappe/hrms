@@ -22,6 +22,7 @@ PAYROLL_JSON_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "em
 REQUIRED_TOP_LEVEL_KEYS = [
     "config",
     "executive_designations",
+    "default_components_to_delete",
     "salary_components",
     "salary_structures",
     "income_tax_slabs",
@@ -101,6 +102,17 @@ class TestPayrollJsonStructure(unittest.TestCase):
             "Family health insurance rate should exceed individual rate",
         )
 
+    def test_default_components_to_delete_non_empty(self):
+        """default_components_to_delete must list at least one component."""
+        to_delete = self.data.get("default_components_to_delete", [])
+        self.assertGreater(len(to_delete), 0, "default_components_to_delete is empty")
+
+    def test_default_components_to_delete_are_strings(self):
+        """Each entry in default_components_to_delete must be a non-empty string."""
+        for name in self.data.get("default_components_to_delete", []):
+            self.assertIsInstance(name, str)
+            self.assertTrue(len(name.strip()) > 0, "Empty component name in default_components_to_delete")
+
 
 class TestSalaryComponents(unittest.TestCase):
     """Validate salary component definitions."""
@@ -111,9 +123,9 @@ class TestSalaryComponents(unittest.TestCase):
             cls.data = json.load(f)
         cls.components = cls.data.get("salary_components", [])
 
-    def test_at_least_one_component(self):
-        """There must be at least one salary component defined."""
-        self.assertGreater(len(self.components), 0)
+    def test_exactly_eight_components(self):
+        """There must be exactly 8 salary components defined."""
+        self.assertEqual(len(self.components), 8, f"Expected 8 components, got {len(self.components)}")
 
     def test_required_fields_present(self):
         """Each salary component must have all required fields."""
@@ -154,6 +166,75 @@ class TestSalaryComponents(unittest.TestCase):
                     comp.get("formula"),
                     f"Component '{comp['name']}' has amount_based_on_formula=1 but no formula",
                 )
+
+    def test_401k_split_into_salaried_and_hourly(self):
+        """401K must be split into Salaried and Hourly variants, with no generic '401K Contribution'."""
+        names = [c["name"] for c in self.components]
+        self.assertIn("401K Contribution (Salaried)", names, "Missing '401K Contribution (Salaried)'")
+        self.assertIn("401K Contribution (Hourly)", names, "Missing '401K Contribution (Hourly)'")
+        self.assertNotIn("401K Contribution", names, "Generic '401K Contribution' should not exist")
+
+    def test_401k_salaried_not_depends_on_payment_days(self):
+        """401K Contribution (Salaried) must have depends_on_payment_days=0."""
+        comp = next(c for c in self.components if c["name"] == "401K Contribution (Salaried)")
+        self.assertEqual(comp["depends_on_payment_days"], 0,
+                         "401K Contribution (Salaried) should not depend on payment days")
+
+    def test_401k_hourly_depends_on_payment_days(self):
+        """401K Contribution (Hourly) must have depends_on_payment_days=1."""
+        comp = next(c for c in self.components if c["name"] == "401K Contribution (Hourly)")
+        self.assertEqual(comp["depends_on_payment_days"], 1,
+                         "401K Contribution (Hourly) should depend on payment days")
+
+    def test_five_components_have_conditions(self):
+        """Exactly 5 components must have conditions (Base Sal, Base Hr, HRA, 401K Sal, 401K Hr)."""
+        with_conditions = [c["name"] for c in self.components if c.get("condition")]
+        self.assertEqual(len(with_conditions), 5,
+                         f"Expected 5 components with conditions, got {len(with_conditions)}: {with_conditions}")
+
+    def test_conditions_use_designation_not_employee_designation(self):
+        """Conditions must use 'designation' directly, not 'employee.designation'."""
+        for comp in self.components:
+            condition = comp.get("condition", "")
+            self.assertNotIn("employee.designation", condition,
+                             f"Component '{comp['name']}' uses 'employee.designation' - must use 'designation' directly")
+
+    def test_conditions_use_designation_keyword(self):
+        """Components with conditions must reference 'designation'."""
+        for comp in self.components:
+            condition = comp.get("condition", "")
+            if condition:
+                self.assertIn("designation", condition,
+                              f"Component '{comp['name']}' condition does not reference 'designation': {condition}")
+
+    def test_income_tax_state_formula_correct(self):
+        """Income Tax State formula must be '(base + (base * 0.40)) * 0.05'."""
+        comp = next(c for c in self.components if c["name"] == "Income Tax State")
+        self.assertEqual(comp.get("formula"), "(base + (base * 0.40)) * 0.05",
+                         f"Income Tax State has wrong formula: {comp.get('formula')}")
+
+    def test_income_tax_state_no_california_reference(self):
+        """Income Tax State description must not reference 'California' or 'CA'."""
+        comp = next(c for c in self.components if c["name"] == "Income Tax State")
+        desc = comp.get("description", "")
+        self.assertNotIn("California", desc, "Income Tax State description should not reference California")
+        self.assertNotIn(" CA ", desc, "Income Tax State description should not reference CA")
+
+    def test_income_tax_federal_is_tax_component(self):
+        """Income Tax Federal must be marked as income_tax_component and variable_based_on_taxable_salary."""
+        comp = next(c for c in self.components if c["name"] == "Income Tax Federal")
+        self.assertEqual(comp.get("is_income_tax_component"), 1,
+                         "Income Tax Federal must have is_income_tax_component=1")
+        self.assertEqual(comp.get("variable_based_on_taxable_salary"), 1,
+                         "Income Tax Federal must have variable_based_on_taxable_salary=1")
+
+    def test_income_tax_federal_no_formula(self):
+        """Income Tax Federal must NOT have a formula (relies on Income Tax Slab auto-calc)."""
+        comp = next(c for c in self.components if c["name"] == "Income Tax Federal")
+        self.assertFalse(comp.get("amount_based_on_formula"),
+                         "Income Tax Federal must not have amount_based_on_formula=1")
+        self.assertFalse(comp.get("formula"),
+                         "Income Tax Federal must not have a formula")
 
 
 class TestSalaryStructures(unittest.TestCase):
@@ -231,6 +312,68 @@ class TestSalaryStructures(unittest.TestCase):
         """Salary structure names must be unique."""
         names = [s["name"] for s in self.structures]
         self.assertEqual(len(names), len(set(names)), f"Duplicate structure names: {names}")
+
+    def test_income_tax_federal_in_both_structures(self):
+        """Income Tax Federal must appear in deductions of both Salaried and Hourly structures."""
+        for struct in self.structures:
+            deduction_names = [d["salary_component"] for d in struct.get("deductions", [])]
+            self.assertIn(
+                "Income Tax Federal",
+                deduction_names,
+                f"Structure '{struct['name']}' is missing 'Income Tax Federal' in deductions",
+            )
+
+    def test_structure_detail_rows_with_formula_flag_have_formula(self):
+        """Structure detail rows with amount_based_on_formula=1 must have a formula field."""
+        for struct in self.structures:
+            for row in struct.get("earnings", []) + struct.get("deductions", []):
+                if row.get("amount_based_on_formula") == 1:
+                    self.assertTrue(
+                        row.get("formula"),
+                        f"Structure '{struct['name']}' detail '{row.get('salary_component')}' "
+                        f"has amount_based_on_formula=1 but no formula",
+                    )
+
+    def test_income_tax_federal_detail_has_no_formula(self):
+        """Income Tax Federal detail rows must not have a formula (triggers tax slab auto-calc)."""
+        for struct in self.structures:
+            for row in struct.get("deductions", []):
+                if row.get("salary_component") == "Income Tax Federal":
+                    self.assertFalse(
+                        row.get("amount_based_on_formula"),
+                        f"Structure '{struct['name']}' Income Tax Federal detail must not have amount_based_on_formula=1",
+                    )
+                    self.assertFalse(
+                        row.get("formula"),
+                        f"Structure '{struct['name']}' Income Tax Federal detail must not have a formula",
+                    )
+
+    def test_salaried_uses_401k_salaried(self):
+        """Salaried structure must use '401K Contribution (Salaried)', not Hourly or generic."""
+        salaried = next(s for s in self.structures if s["name"] == "Salaried")
+        deduction_names = [d["salary_component"] for d in salaried.get("deductions", [])]
+        self.assertIn("401K Contribution (Salaried)", deduction_names)
+        self.assertNotIn("401K Contribution (Hourly)", deduction_names)
+        self.assertNotIn("401K Contribution", deduction_names)
+
+    def test_hourly_uses_401k_hourly(self):
+        """Hourly structure must use '401K Contribution (Hourly)', not Salaried or generic."""
+        hourly = next(s for s in self.structures if s["name"] == "Hourly")
+        deduction_names = [d["salary_component"] for d in hourly.get("deductions", [])]
+        self.assertIn("401K Contribution (Hourly)", deduction_names)
+        self.assertNotIn("401K Contribution (Salaried)", deduction_names)
+        self.assertNotIn("401K Contribution", deduction_names)
+
+    def test_structure_detail_conditions_use_designation(self):
+        """Structure detail row conditions must use 'designation', not 'employee.designation'."""
+        for struct in self.structures:
+            for row in struct.get("earnings", []) + struct.get("deductions", []):
+                condition = row.get("condition", "")
+                self.assertNotIn(
+                    "employee.designation", condition,
+                    f"Structure '{struct['name']}' detail '{row.get('salary_component')}' "
+                    f"uses 'employee.designation' - must use 'designation' directly",
+                )
 
 
 class TestIncomeTaxSlabs(unittest.TestCase):
@@ -402,6 +545,61 @@ class TestScriptContracts(unittest.TestCase):
                 "os.path.join", self.script_content,
                 "Script imports os and uses os.path.join - likely hardcoding a file path",
             )
+
+    def test_uses_load_json_from_utils(self):
+        """Script must import load_json from utils, not use raw json.load."""
+        self.assertIn(
+            "from hrms.demo_data.utils import load_json", self.script_content,
+            "Script must import load_json from hrms.demo_data.utils",
+        )
+        self.assertNotIn(
+            "import json", self.script_content,
+            "Script should not import json directly - use load_json from utils",
+        )
+
+    def test_no_raw_open_payroll_path(self):
+        """Script must not use raw open(payroll_path) - should use load_json instead."""
+        self.assertNotIn(
+            "open(payroll_path", self.script_content,
+            "Script uses raw open(payroll_path) - should use load_json from utils",
+        )
+
+    def test_has_restore_default_components_function(self):
+        """Script must have a restore_default_components function for cleanup."""
+        self.assertIn(
+            "def restore_default_components", self.script_content,
+            "Script must define restore_default_components function",
+        )
+
+    def test_has_delete_default_components_function(self):
+        """Script must have a delete_default_components function for setup."""
+        self.assertIn(
+            "def delete_default_components", self.script_content,
+            "Script must define delete_default_components function",
+        )
+
+    def test_clear_calls_restore_default_components(self):
+        """clear_payroll_data must call restore_default_components."""
+        # Find clear_payroll_data function body
+        clear_start = self.script_content.find("def clear_payroll_data")
+        self.assertNotEqual(clear_start, -1, "clear_payroll_data function not found")
+        clear_body = self.script_content[clear_start:]
+        self.assertIn(
+            "restore_default_components()", clear_body,
+            "clear_payroll_data must call restore_default_components()",
+        )
+
+    def test_create_calls_delete_default_components(self):
+        """create_payroll_data must call delete_default_components."""
+        # Find create_payroll_data function body (up to clear_payroll_data)
+        create_start = self.script_content.find("def create_payroll_data")
+        clear_start = self.script_content.find("def clear_payroll_data")
+        self.assertNotEqual(create_start, -1, "create_payroll_data function not found")
+        create_body = self.script_content[create_start:clear_start]
+        self.assertIn(
+            "delete_default_components(", create_body,
+            "create_payroll_data must call delete_default_components()",
+        )
 
 
 if __name__ == "__main__":

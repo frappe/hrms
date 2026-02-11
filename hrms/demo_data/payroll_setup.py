@@ -8,7 +8,7 @@ All configuration is loaded from the JSON file (employee_payroll.json).
 Compatible with: Frappe v15.95.0, ERPNext v15.95.0, HRMS v15.55.0
 
 Author: shi-kejian
-Version: 3.1.0
+Version: 4.0.0
 
 Usage:
     bench --site [sitename] execute hrms.demo_data.payroll_setup.create_payroll_data \
@@ -16,21 +16,7 @@ Usage:
 """
 
 import frappe
-import json
-
-
-def load_payroll_data(payroll_path):
-    """Load all payroll configuration from JSON file"""
-    if not payroll_path:
-        frappe.throw("payroll_path is required. Provide the path to the payroll JSON file.")
-
-    print(f"  Loading payroll config from: {payroll_path}")
-    with open(payroll_path, 'r') as f:
-        data = json.load(f)
-    print(f"  Loaded {len(data.get('salary_components', []))} salary components, "
-          f"{len(data.get('salary_structures', []))} structures, "
-          f"{len(data.get('income_tax_slabs', []))} tax slabs")
-    return data
+from hrms.demo_data.utils import load_json
 
 
 def ensure_fiscal_year(company, config):
@@ -136,6 +122,62 @@ def ensure_income_tax_slab(company, config, tax_slabs):
     return slab_name
 
 
+def delete_default_components(components_to_delete):
+    """Delete HRMS default salary components that conflict with our custom ones.
+
+    HRMS v15.55.0 ships with default components (Basic, Leave Encashment, Income Tax)
+    that must be removed before creating our custom components.
+    """
+    if not components_to_delete:
+        return
+
+    print("\n  Removing default HRMS salary components...")
+    for comp_name in components_to_delete:
+        if frappe.db.exists("Salary Component", comp_name):
+            try:
+                frappe.delete_doc("Salary Component", comp_name, force=True)
+                print(f"    Deleted default: {comp_name}")
+            except Exception as e:
+                print(f"    Error deleting {comp_name}: {str(e)[:80]}")
+        else:
+            print(f"    Not found (already removed): {comp_name}")
+
+
+def restore_default_components():
+    """Restore HRMS default salary components after clearing payroll data.
+
+    Recreates the default components that ship with HRMS v15.55.0:
+    - Leave Encashment (Earning)
+    - Basic (Earning)
+    - Income Tax (Deduction, is_income_tax_component=1)
+    """
+    defaults = [
+        {"salary_component": "Leave Encashment", "type": "Earning"},
+        {"salary_component": "Basic", "type": "Earning"},
+        {"salary_component": "Income Tax", "type": "Deduction", "is_income_tax_component": 1},
+    ]
+
+    print("\n  Restoring default HRMS salary components...")
+    for comp in defaults:
+        name = comp["salary_component"]
+        if frappe.db.exists("Salary Component", name):
+            print(f"    Already exists: {name}")
+            continue
+        try:
+            doc_data = {
+                "doctype": "Salary Component",
+                "salary_component": name,
+                "type": comp["type"],
+            }
+            if comp.get("is_income_tax_component"):
+                doc_data["is_income_tax_component"] = 1
+            doc = frappe.get_doc(doc_data)
+            doc.insert(ignore_permissions=True)
+            print(f"    Restored: {name} ({comp['type']})")
+        except Exception as e:
+            print(f"    Error restoring {name}: {str(e)[:80]}")
+
+
 def create_salary_components(salary_components, counts):
     """Create salary components (earnings and deductions) from JSON data"""
     for comp in salary_components:
@@ -160,6 +202,9 @@ def create_salary_components(salary_components, counts):
                 doc_data["amount_based_on_formula"] = 1
                 doc_data["formula"] = comp.get("formula", "")
 
+            if comp.get("condition"):
+                doc_data["condition"] = comp.get("condition")
+
             if comp.get("is_income_tax_component"):
                 doc_data["is_income_tax_component"] = 1
             if comp.get("variable_based_on_taxable_salary"):
@@ -175,7 +220,13 @@ def create_salary_components(salary_components, counts):
 
 
 def create_salary_structures(company, salary_structures_data, counts):
-    """Create salary structures from JSON data"""
+    """Create salary structures from JSON data.
+
+    IMPORTANT: Formula and condition must be set on each structure detail row
+    (Salary Detail), not just on the Salary Component. The salary slip evaluation
+    engine reads these fields from the structure row, not the component.
+    See salary_slip.py:1288-1300 (eval_condition_and_formula).
+    """
     for struct in salary_structures_data:
         name = struct.get("name")
 
@@ -194,16 +245,26 @@ def create_salary_structures(company, salary_structures_data, counts):
             })
 
             for earning in struct.get("earnings", []):
-                doc.append("earnings", {
+                row_data = {
                     "salary_component": earning.get("salary_component"),
-                    "amount_based_on_formula": earning.get("amount_based_on_formula", 0)
-                })
+                    "amount_based_on_formula": earning.get("amount_based_on_formula", 0),
+                }
+                if earning.get("formula"):
+                    row_data["formula"] = earning["formula"]
+                if earning.get("condition"):
+                    row_data["condition"] = earning["condition"]
+                doc.append("earnings", row_data)
 
             for deduction in struct.get("deductions", []):
-                doc.append("deductions", {
+                row_data = {
                     "salary_component": deduction.get("salary_component"),
-                    "amount_based_on_formula": deduction.get("amount_based_on_formula", 0)
-                })
+                    "amount_based_on_formula": deduction.get("amount_based_on_formula", 0),
+                }
+                if deduction.get("formula"):
+                    row_data["formula"] = deduction["formula"]
+                if deduction.get("condition"):
+                    row_data["condition"] = deduction["condition"]
+                doc.append("deductions", row_data)
 
             doc.insert(ignore_permissions=True)
             doc.submit()
@@ -346,11 +407,22 @@ def create_payroll_data(company="NovaSoft", payroll_path=None):
     """
     frappe.set_user("Administrator")
 
-    payroll_data = load_payroll_data(payroll_path)
+    if not payroll_path:
+        frappe.throw("payroll_path is required. Provide the path to the payroll JSON file.")
+
+    payroll_data = load_json(payroll_path)
+    if not payroll_data:
+        frappe.throw(f"Failed to load payroll data from: {payroll_path}")
+
     config = payroll_data.get("config", {})
     salary_components = payroll_data.get("salary_components", [])
     salary_structures = payroll_data.get("salary_structures", [])
     tax_slabs = payroll_data.get("income_tax_slabs", [])
+    components_to_delete = payroll_data.get("default_components_to_delete", [])
+
+    print(f"  Loaded {len(salary_components)} salary components, "
+          f"{len(salary_structures)} structures, "
+          f"{len(tax_slabs)} tax slabs")
 
     print(f"\n{'='*60}")
     print(f"Creating Payroll Data for Company: {company}")
@@ -376,6 +448,7 @@ def create_payroll_data(company="NovaSoft", payroll_path=None):
     slab_name = ensure_income_tax_slab(company, config, tax_slabs)
     if slab_name:
         counts["income_tax_slabs"] = 1
+    delete_default_components(components_to_delete)
     frappe.db.commit()
 
     # Step 1: Create Salary Components
@@ -440,7 +513,13 @@ def clear_payroll_data(company="NovaSoft", payroll_path=None):
     """
     frappe.set_user("Administrator")
 
-    payroll_data = load_payroll_data(payroll_path)
+    if not payroll_path:
+        frappe.throw("payroll_path is required. Provide the path to the payroll JSON file.")
+
+    payroll_data = load_json(payroll_path)
+    if not payroll_data:
+        frappe.throw(f"Failed to load payroll data from: {payroll_path}")
+
     salary_components = payroll_data.get("salary_components", [])
     salary_structures = payroll_data.get("salary_structures", [])
     config = payroll_data.get("config", {})
@@ -515,6 +594,9 @@ def clear_payroll_data(company="NovaSoft", payroll_path=None):
             deleted["tax_slabs"] += 1
         except Exception as e:
             print(f"  Error deleting tax slab {slab_name}: {str(e)[:50]}")
+
+    # Restore HRMS default components
+    restore_default_components()
 
     frappe.db.commit()
 
