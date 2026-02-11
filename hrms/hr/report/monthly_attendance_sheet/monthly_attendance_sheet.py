@@ -346,11 +346,14 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 	2. list of values for the group by filter
 	"""
 	Employee = frappe.qb.DocType("Employee")
+	Shift = frappe.qb.DocType("Shift Type")  # Note: Shift Type, not Shift
 
 	joining_date_condition = get_date_condition(Employee.date_of_joining, filters)
 
 	query = (
 		frappe.qb.from_(Employee)
+		.left_join(Shift)
+		.on(Employee.default_shift == Shift.name)
 		.select(
 			Employee.name,
 			Employee.employee_name,
@@ -360,6 +363,7 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 			Employee.branch,
 			Employee.company,
 			Employee.holiday_list,
+			Shift.holiday_list.as_("shift_holiday_list"),  # From default_shift
 			(Employee.date_of_joining).as_("joined_date"),
 			Case()
 			.when(
@@ -381,6 +385,11 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 		query = query.orderby(group_by)
 
 	employee_details = query.run(as_dict=True)
+
+	# Apply shift holiday_list priority: Employee.holiday_list > default_shift.holiday_list
+	for emp in employee_details:
+		if not emp.holiday_list and emp.shift_holiday_list:
+			emp.holiday_list = emp.shift_holiday_list
 
 	group_by_param_values = []
 	emp_map = {}
