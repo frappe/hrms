@@ -2437,25 +2437,32 @@ def generate_password_for_pdf(policy_template, employee):
 	return policy_template.format(**employee.as_dict())
 
 
-def get_salary_component_data(component):
-	# get_cached_value doesn't work here due to alias "name as salary_component"
-	return frappe.db.get_value(
-		"Salary Component",
-		component,
-		(
-			"name as salary_component",
-			"depends_on_payment_days",
-			"salary_component_abbr as abbr",
-			"do_not_include_in_total",
-			"do_not_include_in_accounts",
-			"is_tax_applicable",
-			"is_flexible_benefit",
-			"variable_based_on_taxable_salary",
-			"accrual_component",
-		),
-		as_dict=1,
-		cache=True,
-	)
+def get_additional_salary(self):
+    additional_salaries = frappe.get_all(
+        "Additional Salary",
+        filters={
+            "employee": self.employee,
+            "docstatus": 1,
+            "payroll_date": ["between", [self.start_date, self.end_date]],
+            "is_processed": 0
+        },
+        fields=["name", "salary_component", "amount"]
+    )
+
+    for row in additional_salaries:
+        self.append("earnings", {
+            "salary_component": row.salary_component,
+            "amount": row.amount
+        })
+
+        # Mark Additional Salary as processed
+        frappe.db.set_value(
+            "Additional Salary",
+            row.name,
+            "is_processed",
+            1
+        )
+
 
 
 def get_payroll_payable_account(company, payroll_entry):

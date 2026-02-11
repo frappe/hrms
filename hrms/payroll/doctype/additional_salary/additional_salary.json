@@ -237,7 +237,13 @@
    "share": 1,
    "submit": 1,
    "write": 1
-  }
+  },
+{
+ "fieldname": "is_processed",
+ "fieldtype": "Check",
+ "label": "Is Processed",
+ "default": "0"
+}
  ],
  "search_fields": "employee_name",
  "sort_field": "creation",

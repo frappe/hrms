@@ -327,3 +327,8 @@ def get_additional_salaries(employee, start_date, end_date, component_type):
 		additional_salaries.append(d)
 
 	return additional_salaries
+
+
+def validate(self):
+    if self.is_processed and self.docstatus == 0:
+        frappe.throw("Processed Additional Salary cannot be modified.")
