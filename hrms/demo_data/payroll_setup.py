@@ -8,7 +8,7 @@ All configuration is loaded from the JSON file (employee_payroll.json).
 Compatible with: Frappe v15.95.0, ERPNext v15.95.0, HRMS v15.55.0
 
 Author: shi-kejian
-Version: 4.0.0
+Version: 4.1.0
 
 Usage:
     bench --site [sitename] execute hrms.demo_data.payroll_setup.create_payroll_data \
@@ -340,6 +340,66 @@ def create_structure_assignments(company, payroll_data, counts):
             print(f"  Error assigning {emp.employee_name}: {str(e)[:80]}")
 
 
+def create_health_insurance_additional_salaries(company, config, executive_designations, counts):
+    """Create recurring Additional Salary records for Health Insurance.
+
+    Health Insurance is a fixed premium set per employee via Additional Salary.
+    Executives (Salaried) get Family rate, non-executives (Hourly) get Individual rate.
+    Rates are defined in config: health_insurance_family and health_insurance_individual.
+    """
+    family_rate = config.get("health_insurance_family", 150.12)
+    individual_rate = config.get("health_insurance_individual", 69.28)
+    from_date = config.get("payroll_period_start", "2025-01-01")
+    to_date = config.get("payroll_period_end", "2025-12-31")
+    currency = frappe.db.get_value("Company", company, "default_currency") or "USD"
+
+    assignments = frappe.get_all(
+        "Salary Structure Assignment",
+        filters={"company": company, "docstatus": 1},
+        fields=["employee", "employee_name", "salary_structure"]
+    )
+
+    for assign in assignments:
+        is_executive = assign.salary_structure == "Salaried"
+        rate = family_rate if is_executive else individual_rate
+        plan = "Family" if is_executive else "Individual"
+
+        existing = frappe.db.exists("Additional Salary", {
+            "employee": assign.employee,
+            "salary_component": "Health Insurance",
+            "docstatus": 1
+        })
+
+        if existing:
+            print(f"  Already exists: {assign.employee_name} -> HI ({plan})")
+            continue
+
+        try:
+            # from_date must be >= employee's date_of_joining (Frappe validation)
+            doj = frappe.db.get_value("Employee", assign.employee, "date_of_joining")
+            emp_from_date = max(str(doj), from_date) if doj else from_date
+
+            doc = frappe.get_doc({
+                "doctype": "Additional Salary",
+                "employee": assign.employee,
+                "salary_component": "Health Insurance",
+                "amount": rate,
+                "currency": currency,
+                "company": company,
+                "is_recurring": 1,
+                "from_date": emp_from_date,
+                "to_date": to_date,
+                "overwrite_salary_structure_amount": 1
+            })
+            doc.insert(ignore_permissions=True)
+            doc.submit()
+            counts["additional_salaries"] += 1
+            print(f"  Created: {assign.employee_name} -> HI {plan} (${rate:.2f}/wk)")
+        except Exception as e:
+            counts["errors"].append(f"HI Additional Salary {assign.employee_name}: {str(e)[:80]}")
+            print(f"  Error creating HI for {assign.employee_name}: {str(e)[:80]}")
+
+
 def create_salary_slips(company, config, counts):
     """Create weekly salary slips"""
     week_start = config.get("salary_slip_start", "2025-11-17")
@@ -433,6 +493,7 @@ def create_payroll_data(company="NovaSoft", payroll_path=None):
         "salary_components": 0,
         "salary_structures": 0,
         "structure_assignments": 0,
+        "additional_salaries": 0,
         "salary_slips": 0,
         "income_tax_slabs": 0,
         "errors": []
@@ -472,9 +533,17 @@ def create_payroll_data(company="NovaSoft", payroll_path=None):
     create_structure_assignments(company, payroll_data, counts)
     frappe.db.commit()
 
-    # Step 4: Create Salary Slips
+    # Step 4: Create Health Insurance Additional Salaries
     print("\n" + "="*50)
-    print("Step 4: Creating Salary Slips...")
+    print("Step 4: Creating Health Insurance Additional Salaries...")
+    print("="*50)
+    executive_designations = payroll_data.get("executive_designations", [])
+    create_health_insurance_additional_salaries(company, config, executive_designations, counts)
+    frappe.db.commit()
+
+    # Step 5: Create Salary Slips
+    print("\n" + "="*50)
+    print("Step 5: Creating Salary Slips...")
     print("="*50)
     create_salary_slips(company, config, counts)
     frappe.db.commit()
@@ -486,6 +555,7 @@ def create_payroll_data(company="NovaSoft", payroll_path=None):
     print(f"\n  Salary Components: {counts['salary_components']}")
     print(f"  Salary Structures: {counts['salary_structures']}")
     print(f"  Structure Assignments: {counts['structure_assignments']}")
+    print(f"  Additional Salaries (HI): {counts['additional_salaries']}")
     print(f"  Salary Slips: {counts['salary_slips']}")
     print(f"  Income Tax Slabs: {counts['income_tax_slabs']}")
 
@@ -529,7 +599,8 @@ def clear_payroll_data(company="NovaSoft", payroll_path=None):
     print(f"Clearing Payroll Data for Company: {company}")
     print(f"{'='*60}\n")
 
-    deleted = {"slips": 0, "assignments": 0, "structures": 0, "components": 0, "tax_slabs": 0}
+    deleted = {"slips": 0, "additional_salaries": 0, "assignments": 0, "structures": 0,
+              "components": 0, "tax_slabs": 0, "payroll_periods": 0}
 
     # Delete salary slips
     print("Deleting Salary Slips...")
@@ -543,6 +614,19 @@ def clear_payroll_data(company="NovaSoft", payroll_path=None):
             deleted["slips"] += 1
         except Exception as e:
             print(f"  Error deleting slip {slip.name}: {str(e)[:50]}")
+
+    # Delete Additional Salary records
+    print("Deleting Additional Salaries...")
+    add_salaries = frappe.get_all("Additional Salary", filters={"company": company})
+    for a in add_salaries:
+        try:
+            doc = frappe.get_doc("Additional Salary", a.name)
+            if doc.docstatus == 1:
+                doc.cancel()
+            frappe.delete_doc("Additional Salary", a.name, force=True)
+            deleted["additional_salaries"] += 1
+        except Exception as e:
+            print(f"  Error deleting additional salary {a.name}: {str(e)[:50]}")
 
     # Delete structure assignments
     print("Deleting Structure Assignments...")
@@ -595,6 +679,16 @@ def clear_payroll_data(company="NovaSoft", payroll_path=None):
         except Exception as e:
             print(f"  Error deleting tax slab {slab_name}: {str(e)[:50]}")
 
+    # Delete Payroll Period
+    print("Deleting Payroll Period...")
+    period_name = f"Payroll Period {fiscal_year} - {company}"
+    if frappe.db.exists("Payroll Period", period_name):
+        try:
+            frappe.delete_doc("Payroll Period", period_name, force=True)
+            deleted["payroll_periods"] += 1
+        except Exception as e:
+            print(f"  Error deleting payroll period {period_name}: {str(e)[:50]}")
+
     # Restore HRMS default components
     restore_default_components()
 
@@ -604,10 +698,12 @@ def clear_payroll_data(company="NovaSoft", payroll_path=None):
     print("Payroll Data Deletion Complete!")
     print(f"{'='*60}")
     print(f"  Deleted {deleted['slips']} Salary Slips")
+    print(f"  Deleted {deleted['additional_salaries']} Additional Salaries")
     print(f"  Deleted {deleted['assignments']} Structure Assignments")
     print(f"  Deleted {deleted['structures']} Salary Structures")
     print(f"  Deleted {deleted['components']} Salary Components")
     print(f"  Deleted {deleted['tax_slabs']} Income Tax Slabs")
+    print(f"  Deleted {deleted['payroll_periods']} Payroll Periods")
     print(f"{'='*60}\n")
 
     return deleted
