@@ -6,6 +6,7 @@
  "engine": "InnoDB",
  "field_order": [
   "date",
+  "to_date",
   "shift",
   "column_break_gmhs",
   "late_entry",
@@ -172,13 +173,18 @@
    "fieldtype": "HTML",
    "label": "Horizontal Break",
    "options": "<hr>"
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date"
   }
  ],
  "grid_page_length": 50,
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-05-26 09:42:36.888216",
+ "modified": "2026-02-12 18:17:54.307888",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Attendance Tool",

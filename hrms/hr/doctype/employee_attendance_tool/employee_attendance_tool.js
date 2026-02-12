@@ -273,6 +273,7 @@ frappe.ui.form.on("Employee Attendance Tool", {
 					employee_list: employees_to_mark_full_day,
 					status: frm.doc.status,
 					date: frm.doc.date,
+					to_date: frm.doc.to_date,
 					late_entry: frm.doc.late_entry,
 					early_exit: frm.doc.early_exit,
 					shift: frm.doc.shift,
