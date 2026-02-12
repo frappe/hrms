@@ -1,92 +1,5937 @@
 {
-    "attendance_records": [
+  "attendance_records": [
+    {
+      "employee_id": "HR-EMP-00004",
+      "employee_name": "Eugene Sanders",
+      "department": "Accounts",
+      "shift": "Morning",
+      "status": "Present",
+      "records": [
+        {
+          "date": "2025-11-03",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-04",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00059",
+      "employee_name": "Maria Torres",
+      "department": "Accounts",
+      "shift": "Morning",
+      "status": "Present",
+      "records": [
+        {
+          "date": "2025-11-03",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-04",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00060",
+      "employee_name": "Nathan Brooks",
+      "department": "Accounts",
+      "shift": "Morning",
+      "status": "Present",
+      "records": [
+        {
+          "date": "2025-11-03",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-04",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-06",
+          "checkin": null,
+          "checkout": null,
+          "status_override": "Absent"
+        },
+        {
+          "date": "2025-11-07",
+          "checkin": null,
+          "checkout": null,
+          "status_override": "Absent"
+        },
+        {
+          "date": "2025-12-01",
+          "checkin": "07:45:00",
+          "checkout": "15:00:00",
+          "late_entry": true
+        },
+        {
+          "date": "2025-12-02",
+          "checkin": "07:45:00",
+          "checkout": "15:00:00",
+          "late_entry": true
+        },
+        {
+          "date": "2025-12-03",
+          "checkin": "07:00:00",
+          "checkout": "14:30:00",
+          "early_exit": true
+        },
+        {
+          "date": "2025-12-04",
+          "checkin": "07:00:00",
+          "checkout": "14:00:00",
+          "early_exit": true
+        },
+        {
+          "date": "2025-12-05",
+          "checkin": "07:00:00",
+          "checkout": "14:00:00",
+          "early_exit": true
+        },
+        {
+          "date": "2025-12-08",
+          "checkin": "07:00:00",
+          "checkout": "14:00:00",
+          "early_exit": true
+        },
+        {
+          "date": "2025-12-09",
+          "checkin": "07:00:00",
+          "checkout": "14:00:00",
+          "early_exit": true
+        },
+        {
+          "date": "2025-12-10",
+          "checkin": "07:00:00",
+          "checkout": "14:00:00",
+          "early_exit": true
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00061",
+      "employee_name": "Taylor Kim",
+      "department": "Accounts",
+      "shift": "Morning",
+      "status": "Present",
+      "records": [
+        {
+          "date": "2025-11-03",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-04",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00062",
+      "employee_name": "Helena Santos",
+      "department": "Accounts",
+      "shift": "Morning",
+      "status": "Work From Home",
+      "records": [
+        {
+          "date": "2025-11-03",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-04",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-11-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00003",
+      "employee_name": "Carla Ruiz",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00008",
+      "employee_name": "Lily Chen",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00009",
+      "employee_name": "Mark Allen",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00010",
+      "employee_name": "Tanya Brooks",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00011",
+      "employee_name": "Robert Fields",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00012",
+      "employee_name": "Chloe Park",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00013",
+      "employee_name": "Ethan Spencer",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00014",
+      "employee_name": "Natalie Park",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00015",
+      "employee_name": "Grace Liu",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00016",
+      "employee_name": "Peter Novak",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00017",
+      "employee_name": "Sarah Collins",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00018",
+      "employee_name": "Diego Herrera",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00019",
+      "employee_name": "Amira Hassan",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00020",
+      "employee_name": "Wei Zhou",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00021",
+      "employee_name": "Jonas Richter",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00022",
+      "employee_name": "Carmen Rivera",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00023",
+      "employee_name": "Helen Osbourne",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00024",
+      "employee_name": "Victor James Lin",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00025",
+      "employee_name": "David Wong",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00026",
+      "employee_name": "Emily Zhang",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00027",
+      "employee_name": "Hiroshi Tanaka",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00028",
+      "employee_name": "Laura Martinez",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00029",
+      "employee_name": "Frank Miller",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00030",
+      "employee_name": "Jared Hughes",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00031",
+      "employee_name": "Sofia Costa",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00032",
+      "employee_name": "Andre Johnson",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00033",
+      "employee_name": "Fatima Noor",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00034",
+      "employee_name": "Michael Torres",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00035",
+      "employee_name": "Kevin Shah",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00036",
+      "employee_name": "Irene Zhao",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00039",
+      "employee_name": "Hannah Lee",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00040",
+      "employee_name": "Ivan Petrov",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00041",
+      "employee_name": "Michelle Wang",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00042",
+      "employee_name": "Julia Mendes",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00043",
+      "employee_name": "Aaron Rivers",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00044",
+      "employee_name": "Nora Velasquez",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00045",
+      "employee_name": "Daniel Cho",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00046",
+      "employee_name": "Aisha Khan",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00047",
+      "employee_name": "Brian Watkins",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00048",
+      "employee_name": "Selena Park",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00050",
+      "employee_name": "Samuel Ortiz",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00051",
+      "employee_name": "Leonardo Silva",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00052",
+      "employee_name": "Rachel Kim",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00053",
+      "employee_name": "Miguel Santos",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00054",
+      "employee_name": "Priyanka Rao",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00055",
+      "employee_name": "Wei Sun",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    },
+    {
+      "employee_id": "HR-EMP-00056",
+      "employee_name": "Nora Singh",
+      "department": "Research & Development",
+      "shift": "Morning",
+      "status": "Present",
+      "comment": "May 2025 - Full month including Memorial Day (worked on holiday)",
+      "records": [
+        {
+          "date": "2025-05-01",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-02",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-05",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-06",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-07",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-08",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-09",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-12",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-13",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-14",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-15",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-16",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-19",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-20",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-21",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-22",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-23",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-26",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00",
+          "holiday": "Memorial Day"
+        },
+        {
+          "date": "2025-05-27",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-28",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-29",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        },
+        {
+          "date": "2025-05-30",
+          "checkin": "07:00:00",
+          "checkout": "15:00:00"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "description": "Attendance records for multiple departments",
+    "periods": [
       {
-        "employee_id": "HR-EMP-00004",
-        "employee_name": "Eugene Sanders",
         "department": "Accounts",
-        "shift": "Morning",
-        "status": "Present",
-        "records": [
-          {"date": "2025-11-03", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-04", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-05", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-06", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-07", "checkin": "07:00:00", "checkout": "15:00:00"}
-        ]
+        "period": "November 2025 - First week",
+        "week_start": "2025-11-03",
+        "week_end": "2025-11-07"
       },
       {
-        "employee_id": "HR-EMP-00059",
-        "employee_name": "Maria Torres",
-        "department": "Accounts",
-        "shift": "Morning",
-        "status": "Present",
-        "records": [
-          {"date": "2025-11-03", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-04", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-05", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-06", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-07", "checkin": "07:00:00", "checkout": "15:00:00"}
-        ]
-      },
-      {
-        "employee_id": "HR-EMP-00060",
-        "employee_name": "Nathan Brooks",
-        "department": "Accounts",
-        "shift": "Morning",
-        "status": "Present",
-        "records": [
-          {"date": "2025-11-03", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-04", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-05", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-06", "checkin": null, "checkout": null, "status_override": "Absent"},
-          {"date": "2025-11-07", "checkin": null, "checkout": null, "status_override": "Absent"},
-          {"date": "2025-12-01", "checkin": "07:45:00", "checkout": "15:00:00", "late_entry": true},
-          {"date": "2025-12-02", "checkin": "07:45:00", "checkout": "15:00:00", "late_entry": true},
-          {"date": "2025-12-03", "checkin": "07:00:00", "checkout": "14:30:00", "early_exit": true},
-          {"date": "2025-12-04", "checkin": "07:00:00", "checkout": "14:00:00", "early_exit": true},
-          {"date": "2025-12-05", "checkin": "07:00:00", "checkout": "14:00:00", "early_exit": true},
-          {"date": "2025-12-08", "checkin": "07:00:00", "checkout": "14:00:00", "early_exit": true},
-          {"date": "2025-12-09", "checkin": "07:00:00", "checkout": "14:00:00", "early_exit": true},
-          {"date": "2025-12-10", "checkin": "07:00:00", "checkout": "14:00:00", "early_exit": true}
-        ]
-      },
-      {
-        "employee_id": "HR-EMP-00061",
-        "employee_name": "Taylor Kim",
-        "department": "Accounts",
-        "shift": "Morning",
-        "status": "Present",
-        "records": [
-          {"date": "2025-11-03", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-04", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-05", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-06", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-07", "checkin": "07:00:00", "checkout": "15:00:00"}
-        ]
-      },
-      {
-        "employee_id": "HR-EMP-00062",
-        "employee_name": "Helena Santos",
-        "department": "Accounts",
-        "shift": "Morning",
-        "status": "Work From Home",
-        "records": [
-          {"date": "2025-11-03", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-04", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-05", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-06", "checkin": "07:00:00", "checkout": "15:00:00"},
-          {"date": "2025-11-07", "checkin": "07:00:00", "checkout": "15:00:00"}
-        ]
+        "department": "Research & Development",
+        "period": "May 2025 - Full month including Memorial Day",
+        "month_start": "2025-05-01",
+        "month_end": "2025-05-30",
+        "holidays": [
+          "2025-05-26"
+        ],
+        "note": "All 47 R&D employees worked on Memorial Day (2025-05-26) for compensatory off eligibility"
       }
     ],
-    "metadata": {
-      "description": "Attendance records for Accounts department - First week of November 2025",
-      "week_start": "2025-11-03",
-      "week_end": "2025-11-07",
-      "default_shift": {
-        "name": "Morning",
-        "start_time": "07:00:00",
-        "end_time": "15:00:00"
-      }
+    "default_shift": {
+      "name": "Morning",
+      "start_time": "07:00:00",
+      "end_time": "15:00:00"
     }
   }
+}
