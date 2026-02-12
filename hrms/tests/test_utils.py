@@ -43,6 +43,7 @@ def set_defaults():
 	)
 	from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 
+	create_company()
 	make_holiday_list("Salary Slip Test Holiday List")
 	frappe.db.set_value("Company", "_Test Company", "default_holiday_list", "Salary Slip Test Holiday List")
 	create_holiday_list_assignment("Company", "_Test Company", "Salary Slip Test Holiday List")
