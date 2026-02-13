@@ -207,16 +207,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		):
 			frappe.throw(_("Half Day Date should be between From Date and To Date"))
 
-		# prevent half-day leave on holidays when leave type excludes holidays
-
-		if self.half_day and self.half_day_date:
-			include_holiday = frappe.db.get_value("Leave Type", self.leave_type, "include_holiday")
-			if not include_holiday:
-				half_day_date = getdate(self.half_day_date)
-				if get_holidays(self.employee, half_day_date, half_day_date):
-					frappe.throw(
-						_("Half-day leave cannot be applied on a holiday. Please choose a working day.")
-					)
+		validate_half_day_not_on_holiday(self)
 
 
 		if not is_lwp(self.leave_type):
@@ -1500,3 +1491,24 @@ def get_leave_approver(employee):
 
 def on_doctype_update():
 	frappe.db.add_index("Leave Application", ["employee", "from_date", "to_date"])
+
+
+def validate_half_day_not_on_holiday(doc):
+	"""
+    Validate that half-day leave is not applied on a holiday
+    when the selected Leave Type excludes holidays.
+
+    Args:
+        doc (Document): Leave Application document.
+
+    Raises:
+        LeaveDayBlockedError: If half-day leave is applied on a holiday.
+    """ 
+	if doc.half_day and doc.half_day_date:
+		include_holiday = frappe.db.get_value("Leave Type", doc.leave_type, "include_holiday")
+		if not include_holiday:
+			half_day_date = getdate(doc.half_day_date)
+			if get_holidays(doc.employee, half_day_date, half_day_date):
+				frappe.throw(
+					_("Half-day leave cannot be applied on a holiday. Please choose a working day."), LeaveDayBlockedError
+				)

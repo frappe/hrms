@@ -216,7 +216,7 @@ class TestLeaveApplication(HRMSTestSuite):
 			leave_type=leave_type.name,
 			from_date=get_year_start(date),
 			to_date=get_year_ending(date),
-			leaves=2,
+			aves=2,le
 		)
 		leave_application = frappe.get_doc(
 			dict(
@@ -1504,6 +1504,34 @@ class TestLeaveApplication(HRMSTestSuite):
 		application.discard()
 		application.reload()
 		self.assertEqual(application.status, "Cancelled")
+
+
+	def test_half_day_leave_on_holiday_when_include_holiday_disabled(self):
+		frappe.delete_doc_if_exists("Leave Type", "Test Leave Validation", force=1)
+		leave_type = frappe.get_doc(
+			dict(leave_type_name="Test Leave Validation", doctype="Leave Type", include_holiday=False)
+		).insert()
+		date = getdate()
+		first_sunday = get_first_sunday(self.holiday_list, for_date=get_year_start(date))
+		make_allocation_record(
+			leave_type=leave_type.name, from_date=get_year_start(date), to_date=get_year_ending(date)
+		)
+
+		employee = get_employee()
+		first_sunday = get_first_sunday(self.holiday_list)
+		leave_application = frappe.get_doc(
+			dict(
+				doctype="Leave Application",
+				employee=employee.name,
+				leave_type=leave_type.name,
+				from_date=first_sunday,
+				to_date=add_days(first_sunday, 1),
+				company="_Test Company",
+				half_day=1,
+				half_day_date=first_sunday,
+			)
+		)
+		self.assertRaises(LeaveDayBlockedError, leave_application.insert)
 
 
 def create_carry_forwarded_allocation(employee, leave_type, date=None):
