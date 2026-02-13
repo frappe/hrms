@@ -52,7 +52,7 @@
   },
   {
    "collapsible": 1,
-   "depends_on": "from_date",
+   "depends_on": "date",
    "fieldname": "marked_attendance_section",
    "fieldtype": "Section Break",
    "label": "Marked Attendance"
@@ -169,6 +169,8 @@
    "options": "<hr>"
   },
   {
+   "depends_on": "eval:doc.from_date",
+   "description": "Leave blank for single-day attendance.",
    "fieldname": "to_date",
    "fieldtype": "Date",
    "label": "To Date"
@@ -186,7 +188,7 @@
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-02-13 10:28:03.188483",
+ "modified": "2026-02-13 13:29:02.778094",
  "modified_by": "nikita.pawar@intellore.com",
  "module": "HR",
  "name": "Employee Attendance Tool",
