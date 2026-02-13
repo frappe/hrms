@@ -52,7 +52,7 @@ def get_employees(
         if value:
             filters[field] = value
 
-    # All active employees
+    # All active employees, fetch joining date for skipping pre-joining dates
     employee_list = frappe.get_list(
         "Employee",
         fields=["name as employee", "employee_name", "date_of_joining"],
@@ -72,6 +72,7 @@ def get_employees(
         order_by="employee_name",
     )
 
+    # Half-day attendances
     half_day_attendance_list = frappe.get_list(
         "Attendance",
         fields=["employee", "employee_name", "attendance_date"],
@@ -84,7 +85,7 @@ def get_employees(
         order_by="employee_name",
     )
 
-    # All attendance (for unmarked calculation) including half-day modified
+    # All attendance (for unmarked calculation)
     all_attendance = frappe.get_list(
         "Attendance",
         fields=["employee", "attendance_date"],
@@ -164,17 +165,27 @@ def mark_employee_attendance(
     if to_date < from_date:
         frappe.throw(_("To Date cannot be before From Date."))
 
+    # Cache employee joining dates for performance
+    joining_dates = {
+        e: frappe.db.get_value("Employee", e, "date_of_joining") for e in employee_list
+    }
+
     # -------------------------------
     # Full-day attendance
     # -------------------------------
     for n in range((to_date - from_date).days + 1):
         current_date = add_days(from_date, n)
         for employee in employee_list:
+            joining_date = joining_dates.get(employee)
+            if joining_date and current_date < getdate(joining_date):
+                continue
+
             if frappe.db.exists(
                 "Attendance",
                 {"employee": employee, "attendance_date": current_date, "docstatus": ["!=", 2]},
             ):
                 continue
+
             attendance = frappe.get_doc(
                 {
                     "doctype": "Attendance",
@@ -209,10 +220,8 @@ def mark_employee_attendance(
                 doc = frappe.get_doc("Attendance", att.name)
                 # Allow modification on submitted documents
                 doc.flags.ignore_validate_update_after_submit = True
+                # Only update half-day fields
                 doc.half_day_status = half_day_status
-                doc.shift = shift
-                doc.late_entry = late_entry
-                doc.early_exit = early_exit
                 doc.modify_half_day_status = 0
                 doc.save()
 

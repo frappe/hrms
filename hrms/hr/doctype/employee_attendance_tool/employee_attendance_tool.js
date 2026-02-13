@@ -17,7 +17,6 @@ frappe.ui.form.on("Employee Attendance Tool", {
     },
 
     to_date(frm) {
-        // Refresh UI when end date changes
         hide_field("select_employees_section");
         hide_field("marked_attendance_section");
         frm.trigger("reset_tool_actions");
@@ -43,6 +42,10 @@ frappe.ui.form.on("Employee Attendance Tool", {
 
     load_employees(frm) {
         if (!frm.doc.from_date) return;
+
+        if (frm.doc.to_date && frm.doc.to_date < frm.doc.from_date) {
+            frappe.throw(__("To Date cannot be before From Date."));
+        }
 
         frappe.call({
             method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.get_employees",
@@ -70,6 +73,7 @@ frappe.ui.form.on("Employee Attendance Tool", {
             }
 
             if (unmarked_employees > 0 || half_day_marked_employees > 0) {
+                // Unmarked employees
                 if (unmarked_employees) {
                     unhide_field("status");
                     unhide_field("unmarked_employee_header");
@@ -85,6 +89,7 @@ frappe.ui.form.on("Employee Attendance Tool", {
                     r.message["unmarked"]
                 );
 
+                // Half-day employees
                 if (half_day_marked_employees) {
                     unhide_field("half_day_status");
                     unhide_field("half_day_marked_employee_header");
@@ -121,6 +126,7 @@ frappe.ui.form.on("Employee Attendance Tool", {
 
         const $wrapper = frm.get_field(html_fieldname).$wrapper;
         $wrapper.empty();
+
         const employee_wrapper = $(`<div class="employee_wrapper">`).appendTo($wrapper);
 
         frm.fields_dict[multicheck_fieldname] = frappe.ui.form.make_control({
@@ -144,6 +150,9 @@ frappe.ui.form.on("Employee Attendance Tool", {
 
     show_marked_employees(frm, marked_employees) {
         const $wrapper = frm.get_field("marked_attendance_html").$wrapper;
+        $wrapper.empty();  // Clear old table
+        frm.marked_emp_datatable = null;  // Reset cached datatable
+
         const summary_wrapper = $(`<div class="summary_wrapper">`).appendTo($wrapper);
 
         const data = marked_employees.map(entry => [
@@ -235,7 +244,7 @@ frappe.ui.form.on("Employee Attendance Tool", {
                 late_entry: frm.doc.late_entry,
                 early_exit: frm.doc.early_exit,
                 shift: frm.doc.shift,
-                mark_half_day: employees_to_mark_half_day.length ? true : false,
+                mark_half_day: employees_to_mark_half_day.length > 0,
                 half_day_status: frm.doc.half_day_status,
                 half_day_employee_list: employees_to_mark_half_day
             },
