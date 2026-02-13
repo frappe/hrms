@@ -52,7 +52,7 @@
   },
   {
    "collapsible": 1,
-   "depends_on": "date",
+   "depends_on": "from_date",
    "fieldname": "marked_attendance_section",
    "fieldtype": "Section Break",
    "label": "Marked Attendance"
