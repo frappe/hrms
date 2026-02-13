@@ -35,7 +35,7 @@ def get_employees(
     to_date = getdate(to_date) if to_date else from_date
 
     if to_date < from_date:
-        frappe.throw("To Date cannot be before From Date.")
+        frappe.throw(_("To Date cannot be before From Date."))
 
     # Filters for active employees
     filters = {"status": "Active", "date_of_joining": ["<=", from_date]}
