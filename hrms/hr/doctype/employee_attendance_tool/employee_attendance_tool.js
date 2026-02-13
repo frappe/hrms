@@ -241,6 +241,7 @@ frappe.ui.form.on("Employee Attendance Tool", {
                 status: frm.doc.status,
                 from_date: frm.doc.from_date,
                 to_date: frm.doc.to_date,
+                company: frm.doc.company,
                 late_entry: frm.doc.late_entry,
                 early_exit: frm.doc.early_exit,
                 shift: frm.doc.shift,
@@ -256,5 +257,6 @@ frappe.ui.form.on("Employee Attendance Tool", {
                 frm.refresh();
             }
         });
+    }
     }
 });
