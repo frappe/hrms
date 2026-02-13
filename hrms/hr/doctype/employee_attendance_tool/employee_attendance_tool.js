@@ -7,10 +7,10 @@ frappe.ui.form.on("Employee Attendance Tool", {
 	},
 
 	onload(frm) {
-		frm.set_value("date", frappe.datetime.get_today());
+		frm.set_value("from_date", frappe.datetime.get_today());
 	},
 
-	date: function (frm) {
+	from_date: function (frm) {
 		hide_field("select_employees_section");
 		hide_field("marked_attendance_section");
 		frm.trigger("reset_tool_actions");
@@ -35,12 +35,12 @@ frappe.ui.form.on("Employee Attendance Tool", {
 	},
 
 	load_employees(frm) {
-		if (!frm.doc.date) return;
+		if (!frm.doc.from_date) return;
 		frappe
 			.call({
 				method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.get_employees",
 				args: {
-					date: frm.doc.date,
+					from_date: frm.doc.from_date,
 					department: frm.doc.department,
 					branch: frm.doc.branch,
 					company: frm.doc.company,
@@ -272,7 +272,7 @@ frappe.ui.form.on("Employee Attendance Tool", {
 				args: {
 					employee_list: employees_to_mark_full_day,
 					status: frm.doc.status,
-					date: frm.doc.date,
+					from_date: frm.doc.from_date,
 					to_date: frm.doc.to_date,
 					late_entry: frm.doc.late_entry,
 					early_exit: frm.doc.early_exit,

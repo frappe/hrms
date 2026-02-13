@@ -5,7 +5,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "date",
+  "from_date",
   "to_date",
   "shift",
   "column_break_gmhs",
@@ -32,12 +32,6 @@
   "marked_attendance_html"
  ],
  "fields": [
-  {
-   "default": "Today",
-   "fieldname": "date",
-   "fieldtype": "Date",
-   "label": "Date"
-  },
   {
    "fieldname": "department",
    "fieldtype": "Link",
@@ -178,14 +172,22 @@
    "fieldname": "to_date",
    "fieldtype": "Date",
    "label": "To Date"
+  },
+  {
+   "default": "Today",
+   "description": "For single-day attendance, select only this date.",
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-02-12 18:17:54.307888",
- "modified_by": "Administrator",
+ "modified": "2026-02-13 10:28:03.188483",
+ "modified_by": "nikita.pawar@intellore.com",
  "module": "HR",
  "name": "Employee Attendance Tool",
  "owner": "Administrator",

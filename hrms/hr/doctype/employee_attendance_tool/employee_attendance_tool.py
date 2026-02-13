@@ -1,4 +1,4 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd.
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
 import datetime
@@ -19,7 +19,7 @@ class EmployeeAttendanceTool(Document):
 
 @frappe.whitelist()
 def get_employees(
-    date: str | datetime.date,
+    from_date: str | datetime.date,
     department: str | None = None,
     branch: str | None = None,
     company: str | None = None,
@@ -28,11 +28,11 @@ def get_employees(
     employee_grade: str | None = None,
 ) -> dict[str, list]:
 
-    date = getdate(date)
+    from_date = getdate(from_date)
 
     filters = {
         "status": "Active",
-        "date_of_joining": ["<=", date],
+        "date_of_joining": ["<=", from_date],
     }
 
     optional_filters = {
@@ -61,7 +61,7 @@ def get_employees(
         "Attendance",
         fields=["employee", "employee_name", "status", "shift", "leave_type"],
         filters={
-            "attendance_date": date,
+            "attendance_date": from_date,
             "docstatus": 1,
             "modify_half_day_status": 0,
         },
@@ -73,7 +73,7 @@ def get_employees(
         "Attendance",
         fields=["employee", "employee_name"],
         filters={
-            "attendance_date": date,
+            "attendance_date": from_date,
             "docstatus": 1,
             "modify_half_day_status": 1,
             "leave_type": ("is", "set"),
@@ -93,7 +93,7 @@ def get_employees(
 
 
 def _get_unmarked_attendance(employee_list: list[dict], attendance_list: list[dict]) -> list[dict]:
-
+    """Return employees who don’t have attendance marked yet"""
     marked_employees = [entry.get("employee") for entry in attendance_list]
 
     return [
@@ -111,7 +111,7 @@ def _get_unmarked_attendance(employee_list: list[dict], attendance_list: list[di
 def mark_employee_attendance(
     employee_list: list | str,
     status: str,
-    date: str | datetime.date,
+    from_date: str | datetime.date,
     to_date: str | datetime.date | None = None,
     leave_type: str | None = None,
     company: str | None = None,
@@ -123,7 +123,7 @@ def mark_employee_attendance(
     half_day_employee_list: list | str | None = None,
 ) -> None:
 
-    # Convert JSON string to list
+    # Convert JSON strings to lists if needed
     if isinstance(employee_list, str):
         employee_list = json.loads(employee_list)
 
@@ -133,7 +133,8 @@ def mark_employee_attendance(
     if not employee_list:
         frappe.throw("Please select at least one employee.")
 
-    from_date = getdate(date)
+    # Convert to datetime
+    from_date = getdate(from_date)
     to_date = getdate(to_date) if to_date else from_date
 
     # Validate date range
