@@ -216,7 +216,7 @@ class TestLeaveApplication(HRMSTestSuite):
 			leave_type=leave_type.name,
 			from_date=get_year_start(date),
 			to_date=get_year_ending(date),
-			aves=2,le
+			leaves=2,
 		)
 		leave_application = frappe.get_doc(
 			dict(
@@ -1505,7 +1505,7 @@ class TestLeaveApplication(HRMSTestSuite):
 		application.reload()
 		self.assertEqual(application.status, "Cancelled")
 
-
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_half_day_leave_on_holiday_when_include_holiday_disabled(self):
 		frappe.delete_doc_if_exists("Leave Type", "Test Leave Validation", force=1)
 		leave_type = frappe.get_doc(
@@ -1518,7 +1518,6 @@ class TestLeaveApplication(HRMSTestSuite):
 		)
 
 		employee = get_employee()
-		first_sunday = get_first_sunday(self.holiday_list)
 		leave_application = frappe.get_doc(
 			dict(
 				doctype="Leave Application",
