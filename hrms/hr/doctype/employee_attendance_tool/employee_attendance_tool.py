@@ -4,6 +4,7 @@
 import datetime
 import json
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.utils import getdate, add_days
 
@@ -37,8 +38,8 @@ def get_employees(
     if to_date < from_date:
         frappe.throw(_("To Date cannot be before From Date."))
 
-    # Filters for active employees
-    filters = {"status": "Active", "date_of_joining": ["<=", from_date]}
+    # Filters for active employees (date_of_joining <= to_date)
+    filters = {"status": "Active", "date_of_joining": ["<=", to_date]}
     optional_filters = {
         "department": department,
         "branch": branch,
@@ -54,7 +55,7 @@ def get_employees(
     # All active employees
     employee_list = frappe.get_list(
         "Employee",
-        fields=["name as employee", "employee_name"],
+        fields=["name as employee", "employee_name", "date_of_joining"],
         filters=filters,
         order_by="employee_name",
     )
@@ -83,7 +84,17 @@ def get_employees(
         order_by="employee_name",
     )
 
-    unmarked_attendance = _get_unmarked_attendance(employee_list, attendance_list, from_date, to_date)
+    # All attendance (for unmarked calculation) including half-day modified
+    all_attendance = frappe.get_list(
+        "Attendance",
+        fields=["employee", "attendance_date"],
+        filters={
+            "attendance_date": ["between", [from_date, to_date]],
+            "docstatus": 1,
+        },
+    )
+
+    unmarked_attendance = _get_unmarked_attendance(employee_list, all_attendance, from_date, to_date)
 
     return {
         "marked": attendance_list,
@@ -96,14 +107,17 @@ def _get_unmarked_attendance(employee_list: list, attendance_list: list, from_da
     """
     Returns employees missing attendance on any date in the range.
     """
-    # Build a set of (employee, date) that already have attendance
-    marked_set = set((att["employee"], att["attendance_date"]) for att in attendance_list)
+    # Normalize dates for set lookup
+    marked_set = set((att["employee"], getdate(att["attendance_date"])) for att in attendance_list)
 
     unmarked = []
     for emp in employee_list:
         has_missing = False
         for n in range((to_date - from_date).days + 1):
             current_date = add_days(from_date, n)
+            # Skip dates before employee's joining
+            if emp.get("date_of_joining") and current_date < getdate(emp["date_of_joining"]):
+                continue
             if (emp["employee"], current_date) not in marked_set:
                 has_missing = True
                 break
@@ -142,13 +156,13 @@ def mark_employee_attendance(
         half_day_employee_list = json.loads(half_day_employee_list)
 
     if not employee_list and not half_day_employee_list:
-        frappe.throw("Please select at least one employee.")
+        frappe.throw(_("Please select at least one employee."))
 
     from_date = getdate(from_date)
     to_date = getdate(to_date) if to_date else from_date
 
     if to_date < from_date:
-        frappe.throw("To Date cannot be before From Date.")
+        frappe.throw(_("To Date cannot be before From Date."))
 
     # -------------------------------
     # Full-day attendance
@@ -193,6 +207,8 @@ def mark_employee_attendance(
             )
             for att in attendance_docs:
                 doc = frappe.get_doc("Attendance", att.name)
+                # Allow modification on submitted documents
+                doc.flags.ignore_validate_update_after_submit = True
                 doc.half_day_status = half_day_status
                 doc.shift = shift
                 doc.late_entry = late_entry
@@ -200,4 +216,4 @@ def mark_employee_attendance(
                 doc.modify_half_day_status = 0
                 doc.save()
 
-    frappe.msgprint("Attendance marked successfully.")
+    frappe.msgprint(_("Attendance marked successfully."))

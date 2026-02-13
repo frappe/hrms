@@ -16,9 +16,16 @@ frappe.ui.form.on("Employee Attendance Tool", {
         frm.trigger("reset_tool_actions");
     },
 
+    to_date(frm) {
+        // Refresh UI when end date changes
+        hide_field("select_employees_section");
+        hide_field("marked_attendance_section");
+        frm.trigger("reset_tool_actions");
+    },
+
     reset_tool_actions(frm) {
         frm.disable_save();
-        const get_employees_button = this.cur_frm.fields_dict.get_employees.$input;
+        const get_employees_button = frm.fields_dict.get_employees.$input;
         get_employees_button.removeClass("btn-default").addClass("btn-primary");
     },
 
@@ -41,7 +48,7 @@ frappe.ui.form.on("Employee Attendance Tool", {
             method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.get_employees",
             args: {
                 from_date: frm.doc.from_date,
-                to_date: frm.doc.to_date,  // Pass to_date
+                to_date: frm.doc.to_date,
                 department: frm.doc.department,
                 branch: frm.doc.branch,
                 company: frm.doc.company,
@@ -123,13 +130,11 @@ frappe.ui.form.on("Employee Attendance Tool", {
                 fieldtype: "MultiCheck",
                 select_all: true,
                 columns: 3,
-                get_data: () => {
-                    return employee_list.map(emp => ({
-                        label: `${emp.employee} : ${emp.employee_name}`,
-                        value: emp.employee,
-                        checked: 0
-                    }));
-                }
+                get_data: () => employee_list.map(emp => ({
+                    label: `${emp.employee} : ${emp.employee_name}`,
+                    value: emp.employee,
+                    checked: 0
+                }))
             },
             render_input: true
         });
@@ -187,7 +192,7 @@ frappe.ui.form.on("Employee Attendance Tool", {
     },
 
     set_primary_action(frm) {
-        const get_employees_button = this.cur_frm.fields_dict.get_employees.$input;
+        const get_employees_button = frm.fields_dict.get_employees.$input;
         get_employees_button.removeClass("btn-primary").addClass("btn-default");
 
         frm.page.set_primary_action(__("Mark Attendance"), () => {
@@ -215,11 +220,11 @@ frappe.ui.form.on("Employee Attendance Tool", {
                 });
             }
 
-            frm.events.mark_full_day_attendance(frm, employees_to_mark_full_day, employees_to_mark_half_day);
+            frm.events.mark_attendance(frm, employees_to_mark_full_day, employees_to_mark_half_day);
         });
     },
 
-    mark_full_day_attendance(frm, employees_to_mark_full_day, employees_to_mark_half_day) {
+    mark_attendance(frm, employees_to_mark_full_day, employees_to_mark_half_day) {
         frappe.call({
             method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
             args: {
