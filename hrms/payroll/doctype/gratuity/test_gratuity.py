@@ -6,11 +6,10 @@ from frappe.tests import IntegrationTestCase, change_settings
 from frappe.utils import add_days, add_months, floor, flt, get_datetime, get_first_day, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
-from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.expense_claim.test_expense_claim import get_payable_account
-from hrms.payroll.doctype.gratuity.gratuity import get_last_salary_slip
+from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import assign_holiday_list
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_deduction_salary_component,
 	make_earning_salary_component,
@@ -40,7 +39,7 @@ class TestGratuity(IntegrationTestCase):
 		make_deduction_salary_component(setup=True, test_tax=True, company_list=["_Test Company"])
 		make_holiday_list()
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_gratuity_based_on_current_slab_via_additional_salary(self):
 		"""
 		Range	|	Fraction
@@ -85,7 +84,7 @@ class TestGratuity(IntegrationTestCase):
 		gratuity.reload()
 		self.assertEqual(gratuity.status, "Paid")
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_gratuity_based_on_all_previous_slabs_via_payment_entry(self):
 		"""
 		Range   |   Fraction
@@ -194,7 +193,7 @@ class TestGratuity(IntegrationTestCase):
 		)
 		self.assertEqual(gratuity.amount, 190000.0)
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_settle_gratuity_via_fnf_statement(self):
 		from hrms.hr.doctype.full_and_final_statement.test_full_and_final_statement import (
 			create_full_and_final_statement,

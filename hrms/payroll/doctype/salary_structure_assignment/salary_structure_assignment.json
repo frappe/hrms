@@ -25,6 +25,8 @@
   "column_break_9",
   "variable",
   "amended_from",
+  "column_break_kjvm",
+  "leave_encashment_amount_per_day",
   "opening_balances_section",
   "taxable_earnings_till_date",
   "column_break_20",
@@ -104,7 +106,7 @@
   {
    "fieldname": "section_break_7",
    "fieldtype": "Section Break",
-   "label": "Base & Variable"
+   "label": "Base, Variable & Leave Encashment"
   },
   {
    "fetch_from": "grade.default_base_pay",
@@ -227,15 +229,27 @@
    "fieldname": "max_benefits",
    "fieldtype": "Currency",
    "label": "Maximum Benefit Amount"
+  },
+  {
+   "fieldname": "column_break_kjvm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "salary_structure.leave_encashment_amount_per_day",
+   "fetch_if_empty": 1,
+   "fieldname": "leave_encashment_amount_per_day",
+   "fieldtype": "Currency",
+   "label": "Leave Encashment Amount Per Day",
+   "options": "currency"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-03 17:06:42.296943",
+ "modified": "2026-01-09 11:52:07.106968",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

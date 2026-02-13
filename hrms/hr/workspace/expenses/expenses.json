@@ -6,7 +6,7 @@
    "label": "Expense Claims"
   }
  ],
- "content": "[{\"id\":\"L2zVuWBp7u\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Expense Claims\",\"col\":12}},{\"id\":\"xrNOam-5qD\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"WeY2C9ArOK\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"iDZGDH96Bx\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Expense Claim\",\"col\":3}},{\"id\":\"BrkYRKnEbD\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Advance\",\"col\":3}},{\"id\":\"zFC6AYv26B\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Dashboard\",\"col\":3}},{\"id\":\"ALah8wGQ6F\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"sQTzb1f7Y_\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"id\":\"DuIKEI2BM-\",\"type\":\"card\",\"data\":{\"card_name\":\"Claims\",\"col\":4}},{\"id\":\"YLUHzAMPPI\",\"type\":\"card\",\"data\":{\"card_name\":\"Advances\",\"col\":4}},{\"id\":\"gRpeo_qpkn\",\"type\":\"card\",\"data\":{\"card_name\":\"Fleet Management\",\"col\":4}},{\"id\":\"ZSjP2Kct-c\",\"type\":\"card\",\"data\":{\"card_name\":\"Travel\",\"col\":4}},{\"id\":\"xcW_x4wuLQ\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}},{\"id\":\"KgfEHHa8pF\",\"type\":\"card\",\"data\":{\"card_name\":\"Accounting Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"L2zVuWBp7u\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Expense Claims\",\"col\":12}},{\"id\":\"xrNOam-5qD\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"sQTzb1f7Y_\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"id\":\"DuIKEI2BM-\",\"type\":\"card\",\"data\":{\"card_name\":\"Claims\",\"col\":4}},{\"id\":\"YLUHzAMPPI\",\"type\":\"card\",\"data\":{\"card_name\":\"Advances\",\"col\":4}},{\"id\":\"gRpeo_qpkn\",\"type\":\"card\",\"data\":{\"card_name\":\"Fleet Management\",\"col\":4}},{\"id\":\"ZSjP2Kct-c\",\"type\":\"card\",\"data\":{\"card_name\":\"Travel\",\"col\":4}},{\"id\":\"xcW_x4wuLQ\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}},{\"id\":\"KgfEHHa8pF\",\"type\":\"card\",\"data\":{\"card_name\":\"Accounting Reports\",\"col\":4}}]",
  "creation": "2022-08-20 16:28:40.701015",
  "custom_blocks": [],
  "docstatus": 0,
@@ -257,7 +257,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-11-18 15:48:33.969360",
+ "modified": "2026-01-09 18:02:46.503270",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expenses",
@@ -268,33 +268,7 @@
  "quick_lists": [],
  "roles": [],
  "sequence_id": 6.0,
- "shortcuts": [
-  {
-   "color": "Grey",
-   "doc_view": "List",
-   "label": "Dashboard",
-   "link_to": "Expense Claims",
-   "type": "Dashboard"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "List",
-   "format": "{} Unclaimed",
-   "label": "Employee Advance",
-   "link_to": "Employee Advance",
-   "stats_filter": "{\"status\":[\"=\",\"Paid\"]}",
-   "type": "DocType"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "List",
-   "format": "{} Pending",
-   "label": "Expense Claim",
-   "link_to": "Expense Claim",
-   "stats_filter": "{\"status\":[\"=\",\"Draft\"]}",
-   "type": "DocType"
-  }
- ],
+ "shortcuts": [],
  "title": "Expenses",
  "type": "Workspace"
 }

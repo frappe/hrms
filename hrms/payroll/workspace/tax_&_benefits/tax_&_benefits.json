@@ -1,7 +1,7 @@
 {
  "app": "hrms",
  "charts": [],
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Tax Exemption Declaration\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Additional Salary\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Income Tax Computation\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Tax Setup\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Exemption\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Benefits\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"MUnSuJ_4ZW\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"id\":\"rgbG6r_PeK\",\"type\":\"card\",\"data\":{\"card_name\":\"Tax Setup\",\"col\":4}},{\"id\":\"yJJhpwR32W\",\"type\":\"card\",\"data\":{\"card_name\":\"Exemption\",\"col\":4}},{\"id\":\"fklpIA_dvG\",\"type\":\"card\",\"data\":{\"card_name\":\"Benefits\",\"col\":4}},{\"id\":\"V_L6VdkAlV\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2022-08-20 17:04:52.350699",
  "custom_blocks": [],
  "docstatus": 0,
@@ -9,7 +9,7 @@
  "for_user": "",
  "hide_custom": 0,
  "icon": "money-coins-1",
- "idx": 0,
+ "idx": 1,
  "is_hidden": 0,
  "label": "Tax & Benefits",
  "links": [
@@ -136,7 +136,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-08-18 14:57:19.891513",
+ "modified": "2026-01-09 17:58:37.952323",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Tax & Benefits",
@@ -147,31 +147,7 @@
  "quick_lists": [],
  "roles": [],
  "sequence_id": 10.0,
- "shortcuts": [
-  {
-   "color": "Red",
-   "doc_view": "List",
-   "format": "{} Draft",
-   "label": "Employee Tax Exemption Declaration",
-   "link_to": "Employee Tax Exemption Declaration",
-   "stats_filter": "{\"docstatus\":[\"=\",\"0\"]}",
-   "type": "DocType"
-  },
-  {
-   "color": "Grey",
-   "doc_view": "List",
-   "label": "Additional Salary",
-   "link_to": "Additional Salary",
-   "type": "DocType"
-  },
-  {
-   "color": "Grey",
-   "doc_view": "List",
-   "label": "Income Tax Computation",
-   "link_to": "Income Tax Computation",
-   "type": "Report"
-  }
- ],
+ "shortcuts": [],
  "title": "Tax & Benefits",
  "type": "Workspace"
 }

@@ -181,9 +181,27 @@ class LeaveEncashment(AccountsController):
 		if not hasattr(self, "_salary_structure"):
 			self.set_salary_structure()
 
-		per_day_encashment = frappe.db.get_value(
-			"Salary Structure", self._salary_structure, "leave_encashment_amount_per_day"
+		per_day_encashment = frappe.get_value(
+			"Salary Structure Assignment",
+			filters={
+				"employee": self.employee,
+				"salary_structure": self._salary_structure,
+				"docstatus": 1,
+				"from_date": ["<=", self.encashment_date],
+			},
+			fieldname=["leave_encashment_amount_per_day"],
+			order_by="from_date desc",
 		)
+
+		if not per_day_encashment:
+			per_day_encashment = frappe.db.get_value(
+				"Salary Structure",
+				self._salary_structure,
+				"leave_encashment_amount_per_day",
+			)
+
+		per_day_encashment = per_day_encashment or 0
+
 		self.encashment_amount = self.encashment_days * per_day_encashment if per_day_encashment > 0 else 0
 
 	def set_status(self, update=False):

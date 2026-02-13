@@ -24,7 +24,7 @@ class JobOpening(WebsiteGenerator):
 	)
 
 	def autoname(self):
-		self.name = set_name_from_naming_options(frappe.get_meta(self.doctype).autoname, self)
+		set_name_from_naming_options(frappe.get_meta(self.doctype).autoname, self)
 
 	def validate(self):
 		if not self.route:

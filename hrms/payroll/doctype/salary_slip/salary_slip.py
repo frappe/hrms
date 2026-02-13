@@ -389,7 +389,11 @@ class SalarySlip(TransactionBase):
 				.where(
 					(Timesheet.employee == self.employee)
 					& (Timesheet.start_date.between(self.start_date, self.end_date))
-					& ((Timesheet.status == "Submitted") | (Timesheet.status == "Billed"))
+					& (
+						(Timesheet.status == "Submitted")
+						| (Timesheet.status == "Billed")
+						| (Timesheet.status == "Partially Billed")
+					)
 				)
 			).run(as_dict=1)
 
@@ -1651,6 +1655,7 @@ class SalarySlip(TransactionBase):
 				sca.company,
 			)
 			.where(sc.variable_based_on_taxable_salary == 1)
+			.where(sc.disabled == 0)
 		).run(as_dict=True)
 
 		for component in components:

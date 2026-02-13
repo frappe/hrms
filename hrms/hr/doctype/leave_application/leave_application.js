@@ -286,10 +286,14 @@ frappe.ui.form.on("Leave Application", {
 		}
 	},
 	show_save_button: function (frm) {
-		frm.page.set_primary_action("Save", () => {
+		frm.page.set_primary_action(__("Save"), () => {
 			frm.save();
 		});
 		$(".form-message").prop("hidden", true);
+	},
+	posting_date: function (frm) {
+		frm.trigger("make_dashboard");
+		frm.trigger("get_leave_balance");
 	},
 });
 

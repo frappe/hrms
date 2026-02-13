@@ -10,6 +10,7 @@ export default defineConfig({
 	server: {
 		port: 8080,
 		proxy: getProxyOptions(),
+		allowedHosts: true,
 	},
 	plugins: [
 		vue(),

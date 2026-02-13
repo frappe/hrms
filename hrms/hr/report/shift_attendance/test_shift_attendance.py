@@ -6,6 +6,7 @@ from frappe.utils import format_datetime
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
+from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 from hrms.hr.report.shift_attendance.shift_attendance import execute
 from hrms.tests.test_utils import create_company
@@ -17,7 +18,7 @@ class TestShiftAttendance(IntegrationTestCase):
 		create_company()
 		super().setUpClass()
 		frappe.db.delete("Employee", {"company": "_Test Company"})
-
+		frappe.db.delete("Attendance")
 		cls.create_records()
 
 	@classmethod
@@ -164,16 +165,117 @@ class TestShiftAttendance(IntegrationTestCase):
 			}
 		)
 		report = execute(filters)
-		present_records = report[4][0]["value"]
-		self.assertEqual(4, present_records)
-		half_day_records = report[4][1]["value"]
-		self.assertEqual(1, half_day_records)
-		absent_records = report[4][2]["value"]
-		self.assertEqual(1, absent_records)
-		late_entries = report[4][3]["value"]
-		self.assertEqual(2, late_entries)
-		early_exits = report[4][4]["value"]
-		self.assertEqual(4, early_exits)
+		chart_data = get_chart_data(report)
+
+		self.assertEqual(4, chart_data.present_records)
+		self.assertEqual(1, chart_data.half_day_records)
+		self.assertEqual(1, chart_data.absent_records)
+		self.assertEqual(2, chart_data.late_entries)
+		self.assertEqual(4, chart_data.early_exits)
+
+	def test_user_permission_on_attendance_records(self):
+		manager = frappe.get_doc("Employee", {"user_id": "employee1@example.com"})
+		assistant = frappe.get_doc("Employee", {"user_id": "employee2@example.com"})
+
+		filters = frappe._dict(
+			{
+				"company": "_Test Company",
+				"from_date": date(2023, 1, 1),
+				"to_date": date(2023, 1, 3),
+			}
+		)
+
+		frappe.set_user("employee1@example.com")  # only see their own records
+		report = execute(filters)
+		chart_data = get_chart_data(report)
+		self.assertEqual(3, chart_data.total_records)
+		self.assertEqual(3, chart_data.present_records)
+		self.assertEqual(0, chart_data.half_day_records)
+		self.assertEqual(0, chart_data.absent_records)
+		self.assertEqual(1, chart_data.late_entries)
+		self.assertEqual(1, chart_data.early_exits)
+
+		frappe.set_user("employee2@example.com")  # only see their own records
+		report = execute(filters)
+		chart_data = get_chart_data(report)
+
+		self.assertEqual(3, chart_data.total_records)
+		self.assertEqual(1, chart_data.present_records)
+		self.assertEqual(1, chart_data.half_day_records)
+		self.assertEqual(1, chart_data.absent_records)
+		self.assertEqual(1, chart_data.late_entries)
+		self.assertEqual(3, chart_data.early_exits)
+
+		frappe.set_user("Administrator")
+		assistant.reports_to = manager.name
+		assistant.save()
+
+		frappe.set_user("employee1@example.com")  # see their own and their reporter's records
+		report = execute(filters)
+		chart_data = get_chart_data(report)
+
+		self.assertEqual(6, chart_data.total_records)
+		self.assertEqual(4, chart_data.present_records)
+		self.assertEqual(1, chart_data.half_day_records)
+		self.assertEqual(1, chart_data.absent_records)
+		self.assertEqual(2, chart_data.late_entries)
+		self.assertEqual(4, chart_data.early_exits)
+
+		frappe.set_user("Administrator")
+		assistant.reports_to = ""
+		assistant.save()
+
+	def test_get_attendance_records_without_checkins(self):
+		emp = make_employee("test_shift_report@example.com", company="_Test Company")
+
+		mark_attendance(emp, date(2023, 1, 1), "Present", "Shift 1", late_entry=1, early_exit=0)
+		mark_attendance(emp, date(2023, 1, 2), "Half Day", "Shift 2", late_entry=0, early_exit=1)
+		mark_attendance(emp, date(2023, 1, 2), "Absent", "Shift 1", late_entry=1, early_exit=1)
+
+		filters = frappe._dict(
+			{
+				"company": "_Test Company",
+				"from_date": date(2023, 1, 1),
+				"to_date": date(2023, 1, 3),
+				"include_attendance_without_checkins": 1,
+			}
+		)
+
+		report = execute(filters)
+		table_data = report[1]
+		self.assertEqual(len(table_data), 9)
+
+		chart_data = get_chart_data(report)
+		self.assertEqual(chart_data.present_records, 5)
+		self.assertEqual(chart_data.half_day_records, 2)
+		self.assertEqual(chart_data.absent_records, 2)
+		self.assertEqual(chart_data.late_entries, 4)
+		self.assertEqual(chart_data.early_exits, 6)
+
+		# filter by shift
+		filters["shift"] = "Shift 1"
+		report = execute(filters)
+		table_data = report[1]
+		self.assertEqual(len(table_data), 5)
+
+		chart_data = get_chart_data(report)
+
+		self.assertEqual(chart_data.present_records, 4)
+		self.assertEqual(chart_data.half_day_records, 0)
+		self.assertEqual(chart_data.absent_records, 1)
+		self.assertEqual(chart_data.late_entries, 3)
+		self.assertEqual(chart_data.early_exits, 2)
+
+
+def get_chart_data(report):
+	return frappe._dict(
+		total_records=len(report[1]),
+		present_records=report[4][0]["value"],
+		half_day_records=report[4][1]["value"],
+		absent_records=report[4][2]["value"],
+		late_entries=report[4][3]["value"],
+		early_exits=report[4][4]["value"],
+	)
 
 
 def make_checkin(employee, time, log_type):

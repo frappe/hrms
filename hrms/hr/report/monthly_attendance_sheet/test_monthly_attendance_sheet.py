@@ -5,9 +5,9 @@ from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
-from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_list
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
+from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import assign_holiday_list
 from hrms.hr.doctype.leave_allocation.leave_allocation import OverlapError
 from hrms.hr.doctype.leave_application.test_leave_application import make_allocation_record
 from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
@@ -35,7 +35,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 		to_date = get_year_ending(date)
 		make_holiday_list(from_date=from_date, to_date=to_date)
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_monthly_attendance_sheet_report(self):
 		previous_month_first = get_first_day_for_prev_month()
 
@@ -70,7 +70,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 		self.assertEqual(present[1], 1)
 		self.assertEqual(leaves[2], 1)
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_detailed_view(self):
 		previous_month_first = get_first_day_for_prev_month()
 
@@ -115,7 +115,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 			== "L"
 		)
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_single_shift_with_leaves_in_detailed_view(self):
 		previous_month_first = get_first_day_for_prev_month()
 
@@ -151,7 +151,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 			day_shift_row[date_key(add_days(previous_month_first, 2))], "L"
 		)  # leave on the 3rd day
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_single_leave_record(self):
 		previous_month_first = get_first_day_for_prev_month()
 
@@ -175,7 +175,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 		self.assertIsNone(row["shift"])
 		self.assertEqual(row[date_key(previous_month_first)], "L")
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_summarized_view(self):
 		previous_month_first = get_first_day_for_prev_month()
 
@@ -221,7 +221,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 		self.assertEqual(row["total_late_entries"], 1)
 		self.assertEqual(row["total_early_exits"], 1)
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_attendance_with_group_by_filter(self):
 		previous_month_first = get_first_day_for_prev_month()
 
@@ -397,7 +397,7 @@ class TestMonthlyAttendanceSheet(IntegrationTestCase):
 		self.assertEqual(present[1], 1)
 		self.assertEqual(leaves[2], 1)
 
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_validations(self):
 		# validation error for filters without filter based on
 		self.assertRaises(

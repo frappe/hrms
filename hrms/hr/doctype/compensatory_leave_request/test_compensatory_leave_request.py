@@ -5,6 +5,9 @@ import frappe
 from frappe.utils import add_days, add_months, getdate, today
 
 from hrms.hr.doctype.attendance_request.test_attendance_request import get_employee
+from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+	create_holiday_list_assignment,
+)
 from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
 from hrms.hr.doctype.leave_application.leave_application import get_leave_balance_on
 from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
@@ -26,11 +29,11 @@ class TestCompensatoryLeaveRequest(HRMSTestSuite):
 		frappe.db.delete("Leave Period")
 
 		create_leave_period(add_months(today(), -3), add_months(today(), 3), "_Test Company")
+		self.holiday_list = "_Test Compensatory Leave"
 		create_holiday_list()
 
 		employee = get_employee()
-		employee.holiday_list = "_Test Compensatory Leave"
-		employee.save()
+		create_holiday_list_assignment("Employee", employee.name, self.holiday_list)
 
 	def test_leave_balance_on_submit(self):
 		"""check creation of leave allocation on submission of compensatory leave request"""
@@ -44,6 +47,25 @@ class TestCompensatoryLeaveRequest(HRMSTestSuite):
 		self.assertEqual(
 			get_leave_balance_on(employee.name, compensatory_leave_request.leave_type, add_days(today(), 1)),
 			before + 1,
+		)
+
+	def test_leave_balance_on_cancel(self):
+		"""check leave balance update on cancellation of compensatory leave request"""
+		employee = get_employee()
+		mark_attendance(employee, date=add_days(today(), -1))
+
+		request_1 = get_compensatory_leave_request(employee.name, leave_date=add_days(today(), -1))
+
+		request_1.submit()
+		mark_attendance(employee)
+		request_2 = get_compensatory_leave_request(employee.name)
+
+		request_2.submit()
+		# cancel today's compensatory leave request
+		request_2.cancel()
+		self.assertEqual(
+			get_leave_balance_on(employee.name, request_2.leave_type, today()),
+			1,
 		)
 
 	def test_allocation_update_on_submit(self):
@@ -84,7 +106,7 @@ class TestCompensatoryLeaveRequest(HRMSTestSuite):
 		second_alloc_start = today
 		second_alloc_end = add_months(today, 1)
 
-		add_date_to_holiday_list(first_alloc_start, employee.holiday_list)
+		add_date_to_holiday_list(first_alloc_start, self.holiday_list)
 		allocation_1 = create_leave_allocation(
 			leave_type="Compensatory Off",
 			employee=employee.name,
@@ -94,7 +116,7 @@ class TestCompensatoryLeaveRequest(HRMSTestSuite):
 		allocation_1.new_leaves_allocated = 0
 		allocation_1.submit()
 
-		add_date_to_holiday_list(second_alloc_start, employee.holiday_list)
+		add_date_to_holiday_list(second_alloc_start, self.holiday_list)
 		allocation_2 = create_leave_allocation(
 			leave_type="Compensatory Off",
 			employee=employee.name,
@@ -186,7 +208,7 @@ class TestCompensatoryLeaveRequest(HRMSTestSuite):
 
 		employee = get_employee()
 		boundary_date = "2023-12-31"
-		add_date_to_holiday_list(boundary_date, employee.holiday_list)
+		add_date_to_holiday_list(boundary_date, self.holiday_list)
 		mark_attendance(employee, boundary_date, "Present")
 
 		# no leave period found of "2024-01-01"

@@ -4,7 +4,7 @@ pull_request_rules:
       - and:
         - and:
           - author!=ruchamahabal
-          - author!=saurabh6790
+          - author!=asmitahase
           - author!=frappe-pr-bot
           - author!=mergify[bot]
         - or:
@@ -75,5 +75,15 @@ pull_request_rules:
       backport:
         branches:
           - version-15-hotfix
+        assignees:
+          - "{{ author }}"
+
+  - name: backport to version-16-hotfix
+    conditions:
+      - label="backport version-16-hotfix"
+    actions:
+      backport:
+        branches:
+          - version-16-hotfix
         assignees:
           - "{{ author }}"

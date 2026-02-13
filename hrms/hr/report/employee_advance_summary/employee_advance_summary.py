@@ -2,6 +2,8 @@
 # For license information, please see license.txt
 
 
+from pypika import Order
+
 import frappe
 from frappe import _, msgprint
 
@@ -27,6 +29,7 @@ def execute(filters=None):
 			advance.advance_amount,
 			advance.paid_amount,
 			advance.claimed_amount,
+			advance.return_amount,
 			advance.status,
 			advance.currency,
 		]
@@ -80,6 +83,13 @@ def get_columns():
 			"options": "currency",
 			"width": 120,
 		},
+		{
+			"label": _("Returned Amount"),
+			"fieldname": "return_amount",
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 120,
+		},
 		{"label": _("Status"), "fieldname": "status", "fieldtype": "Data", "width": 120},
 		{
 			"label": _("Currency"),
@@ -92,31 +102,42 @@ def get_columns():
 	]
 
 
-def get_conditions(filters):
-	conditions = ""
+def get_advances(filters):
+	EmployeeAdvance = frappe.qb.DocType("Employee Advance")
+
+	query = (
+		frappe.qb.from_(EmployeeAdvance)
+		.select(
+			EmployeeAdvance.name,
+			EmployeeAdvance.employee,
+			EmployeeAdvance.paid_amount,
+			EmployeeAdvance.status,
+			EmployeeAdvance.advance_amount,
+			EmployeeAdvance.claimed_amount,
+			EmployeeAdvance.return_amount,
+			EmployeeAdvance.company,
+			EmployeeAdvance.posting_date,
+			EmployeeAdvance.purpose,
+			EmployeeAdvance.currency,
+		)
+		.where(EmployeeAdvance.docstatus < 2)
+	)
 
 	if filters.get("employee"):
-		conditions += "and employee = %(employee)s"
+		query = query.where(EmployeeAdvance.employee == filters.employee)
+
 	if filters.get("company"):
-		conditions += " and company = %(company)s"
+		query = query.where(EmployeeAdvance.company == filters.company)
+
 	if filters.get("status"):
-		conditions += " and status = %(status)s"
+		query = query.where(EmployeeAdvance.status == filters.status)
+
 	if filters.get("from_date"):
-		conditions += " and posting_date>=%(from_date)s"
+		query = query.where(EmployeeAdvance.posting_date >= filters.from_date)
+
 	if filters.get("to_date"):
-		conditions += " and posting_date<=%(to_date)s"
+		query = query.where(EmployeeAdvance.posting_date <= filters.to_date)
 
-	return conditions
-
-
-def get_advances(filters):
-	conditions = get_conditions(filters)
-	return frappe.db.sql(
-		"""select name, employee, paid_amount, status, advance_amount, claimed_amount, company,
-		posting_date, purpose, currency
-		from `tabEmployee Advance`
-		where docstatus<2 %s order by posting_date, name desc"""
-		% conditions,
-		filters,
-		as_dict=1,
+	return query.orderby(EmployeeAdvance.posting_date, EmployeeAdvance.name, order=Order.desc).run(
+		as_dict=True
 	)
