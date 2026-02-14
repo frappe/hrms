@@ -49,6 +49,25 @@ class TestCompensatoryLeaveRequest(HRMSTestSuite):
 			before + 1,
 		)
 
+	def test_leave_balance_on_cancel(self):
+		"""check leave balance update on cancellation of compensatory leave request"""
+		employee = get_employee()
+		mark_attendance(employee, date=add_days(today(), -1))
+
+		request_1 = get_compensatory_leave_request(employee.name, leave_date=add_days(today(), -1))
+
+		request_1.submit()
+		mark_attendance(employee)
+		request_2 = get_compensatory_leave_request(employee.name)
+
+		request_2.submit()
+		# cancel today's compensatory leave request
+		request_2.cancel()
+		self.assertEqual(
+			get_leave_balance_on(employee.name, request_2.leave_type, today()),
+			1,
+		)
+
 	def test_allocation_update_on_submit(self):
 		employee = get_employee()
 		mark_attendance(employee, date=add_days(today(), -1))

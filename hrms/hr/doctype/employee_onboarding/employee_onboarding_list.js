@@ -5,7 +5,7 @@ frappe.listview_settings["Employee Onboarding"] = {
 		return [
 			__(doc.boarding_status),
 			frappe.utils.guess_colour(doc.boarding_status),
-			"status,=," + doc.boarding_status,
+			"boarding_status,=," + doc.boarding_status,
 		];
 	},
 };

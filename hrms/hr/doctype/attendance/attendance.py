@@ -2,9 +2,12 @@
 # License: GNU General Public License v3. See license.txt
 
 
+from datetime import date
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.query_builder.terms import ValueWrapper
 from frappe.utils import (
 	add_days,
 	cint,
@@ -19,10 +22,10 @@ from frappe.utils import (
 import hrms
 from hrms.hr.doctype.shift_assignment.shift_assignment import has_overlapping_timings
 from hrms.hr.utils import (
-	get_holiday_dates_for_employee,
 	get_holidays_for_employee,
 	validate_active_employee,
 )
+from hrms.utils.holiday_list import get_holiday_dates_between_range
 
 
 class DuplicateAttendanceError(frappe.ValidationError):
@@ -249,10 +252,11 @@ class Attendance(Document):
 
 
 @frappe.whitelist()
-def get_events(start, end, filters=None):
+def get_events(start: date | str, end: date | str, filters: str | list | None = None) -> list[dict]:
 	employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user})
 	if not employee:
 		return []
+
 	if isinstance(filters, str):
 		import json
 
@@ -270,7 +274,7 @@ def add_attendance(filters):
 		"Attendance",
 		fields=[
 			"name",
-			"'Attendance' as doctype",
+			ValueWrapper("Attendance").as_("doctype"),
 			"attendance_date",
 			"employee_name",
 			"status",
@@ -279,7 +283,7 @@ def add_attendance(filters):
 		filters=filters,
 	)
 	for record in attendance:
-		record["title"] = f"{record.employee_name} : {record.status}"
+		record["title"] = f"{record['employee_name']} : {record['status']}"
 	return attendance
 
 
@@ -338,7 +342,7 @@ def mark_attendance(
 
 
 @frappe.whitelist()
-def mark_bulk_attendance(data):
+def mark_bulk_attendance(data: str | dict):
 	import json
 
 	if isinstance(data, str):
@@ -348,11 +352,11 @@ def mark_bulk_attendance(data):
 		frappe.throw(_("Please select a date."))
 		return
 
-	for date in data.unmarked_days:
+	for attendance_date in data.unmarked_days:
 		doc_dict = {
 			"doctype": "Attendance",
 			"employee": data.employee,
-			"attendance_date": get_datetime(date),
+			"attendance_date": get_datetime(attendance_date),
 			"status": data.status,
 			"half_day_status": "Absent" if data.status == "Half Day" else None,
 			"shift": data.shift,
@@ -384,7 +388,9 @@ def get_unmarked_days(employee, from_date, to_date, exclude_holidays=0):
 	marked_days = [getdate(record.attendance_date) for record in records]
 
 	if cint(exclude_holidays):
-		holiday_dates = get_holiday_dates_for_employee(employee, from_date, to_date)
+		holiday_dates = get_holiday_dates_between_range(
+			employee, from_date, to_date, raise_exception_for_holiday_list=False
+		)
 		holidays = [getdate(record) for record in holiday_dates]
 		marked_days.extend(holidays)
 

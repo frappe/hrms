@@ -1002,6 +1002,12 @@ def check_app_permission():
 	if frappe.session.user == "Administrator":
 		return True
 
+	# Website Users cannot access desk routes, so don't show the app to them
+	# This prevents redirect to /desk/people followed by 403 Forbidden
+	user_type = frappe.get_cached_value("User", frappe.session.user, "user_type")
+	if user_type == "Website User":
+		return False
+
 	if frappe.has_permission("Employee", ptype="read"):
 		return True
 

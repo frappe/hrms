@@ -111,6 +111,11 @@ class AdditionalSalary(Document):
 
 		self.validate_from_to_dates("from_date", "to_date")
 
+		if self.is_recurring and not (self.from_date and self.to_date):
+			frappe.throw(_("From and to dates are madatory for recurring type additional salaries."))
+		elif (not self.is_recurring) and (not self.payroll_date):
+			frappe.throw(_("Payroll date is mandatory for non-recurring type additional salaries."))
+
 		if date_of_joining:
 			if self.payroll_date and getdate(self.payroll_date) < getdate(date_of_joining):
 				frappe.throw(_("Payroll date can not be less than employee's joining date."))

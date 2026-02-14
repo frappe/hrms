@@ -14,4 +14,5 @@ def execute():
 				"read": 1,
 			},
 		)
+		doc.flags.ignore_links = True
 		doc.save()
