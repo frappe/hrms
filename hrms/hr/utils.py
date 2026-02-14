@@ -171,7 +171,9 @@ def get_employee_field_property(employee, fieldname):
 	if not field:
 		return
 
-	value = frappe.db.get_value("Employee", employee, fieldname)
+	doc = frappe.get_doc("Employee", employee, check_permission=True)
+	value = doc.get(fieldname)
+
 	if field.fieldtype == "Date":
 		value = formatdate(value)
 	elif field.fieldtype == "Datetime":
@@ -999,6 +1001,12 @@ def check_app_permission():
 	"""Check if user has permission to access the app (for showing the app on app screen)"""
 	if frappe.session.user == "Administrator":
 		return True
+
+	# Website Users cannot access desk routes, so don't show the app to them
+	# This prevents redirect to /desk/people followed by 403 Forbidden
+	user_type = frappe.get_cached_value("User", frappe.session.user, "user_type")
+	if user_type == "Website User":
+		return False
 
 	if frappe.has_permission("Employee", ptype="read"):
 		return True

@@ -112,7 +112,7 @@ class CompensatoryLeaveRequest(Document):
 			leave_allocation = frappe.get_doc("Leave Allocation", self.leave_allocation)
 			if leave_allocation:
 				leave_allocation.new_leaves_allocated -= date_difference
-				if leave_allocation.new_leaves_allocated - date_difference <= 0:
+				if leave_allocation.new_leaves_allocated < 0:
 					leave_allocation.new_leaves_allocated = 0
 				leave_allocation.validate()
 				leave_allocation.db_set("new_leaves_allocated", leave_allocation.total_leaves_allocated)

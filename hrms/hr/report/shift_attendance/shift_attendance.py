@@ -5,7 +5,10 @@ from datetime import timedelta
 
 import frappe
 from frappe import _
+from frappe.query_builder import Criterion
 from frappe.utils import cint, flt, format_datetime, format_duration
+
+from erpnext.accounts.utils import build_qb_match_conditions
 
 
 def execute(filters=None):
@@ -130,9 +133,10 @@ def get_columns():
 
 
 def get_data(filters):
-	query = get_query(filters)
-	data = query.run(as_dict=True)
+	data = get_attendance_with_checkins(filters)
 	data = update_data(data, filters)
+	if filters.include_attendance_without_checkins:
+		data.extend(get_attendance_without_checkins(filters))
 	return data
 
 
@@ -209,15 +213,41 @@ def get_chart_data(data):
 	return chart
 
 
-def get_query(filters):
+def get_attendance_with_checkins(filters):
 	attendance = frappe.qb.DocType("Attendance")
 	checkin = frappe.qb.DocType("Employee Checkin")
 	shift_type = frappe.qb.DocType("Shift Type")
 
 	query = (
-		frappe.qb.from_(attendance)
+		get_base_attendance_query(filters)
 		.inner_join(checkin)
 		.on(checkin.attendance == attendance.name)
+		.select(
+			checkin.shift_start,
+			checkin.shift_end,
+			checkin.shift_actual_start,
+			checkin.shift_actual_end,
+			shift_type.enable_late_entry_marking,
+			shift_type.late_entry_grace_period,
+			shift_type.enable_early_exit_marking,
+			shift_type.early_exit_grace_period,
+		)
+	)
+	for field in filters:
+		if field == "late_entry" and not filters.consider_grace_period:
+			query = query.where(attendance.in_time > checkin.shift_start)
+		elif field == "early_exit" and not filters.consider_grace_period:
+			query = query.where(attendance.out_time < checkin.shift_end)
+	result = query.run(as_dict=True)
+	return result
+
+
+def get_base_attendance_query(filters):
+	attendance = frappe.qb.DocType("Attendance")
+	shift_type = frappe.qb.DocType("Shift Type")
+
+	query = (
+		frappe.qb.from_(attendance)
 		.inner_join(shift_type)
 		.on(attendance.shift == shift_type.name)
 		.select(
@@ -234,34 +264,37 @@ def get_query(filters):
 			attendance.early_exit,
 			attendance.department,
 			attendance.company,
-			checkin.shift_start,
-			checkin.shift_end,
-			checkin.shift_actual_start,
-			checkin.shift_actual_end,
-			shift_type.enable_late_entry_marking,
-			shift_type.late_entry_grace_period,
-			shift_type.enable_early_exit_marking,
-			shift_type.early_exit_grace_period,
 		)
 		.where(attendance.docstatus == 1)
 		.groupby(attendance.name)
 	)
 
-	for filter in filters:
-		if filter == "from_date":
+	for field in filters:
+		if field == "from_date":
 			query = query.where(attendance.attendance_date >= filters.from_date)
-		elif filter == "to_date":
+		elif field == "to_date":
 			query = query.where(attendance.attendance_date <= filters.to_date)
-		elif filter == "consider_grace_period":
+		elif field in ["consider_grace_period", "include_attendance_without_checkins"]:
 			continue
-		elif filter == "late_entry" and not filters.consider_grace_period:
-			query = query.where(attendance.in_time > checkin.shift_start)
-		elif filter == "early_exit" and not filters.consider_grace_period:
-			query = query.where(attendance.out_time < checkin.shift_end)
 		else:
-			query = query.where(attendance[filter] == filters[filter])
+			query = query.where(attendance[field] == filters[field])
 
+	query = query.where(Criterion.all(build_qb_match_conditions("Attendance")))
 	return query
+
+
+def get_attendance_without_checkins(filters):
+	attendance = frappe.qb.DocType("Attendance")
+	checkin = frappe.qb.DocType("Employee Checkin")
+
+	query = (
+		get_base_attendance_query(filters)
+		.left_join(checkin)
+		.on(checkin.attendance == attendance.name)
+		.where(checkin.attendance.isnull())
+	)
+	result = query.run(as_dict=True)
+	return result
 
 
 def update_data(data, filters):

@@ -1655,6 +1655,7 @@ class SalarySlip(TransactionBase):
 				sca.company,
 			)
 			.where(sc.variable_based_on_taxable_salary == 1)
+			.where(sc.disabled == 0)
 		).run(as_dict=True)
 
 		for component in components:

@@ -227,15 +227,19 @@ def get_columns(earning_types, ded_types):
 			}
 		)
 
-	columns.extend(
-		[
+	if "lending" in frappe.get_installed_apps():
+		columns.append(
 			{
 				"label": _("Loan Repayment"),
 				"fieldname": "total_loan_repayment",
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 120,
-			},
+			}
+		)
+
+	columns.extend(
+		[
 			{
 				"label": _("Total Deduction"),
 				"fieldname": "total_deduction",

@@ -1,7 +1,7 @@
 {
  "app": "hrms",
  "charts": [],
- "content": "[{\"id\":\"jk-EYIaS51\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Employees on leave today\",\"col\":4}},{\"id\":\"PbGeXHd7Rt\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Employees on leave this month\",\"col\":4}},{\"id\":\"d_Tfw7CrG_\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"IzQ_B9PEiJ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"id\":\"UZU5aC1En3\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup\",\"col\":4}},{\"id\":\"gBEhmJgb_7\",\"type\":\"card\",\"data\":{\"card_name\":\"Allocation\",\"col\":4}},{\"id\":\"rtrjT9ZnNs\",\"type\":\"card\",\"data\":{\"card_name\":\"Application\",\"col\":4}},{\"id\":\"xHXxbkgNg3\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"jk-EYIaS51\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Employees on leave today\",\"col\":4}},{\"id\":\"PbGeXHd7Rt\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Employees on leave this month\",\"col\":4}},{\"id\":\"XiEIWA4fuD\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Holidays in this month\",\"col\":4}},{\"id\":\"d_Tfw7CrG_\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"IzQ_B9PEiJ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"id\":\"UZU5aC1En3\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup\",\"col\":4}},{\"id\":\"gBEhmJgb_7\",\"type\":\"card\",\"data\":{\"card_name\":\"Allocation\",\"col\":4}},{\"id\":\"rtrjT9ZnNs\",\"type\":\"card\",\"data\":{\"card_name\":\"Application\",\"col\":4}},{\"id\":\"xHXxbkgNg3\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2022-08-20 16:06:26.672497",
  "custom_blocks": [],
  "docstatus": 0,
@@ -186,11 +186,15 @@
    "type": "Link"
   }
  ],
- "modified": "2026-01-12 12:07:43.267785",
+ "modified": "2026-01-12 14:53:42.279653",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leaves",
  "number_cards": [
+  {
+   "label": "Holidays in this month",
+   "number_card_name": "Holidays in this month"
+  },
   {
    "label": "Employees on leave this month",
    "number_card_name": "Number of Employees on Leave (This Month)"

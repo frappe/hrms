@@ -612,7 +612,6 @@ class TestLeaveApplication(HRMSTestSuite):
 
 		# can only apply on optional holidays
 		self.assertRaises(NotAnOptionalHoliday, leave_application.insert)
-
 		leave_application.from_date = optional_leave_date
 		leave_application.to_date = optional_leave_date
 		leave_application.status = "Approved"
@@ -1476,7 +1475,7 @@ class TestLeaveApplication(HRMSTestSuite):
 			"_Test Application 2", from_date=getdate(), to_date=add_days(getdate(), 10), add_weekly_offs=False
 		)
 		add_date_to_holiday_list(getdate(), "_Test Application 2")
-		employee = get_employee().name
+		employee = make_employee("test_leave_days@example.com", company="_Test Company")
 		create_holiday_list_assignment("Employee", employee, "_Test Application")
 		create_holiday_list_assignment("Employee", employee, "_Test Application 2")
 		leave_type = frappe.get_doc(

@@ -102,6 +102,17 @@
    "type": "Link"
   },
   {
+   "child": 1,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Accrued Earnings Report",
+   "link_to": "Accrued Earnings Report",
+   "link_type": "Report",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
    "child": 0,
    "collapsible": 1,
    "icon": "database",
@@ -137,7 +148,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-01-08 14:16:38.356469",
+ "modified": "2026-01-22 12:54:35.728011",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Tax & Benefits",
